@@ -21,7 +21,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center">
-              <Image src="/logo.png" alt="Il Margine" width={180} height={50} className="h-10 w-auto" />
+              <Image src="/logo.png" alt="Il Margine" width={180} height={50} className="h-10 w-auto" style={{ background: 'transparent' }} />
             </Link>
             
             <div className="hidden md:flex items-center gap-6">
@@ -106,35 +106,138 @@ export default function Home() {
           </p>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {markets.map((market) => (
-              <div
-                key={market.id}
-                className={`p-6 rounded-lg border transition-all cursor-pointer ${
-                  market.status === "coming"
-                    ? "bg-slate-900/30 border-slate-800/50 opacity-60"
-                    : activeMarket === market.id
-                    ? "bg-slate-900/80 border-emerald-500/50"
-                    : "bg-slate-900/50 border-slate-800 hover:border-slate-700"
-                }`}
-                onClick={() => market.status === "active" && setActiveMarket(market.id)}
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold">{market.name}</h3>
-                  {market.status === "coming" ? (
-                    <span className="text-xs font-mono text-slate-600 bg-slate-800/50 px-2 py-0.5 rounded">SOON</span>
-                  ) : (
-                    <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">LIVE</span>
-                  )}
-                </div>
-                <p className="text-sm text-slate-500 mb-4">{market.description}</p>
-                {market.status === "active" && (
-                  <div className="flex gap-4 text-sm">
-                    <span className="text-slate-400">{market.bets} bets</span>
-                    <span className="text-emerald-400 font-mono">{market.profit}</span>
+            {markets.map((market) => {
+              const href = market.id === "props" ? "/player-props" : market.id === "atp" ? "/atp-tennis" : "";
+              const isActive = market.status === "active";
+              
+              const cardContent = (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold">{market.name}</h3>
+                    {market.status === "coming" ? (
+                      <span className="text-xs font-mono text-slate-600 bg-slate-800/50 px-2 py-0.5 rounded">SOON</span>
+                    ) : (
+                      <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">LIVE</span>
+                    )}
                   </div>
-                )}
+                  <p className="text-sm text-slate-500 mb-4">{market.description}</p>
+                  {market.status === "active" && (
+                    <div className="flex gap-4 text-sm">
+                      <span className="text-slate-400">{market.bets} bets</span>
+                      <span className="text-emerald-400 font-mono">{market.profit}</span>
+                    </div>
+                  )}
+                </>
+              );
+              
+              const cardClass = `p-6 rounded-lg border transition-all cursor-pointer block ${
+                market.status === "coming"
+                  ? "bg-slate-900/30 border-slate-800/50 opacity-60"
+                  : activeMarket === market.id
+                  ? "bg-slate-900/80 border-emerald-500/50"
+                  : "bg-slate-900/50 border-slate-800 hover:border-slate-700"
+              }`;
+              
+              return isActive ? (
+                <Link
+                  key={market.id}
+                  href={href}
+                  className={cardClass}
+                  onClick={() => setActiveMarket(market.id)}
+                >
+                  {cardContent}
+                </Link>
+              ) : (
+                <div
+                  key={market.id}
+                  className={cardClass}
+                >
+                  {cardContent}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Latest Results */}
+      <section className="py-16 border-b border-slate-800/50 bg-slate-900/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <span className="text-xs font-mono text-emerald-400 mb-2 block">LATEST RESULTS</span>
+              <h2 className="text-2xl font-bold">Recent Picks</h2>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-emerald-400 font-mono">Last 7 days: +4.87u</span>
+            </div>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Result Card 1 - Won */}
+            <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-4 hover:border-slate-700 transition-colors">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs text-slate-500 font-mono">Feb 02</span>
+                <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-medium">WON</span>
               </div>
-            ))}
+              <div className="text-sm text-slate-400 mb-1">ATP Montpellier</div>
+              <div className="font-medium mb-2">Fils ML</div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-500">@1.72 • 1u</span>
+                <span className="text-emerald-400 font-mono font-medium">+0.72u</span>
+              </div>
+            </div>
+            
+            {/* Result Card 2 - Lost */}
+            <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-4 hover:border-slate-700 transition-colors">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs text-slate-500 font-mono">Feb 01</span>
+                <span className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded font-medium">LOST</span>
+              </div>
+              <div className="text-sm text-slate-400 mb-1">Player Props</div>
+              <div className="font-medium mb-2">Salah 2+ Shots OT</div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-500">@1.85 • 1.5u</span>
+                <span className="text-red-400 font-mono font-medium">-1.50u</span>
+              </div>
+            </div>
+            
+            {/* Result Card 3 - Won */}
+            <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-4 hover:border-slate-700 transition-colors">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs text-slate-500 font-mono">Jan 31</span>
+                <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-medium">WON</span>
+              </div>
+              <div className="text-sm text-slate-400 mb-1">ATP Montpellier</div>
+              <div className="font-medium mb-2">Bublik +4.5 Games</div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-500">@1.85 • 2u</span>
+                <span className="text-emerald-400 font-mono font-medium">+1.70u</span>
+              </div>
+            </div>
+            
+            {/* Result Card 4 - Won */}
+            <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-4 hover:border-slate-700 transition-colors">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs text-slate-500 font-mono">Jan 30</span>
+                <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-medium">WON</span>
+              </div>
+              <div className="text-sm text-slate-400 mb-1">Player Props</div>
+              <div className="font-medium mb-2">Palmer 3+ Tackles</div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-500">@1.95 • 2u</span>
+                <span className="text-emerald-400 font-mono font-medium">+1.90u</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-6 flex justify-center gap-4">
+            <Link href="/atp-tennis" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+              View ATP Tennis Results →
+            </Link>
+            <Link href="/player-props" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+              View Player Props Results →
+            </Link>
           </div>
         </div>
       </section>
