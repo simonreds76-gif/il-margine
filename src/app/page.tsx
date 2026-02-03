@@ -6,6 +6,7 @@ import Image from "next/image";
 
 export default function Home() {
   const [activeMarket, setActiveMarket] = useState("props");
+  const [tipsMenuOpen, setTipsMenuOpen] = useState(false);
 
   const markets = [
     { id: "props", name: "Player Props", description: "Football individual player markets", status: "active", bets: "780+", profit: "+25% ROI" },
@@ -25,7 +26,110 @@ export default function Home() {
             </Link>
             
             <div className="hidden md:flex items-center gap-6">
-              <a href="#markets" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Markets</a>
+              {/* Tips Dropdown */}
+              <div className="relative">
+                <button 
+                  onClick={() => setTipsMenuOpen(!tipsMenuOpen)}
+                  onBlur={() => setTimeout(() => setTipsMenuOpen(false), 150)}
+                  className="text-sm text-slate-400 hover:text-slate-100 transition-colors flex items-center gap-1"
+                >
+                  Tips
+                  <svg className={`w-4 h-4 transition-transform ${tipsMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {tipsMenuOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-slate-900/95 backdrop-blur-sm border border-slate-800 rounded-xl shadow-2xl overflow-hidden z-50">
+                    <Link 
+                      href="/player-props" 
+                      className="group block px-4 py-4 hover:bg-emerald-500/10 transition-all duration-300 border-b border-slate-800/50"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="font-medium text-slate-200 group-hover:text-emerald-400 transition-colors">Player Props</span>
+                          <span className="block text-xs text-slate-500 mt-0.5">Football • Shots, Tackles, Fouls</span>
+                        </div>
+                        <div className="w-12 h-8 relative overflow-hidden">
+                          <svg className="w-full h-full" viewBox="0 0 48 32">
+                            <path 
+                              d="M0 28 L12 20 L24 24 L36 12 L48 8" 
+                              fill="none" 
+                              stroke="currentColor" 
+                              strokeWidth="2"
+                              className="text-slate-700 group-hover:text-emerald-500/50 transition-colors duration-300"
+                            />
+                            <path 
+                              d="M0 28 L12 20 L24 24 L36 12 L48 8" 
+                              fill="none" 
+                              stroke="currentColor" 
+                              strokeWidth="2"
+                              className="text-transparent group-hover:text-emerald-400 transition-all duration-500"
+                              strokeDasharray="100"
+                              strokeDashoffset="100"
+                              style={{ animation: tipsMenuOpen ? 'none' : 'none' }}
+                            />
+                            <circle cx="48" cy="8" r="3" className="fill-slate-700 group-hover:fill-emerald-400 transition-colors duration-300" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 mt-2">
+                        <span className="text-xs font-mono text-emerald-400/80">+25% ROI</span>
+                        <span className="text-xs text-slate-600">780+ bets</span>
+                      </div>
+                    </Link>
+                    
+                    <Link 
+                      href="/atp-tennis" 
+                      className="group block px-4 py-4 hover:bg-emerald-500/10 transition-all duration-300 border-b border-slate-800/50"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="font-medium text-slate-200 group-hover:text-emerald-400 transition-colors">ATP Tennis</span>
+                          <span className="block text-xs text-slate-500 mt-0.5">Pre-match • Handicaps, Totals</span>
+                        </div>
+                        <div className="w-12 h-8 relative overflow-hidden">
+                          <svg className="w-full h-full" viewBox="0 0 48 32">
+                            <path 
+                              d="M0 24 L16 22 L32 16 L48 10" 
+                              fill="none" 
+                              stroke="currentColor" 
+                              strokeWidth="2"
+                              className="text-slate-700 group-hover:text-emerald-500/50 transition-colors duration-300"
+                            />
+                            <circle cx="48" cy="10" r="3" className="fill-slate-700 group-hover:fill-emerald-400 transition-colors duration-300" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 mt-2">
+                        <span className="text-xs font-mono text-emerald-400/80">+8.6% ROI</span>
+                        <span className="text-xs text-slate-600">447 bets</span>
+                      </div>
+                    </Link>
+                    
+                    <div className="group px-4 py-4 border-b border-slate-800/50 opacity-50">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="font-medium text-slate-500">Bet Builders</span>
+                          <span className="block text-xs text-slate-600 mt-0.5">Same-game combos</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-slate-600 bg-slate-800 px-2 py-0.5 rounded">SOON</span>
+                      </div>
+                    </div>
+                    
+                    <div className="group px-4 py-4 opacity-50">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="font-medium text-slate-500">ATG</span>
+                          <span className="block text-xs text-slate-600 mt-0.5">Anytime goalscorer</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-slate-600 bg-slate-800 px-2 py-0.5 rounded">SOON</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
               <a href="#the-edge" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">The Edge</a>
               <a href="#track-record" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Track Record</a>
               <button className="bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-medium px-4 py-2 rounded transition-colors flex items-center gap-2">
