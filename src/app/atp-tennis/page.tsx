@@ -8,10 +8,10 @@ export default function ATPTennis() {
   const [activeCategory, setActiveCategory] = useState("all");
 
   const categories = [
-    { id: "all", name: "All Tennis", bets: 447, roi: "+8.6%", winRate: "54%" },
-    { id: "atp", name: "ATP Tour", bets: 330, roi: "+10.5%", winRate: "55%" },
-    { id: "challenger", name: "Challenger", bets: 60, roi: "+5.9%", winRate: "53%" },
-    { id: "ausopen", name: "Australian Open", bets: 57, roi: "+0.5%", winRate: "51%" },
+    { id: "all", name: "All Tennis", bets: 447, roi: "+8.6%", winRate: "54%", avgOdds: "2.05" },
+    { id: "atp", name: "ATP Tour", bets: 330, roi: "+10.5%", winRate: "55%", avgOdds: "2.06" },
+    { id: "challenger", name: "Challenger", bets: 60, roi: "+5.9%", winRate: "53%", avgOdds: "1.95" },
+    { id: "ausopen", name: "Australian Open", bets: 57, roi: "+0.5%", winRate: "51%", avgOdds: "2.10" },
   ];
 
   // Sample active picks - these would come from database
@@ -25,7 +25,6 @@ export default function ATPTennis() {
       odds: 1.95,
       bookmaker: "Pinnacle",
       stake: 1.5,
-      edge: "+7.2%",
       posted: "2h ago",
       status: "pending"
     },
@@ -38,7 +37,6 @@ export default function ATPTennis() {
       odds: 1.87,
       bookmaker: "bet365",
       stake: 1,
-      edge: "+5.8%",
       posted: "4h ago",
       status: "pending"
     },
@@ -93,7 +91,7 @@ export default function ATPTennis() {
           <h1 className="text-3xl md:text-4xl font-bold mb-4">ATP Tennis Betting</h1>
           <p className="text-slate-400 max-w-3xl mb-8">
             Data-driven tennis analysis focused on value in pre-match markets. We specialise in game handicaps, 
-            totals, and set betting where bookmaker pricing is inefficient. All picks independently verified on Tipstrr.
+            totals, and set betting where bookmaker pricing is inefficient.
           </p>
 
           {/* Methodology */}
@@ -159,7 +157,7 @@ export default function ATPTennis() {
                 <div className="text-xs text-slate-500">Win Rate</div>
               </div>
               <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono">2.05</div>
+                <div className="text-2xl font-bold text-emerald-400 font-mono">{cat.avgOdds}</div>
                 <div className="text-xs text-slate-500">Avg Odds</div>
               </div>
             </div>
@@ -181,7 +179,7 @@ export default function ATPTennis() {
           {activePicks.length > 0 ? (
             <div className="grid gap-4">
               {activePicks.map((pick) => (
-                <div key={pick.id} className="bg-slate-900/50 rounded-lg border border-emerald-500/30 p-5 relative overflow-hidden">
+                <div key={pick.id} className="bg-slate-900/50 rounded-lg border border-slate-800 p-5 relative overflow-hidden">
                   <div className="absolute top-0 right-0 bg-amber-500/20 text-amber-400 text-xs font-mono px-3 py-1 rounded-bl">
                     PENDING
                   </div>
@@ -193,22 +191,20 @@ export default function ATPTennis() {
                         <span className="text-slate-700">•</span>
                         <span className="text-xs text-slate-500">{pick.posted}</span>
                       </div>
-                      <h3 className="font-semibold text-lg mb-1">{pick.match}</h3>
-                      <p className="text-emerald-400 font-medium">{pick.selection}</p>
+                      <h3 className="text-slate-400 mb-2">{pick.match}</h3>
+                      <div className="bg-slate-800/50 rounded px-3 py-2 inline-block">
+                        <span className="font-semibold text-lg text-white">{pick.selection}</span>
+                      </div>
                     </div>
                     
-                    <div className="flex flex-wrap items-center gap-4">
+                    <div className="flex flex-wrap items-center gap-6">
                       <div className="text-center">
                         <div className="text-2xl font-bold font-mono text-emerald-400">{pick.odds}</div>
                         <div className="text-xs text-slate-500">{pick.bookmaker}</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-lg font-bold font-mono">{pick.stake}u</div>
+                        <div className="text-xl font-bold font-mono">{pick.stake}u</div>
                         <div className="text-xs text-slate-500">Stake</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-lg font-bold font-mono text-emerald-400">{pick.edge}</div>
-                        <div className="text-xs text-slate-500">Edge</div>
                       </div>
                     </div>
                   </div>
@@ -284,7 +280,7 @@ export default function ATPTennis() {
           </div>
           
           <p className="text-xs text-slate-600 mt-4 text-center">
-            Full history independently verified on <a href="https://tipstrr.com" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">Tipstrr.com</a>
+            All picks timestamped and tracked transparently
           </p>
         </div>
       </section>
