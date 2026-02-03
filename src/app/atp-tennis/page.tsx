@@ -144,21 +144,52 @@ export default function ATPTennis() {
           {/* Stats for selected category */}
           {categories.filter(c => c.id === activeCategory).map(cat => (
             <div key={cat.id} className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono">{cat.bets}</div>
-                <div className="text-xs text-slate-500">Total Bets</div>
+              {/* Total Bets */}
+              <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
+                <div className="text-2xl font-bold text-white font-mono mb-2">{cat.bets}</div>
+                <div className="text-xs text-slate-500 mb-3">Total Bets</div>
+                <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-blue-500 to-blue-400 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min((cat.bets / 500) * 100, 100)}%` }}
+                  />
+                </div>
               </div>
-              <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono">{cat.roi}</div>
-                <div className="text-xs text-slate-500">ROI</div>
+              
+              {/* ROI */}
+              <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
+                <div className="text-2xl font-bold text-emerald-400 font-mono mb-2">{cat.roi}</div>
+                <div className="text-xs text-slate-500 mb-3">ROI</div>
+                <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min(parseFloat(cat.roi) * 4, 100)}%` }}
+                  />
+                </div>
               </div>
-              <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono">{cat.winRate}</div>
-                <div className="text-xs text-slate-500">Win Rate</div>
+              
+              {/* Win Rate */}
+              <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
+                <div className="text-2xl font-bold text-amber-400 font-mono mb-2">{cat.winRate}</div>
+                <div className="text-xs text-slate-500 mb-3">Win Rate</div>
+                <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-500"
+                    style={{ width: `${parseInt(cat.winRate)}%` }}
+                  />
+                </div>
               </div>
-              <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono">{cat.avgOdds}</div>
-                <div className="text-xs text-slate-500">Avg Odds</div>
+              
+              {/* Avg Odds */}
+              <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
+                <div className="text-2xl font-bold text-purple-400 font-mono mb-2">{cat.avgOdds}</div>
+                <div className="text-xs text-slate-500 mb-3">Avg Odds</div>
+                <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-purple-500 to-purple-400 rounded-full transition-all duration-500"
+                    style={{ width: `${(parseFloat(cat.avgOdds) / 3) * 100}%` }}
+                  />
+                </div>
               </div>
             </div>
           ))}

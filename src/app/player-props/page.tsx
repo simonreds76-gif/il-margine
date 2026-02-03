@@ -159,21 +159,52 @@ export default function PlayerProps() {
           {/* Stats for selected league */}
           {leagues.filter(l => l.id === activeLeague).map(league => (
             <div key={league.id} className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono">{league.bets}</div>
-                <div className="text-xs text-slate-500">Total Bets</div>
+              {/* Total Bets */}
+              <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
+                <div className="text-2xl font-bold text-white font-mono mb-2">{league.bets}</div>
+                <div className="text-xs text-slate-500 mb-3">Total Bets</div>
+                <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-blue-500 to-blue-400 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min((league.bets / 1000) * 100, 100)}%` }}
+                  />
+                </div>
               </div>
-              <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono">{league.roi}</div>
-                <div className="text-xs text-slate-500">ROI</div>
+              
+              {/* ROI */}
+              <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
+                <div className="text-2xl font-bold text-emerald-400 font-mono mb-2">{league.roi}</div>
+                <div className="text-xs text-slate-500 mb-3">ROI</div>
+                <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min(parseFloat(league.roi) * 3, 100)}%` }}
+                  />
+                </div>
               </div>
-              <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono">{league.winRate}</div>
-                <div className="text-xs text-slate-500">Win Rate</div>
+              
+              {/* Win Rate */}
+              <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
+                <div className="text-2xl font-bold text-amber-400 font-mono mb-2">{league.winRate}</div>
+                <div className="text-xs text-slate-500 mb-3">Win Rate</div>
+                <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-500"
+                    style={{ width: `${parseInt(league.winRate)}%` }}
+                  />
+                </div>
               </div>
-              <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono">{league.avgOdds}</div>
-                <div className="text-xs text-slate-500">Avg Odds</div>
+              
+              {/* Avg Odds */}
+              <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
+                <div className="text-2xl font-bold text-purple-400 font-mono mb-2">{league.avgOdds}</div>
+                <div className="text-xs text-slate-500 mb-3">Avg Odds</div>
+                <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-purple-500 to-purple-400 rounded-full transition-all duration-500"
+                    style={{ width: `${(parseFloat(league.avgOdds) / 3) * 100}%` }}
+                  />
+                </div>
               </div>
             </div>
           ))}
