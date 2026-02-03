@@ -40,10 +40,11 @@ export default function Home() {
                 </button>
                 
                 {tipsMenuOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-64 bg-slate-900/95 backdrop-blur-sm border border-slate-800 rounded-xl shadow-2xl overflow-hidden z-50">
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-slate-900/95 backdrop-blur-sm border border-slate-800 rounded-xl shadow-2xl overflow-hidden z-50" style={{ cursor: 'url(/coin-cursor.svg) 16 16, pointer' }}>
                     <Link 
                       href="/player-props" 
                       className="group block px-4 py-4 hover:bg-emerald-500/10 transition-all duration-300 border-b border-slate-800/50"
+                      style={{ cursor: 'url(/coin-cursor.svg) 16 16, pointer' }}
                     >
                       <div className="flex items-center justify-between">
                         <div>
@@ -82,6 +83,7 @@ export default function Home() {
                     <Link 
                       href="/atp-tennis" 
                       className="group block px-4 py-4 hover:bg-emerald-500/10 transition-all duration-300 border-b border-slate-800/50"
+                      style={{ cursor: 'url(/coin-cursor.svg) 16 16, pointer' }}
                     >
                       <div className="flex items-center justify-between">
                         <div>
