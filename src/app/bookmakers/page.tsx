@@ -450,13 +450,103 @@ export default function Bookmakers() {
             Opening a new betting account? Check the latest welcome offers and promotions from our recommended bookmakers.
           </p>
 
-          <div className="bg-slate-900/60 rounded-xl border border-slate-800/50 p-8 text-center">
-            <p className="text-slate-400 mb-4">
-              New account offers and promotions will be listed here.
-            </p>
-            <p className="text-sm text-slate-500">
-              Check back regularly for the latest welcome bonuses, free bets, and sign-up promotions.
-            </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {(() => {
+              const offers: NewAccountOffer[] = [
+                {
+                  id: "bet365",
+                  bookmaker: "bet365",
+                  short_name: "bet365",
+                  offer: "Bet £10 Get £30",
+                  description: "New customers only. Place a qualifying bet of £10 to receive £30 in free bets. Free bets credited as 3x £10 bets.",
+                  terms: "18+. New customers only. Min deposit £5. Bet credits available for use upon settlement of bets to value of qualifying deposit. Min odds, bet and payment method exclusions apply. Returns exclude Bet Credits stake. T&Cs, time limits & exclusions apply.",
+                },
+                {
+                  id: "betfair",
+                  bookmaker: "Betfair",
+                  short_name: "Betfair",
+                  offer: "Up to £100 in Free Bets",
+                  description: "New customers only. Get up to £100 in free bets when you place your first bet. Free bets credited based on stake amount.",
+                  terms: "18+. New customers only. Min deposit £10. Free bets credited as bet credits. Min odds apply. T&Cs apply.",
+                },
+                {
+                  id: "paddypower",
+                  bookmaker: "Paddy Power",
+                  short_name: "Paddy",
+                  offer: "£20 Risk-Free Bet",
+                  description: "New customers only. Place your first bet and if it loses, get your stake back as a free bet up to £20.",
+                  terms: "18+. New customers only. Place your first bet on sportsbook markets and if it loses, get your stake back as a free bet. Max £20. T&Cs apply.",
+                },
+                {
+                  id: "williamhill",
+                  bookmaker: "William Hill",
+                  short_name: "WH",
+                  offer: "Bet £10 Get £40",
+                  description: "New customers only. Place a qualifying bet of £10 to receive £40 in free bets. Free bets split as £30 sportsbook + £10 casino.",
+                  terms: "18+. New customers only. Min deposit £10. Qualifying bet must be placed at odds of 1/1 or greater. Free bets credited as 2x £15 sportsbook + £10 casino. T&Cs apply.",
+                },
+                {
+                  id: "skybet",
+                  bookmaker: "Sky Bet",
+                  short_name: "SkyBet",
+                  offer: "Bet £5 Get £20",
+                  description: "New customers only. Place a qualifying bet of £5 to receive £20 in free bets. No wagering requirements on free bets.",
+                  terms: "18+. New customers only. Min deposit £5. Qualifying bet must be placed at odds of 1/1 or greater. Free bets credited as 4x £5 bets. T&Cs apply.",
+                },
+                {
+                  id: "unibet",
+                  bookmaker: "Unibet",
+                  short_name: "Unibet",
+                  offer: "£40 Welcome Bonus",
+                  description: "New customers only. Get £40 in free bets when you deposit and bet £10. Free bets credited as 2x £20 bets.",
+                  terms: "18+. New customers only. Min deposit £10. Qualifying bet must be placed at odds of 1/1 or greater. Free bets credited as 2x £20. T&Cs apply.",
+                },
+              ];
+
+              return offers.map((offer) => {
+                const dbBookmaker = getBookmakerFromDb(offer.short_name);
+                return (
+                  <div key={offer.id} className="bg-slate-900/60 rounded-xl border border-slate-800/50 p-6 hover:border-emerald-500/50 transition-all">
+                    <div className="flex items-center gap-3 mb-4">
+                      <BookmakerLogo 
+                        bookmaker={dbBookmaker || { id: 0, name: offer.bookmaker, short_name: offer.short_name, affiliate_link: null, active: true }}
+                        size="md"
+                      />
+                      <h3 className="font-semibold text-lg">{offer.bookmaker}</h3>
+                    </div>
+                    
+                    <div className="mb-4">
+                      <div className="text-2xl font-bold text-emerald-400 mb-2">{offer.offer}</div>
+                      <p className="text-sm text-slate-300 leading-relaxed">{offer.description}</p>
+                    </div>
+
+                    {offer.terms && (
+                      <div className="mt-4 pt-4 border-t border-slate-800/50">
+                        <p className="text-xs text-slate-500 leading-relaxed">{offer.terms}</p>
+                      </div>
+                    )}
+
+                    {dbBookmaker?.affiliate_link ? (
+                      <a
+                        href={dbBookmaker.affiliate_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-4 block w-full bg-emerald-500 hover:bg-emerald-400 text-black font-medium px-4 py-2.5 rounded-lg text-center transition-colors"
+                      >
+                        Claim Offer
+                      </a>
+                    ) : (
+                      <button
+                        disabled
+                        className="mt-4 w-full bg-slate-800 text-slate-500 font-medium px-4 py-2.5 rounded-lg text-center cursor-not-allowed"
+                      >
+                        Offer Available
+                      </button>
+                    )}
+                  </div>
+                );
+              });
+            })()}
           </div>
         </div>
       </section>
