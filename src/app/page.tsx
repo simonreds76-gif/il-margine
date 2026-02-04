@@ -676,7 +676,7 @@ export default function Home() {
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
               <div className="text-3xl font-bold text-emerald-400 font-mono mb-1">2</div>
-              <div className="text-sm text-slate-500">Active Markets</div>
+              <div className="text-sm text-slate-500">Markets</div>
             </div>
           </div>
 
