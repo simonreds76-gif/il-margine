@@ -246,6 +246,9 @@ export default function PlayerProps() {
               <Link href="/atp-tennis" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
                 ATP Tennis
               </Link>
+              <Link href="/bookmakers" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                Bookmakers
+              </Link>
               <Link href="/calculator" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
                 Calculator
               </Link>
