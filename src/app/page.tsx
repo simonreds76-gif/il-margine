@@ -592,7 +592,9 @@ export default function Home() {
                             <span className="font-mono text-slate-200">{bet.odds}</span>
                           </td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
-                            <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
+                            <div className="flex justify-center">
+                              <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
+                            </div>
                           </td>
                           <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{bet.stake}u</td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">

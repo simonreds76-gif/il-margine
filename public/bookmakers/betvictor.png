@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html class="desktop" lang="en-gb">
+<head>
+<script type="text/javascript">
+  function isStorageAvailable() {
+    var storage;
+    try {
+      storage = window.sessionStorage;  
+      window.sessionStorage.setItem('testSessionStorageKey', 'test value');
+      window.sessionStorage.getItem('testSessionStorageKey');
+      window.sessionStorage.removeItem('testSessionStorageKey');
+      return true;
+    } catch (e) { }
+    return false;
+  };
+  window.isStorageAvailable = isStorageAvailable();
+</script>
+<!-- OneTrust Cookies Consent Notice. -->
+<script type="text/javascript" id="add_onetrustsdk_script_if_allowed">
+  if (window.isStorageAvailable) {
+    var script = document.createElement('script');
+    script.src = 'https://cdn.cookielaw.org/scripttemplates/otSDKStub.js';
+    script.setAttribute("type", "text/javascript");
+    script.setAttribute("charset", "UTF-8");
+    script.setAttribute("data-domain-script", "9b0127a5-f61b-4b81-a20b-21d22384a788");
+    var current_script = document.getElementById('add_onetrustsdk_script_if_allowed');
+    current_script.parentNode.insertBefore(script, current_script.nextSibling);
+  }
+</script>
+<script type="text/javascript">
+  function OptanonWrapper() {
+    if (
+      window.isStorageAvailable
+      && window.OneTrust
+      && !window.OneTrust.IsAlertBoxClosed()
+      && document.cookie.indexOf('accepted_cookies_policy') >= 0
+    ) {
+      window.OneTrust.AllowAll();
+    }
+  }
+</script>
+<!-- OneTrust Cookies Consent Notice. -->
+
+
+<meta charset="utf-8">
+<meta content="True" name="HandheldFriendly">
+<meta content="320" name="MobileOptimized">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport">
+
+<title>BetVictor</title>
+<link href="https://realtimedata.eu.nci-api.com/eventbus" rel="preconnect">
+<link href="https://assets-core-prd.gaming-assets.com" rel="preconnect">
+<link as="fetch" crossorigin="true" href="https://www.betvictor.com/api/site_navigation/floating_navigation" rel="preload" type="application/json">
+<link as="fetch" crossorigin="true" href="https://www.betvictor.com/api/footer_settings?l=false&amp;c=en-gb" rel="preload" type="application/json">
+<link as="fetch" crossorigin="true" href="https://www.betvictor.com/api/seo_entity?mobile_path=%2Fen-gb%2Fblog" rel="preload" type="application/json">
+
+<link rel="stylesheet" href="https://assets-core-prd.gaming-assets.com/mobile/assets/bv_styles/src/manifests/brands/betvictor/manifest.betvictor-de1f7ec6f7d9e1bdf9630b880c2bc47b438909ad19ea48b6a354b3cb8af5382e.css" media="all" />
+<link rel="stylesheet" href="https://assets-core-prd.gaming-assets.com/mobile/assets/bv_styles/src/manifests/manifest.buttons-988595c1a9f2e01bbd71dd0d6d6f1ad83307cec0a0253672ca8080bc850e2ba8.css" media="all" />
+<link rel="stylesheet" href="https://assets-core-prd.gaming-assets.com/mobile/assets/bv_styles/src/manifests/manifest.components-a25d33518187f7ddd4742d3e5b6b99ee1c109fd296d23d52c5c7cdee8df8a560.css" media="all" />
+<link rel="stylesheet" href="https://assets-core-prd.gaming-assets.com/mobile/assets/bv_styles/skins/betvictor/manifest.betvictor.guide-37086b704849f3a3436c9e53b0444d4c376363a50260b91a8379174f2c76c713.css" media="all" />
+<link rel="stylesheet" href="https://assets-core-prd.gaming-assets.com/mobile/assets/brands/betvictor/manifest.betvictor-28ace1976bcfe74ac78b227bf0f1dd9aef5e729cd67367bcb02e59d222b9a1b5.css" media="all" />
+<link rel="stylesheet" href="https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/layout_apps/betvictor/manifest.betvictor.layout_apps-f406145693d9ede7fc36d55fc9d5a7496a168b764e7ac252c45c25bad071e0cf.css" />
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="YlJkhd11za9kWuyag1LsJ2ysHPdreSBtfDvbPa0ZzGH8hZ2lLJ7Vkj1NMfYRTeiMTMhlFBOKC1JJOfCTBS5jMg" />
+<meta content="plgZnbqtx-nrFIEB3_xkrnmMwbuPKqqoSA587VlcVhc" name="captcha-string">
+
+<meta content="#182026" name="theme-color">
+<meta name="google-site-verification" content="JfOCrnE0AAiZI87F0K0GlAK-KzLZFRrUSELTn-zQC7w" />
+<meta content="660A8971266F470E5B685159E352204F" name="msvalidate.01">
+<meta content="" name="description">
+<meta content="200" name="prerender-status-code">
+<link rel="icon" href="https://assets-core-prd.gaming-assets.com/cms-images/7zj48fb01bzie2v8rbglgqchxdlv" /><link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://assets-core-prd.gaming-assets.com/cms-images/9pg5tvetg02k8ghcm28s83vl9dss" /><link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://assets-core-prd.gaming-assets.com/cms-images/tqpyl6zkqnus97ypy6w5chaa0cbr" /><link rel="apple-touch-icon-precomposed" href="https://assets-core-prd.gaming-assets.com/cms-images/7zj48fb01bzie2v8rbglgqchxdlv" />
+
+<link crossorigin="use-credentials" href="/manifest.json" rel="manifest">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta content="BetVictor" name="apple-mobile-web-app-title">
+
+
+
+</head>
+<body class="en-gb 
+brand-id-1 
+has-scroll-bars ">
+<!-- Google Tag Manager -->
+<noscript><iframe src="//bede.betvictor.com/ns.html?id=GTM-KJ9MZKQ"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.setAttributeNode(d.createAttribute('data-ot-ignore'));j.async=true;j.src=
+'//bede.betvictor.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KJ9MZKQ');</script>
+<!-- End Google Tag Manager -->
+
+
+<div class="site-wrapper site-wrapper--with-right-bar" id="root"></div>
+<script>
+  function onDocumentReady(cb) {
+    if (document.readyState !== 'loading') {
+      cb();
+    } else {
+      document.addEventListener('DOMContentLoaded', cb);
+    }
+  }
+</script>
+<script type="text/javascript">
+VCSTATE = {};
+VC = {}
+window.PreloadedRequests = JSON.parse("[]");
+
+HLS_PLAYER_SCRIPT_PATH = "https://assets-core-prd.gaming-assets.com/mobile/assets/hls-bf5b2880ff3963c0e0b2dba13a4744569a55822d9473dee94992448a0ceed772.js"
+missingSilkImageUrl = "https://assets-core-prd.gaming-assets.com/mobile/assets/icons/placeholder-silk-e4e8d092c255058d004cdc3535e78d07d679356860dd177c83f764b6d933a77e.svg";
+JSBundles = {
+realityCheckFlashPlugin: "https://assets.realisticgames.co.uk/html/plugins/realitycheckflashplugin/1.0/desktop/en/js/realitycheckflashplugin-1.0.min.js",
+realisticAjaxLauncher: "https://assets-core-prd.gaming-assets.com/mobile/assets/realistic_ajax_launcher-9536d0064c22419d3969e1bb0e6fb5f91bee45307d775871b6218cdf766952df.js",
+IovationLoader: "packs/utils/iovation",
+airShip: {
+sdk: "https://assets-core-prd.gaming-assets.com/mobile/assets/ua-sdk.min-6de2661af950490d8cb18c8679e086b96ab8101006d0cfa4aab3a8c3ca9c028d.js",
+prompt: "https://assets-core-prd.gaming-assets.com/mobile/assets/ua-html-prompt.min-23c9f980e836fb60c19f0d576290196265664b816b8e86df1db153bd8f1e998f.js",
+},
+frontRowSeatSdk: "https://assets-core-prd.gaming-assets.com/mobile/assets/front_row_seat-0.17.0.min-c2fdbd2329c440507206dfdeff1c8e4be7399f52b79e36dd32169f4154a2077b.js",
+};
+CSSBundles = JSON.parse("{\"accountForms\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/account_forms/betvictor/manifest.betvictor.account_forms-6d2fdb8eab76f2d7a79f5f875f67c752cd0cb350bd04ba0b2db2d2b96cfff8d1.css\",\"accountHistory\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/account_history/betvictor/manifest.betvictor.account_history-57e976238a1ce39f29791d3a6898148d3bb5a5c9af2dd3deda6ca267745e527d.css\",\"accountOverview\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/account_overview/betvictor/manifest.betvictor.account_overview-a66b5685f8f4d5bc922592e191f1512a6c3e31f70a20b1e70d19b971f5f40a28.css\",\"accountPage\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/account_page/betvictor/manifest.betvictor.account_page-5ce7da4327d23c35310e837c5611427480b13edb5040ad94c041dda89acec048.css\",\"accountSecurity\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/account_security/betvictor/manifest.betvictor.account_security-fe656537346595ce9b52cd3c1e07f7c6e37948667041ad88d9a7bceb818484f9.css\",\"appSmartBanner\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/app_smart_banner/betvictor/manifest.betvictor.app_smart_banner-59050c4bdfbaf9d14b5cce8e2e371d7c0d2305ce0daa1dfa1b86c180a2101f61.css\",\"asiaCashier\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/asia_cashier/betvictor/manifest.betvictor.asia_cashier-4fae9231736a926c0eb05728aa8dd4d7ddcae3a231d5934e5348da731b61ac0e.css\",\"banners\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/banners/betvictor/manifest.betvictor.banners-d6805ebf8549daf150ac224a97f935ed9c463357bcd0ca73e46bb1b60dd441fe.css\",\"betBoost\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/bet_boost/betvictor/manifest.betvictor.bet_boost-a542ec2f67a22be2152568b137d812190c114969b84d9ac843591f55d9f6a384.css\",\"betBuilder\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/bet_builder/betvictor/manifest.betvictor.bet_builder-8582659cafec1a33b4c9c66c01ba2dd4db5f22604a7358f382221cfb16205fd1.css\",\"betBuilderFixtures\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/bet_builder_fixtures/manifest.bet_builder_fixtures-d84437a8208b9b70b7d465afd4165f260a333309362ef853314f15fec4525bb2.css\",\"betCalculator\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/bet_calculator/manifest.bet_calculator-10a723f211d88475da20e069ac9800f4c2d36f8d7940eef33baa3672e097f62e.css\",\"betFinder\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/bet_finder/betvictor/manifest.betvictor.bet_finder-e39d59a0d7b43de37d783d3f160d4bd245e229c912ab02bb34d50c765c9aca0f.css\",\"betslipV2\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/betslip_v2/betvictor/manifest.betvictor.betslip_v2-09131e8ed20d1e856a9a80a0f8fd92482c29ca03321cf77f723202d291f588b0.css\",\"boostTokens\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/boost_tokens/manifest.boost_tokens-c5e6f9db0ad316b47d47bf252901bf34afc3f84f7e6eed86da59161be4d3d064.css\",\"cashierActions\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/cashier_actions/betvictor/manifest.betvictor.cashier_actions-2ddaa79db32bb264fe736c22201f8d491d6fc936ae480c07f280f25ba62ec6ee.css\",\"cashoutV2\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/cashout_v2/betvictor/manifest.betvictor.cashout_v2-659434e1bd2b638910d43b0e4a4d0d34fbc174c2facf6cc801318a23a6b4bc6c.css\",\"casinoV2\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/casino_v2/betvictor/manifest.betvictor.casino_v2-6266a7f0e60311489456d94738608d8e4a4f4de1e5a0cfd821db66e2e82ec2d0.css\",\"contactUs\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/contact_us/manifest.contact_us-4296008271c5fb22f5442a98c3b5517087e06c71c3c066ee435763566d50ea03.css\",\"crackTheCodeProgress\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/crack_the_code_progress/betvictor/manifest.betvictor.crack_the_code_progress-28573fa23577bbaa0439b7b49d119f8f9c65c36eb97febc18fcb1b51826c0a54.css\",\"crackTheCodeZone\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/crack_the_code_zone/betvictor/manifest.betvictor.crack_the_code_zone-77ecd6ad6b102464e6a5caa6e97237bc41f304b70f16aa5ebd0d2acec754fdae.css\",\"errorPage\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/error_page/betvictor/manifest.betvictor.error_page-6457bb906a55251890e89ce39c5fe942eecb8a8fbd1234c021c07b7a87a5b6af.css\",\"eventComponents\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/event_components/betvictor/manifest.betvictor.event_components-af80783ce4a1e41c6856f1224b674d5939848e7dee82f6b891b2fab655f94722.css\",\"eventLevel\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/event_level/betvictor/manifest.betvictor.event_level-aaa79aafdb6d986098b6cc39ff6d86769a92611f92927b0dd3c1e05971cb882b.css\",\"floatingNavigation\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/floating_navigation/betvictor/manifest.betvictor.floating_navigation-da06b3d0e537d48c43b2a6fefd78fc2066c0ceb3bbe1e0084aeadbf0d67deca5.css\",\"greyhounds\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/greyhounds/betvictor/manifest.betvictor.greyhounds-e7a53f4b1aa6c58aaddb04aa8383cf810d5e5c1e792e514d0e8c19de5ce68f02.css\",\"hintBanner\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/hint_banner/betvictor/manifest.betvictor.hint_banner-c353c959cc735484eed961bb2b7531cff70422d7e6049c16cc8ab4374893da7b.css\",\"inPlayOverview\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/in_play_overview/betvictor/manifest.betvictor.in_play_overview-ba53e628d61a0306d5609422ef10c15a9ba287dd50f9d59135f381c0d2d46ade.css\",\"kyc\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/kyc/betvictor/manifest.betvictor.kyc-0bdf15f1f1a5b8b85cbc405751223ae0c0dfaf26ee270625affe000fc34a6c6a.css\",\"layoutApps\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/layout_apps/betvictor/manifest.betvictor.layout_apps-f406145693d9ede7fc36d55fc9d5a7496a168b764e7ac252c45c25bad071e0cf.css\",\"liveChat\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/live_chat/betvictor/manifest.betvictor.live_chat-d576d0576d4901d44d6d2c88020f68b6910c26b8f89aa5ebb35409f93f9c51d4.css\",\"login\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/login/manifest.login-91c8c2362fc24fbfa57b0b5fab276c920e83efe652415f21af92afad4c41213e.css\",\"lossLimits\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/loss_limits/betvictor/manifest.betvictor.loss_limits-015b96aa452824aa463893effeef207bae8882366c258379c546e20fccd285c7.css\",\"luckyDip\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/lucky_dip/betvictor/manifest.betvictor.lucky_dip-a0ad5b84add0739863dea948bb65be5774fc2f4df93e194c616e04d814aa8d71.css\",\"mediaStreaming\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/media_streaming/manifest.media_streaming-ff52842cd61fc0735719e654c599b506185b9b23531bd8ff854f085f1f7574ce.css\",\"myTransactions\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/my_transactions/manifest.my_transactions-ec020e6f86e3b59f87b041e4a11bd20b559fdb2bbf13beaaceb3d93e8e8056c2.css\",\"occupationAndSalary\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/occupation_and_salary/betvictor/manifest.betvictor.occupation_and_salary-cde6c75ceee6521de36baa42d2f8924dff0cf984cecde858cd0f97c72618524d.css\",\"offers\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/offers/betvictor/manifest.betvictor.offers-8c76da5a1a9cb321eb3fc63979cd8c51f1c97d8c3545f99d5ecdbfc3b4e19315.css\",\"panicButton\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/panic_button/manifest.panic_button-4302a1e7ac545229c817709ff53b72e3d10406d5bb194b1321575583ce39c32a.css\",\"passwordChange\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/password_change/manifest.password_change-926df26f7f232f4c91acb7a9c730cdac319607c4806b82d06c2b125899804957.css\",\"passwordReset\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/password_reset/manifest.password_reset-cea181306c40414847b280a92549492b919853fe86ed3e4d924bbe6b58457640.css\",\"personalDetails\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/personal_details/betvictor/manifest.betvictor.personal_details-c468b59dcb228b36de4fa549e4ca60a5b3a5e9526a3653ecb483ca8b5e43764a.css\",\"priceItUp\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/price_it_up/betvictor/manifest.betvictor.price_it_up-d83974d4ce59ae8633890b551bc13ef8c98a323b3edda40cb672e6e885f82799.css\",\"questionnaire\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/questionnaire/betvictor/manifest.betvictor.questionnaire-27b0733eef024ea1cb9284cbed3ae98056df0b35dcb2f748b517fbc5c5c9515d.css\",\"quickDeposit\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/quick_deposit/betvictor/manifest.betvictor.quick_deposit-da62a0fbbb36ee20b5f94a7591b0a61a4eb5d7076c4f36afc037ebae6683f81e.css\",\"racecard\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/racecard/betvictor/manifest.betvictor.racecard-d92957cb4c92201a3ead044d07f08499c25de967c07ff0c9853312fd3c052904.css\",\"referAFriend\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/refer_a_friend/betvictor/manifest.betvictor.refer_a_friend-76b9b8ce025258474b5f737dcc14f8c7fbe4a2fc4491622dcf14e7a00e3f23a5.css\",\"referAFriendAsia\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/refer_a_friend_asia/betvictor/manifest.betvictor.refer_a_friend_asia-174dcd3215c7cc3256045944a98048dc7f3e74f0af0346c40c6320a070838848.css\",\"registration\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/registration/betvictor/manifest.betvictor.registration-bad02fab1795db827637c3feab5cfa09559604aaa0ff236accf62e81b51f0471.css\",\"requestCallback\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/request_callback/betvictor/manifest.betvictor.request_callback-ebe8b3d949b47c9d2d3e963f64d228b87e57b651f4a0cf83cb1ec6f0b0349cd9.css\",\"rmgPlayer\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/rmg_player/betvictor/manifest.betvictor.rmg_player-3bf9e359d066095d857d808278e85be81ebb324b22d8c006978a9813997c3e7f.css\",\"saferGamblingLanding\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/safer_gambling_landing/betvictor/manifest.betvictor.safer_gambling_landing-37cd6b60adb6750cef10d4bb61aabcdfd2837c778b1bc68b5ab1c9d015fb0453.css\",\"saferGamblingPortal\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/safer_gambling_portal/betvictor/manifest.betvictor.safer_gambling_portal-a8c8d69d4c925b1f24ecd2630eaebed42a045894dd0655afb44c8ba6ab7785c5.css\",\"scoreboard\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/scoreboard/betvictor/manifest.betvictor.scoreboard-6a0507d3a74697412f4d8428694931ce920dfccd24a0591f9d07b282a11d0a7d.css\",\"search\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/search/betvictor/manifest.betvictor.search-04c8e99247d9286173cac44a43eed708df83d6ef5f72ab71cdf787f241a6b316.css\",\"selfExclude\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/self_exclude/manifest.self_exclude-1b71d3de083ae2c960b9ae46a2dcfc1a143363106fe98dcd0d4386fa8af5b896.css\",\"sendVerifyCode\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/send_verify_code/manifest.send_verify_code-8eff554287435eb86dfdb8f6265bddd10a998852cf03e2920706a8969ffacb13.css\",\"settings\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/settings/betvictor/manifest.betvictor.settings-3832d698d9e272af6745219bdb0559277bd3a006bfe0a54d49288dd15e6fc171.css\",\"signInAndUpTabs\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/sign_in_and_up_tabs/betvictor/manifest.betvictor.sign_in_and_up_tabs-b3b5fc2e45cb1127576fc3342d0b10106169c3130fb1317b48c8d8f04586ea82.css\",\"siteFooter\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/site_footer/betvictor/manifest.betvictor.site_footer-7955f8113719e96ad04d98986e7f61c282f3ab148cac25bae5f642984a5017c6.css\",\"sowCollection\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/sow_collection/betvictor/manifest.betvictor.sow_collection-50f2c2295a4c9cc7afcfd6321f2a0e87fe8f0e054d38ca227ef17b68eb7f28b2.css\",\"sportsbookComponents\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/sportsbook_components/betvictor/manifest.betvictor.sportsbook_components-2be9b638d991cf88b58770d7dda204359043332daa749962b441b60fef7b45b4.css\",\"sportsbookFtpSportLaunch\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/sportsbook_ftp_sport_launch/betvictor/manifest.betvictor.sportsbook_ftp_sport_launch-5862acd61ced345b36fa8005ea8f268249c759ad11f62e5b711c0d0ef54aba0f.css\",\"sportsbookV2\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/sportsbook_v2/betvictor/manifest.betvictor.sportsbook_v2-b8350f201b1b55e38456cc1ec4c3ffc62eaee758758588a1082f29a7ee9c49d6.css\",\"sportsradar\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/sportsradar/betvictor/manifest.betvictor.sportsradar-fff3059ade8a755f7e9c18575afc0fe94cce5e3f61e5347505d169513e90d9af.css\",\"timeOut\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/time_out/betvictor/manifest.betvictor.time_out-427f14113c03bde43c3a0a80fab160f1ea5b7bf4ee374625d937ec15b120be90.css\",\"timeOutBanner\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/time_out_banner/betvictor/manifest.betvictor.time_out_banner-dbf7f8807cc2c99b8414bd0f03cd519aef59c01fa16fd3c22e5335af6cd4a875.css\",\"timeOutExpired\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/time_out_expired/betvictor/manifest.betvictor.time_out_expired-c6b20fbe56571716447323e1d3da3524e92f245b30ad0291d9ffcfa790b31f44.css\",\"twofa\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/twofa/betvictor/manifest.betvictor.twofa-320dd895c816141a6d7c7dd5a2c36d77b470c49aada965f0665b02cff1d2f7ca.css\",\"userInbox\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/user_inbox/betvictor/manifest.betvictor.user_inbox-53f679c15d0a21a9c6c6cb563a80c17455be5034c4654a936f35f90c89007a09.css\",\"verificationZone\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/verification_zone/betvictor/manifest.betvictor.verification_zone-56f8a3e4801bea4661bdc0b2df37c8c1860e7656685b76c86a62272c60a6d88f.css\",\"intTelInput\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/shared_manifests/int_tel_input/manifest.int_tel_input-7e4d67d74de72dcf7def400c91c28cf1e13daca184f25c2c948e89f6662a57c3.css\",\"airship\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/external_manifests/airship/manifest.airship-7227b9c3b019bce5d2ad609992c0166842012dca5bdbdb65f572a08880baec3f.css\",\"jumio\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/external_manifests/jumio/betvictor/manifest.betvictor.jumio-dad50c4536ba0671c40de98c767d01019675982ab10673725f682143445391c1.css\",\"oneAuth\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/external_manifests/one_auth/betvictor/manifest.betvictor.one_auth-6f0e9ef42261e2de38b6163a8b590e1a67919b24badef5ba6109129ec050a246.css\",\"videojs\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/external_manifests/videojs/manifest.videojs-b55ece0388aca6cb009d9b48df802e5e81fceac15d0397cef511484adcc74d27.css\"}");
+TranslationsBundles = JSON.parse("{\"saferGamblingQuestionnaire\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/safer_gambling_questionnaire-a8ed86eb072dc8a419f777c9b6cbbc55.js\",\"saferGamblingPortal\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/safer_gambling_portal-7e4e4a16475abbd97819c79c56770d0b.js\",\"kycStrategies\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/kyc_strategies-e1ad1fff6bcc80a322d8a250ae4dc445.js\",\"selfExclusion\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/self_exclusion-ac2143ee5f3bc18dbbcc06a321331a4b.js\",\"timeOut\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/time_out-d7184eefe02f09731e38657c6ec088ae.js\",\"quickDeposit\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/quick_deposit-fc696420e4e71a6e2d906b09ce4dfacd.js\",\"occupationAndSalary\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/occupation_and_salary-c57210683f7a66a149770947d3481169.js\",\"allowanceQuestionnaire\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/allowance_questionnaire-e104506c9289d073e1feda26f76e40a5.js\",\"betslipBetTypeTooltips\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/betslip_bet_type_tooltips-50e677c7c7df113bfa301546058d0685.js\",\"acceptAllPriceChangesToggle\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/accept_all_price_changes_toggle-5d1337151739ef6a47a9a989ca54c7ce.js\",\"acceptAllLineChangesToggle\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/accept_all_line_changes_toggle-8c39f3b193eaff19b84158bb8256f16c.js\",\"betslip\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/betslip-625481c3957d5e5fe8015f5228854434.js\",\"casinoRegulations\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/casino_regulations-d0ca980dd353cf5364a8315f3a7040ef.js\",\"myTransactions\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/my_transactions-1776bafbe00dada2d37f81197e6a3581.js\",\"lossLimits\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/loss_limits-729e048b86047308ab290d5450633407.js\",\"search\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/search-316de00a4172cf7091ddf7b849388abb.js\",\"panicButton\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/panic_button-d771d0733f442be0ceb0ddf586ed4531.js\",\"ftpGames\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/ftp_games-649cfa9a1d9f7f4e3ad11270acc1a6fc.js\",\"eventLevel\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/event_level-2ea894b7978c6c9cb810c221b839229e.js\",\"payments\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/payments-997f2fc8c1613ec1dbc98d681695a8de.js\",\"sowCollection\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/sow_collection-474b7080369a5ab2ff0e288354e18097.js\",\"registration\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/registration-3e14c1cae27e4a98c5feb52668c3c469.js\",\"verification\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/verification-e7e97dcb50026efaf28a6cceb7a932b6.js\",\"security\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/security-1ff5699702de851a7f7b5c5aa4af7cba.js\",\"boostTokens\":\"https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/boost_tokens-a25958528e4d8f3071c4fdfc6300863c.js\"}");
+
+VCSTATE.TIME_DRIFT = 1770247346 - Math.round(new Date().getTime() / 1000);
+VCSTATE.LOCALE = "en-gb";
+VCSTATE.DOMAIN = 'www.betvictor.com';
+VCSTATE.CURRENCY_CODE = 'GBP';
+VCSTATE.ORIGIN_ID = '3010';
+VCSTATE.BASE_URL = 'https://www.betvictor.com';
+VCSTATE.ASSETS_URL = "https://assets-core-prd.gaming-assets.com";
+VCSTATE.ASSETS_PATH = "https://assets-core-prd.gaming-assets.com/mobile";
+VCSTATE.SITE_BRAND =  "1";
+VCSTATE.PUSH_GATEWAY_EVENT_BUS_URL = "https://realtimedata.eu.nci-api.com/eventbus";
+VCSTATE.CUSTOMER_CONSENT_SLUGS = JSON.parse("{\"terms_and_conditions\":\"terms-conditions\",\"privacy_policy\":\"privacy-notice\",\"responsible_gambling\":\"responsible-gambling\",\"documents_we_may_require\":\"documents-we-may-require\",\"1\":\"terms-conditions\",\"2\":\"privacy-notice\",\"3\":\"responsible-gambling\"}")
+VCSTATE.CUSTOMER_CONSENT_URLS = {"terms_and_conditions":"/en-gb/pages/terms-conditions?first_modal=true","privacy_policy":"/en-gb/pages/privacy-notice?first_modal=true","responsible_gambling":"https://safergambling.betvictor.com/","documents_we_may_require":"/en-gb/pages/documents-we-may-require?first_modal=true","1":"/en-gb/pages/terms-conditions?first_modal=true","2":"/en-gb/pages/privacy-notice?first_modal=true","3":"https://safergambling.betvictor.com/"};
+window.features = JSON.parse("[{\"enabled\":true,\"name\":\"timeform\",\"has_users\":false},{\"enabled\":true,\"name\":\"casino_overlay\",\"has_users\":false},{\"enabled\":true,\"name\":\"iovation\",\"has_users\":false},{\"enabled\":true,\"name\":\"iovation_login\",\"has_users\":false},{\"enabled\":true,\"name\":\"cashout\",\"has_users\":false},{\"enabled\":true,\"name\":\"partial_cashout\",\"has_users\":false},{\"enabled\":true,\"name\":\"in_play\",\"has_users\":false},{\"enabled\":true,\"name\":\"in_play_widget\",\"has_users\":false},{\"enabled\":true,\"name\":\"customer_inbox\",\"has_users\":false},{\"enabled\":true,\"name\":\"bet-finder\",\"has_users\":false},{\"enabled\":true,\"name\":\"email_verification\",\"has_users\":false},{\"enabled\":false,\"name\":\"hidden_casino_category\",\"has_users\":true},{\"enabled\":true,\"name\":\"trending_bets_widget\",\"has_users\":false},{\"enabled\":true,\"name\":\"virtuals\",\"has_users\":false},{\"enabled\":true,\"name\":\"price_it_up_widget\",\"has_users\":false},{\"enabled\":true,\"name\":\"banner_widget\",\"has_users\":false},{\"enabled\":true,\"name\":\"casino_landing_pages\",\"has_users\":false},{\"enabled\":true,\"name\":\"account_reset_password\",\"has_users\":false},{\"enabled\":true,\"name\":\"reset_pass_on_suspended\",\"has_users\":false},{\"enabled\":true,\"name\":\"account_history_unification\",\"has_users\":true},{\"enabled\":true,\"name\":\"bet-builder\",\"has_users\":false},{\"enabled\":true,\"name\":\"2fa\",\"has_users\":true},{\"enabled\":false,\"name\":\"account_history_cashout\",\"has_users\":true},{\"enabled\":false,\"name\":\"banking_history_estimate\",\"has_users\":false},{\"enabled\":false,\"name\":\"leaderboard_zone\",\"has_users\":true},{\"enabled\":true,\"name\":\"piu_fixtures\",\"has_users\":false},{\"enabled\":false,\"name\":\"refer_a_friend\",\"has_users\":false},{\"enabled\":false,\"name\":\"mobile_sms_verification\",\"has_users\":false},{\"enabled\":true,\"name\":\"new_password_reset\",\"has_users\":false},{\"enabled\":true,\"name\":\"bet_calculator\",\"has_users\":true},{\"enabled\":true,\"name\":\"sport_nav_custom_list_component\",\"has_users\":true},{\"enabled\":false,\"name\":\"lottoland\",\"has_users\":false},{\"enabled\":true,\"name\":\"inplay_streaming\",\"has_users\":false},{\"enabled\":false,\"name\":\"tabbed_betslip\",\"has_users\":false},{\"enabled\":true,\"name\":\"bet_boost_widget\",\"has_users\":false},{\"enabled\":true,\"name\":\"casino_mobile_iframe\",\"has_users\":true},{\"enabled\":true,\"name\":\"my_transactions\",\"has_users\":true},{\"enabled\":false,\"name\":\"my_transactions_graph\",\"has_users\":true},{\"enabled\":false,\"name\":\"panic_button\",\"has_users\":false},{\"enabled\":true,\"name\":\"deposit_safer_gambling_message\",\"has_users\":false},{\"enabled\":true,\"name\":\"betslip_redux\",\"has_users\":true},{\"enabled\":true,\"name\":\"in_game_profit_and_loss\",\"has_users\":true},{\"enabled\":true,\"name\":\"in_game_timer\",\"has_users\":true},{\"enabled\":true,\"name\":\"in_game_deposit\",\"has_users\":true},{\"enabled\":true,\"name\":\"sportradar_scoreboard\",\"has_users\":true},{\"enabled\":true,\"name\":\"product_restriction\",\"has_users\":false},{\"enabled\":true,\"name\":\"personalised_casino\",\"has_users\":true},{\"enabled\":true,\"name\":\"raffle\",\"has_users\":false},{\"enabled\":true,\"name\":\"new_footer_settings\",\"has_users\":false},{\"enabled\":true,\"name\":\"favourite_casino_games\",\"has_users\":true},{\"enabled\":true,\"name\":\"follow_line_changes\",\"has_users\":false},{\"enabled\":true,\"name\":\"new_banner_layouts\",\"has_users\":true},{\"enabled\":true,\"name\":\"casino_game_info_page\",\"has_users\":true},{\"enabled\":true,\"name\":\"casino_games_collections\",\"has_users\":true},{\"enabled\":true,\"name\":\"lucky_dip_widget\",\"has_users\":false},{\"enabled\":true,\"name\":\"address_finder_v2\",\"has_users\":false},{\"enabled\":true,\"name\":\"intercom_live_chat\",\"has_users\":false},{\"enabled\":true,\"name\":\"one_auth_rails_migration\",\"has_users\":false},{\"enabled\":true,\"name\":\"registration_v2\",\"has_users\":false},{\"enabled\":true,\"name\":\"competition2_sport_tab\",\"has_users\":false},{\"enabled\":false,\"name\":\"smart_smart_app_banner\",\"has_users\":true},{\"enabled\":true,\"name\":\"passkeys\",\"has_users\":false},{\"enabled\":true,\"name\":\"error_object_overriding\",\"has_users\":false},{\"enabled\":true,\"name\":\"dynamic_skeleton_height\",\"has_users\":true},{\"enabled\":true,\"name\":\"seo_conditional_rendering\",\"has_users\":true},{\"enabled\":true,\"name\":\"casino_jackpots\",\"has_users\":true}]");
+
+BVVars = {}
+
+BVVars = Object.assign(BVVars, {
+railsEnv: "production",
+version: "v13.4.22",
+helpEmail: "help@betvictor.com",
+siteName: "BetVictor",
+isGdprBrand: JSON.parse("true"),
+isGamStopBrand: JSON.parse("true"),
+exclusionEmail: "exclusion@betvictor.com",
+betBuilderMarketTypeIds: JSON.parse('[100340, 152100, 151017, 21000014, 152050]'),
+cookiesPolicyModal: true,
+rootPath: "/",
+defaultLocale: "en-gb",
+kyc: JSON.parse("{\"strategies\":{\"id_passport\":\"1\",\"payment_card\":\"2\",\"asia_id_passport\":\"3\",\"proof_of_address\":\"4\",\"email_verification\":\"5\"},\"helpPage\":null}"),
+brandId: 1,
+casinoV2: {
+logos: false,
+panicButtonEnabled: false,
+timerEnabled: true,
+profitAndLossEnabled: true,
+},
+betslipPayoutDisclaimerUrl: "/en-gb/pages/pay-out-policy?first_modal=true",
+errorPageItems: JSON.parse("[{\"label\":\"Football Betting\",\"url\":\"/en-gb/sports/240\",\"image_url\":\"cms-images/7r2b7g55akpvn83j160rg0drgbgo\"},{\"label\":\"Horse Racing Betting\",\"url\":\"/en-gb/sports/364\",\"image_url\":\"cms-images/p7jwf3piq7htoxv3j3kacan5s3hv\"},{\"label\":\"Online Casino\",\"url\":\"/casino\",\"image_url\":\"cms-images/2lxd8450wmhtl5ws6fz3fimrlqyg\"}]"),
+showProtectionFundsReadMore: true,
+regPathCards: JSON.parse('{"password":{"default":true,"1":false,"2":false,"6":false,"7":false,"10":false,"12":false,"14":false,"17":false,"18":false,"20":false,"21":false,"22":false,"23":false,"2782537":false,"9860465":false,"3469266":false,"2391918":false}}'),
+postcodesToExclude: JSON.parse('{"north_ireland":{"default":false,"14":true}}'),
+addressFieldsMap: JSON.parse('[["address1","line1"],["address2","line2"],["postcode","postalCode"],["city","city"]]'),
+casinoLobbies: JSON.parse("[{\"slug\":\"casino\",\"tag\":\"default\",\"banners_location\":\"Casino\"},{\"slug\":\"live-casino\",\"tag\":\"live-casino\",\"banners_location\":\"Live Casino\"},{\"slug\":\"bingo\",\"tag\":\"bingo\",\"banners_location\":\"Bingo\"}]"),
+cashierShowTermsAndConditions: true,
+dimensionProductIds: JSON.parse("{\"/other-sections\":null,\"/live-casino\":7,\"/sports\":1,\"/casino\":3,\"/offer\":null,\"/live\":2}"),
+virtualSportsIds: [16334710,16334810,16335110,16334910,16335010,144515010,144517010,1142100],
+lottolandGameId: 1008159,
+siteConfigs: JSON.parse("{\"global\":{\"hasCasino\":true,\"showTopLevelNavigation\":true,\"homeProduct\":\"sports\",\"showQuickbetDefault\":true,\"hasSportsbook\":true,\"showBetslipAcceptAllPriceChanges\":true,\"generateHreflangs\":true,\"showBetslipAcceptAllLineChanges\":true,\"kycLoginStrategies\":\"25\",\"showKycBanner\":true,\"redirectToVerificationZone\":true,\"hasQuickDeposit\":true},\"payment_solution_grouping\":null}"),
+iovationSubkey: "sXvM0cVLGomKODLsW7vDW2GHjfl-AflEJJE6YDFtkp0",
+locale: "en-gb",
+countriesAllowEmptyMobileNumber: JSON.parse('{"default":[]}'),
+braintreeLibUrl: "https://js.braintreegateway.com/web/3.68.0/js/client.min.js",
+paypalLibraryUrl: "https://js.braintreegateway.com/web/3.68.0/js/paypal-checkout.min.js",
+quickRegistrationPaypalEnv: "production",
+top_nav_search: false,
+skipIdentityConfirmationInSgPortal: false,
+sportsBanner: true,
+isTabbedSignupLogin: false,
+helpCenterUrl: 'https://helpcentre.betvictor.com/en/',
+onetrustEnabled: true,
+forbiddenPhoneNumberEditing: true,
+wideBannerSizes: JSON.parse("[{\"size\":\"webp_mobile\",\"media\":\"(max-width:414px)\"},{\"size\":\"webp\",\"media\":\"(min-width:415px)\"}]"),
+marketingOptIn: true,
+marketingSpecialOptInSentence: false,
+crackTheCode: {
+standard: true,
+raffle: true,
+paths: JSON.parse("{\"standard\":\"/crack-the-code\",\"raffle\":\"/raffle\"}"),
+},
+offerFilterSettings: JSON.parse("[{\"id\":1,\"name\":\"All\",\"product_key\":\"all\",\"slug\":\"all\"},{\"id\":2,\"name\":\"Sports\",\"product_key\":\"sports\",\"slug\":\"sports\"},{\"id\":3,\"name\":\"Casino\",\"product_key\":\"casino\",\"slug\":\"casino\"},{\"id\":171,\"name\":\"Free to Play\",\"product_key\":\"freetoplay\",\"slug\":\"freetoplay\"}]"),  // why is this here?
+contactUsPageUrl: "/en-gb/pages/contact-us?first_modal=true",
+sportRadarOptions: JSON.parse("{\"goalBannerCustomBgColor\":\"#1D252D\",\"goalBannerImage\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/site/ui/components/scoreboards/sportradar-logos/BVUK-Logo-65fba7fa5c516bb610145404c9a4a43e47482c6fe973a0f4ab48b7d8de3bad38.png\",\"logo\":[\"https://assets-core-prd.gaming-assets.com/mobile/assets/site/ui/components/scoreboards/sportradar-logos/BVUK-Logo-Dark-1ccd0d21636b7f9c48b49488751418aa6d67d3f824b24d3ac5648d87b3164ced.png\"],\"localeOverrides\":{\"nk-no\":\"no\",\"nb-no\":\"no\"}}"),
+datalayerServerSideEndpoint: "",
+userAgentClientHints: JSON.parse("[\"Sec-CH-UA\",\"Sec-CH-UA-Arch\",\"Sec-CH-UA-Bitness\",\"Sec-CH-UA-Full-Version-List\",\"Sec-CH-UA-Mobile\",\"Sec-CH-UA-Model\",\"Sec-CH-UA-Platform\",\"Sec-CH-UA-Platform-Version\",\"Sec-CH-UA-WoW64\"]"),
+noindexSportConfig: JSON.parse("{}"),
+promotionRedirectUrls: JSON.parse("{\"iosAppUrl\":\"https://apps.apple.com/gb/app/betvictor-sports-bets-casino/id564194423\",\"androidAppUrl\":\"https://play.google.com/store/apps/details?id=com.betvictor.bettingapp.uk\\u0026hl=en\\u0026gl=GB\",\"desktopLandingAppsUrl\":\"https://www.betvictor.com/lp/apps\",\"casinoIosAppUrl\":\"https://apps.apple.com/gb/app/betvictor-online-casino-games/id1176505636\",\"oddscheckerAppUrl\":\"https://www.oddschecker.com/app\"}"),
+sectionsMapping: JSON.parse("[{\"name\":\"Other Sections\",\"pathname\":\"/other-sections\",\"sectionKey\":\"otherSections\"},{\"name\":\"Live Casino\",\"pathname\":\"/live-casino\",\"sectionKey\":\"casino::live-casino\"},{\"name\":\"Sports\",\"pathname\":\"/sports\",\"sectionKey\":\"sports\"},{\"name\":\"Casino\",\"pathname\":\"/casino\",\"sectionKey\":\"casino::default\"},{\"name\":\"Offers\",\"pathname\":\"/offer\",\"sectionKey\":\"offers\"},{\"name\":\"InPlay\",\"pathname\":\"/live\",\"sectionKey\":\"inPlay\"}]"),
+rmgPlayerUrl: "//player.performgroup.com/csb.js",
+urbanAirshipConfig: JSON.parse("{}"),
+luckyDipAssets: JSON.parse("{\"audio\":\"/assets/lucky_dip/aud_0-92b8c60ac1ff877d9f4815e730a7a4ecbb7f622113f4c543fc84ea395460575c.mp3\",\"animationJson\":\"/assets/lucky_dip/betvictor/data-7d23bfdb496257fb7388bc7810c704831a03d51eb39b8ca8678674107e666688.json\",\"images\":{\"img_0.png\":\"/assets/lucky_dip/betvictor/en_ca/images/img_0-3ed6f3119d4f1f5fb13970802b7cb531bf5c51241cf2d589e7b8b1dcbc0dc80a.png\",\"img_1.png\":\"/assets/lucky_dip/betvictor/en_ca/images/img_1-251e7656aec0f4ca3c0d050977d72f7cd8d2d6644a6befe498f83ad0632a0a10.png\",\"img_10.jpg\":\"/assets/lucky_dip/betvictor/en_ca/images/img_10-047e702d459a03e276ef274a328fd88475b797ec02dc23756c62d7e7fe490929.jpg\",\"img_2.png\":\"/assets/lucky_dip/betvictor/en_ca/images/img_2-bb04f8a515db416e7d4714641e375b6aba653651b4cf9b40ee77d42693375cf3.png\",\"img_3.png\":\"/assets/lucky_dip/betvictor/en_ca/images/img_3-3e40d9728e0c7dcae7d5bd41efcf3940bfefb0d68ec34a6ae3f00a694974131f.png\",\"img_4.png\":\"/assets/lucky_dip/betvictor/en_ca/images/img_4-afcb1bd7415b55fdb44b1d017694bf21eb1955ada92c5ee2a039c27f55207d1b.png\",\"img_5.png\":\"/assets/lucky_dip/betvictor/en_ca/images/img_5-dfe46bb60a17eaa43a23d7b6eb77e778bea47ff19f6da28bcf0f1c1bd4b7fa79.png\",\"img_6.png\":\"/assets/lucky_dip/betvictor/en_ca/images/img_6-01c0911222f0b20a106079029ac39270c8cd05b2af1b483fa4793dfb26b01092.png\",\"img_7.png\":\"/assets/lucky_dip/betvictor/en_ca/images/img_7-df870c12341c1420e6e08f3603fa79c71c69cc1596eb41252669e731bae931b5.png\",\"img_8.png\":\"/assets/lucky_dip/betvictor/en_ca/images/img_8-05ef733ba20e461155f16008552d77cbcc2e2dc7c830c81badf52ef07107e640.png\",\"img_9.png\":\"/assets/lucky_dip/betvictor/en_ca/images/img_9-2bde1f085f9b3768d068aa77149e8e6e743205e236b6bd67cac0814b7c44e623.png\"}}"),
+casinoGameJackpotsAssets: JSON.parse("{\"animationJson\":\"/assets/jackpots/default/data-da96a045cdae4c80105bf26bd81509b01604cfb68d22efbc78d8c64669b455d4.json\",\"images\":{\"bg.webp\":\"/assets/jackpots/default/images/bg-fff564a4b19f9f91f74fc2cf59ac6ee27c6bdda9aa11b1f8e160da0e799813d8.webp\",\"counter.webp\":\"/assets/jackpots/default/images/counter-da0e1c60ae96207c0e83d819c105eb83cc8369f73b9e8215b234b42cf0ca4ae9.webp\",\"epic.webp\":\"/assets/jackpots/default/images/epic-cbdda2e496d0dac62a88f6a468eb4261710152ad2ed33ab60c2bf2d5516327ed.webp\",\"epic_bg_layer_01.webp\":\"/assets/jackpots/default/images/epic_bg_layer_01-0838458dc5de6fd1717f9fadcb566e3564dab4e2dc02f6ff9a12cd125d9f8e1a.webp\",\"epic_bg_layer_02.webp\":\"/assets/jackpots/default/images/epic_bg_layer_02-a34342a031fef5dc767ee99ea3cca47c315aec9dddf1f8d9c4097303e595e0bd.webp\",\"epic_bg_layer_03.webp\":\"/assets/jackpots/default/images/epic_bg_layer_03-858e29156ab7c84929a95f32f4594ea873aa6056bd6c07f25f114b00c95904d5.webp\",\"epic_highlight.webp\":\"/assets/jackpots/default/images/epic_highlight-3d0cd3a71edcb804ce017b2c81ec33d2623daf421c7c7ce62ed60f014607dd07.webp\",\"epic_jackpot.webp\":\"/assets/jackpots/default/images/epic_jackpot-b065103c0ce5e8a0d39436fa7c8821123310e08183b06723a15208a1e823c0b8.webp\",\"epic_text.webp\":\"/assets/jackpots/default/images/epic_text-62665a05c4ca33ecd66f1f48ccb2a70055802a3399050d36b6c2aa2ee46991b3.webp\",\"layer_10_confetti.ai\":\"/assets/jackpots/default/images/layer_10_confetti-700de00ecaaad14d2e2db5a3527bdc39abb42893415eda8a7157443313aa8fc4.ai\",\"layer_11_confetti.ai\":\"/assets/jackpots/default/images/layer_11_confetti-e607edc7db7f16fbc0a40d822e02425b2d541f457dc7809e5dfdc97933332b09.ai\",\"layer_12_confetti.ai\":\"/assets/jackpots/default/images/layer_12_confetti-0d9b179ca2df242133d40f892e6dc3109b425c4907a85be0feeb152bd529e98a.ai\",\"layer_13_confetti.ai\":\"/assets/jackpots/default/images/layer_13_confetti-880bd8f9f122cc1ee22799889d1e8099d525a973a732a0626d3092487c4b8fb1.ai\",\"layer_14_confetti.ai\":\"/assets/jackpots/default/images/layer_14_confetti-91534124d707fd813b6738c4fc9cb50c02179c59fa7650b95b7cc903e9b9d44a.ai\",\"layer_15_confetti.ai\":\"/assets/jackpots/default/images/layer_15_confetti-f9e8e7c3b5604310f9830c608bf64d980bbf2d7ffaf0065bf80ef2205340f13d.ai\",\"layer_16_confetti.ai\":\"/assets/jackpots/default/images/layer_16_confetti-2e8f2d8756c79f5ad426c6390f2023a0f7069443db9394d51202ccebe4f717e9.ai\",\"layer_17_confetti.ai\":\"/assets/jackpots/default/images/layer_17_confetti-81688ea8dc5ae03e32b8522eccaa4654ee5df3178dbe81096a95d4440e2ab812.ai\",\"layer_18_confetti.ai\":\"/assets/jackpots/default/images/layer_18_confetti-056bcc0f6738bf7370e3c0db76d9be5bad12b0f7752dbad82cb0047703d4f0dc.ai\",\"layer_19_confetti.ai\":\"/assets/jackpots/default/images/layer_19_confetti-380cab174fb2db5cbe7c02e07680fbcc56f4eb441a20a06ca6132326d5467bf5.ai\",\"layer_20_confetti.ai\":\"/assets/jackpots/default/images/layer_20_confetti-93e31cbbd22d1bcc4d213cdf3294af5409b42b80f1bd5e568c9e5b276eabe12c.ai\",\"layer_21_confetti.ai\":\"/assets/jackpots/default/images/layer_21_confetti-82589a62290f714d1f417b5364839394e916d227c45426ffa6f89996dd5e6807.ai\",\"layer_22_confetti.ai\":\"/assets/jackpots/default/images/layer_22_confetti-929a4e4f2079a316e96a9b5faa90cd1426ad51a203127284dd8ecaee27c433a9.ai\",\"layer_23_confetti.ai\":\"/assets/jackpots/default/images/layer_23_confetti-5ae81246b23306865243ba4f2daa0b324bb5c54309deb82c7597f973796c8eaa.ai\",\"layer_24_confetti.ai\":\"/assets/jackpots/default/images/layer_24_confetti-3285621a9d4d0d344e0b81eea311d684ccc3fb28277ba0c781a8185da48d850d.ai\",\"layer_25_confetti.ai\":\"/assets/jackpots/default/images/layer_25_confetti-12fba533b1484d3405ade4a95fa4ef65beb5e940a813dab76717adda7b6c6ac8.ai\",\"layer_26_confetti.ai\":\"/assets/jackpots/default/images/layer_26_confetti-921853f16b94acb1f3525cda49f0ee65a6330779960a2fb245db7599f84f4b35.ai\",\"layer_27_confetti.ai\":\"/assets/jackpots/default/images/layer_27_confetti-e501c586bc53eb72dc04a1a14a437e07b69e31c237784df9f567c95ac7a24899.ai\",\"layer_28_confetti.ai\":\"/assets/jackpots/default/images/layer_28_confetti-4b4bd3facb1cec947ce7b3cd51effd81cdaadb048e7cc4fe61f03d6625514e76.ai\",\"layer_29_confetti.ai\":\"/assets/jackpots/default/images/layer_29_confetti-2feba794939c34349a07ed95e875d3ef134832212cdf3babb81acc4593650d78.ai\",\"layer_2_confetti.ai\":\"/assets/jackpots/default/images/layer_2_confetti-b57027570bb1d1bbdc3e3daf392da764a971fef8ad82e1934d30923b0103d129.ai\",\"layer_30_confetti.ai\":\"/assets/jackpots/default/images/layer_30_confetti-ce48262c12eeb68b4bb4dfd1c8cbc4adca670947500a88bc9a659d8f8378ec89.ai\",\"layer_31_confetti.ai\":\"/assets/jackpots/default/images/layer_31_confetti-18a9d02beecb74e6da9bbafabbebb97f0eaa8f12895c1dcd25ba99afaa349c7d.ai\",\"layer_32_confetti.ai\":\"/assets/jackpots/default/images/layer_32_confetti-00ae01695cb00d4266305694acd5682d086324747da69a5ce8ae4915e4b383f9.ai\",\"layer_33_confetti.ai\":\"/assets/jackpots/default/images/layer_33_confetti-fb6ba445ba319dd98eaa30573e813604efc22b3d093f359a0b7df7eeec5a28a2.ai\",\"layer_34_confetti.ai\":\"/assets/jackpots/default/images/layer_34_confetti-20e80a3c22873d7616b944966956868e3fc3fa7c442072ecca4a509178ce115a.ai\",\"layer_35_confetti.ai\":\"/assets/jackpots/default/images/layer_35_confetti-065b525666f9525d99ea59fb712b04944cbdae7498b04f2945378927fe577eae.ai\",\"layer_36_confetti.ai\":\"/assets/jackpots/default/images/layer_36_confetti-80f592fcf3f8ea3ecd84bfac3b96b4b31affcbde94c80d027a1b19df551793a9.ai\",\"layer_37_confetti.ai\":\"/assets/jackpots/default/images/layer_37_confetti-3b283e66e54be3261b2879e0d78cc359b8510df0138607a8c627c8c6e5496d5f.ai\",\"layer_38_confetti.ai\":\"/assets/jackpots/default/images/layer_38_confetti-fc39ac5ddbf0aee69a3440438d3b45fe25820be32cad4be53ab35d5c5e0660d6.ai\",\"layer_39_confetti.ai\":\"/assets/jackpots/default/images/layer_39_confetti-10cb9ecc5c961553d3cc3c6fa28ed8f742fb76ba9827d867a7d7b2972c8716d0.ai\",\"layer_3_confetti.ai\":\"/assets/jackpots/default/images/layer_3_confetti-4198879331cd6ef9436cfb65009719a191fc52296178533abd586e4897bcc172.ai\",\"layer_40_confetti.ai\":\"/assets/jackpots/default/images/layer_40_confetti-9ef89bd025761625b4d501dcb17cdab846e8bdc58bea71036bedfe3b0c039fd0.ai\",\"layer_41_confetti.ai\":\"/assets/jackpots/default/images/layer_41_confetti-ae01f63abb8aca7a50111e046bf54fb177db0d04a6191b6fae6b9a4b4931a736.ai\",\"layer_42_confetti.ai\":\"/assets/jackpots/default/images/layer_42_confetti-59dae90063e338bf5b94aca4dcf0a45b954aa976472ea4334d802f3e6760047d.ai\",\"layer_43_confetti.ai\":\"/assets/jackpots/default/images/layer_43_confetti-a6b009f90e68e18ff8408ee7bf286ad251454a46be7613dd93fafb4d0f38eae1.ai\",\"layer_44_confetti.ai\":\"/assets/jackpots/default/images/layer_44_confetti-f11c4b0eed461b5d8b97e5c62059befbc521905063f0c220e39ff115cffb7e04.ai\",\"layer_4_confetti.ai\":\"/assets/jackpots/default/images/layer_4_confetti-0ecd2aae545028846c72405580a9d2f90834968b53b0f9d69b00bf58f01a8ff6.ai\",\"layer_5_confetti.ai\":\"/assets/jackpots/default/images/layer_5_confetti-c665cf028e9dcf374819c9da027346e467716a5de3d79111339f9707da347809.ai\",\"layer_6_confetti.ai\":\"/assets/jackpots/default/images/layer_6_confetti-7bd2e2cc6b33b82ffd4981ee1a38875ee9521959de38a9b7fbb90779b13a4b16.ai\",\"layer_7_confetti.ai\":\"/assets/jackpots/default/images/layer_7_confetti-4efb03265e3e1cd3d17966b99374117be876f0c6618e8346f7ce2009182e85b9.ai\",\"layer_8_confetti.ai\":\"/assets/jackpots/default/images/layer_8_confetti-984ac52b3ecde79bf2ad16e4577ce69bff9e856870d68ced29f855f431eaf3fd.ai\",\"layer_9_confetti.ai\":\"/assets/jackpots/default/images/layer_9_confetti-92950f319b1831ff15c7befa59f1d1cc2aa8aa3380c7349edaa93964962baa1c.ai\",\"major.webp\":\"/assets/jackpots/default/images/major-ea37fbdb7ab0c66f47f0de4b587c49c628a18788daa3b2dcbad3f05633fc0428.webp\",\"major_bg_layer_01.webp\":\"/assets/jackpots/default/images/major_bg_layer_01-f2215a1bc600e308c3e4791adb7887b57d2026301a4042478d58eae7b2850030.webp\",\"major_bg_layer_02.webp\":\"/assets/jackpots/default/images/major_bg_layer_02-37948ee6e6c61bc078aa0539194605abc38f92fb8f2aeff41247d64cfbcce17b.webp\",\"major_highlight.webp\":\"/assets/jackpots/default/images/major_highlight-82558767700bc1ffb9fb234708e2cc8832c369b4f1d305370927e0e52c76a93f.webp\",\"major_jackpot.webp\":\"/assets/jackpots/default/images/major_jackpot-b8a54950782c989cc0c98d5f628c1a7884809933e66eb833d5d4d8e5ad061c39.webp\",\"major_lensflare_01.webp\":\"/assets/jackpots/default/images/major_lensflare_01-997bc475eef5bcc2e624c7320cfaa7e81bbaa5ced05ba9f4427428f0984992c5.webp\",\"major_lensflare_02.webp\":\"/assets/jackpots/default/images/major_lensflare_02-4c59a4a4f4006558607b500867bbde397a8df6f167d32efe2c951f6396cf9ed8.webp\",\"major_text.webp\":\"/assets/jackpots/default/images/major_text-3e1bf237b3ee7a9b709ec21c097ac23abe3ff59770c3cee0160f7dc431a771c7.webp\",\"marker.webp\":\"/assets/jackpots/default/images/marker-85f07ce7dcaa228ef8938f4ac11ceb354e44a6ec3c7a4dc6c28391186c763d67.webp\",\"minor.webp\":\"/assets/jackpots/default/images/minor-a59524576f10c1f9ccb941a87bbbd0805519d5d07c7714ca97111db71c0f2a3f.webp\",\"minor_bg_layer_01.webp\":\"/assets/jackpots/default/images/minor_bg_layer_01-70b36a758bdeae131b97ee21569b4e699a745895c530c763f24b50c968d0dd47.webp\",\"minor_highlight.webp\":\"/assets/jackpots/default/images/minor_highlight-e63f4966760aba580c263300004b0ddb4eae3a06a567b1f4627a10d4c62ed8ca.webp\",\"minor_jackpot.webp\":\"/assets/jackpots/default/images/minor_jackpot-ea84ec3c9039a55ef8410ba19b71baef27b3c9ac8c95a880dcfd58e4e8f58018.webp\",\"minor_text.webp\":\"/assets/jackpots/default/images/minor_text-8e9bdcb5b318f91ca0a64a77556b171bf1dcd5febd2ab244f52b0ca71094b75b.webp\",\"rapid.webp\":\"/assets/jackpots/default/images/rapid-f59446ac862454e4f6ddb0db66561363b0f1699483e47347318dce89ff79b01a.webp\",\"rapid_bg_layer_01.webp\":\"/assets/jackpots/default/images/rapid_bg_layer_01-b26b70f5e3d3af977e7bd60b1922e61cee6b6bd00b9531690a012a4fe3dfe612.webp\",\"rapid_highlight.webp\":\"/assets/jackpots/default/images/rapid_highlight-98af0682a04169d23ab7a62dfa73268476404cfba652522e3e6d482b8a971c37.webp\",\"rapid_jackpot.webp\":\"/assets/jackpots/default/images/rapid_jackpot-8eae942e749c810533a50b56422a1a3e365197a5287b707972b8ad6fbc9f5dd1.webp\",\"rapid_text.webp\":\"/assets/jackpots/default/images/rapid_text-3f182ecf05fe65318e4d2fc10f512a3908bef61773240fa6943e1f9da8a3a46f.webp\"}}"),
+casinoJackpotsTermsUrl: "/en-gb/pages/terms-conditions?first_modal=true",
+trustPilotScriptUrl: "https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js",
+confirmFitToPlayOnLogin: false,
+betCalculatorBannersBrandOptions: JSON.parse("null"),
+betCalculatorTranslationsBrandOptions: JSON.parse("{\"default_translations\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/bet_calculator/translations/en-98cc2875bed58c1553efadf4ba890d6bd2f5bc1f4dc5f24ebb1b18a95d9f379e.json\",\"current_brand_translations\":\"https://assets-core-prd.gaming-assets.com/mobile/assets/bet_calculator/translations/1/en-gb-44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a.json\"}"),
+depositLimitHelpPage: JSON.parse("{\"en-gb\":\"https://helpcentre.betvictor.com/en/articles/199075-deposit-limits\",\"en-ca\":\"https://helpcentre-on.betvictor.com/en/articles/198029-deposit-limits\"}"),
+depositLimitFAQHelpPage: JSON.parse("{\"default\":\"https://helpcentre.betvictor.com/en/articles/483484-deposit-limit-faq-s\"}"),
+helpCentrePageUrl: "/en-gb/pages/help?first_modal=true",
+intercomSettings: JSON.parse("{\"appId\":\"bhq6el0j\",\"apiUrl\":\"https://api.eu.intercom.io\",\"apiKey\":\"dG9rOjIzM2MyMjgwXzY4MzVfNGI1OF84YTE2XzY0MTI3NWRkODFhMjoxOjA6ZXUtd2VzdC0x\",\"apiVersion\":\"2.11\",\"hmacKey\":\"1ZAU8dnZwSfej_Ggz-84ZoPbK7M0xshTvqq7OTpl5ig\",\"vcportalProfileUrl\":\"https://vcportal-web.gldn.bv-tools.com/AccountManager/internal/details\",\"region\":\"eu\"}"),
+useAmericanFormat: true,
+promoImage: "",
+betGeniusVideoHost: "https://genius-live-player-production.betstream.betgenius.com",
+deviceId: "8f656eeb-f73b-49c4-88c3-b128d6cedf2e",
+apiSettings: JSON.parse("{\"cfgA\":\"c2VjcmV0X2tleQ==\",\"cfgB\":\"c2VjcmV0X2tleQ==\"}"),
+errbitConfig: JSON.parse("[{\"id\":1,\"instance_name\":\"Frontend\",\"ignored_error_messages\":\"Timeout (u),The string did not match the expected pattern.,Load failed,Browser is not supported,Document is not fully active,QuantumMetricAPI is not define,NetworkError when attempting to fetch resource.,Error,Unexpected end of input,The quota has been exceeded.,pixie is not defined,Can\'t find variable: twttr,Cannot read properties of undefined (reading \'B\'),The operation is insecure.,Object Not Found Matching Id:,Failed to connect to MetaMask,Blocked a frame with origin,Cannot read properties of undefined (reading \'enablePeriodicHeartbeat\')\"}]"),
+seoBrand: true,
+});
+
+BVVars = Object.assign(BVVars, {
+
+assetsHost: "https://assets-core-prd.gaming-assets.com/mobile",
+defaultAssetsHost: "https://assets-core-prd.gaming-assets.com",
+cmsAssetsHost: "https://assets-core-prd.gaming-assets.com/mobile",
+defaultCmsAssetsHost: "https://assets-core-prd.gaming-assets.com",
+
+httpStatus: 200,
+
+deviceInfo: JSON.parse("{\"os\":\"Windows\",\"osVersion\":\"10\",\"deviceType\":\"desktop\"}"),
+prerender: false,
+isBot: false,
+
+currencyCode: 'GBP',
+priceFromatId: 2,
+
+captchaSettings: JSON.parse('{"hcaptcha":{"jsUrl":"https://js.hcaptcha.com/1/api.js","siteKey":"bfee614c-bbd2-4640-aee6-01dcb5925cfa"}}'),
+captchaStrategies: JSON.parse('{"default":{"strategy":"custom_solution","powStrategy":"altcha"},"registration_start":{"strategy":"custom_solution","powStrategy":"disabled"}}'),
+
+dataLayerSettings: JSON.parse("{\"POST\":[{\"event\":\"evt_betslip_add\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/betslip/bets\",\"requestFields\":[],\"configRequestFilter\":\"[.bet({outcome_id:.[\'outcome_id\'],price_id,price,price_text_formatted,click_source})\",\"responseFields\":[],\"configResponseFilter\":\"[{singles:reduce .singles.[] as \$item (0;{outcome_id:.\$item.[\'outcome_id\'],period_id: \$item.period.id, period_description: \$item.period.description, meeting_description: \$item.[\'meeting_description\'], market_description: \$item.[\'market_description\'], outcome_description: \$item.[\'outcome_description\'], event_description: \$item.[\'event_description\'], in_running: \$item.[\'in_running\'], sport_event_path_id: \$item.[\'sport_event_path_id\'], sport_id: \$item.[\'sport_id\'], market_status_id: \$item.[\'market_status_id\'], outcome_status_id: \$item.[\'outcome_status_id\'], market_id: \$item.[\'market_id\'], ew: \$item.ew, quick_bet: \$item.[\'quick_bet\'], predefined_stake: \$item.[\'predefined_stake\']}),betslipReference}]\"},{\"event\":\"evt_bet_submit\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/betslip/submit_betslip\",\"requestFields\":[],\"configRequestFilter\":\"{promocash:.promocash,singles: [.stakes.singles.[].{stake:.s tonumber,outcome_id:.[\'outcome_id\'],price_id:.[\'price_id\'],price:.price,quickbet:.quickbet,price_text_formatted:.[\'price_text_formatted\'],ews:.ews,ew:.ew}],outcomeids:[.stakes.singles.[].[\'outcome_id\']], multiples:[.stakes.multiples.[].{stake:.s,price_text_formatted:.[\'price_text_formatted\']}]}\",\"responseFields\":[],\"configResponseFilter\":\"{timeout:.timeout,id:.response.id,stake:[.response.singles|select(length\\u003e0).[].totalStake]|add,singles:[.response.singles.|select(length\\u003e0)[].{outcomeid:.outcomeId,stake:.totalStake,ew:.ew}],multiples:[.response.multiples.|select(length\\u003e0)[]{stake:.stake,description:.description,ew:.ew}],outcomeids:[.response.outcomes|select(length\\u003e0).byId.|keys|tonumber],outcomes:[.response.outcomes|select(length\\u003e0).byId.[]{outcomeid:.outcomeId|tonumber,outcome_description:.outcomeDescription,market_description:.marketDescription,event_description:.eventDescription,meeting_description:.meetingDescription}],transactionids:.response.transactionIds,success:.response.success,errors:[{type:.type|select(length\\u003e0),failedtransactionid:.[\'failed_bet_save_responses\']|select(length\\u003e0).[].transactionId|select(length\\u003e0),errorcode:.[\'failed_bet_save_responses\']|select(length\\u003e0).[].errorCode}]}\"},{\"event\":\"evt_customer_inbox_status\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/bv_api/customer_inbox/change_status\",\"requestFields\":[],\"configRequestFilter\":\"{id:.ids.[],status:.status}\",\"responseFields\":[],\"configResponseFilter\":\"\"},{\"event\":\"evt_launch_game\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\".*/launch_by_inner_game_id\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"{provider:.provider,is_live_dealer:.[\'is_live_dealer\'],success:.success,sessionId:.gameSessionId,gameId:.gameVersionId,title:.title}\"},{\"event\":\"evt_bonus_opt_in\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/bv_api/offers/opt_in\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"\"},{\"event\":\"evt_forgot_password\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/account/reset_password\",\"requestFields\":[],\"configRequestFilter\":\"[|blank]\",\"responseFields\":[],\"configResponseFilter\":\"{errors:[.errors|select(length \\u003e 0).[].]}\"},{\"event\":\"evt_submit_reset_code\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/account/password_reset/validate_code\",\"requestFields\":[],\"configRequestFilter\":\"|null\",\"responseFields\":[],\"configResponseFilter\":\"\"},{\"event\":\"evt_change_password\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/account/change_password_from_code\",\"requestFields\":[],\"configRequestFilter\":\"|null\",\"responseFields\":[],\"configResponseFilter\":\"\"},{\"event\":\"evt_email_in_use\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/bv_api/account/email_availability\",\"requestFields\":[],\"configRequestFilter\":\"null\",\"responseFields\":[],\"configResponseFilter\":\"\"},{\"event\":\"evt_delayed_bet_submit\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/betslip/delayed_bet_status\",\"requestFields\":[],\"configRequestFilter\":\"{promocash:.promocash,singles: [.stakes.singles.[].{stake:.s tonumber,outcome_id:.[\'outcome_id\'],price_id:.[\'price_id\'],price:.price,quickbet:.quickbet,price_text_formatted:.[\'price_text_formatted\']}],outcomeids:[.stakes.singles.[].[\'outcome_id\']], multiples:[.stakes.multiples.[].{stake:.s,price_text_formatted:.[\'price_text_formatted\']}]}\",\"responseFields\":[],\"configResponseFilter\":\"{id:.id,stake:[.singles|select(length\\u003e0).[].totalStake]|add,singles:[.singles.|select(length\\u003e0)[].{outcomeid:.outcomeId,stake:.totalStake}],multiples:[.multiples.|select(length\\u003e0)[]{stake:.stake,description:.description}],outcomeids:[.outcomes|select(length\\u003e0).byId.|keys|tonumber],outcomes:[.outcomes|select(length\\u003e0).byId.[]{outcomeid:.outcomeId|tonumber,outcome_description:.outcomeDescription,market_description:.marketDescription,event_description:.eventDescription,meeting_description:.meetingDescription}],transactionids:.transactionIds,success:.success,errors:[{type:.type|select(length\\u003e0),failedtransactionid:.[\'failed_bet_save_responses\']|select(length\\u003e0).[].transactionId|select(length\\u003e0),errorcode:.[\'failed_bet_save_responses\']|select(length\\u003e0).[].errorCode}]}\"},{\"event\":\"evt_lucky_dip_select\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/api/lucky_dips/.*/settings\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"{lucky_dip_id:.luckyDipId}\"},{\"event\":\"evt_lucky_dip_bet_placement\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/api/lucky_dips/place_bet\",\"requestFields\":[],\"configRequestFilter\":\"{\'lucky_dip_id\':.\'lucky_dip_id\',\'lucky_dip_sport_id\':.sport_id,\'lucky_dip_stake\':.stake}\",\"responseFields\":[],\"configResponseFilter\":\"{\\r\\n  stake: (.betPlacementResult?.singles? // [] | map(.totalStake) | add // 0),\\r\\n\\r\\n  singles: (\\r\\n    .betPlacementResult?.singles? // []\\r\\n    | map({\\r\\n        outcomeid: .outcomeId,\\r\\n        stake: .totalStake,\\r\\n        ew: .ew\\r\\n      })\\r\\n  ),\\r\\n\\r\\n  outcomes: (\\r\\n    (.betPlacementResult?.outcomes?.byId? // .betPlacementResult?.selections? // [])\\r\\n    | map({\\r\\n        outcomeid: (.outcomeId | tonumber),\\r\\n        outcome_description: .outcomeDescription,\\r\\n        market_description: .marketDescription,\\r\\n        event_description: .eventDescription,\\r\\n        meeting_description: .meetingDescription\\r\\n      })\\r\\n  ),\\r\\n\\r\\n  transactionids: (.betPlacementResult?.transactionIds),\\r\\n\\r\\n  success: (.success // false),\\r\\n\\r\\n  errors: [\\r\\n    {\\r\\n      error_code: (.errorCode // empty | select(length \\u003e 0)),\\r\\n      fail_transactionid: ((.betPlacementResult?.betSaveResponses? // []) |.[0]?.transactionId\\r\\n  ),\\r\\n      status: ((\\r\\n        .betPlacementResult?.betSaveResponses? // [])\\r\\n        | .[0]?.status\\r\\n      )\\r\\n    }\\r\\n  ]\\r\\n}\"},{\"event\":\"evt_reg_load\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/api/registration/account/start\",\"requestFields\":[],\"configRequestFilter\":\"null\",\"responseFields\":[],\"configResponseFilter\":\"{registrationId:.registrationId,countryIsoCode:.countryIsoCode,standardHash:.standardHash,stateIsoCode:.stateIsoCode}\"},{\"event\":\"evt_cashout\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/api/cashout/cashouts\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"\"},{\"event\":\"evt_bet_builder_add\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/bv_api/bet_builder/progressive_prices/.*\",\"requestFields\":[],\"configRequestFilter\":\"null\",\"responseFields\":[],\"configResponseFilter\":\"{description, eventId, legs, errors:.request.errors,selection:reduce .request.legs.[] as \$item (0;{title:.\$item.title,hash:.\$item.hash,market_type_id:.\$item.marketTypeId}),price:.request.price,suspended:.suspended}\"},{\"event\":\"evt_self_exclusion_success\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/api/self_exclusion/account/close\",\"requestFields\":[],\"configRequestFilter\":\"null\",\"responseFields\":[],\"configResponseFilter\":\"\"},{\"event\":\"evt_time_out_success\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/api/time_out/restriction\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"\"},{\"event\":\"evt_promotion_opt_in\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/bv_api/offers/opt_in\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"\"}],\"GET\":[{\"event\":\"evt_deposit_methods\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/bv_cashier/.*/deposits.json\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"[.[]{id:.id, category:.category, default:.default, psid: .[\'payment_solution_id\'] }]\"},{\"event\":\"evt_unread_messages\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/bv_api/customer_inbox/unread_exists\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"\"},{\"event\":\"evt_customer_inbox\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/bv_api/customer_inbox\$\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"{counter:.counter,messages:[.messages.[]{id:.id,status:.status,cta_action:.cta.action,cta_name:.cta.name,cta_productPage:.cta.productPage}]}\"},{\"event\":\"dim_banners\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/bv_api/banners\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"{banners:[.[].id|tonumber]}\"},{\"event\":\"dim_event_id\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/bv_api/events/.*/.*\",\"requestFields\":[],\"configRequestFilter\":\"null\",\"responseFields\":[],\"configResponseFilter\":\"{\'event_id\':.id}\"},{\"event\":\"evt_self_exclusion_view\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/api/self_exclusion_check/periods\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"\"},{\"event\":\"evt_time_out_view\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/api/time_out/periods\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"\"},{\"event\":\"evt_promotion_view\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/bv_api/offers/[0-9A-Z]\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"{title:.title,slug:.slug,id:.id,status:.status,Bonuscode:.bonusCode}\"},{\"event\":\"evt_promotion_list\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/bv_api/offers\$\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"{\'promotion_ids\':[.offers.[].id]}\"},{\"event\":\"evt_occupation_salary_view\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/api/occupation_and_salary\$\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"\"}],\"PUT\":[{\"event\":\"evt_update_wallet\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/bv_cashier/.*/update_wallet.json\",\"requestFields\":[],\"configRequestFilter\":\"{method:.method,operation:.operation}\",\"responseFields\":[],\"configResponseFilter\":\"{success:.success,account_id:.[\'cashier_session_data\'].[\'account_id\'],flow_id:.[\'cashier_session_data\'].[\'flow_id\'],session_token:.parameters.sessionToken}\"},{\"event\":\"evt_occupation_salary_success\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"response\",\"url\":\"/api/occupation_and_salary\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[],\"configResponseFilter\":\"\"}],\"WEBSOCKET\":[{\"event\":\"evt_verification_modal\",\"datalayerEndpointUrl\":\"\",\"fireOn\":\"websocket\",\"url\":\"/user/[0-9]+\$\",\"requestFields\":[],\"configRequestFilter\":\"\",\"responseFields\":[\"errorCodes\",\"status\",\"feedback\",\"name\",\"integrationType\"],\"configResponseFilter\":\"\"}]}"),
+oldBrowser: false,
+shouldQMStartDelayed: true,
+smartAppBanner: JSON.parse("null"),
+feDeposit: {
+debitOnlyCountries: JSON.parse("[\"GB\"]"),
+payButtonColor: "black",
+},
+applePay: {
+merchantIdentifier: "merchant.com.betvictor.app",
+methodNames: JSON.parse("[\"ApplePayWP\",\"ApplePayBVT\"]"),
+},
+googlePay: {
+environment: "PRODUCTION",
+},
+});
+
+</script>
+
+
+
+<script src="https://assets-core-prd.gaming-assets.com/mobile/packs/js/runtime-0842af63c04b275087b8.js"></script>
+<script src="https://assets-core-prd.gaming-assets.com/mobile/packs/js/7854-7adb5492b78a74469202.js"></script>
+<script src="https://assets-core-prd.gaming-assets.com/mobile/packs/js/6187-11bc734e908fb4f1e2b8.js"></script>
+<script src="https://assets-core-prd.gaming-assets.com/mobile/packs/js/3145-ef283659c7fab493a3a1.js"></script>
+<script src="https://assets-core-prd.gaming-assets.com/mobile/packs/js/811-5478f27c6779ab5f8828.js"></script>
+<script src="https://assets-core-prd.gaming-assets.com/mobile/packs/js/utils-6cd783a0687b9b5b4472.js"></script>
+<script src="https://assets-core-prd.gaming-assets.com/mobile/packs/js/redux-a33ba39290ae89c4a7a0.js"></script>
+<script src="https://assets-core-prd.gaming-assets.com/mobile/packs/js/8966-d13732eef72bf555069a.js"></script>
+<script src="https://assets-core-prd.gaming-assets.com/mobile/packs/js/utils/fishnet-eae9c8154ecd7cf3e04f.js"></script>
+<script src="https://assets-core-prd.gaming-assets.com/mobile/packs/js/339-131de9857fcfe480019c.js"></script>
+<script src="https://assets-core-prd.gaming-assets.com/mobile/packs/js/4011-b33a69f582191b7b5a7f.js"></script>
+<script src="https://assets-core-prd.gaming-assets.com/mobile/packs/js/index-503591643ad50d8984e0.js"></script>
+<script src="https://assets-core-prd.gaming-assets.com/mobile/locales/js/en-gb/main-4225b7f64c91b52407663b15b5912622.js"></script>
+<script>
+  onDocumentReady(function() {
+    window.fishnet.launcher.init();
+  });
+</script>
+<script>
+  if (!window.translations_loaded) {
+    document.write("<script src=\"https://www.betvictor.com/javascripts/translations/en-gb.js\"><\/script>");
+  }
+</script>
+
+<!-- Start 2286 -->
+<style>
+.event-level-view .correct-score-market .market-view-wrapper {
+  min-width: 33%;
+}
+</style>
+<!-- End 2286 -->
+<!-- Start 2313 -->
+<style>
+.bvs-modal-container.cookies-disclaimer.is-info-wrapper { display: none; }
+</style>
+
+<!-- End 2313 -->
+<!-- Start 2365 -->
+<style>
+.pt-br .buttons__login_bar--create-account, .pt-br .login-form-register-wrapper, .pt-br .login-component__signup-link {
+  display: none;
+}
+</style>
+<!-- End 2365 -->
+<!-- Start 2378 -->
+<script>
+window.IGNORED_ERROR_MESSAGES && window.IGNORED_ERROR_MESSAGES.push("Cannot read properties of undefined (reading 'F')")
+</script>
+<!-- End 2378 -->
+<!-- Start 2383 -->
+<script type="text/javascript">
+  try {
+    if (window.BVVars && window.VCSTATE && window.VCSTATE.LOCALE !== 'zh-cn') {
+      window.BVVars.useAmericanFormat = true;
+    }
+  } catch (error) {
+  }
+</script>
+<!-- End 2383 -->
+<!-- Start 2384 -->
+<script>
+window.IGNORED_ERROR_MESSAGES && window.IGNORED_ERROR_MESSAGES.push("Can't find variable: gmo")
+</script>
+<!-- End 2384 -->
+<!-- Start 2403 -->
+<style>
+.inplay-coupon-team__logo.img-hide, .sportsbook-v2-sport__logo.img-hide { display: none; }
+</style>
+
+<!-- End 2403 -->
+<!-- Start 2404 -->
+<style>
+  .payment-menu__single--image {
+    width: 48px;
+    height: 48px;
+    background-size: cover !important;
+  }
+</style>
+
+<!-- End 2404 -->
+<!-- Start 2433 -->
+<script>
+document.body.addEventListener('click', (e) => {
+  if (/uc-second-layer-link/.test(e.target.className)) {
+    e.preventDefault();
+    UC_UI.showSecondLayer();
+  }
+});
+</script>
+<!-- End 2433 -->
+<!-- Start 2435 -->
+<style>
+.site-copy-section {
+  font-size: var(--p3Size, 12px);
+  word-wrap: break-word;
+
+  &:first-child {
+    margin-top: var(--bvsSpacing3Xl);
+  }
+  &:last-child {
+    margin-bottom: var(--bvsSpacing3Xl);
+  }
+}
+
+.site-copy-section__content {
+  position: relative;
+  
+  p {
+    margin: 0 0 var(--bvsSpacingXl) 0;
+  }
+  
+  a {
+    color: var(--textLinkText);
+    position: relative;
+    display: inline-block;
+
+    &::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 1px;
+      background-color: transparent;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      transition: all 0.5s ease-out;
+    }
+
+    &:hover {
+      &::before {
+        background-color: var(--textLinkText);
+      }
+    }
+  }
+
+  figure.image > img {
+    max-width: 100%;
+  }
+
+  .raw-html-embed {
+      overflow-x: scroll;
+      scrollbar-width: thin;
+  }
+
+  table {
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid var(--dividerlineDividerLine);
+    margin: var(--bvsSpacingXl) 0;
+
+    th {
+      border-top: 1px solid var(--dividerlineDividerLine);
+      border-bottom: 1px solid var(--dividerlineDividerLine);
+      border-right: 1px solid var(--dividerlineDividerLine);
+      font-weight: $bvs-font-weight-semibold;
+      line-height: 15px;
+      padding: var(--bvsSpacingMd);
+      vertical-align: middle;
+      text-align: left;
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+
+    td {
+      padding: var(--bvsSpacingMd);
+      vertical-align: middle;
+      border-right: 1px solid var(--dividerlineDividerLine);
+      line-height: 15px;
+
+      &:last-child {
+        border-right: none;
+      }
+
+      * {
+        margin: 0;
+        height: 22px;
+        min-width: 44px;
+        line-height: 12px;
+      }
+    }
+
+    tbody > tr > td {
+      border-top: 1px solid var(--dividerlineDividerLine);
+    }
+
+    tfoot > tr > td {
+      border-top: 1px solid var(--dividerlineDividerLine);
+      font-weight: 600;
+
+      &:not(:first-child) {
+        text-align: center;
+      }
+    }
+  }
+
+  ul,
+  ol {
+    margin: var(--bvsSpacingMd) 0 var(--bvsSpacingXl) 0;
+    padding: 0 0 0 var(--bvsSpacing3Xl);
+    li {
+      margin-left: 0;
+      padding-left: 0;
+      margin-bottom: var(--bvsSpacingMd);
+    }
+  }
+
+  ul {
+    li {
+      list-style-type: initial;
+    }
+  }
+
+  .expand-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    cursor: pointer;
+    margin: 0;
+  }
+}
+</style>
+<!-- End 2435 -->
+<!-- Start 2437 -->
+<script>
+window.prerenderReady = false; 
+window.setTimeout(() => {window.prerenderReady = true; }, 1000 * 10);
+</script>
+<!-- End 2437 -->
+<!-- Start 2438 -->
+<style>
+.edit-limit .bvs-msg-box__title {margin-top: 16px;}
+
+   .bvs-modal-container .bvs-msg-box span[class*="is-cancel-"] {
+      top: 12px;
+      right: 12px;
+      position: absolute;
+      border: none;
+      margin-bottom: 0;
+    }
+
+ .bvs-modal-container .bvs-msg-box.is-drawer.sort-by-time .list-modal-top-title-header span[class*="is-cancel-"] {
+background-image: none;}
+
+.sportsbook-v2 .bvs-modal-container .bvs-msg-box.is-drawer .list-modal-top-title-header span[class*="is-cancel-"] {
+background-image: none;}
+</style>
+<!-- End 2438 -->
+<!-- Start 2440 -->
+<style>
+  .account-page-field-rows-wrapper .is-marketing-preferences  {
+    background: var(--controlsCheckBoxGroupBg);
+    text-align: left;
+    padding: 16px;
+    margin-bottom:16px;
+    padding-bottom: 0;
+  }
+
+  .account-page-field-rows-wrapper .is-marketing-preferences h1 {
+    font-size: 18px;
+    margin: 0;
+    max-width: initial;
+  }
+
+  .account-page-field-rows-wrapper .is-marketing-preferences p {
+    margin: 4px 0 16px 0;
+  }
+
+  .account-page-field-rows-wrapper .is-marketing-preferences .flex {
+    flex-direction: row-reverse;
+    text-align: left;
+    margin-bottom: 16px;
+  }
+
+  .account-page-field-rows-wrapper .is-marketing-preferences .flex .onoffswitch {
+    margin-right: 8px
+  }
+</style>
+
+<!-- End 2440 -->
+<!-- Start 2446 -->
+<style>
+.sportsbook-v2 .bvs-modal.competitions-dropdown section .sportsbook-v2__comp-group .list-wrapper.grid {
+text-align: left;
+}
+</style>
+<!-- End 2446 -->
+<!-- Start 2447 -->
+<style>
+  .modal_wrapper.safer-gambling-portal-modal {
+    .modal_sticky_button_wrapper.bvs-button-sticky-wrapper {
+      margin-top: -90px;
+    }
+  }
+</style>
+
+<!-- End 2447 -->
+<!-- Start 2450 -->
+<style>.bvs-modal-container .bvs-msg-box .list-modal-top-title-header .is-close,
+.modal_header .close .close-icon {
+padding: 10px;
+}
+.modal_header .close {margin-right: 8px;}
+.modal_header .close .close-icon .bvs-icon {
+background-size: 24px;
+}
+.modal_header .close .close-icon {padding: 0;}
+</style>
+<!-- End 2450 -->
+<!-- Start 2451 -->
+<style>
+.sportsbook-v2 .section-wrapper .list-wrapper .list-header {
+border-bottom: 1px solid var(--dividerlineDividerLine);
+height: 43px;
+}
+</style>
+<!-- End 2451 -->
+<!-- Start 2454 -->
+<style>
+.loss-limits .loss-limits__current-limits__row .account-form__checkbox>span, .loss-limits__remove-limits__row .account-form__checkbox>span {
+min-width: 80px;
+}
+.horseracing-racecard .market-card:has(.folded) {
+height: 40px;
+}
+</style>
+<!-- End 2454 -->
+
+
+
+<script>
+  window.startQM = function() {
+    var qtm = document.createElement('script');
+    qtm.type = 'text/javascript'; qtm.async = 1;
+    qtm.src = 'https://cdn.quantummetric.com/qscripts/quantum-betvictor.js';
+    var d = document.getElementsByTagName('script')[0];
+    !window.QuantumMetricAPI && d.parentNode.insertBefore(qtm, d);
+  };
+</script>
+
+<div class="fullscreen-message" id="no-javascript">
+<div class="fullscreen-message__content">
+<div class="bvs-site-logo__login"></div>
+<h4 class="fullscreen-message__content-text">
+Please enable javascript to access full featured site
+</h4>
+</div>
+<a class="fullscreen-message__reload-cta-wrapper" href="/">
+<button class="fullscreen-message__reload-cta bvs-button is-secondary">
+<span>
+Reload page
+</span>
+<span class="fullscreen-message__reload-cta-icon"></span>
+</button>
+</a>
+</div>
+<script>
+  BV.requireStyle("https://assets-core-prd.gaming-assets.com/mobile/assets/brands/betvictor/manifest.betvictor.ancillary-e559ff5656dc6daa3713de55568f403d5eaa886cce85518b29630ec959b37b20.css", true);
+  BV.requireStyle("https://assets-core-prd.gaming-assets.com/mobile/assets/bv_styles/skins/betvictor/manifest.betvictor.icons-da28159b40030e9667c226af5c77d4e139154874c220e63ff9f040dc2177d2c8.css");
+  BV.requireStyle("https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/site_footer/betvictor/manifest.betvictor.site_footer-7955f8113719e96ad04d98986e7f61c282f3ab148cac25bae5f642984a5017c6.css");
+</script>
+<script>
+  BV.requireStyle("https://assets-core-prd.gaming-assets.com/mobile/assets/bv_styles/skins/betvictor/manifest.betvictor.sport-icons-1065cf6c2c390c7b4fa57451a72c93523bc2ad4d1122bbf6818f06afc429522c.css");
+  BV.requireStyle("https://assets-core-prd.gaming-assets.com/mobile/assets/manifests/sportsbook_components/betvictor/manifest.betvictor.sportsbook_components-2be9b638d991cf88b58770d7dda204359043332daa749962b441b60fef7b45b4.css");
+</script>
+<script>
+  (function getAllUrlParams(url) {
+    function getStorage() {
+      var storage;
+      try {
+        storage = window.localStorage;  
+        storage.setItem('testSessionStorageKey', 'test value');
+        storage.getItem('testSessionStorageKey');
+        storage.removeItem('testSessionStorageKey');
+      } catch (e) {
+        window.temporaryStorage = {};
+        storage = {
+          getItem: function (key) {return (key in window.temporaryStorage) ? window.temporaryStorage[key] : null},
+          setItem: function (key, value) { window.temporaryStorage[key] = value },
+        };  
+      }
+      return storage;
+    };
+    function attributionScore(attrObject) {
+      var attrKeys = attrObject ? Object.keys(attrObject) : null;
+      var baseScore = attrKeys ? attrKeys.length : 0;
+      var isAffid = attrKeys && attrKeys.includes('affid') && !attrKeys.includes('referrer') ? 1 : 0;
+      return parseInt(baseScore + isAffid);
+    }
+    function rewriteAttribution(storedAttr, newAttr) {
+      var storedAttr = JSON.parse(storedAttr);
+      var newAttr = JSON.parse(newAttr);
+      var storedScore = attributionScore(storedAttr);
+      var newScore = attributionScore(newAttr);
+  
+      if (!storedAttr || !storedAttr.ts || (storedAttr.ts < (Date.now() - (3600 * 24 * 7)))) {
+        return true;
+      } else if (
+        (newAttr.referrer && decodeURIComponent(newAttr.referrer).startsWith('https://' + document.location.hostname)) ||
+        (document.referrer && document.referrer.startsWith('https://' + document.location.hostname)) || 
+        (decodeURIComponent(newAttr.referrer).indexOf('thunderbite.com') > -1) ||
+        newScore < storedScore
+      ) {
+        return false;
+      } 
+      return true;
+    }
+  
+    var queryString = url ? url.split('?')[1] : window.location.search.slice(1);
+    var obj = {};
+  
+    if (queryString) {
+      queryString = queryString.split('#')[0];
+      var arr = queryString.split('&');
+  
+      arr.forEach(function (param) {
+        var [paramName, paramValue] = param.split('=');
+        paramValue = typeof (paramValue) === 'undefined' ? true : paramValue;
+  
+        if (paramName.match(/\[(\d+)?\]$/)) {
+          var key = paramName.replace(/\[(\d+)?\]/, '');
+          if (!obj[key]) obj[key] = [];
+          if (paramName.match(/\[\d+\]$/)) {
+            var index = /\[(\d+)\]/.exec(paramName)[1];
+            obj[key][index] = paramValue;
+          } else {
+            obj[key].push(paramValue);
+          }
+        } else {
+          if (!obj[paramName]) {
+            obj[paramName] = paramValue;
+          } else if (obj[paramName] && typeof obj[paramName] === 'string') {
+            obj[paramName] = [obj[paramName], paramValue];
+          } else {
+            obj[paramName].push(paramValue);
+          }
+        }
+      });
+    }
+    obj.ts = Date.now();
+    obj.landing_page = location.pathname;
+    obj.hostname = document.location.hostname;
+    if (document.referrer) {
+      obj.referrer = document.referrer;
+    }
+  
+    var regex = `^((?!(${ 'tblci|ScCid|rdt_cid|clickid|bca_ID|sub1|aclid|aid|click_id|c|campaign_id|twclid|utm_keyword|term|adgroupid|ad_id|ad|raf|reclid|pid|utm_medium|fbclid|language|mopinion|referrer|utm_content|utm_term|mid|gclid|btagid|nid|crmid|utm_source|utm_campaign|adgroup|btagc|btagb|btaga|btag|affiliateid|affid' ? 'tblci|ScCid|rdt_cid|clickid|bca_ID|sub1|aclid|aid|click_id|c|campaign_id|twclid|utm_keyword|term|adgroupid|ad_id|ad|raf|reclid|pid|utm_medium|fbclid|language|mopinion|referrer|utm_content|utm_term|mid|gclid|btagid|nid|crmid|utm_source|utm_campaign|adgroup|btagc|btagb|btaga|btag|affiliateid|affid' + '|' : '' }hostname|landing_page|referrer|ts)).)*$`;
+    Object.keys(obj).forEach(function (key) {
+      if (key.match(regex)) {
+        delete obj[key];
+      }
+    });
+  
+    var storage = getStorage();
+    var additional_mapping_params = JSON.parse('{"affiliateid":"acquisitionid","affid":"acquisitionid"}');
+    if (obj['btag']) {
+      var btag = obj['btag'];
+      if (btag) {
+        Object.assign(obj, {
+          btaga: !obj.btaga ? btag.split('a_')[1]?.split('b_')[0] : null,
+          btagb: !obj.btagb ? btag.split('b_')[1]?.split('c_')[0] : obj.btagb,
+          btagc: !obj.btagc ? btag.split('c_')[1] : null
+        });
+      }
+    }
+    Object.keys(additional_mapping_params).forEach(sourceKey => { 
+      if (obj.hasOwnProperty(sourceKey)) {
+        const targetKey = additional_mapping_params[sourceKey];
+        obj[targetKey] = obj[sourceKey];
+      }
+    });
+    var newAttribution = JSON.stringify(obj);
+    var storedAttribution = storage.getItem('attribution');
+    if (rewriteAttribution(storedAttribution, newAttribution)) {
+      storage.setItem('attribution', newAttribution);
+      return newAttribution;
+    }
+    return storedAttribution;
+  })();
+</script>
+
+<script>
+  // 86acbd31cd7c09cf30acb66d2fbedc91daa48b86:1710414757.3545823
+  if (Object.keys(BVVars.urbanAirshipConfig).length) {
+    !function(n,r,e,t,c){var i,o="Promise"in n,u={then:function(){return u},catch:function(n){
+    return n(new Error("Airship SDK Error: Unsupported browser")),u}},s=o?new Promise((function(n,r){i=function(e,t){e?r(e):n(t)}})):u
+    ;s._async_setup=function(n){if(o)try{i(null,n(c))}catch(n){i(n)}},n[t]=s;var a=r.createElement("script");a.src=e,a.async=!0,a.id="_uasdk",
+    a.rel=t,r.head.appendChild(a)}(window,document,window.JSBundles.airShip.sdk,
+      'UA', {
+          vapidPublicKey: BVVars.urbanAirshipConfig.vapidPublicKey,
+          appKey: BVVars.urbanAirshipConfig.appKey,
+          token: BVVars.urbanAirshipConfig.token,
+    });
+  }
+</script>
+
+
+
+</body>
+</html>

@@ -80,9 +80,9 @@ export default function BookmakerLogo({
   const hasAffiliate = !!bookmaker.affiliate_link;
 
   const content = (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={`flex items-center justify-center gap-2 ${className}`}>
       {logoPath || logoSvgPath ? (
-        <div className={`${sizeClasses[size]} relative flex-shrink-0`}>
+        <div className={`${sizeClasses[size]} relative flex-shrink-0 mx-auto`}>
           <Image
             src={logoPath || logoSvgPath || ""}
             alt={bookmaker.short_name || bookmaker.name}

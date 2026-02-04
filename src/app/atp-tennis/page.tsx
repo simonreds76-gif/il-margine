@@ -412,7 +412,9 @@ export default function ATPTennis() {
                           <span className="font-mono text-slate-200">{pick.odds}</span>
                         </td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/50">
-                          <BookmakerLogo bookmaker={pick.bookmaker} size="sm" />
+                          <div className="flex justify-center">
+                            <BookmakerLogo bookmaker={pick.bookmaker} size="sm" />
+                          </div>
                         </td>
                         <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{pick.stake}u</td>
                         <td className="px-4 py-3 text-center">
@@ -504,7 +506,9 @@ export default function ATPTennis() {
                           <span className="font-mono text-slate-200">{result.odds}</span>
                         </td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
-                            <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
+                            <div className="flex justify-center">
+                              <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
+                            </div>
                           </td>
                         <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{result.stake}u</td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/30">

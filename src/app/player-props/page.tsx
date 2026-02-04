@@ -410,9 +410,11 @@ export default function PlayerProps() {
                         <td className="px-4 py-3 text-center border-r border-slate-800/50">
                           <span className="font-mono text-slate-200">{pick.odds}</span>
                         </td>
-                          <td className="px-4 py-3 text-center border-r border-slate-800/50">
+                        <td className="px-4 py-3 text-center border-r border-slate-800/50">
+                          <div className="flex justify-center">
                             <BookmakerLogo bookmaker={pick.bookmaker} size="sm" />
-                          </td>
+                          </div>
+                        </td>
                         <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{pick.stake}u</td>
                         <td className="px-4 py-3 text-center">
                           <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">
@@ -522,7 +524,9 @@ export default function PlayerProps() {
                           <span className="font-mono text-slate-200">{result.odds}</span>
                         </td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
-                            <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
+                            <div className="flex justify-center">
+                              <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
+                            </div>
                           </td>
                         <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{result.stake}u</td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/30">
