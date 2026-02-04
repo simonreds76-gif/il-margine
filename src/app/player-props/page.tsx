@@ -220,6 +220,7 @@ export default function PlayerProps() {
               <Link href="/" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Home</Link>
               <Link href="/player-props" className="text-sm text-emerald-400 font-medium">Player Props</Link>
               <Link href="/atp-tennis" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">ATP Tennis</Link>
+              <Link href="/bookmakers" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Bookmakers</Link>
               <Link href="/calculator" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Calculator</Link>
               <a 
                 href={TELEGRAM_CHANNEL_URL}

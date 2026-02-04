@@ -380,6 +380,7 @@ export default function Home() {
               
               <a href="#the-edge" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">The Edge</a>
               <a href="#track-record" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Track Record</a>
+              <Link href="/bookmakers" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Bookmakers</Link>
               <Link href="/calculator" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Calculator</Link>
               <a 
                 href={TELEGRAM_CHANNEL_URL}
@@ -408,6 +409,9 @@ export default function Home() {
               <a href="#track-record" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
                 Track Record
               </a>
+              <Link href="/bookmakers" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                Bookmakers
+              </Link>
               <Link href="/calculator" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
                 Calculator
               </Link>
