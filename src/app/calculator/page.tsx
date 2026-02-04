@@ -174,8 +174,8 @@ export default function Calculator() {
                     <p className="text-sm text-slate-400">Football individual player markets</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-3xl font-bold text-emerald-400 font-mono mb-1">
-                      {combinedStats.props.roi > 0 ? "+" : ""}{combinedStats.props.roi.toFixed(1)}%
+                    <div className={`text-3xl font-bold font-mono mb-1 ${combinedStats.props.roi >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {combinedStats.props.roi >= 0 ? "+" : ""}{combinedStats.props.roi.toFixed(1)}%
                     </div>
                     <div className="text-xs text-slate-500">ROI</div>
                   </div>
@@ -187,11 +187,13 @@ export default function Calculator() {
                     <div className="text-xs text-slate-500 mt-1">Total Bets</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-emerald-400 font-mono">{combinedStats.props.avg_odds.toFixed(2)}</div>
+                    <div className="text-2xl font-bold text-blue-400 font-mono">{combinedStats.props.avg_odds.toFixed(2)}</div>
                     <div className="text-xs text-slate-500 mt-1">Avg Odds</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-emerald-400 font-mono">{combinedStats.props.total_profit.toFixed(1)}u</div>
+                    <div className={`text-2xl font-bold font-mono ${combinedStats.props.total_profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {combinedStats.props.total_profit >= 0 ? '+' : ''}{combinedStats.props.total_profit.toFixed(1)}u
+                    </div>
                     <div className="text-xs text-slate-500 mt-1">Total Profit</div>
                   </div>
                 </div>
@@ -205,8 +207,8 @@ export default function Calculator() {
                     >
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-emerald-500/20 rounded-lg flex items-center justify-center">
-                            <span className="text-xl font-bold text-emerald-400">£{returns.stakePerUnit}</span>
+                          <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                            <span className="text-xl font-bold text-blue-400">£{returns.stakePerUnit}</span>
                           </div>
                           <div>
                             <div className="text-sm text-slate-400">Per Unit Stake</div>
@@ -214,8 +216,8 @@ export default function Calculator() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-2xl font-bold text-emerald-400 font-mono">
-                            +£{returns.totalProfit.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                          <div className={`text-2xl font-bold font-mono ${returns.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {returns.totalProfit >= 0 ? '+' : ''}£{Math.abs(returns.totalProfit).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                           </div>
                           <div className="text-xs text-slate-500">Total Profit</div>
                         </div>
@@ -223,7 +225,9 @@ export default function Calculator() {
                       
                       <div className="mt-4 pt-4 border-t border-slate-700/30">
                         <div className="text-xs text-slate-600">
-                          Average profit per bet: <span className="text-emerald-400 font-mono">£{returns.profitPerBet.toFixed(2)}</span>
+                          Average profit per bet: <span className={`font-mono ${returns.profitPerBet >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {returns.profitPerBet >= 0 ? '+' : ''}£{Math.abs(returns.profitPerBet).toFixed(2)}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -239,8 +243,8 @@ export default function Calculator() {
                     <p className="text-sm text-slate-400">Pre-match singles markets</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-3xl font-bold text-emerald-400 font-mono mb-1">
-                      {combinedStats.tennis.roi > 0 ? "+" : ""}{combinedStats.tennis.roi.toFixed(1)}%
+                    <div className={`text-3xl font-bold font-mono mb-1 ${combinedStats.tennis.roi >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {combinedStats.tennis.roi >= 0 ? "+" : ""}{combinedStats.tennis.roi.toFixed(1)}%
                     </div>
                     <div className="text-xs text-slate-500">ROI</div>
                   </div>
@@ -252,11 +256,13 @@ export default function Calculator() {
                     <div className="text-xs text-slate-500 mt-1">Total Bets</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-emerald-400 font-mono">{combinedStats.tennis.avg_odds.toFixed(2)}</div>
+                    <div className="text-2xl font-bold text-blue-400 font-mono">{combinedStats.tennis.avg_odds.toFixed(2)}</div>
                     <div className="text-xs text-slate-500 mt-1">Avg Odds</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-emerald-400 font-mono">{combinedStats.tennis.total_profit.toFixed(1)}u</div>
+                    <div className={`text-2xl font-bold font-mono ${combinedStats.tennis.total_profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {combinedStats.tennis.total_profit >= 0 ? '+' : ''}{combinedStats.tennis.total_profit.toFixed(1)}u
+                    </div>
                     <div className="text-xs text-slate-500 mt-1">Total Profit</div>
                   </div>
                 </div>
@@ -270,8 +276,8 @@ export default function Calculator() {
                     >
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-emerald-500/20 rounded-lg flex items-center justify-center">
-                            <span className="text-xl font-bold text-emerald-400">£{returns.stakePerUnit}</span>
+                          <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                            <span className="text-xl font-bold text-blue-400">£{returns.stakePerUnit}</span>
                           </div>
                           <div>
                             <div className="text-sm text-slate-400">Per Unit Stake</div>
@@ -279,8 +285,8 @@ export default function Calculator() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-2xl font-bold text-emerald-400 font-mono">
-                            +£{returns.totalProfit.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                          <div className={`text-2xl font-bold font-mono ${returns.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {returns.totalProfit >= 0 ? '+' : ''}£{Math.abs(returns.totalProfit).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                           </div>
                           <div className="text-xs text-slate-500">Total Profit</div>
                         </div>
@@ -288,7 +294,9 @@ export default function Calculator() {
                       
                       <div className="mt-4 pt-4 border-t border-slate-700/30">
                         <div className="text-xs text-slate-600">
-                          Average profit per bet: <span className="text-emerald-400 font-mono">£{returns.profitPerBet.toFixed(2)}</span>
+                          Average profit per bet: <span className={`font-mono ${returns.profitPerBet >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {returns.profitPerBet >= 0 ? '+' : ''}£{Math.abs(returns.profitPerBet).toFixed(2)}
+                          </span>
                         </div>
                       </div>
                     </div>
