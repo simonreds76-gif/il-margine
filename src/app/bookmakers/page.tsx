@@ -144,8 +144,6 @@ export default function Bookmakers() {
         ],
         cons: ["Commission on winnings", "Lower liquidity on smaller tournaments"],
         rating: 4,
-        minOdds: "1.01",
-        maxStake: "Market dependent",
         notes: "Exchange odds often superior, especially for favorites. Essential tool.",
       },
     ],
