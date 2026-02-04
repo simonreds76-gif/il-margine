@@ -53,7 +53,7 @@ export default function AdminPanel() {
 
   // Check password
   const handleLogin = () => {
-    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
+if (password === "Absolut2015!") {
       setIsLoggedIn(true);
       localStorage.setItem("admin_logged_in", "true");
     } else {
