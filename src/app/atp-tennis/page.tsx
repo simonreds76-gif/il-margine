@@ -363,20 +363,20 @@ export default function ATPTennis() {
                   </thead>
                   <tbody>
                     {displayedPending.map((pick) => (
-                      <tr key={pick.id} className="border-b border-slate-800/50 hover:bg-slate-800/20">
-                        <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/30">{pick.event}</td>
-                        <td className="px-4 py-3 text-slate-300 border-r border-slate-800/30">{pick.selection}</td>
-                        <td className="px-4 py-3 text-center border-r border-slate-800/30">
+                      <tr key={pick.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
+                        <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{pick.event}</td>
+                        <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{pick.selection}</td>
+                        <td className="px-4 py-3 text-center border-r border-slate-800/50">
                           <span className="font-mono text-slate-200">{pick.odds}</span>
                         </td>
-                        <td className="px-4 py-3 text-center border-r border-slate-800/30">
+                        <td className="px-4 py-3 text-center border-r border-slate-800/50">
                           {pick.bookmaker?.short_name ? (
-                            <span className="text-xs text-slate-400">{pick.bookmaker.short_name}</span>
+                            <span className="text-xs text-slate-300">{pick.bookmaker.short_name}</span>
                           ) : (
                             <span className="text-xs text-slate-600">-</span>
                           )}
                         </td>
-                        <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/30">{pick.stake}u</td>
+                        <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{pick.stake}u</td>
                         <td className="px-4 py-3 text-center">
                           <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">
                             PENDING
@@ -459,20 +459,20 @@ export default function ATPTennis() {
                   </thead>
                   <tbody>
                     {displayedRecent.map((result) => (
-                      <tr key={result.id} className="border-b border-slate-800/50 hover:bg-slate-800/20">
-                        <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/30">{result.event}</td>
-                        <td className="px-4 py-3 text-slate-300 border-r border-slate-800/30">{result.selection}</td>
-                        <td className="px-4 py-3 text-center border-r border-slate-800/30">
+                      <tr key={result.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
+                        <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{result.event}</td>
+                        <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{result.selection}</td>
+                        <td className="px-4 py-3 text-center border-r border-slate-800/50">
                           <span className="font-mono text-slate-200">{result.odds}</span>
                         </td>
-                        <td className="px-4 py-3 text-center border-r border-slate-800/30">
+                        <td className="px-4 py-3 text-center border-r border-slate-800/50">
                           {result.bookmaker?.short_name ? (
-                            <span className="text-xs text-slate-400">{result.bookmaker.short_name}</span>
+                            <span className="text-xs text-slate-300">{result.bookmaker.short_name}</span>
                           ) : (
                             <span className="text-xs text-slate-600">-</span>
                           )}
                         </td>
-                        <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/30">{result.stake}u</td>
+                        <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{result.stake}u</td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/30">
                           <span className={`text-xs font-mono px-2 py-1 rounded ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
                             {result.status.toUpperCase()}

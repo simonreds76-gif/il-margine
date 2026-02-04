@@ -11,6 +11,7 @@ interface CombinedMarketStats {
   roi: number;
   win_rate: number;
   avg_odds: number;
+  total_profit: number;
 }
 
 export default function Home() {
@@ -99,6 +100,7 @@ export default function Home() {
       roi: 0,
       win_rate: 0,
       avg_odds: 0,
+      total_profit: 0,
     };
     
     const propsWins = BASELINE_STATS.props.wins + propsLiveWins;
@@ -108,6 +110,7 @@ export default function Home() {
     
     propsCombined.win_rate = calculateWinRate(propsWins, propsLosses);
     propsCombined.roi = calculateROI(propsProfit, propsStake || 1);
+    propsCombined.total_profit = propsProfit;
     
     // Calculate weighted average odds
     if (propsLive?.avg_odds && propsLiveBets > 0) {
@@ -133,6 +136,7 @@ export default function Home() {
       roi: 0,
       win_rate: 0,
       avg_odds: 0,
+      total_profit: 0,
     };
     
     const tennisWins = BASELINE_STATS.tennis.wins + tennisLiveWins;
@@ -142,6 +146,7 @@ export default function Home() {
     
     tennisCombined.win_rate = calculateWinRate(tennisWins, tennisLosses);
     tennisCombined.roi = calculateROI(tennisProfit, tennisStake || 1);
+    tennisCombined.total_profit = tennisProfit;
     
     if (tennisLive?.avg_odds && tennisLiveBets > 0) {
       tennisCombined.avg_odds = Number(tennisLive.avg_odds);
@@ -161,6 +166,7 @@ export default function Home() {
       roi: 0,
       win_rate: 0,
       avg_odds: 0,
+      total_profit: 0,
     };
     
     // Combine baseline overall with live data from both markets
@@ -171,6 +177,7 @@ export default function Home() {
     
     overallCombined.win_rate = calculateWinRate(overallWins, overallLosses);
     overallCombined.roi = calculateROI(overallProfit, overallStake || 1);
+    overallCombined.total_profit = overallProfit;
     
     // Weighted average odds across markets
     if (propsCombined.avg_odds > 0 || tennisCombined.avg_odds > 0) {
@@ -280,12 +287,17 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="flex items-center gap-3 mt-2">
-                        <span className="text-xs font-mono text-emerald-400/80">
-                          {combinedStats ? `${combinedStats.props.roi > 0 ? "+" : ""}${combinedStats.props.roi.toFixed(1)}% ROI` : "+25% ROI"}
+                        <span className={`text-xs font-mono ${combinedStats ? (combinedStats.props.roi >= 0 ? 'text-emerald-400' : 'text-red-400') : 'text-emerald-400'}`}>
+                          {combinedStats ? `${combinedStats.props.roi >= 0 ? "+" : ""}${combinedStats.props.roi.toFixed(1)}% ROI` : "+25% ROI"}
                         </span>
-                        <span className="text-xs text-slate-600">
+                        <span className="text-xs text-slate-500">
                           {combinedStats ? `${combinedStats.props.total_bets}+ bets` : "780+ bets"}
                         </span>
+                        {combinedStats && (
+                          <span className={`text-xs font-mono ${combinedStats.props.total_profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {combinedStats.props.total_profit >= 0 ? '+' : ''}{combinedStats.props.total_profit.toFixed(1)}u
+                          </span>
+                        )}
                       </div>
                     </Link>
                     
@@ -313,12 +325,17 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="flex items-center gap-3 mt-2">
-                        <span className="text-xs font-mono text-emerald-400/80">
-                          {combinedStats ? `${combinedStats.tennis.roi > 0 ? "+" : ""}${combinedStats.tennis.roi.toFixed(1)}% ROI` : "+8.6% ROI"}
+                        <span className={`text-xs font-mono ${combinedStats ? (combinedStats.tennis.roi >= 0 ? 'text-emerald-400' : 'text-red-400') : 'text-emerald-400'}`}>
+                          {combinedStats ? `${combinedStats.tennis.roi >= 0 ? "+" : ""}${combinedStats.tennis.roi.toFixed(1)}% ROI` : "+8.6% ROI"}
                         </span>
-                        <span className="text-xs text-slate-600">
+                        <span className="text-xs text-slate-500">
                           {combinedStats ? `${combinedStats.tennis.total_bets} bets` : "447 bets"}
                         </span>
+                        {combinedStats && (
+                          <span className={`text-xs font-mono ${combinedStats.tennis.total_profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {combinedStats.tennis.total_profit >= 0 ? '+' : ''}{combinedStats.tennis.total_profit.toFixed(1)}u
+                          </span>
+                        )}
                       </div>
                     </Link>
                     
@@ -504,48 +521,91 @@ export default function Home() {
               ))}
             </div>
           ) : recentBets.length > 0 ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {recentBets.slice(0, 4).map((bet) => {
-                const settledDate = bet.settled_at ? new Date(bet.settled_at) : null;
-                const dateStr = settledDate 
-                  ? settledDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-                  : 'N/A';
-                
-                return (
-                  <div key={bet.id} className="bg-slate-900/50 rounded-lg border border-slate-800 p-4 hover:border-slate-700 transition-colors">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs text-slate-500 font-mono">{dateStr}</span>
-                      <span className={`text-xs px-2 py-0.5 rounded font-medium ${
-                        bet.status === "won" 
-                          ? "bg-emerald-500/20 text-emerald-400"
-                          : bet.status === "lost"
-                          ? "bg-red-500/20 text-red-400"
-                          : "bg-slate-700 text-slate-400"
-                      }`}>
-                        {bet.status.toUpperCase()}
-                      </span>
-                    </div>
-                    <div className="text-sm text-slate-400 mb-1">
-                      {bet.market === "tennis" ? "ATP Tennis" : bet.market === "props" ? "Player Props" : bet.market}
-                    </div>
-                    <div className="font-medium mb-2">
-                      {bet.player ? `${bet.player}: ` : ""}{bet.selection}
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-slate-500">@{bet.odds} • {bet.stake}u</span>
-                      <span className={`font-mono font-medium ${
-                        bet.profit_loss && bet.profit_loss > 0 
-                          ? "text-emerald-400" 
-                          : bet.profit_loss && bet.profit_loss < 0
-                          ? "text-red-400"
-                          : "text-slate-500"
-                      }`}>
-                        {bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}{bet.profit_loss?.toFixed(2) || "0.00"}u
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
+              {/* Desktop Table */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
+                      <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '80px' }}>Player</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '50px' }}>Stake</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Result</th>
+                      <th className="px-4 py-3 text-right" style={{ width: '80px' }}>P/L</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {recentBets.slice(0, 5).map((bet) => {
+                      const href = bet.market === "tennis" ? "/atp-tennis" : bet.market === "props" ? "/player-props" : "#";
+                      return (
+                        <tr 
+                          key={bet.id} 
+                          className="border-b border-slate-800/50 hover:bg-slate-800/30 cursor-pointer"
+                          onClick={() => window.location.href = href}
+                        >
+                          <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{bet.event}</td>
+                          <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.player || '-'}</td>
+                          <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
+                          <td className="px-4 py-3 text-center border-r border-slate-800/50">
+                            <span className="font-mono text-slate-200">{bet.odds}</span>
+                          </td>
+                          <td className="px-4 py-3 text-center border-r border-slate-800/50">
+                            {bet.bookmaker?.short_name ? (
+                              <span className="text-xs text-slate-300">{bet.bookmaker.short_name}</span>
+                            ) : (
+                              <span className="text-xs text-slate-600">-</span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{bet.stake}u</td>
+                          <td className="px-4 py-3 text-center border-r border-slate-800/50">
+                            <span className={`text-xs font-mono px-2 py-1 rounded ${bet.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
+                              {bet.status.toUpperCase()}
+                            </span>
+                          </td>
+                          <td className={`px-4 py-3 text-right font-mono font-medium ${bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                            {bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}{bet.profit_loss?.toFixed(2) || "0.00"}u
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              {/* Mobile Cards */}
+              <div className="md:hidden divide-y divide-slate-800/50">
+                {recentBets.slice(0, 5).map((bet) => {
+                  const href = bet.market === "tennis" ? "/atp-tennis" : bet.market === "props" ? "/player-props" : "#";
+                  return (
+                    <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/20">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1">
+                          <div className="font-medium text-slate-200 mb-1">{bet.event}</div>
+                          <div className="text-sm text-slate-300 mb-1">
+                            {bet.player && <span>{bet.player} • </span>}
+                            {bet.selection}
+                          </div>
+                        </div>
+                        <span className={`text-xs font-mono px-2 py-1 rounded ml-2 ${bet.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
+                          {bet.status.toUpperCase()}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-4">
+                          <span className="font-mono text-slate-200">{bet.odds}</span>
+                          <span className="text-xs text-slate-300">{bet.bookmaker?.short_name || '-'}</span>
+                          <span className="font-mono text-slate-200">{bet.stake}u</span>
+                        </div>
+                        <span className={`font-mono font-medium ${bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                          {bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}{bet.profit_loss?.toFixed(2)}u
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
