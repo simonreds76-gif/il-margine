@@ -289,18 +289,16 @@ export default function ATPTennis() {
             <h3 className="font-semibold mb-4 text-emerald-400">Our Methodology</h3>
             <div className="grid md:grid-cols-3 gap-6 text-sm text-slate-400">
               <div>
-                <span className="text-slate-200 font-medium block mb-2">Surface-Specific Modeling</span>
-                Our proprietary model incorporates surface-specific ELO ratings, historical serve and return point win percentages over the past 12 months, and fatigue factors. We identify when bookmakers underweight surface-specific statistical edges—particularly on hard courts vs clay—where player performance differentials are significant but often mispriced.
+                <span className="text-slate-200 font-medium block mb-2">Surface Specific Modeling</span>
+                Our proprietary model incorporates surface specific ELO ratings, historical serve and return point win percentages over the past 12 months, and fatigue factors. We identify when bookmakers underweight surface specific statistical edges, particularly on hard courts versus clay, where player performance differentials are significant but often mispriced.
               </div>
               <div>
                 <span className="text-slate-200 font-medium block mb-2">Tournament Tier Focus</span>
-                ATP 250/500 events and Challengers have thinner markets where pricing inefficiencies 
-                persist longer than Grand Slams. Our model accounts for tournament context and market depth.
+                ATP 250 and 500 events, along with Challenger tournaments, have thinner markets where pricing inefficiencies persist longer than Grand Slams. Our model accounts for tournament context and market depth when evaluating value.
               </div>
               <div>
                 <span className="text-slate-200 font-medium block mb-2">Line Value, Not Outcomes</span>
-                We don&apos;t predict winners. We identify when bookmakers have mispriced game handicaps 
-                and totals based on our proprietary modeling that factors in multiple variables we cannot disclose publicly.
+                We do not predict winners. We identify when bookmakers have mispriced game handicaps and totals based on our proprietary modeling, which factors in multiple variables we cannot disclose publicly.
               </div>
             </div>
           </div>
