@@ -64,7 +64,8 @@ export default function PlayerProps() {
       .select("*, bookmaker:bookmakers(*)")
       .eq("market", "props")
       .eq("status", "pending")
-      .order("posted_at", { ascending: false });
+      .order("posted_at", { ascending: false })
+      .limit(15);
     
     if (pending) setPendingBets(pending);
 
@@ -74,7 +75,7 @@ export default function PlayerProps() {
       .eq("market", "props")
       .in("status", ["won", "lost"])
       .order("settled_at", { ascending: false })
-      .limit(20);
+      .limit(25);
     
     if (recent) setRecentBets(recent);
 

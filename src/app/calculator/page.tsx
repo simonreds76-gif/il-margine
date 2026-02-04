@@ -187,7 +187,7 @@ export default function Calculator() {
                     <div className="text-xs text-slate-500 mt-1">Total Bets</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-blue-400 font-mono">{combinedStats.props.avg_odds.toFixed(2)}</div>
+                    <div className="text-2xl font-bold text-amber-400 font-mono">{combinedStats.props.avg_odds.toFixed(2)}</div>
                     <div className="text-xs text-slate-500 mt-1">Avg Odds</div>
                   </div>
                   <div>
@@ -207,8 +207,8 @@ export default function Calculator() {
                     >
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                            <span className="text-xl font-bold text-blue-400">£{returns.stakePerUnit}</span>
+                          <div className="w-12 h-12 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                            <span className="text-xl font-bold text-amber-400">£{returns.stakePerUnit}</span>
                           </div>
                           <div>
                             <div className="text-sm text-slate-400">Per Unit Stake</div>
@@ -256,7 +256,7 @@ export default function Calculator() {
                     <div className="text-xs text-slate-500 mt-1">Total Bets</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-blue-400 font-mono">{combinedStats.tennis.avg_odds.toFixed(2)}</div>
+                    <div className="text-2xl font-bold text-amber-400 font-mono">{combinedStats.tennis.avg_odds.toFixed(2)}</div>
                     <div className="text-xs text-slate-500 mt-1">Avg Odds</div>
                   </div>
                   <div>
@@ -276,8 +276,8 @@ export default function Calculator() {
                     >
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                            <span className="text-xl font-bold text-blue-400">£{returns.stakePerUnit}</span>
+                          <div className="w-12 h-12 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                            <span className="text-xl font-bold text-amber-400">£{returns.stakePerUnit}</span>
                           </div>
                           <div>
                             <div className="text-sm text-slate-400">Per Unit Stake</div>

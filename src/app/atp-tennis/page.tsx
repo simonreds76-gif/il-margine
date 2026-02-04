@@ -72,7 +72,8 @@ export default function ATPTennis() {
       .select("*, bookmaker:bookmakers(*)")
       .eq("market", "tennis")
       .eq("status", "pending")
-      .order("posted_at", { ascending: false });
+      .order("posted_at", { ascending: false })
+      .limit(15);
     
     if (pending) setPendingBets(pending);
 
@@ -83,7 +84,7 @@ export default function ATPTennis() {
       .eq("market", "tennis")
       .in("status", ["won", "lost"])
       .order("settled_at", { ascending: false })
-      .limit(20);
+      .limit(25);
     
     if (recent) setRecentBets(recent);
 
