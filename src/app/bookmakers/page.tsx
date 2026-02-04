@@ -326,19 +326,6 @@ export default function Bookmakers() {
                     </div>
                   )}
 
-                  {rec.minOdds && rec.maxStake && (
-                    <div className="mt-4 pt-4 border-t border-slate-800/50 flex gap-4 text-xs">
-                      <div>
-                        <span className="text-slate-500">Min Odds:</span>
-                        <span className="text-slate-300 ml-2 font-mono">{rec.minOdds}</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-500">Max Stake:</span>
-                        <span className="text-slate-300 ml-2">{rec.maxStake}</span>
-                      </div>
-                    </div>
-                  )}
-
                   {dbBookmaker?.affiliate_link && (
                     <a
                       href={dbBookmaker.affiliate_link}
@@ -431,19 +418,6 @@ export default function Bookmakers() {
                   {rec.notes && (
                     <div className="mt-4 pt-4 border-t border-slate-800/50">
                       <p className="text-xs text-slate-400 italic">{rec.notes}</p>
-                    </div>
-                  )}
-
-                  {rec.minOdds && rec.maxStake && (
-                    <div className="mt-4 pt-4 border-t border-slate-800/50 flex gap-4 text-xs">
-                      <div>
-                        <span className="text-slate-500">Min Odds:</span>
-                        <span className="text-slate-300 ml-2 font-mono">{rec.minOdds}</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-500">Max Stake:</span>
-                        <span className="text-slate-300 ml-2">{rec.maxStake}</span>
-                      </div>
                     </div>
                   )}
 
