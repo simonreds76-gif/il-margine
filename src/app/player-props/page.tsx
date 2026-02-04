@@ -8,12 +8,22 @@ export default function PlayerProps() {
   const [activeLeague, setActiveLeague] = useState("all");
 
   const leagues = [
-    { id: "all", name: "All Leagues", bets: 780, roi: "+25%", winRate: "58%", avgOdds: "2.35" },
-    { id: "pl", name: "Premier League", bets: 285, roi: "+28%", winRate: "59%", avgOdds: "2.30" },
-    { id: "seriea", name: "Serie A", bets: 245, roi: "+22%", winRate: "57%", avgOdds: "2.40" },
-    { id: "ucl", name: "Champions League", bets: 180, roi: "+24%", winRate: "58%", avgOdds: "2.38" },
-    { id: "other", name: "Other", bets: 70, roi: "+19%", winRate: "55%", avgOdds: "2.42" },
+    { id: "all", name: "All Leagues", bets: 780, roi: "+25%", winRate: "58%", avgOdds: "2.35", color: "emerald" },
+    { id: "pl", name: "Premier League", bets: 285, roi: "+28%", winRate: "59%", avgOdds: "2.30", color: "purple" },
+    { id: "seriea", name: "Serie A", bets: 245, roi: "+22%", winRate: "57%", avgOdds: "2.40", color: "blue" },
+    { id: "ucl", name: "Champions League", bets: 180, roi: "+24%", winRate: "58%", avgOdds: "2.38", color: "amber" },
+    { id: "other", name: "Other", bets: 70, roi: "+19%", winRate: "55%", avgOdds: "2.42", color: "cyan" },
   ];
+
+  const colorClasses: Record<string, { border: string; text: string; bg: string; bar: string }> = {
+    emerald: { border: "border-emerald-500/50", text: "text-emerald-400", bg: "bg-emerald-500/10", bar: "from-emerald-500 to-emerald-400" },
+    purple: { border: "border-purple-500/50", text: "text-purple-400", bg: "bg-purple-500/10", bar: "from-purple-500 to-purple-400" },
+    blue: { border: "border-blue-500/50", text: "text-blue-400", bg: "bg-blue-500/10", bar: "from-blue-500 to-blue-400" },
+    amber: { border: "border-amber-500/50", text: "text-amber-400", bg: "bg-amber-500/10", bar: "from-amber-500 to-amber-400" },
+    cyan: { border: "border-cyan-500/50", text: "text-cyan-400", bg: "bg-cyan-500/10", bar: "from-cyan-500 to-cyan-400" },
+  };
+
+  const activeColor = leagues.find(l => l.id === activeLeague)?.color || "emerald";
 
   // Sample active picks
   const activePicks = [
@@ -143,14 +153,14 @@ export default function PlayerProps() {
                 onClick={() => setActiveLeague(league.id)}
                 className={`px-4 py-3 rounded-lg border transition-all ${
                   activeLeague === league.id
-                    ? "bg-slate-900/80 border-emerald-500/50 text-emerald-400"
+                    ? `bg-slate-900/80 ${colorClasses[league.color].border} ${colorClasses[league.color].text}`
                     : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
                 }`}
               >
                 <span className="font-medium">{league.name}</span>
                 <div className="flex gap-3 mt-1 text-xs">
                   <span>{league.bets} bets</span>
-                  <span className="text-emerald-400 font-mono">{league.roi}</span>
+                  <span className={`${colorClasses[league.color].text} font-mono`}>{league.roi}</span>
                 </div>
               </button>
             ))}
@@ -165,7 +175,7 @@ export default function PlayerProps() {
                 <div className="text-xs text-slate-500 mb-3">Total Bets</div>
                 <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-blue-500 to-blue-400 rounded-full transition-all duration-500"
+                    className={`h-full bg-gradient-to-r ${colorClasses[league.color].bar} rounded-full transition-all duration-500`}
                     style={{ width: `${Math.min((league.bets / 1000) * 100, 100)}%` }}
                   />
                 </div>
@@ -173,11 +183,11 @@ export default function PlayerProps() {
               
               {/* ROI */}
               <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono mb-2">{league.roi}</div>
+                <div className={`text-2xl font-bold ${colorClasses[league.color].text} font-mono mb-2`}>{league.roi}</div>
                 <div className="text-xs text-slate-500 mb-3">ROI</div>
                 <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-500"
+                    className={`h-full bg-gradient-to-r ${colorClasses[league.color].bar} rounded-full transition-all duration-500`}
                     style={{ width: `${Math.min(parseFloat(league.roi) * 3, 100)}%` }}
                   />
                 </div>
@@ -185,11 +195,11 @@ export default function PlayerProps() {
               
               {/* Win Rate */}
               <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-amber-400 font-mono mb-2">{league.winRate}</div>
+                <div className={`text-2xl font-bold ${colorClasses[league.color].text} font-mono mb-2`}>{league.winRate}</div>
                 <div className="text-xs text-slate-500 mb-3">Win Rate</div>
                 <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-500"
+                    className={`h-full bg-gradient-to-r ${colorClasses[league.color].bar} rounded-full transition-all duration-500`}
                     style={{ width: `${parseInt(league.winRate)}%` }}
                   />
                 </div>
@@ -197,11 +207,11 @@ export default function PlayerProps() {
               
               {/* Avg Odds */}
               <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-purple-400 font-mono mb-2">{league.avgOdds}</div>
+                <div className={`text-2xl font-bold ${colorClasses[league.color].text} font-mono mb-2`}>{league.avgOdds}</div>
                 <div className="text-xs text-slate-500 mb-3">Avg Odds</div>
                 <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-purple-500 to-purple-400 rounded-full transition-all duration-500"
+                    className={`h-full bg-gradient-to-r ${colorClasses[league.color].bar} rounded-full transition-all duration-500`}
                     style={{ width: `${(parseFloat(league.avgOdds) / 3) * 100}%` }}
                   />
                 </div>

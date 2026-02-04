@@ -8,11 +8,20 @@ export default function ATPTennis() {
   const [activeCategory, setActiveCategory] = useState("all");
 
   const categories = [
-    { id: "all", name: "All Tennis", bets: 447, roi: "+8.6%", winRate: "54%", avgOdds: "2.05" },
-    { id: "atp", name: "ATP Tour", bets: 330, roi: "+10.5%", winRate: "55%", avgOdds: "2.06" },
-    { id: "challenger", name: "Challenger", bets: 60, roi: "+5.9%", winRate: "53%", avgOdds: "1.95" },
-    { id: "ausopen", name: "Australian Open", bets: 57, roi: "+0.5%", winRate: "51%", avgOdds: "2.10" },
+    { id: "all", name: "All Tennis", bets: 447, roi: "+8.6%", winRate: "54%", avgOdds: "2.05", color: "emerald" },
+    { id: "atp", name: "ATP Tour", bets: 330, roi: "+10.5%", winRate: "55%", avgOdds: "2.06", color: "blue" },
+    { id: "challenger", name: "Challenger", bets: 60, roi: "+5.9%", winRate: "53%", avgOdds: "1.95", color: "amber" },
+    { id: "ausopen", name: "Australian Open", bets: 57, roi: "+0.5%", winRate: "51%", avgOdds: "2.10", color: "cyan" },
   ];
+
+  const colorClasses: Record<string, { border: string; text: string; bg: string; bar: string }> = {
+    emerald: { border: "border-emerald-500/50", text: "text-emerald-400", bg: "bg-emerald-500/10", bar: "from-emerald-500 to-emerald-400" },
+    blue: { border: "border-blue-500/50", text: "text-blue-400", bg: "bg-blue-500/10", bar: "from-blue-500 to-blue-400" },
+    amber: { border: "border-amber-500/50", text: "text-amber-400", bg: "bg-amber-500/10", bar: "from-amber-500 to-amber-400" },
+    cyan: { border: "border-cyan-500/50", text: "text-cyan-400", bg: "bg-cyan-500/10", bar: "from-cyan-500 to-cyan-400" },
+  };
+
+  const activeColor = categories.find(c => c.id === activeCategory)?.color || "emerald";
 
   // Sample active picks - these would come from database
   const activePicks = [
@@ -128,14 +137,14 @@ export default function ATPTennis() {
                 onClick={() => setActiveCategory(cat.id)}
                 className={`px-4 py-3 rounded-lg border transition-all ${
                   activeCategory === cat.id
-                    ? "bg-slate-900/80 border-emerald-500/50 text-emerald-400"
+                    ? `bg-slate-900/80 ${colorClasses[cat.color].border} ${colorClasses[cat.color].text}`
                     : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
                 }`}
               >
                 <span className="font-medium">{cat.name}</span>
                 <div className="flex gap-3 mt-1 text-xs">
                   <span>{cat.bets} bets</span>
-                  <span className="text-emerald-400 font-mono">{cat.roi}</span>
+                  <span className={`${colorClasses[cat.color].text} font-mono`}>{cat.roi}</span>
                 </div>
               </button>
             ))}
@@ -150,7 +159,7 @@ export default function ATPTennis() {
                 <div className="text-xs text-slate-500 mb-3">Total Bets</div>
                 <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-blue-500 to-blue-400 rounded-full transition-all duration-500"
+                    className={`h-full bg-gradient-to-r ${colorClasses[cat.color].bar} rounded-full transition-all duration-500`}
                     style={{ width: `${Math.min((cat.bets / 500) * 100, 100)}%` }}
                   />
                 </div>
@@ -158,11 +167,11 @@ export default function ATPTennis() {
               
               {/* ROI */}
               <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono mb-2">{cat.roi}</div>
+                <div className={`text-2xl font-bold ${colorClasses[cat.color].text} font-mono mb-2`}>{cat.roi}</div>
                 <div className="text-xs text-slate-500 mb-3">ROI</div>
                 <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-500"
+                    className={`h-full bg-gradient-to-r ${colorClasses[cat.color].bar} rounded-full transition-all duration-500`}
                     style={{ width: `${Math.min(parseFloat(cat.roi) * 4, 100)}%` }}
                   />
                 </div>
@@ -170,11 +179,11 @@ export default function ATPTennis() {
               
               {/* Win Rate */}
               <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-amber-400 font-mono mb-2">{cat.winRate}</div>
+                <div className={`text-2xl font-bold ${colorClasses[cat.color].text} font-mono mb-2`}>{cat.winRate}</div>
                 <div className="text-xs text-slate-500 mb-3">Win Rate</div>
                 <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-500"
+                    className={`h-full bg-gradient-to-r ${colorClasses[cat.color].bar} rounded-full transition-all duration-500`}
                     style={{ width: `${parseInt(cat.winRate)}%` }}
                   />
                 </div>
@@ -182,11 +191,11 @@ export default function ATPTennis() {
               
               {/* Avg Odds */}
               <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-                <div className="text-2xl font-bold text-purple-400 font-mono mb-2">{cat.avgOdds}</div>
+                <div className={`text-2xl font-bold ${colorClasses[cat.color].text} font-mono mb-2`}>{cat.avgOdds}</div>
                 <div className="text-xs text-slate-500 mb-3">Avg Odds</div>
                 <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-purple-500 to-purple-400 rounded-full transition-all duration-500"
+                    className={`h-full bg-gradient-to-r ${colorClasses[cat.color].bar} rounded-full transition-all duration-500`}
                     style={{ width: `${(parseFloat(cat.avgOdds) / 3) * 100}%` }}
                   />
                 </div>
@@ -204,7 +213,7 @@ export default function ATPTennis() {
               <span className="text-xs font-mono text-emerald-400 mb-2 block">ACTIVE PICKS</span>
               <h2 className="text-2xl font-bold">Current Selections</h2>
             </div>
-            <span className="text-xs text-slate-500">Updated in real-time via Telegram</span>
+            <span className="text-xs text-slate-500">Updated daily on this page</span>
           </div>
 
           {activePicks.length > 0 ? (
@@ -245,16 +254,12 @@ export default function ATPTennis() {
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
               <p className="text-slate-500">No active picks at the moment</p>
-              <p className="text-xs text-slate-600 mt-2">Join Telegram to get notified when new picks are posted</p>
+              <p className="text-xs text-slate-600 mt-2">Check back soon for new selections</p>
             </div>
           )}
           
-          <div className="mt-6 p-4 bg-slate-900/30 rounded-lg border border-slate-800 text-center">
-            <p className="text-sm text-slate-400 mb-3">Get real-time alerts when new picks are posted</p>
-            <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-medium px-5 py-2 rounded inline-flex items-center gap-2 transition-colors text-sm">
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-              Join Telegram Channel
-            </button>
+          <div className="mt-6 p-4 bg-emerald-500/5 rounded-lg border border-emerald-500/20 text-center">
+            <p className="text-sm text-slate-400">Tennis picks are posted directly on this page. Bookmark and check back regularly.</p>
           </div>
         </div>
       </section>
@@ -363,23 +368,8 @@ export default function ATPTennis() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-xs font-mono text-emerald-400 mb-4 block">FREE DURING BETA</span>
-          <h2 className="text-3xl font-bold mb-4">Get ATP Tennis picks on Telegram</h2>
-          <p className="text-slate-400 mb-8 max-w-lg mx-auto">
-            Match, selection, odds, bookmaker, stake. Everything you need. Posted in real-time before events start.
-          </p>
-          <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-medium px-6 py-3 rounded inline-flex items-center gap-2 transition-colors">
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-            Join Telegram Channel
-          </button>
-        </div>
-      </section>
-
       {/* Footer */}
-      <footer className="border-t border-slate-800 py-8">
+      <footer className="border-t border-slate-800 py-8 mt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
