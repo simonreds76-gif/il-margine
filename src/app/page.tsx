@@ -6,6 +6,7 @@ import Image from "next/image";
 import { supabase, MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
+import BookmakerLogo from "@/components/BookmakerLogo";
 
 interface CombinedMarketStats {
   total_bets: number;
@@ -591,11 +592,7 @@ export default function Home() {
                             <span className="font-mono text-slate-200">{bet.odds}</span>
                           </td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
-                            {bet.bookmaker?.short_name ? (
-                              <span className="text-xs text-slate-300">{bet.bookmaker.short_name}</span>
-                            ) : (
-                              <span className="text-xs text-slate-600">-</span>
-                            )}
+                            <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
                           </td>
                           <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{bet.stake}u</td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
@@ -633,7 +630,7 @@ export default function Home() {
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-4">
                           <span className="font-mono text-slate-200">{bet.odds}</span>
-                          <span className="text-xs text-slate-300">{bet.bookmaker?.short_name || '-'}</span>
+                          <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
                           <span className="font-mono text-slate-200">{bet.stake}u</span>
                         </div>
                         <span className={`font-mono font-medium ${bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>

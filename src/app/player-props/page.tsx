@@ -6,6 +6,7 @@ import Image from "next/image";
 import { supabase, Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
+import BookmakerLogo from "@/components/BookmakerLogo";
 
 export default function PlayerProps() {
   const [activeLeague, setActiveLeague] = useState("all");
@@ -409,13 +410,9 @@ export default function PlayerProps() {
                         <td className="px-4 py-3 text-center border-r border-slate-800/50">
                           <span className="font-mono text-slate-200">{pick.odds}</span>
                         </td>
-                        <td className="px-4 py-3 text-center border-r border-slate-800/50">
-                          {pick.bookmaker?.short_name ? (
-                            <span className="text-xs text-slate-300">{pick.bookmaker.short_name}</span>
-                          ) : (
-                            <span className="text-xs text-slate-600">-</span>
-                          )}
-                        </td>
+                          <td className="px-4 py-3 text-center border-r border-slate-800/50">
+                            <BookmakerLogo bookmaker={pick.bookmaker} size="sm" />
+                          </td>
                         <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{pick.stake}u</td>
                         <td className="px-4 py-3 text-center">
                           <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">
@@ -445,7 +442,7 @@ export default function PlayerProps() {
                     </div>
                     <div className="flex items-center gap-4 text-sm">
                       <span className="font-mono text-slate-200">{pick.odds}</span>
-                      <span className="text-xs text-slate-400">{pick.bookmaker?.short_name || '-'}</span>
+                        <BookmakerLogo bookmaker={pick.bookmaker} size="sm" />
                       <span className="font-mono text-slate-300">{pick.stake}u</span>
                     </div>
                   </div>
@@ -524,13 +521,9 @@ export default function PlayerProps() {
                         <td className="px-4 py-3 text-center border-r border-slate-800/50">
                           <span className="font-mono text-slate-200">{result.odds}</span>
                         </td>
-                        <td className="px-4 py-3 text-center border-r border-slate-800/50">
-                          {result.bookmaker?.short_name ? (
-                            <span className="text-xs text-slate-300">{result.bookmaker.short_name}</span>
-                          ) : (
-                            <span className="text-xs text-slate-600">-</span>
-                          )}
-                        </td>
+                          <td className="px-4 py-3 text-center border-r border-slate-800/50">
+                            <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
+                          </td>
                         <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{result.stake}u</td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/30">
                           <span className={`text-xs font-mono px-2 py-1 rounded ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
@@ -564,7 +557,7 @@ export default function PlayerProps() {
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-4">
                         <span className="font-mono text-slate-200">{result.odds}</span>
-                        <span className="text-xs text-slate-400">{result.bookmaker?.short_name || '-'}</span>
+                        <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
                         <span className="font-mono text-slate-300">{result.stake}u</span>
                       </div>
                       <span className={`font-mono font-medium ${result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
