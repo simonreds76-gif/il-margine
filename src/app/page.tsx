@@ -458,20 +458,8 @@ export default function Home() {
       </section>
 
       {/* Markets */}
-      <section id="markets" className="py-20 border-b border-slate-800/50 relative overflow-hidden">
-        {/* Faded Banner Background */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
-          <Image 
-            src="/banner.png" 
-            alt="Il Margine" 
-            width={1200} 
-            height={400} 
-            className="w-full max-w-5xl h-auto object-contain"
-            style={{ filter: 'blur(2px)' }}
-          />
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <section id="markets" className="py-20 border-b border-slate-800/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 mb-6">
             <span className="text-xs font-mono text-emerald-400 tracking-wider">MARKETS</span>
           </div>
@@ -664,8 +652,19 @@ export default function Home() {
       </section>
 
       {/* The Edge Section */}
-      <section id="the-edge" className="py-20 border-b border-slate-800/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="the-edge" className="py-20 border-b border-slate-800/50 relative overflow-hidden">
+        {/* Faded Banner Background */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
+          <Image 
+            src="/banner.png" 
+            alt="Il Margine" 
+            width={1200} 
+            height={400} 
+            className="w-full max-w-6xl h-auto object-contain"
+          />
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
             <div>
               <span className="text-xs font-mono text-emerald-400 mb-4 block tracking-wider">WHY IT WORKS</span>
