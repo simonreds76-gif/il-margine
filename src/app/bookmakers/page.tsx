@@ -464,6 +464,29 @@ export default function Bookmakers() {
         </div>
       </section>
 
+      {/* New Account Offers Section */}
+      <section className="py-16 border-b border-slate-800/50 bg-slate-900/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-2 mb-6">
+            <span className="text-xs font-mono text-emerald-400 tracking-wider">NEW ACCOUNTS</span>
+          </div>
+          
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">New Account Offers</h2>
+          <p className="text-base text-slate-300 mb-8 sm:mb-10 max-w-2xl">
+            Opening a new betting account? Check the latest welcome offers and promotions from our recommended bookmakers.
+          </p>
+
+          <div className="bg-slate-900/60 rounded-xl border border-slate-800/50 p-8 text-center">
+            <p className="text-slate-400 mb-4">
+              New account offers and promotions will be listed here.
+            </p>
+            <p className="text-sm text-slate-500">
+              Check back regularly for the latest welcome bonuses, free bets, and sign-up promotions.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Bet Builders Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
