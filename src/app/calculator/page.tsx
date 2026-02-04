@@ -219,7 +219,7 @@ export default function Calculator() {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-3 gap-4 mb-6 pb-6 border-b border-slate-800">
+                <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6 pb-6 border-b border-slate-800">
                   <div>
                     <div className="text-2xl font-bold text-white font-mono">{combinedStats.props.total_bets}</div>
                     <div className="text-xs text-slate-500 mt-1">Total Bets</div>
@@ -243,18 +243,18 @@ export default function Calculator() {
                       key={returns.stakePerUnit}
                       className="bg-slate-800/50 rounded-lg border border-slate-700/50 p-4 sm:p-6 hover:border-emerald-500/50 transition-all"
                     >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-amber-500/20 rounded-lg flex items-center justify-center">
-                            <span className="text-xl font-bold text-amber-400">£{returns.stakePerUnit}</span>
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                            <span className="text-lg sm:text-xl font-bold text-amber-400">£{returns.stakePerUnit}</span>
                           </div>
                           <div>
                             <div className="text-sm text-slate-400">Per Unit Stake</div>
                             <div className="text-xs text-slate-600">£{returns.stakePerUnit.toLocaleString()} × {combinedStats.props.total_bets} bets</div>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <div className={`text-2xl font-bold font-mono ${returns.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        <div className="text-left sm:text-right">
+                          <div className={`text-xl sm:text-2xl font-bold font-mono ${returns.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                             {returns.totalProfit >= 0 ? '+' : ''}£{Math.abs(returns.totalProfit).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                           </div>
                           <div className="text-xs text-slate-500">Total Profit</div>
@@ -288,7 +288,7 @@ export default function Calculator() {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-3 gap-4 mb-6 pb-6 border-b border-slate-800">
+                <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6 pb-6 border-b border-slate-800">
                   <div>
                     <div className="text-2xl font-bold text-white font-mono">{combinedStats.tennis.total_bets}</div>
                     <div className="text-xs text-slate-500 mt-1">Total Bets</div>
@@ -312,18 +312,18 @@ export default function Calculator() {
                       key={returns.stakePerUnit}
                       className="bg-slate-800/50 rounded-lg border border-slate-700/50 p-4 sm:p-6 hover:border-emerald-500/50 transition-all"
                     >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-amber-500/20 rounded-lg flex items-center justify-center">
-                            <span className="text-xl font-bold text-amber-400">£{returns.stakePerUnit}</span>
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                            <span className="text-lg sm:text-xl font-bold text-amber-400">£{returns.stakePerUnit}</span>
                           </div>
                           <div>
                             <div className="text-sm text-slate-400">Per Unit Stake</div>
                             <div className="text-xs text-slate-600">£{returns.stakePerUnit.toLocaleString()} × {combinedStats.tennis.total_bets} bets</div>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <div className={`text-2xl font-bold font-mono ${returns.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        <div className="text-left sm:text-right">
+                          <div className={`text-xl sm:text-2xl font-bold font-mono ${returns.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                             {returns.totalProfit >= 0 ? '+' : ''}£{Math.abs(returns.totalProfit).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                           </div>
                           <div className="text-xs text-slate-500">Total Profit</div>
