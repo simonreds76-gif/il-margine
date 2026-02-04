@@ -426,7 +426,7 @@ export default function Home() {
             </h1>
             
             <p className="text-lg sm:text-xl text-slate-300 mb-8 sm:mb-10 leading-relaxed max-w-2xl mx-auto">
-              Professional betting methodology from a former odds compiler. We identify value where bookmakers misprice markets. Singles only, data-driven selections, transparent results.
+              Professional betting methodology from a former odds compiler. We identify value where bookmakers misprice markets. Data-driven selections, transparent results.
             </p>
             
             <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-12 sm:mb-16">
@@ -445,8 +445,8 @@ export default function Home() {
                 <div className="text-sm text-slate-400 font-medium">Verified Edge</div>
               </div>
               <div className="p-5 sm:p-6 bg-slate-900/60 rounded-lg border border-slate-800/50 hover:border-emerald-500/30 transition-all">
-                <div className="text-3xl font-bold text-emerald-400 font-mono mb-2">100%</div>
-                <div className="text-sm text-slate-400 font-medium">Singles Only</div>
+                <div className="text-3xl font-bold text-emerald-400 font-mono mb-2">25+</div>
+                <div className="text-sm text-slate-400 font-medium">Years Experience</div>
               </div>
               <div className="p-5 sm:p-6 bg-slate-900/60 rounded-lg border border-slate-800/50 hover:border-emerald-500/30 transition-all">
                 <div className="text-3xl font-bold text-emerald-400 font-mono mb-2">1,200+</div>
@@ -458,8 +458,20 @@ export default function Home() {
       </section>
 
       {/* Markets */}
-      <section id="markets" className="py-20 border-b border-slate-800/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="markets" className="py-20 border-b border-slate-800/50 relative overflow-hidden">
+        {/* Faded Banner Background */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+          <Image 
+            src="/banner.png" 
+            alt="Il Margine" 
+            width={1200} 
+            height={400} 
+            className="w-full max-w-5xl h-auto object-contain"
+            style={{ filter: 'blur(2px)' }}
+          />
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex items-center gap-2 mb-6">
             <span className="text-xs font-mono text-emerald-400 tracking-wider">MARKETS</span>
           </div>
