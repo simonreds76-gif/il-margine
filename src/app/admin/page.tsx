@@ -3,9 +3,13 @@
 import { useState, useEffect } from "react";
 import { supabase, Bet, Bookmaker } from "@/lib/supabase";
 
+// Hardcoded password (since env vars can be tricky with Vercel)
+const ADMIN_PASSWORD = "Absolut2015!";
+
 export default function AdminPanel() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [activeTab, setActiveTab] = useState<"add" | "pending" | "recent">("add");
   const [bookmakers, setBookmakers] = useState<Bookmaker[]>([]);
   const [pendingBets, setPendingBets] = useState<Bet[]>([]);
@@ -51,9 +55,9 @@ export default function AdminPanel() {
     ],
   };
 
-  // Check password
+  // Check password - hardcoded for reliability
   const handleLogin = () => {
-if (password === "Absolut2015!") {
+    if (password === ADMIN_PASSWORD) {
       setIsLoggedIn(true);
       localStorage.setItem("admin_logged_in", "true");
     } else {
@@ -78,31 +82,37 @@ if (password === "Absolut2015!") {
   }, [isLoggedIn]);
 
   const fetchBookmakers = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("bookmakers")
       .select("*")
       .eq("active", true)
       .order("name");
     if (data) setBookmakers(data);
+    if (error) console.log("Bookmakers error:", error);
   };
 
   const fetchPendingBets = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("bets")
       .select("*, bookmaker:bookmakers(*)")
       .eq("status", "pending")
       .order("posted_at", { ascending: false });
     if (data) setPendingBets(data);
+    if (error) console.log("Pending bets error:", error);
   };
 
   const fetchRecentBets = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("bets")
       .select("*, bookmaker:bookmakers(*)")
-      .neq("status", "pending")
+      .in("status", ["won", "lost", "void"])
       .order("settled_at", { ascending: false })
-      .limit(20);
-    if (data) setRecentBets(data);
+      .limit(50);
+    if (data) {
+      console.log("Recent bets fetched:", data);
+      setRecentBets(data);
+    }
+    if (error) console.log("Recent bets error:", error);
   };
 
   // Add new bet
@@ -146,6 +156,8 @@ if (password === "Absolut2015!") {
   // Settle bet
   const handleSettle = async (betId: number, status: "won" | "lost" | "void") => {
     setLoading(true);
+    setMessage(null);
+    
     const { error } = await supabase
       .from("bets")
       .update({ status })
@@ -157,8 +169,9 @@ if (password === "Absolut2015!") {
       setMessage({ type: "error", text: error.message });
     } else {
       setMessage({ type: "success", text: `Bet marked as ${status}` });
-      fetchPendingBets();
-      fetchRecentBets();
+      // Refresh both lists
+      await fetchPendingBets();
+      await fetchRecentBets();
     }
   };
 
@@ -183,14 +196,32 @@ if (password === "Absolut2015!") {
       <div className="min-h-screen bg-[#0f1117] text-slate-100 flex items-center justify-center">
         <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-8 w-full max-w-sm">
           <h1 className="text-2xl font-bold mb-6 text-center">Admin Login</h1>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-            className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 mb-4 focus:outline-none focus:border-emerald-500"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+              className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 mb-4 focus:outline-none focus:border-emerald-500 pr-12"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-3 text-slate-500 hover:text-slate-300"
+            >
+              {showPassword ? (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              )}
+            </button>
+          </div>
           <button
             onClick={handleLogin}
             className="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-medium py-3 rounded transition-colors"
@@ -231,7 +262,7 @@ if (password === "Absolut2015!") {
           {[
             { id: "add", label: "Add Bet" },
             { id: "pending", label: `Pending (${pendingBets.length})` },
-            { id: "recent", label: "Recent" },
+            { id: "recent", label: `Recent (${recentBets.length})` },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -382,9 +413,9 @@ if (password === "Absolut2015!") {
                 <label className="block text-xs text-slate-500 mb-1">Stake (units)</label>
                 <input
                   type="number"
-                  step="0.1"
-                  min="0.1"
-                  max="2"
+                  step="0.05"
+                  min="0.05"
+                  max="5"
                   value={form.stake}
                   onChange={(e) => setForm({ ...form, stake: e.target.value })}
                   required
@@ -490,7 +521,15 @@ if (password === "Absolut2015!") {
         {activeTab === "recent" && (
           <div className="space-y-2">
             {recentBets.length === 0 ? (
-              <p className="text-slate-500 text-center py-8">No settled bets yet</p>
+              <div className="text-center py-8">
+                <p className="text-slate-500">No settled bets yet</p>
+                <button 
+                  onClick={fetchRecentBets}
+                  className="mt-2 text-sm text-emerald-400 hover:underline"
+                >
+                  Refresh
+                </button>
+              </div>
             ) : (
               recentBets.map((bet) => (
                 <div
@@ -510,26 +549,36 @@ if (password === "Absolut2015!") {
                       >
                         {bet.status.toUpperCase()}
                       </span>
+                      <span className="text-xs text-slate-500 uppercase">{bet.market}</span>
                       <span className="text-sm text-slate-400">{bet.event}</span>
                     </div>
                     <p className="text-sm mt-1">
+                      {bet.player && <span className="text-slate-500">{bet.player}: </span>}
                       {bet.selection}{" "}
                       <span className="text-slate-500">
                         @ {bet.odds} • {bet.stake}u
                       </span>
                     </p>
                   </div>
-                  <div
-                    className={`text-lg font-mono font-bold ${
-                      bet.profit_loss && bet.profit_loss > 0
-                        ? "text-emerald-400"
-                        : bet.profit_loss && bet.profit_loss < 0
-                        ? "text-red-400"
-                        : "text-slate-500"
-                    }`}
-                  >
-                    {bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}
-                    {bet.profit_loss?.toFixed(2)}u
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`text-lg font-mono font-bold ${
+                        bet.profit_loss && bet.profit_loss > 0
+                          ? "text-emerald-400"
+                          : bet.profit_loss && bet.profit_loss < 0
+                          ? "text-red-400"
+                          : "text-slate-500"
+                      }`}
+                    >
+                      {bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}
+                      {bet.profit_loss?.toFixed(2)}u
+                    </div>
+                    <button
+                      onClick={() => handleDelete(bet.id)}
+                      className="text-slate-600 hover:text-red-400 text-sm"
+                    >
+                      🗑
+                    </button>
                   </div>
                 </div>
               ))
