@@ -18,6 +18,9 @@ export default function ATPTennis() {
     { id: "atp", name: "ATP Tour", color: "blue" },
     { id: "challenger", name: "Challenger", color: "amber" },
     { id: "ausopen", name: "Australian Open", color: "cyan" },
+    { id: "rolandgarros", name: "Roland Garros", color: "rose" },
+    { id: "wimbledon", name: "Wimbledon", color: "green" },
+    { id: "usopen", name: "US Open", color: "indigo" },
     { id: "other", name: "Other", color: "purple" },
   ];
 
@@ -27,6 +30,9 @@ export default function ATPTennis() {
     amber: { border: "border-amber-500/50", text: "text-amber-400", bg: "bg-amber-500/10", bar: "from-amber-500 to-amber-400" },
     cyan: { border: "border-cyan-500/50", text: "text-cyan-400", bg: "bg-cyan-500/10", bar: "from-cyan-500 to-cyan-400" },
     purple: { border: "border-purple-500/50", text: "text-purple-400", bg: "bg-purple-500/10", bar: "from-purple-500 to-purple-400" },
+    rose: { border: "border-rose-500/50", text: "text-rose-400", bg: "bg-rose-500/10", bar: "from-rose-500 to-rose-400" },
+    green: { border: "border-green-500/50", text: "text-green-400", bg: "bg-green-500/10", bar: "from-green-500 to-green-400" },
+    indigo: { border: "border-indigo-500/50", text: "text-indigo-400", bg: "bg-indigo-500/10", bar: "from-indigo-500 to-indigo-400" },
   };
 
   // Fetch data on load

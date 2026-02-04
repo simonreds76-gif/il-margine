@@ -41,6 +41,9 @@ export default function AdminPanel() {
       { id: "atp", name: "ATP Tour" },
       { id: "challenger", name: "Challenger" },
       { id: "ausopen", name: "Australian Open" },
+      { id: "rolandgarros", name: "Roland Garros" },
+      { id: "wimbledon", name: "Wimbledon" },
+      { id: "usopen", name: "US Open" },
       { id: "other", name: "Other" },
     ],
     betbuilders: [

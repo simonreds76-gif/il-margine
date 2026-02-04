@@ -131,6 +131,30 @@ export const BASELINE_STATS: BaselineStats = {
         total_stake: 280,
         avg_odds: 2.06, // As specified
       },
+      rolandgarros: {
+        total_bets: 0, // Will be populated when tournament starts
+        wins: 0,
+        losses: 0,
+        total_profit: 0,
+        total_stake: 0,
+        avg_odds: 0, // Will be calculated from actual bets
+      },
+      wimbledon: {
+        total_bets: 0, // Will be populated when tournament starts
+        wins: 0,
+        losses: 0,
+        total_profit: 0,
+        total_stake: 0,
+        avg_odds: 0, // Will be calculated from actual bets
+      },
+      usopen: {
+        total_bets: 0, // Will be populated when tournament starts
+        wins: 0,
+        losses: 0,
+        total_profit: 0,
+        total_stake: 0,
+        avg_odds: 0, // Will be calculated from actual bets
+      },
       other: {
         total_bets: 50,
         wins: Math.round(50 * 0.54), // 54% win rate = 27 wins
