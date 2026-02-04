@@ -11,25 +11,42 @@ interface BookmakerLogoProps {
   className?: string;
 }
 
-// Map bookmaker short names to logo filenames
+// Map bookmaker short names to logo filenames (try PNG first, fallback to SVG)
 const bookmakerLogos: Record<string, string> = {
-  "Bet365": "bet365.png",
-  "Betfair": "betfair.png",
-  "Paddy Power": "paddypower.png",
-  "William Hill": "williamhill.png",
-  "Ladbrokes": "ladbrokes.png",
-  "Coral": "coral.png",
-  "Sky Bet": "skybet.png",
-  "Unibet": "unibet.png",
-  "Betway": "betway.png",
-  "888sport": "888sport.png",
-  "Betvictor": "betvictor.png",
-  "Betfred": "betfred.png",
-  "BoyleSports": "boylesports.png",
-  "Pinnacle": "pinnacle.png",
-  "Marathon": "marathon.png",
-  "DraftKings": "draftkings.png",
-  "FanDuel": "fanduel.png",
+  "bet365": "bet365",
+  "Bet365": "bet365",
+  "Betfair": "betfair",
+  "betfair": "betfair",
+  "Paddy Power": "paddypower",
+  "Paddy": "paddypower",
+  "paddypower": "paddypower",
+  "William Hill": "williamhill",
+  "WH": "williamhill",
+  "williamhill": "williamhill",
+  "Ladbrokes": "ladbrokes",
+  "ladbrokes": "ladbrokes",
+  "Coral": "coral",
+  "coral": "coral",
+  "Sky Bet": "skybet",
+  "SkyBet": "skybet",
+  "skybet": "skybet",
+  "Unibet": "unibet",
+  "unibet": "unibet",
+  "Betway": "betway",
+  "betway": "betway",
+  "888sport": "888sport",
+  "Betvictor": "betvictor",
+  "betvictor": "betvictor",
+  "Betfred": "betfred",
+  "betfred": "betfred",
+  "BoyleSports": "boylesports",
+  "Pinnacle": "pinnacle",
+  "pinnacle": "pinnacle",
+  "Marathon": "marathon",
+  "BetMGM": "betmgm",
+  "betmgm": "betmgm",
+  "DraftKings": "draftkings",
+  "FanDuel": "fanduel",
   // Add more as needed
 };
 
@@ -51,8 +68,12 @@ export default function BookmakerLogo({
     );
   }
 
-  const logoFilename = bookmakerLogos[bookmaker.short_name] || bookmakerLogos[bookmaker.name];
-  const logoPath = logoFilename ? `/bookmakers/${logoFilename}` : null;
+  const logoBase = bookmakerLogos[bookmaker.short_name] || bookmakerLogos[bookmaker.name];
+  // Try PNG first, fallback to SVG
+  const logoPath = logoBase ? (
+    `/bookmakers/${logoBase}.png` // Will try PNG first
+  ) : null;
+  const logoSvgPath = logoBase ? `/bookmakers/${logoBase}.svg` : null;
   
   // Determine link - use affiliate if available, otherwise placeholder
   const link = bookmaker.affiliate_link || "#";
@@ -60,18 +81,36 @@ export default function BookmakerLogo({
 
   const content = (
     <div className={`flex items-center gap-2 ${className}`}>
-      {logoPath ? (
+      {logoPath || logoSvgPath ? (
         <div className={`${sizeClasses[size]} relative flex-shrink-0`}>
-          <Image
-            src={logoPath}
-            alt={bookmaker.short_name || bookmaker.name}
-            fill
-            className="object-contain"
-            onError={(e) => {
-              // Fallback if image doesn't exist
-              e.currentTarget.style.display = "none";
-            }}
-          />
+          {logoPath && (
+            <Image
+              src={logoPath}
+              alt={bookmaker.short_name || bookmaker.name}
+              fill
+              className="object-contain"
+              onError={(e) => {
+                // If PNG fails, try SVG
+                if (logoSvgPath) {
+                  const img = e.currentTarget;
+                  img.src = logoSvgPath;
+                  img.onerror = () => {
+                    img.style.display = "none";
+                  };
+                } else {
+                  e.currentTarget.style.display = "none";
+                }
+              }}
+            />
+          )}
+          {!logoPath && logoSvgPath && (
+            <Image
+              src={logoSvgPath}
+              alt={bookmaker.short_name || bookmaker.name}
+              fill
+              className="object-contain"
+            />
+          )}
         </div>
       ) : (
         <div className={`${sizeClasses[size]} bg-slate-800 rounded flex items-center justify-center flex-shrink-0`}>
