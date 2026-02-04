@@ -64,29 +64,29 @@ export const BASELINE_STATS: BaselineStats = {
   categoryBaselines: {
     props: {
       // Serie A = 2x PL, Champions League < PL, Other = 25
-      // Distribution: PL=200, SerieA=400 (double PL), UCL=155 (lower than PL), Other=25 (Total: 780)
+      // Distribution: PL=225, SerieA=450 (double PL), UCL=80 (lower than PL), Other=25 (Total: 780)
       pl: {
-        total_bets: 200,
-        wins: Math.round(200 * 0.58), // 58% win rate = 116 wins
-        losses: 200 - Math.round(200 * 0.58), // 84 losses
-        total_profit: 200 * 0.25, // 25% ROI = 50u profit
-        total_stake: 200,
+        total_bets: 225,
+        wins: Math.round(225 * 0.58), // 58% win rate = 131 wins
+        losses: 225 - Math.round(225 * 0.58), // 94 losses
+        total_profit: 225 * 0.25, // 25% ROI = 56.25u profit
+        total_stake: 225,
         avg_odds: 0,
       },
       seriea: {
-        total_bets: 400, // Double of PL (Serie A expert)
-        wins: Math.round(400 * 0.58), // 58% win rate = 232 wins
-        losses: 400 - Math.round(400 * 0.58), // 168 losses
-        total_profit: 400 * 0.25, // 25% ROI = 100u profit
-        total_stake: 400,
+        total_bets: 450, // Double of PL (Serie A expert)
+        wins: Math.round(450 * 0.58), // 58% win rate = 261 wins
+        losses: 450 - Math.round(450 * 0.58), // 189 losses
+        total_profit: 450 * 0.25, // 25% ROI = 112.5u profit
+        total_stake: 450,
         avg_odds: 0,
       },
       ucl: {
-        total_bets: 155, // Lower than PL
-        wins: Math.round(155 * 0.58), // 58% win rate = 90 wins
-        losses: 155 - Math.round(155 * 0.58), // 65 losses
-        total_profit: 155 * 0.25, // 25% ROI = 38.75u profit
-        total_stake: 155,
+        total_bets: 80, // Lower than PL
+        wins: Math.round(80 * 0.58), // 58% win rate = 46 wins
+        losses: 80 - Math.round(80 * 0.58), // 34 losses
+        total_profit: 80 * 0.25, // 25% ROI = 20u profit
+        total_stake: 80,
         avg_odds: 0,
       },
       other: {
