@@ -83,34 +83,21 @@ export default function BookmakerLogo({
     <div className={`flex items-center gap-2 ${className}`}>
       {logoPath || logoSvgPath ? (
         <div className={`${sizeClasses[size]} relative flex-shrink-0`}>
-          {logoPath && (
-            <Image
-              src={logoPath}
-              alt={bookmaker.short_name || bookmaker.name}
-              fill
-              className="object-contain"
-              onError={(e) => {
-                // If PNG fails, try SVG
-                if (logoSvgPath) {
-                  const img = e.currentTarget;
-                  img.src = logoSvgPath;
-                  img.onerror = () => {
-                    img.style.display = "none";
-                  };
-                } else {
-                  e.currentTarget.style.display = "none";
-                }
-              }}
-            />
-          )}
-          {!logoPath && logoSvgPath && (
-            <Image
-              src={logoSvgPath}
-              alt={bookmaker.short_name || bookmaker.name}
-              fill
-              className="object-contain"
-            />
-          )}
+          <Image
+            src={logoPath || logoSvgPath || ""}
+            alt={bookmaker.short_name || bookmaker.name}
+            fill
+            className="object-contain"
+            unoptimized
+            onError={(e) => {
+              // If PNG fails and we have SVG, try SVG
+              if (logoPath && logoSvgPath && e.currentTarget.src.includes('.png')) {
+                e.currentTarget.src = logoSvgPath;
+              } else {
+                e.currentTarget.style.display = "none";
+              }
+            }}
+          />
         </div>
       ) : (
         <div className={`${sizeClasses[size]} bg-slate-800 rounded flex items-center justify-center flex-shrink-0`}>
