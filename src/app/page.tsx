@@ -382,7 +382,7 @@ export default function Home() {
             </h1>
             
             <p className="text-lg text-slate-400 mb-8 leading-relaxed">
-              Professional betting methodology built on 25 years of odds compilation experience. We identify value where bookmakers misprice markets. Singles only, data-driven selections, transparent results.
+              Professional betting methodology from a former odds compiler. We identify value where bookmakers misprice markets. Singles only, data-driven selections, transparent results.
             </p>
             
             <div className="flex flex-wrap justify-center gap-4 mb-12">
@@ -405,8 +405,8 @@ export default function Home() {
                 <div className="text-xs text-slate-500">Singles Only</div>
               </div>
               <div className="p-4 bg-slate-900/50 rounded border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono mb-1">25+</div>
-                <div className="text-xs text-slate-500">Years Experience</div>
+                <div className="text-2xl font-bold text-emerald-400 font-mono mb-1">1,200+</div>
+                <div className="text-xs text-slate-500">Tracked Bets</div>
               </div>
             </div>
           </div>

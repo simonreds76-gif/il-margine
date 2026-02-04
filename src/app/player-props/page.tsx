@@ -402,6 +402,22 @@ export default function PlayerProps() {
                   </div>
                 ))}
               </div>
+              
+              {/* Show More/Less Button */}
+              {filteredPending.length > 5 && (
+                <div className="border-t border-slate-800 p-4 text-center">
+                  <button
+                    onClick={() => setShowAllPending(!showAllPending)}
+                    className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+                  >
+                    {showAllPending ? (
+                      <>Show Less ({filteredPending.length - 5} hidden)</>
+                    ) : (
+                      <>Show All ({filteredPending.length - 5} more)</>
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
