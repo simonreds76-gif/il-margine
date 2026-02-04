@@ -235,7 +235,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center">
-              <Image src="/logo.png" alt="Il Margine" width={180} height={50} className="h-10 w-auto" style={{ background: 'transparent' }} />
+              <Image src="/logo.png" alt="Il Margine" width={180} height={50} className="h-11 md:h-12 w-auto" style={{ background: 'transparent' }} />
             </Link>
             
             {/* Mobile Menu Button */}
@@ -414,55 +414,43 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="py-12 md:py-20 border-b border-slate-800/50">
+      <section className="py-16 md:py-24 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Banner */}
-          <div className="mb-12 flex justify-center">
-            <Image 
-              src="/banner.png" 
-              alt="Il Margine" 
-              width={900} 
-              height={300} 
-              className="max-w-3xl w-full h-auto object-contain"
-              priority
-            />
-          </div>
-
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded">FREE BETA</span>
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="flex items-center justify-center gap-2 mb-8">
+              <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded border border-emerald-500/20">FREE BETA</span>
             </div>
             
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
-              Betting with <span className="text-emerald-400">mathematical edge</span>.
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 sm:mb-8 leading-tight tracking-tight">
+              Betting with <span className="text-emerald-400">mathematical edge</span>
             </h1>
             
-            <p className="text-base sm:text-lg text-slate-400 mb-6 sm:mb-8 leading-relaxed px-2">
+            <p className="text-lg sm:text-xl text-slate-300 mb-8 sm:mb-10 leading-relaxed max-w-2xl mx-auto">
               Professional betting methodology from a former odds compiler. We identify value where bookmakers misprice markets. Singles only, data-driven selections, transparent results.
             </p>
             
-            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8 sm:mb-12">
-              <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-medium px-5 sm:px-6 py-2.5 sm:py-3 rounded text-sm sm:text-base flex items-center gap-2 transition-colors">
-                <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-12 sm:mb-16">
+              <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg text-base sm:text-lg flex items-center gap-2 transition-all hover:scale-105 shadow-lg shadow-emerald-500/20">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
                 Join Telegram Channel
               </button>
-              <a href="#the-edge" className="border border-slate-700 hover:border-slate-500 text-slate-300 font-medium px-5 sm:px-6 py-2.5 sm:py-3 rounded text-sm sm:text-base transition-colors">
+              <a href="#the-edge" className="border border-slate-600 hover:border-slate-400 text-slate-200 font-medium px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg text-base sm:text-lg transition-all hover:bg-slate-800/50">
                 How It Works
               </a>
             </div>
             
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
-              <div className="p-4 bg-slate-900/50 rounded border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono mb-1">✓</div>
-                <div className="text-xs text-slate-500">Verified Edge</div>
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8">
+              <div className="p-5 sm:p-6 bg-slate-900/60 rounded-lg border border-slate-800/50 hover:border-emerald-500/30 transition-all">
+                <div className="text-3xl font-bold text-emerald-400 font-mono mb-2">✓</div>
+                <div className="text-sm text-slate-400 font-medium">Verified Edge</div>
               </div>
-              <div className="p-4 bg-slate-900/50 rounded border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono mb-1">100%</div>
-                <div className="text-xs text-slate-500">Singles Only</div>
+              <div className="p-5 sm:p-6 bg-slate-900/60 rounded-lg border border-slate-800/50 hover:border-emerald-500/30 transition-all">
+                <div className="text-3xl font-bold text-emerald-400 font-mono mb-2">100%</div>
+                <div className="text-sm text-slate-400 font-medium">Singles Only</div>
               </div>
-              <div className="p-4 bg-slate-900/50 rounded border border-slate-800">
-                <div className="text-2xl font-bold text-emerald-400 font-mono mb-1">1,200+</div>
-                <div className="text-xs text-slate-500">Tracked Bets</div>
+              <div className="p-5 sm:p-6 bg-slate-900/60 rounded-lg border border-slate-800/50 hover:border-emerald-500/30 transition-all">
+                <div className="text-3xl font-bold text-emerald-400 font-mono mb-2">1,200+</div>
+                <div className="text-sm text-slate-400 font-medium">Tracked Bets</div>
               </div>
             </div>
           </div>
@@ -470,14 +458,14 @@ export default function Home() {
       </section>
 
       {/* Markets */}
-      <section id="markets" className="py-16 border-b border-slate-800/50">
+      <section id="markets" className="py-20 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 mb-8">
-            <span className="text-xs font-mono text-emerald-400">MARKETS</span>
+          <div className="flex items-center gap-2 mb-6">
+            <span className="text-xs font-mono text-emerald-400 tracking-wider">MARKETS</span>
           </div>
           
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Where we find edge</h2>
-          <p className="text-sm sm:text-base text-slate-400 mb-8 sm:mb-10 max-w-2xl">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">Where we find edge</h2>
+          <p className="text-base sm:text-lg text-slate-300 mb-12 sm:mb-14 max-w-2xl">
             We focus on markets where bookmaker pricing is inefficient. No mainstream match odds. No markets where the bookies have perfect data.
           </p>
 
@@ -506,12 +494,12 @@ export default function Home() {
                 </>
               );
               
-              const cardClass = `p-6 rounded-lg border transition-all cursor-pointer block ${
+              const cardClass = `p-6 sm:p-8 rounded-xl border transition-all cursor-pointer block ${
                 market.status === "coming"
                   ? "bg-slate-900/30 border-slate-800/50 opacity-60"
                   : activeMarket === market.id
-                  ? "bg-slate-900/80 border-emerald-500/50"
-                  : "bg-slate-900/50 border-slate-800 hover:border-slate-700"
+                  ? "bg-slate-900/80 border-emerald-500/50 shadow-lg shadow-emerald-500/10"
+                  : "bg-slate-900/60 border-slate-800/50 hover:border-slate-700 hover:bg-slate-900/70"
               }`;
               
               return isActive ? (
@@ -537,12 +525,12 @@ export default function Home() {
       </section>
 
       {/* Latest Results */}
-      <section className="py-16 border-b border-slate-800/50 bg-slate-900/20">
+      <section className="py-20 border-b border-slate-800/50 bg-slate-900/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 sm:mb-10">
             <div>
-              <span className="text-xs font-mono text-emerald-400 mb-2 block">LATEST RESULTS</span>
-              <h2 className="text-xl sm:text-2xl font-bold">Recent Selections</h2>
+              <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">LATEST RESULTS</span>
+              <h2 className="text-2xl sm:text-3xl font-bold">Recent Selections</h2>
             </div>
             <div className="flex items-center gap-4">
               <span className="text-xs sm:text-sm text-emerald-400 font-mono">
@@ -664,14 +652,14 @@ export default function Home() {
       </section>
 
       {/* The Edge Section */}
-      <section id="the-edge" className="py-16 border-b border-slate-800/50">
+      <section id="the-edge" className="py-20 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
             <div>
-              <span className="text-xs font-mono text-emerald-400 mb-3 sm:mb-4 block">WHY IT WORKS</span>
-              <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">The Edge</h2>
+              <span className="text-xs font-mono text-emerald-400 mb-4 block tracking-wider">WHY IT WORKS</span>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">The Edge</h2>
               
-              <div className="space-y-6 text-slate-400 leading-relaxed">
+              <div className="space-y-6 text-slate-300 leading-relaxed text-base">
                 <p>
                   25 years in the betting industry. Former odds compiler. I&apos;ve worked on the other side, building the prices that bookmakers use. I know exactly where they cut corners and where value hides.
                 </p>
@@ -745,47 +733,47 @@ export default function Home() {
       </section>
 
       {/* Track Record */}
-      <section id="track-record" className="py-16 border-b border-slate-800/50">
+      <section id="track-record" className="py-20 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <span className="text-xs font-mono text-emerald-400 mb-3 sm:mb-4 block">TRACK RECORD</span>
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Proven Results</h2>
-          <p className="text-sm sm:text-base text-slate-400 mb-8 sm:mb-10 max-w-2xl">
+          <span className="text-xs font-mono text-emerald-400 mb-4 block tracking-wider">TRACK RECORD</span>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">Proven Results</h2>
+          <p className="text-base sm:text-lg text-slate-300 mb-12 sm:mb-14 max-w-2xl">
             Transparent results across all active markets. ATP Tennis independently verified on Tipstrr. Player Props self-tracked with timestamped records.
           </p>
 
           {/* Combined Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-12">
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-3xl font-bold text-emerald-400 font-mono mb-1">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-12 sm:mb-16">
+            <div className="p-6 sm:p-8 bg-slate-900/60 rounded-xl border border-slate-800/50 hover:border-emerald-500/30 transition-all">
+              <div className="text-4xl sm:text-5xl font-bold text-emerald-400 font-mono mb-2">
                 {loading ? "..." : combinedStats ? `${combinedStats.overall.total_bets.toLocaleString()}+` : "1,200+"}
               </div>
-              <div className="text-sm text-slate-500">Total Bets</div>
+              <div className="text-sm text-slate-400 font-medium">Total Bets</div>
             </div>
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-3xl font-bold text-emerald-400 font-mono mb-1">
+            <div className="p-6 sm:p-8 bg-slate-900/60 rounded-xl border border-slate-800/50 hover:border-emerald-500/30 transition-all">
+              <div className="text-4xl sm:text-5xl font-bold text-emerald-400 font-mono mb-2">
                 {loading ? "..." : combinedStats ? `${combinedStats.overall.win_rate.toFixed(0)}%` : "56%"}
               </div>
-              <div className="text-sm text-slate-500">Win Rate</div>
+              <div className="text-sm text-slate-400 font-medium">Win Rate</div>
             </div>
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-3xl font-bold text-emerald-400 font-mono mb-1">
+            <div className="p-6 sm:p-8 bg-slate-900/60 rounded-xl border border-slate-800/50 hover:border-emerald-500/30 transition-all">
+              <div className="text-4xl sm:text-5xl font-bold text-emerald-400 font-mono mb-2">
                 {loading ? "..." : combinedStats ? `${combinedStats.overall.roi > 0 ? "+" : ""}${combinedStats.overall.roi.toFixed(1)}%` : "+18%"}
               </div>
-              <div className="text-sm text-slate-500">Combined ROI</div>
+              <div className="text-sm text-slate-400 font-medium">Combined ROI</div>
             </div>
-            <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-3xl font-bold text-emerald-400 font-mono mb-1">2</div>
-              <div className="text-sm text-slate-500">Markets</div>
+            <div className="p-6 sm:p-8 bg-slate-900/60 rounded-xl border border-slate-800/50 hover:border-emerald-500/30 transition-all">
+              <div className="text-4xl sm:text-5xl font-bold text-emerald-400 font-mono mb-2">2</div>
+              <div className="text-sm text-slate-400 font-medium">Markets</div>
             </div>
           </div>
 
           {/* Individual Markets */}
-          <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
             {/* Player Props */}
-            <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold">Player Props</h3>
-                <span className="text-xs font-mono text-slate-600">FOOTBALL 2025</span>
+            <div className="bg-slate-900/60 rounded-xl border border-slate-800/50 p-6 sm:p-8 hover:border-slate-700 transition-all">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-semibold text-lg">Player Props</h3>
+                <span className="text-xs font-mono text-slate-500">FOOTBALL 2025</span>
               </div>
               <div className="grid grid-cols-3 gap-4 mb-4">
                 <div>
@@ -811,9 +799,9 @@ export default function Home() {
             </div>
 
             {/* ATP Tennis */}
-            <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold">ATP Tennis</h3>
+            <div className="bg-slate-900/60 rounded-xl border border-slate-800/50 p-6 sm:p-8 hover:border-slate-700 transition-all">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-semibold text-lg">ATP Tennis</h3>
                 <span className="text-xs font-mono text-emerald-400">TIPSTRR VERIFIED</span>
               </div>
               <div className="grid grid-cols-3 gap-4 mb-4">
@@ -843,13 +831,13 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Ready to join?</h2>
-          <p className="text-sm sm:text-base text-slate-400 mb-6 sm:mb-8 max-w-lg mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">Ready to join?</h2>
+          <p className="text-base sm:text-lg text-slate-300 mb-8 sm:mb-10 max-w-lg mx-auto">
             Free selections delivered to Telegram. Match, selection, odds, bookmaker. Everything you need to place your bet.
           </p>
-          <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-medium px-6 py-3 rounded inline-flex items-center gap-2 transition-colors">
+          <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-8 py-4 rounded-lg text-lg inline-flex items-center gap-2 transition-all hover:scale-105 shadow-lg shadow-emerald-500/20">
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
             Join Telegram Channel
           </button>
