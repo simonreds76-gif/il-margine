@@ -445,8 +445,8 @@ export default function Home() {
                 <div className="text-sm text-slate-400 font-medium">Verified Edge</div>
               </div>
               <div className="p-5 sm:p-6 bg-slate-900/60 rounded-lg border border-slate-800/50 hover:border-emerald-500/30 transition-all">
-                <div className="text-3xl font-bold text-emerald-400 font-mono mb-2">25+</div>
-                <div className="text-sm text-slate-400 font-medium">Years Experience</div>
+                <div className="text-3xl font-bold text-emerald-400 font-mono mb-2">100%</div>
+                <div className="text-sm text-slate-400 font-medium">Transparent</div>
               </div>
               <div className="p-5 sm:p-6 bg-slate-900/60 rounded-lg border border-slate-800/50 hover:border-emerald-500/30 transition-all">
                 <div className="text-3xl font-bold text-emerald-400 font-mono mb-2">1,200+</div>
