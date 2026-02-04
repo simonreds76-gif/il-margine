@@ -15,9 +15,17 @@ interface BookmakerRecommendation {
   pros: string[];
   cons?: string[];
   rating: number;
-  minOdds?: string;
-  maxStake?: string;
   notes?: string;
+}
+
+interface NewAccountOffer {
+  id: string;
+  bookmaker: string;
+  short_name: string;
+  offer: string;
+  description: string;
+  terms?: string;
+  expiry?: string;
 }
 
 export default function Bookmakers() {
@@ -72,8 +80,6 @@ export default function Bookmakers() {
         ],
         cons: ["Requires understanding of exchange mechanics", "Commission on winnings"],
         rating: 5,
-        minOdds: "1.01",
-        maxStake: "Market dependent",
         notes: "Essential for serious bettors. Exchange odds often beat traditional bookmakers.",
       },
       {
@@ -90,8 +96,6 @@ export default function Bookmakers() {
         ],
         cons: ["Not directly available in UK (accessible via brokers)", "Limited prop markets compared to bet365", "Requires larger stakes for value"],
         rating: 5,
-        minOdds: "1.74",
-        maxStake: "Unlimited",
         notes: "Pinnacle odds are the industry benchmark for closing line value. While not directly available in the UK, many bettors access Pinnacle through brokers. We use Pinnacle odds as our reference point for identifying value at other bookmakers.",
       },
     ],
@@ -125,8 +129,6 @@ export default function Bookmakers() {
         ],
         cons: ["Not directly available in UK (accessible via brokers)", "Limited live betting options", "Requires larger stakes"],
         rating: 5,
-        minOdds: "1.74",
-        maxStake: "Unlimited",
         notes: "Pinnacle odds are the industry benchmark for closing line value in tennis. While not directly available in the UK, many bettors access Pinnacle through brokers. We use Pinnacle odds as our reference point for identifying value at other bookmakers.",
       },
       {
