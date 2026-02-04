@@ -63,38 +63,38 @@ export const BASELINE_STATS: BaselineStats = {
   // Category-level baselines - Calculated from market totals with distribution rules
   categoryBaselines: {
     props: {
-      // Serie A = 2x PL, Serie A = 2x UCL, PL = UCL, Others significantly lower
-      // Distribution: PL=180, UCL=180, SerieA=360, Other=60 (Total: 780)
+      // Serie A = 2x PL, Champions League < PL, Other = 25
+      // Distribution: PL=200, SerieA=400 (double PL), UCL=155 (lower than PL), Other=25 (Total: 780)
       pl: {
-        total_bets: 180,
-        wins: Math.round(180 * 0.58), // 58% win rate = 104 wins
-        losses: 180 - Math.round(180 * 0.58), // 76 losses
-        total_profit: 180 * 0.25, // 25% ROI = 45u profit
-        total_stake: 180,
+        total_bets: 200,
+        wins: Math.round(200 * 0.58), // 58% win rate = 116 wins
+        losses: 200 - Math.round(200 * 0.58), // 84 losses
+        total_profit: 200 * 0.25, // 25% ROI = 50u profit
+        total_stake: 200,
         avg_odds: 0,
       },
       seriea: {
-        total_bets: 360, // Double of PL/UCL
-        wins: Math.round(360 * 0.58), // 58% win rate = 209 wins
-        losses: 360 - Math.round(360 * 0.58), // 151 losses
-        total_profit: 360 * 0.25, // 25% ROI = 90u profit
-        total_stake: 360,
+        total_bets: 400, // Double of PL (Serie A expert)
+        wins: Math.round(400 * 0.58), // 58% win rate = 232 wins
+        losses: 400 - Math.round(400 * 0.58), // 168 losses
+        total_profit: 400 * 0.25, // 25% ROI = 100u profit
+        total_stake: 400,
         avg_odds: 0,
       },
       ucl: {
-        total_bets: 180, // Same as PL
-        wins: Math.round(180 * 0.58), // 58% win rate = 104 wins
-        losses: 180 - Math.round(180 * 0.58), // 76 losses
-        total_profit: 180 * 0.25, // 25% ROI = 45u profit
-        total_stake: 180,
+        total_bets: 155, // Lower than PL
+        wins: Math.round(155 * 0.58), // 58% win rate = 90 wins
+        losses: 155 - Math.round(155 * 0.58), // 65 losses
+        total_profit: 155 * 0.25, // 25% ROI = 38.75u profit
+        total_stake: 155,
         avg_odds: 0,
       },
       other: {
-        total_bets: 60, // Significantly lower
-        wins: Math.round(60 * 0.58), // 58% win rate = 35 wins
-        losses: 60 - Math.round(60 * 0.58), // 25 losses
-        total_profit: 60 * 0.25, // 25% ROI = 15u profit
-        total_stake: 60,
+        total_bets: 25, // As specified
+        wins: Math.round(25 * 0.58), // 58% win rate = 15 wins
+        losses: 25 - Math.round(25 * 0.58), // 10 losses
+        total_profit: 25 * 0.25, // 25% ROI = 6.25u profit
+        total_stake: 25,
         avg_odds: 0,
       },
     },
