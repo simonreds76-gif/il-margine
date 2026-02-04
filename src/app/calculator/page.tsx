@@ -94,16 +94,14 @@ export default function Calculator() {
   };
 
   const calculateReturns = (stakePerUnit: number, marketStats: CombinedMarketStats) => {
-    const totalStaked = marketStats.total_bets * stakePerUnit;
-    const totalProfit = totalStaked * (marketStats.roi / 100);
-    const totalReturn = totalStaked + totalProfit;
+    // Calculate profit directly from units profit × stake per unit
+    // This is more accurate than using ROI percentage
+    const totalProfit = marketStats.total_profit * stakePerUnit;
     const profitPerBet = marketStats.total_bets > 0 ? totalProfit / marketStats.total_bets : 0;
     
     return {
       stakePerUnit,
-      totalStaked,
       totalProfit,
-      totalReturn,
       profitPerBet,
     };
   };
@@ -223,17 +221,6 @@ export default function Calculator() {
                         </div>
                       </div>
                       
-                      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-700/50">
-                        <div>
-                          <div className="text-xs text-slate-500 mb-1">Total Staked</div>
-                          <div className="text-lg font-semibold text-white font-mono">£{returns.totalStaked.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>
-                        </div>
-                        <div>
-                          <div className="text-xs text-slate-500 mb-1">Total Return</div>
-                          <div className="text-lg font-semibold text-emerald-400 font-mono">£{returns.totalReturn.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>
-                        </div>
-                      </div>
-                      
                       <div className="mt-4 pt-4 border-t border-slate-700/30">
                         <div className="text-xs text-slate-600">
                           Average profit per bet: <span className="text-emerald-400 font-mono">£{returns.profitPerBet.toFixed(2)}</span>
@@ -296,17 +283,6 @@ export default function Calculator() {
                             +£{returns.totalProfit.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                           </div>
                           <div className="text-xs text-slate-500">Total Profit</div>
-                        </div>
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-700/50">
-                        <div>
-                          <div className="text-xs text-slate-500 mb-1">Total Staked</div>
-                          <div className="text-lg font-semibold text-white font-mono">£{returns.totalStaked.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>
-                        </div>
-                        <div>
-                          <div className="text-xs text-slate-500 mb-1">Total Return</div>
-                          <div className="text-lg font-semibold text-emerald-400 font-mono">£{returns.totalReturn.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>
                         </div>
                       </div>
                       
