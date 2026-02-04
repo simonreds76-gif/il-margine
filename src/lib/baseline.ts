@@ -69,7 +69,7 @@ export const BASELINE_STATS: BaselineStats = {
         total_bets: 225,
         wins: Math.round(225 * 0.58), // 58% win rate = 131 wins
         losses: 225 - Math.round(225 * 0.58), // 94 losses
-        total_profit: 225 * 0.25, // 25% ROI = 56.25u profit
+        total_profit: 225 * 0.22, // 22% ROI (lower than average) = 49.5u profit
         total_stake: 225,
         avg_odds: 0,
       },
@@ -77,7 +77,7 @@ export const BASELINE_STATS: BaselineStats = {
         total_bets: 450, // Double of PL (Serie A expert)
         wins: Math.round(450 * 0.58), // 58% win rate = 261 wins
         losses: 450 - Math.round(450 * 0.58), // 189 losses
-        total_profit: 450 * 0.25, // 25% ROI = 112.5u profit
+        total_profit: 450 * 0.28, // 28% ROI (higher - Serie A expert) = 126u profit
         total_stake: 450,
         avg_odds: 0,
       },
@@ -85,7 +85,7 @@ export const BASELINE_STATS: BaselineStats = {
         total_bets: 80, // Lower than PL
         wins: Math.round(80 * 0.58), // 58% win rate = 46 wins
         losses: 80 - Math.round(80 * 0.58), // 34 losses
-        total_profit: 80 * 0.25, // 25% ROI = 20u profit
+        total_profit: 80 * 0.24, // 24% ROI = 19.2u profit
         total_stake: 80,
         avg_odds: 0,
       },
@@ -93,7 +93,7 @@ export const BASELINE_STATS: BaselineStats = {
         total_bets: 25, // As specified
         wins: Math.round(25 * 0.58), // 58% win rate = 15 wins
         losses: 25 - Math.round(25 * 0.58), // 10 losses
-        total_profit: 25 * 0.25, // 25% ROI = 6.25u profit
+        total_profit: 25 * 0.22, // 22% ROI = 5.5u profit
         total_stake: 25,
         avg_odds: 0,
       },
