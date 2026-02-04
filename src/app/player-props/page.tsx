@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { supabase, Bet, CategoryStats } from "@/lib/supabase";
+import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 
 export default function PlayerProps() {
   const [activeLeague, setActiveLeague] = useState("all");
@@ -66,29 +67,75 @@ export default function PlayerProps() {
 
   const getStatsForLeague = (leagueId: string) => {
     if (leagueId === "all") {
+      // For "All Leagues" - combine baseline + all live data
       const allStats = stats.filter(s => s.market === "props");
-      if (allStats.length === 0) return { total_bets: 0, roi: 0, win_rate: 0, avg_odds: 0 };
       
-      const totalBets = allStats.reduce((sum, s) => sum + (s.total_bets || 0), 0);
-      const totalProfit = allStats.reduce((sum, s) => sum + (s.total_profit || 0), 0);
-      const wins = allStats.reduce((sum, s) => sum + (s.wins || 0), 0);
-      const losses = allStats.reduce((sum, s) => sum + (s.losses || 0), 0);
-      const avgOdds = allStats.length > 0 ? allStats.reduce((sum, s) => sum + (s.avg_odds || 0), 0) / allStats.length : 0;
+      const liveBets = allStats.reduce((sum, s) => sum + (s.total_bets || 0), 0);
+      const liveProfit = allStats.reduce((sum, s) => sum + (Number(s.total_profit) || 0), 0);
+      const liveWins = allStats.reduce((sum, s) => sum + (s.wins || 0), 0);
+      const liveLosses = allStats.reduce((sum, s) => sum + (s.losses || 0), 0);
+      // Estimate stake from bets (assuming avg 1u per bet if no stake data)
+      const liveStake = liveBets;
+      
+      // Combine with baseline
+      const totalBets = BASELINE_STATS.props.total_bets + liveBets;
+      const totalProfit = BASELINE_STATS.props.total_profit + liveProfit;
+      const totalWins = BASELINE_STATS.props.wins + liveWins;
+      const totalLosses = BASELINE_STATS.props.losses + liveLosses;
+      const totalStake = BASELINE_STATS.props.total_stake + liveStake;
+      
+      const avgOdds = allStats.length > 0 ? allStats.reduce((sum, s) => sum + (Number(s.avg_odds) || 0), 0) / allStats.length : 0;
       
       return {
         total_bets: totalBets,
-        roi: totalBets > 0 ? (totalProfit / totalBets * 100) : 0,
-        win_rate: (wins + losses) > 0 ? (wins / (wins + losses) * 100) : 0,
+        roi: calculateROI(totalProfit, totalStake || 1),
+        win_rate: calculateWinRate(totalWins, totalLosses),
         avg_odds: avgOdds,
       };
     }
     
+    // For specific league - combine category baseline + live data for that category
+    const categoryBaseline = BASELINE_STATS.categoryBaselines.props[leagueId as keyof typeof BASELINE_STATS.categoryBaselines.props];
     const leagueStats = stats.find(s => s.category === leagueId);
+    
+    if (!categoryBaseline) {
+      // No baseline for this category, show only live data
+      if (!leagueStats) {
+        return { total_bets: 0, roi: 0, win_rate: 0, avg_odds: 0 };
+      }
+      const liveBets = leagueStats.total_bets || 0;
+      const liveProfit = Number(leagueStats.total_profit) || 0;
+      const liveWins = leagueStats.wins || 0;
+      const liveLosses = leagueStats.losses || 0;
+      // Estimate stake from bets (assuming avg 1u per bet if no stake data)
+      const liveStake = liveBets;
+      return {
+        total_bets: liveBets,
+        roi: liveStake > 0 ? calculateROI(liveProfit, liveStake) : 0,
+        win_rate: calculateWinRate(liveWins, liveLosses),
+        avg_odds: Number(leagueStats.avg_odds) || 0,
+      };
+    }
+    
+    const liveBets = leagueStats?.total_bets || 0;
+    const liveProfit = Number(leagueStats?.total_profit) || 0;
+    const liveWins = leagueStats?.wins || 0;
+    const liveLosses = leagueStats?.losses || 0;
+    // Estimate stake from bets (assuming avg 1u per bet if no stake data)
+    const liveStake = liveBets;
+    
+    // Combine category baseline + live data
+    const totalBets = categoryBaseline.total_bets + liveBets;
+    const totalProfit = categoryBaseline.total_profit + liveProfit;
+    const totalWins = categoryBaseline.wins + liveWins;
+    const totalLosses = categoryBaseline.losses + liveLosses;
+    const totalStake = categoryBaseline.total_stake + liveStake;
+    
     return {
-      total_bets: leagueStats?.total_bets || 0,
-      roi: leagueStats?.roi || 0,
-      win_rate: leagueStats?.win_rate || 0,
-      avg_odds: leagueStats?.avg_odds || 0,
+      total_bets: totalBets,
+      roi: calculateROI(totalProfit, totalStake || 1),
+      win_rate: calculateWinRate(totalWins, totalLosses),
+      avg_odds: Number(leagueStats?.avg_odds) || 0,
     };
   };
 

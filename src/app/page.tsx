@@ -1,16 +1,221 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { supabase, MarketStats } from "@/lib/supabase";
+import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
+
+interface CombinedMarketStats {
+  total_bets: number;
+  roi: number;
+  win_rate: number;
+  avg_odds: number;
+}
 
 export default function Home() {
   const [activeMarket, setActiveMarket] = useState("props");
   const [tipsMenuOpen, setTipsMenuOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [marketStats, setMarketStats] = useState<MarketStats[]>([]);
+  const [recentBets, setRecentBets] = useState<any[]>([]);
+  const [combinedStats, setCombinedStats] = useState<{
+    props: CombinedMarketStats;
+    tennis: CombinedMarketStats;
+    overall: CombinedMarketStats;
+  } | null>(null);
+
+  // Fetch live data from database
+  useEffect(() => {
+    fetchData();
+
+    // Set up real-time subscription to update when bets change
+    const channel = supabase
+      .channel('bets-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
+          schema: 'public',
+          table: 'bets'
+        },
+        (payload) => {
+          // When any bet is added, updated, or deleted, refresh the data
+          console.log('Bet changed:', payload.eventType);
+          fetchData();
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscription on unmount
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchData = async () => {
+    setLoading(true);
+    
+    // Fetch market stats
+    const { data: stats, error: statsError } = await supabase
+      .from("market_stats")
+      .select("*");
+    
+    if (stats) setMarketStats(stats);
+    if (statsError) console.error("Error fetching market stats:", statsError);
+
+    // Fetch recent settled bets (last 4-6 for homepage)
+    const { data: recent, error: recentError } = await supabase
+      .from("bets")
+      .select("*, bookmaker:bookmakers(*)")
+      .in("status", ["won", "lost"])
+      .order("settled_at", { ascending: false })
+      .limit(6);
+    
+    if (recent) setRecentBets(recent);
+    if (recentError) console.error("Error fetching recent bets:", recentError);
+
+    // Calculate combined stats - always call this, even if stats is empty
+    // It will use baseline values when there's no live data
+    calculateCombinedStats(stats || []);
+    
+    setLoading(false);
+  };
+
+  const calculateCombinedStats = (liveStats: MarketStats[]) => {
+    const propsLive = liveStats.find(s => s.market === "props");
+    const tennisLive = liveStats.find(s => s.market === "tennis");
+
+    // Combine Player Props
+    const propsLiveBets = propsLive?.total_bets || 0;
+    const propsLiveWins = propsLive?.wins || 0;
+    const propsLiveLosses = propsLive?.losses || 0;
+    const propsLiveProfit = Number(propsLive?.total_profit) || 0;
+    // Estimate stake from bets (assuming avg 1u per bet if no stake data)
+    const propsLiveStake = propsLiveBets;
+    
+    const propsCombined: CombinedMarketStats = {
+      total_bets: BASELINE_STATS.props.total_bets + propsLiveBets,
+      roi: 0,
+      win_rate: 0,
+      avg_odds: 0,
+    };
+    
+    const propsWins = BASELINE_STATS.props.wins + propsLiveWins;
+    const propsLosses = BASELINE_STATS.props.losses + propsLiveLosses;
+    const propsProfit = BASELINE_STATS.props.total_profit + propsLiveProfit;
+    const propsStake = BASELINE_STATS.props.total_stake + (propsLiveStake || propsLiveBets); // Fallback to bet count if no stake data
+    
+    propsCombined.win_rate = calculateWinRate(propsWins, propsLosses);
+    propsCombined.roi = calculateROI(propsProfit, propsStake || 1);
+    
+    // Calculate weighted average odds
+    if (propsLive?.avg_odds && propsLiveBets > 0) {
+      // Baseline doesn't have avg_odds, so we'll use live avg_odds as approximation
+      // Or calculate from baseline ROI if we had that data
+      propsCombined.avg_odds = Number(propsLive.avg_odds);
+    } else {
+      // If no live data, we can't calculate combined avg_odds accurately
+      // Use a placeholder or estimate from ROI
+      propsCombined.avg_odds = 0;
+    }
+
+    // Combine ATP Tennis
+    const tennisLiveBets = tennisLive?.total_bets || 0;
+    const tennisLiveWins = tennisLive?.wins || 0;
+    const tennisLiveLosses = tennisLive?.losses || 0;
+    const tennisLiveProfit = Number(tennisLive?.total_profit) || 0;
+    // Estimate stake from bets (assuming avg 1u per bet if no stake data)
+    const tennisLiveStake = tennisLiveBets;
+    
+    const tennisCombined: CombinedMarketStats = {
+      total_bets: BASELINE_STATS.tennis.total_bets + tennisLiveBets,
+      roi: 0,
+      win_rate: 0,
+      avg_odds: 0,
+    };
+    
+    const tennisWins = BASELINE_STATS.tennis.wins + tennisLiveWins;
+    const tennisLosses = BASELINE_STATS.tennis.losses + tennisLiveLosses;
+    const tennisProfit = BASELINE_STATS.tennis.total_profit + tennisLiveProfit;
+    const tennisStake = BASELINE_STATS.tennis.total_stake + (tennisLiveStake || tennisLiveBets);
+    
+    tennisCombined.win_rate = calculateWinRate(tennisWins, tennisLosses);
+    tennisCombined.roi = calculateROI(tennisProfit, tennisStake || 1);
+    
+    if (tennisLive?.avg_odds && tennisLiveBets > 0) {
+      tennisCombined.avg_odds = Number(tennisLive.avg_odds);
+    } else {
+      tennisCombined.avg_odds = 0;
+    }
+
+    // Combine Overall - Use baseline overall stats directly, then add live data from both markets
+    const overallLiveBets = propsLiveBets + tennisLiveBets;
+    const overallLiveWins = propsLiveWins + tennisLiveWins;
+    const overallLiveLosses = propsLiveLosses + tennisLiveLosses;
+    const overallLiveProfit = propsLiveProfit + tennisLiveProfit;
+    const overallLiveStake = (propsLiveStake || propsLiveBets) + (tennisLiveStake || tennisLiveBets);
+    
+    const overallCombined: CombinedMarketStats = {
+      total_bets: BASELINE_STATS.overall.total_bets + overallLiveBets,
+      roi: 0,
+      win_rate: 0,
+      avg_odds: 0,
+    };
+    
+    // Combine baseline overall with live data from both markets
+    const overallWins = BASELINE_STATS.overall.wins + overallLiveWins;
+    const overallLosses = BASELINE_STATS.overall.losses + overallLiveLosses;
+    const overallProfit = BASELINE_STATS.overall.total_profit + overallLiveProfit;
+    const overallStake = BASELINE_STATS.overall.total_stake + overallLiveStake;
+    
+    overallCombined.win_rate = calculateWinRate(overallWins, overallLosses);
+    overallCombined.roi = calculateROI(overallProfit, overallStake || 1);
+    
+    // Weighted average odds across markets
+    if (propsCombined.avg_odds > 0 || tennisCombined.avg_odds > 0) {
+      const totalOddsWeight = (propsCombined.avg_odds * propsCombined.total_bets) + 
+                             (tennisCombined.avg_odds * tennisCombined.total_bets);
+      overallCombined.avg_odds = overallCombined.total_bets > 0 
+        ? totalOddsWeight / overallCombined.total_bets
+        : 0;
+    }
+
+    setCombinedStats({
+      props: propsCombined,
+      tennis: tennisCombined,
+      overall: overallCombined,
+    });
+  };
+
+  // Calculate last 7 days profit from recent bets
+  const last7DaysProfit = recentBets
+    .filter(bet => {
+      if (!bet.settled_at) return false;
+      const settledDate = new Date(bet.settled_at);
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      return settledDate >= sevenDaysAgo;
+    })
+    .reduce((sum, bet) => sum + (Number(bet.profit_loss) || 0), 0);
 
   const markets = [
-    { id: "props", name: "Player Props", description: "Football individual player markets", status: "active", bets: "780+", profit: "+25% ROI" },
-    { id: "atp", name: "ATP Tennis", description: "Pre-match singles markets", status: "active", bets: "447", profit: "+8.6% ROI" },
+    { 
+      id: "props", 
+      name: "Player Props", 
+      description: "Football individual player markets", 
+      status: "active", 
+      bets: combinedStats ? `${combinedStats.props.total_bets}+` : "780+", 
+      profit: combinedStats ? `${combinedStats.props.roi > 0 ? "+" : ""}${combinedStats.props.roi.toFixed(1)}% ROI` : "+25% ROI" 
+    },
+    { 
+      id: "atp", 
+      name: "ATP Tennis", 
+      description: "Pre-match singles markets", 
+      status: "active", 
+      bets: combinedStats ? `${combinedStats.tennis.total_bets}` : "447", 
+      profit: combinedStats ? `${combinedStats.tennis.roi > 0 ? "+" : ""}${combinedStats.tennis.roi.toFixed(1)}% ROI` : "+8.6% ROI" 
+    },
     { id: "builders", name: "Bet Builders", description: "Same-game combinations", status: "coming" },
     { id: "atg", name: "ATG", description: "Anytime goalscorer markets", status: "coming" },
   ];
@@ -75,8 +280,12 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="flex items-center gap-3 mt-2">
-                        <span className="text-xs font-mono text-emerald-400/80">+25% ROI</span>
-                        <span className="text-xs text-slate-600">780+ bets</span>
+                        <span className="text-xs font-mono text-emerald-400/80">
+                          {combinedStats ? `${combinedStats.props.roi > 0 ? "+" : ""}${combinedStats.props.roi.toFixed(1)}% ROI` : "+25% ROI"}
+                        </span>
+                        <span className="text-xs text-slate-600">
+                          {combinedStats ? `${combinedStats.props.total_bets}+ bets` : "780+ bets"}
+                        </span>
                       </div>
                     </Link>
                     
@@ -104,8 +313,12 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="flex items-center gap-3 mt-2">
-                        <span className="text-xs font-mono text-emerald-400/80">+8.6% ROI</span>
-                        <span className="text-xs text-slate-600">447 bets</span>
+                        <span className="text-xs font-mono text-emerald-400/80">
+                          {combinedStats ? `${combinedStats.tennis.roi > 0 ? "+" : ""}${combinedStats.tennis.roi.toFixed(1)}% ROI` : "+8.6% ROI"}
+                        </span>
+                        <span className="text-xs text-slate-600">
+                          {combinedStats ? `${combinedStats.tennis.total_bets} bets` : "447 bets"}
+                        </span>
                       </div>
                     </Link>
                     
@@ -275,67 +488,69 @@ export default function Home() {
               <h2 className="text-2xl font-bold">Recent Picks</h2>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-sm text-emerald-400 font-mono">Last 7 days: +4.87u</span>
+              <span className="text-sm text-emerald-400 font-mono">
+                Last 7 days: {last7DaysProfit > 0 ? "+" : ""}{last7DaysProfit.toFixed(2)}u
+              </span>
             </div>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Result Card 1 - Won */}
-            <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-4 hover:border-slate-700 transition-colors">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs text-slate-500 font-mono">Feb 02</span>
-                <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-medium">WON</span>
-              </div>
-              <div className="text-sm text-slate-400 mb-1">ATP Montpellier</div>
-              <div className="font-medium mb-2">Fils ML</div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-500">@1.72 • 1u</span>
-                <span className="text-emerald-400 font-mono font-medium">+0.72u</span>
-              </div>
+          {loading ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="bg-slate-900/50 rounded-lg border border-slate-800 p-4 animate-pulse">
+                  <div className="h-20 bg-slate-800/50 rounded"></div>
+                </div>
+              ))}
             </div>
-            
-            {/* Result Card 2 - Lost */}
-            <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-4 hover:border-slate-700 transition-colors">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs text-slate-500 font-mono">Feb 01</span>
-                <span className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded font-medium">LOST</span>
-              </div>
-              <div className="text-sm text-slate-400 mb-1">Player Props</div>
-              <div className="font-medium mb-2">Salah 2+ Shots OT</div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-500">@1.85 • 1.5u</span>
-                <span className="text-red-400 font-mono font-medium">-1.50u</span>
-              </div>
+          ) : recentBets.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {recentBets.slice(0, 4).map((bet) => {
+                const settledDate = bet.settled_at ? new Date(bet.settled_at) : null;
+                const dateStr = settledDate 
+                  ? settledDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                  : 'N/A';
+                
+                return (
+                  <div key={bet.id} className="bg-slate-900/50 rounded-lg border border-slate-800 p-4 hover:border-slate-700 transition-colors">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs text-slate-500 font-mono">{dateStr}</span>
+                      <span className={`text-xs px-2 py-0.5 rounded font-medium ${
+                        bet.status === "won" 
+                          ? "bg-emerald-500/20 text-emerald-400"
+                          : bet.status === "lost"
+                          ? "bg-red-500/20 text-red-400"
+                          : "bg-slate-700 text-slate-400"
+                      }`}>
+                        {bet.status.toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="text-sm text-slate-400 mb-1">
+                      {bet.market === "tennis" ? "ATP Tennis" : bet.market === "props" ? "Player Props" : bet.market}
+                    </div>
+                    <div className="font-medium mb-2">
+                      {bet.player ? `${bet.player}: ` : ""}{bet.selection}
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-slate-500">@{bet.odds} • {bet.stake}u</span>
+                      <span className={`font-mono font-medium ${
+                        bet.profit_loss && bet.profit_loss > 0 
+                          ? "text-emerald-400" 
+                          : bet.profit_loss && bet.profit_loss < 0
+                          ? "text-red-400"
+                          : "text-slate-500"
+                      }`}>
+                        {bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}{bet.profit_loss?.toFixed(2) || "0.00"}u
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            
-            {/* Result Card 3 - Won */}
-            <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-4 hover:border-slate-700 transition-colors">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs text-slate-500 font-mono">Jan 31</span>
-                <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-medium">WON</span>
-              </div>
-              <div className="text-sm text-slate-400 mb-1">ATP Montpellier</div>
-              <div className="font-medium mb-2">Bublik +4.5 Games</div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-500">@1.85 • 2u</span>
-                <span className="text-emerald-400 font-mono font-medium">+1.70u</span>
-              </div>
+          ) : (
+            <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
+              <p className="text-slate-500">No recent results yet</p>
             </div>
-            
-            {/* Result Card 4 - Won */}
-            <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-4 hover:border-slate-700 transition-colors">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs text-slate-500 font-mono">Jan 30</span>
-                <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-medium">WON</span>
-              </div>
-              <div className="text-sm text-slate-400 mb-1">Player Props</div>
-              <div className="font-medium mb-2">Palmer 3+ Tackles</div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-500">@1.95 • 2u</span>
-                <span className="text-emerald-400 font-mono font-medium">+1.90u</span>
-              </div>
-            </div>
-          </div>
+          )}
           
           <div className="mt-6 flex justify-center gap-4">
             <Link href="/atp-tennis" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
@@ -441,15 +656,21 @@ export default function Home() {
           {/* Combined Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-3xl font-bold text-emerald-400 font-mono mb-1">1,200+</div>
+              <div className="text-3xl font-bold text-emerald-400 font-mono mb-1">
+                {loading ? "..." : combinedStats ? `${combinedStats.overall.total_bets.toLocaleString()}+` : "1,200+"}
+              </div>
               <div className="text-sm text-slate-500">Total Bets</div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-3xl font-bold text-emerald-400 font-mono mb-1">56%</div>
+              <div className="text-3xl font-bold text-emerald-400 font-mono mb-1">
+                {loading ? "..." : combinedStats ? `${combinedStats.overall.win_rate.toFixed(0)}%` : "56%"}
+              </div>
               <div className="text-sm text-slate-500">Win Rate</div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className="text-3xl font-bold text-emerald-400 font-mono mb-1">+18%</div>
+              <div className="text-3xl font-bold text-emerald-400 font-mono mb-1">
+                {loading ? "..." : combinedStats ? `${combinedStats.overall.roi > 0 ? "+" : ""}${combinedStats.overall.roi.toFixed(1)}%` : "+18%"}
+              </div>
               <div className="text-sm text-slate-500">Combined ROI</div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
@@ -468,15 +689,21 @@ export default function Home() {
               </div>
               <div className="grid grid-cols-3 gap-4 mb-4">
                 <div>
-                  <div className="text-2xl font-bold text-emerald-400 font-mono">780+</div>
+                  <div className="text-2xl font-bold text-emerald-400 font-mono">
+                    {loading ? "..." : combinedStats ? `${combinedStats.props.total_bets}+` : "780+"}
+                  </div>
                   <div className="text-xs text-slate-500">Bets</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-emerald-400 font-mono">+25%</div>
+                  <div className="text-2xl font-bold text-emerald-400 font-mono">
+                    {loading ? "..." : combinedStats ? `${combinedStats.props.roi > 0 ? "+" : ""}${combinedStats.props.roi.toFixed(1)}%` : "+25%"}
+                  </div>
                   <div className="text-xs text-slate-500">ROI</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-emerald-400 font-mono">58%</div>
+                  <div className="text-2xl font-bold text-emerald-400 font-mono">
+                    {loading ? "..." : combinedStats ? `${combinedStats.props.win_rate.toFixed(0)}%` : "58%"}
+                  </div>
                   <div className="text-xs text-slate-500">Win Rate</div>
                 </div>
               </div>
@@ -491,15 +718,21 @@ export default function Home() {
               </div>
               <div className="grid grid-cols-3 gap-4 mb-4">
                 <div>
-                  <div className="text-2xl font-bold text-emerald-400 font-mono">447</div>
+                  <div className="text-2xl font-bold text-emerald-400 font-mono">
+                    {loading ? "..." : combinedStats ? `${combinedStats.tennis.total_bets}` : "447"}
+                  </div>
                   <div className="text-xs text-slate-500">Bets</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-emerald-400 font-mono">+8.6%</div>
+                  <div className="text-2xl font-bold text-emerald-400 font-mono">
+                    {loading ? "..." : combinedStats ? `${combinedStats.tennis.roi > 0 ? "+" : ""}${combinedStats.tennis.roi.toFixed(1)}%` : "+8.6%"}
+                  </div>
                   <div className="text-xs text-slate-500">ROI</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-emerald-400 font-mono">54%</div>
+                  <div className="text-2xl font-bold text-emerald-400 font-mono">
+                    {loading ? "..." : combinedStats ? `${combinedStats.tennis.win_rate.toFixed(0)}%` : "54%"}
+                  </div>
                   <div className="text-xs text-slate-500">Win Rate</div>
                 </div>
               </div>

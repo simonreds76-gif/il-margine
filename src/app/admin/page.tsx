@@ -158,9 +158,40 @@ export default function AdminPanel() {
     setLoading(true);
     setMessage(null);
     
+    // First, fetch the bet to get odds and stake for profit calculation
+    const { data: bet, error: fetchError } = await supabase
+      .from("bets")
+      .select("odds, stake")
+      .eq("id", betId)
+      .single();
+
+    if (fetchError || !bet) {
+      setLoading(false);
+      setMessage({ type: "error", text: "Failed to fetch bet details" });
+      return;
+    }
+
+    // Calculate profit/loss based on status
+    let profitLoss: number;
+    if (status === "won") {
+      // Profit = (odds * stake) - stake
+      profitLoss = Number(bet.odds) * Number(bet.stake) - Number(bet.stake);
+    } else if (status === "lost") {
+      // Loss = -stake
+      profitLoss = -Number(bet.stake);
+    } else {
+      // Void = 0
+      profitLoss = 0;
+    }
+
+    // Update bet with status, profit_loss, and settled_at timestamp
     const { error } = await supabase
       .from("bets")
-      .update({ status })
+      .update({ 
+        status,
+        profit_loss: profitLoss,
+        settled_at: new Date().toISOString()
+      })
       .eq("id", betId);
 
     setLoading(false);
@@ -168,7 +199,7 @@ export default function AdminPanel() {
     if (error) {
       setMessage({ type: "error", text: error.message });
     } else {
-      setMessage({ type: "success", text: `Bet marked as ${status}` });
+      setMessage({ type: "success", text: `Bet marked as ${status}. P/L: ${profitLoss > 0 ? "+" : ""}${profitLoss.toFixed(2)}u` });
       // Refresh both lists
       await fetchPendingBets();
       await fetchRecentBets();
