@@ -332,28 +332,35 @@ export default function PlayerProps() {
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
               {/* Desktop Table */}
               <div className="hidden md:block overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-800 text-xs text-slate-500 uppercase">
-                      <th className="px-4 py-3 text-left">Match</th>
-                      <th className="px-4 py-3 text-left" style={{ width: '80px' }}>Player</th>
-                      <th className="px-4 py-3 text-left">Selection</th>
-                      <th className="px-4 py-3 text-center" style={{ width: '80px' }}>Odds</th>
-                      <th className="px-4 py-3 text-center" style={{ width: '50px' }}>Stake</th>
+                    <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
+                      <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '80px' }}>Player</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '50px' }}>Stake</th>
                       <th className="px-4 py-3 text-center" style={{ width: '70px' }}>Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredPending.map((pick) => (
                       <tr key={pick.id} className="border-b border-slate-800/50 hover:bg-slate-800/20">
-                        <td className="px-4 py-3 font-medium text-slate-200">{pick.event}</td>
-                        <td className="px-4 py-3 text-slate-400">{pick.player || '-'}</td>
-                        <td className="px-4 py-3 text-slate-300">{pick.selection}</td>
-                        <td className="px-4 py-3 text-center">
-                          <span className="font-mono text-emerald-400">{pick.odds}</span>
-                          <span className="text-xs text-slate-500 ml-1">{pick.bookmaker?.short_name}</span>
+                        <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/30">{pick.event}</td>
+                        <td className="px-4 py-3 text-slate-400 border-r border-slate-800/30">{pick.player || '-'}</td>
+                        <td className="px-4 py-3 text-slate-300 border-r border-slate-800/30">{pick.selection}</td>
+                        <td className="px-4 py-3 text-center border-r border-slate-800/30">
+                          <span className="font-mono text-slate-200">{pick.odds}</span>
                         </td>
-                        <td className="px-4 py-3 text-center font-mono text-slate-200">{pick.stake}u</td>
+                        <td className="px-4 py-3 text-center border-r border-slate-800/30">
+                          {pick.bookmaker?.short_name ? (
+                            <span className="text-xs text-slate-400">{pick.bookmaker.short_name}</span>
+                          ) : (
+                            <span className="text-xs text-slate-600">-</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/30">{pick.stake}u</td>
                         <td className="px-4 py-3 text-center">
                           <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">
                             PENDING
@@ -381,7 +388,8 @@ export default function PlayerProps() {
                       </span>
                     </div>
                     <div className="flex items-center gap-4 text-sm">
-                      <span className="font-mono text-emerald-400">{pick.odds} {pick.bookmaker?.short_name}</span>
+                      <span className="font-mono text-slate-200">{pick.odds}</span>
+                      <span className="text-xs text-slate-400">{pick.bookmaker?.short_name || '-'}</span>
                       <span className="font-mono text-slate-300">{pick.stake}u</span>
                     </div>
                   </div>
@@ -417,30 +425,37 @@ export default function PlayerProps() {
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
               {/* Desktop Table */}
               <div className="hidden md:block overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-800 text-xs text-slate-500 uppercase">
-                      <th className="px-4 py-3 text-left">Match</th>
-                      <th className="px-4 py-3 text-left" style={{ width: '80px' }}>Player</th>
-                      <th className="px-4 py-3 text-left">Selection</th>
-                      <th className="px-4 py-3 text-center" style={{ width: '80px' }}>Odds</th>
-                      <th className="px-4 py-3 text-center" style={{ width: '50px' }}>Stake</th>
-                      <th className="px-4 py-3 text-center" style={{ width: '70px' }}>Result</th>
+                    <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
+                      <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '80px' }}>Player</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '50px' }}>Stake</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Result</th>
                       <th className="px-4 py-3 text-right" style={{ width: '80px' }}>P/L</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredRecent.map((result) => (
                       <tr key={result.id} className="border-b border-slate-800/50 hover:bg-slate-800/20">
-                        <td className="px-4 py-3 font-medium text-slate-200">{result.event}</td>
-                        <td className="px-4 py-3 text-slate-400">{result.player || '-'}</td>
-                        <td className="px-4 py-3 text-slate-300">{result.selection}</td>
-                        <td className="px-4 py-3 text-center">
-                          <span className="font-mono text-emerald-400">{result.odds}</span>
-                          <span className="text-xs text-slate-500 ml-1">{result.bookmaker?.short_name}</span>
+                        <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/30">{result.event}</td>
+                        <td className="px-4 py-3 text-slate-400 border-r border-slate-800/30">{result.player || '-'}</td>
+                        <td className="px-4 py-3 text-slate-300 border-r border-slate-800/30">{result.selection}</td>
+                        <td className="px-4 py-3 text-center border-r border-slate-800/30">
+                          <span className="font-mono text-slate-200">{result.odds}</span>
                         </td>
-                        <td className="px-4 py-3 text-center font-mono text-slate-200">{result.stake}u</td>
-                        <td className="px-4 py-3 text-center">
+                        <td className="px-4 py-3 text-center border-r border-slate-800/30">
+                          {result.bookmaker?.short_name ? (
+                            <span className="text-xs text-slate-400">{result.bookmaker.short_name}</span>
+                          ) : (
+                            <span className="text-xs text-slate-600">-</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/30">{result.stake}u</td>
+                        <td className="px-4 py-3 text-center border-r border-slate-800/30">
                           <span className={`text-xs font-mono px-2 py-1 rounded ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
                             {result.status.toUpperCase()}
                           </span>
@@ -471,7 +486,8 @@ export default function PlayerProps() {
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-4">
-                        <span className="font-mono text-emerald-400">{result.odds} {result.bookmaker?.short_name}</span>
+                        <span className="font-mono text-slate-200">{result.odds}</span>
+                        <span className="text-xs text-slate-400">{result.bookmaker?.short_name || '-'}</span>
                         <span className="font-mono text-slate-300">{result.stake}u</span>
                       </div>
                       <span className={`font-mono font-medium ${result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
