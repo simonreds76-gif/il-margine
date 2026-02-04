@@ -17,6 +17,7 @@ interface CombinedMarketStats {
 export default function Home() {
   const [activeMarket, setActiveMarket] = useState("props");
   const [tipsMenuOpen, setTipsMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [marketStats, setMarketStats] = useState<MarketStats[]>([]);
   const [recentBets, setRecentBets] = useState<any[]>([]);
@@ -237,6 +238,21 @@ export default function Home() {
               <Image src="/logo.png" alt="Il Margine" width={180} height={50} className="h-10 w-auto" style={{ background: 'transparent' }} />
             </Link>
             
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-slate-400 hover:text-slate-100 transition-colors"
+              aria-label="Toggle menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {mobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+            
             <div className="hidden md:flex items-center gap-6">
               {/* Tips Dropdown */}
               <div className="relative">
@@ -369,6 +385,31 @@ export default function Home() {
               </button>
             </div>
           </div>
+          
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden border-t border-slate-800/50 py-4 space-y-3">
+              <Link href="/player-props" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                Player Props
+              </Link>
+              <Link href="/atp-tennis" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                ATP Tennis
+              </Link>
+              <a href="#the-edge" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                The Edge
+              </a>
+              <a href="#track-record" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                Track Record
+              </a>
+              <Link href="/calculator" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                Calculator
+              </Link>
+              <button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-medium px-4 py-2.5 rounded transition-colors flex items-center justify-center gap-2">
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                Join Free
+              </button>
+            </div>
+          )}
         </div>
       </nav>
 
@@ -392,25 +433,25 @@ export default function Home() {
               <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded">FREE BETA</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
               Betting with <span className="text-emerald-400">mathematical edge</span>.
             </h1>
             
-            <p className="text-lg text-slate-400 mb-8 leading-relaxed">
+            <p className="text-base sm:text-lg text-slate-400 mb-6 sm:mb-8 leading-relaxed px-2">
               Professional betting methodology from a former odds compiler. We identify value where bookmakers misprice markets. Singles only, data-driven selections, transparent results.
             </p>
             
-            <div className="flex flex-wrap justify-center gap-4 mb-12">
-              <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-medium px-6 py-3 rounded flex items-center gap-2 transition-colors">
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8 sm:mb-12">
+              <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-medium px-5 sm:px-6 py-2.5 sm:py-3 rounded text-sm sm:text-base flex items-center gap-2 transition-colors">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
                 Join Telegram Channel
               </button>
-              <a href="#the-edge" className="border border-slate-700 hover:border-slate-500 text-slate-300 font-medium px-6 py-3 rounded transition-colors">
+              <a href="#the-edge" className="border border-slate-700 hover:border-slate-500 text-slate-300 font-medium px-5 sm:px-6 py-2.5 sm:py-3 rounded text-sm sm:text-base transition-colors">
                 How It Works
               </a>
             </div>
             
-            <div className="flex flex-wrap justify-center gap-6">
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
               <div className="p-4 bg-slate-900/50 rounded border border-slate-800">
                 <div className="text-2xl font-bold text-emerald-400 font-mono mb-1">✓</div>
                 <div className="text-xs text-slate-500">Verified Edge</div>
@@ -435,8 +476,8 @@ export default function Home() {
             <span className="text-xs font-mono text-emerald-400">MARKETS</span>
           </div>
           
-          <h2 className="text-3xl font-bold mb-4">Where we find edge</h2>
-          <p className="text-slate-400 mb-10 max-w-2xl">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Where we find edge</h2>
+          <p className="text-sm sm:text-base text-slate-400 mb-8 sm:mb-10 max-w-2xl">
             We focus on markets where bookmaker pricing is inefficient. No mainstream match odds. No markets where the bookies have perfect data.
           </p>
 
@@ -498,13 +539,13 @@ export default function Home() {
       {/* Latest Results */}
       <section className="py-16 border-b border-slate-800/50 bg-slate-900/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
             <div>
               <span className="text-xs font-mono text-emerald-400 mb-2 block">LATEST RESULTS</span>
-              <h2 className="text-2xl font-bold">Recent Selections</h2>
+              <h2 className="text-xl sm:text-2xl font-bold">Recent Selections</h2>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-sm text-emerald-400 font-mono">
+              <span className="text-xs sm:text-sm text-emerald-400 font-mono">
                 Last 7 days: {last7DaysProfit > 0 ? "+" : ""}{last7DaysProfit.toFixed(2)}u
               </span>
             </div>
@@ -521,8 +562,8 @@ export default function Home() {
           ) : recentBets.length > 0 ? (
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
               {/* Desktop Table */}
-              <div className="hidden md:block overflow-x-auto">
-                <table className="w-full border-collapse">
+              <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
+                <table className="w-full border-collapse min-w-full">
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
                       <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
@@ -625,10 +666,10 @@ export default function Home() {
       {/* The Edge Section */}
       <section id="the-edge" className="py-16 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
             <div>
-              <span className="text-xs font-mono text-emerald-400 mb-4 block">WHY IT WORKS</span>
-              <h2 className="text-3xl font-bold mb-6">The Edge</h2>
+              <span className="text-xs font-mono text-emerald-400 mb-3 sm:mb-4 block">WHY IT WORKS</span>
+              <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">The Edge</h2>
               
               <div className="space-y-6 text-slate-400 leading-relaxed">
                 <p>
@@ -706,14 +747,14 @@ export default function Home() {
       {/* Track Record */}
       <section id="track-record" className="py-16 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <span className="text-xs font-mono text-emerald-400 mb-4 block">TRACK RECORD</span>
-          <h2 className="text-3xl font-bold mb-4">Proven Results</h2>
-          <p className="text-slate-400 mb-10 max-w-2xl">
+          <span className="text-xs font-mono text-emerald-400 mb-3 sm:mb-4 block">TRACK RECORD</span>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Proven Results</h2>
+          <p className="text-sm sm:text-base text-slate-400 mb-8 sm:mb-10 max-w-2xl">
             Transparent results across all active markets. ATP Tennis independently verified on Tipstrr. Player Props self-tracked with timestamped records.
           </p>
 
           {/* Combined Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-12">
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
               <div className="text-3xl font-bold text-emerald-400 font-mono mb-1">
                 {loading ? "..." : combinedStats ? `${combinedStats.overall.total_bets.toLocaleString()}+` : "1,200+"}
@@ -739,7 +780,7 @@ export default function Home() {
           </div>
 
           {/* Individual Markets */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
             {/* Player Props */}
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-6">
               <div className="flex items-center justify-between mb-4">
@@ -804,8 +845,8 @@ export default function Home() {
       {/* CTA */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to join?</h2>
-          <p className="text-slate-400 mb-8 max-w-lg mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Ready to join?</h2>
+          <p className="text-sm sm:text-base text-slate-400 mb-6 sm:mb-8 max-w-lg mx-auto">
             Free selections delivered to Telegram. Match, selection, odds, bookmaker. Everything you need to place your bet.
           </p>
           <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-medium px-6 py-3 rounded inline-flex items-center gap-2 transition-colors">

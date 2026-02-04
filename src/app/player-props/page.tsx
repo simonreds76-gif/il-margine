@@ -14,6 +14,7 @@ export default function PlayerProps() {
   const [loading, setLoading] = useState(true);
   const [showAllPending, setShowAllPending] = useState(false);
   const [showAllRecent, setShowAllRecent] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const leagueConfig = [
     { id: "all", name: "All Leagues", color: "emerald" },
@@ -198,6 +199,21 @@ export default function PlayerProps() {
               <Image src="/logo.png" alt="Il Margine" width={180} height={50} className="h-10 w-auto" style={{ background: 'transparent' }} />
             </Link>
             
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-slate-400 hover:text-slate-100 transition-colors"
+              aria-label="Toggle menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {mobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+            
             <div className="hidden md:flex items-center gap-6">
               <Link href="/" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Home</Link>
               <Link href="/player-props" className="text-sm text-emerald-400 font-medium">Player Props</Link>
@@ -209,6 +225,28 @@ export default function PlayerProps() {
               </button>
             </div>
           </div>
+          
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden border-t border-slate-800/50 py-4 space-y-3">
+              <Link href="/" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                Home
+              </Link>
+              <Link href="/player-props" className="block px-4 py-2 text-sm text-emerald-400 font-medium hover:bg-emerald-500/10 rounded transition-colors">
+                Player Props
+              </Link>
+              <Link href="/atp-tennis" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                ATP Tennis
+              </Link>
+              <Link href="/calculator" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                Calculator
+              </Link>
+              <button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-medium px-4 py-2.5 rounded transition-colors flex items-center justify-center gap-2">
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                Join Free
+              </button>
+            </div>
+          )}
         </div>
       </nav>
 
@@ -221,13 +259,13 @@ export default function PlayerProps() {
             <span className="text-sm text-emerald-400">Player Props</span>
           </div>
           
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">Football Player Props</h1>
-          <p className="text-slate-400 max-w-3xl mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">Football Player Props</h1>
+          <p className="text-sm sm:text-base text-slate-400 max-w-3xl mb-6 sm:mb-8">
             Individual player markets represent one of the most inefficient pricing areas in football betting. 
             While bookmakers dedicate significant resources to match odds, player props receive far less attention.
           </p>
 
-          <div className="flex flex-wrap gap-2 mb-8">
+          <div className="flex flex-wrap gap-2 mb-6 sm:mb-8">
             <span className="px-3 py-1.5 bg-slate-800/50 rounded text-xs font-mono text-slate-400 border border-slate-700/50">Shots</span>
             <span className="px-3 py-1.5 bg-slate-800/50 rounded text-xs font-mono text-slate-400 border border-slate-700/50">Shots on Target</span>
             <span className="px-3 py-1.5 bg-slate-800/50 rounded text-xs font-mono text-slate-400 border border-slate-700/50">Fouls</span>
@@ -261,7 +299,7 @@ export default function PlayerProps() {
       {/* League Tabs */}
       <section className="py-8 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap gap-3 mb-8">
+          <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
             {leagueConfig.map((league) => {
               const leagueStats = getStatsForLeague(league.id);
               return (
@@ -287,7 +325,7 @@ export default function PlayerProps() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
               <div className="text-2xl font-bold text-white font-mono mb-2">{currentStats.total_bets}</div>
               <div className="text-xs text-slate-500 mb-3">Total Bets</div>
@@ -338,8 +376,8 @@ export default function PlayerProps() {
           ) : filteredPending.length > 0 ? (
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
               {/* Desktop Table */}
-              <div className="hidden md:block overflow-x-auto">
-                <table className="w-full border-collapse">
+              <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
+                <table className="w-full border-collapse min-w-full">
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
                       <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
@@ -447,8 +485,8 @@ export default function PlayerProps() {
           {filteredRecent.length > 0 ? (
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
               {/* Desktop Table */}
-              <div className="hidden md:block overflow-x-auto">
-                <table className="w-full border-collapse">
+              <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
+                <table className="w-full border-collapse min-w-full">
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
                       <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
