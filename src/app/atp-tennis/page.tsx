@@ -287,18 +287,24 @@ export default function ATPTennis() {
           {/* Methodology */}
           <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-6 mb-8">
             <h3 className="font-semibold mb-4 text-emerald-400">Our Methodology</h3>
-            <div className="grid md:grid-cols-3 gap-6 text-sm text-slate-400">
+            <div className="grid md:grid-cols-3 gap-6 text-sm text-slate-400 leading-relaxed">
               <div>
                 <span className="text-slate-200 font-medium block mb-2">Surface Specific Modeling</span>
-                Our proprietary model incorporates surface specific ELO ratings, historical serve and return point win percentages over the past 12 months, and fatigue factors. We identify when bookmakers underweight surface specific statistical edges, particularly on hard courts versus clay, where player performance differentials are significant but often mispriced.
+                <p>
+                  Our proprietary model incorporates surface specific ELO ratings calibrated to each playing surface, alongside historical serve and return point win percentages calculated over the preceding twelve month period. The model further integrates fatigue factors and additional variables that we cannot disclose publicly. This comprehensive approach enables us to identify instances where bookmakers systematically underweight surface specific statistical edges, particularly in the context of hard court versus clay court performance differentials, where player performance variations are substantial yet frequently mispriced by market makers.
+                </p>
               </div>
               <div>
                 <span className="text-slate-200 font-medium block mb-2">Tournament Tier Focus</span>
-                ATP 250 and 500 events, along with Challenger tournaments, have thinner markets where pricing inefficiencies persist longer than Grand Slams. Our model accounts for tournament context and market depth when evaluating value.
+                <p>
+                  ATP 250 and 500 level events, in addition to Challenger tournaments, exhibit thinner market depth where pricing inefficiencies persist for extended periods relative to Grand Slam competitions. Our analytical framework accounts for tournament context, market depth, and liquidity constraints when evaluating value propositions. This systematic approach allows us to exploit pricing anomalies that emerge in less liquid markets where bookmaker pricing models receive less scrutiny and adjustment.
+                </p>
               </div>
               <div>
                 <span className="text-slate-200 font-medium block mb-2">Line Value, Not Outcomes</span>
-                We do not predict winners. We identify when bookmakers have mispriced game handicaps and totals based on our proprietary modeling, which factors in multiple variables we cannot disclose publicly.
+                <p>
+                  Our methodology does not seek to predict match outcomes. Rather, we identify instances where bookmakers have mispriced game handicaps and totals through systematic analysis of our proprietary modeling framework. This framework incorporates multiple variables, including but not limited to surface specific performance metrics, fatigue indicators, and other factors that remain proprietary. We focus exclusively on identifying value in the pricing of specific markets rather than attempting to forecast match results.
+                </p>
               </div>
             </div>
           </div>
