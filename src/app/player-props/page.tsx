@@ -12,6 +12,8 @@ export default function PlayerProps() {
   const [recentBets, setRecentBets] = useState<Bet[]>([]);
   const [stats, setStats] = useState<CategoryStats[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAllPending, setShowAllPending] = useState(false);
+  const [showAllRecent, setShowAllRecent] = useState(false);
 
   const leagueConfig = [
     { id: "all", name: "All Leagues", color: "emerald" },
@@ -65,7 +67,7 @@ export default function PlayerProps() {
       .eq("market", "props")
       .eq("status", "pending")
       .order("posted_at", { ascending: false })
-      .limit(15);
+      .limit(50); // Fetch more from DB, but display only 5 initially
     
     if (pending) setPendingBets(pending);
 
@@ -75,7 +77,7 @@ export default function PlayerProps() {
       .eq("market", "props")
       .in("status", ["won", "lost"])
       .order("settled_at", { ascending: false })
-      .limit(25);
+      .limit(50); // Fetch more from DB, but display only 5 initially
     
     if (recent) setRecentBets(recent);
 
@@ -165,6 +167,10 @@ export default function PlayerProps() {
 
   const filteredPending = activeLeague === "all" ? pendingBets : pendingBets.filter(b => b.category === activeLeague);
   const filteredRecent = activeLeague === "all" ? recentBets : recentBets.filter(b => b.category === activeLeague);
+  
+  // Display limits: show 5 initially, or all if expanded
+  const displayedPending = showAllPending ? filteredPending : filteredPending.slice(0, 5);
+  const displayedRecent = showAllRecent ? filteredRecent : filteredRecent.slice(0, 5);
 
   const activeColor = leagueConfig.find(l => l.id === activeLeague)?.color || "emerald";
   const currentStats = getStatsForLeague(activeLeague);
@@ -346,7 +352,7 @@ export default function PlayerProps() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredPending.map((pick) => (
+                    {displayedPending.map((pick) => (
                       <tr key={pick.id} className="border-b border-slate-800/50 hover:bg-slate-800/20">
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/30">{pick.event}</td>
                         <td className="px-4 py-3 text-slate-400 border-r border-slate-800/30">{pick.player || '-'}</td>
@@ -374,7 +380,7 @@ export default function PlayerProps() {
               </div>
               {/* Mobile Cards */}
               <div className="md:hidden divide-y divide-slate-800/50">
-                {filteredPending.map((pick) => (
+                {displayedPending.map((pick) => (
                   <div key={pick.id} className="p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
@@ -440,7 +446,7 @@ export default function PlayerProps() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredRecent.map((result) => (
+                    {displayedRecent.map((result) => (
                       <tr key={result.id} className="border-b border-slate-800/50 hover:bg-slate-800/20">
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/30">{result.event}</td>
                         <td className="px-4 py-3 text-slate-400 border-r border-slate-800/30">{result.player || '-'}</td>
@@ -471,7 +477,7 @@ export default function PlayerProps() {
               </div>
               {/* Mobile Cards */}
               <div className="md:hidden divide-y divide-slate-800/50">
-                {filteredRecent.map((result) => (
+                {displayedRecent.map((result) => (
                   <div key={result.id} className="p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
@@ -498,6 +504,22 @@ export default function PlayerProps() {
                   </div>
                 ))}
               </div>
+              
+              {/* Show More/Less Button */}
+              {filteredRecent.length > 5 && (
+                <div className="border-t border-slate-800 p-4 text-center">
+                  <button
+                    onClick={() => setShowAllRecent(!showAllRecent)}
+                    className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+                  >
+                    {showAllRecent ? (
+                      <>Show Less ({filteredRecent.length - 5} hidden)</>
+                    ) : (
+                      <>Show All ({filteredRecent.length - 5} more)</>
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">

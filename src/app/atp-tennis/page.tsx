@@ -12,6 +12,8 @@ export default function ATPTennis() {
   const [recentBets, setRecentBets] = useState<Bet[]>([]);
   const [stats, setStats] = useState<CategoryStats[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAllPending, setShowAllPending] = useState(false);
+  const [showAllRecent, setShowAllRecent] = useState(false);
 
   const categoryConfig = [
     { id: "all", name: "All Tennis", color: "emerald" },
@@ -73,7 +75,7 @@ export default function ATPTennis() {
       .eq("market", "tennis")
       .eq("status", "pending")
       .order("posted_at", { ascending: false })
-      .limit(15);
+      .limit(50); // Fetch more from DB, but display only 5 initially
     
     if (pending) setPendingBets(pending);
 
@@ -84,7 +86,7 @@ export default function ATPTennis() {
       .eq("market", "tennis")
       .in("status", ["won", "lost"])
       .order("settled_at", { ascending: false })
-      .limit(25);
+      .limit(50); // Fetch more from DB, but display only 5 initially
     
     if (recent) setRecentBets(recent);
 
@@ -182,6 +184,10 @@ export default function ATPTennis() {
   const filteredRecent = activeCategory === "all"
     ? recentBets
     : recentBets.filter(b => b.category === activeCategory);
+  
+  // Display limits: show 5 initially, or all if expanded
+  const displayedPending = showAllPending ? filteredPending : filteredPending.slice(0, 5);
+  const displayedRecent = showAllRecent ? filteredRecent : filteredRecent.slice(0, 5);
 
   const activeColor = categoryConfig.find(c => c.id === activeCategory)?.color || "emerald";
   const currentStats = getStatsForCategory(activeCategory);
@@ -356,7 +362,7 @@ export default function ATPTennis() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredPending.map((pick) => (
+                    {displayedPending.map((pick) => (
                       <tr key={pick.id} className="border-b border-slate-800/50 hover:bg-slate-800/20">
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/30">{pick.event}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/30">{pick.selection}</td>
@@ -383,7 +389,7 @@ export default function ATPTennis() {
               </div>
               {/* Mobile Cards */}
               <div className="md:hidden divide-y divide-slate-800/50">
-                {filteredPending.map((pick) => (
+                {displayedPending.map((pick) => (
                   <div key={pick.id} className="p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
@@ -402,6 +408,22 @@ export default function ATPTennis() {
                   </div>
                 ))}
               </div>
+              
+              {/* Show More/Less Button */}
+              {filteredPending.length > 5 && (
+                <div className="border-t border-slate-800 p-4 text-center">
+                  <button
+                    onClick={() => setShowAllPending(!showAllPending)}
+                    className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+                  >
+                    {showAllPending ? (
+                      <>Show Less ({filteredPending.length - 5} hidden)</>
+                    ) : (
+                      <>Show All ({filteredPending.length - 5} more)</>
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
@@ -436,7 +458,7 @@ export default function ATPTennis() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredRecent.map((result) => (
+                    {displayedRecent.map((result) => (
                       <tr key={result.id} className="border-b border-slate-800/50 hover:bg-slate-800/20">
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/30">{result.event}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/30">{result.selection}</td>
@@ -466,7 +488,7 @@ export default function ATPTennis() {
               </div>
               {/* Mobile Cards */}
               <div className="md:hidden divide-y divide-slate-800/50">
-                {filteredRecent.map((result) => (
+                {displayedRecent.map((result) => (
                   <div key={result.id} className="p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
@@ -490,6 +512,22 @@ export default function ATPTennis() {
                   </div>
                 ))}
               </div>
+              
+              {/* Show More/Less Button */}
+              {filteredRecent.length > 5 && (
+                <div className="border-t border-slate-800 p-4 text-center">
+                  <button
+                    onClick={() => setShowAllRecent(!showAllRecent)}
+                    className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+                  >
+                    {showAllRecent ? (
+                      <>Show Less ({filteredRecent.length - 5} hidden)</>
+                    ) : (
+                      <>Show All ({filteredRecent.length - 5} more)</>
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
