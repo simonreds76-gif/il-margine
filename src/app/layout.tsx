@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Il Margine | Mathematical Edge Betting",
-  description: "Kill the bookies. Mathematical edge betting, singles only. Join our free Telegram channel for picks that got us banned from every major UK bookmaker.",
+  description: "Mathematical edge betting with 25 years of odds compilation experience. Professional betting methodology, singles only, transparent results. Join our free Telegram channel for value-driven selections.",
   icons: {
     icon: [
       { url: "/favicon.png", sizes: "64x64", type: "image/png" },

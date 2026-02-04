@@ -347,6 +347,7 @@ export default function Home() {
               
               <a href="#the-edge" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">The Edge</a>
               <a href="#track-record" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Track Record</a>
+              <Link href="/calculator" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Calculator</Link>
               <button className="bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-medium px-4 py-2 rounded transition-colors flex items-center gap-2">
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
                 Join Free
@@ -381,7 +382,7 @@ export default function Home() {
             </h1>
             
             <p className="text-lg text-slate-400 mb-8 leading-relaxed">
-              Professional betting methodology built on 25 years of odds compilation experience. We find value where bookmakers misprice. Singles only, data-driven picks, transparent results.
+              Professional betting methodology built on 25 years of odds compilation experience. We identify value where bookmakers misprice markets. Singles only, data-driven selections, transparent results.
             </p>
             
             <div className="flex flex-wrap justify-center gap-4 mb-12">
@@ -485,7 +486,7 @@ export default function Home() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <span className="text-xs font-mono text-emerald-400 mb-2 block">LATEST RESULTS</span>
-              <h2 className="text-2xl font-bold">Recent Picks</h2>
+              <h2 className="text-2xl font-bold">Recent Selections</h2>
             </div>
             <div className="flex items-center gap-4">
               <span className="text-sm text-emerald-400 font-mono">
@@ -650,7 +651,7 @@ export default function Home() {
           <span className="text-xs font-mono text-emerald-400 mb-4 block">TRACK RECORD</span>
           <h2 className="text-3xl font-bold mb-4">Proven Results</h2>
           <p className="text-slate-400 mb-10 max-w-2xl">
-            Exposed results across all active markets. ATP Tennis verified on Tipstrr. Player Props self-tracked with timestamped records.
+            Transparent results across all active markets. ATP Tennis independently verified on Tipstrr. Player Props self-tracked with timestamped records.
           </p>
 
           {/* Combined Stats */}
@@ -747,7 +748,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to join?</h2>
           <p className="text-slate-400 mb-8 max-w-lg mx-auto">
-            Free picks delivered to Telegram. Match, selection, odds, bookmaker. Everything you need.
+            Free selections delivered to Telegram. Match, selection, odds, bookmaker. Everything you need to place your bet.
           </p>
           <button className="bg-emerald-500 hover:bg-emerald-400 text-black font-medium px-6 py-3 rounded inline-flex items-center gap-2 transition-colors">
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
