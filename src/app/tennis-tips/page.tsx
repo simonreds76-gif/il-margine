@@ -502,7 +502,15 @@ export default function TennisTips() {
               <span className="font-semibold text-sm">Il Margine</span>
               <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">FREE BETA</span>
             </div>
-            <div className="text-xs text-slate-600">Gamble responsibly. 18+ only.</div>
+            <div className="text-xs text-slate-600 text-center md:text-right">
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 mb-2">
+                <Link href="/disclaimer" className="hover:text-slate-300">Disclaimer</Link>
+                <Link href="/privacy-policy" className="hover:text-slate-300">Privacy Policy</Link>
+                <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="hover:text-slate-300">Responsible Gambling</a>
+              </div>
+              <p>Gamble responsibly. 18+ only.</p>
+              <p className="mt-1 text-slate-500">Past performance does not guarantee future results. Illustrative based on historical data. Always bet within your means.</p>
+            </div>
           </div>
         </div>
       </footer>

@@ -331,8 +331,13 @@ export default function Calculator() {
               <span className="font-semibold text-sm">Il Margine</span>
               <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">FREE BETA</span>
             </div>
-            <div className="text-xs text-slate-600">
-              Gamble responsibly. 18+ only.
+            <div className="flex flex-col items-center md:items-end gap-2">
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-slate-500">
+                <Link href="/disclaimer" className="hover:text-slate-300">Disclaimer</Link>
+                <Link href="/privacy-policy" className="hover:text-slate-300">Privacy Policy</Link>
+                <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="hover:text-slate-300">Responsible Gambling</a>
+              </div>
+              <div className="text-xs text-slate-600">Gamble responsibly. 18+ only.</div>
             </div>
           </div>
         </div>
