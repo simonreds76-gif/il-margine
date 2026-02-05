@@ -255,7 +255,10 @@ export default function Bookmakers() {
             <span className="text-xs font-mono text-emerald-400 tracking-wider">PLAYER PROPS</span>
           </div>
           
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Best Bookmakers for Player Props</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-3">
+            <span className="text-3xl sm:text-4xl">⚽</span>
+            Best Bookmakers for Player Props
+          </h2>
           <p className="text-base text-slate-300 mb-8 sm:mb-10 max-w-2xl">
             Player props require bookmakers with wide market coverage and competitive odds. These are our top recommendations.
           </p>
@@ -350,7 +353,10 @@ export default function Bookmakers() {
             <span className="text-xs font-mono text-emerald-400 tracking-wider">TENNIS</span>
           </div>
           
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Best Bookmakers for Tennis</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-3">
+            <span className="text-3xl sm:text-4xl">🎾</span>
+            Best Bookmakers for Tennis
+          </h2>
           <p className="text-base text-slate-300 mb-8 sm:mb-10 max-w-2xl">
             Tennis betting requires sharp odds and good market depth. These bookmakers excel in tennis markets.
           </p>
@@ -445,7 +451,10 @@ export default function Bookmakers() {
             <span className="text-xs font-mono text-emerald-400 tracking-wider">NEW ACCOUNTS</span>
           </div>
           
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">New Account Offers</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-3">
+            <span className="text-3xl sm:text-4xl">💰</span>
+            New Account Offers
+          </h2>
           <p className="text-base text-slate-300 mb-8 sm:mb-10 max-w-2xl">
             Opening a new betting account? Check the latest welcome offers and promotions from our recommended bookmakers.
           </p>
@@ -506,43 +515,56 @@ export default function Bookmakers() {
               return offers.map((offer) => {
                 const dbBookmaker = getBookmakerFromDb(offer.short_name);
                 return (
-                  <div key={offer.id} className="bg-slate-900/60 rounded-xl border border-slate-800/50 p-6 hover:border-emerald-500/50 transition-all">
-                    <div className="flex items-center gap-3 mb-4">
-                      <BookmakerLogo 
-                        bookmaker={dbBookmaker || { id: 0, name: offer.bookmaker, short_name: offer.short_name, affiliate_link: null, active: true }}
-                        size="md"
-                      />
-                      <h3 className="font-semibold text-lg">{offer.bookmaker}</h3>
-                    </div>
+                  <div key={offer.id} className="bg-gradient-to-br from-slate-900/80 to-slate-800/60 rounded-xl border-2 border-emerald-500/30 p-6 hover:border-emerald-500/60 transition-all relative overflow-hidden">
+                    {/* Decorative background elements */}
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl -mr-16 -mt-16"></div>
+                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl -ml-12 -mb-12"></div>
                     
-                    <div className="mb-4">
-                      <div className="text-2xl font-bold text-emerald-400 mb-2">{offer.offer}</div>
-                      <p className="text-sm text-slate-300 leading-relaxed">{offer.description}</p>
-                    </div>
-
-                    {offer.terms && (
-                      <div className="mt-4 pt-4 border-t border-slate-800/50">
-                        <p className="text-xs text-slate-500 leading-relaxed">{offer.terms}</p>
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <BookmakerLogo 
+                            bookmaker={dbBookmaker || { id: 0, name: offer.bookmaker, short_name: offer.short_name, affiliate_link: null, active: true }}
+                            size="md"
+                          />
+                          <h3 className="font-semibold text-lg">{offer.bookmaker}</h3>
+                        </div>
+                        <div className="text-3xl">🎁</div>
                       </div>
-                    )}
+                      
+                      <div className="mb-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-2xl">💵</span>
+                          <div className="text-2xl font-bold text-emerald-400">{offer.offer}</div>
+                        </div>
+                        <p className="text-sm text-slate-300 leading-relaxed">{offer.description}</p>
+                      </div>
 
-                    {dbBookmaker?.affiliate_link ? (
-                      <a
-                        href={dbBookmaker.affiliate_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-4 block w-full bg-emerald-500 hover:bg-emerald-400 text-black font-medium px-4 py-2.5 rounded-lg text-center transition-colors"
-                      >
-                        Claim Offer
-                      </a>
-                    ) : (
-                      <button
-                        disabled
-                        className="mt-4 w-full bg-slate-800 text-slate-500 font-medium px-4 py-2.5 rounded-lg text-center cursor-not-allowed"
-                      >
-                        Offer Available
-                      </button>
-                    )}
+                      {offer.terms && (
+                        <div className="mt-4 pt-4 border-t border-slate-800/50">
+                          <p className="text-xs text-slate-500 leading-relaxed">{offer.terms}</p>
+                        </div>
+                      )}
+
+                      {dbBookmaker?.affiliate_link ? (
+                        <a
+                          href={dbBookmaker.affiliate_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-4 block w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-black font-bold px-4 py-3 rounded-lg text-center transition-all shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 flex items-center justify-center gap-2"
+                        >
+                          <span>🎉</span>
+                          Claim Offer Now
+                        </a>
+                      ) : (
+                        <button
+                          disabled
+                          className="mt-4 w-full bg-slate-800 text-slate-500 font-medium px-4 py-2.5 rounded-lg text-center cursor-not-allowed"
+                        >
+                          Offer Available
+                        </button>
+                      )}
+                    </div>
                   </div>
                 );
               });
@@ -558,7 +580,10 @@ export default function Bookmakers() {
             <span className="text-xs font-mono text-emerald-400 tracking-wider">BET BUILDERS</span>
           </div>
           
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Best Bookmakers for Bet Builders</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-3">
+            <span className="text-3xl sm:text-4xl">🎯</span>
+            Best Bookmakers for Bet Builders
+          </h2>
           <p className="text-base text-slate-300 mb-8 sm:mb-10 max-w-2xl">
             Same-game combinations require flexible bet builder tools. These bookmakers offer the best builder interfaces.
           </p>
