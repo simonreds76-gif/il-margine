@@ -1,20 +1,10 @@
 import Link from "next/link";
-import Image from "next/image";
 
 export default function Disclaimer() {
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <section className="py-12 md:py-16 border-b border-slate-800/50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center mb-10">
-            <Image
-              src="/banner.png"
-              alt="Il Margine"
-              width={1200}
-              height={400}
-              className="w-full max-w-2xl h-auto object-contain rounded-lg"
-            />
-          </div>
           <Link href="/" className="text-sm text-slate-500 hover:text-slate-300 mb-6 inline-block">
             ← Home
           </Link>

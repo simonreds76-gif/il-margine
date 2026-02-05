@@ -694,13 +694,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Banner sign-off */}
-      <section className="py-12 border-b border-slate-800/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
-          <Image src="/banner.png" alt="Il Margine" width={1200} height={400} className="w-full max-w-2xl h-auto object-contain rounded-lg opacity-90" />
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="border-t border-slate-800 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
