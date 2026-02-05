@@ -5,7 +5,7 @@ export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <section className="py-12 md:py-16 border-b border-slate-800/50 relative overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center opacity-[0.06] pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center opacity-[0.14] pointer-events-none">
           <Image
             src="/banner.png"
             alt=""
