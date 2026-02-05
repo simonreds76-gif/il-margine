@@ -1,10 +1,20 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Disclaimer() {
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <section className="py-12 md:py-16 border-b border-slate-800/50">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-12 md:py-16 border-b border-slate-800/50 relative overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center opacity-[0.06] pointer-events-none">
+          <Image
+            src="/banner.png"
+            alt=""
+            width={1200}
+            height={400}
+            className="w-full max-w-4xl h-auto object-contain"
+          />
+        </div>
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <Link href="/" className="text-sm text-slate-500 hover:text-slate-300 mb-6 inline-block">
             ← Home
           </Link>
