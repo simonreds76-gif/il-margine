@@ -23,7 +23,6 @@ export default function Calculator() {
     props: CombinedMarketStats;
     tennis: CombinedMarketStats;
   } | null>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
