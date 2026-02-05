@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -10,9 +10,29 @@ export default function GlobalNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [tipsMenuOpen, setTipsMenuOpen] = useState(false);
   const pathname = usePathname();
-  const isTipsActive = ['/tennis-tips', '/player-props', '/anytime-goalscorer', '/bet-builders'].includes(pathname);
+  const [homeSection, setHomeSection] = useState<"edge" | "track-record">("edge");
+
+  useEffect(() => {
+    const sync = () => {
+      if (typeof window === "undefined") return;
+      setHomeSection(window.location.hash === "#track-record" ? "track-record" : "edge");
+    };
+    sync();
+    window.addEventListener("hashchange", sync);
+    window.addEventListener("popstate", sync);
+    return () => {
+      window.removeEventListener("hashchange", sync);
+      window.removeEventListener("popstate", sync);
+    };
+  }, []);
+
+  const isTipsActive = ["/tennis-tips", "/player-props", "/anytime-goalscorer", "/bet-builders"].includes(pathname);
+  const isEdgeActive = pathname === "/" && homeSection === "edge";
+  const isTrackRecordActive = pathname === "/" && homeSection === "track-record";
+  const setEdge = () => setHomeSection("edge");
+  const setTrackRecord = () => setHomeSection("track-record");
   const linkClass = (active: boolean) =>
-    `text-sm transition-colors ${active ? 'text-emerald-400 font-medium' : 'text-slate-400 hover:text-slate-100'}`;
+    `text-sm transition-colors ${active ? "text-emerald-400 font-medium" : "text-slate-400 hover:text-slate-100"}`;
 
   return (
     <nav className="border-b border-slate-800/80 sticky top-0 z-50 bg-[#0f1117]/95 backdrop-blur-sm">
@@ -61,8 +81,8 @@ export default function GlobalNav() {
               )}
             </div>
             
-            <Link href="/#the-edge" className={linkClass(pathname === '/')}>The Edge</Link>
-            <Link href="/#track-record" className={linkClass(pathname === '/')}>Track Record</Link>
+            <a href="/#the-edge" onClick={setEdge} className={linkClass(isEdgeActive)}>The Edge</a>
+            <a href="/#track-record" onClick={setTrackRecord} className={linkClass(isTrackRecordActive)}>Track Record</a>
             <Link href="/bookmakers" className={linkClass(pathname === '/bookmakers')}>Bookmakers</Link>
             <Link href="/calculator" className={linkClass(pathname === '/calculator')}>Calculator</Link>
             <a
@@ -107,12 +127,12 @@ export default function GlobalNav() {
                 </div>
               )}
             </div>
-            <Link href="/#the-edge" className={`block px-4 py-2 text-sm rounded transition-colors ${pathname === '/' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+            <a href="/#the-edge" onClick={setEdge} className={`block px-4 py-2 text-sm rounded transition-colors ${isEdgeActive ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
               The Edge
-            </Link>
-            <Link href="/#track-record" className={`block px-4 py-2 text-sm rounded transition-colors ${pathname === '/' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+            </a>
+            <a href="/#track-record" onClick={setTrackRecord} className={`block px-4 py-2 text-sm rounded transition-colors ${isTrackRecordActive ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
               Track Record
-            </Link>
+            </a>
             <Link href="/bookmakers" className={`block px-4 py-2 text-sm rounded transition-colors ${pathname === '/bookmakers' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
               Bookmakers
             </Link>

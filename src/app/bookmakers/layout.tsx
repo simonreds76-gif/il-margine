@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: url },
+  robots: { index: false, follow: true },
   openGraph: {
     type: "website",
     locale: "en_GB",
