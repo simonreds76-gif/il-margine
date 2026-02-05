@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import GlobalNav from "@/components/GlobalNav";
+import StructuredData from "@/components/StructuredData";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,37 +47,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ilmargine.bet';
-  
   return (
     <html lang="en">
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              "name": "Il Margine",
-              "url": siteUrl,
-              "description": "Independent betting tips and analysis across tennis, player props and football markets, with a disciplined and data-driven approach.",
-            }),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "Il Margine",
-              "url": siteUrl,
-              "logo": `${siteUrl}/logo.png`,
-            }),
-          }}
-        />
-      </head>
       <body className={inter.className}>
+        <StructuredData />
         <GlobalNav />
         {children}
       </body>
