@@ -124,10 +124,10 @@ export default function Calculator() {
           <div className="flex items-center gap-2 mb-4">
             <Link href="/" className="text-sm text-slate-500 hover:text-slate-300">Home</Link>
             <span className="text-slate-600">/</span>
-            <span className="text-sm text-emerald-400">Returns Calculator</span>
+            <span className="text-sm text-emerald-400">Calculator</span>
           </div>
           
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">Potential Returns Calculator</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">Returns Calculator</h1>
           <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
             Calculate your potential returns based on our historical performance. All calculations are based on our verified track record and assume you follow our unit recommendations.
           </p>
