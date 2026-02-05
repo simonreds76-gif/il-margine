@@ -319,12 +319,12 @@ export default function Home() {
                     </Link>
                     
                     <Link 
-                      href="/atp-tennis" 
+                      href="/tennis-tips" 
                       className="group block px-4 py-4 hover:bg-emerald-500/10 transition-all duration-300 border-b border-slate-800/50"
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="font-medium text-slate-200 group-hover:text-emerald-400 transition-colors">ATP Tennis</span>
+                          <span className="font-medium text-slate-200 group-hover:text-emerald-400 transition-colors">Tennis Tips</span>
                           <span className="block text-xs text-slate-500 mt-0.5">Pre-match • Handicaps, Totals</span>
                         </div>
                         <div className="w-12 h-8 relative overflow-hidden">
@@ -355,25 +355,29 @@ export default function Home() {
                       </div>
                     </Link>
                     
-                    <div className="group px-4 py-4 border-b border-slate-800/50 opacity-50">
+                    <Link 
+                      href="/anytime-goalscorer" 
+                      className="group block px-4 py-4 hover:bg-emerald-500/10 transition-all duration-300 border-b border-slate-800/50"
+                    >
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="font-medium text-slate-500">Bet Builders</span>
-                          <span className="block text-xs text-slate-600 mt-0.5">Same-game combos</span>
+                          <span className="font-medium text-slate-200 group-hover:text-emerald-400 transition-colors">Anytime Goalscorer</span>
+                          <span className="block text-xs text-slate-500 mt-0.5">Scoring markets • xG analysis</span>
                         </div>
-                        <span className="text-[10px] font-mono text-slate-600 bg-slate-800 px-2 py-0.5 rounded">SOON</span>
                       </div>
-                    </div>
+                    </Link>
                     
-                    <div className="group px-4 py-4 opacity-50">
+                    <Link 
+                      href="/bet-builders" 
+                      className="group block px-4 py-4 hover:bg-emerald-500/10 transition-all duration-300"
+                    >
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="font-medium text-slate-500">ATG</span>
-                          <span className="block text-xs text-slate-600 mt-0.5">Anytime goalscorer</span>
+                          <span className="font-medium text-slate-200 group-hover:text-emerald-400 transition-colors">Bet Builders</span>
+                          <span className="block text-xs text-slate-500 mt-0.5">Same-game combos</span>
                         </div>
-                        <span className="text-[10px] font-mono text-slate-600 bg-slate-800 px-2 py-0.5 rounded">SOON</span>
                       </div>
-                    </div>
+                    </Link>
                   </div>
                 )}
               </div>
@@ -400,8 +404,14 @@ export default function Home() {
               <Link href="/player-props" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
                 Player Props
               </Link>
-              <Link href="/atp-tennis" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
-                ATP Tennis
+              <Link href="/tennis-tips" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                Tennis Tips
+              </Link>
+              <Link href="/anytime-goalscorer" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                Anytime Goalscorer
+              </Link>
+              <Link href="/bet-builders" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                Bet Builders
               </Link>
               <a href="#the-edge" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
                 The Edge
@@ -487,7 +497,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {markets.map((market) => {
-              const href = market.id === "props" ? "/player-props" : market.id === "atp" ? "/atp-tennis" : "";
+              const href = market.id === "props" ? "/player-props" : market.id === "atp" ? "/tennis-tips" : "";
               const isActive = market.status === "active";
               
               const cardContent = (
@@ -582,7 +592,7 @@ export default function Home() {
                   </thead>
                   <tbody>
                     {recentBets.slice(0, 5).map((bet) => {
-                      const href = bet.market === "tennis" ? "/atp-tennis" : bet.market === "props" ? "/player-props" : "#";
+                      const href = bet.market === "tennis" ? "/tennis-tips" : bet.market === "props" ? "/player-props" : "#";
                       return (
                         <tr 
                           key={bet.id} 
@@ -655,8 +665,8 @@ export default function Home() {
           )}
           
           <div className="mt-6 flex justify-center gap-4">
-            <Link href="/atp-tennis" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
-              View ATP Tennis Results →
+            <Link href="/tennis-tips" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+              View Tennis Tips Results →
             </Link>
             <Link href="/player-props" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
               View Player Props Results →

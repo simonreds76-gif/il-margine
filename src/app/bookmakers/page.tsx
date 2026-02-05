@@ -33,6 +33,7 @@ export default function Bookmakers() {
   const [bookmakers, setBookmakers] = useState<Bookmaker[]>([]);
   const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [tipsMenuOpen, setTipsMenuOpen] = useState(false);
 
   useEffect(() => {
     fetchBookmakers();
@@ -214,8 +215,26 @@ export default function Bookmakers() {
             
             <div className="hidden md:flex items-center gap-6">
               <Link href="/" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Home</Link>
-              <Link href="/player-props" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Player Props</Link>
-              <Link href="/atp-tennis" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">ATP Tennis</Link>
+              <div className="relative">
+                <button 
+                  onClick={() => setTipsMenuOpen(!tipsMenuOpen)}
+                  onBlur={() => setTimeout(() => setTipsMenuOpen(false), 150)}
+                  className="text-sm text-slate-400 hover:text-slate-100 transition-colors flex items-center gap-1"
+                >
+                  Tips
+                  <svg className={`w-4 h-4 transition-transform ${tipsMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {tipsMenuOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-48 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-50">
+                    <Link href="/tennis-tips" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Tennis Tips</Link>
+                    <Link href="/player-props" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Player Props</Link>
+                    <Link href="/anytime-goalscorer" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Anytime Goalscorer</Link>
+                    <Link href="/bet-builders" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Bet Builders</Link>
+                  </div>
+                )}
+              </div>
               <Link href="/bookmakers" className="text-sm text-emerald-400 font-medium">Bookmakers</Link>
               <Link href="/calculator" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Calculator</Link>
               <a
@@ -233,8 +252,10 @@ export default function Bookmakers() {
           {mobileMenuOpen && (
             <div className="md:hidden border-t border-slate-800/50 py-4 space-y-3">
               <Link href="/" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">Home</Link>
+              <Link href="/tennis-tips" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">Tennis Tips</Link>
               <Link href="/player-props" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">Player Props</Link>
-              <Link href="/atp-tennis" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">ATP Tennis</Link>
+              <Link href="/anytime-goalscorer" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">Anytime Goalscorer</Link>
+              <Link href="/bet-builders" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">Bet Builders</Link>
               <Link href="/bookmakers" className="block px-4 py-2 text-sm text-emerald-400 font-medium hover:bg-emerald-500/10 rounded transition-colors">Bookmakers</Link>
               <Link href="/calculator" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">Calculator</Link>
               <a
