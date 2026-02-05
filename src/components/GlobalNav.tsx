@@ -10,6 +10,9 @@ export default function GlobalNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [tipsMenuOpen, setTipsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const isTipsActive = ['/tennis-tips', '/player-props', '/anytime-goalscorer', '/bet-builders'].includes(pathname);
+  const linkClass = (active: boolean) =>
+    `text-sm transition-colors ${active ? 'text-emerald-400 font-medium' : 'text-slate-400 hover:text-slate-100'}`;
 
   return (
     <nav className="border-b border-slate-800/80 sticky top-0 z-50 bg-[#0f1117]/95 backdrop-blur-sm">
@@ -41,7 +44,7 @@ export default function GlobalNav() {
               <button 
                 onClick={() => setTipsMenuOpen(!tipsMenuOpen)}
                 onBlur={() => setTimeout(() => setTipsMenuOpen(false), 150)}
-                className="text-sm text-slate-400 hover:text-slate-100 transition-colors flex items-center gap-1"
+                className={`flex items-center gap-1 ${linkClass(isTipsActive)}`}
               >
                 Tips
                 <svg className={`w-4 h-4 transition-transform ${tipsMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,10 +61,10 @@ export default function GlobalNav() {
               )}
             </div>
             
-            <Link href="/#the-edge" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">The Edge</Link>
-            <Link href="/#track-record" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Track Record</Link>
-            <Link href="/bookmakers" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Bookmakers</Link>
-            <Link href="/calculator" className="text-sm text-slate-400 hover:text-slate-100 transition-colors">Calculator</Link>
+            <Link href="/#the-edge" className={linkClass(pathname === '/')}>The Edge</Link>
+            <Link href="/#track-record" className={linkClass(pathname === '/')}>Track Record</Link>
+            <Link href="/bookmakers" className={linkClass(pathname === '/bookmakers')}>Bookmakers</Link>
+            <Link href="/calculator" className={linkClass(pathname === '/calculator')}>Calculator</Link>
             <a
               href={TELEGRAM_CHANNEL_URL}
               target="_blank"
@@ -80,7 +83,7 @@ export default function GlobalNav() {
             <div className="px-4">
               <button 
                 onClick={() => setTipsMenuOpen(!tipsMenuOpen)}
-                className="w-full flex items-center justify-between text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded px-2 py-2 transition-colors"
+                className={`w-full flex items-center justify-between text-sm rounded px-2 py-2 transition-colors ${isTipsActive ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}
               >
                 <span>Tips</span>
                 <svg className={`w-4 h-4 transition-transform ${tipsMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,31 +92,31 @@ export default function GlobalNav() {
               </button>
               {tipsMenuOpen && (
                 <div className="mt-2 ml-4 space-y-2">
-                  <Link href="/tennis-tips" className="block px-2 py-2 text-sm text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                  <Link href="/tennis-tips" className={`block px-2 py-2 text-sm rounded transition-colors ${pathname === '/tennis-tips' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
                     Tennis Tips
                   </Link>
-                  <Link href="/player-props" className="block px-2 py-2 text-sm text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                  <Link href="/player-props" className={`block px-2 py-2 text-sm rounded transition-colors ${pathname === '/player-props' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
                     Player Props
                   </Link>
-                  <Link href="/anytime-goalscorer" className="block px-2 py-2 text-sm text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                  <Link href="/anytime-goalscorer" className={`block px-2 py-2 text-sm rounded transition-colors ${pathname === '/anytime-goalscorer' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
                     Anytime Goalscorer
                   </Link>
-                  <Link href="/bet-builders" className="block px-2 py-2 text-sm text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+                  <Link href="/bet-builders" className={`block px-2 py-2 text-sm rounded transition-colors ${pathname === '/bet-builders' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
                     Bet Builders
                   </Link>
                 </div>
               )}
             </div>
-            <Link href="/#the-edge" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+            <Link href="/#the-edge" className={`block px-4 py-2 text-sm rounded transition-colors ${pathname === '/' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
               The Edge
             </Link>
-            <Link href="/#track-record" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+            <Link href="/#track-record" className={`block px-4 py-2 text-sm rounded transition-colors ${pathname === '/' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
               Track Record
             </Link>
-            <Link href="/bookmakers" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+            <Link href="/bookmakers" className={`block px-4 py-2 text-sm rounded transition-colors ${pathname === '/bookmakers' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
               Bookmakers
             </Link>
-            <Link href="/calculator" className="block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors">
+            <Link href="/calculator" className={`block px-4 py-2 text-sm rounded transition-colors ${pathname === '/calculator' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
               Calculator
             </Link>
             <a 

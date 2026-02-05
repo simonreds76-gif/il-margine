@@ -1,9 +1,25 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+function createSupabaseClient(): SupabaseClient | null {
+  if (supabaseUrl && supabaseAnonKey) return createClient(supabaseUrl, supabaseAnonKey);
+  return null;
+}
+
+const _client = createSupabaseClient();
+
+const noEnvStub = new Proxy({} as SupabaseClient, {
+  get() {
+    throw new Error(
+      'NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required. Set them in Vercel (Settings → Environment Variables) or .env.local.'
+    );
+  },
+});
+
+/** Supabase client. Throws at first use if env vars are missing (build still succeeds). */
+export const supabase: SupabaseClient = _client ?? noEnvStub;
 
 // Types for our database
 export interface Bookmaker {

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { supabase, MarketStats } from "@/lib/supabase";
-import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
+import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
 import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
 import BookmakerLogo from "@/components/BookmakerLogo";
 
@@ -207,22 +207,23 @@ export default function Home() {
     })
     .reduce((sum, bet) => sum + (Number(bet.profit_loss) || 0), 0);
 
+  const displayStats = combinedStats ?? getBaselineDisplayStats();
   const markets = [
     { 
       id: "props", 
       name: "Player Props", 
       description: "Football individual player markets", 
       status: "active", 
-      bets: combinedStats ? `${combinedStats.props.total_bets}+` : "780+", 
-      profit: combinedStats ? `${combinedStats.props.roi > 0 ? "+" : ""}${combinedStats.props.roi.toFixed(1)}% ROI` : "+25% ROI" 
+      bets: `${displayStats.props.total_bets}+`, 
+      profit: `${displayStats.props.roi > 0 ? "+" : ""}${displayStats.props.roi.toFixed(1)}% ROI` 
     },
     { 
       id: "atp", 
       name: "ATP Tennis", 
       description: "Pre-match singles markets", 
       status: "active", 
-      bets: combinedStats ? `${combinedStats.tennis.total_bets}` : "447", 
-      profit: combinedStats ? `${combinedStats.tennis.roi > 0 ? "+" : ""}${combinedStats.tennis.roi.toFixed(1)}% ROI` : "+8.6% ROI" 
+      bets: `${displayStats.tennis.total_bets}`, 
+      profit: `${displayStats.tennis.roi > 0 ? "+" : ""}${displayStats.tennis.roi.toFixed(1)}% ROI` 
     },
     { id: "builders", name: "Bet Builders", description: "Same-game combinations", status: "coming" },
     { id: "atg", name: "ATG", description: "Anytime goalscorer markets", status: "coming" },
@@ -363,15 +364,7 @@ export default function Home() {
             </div>
           </div>
           
-          {loading ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-slate-900/50 rounded-lg border border-slate-800 p-4 animate-pulse">
-                  <div className="h-20 bg-slate-800/50 rounded"></div>
-                </div>
-              ))}
-            </div>
-          ) : recentBets.length > 0 ? (
+          {recentBets.length > 0 ? (
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
               {/* Desktop Table */}
               <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
@@ -457,19 +450,35 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
-              <p className="text-slate-500">No recent results yet</p>
+            <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 sm:p-10 text-center">
+              <p className="text-slate-400 mb-6">No results published yet.</p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Link
+                  href="/tennis-tips"
+                  className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-4 py-2.5 rounded-lg transition-colors"
+                >
+                  Tennis Tips
+                </Link>
+                <Link
+                  href="/player-props"
+                  className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-4 py-2.5 rounded-lg transition-colors"
+                >
+                  Player Props
+                </Link>
+              </div>
             </div>
           )}
           
-          <div className="mt-6 flex justify-center gap-4">
-            <Link href="/tennis-tips" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
-              View Tennis Tips Results →
-            </Link>
-            <Link href="/player-props" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
-              View Player Props Results →
-            </Link>
-          </div>
+          {recentBets.length > 0 && (
+            <div className="mt-6 flex justify-center gap-4">
+              <Link href="/tennis-tips" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+                View Tennis Tips Results →
+              </Link>
+              <Link href="/player-props" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+                View Player Props Results →
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
@@ -574,23 +583,23 @@ export default function Home() {
             Transparent results across all active markets. ATP Tennis independently verified on Tipstrr. Player Props self-tracked with timestamped records.
           </p>
 
-          {/* Combined Stats */}
+          {/* Combined Stats - uses baseline when live data not yet loaded */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-12 sm:mb-16">
             <div className="p-6 sm:p-8 bg-slate-900/60 rounded-xl border border-slate-800/50 hover:border-emerald-500/30 transition-all">
               <div className="text-4xl sm:text-5xl font-bold text-emerald-400 font-mono mb-2">
-                {loading ? "..." : combinedStats ? `${combinedStats.overall.total_bets.toLocaleString()}+` : "1,200+"}
+                {displayStats.overall.total_bets.toLocaleString()}+
               </div>
               <div className="text-sm text-slate-400 font-medium">Total Bets</div>
             </div>
             <div className="p-6 sm:p-8 bg-slate-900/60 rounded-xl border border-slate-800/50 hover:border-emerald-500/30 transition-all">
               <div className="text-4xl sm:text-5xl font-bold text-emerald-400 font-mono mb-2">
-                {loading ? "..." : combinedStats ? `${combinedStats.overall.win_rate.toFixed(0)}%` : "56%"}
+                {displayStats.overall.win_rate.toFixed(0)}%
               </div>
               <div className="text-sm text-slate-400 font-medium">Win Rate</div>
             </div>
             <div className="p-6 sm:p-8 bg-slate-900/60 rounded-xl border border-slate-800/50 hover:border-emerald-500/30 transition-all">
               <div className="text-4xl sm:text-5xl font-bold text-emerald-400 font-mono mb-2">
-                {loading ? "..." : combinedStats ? `${combinedStats.overall.roi > 0 ? "+" : ""}${combinedStats.overall.roi.toFixed(1)}%` : "+18%"}
+                {displayStats.overall.roi > 0 ? "+" : ""}{displayStats.overall.roi.toFixed(1)}%
               </div>
               <div className="text-sm text-slate-400 font-medium">Combined ROI</div>
             </div>
@@ -611,19 +620,19 @@ export default function Home() {
               <div className="grid grid-cols-3 gap-4 mb-4">
                 <div>
                   <div className="text-2xl font-bold text-emerald-400 font-mono">
-                    {loading ? "..." : combinedStats ? `${combinedStats.props.total_bets}+` : "780+"}
+                    {displayStats.props.total_bets}+
                   </div>
                   <div className="text-xs text-slate-500">Bets</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-emerald-400 font-mono">
-                    {loading ? "..." : combinedStats ? `${combinedStats.props.roi > 0 ? "+" : ""}${combinedStats.props.roi.toFixed(1)}%` : "+25%"}
+                    {displayStats.props.roi > 0 ? "+" : ""}{displayStats.props.roi.toFixed(1)}%
                   </div>
                   <div className="text-xs text-slate-500">ROI</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-emerald-400 font-mono">
-                    {loading ? "..." : combinedStats ? `${combinedStats.props.win_rate.toFixed(0)}%` : "58%"}
+                    {displayStats.props.win_rate.toFixed(0)}%
                   </div>
                   <div className="text-xs text-slate-500">Win Rate</div>
                 </div>
@@ -640,19 +649,19 @@ export default function Home() {
               <div className="grid grid-cols-3 gap-4 mb-4">
                 <div>
                   <div className="text-2xl font-bold text-emerald-400 font-mono">
-                    {loading ? "..." : combinedStats ? `${combinedStats.tennis.total_bets}` : "447"}
+                    {displayStats.tennis.total_bets}
                   </div>
                   <div className="text-xs text-slate-500">Bets</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-emerald-400 font-mono">
-                    {loading ? "..." : combinedStats ? `${combinedStats.tennis.roi > 0 ? "+" : ""}${combinedStats.tennis.roi.toFixed(1)}%` : "+8.6%"}
+                    {displayStats.tennis.roi > 0 ? "+" : ""}{displayStats.tennis.roi.toFixed(1)}%
                   </div>
                   <div className="text-xs text-slate-500">ROI</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-emerald-400 font-mono">
-                    {loading ? "..." : combinedStats ? `${combinedStats.tennis.win_rate.toFixed(0)}%` : "54%"}
+                    {displayStats.tennis.win_rate.toFixed(0)}%
                   </div>
                   <div className="text-xs text-slate-500">Win Rate</div>
                 </div>

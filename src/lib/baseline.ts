@@ -184,3 +184,37 @@ export function calculateWinRate(wins: number, losses: number): number {
   if (total === 0) return 0;
   return (wins / total) * 100;
 }
+
+/** Baseline-only stats for display (e.g. before live data loads). Same shape as combined stats. */
+export function getBaselineDisplayStats(): {
+  props: { total_bets: number; roi: number; win_rate: number; avg_odds: number; total_profit: number };
+  tennis: { total_bets: number; roi: number; win_rate: number; avg_odds: number; total_profit: number };
+  overall: { total_bets: number; roi: number; win_rate: number; avg_odds: number; total_profit: number };
+} {
+  const props = BASELINE_STATS.props;
+  const tennis = BASELINE_STATS.tennis;
+  const overall = BASELINE_STATS.overall;
+  return {
+    props: {
+      total_bets: props.total_bets,
+      roi: calculateROI(props.total_profit, props.total_stake),
+      win_rate: calculateWinRate(props.wins, props.losses),
+      avg_odds: props.avg_odds,
+      total_profit: props.total_profit,
+    },
+    tennis: {
+      total_bets: tennis.total_bets,
+      roi: calculateROI(tennis.total_profit, tennis.total_stake),
+      win_rate: calculateWinRate(tennis.wins, tennis.losses),
+      avg_odds: tennis.avg_odds,
+      total_profit: tennis.total_profit,
+    },
+    overall: {
+      total_bets: overall.total_bets,
+      roi: calculateROI(overall.total_profit, overall.total_stake),
+      win_rate: calculateWinRate(overall.wins, overall.losses),
+      avg_odds: overall.avg_odds,
+      total_profit: overall.total_profit,
+    },
+  };
+}

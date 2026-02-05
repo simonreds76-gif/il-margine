@@ -1,12 +1,29 @@
 import type { Metadata } from "next";
+import { BASE_URL } from "@/lib/config";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ilmargine.bet';
+const title = "Recommended Bookmakers | Best Betting Sites for Tips";
+const description =
+  "Where to place your bets. We recommend bookmakers based on market coverage, odds quality, betting limits, and account management.";
+const url = `${BASE_URL}/bookmakers`;
 
 export const metadata: Metadata = {
-  title: "Recommended Bookmakers | Best Betting Sites for Tips",
-  description: "Where to place your bets. We recommend bookmakers based on market coverage, odds quality, betting limits, and account management.",
-  alternates: {
-    canonical: `${siteUrl}/bookmakers`,
+  title,
+  description,
+  alternates: { canonical: url },
+  openGraph: {
+    type: "website",
+    locale: "en_GB",
+    url,
+    siteName: "Il Margine",
+    title,
+    description,
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Il Margine - Recommended Bookmakers" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/og.png"],
   },
 };
 

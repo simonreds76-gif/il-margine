@@ -1,11 +1,12 @@
+import { BASE_URL } from '@/lib/config';
+
 export default function StructuredData() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ilmargine.bet';
   
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Il Margine",
-    "url": siteUrl,
+    "url": BASE_URL,
     "description": "Independent betting tips and analysis across tennis, player props and football markets, with a disciplined and data-driven approach.",
   };
   
@@ -13,8 +14,8 @@ export default function StructuredData() {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Il Margine",
-    "url": siteUrl,
-    "logo": `${siteUrl}/logo.png`,
+    "url": BASE_URL,
+    "logo": `${BASE_URL}/logo.png`,
   };
   
   return (

@@ -1,5 +1,27 @@
 # Domain Setup Guide: ilmargine.bet
 
+## Environment: `NEXT_PUBLIC_SITE_URL` (canonical / OG / sitemap)
+
+Set this in **Vercel** so OG URLs, canonicals, and the sitemap use the correct domain:
+
+- **Preview / Development:** `https://il-margine.vercel.app`  
+  (Vercel → Project → Settings → Environment Variables → add for **Preview** and optionally **Development**.)
+- **Production (after domain cutover):** `https://ilmargine.bet`  
+  (Same place, add for **Production** only.)
+
+If unset, the app falls back to `https://ilmargine.bet`. No code changes needed when you switch domains—just the env value per environment.
+
+### Required for production build and /admin: Supabase
+
+Set these in **Vercel → Project → Settings → Environment Variables** (for Production and Preview if you use admin there):
+
+- `NEXT_PUBLIC_SUPABASE_URL` – your Supabase project URL (e.g. `https://xxxxx.supabase.co`)
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` – your Supabase anon/public key
+
+If these are missing, the site still builds and deploys; only the admin page and any Supabase-dependent features will throw at runtime when used. So add them before using admin in production.
+
+---
+
 ## Step 1: Register Domain on Namecheap
 
 1. Go to [namecheap.com](https://www.namecheap.com)
@@ -95,6 +117,29 @@ Once Vercel shows status as **Valid**:
 - Verify DNS records are saved correctly in Namecheap
 - Check Vercel domain status shows "Valid"
 - Try accessing via `http://ilmargine.bet` (should redirect to HTTPS)
+
+## OG image: `public/og.png`
+
+Social previews (Twitter, Facebook, etc.) use `/og.png`. Ensure **`public/og.png`** exists and is **1200×630 px**. After deploy, confirm e.g. `https://il-margine.vercel.app/og.png` returns 200 and the image looks correct. (If the file is missing, add it before launch or social shares will show a broken or default image.)
+
+## Verify meta tags in HTML
+
+After deploying (or running `npm run build` and `npm run start` with env set), open:
+
+- **https://[your-domain]/bookmakers**
+- **https://[your-domain]/calculator**
+
+View Page Source (or Inspect → Elements) and confirm these are present in `<head>`:
+
+- `rel="canonical"` with the correct URL (e.g. `https://ilmargine.bet/bookmakers`)
+- `<meta property="og:title" ...>` matching the page title
+- `<meta property="og:url" ...>` matching the page URL
+- `<meta property="og:image" ...>` (e.g. `/og.png` or full URL)
+- `<meta name="twitter:title" ...>` matching the page title
+
+Next.js App Router emits these from each route’s layout `metadata` (and the root `metadataBase`).
+
+---
 
 ## Optional: Keep Old Domain Active
 

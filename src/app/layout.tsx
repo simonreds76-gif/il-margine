@@ -3,25 +3,24 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import GlobalNav from "@/components/GlobalNav";
 import StructuredData from "@/components/StructuredData";
+import { BASE_URL } from "@/lib/config";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ilmargine.bet';
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(BASE_URL),
   title: {
     default: "Smart Betting Tips & Analysis | Tennis, Props & Football",
     template: "%s | Il Margine",
   },
   description: "Independent betting tips and analysis across tennis, player props and football markets, with a disciplined and data-driven approach.",
   alternates: {
-    canonical: siteUrl,
+    canonical: BASE_URL,
   },
   openGraph: {
     type: "website",
     locale: "en_GB",
-    url: siteUrl,
+    url: BASE_URL,
     siteName: "Il Margine",
     title: "Smart Betting Tips & Analysis | Tennis, Props & Football",
     description: "Independent betting tips and analysis across tennis, player props and football markets, with a disciplined and data-driven approach.",
