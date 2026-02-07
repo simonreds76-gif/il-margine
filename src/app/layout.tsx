@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import GlobalNav from "@/components/GlobalNav";
 import StructuredData from "@/components/StructuredData";
-import { BASE_URL } from "@/lib/config";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
+import { BASE_URL, GA_MEASUREMENT_ID } from "@/lib/config";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -57,6 +59,18 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.png" sizes="32x32" type="image/png" />
       </head>
       <body className={inter.className}>
+        {GA_MEASUREMENT_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga-config" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_MEASUREMENT_ID}');`}
+            </Script>
+          </>
+        )}
+        <GoogleAnalytics />
         <StructuredData />
         <GlobalNav />
         {children}
