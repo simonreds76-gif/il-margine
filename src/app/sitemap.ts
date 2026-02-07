@@ -1,8 +1,8 @@
 import { MetadataRoute } from 'next';
-import { BASE_URL } from '@/lib/config';
+import { BASE_URL, BOOKMAKERS_INDEXABLE } from '@/lib/config';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
+  const entries: MetadataRoute.Sitemap = [
     {
       url: BASE_URL,
       lastModified: new Date(),
@@ -33,12 +33,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
-    {
-      url: `${BASE_URL}/bookmakers`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
+    ...(BOOKMAKERS_INDEXABLE
+      ? [{
+          url: `${BASE_URL}/bookmakers`,
+          lastModified: new Date(),
+          changeFrequency: 'monthly' as const,
+          priority: 0.7,
+        }]
+      : []),
     {
       url: `${BASE_URL}/calculator`,
       lastModified: new Date(),
@@ -57,5 +59,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly',
       priority: 0.3,
     },
+    {
+      url: `${BASE_URL}/cookies-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${BASE_URL}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.5,
+    },
   ];
+  return entries;
 }

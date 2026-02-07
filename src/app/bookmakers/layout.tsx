@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { BASE_URL } from "@/lib/config";
+import { BASE_URL, BOOKMAKERS_INDEXABLE } from "@/lib/config";
 
-const title = "Recommended Bookmakers | Best Betting Sites for Tips";
+const title = "Bookmakers & Key Concepts | Honest Reviews & Punter Glossary";
 const description =
-  "Where to place your bets. We recommend bookmakers based on market coverage, odds quality, betting limits, and account management.";
+  "Honest bookmaker reviews (Midnite, BetVictor, Unibet, Coral, Ladbrokes, BetMGM), new account offers, and a punter's glossary: CLV, gubbing, margin, value, Super Sub, account restrictions.";
 const url = `${BASE_URL}/bookmakers`;
 
 export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: url },
-  robots: { index: false, follow: true },
+  robots: { index: BOOKMAKERS_INDEXABLE, follow: true },
   openGraph: {
     type: "website",
     locale: "en_GB",
@@ -18,13 +18,13 @@ export const metadata: Metadata = {
     siteName: "Il Margine",
     title,
     description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Il Margine - Recommended Bookmakers" }],
+    images: [{ url: `${BASE_URL}/banner.png`, width: 1200, height: 400, alt: "Il Margine - Recommended Bookmakers", type: "image/png" }],
   },
   twitter: {
     card: "summary_large_image",
     title,
     description,
-    images: ["/og.png"],
+    images: [`${BASE_URL}/banner.png`],
   },
 };
 
