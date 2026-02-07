@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Footer from "@/components/Footer";
 
 export default function Disclaimer() {
   return (
@@ -36,22 +37,7 @@ export default function Disclaimer() {
         </div>
       </section>
 
-      <footer className="border-t border-slate-800 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <Link href="/" className="font-semibold text-sm text-slate-200 hover:text-white">
-              Il Margine
-            </Link>
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-slate-500">
-              <Link href="/disclaimer" className="hover:text-slate-300">Disclaimer</Link>
-              <Link href="/privacy-policy" className="hover:text-slate-300">Privacy Policy</Link>
-              <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="hover:text-slate-300">
-                Responsible Gambling
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

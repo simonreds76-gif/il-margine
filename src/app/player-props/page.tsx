@@ -7,6 +7,7 @@ import { supabase, Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
 import BookmakerLogo from "@/components/BookmakerLogo";
+import Footer from "@/components/Footer";
 
 export default function PlayerProps() {
   const [activeLeague, setActiveLeague] = useState("all");
@@ -530,27 +531,7 @@ export default function PlayerProps() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-800 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Image src="/favicon.png" alt="Il Margine" width={32} height={32} className="rounded" />
-              <span className="font-semibold text-sm">Il Margine</span>
-              <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">FREE BETA</span>
-            </div>
-            <div className="text-xs text-slate-600 text-center md:text-right">
-              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 mb-2">
-                <Link href="/disclaimer" className="hover:text-slate-300">Disclaimer</Link>
-                <Link href="/privacy-policy" className="hover:text-slate-300">Privacy Policy</Link>
-                <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="hover:text-slate-300">Responsible Gambling</a>
-              </div>
-              <p>Gamble responsibly. 18+ only.</p>
-              <p className="mt-1 text-slate-500">Past performance does not guarantee future results. Illustrative based on historical data. Always bet within your means.</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
