@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Bookmaker } from "@/lib/supabase";
@@ -43,8 +44,8 @@ const bookmakerLogos: Record<string, string> = {
   "Pinnacle": "pinnacle",
   "pinnacle": "pinnacle",
   "Marathon": "marathon",
-  "BetMGM": "betmgm_new.png",
-  "betmgm": "betmgm_new.png",
+  "BetMGM": "betmgm",
+  "betmgm": "betmgm",
   "Midnite": "midnite",
   "midnite": "midnite",
   "BetVictor": "betvictor",
@@ -71,7 +72,6 @@ export default function BookmakerLogo({
   }
 
   const logoBase = bookmakerLogos[bookmaker.short_name] || bookmakerLogos[bookmaker.name];
-  // Paths to try: explicit filename (e.g. betmgm_new.png) or base + extensions from public/bookmakers
   const hasExtension = logoBase?.includes(".");
   const logoPaths: string[] = logoBase
     ? hasExtension
@@ -83,27 +83,32 @@ export default function BookmakerLogo({
           `/bookmakers/${logoBase}.jpg`,
         ]
     : [];
-  const primarySrc = logoPaths[0] || null;
+  const [srcIndex, setSrcIndex] = useState(0);
+  const [imageFailed, setImageFailed] = useState(false);
+  const currentSrc = logoPaths[srcIndex] || null;
 
   const link = bookmaker.affiliate_link || "#";
   const hasAffiliate = !!bookmaker.affiliate_link;
 
+  const showImage = currentSrc && !imageFailed;
+
   const content = (
     <div className={`flex items-center justify-center gap-2 ${className}`}>
-      {primarySrc ? (
+      {showImage ? (
         <div className={`${sizeClasses[size]} relative flex-shrink-0 mx-auto`}>
           <Image
-            src={primarySrc}
+            src={currentSrc}
             alt={bookmaker.short_name || bookmaker.name}
             fill
+            sizes="32px"
             className="object-contain"
             unoptimized
-            onError={(e) => {
-              const current = e.currentTarget.src;
-              const idx = logoPaths.findIndex((p) => current.endsWith(p.split("/").pop() || ""));
-              const next = idx >= 0 && idx < logoPaths.length - 1 ? logoPaths[idx + 1] : null;
-              if (next) e.currentTarget.src = next;
-              else e.currentTarget.style.display = "none";
+            onError={() => {
+              if (srcIndex < logoPaths.length - 1) {
+                setSrcIndex((i) => i + 1);
+              } else {
+                setImageFailed(true);
+              }
             }}
           />
         </div>

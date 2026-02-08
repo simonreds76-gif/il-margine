@@ -439,20 +439,20 @@ export default function BookmakersPage() {
                     </ul>
                   </div>
                   {rec.notes && (
-                    <div className="mt-4 pt-4 border-t border-slate-800/50">
-                      <p className="text-xs text-slate-400 italic">{rec.notes}</p>
+                    <div className="mt-4 pt-4 border-t border-slate-800/50 text-left">
+                      <p className="text-xs text-slate-400 italic leading-relaxed">{rec.notes}</p>
                     </div>
                   )}
                   </div>
                   {offer && (
                     <div className="mt-auto pt-4">
-                      <div className="min-h-[88px] p-3 rounded-lg bg-orange-500/15 border border-orange-500/40 flex flex-col justify-center">
-                        <span className="text-xs font-mono text-orange-400 tracking-wider block mb-1.5 flex items-center gap-1.5">
+                      <div className="h-[90px] p-3 rounded-lg bg-orange-500/15 border border-orange-500/40 flex flex-col justify-center overflow-hidden">
+                        <span className="text-xs font-mono text-orange-400 tracking-wider flex items-center gap-1.5 mb-1.5 shrink-0">
                           New account offer
-                          <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/25 border-2 border-emerald-500/60 text-2xl shadow-inner" aria-hidden title="Offer">💰</span>
+                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/25 border border-emerald-500/60 text-lg shrink-0" aria-hidden title="Offer">💰</span>
                         </span>
-                        <p className="text-base font-bold text-amber-400 mb-0.5 line-clamp-2">{offer.offer}</p>
-                        <p className="text-xs text-slate-500 line-clamp-2">{offer.description}</p>
+                        <p className="text-sm font-bold text-amber-400 line-clamp-1 truncate">{offer.offer}</p>
+                        <p className="text-xs text-slate-500 line-clamp-1 truncate mt-0.5">{offer.description}</p>
                       </div>
                       <div className="mt-3 w-full flex justify-center sm:justify-center">
                         <a
