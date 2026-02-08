@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import GlobalNav from "@/components/GlobalNav";
+import SpeedInsightsClient from "@/components/SpeedInsightsClient";
 import StructuredData from "@/components/StructuredData";
 import { BASE_URL } from "@/lib/config";
 
@@ -52,6 +53,7 @@ export default function RootLayout({
         <StructuredData />
         <GlobalNav />
         {children}
+        <SpeedInsightsClient />
       </body>
     </html>
   );
