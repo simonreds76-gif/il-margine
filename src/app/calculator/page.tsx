@@ -128,11 +128,11 @@ export default function Calculator() {
           </div>
           
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">Returns Calculator</h1>
-          <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed mb-6">
             Calculate your potential returns based on our historical performance. All calculations are based on our verified track record and assume you follow our unit recommendations.
           </p>
-          
-          <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-8">
+
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-8 mt-2">
             <p className="text-sm text-amber-200">
               <strong className="text-amber-400">Important:</strong> Past performance does not guarantee future results. These calculations are illustrative based on historical data. Always bet responsibly and within your means.
             </p>

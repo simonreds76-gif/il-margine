@@ -43,14 +43,13 @@ const bookmakerLogos: Record<string, string> = {
   "Pinnacle": "pinnacle",
   "pinnacle": "pinnacle",
   "Marathon": "marathon",
-  "BetMGM": "betmgm",
-  "betmgm": "betmgm",
+  "BetMGM": "betmgm_new.png",
+  "betmgm": "betmgm_new.png",
   "Midnite": "midnite",
   "midnite": "midnite",
   "BetVictor": "betvictor",
   "DraftKings": "draftkings",
   "FanDuel": "fanduel",
-  // Add more as needed
 };
 
 const sizeClasses = {
@@ -72,33 +71,39 @@ export default function BookmakerLogo({
   }
 
   const logoBase = bookmakerLogos[bookmaker.short_name] || bookmakerLogos[bookmaker.name];
-  // Try PNG first, fallback to SVG
-  const logoPath = logoBase ? (
-    `/bookmakers/${logoBase}.png` // Will try PNG first
-  ) : null;
-  const logoSvgPath = logoBase ? `/bookmakers/${logoBase}.svg` : null;
-  
-  // Determine link - use affiliate if available, otherwise placeholder
+  // Paths to try: explicit filename (e.g. betmgm_new.png) or base + extensions from public/bookmakers
+  const hasExtension = logoBase?.includes(".");
+  const logoPaths: string[] = logoBase
+    ? hasExtension
+      ? [`/bookmakers/${logoBase}`]
+      : [
+          `/bookmakers/${logoBase}.png`,
+          `/bookmakers/${logoBase}.svg`,
+          `/bookmakers/${logoBase}.jpeg`,
+          `/bookmakers/${logoBase}.jpg`,
+        ]
+    : [];
+  const primarySrc = logoPaths[0] || null;
+
   const link = bookmaker.affiliate_link || "#";
   const hasAffiliate = !!bookmaker.affiliate_link;
 
   const content = (
     <div className={`flex items-center justify-center gap-2 ${className}`}>
-      {logoPath || logoSvgPath ? (
+      {primarySrc ? (
         <div className={`${sizeClasses[size]} relative flex-shrink-0 mx-auto`}>
           <Image
-            src={logoPath || logoSvgPath || ""}
+            src={primarySrc}
             alt={bookmaker.short_name || bookmaker.name}
             fill
             className="object-contain"
             unoptimized
             onError={(e) => {
-              // If PNG fails and we have SVG, try SVG
-              if (logoPath && logoSvgPath && e.currentTarget.src.includes('.png')) {
-                e.currentTarget.src = logoSvgPath;
-              } else {
-                e.currentTarget.style.display = "none";
-              }
+              const current = e.currentTarget.src;
+              const idx = logoPaths.findIndex((p) => current.endsWith(p.split("/").pop() || ""));
+              const next = idx >= 0 && idx < logoPaths.length - 1 ? logoPaths[idx + 1] : null;
+              if (next) e.currentTarget.src = next;
+              else e.currentTarget.style.display = "none";
             }}
           />
         </div>

@@ -270,8 +270,8 @@ export default function BookmakersPage() {
             <span className="text-sm text-emerald-400 font-medium">Bookmakers</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">Bookmakers & Key Concepts</h1>
-          <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed mb-8">
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-3 sm:mb-4">Bookmakers & Key Concepts</h1>
+          <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed mb-6">
             Straight-talking guidance for punters: where to bet, how to think about odds and your account, and the jargon that matters. No filler. The kind of reference you won&apos;t find in generic affiliate roundups.
           </p>
 
@@ -359,17 +359,17 @@ export default function BookmakersPage() {
       {/* Bookmakers we recommend — only those we're happy to promote */}
       <section className="py-12 md:py-16 border-b border-slate-800/50 bg-gradient-to-b from-slate-900/30 to-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 mb-6">
+          <div className="flex items-center gap-2 mb-4">
             <span className="text-xs font-mono text-amber-400 tracking-wider">RECOMMENDED</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6 flex items-center gap-3">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-3 sm:mb-4 flex items-center gap-3">
             <span className="text-3xl sm:text-4xl" aria-hidden>📋</span>
             Bookmakers We Recommend & New Account Offers
           </h2>
-          <p className="text-base text-slate-300 mb-8 sm:mb-10 max-w-3xl">
+          <p className="text-base text-slate-300 mb-4 sm:mb-5 max-w-3xl">
             We only promote bookmakers we&apos;re comfortable with. Honest reviews for player props, tennis, and bet builders, plus current new account offers. Always check the site for full terms.
           </p>
-          <p className="text-sm text-amber-400/95 font-medium mb-8 sm:mb-10 flex items-center gap-2">
+          <p className="text-sm text-amber-400/95 font-medium mb-6 sm:mb-8 flex items-center gap-2">
             <span className="inline-flex w-1.5 h-1.5 rounded-full bg-amber-400" aria-hidden />
             Used by us. We&apos;ve placed bets, checked limits and withdrawal times at every one.
           </p>
@@ -446,13 +446,13 @@ export default function BookmakersPage() {
                   </div>
                   {offer && (
                     <div className="mt-auto pt-4">
-                      <div className="p-3 rounded-lg bg-orange-500/15 border border-orange-500/40">
+                      <div className="min-h-[88px] p-3 rounded-lg bg-orange-500/15 border border-orange-500/40 flex flex-col justify-center">
                         <span className="text-xs font-mono text-orange-400 tracking-wider block mb-1.5 flex items-center gap-1.5">
                           New account offer
                           <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/25 border-2 border-emerald-500/60 text-2xl shadow-inner" aria-hidden title="Offer">💰</span>
                         </span>
-                        <p className="text-base sm:text-lg font-bold text-amber-400 mb-0.5">{offer.offer}</p>
-                        <p className="text-xs text-slate-500">{offer.description}</p>
+                        <p className="text-base font-bold text-amber-400 mb-0.5 line-clamp-2">{offer.offer}</p>
+                        <p className="text-xs text-slate-500 line-clamp-2">{offer.description}</p>
                       </div>
                       <div className="mt-3 w-full flex justify-center sm:justify-center">
                         <a
