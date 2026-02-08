@@ -224,7 +224,7 @@ export default function Bookmakers() {
             Player props require bookmakers with wide market coverage and competitive odds. These are our top recommendations.
           </p>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {recommendations.props.map((rec) => {
               const dbBookmaker = getBookmakerFromDb(rec.short_name);
               return (
@@ -322,7 +322,7 @@ export default function Bookmakers() {
             Tennis betting requires sharp odds and good market depth. These bookmakers excel in tennis markets.
           </p>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {recommendations.tennis.map((rec) => {
               const dbBookmaker = getBookmakerFromDb(rec.short_name);
               return (
@@ -420,7 +420,7 @@ export default function Bookmakers() {
             Opening a new betting account? Check the latest welcome offers and promotions from our recommended bookmakers.
           </p>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {(() => {
               const offers: NewAccountOffer[] = [
                 {
@@ -549,7 +549,7 @@ export default function Bookmakers() {
             Same-game combinations require flexible bet builder tools. These bookmakers offer the best builder interfaces.
           </p>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {recommendations.betbuilders.map((rec) => {
               const dbBookmaker = getBookmakerFromDb(rec.short_name);
               return (

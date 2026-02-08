@@ -7,3 +7,6 @@ export const TELEGRAM_CHANNEL_URL = process.env.NEXT_PUBLIC_TELEGRAM_CHANNEL_URL
 // Stripe configuration (for future VIP access)
 export const STRIPE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "";
 export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || "";
+
+/** Google Analytics. Set NEXT_PUBLIC_GA_MEASUREMENT_ID in Vercel to enable. */
+export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "";
