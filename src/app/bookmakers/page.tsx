@@ -1,12 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import { supabase, Bookmaker } from "@/lib/supabase";
-import { useEffect } from "react";
-import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
 
 interface BookmakerRecommendation {
   id: string;
@@ -43,7 +40,7 @@ export default function Bookmakers() {
       .select("*")
       .eq("active", true)
       .order("name");
-    
+
     if (data) setBookmakers(data);
     if (error) console.error("Error fetching bookmakers:", error);
     setLoading(false);
@@ -181,8 +178,8 @@ export default function Bookmakers() {
   };
 
   const getBookmakerFromDb = (shortName: string): Bookmaker | undefined => {
-    return bookmakers.find(b => 
-      b.short_name.toLowerCase() === shortName.toLowerCase() || 
+    return bookmakers.find(b =>
+      b.short_name.toLowerCase() === shortName.toLowerCase() ||
       b.name.toLowerCase() === shortName.toLowerCase()
     );
   };
@@ -237,7 +234,7 @@ export default function Bookmakers() {
             <span className="text-slate-600">/</span>
             <span className="text-sm text-emerald-400">Bookmakers</span>
           </div>
-          
+
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">Recommended Bookmakers</h1>
           <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
             Where to place your bets. We recommend bookmakers based on market coverage, odds quality, betting limits, and account management. These are the bookmakers we use ourselves.
@@ -251,9 +248,9 @@ export default function Bookmakers() {
           <div className="flex items-center gap-2 mb-6">
             <span className="text-xs font-mono text-emerald-400 tracking-wider">PLAYER PROPS</span>
           </div>
-          
+
           <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-3">
-            <span className="text-3xl sm:text-4xl">⚽</span>
+            <span className="text-3xl sm:text-4xl" aria-hidden>⚽</span>
             Best Bookmakers for Player Props
           </h2>
           <p className="text-base text-slate-300 mb-8 sm:mb-10 max-w-2xl">
@@ -267,7 +264,7 @@ export default function Bookmakers() {
                 <div key={rec.id} className="bg-slate-900/60 rounded-xl border border-slate-800/50 p-6 hover:border-slate-700 transition-all">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <BookmakerLogo 
+                      <BookmakerLogo
                         bookmaker={dbBookmaker || { id: 0, name: rec.name, short_name: rec.short_name, affiliate_link: null, active: true }}
                         size="md"
                       />
@@ -275,13 +272,13 @@ export default function Bookmakers() {
                     </div>
                     <div className="flex items-center gap-1">
                       {[...Array(5)].map((_, i) => (
-                        <svg key={i} className={`w-4 h-4 ${i < rec.rating ? 'text-emerald-400' : 'text-slate-700'}`} fill="currentColor" viewBox="0 0 20 20">
+                        <svg key={i} className={`w-4 h-4 ${i < rec.rating ? "text-emerald-400" : "text-slate-700"}`} fill="currentColor" viewBox="0 0 20 20">
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="mb-4">
                     <span className="text-xs font-mono text-emerald-400 mb-2 block">BEST FOR</span>
                     <div className="flex flex-wrap gap-2">
@@ -349,9 +346,9 @@ export default function Bookmakers() {
           <div className="flex items-center gap-2 mb-6">
             <span className="text-xs font-mono text-emerald-400 tracking-wider">TENNIS</span>
           </div>
-          
+
           <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-3">
-            <span className="text-3xl sm:text-4xl">🎾</span>
+            <span className="text-3xl sm:text-4xl" aria-hidden>🎾</span>
             Best Bookmakers for Tennis
           </h2>
           <p className="text-base text-slate-300 mb-8 sm:mb-10 max-w-2xl">
@@ -365,7 +362,7 @@ export default function Bookmakers() {
                 <div key={rec.id} className="bg-slate-900/60 rounded-xl border border-slate-800/50 p-6 hover:border-slate-700 transition-all">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <BookmakerLogo 
+                      <BookmakerLogo
                         bookmaker={dbBookmaker || { id: 0, name: rec.name, short_name: rec.short_name, affiliate_link: null, active: true }}
                         size="md"
                       />
@@ -373,13 +370,13 @@ export default function Bookmakers() {
                     </div>
                     <div className="flex items-center gap-1">
                       {[...Array(5)].map((_, i) => (
-                        <svg key={i} className={`w-4 h-4 ${i < rec.rating ? 'text-emerald-400' : 'text-slate-700'}`} fill="currentColor" viewBox="0 0 20 20">
+                        <svg key={i} className={`w-4 h-4 ${i < rec.rating ? "text-emerald-400" : "text-slate-700"}`} fill="currentColor" viewBox="0 0 20 20">
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="mb-4">
                     <span className="text-xs font-mono text-emerald-400 mb-2 block">BEST FOR</span>
                     <div className="flex flex-wrap gap-2">
@@ -447,9 +444,9 @@ export default function Bookmakers() {
           <div className="flex items-center gap-2 mb-6">
             <span className="text-xs font-mono text-emerald-400 tracking-wider">NEW ACCOUNTS</span>
           </div>
-          
+
           <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-3">
-            <span className="text-3xl sm:text-4xl">💰</span>
+            <span className="text-3xl sm:text-4xl" aria-hidden>💰</span>
             New Account Offers
           </h2>
           <p className="text-base text-slate-300 mb-8 sm:mb-10 max-w-2xl">
@@ -513,25 +510,24 @@ export default function Bookmakers() {
                 const dbBookmaker = getBookmakerFromDb(offer.short_name);
                 return (
                   <div key={offer.id} className="bg-gradient-to-br from-slate-900/80 to-slate-800/60 rounded-xl border-2 border-emerald-500/30 p-6 hover:border-emerald-500/60 transition-all relative overflow-hidden">
-                    {/* Decorative background elements */}
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl -mr-16 -mt-16"></div>
-                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl -ml-12 -mb-12"></div>
-                    
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl -mr-16 -mt-16" aria-hidden />
+                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl -ml-12 -mb-12" aria-hidden />
+
                     <div className="relative z-10">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
-                          <BookmakerLogo 
+                          <BookmakerLogo
                             bookmaker={dbBookmaker || { id: 0, name: offer.bookmaker, short_name: offer.short_name, affiliate_link: null, active: true }}
                             size="md"
                           />
                           <h3 className="font-semibold text-lg">{offer.bookmaker}</h3>
                         </div>
-                        <div className="text-3xl">🎁</div>
+                        <span className="text-3xl" aria-hidden>🎁</span>
                       </div>
-                      
+
                       <div className="mb-4">
                         <div className="flex items-center gap-2 mb-2">
-                          <span className="text-2xl">💵</span>
+                          <span className="text-2xl" aria-hidden>💵</span>
                           <div className="text-2xl font-bold text-emerald-400">{offer.offer}</div>
                         </div>
                         <p className="text-sm text-slate-300 leading-relaxed">{offer.description}</p>
@@ -550,7 +546,7 @@ export default function Bookmakers() {
                           rel="noopener noreferrer"
                           className="mt-4 block w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-black font-bold px-4 py-3 rounded-lg text-center transition-all shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 flex items-center justify-center gap-2"
                         >
-                          <span>🎉</span>
+                          <span aria-hidden>🎉</span>
                           Claim Offer Now
                         </a>
                       ) : (
@@ -576,9 +572,9 @@ export default function Bookmakers() {
           <div className="flex items-center gap-2 mb-6">
             <span className="text-xs font-mono text-emerald-400 tracking-wider">BET BUILDERS</span>
           </div>
-          
+
           <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-3">
-            <span className="text-3xl sm:text-4xl">🎯</span>
+            <span className="text-3xl sm:text-4xl" aria-hidden>🎯</span>
             Best Bookmakers for Bet Builders
           </h2>
           <p className="text-base text-slate-300 mb-8 sm:mb-10 max-w-2xl">
@@ -592,7 +588,7 @@ export default function Bookmakers() {
                 <div key={rec.id} className="bg-slate-900/60 rounded-xl border border-slate-800/50 p-6 hover:border-slate-700 transition-all">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <BookmakerLogo 
+                      <BookmakerLogo
                         bookmaker={dbBookmaker || { id: 0, name: rec.name, short_name: rec.short_name, affiliate_link: null, active: true }}
                         size="md"
                       />
@@ -600,13 +596,13 @@ export default function Bookmakers() {
                     </div>
                     <div className="flex items-center gap-1">
                       {[...Array(5)].map((_, i) => (
-                        <svg key={i} className={`w-4 h-4 ${i < rec.rating ? 'text-emerald-400' : 'text-slate-700'}`} fill="currentColor" viewBox="0 0 20 20">
+                        <svg key={i} className={`w-4 h-4 ${i < rec.rating ? "text-emerald-400" : "text-slate-700"}`} fill="currentColor" viewBox="0 0 20 20">
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="mb-4">
                     <span className="text-xs font-mono text-emerald-400 mb-2 block">BEST FOR</span>
                     <div className="flex flex-wrap gap-2">

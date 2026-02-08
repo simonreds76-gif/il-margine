@@ -45,6 +45,9 @@ const bookmakerLogos: Record<string, string> = {
   "Marathon": "marathon",
   "BetMGM": "betmgm",
   "betmgm": "betmgm",
+  "Midnite": "midnite",
+  "midnite": "midnite",
+  "BetVictor": "betvictor",
   "DraftKings": "draftkings",
   "FanDuel": "fanduel",
   // Add more as needed
