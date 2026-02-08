@@ -5,6 +5,7 @@ import "./globals.css";
 import GlobalNav from "@/components/GlobalNav";
 import StructuredData from "@/components/StructuredData";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import SpeedInsightsClient from "@/components/SpeedInsightsClient";
 import { BASE_URL, GA_MEASUREMENT_ID } from "@/lib/config";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -71,6 +72,7 @@ export default function RootLayout({
           </>
         )}
         <GoogleAnalytics />
+        <SpeedInsightsClient />
         <StructuredData />
         <GlobalNav />
         {children}

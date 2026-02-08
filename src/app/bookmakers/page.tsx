@@ -189,9 +189,45 @@ export default function Bookmakers() {
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      {/* Nav */}
-            {/* Navigation is now in GlobalNav component in layout.tsx */}
-
+      {/* KEY CONCEPTS — A PUNTER'S GLOSSARY */}
+      <section className="py-12 md:py-16 border-b border-slate-800/50 bg-slate-900/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6 flex items-center gap-2">
+            <span className="text-xs font-mono text-emerald-400 tracking-wider">KEY CONCEPTS</span>
+            <span className="text-slate-500">—</span>
+            <span>A Punter&apos;s Glossary</span>
+          </h2>
+          <p className="text-slate-400 mb-6 max-w-3xl">
+            Essential terms every bettor should know before comparing bookmakers and placing bets.
+          </p>
+          <dl className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div>
+              <dt className="font-semibold text-emerald-400 mb-1">Value</dt>
+              <dd className="text-sm text-slate-400">When the odds offered imply a lower probability than your estimate of the true chance. Betting when you have value is the edge that drives long-term profit.</dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-emerald-400 mb-1">Closing Line Value (CLV)</dt>
+              <dd className="text-sm text-slate-400">How your bet price compares to the final market odds. Beating the closing line consistently is a strong indicator of genuine edge.</dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-emerald-400 mb-1">Odds</dt>
+              <dd className="text-sm text-slate-400">The price a bookmaker offers. Decimal odds (e.g. 2.10) show your total return per unit staked; fractional (e.g. 11/10) is traditional in the UK.</dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-emerald-400 mb-1">Stake / Unit</dt>
+              <dd className="text-sm text-slate-400">The amount you risk on a bet. Many punters use a fixed unit (e.g. 1% of bankroll) to manage risk and compare returns.</dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-emerald-400 mb-1">Margin (Overround)</dt>
+              <dd className="text-sm text-slate-400">The bookmaker&apos;s built-in profit across a market. Lower margins usually mean fairer odds for the punter.</dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-emerald-400 mb-1">Edge</dt>
+              <dd className="text-sm text-slate-400">A consistent advantage over the market—from better information, modelling, or discipline. Without edge, betting is negative expectation.</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
 
       {/* Hero */}
       <section className="py-12 md:py-20 border-b border-slate-800/50">
