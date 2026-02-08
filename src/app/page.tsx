@@ -290,7 +290,7 @@ export default function Home() {
             <span className="text-xs font-mono text-emerald-400 tracking-wider">MARKETS</span>
           </div>
           
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">Where we find edge</h2>
+          <h2 className="text-2xl sm:text-3xl font-semibold text-emerald-400 mb-4 sm:mb-6">Where we find edge</h2>
           <p className="text-base sm:text-lg text-slate-300 mb-12 sm:mb-14 max-w-2xl">
             We focus on markets where bookmaker pricing is inefficient. No mainstream match odds. No markets where the bookies have perfect data.
           </p>
@@ -356,7 +356,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 sm:mb-10">
             <div>
               <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">LATEST RESULTS</span>
-              <h2 className="text-2xl sm:text-3xl font-bold">Recent Selections</h2>
+              <h2 className="text-2xl sm:text-3xl font-semibold text-emerald-400">Recent Selections</h2>
             </div>
             <div className="flex items-center gap-4">
               <span className="text-xs sm:text-sm text-emerald-400 font-mono">
@@ -500,7 +500,7 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
             <div>
               <span className="text-xs font-mono text-emerald-400 mb-4 block tracking-wider">WHY IT WORKS</span>
-              <h2 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">The Edge</h2>
+              <h2 className="text-2xl sm:text-3xl font-semibold text-emerald-400 mb-6 sm:mb-8">The Edge</h2>
               
               <div className="space-y-6 text-slate-300 leading-relaxed text-base">
                 <p>
@@ -551,7 +551,7 @@ export default function Home() {
             </div>
             
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-6">
-              <h3 className="font-semibold mb-4 text-emerald-400">The Philosophy</h3>
+              <h3 className="text-xl font-semibold mb-4 text-emerald-400">The Philosophy</h3>
               <div className="space-y-4 text-sm text-slate-400">
                 <div className="flex gap-3">
                   <span className="text-emerald-400 font-mono">01</span>
@@ -579,7 +579,7 @@ export default function Home() {
       <section id="track-record" className="pt-4 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50 scroll-mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <span className="text-xs font-mono text-emerald-400 mb-4 block tracking-wider">TRACK RECORD</span>
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">Proven Results</h2>
+          <h2 className="text-2xl sm:text-3xl font-semibold text-emerald-400 mb-6 sm:mb-8">Proven Results</h2>
           <p className="text-base sm:text-lg text-slate-300 mb-12 sm:mb-14 max-w-2xl">
             Transparent results across all active markets. ATP Tennis independently verified on Tipstrr. Player Props self-tracked with timestamped records.
           </p>
@@ -679,7 +679,7 @@ export default function Home() {
       {/* CTA */}
       <section className="py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">Ready to join?</h2>
+          <h2 className="text-2xl sm:text-3xl font-semibold text-emerald-400 mb-4 sm:mb-6">Ready to join?</h2>
           <p className="text-base sm:text-lg text-slate-300 mb-8 sm:mb-10 max-w-lg mx-auto">
             Free selections delivered to Telegram. Match, selection, odds, bookmaker. Everything you need to place your bet.
           </p>

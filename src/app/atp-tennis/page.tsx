@@ -17,7 +17,7 @@ export default function ATPTennisPage() {
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <section className="pt-4 pb-10 md:pt-6 md:pb-12 border-b border-slate-800/50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold mb-4">ATP Tennis Tips</h1>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4">ATP Tennis Tips</h1>
           <p className="text-slate-300 mb-6">
             We’ve consolidated all tennis coverage—ATP, Challenger, and majors—on one page.
           </p>

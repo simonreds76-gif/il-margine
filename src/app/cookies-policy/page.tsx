@@ -27,7 +27,7 @@ export default function CookiesPolicyPage() {
             </span>
             <span>← Home</span>
           </Link>
-          <h1 className="text-3xl font-bold mb-8">Cookies Policy</h1>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-8">Cookies Policy</h1>
           <div className="prose prose-invert prose-slate max-w-none text-slate-300 space-y-4 text-sm leading-relaxed">
             <p>
               This page explains how we use cookies and similar technologies on ilmargine.bet. For how we handle

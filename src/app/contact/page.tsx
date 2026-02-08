@@ -27,7 +27,7 @@ export default function ContactPage() {
             </span>
             <span>← Home</span>
           </Link>
-          <h1 className="text-3xl font-bold mb-2">Contact us</h1>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">Contact us</h1>
           <p className="text-slate-400 text-sm mb-10">
             We&apos;re happy to hear from you. Use the address that best fits your enquiry.
           </p>

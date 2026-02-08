@@ -12,11 +12,8 @@ export default function Footer({ className = "" }: FooterProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-3">
-            <span className="inline-flex shrink-0 w-8 h-8 rounded overflow-hidden bg-[#0f1117] ring-1 ring-slate-800/80">
-              <Image src="/favicon.png" alt="Il Margine" width={36} height={36} className="block rounded object-cover object-center -m-0.5 w-9 h-9" unoptimized />
-            </span>
+            <Image src="/logo.png" alt="Il Margine" width={140} height={40} className="h-8 w-auto object-contain" />
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-semibold text-sm">Il Margine</span>
               <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">FREE BETA</span>
               <span className="text-xs text-slate-500">Launched {LAUNCH_YEAR}</span>
             </div>

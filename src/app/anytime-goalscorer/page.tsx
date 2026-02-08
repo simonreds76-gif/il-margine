@@ -22,7 +22,7 @@ export default function AnytimeGoalscorer() {
             <span className="text-sm text-emerald-400">Anytime Goalscorer</span>
           </div>
           
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">Anytime Goalscorer Betting Tips</h1>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">Anytime Goalscorer Betting Tips</h1>
           <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
             Anytime goalscorer betting tips with analytical breakdowns based on roles, xG data and match context.
           </p>

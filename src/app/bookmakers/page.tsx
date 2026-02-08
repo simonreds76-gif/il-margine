@@ -270,7 +270,7 @@ export default function BookmakersPage() {
             <span className="text-sm text-emerald-400 font-medium">Bookmakers</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">Bookmakers & Key Concepts</h1>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">Bookmakers & Key Concepts</h1>
           <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed mb-8">
             Straight-talking guidance for punters: where to bet, how to think about odds and your account, and the jargon that matters. No filler. The kind of reference you won&apos;t find in generic affiliate roundups.
           </p>
@@ -362,7 +362,7 @@ export default function BookmakersPage() {
           <div className="flex items-center gap-2 mb-6">
             <span className="text-xs font-mono text-amber-400 tracking-wider">RECOMMENDED</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-3 text-slate-100">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-emerald-400 mb-4 sm:mb-6 flex items-center gap-3">
             <span className="text-3xl sm:text-4xl" aria-hidden>📋</span>
             Bookmakers We Recommend & New Account Offers
           </h2>
@@ -493,7 +493,7 @@ export default function BookmakersPage() {
             <span className="text-xs font-mono text-amber-400 tracking-wider">IMPORTANT</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 flex items-center gap-3 text-slate-100">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-emerald-400 mb-4 sm:mb-6 flex items-center gap-3">
             <span className="text-3xl sm:text-4xl" aria-hidden>⚠️</span>
             Understanding Account Restrictions
           </h2>

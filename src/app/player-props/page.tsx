@@ -206,7 +206,7 @@ export default function PlayerProps() {
             <span className="text-sm text-emerald-400">Player Props</span>
           </div>
           
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">Football Player Props</h1>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">Football Player Props</h1>
           <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
             Individual player markets represent one of the most inefficient pricing areas in football betting. 
             While bookmakers dedicate significant resources to match odds, player props receive far less attention.
@@ -311,7 +311,7 @@ export default function PlayerProps() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <span className="text-xs font-mono text-emerald-400 mb-2 block">ACTIVE SELECTIONS</span>
-              <h2 className="text-xl sm:text-2xl font-bold">Current Picks</h2>
+              <h2 className="text-2xl sm:text-3xl font-semibold text-emerald-400">Current Picks</h2>
             </div>
             <span className="text-xs text-slate-500 hidden sm:block">Updated in real-time via Telegram</span>
           </div>
@@ -429,7 +429,7 @@ export default function PlayerProps() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
             <span className="text-xs font-mono text-emerald-400 mb-2 block">RESULTS</span>
-            <h2 className="text-xl sm:text-2xl font-bold">Recent Selections</h2>
+            <h2 className="text-2xl sm:text-3xl font-semibold text-emerald-400">Recent Selections</h2>
           </div>
 
           {filteredRecent.length > 0 ? (

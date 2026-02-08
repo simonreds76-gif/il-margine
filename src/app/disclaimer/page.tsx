@@ -9,7 +9,7 @@ export default function Disclaimer() {
           <Link href="/" className="text-sm text-slate-500 hover:text-slate-300 mb-6 inline-block">
             ← Home
           </Link>
-          <h1 className="text-3xl font-bold mb-8">Disclaimer</h1>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-8">Disclaimer</h1>
           <div className="prose prose-invert prose-slate max-w-none text-slate-300 space-y-4 text-sm leading-relaxed">
             <p>
               Past performance does not guarantee future results. All tips, analysis and statistics on this site are for
