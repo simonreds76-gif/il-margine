@@ -28,18 +28,6 @@ export default function Home() {
     overall: CombinedMarketStats;
   } | null>(null);
 
-  // Scroll to hash when landing on /#the-edge or /#track-record (e.g. from nav on another page)
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.location.hash) return;
-    const id = window.location.hash.slice(1);
-    if (!id) return;
-    const t = setTimeout(() => {
-      const el = document.getElementById(id);
-      el?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
-    return () => clearTimeout(t);
-  }, []);
-
   // Fetch live data from database
   useEffect(() => {
     fetchData();
@@ -264,9 +252,9 @@ export default function Home() {
             
             <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-12 sm:mb-16">
               <TelegramButton variant="cta" className="transition-all hover:scale-105" />
-              <a href="#the-edge" className="border border-slate-600 hover:border-slate-400 text-slate-200 font-medium px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg text-base sm:text-lg transition-all hover:bg-slate-800/50">
+              <Link href="/the-edge" className="border border-slate-600 hover:border-slate-400 text-slate-200 font-medium px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg text-base sm:text-lg transition-all hover:bg-slate-800/50">
                 How It Works
-              </a>
+              </Link>
             </div>
             
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8">
@@ -487,203 +475,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Banner image (live parity) */}
+      {/* Banner */}
       <section className="py-8 md:py-12 border-b border-slate-800/50 flex justify-center bg-slate-900/20">
         <div className="max-w-6xl w-full px-4 sm:px-6 lg:px-8">
           <Image src="/banner.png" alt="Il Margine" width={1200} height={400} className="w-full h-auto object-contain rounded-lg opacity-90" />
-        </div>
-      </section>
-
-      {/* The Edge Section */}
-      <section id="the-edge" className="pt-4 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50 relative overflow-hidden scroll-mt-20">
-        {/* Faded Banner Background */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
-          <Image 
-            src="/banner.png" 
-            alt="Il Margine" 
-            width={1200} 
-            height={400} 
-            className="w-full max-w-6xl h-auto object-contain"
-          />
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-            <div>
-              <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">WHY IT WORKS</span>
-              <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-6 sm:mb-8">The Edge</h2>
-              
-              <div className="space-y-6 text-slate-300 leading-relaxed text-base">
-                <p>
-                  25 years in the betting industry. Former odds compiler. I&apos;ve worked on the other side, building the prices that bookmakers use. I know exactly where they cut corners and where value hides.
-                </p>
-                <p>
-                  Every pick is backed by proprietary models that strip out bookmaker margin to find true odds. We only bet when the numbers say yes. No hunches. No tips from a mate. Pure mathematics.
-                </p>
-                <p>
-                  The results speak for themselves. Over {displayStats.overall.total_bets.toLocaleString()} tracked bets with consistent, verifiable profits across multiple markets.
-                </p>
-              </div>
-              
-              {/* Edge Calculation Example */}
-              <div className="mt-8 bg-slate-900/50 rounded-lg border border-slate-800 p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <span className="font-mono text-sm text-slate-400">HOW WE FIND EDGE</span>
-                  <span className="text-[10px] font-mono text-slate-600 bg-slate-800 px-2 py-1 rounded">EXAMPLE</span>
-                </div>
-                
-                <div className="space-y-3 font-mono text-sm">
-                  <div className="flex justify-between items-center py-2 border-b border-slate-800/50">
-                    <span className="text-slate-400">Bookmaker Odds</span>
-                    <span className="text-slate-100">2.10</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-slate-800/50">
-                    <span className="text-slate-400">Implied Probability</span>
-                    <span className="text-slate-100">47.62%</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-slate-800/50">
-                    <span className="text-slate-400">Our Fair Odds <span className="text-slate-600">(margin stripped)</span></span>
-                    <span className="text-slate-100">1.89</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-slate-800/50">
-                    <span className="text-slate-400">True Probability</span>
-                    <span className="text-slate-100">52.91%</span>
-                  </div>
-                  <div className="flex justify-between items-center py-3 bg-emerald-500/10 rounded px-3 -mx-3 mt-2">
-                    <span className="text-emerald-400 font-semibold">Mathematical Edge</span>
-                    <span className="text-emerald-400 font-bold text-lg">+11.1%</span>
-                  </div>
-                </div>
-                
-                <p className="text-xs text-slate-500 mt-4">
-                  We strip bookmaker margin to find true odds. When their price exceeds fair value, we bet.
-                </p>
-              </div>
-            </div>
-            
-            <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-6">
-              <h3 className="text-2xl font-semibold mb-4 text-emerald-400">The Philosophy</h3>
-              <div className="space-y-4 text-sm text-slate-400">
-                <div className="flex gap-3">
-                  <span className="text-emerald-400 font-mono">01</span>
-                  <p><strong className="text-slate-200">Mathematical edge only.</strong> We calculate true odds. We only bet when our odds are better than the bookmaker&apos;s.</p>
-                </div>
-                <div className="flex gap-3">
-                  <span className="text-emerald-400 font-mono">02</span>
-                  <p><strong className="text-slate-200">Singles only.</strong> Accumulators compound the bookmaker&apos;s edge. A five-fold with 5% margin per leg = 22.6% against you. That&apos;s the graveyard of the bettor.</p>
-                </div>
-                <div className="flex gap-3">
-                  <span className="text-emerald-400 font-mono">03</span>
-                  <p><strong className="text-slate-200">Exploit inefficiencies.</strong> Player props, niche markets, early lines. Where their models are weak, we attack.</p>
-                </div>
-                <div className="flex gap-3">
-                  <span className="text-emerald-400 font-mono">04</span>
-                  <p><strong className="text-slate-200">No secrets given away.</strong> We share the picks, not the model. Rest assured we&apos;re not betting for fun.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Track Record */}
-      <section id="track-record" className="pt-4 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50 scroll-mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">TRACK RECORD</span>
-          <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-6 sm:mb-8">Proven Results</h2>
-          <p className="text-base sm:text-lg text-slate-300 mb-12 sm:mb-14 max-w-2xl">
-            Transparent results across all active markets. ATP Tennis independently verified on Tipstrr. Player Props self-tracked with timestamped records.
-          </p>
-
-          {/* Combined Stats - uses baseline when live data not yet loaded */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-12 sm:mb-16">
-            <div className="p-6 sm:p-8 bg-slate-900/60 rounded-xl border border-slate-800/50 hover:border-emerald-500/30 transition-all">
-              <div className="text-4xl sm:text-5xl font-bold text-emerald-400 font-mono mb-2">
-                {displayStats.overall.total_bets.toLocaleString()}+
-              </div>
-              <div className="text-sm text-slate-400 font-medium">Total Bets</div>
-            </div>
-            <div className="p-6 sm:p-8 bg-slate-900/60 rounded-xl border border-slate-800/50 hover:border-emerald-500/30 transition-all">
-              <div className="text-4xl sm:text-5xl font-bold text-emerald-400 font-mono mb-2">
-                {displayStats.overall.win_rate.toFixed(0)}%
-              </div>
-              <div className="text-sm text-slate-400 font-medium">Win Rate</div>
-            </div>
-            <div className="p-6 sm:p-8 bg-slate-900/60 rounded-xl border border-slate-800/50 hover:border-emerald-500/30 transition-all">
-              <div className="text-4xl sm:text-5xl font-bold text-emerald-400 font-mono mb-2">
-                {displayStats.overall.roi > 0 ? "+" : ""}{displayStats.overall.roi.toFixed(1)}%
-              </div>
-              <div className="text-sm text-slate-400 font-medium">Combined ROI</div>
-            </div>
-            <div className="p-6 sm:p-8 bg-slate-900/60 rounded-xl border border-slate-800/50 hover:border-emerald-500/30 transition-all">
-              <div className="text-4xl sm:text-5xl font-bold text-emerald-400 font-mono mb-2">2</div>
-              <div className="text-sm text-slate-400 font-medium">Markets</div>
-            </div>
-          </div>
-
-          {/* Individual Markets */}
-          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
-            {/* Player Props */}
-            <div className="bg-slate-900/60 rounded-xl border border-slate-800/50 p-6 sm:p-8 hover:border-slate-700 transition-all">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="font-semibold text-lg">Player Props</h3>
-                <span className="text-xs font-mono text-slate-500">FOOTBALL 2025</span>
-              </div>
-              <div className="grid grid-cols-3 gap-4 mb-4">
-                <div>
-                  <div className="text-2xl font-bold text-emerald-400 font-mono">
-                    {displayStats.props.total_bets}+
-                  </div>
-                  <div className="text-xs text-slate-500">Bets</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-emerald-400 font-mono">
-                    {displayStats.props.roi > 0 ? "+" : ""}{displayStats.props.roi.toFixed(1)}%
-                  </div>
-                  <div className="text-xs text-slate-500">ROI</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-emerald-400 font-mono">
-                    {displayStats.props.win_rate.toFixed(0)}%
-                  </div>
-                  <div className="text-xs text-slate-500">Win Rate</div>
-                </div>
-              </div>
-              <p className="text-xs text-slate-500">Self-tracked with timestamped screenshots</p>
-            </div>
-
-            {/* ATP Tennis */}
-            <div className="bg-slate-900/60 rounded-xl border border-slate-800/50 p-6 sm:p-8 hover:border-slate-700 transition-all">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="font-semibold text-lg">ATP Tennis</h3>
-                <span className="text-xs font-mono text-emerald-400">TIPSTRR VERIFIED</span>
-              </div>
-              <div className="grid grid-cols-3 gap-4 mb-4">
-                <div>
-                  <div className="text-2xl font-bold text-emerald-400 font-mono">
-                    {displayStats.tennis.total_bets}
-                  </div>
-                  <div className="text-xs text-slate-500">Bets</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-emerald-400 font-mono">
-                    {displayStats.tennis.roi > 0 ? "+" : ""}{displayStats.tennis.roi.toFixed(1)}%
-                  </div>
-                  <div className="text-xs text-slate-500">ROI</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-emerald-400 font-mono">
-                    {displayStats.tennis.win_rate.toFixed(0)}%
-                  </div>
-                  <div className="text-xs text-slate-500">Win Rate</div>
-                </div>
-              </div>
-              <p className="text-xs text-slate-500">Independently verified on Tipstrr.com</p>
-            </div>
-          </div>
-          <p className="mt-8 text-xs text-slate-500 max-w-2xl">
-            Past performance does not guarantee future results. These calculations are illustrative based on historical data. Always bet responsibly and within your means.
-          </p>
         </div>
       </section>
 

@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "Track Record",
   description: "Transparent betting results: Player Props and ATP Tennis. Verified track record, ROI, win rate.",
   alternates: {
-    canonical: BASE_URL,
+    canonical: `${BASE_URL}/track-record`,
   },
   robots: "index, follow",
 };

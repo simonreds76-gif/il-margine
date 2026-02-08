@@ -18,11 +18,9 @@ export default function GlobalNav() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (!window.location.hash) {
-      window.scrollTo(0, 0);
-      const raf = requestAnimationFrame(() => window.scrollTo(0, 0));
-      return () => cancelAnimationFrame(raf);
-    }
+    window.scrollTo(0, 0);
+    const raf = requestAnimationFrame(() => window.scrollTo(0, 0));
+    return () => cancelAnimationFrame(raf);
   }, [pathname]);
 
   const isTipsActive = ["/tennis-tips", "/player-props", "/anytime-goalscorer", "/bet-builders"].includes(pathname);
@@ -76,17 +74,8 @@ export default function GlobalNav() {
               )}
             </div>
             
-            {pathname === "/" ? (
-              <>
-                <a href="#the-edge" className={linkClass(false)}>The Edge</a>
-                <a href="#track-record" className={linkClass(false)}>Track Record</a>
-              </>
-            ) : (
-              <>
-                <Link href="/#the-edge" className={linkClass(false)}>The Edge</Link>
-                <Link href="/#track-record" className={linkClass(false)}>Track Record</Link>
-              </>
-            )}
+            <Link href="/the-edge" className={linkClass(pathname === "/the-edge")}>The Edge</Link>
+            <Link href="/track-record" className={linkClass(pathname === "/track-record")}>Track Record</Link>
             <Link href="/bookmakers" className={linkClass(pathname === '/bookmakers')}>Bookmakers</Link>
             <Link href="/calculator" className={linkClass(pathname === '/calculator')}>Calculator</Link>
             <TelegramButton variant="nav" />
@@ -123,25 +112,12 @@ export default function GlobalNav() {
                 </div>
               )}
             </div>
-            {pathname === "/" ? (
-              <>
-                <a href="#the-edge" onClick={() => setMobileMenuOpen(false)} className="flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10">
-                  The Edge
-                </a>
-                <a href="#track-record" onClick={() => setMobileMenuOpen(false)} className="flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10">
-                  Track Record
-                </a>
-              </>
-            ) : (
-              <>
-                <Link href="/#the-edge" onClick={() => setMobileMenuOpen(false)} className="flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10">
-                  The Edge
-                </Link>
-                <Link href="/#track-record" onClick={() => setMobileMenuOpen(false)} className="flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10">
-                  Track Record
-                </Link>
-              </>
-            )}
+            <Link href="/the-edge" onClick={() => setMobileMenuOpen(false)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/the-edge" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
+              The Edge
+            </Link>
+            <Link href="/track-record" onClick={() => setMobileMenuOpen(false)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/track-record" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
+              Track Record
+            </Link>
             <Link href="/bookmakers" className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/bookmakers' ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
               Bookmakers
             </Link>
