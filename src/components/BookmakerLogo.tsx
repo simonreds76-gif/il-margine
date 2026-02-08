@@ -31,8 +31,6 @@ const bookmakerLogos: Record<string, string> = {
   "Sky Bet": "skybet",
   "SkyBet": "skybet",
   "skybet": "skybet",
-  "Unibet": "unibet",
-  "unibet": "unibet",
   "Betway": "betway",
   "betway": "betway",
   "888sport": "888sport",
@@ -44,11 +42,13 @@ const bookmakerLogos: Record<string, string> = {
   "Pinnacle": "pinnacle",
   "pinnacle": "pinnacle",
   "Marathon": "marathon",
-  "BetMGM": "betmgm",
-  "betmgm": "betmgm",
+  "BetMGM": "BetMGM UK_idPMHl2t9c_0.png",
+  "betmgm": "BetMGM UK_idPMHl2t9c_0.png",
   "Midnite": "midnite",
   "midnite": "midnite",
   "BetVictor": "betvictor",
+  "Unibet": "Unibet_idYHeiKVm__1.png",
+  "unibet": "Unibet_idYHeiKVm__1.png",
   "DraftKings": "draftkings",
   "FanDuel": "fanduel",
 };
@@ -75,7 +75,7 @@ export default function BookmakerLogo({
   const hasExtension = logoBase?.includes(".");
   const logoPaths: string[] = logoBase
     ? hasExtension
-      ? [`/bookmakers/${logoBase}`]
+      ? [`/bookmakers/${encodeURIComponent(logoBase)}`]
       : [
           `/bookmakers/${logoBase}.png`,
           `/bookmakers/${logoBase}.svg`,

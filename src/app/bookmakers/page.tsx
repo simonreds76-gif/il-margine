@@ -440,7 +440,7 @@ export default function BookmakersPage() {
                   </div>
                   {rec.notes && (
                     <div className="mt-4 pt-4 border-t border-slate-800/50 text-left">
-                      <p className="text-xs text-slate-400 italic leading-relaxed">{rec.notes}</p>
+                      <p className="text-sm text-slate-400 leading-relaxed">{rec.notes}</p>
                     </div>
                   )}
                   </div>
