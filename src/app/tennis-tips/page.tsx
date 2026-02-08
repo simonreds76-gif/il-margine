@@ -197,7 +197,7 @@ export default function TennisTips() {
       {/* Navigation is now in GlobalNav component in layout.tsx */}
 
       {/* Hero */}
-      <section className="py-12 md:py-20 border-b border-slate-800/50">
+      <section className="pt-8 pb-12 md:pt-10 md:pb-16 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 mb-4">
             <Link href="/" className="text-sm text-slate-500 hover:text-slate-300">Home</Link>
@@ -232,7 +232,7 @@ export default function TennisTips() {
       </section>
 
       {/* Category Tabs */}
-      <section className="py-8 border-b border-slate-800/50">
+      <section className="py-12 md:py-16 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
             {categoryConfig.map((cat) => {
@@ -294,7 +294,7 @@ export default function TennisTips() {
       </section>
 
       {/* Active Picks */}
-      <section className="py-12 border-b border-slate-800/50">
+      <section className="py-12 md:py-16 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -393,7 +393,7 @@ export default function TennisTips() {
       </section>
 
       {/* Recent Results */}
-      <section className="py-12 border-b border-slate-800/50">
+      <section className="py-12 md:py-16 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
             <span className="text-xs font-mono text-emerald-400 mb-2 block">RESULTS</span>

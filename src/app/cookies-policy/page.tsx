@@ -16,13 +16,15 @@ export const metadata: Metadata = {
 export default function CookiesPolicyPage() {
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <section className="py-12 md:py-16 border-b border-slate-800/50">
+      <section className="pt-8 pb-10 md:pt-10 md:pb-12 border-b border-slate-800/50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8"
           >
-            <Image src="/favicon.png" alt="" width={40} height={40} className="block rounded" unoptimized />
+            <span className="flex h-10 w-10 shrink-0 overflow-hidden rounded-md bg-[#0f1117] ring-2 ring-[#0f1117] ring-inset">
+              <Image src="/favicon.png" alt="" width={40} height={40} className="h-full w-full object-cover object-center" unoptimized />
+            </span>
             <span>← Home</span>
           </Link>
           <h1 className="text-3xl font-bold mb-8">Cookies Policy</h1>

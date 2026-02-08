@@ -235,7 +235,7 @@ export default function Home() {
       {/* Navigation is now in GlobalNav component in layout.tsx */}
 
       {/* Hero */}
-      <section className="py-16 md:py-24 border-b border-slate-800/50">
+      <section className="pt-8 pb-12 md:pt-10 md:pb-16 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <div className="flex items-center justify-center gap-2 mb-8">
@@ -284,7 +284,7 @@ export default function Home() {
       </section>
 
       {/* Markets */}
-      <section id="markets" className="py-20 border-b border-slate-800/50 scroll-mt-16">
+      <section id="markets" className="py-12 md:py-16 border-b border-slate-800/50 scroll-mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 mb-6">
             <span className="text-xs font-mono text-emerald-400 tracking-wider">MARKETS</span>
@@ -351,7 +351,7 @@ export default function Home() {
       </section>
 
       {/* Latest Results */}
-      <section className="py-20 border-b border-slate-800/50 bg-slate-900/20">
+      <section className="py-12 md:py-16 border-b border-slate-800/50 bg-slate-900/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 sm:mb-10">
             <div>
@@ -484,7 +484,7 @@ export default function Home() {
       </section>
 
       {/* The Edge Section */}
-      <section id="the-edge" className="py-20 border-b border-slate-800/50 relative overflow-hidden scroll-mt-16">
+      <section id="the-edge" className="py-12 md:py-16 border-b border-slate-800/50 relative overflow-hidden scroll-mt-16">
         {/* Faded Banner Background */}
         <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
           <Image 
@@ -576,7 +576,7 @@ export default function Home() {
       </section>
 
       {/* Track Record */}
-      <section id="track-record" className="py-20 border-b border-slate-800/50 scroll-mt-16">
+      <section id="track-record" className="py-12 md:py-16 border-b border-slate-800/50 scroll-mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <span className="text-xs font-mono text-emerald-400 mb-4 block tracking-wider">TRACK RECORD</span>
           <h2 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">Proven Results</h2>
@@ -677,7 +677,7 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-20">
+      <section className="py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6">Ready to join?</h2>
           <p className="text-base sm:text-lg text-slate-300 mb-8 sm:mb-10 max-w-lg mx-auto">

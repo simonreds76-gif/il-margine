@@ -120,7 +120,7 @@ export default function Calculator() {
 
 
       {/* Hero */}
-      <section className="py-12 md:py-20 border-b border-slate-800/50">
+      <section className="pt-8 pb-12 md:pt-10 md:pb-16 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 mb-4">
             <Link href="/" className="text-sm text-slate-500 hover:text-slate-300">Home</Link>
@@ -142,7 +142,7 @@ export default function Calculator() {
       </section>
 
       {/* Calculator Tables */}
-      <section className="py-12">
+      <section className="py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
             <div className="text-center py-12">
