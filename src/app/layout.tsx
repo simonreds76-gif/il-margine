@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { Inter } from "next/font/google";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import GlobalNav from "@/components/GlobalNav";
+import SpeedInsightsClient from "@/components/SpeedInsightsClient";
 import StructuredData from "@/components/StructuredData";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { BASE_URL } from "@/lib/config";
@@ -18,7 +18,8 @@ export const metadata: Metadata = {
     default: "Smart Betting Tips & Analysis | Tennis, Props & Football",
     template: "%s | Il Margine",
   },
-  description: "Independent betting tips and analysis across tennis, player props and football markets, with a disciplined and data-driven approach.",
+  description:
+    "Independent betting tips and analysis across tennis, player props and football markets, with a disciplined and data-driven approach.",
   alternates: {
     canonical: BASE_URL,
   },
@@ -28,7 +29,8 @@ export const metadata: Metadata = {
     url: BASE_URL,
     siteName: "Il Margine",
     title: "Smart Betting Tips & Analysis | Tennis, Props & Football",
-    description: "Independent betting tips and analysis across tennis, player props and football markets, with a disciplined and data-driven approach.",
+    description:
+      "Independent betting tips and analysis across tennis, player props and football markets, with a disciplined and data-driven approach.",
     images: [
       {
         url: "/og.png",
@@ -41,7 +43,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Smart Betting Tips & Analysis | Tennis, Props & Football",
-    description: "Independent betting tips and analysis across tennis, player props and football markets, with a disciplined and data-driven approach.",
+    description:
+      "Independent betting tips and analysis across tennis, player props and football markets, with a disciplined and data-driven approach.",
     images: ["/og.png"],
   },
 };
@@ -69,7 +72,7 @@ export default function RootLayout({
         <StructuredData />
         <GlobalNav />
         {children}
-        <SpeedInsights />
+        <SpeedInsightsClient />
       </body>
     </html>
   );
