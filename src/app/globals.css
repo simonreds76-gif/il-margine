@@ -12,6 +12,10 @@
   --color-accent: var(--accent);
 }
 
+html {
+  scroll-behavior: auto;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

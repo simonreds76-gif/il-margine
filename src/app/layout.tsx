@@ -75,7 +75,9 @@ export default function RootLayout({
         <SpeedInsightsClient />
         <StructuredData />
         <GlobalNav />
-        {children}
+        <div className="w-full min-h-screen">
+          {children}
+        </div>
       </body>
     </html>
   );
