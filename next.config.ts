@@ -4,15 +4,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: process.cwd(),
   },
-  async redirects() {
-    return [
-      {
-        source: "/atp-tennis",
-        destination: "/tennis-tips",
-        permanent: true,
-      },
-    ];
-  },
+  // No redirects: /atp-tennis is a real page with canonical to /tennis-tips so Google indexes content, not a redirect.
 };
 
 export default nextConfig;

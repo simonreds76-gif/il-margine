@@ -259,7 +259,7 @@ export default function BookmakersPage() {
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <section className="relative pt-8 pb-12 md:pt-10 md:pb-16 border-b border-slate-800/50 overflow-hidden">
+      <section className="relative pt-4 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/10 via-transparent to-transparent pointer-events-none" aria-hidden />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="flex items-center gap-2 mb-4">

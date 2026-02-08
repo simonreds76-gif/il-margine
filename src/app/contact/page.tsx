@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <section className="pt-8 pb-10 md:pt-10 md:pb-12 border-b border-slate-800/50">
+      <section className="pt-4 pb-10 md:pt-6 md:pb-12 border-b border-slate-800/50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link
             href="/"

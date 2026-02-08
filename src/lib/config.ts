@@ -14,5 +14,5 @@ export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || "";
 /** When true: /bookmakers is indexable and included in sitemap. When false (default): noindex and excluded from sitemap. */
 export const BOOKMAKERS_INDEXABLE = process.env.BOOKMAKERS_INDEXABLE === "true";
 
-/** Google Analytics measurement ID. When set, GA and route tracking are enabled. */
-export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-YGYZH8K072";
+/** Google Analytics 4 measurement ID (e.g. G-XXXXXXXX). Set NEXT_PUBLIC_GA_MEASUREMENT_ID in Vercel / .env. */
+export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "";

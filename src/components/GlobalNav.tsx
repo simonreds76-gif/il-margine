@@ -50,8 +50,8 @@ export default function GlobalNav() {
     <nav className="border-b border-slate-800/80 sticky top-0 z-50 bg-[#0f1117]/95 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center h-10 md:h-12 overflow-hidden rounded-md bg-[#0f1117] ring-2 ring-[#0f1117] ring-inset shrink-0">
-            <Image src="/logo.png" alt="Il Margine" width={180} height={50} className="h-10 md:h-12 w-auto scale-[1.18] object-contain object-center" style={{ background: "transparent" }} />
+          <Link href="/" className="flex items-center h-10 w-10 md:h-12 md:w-12 shrink-0 overflow-hidden rounded-md">
+            <Image src="/logo.png" alt="Il Margine" width={64} height={64} className="h-full w-full object-contain" />
           </Link>
           
           {/* Mobile Menu Button */}
