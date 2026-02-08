@@ -12,7 +12,7 @@ export default function Footer({ className = "" }: FooterProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-3">
-            <Image src="/logo.png" alt="Il Margine" width={140} height={40} className="h-8 w-auto object-contain" />
+            <Image src="/favicon.png" alt="Il Margine" width={40} height={40} className="h-8 w-8 object-contain" />
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">FREE BETA</span>
               <span className="text-xs text-slate-500">Launched {LAUNCH_YEAR}</span>

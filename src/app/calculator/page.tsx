@@ -154,7 +154,7 @@ export default function Calculator() {
               <div className="bg-gradient-to-br from-slate-900/80 to-slate-900/40 rounded-xl border border-slate-800 p-6 sm:p-8">
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h2 className="text-2xl font-semibold text-emerald-400 mb-2">Player Props</h2>
+                    <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">Player Props</h2>
                     <p className="text-sm text-slate-400">Football individual player markets</p>
                   </div>
                   <div className="text-right">
@@ -223,7 +223,7 @@ export default function Calculator() {
               <div className="bg-gradient-to-br from-slate-900/80 to-slate-900/40 rounded-xl border border-slate-800 p-6 sm:p-8">
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h2 className="text-2xl font-semibold text-emerald-400 mb-2">Tennis Tips</h2>
+                    <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">Tennis Tips</h2>
                     <p className="text-sm text-slate-400">Pre-match singles markets</p>
                   </div>
                   <div className="text-right">

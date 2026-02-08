@@ -22,9 +22,7 @@ export default function CookiesPolicyPage() {
             href="/"
             className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8"
           >
-            <span className="flex h-10 w-10 shrink-0 overflow-hidden rounded-md bg-[#0f1117] ring-2 ring-[#0f1117] ring-inset">
-              <Image src="/favicon.png" alt="" width={40} height={40} className="h-full w-full object-cover object-center" unoptimized />
-            </span>
+            <Image src="/favicon.png" alt="" width={40} height={40} className="h-10 w-10 object-contain shrink-0" />
             <span>← Home</span>
           </Link>
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-8">Cookies Policy</h1>

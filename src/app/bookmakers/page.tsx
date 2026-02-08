@@ -362,7 +362,7 @@ export default function BookmakersPage() {
           <div className="flex items-center gap-2 mb-6">
             <span className="text-xs font-mono text-amber-400 tracking-wider">RECOMMENDED</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-semibold text-emerald-400 mb-4 sm:mb-6 flex items-center gap-3">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6 flex items-center gap-3">
             <span className="text-3xl sm:text-4xl" aria-hidden>📋</span>
             Bookmakers We Recommend & New Account Offers
           </h2>
@@ -493,7 +493,7 @@ export default function BookmakersPage() {
             <span className="text-xs font-mono text-amber-400 tracking-wider">IMPORTANT</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-semibold text-emerald-400 mb-4 sm:mb-6 flex items-center gap-3">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6 flex items-center gap-3">
             <span className="text-3xl sm:text-4xl" aria-hidden>⚠️</span>
             Understanding Account Restrictions
           </h2>

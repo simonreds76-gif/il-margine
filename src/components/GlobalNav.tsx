@@ -50,8 +50,8 @@ export default function GlobalNav() {
     <nav className="border-b border-slate-800/80 sticky top-0 z-50 bg-[#0f1117]/95 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center h-10 md:h-12 shrink-0">
-            <Image src="/logo.png" alt="Il Margine" width={180} height={50} className="h-10 md:h-12 w-auto object-contain" />
+          <Link href="/" className="flex items-center h-10 w-10 md:h-12 md:w-12 shrink-0" onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
+            <Image src="/favicon.png" alt="Il Margine" width={48} height={48} className="h-full w-full object-contain" />
           </Link>
           
           {/* Mobile Menu Button */}
@@ -93,6 +93,9 @@ export default function GlobalNav() {
               )}
             </div>
             
+            <Link href="/" className={linkClass(pathname === "/")} onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
+              Home
+            </Link>
             <a href="/#the-edge" onClick={setEdge} className={linkClass(isEdgeActive)}>The Edge</a>
             <a href="/#track-record" onClick={setTrackRecord} className={linkClass(isTrackRecordActive)}>Track Record</a>
             <Link href="/bookmakers" className={linkClass(pathname === '/bookmakers')}>Bookmakers</Link>
@@ -139,6 +142,9 @@ export default function GlobalNav() {
                 </div>
               )}
             </div>
+            <Link href="/" className={`flex items-center min-h-[44px] px-4 py-3 text-sm rounded transition-colors ${pathname === '/' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`} onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
+              Home
+            </Link>
             <a href="/#the-edge" onClick={setEdge} className={`flex items-center min-h-[44px] px-4 py-3 text-sm rounded transition-colors ${isEdgeActive ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
               The Edge
             </a>
