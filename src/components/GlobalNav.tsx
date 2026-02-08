@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
+import TelegramButton from "@/components/TelegramButton";
 
 export default function GlobalNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -18,21 +18,23 @@ export default function GlobalNav() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    window.scrollTo(0, 0);
-    const raf = requestAnimationFrame(() => window.scrollTo(0, 0));
-    return () => cancelAnimationFrame(raf);
+    if (!window.location.hash) {
+      window.scrollTo(0, 0);
+      const raf = requestAnimationFrame(() => window.scrollTo(0, 0));
+      return () => cancelAnimationFrame(raf);
+    }
   }, [pathname]);
 
   const isTipsActive = ["/tennis-tips", "/player-props", "/anytime-goalscorer", "/bet-builders"].includes(pathname);
   const linkClass = (active: boolean) =>
-    `text-sm transition-colors ${active ? "text-emerald-400 font-medium" : "text-slate-400 hover:text-slate-100"}`;
+    `text-base font-medium transition-colors ${active ? "text-emerald-400" : "text-slate-400 hover:text-slate-100"}`;
 
   return (
     <nav className="border-b border-slate-800/80 sticky top-0 z-50 bg-[#0f1117]/95 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center h-10 md:h-12 shrink-0" onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
-            <Image src="/logo.png" alt="Il Margine" width={180} height={50} className="h-10 md:h-12 w-auto object-contain" />
+        <div className="flex items-center justify-between h-20">
+          <Link href="/" className="flex items-center h-14 md:h-16 shrink-0" onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
+            <Image src="/logo.png" alt="Il Margine" width={240} height={64} className="h-14 md:h-16 w-auto object-contain" />
           </Link>
           
           {/* Mobile Menu Button */}
@@ -74,19 +76,20 @@ export default function GlobalNav() {
               )}
             </div>
             
-            <Link href="/the-edge" className={linkClass(pathname === "/the-edge")}>The Edge</Link>
-            <Link href="/track-record" className={linkClass(pathname === "/track-record")}>Track Record</Link>
+            {pathname === "/" ? (
+              <>
+                <a href="#the-edge" className={linkClass(false)}>The Edge</a>
+                <a href="#track-record" className={linkClass(false)}>Track Record</a>
+              </>
+            ) : (
+              <>
+                <Link href="/#the-edge" className={linkClass(false)}>The Edge</Link>
+                <Link href="/#track-record" className={linkClass(false)}>Track Record</Link>
+              </>
+            )}
             <Link href="/bookmakers" className={linkClass(pathname === '/bookmakers')}>Bookmakers</Link>
             <Link href="/calculator" className={linkClass(pathname === '/calculator')}>Calculator</Link>
-            <a
-              href={TELEGRAM_CHANNEL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-medium px-4 py-2 rounded transition-colors flex items-center gap-2"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-              Join Free
-            </a>
+            <TelegramButton variant="nav" />
           </div>
         </div>
         
@@ -96,7 +99,7 @@ export default function GlobalNav() {
             <div className="px-4">
               <button 
                 onClick={() => setTipsMenuOpen(!tipsMenuOpen)}
-                className={`w-full min-h-[44px] flex items-center justify-between text-sm rounded px-3 py-3 transition-colors ${isTipsActive ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}
+                className={`w-full min-h-[44px] flex items-center justify-between text-base font-medium rounded px-3 py-3 transition-colors ${isTipsActive ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}
               >
                 <span>Tips</span>
                 <svg className={`w-4 h-4 transition-transform ${tipsMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,27 +123,34 @@ export default function GlobalNav() {
                 </div>
               )}
             </div>
-            <Link href="/the-edge" className={`flex items-center min-h-[44px] px-4 py-3 text-sm rounded transition-colors ${pathname === '/the-edge' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
-              The Edge
-            </Link>
-            <Link href="/track-record" className={`flex items-center min-h-[44px] px-4 py-3 text-sm rounded transition-colors ${pathname === '/track-record' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
-              Track Record
-            </Link>
-            <Link href="/bookmakers" className={`flex items-center min-h-[44px] px-4 py-3 text-sm rounded transition-colors ${pathname === '/bookmakers' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+            {pathname === "/" ? (
+              <>
+                <a href="#the-edge" onClick={() => setMobileMenuOpen(false)} className="flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10">
+                  The Edge
+                </a>
+                <a href="#track-record" onClick={() => setMobileMenuOpen(false)} className="flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10">
+                  Track Record
+                </a>
+              </>
+            ) : (
+              <>
+                <Link href="/#the-edge" onClick={() => setMobileMenuOpen(false)} className="flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10">
+                  The Edge
+                </Link>
+                <Link href="/#track-record" onClick={() => setMobileMenuOpen(false)} className="flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10">
+                  Track Record
+                </Link>
+              </>
+            )}
+            <Link href="/bookmakers" className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/bookmakers' ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
               Bookmakers
             </Link>
-            <Link href="/calculator" className={`flex items-center min-h-[44px] px-4 py-3 text-sm rounded transition-colors ${pathname === '/calculator' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+            <Link href="/calculator" className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/calculator' ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
               Calculator
             </Link>
-            <a 
-              href={TELEGRAM_CHANNEL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full min-h-[44px] mt-4 bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-medium px-4 py-3 rounded transition-colors flex items-center justify-center gap-2"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-              Join Free
-            </a>
+            <div className="mt-4 px-4">
+              <TelegramButton variant="nav" className="w-full min-h-[44px] justify-center" />
+            </div>
           </div>
         )}
       </div>

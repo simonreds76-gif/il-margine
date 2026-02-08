@@ -3,8 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
-
 export default function BetBuilders() {
 
   return (

@@ -5,8 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { supabase, MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
-import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
 import BookmakerLogo from "@/components/BookmakerLogo";
+import TelegramButton from "@/components/TelegramButton";
 import Footer from "@/components/Footer";
 
 interface CombinedMarketStats {
@@ -27,6 +27,18 @@ export default function Home() {
     tennis: CombinedMarketStats;
     overall: CombinedMarketStats;
   } | null>(null);
+
+  // Scroll to hash when landing on /#the-edge or /#track-record (e.g. from nav on another page)
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.location.hash) return;
+    const id = window.location.hash.slice(1);
+    if (!id) return;
+    const t = setTimeout(() => {
+      const el = document.getElementById(id);
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+    return () => clearTimeout(t);
+  }, []);
 
   // Fetch live data from database
   useEffect(() => {
@@ -251,18 +263,10 @@ export default function Home() {
             </p>
             
             <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-12 sm:mb-16">
-              <a 
-                href={TELEGRAM_CHANNEL_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg text-base sm:text-lg flex items-center gap-2 transition-all hover:scale-105 shadow-lg shadow-emerald-500/20"
-              >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-                Join Telegram Channel
-              </a>
-              <Link href="/the-edge" className="border border-slate-600 hover:border-slate-400 text-slate-200 font-medium px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg text-base sm:text-lg transition-all hover:bg-slate-800/50">
+              <TelegramButton variant="cta" className="transition-all hover:scale-105" />
+              <a href="#the-edge" className="border border-slate-600 hover:border-slate-400 text-slate-200 font-medium px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg text-base sm:text-lg transition-all hover:bg-slate-800/50">
                 How It Works
-              </Link>
+              </a>
             </div>
             
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8">
@@ -284,7 +288,7 @@ export default function Home() {
       </section>
 
       {/* Markets */}
-      <section id="markets" className="py-12 md:py-16 border-b border-slate-800/50 scroll-mt-16">
+      <section id="markets" className="py-12 md:py-16 border-b border-slate-800/50 scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 mb-6">
             <span className="text-xs font-mono text-emerald-400 tracking-wider">MARKETS</span>
@@ -420,7 +424,7 @@ export default function Home() {
               {/* Mobile Cards */}
               <div className="md:hidden divide-y divide-slate-800/50">
                 {recentBets.slice(0, 5).map((bet) => {
-                  const href = bet.market === "tennis" ? "/atp-tennis" : bet.market === "props" ? "/player-props" : "#";
+                  const href = bet.market === "tennis" ? "/tennis-tips" : bet.market === "props" ? "/player-props" : "#";
                   return (
                     <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/20">
                       <div className="flex items-start justify-between mb-2">
@@ -483,8 +487,15 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Banner image (live parity) */}
+      <section className="py-8 md:py-12 border-b border-slate-800/50 flex justify-center bg-slate-900/20">
+        <div className="max-w-6xl w-full px-4 sm:px-6 lg:px-8">
+          <Image src="/banner.png" alt="Il Margine" width={1200} height={400} className="w-full h-auto object-contain rounded-lg opacity-90" />
+        </div>
+      </section>
+
       {/* The Edge Section */}
-      <section id="the-edge" className="pt-4 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50 relative overflow-hidden scroll-mt-16">
+      <section id="the-edge" className="pt-4 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50 relative overflow-hidden scroll-mt-20">
         {/* Faded Banner Background */}
         <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
           <Image 
@@ -576,7 +587,7 @@ export default function Home() {
       </section>
 
       {/* Track Record */}
-      <section id="track-record" className="pt-4 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50 scroll-mt-16">
+      <section id="track-record" className="pt-4 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50 scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">TRACK RECORD</span>
           <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-6 sm:mb-8">Proven Results</h2>
@@ -683,15 +694,7 @@ export default function Home() {
           <p className="text-base sm:text-lg text-slate-300 mb-8 sm:mb-10 max-w-lg mx-auto">
             Free selections delivered to Telegram. Match, selection, odds, bookmaker. Everything you need to place your bet.
           </p>
-          <a 
-            href={TELEGRAM_CHANNEL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-8 py-4 rounded-lg text-lg inline-flex items-center gap-2 transition-all hover:scale-105 shadow-lg shadow-emerald-500/20"
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-            Join Telegram Channel
-          </a>
+          <TelegramButton variant="cta" className="transition-all hover:scale-105" />
         </div>
       </section>
 

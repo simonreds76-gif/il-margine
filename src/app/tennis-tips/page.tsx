@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { supabase, Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
-import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import Footer from "@/components/Footer";
 

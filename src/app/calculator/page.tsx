@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { supabase, MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI } from "@/lib/baseline";
-import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
 import Footer from "@/components/Footer";
 
 interface CombinedMarketStats {
