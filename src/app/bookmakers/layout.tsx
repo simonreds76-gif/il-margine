@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const title = "Recommended Bookmakers | Best Betting Sites for Tips";
 const description =
   "Where to place your bets. We recommend bookmakers based on market coverage, odds quality, betting limits, and account management.";
