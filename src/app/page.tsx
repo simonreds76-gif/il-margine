@@ -284,7 +284,7 @@ export default function Home() {
       </section>
 
       {/* Markets */}
-      <section id="markets" className="py-20 border-b border-slate-800/50">
+      <section id="markets" className="py-20 border-b border-slate-800/50 scroll-mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 mb-6">
             <span className="text-xs font-mono text-emerald-400 tracking-wider">MARKETS</span>
@@ -484,7 +484,7 @@ export default function Home() {
       </section>
 
       {/* The Edge Section */}
-      <section id="the-edge" className="py-20 border-b border-slate-800/50 relative overflow-hidden">
+      <section id="the-edge" className="py-20 border-b border-slate-800/50 relative overflow-hidden scroll-mt-16">
         {/* Faded Banner Background */}
         <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
           <Image 
@@ -576,7 +576,7 @@ export default function Home() {
       </section>
 
       {/* Track Record */}
-      <section id="track-record" className="py-20 border-b border-slate-800/50">
+      <section id="track-record" className="py-20 border-b border-slate-800/50 scroll-mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <span className="text-xs font-mono text-emerald-400 mb-4 block tracking-wider">TRACK RECORD</span>
           <h2 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8">Proven Results</h2>
