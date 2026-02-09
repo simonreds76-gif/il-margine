@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { supabase, MarketStats } from "@/lib/supabase";
+import { supabase, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI } from "@/lib/baseline";
 import Footer from "@/components/Footer";
 
@@ -38,7 +38,7 @@ interface CombinedMarketStats {
 
 export default function Calculator() {
   const [loading, setLoading] = useState(true);
-  const [marketStats, setMarketStats] = useState<MarketStats[]>([]);
+  const [categoryStats, setCategoryStats] = useState<CategoryStats[]>([]);
   const [combinedStats, setCombinedStats] = useState<{
     props: CombinedMarketStats;
     tennis: CombinedMarketStats;
@@ -46,67 +46,93 @@ export default function Calculator() {
 
   useEffect(() => {
     fetchData();
+
+    // Re-fetch when any bet is added, settled, or deleted from admin (same source as tips pages)
+    const channel = supabase
+      .channel("calculator-bets-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "bets" },
+        () => fetchData()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchData = async () => {
     setLoading(true);
-    
-    const { data: stats } = await supabase
-      .from("market_stats")
-      .select("*");
-    
-    if (stats) setMarketStats(stats);
-    calculateCombinedStats(stats || []);
+
+    const [statsRes, betsRes] = await Promise.all([
+      supabase.from("category_stats").select("*"),
+      supabase.from("bets").select("market, stake").in("status", ["won", "lost"]),
+    ]);
+
+    const stats = statsRes.data ?? [];
+    if (stats.length) setCategoryStats(stats);
+
+    // Total stake from actual stakes per bet (exact ROI for any staking plan)
+    const settledBets = betsRes.data ?? [];
+    const liveStakeByMarket = {
+      props: settledBets.filter((b) => b.market === "props").reduce((sum, b) => sum + (Number(b.stake) || 0), 0),
+      tennis: settledBets.filter((b) => b.market === "tennis").reduce((sum, b) => sum + (Number(b.stake) || 0), 0),
+    };
+
+    calculateCombinedStats(stats, liveStakeByMarket);
     setLoading(false);
   };
 
-  const calculateCombinedStats = (liveStats: MarketStats[]) => {
-    const propsLive = liveStats.find(s => s.market === "props");
-    const tennisLive = liveStats.find(s => s.market === "tennis");
+  // Same aggregation as Player Props "All Leagues" and Tennis Tips "All Tennis" so numbers match
+  const calculateCombinedStats = (
+    liveStats: CategoryStats[],
+    liveStakeByMarket: { props: number; tennis: number }
+  ) => {
+    const propsRows = liveStats.filter((s) => s.market === "props");
+    const tennisRows = liveStats.filter((s) => s.market === "tennis");
 
-    // Player Props
-    const propsLiveBets = propsLive?.total_bets || 0;
-    const propsLiveProfit = Number(propsLive?.total_profit) || 0;
-    const propsLiveStake = propsLiveBets;
-    
+    // Player Props: sum categories (same as player-props page "All Leagues")
+    const propsLiveBets = propsRows.reduce((sum, s) => sum + (s.total_bets || 0), 0);
+    const propsLiveProfit = propsRows.reduce((sum, s) => sum + (Number(s.total_profit) || 0), 0);
+    const propsLiveStake = liveStakeByMarket.props > 0 ? liveStakeByMarket.props : propsLiveBets; // fallback 1u per bet if no stakes
+    const propsOddsWeighted = propsRows.reduce((sum, s) => sum + (Number(s.avg_odds) || 0) * (s.total_bets || 0), 0);
+    const propsAvgOdds = propsLiveBets > 0 ? propsOddsWeighted / propsLiveBets : 1.98;
+
     const propsCombined: CombinedMarketStats = {
       total_bets: BASELINE_STATS.props.total_bets + propsLiveBets,
       roi: 0,
       win_rate: 0,
-      avg_odds: 0,
+      avg_odds: propsAvgOdds,
       total_profit: 0,
       total_stake: 0,
     };
-    
     const propsProfit = BASELINE_STATS.props.total_profit + propsLiveProfit;
     const propsStake = BASELINE_STATS.props.total_stake + propsLiveStake;
-    
     propsCombined.roi = calculateROI(propsProfit, propsStake || 1);
     propsCombined.total_profit = propsProfit;
     propsCombined.total_stake = propsStake;
-    propsCombined.avg_odds = propsLive?.avg_odds ? Number(propsLive.avg_odds) : 1.98;
 
-    // Tennis
-    const tennisLiveBets = tennisLive?.total_bets || 0;
-    const tennisLiveProfit = Number(tennisLive?.total_profit) || 0;
-    const tennisLiveStake = tennisLiveBets;
-    
+    // Tennis: sum categories (same as tennis-tips page "All Tennis")
+    const tennisLiveBets = tennisRows.reduce((sum, s) => sum + (s.total_bets || 0), 0);
+    const tennisLiveProfit = tennisRows.reduce((sum, s) => sum + (Number(s.total_profit) || 0), 0);
+    const tennisLiveStake = liveStakeByMarket.tennis > 0 ? liveStakeByMarket.tennis : tennisLiveBets; // fallback 1u per bet if no stakes
+    const tennisOddsWeighted = tennisRows.reduce((sum, s) => sum + (Number(s.avg_odds) || 0) * (s.total_bets || 0), 0);
+    const tennisAvgOdds = tennisLiveBets > 0 ? tennisOddsWeighted / tennisLiveBets : 2.06;
+
     const tennisCombined: CombinedMarketStats = {
       total_bets: BASELINE_STATS.tennis.total_bets + tennisLiveBets,
       roi: 0,
       win_rate: 0,
-      avg_odds: 0,
+      avg_odds: tennisAvgOdds,
       total_profit: 0,
       total_stake: 0,
     };
-    
     const tennisProfit = BASELINE_STATS.tennis.total_profit + tennisLiveProfit;
     const tennisStake = BASELINE_STATS.tennis.total_stake + tennisLiveStake;
-    
     tennisCombined.roi = calculateROI(tennisProfit, tennisStake || 1);
     tennisCombined.total_profit = tennisProfit;
     tennisCombined.total_stake = tennisStake;
-    tennisCombined.avg_odds = tennisLive?.avg_odds ? Number(tennisLive.avg_odds) : 2.06;
 
     setCombinedStats({
       props: propsCombined,
