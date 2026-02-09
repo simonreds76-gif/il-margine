@@ -488,6 +488,47 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Quick FAQ */}
+      <section className="py-12 md:py-16 border-b border-slate-800/50 bg-slate-900/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+            <div>
+              <span className="text-xs font-mono text-emerald-400 mb-2 block tracking-wider">QUICK FAQ</span>
+              <h2 className="text-2xl sm:text-3xl font-semibold text-slate-100">Frequently asked questions</h2>
+            </div>
+            <Link href="/faq" className="text-sm font-medium text-emerald-400 hover:text-emerald-300 transition-colors shrink-0">
+              View all FAQ →
+            </Link>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4 max-w-4xl">
+            <Link href="/faq#getting-started" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
+              <h3 className="font-medium text-slate-200 mb-1">What is Il Margine?</h3>
+              <p className="text-sm text-slate-500">A professional betting analysis service from a former odds compiler. We find edge in player props and ATP tennis.</p>
+            </Link>
+            <Link href="/faq#getting-started" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
+              <h3 className="font-medium text-slate-200 mb-1">How do I follow the tips?</h3>
+              <p className="text-sm text-slate-500">Join our free Telegram for player props; tennis tips are on the website. No payment, no trial.</p>
+            </Link>
+            <Link href="/faq#getting-started" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
+              <h3 className="font-medium text-slate-200 mb-1">Do I need Telegram?</h3>
+              <p className="text-sm text-slate-500">Only for football player props. Tennis tips are published on the site—no Telegram needed.</p>
+            </Link>
+            <Link href="/faq#betting-philosophy-approach" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
+              <h3 className="font-medium text-slate-200 mb-1">What is ROI and why does it matter?</h3>
+              <p className="text-sm text-slate-500">Return on investment. It matters more than win rate—you can win often and still lose money.</p>
+            </Link>
+            <Link href="/faq#costs-and-monetization" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
+              <h3 className="font-medium text-slate-200 mb-1">How much does it cost?</h3>
+              <p className="text-sm text-slate-500">Free. We’re growing our follower base; all tips are free with no trial or card required.</p>
+            </Link>
+            <Link href="/faq#markets-and-betting-types" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
+              <h3 className="font-medium text-slate-200 mb-1">What are player props?</h3>
+              <p className="text-sm text-slate-500">Bets on individual player stats (e.g. shots on target, fouls) rather than the match result.</p>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

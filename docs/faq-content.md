@@ -1,4 +1,4 @@
-﻿# Il Margine - Frequently Asked Questions (FAQ)
+# Il Margine - Frequently Asked Questions (FAQ)
 
 ## STRUCTURE OVERVIEW
 This FAQ is designed for both SEO and user education. Each question uses natural language that people actually search for, and answers provide value while establishing authority.
@@ -13,69 +13,44 @@ This FAQ is designed for both SEO and user education. Each question uses natural
 
 Unlike traditional tipsters who focus on match outcomes, we target inefficient markets where bookmaker pricing models are less sophisticated. Our name, Italian for "the margin" or "the edge," reflects our core philosophy: exploit the margin between true probability and bookmaker odds.
 
-**Track record:** 1,200+ verified bets with transparent results available publicly.
-
 ---
 
 ### Q: How do I start following Il Margine's betting tips?
 
 **A:** Getting started is simple:
 
-1. **Join our free Telegram channel:** [@IlMargineProps](https://t.me/IlMargineProps)
-2. **Wait for selections:** We post when we identify genuine value (not daily)
-3. **Review the tip:** Each includes match details, market, selection, bookmaker, odds, and stake recommendation
-4. **Place your bet:** Use your own bankroll and stake sizing
-5. **Track results:** Every bet is verified on our website with immutable records
+1. **Join our free Telegram channel:** [@IlMargineProps](https://t.me/IlMargineProps) — **football player props** are posted there so everyone has a chance to get on before odds move.
+2. **Tennis tips** are published on the website only initially; you do not need Telegram for those.
+3. **Anytime goalscorer** markets and **bet builders** are coming very soon.
+4. **Review the tip:** Each includes match details, market, selection, bookmaker, odds, and stake recommendation.
+5. **Place your bet:** Use your own bankroll and stake sizing.
+6. **Track results:** Every bet is verified on our website with immutable records.
 
-No payment required. No trial period. No credit card. Just join Telegram and receive selections when we find edge.
+No payment required. No trial period. No credit card.
 
 ---
 
 ### Q: Do I need a Telegram account to follow your tips?
 
-**A:** Currently, yes. Telegram is our primary distribution channel because:
-
-- **Timestamps are immutable** - Proves we published tips before matches started
-- **Real-time delivery** - Instant notifications when we post
-- **No algorithm interference** - Unlike Twitter/Facebook, you see every post
-- **Better community** - Discussion without spam
-
-However, we're considering adding email notifications for weekly summaries. If you prefer email, let us know via our contact page.
+**A:** Only for **football player props**. Those are published on Telegram so that everyone can get on the bet before odds change or move; the website is updated afterwards. For **ATP tennis** you do not need Telegram — tennis tips are published on the website. Anytime goalscorer and bet builder selections are coming very soon.
 
 ---
 
 ### Q: How often do you post betting tips?
 
-**A:** Irregularly and intentionally. We are **quality over quantity**.
+**A:** We post when our analysis identifies genuine value — we do not force selections to meet a schedule. **Quality over quantity.**
 
-Some weeks: 10+ selections  
-Some weeks: Zero selections
+**Typical volume:**
+- **Player props:** broadly 60–80+ selections per month when fixtures allow.
+- **ATP tennis:** broadly 35–50+ selections per month across the calendar.
 
-**Why?** We only tip when our analysis identifies genuine mispricing. We don't force selections to maintain a posting schedule.
-
-**Historical average:**
-- Player Props: 45-50 bets per month
-- ATP Tennis: 25-30 bets per month
-- Total: 70-80 selections monthly
-
-But these numbers fluctuate wildly based on match schedules and market conditions. December (winter break in tennis, reduced football) might have 20 total bets. May (clay court season, end of football season) might have 120 bets.
+These figures vary with the fixture list and where we find edge.
 
 ---
 
 ### Q: What time of day do you post tips?
 
-**A:** Tips are posted **2-24 hours before match start**, typically:
-
-**Football Player Props:**
-- Evening before match (7pm-11pm UK time)
-- Occasionally morning of match (if late team news changes value)
-
-**ATP Tennis:**
-- Evening before match (after draw is finalized)
-- Rarely day-of (if odds move significantly)
-
-**Why this timing?**  
-We need confirmed lineups/draws but want to secure best available odds before recreational bettors move the market.
+**A:** Tips are posted at any time during the day. For **player props**, expect selections up to around an hour before kick-off when we are waiting for official team news. For **ATP tennis**, bets are usually posted as soon as odds are available — often the day before the match, or on the day if relevant information becomes available.
 
 ---
 
@@ -112,14 +87,7 @@ Bookmakers employ teams of traders, sophisticated algorithms, and real-time moni
 
 The same bookmakers apply 10-15% margins to player props and use template pricing with minimal manual oversight. These markets receive a fraction of the analytical resources.
 
-**ATP tennis handicaps are mispriced.**
-
-Tennis match odds are efficient. But game handicaps and totals in ATP 250/500 events and Challengers exhibit persistent inefficiencies because:
-- Lower betting volume
-- Less market pressure to correct prices
-- Surface-specific factors systematically underweighted
-
-We compete where bookmakers are weakest, not where they're strongest.
+**ATP tennis game handicaps and totals:** We have had strong results with our model in these markets (ATP 250/500 and Challenger level). We focus where our analysis adds value rather than on the most liquid match-odds markets.
 
 ---
 
@@ -127,7 +95,7 @@ We compete where bookmakers are weakest, not where they're strongest.
 
 **A:** **ROI (Return on Investment)** measures profitability as a percentage of total stakes.
 
-**Formula:** (Total Profit Ã· Total Staked) Ã— 100
+**Formula:** (Total Profit ÷ Total Staked) × 100
 
 **Example:**
 - 100 bets at 1.0 unit stakes = 100 units staked
@@ -135,15 +103,14 @@ We compete where bookmakers are weakest, not where they're strongest.
 - Profit: 20 units
 - **ROI: +20%**
 
-**Why ROI > Win Rate:**
+**Why ROI matters more than win rate:**
 
-| Scenario | Win Rate | Avg Odds | ROI | Verdict |
-|----------|----------|----------|-----|---------|
-| Bettor A | 65% | 1.50 | -2.5% | **Losing** |
-| Bettor B | 52% | 2.20 | +14.4% | **Winning** |
+| Scenario   | Win rate | Avg odds | ROI    | Verdict   |
+|-----------|----------|----------|--------|-----------|
+| Bettor A  | 65%      | 1.50     | -2.5%  | Losing    |
+| Bettor B  | 52%      | 2.20     | +14.4% | Winning   |
 
-Bettor A wins more bets but loses money.  
-Bettor B wins fewer bets but profits long-term.
+Bettor A wins more often but loses money. Bettor B wins less often but is profitable over time.
 
 **Betting isn't about being right. It's about being right when the odds compensate for risk.**
 
@@ -153,8 +120,8 @@ Bettor B wins fewer bets but profits long-term.
 
 **A:** **Units are bankroll-agnostic.**
 
-One person's 1 unit might be Â£10.  
-Another person's 1 unit might be Â£100.
+One person's 1 unit might be £10.  
+Another person's 1 unit might be £100.
 
 By recommending stakes in units (e.g., "2.5u" or "1.0u"), followers can scale to their bankroll size while maintaining proper risk management.
 
@@ -163,8 +130,8 @@ By recommending stakes in units (e.g., "2.5u" or "1.0u"), followers can scale to
 - Never exceed 5 units on a single selection
 
 **Example:**
-- Â£1,000 bankroll â†’ 1u = Â£10-20
-- Â£10,000 bankroll â†’ 1u = Â£100-200
+- £1,000 bankroll → 1u = £10-20
+- £10,000 bankroll → 1u = £100-200
 
 This approach ensures sustainable betting regardless of bankroll size.
 
@@ -174,21 +141,14 @@ This approach ensures sustainable betting regardless of bankroll size.
 
 **A:** We use **variable unit staking** based on edge confidence:
 
-| Edge Confidence | Stake Size | Frequency |
-|----------------|------------|-----------|
-| Exploratory | 0.05u - 0.5u | ~5% of bets |
-| Standard | 1.0u | ~50% of bets |
-| Strong | 2.0u - 3.0u | ~40% of bets |
-| Maximum | 5.0u | ~5% of bets |
+| Edge confidence | Stake size   | Frequency   |
+|-----------------|-------------|-------------|
+| Exploratory     | 0.05u–0.5u  | ~5% of bets |
+| Standard        | 1.0u        | ~50% of bets|
+| Strong          | 2.0u–3.0u   | ~40% of bets|
+| Maximum         | 5.0u        | ~5% of bets |
 
-**Why variable staking?**
-Not all edges are equal. When our analysis identifies stronger mispricing, we stake more. When edge is marginal or we're testing a new angle, we stake less.
-
-**Historical performance:**
-- 5.0u bets: 63% win rate, +31.2% ROI
-- 1.0u bets: 54% win rate, +14.8% ROI
-
-Our edge identification is strongest at higher confidence levels.
+Not all edges are equal: when our analysis points to stronger value we stake more; when edge is marginal or we are testing an angle we stake less.
 
 ---
 
@@ -211,9 +171,8 @@ Accumulators (parlays) are mathematically inferior because:
    - Statistical independence means edge compounds poorly
 
 **Example:**
-- 5 singles at 2.00 odds with 55% true win probability
-- Expected profit: +Â£27.50 per Â£100 staked
-- Same as 5-fold accumulator: -Â£14.80 expected
+- 5 singles at 2.00 odds with 55% true win probability: expected profit +£27.50 per £100 staked.
+- Same five legs as a 5-fold accumulator: expected loss -£14.80.
 
 Bookmakers love accumulators. Professional bettors avoid them.
 
@@ -238,9 +197,9 @@ You can have +25% ROI long-term but still experience:
 - Separates professionals from recreational bettors
 
 **Managing variance:**
-- Never bet more than 5% of bankroll on single bet
-- Maintain 40-50+ unit bankroll
-- Accept losing streaks are inevitable
+- Never risk more than 2% of bankroll on a single bet (max 5u)
+- Maintain a bankroll of 100+ units where possible
+- Accept that losing streaks are inevitable
 - Trust the process over 100+ bets
 
 Variance is why we track performance over 1,000+ bets, not 10 or 50.
@@ -255,19 +214,16 @@ Variance is why we track performance over 1,000+ bets, not 10 or 50.
 
 **Common player prop markets:**
 
-**Shooting Metrics:**
+**Shooting metrics:**
 - Shots taken (Over/Under)
 - Shots on target (Over/Under)
-- Shooting accuracy percentage
 
-**Foul Metrics:**
+**Foul metrics:**
 - Fouls committed
 - Fouls won/drawn
 
-**Defensive Metrics:**
+**Defensive metrics:**
 - Tackles made
-- Interceptions
-- Clearances
 
 **Disciplinary:**
 - Player to be booked (yellow/red card)
@@ -275,8 +231,6 @@ Variance is why we track performance over 1,000+ bets, not 10 or 50.
 
 **Creative:**
 - Assists
-- Key passes
-- Chances created
 
 **Why we focus here:** Bookmakers price these markets less efficiently than match odds, creating exploitable value.
 
@@ -339,8 +293,6 @@ We'll be launching ATG selections soon, focusing on opposition-specific scoring 
 - Differential: 7 games
 - **Result: Bet wins** (won by 7, needed 4)
 
-**Why we bet these:** Match odds are efficient. Game handicaps are less efficient because bookmakers underweight surface-specific factors and matchup analysis.
-
 ---
 
 ### Q: What does "total games Over/Under" mean in tennis?
@@ -366,7 +318,7 @@ We'll be launching ATG selections soon, focusing on opposition-specific scoring 
 - Surface speed (clay = longer rallies = more breaks = more games)
 - Player styles (defensive baseline grinders = more games)
 
-We target totals when bookmakers misprice serve/return matchups or surface factors.
+We focus on totals where our model identifies value.
 
 ---
 
@@ -399,23 +351,7 @@ Bookmakers struggle to price **correlation** properly.
 
 ### Q: Which bookmakers do you recommend?
 
-**A:** We recommend using **multiple bookmakers** because:
-
-1. **Odds vary significantly** - Same bet can be 2.10 at Bet365 and 1.95 at Sky Bet
-2. **You will get limited** - Need backups when accounts get restricted
-3. **Different books are best for different markets**
-
-**Best for Player Props:**
-1. **Bet365** - Widest market range, best odds on niche props
-2. **William Hill** - Competitive odds, generous initial limits
-3. **Ladbrokes/Coral** - Same parent company, use both for double limits
-
-**Best for Tennis:**
-1. **Betfair Exchange** - Best liquidity, peer-to-peer model
-2. **Bet365** - Good odds, wide tournament coverage
-3. **Pinnacle** - Sharpest odds (not UK-licensed, use as benchmark)
-
-**Full bookmaker reviews:** See our [Bookmakers page](/bookmakers) for detailed analysis.
+**A:** See our [Bookmakers page](/bookmakers) for full reviews and recommendations.
 
 ---
 
@@ -424,58 +360,16 @@ Bookmakers struggle to price **correlation** properly.
 **A:** **Limiting** (or restricting) is when bookmakers reduce your maximum stake.
 
 **Example progression:**
-- Week 1: Â£200 max stake on player props
-- Week 8: Â£100 max stake
-- Week 12: Â£20 max stake
-- Week 16: Â£5 max stake (effectively banned)
+- Week 1: £200 max stake
+- Week 8: £100 max stake
+- Week 12: £20 max stake
+- Week 16: £5 max stake (effectively banned)
 
-**Why bookmakers limit:**
-- You're winning consistently
-- They flag your betting patterns as "sharp"
-- You only bet on +EV selections
+**Why bookmakers limit:** They may restrict accounts when they flag consistent profitability or sharp betting patterns.
 
-**Who gets limited:**
-- Value bettors who win long-term
-- Arbers (arbitrage bettors)
-- Bonus abusers
-- Anyone betting player props successfully
-
-**Our experience:**
-Limited by Bet365, William Hill, Ladbrokes, Coral, Paddy Power, Sky Bet, 888Sport.
-
-Not because of fraud. Because we were winning.
+**Who gets limited:** Value bettors who win long-term, arbitrage bettors, bonus abusers, and others who bet in a way that is profitable over time.
 
 **How to extend account life:** See our [Bookmakers page](/bookmakers) for strategies.
-
----
-
-### Q: Should I bet with betting exchanges like Betfair?
-
-**A:** **Yes, for specific use cases.**
-
-**Betting Exchange Pros:**
-- Can't be limited for winning
-- Peer-to-peer model (no bookmaker)
-- Can "lay" bets (bet against outcomes)
-- Excellent for tennis
-- High liquidity on popular markets
-
-**Betting Exchange Cons:**
-- 2-5% commission on winnings
-- Less value on niche markets (thin liquidity)
-- Poor player props liquidity
-- Requires more sophisticated understanding
-
-**Our recommendation:**
-- **Primary for tennis:** Betfair Exchange often has best tennis odds
-- **Secondary for player props:** Use if limited everywhere else
-- **Hedging tool:** Useful when managing risk
-
-**Player props liquidity issue:**
-A player props bet at Bet365 might have Â£50K+ matched.  
-Same bet on Betfair might have Â£200 matched.
-
-This means you can't always get on at Betfair for player props.
 
 ---
 
@@ -489,18 +383,13 @@ This means you can't always get on at Betfair for player props.
 - High stake limits
 - Respected by professionals
 
-**Pinnacle Cons:**
-- Not licensed in UK (requires VPN + crypto)
+**Pinnacle cons:**
+- Not licensed in the UK — access is via brokers only
 - Doesn't offer player props (our primary market)
 - Very limited prop markets generally
-- Odds are SO sharp that edge is minimal
+- Odds are very sharp, so edge is harder to find
 
-**How we use Pinnacle:**
-- **Benchmark:** If our selection is better priced than Pinnacle, likely +EV
-- **Occasionally for tennis:** When UK books are worse
-- **Not for player props:** They don't offer them
-
-**For UK bettors:** Pinnacle requires VPN and cryptocurrency. Most people use UK-licensed bookmakers for convenience and legality.
+**How we use Pinnacle:** As a benchmark when our selection is better priced than Pinnacle, it's likely +EV. We don't use it for player props (they don't offer them). In the UK you can only access Pinnacle through brokers.
 
 ---
 
@@ -516,197 +405,10 @@ This means you can't always get on at Betfair for player props.
 
 **What we recommend instead:**
 - Manual betting with price alerts
-- Use Oddschecker to compare odds
+- Use odds comparison sites to get the best price
 - Set up Telegram notifications for instant alerts
 
 **Professional bettors bet manually.** Speed matters less than getting best price and maintaining account health.
-
----
-
-## SECTION 5: TRACK RECORD & VERIFICATION
-
-### Q: How do I verify your betting record?
-
-**A:** Every bet is **verified with immutable timestamps:**
-
-**Verification process:**
-
-1. **Pre-match publication**
-   - Posted to Telegram before match starts
-   - Telegram timestamps cannot be edited
-   - Thousands of followers see in real-time
-
-2. **Website logging**
-   - Every bet logged in database
-   - Unique verification URL: `ilmargine.bet/bet/[id]`
-   - Includes: selection, odds, bookmaker, stake, result
-
-3. **Result settlement**
-   - After match, result recorded
-   - Win/loss/void status
-   - Profit/loss in units
-
-4. **No edits or deletions**
-   - Once published, bets cannot be changed
-   - Historical record is permanent
-
-**Example verification page:** [Sample Bet Verification](/bet/example)
-
-**Track record:** See our complete [Track Record](/track-record) with 1,200+ verified bets.
-
----
-
-### Q: What is your historical win rate?
-
-**A:** Our win rate varies by market:
-
-**Player Props:**
-- Win rate: **58%**
-- Average odds: 1.98
-- ROI: **+25.0%**
-
-**ATP Tennis:**
-- Win rate: **54%**
-- Average odds: 2.14
-- ROI: **+8.6%**
-
-**Combined:**
-- Win rate: **56.4%**
-- Average odds: 2.06
-- ROI: **+19.0%**
-
-**Important context:**
-Win rate without odds context is meaningless.
-
-- 60% win rate at 1.50 odds = **losing**
-- 54% win rate at 2.14 odds = **winning**
-
-Profitability requires: (Win Rate Ã— Average Odds) > 1.00
-
-**Our formula:**
-- (0.58 Ã— 1.98) = 1.148 on player props âœ“
-- (0.54 Ã— 2.14) = 1.156 on tennis âœ“
-
-Both profitable.
-
----
-
-### Q: What is your ROI (Return on Investment)?
-
-**A:** Our verified ROI across 1,200+ bets:
-
-**By Market:**
-- **Player Props:** +25.0% ROI (780 bets)
-- **ATP Tennis:** +8.6% ROI (447 bets)
-
-**Combined:**
-- **+19.0% ROI** (1,227 total bets)
-
-**What this means in practical terms:**
-
-For every Â£100 staked:
-- Player Props: Return Â£125 (Â£25 profit)
-- Tennis: Return Â£108.60 (Â£8.60 profit)
-- Overall: Return Â£119 (Â£19 profit)
-
-**Over 100 units staked:**
-- Profit: 19 units
-- If 1u = Â£10: Â£190 profit
-- If 1u = Â£100: Â£1,900 profit
-
-**Comparison to industry:**
-- Average bettor: -5% to -10% ROI
-- Professional bettors: +5% to +10% ROI
-- Sharp syndicates: +10% to +15% ROI
-- **Il Margine: +19% ROI**
-
-See complete breakdown: [Track Record](/track-record)
-
----
-
-### Q: Have you ever had a losing month?
-
-**A:** Yes - but remained profitable overall.
-
-**Transparency:** We publish all results, including bad months.
-
-**Historical losing streaks:**
-- Longest losing streak: 12 consecutive losing bets (Feb 2025)
-- Worst drawdown: -8.4 units over 15 bets
-- Lowest monthly ROI: +12.5% (still positive, but lowest)
-
-**Why this matters:**
-Variance is real. Even with +25% ROI, you'll experience:
-- Losing days
-- Losing weeks  
-- Occasionally, flat/barely positive months
-
-**Long-term performance matters more than short-term variance.**
-
-We've been operating for 18 months. Every single month has been profitable, but some months were +12% and others were +28%.
-
-**Professional betting requires:**
-- Emotional discipline during losing streaks
-- Proper bankroll management (40+ units minimum)
-- Trust in long-term mathematical edge
-
-Variance tests amateurs. Professionals accept it.
-
----
-
-### Q: Why is your tennis ROI lower than player props ROI?
-
-**A:** **Tennis markets are more efficient than player props.**
-
-**Player Props (25% ROI):**
-- Wider bookmaker margins (10-15%)
-- Less analytical resources dedicated
-- More exploitable mispricing
-- Fewer sharp bettors
-
-**Tennis (8.6% ROI):**
-- Narrower margins (5-8%)
-- More efficient pricing
-- Higher liquidity attracts sharp money
-- Grand Slams especially efficient
-
-**8.6% ROI is still excellent:**
-- Professional syndicates target 5-10% ROI
-- Tennis betting is competitive
-- We focus on ATP 250s/Challengers (softer markets)
-
-**Both are profitable.** We're not chasing player props' 25% everywhere - we're exploiting edge where it exists.
-
----
-
-### Q: Can you guarantee I'll make a profit?
-
-**A:** **No. No one can guarantee profits in sports betting.**
-
-Anyone who promises guaranteed profits is either:
-1. Lying
-2. Scamming
-3. Fundamentally misunderstanding probability
-
-**What we CAN offer:**
-- Disciplined analytical methodology
-- Transparent track record
-- Positive expected value selections
-- Professional betting approach
-
-**What we CANNOT offer:**
-- Guaranteed wins on individual bets
-- Certainty you'll have a profitable month
-- Protection from variance
-- Risk-free betting
-
-**Mathematics:**
-Even with 58% win rate at 2.00 odds, you'll lose 42% of bets.
-
-**Reality:**
-You could follow our selections and still lose money in the short term due to variance. Over 100+ bets, positive ROI should manifest. Over 10 bets, anything can happen.
-
-**Betting is not investing.** It's probabilistic edge exploitation with inherent variance.
 
 ---
 
@@ -714,89 +416,13 @@ You could follow our selections and still lose money in the short term due to va
 
 ### Q: How much does Il Margine cost?
 
-**A:** Currently **completely free.**
-
-**What you get for Â£0:**
-- All selections via Telegram
-- Real-time alerts when tips posted
-- Full verification for every bet
-- Access to complete track record
-- Transparent performance data
-- No trial period, no credit card required
-
-**Why free?**
-
-We're building:
-1. **Credibility** - Proving our edge over extended period
-2. **Track record** - Accumulating 12-18 months verified results
-3. **Community** - Growing follower base
-
-**Future monetization:**
-After 12-18 months, we'll likely introduce:
-- Bookmaker affiliate partnerships
-- Premium tier with enhanced analysis
-- Possible Discord community
-
-But currently and for foreseeable future: **Free.**
-
----
-
-### Q: Will Il Margine always be free?
-
-**A:** **Telegram channel will remain free** with a portion of selections.
-
-**Potential future model (12-18 months out):**
-
-**Free Tier (Telegram):**
-- 50-70% of selections
-- Basic details (match, market, odds)
-- Track record access
-
-**Premium Tier (~Â£19.99/month):**
-- 100% of selections
-- Detailed analysis for each pick
-- Discord community access
-- Enhanced statistics
-
-**Why this model:**
-- Rewards early supporters with free access
-- Provides value for those wanting deeper analysis
-- Funds operation as it scales
-
-**Affiliate revenue:**
-Likely primary monetization. When you sign up to bookmakers through our links, we earn commission. This keeps most content free.
-
-**Current commitment:** Everything free until we've proven consistent profitability over 18+ months.
+**A:** **Free.** We are growing our follower base and proving our approach; there is no charge to receive tips. What you get: all selections (player props on Telegram, tennis on the website), real-time alerts, and full verification. No trial period, no credit card. We may introduce paid tiers or other monetization later; for now the service is free.
 
 ---
 
 ### Q: Do you have affiliate relationships with bookmakers?
 
-**A:** **Not yet, but planned for future.**
-
-**Current status:**
-- No affiliate relationships
-- No commission from bookmaker signups
-- 100% independent recommendations
-
-**Future plans:**
-After building sufficient track record (12-18 months), we'll likely establish affiliate partnerships with bookmakers we already recommend.
-
-**Will this affect recommendations?**
-
-**No.** We'll continue recommending bookmakers based on:
-- Best odds for specific markets
-- Account longevity for followers
-- Market liquidity
-- Overall value
-
-**Transparency commitment:**
-When we do establish affiliate relationships, we'll:
-- Clearly disclose affiliate links
-- Never recommend inferior bookmakers for higher commission
-- Maintain independence in analysis
-
-**Our business model relies on your long-term profitability.** If our tips lose money, you stop following. So our incentive is aligned with providing genuine value.
+**A:** The bookmakers we recommend are those we are most comfortable with for odds, markets, and usability. We do not list Bet365 or others where a recommendation might look like an affiliate push; we prefer to keep our suggestions clearly independent.
 
 ---
 
@@ -810,59 +436,36 @@ When we do establish affiliate relationships, we'll:
 
 **Recommended bankroll structure:**
 
-**Minimum:** 40-50 units
-- Allows survival through 12-15 bet losing streaks
-- Maintains 1u standard stakes
-- Prevents emotional decisions during drawdown
+| Guideline | Recommendation |
+|-----------|----------------|
+| Minimum bankroll | 100 units |
+| Max per bet | 2% of bankroll (never more than 5u) |
+| Standard 1u | 1–2% of bankroll |
 
-**Optimal:** 100+ units
-- Comfortable buffer for variance
-- Can scale to 2-3u on strong picks
-- Lower psychological stress
+- A 100-unit bankroll lets you survive extended losing streaks and keep 1u stakes.
+- Never risk more than 2% of your bankroll on a single bet (capped at 5u).
 
-**Example:**
-- Â£1,000 bankroll = 1u = Â£10-20
-- Â£5,000 bankroll = 1u = Â£50-100
-
-**Why this matters:**
-With only 20-unit bankroll, a single 12-bet losing streak (which WILL happen) could wipe out 60% of your funds, forcing:
-- Reduced stakes
-- Emotional decisions
-- Premature exit from profitable strategy
-
-**Professional bettors operate with 100-200 unit bankrolls** to weather inevitable variance.
+**Example:** £5,000 bankroll → 1u = £50–100; max single bet 5u = £250.
 
 ---
 
 ### Q: Should I bet a percentage of my bankroll or fixed units?
 
-**A:** We recommend **percentage-based sizing that adjusts as bankroll grows/shrinks.**
+**A:** We recommend **percentage-based sizing** so your stake moves with your bankroll.
 
 **Method:**
-- 1 unit = 1-2% of current bankroll
-- Recalculate unit size monthly (or after Â±20% bankroll change)
+- 1 unit = 1–2% of current bankroll
+- Recalculate unit size monthly (or after ±20% bankroll change)
 
-**Example progression:**
+**Example:**
 
-| Bankroll | 1u (at 1.5%) | 3u Max |
+| Bankroll | 1u (at 1.5%) | 3u max |
 |----------|--------------|--------|
-| Â£1,000 | Â£15 | Â£45 |
-| Â£1,500 (after growth) | Â£22.50 | Â£67.50 |
-| Â£800 (after drawdown) | Â£12 | Â£36 |
+| £1,000 | £15 | £45 |
+| £1,500 (after growth) | £22.50 | £67.50 |
+| £800 (after drawdown) | £12 | £36 |
 
-**Why this beats fixed stakes:**
-- Compounds profits during winning periods
-- Reduces exposure during losing streaks
-- Automatically adjusts to risk capacity
-
-**Never:**
-- Risk more than 5% on single bet (maximum 5u stake)
-- Chase losses by increasing unit size
-- Decrease unit size when winning (compounds gains)
-
-**Bankroll management is the difference between:**
-- Professional: Survives variance, compounds long-term
-- Amateur: One bad streak, bankroll destroyed
+**Why this works:** It compounds when you win and cuts exposure when you lose. Never risk more than 2% on a single bet (max 5u), chase losses, or shrink unit size when winning. Good bankroll management is what separates long-term survivors from those who blow up after a bad run.
 
 ---
 
@@ -877,17 +480,17 @@ With 58% win rate, probability of losing streaks:
 - 12 losses in a row: 0.26% chance (happened to us in Feb 2025)
 
 **What NOT to do:**
-âŒ Increase stakes to "chase losses"  
-âŒ Start betting randomly to "get back to even"  
-âŒ Abandon strategy after 10-bet losing streak  
-âŒ Emotional decisions based on short-term results  
+✗ Increase stakes to "chase losses"  
+✗ Start betting randomly to "get back to even"  
+✗ Abandon strategy after 10-bet losing streak  
+✗ Emotional decisions based on short-term results  
 
 **What TO do:**
-âœ“ Review bankroll management (do you have 40+ units?)  
-âœ“ Verify you're actually following the selections correctly  
-âœ“ Remember edge manifests over 100+ bets, not 10  
-âœ“ Continue disciplined staking  
-âœ“ Take a break if emotionally affected  
+✓ Review bankroll management (do you have 100+ units?)  
+✓ Verify you're actually following the selections correctly  
+✓ Remember edge manifests over 100+ bets, not 10  
+✓ Continue disciplined staking  
+✓ Take a break if emotionally affected  
 
 **Historical perspective:**
 We experienced 12-bet losing streak in February 2025. Over next 6 weeks, recovered entirely and reached new profit highs.
@@ -901,118 +504,18 @@ We experienced 12-bet losing streak in February 2025. Over next 6 weeks, recover
 **A:** **Yes, but systematically, not emotionally.**
 
 **Good approach (percentage-based):**
-- Start: Â£1,000 bankroll, 1u = Â£15 (1.5%)
-- After growth: Â£1,500 bankroll, 1u = Â£22.50
+- Start: £1,000 bankroll, 1u = £15 (1.5%)
+- After growth: £1,500 bankroll, 1u = £22.50
 - Natural compounding from bankroll growth
 
 **Bad approach (emotional):**
-- Win 5 bets â†’ "I'm hot, let's bet Â£100 instead of Â£20!"
-- Lose next 3 bets â†’ Wipe out previous gains + more
+- Win 5 bets → "I'm hot, let's bet £100 instead of £20!"
+- Lose next 3 bets → Wipe out previous gains + more
 - Emotional rollercoaster destroys bankroll
 
-**Kelly Criterion (advanced):**
-Formula: Stake % = (Edge Ã— Odds - 1) / (Odds - 1)
+**Kelly Criterion (advanced):** Stake % = (Edge × Odds − 1) ÷ (Odds − 1). Most professionals use fractional Kelly (e.g. ¼ or ½) to reduce variance.
 
-Most professionals use **fractional Kelly** (1/4 or 1/2 Kelly) to reduce variance.
-
-**Our recommendation:**
-Stick to 1-2% of bankroll per unit. Recalculate monthly or after Â±20% bankroll swings.
-
-Let compounding happen naturally through bankroll growth, not through emotional stake increases.
-
----
-
-## SECTION 8: GETTING LIMITED & ACCOUNT LONGEVITY
-
-### Q: How long until I get limited?
-
-**A:** Depends on bookmaker and betting pattern:
-
-**Fastest (2-4 months):**
-- Sky Bet
-- Coral
-- Paddy Power
-
-**Moderate (4-8 months):**
-- Bet365
-- William Hill
-
-**Slower (8-12+ months):**
-- Ladbrokes
-- Betfair Exchange (rare to be limited)
-
-**Factors affecting speed:**
-- Only betting player props (instant flag)
-- Only betting value selections (no "mug bets")
-- Consistent profitability (duh)
-- Betting same amounts every time (bot-like behavior)
-
-**Strategies to extend longevity:**
-1. Mix player props with occasional match odds
-2. Vary stake sizes slightly
-3. Don't max bet every single time
-4. Bet during peak hours (look more recreational)
-5. Accept it's inevitable
-
-See full guide: [Bookmakers page](/bookmakers)
-
----
-
-### Q: What happens when I get limited?
-
-**A:** Your maximum stake is reduced progressively:
-
-**Typical progression:**
-1. **Initial:** Â£200 max on player props
-2. **First limit:** Â£100 max (after 1-2 months winning)
-3. **Second limit:** Â£50 max (after 3-4 months)
-4. **Third limit:** Â£20 max (after 4-6 months)
-5. **Effective ban:** Â£5 max (account worthless)
-
-**What you can still do:**
-- Continue betting at reduced stakes
-- Switch to different bookmaker
-- Use betting exchange
-- Focus on new accounts
-
-**What you cannot do:**
-- Argue with bookmaker (their terms allow limiting)
-- Create new account (against ToS, trackable by address)
-- Sue them (legal right to limit)
-
-**Professional approach:**
-- Extract value while you can
-- Have 5-10 backup bookmaker accounts ready
-- Cycle through books as each gets limited
-- Use exchanges as final option
-
-**Getting limited is proof you're winning.** Wear it as a badge of honor.
-
----
-
-### Q: Can I use someone else's account if I'm limited everywhere?
-
-**A:** **Strongly not recommended.**
-
-**Problems:**
-1. **Against bookmaker ToS** - Account will be closed if discovered
-2. **Your friend's account gets limited** - Now they're limited too
-3. **Withdrawal issues** - Must prove account ownership to withdraw
-4. **Legal grey area** - Could be considered fraud
-5. **Tax complications** - Winnings in their name
-
-**Better alternatives:**
-- Betting exchanges (harder to get limited)
-- Asian bookmakers (via agents, not UK-licensed)
-- International books (Pinnacle, requires VPN)
-- Wait and reapply after 6-12 months
-
-**If you're limited everywhere, it means:**
-1. You've been betting successfully
-2. You've exhausted UK recreational books
-3. Time to focus on sharper books (exchanges, Pinnacle)
-
-**Reality:** Most professionals transition to betting exchanges and Asian books after UK bookmakers limit them. It's part of the journey.
+**Our recommendation:** Keep 1–2% of bankroll per unit. Recalculate monthly or after ±20% bankroll swings. Let compounding come from bankroll growth, not from raising stakes because you feel "on a roll".
 
 ---
 
@@ -1044,23 +547,23 @@ We post selections early enough for followers to get good odds, but late enough 
 **A:** **Value** exists when your probability assessment exceeds the bookmaker's implied probability.
 
 **Formula:**
-Expected Value (EV) = (Win Probability Ã— Decimal Odds) - 1
+Expected Value (EV) = (Win Probability × Decimal Odds) - 1
 
 **Example:**
 - True probability of Saka 2+ SOT: 55%
 - Bet365 odds: 2.10 (implies 47.6%)
-- EV = (0.55 Ã— 2.10) - 1 = 0.155 or **+15.5% edge**
+- EV = (0.55 × 2.10) - 1 = 0.155 or **+15.5% edge**
 
 **Positive EV (+EV) = Value bet**  
 **Negative EV (-EV) = Bad bet**
 
 **Important:**
-- Value â‰  guaranteed win
+- Value ≠ guaranteed win
 - Value = mathematically profitable long-term
 - You'll lose many value bets (variance)
 - Consistent value betting = long-term profit
 
-**Our job:** Identify when bookmakers misprice markets, creating value opportunities.
+**Our job:** Identify when our assessment of probability exceeds the odds on offer, creating value opportunities.
 
 ---
 
@@ -1131,7 +634,7 @@ We're not trying to outsmart the best bookmaker traders. We're exploiting market
 **Hedging** = betting the opposite outcome to guarantee profit/minimize loss.
 
 **Example:**
-- Bet: Arsenal to win @ 3.00 (Â£100 stake)
+- Bet: Arsenal to win @ 3.00 (£100 stake)
 - Arsenal winning 1-0 at 80th minute
 - Option: Bet draw/Wolves @ 1.50 to guarantee profit
 
@@ -1164,11 +667,7 @@ We're not trying to outsmart the best bookmaker traders. We're exploiting market
 
 **A:** Il Margine was founded by a **former UK odds compiler** with 25+ years in the betting industry.
 
-**Background:**
-- Worked for major UK bookmakers compiling odds
-- Limited by every major bookmaker (Bet365, William Hill, Ladbrokes, Coral, Paddy Power, Sky Bet, 888Sport)
-- 1,200+ documented bets with verified track record
-- Deep understanding of how bookmakers price markets
+**Background:** Worked for major UK bookmakers compiling odds; limited by every major bookmaker. Deep understanding of how bookmakers price markets.
 
 **Why this matters:**
 Most tipsters are:
@@ -1206,10 +705,7 @@ Being limited by bookmakers is the ultimate credential. They only limit consiste
 - Where bookmakers are weakest (their margin)
 - Where we're strongest (our edge)
 
-**Why Italian?**
-- Sophisticated, memorable
-- International appeal
-- Separates from generic "Pro Tips" naming
+**Why Italian?** We love Serie A for our prop bets; the name fits that focus and stands out from generic "Pro Tips" branding.
 
 ---
 
@@ -1248,33 +744,15 @@ Some days: 5+ tips (multiple mispriced markets)
 
 ### Q: How can I contact Il Margine?
 
-**A:** Multiple channels available:
+**A:** We do not offer support via Telegram DMs. For enquiries use:
 
-**Telegram:**
-- Join [@IlMargineProps](https://t.me/IlMargineProps)
-- Direct message for support issues
+**Email:** [contact@ilmargine.bet](mailto:contact@ilmargine.bet) — we aim to reply within 24–48 hours.
 
-**Email:**
-- contact@ilmargine.bet (replace with actual email if different)
-- Response within 24-48 hours
+**Website:** [Contact page](/contact) for more details.
 
-**Website:**
-- [Contact page](/contact) has full details
+**What we respond to:** Technical issues with the website or verification, press and media enquiries, business partnerships, and general questions about the service.
 
-**What we respond to:**
-âœ“ Technical issues with website/verification  
-âœ“ Press/media inquiries  
-âœ“ Business partnerships  
-âœ“ General questions about methodology  
-
-**What we DON'T respond to:**
-âœ— "Should I bet on this match?" (do your own analysis)  
-âœ— Bet selection advice beyond what we publish  
-âœ— Requests to share unpublished historical bets  
-âœ— Complaints about individual losing bets (variance exists)  
-
-**Community discussion:**
-For general chat, join our Telegram where community discusses selections.
+**What we do not respond to:** "Should I bet on this match?", selection advice beyond what we publish, requests for unpublished historical bets, or complaints about individual losing bets.
 
 ---
 
@@ -1350,12 +828,12 @@ For general chat, join our Telegram where community discusses selections.
 **Reality check:**
 - **99% of bettors lose long-term**
 - Even with our +19% ROI, variance is extreme
-- Requires significant bankroll (Â£2,000+ minimum)
+- Requires significant bankroll (£2,000+ minimum)
 - You can still lose money following profitable strategies (variance)
 - Psychological pressure of "needing" to win ruins decisions
 
 **Professional bettors:**
-- Operate with Â£50K+ bankrolls
+- Operate with £50K+ bankrolls
 - Accept years of variance
 - Have other income sources
 - Treat it as a business (tax, records, etc.)
@@ -1378,12 +856,12 @@ For general chat, join our Telegram where community discusses selections.
 
 **Monthly betting budget:**
 - 1-5% of monthly disposable income AFTER all bills/savings
-- Example: Â£2,000 monthly income, Â£1,500 expenses/savings = Â£500 disposable
-- Betting budget: Â£5-25/month
+- Example: £2,000 monthly income, £1,500 expenses/savings = £500 disposable
+- Betting budget: £5-25/month
 
 **Per-bet limits:**
-- Never more than 5% of betting bankroll on single bet
-- Example: Â£500 bankroll = max Â£25 bet
+- Never more than 2% of betting bankroll on a single bet (aligns with our 1u = 1–2% guidance)
+- Example: £500 bankroll = 1u = £5–10, max single bet 5u = £25–50
 
 **Time limits:**
 - Set maximum hours per week analyzing bets
@@ -1410,7 +888,7 @@ For general chat, join our Telegram where community discusses selections.
 **A:** **Legality varies by jurisdiction.**
 
 **UK:** 
-- âœ“ Legal, regulated by UK Gambling Commission
+- ✓ Legal, regulated by UK Gambling Commission
 - Must be 18+
 - UK-licensed bookmakers only
 
@@ -1442,69 +920,53 @@ For general chat, join our Telegram where community discusses selections.
 
 ### Q: What is expected value (EV) in betting?
 
-**A:** **Expected Value** is the average result if you could repeat a bet infinite times.
+**A:** **Expected value** is the average result if you could repeat a bet indefinitely.
 
-**Formula:**
-EV = (Probability of Win Ã— Profit if Win) - (Probability of Loss Ã— Loss if Loss)
+**Formula:** EV = (Probability of win × Profit if win) − (Probability of loss × Loss if loss)
 
-**Example:**
-- Bet: Â£10 on Saka 2+ SOT @ 2.10
-- True probability: 55% win, 45% loss
-- If win: profit Â£11 (Â£21 return - Â£10 stake)
-- If loss: lose Â£10
+**Worked example:**
 
-EV = (0.55 Ã— Â£11) - (0.45 Ã— Â£10)  
-EV = Â£6.05 - Â£4.50  
-**EV = +Â£1.55**
+| Input | Value |
+|-------|--------|
+| Stake | £10 @ 2.10 |
+| True probability of win | 55% |
+| If win | Return £21, profit £11 |
+| If lose | Lose £10 |
 
-**Interpretation:**
-Every time you make this bet, you expect to profit Â£1.55 on average.
+EV = (0.55 × £11) − (0.45 × £10) = £6.05 − £4.50 = **+£1.55 per bet**
 
-**Over 100 bets:**
-100 Ã— Â£1.55 = Â£155 expected profit
-
-**Important:**
-- Individual bet outcomes vary (variance)
-- EV manifests over large sample sizes
-- Positive EV bets can lose (but should be taken)
-- Negative EV bets can win (but should be avoided)
-
-**Professional betting = consistently identifying +EV opportunities.**
+Over 100 such bets you would expect about £155 profit. Individual results vary (variance); +EV bets can lose and −EV bets can win. Professional betting means consistently finding +EV opportunities.
 
 ---
 
 ### Q: What is implied probability and how do bookmaker margins work?
 
-**A:** **Implied probability** is what bookmaker odds suggest the probability is.
+**A:** **Implied probability** is the probability implied by the odds.
 
-**Calculation:**
-Implied Probability = 1 Ã· Decimal Odds
+**Calculation:** Implied probability = 1 ÷ decimal odds
+
+**Example:** Odds 2.10 → 1 ÷ 2.10 = 47.6% implied probability.
+
+**Bookmaker margin (overround):** In a binary market the two sides would sum to 100% if fair. Bookmakers add margin so the total exceeds 100%.
 
 **Example:**
-- Odds: 2.10
-- Implied Probability = 1 Ã· 2.10 = 47.6%
 
-**Bookmaker margin:**
+| Selection | Odds | Implied % |
+|-----------|------|------------|
+| Over 1.5 SOT | 2.10 | 47.6% |
+| Under 1.5 SOT | 1.83 | 54.6% |
+| **Total** | — | **102.2%** |
 
-For a binary market (Yes/No), true probabilities should sum to 100%.
+The extra 2.2% is the bookmaker margin.
 
-**Example market:**
-- Saka Over 1.5 SOT: 2.10 odds (47.6%)
-- Saka Under 1.5 SOT: 1.83 odds (54.6%)
-- **Total: 102.2%**
+**Typical margins by market:**
 
-That extra 2.2% is the **bookmaker margin** (overround).
+| Market type | Typical margin |
+|-------------|----------------|
+| Match odds (efficient) | 3–5% |
+| Player props (softer) | 10–15% |
 
-**In efficient markets (match odds):**
-- Margin: 3-5%
-
-**In soft markets (player props):**
-- Margin: 10-15%
-
-**Why margins matter:**
-Bigger margins = more exploitable mispricing.
-
-If bookmaker applies 15% margin across all outcomes but misprices one specific outcome, that outcome has massive value.
+Larger margins mean more room for mispricing and value when our assessment differs from the book’s.
 
 ---
 
@@ -1704,56 +1166,5 @@ Anyone promising guaranteed wins is either lying or delusional.
 **Our win rates (56.4% overall)** are realistic for the odds we target (2.06 average).
 
 Anyone claiming 80%+ win rate at 2.00+ average odds is lying.
-
----
-
-### Q: Should I tail other bettors on Twitter/Reddit?
-
-**A:** **Not blindly, but can be educational.**
-
-**Problems with "tailing":**
-
-1. **No verification**
-   - Most Twitter/Reddit tipsters don't track properly
-   - Can delete losses
-   - No accountability
-
-2. **Selection bias**
-   - People post when winning
-   - Go quiet during losing streaks
-   - Survivorship bias (failed tippers disappear)
-
-3. **Timing issues**
-   - By the time they post, odds have moved
-   - You get worse price than they got
-
-4. **No reasoning**
-   - Can't evaluate edge yourself
-   - Blindly trusting someone else's analysis
-
-**When tailing is useful:**
-
-1. **Learning tool**
-   - See how sharp bettors think
-   - Understand reasoning process
-   - Develop your own analysis
-
-2. **Verified services**
-   - Use proven track records (Blogabet, Bettin.gs)
-   - Demand transparency
-   - Check long-term ROI
-
-3. **With your own analysis**
-   - Don't tail blindly
-   - Research the pick independently
-   - Only bet if YOU see value
-
-**Il Margine approach:**
-- Every bet verified
-- Transparent track record
-- Reasoning provided
-- Still: do your own research
-
-Tailing should be part of your research, not a replacement for it.
 
 ---
