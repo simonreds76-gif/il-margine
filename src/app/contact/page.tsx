@@ -50,10 +50,7 @@ export default function ContactPage() {
             <div>
               <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-3">Contact us</h1>
               <p className="text-slate-400 text-base leading-relaxed mb-4">
-                We&apos;re happy to hear from you. Whether you have a question about our methodology, want to join the Telegram channel, or are interested in working with us, drop a line to the address that best fits your enquiry. We aim to reply within a couple of working days.
-              </p>
-              <p className="text-slate-500 text-sm">
-                For tips and updates, join us on Telegram — the link is on the homepage.
+                We&apos;re happy to hear from you. Whether you have a general question about the service or are interested in working with us, drop a line to the address that best fits your enquiry. We aim to reply within a couple of working days. We don&apos;t share the details of our methodology, but we&apos;re happy to answer questions about what we offer.
               </p>
             </div>
           </div>
