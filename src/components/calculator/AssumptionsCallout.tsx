@@ -2,9 +2,9 @@
 
 export default function AssumptionsCallout() {
   const assumptions = [
-    "Based on historical ROI, not a prediction.",
-    "Assumes unit discipline (e.g. 1 to 2% per unit).",
-    "Variance not modelled; short-term results will differ.",
+    "Based on our verified settled bets only; not a prediction of future results.",
+    "Assumes you would have staked the same amount on every bet.",
+    "Variance is not modelled; short-term results will differ.",
   ];
 
   return (

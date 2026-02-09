@@ -2,20 +2,20 @@
 
 const faqItems = [
   {
-    q: "What is the unit system?",
-    a: "We recommend stakes in units (1u, 2u, etc.). A unit is a fixed percentage of your bankroll, typically 1 to 2%. Example: £2,500 bankroll at 1% means 1u = £25. A 2u pick = £50 stake.",
+    q: "What does this calculator show?",
+    a: "It shows how much you would have won or lost if you had followed our settled bets (player props and ATP tennis) with a fixed stake per bet, e.g. £25, £50 or £100 on every bet. Results are based only on our verified track record. No predictions or simulations.",
   },
   {
-    q: "How are returns calculated?",
-    a: "Returns use our historical ROI applied to your total stake in units. Expected profit (units) = total stake × (ROI ÷ 100). If you enter bankroll and unit size, we also show expected profit in £ and an illustrative ending bankroll.",
+    q: "Where do the numbers come from?",
+    a: "From our verified historical track record: every settled bet we have logged (player props and ATP tennis). We sum profit and total staked from those bets to get ROI, then apply your chosen stake per bet to show what your profit or loss would have been in pounds.",
   },
   {
     q: "Is this a prediction of future results?",
-    a: "No. The calculator is based on past performance only. Future results may differ. Variance is not modelled. Always bet responsibly and within your means.",
+    a: "No. The calculator is based on past performance only. Future results may differ. It is for illustration only. Always bet responsibly and within your means.",
   },
   {
-    q: "Where does the ROI come from?",
-    a: "ROI is derived from our verified track record (player props and ATP tennis), combined with baseline historical data. It updates as new bets are settled. If live data is unavailable, we use the last known ROI and show a notice.",
+    q: "What if the data is unavailable?",
+    a: "If live data is temporarily unavailable, we use the last recorded settled-bets performance and show a notice: \"Data notice: Live updates are temporarily unavailable. Results are calculated using the last recorded settled-bets performance.\"",
   },
 ];
 

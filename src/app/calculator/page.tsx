@@ -11,7 +11,6 @@ import CalculatorCard, { type CalculatorData } from "@/components/calculator/Cal
 import HowItWorks from "@/components/calculator/HowItWorks";
 import AssumptionsCallout from "@/components/calculator/AssumptionsCallout";
 import FaqAccordion from "@/components/calculator/FaqAccordion";
-import ProfitChart from "@/components/calculator/ProfitChart";
 
 interface CombinedMarketStats {
   total_bets: number;
@@ -36,12 +35,10 @@ export default function CalculatorPage() {
     props: CombinedMarketStats;
     tennis: CombinedMarketStats;
   } | null>(null);
-  const [dataError, setDataError] = useState(false);
   const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    setDataError(false);
     try {
       const [statsRes, betsRes] = await Promise.all([
         supabase.from("category_stats").select("*"),
@@ -87,15 +84,16 @@ export default function CalculatorPage() {
 
       setCombinedStats({ props: propsCombined, tennis: tennisCombined });
       const overallROI = computeOverallROI(propsCombined, tennisCombined);
-      setCalculatorData({ roi: overallROI, source: "live" });
-      track("calculator_data_loaded", { roi_used: overallROI });
+      const nBets = propsCombined.total_bets + tennisCombined.total_bets;
+      setCalculatorData({ roi: overallROI, nBets, source: "live" });
+      track("calculator_data_loaded", { roi_used: overallROI, bets_count: nBets });
     } catch (e) {
-      setDataError(true);
       track("calculator_error", { type: "data_fetch" });
       const baseline = getBaselineDisplayStats();
       const fallbackRoi = baseline.overall.roi;
-      setCalculatorData({ roi: fallbackRoi, source: "fallback" });
-      track("calculator_data_loaded", { roi_used: fallbackRoi, fallback: true });
+      const fallbackBets = baseline.overall.total_bets;
+      setCalculatorData({ roi: fallbackRoi, nBets: fallbackBets, source: "fallback" });
+      track("calculator_data_loaded", { roi_used: fallbackRoi, bets_count: fallbackBets, fallback: true });
     } finally {
       setLoading(false);
     }
@@ -117,7 +115,7 @@ export default function CalculatorPage() {
   // Fallback when no combined stats yet (e.g. empty DB) but no throw
   const displayData = calculatorData ?? (() => {
     const baseline = getBaselineDisplayStats();
-    return { roi: baseline.overall.roi, source: "fallback" as const };
+    return { roi: baseline.overall.roi, nBets: baseline.overall.total_bets, source: "fallback" as const };
   })();
 
   return (
@@ -134,16 +132,21 @@ export default function CalculatorPage() {
       {/* Hero: calculator first on mobile, two columns on desktop */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 md:pt-8 md:pb-16 border-b border-slate-800/50">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-start">
-          {/* Left column: H1, sub, trust chips. On mobile order-2 so calculator is first. */}
+          {/* Left column: H1, What this calculator shows, body. On mobile order-2 so calculator is first. */}
           <div className="lg:order-1 order-2">
-            <h1 className="text-[34px] sm:text-[40px] md:text-[44px] font-semibold text-slate-100 mb-3 tracking-tight">
+            <h1 className="text-[34px] sm:text-[40px] md:text-[44px] font-semibold text-slate-100 mb-6 tracking-tight">
               Returns Calculator
             </h1>
-            <p className="text-base sm:text-lg text-slate-300 max-w-prose leading-relaxed mb-6">
-              Estimate illustrative returns using our verified track record and your staking plan.
+            <h2 className="text-xl sm:text-2xl font-semibold text-slate-100 mb-3">
+              What this calculator shows
+            </h2>
+            <p className="text-base text-slate-300 max-w-prose leading-relaxed mb-4">
+              This calculator shows how much you would have won or lost if you had followed our settled bets using a fixed stake per bet (e.g. £25, £50, £100).
+              Results are based only on our verified historical track record (player props + ATP tennis). No projections, no simulations.
+              If live data is temporarily unavailable, we use the last recorded results and show a notice.
             </p>
             <div className="flex flex-wrap gap-2">
-              {["Verified track record", "Unit-based staking", "Illustrative only"].map((label) => (
+              {["Verified track record", "Settled bets only", "No projections"].map((label) => (
                 <span
                   key={label}
                   className="text-xs font-medium text-slate-400 bg-slate-800/60 border border-slate-700/50 px-3 py-1.5 rounded-lg"
@@ -156,21 +159,14 @@ export default function CalculatorPage() {
           {/* Right column: Calculator card. On mobile order-1 (first). */}
           <div className="lg:order-2 order-1">
             <CalculatorCard loading={loading} data={displayData} />
-            {dataError && (
+            {displayData.source === "fallback" && (
               <p className="mt-3 text-sm text-amber-400/90">
-                Using last known ROI. You can still use the calculator.
+                Data notice: Live updates are temporarily unavailable. Results are calculated using the last recorded settled-bets performance.
               </p>
             )}
           </div>
         </div>
       </section>
-
-      {/* Optional chart - only when we have ROI */}
-      {!loading && displayData && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 border-b border-slate-800/50">
-          <ProfitChart roi={displayData.roi} />
-        </section>
-      )}
 
       {/* How it works */}
       <section className="py-12 md:py-16 border-b border-slate-800/50">
