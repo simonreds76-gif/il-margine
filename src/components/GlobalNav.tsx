@@ -19,8 +19,6 @@ export default function GlobalNav() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     window.scrollTo(0, 0);
-    const raf = requestAnimationFrame(() => window.scrollTo(0, 0));
-    return () => cancelAnimationFrame(raf);
   }, [pathname]);
 
   const isTipsActive = ["/tennis-tips", "/player-props", "/anytime-goalscorer", "/bet-builders"].includes(pathname);
@@ -32,7 +30,7 @@ export default function GlobalNav() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center h-14 md:h-16 shrink-0" onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
-            <Image src="/logo.png" alt="Il Margine" width={240} height={64} className="h-14 md:h-16 w-auto object-contain" />
+            <Image src="/logo.png" alt="Il Margine" width={240} height={64} className="h-14 md:h-16 w-auto object-contain" priority />
           </Link>
           
           {/* Mobile Menu Button */}

@@ -119,22 +119,23 @@ export default function Calculator() {
 
 
       {/* Hero */}
-      <section className="pt-4 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50">
+      <section className="pt-4 pb-10 md:pt-6 md:pb-14 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 mb-4">
-            <Link href="/" className="text-sm text-slate-500 hover:text-slate-300">Home</Link>
+          <div className="flex items-center gap-2 mb-6">
+            <Link href="/" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">Home</Link>
             <span className="text-slate-600">/</span>
-            <span className="text-sm text-emerald-400">Calculator</span>
+            <span className="text-sm text-emerald-400 font-medium">Calculator</span>
           </div>
-          
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">Returns Calculator</h1>
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-xs font-mono text-emerald-400/90 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded">Calculator</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-3 sm:mb-4">Returns Calculator</h1>
           <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed mb-6">
             Calculate your potential returns based on our historical performance. All calculations are based on our verified track record and assume you follow our unit recommendations.
           </p>
-
-          <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-8 mt-2">
-            <p className="text-sm text-amber-200">
-              <strong className="text-amber-400">Important:</strong> Past performance does not guarantee future results. These calculations are illustrative based on historical data. Always bet responsibly and within your means.
+          <div className="border-l-4 border-amber-500/60 bg-amber-500/5 rounded-r-lg py-3 px-4 max-w-2xl">
+            <p className="text-sm text-slate-300 leading-relaxed">
+              <strong className="text-amber-400/95">Important:</strong> Past performance does not guarantee future results. These calculations are illustrative. Always bet responsibly and within your means.
             </p>
           </div>
         </div>
@@ -144,146 +145,119 @@ export default function Calculator() {
       <section className="py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
-            <div className="text-center py-12">
-              <p className="text-slate-500">Loading performance data...</p>
+            <div className="flex flex-col items-center justify-center py-16 gap-4">
+              <div className="h-2 w-32 rounded-full bg-slate-800 overflow-hidden">
+                <div className="h-full w-1/2 rounded-full bg-emerald-500/40 animate-pulse" />
+              </div>
+              <p className="text-sm text-slate-500">Loading performance data…</p>
             </div>
           ) : combinedStats ? (
-            <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-10">
               {/* Player Props */}
-              <div className="bg-gradient-to-br from-slate-900/80 to-slate-900/40 rounded-xl border border-slate-800 p-6 sm:p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">Player Props</h2>
-                    <p className="text-sm text-slate-400">Football individual player markets</p>
-                  </div>
-                  <div className="text-right">
-                    <div className={`text-3xl font-bold font-mono mb-1 ${combinedStats.props.roi >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {combinedStats.props.roi >= 0 ? "+" : ""}{combinedStats.props.roi.toFixed(1)}%
+              <div className="rounded-2xl border border-slate-800/80 bg-slate-900/50 overflow-hidden shadow-lg shadow-black/20">
+                <div className="h-1 bg-gradient-to-r from-emerald-500 to-emerald-400/80" aria-hidden />
+                <div className="p-6 sm:p-8">
+                  <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
+                    <div>
+                      <h2 className="text-2xl sm:text-3xl font-semibold text-slate-100">Player Props</h2>
+                      <p className="text-sm text-slate-400 mt-1">Football individual player markets</p>
                     </div>
-                    <div className="text-xs text-slate-500">ROI</div>
+                    <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold font-mono ${combinedStats.props.roi >= 0 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
+                      {combinedStats.props.roi >= 0 ? "+" : ""}{combinedStats.props.roi.toFixed(1)}% ROI
+                    </span>
                   </div>
-                </div>
-                
-                <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6 pb-6 border-b border-slate-800">
-                  <div>
-                    <div className="text-2xl font-bold text-white font-mono">{combinedStats.props.total_bets}</div>
-                    <div className="text-xs text-slate-500 mt-1">Total Bets</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-amber-400 font-mono">{combinedStats.props.avg_odds.toFixed(2)}</div>
-                    <div className="text-xs text-slate-500 mt-1">Avg Odds</div>
-                  </div>
-                  <div>
-                    <div className={`text-2xl font-bold font-mono ${combinedStats.props.total_profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {combinedStats.props.total_profit >= 0 ? '+' : ''}{combinedStats.props.total_profit.toFixed(1)}u
+                  <div className="grid grid-cols-3 gap-3 mb-6">
+                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/50 p-4 text-center">
+                      <div className="text-xl sm:text-2xl font-bold font-mono text-slate-100">{combinedStats.props.total_bets}</div>
+                      <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Bets</div>
                     </div>
-                    <div className="text-xs text-slate-500 mt-1">Total Profit</div>
+                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/50 p-4 text-center">
+                      <div className="text-xl sm:text-2xl font-bold font-mono text-amber-400/90">{combinedStats.props.avg_odds.toFixed(2)}</div>
+                      <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Avg Odds</div>
+                    </div>
+                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/50 p-4 text-center">
+                      <div className={`text-xl sm:text-2xl font-bold font-mono ${combinedStats.props.total_profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {combinedStats.props.total_profit >= 0 ? '+' : ''}{combinedStats.props.total_profit.toFixed(1)}u
+                      </div>
+                      <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Profit</div>
+                    </div>
                   </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="text-xs font-mono text-slate-500 uppercase mb-4">Returns by Stake Level</div>
-                  {propsReturns.map((returns, idx) => (
-                    <div 
-                      key={returns.stakePerUnit}
-                      className="bg-slate-800/50 rounded-lg border border-slate-700/50 p-4 sm:p-6 hover:border-emerald-500/50 transition-all"
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
-                        <div className="flex items-center gap-2 sm:gap-3">
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-500/20 rounded-lg flex items-center justify-center">
-                            <span className="text-lg sm:text-xl font-bold text-amber-400">£{returns.stakePerUnit}</span>
-                          </div>
-                          <div>
-                            <div className="text-sm text-slate-400">Per Unit Stake</div>
-                            <div className="text-xs text-slate-600">£{returns.stakePerUnit.toLocaleString()} × {combinedStats.props.total_bets} bets</div>
-                          </div>
+                  <p className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-3">Returns by stake</p>
+                  <div className="space-y-3">
+                    {propsReturns.map((returns) => (
+                      <div
+                        key={returns.stakePerUnit}
+                        className="rounded-xl bg-slate-800/40 border border-slate-700/50 p-4 flex flex-wrap items-center justify-between gap-3 hover:border-emerald-500/40 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="inline-flex h-9 min-w-[3rem] items-center justify-center rounded-lg bg-emerald-500/15 border border-emerald-500/30 font-bold font-mono text-emerald-400 text-sm">
+                            £{returns.stakePerUnit}
+                          </span>
+                          <span className="text-xs text-slate-500">per unit × {combinedStats.props.total_bets} bets</span>
                         </div>
-                        <div className="text-left sm:text-right">
-                          <div className={`text-xl sm:text-2xl font-bold font-mono ${returns.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        <div className="text-right">
+                          <div className={`text-lg font-bold font-mono ${returns.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                             {returns.totalProfit >= 0 ? '+' : ''}£{Math.abs(returns.totalProfit).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                           </div>
-                          <div className="text-xs text-slate-500">Total Profit</div>
+                          <div className="text-[11px] text-slate-500">avg {returns.profitPerBet >= 0 ? '+' : ''}£{Math.abs(returns.profitPerBet).toFixed(2)}/bet</div>
                         </div>
                       </div>
-                      
-                      <div className="mt-4 pt-4 border-t border-slate-700/30">
-                        <div className="text-xs text-slate-600">
-                          Average profit per bet: <span className={`font-mono ${returns.profitPerBet >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                            {returns.profitPerBet >= 0 ? '+' : ''}£{Math.abs(returns.profitPerBet).toFixed(2)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
 
               {/* Tennis Tips */}
-              <div className="bg-gradient-to-br from-slate-900/80 to-slate-900/40 rounded-xl border border-slate-800 p-6 sm:p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">Tennis Tips</h2>
-                    <p className="text-sm text-slate-400">Pre-match singles markets</p>
-                  </div>
-                  <div className="text-right">
-                    <div className={`text-3xl font-bold font-mono mb-1 ${combinedStats.tennis.roi >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {combinedStats.tennis.roi >= 0 ? "+" : ""}{combinedStats.tennis.roi.toFixed(1)}%
+              <div className="rounded-2xl border border-slate-800/80 bg-slate-900/50 overflow-hidden shadow-lg shadow-black/20">
+                <div className="h-1 bg-gradient-to-r from-amber-500/90 to-amber-400/70" aria-hidden />
+                <div className="p-6 sm:p-8">
+                  <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
+                    <div>
+                      <h2 className="text-2xl sm:text-3xl font-semibold text-slate-100">Tennis Tips</h2>
+                      <p className="text-sm text-slate-400 mt-1">Pre-match singles markets</p>
                     </div>
-                    <div className="text-xs text-slate-500">ROI</div>
+                    <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold font-mono ${combinedStats.tennis.roi >= 0 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
+                      {combinedStats.tennis.roi >= 0 ? "+" : ""}{combinedStats.tennis.roi.toFixed(1)}% ROI
+                    </span>
                   </div>
-                </div>
-                
-                <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6 pb-6 border-b border-slate-800">
-                  <div>
-                    <div className="text-2xl font-bold text-white font-mono">{combinedStats.tennis.total_bets}</div>
-                    <div className="text-xs text-slate-500 mt-1">Total Bets</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-amber-400 font-mono">{combinedStats.tennis.avg_odds.toFixed(2)}</div>
-                    <div className="text-xs text-slate-500 mt-1">Avg Odds</div>
-                  </div>
-                  <div>
-                    <div className={`text-2xl font-bold font-mono ${combinedStats.tennis.total_profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {combinedStats.tennis.total_profit >= 0 ? '+' : ''}{combinedStats.tennis.total_profit.toFixed(1)}u
+                  <div className="grid grid-cols-3 gap-3 mb-6">
+                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/50 p-4 text-center">
+                      <div className="text-xl sm:text-2xl font-bold font-mono text-slate-100">{combinedStats.tennis.total_bets}</div>
+                      <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Bets</div>
                     </div>
-                    <div className="text-xs text-slate-500 mt-1">Total Profit</div>
+                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/50 p-4 text-center">
+                      <div className="text-xl sm:text-2xl font-bold font-mono text-amber-400/90">{combinedStats.tennis.avg_odds.toFixed(2)}</div>
+                      <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Avg Odds</div>
+                    </div>
+                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/50 p-4 text-center">
+                      <div className={`text-xl sm:text-2xl font-bold font-mono ${combinedStats.tennis.total_profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {combinedStats.tennis.total_profit >= 0 ? '+' : ''}{combinedStats.tennis.total_profit.toFixed(1)}u
+                      </div>
+                      <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Profit</div>
+                    </div>
                   </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="text-xs font-mono text-slate-500 uppercase mb-4">Returns by Stake Level</div>
-                  {tennisReturns.map((returns, idx) => (
-                    <div 
-                      key={returns.stakePerUnit}
-                      className="bg-slate-800/50 rounded-lg border border-slate-700/50 p-4 sm:p-6 hover:border-emerald-500/50 transition-all"
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
-                        <div className="flex items-center gap-2 sm:gap-3">
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-500/20 rounded-lg flex items-center justify-center">
-                            <span className="text-lg sm:text-xl font-bold text-amber-400">£{returns.stakePerUnit}</span>
-                          </div>
-                          <div>
-                            <div className="text-sm text-slate-400">Per Unit Stake</div>
-                            <div className="text-xs text-slate-600">£{returns.stakePerUnit.toLocaleString()} × {combinedStats.tennis.total_bets} bets</div>
-                          </div>
+                  <p className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-3">Returns by stake</p>
+                  <div className="space-y-3">
+                    {tennisReturns.map((returns) => (
+                      <div
+                        key={returns.stakePerUnit}
+                        className="rounded-xl bg-slate-800/40 border border-slate-700/50 p-4 flex flex-wrap items-center justify-between gap-3 hover:border-amber-500/40 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="inline-flex h-9 min-w-[3rem] items-center justify-center rounded-lg bg-amber-500/15 border border-amber-500/30 font-bold font-mono text-amber-400/95 text-sm">
+                            £{returns.stakePerUnit}
+                          </span>
+                          <span className="text-xs text-slate-500">per unit × {combinedStats.tennis.total_bets} bets</span>
                         </div>
-                        <div className="text-left sm:text-right">
-                          <div className={`text-xl sm:text-2xl font-bold font-mono ${returns.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        <div className="text-right">
+                          <div className={`text-lg font-bold font-mono ${returns.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                             {returns.totalProfit >= 0 ? '+' : ''}£{Math.abs(returns.totalProfit).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                           </div>
-                          <div className="text-xs text-slate-500">Total Profit</div>
+                          <div className="text-[11px] text-slate-500">avg {returns.profitPerBet >= 0 ? '+' : ''}£{Math.abs(returns.profitPerBet).toFixed(2)}/bet</div>
                         </div>
                       </div>
-                      
-                      <div className="mt-4 pt-4 border-t border-slate-700/30">
-                        <div className="text-xs text-slate-600">
-                          Average profit per bet: <span className={`font-mono ${returns.profitPerBet >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                            {returns.profitPerBet >= 0 ? '+' : ''}£{Math.abs(returns.profitPerBet).toFixed(2)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -293,28 +267,28 @@ export default function Calculator() {
             </div>
           )}
 
-          {/* Info Box */}
-          <div className="mt-12 bg-slate-900/50 rounded-lg border border-slate-800 p-6">
-            <h3 className="font-semibold mb-4 text-emerald-400">How It Works</h3>
-            <div className="grid md:grid-cols-2 gap-6 text-sm text-slate-400">
-              <div>
-                <p className="mb-2">
-                  <strong className="text-slate-200">Unit System:</strong> We recommend stakes in "units" (1u, 2u, etc.). 
-                  A unit represents a fixed percentage of your betting bankroll (typically 1-2%).
+          {/* How It Works */}
+          <div className="mt-14 rounded-2xl border border-slate-800/80 bg-slate-900/50 overflow-hidden">
+            <div className="border-l-4 border-emerald-500/60 bg-emerald-500/5 px-5 py-3">
+              <h3 className="font-semibold text-emerald-400">How It Works</h3>
+            </div>
+            <div className="grid md:grid-cols-2 gap-8 p-6 sm:p-8 text-sm text-slate-400">
+              <div className="space-y-4">
+                <p className="leading-relaxed">
+                  <strong className="text-slate-200">Unit system:</strong> We recommend stakes in units (1u, 2u, etc.). 
+                  A unit is a fixed % of your bankroll (typically 1–2%).
                 </p>
-                <p>
-                  <strong className="text-slate-200">Example:</strong> If your bankroll is £2,500 and you use 1% units, 
-                  then 1u = £25. If we recommend 2u on a selection, you would stake £50.
+                <p className="leading-relaxed">
+                  <strong className="text-slate-200">Example:</strong> £2,500 bankroll at 1% → 1u = £25. A 2u pick = £50 stake.
                 </p>
               </div>
-              <div>
-                <p className="mb-2">
-                  <strong className="text-slate-200">Calculations:</strong> Returns are calculated by multiplying our historical 
-                  ROI by your total stake across all bets. This assumes you follow our unit recommendations exactly.
+              <div className="space-y-4">
+                <p className="leading-relaxed">
+                  <strong className="text-slate-200">Calculations:</strong> Returns use our historical ROI × your total stake. 
+                  Assumes you follow our unit recommendations.
                 </p>
-                <p>
-                  <strong className="text-slate-200">Remember:</strong> These are historical returns. Future performance may differ. 
-                  Always practice responsible bankroll management.
+                <p className="leading-relaxed">
+                  <strong className="text-slate-200">Remember:</strong> Historical only. Future results may differ. Practice responsible bankroll management.
                 </p>
               </div>
             </div>
