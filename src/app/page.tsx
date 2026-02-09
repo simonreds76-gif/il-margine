@@ -509,12 +509,12 @@ export default function Home() {
                 {
                   q: "Do I need a Telegram account to follow your tips?",
                   title: "Do I need Telegram?",
-                  summary: "Only for football player props. Tennis tips are published on the site—no Telegram needed.",
+                  summary: "Only for football player props. Tennis tips are published on the site; no Telegram needed.",
                 },
                 {
                   q: "What is ROI and why does it matter more than win rate?",
                   title: "What is ROI and why does it matter?",
-                  summary: "Return on investment. It matters more than win rate—you can win often and still lose money.",
+                  summary: "Return on investment. It matters more than win rate. You can win often and still lose money.",
                 },
                 {
                   q: "How much does Il Margine cost?",
