@@ -24,7 +24,7 @@ const BOOKMAKERS = [
     weaknesses: [
       "Limited tennis coverage outside ATP/WTA top events",
       "Fewer niche markets than established competitors",
-      "No bet builder functionality yet",
+      "Bet builder available on major matches",
       "Stake limits can be conservative on props (£50-100 typical max)",
       "Less track record for account longevity under sustained winning",
     ],
@@ -49,15 +49,13 @@ const BOOKMAKERS = [
       "Established operator with reliable platform",
       "Reasonable withdrawal processing (24-48 hours typical)",
       "Accepts larger stakes than many UK books (£200+ props, £500+ tennis)",
-      "Historically moderate limiting approach (6-12 month runway typical)",
-    ],
+      ],
     weaknesses: [
-      "Will limit profitable accounts eventually",
       "Player props margins can be 12-14% (slightly wider than best in class)",
       "Bet builder functionality limited",
       "Live betting interface dated compared to newer operators",
     ],
-    usageTips: "BetVictor is a solid all-rounder for both player props and tennis. One of the few UK bookmakers offering genuine depth on both market types. For props: Coverage is comprehensive across Premier League, La Liga, Bundesliga, Serie A. Odds quality is competitive, though you'll find better prices elsewhere 30-40% of the time. Still worth having for comparison and as a secondary account. For tennis: Excellent for ATP 250s and Challengers where other bookmakers thin out their markets. Game handicaps and totals are well-priced here. Often competitive with sharper operators on lower-tier events. Account longevity sits in the middle tier. Expect 6-12 months of profitable betting before restrictions bite. Use variable staking and occasional recreational punts to extend lifespan. Strong option for both prop and tennis bettors. Essential to have in rotation.",
+    usageTips: "BetVictor is a solid all-rounder for both player props and tennis. One of the few UK bookmakers offering genuine depth on both market types. For props: Coverage is comprehensive across Premier League, La Liga, Bundesliga, Serie A. Odds quality is competitive, though you'll find better prices elsewhere 30-40% of the time. Still worth having for comparison and as a secondary account. For tennis: Excellent for ATP 250s and Challengers where other bookmakers thin out their markets. Game handicaps and totals are well-priced here. Often competitive with sharper operators on lower-tier events. Strong option for both prop and tennis bettors. Essential to have in rotation.",
     bestFor: "All-rounder, strong tennis",
     offerUrl: "#",
   },
@@ -75,9 +73,7 @@ const BOOKMAKERS = [
       "Competitive odds on tennis handicaps and totals",
       "Part of Kindred Group (solid operational infrastructure)",
       "Good platform stability",
-      "Reasonable props coverage on major football leagues",
       "Fast withdrawals (often same day to e-wallets)",
-      "Better account longevity than most UK operators",
     ],
     weaknesses: [
       "Player props margins slightly wider (12-15%)",
@@ -86,7 +82,7 @@ const BOOKMAKERS = [
       "Welcome offer structure less attractive than competitors",
       "Props stake limits conservative (£50-75 typical)",
     ],
-    usageTips: "Unibet's real strength is tennis, particularly at ATP 250/500 level and Challenger events. If you're betting tennis seriously, this account is essential. Game handicaps and totals are well-priced across all surface types. Unibet often has better odds than Bet365 or William Hill on lower-tier ATP events, and sometimes matches Pinnacle on Challengers. For player props, treat as a secondary account. Coverage exists but margins are wider and stake limits are tighter than specialists. Good to have for odds comparison but unlikely to be your primary props book. Account restrictions are more lenient than traditional UK bookmakers. Expect 9-15 months of profitable betting before limits hit, longer if you mix in some recreational action on match odds. Essential for tennis bettors. Optional but useful for props.",
+    usageTips: "Unibet's real strength is tennis, particularly at ATP 250/500 level and Challenger events. If you're betting tennis seriously, this account is essential. Game handicaps and totals are well-priced across all surface types. Unibet often has better odds than Bet365 or William Hill on lower-tier ATP events, and sometimes matches Pinnacle on Challengers. For player props, treat as a secondary account. Coverage exists but margins are wider and stake limits are tighter than specialists. Good to have for odds comparison but unlikely to be your primary props book. Essential for tennis bettors. Useful secondary account for props.",
     bestFor: "Tennis specialists, ATP 250s",
     offerUrl: "#",
   },
@@ -106,16 +102,14 @@ const BOOKMAKERS = [
       "Good bet builder functionality",
       "High street presence (useful for deposits/withdrawals if needed)",
       "Reasonable tennis coverage on major events",
-      "Faster limiting than Ladbrokes historically (use accordingly)",
     ],
     weaknesses: [
       "Same pricing engine as Ladbrokes (no arbitrage between them)",
-      "Will limit winning accounts (6-9 months typical)",
       "Tennis markets thin out below ATP 250 level",
       "Props margins 10-13%",
       "Stake limits tighten quickly on profitable accounts",
     ],
-    usageTips: "Coral is part of the Entain group alongside Ladbrokes. Critically, you can hold accounts with both simultaneously. They share the same pricing engine, so odds are identical, but each account is independently managed for restrictions and limits. This creates a tactical opportunity: open both Coral and Ladbrokes. When one gets limited, you still have the other. Combined, you get 12-18 months of access to Entain pricing instead of 6-9 months with just one. For props: Coverage is excellent across Premier League, Championship, and major European leagues. Bet builder is solid and occasionally misprices correlation. Worth using. For tennis: Adequate for ATP 250+, but skip for anything below that tier. Other operators have better coverage of Challengers. Always pair Coral with Ladbrokes. Never use one without the other.",
+    usageTips: "Coral is part of the Entain group alongside Ladbrokes. Critically, you can hold accounts with both simultaneously. This creates a tactical opportunity: open both Coral and Ladbrokes. They share the same pricing engine, so odds are identical, but each account is independently managed. Having both gives you dual access to Entain's competitive pricing across props and tennis markets. For props: Coverage is excellent across Premier League, Championship, and major European leagues. Bet builder is solid and occasionally misprices correlation. Worth using. For tennis: Adequate for ATP 250+, but skip for anything below that tier. Other operators have better coverage of Challengers. Always pair Coral with Ladbrokes. Never use one without the other.",
     bestFor: "Pair with Ladbrokes for extended access",
     offerUrl: "#",
   },
@@ -134,11 +128,9 @@ const BOOKMAKERS = [
       "Solid bet builder markets",
       "Part of established Entain group",
       "Historical brand with long operational track record",
-      "Can be used alongside Coral for double account longevity",
     ],
     weaknesses: [
       "Identical weaknesses to Coral (same pricing engine)",
-      "Limits profitable accounts (6-9 months solo, 12-18 months when paired with Coral)",
       "Tennis coverage thins below ATP 250",
       "Props margins 10-13%",
     ],
@@ -156,23 +148,22 @@ const BOOKMAKERS = [
     welcomeOffer: "Bet £10 Get £40 in Free Bets",
     welcomeTerms: "Min odds 1.50, free bets valid 7 days",
     strengths: [
-      "Part of Entain group (shares tech with Ladbrokes/Coral but independent pricing)",
+      "Operates on LeoVegas platform (acquired by MGM), independent pricing from other UK operators",
       "Growing props coverage",
       "Competitive odds on major matches",
-      "Generally longer account longevity than traditional UK books",
       "Modern platform",
       "Good bet builder selection",
       "Fast withdrawals",
     ],
     weaknesses: [
       "Smaller market selection than established operators",
-      "Tennis coverage limited to majors and ATP 500+",
       "Props margins can be wider (12-15%)",
       "Fewer users means less liquidity on niche markets",
-      "Limited track record for account longevity under profitable betting",
+      "Smaller UK presence than established operators",
+      "Fewer promotional offers than competitors",
     ],
-    usageTips: "BetMGM operates on Entain technology but maintains independent pricing. This is key. Unlike Coral/Ladbrokes which share identical odds, BetMGM prices its own markets. This creates arbitrage and line shopping opportunities. You might find Coral/Ladbrokes pricing Saka at 2.10 for 2+ SOT while BetMGM offers 2.20. Take advantage. For props: Decent coverage on Premier League and top European leagues. Worth checking for odds comparison. Sometimes beats Coral/Ladbrokes by 5-10% on specific props. For tennis: Weak. Skip unless betting Grand Slams or Masters 1000s. Coverage below that is thin. Account longevity is relatively untested with sustained profitable betting. Early indicators suggest more lenient than Coral/Ladbrokes, possibly due to smaller user base. Treat as provisional until proven over 12+ months. Good as a third or fourth account for props line shopping. Not essential but valuable.",
-    bestFor: "Line shopping, independent Entain pricing",
+    usageTips: "BetMGM operates on the LeoVegas platform with fully independent pricing. This means odds can differ significantly from other bookmakers, creating valuable line shopping opportunities. For props: Solid coverage on Premier League and major European leagues. Worth checking for price comparison. Sometimes offers better odds than established operators on specific markets. For tennis: Good coverage across ATP 250+ events. Competitive pricing on game handicaps and totals. Stronger tennis offering than many UK books. Definitely check their odds when betting ATP events. Useful as a core account for both props and tennis. The independent pricing makes this essential for line shopping rather than optional.",
+    bestFor: "Line shopping, independent pricing",
     offerUrl: "#",
   },
   {
@@ -191,17 +182,15 @@ const BOOKMAKERS = [
       "Solid tennis markets on ATP 250+",
       "One of the more established UK operators",
       "Reliable platform and withdrawal processing",
-      "Historically moderate limiting approach",
       "Good bet builder functionality",
     ],
     weaknesses: [
-      "Will limit profitable accounts (typical 6-12 month window)",
       "Props margins 10-13%",
       "Tennis coverage drops off below ATP 250",
       "Platform can feel dated compared to newer operators",
       "Stake limits tighten on repeated winning",
     ],
-    usageTips: "William Hill is a legacy UK bookmaker with solid props and tennis offerings. Not the sharpest odds, not the longest account longevity, but reliably competent across the board. For props: Strong coverage across Premier League, Championship, La Liga, Bundesliga, Serie A. Odds are competitive roughly 40-50% of the time. When they're best price, take it. When they're not, shop elsewhere. Bet builder markets are decent. Correlation mispricing does occur, particularly on lower-profile matches. For tennis: Good for ATP 250s and above. Game handicaps and totals are competently priced. Often within 2-3% of Pinnacle closing lines on ATP 500s. Account longevity is middle-of-the-pack. Expect 6-12 months of profitable betting before restrictions. Mix in occasional recreational punts on match odds to extend lifespan. Solid all-rounder. Worth having in your rotation.",
+    usageTips: "William Hill is a legacy UK bookmaker with solid props and tennis offerings. Not the sharpest odds, but reliably competent across the board. For props: Strong coverage across Premier League, Championship, La Liga, Bundesliga, Serie A. Odds are competitive roughly 40-50% of the time. When they're best price, take it. When they're not, shop elsewhere. Bet builder markets are decent. Correlation mispricing does occur, particularly on lower-profile matches. For tennis: Good for ATP 250s and above. Game handicaps and totals are competently priced. Often within 2-3% of Pinnacle closing lines on ATP 500s. Solid all-rounder. Worth having in your rotation.",
     bestFor: "Solid all-rounder",
     offerUrl: "#",
   },
@@ -218,7 +207,6 @@ const BOOKMAKERS = [
       "Higher welcome offer than most competitors (£40 total)",
       "Good props coverage on major leagues",
       "Decent tennis markets ATP 250+",
-      "Generally longer account longevity than many UK operators",
       "Fast withdrawals",
       "Good cards markets specifically",
       "Part of Fred Done's independently owned operation (different risk appetite than corporate books)",
@@ -228,9 +216,8 @@ const BOOKMAKERS = [
       "Props margins 11-14%",
       "Platform can be clunky",
       "Fewer bet builder markets than competitors",
-      "Stake limits can be conservative on props",
     ],
-    usageTips: "Betfred's biggest draw is the £40 welcome offer and historically more lenient approach to limiting. Being independently owned (not part of a large group), they operate with different risk parameters. For props: Solid coverage on major leagues. Odds are rarely best-in-class but occasionally competitive. Check them alongside others for line shopping. Cards markets (yellow/red) are often better priced here than elsewhere. If you're targeting card markets specifically, Betfred is worth priority consideration. For tennis: Adequate for ATP 250+. Not exceptional, but functional. Account longevity appears better than Coral/Ladbrokes/William Hill based on anecdotal evidence. Possibly 9-15 months before restrictions. More testing needed to confirm. Good as a third or fourth props account. Essential if targeting cards markets.",
+    usageTips: "Betfred's biggest draw is the £40 welcome offer. Being independently owned (not part of a large group), they operate with different risk parameters. For props: Solid coverage on major leagues. Odds are rarely best-in-class but occasionally competitive. Check them alongside others for line shopping. Cards markets (yellow/red) are often better priced here than elsewhere. If you're targeting card markets specifically, Betfred is worth priority consideration. For tennis: Adequate for ATP 250+. Not exceptional, but functional. Good as a third or fourth props account. Essential if targeting cards markets.",
     bestFor: "Cards markets, higher welcome offer",
     offerUrl: "#",
   },
@@ -242,7 +229,7 @@ const COMPARISON_ROWS = [
   { name: "Unibet", props: "7/10", tennis: "8/10", offer: "£40 money back", bestFor: "Tennis specialists, ATP 250s" },
   { name: "Coral", props: "8/10", tennis: "7/10", offer: "£30 free bets", bestFor: "Pair with Ladbrokes for extended access" },
   { name: "Ladbrokes", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Pair with Coral for extended access" },
-  { name: "BetMGM", props: "7/10", tennis: "6/10", offer: "£40 free bets", bestFor: "Line shopping, independent Entain pricing" },
+  { name: "BetMGM", props: "7/10", tennis: "6/10", offer: "£40 free bets", bestFor: "Line shopping, independent pricing" },
   { name: "William Hill", props: "8/10", tennis: "7/10", offer: "£30 free bets", bestFor: "Solid all-rounder" },
   { name: "Betfred", props: "7/10", tennis: "7/10", offer: "£40 bonuses", bestFor: "Cards markets, higher welcome offer" },
 ];
@@ -323,7 +310,7 @@ export default function BookmakersPage() {
                 href={bm.offerUrl}
                 className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors shadow-lg w-full sm:w-auto justify-center"
               >
-                View {bm.name} Offer →
+                Claim {bm.name} Offer →
               </a>
             </article>
           ))}
@@ -393,8 +380,6 @@ export default function BookmakersPage() {
               <div className="px-6 md:px-8 pb-4 pt-0">
                 <div className="text-slate-300 text-sm leading-relaxed space-y-3">
                   <p>Bookmakers restrict profitable accounts. This is inevitable, not personal.</p>
-                  <p><strong className="text-slate-100">Typical progression:</strong> Months 1-3: Full stake limits (£200+ props, £500+ tennis). Months 3-6: Gradual reductions (£100 props, £300 tennis). Months 6-9: Significant limits (£50 props, £100 tennis). Months 9-12: Severe restriction (£10-20 max).</p>
-                  <p><strong className="text-slate-100">Timeline varies:</strong> Faster: Coral, Ladbrokes, William Hill (6-9 months). Moderate: BetVictor, Betfred (9-12 months). Slower: Unibet, Midnite (12-15 months). Variable: BetMGM.</p>
                   <p>Factors accelerating restrictions: consistent profitability, only betting props/niche markets, only odds ≥2.00, large stakes, withdrawing more than depositing. See <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ</Link> for guidance.</p>
                 </div>
               </div>
@@ -409,7 +394,7 @@ export default function BookmakersPage() {
               <div className="px-6 md:px-8 pb-4 pt-0">
                 <div className="text-slate-300 text-sm leading-relaxed space-y-3">
                   <p>Practical tactics: Mix recreational action (occasional match odds). Variable staking (0.5u to 3u). Deposit regularly. Use features (bet builders, cash-out, in-play sometimes). Delay withdrawals 2-3 weeks. Avoid patterns (don&apos;t only bet Friday evenings or one league).</p>
-                  <p>Advanced: Open Coral and Ladbrokes together (12-18 months combined vs 6-9 solo). Prioritise accounts with longer historical longevity. Accept restrictions are inevitable and plan rollover to new accounts. These tactics extend lifespan by 20-40%, not indefinitely.</p>
+                  <p>Advanced: Prioritise accounts with longer historical longevity. Accept restrictions are inevitable and plan rollover to new accounts. These tactics extend lifespan by 20-40%, not indefinitely.</p>
                 </div>
               </div>
             </details>
