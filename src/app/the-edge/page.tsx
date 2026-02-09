@@ -74,14 +74,18 @@ export default function TheEdgePage() {
                 </div>
                 <div className="flex gap-3">
                   <span className="text-emerald-400 font-mono">02</span>
-                  <p><strong className="text-slate-200">Singles only.</strong> Accumulators compound the bookmaker&apos;s edge. A five-fold with 5% margin per leg = 22.6% against you. That&apos;s the graveyard of the bettor.</p>
+                  <p><strong className="text-slate-200">We don&apos;t bet because we think a team or player will win.</strong> We bet because we have an edge over the odds. Our true probability is higher than the price implies, so the bet is value. Whether the selection wins or loses is irrelevant to the decision; what matters is that the odds were wrong. That&apos;s the only reason we ever put a bet on.</p>
                 </div>
                 <div className="flex gap-3">
                   <span className="text-emerald-400 font-mono">03</span>
-                  <p><strong className="text-slate-200">Exploit inefficiencies.</strong> Player props, niche markets, early lines. Where their models are weak, we attack.</p>
+                  <p><strong className="text-slate-200">Singles only.</strong> Accumulators compound the bookmaker&apos;s edge. A five-fold with 5% margin per leg = 22.6% against you. That&apos;s the graveyard of the bettor.</p>
                 </div>
                 <div className="flex gap-3">
                   <span className="text-emerald-400 font-mono">04</span>
+                  <p><strong className="text-slate-200">Exploit inefficiencies.</strong> Player props, niche markets, early lines. Where their models are weak, we attack.</p>
+                </div>
+                <div className="flex gap-3">
+                  <span className="text-emerald-400 font-mono">05</span>
                   <p><strong className="text-slate-200">No secrets given away.</strong> We share the picks, not the model. Rest assured we&apos;re not betting for fun.</p>
                 </div>
               </div>
