@@ -173,14 +173,9 @@ export default function CalculatorPage() {
         <HowItWorks />
       </section>
 
-      {/* Assumptions + Responsible gambling callout */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-6">
+      {/* Assumptions (collapsed) */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <AssumptionsCallout />
-        <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-5">
-          <p className="text-sm text-slate-300 leading-relaxed">
-            <strong className="text-amber-400/95">Responsible gambling:</strong> Past performance does not guarantee future results. These calculations are illustrative. Only bet what you can afford to lose. If you need help, visit BeGambleAware or GamCare.
-          </p>
-        </div>
       </section>
 
       {/* Mind the margin: slim full-width divider (subtle brand transition before FAQ) */}
@@ -206,6 +201,15 @@ export default function CalculatorPage() {
       <section className="py-12 md:py-16 border-b border-slate-800/50">
         <div className="px-4 sm:px-6 lg:px-8">
           <FaqAccordion />
+        </div>
+      </section>
+
+      {/* Responsible gambling notice */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-5">
+          <p className="text-sm text-slate-300 leading-relaxed">
+            <strong className="text-amber-400/95">Responsible gambling:</strong> Past performance does not guarantee future results. These calculations are illustrative. Only bet what you can afford to lose. If you need help, visit BeGambleAware or GamCare.
+          </p>
         </div>
       </section>
 
