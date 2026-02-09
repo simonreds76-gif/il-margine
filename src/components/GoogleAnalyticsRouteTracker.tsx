@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 declare global {
   interface Window {
-    gtag?: (command: string, targetId: string, config?: Record<string, unknown>) => void;
+    gtag?: (command: string, a?: string, b?: Record<string, unknown>) => void;
   }
 }
 
