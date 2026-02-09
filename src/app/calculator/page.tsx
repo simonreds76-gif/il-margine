@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { supabase, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, getBaselineDisplayStats } from "@/lib/baseline";
 import { track } from "@/lib/analytics";
@@ -180,6 +181,27 @@ export default function CalculatorPage() {
           <p className="text-sm text-slate-300 leading-relaxed">
             <strong className="text-amber-400/95">Responsible gambling:</strong> Past performance does not guarantee future results. These calculations are illustrative. Only bet what you can afford to lose. If you need help, visit BeGambleAware or GamCare.
           </p>
+        </div>
+      </section>
+
+      {/* Mind the margin: slim full-width divider (subtle brand transition before FAQ) */}
+      <section
+        className="relative w-full overflow-hidden border-y border-slate-800/50"
+        aria-hidden
+      >
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Image
+            src="/banner-mind-the-margin.png"
+            alt=""
+            width={1200}
+            height={400}
+            className="w-full max-w-4xl object-contain object-center opacity-[0.18] select-none pointer-events-none"
+          />
+        </div>
+        <div className="relative py-6 md:py-8 min-h-[72px] flex items-center justify-center">
+          <span className="text-slate-500/80 text-sm font-medium tracking-wide">
+            Mind the margin.
+          </span>
         </div>
       </section>
 
