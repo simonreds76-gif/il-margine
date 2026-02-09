@@ -236,8 +236,8 @@ export default function Home() {
       {/* Navigation is now in GlobalNav component in layout.tsx */}
 
       {/* Hero */}
-      <section className="pt-4 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="pt-6 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <div className="flex flex-col items-center justify-center gap-2 mb-8">
               <div className="flex items-center gap-2">
@@ -283,7 +283,7 @@ export default function Home() {
 
       {/* Markets */}
       <section id="markets" className="py-12 md:py-16 border-b border-slate-800/50 scroll-mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 mb-6">
             <span className="text-xs font-mono text-emerald-400 tracking-wider">MARKETS</span>
           </div>
@@ -350,7 +350,7 @@ export default function Home() {
 
       {/* Latest Results */}
       <section className="py-12 md:py-16 border-b border-slate-800/50 bg-slate-900/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 sm:mb-10">
             <div>
               <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">LATEST RESULTS</span>
@@ -483,7 +483,7 @@ export default function Home() {
 
       {/* Quick FAQ */}
       <section className="py-12 md:py-16 border-b border-slate-800/50 bg-slate-900/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
             <div>
               <span className="text-xs font-mono text-emerald-400 mb-2 block tracking-wider">QUICK FAQ</span>
@@ -543,7 +543,7 @@ export default function Home() {
 
       {/* CTA */}
       <section className="py-12 md:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">Ready to join?</h2>
           <p className="text-base sm:text-lg text-slate-300 mb-8 sm:mb-10 max-w-lg mx-auto">
             Free selections delivered to Telegram. Match, selection, odds, bookmaker. Everything you need to place your bet.

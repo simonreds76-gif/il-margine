@@ -63,11 +63,11 @@ export default function TheEdgePage() {
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <FaqSchema />
       {/* Hero - keep as is */}
-      <section className="pt-4 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50 relative overflow-hidden">
+      <section className="pt-6 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50 relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
           <Image src="/banner.png" alt="" width={1200} height={400} className="w-full max-w-6xl h-auto object-contain" />
         </div>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8">
             <Image src="/favicon.png" alt="" width={40} height={40} className="h-10 w-10 object-contain shrink-0" />
             <span>← Home</span>
@@ -174,7 +174,7 @@ export default function TheEdgePage() {
           <div className="space-y-3 text-slate-300 leading-relaxed text-base">
             <p><strong className="text-slate-100">Irregular posting schedule.</strong> We post when we find value, not on a daily schedule.</p>
             <p><strong className="text-slate-100">Variance will test you.</strong> Prepare for losing runs. 10+ consecutive losing bets will happen even with positive edge.</p>
-            <p><strong className="text-slate-100">Account restrictions.</strong> If you follow our picks and win, bookmakers will eventually limit your stakes. It&apos;s proof you&apos;re betting well. See our <Link href="/bookmakers" className="text-emerald-400 hover:text-emerald-300 underline">bookmakers</Link> and <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ</Link> for context.</p>
+            <p><strong className="text-slate-100">Stakes can get limited.</strong> If you follow our picks and win, bookmakers may reduce your stake sizes over time. It&apos;s a sign you&apos;re betting well. See our <Link href="/bookmakers" className="text-emerald-400 hover:text-emerald-300 underline">bookmakers</Link> and <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ</Link> for context.</p>
             <p><strong className="text-slate-100">Long-term focus.</strong> Edge manifests over hundreds of bets. Judging performance after 20 bets is measuring noise, not signal.</p>
             <p><strong className="text-slate-100">No get-rich-quick.</strong> Professional betting is slow, steady edge exploitation.</p>
           </div>

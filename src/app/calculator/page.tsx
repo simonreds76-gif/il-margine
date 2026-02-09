@@ -121,7 +121,7 @@ export default function CalculatorPage() {
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       {/* Breadcrumbs */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <div className="flex items-center gap-2 text-sm">
           <Link href="/" className="text-slate-500 hover:text-slate-300 transition-colors">Home</Link>
           <span className="text-slate-600">/</span>
@@ -130,7 +130,7 @@ export default function CalculatorPage() {
       </div>
 
       {/* Hero: calculator first on mobile, two columns on desktop */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 md:pt-8 md:pb-16 border-b border-slate-800/50">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 md:pb-16 border-b border-slate-800/50">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-start">
           {/* Left column: H1, What this calculator shows, body. On mobile order-2 so calculator is first. */}
           <div className="lg:order-1 order-2">

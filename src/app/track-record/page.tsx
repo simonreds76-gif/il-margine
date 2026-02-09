@@ -43,7 +43,7 @@ export default function TrackRecordPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8 md:pt-6 md:pb-12">
         <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8">
           <Image src="/favicon.png" alt="" width={40} height={40} className="h-10 w-10 object-contain shrink-0" />
           <span>← Home</span>
@@ -89,7 +89,7 @@ export default function TrackRecordPage() {
             <li><strong className="text-slate-100">Variance is real.</strong> Winning months and losing months happen. Even with positive long-term edge, short-term results fluctuate. This is normal.</li>
             <li><strong className="text-slate-100">Sample size matters.</strong> Performance over 20 bets is mostly noise. Over 100 bets, signal emerges. Over 200 bets, edge becomes clear. Judge long term, not week to week.</li>
             <li><strong className="text-slate-100">ROI varies by market.</strong> Player props typically higher ROI than tennis (wider margins, more exploitable). Match odds lower ROI (tighter margins). Staking adapts accordingly.</li>
-            <li><strong className="text-slate-100">Account restrictions affect access.</strong> If you follow picks successfully, bookmakers will limit your stakes eventually. See our <Link href="/bookmakers" className="text-emerald-400 hover:text-emerald-300 underline">bookmakers</Link> and <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ</Link> for context. It&apos;s proof the approach works.</li>
+            <li><strong className="text-slate-100">Stakes can get limited.</strong> If you follow picks successfully, bookmakers may reduce your stake sizes over time. See our <Link href="/bookmakers" className="text-emerald-400 hover:text-emerald-300 underline">bookmakers</Link> and <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ</Link> for context—it&apos;s a sign the approach works.</li>
             <li><strong className="text-slate-100">Losses get logged.</strong> Every selection gets recorded, winner or loser. Transparency over marketing.</li>
           </ul>
         </section>

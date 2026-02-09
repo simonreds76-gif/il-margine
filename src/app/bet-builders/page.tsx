@@ -12,8 +12,8 @@ export default function BetBuilders() {
 
 
       {/* Hero */}
-      <section className="pt-4 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="pt-6 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 mb-4">
             <Link href="/" className="text-sm text-slate-500 hover:text-slate-300">Home</Link>
             <span className="text-slate-600">/</span>
@@ -29,7 +29,7 @@ export default function BetBuilders() {
 
       {/* Coming Soon */}
       <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-12 text-center">
             <p className="text-slate-400 text-lg">Coming soon. Check back for bet builder tips and same game combo analysis.</p>
           </div>

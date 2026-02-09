@@ -259,9 +259,9 @@ export default function BookmakersPage() {
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <section className="relative pt-4 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50 overflow-hidden">
+      <section className="relative pt-6 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/10 via-transparent to-transparent pointer-events-none" aria-hidden />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="flex items-center gap-2 mb-4">
             <Link href="/" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">
               Home
@@ -358,7 +358,7 @@ export default function BookmakersPage() {
 
       {/* Bookmakers we recommend — only those we're happy to promote */}
       <section className="py-12 md:py-16 border-b border-slate-800/50 bg-gradient-to-b from-slate-900/30 to-transparent">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xs font-mono text-amber-400 tracking-wider">RECOMMENDED</span>
           </div>
@@ -488,7 +488,7 @@ export default function BookmakersPage() {
       </section>
 
       <section className="py-12 md:py-16 border-t border-slate-800/50 bg-gradient-to-b from-slate-900/30 to-slate-900/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 mb-6">
             <span className="text-xs font-mono text-amber-400 tracking-wider">IMPORTANT</span>
           </div>

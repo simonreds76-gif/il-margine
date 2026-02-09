@@ -58,8 +58,8 @@ export default function FaqPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
       <FaqOpenByHash />
-      <section className="pt-4 pb-8 md:pt-6 md:pb-10 border-b border-slate-800/50">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="pt-6 pb-8 md:pt-6 md:pb-10 border-b border-slate-800/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8"
