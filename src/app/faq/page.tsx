@@ -6,14 +6,7 @@ import Image from "next/image";
 import Footer from "@/components/Footer";
 import FaqAnswer from "@/components/FaqAnswer";
 import FaqOpenByHash from "@/components/FaqOpenByHash";
-import { parseFaqMd, type FaqSection } from "@/lib/parse-faq";
-
-function questionSlug(q: string): string {
-  return q
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
+import { parseFaqMd, questionSlug, type FaqSection } from "@/lib/parse-faq";
 import { BASE_URL } from "@/lib/config";
 
 export const metadata: Metadata = {
@@ -90,10 +83,10 @@ export default function FaqPage() {
 
           {/* Section navigation */}
           <nav
-            className="rounded-xl bg-slate-800/40 border border-slate-700/50 p-4 sm:p-5 mb-10"
+            className="rounded-xl bg-slate-800/50 border border-slate-700/50 p-5 sm:p-6 mb-12 shadow-sm"
             aria-label="FAQ sections"
           >
-            <h2 className="text-xs font-mono font-semibold text-emerald-400 tracking-wider mb-3">
+            <h2 className="text-xs font-mono font-semibold text-emerald-400 tracking-wider mb-4">
               Jump to section
             </h2>
             <ul className="flex flex-wrap gap-2">
@@ -101,7 +94,7 @@ export default function FaqPage() {
                 <li key={sec.id}>
                   <a
                     href={`#${sec.id}`}
-                    className="text-sm text-slate-300 hover:text-emerald-400 transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-700/50"
+                    className="text-sm text-slate-300 hover:text-emerald-400 transition-colors px-4 py-2 rounded-lg hover:bg-slate-700/50 border border-transparent hover:border-slate-600"
                   >
                     {sec.title}
                   </a>
@@ -111,32 +104,34 @@ export default function FaqPage() {
           </nav>
 
           {/* Accordion sections */}
-          <div className="space-y-10">
+          <div className="space-y-12">
             {sections.map((section) => (
               <section
                 key={section.id}
                 id={section.id}
                 className="scroll-mt-24"
               >
-                <h2 className="text-lg font-semibold text-emerald-400 mb-4 font-mono tracking-wide">
+                <h2 className="text-base font-semibold text-slate-100 mb-1 flex items-center gap-3">
+                  <span className="w-1 h-6 rounded-full bg-emerald-400/80" aria-hidden />
                   {section.title}
                 </h2>
-                <div className="space-y-2">
+                <p className="text-slate-500 text-sm mb-5 pl-4">{section.items.length} question{section.items.length !== 1 ? "s" : ""}</p>
+                <div className="space-y-3">
                   {section.items.map((item, idx) => (
                     <details
                       key={idx}
                       id={questionSlug(item.q)}
-                      className="group rounded-xl bg-slate-800/40 border border-slate-700/50 overflow-hidden scroll-mt-24"
+                      className="group rounded-xl bg-slate-800/50 border border-slate-700/50 overflow-hidden scroll-mt-24 shadow-sm hover:border-slate-600"
                     >
-                      <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-3.5 text-left text-slate-200 hover:bg-slate-700/30 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500">
-                        <span className="flex-1 font-medium">{item.q}</span>
-                        <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180" aria-hidden>
+                      <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 text-left text-slate-200 hover:bg-slate-700/30 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 rounded-xl border-l-4 border-transparent group-open:border-emerald-500/80 group-open:bg-slate-700/20">
+                        <span className="flex-1 font-medium text-[15px] leading-snug">{item.q}</span>
+                        <span className="text-emerald-400 shrink-0 transition-transform duration-200 group-open:rotate-180" aria-hidden>
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
                         </span>
                       </summary>
-                      <div className="border-t border-slate-700/50 px-4 py-3 bg-slate-800/20">
+                      <div className="border-t border-slate-700/50 px-5 py-4 bg-slate-800/30 min-h-[1px]">
                         <FaqAnswer text={item.a} />
                       </div>
                     </details>
@@ -146,7 +141,7 @@ export default function FaqPage() {
             ))}
           </div>
 
-          <div className="mt-12 rounded-xl bg-slate-800/40 border border-slate-700/50 p-5 text-center">
+          <div className="mt-14 rounded-xl bg-slate-800/50 border border-slate-700/50 p-6 text-center shadow-sm">
             <p className="text-slate-400 text-sm mb-3">Still have questions?</p>
             <Link
               href="/contact"

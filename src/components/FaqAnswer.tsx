@@ -28,7 +28,7 @@ export default function FaqAnswer({ text }: { text: string }) {
   const blocks = text.split(/\n\n+/).filter(Boolean);
 
   return (
-    <div className="space-y-3 text-slate-300 text-sm leading-relaxed">
+    <div className="space-y-4 text-slate-300 text-sm leading-relaxed">
       {blocks.map((block, i) => {
         const trimmed = block.trim();
         if (isMarkdownTable(trimmed)) {
@@ -36,14 +36,14 @@ export default function FaqAnswer({ text }: { text: string }) {
           if (rows.length === 0) return <p key={i}>{trimmed}</p>;
           const [header, ...bodyRows] = rows;
           return (
-            <div key={i} className="my-4 overflow-x-auto">
-              <table className="w-full border-collapse border border-slate-600 rounded-lg overflow-hidden">
+            <div key={i} className="my-5 overflow-x-auto rounded-lg border border-slate-600/80 shadow-inner overflow-hidden">
+              <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-slate-800/60">
+                  <tr className="bg-emerald-500/10">
                     {header.map((cell, j) => (
                       <th
                         key={j}
-                        className="px-3 py-2 text-left text-slate-200 font-medium border-b border-slate-600 border-r border-slate-600 last:border-r-0"
+                        className="px-4 py-3 text-left text-slate-200 font-semibold text-xs uppercase tracking-wider border-b border-slate-600 border-r border-slate-600/80 last:border-r-0"
                       >
                         {renderInline(cell)}
                       </th>
@@ -52,11 +52,11 @@ export default function FaqAnswer({ text }: { text: string }) {
                 </thead>
                 <tbody>
                   {bodyRows.map((row, ri) => (
-                    <tr key={ri} className="bg-slate-800/20 hover:bg-slate-800/40">
+                    <tr key={ri} className="bg-slate-800/30 hover:bg-slate-800/50 transition-colors border-b border-slate-700/50 last:border-b-0">
                       {row.map((cell, j) => (
                         <td
                           key={j}
-                          className="px-3 py-2 text-slate-300 border-b border-slate-700/50 border-r border-slate-700/50 last:border-r-0"
+                          className="px-4 py-3 text-slate-300 border-r border-slate-700/50 last:border-r-0"
                         >
                           {renderInline(cell)}
                         </td>
@@ -69,7 +69,7 @@ export default function FaqAnswer({ text }: { text: string }) {
           );
         }
         return (
-          <p key={i}>{renderInline(trimmed)}</p>
+          <p key={i} className="leading-relaxed">{renderInline(trimmed)}</p>
         );
       })}
     </div>

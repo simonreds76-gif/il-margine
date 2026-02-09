@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { questionSlug } from "@/lib/parse-faq";
 import { supabase, MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
@@ -481,13 +481,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Banner */}
-      <section className="py-8 md:py-12 border-b border-slate-800/50 flex justify-center bg-slate-900/20">
-        <div className="max-w-6xl w-full px-4 sm:px-6 lg:px-8">
-          <Image src="/banner.png" alt="Il Margine" width={1200} height={400} className="w-full h-auto object-contain rounded-lg opacity-90" />
-        </div>
-      </section>
-
       {/* Quick FAQ */}
       <section className="py-12 md:py-16 border-b border-slate-800/50 bg-slate-900/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -501,30 +494,49 @@ export default function Home() {
             </Link>
           </div>
           <div className="grid sm:grid-cols-2 gap-4 max-w-4xl">
-            <Link href="/faq#getting-started" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
-              <h3 className="font-medium text-slate-200 mb-1">What is Il Margine?</h3>
-              <p className="text-sm text-slate-500">A professional betting analysis service from a former odds compiler. We find edge in player props and ATP tennis.</p>
-            </Link>
-            <Link href="/faq#getting-started" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
-              <h3 className="font-medium text-slate-200 mb-1">How do I follow the tips?</h3>
-              <p className="text-sm text-slate-500">Join our free Telegram for player props; tennis tips are on the website. No payment, no trial.</p>
-            </Link>
-            <Link href="/faq#getting-started" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
-              <h3 className="font-medium text-slate-200 mb-1">Do I need Telegram?</h3>
-              <p className="text-sm text-slate-500">Only for football player props. Tennis tips are published on the site—no Telegram needed.</p>
-            </Link>
-            <Link href="/faq#what-is-roi-and-why-does-it-matter-more-than-win-rate" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
-              <h3 className="font-medium text-slate-200 mb-1">What is ROI and why does it matter?</h3>
-              <p className="text-sm text-slate-500">Return on investment. It matters more than win rate—you can win often and still lose money.</p>
-            </Link>
-            <Link href="/faq#how-much-does-il-margine-cost" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
-              <h3 className="font-medium text-slate-200 mb-1">How much does it cost?</h3>
-              <p className="text-sm text-slate-500">Free. We’re growing our follower base; all tips are free with no trial or card required.</p>
-            </Link>
-            <Link href="/faq#what-are-player-props-in-football-betting" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
-              <h3 className="font-medium text-slate-200 mb-1">What are player props?</h3>
-              <p className="text-sm text-slate-500">Bets on individual player stats (e.g. shots on target, fouls) rather than the match result.</p>
-            </Link>
+            {(
+              [
+                {
+                  q: "What is Il Margine?",
+                  title: "What is Il Margine?",
+                  summary: "A professional betting analysis service from a former odds compiler. We find edge in player props and ATP tennis.",
+                },
+                {
+                  q: "How do I start following Il Margine's betting tips?",
+                  title: "How do I follow the tips?",
+                  summary: "Join our free Telegram for player props; tennis tips are on the website. No payment, no trial.",
+                },
+                {
+                  q: "Do I need a Telegram account to follow your tips?",
+                  title: "Do I need Telegram?",
+                  summary: "Only for football player props. Tennis tips are published on the site—no Telegram needed.",
+                },
+                {
+                  q: "What is ROI and why does it matter more than win rate?",
+                  title: "What is ROI and why does it matter?",
+                  summary: "Return on investment. It matters more than win rate—you can win often and still lose money.",
+                },
+                {
+                  q: "How much does Il Margine cost?",
+                  title: "How much does it cost?",
+                  summary: "Free. We're growing our follower base; all tips are free with no trial or card required.",
+                },
+                {
+                  q: "What are player props in football betting?",
+                  title: "What are player props?",
+                  summary: "Bets on individual player stats (e.g. shots on target, fouls) rather than the match result.",
+                },
+              ] as const
+            ).map((item) => (
+              <Link
+                key={item.q}
+                href={`/faq#${questionSlug(item.q)}`}
+                className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block"
+              >
+                <h3 className="font-medium text-slate-200 mb-1">{item.title}</h3>
+                <p className="text-sm text-slate-500">{item.summary}</p>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
