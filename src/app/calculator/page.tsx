@@ -7,6 +7,57 @@ import { supabase, MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI } from "@/lib/baseline";
 import Footer from "@/components/Footer";
 
+/** Stake amount: real note thumbnails for £20/£50, chip for £100 (no green — reserved for profit/ROI). */
+function StakeNote({ amount }: { amount: number }) {
+  const hasNoteImage = amount === 20 || amount === 50;
+  const objectPosition = amount === 20 ? "0% 0" : "50% 0";
+
+  if (hasNoteImage) {
+    return (
+      <div
+        className="relative h-10 w-[3.5rem] shrink-0 overflow-hidden rounded-lg border border-amber-800/50 bg-slate-900 shadow-md"
+        aria-label={`£${amount} per unit`}
+      >
+        <Image
+          src="/notes/uk-notes.png"
+          alt=""
+          fill
+          className="object-cover object-left-top"
+          style={{ objectPosition }}
+          sizes="56px"
+        />
+        <span className="absolute bottom-0.5 right-0.5 rounded bg-black/70 px-1 font-mono text-[10px] font-bold text-amber-100/95">
+          £{amount}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="relative inline-flex h-10 min-w-[4rem] items-center justify-center rounded-lg overflow-hidden border border-amber-700/40 bg-gradient-to-br from-stone-700/90 to-stone-800/90 shadow-inner"
+      aria-label={`£${amount} per unit`}
+    >
+      {/* Subtle “note” pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.07]"
+        style={{
+          backgroundImage: `repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 4px,
+            currentColor 4px,
+            currentColor 5px
+          )`,
+        }}
+      />
+      <span className="relative font-bold font-mono text-sm text-amber-100/95 drop-shadow-sm">
+        £{amount}
+      </span>
+    </div>
+  );
+}
+
 interface CombinedMarketStats {
   total_bets: number;
   roi: number;
@@ -95,11 +146,11 @@ export default function Calculator() {
   };
 
   const calculateReturns = (stakePerUnit: number, marketStats: CombinedMarketStats) => {
-    // Calculate profit directly from units profit × stake per unit
-    // This is more accurate than using ROI percentage
+    // Profit in £ = profit in units × your stake per unit
     const totalProfit = marketStats.total_profit * stakePerUnit;
+    // Avg per bet = total profit (£) / total bets — accurate over the full track record
     const profitPerBet = marketStats.total_bets > 0 ? totalProfit / marketStats.total_bets : 0;
-    
+
     return {
       stakePerUnit,
       totalProfit,
@@ -107,7 +158,7 @@ export default function Calculator() {
     };
   };
 
-  const stakeLevels = [25, 50, 100];
+  const stakeLevels = [20, 50, 100];
 
   const propsReturns = combinedStats ? stakeLevels.map(stake => calculateReturns(stake, combinedStats.props)) : [];
   const tennisReturns = combinedStats ? stakeLevels.map(stake => calculateReturns(stake, combinedStats.tennis)) : [];
@@ -190,9 +241,7 @@ export default function Calculator() {
                         className="rounded-xl bg-slate-800/40 border border-slate-700/50 p-4 flex flex-wrap items-center justify-between gap-3 hover:border-emerald-500/40 transition-colors"
                       >
                         <div className="flex items-center gap-3">
-                          <span className="inline-flex h-9 min-w-[3rem] items-center justify-center rounded-lg bg-emerald-500/15 border border-emerald-500/30 font-bold font-mono text-emerald-400 text-sm">
-                            £{returns.stakePerUnit}
-                          </span>
+                          <StakeNote amount={returns.stakePerUnit} />
                           <span className="text-xs text-slate-500">per unit × {combinedStats.props.total_bets} bets</span>
                         </div>
                         <div className="text-right">
@@ -244,9 +293,7 @@ export default function Calculator() {
                         className="rounded-xl bg-slate-800/40 border border-slate-700/50 p-4 flex flex-wrap items-center justify-between gap-3 hover:border-amber-500/40 transition-colors"
                       >
                         <div className="flex items-center gap-3">
-                          <span className="inline-flex h-9 min-w-[3rem] items-center justify-center rounded-lg bg-amber-500/15 border border-amber-500/30 font-bold font-mono text-amber-400/95 text-sm">
-                            £{returns.stakePerUnit}
-                          </span>
+                          <StakeNote amount={returns.stakePerUnit} />
                           <span className="text-xs text-slate-500">per unit × {combinedStats.tennis.total_bets} bets</span>
                         </div>
                         <div className="text-right">
