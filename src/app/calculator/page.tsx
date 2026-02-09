@@ -176,8 +176,11 @@ export default function Calculator() {
             <span className="text-xs font-mono text-emerald-400/90 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded">Calculator</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-3 sm:mb-4">Returns Calculator</h1>
-          <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed mb-6">
+          <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed mb-2">
             Calculate your potential returns based on our historical performance. All calculations are based on our verified track record and assume you follow our unit recommendations.
+          </p>
+          <p className="text-sm text-slate-500 max-w-3xl mb-6">
+            Historical record; figures update as new bets are settled. Live logging from March 2026.
           </p>
           <div className="border-l-4 border-amber-500/60 bg-amber-500/5 rounded-r-lg py-3 px-4 max-w-2xl">
             <p className="text-sm text-slate-300 leading-relaxed">

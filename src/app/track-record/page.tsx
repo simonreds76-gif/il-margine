@@ -122,8 +122,11 @@ export default function TrackRecordPage() {
           </Link>
           <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">TRACK RECORD</span>
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-6 sm:mb-8">Proven Results</h1>
-          <p className="text-base sm:text-lg text-slate-300 mb-12 sm:mb-14 max-w-2xl">
+          <p className="text-base sm:text-lg text-slate-300 mb-3 max-w-2xl">
             Transparent results across all active markets. ATP Tennis independently verified on Tipstrr. Player Props self-tracked with timestamped records.
+          </p>
+          <p className="text-sm text-slate-500 mb-12 sm:mb-14 max-w-2xl">
+            Historical performance. Live pick logging from March 2026.
           </p>
 
           {loading ? (
