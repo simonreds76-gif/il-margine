@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { BASE_URL, BOOKMAKERS_INDEXABLE } from "@/lib/config";
 
-const title = "Bookmakers & Key Concepts | Honest Reviews & Punter Glossary";
+const title = "Recommended Bookmakers | 8 Field-Tested Operators & Betting Glossary";
 const description =
-  "Honest bookmaker reviews (Midnite, BetVictor, Unibet, Coral, Ladbrokes, BetMGM), new account offers, and a punter's glossary: CLV, gubbing, margin, value, Super Sub, account restrictions.";
+  "Eight recommended bookmakers (Midnite, BetVictor, Unibet, Coral, Ladbrokes, BetMGM, William Hill, Betfred): honest reviews, welcome offers, key concepts, comparison table, and industry glossary.";
 const url = `${BASE_URL}/bookmakers`;
 
 export const metadata: Metadata = {
