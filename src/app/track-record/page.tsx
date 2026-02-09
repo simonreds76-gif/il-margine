@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import Footer from "@/components/Footer";
 import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
 
 const FAQ_ITEMS = [
@@ -145,7 +144,6 @@ export default function TrackRecordPage() {
           <p className="mt-1">18+ only. Gamble responsibly. <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400/80 hover:text-emerald-400">BeGambleAware.org</a></p>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import Footer from "@/components/Footer";
 import { BASE_URL, TELEGRAM_CHANNEL_URL } from "@/lib/config";
 
 export const metadata: Metadata = {
@@ -254,7 +253,6 @@ export default function TheEdgePage() {
         <p>Betting involves risk. Only bet what you can afford to lose.</p>
         <p className="mt-1">18+ only. Gamble responsibly. <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400/80 hover:text-emerald-400">BeGambleAware.org</a></p>
       </div>
-      <Footer />
     </div>
   );
 }
