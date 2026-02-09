@@ -35,7 +35,7 @@ function StakeNote({ amount }: { amount: number }) {
           />
         </div>
       )}
-      <span className={showImg ? "pr-3" : "px-3"} font-bold font-mono text-sm text-amber-100/95">
+      <span className={`${showImg ? "pr-3" : "px-3"} font-bold font-mono text-sm text-amber-100/95`}>
         £{amount}
       </span>
     </div>
