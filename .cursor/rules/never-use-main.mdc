@@ -1,0 +1,34 @@
+---
+description: Never use main — only golden-with-speed-insights; main must not build on Vercel
+alwaysApply: true
+---
+
+# Never use main
+
+**Order: the `main` branch must never be used for this project and must never build on Vercel.**
+
+## Branch to use
+
+- **Only branch for work and deploys:** `golden-with-speed-insights`
+- All edits, commits, and pushes go to **golden-with-speed-insights**.
+- Preview and production in Vercel must deploy from **golden-with-speed-insights**, not `main`.
+
+## What NOT to do
+
+- Do **not** push to `main`. Do **not** run `git push origin main`.
+- Do **not** merge from golden into main as part of deployment.
+- Do **not** open PRs into main unless the user explicitly asks.
+
+## Vercel: stop main from building
+
+- In **Vercel** → Project **Settings** → **Git** → **Ignored Build Step**, set:
+  ```bash
+  node scripts/vercel-ignore-main.cjs
+  ```
+- That script exits 1 for branch `main` (skip build) and 0 for other branches (build). So only non-main branches (e.g. golden-with-speed-insights) get built.
+
+## Workflow
+
+1. `git fetch --all && git checkout golden-with-speed-insights && git pull origin golden-with-speed-insights`
+2. Make changes on **golden-with-speed-insights**.
+3. `git add` / `git commit` / `git push origin golden-with-speed-insights` for preview.
