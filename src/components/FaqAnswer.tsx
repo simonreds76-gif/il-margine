@@ -1,17 +1,77 @@
 import Link from "next/link";
 
+/** Check if a block of text is a markdown table (every line contains |) */
+function isMarkdownTable(block: string): boolean {
+  const lines = block.trim().split("\n").filter(Boolean);
+  if (lines.length < 2) return false;
+  return lines.every((line) => line.includes("|"));
+}
+
+/** Parse markdown table into rows of cells. Skips separator row (|---|---|). */
+function parseMarkdownTable(block: string): string[][] {
+  const lines = block.trim().split("\n").filter(Boolean);
+  const rows: string[][] = [];
+  for (const line of lines) {
+    const cells = line.split("|").map((c) => c.trim()).filter((_, i, arr) => i > 0 && i < arr.length - 1);
+    if (cells.length === 0) continue;
+    const isSeparator = cells.every((c) => /^[-:]+$/.test(c));
+    if (isSeparator) continue;
+    rows.push(cells);
+  }
+  return rows;
+}
+
 /**
- * Renders FAQ answer text: paragraphs, **bold**, and [text](url) links.
- * Internal paths use Next Link; external use <a>.
+ * Renders FAQ answer: paragraphs, **bold**, [text](url), and markdown tables as proper HTML tables.
  */
 export default function FaqAnswer({ text }: { text: string }) {
-  const paragraphs = text.split(/\n\n+/).filter(Boolean);
+  const blocks = text.split(/\n\n+/).filter(Boolean);
 
   return (
     <div className="space-y-3 text-slate-300 text-sm leading-relaxed">
-      {paragraphs.map((para, i) => (
-        <p key={i}>{renderInline(para)}</p>
-      ))}
+      {blocks.map((block, i) => {
+        const trimmed = block.trim();
+        if (isMarkdownTable(trimmed)) {
+          const rows = parseMarkdownTable(trimmed);
+          if (rows.length === 0) return <p key={i}>{trimmed}</p>;
+          const [header, ...bodyRows] = rows;
+          return (
+            <div key={i} className="my-4 overflow-x-auto">
+              <table className="w-full border-collapse border border-slate-600 rounded-lg overflow-hidden">
+                <thead>
+                  <tr className="bg-slate-800/60">
+                    {header.map((cell, j) => (
+                      <th
+                        key={j}
+                        className="px-3 py-2 text-left text-slate-200 font-medium border-b border-slate-600 border-r border-slate-600 last:border-r-0"
+                      >
+                        {renderInline(cell)}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {bodyRows.map((row, ri) => (
+                    <tr key={ri} className="bg-slate-800/20 hover:bg-slate-800/40">
+                      {row.map((cell, j) => (
+                        <td
+                          key={j}
+                          className="px-3 py-2 text-slate-300 border-b border-slate-700/50 border-r border-slate-700/50 last:border-r-0"
+                        >
+                          {renderInline(cell)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        }
+        return (
+          <p key={i}>{renderInline(trimmed)}</p>
+        );
+      })}
     </div>
   );
 }

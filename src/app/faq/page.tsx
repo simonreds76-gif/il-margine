@@ -5,7 +5,15 @@ import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/Footer";
 import FaqAnswer from "@/components/FaqAnswer";
+import FaqOpenByHash from "@/components/FaqOpenByHash";
 import { parseFaqMd, type FaqSection } from "@/lib/parse-faq";
+
+function questionSlug(q: string): string {
+  return q
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
 import { BASE_URL } from "@/lib/config";
 
 export const metadata: Metadata = {
@@ -56,6 +64,7 @@ export default function FaqPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
+      <FaqOpenByHash />
       <section className="pt-4 pb-8 md:pt-6 md:pb-10 border-b border-slate-800/50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link
@@ -116,7 +125,8 @@ export default function FaqPage() {
                   {section.items.map((item, idx) => (
                     <details
                       key={idx}
-                      className="group rounded-xl bg-slate-800/40 border border-slate-700/50 overflow-hidden"
+                      id={questionSlug(item.q)}
+                      className="group rounded-xl bg-slate-800/40 border border-slate-700/50 overflow-hidden scroll-mt-24"
                     >
                       <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-3.5 text-left text-slate-200 hover:bg-slate-700/30 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500">
                         <span className="flex-1 font-medium">{item.q}</span>

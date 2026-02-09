@@ -513,15 +513,15 @@ export default function Home() {
               <h3 className="font-medium text-slate-200 mb-1">Do I need Telegram?</h3>
               <p className="text-sm text-slate-500">Only for football player props. Tennis tips are published on the site—no Telegram needed.</p>
             </Link>
-            <Link href="/faq#betting-philosophy-approach" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
+            <Link href="/faq#what-is-roi-and-why-does-it-matter-more-than-win-rate" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
               <h3 className="font-medium text-slate-200 mb-1">What is ROI and why does it matter?</h3>
               <p className="text-sm text-slate-500">Return on investment. It matters more than win rate—you can win often and still lose money.</p>
             </Link>
-            <Link href="/faq#costs-and-monetization" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
+            <Link href="/faq#how-much-does-il-margine-cost" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
               <h3 className="font-medium text-slate-200 mb-1">How much does it cost?</h3>
               <p className="text-sm text-slate-500">Free. We’re growing our follower base; all tips are free with no trial or card required.</p>
             </Link>
-            <Link href="/faq#markets-and-betting-types" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
+            <Link href="/faq#what-are-player-props-in-football-betting" className="p-4 sm:p-5 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:border-emerald-500/30 transition-colors text-left block">
               <h3 className="font-medium text-slate-200 mb-1">What are player props?</h3>
               <p className="text-sm text-slate-500">Bets on individual player stats (e.g. shots on target, fouls) rather than the match result.</p>
             </Link>
