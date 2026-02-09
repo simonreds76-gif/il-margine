@@ -9,11 +9,12 @@ const telegramIcon = (
 interface TelegramButtonProps {
   variant?: "nav" | "cta" | "inline";
   className?: string;
+  onClick?: () => void;
 }
 
 const baseClass = "inline-flex items-center justify-center gap-2 font-medium text-white rounded transition-colors bg-[#0088cc] hover:bg-[#0077b5] focus:outline-none focus:ring-2 focus:ring-[#0088cc] focus:ring-offset-2 focus:ring-offset-[#0f1117]";
 
-export default function TelegramButton({ variant = "nav", className = "" }: TelegramButtonProps) {
+export default function TelegramButton({ variant = "nav", className = "", onClick }: TelegramButtonProps) {
   const variantClasses = {
     nav: "px-4 py-2.5 text-sm",
     cta: "px-6 sm:px-8 py-3 sm:py-3.5 text-base sm:text-lg shadow-lg",
@@ -25,6 +26,7 @@ export default function TelegramButton({ variant = "nav", className = "" }: Tele
       href={TELEGRAM_CHANNEL_URL}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={onClick}
       className={`${baseClass} ${variantClasses[variant]} ${className}`.trim()}
     >
       <span className="text-white" aria-hidden>✓</span>
