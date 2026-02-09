@@ -24,7 +24,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Do you bet on match odds or just props?",
-    a: "Primarily player props and tennis handicaps. Occasionally match odds when clear mispricing exists. We bet wherever edge exists, but focus on less efficient markets where value is more frequent.",
+    a: "Primarily player props and ATP tennis (men's). Occasionally match odds when clear mispricing exists. We bet wherever edge exists, but focus on less efficient markets where value is more frequent.",
   },
   {
     q: "Why don't you share your model?",
@@ -121,7 +121,7 @@ export default function TheEdgePage() {
             <p>Bookmakers dedicate their resources unevenly. Premier League match odds get teams of traders, live monitoring, and sophisticated algorithms. Player props get template pricing and minimal oversight.</p>
             <p><strong className="text-slate-100">Our focus areas:</strong></p>
             <p><strong className="text-slate-200">Player Props</strong> — Individual player statistics: shots on target, fouls committed, tackles made, cards received. These markets receive a fraction of the analytical attention that match odds do. Bookmakers use historical averages with minimal matchup-specific adjustment. When opponent defensive stats, tactical setups, or referee tendencies create outliers, value emerges.</p>
-            <p><strong className="text-slate-200">Tennis Handicaps</strong> — Game spreads and totals in ATP events, particularly 250s and Challengers. These tournaments get less market attention than Grand Slams. Surface-specific performance differentials are systematically underweighted. A player who&apos;s elite on clay but average on grass will still be priced closer to their universal ranking than their surface-specific form suggests.</p>
+            <p><strong className="text-slate-200">ATP Tennis (men&apos;s)</strong> — Match odds, handicaps, and totals across ATP events, particularly 250s and Challengers. These tournaments get less market attention than Grand Slams. Surface-specific performance differentials are systematically underweighted. A player who&apos;s elite on clay but average on grass will still be priced closer to their universal ranking than their surface-specific form suggests.</p>
             <p><strong className="text-slate-200">Bet Builders</strong> <span className="text-slate-500">(Coming Soon)</span> — Same-game multiples where correlation is mispriced. When bookmakers price legs independently that are actually correlated, mathematical edges appear.</p>
             <p><strong className="text-slate-100">What we don&apos;t bet:</strong> High-profile match odds in major leagues unless clear mispricing exists. We&apos;re not competing with bookmaker traders on markets they prioritize. We operate where their models are weakest.</p>
           </div>
@@ -243,7 +243,7 @@ export default function TheEdgePage() {
             href={TELEGRAM_CHANNEL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-[#10b981] hover:bg-emerald-400 text-slate-900 font-semibold px-6 py-3 rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
           >
             → Join Free on Telegram
           </a>

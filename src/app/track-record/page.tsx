@@ -10,7 +10,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "How do I verify picks are real?",
-    a: "Telegram timestamps for player props (posted before events start). Tennis picks posted here with timestamps. You can check the archive to verify timing.",
+    a: "Telegram timestamps for player props (posted before events start). Tennis picks posted on the website. You can check the archive to verify timing.",
   },
   {
     q: "What if results are poor?",
@@ -134,7 +134,7 @@ export default function TrackRecordPage() {
             href={TELEGRAM_CHANNEL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-[#10b981] hover:bg-emerald-400 text-slate-900 font-semibold px-6 py-3 rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
           >
             → Join Telegram for Player Props
           </a>
