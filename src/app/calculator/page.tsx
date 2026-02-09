@@ -7,51 +7,35 @@ import { supabase, MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI } from "@/lib/baseline";
 import Footer from "@/components/Footer";
 
-/** Stake amount: real note thumbnails for £20/£50, chip for £100 (no green — reserved for profit/ROI). */
+/** Stake: slang icon (pony/bullseye/ton) + amount so everyone gets it. Neutral colours — green is for profit/ROI. */
+const STAKE_ICONS: Record<number, string> = {
+  25: "/calculator/pony.png",
+  50: "/calculator/bullseye.png",
+  100: "/calculator/ton.png",
+};
+
 function StakeNote({ amount }: { amount: number }) {
-  const hasNoteImage = amount === 20 || amount === 50;
-  const objectPosition = amount === 20 ? "0% 0" : "50% 0";
-
-  if (hasNoteImage) {
-    return (
-      <div
-        className="relative h-10 w-[3.5rem] shrink-0 overflow-hidden rounded-lg border border-amber-800/50 bg-slate-900 shadow-md"
-        aria-label={`£${amount} per unit`}
-      >
-        <Image
-          src="/notes/uk-notes.png"
-          alt=""
-          fill
-          className="object-cover object-left-top"
-          style={{ objectPosition }}
-          sizes="56px"
-        />
-        <span className="absolute bottom-0.5 right-0.5 rounded bg-black/70 px-1 font-mono text-[10px] font-bold text-amber-100/95">
-          £{amount}
-        </span>
-      </div>
-    );
-  }
-
+  const src = STAKE_ICONS[amount];
+  const [imgError, setImgError] = useState(false);
+  const showImg = src && !imgError;
   return (
     <div
-      className="relative inline-flex h-10 min-w-[4rem] items-center justify-center rounded-lg overflow-hidden border border-amber-700/40 bg-gradient-to-br from-stone-700/90 to-stone-800/90 shadow-inner"
+      className="flex items-center gap-2 rounded-lg border border-amber-700/40 bg-slate-800/60 overflow-hidden"
       aria-label={`£${amount} per unit`}
     >
-      {/* Subtle “note” pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage: `repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 4px,
-            currentColor 4px,
-            currentColor 5px
-          )`,
-        }}
-      />
-      <span className="relative font-bold font-mono text-sm text-amber-100/95 drop-shadow-sm">
+      {showImg && (
+        <div className="relative h-10 w-10 shrink-0 bg-slate-900/80 flex items-center justify-center">
+          <Image
+            src={src}
+            alt=""
+            width={36}
+            height={36}
+            className="object-contain"
+            onError={() => setImgError(true)}
+          />
+        </div>
+      )}
+      <span className={showImg ? "pr-3" : "px-3"} font-bold font-mono text-sm text-amber-100/95">
         £{amount}
       </span>
     </div>
@@ -158,7 +142,7 @@ export default function Calculator() {
     };
   };
 
-  const stakeLevels = [20, 50, 100];
+  const stakeLevels = [25, 50, 100];
 
   const propsReturns = combinedStats ? stakeLevels.map(stake => calculateReturns(stake, combinedStats.props)) : [];
   const tennisReturns = combinedStats ? stakeLevels.map(stake => calculateReturns(stake, combinedStats.tennis)) : [];
