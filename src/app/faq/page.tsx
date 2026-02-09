@@ -74,6 +74,7 @@ export default function FaqPage() {
             <span>← Home</span>
           </Link>
 
+          <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">QUESTIONS</span>
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">
             Frequently Asked Questions
           </h1>

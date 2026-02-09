@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { supabase, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, getBaselineDisplayStats } from "@/lib/baseline";
 import { track } from "@/lib/analytics";
@@ -120,13 +121,11 @@ export default function CalculatorPage() {
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      {/* Breadcrumbs */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <div className="flex items-center gap-2 text-sm">
-          <Link href="/" className="text-slate-500 hover:text-slate-300 transition-colors">Home</Link>
-          <span className="text-slate-600">/</span>
-          <span className="text-emerald-400 font-medium">Calculator</span>
-        </div>
+        <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8">
+          <Image src="/favicon.png" alt="" width={40} height={40} className="h-10 w-10 object-contain shrink-0" />
+          <span>← Home</span>
+        </Link>
       </div>
 
       {/* Hero: calculator first on mobile, two columns on desktop */}
@@ -134,7 +133,8 @@ export default function CalculatorPage() {
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-start">
           {/* Left column: H1, What this calculator shows, body. On mobile order-2 so calculator is first. */}
           <div className="lg:order-1 order-2">
-            <h1 className="text-[34px] sm:text-[40px] md:text-[44px] font-semibold text-slate-100 mb-6 tracking-tight">
+            <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">CALCULATOR</span>
+            <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-6">
               Returns Calculator
             </h1>
             <h2 className="text-xl sm:text-2xl font-semibold text-slate-100 mb-3">

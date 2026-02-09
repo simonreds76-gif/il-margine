@@ -72,6 +72,20 @@ export default function TrackRecordPage() {
           </div>
         </section>
 
+        {/* Historical Performance */}
+        <section className="bg-[#1a1d24] rounded-xl border border-emerald-500/20 p-6 md:p-8 mb-8">
+          <h2 className="text-xl font-semibold text-emerald-400 mb-4">Historical Performance</h2>
+          <h3 className="text-sm font-semibold text-slate-200 mb-3">18-Month Baseline</h3>
+          <p className="text-slate-300 leading-relaxed mb-4">Performance data from private tracking period (validation phase):</p>
+          <ul className="space-y-3 text-slate-300 leading-relaxed list-none">
+            <li><strong className="text-slate-100">Player Props</strong> — <span className="text-emerald-400 font-medium">780+</span> bets | <span className="text-emerald-400 font-medium">+25.0%</span> ROI | <span className="text-emerald-400 font-medium">58%</span> win rate</li>
+            <li><strong className="text-slate-100">ATP Tennis</strong> — <span className="text-emerald-400 font-medium">447</span> bets | <span className="text-emerald-400 font-medium">+8.6%</span> ROI | <span className="text-emerald-400 font-medium">54%</span> win rate | Tipstrr verified</li>
+            <li><strong className="text-slate-100">Combined</strong> — <span className="text-emerald-400 font-medium">1,227+</span> total bets | <span className="text-emerald-400 font-medium">+19.0%</span> overall ROI | 18 months</li>
+          </ul>
+          <p className="text-slate-400 text-sm mt-4">Stakes: Variable (0.05u to 5u based on edge confidence)</p>
+          <p className="text-slate-400 text-sm mt-2">This data reflects actual settled bets used to validate our methodology. Live public tracking with full transparency is now ongoing.</p>
+        </section>
+
         {/* 2. How Tracking Works */}
         <section className="bg-[#1a1d24] rounded-xl border border-slate-800 p-6 md:p-8 mb-8">
           <h2 className="text-xl font-semibold text-emerald-400 mb-4">Verification System</h2>

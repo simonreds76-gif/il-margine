@@ -10,8 +10,8 @@ export const TELEGRAM_CHANNEL_URL = process.env.NEXT_PUBLIC_TELEGRAM_CHANNEL_URL
 /** Launch year for display and schema. */
 export const LAUNCH_YEAR = 2026;
 
-/** Shown in footer: e.g. "Coming March 2026" while in testing, or "Launched 2026" when live. */
-export const LAUNCH_LABEL = "Coming March 2026";
+/** Shown in footer: e.g. "Launching March 2026" while in testing, or "Launched 2026" when live. */
+export const LAUNCH_LABEL = "Launching March 2026";
 
 /** Short line for visitors who land during testing (homepage). */
 export const BETA_NOTICE = "We're in testing. Full launch March 2026.";
