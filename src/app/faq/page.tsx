@@ -81,7 +81,7 @@ export default function FaqPage() {
             Betting with mathematical edge, Telegram tips, player props, tennis, ROI, bookmakers, and more.
           </p>
 
-          {/* Section navigation */}
+          {/* Section navigation - numbered list for clear structure */}
           <nav
             className="rounded-xl bg-slate-800/50 border border-slate-700/50 p-5 sm:p-6 mb-12 shadow-sm"
             aria-label="FAQ sections"
@@ -89,33 +89,37 @@ export default function FaqPage() {
             <h2 className="text-xs font-mono font-semibold text-emerald-400 tracking-wider mb-4">
               Jump to section
             </h2>
-            <ul className="flex flex-wrap gap-2">
-              {sections.map((sec) => (
-                <li key={sec.id}>
+            <ol className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 list-none pl-0">
+              {sections.map((sec, index) => (
+                <li key={sec.id} className="flex items-baseline gap-2">
+                  <span className="text-slate-500 font-mono text-sm shrink-0 w-6" aria-hidden>
+                    {String(index + 1).padStart(2, " ")}.
+                  </span>
                   <a
                     href={`#${sec.id}`}
-                    className="text-sm text-slate-300 hover:text-emerald-400 transition-colors px-4 py-2 rounded-lg hover:bg-slate-700/50 border border-transparent hover:border-slate-600"
+                    className="text-sm text-slate-300 hover:text-emerald-400 transition-colors py-1.5 rounded hover:bg-slate-700/40 -mx-1 px-1"
                   >
                     {sec.title}
                   </a>
                 </li>
               ))}
-            </ul>
+            </ol>
           </nav>
 
           {/* Accordion sections */}
           <div className="space-y-12">
-            {sections.map((section) => (
+            {sections.map((section, index) => (
               <section
                 key={section.id}
                 id={section.id}
                 className="scroll-mt-24"
               >
                 <h2 className="text-base font-semibold text-slate-100 mb-1 flex items-center gap-3">
-                  <span className="w-1 h-6 rounded-full bg-emerald-400/80" aria-hidden />
+                  <span className="text-emerald-400/80 font-mono text-sm shrink-0 w-6">{index + 1}.</span>
+                  <span className="w-1 h-6 rounded-full bg-emerald-400/80 shrink-0" aria-hidden />
                   {section.title}
                 </h2>
-                <p className="text-slate-500 text-sm mb-5 pl-4">{section.items.length} question{section.items.length !== 1 ? "s" : ""}</p>
+                <p className="text-slate-500 text-sm mb-5 pl-10">{section.items.length} question{section.items.length !== 1 ? "s" : ""}</p>
                 <div className="space-y-3">
                   {section.items.map((item, idx) => (
                     <details
