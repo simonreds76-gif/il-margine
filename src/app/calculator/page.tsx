@@ -315,7 +315,7 @@ export default function Calculator() {
       {/* Banner */}
       <section className="py-12 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
-          <Image src="/banner.png" alt="Il Margine" width={1200} height={400} className="w-full max-w-2xl h-auto object-contain rounded-lg" />
+          <Image src="/banner-mind-the-margin.png" alt="Il Margine: Mind the margin" width={1200} height={400} className="w-full max-w-2xl h-auto object-contain rounded-lg" />
         </div>
       </section>
 
