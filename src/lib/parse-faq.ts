@@ -14,16 +14,16 @@ export interface FaqSection {
   items: FaqItem[];
 }
 
-/** Section and question IDs: underscores only, no dashes. */
+/** Section and question IDs: lowercase, hyphenated (dashes). */
 function slugify(title: string): string {
   return title
     .toLowerCase()
     .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, "_")
-    .replace(/^_|_$/g, "");
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
-/** Slug for FAQ question anchors (underscores, no dashes). Use same in homepage links. */
+/** Slug for FAQ question anchors. Use same in homepage links. */
 export function questionSlug(q: string): string {
   return slugify(q);
 }

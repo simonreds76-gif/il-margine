@@ -19,7 +19,7 @@ Unlike traditional tipsters who focus on match outcomes, we target inefficient m
 
 **A:** Getting started is simple:
 
-1. **Join our free Telegram channel:** [@IlMargineProps](https://t.me/IlMargineProps) — **football player props** are posted there so everyone has a chance to get on before odds move.
+1. **Join our free Telegram channel:** [@IlMargineProps](https://t.me/IlMargineProps). **Football player props** are posted there so everyone has a chance to get on before odds move.
 2. **Tennis tips** are published on the website only initially; you do not need Telegram for those.
 3. **Anytime goalscorer** markets and **bet builders** are coming very soon.
 4. **Review the tip:** Each includes match details, market, selection, bookmaker, odds, and stake recommendation.
@@ -32,17 +32,17 @@ No payment required. No trial period. No credit card.
 
 ### Q: Do I need a Telegram account to follow your tips?
 
-**A:** Only for **football player props**. Those are published on Telegram so that everyone can get on the bet before odds change or move; the website is updated afterwards. For **ATP tennis** you do not need Telegram — tennis tips are published on the website. Anytime goalscorer and bet builder selections are coming very soon.
+**A:** Only for **football player props**. Those are published on Telegram so that everyone can get on the bet before odds change or move; the website is updated afterwards. For **ATP tennis** you do not need Telegram. Tennis tips are published on the website. Anytime goalscorer and bet builder selections are coming very soon.
 
 ---
 
 ### Q: How often do you post betting tips?
 
-**A:** We post when our analysis identifies genuine value — we do not force selections to meet a schedule. **Quality over quantity.**
+**A:** We post when our analysis identifies genuine value. We do not force selections to meet a schedule. **Quality over quantity.**
 
 **Typical volume:**
-- **Player props:** broadly 60–80+ selections per month when fixtures allow.
-- **ATP tennis:** broadly 35–50+ selections per month across the calendar.
+- **Player props:** broadly 60 to 80+ selections per month when fixtures allow.
+- **ATP tennis:** broadly 35 to 50+ selections per month across the calendar.
 
 These figures vary with the fixture list and where we find edge.
 
@@ -50,7 +50,7 @@ These figures vary with the fixture list and where we find edge.
 
 ### Q: What time of day do you post tips?
 
-**A:** Tips are posted at any time during the day. For **player props**, expect selections up to around an hour before kick-off when we are waiting for official team news. For **ATP tennis**, bets are usually posted as soon as odds are available — often the day before the match, or on the day if relevant information becomes available.
+**A:** Tips are posted at any time during the day. For **player props**, expect selections up to around an hour before kick-off when we are waiting for official team news. For **ATP tennis**, bets are usually posted as soon as odds are available; often the day before the match, or on the day if relevant information becomes available.
 
 ---
 
@@ -143,9 +143,9 @@ This approach ensures sustainable betting regardless of bankroll size.
 
 | Edge confidence | Stake size   | Frequency   |
 |-----------------|-------------|-------------|
-| Exploratory     | 0.05u–0.5u  | ~5% of bets |
+| Exploratory     | 0.05u to 0.5u  | ~5% of bets |
 | Standard        | 1.0u        | ~50% of bets|
-| Strong          | 2.0u–3.0u   | ~40% of bets|
+| Strong          | 2.0u to 3.0u   | ~40% of bets|
 | Maximum         | 5.0u        | ~5% of bets |
 
 Not all edges are equal: when our analysis points to stronger value we stake more; when edge is marginal or we are testing an angle we stake less.
@@ -384,7 +384,7 @@ Bookmakers struggle to price **correlation** properly.
 - Respected by professionals
 
 **Pinnacle cons:**
-- Not licensed in the UK — access is via brokers only
+- Not licensed in the UK; access is via brokers only
 - Doesn't offer player props (our primary market)
 - Very limited prop markets generally
 - Odds are very sharp, so edge is harder to find
@@ -440,12 +440,12 @@ Bookmakers struggle to price **correlation** properly.
 |-----------|----------------|
 | Minimum bankroll | 100 units |
 | Max per bet | 2% of bankroll (never more than 5u) |
-| Standard 1u | 1–2% of bankroll |
+| Standard 1u | 1 to 2% of bankroll |
 
 - A 100-unit bankroll lets you survive extended losing streaks and keep 1u stakes.
 - Never risk more than 2% of your bankroll on a single bet (capped at 5u).
 
-**Example:** £5,000 bankroll → 1u = £50–100; max single bet 5u = £250.
+**Example:** £5,000 bankroll → 1u = £50 to £100; max single bet 5u = £250.
 
 ---
 
@@ -454,7 +454,7 @@ Bookmakers struggle to price **correlation** properly.
 **A:** We recommend **percentage-based sizing** so your stake moves with your bankroll.
 
 **Method:**
-- 1 unit = 1–2% of current bankroll
+- 1 unit = 1 to 2% of current bankroll
 - Recalculate unit size monthly (or after ±20% bankroll change)
 
 **Example:**
@@ -515,7 +515,7 @@ We experienced 12-bet losing streak in February 2025. Over next 6 weeks, recover
 
 **Kelly Criterion (advanced):** Stake % = (Edge × Odds − 1) ÷ (Odds − 1). Most professionals use fractional Kelly (e.g. ¼ or ½) to reduce variance.
 
-**Our recommendation:** Keep 1–2% of bankroll per unit. Recalculate monthly or after ±20% bankroll swings. Let compounding come from bankroll growth, not from raising stakes because you feel "on a roll".
+**Our recommendation:** Keep 1 to 2% of bankroll per unit. Recalculate monthly or after ±20% bankroll swings. Let compounding come from bankroll growth, not from raising stakes because you feel "on a roll".
 
 ---
 
@@ -746,7 +746,7 @@ Some days: 5+ tips (multiple mispriced markets)
 
 **A:** We do not offer support via Telegram DMs. For enquiries use:
 
-**Email:** [contact@ilmargine.bet](mailto:contact@ilmargine.bet) — we aim to reply within 24–48 hours.
+**Email:** [contact@ilmargine.bet](mailto:contact@ilmargine.bet). We aim to reply within 24 to 48 hours.
 
 **Website:** [Contact page](/contact) for more details.
 
@@ -860,8 +860,8 @@ Some days: 5+ tips (multiple mispriced markets)
 - Betting budget: £5-25/month
 
 **Per-bet limits:**
-- Never more than 2% of betting bankroll on a single bet (aligns with our 1u = 1–2% guidance)
-- Example: £500 bankroll = 1u = £5–10, max single bet 5u = £25–50
+- Never more than 2% of betting bankroll on a single bet (aligns with our 1u = 1 to 2% guidance)
+- Example: £500 bankroll = 1u = £5 to £10, max single bet 5u = £25 to £50
 
 **Time limits:**
 - Set maximum hours per week analyzing bets
@@ -955,7 +955,7 @@ Over 100 such bets you would expect about £155 profit. Individual results vary 
 |-----------|------|------------|
 | Over 1.5 SOT | 2.10 | 47.6% |
 | Under 1.5 SOT | 1.83 | 54.6% |
-| **Total** | — | **102.2%** |
+| **Total** | n/a | **102.2%** |
 
 The extra 2.2% is the bookmaker margin.
 
@@ -963,8 +963,8 @@ The extra 2.2% is the bookmaker margin.
 
 | Market type | Typical margin |
 |-------------|----------------|
-| Match odds (efficient) | 3–5% |
-| Player props (softer) | 10–15% |
+| Match odds (efficient) | 3 to 5% |
+| Player props (softer) | 10 to 15% |
 
 Larger margins mean more room for mispricing and value when our assessment differs from the book’s.
 
