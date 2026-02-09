@@ -143,8 +143,8 @@ const BOOKMAKERS = [
     name: "BetMGM",
     stars: "⭐⭐⭐⭐",
     rating: "4/5",
-    propsScore: "7/10",
-    tennisScore: "6/10",
+    propsScore: "8/10",
+    tennisScore: "7/10",
     welcomeOffer: "Bet £10 Get £40 in Free Bets",
     welcomeTerms: "Min odds 1.50, free bets valid 7 days",
     strengths: [
@@ -163,7 +163,7 @@ const BOOKMAKERS = [
       "Fewer promotional offers than competitors",
     ],
     usageTips: "BetMGM operates on the LeoVegas platform with fully independent pricing. This means odds can differ significantly from other bookmakers, creating valuable line shopping opportunities. For props: Solid coverage on Premier League and major European leagues. Worth checking for price comparison. Sometimes offers better odds than established operators on specific markets. For tennis: Good coverage across ATP 250+ events. Competitive pricing on game handicaps and totals. Stronger tennis offering than many UK books. Definitely check their odds when betting ATP events. Useful as a core account for both props and tennis. The independent pricing makes this essential for line shopping rather than optional.",
-    bestFor: "Line shopping, independent pricing",
+    bestFor: "Player props & tennis, independent pricing for line shopping",
     offerUrl: "#",
   },
   {
@@ -229,7 +229,7 @@ const COMPARISON_ROWS = [
   { name: "Unibet", props: "7/10", tennis: "8/10", offer: "£40 money back", bestFor: "Tennis specialists, ATP 250s" },
   { name: "Coral", props: "8/10", tennis: "7/10", offer: "£30 free bets", bestFor: "Pair with Ladbrokes for extended access" },
   { name: "Ladbrokes", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Pair with Coral for extended access" },
-  { name: "BetMGM", props: "7/10", tennis: "6/10", offer: "£40 free bets", bestFor: "Line shopping, independent pricing" },
+  { name: "BetMGM", props: "8/10", tennis: "7/10", offer: "£40 free bets", bestFor: "Player props & tennis, independent pricing for line shopping" },
   { name: "William Hill", props: "8/10", tennis: "7/10", offer: "£30 free bets", bestFor: "Solid all-rounder" },
   { name: "Betfred", props: "7/10", tennis: "7/10", offer: "£40 bonuses", bestFor: "Cards markets, higher welcome offer" },
 ];
@@ -453,7 +453,7 @@ export default function BookmakersPage() {
               <li>Open all eight accounts — welcome offers alone provide £250+ value</li>
               <li>Prioritise by market focus: Props primary: BetVictor, Midnite, William Hill, Coral, Ladbrokes. Tennis primary: Unibet, BetVictor, William Hill. Mixed: all eight for line shopping</li>
               <li>Always open Coral AND Ladbrokes — never one without the other</li>
-              <li>Use BetMGM for Entain price comparison — often differs from Coral/Ladbrokes</li>
+              <li>Use BetMGM for line shopping — independent pricing often differs from other UK operators</li>
             </ol>
             <p><strong className="text-slate-100">Line shopping workflow:</strong> Before placing any bet: check odds across all eight, identify best price, place at bookmaker offering highest odds, track which books consistently offer best price, adjust priority accordingly.</p>
             <p>Over time, accounts will restrict at different rates. By opening all eight, you extend total operational window to 18-24 months before severe restrictions across all accounts. See <Link href="/track-record" className="text-emerald-400 hover:text-emerald-300 underline">Track Record</Link> for our performance context.</p>
