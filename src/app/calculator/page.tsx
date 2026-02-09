@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 function StakeNote({ amount }: { amount: number }) {
   return (
     <div
-      className="relative inline-flex h-10 min-w-[4rem] items-center justify-center rounded-lg overflow-hidden border border-amber-700/40 bg-gradient-to-br from-stone-700/90 to-stone-800/90 shadow-inner"
+      className="relative inline-flex h-9 sm:h-10 min-w-[3.25rem] sm:min-w-[4rem] items-center justify-center rounded-lg overflow-hidden border border-amber-700/40 bg-gradient-to-br from-stone-700/90 to-stone-800/90 shadow-inner shrink-0"
       aria-label={`£${amount} per unit`}
     >
       <div
@@ -20,7 +20,7 @@ function StakeNote({ amount }: { amount: number }) {
           backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 4px, currentColor 4px, currentColor 5px)`,
         }}
       />
-      <span className="relative font-bold font-mono text-sm text-amber-100/95 drop-shadow-sm">
+      <span className="relative font-bold font-mono text-xs sm:text-sm text-amber-100/95 drop-shadow-sm">
         £{amount}
       </span>
     </div>
@@ -174,32 +174,32 @@ export default function Calculator() {
           ) : combinedStats ? (
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-10">
               {/* Player Props */}
-              <div className="rounded-2xl border border-slate-800/80 bg-slate-900/50 overflow-hidden shadow-lg shadow-black/20">
+              <div className="rounded-2xl border border-slate-800/80 bg-slate-900/50 overflow-hidden shadow-lg shadow-black/20 min-w-0">
                 <div className="h-1 bg-gradient-to-r from-emerald-500 to-emerald-400/80" aria-hidden />
-                <div className="p-6 sm:p-8">
-                  <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
-                    <div>
-                      <h2 className="text-2xl sm:text-3xl font-semibold text-slate-100">Player Props</h2>
-                      <p className="text-sm text-slate-400 mt-1">Football individual player markets</p>
+                <div className="p-4 sm:p-6 md:p-8 min-w-0 overflow-hidden">
+                  <div className="flex flex-wrap items-end justify-between gap-3 sm:gap-4 mb-6">
+                    <div className="min-w-0">
+                      <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-slate-100">Player Props</h2>
+                      <p className="text-xs sm:text-sm text-slate-400 mt-1">Football individual player markets</p>
                     </div>
-                    <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold font-mono ${combinedStats.props.roi >= 0 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
+                    <span className={`inline-flex items-center px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-bold font-mono shrink-0 ${combinedStats.props.roi >= 0 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
                       {combinedStats.props.roi >= 0 ? "+" : ""}{combinedStats.props.roi.toFixed(1)}% ROI
                     </span>
                   </div>
-                  <div className="grid grid-cols-3 gap-3 mb-6">
-                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/50 p-4 text-center">
-                      <div className="text-xl sm:text-2xl font-bold font-mono text-slate-100">{combinedStats.props.total_bets}</div>
-                      <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Bets</div>
+                  <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-6">
+                    <div className="min-w-0 rounded-xl bg-slate-800/60 border border-slate-700/50 p-3 sm:p-4 text-center overflow-hidden">
+                      <div className="text-base sm:text-xl md:text-2xl font-bold font-mono text-slate-100 truncate" title={String(combinedStats.props.total_bets)}>{combinedStats.props.total_bets}</div>
+                      <div className="text-[10px] sm:text-xs text-slate-500 mt-1 uppercase tracking-wider">Bets</div>
                     </div>
-                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/50 p-4 text-center">
-                      <div className="text-xl sm:text-2xl font-bold font-mono text-amber-400/90">{combinedStats.props.avg_odds.toFixed(2)}</div>
-                      <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Avg Odds</div>
+                    <div className="min-w-0 rounded-xl bg-slate-800/60 border border-slate-700/50 p-3 sm:p-4 text-center overflow-hidden">
+                      <div className="text-base sm:text-xl md:text-2xl font-bold font-mono text-amber-400/90 truncate">{combinedStats.props.avg_odds.toFixed(2)}</div>
+                      <div className="text-[10px] sm:text-xs text-slate-500 mt-1 uppercase tracking-wider">Avg Odds</div>
                     </div>
-                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/50 p-4 text-center">
-                      <div className={`text-xl sm:text-2xl font-bold font-mono ${combinedStats.props.total_profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <div className="min-w-0 rounded-xl bg-slate-800/60 border border-slate-700/50 p-3 sm:p-4 text-center overflow-hidden">
+                      <div className={`text-base sm:text-xl md:text-2xl font-bold font-mono truncate ${combinedStats.props.total_profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                         {combinedStats.props.total_profit >= 0 ? '+' : ''}{combinedStats.props.total_profit.toFixed(1)}u
                       </div>
-                      <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Profit</div>
+                      <div className="text-[10px] sm:text-xs text-slate-500 mt-1 uppercase tracking-wider">Profit</div>
                     </div>
                   </div>
                   <p className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-3">Returns by stake</p>
@@ -207,14 +207,14 @@ export default function Calculator() {
                     {propsReturns.map((returns) => (
                       <div
                         key={returns.stakePerUnit}
-                        className="rounded-xl bg-slate-800/40 border border-slate-700/50 p-4 flex flex-wrap items-center justify-between gap-3 hover:border-emerald-500/40 transition-colors"
+                        className="rounded-xl bg-slate-800/40 border border-slate-700/50 p-3 sm:p-4 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-between gap-2 sm:gap-3 hover:border-emerald-500/40 transition-colors min-w-0 overflow-hidden"
                       >
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                           <StakeNote amount={returns.stakePerUnit} />
-                          <span className="text-xs text-slate-500">per unit × {combinedStats.props.total_bets} bets</span>
+                          <span className="text-xs text-slate-500 shrink-0">per unit × {combinedStats.props.total_bets} bets</span>
                         </div>
-                        <div className="text-right">
-                          <div className={`text-lg font-bold font-mono ${returns.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        <div className="text-left sm:text-right min-w-0 flex flex-col justify-center">
+                          <div className={`text-base sm:text-lg font-bold font-mono break-all ${returns.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                             {returns.totalProfit >= 0 ? '+' : ''}£{Math.abs(returns.totalProfit).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                           </div>
                           <div className="text-[11px] text-slate-500">avg {returns.profitPerBet >= 0 ? '+' : ''}£{Math.abs(returns.profitPerBet).toFixed(2)}/bet</div>
@@ -226,32 +226,32 @@ export default function Calculator() {
               </div>
 
               {/* Tennis Tips */}
-              <div className="rounded-2xl border border-slate-800/80 bg-slate-900/50 overflow-hidden shadow-lg shadow-black/20">
+              <div className="rounded-2xl border border-slate-800/80 bg-slate-900/50 overflow-hidden shadow-lg shadow-black/20 min-w-0">
                 <div className="h-1 bg-gradient-to-r from-amber-500/90 to-amber-400/70" aria-hidden />
-                <div className="p-6 sm:p-8">
-                  <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
-                    <div>
-                      <h2 className="text-2xl sm:text-3xl font-semibold text-slate-100">Tennis Tips</h2>
-                      <p className="text-sm text-slate-400 mt-1">Pre-match singles markets</p>
+                <div className="p-4 sm:p-6 md:p-8 min-w-0 overflow-hidden">
+                  <div className="flex flex-wrap items-end justify-between gap-3 sm:gap-4 mb-6">
+                    <div className="min-w-0">
+                      <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-slate-100">Tennis Tips</h2>
+                      <p className="text-xs sm:text-sm text-slate-400 mt-1">Pre-match singles markets</p>
                     </div>
-                    <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold font-mono ${combinedStats.tennis.roi >= 0 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
+                    <span className={`inline-flex items-center px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-bold font-mono shrink-0 ${combinedStats.tennis.roi >= 0 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
                       {combinedStats.tennis.roi >= 0 ? "+" : ""}{combinedStats.tennis.roi.toFixed(1)}% ROI
                     </span>
                   </div>
-                  <div className="grid grid-cols-3 gap-3 mb-6">
-                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/50 p-4 text-center">
-                      <div className="text-xl sm:text-2xl font-bold font-mono text-slate-100">{combinedStats.tennis.total_bets}</div>
-                      <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Bets</div>
+                  <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-6">
+                    <div className="min-w-0 rounded-xl bg-slate-800/60 border border-slate-700/50 p-3 sm:p-4 text-center overflow-hidden">
+                      <div className="text-base sm:text-xl md:text-2xl font-bold font-mono text-slate-100 truncate" title={String(combinedStats.tennis.total_bets)}>{combinedStats.tennis.total_bets}</div>
+                      <div className="text-[10px] sm:text-xs text-slate-500 mt-1 uppercase tracking-wider">Bets</div>
                     </div>
-                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/50 p-4 text-center">
-                      <div className="text-xl sm:text-2xl font-bold font-mono text-amber-400/90">{combinedStats.tennis.avg_odds.toFixed(2)}</div>
-                      <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Avg Odds</div>
+                    <div className="min-w-0 rounded-xl bg-slate-800/60 border border-slate-700/50 p-3 sm:p-4 text-center overflow-hidden">
+                      <div className="text-base sm:text-xl md:text-2xl font-bold font-mono text-amber-400/90 truncate">{combinedStats.tennis.avg_odds.toFixed(2)}</div>
+                      <div className="text-[10px] sm:text-xs text-slate-500 mt-1 uppercase tracking-wider">Avg Odds</div>
                     </div>
-                    <div className="rounded-xl bg-slate-800/60 border border-slate-700/50 p-4 text-center">
-                      <div className={`text-xl sm:text-2xl font-bold font-mono ${combinedStats.tennis.total_profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <div className="min-w-0 rounded-xl bg-slate-800/60 border border-slate-700/50 p-3 sm:p-4 text-center overflow-hidden">
+                      <div className={`text-base sm:text-xl md:text-2xl font-bold font-mono truncate ${combinedStats.tennis.total_profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                         {combinedStats.tennis.total_profit >= 0 ? '+' : ''}{combinedStats.tennis.total_profit.toFixed(1)}u
                       </div>
-                      <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider">Profit</div>
+                      <div className="text-[10px] sm:text-xs text-slate-500 mt-1 uppercase tracking-wider">Profit</div>
                     </div>
                   </div>
                   <p className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-3">Returns by stake</p>
@@ -259,14 +259,14 @@ export default function Calculator() {
                     {tennisReturns.map((returns) => (
                       <div
                         key={returns.stakePerUnit}
-                        className="rounded-xl bg-slate-800/40 border border-slate-700/50 p-4 flex flex-wrap items-center justify-between gap-3 hover:border-amber-500/40 transition-colors"
+                        className="rounded-xl bg-slate-800/40 border border-slate-700/50 p-3 sm:p-4 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-between gap-2 sm:gap-3 hover:border-amber-500/40 transition-colors min-w-0 overflow-hidden"
                       >
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                           <StakeNote amount={returns.stakePerUnit} />
-                          <span className="text-xs text-slate-500">per unit × {combinedStats.tennis.total_bets} bets</span>
+                          <span className="text-xs text-slate-500 shrink-0">per unit × {combinedStats.tennis.total_bets} bets</span>
                         </div>
-                        <div className="text-right">
-                          <div className={`text-lg font-bold font-mono ${returns.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        <div className="text-left sm:text-right min-w-0 flex flex-col justify-center">
+                          <div className={`text-base sm:text-lg font-bold font-mono break-all ${returns.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                             {returns.totalProfit >= 0 ? '+' : ''}£{Math.abs(returns.totalProfit).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                           </div>
                           <div className="text-[11px] text-slate-500">avg {returns.profitPerBet >= 0 ? '+' : ''}£{Math.abs(returns.profitPerBet).toFixed(2)}/bet</div>
