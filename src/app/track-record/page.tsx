@@ -5,28 +5,24 @@ import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
 
 const FAQ_ITEMS = [
   {
-    q: "When will live results start appearing?",
-    a: "March 2026. All picks from that point forward will be logged here with full transparency.",
+    q: "Where can I see the actual data?",
+    a: "Data is being integrated into the site. Player props go to Telegram first (quick markets), tennis posts here. Check back as the database populates.",
   },
   {
-    q: "Can I see detailed historical data?",
-    a: "Summary statistics are available. Detailed bet-by-bet breakdown will be added after March launch when live tracking infrastructure is built.",
+    q: "How do I verify picks are real?",
+    a: "Telegram timestamps for player props (posted before events start). Tennis picks posted here with timestamps. You can check the archive to verify timing.",
   },
   {
-    q: "How do I verify bets are real?",
-    a: "Every bet has Telegram timestamp (posted before event starts). You can verify by checking our Telegram channel history. After March, individual verification pages will provide direct proof.",
+    q: "What if results are poor?",
+    a: "They stay logged. Losing bets are part of betting. Variance happens. What gets posted stays posted.",
   },
   {
-    q: "What if you have a losing month?",
-    a: "It'll be visible here. Variance is part of betting. We're not hiding bad periods—they're inevitable even with positive edge.",
+    q: "Where's the detailed breakdown?",
+    a: "Being built. Basic data is tracked, detailed tables and filtering coming as the site develops.",
   },
   {
-    q: "Why isn't there more data shown right now?",
-    a: "Platform is in beta. Live tracking infrastructure launches March 2026. Historical data was tracked privately to validate methodology before public launch.",
-  },
-  {
-    q: "Can you edit past results?",
-    a: "No. Once a bet is logged, it's permanent. Telegram timestamps make retroactive editing impossible.",
+    q: "Can past picks be edited?",
+    a: "No. Telegram timestamps are immutable. Site data can't be retroactively changed once logged.",
   },
 ];
 
@@ -58,21 +54,21 @@ export default function TrackRecordPage() {
           <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">TRACK RECORD</span>
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-3">Track Record</h1>
           <p className="text-lg text-slate-300 max-w-2xl mb-2">
-            Transparent performance across our betting markets.
+            Performance data across betting markets.
           </p>
           <p className="text-base text-slate-400 max-w-2xl leading-relaxed">
-            All picks are timestamped and trackable. ATP Tennis verified on Tipstrr. Player Props self-tracked with Telegram timestamps. Results update as bets settle. No edits, no deletions, no hiding losses. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">The Edge</Link> for our methodology.
+            Player props posted to Telegram with timestamps. Tennis selections posted here. Results logged after settlement. No edits, no deletions. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">The Edge</Link> for our methodology.
           </p>
         </section>
 
-        {/* 1. Platform Status */}
+        {/* 1. Current Data */}
         <section className="bg-[#1a1d24] rounded-xl border border-slate-800 p-6 md:p-8 mb-8">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-4">Platform Status</h2>
+          <h2 className="text-xl font-semibold text-emerald-400 mb-4">Performance Overview</h2>
           <div className="text-slate-300 leading-relaxed space-y-3">
-            <p><strong className="text-slate-100">Beta Phase</strong> — Building track record through March 2026.</p>
-            <p><strong className="text-slate-100">Historical data:</strong> Available from prior private tracking.</p>
-            <p><strong className="text-slate-100">Live picks:</strong> Launching March 2026 with full public logging.</p>
-            <p>All future selections will be posted to Telegram with immutable timestamps before events start, then logged here after settlement.</p>
+            <p>Historical tracking across ATP tennis and player props markets. Data reflects actual bets placed and settled.</p>
+            <p><strong className="text-slate-100">Player Props:</strong> Logged after posting to Telegram. Props odds move quickly so these are shared there first, then recorded here.</p>
+            <p><strong className="text-slate-100">Tennis:</strong> Posted directly on site with full analysis. More stable markets allow detailed writeups.</p>
+            <p>Performance data updates as bets settle. What&apos;s tracked stays tracked.</p>
           </div>
         </section>
 
@@ -80,118 +76,35 @@ export default function TrackRecordPage() {
         <section className="bg-[#1a1d24] rounded-xl border border-slate-800 p-6 md:p-8 mb-8">
           <h2 className="text-xl font-semibold text-emerald-400 mb-4">Verification System</h2>
           <ul className="space-y-3 text-slate-300 leading-relaxed list-none">
-            <li><strong className="text-slate-100">Pre-Match Posting:</strong> Every selection posted to Telegram before event starts. Telegram timestamps are immutable.</li>
-            <li><strong className="text-slate-100">Post-Match Settlement:</strong> After result, bet is logged here with outcome (win/loss/void), profit/loss in units, and link to original Telegram post.</li>
-            <li><strong className="text-slate-100">Individual Verification:</strong> Each bet will have unique page: ilmargine.bet/bet/[id] — match details, selection, odds, bookmaker, stake, result, Telegram timestamp proof.</li>
-            <li><strong className="text-slate-100">No Editing:</strong> Once logged, bets cannot be changed or deleted.</li>
+            <li><strong className="text-slate-100">Pre-match posting:</strong> Every selection posted before event starts. Telegram timestamps for player props are immutable (can&apos;t be edited retroactively). Tennis picks posted directly on site.</li>
+            <li><strong className="text-slate-100">Post-match settlement:</strong> After result, bet is logged here with outcome (win/loss/void), profit/loss in units, and link to original post where applicable.</li>
+            <li><strong className="text-slate-100">No editing:</strong> Once logged, bets cannot be changed or deleted. What&apos;s posted is permanent.</li>
           </ul>
         </section>
 
-        {/* 3. Historical Performance - Option A */}
-        <section className="bg-[#1a1d24] rounded-xl border border-emerald-500/20 p-6 md:p-8 mb-8">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-4">Pre-Launch Tracking</h2>
-          <p className="text-slate-300 leading-relaxed mb-6">
-            Prior to public launch, we tracked selections privately to validate methodology.
-          </p>
-          <div className="grid sm:grid-cols-3 gap-4 mb-4">
-            <div className="rounded-lg bg-slate-800/50 border border-slate-700 p-4">
-              <div className="text-2xl font-bold text-emerald-400 font-mono">447</div>
-              <div className="text-sm text-slate-400">ATP Tennis bets</div>
-              <div className="text-xs text-slate-500 mt-1">Verified on Tipstrr</div>
-            </div>
-            <div className="rounded-lg bg-slate-800/50 border border-slate-700 p-4">
-              <div className="text-2xl font-bold text-emerald-400 font-mono">780+</div>
-              <div className="text-sm text-slate-400">Player Props</div>
-              <div className="text-xs text-slate-500 mt-1">Self-logged with timestamps</div>
-            </div>
-            <div className="rounded-lg bg-slate-800/50 border border-slate-700 p-4">
-              <div className="text-2xl font-bold text-emerald-400 font-mono">1,200+</div>
-              <div className="text-sm text-slate-400">Combined</div>
-              <div className="text-xs text-slate-500 mt-1">18 months tracked</div>
-            </div>
-          </div>
-          <p className="text-sm text-slate-500">
-            Full detailed breakdown available after March 2026 launch when live tracking begins.
-          </p>
-        </section>
-
-        {/* 4. What To Expect */}
+        {/* 3. What To Expect */}
         <section className="bg-[#1a1d24] rounded-xl border border-slate-800 p-6 md:p-8 mb-8">
           <h2 className="text-xl font-semibold text-emerald-400 mb-4">Realistic Expectations</h2>
           <ul className="space-y-3 text-slate-300 leading-relaxed">
-            <li><strong className="text-slate-100">Variance is real.</strong> Winning months and losing months happen. Even with positive long-term edge, short-term results fluctuate.</li>
-            <li><strong className="text-slate-100">Sample size matters.</strong> Performance over 20 bets is mostly noise. Over 100+ bets, signal emerges. Judge long-term, not week-to-week.</li>
-            <li><strong className="text-slate-100">ROI varies by market.</strong> Player props typically higher ROI than tennis. We adapt staking accordingly.</li>
-            <li><strong className="text-slate-100">Account restrictions affect access.</strong> If you follow our picks successfully, bookmakers will limit your stakes eventually. See our <Link href="/bookmakers" className="text-emerald-400 hover:text-emerald-300 underline">bookmakers</Link> and <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ</Link> pages.</li>
-            <li><strong className="text-slate-100">We don&apos;t hide losing bets.</strong> Every selection—winner or loser—will be logged here.</li>
+            <li><strong className="text-slate-100">Variance is real.</strong> Winning months and losing months happen. Even with positive long-term edge, short-term results fluctuate. This is normal.</li>
+            <li><strong className="text-slate-100">Sample size matters.</strong> Performance over 20 bets is mostly noise. Over 100 bets, signal emerges. Over 200 bets, edge becomes clear. Judge long term, not week to week.</li>
+            <li><strong className="text-slate-100">ROI varies by market.</strong> Player props typically higher ROI than tennis (wider margins, more exploitable). Match odds lower ROI (tighter margins). Staking adapts accordingly.</li>
+            <li><strong className="text-slate-100">Account restrictions affect access.</strong> If you follow picks successfully, bookmakers will limit your stakes eventually. See our <Link href="/bookmakers" className="text-emerald-400 hover:text-emerald-300 underline">bookmakers</Link> and <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ</Link> for context. It&apos;s proof the approach works.</li>
+            <li><strong className="text-slate-100">Losses get logged.</strong> Every selection gets recorded, winner or loser. Transparency over marketing.</li>
           </ul>
         </section>
 
-        {/* 5. Live Tracking Coming Soon - table mockup */}
+        {/* 4. How It Works - Pick Distribution */}
         <section className="bg-[#1a1d24] rounded-xl border border-emerald-500/20 p-6 md:p-8 mb-8">
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <h2 className="text-xl font-semibold text-emerald-400">Launching March 2026</h2>
-            <span className="text-xs font-mono font-medium text-emerald-400 bg-emerald-500/20 border border-emerald-500/40 px-3 py-1.5 rounded">Coming Soon</span>
+          <h2 className="text-xl font-semibold text-emerald-400 mb-4">Pick Distribution</h2>
+          <div className="text-slate-300 leading-relaxed space-y-3">
+            <p><strong className="text-slate-100">Player Props:</strong> Posted to Telegram when value is identified. Props move quickly, so these are shared in real time on Telegram then logged here after settlement.</p>
+            <p><strong className="text-slate-100">Tennis:</strong> Posted directly on the website. These markets are more stable, allowing time for proper analysis and posting.</p>
+            <p>Results are tracked and logged transparently. What gets posted stays posted.</p>
           </div>
-          <p className="text-slate-300 leading-relaxed mb-6">
-            Starting March, every pick will appear here: pre-match table, settled bets table, performance breakdown by market and league, and individual verification pages.
-          </p>
-          <div className="overflow-x-auto rounded-lg border border-slate-700">
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr className="bg-slate-800/60 border-b border-slate-700">
-                  <th className="text-left py-3 px-4 text-slate-400 font-medium">Date</th>
-                  <th className="text-left py-3 px-4 text-slate-400 font-medium">Market</th>
-                  <th className="text-left py-3 px-4 text-slate-400 font-medium">Selection</th>
-                  <th className="text-left py-3 px-4 text-slate-400 font-medium">Odds</th>
-                  <th className="text-left py-3 px-4 text-slate-400 font-medium">Stake</th>
-                  <th className="text-left py-3 px-4 text-slate-400 font-medium">Result</th>
-                  <th className="text-left py-3 px-4 text-slate-400 font-medium">P/L</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-slate-800">
-                  <td colSpan={7} className="py-8 px-4 text-center text-slate-500">
-                    Live tracking launches March 2026. This table will populate automatically as bets settle.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p className="text-sm text-slate-500 mt-4">
-            <a href={TELEGRAM_CHANNEL_URL} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline">Join Telegram</a> to be notified when live tracking goes live.
-          </p>
         </section>
 
-        {/* 6. Why Transparency Matters */}
-        <section className="bg-[#1a1d24] rounded-xl border border-slate-800 p-6 md:p-8 mb-8">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-4">Industry Standard vs Our Standard</h2>
-          <div className="grid md:grid-cols-2 gap-6 text-slate-300 leading-relaxed">
-            <div>
-              <p className="text-slate-500 text-sm font-medium mb-2">Most betting services:</p>
-              <ul className="list-disc pl-5 space-y-1 text-sm">
-                <li>Hide losing bets</li>
-                <li>Edit past selections when odds change</li>
-                <li>Cherry-pick timeframes</li>
-                <li>No independent verification</li>
-              </ul>
-            </div>
-            <div>
-              <p className="text-emerald-400/90 text-sm font-medium mb-2">Our approach:</p>
-              <ul className="list-disc pl-5 space-y-1 text-sm">
-                <li>Every bet logged publicly</li>
-                <li>Immutable Telegram timestamps</li>
-                <li>No editing or deleting</li>
-                <li>ATP tennis independently verified (Tipstrr)</li>
-              </ul>
-            </div>
-          </div>
-          <p className="mt-4 text-slate-300">
-            Trust is earned through honesty, not marketing. If we have a bad month, you&apos;ll see it. This is our accountability.
-          </p>
-        </section>
-
-        {/* 7. FAQ */}
+        {/* 5. FAQ */}
         <section className="bg-[#1a1d24] rounded-xl border border-slate-800 overflow-hidden mb-8">
           <h2 className="text-xl font-semibold text-emerald-400 p-6 md:p-8 pb-2">Frequently Asked Questions</h2>
           <div className="divide-y divide-slate-800">
@@ -211,11 +124,11 @@ export default function TrackRecordPage() {
           </div>
         </section>
 
-        {/* 8. CTA */}
+        {/* 6. CTA */}
         <section className="bg-emerald-500/10 rounded-xl border border-emerald-500/30 p-6 md:p-8 text-center">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-2">Follow Live Results</h2>
+          <h2 className="text-xl font-semibold text-emerald-400 mb-2">Follow The Picks</h2>
           <p className="text-slate-300 text-base mb-6 max-w-xl mx-auto leading-relaxed">
-            Join Telegram to see selections as they&apos;re posted (before events start) and verify timestamps yourself. When March launch happens, this page will update automatically with every settled bet.
+            Player props posted to Telegram as value is identified. Tennis selections posted here with full analysis.
           </p>
           <a
             href={TELEGRAM_CHANNEL_URL}
@@ -223,7 +136,7 @@ export default function TrackRecordPage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-[#10b981] hover:bg-emerald-400 text-slate-900 font-semibold px-6 py-3 rounded-lg transition-colors"
           >
-            → Join Free on Telegram
+            → Join Telegram for Player Props
           </a>
         </section>
 

@@ -3,7 +3,7 @@ import { BASE_URL } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "Track Record",
-  description: "Transparent betting results: Player Props and ATP Tennis. Verified track record, ROI, win rate.",
+  description: "Performance data across betting markets. Player props on Telegram, tennis on site. Results logged as they settle.",
   alternates: {
     canonical: `${BASE_URL}/track-record`,
   },
