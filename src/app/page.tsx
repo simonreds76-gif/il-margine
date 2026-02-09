@@ -8,6 +8,7 @@ import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats
 import BookmakerLogo from "@/components/BookmakerLogo";
 import TelegramButton from "@/components/TelegramButton";
 import Footer from "@/components/Footer";
+import { BETA_NOTICE } from "@/lib/config";
 
 interface CombinedMarketStats {
   total_bets: number;
@@ -238,8 +239,13 @@ export default function Home() {
       <section className="pt-4 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="flex items-center justify-center gap-2 mb-8">
-              <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded border border-emerald-500/20">FREE BETA</span>
+            <div className="flex flex-col items-center justify-center gap-2 mb-8">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded border border-emerald-500/20">FREE BETA</span>
+              </div>
+              <p className="text-sm text-slate-500 max-w-md text-center">
+                {BETA_NOTICE}
+              </p>
             </div>
             
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-2 leading-tight tracking-tight">
