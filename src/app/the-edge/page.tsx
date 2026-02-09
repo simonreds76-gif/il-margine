@@ -28,7 +28,8 @@ export default function TheEdgePage() {
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
             <div>
               <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">WHY IT WORKS</span>
-              <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-6 sm:mb-8">The Edge</h1>
+              <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">The Edge</h1>
+              <p className="text-lg text-slate-400 font-medium mb-6 sm:mb-8">Il Margine: Mind the margin.</p>
               <div className="space-y-6 text-slate-300 leading-relaxed text-base">
                 <p>25 years in the betting industry. Former odds compiler. I&apos;ve worked on the other side, building the prices that bookmakers use. I know exactly where they cut corners and where value hides.</p>
                 <p>Every pick is backed by proprietary models that strip out bookmaker margin to find true odds. We only bet when the numbers say yes. No hunches. No tips from a mate. Pure mathematics.</p>

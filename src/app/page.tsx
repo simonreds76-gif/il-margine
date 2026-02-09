@@ -242,10 +242,10 @@ export default function Home() {
               <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded border border-emerald-500/20">FREE BETA</span>
             </div>
             
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 sm:mb-8 leading-tight tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-2 leading-tight tracking-tight">
               Betting with <span className="text-emerald-400">mathematical edge</span>
             </h1>
-            
+            <p className="text-lg text-slate-400 font-medium mb-6 sm:mb-8">Il Margine: Mind the margin.</p>
             <p className="text-lg sm:text-xl text-slate-300 mb-8 sm:mb-10 leading-relaxed max-w-2xl mx-auto">
               Professional betting methodology from a former odds compiler. We identify value where bookmakers misprice markets. Data-driven selections, transparent results.
             </p>
