@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { supabase, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, getBaselineDisplayStats } from "@/lib/baseline";
 import { track } from "@/lib/analytics";
@@ -190,11 +189,9 @@ export default function CalculatorPage() {
         aria-hidden
       >
         <div className="absolute inset-0 flex items-center justify-center">
-          <Image
+          <img
             src="/banner-mind-the-margin.png"
             alt=""
-            width={1200}
-            height={400}
             className="w-full max-w-4xl object-contain object-center opacity-[0.18] select-none pointer-events-none"
           />
         </div>
