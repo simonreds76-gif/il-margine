@@ -59,6 +59,12 @@ const bookmakerLogos: Record<string, string> = {
   "FanDuel": "fanduel",
 };
 
+// Override for display when short_name is abbreviated (e.g. CR -> Coral)
+const bookmakerDisplayNames: Record<string, string> = {
+  "CR": "Coral",
+  "WH": "William Hill",
+};
+
 const sizeClasses = {
   sm: "w-6 h-6",
   md: "w-8 h-8",
@@ -80,14 +86,15 @@ export default function BookmakerLogo({
 
   const logoBase = bookmakerLogos[bookmaker.short_name] || bookmakerLogos[bookmaker.name];
   const hasExtension = logoBase?.includes(".");
+  // Try jpeg/jpg before svg so coral.jpeg etc. load without failing on missing .png first
   const logoPaths: string[] = logoBase
     ? hasExtension
       ? [`/bookmakers/${encodeURIComponent(logoBase)}`]
       : [
           `/bookmakers/${logoBase}.png`,
-          `/bookmakers/${logoBase}.svg`,
           `/bookmakers/${logoBase}.jpeg`,
           `/bookmakers/${logoBase}.jpg`,
+          `/bookmakers/${logoBase}.svg`,
         ]
     : [];
   const [srcIndex, setSrcIndex] = useState(0);
@@ -99,13 +106,20 @@ export default function BookmakerLogo({
 
   const showImage = currentSrc && !imageFailed;
 
+  // Prefer name for display; use override so "CR" shows as "Coral" etc.
+  const displayName =
+    bookmaker.name ||
+    bookmakerDisplayNames[bookmaker.short_name] ||
+    bookmaker.short_name ||
+    "";
+
   const content = (
     <div className={`flex items-center justify-center gap-2 ${className}`}>
       {showImage ? (
         <div className={`${sizeClasses[size]} min-w-[1.5rem] min-h-[1.5rem] relative flex-shrink-0 mx-auto`}>
           <Image
             src={currentSrc}
-            alt={bookmaker.short_name || bookmaker.name}
+            alt={displayName}
             fill
             sizes="32px"
             className="object-contain"
@@ -122,12 +136,12 @@ export default function BookmakerLogo({
       ) : (
         <div className={`${sizeClasses[size]} bg-slate-800 rounded flex items-center justify-center flex-shrink-0`}>
           <span className="text-[10px] text-slate-500 font-medium">
-            {bookmaker.short_name?.charAt(0) || bookmaker.name.charAt(0)}
+            {displayName.charAt(0)}
           </span>
         </div>
       )}
       {showName && (
-        <span className="text-xs text-slate-300">{bookmaker.short_name || bookmaker.name}</span>
+        <span className="text-xs text-slate-300">{displayName}</span>
       )}
     </div>
   );
@@ -143,7 +157,7 @@ export default function BookmakerLogo({
       target="_blank"
       rel="noopener noreferrer"
       className="hover:opacity-80 transition-opacity"
-      title={hasAffiliate ? `Visit ${bookmaker.short_name || bookmaker.name}` : undefined}
+      title={hasAffiliate ? `Visit ${displayName}` : undefined}
     >
       {content}
     </Link>
