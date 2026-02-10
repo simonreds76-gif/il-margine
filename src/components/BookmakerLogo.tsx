@@ -6,14 +6,38 @@ import Link from "next/link";
 import { Bookmaker } from "@/lib/supabase";
 
 interface BookmakerLogoProps {
-  bookmaker: Bookmaker | null | undefined;
+  /** Single bookmaker or array (Supabase sometimes returns relation as array) */
+  bookmaker: Bookmaker | Bookmaker[] | null | undefined;
   size?: "sm" | "md" | "lg";
   showName?: boolean;
   className?: string;
 }
 
-// Map bookmaker short names to logo filenames (try PNG first, fallback to SVG)
+// Map bookmaker short_name / name (from DB or copy) to logo filename in public/bookmakers/.
+// When adding a new bookmaker: add row in Supabase bookmakers, add logo file, then add entry here (name + short_name variants).
 const bookmakerLogos: Record<string, string> = {
+  // Recommended 8 + common variants
+  "Midnite": "midnite",
+  "midnite": "midnite",
+  "BetVictor": "betvictor",
+  "Betvictor": "betvictor",
+  "betvictor": "betvictor",
+  "Unibet": "Unibet_idYHeiKVm__1.png",
+  "unibet": "Unibet_idYHeiKVm__1.png",
+  "Coral": "coral",
+  "coral": "coral",
+  "CR": "coral",
+  "Ladbrokes": "ladbrokes",
+  "ladbrokes": "ladbrokes",
+  "BetMGM": "BetMGM UK_idPMHl2t9c_0.png",
+  "betmgm": "BetMGM UK_idPMHl2t9c_0.png",
+  "LeoVegas": "BetMGM UK_idPMHl2t9c_0.png",
+  "William Hill": "williamhill",
+  "WH": "williamhill",
+  "williamhill": "williamhill",
+  "Betfred": "betfred",
+  "betfred": "betfred",
+  // Others (admin / legacy)
   "bet365": "bet365",
   "Bet365": "bet365",
   "Betfair": "betfair",
@@ -21,34 +45,16 @@ const bookmakerLogos: Record<string, string> = {
   "Paddy Power": "paddypower",
   "Paddy": "paddypower",
   "paddypower": "paddypower",
-  "William Hill": "williamhill",
-  "WH": "williamhill",
-  "williamhill": "williamhill",
-  "Ladbrokes": "ladbrokes",
-  "ladbrokes": "ladbrokes",
-  "Coral": "coral",
-  "coral": "coral",
   "Sky Bet": "skybet",
   "SkyBet": "skybet",
   "skybet": "skybet",
   "Betway": "betway",
   "betway": "betway",
   "888sport": "888sport",
-  "Betvictor": "betvictor",
-  "betvictor": "betvictor",
-  "Betfred": "betfred",
-  "betfred": "betfred",
   "BoyleSports": "boylesports",
   "Pinnacle": "pinnacle",
   "pinnacle": "pinnacle",
   "Marathon": "marathon",
-  "BetMGM": "BetMGM UK_idPMHl2t9c_0.png",
-  "betmgm": "BetMGM UK_idPMHl2t9c_0.png",
-  "Midnite": "midnite",
-  "midnite": "midnite",
-  "BetVictor": "betvictor",
-  "Unibet": "Unibet_idYHeiKVm__1.png",
-  "unibet": "Unibet_idYHeiKVm__1.png",
   "DraftKings": "draftkings",
   "FanDuel": "fanduel",
 };
@@ -60,11 +66,12 @@ const sizeClasses = {
 };
 
 export default function BookmakerLogo({
-  bookmaker,
+  bookmaker: bookmakerProp,
   size = "sm",
   showName = false,
   className = "",
 }: BookmakerLogoProps) {
+  const bookmaker = Array.isArray(bookmakerProp) ? bookmakerProp[0] : bookmakerProp;
   if (!bookmaker) {
     return (
       <span className={`text-xs text-slate-600 ${className}`}>-</span>
@@ -95,7 +102,7 @@ export default function BookmakerLogo({
   const content = (
     <div className={`flex items-center justify-center gap-2 ${className}`}>
       {showImage ? (
-        <div className={`${sizeClasses[size]} relative flex-shrink-0 mx-auto`}>
+        <div className={`${sizeClasses[size]} min-w-[1.5rem] min-h-[1.5rem] relative flex-shrink-0 mx-auto`}>
           <Image
             src={currentSrc}
             alt={bookmaker.short_name || bookmaker.name}
