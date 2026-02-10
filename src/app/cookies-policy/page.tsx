@@ -41,14 +41,14 @@ export default function CookiesPolicyPage() {
             </p>
             <h2 className="text-lg font-semibold text-slate-200 mt-8 mb-2">Our use of cookies</h2>
             <p>
-              <strong className="text-slate-200">Right now</strong> we do not run Google Analytics, affiliate
-              tracking, or other non-essential scripts. We are not setting non-essential cookies. If our site or
-              hosting sets strictly necessary cookies (for example to keep you logged in or remember security
-              preferences), we will list them here.
+              We use <strong className="text-slate-200">analytics cookies</strong> (Google Analytics) only after you
+              accept our cookie banner. We do not set non-essential cookies until you click &ldquo;Accept&rdquo;.
+              Our site or hosting may set strictly necessary cookies (e.g. for security or preferences); we do not
+              use these for tracking.
             </p>
             <p>
-              If we add analytics or affiliate cookies in future, we will update this page and seek consent where
-              required.
+              If we add affiliate or other optional cookies in future, we will update this page and seek consent
+              where required.
             </p>
           </div>
         </div>

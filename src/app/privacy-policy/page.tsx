@@ -17,27 +17,31 @@ export default function PrivacyPolicy() {
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-8">Privacy Policy</h1>
           <div className="prose prose-invert prose-slate max-w-none text-slate-300 space-y-4 text-sm leading-relaxed">
             <p>
-              This policy describes how we handle your information when you use il-margine.bet (and related domains).
+              This policy describes how we handle your information when you use ilmargine.bet (and related domains).
             </p>
             <p>
               <strong className="text-slate-200">Information we collect.</strong> When you visit the site we may log
-              technical data such as IP address, browser type and pages viewed. If we add analytics (e.g. Google
-              Analytics), that will involve cookies and similar technologies; we will update this page and provide a
-              simple way to accept or manage preferences.
+              technical data such as IP address, browser type and pages viewed. We use Google Analytics only if you
+              accept our cookie banner; that involves cookies and similar technologies. See our{" "}
+              <Link href="/cookies-policy" className="text-emerald-400 hover:text-emerald-300 underline">
+                Cookies policy
+              </Link>{" "}
+              for details.
             </p>
             <p>
               <strong className="text-slate-200">How we use it.</strong> We use this to run and improve the site, and
               to comply with the law. We do not sell your data.
             </p>
             <p>
-              <strong className="text-slate-200">Cookies.</strong> We may use essential and analytics cookies. When
-              analytics are enabled, we will add a short notice and a link to this policy so you can accept or find out
-              more.
+              <strong className="text-slate-200">Cookies.</strong> We use essential and, with your consent, analytics
+              cookies. You can accept or find out more via the cookie notice on the site.
             </p>
             <p>
               <strong className="text-slate-200">Your rights.</strong> Under UK GDPR you have rights including access,
-              correction and deletion. To exercise them or ask questions, contact us (e.g. via the contact method
-              stated on the site).
+              correction, deletion and the right to withdraw consent. To exercise them or ask questions, contact us at{" "}
+              <a href="mailto:contact@ilmargine.bet" className="text-emerald-400 hover:text-emerald-300 underline">
+                contact@ilmargine.bet
+              </a>.
             </p>
             <p>
               <strong className="text-slate-200">Changes.</strong> We may update this policy; the latest version will

@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import GlobalNav from "@/components/GlobalNav";
 import StructuredData from "@/components/StructuredData";
-import GoogleAnalytics from "@/components/GoogleAnalytics";
+import CookieBanner from "@/components/CookieBanner";
 import SpeedInsightsClient from "@/components/SpeedInsightsClient";
 import { BASE_URL, GA_MEASUREMENT_ID } from "@/lib/config";
 
@@ -62,18 +61,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
       </head>
       <body className={inter.className}>
-        {GA_MEASUREMENT_ID && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="ga-config" strategy="afterInteractive">
-              {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_MEASUREMENT_ID}');`}
-            </Script>
-          </>
-        )}
-        <GoogleAnalytics />
+        <CookieBanner measurementId={GA_MEASUREMENT_ID} />
         <SpeedInsightsClient />
         <StructuredData />
         <GlobalNav />
