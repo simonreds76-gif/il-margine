@@ -16,6 +16,18 @@ export default function AdminPanel() {
   const [recentBets, setRecentBets] = useState<Bet[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [editingBet, setEditingBet] = useState<Bet | null>(null);
+  const [editForm, setEditForm] = useState({
+    market: "props" as "props" | "tennis" | "betbuilders" | "atg",
+    category: "",
+    event: "",
+    player: "",
+    selection: "",
+    odds: "",
+    bookmaker_id: "",
+    stake: "1",
+    notes: "",
+  });
 
   // Form state
   const [form, setForm] = useState({
@@ -221,6 +233,71 @@ export default function AdminPanel() {
       setMessage({ type: "success", text: "Bet deleted" });
       fetchPendingBets();
       fetchRecentBets();
+    }
+  };
+
+  // Open edit modal
+  const openEdit = (bet: Bet) => {
+    setEditingBet(bet);
+    setEditForm({
+      market: bet.market,
+      category: bet.category,
+      event: bet.event,
+      player: bet.player || "",
+      selection: bet.selection,
+      odds: String(bet.odds),
+      bookmaker_id: String(bet.bookmaker_id),
+      stake: String(bet.stake),
+      notes: bet.notes || "",
+    });
+  };
+
+  // Save edited bet (updates DB; stats recalc automatically from DB + baseline)
+  const handleSaveEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingBet) return;
+    setLoading(true);
+    setMessage(null);
+
+    const payload: Record<string, unknown> = {
+      market: editForm.market,
+      category: editForm.category,
+      event: editForm.event,
+      player: editForm.player || null,
+      selection: editForm.selection,
+      odds: parseFloat(editForm.odds),
+      bookmaker_id: parseInt(editForm.bookmaker_id),
+      stake: parseFloat(editForm.stake),
+      notes: editForm.notes || null,
+    };
+
+    // If settled, recalc profit_loss from new odds/stake
+    if (editingBet.status && ["won", "lost", "void"].includes(editingBet.status)) {
+      const status = editingBet.status as "won" | "lost" | "void";
+      const stake = parseFloat(editForm.stake);
+      const odds = parseFloat(editForm.odds);
+      if (status === "won") {
+        payload.profit_loss = odds * stake - stake;
+      } else if (status === "lost") {
+        payload.profit_loss = -stake;
+      } else {
+        payload.profit_loss = 0;
+      }
+    }
+
+    const { error } = await supabase
+      .from("bets")
+      .update(payload)
+      .eq("id", editingBet.id);
+
+    setLoading(false);
+    if (error) {
+      setMessage({ type: "error", text: error.message });
+    } else {
+      setMessage({ type: "success", text: "Pick updated. Stats will reflect the change." });
+      setEditingBet(null);
+      await fetchPendingBets();
+      await fetchRecentBets();
     }
   };
 
@@ -515,7 +592,14 @@ export default function AdminPanel() {
                     <span className="font-medium">{bet.selection}</span>
                     <span className="text-slate-500 ml-2">• {bet.stake}u</span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
+                    <button
+                      onClick={() => openEdit(bet)}
+                      disabled={loading}
+                      className="px-3 bg-slate-700/50 hover:bg-slate-600 text-slate-300 py-2 rounded text-sm transition-colors"
+                    >
+                      Edit
+                    </button>
                     <button
                       onClick={() => handleSettle(bet.id, "won")}
                       disabled={loading}
@@ -608,6 +692,12 @@ export default function AdminPanel() {
                       {bet.profit_loss?.toFixed(2)}u
                     </div>
                     <button
+                      onClick={() => openEdit(bet)}
+                      className="text-slate-500 hover:text-emerald-400 text-sm"
+                    >
+                      Edit
+                    </button>
+                    <button
                       onClick={() => handleDelete(bet.id)}
                       className="text-slate-600 hover:text-red-400 text-sm"
                     >
@@ -620,6 +710,146 @@ export default function AdminPanel() {
           </div>
         )}
       </div>
+
+      {/* Edit bet modal */}
+      {editingBet && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" onClick={() => setEditingBet(null)}>
+          <div className="bg-slate-900 border border-slate-700 rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Edit pick</h2>
+              <button type="button" onClick={() => setEditingBet(null)} className="text-slate-500 hover:text-slate-300">✕</button>
+            </div>
+            <form onSubmit={handleSaveEdit} className="p-4 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs text-slate-500 mb-1">Market</label>
+                  <select
+                    value={editForm.market}
+                    onChange={(e) => setEditForm({ ...editForm, market: e.target.value as typeof editForm.market, category: "" })}
+                    className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
+                  >
+                    <option value="props">Player Props</option>
+                    <option value="tennis">ATP Tennis</option>
+                    <option value="betbuilders">Bet Builders</option>
+                    <option value="atg">ATG</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs text-slate-500 mb-1">Category</label>
+                  <select
+                    value={editForm.category}
+                    onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
+                    required
+                    className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
+                  >
+                    <option value="">Select...</option>
+                    {categories[editForm.market].map((cat) => (
+                      <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs text-slate-500 mb-1">Event</label>
+                <input
+                  type="text"
+                  value={editForm.event}
+                  onChange={(e) => setEditForm({ ...editForm, event: e.target.value })}
+                  required
+                  className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
+                />
+              </div>
+              {editForm.market === "props" && (
+                <div>
+                  <label className="block text-xs text-slate-500 mb-1">Player</label>
+                  <input
+                    type="text"
+                    value={editForm.player}
+                    onChange={(e) => setEditForm({ ...editForm, player: e.target.value })}
+                    className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+              )}
+              <div>
+                <label className="block text-xs text-slate-500 mb-1">Selection</label>
+                <input
+                  type="text"
+                  value={editForm.selection}
+                  onChange={(e) => setEditForm({ ...editForm, selection: e.target.value })}
+                  required
+                  className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs text-slate-500 mb-1">Odds</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="1.01"
+                    value={editForm.odds}
+                    onChange={(e) => setEditForm({ ...editForm, odds: e.target.value })}
+                    required
+                    className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-slate-500 mb-1">Bookmaker</label>
+                  <select
+                    value={editForm.bookmaker_id}
+                    onChange={(e) => setEditForm({ ...editForm, bookmaker_id: e.target.value })}
+                    required
+                    className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
+                  >
+                    <option value="">Select...</option>
+                    {bookmakers.map((bk) => (
+                      <option key={bk.id} value={bk.id}>{bk.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs text-slate-500 mb-1">Stake (units)</label>
+                  <input
+                    type="number"
+                    step="0.05"
+                    min="0.05"
+                    max="5"
+                    value={editForm.stake}
+                    onChange={(e) => setEditForm({ ...editForm, stake: e.target.value })}
+                    required
+                    className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs text-slate-500 mb-1">Notes (optional)</label>
+                <input
+                  type="text"
+                  value={editForm.notes}
+                  onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
+                  className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
+                />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingBet(null)}
+                  className="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-200 py-3 rounded font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 bg-emerald-500 hover:bg-emerald-400 disabled:bg-slate-700 text-black font-medium py-3 rounded transition-colors"
+                >
+                  {loading ? "Saving..." : "Save"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
