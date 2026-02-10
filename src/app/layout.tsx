@@ -59,6 +59,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.png" sizes="32x32" type="image/png" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <meta name="msvalidate.01" content="FD4A9F8A7202C71E5465E6A51F6B8F62" />
       </head>
       <body className={inter.className}>
         <CookieBanner measurementId={GA_MEASUREMENT_ID} />
