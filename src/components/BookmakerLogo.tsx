@@ -67,6 +67,11 @@ const bookmakerDisplayNames: Record<string, string> = {
   "WH": "William Hill",
 };
 
+// Logos that have lots of padding in the asset – scale up so they match others’ visual size
+const logoScale: Record<string, number> = {
+  pinnacle: 1.6,
+};
+
 const sizeClasses = {
   sm: "w-6 h-6",
   md: "w-8 h-8",
@@ -107,6 +112,8 @@ export default function BookmakerLogo({
   const hasAffiliate = !!bookmaker.affiliate_link;
 
   const showImage = currentSrc && !imageFailed;
+  const scaleKey = logoBase?.split(".")[0] ?? "";
+  const scale = logoScale[scaleKey] ?? 1;
 
   // Prefer name for display; use override so "CR" shows as "Coral" etc.
   const displayName =
@@ -118,22 +125,24 @@ export default function BookmakerLogo({
   const content = (
     <div className={`flex items-center justify-center gap-2 ${className}`}>
       {showImage ? (
-        <div className={`${sizeClasses[size]} min-w-[1.5rem] min-h-[1.5rem] relative flex-shrink-0 mx-auto`}>
-          <Image
-            src={currentSrc}
-            alt={displayName}
-            fill
-            sizes="32px"
-            className="object-contain"
-            unoptimized
-            onError={() => {
-              if (srcIndex < logoPaths.length - 1) {
-                setSrcIndex((i) => i + 1);
-              } else {
-                setImageFailed(true);
-              }
-            }}
-          />
+        <div className={`${sizeClasses[size]} min-w-[1.5rem] min-h-[1.5rem] relative flex-shrink-0 mx-auto overflow-hidden`}>
+          <div className="absolute inset-0" style={{ transform: `scale(${scale})` }}>
+            <Image
+              src={currentSrc}
+              alt={displayName}
+              fill
+              sizes="32px"
+              className="object-contain"
+              unoptimized
+              onError={() => {
+                if (srcIndex < logoPaths.length - 1) {
+                  setSrcIndex((i) => i + 1);
+                } else {
+                  setImageFailed(true);
+                }
+              }}
+            />
+          </div>
         </div>
       ) : (
         <div className={`${sizeClasses[size]} bg-slate-800 rounded flex items-center justify-center flex-shrink-0`}>

@@ -85,7 +85,7 @@ export default function Home() {
       .from("bets")
       .select("*, bookmaker:bookmakers(*)")
       .eq("status", "pending")
-      .order("created_at", { ascending: false })
+      .order("posted_at", { ascending: false })
       .limit(5);
     
     if (pending) setPendingBets(pending);
