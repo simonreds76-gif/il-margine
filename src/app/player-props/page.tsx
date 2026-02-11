@@ -62,6 +62,14 @@ export default function PlayerProps() {
     };
   }, []);
 
+  // Scroll to #picks when landing from homepage link (client-side nav doesn't scroll to hash)
+  useEffect(() => {
+    if (typeof window === "undefined" || window.location.hash !== "#picks" || loading) return;
+    const el = document.getElementById("picks");
+    if (!el) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" })));
+  }, [loading]);
+
   const fetchData = async () => {
     setLoading(true);
     
