@@ -72,10 +72,11 @@ const logoScale: Record<string, number> = {
   pinnacle: 1.6,
 };
 
+// All logos one step larger so thumbnails are easier to recognise (was 24/32/40px)
 const sizeClasses = {
-  sm: "w-6 h-6",
-  md: "w-8 h-8",
-  lg: "w-10 h-10",
+  sm: "w-8 h-8",
+  md: "w-10 h-10",
+  lg: "w-12 h-12",
 };
 
 export default function BookmakerLogo({
@@ -125,13 +126,13 @@ export default function BookmakerLogo({
   const content = (
     <div className={`flex items-center justify-center gap-2 ${className}`}>
       {showImage ? (
-        <div className={`${sizeClasses[size]} min-w-[1.5rem] min-h-[1.5rem] relative flex-shrink-0 mx-auto overflow-hidden`}>
+        <div className={`${sizeClasses[size]} min-w-[2rem] min-h-[2rem] relative flex-shrink-0 mx-auto overflow-hidden`}>
           <div className="absolute inset-0" style={{ transform: `scale(${scale})` }}>
             <Image
               src={currentSrc}
               alt={displayName}
               fill
-              sizes="32px"
+              sizes="48px"
               className="object-contain"
               unoptimized
               onError={() => {
