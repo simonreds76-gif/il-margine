@@ -8,6 +8,7 @@ import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import TelegramButton from "@/components/TelegramButton";
 import Footer from "@/components/Footer";
+import { formatStake } from "@/lib/format";
 
 export default function PlayerProps() {
   const [activeLeague, setActiveLeague] = useState("all");
@@ -350,7 +351,7 @@ export default function PlayerProps() {
                             <BookmakerLogo bookmaker={pick.bookmaker} size="sm" />
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{pick.stake}u</td>
+                        <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(pick.stake)}u</td>
                         <td className="px-4 py-3 text-center">
                           <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">
                             PENDING
@@ -380,7 +381,7 @@ export default function PlayerProps() {
                     <div className="flex items-center gap-4 text-sm">
                       <span className="font-mono text-slate-200">{pick.odds}</span>
                         <BookmakerLogo bookmaker={pick.bookmaker} size="sm" />
-                      <span className="font-mono text-slate-300">{pick.stake}u</span>
+                      <span className="font-mono text-slate-300">{formatStake(pick.stake)}u</span>
                     </div>
                   </div>
                 ))}
@@ -455,7 +456,7 @@ export default function PlayerProps() {
                               <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
                             </div>
                           </td>
-                        <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{result.stake}u</td>
+                        <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(result.stake)}u</td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/30">
                           <span className={`text-xs font-mono px-2 py-1 rounded ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
                             {result.status.toUpperCase()}
@@ -489,7 +490,7 @@ export default function PlayerProps() {
                       <div className="flex items-center gap-4">
                         <span className="font-mono text-slate-200">{result.odds}</span>
                         <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
-                        <span className="font-mono text-slate-300">{result.stake}u</span>
+                        <span className="font-mono text-slate-300">{formatStake(result.stake)}u</span>
                       </div>
                       <span className={`font-mono font-medium ${result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
                         {result.profit_loss && result.profit_loss > 0 ? "+" : ""}{result.profit_loss?.toFixed(2)}u

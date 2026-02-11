@@ -9,6 +9,7 @@ import BookmakerLogo from "@/components/BookmakerLogo";
 import TelegramButton from "@/components/TelegramButton";
 import Footer from "@/components/Footer";
 import { BETA_NOTICE } from "@/lib/config";
+import { formatStake } from "@/lib/format";
 
 interface CombinedMarketStats {
   total_bets: number;
@@ -16,12 +17,6 @@ interface CombinedMarketStats {
   win_rate: number;
   avg_odds: number;
   total_profit: number;
-}
-
-/** Stake display: no trailing zeros (0.5 not 0.50, 0.75 stays 0.75) */
-function formatStake(stake: number | string): string {
-  const n = Number(stake);
-  return String(parseFloat(n.toFixed(2)));
 }
 
 export default function Home() {
