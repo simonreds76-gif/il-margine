@@ -3,9 +3,6 @@
 import { useState, useEffect } from "react";
 import { supabase, Bet, Bookmaker } from "@/lib/supabase";
 
-// Hardcoded password (since env vars can be tricky with Vercel)
-const ADMIN_PASSWORD = "Absolut2015!";
-
 export default function AdminPanel() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [password, setPassword] = useState("");
@@ -70,21 +67,24 @@ export default function AdminPanel() {
     ],
   };
 
-  // Check password - hardcoded for reliability
-  const handleLogin = () => {
-    if (password === ADMIN_PASSWORD) {
+  const handleLogin = async () => {
+    setMessage(null);
+    const res = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.ok) {
       setIsLoggedIn(true);
       localStorage.setItem("admin_logged_in", "true");
     } else {
-      setMessage({ type: "error", text: "Wrong password" });
+      setMessage({ type: "error", text: data.error || "Wrong password" });
     }
   };
 
-  // Check if already logged in
   useEffect(() => {
-    if (localStorage.getItem("admin_logged_in") === "true") {
-      setIsLoggedIn(true);
-    }
+    if (localStorage.getItem("admin_logged_in") === "true") setIsLoggedIn(true);
   }, []);
 
   // Fetch bookmakers
@@ -130,14 +130,14 @@ export default function AdminPanel() {
     if (error) console.log("Recent bets error:", error);
   };
 
-  // Add new bet
   const handleAddBet = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
-
-    const { error } = await supabase.from("bets").insert([
-      {
+    const res = await fetch("/api/admin/bets", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         market: form.market,
         category: form.category,
         event: form.event,
@@ -147,92 +147,58 @@ export default function AdminPanel() {
         bookmaker_id: parseInt(form.bookmaker_id),
         stake: parseFloat(form.stake),
         notes: form.notes || null,
-      },
-    ]);
-
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
     setLoading(false);
-
-    if (error) {
-      setMessage({ type: "error", text: error.message });
-    } else {
+    if (res.ok) {
       setMessage({ type: "success", text: "Bet added successfully!" });
-      setForm({
-        ...form,
-        event: "",
-        player: "",
-        selection: "",
-        odds: "",
-        notes: "",
-      });
+      setForm({ ...form, event: "", player: "", selection: "", odds: "", notes: "" });
       fetchPendingBets();
+    } else {
+      setMessage({ type: "error", text: data.error || "Failed to add bet" });
     }
   };
 
-  // Settle bet
   const handleSettle = async (betId: number, status: "won" | "lost" | "void") => {
     setLoading(true);
     setMessage(null);
-    
-    // First, fetch the bet to get odds and stake for profit calculation
-    const { data: bet, error: fetchError } = await supabase
-      .from("bets")
-      .select("odds, stake")
-      .eq("id", betId)
-      .single();
-
+    const { data: bet, error: fetchError } = await supabase.from("bets").select("odds, stake").eq("id", betId).single();
     if (fetchError || !bet) {
       setLoading(false);
       setMessage({ type: "error", text: "Failed to fetch bet details" });
       return;
     }
-
-    // Calculate profit/loss based on status
     let profitLoss: number;
-    if (status === "won") {
-      // Profit = (odds * stake) - stake
-      profitLoss = Number(bet.odds) * Number(bet.stake) - Number(bet.stake);
-    } else if (status === "lost") {
-      // Loss = -stake
-      profitLoss = -Number(bet.stake);
-    } else {
-      // Void = 0
-      profitLoss = 0;
-    }
-
-    // Update bet with status, profit_loss, and settled_at timestamp
-    const { error } = await supabase
-      .from("bets")
-      .update({ 
-        status,
-        profit_loss: profitLoss,
-        settled_at: new Date().toISOString()
-      })
-      .eq("id", betId);
-
+    if (status === "won") profitLoss = Number(bet.odds) * Number(bet.stake) - Number(bet.stake);
+    else if (status === "lost") profitLoss = -Number(bet.stake);
+    else profitLoss = 0;
+    const res = await fetch("/api/admin/bets", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: betId, status, profit_loss: profitLoss, settled_at: new Date().toISOString() }),
+    });
+    const data = await res.json().catch(() => ({}));
     setLoading(false);
-
-    if (error) {
-      setMessage({ type: "error", text: error.message });
-    } else {
+    if (res.ok) {
       setMessage({ type: "success", text: `Bet marked as ${status}. P/L: ${profitLoss > 0 ? "+" : ""}${profitLoss.toFixed(2)}u` });
-      // Refresh both lists
       await fetchPendingBets();
       await fetchRecentBets();
+    } else {
+      setMessage({ type: "error", text: data.error || "Failed to settle" });
     }
   };
 
-  // Delete bet
   const handleDelete = async (betId: number) => {
     if (!confirm("Are you sure you want to delete this bet?")) return;
-
-    const { error } = await supabase.from("bets").delete().eq("id", betId);
-
-    if (error) {
-      setMessage({ type: "error", text: error.message });
-    } else {
+    const res = await fetch(`/api/admin/bets?id=${betId}`, { method: "DELETE" });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) {
       setMessage({ type: "success", text: "Bet deleted" });
       fetchPendingBets();
       fetchRecentBets();
+    } else {
+      setMessage({ type: "error", text: data.error || "Failed to delete" });
     }
   };
 
@@ -285,19 +251,20 @@ export default function AdminPanel() {
       }
     }
 
-    const { error } = await supabase
-      .from("bets")
-      .update(payload)
-      .eq("id", editingBet.id);
-
+    const res = await fetch("/api/admin/bets", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: editingBet.id, ...payload }),
+    });
+    const data = await res.json().catch(() => ({}));
     setLoading(false);
-    if (error) {
-      setMessage({ type: "error", text: error.message });
-    } else {
+    if (res.ok) {
       setMessage({ type: "success", text: "Pick updated. Stats will reflect the change." });
       setEditingBet(null);
       await fetchPendingBets();
       await fetchRecentBets();
+    } else {
+      setMessage({ type: "error", text: data.error || "Failed to update" });
     }
   };
 
@@ -356,7 +323,8 @@ export default function AdminPanel() {
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <h1 className="text-xl font-bold">Il Margine Admin</h1>
           <button
-            onClick={() => {
+            onClick={async () => {
+              await fetch("/api/admin/logout", { method: "POST" });
               localStorage.removeItem("admin_logged_in");
               setIsLoggedIn(false);
             }}
