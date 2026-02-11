@@ -18,6 +18,12 @@ interface CombinedMarketStats {
   total_profit: number;
 }
 
+/** Stake display: no trailing zeros (0.5 not 0.50, 0.75 stays 0.75) */
+function formatStake(stake: number | string): string {
+  const n = Number(stake);
+  return String(parseFloat(n.toFixed(2)));
+}
+
 export default function Home() {
   const [activeMarket, setActiveMarket] = useState("props");
   const [loading, setLoading] = useState(true);
@@ -373,8 +379,7 @@ export default function Home() {
                 <table className="w-full border-collapse min-w-full">
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
-                      <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
-                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '80px' }}>Player</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800 min-w-[180px]">Match</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
@@ -390,8 +395,7 @@ export default function Home() {
                           className="border-b border-slate-800/50 hover:bg-slate-800/30 cursor-pointer"
                           onClick={() => window.location.href = href}
                         >
-                          <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{bet.event}</td>
-                          <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.player || '-'}</td>
+                          <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50 min-w-[180px] whitespace-nowrap">{bet.event}</td>
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
                             <span className="font-mono text-slate-200">{bet.odds}</span>
@@ -401,7 +405,7 @@ export default function Home() {
                               <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
                             </div>
                           </td>
-                          <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{bet.stake}u</td>
+                          <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(bet.stake)}u</td>
                         </tr>
                       );
                     })}
@@ -414,14 +418,11 @@ export default function Home() {
                   return (
                     <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/20">
                       <div className="font-medium text-slate-200 mb-1">{bet.event}</div>
-                      <div className="text-sm text-slate-300 mb-2">
-                        {bet.player && <span>{bet.player} • </span>}
-                        {bet.selection}
-                      </div>
+                      <div className="text-sm text-slate-300 mb-2">{bet.selection}</div>
                       <div className="flex items-center gap-4 text-sm">
                         <span className="font-mono text-slate-200">{bet.odds}</span>
                         <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
-                        <span className="font-mono text-slate-200">{bet.stake}u</span>
+                        <span className="font-mono text-slate-200">{formatStake(bet.stake)}u</span>
                       </div>
                     </Link>
                   );
@@ -466,8 +467,7 @@ export default function Home() {
                 <table className="w-full border-collapse min-w-full">
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
-                      <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
-                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '80px' }}>Player</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800 min-w-[180px]">Match</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
@@ -485,8 +485,7 @@ export default function Home() {
                           className="border-b border-slate-800/50 hover:bg-slate-800/30 cursor-pointer"
                           onClick={() => window.location.href = href}
                         >
-                          <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{bet.event}</td>
-                          <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.player || '-'}</td>
+                          <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50 min-w-[180px] whitespace-nowrap">{bet.event}</td>
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
                             <span className="font-mono text-slate-200">{bet.odds}</span>
@@ -496,7 +495,7 @@ export default function Home() {
                               <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
                             </div>
                           </td>
-                          <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{bet.stake}u</td>
+                          <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(bet.stake)}u</td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
                             <span className={`text-xs font-mono px-2 py-1 rounded ${bet.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
                               {bet.status.toUpperCase()}
@@ -520,10 +519,7 @@ export default function Home() {
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="font-medium text-slate-200 mb-1">{bet.event}</div>
-                          <div className="text-sm text-slate-300 mb-1">
-                            {bet.player && <span>{bet.player} • </span>}
-                            {bet.selection}
-                          </div>
+                          <div className="text-sm text-slate-300 mb-1">{bet.selection}</div>
                         </div>
                         <span className={`text-xs font-mono px-2 py-1 rounded ml-2 ${bet.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
                           {bet.status.toUpperCase()}
@@ -533,7 +529,7 @@ export default function Home() {
                         <div className="flex items-center gap-4">
                           <span className="font-mono text-slate-200">{bet.odds}</span>
                           <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
-                          <span className="font-mono text-slate-200">{bet.stake}u</span>
+                          <span className="font-mono text-slate-200">{formatStake(bet.stake)}u</span>
                         </div>
                         <span className={`font-mono font-medium ${bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
                           {bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}{bet.profit_loss?.toFixed(2)}u
