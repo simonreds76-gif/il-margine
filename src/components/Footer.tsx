@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { LAUNCH_LABEL, SITE_MOTTO } from "@/lib/config";
+import { SITE_MOTTO } from "@/lib/config";
 
 interface FooterProps {
   className?: string;
@@ -17,7 +17,6 @@ export default function Footer({ className = "" }: FooterProps) {
               <span className="text-xs font-medium text-slate-400">Il Margine: {SITE_MOTTO}</span>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">FREE BETA</span>
-                <span className="text-xs text-slate-500">{LAUNCH_LABEL}</span>
               </div>
             </div>
           </Link>
