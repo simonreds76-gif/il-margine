@@ -368,6 +368,7 @@ export default function Home() {
             <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">LIVE NOW</span>
             <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Active Tips</h2>
           </div>
+          <p className="text-slate-500 text-xs mb-6">Stake in units (1u = your standard stake). We typically recommend 0.5u–2u per pick.</p>
           {pendingBets.length > 0 ? (
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
               <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
@@ -454,7 +455,7 @@ export default function Home() {
               </span>
             </div>
           </div>
-          
+          <p className="text-slate-500 text-xs mb-6">Stake in units (1u = your standard stake). We typically recommend 0.5u–2u per pick.</p>
           {recentBets.length > 0 ? (
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
               {/* Desktop Table */}

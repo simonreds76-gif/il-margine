@@ -310,6 +310,7 @@ export default function TennisTips() {
               <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Current Picks</h2>
             </div>
           </div>
+          <p className="text-slate-500 text-xs mb-6">Stake in units (1u = your standard stake). We typically recommend 0.5u–2u per pick.</p>
 
           {loading ? (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
