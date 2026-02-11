@@ -54,6 +54,8 @@ const bookmakerLogos: Record<string, string> = {
   "BoyleSports": "boylesports",
   "Pinnacle": "pinnacle",
   "pinnacle": "pinnacle",
+  "Pinnacle Bet": "pinnacle",
+  "pinnacle bet": "pinnacle",
   "Marathon": "marathon",
   "DraftKings": "draftkings",
   "FanDuel": "fanduel",

@@ -15,7 +15,7 @@ For the recommended bookmakers section, use these filenames (PNG or SVG):
 
 Other bookmakers (if used elsewhere):
 
-- `bet365.png`, `betfair.png`, `paddypower.png`, `williamhill.png`, `skybet.png`, `betway.png`, `888sport.png`, `betfred.png`, `pinnacle.png`, etc.
+- `bet365.png`, `betfair.png`, `paddypower.png`, `williamhill.png`, `skybet.png`, `betway.png`, `888sport.png`, `betfred.png`, `pinnacle.png` (or `pinnacle.svg`), etc.
 
 ## Logo Specifications
 

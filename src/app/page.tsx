@@ -23,6 +23,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [marketStats, setMarketStats] = useState<MarketStats[]>([]);
   const [recentBets, setRecentBets] = useState<any[]>([]);
+  const [pendingBets, setPendingBets] = useState<any[]>([]);
   const [combinedStats, setCombinedStats] = useState<{
     props: CombinedMarketStats;
     tennis: CombinedMarketStats;
@@ -68,16 +69,27 @@ export default function Home() {
     if (stats) setMarketStats(stats);
     if (statsError) console.error("Error fetching market stats:", statsError);
 
-    // Fetch recent settled bets (last 4-6 for homepage)
+    // Fetch recent settled bets (max 5 shown on homepage)
     const { data: recent, error: recentError } = await supabase
       .from("bets")
       .select("*, bookmaker:bookmakers(*)")
       .in("status", ["won", "lost"])
       .order("settled_at", { ascending: false })
-      .limit(6);
+      .limit(5);
     
     if (recent) setRecentBets(recent);
     if (recentError) console.error("Error fetching recent bets:", recentError);
+
+    // Fetch pending bets for "Active tips" (same max 5)
+    const { data: pending, error: pendingError } = await supabase
+      .from("bets")
+      .select("*, bookmaker:bookmakers(*)")
+      .eq("status", "pending")
+      .order("created_at", { ascending: false })
+      .limit(5);
+    
+    if (pending) setPendingBets(pending);
+    if (pendingError) console.error("Error fetching pending bets:", pendingError);
 
     // Calculate combined stats - always call this, even if stats is empty
     // It will use baseline values when there's no live data
@@ -344,6 +356,90 @@ export default function Home() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Active tips (pending picks) */}
+      <section className="py-12 md:py-16 border-b border-slate-800/50 bg-slate-900/20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 sm:mb-10">
+            <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">LIVE NOW</span>
+            <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Active Tips</h2>
+          </div>
+          {pendingBets.length > 0 ? (
+            <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
+              <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
+                <table className="w-full border-collapse min-w-full">
+                  <thead>
+                    <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
+                      <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '80px' }}>Player</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '50px' }}>Stake</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pendingBets.map((bet) => {
+                      const href = bet.market === "tennis" ? "/tennis-tips" : bet.market === "props" ? "/player-props" : "#";
+                      return (
+                        <tr
+                          key={bet.id}
+                          className="border-b border-slate-800/50 hover:bg-slate-800/30 cursor-pointer"
+                          onClick={() => window.location.href = href}
+                        >
+                          <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{bet.event}</td>
+                          <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.player || '-'}</td>
+                          <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
+                          <td className="px-4 py-3 text-center border-r border-slate-800/50">
+                            <span className="font-mono text-slate-200">{bet.odds}</span>
+                          </td>
+                          <td className="px-4 py-3 text-center border-r border-slate-800/50">
+                            <div className="flex justify-center">
+                              <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{bet.stake}u</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <div className="md:hidden divide-y divide-slate-800/50">
+                {pendingBets.map((bet) => {
+                  const href = bet.market === "tennis" ? "/tennis-tips" : bet.market === "props" ? "/player-props" : "#";
+                  return (
+                    <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/20">
+                      <div className="font-medium text-slate-200 mb-1">{bet.event}</div>
+                      <div className="text-sm text-slate-300 mb-2">
+                        {bet.player && <span>{bet.player} • </span>}
+                        {bet.selection}
+                      </div>
+                      <div className="flex items-center gap-4 text-sm">
+                        <span className="font-mono text-slate-200">{bet.odds}</span>
+                        <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
+                        <span className="font-mono text-slate-200">{bet.stake}u</span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-6 sm:p-8 text-center">
+              <p className="text-slate-400 mb-4">No active tips right now. Check back later.</p>
+            </div>
+          )}
+          <div className="mt-6 flex flex-wrap justify-center gap-4 sm:gap-6">
+            <Link href="/tennis-tips" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+              View latest tennis tips →
+            </Link>
+            <Link href="/player-props" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+              View latest player props →
+            </Link>
           </div>
         </div>
       </section>

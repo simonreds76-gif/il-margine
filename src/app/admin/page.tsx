@@ -493,7 +493,7 @@ export default function AdminPanel() {
                 <input
                   type="number"
                   step="0.05"
-                  min="0.05"
+                  min="0.1"
                   max="5"
                   value={form.stake}
                   onChange={(e) => setForm({ ...form, stake: e.target.value })}
@@ -780,7 +780,7 @@ export default function AdminPanel() {
                   <input
                     type="number"
                     step="0.05"
-                    min="0.05"
+                    min="0.1"
                     max="5"
                     value={editForm.stake}
                     onChange={(e) => setEditForm({ ...editForm, stake: e.target.value })}
