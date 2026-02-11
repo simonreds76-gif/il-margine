@@ -69,7 +69,12 @@ const bookmakerDisplayNames: Record<string, string> = {
 
 // Logos that have lots of padding in the asset – scale up so they match others’ visual size
 const logoScale: Record<string, number> = {
-  pinnacle: 1.6,
+  pinnacle: 2,
+};
+
+// Prefer SVG for crisp scaling (avoids pixelation when PNG is low-res)
+const preferSvg: Record<string, boolean> = {
+  bet365: true,
 };
 
 // All logos one step larger so thumbnails are easier to recognise (was 24/32/40px)
@@ -94,16 +99,25 @@ export default function BookmakerLogo({
 
   const logoBase = bookmakerLogos[bookmaker.short_name] || bookmakerLogos[bookmaker.name];
   const hasExtension = logoBase?.includes(".");
-  // Try jpeg/jpg before svg so coral.jpeg etc. load without failing on missing .png first
+  const scaleKey = logoBase?.split(".")[0] ?? "";
+  const useSvgFirst = preferSvg[scaleKey];
+  // Prefer SVG for some logos (crisp at any size); otherwise try png/jpeg/jpg then svg
   const logoPaths: string[] = logoBase
     ? hasExtension
       ? [`/bookmakers/${encodeURIComponent(logoBase)}`]
-      : [
-          `/bookmakers/${logoBase}.png`,
-          `/bookmakers/${logoBase}.jpeg`,
-          `/bookmakers/${logoBase}.jpg`,
-          `/bookmakers/${logoBase}.svg`,
-        ]
+      : useSvgFirst
+        ? [
+            `/bookmakers/${logoBase}.svg`,
+            `/bookmakers/${logoBase}.png`,
+            `/bookmakers/${logoBase}.jpeg`,
+            `/bookmakers/${logoBase}.jpg`,
+          ]
+        : [
+            `/bookmakers/${logoBase}.png`,
+            `/bookmakers/${logoBase}.jpeg`,
+            `/bookmakers/${logoBase}.jpg`,
+            `/bookmakers/${logoBase}.svg`,
+          ]
     : [];
   const [srcIndex, setSrcIndex] = useState(0);
   const [imageFailed, setImageFailed] = useState(false);
@@ -113,7 +127,6 @@ export default function BookmakerLogo({
   const hasAffiliate = !!bookmaker.affiliate_link;
 
   const showImage = currentSrc && !imageFailed;
-  const scaleKey = logoBase?.split(".")[0] ?? "";
   const scale = logoScale[scaleKey] ?? 1;
 
   // Prefer name for display; use override so "CR" shows as "Coral" etc.
