@@ -81,7 +81,7 @@ export default function Home() {
     if (recent) setRecentBets(recent);
     if (recentError) console.error("Error fetching recent bets:", recentError);
 
-    // Fetch pending bets for "Active tips" (same max 5)
+    // Fetch pending bets for "Active Picks" (same max 5)
     const { data: pending, error: pendingError } = await supabase
       .from("bets")
       .select("*, bookmaker:bookmakers(*)")
@@ -361,12 +361,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Active tips (pending picks) */}
+      {/* Active picks (pending) */}
       <section className="py-12 md:py-16 border-b border-slate-800/50 bg-slate-900/20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8 sm:mb-10">
             <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">LIVE NOW</span>
-            <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Active Tips</h2>
+            <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Active Picks</h2>
           </div>
           <p className="text-slate-500 text-xs mb-6">Stake in units (1u = your standard stake). We typically recommend 0.5u–2u per pick.</p>
           {pendingBets.length > 0 ? (
@@ -376,6 +376,7 @@ export default function Home() {
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
                       <th className="px-4 py-3 text-left border-r border-slate-800 min-w-[180px]">Match</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '100px' }}>Player</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
@@ -392,6 +393,7 @@ export default function Home() {
                           onClick={() => window.location.href = href}
                         >
                           <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50 min-w-[180px] whitespace-nowrap">{bet.event}</td>
+                          <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.player || "–"}</td>
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
                             <span className="font-mono text-slate-200">{bet.odds}</span>
@@ -414,7 +416,10 @@ export default function Home() {
                   return (
                     <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/20">
                       <div className="font-medium text-slate-200 mb-1">{bet.event}</div>
-                      <div className="text-sm text-slate-300 mb-2">{bet.selection}</div>
+                      <div className="text-sm text-slate-300 mb-2">
+                        {bet.player && <span>{bet.player} · </span>}
+                        {bet.selection}
+                      </div>
                       <div className="flex items-center gap-4 text-sm">
                         <span className="font-mono text-slate-200">{bet.odds}</span>
                         <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
@@ -427,7 +432,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-6 sm:p-8 text-center">
-              <p className="text-slate-400 mb-4">No active tips right now. Check back later.</p>
+              <p className="text-slate-400 mb-4">No active picks right now. Check back later.</p>
             </div>
           )}
           <div className="mt-6 flex flex-wrap justify-center gap-4 sm:gap-6">
@@ -464,6 +469,7 @@ export default function Home() {
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
                       <th className="px-4 py-3 text-left border-r border-slate-800 min-w-[180px]">Match</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '100px' }}>Player</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
@@ -482,6 +488,7 @@ export default function Home() {
                           onClick={() => window.location.href = href}
                         >
                           <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50 min-w-[180px] whitespace-nowrap">{bet.event}</td>
+                          <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.player || "–"}</td>
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
                             <span className="font-mono text-slate-200">{bet.odds}</span>
@@ -515,7 +522,10 @@ export default function Home() {
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="font-medium text-slate-200 mb-1">{bet.event}</div>
-                          <div className="text-sm text-slate-300 mb-1">{bet.selection}</div>
+                          <div className="text-sm text-slate-300 mb-1">
+                            {bet.player && <span>{bet.player} · </span>}
+                            {bet.selection}
+                          </div>
                         </div>
                         <span className={`text-xs font-mono px-2 py-1 rounded ml-2 ${bet.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
                           {bet.status.toUpperCase()}
