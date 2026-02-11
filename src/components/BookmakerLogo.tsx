@@ -146,7 +146,7 @@ export default function BookmakerLogo({
               alt={displayName}
               fill
               sizes="48px"
-              className="object-cover"
+              className="object-contain"
               unoptimized
               onError={() => {
                 if (srcIndex < logoPaths.length - 1) {
