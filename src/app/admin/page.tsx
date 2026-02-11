@@ -145,7 +145,7 @@ export default function AdminPanel() {
         selection: form.selection,
         odds: parseFloat(form.odds),
         bookmaker_id: parseInt(form.bookmaker_id),
-        stake: parseFloat(form.stake),
+        stake: Math.round(parseFloat(form.stake) * 100) / 100,
         notes: form.notes || null,
       }),
     });
@@ -233,7 +233,7 @@ export default function AdminPanel() {
       selection: editForm.selection,
       odds: parseFloat(editForm.odds),
       bookmaker_id: parseInt(editForm.bookmaker_id),
-      stake: parseFloat(editForm.stake),
+      stake: Math.round(parseFloat(editForm.stake) * 100) / 100,
       notes: editForm.notes || null,
     };
 
