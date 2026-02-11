@@ -383,7 +383,7 @@ export default function Home() {
                   </thead>
                   <tbody>
                     {pendingBets.map((bet) => {
-                      const href = bet.market === "tennis" ? "/tennis-tips" : bet.market === "props" ? "/player-props" : "#";
+                      const href = bet.market === "tennis" ? "/tennis-tips#picks" : bet.market === "props" ? "/player-props#picks" : "#";
                       return (
                         <tr
                           key={bet.id}
@@ -409,7 +409,7 @@ export default function Home() {
               </div>
               <div className="md:hidden divide-y divide-slate-800/50">
                 {pendingBets.map((bet) => {
-                  const href = bet.market === "tennis" ? "/tennis-tips" : bet.market === "props" ? "/player-props" : "#";
+                  const href = bet.market === "tennis" ? "/tennis-tips#picks" : bet.market === "props" ? "/player-props#picks" : "#";
                   return (
                     <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/20">
                       <div className="font-medium text-slate-200 mb-1">{bet.event}</div>
@@ -430,10 +430,10 @@ export default function Home() {
             </div>
           )}
           <div className="mt-6 flex flex-wrap justify-center gap-4 sm:gap-6">
-            <Link href="/tennis-tips" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+            <Link href="/tennis-tips#picks" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
               View latest tennis tips →
             </Link>
-            <Link href="/player-props" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+            <Link href="/player-props#picks" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
               View latest player props →
             </Link>
           </div>
@@ -473,7 +473,7 @@ export default function Home() {
                   </thead>
                   <tbody>
                     {recentBets.slice(0, 5).map((bet) => {
-                      const href = bet.market === "tennis" ? "/tennis-tips" : bet.market === "props" ? "/player-props" : "#";
+                      const href = bet.market === "tennis" ? "/tennis-tips#picks" : bet.market === "props" ? "/player-props#picks" : "#";
                       return (
                         <tr 
                           key={bet.id} 
@@ -508,7 +508,7 @@ export default function Home() {
               {/* Mobile Cards */}
               <div className="md:hidden divide-y divide-slate-800/50">
                 {recentBets.slice(0, 5).map((bet) => {
-                  const href = bet.market === "tennis" ? "/tennis-tips" : bet.market === "props" ? "/player-props" : "#";
+                  const href = bet.market === "tennis" ? "/tennis-tips#picks" : bet.market === "props" ? "/player-props#picks" : "#";
                   return (
                     <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/20">
                       <div className="flex items-start justify-between mb-2">
@@ -540,13 +540,13 @@ export default function Home() {
               <p className="text-slate-400 mb-6">No results published yet.</p>
               <div className="flex flex-wrap justify-center gap-3">
                 <Link
-                  href="/tennis-tips"
+                  href="/tennis-tips#picks"
                   className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-4 py-2.5 rounded-lg transition-colors"
                 >
                   Tennis Tips
                 </Link>
                 <Link
-                  href="/player-props"
+                  href="/player-props#picks"
                   className="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-4 py-2.5 rounded-lg transition-colors"
                 >
                   Player Props
@@ -557,10 +557,10 @@ export default function Home() {
           
           {recentBets.length > 0 && (
             <div className="mt-6 flex justify-center gap-4">
-              <Link href="/tennis-tips" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+              <Link href="/tennis-tips#picks" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
                 View Tennis Tips Results →
               </Link>
-              <Link href="/player-props" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+              <Link href="/player-props#picks" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
                 View Player Props Results →
               </Link>
             </div>

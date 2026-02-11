@@ -293,8 +293,8 @@ export default function TennisTips() {
         </div>
       </section>
 
-      {/* Active Picks */}
-      <section className="py-12 md:py-16 border-b border-slate-800/50">
+      {/* Active Picks – id for deep link from homepage */}
+      <section id="picks" className="py-12 md:py-16 border-b border-slate-800/50 scroll-mt-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-6">
             <div>
