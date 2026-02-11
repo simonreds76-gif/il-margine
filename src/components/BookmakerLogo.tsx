@@ -19,16 +19,23 @@ const bookmakerLogos: Record<string, string> = {
   // Recommended 8 + common variants
   "Midnite": "midnite",
   "midnite": "midnite",
+  "Midnight": "midnite",
+  "midnight": "midnite",
+  "MN": "midnite",
   "BetVictor": "betvictor",
   "Betvictor": "betvictor",
   "betvictor": "betvictor",
+  "Bet Victor": "betvictor",
+  "bet victor": "betvictor",
+  "BV": "betvictor",
   "Unibet": "Unibet_idYHeiKVm__1.png",
   "unibet": "Unibet_idYHeiKVm__1.png",
   "Coral": "coral",
   "coral": "coral",
   "CR": "coral",
-  "Ladbrokes": "ladbrokes",
-  "ladbrokes": "ladbrokes",
+  "Ladbrokes": "coral",
+  "ladbrokes": "coral",
+  "LAD": "coral",
   "BetMGM": "BetMGM UK_idPMHl2t9c_0.png",
   "betmgm": "BetMGM UK_idPMHl2t9c_0.png",
   "LeoVegas": "BetMGM UK_idPMHl2t9c_0.png",
@@ -37,6 +44,9 @@ const bookmakerLogos: Record<string, string> = {
   "williamhill": "williamhill",
   "Betfred": "betfred",
   "betfred": "betfred",
+  "Bet Fred": "betfred",
+  "bet fred": "betfred",
+  "BF": "betfred",
   // Others (admin / legacy)
   "bet365": "bet365",
   "Bet365": "bet365",
@@ -65,6 +75,9 @@ const bookmakerLogos: Record<string, string> = {
 const bookmakerDisplayNames: Record<string, string> = {
   "CR": "Coral",
   "WH": "William Hill",
+  "LAD": "Ladbrokes",
+  "BV": "BetVictor",
+  "BF": "Betfred",
 };
 
 // Logos that have lots of padding in the asset – scale up so they match others’ visual size
