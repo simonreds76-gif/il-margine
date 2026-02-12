@@ -76,6 +76,7 @@ export default function GlobalNav() {
             <Link href="/track-record" className={linkClass(pathname === "/track-record")}>Track Record</Link>
             <Link href="/bookmakers" className={linkClass(pathname === '/bookmakers')}>Bookmakers</Link>
             <Link href="/calculator" className={linkClass(pathname === '/calculator')}>Calculator</Link>
+            <Link href="/resources" className={linkClass(pathname === '/resources' || pathname.startsWith('/resources/'))}>Resources</Link>
             <TelegramButton variant="nav" />
           </div>
         </div>
@@ -121,6 +122,9 @@ export default function GlobalNav() {
             </Link>
             <Link href="/calculator" className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/calculator' ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
               Calculator
+            </Link>
+            <Link href="/resources" onClick={() => setMobileMenuOpen(false)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/resources' || pathname?.startsWith('/resources/') ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+              Resources
             </Link>
             <div className="mt-4 px-4">
               <TelegramButton variant="nav" className="w-full min-h-[44px] justify-center" />
