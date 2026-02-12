@@ -122,15 +122,12 @@ export default function CalculatorPage() {
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      {/* Hero: two calculators side by side */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 md:pb-16 border-b border-slate-800/50">
         <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8">
           <Image src="/favicon.png" alt="" width={40} height={40} className="h-10 w-10 object-contain shrink-0" />
           <span>← Home</span>
         </Link>
-      </div>
-
-      {/* Hero: two calculators side by side */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 md:pb-16 border-b border-slate-800/50">
         <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">CALCULATORS</span>
         <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-8">
           Returns & Kelly

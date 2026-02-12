@@ -73,7 +73,7 @@ export default function ResourcesPage() {
             <Link
               key={resource.href}
               href={resource.href}
-              className="block p-6 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-500/30 transition-colors"
+              className="block p-6 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-500/30 transition-colors group"
             >
               <span className="inline-block text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded mb-3">
                 {resource.category}
@@ -84,9 +84,14 @@ export default function ResourcesPage() {
               <p className="text-slate-400 text-sm leading-relaxed mb-4">
                 {resource.description}
               </p>
-              <span className="text-xs text-slate-500 font-mono">
-                {resource.minRead} min read
-              </span>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-500 font-mono">
+                  {resource.minRead} min read
+                </span>
+                <span className="text-sm font-medium text-emerald-400 group-hover:text-emerald-300">
+                  Read article →
+                </span>
+              </div>
             </Link>
           ))}
         </div>
