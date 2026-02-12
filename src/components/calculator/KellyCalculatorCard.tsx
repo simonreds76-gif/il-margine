@@ -5,8 +5,8 @@ import Link from "next/link";
 
 const FRACTION_PRESETS = [
   { label: "0.1x", value: 0.1 },
-  { label: "¼", value: 0.25 },
-  { label: "½", value: 0.5 },
+  { label: "0.25x", value: 0.25 },
+  { label: "0.5x", value: 0.5 },
   { label: "Full", value: 1 },
 ] as const;
 
