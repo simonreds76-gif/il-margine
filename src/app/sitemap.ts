@@ -95,6 +95,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     },
+    {
+      url: `${BASE_URL}/resources`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/resources/kelly-criterion-sports-betting`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
   ];
   return entries;
 }
