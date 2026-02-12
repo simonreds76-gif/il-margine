@@ -4,8 +4,9 @@ import { useState, useCallback } from "react";
 import Link from "next/link";
 
 const FRACTION_PRESETS = [
-  { label: "¼ Kelly", value: 0.25 },
-  { label: "½ Kelly", value: 0.5 },
+  { label: "0.1x", value: 0.1 },
+  { label: "¼", value: 0.25 },
+  { label: "½", value: 0.5 },
   { label: "Full", value: 1 },
 ] as const;
 
@@ -36,7 +37,7 @@ export default function KellyCalculatorCard() {
   const [bankroll, setBankroll] = useState<string>("1000");
   const [decimalOdds, setDecimalOdds] = useState<string>("2.00");
   const [winProbability, setWinProbability] = useState<string>("55");
-  const [fraction, setFraction] = useState<number>(0.25);
+  const [fraction, setFraction] = useState<number>(0.1);
 
   const bankrollVal = Math.max(0, parseNum(bankroll));
   const oddsVal = parseNum(decimalOdds);
@@ -59,7 +60,7 @@ export default function KellyCalculatorCard() {
     setBankroll("1000");
     setDecimalOdds("2.00");
     setWinProbability("55");
-    setFraction(0.25);
+    setFraction(0.1);
   }, []);
 
   return (
@@ -116,7 +117,7 @@ export default function KellyCalculatorCard() {
           <span className="text-xs font-mono text-slate-500 uppercase tracking-wider">
             Kelly fraction
           </span>
-          <div className="mt-2 flex gap-2">
+          <div className="mt-2 flex flex-wrap gap-2">
             {FRACTION_PRESETS.map(({ label, value }) => (
               <button
                 key={value}
@@ -132,7 +133,7 @@ export default function KellyCalculatorCard() {
               </button>
             ))}
           </div>
-          <p className="mt-0.5 text-xs text-slate-500">Quarter Kelly recommended for most bettors</p>
+          <p className="mt-0.5 text-xs text-slate-500">One-tenth Kelly recommended for prop bets</p>
         </div>
       </div>
 

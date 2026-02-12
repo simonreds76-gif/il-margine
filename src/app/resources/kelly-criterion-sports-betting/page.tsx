@@ -304,7 +304,7 @@ export default function KellyCriterionPage() {
                       • Formula:{" "}
                       <code className="text-emerald-400 font-mono">f* = (bp - q) / b</code>
                     </li>
-                    <li>• Use fractional Kelly (quarter Kelly recommended)</li>
+                    <li>• Use fractional Kelly (one-tenth or quarter recommended for props)</li>
                     <li>• Never bet more than 5% of bankroll on single bet</li>
                     <li>• Only works if you have a genuine edge</li>
                   </ul>
@@ -331,32 +331,30 @@ export default function KellyCriterionPage() {
                     Example: Player Props Calculation
                   </h4>
                   <p className="text-slate-300 mb-4">
-                    <strong className="text-slate-200">Scenario:</strong> Erling
-                    Haaland vs Brighton
+                    <strong className="text-slate-200">Scenario:</strong> Declan
+                    Rice 2+ tackles won vs Aston Villa
                   </p>
                   <ul className="text-slate-300 text-sm space-y-2 mb-4">
-                    <li>• Your analysis: Brighton concede an average of 5.2 shots on target per match to opposing forwards this season</li>
-                    <li>• Haaland averages 3.8 shots on target at home</li>
-                    <li>• Matchup suggests 65% probability of Haaland 3+ shots on target</li>
-                    <li>• Bookmaker offers 2.20 (decimal)</li>
+                    <li>• Rice averages 2.3 tackles per game in the Premier League</li>
+                    <li>• Villa&apos;s midfield tends to give up tackle opportunities</li>
+                    <li>• Your matchup analysis suggests 58% probability of 2+ tackles won</li>
+                    <li>• Bookmaker offers 2.00 (decimal)</li>
                   </ul>
                   <p className="text-slate-300 mb-2">Kelly calculation:</p>
                   <p className="text-slate-300 mb-0">
-                    b = 1.20, p = 0.65, q = 0.35 →{" "}
-                    <code className="text-emerald-400 font-mono">f* = 40.6%</code>
+                    b = 1.00, p = 0.58, q = 0.42 →{" "}
+                    <code className="text-emerald-400 font-mono">f* = 16%</code>
                   </p>
                 </div>
 
                 <p className="mb-4">
-                  <strong className="text-slate-200">Stop.</strong> This is where
-                  Kelly gets dangerous. The formula suggests betting over 40% of your
-                  bankroll on a single prop bet. This is mathematically optimal for
-                  maximum growth, but psychologically and practically insane. One bad
-                  result wipes out nearly half your funds.
-                </p>
-                <p className="mb-4">
-                  This is exactly why professionals use{" "}
-                  <strong className="text-slate-200">fractional Kelly</strong>.
+                  Full Kelly suggests staking 16% of your bankroll. On £1,000 that&apos;s
+                  £160 on a single prop bet. One bad result and you&apos;ve lost a big
+                  chunk. For player props, where probability estimates are less reliable
+                  than in, say, liquid tennis markets, that&apos;s too aggressive. This is
+                  why many professionals use{" "}
+                  <strong className="text-slate-200">fractional Kelly</strong>, often
+                  one-tenth or quarter Kelly for props.
                 </p>
 
                 <h3 className="text-xl font-semibold text-slate-100 mb-4 mt-8">
@@ -368,30 +366,29 @@ export default function KellyCriterionPage() {
                 </p>
                 <ul className="list-disc pl-6 mb-4 space-y-2">
                   <li>
-                    <strong className="text-slate-200">Half Kelly (0.5x):</strong> Bet
-                    50% of the Kelly recommendation
+                    <strong className="text-slate-200">One-Tenth Kelly (0.1x):</strong>{" "}
+                    Bet 10% of the Kelly recommendation (common for prop bets)
                   </li>
                   <li>
                     <strong className="text-slate-200">Quarter Kelly (0.25x):</strong>{" "}
                     Bet 25% of the Kelly recommendation
                   </li>
                   <li>
-                    <strong className="text-slate-200">One-Tenth Kelly (0.1x):</strong>{" "}
-                    Bet 10% of the Kelly recommendation
+                    <strong className="text-slate-200">Half Kelly (0.5x):</strong> Bet
+                    50% of the Kelly recommendation
                   </li>
                 </ul>
                 <p className="mb-4">
-                  Using our Haaland example with{" "}
-                  <strong className="text-slate-200">quarter Kelly</strong>:
+                  Using our Rice example with{" "}
+                  <strong className="text-slate-200">one-tenth Kelly</strong>:
                 </p>
                 <p className="mb-4">
-                  Full Kelly: 40.6% → Quarter Kelly: 40.6% × 0.25 ={" "}
-                  <strong className="text-slate-200">10.15%</strong> of bankroll
+                  Full Kelly: 16% → One-tenth Kelly: 16% × 0.1 ={" "}
+                  <strong className="text-slate-200">1.6%</strong> of bankroll
                 </p>
                 <p className="mb-4">
                   On a £1,000 bankroll, that&apos;s{" "}
-                  <strong className="text-slate-200">£101.50</strong> instead of{" "}
-                  £406.
+                  <strong className="text-slate-200">£16</strong> instead of £160.
                 </p>
 
                 <h3 className="text-xl font-semibold text-slate-100 mb-4 mt-8">
@@ -630,7 +627,7 @@ export default function KellyCriterionPage() {
                         <td className="py-3 pr-4">One-Tenth Kelly (0.1x)</td>
                         <td className="py-3 pr-4">Low</td>
                         <td className="py-3 pr-4">19%</td>
-                        <td className="py-3">Beginners/conservative</td>
+                        <td className="py-3">Prop bets / conservative</td>
                       </tr>
                     </tbody>
                   </table>
@@ -649,8 +646,8 @@ export default function KellyCriterionPage() {
                     bankroll (one-tenth Kelly on smaller edges)
                   </li>
                   <li>
-                    <strong className="text-slate-200">Maximum stake:</strong> 4% of
-                    bankroll (approximately quarter Kelly on strongest edges)
+                    <strong className="text-slate-200">Maximum stake:</strong> 2-4% of
+                    bankroll (one-tenth to quarter Kelly depending on confidence)
                   </li>
                   <li>
                     <strong className="text-slate-200">Typical stake:</strong> 1-2% of
@@ -724,7 +721,7 @@ export default function KellyCriterionPage() {
                     /calculator
                   </Link>
                   . Input bankroll, decimal odds, and your win probability estimate, then
-                  choose your fractional multiplier (quarter Kelly recommended). The
+                  choose your fractional multiplier (one-tenth or quarter Kelly). The
                   calculator outputs your recommended stake instantly.
                 </p>
 
@@ -733,7 +730,7 @@ export default function KellyCriterionPage() {
                 </h3>
                 <ol className="list-decimal pl-6 mb-4 space-y-2">
                   <li>Never bet more than 5% of bankroll on a single bet</li>
-                  <li>Use quarter Kelly or less for player props and tennis</li>
+                  <li>Use one-tenth or quarter Kelly for player props and tennis</li>
                   <li>Recalculate bankroll monthly</li>
                   <li>If Kelly says don&apos;t bet, don&apos;t bet — no exceptions</li>
                   <li>Track everything</li>
@@ -790,7 +787,7 @@ export default function KellyCriterionPage() {
                 </p>
                 <p className="mb-4">
                   Our approach at Il Margine combines data-driven selection with
-                  conservative fractional Kelly staking (typically quarter Kelly).
+                  conservative fractional Kelly staking (typically one-tenth or quarter Kelly).
                   This balance delivers sustainable growth without the volatility that
                   destroys most bettors.
                 </p>
