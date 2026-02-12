@@ -350,9 +350,10 @@ export default function KellyCriterionPage() {
                 <p className="mb-4">
                   Full Kelly suggests staking 16% of your bankroll. On £1,000 that&apos;s
                   £160 on a single prop bet. One bad result and you&apos;ve lost a big
-                  chunk. For player props, where probability estimates are less reliable
-                  than in, say, liquid tennis markets, that&apos;s too aggressive. This is
-                  why many professionals use{" "}
+                  chunk. Player props are more volatile than match outcomes (individual
+                  performance swings harder), and probability estimates are less reliable
+                  than in liquid tennis markets. That&apos;s too aggressive. This is why
+                  many professionals use{" "}
                   <strong className="text-slate-200">fractional Kelly</strong>, often
                   one-tenth or quarter Kelly for props.
                 </p>
@@ -367,7 +368,9 @@ export default function KellyCriterionPage() {
                 <ul className="list-disc pl-6 mb-4 space-y-2">
                   <li>
                     <strong className="text-slate-200">One-Tenth Kelly (0.1x):</strong>{" "}
-                    Bet 10% of the Kelly recommendation (common for prop bets)
+                    Bet 10% of the Kelly recommendation. Advised for prop bets because
+                    they are more volatile than match outcomes: individual player
+                    performance swings harder, and probability estimates are less reliable.
                   </li>
                   <li>
                     <strong className="text-slate-200">Quarter Kelly (0.25x):</strong>{" "}

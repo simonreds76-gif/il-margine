@@ -18,6 +18,14 @@ export interface Resource {
 
 export const RESOURCES: Resource[] = [
   {
+    href: "/resources/closing-line-value",
+    title: "Closing Line Value: The Only Metric That Matters",
+    description:
+      "Learn why CLV is the most reliable predictor of betting success. Understand how to calculate, track, and consistently beat the closing line across props and tennis markets.",
+    minRead: 11,
+    category: "Value Betting",
+  },
+  {
     href: "/resources/kelly-criterion-sports-betting",
     title: "The Kelly Criterion for Sports Betting",
     description:
