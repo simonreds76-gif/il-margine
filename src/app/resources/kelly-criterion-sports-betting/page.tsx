@@ -304,7 +304,7 @@ export default function KellyCriterionPage() {
                       • Formula:{" "}
                       <code className="text-emerald-400 font-mono">f* = (bp - q) / b</code>
                     </li>
-                    <li>• Use fractional Kelly (one-tenth or quarter recommended for props)</li>
+                    <li>• Use fractional Kelly (one-tenth for props, quarter for tennis)</li>
                     <li>• Never bet more than 5% of bankroll on single bet</li>
                     <li>• Only works if you have a genuine edge</li>
                   </ul>
@@ -514,8 +514,8 @@ export default function KellyCriterionPage() {
                   <p className="text-slate-300 mb-0">
                     If you estimate 60% win probability but true probability is 55%,
                     you&apos;ll bet nearly 4x too much. This is why professionals use
-                    quarter Kelly — it provides a 4x safety margin against estimation
-                    errors.
+                    fractional Kelly (one-tenth or quarter) — it provides a safety margin
+                    against estimation errors.
                   </p>
                 </div>
 
@@ -624,44 +624,37 @@ export default function KellyCriterionPage() {
                         <td className="py-3 pr-4">Quarter Kelly (0.25x)</td>
                         <td className="py-3 pr-4">Moderate</td>
                         <td className="py-3 pr-4">56%</td>
-                        <td className="py-3">Most professionals</td>
+                        <td className="py-3">Tennis / match markets (liquid)</td>
                       </tr>
                       <tr className="border-b border-slate-800/50">
                         <td className="py-3 pr-4">One-Tenth Kelly (0.1x)</td>
                         <td className="py-3 pr-4">Low</td>
                         <td className="py-3 pr-4">19%</td>
-                        <td className="py-3">Prop bets / conservative</td>
+                        <td className="py-3">Prop bets / conservative (most pros)</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
 
-                <h3 className="text-xl font-semibold text-slate-100 mb-4 mt-8">
-                  How Il Margine Approaches It
-                </h3>
-                <p className="mb-4">
-                  Our stake range is <strong className="text-slate-200">0.5u to 2u</strong>,
-                  where 1 unit represents 1-2% of bankroll. This translates to:
-                </p>
-                <ul className="list-disc pl-6 mb-4 space-y-2">
-                  <li>
-                    <strong className="text-slate-200">Minimum stake:</strong> 0.5% of
-                    bankroll (one-tenth Kelly on smaller edges)
-                  </li>
-                  <li>
-                    <strong className="text-slate-200">Maximum stake:</strong> 2-4% of
-                    bankroll (one-tenth to quarter Kelly depending on confidence)
-                  </li>
-                  <li>
-                    <strong className="text-slate-200">Typical stake:</strong> 1-2% of
-                    bankroll
-                  </li>
-                </ul>
-                <p className="mb-4">
-                  We use this conservative approach because of estimation uncertainty,
-                  multiple simultaneous bets, account longevity, and psychological
-                  sustainability.
-                </p>
+                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-6 my-6">
+                  <h3 className="text-xl font-semibold text-emerald-400 mb-4">
+                    How Il Margine Approaches It
+                  </h3>
+                  <p className="text-slate-300 mb-4">
+                    We use <strong className="text-slate-200">one-tenth Kelly for prop bets</strong> — they&apos;re more volatile and our probability estimates are less reliable. For tennis (match / first set markets), where edges are easier to quantify and markets are more liquid, we use <strong className="text-slate-200">quarter Kelly</strong>.
+                  </p>
+                  <p className="text-slate-300 mb-4">
+                    Our stake range is generally <strong className="text-slate-200">0.5u to 2u</strong>, where 1 unit ≈ 1% of bankroll. That means:
+                  </p>
+                  <ul className="text-slate-300 text-sm space-y-2 list-none mb-4">
+                    <li>• <strong className="text-slate-200">Minimum:</strong> ~0.5% of bankroll</li>
+                    <li>• <strong className="text-slate-200">Maximum:</strong> ~2% of bankroll</li>
+                    <li>• <strong className="text-slate-200">Typical:</strong> 1u (1% of bankroll)</li>
+                  </ul>
+                  <p className="text-slate-300 mb-0">
+                    We cap at ~2% because of estimation uncertainty, multiple simultaneous bets, and account longevity. Most professionals avoid staking more than 1–2% per bet; 2–4% is aggressive and rarely justified for props.
+                  </p>
+                </div>
 
                 <h3 className="text-xl font-semibold text-slate-100 mb-4 mt-8">
                   The Ed Thorp Insight
@@ -703,7 +696,7 @@ export default function KellyCriterionPage() {
                   </li>
                   <li>
                     <strong className="text-slate-200">Apply Fractional Kelly</strong> —
-                    Multiply by 0.25 (recommended)
+                    Multiply by 0.1 for props, 0.25 for tennis/match markets
                   </li>
                   <li>
                     <strong className="text-slate-200">Calculate Stake in Currency</strong> —
@@ -733,7 +726,7 @@ export default function KellyCriterionPage() {
                 </h3>
                 <ol className="list-decimal pl-6 mb-4 space-y-2">
                   <li>Never bet more than 5% of bankroll on a single bet</li>
-                  <li>Use one-tenth or quarter Kelly for player props and tennis</li>
+                  <li>Use one-tenth Kelly for props, quarter Kelly for tennis</li>
                   <li>Recalculate bankroll monthly</li>
                   <li>If Kelly says don&apos;t bet, don&apos;t bet — no exceptions</li>
                   <li>Track everything</li>
@@ -790,7 +783,7 @@ export default function KellyCriterionPage() {
                 </p>
                 <p className="mb-4">
                   Our approach at Il Margine combines data-driven selection with
-                  conservative fractional Kelly staking (typically one-tenth or quarter Kelly).
+                  conservative fractional Kelly staking (one-tenth for props, quarter for tennis).
                   This balance delivers sustainable growth without the volatility that
                   destroys most bettors.
                 </p>
