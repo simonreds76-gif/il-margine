@@ -716,12 +716,16 @@ export default function KellyCriterionPage() {
                 </ol>
 
                 <h3 className="text-xl font-semibold text-slate-100 mb-4 mt-8">
-                  Kelly Calculator Tool
+                  Kelly Calculator
                 </h3>
                 <p className="mb-4">
-                  Use our Kelly Calculator at ilmargine.bet/calculator. Input
-                  bankroll, odds, win probability estimate, and fractional Kelly
-                  multiplier. The calculator outputs your recommended stake instantly.
+                  Use our free Kelly calculator at{" "}
+                  <Link href="/calculator" className="text-emerald-400 hover:text-emerald-300 underline">
+                    /calculator
+                  </Link>
+                  . Input bankroll, decimal odds, and your win probability estimate, then
+                  choose your fractional multiplier (quarter Kelly recommended). The
+                  calculator outputs your recommended stake instantly.
                 </p>
 
                 <h3 className="text-xl font-semibold text-slate-100 mb-4 mt-8">
@@ -793,30 +797,13 @@ export default function KellyCriterionPage() {
                 <p className="mb-4">
                   The mathematics are clear: if you have an edge, Kelly tells you how
                   much to bet. If you don&apos;t have an edge, Kelly tells you not to bet
-                  at all. That honesty — that mathematical discipline — is what
-                  separates profitable betting from gambling.
+                  at all. That honesty and mathematical discipline is what separates
+                  profitable betting from gambling.
                 </p>
                 <p className="mb-4 font-semibold text-slate-200">
                   Start conservative. Track everything. Let the mathematics guide you.
                 </p>
               </section>
-
-              {/* CTA Box */}
-              <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-6 my-6">
-                <h4 className="text-emerald-400 font-semibold mb-3">
-                  Ready to Calculate Your Kelly Stakes?
-                </h4>
-                <p className="text-slate-300 mb-4">
-                  Use our free Kelly Criterion calculator to determine optimal bet
-                  sizes based on your edge and bankroll.
-                </p>
-                <Link
-                  href="/calculator"
-                  className="inline-block bg-emerald-500 hover:bg-emerald-400 text-white font-medium px-6 py-3 rounded-lg transition-colors"
-                >
-                  Open Calculator
-                </Link>
-              </div>
 
               {/* Related Resources */}
               <div className="border-t border-slate-800 mt-16 pt-8">
@@ -837,9 +824,9 @@ export default function KellyCriterionPage() {
                     href="/calculator"
                     className="block p-4 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-500/30 transition-colors"
                   >
-                    <h4 className="text-slate-100 font-semibold mb-2">Kelly Calculator</h4>
+                    <h4 className="text-slate-100 font-semibold mb-2">Returns Calculator</h4>
                     <p className="text-sm text-slate-400">
-                      Calculate your optimal stake sizes based on edge and bankroll
+                      See how much you would have won following our historical picks at different stake levels
                     </p>
                   </Link>
                 </div>

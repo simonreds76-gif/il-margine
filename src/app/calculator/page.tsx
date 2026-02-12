@@ -9,6 +9,7 @@ import { track } from "@/lib/analytics";
 import Footer from "@/components/Footer";
 import TelegramButton from "@/components/TelegramButton";
 import CalculatorCard, { type CalculatorData } from "@/components/calculator/CalculatorCard";
+import KellyCalculatorCard from "@/components/calculator/KellyCalculatorCard";
 import HowItWorks from "@/components/calculator/HowItWorks";
 import AssumptionsCallout from "@/components/calculator/AssumptionsCallout";
 import FaqAccordion from "@/components/calculator/FaqAccordion";
@@ -128,42 +129,45 @@ export default function CalculatorPage() {
         </Link>
       </div>
 
-      {/* Hero: calculator first on mobile, two columns on desktop */}
+      {/* Hero: two calculators side by side */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 md:pb-16 border-b border-slate-800/50">
+        <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">CALCULATORS</span>
+        <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-8">
+          Returns & Kelly
+        </h1>
+
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-start">
-          {/* Left column: H1, What this calculator shows, body. On mobile order-2 so calculator is first. */}
-          <div className="lg:order-1 order-2">
-            <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">CALCULATOR</span>
-            <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-6">
-              Returns Calculator
-            </h1>
-            <h2 className="text-xl sm:text-2xl font-semibold text-slate-100 mb-3">
-              What this calculator shows
-            </h2>
-            <p className="text-base text-slate-300 max-w-prose leading-relaxed mb-4">
-              This calculator shows how much you would have won or lost if you had followed our settled bets using a fixed stake per bet (e.g. £25, £50, £100).
-              Results are based only on our verified historical track record (player props + ATP tennis). No projections, no simulations.
-              If live data is temporarily unavailable, we use the last recorded results and show a notice.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {["Verified track record", "Settled bets only", "No projections"].map((label) => (
-                <span
-                  key={label}
-                  className="text-xs font-medium text-slate-400 bg-slate-800/60 border border-slate-700/50 px-3 py-1.5 rounded-lg"
-                >
-                  {label}
-                </span>
-              ))}
+          {/* Returns Calculator */}
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-xl font-semibold text-slate-100 mb-2">
+                Returns Calculator
+              </h2>
+              <p className="text-sm text-slate-400 leading-relaxed mb-4">
+                How much you would have won or lost following our settled bets with a fixed stake per bet (e.g. £25, £50, £100).
+                Based on our verified track record. No projections.
+              </p>
             </div>
-          </div>
-          {/* Right column: Calculator card. On mobile order-1 (first). */}
-          <div className="lg:order-2 order-1">
             <CalculatorCard loading={loading} data={displayData} />
             {displayData.source === "fallback" && (
-              <p className="mt-3 text-sm text-amber-400/90">
-                Data notice: Live updates are temporarily unavailable. Results are calculated using the last recorded settled-bets performance.
+              <p className="text-sm text-amber-400/90">
+                Data notice: Live updates temporarily unavailable. Using last recorded results.
               </p>
             )}
+          </div>
+
+          {/* Kelly Calculator */}
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-xl font-semibold text-slate-100 mb-2">
+                Kelly Criterion
+              </h2>
+              <p className="text-sm text-slate-400 leading-relaxed mb-4">
+                Optimal bet size based on your edge. Input bankroll, decimal odds, and your estimated win probability.
+                Use fractional Kelly (quarter recommended) to reduce variance.
+              </p>
+            </div>
+            <KellyCalculatorCard />
           </div>
         </div>
       </section>
