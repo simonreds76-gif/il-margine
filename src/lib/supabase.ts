@@ -44,6 +44,7 @@ export interface Bet {
   profit_loss: number | null;
   posted_at: string;
   settled_at: string | null;
+  match_date: string | null; // Date when match is played (YYYY-MM-DD)
   notes: string | null;
   // Joined data
   bookmaker?: Bookmaker;
