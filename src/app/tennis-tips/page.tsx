@@ -347,7 +347,7 @@ export default function TennisTips() {
                   <tbody>
                     {displayedPending.map((pick) => (
                       <tr key={pick.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
-                        <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm">{formatMatchDate(pick.match_date)}</td>
+                        <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(pick.match_date)}</td>
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{pick.event}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{pick.selection}</td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/50">
@@ -376,7 +376,7 @@ export default function TennisTips() {
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs text-slate-500">{formatMatchDate(pick.match_date)}</span>
+                          <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
                           <div className="font-medium text-slate-200">{pick.event}</div>
                         </div>
                         <div className="text-sm text-slate-400">{pick.selection}</div>
@@ -446,7 +446,7 @@ export default function TennisTips() {
                   <tbody>
                     {displayedRecent.map((result) => (
                       <tr key={result.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
-                        <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm">{formatMatchDate(result.match_date)}</td>
+                        <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(result.match_date)}</td>
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{result.event}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{result.selection}</td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/50">
@@ -478,7 +478,7 @@ export default function TennisTips() {
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs text-slate-500">{formatMatchDate(result.match_date)}</span>
+                          <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(result.match_date)}</span>
                           <div className="font-medium text-slate-200">{result.event}</div>
                         </div>
                         <div className="text-sm text-slate-400">{result.selection}</div>

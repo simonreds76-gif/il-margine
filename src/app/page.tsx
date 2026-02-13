@@ -411,7 +411,7 @@ export default function Home() {
                           className="border-b border-slate-800/50 hover:bg-slate-800/30 cursor-pointer"
                           onClick={() => window.location.href = href}
                         >
-                          <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm">{formatMatchDate(bet.match_date)}</td>
+                          <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(bet.match_date)}</td>
                           <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50 min-w-[180px] whitespace-nowrap">{bet.event}</td>
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.player || "–"}</td>
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
@@ -436,7 +436,7 @@ export default function Home() {
                   return (
                     <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/20">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs text-slate-500">{formatMatchDate(bet.match_date)}</span>
+                        <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(bet.match_date)}</span>
                         <span className="font-mono text-slate-200">{bet.odds}</span>
                       </div>
                       <div className="font-medium text-slate-200 mb-1">{bet.event}</div>
@@ -511,7 +511,7 @@ export default function Home() {
                           className="border-b border-slate-800/50 hover:bg-slate-800/30 cursor-pointer"
                           onClick={() => window.location.href = href}
                         >
-                          <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm">{formatMatchDate(bet.match_date)}</td>
+                          <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(bet.match_date)}</td>
                           <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50 min-w-[180px] whitespace-nowrap">{bet.event}</td>
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.player || "–"}</td>
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
@@ -547,7 +547,7 @@ export default function Home() {
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xs text-slate-500">{formatMatchDate(bet.match_date)}</span>
+                            <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(bet.match_date)}</span>
                             <div className="font-medium text-slate-200">{bet.event}</div>
                           </div>
                           <div className="text-sm text-slate-300 mb-1">
