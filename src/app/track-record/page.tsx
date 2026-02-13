@@ -5,24 +5,24 @@ import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
 
 const FAQ_ITEMS = [
   {
-    q: "Where can I see the actual data?",
-    a: "Data is being integrated into the site. Player props go to Telegram first (quick markets), tennis posts here. Check back as the database populates.",
+    q: "How is performance calculated?",
+    a: "ROI (Return on Investment) is calculated as total profit divided by total stakes across all bets. We use industry-standard metrics: win rate, average odds, and profit/loss in units. All calculations are transparent and verifiable.",
   },
   {
-    q: "How do I verify picks are real?",
-    a: "Telegram timestamps for player props (posted before events start). Tennis picks posted on the website. You can check the archive to verify timing.",
+    q: "Why track props and tennis separately?",
+    a: "Player props and tennis are different markets. Props markets are less efficient; bookmakers misprice them more often, creating larger edges. However, they restrict stakes quickly. Tennis markets are sharper but allow higher stakes. Tracking them separately shows where value exists and how each market performs.",
   },
   {
-    q: "What if results are poor?",
-    a: "They stay logged. Losing bets are part of betting. Variance happens. What gets posted stays posted.",
-  },
-  {
-    q: "Where's the detailed breakdown?",
-    a: "Being built. Basic data is tracked, detailed tables and filtering coming as the site develops.",
+    q: "How do you handle losing runs?",
+    a: "They're displayed exactly as they happen. Losing streaks are normal in value betting. What matters is long-term edge, not short-term results. We don't hide drawdowns or cherry-pick periods. The full record stays public, wins and losses.",
   },
   {
     q: "Can past picks be edited?",
     a: "No. Telegram timestamps are immutable. Site data can't be retroactively changed once logged.",
+  },
+  {
+    q: "What's wrong with most tipster services?",
+    a: "They're frauds. \"Cappers\" posting plays of the year with no timestamps, 20-unit max bets that vanish when they lose, and records conveniently edited after the fact. It's not analysis. It's gambling repackaged as expertise to sell subscriptions. These aren't professionals, they're marketers who discovered that confidence sells better than honesty. Real edge shows up in verifiable data: immutable timestamps, closing line value, and a public record that includes every losing streak. If they're hiding on social media instead of posting transparent results, you already know why.",
   },
 ];
 
