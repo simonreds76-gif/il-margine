@@ -42,29 +42,19 @@ export default function CalculatorPage() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [statsRes, betsRes] = await Promise.all([
-        supabase.from("category_stats").select("*"),
-        supabase.from("bets").select("market, stake").in("status", ["won", "lost"]),
-      ]);
-
-      const stats = statsRes.data ?? [];
+      const { data } = await supabase.from("category_stats").select("*");
+      const stats = data ?? [];
       if (stats.length) setCategoryStats(stats);
-
-      const settledBets = betsRes.data ?? [];
-      const liveStakeByMarket = {
-        props: settledBets.filter((b) => b.market === "props").reduce((sum, b) => sum + (Number(b.stake) || 0), 0),
-        tennis: settledBets.filter((b) => b.market === "tennis").reduce((sum, b) => sum + (Number(b.stake) || 0), 0),
-      };
 
       const propsRows = stats.filter((s: CategoryStats) => s.market === "props");
       const tennisRows = stats.filter((s: CategoryStats) => s.market === "tennis");
 
       const propsLiveBets = propsRows.reduce((sum, s) => sum + (s.total_bets || 0), 0);
       const propsLiveProfit = propsRows.reduce((sum, s) => sum + (Number(s.total_profit) || 0), 0);
-      const propsLiveStake = liveStakeByMarket.props > 0 ? liveStakeByMarket.props : propsLiveBets;
+      const propsLiveStake = propsRows.reduce((sum, s) => sum + (Number(s.total_stake) || 0), 0) || propsLiveBets;
       const tennisLiveBets = tennisRows.reduce((sum, s) => sum + (s.total_bets || 0), 0);
       const tennisLiveProfit = tennisRows.reduce((sum, s) => sum + (Number(s.total_profit) || 0), 0);
-      const tennisLiveStake = liveStakeByMarket.tennis > 0 ? liveStakeByMarket.tennis : tennisLiveBets;
+      const tennisLiveStake = tennisRows.reduce((sum, s) => sum + (Number(s.total_stake) || 0), 0) || tennisLiveBets;
 
       const propsProfit = BASELINE_STATS.props.total_profit + propsLiveProfit;
       const propsStake = BASELINE_STATS.props.total_stake + propsLiveStake;

@@ -108,8 +108,7 @@ export default function Home() {
     const propsLiveWins = propsLive?.wins || 0;
     const propsLiveLosses = propsLive?.losses || 0;
     const propsLiveProfit = Number(propsLive?.total_profit) || 0;
-    // Estimate stake from bets (assuming avg 1u per bet if no stake data)
-    const propsLiveStake = propsLiveBets;
+    const propsLiveStake = Number(propsLive?.total_stake) || propsLiveBets;
     
     const propsCombined: CombinedMarketStats = {
       total_bets: BASELINE_STATS.props.total_bets + propsLiveBets,
@@ -122,7 +121,7 @@ export default function Home() {
     const propsWins = BASELINE_STATS.props.wins + propsLiveWins;
     const propsLosses = BASELINE_STATS.props.losses + propsLiveLosses;
     const propsProfit = BASELINE_STATS.props.total_profit + propsLiveProfit;
-    const propsStake = BASELINE_STATS.props.total_stake + (propsLiveStake || propsLiveBets); // Fallback to bet count if no stake data
+    const propsStake = BASELINE_STATS.props.total_stake + propsLiveStake;
     
     propsCombined.win_rate = calculateWinRate(propsWins, propsLosses);
     propsCombined.roi = calculateROI(propsProfit, propsStake || 1);
@@ -144,8 +143,7 @@ export default function Home() {
     const tennisLiveWins = tennisLive?.wins || 0;
     const tennisLiveLosses = tennisLive?.losses || 0;
     const tennisLiveProfit = Number(tennisLive?.total_profit) || 0;
-    // Estimate stake from bets (assuming avg 1u per bet if no stake data)
-    const tennisLiveStake = tennisLiveBets;
+    const tennisLiveStake = Number(tennisLive?.total_stake) || tennisLiveBets;
     
     const tennisCombined: CombinedMarketStats = {
       total_bets: BASELINE_STATS.tennis.total_bets + tennisLiveBets,
@@ -158,7 +156,7 @@ export default function Home() {
     const tennisWins = BASELINE_STATS.tennis.wins + tennisLiveWins;
     const tennisLosses = BASELINE_STATS.tennis.losses + tennisLiveLosses;
     const tennisProfit = BASELINE_STATS.tennis.total_profit + tennisLiveProfit;
-    const tennisStake = BASELINE_STATS.tennis.total_stake + (tennisLiveStake || tennisLiveBets);
+    const tennisStake = BASELINE_STATS.tennis.total_stake + tennisLiveStake;
     
     tennisCombined.win_rate = calculateWinRate(tennisWins, tennisLosses);
     tennisCombined.roi = calculateROI(tennisProfit, tennisStake || 1);
@@ -175,7 +173,7 @@ export default function Home() {
     const overallLiveWins = propsLiveWins + tennisLiveWins;
     const overallLiveLosses = propsLiveLosses + tennisLiveLosses;
     const overallLiveProfit = propsLiveProfit + tennisLiveProfit;
-    const overallLiveStake = (propsLiveStake || propsLiveBets) + (tennisLiveStake || tennisLiveBets);
+    const overallLiveStake = propsLiveStake + tennisLiveStake;
     
     const overallCombined: CombinedMarketStats = {
       total_bets: BASELINE_STATS.overall.total_bets + overallLiveBets,
@@ -278,16 +276,27 @@ export default function Home() {
             
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8">
               <div className="p-5 sm:p-6 bg-slate-900/60 rounded-lg border border-slate-800/50 hover:border-emerald-500/30 transition-all">
-                <div className="text-3xl font-bold text-emerald-400 font-mono mb-2">✓</div>
-                <div className="text-sm text-slate-400 font-medium">Verified Edge</div>
+                <div className="text-3xl sm:text-4xl font-semibold text-emerald-400 font-mono mb-2">
+                  {displayStats.overall.roi > 0 ? "+" : ""}{displayStats.overall.roi.toFixed(1)}% ROI
+                </div>
+                <div className="text-sm text-slate-300">Since Oct 2024</div>
               </div>
               <div className="p-5 sm:p-6 bg-slate-900/60 rounded-lg border border-slate-800/50 hover:border-emerald-500/30 transition-all">
-                <div className="text-3xl font-bold text-emerald-400 font-mono mb-2">100%</div>
-                <div className="text-sm text-slate-400 font-medium">Transparent</div>
+                <div className="text-3xl sm:text-4xl font-semibold text-emerald-400 font-mono mb-2">
+                  {displayStats.overall.total_bets.toLocaleString()}+
+                </div>
+                <div className="text-sm text-slate-300">
+                  {(() => {
+                    const start = new Date("2024-10-01");
+                    const now = new Date();
+                    const months = Math.max(1, (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()));
+                    return `${months}+ Months`;
+                  })()}
+                </div>
               </div>
               <div className="p-5 sm:p-6 bg-slate-900/60 rounded-lg border border-slate-800/50 hover:border-emerald-500/30 transition-all">
-                <div className="text-3xl font-bold text-emerald-400 font-mono mb-2">{displayStats.overall.total_bets.toLocaleString()}+</div>
-                <div className="text-sm text-slate-400 font-medium">Tracked Bets</div>
+                <div className="text-3xl sm:text-4xl font-semibold text-emerald-400 mb-2">Data-Driven</div>
+                <div className="text-sm text-slate-300">Mathematical Edge</div>
               </div>
             </div>
           </div>

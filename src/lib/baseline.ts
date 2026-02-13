@@ -52,13 +52,14 @@ export const BASELINE_STATS: BaselineStats = {
     total_stake: 447, // Assuming average 1u stake
     avg_odds: 0, // Will calculate from ROI and win rate if needed
   },
+  // overall = props + tennis (must stay in sync)
   overall: {
-    total_bets: 1200,
-    wins: Math.round(1200 * 0.56), // 56% win rate = 672 wins
-    losses: 1200 - Math.round(1200 * 0.56), // 528 losses
-    total_profit: 1200 * 0.18, // +18% ROI
-    total_stake: 1200, // Assuming average 1u stake
-    avg_odds: 0, // Will calculate if needed
+    get total_bets() { return BASELINE_STATS.props.total_bets + BASELINE_STATS.tennis.total_bets; },
+    get wins() { return BASELINE_STATS.props.wins + BASELINE_STATS.tennis.wins; },
+    get losses() { return BASELINE_STATS.props.losses + BASELINE_STATS.tennis.losses; },
+    get total_profit() { return BASELINE_STATS.props.total_profit + BASELINE_STATS.tennis.total_profit; },
+    get total_stake() { return BASELINE_STATS.props.total_stake + BASELINE_STATS.tennis.total_stake; },
+    avg_odds: 0, // Weighted from props + tennis when combined
   },
   // Category-level baselines - Calculated from market totals with distribution rules
   categoryBaselines: {

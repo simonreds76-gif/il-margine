@@ -122,7 +122,7 @@ export default function TennisTips() {
       const liveProfit = allStats.reduce((sum, s) => sum + (Number(s.total_profit) || 0), 0);
       const liveWins = allStats.reduce((sum, s) => sum + (s.wins || 0), 0);
       const liveLosses = allStats.reduce((sum, s) => sum + (s.losses || 0), 0);
-      const liveStake = liveBets;
+      const liveStake = allStats.reduce((sum, s) => sum + (Number(s.total_stake) || 0), 0) || liveBets;
       
       // Combine with baseline
       const totalBets = BASELINE_STATS.tennis.total_bets + liveBets;
@@ -131,7 +131,12 @@ export default function TennisTips() {
       const totalLosses = BASELINE_STATS.tennis.losses + liveLosses;
       const totalStake = BASELINE_STATS.tennis.total_stake + liveStake;
       
-      const avgOdds = allStats.length > 0 ? allStats.reduce((sum, s) => sum + (Number(s.avg_odds) || 0), 0) / allStats.length : 0;
+      // Weighted avg by bet count (baseline + live)
+      const baselineOddsWeight = Object.values(BASELINE_STATS.categoryBaselines.tennis).reduce(
+        (sum, c) => sum + (c.avg_odds || 0) * (c.total_bets || 0), 0
+      );
+      const liveOddsWeight = allStats.reduce((sum, s) => sum + (Number(s.avg_odds) || 0) * (s.total_bets || 0), 0);
+      const avgOdds = totalBets > 0 ? (baselineOddsWeight + liveOddsWeight) / totalBets : 0;
       
       return {
         total_bets: totalBets,
@@ -154,7 +159,7 @@ export default function TennisTips() {
       const liveProfit = Number(catStats.total_profit) || 0;
       const liveWins = catStats.wins || 0;
       const liveLosses = catStats.losses || 0;
-      const liveStake = liveBets;
+      const liveStake = Number(catStats.total_stake) || liveBets;
       return {
         total_bets: liveBets,
         roi: liveStake > 0 ? calculateROI(liveProfit, liveStake) : 0,
@@ -167,7 +172,7 @@ export default function TennisTips() {
     const liveProfit = Number(catStats?.total_profit) || 0;
     const liveWins = catStats?.wins || 0;
     const liveLosses = catStats?.losses || 0;
-    const liveStake = liveBets;
+    const liveStake = Number(catStats?.total_stake) || liveBets;
     
     // Combine category baseline + live data
     const totalBets = categoryBaseline.total_bets + liveBets;

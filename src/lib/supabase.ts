@@ -60,6 +60,7 @@ export interface MarketStats {
   roi: number;
   avg_odds: number;
   avg_stake: number;
+  total_stake?: number; // sum of stake for won+lost (actual units in play)
 }
 
 export interface CategoryStats {
@@ -73,4 +74,5 @@ export interface CategoryStats {
   total_profit: number;
   roi: number;
   avg_odds: number;
+  total_stake?: number; // sum of stake for won+lost (actual units in play)
 }
