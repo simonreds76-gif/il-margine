@@ -64,15 +64,16 @@ export const BASELINE_STATS: BaselineStats = {
   // Category-level baselines - Calculated from market totals with distribution rules
   categoryBaselines: {
     props: {
-      // Serie A = 2x PL, Champions League < PL, Other = 25
-      // Distribution: PL=225, SerieA=450 (double PL), UCL=80 (lower than PL), Other=25 (Total: 780)
+      // Serie A = 2x PL, Champions League, Other = 25. Avg odds weighted to 2.75 for All Leagues.
+      // Distribution: PL=225, SerieA=450 (double PL), UCL=80, Other=25 (Total: 780)
+      // Logic: Serie A = main focus (higher odds); UCL = higher variance; PL = liquid; Other = mixed
       pl: {
         total_bets: 225,
         wins: Math.round(225 * 0.58), // 58% win rate = 131 wins
         losses: 225 - Math.round(225 * 0.58), // 94 losses
         total_profit: 225 * 0.22, // 22% ROI (lower than average) = 49.5u profit
         total_stake: 225,
-        avg_odds: 1.90, // Calculated from ROI and win rate: (1 + ROI) / win_rate ≈ 1.90
+        avg_odds: 2.68, // Weighted: (225*2.68 + 450*2.80 + 80*2.75 + 25*2.50) / 780 = 2.75
       },
       seriea: {
         total_bets: 450, // Double of PL (Serie A expert)
@@ -80,15 +81,15 @@ export const BASELINE_STATS: BaselineStats = {
         losses: 450 - Math.round(450 * 0.58), // 189 losses
         total_profit: 450 * 0.28, // 28% ROI (higher - Serie A expert) = 126u profit
         total_stake: 450,
-        avg_odds: 2.05, // Higher odds reflect better value finding (expert level)
+        avg_odds: 2.80, // Main focus, higher odds (value found)
       },
       ucl: {
-        total_bets: 80, // Lower than PL
+        total_bets: 80,
         wins: Math.round(80 * 0.58), // 58% win rate = 46 wins
         losses: 80 - Math.round(80 * 0.58), // 34 losses
         total_profit: 80 * 0.24, // 24% ROI = 19.2u profit
         total_stake: 80,
-        avg_odds: 1.93, // Calculated from ROI and win rate
+        avg_odds: 2.75, // Champions League: higher variance, less predictable
       },
       other: {
         total_bets: 25, // As specified
@@ -96,7 +97,7 @@ export const BASELINE_STATS: BaselineStats = {
         losses: 25 - Math.round(25 * 0.58), // 10 losses
         total_profit: 25 * 0.22, // 22% ROI = 5.5u profit
         total_stake: 25,
-        avg_odds: 1.90, // Similar to PL
+        avg_odds: 2.50, // Mixed leagues
       },
     },
     tennis: {

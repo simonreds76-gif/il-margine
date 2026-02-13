@@ -164,6 +164,7 @@ export default function PlayerProps() {
     const liveWins = leagueStats?.wins || 0;
     const liveLosses = leagueStats?.losses || 0;
     const liveStake = Number(leagueStats?.total_stake) || liveBets;
+    const liveAvgOdds = Number(leagueStats?.avg_odds) || 0;
     
     // Combine category baseline + live data
     const totalBets = categoryBaseline.total_bets + liveBets;
@@ -172,11 +173,16 @@ export default function PlayerProps() {
     const totalLosses = categoryBaseline.losses + liveLosses;
     const totalStake = categoryBaseline.total_stake + liveStake;
     
+    // Weighted avg odds (baseline + live); fallback to baseline when no live data
+    const baselineOddsWeight = (categoryBaseline.avg_odds || 0) * (categoryBaseline.total_bets || 0);
+    const liveOddsWeight = liveAvgOdds * liveBets;
+    const avgOdds = totalBets > 0 ? (baselineOddsWeight + liveOddsWeight) / totalBets : (categoryBaseline.avg_odds || 0);
+    
     return {
       total_bets: totalBets,
       roi: calculateROI(totalProfit, totalStake || 1),
       win_rate: calculateWinRate(totalWins, totalLosses),
-      avg_odds: Number(leagueStats?.avg_odds) || 0,
+      avg_odds: avgOdds,
     };
   };
 
