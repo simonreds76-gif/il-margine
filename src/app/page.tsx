@@ -8,8 +8,9 @@ import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats
 import BookmakerLogo from "@/components/BookmakerLogo";
 import TelegramButton from "@/components/TelegramButton";
 import Footer from "@/components/Footer";
+import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import { BETA_NOTICE } from "@/lib/config";
-import { formatStake } from "@/lib/format";
+import { formatStake, formatMatchDate } from "@/lib/format";
 
 interface CombinedMarketStats {
   total_bets: number;
@@ -392,6 +393,7 @@ export default function Home() {
                 <table className="w-full border-collapse min-w-full">
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '70px' }}>Date</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800 min-w-[180px]">Match</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '100px' }}>Player</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
@@ -409,6 +411,7 @@ export default function Home() {
                           className="border-b border-slate-800/50 hover:bg-slate-800/30 cursor-pointer"
                           onClick={() => window.location.href = href}
                         >
+                          <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm">{formatMatchDate(bet.match_date)}</td>
                           <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50 min-w-[180px] whitespace-nowrap">{bet.event}</td>
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.player || "–"}</td>
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
@@ -432,13 +435,16 @@ export default function Home() {
                   const href = bet.market === "tennis" ? "/tennis-tips#picks" : bet.market === "props" ? "/player-props#picks" : "#";
                   return (
                     <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/20">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs text-slate-500">{formatMatchDate(bet.match_date)}</span>
+                        <span className="font-mono text-slate-200">{bet.odds}</span>
+                      </div>
                       <div className="font-medium text-slate-200 mb-1">{bet.event}</div>
                       <div className="text-sm text-slate-300 mb-2">
                         {bet.player && <span>{bet.player} · </span>}
                         {bet.selection}
                       </div>
                       <div className="flex items-center gap-4 text-sm">
-                        <span className="font-mono text-slate-200">{bet.odds}</span>
                         <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
                         <span className="font-mono text-slate-200">{formatStake(bet.stake)}u</span>
                       </div>
@@ -485,6 +491,7 @@ export default function Home() {
                 <table className="w-full border-collapse min-w-full">
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '70px' }}>Date</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800 min-w-[180px]">Match</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '100px' }}>Player</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
@@ -504,6 +511,7 @@ export default function Home() {
                           className="border-b border-slate-800/50 hover:bg-slate-800/30 cursor-pointer"
                           onClick={() => window.location.href = href}
                         >
+                          <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm">{formatMatchDate(bet.match_date)}</td>
                           <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50 min-w-[180px] whitespace-nowrap">{bet.event}</td>
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.player || "–"}</td>
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
@@ -538,7 +546,10 @@ export default function Home() {
                     <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/20">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
-                          <div className="font-medium text-slate-200 mb-1">{bet.event}</div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs text-slate-500">{formatMatchDate(bet.match_date)}</span>
+                            <div className="font-medium text-slate-200">{bet.event}</div>
+                          </div>
                           <div className="text-sm text-slate-300 mb-1">
                             {bet.player && <span>{bet.player} · </span>}
                             {bet.selection}
@@ -595,6 +606,8 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      <MonthlyBreakdownSection scope="combined" />
 
       {/* Quick FAQ */}
       <section className="py-12 md:py-16 border-b border-slate-800/50 bg-slate-900/20">

@@ -7,7 +7,8 @@ import { supabase, Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import Footer from "@/components/Footer";
-import { formatStake } from "@/lib/format";
+import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
+import { formatStake, formatMatchDate } from "@/lib/format";
 
 export default function TennisTips() {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -334,6 +335,7 @@ export default function TennisTips() {
                 <table className="w-full border-collapse min-w-full">
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '70px' }}>Date</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
@@ -345,6 +347,7 @@ export default function TennisTips() {
                   <tbody>
                     {displayedPending.map((pick) => (
                       <tr key={pick.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
+                        <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm">{formatMatchDate(pick.match_date)}</td>
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{pick.event}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{pick.selection}</td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/50">
@@ -372,7 +375,10 @@ export default function TennisTips() {
                   <div key={pick.id} className="p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
-                        <div className="font-medium text-slate-200 mb-1">{pick.event}</div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs text-slate-500">{formatMatchDate(pick.match_date)}</span>
+                          <div className="font-medium text-slate-200">{pick.event}</div>
+                        </div>
                         <div className="text-sm text-slate-400">{pick.selection}</div>
                       </div>
                       <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400 ml-2">
@@ -427,6 +433,7 @@ export default function TennisTips() {
                 <table className="w-full border-collapse min-w-full">
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '70px' }}>Date</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
@@ -439,6 +446,7 @@ export default function TennisTips() {
                   <tbody>
                     {displayedRecent.map((result) => (
                       <tr key={result.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
+                        <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm">{formatMatchDate(result.match_date)}</td>
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{result.event}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{result.selection}</td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/50">
@@ -469,7 +477,10 @@ export default function TennisTips() {
                   <div key={result.id} className="p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
-                        <div className="font-medium text-slate-200 mb-1">{result.event}</div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs text-slate-500">{formatMatchDate(result.match_date)}</span>
+                          <div className="font-medium text-slate-200">{result.event}</div>
+                        </div>
                         <div className="text-sm text-slate-400">{result.selection}</div>
                       </div>
                       <span className={`text-xs font-mono px-2 py-1 rounded ml-2 ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
@@ -513,6 +524,8 @@ export default function TennisTips() {
           )}
         </div>
       </section>
+
+      <MonthlyBreakdownSection scope="tennis" />
 
       <Footer />
     </div>

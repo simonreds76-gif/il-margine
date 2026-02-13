@@ -2,18 +2,25 @@
 
 import { useState, useEffect } from "react";
 import { supabase, Bet, Bookmaker } from "@/lib/supabase";
+import MonthlyBreakdown from "@/components/MonthlyBreakdown";
 
 export default function AdminPanel() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [activeTab, setActiveTab] = useState<"add" | "pending" | "recent">("add");
+  const [activeTab, setActiveTab] = useState<"add" | "pending" | "recent" | "settings">("add");
   const [bookmakers, setBookmakers] = useState<Bookmaker[]>([]);
   const [pendingBets, setPendingBets] = useState<Bet[]>([]);
   const [recentBets, setRecentBets] = useState<Bet[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [editingBet, setEditingBet] = useState<Bet | null>(null);
+  const [monthlyBreakdownPublic, setMonthlyBreakdownPublic] = useState<Record<string, boolean>>({
+    combined: false,
+    props: false,
+    tennis: false,
+  });
+  const [settingsLoading, setSettingsLoading] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({
     market: "props" as "props" | "tennis" | "betbuilders" | "atg",
     category: "",
@@ -23,6 +30,7 @@ export default function AdminPanel() {
     odds: "",
     bookmaker_id: "",
     stake: "1",
+    match_date: "",
     notes: "",
   });
 
@@ -36,6 +44,7 @@ export default function AdminPanel() {
     odds: "",
     bookmaker_id: "",
     stake: "1",
+    match_date: new Date().toISOString().slice(0, 10),
     notes: "",
   });
 
@@ -87,14 +96,49 @@ export default function AdminPanel() {
     if (localStorage.getItem("admin_logged_in") === "true") setIsLoggedIn(true);
   }, []);
 
-  // Fetch bookmakers
+  // Fetch bookmakers and settings
   useEffect(() => {
     if (isLoggedIn) {
       fetchBookmakers();
       fetchPendingBets();
       fetchRecentBets();
+      fetchSettings();
     }
   }, [isLoggedIn]);
+
+  const SETTING_KEYS = { combined: "monthly_breakdown_combined_public", props: "monthly_breakdown_props_public", tennis: "monthly_breakdown_tennis_public" } as const;
+
+  const fetchSettings = async () => {
+    const keys = Object.values(SETTING_KEYS);
+    const { data: rows } = await supabase.from("site_settings").select("key, value").in("key", keys);
+    const result: Record<string, boolean> = { combined: false, props: false, tennis: false };
+    for (const key of keys) {
+      const scope = key === SETTING_KEYS.combined ? "combined" : key === SETTING_KEYS.props ? "props" : "tennis";
+      result[scope] = rows?.find((r) => r.key === key)?.value === true;
+    }
+    setMonthlyBreakdownPublic(result);
+  };
+
+  const toggleMonthlyBreakdownPublic = async (scope: "combined" | "props" | "tennis") => {
+    setSettingsLoading(scope);
+    setMessage(null);
+    const key = SETTING_KEYS[scope];
+    const newVal = !monthlyBreakdownPublic[scope];
+    const res = await fetch("/api/admin/settings", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key, value: newVal }),
+    });
+    const data = await res.json().catch(() => ({}));
+    setSettingsLoading(null);
+    if (res.ok) {
+      setMonthlyBreakdownPublic((prev) => ({ ...prev, [scope]: newVal }));
+      const labels = { combined: "Homepage (combined)", props: "Player Props", tennis: "Tennis" };
+      setMessage({ type: "success", text: `${labels[scope]}: ${newVal ? "now public" : "now hidden"}` });
+    } else {
+      setMessage({ type: "error", text: data.error || "Failed to update" });
+    }
+  };
 
   const fetchBookmakers = async () => {
     const { data, error } = await supabase
@@ -146,6 +190,7 @@ export default function AdminPanel() {
         odds: parseFloat(form.odds),
         bookmaker_id: parseInt(form.bookmaker_id),
         stake: Math.round(parseFloat(form.stake) * 100) / 100,
+        match_date: form.match_date || null,
         notes: form.notes || null,
       }),
     });
@@ -153,7 +198,7 @@ export default function AdminPanel() {
     setLoading(false);
     if (res.ok) {
       setMessage({ type: "success", text: "Bet added successfully!" });
-      setForm({ ...form, event: "", player: "", selection: "", odds: "", notes: "" });
+      setForm({ ...form, event: "", player: "", selection: "", odds: "", match_date: new Date().toISOString().slice(0, 10), notes: "" });
       fetchPendingBets();
     } else {
       setMessage({ type: "error", text: data.error || "Failed to add bet" });
@@ -214,6 +259,7 @@ export default function AdminPanel() {
       odds: String(bet.odds),
       bookmaker_id: String(bet.bookmaker_id),
       stake: String(bet.stake),
+      match_date: bet.match_date ? bet.match_date.slice(0, 10) : new Date().toISOString().slice(0, 10),
       notes: bet.notes || "",
     });
   };
@@ -234,6 +280,7 @@ export default function AdminPanel() {
       odds: parseFloat(editForm.odds),
       bookmaker_id: parseInt(editForm.bookmaker_id),
       stake: Math.round(parseFloat(editForm.stake) * 100) / 100,
+      match_date: editForm.match_date || null,
       notes: editForm.notes || null,
     };
 
@@ -342,6 +389,7 @@ export default function AdminPanel() {
             { id: "add", label: "Add Bet" },
             { id: "pending", label: `Pending (${pendingBets.length})` },
             { id: "recent", label: `Recent (${recentBets.length})` },
+            { id: "settings", label: "Settings" },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -425,6 +473,18 @@ export default function AdminPanel() {
                 placeholder="e.g. Arsenal vs Chelsea"
                 value={form.event}
                 onChange={(e) => setForm({ ...form, event: e.target.value })}
+                required
+                className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+
+            {/* Match date */}
+            <div>
+              <label className="block text-xs text-slate-500 mb-1">Match date</label>
+              <input
+                type="date"
+                value={form.match_date}
+                onChange={(e) => setForm({ ...form, match_date: e.target.value })}
                 required
                 className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
               />
@@ -603,6 +663,41 @@ export default function AdminPanel() {
           </div>
         )}
 
+        {/* SETTINGS TAB */}
+        {activeTab === "settings" && (
+          <div className="space-y-8">
+            <p className="text-sm text-slate-400">
+              Control which monthly breakdowns are visible on each page. You can show props when they&apos;re profitable while keeping tennis hidden.
+            </p>
+            {[
+              { scope: "combined" as const, label: "Homepage", desc: "Tennis + props combined" },
+              { scope: "props" as const, label: "Player Props page", desc: "Props only" },
+              { scope: "tennis" as const, label: "Tennis page", desc: "Tennis only" },
+            ].map(({ scope, label, desc }) => (
+              <div key={scope} className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-3">
+                  <div>
+                    <h3 className="font-semibold">{label}</h3>
+                    <p className="text-xs text-slate-500">{desc}</p>
+                  </div>
+                  <button
+                    onClick={() => toggleMonthlyBreakdownPublic(scope)}
+                    disabled={settingsLoading === scope}
+                    className={`px-4 py-2 rounded font-medium transition-colors ${
+                      monthlyBreakdownPublic[scope]
+                        ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 hover:bg-emerald-500/30"
+                        : "bg-slate-700/50 text-slate-400 border border-slate-600 hover:bg-slate-700"
+                    }`}
+                  >
+                    {monthlyBreakdownPublic[scope] ? "Public (click to hide)" : "Hidden (click to show)"}
+                  </button>
+                </div>
+                <MonthlyBreakdown scope={scope} showAll />
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* RECENT BETS TAB */}
         {activeTab === "recent" && (
           <div className="space-y-2">
@@ -723,6 +818,16 @@ export default function AdminPanel() {
                   type="text"
                   value={editForm.event}
                   onChange={(e) => setEditForm({ ...editForm, event: e.target.value })}
+                  required
+                  className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-500 mb-1">Match date</label>
+                <input
+                  type="date"
+                  value={editForm.match_date}
+                  onChange={(e) => setEditForm({ ...editForm, match_date: e.target.value })}
                   required
                   className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
                 />

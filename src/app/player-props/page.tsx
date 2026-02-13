@@ -8,7 +8,8 @@ import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import TelegramButton from "@/components/TelegramButton";
 import Footer from "@/components/Footer";
-import { formatStake } from "@/lib/format";
+import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
+import { formatStake, formatMatchDate } from "@/lib/format";
 
 export default function PlayerProps() {
   const [activeLeague, setActiveLeague] = useState("all");
@@ -346,6 +347,7 @@ export default function PlayerProps() {
                 <table className="w-full border-collapse min-w-full">
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '70px' }}>Date</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '80px' }}>Player</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
@@ -358,6 +360,7 @@ export default function PlayerProps() {
                   <tbody>
                     {displayedPending.map((pick) => (
                       <tr key={pick.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
+                        <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm">{formatMatchDate(pick.match_date)}</td>
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{pick.event}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{pick.player || '-'}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{pick.selection}</td>
@@ -386,7 +389,10 @@ export default function PlayerProps() {
                   <div key={pick.id} className="p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
-                        <div className="font-medium text-slate-200 mb-1">{pick.event}</div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs text-slate-500">{formatMatchDate(pick.match_date)}</span>
+                          <div className="font-medium text-slate-200">{pick.event}</div>
+                        </div>
                         <div className="text-sm text-slate-400 mb-1">
                           {pick.player && <span>{pick.player} • </span>}
                           {pick.selection}
@@ -450,6 +456,7 @@ export default function PlayerProps() {
                 <table className="w-full border-collapse min-w-full">
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '70px' }}>Date</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '80px' }}>Player</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
@@ -463,6 +470,7 @@ export default function PlayerProps() {
                   <tbody>
                     {displayedRecent.map((result) => (
                       <tr key={result.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
+                        <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm">{formatMatchDate(result.match_date)}</td>
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{result.event}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{result.player || '-'}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{result.selection}</td>
@@ -494,7 +502,10 @@ export default function PlayerProps() {
                   <div key={result.id} className="p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
-                        <div className="font-medium text-slate-200 mb-1">{result.event}</div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs text-slate-500">{formatMatchDate(result.match_date)}</span>
+                          <div className="font-medium text-slate-200">{result.event}</div>
+                        </div>
                         <div className="text-sm text-slate-400 mb-1">
                           {result.player && <span>{result.player} • </span>}
                           {result.selection}
@@ -541,6 +552,8 @@ export default function PlayerProps() {
           )}
         </div>
       </section>
+
+      <MonthlyBreakdownSection scope="props" />
 
       <Footer />
     </div>
