@@ -283,7 +283,7 @@ export default function Home() {
               </div>
               <div className="p-5 sm:p-6 bg-slate-900/60 rounded-lg border border-slate-800/50 hover:border-emerald-500/30 transition-all">
                 <div className="text-3xl sm:text-4xl font-semibold text-emerald-400 font-mono mb-2">
-                  {displayStats.overall.total_bets.toLocaleString()}+
+                  {displayStats.overall.total_bets.toLocaleString()}+ Bets
                 </div>
                 <div className="text-sm text-slate-300">
                   {(() => {
