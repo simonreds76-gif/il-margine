@@ -21,6 +21,7 @@ export default function AdminPanel() {
     tennis: false,
   });
   const [settingsLoading, setSettingsLoading] = useState<string | null>(null);
+  const [adminError, setAdminError] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({
     market: "props" as "props" | "tennis" | "betbuilders" | "atg",
     category: "",
@@ -109,14 +110,19 @@ export default function AdminPanel() {
   const SETTING_KEYS = { combined: "monthly_breakdown_combined_public", props: "monthly_breakdown_props_public", tennis: "monthly_breakdown_tennis_public" } as const;
 
   const fetchSettings = async () => {
-    const keys = Object.values(SETTING_KEYS);
-    const { data: rows } = await supabase.from("site_settings").select("key, value").in("key", keys);
-    const result: Record<string, boolean> = { combined: false, props: false, tennis: false };
-    for (const key of keys) {
-      const scope = key === SETTING_KEYS.combined ? "combined" : key === SETTING_KEYS.props ? "props" : "tennis";
-      result[scope] = rows?.find((r) => r.key === key)?.value === true;
+    try {
+      const keys = Object.values(SETTING_KEYS);
+      const { data: rows } = await supabase.from("site_settings").select("key, value").in("key", keys);
+      const result: Record<string, boolean> = { combined: false, props: false, tennis: false };
+      for (const key of keys) {
+        const scope = key === SETTING_KEYS.combined ? "combined" : key === SETTING_KEYS.props ? "props" : "tennis";
+        result[scope] = rows?.find((r) => r.key === key)?.value === true;
+      }
+      setMonthlyBreakdownPublic(result);
+    } catch (e) {
+      console.error("fetchSettings:", e);
+      setAdminError("Could not load settings. Check Supabase env vars.");
     }
-    setMonthlyBreakdownPublic(result);
   };
 
   const toggleMonthlyBreakdownPublic = async (scope: "combined" | "props" | "tennis") => {
@@ -141,37 +147,49 @@ export default function AdminPanel() {
   };
 
   const fetchBookmakers = async () => {
-    const { data, error } = await supabase
-      .from("bookmakers")
-      .select("*")
-      .eq("active", true)
-      .order("name");
-    if (data) setBookmakers(data);
-    if (error) console.log("Bookmakers error:", error);
+    try {
+      const { data, error } = await supabase
+        .from("bookmakers")
+        .select("*")
+        .eq("active", true)
+        .order("name");
+      if (data) setBookmakers(data);
+      if (error) console.error("Bookmakers error:", error);
+    } catch (e) {
+      console.error("fetchBookmakers:", e);
+      setAdminError("Could not connect to Supabase. Check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
+    }
   };
 
   const fetchPendingBets = async () => {
-    const { data, error } = await supabase
-      .from("bets")
-      .select("*, bookmaker:bookmakers(*)")
-      .eq("status", "pending")
-      .order("posted_at", { ascending: false });
-    if (data) setPendingBets(data);
-    if (error) console.log("Pending bets error:", error);
+    try {
+      const { data, error } = await supabase
+        .from("bets")
+        .select("*, bookmaker:bookmakers(*)")
+        .eq("status", "pending")
+        .order("posted_at", { ascending: false });
+      if (data) setPendingBets(data);
+      if (error) console.error("Pending bets error:", error);
+    } catch (e) {
+      console.error("fetchPendingBets:", e);
+      if (!adminError) setAdminError("Could not load data.");
+    }
   };
 
   const fetchRecentBets = async () => {
-    const { data, error } = await supabase
-      .from("bets")
-      .select("*, bookmaker:bookmakers(*)")
-      .in("status", ["won", "lost", "void"])
-      .order("settled_at", { ascending: false })
-      .limit(50);
-    if (data) {
-      console.log("Recent bets fetched:", data);
-      setRecentBets(data);
+    try {
+      const { data, error } = await supabase
+        .from("bets")
+        .select("*, bookmaker:bookmakers(*)")
+        .in("status", ["won", "lost", "void"])
+        .order("settled_at", { ascending: false })
+        .limit(50);
+      if (data) setRecentBets(data);
+      if (error) console.error("Recent bets error:", error);
+    } catch (e) {
+      console.error("fetchRecentBets:", e);
+      if (!adminError) setAdminError("Could not load data.");
     }
-    if (error) console.log("Recent bets error:", error);
   };
 
   const handleAddBet = async (e: React.FormEvent) => {
@@ -405,6 +423,15 @@ export default function AdminPanel() {
           ))}
         </div>
       </div>
+
+      {/* Admin error (e.g. missing Supabase env vars) */}
+      {adminError && (
+        <div className="max-w-4xl mx-auto mt-4 px-4">
+          <div className="p-3 rounded text-sm bg-red-500/10 text-red-400 border border-red-500/30">
+            {adminError} Ensure env vars are set for Preview deployments in Vercel.
+          </div>
+        </div>
+      )}
 
       {/* Message */}
       {message && (

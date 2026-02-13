@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import AdminErrorBoundary from "./AdminErrorBoundary";
 
 /** Avoid prerendering admin so Supabase is never required at build time. */
 export const dynamic = "force-dynamic";
@@ -16,5 +17,5 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <AdminErrorBoundary>{children}</AdminErrorBoundary>;
 }
