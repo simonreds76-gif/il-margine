@@ -276,14 +276,22 @@ export default function Home() {
             
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8">
               <div className="p-5 sm:p-6 bg-slate-900/60 rounded-lg border border-slate-800/50 hover:border-emerald-500/30 transition-all">
-                <div className="text-3xl sm:text-4xl font-semibold text-emerald-400 font-mono mb-2">
-                  {displayStats.overall.roi > 0 ? "+" : ""}{displayStats.overall.roi.toFixed(1)}% ROI
+                <div className="text-3xl sm:text-4xl font-semibold text-emerald-400 font-mono mb-2 min-h-[2.25rem]">
+                  {loading ? (
+                    <span className="inline-block animate-pulse text-slate-500">—</span>
+                  ) : (
+                    <>{displayStats.overall.roi > 0 ? "+" : ""}{displayStats.overall.roi.toFixed(1)}% ROI</>
+                  )}
                 </div>
                 <div className="text-sm text-slate-300">Since Oct 2024</div>
               </div>
               <div className="p-5 sm:p-6 bg-slate-900/60 rounded-lg border border-slate-800/50 hover:border-emerald-500/30 transition-all">
-                <div className="text-3xl sm:text-4xl font-semibold text-emerald-400 font-mono mb-2">
-                  {displayStats.overall.total_bets.toLocaleString()}+ Bets
+                <div className="text-3xl sm:text-4xl font-semibold text-emerald-400 font-mono mb-2 min-h-[2.25rem]">
+                  {loading ? (
+                    <span className="inline-block animate-pulse text-slate-500">—</span>
+                  ) : (
+                    <>{displayStats.overall.total_bets.toLocaleString()}+ Bets</>
+                  )}
                 </div>
                 <div className="text-sm text-slate-300">
                   {(() => {
