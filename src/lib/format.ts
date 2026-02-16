@@ -4,6 +4,12 @@ export function formatStake(stake: number | string): string {
   return String(parseFloat(n.toFixed(2)));
 }
 
+/** Odds display: always 2 decimals (1.80, 2.20, 3.00) */
+export function formatOdds(odds: number | string): string {
+  const n = Number(odds);
+  return isNaN(n) ? "–" : n.toFixed(2);
+}
+
 /** Match date display: e.g. "7 Feb" */
 export function formatMatchDate(dateStr: string | null | undefined): string {
   if (!dateStr) return "–";

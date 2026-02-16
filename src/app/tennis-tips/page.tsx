@@ -8,7 +8,7 @@ import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
-import { formatStake, formatMatchDate } from "@/lib/format";
+import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
 
 export default function TennisTips() {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -303,7 +303,7 @@ export default function TennisTips() {
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${colorClasses[activeColor].text} font-mono mb-2`}>{currentStats.avg_odds.toFixed(2)}</div>
+              <div className={`text-2xl font-bold ${colorClasses[activeColor].text} font-mono mb-2`}>{formatOdds(currentStats.avg_odds)}</div>
               <div className="text-xs text-slate-500 mb-3">Avg Odds</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                 <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${(currentStats.avg_odds / 3) * 100}%` }} />
@@ -351,7 +351,7 @@ export default function TennisTips() {
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{pick.event}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{pick.selection}</td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/50">
-                          <span className="font-mono text-slate-200">{pick.odds}</span>
+                          <span className="font-mono text-slate-200">{formatOdds(pick.odds)}</span>
                         </td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/50">
                           <div className="flex justify-center">
@@ -386,7 +386,7 @@ export default function TennisTips() {
                       </span>
                     </div>
                     <div className="flex items-center gap-4 text-sm">
-                      <span className="font-mono text-slate-200">{pick.odds}</span>
+                      <span className="font-mono text-slate-200">{formatOdds(pick.odds)}</span>
                         <BookmakerLogo bookmaker={pick.bookmaker} size="sm" />
                       <span className="font-mono text-slate-300">{formatStake(pick.stake)}u</span>
                     </div>
@@ -450,7 +450,7 @@ export default function TennisTips() {
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{result.event}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{result.selection}</td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/50">
-                          <span className="font-mono text-slate-200">{result.odds}</span>
+                          <span className="font-mono text-slate-200">{formatOdds(result.odds)}</span>
                         </td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
                             <div className="flex justify-center">
@@ -489,7 +489,7 @@ export default function TennisTips() {
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-4">
-                        <span className="font-mono text-slate-200">{result.odds}</span>
+                        <span className="font-mono text-slate-200">{formatOdds(result.odds)}</span>
                         <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
                         <span className="font-mono text-slate-300">{formatStake(result.stake)}u</span>
                       </div>

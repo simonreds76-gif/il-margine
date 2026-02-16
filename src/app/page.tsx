@@ -10,7 +10,7 @@ import TelegramButton from "@/components/TelegramButton";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import { BETA_NOTICE } from "@/lib/config";
-import { formatStake, formatMatchDate } from "@/lib/format";
+import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
 
 interface CombinedMarketStats {
   total_bets: number;
@@ -416,7 +416,7 @@ export default function Home() {
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.player || "–"}</td>
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
-                            <span className="font-mono text-slate-200">{bet.odds}</span>
+                            <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
                           </td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
                             <div className="flex justify-center">
@@ -437,7 +437,7 @@ export default function Home() {
                     <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/20">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(bet.match_date)}</span>
-                        <span className="font-mono text-slate-200">{bet.odds}</span>
+                        <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
                       </div>
                       <div className="font-medium text-slate-200 mb-1">{bet.event}</div>
                       <div className="text-sm text-slate-300 mb-2">
@@ -516,7 +516,7 @@ export default function Home() {
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.player || "–"}</td>
                           <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
-                            <span className="font-mono text-slate-200">{bet.odds}</span>
+                            <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
                           </td>
                           <td className="px-4 py-3 text-center border-r border-slate-800/50">
                             <div className="flex justify-center">
@@ -561,7 +561,7 @@ export default function Home() {
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-4">
-                          <span className="font-mono text-slate-200">{bet.odds}</span>
+                          <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
                           <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
                           <span className="font-mono text-slate-200">{formatStake(bet.stake)}u</span>
                         </div>

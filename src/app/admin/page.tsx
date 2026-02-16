@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase, Bet, Bookmaker } from "@/lib/supabase";
+import { formatOdds } from "@/lib/format";
 import MonthlyBreakdown from "@/components/MonthlyBreakdown";
 
 export default function AdminPanel() {
@@ -639,7 +640,7 @@ export default function AdminPanel() {
                     </div>
                     <div className="text-right">
                       <div className="text-lg font-mono text-emerald-400">
-                        {bet.odds}
+                        {formatOdds(bet.odds)}
                       </div>
                       <div className="text-xs text-slate-500">
                         {bet.bookmaker?.short_name}
@@ -767,7 +768,7 @@ export default function AdminPanel() {
                       {bet.player && <span className="text-slate-500">{bet.player}: </span>}
                       {bet.selection}{" "}
                       <span className="text-slate-500">
-                        @ {bet.odds} • {bet.stake}u
+                        @ {formatOdds(bet.odds)} • {bet.stake}u
                       </span>
                     </p>
                   </div>
