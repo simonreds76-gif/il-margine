@@ -33,6 +33,7 @@ export default function AdminPanel() {
     stake: "1",
     match_date: "",
     notes: "",
+    status: "won" as "won" | "lost" | "void",
   });
 
   // Form state
@@ -279,6 +280,7 @@ export default function AdminPanel() {
       stake: String(bet.stake),
       match_date: bet.match_date ? bet.match_date.slice(0, 10) : new Date().toISOString().slice(0, 10),
       notes: bet.notes || "",
+      status: (bet.status === "won" || bet.status === "lost" || bet.status === "void" ? bet.status : "won") as "won" | "lost" | "void",
     });
   };
 
@@ -302,9 +304,10 @@ export default function AdminPanel() {
       notes: editForm.notes || null,
     };
 
-    // If settled, recalc profit_loss from new odds/stake
+    // If settled, include status and recalc profit_loss from new odds/stake/status
     if (editingBet.status && ["won", "lost", "void"].includes(editingBet.status)) {
-      const status = editingBet.status as "won" | "lost" | "void";
+      const status = editForm.status;
+      payload.status = status;
       const stake = parseFloat(editForm.stake);
       const odds = parseFloat(editForm.odds);
       if (status === "won") {
@@ -859,6 +862,20 @@ export default function AdminPanel() {
                   className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
                 />
               </div>
+              {editingBet.status && ["won", "lost", "void"].includes(editingBet.status) && (
+                <div>
+                  <label className="block text-xs text-slate-500 mb-1">Result</label>
+                  <select
+                    value={editForm.status}
+                    onChange={(e) => setEditForm({ ...editForm, status: e.target.value as "won" | "lost" | "void" })}
+                    className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
+                  >
+                    <option value="won">Won</option>
+                    <option value="lost">Lost</option>
+                    <option value="void">Void</option>
+                  </select>
+                </div>
+              )}
               {editForm.market === "props" && (
                 <div>
                   <label className="block text-xs text-slate-500 mb-1">Player</label>
