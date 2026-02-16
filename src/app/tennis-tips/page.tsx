@@ -501,6 +501,13 @@ export default function TennisTips() {
                 ))}
               </div>
               
+              {/* Note when showing max 50 results */}
+              {showAllRecent && filteredRecent.length === 50 && (
+                <div className="border-t border-slate-800 px-4 py-2 text-center">
+                  <p className="text-xs text-slate-500">Showing the 50 most recent settled bets.</p>
+                </div>
+              )}
+              
               {/* Show More/Less Button */}
               {filteredRecent.length > 5 && (
                 <div className="border-t border-slate-800 p-4 text-center">

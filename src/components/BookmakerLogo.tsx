@@ -83,6 +83,7 @@ const bookmakerDisplayNames: Record<string, string> = {
 // Logos that have lots of padding in the asset – scale up so they match others’ visual size
 const logoScale: Record<string, number> = {
   pinnacle: 2,
+  ladbrokes: 0.85,
 };
 
 // Prefer SVG for crisp scaling (avoids pixelation when PNG is low-res)
