@@ -66,8 +66,8 @@ const BOOKMAKERS = [
     rating: "4/5",
     propsScore: "8/10",
     tennisScore: "7/10",
-    welcomeOffer: "Bet £10 Get £20 in Free Bets",
-    welcomeTerms: "3+ selections, combined odds 2/1+, T&Cs apply",
+    welcomeOffer: "Bet £5 Get £20 in Free Bets",
+    welcomeTerms: "4 × £5 free bets, min odds 1/2 (1.50), T&Cs apply",
     strengths: [
       "Comprehensive player props across all major leagues",
       "Part of Entain (shares group with Coral, Ladbrokes – separate account)",
@@ -226,7 +226,7 @@ const BOOKMAKERS = [
 const COMPARISON_ROWS = [
   { name: "Midnite", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Modern platform, major league props" },
   { name: "BetVictor", props: "8/10", tennis: "8/10", offer: "£40 bonuses", bestFor: "All-rounder, strong tennis" },
-  { name: "Bwin", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Pair with Coral and Ladbrokes for extended access" },
+  { name: "Bwin", props: "8/10", tennis: "7/10", offer: "£5 → £20 free bets", bestFor: "Pair with Coral and Ladbrokes for extended access" },
   { name: "Coral", props: "8/10", tennis: "7/10", offer: "£30 free bets", bestFor: "Pair with Ladbrokes for extended access" },
   { name: "Ladbrokes", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Pair with Coral for extended access" },
   { name: "BetMGM", props: "8/10", tennis: "7/10", offer: "£40 free bets", bestFor: "Player props & tennis, independent pricing for line shopping" },
