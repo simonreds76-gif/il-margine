@@ -8,7 +8,7 @@ For the recommended bookmakers section, use these filenames (PNG or SVG):
 
 - `midnite.png` (or .svg)
 - `betvictor.png` (or .svg)
-- `unibet.png` (or .svg)
+- `bwin.png` (or .svg)
 - `coral.png` (or .svg)
 - `ladbrokes.png` (or .svg)
 - `betmgm.png` (or .svg)

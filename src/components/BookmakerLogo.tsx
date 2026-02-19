@@ -36,6 +36,9 @@ const bookmakerLogos: Record<string, string> = {
   "Ladbrokes": "ladbrokes",
   "ladbrokes": "ladbrokes",
   "LAD": "ladbrokes",
+  "Bwin": "bwin",
+  "bwin": "bwin",
+  "BW": "bwin",
   "BetMGM": "BetMGM UK_idPMHl2t9c_0.png",
   "betmgm": "BetMGM UK_idPMHl2t9c_0.png",
   "LeoVegas": "BetMGM UK_idPMHl2t9c_0.png",
@@ -78,6 +81,7 @@ const bookmakerDisplayNames: Record<string, string> = {
   "LAD": "Ladbrokes",
   "BV": "BetVictor",
   "BF": "Betfred",
+  "BW": "Bwin",
 };
 
 // Logos that have lots of padding in the asset – scale up so they match others’ visual size

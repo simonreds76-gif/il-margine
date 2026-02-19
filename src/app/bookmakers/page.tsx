@@ -60,30 +60,30 @@ const BOOKMAKERS = [
     offerUrl: "#",
   },
   {
-    id: "unibet",
-    name: "Unibet",
+    id: "bwin",
+    name: "Bwin",
     stars: "⭐⭐⭐⭐",
     rating: "4/5",
-    propsScore: "7/10",
-    tennisScore: "8/10",
-    welcomeOffer: "Money Back as Bonus up to £40",
-    welcomeTerms: "Min odds 1.40, 3+ selections, T&Cs apply",
+    propsScore: "8/10",
+    tennisScore: "7/10",
+    welcomeOffer: "Bet £10 Get £20 in Free Bets",
+    welcomeTerms: "3+ selections, combined odds 2/1+, T&Cs apply",
     strengths: [
-      "Excellent tennis markets across all tiers (ATP, WTA, Challengers)",
-      "Competitive odds on tennis handicaps and totals",
-      "Part of Kindred Group (solid operational infrastructure)",
-      "Good platform stability",
-      "Fast withdrawals (often same day to e-wallets)",
+      "Comprehensive player props across all major leagues",
+      "Part of Entain (shares group with Coral, Ladbrokes – separate account)",
+      "Solid odds quality on props markets",
+      "Good bet builder functionality",
+      "Modern online platform",
+      "Reasonable tennis coverage on major events",
     ],
     weaknesses: [
-      "Player props margins slightly wider (12-15%)",
-      "Fewer prop markets than dedicated prop-focused books",
-      "Bet builder limited to major matches only",
-      "Welcome offer structure less attractive than competitors",
-      "Props stake limits conservative (£50-75 typical)",
+      "Same pricing engine as other Entain brands (no arbitrage between Bwin, Coral, Ladbrokes)",
+      "Tennis markets thin out below ATP 250 level",
+      "Props margins 10-13%",
+      "Stake limits tighten quickly on profitable accounts",
     ],
-    usageTips: "Unibet's real strength is tennis, particularly at ATP 250/500 level and Challenger events. If you're betting tennis seriously, this account is essential. Game handicaps and totals are well-priced across all surface types. Unibet often has better odds than Bet365 or William Hill on lower-tier ATP events, and sometimes matches Pinnacle on Challengers. For player props, treat as a secondary account. Coverage exists but margins are wider and stake limits are tighter than specialists. Good to have for odds comparison but unlikely to be your primary props book. Essential for tennis bettors. Useful secondary account for props.",
-    bestFor: "Tennis specialists, ATP 250s",
+    usageTips: "Bwin is part of the Entain group alongside Coral and Ladbrokes. You can hold accounts with all three simultaneously. Each is independently managed despite shared pricing, so having Bwin plus Coral and Ladbrokes extends your access window to Entain's competitive odds. For props: Coverage is excellent across Premier League, Championship, and major European leagues. Bet builder is solid. For tennis: Adequate for ATP 250+. Worth pairing with Coral and Ladbrokes for maximum Entain access.",
+    bestFor: "Pair with Coral and Ladbrokes for extended access",
     offerUrl: "#",
   },
   {
@@ -226,7 +226,7 @@ const BOOKMAKERS = [
 const COMPARISON_ROWS = [
   { name: "Midnite", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Modern platform, major league props" },
   { name: "BetVictor", props: "8/10", tennis: "8/10", offer: "£40 bonuses", bestFor: "All-rounder, strong tennis" },
-  { name: "Unibet", props: "7/10", tennis: "8/10", offer: "£40 money back", bestFor: "Tennis specialists, ATP 250s" },
+  { name: "Bwin", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Pair with Coral and Ladbrokes for extended access" },
   { name: "Coral", props: "8/10", tennis: "7/10", offer: "£30 free bets", bestFor: "Pair with Ladbrokes for extended access" },
   { name: "Ladbrokes", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Pair with Coral for extended access" },
   { name: "BetMGM", props: "8/10", tennis: "7/10", offer: "£40 free bets", bestFor: "Player props & tennis, independent pricing for line shopping" },
@@ -239,7 +239,7 @@ const FAQ_ITEMS = [
   { q: "What if odds are better elsewhere?", a: "Always take best price. Line shop across all eight before placing any bet. Over 100 bets, even 2-3% better average odds compounds significantly. Never settle for worse odds out of loyalty or convenience." },
   { q: "Do affiliate links affect your recommendations?", a: "No. These bookmakers were selected through months of real-money testing before any affiliate discussions began. We sought partnerships with books we already used, not vice versa. If a bookmaker deteriorates in quality or changes practices, we'll remove them regardless of commercial arrangements." },
   { q: "Are welcome bonuses worth it?", a: "Absolutely. Combined, these eight offer £250+ in bonuses. Even accounting for rollover requirements, expected value is positive. Claim all of them. Use them on +EV opportunities where possible, or on lower-variance markets if rollover requirements demand it." },
-  { q: "Can I use both Ladbrokes and Coral?", a: "Yes, and you absolutely should. They're part of the same group (Entain) and share identical pricing, but account management is separate. Opening both doubles your access window to Entain odds from 6-9 months to 12-18 months. This pairing is essential." },
+  { q: "Can I use Ladbrokes, Coral, and Bwin together?", a: "Yes, and you should. They're part of the same group (Entain) and share identical pricing, but account management is separate. Opening all three extends your access window to Entain odds significantly. This trio is essential if you're serious about line shopping." },
   { q: "What happens when I get restricted?", a: "Stake limits reduce gradually, eventually hitting £5-20 maximum. The account remains active but becomes operationally useless for serious betting. This is inevitable for winning accounts. Plan for it by having multiple accounts active. When one restricts, continue with others.", linkToFaq: true },
 ];
 
@@ -451,7 +451,7 @@ export default function BookmakersPage() {
             <p><strong className="text-slate-100">Account opening sequence:</strong></p>
             <ol className="list-decimal pl-6 space-y-2">
               <li>Open all eight accounts — welcome offers alone provide £250+ value</li>
-              <li>Prioritise by market focus: Props primary: BetVictor, Midnite, William Hill, Coral, Ladbrokes. Tennis primary: Unibet, BetVictor, William Hill. Mixed: all eight for line shopping</li>
+              <li>Prioritise by market focus: Props primary: BetVictor, Midnite, William Hill, Coral, Ladbrokes, Bwin. Tennis primary: BetVictor, William Hill. Mixed: all eight for line shopping</li>
               <li>Always open Coral AND Ladbrokes — never one without the other</li>
               <li>Use BetMGM for line shopping — independent pricing often differs from other UK operators</li>
             </ol>
