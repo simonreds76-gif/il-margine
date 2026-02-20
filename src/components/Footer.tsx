@@ -29,9 +29,6 @@ export default function Footer({ className = "" }: FooterProps) {
               <Link href="/disclaimer" className="hover:text-slate-300">Disclaimer</Link>
               <Link href="/privacy-policy" className="hover:text-slate-300">Privacy Policy</Link>
               <Link href="/cookies-policy" className="hover:text-slate-300">Cookies Policy</Link>
-              <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="hover:text-slate-300">
-                Responsible Gambling
-              </a>
             </div>
             <div className="text-xs text-slate-500">Gamble responsibly. 18+ only.</div>
           </div>

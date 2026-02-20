@@ -26,10 +26,10 @@ export default function ComplianceBadges({ className = "" }: { className?: strin
       >
         <Image
           src="/compliance/begambleaware.svg"
-          alt="BeGambleAware"
-          width={140}
-          height={32}
-          className="h-8 w-auto"
+          alt="BeGambleAware - Advice, tools and support"
+          width={160}
+          height={38}
+          className="h-9 w-auto min-w-[120px]"
         />
       </a>
     </div>
