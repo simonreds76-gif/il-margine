@@ -419,7 +419,7 @@ export default function Home() {
                           onClick={() => window.location.href = href}
                         >
                           <td className="px-4 py-3 border-r border-slate-800/50">
-                            <MarketBadge market={bet.market} category={bet.category} />
+                            <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
                           </td>
                           <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(bet.match_date)}</td>
                           <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50 min-w-[180px] whitespace-nowrap">{bet.event}</td>
@@ -526,7 +526,7 @@ export default function Home() {
                           onClick={() => window.location.href = href}
                         >
                           <td className="px-4 py-3 border-r border-slate-800/50">
-                            <MarketBadge market={bet.market} category={bet.category} />
+                            <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
                           </td>
                           <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(bet.match_date)}</td>
                           <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50 min-w-[180px] whitespace-nowrap">{bet.event}</td>

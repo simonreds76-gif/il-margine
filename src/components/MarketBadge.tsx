@@ -39,7 +39,7 @@ export default function MarketBadge({ market, category, showLabel = false, class
   const { src, label, invertForDark } = getConfig(market, category ?? "");
   return (
     <span
-      className={`inline-flex items-center gap-1.5 ${hideOnMobile ? "hidden md:inline-flex" : ""} ${className}`}
+      className={`inline-flex items-center gap-1.5 ${hideOnMobile ? "hidden lg:inline-flex" : ""} ${className}`}
       title={label}
     >
       <img
