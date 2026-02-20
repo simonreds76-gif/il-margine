@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import GlobalNav from "@/components/GlobalNav";
 import StructuredData from "@/components/StructuredData";
@@ -64,6 +65,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <CookieBanner measurementId={GA_MEASUREMENT_ID} />
         <SpeedInsightsClient />
+        <Analytics />
         <StructuredData />
         <GlobalNav />
         <div className="site-content w-full min-h-screen">
