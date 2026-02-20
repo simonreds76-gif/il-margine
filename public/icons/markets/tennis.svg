@@ -1,16 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-  <defs>
-    <linearGradient id="tennisgreen" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#22c55e"/>
-      <stop offset="100%" stop-color="#16a34a"/>
-    </linearGradient>
-  </defs>
-  <circle cx="12" cy="12" r="10" fill="#0f1117" stroke="#22c55e" stroke-width="1"/>
-  <ellipse cx="10" cy="9" rx="5" ry="6" fill="none" stroke="url(#tennisgreen)" stroke-width="1.5" transform="rotate(-20 10 9)"/>
-  <line x1="6" y1="6" x2="14" y2="12" stroke="url(#tennisgreen)" stroke-width="1" opacity="0.5"/>
-  <line x1="5" y1="9" x2="13" y2="9" stroke="url(#tennisgreen)" stroke-width="1" opacity="0.5"/>
-  <line x1="7" y1="4" x2="12" y2="14" stroke="url(#tennisgreen)" stroke-width="1" opacity="0.5"/>
-  <line x1="9" y1="14" x2="5" y2="20" stroke="url(#tennisgreen)" stroke-width="2.5" stroke-linecap="round"/>
-  <circle cx="17" cy="17" r="4" fill="#c8e620" stroke="#8fb300" stroke-width="1"/>
-  <path d="M14.5 15C15.5 16 15.5 18 14.5 19M19.5 15C18.5 16 18.5 18 19.5 19" stroke="#8fb300" stroke-width="0.75" fill="none"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <circle cx="12" cy="12" r="9" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+  <path d="M5 7c2 2.5 2 7.5 0 10" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M19 7c-2 2.5-2 7.5 0 10" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/>
 </svg>
