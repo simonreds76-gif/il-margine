@@ -6,6 +6,7 @@ import Image from "next/image";
 import { supabase, Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
+import MarketBadge from "@/components/MarketBadge";
 import TelegramButton from "@/components/TelegramButton";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
@@ -347,6 +348,7 @@ export default function PlayerProps() {
                 <table className="w-full border-collapse min-w-full">
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '50px' }}></th>
                       <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '70px' }}>Date</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '80px' }}>Player</th>
@@ -360,6 +362,9 @@ export default function PlayerProps() {
                   <tbody>
                     {displayedPending.map((pick) => (
                       <tr key={pick.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
+                        <td className="px-4 py-3 border-r border-slate-800/50">
+                          <MarketBadge market={pick.market} category={pick.category} />
+                        </td>
                         <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(pick.match_date)}</td>
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{pick.event}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{pick.player || '-'}</td>
@@ -390,9 +395,10 @@ export default function PlayerProps() {
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
+                          <MarketBadge market={pick.market} category={pick.category} />
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
-                          <div className="font-medium text-slate-200">{pick.event}</div>
                         </div>
+                        <div className="font-medium text-slate-200 mb-1">{pick.event}</div>
                         <div className="text-sm text-slate-400 mb-1">
                           {pick.player && <span>{pick.player} • </span>}
                           {pick.selection}
@@ -456,6 +462,7 @@ export default function PlayerProps() {
                 <table className="w-full border-collapse min-w-full">
                   <thead>
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '50px' }}></th>
                       <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '70px' }}>Date</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '80px' }}>Player</th>
@@ -470,6 +477,9 @@ export default function PlayerProps() {
                   <tbody>
                     {displayedRecent.map((result) => (
                       <tr key={result.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
+                        <td className="px-4 py-3 border-r border-slate-800/50">
+                          <MarketBadge market={result.market} category={result.category} />
+                        </td>
                         <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(result.match_date)}</td>
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{result.event}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{result.player || '-'}</td>
@@ -503,9 +513,10 @@ export default function PlayerProps() {
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
+                          <MarketBadge market={result.market} category={result.category} />
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(result.match_date)}</span>
-                          <div className="font-medium text-slate-200">{result.event}</div>
                         </div>
+                        <div className="font-medium text-slate-200 mb-1">{result.event}</div>
                         <div className="text-sm text-slate-400 mb-1">
                           {result.player && <span>{result.player} • </span>}
                           {result.selection}
