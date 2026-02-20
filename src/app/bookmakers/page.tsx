@@ -265,6 +265,9 @@ export default function BookmakersPage() {
           <p className="text-slate-300 leading-relaxed mb-4 max-w-3xl">
             This page recommends bookmakers we&apos;ve tested with real stakes across player props and tennis markets. Each has been evaluated for odds quality, market depth, account longevity, and operational reliability.
           </p>
+          <p className="text-slate-400 text-sm mb-4 max-w-3xl">
+            18+ only. Gamble responsibly. For support: <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline">begambleaware.org</a> or 0808 8020 133 (National Gambling Helpline).
+          </p>
           <ul className="list-disc pl-6 text-slate-300 space-y-1 mb-4 max-w-3xl">
             <li>Eight bookmakers suitable for value betting</li>
             <li>Market-specific strengths for props and tennis</li>
