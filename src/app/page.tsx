@@ -572,11 +572,13 @@ export default function Home() {
                           {bet.status.toUpperCase()}
                         </span>
                       </div>
-                      <div className="grid grid-cols-[auto_auto_2.5rem_auto] gap-2 items-center text-sm">
-                        <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
-                        <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
-                        <span className="font-mono text-slate-200 font-semibold text-right">{formatStake(bet.stake)}u</span>
-                        <span className={`font-mono font-medium ${bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-4">
+                          <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
+                          <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
+                          <span className="font-mono text-slate-200 font-semibold min-w-[2.5rem] text-right">{formatStake(bet.stake)}u</span>
+                        </div>
+                        <span className={`font-mono font-medium shrink-0 ${bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
                           {bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}{bet.profit_loss?.toFixed(2)}u
                         </span>
                       </div>

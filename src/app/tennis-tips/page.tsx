@@ -509,11 +509,13 @@ export default function TennisTips() {
                         {result.status.toUpperCase()}
                       </span>
                     </div>
-                    <div className="grid grid-cols-[auto_auto_2.5rem_auto] gap-2 items-center text-sm">
-                      <span className="font-mono text-slate-200">{formatOdds(result.odds)}</span>
-                      <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
-                      <span className="font-mono text-slate-300 font-semibold text-right">{formatStake(result.stake)}u</span>
-                      <span className={`font-mono font-medium ${result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-4">
+                        <span className="font-mono text-slate-200">{formatOdds(result.odds)}</span>
+                        <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
+                        <span className="font-mono text-slate-300 font-semibold min-w-[2.5rem] text-right">{formatStake(result.stake)}u</span>
+                      </div>
+                      <span className={`font-mono font-medium shrink-0 ${result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
                         {result.profit_loss && result.profit_loss > 0 ? "+" : ""}{result.profit_loss?.toFixed(2)}u
                       </span>
                     </div>
