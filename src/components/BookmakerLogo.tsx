@@ -42,10 +42,11 @@ const bookmakerLogos: Record<string, string> = {
   "BetMGM": "BetMGM UK_idPMHl2t9c_0.png",
   "betmgm": "BetMGM UK_idPMHl2t9c_0.png",
   "LeoVegas": "BetMGM UK_idPMHl2t9c_0.png",
-  "William Hill": "williamhill",
-  "WH": "williamhill",
-  "wh": "williamhill",
-  "williamhill": "williamhill",
+  "William Hill": "williamhill.svg",
+  "WilliamHill": "williamhill.svg",
+  "WH": "williamhill.svg",
+  "wh": "williamhill.svg",
+  "williamhill": "williamhill.svg",
   "Betfred": "betfred",
   "betfred": "betfred",
   "Bet Fred": "betfred",
@@ -59,11 +60,12 @@ const bookmakerLogos: Record<string, string> = {
   "Paddy Power": "paddypower",
   "Paddy": "paddypower",
   "paddypower": "paddypower",
-  "Sky Bet": "skybet",
-  "SkyBet": "skybet",
-  "skybet": "skybet",
-  "SB": "skybet",
-  "sb": "skybet",
+  "Sky Bet": "skybet.svg",
+  "SkyBet": "skybet.svg",
+  "Skybet": "skybet.svg",
+  "skybet": "skybet.svg",
+  "SB": "skybet.svg",
+  "sb": "skybet.svg",
   "Betway": "betway",
   "betway": "betway",
   "888sport": "888sport",
@@ -121,7 +123,9 @@ export default function BookmakerLogo({
     );
   }
 
-  const logoBase = bookmakerLogos[bookmaker.short_name] || bookmakerLogos[bookmaker.name];
+  const sn = String(bookmaker.short_name || "").trim();
+  const nm = String(bookmaker.name || "").trim();
+  const logoBase = bookmakerLogos[sn] || bookmakerLogos[nm] || bookmakerLogos[sn.toLowerCase()] || bookmakerLogos[nm.toLowerCase()];
   const hasExtension = logoBase?.includes(".");
   const scaleKey = logoBase?.split(".")[0] ?? "";
   const useSvgFirst = preferSvg[scaleKey];
