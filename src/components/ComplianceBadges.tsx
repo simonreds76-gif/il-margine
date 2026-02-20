@@ -7,7 +7,7 @@ import Image from "next/image";
 export default function ComplianceBadges({ className = "" }: { className?: string }) {
   return (
     <div className={`flex flex-wrap items-center gap-4 ${className}`}>
-      <div className="flex items-center gap-2" title="18+ only. Gambling is for adults.">
+      <div title="18+ only. Gambling is for adults.">
         <Image
           src="/compliance/18plus.svg"
           alt="18+"
@@ -15,7 +15,6 @@ export default function ComplianceBadges({ className = "" }: { className?: strin
           height={40}
           className="h-10 w-10 shrink-0"
         />
-        <span className="text-xs text-slate-400">18+ only</span>
       </div>
       <a
         href="https://www.begambleaware.org"
