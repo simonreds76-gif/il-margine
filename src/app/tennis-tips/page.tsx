@@ -350,24 +350,24 @@ export default function TennisTips() {
                   </thead>
                   <tbody>
                     {displayedPending.map((pick) => (
-                      <tr key={pick.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
-                        <td className="px-4 py-3 border-r border-slate-800/50">
+                      <tr key={pick.id} className="border-b border-slate-700 hover:bg-slate-800/30">
+                        <td className="px-4 py-4 border-r border-slate-800/50">
                           <MarketBadge market={pick.market} category={pick.category} hideOnMobile />
                         </td>
-                        <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(pick.match_date)}</td>
-                        <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{pick.event}</td>
-                        <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{pick.player || "–"}</td>
-                        <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{pick.selection}</td>
-                        <td className="px-4 py-3 text-center border-r border-slate-800/50">
+                        <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(pick.match_date)}</td>
+                        <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50">{pick.event}</td>
+                        <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{pick.player || "–"}</td>
+                        <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{pick.selection}</td>
+                        <td className="px-4 py-4 text-center border-r border-slate-800/50">
                           <span className="font-mono text-slate-200">{formatOdds(pick.odds)}</span>
                         </td>
-                        <td className="px-4 py-3 text-center border-r border-slate-800/50">
+                        <td className="px-4 py-4 text-center border-r border-slate-800/50">
                           <div className="flex justify-center">
                             <BookmakerLogo bookmaker={pick.bookmaker} size="sm" />
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(pick.stake)}u</td>
-                        <td className="px-4 py-3 text-center">
+                        <td className="px-4 py-4 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(pick.stake)}u</td>
+                        <td className="px-4 py-4 text-center">
                           <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">
                             PENDING
                           </span>
@@ -378,9 +378,9 @@ export default function TennisTips() {
                 </table>
               </div>
               {/* Mobile Cards */}
-              <div className="md:hidden divide-y divide-slate-700/60">
+              <div className="md:hidden divide-y divide-slate-600">
                 {displayedPending.map((pick) => (
-                  <div key={pick.id} className="p-4 hover:bg-slate-800/20">
+                  <div key={pick.id} className="p-5 hover:bg-slate-800/20">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
@@ -460,29 +460,29 @@ export default function TennisTips() {
                   </thead>
                   <tbody>
                     {displayedRecent.map((result) => (
-                      <tr key={result.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
-                        <td className="px-4 py-3 border-r border-slate-800/50">
+                      <tr key={result.id} className="border-b border-slate-700 hover:bg-slate-800/30">
+                        <td className="px-4 py-4 border-r border-slate-800/50">
                           <MarketBadge market={result.market} category={result.category} hideOnMobile />
                         </td>
-                        <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(result.match_date)}</td>
-                        <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{result.event}</td>
-                        <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{result.player || "–"}</td>
-                        <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{result.selection}</td>
-                        <td className="px-4 py-3 text-center border-r border-slate-800/50">
+                        <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(result.match_date)}</td>
+                        <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50">{result.event}</td>
+                        <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{result.player || "–"}</td>
+                        <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{result.selection}</td>
+                        <td className="px-4 py-4 text-center border-r border-slate-800/50">
                           <span className="font-mono text-slate-200">{formatOdds(result.odds)}</span>
                         </td>
-                          <td className="px-4 py-3 text-center border-r border-slate-800/50">
+                          <td className="px-4 py-4 text-center border-r border-slate-800/50">
                             <div className="flex justify-center">
                               <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
                             </div>
                           </td>
-                        <td className="px-4 py-3 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(result.stake)}u</td>
-                        <td className="px-4 py-3 text-center border-r border-slate-800/30">
+                        <td className="px-4 py-4 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(result.stake)}u</td>
+                        <td className="px-4 py-4 text-center border-r border-slate-800/30">
                           <span className={`text-xs font-mono px-2 py-1 rounded ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
                             {result.status.toUpperCase()}
                           </span>
                         </td>
-                        <td className={`px-4 py-3 text-right font-mono font-medium ${result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                        <td className={`px-4 py-4 text-right font-mono font-medium ${result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
                           {result.profit_loss && result.profit_loss > 0 ? "+" : ""}{result.profit_loss?.toFixed(2)}u
                         </td>
                       </tr>
@@ -491,9 +491,9 @@ export default function TennisTips() {
                 </table>
               </div>
               {/* Mobile Cards */}
-              <div className="md:hidden divide-y divide-slate-700/60">
+              <div className="md:hidden divide-y divide-slate-600">
                 {displayedRecent.map((result) => (
-                  <div key={result.id} className="p-4 hover:bg-slate-800/20">
+                  <div key={result.id} className="p-5 hover:bg-slate-800/20">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
