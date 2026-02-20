@@ -1,27 +1,24 @@
 "use client";
 
-/** Maps market + category to icon (emoji) and label. Used in picks tables. */
-const MARKET_CONFIG: Record<string, { icon: string; label: string }> = {
-  // Tennis – single icon for all
-  tennis: { icon: "🎾", label: "Tennis" },
-  atp: { icon: "🎾", label: "ATP" },
-  challenger: { icon: "🎾", label: "Challenger" },
-  ausopen: { icon: "🎾", label: "Aus Open" },
-  rolandgarros: { icon: "🎾", label: "Roland Garros" },
-  wimbledon: { icon: "🎾", label: "Wimbledon" },
-  usopen: { icon: "🎾", label: "US Open" },
-  // Props – league flags
-  pl: { icon: "🇬🇧", label: "Premier League" },
-  seriea: { icon: "🇮🇹", label: "Serie A" },
-  ucl: { icon: "🇪🇺", label: "Champions League" },
-  // Other / future (World Cup etc.)
-  other: { icon: "🌍", label: "Other" },
-  worldcup: { icon: "🌍", label: "World Cup" },
-  betbuilders: { icon: "⚽", label: "Bet Builders" },
-  atg: { icon: "⚽", label: "ATG" },
+/** Maps market + category to SVG icon path and label. Used in picks tables. */
+const MARKET_CONFIG: Record<string, { src: string; label: string }> = {
+  tennis: { src: "/icons/markets/tennis.svg", label: "Tennis" },
+  atp: { src: "/icons/markets/tennis.svg", label: "ATP" },
+  challenger: { src: "/icons/markets/tennis.svg", label: "Challenger" },
+  ausopen: { src: "/icons/markets/tennis.svg", label: "Aus Open" },
+  rolandgarros: { src: "/icons/markets/tennis.svg", label: "Roland Garros" },
+  wimbledon: { src: "/icons/markets/tennis.svg", label: "Wimbledon" },
+  usopen: { src: "/icons/markets/tennis.svg", label: "US Open" },
+  pl: { src: "/icons/markets/pl.svg", label: "Premier League" },
+  seriea: { src: "/icons/markets/seriea.svg", label: "Serie A" },
+  ucl: { src: "/icons/markets/ucl.svg", label: "Champions League" },
+  other: { src: "/icons/markets/other.svg", label: "Other" },
+  worldcup: { src: "/icons/markets/other.svg", label: "World Cup" },
+  betbuilders: { src: "/icons/markets/other.svg", label: "Bet Builders" },
+  atg: { src: "/icons/markets/other.svg", label: "ATG" },
 };
 
-function getConfig(market: string, category: string): { icon: string; label: string } {
+function getConfig(market: string, category: string): { src: string; label: string } {
   if (market === "tennis") return MARKET_CONFIG.tennis;
   if (market === "betbuilders") return MARKET_CONFIG.betbuilders;
   if (market === "atg") return MARKET_CONFIG.atg;
@@ -32,19 +29,24 @@ function getConfig(market: string, category: string): { icon: string; label: str
 interface MarketBadgeProps {
   market: string;
   category?: string | null;
-  /** Show label next to icon (default: icon only for compact tables) */
   showLabel?: boolean;
   className?: string;
 }
 
 export default function MarketBadge({ market, category, showLabel = false, className = "" }: MarketBadgeProps) {
-  const { icon, label } = getConfig(market, category ?? "");
+  const { src, label } = getConfig(market, category ?? "");
   return (
     <span
-      className={`inline-flex items-center gap-1.5 text-base ${className}`}
+      className={`inline-flex items-center gap-1.5 ${className}`}
       title={label}
     >
-      <span aria-hidden>{icon}</span>
+      <img
+        src={src}
+        alt={label}
+        width={24}
+        height={24}
+        className="h-6 w-6 shrink-0"
+      />
       {showLabel && <span className="text-xs font-medium text-slate-400">{label}</span>}
     </span>
   );
