@@ -378,13 +378,13 @@ export default function TennisTips() {
                 </table>
               </div>
               {/* Mobile Cards */}
-              <div className="md:hidden divide-y divide-slate-800/50">
+              <div className="md:hidden divide-y divide-slate-700/60">
                 {displayedPending.map((pick) => (
-                  <div key={pick.id} className="p-4">
+                  <div key={pick.id} className="p-4 hover:bg-slate-800/20">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <MarketBadge market={pick.market} category={pick.category} />
+                          <MarketBadge market={pick.market} category={pick.category} hideOnMobile />
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
                         </div>
                         <div className="font-medium text-slate-200 mb-1">{pick.event}</div>
@@ -397,10 +397,12 @@ export default function TennisTips() {
                         PENDING
                       </span>
                     </div>
-                    <div className="grid grid-cols-[auto_auto_2.5rem] gap-2 items-center text-sm">
-                      <span className="font-mono text-slate-200">{formatOdds(pick.odds)}</span>
-                      <BookmakerLogo bookmaker={pick.bookmaker} size="sm" />
-                      <span className="font-mono text-slate-300 font-semibold text-right">{formatStake(pick.stake)}u</span>
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-4">
+                        <span className="font-mono text-slate-200">{formatOdds(pick.odds)}</span>
+                        <BookmakerLogo bookmaker={pick.bookmaker} size="sm" />
+                        <span className="font-mono text-slate-100 font-bold min-w-[2.5rem] text-right">{formatStake(pick.stake)}u</span>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -490,13 +492,13 @@ export default function TennisTips() {
                 </table>
               </div>
               {/* Mobile Cards */}
-              <div className="md:hidden divide-y divide-slate-800/50">
+              <div className="md:hidden divide-y divide-slate-700/60">
                 {displayedRecent.map((result) => (
-                  <div key={result.id} className="p-4">
+                  <div key={result.id} className="p-4 hover:bg-slate-800/20">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <MarketBadge market={result.market} category={result.category} />
+                          <MarketBadge market={result.market} category={result.category} hideOnMobile />
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(result.match_date)}</span>
                         </div>
                         <div className="font-medium text-slate-200 mb-1">{result.event}</div>
@@ -513,7 +515,7 @@ export default function TennisTips() {
                       <div className="flex items-center gap-4">
                         <span className="font-mono text-slate-200">{formatOdds(result.odds)}</span>
                         <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
-                        <span className="font-mono text-slate-300 font-semibold min-w-[2.5rem] text-right">{formatStake(result.stake)}u</span>
+                        <span className="font-mono text-slate-100 font-bold min-w-[2.5rem] text-right">{formatStake(result.stake)}u</span>
                       </div>
                       <span className={`font-mono font-medium shrink-0 ${result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
                         {result.profit_loss && result.profit_loss > 0 ? "+" : ""}{result.profit_loss?.toFixed(2)}u

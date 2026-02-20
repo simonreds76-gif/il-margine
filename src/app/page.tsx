@@ -435,26 +435,26 @@ export default function Home() {
                   </tbody>
                 </table>
               </div>
-              <div className="md:hidden divide-y divide-slate-800/50">
+              <div className="md:hidden divide-y divide-slate-700/60">
                 {pendingBets.map((bet) => {
                   const href = bet.market === "tennis" ? "/tennis-tips#picks" : bet.market === "props" ? "/player-props#picks" : "#";
                   return (
-                    <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/20">
+                    <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/30 active:bg-slate-800/40">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="flex items-center gap-2">
-                          <MarketBadge market={bet.market} category={bet.category} />
-                          <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(bet.match_date)}</span>
-                        </span>
-                        <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
+                        <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(bet.match_date)}</span>
+                        <span className="text-xs font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-400">PENDING</span>
                       </div>
                       <div className="font-medium text-slate-200 mb-1">{bet.event}</div>
                       <div className="text-sm text-slate-300 mb-2">
                         {bet.player && <span>{bet.player} · </span>}
                         {bet.selection}
                       </div>
-                      <div className="grid grid-cols-[auto_2.5rem] gap-2 items-center text-sm">
-                        <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
-                        <span className="font-mono text-slate-200 font-semibold text-right">{formatStake(bet.stake)}u</span>
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-4">
+                          <span className="font-mono text-slate-200 font-semibold">{formatOdds(bet.odds)}</span>
+                          <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
+                          <span className="font-mono text-slate-100 font-bold min-w-[2.5rem] text-right">{formatStake(bet.stake)}u</span>
+                        </div>
                       </div>
                     </Link>
                   );
@@ -551,15 +551,15 @@ export default function Home() {
                 </table>
               </div>
               {/* Mobile Cards */}
-              <div className="md:hidden divide-y divide-slate-800/50">
+              <div className="md:hidden divide-y divide-slate-700/60">
                 {recentBets.slice(0, 5).map((bet) => {
                   const href = bet.market === "tennis" ? "/tennis-tips#picks" : bet.market === "props" ? "/player-props#picks" : "#";
                   return (
-                    <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/20">
+                    <Link key={bet.id} href={href} className="block p-4 hover:bg-slate-800/30 active:bg-slate-800/40">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <MarketBadge market={bet.market} category={bet.category} />
+                            <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
                             <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(bet.match_date)}</span>
                           </div>
                           <div className="font-medium text-slate-200 mb-1">{bet.event}</div>
@@ -576,7 +576,7 @@ export default function Home() {
                         <div className="flex items-center gap-4">
                           <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
                           <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
-                          <span className="font-mono text-slate-200 font-semibold min-w-[2.5rem] text-right">{formatStake(bet.stake)}u</span>
+                          <span className="font-mono text-slate-100 font-bold min-w-[2.5rem] text-right">{formatStake(bet.stake)}u</span>
                         </div>
                         <span className={`font-mono font-medium shrink-0 ${bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
                           {bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}{bet.profit_loss?.toFixed(2)}u
