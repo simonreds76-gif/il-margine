@@ -564,7 +564,6 @@ export default function Home() {
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
                             <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(bet.match_date)}</span>
                           </div>
                           <div className="font-medium text-slate-200 mb-1">{bet.event}</div>

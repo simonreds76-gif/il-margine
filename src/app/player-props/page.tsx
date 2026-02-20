@@ -395,7 +395,6 @@ export default function PlayerProps() {
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <MarketBadge market={pick.market} category={pick.category} hideOnMobile />
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
                         </div>
                         <div className="font-medium text-slate-200 mb-1">{pick.event}</div>
@@ -515,7 +514,6 @@ export default function PlayerProps() {
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <MarketBadge market={result.market} category={result.category} hideOnMobile />
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(result.match_date)}</span>
                         </div>
                         <div className="font-medium text-slate-200 mb-1">{result.event}</div>
