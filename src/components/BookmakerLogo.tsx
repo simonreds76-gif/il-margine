@@ -44,6 +44,7 @@ const bookmakerLogos: Record<string, string> = {
   "LeoVegas": "BetMGM UK_idPMHl2t9c_0.png",
   "William Hill": "williamhill",
   "WH": "williamhill",
+  "wh": "williamhill",
   "williamhill": "williamhill",
   "Betfred": "betfred",
   "betfred": "betfred",
@@ -61,6 +62,8 @@ const bookmakerLogos: Record<string, string> = {
   "Sky Bet": "skybet",
   "SkyBet": "skybet",
   "skybet": "skybet",
+  "SB": "skybet",
+  "sb": "skybet",
   "Betway": "betway",
   "betway": "betway",
   "888sport": "888sport",
@@ -82,6 +85,7 @@ const bookmakerDisplayNames: Record<string, string> = {
   "BV": "BetVictor",
   "BF": "Betfred",
   "BW": "Bwin",
+  "SB": "Sky Bet",
 };
 
 // Logos that have lots of padding in the asset – scale up so they match others’ visual size
@@ -93,6 +97,8 @@ const logoScale: Record<string, number> = {
 // Prefer SVG for crisp scaling (avoids pixelation when PNG is low-res)
 const preferSvg: Record<string, boolean> = {
   bet365: true,
+  williamhill: true,
+  skybet: true,
 };
 
 // All logos one step larger so thumbnails are easier to recognise (was 24/32/40px)
