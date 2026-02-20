@@ -41,7 +41,7 @@ export default function MarketBadge({ market, category, showLabel = false, class
       title={label}
     >
       <img
-        src={src}
+        src={`${src}?v=2`}
         alt={label}
         width={24}
         height={24}
