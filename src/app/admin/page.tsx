@@ -521,13 +521,13 @@ export default function AdminPanel() {
               />
             </div>
 
-            {/* Player (optional) */}
-            {form.market === "props" && (
+            {/* Player (optional) - props: player name; tennis: pick for match odds (e.g. Buse for ML) */}
+            {(form.market === "props" || form.market === "tennis") && (
               <div>
                 <label className="block text-xs text-slate-500 mb-1">Player</label>
                 <input
                   type="text"
-                  placeholder="e.g. Saka"
+                  placeholder={form.market === "tennis" ? "e.g. Buse (for match odds / ML)" : "e.g. Saka"}
                   value={form.player}
                   onChange={(e) => setForm({ ...form, player: e.target.value })}
                   className="w-full bg-slate-800 border border-slate-700 rounded px-4 py-3 focus:outline-none focus:border-emerald-500"
@@ -540,7 +540,7 @@ export default function AdminPanel() {
               <label className="block text-xs text-slate-500 mb-1">Selection</label>
               <input
                 type="text"
-                placeholder="e.g. Over 2.5 Shots"
+                placeholder={form.market === "tennis" ? "e.g. ML or Game handicap -2.5" : "e.g. Over 2.5 Shots"}
                 value={form.selection}
                 onChange={(e) => setForm({ ...form, selection: e.target.value })}
                 required
@@ -877,7 +877,7 @@ export default function AdminPanel() {
                   </select>
                 </div>
               )}
-              {editForm.market === "props" && (
+              {(editForm.market === "props" || editForm.market === "tennis") && (
                 <div>
                   <label className="block text-xs text-slate-500 mb-1">Player</label>
                   <input

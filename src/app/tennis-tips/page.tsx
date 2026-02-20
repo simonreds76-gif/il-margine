@@ -323,6 +323,7 @@ export default function TennisTips() {
             </div>
           </div>
           <p className="text-slate-500 text-xs mb-6">Stake in units (1u = your standard stake). We typically recommend 0.5u–2u per pick.</p>
+          <p className="text-slate-500 text-xs mb-6 italic"><strong className="text-slate-400 not-italic">ML (Moneyline):</strong> A bet on the outright winner of the match. The term comes from American sports betting, where the “money line” originally referred to the odds shown for each team; over time it became shorthand for straight win/loss bets without handicaps or spreads.</p>
 
           {loading ? (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
@@ -337,6 +338,7 @@ export default function TennisTips() {
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
                       <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '70px' }}>Date</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '100px' }}>Pick</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
@@ -349,6 +351,7 @@ export default function TennisTips() {
                       <tr key={pick.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
                         <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(pick.match_date)}</td>
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{pick.event}</td>
+                        <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{pick.player || "–"}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{pick.selection}</td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/50">
                           <span className="font-mono text-slate-200">{formatOdds(pick.odds)}</span>
@@ -379,7 +382,10 @@ export default function TennisTips() {
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
                           <div className="font-medium text-slate-200">{pick.event}</div>
                         </div>
-                        <div className="text-sm text-slate-400">{pick.selection}</div>
+                        <div className="text-sm text-slate-400">
+                          {pick.player && <span>{pick.player} · </span>}
+                          {pick.selection}
+                        </div>
                       </div>
                       <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400 ml-2">
                         PENDING
@@ -435,6 +441,7 @@ export default function TennisTips() {
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
                       <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '70px' }}>Date</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '100px' }}>Pick</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
@@ -448,6 +455,7 @@ export default function TennisTips() {
                       <tr key={result.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
                         <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(result.match_date)}</td>
                         <td className="px-4 py-3 font-medium text-slate-200 border-r border-slate-800/50">{result.event}</td>
+                        <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{result.player || "–"}</td>
                         <td className="px-4 py-3 text-slate-300 border-r border-slate-800/50">{result.selection}</td>
                         <td className="px-4 py-3 text-center border-r border-slate-800/50">
                           <span className="font-mono text-slate-200">{formatOdds(result.odds)}</span>
@@ -481,7 +489,10 @@ export default function TennisTips() {
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(result.match_date)}</span>
                           <div className="font-medium text-slate-200">{result.event}</div>
                         </div>
-                        <div className="text-sm text-slate-400">{result.selection}</div>
+                        <div className="text-sm text-slate-400">
+                          {result.player && <span>{result.player} · </span>}
+                          {result.selection}
+                        </div>
                       </div>
                       <span className={`text-xs font-mono px-2 py-1 rounded ml-2 ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
                         {result.status.toUpperCase()}
