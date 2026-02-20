@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { SITE_MOTTO } from "@/lib/config";
+import ComplianceBadges from "@/components/ComplianceBadges";
 
 interface FooterProps {
   className?: string;
@@ -20,7 +21,8 @@ export default function Footer({ className = "" }: FooterProps) {
               </div>
             </div>
           </Link>
-          <div className="flex flex-col items-center md:items-end gap-2">
+          <div className="flex flex-col items-center md:items-end gap-3">
+            <ComplianceBadges />
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-slate-500">
               <Link href="/faq" className="hover:text-slate-300">Frequently Asked Questions</Link>
               <Link href="/contact" className="hover:text-slate-300">Contact</Link>

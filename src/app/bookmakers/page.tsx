@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/Footer";
+import ComplianceBadges from "@/components/ComplianceBadges";
 
 const BOOKMAKERS = [
   {
@@ -265,6 +266,9 @@ export default function BookmakersPage() {
           <p className="text-slate-300 leading-relaxed mb-4 max-w-3xl">
             This page recommends bookmakers we&apos;ve tested with real stakes across player props and tennis markets. Each has been evaluated for odds quality, market depth, account longevity, and operational reliability.
           </p>
+          <div className="mb-4">
+            <ComplianceBadges className="flex-wrap gap-6" />
+          </div>
           <ul className="list-disc pl-6 text-slate-300 space-y-1 mb-4 max-w-3xl">
             <li>Eight bookmakers suitable for value betting</li>
             <li>Market-specific strengths for props and tennis</li>
@@ -620,6 +624,9 @@ export default function BookmakersPage() {
 
         {/* Responsible Gambling */}
         <section className="mb-10">
+          <div className="mb-6">
+            <ComplianceBadges />
+          </div>
           <h2 className="text-xl font-semibold text-emerald-400 mb-4">Betting Responsibly</h2>
           <p className="text-slate-300 text-sm leading-relaxed mb-3">Opening multiple bookmaker accounts is standard for professional bettors, but it requires discipline.</p>
           <p className="text-slate-300 text-sm leading-relaxed mb-3"><strong className="text-slate-200">Guidelines:</strong> Only deposit money you can afford to lose. Set loss limits across all accounts. Never chase losses by opening more accounts. Track total exposure. Be aware that more accounts = more temptation.</p>
