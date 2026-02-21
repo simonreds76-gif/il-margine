@@ -98,7 +98,7 @@ export default function Home() {
 
     // Fetch last 7 days P/L from server API (bypasses RLS, ensures all bets included)
     try {
-      const res = await fetch("/api/last7-profit");
+      const res = await fetch("/api/last7-profit", { cache: "no-store" });
       const json = await res.json();
       if (res.ok && typeof json.total === "number") {
         setLast7DaysProfit(json.total);
