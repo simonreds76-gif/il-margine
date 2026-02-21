@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "create-logos": "node scripts/create-placeholder-logos.js",
-    "download-logos": "node scripts/download-real-logos.js"
+    "download-logos": "node scripts/download-real-logos.js",
+    "check-last7": "node scripts/check-last7.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.94.0",

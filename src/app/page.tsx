@@ -28,6 +28,7 @@ export default function Home() {
   const [recentBets, setRecentBets] = useState<any[]>([]);
   const [pendingBets, setPendingBets] = useState<any[]>([]);
   const [last7DaysProfit, setLast7DaysProfit] = useState<number>(0);
+  const [last7DaysCount, setLast7DaysCount] = useState<number>(0);
   const [combinedStats, setCombinedStats] = useState<{
     props: CombinedMarketStats;
     tennis: CombinedMarketStats;
@@ -95,20 +96,17 @@ export default function Home() {
     if (pending) setPendingBets(pending);
     if (pendingError) console.error("Error fetching pending bets:", pendingError);
 
-    // Fetch all settled bets from last 7 days for accurate P/L
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    const { data: last7Bets, error: last7Error } = await supabase
-      .from("bets")
-      .select("profit_loss")
-      .in("status", ["won", "lost"])
-      .not("settled_at", "is", null)
-      .gte("settled_at", sevenDaysAgo.toISOString());
-    if (last7Bets) {
-      const sum = last7Bets.reduce((s, b) => s + (Number(b.profit_loss) || 0), 0);
-      setLast7DaysProfit(sum);
+    // Fetch last 7 days P/L from server API (bypasses RLS, ensures all bets included)
+    try {
+      const res = await fetch("/api/last7-profit");
+      const json = await res.json();
+      if (res.ok && typeof json.total === "number") {
+        setLast7DaysProfit(json.total);
+        setLast7DaysCount(typeof json.count === "number" ? json.count : 0);
+      }
+    } catch (e) {
+      console.error("Error fetching last 7 days:", e);
     }
-    if (last7Error) console.error("Error fetching last 7 days:", last7Error);
 
     // Calculate combined stats - always call this, even if stats is empty
     // It will use baseline values when there's no live data
@@ -493,6 +491,9 @@ export default function Home() {
             <div className="flex items-center gap-4">
               <span className="text-xs sm:text-sm text-emerald-400 font-mono">
                 Last 7 days: {last7DaysProfit > 0 ? "+" : ""}{last7DaysProfit.toFixed(2)}u
+                {last7DaysCount > 0 && (
+                  <span className="text-slate-500 font-normal ml-1">({last7DaysCount} bet{last7DaysCount !== 1 ? "s" : ""})</span>
+                )}
               </span>
             </div>
           </div>
