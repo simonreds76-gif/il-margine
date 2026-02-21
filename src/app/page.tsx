@@ -399,8 +399,8 @@ export default function Home() {
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
                       <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '50px' }}></th>
                       <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '70px' }}>Date</th>
-                      <th className="px-4 py-3 text-left border-r border-slate-800 min-w-[180px]">Match</th>
-                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '100px' }}>Player</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800 min-w-[140px]">Match</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '140px' }}>Player</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
@@ -420,8 +420,8 @@ export default function Home() {
                             <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
                           </td>
                           <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(bet.match_date)}</td>
-                          <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50 min-w-[180px] whitespace-nowrap">{bet.event}</td>
-                          <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{bet.player || "–"}</td>
+                          <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50 min-w-[140px] whitespace-nowrap">{bet.event}</td>
+                          <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50 whitespace-nowrap">{bet.player || "–"}</td>
                           <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
                           <td className="px-4 py-4 text-center border-r border-slate-800/50">
                             <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
@@ -507,8 +507,8 @@ export default function Home() {
                     <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
                       <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '50px' }}></th>
                       <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '70px' }}>Date</th>
-                      <th className="px-4 py-3 text-left border-r border-slate-800 min-w-[180px]">Match</th>
-                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '100px' }}>Player</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800 min-w-[140px]">Match</th>
+                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '140px' }}>Player</th>
                       <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
@@ -530,8 +530,8 @@ export default function Home() {
                             <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
                           </td>
                           <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(bet.match_date)}</td>
-                          <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50 min-w-[180px] whitespace-nowrap">{bet.event}</td>
-                          <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{bet.player || "–"}</td>
+                          <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50 min-w-[140px] whitespace-nowrap">{bet.event}</td>
+                          <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50 whitespace-nowrap">{bet.player || "–"}</td>
                           <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
                           <td className="px-4 py-4 text-center border-r border-slate-800/50">
                             <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
