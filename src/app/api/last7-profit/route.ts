@@ -12,7 +12,6 @@ export async function GET() {
     return NextResponse.json({ error: "Server misconfigured", total: 0, count: 0 }, { status: 500 });
   }
 
-  // Use start of day 7 days ago (UTC) to avoid timezone edge cases
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setUTCDate(sevenDaysAgo.getUTCDate() - 7);
   sevenDaysAgo.setUTCHours(0, 0, 0, 0);

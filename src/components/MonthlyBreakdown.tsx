@@ -74,7 +74,29 @@ export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBrea
         <h3 className="text-sm font-semibold text-slate-200">Monthly breakdown</h3>
         <p className="text-xs text-slate-500 mt-0.5">{SUBTITLE_BY_SCOPE[scope]}</p>
       </div>
-      <div className="overflow-x-auto">
+      {/* Mobile: compact rows, no horizontal scroll */}
+      <div className="md:hidden divide-y divide-slate-800/50">
+        {displayed.map((r) => (
+          <div key={r.month} className="px-4 py-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-slate-200 font-medium">{formatMonth(r.month)}</span>
+              <span className={`font-mono font-medium ${Number(r.total_profit) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                {Number(r.total_profit) >= 0 ? "+" : ""}{Number(r.total_profit).toFixed(2)}u
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-mono text-slate-500">
+              <span>{r.total_bets} bets</span>
+              <span>{r.wins}-{r.losses}</span>
+              <span>{Number(r.total_stake).toFixed(1)}u staked</span>
+              <span className={Number(r.roi) >= 0 ? "text-emerald-400" : "text-red-400"}>
+                {Number(r.roi) >= 0 ? "+" : ""}{Number(r.roi).toFixed(1)}% ROI
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* Desktop: table */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase">
