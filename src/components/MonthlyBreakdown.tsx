@@ -45,6 +45,7 @@ export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBrea
   const [rows, setRows] = useState<MonthRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
+  const [openMonth, setOpenMonth] = useState<string | null>(null);
 
   const view = VIEW_BY_SCOPE[scope];
 
@@ -74,26 +75,43 @@ export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBrea
         <h3 className="text-sm font-semibold text-slate-200">Monthly breakdown</h3>
         <p className="text-xs text-slate-500 mt-0.5">{SUBTITLE_BY_SCOPE[scope]}</p>
       </div>
-      {/* Mobile: compact rows, no horizontal scroll */}
+      {/* Mobile: tap to expand each month */}
       <div className="md:hidden divide-y divide-slate-800/50">
-        {displayed.map((r) => (
-          <div key={r.month} className="px-4 py-3">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-slate-200 font-medium">{formatMonth(r.month)}</span>
-              <span className={`font-mono font-medium ${Number(r.total_profit) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
-                {Number(r.total_profit) >= 0 ? "+" : ""}{Number(r.total_profit).toFixed(2)}u
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-mono text-slate-500">
-              <span>{r.total_bets} bets</span>
-              <span>{r.wins}-{r.losses}</span>
-              <span>{Number(r.total_stake).toFixed(1)}u staked</span>
-              <span className={Number(r.roi) >= 0 ? "text-emerald-400" : "text-red-400"}>
-                {Number(r.roi) >= 0 ? "+" : ""}{Number(r.roi).toFixed(1)}% ROI
-              </span>
-            </div>
-          </div>
-        ))}
+        {displayed.map((r) => {
+          const isOpen = openMonth === r.month;
+          return (
+            <button
+              key={r.month}
+              type="button"
+              onClick={() => setOpenMonth(isOpen ? null : r.month)}
+              className="w-full px-4 py-3 text-left transition-colors active:bg-slate-800/50"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-slate-200 font-medium">{formatMonth(r.month)}</span>
+                <span className="flex items-center gap-2">
+                  <span className={`font-mono font-medium ${Number(r.total_profit) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                    {Number(r.total_profit) >= 0 ? "+" : ""}{Number(r.total_profit).toFixed(2)}u
+                  </span>
+                  <span className={`text-slate-500 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </span>
+                </span>
+              </div>
+              {isOpen && (
+                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-mono text-slate-500 mt-2 pt-2 border-t border-slate-800/50">
+                  <span>{r.total_bets} bets</span>
+                  <span>{r.wins}-{r.losses}</span>
+                  <span>{Number(r.total_stake).toFixed(1)}u staked</span>
+                  <span className={Number(r.roi) >= 0 ? "text-emerald-400" : "text-red-400"}>
+                    {Number(r.roi) >= 0 ? "+" : ""}{Number(r.roi).toFixed(1)}% ROI
+                  </span>
+                </div>
+              )}
+            </button>
+          );
+        })}
       </div>
       {/* Desktop: table */}
       <div className="hidden md:block overflow-x-auto">
