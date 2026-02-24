@@ -1,20 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
 /** Same logo logic as BookmakerLogo. Maps bookmaker id to filename in public/bookmakers/. Omit if no logo file. */
 const LOGO_MAP: Record<string, string> = {
+  midnite: "midnite",
   betvictor: "betvictor",
   coral: "coral",
   ladbrokes: "ladbrokes",
   betmgm: "betmgm",
   "william-hill": "williamhill",
   betfred: "betfred",
-};
-
-const LOGO_SCALE: Record<string, number> = {
-  ladbrokes: 0.85,
 };
 
 const SIZE_CLASSES = {
@@ -33,6 +29,7 @@ interface BookmakerThumbProps {
 
 export default function BookmakerThumb({ id, name, size = "md", className = "" }: BookmakerThumbProps) {
   const logoBase = LOGO_MAP[id];
+  const [srcIndex, setSrcIndex] = useState(0);
   const [failed, setFailed] = useState(false);
 
   const logoPaths = logoBase ? [
@@ -41,24 +38,28 @@ export default function BookmakerThumb({ id, name, size = "md", className = "" }
     `/bookmakers/${logoBase}.jpg`,
   ] : [];
 
-  const scale = LOGO_SCALE[logoBase ?? ""] ?? 1;
-  const showImage = logoPaths.length > 0 && !failed;
+  const currentSrc = logoPaths[srcIndex] ?? null;
+  const showImage = currentSrc && !failed;
+
+  const handleError = () => {
+    if (srcIndex < logoPaths.length - 1) {
+      setSrcIndex((i) => i + 1);
+    } else {
+      setFailed(true);
+    }
+  };
 
   return (
     <div className={`flex items-center justify-center flex-shrink-0 ${className}`}>
       {showImage ? (
-        <div className={`${SIZE_CLASSES[size]} min-w-[1.5rem] min-h-[1.5rem] relative overflow-hidden rounded-lg`}>
-          <div className="absolute inset-0" style={{ transform: `scale(${scale})` }}>
-            <Image
-              src={logoPaths[0]}
-              alt={name}
-              fill
-              sizes="48px"
-              className="object-contain"
-              unoptimized
-              onError={() => setFailed(true)}
-            />
-          </div>
+        <div className={`${SIZE_CLASSES[size]} relative overflow-hidden rounded-lg flex items-center justify-center bg-slate-800/50`}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={currentSrc}
+            alt={name}
+            className="w-full h-full object-contain"
+            onError={handleError}
+          />
         </div>
       ) : (
         <div className={`${SIZE_CLASSES[size]} rounded-lg bg-slate-700 flex items-center justify-center`}>

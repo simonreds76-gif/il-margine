@@ -324,10 +324,9 @@ export default function BookmakersPage() {
           <p className="text-lg text-slate-300 max-w-2xl mb-4">
             Eight bookmakers. One strategy. Field-tested for props and tennis — we bet here and we&apos;re honest about restrictions.
           </p>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-slate-300 text-xs mb-4">
-            <span className="text-emerald-400">●</span>
-            We use these · No fluff · Honest about gubbing
-          </div>
+          <p className="text-slate-400 text-sm mb-4 max-w-2xl">
+            Independent reviews based on real-money testing. Affiliate links are used where we have partnerships; recommendations are unchanged regardless.
+          </p>
           <p className="text-slate-500 text-sm max-w-3xl">
             18+ only. Gamble responsibly. <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400/80 hover:text-emerald-300 underline">begambleaware.org</a>
           </p>
