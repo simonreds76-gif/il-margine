@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/Footer";
-import BookmakerThumb from "@/components/BookmakerThumb";
+import BookmakerLogo from "@/components/BookmakerLogo";
 
 const BOOKMAKERS = [
   {
@@ -241,7 +241,7 @@ function BookmakerCard({ bm }: { bm: (typeof BOOKMAKERS)[0] }) {
       {/* Conversion block: always visible */}
       <div className="p-5 md:p-6">
         <div className="flex flex-wrap items-center gap-3 mb-3">
-          <BookmakerThumb id={bm.id} name={bm.name} size="md" />
+          <BookmakerLogo bookmaker={{ id: 0, name: bm.name, short_name: bm.name, affiliate_link: bm.offerUrl !== "#" ? bm.offerUrl : null, active: true }} size="md" />
           <div>
             <h3 className="font-semibold text-slate-100">{bm.name}</h3>
             <span className="text-xs text-slate-500">{bm.stars} · Props {bm.propsScore} · Tennis {bm.tennisScore}</span>
@@ -322,10 +322,10 @@ export default function BookmakersPage() {
             £250+ in Welcome Offers
           </h1>
           <p className="text-lg text-slate-300 max-w-2xl mb-4">
-            Eight bookmakers. One strategy. Field-tested for props and tennis — we bet here and we&apos;re honest about restrictions.
+            Eight bookmakers. One strategy. Field tested for props and tennis. We bet here and we&apos;re honest about restrictions.
           </p>
           <p className="text-slate-400 text-sm mb-4 max-w-2xl">
-            Independent reviews based on real-money testing. Affiliate links are used where we have partnerships; recommendations are unchanged regardless.
+            Independent reviews based on real money testing. Affiliate links are used where we have partnerships. Recommendations are unchanged regardless.
           </p>
           <p className="text-slate-500 text-sm max-w-3xl">
             18+ only. Gamble responsibly. <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400/80 hover:text-emerald-300 underline">begambleaware.org</a>
@@ -339,7 +339,7 @@ export default function BookmakersPage() {
             {BOOKMAKERS.map((bm) => (
               <div key={bm.id} className="rounded-lg border border-slate-700/80 bg-slate-800/40 p-3 flex flex-col gap-2">
                 <div className="flex items-center gap-2">
-                  <BookmakerThumb id={bm.id} name={bm.name} size="xs" />
+                  <BookmakerLogo bookmaker={{ id: 0, name: bm.name, short_name: bm.name, affiliate_link: bm.offerUrl !== "#" ? bm.offerUrl : null, active: true }} size="sm" />
                   <span className="font-medium text-slate-200 text-sm">{bm.name}</span>
                 </div>
                 <p className="text-xs font-medium text-slate-100">{bm.welcomeOffer}</p>
@@ -363,7 +363,7 @@ export default function BookmakersPage() {
 
           {/* Entain trio */}
           <div className="mb-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300/80 mb-3">The Entain trio — open all three</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300/80 mb-3">The Entain trio (open all three)</p>
             <div className="space-y-6">
               {BOOKMAKERS.filter((bm) => ["bwin", "coral", "ladbrokes"].includes(bm.id)).map((bm) => (
                 <BookmakerCard key={bm.id} bm={bm} />
