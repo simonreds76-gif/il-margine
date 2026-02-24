@@ -99,7 +99,6 @@ const logoScale: Record<string, number> = {
 // Prefer SVG for crisp scaling (avoids pixelation when PNG is low-res)
 const preferSvg: Record<string, boolean> = {
   bet365: true,
-  betfred: true,
   williamhill: true,
   skybet: true,
 };
