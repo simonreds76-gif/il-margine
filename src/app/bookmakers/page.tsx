@@ -67,7 +67,7 @@ const BOOKMAKERS = [
     propsScore: "8/10",
     tennisScore: "7/10",
     welcomeOffer: "Bet £5 Get £20 in Free Bets",
-    welcomeTerms: "18+ UK+ROI only. Min £5 bet on sports within 14 days at odds 1/2+. 4×£5 free bets, valid 7 days, stake not returned. T&Cs apply.",
+    welcomeTerms: "Min £5 bet on sports at odds 1/2+. 4×£5 free bets, valid 7 days, stake not returned. T&Cs apply.",
     strengths: [
       "Comprehensive player props across all major leagues",
       "Part of Entain (shares group with Coral, Ladbrokes – separate account)",
@@ -281,11 +281,7 @@ export default function BookmakersPage() {
                 <span className="text-sm text-slate-500">Props {bm.propsScore} · Tennis {bm.tennisScore}</span>
               </div>
               <div className="rounded-lg border border-slate-700/80 bg-slate-800/40 px-3.5 py-2.5 mb-4">
-                <div className="flex items-baseline gap-2 flex-wrap">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-300">New customers</span>
-                  <span className="text-slate-500">·</span>
-                  <span className="text-sm font-semibold text-slate-100">{bm.welcomeOffer}</span>
-                </div>
+                <p className="text-sm font-semibold text-slate-100">{bm.welcomeOffer}</p>
                 <p className="mt-1 text-[11px] text-slate-500 leading-relaxed">{bm.welcomeTerms}</p>
               </div>
               <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 mb-4">
@@ -303,7 +299,8 @@ export default function BookmakersPage() {
                 </div>
               </div>
               <p className="text-slate-400 text-sm leading-relaxed mb-4">{bm.usageTips}</p>
-              <div>
+              <div className="flex flex-col gap-2">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-300">New customers</span>
                 <a
                   href={bm.offerUrl}
                   target={bm.offerUrl !== "#" ? "_blank" : undefined}
