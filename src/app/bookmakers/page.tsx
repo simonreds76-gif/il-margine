@@ -67,7 +67,7 @@ const BOOKMAKERS = [
     propsScore: "8/10",
     tennisScore: "7/10",
     welcomeOffer: "Bet £5 Get £20 in Free Bets",
-    welcomeTerms: "4 × £5 free bets, min odds 1/2 (1.50), T&Cs apply",
+    welcomeTerms: "18+ UK+ROI only. Min £5 bet on sports within 14 days at odds 1/2+. 4×£5 free bets, valid 7 days, stake not returned. T&Cs apply.",
     strengths: [
       "Comprehensive player props across all major leagues",
       "Part of Entain (shares group with Coral, Ladbrokes – separate account)",
@@ -84,7 +84,7 @@ const BOOKMAKERS = [
     ],
     usageTips: "Bwin is part of the Entain group alongside Coral and Ladbrokes. You can hold accounts with all three simultaneously. Each is independently managed despite shared pricing, so having Bwin plus Coral and Ladbrokes extends your access window to Entain's competitive odds. For props: Coverage is excellent across Premier League, Championship, and major European leagues. Bet builder is solid. For tennis: Adequate for ATP 250+. Worth pairing with Coral and Ladbrokes for maximum Entain access.",
     bestFor: "Pair with Coral and Ladbrokes for extended access",
-    offerUrl: "#",
+    offerUrl: "https://mediaserver.entainpartners.com/renderBanner.do?zoneId=2190420",
   },
   {
     id: "coral",
@@ -311,6 +311,8 @@ export default function BookmakersPage() {
               <p className="text-slate-300 text-sm leading-relaxed mb-6">{bm.usageTips}</p>
               <a
                 href={bm.offerUrl}
+                target={bm.offerUrl !== "#" ? "_blank" : undefined}
+                rel={bm.offerUrl !== "#" ? "noopener noreferrer nofollow" : undefined}
                 className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors shadow-lg w-full sm:w-auto justify-center"
               >
                 Claim {bm.name} Offer →
