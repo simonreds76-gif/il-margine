@@ -290,9 +290,13 @@ export default function BookmakersPage() {
                 <span>💰 <strong className="text-slate-200">Player Props:</strong> {bm.propsScore}</span>
                 <span>🎾 <strong className="text-slate-200">Tennis:</strong> {bm.tennisScore}</span>
               </div>
-              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-4 mb-4">
-                <p className="font-medium text-slate-100">New customers: {bm.welcomeOffer}</p>
-                <p className="text-sm text-slate-400 mt-1">Terms: {bm.welcomeTerms}</p>
+              <div className="relative overflow-hidden rounded-xl border border-emerald-500/25 bg-gradient-to-br from-emerald-500/15 to-emerald-500/5 p-5 mb-4">
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-400/60 rounded-l-xl" />
+                <div className="pl-1">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-emerald-400/90">New customers</span>
+                  <p className="mt-1.5 text-lg font-bold text-slate-100 leading-tight">{bm.welcomeOffer}</p>
+                  <p className="mt-2 text-xs text-slate-500 leading-relaxed">{bm.welcomeTerms}</p>
+                </div>
               </div>
               <div className="grid sm:grid-cols-2 gap-6 mb-4">
                 <div>
