@@ -84,7 +84,7 @@ const BOOKMAKERS = [
     ],
     usageTips: "Bwin is part of the Entain group alongside Coral and Ladbrokes. You can hold accounts with all three simultaneously. Each is independently managed despite shared pricing, so having Bwin plus Coral and Ladbrokes extends your access window to Entain's competitive odds. For props: Coverage is excellent across Premier League, Championship, and major European leagues. Bet builder is solid. For tennis: Adequate for ATP 250+. Worth pairing with Coral and Ladbrokes for maximum Entain access.",
     bestFor: "Pair with Coral and Ladbrokes for extended access",
-    offerUrl: "https://mediaserver.entainpartners.com/renderBanner.do?zoneId=2190420",
+    offerUrl: "/api/go/bwin",
   },
   {
     id: "coral",
