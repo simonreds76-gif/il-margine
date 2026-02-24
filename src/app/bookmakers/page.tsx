@@ -253,27 +253,18 @@ export default function BookmakersPage() {
         </Link>
 
         {/* Hero */}
-        <section className="mb-12 md:mb-16">
-          <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">BOOKMAKERS</span>
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-3">Recommended Bookmakers</h1>
-          <p className="text-lg text-slate-300 max-w-3xl mb-4">
-            Field-tested bookmakers for player props and tennis betting. Affiliate partnerships being established.
+        <section className="mb-10 md:mb-12">
+          <span className="text-[11px] font-semibold uppercase tracking-widest text-emerald-300 mb-2 block">Bookmakers</span>
+          <h1 className="text-2xl sm:text-3xl font-semibold text-slate-100 mb-2">Recommended Bookmakers</h1>
+          <p className="text-slate-300 leading-relaxed max-w-3xl mb-3">
+            Field-tested bookmakers for player props and tennis betting. Eight operators evaluated for odds quality, market depth, account longevity, and operational reliability.
           </p>
-          <p className="text-slate-300 leading-relaxed mb-4 max-w-3xl">
-            Not all bookmakers are created equal. Some offer competitive odds on player props, others restrict winning accounts within weeks. Some process withdrawals in hours, others take days.
-          </p>
-          <p className="text-slate-300 leading-relaxed mb-4 max-w-3xl">
-            This page recommends bookmakers we&apos;ve tested with real stakes across player props and tennis markets. Each has been evaluated for odds quality, market depth, account longevity, and operational reliability.
-          </p>
-          <p className="text-slate-400 text-sm mb-4 max-w-3xl">
+          <p className="text-slate-400 text-sm max-w-3xl mb-4">
             18+ only. Gamble responsibly. For support: <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline">begambleaware.org</a> or 0808 8020 133 (National Gambling Helpline).
           </p>
-          <ul className="list-disc pl-6 text-slate-300 space-y-1 mb-4 max-w-3xl">
-            <li>Eight bookmakers suitable for value betting</li>
-            <li>Market-specific strengths for props and tennis</li>
-            <li>Realistic account longevity expectations</li>
-            <li>Current welcome offers</li>
-            <li>Usage tactics for each platform</li>
+          <ul className="list-disc pl-5 text-slate-400 text-sm space-y-0.5 mb-3 max-w-3xl">
+            <li>Eight bookmakers for value betting</li>
+            <li>Props and tennis focus · Welcome offers · Usage tactics</li>
           </ul>
           <p className="text-slate-400 text-sm max-w-3xl">
             <strong className="text-slate-300">Affiliate disclosure:</strong> We&apos;re establishing affiliate partnerships with these bookmakers. When active, links will be clearly marked. Recommendations remain independent regardless of commercial arrangements.
@@ -281,44 +272,43 @@ export default function BookmakersPage() {
         </section>
 
         {/* 8 Bookmaker cards */}
-        <div className="space-y-8 mb-14">
+        <div className="space-y-6 mb-12">
           {BOOKMAKERS.map((bm) => (
-            <article key={bm.id} className="bg-[#1a1d24] rounded-xl border border-slate-800 p-6 md:p-8">
-              <h3 className="text-xl font-semibold text-slate-100 mb-2">{bm.name}</h3>
-              <p className="text-amber-400/90 text-sm mb-3" aria-label={`Rating ${bm.rating}`}>{bm.stars}</p>
-              <div className="flex flex-wrap gap-4 text-sm text-slate-400 mb-4">
-                <span>💰 <strong className="text-slate-200">Player Props:</strong> {bm.propsScore}</span>
-                <span>🎾 <strong className="text-slate-200">Tennis:</strong> {bm.tennisScore}</span>
+            <article key={bm.id} className="bg-[#1a1d24] rounded-xl border border-slate-800 p-5 md:p-6">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-3">
+                <h3 className="text-lg font-semibold text-slate-100">{bm.name}</h3>
+                <p className="text-amber-400/90 text-sm" aria-label={`Rating ${bm.rating}`}>{bm.stars}</p>
+                <span className="text-sm text-slate-500">Props {bm.propsScore} · Tennis {bm.tennisScore}</span>
               </div>
-              <div className="relative overflow-hidden rounded-xl border border-emerald-500/25 bg-gradient-to-br from-emerald-500/15 to-emerald-500/5 p-5 mb-4">
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-400/60 rounded-l-xl" />
-                <div className="pl-1">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-emerald-400/90">New customers</span>
-                  <p className="mt-1.5 text-lg font-bold text-slate-100 leading-tight">{bm.welcomeOffer}</p>
-                  <p className="mt-2 text-xs text-slate-500 leading-relaxed">{bm.welcomeTerms}</p>
+              <div className="rounded-lg border border-slate-700/80 bg-slate-800/40 px-3.5 py-2.5 mb-4">
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-300">New customers</span>
+                  <span className="text-slate-500">·</span>
+                  <span className="text-sm font-semibold text-slate-100">{bm.welcomeOffer}</span>
                 </div>
+                <p className="mt-1 text-[11px] text-slate-500 leading-relaxed">{bm.welcomeTerms}</p>
               </div>
-              <div className="grid sm:grid-cols-2 gap-6 mb-4">
+              <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 mb-4">
                 <div>
-                  <p className="text-xs font-mono text-emerald-400 mb-2">Strengths</p>
-                  <ul className="list-disc pl-5 text-slate-300 text-sm space-y-1">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-300 mb-1.5">Strengths</p>
+                  <ul className="list-disc pl-4 text-slate-400 text-sm space-y-0.5">
                     {bm.strengths.map((s, i) => <li key={i}>{s}</li>)}
                   </ul>
                 </div>
                 <div>
-                  <p className="text-xs font-mono text-slate-400 mb-2">Weaknesses</p>
-                  <ul className="list-disc pl-5 text-slate-300 text-sm space-y-1">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Weaknesses</p>
+                  <ul className="list-disc pl-4 text-slate-400 text-sm space-y-0.5">
                     {bm.weaknesses.map((w, i) => <li key={i}>{w}</li>)}
                   </ul>
                 </div>
               </div>
-              <p className="text-slate-300 text-sm leading-relaxed mb-6">{bm.usageTips}</p>
-              <div className="pt-2">
+              <p className="text-slate-400 text-sm leading-relaxed mb-4">{bm.usageTips}</p>
+              <div>
                 <a
                   href={bm.offerUrl}
                   target={bm.offerUrl !== "#" ? "_blank" : undefined}
                   rel={bm.offerUrl !== "#" ? "noopener noreferrer nofollow" : undefined}
-                  className="inline-block w-full sm:w-auto text-center bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors shadow-lg"
+                  className="inline-block w-full sm:w-auto text-center bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors"
                 >
                   Claim {bm.name} Offer →
                 </a>
@@ -328,7 +318,7 @@ export default function BookmakersPage() {
         </div>
 
         {/* Key Concepts - 5 accordions */}
-        <section className="mb-14">
+        <section className="mb-10">
           <h2 className="text-xl font-semibold text-emerald-400 mb-6">Understanding Bookmaker Markets</h2>
           <div className="bg-[#1a1d24] rounded-xl border border-slate-800 overflow-hidden divide-y divide-slate-800">
             <details className="group">
@@ -426,7 +416,7 @@ export default function BookmakersPage() {
         </section>
 
         {/* Comparison Table */}
-        <section className="mb-14">
+        <section className="mb-10">
           <h2 className="text-xl font-semibold text-emerald-400 mb-4">Quick Comparison</h2>
           <div className="overflow-x-auto rounded-lg border border-slate-700">
             <table className="w-full text-sm border-collapse min-w-[600px]">
@@ -456,7 +446,7 @@ export default function BookmakersPage() {
         </section>
 
         {/* Account Strategy */}
-        <section className="bg-[#1a1d24] rounded-xl border border-slate-800 p-6 md:p-8 mb-14">
+        <section className="bg-[#1a1d24] rounded-xl border border-slate-800 p-6 md:p-8 mb-10">
           <h2 className="text-xl font-semibold text-emerald-400 mb-4">Recommended Approach</h2>
           <div className="text-slate-300 text-sm leading-relaxed space-y-4">
             <p><strong className="text-slate-100">Account opening sequence:</strong></p>
@@ -472,7 +462,7 @@ export default function BookmakersPage() {
         </section>
 
         {/* Betting Glossary - 8 categories */}
-        <section className="mb-14">
+        <section className="mb-10">
           <h2 className="text-xl font-semibold text-emerald-400 mb-6">Industry Terminology You Need To Know</h2>
           <div className="bg-[#1a1d24] rounded-xl border border-slate-800 overflow-hidden divide-y divide-slate-800">
             <details className="group">
@@ -597,7 +587,7 @@ export default function BookmakersPage() {
         </section>
 
         {/* FAQ */}
-        <section className="bg-[#1a1d24] rounded-xl border border-slate-800 overflow-hidden mb-14">
+        <section className="bg-[#1a1d24] rounded-xl border border-slate-800 overflow-hidden mb-10">
           <h2 className="text-xl font-semibold text-emerald-400 p-6 md:p-8 pb-2">Common Questions</h2>
           <div className="divide-y divide-slate-800">
             {FAQ_ITEMS.map((item, i) => (
@@ -622,7 +612,7 @@ export default function BookmakersPage() {
         </section>
 
         {/* Affiliate Disclosure - amber */}
-        <section className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-6 md:p-8 mb-14">
+        <section className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-6 md:p-8 mb-10">
           <h2 className="text-lg font-semibold text-amber-400/95 mb-3">Transparency Statement</h2>
           <p className="text-slate-300 text-sm leading-relaxed mb-3">We&apos;re in the process of establishing affiliate partnerships with the bookmakers recommended on this page.</p>
           <p className="text-slate-300 text-sm leading-relaxed mb-3"><strong className="text-slate-200">What this means:</strong> If you click through and open an account, we may receive a commission. This costs you nothing extra. Welcome offers are identical whether you use our links or go direct.</p>
