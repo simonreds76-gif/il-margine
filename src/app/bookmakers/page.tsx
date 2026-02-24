@@ -309,14 +309,16 @@ export default function BookmakersPage() {
                 </div>
               </div>
               <p className="text-slate-300 text-sm leading-relaxed mb-6">{bm.usageTips}</p>
-              <a
-                href={bm.offerUrl}
-                target={bm.offerUrl !== "#" ? "_blank" : undefined}
-                rel={bm.offerUrl !== "#" ? "noopener noreferrer nofollow" : undefined}
-                className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors shadow-lg w-full sm:w-auto justify-center"
-              >
-                Claim {bm.name} Offer →
-              </a>
+              <div className="pt-2">
+                <a
+                  href={bm.offerUrl}
+                  target={bm.offerUrl !== "#" ? "_blank" : undefined}
+                  rel={bm.offerUrl !== "#" ? "noopener noreferrer nofollow" : undefined}
+                  className="inline-block w-full sm:w-auto text-center bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors shadow-lg"
+                >
+                  Claim {bm.name} Offer →
+                </a>
+              </div>
             </article>
           ))}
         </div>
