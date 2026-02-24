@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/Footer";
+import BookmakerThumb from "@/components/BookmakerThumb";
 
 const BOOKMAKERS = [
   {
@@ -234,27 +235,13 @@ const COMPARISON_ROWS = [
   { name: "Betfred", props: "7/10", tennis: "7/10", offer: "£40 bonuses", bestFor: "Cards markets, higher welcome offer" },
 ];
 
-// Logos: id -> base filename (no ext). Omit if no logo.
-const BOOKMAKER_LOGO: Record<string, string> = {
-  betvictor: "betvictor",
-  coral: "coral",
-  ladbrokes: "ladbrokes",
-  betmgm: "betmgm",
-  "william-hill": "williamhill",
-  betfred: "betfred",
-};
-
-function BookmakerCard({ bm, logoMap }: { bm: (typeof BOOKMAKERS)[0]; logoMap: Record<string, string> }) {
+function BookmakerCard({ bm }: { bm: (typeof BOOKMAKERS)[0] }) {
   return (
     <article className="bg-[#1a1d24] rounded-xl border border-slate-800 overflow-hidden">
       {/* Conversion block: always visible */}
       <div className="p-5 md:p-6">
         <div className="flex flex-wrap items-center gap-3 mb-3">
-          {logoMap[bm.id] ? (
-            <Image src={`/bookmakers/${logoMap[bm.id]}.svg`} alt="" width={40} height={40} className="rounded-lg object-contain" />
-          ) : (
-            <span className="w-10 h-10 rounded-lg bg-slate-700 flex items-center justify-center text-sm font-semibold text-slate-400">{bm.name.charAt(0)}</span>
-          )}
+          <BookmakerThumb id={bm.id} name={bm.name} size="md" />
           <div>
             <h3 className="font-semibold text-slate-100">{bm.name}</h3>
             <span className="text-xs text-slate-500">{bm.stars} · Props {bm.propsScore} · Tennis {bm.tennisScore}</span>
@@ -342,7 +329,7 @@ export default function BookmakersPage() {
             We use these · No fluff · Honest about gubbing
           </div>
           <p className="text-slate-500 text-sm max-w-3xl">
-            18+ only. Gamble responsibly. <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400/80 hover:text-emerald-300 underline">begambleaware.org</a> · Affiliate links marked when active.
+            18+ only. Gamble responsibly. <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400/80 hover:text-emerald-300 underline">begambleaware.org</a>
           </p>
         </section>
 
@@ -353,11 +340,7 @@ export default function BookmakersPage() {
             {BOOKMAKERS.map((bm) => (
               <div key={bm.id} className="rounded-lg border border-slate-700/80 bg-slate-800/40 p-3 flex flex-col gap-2">
                 <div className="flex items-center gap-2">
-                  {BOOKMAKER_LOGO[bm.id] ? (
-                    <Image src={`/bookmakers/${BOOKMAKER_LOGO[bm.id]}.svg`} alt="" width={28} height={28} className="rounded object-contain" />
-                  ) : (
-                    <span className="w-7 h-7 rounded bg-slate-700 flex items-center justify-center text-xs font-semibold text-slate-400">{bm.name.charAt(0)}</span>
-                  )}
+                  <BookmakerThumb id={bm.id} name={bm.name} size="xs" />
                   <span className="font-medium text-slate-200 text-sm">{bm.name}</span>
                 </div>
                 <p className="text-xs font-medium text-slate-100">{bm.welcomeOffer}</p>
@@ -384,7 +367,7 @@ export default function BookmakersPage() {
             <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300/80 mb-3">The Entain trio — open all three</p>
             <div className="space-y-6">
               {BOOKMAKERS.filter((bm) => ["bwin", "coral", "ladbrokes"].includes(bm.id)).map((bm) => (
-                <BookmakerCard key={bm.id} bm={bm} logoMap={BOOKMAKER_LOGO} />
+                <BookmakerCard key={bm.id} bm={bm} />
               ))}
             </div>
           </div>
@@ -393,7 +376,7 @@ export default function BookmakersPage() {
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Other operators</p>
           <div className="space-y-6">
             {BOOKMAKERS.filter((bm) => !["bwin", "coral", "ladbrokes"].includes(bm.id)).map((bm) => (
-              <BookmakerCard key={bm.id} bm={bm} logoMap={BOOKMAKER_LOGO} />
+              <BookmakerCard key={bm.id} bm={bm} />
             ))}
           </div>
         </section>
@@ -474,9 +457,17 @@ export default function BookmakersPage() {
                 </span>
               </summary>
               <div className="px-6 md:px-8 pb-4 pt-0">
-                <div className="text-slate-300 text-sm leading-relaxed space-y-3">
-                  <p>Practical tactics: Mix recreational action (occasional match odds). Variable staking (0.5u to 3u). Deposit regularly. Use features (bet builders, cash-out, in-play sometimes). Delay withdrawals 2-3 weeks. Avoid patterns (don&apos;t only bet Friday evenings or one league).</p>
-                  <p>Advanced: Prioritise accounts with longer historical longevity. Accept restrictions are inevitable and plan rollover to new accounts. These tactics extend lifespan by 20-40%, not indefinitely.</p>
+                <div className="text-slate-300 text-sm leading-relaxed space-y-4">
+                  <p>Bookmakers flag accounts that only take value. Blending typical punters&apos; behaviour can extend lifespan:</p>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li><strong className="text-slate-100">Mix in recreational bets:</strong> For every 3–4 value bets, place one bet at standard odds (e.g. match winner, favourite). Don&apos;t only bet when you spot edge.</li>
+                    <li><strong className="text-slate-100">Stick to popular markets:</strong> Premier League, Champions League, major events. Avoid obscure leagues unless you bet there regularly anyway.</li>
+                    <li><strong className="text-slate-100">Bet at normal times:</strong> Weekends, before kick-off. Avoid only betting during sharp odds moves.</li>
+                    <li><strong className="text-slate-100">Vary stakes:</strong> Use rounded amounts (10, 20, 25). Avoid odd decimals or constant max stakes.</li>
+                    <li><strong className="text-slate-100">Use bet builders and accas occasionally:</strong> Popular with casual punters. Small acca or correlated builder now and then helps.</li>
+                    <li><strong className="text-slate-100">Occasional in-play:</strong> Small random in-play bets mirror typical betting habits.</li>
+                  </ul>
+                  <p>Also: Deposit regularly. Delay withdrawals 2–3 weeks. Avoid patterns (same time, same league only). These tactics extend lifespan by 20–40%, not indefinitely. Restrictions are inevitable; plan rollover to new accounts.</p>
                 </div>
               </div>
             </details>
