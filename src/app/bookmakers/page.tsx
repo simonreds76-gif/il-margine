@@ -234,6 +234,82 @@ const COMPARISON_ROWS = [
   { name: "Betfred", props: "7/10", tennis: "7/10", offer: "£40 bonuses", bestFor: "Cards markets, higher welcome offer" },
 ];
 
+// Logos: id -> base filename (no ext). Omit if no logo.
+const BOOKMAKER_LOGO: Record<string, string> = {
+  betvictor: "betvictor",
+  coral: "coral",
+  ladbrokes: "ladbrokes",
+  betmgm: "betmgm",
+  "william-hill": "williamhill",
+  betfred: "betfred",
+};
+
+function BookmakerCard({ bm, logoMap }: { bm: (typeof BOOKMAKERS)[0]; logoMap: Record<string, string> }) {
+  return (
+    <article className="bg-[#1a1d24] rounded-xl border border-slate-800 overflow-hidden">
+      {/* Conversion block: always visible */}
+      <div className="p-5 md:p-6">
+        <div className="flex flex-wrap items-center gap-3 mb-3">
+          {logoMap[bm.id] ? (
+            <Image src={`/bookmakers/${logoMap[bm.id]}.svg`} alt="" width={40} height={40} className="rounded-lg object-contain" />
+          ) : (
+            <span className="w-10 h-10 rounded-lg bg-slate-700 flex items-center justify-center text-sm font-semibold text-slate-400">{bm.name.charAt(0)}</span>
+          )}
+          <div>
+            <h3 className="font-semibold text-slate-100">{bm.name}</h3>
+            <span className="text-xs text-slate-500">{bm.stars} · Props {bm.propsScore} · Tennis {bm.tennisScore}</span>
+          </div>
+          <span className="sm:ml-auto text-[10px] font-medium px-2 py-0.5 rounded bg-slate-800 text-slate-400 shrink-0 max-w-full sm:max-w-[200px] truncate" title={bm.bestFor}>{bm.bestFor}</span>
+        </div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 border-t border-slate-800">
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-300">New customers</span>
+            <span className="text-slate-500">·</span>
+            <span className="text-sm font-semibold text-slate-100">{bm.welcomeOffer}</span>
+          </div>
+          <a
+            href={bm.offerUrl}
+            target={bm.offerUrl !== "#" ? "_blank" : undefined}
+            rel={bm.offerUrl !== "#" ? "noopener noreferrer nofollow" : undefined}
+            className="inline-block w-full sm:w-auto text-center bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors shrink-0"
+          >
+            Claim {bm.name} Offer →
+          </a>
+        </div>
+      </div>
+      {/* Expandable details */}
+      <details className="group border-t border-slate-800">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-5 md:px-6 py-3 text-sm text-slate-400 hover:text-slate-300 hover:bg-slate-800/30 transition-colors">
+          <span>Full review</span>
+          <span className="text-emerald-400 transition-transform group-open:rotate-180">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+          </span>
+        </summary>
+        <div className="px-5 md:px-6 pb-5 pt-0 space-y-4">
+          <div className="rounded-lg border border-slate-700/80 bg-slate-800/40 px-3 py-2">
+            <p className="text-[11px] text-slate-500">{bm.welcomeTerms}</p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-300 mb-1.5">Strengths</p>
+              <ul className="list-disc pl-4 text-slate-400 text-sm space-y-0.5">
+                {bm.strengths.map((s, i) => <li key={i}>{s}</li>)}
+              </ul>
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Weaknesses</p>
+              <ul className="list-disc pl-4 text-slate-400 text-sm space-y-0.5">
+                {bm.weaknesses.map((w, i) => <li key={i}>{w}</li>)}
+              </ul>
+            </div>
+          </div>
+          <p className="text-slate-400 text-sm leading-relaxed">{bm.usageTips}</p>
+        </div>
+      </details>
+    </article>
+  );
+}
+
 const FAQ_ITEMS = [
   { q: "Should I open all eight accounts at once?", a: "Yes. Welcome offers alone provide £250+ value. More importantly, having eight accounts active extends your operational window to 18-24 months before restrictions become severe across all platforms. Open them all, claim all offers, use them strategically." },
   { q: "What if odds are better elsewhere?", a: "Always take best price. Line shop across all eight before placing any bet. Over 100 bets, even 2-3% better average odds compounds significantly. Never settle for worse odds out of loyalty or convenience." },
@@ -255,64 +331,72 @@ export default function BookmakersPage() {
         {/* Hero */}
         <section className="mb-10 md:mb-12">
           <span className="text-[11px] font-semibold uppercase tracking-widest text-emerald-300 mb-2 block">Bookmakers</span>
-          <h1 className="text-2xl sm:text-3xl font-semibold text-slate-100 mb-2">Recommended Bookmakers</h1>
-          <p className="text-slate-300 leading-relaxed max-w-3xl mb-3">
-            Field-tested bookmakers for player props and tennis betting. Eight operators evaluated for odds quality, market depth, account longevity, and operational reliability.
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">
+            £250+ in Welcome Offers
+          </h1>
+          <p className="text-lg text-slate-300 max-w-2xl mb-4">
+            Eight bookmakers. One strategy. Field-tested for props and tennis — we bet here and we&apos;re honest about restrictions.
           </p>
-          <p className="text-slate-400 text-sm max-w-3xl mb-4">
-            18+ only. Gamble responsibly. For support: <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline">begambleaware.org</a> or 0808 8020 133 (National Gambling Helpline).
-          </p>
-          <ul className="list-disc pl-5 text-slate-400 text-sm space-y-0.5 mb-3 max-w-3xl">
-            <li>Eight bookmakers for value betting</li>
-            <li>Props and tennis focus · Welcome offers · Usage tactics</li>
-          </ul>
-          <p className="text-slate-400 text-sm max-w-3xl">
-            <strong className="text-slate-300">Affiliate disclosure:</strong> We&apos;re establishing affiliate partnerships with these bookmakers. When active, links will be clearly marked. Recommendations remain independent regardless of commercial arrangements.
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-slate-300 text-xs mb-4">
+            <span className="text-emerald-400">●</span>
+            We use these · No fluff · Honest about gubbing
+          </div>
+          <p className="text-slate-500 text-sm max-w-3xl">
+            18+ only. Gamble responsibly. <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400/80 hover:text-emerald-300 underline">begambleaware.org</a> · Affiliate links marked when active.
           </p>
         </section>
 
-        {/* 8 Bookmaker cards */}
-        <div className="space-y-6 mb-12">
-          {BOOKMAKERS.map((bm) => (
-            <article key={bm.id} className="bg-[#1a1d24] rounded-xl border border-slate-800 p-5 md:p-6">
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-3">
-                <h3 className="text-lg font-semibold text-slate-100">{bm.name}</h3>
-                <p className="text-amber-400/90 text-sm" aria-label={`Rating ${bm.rating}`}>{bm.stars}</p>
-                <span className="text-sm text-slate-500">Props {bm.propsScore} · Tennis {bm.tennisScore}</span>
-              </div>
-              <div className="rounded-lg border border-slate-700/80 bg-slate-800/40 px-3.5 py-2.5 mb-4">
-                <p className="text-sm font-semibold text-slate-100">{bm.welcomeOffer}</p>
-                <p className="mt-1 text-[11px] text-slate-500 leading-relaxed">{bm.welcomeTerms}</p>
-              </div>
-              <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 mb-4">
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-300 mb-1.5">Strengths</p>
-                  <ul className="list-disc pl-4 text-slate-400 text-sm space-y-0.5">
-                    {bm.strengths.map((s, i) => <li key={i}>{s}</li>)}
-                  </ul>
+        {/* Quick-offer strip: scan & convert */}
+        <section className="mb-10">
+          <h2 className="text-sm font-semibold text-slate-400 mb-4">Offers at a glance</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {BOOKMAKERS.map((bm) => (
+              <div key={bm.id} className="rounded-lg border border-slate-700/80 bg-slate-800/40 p-3 flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  {BOOKMAKER_LOGO[bm.id] ? (
+                    <Image src={`/bookmakers/${BOOKMAKER_LOGO[bm.id]}.svg`} alt="" width={28} height={28} className="rounded object-contain" />
+                  ) : (
+                    <span className="w-7 h-7 rounded bg-slate-700 flex items-center justify-center text-xs font-semibold text-slate-400">{bm.name.charAt(0)}</span>
+                  )}
+                  <span className="font-medium text-slate-200 text-sm">{bm.name}</span>
                 </div>
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Weaknesses</p>
-                  <ul className="list-disc pl-4 text-slate-400 text-sm space-y-0.5">
-                    {bm.weaknesses.map((w, i) => <li key={i}>{w}</li>)}
-                  </ul>
-                </div>
-              </div>
-              <p className="text-slate-400 text-sm leading-relaxed mb-4">{bm.usageTips}</p>
-              <div className="flex flex-col gap-2">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-300">New customers</span>
+                <p className="text-xs font-medium text-slate-100">{bm.welcomeOffer}</p>
+                <p className="text-[10px] text-slate-500 line-clamp-1">{bm.bestFor}</p>
                 <a
                   href={bm.offerUrl}
                   target={bm.offerUrl !== "#" ? "_blank" : undefined}
                   rel={bm.offerUrl !== "#" ? "noopener noreferrer nofollow" : undefined}
-                  className="inline-block w-full sm:w-auto text-center bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors"
+                  className="mt-auto text-xs font-semibold text-emerald-400 hover:text-emerald-300"
                 >
-                  Claim {bm.name} Offer →
+                  {bm.offerUrl !== "#" ? "Claim offer →" : "View offer"}
                 </a>
               </div>
-            </article>
-          ))}
-        </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Full reviews */}
+        <section className="mb-12">
+          <h2 className="text-sm font-semibold text-slate-400 mb-4">Full reviews</h2>
+
+          {/* Entain trio */}
+          <div className="mb-6">
+            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300/80 mb-3">The Entain trio — open all three</p>
+            <div className="space-y-6">
+              {BOOKMAKERS.filter((bm) => ["bwin", "coral", "ladbrokes"].includes(bm.id)).map((bm) => (
+                <BookmakerCard key={bm.id} bm={bm} logoMap={BOOKMAKER_LOGO} />
+              ))}
+            </div>
+          </div>
+
+          {/* Rest */}
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Other operators</p>
+          <div className="space-y-6">
+            {BOOKMAKERS.filter((bm) => !["bwin", "coral", "ladbrokes"].includes(bm.id)).map((bm) => (
+              <BookmakerCard key={bm.id} bm={bm} logoMap={BOOKMAKER_LOGO} />
+            ))}
+          </div>
+        </section>
 
         {/* Key Concepts - 5 accordions */}
         <section className="mb-10">
