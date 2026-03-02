@@ -193,7 +193,7 @@ const BOOKMAKERS = [
     ],
     usageTips: "William Hill is a legacy UK bookmaker with solid props and tennis offerings. Not the sharpest odds, but reliably competent across the board. For props: Strong coverage across Premier League, Championship, La Liga, Bundesliga, Serie A. Odds are competitive roughly 40-50% of the time. When they're best price, take it. When they're not, shop elsewhere. Bet builder markets are decent. Correlation mispricing does occur, particularly on lower-profile matches. For tennis: Good for ATP 250s and above. Game handicaps and totals are competently priced. Often within 2-3% of Pinnacle closing lines on ATP 500s. Solid all-rounder. Worth having in your rotation.",
     bestFor: "Solid all-rounder",
-    offerUrl: "#",
+    offerUrl: "/api/go/william-hill",
   },
   {
     id: "betfred",
