@@ -5,16 +5,11 @@ export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://ilmargine.b
 /** Site motto / tagline. Used in footer, The Edge page, and homepage. */
 export const SITE_MOTTO = "Mind the margin.";
 
-export const TELEGRAM_CHANNEL_URL = process.env.NEXT_PUBLIC_TELEGRAM_CHANNEL_URL || "https://t.me/IlMargineProps";
-
 /** Launch year for display and schema. */
 export const LAUNCH_YEAR = 2026;
 
-/** Shown in footer: e.g. "Launching March 2026" while in testing, or "Launched 2026" when live. */
+/** Shown in footer. */
 export const LAUNCH_LABEL = "Launching March 2026";
-
-/** Short line for visitors who land during beta (homepage). */
-export const BETA_NOTICE = "We're in beta. Full launch March 2026.";
 
 // Stripe configuration (for future VIP access)
 export const STRIPE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "";

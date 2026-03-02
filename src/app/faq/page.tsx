@@ -12,7 +12,7 @@ import { BASE_URL } from "@/lib/config";
 export const metadata: Metadata = {
   title: "FAQ",
   description:
-    "Frequently asked questions about Il Margine: betting tips, Telegram, player props, tennis, ROI, bookmakers, bankroll management, and more.",
+    "Frequently asked questions about Il Margine: betting tips, player props, tennis, ROI, bookmakers, bankroll management, and more.",
   alternates: {
     canonical: `${BASE_URL}/faq`,
   },
@@ -79,7 +79,7 @@ export default function FaqPage() {
             Frequently Asked Questions
           </h1>
           <p className="text-slate-400 text-base mb-8">
-            Betting with mathematical edge, Telegram tips, player props, tennis, ROI, bookmakers, and more.
+            Betting with mathematical edge. Player props, tennis, ROI, bookmakers, and more.
           </p>
 
           {/* Section navigation - numbered list for clear structure */}

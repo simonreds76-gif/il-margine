@@ -15,9 +15,6 @@ export default function Footer({ className = "" }: FooterProps) {
             <Image src="/favicon.png" alt="Il Margine" width={40} height={40} className="h-8 w-8 object-contain" />
             <div className="flex flex-col gap-0.5">
               <span className="text-xs font-medium text-slate-400">Il Margine: {SITE_MOTTO}</span>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">FREE BETA</span>
-              </div>
             </div>
           </Link>
           <div className="flex flex-col items-center md:items-end gap-3">

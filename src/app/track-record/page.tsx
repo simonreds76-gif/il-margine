@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/Footer";
-import { TELEGRAM_CHANNEL_URL } from "@/lib/config";
+import { BASE_URL } from "@/lib/config";
 
 const FAQ_ITEMS = [
   {
@@ -18,7 +18,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Can past picks be edited?",
-    a: "No. Telegram timestamps are immutable. Site data can't be retroactively changed once logged.",
+    a: "No. Once logged on the site, data can't be retroactively changed or deleted.",
   },
   {
     q: "What's wrong with most tipster services?",
@@ -57,7 +57,7 @@ export default function TrackRecordPage() {
             Performance data across betting markets.
           </p>
           <p className="text-base text-slate-400 max-w-2xl leading-relaxed">
-            Player props posted to Telegram with timestamps. Tennis selections posted here. Results logged after settlement. No edits, no deletions. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">The Edge</Link> for our methodology.
+            All selections posted on site before kick-off. Results logged after settlement. No edits, no deletions. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">The Edge</Link> for our methodology.
           </p>
         </section>
 
@@ -66,8 +66,8 @@ export default function TrackRecordPage() {
           <h2 className="text-xl font-semibold text-emerald-400 mb-4">Performance Overview</h2>
           <div className="text-slate-300 leading-relaxed space-y-3">
             <p>Historical tracking across ATP tennis and player props markets. Data reflects actual bets placed and settled.</p>
-            <p><strong className="text-slate-100">Player Props:</strong> Logged after posting to Telegram. Props odds move quickly so these are shared there first, then recorded here.</p>
-            <p><strong className="text-slate-100">Tennis:</strong> Posted directly on site with full analysis. More stable markets allow detailed writeups.</p>
+            <p><strong className="text-slate-100">Player Props:</strong> Posted on site when value is identified. Odds move quickly so selections are shared as soon as possible.</p>
+            <p><strong className="text-slate-100">Tennis:</strong> Posted on site with full analysis. More stable markets allow detailed writeups.</p>
             <p>Performance data updates as bets settle. What&apos;s tracked stays tracked.</p>
           </div>
         </section>
@@ -90,7 +90,7 @@ export default function TrackRecordPage() {
         <section className="bg-[#1a1d24] rounded-xl border border-slate-800 p-6 md:p-8 mb-8">
           <h2 className="text-xl font-semibold text-emerald-400 mb-4">Verification System</h2>
           <ul className="space-y-3 text-slate-300 leading-relaxed list-none">
-            <li><strong className="text-slate-100">Pre-match posting:</strong> Every selection posted before event starts. Telegram timestamps for player props are immutable (can&apos;t be edited retroactively). Tennis picks posted directly on site.</li>
+            <li><strong className="text-slate-100">Pre-match posting:</strong> Every selection posted on site before event starts. Timestamps are immutable and can&apos;t be edited retroactively.</li>
             <li><strong className="text-slate-100">Post-match settlement:</strong> After result, bet is logged here with outcome (win/loss/void), profit/loss in units, and link to original post where applicable.</li>
             <li><strong className="text-slate-100">No editing:</strong> Once logged, bets cannot be changed or deleted. What&apos;s posted is permanent.</li>
           </ul>
@@ -112,8 +112,8 @@ export default function TrackRecordPage() {
         <section className="bg-[#1a1d24] rounded-xl border border-emerald-500/20 p-6 md:p-8 mb-8">
           <h2 className="text-xl font-semibold text-emerald-400 mb-4">Pick Distribution</h2>
           <div className="text-slate-300 leading-relaxed space-y-3">
-            <p><strong className="text-slate-100">Player Props:</strong> Posted to Telegram when value is identified. Props move quickly, so these are shared in real time on Telegram then logged here after settlement.</p>
-            <p><strong className="text-slate-100">Tennis:</strong> Posted directly on the website. These markets are more stable, allowing time for proper analysis and posting.</p>
+            <p><strong className="text-slate-100">Player Props:</strong> Posted on site when value is identified. Props move quickly, so selections are shared in real time then logged after settlement.</p>
+            <p><strong className="text-slate-100">Tennis:</strong> Posted on the website with full analysis. These markets are more stable, allowing time for proper writeups.</p>
             <p>Results are tracked and logged transparently. What gets posted stays posted.</p>
           </div>
         </section>
@@ -142,16 +142,14 @@ export default function TrackRecordPage() {
         <section className="bg-emerald-500/10 rounded-xl border border-emerald-500/30 p-6 md:p-8 text-center">
           <h2 className="text-xl font-semibold text-emerald-400 mb-2">Follow The Picks</h2>
           <p className="text-slate-300 text-base mb-6 max-w-xl mx-auto leading-relaxed">
-            Player props posted to Telegram as value is identified. Tennis selections posted here with full analysis.
+            All selections — player props and tennis — posted on site with full analysis.
           </p>
-          <a
-            href={TELEGRAM_CHANNEL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+          <Link
+            href="/player-props"
+            className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
           >
-            → Join Telegram for Player Props
-          </a>
+            → View Player Props
+          </Link>
         </section>
 
         <div className="text-center text-sm text-slate-500 pt-4 pb-8">

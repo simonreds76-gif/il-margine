@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/Footer";
-import { BASE_URL, TELEGRAM_CHANNEL_URL } from "@/lib/config";
+import { BASE_URL } from "@/lib/config";
 
 export const metadata: Metadata = {
   title: "The Edge",
@@ -237,16 +237,14 @@ export default function TheEdgePage() {
         <section className="bg-emerald-500/10 rounded-xl border border-emerald-500/30 p-6 md:p-8 text-center">
           <h2 className="text-xl font-semibold text-emerald-400 mb-2">See The Edge In Practice</h2>
           <p className="text-slate-300 text-base mb-6 max-w-xl mx-auto leading-relaxed">
-            Join our free Telegram channel to see the methodology in action. Every pick includes match details, market, selection, odds, bookmaker, and stake recommendation. When we identify value, you&apos;ll see it before the event starts.
+            Browse our tips to see the methodology in action. Every pick includes match details, market, selection, odds, bookmaker, and stake recommendation. When we identify value, you&apos;ll see it before the line moves.
           </p>
-          <a
-            href={TELEGRAM_CHANNEL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+          <Link
+            href="/player-props"
+            className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
           >
-            → Join Free on Telegram
-          </a>
+            → View Player Props
+          </Link>
         </section>
       </div>
 

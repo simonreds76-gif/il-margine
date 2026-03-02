@@ -7,7 +7,6 @@ import { supabase, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, getBaselineDisplayStats } from "@/lib/baseline";
 import { track } from "@/lib/analytics";
 import Footer from "@/components/Footer";
-import TelegramButton from "@/components/TelegramButton";
 import CalculatorCard, { type CalculatorData } from "@/components/calculator/CalculatorCard";
 import KellyCalculatorCard from "@/components/calculator/KellyCalculatorCard";
 import HowItWorks from "@/components/calculator/HowItWorks";
@@ -204,15 +203,13 @@ export default function CalculatorPage() {
         </div>
       </section>
 
-      {/* Telegram CTA - subtle */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="rounded-xl border border-slate-700/50 bg-slate-800/40 p-6 text-center">
-          <p className="text-slate-300 font-medium mb-2">Want picks in real time?</p>
-          <p className="text-sm text-slate-500 mb-4">Join our free Telegram channel for player props and updates.</p>
-          <TelegramButton
-            variant="cta"
-            onClick={() => track("telegram_click", { placement: "calculator" })}
-          />
+          <p className="text-slate-300 font-medium mb-2">Looking for today&apos;s picks?</p>
+          <p className="text-sm text-slate-500 mb-4">All selections posted free on the website with full analysis.</p>
+          <a href="/tennis-tips" className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors">
+            View Tips
+          </a>
         </div>
       </section>
 

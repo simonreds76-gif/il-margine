@@ -7,10 +7,8 @@ import { supabase, MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import MarketBadge from "@/components/MarketBadge";
-import TelegramButton from "@/components/TelegramButton";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
-import { BETA_NOTICE } from "@/lib/config";
 import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
 
 interface CombinedMarketStats {
@@ -255,15 +253,6 @@ export default function Home() {
       <section className="pt-6 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="flex flex-col items-center justify-center gap-2 mb-8">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded border border-emerald-500/20">FREE BETA</span>
-              </div>
-              <p className="text-sm text-slate-500 max-w-md text-center">
-                {BETA_NOTICE}
-              </p>
-            </div>
-            
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-2 leading-tight tracking-tight">
               Betting with <span className="text-emerald-400">mathematical edge</span>
             </h1>
@@ -273,7 +262,9 @@ export default function Home() {
             </p>
             
             <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-12 sm:mb-16">
-              <TelegramButton variant="cta" className="transition-all hover:scale-105" />
+              <Link href="/tennis-tips" className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg text-base sm:text-lg transition-all hover:scale-105">
+                View Today&apos;s Tips
+              </Link>
               <Link href="/the-edge" className="border border-slate-600 hover:border-slate-400 text-slate-200 font-medium px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg text-base sm:text-lg transition-all hover:bg-slate-800/50">
                 How It Works
               </Link>
@@ -650,12 +641,7 @@ export default function Home() {
                 {
                   q: "How do I start following Il Margine's betting tips?",
                   title: "How do I follow the tips?",
-                  summary: "Join our free Telegram for player props; tennis tips are on the website. No payment, no trial.",
-                },
-                {
-                  q: "Do I need a Telegram account to follow your tips?",
-                  title: "Do I need Telegram?",
-                  summary: "Only for football player props. Tennis tips are published on the site; no Telegram needed.",
+                  summary: "All tips are posted directly on the website. Tennis tips, player props, and all selections are free — no payment, no sign-up required.",
                 },
                 {
                   q: "What is ROI and why does it matter more than win rate?",
@@ -692,9 +678,11 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">Ready to join?</h2>
           <p className="text-base sm:text-lg text-slate-300 mb-8 sm:mb-10 max-w-lg mx-auto">
-            Free selections delivered to Telegram. Match, selection, odds, bookmaker. Everything you need to place your bet.
+            Free selections posted on site. Match, selection, odds, bookmaker. Everything you need to place your bet.
           </p>
-          <TelegramButton variant="cta" className="transition-all hover:scale-105" />
+          <Link href="/tennis-tips" className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg text-base sm:text-lg transition-all hover:scale-105">
+            View Today&apos;s Tips
+          </Link>
         </div>
       </section>
 

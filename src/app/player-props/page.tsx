@@ -7,7 +7,7 @@ import { supabase, Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import MarketBadge from "@/components/MarketBadge";
-import TelegramButton from "@/components/TelegramButton";
+
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
@@ -333,7 +333,7 @@ export default function PlayerProps() {
               <span className="text-xs font-mono text-emerald-400 mb-2 block">ACTIVE SELECTIONS</span>
               <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Current Picks</h2>
             </div>
-            <span className="text-xs text-slate-500 hidden sm:block">Updated in real-time via Telegram</span>
+            <span className="text-xs text-slate-500 hidden sm:block">Updated in real-time on site</span>
           </div>
           <p className="text-slate-500 text-xs mb-6">Stake in units (1u = your standard stake). We typically recommend 0.5u–2u per pick.</p>
 
@@ -437,13 +437,12 @@ export default function PlayerProps() {
           ) : (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
               <p className="text-slate-500">No active selections at the moment</p>
-              <p className="text-xs text-slate-600 mt-2">Join Telegram to get notified when new selections are posted</p>
+              <p className="text-xs text-slate-600 mt-2">Check back soon for new selections</p>
             </div>
           )}
           
           <div className="mt-6 p-4 bg-slate-900/30 rounded-lg border border-slate-800 text-center">
-            <p className="text-sm text-slate-400 mb-3">Get real-time alerts when new selections are posted</p>
-            <TelegramButton variant="inline" />
+            <p className="text-sm text-slate-400">All selections posted here in real time. Bookmark this page.</p>
           </div>
         </div>
       </section>
