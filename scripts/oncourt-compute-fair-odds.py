@@ -16,7 +16,7 @@ from datetime import date
 
 # Project root for tennis_prob
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from src.lib.tennis_prob import prob_match_best_of_3, expected_total_games_best_of_3
+from src.lib.tennis_prob import prob_match_best_of_3, expected_total_games_best_of_3, prob_over_games
 
 def load_env():
     base = os.path.dirname(os.path.abspath(__file__))
@@ -34,10 +34,15 @@ def load_env():
 
 load_env()
 
-# P = w*P_elo + (1-w)*P_serve_return. Default 40% Elo / 60% serve-return; adaptive by sample size (see below).
-HYBRID_ELO_WEIGHT_DEFAULT = 0.4   # when both have 20+ matches on surface
-HYBRID_ELO_WEIGHT_MIN_MATCHES = 20  # below this we lean more on Elo
-POINT_CLAMP = (0.01, 0.99)
+# ─── CALIBRATION CONSTANTS (2026-03-02 tuning) ─────────────────────
+#
+# P = w*P_elo + (1-w)*P_serve_return.
+# Default 55% Elo / 45% serve-return; adaptive by sample size (see below).
+# Rationale: serve/return stats are noisy game-level proxies for point probs.
+# At Challenger level with <20 matches, Elo+rank is more reliable.
+HYBRID_ELO_WEIGHT_DEFAULT = 0.55   # was 0.40; Elo is more stable than noisy serve/return
+HYBRID_ELO_WEIGHT_MIN_MATCHES = 30  # was 20; only trust serve/return more when well-sampled
+POINT_CLAMP = (0.48, 0.82)   # SPW range: prevents junk from Barnett-Clarke flowing into K-M; slightly wider than (0.50, 0.80) for big servers / clay grinders
 DEFAULT_ELO = 1500
 # Vs leftie: adjustment from win_pct_vs_leftie (default 0.5)
 VS_LEFTIE_WEIGHT = 0.03
@@ -57,11 +62,18 @@ ALTITUDE_CAP = 0.02
 ALTITUDE_THRESHOLD_M = 200   # only adjust when venue altitude >= this (metres)
 # Age: small modifier (prime 22-30, decline after 30)
 AGE_CAP = 0.01
-# Rank: blend with Elo; 0.15 so rank is tiebreaker not major input. Log-rank for ATP; surface points primary when available.
-RANK_ELO_BLEND = 0.15
-LOG_RANK_SCALE = 1.1   # for log(rank) difference in log-odds
-# Shrinkage toward surface average when match count is low (hold/return noisy)
-SHRINKAGE_N = 15   # matches needed for ~50% trust in raw stats
+# Rank: blend with Elo.
+# 0.30 so rank is a significant input (especially for Challengers where Elo may be default 1500).
+# Was 0.15 which made rank a tiebreaker with only 6% total influence — far too low.
+RANK_ELO_BLEND = 0.30   # was 0.15
+# Log-rank scale for ATP ranking → win probability.
+# Old value 1.1 was catastrophically wrong: rank 100 vs 300 → 91% (absurd).
+# New value 3.5: rank 100 vs 300 → 67%, rank 50 vs 200 → 71% (realistic).
+LOG_RANK_SCALE = 3.5   # was 1.1
+# Shrinkage toward surface average when match count is low (hold/return noisy).
+# With N=40: 10 matches → alpha=0.20 (20% raw stats), 20 → 0.33, 40 → 0.50.
+# Was N=15 which gave 40% weight to 10-match stats (way too trusting of noise).
+SHRINKAGE_N = 40   # was 15
 # League avg serve point win % by surface (for ratio-based p_a/p_b; Barnett-Clarke). Replace with DB-computed if available.
 SURFACE_LEAGUE_AVG = {"Hard": 0.64, "Clay": 0.62, "Grass": 0.67, "I.hard": 0.64, "N/A": 0.64}
 # Surface averages for shrinkage (hold, return) when match_count is low
@@ -659,26 +671,34 @@ def main():
         e1_o = elo_lookup.get((p1, "Overall"))
         e2_o = elo_lookup.get((p2, "Overall"))
 
-        if s1 is None or s2 is None:
-            if s1 is None and s2 is None:
-                skip_missing_both += 1
-            elif s1 is None:
-                skip_missing_p1 += 1
-            else:
-                skip_missing_p2 += 1
-            continue
+        # Track whether player has real Elo (not default 1500)
+        e1_is_real = (p1, surface) in elo_lookup or (p1, "Overall") in elo_lookup
+        e2_is_real = (p2, surface) in elo_lookup or (p2, "Overall") in elo_lookup
 
-        # Blend 12m with long-window (36m); adaptive by match count (less recent when few matches)
-        h1_12 = _float(s1.get("hold_pct"), 0.65)
-        r1_12 = _float(s1.get("return_pct"), 0.35)
-        h2_12 = _float(s2.get("hold_pct"), 0.65)
-        r2_12 = _float(s2.get("return_pct"), 0.35)
-        h1_long = _float(s1.get("hold_pct_long"), h1_12)
-        r1_long = _float(s1.get("return_pct_long"), r1_12)
-        h2_long = _float(s2.get("hold_pct_long"), h2_12)
-        r2_long = _float(s2.get("return_pct_long"), r2_12)
-        mc1_12 = int(s1.get("match_count") or 0)
-        mc2_12 = int(s2.get("match_count") or 0)
+        # Determine confidence and whether we have stats
+        has_s1 = s1 is not None
+        has_s2 = s2 is not None
+        if not has_s1 and not has_s2:
+            skip_missing_both += 1
+        elif not has_s1:
+            skip_missing_p1 += 1
+        elif not has_s2:
+            skip_missing_p2 += 1
+
+        surf_hold = SURFACE_AVG_HOLD.get(surface, 0.64)
+        surf_ret = SURFACE_AVG_RETURN.get(surface, 0.36)
+
+        # Blend 12m with long-window (36m); use surface averages as fallback when stats missing
+        h1_12 = _float((s1 or {}).get("hold_pct"), surf_hold)
+        r1_12 = _float((s1 or {}).get("return_pct"), surf_ret)
+        h2_12 = _float((s2 or {}).get("hold_pct"), surf_hold)
+        r2_12 = _float((s2 or {}).get("return_pct"), surf_ret)
+        h1_long = _float((s1 or {}).get("hold_pct_long"), h1_12)
+        r1_long = _float((s1 or {}).get("return_pct_long"), r1_12)
+        h2_long = _float((s2 or {}).get("hold_pct_long"), h2_12)
+        r2_long = _float((s2 or {}).get("return_pct_long"), r2_12)
+        mc1_12 = int((s1 or {}).get("match_count") or 0) if has_s1 else 0
+        mc2_12 = int((s2 or {}).get("match_count") or 0) if has_s2 else 0
         min_matches_12 = min(mc1_12, mc2_12)
         if min_matches_12 >= 25:
             recent_weight = 0.75
@@ -697,8 +717,6 @@ def main():
         hold2_raw = recent_weight * h2_12 + (1.0 - recent_weight) * h2_long
         ret2_raw = recent_weight * r2_12 + (1.0 - recent_weight) * r2_long
         # Shrinkage toward surface average when match count is low
-        surf_hold = SURFACE_AVG_HOLD.get(surface, 0.64)
-        surf_ret = SURFACE_AVG_RETURN.get(surface, 0.36)
         alpha1 = mc1_12 / (mc1_12 + SHRINKAGE_N) if mc1_12 else 0.0
         alpha2 = mc2_12 / (mc2_12 + SHRINKAGE_N) if mc2_12 else 0.0
         hold1 = alpha1 * hold1_raw + (1.0 - alpha1) * surf_hold if alpha1 > 0 else surf_hold
@@ -733,6 +751,7 @@ def main():
             exp_games = exp_games + max(-TOURNAMENT_TOTAL_SHIFT_CAP, min(TOURNAMENT_TOTAL_SHIFT_CAP, raw_add))
         # Soft clamp: bo3 realistic range [12, 48]; 38 was too low and clamped too many matches to same value
         exp_games = max(12.0, min(48.0, exp_games))
+        # ─── Elo + Rank ────────────────────────────────────────────
         # Sackmann: 50/50 blend of single-surface and overall Elo predicts best
         p_elo_surface = 1.0 / (1.0 + 10.0 ** ((e2_s - e1_s) / 400.0))
         if e1_o is not None and e2_o is not None:
@@ -740,26 +759,57 @@ def main():
             p_elo = 0.5 * p_elo_surface + 0.5 * p_elo_overall
         else:
             p_elo = p_elo_surface
-        # General ability: surface points primary when available; else log-rank (ATP); rank blend 0.15
+
+        # General ability: surface points primary when available; else log-rank (ATP).
+        # LOG_RANK_SCALE = 3.5 so rank 100 vs 300 → ~67% (was 1.1 → 91%, catastrophically extreme).
         r1, r2 = atp_rank_by_player.get(p1), atp_rank_by_player.get(p2)
         pts1 = surface_points_by_player.get(p1, {}).get(surface) if surface in ("Hard", "Clay", "Grass", "I.hard") else None
         pts2 = surface_points_by_player.get(p2, {}).get(surface) if surface in ("Hard", "Clay", "Grass", "I.hard") else None
         p_rank = None
         if pts1 is not None and pts2 is not None and (pts1 > 0 or pts2 > 0):
-            p_rank = pts1 / (pts1 + pts2)
+            # Surface points ratio (with floor to avoid division by zero)
+            p_rank = (pts1 + 1) / (pts1 + pts2 + 2)
         elif r1 is not None and r2 is not None and r1 > 0 and r2 > 0:
             log_scale = LOG_RANK_SCALE
             p_rank = 1.0 / (1.0 + 10.0 ** ((math.log(max(1, r1)) - math.log(max(1, r2))) / log_scale))
-        if p_rank is not None:
+
+        # When both players have default Elo (1500/1500) AND we have rank,
+        # rank should be the primary signal — not blended 30% into useless Elo.
+        both_elo_default = not e1_is_real and not e2_is_real
+        if both_elo_default and p_rank is not None:
+            # Rank IS the Elo signal when Elo is uninformative
+            p_elo = p_rank
+        elif p_rank is not None:
+            # Normal blend: rank is 30% of the Elo component
             p_elo = (1.0 - RANK_ELO_BLEND) * p_elo + RANK_ELO_BLEND * p_rank
-        # Hybrid: default 40% Elo / 60% serve-return; lean more on Elo when either player has few surface matches
-        elo_weight = HYBRID_ELO_WEIGHT_DEFAULT + 0.3 * max(0.0, 1.0 - min(min_matches_12, HYBRID_ELO_WEIGHT_MIN_MATCHES) / float(HYBRID_ELO_WEIGHT_MIN_MATCHES))
-        elo_weight = max(0.3, min(0.7, elo_weight))
-        # When serve/return is uninformative (near 50/50) but Elo/rank strongly favour one player, trust Elo+rank more
-        # (e.g. Pellegrino vs Darderi: identical hold/return in DB -> 50/50; Elo and rank say Darderi heavy favourite)
-        if abs(p_serve_return - 0.5) < 0.04 and p_rank is not None:
+        # Confidence level based on data availability
+        if not has_s1 and not has_s2:
+            confidence = "low"
+        elif not has_s1 or not has_s2:
+            confidence = "low" if min(mc1_12, mc2_12) < 5 else "medium"
+        elif min(mc1_12, mc2_12) < 5:
+            confidence = "medium"
+        elif min(mc1_12, mc2_12) >= 10:
+            confidence = "high"
+        else:
+            confidence = "medium"
+
+        # ─── Hybrid blend: Elo vs serve/return ──────────────────────
+        # Default 55% Elo / 45% serve-return (was 40/60).
+        # Lean more on Elo when stats are thin or missing.
+        if not has_s1 or not has_s2:
+            elo_weight = 0.80
+        else:
+            # Adaptive: ranges from 0.55 (30+ matches) up to 0.85 (0 matches)
+            elo_weight = HYBRID_ELO_WEIGHT_DEFAULT + 0.30 * max(0.0, 1.0 - min(min_matches_12, HYBRID_ELO_WEIGHT_MIN_MATCHES) / float(HYBRID_ELO_WEIGHT_MIN_MATCHES))
+            elo_weight = max(0.40, min(0.85, elo_weight))
+
+        # When serve/return is uninformative (near 50/50) but Elo/rank strongly favour one player, trust Elo+rank more.
+        # Threshold widened from 0.04 to 0.08 to catch more cases where heavy shrinkage washes out real differences.
+        if abs(p_serve_return - 0.5) < 0.08 and p_rank is not None:
+            # Serve/return is uninformative — rely on rank + Elo
             p_elo_effective = 0.4 * p_elo + 0.6 * p_rank
-            elo_weight = 0.9
+            elo_weight = 0.90
             p1_win = elo_weight * p_elo_effective + (1.0 - elo_weight) * p_serve_return
         else:
             p1_win = elo_weight * p_elo + (1.0 - elo_weight) * p_serve_return
@@ -864,11 +914,12 @@ def main():
             n1_l, n2_l = n1.lower(), n2.lower()
             if any(d in n1_l or d in n2_l for d in debug_names):
                 print(f"\n  [DEBUG] {n1} (P1 id={p1}) vs {n2} (P2 id={p2}) surface={surface}")
-                print(f"    Elo surface: P1={e1_s:.0f} P2={e2_s:.0f}  Overall: P1={e1_o} P2={e2_o}")
-                mc1 = s1.get("match_count"); sp1 = s1.get("service_pts"); mc2 = s2.get("match_count"); sp2 = s2.get("service_pts")
+                print(f"    Elo surface: P1={e1_s:.0f} P2={e2_s:.0f}  Overall: P1={e1_o} P2={e2_o}  real_elo: P1={e1_is_real} P2={e2_is_real}  confidence={confidence}")
+                mc1 = (s1 or {}).get("match_count"); sp1 = (s1 or {}).get("service_pts"); mc2 = (s2 or {}).get("match_count"); sp2 = (s2 or {}).get("service_pts")
                 print(f"    Hold/return 12m: P1 hold={hold1:.3f} ret={ret1:.3f}  P2 hold={hold2:.3f} ret={ret2:.3f}  (P1 matches={mc1} svc_pts={sp1}  P2 matches={mc2} svc_pts={sp2})")
-                print(f"    ATP rank: P1={atp_rank_by_player.get(p1)} P2={atp_rank_by_player.get(p2)}")
-                print(f"    p_elo={p_elo:.4f} p_serve_return={p_serve_return:.4f} -> p1_win={p1_win:.4f} (after adj)")
+                print(f"    Shrinkage: alpha1={alpha1:.3f} alpha2={alpha2:.3f}  (SHRINKAGE_N={SHRINKAGE_N})")
+                print(f"    ATP rank: P1={atp_rank_by_player.get(p1)} P2={atp_rank_by_player.get(p2)}  p_rank={p_rank}  both_elo_default={both_elo_default}")
+                print(f"    p_elo={p_elo:.4f} p_serve_return={p_serve_return:.4f} elo_weight={elo_weight:.2f} -> p1_win={p1_win:.4f} (after adj)")
                 o1 = 1.0 / p1_win if p1_win > 0 else 0
                 o2 = 1.0 / p2_win if p2_win > 0 else 0
                 print(f"    Our fair odds: P1={o1:.2f} P2={o2:.2f}  (if P1 favoured, P1 odds should be lower e.g. ~1.2)")
@@ -882,6 +933,21 @@ def main():
             p1_win, p2_win = p1_win / tot, p2_win / tot
         odds1 = 1.0 / p1_win if p1_win > 0 else 100.0
         odds2 = 1.0 / p2_win if p2_win > 0 else 100.0
+
+        # O/U: compute fair over/under prices at 3 half-integer lines around E[G]
+        primary_line = round(exp_games * 2) / 2.0
+        if primary_line == int(primary_line):
+            primary_line += 0.5
+        ou_lines = [primary_line - 1.0, primary_line, primary_line + 1.0]
+        ou_data = {}
+        for idx, line in enumerate(ou_lines, 1):
+            p_over = prob_over_games(p_a_eg, p_b_eg, line)
+            p_over = max(0.01, min(0.99, p_over))
+            fair_over = round(1.0 / p_over, 3)
+            fair_under = round(1.0 / (1.0 - p_over), 3)
+            ou_data[f"ou_line_{idx}"] = round(line, 1)
+            ou_data[f"ou_over_{idx}"] = fair_over
+            ou_data[f"ou_under_{idx}"] = fair_under
 
         out.append({
             "tour_id": tour_id,
@@ -897,11 +963,19 @@ def main():
             "odds1": round(odds1, 2),
             "odds2": round(odds2, 2),
             "expected_total_games": round(exp_games, 1),
+            "confidence": confidence,
+            **ou_data,
         })
 
     print(f"Computed {len(out)} fair odds rows")
     print(f"  Fixture surfaces (from tour_id): {dict(surface_counts)}")
-    print(f"  Skipped: no player1/player2 = {skip_no_players}, missing stats both = {skip_missing_both}, P1 only = {skip_missing_p1}, P2 only = {skip_missing_p2}")
+    print(f"  Skipped: no player1/player2 = {skip_no_players}")
+    print(f"  Elo/rank fallback (missing stats): both = {skip_missing_both}, P1 only = {skip_missing_p1}, P2 only = {skip_missing_p2}")
+    conf_counts = {"high": 0, "medium": 0, "low": 0}
+    for row in out:
+        c = row.get("confidence", "high")
+        conf_counts[c] = conf_counts.get(c, 0) + 1
+    print(f"  Confidence: high={conf_counts['high']}, medium={conf_counts['medium']}, low={conf_counts['low']}")
     if out:
         for row in out[:3]:
             print(f"  P1={row['player1_id']} P2={row['player2_id']} surface={row['surface']} P1={row['p1_win_prob']} odds1={row['odds1']} odds2={row['odds2']}")

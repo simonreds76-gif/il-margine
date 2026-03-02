@@ -27,6 +27,16 @@ So only `golden-with-speed-insights` (or other branches) trigger builds:
    ```
 2. If the command exits `0`, Vercel builds; if `1`, it skips. The script skips when the branch is `main`.
 
+## Tennis stats test (Sackmann data)
+
+Local test to verify the serve/return pipeline using Jeff Sackmann's tennis_atp data from GitHub:
+
+```bash
+node scripts/test-sackmann-stats.js
+```
+
+Uses 2023 and 2024 ATP match CSVs, computes serve%/return%/total by player and surface, plus vs-leftie stats. Sample matchup (Sinner vs Zverev) included. Data: CC BY-NC-SA 4.0 — for testing only.
+
 ## Other scripts
 
 - **create-logos** – placeholder bookmaker logos

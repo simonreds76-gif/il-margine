@@ -33,10 +33,11 @@ if %ERRORLEVEL% neq 0 (
 )
 echo.
 
-REM --- Step 2: Sync to Supabase ---
-echo === Step 2/4: Sync to Supabase ===
+REM --- Step 2: Sync to Supabase (--quick = players/tours/today only) ---
+REM   First time? Run: python scripts\oncourt-load-supabase.py  (full load)
+echo === Step 2/4: Sync to Supabase (quick) ===
 echo.
-python scripts\oncourt-load-supabase.py
+python scripts\oncourt-load-supabase.py --quick
 if %ERRORLEVEL% neq 0 (
     echo.
     echo ERROR: Supabase sync failed. Check .env.local credentials.

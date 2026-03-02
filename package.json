@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "daily-odds": "python scripts/run-daily-odds.py",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

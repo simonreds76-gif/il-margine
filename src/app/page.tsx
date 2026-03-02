@@ -405,7 +405,12 @@ export default function Home() {
                         <tr
                           key={bet.id}
                           className="border-b border-slate-700 hover:bg-slate-800/30 cursor-pointer"
-                          onClick={() => window.location.href = href}
+                          onClick={(e) => {
+                            const target = e.target as HTMLElement;
+                            // Allow clicks on bookmaker affiliate logos (or any nested link) to use their own link
+                            if (target.closest("a")) return;
+                            window.location.href = href;
+                          }}
                         >
                           <td className="px-4 py-4 border-r border-slate-800/50">
                             <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
@@ -515,7 +520,12 @@ export default function Home() {
                         <tr 
                           key={bet.id} 
                           className="border-b border-slate-700 hover:bg-slate-800/30 cursor-pointer"
-                          onClick={() => window.location.href = href}
+                          onClick={(e) => {
+                            const target = e.target as HTMLElement;
+                            // Let clicks on bookmaker logos (affiliate links) and any nested links go through
+                            if (target.closest("a")) return;
+                            window.location.href = href;
+                          }}
                         >
                           <td className="px-4 py-4 border-r border-slate-800/50">
                             <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
