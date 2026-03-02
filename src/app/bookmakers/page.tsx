@@ -61,6 +61,33 @@ const BOOKMAKERS = [
     offerUrl: "#",
   },
   {
+    id: "william-hill",
+    name: "William Hill",
+    stars: "⭐⭐⭐⭐",
+    rating: "4/5",
+    propsScore: "8/10",
+    tennisScore: "7/10",
+    welcomeOffer: "Bet £10 Get £30 in Free Bets",
+    welcomeTerms: "Min odds 1.50, free bets valid 30 days",
+    strengths: [
+      "Must-have in our rotation — we use it regularly for props and tennis",
+      "Stake limits hold up better than many UK books we've tested",
+      "Comprehensive player props across Premier League, Championship, major European leagues",
+      "Solid tennis markets on ATP 250+; game handicaps and totals competently priced",
+      "Reliable platform, withdrawal processing and liquidity",
+      "Good bet builder; correlation mispricing appears on lower-profile matches",
+      "Established operator — one of the books we rely on most",
+    ],
+    weaknesses: [
+      "Props margins 10-13% (in line with market)",
+      "Tennis coverage drops off below ATP 250",
+      "Platform can feel dated next to newer apps",
+    ],
+    usageTips: "William Hill is a must-have. We use it regularly for both player props and tennis. Limits have held up better than at several other UK books in our experience — we still get meaningful stakes on props and tennis months in. For props: strong coverage across Premier League, Championship, La Liga, Bundesliga, Serie A. Odds are competitive often enough that we always check them when line shopping. Bet builder markets are decent and correlation mispricing does appear, especially on lower-profile matches. For tennis: solid for ATP 250 and above; game handicaps and totals are competently priced and often within a few percent of sharp closing lines. Withdrawal processing is reliable. Open this account early and keep it in your core set. One of the books we'd replace last.",
+    bestFor: "Must-have — we use it often, limits hold up",
+    offerUrl: "/api/go/william-hill",
+  },
+  {
     id: "bwin",
     name: "Bwin",
     stars: "⭐⭐⭐⭐",
@@ -168,34 +195,6 @@ const BOOKMAKERS = [
     offerUrl: "#",
   },
   {
-    id: "william-hill",
-    name: "William Hill",
-    stars: "⭐⭐⭐⭐",
-    rating: "4/5",
-    propsScore: "8/10",
-    tennisScore: "7/10",
-    welcomeOffer: "Bet £10 Get £30 in Free Bets",
-    welcomeTerms: "Min odds 1.50, free bets valid 30 days",
-    strengths: [
-      "Comprehensive player props across all major leagues",
-      "Competitive odds on props markets",
-      "Good lower-league football coverage",
-      "Solid tennis markets on ATP 250+",
-      "One of the more established UK operators",
-      "Reliable platform and withdrawal processing",
-      "Good bet builder functionality",
-    ],
-    weaknesses: [
-      "Props margins 10-13%",
-      "Tennis coverage drops off below ATP 250",
-      "Platform can feel dated compared to newer operators",
-      "Stake limits tighten on repeated winning",
-    ],
-    usageTips: "William Hill is a legacy UK bookmaker with solid props and tennis offerings. Not the sharpest odds, but reliably competent across the board. For props: Strong coverage across Premier League, Championship, La Liga, Bundesliga, Serie A. Odds are competitive roughly 40-50% of the time. When they're best price, take it. When they're not, shop elsewhere. Bet builder markets are decent. Correlation mispricing does occur, particularly on lower-profile matches. For tennis: Good for ATP 250s and above. Game handicaps and totals are competently priced. Often within 2-3% of Pinnacle closing lines on ATP 500s. Solid all-rounder. Worth having in your rotation.",
-    bestFor: "Solid all-rounder",
-    offerUrl: "/api/go/william-hill",
-  },
-  {
     id: "betfred",
     name: "Betfred",
     stars: "⭐⭐⭐⭐",
@@ -227,11 +226,11 @@ const BOOKMAKERS = [
 const COMPARISON_ROWS = [
   { name: "Midnite", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Modern platform, major league props" },
   { name: "BetVictor", props: "8/10", tennis: "8/10", offer: "£40 bonuses", bestFor: "All-rounder, strong tennis" },
+  { name: "William Hill", props: "8/10", tennis: "7/10", offer: "£30 free bets", bestFor: "Must-have — we use it often, limits hold up" },
   { name: "Bwin", props: "8/10", tennis: "7/10", offer: "£5 → £20 free bets", bestFor: "Pair with Coral and Ladbrokes for extended access" },
   { name: "Coral", props: "8/10", tennis: "7/10", offer: "£30 free bets", bestFor: "Pair with Ladbrokes for extended access" },
   { name: "Ladbrokes", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Pair with Coral for extended access" },
   { name: "BetMGM", props: "8/10", tennis: "7/10", offer: "£40 free bets", bestFor: "Player props & tennis, independent pricing for line shopping" },
-  { name: "William Hill", props: "8/10", tennis: "7/10", offer: "£30 free bets", bestFor: "Solid all-rounder" },
   { name: "Betfred", props: "7/10", tennis: "7/10", offer: "£40 bonuses", bestFor: "Cards markets, higher welcome offer" },
 ];
 
@@ -266,10 +265,10 @@ function BookmakerCard({ bm }: { bm: (typeof BOOKMAKERS)[0] }) {
       </div>
       {/* Expandable details */}
       <details className="group border-t border-slate-800">
-        <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-5 md:px-6 py-3 text-sm text-slate-400 hover:text-slate-300 hover:bg-slate-800/30 transition-colors">
-          <span>Full review</span>
-          <span className="text-emerald-400 transition-transform group-open:rotate-180">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-5 md:px-6 py-3.5 text-sm rounded-b-xl hover:bg-slate-800/50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50">
+          <span className="text-slate-300 font-medium">Read full review — click to expand</span>
+          <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180" aria-hidden>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
           </span>
         </summary>
         <div className="px-5 md:px-6 pb-5 pt-0 space-y-4">
@@ -360,6 +359,17 @@ export default function BookmakersPage() {
         {/* Full reviews */}
         <section className="mb-12">
           <h2 className="text-sm font-semibold text-slate-400 mb-4">Full reviews</h2>
+          <p className="text-slate-500 text-sm mb-6">Click &quot;Read full review&quot; on each card for strengths, weaknesses, terms and how we use each book.</p>
+
+          {/* Must-have: William Hill first */}
+          <div className="mb-6">
+            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300/80 mb-3">Must-have — we use it often</p>
+            <div className="space-y-6">
+              {BOOKMAKERS.filter((bm) => bm.id === "william-hill").map((bm) => (
+                <BookmakerCard key={bm.id} bm={bm} />
+              ))}
+            </div>
+          </div>
 
           {/* Entain trio */}
           <div className="mb-6">
@@ -374,7 +384,7 @@ export default function BookmakersPage() {
           {/* Rest */}
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Other operators</p>
           <div className="space-y-6">
-            {BOOKMAKERS.filter((bm) => !["bwin", "coral", "ladbrokes"].includes(bm.id)).map((bm) => (
+            {BOOKMAKERS.filter((bm) => !["bwin", "coral", "ladbrokes", "william-hill"].includes(bm.id)).map((bm) => (
               <BookmakerCard key={bm.id} bm={bm} />
             ))}
           </div>
