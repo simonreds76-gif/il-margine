@@ -85,10 +85,21 @@ function parseOULines(match: FairOddsMatch): OULine[] {
 }
 
 function valueColor(v: number | undefined): string {
+  if (v == null) return "text-slate-600";
+  if (v >= 5) return "text-emerald-300 font-bold drop-shadow-[0_0_6px_rgba(52,211,153,0.3)]";
+  if (v >= 2) return "text-emerald-400 font-semibold";
+  if (v < -10) return "text-red-400 font-bold";
+  if (v < -5) return "text-red-400/90 font-medium";
+  if (v < -2) return "text-red-400/60";
+  return "text-slate-400";
+}
+
+function valueBg(v: number | undefined): string {
   if (v == null) return "";
-  if (v >= 2) return "text-emerald-400";
-  if (v < -5) return "text-red-400";
-  return "text-slate-500";
+  if (v >= 5) return "bg-emerald-500/10";
+  if (v >= 2) return "bg-emerald-500/5";
+  if (v < -10) return "bg-red-500/10";
+  return "";
 }
 
 function fmtOdds(v: number | undefined): string {
@@ -268,25 +279,25 @@ export default function FairOddsPage() {
             </p>
             <table className="w-full text-sm" style={{ minWidth: showStats ? "1400px" : "1080px" }}>
               <thead>
-                <tr className="border-b border-slate-800/70 bg-slate-900/40 text-slate-500 text-xs uppercase tracking-wider">
-                  <th className="text-left px-3 py-2.5 font-medium sticky left-0 bg-slate-900/95 z-10">Match</th>
-                  <th className="text-center px-2 py-2.5 font-medium w-[50px]">Surf</th>
-                  <th className="text-center px-2 py-2.5 font-medium" colSpan={2}>Fair Odds</th>
-                  <th className="text-center px-2 py-2.5 font-medium" colSpan={2}>PIN</th>
-                  <th className="text-center px-2 py-2.5 font-medium" colSpan={2}>Value %</th>
+                <tr className="border-b-2 border-slate-700/60 bg-[#0d0f14] text-slate-400 text-[11px] uppercase tracking-wider">
+                  <th className="text-left px-3 py-3 font-semibold sticky left-0 bg-[#0d0f14] z-10 border-r border-slate-800/40">Match</th>
+                  <th className="text-center px-2 py-3 font-semibold w-[50px]">Surf</th>
+                  <th className="text-center px-2 py-3 font-semibold text-slate-300" colSpan={2}>Fair Odds</th>
+                  <th className="text-center px-2 py-3 font-semibold text-slate-300" colSpan={2}>Pinnacle</th>
+                  <th className="text-center px-2 py-3 font-semibold text-emerald-500/70" colSpan={2}>Value %</th>
                   {showStats && (
                     <>
-                      <th className="text-center px-1.5 py-2.5 font-medium text-[10px]">P1 S%</th>
-                      <th className="text-center px-1.5 py-2.5 font-medium text-[10px]">P1 R%</th>
-                      <th className="text-center px-1.5 py-2.5 font-medium text-[10px]">P1 T</th>
-                      <th className="text-center px-1.5 py-2.5 font-medium text-[10px]">P2 S%</th>
-                      <th className="text-center px-1.5 py-2.5 font-medium text-[10px]">P2 R%</th>
-                      <th className="text-center px-1.5 py-2.5 font-medium text-[10px]">P2 T</th>
+                      <th className="text-center px-1.5 py-3 font-medium text-[10px]">P1 S%</th>
+                      <th className="text-center px-1.5 py-3 font-medium text-[10px]">P1 R%</th>
+                      <th className="text-center px-1.5 py-3 font-medium text-[10px]">P1 T</th>
+                      <th className="text-center px-1.5 py-3 font-medium text-[10px]">P2 S%</th>
+                      <th className="text-center px-1.5 py-3 font-medium text-[10px]">P2 R%</th>
+                      <th className="text-center px-1.5 py-3 font-medium text-[10px]">P2 T</th>
                     </>
                   )}
-                  <th className="text-center px-2 py-2.5 font-medium">E[G]</th>
-                  <th className="text-left px-2 py-2.5 font-medium min-w-[180px] w-[17%]">O/U Fair</th>
-                  <th className="text-left px-2 py-2.5 font-medium min-w-[140px]">O/U PIN</th>
+                  <th className="text-center px-2 py-3 font-semibold">E[G]</th>
+                  <th className="text-left px-2 py-3 font-semibold min-w-[180px] w-[17%]">O/U Fair</th>
+                  <th className="text-left px-2 py-3 font-semibold min-w-[140px]">O/U Pin</th>
                 </tr>
               </thead>
               <tbody>
@@ -352,14 +363,14 @@ function MatchRow({ match, showStats }: { match: FairOddsMatch; showStats: boole
   return (
     <tr className="border-b border-slate-800/30 hover:bg-slate-800/20 transition-colors">
       {/* Match (sticky) */}
-      <td className="px-3 py-2.5 sticky left-0 bg-[#0f1117] z-10">
+      <td className="px-3 py-3 sticky left-0 bg-[#0f1117] z-10 border-r border-slate-800/40">
         <div className="flex flex-col gap-0.5">
-          <span className="text-slate-200 text-sm leading-tight">
+          <span className="text-slate-100 text-[13px] font-medium leading-tight tracking-tight">
             {m.player1_name || "TBD"}
-            <span className="text-slate-600 mx-1.5">vs</span>
+            <span className="text-slate-600 mx-1.5 font-normal text-xs">vs</span>
             {m.player2_name || "TBD"}
           </span>
-          <span className="text-[10px] text-slate-600 font-mono">
+          <span className="text-[10px] text-slate-500 font-mono">
             {fmtProb(m.p1_win_prob)} – {fmtProb(m.p2_win_prob)}
           </span>
         </div>
@@ -371,22 +382,22 @@ function MatchRow({ match, showStats }: { match: FairOddsMatch; showStats: boole
       </td>
 
       {/* Fair Odds */}
-      <td className="text-center px-2 py-2.5 font-mono text-sm text-slate-200">{fmtOdds(m.odds1)}</td>
-      <td className="text-center px-2 py-2.5 font-mono text-sm text-slate-200">{fmtOdds(m.odds2)}</td>
+      <td className="text-center px-2 py-3 font-mono text-[13px] font-semibold text-slate-100">{fmtOdds(m.odds1)}</td>
+      <td className="text-center px-2 py-3 font-mono text-[13px] font-semibold text-slate-100">{fmtOdds(m.odds2)}</td>
 
       {/* Pinnacle Odds */}
-      <td className="text-center px-2 py-2.5 font-mono text-sm text-slate-400">
-        {hasPinnacle ? fmtOdds(m.pinnacle_odds1) : "—"}
+      <td className="text-center px-2 py-3 font-mono text-[13px] text-slate-300">
+        {hasPinnacle ? fmtOdds(m.pinnacle_odds1) : <span className="text-slate-600">—</span>}
       </td>
-      <td className="text-center px-2 py-2.5 font-mono text-sm text-slate-400">
-        {hasPinnacle ? fmtOdds(m.pinnacle_odds2) : "—"}
+      <td className="text-center px-2 py-3 font-mono text-[13px] text-slate-300">
+        {hasPinnacle ? fmtOdds(m.pinnacle_odds2) : <span className="text-slate-600">—</span>}
       </td>
 
       {/* Value % */}
-      <td className={`text-center px-2 py-2.5 font-mono text-xs ${valueColor(m.value_p1)}`}>
+      <td className={`text-center px-2 py-2.5 font-mono text-xs ${valueColor(m.value_p1)} ${valueBg(m.value_p1)}`}>
         {m.value_p1 != null ? fmtPct(m.value_p1) : "—"}
       </td>
-      <td className={`text-center px-2 py-2.5 font-mono text-xs ${valueColor(m.value_p2)}`}>
+      <td className={`text-center px-2 py-2.5 font-mono text-xs ${valueColor(m.value_p2)} ${valueBg(m.value_p2)}`}>
         {m.value_p2 != null ? fmtPct(m.value_p2) : "—"}
       </td>
 
