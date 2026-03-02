@@ -338,10 +338,10 @@ function TournamentGroup({
 }) {
   return (
     <>
-      <tr className="bg-slate-900/50">
+      <tr className="bg-[#0c0e14]">
         <td
           colSpan={showStats ? 17 : 11}
-          className="px-3 py-2 text-xs font-medium text-slate-400 uppercase tracking-wider border-b border-slate-800/40"
+          className="px-3 py-2.5 text-[11px] font-semibold text-slate-300 uppercase tracking-widest border-b-2 border-slate-700/50 border-t border-slate-700/30"
         >
           {tournament}
         </td>
@@ -361,7 +361,7 @@ function MatchRow({ match, showStats }: { match: FairOddsMatch; showStats: boole
   const hasPinnacle = m.pinnacle_odds1 != null && m.pinnacle_odds1 > 0;
 
   return (
-    <tr className="border-b border-slate-800/30 hover:bg-slate-800/20 transition-colors">
+    <tr className="border-b border-slate-800/30 hover:bg-slate-800/25 even:bg-slate-900/20 transition-colors">
       {/* Match (sticky) */}
       <td className="px-3 py-3 sticky left-0 bg-[#0f1117] z-10 border-r border-slate-800/40">
         <div className="flex flex-col gap-0.5">
@@ -394,10 +394,10 @@ function MatchRow({ match, showStats }: { match: FairOddsMatch; showStats: boole
       </td>
 
       {/* Value % */}
-      <td className={`text-center px-2 py-2.5 font-mono text-xs ${valueColor(m.value_p1)} ${valueBg(m.value_p1)}`}>
+      <td className={`text-center px-2.5 py-3 font-mono text-[13px] ${valueColor(m.value_p1)} ${valueBg(m.value_p1)}`}>
         {m.value_p1 != null ? fmtPct(m.value_p1) : "—"}
       </td>
-      <td className={`text-center px-2 py-2.5 font-mono text-xs ${valueColor(m.value_p2)} ${valueBg(m.value_p2)}`}>
+      <td className={`text-center px-2.5 py-3 font-mono text-[13px] ${valueColor(m.value_p2)} ${valueBg(m.value_p2)}`}>
         {m.value_p2 != null ? fmtPct(m.value_p2) : "—"}
       </td>
 
