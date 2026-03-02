@@ -49,4 +49,20 @@ The scraper (`scripts/pinnacle-scrape-odds.py`, 752 lines) already has:
 
 We have the full page HTML saved at `data/pinnacle-html/pinnacle-20260302-005934.html` (can paste sections if needed).
 
-## Please provide the code changes needed to extract game totals O/U from Pinnacle.
+## ALSO: Scrape by league, not the generic matchups page
+
+Currently the scraper hits `https://www.pinnacle.com/en/tennis/matchups/` which dumps all tennis together. At certain times we only get WTA qualifiers, missing ATP/Challengers entirely.
+
+Better approach: start from `https://www.pinnacle.com/en/tennis/leagues/` which lists all tennis leagues. The scraper should:
+
+1. Navigate to the leagues page
+2. Find the ATP and Challenger league links (skip WTA for now)
+3. Click into each one (e.g. `https://www.pinnacle.com/en/tennis/atp/matchups/`, `https://www.pinnacle.com/en/tennis/atp-challengers/matchups/` or whatever the URLs are)
+4. Scrape odds from each league page separately
+5. Tag each match with the correct league (ATP or Challenger) based on which page it came from — no more DOM ancestor walking needed
+
+This way we never miss ATP/Challenger matches and league detection is 100% accurate.
+
+## Please provide the code changes needed for both:
+1. League-based navigation (ATP + Challengers, skip WTA)
+2. Game totals O/U extraction (not set totals)
