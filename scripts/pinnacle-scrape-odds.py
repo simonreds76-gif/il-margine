@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 """
-Pinnacle tennis odds scraper.
-Scrapes match-winner + Over/Under total games.
-Upserts to bookmaker_odds_snapshot in Supabase.
+Pinnacle tennis odds scraper — API edition.
+
+Uses Pinnacle's public guest API (guest.api.arcadia.pinnacle.com) to fetch
+structured JSON for all tennis leagues, matchups, and markets. No more HTML
+parsing or Playwright browser automation.
+
+Returns match-winner odds + total-games O/U for ATP & Challenger leagues.
 
 Usage:
   python scripts/pinnacle-scrape-odds.py
-  python scripts/pinnacle-scrape-odds.py --dry-run
-  python scripts/pinnacle-scrape-odds.py --save-html
-  python scripts/pinnacle-scrape-odds.py --verbose
+  python scripts/pinnacle-scrape-odds.py --dry-run --verbose
+  python scripts/pinnacle-scrape-odds.py --include-wta
 """
 
-import asyncio
 import csv
+import json
 import os
 import re
 import sys
@@ -22,625 +25,361 @@ from pathlib import Path
 from time import sleep as _sleep
 
 import requests
-from playwright.async_api import async_playwright
 
 # ─── Environment ────────────────────────────────────────────────────
 
-def load_env():
-    """Load .env.local / env.local from project root."""
-    base = os.path.dirname(os.path.abspath(__file__))
-    root = os.path.dirname(base)
-    for name in ["env.local", ".env.local"]:
-        path = os.path.join(root, name)
-        if os.path.exists(path):
-            with open(path, encoding="utf-8") as f:
-                for line in f:
-                    line = line.strip().replace("\r", "")
-                    if line and not line.startswith("#") and "=" in line:
-                        k, v = line.split("=", 1)
-                        v = v.strip().strip('"').strip("'")
-                        os.environ[k.strip()] = v
+def _load_env():
+    """Load .env.local from project root."""
+    root = Path(__file__).resolve().parent.parent
+    for name in [".env.local", "env.local"]:
+        path = root / name
+        if path.exists():
+            for line in path.read_text(encoding="utf-8").splitlines():
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    os.environ[k.strip()] = v.strip().strip('"').strip("'")
 
-load_env()
+_load_env()
 
-# ─── Constants ──────────────────────────────────────────────────────
+# ─── Config ─────────────────────────────────────────────────────────
 
 SUPABASE_URL = os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY")
 
-PINNACLE_TENNIS_URL = "https://www.pinnacle.com/en/tennis/matchups/"
 DRY_RUN = "--dry-run" in sys.argv
-SAVE_HTML = "--save-html" in sys.argv
 VERBOSE = "--verbose" in sys.argv or "-v" in sys.argv
-HTML_DIR = Path("data/pinnacle-html")
+INCLUDE_WTA = "--include-wta" in sys.argv
+
+# ─── Pinnacle Guest API ────────────────────────────────────────────
+#
+# This is the same API that Pinnacle's own frontend uses. It's public,
+# requires no authentication beyond a static API key, and returns clean
+# structured JSON. The key below is extracted from Pinnacle's frontend
+# JS bundle and is the same one used by multiple open-source projects.
+#
+# If it stops working:
+#   1. Go to pinnacle.com, open DevTools Network tab
+#   2. Look for requests to guest.api.arcadia.pinnacle.com
+#   3. Copy the X-API-Key header value
+#   4. Update the constant below
+
+PINNACLE_API_BASE = "https://guest.api.arcadia.pinnacle.com/0.1"
+PINNACLE_API_KEY = "CmX2KcMrXuFmNg6YFbmTxE0y9CIrOi0R"
+PINNACLE_SPORT_ID_TENNIS = 33
+
+API_HEADERS = {
+    "X-API-Key": PINNACLE_API_KEY,
+    "Referer": "https://www.pinnacle.com/",
+    "Accept": "application/json",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+}
+
+API_TIMEOUT = 15  # seconds
 
 
 # ─── Helpers ────────────────────────────────────────────────────────
 
-def parse_decimal_odds(text: str) -> float | None:
-    """Parse odds text like '1.72' to decimal."""
-    text = (text or "").strip()
-    if not text or text == "-":
-        return None
-    try:
-        val = float(text)
-        if val >= 1.01:
-            return round(val, 3)
-        return None
-    except ValueError:
-        return None
+def american_to_decimal(american: int | float) -> float:
+    """Convert American odds (+150, -180) to decimal (2.50, 1.556)."""
+    american = int(american)
+    if american >= 100:
+        return round(1 + american / 100, 3)
+    elif american <= -100:
+        return round(1 + 100 / abs(american), 3)
+    return 0.0
 
 
 def compute_margin(odds1: float, odds2: float) -> float:
-    """Pinnacle margin = sum of implied probs - 1 (as percentage)."""
-    if not odds1 or not odds2:
+    """Pinnacle margin as percentage."""
+    if not odds1 or not odds2 or odds1 <= 1 or odds2 <= 1:
         return 0.0
     return round((1 / odds1 + 1 / odds2 - 1) * 100, 2)
 
 
-def is_doubles(name: str) -> bool:
-    return "/" in (name or "") or "&" in (name or "")
-
-
-def _text_from_html(html: str) -> str:
-    """Extract visible text from HTML (content between > and <)."""
-    parts = re.findall(r">([^<]*)<", html)
-    return " ".join(p.strip() for p in parts if p.strip())
-
-
-def _clean_name(n: str) -> str:
-    """Clean player name: strip parenthetical, trailing day names, etc."""
-    n = re.sub(r"\s*\([^)]*\)", "", n)  # strip (8), (WC), (Sets), etc.
-    n = re.sub(r"\s+(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday),.*$", "", n, flags=re.I)
-    n = re.sub(r"\s+(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)\s*$", "", n, flags=re.I)
-    n = re.sub(r"\s+vs\s+at\s*$", "", n, flags=re.I)
-    n = re.sub(r"\s+at\s*$", "", n, flags=re.I)
+def _clean_name(name: str) -> str:
+    """
+    Clean player name from the API.
+    Strips '(Games)', '(Sets)', seeding numbers in parens, trailing junk.
+    """
+    n = (name or "").strip()
+    n = re.sub(r"\s*\(Games\)", "", n)
+    n = re.sub(r"\s*\(Sets\)", "", n)
+    n = re.sub(r"\s*\([^)]*\)", "", n)  # strip (8), (WC), etc.
     return n.strip()
 
 
-def _norm_name(n: str) -> str:
-    """Normalise name for O/U merge: lowercase, strip accents/parens/hyphens."""
-    n = (n or "").strip().lower()
+def _is_doubles(name: str) -> bool:
+    return "/" in (name or "") or " & " in (name or "")
+
+
+def _norm_name(name: str) -> str:
+    """Normalise name for dedup/matching: lowercase, strip accents."""
+    n = (name or "").strip().lower()
     n = unicodedata.normalize("NFD", n)
-    n = re.sub(r'[\u0300-\u036f]', '', n)
-    n = re.sub(r'\s*\(.*?\)', '', n)
-    n = re.sub(r"[-']", '', n)
+    n = re.sub(r"[\u0300-\u036f]", "", n)
+    n = re.sub(r"[-']", "", n)
     return " ".join(n.split())
 
 
-# ─── O/U structured parser ─────────────────────────────────────────
-
-def _parse_ou_from_html(row_html: str) -> tuple:
-    """
-    Extract O/U line + odds from data-test-id="over-under" HTML section.
-    Returns (ou_line, ou_over, ou_under) or (None, None, None).
-    """
-    ou_start = row_html.find('data-test-id="over-under"')
-    if ou_start == -1:
-        return None, None, None
-
-    # Isolate the over-under section (stop at next data-test-id)
-    ou_section = row_html[ou_start:]
-    next_section = re.search(r'data-test-id="(?!over-under)', ou_section[30:])
-    if next_section:
-        ou_section = ou_section[:next_section.start() + 30]
-
-    # ── Line ──
-    line_val = None
-    # Method 1: button title="22.5"
-    title_m = re.search(r'title="((?:1[5-9]|2[0-9]|3[0-5])\.5)"', ou_section)
-    if title_m:
-        line_val = float(title_m.group(1))
-    # Method 2: span text like "22.5", "O 22.5", "U 22.5"
-    if line_val is None:
-        label_m = re.search(r'>\s*[OU]?\s*((?:1[5-9]|2[0-9]|3[0-5])\.5)\s*<', ou_section)
-        if label_m:
-            line_val = float(label_m.group(1))
-    if line_val is None:
-        return None, None, None
-
-    # ── Prices ──
-    prices = re.findall(r'class="price[^"]*"[^>]*>\s*(\d+\.\d{2,3})\s*<', ou_section)
-    if len(prices) < 2:
-        all_decimals = re.findall(r'>\s*(\d+\.\d{2,3})\s*<', ou_section)
-        prices = [p for p in all_decimals if 1.01 < float(p) < 20]
-    valid = [round(float(p), 3) for p in prices if 1.01 < float(p) < 20]
-    if len(valid) >= 2:
-        return line_val, valid[0], valid[1]
-    return None, None, None
-
-
-def _parse_moneyline_from_html(row_html: str) -> tuple:
-    """
-    Extract match-winner odds from data-test-id="moneyline" HTML section.
-    Returns (odds1, odds2) or (None, None).
-    """
-    ml_start = row_html.find('data-test-id="moneyline"')
-    if ml_start == -1:
-        return None, None
-
-    ml_section = row_html[ml_start:]
-    next_section = re.search(r'data-test-id="(?!moneyline)', ml_section[30:])
-    if next_section:
-        ml_section = ml_section[:next_section.start() + 30]
-
-    prices = re.findall(r'class="price[^"]*"[^>]*>\s*(\d+\.\d{2,3})\s*<', ml_section)
-    if len(prices) < 2:
-        prices = re.findall(r'>\s*(\d+\.\d{2,3})\s*<', ml_section)
-        prices = [p for p in prices if 1.01 < float(p) < 100]
-    if len(prices) >= 2:
-        return round(float(prices[0]), 3), round(float(prices[1]), 3)
-    return None, None
-
-
-# ─── Flat-text row parser (fallback) ───────────────────────────────
-
-def _parse_row_from_html(row_html: str) -> dict | None:
-    """
-    Parse a single row HTML string into match_data or None.
-    Pure string/regex — used as fallback when data-test-id selectors aren't present.
-    """
-    text = _text_from_html(row_html)
-    if not text or len(text) < 10:
-        return None
-    # Skip date headers
-    if re.search(r"^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),.*\d{4}\s+at\s+\d{1,2}:\d{2}", text[:80], re.I):
-        return None
-    # Doubles
-    if "/" in text or " & " in text:
-        return None
-    # Decimal odds: 1.01–100
-    odds_candidates = re.findall(r"\b(\d+\.\d{2,3})\b", text)
-    odds = []
-    for s in odds_candidates:
+def _api_get(path: str, retries: int = 3) -> list | dict | None:
+    """GET from Pinnacle API with retries."""
+    url = f"{PINNACLE_API_BASE}/{path.lstrip('/')}"
+    for attempt in range(1, retries + 1):
         try:
-            v = float(s)
-            if 1.01 < v < 100:
-                odds.append(round(v, 3))
-        except ValueError:
-            pass
-    if len(odds) < 2:
-        return None
-    odds1, odds2 = odds[0], odds[1]
-
-    skip = {
-        "ML", "OU", "Total", "Spread", "Over", "Under", "Singles", "Doubles", "Games",
-        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
-        "January", "February", "March", "April", "May", "June", "July", "August",
-        "September", "October", "November", "December", "at", "Match Winner", "Winner",
-    }
-
-    def _bad_name(n: str) -> bool:
-        if not n or "Match Winner" in n or re.search(r"\d+\.\d+", n):
-            return True
-        return False
-
-    p1_name, p2_name = None, None
-    # Pinnacle tennis: "Emerson Jones (Sets) Nikola Bartunkova (Sets)"
-    if " (Sets)" in text or " (sets)" in text:
-        parts = re.split(r"\s*\([Ss]ets\)\s*", text)
-        names = [re.sub(r"\s+", " ", p).strip() for p in parts if p.strip() and not re.match(r"^\d{1,2}:\d{2}$", p.strip())]
-        if len(names) >= 2 and 2 <= len(names[0]) <= 60 and 2 <= len(names[1]) <= 60:
-            if names[0] not in skip and names[1] not in skip and not re.match(r"^[\d.+-]+$", names[0]) and not re.match(r"^[\d.+-]+$", names[1]):
-                p1_name, p2_name = names[0], names[1]
-    if not p1_name or not p2_name:
-        for sep in (" - ", " vs ", " v ", " / "):
-            if sep in text:
-                parts = text.split(sep, 1)
-                if len(parts) == 2:
-                    a = re.sub(r"\s+", " ", parts[0]).strip()
-                    b = re.sub(r"\s+", " ", parts[1]).strip()
-                    if _bad_name(b) and (sep == " - " or " vs " in b):
-                        b = re.split(r"\s+vs\s+|\s+Match\s+", b, maxsplit=1)[0].strip()
-                    if _bad_name(a) or _bad_name(b):
-                        continue
-                    if 2 <= len(a) <= 60 and 2 <= len(b) <= 60 and a not in skip and b not in skip:
-                        if not re.match(r"^[\d.+-]+$", a) and not re.match(r"^[\d.+-]+$", b):
-                            p1_name, p2_name = a, b
-                            break
-    if not p1_name or not p2_name:
-        tokens = re.findall(r"[A-Za-z\u00C0-\u00FF][A-Za-z0-9\s\-'.]{1,58}[A-Za-z\u00C0-\u00FF]|[A-Za-z\u00C0-\u00FF]{2,60}", text)
-        candidates = [
-            t.strip() for t in tokens
-            if 2 <= len(t.strip()) <= 60 and t.strip() not in skip and not re.match(r"^[\d.+-]+$", t.strip())
-            and not _bad_name(t.strip())
-        ]
-        seen = set()
-        unique = [x for x in candidates if x not in seen and not seen.add(x)]
-        if len(unique) >= 2:
-            p1_name, p2_name = unique[0], unique[1]
-
-    p1_name = _clean_name(p1_name or "")
-    p2_name = _clean_name(p2_name or "")
-    if not p1_name or not p2_name or is_doubles(p1_name) or is_doubles(p2_name):
-        return None
-
-    # O/U from text (fallback — structured parser is preferred)
-    ou_line = None
-    ou_over = None
-    ou_under = None
-    line_m = re.search(r"\b(1[5-9]|2[0-9]|3[0-5])\.5\b", text)
-    if line_m:
-        line_val = float(line_m.group(0))
-        rest = text[line_m.end():line_m.end() + 200]
-        ou_nums = re.findall(r"\b(\d+\.\d{2,3})\b", rest)
-        ou_odds = [float(x) for x in ou_nums if 1.01 < float(x) < 20]
-        if len(ou_odds) >= 2:
-            ou_line = line_val
-            ou_over, ou_under = ou_odds[0], ou_odds[1]
-
-    return {
-        "player1_name": p1_name,
-        "player2_name": p2_name,
-        "odds1": odds1,
-        "odds2": odds2,
-        "pinnacle_margin": compute_margin(odds1, odds2),
-        "ou_line": ou_line,
-        "ou_over": ou_over,
-        "ou_under": ou_under,
-    }
+            resp = requests.get(url, headers=API_HEADERS, timeout=API_TIMEOUT)
+            if resp.ok:
+                return resp.json()
+            if resp.status_code == 403:
+                print(f"  ERROR: 403 Forbidden — API key may have changed.")
+                print(f"  See instructions in the script header to update PINNACLE_API_KEY.")
+                return None
+            if resp.status_code == 429:
+                wait = 2 ** attempt
+                print(f"  Rate limited (429), waiting {wait}s...")
+                _sleep(wait)
+                continue
+            print(f"  WARNING: API returned {resp.status_code} for {path} (attempt {attempt})")
+        except requests.exceptions.RequestException as e:
+            print(f"  WARNING: Network error for {path} (attempt {attempt}): {e}")
+        if attempt < retries:
+            _sleep(1)
+    return None
 
 
-# ─── O/U merge helper ──────────────────────────────────────────────
+# ─── League detection ───────────────────────────────────────────────
 
-def _merge_ou_into_results(results: list, ou_rows: list) -> int:
-    """Merge O/U data from totals-tab scrape into match-winner results by player name."""
-    results_by_names = {}
-    for r in results:
-        key = (_norm_name(r["player1_name"]), _norm_name(r["player2_name"]))
-        results_by_names[key] = r
-        results_by_names[(key[1], key[0])] = r  # reversed
-
-    matched = 0
-    for ou in ou_rows:
-        key = (_norm_name(ou["p1"]), _norm_name(ou["p2"]))
-        r = results_by_names.get(key)
-        if r and r.get("ou_line") is None:
-            r["ou_line"] = ou["line"]
-            r["ou_over"] = ou["over"]
-            r["ou_under"] = ou["under"]
-            matched += 1
-    return matched
-
-
-# ─── Main scraper ───────────────────────────────────────────────────
-
-async def scrape_pinnacle():
+def _classify_league(name: str) -> str:
     """
-    1. Load the matchups page, wait for odds to render.
-    2. Use JS to find row containers with data-test-id="moneyline" / "over-under".
-    3. Parse match-winner + O/U with structured parsers, fallback to flat-text.
-    4. Phase 2: try Total Games tab for additional O/U data.
-    5. If 0 matches or 0 O/U, save HTML for debugging.
+    Classify a Pinnacle league name into our internal league tags.
+    Returns 'ATP', 'Challenger', or 'WTA'.
+    """
+    upper = (name or "").upper()
+    if "CHALLENGER" in upper:
+        return "Challenger"
+    if "WTA" in upper or "WOMEN" in upper:
+        return "WTA"
+    return "ATP"
+
+
+def _should_include_league(name: str) -> bool:
+    """Filter leagues based on CLI flags."""
+    upper = (name or "").upper()
+    if "ITF" in upper:
+        return False
+    if "ATP" in upper or "CHALLENGER" in upper:
+        return True
+    if "WTA" in upper or "WOMEN" in upper:
+        return INCLUDE_WTA
+    return True
+
+
+# ─── Core scraper ───────────────────────────────────────────────────
+
+def scrape_pinnacle() -> list[dict]:
+    """
+    Scrape all ATP/Challenger tennis odds from Pinnacle's guest API.
+
+    Flow:
+      1. GET /sports/33/leagues — list active tennis leagues
+      2. Filter for ATP/Challenger (optionally WTA)
+      3. For each league:
+         a. GET /leagues/{id}/matchups — get matches + player names
+         b. GET /leagues/{id}/markets/straight — get all odds
+         c. Join moneyline + game-total markets to matchups
+      4. Return list of match dicts
     """
     results = []
-    now = datetime.now(timezone.utc)
 
-    async with async_playwright() as pw:
-        browser = await pw.chromium.launch(headless=True)
-        context = await browser.new_context(
-            viewport={"width": 1440, "height": 900},
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        )
-        page = await context.new_page()
+    # ── Step 1: Get active tennis leagues ──
+    if VERBOSE:
+        print("  Fetching tennis leagues...")
+    leagues = _api_get(f"sports/{PINNACLE_SPORT_ID_TENNIS}/leagues?all=false")
+    if not leagues:
+        print("ERROR: Failed to fetch tennis leagues from API.")
+        return []
 
-        print(f"[{now.strftime('%H:%M:%S')}] Loading Pinnacle tennis...")
-        try:
-            await page.goto(PINNACLE_TENNIS_URL, wait_until="domcontentloaded", timeout=30000)
-            try:
-                await page.wait_for_selector(
-                    '[data-test-id="event-row"], [class*="eventRow"], [class*="matchup"], div[class*="row"] button[class*="market"]',
-                    timeout=20000,
-                )
-            except Exception:
-                pass
-            await page.wait_for_timeout(2000)
-        except Exception as e:
-            print(f"ERROR: Failed to load Pinnacle: {e}")
-            if SAVE_HTML:
-                HTML_DIR.mkdir(parents=True, exist_ok=True)
-                await page.screenshot(path=str(HTML_DIR / f"error-{now.strftime('%Y%m%d-%H%M%S')}.png"))
-            await browser.close()
-            return []
+    target_leagues = [(lg["id"], lg["name"]) for lg in leagues if _should_include_league(lg.get("name", ""))]
+    if VERBOSE:
+        print(f"  {len(leagues)} total leagues, {len(target_leagues)} targeted:")
+        for lid, lname in target_leagues:
+            print(f"    {lid}: {lname}")
 
-        page_html = await page.content()
-        if SAVE_HTML:
-            HTML_DIR.mkdir(parents=True, exist_ok=True)
-            html_path = HTML_DIR / f"pinnacle-{now.strftime('%Y%m%d-%H%M%S')}.html"
-            html_path.write_text(page_html, encoding="utf-8")
-            print(f"  Saved HTML to {html_path}")
+    if not target_leagues:
+        print("  No ATP/Challenger leagues currently active on Pinnacle.")
+        return []
 
-        # ── Phase 1: Row selection via JS ──
-        row_data = await page.evaluate("""
-            () => {
-                const rows = new Set();
+    # ── Step 2: Scrape each league ──
+    for league_id, league_name in target_leagues:
+        league_tag = _classify_league(league_name)
+        if VERBOSE:
+            print(f"\n  Scraping: {league_name} ({league_tag})")
 
-                // Rows with over-under buttons (have O/U data)
-                for (const ou of document.querySelectorAll('[data-test-id="over-under"]')) {
-                    if (!ou.querySelector('button')) continue;
-                    let el = ou.parentElement;
-                    for (let i = 0; i < 10 && el; i++) {
-                        if (el.querySelector('[data-test-id="moneyline"]') &&
-                            el.querySelector('[data-test-id="over-under"]')) {
-                            rows.add(el);
-                            break;
-                        }
-                        el = el.parentElement;
+        matchups = _api_get(f"leagues/{league_id}/matchups")
+        if not matchups:
+            if VERBOSE:
+                print(f"    No matchups for {league_name}")
+            continue
+
+        markets = _api_get(f"leagues/{league_id}/markets/straight")
+        if not markets:
+            if VERBOSE:
+                print(f"    No markets for {league_name}")
+            continue
+
+        # ── Separate regular vs (Games) matchups ──
+        regular_matchups = []
+        games_matchups = []
+        for m in matchups:
+            parts = m.get("participants", [])
+            if len(parts) < 2:
+                continue
+            p1_name = parts[0].get("name", "")
+            if "(Games)" in p1_name:
+                games_matchups.append(m)
+            else:
+                regular_matchups.append(m)
+
+        # ── Build (Games) matchup lookup by parentId ──
+        games_by_parent = {}
+        for gm in games_matchups:
+            pid = gm.get("parentId")
+            if pid:
+                games_by_parent[pid] = gm["id"]
+
+        # ── Index markets by matchupId ──
+        moneylines = {}
+        game_totals = {}
+
+        for mkt in markets:
+            mid = mkt.get("matchupId")
+            mtype = mkt.get("type")
+            period = mkt.get("period")
+            prices = mkt.get("prices", [])
+            if period != 0 or not prices:
+                continue
+
+            if mtype == "moneyline":
+                home = next((p["price"] for p in prices if p.get("designation") == "home"), None)
+                away = next((p["price"] for p in prices if p.get("designation") == "away"), None)
+                if home is not None and away is not None:
+                    moneylines[mid] = {
+                        "odds1": american_to_decimal(home),
+                        "odds2": american_to_decimal(away),
                     }
-                }
-                // Rows with moneyline buttons (catches rows without O/U)
-                for (const ml of document.querySelectorAll('[data-test-id="moneyline"]')) {
-                    if (!ml.querySelector('button')) continue;
-                    let el = ml.parentElement;
-                    for (let i = 0; i < 5 && el; i++) {
-                        if (el.querySelector('[data-test-id="moneyline"]')) {
-                            rows.add(el);
-                            break;
-                        }
-                        el = el.parentElement;
-                    }
-                }
 
-                // For each row: outerHTML + league detection
-                return [...rows].map(row => {
-                    let p = row, bestLeague = null, bestLen = Infinity;
-                    for (let i = 0; i < 20 && p; i++) {
-                        const t = (p.textContent || '');
-                        const upper = t.toUpperCase();
-                        const hasWta = upper.includes('WTA') || upper.includes('WOMEN');
-                        const hasAtp = upper.includes('ATP') || upper.includes("MEN'S") || upper.includes("MENS ");
-                        if (hasWta && !hasAtp && t.length < bestLen) { bestLeague = 'WTA'; bestLen = t.length; }
-                        if (hasAtp && !hasWta && t.length < bestLen) { bestLeague = 'ATP'; bestLen = t.length; }
-                        const tag = p.tagName?.toUpperCase();
-                        if (bestLeague && (tag === 'SECTION' || tag === 'H1' || tag === 'H2' || tag === 'H3')) break;
-                        p = p.parentElement;
-                    }
-                    return { html: row.outerHTML, league: bestLeague || 'ATP' };
-                });
-            }
-        """)
-
-        if not row_data:
-            # Fallback to old selectors
-            old_rows = await page.query_selector_all(
-                '[data-test-id="event-row"], [class*="eventRow"], [class*="matchup"], div[class*="gameInfo"]'
-            )
-            if not old_rows:
-                old_rows = await page.query_selector_all('div[class*="row"]:has(button[class*="market"])')
-            row_data = []
-            for row in old_rows:
-                try:
-                    handle = await row.evaluate_handle(
-                        "el => { let p = el.parentElement; while (p) { if (p.querySelectorAll('button').length >= 2) return p; p = p.parentElement; } return el; }"
-                    )
-                    el = handle.as_element()
-                    html = (await el.inner_html()) if el else (await row.inner_html())
-                    await handle.dispose()
-                except Exception:
-                    html = await row.inner_html()
-                league = "ATP"
-                try:
-                    league = await row.evaluate("""
-                        (el) => {
-                            let p = el;
-                            for (let i = 0; i < 20 && p; i++) {
-                                const t = (p.textContent || '').toUpperCase();
-                                const hasWta = t.includes('WTA') || t.includes('WOMEN');
-                                const hasAtp = t.includes('ATP') || t.includes("MEN'S") || t.includes("MENS ");
-                                if (hasWta && !hasAtp) return 'WTA';
-                                if (hasAtp && !hasWta) return 'ATP';
-                                p = p.parentElement;
-                            }
-                            return 'ATP';
-                        }
-                    """)
-                except Exception:
-                    pass
-                row_data.append({"html": html, "league": league})
-
-        if not row_data:
-            print("WARNING: Found 0 match rows. Pinnacle may have changed layout.")
-            if not SAVE_HTML:
-                HTML_DIR.mkdir(parents=True, exist_ok=True)
-                html_path = HTML_DIR / f"pinnacle-no-matches-{now.strftime('%Y%m%d-%H%M%S')}.html"
-                html_path.write_text(page_html, encoding="utf-8")
-            await browser.close()
-            return []
-
-        print(f"  Found {len(row_data)} candidate rows")
-
-        # ── Phase 2: Total Games tab (O/U supplement) ──
-        ou_scraped = []
-        try:
-            total_tab = None
-            for sel in [
-                'button:has-text("Total")',
-                '[data-test-id*="total"]',
-                'button:has-text("Total Games")',
-                'a:has-text("Total")',
-                '[class*="market"] button:has-text("Total")',
-                'div[role="tab"]:has-text("Total")',
-            ]:
-                try:
-                    tab = page.locator(sel).first
-                    if await tab.count() > 0:
-                        total_tab = tab
-                        break
-                except Exception:
+            elif mtype == "total":
+                points = prices[0].get("points", 0)
+                is_alt = mkt.get("isAlternate", False)
+                if points < 10:
+                    continue  # skip set totals
+                over_p = next((p["price"] for p in prices if p.get("designation") == "over"), None)
+                under_p = next((p["price"] for p in prices if p.get("designation") == "under"), None)
+                if over_p is None or under_p is None:
                     continue
-
-            if total_tab:
-                await total_tab.click()
-                await page.wait_for_timeout(2000)
-
-                if SAVE_HTML:
-                    totals_html = await page.content()
-                    totals_path = HTML_DIR / f"pinnacle-totals-{now.strftime('%Y%m%d-%H%M%S')}.html"
-                    totals_path.write_text(totals_html, encoding="utf-8")
-
-                ou_rows_els = await page.query_selector_all(
-                    '[data-test-id="event-row"], [class*="eventRow"], [class*="matchup"], div[class*="gameInfo"]'
-                )
-                if not ou_rows_els:
-                    ou_rows_els = await page.query_selector_all('div[class*="row"]:has(button[class*="market"])')
-
-                for ou_row in ou_rows_els:
-                    try:
-                        ou_html = await ou_row.inner_html()
-                        ou_text = _text_from_html(ou_html)
-                        if not ou_text or "/" in ou_text or " & " in ou_text:
-                            continue
-                        line_match = re.search(r"\b(1[5-9]|2[0-9]|3[0-5])\.5\b", ou_text)
-                        if not line_match:
-                            continue
-                        line_val = float(line_match.group(0))
-                        all_odds = re.findall(r"\b(\d+\.\d{2,3})\b", ou_text)
-                        valid_odds = [float(x) for x in all_odds if 1.01 < float(x) < 20]
-                        if len(valid_odds) < 2:
-                            continue
-                        p1, p2 = None, None
-                        if " (Sets)" in ou_text or " (sets)" in ou_text:
-                            parts = re.split(r"\s*\([Ss]ets\)\s*", ou_text)
-                            names = [re.sub(r"\s+", " ", p).strip() for p in parts
-                                     if p.strip() and not re.match(r"^\d", p.strip())]
-                            if len(names) >= 2:
-                                p1 = _clean_name(names[0])
-                                p2 = _clean_name(names[1])
-                        if p1 and p2 and 2 <= len(p1) <= 60 and 2 <= len(p2) <= 60:
-                            ou_scraped.append({
-                                "p1": p1, "p2": p2,
-                                "line": line_val,
-                                "over": round(valid_odds[0], 3),
-                                "under": round(valid_odds[1], 3),
-                            })
-                    except Exception:
-                        continue
-
-                if VERBOSE:
-                    print(f"  Total Games tab: found {len(ou_scraped)} O/U rows")
-            else:
-                if VERBOSE:
-                    print("  No 'Total' market tab found (O/U may be inline).")
-        except Exception as e:
-            if VERBOSE:
-                print(f"  Phase 2 O/U warning: {e}")
-
-        await browser.close()
-
-        # ── Parse each row ──
-        for idx, rd in enumerate(row_data):
-            row_html = rd.get("html", "") if isinstance(rd, dict) else ""
-            league = rd.get("league", "ATP") if isinstance(rd, dict) else "ATP"
-            if not row_html or len(row_html) < 20:
-                continue
-            try:
-                # ── Structured parsing (preferred) ──
-                ml_odds1, ml_odds2 = _parse_moneyline_from_html(row_html)
-                ou_line, ou_over, ou_under = _parse_ou_from_html(row_html)
-
-                # Extract player names from gameInfoMatchName div
-                p1_name, p2_name = None, None
-                name_match = re.search(
-                    r'class="[^"]*gameInfoMatchName[^"]*"[^>]*>(.*?)</div>',
-                    row_html, re.S
-                )
-                if name_match:
-                    name_text = _text_from_html(name_match.group(1))
-                    for sep in (" - ", " vs ", " v "):
-                        if sep in name_text:
-                            parts = name_text.split(sep, 1)
-                            if len(parts) == 2:
-                                p1_name = _clean_name(parts[0].strip())
-                                p2_name = _clean_name(parts[1].strip())
-                                break
-
-                # Structured path: names + moneyline both found
-                if p1_name and p2_name and ml_odds1 and ml_odds2:
-                    if is_doubles(p1_name) or is_doubles(p2_name):
-                        continue
-                    match_data = {
-                        "player1_name": p1_name,
-                        "player2_name": p2_name,
-                        "odds1": ml_odds1,
-                        "odds2": ml_odds2,
-                        "pinnacle_margin": compute_margin(ml_odds1, ml_odds2),
-                        "ou_line": ou_line,
-                        "ou_over": ou_over,
-                        "ou_under": ou_under,
+                existing = game_totals.get(mid)
+                if existing is None or (existing.get("is_alt") and not is_alt):
+                    game_totals[mid] = {
+                        "line": points,
+                        "over": american_to_decimal(over_p),
+                        "under": american_to_decimal(under_p),
+                        "is_alt": is_alt,
                     }
-                else:
-                    # Fall back to flat-text parser
-                    match_data = _parse_row_from_html(row_html)
-                    if not match_data:
-                        continue
-                    # Override with structured data where available
-                    if ml_odds1 and ml_odds2:
-                        match_data["odds1"] = ml_odds1
-                        match_data["odds2"] = ml_odds2
-                        match_data["pinnacle_margin"] = compute_margin(ml_odds1, ml_odds2)
-                    if ou_line is not None:
-                        match_data["ou_line"] = ou_line
-                        match_data["ou_over"] = ou_over
-                        match_data["ou_under"] = ou_under
 
-                match_data["league"] = league
-                results.append(match_data)
+        if VERBOSE:
+            print(f"    {len(regular_matchups)} regular matchups, {len(games_matchups)} (Games) variants")
+            print(f"    {len(moneylines)} moneylines, {len(game_totals)} game-total lines")
 
-            except Exception as e:
-                if VERBOSE and idx < 3:
-                    print(f"  [debug] row {idx} parse error: {e}")
+        # ── Merge: for each regular matchup, combine ML + game total ──
+        league_count = 0
+        for m in regular_matchups:
+            mid = m["id"]
+            parts = m.get("participants", [])
+            if len(parts) < 2:
                 continue
 
-        # Merge Phase 2 O/U
-        if ou_scraped:
-            ou_merged = _merge_ou_into_results(results, ou_scraped)
-            if VERBOSE:
-                print(f"  Merged O/U into {ou_merged}/{len(results)} matches from Phase 2")
+            p1_raw = parts[0].get("name", "")
+            p2_raw = parts[1].get("name", "")
+            p1 = _clean_name(p1_raw)
+            p2 = _clean_name(p2_raw)
 
-        # Dedup by player pair, keep lowest margin
-        seen = {}
-        for r in results:
-            key = (r["player1_name"], r["player2_name"])
-            if key in seen:
-                if r["pinnacle_margin"] < seen[key]["pinnacle_margin"]:
-                    seen[key] = r
-            else:
+            if _is_doubles(p1) or _is_doubles(p2):
+                continue
+            if m.get("isLive"):
+                continue
+
+            ml = moneylines.get(mid)
+            if not ml:
+                continue
+
+            gt = None
+            games_mid = games_by_parent.get(mid)
+            if games_mid:
+                gt = game_totals.get(games_mid)
+            if not gt and m.get("parentId"):
+                games_mid = games_by_parent.get(m["parentId"])
+                if games_mid:
+                    gt = game_totals.get(games_mid)
+            if not gt:
+                gt = game_totals.get(mid)
+
+            margin = compute_margin(ml["odds1"], ml["odds2"])
+
+            row = {
+                "player1_name": p1,
+                "player2_name": p2,
+                "odds1": ml["odds1"],
+                "odds2": ml["odds2"],
+                "pinnacle_margin": margin,
+                "ou_line": gt["line"] if gt else None,
+                "ou_over": gt["over"] if gt else None,
+                "ou_under": gt["under"] if gt else None,
+                "league": league_tag,
+                "league_name": league_name,
+            }
+            results.append(row)
+            league_count += 1
+
+        if VERBOSE:
+            ou_c = sum(1 for r in results[-league_count:] if r.get("ou_line"))
+            print(f"    → {league_count} singles matches ({ou_c} with O/U)")
+
+    # ── Dedup by player pair (keep lowest margin) ──
+    seen = {}
+    for r in results:
+        key = (_norm_name(r["player1_name"]), _norm_name(r["player2_name"]))
+        if key in seen:
+            if r["pinnacle_margin"] < seen[key]["pinnacle_margin"]:
                 seen[key] = r
-        results = list(seen.values())
+        else:
+            seen[key] = r
+    results = list(seen.values())
 
-        ou_count = sum(1 for r in results if r.get("ou_line") is not None)
-        if results and ou_count == 0:
-            print("  WARNING: 0/%d matches have O/U. Selectors may need updating." % len(results))
-            if not SAVE_HTML:
-                HTML_DIR.mkdir(parents=True, exist_ok=True)
-                html_path = HTML_DIR / f"pinnacle-no-ou-{now.strftime('%Y%m%d-%H%M%S')}.html"
-                html_path.write_text(page_html, encoding="utf-8")
-                print(f"  Auto-saved HTML to {html_path}")
-
-    print(f"  Scraped {len(results)} singles matches ({ou_count} with O/U)")
     return results
 
 
 # ─── Supabase upsert ────────────────────────────────────────────────
 
-def upsert_to_supabase(results: list):
-    """Upsert scraped odds to bookmaker_odds_snapshot via Supabase REST API."""
+def upsert_to_supabase(results: list[dict]):
+    """Batch upsert to bookmaker_odds_snapshot via PostgREST."""
     if not SUPABASE_URL or not SUPABASE_KEY:
-        print("WARNING: No Supabase credentials. Printing to stdout only.")
+        print("  WARNING: No Supabase credentials — skipping upsert.")
         return
 
     now = datetime.now(timezone.utc)
     today = now.strftime("%Y-%m-%d")
+
     rows = []
     for r in results:
-        league = (r.get("league") or "ATP").strip().upper()
-        if league not in ("ATP", "WTA"):
-            league = "ATP"
+        league_db = r.get("league", "ATP")
+        if league_db == "Challenger":
+            league_db = "ATP"
+
         rows.append({
             "capture_date": today,
             "captured_at": now.isoformat(),
             "bookmaker": "Pinnacle",
-            "league": league,
+            "league": league_db,
             "player1_name": r["player1_name"],
             "player2_name": r["player2_name"],
             "odds1": r["odds1"],
@@ -654,9 +393,6 @@ def upsert_to_supabase(results: list):
     if not rows:
         print("  No rows to upsert.")
         return
-
-    atp_count = sum(1 for row in rows if row["league"] == "ATP")
-    wta_count = len(rows) - atp_count
 
     conflict_cols = "capture_date,bookmaker,league,player1_name,player2_name"
     url = f"{SUPABASE_URL.rstrip('/')}/rest/v1/bookmaker_odds_snapshot?on_conflict={conflict_cols}"
@@ -672,17 +408,19 @@ def upsert_to_supabase(results: list):
         try:
             resp = requests.post(url, json=rows, headers=headers, timeout=30)
             if resp.ok:
-                print(f"  Upserted {len(rows)} rows to bookmaker_odds_snapshot ({atp_count} ATP, {wta_count} WTA)")
+                atp_c = sum(1 for r in rows if r["league"] == "ATP")
+                wta_c = sum(1 for r in rows if r["league"] == "WTA")
+                print(f"  Upserted {len(rows)} rows ({atp_c} ATP, {wta_c} WTA)")
                 return
             elif resp.status_code == 409:
-                print(f"  ERROR: 409 Conflict — missing UNIQUE constraint on bookmaker_odds_snapshot.")
-                print(f"  Run in Supabase SQL Editor:")
-                print(f"    ALTER TABLE bookmaker_odds_snapshot")
-                print(f"      ADD CONSTRAINT bookmaker_odds_snapshot_upsert_key")
+                print("  ERROR: 409 Conflict — missing UNIQUE constraint.")
+                print("  Run in Supabase SQL Editor:")
+                print("    ALTER TABLE bookmaker_odds_snapshot")
+                print("      ADD CONSTRAINT bookmaker_odds_snapshot_upsert_key")
                 print(f"      UNIQUE ({conflict_cols});")
                 return
             else:
-                print(f"  WARNING: Batch upsert failed (attempt {attempt}/{max_retries}): {resp.status_code} {resp.text[:200]}")
+                print(f"  WARNING: Upsert failed (attempt {attempt}/{max_retries}): {resp.status_code} {resp.text[:200]}")
         except requests.exceptions.RequestException as e:
             print(f"  WARNING: Network error (attempt {attempt}/{max_retries}): {e}")
 
@@ -694,54 +432,85 @@ def upsert_to_supabase(results: list):
     print(f"  ERROR: All {max_retries} upsert attempts failed.")
 
 
+# ─── CSV backup ──────────────────────────────────────────────────────
+
+def save_csv(results: list[dict]):
+    """Write CSV backup to data/."""
+    csv_path = Path(f"data/pinnacle-odds-{datetime.now(timezone.utc).strftime('%Y-%m-%d')}.csv")
+    csv_path.parent.mkdir(parents=True, exist_ok=True)
+
+    fieldnames = [
+        "player1_name", "player2_name", "odds1", "odds2",
+        "pinnacle_margin", "ou_line", "ou_over", "ou_under",
+        "league", "league_name",
+    ]
+    with open(csv_path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(results)
+    print(f"  CSV: {csv_path}")
+
+
+# ─── JSON dump (debug) ──────────────────────────────────────────────
+
+def save_debug_json(results: list[dict]):
+    """Write raw results as JSON for debugging."""
+    json_path = Path(f"data/pinnacle-debug-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}.json")
+    json_path.parent.mkdir(parents=True, exist_ok=True)
+    json_path.write_text(json.dumps(results, indent=2, default=str), encoding="utf-8")
+    print(f"  Debug JSON: {json_path}")
+
+
 # ─── Entry point ────────────────────────────────────────────────────
 
-async def main():
+def main():
+    now = datetime.now(timezone.utc)
     print(f"{'=' * 60}")
-    print(f"  Pinnacle Tennis Odds Scraper")
-    print(f"  {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}")
-    print(f"  Mode: {'DRY RUN' if DRY_RUN else 'LIVE'}")
+    print(f"  Pinnacle Tennis Odds Scraper (API edition)")
+    print(f"  {now.strftime('%Y-%m-%d %H:%M UTC')}")
+    print(f"  Mode: {'DRY RUN' if DRY_RUN else 'LIVE'} | WTA: {'included' if INCLUDE_WTA else 'excluded'}")
     print(f"{'=' * 60}")
 
-    if not SUPABASE_URL or not SUPABASE_KEY:
-        print("\nWARNING: Missing Supabase credentials.")
+    if not DRY_RUN and (not SUPABASE_URL or not SUPABASE_KEY):
+        print("\n  WARNING: Missing Supabase credentials.")
         print("  Ensure .env.local has NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.")
-        if DRY_RUN:
-            print("  (Continuing in dry-run mode without DB...)")
-        else:
-            print("  Either add credentials or use --dry-run.")
-            sys.exit(1)
+        print("  Use --dry-run to scrape without DB, or add credentials.")
+        sys.exit(1)
 
-    results = await scrape_pinnacle()
+    results = scrape_pinnacle()
 
     if not results:
-        print("\nWARNING: No matches scraped. Possible causes:")
-        print("  1. Pinnacle layout changed (check saved HTML in data/pinnacle-html/)")
-        print("  2. No tennis matches scheduled today")
-        print("  3. Network/geo-blocking issue (try with VPN)")
+        print("\n  No matches scraped. Possible causes:")
+        print("  1. No tennis scheduled right now on Pinnacle")
+        print("  2. API key may have changed (check PINNACLE_API_KEY)")
+        print("  3. Network/geo-blocking (try VPN)")
         sys.exit(0)
+
+    ou_count = sum(1 for r in results if r.get("ou_line") is not None)
+    atp = sum(1 for r in results if r["league"] in ("ATP", "Challenger"))
+    wta = sum(1 for r in results if r["league"] == "WTA")
+    chall = sum(1 for r in results if r["league"] == "Challenger")
+
+    print(f"\n  Summary: {len(results)} matches ({atp} ATP/Challenger, {wta} WTA), {ou_count} with O/U")
+    if chall:
+        print(f"    ({chall} of which are Challenger)")
+
+    if VERBOSE:
+        print()
+        for r in results:
+            ou_str = f"O/U {r['ou_line']} ({r['ou_over']:.3f}/{r['ou_under']:.3f})" if r.get("ou_line") else "no O/U"
+            print(f"    {r['player1_name']:>25s}  {r['odds1']:.3f}  vs  {r['odds2']:.3f}  {r['player2_name']:<25s}  m={r['pinnacle_margin']:.1f}%  {ou_str}  [{r['league']}]")
+
+    save_csv(results)
+
+    if VERBOSE:
+        save_debug_json(results)
 
     if not DRY_RUN:
         upsert_to_supabase(results)
 
-    # CSV backup
-    csv_path = Path(f"data/pinnacle-odds-{datetime.now().strftime('%Y-%m-%d')}.csv")
-    csv_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(csv_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=[
-            "player1_name", "player2_name", "odds1", "odds2",
-            "pinnacle_margin", "ou_line", "ou_over", "ou_under", "league"
-        ])
-        writer.writeheader()
-        writer.writerows(results)
-    print(f"  CSV backup: {csv_path}")
-
-    # Summary
-    ou_count = sum(1 for r in results if r.get("ou_line") is not None)
-    atp = sum(1 for r in results if r.get("league", "ATP") == "ATP")
-    wta = len(results) - atp
-    print(f"\n  Summary: {len(results)} matches ({atp} ATP, {wta} WTA), {ou_count} with O/U")
+    print(f"\n  Done.")
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
