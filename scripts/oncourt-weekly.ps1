@@ -1,17 +1,15 @@
 # Il Margine — Weekly Scheduled Task (runs Sunday 22:00)
-#
-# Full load: re-syncs ALL data including 1M+ games and stats rows.
-# This catches any historical corrections from OnCourt updates.
-#
-# Windows Task Scheduler runs this via:
-#   powershell.exe -ExecutionPolicy Bypass -NoProfile -File "...\oncourt-weekly.ps1"
+# Full refresh + weekly model feature refresh (H2H + advanced stats)
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $root
 
+$dataDir = Join-Path $root "data"
+New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
+
 $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-$logFile = Join-Path $root "data\oncourt-weekly.log"
+$logFile = Join-Path $dataDir "oncourt-weekly.log"
 
 function Log($msg) {
     $line = "$(Get-Date -Format 'HH:mm:ss') $msg"
@@ -24,7 +22,7 @@ Log "  Weekly Full Load started at $timestamp"
 Log "============================================"
 
 # Step 1: Extract from OnCourt (32-bit Python for .mdb)
-Log "=== Step 1/3: OnCourt extract ==="
+Log "=== Step 1/5: OnCourt extract ==="
 $py32 = "C:\Python312-32\python.exe"
 if (Test-Path $py32) {
     & $py32 scripts\oncourt-extract-all.py 2>&1 | ForEach-Object { Log $_ }
@@ -35,8 +33,8 @@ if (Test-Path $py32) {
     Log "WARNING: 32-bit Python not found at $py32, skipping extract"
 }
 
-# Step 2: FULL sync to Supabase (all tables including games + stat)
-Log "=== Step 2/3: Supabase FULL sync ==="
+# Step 2: FULL sync to Supabase
+Log "=== Step 2/5: Supabase FULL sync ==="
 & python scripts\oncourt-load-supabase.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "ERROR: Supabase full sync failed (exit $LASTEXITCODE)"
@@ -44,10 +42,24 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 # Step 3: Compute player stats
-Log "=== Step 3/3: Compute player stats ==="
+Log "=== Step 3/5: Compute player stats ==="
 & python scripts\oncourt-compute-player-stats.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Player stats failed (exit $LASTEXITCODE), continuing..."
+}
+
+# Step 4: Recompute H2H (Sackmann/TML -> OnCourt)
+Log "=== Step 4/5: Recompute H2H ==="
+& python scripts\sackmann-compute-h2h.py 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: H2H recompute failed (exit $LASTEXITCODE), continuing..."
+}
+
+# Step 5: Recompute advanced stats (Sackmann/TML -> OnCourt)
+Log "=== Step 5/5: Recompute advanced stats ==="
+& python scripts\sackmann-compute-advanced-stats.py 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: Advanced stats recompute failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "============================================"
