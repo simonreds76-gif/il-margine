@@ -41,6 +41,7 @@ interface FairOddsMatch {
   pinnacle_ou_under?: number;
   value_p1?: number;
   value_p2?: number;
+  confidence?: string;
 }
 
 interface ApiResponse {
@@ -85,12 +86,17 @@ function parseOULines(match: FairOddsMatch): OULine[] {
 }
 
 function valueColor(v: number | undefined): string {
-  if (v == null) return "text-slate-600";
-  if (v >= 5) return "text-emerald-300 font-bold drop-shadow-[0_0_6px_rgba(52,211,153,0.3)]";
-  if (v >= 2) return "text-emerald-400 font-semibold";
-  if (v < -10) return "text-red-400 font-bold";
-  if (v < -5) return "text-red-400/90 font-medium";
-  if (v < -2) return "text-red-400/60";
+  if (v == null) return "text-slate-500";
+  if (v > 0) {
+    if (v >= 5) return "text-emerald-300 font-bold";
+    if (v >= 2) return "text-emerald-400 font-semibold";
+    return "text-emerald-500/90";
+  }
+  if (v < 0) {
+    if (v <= -10) return "text-red-400 font-bold";
+    if (v <= -5) return "text-red-400 font-medium";
+    return "text-red-400/80";
+  }
   return "text-slate-400";
 }
 
@@ -98,7 +104,9 @@ function valueBg(v: number | undefined): string {
   if (v == null) return "";
   if (v >= 5) return "bg-emerald-500/10";
   if (v >= 2) return "bg-emerald-500/5";
-  if (v < -10) return "bg-red-500/10";
+  if (v > 0) return "bg-emerald-500/5";
+  if (v <= -10) return "bg-red-500/10";
+  if (v < 0) return "bg-red-500/5";
   return "";
 }
 
@@ -232,7 +240,7 @@ export default function FairOddsPage() {
               <span className="text-amber-400/80">{data.pinnacle_hint}</span>
             )}
             <span className="text-slate-600">
-              Value % = (Pinnacle / Our odds) − 1; positive = Pinnacle offering more than our fair price (value bet at Pinnacle).
+              Value % = (Pinnacle / Our odds) − 1; positive = value at Pinnacle. E[G]/O/U from last run — re-run fair-odds script to get new solver lines (e.g. 21.5–23.5 not 24.5–26.5).
             </span>
           </div>
         )}
@@ -271,33 +279,48 @@ export default function FairOddsPage() {
           </div>
         )}
 
-        {/* Table */}
+        {/* Table: always 11 core + 6 stat columns so layout never breaks when toggling Show Stats */}
         {!loading && matches.length > 0 && (
-          <div className="overflow-x-auto rounded-lg border border-slate-800/70" style={{ scrollbarGutter: "stable" }}>
+          <div className="overflow-x-auto rounded-lg border border-slate-800/70 min-w-0" style={{ scrollbarGutter: "stable" }}>
             <p className="text-[10px] text-slate-600 px-3 py-1.5 border-b border-slate-800/50 bg-slate-900/30">
-              Scroll horizontally if needed to see the full O/U column.
+              Scroll horizontally if needed. Pinnacle odds from public API each run.
             </p>
-            <table className="w-full text-sm" style={{ minWidth: showStats ? "1400px" : "1080px" }}>
+            <table className="w-full text-sm table-fixed" style={{ minWidth: 1200 }}>
+              <colgroup>
+                <col style={{ width: "min(200px, 14%)" }} />
+                <col style={{ width: 52 }} />
+                <col style={{ width: 56 }} />
+                <col style={{ width: 56 }} />
+                <col style={{ width: 56 }} />
+                <col style={{ width: 56 }} />
+                <col style={{ width: 64 }} />
+                <col style={{ width: 64 }} />
+                <col style={{ width: 52 }} />
+                <col style={{ width: "min(180px, 14%)" }} />
+                <col style={{ width: 160 }} />
+                <col style={{ width: showStats ? 52 : 0 }} />
+                <col style={{ width: showStats ? 52 : 0 }} />
+                <col style={{ width: showStats ? 44 : 0 }} />
+                <col style={{ width: showStats ? 52 : 0 }} />
+                <col style={{ width: showStats ? 52 : 0 }} />
+                <col style={{ width: showStats ? 44 : 0 }} />
+              </colgroup>
               <thead>
                 <tr className="border-b-2 border-slate-700/60 bg-[#0d0f14] text-slate-400 text-[11px] uppercase tracking-wider">
                   <th className="text-left px-3 py-3 font-semibold sticky left-0 bg-[#0d0f14] z-10 border-r border-slate-800/40">Match</th>
-                  <th className="text-center px-2 py-3 font-semibold w-[50px]">Surf</th>
+                  <th className="text-center px-2 py-3 font-semibold">Surf</th>
                   <th className="text-center px-2 py-3 font-semibold text-slate-300" colSpan={2}>Fair Odds</th>
                   <th className="text-center px-2 py-3 font-semibold text-slate-300" colSpan={2}>Pinnacle</th>
                   <th className="text-center px-2 py-3 font-semibold text-emerald-500/70" colSpan={2}>Value %</th>
-                  {showStats && (
-                    <>
-                      <th className="text-center px-1.5 py-3 font-medium text-[10px]">P1 S%</th>
-                      <th className="text-center px-1.5 py-3 font-medium text-[10px]">P1 R%</th>
-                      <th className="text-center px-1.5 py-3 font-medium text-[10px]">P1 T</th>
-                      <th className="text-center px-1.5 py-3 font-medium text-[10px]">P2 S%</th>
-                      <th className="text-center px-1.5 py-3 font-medium text-[10px]">P2 R%</th>
-                      <th className="text-center px-1.5 py-3 font-medium text-[10px]">P2 T</th>
-                    </>
-                  )}
                   <th className="text-center px-2 py-3 font-semibold">E[G]</th>
-                  <th className="text-left px-2 py-3 font-semibold min-w-[180px] w-[17%]">O/U Fair</th>
-                  <th className="text-left px-2 py-3 font-semibold min-w-[140px]">O/U Pin</th>
+                  <th className="text-left px-2 py-3 font-semibold">O/U Fair</th>
+                  <th className="text-left px-2 py-3 font-semibold">O/U Pin</th>
+                  <th className="text-center px-1.5 py-3 font-medium text-[10px] overflow-hidden">P1 S%</th>
+                  <th className="text-center px-1.5 py-3 font-medium text-[10px] overflow-hidden">P1 R%</th>
+                  <th className="text-center px-1.5 py-3 font-medium text-[10px] overflow-hidden">P1 T</th>
+                  <th className="text-center px-1.5 py-3 font-medium text-[10px] overflow-hidden">P2 S%</th>
+                  <th className="text-center px-1.5 py-3 font-medium text-[10px] overflow-hidden">P2 R%</th>
+                  <th className="text-center px-1.5 py-3 font-medium text-[10px] overflow-hidden">P2 T</th>
                 </tr>
               </thead>
               <tbody>
@@ -340,7 +363,7 @@ function TournamentGroup({
     <>
       <tr className="bg-[#0c0e14]">
         <td
-          colSpan={showStats ? 17 : 11}
+          colSpan={17}
           className="px-3 py-2.5 text-[11px] font-semibold text-slate-300 uppercase tracking-widest border-b-2 border-slate-700/50 border-t border-slate-700/30"
         >
           {tournament}
@@ -361,7 +384,9 @@ function MatchRow({ match, showStats }: { match: FairOddsMatch; showStats: boole
   const hasPinnacle = m.pinnacle_odds1 != null && m.pinnacle_odds1 > 0;
 
   return (
-    <tr className="border-b border-slate-800/30 hover:bg-slate-800/25 even:bg-slate-900/20 transition-colors">
+    <tr className={`border-b border-slate-800/30 hover:bg-slate-800/25 even:bg-slate-900/20 transition-colors ${
+      m.confidence === 'none' ? 'opacity-40' : ''
+    }`}>
       {/* Match (sticky) */}
       <td className="px-3 py-3 sticky left-0 bg-[#0f1117] z-10 border-r border-slate-800/40">
         <div className="flex flex-col gap-0.5">
@@ -401,51 +426,58 @@ function MatchRow({ match, showStats }: { match: FairOddsMatch; showStats: boole
         {m.value_p2 != null ? fmtPct(m.value_p2) : "—"}
       </td>
 
-      {/* Stats (togglable) */}
-      {showStats && (
-        <>
-          <td className="text-center px-1.5 py-2.5 font-mono text-xs text-slate-500">{m.p1_serve?.toFixed(1) ?? "—"}</td>
-          <td className="text-center px-1.5 py-2.5 font-mono text-xs text-slate-500">{m.p1_return?.toFixed(1) ?? "—"}</td>
-          <td className="text-center px-1.5 py-2.5 font-mono text-xs text-slate-500">{m.p1_total?.toFixed(1) ?? "—"}</td>
-          <td className="text-center px-1.5 py-2.5 font-mono text-xs text-slate-500">{m.p2_serve?.toFixed(1) ?? "—"}</td>
-          <td className="text-center px-1.5 py-2.5 font-mono text-xs text-slate-500">{m.p2_return?.toFixed(1) ?? "—"}</td>
-          <td className="text-center px-1.5 py-2.5 font-mono text-xs text-slate-500">{m.p2_total?.toFixed(1) ?? "—"}</td>
-        </>
-      )}
-
-      {/* Expected Total Games */}
-      <td className="text-center px-2 py-2.5 font-mono text-sm text-slate-400">
+      {/* E[G] and O/U */}
+      <td className="text-center px-2 py-2.5 font-mono text-sm text-slate-400 overflow-hidden">
         {m.expected_total_games != null ? m.expected_total_games.toFixed(1) : "—"}
       </td>
-
-      {/* O/U Fair */}
-      <td className="px-2 py-2 min-w-[180px] w-[17%]">
+      <td className="px-2 py-2 overflow-hidden">
         <OverUnderFairCell lines={ouLines} />
       </td>
-
-      {/* O/U Pinnacle */}
-      <td className="px-2 py-2 min-w-[140px]">
+      <td className="px-2 py-2 align-top" style={{ minWidth: 160 }}>
         <OverUnderPinCell match={m} lines={ouLines} />
+      </td>
+
+      {/* Stats: always 6 cells; when !showStats colgroup gives them 0 width */}
+      <td className={`text-center px-1.5 py-2.5 font-mono text-xs text-slate-500 overflow-hidden ${!showStats ? "opacity-0" : ""}`}>
+        {m.p1_serve?.toFixed(1) ?? "—"}
+      </td>
+      <td className={`text-center px-1.5 py-2.5 font-mono text-xs text-slate-500 overflow-hidden ${!showStats ? "opacity-0" : ""}`}>
+        {m.p1_return?.toFixed(1) ?? "—"}
+      </td>
+      <td className={`text-center px-1.5 py-2.5 font-mono text-xs text-slate-500 overflow-hidden ${!showStats ? "opacity-0" : ""}`}>
+        {m.p1_total?.toFixed(1) ?? "—"}
+      </td>
+      <td className={`text-center px-1.5 py-2.5 font-mono text-xs text-slate-500 overflow-hidden ${!showStats ? "opacity-0" : ""}`}>
+        {m.p2_serve?.toFixed(1) ?? "—"}
+      </td>
+      <td className={`text-center px-1.5 py-2.5 font-mono text-xs text-slate-500 overflow-hidden ${!showStats ? "opacity-0" : ""}`}>
+        {m.p2_return?.toFixed(1) ?? "—"}
+      </td>
+      <td className={`text-center px-1.5 py-2.5 font-mono text-xs text-slate-500 overflow-hidden ${!showStats ? "opacity-0" : ""}`}>
+        {m.p2_total?.toFixed(1) ?? "—"}
       </td>
     </tr>
   );
 }
 
-/* ─── O/U Cells ─────────────────────────────────────────────────── */
+/* ─── O/U Cells: same 3-row layout for Fair and Pin so columns align ─ */
+
+const OU_ROW_CLASS = "grid gap-x-2 text-xs font-mono items-start";
+const OU_GRID_COLS = "36px 52px 52px"; // line | O | U
 
 function OverUnderFairCell({ lines }: { lines: OULine[] }) {
   if (lines.length === 0) return <span className="text-slate-600 text-xs">—</span>;
 
   return (
-    <div className="space-y-1" style={{ overflow: "visible", whiteSpace: "nowrap" }}>
+    <div className="space-y-1.5">
       {lines.map((ou) => (
-        <div key={ou.line} className="grid gap-1.5 text-xs" style={{ gridTemplateColumns: "32px 1fr 1fr" }}>
-          <span className="text-slate-500 font-mono">{ou.line}</span>
-          <span className="text-slate-300 font-mono">
+        <div key={ou.line} className={OU_ROW_CLASS} style={{ gridTemplateColumns: OU_GRID_COLS }}>
+          <span className="text-slate-500 tabular-nums">{ou.line}</span>
+          <span className="text-slate-300 tabular-nums">
             <span className="text-slate-600 mr-0.5">O</span>
             {ou.fairOver.toFixed(2)}
           </span>
-          <span className="text-slate-300 font-mono">
+          <span className="text-slate-300 tabular-nums">
             <span className="text-slate-600 mr-0.5">U</span>
             {ou.fairUnder.toFixed(2)}
           </span>
@@ -459,38 +491,54 @@ function OverUnderPinCell({ match, lines }: { match: FairOddsMatch; lines: OULin
   const pinLine = match.pinnacle_ou_line;
   const pinOver = match.pinnacle_ou_over;
   const pinUnder = match.pinnacle_ou_under;
+  const hasPin = pinLine != null && pinOver != null && pinUnder != null;
 
-  if (pinLine == null || pinOver == null || pinUnder == null) {
-    return <span className="text-slate-600 text-xs">—</span>;
-  }
-
-  const fairMatch = lines.find((l) => l.line === pinLine);
-  const overValue = fairMatch ? ((pinOver / fairMatch.fairOver - 1) * 100) : null;
-  const underValue = fairMatch ? ((pinUnder / fairMatch.fairUnder - 1) * 100) : null;
+  if (lines.length === 0) return <span className="text-slate-600 text-xs">—</span>;
+  const fairMatchPin = hasPin ? lines.find((l) => l.line === pinLine) : null;
+  const overValue = fairMatchPin ? ((pinOver! / fairMatchPin.fairOver - 1) * 100) : null;
+  const underValue = fairMatchPin ? ((pinUnder! / fairMatchPin.fairUnder - 1) * 100) : null;
 
   return (
-    <div style={{ overflow: "visible", whiteSpace: "nowrap" }}>
-      <div className="grid gap-1.5 text-xs" style={{ gridTemplateColumns: "32px 1fr 1fr" }}>
-        <span className="text-slate-500 font-mono">{pinLine}</span>
-        <span className="font-mono">
-          <span className="text-slate-600 mr-0.5">O</span>
-          <span className="text-slate-400">{pinOver.toFixed(2)}</span>
-          {overValue != null && (
-            <span className={`ml-1 text-[10px] ${valueColor(overValue)}`}>
-              {overValue > 0 ? "+" : ""}{overValue.toFixed(1)}%
-            </span>
-          )}
-        </span>
-        <span className="font-mono">
-          <span className="text-slate-600 mr-0.5">U</span>
-          <span className="text-slate-400">{pinUnder.toFixed(2)}</span>
-          {underValue != null && (
-            <span className={`ml-1 text-[10px] ${valueColor(underValue)}`}>
-              {underValue > 0 ? "+" : ""}{underValue.toFixed(1)}%
-            </span>
-          )}
-        </span>
-      </div>
+    <div className="space-y-1.5">
+      {lines.map((ou) => {
+        const isPinRow = hasPin && ou.line === pinLine;
+        return (
+          <div key={ou.line} className={OU_ROW_CLASS} style={{ gridTemplateColumns: OU_GRID_COLS }}>
+            <span className="text-slate-500 tabular-nums">{ou.line}</span>
+            {isPinRow ? (
+              <>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-slate-400 tabular-nums">
+                    <span className="text-slate-600 mr-0.5">O</span>
+                    {pinOver!.toFixed(2)}
+                  </span>
+                  {overValue != null && (
+                    <span className={`text-[10px] mt-0.5 tabular-nums ${valueColor(overValue)} ${valueBg(overValue)}`}>
+                      {overValue > 0 ? "+" : ""}{overValue.toFixed(1)}%
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-slate-400 tabular-nums">
+                    <span className="text-slate-600 mr-0.5">U</span>
+                    {pinUnder!.toFixed(2)}
+                  </span>
+                  {underValue != null && (
+                    <span className={`text-[10px] mt-0.5 tabular-nums ${valueColor(underValue)} ${valueBg(underValue)}`}>
+                      {underValue > 0 ? "+" : ""}{underValue.toFixed(1)}%
+                    </span>
+                  )}
+                </div>
+              </>
+            ) : (
+              <>
+                <span className="text-slate-600">—</span>
+                <span className="text-slate-600">—</span>
+              </>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

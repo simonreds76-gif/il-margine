@@ -42,8 +42,10 @@ load_env()
 # At Challenger level with <20 matches, Elo+rank is more reliable.
 HYBRID_ELO_WEIGHT_DEFAULT = 0.55   # was 0.40; Elo is more stable than noisy serve/return
 HYBRID_ELO_WEIGHT_MIN_MATCHES = 30  # was 20; only trust serve/return more when well-sampled
-POINT_CLAMP = (0.48, 0.82)   # SPW range: prevents junk from Barnett-Clarke flowing into K-M; slightly wider than (0.50, 0.80) for big servers / clay grinders
+POINT_CLAMP = (0.48, 0.82)   # realistic SPW range (0.01/0.99 was too wide, let junk through K-M)
 DEFAULT_ELO = 1500
+# Standard bookie O/U lines for ATP bo3 — we price at these instead of centring on mean E[G]
+STANDARD_OU_LINES = [19.5, 20.5, 21.5, 22.5, 23.5, 24.5, 25.5]
 # Vs leftie: adjustment from win_pct_vs_leftie (default 0.5)
 VS_LEFTIE_WEIGHT = 0.03
 VS_LEFTIE_CAP = 0.015
@@ -126,6 +128,35 @@ def _age_factor(birthdate_str):
     if age < 22:
         return 0.002 * (22 - age)  # e.g. 20 -> 0.004
     return 0.0  # prime 22-30
+
+
+def _solve_spw_for_match_prob(p1_win, avg_spw, clamp_lo=0.48, clamp_hi=0.82, tol=5e-4, max_iter=60):
+    """Binary-search for (p_a, p_b) such that prob_match_best_of_3(p_a, p_b) ≈ p1_win.
+
+    Assumes symmetric offset from avg_spw: p_a = avg + delta, p_b = avg - delta.
+    This preserves the surface's average serve point win % while producing the
+    correct match win probability.
+
+    Returns (p_a, p_b) clamped to [clamp_lo, clamp_hi].
+    """
+    p1_win = max(0.02, min(0.98, p1_win))
+    avg_spw = max(clamp_lo + 0.01, min(clamp_hi - 0.01, avg_spw))
+    max_delta = min(avg_spw - clamp_lo, clamp_hi - avg_spw)
+    lo, hi = -max_delta, max_delta
+    for _ in range(max_iter):
+        mid = (lo + hi) / 2.0
+        pa = max(clamp_lo, min(clamp_hi, avg_spw + mid))
+        pb = max(clamp_lo, min(clamp_hi, avg_spw - mid))
+        prob = prob_match_best_of_3(pa, pb)
+        if abs(prob - p1_win) < tol:
+            return (pa, pb)
+        if prob < p1_win:
+            lo = mid
+        else:
+            hi = mid
+    mid = (lo + hi) / 2.0
+    return (max(clamp_lo, min(clamp_hi, avg_spw + mid)),
+            max(clamp_lo, min(clamp_hi, avg_spw - mid)))
 
 
 def main():
@@ -734,23 +765,11 @@ def main():
         p_b = max(POINT_CLAMP[0], min(POINT_CLAMP[1], p_b))
 
         p_serve_return = prob_match_best_of_3(p_a, p_b)
-        # Venue SPW adjustment: use venue-adjusted p_a, p_b for expected games when tournament_serve_profile has data
-        p_a_eg, p_b_eg = p_a, p_b
-        if tid is not None:
-            venue_spw = venue_serve_lookup.get((tid, surface))
-            if venue_spw is not None and league_avg > 0:
-                speed_ratio = venue_spw / league_avg
-                speed_ratio = max(SPEED_RATIO_CLAMP[0], min(SPEED_RATIO_CLAMP[1], speed_ratio))
-                p_a_eg = max(0.50, min(0.80, p_a * speed_ratio))
-                p_b_eg = max(0.50, min(0.80, p_b * speed_ratio))
-        exp_games = expected_total_games_best_of_3(p_a_eg, p_b_eg)
-        tour_shift = tour_shift_lookup.get((tid, surface)) if tid is not None else None
-        if tour_shift is not None:
-            # Residual shift only (venue SPW adjustment does most of the work when tournament_serve_profile is populated)
-            raw_add = TOURNAMENT_TOTAL_WEIGHT * tour_shift
-            exp_games = exp_games + max(-TOURNAMENT_TOTAL_SHIFT_CAP, min(TOURNAMENT_TOTAL_SHIFT_CAP, raw_add))
-        # Soft clamp: bo3 realistic range [12, 48]; 38 was too low and clamped too many matches to same value
-        exp_games = max(12.0, min(48.0, exp_games))
+
+        # NOTE: p_a_eg / p_b_eg for E[G] and O/U are now computed AFTER p1_win
+        # is finalised (see "Solve SPW" block below). The old approach computed
+        # them here from the raw Barnett-Clarke ratio, which was inconsistent
+        # with the final match-win probability after Elo/rank blending.
         # ─── Elo + Rank ────────────────────────────────────────────
         # Sackmann: 50/50 blend of single-surface and overall Elo predicts best
         p_elo_surface = 1.0 / (1.0 + 10.0 ** ((e2_s - e1_s) / 400.0))
@@ -783,7 +802,11 @@ def main():
             # Normal blend: rank is 30% of the Elo component
             p_elo = (1.0 - RANK_ELO_BLEND) * p_elo + RANK_ELO_BLEND * p_rank
         # Confidence level based on data availability
-        if not has_s1 and not has_s2:
+        if both_elo_default and p_rank is None and not has_s1 and not has_s2:
+            # Truly zero data: no stats, no real Elo, no rank.
+            # Model output is meaningless (50/50 by construction).
+            confidence = "none"
+        elif not has_s1 and not has_s2:
             confidence = "low"
         elif not has_s1 or not has_s2:
             confidence = "low" if min(mc1_12, mc2_12) < 5 else "medium"
@@ -909,6 +932,53 @@ def main():
         p1_win += delta_p1
         p2_win -= delta_p1
 
+        # Normalize
+        tot = p1_win + p2_win
+        if tot > 0:
+            p1_win, p2_win = p1_win / tot, p2_win / tot
+        odds1 = 1.0 / p1_win if p1_win > 0 else 100.0
+        odds2 = 1.0 / p2_win if p2_win > 0 else 100.0
+
+        # ─── Solve SPW from final p1_win, then compute E[G] and O/U ──────
+        # avg_spw for this surface (used as centre point for the solve)
+        avg_spw_surface = league_avg_by_surface.get(surface, 0.64)
+        # Venue SPW adjustment: shift the centre point if we have tournament serve profile
+        if tid is not None:
+            venue_spw = venue_serve_lookup.get((tid, surface))
+            if venue_spw is not None:
+                avg_spw_surface = venue_spw  # use venue-specific SPW as centre
+        p_a_eg, p_b_eg = _solve_spw_for_match_prob(
+            p1_win, avg_spw_surface,
+            clamp_lo=POINT_CLAMP[0], clamp_hi=POINT_CLAMP[1]
+        )
+        exp_games = expected_total_games_best_of_3(p_a_eg, p_b_eg)
+
+        # Tournament residual shift (e.g. court speed effects not captured by venue SPW)
+        tour_shift = tour_shift_lookup.get((tid, surface)) if tid is not None else None
+        if tour_shift is not None:
+            raw_add = TOURNAMENT_TOTAL_WEIGHT * tour_shift
+            exp_games += max(-TOURNAMENT_TOTAL_SHIFT_CAP, min(TOURNAMENT_TOTAL_SHIFT_CAP, raw_add))
+        exp_games = max(12.0, min(48.0, exp_games))
+
+        # O/U: use STANDARD bookie lines (not centred on mean E[G]).
+        # Find the line where P(over) crosses 50% (median), then show that line ± 1 — like Pinnacle.
+        ou_data = {}
+        if confidence != "none":
+            line_probs = []
+            for line in STANDARD_OU_LINES:
+                p_over = prob_over_games(p_a_eg, p_b_eg, line)
+                p_over = max(0.01, min(0.99, p_over))
+                line_probs.append((line, p_over))
+            median_idx = min(range(len(line_probs)), key=lambda i: abs(line_probs[i][1] - 0.50))
+            median_idx = max(1, min(len(line_probs) - 2, median_idx))
+            for idx_offset, display_idx in enumerate(range(median_idx - 1, median_idx + 2)):
+                line, p_over = line_probs[display_idx]
+                fair_over = round(1.0 / p_over, 3)
+                fair_under = round(1.0 / (1.0 - p_over), 3)
+                ou_data[f"ou_line_{idx_offset + 1}"] = round(line, 1)
+                ou_data[f"ou_over_{idx_offset + 1}"] = fair_over
+                ou_data[f"ou_under_{idx_offset + 1}"] = fair_under
+
         if do_debug:
             n1, n2 = name_by_player.get(p1, ""), name_by_player.get(p2, "")
             n1_l, n2_l = n1.lower(), n2.lower()
@@ -924,30 +994,9 @@ def main():
                 o2 = 1.0 / p2_win if p2_win > 0 else 0
                 print(f"    Our fair odds: P1={o1:.2f} P2={o2:.2f}  (if P1 favoured, P1 odds should be lower e.g. ~1.2)")
                 print(f"    Expected total games: {exp_games:.1f}")
+                print(f"    p_a_eg={p_a_eg:.4f} p_b_eg={p_b_eg:.4f}  (solved from p1_win={p1_win:.4f}, avg_spw={avg_spw_surface:.3f})")
                 if (mc1 is not None and int(mc1 or 0) < 10) or (mc2 is not None and int(mc2 or 0) < 10):
                     print(f"    ^ Low match_count -> hold/return may be noisy. Re-run oncourt-compute-player-stats after fresh extract, or add prior when sample small.")
-
-        # Normalize
-        tot = p1_win + p2_win
-        if tot > 0:
-            p1_win, p2_win = p1_win / tot, p2_win / tot
-        odds1 = 1.0 / p1_win if p1_win > 0 else 100.0
-        odds2 = 1.0 / p2_win if p2_win > 0 else 100.0
-
-        # O/U: compute fair over/under prices at 3 half-integer lines around E[G]
-        primary_line = round(exp_games * 2) / 2.0
-        if primary_line == int(primary_line):
-            primary_line += 0.5
-        ou_lines = [primary_line - 1.0, primary_line, primary_line + 1.0]
-        ou_data = {}
-        for idx, line in enumerate(ou_lines, 1):
-            p_over = prob_over_games(p_a_eg, p_b_eg, line)
-            p_over = max(0.01, min(0.99, p_over))
-            fair_over = round(1.0 / p_over, 3)
-            fair_under = round(1.0 / (1.0 - p_over), 3)
-            ou_data[f"ou_line_{idx}"] = round(line, 1)
-            ou_data[f"ou_over_{idx}"] = fair_over
-            ou_data[f"ou_under_{idx}"] = fair_under
 
         out.append({
             "tour_id": tour_id,
@@ -971,11 +1020,11 @@ def main():
     print(f"  Fixture surfaces (from tour_id): {dict(surface_counts)}")
     print(f"  Skipped: no player1/player2 = {skip_no_players}")
     print(f"  Elo/rank fallback (missing stats): both = {skip_missing_both}, P1 only = {skip_missing_p1}, P2 only = {skip_missing_p2}")
-    conf_counts = {"high": 0, "medium": 0, "low": 0}
+    conf_counts = {"high": 0, "medium": 0, "low": 0, "none": 0}
     for row in out:
         c = row.get("confidence", "high")
         conf_counts[c] = conf_counts.get(c, 0) + 1
-    print(f"  Confidence: high={conf_counts['high']}, medium={conf_counts['medium']}, low={conf_counts['low']}")
+    print(f"  Confidence: high={conf_counts['high']}, medium={conf_counts['medium']}, low={conf_counts['low']}, none={conf_counts['none']}")
     if out:
         for row in out[:3]:
             print(f"  P1={row['player1_id']} P2={row['player2_id']} surface={row['surface']} P1={row['p1_win_prob']} odds1={row['odds1']} odds2={row['odds2']}")
@@ -1006,4 +1055,10 @@ def main():
 
 
 if __name__ == "__main__":
+    if "--test-solver" in sys.argv:
+        # Quick local check: 85% favourite -> E[G] ~22.5 (no Supabase needed)
+        p_a, p_b = _solve_spw_for_match_prob(0.85, 0.64, clamp_lo=POINT_CLAMP[0], clamp_hi=POINT_CLAMP[1])
+        eg = expected_total_games_best_of_3(p_a, p_b)
+        print(f"[--test-solver] p1_win=0.85 avg_spw=0.64 -> p_a={p_a:.3f} p_b={p_b:.3f} E[G]={eg:.1f} (expect ~22.5)")
+        sys.exit(0)
     main()

@@ -47,7 +47,7 @@ async function run(): Promise<Response> {
 
   const { data: oddsRows, error: oddsErr } = await supabase
     .from("daily_fair_odds")
-    .select("id, tour_id, player1_id, player2_id, surface, p1_win_prob, p2_win_prob, odds1, odds2, expected_total_games, ou_line_1, ou_over_1, ou_under_1, ou_line_2, ou_over_2, ou_under_2, ou_line_3, ou_over_3, ou_under_3")
+    .select("id, tour_id, player1_id, player2_id, surface, p1_win_prob, p2_win_prob, odds1, odds2, expected_total_games, ou_line_1, ou_over_1, ou_under_1, ou_line_2, ou_over_2, ou_under_2, ou_line_3, ou_over_3, ou_under_3, confidence")
     .order("tour_id")
     .order("draw")
     .order("round_id")
@@ -365,8 +365,9 @@ async function run(): Promise<Response> {
       pinnacle_ou_line: pinnacle?.pinnacle_ou_line,
       pinnacle_ou_over: pinnacle?.pinnacle_ou_over,
       pinnacle_ou_under: pinnacle?.pinnacle_ou_under,
-      value_p1: valueP1,
-      value_p2: valueP2,
+      value_p1: (r as { confidence?: string }).confidence === "none" ? undefined : valueP1,
+      value_p2: (r as { confidence?: string }).confidence === "none" ? undefined : valueP2,
+      confidence: (r as { confidence?: string }).confidence,
     };
   });
 
