@@ -399,24 +399,20 @@ export default function Home() {
                     </tr>
                   </thead>
                   <tbody>
-                    {pendingBets.map((bet) => {
-                      const href = bet.market === "tennis" ? "/tennis-tips#picks" : bet.market === "props" ? "/player-props#picks" : "#";
-                      return (
+                    {pendingBets.map((bet) => (
                         <tr
                           key={bet.id}
-                          className="border-b border-slate-700 hover:bg-slate-800/30 cursor-pointer"
-                          onClick={(e) => {
-                            const target = e.target as HTMLElement;
-                            // Allow clicks on bookmaker affiliate logos (or any nested link) to use their own link
-                            if (target.closest("a")) return;
-                            window.location.href = href;
-                          }}
+                          className="border-b border-slate-700 hover:bg-slate-800/30"
                         >
                           <td className="px-4 py-4 border-r border-slate-800/50">
                             <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
                           </td>
                           <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(bet.match_date)}</td>
-                          <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50 min-w-[140px] whitespace-nowrap">{bet.event}</td>
+                          <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50 min-w-[140px] whitespace-nowrap">
+                            <Link href={`/tips/${bet.id}`} className="hover:text-emerald-400 transition-colors">
+                              {bet.event}
+                            </Link>
+                          </td>
                           <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50 whitespace-nowrap">{bet.player || "–"}</td>
                           <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
                           <td className="px-4 py-4 text-center border-r border-slate-800/50">
@@ -429,16 +425,13 @@ export default function Home() {
                           </td>
                           <td className="px-4 py-4 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(bet.stake)}u</td>
                         </tr>
-                      );
-                    })}
+                      ))}
                   </tbody>
                 </table>
               </div>
               <div className="md:hidden divide-y divide-slate-600">
-                {pendingBets.map((bet) => {
-                  const href = bet.market === "tennis" ? "/tennis-tips#picks" : bet.market === "props" ? "/player-props#picks" : "#";
-                  return (
-                    <Link key={bet.id} href={href} className="block p-5 hover:bg-slate-800/30 active:bg-slate-800/40">
+                {pendingBets.map((bet) => (
+                    <Link key={bet.id} href={`/tips/${bet.id}`} className="block p-5 hover:bg-slate-800/30 active:bg-slate-800/40">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(bet.match_date)}</span>
                         <span className="text-xs font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-400">PENDING</span>
@@ -456,8 +449,7 @@ export default function Home() {
                         </div>
                       </div>
                     </Link>
-                  );
-                })}
+                ))}
               </div>
             </div>
           ) : (
@@ -514,24 +506,20 @@ export default function Home() {
                     </tr>
                   </thead>
                   <tbody>
-                    {recentBets.slice(0, 5).map((bet) => {
-                      const href = bet.market === "tennis" ? "/tennis-tips#picks" : bet.market === "props" ? "/player-props#picks" : "#";
-                      return (
-                        <tr 
-                          key={bet.id} 
-                          className="border-b border-slate-700 hover:bg-slate-800/30 cursor-pointer"
-                          onClick={(e) => {
-                            const target = e.target as HTMLElement;
-                            // Let clicks on bookmaker logos (affiliate links) and any nested links go through
-                            if (target.closest("a")) return;
-                            window.location.href = href;
-                          }}
+                    {recentBets.slice(0, 5).map((bet) => (
+                        <tr
+                          key={bet.id}
+                          className="border-b border-slate-700 hover:bg-slate-800/30"
                         >
                           <td className="px-4 py-4 border-r border-slate-800/50">
                             <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
                           </td>
                           <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(bet.match_date)}</td>
-                          <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50 min-w-[140px] whitespace-nowrap">{bet.event}</td>
+                          <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50 min-w-[140px] whitespace-nowrap">
+                            <Link href={`/tips/${bet.id}`} className="hover:text-emerald-400 transition-colors">
+                              {bet.event}
+                            </Link>
+                          </td>
                           <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50 whitespace-nowrap">{bet.player || "–"}</td>
                           <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{bet.selection}</td>
                           <td className="px-4 py-4 text-center border-r border-slate-800/50">
@@ -552,17 +540,14 @@ export default function Home() {
                             {bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}{bet.profit_loss?.toFixed(2) || "0.00"}u
                           </td>
                         </tr>
-                      );
-                    })}
+                      ))}
                   </tbody>
                 </table>
               </div>
               {/* Mobile Cards */}
               <div className="md:hidden divide-y divide-slate-600">
-                {recentBets.slice(0, 5).map((bet) => {
-                  const href = bet.market === "tennis" ? "/tennis-tips#picks" : bet.market === "props" ? "/player-props#picks" : "#";
-                  return (
-                    <Link key={bet.id} href={href} className="block p-5 hover:bg-slate-800/30 active:bg-slate-800/40">
+                {recentBets.slice(0, 5).map((bet) => (
+                    <Link key={bet.id} href={`/tips/${bet.id}`} className="block p-5 hover:bg-slate-800/30 active:bg-slate-800/40">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
@@ -589,8 +574,7 @@ export default function Home() {
                         </span>
                       </div>
                     </Link>
-                  );
-                })}
+                ))}
               </div>
             </div>
           ) : (

@@ -366,7 +366,11 @@ export default function PlayerProps() {
                           <MarketBadge market={pick.market} category={pick.category} hideOnMobile />
                         </td>
                         <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(pick.match_date)}</td>
-                        <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50">{pick.event}</td>
+                        <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50">
+                          <Link href={`/tips/${pick.id}`} className="hover:text-emerald-400 transition-colors">
+                            {pick.event}
+                          </Link>
+                        </td>
                         <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{pick.player || '-'}</td>
                         <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{pick.selection}</td>
                         <td className="px-4 py-4 text-center border-r border-slate-800/50">
@@ -397,7 +401,9 @@ export default function PlayerProps() {
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
                         </div>
-                        <div className="font-medium text-slate-200 mb-1">{pick.event}</div>
+                        <Link href={`/tips/${pick.id}`} className="font-medium text-slate-200 mb-1 hover:text-emerald-400 transition-colors block">
+                          {pick.event}
+                        </Link>
                         <div className="text-sm text-slate-400 mb-1">
                           {pick.player && <span>{pick.player} • </span>}
                           {pick.selection}
@@ -481,7 +487,11 @@ export default function PlayerProps() {
                           <MarketBadge market={result.market} category={result.category} hideOnMobile />
                         </td>
                         <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(result.match_date)}</td>
-                        <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50">{result.event}</td>
+                        <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50">
+                          <Link href={`/tips/${result.id}`} className="hover:text-emerald-400 transition-colors">
+                            {result.event}
+                          </Link>
+                        </td>
                         <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{result.player || '-'}</td>
                         <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{result.selection}</td>
                         <td className="px-4 py-4 text-center border-r border-slate-800/50">
@@ -515,7 +525,9 @@ export default function PlayerProps() {
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(result.match_date)}</span>
                         </div>
-                        <div className="font-medium text-slate-200 mb-1">{result.event}</div>
+                        <Link href={`/tips/${result.id}`} className="font-medium text-slate-200 mb-1 hover:text-emerald-400 transition-colors block">
+                          {result.event}
+                        </Link>
                         <div className="text-sm text-slate-400 mb-1">
                           {result.player && <span>{result.player} • </span>}
                           {result.selection}

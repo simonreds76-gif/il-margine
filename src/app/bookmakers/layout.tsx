@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { BASE_URL, BOOKMAKERS_INDEXABLE } from "@/lib/config";
 
 const title = "Recommended Bookmakers | 8 Field-Tested Operators & Betting Glossary";
@@ -28,10 +29,19 @@ export const metadata: Metadata = {
   },
 };
 
+/** William Hill affiliate impression script (S.ashx). Loads on /bookmakers so William Hill can track page views. */
+const WH_IMPRESSION_SCRIPT =
+  "https://campaigns.williamhill.com/S.ashx?btag=a_214702b_1456c_&affid=1744894&siteid=214702&adid=1456&c=";
+
 export default function BookmakersLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      <Script src={WH_IMPRESSION_SCRIPT} strategy="lazyOnload" />
+      {children}
+    </>
+  );
 }

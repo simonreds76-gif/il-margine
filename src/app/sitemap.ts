@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next';
 import { BASE_URL, BOOKMAKERS_INDEXABLE } from '@/lib/config';
+import { supabase } from '@/lib/supabase';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [
     {
       url: BASE_URL,
@@ -114,5 +115,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
   ];
+
+  // Individual tip pages (so Google can index e.g. "Sakatsume vs Parks")
+  try {
+    const { data: bets } = await supabase
+      .from('bets')
+      .select('id, posted_at, settled_at')
+      .order('posted_at', { ascending: false })
+      .limit(500);
+    if (bets?.length) {
+      for (const bet of bets) {
+        const lastMod = bet.settled_at || bet.posted_at;
+        entries.push({
+          url: `${BASE_URL}/tips/${bet.id}`,
+          lastModified: lastMod ? new Date(lastMod) : new Date(),
+          changeFrequency: 'weekly' as const,
+          priority: 0.6,
+        });
+      }
+    }
+  } catch {
+    // Supabase may be unavailable at build time; static entries still work
+  }
+
   return entries;
 }
