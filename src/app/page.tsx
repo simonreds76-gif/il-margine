@@ -10,6 +10,7 @@ import MarketBadge from "@/components/MarketBadge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
+import { slugifyTip } from "@/lib/slugify";
 
 interface CombinedMarketStats {
   total_bets: number;
@@ -409,7 +410,7 @@ export default function Home() {
                           </td>
                           <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(bet.match_date)}</td>
                           <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50 min-w-[140px] whitespace-nowrap">
-                            <Link href={`/tips/${bet.id}`} className="hover:text-emerald-400 transition-colors">
+                            <Link href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="hover:text-emerald-400 transition-colors">
                               {bet.event}
                             </Link>
                           </td>
@@ -431,7 +432,7 @@ export default function Home() {
               </div>
               <div className="md:hidden divide-y divide-slate-600">
                 {pendingBets.map((bet) => (
-                    <Link key={bet.id} href={`/tips/${bet.id}`} className="block p-5 hover:bg-slate-800/30 active:bg-slate-800/40">
+                    <Link key={bet.id} href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="block p-5 hover:bg-slate-800/30 active:bg-slate-800/40">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(bet.match_date)}</span>
                         <span className="text-xs font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-400">PENDING</span>
@@ -516,7 +517,7 @@ export default function Home() {
                           </td>
                           <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(bet.match_date)}</td>
                           <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50 min-w-[140px] whitespace-nowrap">
-                            <Link href={`/tips/${bet.id}`} className="hover:text-emerald-400 transition-colors">
+                            <Link href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="hover:text-emerald-400 transition-colors">
                               {bet.event}
                             </Link>
                           </td>
@@ -547,7 +548,7 @@ export default function Home() {
               {/* Mobile Cards */}
               <div className="md:hidden divide-y divide-slate-600">
                 {recentBets.slice(0, 5).map((bet) => (
-                    <Link key={bet.id} href={`/tips/${bet.id}`} className="block p-5 hover:bg-slate-800/30 active:bg-slate-800/40">
+                    <Link key={bet.id} href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="block p-5 hover:bg-slate-800/30 active:bg-slate-800/40">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">

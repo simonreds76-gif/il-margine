@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { supabase } from "@/lib/supabase";
 import { BASE_URL } from "@/lib/config";
+import { slugifyTip, parseTipSlugId } from "@/lib/slugify";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import MarketBadge from "@/components/MarketBadge";
 import Footer from "@/components/Footer";
@@ -11,8 +12,15 @@ import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
 /** Revalidate tip pages every 60s so settled status and new tips show without full dynamic. */
 export const revalidate = 60;
 
+/** Spell out common abbreviations on the tip page (no need to shorten here). */
+function displaySelection(selection: string): string {
+  const s = (selection || "").trim();
+  if (s.toUpperCase() === "ML") return "Moneyline";
+  return s;
+}
+
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slugId: string }>;
 }
 
 async function getBet(id: number) {
@@ -26,18 +34,19 @@ async function getBet(id: number) {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = await params;
-  const idNum = parseInt(id, 10);
-  if (isNaN(idNum)) return { title: "Tip not found" };
-  const bet = await getBet(idNum);
+  const { slugId } = await params;
+  const id = parseTipSlugId(slugId);
+  if (id === null) return { title: "Tip not found" };
+  const bet = await getBet(id);
   if (!bet) return { title: "Tip not found" };
 
+  const canonicalSlug = slugifyTip(bet.event, bet.id);
   const title = `${bet.event} – ${bet.selection} | Betting Tip`;
   const description =
     bet.market === "tennis"
       ? `Tennis tip: ${bet.event}. ${bet.selection} at ${formatOdds(bet.odds)}. ${bet.category}. Il Margine.`
       : `Player props tip: ${bet.event}. ${bet.player ? bet.player + " – " : ""}${bet.selection} at ${formatOdds(bet.odds)}. Il Margine.`;
-  const url = `${BASE_URL}/tips/${id}`;
+  const url = `${BASE_URL}/tips/${canonicalSlug}`;
 
   return {
     title,
@@ -61,11 +70,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function TipPage({ params }: PageProps) {
-  const { id } = await params;
-  const idNum = parseInt(id, 10);
-  if (isNaN(idNum)) notFound();
-  const bet = await getBet(idNum);
+  const { slugId } = await params;
+  const id = parseTipSlugId(slugId);
+  if (id === null) notFound();
+  const bet = await getBet(id);
   if (!bet) notFound();
+
+  const canonicalSlug = slugifyTip(bet.event, bet.id);
+  if (slugId !== canonicalSlug) {
+    redirect(`/tips/${canonicalSlug}`);
+  }
 
   const listHref = bet.market === "tennis" ? "/tennis-tips" : bet.market === "props" ? "/player-props" : "/";
   const listLabel = bet.market === "tennis" ? "Tennis Tips" : bet.market === "props" ? "Player Props" : "Home";
@@ -96,7 +110,7 @@ export default async function TipPage({ params }: PageProps) {
             <span className="text-emerald-400">Tip</span>
           </div>
 
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-6">
             <MarketBadge market={bet.market} category={bet.category} />
             <span className="text-xs font-mono px-2 py-1 rounded border border-slate-700 text-slate-400">
               {formatMatchDate(bet.match_date)}
@@ -104,28 +118,40 @@ export default async function TipPage({ params }: PageProps) {
             <span className={`text-xs font-mono px-2 py-1 rounded ${statusClass}`}>{statusLabel}</span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-semibold text-slate-100 mb-2">{bet.event}</h1>
-          {bet.player && (
-            <p className="text-slate-400 text-sm mb-4">
-              {bet.player}
-            </p>
+          {/* The pick is the hero – large and bold. Match is context. */}
+          {bet.player ? (
+            <>
+              <p className="text-slate-500 text-sm font-medium uppercase tracking-wider mb-1">Pick</p>
+              <h1 className="text-4xl sm:text-5xl font-bold text-slate-100 tracking-tight mb-2">
+                {bet.player}
+              </h1>
+              <p className="text-lg text-slate-400 mb-8">{bet.event}</p>
+            </>
+          ) : (
+            <>
+              <p className="text-slate-500 text-sm font-medium uppercase tracking-wider mb-1">Pick</p>
+              <h1 className="text-4xl sm:text-5xl font-bold text-slate-100 tracking-tight mb-2">
+                {displaySelection(bet.selection)}
+              </h1>
+              <p className="text-lg text-slate-400 mb-8">{bet.event}</p>
+            </>
           )}
 
-          <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-6 space-y-4">
+          <div className="bg-slate-900/60 rounded-xl border border-slate-700/80 p-6 space-y-4 shadow-lg">
             <div className="flex justify-between items-center">
-              <span className="text-slate-500">Selection</span>
-              <span className="font-medium text-slate-200">{bet.selection}</span>
+              <span className="text-slate-500 text-sm">Market</span>
+              <span className="font-medium text-slate-200">{displaySelection(bet.selection)}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-slate-500">Odds</span>
-              <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
+              <span className="text-slate-500 text-sm">Odds</span>
+              <span className="font-mono text-lg font-semibold text-slate-100">{formatOdds(bet.odds)}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-slate-500">Stake</span>
+              <span className="text-slate-500 text-sm">Stake</span>
               <span className="font-mono text-slate-200">{formatStake(bet.stake)}u</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-slate-500">Bookmaker</span>
+              <span className="text-slate-500 text-sm">Bookmaker</span>
               <div className="flex items-center justify-end">
                 <BookmakerLogo
                   bookmaker={Array.isArray(bet.bookmaker) ? bet.bookmaker[0] : bet.bookmaker}

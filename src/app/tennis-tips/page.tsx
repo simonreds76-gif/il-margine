@@ -10,6 +10,7 @@ import MarketBadge from "@/components/MarketBadge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
+import { slugifyTip } from "@/lib/slugify";
 
 export default function TennisTips() {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -356,7 +357,7 @@ export default function TennisTips() {
                         </td>
                         <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(pick.match_date)}</td>
                         <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50">
-                          <Link href={`/tips/${pick.id}`} className="hover:text-emerald-400 transition-colors">
+                          <Link href={`/tips/${slugifyTip(pick.event, pick.id)}`} className="hover:text-emerald-400 transition-colors">
                             {pick.event}
                           </Link>
                         </td>
@@ -390,7 +391,7 @@ export default function TennisTips() {
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
                         </div>
-                        <Link href={`/tips/${pick.id}`} className="font-medium text-slate-200 mb-1 hover:text-emerald-400 transition-colors block">
+                        <Link href={`/tips/${slugifyTip(pick.event, pick.id)}`} className="font-medium text-slate-200 mb-1 hover:text-emerald-400 transition-colors block">
                           {pick.event}
                         </Link>
                         <div className="text-sm text-slate-400">
@@ -472,7 +473,7 @@ export default function TennisTips() {
                         </td>
                         <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(result.match_date)}</td>
                         <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50">
-                          <Link href={`/tips/${result.id}`} className="hover:text-emerald-400 transition-colors">
+                          <Link href={`/tips/${slugifyTip(result.event, result.id)}`} className="hover:text-emerald-400 transition-colors">
                             {result.event}
                           </Link>
                         </td>
@@ -509,7 +510,7 @@ export default function TennisTips() {
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(result.match_date)}</span>
                         </div>
-                        <Link href={`/tips/${result.id}`} className="font-medium text-slate-200 mb-1 hover:text-emerald-400 transition-colors block">
+                        <Link href={`/tips/${slugifyTip(result.event, result.id)}`} className="font-medium text-slate-200 mb-1 hover:text-emerald-400 transition-colors block">
                           {result.event}
                         </Link>
                         <div className="text-sm text-slate-400">
