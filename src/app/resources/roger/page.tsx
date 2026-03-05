@@ -99,7 +99,7 @@ export default function RogerPage() {
             <Link href="/contact" className="text-emerald-400 hover:text-emerald-300 underline">
               Contact us
             </Link>
-            {" "}(<a href="mailto:contact@ilmargine.bet" className="text-emerald-400 hover:text-emerald-300 underline">contact@ilmargine.bet</a>).
+            .
           </p>
         </div>
       </section>
