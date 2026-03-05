@@ -32,7 +32,15 @@ export const RESOURCES: Resource[] = [
     description:
       "Master the mathematics of optimal bet sizing. Learn how professional bettors use the Kelly Criterion to maximize bankroll growth while controlling risk. Covers fractional Kelly, player props, tennis, and practical implementation.",
     minRead: 13,
-    category: "Bankroll Management",
+    category: "Tools",
+  },
+  {
+    href: "/calculator",
+    title: "ROI & Kelly Calculator",
+    description:
+      "Bankroll calculator using our verified track record. Kelly Criterion calculator for optimal stake sizing. One-tenth Kelly for props, quarter Kelly for tennis.",
+    minRead: 2,
+    category: "Tools",
   },
   {
     href: "/resources/roger",

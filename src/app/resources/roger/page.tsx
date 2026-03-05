@@ -42,6 +42,9 @@ export default function RogerPage() {
           <p className="text-lg text-slate-300 leading-relaxed mb-4">
             Roger is our tennis stats chatbot, named in honour of Roger Federer. Ask about ATP head to head records, tournament history, serve stats, player records at venues, and more. Anything relevant to tennis to enhance your betting.
           </p>
+          <p className="text-sm text-slate-500 leading-relaxed mb-2">
+            Limits may apply during peak usage.
+          </p>
           <p className="text-sm text-slate-500 leading-relaxed mb-6">
             Player records and head-to-head use full ATP history. Fav/dog ROI and betting stats are based on the last four years.
           </p>
@@ -75,7 +78,7 @@ export default function RogerPage() {
             <li>• How favourites or underdogs do at a tournament (ROI, last 4 years)</li>
           </ul>
           <p className="text-sm text-slate-500 mt-4">
-            Any tips or views are based solely on our stats and data. We don&apos;t speculate beyond what the numbers show.
+            Any tips or views from Roger are based solely on our stats and data. Roger doesn&apos;t speculate beyond what the numbers show.
           </p>
 
           <h2 className="text-xl font-semibold text-slate-100 mt-10 mb-4">Try asking (click to get an answer)</h2>
