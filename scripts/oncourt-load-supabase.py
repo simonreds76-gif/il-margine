@@ -24,7 +24,17 @@ import requests
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "oncourt"
+MIGRATION_SQL = ROOT / "docs" / "supabase-player-hand-reference-fix.sql"
 BATCH = 5000
+HAND_SOURCE_CANDIDATES = (
+    "oncourt",
+    "categories_atp",
+    "oncourt_categories",
+    "manual",
+    "atp",
+    "import",
+    "script",
+)
 
 QUICK = "--quick" in sys.argv
 RECENT = "--recent" in sys.argv
@@ -139,6 +149,251 @@ def _dedup(data, key_cols):
             seen.add(k)
             out.append(row)
     return out
+
+
+def _load_known_player_ids(data_dir):
+    path = data_dir / "players_atp.csv"
+    if not path.exists():
+        return set()
+    ids = set()
+    with open(path, "r", encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            pid = row.get("id")
+            if not pid:
+                continue
+            try:
+                ids.add(int(pid))
+            except ValueError:
+                continue
+    return ids
+
+
+def _run_hand_reference_migration():
+    """Run migration via psycopg2 if DATABASE_URL is set. Returns True if run successfully."""
+    db_url = os.environ.get("DATABASE_URL") or os.environ.get("SUPABASE_DB_URL")
+    if not db_url or not MIGRATION_SQL.exists():
+        return False
+    try:
+        import psycopg2
+        sql = MIGRATION_SQL.read_text(encoding="utf-8")
+        conn = psycopg2.connect(db_url)
+        conn.autocommit = True
+        cur = conn.cursor()
+        cur.execute(sql)
+        cur.close()
+        conn.close()
+        print("  Applied player_hand_reference fix (DATABASE_URL).")
+        return True
+    except Exception as e:
+        print(f"  Migration failed: {e}")
+        return False
+
+
+def _is_source_constraint_error(text: str) -> bool:
+    if not text:
+        return False
+    t = text.lower()
+    return (
+        "player_hand_reference_source_check" in t
+        or ("source" in t and "check" in t)
+        or 'null value in column "source"' in t
+    )
+
+
+def _is_source_column_missing_error(text: str) -> bool:
+    if not text:
+        return False
+    t = text.lower()
+    return 'column "source" does not exist' in t
+
+
+def _player_hand_payload(rows, source_value):
+    if source_value is None:
+        return [{"player_id": r["player_id"], "hand": "L"} for r in rows]
+    return [{"player_id": r["player_id"], "hand": "L", "source": source_value} for r in rows]
+
+
+def _post_player_hand_rows(rows, source_value, retries=2):
+    url = f"{SUPABASE_URL}/rest/v1/player_hand_reference?on_conflict=player_id"
+    payload = _player_hand_payload(rows, source_value)
+    hdrs = _headers()
+    hdrs["Prefer"] = "resolution=merge-duplicates,return=minimal"
+    last_status = 0
+    last_text = ""
+    for attempt in range(1, retries + 1):
+        try:
+            resp = requests.post(url, json=payload, headers=hdrs, timeout=120)
+            if resp.ok:
+                return True, resp.status_code, ""
+            last_status = resp.status_code
+            last_text = resp.text or ""
+        except requests.RequestException as e:
+            last_status = -1
+            last_text = str(e)
+        if attempt < retries:
+            _sleep(2 ** attempt)
+    return False, last_status, last_text
+
+
+def _delete_existing_lefties(retries=2):
+    url = f"{SUPABASE_URL}/rest/v1/player_hand_reference"
+    hdrs = _headers()
+    hdrs["Prefer"] = "return=minimal"
+    last_status = 0
+    last_text = ""
+    for attempt in range(1, retries + 1):
+        try:
+            resp = requests.delete(url, headers=hdrs, params={"hand": "eq.L"}, timeout=60)
+            if resp.ok:
+                return True, resp.status_code, ""
+            last_status = resp.status_code
+            last_text = resp.text or ""
+        except requests.RequestException as e:
+            last_status = -1
+            last_text = str(e)
+        if attempt < retries:
+            _sleep(2 ** attempt)
+    return False, last_status, last_text
+
+
+def _detect_player_hand_has_source_column():
+    url = f"{SUPABASE_URL}/rest/v1/player_hand_reference"
+    try:
+        resp = requests.get(url, headers=_headers(), params={"select": "source", "limit": 1}, timeout=30)
+    except requests.RequestException:
+        return None
+    if resp.ok:
+        return True
+    if _is_source_column_missing_error(resp.text):
+        return False
+    return None
+
+
+def _fetch_existing_player_hand_sources():
+    url = f"{SUPABASE_URL}/rest/v1/player_hand_reference"
+    try:
+        resp = requests.get(
+            url,
+            headers=_headers(),
+            params={"select": "source", "source": "not.is.null", "limit": 2000},
+            timeout=30,
+        )
+    except requests.RequestException:
+        return []
+    if not resp.ok:
+        return []
+    out = []
+    seen = set()
+    try:
+        data = resp.json()
+    except ValueError:
+        return []
+    if not isinstance(data, list):
+        return []
+    for row in data:
+        source = row.get("source")
+        if not isinstance(source, str):
+            continue
+        source = source.strip()
+        if not source or source in seen:
+            continue
+        seen.add(source)
+        out.append(source)
+    return out
+
+
+def _resolve_player_hand_source_mode(rows):
+    sample = rows[: min(25, len(rows))]
+    has_source_column = _detect_player_hand_has_source_column()
+    candidates = []
+    if has_source_column is False:
+        candidates = [None]
+    else:
+        for value in _fetch_existing_player_hand_sources():
+            if value not in candidates:
+                candidates.append(value)
+        for value in HAND_SOURCE_CANDIDATES:
+            if value not in candidates:
+                candidates.append(value)
+        candidates.append(None)
+
+    tried = []
+    for source_value in candidates:
+        ok, status, err_text = _post_player_hand_rows(sample, source_value, retries=1)
+        label = source_value if source_value is not None else "<omit>"
+        if ok:
+            if tried:
+                print(f"  player_hand_reference: source negotiation -> {label}")
+            return source_value
+        tried.append((label, status))
+
+    if _run_hand_reference_migration():
+        for source_value in ("oncourt", None):
+            ok, status, err_text = _post_player_hand_rows(sample, source_value, retries=1)
+            label = source_value if source_value is not None else "<omit>"
+            if ok:
+                print(f"  player_hand_reference: source negotiation after migration -> {label}")
+                return source_value
+            tried.append((f"{label} (post-migration)", status))
+
+    summary = ", ".join(f"{label}:{status}" for label, status in tried[-8:])
+    raise RuntimeError(f"source negotiation failed ({summary})")
+
+
+def _load_player_hand(data_dir):
+    """Load player_hand_reference from categories_atp.csv (cat1=True = left-handed)."""
+    path = data_dir / "categories_atp.csv"
+    if not path.exists():
+        print("  player_hand_reference: SKIPPED (categories_atp.csv not found)")
+        return False
+    rows = []
+    with open(path, "r", encoding="utf-8-sig", newline="") as f:
+        for r in csv.DictReader(f):
+            pid = r.get("player_id")
+            if not pid:
+                continue
+            try:
+                pid = int(pid)
+            except ValueError:
+                continue
+            if str(r.get("cat1") or "").strip().lower() == "true":
+                rows.append({"player_id": pid, "hand": "L"})
+
+    if rows:
+        known_player_ids = _load_known_player_ids(data_dir)
+        if known_player_ids:
+            before = len(rows)
+            rows = [r for r in rows if r["player_id"] in known_player_ids]
+            skipped = before - len(rows)
+            if skipped:
+                print(f"  player_hand_reference: skipped {skipped:,} rows (player_id missing in players_atp.csv)")
+
+    if not rows:
+        print("  player_hand_reference: 0 lefties (no cat1=True in categories_atp.csv)")
+        return True
+    try:
+        source_mode = _resolve_player_hand_source_mode(rows)
+    except RuntimeError as e:
+        print(f"  ERROR: player_hand_reference: {e}")
+        return False
+
+    ok, status, err_text = _delete_existing_lefties(retries=3)
+    if not ok:
+        print(f"  ERROR: player_hand_reference delete existing lefties failed status={status}: {err_text[:220]}")
+        return False
+
+    for i in range(0, len(rows), BATCH):
+        batch = rows[i : i + BATCH]
+        ok, status, err_text = _post_player_hand_rows(batch, source_mode, retries=3)
+        if not ok:
+            mode = source_mode if source_mode is not None else "<omit>"
+            print(f"  ERROR: player_hand_reference batch failed ({mode}) status={status}: {err_text[:220]}")
+            if _is_source_constraint_error(err_text):
+                print("  Hint: source constraint rejected all negotiated payloads.")
+            return False
+    mode = source_mode if source_mode is not None else "<omit>"
+    print(f"  player_hand_reference: {len(rows):,} left-handed players (source={mode})")
+    return True
 
 
 def _upload_batched(table, rows, on_conflict, transform_fn, label=None):
@@ -286,7 +541,12 @@ def main():
             },
         )
 
-    # 6. Today (delete + insert fresh)
+    # 6. player_hand_reference (lefties from categories_atp.csv, cat1=True)
+    if not _load_player_hand(DATA_DIR):
+        print("ERROR: player_hand_reference load failed; stopping sync to avoid stale leftie data.")
+        sys.exit(1)
+
+    # 7. Today (delete + insert fresh)
     rows = load_csv(DATA_DIR / "today_atp.csv")
     if rows:
         data = [

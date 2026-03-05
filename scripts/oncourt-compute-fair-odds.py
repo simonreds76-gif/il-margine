@@ -17,6 +17,7 @@ from datetime import date
 # Project root for tennis_prob
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from src.lib.tennis_prob import prob_match_best_of_3, expected_total_games_best_of_3, prob_over_games
+from injury_overlay import env_bool, load_recent_injury_index
 
 def load_env():
     base = os.path.dirname(os.path.abspath(__file__))
@@ -34,75 +35,160 @@ def load_env():
 
 load_env()
 
-# ─── CALIBRATION CONSTANTS (2026-03-02 tuning) ─────────────────────
-#
-# P = w*P_elo + (1-w)*P_serve_return.
-# Default 55% Elo / 45% serve-return; adaptive by sample size (see below).
-# Rationale: serve/return stats are noisy game-level proxies for point probs.
-# At Challenger level with <20 matches, Elo+rank is more reliable.
-HYBRID_ELO_WEIGHT_DEFAULT = 0.55   # was 0.40; Elo is more stable than noisy serve/return
-HYBRID_ELO_WEIGHT_MIN_MATCHES = 30  # was 20; only trust serve/return more when well-sampled
-POINT_CLAMP = (0.48, 0.82)   # realistic SPW range (0.01/0.99 was too wide, let junk through K-M)
+# ─── CALIBRATION CONSTANTS (Codex full calibration pass) ───────────
+HYBRID_ELO_WEIGHT_DEFAULT = 0.58
+HYBRID_ELO_WEIGHT_MIN_MATCHES = 28
+POINT_CLAMP = (0.42, 0.80)
+RETURN_CLAMP = (0.20, 0.55)
 DEFAULT_ELO = 1500
-# Standard bookie O/U lines for ATP bo3 — we price at these instead of centring on mean E[G]
-STANDARD_OU_LINES = [19.5, 20.5, 21.5, 22.5, 23.5, 24.5, 25.5]
-# Vs leftie: adjustment from win_pct_vs_leftie (default 0.5)
+# Market-like half-point menu. We still publish 3 lines per match, centered on
+# the model median, but draw from a broader realistic set.
+STANDARD_OU_LINES = [x + 0.5 for x in range(18, 28)]  # 18.5 .. 27.5
+# O/U calibration: model has been running high on totals; shift thresholds up
+# when pricing P(over), equivalent to shifting our distribution left.
+OU_LINE_SHIFT_BY_SURFACE = {"Hard": 2.6, "Clay": 2.9, "Grass": 1.8, "I.hard": 2.4, "N/A": 2.5}
+OU_CHALLENGER_EXTRA_SHIFT = 0.35
+OU_ATP_MAIN_TOUR_EXTRA_SHIFT = -0.15
+
 VS_LEFTIE_WEIGHT = 0.03
 VS_LEFTIE_CAP = 0.015
-# Vs big server (hold_pct >= 0.68 on surface): adjustment from win_pct_vs_big_server
 VS_BIG_SERVER_WEIGHT = 0.03
 VS_BIG_SERVER_CAP = 0.015
 BIG_SERVER_HOLD_PCT = 0.68
-# Long-window: base blend 12m vs 36m; overridden by adaptive blend when match_count available
 BLEND_RECENT_WEIGHT = 0.5
-# Venue (same-event): lifetime win rate at this tournament
+
 VENUE_WEIGHT = 0.025
 VENUE_CAP = 0.015
-# Altitude: at high altitude serve is more effective
 ALTITUDE_WEIGHT = 0.03
 ALTITUDE_CAP = 0.02
-ALTITUDE_THRESHOLD_M = 200   # only adjust when venue altitude >= this (metres)
-# Age: small modifier (prime 22-30, decline after 30)
+ALTITUDE_THRESHOLD_M = 200
 AGE_CAP = 0.01
-# Rank: blend with Elo.
-# 0.30 so rank is a significant input (especially for Challengers where Elo may be default 1500).
-# Was 0.15 which made rank a tiebreaker with only 6% total influence — far too low.
-RANK_ELO_BLEND = 0.30   # was 0.15
-# Log-rank scale for ATP ranking → win probability.
-# Old value 1.1 was catastrophically wrong: rank 100 vs 300 → 91% (absurd).
-# New value 3.5: rank 100 vs 300 → 67%, rank 50 vs 200 → 71% (realistic).
-LOG_RANK_SCALE = 3.5   # was 1.1
-# Shrinkage toward surface average when match count is low (hold/return noisy).
-# With N=40: 10 matches → alpha=0.20 (20% raw stats), 20 → 0.33, 40 → 0.50.
-# Was N=15 which gave 40% weight to 10-match stats (way too trusting of noise).
-SHRINKAGE_N = 40   # was 15
-# League avg serve point win % by surface (for ratio-based p_a/p_b; Barnett-Clarke). Replace with DB-computed if available.
+
+RANK_LOGIT_SCALE = 0.95
+RANK_CLASS_GAP_RATIO_START = 1.40
+RANK_CLASS_GAP_CAP = 0.07
+RANK_POINTS_BLEND = 0.35
+POINTS_LOGIT_SCALE = 1.25
+POINTS_MIN_BASE = 5.0
+
+SHRINKAGE_N = 40
 SURFACE_LEAGUE_AVG = {"Hard": 0.64, "Clay": 0.62, "Grass": 0.67, "I.hard": 0.64, "N/A": 0.64}
-# Surface averages for shrinkage (hold, return) when match_count is low
-SURFACE_AVG_HOLD = {"Hard": 0.64, "Clay": 0.62, "Grass": 0.67, "I.hard": 0.64, "N/A": 0.64}
-SURFACE_AVG_RETURN = {"Hard": 0.36, "Clay": 0.38, "Grass": 0.33, "I.hard": 0.36, "N/A": 0.36}
-# Tournament totals: residual shift after venue-SPW adjustment (Claude: reduce from 0.5 to 0.2, cap ±1.5)
+
+# Raw-scale priors from player_surface_stats distribution (fallbacks; overridden by DB-derived priors)
+SURFACE_AVG_HOLD = {"Hard": 0.4342, "Clay": 0.4189, "Grass": 0.5053, "I.hard": 0.5099, "N/A": 0.44}
+SURFACE_AVG_RETURN = {"Hard": 0.3467, "Clay": 0.3643, "Grass": 0.3166, "I.hard": 0.3413, "N/A": 0.35}
+
 TOURNAMENT_TOTAL_WEIGHT = 0.20
 TOURNAMENT_TOTAL_SHIFT_CAP = 1.5
-# Only use a tour's shift when it has at least this many matches (noisy otherwise)
 MIN_TOUR_MATCHES_FOR_SHIFT = 30
-# Venue SPW: min matches to use tournament_serve_profile (Claude: 50)
 MIN_VENUE_SPW_MATCHES = 50
 SPEED_RATIO_CLAMP = (0.92, 1.08)
-# Form/fatigue (player_recent_activity): three factors combined, then net delta cap
-FORM_WEIGHT = 0.06
-FORM_CAP = 0.02
-FORM_MIN_MATCHES = 3   # need 3+ matches in 21d to apply form signal
-FATIGUE_PLAYED_YESTERDAY = 0.008   # penalty (we apply as negative)
-FATIGUE_DENSE_5D = 0.007           # 3+ matches in 5 days
-FATIGUE_MODERATE_COMPOUND = 0.004  # 2 in 5d AND played yesterday
+
+FORM_WEIGHT = 0.07
+FORM_CAP = 0.03
+FORM_MIN_MATCHES = 3
+FATIGUE_PLAYED_YESTERDAY = 0.008
+FATIGUE_DENSE_5D = 0.007
+FATIGUE_MODERATE_COMPOUND = 0.004
 FATIGUE_CAP = 0.015
-RUST_THRESHOLD_MODERATE = 28       # days without match → moderate rust
-RUST_THRESHOLD_SEVERE = 42         # days → significant rust
+RUST_THRESHOLD_MODERATE = 28
+RUST_THRESHOLD_SEVERE = 42
 RUST_PENALTY_MODERATE = 0.008
 RUST_PENALTY_SEVERE = 0.015
 RUST_CAP = 0.015
-FORM_TOTAL_CAP = 0.025
+FORM_TOTAL_CAP = 0.05
+
+# Explicit match-result form features (from oncourt_games)
+RESULTS_LOOKBACK_YEARS = 5
+YTD_FORM_MIN_MATCHES = 5
+YTD_FORM_WEIGHT = 0.07
+YTD_FORM_CAP = 0.03
+LAST5_FORM_MIN_MATCHES = 3
+LAST5_FORM_WEIGHT = 0.04
+LAST5_FORM_CAP = 0.015
+STREAK_SOFT_START = 3
+STREAK_HARD_START = 6
+STREAK_UNIT = 0.004
+STREAK_CAP = 0.03
+RESULTS_FORM_TOTAL_CAP = 0.08
+
+# Same-tournament history (past years by normalized tournament key)
+TOURNAMENT_HISTORY_MIN_MATCHES = 2
+TOURNAMENT_HISTORY_WEIGHT = 0.08
+TOURNAMENT_HISTORY_CAP = 0.03
+TOURNAMENT_HISTORY_PRIOR_K = 3.0
+TOURNAMENT_HISTORY_PRIOR_P = 0.5
+
+# Rank prior downweight when player is in form crisis
+FORM_CRISIS_LOSS_STREAK = 4
+FORM_CRISIS_YTD_MIN_MATCHES = 6
+FORM_CRISIS_YTD_WINRATE_MAX = 0.30
+RANK_WEIGHT_CRISIS_MULT = 0.25
+RANK_WEIGHT_CRISIS_OPPOSED_MULT = 0.85
+FORM_CRISIS_SHOCK_BASE = 0.020
+FORM_CRISIS_SHOCK_STREAK_UNIT = 0.010
+FORM_CRISIS_SHOCK_YTD_BONUS = 0.015
+FORM_CRISIS_SHOCK_CAP = 0.070
+
+# Allow larger adjustment when confidence is high
+DELTA_CAP_HIGH = 0.14
+DELTA_CAP_MEDIUM = 0.10
+DELTA_CAP_LOW = 0.08
+DELTA_COMPONENT_SUM_CAP_FACTOR = 0.60
+DELTA_COMPONENT_SUM_CAP_MAX = 0.20
+
+H2H_MIN_MATCHES = 5
+H2H_WEIGHT = 0.03
+H2H_CAP = 0.02
+
+ADV_MIN_MATCHES = 12
+ADV_SERVE_MATCHUP_WEIGHT = 0.10
+ADV_CLUTCH_WEIGHT = 0.05
+ADV_DISCIPLINE_WEIGHT = 0.03
+ADV_TOTAL_CAP = 0.015
+
+INCLUDE_TOUR_RANK_MAX = 3
+UNKNOWN_PLAYER_IDS = {3699, 3700}
+
+ELO_RELIABILITY_MIN = 0.50
+ELO_STALE_WEIGHT_CAP = 0.30
+MISSING_ACTIVITY_BASE_PENALTY = 0.010
+MISSING_ACTIVITY_AGE_START = 31
+MISSING_ACTIVITY_AGE_WEIGHT = 0.0020
+MISSING_ACTIVITY_PENALTY_CAP = 0.035
+
+# Post-hoc probability calibration (fit on historical backtest; 2024 train).
+# Favorite-space Platt transform blended by tour tier to avoid overcorrection
+# on event classes where raw priors are already strong.
+PROB_CAL_A = 0.173
+PROB_CAL_B = 0.512
+PROB_CAL_SERIES_BLEND = {
+    "ATP250": 0.35,
+    "Masters 1000": 1.00,
+    "ATP500": 0.35,
+    "Grand Slam": 0.00,
+    "Masters Cup": 0.00,
+}
+SERIES_FAVORITE_PROB_CAP = {
+    "ATP250": {"high": 0.89, "medium": 0.85, "low": 0.82},
+}
+DEFAULT_INJURY_CSV = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "data",
+    "injured-players-tennisexplorer.csv",
+)
+DEFAULT_FAIR_ODDS_INJURY_LOOKBACK_DAYS = 14
+DEFAULT_FAIR_ODDS_INJURY_DELTA = 0.02
+
+# Optional tournament CPI (surface-speed) overlay from Tennis Abstract.
+# Keep OFF by default and validate before enabling live.
+DEFAULT_CPI_LOOKBACK_YEARS = 3
+DEFAULT_CPI_MATCH_WEIGHT = 0.025
+DEFAULT_CPI_MATCH_CAP = 0.012
+DEFAULT_CPI_Z_CAP = 2.0
+DEFAULT_CPI_TOTAL_RATIO_WEIGHT = 0.020
+DEFAULT_CPI_TOTAL_RATIO_CLAMP = (0.95, 1.05)
+DEFAULT_CPI_WITH_VENUE_BLEND = 0.20
 
 
 def _float(v, default=None):
@@ -114,20 +200,26 @@ def _float(v, default=None):
         return default
 
 
-def _age_factor(birthdate_str):
-    """Return small modifier for age: prime 22-30 ~ 0, decline after 30 negative, young positive. Cap in caller."""
+def _age_years(birthdate_str):
     if not birthdate_str:
-        return 0.0
+        return None
     try:
-        bd = date.fromisoformat(birthdate_str.strip()[:10])
-        age = (date.today() - bd).days / 365.25
+        bd = date.fromisoformat(str(birthdate_str).strip()[:10])
+        return (date.today() - bd).days / 365.25
     except (ValueError, TypeError, IndexError):
+        return None
+
+
+def _age_factor(birthdate_str):
+    """Small age modifier: prime ~22-30, mild decline after 30."""
+    age = _age_years(birthdate_str)
+    if age is None:
         return 0.0
     if age >= 30:
-        return -0.004 * (age - 30)  # e.g. 35 -> -0.02
+        return -0.004 * (age - 30)
     if age < 22:
-        return 0.002 * (22 - age)  # e.g. 20 -> 0.004
-    return 0.0  # prime 22-30
+        return 0.002 * (22 - age)
+    return 0.0
 
 
 def _solve_spw_for_match_prob(p1_win, avg_spw, clamp_lo=0.48, clamp_hi=0.82, tol=5e-4, max_iter=60):
@@ -159,8 +251,223 @@ def _solve_spw_for_match_prob(p1_win, avg_spw, clamp_lo=0.48, clamp_hi=0.82, tol
             max(clamp_lo, min(clamp_hi, avg_spw - mid)))
 
 
+def _clamp(x, lo, hi):
+    return max(lo, min(hi, x))
+
+
+def _logit(p):
+    p = _clamp(p, 1e-6, 1.0 - 1e-6)
+    return math.log(p / (1.0 - p))
+
+
+def _sigmoid(z):
+    if z >= 0:
+        ez = math.exp(-z)
+        return 1.0 / (1.0 + ez)
+    ez = math.exp(z)
+    return ez / (1.0 + ez)
+
+
+def _surface_candidates(surface):
+    if surface == "I.hard":
+        return ("I.hard", "Hard", "N/A")
+    if surface == "Hard":
+        return ("Hard", "I.hard", "N/A")
+    return (surface, "N/A")
+
+
+def _parse_iso_date(v):
+    if not v:
+        return None
+    try:
+        return date.fromisoformat(str(v).strip()[:10])
+    except (ValueError, TypeError, IndexError):
+        return None
+
+
+def _tour_key(name):
+    """
+    Normalize tournament identity across years/sponsor strings.
+    Example: 'BNP Paribas Open - Indian Wells' -> 'indian wells'
+    """
+    raw = (name or "").strip().lower()
+    if not raw:
+        return ""
+    parts = [p.strip() for p in re.split(r"\s*-\s*", raw) if p.strip()]
+    core = parts[-1] if len(parts) >= 2 and len(parts[-1]) >= 4 else raw
+    core = re.sub(r"\b\d{4}\b", " ", core)
+    core = re.sub(r"\b(challenger|qualifiers?|qualifying|qualification|atp|wta)\b", " ", core)
+    core = re.sub(r"[^a-z0-9]+", " ", core)
+    return " ".join(core.split())
+
+
+def _tour_key_candidates(name):
+    raw = (name or "").strip().lower()
+    if not raw:
+        return []
+    parts = [p.strip() for p in re.split(r"\s*-\s*", raw) if p.strip()]
+    cands = [_tour_key(raw)]
+    if parts:
+        cands.append(_tour_key(parts[0]))
+        cands.append(_tour_key(parts[-1]))
+    if len(parts) >= 2:
+        cands.append(_tour_key(parts[0] + " " + parts[-1]))
+    out = []
+    seen = set()
+    for c in cands:
+        if not c or c in seen:
+            continue
+        seen.add(c)
+        out.append(c)
+    return out
+
+
+def _mean_std(values):
+    vals = [float(x) for x in values if x is not None]
+    n = len(vals)
+    if n == 0:
+        return (0.0, 1.0)
+    mean = sum(vals) / float(n)
+    if n == 1:
+        return (mean, 1.0)
+    var = sum((x - mean) ** 2 for x in vals) / float(n)
+    std = math.sqrt(var)
+    if std < 1e-9:
+        std = 1.0
+    return (mean, std)
+
+
+def _series_bucket_from_tour(tour_name, tour_rank):
+    u = (tour_name or "").upper()
+    if any(x in u for x in ("AUSTRALIAN OPEN", "ROLAND GARROS", "WIMBLEDON", "US OPEN", "GRAND SLAM")):
+        return "Grand Slam"
+    if "MASTERS CUP" in u or "ATP FINALS" in u or "TOUR FINALS" in u:
+        return "Masters Cup"
+    if "MASTERS" in u or "1000" in u:
+        return "Masters 1000"
+    if "ATP 500" in u or "500" in u:
+        return "ATP500"
+    if "ATP 250" in u or "250" in u:
+        return "ATP250"
+    if "CHALLENGER" in u:
+        return "ATP250"
+
+    # Rank fallback from OnCourt tours table when naming is sparse.
+    try:
+        rk = int(tour_rank) if tour_rank is not None else None
+    except (TypeError, ValueError):
+        rk = None
+    if rk == 1:
+        return "Grand Slam"
+    if rk == 3:
+        return "Masters 1000"
+    if rk == 2:
+        return "ATP500"
+    return "ATP250"
+
+
+def _series_calibration_blend(series_bucket, surface, confidence):
+    blend = PROB_CAL_SERIES_BLEND.get(series_bucket, 1.0)
+    if series_bucket in ("ATP250", "ATP500"):
+        if confidence == "medium":
+            blend *= 0.55
+        elif confidence == "low":
+            blend *= 0.35
+        if series_bucket == "ATP500" and surface == "Hard":
+            blend *= 0.00
+        elif surface in ("Clay", "Grass"):
+            blend *= 0.75
+    return _clamp(blend, 0.0, 1.0)
+
+
+def _series_rank_weight_multiplier(series_bucket, confidence):
+    if series_bucket == "ATP250":
+        return {"high": 0.90, "medium": 0.72, "low": 0.60}.get(confidence, 1.0)
+    if series_bucket == "ATP500":
+        return {"high": 0.95, "medium": 0.78, "low": 0.65}.get(confidence, 1.0)
+    return 1.0
+
+
+def _series_delta_multipliers(series_bucket, surface, confidence):
+    if series_bucket == "ATP250":
+        if confidence == "high":
+            return (1.12, 1.15, 0.88, 0.90)
+        if confidence == "medium":
+            return (1.18, 1.22, 0.76, 0.82)
+        if confidence == "low":
+            return (1.24, 1.28, 0.66, 0.72)
+    if series_bucket == "ATP500":
+        if surface == "Hard":
+            if confidence == "high":
+                return (0.98, 1.02, 0.68, 0.80)
+            if confidence == "medium":
+                return (1.02, 1.06, 0.60, 0.72)
+            if confidence == "low":
+                return (1.06, 1.10, 0.52, 0.66)
+        if confidence == "high":
+            return (1.02, 1.06, 0.78, 0.88)
+        if confidence == "medium":
+            return (1.08, 1.12, 0.70, 0.82)
+        if confidence == "low":
+            return (1.14, 1.18, 0.62, 0.74)
+    return (1.0, 1.0, 1.0, 1.0)
+
+
+def _series_crisis_rank_multiplier(series_bucket):
+    if series_bucket == "ATP250":
+        return 0.42
+    if series_bucket == "ATP500":
+        return 0.48
+    return RANK_WEIGHT_CRISIS_MULT
+
+
+def _apply_series_probability_guard(p1_win, series_bucket, surface, confidence):
+    caps = SERIES_FAVORITE_PROB_CAP.get(series_bucket)
+    if not caps:
+        return _clamp(float(p1_win), 1e-6, 1.0 - 1e-6)
+    cap = float(caps.get(confidence, 0.90))
+    if series_bucket == "ATP500" and surface == "Hard":
+        cap -= 0.02
+    cap = _clamp(cap, 0.78, 0.93)
+    p = _clamp(float(p1_win), 1e-6, 1.0 - 1e-6)
+    fav_is_p1 = p >= 0.5
+    q = p if fav_is_p1 else (1.0 - p)
+    q = min(q, cap)
+    return q if fav_is_p1 else (1.0 - q)
+
+
+def _calibrate_match_probability(p1_win, series_bucket, surface, confidence):
+    p = _clamp(float(p1_win), 1e-6, 1.0 - 1e-6)
+    fav_is_p1 = p >= 0.5
+    q_raw = p if fav_is_p1 else (1.0 - p)
+    z = PROB_CAL_A + PROB_CAL_B * _logit(q_raw)
+    q_cal = _sigmoid(z)
+    blend = _series_calibration_blend(series_bucket, surface, confidence)
+    q = (1.0 - blend) * q_raw + blend * q_cal
+    q = _clamp(q, 1e-6, 1.0 - 1e-6)
+    return q if fav_is_p1 else (1.0 - q)
+
+
 def main():
     import requests
+    def _env_int(name, default):
+        raw = os.environ.get(name)
+        if raw is None or str(raw).strip() == "":
+            return default
+        try:
+            return int(float(raw))
+        except (TypeError, ValueError):
+            return default
+
+    def _env_float(name, default):
+        raw = os.environ.get(name)
+        if raw is None or str(raw).strip() == "":
+            return default
+        try:
+            return float(raw)
+        except (TypeError, ValueError):
+            return default
+
     do_dry_run = "--dry-run" in sys.argv
     if do_dry_run:
         print("Dry run: will not write to Supabase\n")
@@ -200,10 +507,10 @@ def main():
     print(f"  Fixtures with no result (unplayed): {len(fixtures)}")
 
     # 2) Tour -> surface; restrict to ATP + Challenger only (exclude ITF, Futures, etc.)
-    tour_select = "id,court_id,name,rank,altitude"
+    tour_select = "id,court_id,name,rank,altitude,date"
     r0 = requests.get(f"{base}/oncourt_tours", headers=headers, params={"select": tour_select, "limit": 1}, timeout=REQ_TIMEOUT)
     if r0.status_code == 400:
-        tour_select = "id,court_id,name,rank"
+        tour_select = "id,court_id,name,rank,date"
     tours_list = []
     off = 0
     while True:
@@ -220,6 +527,9 @@ def main():
     itf_pattern = re.compile(r"\b[MW]\d{1,2}\b", re.IGNORECASE)
 
     tours = {}
+    tour_name_by_id = {}
+    tour_rank_by_id = {}
+    tour_date_by_id = {}
     tour_to_altitude = {}
     atp_challenger_tour_ids = set()
     for t in tours_list:
@@ -227,6 +537,11 @@ def main():
             continue
         tid = int(t["id"])
         tours[tid] = t.get("court_id")
+        tour_name_by_id[tid] = t.get("name") or ""
+        tour_rank_by_id[tid] = t.get("rank")
+        tdate = _parse_iso_date(t.get("date"))
+        if tdate is not None:
+            tour_date_by_id[tid] = tdate.isoformat()
         alt = t.get("altitude")
         if alt is not None:
             try:
@@ -240,13 +555,14 @@ def main():
             continue
         if "ITF" in name or "FUTURES" in name:
             continue
-        # Include: rank 1 (ATP) or 2 (Challenger), or name contains Challenger, or ATP
-        if rank is not None and rank <= 2:
+        # Include ATP + Challenger: rank<=3 keeps ATP main tour (Masters 1000 often rank 3).
+        if rank is not None and rank <= INCLUDE_TOUR_RANK_MAX:
             atp_challenger_tour_ids.add(tid)
         elif "CHALLENGER" in name:
             atp_challenger_tour_ids.add(tid)
-        elif "ATP" in name:
+        elif "ATP" in name or "MASTERS" in name or "GRAND SLAM" in name:
             atp_challenger_tour_ids.add(tid)
+    tour_key_by_id = {tid: _tour_key(tour_name_by_id.get(tid, "")) for tid in tour_name_by_id}
     fixtures = [f for f in fixtures if f.get("tour_id") in atp_challenger_tour_ids]
     print(f"  Fixtures after ATP/Challenger only (excl. M15/M25/ITF): {len(fixtures)}")
 
@@ -277,8 +593,10 @@ def main():
     print(f"  Loaded {len(tour_to_surface):,} tours -> surface" + (f", {len(tour_to_altitude):,} with altitude (run oncourt-derive-altitude.py + migration if 0)" if tour_to_altitude else ""))
 
     # 3) All player_surface_stats (with long-window columns for blend if table has them) and player_elo
-    stats_select_full = "player_id,surface,hold_pct,return_pct,hold_pct_long,return_pct_long,match_count,service_pts"
-    stats_select_base = "player_id,surface,hold_pct,return_pct,match_count,service_pts"
+    stats_select_full = "player_id,surface,hold_pct,return_pct,hold_pct_long,return_pct_long,match_count,service_pts,return_pts"
+    stats_select_base = "player_id,surface,hold_pct,return_pct,match_count,service_pts,return_pts"
+    stats_select_legacy = "player_id,surface,hold_pct,return_pct,match_count,service_pts"
+
     r = requests.get(
         f"{base}/player_surface_stats",
         headers={**headers, "Prefer": "count=exact"},
@@ -294,9 +612,18 @@ def main():
             timeout=REQ_TIMEOUT,
         )
         stats_select = stats_select_base
+    if r.status_code in (400, 404):
+        r = requests.get(
+            f"{base}/player_surface_stats",
+            headers={**headers, "Prefer": "count=exact"},
+            params={"select": stats_select_legacy, "limit": 1},
+            timeout=REQ_TIMEOUT,
+        )
+        stats_select = stats_select_legacy
     if r.status_code not in (200, 206):
         print("player_surface_stats fetch failed:", r.status_code)
         sys.exit(1)
+
     stats_rows = []
     off = 0
     while True:
@@ -314,7 +641,40 @@ def main():
         off += len(data)
         if len(data) < 1000:
             break
+
     stats = {(int(r["player_id"]), (r.get("surface") or "N/A").strip()): r for r in stats_rows}
+
+    # Surface priors in raw player_surface_stats scale (weighted by point counts)
+    surface_hold_prior = dict(SURFACE_AVG_HOLD)
+    surface_ret_prior = dict(SURFACE_AVG_RETURN)
+    _hold_num, _hold_den = {}, {}
+    _ret_num, _ret_den = {}, {}
+    for row in stats_rows:
+        surf = (row.get("surface") or "N/A").strip() or "N/A"
+        h = _float(row.get("hold_pct"))
+        rv = _float(row.get("return_pct"))
+        svc_pts = int(row.get("service_pts") or 0)
+        ret_pts = int(row.get("return_pts") or 0)
+        if h is not None:
+            w = max(1, svc_pts)
+            _hold_num[surf] = _hold_num.get(surf, 0.0) + h * w
+            _hold_den[surf] = _hold_den.get(surf, 0) + w
+        if rv is not None:
+            w = max(1, ret_pts if ret_pts > 0 else svc_pts)
+            _ret_num[surf] = _ret_num.get(surf, 0.0) + rv * w
+            _ret_den[surf] = _ret_den.get(surf, 0) + w
+    for surf, den in _hold_den.items():
+        if den > 0:
+            surface_hold_prior[surf] = _hold_num[surf] / den
+    for surf, den in _ret_den.items():
+        if den > 0:
+            surface_ret_prior[surf] = _ret_num[surf] / den
+    if surface_hold_prior:
+        h_h = surface_hold_prior.get("Hard", SURFACE_AVG_HOLD["Hard"])
+        h_c = surface_hold_prior.get("Clay", SURFACE_AVG_HOLD["Clay"])
+        r_h = surface_ret_prior.get("Hard", SURFACE_AVG_RETURN["Hard"])
+        r_c = surface_ret_prior.get("Clay", SURFACE_AVG_RETURN["Clay"])
+        print(f"  Surface priors (raw stats): Hard hold={h_h:.3f} ret={r_h:.3f}, Clay hold={h_c:.3f} ret={r_c:.3f}")
 
     elo_rows = []
     off = 0
@@ -340,17 +700,26 @@ def main():
     # 4) Lefties: prefer player_hand_reference (hand=L), then fallback to player_extra + categories
     leftie_ids = set()
     try:
-        r = requests.get(
-            f"{base}/player_hand_reference",
-            headers=headers,
-            params={"select": "player_id", "hand": "eq.L", "limit": 10000},
-            timeout=REQ_TIMEOUT,
-        )
-        if r.status_code == 200 and r.json():
-            for row in r.json():
+        off = 0
+        while True:
+            r = requests.get(
+                f"{base}/player_hand_reference",
+                headers=headers,
+                params={"select": "player_id", "hand": "eq.L", "offset": off, "limit": 1000},
+                timeout=REQ_TIMEOUT,
+            )
+            if r.status_code != 200:
+                break
+            data = r.json()
+            if not data:
+                break
+            for row in data:
                 pid = row.get("player_id")
                 if pid is not None:
                     leftie_ids.add(int(pid))
+            off += len(data)
+            if len(data) < 1000:
+                break
         if leftie_ids:
             pass  # use player_hand_reference
         else:
@@ -545,6 +914,18 @@ def main():
         pass
     print(f"  League avg (surface): {league_avg_from_db} from DB" + (", rest constants" if league_avg_from_db < len(SURFACE_LEAGUE_AVG) else ""))
 
+    # Map raw player_surface_stats scale -> SPW scale used by tennis_prob
+    surface_hold_shift = {}
+    surface_ret_shift = {}
+    all_surfaces = set(surface_hold_prior.keys()) | set(surface_ret_prior.keys()) | set(league_avg_by_surface.keys())
+    for surf in all_surfaces:
+        raw_h = surface_hold_prior.get(surf, SURFACE_AVG_HOLD.get(surf, 0.44))
+        raw_r = surface_ret_prior.get(surf, SURFACE_AVG_RETURN.get(surf, 0.35))
+        spw = league_avg_by_surface.get(surf, SURFACE_LEAGUE_AVG.get(surf, 0.64))
+        spw = _clamp(spw, 0.52, 0.72)
+        surface_hold_shift[surf] = spw - raw_h
+        surface_ret_shift[surf] = (1.0 - spw) - raw_r
+
     # 5d) Tournament avg total games (shift_from_surface for expected_total_games adjustment)
     tour_shift_lookup = {}
     if venue_tour_ids:
@@ -597,6 +978,226 @@ def main():
             fixture_player_ids.add(int(a))
         if b is not None:
             fixture_player_ids.add(int(b))
+    # 5e0) Match-history features from oncourt_games:
+    # YTD form, current streak, and same-tournament history across past years.
+    recent_results_by_player = {}
+    tournament_history_by_player_key = {}
+    history_start = date(max(2000, date.today().year - RESULTS_LOOKBACK_YEARS), 1, 1).isoformat()
+
+    if fixture_player_ids:
+        ids_list = list(fixture_player_ids)
+        seen_hist = set()
+        player_history = {pid: [] for pid in ids_list}
+
+        for i in range(0, len(ids_list), 60):
+            chunk = ids_list[i : i + 60]
+            in_clause = "in.(" + ",".join(str(x) for x in chunk) + ")"
+
+            for col in ("winner_id", "loser_id"):
+                off = 0
+                while True:
+                    try:
+                        r = requests.get(
+                            f"{base}/oncourt_games",
+                            headers=headers,
+                            params={
+                                "select": "winner_id,loser_id,tour_id,round_id,date",
+                                col: in_clause,
+                                "date": f"gte.{history_start}",
+                                "offset": off,
+                                "limit": 1000,
+                            },
+                            timeout=REQ_TIMEOUT,
+                        )
+                    except Exception:
+                        break
+                    if r.status_code != 200:
+                        break
+
+                    data = r.json() or []
+                    if not data:
+                        break
+
+                    for row in data:
+                        w = row.get("winner_id")
+                        l = row.get("loser_id")
+                        if w is None or l is None:
+                            continue
+                        try:
+                            w = int(w)
+                            l = int(l)
+                        except (TypeError, ValueError):
+                            continue
+
+                        tid_hist = row.get("tour_id")
+                        try:
+                            tid_hist = int(tid_hist) if tid_hist is not None else None
+                        except (TypeError, ValueError):
+                            tid_hist = None
+
+                        d_hist = _parse_iso_date(
+                            row.get("date") or (tour_date_by_id.get(tid_hist) if tid_hist is not None else None)
+                        )
+                        if d_hist is None:
+                            continue
+
+                        rec_key = (w, l, tid_hist, int(row.get("round_id") or -1), d_hist.isoformat())
+                        if rec_key in seen_hist:
+                            continue
+                        seen_hist.add(rec_key)
+
+                        if w in player_history:
+                            player_history[w].append((d_hist, True, tid_hist))
+                        if l in player_history:
+                            player_history[l].append((d_hist, False, tid_hist))
+
+                    off += len(data)
+                    if len(data) < 1000:
+                        break
+
+        ytd_start = date(date.today().year, 1, 1)
+
+        for pid, hist in player_history.items():
+            hist.sort(key=lambda x: x[0], reverse=True)
+
+            total_n = len(hist)
+            ytd_hist = [h for h in hist if h[0] >= ytd_start]
+            ytd_n = len(ytd_hist)
+            ytd_w = sum(1 for _, is_win, _ in ytd_hist if is_win)
+
+            last5_hist = hist[:5]
+            last5_n = len(last5_hist)
+            last5_w = sum(1 for _, is_win, _ in last5_hist if is_win)
+
+            win_streak = 0
+            loss_streak = 0
+            if hist:
+                first_is_win = hist[0][1]
+                streak = 0
+                for _, is_win, _ in hist:
+                    if is_win == first_is_win:
+                        streak += 1
+                    else:
+                        break
+                if first_is_win:
+                    win_streak = streak
+                else:
+                    loss_streak = streak
+
+            recent_results_by_player[pid] = {
+                "matches_total": total_n,
+                "ytd_matches": ytd_n,
+                "ytd_wins": ytd_w,
+                "ytd_win_rate": (ytd_w / ytd_n) if ytd_n > 0 else None,
+                "last5_matches": last5_n,
+                "last5_wins": last5_w,
+                "last5_win_rate": (last5_w / last5_n) if last5_n > 0 else None,
+                "win_streak": win_streak,
+                "loss_streak": loss_streak,
+            }
+
+            per_tour = {}
+            for _, is_win, tid_hist in hist:
+                if tid_hist is None:
+                    continue
+                tkey = tour_key_by_id.get(tid_hist, "")
+                if not tkey:
+                    continue
+                wins, matches = per_tour.get(tkey, (0, 0))
+                wins += 1 if is_win else 0
+                matches += 1
+                per_tour[tkey] = (wins, matches)
+
+            for tkey, (wins, matches) in per_tour.items():
+                tournament_history_by_player_key[(pid, tkey)] = {"wins": wins, "matches": matches}
+
+    players_with_hist = sum(
+        1 for v in recent_results_by_player.values() if (v.get("matches_total") or 0) > 0
+    )
+    print(
+        f"  Match history: {players_with_hist}/{len(fixture_player_ids)} players with matches since {history_start}, "
+        f"tournament-history keys: {len(tournament_history_by_player_key):,}"
+    )
+
+    def _results_form_component(pid):
+        rec = recent_results_by_player.get(pid) or {}
+        d = 0.0
+
+        ytd_n = int(rec.get("ytd_matches") or 0)
+        ytd_wr = rec.get("ytd_win_rate")
+        if ytd_n >= YTD_FORM_MIN_MATCHES and ytd_wr is not None:
+            ytd_scale = min(1.0, ytd_n / 14.0)
+            d += _clamp((float(ytd_wr) - 0.5) * YTD_FORM_WEIGHT * ytd_scale, -YTD_FORM_CAP, YTD_FORM_CAP)
+
+        l5_n = int(rec.get("last5_matches") or 0)
+        l5_wr = rec.get("last5_win_rate")
+        if l5_n >= LAST5_FORM_MIN_MATCHES and l5_wr is not None:
+            l5_scale = min(1.0, l5_n / 5.0)
+            d += _clamp((float(l5_wr) - 0.5) * LAST5_FORM_WEIGHT * l5_scale, -LAST5_FORM_CAP, LAST5_FORM_CAP)
+
+        loss_streak = int(rec.get("loss_streak") or 0)
+        win_streak = int(rec.get("win_streak") or 0)
+
+        if loss_streak >= STREAK_SOFT_START:
+            streak_pen = (loss_streak - STREAK_SOFT_START + 1) * STREAK_UNIT
+            if loss_streak >= STREAK_HARD_START:
+                streak_pen += 0.006
+            d -= min(STREAK_CAP, streak_pen)
+        elif win_streak >= STREAK_SOFT_START:
+            streak_boost = (win_streak - STREAK_SOFT_START + 1) * STREAK_UNIT
+            if win_streak >= STREAK_HARD_START:
+                streak_boost += 0.004
+            d += min(STREAK_CAP, streak_boost)
+
+        return _clamp(d, -RESULTS_FORM_TOTAL_CAP, RESULTS_FORM_TOTAL_CAP)
+
+    def _tournament_history_component(pid, tid):
+        if tid is None:
+            return 0.0
+        tkey = tour_key_by_id.get(tid, "")
+        if not tkey:
+            return 0.0
+        rec = tournament_history_by_player_key.get((pid, tkey))
+        if not rec:
+            return 0.0
+
+        n = int(rec.get("matches") or 0)
+        if n < TOURNAMENT_HISTORY_MIN_MATCHES:
+            return 0.0
+
+        w = int(rec.get("wins") or 0)
+        wr = (w + TOURNAMENT_HISTORY_PRIOR_P * TOURNAMENT_HISTORY_PRIOR_K) / (n + TOURNAMENT_HISTORY_PRIOR_K)
+        scale = min(1.0, n / 8.0)
+        return _clamp((wr - 0.5) * TOURNAMENT_HISTORY_WEIGHT * scale, -TOURNAMENT_HISTORY_CAP, TOURNAMENT_HISTORY_CAP)
+
+    def _is_form_crisis(pid):
+        rec = recent_results_by_player.get(pid) or {}
+        ytd_n = int(rec.get("ytd_matches") or 0)
+        ytd_wr = rec.get("ytd_win_rate")
+        loss_streak = int(rec.get("loss_streak") or 0)
+
+        if loss_streak >= FORM_CRISIS_LOSS_STREAK:
+            return True
+        if ytd_n >= FORM_CRISIS_YTD_MIN_MATCHES and ytd_wr is not None and float(ytd_wr) <= FORM_CRISIS_YTD_WINRATE_MAX:
+            return True
+        return False
+
+    def _form_crisis_shock(pid):
+        rec = recent_results_by_player.get(pid) or {}
+        if not _is_form_crisis(pid):
+            return 0.0
+
+        loss_streak = int(rec.get("loss_streak") or 0)
+        ytd_n = int(rec.get("ytd_matches") or 0)
+        ytd_wr = rec.get("ytd_win_rate")
+
+        shock = FORM_CRISIS_SHOCK_BASE
+        if loss_streak >= FORM_CRISIS_LOSS_STREAK:
+            shock += (loss_streak - FORM_CRISIS_LOSS_STREAK + 1) * FORM_CRISIS_SHOCK_STREAK_UNIT
+        if ytd_n >= FORM_CRISIS_YTD_MIN_MATCHES and ytd_wr is not None and float(ytd_wr) <= FORM_CRISIS_YTD_WINRATE_MAX:
+            shock += FORM_CRISIS_SHOCK_YTD_BONUS
+
+        return min(FORM_CRISIS_SHOCK_CAP, shock)
     if fixture_player_ids:
         try:
             r = requests.get(
@@ -613,6 +1214,90 @@ def main():
         except Exception:
             pass
     print(f"  Recent activity: {len(recent_activity_by_player):,} rows" + (" (form/fatigue active)" if recent_activity_by_player else " (run oncourt-compute-recent-activity.py)"))
+
+    # 5f) H2H table
+    h2h_rows = []
+    try:
+        off = 0
+        while True:
+            r = requests.get(
+                f"{base}/player_h2h",
+                headers=headers,
+                params={"select": "player_a_id,player_b_id,surface,wins_a,wins_b,match_count,last_match_date", "offset": off, "limit": 1000},
+                timeout=REQ_TIMEOUT,
+            )
+            if r.status_code != 200:
+                break
+            data = r.json()
+            if not data:
+                break
+            h2h_rows.extend(data)
+            off += len(data)
+            if len(data) < 1000:
+                break
+    except Exception:
+        pass
+    h2h_lookup = {}
+    for row in h2h_rows:
+        a = row.get("player_a_id")
+        b = row.get("player_b_id")
+        surf = (row.get("surface") or "N/A").strip()
+        if a is None or b is None or not surf:
+            continue
+        h2h_lookup[(int(a), int(b), surf)] = {
+            "player_a_id": int(a),
+            "player_b_id": int(b),
+            "wins_a": int(row.get("wins_a") or 0),
+            "wins_b": int(row.get("wins_b") or 0),
+            "match_count": int(row.get("match_count") or 0),
+            "last_match_date": row.get("last_match_date"),
+        }
+    def _get_h2h_row(pid1, pid2, surf):
+        a, b = (pid1, pid2) if pid1 < pid2 else (pid2, pid1)
+        for s in _surface_candidates(surf):
+            rec = h2h_lookup.get((a, b, s))
+            if rec:
+                return rec
+        return None
+    print(f"  H2H: {len(h2h_lookup):,} rows" + (" (active)" if h2h_lookup else " (none - run sackmann-compute-h2h.py)"))
+
+    # 5g) Advanced player stats
+    adv_rows = []
+    try:
+        off = 0
+        while True:
+            r = requests.get(
+                f"{base}/player_advanced_stats",
+                headers=headers,
+                params={"select": "player_id,surface,first_serve_pct,first_serve_win_pct,second_serve_win_pct,ace_rate,df_rate,bp_save_pct,bp_convert_pct,match_count", "offset": off, "limit": 1000},
+                timeout=REQ_TIMEOUT,
+            )
+            if r.status_code != 200:
+                break
+            data = r.json()
+            if not data:
+                break
+            adv_rows.extend(data)
+            off += len(data)
+            if len(data) < 1000:
+                break
+    except Exception:
+        pass
+    advanced_lookup = {}
+    for row in adv_rows:
+        pid = row.get("player_id")
+        surf = (row.get("surface") or "N/A").strip()
+        if pid is None or not surf:
+            continue
+        advanced_lookup[(int(pid), surf)] = row
+    def _get_advanced_row(pid, surf):
+        for s in _surface_candidates(surf):
+            rec = advanced_lookup.get((pid, s))
+            if rec:
+                return rec
+        return None
+    print(f"  Advanced stats: {len(advanced_lookup):,} rows" + (" (active)" if advanced_lookup else " (none - run sackmann-compute-advanced-stats.py)"))
+
     birthdate_by_player = {}
     atp_rank_by_player = {}
     surface_points_by_player = {}  # pid -> {"Hard": x, "Clay": y, "Grass": z} from OnCourt
@@ -663,6 +1348,189 @@ def main():
     for sn, plist in surname_to_players.items():
         if len(plist) > 1:
             print(f"  WARNING: Same surname '{sn}' for multiple players in today's fixtures: {plist}. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).")
+
+    injury_downweight_enabled = env_bool(os.environ.get("FAIR_ODDS_INJURY_DOWNWEIGHT_ENABLED"), False)
+    injury_lookback_days = max(
+        0,
+        _env_int(
+            "FAIR_ODDS_INJURY_LOOKBACK_DAYS",
+            _env_int("STRICT_INJURY_LOOKBACK_DAYS", DEFAULT_FAIR_ODDS_INJURY_LOOKBACK_DAYS),
+        ),
+    )
+    injury_delta = _clamp(_env_float("FAIR_ODDS_INJURY_DELTA", DEFAULT_FAIR_ODDS_INJURY_DELTA), 0.0, 0.08)
+    injury_csv = os.environ.get("INJURED_PLAYERS_CSV", DEFAULT_INJURY_CSV)
+    injury_index = load_recent_injury_index(
+        injury_csv,
+        lookback_days=injury_lookback_days,
+        today=date.today(),
+        include_sources=("injured",),
+    )
+    injury_flagged_p1 = 0
+    injury_flagged_p2 = 0
+    injury_adjusted_matches = 0
+    print(
+        f"  Injury list: {injury_index.rows_recent}/{injury_index.rows_loaded} recent rows "
+        f"(lookback {injury_lookback_days}d, downweight={'on' if injury_downweight_enabled else 'off'}, "
+        f"delta={injury_delta:.3f})"
+    )
+
+    cpi_enabled = env_bool(os.environ.get("FAIR_ODDS_CPI_ENABLED"), False)
+    cpi_lookback_years = max(0, _env_int("FAIR_ODDS_CPI_FALLBACK_YEARS", DEFAULT_CPI_LOOKBACK_YEARS))
+    cpi_match_weight = _clamp(_env_float("FAIR_ODDS_CPI_MATCH_WEIGHT", DEFAULT_CPI_MATCH_WEIGHT), 0.0, 0.15)
+    cpi_match_cap = _clamp(_env_float("FAIR_ODDS_CPI_MATCH_CAP", DEFAULT_CPI_MATCH_CAP), 0.0, 0.08)
+    cpi_z_cap = _clamp(_env_float("FAIR_ODDS_CPI_Z_CAP", DEFAULT_CPI_Z_CAP), 0.2, 6.0)
+    cpi_total_ratio_weight = _clamp(
+        _env_float("FAIR_ODDS_CPI_TOTAL_RATIO_WEIGHT", DEFAULT_CPI_TOTAL_RATIO_WEIGHT),
+        0.0,
+        0.20,
+    )
+    cpi_total_ratio_min = _clamp(
+        _env_float("FAIR_ODDS_CPI_TOTAL_RATIO_MIN", DEFAULT_CPI_TOTAL_RATIO_CLAMP[0]),
+        0.80,
+        1.00,
+    )
+    cpi_total_ratio_max = _clamp(
+        _env_float("FAIR_ODDS_CPI_TOTAL_RATIO_MAX", DEFAULT_CPI_TOTAL_RATIO_CLAMP[1]),
+        1.00,
+        1.20,
+    )
+    if cpi_total_ratio_min > cpi_total_ratio_max:
+        cpi_total_ratio_min, cpi_total_ratio_max = cpi_total_ratio_max, cpi_total_ratio_min
+    cpi_with_venue_blend = _clamp(
+        _env_float("FAIR_ODDS_CPI_WITH_VENUE_BLEND", DEFAULT_CPI_WITH_VENUE_BLEND),
+        0.0,
+        1.0,
+    )
+
+    cpi_lookup = {}
+    cpi_year_surface_stats = {}
+    cpi_surface_stats = {}
+    cpi_resolved_matches = 0
+    cpi_delta_applied_matches = 0
+    cpi_total_used_matches = 0
+    cpi_rows_loaded = 0
+
+    if cpi_enabled:
+        fixture_tour_ids = set()
+        fixture_years = set()
+        for f in fixtures:
+            tid_raw = f.get("tour_id")
+            if tid_raw is None:
+                continue
+            try:
+                tid_i = int(tid_raw)
+            except (TypeError, ValueError):
+                continue
+            fixture_tour_ids.add(tid_i)
+            td = _parse_iso_date(tour_date_by_id.get(tid_i))
+            if td is not None:
+                fixture_years.add(td.year)
+        if not fixture_years:
+            fixture_years.add(date.today().year)
+        min_year = max(1980, min(fixture_years) - cpi_lookback_years)
+        max_year = max(fixture_years)
+
+        cpi_rows = []
+        try:
+            off = 0
+            while True:
+                r = requests.get(
+                    f"{base}/tournament_surface_speed",
+                    headers=headers,
+                    params={
+                        "select": "season_year,surface,tournament_key,cpi",
+                        "and": f"(season_year.gte.{min_year},season_year.lte.{max_year})",
+                        "offset": off,
+                        "limit": 1000,
+                    },
+                    timeout=REQ_TIMEOUT,
+                )
+                if r.status_code != 200:
+                    break
+                data = r.json() or []
+                if not data:
+                    break
+                cpi_rows.extend(data)
+                off += len(data)
+                if len(data) < 1000:
+                    break
+        except Exception:
+            pass
+
+        stats_by_year_surface = {}
+        stats_by_surface = {}
+        for row in cpi_rows:
+            y = row.get("season_year")
+            surf_raw = (row.get("surface") or "").strip()
+            tkey = (row.get("tournament_key") or "").strip()
+            cpi_val = _float(row.get("cpi"))
+            if y is None or not surf_raw or not tkey or cpi_val is None:
+                continue
+            try:
+                y = int(y)
+            except (TypeError, ValueError):
+                continue
+            surf = "Hard" if surf_raw == "I.hard" else surf_raw
+            if surf not in ("Hard", "Clay", "Grass"):
+                continue
+            cpi_lookup[(y, surf, tkey)] = float(cpi_val)
+            stats_by_year_surface.setdefault((y, surf), []).append(float(cpi_val))
+            stats_by_surface.setdefault(surf, []).append(float(cpi_val))
+
+        cpi_rows_loaded = len(cpi_lookup)
+        for key, vals in stats_by_year_surface.items():
+            cpi_year_surface_stats[key] = _mean_std(vals)
+        for surf, vals in stats_by_surface.items():
+            cpi_surface_stats[surf] = _mean_std(vals)
+
+        print(
+            f"  CPI rows: {cpi_rows_loaded:,} "
+            f"(years {min_year}-{max_year}, fallback {cpi_lookback_years}y, "
+            f"match_weight={cpi_match_weight:.3f}, total_ratio_weight={cpi_total_ratio_weight:.3f})"
+        )
+    else:
+        print("  CPI rows: disabled (set FAIR_ODDS_CPI_ENABLED=true to activate)")
+
+    def _resolve_cpi_for_match(tid, surface):
+        if not cpi_lookup or tid is None:
+            return (None, None, "none")
+        tname = tour_name_by_id.get(tid, "")
+        if not tname:
+            return (None, None, "missing_tour")
+        td = _parse_iso_date(tour_date_by_id.get(tid))
+        season_year = td.year if td is not None else date.today().year
+        keys = _tour_key_candidates(tname)
+        if not keys:
+            return (None, season_year, "missing_key")
+
+        surf_candidates = []
+        for s in _surface_candidates(surface):
+            ss = "Hard" if s == "I.hard" else s
+            if ss in ("Hard", "Clay", "Grass") and ss not in surf_candidates:
+                surf_candidates.append(ss)
+        if not surf_candidates:
+            surf_candidates = ["Hard", "Clay", "Grass"]
+
+        for yr_back in range(0, cpi_lookback_years + 1):
+            y = season_year - yr_back
+            for surf in surf_candidates:
+                for tkey in keys:
+                    v = cpi_lookup.get((y, surf, tkey))
+                    if v is not None:
+                        mode = "exact_year" if yr_back == 0 else f"fallback_y{yr_back}"
+                        return (float(v), y, mode)
+        return (None, season_year, "missing")
+
+    def _cpi_z_score(cpi_value, season_year, surface):
+        if cpi_value is None:
+            return 0.0
+        surf = "Hard" if surface == "I.hard" else surface
+        mean, std = cpi_year_surface_stats.get((season_year, surf), cpi_surface_stats.get(surf, (0.0, 1.0)))
+        if std <= 1e-9:
+            std = 1.0
+        z = (float(cpi_value) - mean) / std
+        return _clamp(z, -cpi_z_cap, cpi_z_cap)
+
     do_debug = "--debug" in sys.argv
     debug_names = []
     for i, arg in enumerate(sys.argv):
@@ -674,6 +1542,9 @@ def main():
 
     out = []
     skip_no_players = 0
+    skip_doubles = 0
+    skip_unknown = 0
+    skip_same_player = 0
     skip_missing_both = 0
     skip_missing_p1 = 0
     skip_missing_p2 = 0
@@ -688,12 +1559,41 @@ def main():
             skip_no_players += 1
             continue
         p1, p2 = int(p1), int(p2)
+        if p1 == p2:
+            skip_same_player += 1
+            continue
+        n1 = (name_by_player.get(p1) or "")
+        n2 = (name_by_player.get(p2) or "")
+        n1_l = n1.lower()
+        n2_l = n2.lower()
+        if p1 in UNKNOWN_PLAYER_IDS or p2 in UNKNOWN_PLAYER_IDS or "unknown player" in n1_l or "unknown player" in n2_l:
+            skip_unknown += 1
+            continue
+        if "/" in n1 or "/" in n2 or "&" in n1 or "&" in n2:
+            skip_doubles += 1
+            continue
+        p1_recent_injured, p1_injury_mode = injury_index.match_name(n1)
+        p2_recent_injured, p2_injury_mode = injury_index.match_name(n2)
+        if p1_recent_injured:
+            injury_flagged_p1 += 1
+        if p2_recent_injured:
+            injury_flagged_p2 += 1
         try:
             tid = int(tour_id) if tour_id is not None else None
         except (TypeError, ValueError):
             tid = None
         surface = (tour_to_surface.get(tid) or "N/A") if tid is not None else "N/A"
         surface_counts[surface] = surface_counts.get(surface, 0) + 1
+
+        cpi_value = None
+        cpi_year = None
+        cpi_mode = "off"
+        cpi_z = 0.0
+        if cpi_enabled:
+            cpi_value, cpi_year, cpi_mode = _resolve_cpi_for_match(tid, surface)
+            if cpi_value is not None and cpi_year is not None:
+                cpi_resolved_matches += 1
+                cpi_z = _cpi_z_score(cpi_value, cpi_year, surface)
 
         s1 = stats.get((p1, surface))
         s2 = stats.get((p2, surface))
@@ -716,10 +1616,10 @@ def main():
         elif not has_s2:
             skip_missing_p2 += 1
 
-        surf_hold = SURFACE_AVG_HOLD.get(surface, 0.64)
-        surf_ret = SURFACE_AVG_RETURN.get(surface, 0.36)
+        surf_hold = surface_hold_prior.get(surface, SURFACE_AVG_HOLD.get(surface, 0.44))
+        surf_ret = surface_ret_prior.get(surface, SURFACE_AVG_RETURN.get(surface, 0.35))
 
-        # Blend 12m with long-window (36m); use surface averages as fallback when stats missing
+        # Blend 12m with long-window (36m); use surface priors as fallback when stats missing
         h1_12 = _float((s1 or {}).get("hold_pct"), surf_hold)
         r1_12 = _float((s1 or {}).get("return_pct"), surf_ret)
         h2_12 = _float((s2 or {}).get("hold_pct"), surf_hold)
@@ -728,9 +1628,11 @@ def main():
         r1_long = _float((s1 or {}).get("return_pct_long"), r1_12)
         h2_long = _float((s2 or {}).get("hold_pct_long"), h2_12)
         r2_long = _float((s2 or {}).get("return_pct_long"), r2_12)
+
         mc1_12 = int((s1 or {}).get("match_count") or 0) if has_s1 else 0
         mc2_12 = int((s2 or {}).get("match_count") or 0) if has_s2 else 0
         min_matches_12 = min(mc1_12, mc2_12)
+
         if min_matches_12 >= 25:
             recent_weight = 0.75
         elif min_matches_12 >= 15:
@@ -739,15 +1641,18 @@ def main():
             recent_weight = 0.5
         else:
             recent_weight = 0.3
+
         if surface == "Clay":
-            recent_weight = min(recent_weight, 0.6)   # clay: more weight to long window
+            recent_weight = min(recent_weight, 0.6)
         elif surface == "Grass":
-            recent_weight = max(recent_weight, 0.55)   # grass: favour 12m (stale faster)
+            recent_weight = max(recent_weight, 0.55)
+
         hold1_raw = recent_weight * h1_12 + (1.0 - recent_weight) * h1_long
         ret1_raw = recent_weight * r1_12 + (1.0 - recent_weight) * r1_long
         hold2_raw = recent_weight * h2_12 + (1.0 - recent_weight) * h2_long
         ret2_raw = recent_weight * r2_12 + (1.0 - recent_weight) * r2_long
-        # Shrinkage toward surface average when match count is low
+
+        # Shrinkage toward surface priors when sample is low
         alpha1 = mc1_12 / (mc1_12 + SHRINKAGE_N) if mc1_12 else 0.0
         alpha2 = mc2_12 / (mc2_12 + SHRINKAGE_N) if mc2_12 else 0.0
         hold1 = alpha1 * hold1_raw + (1.0 - alpha1) * surf_hold if alpha1 > 0 else surf_hold
@@ -755,56 +1660,108 @@ def main():
         hold2 = alpha2 * hold2_raw + (1.0 - alpha2) * surf_hold if alpha2 > 0 else surf_hold
         ret2 = alpha2 * ret2_raw + (1.0 - alpha2) * surf_ret if alpha2 > 0 else surf_ret
 
-        # p_A, p_B: ratio-based (Barnett-Clarke) relative to league avg serve point win % on surface (from DB or constants)
+        # Convert raw stats scale -> SPW scale expected by tennis_prob
+        hold_shift = surface_hold_shift.get(surface, 0.0)
+        ret_shift = surface_ret_shift.get(surface, 0.0)
+
+        hold1_eff = _clamp(hold1 + hold_shift, POINT_CLAMP[0], POINT_CLAMP[1])
+        hold2_eff = _clamp(hold2 + hold_shift, POINT_CLAMP[0], POINT_CLAMP[1])
+        ret1_eff = _clamp(ret1 + ret_shift, RETURN_CLAMP[0], RETURN_CLAMP[1])
+        ret2_eff = _clamp(ret2 + ret_shift, RETURN_CLAMP[0], RETURN_CLAMP[1])
+
+        # Barnett-Clarke style p_A / p_B from adjusted serve/return point strengths
         league_avg = league_avg_by_surface.get(surface, 0.64)
         if league_avg <= 0 or league_avg >= 1:
             league_avg = 0.64
-        p_a = (hold1 * (1.0 - ret2)) / league_avg
-        p_b = (hold2 * (1.0 - ret1)) / league_avg
-        p_a = max(POINT_CLAMP[0], min(POINT_CLAMP[1], p_a))
-        p_b = max(POINT_CLAMP[0], min(POINT_CLAMP[1], p_b))
+
+        p_a = (hold1_eff * (1.0 - ret2_eff)) / league_avg
+        p_b = (hold2_eff * (1.0 - ret1_eff)) / league_avg
+        p_a = _clamp(p_a, POINT_CLAMP[0], POINT_CLAMP[1])
+        p_b = _clamp(p_b, POINT_CLAMP[0], POINT_CLAMP[1])
 
         p_serve_return = prob_match_best_of_3(p_a, p_b)
 
-        # NOTE: p_a_eg / p_b_eg for E[G] and O/U are now computed AFTER p1_win
-        # is finalised (see "Solve SPW" block below). The old approach computed
-        # them here from the raw Barnett-Clarke ratio, which was inconsistent
-        # with the final match-win probability after Elo/rank blending.
-        # ─── Elo + Rank ────────────────────────────────────────────
-        # Sackmann: 50/50 blend of single-surface and overall Elo predicts best
-        p_elo_surface = 1.0 / (1.0 + 10.0 ** ((e2_s - e1_s) / 400.0))
+        def _recent_reliability(pid):
+            act = recent_activity_by_player.get(pid)
+            if not act:
+                age = _age_years(birthdate_by_player.get(pid))
+                rel = 0.72
+                if age is not None and age >= 31:
+                    rel -= min(0.24, (age - 31) * 0.025)
+                return max(ELO_RELIABILITY_MIN, rel)
+            m21 = int(act.get("matches_last_21d") or 0)
+            if m21 >= 8:
+                return 1.00
+            if m21 >= 5:
+                return 0.95
+            if m21 >= 3:
+                return 0.90
+            if m21 >= 1:
+                return 0.84
+            last_d = act.get("last_match_date")
+            if last_d:
+                try:
+                    ld = date.fromisoformat(str(last_d)[:10])
+                    days = (date.today() - ld).days
+                    if days >= 90:
+                        return 0.55
+                    if days >= 60:
+                        return 0.65
+                    if days >= 35:
+                        return 0.75
+                except (ValueError, TypeError):
+                    pass
+            return 0.80
+
+        rel1 = _recent_reliability(p1)
+        rel2 = _recent_reliability(p2)
+        elo_reliability = 0.5 * (rel1 + rel2)
+
+        # Reliability-adjust Elo per player (directional; stale player is penalized individually)
+        e1_s_eff = DEFAULT_ELO + rel1 * (e1_s - DEFAULT_ELO)
+        e2_s_eff = DEFAULT_ELO + rel2 * (e2_s - DEFAULT_ELO)
+        p_elo_surface = 1.0 / (1.0 + 10.0 ** ((e2_s_eff - e1_s_eff) / 400.0))
+
         if e1_o is not None and e2_o is not None:
-            p_elo_overall = 1.0 / (1.0 + 10.0 ** ((float(e2_o) - float(e1_o)) / 400.0))
+            e1_o_eff = DEFAULT_ELO + rel1 * (float(e1_o) - DEFAULT_ELO)
+            e2_o_eff = DEFAULT_ELO + rel2 * (float(e2_o) - DEFAULT_ELO)
+            p_elo_overall = 1.0 / (1.0 + 10.0 ** ((e2_o_eff - e1_o_eff) / 400.0))
             p_elo = 0.5 * p_elo_surface + 0.5 * p_elo_overall
         else:
             p_elo = p_elo_surface
 
-        # General ability: surface points primary when available; else log-rank (ATP).
-        # LOG_RANK_SCALE = 3.5 so rank 100 vs 300 → ~67% (was 1.1 → 91%, catastrophically extreme).
+        # Rank/points prior (stronger class-gap separation than old linear blend)
         r1, r2 = atp_rank_by_player.get(p1), atp_rank_by_player.get(p2)
         pts1 = surface_points_by_player.get(p1, {}).get(surface) if surface in ("Hard", "Clay", "Grass", "I.hard") else None
         pts2 = surface_points_by_player.get(p2, {}).get(surface) if surface in ("Hard", "Clay", "Grass", "I.hard") else None
-        p_rank = None
-        if pts1 is not None and pts2 is not None and (pts1 > 0 or pts2 > 0):
-            # Surface points ratio (with floor to avoid division by zero)
-            p_rank = (pts1 + 1) / (pts1 + pts2 + 2)
-        elif r1 is not None and r2 is not None and r1 > 0 and r2 > 0:
-            log_scale = LOG_RANK_SCALE
-            p_rank = 1.0 / (1.0 + 10.0 ** ((math.log(max(1, r1)) - math.log(max(1, r2))) / log_scale))
 
-        # When both players have default Elo (1500/1500) AND we have rank,
-        # rank should be the primary signal — not blended 30% into useless Elo.
+        p_rank = None
+        p_rank_atp = None
+        p_rank_points = None
+
+        if r1 is not None and r2 is not None and r1 > 0 and r2 > 0:
+            log_ratio = math.log(max(1.0, float(r2)) / max(1.0, float(r1)))
+            p_rank_atp = _sigmoid(log_ratio / RANK_LOGIT_SCALE)
+            rr = max(r1, r2) / float(min(r1, r2))
+            if rr >= RANK_CLASS_GAP_RATIO_START:
+                extra = min(RANK_CLASS_GAP_CAP, math.log(rr / RANK_CLASS_GAP_RATIO_START) * 0.08)
+                p_rank_atp = _clamp(p_rank_atp + (extra if r1 < r2 else -extra), 0.02, 0.98)
+
+        if pts1 is not None and pts2 is not None and (pts1 > 0 or pts2 > 0):
+            log_pts_ratio = math.log((max(0.0, pts1) + POINTS_MIN_BASE) / (max(0.0, pts2) + POINTS_MIN_BASE))
+            p_rank_points = _sigmoid(log_pts_ratio / POINTS_LOGIT_SCALE)
+
+        if p_rank_atp is not None and p_rank_points is not None:
+            p_rank = (1.0 - RANK_POINTS_BLEND) * p_rank_atp + RANK_POINTS_BLEND * p_rank_points
+        elif p_rank_atp is not None:
+            p_rank = p_rank_atp
+        elif p_rank_points is not None:
+            p_rank = p_rank_points
+
         both_elo_default = not e1_is_real and not e2_is_real
-        if both_elo_default and p_rank is not None:
-            # Rank IS the Elo signal when Elo is uninformative
-            p_elo = p_rank
-        elif p_rank is not None:
-            # Normal blend: rank is 30% of the Elo component
-            p_elo = (1.0 - RANK_ELO_BLEND) * p_elo + RANK_ELO_BLEND * p_rank
-        # Confidence level based on data availability
+
+        # Confidence
         if both_elo_default and p_rank is None and not has_s1 and not has_s2:
-            # Truly zero data: no stats, no real Elo, no rank.
-            # Model output is meaningless (50/50 by construction).
             confidence = "none"
         elif not has_s1 and not has_s2:
             confidence = "low"
@@ -817,54 +1774,161 @@ def main():
         else:
             confidence = "medium"
 
-        # ─── Hybrid blend: Elo vs serve/return ──────────────────────
-        # Default 55% Elo / 45% serve-return (was 40/60).
-        # Lean more on Elo when stats are thin or missing.
-        if not has_s1 or not has_s2:
-            elo_weight = 0.80
-        else:
-            # Adaptive: ranges from 0.55 (30+ matches) up to 0.85 (0 matches)
-            elo_weight = HYBRID_ELO_WEIGHT_DEFAULT + 0.30 * max(0.0, 1.0 - min(min_matches_12, HYBRID_ELO_WEIGHT_MIN_MATCHES) / float(HYBRID_ELO_WEIGHT_MIN_MATCHES))
-            elo_weight = max(0.40, min(0.85, elo_weight))
+        if confidence in ("high", "medium"):
+            if p1 not in recent_activity_by_player or p2 not in recent_activity_by_player:
+                confidence = "medium" if confidence == "high" else "low"
+        series_bucket = _series_bucket_from_tour(tour_name_by_id.get(tid, ""), tour_rank_by_id.get(tid))
+        form_mult, results_mult, structural_mult, cap_mult = _series_delta_multipliers(series_bucket, surface, confidence)
 
-        # When serve/return is uninformative (near 50/50) but Elo/rank strongly favour one player, trust Elo+rank more.
-        # Threshold widened from 0.04 to 0.08 to catch more cases where heavy shrinkage washes out real differences.
-        if abs(p_serve_return - 0.5) < 0.08 and p_rank is not None:
-            # Serve/return is uninformative — rely on rank + Elo
-            p_elo_effective = 0.4 * p_elo + 0.6 * p_rank
-            elo_weight = 0.90
-            p1_win = elo_weight * p_elo_effective + (1.0 - elo_weight) * p_serve_return
+        # Blend in logit space (better behavior than linear prob mix when components disagree)
+        serve_rel = min(1.0, min_matches_12 / float(HYBRID_ELO_WEIGHT_MIN_MATCHES)) if (has_s1 and has_s2) else 0.0
+        w_sr = (1.0 - HYBRID_ELO_WEIGHT_DEFAULT) * (0.35 + 0.65 * serve_rel) if (has_s1 and has_s2) else 0.0
+        w_elo = HYBRID_ELO_WEIGHT_DEFAULT * (0.65 + 0.35 * elo_reliability)
+
+        w_rank = 0.0
+        rank_gap_strength = 0.0
+        if p_rank is not None:
+            if r1 is not None and r2 is not None and r1 > 0 and r2 > 0:
+                rr = max(r1, r2) / float(min(r1, r2))
+                rank_strength = _clamp((rr - 1.0) / 3.0, 0.25, 1.0)
+            else:
+                rank_strength = 0.45
+            rank_gap_strength = _clamp(abs(p_rank - 0.5) * 2.0, 0.0, 1.0)
+            w_rank = 0.18 + 0.34 * rank_strength + 0.10 * rank_gap_strength
+
+            # If rank and Elo disagree strongly, reduce Elo dominance.
+            if (p_rank - 0.5) * (p_elo - 0.5) < 0:
+                w_elo *= max(0.45, 1.0 - 0.75 * rank_gap_strength)
+                w_sr *= max(0.70, 1.0 - 0.35 * rank_gap_strength)
+                w_rank += 0.18 * rank_gap_strength
+            w_rank *= _series_rank_weight_multiplier(series_bucket, confidence)
+
+        if not has_s1 or not has_s2:
+            w_sr *= 0.15
+            w_elo += 0.08
+            if p_rank is not None:
+                w_rank += 0.12
+
+        if both_elo_default:
+            w_elo *= 0.30
+            if p_rank is not None:
+                w_rank += 0.35
+
+        p1_crisis = _is_form_crisis(p1)
+        p2_crisis = _is_form_crisis(p2)
+        if p_rank is not None and w_rank > 0 and p1_crisis != p2_crisis:
+            rank_favors_p1 = p_rank > 0.5
+            crisis_favored_by_rank = (p1_crisis and rank_favors_p1) or (p2_crisis and not rank_favors_p1)
+            if crisis_favored_by_rank:
+                w_rank *= _series_crisis_rank_multiplier(series_bucket)
+            else:
+                w_rank *= RANK_WEIGHT_CRISIS_OPPOSED_MULT
+
+        total_w = w_sr + w_elo + w_rank
+        sr_weight = 0.0
+        elo_weight = 0.0
+        rank_weight = 0.0
+
+        if total_w <= 0:
+            p1_win = 0.5
         else:
-            p1_win = elo_weight * p_elo + (1.0 - elo_weight) * p_serve_return
+            sr_weight = w_sr / total_w
+            elo_weight = w_elo / total_w
+            rank_weight = w_rank / total_w
+            z = sr_weight * _logit(p_serve_return) + elo_weight * _logit(p_elo)
+            if p_rank is not None and rank_weight > 0:
+                z += rank_weight * _logit(p_rank)
+            p1_win = _sigmoid(z)
+
         p2_win = 1.0 - p1_win
 
         # Factor adjustments (small weights, capped so we don't flip favourites)
         delta_p1 = 0.0
+        h2h_delta = 0.0
+        adv_delta = 0.0
+        results_form_delta = 0.0
+        tour_history_delta = 0.0
+        crisis_shock_delta = 0.0
+        cpi_delta = 0.0
+
+        # H2H
+        h2h_row = _get_h2h_row(p1, p2, surface)
+        if h2h_row:
+            h2h_n = int(h2h_row.get("match_count") or 0)
+            if h2h_n >= H2H_MIN_MATCHES:
+                wins_p1 = h2h_row["wins_a"] if p1 == h2h_row["player_a_id"] else h2h_row["wins_b"]
+                win_rate_p1 = wins_p1 / h2h_n if h2h_n > 0 else 0.5
+                h2h_delta = _clamp((win_rate_p1 - 0.5) * H2H_WEIGHT, -H2H_CAP, H2H_CAP)
+                delta_p1 += structural_mult * h2h_delta
+
+        # Advanced serve/return profile
+        adv1 = _get_advanced_row(p1, surface)
+        adv2 = _get_advanced_row(p2, surface)
+        if adv1 and adv2:
+            adv_m1 = int(adv1.get("match_count") or 0)
+            adv_m2 = int(adv2.get("match_count") or 0)
+            adv_min = min(adv_m1, adv_m2)
+            if adv_min >= ADV_MIN_MATCHES:
+                sample_scale = min(1.0, adv_min / 40.0)
+                fs_pct_1 = _float(adv1.get("first_serve_pct"), 0.0) or 0.0
+                fs_pct_2 = _float(adv2.get("first_serve_pct"), 0.0) or 0.0
+                fsw_1 = _float(adv1.get("first_serve_win_pct"), 0.0) or 0.0
+                fsw_2 = _float(adv2.get("first_serve_win_pct"), 0.0) or 0.0
+                ssw_1 = _float(adv1.get("second_serve_win_pct"), 0.0) or 0.0
+                ssw_2 = _float(adv2.get("second_serve_win_pct"), 0.0) or 0.0
+                ace_1 = _float(adv1.get("ace_rate"), 0.0) or 0.0
+                ace_2 = _float(adv2.get("ace_rate"), 0.0) or 0.0
+                df_1 = _float(adv1.get("df_rate"), 0.0) or 0.0
+                df_2 = _float(adv2.get("df_rate"), 0.0) or 0.0
+                bp_save_1 = _float(adv1.get("bp_save_pct"), 0.5) or 0.5
+                bp_save_2 = _float(adv2.get("bp_save_pct"), 0.5) or 0.5
+                bp_conv_1 = _float(adv1.get("bp_convert_pct"), 0.5) or 0.5
+                bp_conv_2 = _float(adv2.get("bp_convert_pct"), 0.5) or 0.5
+
+                serve_matchup = (fsw_1 - fsw_2) * 0.45 + (ssw_1 - ssw_2) * 0.40 + (fs_pct_1 - fs_pct_2) * 0.15
+                clutch_matchup = ((bp_save_1 - bp_conv_2) - (bp_save_2 - bp_conv_1)) * 0.5
+                discipline_matchup = (ace_1 - df_1) - (ace_2 - df_2)
+
+                adv_delta = sample_scale * (
+                    ADV_SERVE_MATCHUP_WEIGHT * serve_matchup
+                    + ADV_CLUTCH_WEIGHT * clutch_matchup
+                    + ADV_DISCIPLINE_WEIGHT * discipline_matchup
+                )
+                adv_delta = _clamp(adv_delta, -ADV_TOTAL_CAP, ADV_TOTAL_CAP)
+                delta_p1 += adv_delta
+
         # Vs leftie
         if p2 in leftie_ids:
             w1_vs_leftie = vs_leftie_lookup.get((p1, surface), 0.5)
-            delta_p1 += (w1_vs_leftie - 0.5) * VS_LEFTIE_WEIGHT
+            delta_p1 += structural_mult * (w1_vs_leftie - 0.5) * VS_LEFTIE_WEIGHT
         if p1 in leftie_ids:
             w2_vs_leftie = vs_leftie_lookup.get((p2, surface), 0.5)
-            delta_p1 -= (w2_vs_leftie - 0.5) * VS_LEFTIE_WEIGHT
+            delta_p1 -= structural_mult * (w2_vs_leftie - 0.5) * VS_LEFTIE_WEIGHT
         # Vs big server: when opponent is big server, use win_pct_vs_big_server (continuous: weight by how much over surface avg)
         if (p2, surface) in big_server_set:
             w1_vs_bs = vs_big_server_lookup.get((p1, surface), 0.5)
             server_strength = max(0.0, (hold2 - surf_hold) / 0.13) if surf_hold < 0.75 else 1.0  # 0.75 - 0.62 ≈ 0.13 for clay
             server_strength = min(1.0, server_strength)
             d_bs = (w1_vs_bs - 0.5) * VS_BIG_SERVER_WEIGHT * server_strength
-            delta_p1 += max(-VS_BIG_SERVER_CAP, min(VS_BIG_SERVER_CAP, d_bs))
+            delta_p1 += structural_mult * max(-VS_BIG_SERVER_CAP, min(VS_BIG_SERVER_CAP, d_bs))
         if (p1, surface) in big_server_set:
             w2_vs_bs = vs_big_server_lookup.get((p2, surface), 0.5)
             server_strength = max(0.0, (hold1 - surf_hold) / 0.13) if surf_hold < 0.75 else 1.0
             server_strength = min(1.0, server_strength)
             d_bs = (w2_vs_bs - 0.5) * VS_BIG_SERVER_WEIGHT * server_strength
-            delta_p1 -= max(-VS_BIG_SERVER_CAP, min(VS_BIG_SERVER_CAP, d_bs))
+            delta_p1 -= structural_mult * max(-VS_BIG_SERVER_CAP, min(VS_BIG_SERVER_CAP, d_bs))
         # Venue (same-event): better record at this tour gets a small boost
         if tid is not None:
             v1 = venue_lookup.get((p1, tid), 0.5)
             v2 = venue_lookup.get((p2, tid), 0.5)
-            delta_p1 += (v1 - 0.5) * VENUE_WEIGHT - (v2 - 0.5) * VENUE_WEIGHT
+            delta_p1 += structural_mult * ((v1 - 0.5) * VENUE_WEIGHT - (v2 - 0.5) * VENUE_WEIGHT)
+        # Tournament CPI overlay (surface-speed): faster courts amplify server-style edge.
+        if cpi_enabled and cpi_value is not None and cpi_match_weight > 0.0:
+            style_edge = (hold1 - hold2) - (ret1 - ret2)
+            cpi_delta = _clamp(cpi_z * style_edge * cpi_match_weight, -cpi_match_cap, cpi_match_cap)
+            if abs(cpi_delta) > 1e-9:
+                delta_p1 += structural_mult * cpi_delta
+                cpi_delta_applied_matches += 1
         # Altitude: use player record at high-altitude venues (win_pct_at_altitude by surface); fallback to hold% proxy if no stats
         alt = tour_to_altitude.get(tid) if tid is not None else None
         if alt is not None and alt >= ALTITUDE_THRESHOLD_M:
@@ -875,7 +1939,7 @@ def main():
             else:
                 d_alt = (hold1 - hold2) * ALTITUDE_WEIGHT
             d_alt = max(-ALTITUDE_CAP, min(ALTITUDE_CAP, d_alt))
-            delta_p1 += d_alt
+            delta_p1 += structural_mult * d_alt
         # Age: prime vs decline (scale so max effect ~ ±0.01)
         a1 = _age_factor(birthdate_by_player.get(p1))
         a2 = _age_factor(birthdate_by_player.get(p2))
@@ -885,7 +1949,13 @@ def main():
         def _form_fatigue_rust(pid, player_elo_surface):
             act = recent_activity_by_player.get(pid)
             if not act:
-                return 0.0
+                age = _age_years(birthdate_by_player.get(pid))
+                penalty = MISSING_ACTIVITY_BASE_PENALTY
+                if age is not None and age >= MISSING_ACTIVITY_AGE_START:
+                    penalty += (age - MISSING_ACTIVITY_AGE_START) * MISSING_ACTIVITY_AGE_WEIGHT
+                if age is not None and age >= 34:
+                    penalty += min(0.010, (age - 34) * 0.002)
+                return -min(MISSING_ACTIVITY_PENALTY_CAP, penalty)
             m21 = int(act.get("matches_last_21d") or 0)
             wr = _float(act.get("win_rate_21d"))
             avg_opp = _float(act.get("avg_opponent_elo"), 1500)
@@ -923,12 +1993,57 @@ def main():
             return delta_form + delta_fatigue + delta_rust
         p1_form = _form_fatigue_rust(p1, e1_s)
         p2_form = _form_fatigue_rust(p2, e2_s)
-        delta_p1_form = 0.5 * (p1_form - p2_form)
+        delta_p1_form = form_mult * 0.5 * (p1_form - p2_form)
         delta_p1_form = max(-FORM_TOTAL_CAP, min(FORM_TOTAL_CAP, delta_p1_form))
         delta_p1 += delta_p1_form
+
+        # Direct results-form layer (YTD + last5 + active streak)
+        p1_results_form = _results_form_component(p1)
+        p2_results_form = _results_form_component(p2)
+        results_form_delta = _clamp(
+            results_mult * (p1_results_form - p2_results_form),
+            -RESULTS_FORM_TOTAL_CAP,
+            RESULTS_FORM_TOTAL_CAP,
+        )
+        delta_p1 += results_form_delta
+
+        # Tournament history (same event across years)
+        if tid is not None:
+            t1 = _tournament_history_component(p1, tid)
+            t2 = _tournament_history_component(p2, tid)
+            tour_history_delta = _clamp(t1 - t2, -TOURNAMENT_HISTORY_CAP, TOURNAMENT_HISTORY_CAP)
+            delta_p1 += structural_mult * tour_history_delta
+
+        # Extra crisis shock (one-sided only): pushes severe losing-run players further out.
+        if p1_crisis and not p2_crisis:
+            crisis_shock_delta = -_form_crisis_shock(p1)
+        elif p2_crisis and not p1_crisis:
+            crisis_shock_delta = _form_crisis_shock(p2)
+        delta_p1 += crisis_shock_delta
+
         # Cap total adjustment
-        delta_p1 = max(-max(VS_LEFTIE_CAP, VS_BIG_SERVER_CAP, VENUE_CAP, ALTITUDE_CAP, AGE_CAP, FORM_TOTAL_CAP), min(max(VS_LEFTIE_CAP, VS_BIG_SERVER_CAP, VENUE_CAP, ALTITUDE_CAP, AGE_CAP, FORM_TOTAL_CAP), delta_p1))
-        delta_p1 = max(-0.04, min(0.04, delta_p1))  # overall cap ±0.04
+        cap_components = [
+            VS_LEFTIE_CAP,
+            VS_BIG_SERVER_CAP,
+            VENUE_CAP,
+            cpi_match_cap if cpi_enabled else 0.0,
+            ALTITUDE_CAP,
+            AGE_CAP,
+            FORM_TOTAL_CAP,
+            RESULTS_FORM_TOTAL_CAP,
+            TOURNAMENT_HISTORY_CAP,
+            H2H_CAP,
+            ADV_TOTAL_CAP,
+        ]
+        component_cap = min(
+            DELTA_COMPONENT_SUM_CAP_MAX,
+            sum(cap_components) * DELTA_COMPONENT_SUM_CAP_FACTOR,
+        )
+        delta_p1 = _clamp(delta_p1, -component_cap, component_cap)
+
+        overall_cap = DELTA_CAP_HIGH if confidence == "high" else (DELTA_CAP_MEDIUM if confidence == "medium" else DELTA_CAP_LOW)
+        overall_cap *= cap_mult
+        delta_p1 = _clamp(delta_p1, -overall_cap, overall_cap)
         p1_win += delta_p1
         p2_win -= delta_p1
 
@@ -936,17 +2051,66 @@ def main():
         tot = p1_win + p2_win
         if tot > 0:
             p1_win, p2_win = p1_win / tot, p2_win / tot
+
+        # Post-hoc calibration by tour tier (trained on historical backtest).
+        p1_win = _calibrate_match_probability(p1_win, series_bucket, surface, confidence)
+        p1_win = _apply_series_probability_guard(p1_win, series_bucket, surface, confidence)
+        p2_win = 1.0 - p1_win
+
+        injury_delta_p1 = 0.0
+        if injury_downweight_enabled and injury_delta > 0.0:
+            if p1_recent_injured and not p2_recent_injured:
+                injury_delta_p1 = -injury_delta
+            elif p2_recent_injured and not p1_recent_injured:
+                injury_delta_p1 = injury_delta
+            if injury_delta_p1 != 0.0:
+                # Risk-control cap: do not flip the pre-adjustment favorite.
+                fav_before_p1 = p1_win >= 0.5
+                p1_adj = _clamp(p1_win + injury_delta_p1, 0.02, 0.98)
+                if fav_before_p1:
+                    p1_adj = max(0.5001, p1_adj)
+                else:
+                    p1_adj = min(0.4999, p1_adj)
+                if abs(p1_adj - p1_win) > 1e-9:
+                    injury_adjusted_matches += 1
+                p1_win = p1_adj
+                p2_win = 1.0 - p1_win
+
         odds1 = 1.0 / p1_win if p1_win > 0 else 100.0
         odds2 = 1.0 / p2_win if p2_win > 0 else 100.0
 
         # ─── Solve SPW from final p1_win, then compute E[G] and O/U ──────
         # avg_spw for this surface (used as centre point for the solve)
-        avg_spw_surface = league_avg_by_surface.get(surface, 0.64)
-        # Venue SPW adjustment: shift the centre point if we have tournament serve profile
-        if tid is not None:
-            venue_spw = venue_serve_lookup.get((tid, surface))
+        avg_spw_surface_base = league_avg_by_surface.get(surface, 0.64)
+        avg_spw_surface = avg_spw_surface_base
+        venue_spw = venue_serve_lookup.get((tid, surface)) if tid is not None else None
+        cpi_ratio = 1.0
+        cpi_used_in_totals = False
+
+        if cpi_enabled and cpi_value is not None and cpi_total_ratio_weight > 0.0:
+            cpi_ratio = _clamp(
+                1.0 + cpi_total_ratio_weight * cpi_z,
+                cpi_total_ratio_min,
+                cpi_total_ratio_max,
+            )
+            cpi_spw_center = _clamp(
+                avg_spw_surface_base * cpi_ratio,
+                POINT_CLAMP[0] + 0.01,
+                POINT_CLAMP[1] - 0.01,
+            )
             if venue_spw is not None:
-                avg_spw_surface = venue_spw  # use venue-specific SPW as centre
+                # Blend CPI with venue-SPW to avoid double counting pace information.
+                avg_spw_surface = (
+                    (1.0 - cpi_with_venue_blend) * venue_spw
+                    + cpi_with_venue_blend * cpi_spw_center
+                )
+            else:
+                avg_spw_surface = cpi_spw_center
+            cpi_used_in_totals = True
+            cpi_total_used_matches += 1
+        elif venue_spw is not None:
+            # Default behavior: venue-specific SPW centre when available.
+            avg_spw_surface = venue_spw
         p_a_eg, p_b_eg = _solve_spw_for_match_prob(
             p1_win, avg_spw_surface,
             clamp_lo=POINT_CLAMP[0], clamp_hi=POINT_CLAMP[1]
@@ -960,13 +2124,25 @@ def main():
             exp_games += max(-TOURNAMENT_TOTAL_SHIFT_CAP, min(TOURNAMENT_TOTAL_SHIFT_CAP, raw_add))
         exp_games = max(12.0, min(48.0, exp_games))
 
+        # Market calibration for totals: our raw model tends to run high on E[G].
+        # Shift line-space up when pricing P(over), equivalent to a left shift in
+        # total-games distribution.
+        ou_shift = OU_LINE_SHIFT_BY_SURFACE.get(surface, OU_LINE_SHIFT_BY_SURFACE["N/A"])
+        if tid is not None:
+            tname = (tour_name_by_id.get(tid) or "").upper()
+            if "CHALLENGER" in tname:
+                ou_shift += OU_CHALLENGER_EXTRA_SHIFT
+            elif "ATP" in tname or "MASTERS" in tname or "GRAND SLAM" in tname:
+                ou_shift += OU_ATP_MAIN_TOUR_EXTRA_SHIFT
+        exp_games_cal = max(12.0, min(48.0, exp_games - ou_shift))
+
         # O/U: use STANDARD bookie lines (not centred on mean E[G]).
         # Find the line where P(over) crosses 50% (median), then show that line ± 1 — like Pinnacle.
         ou_data = {}
         if confidence != "none":
             line_probs = []
             for line in STANDARD_OU_LINES:
-                p_over = prob_over_games(p_a_eg, p_b_eg, line)
+                p_over = prob_over_games(p_a_eg, p_b_eg, line + ou_shift)
                 p_over = max(0.01, min(0.99, p_over))
                 line_probs.append((line, p_over))
             median_idx = min(range(len(line_probs)), key=lambda i: abs(line_probs[i][1] - 0.50))
@@ -989,11 +2165,28 @@ def main():
                 print(f"    Hold/return 12m: P1 hold={hold1:.3f} ret={ret1:.3f}  P2 hold={hold2:.3f} ret={ret2:.3f}  (P1 matches={mc1} svc_pts={sp1}  P2 matches={mc2} svc_pts={sp2})")
                 print(f"    Shrinkage: alpha1={alpha1:.3f} alpha2={alpha2:.3f}  (SHRINKAGE_N={SHRINKAGE_N})")
                 print(f"    ATP rank: P1={atp_rank_by_player.get(p1)} P2={atp_rank_by_player.get(p2)}  p_rank={p_rank}  both_elo_default={both_elo_default}")
-                print(f"    p_elo={p_elo:.4f} p_serve_return={p_serve_return:.4f} elo_weight={elo_weight:.2f} -> p1_win={p1_win:.4f} (after adj)")
+                print(f"    p_elo={p_elo:.4f} p_rank={p_rank} p_serve_return={p_serve_return:.4f} weights(sr/elo/rank)=({sr_weight:.2f}/{elo_weight:.2f}/{rank_weight:.2f}) -> p1_win={p1_win:.4f} (after adj+cal), series={series_bucket}")
+                print(f"    Effective SPW inputs: P1 serve={hold1_eff:.3f} ret={ret1_eff:.3f} | P2 serve={hold2_eff:.3f} ret={ret2_eff:.3f} | shifts hold={hold_shift:+.3f} ret={ret_shift:+.3f}")
+                print(
+                    f"    Injury: p1={p1_recent_injured}({p1_injury_mode}) "
+                    f"p2={p2_recent_injured}({p2_injury_mode}) "
+                    f"enabled={injury_downweight_enabled} delta={injury_delta_p1:+.4f}"
+                )
+                print(
+                    f"    CPI: enabled={cpi_enabled} value={cpi_value} year={cpi_year} mode={cpi_mode} "
+                    f"z={cpi_z:+.3f} delta={cpi_delta:+.4f} ratio={cpi_ratio:.3f} totals_used={cpi_used_in_totals}"
+                )
+                print(
+                    f"    H2H={h2h_delta:+.4f} ADV={adv_delta:+.4f} "
+                    f"form_base={delta_p1_form:+.4f} results_form={results_form_delta:+.4f} "
+                    f"tour_hist={tour_history_delta:+.4f} crisis_shock={crisis_shock_delta:+.4f} "
+                    f"total_delta={delta_p1:+.4f} "
+                    f"crisis(P1/P2)={p1_crisis}/{p2_crisis}"
+                )
                 o1 = 1.0 / p1_win if p1_win > 0 else 0
                 o2 = 1.0 / p2_win if p2_win > 0 else 0
                 print(f"    Our fair odds: P1={o1:.2f} P2={o2:.2f}  (if P1 favoured, P1 odds should be lower e.g. ~1.2)")
-                print(f"    Expected total games: {exp_games:.1f}")
+                print(f"    Expected total games: raw={exp_games:.1f} calibrated={exp_games_cal:.1f} (ou_shift={ou_shift:+.2f})")
                 print(f"    p_a_eg={p_a_eg:.4f} p_b_eg={p_b_eg:.4f}  (solved from p1_win={p1_win:.4f}, avg_spw={avg_spw_surface:.3f})")
                 if (mc1 is not None and int(mc1 or 0) < 10) or (mc2 is not None and int(mc2 or 0) < 10):
                     print(f"    ^ Low match_count -> hold/return may be noisy. Re-run oncourt-compute-player-stats after fresh extract, or add prior when sample small.")
@@ -1011,20 +2204,32 @@ def main():
             "p_elo": round(p_elo, 4),
             "odds1": round(odds1, 2),
             "odds2": round(odds2, 2),
-            "expected_total_games": round(exp_games, 1),
+            "expected_total_games": round(exp_games_cal, 1),
             "confidence": confidence,
             **ou_data,
         })
 
     print(f"Computed {len(out)} fair odds rows")
     print(f"  Fixture surfaces (from tour_id): {dict(surface_counts)}")
-    print(f"  Skipped: no player1/player2 = {skip_no_players}")
+    print(f"  Skipped: no player1/player2 = {skip_no_players}, same-player = {skip_same_player}, unknown = {skip_unknown}, doubles/team (name contains / or &) = {skip_doubles}")
     print(f"  Elo/rank fallback (missing stats): both = {skip_missing_both}, P1 only = {skip_missing_p1}, P2 only = {skip_missing_p2}")
     conf_counts = {"high": 0, "medium": 0, "low": 0, "none": 0}
     for row in out:
         c = row.get("confidence", "high")
         conf_counts[c] = conf_counts.get(c, 0) + 1
     print(f"  Confidence: high={conf_counts['high']}, medium={conf_counts['medium']}, low={conf_counts['low']}, none={conf_counts['none']}")
+    print(
+        "  Injury flags: "
+        f"P1={injury_flagged_p1}, P2={injury_flagged_p2}, "
+        f"adjusted_matches={injury_adjusted_matches} "
+        f"(downweight={'on' if injury_downweight_enabled else 'off'})"
+    )
+    if cpi_enabled:
+        print(
+            "  CPI overlay: "
+            f"rows={cpi_rows_loaded:,}, resolved_matches={cpi_resolved_matches}, "
+            f"delta_applied={cpi_delta_applied_matches}, totals_used={cpi_total_used_matches}"
+        )
     if out:
         for row in out[:3]:
             print(f"  P1={row['player1_id']} P2={row['player2_id']} surface={row['surface']} P1={row['p1_win_prob']} odds1={row['odds1']} odds2={row['odds2']}")

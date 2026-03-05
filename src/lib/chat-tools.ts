@@ -16,6 +16,28 @@ function str(v: unknown): string {
   return v == null ? "" : String(v).trim();
 }
 
+async function fetchAllLeftieIds(): Promise<number[]> {
+  const pageSize = 1000;
+  let from = 0;
+  const out: number[] = [];
+
+  while (true) {
+    const { data, error } = await sb
+      .from("player_hand_reference")
+      .select("player_id")
+      .eq("hand", "L")
+      .range(from, from + pageSize - 1);
+
+    if (error || !data?.length) break;
+    for (const row of data) {
+      out.push(num(row.player_id));
+    }
+    if (data.length < pageSize) break;
+    from += data.length;
+  }
+  return [...new Set(out.filter((id) => id > 0))];
+}
+
 const TOURNAMENT_ALIASES: Record<string, string[]> = {
   "roland garros":     ["French Open"],
   "french open":       ["French Open"],
@@ -350,12 +372,7 @@ export async function playerRecentForm(playerId: number): Promise<Row> {
 /* ── Record vs lefties (always returns surface breakdown) ── */
 
 export async function playerRecordVsLefties(playerId: number): Promise<Row> {
-  const { data: leftieIds } = await sb
-    .from("player_hand_reference")
-    .select("player_id")
-    .eq("hand", "L")
-    .limit(5000);
-  const lefties = new Set((leftieIds ?? []).map((r: Row) => num(r.player_id)));
+  const lefties = new Set(await fetchAllLeftieIds());
   if (!lefties.size) return { overall: { wins: 0, losses: 0 }, note: "No leftie reference data" };
 
   const winsQ = sb
@@ -385,6 +402,7 @@ export async function playerRecordVsLefties(playerId: number): Promise<Row> {
     const n = str(c.name).toUpperCase();
     if (n.includes("CLAY")) courtToSurface[num(c.id)] = "Clay";
     else if (n.includes("GRASS")) courtToSurface[num(c.id)] = "Grass";
+    else if (n.includes("I.HARD") || n === "I.HARD" || n.includes("INDOOR")) courtToSurface[num(c.id)] = "I.hard";
     else courtToSurface[num(c.id)] = "Hard";
   }
   const tourToSurface: Record<number, string> = {};
