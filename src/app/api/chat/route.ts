@@ -49,6 +49,7 @@ RESPONSE STYLE — THIS IS CRITICAL:
 - When asked who will WIN A TOURNAMENT (e.g. "who wins Indian Wells?", "Indian Wells champion?"): do NOT rely on today's match list. Use player_record_at_tournament, player_surface_stats, player_recent_form, tournament_past_winners, court_pace. Today's matches are a small slice — focus on tournament history, form, and surface fit.
 - When asked "is X playing?" or "is Draper in the draw?" or "who's playing Indian Wells?": use tournament_entrants with the tournament and player name. This uses Pinnacle outright odds and gives the full draw.
 - When asked about game handicaps, use the expected total games and game margin data to assess whether the line is coverable.
+- "Where does X have the best record?" or "X's best surface?" → use player_record_by_surface for surface breakdown. For best tournament, call player_record_at_tournament for 2–3 likely venues (e.g. Indian Wells, Cincinnati, Paris).
 - "How do favourites/dogs do at X?" or "fav ROI at Indian Wells?" → use tournament_fav_dog_stats. Level-stake ROI from backtest.
 - "Record of seeds at this tournament?" or "how do qualifiers do at X?" → use tournament_seed_stats. Seed/entry win rates from Sackmann.
 - "Big servers" = use player_record_vs_big_server (W-L vs opponents with SPW >= 68% on that surface). When explaining, say "service point win %" or "SPW", NOT "hold serve" — 68% SPW is a high bar (elite servers only).
@@ -69,6 +70,7 @@ RULES:
 - You can chain multiple tool calls to answer complex questions (e.g. search both players, then get H2H).
 - Data covers ATP main tour and Challenger level. No WTA/ITF.
 - Do NOT mention "model", "fair odds model", "our model", "algorithm" or anything revealing internal methodology. Present everything as your expert analysis.
+- If asked for tips or picks: base them solely on the stats and data from your tools. Do not speculate beyond what the data supports.
 - Do NOT reference retired players (Federer, Nadal, Murray, etc.) as if they are current. If citing past achievements, be explicit: "beat Federer here in 2019 when he was still active".
 - Use British currency: "quid" not "bucks", "£" not "$". E.g. "a few quid" not "a few bucks".
 - Surface values: Hard, Clay, Grass, I.hard (indoor hard).
@@ -88,6 +90,22 @@ async function resolvePlayerId(idOrName: string): Promise<number> {
     if (retry.length > 0 && retry[0].id) return Number(retry[0].id);
   }
   return 0;
+}
+
+/** Wrap tool execute to catch errors and return structured error instead of crashing. */
+function safeExecute<T, A extends unknown[]>(
+  fn: (...args: A) => Promise<T>,
+  toolName: string
+): (...args: A) => Promise<T | { error: string }> {
+  return async (...args: A) => {
+    try {
+      return await fn(...args);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(`[chat] Tool ${toolName} failed:`, msg);
+      return { error: `Tool failed: ${msg}` };
+    }
+  };
 }
 
 export async function POST(req: Request) {
@@ -117,7 +135,7 @@ export async function POST(req: Request) {
         inputSchema: z.object({
           name: z.string().describe("Player name or surname to search for"),
         }),
-        execute: async ({ name }: { name: string }) => tools.searchPlayer(name),
+        execute: safeExecute(async ({ name }) => tools.searchPlayer(name), "search_player"),
       },
 
       player_info: {
@@ -125,7 +143,7 @@ export async function POST(req: Request) {
         inputSchema: z.object({
           player_id: z.string().describe("OnCourt player ID as string (get from search_player first)"),
         }),
-        execute: async ({ player_id }: { player_id: string }) => tools.playerInfo(await resolvePlayerId(player_id)),
+        execute: safeExecute(async ({ player_id }) => tools.playerInfo(await resolvePlayerId(player_id)), "player_info"),
       },
 
       player_surface_stats: {
@@ -134,8 +152,11 @@ export async function POST(req: Request) {
           player_id: z.string().describe("OnCourt player ID as string"),
           surface: z.string().describe("Surface filter: Hard, Clay, Grass, I.hard, or 'all' for all surfaces"),
         }),
-        execute: async ({ player_id, surface }: { player_id: string; surface: string }) =>
-          tools.playerSurfaceStats(await resolvePlayerId(player_id), surface === "all" ? undefined : surface),
+        execute: safeExecute(
+          async ({ player_id, surface }) =>
+            tools.playerSurfaceStats(await resolvePlayerId(player_id), surface === "all" ? undefined : surface),
+          "player_surface_stats"
+        ),
       },
 
       player_advanced_stats: {
@@ -144,8 +165,11 @@ export async function POST(req: Request) {
           player_id: z.string().describe("OnCourt player ID as string"),
           surface: z.string().describe("Surface filter: Hard, Clay, Grass, I.hard, or 'all' for all surfaces"),
         }),
-        execute: async ({ player_id, surface }: { player_id: string; surface: string }) =>
-          tools.playerAdvancedStats(await resolvePlayerId(player_id), surface === "all" ? undefined : surface),
+        execute: safeExecute(
+          async ({ player_id, surface }) =>
+            tools.playerAdvancedStats(await resolvePlayerId(player_id), surface === "all" ? undefined : surface),
+          "player_advanced_stats"
+        ),
       },
 
       head_to_head: {
@@ -155,8 +179,11 @@ export async function POST(req: Request) {
           player_b_id: z.string().describe("Second player's OnCourt ID as string"),
           surface: z.string().describe("Filter by surface: Hard, Clay, Grass, I.hard, or 'all' for all surfaces"),
         }),
-        execute: async ({ player_a_id, player_b_id, surface }: { player_a_id: string; player_b_id: string; surface: string }) =>
-          tools.headToHead(await resolvePlayerId(player_a_id), await resolvePlayerId(player_b_id), surface === "all" ? undefined : surface),
+        execute: safeExecute(
+          async ({ player_a_id, player_b_id, surface }) =>
+            tools.headToHead(await resolvePlayerId(player_a_id), await resolvePlayerId(player_b_id), surface === "all" ? undefined : surface),
+          "head_to_head"
+        ),
       },
 
       player_record_at_tournament: {
@@ -165,8 +192,11 @@ export async function POST(req: Request) {
           player_id: z.string().describe("OnCourt player ID as string"),
           tournament_name: z.string().describe("Tournament name or partial name (e.g. 'Monte Carlo', 'Roland Garros', 'Indian Wells')"),
         }),
-        execute: async ({ player_id, tournament_name }: { player_id: string; tournament_name: string }) =>
-          tools.playerRecordAtTournament(await resolvePlayerId(player_id), tournament_name),
+        execute: safeExecute(
+          async ({ player_id, tournament_name }) =>
+            tools.playerRecordAtTournament(await resolvePlayerId(player_id), tournament_name),
+          "player_record_at_tournament"
+        ),
       },
 
       player_recent_form: {
@@ -174,7 +204,7 @@ export async function POST(req: Request) {
         inputSchema: z.object({
           player_id: z.string().describe("OnCourt player ID as string"),
         }),
-        execute: async ({ player_id }: { player_id: string }) => tools.playerRecentForm(await resolvePlayerId(player_id)),
+        execute: safeExecute(async ({ player_id }) => tools.playerRecentForm(await resolvePlayerId(player_id)), "player_recent_form"),
       },
 
       player_record_vs_lefties: {
@@ -182,8 +212,10 @@ export async function POST(req: Request) {
         inputSchema: z.object({
           player_id: z.string().describe("OnCourt player ID as string"),
         }),
-        execute: async ({ player_id }: { player_id: string }) =>
-          tools.playerRecordVsLefties(await resolvePlayerId(player_id)),
+        execute: safeExecute(
+          async ({ player_id }) => tools.playerRecordVsLefties(await resolvePlayerId(player_id)),
+          "player_record_vs_lefties"
+        ),
       },
 
       player_record_vs_big_server: {
@@ -191,8 +223,10 @@ export async function POST(req: Request) {
         inputSchema: z.object({
           player_id: z.string().describe("OnCourt player ID as string"),
         }),
-        execute: async ({ player_id }: { player_id: string }) =>
-          tools.playerRecordVsBigServer(await resolvePlayerId(player_id)),
+        execute: safeExecute(
+          async ({ player_id }) => tools.playerRecordVsBigServer(await resolvePlayerId(player_id)),
+          "player_record_vs_big_server"
+        ),
       },
 
       player_record_at_altitude: {
@@ -200,7 +234,10 @@ export async function POST(req: Request) {
         inputSchema: z.object({
           player_id: z.string().describe("OnCourt player ID as string"),
         }),
-        execute: async ({ player_id }: { player_id: string }) => tools.playerRecordAtAltitude(await resolvePlayerId(player_id)),
+        execute: safeExecute(
+          async ({ player_id }) => tools.playerRecordAtAltitude(await resolvePlayerId(player_id)),
+          "player_record_at_altitude"
+        ),
       },
 
       player_record_vs_rank_range: {
@@ -209,8 +246,11 @@ export async function POST(req: Request) {
           player_id: z.string().describe("OnCourt player ID as string"),
           max_rank: z.string().describe("Maximum rank to filter opponents (e.g. '10' for top 10, '50' for top 50)"),
         }),
-        execute: async ({ player_id, max_rank }: { player_id: string; max_rank: string }) =>
-          tools.playerRecordVsRankRange(await resolvePlayerId(player_id), Number(max_rank) || 10),
+        execute: safeExecute(
+          async ({ player_id, max_rank }) =>
+            tools.playerRecordVsRankRange(await resolvePlayerId(player_id), Number(max_rank) || 10),
+          "player_record_vs_rank_range"
+        ),
       },
 
       player_record_by_round: {
@@ -218,7 +258,10 @@ export async function POST(req: Request) {
         inputSchema: z.object({
           player_id: z.string().describe("OnCourt player ID as string"),
         }),
-        execute: async ({ player_id }: { player_id: string }) => tools.playerRecordByRound(await resolvePlayerId(player_id)),
+        execute: safeExecute(
+          async ({ player_id }) => tools.playerRecordByRound(await resolvePlayerId(player_id)),
+          "player_record_by_round"
+        ),
       },
 
       player_record_by_surface: {
@@ -227,8 +270,11 @@ export async function POST(req: Request) {
           player_id: z.string().describe("OnCourt player ID or player name"),
           surface: z.string().describe("Surface filter: Hard, Clay, Grass, or 'all' for breakdown of all surfaces"),
         }),
-        execute: async ({ player_id, surface }: { player_id: string; surface: string }) =>
-          tools.playerRecordBySurface(await resolvePlayerId(player_id), surface === "all" ? undefined : surface),
+        execute: safeExecute(
+          async ({ player_id, surface }) =>
+            tools.playerRecordBySurface(await resolvePlayerId(player_id), surface === "all" ? undefined : surface),
+          "player_record_by_surface"
+        ),
       },
 
       tournament_info: {
@@ -236,7 +282,7 @@ export async function POST(req: Request) {
         inputSchema: z.object({
           tournament_name: z.string().describe("Tournament name or partial name"),
         }),
-        execute: async ({ tournament_name }: { tournament_name: string }) => tools.tournamentInfo(tournament_name),
+        execute: safeExecute(async ({ tournament_name }) => tools.tournamentInfo(tournament_name), "tournament_info"),
       },
 
       court_pace: {
@@ -244,7 +290,7 @@ export async function POST(req: Request) {
         inputSchema: z.object({
           tournament_name: z.string().describe("Tournament name or partial name"),
         }),
-        execute: async ({ tournament_name }: { tournament_name: string }) => tools.courtPace(tournament_name),
+        execute: safeExecute(async ({ tournament_name }) => tools.courtPace(tournament_name), "court_pace"),
       },
 
       tournament_past_winners: {
@@ -252,7 +298,10 @@ export async function POST(req: Request) {
         inputSchema: z.object({
           tournament_name: z.string().describe("Tournament name or partial name"),
         }),
-        execute: async ({ tournament_name }: { tournament_name: string }) => tools.tournamentPastWinners(tournament_name),
+        execute: safeExecute(
+          async ({ tournament_name }) => tools.tournamentPastWinners(tournament_name),
+          "tournament_past_winners"
+        ),
       },
 
       tournament_entrants: {
@@ -261,8 +310,11 @@ export async function POST(req: Request) {
           tournament_name: z.string().describe("Tournament name (e.g. Indian Wells, Miami)"),
           player_name: z.string().describe("Player name to check (e.g. Draper), or 'all' for full entrants list"),
         }),
-        execute: async ({ tournament_name, player_name }: { tournament_name: string; player_name: string }) =>
-          tools.tournamentEntrants(tournament_name, player_name === "all" ? undefined : player_name),
+        execute: safeExecute(
+          async ({ tournament_name, player_name }) =>
+            tools.tournamentEntrants(tournament_name, player_name === "all" ? undefined : player_name),
+          "tournament_entrants"
+        ),
       },
 
       match_prediction: {
@@ -270,8 +322,10 @@ export async function POST(req: Request) {
         inputSchema: z.object({
           player_name: z.string().describe("Player name to find their specific match, or 'all' to get all today's matches"),
         }),
-        execute: async ({ player_name }: { player_name: string }) =>
-          tools.matchPrediction(player_name === "all" ? undefined : player_name),
+        execute: safeExecute(
+          async ({ player_name }) => tools.matchPrediction(player_name === "all" ? undefined : player_name),
+          "match_prediction"
+        ),
       },
 
       tournament_fav_dog_stats: {
@@ -279,8 +333,10 @@ export async function POST(req: Request) {
         inputSchema: z.object({
           tournament_name: z.string().describe("Tournament name (e.g. Indian Wells, French Open, Miami)"),
         }),
-        execute: async ({ tournament_name }: { tournament_name: string }) =>
-          tools.tournamentFavDogStats(tournament_name),
+        execute: safeExecute(
+          async ({ tournament_name }) => tools.tournamentFavDogStats(tournament_name),
+          "tournament_fav_dog_stats"
+        ),
       },
 
       tournament_seed_stats: {
@@ -288,8 +344,10 @@ export async function POST(req: Request) {
         inputSchema: z.object({
           tournament_name: z.string().describe("Tournament name (e.g. Indian Wells, French Open, Wimbledon)"),
         }),
-        execute: async ({ tournament_name }: { tournament_name: string }) =>
-          tools.tournamentSeedStats(tournament_name),
+        execute: safeExecute(
+          async ({ tournament_name }) => tools.tournamentSeedStats(tournament_name),
+          "tournament_seed_stats"
+        ),
       },
     },
   });

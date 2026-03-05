@@ -75,7 +75,7 @@ export default function CookieBanner({ measurementId }: Props) {
       <div className="w-full max-w-md rounded-xl border border-slate-700/60 bg-slate-900 p-6 shadow-2xl">
         <h2 className="text-lg font-semibold text-slate-100 mb-2">We use cookies</h2>
         <p className="text-sm text-slate-400 mb-6">
-          We use analytics cookies to improve the site and understand how you use it — including what you ask Roger, our tennis chatbot.{" "}
+          We use analytics cookies to improve the site and understand how you use it, including what you ask Roger, our tennis chatbot.{" "}
           <Link href="/cookies-policy" className="text-emerald-400 hover:text-emerald-300 underline">
             Cookies policy
           </Link>

@@ -7,9 +7,10 @@ import { useChatContext } from "@/contexts/ChatContext";
 import { track } from "@/lib/analytics";
 
 const SUGGESTED = [
-  "What's Sinner's record vs left-handed players?",
-  "Alcaraz's record at Indian Wells?",
-  "Head-to-head for today's ATP matches?",
+  "CPI of Miami in 2024?",
+  "How do underdogs do at Indian Wells?",
+  "Sinner's record vs left-handed players?",
+  "How do qualifiers do at Roland Garros?",
   "Who's won Indian Wells the most?",
 ];
 
@@ -110,10 +111,10 @@ export default function ChatWidget() {
             {messages.length === 0 && !error && (
               <div className="space-y-3">
                 <p className="text-sm text-slate-400">
-                  Ask me anything about ATP tennis: player records, head to head, tournament history, serve stats, and more to enhance your betting.
+                  Ask me anything about ATP tennis: player records, head to head, tournament history, court pace (CPI), serve stats, and more.
                 </p>
                 <p className="text-xs text-slate-500">
-                  Player records and H2H use full ATP history; fav/dog ROI and betting stats cover the last 4 years.
+                  Player records and H2H use full ATP history; fav/dog ROI covers the last 4 years. Tips are based solely on our stats and data.
                 </p>
                 <div className="space-y-2">
                   <p className="text-[11px] text-slate-600 uppercase tracking-wider font-medium">Try asking:</p>

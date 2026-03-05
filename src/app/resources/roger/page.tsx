@@ -7,9 +7,10 @@ import Footer from "@/components/Footer";
 import { useChatContext } from "@/contexts/ChatContext";
 
 const SUGGESTED = [
-  "What's Sinner's record vs left-handed players?",
-  "Alcaraz's record at Indian Wells?",
-  "Head to head for today's ATP matches?",
+  "CPI of Miami in 2024?",
+  "How do underdogs do at Indian Wells?",
+  "Sinner's record vs left-handed players?",
+  "How do qualifiers do at Roland Garros?",
   "Who's won Indian Wells the most?",
 ];
 
@@ -33,7 +34,7 @@ export default function RogerPage() {
             <span>← Resources</span>
           </Link>
           <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">
-            TENNIS STATS CHATBOT
+            TENNIS STATS CHATBOT · VERSION 1.0
           </span>
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4">
             Meet Roger
@@ -67,12 +68,15 @@ export default function RogerPage() {
           <ul className="space-y-2 text-slate-300">
             <li>• Head-to-head records between any ATP players</li>
             <li>• Player records at specific tournaments (Indian Wells, Roland Garros, etc.)</li>
+            <li>• Court pace (CPI) by tournament and year</li>
             <li>• Serve and return stats by surface</li>
             <li>• Record vs left-handed players or big servers</li>
             <li>• Tournament winners, seeds, qualifiers, and recent form</li>
             <li>• How favourites or underdogs do at a tournament (ROI, last 4 years)</li>
-            <li>• Today&apos;s matches: H2H and context for the fixtures</li>
           </ul>
+          <p className="text-sm text-slate-500 mt-4">
+            Any tips or views are based solely on our stats and data. We don&apos;t speculate beyond what the numbers show.
+          </p>
 
           <h2 className="text-xl font-semibold text-slate-100 mt-10 mb-4">Try asking (click to get an answer)</h2>
           <div className="space-y-2">
@@ -86,6 +90,14 @@ export default function RogerPage() {
               </button>
             ))}
           </div>
+
+          <p className="text-sm text-slate-500 mt-10">
+            Roger v1.0. We&apos;re iterating. Feedback, improvements, or bug reports?{" "}
+            <Link href="/contact" className="text-emerald-400 hover:text-emerald-300 underline">
+              Contact us
+            </Link>
+            {" "}(<a href="mailto:contact@ilmargine.bet" className="text-emerald-400 hover:text-emerald-300 underline">contact@ilmargine.bet</a>).
+          </p>
         </div>
       </section>
 
