@@ -6,12 +6,17 @@ Uses Pinnacle's public guest API (guest.api.arcadia.pinnacle.com) to fetch
 structured JSON for all tennis leagues, matchups, and markets. No more HTML
 parsing or Playwright browser automation.
 
-Returns match-winner odds + total-games O/U for ATP & Challenger leagues.
+Scope: MEN'S SINGLES ONLY.
+  - Include: ATP (main draw + qualifiers), Challenger.
+  - Exclude: doubles, ITF, WTA, Futures / anything below Challenger (e.g. M15, M25).
 
 Usage:
   python scripts/pinnacle-scrape-odds.py
   python scripts/pinnacle-scrape-odds.py --dry-run --verbose
   python scripts/pinnacle-scrape-odds.py --include-wta
+  python scripts/pinnacle-scrape-odds.py --list-leagues   # debug: print all tennis leagues (Indian Wells etc.)
+  python scripts/pinnacle-scrape-odds.py --active-leagues-only   # only leagues with all=false (default)
+  python scripts/pinnacle-scrape-odds.py --all-leagues           # use all=true (slower; debug/fallback)
 """
 
 import csv
@@ -50,6 +55,10 @@ SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SU
 DRY_RUN = "--dry-run" in sys.argv
 VERBOSE = "--verbose" in sys.argv or "-v" in sys.argv
 INCLUDE_WTA = "--include-wta" in sys.argv
+LIST_LEAGUES_ONLY = "--list-leagues" in sys.argv
+PINNACLE_LEAGUES_ALL = "--all-leagues" in sys.argv
+# Keep daily jobs fast and predictable: use active leagues by default.
+PINNACLE_LEAGUES_ACTIVE_ONLY = "--active-leagues-only" in sys.argv or not PINNACLE_LEAGUES_ALL
 
 # ─── Pinnacle Guest API ────────────────────────────────────────────
 #
@@ -163,26 +172,73 @@ def _classify_league(name: str) -> str:
 
 
 def _should_include_league(name: str) -> bool:
-    """Filter leagues based on CLI flags."""
+    """
+    Include men's singles tour-level leagues (ATP/challenger/qualifiers where Pinnacle
+    may omit explicit 'ATP' in league name). Exclude women, ITF/Futures, and low-level Mxx.
+    """
     upper = (name or "").upper()
-    if "ITF" in upper:
-        return False
-    if "ATP" in upper or "CHALLENGER" in upper:
-        return True
     if "WTA" in upper or "WOMEN" in upper:
-        return INCLUDE_WTA
+        return bool(INCLUDE_WTA)
+    if "DOUBLES" in upper:
+        return False
+    if "ITF" in upper or "FUTURES" in upper or "JUNIOR" in upper or "BOYS" in upper or "GIRLS" in upper:
+        return False
+    if re.search(r"\bM\d{2}\b", upper):  # M15, M25, M50 etc.
+        return False
+    # Keep explicit ATP/Challenger; also include remaining men's leagues so
+    # qualifiers like Indian Wells are not missed when naming differs.
     return True
+
+
+def _extract_best_game_total(markets: list[dict] | None) -> dict | None:
+    """
+    Pick one full-match games total market (prefer non-alternate). Skip set totals.
+    """
+    best = None
+    for mkt in markets or []:
+        if mkt.get("type") != "total":
+            continue
+        if mkt.get("period") != 0:
+            continue
+        prices = mkt.get("prices", []) or []
+        if not prices:
+            continue
+        points = prices[0].get("points")
+        try:
+            points_f = float(points)
+        except (TypeError, ValueError):
+            continue
+        units = str(mkt.get("units") or "").lower()
+        special = str(mkt.get("special") or "").lower()
+        if "set" in units or "set" in special:
+            continue
+        if points_f < 10:
+            continue  # set totals are typically <10
+        over_p = next((p["price"] for p in prices if p.get("designation") == "over"), None)
+        under_p = next((p["price"] for p in prices if p.get("designation") == "under"), None)
+        if over_p is None or under_p is None:
+            continue
+        cand = {
+            "line": points_f,
+            "over": american_to_decimal(over_p),
+            "under": american_to_decimal(under_p),
+            "is_alt": bool(mkt.get("isAlternate", False)),
+        }
+        if best is None or (best.get("is_alt") and not cand.get("is_alt")):
+            best = cand
+    return best
 
 
 # ─── Core scraper ───────────────────────────────────────────────────
 
 def scrape_pinnacle() -> list[dict]:
     """
-    Scrape all ATP/Challenger tennis odds from Pinnacle's guest API.
+    Scrape men's singles only: ATP (main + qualifiers) + Challenger.
+    No doubles, ITF, WTA, or below Challenger.
 
     Flow:
-      1. GET /sports/33/leagues — list active tennis leagues
-      2. Filter for ATP/Challenger (optionally WTA)
+      1. GET /sports/33/leagues — list tennis leagues
+      2. Filter for ATP/Challenger only (optionally WTA with --include-wta)
       3. For each league:
          a. GET /leagues/{id}/matchups — get matches + player names
          b. GET /leagues/{id}/markets/straight — get all odds
@@ -191,10 +247,12 @@ def scrape_pinnacle() -> list[dict]:
     """
     results = []
 
-    # ── Step 1: Get active tennis leagues ──
+    # ── Step 1: Get tennis leagues ──
+    # default: active only (all=false); fallback/debug: --all-leagues (all=true)
+    all_param = "false" if PINNACLE_LEAGUES_ACTIVE_ONLY else "true"
     if VERBOSE:
-        print("  Fetching tennis leagues...")
-    leagues = _api_get(f"sports/{PINNACLE_SPORT_ID_TENNIS}/leagues?all=false")
+        print(f"  Fetching tennis leagues (all={all_param})...")
+    leagues = _api_get(f"sports/{PINNACLE_SPORT_ID_TENNIS}/leagues?all={all_param}")
     if not leagues:
         print("ERROR: Failed to fetch tennis leagues from API.")
         return []
@@ -269,28 +327,18 @@ def scrape_pinnacle() -> list[dict]:
                     }
 
             elif mtype == "total":
-                points = prices[0].get("points", 0)
-                is_alt = mkt.get("isAlternate", False)
-                if points < 10:
-                    continue  # skip set totals
-                over_p = next((p["price"] for p in prices if p.get("designation") == "over"), None)
-                under_p = next((p["price"] for p in prices if p.get("designation") == "under"), None)
-                if over_p is None or under_p is None:
+                cand = _extract_best_game_total([mkt])
+                if cand is None:
                     continue
                 existing = game_totals.get(mid)
-                if existing is None or (existing.get("is_alt") and not is_alt):
-                    game_totals[mid] = {
-                        "line": points,
-                        "over": american_to_decimal(over_p),
-                        "under": american_to_decimal(under_p),
-                        "is_alt": is_alt,
-                    }
+                if existing is None or (existing.get("is_alt") and not cand.get("is_alt")):
+                    game_totals[mid] = cand
 
         if VERBOSE:
             print(f"    {len(regular_matchups)} regular matchups, {len(games_matchups)} (Games) variants")
             print(f"    {len(moneylines)} moneylines, {len(game_totals)} game-total lines")
 
-        # ── Merge: for each regular matchup, combine ML + game total ──
+        # ── Merge: for each regular matchup, combine ML + game total (singles only) ──
         league_count = 0
         for m in regular_matchups:
             mid = m["id"]
@@ -303,6 +351,7 @@ def scrape_pinnacle() -> list[dict]:
             p1 = _clean_name(p1_raw)
             p2 = _clean_name(p2_raw)
 
+            # Men's singles only: skip doubles (e.g. "Smith / Jones" or "A & B")
             if _is_doubles(p1) or _is_doubles(p2):
                 continue
             if m.get("isLive"):
@@ -322,6 +371,24 @@ def scrape_pinnacle() -> list[dict]:
                     gt = game_totals.get(games_mid)
             if not gt:
                 gt = game_totals.get(mid)
+            if not gt:
+                # Fallback: query matchup-level markets (same as opening the match page)
+                fallback_ids = []
+                if games_mid:
+                    fallback_ids.append(games_mid)
+                fallback_ids.append(mid)
+                if m.get("parentId"):
+                    fallback_ids.append(m["parentId"])
+                for fb_mid in dict.fromkeys(fallback_ids):
+                    related = _api_get(f"matchups/{fb_mid}/markets/related/straight", retries=1)
+                    if isinstance(related, list):
+                        gt = _extract_best_game_total(related)
+                    if gt is None:
+                        straight = _api_get(f"matchups/{fb_mid}/markets/straight", retries=1)
+                        if isinstance(straight, list):
+                            gt = _extract_best_game_total(straight)
+                    if gt is not None:
+                        break
 
             margin = compute_margin(ml["odds1"], ml["odds2"])
 
@@ -342,7 +409,7 @@ def scrape_pinnacle() -> list[dict]:
 
         if VERBOSE:
             ou_c = sum(1 for r in results[-league_count:] if r.get("ou_line"))
-            print(f"    → {league_count} singles matches ({ou_c} with O/U)")
+            print(f"    -> {league_count} singles matches ({ou_c} with O/U)")
 
     # ── Dedup by player pair (keep lowest margin) ──
     seen = {}
@@ -358,6 +425,149 @@ def scrape_pinnacle() -> list[dict]:
     return results
 
 
+# ─── Outright (tournament winner) scraper ───────────────────────────
+
+def _normalise_tournament_name(league_name: str) -> str:
+    """Map Pinnacle league name to canonical tournament name."""
+    upper = (league_name or "").upper()
+    if "INDIAN WELLS" in upper and "CHALLENGER" not in upper and "QUALIF" not in upper:
+        return "Indian Wells"
+    if "MIAMI" in upper and "ITF" not in upper and "CHALLENGER" not in upper:
+        return "Miami"
+    if "MONTE CARLO" in upper or "MONTE-CARLO" in upper:
+        return "Monte Carlo"
+    if "MADRID" in upper and "MUTUA" in upper:
+        return "Madrid"
+    if "ROME" in upper or "INTERNAZIONALI" in upper and "ITAL" in upper:
+        return "Rome"
+    if "CANADA" in upper or "MONTREAL" in upper or "TORONTO" in upper:
+        return "Canada"
+    if "CINCINNATI" in upper or "WESTERN" in upper:
+        return "Cincinnati"
+    if "SHANGHAI" in upper:
+        return "Shanghai"
+    if "PARIS" in upper and "MASTERS" in upper:
+        return "Paris"
+    if "AUSTRALIAN OPEN" in upper:
+        return "Australian Open"
+    if "FRENCH OPEN" in upper or "ROLAND" in upper:
+        return "French Open"
+    if "WIMBLEDON" in upper:
+        return "Wimbledon"
+    if "US OPEN" in upper or "U.S. OPEN" in upper:
+        return "US Open"
+    # Fallback: strip qualifiers, challenger, round suffixes
+    name = re.sub(r"\s*-\s*(Qualifiers?|R\d+|QF|SF|Final|CHALLENGER).*", "", upper, flags=re.I)
+    return name.strip() or league_name
+
+
+def scrape_outrights() -> list[dict]:
+    """
+    Scrape tournament winner (outright) odds from Pinnacle.
+    Returns list of {tournament_name, league_name, player_name, odds, rank_in_market}.
+    """
+    results = []
+    leagues = _api_get(f"sports/{PINNACLE_SPORT_ID_TENNIS}/leagues?all={'false' if PINNACLE_LEAGUES_ACTIVE_ONLY else 'true'}")
+    if not leagues:
+        return []
+
+    for lg in leagues:
+        name = lg.get("name", "")
+        if not _should_include_league(name) or "DOUBLES" in name.upper():
+            continue
+        lid = lg.get("id")
+        matchups = _api_get(f"leagues/{lid}/matchups")
+        if not matchups:
+            continue
+
+        outright = next((m for m in matchups if len(m.get("participants", [])) > 2), None)
+        if not outright:
+            continue
+
+        markets = _api_get(f"leagues/{lid}/markets/straight")
+        mkt = next((m for m in markets or [] if m.get("matchupId") == outright["id"] and m.get("type") == "moneyline"), None)
+        if not mkt or not mkt.get("prices"):
+            continue
+
+        pid_to_name = {p.get("id"): _clean_name(p.get("name", "")) for p in outright.get("participants", [])}
+        prices = mkt.get("prices", [])
+        rows = []
+        for rank, p in enumerate(prices, 1):
+            pid = p.get("participantId")
+            player = pid_to_name.get(pid, "")
+            if not player or player == "The Field":
+                continue
+            try:
+                american = int(p.get("price", 0))
+                odds = american_to_decimal(american)
+            except (TypeError, ValueError):
+                continue
+            rows.append({
+                "tournament_name": _normalise_tournament_name(name),
+                "league_name": name,
+                "player_name": player,
+                "odds": odds,
+                "rank_in_market": rank,
+            })
+        results.extend(rows)
+        if VERBOSE:
+            print(f"    Outright: {name} -> {len(rows)} players")
+
+    return results
+
+
+def upsert_outrights_to_supabase(results: list[dict]):
+    """Batch upsert to tournament_outright_snapshot."""
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        print("  WARNING: No Supabase credentials — skipping outright upsert.")
+        return
+
+    now = datetime.now(timezone.utc)
+    today = now.strftime("%Y-%m-%d")
+
+    rows = []
+    for r in results:
+        rows.append({
+            "capture_date": today,
+            "tournament_name": r["tournament_name"],
+            "league_name": r["league_name"],
+            "player_name": r["player_name"],
+            "odds": r["odds"],
+            "rank_in_market": r["rank_in_market"],
+            "captured_at": now.isoformat(),
+        })
+
+    if not rows:
+        return
+
+    delete_url = f"{SUPABASE_URL.rstrip('/')}/rest/v1/tournament_outright_snapshot?capture_date=eq.{today}"
+    delete_headers = {"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"}
+    try:
+        requests.delete(delete_url, headers=delete_headers, timeout=30)
+    except requests.RequestException:
+        pass
+
+    url = f"{SUPABASE_URL.rstrip('/')}/rest/v1/tournament_outright_snapshot"
+    headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Content-Type": "application/json",
+        "Prefer": "resolution=merge-duplicates",
+    }
+    try:
+        resp = requests.post(url, json=rows, headers=headers, timeout=60)
+        if resp.ok:
+            by_tour = {}
+            for r in rows:
+                t = r["tournament_name"]
+                by_tour[t] = by_tour.get(t, 0) + 1
+            print(f"  Outrights: {len(rows)} rows for {len(by_tour)} tournaments")
+        else:
+            print(f"  WARNING: Outright upsert failed: {resp.status_code} {resp.text[:120]}")
+    except requests.RequestException as e:
+        print(f"  WARNING: Outright upsert error: {e}")
+
+
 # ─── Supabase upsert ────────────────────────────────────────────────
 
 def upsert_to_supabase(results: list[dict]):
@@ -371,15 +581,11 @@ def upsert_to_supabase(results: list[dict]):
 
     rows = []
     for r in results:
-        league_db = r.get("league", "ATP")
-        if league_db == "Challenger":
-            league_db = "ATP"
-
         rows.append({
             "capture_date": today,
             "captured_at": now.isoformat(),
             "bookmaker": "Pinnacle",
-            "league": league_db,
+            "league": r.get("league", "ATP"),
             "player1_name": r["player1_name"],
             "player2_name": r["player2_name"],
             "odds1": r["odds1"],
@@ -393,6 +599,19 @@ def upsert_to_supabase(results: list[dict]):
     if not rows:
         print("  No rows to upsert.")
         return
+
+    # Keep snapshot coherent per day: clear today's Pinnacle rows first, then write fresh set.
+    delete_url = f"{SUPABASE_URL.rstrip('/')}/rest/v1/bookmaker_odds_snapshot?capture_date=eq.{today}&bookmaker=eq.Pinnacle"
+    delete_headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+    }
+    try:
+        dresp = requests.delete(delete_url, headers=delete_headers, timeout=30)
+        if not dresp.ok:
+            print(f"  WARNING: pre-clear failed ({dresp.status_code}): {dresp.text[:160]}")
+    except requests.RequestException as e:
+        print(f"  WARNING: pre-clear network error: {e}")
 
     conflict_cols = "capture_date,bookmaker,league,player1_name,player2_name"
     url = f"{SUPABASE_URL.rstrip('/')}/rest/v1/bookmaker_odds_snapshot?on_conflict={conflict_cols}"
@@ -409,8 +628,9 @@ def upsert_to_supabase(results: list[dict]):
             resp = requests.post(url, json=rows, headers=headers, timeout=30)
             if resp.ok:
                 atp_c = sum(1 for r in rows if r["league"] == "ATP")
+                chall_c = sum(1 for r in rows if r["league"] == "Challenger")
                 wta_c = sum(1 for r in rows if r["league"] == "WTA")
-                print(f"  Upserted {len(rows)} rows ({atp_c} ATP, {wta_c} WTA)")
+                print(f"  Upserted {len(rows)} rows ({atp_c} ATP, {chall_c} Challenger, {wta_c} WTA)")
                 return
             elif resp.status_code == 409:
                 print("  ERROR: 409 Conflict — missing UNIQUE constraint.")
@@ -463,6 +683,34 @@ def save_debug_json(results: list[dict]):
 
 # ─── Entry point ────────────────────────────────────────────────────
 
+def list_leagues_and_exit():
+    """Fetch and print all tennis leagues (all=false and all=true) for debugging Indian Wells etc."""
+    print("  Fetching tennis leagues (all=false)...")
+    active = _api_get(f"sports/{PINNACLE_SPORT_ID_TENNIS}/leagues?all=false")
+    print("  Fetching tennis leagues (all=true)...")
+    all_leagues = _api_get(f"sports/{PINNACLE_SPORT_ID_TENNIS}/leagues?all=true")
+    print()
+    for label, leagues in [("all=false (active)", active or []), ("all=true (all)", all_leagues or [])]:
+        print(f"  --- {label}: {len(leagues or [])} leagues ---")
+        if not leagues:
+            continue
+        for lg in leagues:
+            name = lg.get("name") or ""
+            lid = lg.get("id", "")
+            inc = "YES" if _should_include_league(name) else "no"
+            tag = _classify_league(name)
+            print(f"    {lid}: {name!r}  -> include={inc}  tag={tag}")
+        print()
+    # Highlight Indian Wells
+    combined = list({lg.get("name"): lg for lg in ((active or []) + (all_leagues or [])) if lg.get("name")}.values())
+    indian = [lg for lg in combined if "indian" in (lg.get("name") or "").lower() or "wells" in (lg.get("name") or "").lower()]
+    if indian:
+        print("  Indian Wells–related leagues:", [lg.get("name") for lg in indian])
+    else:
+        print("  No league name containing 'Indian' or 'Wells' found.")
+    sys.exit(0)
+
+
 def main():
     now = datetime.now(timezone.utc)
     print(f"{'=' * 60}")
@@ -470,6 +718,9 @@ def main():
     print(f"  {now.strftime('%Y-%m-%d %H:%M UTC')}")
     print(f"  Mode: {'DRY RUN' if DRY_RUN else 'LIVE'} | WTA: {'included' if INCLUDE_WTA else 'excluded'}")
     print(f"{'=' * 60}")
+
+    if LIST_LEAGUES_ONLY:
+        list_leagues_and_exit()
 
     if not DRY_RUN and (not SUPABASE_URL or not SUPABASE_KEY):
         print("\n  WARNING: Missing Supabase credentials.")
@@ -508,6 +759,18 @@ def main():
 
     if not DRY_RUN:
         upsert_to_supabase(results)
+
+    # ── Outright (tournament winner) odds ──
+    outrights = scrape_outrights()
+    if outrights:
+        if VERBOSE:
+            by_t = {}
+            for o in outrights:
+                t = o["tournament_name"]
+                by_t[t] = by_t.get(t, 0) + 1
+            print(f"\n  Outrights: {len(outrights)} players across {len(by_t)} tournaments")
+        if not DRY_RUN:
+            upsert_outrights_to_supabase(outrights)
 
     print(f"\n  Done.")
 

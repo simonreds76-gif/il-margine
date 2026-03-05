@@ -7,6 +7,7 @@ import ComplianceBar from "@/components/ComplianceBar";
 import StructuredData from "@/components/StructuredData";
 import CookieBanner from "@/components/CookieBanner";
 import SpeedInsightsClient from "@/components/SpeedInsightsClient";
+import ChatWidget from "@/components/ChatWidget";
 import { BASE_URL, GA_MEASUREMENT_ID } from "@/lib/config";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -73,6 +74,7 @@ export default function RootLayout({
         <div className="site-content w-full min-h-screen">
           {children}
         </div>
+        <ChatWidget />
       </body>
     </html>
   );
