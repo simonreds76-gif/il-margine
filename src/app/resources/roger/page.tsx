@@ -38,8 +38,11 @@ export default function RogerPage() {
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4">
             Meet Roger
           </h1>
-          <p className="text-lg text-slate-300 leading-relaxed mb-6">
+          <p className="text-lg text-slate-300 leading-relaxed mb-4">
             Roger is our tennis stats chatbot, named in honour of Roger Federer. Ask about ATP head to head records, tournament history, serve stats, player records at venues, and more. Anything relevant to tennis to enhance your betting.
+          </p>
+          <p className="text-sm text-slate-500 leading-relaxed mb-6">
+            Player records and head-to-head use full ATP history. Fav/dog ROI and betting stats are based on the last four years.
           </p>
           <div className="flex flex-wrap gap-3">
             <button
@@ -67,7 +70,7 @@ export default function RogerPage() {
             <li>• Serve and return stats by surface</li>
             <li>• Record vs left-handed players or big servers</li>
             <li>• Tournament winners, seeds, qualifiers, and recent form</li>
-            <li>• How favourites or underdogs do at a tournament (historical ROI)</li>
+            <li>• How favourites or underdogs do at a tournament (ROI, last 4 years)</li>
             <li>• Today&apos;s matches: H2H and context for the fixtures</li>
           </ul>
 

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useMemo, FormEvent } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useChatContext } from "@/contexts/ChatContext";
+import { track } from "@/lib/analytics";
 
 const SUGGESTED = [
   "What's Sinner's record vs left-handed players?",
@@ -51,6 +52,7 @@ export default function ChatWidget() {
   function submit(text: string) {
     if (!text.trim() || isLoading) return;
     clearError();
+    track("roger_query", { query: text.trim() });
     sendMessage({ text });
     setInputValue("");
   }
@@ -109,6 +111,9 @@ export default function ChatWidget() {
               <div className="space-y-3">
                 <p className="text-sm text-slate-400">
                   Ask me anything about ATP tennis: player records, head to head, tournament history, serve stats, and more to enhance your betting.
+                </p>
+                <p className="text-xs text-slate-500">
+                  Player records and H2H use full ATP history; fav/dog ROI and betting stats cover the last 4 years.
                 </p>
                 <div className="space-y-2">
                   <p className="text-[11px] text-slate-600 uppercase tracking-wider font-medium">Try asking:</p>
