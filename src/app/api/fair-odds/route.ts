@@ -630,13 +630,10 @@ async function run(): Promise<Response> {
 
   const playerIds = new Set<number>();
   const tourIds = new Set<number>();
-  const statsKeys = new Set<string>();
   for (const r of oddsRows) {
     if (r.player1_id != null) playerIds.add(r.player1_id);
     if (r.player2_id != null) playerIds.add(r.player2_id);
     if (r.tour_id != null) tourIds.add(r.tour_id);
-    if (r.player1_id != null && r.surface) statsKeys.add(`${r.player1_id}:${r.surface}`);
-    if (r.player2_id != null && r.surface) statsKeys.add(`${r.player2_id}:${r.surface}`);
   }
 
   const BATCH = 100;
@@ -703,16 +700,41 @@ async function run(): Promise<Response> {
     );
   }
 
+  const normalizeSurfaceKey = (surface?: string | null): string => {
+    const s = (surface ?? "").trim().toLowerCase();
+    if (!s) return "n/a";
+    if (s === "i.hard" || s === "ihard" || s === "indoor hard") return "i.hard";
+    if (s === "hard") return "hard";
+    if (s === "clay") return "clay";
+    if (s === "grass") return "grass";
+    if (s === "n/a" || s === "na") return "n/a";
+    return s;
+  };
+  const surfaceCandidates = (surface?: string | null): string[] => {
+    const s = normalizeSurfaceKey(surface);
+    if (s === "i.hard") return ["i.hard", "hard", "n/a"];
+    if (s === "hard") return ["hard", "i.hard", "n/a"];
+    return [s, "n/a"];
+  };
   const stats = new Map<string, { hold_pct: number; return_pct: number }>();
   for (const res of statsChunks) {
     for (const s of res.data ?? []) {
-      const key = `${s.player_id}:${s.surface}`;
-      if (!statsKeys.has(key)) continue;
+      const pid = s.player_id != null ? Number(s.player_id) : NaN;
+      if (!Number.isFinite(pid)) continue;
+      const key = `${pid}:${normalizeSurfaceKey(s.surface)}`;
       const hold = s.hold_pct != null ? Number(s.hold_pct) : 0;
       const ret = s.return_pct != null ? Number(s.return_pct) : 0;
       stats.set(key, { hold_pct: hold, return_pct: ret });
     }
   }
+  const getSurfaceStats = (playerId?: number | null, surface?: string | null) => {
+    if (playerId == null) return null;
+    for (const surf of surfaceCandidates(surface)) {
+      const row = stats.get(`${playerId}:${surf}`);
+      if (row) return row;
+    }
+    return null;
+  };
 
   // Use UTC date so it matches script: datetime.now(timezone.utc).date().isoformat()
   const now = new Date();
@@ -747,7 +769,6 @@ async function run(): Promise<Response> {
     return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
   })();
 
-  let snapshotDate = today;
   const { data: snapshotData } = await snapshotClient
     .from("bookmaker_odds_snapshot")
     .select("player1_name, player2_name, odds1, odds2, ou_line, ou_over, ou_under, league, captured_at")
@@ -767,7 +788,6 @@ async function run(): Promise<Response> {
       .order("captured_at", { ascending: false })
       .limit(2000);
     rawSnapshot = yesterdayData;
-    if (rawSnapshot?.length) snapshotDate = yesterday;
   }
 
   if (rawSnapshot?.length) {
@@ -965,8 +985,8 @@ async function run(): Promise<Response> {
   let strictPolicySignaledCount = 0;
 
   const matches: FairOddsRow[] = mainTourOddsRows.map((r) => {
-    const p1Stats = r.player1_id != null && r.surface ? stats.get(`${r.player1_id}:${r.surface}`) : null;
-    const p2Stats = r.player2_id != null && r.surface ? stats.get(`${r.player2_id}:${r.surface}`) : null;
+    const p1Stats = getSurfaceStats(r.player1_id, r.surface);
+    const p2Stats = getSurfaceStats(r.player2_id, r.surface);
     const p1Name = (r.player1_id != null ? players.get(r.player1_id) : null) ?? "";
     const p2Name = (r.player2_id != null ? players.get(r.player2_id) : null) ?? "";
     const tourMeta = r.tour_id != null ? tours.get(r.tour_id) : undefined;

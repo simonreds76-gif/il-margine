@@ -11,6 +11,8 @@ interface BookmakerLogoProps {
   size?: "sm" | "md" | "lg";
   showName?: boolean;
   className?: string;
+  /** When true, render logo only (no Link). Use when already inside a Link to avoid invalid nested anchors. */
+  noLink?: boolean;
 }
 
 // Map bookmaker short_name / name (from DB or copy) to logo filename in public/bookmakers/.
@@ -115,6 +117,7 @@ export default function BookmakerLogo({
   size = "sm",
   showName = false,
   className = "",
+  noLink = false,
 }: BookmakerLogoProps) {
   const bookmaker = Array.isArray(bookmakerProp) ? bookmakerProp[0] : bookmakerProp;
   if (!bookmaker) {
@@ -199,8 +202,8 @@ export default function BookmakerLogo({
     </div>
   );
 
-  // If no affiliate link, just show the logo without link
-  if (!hasAffiliate) {
+  // If no affiliate link or noLink prop (e.g. already inside a Link), just show the logo
+  if (!hasAffiliate || noLink) {
     return content;
   }
 

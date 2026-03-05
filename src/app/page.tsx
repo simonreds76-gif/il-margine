@@ -262,7 +262,7 @@ export default function Home() {
               Professional betting methodology from a former odds compiler. We identify value where bookmakers misprice markets. Data-driven selections, transparent results.
             </p>
             
-            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-12 sm:mb-16">
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8">
               <Link href="/tennis-tips" className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg text-base sm:text-lg transition-all hover:scale-105">
                 View Today&apos;s Tips
               </Link>
@@ -270,7 +270,6 @@ export default function Home() {
                 How It Works
               </Link>
             </div>
-            
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8">
               <div className="p-5 sm:p-6 bg-slate-900/60 rounded-lg border border-slate-800/50 hover:border-emerald-500/30 transition-all">
                 <div className="text-3xl sm:text-4xl font-semibold text-emerald-400 font-mono mb-2 min-h-[2.25rem]">
@@ -445,7 +444,7 @@ export default function Home() {
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-4">
                           <span className="font-mono text-slate-200 font-semibold">{formatOdds(bet.odds)}</span>
-                          <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
+                          <BookmakerLogo bookmaker={bet.bookmaker} size="sm" noLink />
                           <span className="font-mono text-slate-100 font-bold min-w-[2.5rem] text-right">{formatStake(bet.stake)}u</span>
                         </div>
                       </div>
@@ -567,7 +566,7 @@ export default function Home() {
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-4">
                           <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
-                          <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
+                          <BookmakerLogo bookmaker={bet.bookmaker} size="sm" noLink />
                           <span className="font-mono text-slate-100 font-bold min-w-[2.5rem] text-right">{formatStake(bet.stake)}u</span>
                         </div>
                         <span className={`font-mono font-medium shrink-0 ${bet.status === "void" ? "text-slate-400" : bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>

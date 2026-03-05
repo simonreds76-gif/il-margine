@@ -1,5 +1,5 @@
 # Il Margine — Daily Scheduled Task (runs at 23:55)
-# Fully automatic: extract -> sync -> stats -> odds -> strict report append
+# Fully automatic: extract -> sync -> stats -> injury/CPI refresh -> odds -> strict report append
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
@@ -27,7 +27,7 @@ Log "  Daily Pipeline started at $timestamp"
 Log "============================================"
 
 # Step 1: Extract from OnCourt (32-bit Python for .mdb)
-Log "=== Step 1/5: OnCourt extract ==="
+Log "=== Step 1/7: OnCourt extract ==="
 $py32 = "C:\Python312-32\python.exe"
 if (Test-Path $py32) {
     & $py32 scripts\oncourt-extract-all.py 2>&1 | ForEach-Object { Log $_ }
@@ -39,7 +39,7 @@ if (Test-Path $py32) {
 }
 
 # Step 2: Sync to Supabase
-Log "=== Step 2/5: Supabase sync ($syncMode) ==="
+Log "=== Step 2/7: Supabase sync ($syncMode) ==="
 & python scripts\oncourt-load-supabase.py $syncMode 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "ERROR: Supabase sync failed (exit $LASTEXITCODE)"
@@ -47,22 +47,36 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 # Step 3: Compute player stats
-Log "=== Step 3/5: Compute player stats ==="
+Log "=== Step 3/7: Compute player stats ==="
 & python scripts\oncourt-compute-player-stats.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Player stats failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 4: Pinnacle odds + fair odds
-Log "=== Step 4/5: Pinnacle odds + fair odds ==="
-& python scripts\run-daily-odds.py 2>&1 | ForEach-Object { Log $_ }
+# Step 4: Refresh TennisExplorer injured/returning CSV
+Log "=== Step 4/7: Refresh injured players list (TennisExplorer) ==="
+& python scripts\scrape-tennisexplorer-injured.py --max-pages 2 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: injured players scrape failed (exit $LASTEXITCODE), continuing..."
+}
+
+# Step 5: Refresh Tennis Abstract CPI/surface-speed table
+Log "=== Step 5/7: Refresh CPI surface-speed table ==="
+& python scripts\scrape-tennisabstract-surface-speed.py 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: CPI surface-speed refresh failed (exit $LASTEXITCODE), continuing..."
+}
+
+# Step 6: Pinnacle odds + fair odds
+Log "=== Step 6/7: Pinnacle odds + fair odds ==="
+& python scripts\run-daily-odds.py --skip-strict-report 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "ERROR: Pinnacle/fair-odds failed (exit $LASTEXITCODE)"
     exit 1
 }
 
-# Step 5: Strict policy report (auto-append CSV)
-Log "=== Step 5/5: Strict policy report (--append) ==="
+# Step 7: Strict policy report (auto-append CSV)
+Log "=== Step 7/7: Strict policy report (--append) ==="
 & python scripts\strict-policy-report.py --append 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "ERROR: strict-policy-report failed (exit $LASTEXITCODE)"

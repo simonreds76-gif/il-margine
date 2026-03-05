@@ -22,6 +22,7 @@ Or run individually:
 
 1. Supabase Dashboard → SQL Editor
 2. Run `docs/supabase-oncourt-schema.sql`
+3. Run `docs/supabase-player-hand-reference.sql` (for leftie list used by chat + fair-odds)
 
 ## Phase 1.3 – Load into Supabase
 
@@ -33,6 +34,8 @@ C:\Python312-32\python.exe scripts/oncourt-load-supabase.py
 ```
 
 Get credentials: Supabase Dashboard → Settings → API (URL + service_role key).
+
+**player_hand_reference** is loaded from `data/oncourt/categories_atp.csv` (cat1=True = left-handed). Requires that CSV and the table from `docs/supabase-player-hand-reference.sql`. Also runnable standalone: `python scripts/oncourt-load-player-hand.py`
 
 ## One-shot: Extract + Load
 

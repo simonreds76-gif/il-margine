@@ -8,6 +8,8 @@ import StructuredData from "@/components/StructuredData";
 import CookieBanner from "@/components/CookieBanner";
 import SpeedInsightsClient from "@/components/SpeedInsightsClient";
 import ChatWidget from "@/components/ChatWidget";
+import RogerTeaser from "@/components/RogerTeaser";
+import { ChatProvider } from "@/contexts/ChatContext";
 import { BASE_URL, GA_MEASUREMENT_ID } from "@/lib/config";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -65,16 +67,19 @@ export default function RootLayout({
         <meta name="msvalidate.01" content="FD4A9F8A7202C71E5465E6A51F6B8F62" />
       </head>
       <body className={inter.className}>
-        <CookieBanner measurementId={GA_MEASUREMENT_ID} />
-        <SpeedInsightsClient />
-        <Analytics />
-        <StructuredData />
-        <GlobalNav />
-        <ComplianceBar />
-        <div className="site-content w-full min-h-screen">
-          {children}
-        </div>
-        <ChatWidget />
+        <ChatProvider>
+          <CookieBanner measurementId={GA_MEASUREMENT_ID} />
+          <SpeedInsightsClient />
+          <Analytics />
+          <StructuredData />
+          <GlobalNav />
+          <ComplianceBar />
+          <div className="site-content w-full min-h-screen">
+            {children}
+          </div>
+          <ChatWidget />
+          <RogerTeaser />
+        </ChatProvider>
       </body>
     </html>
   );

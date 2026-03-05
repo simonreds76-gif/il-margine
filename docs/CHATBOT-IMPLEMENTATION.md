@@ -8,7 +8,15 @@ All chatbot changes live in the codebase. This doc summarises what's built and t
 |------|---------|
 | `src/app/api/chat/route.ts` | API route, system prompt, tool definitions, Groq/Kimi K2 |
 | `src/lib/chat-tools.ts` | All Supabase query functions (tools) |
+| `src/lib/chat-rag.ts` | RAG retrieval: entity extraction + parallel tool calls, pre-fetches context for the LLM |
 | `src/components/ChatWidget.tsx` | Chat UI, hidden in production |
+
+## RAG (Phase 3)
+
+Before each LLM call, we run retrieval over the user's last message:
+- **Entity extraction:** Player names (from "X vs Y", "X's record", etc.), tournament names (from alias list)
+- **Parallel tool calls:** H2H, player_record_at_tournament, vs_lefties, vs_big_servers, recent_form, tournament_past_winners, court_pace, tournament_info
+- **Context injection:** Retrieved data is prepended to the system prompt. The LLM is instructed to prefer this context and may still call tools for additional detail.
 
 ## Tools (18)
 
@@ -31,6 +39,8 @@ All chatbot changes live in the codebase. This doc summarises what's built and t
 | `court_pace` | CPI / court speed (fast/slow) |
 | `tournament_past_winners` | Past champions with runner-ups |
 | `tournament_entrants` | "Is X playing?" — from Pinnacle outrights (~16 per tournament) |
+| `tournament_fav_dog_stats` | How favourites/dogs do at a tournament (backtest ROI) |
+| `tournament_seed_stats` | Seed/entry stats, qualifier win rates (Sackmann) |
 | `match_prediction` | Today's matches, win probs, handicaps |
 
 ## System Prompt Rules
@@ -57,10 +67,13 @@ All chatbot changes live in the codebase. This doc summarises what's built and t
 - `SUPABASE_SERVICE_ROLE_KEY` — for tools
 - `NEXT_PUBLIC_SUPABASE_URL` — for tools
 
-## Visibility
+## Visibility & placement
 
-- **Localhost:** Chat widget visible.
-- **Production:** Hidden (`process.env.NODE_ENV === "production" return null` in ChatWidget).
+- **Localhost:** Chat widget + nav "Ask Margine" + ChatPrompt on tennis tips & homepage.
+- **Production:** All hidden (`CHAT_ENABLED = NODE_ENV !== "production"`).
+- **Nav:** "Ask Margine" in GlobalNav (desktop & mobile) — opens chat.
+- **Page prompts:** ChatPrompt on `/tennis-tips` and `/` — contextual CTA to open chat.
+- **Name:** "Ask Margine" (branded, tennis + Margine).
 
 ## Outright Setup
 

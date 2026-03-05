@@ -1,0 +1,92 @@
+"use client";
+
+import { useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import Footer from "@/components/Footer";
+import { useChatContext } from "@/contexts/ChatContext";
+
+const SUGGESTED = [
+  "What's Sinner's record vs left-handed players?",
+  "Alcaraz's record at Indian Wells?",
+  "Head to head for today's ATP matches?",
+  "Who's won Indian Wells the most?",
+];
+
+export default function RogerPage() {
+  const ctx = useChatContext();
+  const openChat = ctx?.openChat;
+  const openChatWithMessage = ctx?.openChatWithMessage;
+
+  useEffect(() => {
+    openChat?.();
+  }, [openChat]);
+
+  return (
+    <div className="min-h-screen bg-[#0f1117] text-slate-100">
+      <section className="pt-6 pb-12 md:pt-8 md:pb-16 border-b border-slate-800/50">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Link
+            href="/resources"
+            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8"
+          >
+            <span>← Resources</span>
+          </Link>
+          <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">
+            TENNIS STATS CHATBOT
+          </span>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4">
+            Meet Roger
+          </h1>
+          <p className="text-lg text-slate-300 leading-relaxed mb-6">
+            Roger is our tennis stats chatbot, named in honour of Roger Federer. Ask about ATP head to head records, tournament history, serve stats, player records at venues, and more. Anything relevant to tennis to enhance your betting.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => openChat?.()}
+              className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+            >
+              Open Roger
+            </button>
+            <Link
+              href="/tennis-tips"
+              className="inline-flex items-center gap-2 border border-slate-600 hover:border-slate-400 text-slate-200 font-medium px-6 py-3 rounded-lg transition-colors"
+            >
+              View Tennis Tips
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 md:py-16">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-xl font-semibold text-slate-100 mb-4">What you can ask</h2>
+          <ul className="space-y-2 text-slate-300">
+            <li>• Head-to-head records between any ATP players</li>
+            <li>• Player records at specific tournaments (Indian Wells, Roland Garros, etc.)</li>
+            <li>• Serve and return stats by surface</li>
+            <li>• Record vs left-handed players or big servers</li>
+            <li>• Tournament winners, seeds, qualifiers, and recent form</li>
+            <li>• How favourites or underdogs do at a tournament (historical ROI)</li>
+            <li>• Today&apos;s matches: H2H and context for the fixtures</li>
+          </ul>
+
+          <h2 className="text-xl font-semibold text-slate-100 mt-10 mb-4">Try asking (click to get an answer)</h2>
+          <div className="space-y-2">
+            {SUGGESTED.map((q) => (
+              <button
+                key={q}
+                onClick={() => openChatWithMessage?.(q)}
+                className="block w-full text-left text-sm px-4 py-3 rounded-lg border border-slate-800/60 text-slate-300 hover:bg-slate-800/40 hover:border-emerald-500/30 transition-colors"
+              >
+                {q}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}

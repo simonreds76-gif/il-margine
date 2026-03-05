@@ -3,16 +3,22 @@
 import { useState, useRef, useEffect, useMemo, FormEvent } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
+import { useChatContext } from "@/contexts/ChatContext";
 
 const SUGGESTED = [
-  "What's Sinner's record on clay?",
-  "Monfils vs Rublev head to head?",
-  "Who won Roland Garros last year?",
-  "Who do you think wins today's matches?",
+  "What's Sinner's record vs left-handed players?",
+  "Alcaraz's record at Indian Wells?",
+  "Head-to-head for today's ATP matches?",
+  "Who's won Indian Wells the most?",
 ];
 
+const ROGER_ENABLED = process.env.NODE_ENV !== "production";
+
 export default function ChatWidget() {
-  const [open, setOpen] = useState(false);
+  const ctx = useChatContext();
+  const [localOpen, setLocalOpen] = useState(false);
+  const open = ctx?.open ?? localOpen;
+  const setOpen = ctx?.setOpen ?? setLocalOpen;
   const [inputValue, setInputValue] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -33,6 +39,15 @@ export default function ChatWidget() {
     if (open && inputRef.current) inputRef.current.focus();
   }, [open]);
 
+  // When opened with a pending message (e.g. from Roger page), submit it
+  useEffect(() => {
+    if (open && ctx?.pendingMessage && !isLoading) {
+      const msg = ctx.pendingMessage;
+      ctx.clearPendingMessage();
+      submit(msg);
+    }
+  }, [open, ctx?.pendingMessage, ctx?.clearPendingMessage, isLoading, submit]);
+
   function submit(text: string) {
     if (!text.trim() || isLoading) return;
     clearError();
@@ -52,14 +67,14 @@ export default function ChatWidget() {
       .join("");
   }
 
-  if (process.env.NODE_ENV === "production") return null;
+  if (!ROGER_ENABLED) return null;
 
   return (
     <>
       <button
         onClick={() => setOpen(!open)}
         className="fixed bottom-5 right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-900/30 transition-all hover:scale-105"
-        aria-label="Open tennis data chat"
+        aria-label="Open Roger tennis stats chat"
       >
         {open ? (
           <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -78,8 +93,8 @@ export default function ChatWidget() {
           <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800/60 bg-[#0d0f14]">
             <img src="/favicon.png" alt="Il Margine" className="w-8 h-8 object-contain" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-slate-100">Tennis Data Assistant</p>
-              <p className="text-[11px] text-slate-500">Ask about players, H2H, tournaments, stats</p>
+              <p className="text-sm font-semibold text-slate-100">Roger</p>
+              <p className="text-[11px] text-slate-500">Tennis stats chatbot. H2H, tournaments, records</p>
             </div>
             <button onClick={() => setOpen(false)} className="text-slate-500 hover:text-slate-300 transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -93,7 +108,7 @@ export default function ChatWidget() {
             {messages.length === 0 && !error && (
               <div className="space-y-3">
                 <p className="text-sm text-slate-400">
-                  Ask me anything about ATP tennis — player records, head-to-head, tournament history, serve stats, and more.
+                  Ask me anything about ATP tennis: player records, head to head, tournament history, serve stats, and more to enhance your betting.
                 </p>
                 <div className="space-y-2">
                   <p className="text-[11px] text-slate-600 uppercase tracking-wider font-medium">Try asking:</p>

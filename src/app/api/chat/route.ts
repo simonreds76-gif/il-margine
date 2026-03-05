@@ -2,12 +2,31 @@ import { createGroq } from "@ai-sdk/groq";
 import { streamText, stepCountIs, convertToModelMessages } from "ai";
 import { z } from "zod";
 import * as tools from "@/lib/chat-tools";
+import { retrieveContext } from "@/lib/chat-rag";
 
 export const maxDuration = 30;
 
 const CHAT_MODEL = process.env.GROQ_MODEL || "moonshotai/kimi-k2-instruct";
 
-function buildSystemPrompt(): string {
+function getLastUserMessageText(messages: unknown[]): string {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i] as { role?: string; content?: string; parts?: Array<{ type?: string; text?: string }> };
+    if (m?.role === "user") {
+      if (typeof m.content === "string") return m.content;
+      if (Array.isArray(m.parts)) {
+        const text = m.parts
+          .filter((p) => p?.type === "text" && typeof p.text === "string")
+          .map((p) => (p as { text: string }).text)
+          .join("");
+        if (text) return text;
+      }
+      break;
+    }
+  }
+  return "";
+}
+
+function buildSystemPrompt(ragContext?: string): string {
   const now = new Date();
   const today = now.toISOString().slice(0, 10);
   const year = now.getFullYear();
@@ -30,7 +49,10 @@ RESPONSE STYLE — THIS IS CRITICAL:
 - When asked who will WIN A TOURNAMENT (e.g. "who wins Indian Wells?", "Indian Wells champion?"): do NOT rely on today's match list. Use player_record_at_tournament, player_surface_stats, player_recent_form, tournament_past_winners, court_pace. Today's matches are a small slice — focus on tournament history, form, and surface fit.
 - When asked "is X playing?" or "is Draper in the draw?" or "who's playing Indian Wells?": use tournament_entrants with the tournament and player name. This uses Pinnacle outright odds and gives the full draw.
 - When asked about game handicaps, use the expected total games and game margin data to assess whether the line is coverable.
+- "How do favourites/dogs do at X?" or "fav ROI at Indian Wells?" → use tournament_fav_dog_stats. Level-stake ROI from backtest.
+- "Record of seeds at this tournament?" or "how do qualifiers do at X?" → use tournament_seed_stats. Seed/entry win rates from Sackmann.
 - "Big servers" = use player_record_vs_big_server (W-L vs opponents with SPW >= 68% on that surface). When explaining, say "service point win %" or "SPW", NOT "hold serve" — 68% SPW is a high bar (elite servers only).
+- player_record_vs_lefties: The leftie reference list may not include all players (e.g. Shelton). If by_surface shows only one surface, do NOT claim "all his matches were on X". Say "in our data" or "in the matches we have" — the data may be incomplete.
 - Use phrases like "the numbers favour X here", "this looks like a comfortable win", "tight one — could go either way", "I'd lean towards X but it's marginal".
 
 TOURNAMENT NAME MAPPING (critical — the database uses English names):
@@ -51,7 +73,7 @@ RULES:
 - Use British currency: "quid" not "bucks", "£" not "$". E.g. "a few quid" not "a few bucks".
 - Surface values: Hard, Clay, Grass, I.hard (indoor hard).
 - Round IDs in the database: 1=R1, 2=R2, 3=R3, 7=R16, 9=QF, 10=SF, 12=Final. 4-6 are qualifying rounds.
-- Keep responses SHORT. Max 200 words for match lists, max 100 words for single-match questions. Punchy is better than thorough.`;
+- Keep responses SHORT. Max 200 words for match lists, max 100 words for single-match questions. Punchy is better than thorough.${ragContext ? `\n\n${ragContext}\n\nRAG: Prefer the retrieved context above when it answers the question. You may still call tools for additional detail, but use the context first.` : ""}`;
 }
 
 async function resolvePlayerId(idOrName: string): Promise<number> {
@@ -80,9 +102,12 @@ export async function POST(req: Request) {
   const { messages: uiMessages } = await req.json();
   const modelMessages = await convertToModelMessages(uiMessages);
 
+  const lastUserText = getLastUserMessageText(Array.isArray(uiMessages) ? uiMessages : []);
+  const ragContext = lastUserText ? await retrieveContext(lastUserText) : undefined;
+
   const result = streamText({
     model: groq(CHAT_MODEL),
-    system: buildSystemPrompt(),
+    system: buildSystemPrompt(ragContext),
     messages: modelMessages,
     maxRetries: 1,
     stopWhen: stepCountIs(8),
@@ -247,6 +272,24 @@ export async function POST(req: Request) {
         }),
         execute: async ({ player_name }: { player_name: string }) =>
           tools.matchPrediction(player_name === "all" ? undefined : player_name),
+      },
+
+      tournament_fav_dog_stats: {
+        description: "Get historical favourite vs underdog ROI at a tournament (from backtest). Use for 'how do favourites do at Indian Wells?', 'how do dogs do at this tournament?', 'fav/dog ROI at X'. Returns level-stake ROI % for backing favourites and underdogs over recent years.",
+        inputSchema: z.object({
+          tournament_name: z.string().describe("Tournament name (e.g. Indian Wells, French Open, Miami)"),
+        }),
+        execute: async ({ tournament_name }: { tournament_name: string }) =>
+          tools.tournamentFavDogStats(tournament_name),
+      },
+
+      tournament_seed_stats: {
+        description: "Get seed and entry stats at a tournament (from Sackmann). Use for 'record of seeds at this tournament', 'how do qualifiers do at X', 'seed 1-2 at Indian Wells'. Returns win rates by segment (seed_unseeded, entry_MD, entry_Q, etc.), max round reached, R1 win rate.",
+        inputSchema: z.object({
+          tournament_name: z.string().describe("Tournament name (e.g. Indian Wells, French Open, Wimbledon)"),
+        }),
+        execute: async ({ tournament_name }: { tournament_name: string }) =>
+          tools.tournamentSeedStats(tournament_name),
       },
     },
   });

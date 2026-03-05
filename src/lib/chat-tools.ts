@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import { readFile } from "fs/promises";
+import path from "path";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -947,5 +949,117 @@ export async function courtPace(tournamentName: string): Promise<Row> {
     pace_rating: paceRating,
     sample_size: latest.sample_size,
     recent_years: history,
+  };
+}
+
+/* ── Tournament fav/dog ROI (from backtest CSVs) ───────────── */
+
+function parseCsv(content: string): Record<string, string>[] {
+  const lines = content.trim().split(/\r?\n/);
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(",").map((h) => h.trim());
+  const rows: Record<string, string>[] = [];
+  for (let i = 1; i < lines.length; i++) {
+    const vals = lines[i].split(",");
+    const row: Record<string, string> = {};
+    headers.forEach((h, j) => {
+      row[h] = vals[j] ?? "";
+    });
+    rows.push(row);
+  }
+  return rows;
+}
+
+function matchesTournament(term: string, key: string, display: string): boolean {
+  const t = term.toLowerCase().trim();
+  const k = key.toLowerCase();
+  const d = display.toLowerCase();
+  return k.includes(t) || d.includes(t) || t.includes(k) || t.includes(d.split(" ")[0] ?? "");
+}
+
+/** Reads tournament-fav-dog-roi.csv. For deployment, ensure data/backtest/tournament-fav-dog-roi.csv is committed. */
+export async function tournamentFavDogStats(tournamentName: string): Promise<Row> {
+  const searchTerms = resolveSearchTerms(tournamentName);
+  const csvPath = path.join(process.cwd(), "data", "backtest", "tournament-fav-dog-roi.csv");
+  try {
+    const content = await readFile(csvPath, "utf-8");
+    const rows = parseCsv(content);
+    const rolling = rows.filter((r) => (r.window_type ?? "") === "rolling_4" || (r.window_type ?? "") === "prior_editions");
+    const byYear = rows.filter((r) => (r.window_type ?? "") === "year");
+    const candidates = rolling.length ? rolling : byYear;
+    for (const term of searchTerms) {
+      const match = candidates.find((r) => matchesTournament(term, r.tournament_key ?? "", r.tournament_display ?? ""));
+      if (match) {
+        return {
+          tournament: match.tournament_display ?? match.tournament_key,
+          window: match.window_type,
+          years: match.years,
+          n_matches: num(match.n_matches),
+          fav_bets: num(match.fav_bets),
+          fav_wins: num(match.fav_wins),
+          fav_roi_pct_shrunk: Math.round(num(match.fav_roi_pct_shrunk) * 100) / 100,
+          dog_bets: num(match.dog_bets),
+          dog_wins: num(match.dog_wins),
+          dog_roi_pct_shrunk: Math.round(num(match.dog_roi_pct_shrunk) * 100) / 100,
+        };
+      }
+    }
+  } catch (err) {
+    if (process.env.NODE_ENV === "development") {
+      console.error("[tournamentFavDogStats]", err instanceof Error ? err.message : String(err));
+    }
+  }
+  return {
+    found: false,
+    tournament: tournamentName,
+    message: "No favourite/dog ROI data for this tournament. The backtest CSV may be missing or the tournament name may not match.",
+  };
+}
+
+/** Reads tournament-seed-entry-stats.csv. For deployment, ensure data/backtest/tournament-seed-entry-stats.csv is committed. */
+export async function tournamentSeedStats(tournamentName: string): Promise<Row> {
+  const searchTerms = resolveSearchTerms(tournamentName);
+  const csvPath = path.join(process.cwd(), "data", "backtest", "tournament-seed-entry-stats.csv");
+  try {
+    const content = await readFile(csvPath, "utf-8");
+    const rows = parseCsv(content);
+    const rolling = rows.filter((r) => (r.window_type ?? "") === "rolling_4" || (r.window_type ?? "") === "prior_editions");
+    const byYear = rows.filter((r) => (r.window_type ?? "") === "year");
+    const candidates = rolling.length ? rolling : byYear;
+    let matchKey: string | null = null;
+    let matchDisplay = "";
+    for (const term of searchTerms) {
+      const found = candidates.find((r) => matchesTournament(term, r.tournament_key ?? "", r.tournament_display ?? ""));
+      if (found) {
+        matchKey = found.tournament_key ?? null;
+        matchDisplay = found.tournament_display ?? found.tournament_key ?? "";
+        break;
+      }
+    }
+    if (matchKey) {
+      const segs = candidates.filter((r) => r.tournament_key === matchKey);
+      return {
+        tournament: matchDisplay,
+        window: segs[0]?.window_type,
+        years: segs[0]?.years,
+        segments: segs.slice(0, 15).map((r) => ({
+          segment: r.segment_type,
+          family: r.segment_family,
+          n_matches: num(r.n_matches),
+          win_rate_pct: Math.round(num(r.win_rate_pct_raw) * 10) / 10,
+          max_round: r.max_round,
+          r1_win_rate: num(r.r1_matches) > 0 ? Math.round((num(r.r1_wins) / num(r.r1_matches)) * 1000) / 10 : null,
+        })),
+      };
+    }
+  } catch (err) {
+    if (process.env.NODE_ENV === "development") {
+      console.error("[tournamentSeedStats]", err instanceof Error ? err.message : String(err));
+    }
+  }
+  return {
+    found: false,
+    tournament: tournamentName,
+    message: "No seed/entry stats for this tournament. The backtest CSV may be missing or the tournament name may not match.",
   };
 }

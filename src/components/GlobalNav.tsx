@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-
 export default function GlobalNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [tipsMenuOpen, setTipsMenuOpen] = useState(false);
@@ -71,7 +70,6 @@ export default function GlobalNav() {
                 </div>
               )}
             </div>
-            
             <Link href="/the-edge" className={linkClass(pathname === "/the-edge")}>The Edge</Link>
             <Link href="/track-record" className={linkClass(pathname === "/track-record")}>Track Record</Link>
             <Link href="/bookmakers" className={linkClass(pathname === '/bookmakers')}>Bookmakers</Link>

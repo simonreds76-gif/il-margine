@@ -115,6 +115,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     },
+    {
+      url: `${BASE_URL}/resources/roger`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.85,
+    },
   ];
 
   // Individual tip pages (so Google can index e.g. "Sakatsume vs Parks")
