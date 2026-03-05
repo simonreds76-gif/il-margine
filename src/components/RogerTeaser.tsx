@@ -6,7 +6,7 @@ import { useChatContext } from "@/contexts/ChatContext";
 
 const ROGER_TEASER_KEY = "roger_teaser_seen";
 const ROGER_TEASER_DELAY_MS = 5000;
-const ROGER_ENABLED = process.env.NODE_ENV !== "production";
+const ROGER_ENABLED = true;
 
 const TENNIS_PAGES = ["/", "/tennis-tips", "/player-props", "/atp-tennis", "/fair-odds"];
 

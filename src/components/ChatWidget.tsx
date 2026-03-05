@@ -14,7 +14,7 @@ const SUGGESTED = [
   "Who's won Indian Wells the most?",
 ];
 
-const ROGER_ENABLED = process.env.NODE_ENV !== "production";
+const ROGER_ENABLED = true;
 
 export default function ChatWidget() {
   const ctx = useChatContext();
