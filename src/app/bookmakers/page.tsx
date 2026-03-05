@@ -67,8 +67,8 @@ const BOOKMAKERS = [
     rating: "4/5",
     propsScore: "8/10",
     tennisScore: "7/10",
-    welcomeOffer: "Bet £10 Get £30 in Free Bets",
-    welcomeTerms: "Min odds 1.50, free bets valid 30 days",
+    welcomeOffer: "Bet £10 Get £40 in Free Bets",
+    welcomeTerms: "New UK customers, promo code G40. Deposit & place £10 cash single bet (min odds 1/2) on sportsbook (excl. Virtuals). Get £40 in Free Bets (4x£10), valid 7 days, must use in full (£10 each). Not valid via PayPal, Neosurf, Paysafe, Apple Pay, NETELLER, Skrill, ecoPayz, Kalibra/Postpay or WH PLUS Card. One per customer. Full T&Cs apply.",
     strengths: [
       "Must-have in our rotation — we use it regularly for props and tennis",
       "Stake limits hold up better than many UK books we've tested",
@@ -226,7 +226,7 @@ const BOOKMAKERS = [
 const COMPARISON_ROWS = [
   { name: "Midnite", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Modern platform, major league props" },
   { name: "BetVictor", props: "8/10", tennis: "8/10", offer: "£40 bonuses", bestFor: "All-rounder, strong tennis" },
-  { name: "William Hill", props: "8/10", tennis: "7/10", offer: "£30 free bets", bestFor: "Must-have — we use it often, limits hold up" },
+  { name: "William Hill", props: "8/10", tennis: "7/10", offer: "£40 free bets", bestFor: "Must-have — we use it often, limits hold up" },
   { name: "Bwin", props: "8/10", tennis: "7/10", offer: "£5 → £20 free bets", bestFor: "Pair with Coral and Ladbrokes for extended access" },
   { name: "Coral", props: "8/10", tennis: "7/10", offer: "£30 free bets", bestFor: "Pair with Ladbrokes for extended access" },
   { name: "Ladbrokes", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Pair with Coral for extended access" },
