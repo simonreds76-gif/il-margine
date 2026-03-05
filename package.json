@@ -13,9 +13,13 @@
     "check-last7": "node scripts/check-last7.js"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.43",
+    "@ai-sdk/groq": "^3.0.29",
+    "@ai-sdk/react": "^3.0.118",
     "@supabase/supabase-js": "^2.94.0",
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^1.3.1",
+    "ai": "^6.0.116",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
