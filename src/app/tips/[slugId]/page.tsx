@@ -94,32 +94,25 @@ export default async function TipPage({ params }: PageProps) {
           ? "bg-red-500/20 text-red-400"
           : "bg-slate-500/20 text-slate-400";
 
-  const fullTipText = bet.player && bet.selection
-    ? `${bet.player} ${displaySelection(bet.selection)}`
-    : bet.player
-      ? bet.player
-      : displaySelection(bet.selection);
+  const heroName = bet.player || displaySelection(bet.selection);
+  const heroSelection = bet.player ? displaySelection(bet.selection) : null;
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      {/* Hero block: gradient tint + full tip up entirely */}
+      {/* Hero: player name huge, selection as accent subtitle, match as context */}
       <section className="relative pt-6 pb-10 md:pt-8 md:pb-14 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/20 via-transparent to-transparent pointer-events-none" />
-        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-emerald-500/60 to-emerald-600/20 pointer-events-none" />
+        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-emerald-500/60 to-emerald-600/0 pointer-events-none" />
         <div className="relative max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 mb-6 text-sm">
-            <Link href="/" className="text-slate-500 hover:text-emerald-400/90 transition-colors">
-              Home
-            </Link>
+            <Link href="/" className="text-slate-500 hover:text-emerald-400/90 transition-colors">Home</Link>
             <span className="text-slate-600">/</span>
-            <Link href={listHref} className="text-slate-500 hover:text-emerald-400/90 transition-colors">
-              {listLabel}
-            </Link>
+            <Link href={listHref} className="text-slate-500 hover:text-emerald-400/90 transition-colors">{listLabel}</Link>
             <span className="text-slate-600">/</span>
             <span className="text-emerald-400 font-medium">Tip</span>
           </div>
 
-          <div className="flex items-center gap-2 mb-6 flex-wrap">
+          <div className="flex items-center gap-2 mb-5 flex-wrap">
             <MarketBadge market={bet.market} category={bet.category} />
             <span className="text-xs font-mono px-2.5 py-1 rounded-md border border-slate-600 text-slate-400 bg-slate-800/50">
               {formatMatchDate(bet.match_date)}
@@ -127,50 +120,50 @@ export default async function TipPage({ params }: PageProps) {
             <span className={`text-xs font-mono px-2.5 py-1 rounded-md font-medium ${statusClass}`}>{statusLabel}</span>
           </div>
 
-          {/* Full tip as hero – e.g. "Javi Guerra Over 1.5 Fouls" or "Altmaier" + match */}
-          <p className="text-emerald-400/90 text-xs font-semibold uppercase tracking-widest mb-3">Pick</p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-3 text-slate-100">
-            {fullTipText}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-2">
+            {heroName}
           </h1>
-          <p className="text-slate-400 text-base sm:text-lg">{bet.event}</p>
+          {heroSelection && (
+            <p className="text-xl sm:text-2xl font-medium text-emerald-400 mb-3">{heroSelection}</p>
+          )}
+          <p className="text-slate-500 text-base">{bet.event}</p>
         </div>
       </section>
 
+      {/* Card: odds, stake, bookmaker as a 3-column grid — no Market row (it's in the hero) */}
       <section className="pb-12 md:pb-16">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-xl border border-emerald-500/25 bg-slate-900/80 p-6 space-y-4 shadow-xl shadow-emerald-950/20 ring-1 ring-slate-700/50">
-            <div className="flex justify-between items-center">
-              <span className="text-slate-500 text-sm">Market</span>
-              <span className="font-medium text-emerald-400/90">{displaySelection(bet.selection)}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-500 text-sm">Odds</span>
-              <span className="font-mono text-xl font-bold text-emerald-400">{formatOdds(bet.odds)}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-500 text-sm">Stake</span>
-              <span className="font-mono text-slate-200">{formatStake(bet.stake)}u</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-500 text-sm">Bookmaker</span>
-              <div className="flex items-center justify-end">
+          <div className="rounded-xl border border-slate-700/80 bg-slate-900/80 shadow-xl ring-1 ring-slate-800/60 overflow-hidden">
+            <div className="grid grid-cols-3 divide-x divide-slate-700/60">
+              <div className="p-6 text-center">
+                <span className="block text-[11px] font-medium uppercase tracking-widest text-slate-500 mb-2">Odds</span>
+                <span className="block font-mono text-2xl sm:text-3xl font-bold text-white">{formatOdds(bet.odds)}</span>
+              </div>
+              <div className="p-6 text-center">
+                <span className="block text-[11px] font-medium uppercase tracking-widest text-slate-500 mb-2">Stake</span>
+                <span className="block font-mono text-2xl sm:text-3xl font-bold text-white">{formatStake(bet.stake)}u</span>
+              </div>
+              <div className="p-6 flex flex-col items-center justify-center">
+                <span className="block text-[11px] font-medium uppercase tracking-widest text-slate-500 mb-3">Bookmaker</span>
                 <BookmakerLogo
                   bookmaker={Array.isArray(bet.bookmaker) ? bet.bookmaker[0] : bet.bookmaker}
-                  size="sm"
+                  size="lg"
                 />
               </div>
             </div>
+
             {(bet.status === "won" || bet.status === "lost") && bet.profit_loss != null && (
-              <div className="flex justify-between items-center pt-4 border-t border-slate-700/80">
-                <span className="text-slate-500 text-sm">Result</span>
-                <span className={`font-mono font-semibold ${bet.profit_loss >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
+              <div className="border-t border-slate-700/60 px-6 py-5 flex justify-between items-center">
+                <span className="text-sm font-medium uppercase tracking-widest text-slate-500">Result</span>
+                <span className={`font-mono text-xl font-bold ${bet.profit_loss >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
                   {bet.profit_loss >= 0 ? "+" : ""}{bet.profit_loss.toFixed(2)}u
                 </span>
               </div>
             )}
+
             {bet.notes && (
-              <div className="pt-4 border-t border-slate-700/80">
-                <span className="text-slate-500 text-sm block mb-2">Notes</span>
+              <div className="border-t border-slate-700/60 px-6 py-5">
+                <span className="text-sm font-medium uppercase tracking-widest text-slate-500 block mb-2">Notes</span>
                 <p className="text-slate-300 text-sm leading-relaxed">{bet.notes}</p>
               </div>
             )}
