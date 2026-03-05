@@ -77,7 +77,7 @@ export default function Home() {
     const { data: recent, error: recentError } = await supabase
       .from("bets")
       .select("*, bookmaker:bookmakers(*)")
-      .in("status", ["won", "lost"])
+      .in("status", ["won", "lost", "void"])
       .order("settled_at", { ascending: false })
       .limit(5);
     
@@ -533,12 +533,12 @@ export default function Home() {
                           </td>
                           <td className="px-4 py-4 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(bet.stake)}u</td>
                           <td className="px-4 py-4 text-center border-r border-slate-800/50">
-                            <span className={`text-xs font-mono px-2 py-1 rounded ${bet.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
+                            <span className={`text-xs font-mono px-2 py-1 rounded ${bet.status === "won" ? "text-emerald-400 bg-emerald-500/10" : bet.status === "void" ? "text-slate-400 bg-slate-500/10" : "text-red-400 bg-red-500/10"}`}>
                               {bet.status.toUpperCase()}
                             </span>
                           </td>
-                          <td className={`px-4 py-4 text-right font-mono font-medium ${bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
-                            {bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}{bet.profit_loss?.toFixed(2) || "0.00"}u
+                          <td className={`px-4 py-4 text-right font-mono font-medium ${bet.status === "void" ? "text-slate-400" : bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                            {bet.status === "void" ? "0.00" : `${bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}${bet.profit_loss?.toFixed(2) || "0.00"}`}u
                           </td>
                         </tr>
                       ))}
@@ -560,7 +560,7 @@ export default function Home() {
                             {bet.selection}
                           </div>
                         </div>
-                        <span className={`text-xs font-mono px-2 py-1 rounded ml-2 ${bet.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
+                        <span className={`text-xs font-mono px-2 py-1 rounded ml-2 ${bet.status === "won" ? "text-emerald-400 bg-emerald-500/10" : bet.status === "void" ? "text-slate-400 bg-slate-500/10" : "text-red-400 bg-red-500/10"}`}>
                           {bet.status.toUpperCase()}
                         </span>
                       </div>
@@ -570,8 +570,8 @@ export default function Home() {
                           <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
                           <span className="font-mono text-slate-100 font-bold min-w-[2.5rem] text-right">{formatStake(bet.stake)}u</span>
                         </div>
-                        <span className={`font-mono font-medium shrink-0 ${bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
-                          {bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}{bet.profit_loss?.toFixed(2)}u
+                        <span className={`font-mono font-medium shrink-0 ${bet.status === "void" ? "text-slate-400" : bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                          {bet.status === "void" ? "0.00" : `${bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}${bet.profit_loss?.toFixed(2)}`}u
                         </span>
                       </div>
                     </Link>

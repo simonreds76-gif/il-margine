@@ -90,7 +90,7 @@ export default function PlayerProps() {
       .from("bets")
       .select("*, bookmaker:bookmakers(*)")
       .eq("market", "props")
-      .in("status", ["won", "lost"])
+      .in("status", ["won", "lost", "void"])
       .order("settled_at", { ascending: false })
       .limit(50); // Fetch more from DB, but display only 5 initially
     
@@ -505,12 +505,12 @@ export default function PlayerProps() {
                           </td>
                         <td className="px-4 py-4 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(result.stake)}u</td>
                         <td className="px-4 py-4 text-center border-r border-slate-800/30">
-                          <span className={`text-xs font-mono px-2 py-1 rounded ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
+                          <span className={`text-xs font-mono px-2 py-1 rounded ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : result.status === "void" ? "text-slate-400 bg-slate-500/10" : "text-red-400 bg-red-500/10"}`}>
                             {result.status.toUpperCase()}
                           </span>
                         </td>
-                        <td className={`px-4 py-4 text-right font-mono font-medium ${result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
-                          {result.profit_loss && result.profit_loss > 0 ? "+" : ""}{result.profit_loss?.toFixed(2)}u
+                        <td className={`px-4 py-4 text-right font-mono font-medium ${result.status === "void" ? "text-slate-400" : result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                          {result.status === "void" ? "0.00" : `${result.profit_loss && result.profit_loss > 0 ? "+" : ""}${result.profit_loss?.toFixed(2)}`}u
                         </td>
                       </tr>
                     ))}
@@ -534,7 +534,7 @@ export default function PlayerProps() {
                           {result.selection}
                         </div>
                       </div>
-                      <span className={`text-xs font-mono px-2 py-1 rounded ml-2 ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
+                      <span className={`text-xs font-mono px-2 py-1 rounded ml-2 ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : result.status === "void" ? "text-slate-400 bg-slate-500/10" : "text-red-400 bg-red-500/10"}`}>
                         {result.status.toUpperCase()}
                       </span>
                     </div>
@@ -544,8 +544,8 @@ export default function PlayerProps() {
                         <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
                         <span className="font-mono text-slate-100 font-bold min-w-[2.5rem] text-right">{formatStake(result.stake)}u</span>
                       </div>
-                      <span className={`font-mono font-medium shrink-0 ${result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
-                        {result.profit_loss && result.profit_loss > 0 ? "+" : ""}{result.profit_loss?.toFixed(2)}u
+                      <span className={`font-mono font-medium shrink-0 ${result.status === "void" ? "text-slate-400" : result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                        {result.status === "void" ? "0.00" : `${result.profit_loss && result.profit_loss > 0 ? "+" : ""}${result.profit_loss?.toFixed(2)}`}u
                       </span>
                     </div>
                   </div>
