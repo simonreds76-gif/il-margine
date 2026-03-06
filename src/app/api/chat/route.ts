@@ -128,6 +128,38 @@ async function deterministicAnswer(userText: string): Promise<string | null> {
       : `${lead[0]} has won ${mostTournament} the most in this dataset (${lead[1]} titles).`;
   }
 
+  const asksUnderdog = /\b(underdog|underdogs|dog|dogs|outsider|outsiders|longshot|long shot)\b/i.test(q);
+  if (asksUnderdog) {
+    const rows = await tools.matchPrediction(undefined);
+    const matches = rows.filter((r) => asStr((r as Record<string, unknown>).player1) && asStr((r as Record<string, unknown>).player2));
+    if (!matches.length) return "No ATP main-draw matches found for today.";
+
+    const dogs = matches
+      .map((r) => {
+        const rr = r as Record<string, unknown>;
+        const p1 = asNum(rr.p1_win_pct);
+        const p2 = asNum(rr.p2_win_pct);
+        if (p1 === p2) return null;
+        const dogIsP1 = p1 < p2;
+        const dogName = dogIsP1 ? asStr(rr.player1) : asStr(rr.player2);
+        const favName = dogIsP1 ? asStr(rr.player2) : asStr(rr.player1);
+        const dogPct = Math.min(p1, p2);
+        return {
+          dogName,
+          favName,
+          dogPct,
+          matchLabel: `${asStr(rr.player1)} vs ${asStr(rr.player2)}`,
+        };
+      })
+      .filter((x): x is { dogName: string; favName: string; dogPct: number; matchLabel: string } => !!x)
+      .sort((a, b) => b.dogPct - a.dogPct);
+
+    if (!dogs.length) return "No underdog spots found in today's ATP main-draw matches.";
+
+    const top = dogs.slice(0, 5).map((d) => `${d.dogName} ${d.dogPct.toFixed(1)}% (vs ${d.favName}; ${d.matchLabel})`);
+    return `Top ATP underdog spots today (by upset chance): ${top.join("; ")}.`;
+  }
+
   if (lower.includes("today") || lower.includes("today's") || lower.includes("todays") || lower.includes("picks")) {
     const rows = await tools.matchPrediction(undefined);
     const matches = rows.filter((r) => asStr((r as Record<string, unknown>).player1) && asStr((r as Record<string, unknown>).player2));
