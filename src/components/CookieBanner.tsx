@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Script from "next/script";
 import GoogleAnalyticsRouteTracker from "./GoogleAnalyticsRouteTracker";
 
@@ -18,8 +19,13 @@ interface Props {
   measurementId: string;
 }
 
+const POLICY_PATHS = ["/cookies-policy", "/privacy-policy"];
+
 export default function CookieBanner({ measurementId }: Props) {
+  const pathname = usePathname();
   const [consent, setConsent] = useState<"accepted" | "rejected" | "pending" | null>(null);
+
+  const isPolicyPage = pathname && POLICY_PATHS.some((p) => pathname.startsWith(p));
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -63,6 +69,9 @@ export default function CookieBanner({ measurementId }: Props) {
     // They clicked "Essential only" — dismiss for this session only. No persist, so modal reappears on next visit.
     return null;
   }
+
+  // On policy pages, never block — let the user read the policy before deciding.
+  if (isPolicyPage) return null;
 
   // Modal overlay — blocks the page. "Accept" persists and loads GA. "Essential only" dismisses now but modal shows again next visit.
   return (
