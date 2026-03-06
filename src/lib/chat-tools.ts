@@ -325,31 +325,70 @@ export async function playerRecentForm(playerId: number): Promise<Row> {
 
 /* ── Record vs lefties (always returns surface breakdown) ── */
 
+/** Use precomputed player_vs_leftie_stats when available — avoids URL-length limits with 1200+ leftie IDs. */
+async function playerRecordVsLeftiesFromStats(playerId: number): Promise<Row | null> {
+  const { data: rows } = await sb
+    .from("player_vs_leftie_stats")
+    .select("surface, win_pct_vs_leftie, match_count_vs_leftie")
+    .eq("player_id", playerId);
+  if (!rows?.length) return null;
+
+  const bySurface: Record<string, { wins: number; losses: number; win_pct: number }> = {};
+  let totalW = 0, totalL = 0;
+  for (const r of rows) {
+    const surf = str(r.surface) || "Hard";
+    const mc = num(r.match_count_vs_leftie);
+    const wp = num(r.win_pct_vs_leftie, 0.5);
+    const wins = mc > 0 ? Math.round(wp * mc) : 0;
+    const losses = mc - wins;
+    totalW += wins;
+    totalL += losses;
+    bySurface[surf] = { wins, losses, win_pct: mc > 0 ? Math.round(wp * 1000) / 10 : 0 };
+  }
+  const total = totalW + totalL;
+  return {
+    overall: { wins: totalW, losses: totalL, total, win_pct: total > 0 ? Math.round((totalW / total) * 1000) / 10 : 0 },
+    by_surface: bySurface,
+    note: "Precomputed from ATP + Challenger matches. Leftie list from OnCourt categories.",
+  };
+}
+
+const LEFTIE_CHUNK_SIZE = 200;
+
 export async function playerRecordVsLefties(playerId: number): Promise<Row> {
-  const lefties = new Set(await fetchAllLeftieIds());
-  if (!lefties.size) return { overall: { wins: 0, losses: 0 }, note: "No leftie reference data" };
+  let precomputed: Row | null = null;
+  try {
+    precomputed = await playerRecordVsLeftiesFromStats(playerId);
+  } catch {
+    // Table may not exist; fall back to live query
+  }
+  if (precomputed) return precomputed;
 
-  const winsQ = sb
-    .from("oncourt_games")
-    .select("winner_id, loser_id, tour_id, result, date")
-    .eq("winner_id", playerId)
-    .in("loser_id", Array.from(lefties))
-    .order("date", { ascending: false })
-    .limit(500);
+  const lefties = await fetchAllLeftieIds();
+  if (!lefties.length) return { overall: { wins: 0, losses: 0 }, note: "No leftie reference data" };
 
-  const lossesQ = sb
-    .from("oncourt_games")
-    .select("winner_id, loser_id, tour_id, result, date")
-    .eq("loser_id", playerId)
-    .in("winner_id", Array.from(lefties))
-    .order("date", { ascending: false })
-    .limit(500);
+  const leftieArr = [...new Set(lefties.filter((id) => id > 0))];
+  const allWins: Row[] = [];
+  const allLosses: Row[] = [];
 
-  const [{ data: wins }, { data: losses }] = await Promise.all([winsQ, lossesQ]);
-  const allWins = wins ?? [];
-  const allLosses = losses ?? [];
+  for (let i = 0; i < leftieArr.length; i += LEFTIE_CHUNK_SIZE) {
+    const chunk = leftieArr.slice(i, i + LEFTIE_CHUNK_SIZE);
+    const [winsRes, lossesRes] = await Promise.all([
+      sb.from("oncourt_games").select("winner_id, loser_id, tour_id, result, date").eq("winner_id", playerId).in("loser_id", chunk).order("date", { ascending: false }).limit(500),
+      sb.from("oncourt_games").select("winner_id, loser_id, tour_id, result, date").eq("loser_id", playerId).in("winner_id", chunk).order("date", { ascending: false }).limit(500),
+    ]);
+    if (winsRes.data?.length) allWins.push(...winsRes.data);
+    if (lossesRes.data?.length) allLosses.push(...lossesRes.data);
+  }
 
-  const { data: tours } = await sb.from("oncourt_tours").select("id, court_id").limit(10000);
+  const tourIds = [...new Set([...allWins, ...allLosses].map((m) => num(m.tour_id)))];
+  const toursList: Row[] = [];
+  for (let i = 0; i < tourIds.length; i += 200) {
+    const chunk = tourIds.slice(i, i + 200);
+    const { data } = await sb.from("oncourt_tours").select("id, court_id").in("id", chunk);
+    if (data?.length) toursList.push(...data);
+  }
+  const tours = toursList;
   const { data: courts } = await sb.from("oncourt_courts").select("id, name").limit(50);
   const courtToSurface: Record<number, string> = {};
   for (const c of courts ?? []) {
@@ -357,6 +396,7 @@ export async function playerRecordVsLefties(playerId: number): Promise<Row> {
     if (n.includes("CLAY")) courtToSurface[num(c.id)] = "Clay";
     else if (n.includes("GRASS")) courtToSurface[num(c.id)] = "Grass";
     else if (n.includes("I.HARD") || n === "I.HARD" || n.includes("INDOOR")) courtToSurface[num(c.id)] = "I.hard";
+    else if (n.includes("CARPET")) courtToSurface[num(c.id)] = "Carpet";
     else courtToSurface[num(c.id)] = "Hard";
   }
   const tourToSurface: Record<number, string> = {};
@@ -392,6 +432,7 @@ export async function playerRecordVsLefties(playerId: number): Promise<Row> {
       win_pct: total > 0 ? Math.round((totalW / total) * 1000) / 10 : 0,
     },
     by_surface: surfaceBreakdown,
+    note: "ATP + Challenger matches vs left-handed opponents (OnCourt categories). Chunked query.",
   };
 }
 
