@@ -5,26 +5,9 @@
  */
 import * as tools from "@/lib/chat-tools";
 
-const TOURNAMENT_ALIASES: Record<string, string[]> = {
-  "indian wells": ["Indian Wells"],
-  "miami": ["Miami"],
-  "monte carlo": ["Monte Carlo"],
-  "madrid": ["Madrid"],
-  "rome": ["Rome", "Italian Open"],
-  "french open": ["French Open"],
-  "roland garros": ["French Open"],
-  "wimbledon": ["Wimbledon"],
-  "us open": ["US Open"],
-  "australian open": ["Australian Open"],
-  "canada": ["Canada", "Canadian Open"],
-  "cincinnati": ["Cincinnati"],
-  "shanghai": ["Shanghai"],
-  "paris": ["Paris"],
-  "barcelona": ["Barcelona"],
-  "dubai": ["Dubai"],
-  "acapulco": ["Acapulco"],
-  "brisbane": ["Brisbane"],
-};
+/** Same as chat-tools: full ATP list by tournament name and city. */
+import tournamentAliases from "./tournament-aliases.json";
+const TOURNAMENT_ALIASES: Record<string, string[]> = tournamentAliases as Record<string, string[]>;
 
 function extractTournamentNames(query: string): string[] {
   const lower = query.toLowerCase();
@@ -109,6 +92,13 @@ export async function retrieveContext(query: string): Promise<string> {
     promises.push(
       tools.headToHead(playerIds[0], playerIds[1]).then((d) => ({ label: "head_to_head", data: d }))
     );
+  }
+
+  // Player record by surface (for "best record", "where does X do best" etc.)
+  if (playerIds.length > 0 && hasKeyword(q, "record", "best", "where does", "surface", "clay", "hard", "grass")) {
+    for (const pid of playerIds.slice(0, 2)) {
+      promises.push(tools.playerRecordBySurface(pid).then((d) => ({ label: "player_record_by_surface", data: d })));
+    }
   }
 
   // Player record at tournament

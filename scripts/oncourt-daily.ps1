@@ -75,9 +75,9 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# Step 7: Strict policy report (auto-append CSV)
-Log "=== Step 7/7: Strict policy report (--append) ==="
-& python scripts\strict-policy-report.py --append 2>&1 | ForEach-Object { Log $_ }
+# Step 7: Strict policy report + overlay comparison (auto-append CSVs)
+Log "=== Step 7/7: Strict policy report (--append --compare-overlay) ==="
+& python scripts\strict-policy-report.py --append --compare-overlay 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "ERROR: strict-policy-report failed (exit $LASTEXITCODE)"
     exit 1
