@@ -78,6 +78,37 @@ async function deterministicAnswer(userText: string): Promise<string | null> {
     return "I use ATP match stats and market data from the database to give a straight, data-backed read.";
   }
 
+  const isH2hIntent = /\b(h2h|head to head|head-to-head)\b/i.test(q);
+  if (isH2hIntent) {
+    const pair = extractVsNames(q);
+    if (pair) {
+      const [a, b] = pair;
+      const pa = await tools.searchPlayer(a);
+      const pb = await tools.searchPlayer(b);
+      if (pa.length && pb.length && pa[0].id && pb[0].id) {
+        const h2h = await tools.headToHead(Number(pa[0].id), Number(pb[0].id), undefined);
+        const summary = (h2h as Record<string, unknown>).summary as Array<Record<string, unknown>> | undefined;
+        const overall = summary?.find((r) => asStr(r.surface) === "Overall");
+        const surfaceRows = summary?.filter((r) => asStr(r.surface) !== "Overall") ?? [];
+        const aId = Number(pa[0].id);
+        const bId = Number(pb[0].id);
+        const lowId = Math.min(aId, bId);
+        const aIsLow = aId === lowId;
+        const orientWinsA = (row: Record<string, unknown>) => (aIsLow ? asNum(row.wins_a) : asNum(row.wins_b));
+        const orientWinsB = (row: Record<string, unknown>) => (aIsLow ? asNum(row.wins_b) : asNum(row.wins_a));
+        const oW = overall ? orientWinsA(overall) : surfaceRows.reduce((s, r) => s + orientWinsA(r), 0);
+        const oL = overall ? orientWinsB(overall) : surfaceRows.reduce((s, r) => s + orientWinsB(r), 0);
+        const surf = surfaceRows
+          .map((r) => `${asStr(r.surface)} ${orientWinsA(r)}-${orientWinsB(r)}`)
+          .slice(0, 4)
+          .join(", ");
+        const aName = asStr(pa[0].name) || a;
+        const bName = asStr(pb[0].name) || b;
+        return `${aName} vs ${bName} historical H2H: ${oW}-${oL}.${surf ? ` Surface split: ${surf}.` : ""} This is historical data, not today's fixture list.`;
+      }
+    }
+  }
+
   const mostTournament = extractTournamentMostWinners(q);
   if (mostTournament) {
     const winners = await tools.tournamentPastWinners(mostTournament);
