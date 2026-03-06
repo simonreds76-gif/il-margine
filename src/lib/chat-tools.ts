@@ -40,83 +40,9 @@ async function fetchAllLeftieIds(): Promise<number[]> {
   return [...new Set(out.filter((id) => id > 0))];
 }
 
-const TOURNAMENT_ALIASES: Record<string, string[]> = {
-  "roland garros":     ["French Open"],
-  "french open":       ["French Open"],
-  "garros":            ["French Open"],
-  "paris slam":        ["French Open"],
-  "wimbledon":         ["Wimbledon"],
-  "us open":           ["US Open", "U.S. Open"],
-  "u.s. open":         ["US Open", "U.S. Open"],
-  "flushing":          ["US Open", "U.S. Open"],
-  "australian open":   ["Australian Open"],
-  "melbourne":         ["Australian Open"],
-  "indian wells":      ["Indian Wells", "BNP Paribas"],
-  "bnp paribas":       ["Indian Wells", "BNP Paribas"],
-  "miami":             ["Miami"],
-  "monte carlo":       ["Monte Carlo", "Monte-Carlo"],
-  "monte-carlo":       ["Monte Carlo", "Monte-Carlo"],
-  "montecarlo":        ["Monte Carlo", "Monte-Carlo"],
-  "rome":              ["Rome", "Roma", "Italian Open", "Internazionali"],
-  "roma":              ["Rome", "Roma", "Italian Open", "Internazionali"],
-  "italian open":      ["Rome", "Roma", "Italian Open", "Internazionali"],
-  "internazionali":    ["Rome", "Roma", "Italian Open", "Internazionali"],
-  "foro italico":      ["Rome", "Roma", "Italian Open", "Internazionali"],
-  "madrid":            ["Madrid", "Mutua Madrid"],
-  "mutua":             ["Madrid", "Mutua Madrid"],
-  "shanghai":          ["Shanghai"],
-  "canada":            ["Canada", "Canadian Open", "Montreal", "Toronto", "National Bank"],
-  "canadian":          ["Canada", "Canadian Open", "Montreal", "Toronto", "National Bank"],
-  "montreal":          ["Canada", "Canadian Open", "Montreal", "Toronto", "National Bank"],
-  "toronto":           ["Canada", "Canadian Open", "Montreal", "Toronto", "National Bank"],
-  "cincinnati":        ["Cincinnati", "Western & Southern"],
-  "western & southern":["Cincinnati", "Western & Southern"],
-  "barcelona":         ["Barcelona"],
-  "hamburg":           ["Hamburg"],
-  "queen's":           ["Queen's", "Queens"],
-  "queens":            ["Queen's", "Queens"],
-  "halle":             ["Halle"],
-  "beijing":           ["Beijing", "China Open"],
-  "china open":        ["Beijing", "China Open"],
-  "basel":             ["Basel"],
-  "vienna":            ["Vienna", "Erste Bank"],
-  "erste bank":        ["Vienna", "Erste Bank"],
-  "paris masters":     ["Paris", "Bercy", "Rolex Paris"],
-  "bercy":             ["Paris", "Bercy", "Rolex Paris"],
-  "atp finals":        ["ATP Finals", "Tour Finals", "Masters Cup", "Nitto"],
-  "tour finals":       ["ATP Finals", "Tour Finals", "Masters Cup", "Nitto"],
-  "nitto":             ["ATP Finals", "Tour Finals", "Masters Cup", "Nitto"],
-  "dubai":             ["Dubai"],
-  "doha":              ["Doha", "Qatar"],
-  "qatar":             ["Doha", "Qatar"],
-  "acapulco":          ["Acapulco", "Mexican Open"],
-  "mexican open":      ["Acapulco", "Mexican Open"],
-  "rotterdam":         ["Rotterdam", "ABN AMRO"],
-  "abn amro":          ["Rotterdam", "ABN AMRO"],
-  "monte":             ["Monte Carlo", "Monte-Carlo"],
-  "washington":        ["Washington", "Citi Open"],
-  "citi open":         ["Washington", "Citi Open"],
-  "tokyo":             ["Tokyo", "Japan Open"],
-  "japan open":        ["Tokyo", "Japan Open"],
-  "brisbane":          ["Brisbane"],
-  "auckland":          ["Auckland"],
-  "adelaide":          ["Adelaide"],
-  "marseille":         ["Marseille", "Open 13"],
-  "lyon":              ["Lyon"],
-  "stuttgart":         ["Stuttgart"],
-  "s-hertogenbosch":   ["s-Hertogenbosch", "Libema"],
-  "eastbourne":        ["Eastbourne"],
-  "los cabos":         ["Los Cabos"],
-  "umag":              ["Umag"],
-  "gstaad":            ["Gstaad"],
-  "kitzbuhel":         ["Kitzbuhel", "Kitzbuehel"],
-  "winston-salem":     ["Winston-Salem"],
-  "zhuhai":            ["Zhuhai"],
-  "sofia":             ["Sofia"],
-  "stockholm":         ["Stockholm"],
-  "antwerp":           ["Antwerp", "European Open"],
-  "metz":              ["Metz", "Moselle"],
-};
+/** Tournament name + city aliases. Full ATP list by tournament name and city. */
+import tournamentAliases from "./tournament-aliases.json";
+const TOURNAMENT_ALIASES: Record<string, string[]> = tournamentAliases as Record<string, string[]>;
 
 function resolveSearchTerms(input: string): string[] {
   const lower = input.toLowerCase().trim();
@@ -299,19 +225,24 @@ export async function playerRecordAtTournament(playerId: number, tournamentName:
   const allMatches = [...(wins ?? []), ...(losses ?? [])]
     .sort((a, b) => String(b.date).localeCompare(String(a.date)));
 
-  const enriched = [];
-  for (const m of allMatches.slice(0, 30)) {
+  const toEnrich = allMatches.slice(0, 30);
+  const opponentIds = [...new Set(toEnrich.map((m) => (num(m.winner_id) === playerId ? num(m.loser_id) : num(m.winner_id))))];
+  const { data: opponents } = opponentIds.length > 0
+    ? await sb.from("oncourt_players").select("id, name").in("id", opponentIds)
+    : { data: [] };
+  const oppMap = new Map((opponents ?? []).map((o) => [num(o.id), str(o.name)]));
+
+  const enriched = toEnrich.map((m) => {
     const opponentId = num(m.winner_id) === playerId ? num(m.loser_id) : num(m.winner_id);
-    const { data: opp } = await sb.from("oncourt_players").select("name").eq("id", opponentId).maybeSingle();
     const won = num(m.winner_id) === playerId;
-    enriched.push({
+    return {
       date: m.date,
-      opponent: opp?.name ?? `Player ${opponentId}`,
+      opponent: oppMap.get(opponentId) ?? `Player ${opponentId}`,
       won,
       score: m.result,
       round_id: m.round_id,
-    });
-  }
+    };
+  });
 
   return {
     tournament: tournamentName,
@@ -974,7 +905,8 @@ function matchesTournament(term: string, key: string, display: string): boolean 
   const t = term.toLowerCase().trim();
   const k = key.toLowerCase();
   const d = display.toLowerCase();
-  return k.includes(t) || d.includes(t) || t.includes(k) || t.includes(d.split(" ")[0] ?? "");
+  // Avoid t.includes(firstWord): "Italian Open" would falsely match "Open 13" (Marseille) via "open"
+  return k.includes(t) || d.includes(t) || t.includes(k);
 }
 
 /** Reads tournament-fav-dog-roi.csv. For deployment, ensure data/backtest/tournament-fav-dog-roi.csv is committed. */

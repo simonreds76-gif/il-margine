@@ -68,6 +68,7 @@ TOURNAMENT CALENDAR (memorise these months so you know when draws are known):
 
 RULES:
 - CRITICAL: Always output a brief sentence of text BEFORE making any tool calls. Never start your response with a tool call directly. Example: "Let me look that up." then call the tool.
+- CRITICAL: After calling a tool, you MUST include the result in your response. Never leave the user with only "Let me look that up" and nothing else. Always deliver the answer or say you don't have that data.
 - Always use search_player first to find player IDs before using other player tools.
 - Present percentages with one decimal (65.2%), keep it clean.
 - If a tool returns empty results, say you don't have data for that — never make up numbers.
@@ -75,7 +76,7 @@ RULES:
 - Data covers ATP main tour and Challenger level. No WTA/ITF.
 - Do NOT mention "model", "fair odds model", "our model", "algorithm" or anything revealing internal methodology. Present everything as your expert analysis.
 - If asked for tips or picks: base them solely on the stats and data from your tools. Do not speculate beyond what the data supports.
-- Do NOT reference retired players (Federer, Nadal, Murray, etc.) as if they are current. If citing past achievements, be explicit: "beat Federer here in 2019 when he was still active".
+- Retired players: Do NOT reference Federer, Nadal, Murray, etc. as if they are current. If citing past achievements, be explicit: "beat Federer here in 2019 when he was still active". Exception: "Who's won X the most?" or "past winners at X" are historical by nature — include all winners (Djokovic, Federer, Nadal, etc.) and optionally note who's retired. If asked for "active players only" who won most or have best record: we have no active/retired filter. Use tournament_past_winners and player_record_at_tournament for likely candidates; note who's retired when relevant.
 - Use British currency: "quid" not "bucks", "£" not "$". E.g. "a few quid" not "a few bucks".
 - Surface values: Hard, Clay, Grass, I.hard (indoor hard).
 - Round IDs in the database: 1=R1, 2=R2, 3=R3, 7=R16, 9=QF, 10=SF, 12=Final. 4-6 are qualifying rounds.
@@ -359,10 +360,23 @@ export async function POST(req: Request) {
   return result.toUIMessageStreamResponse();
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
+    const lower = message.toLowerCase();
     console.error("[chat] Error:", err);
     if (process.env.NODE_ENV === "development") {
       return new Response(`Error (dev): ${message}`, { status: 500 });
     }
-    return new Response("Sorry, I'm a bit busy right now. Please try again in a moment.", { status: 503 });
+    let userMessage = "Sorry, I'm a bit busy right now. Please try again in a moment.";
+    if (lower.includes("over capacity") || lower.includes("overcapacity")) {
+      userMessage = "Roger is overloaded right now. Try again in a minute.";
+    } else if (lower.includes("rate limit") || lower.includes("quota") || lower.includes("429")) {
+      userMessage = "I've hit my daily question limit. Please try again in an hour or so.";
+    } else if (lower.includes("timeout") || lower.includes("timed out")) {
+      userMessage = "Request timed out. Please try again.";
+    } else if (lower.includes("api key") || lower.includes("unauthorized") || lower.includes("401")) {
+      userMessage = "Roger is temporarily unavailable. We're looking into it.";
+    } else if (message.length < 200 && !message.includes("key") && !message.includes("secret")) {
+      userMessage = `Roger hit an error: ${message}`;
+    }
+    return new Response(userMessage, { status: 503 });
   }
 }
