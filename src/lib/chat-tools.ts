@@ -664,6 +664,7 @@ function estimateHandicap(winProb: number, expectedTotal: number): { favouredPla
 }
 
 export async function matchPrediction(playerName?: string): Promise<Row[]> {
+  const MAX_CHAT_MATCH_ROWS = 40;
   const { data: odds } = await sb
     .from("daily_fair_odds")
     .select("id, tour_id, player1_id, player2_id, surface, p1_win_prob, p2_win_prob, odds1, odds2, expected_total_games, confidence")
@@ -735,7 +736,14 @@ export async function matchPrediction(playerName?: string): Promise<Row[]> {
       str(r.player1).toLowerCase().includes(q) || str(r.player2).toLowerCase().includes(q)
     );
   }
-  return rows;
+  if (rows.length <= MAX_CHAT_MATCH_ROWS) return rows;
+  return [
+    ...rows.slice(0, MAX_CHAT_MATCH_ROWS),
+    {
+      note: `Showing first ${MAX_CHAT_MATCH_ROWS} of ${rows.length} ATP main-draw matches for chat brevity.`,
+      total_matches: rows.length,
+    },
+  ];
 }
 
 /* ── Player W-L record by surface ────────────────────────── */

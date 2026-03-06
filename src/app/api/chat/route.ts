@@ -8,6 +8,166 @@ export const maxDuration = 30;
 
 const CHAT_MODEL = process.env.GROQ_MODEL || "moonshotai/kimi-k2-instruct";
 
+function asNum(v: unknown, fallback = 0): number {
+  if (v == null || v === "") return fallback;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function asStr(v: unknown): string {
+  return v == null ? "" : String(v).trim();
+}
+
+function uiTextStreamResponse(text: string): Response {
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream({
+    start(controller) {
+      const push = (obj: unknown) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(obj)}\n\n`));
+      push({ type: "start" });
+      push({ type: "start-step" });
+      push({ type: "text-start", id: "txt-0" });
+      push({ type: "text-delta", id: "txt-0", delta: text });
+      push({ type: "text-end", id: "txt-0" });
+      push({ type: "finish-step" });
+      push({ type: "finish", finishReason: "stop" });
+      controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+      controller.close();
+    },
+  });
+  return new Response(stream, {
+    status: 200,
+    headers: {
+      "Content-Type": "text/event-stream; charset=utf-8",
+      "Cache-Control": "no-cache, no-transform",
+      Connection: "keep-alive",
+    },
+  });
+}
+
+function extractVsNames(query: string): [string, string] | null {
+  const m = query.match(/([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s.'-]*?)\s+(?:vs?\.?|versus)\s+([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s.'-]*?)(?:\?|$|,|\.|\s)/i);
+  if (!m) return null;
+  const a = m[1].replace(/^(who\s+wins?\s+|who\s+|pick\s+|predict\s+)/i, "").trim();
+  const b = m[2].replace(/^(who\s+wins?\s+|who\s+|pick\s+|predict\s+)/i, "").trim();
+  if (!a || !b) return null;
+  return [a, b];
+}
+
+function extractTournamentMostWinners(query: string): string | null {
+  const m = query.match(/won\s+(.+?)\s+the\s+most/i);
+  if (!m) return null;
+  return m[1].replace(/^the\s+/i, "").trim();
+}
+
+function formatSurfaceBreakdown(bySurface: unknown): string {
+  const obj = bySurface as Record<string, { wins?: number; losses?: number; win_pct?: number }> | undefined;
+  if (!obj || typeof obj !== "object") return "";
+  const parts = Object.entries(obj)
+    .map(([s, r]) => `${s} ${asNum(r?.win_pct).toFixed(1)}% (${asNum(r?.wins)}-${asNum(r?.losses)})`)
+    .slice(0, 5);
+  return parts.join(", ");
+}
+
+async function deterministicAnswer(userText: string): Promise<string | null> {
+  const q = userText.trim();
+  const lower = q.toLowerCase();
+
+  if (!q) return null;
+
+  if ((lower.includes("do you use") || lower.includes("use your")) && (lower.includes("model") || lower.includes("algorithm"))) {
+    return "I use ATP match stats and market data from the database to give a straight, data-backed read.";
+  }
+
+  const mostTournament = extractTournamentMostWinners(q);
+  if (mostTournament) {
+    const winners = await tools.tournamentPastWinners(mostTournament);
+    if (!winners.length) return `I don't have past-winner data for ${mostTournament} in this dataset.`;
+    const counts = new Map<string, number>();
+    for (const row of winners) {
+      const w = asStr((row as Record<string, unknown>).winner);
+      if (!w) continue;
+      counts.set(w, (counts.get(w) ?? 0) + 1);
+    }
+    const top = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3);
+    if (!top.length) return `I don't have complete winners data for ${mostTournament} right now.`;
+    const lead = top[0];
+    const chasers = top.slice(1).map(([name, n]) => `${name} (${n})`).join(", ");
+    return chasers
+      ? `${lead[0]} has won ${mostTournament} the most in this dataset (${lead[1]} titles). Next: ${chasers}.`
+      : `${lead[0]} has won ${mostTournament} the most in this dataset (${lead[1]} titles).`;
+  }
+
+  if (lower.includes("today") || lower.includes("today's") || lower.includes("todays") || lower.includes("picks")) {
+    const rows = await tools.matchPrediction(undefined);
+    const matches = rows.filter((r) => asStr((r as Record<string, unknown>).player1) && asStr((r as Record<string, unknown>).player2));
+    if (!matches.length) return "No ATP main-draw matches found for today.";
+    const ranked = [...matches].sort((a, b) => {
+      const pa = asNum((a as Record<string, unknown>).p1_win_pct);
+      const pb = asNum((b as Record<string, unknown>).p1_win_pct);
+      return Math.abs(pb - 50) - Math.abs(pa - 50);
+    });
+    const top = ranked.slice(0, 5).map((r) => {
+      const rr = r as Record<string, unknown>;
+      return `${asStr(rr.favoured)} ${Math.max(asNum(rr.p1_win_pct), asNum(rr.p2_win_pct)).toFixed(1)}% (${asStr(rr.player1)} vs ${asStr(rr.player2)})`;
+    });
+    return `Top ATP spots today: ${top.join("; ")}.`;
+  }
+
+  if (lower.includes("big server")) {
+    const m = q.match(/how does\s+(.+?)\s+do against big servers/i);
+    const name = m?.[1]?.trim();
+    if (name) {
+      const players = await tools.searchPlayer(name);
+      if (!players.length || !players[0].id) return `I can't find ${name} in the player index.`;
+      const pid = Number(players[0].id);
+      const stats = await tools.playerRecordVsBigServer(pid);
+      const overall = (stats as Record<string, unknown>).overall as Record<string, unknown> | undefined;
+      const bySurface = formatSurfaceBreakdown((stats as Record<string, unknown>).by_surface);
+      return `${asStr(players[0].name)} vs big servers: ${asNum(overall?.win_pct).toFixed(1)}% (${asNum(overall?.wins)}-${asNum(overall?.losses)}).${bySurface ? ` By surface: ${bySurface}.` : ""}`;
+    }
+  }
+
+  if (lower.includes("leftie") || lower.includes("left-handed") || lower.includes("lefty") || lower.includes("vs left")) {
+    const m = q.match(/how does\s+(.+?)\s+do against/i) || q.match(/(.+?)\s+vs a leftie/i);
+    const name = m?.[1]?.trim();
+    if (name) {
+      const players = await tools.searchPlayer(name);
+      if (!players.length || !players[0].id) return `I can't find ${name} in the player index.`;
+      const pid = Number(players[0].id);
+      const stats = await tools.playerRecordVsLefties(pid);
+      const overall = (stats as Record<string, unknown>).overall as Record<string, unknown> | undefined;
+      const bySurface = formatSurfaceBreakdown((stats as Record<string, unknown>).by_surface);
+      return `${asStr(players[0].name)} vs lefties: ${asNum(overall?.win_pct).toFixed(1)}% (${asNum(overall?.wins)}-${asNum(overall?.losses)}).${bySurface ? ` By surface: ${bySurface}.` : ""}`;
+    }
+  }
+
+  if (lower.includes("who wins")) {
+    const pair = extractVsNames(q);
+    if (pair) {
+      const [a, b] = pair;
+      const rowsA = await tools.matchPrediction(a);
+      const rowsB = await tools.matchPrediction(b);
+      const rows = [...rowsA, ...rowsB].filter((r) => asStr((r as Record<string, unknown>).player1) && asStr((r as Record<string, unknown>).player2));
+      const target = rows.find((r) => {
+        const rr = r as Record<string, unknown>;
+        const p1 = asStr(rr.player1).toLowerCase();
+        const p2 = asStr(rr.player2).toLowerCase();
+        return (p1.includes(a.toLowerCase()) || p2.includes(a.toLowerCase())) && (p1.includes(b.toLowerCase()) || p2.includes(b.toLowerCase()));
+      });
+      if (target) {
+        const rr = target as Record<string, unknown>;
+        const fav = asStr(rr.favoured);
+        const favPct = Math.max(asNum(rr.p1_win_pct), asNum(rr.p2_win_pct)).toFixed(1);
+        const total = asNum(rr.expected_total_games).toFixed(1);
+        return `Numbers favour ${fav} (${favPct}%) in ${asStr(rr.player1)} vs ${asStr(rr.player2)} on ${asStr(rr.surface)}. Expected total games: ${total}.`;
+      }
+      return `${a} vs ${b} is not listed in today's ATP main-draw fixtures, so I can't give a live match probability right now.`;
+    }
+  }
+
+  return null;
+}
+
 function getLastUserMessageText(messages: unknown[]): string {
   for (let i = messages.length - 1; i >= 0; i--) {
     const m = messages[i] as { role?: string; content?: string; parts?: Array<{ type?: string; text?: string }> };
@@ -26,7 +186,41 @@ function getLastUserMessageText(messages: unknown[]): string {
   return "";
 }
 
-function buildSystemPrompt(ragContext?: string): string {
+function buildIntentHints(userText: string): string {
+  const q = userText.toLowerCase();
+  const hints: string[] = [];
+
+  const hasVs = /\b(vs|v|versus)\b/.test(q);
+  const asksH2h = hasVs && (q.includes("h2h") || q.includes("head to head") || q.includes("head-to-head"));
+  if (asksH2h) {
+    hints.push("- Intent hint: This is H2H. Call search_player for both players, then head_to_head.");
+  }
+  if (q.includes("leftie") || q.includes("left-handed") || q.includes("lefty") || q.includes("vs left")) {
+    hints.push("- Intent hint: This is a vs-lefties query. Call search_player, then player_record_vs_lefties.");
+  }
+  if (q.includes("big server")) {
+    hints.push("- Intent hint: This is a vs-big-servers query. Call search_player, then player_record_vs_big_server.");
+  }
+
+  const asksTournamentWinner = q.includes("who wins") && !hasVs;
+  if (asksTournamentWinner) {
+    hints.push(
+      "- Intent hint: This asks for tournament winner, not today's fixtures. Use tournament_past_winners + tournament_entrants (+ form/surface tools if needed). Do NOT use match_prediction."
+    );
+  }
+  if (q.includes("today") || q.includes("today's") || q.includes("todays") || q.includes("picks")) {
+    hints.push("- Intent hint: This is a today's-matches/picks query. Use match_prediction.");
+  }
+  if (q.includes("model") || q.includes("algorithm")) {
+    hints.push(
+      '- Intent hint: Do not use the words "model" or "algorithm" in your answer. Say: "I use ATP match stats and market data from the database."'
+    );
+  }
+
+  return hints.length ? `\n\nINTENT HINTS:\n${hints.join("\n")}` : "";
+}
+
+function buildSystemPrompt(ragContext?: string, intentHints?: string): string {
   const now = new Date();
   const today = now.toISOString().slice(0, 10);
   const year = now.getFullYear();
@@ -75,12 +269,13 @@ RULES:
 - You can chain multiple tool calls to answer complex questions (e.g. search both players, then get H2H).
 - Data covers ATP main tour and Challenger level. No WTA/ITF.
 - Do NOT mention "model", "fair odds model", "our model", "algorithm" or anything revealing internal methodology. Present everything as your expert analysis.
+- BANNED WORDS in final output: "model", "models", "algorithm", "algorithms". Never use them, even when the user asks with those words.
 - If asked for tips or picks: base them solely on the stats and data from your tools. Do not speculate beyond what the data supports.
 - Retired players: Do NOT reference Federer, Nadal, Murray, etc. as if they are current. If citing past achievements, be explicit: "beat Federer here in 2019 when he was still active". Exception: "Who's won X the most?" or "past winners at X" are historical by nature — include all winners (Djokovic, Federer, Nadal, etc.) and optionally note who's retired. If asked for "active players only" who won most or have best record: we have no active/retired filter. Use tournament_past_winners and player_record_at_tournament for likely candidates; note who's retired when relevant.
 - Use British currency: "quid" not "bucks", "£" not "$". E.g. "a few quid" not "a few bucks".
 - Surface values: Hard, Clay, Grass, I.hard (indoor hard).
 - Round IDs in the database: 1=R1, 2=R2, 3=R3, 7=R16, 9=QF, 10=SF, 12=Final. 4-6 are qualifying rounds.
-- Keep responses SHORT. Max 200 words for match lists, max 100 words for single-match questions. Punchy is better than thorough.${ragContext ? `\n\n${ragContext}\n\nRAG: Prefer the retrieved context above when it answers the question. You may still call tools for additional detail, but use the context first.` : ""}`;
+- Keep responses SHORT. Max 200 words for match lists, max 100 words for single-match questions. Punchy is better than thorough.${ragContext ? `\n\n${ragContext}\n\nRAG: Prefer the retrieved context above when it answers the question. You may still call tools for additional detail, but use the context first.` : ""}${intentHints ?? ""}`;
 }
 
 async function resolvePlayerId(idOrName: string): Promise<number> {
@@ -126,13 +321,20 @@ export async function POST(req: Request) {
   const modelMessages = await convertToModelMessages(uiMessages);
 
   const lastUserText = getLastUserMessageText(Array.isArray(uiMessages) ? uiMessages : []);
+  if (lastUserText) {
+    const fast = await deterministicAnswer(lastUserText);
+    if (fast) {
+      return uiTextStreamResponse(fast);
+    }
+  }
   const ragContext = lastUserText ? await retrieveContext(lastUserText) : undefined;
+  const intentHints = lastUserText ? buildIntentHints(lastUserText) : "";
 
   const result = streamText({
     model: groq(CHAT_MODEL),
-    system: buildSystemPrompt(ragContext),
+    system: buildSystemPrompt(ragContext, intentHints),
     messages: modelMessages,
-    maxRetries: 1,
+    maxRetries: 2,
     stopWhen: stepCountIs(8),
     tools: {
       search_player: {

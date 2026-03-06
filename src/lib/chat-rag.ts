@@ -20,7 +20,6 @@ function extractTournamentNames(query: string): string[] {
 
 /** Extract candidate player name tokens (e.g. "Sinner", "Alcaraz", "Rune vs Cobolli" -> ["Sinner"], ["Alcaraz"], ["Rune","Cobolli"]) */
 function extractPlayerCandidates(query: string): string[][] {
-  const lower = query.toLowerCase();
   const candidates: string[][] = [];
 
   // "X vs Y" or "X v Y" or "X versus Y"
@@ -159,6 +158,31 @@ export async function retrieveContext(query: string): Promise<string> {
       for (const t of tournaments.slice(0, 1)) {
         promises.push(tools.tournamentInfo(t).then((d) => ({ label: "tournament_info", data: d })));
       }
+    }
+  }
+
+  // Today's matches / picks / specific "who wins X vs Y" (non-tournament winner)
+  const isTodayMatchesQuery = hasKeyword(
+    q,
+    "today",
+    "today's",
+    "todays",
+    "picks",
+    "who wins",
+    "winner",
+    "prediction"
+  );
+  const isTournamentWinnerIntent = tournaments.length > 0 && hasKeyword(q, "who wins", "champion", "title");
+  if (isTodayMatchesQuery && !isTournamentWinnerIntent) {
+    if (playerNames.length >= 2 && hasKeyword(q, "vs", "versus", "v ")) {
+      // Query each player to increase hit chance for a specific fixture.
+      for (const name of playerNames.slice(0, 2)) {
+        promises.push(
+          tools.matchPrediction(name).then((d) => ({ label: `match_prediction_${name.replace(/\s+/g, "_")}`, data: d }))
+        );
+      }
+    } else {
+      promises.push(tools.matchPrediction(undefined).then((d) => ({ label: "match_prediction_all", data: d })));
     }
   }
 
