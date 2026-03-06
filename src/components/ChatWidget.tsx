@@ -76,7 +76,8 @@ export default function ChatWidget() {
     <>
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-5 right-5 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-900/30 transition-all hover:scale-105"
+        className="fixed z-50 flex items-center justify-center w-14 h-14 min-w-[56px] min-h-[56px] rounded-full bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white shadow-lg shadow-emerald-900/30 transition-all hover:scale-105 touch-manipulation
+          bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-[max(1.25rem,env(safe-area-inset-right))]"
         aria-label="Open Roger tennis stats chat"
       >
         {open ? (
@@ -91,15 +92,23 @@ export default function ChatWidget() {
       </button>
 
       {open && (
-        <div className="fixed bottom-24 right-5 z-50 w-[380px] max-w-[calc(100vw-2.5rem)] h-[540px] max-h-[calc(100vh-8rem)] flex flex-col rounded-2xl border border-slate-700/60 bg-[#0f1117] shadow-2xl shadow-black/50 overflow-hidden">
+        <div
+          className="fixed z-50 flex flex-col rounded-2xl border border-slate-700/60 bg-[#0f1117] shadow-2xl shadow-black/50 overflow-hidden
+            left-4 right-4 top-[max(4rem,env(safe-area-inset-top))] bottom-[max(6.5rem,calc(5.5rem+env(safe-area-inset-bottom)))]
+            sm:left-auto sm:right-5 sm:top-auto sm:bottom-24 sm:w-[380px] sm:max-w-[calc(100vw-2.5rem)] sm:h-[540px] sm:max-h-[calc(100vh-8rem)]"
+        >
           {/* Header */}
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800/60 bg-[#0d0f14]">
-            <img src="/favicon.png" alt="Il Margine" className="w-8 h-8 object-contain" />
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800/60 bg-[#0d0f14] shrink-0">
+            <img src="/favicon.png" alt="Il Margine" className="w-8 h-8 object-contain shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-slate-100">Roger</p>
-              <p className="text-[11px] text-slate-500">Tennis stats chatbot. H2H, tournaments, records</p>
+              <p className="text-[11px] text-slate-500 hidden sm:block">Tennis stats chatbot. H2H, tournaments, records</p>
             </div>
-            <button onClick={() => setOpen(false)} className="text-slate-500 hover:text-slate-300 transition-colors">
+            <button
+              onClick={() => setOpen(false)}
+              className="shrink-0 p-2 -m-2 text-slate-500 hover:text-slate-300 active:text-slate-200 transition-colors touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
+              aria-label="Close chat"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -107,7 +116,7 @@ export default function ChatWidget() {
           </div>
 
           {/* Messages */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-3 space-y-3 overscroll-contain" style={{ WebkitOverflowScrolling: "touch" }}>
             {messages.length === 0 && !error && (
               <div className="space-y-3">
                 <p className="text-sm text-slate-400">
@@ -122,7 +131,7 @@ export default function ChatWidget() {
                     <button
                       key={q}
                       onClick={() => submit(q)}
-                      className="block w-full text-left text-xs px-3 py-2 rounded-lg border border-slate-800/60 text-slate-300 hover:bg-slate-800/40 hover:border-slate-700 transition-colors"
+                      className="block w-full text-left text-sm sm:text-xs px-4 py-3 sm:py-2 rounded-lg border border-slate-800/60 text-slate-300 hover:bg-slate-800/40 hover:border-slate-700 active:bg-slate-800/50 transition-colors touch-manipulation min-h-[44px] sm:min-h-0"
                     >
                       {q}
                     </button>
@@ -173,20 +182,20 @@ export default function ChatWidget() {
           {/* Input */}
           <form
             onSubmit={onSubmit}
-            className="flex items-center gap-2 px-3 py-3 border-t border-slate-800/60 bg-[#0d0f14]"
+            className="flex items-center gap-2 px-3 py-3 border-t border-slate-800/60 bg-[#0d0f14] shrink-0"
           >
             <input
               ref={inputRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Ask about any player or tournament..."
-              className="flex-1 bg-slate-800/50 border border-slate-700/50 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
+              className="flex-1 min-w-0 bg-slate-800/50 border border-slate-700/50 rounded-xl px-3.5 py-3 text-base sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
               disabled={isLoading}
             />
             <button
               type="submit"
               disabled={isLoading || !inputValue.trim()}
-              className="flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-30 disabled:hover:bg-emerald-600 transition-all"
+              className="flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white disabled:opacity-30 disabled:hover:bg-emerald-600 transition-all touch-manipulation"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
