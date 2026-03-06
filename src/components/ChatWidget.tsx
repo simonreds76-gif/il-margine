@@ -10,8 +10,8 @@ const SUGGESTED = [
   "CPI of Miami in 2024?",
   "How do underdogs do at Indian Wells?",
   "Sinner's record vs left-handed players?",
-  "How do qualifiers do at Roland Garros?",
   "Who's won Indian Wells the most?",
+  "Dimitrov's record at Monte Carlo?",
 ];
 
 const ROGER_ENABLED = true;
@@ -152,9 +152,7 @@ export default function ChatWidget() {
             {error && (
               <div className="flex justify-start">
                 <div className="max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed bg-slate-800/60 text-slate-300 rounded-bl-md">
-                  {error.message?.toLowerCase().includes("rate limit") || error.message?.toLowerCase().includes("quota")
-                    ? "I've hit my daily question limit. Please try again in an hour or so."
-                    : "Sorry, I'm a bit busy right now. Please try again in a moment."}
+                  {error.message || "Sorry, I'm a bit busy right now. Please try again in a moment."}
                 </div>
               </div>
             )}

@@ -10,8 +10,8 @@ const SUGGESTED = [
   "CPI of Miami in 2024?",
   "How do underdogs do at Indian Wells?",
   "Sinner's record vs left-handed players?",
-  "How do qualifiers do at Roland Garros?",
   "Who's won Indian Wells the most?",
+  "Dimitrov's record at Monte Carlo?",
 ];
 
 export default function RogerPage() {
