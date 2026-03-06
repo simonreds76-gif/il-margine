@@ -49,7 +49,10 @@ function resolveSearchTerms(input: string): string[] {
   for (const [alias, dbNames] of Object.entries(TOURNAMENT_ALIASES)) {
     if (lower.includes(alias)) return dbNames;
   }
-  return [input];
+  const terms = [input];
+  if (/\s/.test(input)) terms.push(input.replace(/\s+/g, "-"));
+  if (/-/.test(input)) terms.push(input.replace(/-/g, " "));
+  return [...new Set(terms)];
 }
 
 const JUNK_TOUR_KEYWORDS = ["junior", "qualif", "boys", "girls", "legends", "doubles", "wheelchair"];
@@ -58,21 +61,39 @@ function isMainTour(name: string): boolean {
   return !JUNK_TOUR_KEYWORDS.some((kw) => lower.includes(kw));
 }
 
-/* ── Player search (fuzzy by surname) ─────────────────────── */
+/* ── Player search (fuzzy, typo-tolerant) ─────────────────── */
 
-/** Common spelling variants for player search (e.g. Maroszan -> Marozsan for Hungarian names). */
-function searchVariants(q: string): string[] {
+/** Common spelling variants (Maroszan/Marozsan, etc.). */
+function spellingVariants(q: string): string[] {
   const variants = [q];
   const lower = q.toLowerCase();
   if (lower.includes("maroszan")) variants.push(q.replace(/maroszan/gi, "Marozsan"));
   if (lower.includes("marozsan") && !lower.includes("maroszan")) variants.push(q.replace(/marozsan/gi, "Maroszan"));
+  if (lower.includes("auger-aliassime")) variants.push(q.replace(/auger-aliassime/gi, "Auger-Aliassime"));
+  if (lower.includes("auger aliassime")) variants.push(q.replace(/auger aliassime/gi, "Auger-Aliassime"));
+  if (lower.includes("auger aliassime") && !lower.includes("auger-aliassime")) variants.push(q.replace(/auger aliassime/gi, "Auger Aliassime"));
   return [...new Set(variants)];
+}
+
+/** Typo-tolerant variants: dedupe consecutive chars, surname only, prefix. */
+function typoTolerantVariants(q: string): string[] {
+  const out: string[] = [];
+  const words = q.split(/\s+/).filter(Boolean);
+  const surname = words.length > 1 ? words[words.length - 1]! : words[0] ?? q;
+  if (surname.length >= 4) out.push(surname);
+  const deduped = surname.replace(/(.)\1+/g, "$1");
+  if (deduped !== surname && deduped.length >= 4) out.push(deduped);
+  if (surname.length >= 6) out.push(surname.slice(0, 6));
+  if (surname.length >= 5) out.push(surname.slice(0, 5));
+  return [...new Set(out)];
 }
 
 export async function searchPlayer(name: string): Promise<Row[]> {
   const q = name.trim();
   if (!q) return [];
-  for (const term of searchVariants(q)) {
+  const termsToTry = [...spellingVariants(q), ...typoTolerantVariants(q).filter((t) => t !== q)];
+  for (const term of termsToTry) {
+    if (!term || term.length < 3) continue;
     const { data } = await sb
       .from("oncourt_players")
       .select("id, name, birthdate, country, atp_rank")
