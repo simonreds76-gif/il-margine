@@ -319,7 +319,31 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
   }
 
   const againstName = extractAgainstPlayerName(q);
-  const asksPick = /\b(pick|lean|fancy|who do you like|who wins)\b/i.test(q);
+  const asksPick = /\b(pick|picks|tip|tips|lean|fancy|who do you like|who wins)\b/i.test(q);
+  const vsPairForPick = extractVsNames(q);
+  if (vsPairForPick && asksPick) {
+    const [a, b] = vsPairForPick;
+    const rowsA = await tools.matchPrediction(a);
+    const rowsB = await tools.matchPrediction(b);
+    const rows = [...rowsA, ...rowsB].filter((r) => asStr((r as Record<string, unknown>).player1) && asStr((r as Record<string, unknown>).player2));
+    const target = rows.find((r) => {
+      const rr = r as Record<string, unknown>;
+      const p1 = asStr(rr.player1).toLowerCase();
+      const p2 = asStr(rr.player2).toLowerCase();
+      return (p1.includes(a.toLowerCase()) || p2.includes(a.toLowerCase())) && (p1.includes(b.toLowerCase()) || p2.includes(b.toLowerCase()));
+    });
+    if (target) {
+      const rr = target as Record<string, unknown>;
+      const p1 = asNum(rr.p1_win_pct);
+      const p2 = asNum(rr.p2_win_pct);
+      const fav = p1 >= p2 ? asStr(rr.player1) : asStr(rr.player2);
+      const favPct = Math.max(p1, p2).toFixed(1);
+      const dog = p1 < p2 ? asStr(rr.player1) : asStr(rr.player2);
+      const dogPct = Math.min(p1, p2).toFixed(1);
+      return `For ${asStr(rr.player1)} vs ${asStr(rr.player2)} today, I'd lean ${fav} (${favPct}%). ${dog} is live at ${dogPct}% if you want the dog angle.`;
+    }
+    return `${a} vs ${b} is not listed in today's ATP main-draw fixtures, so I can't give a live tip right now.`;
+  }
   if (againstName && asksPick) {
     const rows = await tools.matchPrediction(againstName);
     const matches = rows.filter((r) => asStr((r as Record<string, unknown>).player1) && asStr((r as Record<string, unknown>).player2));
