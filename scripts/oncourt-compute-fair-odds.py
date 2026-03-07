@@ -14,10 +14,26 @@ import re
 import sys
 from datetime import date
 
-# Project root for tennis_prob
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+# Project root for tennis_prob; scripts dir for matchup_model
+_script_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(_script_dir, ".."))
+sys.path.insert(0, _script_dir)
 from src.lib.tennis_prob import prob_match_best_of_3, expected_total_games_best_of_3, prob_over_games
 from injury_overlay import env_bool, load_recent_injury_index
+from class_gap import apply_class_gap
+
+# Matchup-aware p_a/p_b from decomposed serve stats (Path B)
+try:
+    from matchup_model import MatchupStats, compute_match_point_probs
+    HAS_MATCHUP_MODEL = True
+except ImportError:
+    HAS_MATCHUP_MODEL = False
+
+try:
+    from live_model_v2 import LiveModelV2
+    HAS_LIVE_V2 = True
+except ImportError:
+    HAS_LIVE_V2 = False
 
 def load_env():
     base = os.path.dirname(os.path.abspath(__file__))
@@ -592,55 +608,86 @@ def main():
             tour_to_surface[tid] = _court_to_surface(raw) if raw != "N/A" else raw
     print(f"  Loaded {len(tour_to_surface):,} tours -> surface" + (f", {len(tour_to_altitude):,} with altitude (run oncourt-derive-altitude.py + migration if 0)" if tour_to_altitude else ""))
 
-    # 3) All player_surface_stats (with long-window columns for blend if table has them) and player_elo
+    # 3) Player surface stats. Prefer player_surface_stats_v2 (decomposed serve) when available.
+    stats_select_v2 = ("player_id,surface,hold_pct,return_pct,hold_pct_long,return_pct_long,"
+                      "match_count,service_pts,return_pts,first_serve_pct,first_serve_win_pct,"
+                      "second_serve_win_pct,ace_rate,df_rate,bp_save_rate,bp_convert_rate,"
+                      "first_serve_pct_long,first_serve_win_pct_long,second_serve_win_pct_long")
     stats_select_full = "player_id,surface,hold_pct,return_pct,hold_pct_long,return_pct_long,match_count,service_pts,return_pts"
     stats_select_base = "player_id,surface,hold_pct,return_pct,match_count,service_pts,return_pts"
     stats_select_legacy = "player_id,surface,hold_pct,return_pct,match_count,service_pts"
 
-    r = requests.get(
-        f"{base}/player_surface_stats",
-        headers={**headers, "Prefer": "count=exact"},
-        params={"select": stats_select_full, "limit": 1},
-        timeout=REQ_TIMEOUT,
-    )
-    stats_select = stats_select_full
-    if r.status_code in (400, 404):
-        r = requests.get(
-            f"{base}/player_surface_stats",
-            headers={**headers, "Prefer": "count=exact"},
-            params={"select": stats_select_base, "limit": 1},
-            timeout=REQ_TIMEOUT,
-        )
-        stats_select = stats_select_base
-    if r.status_code in (400, 404):
-        r = requests.get(
-            f"{base}/player_surface_stats",
-            headers={**headers, "Prefer": "count=exact"},
-            params={"select": stats_select_legacy, "limit": 1},
-            timeout=REQ_TIMEOUT,
-        )
-        stats_select = stats_select_legacy
-    if r.status_code not in (200, 206):
-        print("player_surface_stats fetch failed:", r.status_code)
-        sys.exit(1)
-
     stats_rows = []
-    off = 0
-    while True:
+    use_v2 = False
+    if HAS_MATCHUP_MODEL:
         r = requests.get(
-            f"{base}/player_surface_stats",
-            headers=headers,
-            params={"select": stats_select, "offset": off, "limit": 1000},
+            f"{base}/player_surface_stats_v2",
+            headers={**headers, "Prefer": "count=exact"},
+            params={"select": stats_select_v2, "limit": 1},
             timeout=REQ_TIMEOUT,
         )
-        r.raise_for_status()
-        data = r.json()
-        if not data:
-            break
-        stats_rows.extend(data)
-        off += len(data)
-        if len(data) < 1000:
-            break
+        if r.status_code in (200, 206):
+            use_v2 = True
+            off = 0
+            while True:
+                r = requests.get(
+                    f"{base}/player_surface_stats_v2",
+                    headers=headers,
+                    params={"select": stats_select_v2, "offset": off, "limit": 1000},
+                    timeout=REQ_TIMEOUT,
+                )
+                r.raise_for_status()
+                data = r.json()
+                if not data:
+                    break
+                stats_rows.extend(data)
+                off += len(data)
+                if len(data) < 1000:
+                    break
+            print(f"  Loaded {len(stats_rows):,} rows from player_surface_stats_v2 (matchup model)")
+    if not stats_rows:
+        r = requests.get(
+            f"{base}/player_surface_stats",
+            headers={**headers, "Prefer": "count=exact"},
+            params={"select": stats_select_full, "limit": 1},
+            timeout=REQ_TIMEOUT,
+        )
+        stats_select = stats_select_full
+        if r.status_code in (400, 404):
+            r = requests.get(
+                f"{base}/player_surface_stats",
+                headers={**headers, "Prefer": "count=exact"},
+                params={"select": stats_select_base, "limit": 1},
+                timeout=REQ_TIMEOUT,
+            )
+            stats_select = stats_select_base
+        if r.status_code in (400, 404):
+            r = requests.get(
+                f"{base}/player_surface_stats",
+                headers={**headers, "Prefer": "count=exact"},
+                params={"select": stats_select_legacy, "limit": 1},
+                timeout=REQ_TIMEOUT,
+            )
+            stats_select = stats_select_legacy
+        if r.status_code not in (200, 206):
+            print("player_surface_stats fetch failed:", r.status_code)
+            sys.exit(1)
+        off = 0
+        while True:
+            r = requests.get(
+                f"{base}/player_surface_stats",
+                headers=headers,
+                params={"select": stats_select, "offset": off, "limit": 1000},
+                timeout=REQ_TIMEOUT,
+            )
+            r.raise_for_status()
+            data = r.json()
+            if not data:
+                break
+            stats_rows.extend(data)
+            off += len(data)
+            if len(data) < 1000:
+                break
 
     stats = {(int(r["player_id"]), (r.get("surface") or "N/A").strip()): r for r in stats_rows}
 
@@ -1215,6 +1262,13 @@ def main():
             pass
     print(f"  Recent activity: {len(recent_activity_by_player):,} rows" + (" (form/fatigue active)" if recent_activity_by_player else " (run oncourt-compute-recent-activity.py)"))
 
+    # --- V2 MODEL: load decomposed stats + recent games ---
+    v2_model = None
+    if HAS_LIVE_V2 and fixture_player_ids and venue_tour_ids and tour_to_surface:
+        v2_model = LiveModelV2(url.rstrip("/"), key)
+        v2_model.load_data(fixture_player_ids, venue_tour_ids, tour_to_surface)
+    # --- END V2 ---
+
     # 5f) H2H table
     h2h_rows = []
     try:
@@ -1669,15 +1723,56 @@ def main():
         ret1_eff = _clamp(ret1 + ret_shift, RETURN_CLAMP[0], RETURN_CLAMP[1])
         ret2_eff = _clamp(ret2 + ret_shift, RETURN_CLAMP[0], RETURN_CLAMP[1])
 
-        # Barnett-Clarke style p_A / p_B from adjusted serve/return point strengths
+        # p_A / p_B: use LiveModelV2 (matchup + fallback) when available
         league_avg = league_avg_by_surface.get(surface, 0.64)
         if league_avg <= 0 or league_avg >= 1:
             league_avg = 0.64
 
-        p_a = (hold1_eff * (1.0 - ret2_eff)) / league_avg
-        p_b = (hold2_eff * (1.0 - ret1_eff)) / league_avg
-        p_a = _clamp(p_a, POINT_CLAMP[0], POINT_CLAMP[1])
-        p_b = _clamp(p_b, POINT_CLAMP[0], POINT_CLAMP[1])
+        if v2_model is not None:
+            p_a, p_b, _ = v2_model.point_probs(
+                p1, p2, surface,
+                hold1=hold1_eff, ret1=ret1_eff,
+                hold2=hold2_eff, ret2=ret2_eff,
+                league_avg=league_avg,
+            )
+            p_a = _clamp(p_a, POINT_CLAMP[0], POINT_CLAMP[1])
+            p_b = _clamp(p_b, POINT_CLAMP[0], POINT_CLAMP[1])
+        elif HAS_MATCHUP_MODEL and (s1 or s2):
+            def _blend(s, k12, klong):
+                v12 = _float((s or {}).get(k12))
+                vlong = _float((s or {}).get(klong), v12)
+                if v12 is None:
+                    return vlong
+                if vlong is None:
+                    return v12
+                return recent_weight * v12 + (1.0 - recent_weight) * vlong
+
+            def _build_matchup_row(s, hold_val, ret_val):
+                row = {
+                    "hold_pct": hold_val, "return_pct": ret_val,
+                    "match_count": int((s or {}).get("match_count") or 0),
+                    "service_pts": int((s or {}).get("service_pts") or 0),
+                }
+                if s:
+                    row["first_serve_pct"] = _blend(s, "first_serve_pct", "first_serve_pct_long")
+                    row["first_serve_win_pct"] = _blend(s, "first_serve_win_pct", "first_serve_win_pct_long")
+                    row["second_serve_win_pct"] = _blend(s, "second_serve_win_pct", "second_serve_win_pct_long")
+                    row["ace_rate"] = _float(s.get("ace_rate"))
+                    row["df_rate"] = _float(s.get("df_rate"))
+                    row["bp_save_rate"] = _float(s.get("bp_save_rate"))
+                    row["bp_convert_rate"] = _float(s.get("bp_convert_rate"))
+                return row
+
+            row1 = _build_matchup_row(s1, hold1, ret1)
+            row2 = _build_matchup_row(s2, hold2, ret2)
+            stats_a = MatchupStats.from_db_row(row1)
+            stats_b = MatchupStats.from_db_row(row2)
+            p_a, p_b, _ = compute_match_point_probs(stats_a, stats_b, surface)
+        else:
+            p_a = (hold1_eff * (1.0 - ret2_eff)) / league_avg
+            p_b = (hold2_eff * (1.0 - ret1_eff)) / league_avg
+            p_a = _clamp(p_a, POINT_CLAMP[0], POINT_CLAMP[1])
+            p_b = _clamp(p_b, POINT_CLAMP[0], POINT_CLAMP[1])
 
         p_serve_return = prob_match_best_of_3(p_a, p_b)
 
@@ -1944,8 +2039,23 @@ def main():
         a1 = _age_factor(birthdate_by_player.get(p1))
         a2 = _age_factor(birthdate_by_player.get(p2))
         delta_p1 += 0.5 * (a1 - a2)
-        # Form/fatigue/rust (player_recent_activity): three factors, then net delta
+        # --- V2 MODEL: compound fatigue + form ---
         today_d = date.today()
+
+        def _form_only(pid, player_elo_surface):
+            act = recent_activity_by_player.get(pid)
+            if not act:
+                return 0.0
+            m21 = int(act.get("matches_last_21d") or 0)
+            wr = _float(act.get("win_rate_21d"))
+            avg_opp = _float(act.get("avg_opponent_elo"), 1500)
+            delta_form = 0.0
+            if m21 >= FORM_MIN_MATCHES and wr is not None and avg_opp is not None:
+                expected_wr = 1.0 / (1.0 + 10.0 ** ((avg_opp - player_elo_surface) / 400.0))
+                delta_form = (wr - expected_wr) * FORM_WEIGHT
+                delta_form = max(-FORM_CAP, min(FORM_CAP, delta_form))
+            return delta_form
+
         def _form_fatigue_rust(pid, player_elo_surface):
             act = recent_activity_by_player.get(pid)
             if not act:
@@ -1959,13 +2069,11 @@ def main():
             m21 = int(act.get("matches_last_21d") or 0)
             wr = _float(act.get("win_rate_21d"))
             avg_opp = _float(act.get("avg_opponent_elo"), 1500)
-            # Factor A: form (outperform vs expected given opponent quality)
             delta_form = 0.0
             if m21 >= FORM_MIN_MATCHES and wr is not None and avg_opp is not None:
                 expected_wr = 1.0 / (1.0 + 10.0 ** ((avg_opp - player_elo_surface) / 400.0))
                 delta_form = (wr - expected_wr) * FORM_WEIGHT
                 delta_form = max(-FORM_CAP, min(FORM_CAP, delta_form))
-            # Factor B: fatigue (scheduling density)
             delta_fatigue = 0.0
             if act.get("played_yesterday"):
                 delta_fatigue -= FATIGUE_PLAYED_YESTERDAY
@@ -1975,7 +2083,6 @@ def main():
             elif m5 >= 2 and act.get("played_yesterday"):
                 delta_fatigue -= FATIGUE_MODERATE_COMPOUND
             delta_fatigue = max(-FATIGUE_CAP, delta_fatigue)
-            # Factor C: inactivity / ring rust
             delta_rust = 0.0
             last_d = act.get("last_match_date")
             if last_d:
@@ -1991,11 +2098,21 @@ def main():
                 except (ValueError, TypeError):
                     pass
             return delta_form + delta_fatigue + delta_rust
-        p1_form = _form_fatigue_rust(p1, e1_s)
-        p2_form = _form_fatigue_rust(p2, e2_s)
-        delta_p1_form = form_mult * 0.5 * (p1_form - p2_form)
-        delta_p1_form = max(-FORM_TOTAL_CAP, min(FORM_TOTAL_CAP, delta_p1_form))
-        delta_p1 += delta_p1_form
+
+        if v2_model is not None:
+            delta_fatigue_v2 = v2_model.fatigue_delta(p1, p2, today_d, surface, tid)
+            p1_form = _form_only(p1, e1_s)
+            p2_form = _form_only(p2, e2_s)
+            delta_p1_form = form_mult * 0.5 * (p1_form - p2_form)
+            delta_p1_form = max(-FORM_TOTAL_CAP, min(FORM_TOTAL_CAP, delta_p1_form))
+            delta_p1 += delta_p1_form + delta_fatigue_v2
+        else:
+            p1_form = _form_fatigue_rust(p1, e1_s)
+            p2_form = _form_fatigue_rust(p2, e2_s)
+            delta_p1_form = form_mult * 0.5 * (p1_form - p2_form)
+            delta_p1_form = max(-FORM_TOTAL_CAP, min(FORM_TOTAL_CAP, delta_p1_form))
+            delta_p1 += delta_p1_form
+        # --- END V2 ---
 
         # Direct results-form layer (YTD + last5 + active streak)
         p1_results_form = _results_form_component(p1)
@@ -2046,6 +2163,13 @@ def main():
         delta_p1 = _clamp(delta_p1, -overall_cap, overall_cap)
         p1_win += delta_p1
         p2_win -= delta_p1
+
+        # Class gap: push heavy mismatches toward Elo expectation (before normalisation)
+        p1_win = apply_class_gap(
+            p1_win, e1_s, e2_s, e1_o, e2_o,
+            atp_rank_by_player.get(p1), atp_rank_by_player.get(p2),
+        )
+        p2_win = 1.0 - p1_win
 
         # Normalize
         tot = p1_win + p2_win
@@ -2210,6 +2334,8 @@ def main():
         })
 
     print(f"Computed {len(out)} fair odds rows")
+    if v2_model is not None:
+        v2_model.print_summary()
     print(f"  Fixture surfaces (from tour_id): {dict(surface_counts)}")
     print(f"  Skipped: no player1/player2 = {skip_no_players}, same-player = {skip_same_player}, unknown = {skip_unknown}, doubles/team (name contains / or &) = {skip_doubles}")
     print(f"  Elo/rank fallback (missing stats): both = {skip_missing_both}, P1 only = {skip_missing_p1}, P2 only = {skip_missing_p2}")
