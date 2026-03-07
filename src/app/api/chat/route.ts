@@ -68,7 +68,102 @@ function formatSurfaceBreakdown(bySurface: unknown): string {
   return parts.join(", ");
 }
 
-async function deterministicAnswer(userText: string): Promise<string | null> {
+type ChatMsg = { role?: string; content?: string; parts?: Array<{ type?: string; text?: string }> };
+
+function messageText(m: unknown): string {
+  const msg = m as ChatMsg;
+  if (typeof msg?.content === "string") return msg.content;
+  if (Array.isArray(msg?.parts)) {
+    return msg.parts
+      .filter((p) => p?.type === "text" && typeof p.text === "string")
+      .map((p) => p.text as string)
+      .join("");
+  }
+  return "";
+}
+
+function recentConversationTexts(messages: unknown[] | undefined, maxCount = 8): string[] {
+  if (!Array.isArray(messages) || !messages.length) return [];
+  const out: string[] = [];
+  for (let i = messages.length - 1; i >= 0 && out.length < maxCount; i--) {
+    const t = messageText(messages[i]).trim();
+    if (!t) continue;
+    out.push(t);
+  }
+  return out;
+}
+
+function inferRoundFromQuery(query: string): string | null {
+  const q = query.toLowerCase();
+  if (q.includes("quarter") || q.includes("quarters") || q.includes("quarter-final") || q.includes("quarterfinal") || /\bqf\b/.test(q)) return "QF";
+  if (q.includes("semi") || q.includes("semis") || q.includes("semi-final") || q.includes("semifinal") || /\bsf\b/.test(q)) return "SF";
+  if (q.includes("final")) return "Final";
+  if (q.includes("r16") || q.includes("round of 16") || q.includes("last 16")) return "R16";
+  if (q.includes("r3") || q.includes("third round")) return "R3";
+  if (q.includes("r2") || q.includes("second round")) return "R2";
+  if (q.includes("r1") || q.includes("first round")) return "R1";
+  return null;
+}
+
+function inferYear(text: string, currentYear: number): number | null {
+  const m = text.match(/\b(20\d{2})\b/);
+  if (m) return Number(m[1]);
+  const q = text.toLowerCase();
+  if (q.includes("last year")) return currentYear - 1;
+  if (q.includes("this year")) return currentYear;
+  return null;
+}
+
+function inferTournament(text: string): string | null {
+  const q = text.toLowerCase();
+  const known = [
+    "roland garros",
+    "french open",
+    "wimbledon",
+    "us open",
+    "australian open",
+    "indian wells",
+    "miami",
+    "monte carlo",
+    "madrid",
+    "rome",
+    "canada",
+    "cincinnati",
+    "shanghai",
+    "paris",
+  ];
+  for (const t of known) {
+    if (q.includes(t)) return t;
+  }
+  const won = text.match(/\bwho\s+won\s+(.+?)\s+(?:last|this)\s+year\b/i);
+  if (won?.[1]) return won[1].trim();
+  const atIn = text.match(/\b(?:at|in)\s+([A-Za-z][A-Za-z\s.'-]{2,50}?)(?:\s+(?:last|this)\s+year|\s+20\d{2}|\?|$)/i);
+  if (atIn?.[1]) {
+    const cand = atIn[1].trim();
+    const c = cand.toLowerCase();
+    if (!/\b(final|finals|semi|semis|quarter|quarters|qf|sf|r16|round)\b/.test(c)) {
+      return cand;
+    }
+  }
+  return null;
+}
+
+function inferPlayerFromBeatQuery(query: string, contextTexts: string[]): string | null {
+  const direct = query.match(/\bwho did\s+(.+?)\s+beat\b/i);
+  if (direct?.[1]) {
+    const cand = direct[1].trim().replace(/^(he|she|they|him|her)\b/i, "").trim();
+    if (cand && !/^(he|she|they|him|her)$/i.test(cand)) return cand;
+  }
+  for (const t of contextTexts) {
+    const m =
+      t.match(/\b([A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3})\s+(?:has\s+)?won\b/) ||
+      t.match(/\b([A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3})\s+(?:beat|defeated|crushed)\b/);
+    if (m?.[1]) return m[1].trim();
+  }
+  return null;
+}
+
+async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Promise<string | null> {
   const q = userText.trim();
   const lower = q.toLowerCase();
 
@@ -76,6 +171,62 @@ async function deterministicAnswer(userText: string): Promise<string | null> {
 
   if ((lower.includes("do you use") || lower.includes("use your")) && (lower.includes("model") || lower.includes("algorithm"))) {
     return "I use ATP match stats and market data from the database to give a straight, data-backed read.";
+  }
+
+  const asksBeatInRound =
+    /\bwho did\b/i.test(q) &&
+    /\bbeat\b/i.test(q) &&
+    /\b(quarter|quarters|qf|semi|semis|sf|final|finals|r16|round of 16|last 16|r3|r2|r1|first round|second round|third round)\b/i.test(q);
+  if (asksBeatInRound) {
+    const round = inferRoundFromQuery(q);
+    if (round) {
+      const nowYear = new Date().getFullYear();
+      const contextTexts = recentConversationTexts(uiMessages, 10);
+      const seasonYear =
+        inferYear(q, nowYear) ??
+        contextTexts.map((t) => inferYear(t, nowYear)).find((y): y is number => y != null) ??
+        undefined;
+      const tournament =
+        inferTournament(q) ??
+        contextTexts.map((t) => inferTournament(t)).find((t): t is string => !!t) ??
+        null;
+      const player =
+        inferPlayerFromBeatQuery(q, contextTexts) ??
+        null;
+
+      if (tournament && player) {
+        const result = await tools.tournamentEditionResults(tournament, seasonYear, round, player);
+        const found = Boolean((result as Record<string, unknown>).found);
+        const matches = (((result as Record<string, unknown>).matches as Array<Record<string, unknown>> | undefined) ?? [])
+          .filter((m) => asStr(m.winner) && asStr(m.loser));
+        if (found && matches.length) {
+          const playerLower = player.toLowerCase();
+          const won = matches.find((m) => asStr(m.winner).toLowerCase().includes(playerLower));
+          const lost = matches.find((m) => asStr(m.loser).toLowerCase().includes(playerLower));
+          const m = won ?? lost ?? matches[0];
+          const yearOut = asNum((result as Record<string, unknown>).season_year) || seasonYear || nowYear;
+          const tourOut = asStr((result as Record<string, unknown>).tournament) || tournament;
+          const roundOut = asStr(m.round) || round;
+          const winner = asStr(m.winner);
+          const loser = asStr(m.loser);
+          const score = asStr(m.score);
+          if (won) {
+            return score
+              ? `${winner} beat ${loser} in the ${roundOut} at ${tourOut} ${yearOut}, ${score}.`
+              : `${winner} beat ${loser} in the ${roundOut} at ${tourOut} ${yearOut}.`;
+          }
+          if (lost) {
+            return score
+              ? `${loser} lost to ${winner} in the ${roundOut} at ${tourOut} ${yearOut}, ${score}.`
+              : `${loser} lost to ${winner} in the ${roundOut} at ${tourOut} ${yearOut}.`;
+          }
+          return score
+            ? `${winner} beat ${loser} in the ${roundOut} at ${tourOut} ${yearOut}, ${score}.`
+            : `${winner} beat ${loser} in the ${roundOut} at ${tourOut} ${yearOut}.`;
+        }
+        return `I couldn't find that ${round} result for ${player} at ${tournament}${seasonYear ? ` ${seasonYear}` : ""}.`;
+      }
+    }
   }
 
   const isH2hIntent = /\b(h2h|head to head|head-to-head)\b/i.test(q);
@@ -271,6 +422,14 @@ function buildIntentHints(userText: string): string {
       "- Intent hint: This asks for tournament winner, not today's fixtures. Use tournament_past_winners + tournament_entrants (+ form/surface tools if needed). Do NOT use match_prediction."
     );
   }
+  const asksTournamentEditionResult =
+    (q.includes("who did") || q.includes("who beat") || q.includes("beat in")) &&
+    (q.includes("quarter") || q.includes("qf") || q.includes("semi") || q.includes("sf") || q.includes("final") || q.includes("r16"));
+  if (asksTournamentEditionResult) {
+    hints.push(
+      "- Intent hint: This asks about specific tournament-edition results. Use tournament_edition_results with tournament_name, season_year, round, and player_name (infer pronouns from prior context)."
+    );
+  }
   if (q.includes("today") || q.includes("today's") || q.includes("todays") || q.includes("picks")) {
     hints.push("- Intent hint: This is a today's-matches/picks query. Use match_prediction.");
   }
@@ -305,6 +464,7 @@ RESPONSE STYLE — THIS IS CRITICAL:
 - When asked about a specific match ("who wins Borges vs Nava?"), give a focused take: probability, surface context, form, H2H if relevant, and a handicap view.
 - When asked who will WIN A TOURNAMENT (e.g. "who wins Indian Wells?", "Indian Wells champion?"): do NOT rely on today's match list. Use player_record_at_tournament, player_surface_stats, player_recent_form, tournament_past_winners, court_pace. Today's matches are a small slice — focus on tournament history, form, and surface fit.
 - When asked "is X playing?" or "is Draper in the draw?" or "who's playing Indian Wells?": use tournament_entrants with the tournament and player name. This uses Pinnacle outright odds and gives the full draw.
+- For questions like "who did X beat in the quarters/semis/final at [tournament] [year]" or follow-ups like "who did he beat in the quarters?", use tournament_edition_results (tournament_name + season_year + round + player_name). Do not claim you lack results access when data exists.
 - When asked about game handicaps, use the expected total games and game margin data to assess whether the line is coverable.
 - "Where does X have the best record?" or "X's best surface?" → use player_record_by_surface for surface breakdown. For best tournament, call player_record_at_tournament for 2–3 likely venues (e.g. Indian Wells, Cincinnati, Paris).
 - "How do favourites/dogs do at X?" or "fav ROI at Indian Wells?" → use tournament_fav_dog_stats. Level-stake ROI from backtest.
@@ -385,7 +545,7 @@ export async function POST(req: Request) {
 
   const lastUserText = getLastUserMessageText(Array.isArray(uiMessages) ? uiMessages : []);
   if (lastUserText) {
-    const fast = await deterministicAnswer(lastUserText);
+    const fast = await deterministicAnswer(lastUserText, Array.isArray(uiMessages) ? uiMessages : undefined);
     if (fast) {
       return uiTextStreamResponse(fast);
     }
@@ -571,6 +731,26 @@ export async function POST(req: Request) {
         execute: safeExecute(
           async ({ tournament_name }) => tools.tournamentPastWinners(tournament_name),
           "tournament_past_winners"
+        ),
+      },
+
+      tournament_edition_results: {
+        description: "Get match-level results for a specific tournament edition (year), with optional round and player filters. Use for questions like 'who did Alcaraz beat in the QF at Roland Garros last year?'.",
+        inputSchema: z.object({
+          tournament_name: z.string().describe("Tournament name (e.g. French Open, Indian Wells, Wimbledon)"),
+          season_year: z.string().optional().describe("Edition year (e.g. 2025). Omit to use latest edition."),
+          round: z.string().optional().describe("Round filter (QF, SF, Final, R16, R1, etc.)"),
+          player_name: z.string().optional().describe("Optional player name filter (e.g. Carlos Alcaraz)"),
+        }),
+        execute: safeExecute(
+          async ({ tournament_name, season_year, round, player_name }) =>
+            tools.tournamentEditionResults(
+              tournament_name,
+              season_year && /^\d{4}$/.test(season_year) ? Number(season_year) : undefined,
+              round,
+              player_name
+            ),
+          "tournament_edition_results"
         ),
       },
 

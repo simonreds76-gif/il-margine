@@ -70,7 +70,7 @@ Before each LLM call, we run retrieval over the user's last message:
 ## Visibility & placement
 
 - **Localhost:** Chat widget + nav "Ask Margine" + ChatPrompt on tennis tips & homepage.
-- **Production:** All hidden (`CHAT_ENABLED = NODE_ENV !== "production"`).
+- **Production:** Roger is live.
 - **Nav:** "Ask Margine" in GlobalNav (desktop & mobile) — opens chat.
 - **Page prompts:** ChatPrompt on `/tennis-tips` and `/` — contextual CTA to open chat.
 - **Name:** "Ask Margine" (branded, tennis + Margine).

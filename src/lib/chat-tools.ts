@@ -897,6 +897,142 @@ export async function tournamentPastWinners(tournamentName: string): Promise<Row
   return results;
 }
 
+/**
+ * Match-level results for a specific tournament edition, with optional round/player filters.
+ * Example: French Open 2025, round=QF, player=Alcaraz.
+ */
+export async function tournamentEditionResults(
+  tournamentName: string,
+  seasonYear?: number,
+  round?: string,
+  playerName?: string
+): Promise<Row> {
+  const searchTerms = resolveSearchTerms(tournamentName);
+  let allTours: Row[] = [];
+  for (const term of searchTerms) {
+    const { data } = await sb
+      .from("oncourt_tours")
+      .select("id, name, date, rank")
+      .ilike("name", `%${term}%`)
+      .order("date", { ascending: false })
+      .limit(120);
+    if (data?.length) allTours = [...allTours, ...data];
+  }
+  if (!allTours.length) {
+    return {
+      found: false,
+      tournament: tournamentName,
+      message: "No tournament editions found for that name.",
+    };
+  }
+
+  const mainTours = allTours.filter((t) => isMainTour(str(t.name)));
+  const tours = mainTours.length ? mainTours : allTours;
+  const availableYears = [...new Set(tours.map((t) => str(t.date).slice(0, 4)).filter(Boolean))]
+    .sort((a, b) => b.localeCompare(a));
+
+  const latestYear = availableYears.length ? Number(availableYears[0]) : undefined;
+  const targetYear =
+    seasonYear && Number.isFinite(seasonYear) && seasonYear > 1900 ? seasonYear : latestYear;
+  if (!targetYear) {
+    return {
+      found: false,
+      tournament: tournamentName,
+      available_years: availableYears,
+      message: "No valid season year found for this tournament.",
+    };
+  }
+
+  const yearTours = tours.filter((t) => str(t.date).startsWith(`${targetYear}`));
+  if (!yearTours.length) {
+    return {
+      found: false,
+      tournament: tournamentName,
+      season_year: targetYear,
+      available_years: availableYears,
+      message: "No edition found for that year.",
+    };
+  }
+
+  const edition = [...yearTours].sort((a, b) => str(b.date).localeCompare(str(a.date)))[0];
+  const requestedRoundId = normalizeRoundId(round);
+
+  let q = sb
+    .from("oncourt_games")
+    .select("winner_id, loser_id, round_id, result, date")
+    .eq("tour_id", num(edition.id));
+  if (requestedRoundId) q = q.eq("round_id", requestedRoundId);
+  const { data: games } = await q.limit(400);
+
+  if (!games?.length) {
+    return {
+      found: false,
+      tournament: str(edition.name),
+      season_year: targetYear,
+      round_requested: round ?? null,
+      round_id: requestedRoundId,
+      message: "No matches found for this edition/filter.",
+    };
+  }
+
+  const playerIds = [...new Set(games.flatMap((g) => [num(g.winner_id), num(g.loser_id)]).filter((id) => id > 0))];
+  const { data: players } = playerIds.length
+    ? await sb.from("oncourt_players").select("id, name").in("id", playerIds)
+    : { data: [] as Row[] };
+  const pMap = new Map<number, string>((players ?? []).map((p) => [num(p.id), str(p.name)]));
+
+  let playerIdFilter: number | null = null;
+  let playerNameFilter = "";
+  if (playerName && str(playerName).toLowerCase() !== "all") {
+    playerNameFilter = str(playerName).toLowerCase();
+    const found = await searchPlayer(playerName);
+    if (found.length > 0 && num(found[0].id) > 0) playerIdFilter = num(found[0].id);
+  }
+
+  let matches = games
+    .map((g) => {
+      const winner = pMap.get(num(g.winner_id)) ?? `Player ${num(g.winner_id)}`;
+      const loser = pMap.get(num(g.loser_id)) ?? `Player ${num(g.loser_id)}`;
+      return {
+        date: g.date,
+        round_id: num(g.round_id),
+        round: roundLabel(num(g.round_id)),
+        winner_id: num(g.winner_id),
+        winner,
+        loser_id: num(g.loser_id),
+        loser,
+        score: str(g.result),
+      };
+    })
+    .filter((m) => !m.winner.includes("/") && !m.loser.includes("/"));
+
+  if (playerIdFilter) {
+    matches = matches.filter((m) => m.winner_id === playerIdFilter || m.loser_id === playerIdFilter);
+  } else if (playerNameFilter) {
+    matches = matches.filter((m) =>
+      m.winner.toLowerCase().includes(playerNameFilter) || m.loser.toLowerCase().includes(playerNameFilter)
+    );
+  }
+
+  matches.sort((a, b) => {
+    const byRound = b.round_id - a.round_id;
+    if (byRound !== 0) return byRound;
+    return str(b.date).localeCompare(str(a.date));
+  });
+
+  return {
+    found: true,
+    tournament: str(edition.name),
+    season_year: targetYear,
+    round_requested: round ?? null,
+    round_id: requestedRoundId,
+    player_filter: playerName || null,
+    match_count: matches.length,
+    matches: matches.slice(0, 120),
+    available_years: availableYears,
+  };
+}
+
 /* ── Court pace (CPI-based) ──────────────────────────────── */
 
 export async function courtPace(tournamentName: string): Promise<Row> {
@@ -977,6 +1113,43 @@ function matchesTournament(term: string, key: string, display: string): boolean 
   const d = display.toLowerCase();
   // Avoid t.includes(firstWord): "Italian Open" would falsely match "Open 13" (Marseille) via "open"
   return k.includes(t) || d.includes(t) || t.includes(k);
+}
+
+function normalizeRoundId(roundInput?: string | number): number | null {
+  if (roundInput == null) return null;
+  if (typeof roundInput === "number" && Number.isFinite(roundInput)) return roundInput;
+  const raw = str(roundInput).toLowerCase().trim();
+  if (!raw) return null;
+  if (/^\d+$/.test(raw)) return Number(raw);
+
+  const compact = raw.replace(/[^a-z0-9]/g, "");
+  if (compact === "f" || compact === "final") return 12;
+  if (compact === "sf" || compact === "semifinal" || compact === "semis" || compact === "semi") return 10;
+  if (compact === "qf" || compact === "quarterfinal" || compact === "quarters" || compact === "quarter") return 9;
+  if (compact === "r16" || compact === "roundof16" || compact === "last16") return 7;
+  if (compact === "r3" || compact === "thirdround") return 3;
+  if (compact === "r2" || compact === "secondround") return 2;
+  if (compact === "r1" || compact === "firstround") return 1;
+  if (compact === "q3" || compact === "qualifying3") return 6;
+  if (compact === "q2" || compact === "qualifying2") return 5;
+  if (compact === "q1" || compact === "qualifying1") return 4;
+  return null;
+}
+
+function roundLabel(roundId: number): string {
+  const labels: Record<number, string> = {
+    1: "R1",
+    2: "R2",
+    3: "R3",
+    4: "Q1",
+    5: "Q2",
+    6: "Q3",
+    7: "R16",
+    9: "QF",
+    10: "SF",
+    12: "Final",
+  };
+  return labels[roundId] ?? `Round ${roundId}`;
 }
 
 /** Reads tournament-fav-dog-roi.csv. For deployment, ensure data/backtest/tournament-fav-dog-roi.csv is committed. */
