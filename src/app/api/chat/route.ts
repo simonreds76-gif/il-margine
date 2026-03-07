@@ -318,6 +318,31 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
     return `Top ATP underdog spots today (by upset chance): ${top.join("; ")}.`;
   }
 
+  const asksValue = /\b(best value|value bet|value pick|value spot|edge)\b/i.test(q);
+  if (asksValue) {
+    const value = await tools.valuePicksToday(5, 3);
+    const found = Boolean((value as Record<string, unknown>).found);
+    const picks = ((value as Record<string, unknown>).picks as Array<Record<string, unknown>> | undefined) ?? [];
+    if (!found) {
+      const msg = asStr((value as Record<string, unknown>).message);
+      return msg || "No Pinnacle-linked value data is available right now.";
+    }
+    if (!picks.length) {
+      const capture = asStr((value as Record<string, unknown>).capture_date);
+      return `No moneyline value edges >= 3% from matched Pinnacle lines${capture ? ` (snapshot ${capture})` : ""}.`;
+    }
+    const top = picks.slice(0, 5).map((p, i) => {
+      const player = asStr(p.player);
+      const opp = asStr(p.opponent);
+      const v = asNum(p.value_pct).toFixed(1);
+      const pin = asNum(p.pinnacle_odds).toFixed(2);
+      const fair = asNum(p.fair_odds).toFixed(2);
+      const conf = asStr(p.confidence) || "n/a";
+      return `${i + 1}) ${player} over ${opp} (+${v}% edge; Pin ${pin} vs fair ${fair}; ${conf})`;
+    });
+    return `Best ATP moneyline value spots today: ${top.join("; ")}.`;
+  }
+
   const againstName = extractAgainstPlayerName(q);
   const asksPick = /\b(pick|picks|tip|tips|lean|fancy|who do you like|who wins)\b/i.test(q);
   const vsPairForPick = extractVsNames(q);
@@ -368,11 +393,29 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
     return `For ${asStr(rr.player1)} vs ${asStr(rr.player2)} today, I'd lean ${fav} (${favPct}%). ${dog} is live at ${dogPct}% if you want the dog angle.`;
   }
 
-  const asksTips = /\b(tip|tips|pick|picks|best bet|best bets|bet slip|value picks?)\b/i.test(q);
+  const asksTips = /\b(tip|tips|pick|picks|best bet|best bets|bet slip)\b/i.test(q);
   if (asksTips) {
     const rows = await tools.matchPrediction(undefined);
     const matches = rows.filter((r) => asStr((r as Record<string, unknown>).player1) && asStr((r as Record<string, unknown>).player2));
     if (!matches.length) return "No ATP main-draw matches found for today.";
+
+    const value = await tools.valuePicksToday(3, 3);
+    const valueFound = Boolean((value as Record<string, unknown>).found);
+    const valuePicks = ((value as Record<string, unknown>).picks as Array<Record<string, unknown>> | undefined) ?? [];
+    const valueCapture = asStr((value as Record<string, unknown>).capture_date);
+    const valuePart = valueFound && valuePicks.length
+      ? valuePicks
+          .slice(0, 3)
+          .map((p, i) => {
+            const player = asStr(p.player);
+            const opp = asStr(p.opponent);
+            const v = asNum(p.value_pct).toFixed(1);
+            const pin = asNum(p.pinnacle_odds).toFixed(2);
+            const fair = asNum(p.fair_odds).toFixed(2);
+            return `${i + 1}) ${player} over ${opp} (+${v}% edge; Pin ${pin} vs fair ${fair})`;
+          })
+          .join("; ")
+      : `No ML value edges >= 3%${valueCapture ? ` (snapshot ${valueCapture})` : ""}.`;
 
     const scored = matches
       .map((r) => {
@@ -398,6 +441,7 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
       .filter((x) => x.winPct >= 58)
       .sort((a, b) => b.score - a.score);
 
+    const favouritesCap = valueFound && valuePicks.length >= 1 ? 3 : 5;
     const top = (scored.length ? scored : matches
       .map((r) => {
         const rr = r as Record<string, unknown>;
@@ -413,10 +457,13 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
           score: Math.abs(p1 - 50),
         };
       }).sort((a, b) => b.score - a.score))
-      .slice(0, 5);
+      .slice(0, favouritesCap);
 
-    const tips = top.map((t, i) => `${i + 1}) ${t.pickPlayer} over ${t.oppPlayer} (${t.winPct.toFixed(1)}%, ${t.confidence}, ${t.surface})`);
-    return `Today's ATP tips from the numbers: ${tips.join("; ")}.`;
+    const favPart = top
+      .map((t, i) => `${i + 1}) ${t.pickPlayer} over ${t.oppPlayer} (${t.winPct.toFixed(1)}%, ${t.confidence}, ${t.surface})`)
+      .join("; ");
+
+    return `Best value (Pinnacle vs fair, ML): ${valuePart}. Best favourites: ${favPart}.`;
   }
 
   if (lower.includes("today") || lower.includes("today's") || lower.includes("todays") || lower.includes("picks")) {
@@ -542,8 +589,11 @@ function buildIntentHints(userText: string): string {
   if (q.includes("today") || q.includes("today's") || q.includes("todays") || q.includes("picks")) {
     hints.push("- Intent hint: This is a today's-matches/picks query. Use match_prediction.");
   }
-  if (q.includes("tip") || q.includes("tips") || q.includes("best bet") || q.includes("bet slip") || q.includes("value pick")) {
+  if (q.includes("tip") || q.includes("tips") || q.includes("best bet") || q.includes("bet slip")) {
     hints.push("- Intent hint: User wants betting tips. Use match_prediction and return 3-5 concrete ATP picks with win % and confidence.");
+  }
+  if (q.includes("value") || q.includes("edge")) {
+    hints.push("- Intent hint: User wants value bets. Use value_picks_today and quote moneyline edge only (Pinnacle vs fair odds). No handicap picks.");
   }
   if (q.includes("model") || q.includes("algorithm")) {
     hints.push(
@@ -581,6 +631,7 @@ RESPONSE STYLE — THIS IS CRITICAL:
 - When asked "is X playing?" or "is Draper in the draw?" or "who's playing Indian Wells?": use tournament_entrants with the tournament and player name. This uses Pinnacle outright odds and gives the full draw.
 - For questions like "who did X beat in the quarters/semis/final at [tournament] [year]" or follow-ups like "who did he beat in the quarters?", use tournament_edition_results (tournament_name + season_year + round + player_name). Do not claim you lack results access when data exists.
 - When asked about game handicaps, use the expected total games and game margin data to assess whether the line is coverable.
+- For "best value bet" requests, use value_picks_today and only provide moneyline value edges from Pinnacle vs fair odds. Do not give handicap picks unless handicap market data is explicitly available.
 - "Where does X have the best record?" or "X's best surface?" → use player_record_by_surface for surface breakdown. For best tournament, call player_record_at_tournament for 2–3 likely venues (e.g. Indian Wells, Cincinnati, Paris).
 - "How do favourites/dogs do at X?" or "fav ROI at Indian Wells?" → use tournament_fav_dog_stats. Level-stake ROI from backtest.
 - "Record of seeds at this tournament?" or "how do qualifiers do at X?" → use tournament_seed_stats. Seed/entry win rates from Sackmann.
@@ -610,6 +661,7 @@ RULES:
 - Do NOT mention "model", "fair odds model", "our model", "algorithm" or anything revealing internal methodology. Present everything as your expert analysis.
 - BANNED WORDS in final output: "model", "models", "algorithm", "algorithms". Never use them, even when the user asks with those words.
 - If asked for tips or picks: base them solely on the stats and data from your tools. Do not speculate beyond what the data supports.
+- If asked for value bets: only use value_picks_today outputs (Pinnacle vs fair odds). If no value rows exist, say no value found.
 - Retired players: Do NOT reference Federer, Nadal, Murray, etc. as if they are current. If citing past achievements, be explicit: "beat Federer here in 2019 when he was still active". Exception: "Who's won X the most?" or "past winners at X" are historical by nature — include all winners (Djokovic, Federer, Nadal, etc.) and optionally note who's retired. If asked for "active players only" who won most or have best record: we have no active/retired filter. Use tournament_past_winners and player_record_at_tournament for likely candidates; note who's retired when relevant.
 - Use British currency: "quid" not "bucks", "£" not "$". E.g. "a few quid" not "a few bucks".
 - Surface values: Hard, Clay, Grass, I.hard (indoor hard).
@@ -891,6 +943,22 @@ export async function POST(req: Request) {
         execute: safeExecute(
           async ({ player_name }) => tools.matchPrediction(player_name === "all" ? undefined : player_name),
           "match_prediction"
+        ),
+      },
+
+      value_picks_today: {
+        description: "Get today's moneyline value picks by comparing fair odds vs Pinnacle match odds on matched ATP singles rows. Returns value_pct edge and both odds. Use for 'best value bet today'.",
+        inputSchema: z.object({
+          limit: z.string().optional().describe("Max picks to return (default 5)"),
+          min_value_pct: z.string().optional().describe("Minimum edge % (default 3)"),
+        }),
+        execute: safeExecute(
+          async ({ limit, min_value_pct }) =>
+            tools.valuePicksToday(
+              limit && /^\d+$/.test(limit) ? Number(limit) : 5,
+              min_value_pct && /^-?\d+(\.\d+)?$/.test(min_value_pct) ? Number(min_value_pct) : 3
+            ),
+          "value_picks_today"
         ),
       },
 

@@ -746,6 +746,304 @@ export async function matchPrediction(playerName?: string): Promise<Row[]> {
   ];
 }
 
+function isDoublesName(name: string): boolean {
+  return (name ?? "").includes("/") || (name ?? "").includes("&");
+}
+
+function isMainTourFixture(tourName: string, rank?: number | null): boolean {
+  const up = (tourName ?? "").toUpperCase();
+  if (!up) return true;
+  if (up.includes("CHALLENGER") || up.includes(" CH ") || up.includes(" ATP CH ")) return false;
+  if (up.includes("QUALIF")) return false;
+  if (typeof rank === "number" && Number.isFinite(rank) && rank > 3) return false;
+  return true;
+}
+
+function normMatchName(s: string): string {
+  return (s ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/-/g, "")
+    .replace(/'/g, "")
+    .trim();
+}
+
+function tokenizeMatchName(name: string): string[] {
+  const cleaned = (name ?? "")
+    .replace(/\s*\([^)]*\)/g, " ")
+    .replace(/\s*\[[^\]]*\]/g, " ")
+    .replace(/,/g, " ")
+    .replace(/-/g, " ")
+    .replace(/'/g, " ")
+    .trim();
+  return cleaned
+    .split(/\s+/)
+    .map(normMatchName)
+    .filter(Boolean)
+    .filter((t) => !/^[a-z]$/.test(t));
+}
+
+function surnameKeysForMatch(name: string): string[] {
+  const t = tokenizeMatchName(name);
+  if (!t.length) return [];
+  const out = new Set<string>();
+  const n = t.length;
+  out.add(t[n - 1]);
+  if (n >= 2) {
+    out.add(t[n - 2]);
+    out.add(`${t[n - 2]} ${t[n - 1]}`);
+    out.add(`${t[n - 2]}${t[n - 1]}`);
+  }
+  return Array.from(out);
+}
+
+function firstWordForMatch(name: string): string {
+  const t = tokenizeMatchName(name);
+  return t.length ? t[0] : "";
+}
+
+function fullNameForMatch(name: string): string {
+  return tokenizeMatchName(name).join(" ");
+}
+
+function pairKeysForMatch(a: string, b: string): string[] {
+  const aKeys = surnameKeysForMatch(a);
+  const bKeys = surnameKeysForMatch(b);
+  const out = new Set<string>();
+  for (const ka of aKeys) {
+    for (const kb of bKeys) out.add(`${ka}|${kb}`);
+  }
+  return Array.from(out);
+}
+
+type FairRowForValue = {
+  id: number;
+  player1_name: string;
+  player2_name: string;
+  surface: string;
+  confidence: string;
+  odds1: number;
+  odds2: number;
+  p1_win_pct: number;
+  p2_win_pct: number;
+};
+
+type PinRowForValue = {
+  player1_name: string;
+  player2_name: string;
+  odds1: number;
+  odds2: number;
+};
+
+export async function valuePicksToday(limit = 5, minValuePct = 3): Promise<Row> {
+  const minWinPctGuard = 35;
+  const maxFairOddsGuard = 4.5;
+  const fairLimit = 2000;
+  const { data: odds } = await sb
+    .from("daily_fair_odds")
+    .select("id, tour_id, player1_id, player2_id, surface, p1_win_prob, p2_win_prob, odds1, odds2, confidence")
+    .order("tour_id")
+    .limit(fairLimit);
+  if (!odds?.length) {
+    return { found: false, message: "No daily fair-odds rows found for today." };
+  }
+
+  const playerIds = [...new Set(odds.flatMap((r) => [num(r.player1_id), num(r.player2_id)]).filter((id) => id > 0))];
+  const tourIds = [...new Set(odds.map((r) => num(r.tour_id)).filter((id) => id > 0))];
+
+  const BATCH = 200;
+  const playerRows: Row[] = [];
+  for (let i = 0; i < playerIds.length; i += BATCH) {
+    const chunk = playerIds.slice(i, i + BATCH);
+    const { data } = await sb.from("oncourt_players").select("id, name").in("id", chunk);
+    if (data?.length) playerRows.push(...data);
+  }
+  const tourRows: Row[] = [];
+  for (let i = 0; i < tourIds.length; i += BATCH) {
+    const chunk = tourIds.slice(i, i + BATCH);
+    const { data } = await sb.from("oncourt_tours").select("id, name, rank").in("id", chunk);
+    if (data?.length) tourRows.push(...data);
+  }
+
+  const playerMap = new Map<number, string>(playerRows.map((p) => [num(p.id), str(p.name)]));
+  const tourMap = new Map<number, { name: string; rank: number | null }>(
+    tourRows.map((t) => {
+      const rankVal = t.rank != null ? Number(t.rank) : NaN;
+      return [num(t.id), { name: str(t.name), rank: Number.isFinite(rankVal) ? rankVal : null }];
+    })
+  );
+
+  const fairRows: FairRowForValue[] = [];
+  for (const r of odds) {
+    const id = num(r.id);
+    const p1 = playerMap.get(num(r.player1_id)) ?? "";
+    const p2 = playerMap.get(num(r.player2_id)) ?? "";
+    if (!id || !p1 || !p2 || isDoublesName(p1) || isDoublesName(p2)) continue;
+    const tMeta = tourMap.get(num(r.tour_id));
+    if (!isMainTourFixture(tMeta?.name ?? "", tMeta?.rank ?? null)) continue;
+    fairRows.push({
+      id,
+      player1_name: p1,
+      player2_name: p2,
+      surface: str(r.surface),
+      confidence: str(r.confidence).toLowerCase() || "n/a",
+      odds1: num(r.odds1),
+      odds2: num(r.odds2),
+      p1_win_pct: Math.round(num(r.p1_win_prob) * 1000) / 10,
+      p2_win_pct: Math.round(num(r.p2_win_prob) * 1000) / 10,
+    });
+  }
+  if (!fairRows.length) {
+    return { found: false, message: "No ATP main-draw fair-odds rows found for today." };
+  }
+
+  const now = new Date();
+  const today = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-${String(now.getUTCDate()).padStart(2, "0")}`;
+  const y = new Date(now.getTime() - 86400000);
+  const yesterday = `${y.getUTCFullYear()}-${String(y.getUTCMonth() + 1).padStart(2, "0")}-${String(y.getUTCDate()).padStart(2, "0")}`;
+
+  let captureDate = today;
+  let { data: snap } = await sb
+    .from("bookmaker_odds_snapshot")
+    .select("player1_name, player2_name, odds1, odds2, league")
+    .eq("bookmaker", "Pinnacle")
+    .eq("capture_date", today)
+    .order("captured_at", { ascending: false })
+    .limit(2000);
+
+  if (!snap?.length) {
+    const fallback = await sb
+      .from("bookmaker_odds_snapshot")
+      .select("player1_name, player2_name, odds1, odds2, league")
+      .eq("bookmaker", "Pinnacle")
+      .eq("capture_date", yesterday)
+      .order("captured_at", { ascending: false })
+      .limit(2000);
+    snap = fallback.data ?? [];
+    captureDate = yesterday;
+  }
+
+  const pinRows: PinRowForValue[] = (snap ?? [])
+    .filter((r) => str(r.league) === "ATP")
+    .map((r) => ({
+      player1_name: str(r.player1_name),
+      player2_name: str(r.player2_name),
+      odds1: num(r.odds1),
+      odds2: num(r.odds2),
+    }))
+    .filter((r) => r.player1_name && r.player2_name && !isDoublesName(r.player1_name) && !isDoublesName(r.player2_name));
+
+  if (!pinRows.length) {
+    return {
+      found: false,
+      capture_date: captureDate,
+      message: "No Pinnacle ATP snapshot rows found for today/yesterday.",
+    };
+  }
+
+  const pinLookup = new Map<string, Array<{ row: PinRowForValue; reversed: boolean }>>();
+  const addLookup = (key: string, val: { row: PinRowForValue; reversed: boolean }) => {
+    if (!key) return;
+    const arr = pinLookup.get(key);
+    if (arr) arr.push(val);
+    else pinLookup.set(key, [val]);
+  };
+  for (const pin of pinRows) {
+    for (const key of pairKeysForMatch(pin.player1_name, pin.player2_name)) {
+      addLookup(key, { row: pin, reversed: false });
+    }
+    for (const key of pairKeysForMatch(pin.player2_name, pin.player1_name)) {
+      addLookup(key, { row: pin, reversed: true });
+    }
+  }
+
+  const matched = new Map<number, { pinOdds1: number; pinOdds2: number }>();
+  const usedPin = new Set<PinRowForValue>();
+  for (const fo of fairRows) {
+    const candidateMap = new Map<string, { row: PinRowForValue; reversed: boolean; score: number }>();
+    for (const key of pairKeysForMatch(fo.player1_name, fo.player2_name)) {
+      for (const ent of pinLookup.get(key) ?? []) {
+        const id = `${ent.row.player1_name}|${ent.row.player2_name}|${ent.reversed ? "R" : "N"}`;
+        const prev = candidateMap.get(id);
+        if (prev) prev.score += 1;
+        else candidateMap.set(id, { row: ent.row, reversed: ent.reversed, score: 1 });
+      }
+    }
+    if (!candidateMap.size) continue;
+
+    const foP1First = firstWordForMatch(fo.player1_name);
+    const foP2First = firstWordForMatch(fo.player2_name);
+    const foP1Full = fullNameForMatch(fo.player1_name);
+    const foP2Full = fullNameForMatch(fo.player2_name);
+
+    for (const cand of candidateMap.values()) {
+      const pinP1 = cand.reversed ? cand.row.player2_name : cand.row.player1_name;
+      const pinP2 = cand.reversed ? cand.row.player1_name : cand.row.player2_name;
+      if (foP1First && foP1First === firstWordForMatch(pinP1)) cand.score += 2;
+      if (foP2First && foP2First === firstWordForMatch(pinP2)) cand.score += 2;
+      if (foP1Full && foP1Full === fullNameForMatch(pinP1)) cand.score += 4;
+      if (foP2Full && foP2Full === fullNameForMatch(pinP2)) cand.score += 4;
+    }
+
+    const ranked = Array.from(candidateMap.values())
+      .filter((c) => !usedPin.has(c.row))
+      .sort((a, b) => b.score - a.score);
+    if (!ranked.length) continue;
+    if (ranked.length > 1 && ranked[0].score === ranked[1].score) continue;
+
+    const best = ranked[0];
+    usedPin.add(best.row);
+    matched.set(fo.id, {
+      pinOdds1: best.reversed ? best.row.odds2 : best.row.odds1,
+      pinOdds2: best.reversed ? best.row.odds1 : best.row.odds2,
+    });
+  }
+
+  const confBoost = (c: string): number => (c === "high" ? 1 : c === "medium" ? 0.5 : 0);
+  const picks = fairRows
+    .map((fo) => {
+      const pin = matched.get(fo.id);
+      if (!pin) return null;
+      const v1 = fo.odds1 > 1 && pin.pinOdds1 > 1 ? Math.round((pin.pinOdds1 / fo.odds1 - 1) * 10000) / 100 : -999;
+      const v2 = fo.odds2 > 1 && pin.pinOdds2 > 1 ? Math.round((pin.pinOdds2 / fo.odds2 - 1) * 10000) / 100 : -999;
+      if (v1 < minValuePct && v2 < minValuePct) return null;
+      const p1Side = v1 >= v2;
+      const sideWinPct = p1Side ? fo.p1_win_pct : fo.p2_win_pct;
+      const sideFairOdds = p1Side ? fo.odds1 : fo.odds2;
+      if (sideWinPct < minWinPctGuard) return null;
+      if (sideFairOdds > maxFairOddsGuard) return null;
+      return {
+        matchup: `${fo.player1_name} vs ${fo.player2_name}`,
+        player: p1Side ? fo.player1_name : fo.player2_name,
+        opponent: p1Side ? fo.player2_name : fo.player1_name,
+        side: p1Side ? "P1" : "P2",
+        value_pct: p1Side ? v1 : v2,
+        fair_odds: sideFairOdds,
+        pinnacle_odds: p1Side ? pin.pinOdds1 : pin.pinOdds2,
+        win_pct: sideWinPct,
+        confidence: fo.confidence,
+        surface: fo.surface,
+        rank_score: (p1Side ? v1 : v2) + confBoost(fo.confidence),
+      };
+    })
+    .filter((x): x is NonNullable<typeof x> => !!x)
+    .sort((a, b) => b.rank_score - a.rank_score || b.value_pct - a.value_pct)
+    .slice(0, Math.max(1, Math.min(15, Math.floor(limit))));
+
+  return {
+    found: true,
+    capture_date: captureDate,
+    min_value_pct: minValuePct,
+    guard_min_win_pct: minWinPctGuard,
+    guard_max_fair_odds: maxFairOddsGuard,
+    fair_rows: fairRows.length,
+    pinnacle_rows: pinRows.length,
+    matched_rows: matched.size,
+    picks,
+  };
+}
+
 /* ── Player W-L record by surface ────────────────────────── */
 
 export async function playerRecordBySurface(playerId: number, surface?: string): Promise<Row> {
