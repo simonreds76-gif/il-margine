@@ -163,6 +163,13 @@ function inferPlayerFromBeatQuery(query: string, contextTexts: string[]): string
   return null;
 }
 
+function extractAgainstPlayerName(query: string): string | null {
+  const m = query.match(/\bagainst\s+([A-Za-z][A-Za-z\s.'-]{1,50})\??$/i);
+  if (!m?.[1]) return null;
+  const name = m[1].trim().replace(/\s+/g, " ");
+  return name || null;
+}
+
 async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Promise<string | null> {
   const q = userText.trim();
   const lower = q.toLowerCase();
@@ -311,6 +318,83 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
     return `Top ATP underdog spots today (by upset chance): ${top.join("; ")}.`;
   }
 
+  const againstName = extractAgainstPlayerName(q);
+  const asksPick = /\b(pick|lean|fancy|who do you like|who wins)\b/i.test(q);
+  if (againstName && asksPick) {
+    const rows = await tools.matchPrediction(againstName);
+    const matches = rows.filter((r) => asStr((r as Record<string, unknown>).player1) && asStr((r as Record<string, unknown>).player2));
+    if (!matches.length) {
+      return `I can't find a listed ATP main-draw match today involving ${againstName}.`;
+    }
+
+    const nameLower = againstName.toLowerCase();
+    const pickMatch =
+      matches.find((r) => {
+        const rr = r as Record<string, unknown>;
+        return asStr(rr.player1).toLowerCase().includes(nameLower) || asStr(rr.player2).toLowerCase().includes(nameLower);
+      }) ?? matches[0];
+
+    const rr = pickMatch as Record<string, unknown>;
+    const p1 = asNum(rr.p1_win_pct);
+    const p2 = asNum(rr.p2_win_pct);
+    const fav = p1 >= p2 ? asStr(rr.player1) : asStr(rr.player2);
+    const favPct = Math.max(p1, p2).toFixed(1);
+    const dog = p1 < p2 ? asStr(rr.player1) : asStr(rr.player2);
+    const dogPct = Math.min(p1, p2).toFixed(1);
+    return `For ${asStr(rr.player1)} vs ${asStr(rr.player2)} today, I'd lean ${fav} (${favPct}%). ${dog} is live at ${dogPct}% if you want the dog angle.`;
+  }
+
+  const asksTips = /\b(tip|tips|pick|picks|best bet|best bets|bet slip|value picks?)\b/i.test(q);
+  if (asksTips) {
+    const rows = await tools.matchPrediction(undefined);
+    const matches = rows.filter((r) => asStr((r as Record<string, unknown>).player1) && asStr((r as Record<string, unknown>).player2));
+    if (!matches.length) return "No ATP main-draw matches found for today.";
+
+    const scored = matches
+      .map((r) => {
+        const rr = r as Record<string, unknown>;
+        const p1 = asNum(rr.p1_win_pct);
+        const p2 = asNum(rr.p2_win_pct);
+        const pickP1 = p1 >= p2;
+        const pickPlayer = pickP1 ? asStr(rr.player1) : asStr(rr.player2);
+        const oppPlayer = pickP1 ? asStr(rr.player2) : asStr(rr.player1);
+        const winPct = Math.max(p1, p2);
+        const conf = asStr(rr.confidence).toLowerCase();
+        const confBoost = conf === "high" ? 4 : conf === "medium" ? 2 : 0;
+        const score = Math.abs(p1 - 50) + confBoost;
+        return {
+          pickPlayer,
+          oppPlayer,
+          winPct,
+          confidence: conf || "n/a",
+          surface: asStr(rr.surface),
+          score,
+        };
+      })
+      .filter((x) => x.winPct >= 58)
+      .sort((a, b) => b.score - a.score);
+
+    const top = (scored.length ? scored : matches
+      .map((r) => {
+        const rr = r as Record<string, unknown>;
+        const p1 = asNum(rr.p1_win_pct);
+        const p2 = asNum(rr.p2_win_pct);
+        const pickP1 = p1 >= p2;
+        return {
+          pickPlayer: pickP1 ? asStr(rr.player1) : asStr(rr.player2),
+          oppPlayer: pickP1 ? asStr(rr.player2) : asStr(rr.player1),
+          winPct: Math.max(p1, p2),
+          confidence: asStr(rr.confidence).toLowerCase() || "n/a",
+          surface: asStr(rr.surface),
+          score: Math.abs(p1 - 50),
+        };
+      }).sort((a, b) => b.score - a.score))
+      .slice(0, 5);
+
+    const tips = top.map((t, i) => `${i + 1}) ${t.pickPlayer} over ${t.oppPlayer} (${t.winPct.toFixed(1)}%, ${t.confidence}, ${t.surface})`);
+    return `Today's ATP tips from the numbers: ${tips.join("; ")}.`;
+  }
+
   if (lower.includes("today") || lower.includes("today's") || lower.includes("todays") || lower.includes("picks")) {
     const rows = await tools.matchPrediction(undefined);
     const matches = rows.filter((r) => asStr((r as Record<string, unknown>).player1) && asStr((r as Record<string, unknown>).player2));
@@ -403,6 +487,7 @@ function getLastUserMessageText(messages: unknown[]): string {
 function buildIntentHints(userText: string): string {
   const q = userText.toLowerCase();
   const hints: string[] = [];
+  const nowYear = new Date().getFullYear();
 
   const hasVs = /\b(vs|v|versus)\b/.test(q);
   const asksH2h = hasVs && (q.includes("h2h") || q.includes("head to head") || q.includes("head-to-head"));
@@ -433,10 +518,16 @@ function buildIntentHints(userText: string): string {
   if (q.includes("today") || q.includes("today's") || q.includes("todays") || q.includes("picks")) {
     hints.push("- Intent hint: This is a today's-matches/picks query. Use match_prediction.");
   }
+  if (q.includes("tip") || q.includes("tips") || q.includes("best bet") || q.includes("bet slip") || q.includes("value pick")) {
+    hints.push("- Intent hint: User wants betting tips. Use match_prediction and return 3-5 concrete ATP picks with win % and confidence.");
+  }
   if (q.includes("model") || q.includes("algorithm")) {
     hints.push(
       '- Intent hint: Do not use the words "model" or "algorithm" in your answer. Say: "I use ATP match stats and market data from the database."'
     );
+  }
+  if (q.includes("last year") || q.includes("this year")) {
+    hints.push(`- Intent hint: Use explicit years in the answer. Last year = ${nowYear - 1}, this year = ${nowYear}.`);
   }
 
   return hints.length ? `\n\nINTENT HINTS:\n${hints.join("\n")}` : "";
@@ -484,6 +575,7 @@ TOURNAMENT CALENDAR (memorise these months so you know when draws are known):
 - If asked whether a player is in a future tournament's draw (e.g. "is Merida in the French Open draw?" in March): the draw is not known until the tournament month. Say so. E.g. "Roland Garros is in May/June, so we won't know the draw until then."
 
 RULES:
+- CRITICAL: Resolve relative time references to explicit years in output. If user says "last year", use ${year - 1}. If they say "this year", use ${year}. Write the year explicitly in your answer.
 - CRITICAL: Always output a brief sentence of text BEFORE making any tool calls. Never start your response with a tool call directly. Example: "Let me look that up." then call the tool.
 - CRITICAL: After calling a tool, you MUST include the result in your response. Never leave the user with only "Let me look that up" and nothing else. Always deliver the answer or say you don't have that data.
 - Always use search_player first to find player IDs before using other player tools.

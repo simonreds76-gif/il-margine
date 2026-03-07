@@ -50,6 +50,16 @@ function hasKeyword(query: string, ...keywords: string[]): boolean {
   return keywords.some((k) => lower.includes(k));
 }
 
+function inferSeasonYearFromQuery(query: string): number | undefined {
+  const y = query.match(/\b(20\d{2})\b/);
+  if (y?.[1]) return Number(y[1]);
+  const nowYear = new Date().getFullYear();
+  const q = query.toLowerCase();
+  if (q.includes("last year")) return nowYear - 1;
+  if (q.includes("this year")) return nowYear;
+  return undefined;
+}
+
 function formatJson(obj: unknown): string {
   try {
     return JSON.stringify(obj, null, 0).slice(0, 2000);
@@ -85,6 +95,7 @@ export async function retrieveContext(query: string): Promise<string> {
   }
 
   const promises: Promise<{ label: string; data: unknown }>[] = [];
+  const seasonYear = inferSeasonYearFromQuery(q);
 
   // H2H if two players and vs/head-to-head
   if (playerIds.length >= 2 && hasKeyword(q, "vs", "versus", "head to head", "h2h")) {
@@ -106,6 +117,23 @@ export async function retrieveContext(query: string): Promise<string> {
       for (const t of tournaments.slice(0, 2)) {
         promises.push(
           tools.playerRecordAtTournament(pid, t).then((d) => ({ label: `player_record_at_${t}`, data: d }))
+        );
+      }
+    }
+  }
+
+  // Player + tournament edition results (helps with "last year", "who did he lose to", "went out early")
+  if (
+    playerIds.length > 0 &&
+    tournaments.length > 0 &&
+    hasKeyword(q, "last year", "this year", "lost", "lose", "went out", "exit", "exits", "recent form", "how did")
+  ) {
+    for (let i = 0; i < Math.min(playerNames.length, 1); i++) {
+      for (const t of tournaments.slice(0, 1)) {
+        promises.push(
+          tools
+            .tournamentEditionResults(t, seasonYear, undefined, playerNames[i])
+            .then((d) => ({ label: `edition_results_${playerNames[i].replace(/\s+/g, "_")}_${t.replace(/\s+/g, "_")}`, data: d }))
         );
       }
     }
