@@ -105,6 +105,8 @@ const STRICT_POLICY_ALLOWED_CONFIDENCE = new Set<string>(["high"]);
 const STRICT_POLICY_EXCLUDE_ATP500_HARD_SHORT_FAVORITES = true;
 const STRICT_POLICY_SHORT_FAVORITE_MAX_ODDS = 1.8;
 const STRICT_POLICY_SHORT_FAVORITE_CONFIDENCE = new Set<string>(["high"]);
+// Skip matches where model favourite odds < 1.25. Model cannot price extreme mismatches — both sides unreliable.
+const STRICT_POLICY_MISPRICE_FAV_ODDS_MIN = 1.25;
 const STRICT_POLICY_PRODUCTION_MODE: StrictPolicyMode =
   (process.env.STRICT_POLICY_PRODUCTION_MODE ?? "base").trim().toLowerCase() === "overlay"
     ? "overlay"
@@ -1019,10 +1021,20 @@ async function run(): Promise<Response> {
       p1WinProb,
       p2WinProb
     );
+    const modelFavOddsMispriceExcluded =
+      STRICT_POLICY_MODE && Math.min(ourOdds1, ourOdds2) < STRICT_POLICY_MISPRICE_FAV_ODDS_MIN;
     const injuryExcluded = STRICT_POLICY_MODE && STRICT_INJURY_OVERLAY_ENABLED && recentInjuredAny;
-    if (policyBaseAllows && (shortFavoriteExcluded || injuryExcluded)) strictPolicyExcludedCount += 1;
+    if (
+      policyBaseAllows &&
+      (shortFavoriteExcluded || modelFavOddsMispriceExcluded || injuryExcluded)
+    )
+      strictPolicyExcludedCount += 1;
     if (policyBaseAllows && injuryExcluded) injurySkippedCount += 1;
-    const policyAllows = policyBaseAllows && !shortFavoriteExcluded && !injuryExcluded;
+    const policyAllows =
+      policyBaseAllows &&
+      !shortFavoriteExcluded &&
+      !modelFavOddsMispriceExcluded &&
+      !injuryExcluded;
     if (policyAllows) strictPolicyEligibleCount += 1;
     const strictCandidateValueP1 =
       policyAllows && rawValueP1 != null && rawValueP1 >= STRICT_POLICY_MIN_VALUE_PCT ? rawValueP1 : undefined;
