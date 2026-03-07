@@ -1,4 +1,4 @@
-# Il Margine — Daily Scheduled Task (runs at 23:55)
+# Il Margine — Daily Scheduled Task (runs at 11:00 and 23:55)
 # Fully automatic: extract -> sync -> stats -> injury/CPI refresh -> odds -> strict report append
 
 $ErrorActionPreference = "Stop"
