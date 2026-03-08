@@ -20,10 +20,16 @@ export default function RogerTeaser() {
     if (!TENNIS_PAGES.includes(pathname || "")) return;
     if (pathname === "/resources/roger") return;
 
-    const seen = sessionStorage.getItem(ROGER_TEASER_KEY);
-    if (seen) return;
+    // Only auto-open for first-time visitors (localStorage persists across sessions)
+    const seenEver = localStorage.getItem(ROGER_TEASER_KEY);
+    if (seenEver) return;
+
+    // Also skip if already shown this session (belt-and-suspenders)
+    const seenThisSession = sessionStorage.getItem(ROGER_TEASER_KEY);
+    if (seenThisSession) return;
 
     const t = setTimeout(() => {
+      localStorage.setItem(ROGER_TEASER_KEY, "1");
       sessionStorage.setItem(ROGER_TEASER_KEY, "1");
       openChat?.();
     }, ROGER_TEASER_DELAY_MS);

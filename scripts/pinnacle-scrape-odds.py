@@ -15,6 +15,7 @@ Usage:
   python scripts/pinnacle-scrape-odds.py --dry-run --verbose
   python scripts/pinnacle-scrape-odds.py --include-wta
   python scripts/pinnacle-scrape-odds.py --list-leagues   # debug: print all tennis leagues (Indian Wells etc.)
+  python scripts/pinnacle-scrape-odds.py --list-market-types   # debug: print market types (spread/handicap discovery)
   python scripts/pinnacle-scrape-odds.py --active-leagues-only   # only leagues with all=false (default)
   python scripts/pinnacle-scrape-odds.py --all-leagues           # use all=true (slower; debug/fallback)
 """
@@ -56,6 +57,7 @@ DRY_RUN = "--dry-run" in sys.argv
 VERBOSE = "--verbose" in sys.argv or "-v" in sys.argv
 INCLUDE_WTA = "--include-wta" in sys.argv
 LIST_LEAGUES_ONLY = "--list-leagues" in sys.argv
+LIST_MARKET_TYPES = "--list-market-types" in sys.argv
 PINNACLE_LEAGUES_ALL = "--all-leagues" in sys.argv
 # Keep daily jobs fast and predictable: use active leagues by default.
 PINNACLE_LEAGUES_ACTIVE_ONLY = "--active-leagues-only" in sys.argv or not PINNACLE_LEAGUES_ALL
@@ -148,6 +150,11 @@ def _api_get(path: str, retries: int = 3) -> list | dict | None:
                 print(f"  Rate limited (429), waiting {wait}s...")
                 _sleep(wait)
                 continue
+            if resp.status_code == 503:
+                wait = 2 ** attempt
+                print(f"  Service unavailable (503), waiting {wait}s...")
+                _sleep(wait)
+                continue
             print(f"  WARNING: API returned {resp.status_code} for {path} (attempt {attempt})")
         except requests.exceptions.RequestException as e:
             print(f"  WARNING: Network error for {path} (attempt {attempt}): {e}")
@@ -229,6 +236,57 @@ def _extract_best_game_total(markets: list[dict] | None) -> dict | None:
     return best
 
 
+def _extract_best_spread(markets: list[dict] | None) -> dict | None:
+    """
+    Pick one game handicap (spread) market per matchup.
+    Prefer non-alternate. Among those, prefer line in [3.5, 4.5, 5.5] (common main lines),
+    then pick the one with lowest margin (most balanced).
+    """
+    candidates = []
+    for mkt in markets or []:
+        if mkt.get("type") != "spread":
+            continue
+        if mkt.get("period") != 0:
+            continue
+        prices = mkt.get("prices", []) or []
+        if len(prices) < 2:
+            continue
+        # points: [4.5, -4.5] = home +4.5, away -4.5
+        pts = prices[0].get("points")
+        try:
+            line = abs(float(pts))
+        except (TypeError, ValueError):
+            continue
+        home_p = next((p["price"] for p in prices if p.get("designation") == "home"), None)
+        away_p = next((p["price"] for p in prices if p.get("designation") == "away"), None)
+        if home_p is None or away_p is None:
+            continue
+        odds1 = american_to_decimal(home_p)
+        odds2 = american_to_decimal(away_p)
+        if odds1 <= 1 or odds2 <= 1:
+            continue
+        margin = compute_margin(odds1, odds2)
+        is_alt = bool(mkt.get("isAlternate", False))
+        candidates.append({
+            "line": line,
+            "odds1": odds1,
+            "odds2": odds2,
+            "margin": margin,
+            "is_alt": is_alt,
+        })
+    if not candidates:
+        return None
+    # Prefer non-alternate
+    non_alt = [c for c in candidates if not c["is_alt"]]
+    pool = non_alt if non_alt else candidates
+    # Prefer common main lines (3.5, 4.5, 5.5)
+    main_lines = {3.5, 4.5, 5.5}
+    in_main = [c for c in pool if c["line"] in main_lines]
+    pool = in_main if in_main else pool
+    # Pick lowest margin (most balanced)
+    return min(pool, key=lambda c: c["margin"])
+
+
 # ─── Core scraper ───────────────────────────────────────────────────
 
 def scrape_pinnacle() -> list[dict]:
@@ -252,7 +310,7 @@ def scrape_pinnacle() -> list[dict]:
     all_param = "false" if PINNACLE_LEAGUES_ACTIVE_ONLY else "true"
     if VERBOSE:
         print(f"  Fetching tennis leagues (all={all_param})...")
-    leagues = _api_get(f"sports/{PINNACLE_SPORT_ID_TENNIS}/leagues?all={all_param}")
+    leagues = _api_get(f"sports/{PINNACLE_SPORT_ID_TENNIS}/leagues?all={all_param}", retries=6)
     if not leagues:
         print("ERROR: Failed to fetch tennis leagues from API.")
         return []
@@ -308,6 +366,7 @@ def scrape_pinnacle() -> list[dict]:
         # ── Index markets by matchupId ──
         moneylines = {}
         game_totals = {}
+        game_spreads: dict[int, list[dict]] = {}
 
         for mkt in markets:
             mid = mkt.get("matchupId")
@@ -334,9 +393,13 @@ def scrape_pinnacle() -> list[dict]:
                 if existing is None or (existing.get("is_alt") and not cand.get("is_alt")):
                     game_totals[mid] = cand
 
+            elif mtype == "spread":
+                game_spreads.setdefault(mid, []).append(mkt)
+
         if VERBOSE:
+            spread_count = sum(len(v) for v in game_spreads.values())
             print(f"    {len(regular_matchups)} regular matchups, {len(games_matchups)} (Games) variants")
-            print(f"    {len(moneylines)} moneylines, {len(game_totals)} game-total lines")
+            print(f"    {len(moneylines)} moneylines, {len(game_totals)} game-total lines, {spread_count} spread markets")
 
         # ── Merge: for each regular matchup, combine ML + game total (singles only) ──
         league_count = 0
@@ -390,6 +453,29 @@ def scrape_pinnacle() -> list[dict]:
                     if gt is not None:
                         break
 
+            # Spread (game handicap): same lookup as game totals
+            spread = None
+            for spread_mid in [games_mid, mid]:
+                if spread_mid is None:
+                    continue
+                spread_mkts = game_spreads.get(spread_mid, [])
+                if spread_mkts:
+                    spread = _extract_best_spread(spread_mkts)
+                    break
+            if spread is None and (games_mid or m.get("parentId")):
+                for fb_mid in [games_mid, m.get("parentId"), mid]:
+                    if fb_mid is None:
+                        continue
+                    related = _api_get(f"matchups/{fb_mid}/markets/related/straight", retries=1)
+                    if isinstance(related, list):
+                        spread = _extract_best_spread([m for m in related if m.get("type") == "spread"])
+                    if spread is None:
+                        straight = _api_get(f"matchups/{fb_mid}/markets/straight", retries=1)
+                        if isinstance(straight, list):
+                            spread = _extract_best_spread([m for m in straight if m.get("type") == "spread"])
+                    if spread is not None:
+                        break
+
             margin = compute_margin(ml["odds1"], ml["odds2"])
 
             row = {
@@ -401,15 +487,19 @@ def scrape_pinnacle() -> list[dict]:
                 "ou_line": gt["line"] if gt else None,
                 "ou_over": gt["over"] if gt else None,
                 "ou_under": gt["under"] if gt else None,
+                "spread_line": spread["line"] if spread else None,
+                "spread_odds1": spread["odds1"] if spread else None,
+                "spread_odds2": spread["odds2"] if spread else None,
                 "league": league_tag,
                 "league_name": league_name,
             }
             results.append(row)
             league_count += 1
 
-        if VERBOSE:
+        if VERBOSE and league_count > 0:
             ou_c = sum(1 for r in results[-league_count:] if r.get("ou_line"))
-            print(f"    -> {league_count} singles matches ({ou_c} with O/U)")
+            spread_c = sum(1 for r in results[-league_count:] if r.get("spread_line"))
+            print(f"    -> {league_count} singles matches ({ou_c} with O/U, {spread_c} with spread)")
 
     # ── Dedup by player pair (keep lowest margin) ──
     seen = {}
@@ -594,6 +684,9 @@ def upsert_to_supabase(results: list[dict]):
             "ou_line": r.get("ou_line"),
             "ou_over": r.get("ou_over"),
             "ou_under": r.get("ou_under"),
+            "spread_line": r.get("spread_line"),
+            "spread_odds1": r.get("spread_odds1"),
+            "spread_odds2": r.get("spread_odds2"),
         })
 
     if not rows:
@@ -662,6 +755,7 @@ def save_csv(results: list[dict]):
     fieldnames = [
         "player1_name", "player2_name", "odds1", "odds2",
         "pinnacle_margin", "ou_line", "ou_over", "ou_under",
+        "spread_line", "spread_odds1", "spread_odds2",
         "league", "league_name",
     ]
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
@@ -711,6 +805,55 @@ def list_leagues_and_exit():
     sys.exit(0)
 
 
+def list_market_types_and_exit():
+    """Fetch markets from first ATP league and print all market types (for handicap/spread discovery)."""
+    leagues = _api_get(f"sports/{PINNACLE_SPORT_ID_TENNIS}/leagues?all=false")
+    if not leagues:
+        print("  ERROR: Failed to fetch leagues.")
+        sys.exit(1)
+    target = [(lg["id"], lg["name"]) for lg in leagues if _should_include_league(lg.get("name", ""))]
+    if not target:
+        print("  No ATP/Challenger leagues found.")
+        sys.exit(1)
+    league_id, league_name = target[0]
+    print(f"  Fetching markets for: {league_name} (id={league_id})")
+    markets = _api_get(f"leagues/{league_id}/markets/straight")
+    if not markets:
+        print("  No markets returned.")
+        sys.exit(1)
+    types_seen: dict[str, list[dict]] = {}
+    for m in markets:
+        t = m.get("type") or "null"
+        if t not in types_seen:
+            types_seen[t] = []
+        types_seen[t].append(m)
+    print(f"\n  Market types in /leagues/{league_id}/markets/straight:")
+    for t, mkts in sorted(types_seen.items()):
+        sample = mkts[0] if mkts else {}
+        units = sample.get("units", "")
+        period = sample.get("period", "")
+        prices = sample.get("prices", [])
+        price_info = ""
+        if prices:
+            designations = [p.get("designation") for p in prices[:4]]
+            points = [p.get("points") for p in prices[:4] if "points" in (p or {})]
+            price_info = f"  designations={designations}"
+            if points:
+                price_info += f"  points={points}"
+        print(f"    type={t!r}  count={len(mkts)}  period={period}  units={units!r}")
+        if price_info:
+            print(f"      sample: {price_info.strip()}")
+    if "spread" in types_seen:
+        print("\n  Sample spread markets (first 3):")
+        for m in types_seen["spread"][:3]:
+            mid = m.get("matchupId")
+            pts = [p.get("points") for p in (m.get("prices") or [])]
+            des = [p.get("designation") for p in (m.get("prices") or [])]
+            prc = [p.get("price") for p in (m.get("prices") or [])]
+            print(f"    matchupId={mid}  points={pts}  designation={des}  price={prc}")
+    sys.exit(0)
+
+
 def main():
     now = datetime.now(timezone.utc)
     print(f"{'=' * 60}")
@@ -721,6 +864,8 @@ def main():
 
     if LIST_LEAGUES_ONLY:
         list_leagues_and_exit()
+    if LIST_MARKET_TYPES:
+        list_market_types_and_exit()
 
     if not DRY_RUN and (not SUPABASE_URL or not SUPABASE_KEY):
         print("\n  WARNING: Missing Supabase credentials.")
@@ -738,11 +883,12 @@ def main():
         sys.exit(0)
 
     ou_count = sum(1 for r in results if r.get("ou_line") is not None)
+    spread_count = sum(1 for r in results if r.get("spread_line") is not None)
     atp = sum(1 for r in results if r["league"] in ("ATP", "Challenger"))
     wta = sum(1 for r in results if r["league"] == "WTA")
     chall = sum(1 for r in results if r["league"] == "Challenger")
 
-    print(f"\n  Summary: {len(results)} matches ({atp} ATP/Challenger, {wta} WTA), {ou_count} with O/U")
+    print(f"\n  Summary: {len(results)} matches ({atp} ATP/Challenger, {wta} WTA), {ou_count} with O/U, {spread_count} with spread")
     if chall:
         print(f"    ({chall} of which are Challenger)")
 
@@ -750,7 +896,8 @@ def main():
         print()
         for r in results:
             ou_str = f"O/U {r['ou_line']} ({r['ou_over']:.3f}/{r['ou_under']:.3f})" if r.get("ou_line") else "no O/U"
-            print(f"    {r['player1_name']:>25s}  {r['odds1']:.3f}  vs  {r['odds2']:.3f}  {r['player2_name']:<25s}  m={r['pinnacle_margin']:.1f}%  {ou_str}  [{r['league']}]")
+            spread_str = f"Spread {r['spread_line']} ({r['spread_odds1']:.3f}/{r['spread_odds2']:.3f})" if r.get("spread_line") else ""
+            print(f"    {r['player1_name']:>25s}  {r['odds1']:.3f}  vs  {r['odds2']:.3f}  {r['player2_name']:<25s}  m={r['pinnacle_margin']:.1f}%  {ou_str}  {spread_str}  [{r['league']}]")
 
     save_csv(results)
 
