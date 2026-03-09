@@ -230,6 +230,17 @@ function buildCases() {
       expectAny: [/\(2025\)/, /2025/],
       rejectAny: [/Top ATP underdog spots today/i, /Could you clarify/i],
     },
+    {
+      id: "tournament_best_record_followup_there",
+      messages: [
+        mkUser("how do favourites do at delray beach?"),
+        mkAssistant("Delray Beach Open (2022-2025): underdogs ROI -9.8% (39/103), favourites ROI -2.1% (64/103) on 103 matches."),
+        mkUser("who has the best record there?"),
+      ],
+      expectAll: [/Best record there by titles/i],
+      expectAny: [/Delray|record there/i],
+      rejectAny: [/Could you clarify/i, /Top ATP spots today/i],
+    },
   ];
 }
 

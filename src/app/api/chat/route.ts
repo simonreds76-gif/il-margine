@@ -149,6 +149,23 @@ function inferTournament(text: string): string | null {
   return null;
 }
 
+function inferTournamentFromContextTexts(contextTexts: string[]): string | null {
+  for (const text of contextTexts) {
+    const direct = inferTournament(text);
+    if (direct) return direct;
+
+    // Example: "Delray Beach Open (2022-2025): underdogs ROI ..."
+    const lineLead = text.match(/^([A-Z][A-Za-z0-9 '&.-]{3,90}?)(?:\s*\(\d{4}(?:-\d{4})?\)|:)/);
+    if (lineLead?.[1]) {
+      const candidate = lineLead[1].trim();
+      if (!/^Top ATP\b/i.test(candidate) && !/^Best ATP\b/i.test(candidate)) {
+        return candidate;
+      }
+    }
+  }
+  return null;
+}
+
 function inferPlayerFromBeatQuery(query: string, contextTexts: string[]): string | null {
   const direct = query.match(/\bwho did\s+(.+?)\s+beat\b/i);
   if (direct?.[1]) {
@@ -184,6 +201,8 @@ const FAQ_TELEGRAM = `No. All tips are published on the website. Football player
 async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Promise<string | null> {
   const q = userText.trim();
   const lower = q.toLowerCase();
+  const nowYear = new Date().getFullYear();
+  const contextTexts = recentConversationTexts(uiMessages, 10);
 
   if (!q) return null;
 
@@ -211,8 +230,6 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
   if (asksBeatInRound) {
     const round = inferRoundFromQuery(q);
     if (round) {
-      const nowYear = new Date().getFullYear();
-      const contextTexts = recentConversationTexts(uiMessages, 10);
       const seasonYear =
         inferYear(q, nowYear) ??
         contextTexts.map((t) => inferYear(t, nowYear)).find((y): y is number => y != null) ??
@@ -220,6 +237,7 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
       const tournament =
         inferTournament(q) ??
         contextTexts.map((t) => inferTournament(t)).find((t): t is string => !!t) ??
+        inferTournamentFromContextTexts(contextTexts) ??
         null;
       const player =
         inferPlayerFromBeatQuery(q, contextTexts) ??
@@ -257,6 +275,37 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
         }
         return `I couldn't find that ${round} result for ${player} at ${tournament}${seasonYear ? ` ${seasonYear}` : ""}.`;
       }
+    }
+  }
+
+  const asksBestRecordAtTournament =
+    /\b(best record|most titles|most wins)\b/i.test(q) &&
+    (/\bthere\b/i.test(q) || /\b(at|in)\b/i.test(q) || /\btournament\b/i.test(q));
+  if (asksBestRecordAtTournament) {
+    const tournament =
+      inferTournament(q) ??
+      contextTexts.map((t) => inferTournament(t)).find((t): t is string => !!t) ??
+      inferTournamentFromContextTexts(contextTexts) ??
+      null;
+    if (tournament) {
+      const winners = await tools.tournamentPastWinners(tournament);
+      if (!winners.length) return `I don't have past-winner data for ${tournament} in this dataset.`;
+      const counts = new Map<string, number>();
+      for (const row of winners) {
+        const w = asStr((row as Record<string, unknown>).winner);
+        if (!w) continue;
+        counts.set(w, (counts.get(w) ?? 0) + 1);
+      }
+      const top = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
+      if (!top.length) return `I don't have complete winners data for ${tournament} right now.`;
+      const [leader, leaderTitles] = top[0];
+      const chasers = top
+        .slice(1, 4)
+        .map(([name, n]) => `${name} (${n})`)
+        .join(", ");
+      return chasers
+        ? `Best record there by titles in this dataset: ${leader} (${leaderTitles}). Next: ${chasers}.`
+        : `Best record there by titles in this dataset: ${leader} (${leaderTitles}).`;
     }
   }
 
@@ -337,8 +386,6 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
       : `${lead[0]} has won ${mostTournament} the most in this dataset (${lead[1]} titles).`;
   }
 
-  const nowYear = new Date().getFullYear();
-  const contextTexts = recentConversationTexts(uiMessages, 10);
   const asksFavDogTerm =
     /\b(underdog|underdogs|dog|dogs|favourite|favourites|favorite|favorites|fav|favs)\b/i.test(q) &&
     (
