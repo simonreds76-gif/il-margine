@@ -337,16 +337,30 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
       : `${lead[0]} has won ${mostTournament} the most in this dataset (${lead[1]} titles).`;
   }
 
+  const nowYear = new Date().getFullYear();
+  const contextTexts = recentConversationTexts(uiMessages, 10);
   const asksFavDogTerm =
     /\b(underdog|underdogs|dog|dogs|favourite|favourites|favorite|favorites|fav|favs)\b/i.test(q) &&
     (
       /\b(how do|how does|roi|perform|record|results?)\b/i.test(q) ||
       /\b(at|in)\b/i.test(q)
     );
-  if (asksFavDogTerm) {
-    const tournament = inferTournament(q);
+  const asksFavDogFollowUp =
+    /\b(last year|this year|20\d{2})\b/i.test(q) &&
+    contextTexts.some((t) =>
+      /\b(underdog|underdogs|dog|dogs|favourite|favourites|favorite|favorites|fav|favs)\b/i.test(t)
+    );
+  if (asksFavDogTerm || asksFavDogFollowUp) {
+    const tournament =
+      inferTournament(q) ??
+      contextTexts.map((t) => inferTournament(t)).find((t): t is string => !!t);
+    const seasonYear =
+      inferYear(q, nowYear) ??
+      (asksFavDogFollowUp
+        ? contextTexts.map((t) => inferYear(t, nowYear)).find((y): y is number => y != null)
+        : undefined);
     if (tournament) {
-      const stats = await tools.tournamentFavDogStats(tournament);
+      const stats = await tools.tournamentFavDogStats(tournament, seasonYear);
       const found = (stats as Record<string, unknown>).found !== false;
       if (!found) {
         const msg = asStr((stats as Record<string, unknown>).message);
@@ -365,7 +379,8 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
       const favRoiStr = `${favRoi >= 0 ? "+" : ""}${favRoi.toFixed(1)}%`;
       const dogRoiStr = `${dogRoi >= 0 ? "+" : ""}${dogRoi.toFixed(1)}%`;
 
-      return `${tName}${years ? ` (${years})` : ""}: underdogs ROI ${dogRoiStr} (${dogWins}/${dogBets}), favourites ROI ${favRoiStr} (${favWins}/${favBets}) on ${n} matches.`;
+      const period = seasonYear ? String(seasonYear) : years;
+      return `${tName}${period ? ` (${period})` : ""}: underdogs ROI ${dogRoiStr} (${dogWins}/${dogBets}), favourites ROI ${favRoiStr} (${favWins}/${favBets}) on ${n} matches.`;
     }
   }
 

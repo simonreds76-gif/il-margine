@@ -842,14 +842,13 @@ export async function todayMatchH2H(limit = 40): Promise<Row> {
     .filter((r) => r.player1_id > 0 && r.player2_id > 0 && r.player1 && r.player2);
 
   const fixturePlayerIds = [...new Set(fixtureRows.flatMap((r) => [r.player1_id, r.player2_id]))];
-  const inIds = `in.(${fixturePlayerIds.join(",")})`;
   const games: Row[] = [];
   for (let off = 0; ; off += 1000) {
     const { data } = await sb
       .from("oncourt_games")
       .select("winner_id, loser_id, date")
-      .filter("winner_id", "in", inIds)
-      .filter("loser_id", "in", inIds)
+      .in("winner_id", fixturePlayerIds)
+      .in("loser_id", fixturePlayerIds)
       .range(off, off + 999);
     if (!data?.length) break;
     games.push(...data);
@@ -1607,19 +1606,45 @@ function roundLabel(roundId: number): string {
 }
 
 /** Reads tournament-fav-dog-roi.csv. For deployment, ensure data/backtest/tournament-fav-dog-roi.csv is committed. */
-export async function tournamentFavDogStats(tournamentName: string): Promise<Row> {
+export async function tournamentFavDogStats(tournamentName: string, seasonYear?: number): Promise<Row> {
   const searchTerms = resolveSearchTerms(tournamentName);
   const csvPath = path.join(process.cwd(), "data", "backtest", "tournament-fav-dog-roi.csv");
   try {
     const content = await readFile(csvPath, "utf-8");
     const rows = parseCsv(content);
-    const rolling = rows.filter((r) => (r.window_type ?? "") === "rolling_4" || (r.window_type ?? "") === "prior_editions");
-    const byYear = rows.filter((r) => (r.window_type ?? "") === "year");
-    const candidates = rolling.length ? rolling : byYear;
+    let matchedRows: Row[] = [];
     for (const term of searchTerms) {
-      const match = candidates.find((r) => matchesTournament(term, r.tournament_key ?? "", r.tournament_display ?? ""));
+      const subset = rows.filter((r) => matchesTournament(term, r.tournament_key ?? "", r.tournament_display ?? ""));
+      if (subset.length) {
+        matchedRows = subset;
+        break;
+      }
+    }
+    if (matchedRows.length) {
+      const byYear = matchedRows.filter((r) => (r.window_type ?? "") === "year");
+      const rolling = matchedRows.filter((r) => (r.window_type ?? "") === "rolling_4" || (r.window_type ?? "") === "prior_editions");
+
+      let match: Row | undefined;
+      if (seasonYear && Number.isFinite(seasonYear)) {
+        match = byYear.find((r) => {
+          const y = num(r.start_year);
+          return y === seasonYear;
+        });
+        if (!match) {
+          match = matchedRows.find((r) => {
+            const target = num(r.target_season_year);
+            return target === seasonYear;
+          });
+        }
+      }
+      if (!match) {
+        match = (rolling.length ? rolling : byYear)[0];
+      }
+
       if (match) {
         return {
+          found: true,
+          requested_year: seasonYear ?? null,
           tournament: match.tournament_display ?? match.tournament_key,
           window: match.window_type,
           years: match.years,
