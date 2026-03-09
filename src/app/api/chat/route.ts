@@ -265,6 +265,33 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
         return `${aName} vs ${bName} historical H2H: ${oW}-${oL}.${surf ? ` Surface split: ${surf}.` : ""} This is historical data, not today's fixture list.`;
       }
     }
+
+    const asksTodayAllH2H =
+      /\b(today|today's|todays)\b/i.test(q) &&
+      /\b(all|matches|fixtures|games)\b/i.test(q);
+    if (asksTodayAllH2H) {
+      const out = await tools.todayMatchH2H(40);
+      const found = Boolean((out as Record<string, unknown>).found);
+      const rows = (((out as Record<string, unknown>).rows as Array<Record<string, unknown>> | undefined) ?? [])
+        .filter((r) => asStr(r.player1) && asStr(r.player2));
+      if (!found || !rows.length) return "No ATP main-draw matches found for today.";
+
+      const parts = rows.map((r) => {
+        const p1 = asStr(r.player1);
+        const p2 = asStr(r.player2);
+        const w1 = asNum(r.h2h_wins_p1);
+        const w2 = asNum(r.h2h_wins_p2);
+        const n = asNum(r.h2h_matches);
+        if (n <= 0) return `${p1} vs ${p2}: no prior H2H in our OnCourt data`;
+        return `${p1} vs ${p2}: ${w1}-${w2}`;
+      });
+
+      const total = asNum((out as Record<string, unknown>).total_matches);
+      const shown = asNum((out as Record<string, unknown>).shown_matches);
+      const truncated = Boolean((out as Record<string, unknown>).truncated);
+      const suffix = truncated || shown < total ? ` Showing ${shown}/${total} matches.` : "";
+      return `Today's ATP main-draw H2H: ${parts.join("; ")}.${suffix}`;
+    }
   }
 
   const mostTournament = extractTournamentMostWinners(q);

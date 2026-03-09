@@ -795,6 +795,113 @@ export async function matchPrediction(playerName?: string): Promise<Row[]> {
   ];
 }
 
+export async function todayMatchH2H(limit = 40): Promise<Row> {
+  const cap = Math.max(1, Math.min(100, Math.floor(limit)));
+  const { data: odds } = await sb
+    .from("daily_fair_odds")
+    .select("id, tour_id, player1_id, player2_id, surface")
+    .order("tour_id")
+    .limit(400);
+  if (!odds?.length) return { found: false, rows: [], message: "No matches found for today." };
+
+  const tIds = new Set<number>();
+  for (const r of odds) {
+    if (r.tour_id) tIds.add(r.tour_id as number);
+  }
+  const { data: tours } = await sb.from("oncourt_tours").select("id, name, rank").in("id", Array.from(tIds));
+  const atpTourIds = new Set<number>();
+  const tMap: Record<number, string> = {};
+  for (const t of tours ?? []) {
+    if (isMainTourFixture(str(t.name), num(t.rank))) {
+      atpTourIds.add(num(t.id));
+      tMap[num(t.id)] = str(t.name);
+    }
+  }
+
+  const atpOdds = odds.filter((r: Row) => atpTourIds.has(num(r.tour_id)));
+  if (!atpOdds.length) return { found: false, rows: [], message: "No ATP main-draw matches found for today." };
+
+  const pIds = new Set<number>();
+  for (const r of atpOdds) {
+    if (r.player1_id) pIds.add(r.player1_id as number);
+    if (r.player2_id) pIds.add(r.player2_id as number);
+  }
+  const { data: players } = await sb.from("oncourt_players").select("id, name").in("id", Array.from(pIds));
+  const pMap: Record<number, string> = {};
+  for (const p of players ?? []) pMap[num(p.id)] = str(p.name);
+
+  const fixtureRows = atpOdds
+    .map((r: Row) => ({
+      player1_id: num(r.player1_id),
+      player2_id: num(r.player2_id),
+      player1: pMap[num(r.player1_id)] ?? "Unknown",
+      player2: pMap[num(r.player2_id)] ?? "Unknown",
+      surface: str(r.surface),
+      tournament: tMap[num(r.tour_id)] ?? "",
+    }))
+    .filter((r) => r.player1_id > 0 && r.player2_id > 0 && r.player1 && r.player2);
+
+  const fixturePlayerIds = [...new Set(fixtureRows.flatMap((r) => [r.player1_id, r.player2_id]))];
+  const inIds = `in.(${fixturePlayerIds.join(",")})`;
+  const games: Row[] = [];
+  for (let off = 0; ; off += 1000) {
+    const { data } = await sb
+      .from("oncourt_games")
+      .select("winner_id, loser_id, date")
+      .filter("winner_id", "in", inIds)
+      .filter("loser_id", "in", inIds)
+      .range(off, off + 999);
+    if (!data?.length) break;
+    games.push(...data);
+    if (data.length < 1000) break;
+  }
+
+  const h2h = new Map<string, { a: number; b: number; matches: number; last_date: string }>();
+  const keyOf = (a: number, b: number) => (a < b ? `${a}|${b}` : `${b}|${a}`);
+  for (const g of games) {
+    const w = num(g.winner_id);
+    const l = num(g.loser_id);
+    if (w <= 0 || l <= 0 || w === l) continue;
+    const a = Math.min(w, l);
+    const b = Math.max(w, l);
+    const k = keyOf(a, b);
+    const rec = h2h.get(k) ?? { a: 0, b: 0, matches: 0, last_date: "" };
+    if (w === a) rec.a += 1;
+    else rec.b += 1;
+    rec.matches += 1;
+    const d = str(g.date);
+    if (d && (!rec.last_date || d > rec.last_date)) rec.last_date = d;
+    h2h.set(k, rec);
+  }
+
+  const rows = fixtureRows.map((r) => {
+    const a = Math.min(r.player1_id, r.player2_id);
+    const b = Math.max(r.player1_id, r.player2_id);
+    const rec = h2h.get(keyOf(a, b));
+    const wins1 = rec ? (r.player1_id === a ? rec.a : rec.b) : 0;
+    const wins2 = rec ? (r.player2_id === b ? rec.b : rec.a) : 0;
+    return {
+      player1: r.player1,
+      player2: r.player2,
+      surface: r.surface,
+      tournament: r.tournament,
+      h2h_wins_p1: wins1,
+      h2h_wins_p2: wins2,
+      h2h_matches: rec?.matches ?? 0,
+      last_meeting_date: rec?.last_date ?? null,
+    };
+  });
+
+  const shown = rows.slice(0, cap);
+  return {
+    found: true,
+    total_matches: rows.length,
+    shown_matches: shown.length,
+    rows: shown,
+    truncated: rows.length > shown.length,
+  };
+}
+
 function isDoublesName(name: string): boolean {
   return (name ?? "").includes("/") || (name ?? "").includes("&");
 }
