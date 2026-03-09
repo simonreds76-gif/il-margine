@@ -19,12 +19,11 @@ Unlike traditional tipsters who focus on match outcomes, we target inefficient m
 
 **A:** Getting started is simple:
 
-1. **Join our free Telegram channel:** [@IlMargineProps](https://t.me/IlMargineProps). **Football player props** are posted there so everyone has a chance to get on before odds move.
-2. **Tennis tips** are published on the website only initially; you do not need Telegram for those.
-3. **Anytime goalscorer** markets and **bet builders** are coming very soon.
-4. **Review the tip:** Each includes match details, market, selection, bookmaker, odds, and stake recommendation.
-5. **Place your bet:** Use your own bankroll and stake sizing.
-6. **Track results:** Every bet is verified on our website with immutable records.
+1. **Visit the website:** All tips (football player props, ATP tennis) are published on the website. Check the relevant pages for today's selections.
+2. **Anytime goalscorer** markets and **bet builders** are coming very soon.
+3. **Review the tip:** Each includes match details, market, selection, bookmaker, odds, and stake recommendation.
+4. **Place your bet:** Use your own bankroll and stake sizing.
+5. **Track results:** Every bet is verified on our website with immutable records.
 
 No payment required. No trial period. No credit card.
 
@@ -32,7 +31,7 @@ No payment required. No trial period. No credit card.
 
 ### Q: Do I need a Telegram account to follow your tips?
 
-**A:** Only for **football player props**. Those are published on Telegram so that everyone can get on the bet before odds change or move; the website is updated afterwards. For **ATP tennis** you do not need Telegram. Tennis tips are published on the website. Anytime goalscorer and bet builder selections are coming very soon.
+**A:** No. All tips are published on the website. Football player props and ATP tennis selections are posted on the site. Anytime goalscorer and bet builder selections are coming very soon.
 
 ---
 
@@ -406,7 +405,7 @@ Bookmakers struggle to price **correlation** properly.
 **What we recommend instead:**
 - Manual betting with price alerts
 - Use odds comparison sites to get the best price
-- Set up Telegram notifications for instant alerts
+- Set up price alerts for instant notifications
 
 **Professional bettors bet manually.** Speed matters less than getting best price and maintaining account health.
 
@@ -416,7 +415,7 @@ Bookmakers struggle to price **correlation** properly.
 
 ### Q: How much does Il Margine cost?
 
-**A:** **Free.** We are growing our follower base and proving our approach; there is no charge to receive tips. What you get: all selections (player props on Telegram, tennis on the website), real-time alerts, and full verification. No trial period, no credit card. We may introduce paid tiers or other monetization later; for now the service is free.
+**A:** **Free.** We are growing our follower base and proving our approach; there is no charge to receive tips. What you get: all selections on the website, real-time alerts, and full verification. No trial period, no credit card. We may introduce paid tiers or other monetization later; for now the service is free.
 
 ---
 
@@ -730,7 +729,7 @@ Being limited by bookmakers is the ultimate credential. They only limit consiste
 
 **Evening (6pm-10pm):**
 - Finalize selections with positive EV
-- Post to Telegram with reasoning
+- Publish selections on the website with reasoning
 - Log bets in verification system
 
 **Not every day produces selections.**
@@ -744,7 +743,7 @@ Some days: 5+ tips (multiple mispriced markets)
 
 ### Q: How can I contact Il Margine?
 
-**A:** We do not offer support via Telegram DMs. For enquiries use:
+**A:** For enquiries use:
 
 **Email:** [contact@ilmargine.bet](mailto:contact@ilmargine.bet). We aim to reply within 24 to 48 hours.
 
@@ -761,8 +760,8 @@ Some days: 5+ tips (multiple mispriced markets)
 **A:** **Yes, with attribution.**
 
 **What you CAN do:**
-- Share our Telegram posts
-- Screenshot tips with @IlMargineProps credit
+- Share our tips and website content
+- Screenshot tips with ilmargine.bet credit
 - Discuss selections in forums/Reddit
 - Link to our website
 - Share track record data
@@ -770,7 +769,7 @@ Some days: 5+ tips (multiple mispriced markets)
 **What you CANNOT do:**
 - Copy tips and present as your own
 - Create "copycat" services using our analysis
-- Sell access to our free Telegram content
+- Sell access to our free content
 - Pretend to be affiliated with Il Margine
 
 **We encourage sharing** to:
@@ -778,7 +777,7 @@ Some days: 5+ tips (multiple mispriced markets)
 - Build community
 - Spread mathematical betting approach
 
-**Please give credit:** Tag @IlMargineProps or link to ilmargine.bet
+**Please give credit:** Link to ilmargine.bet
 
 ---
 

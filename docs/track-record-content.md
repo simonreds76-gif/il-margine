@@ -509,10 +509,10 @@ How we vary bet sizing based on edge confidence.
 - Timestamped entry prevents backdating
 - Includes: match, market, selection, odds, bookmaker, stake
 
-**Step 2: Public Telegram Posting**
-- Bet published to Telegram immediately after placing
-- Telegram timestamps are immutable
-- Thousands of followers see bet in real-time
+**Step 2: Public Website Posting**
+- Bet published on the website when value is identified
+- Timestamps are immutable
+- Selections visible to all visitors
 
 **Step 3: Result Settlement**
 - After match concludes, result is logged
@@ -522,7 +522,7 @@ How we vary bet sizing based on edge confidence.
 **Step 4: Individual Verification Pages**
 - Each bet gets unique URL: `ilmargine.bet/bet/[id]`
 - Displays full bet details
-- Shows Telegram post timestamp
+- Shows post timestamp
 - Provides result and profit/loss
 
 **Example:** [ilmargine.bet/bet/20251115-001](#)
@@ -631,7 +631,7 @@ No hidden losses. No edited bets. No excuses.
 
 **If you want to follow our selections:**
 
-[→ Join Free on Telegram](https://t.me/IlMargineProps)
+Visit the website for today's picks.
 
 ---
 

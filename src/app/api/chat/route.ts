@@ -170,11 +170,34 @@ function extractAgainstPlayerName(query: string): string | null {
   return name || null;
 }
 
+const FAQ_GETTING_STARTED = `Getting started is simple:
+1. Visit the website: All tips (football player props, ATP tennis) are published on the website. Check the relevant pages for today's selections.
+2. Anytime goalscorer markets and bet builders are coming very soon.
+3. Review the tip: Each includes match details, market, selection, bookmaker, odds, and stake recommendation.
+4. Place your bet: Use your own bankroll and stake sizing.
+5. Track results: Every bet is verified on our website with immutable records.
+No payment required. No trial period. No credit card.`;
+
+const FAQ_TELEGRAM = `No. All tips are published on the website. Football player props and ATP tennis selections are posted on the site. Anytime goalscorer and bet builder selections are coming very soon.`;
+
 async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Promise<string | null> {
   const q = userText.trim();
   const lower = q.toLowerCase();
 
   if (!q) return null;
+
+  if (
+    (lower.includes("how do i") || lower.includes("how can i")) &&
+    (lower.includes("start") || lower.includes("follow") || lower.includes("get") || lower.includes("tips"))
+  ) {
+    return FAQ_GETTING_STARTED;
+  }
+  if (
+    (lower.includes("telegram") || lower.includes("do i need")) &&
+    (lower.includes("account") || lower.includes("follow") || lower.includes("tips"))
+  ) {
+    return FAQ_TELEGRAM;
+  }
 
   if ((lower.includes("do you use") || lower.includes("use your")) && (lower.includes("model") || lower.includes("algorithm"))) {
     return "I use ATP match stats and market data from the database to give a straight, data-backed read.";
