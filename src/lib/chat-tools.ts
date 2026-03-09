@@ -185,16 +185,6 @@ export async function headToHead(playerAId: number, playerBId: number, surface?:
   const lowId = Math.min(playerAId, playerBId);
   const highId = Math.max(playerAId, playerBId);
 
-  // Legacy precomputed table can be stale/incomplete when ID mapping coverage is partial.
-  // Keep reading it for fallback, but build authoritative H2H summary from oncourt_games.
-  let q = sb
-    .from("player_h2h")
-    .select("*")
-    .eq("player_a_id", lowId)
-    .eq("player_b_id", highId);
-  if (surface) q = q.eq("surface", surface);
-  const { data: h2hLegacy } = await q.limit(10);
-
   const { data: matches } = await sb
     .from("oncourt_games")
     .select("winner_id, loser_id, tour_id, round_id, result, date")
@@ -259,7 +249,9 @@ export async function headToHead(playerAId: number, playerBId: number, surface?:
     });
 
   return {
-    summary: computedSummary.length ? computedSummary : (h2hLegacy ?? []),
+    summary: surface
+      ? computedSummary.filter((r) => r.surface === surface || r.surface === "Overall")
+      : computedSummary,
     recent_matches: enriched,
     player_a_id: playerAId,
     player_b_id: playerBId,
