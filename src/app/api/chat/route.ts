@@ -6,7 +6,8 @@ import { retrieveContext } from "@/lib/chat-rag";
 
 export const maxDuration = 30;
 
-const CHAT_MODEL = process.env.GROQ_MODEL || "moonshotai/kimi-k2-instruct";
+// Groq: Llama 4 Maverick 17B was decommissioned. Use GPT OSS 120B (or override via GROQ_MODEL).
+const CHAT_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
 
 function asNum(v: unknown, fallback = 0): number {
   if (v == null || v === "") return fallback;
