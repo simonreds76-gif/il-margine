@@ -72,14 +72,20 @@ def main() -> int:
 
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "pinnacle-scrape-odds.py"), "--active-leagues-only"],
-        label="1/3 Pinnacle scraper (writes to bookmaker_odds_snapshot)",
+        label="1/4 Pinnacle scraper (writes to bookmaker_odds_snapshot)",
         fatal=True,
     )
 
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "oncourt-compute-fair-odds.py")],
-        label="2/3 Fair odds pipeline",
+        label="2/4 Fair odds pipeline",
         fatal=True,
+    )
+
+    run_cmd(
+        [sys.executable, str(ROOT / "scripts" / "compute-handicap-values.py")],
+        label="3/4 Handicap values (spread edge)",
+        fatal=False,
     )
 
     if not args.skip_strict_report:
@@ -111,11 +117,11 @@ def main() -> int:
 
         run_cmd(
             strict_cmd,
-            label=f"3/3 Strict report (production mode: {args.strict_policy_mode}; compare: {args.strict_compare_overlay})",
+            label=f"4/4 Strict report (production mode: {args.strict_policy_mode}; compare: {args.strict_compare_overlay})",
             fatal=False,
         )
     else:
-        print("\n=== 3/3 Strict report skipped (--skip-strict-report) ===")
+        print("\n=== 4/4 Strict report skipped (--skip-strict-report) ===")
 
     print("\nDone. Pinnacle snapshot + daily_fair_odds updated.")
     if not args.skip_strict_report:

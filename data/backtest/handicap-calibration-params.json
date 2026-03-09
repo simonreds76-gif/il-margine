@@ -1,0 +1,121 @@
+{
+  "generated_at_utc": "2026-03-09T16:47:07Z",
+  "line_source_requested": "auto",
+  "line_source_used": "synthetic",
+  "files": [
+    "data/backtest/backtest-results-2022.csv",
+    "data/backtest/backtest-results-2023.csv",
+    "data/backtest/backtest-results-2024.csv",
+    "data/backtest/backtest-results-2025.csv"
+  ],
+  "lines": [
+    -5.5,
+    -4.5,
+    -3.5,
+    -2.5,
+    -1.5,
+    -0.5,
+    0.5,
+    1.5,
+    2.5,
+    3.5,
+    4.5,
+    5.5
+  ],
+  "sample_count": 220272,
+  "years": [
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "holdout_year": 2025,
+  "skipped_rows": {
+    "file_missing": 0,
+    "no_prob": 0,
+    "no_score": 1,
+    "no_winner": 0,
+    "bad_date": 0,
+    "bad_margin": 710,
+    "no_names": 0
+  },
+  "source_details": {
+    "snapshot": {
+      "snapshot_rows": 0,
+      "match_rows": 9178,
+      "matched": 0,
+      "unmatched": 9178,
+      "ambiguous": 0
+    },
+    "synthetic": {
+      "synthetic_lines": 12,
+      "match_rows": 9178
+    }
+  },
+  "best": {
+    "line_shift": -0.5,
+    "platt_a": -0.027807,
+    "platt_b": 0.561037,
+    "objective": 0.5953922252955904,
+    "train_raw": {
+      "n": 169248,
+      "hit_rate": 0.5,
+      "mean_pred": 0.508404659352907,
+      "bias": 0.008404659352907018,
+      "brier": 0.21817298413454997,
+      "log_loss": 0.6402376157383416
+    },
+    "train_cal": {
+      "n": 169248,
+      "hit_rate": 0.5,
+      "mean_pred": 0.5000000000001643,
+      "bias": 1.6431300764452317e-13,
+      "brier": 0.20986406111241457,
+      "log_loss": 0.60683059430801
+    },
+    "test_raw": {
+      "n": 51024,
+      "hit_rate": 0.5,
+      "mean_pred": 0.5084019541985079,
+      "bias": 0.008401954198507866,
+      "brier": 0.21102593141578405,
+      "log_loss": 0.6198225378580012
+    },
+    "test_cal": {
+      "n": 51024,
+      "hit_rate": 0.5,
+      "mean_pred": 0.49999565205303975,
+      "bias": -4.347946960248095e-06,
+      "brier": 0.20492023462700765,
+      "log_loss": 0.5953907035141544
+    }
+  },
+  "surface_eval": {
+    "clay": {
+      "n": 15888,
+      "raw_bias": -0.05884432130307665,
+      "cal_bias": -0.04972308382143409,
+      "raw_log_loss": 0.6224742305349509,
+      "cal_log_loss": 0.5990057746727955
+    },
+    "grass": {
+      "n": 5928,
+      "raw_bias": -0.06152174057327775,
+      "cal_bias": -0.05399134874327255,
+      "raw_log_loss": 0.6671451188668696,
+      "cal_log_loss": 0.6138022867812989
+    },
+    "hard": {
+      "n": 29208,
+      "raw_bias": -0.06018556586705204,
+      "cal_bias": -0.051708757768201885,
+      "raw_log_loss": 0.6365547864945275,
+      "cal_log_loss": 0.6026087982911796
+    }
+  },
+  "usage": {
+    "HANDICAP_LINE_SHIFT": -0.5,
+    "HANDICAP_PLATT_A": -0.027807,
+    "HANDICAP_PLATT_B": 0.561037
+  }
+}

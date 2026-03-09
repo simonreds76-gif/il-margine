@@ -18,6 +18,15 @@ function str(v: unknown): string {
   return v == null ? "" : String(v).trim();
 }
 
+function surfaceFromCourtName(name: string): string {
+  const n = str(name).toUpperCase();
+  if (n.includes("CLAY")) return "Clay";
+  if (n.includes("GRASS")) return "Grass";
+  if (n.includes("I.HARD") || n === "I.HARD" || n.includes("INDOOR")) return "I.hard";
+  if (n.includes("CARPET")) return "Carpet";
+  return "Hard";
+}
+
 async function fetchAllLeftieIds(): Promise<number[]> {
   const pageSize = 1000;
   let from = 0;
@@ -176,33 +185,81 @@ export async function headToHead(playerAId: number, playerBId: number, surface?:
   const lowId = Math.min(playerAId, playerBId);
   const highId = Math.max(playerAId, playerBId);
 
+  // Legacy precomputed table can be stale/incomplete when ID mapping coverage is partial.
+  // Keep reading it for fallback, but build authoritative H2H summary from oncourt_games.
   let q = sb
     .from("player_h2h")
     .select("*")
     .eq("player_a_id", lowId)
     .eq("player_b_id", highId);
   if (surface) q = q.eq("surface", surface);
-  const { data: h2h } = await q.limit(10);
+  const { data: h2hLegacy } = await q.limit(10);
 
   const { data: matches } = await sb
     .from("oncourt_games")
     .select("winner_id, loser_id, tour_id, round_id, result, date")
     .or(`and(winner_id.eq.${playerAId},loser_id.eq.${playerBId}),and(winner_id.eq.${playerBId},loser_id.eq.${playerAId})`)
     .order("date", { ascending: false })
-    .limit(20);
+    .limit(200);
+
+  const tourIds = [...new Set((matches ?? []).map((m) => num(m.tour_id)).filter((id) => id > 0))];
+  const tours: Row[] = [];
+  for (let i = 0; i < tourIds.length; i += 200) {
+    const chunk = tourIds.slice(i, i + 200);
+    const { data } = await sb.from("oncourt_tours").select("id, name, court_id").in("id", chunk);
+    if (data?.length) tours.push(...data);
+  }
+  const tourMap: Record<number, Row> = {};
+  for (const t of tours) tourMap[num(t.id)] = t;
+
+  const courtIds = [...new Set(tours.map((t) => num(t.court_id)).filter((id) => id > 0))];
+  const courtMap: Record<number, string> = {};
+  if (courtIds.length) {
+    const { data: courts } = await sb.from("oncourt_courts").select("id, name").in("id", courtIds);
+    for (const c of courts ?? []) courtMap[num(c.id)] = str(c.name);
+  }
+
+  const summaryBySurface: Record<string, { wins_a: number; wins_b: number; match_count: number; last_match_date: string | null }> = {};
+  const pushSummary = (surf: string, winnerId: number, matchDate: string) => {
+    if (!summaryBySurface[surf]) {
+      summaryBySurface[surf] = { wins_a: 0, wins_b: 0, match_count: 0, last_match_date: null };
+    }
+    const rec = summaryBySurface[surf];
+    if (winnerId === lowId) rec.wins_a += 1;
+    else if (winnerId === highId) rec.wins_b += 1;
+    rec.match_count += 1;
+    if (matchDate && (!rec.last_match_date || matchDate > rec.last_match_date)) rec.last_match_date = matchDate;
+  };
 
   const enriched = [];
   for (const m of matches ?? []) {
-    const { data: tour } = await sb
-      .from("oncourt_tours")
-      .select("name, court_id")
-      .eq("id", m.tour_id)
-      .maybeSingle();
-    enriched.push({ ...m, tournament: tour?.name ?? "" });
+    const t = tourMap[num(m.tour_id)];
+    const courtName = courtMap[num(t?.court_id)] ?? "";
+    const surf = surfaceFromCourtName(courtName);
+    const d = str(m.date);
+    pushSummary("Overall", num(m.winner_id), d);
+    pushSummary(surf, num(m.winner_id), d);
+    enriched.push({ ...m, tournament: str(t?.name), surface: surf });
   }
 
+  const computedSummary = Object.entries(summaryBySurface)
+    .map(([surf, rec]) => ({
+      player_a_id: lowId,
+      player_b_id: highId,
+      surface: surf,
+      wins_a: rec.wins_a,
+      wins_b: rec.wins_b,
+      match_count: rec.match_count,
+      last_match_date: rec.last_match_date,
+    }))
+    .sort((a, b) => {
+      if (a.surface === "Overall") return -1;
+      if (b.surface === "Overall") return 1;
+      return a.surface.localeCompare(b.surface);
+    });
+
   return {
-    summary: h2h ?? [],
+    summary: computedSummary.length ? computedSummary : (h2hLegacy ?? []),
     recent_matches: enriched,
     player_a_id: playerAId,
     player_b_id: playerBId,

@@ -39,6 +39,11 @@ interface FairOddsMatch {
   pinnacle_ou_line?: number;
   pinnacle_ou_over?: number;
   pinnacle_ou_under?: number;
+  spread_line?: number;
+  spread_odds1?: number;
+  spread_odds2?: number;
+  handicap_edge_p1?: number;
+  handicap_edge_p2?: number;
   value_p1?: number;
   value_p2?: number;
   confidence?: string;
@@ -73,8 +78,8 @@ interface ApiResponse {
 }
 
 const SHOW_OU_COLUMNS = false;
-const TABLE_COL_COUNT = SHOW_OU_COLUMNS ? 17 : 15;
-const TABLE_MIN_WIDTH = SHOW_OU_COLUMNS ? 1500 : 1060;
+const TABLE_COL_COUNT = SHOW_OU_COLUMNS ? 18 : 11; // 10 core + 1 Stats (consolidated)
+const TABLE_MIN_WIDTH = SHOW_OU_COLUMNS ? 1550 : 1100;
 
 /* â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
@@ -266,7 +271,7 @@ export default function FairOddsPage() {
 
         {/* Pinnacle status bar */}
         {data && (
-          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 mb-4 px-1">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 mb-4 px-1">
             <span>
               Pinnacle snapshot (today UTC):{" "}
               <span className="text-slate-300">{data.pinnacle_count} matches loaded</span>
@@ -278,7 +283,10 @@ export default function FairOddsPage() {
               <span className="text-amber-400/80">{data.pinnacle_hint}</span>
             )}
             <span className="text-slate-600">
-              Value % = (Pinnacle / Our odds) - 1; positive means value at Pinnacle.
+              Value % = (Pinnacle / Our odds) - 1; positive = value at Pinnacle.
+            </span>
+            <span className="text-slate-600">
+              Spread: ±line = game handicap (P1 +line / P2 −line). Odds = Pinnacle; edge % = model vs market (positive = value).
             </span>
             {data.policy?.mode === "strict" && (
               <span className="text-emerald-300/90">
@@ -330,7 +338,7 @@ export default function FairOddsPage() {
 
         {/* Table: 9 core + optional 2 O/U + 6 stat columns */}
         {!loading && matches.length > 0 && (
-          <div className="overflow-x-auto rounded-xl border border-slate-700/60 bg-slate-900/35 shadow-[0_10px_40px_rgba(0,0,0,0.35)] min-w-0" style={{ scrollbarGutter: "stable" }}>
+          <div className="overflow-x-auto rounded-xl border border-slate-700/60 bg-slate-900/35 shadow-[0_10px_40px_rgba(0,0,0,0.35)] min-w-0 w-full" style={{ scrollbarGutter: "stable" }}>
             <p className="text-[10px] text-slate-600 px-3 py-1.5 border-b border-slate-800/50 bg-slate-900/30">
               Scroll horizontally if needed. Pinnacle odds from public API each run.
             </p>
@@ -345,14 +353,10 @@ export default function FairOddsPage() {
                 <col style={{ width: 72 }} />
                 <col style={{ width: 72 }} />
                 <col style={{ width: 56 }} />
+                <col style={{ width: 150 }} />
                 {SHOW_OU_COLUMNS && <col style={{ width: 220 }} />}
                 {SHOW_OU_COLUMNS && <col style={{ width: 220 }} />}
-                <col style={{ width: 48 }} />
-                <col style={{ width: 48 }} />
-                <col style={{ width: 40 }} />
-                <col style={{ width: 48 }} />
-                <col style={{ width: 48 }} />
-                <col style={{ width: 40 }} />
+                <col style={{ width: 130 }} />
               </colgroup>
               <thead>
                 <tr className="border-b-2 border-slate-700/70 bg-[#0d0f14]/90 text-slate-300 text-[11px] uppercase tracking-wider">
@@ -362,14 +366,13 @@ export default function FairOddsPage() {
                   <th className="text-center px-2 py-3 font-semibold text-slate-300" colSpan={2}>Pinnacle</th>
                   <th className="text-center px-2 py-3 font-semibold text-emerald-500/70" colSpan={2}>Value %</th>
                   <th className="text-center px-2 py-3 font-semibold">E[G]</th>
+                  <th className="text-center px-2 py-3 font-semibold text-slate-400">Spread</th>
                   {SHOW_OU_COLUMNS && <th className="text-left px-2 py-3 font-semibold">O/U Fair</th>}
                   {SHOW_OU_COLUMNS && <th className="text-left px-2 py-3 font-semibold">O/U Pin</th>}
-                  <th className={`text-center px-1 py-3 font-medium text-[10px] tabular-nums w-12 ${!showStats ? "invisible" : ""}`}>P1 S%</th>
-                  <th className={`text-center px-1 py-3 font-medium text-[10px] tabular-nums w-12 ${!showStats ? "invisible" : ""}`}>P1 R%</th>
-                  <th className={`text-center px-1 py-3 font-medium text-[10px] tabular-nums w-10 ${!showStats ? "invisible" : ""}`}>P1 T</th>
-                  <th className={`text-center px-1 py-3 font-medium text-[10px] tabular-nums w-12 ${!showStats ? "invisible" : ""}`}>P2 S%</th>
-                  <th className={`text-center px-1 py-3 font-medium text-[10px] tabular-nums w-12 ${!showStats ? "invisible" : ""}`}>P2 R%</th>
-                  <th className={`text-center px-1 py-3 font-medium text-[10px] tabular-nums w-10 ${!showStats ? "invisible" : ""}`}>P2 T</th>
+                  <th className={`text-center px-2 py-3 font-medium text-[10px] ${!showStats ? "invisible" : ""}`} title="S% R% T (serve, return, total)">
+                    <span className="block">Stats</span>
+                    <span className="block text-[9px] text-slate-500 font-normal">S / R / T</span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -497,6 +500,29 @@ function MatchRow({ match, showStats }: { match: FairOddsMatch; showStats: boole
       <td className="text-center px-2 py-2.5 font-mono tabular-nums text-sm text-slate-300 overflow-hidden">
         {m.expected_total_games != null ? m.expected_total_games.toFixed(1) : "—"}
       </td>
+
+      {/* Spread (handicap): line, Pinnacle odds, model edge */}
+      <td className="px-2 py-2.5 min-w-[140px]">
+        {m.spread_line != null ? (
+          <div className="text-[11px] font-mono tabular-nums space-y-1">
+            <div className="text-slate-500 font-medium text-center">±{m.spread_line}</div>
+            <div className="grid grid-cols-[1fr_auto_auto] gap-x-2 gap-y-0.5 items-center">
+              <span className="text-slate-400 truncate">P1 +{m.spread_line}</span>
+              <span className="text-slate-300">{m.spread_odds1 != null ? m.spread_odds1.toFixed(2) : "—"}</span>
+              <span className={`min-w-[3rem] text-right ${valueColor(m.handicap_edge_p1)}`}>
+                {m.handicap_edge_p1 != null ? `${m.handicap_edge_p1 > 0 ? "+" : ""}${m.handicap_edge_p1.toFixed(1)}%` : "—"}
+              </span>
+              <span className="text-slate-400 truncate">P2 −{m.spread_line}</span>
+              <span className="text-slate-300">{m.spread_odds2 != null ? m.spread_odds2.toFixed(2) : "—"}</span>
+              <span className={`min-w-[3rem] text-right ${valueColor(m.handicap_edge_p2)}`}>
+                {m.handicap_edge_p2 != null ? `${m.handicap_edge_p2 > 0 ? "+" : ""}${m.handicap_edge_p2.toFixed(1)}%` : "—"}
+              </span>
+            </div>
+          </div>
+        ) : (
+          <span className="text-slate-600 text-xs">—</span>
+        )}
+      </td>
       {SHOW_OU_COLUMNS && (
         <td className="px-2 py-2.5 align-top">
           <OverUnderFairCell lines={ouLines} />
@@ -508,24 +534,16 @@ function MatchRow({ match, showStats }: { match: FairOddsMatch; showStats: boole
         </td>
       )}
 
-      {/* Stats: 6 fixed-width cells; hidden when !showStats to keep columns aligned */}
-      <td className={`text-center px-1 py-2.5 font-mono text-xs tabular-nums ${showStats ? "text-slate-200" : "text-slate-500 invisible"}`}>
-        {m.p1_serve != null ? m.p1_serve.toFixed(1) : "—"}
-      </td>
-      <td className={`text-center px-1 py-2.5 font-mono text-xs tabular-nums ${showStats ? "text-slate-200" : "text-slate-500 invisible"}`}>
-        {m.p1_return != null ? m.p1_return.toFixed(1) : "—"}
-      </td>
-      <td className={`text-center px-1 py-2.5 font-mono text-xs tabular-nums ${showStats ? "text-slate-200" : "text-slate-500 invisible"}`}>
-        {m.p1_total != null ? m.p1_total.toFixed(1) : "—"}
-      </td>
-      <td className={`text-center px-1 py-2.5 font-mono text-xs tabular-nums ${showStats ? "text-slate-200" : "text-slate-500 invisible"}`}>
-        {m.p2_serve != null ? m.p2_serve.toFixed(1) : "—"}
-      </td>
-      <td className={`text-center px-1 py-2.5 font-mono text-xs tabular-nums ${showStats ? "text-slate-200" : "text-slate-500 invisible"}`}>
-        {m.p2_return != null ? m.p2_return.toFixed(1) : "—"}
-      </td>
-      <td className={`text-center px-1 py-2.5 font-mono text-xs tabular-nums ${showStats ? "text-slate-200" : "text-slate-500 invisible"}`}>
-        {m.p2_total != null ? m.p2_total.toFixed(1) : "—"}
+      {/* Stats: single consolidated cell when showStats */}
+      <td className={`px-2 py-2.5 font-mono text-[11px] tabular-nums ${showStats ? "text-slate-200" : "text-slate-500 invisible"}`}>
+        {showStats && (
+          <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5">
+            <span className="text-slate-500 text-[10px]">P1</span>
+            <span>{m.p1_serve != null ? m.p1_serve.toFixed(1) : "—"} / {m.p1_return != null ? m.p1_return.toFixed(1) : "—"} / {m.p1_total != null ? m.p1_total.toFixed(1) : "—"}</span>
+            <span className="text-slate-500 text-[10px]">P2</span>
+            <span>{m.p2_serve != null ? m.p2_serve.toFixed(1) : "—"} / {m.p2_return != null ? m.p2_return.toFixed(1) : "—"} / {m.p2_total != null ? m.p2_total.toFixed(1) : "—"}</span>
+          </div>
+        )}
       </td>
     </tr>
   );
