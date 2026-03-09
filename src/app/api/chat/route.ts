@@ -60,6 +60,35 @@ function extractTournamentMostWinners(query: string): string | null {
   return m[1].replace(/^the\s+/i, "").trim();
 }
 
+function inferWindowYears(text: string): number | null {
+  const m =
+    text.match(/\b(?:past|last)\s+(\d{1,2})\s+years?\b/i) ||
+    text.match(/\b(\d{1,2})\s*-\s*years?\b/i) ||
+    text.match(/\b(\d{1,2})\s+year\b/i);
+  if (!m?.[1]) return null;
+  const n = Number(m[1]);
+  if (!Number.isFinite(n)) return null;
+  return Math.max(1, Math.min(20, n));
+}
+
+function inferTournamentFromWindowPhrase(text: string): string | null {
+  const m = text.match(
+    /\b(?:at|in)\s+([A-Za-z][A-Za-z0-9\s.'-]{1,80}?)(?:\s+(?:in|over)\s+the\s+(?:past|last)\s+\d+\s+years?|\s+(?:past|last)\s+\d+\s+years?|\?|$)/i
+  );
+  if (!m?.[1]) return null;
+  const candidate = m[1].trim().replace(/^the\s+/i, "").trim();
+  if (!candidate) return null;
+  const c = candidate.toLowerCase();
+  if (/\b(final|finals|semi|semis|quarter|quarters|qf|sf|r16|round)\b/.test(c)) return null;
+  return candidate;
+}
+
+function canonicalTournamentForHistorical(name: string): string {
+  const t = name.toLowerCase().trim();
+  if (/\bqueen'?s\b/.test(t) || /\bqueens\b/.test(t)) return "Queen's Club Championships";
+  return name;
+}
+
 function formatSurfaceBreakdown(bySurface: unknown): string {
   const obj = bySurface as Record<string, { wins?: number; losses?: number; win_pct?: number }> | undefined;
   if (!obj || typeof obj !== "object") return "";
@@ -223,6 +252,84 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
     return "I use ATP match stats and market data from the database to give a straight, data-backed read.";
   }
 
+  const asksBestPerformerAtTournament =
+    /\b(best performer|most successful|best record)\b/i.test(q) &&
+    (/\b(at|in|there)\b/i.test(q) || /\btournament\b/i.test(q));
+  if (asksBestPerformerAtTournament) {
+    const tournament =
+      inferTournament(q) ??
+      inferTournamentFromWindowPhrase(q) ??
+      contextTexts.map((t) => inferTournament(t)).find((t): t is string => !!t) ??
+      inferTournamentFromContextTexts(contextTexts) ??
+      null;
+    if (tournament) {
+      const canonicalTournament = canonicalTournamentForHistorical(tournament);
+      let winners = await tools.tournamentPastWinners(canonicalTournament);
+      if (!winners.length && canonicalTournament !== tournament) {
+        winners = await tools.tournamentPastWinners(tournament);
+      }
+      if (!winners.length) return `I don't have past-winner data for ${tournament} in this dataset.`;
+
+      const rows = winners
+        .map((r) => ({
+          tournament: asStr((r as Record<string, unknown>).tournament),
+          winner: asStr((r as Record<string, unknown>).winner),
+          year: asNum((r as Record<string, unknown>).year),
+        }))
+        .filter((r) => r.winner && r.year > 0)
+        .sort((a, b) => b.year - a.year);
+      if (!rows.length) return `I don't have complete winners data for ${tournament} right now.`;
+
+      const requestedYears = inferWindowYears(q);
+      const isPastWindowQuery = /\b(?:past|last)\s+\d+\s+years?\b/i.test(q);
+      const uniqueYears = [...new Set(rows.map((r) => r.year))].sort((a, b) => b - a);
+      const yearsWindow = requestedYears ?? (/\bpast\b|\blast\b/i.test(q) ? 4 : null);
+      const explicitYearMatch = q.match(/\b(20\d{2})\b/);
+      const explicitEndYear = explicitYearMatch ? Number(explicitYearMatch[1]) : null;
+      const windowEndYear = explicitEndYear ?? (/\bthis year\b/i.test(q) ? nowYear : nowYear - 1);
+      const selectedYears = isPastWindowQuery && yearsWindow
+        ? uniqueYears.filter((y) => y >= (windowEndYear - yearsWindow + 1) && y <= windowEndYear)
+        : yearsWindow
+          ? uniqueYears.slice(0, yearsWindow)
+          : uniqueYears;
+      if (!selectedYears.length && isPastWindowQuery && yearsWindow) {
+        const startYear = windowEndYear - yearsWindow + 1;
+        return `I don't have winners data for ${tournament} in ${startYear}-${windowEndYear} in this dataset.`;
+      }
+      const selectedSet = new Set(selectedYears);
+      const scoped = rows.filter((r) => selectedSet.has(r.year));
+      if (!scoped.length) return `I don't have enough historical winners data for ${tournament}.`;
+
+      const counts = new Map<string, number>();
+      for (const r of scoped) counts.set(r.winner, (counts.get(r.winner) ?? 0) + 1);
+      const ranked = [...counts.entries()].sort((a, b) => (b[1] - a[1]) || a[0].localeCompare(b[0]));
+      const topCount = ranked[0]?.[1] ?? 0;
+      const leaders = ranked.filter(([, n]) => n === topCount).slice(0, 4);
+      const yearMin = Math.min(...selectedYears);
+      const yearMax = Math.max(...selectedYears);
+      const yearLabel = yearMin === yearMax ? `${yearMax}` : `${yearMin}-${yearMax}`;
+      const displayTournament = scoped[0].tournament || tournament;
+
+      if (leaders.length > 1) {
+        const tied = leaders.map(([name, n]) => `${name} (${n})`).join(", ");
+        const next = ranked
+          .filter(([, n]) => n < topCount)
+          .slice(0, 2)
+          .map(([name, n]) => `${name} (${n})`)
+          .join(", ");
+        return next
+          ? `${displayTournament} (${yearLabel}): best performer by titles is tied: ${tied}. Next: ${next}.`
+          : `${displayTournament} (${yearLabel}): best performer by titles is tied: ${tied}.`;
+      }
+
+      const [leader, n] = ranked[0];
+      const chasers = ranked.slice(1, 3).map(([name, c]) => `${name} (${c})`).join(", ");
+      return chasers
+        ? `${displayTournament} (${yearLabel}): best performer by titles is ${leader} (${n}). Next: ${chasers}.`
+        : `${displayTournament} (${yearLabel}): best performer by titles is ${leader} (${n}).`;
+    }
+  }
+
   const asksBeatInRound =
     /\bwho did\b/i.test(q) &&
     /\bbeat\b/i.test(q) &&
@@ -288,7 +395,11 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
       inferTournamentFromContextTexts(contextTexts) ??
       null;
     if (tournament) {
-      const winners = await tools.tournamentPastWinners(tournament);
+      const canonicalTournament = canonicalTournamentForHistorical(tournament);
+      let winners = await tools.tournamentPastWinners(canonicalTournament);
+      if (!winners.length && canonicalTournament !== tournament) {
+        winners = await tools.tournamentPastWinners(tournament);
+      }
       if (!winners.length) return `I don't have past-winner data for ${tournament} in this dataset.`;
       const counts = new Map<string, number>();
       for (const row of winners) {
@@ -369,7 +480,11 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
 
   const mostTournament = extractTournamentMostWinners(q);
   if (mostTournament) {
-    const winners = await tools.tournamentPastWinners(mostTournament);
+    const canonicalTournament = canonicalTournamentForHistorical(mostTournament);
+    let winners = await tools.tournamentPastWinners(canonicalTournament);
+    if (!winners.length && canonicalTournament !== mostTournament) {
+      winners = await tools.tournamentPastWinners(mostTournament);
+    }
     if (!winners.length) return `I don't have past-winner data for ${mostTournament} in this dataset.`;
     const counts = new Map<string, number>();
     for (const row of winners) {

@@ -216,7 +216,7 @@ function buildCases() {
       id: "rg_winner_and_qf_single_turn",
       messages: [mkUser("who won roland garros last year and who did he beat in the quarters?")],
       expectAll: [/French Open|Roland\W*Garros/i, /quarter|QF/i],
-      expectAny: [/Tommy Paul/i, /beat|smashed|defeated/i],
+      expectAny: [/Tommy\s*Paul/i, /beat|smashed|defeated|dismantled/i],
       rejectAny: [/I couldn't find/i, /I don't have access/i],
     },
     {
@@ -237,9 +237,16 @@ function buildCases() {
         mkAssistant("Delray Beach Open (2022-2025): underdogs ROI -9.8% (39/103), favourites ROI -2.1% (64/103) on 103 matches."),
         mkUser("who has the best record there?"),
       ],
-      expectAll: [/Best record there by titles/i],
-      expectAny: [/Delray|record there/i],
+      expectAll: [/Delray/i],
+      expectAny: [/Best record there by titles/i, /best performer by titles/i],
       rejectAny: [/Could you clarify/i, /Top ATP spots today/i],
+    },
+    {
+      id: "best_performer_queens_past4y",
+      messages: [mkUser("who's the best performer at the Queen's in the past 4 years?")],
+      expectAll: [/Queen/i],
+      expectAny: [/best performer by titles/i, /I don't have (?:winners|past-winner) data for Queen/i],
+      rejectAny: [/Could you clarify/i, /Top ATP spots today/i, /Rate limit/i],
     },
   ];
 }

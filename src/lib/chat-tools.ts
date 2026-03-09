@@ -55,6 +55,16 @@ const TOURNAMENT_ALIASES: Record<string, string[]> = tournamentAliases as Record
 
 function resolveSearchTerms(input: string): string[] {
   const lower = input.toLowerCase().trim();
+  // Exact alias match before fuzzy includes.
+  for (const [alias, dbNames] of Object.entries(TOURNAMENT_ALIASES)) {
+    if (lower === alias) return dbNames;
+  }
+  // Exact canonical DB-name match should avoid broad alias expansion.
+  for (const dbNames of Object.values(TOURNAMENT_ALIASES)) {
+    for (const dbName of dbNames) {
+      if (lower === dbName.toLowerCase()) return [dbName];
+    }
+  }
   for (const [alias, dbNames] of Object.entries(TOURNAMENT_ALIASES)) {
     if (lower.includes(alias)) return dbNames;
   }
