@@ -337,6 +337,38 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
       : `${lead[0]} has won ${mostTournament} the most in this dataset (${lead[1]} titles).`;
   }
 
+  const asksFavDogTerm =
+    /\b(underdog|underdogs|dog|dogs|favourite|favourites|favorite|favorites|fav|favs)\b/i.test(q) &&
+    (
+      /\b(how do|how does|roi|perform|record|results?)\b/i.test(q) ||
+      /\b(at|in)\b/i.test(q)
+    );
+  if (asksFavDogTerm) {
+    const tournament = inferTournament(q);
+    if (tournament) {
+      const stats = await tools.tournamentFavDogStats(tournament);
+      const found = (stats as Record<string, unknown>).found !== false;
+      if (!found) {
+        const msg = asStr((stats as Record<string, unknown>).message);
+        return msg || `I don't have fav/dog tournament stats for ${tournament} right now.`;
+      }
+
+      const tName = asStr((stats as Record<string, unknown>).tournament) || tournament;
+      const years = asStr((stats as Record<string, unknown>).years);
+      const n = asNum((stats as Record<string, unknown>).n_matches);
+      const favRoi = asNum((stats as Record<string, unknown>).fav_roi_pct_shrunk);
+      const dogRoi = asNum((stats as Record<string, unknown>).dog_roi_pct_shrunk);
+      const favWins = asNum((stats as Record<string, unknown>).fav_wins);
+      const favBets = asNum((stats as Record<string, unknown>).fav_bets);
+      const dogWins = asNum((stats as Record<string, unknown>).dog_wins);
+      const dogBets = asNum((stats as Record<string, unknown>).dog_bets);
+      const favRoiStr = `${favRoi >= 0 ? "+" : ""}${favRoi.toFixed(1)}%`;
+      const dogRoiStr = `${dogRoi >= 0 ? "+" : ""}${dogRoi.toFixed(1)}%`;
+
+      return `${tName}${years ? ` (${years})` : ""}: underdogs ROI ${dogRoiStr} (${dogWins}/${dogBets}), favourites ROI ${favRoiStr} (${favWins}/${favBets}) on ${n} matches.`;
+    }
+  }
+
   const asksUnderdog = /\b(underdog|underdogs|dog|dogs|outsider|outsiders|longshot|long shot)\b/i.test(q);
   if (asksUnderdog) {
     const rows = await tools.matchPrediction(undefined);
