@@ -18,7 +18,13 @@ from datetime import date
 _script_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(_script_dir, ".."))
 sys.path.insert(0, _script_dir)
-from src.lib.tennis_prob import prob_match_best_of_3, expected_total_games_best_of_3, prob_over_games
+from src.lib.tennis_prob import (
+    prob_match_best_of_3,
+    prob_match_best_of_5,
+    expected_total_games_best_of_3,
+    expected_total_games_best_of_5,
+    prob_over_games,
+)
 from injury_overlay import env_bool, load_recent_injury_index
 from class_gap import apply_class_gap
 
@@ -238,15 +244,18 @@ def _age_factor(birthdate_str):
     return 0.0
 
 
-def _solve_spw_for_match_prob(p1_win, avg_spw, clamp_lo=0.48, clamp_hi=0.82, tol=5e-4, max_iter=60):
-    """Binary-search for (p_a, p_b) such that prob_match_best_of_3(p_a, p_b) ≈ p1_win.
+def _solve_spw_for_match_prob(p1_win, avg_spw, clamp_lo=0.48, clamp_hi=0.82, tol=5e-4, max_iter=60, prob_fn=None):
+    """Binary-search for (p_a, p_b) such that prob_fn(p_a, p_b) ≈ p1_win.
 
+    prob_fn: prob_match_best_of_3 (default) or prob_match_best_of_5 for Grand Slams.
     Assumes symmetric offset from avg_spw: p_a = avg + delta, p_b = avg - delta.
     This preserves the surface's average serve point win % while producing the
     correct match win probability.
 
     Returns (p_a, p_b) clamped to [clamp_lo, clamp_hi].
     """
+    if prob_fn is None:
+        prob_fn = prob_match_best_of_3
     p1_win = max(0.02, min(0.98, p1_win))
     avg_spw = max(clamp_lo + 0.01, min(clamp_hi - 0.01, avg_spw))
     max_delta = min(avg_spw - clamp_lo, clamp_hi - avg_spw)
@@ -255,7 +264,7 @@ def _solve_spw_for_match_prob(p1_win, avg_spw, clamp_lo=0.48, clamp_hi=0.82, tol
         mid = (lo + hi) / 2.0
         pa = max(clamp_lo, min(clamp_hi, avg_spw + mid))
         pb = max(clamp_lo, min(clamp_hi, avg_spw - mid))
-        prob = prob_match_best_of_3(pa, pb)
+        prob = prob_fn(pa, pb)
         if abs(prob - p1_win) < tol:
             return (pa, pb)
         if prob < p1_win:
@@ -489,13 +498,13 @@ def main():
         print("Dry run: will not write to Supabase\n")
 
     url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL")
-    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
-    if not url or not key:
+    _supabase_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+    if not url or not _supabase_key:
         print("Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env.local")
         sys.exit(1)
 
     base = url.rstrip("/") + "/rest/v1"
-    headers = {"apikey": key, "Authorization": f"Bearer {key}"}
+    headers = {"apikey": _supabase_key, "Authorization": f"Bearer {_supabase_key}"}
     REQ_TIMEOUT = 45  # avoid hanging on slow Supabase
 
     # 1) Today's fixtures (dedupe by match key so same match isn't listed twice)
@@ -508,10 +517,10 @@ def main():
     seen = set()
     fixtures = []
     for f in raw_fixtures:
-        key = (f.get("tour_id"), f.get("player1_id"), f.get("player2_id"), f.get("round_id"))
-        if key in seen:
+        match_key = (f.get("tour_id"), f.get("player1_id"), f.get("player2_id"), f.get("round_id"))
+        if match_key in seen:
             continue
-        seen.add(key)
+        seen.add(match_key)
         fixtures.append(f)
     if len(fixtures) < len(raw_fixtures):
         print(f"Fixtures: {len(fixtures)} (deduped from {len(raw_fixtures)})")
@@ -1265,47 +1274,100 @@ def main():
     # --- V2 MODEL: load decomposed stats + recent games ---
     v2_model = None
     if HAS_LIVE_V2 and fixture_player_ids and venue_tour_ids and tour_to_surface:
-        v2_model = LiveModelV2(url.rstrip("/"), key)
+        v2_model = LiveModelV2(url.rstrip("/"), _supabase_key)
         v2_model.load_data(fixture_player_ids, venue_tour_ids, tour_to_surface)
     # --- END V2 ---
 
-    # 5f) H2H table
-    h2h_rows = []
-    try:
-        off = 0
-        while True:
-            r = requests.get(
-                f"{base}/player_h2h",
-                headers=headers,
-                params={"select": "player_a_id,player_b_id,surface,wins_a,wins_b,match_count,last_match_date", "offset": off, "limit": 1000},
-                timeout=REQ_TIMEOUT,
-            )
-            if r.status_code != 200:
-                break
-            data = r.json()
-            if not data:
-                break
-            h2h_rows.extend(data)
-            off += len(data)
-            if len(data) < 1000:
-                break
-    except Exception:
-        pass
+    # 5f) H2H from authoritative match history (oncourt_games), not pre-aggregated table.
     h2h_lookup = {}
-    for row in h2h_rows:
-        a = row.get("player_a_id")
-        b = row.get("player_b_id")
-        surf = (row.get("surface") or "N/A").strip()
-        if a is None or b is None or not surf:
-            continue
-        h2h_lookup[(int(a), int(b), surf)] = {
-            "player_a_id": int(a),
-            "player_b_id": int(b),
-            "wins_a": int(row.get("wins_a") or 0),
-            "wins_b": int(row.get("wins_b") or 0),
-            "match_count": int(row.get("match_count") or 0),
-            "last_match_date": row.get("last_match_date"),
-        }
+    h2h_source_rows = 0
+    if fixture_player_ids:
+        try:
+            id_list = sorted(int(x) for x in fixture_player_ids)
+            in_clause = "in.(" + ",".join(str(x) for x in id_list) + ")"
+            off = 0
+            while True:
+                r = requests.get(
+                    f"{base}/oncourt_games",
+                    headers=headers,
+                    params={
+                        "select": "winner_id,loser_id,tour_id,date",
+                        "winner_id": in_clause,
+                        "loser_id": in_clause,
+                        "offset": off,
+                        "limit": 1000,
+                    },
+                    timeout=REQ_TIMEOUT,
+                )
+                if r.status_code != 200:
+                    break
+                data = r.json() or []
+                if not data:
+                    break
+
+                h2h_source_rows += len(data)
+                for row in data:
+                    w = row.get("winner_id")
+                    l = row.get("loser_id")
+                    if w is None or l is None:
+                        continue
+                    try:
+                        w = int(w)
+                        l = int(l)
+                    except (TypeError, ValueError):
+                        continue
+                    if w == l:
+                        continue
+
+                    tid_h2h = row.get("tour_id")
+                    try:
+                        tid_h2h = int(tid_h2h) if tid_h2h is not None else None
+                    except (TypeError, ValueError):
+                        tid_h2h = None
+
+                    d_h2h = _parse_iso_date(
+                        row.get("date") or (tour_date_by_id.get(tid_h2h) if tid_h2h is not None else None)
+                    )
+                    d_h2h_iso = d_h2h.isoformat() if d_h2h is not None else None
+
+                    surf = (tour_to_surface.get(tid_h2h) or "N/A") if tid_h2h is not None else "N/A"
+                    if not surf:
+                        surf = "N/A"
+
+                    a, b = (w, l) if w < l else (l, w)
+                    winner_is_a = (w == a)
+
+                    def _bump(key_surf):
+                        rec = h2h_lookup.get((a, b, key_surf))
+                        if rec is None:
+                            rec = {
+                                "player_a_id": a,
+                                "player_b_id": b,
+                                "wins_a": 0,
+                                "wins_b": 0,
+                                "match_count": 0,
+                                "last_match_date": None,
+                            }
+                            h2h_lookup[(a, b, key_surf)] = rec
+                        if winner_is_a:
+                            rec["wins_a"] += 1
+                        else:
+                            rec["wins_b"] += 1
+                        rec["match_count"] += 1
+                        if d_h2h_iso and (rec["last_match_date"] is None or d_h2h_iso > rec["last_match_date"]):
+                            rec["last_match_date"] = d_h2h_iso
+
+                    # Surface-specific record
+                    _bump(surf)
+                    # All-surface fallback record
+                    if surf != "N/A":
+                        _bump("N/A")
+
+                off += len(data)
+                if len(data) < 1000:
+                    break
+        except Exception:
+            pass
     def _get_h2h_row(pid1, pid2, surf):
         a, b = (pid1, pid2) if pid1 < pid2 else (pid2, pid1)
         for s in _surface_candidates(surf):
@@ -1313,7 +1375,10 @@ def main():
             if rec:
                 return rec
         return None
-    print(f"  H2H: {len(h2h_lookup):,} rows" + (" (active)" if h2h_lookup else " (none - run sackmann-compute-h2h.py)"))
+    print(
+        f"  H2H: {len(h2h_lookup):,} rows"
+        + (f" from oncourt_games ({h2h_source_rows:,} source rows)" if h2h_lookup else " (none from oncourt_games)")
+    )
 
     # 5g) Advanced player stats
     adv_rows = []
@@ -1638,6 +1703,8 @@ def main():
             tid = None
         surface = (tour_to_surface.get(tid) or "N/A") if tid is not None else "N/A"
         surface_counts[surface] = surface_counts.get(surface, 0) + 1
+        series_bucket = _series_bucket_from_tour(tour_name_by_id.get(tid, ""), tour_rank_by_id.get(tid))
+        is_best_of_5 = series_bucket == "Grand Slam"
 
         cpi_value = None
         cpi_year = None
@@ -1774,7 +1841,7 @@ def main():
             p_a = _clamp(p_a, POINT_CLAMP[0], POINT_CLAMP[1])
             p_b = _clamp(p_b, POINT_CLAMP[0], POINT_CLAMP[1])
 
-        p_serve_return = prob_match_best_of_3(p_a, p_b)
+        p_serve_return = prob_match_best_of_5(p_a, p_b) if is_best_of_5 else prob_match_best_of_3(p_a, p_b)
 
         def _recent_reliability(pid):
             act = recent_activity_by_player.get(pid)
@@ -1872,7 +1939,6 @@ def main():
         if confidence in ("high", "medium"):
             if p1 not in recent_activity_by_player or p2 not in recent_activity_by_player:
                 confidence = "medium" if confidence == "high" else "low"
-        series_bucket = _series_bucket_from_tour(tour_name_by_id.get(tid, ""), tour_rank_by_id.get(tid))
         form_mult, results_mult, structural_mult, cap_mult = _series_delta_multipliers(series_bucket, surface, confidence)
 
         # Blend in logit space (better behavior than linear prob mix when components disagree)
@@ -2235,11 +2301,13 @@ def main():
         elif venue_spw is not None:
             # Default behavior: venue-specific SPW centre when available.
             avg_spw_surface = venue_spw
+        prob_match_fn = prob_match_best_of_5 if is_best_of_5 else prob_match_best_of_3
         p_a_eg, p_b_eg = _solve_spw_for_match_prob(
             p1_win, avg_spw_surface,
-            clamp_lo=POINT_CLAMP[0], clamp_hi=POINT_CLAMP[1]
+            clamp_lo=POINT_CLAMP[0], clamp_hi=POINT_CLAMP[1],
+            prob_fn=prob_match_fn,
         )
-        exp_games = expected_total_games_best_of_3(p_a_eg, p_b_eg)
+        exp_games = expected_total_games_best_of_5(p_a_eg, p_b_eg) if is_best_of_5 else expected_total_games_best_of_3(p_a_eg, p_b_eg)
 
         # Tournament residual shift (e.g. court speed effects not captured by venue SPW)
         tour_shift = tour_shift_lookup.get((tid, surface)) if tid is not None else None
@@ -2324,6 +2392,8 @@ def main():
             "draw": draw,
             "p1_win_prob": round(p1_win, 4),
             "p2_win_prob": round(p2_win, 4),
+            "p_a": round(p_a, 4),
+            "p_b": round(p_b, 4),
             "p_serve_return": round(p_serve_return, 4),
             "p_elo": round(p_elo, 4),
             "odds1": round(odds1, 2),
