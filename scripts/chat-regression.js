@@ -238,7 +238,7 @@ function buildCases() {
         mkUser("who has the best record there?"),
       ],
       expectAll: [/Delray/i],
-      expectAny: [/Best record there by titles/i, /best performer by titles/i],
+      expectAny: [/most match wins is/i, /Best record there by titles/i, /best performer by titles/i],
       rejectAny: [/Could you clarify/i, /Top ATP spots today/i],
     },
     {
@@ -250,6 +250,20 @@ function buildCases() {
       ],
       expectAll: [/Umag/i],
       expectAny: [/most match wins is/i, /don't have enough match-level history/i],
+      rejectAny: [/Could you clarify/i, /Top ATP spots today/i],
+    },
+    {
+      id: "umag_best_record_single_turn",
+      messages: [mkUser("who's got the best record in Umag?")],
+      expectAll: [/Umag/i],
+      expectAny: [/most match wins is/i, /don't have enough match-level history/i],
+      rejectAny: [/best performer by titles/i, /Could you clarify/i, /Top ATP spots today/i],
+    },
+    {
+      id: "umag_titles_tie_recent_context",
+      messages: [mkUser("who has most titles in Umag in the past 4 years?")],
+      expectAll: [/Most recent among tied:/i],
+      expectAny: [/Best record there by titles/i, /best performer by titles is tied/i],
       rejectAny: [/Could you clarify/i, /Top ATP spots today/i],
     },
     {

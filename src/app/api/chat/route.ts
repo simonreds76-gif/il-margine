@@ -98,6 +98,30 @@ function formatSurfaceBreakdown(bySurface: unknown): string {
   return parts.join(", ");
 }
 
+function tiedLeadersRecencyText(
+  rows: Array<{ winner: string; year: number }>,
+  leaderNames: string[],
+  maxItems = 3
+): string {
+  if (!rows.length || !leaderNames.length) return "";
+  const leaderSet = new Set(leaderNames.map((n) => n.toLowerCase()));
+  const latestByWinner = new Map<string, number>();
+  for (const row of rows) {
+    if (!row.winner || !row.year) continue;
+    if (!leaderSet.has(row.winner.toLowerCase())) continue;
+    const prev = latestByWinner.get(row.winner) ?? 0;
+    if (row.year > prev) latestByWinner.set(row.winner, row.year);
+  }
+  const recent = [...latestByWinner.entries()]
+    .map(([name, year]) => ({ name, year }))
+    .filter((r) => r.year > 0)
+    .sort((a, b) => (b.year - a.year) || a.name.localeCompare(b.name))
+    .slice(0, Math.max(1, maxItems));
+  if (!recent.length) return "";
+  const out = recent.map((r) => `${r.name} (${r.year})`).join(", ");
+  return ` Most recent among tied: ${out}.`;
+}
+
 type ChatMsg = { role?: string; content?: string; parts?: Array<{ type?: string; text?: string }> };
 
 function messageText(m: unknown): string {
@@ -264,8 +288,11 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
     return "I use ATP match stats and market data from the database to give a straight, data-backed read.";
   }
 
+  const asksBestRecordGeneric =
+    /\bbest record\b/i.test(q) &&
+    !/\b(title|titles|most titles|won\s+.+\s+the\s+most)\b/i.test(q);
   const asksTournamentMatchesWon =
-    /\b(by\s+matches?\s+won|matches?\s+won|most\s+match\s+wins?|match\s+wins?)\b/i.test(q) &&
+    (/\b(by\s+matches?\s+won|matches?\s+won|most\s+match\s+wins?|match\s+wins?)\b/i.test(q) || asksBestRecordGeneric) &&
     (/\bthere\b/i.test(q) || /\b(at|in)\b/i.test(q) || contextTexts.length > 0);
   if (asksTournamentMatchesWon) {
     const tournament =
@@ -323,7 +350,7 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
   }
 
   const asksBestPerformerAtTournament =
-    /\b(best performer|most successful|best record)\b/i.test(q) &&
+    /\b(best performer|most successful|most titles?)\b/i.test(q) &&
     (/\b(at|in|there)\b/i.test(q) || /\btournament\b/i.test(q));
   if (asksBestPerformerAtTournament) {
     const tournament =
@@ -374,7 +401,8 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
       for (const r of scoped) counts.set(r.winner, (counts.get(r.winner) ?? 0) + 1);
       const ranked = [...counts.entries()].sort((a, b) => (b[1] - a[1]) || a[0].localeCompare(b[0]));
       const topCount = ranked[0]?.[1] ?? 0;
-      const leaders = ranked.filter(([, n]) => n === topCount).slice(0, 4);
+      const leadersAll = ranked.filter(([, n]) => n === topCount);
+      const leaders = leadersAll.slice(0, 4);
       const yearMin = Math.min(...selectedYears);
       const yearMax = Math.max(...selectedYears);
       const yearLabel = yearMin === yearMax ? `${yearMax}` : `${yearMin}-${yearMax}`;
@@ -382,14 +410,21 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
 
       if (leaders.length > 1) {
         const tied = leaders.map(([name, n]) => `${name} (${n})`).join(", ");
+        const hiddenTied = leadersAll.length - leaders.length;
+        const tiedText = hiddenTied > 0 ? `${tied} (+${hiddenTied} more)` : tied;
+        const recentText = tiedLeadersRecencyText(
+          scoped.map((r) => ({ winner: r.winner, year: r.year })),
+          leadersAll.map(([name]) => name),
+          3
+        );
         const next = ranked
           .filter(([, n]) => n < topCount)
           .slice(0, 2)
           .map(([name, n]) => `${name} (${n})`)
           .join(", ");
         return next
-          ? `${displayTournament} (${yearLabel}): best performer by titles is tied: ${tied}. Next: ${next}.`
-          : `${displayTournament} (${yearLabel}): best performer by titles is tied: ${tied}.`;
+          ? `${displayTournament} (${yearLabel}): best performer by titles is tied: ${tiedText}.${recentText} Next: ${next}.`
+          : `${displayTournament} (${yearLabel}): best performer by titles is tied: ${tiedText}.${recentText}`;
       }
 
       const [leader, n] = ranked[0];
@@ -456,7 +491,7 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
   }
 
   const asksBestRecordAtTournament =
-    /\b(best record|most titles|most wins)\b/i.test(q) &&
+    /\b(most titles?)\b/i.test(q) &&
     (/\bthere\b/i.test(q) || /\b(at|in)\b/i.test(q) || /\btournament\b/i.test(q));
   if (asksBestRecordAtTournament) {
     const tournament =
@@ -471,16 +506,42 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
         winners = await tools.tournamentPastWinners(tournament);
       }
       if (!winners.length) return `I don't have past-winner data for ${tournament} in this dataset.`;
+      const rows = winners
+        .map((r) => ({
+          winner: asStr((r as Record<string, unknown>).winner),
+          year: asNum((r as Record<string, unknown>).year),
+        }))
+        .filter((r) => r.winner && r.year > 0);
+      if (!rows.length) return `I don't have complete winners data for ${tournament} right now.`;
+
       const counts = new Map<string, number>();
-      for (const row of winners) {
-        const w = asStr((row as Record<string, unknown>).winner);
+      for (const row of rows) {
+        const w = row.winner;
         if (!w) continue;
         counts.set(w, (counts.get(w) ?? 0) + 1);
       }
-      const top = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
-      if (!top.length) return `I don't have complete winners data for ${tournament} right now.`;
-      const [leader, leaderTitles] = top[0];
-      const chasers = top
+      const ranked = [...counts.entries()].sort((a, b) => (b[1] - a[1]) || a[0].localeCompare(b[0]));
+      if (!ranked.length) return `I don't have complete winners data for ${tournament} right now.`;
+      const topCount = ranked[0]?.[1] ?? 0;
+      const leadersAll = ranked.filter(([, n]) => n === topCount);
+      const leaders = leadersAll.slice(0, 4);
+      if (leaders.length > 1) {
+        const tied = leaders.map(([name, n]) => `${name} (${n})`).join(", ");
+        const hiddenTied = leadersAll.length - leaders.length;
+        const tiedText = hiddenTied > 0 ? `${tied} (+${hiddenTied} more)` : tied;
+        const recentText = tiedLeadersRecencyText(rows, leadersAll.map(([name]) => name), 3);
+        const next = ranked
+          .filter(([, n]) => n < topCount)
+          .slice(0, 2)
+          .map(([name, n]) => `${name} (${n})`)
+          .join(", ");
+        return next
+          ? `Best record there by titles in this dataset is tied: ${tiedText}.${recentText} Next: ${next}.`
+          : `Best record there by titles in this dataset is tied: ${tiedText}.${recentText}`;
+      }
+
+      const [leader, leaderTitles] = ranked[0];
+      const chasers = ranked
         .slice(1, 4)
         .map(([name, n]) => `${name} (${n})`)
         .join(", ");
