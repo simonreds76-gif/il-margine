@@ -144,6 +144,18 @@ function inferYear(text: string, currentYear: number): number | null {
   return null;
 }
 
+function inferYearRange(text: string): { start: number; end: number } | null {
+  const m = text.match(/\b(20\d{2})\s*-\s*(20\d{2})\b/);
+  if (!m) return null;
+  const a = Number(m[1]);
+  const b = Number(m[2]);
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
+  const start = Math.min(a, b);
+  const end = Math.max(a, b);
+  if (start < 1900 || end < 1900) return null;
+  return { start, end };
+}
+
 function inferTournament(text: string): string | null {
   const q = text.toLowerCase();
   const known = [
@@ -250,6 +262,64 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
 
   if ((lower.includes("do you use") || lower.includes("use your")) && (lower.includes("model") || lower.includes("algorithm"))) {
     return "I use ATP match stats and market data from the database to give a straight, data-backed read.";
+  }
+
+  const asksTournamentMatchesWon =
+    /\b(by\s+matches?\s+won|matches?\s+won|most\s+match\s+wins?|match\s+wins?)\b/i.test(q) &&
+    (/\bthere\b/i.test(q) || /\b(at|in)\b/i.test(q) || contextTexts.length > 0);
+  if (asksTournamentMatchesWon) {
+    const tournament =
+      inferTournament(q) ??
+      inferTournamentFromWindowPhrase(q) ??
+      contextTexts.map((t) => inferTournament(t)).find((t): t is string => !!t) ??
+      inferTournamentFromContextTexts(contextTexts) ??
+      null;
+    if (tournament) {
+      const windowYears =
+        inferWindowYears(q) ??
+        contextTexts.map((t) => inferWindowYears(t)).find((n): n is number => n != null);
+      const explicitRange =
+        inferYearRange(q) ??
+        contextTexts.map((t) => inferYearRange(t)).find((r): r is { start: number; end: number } => r != null);
+      const canonicalTournament = canonicalTournamentForHistorical(tournament);
+      let stats = await tools.tournamentBestByMatchesWon(
+        canonicalTournament,
+        windowYears,
+        explicitRange?.end,
+        explicitRange?.start
+      );
+      if (!(stats as Record<string, unknown>).found && canonicalTournament !== tournament) {
+        stats = await tools.tournamentBestByMatchesWon(
+          tournament,
+          windowYears,
+          explicitRange?.end,
+          explicitRange?.start
+        );
+      }
+      if (!(stats as Record<string, unknown>).found) {
+        const msg = asStr((stats as Record<string, unknown>).message);
+        return msg || `I don't have enough match-level history for ${tournament}.`;
+      }
+
+      const top = (((stats as Record<string, unknown>).top as Array<Record<string, unknown>> | undefined) ?? [])
+        .filter((r) => asStr(r.player_name));
+      if (!top.length) return `I don't have enough match-level history for ${tournament}.`;
+
+      const tourOut = asStr((stats as Record<string, unknown>).tournament) || tournament;
+      const years = asStr((stats as Record<string, unknown>).years);
+      const leader = top[0];
+      const leaderName = asStr(leader.player_name);
+      const leaderWins = asNum(leader.wins);
+      const leaderLosses = asNum(leader.losses);
+      const leaderPct = asNum(leader.win_pct).toFixed(1);
+      const chasers = top
+        .slice(1, 4)
+        .map((r) => `${asStr(r.player_name)} (${asNum(r.wins)}-${asNum(r.losses)})`)
+        .join(", ");
+      return chasers
+        ? `${tourOut}${years ? ` (${years})` : ""}: most match wins is ${leaderName} (${leaderWins}-${leaderLosses}, ${leaderPct}% win). Next: ${chasers}.`
+        : `${tourOut}${years ? ` (${years})` : ""}: most match wins is ${leaderName} (${leaderWins}-${leaderLosses}, ${leaderPct}% win).`;
+    }
   }
 
   const asksBestPerformerAtTournament =

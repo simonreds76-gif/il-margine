@@ -242,6 +242,17 @@ function buildCases() {
       rejectAny: [/Could you clarify/i, /Top ATP spots today/i],
     },
     {
+      id: "umag_followup_matches_won",
+      messages: [
+        mkUser("who's got the best record in Umag?"),
+        mkAssistant("Plava Laguna Croatia Open - Umag (2006-2025): best performer by titles is tied: Alexandr Dolgopolov (1), Alexei Popyrin (1), Andrey Rublev (1), Carlos Alcaraz (1)."),
+        mkUser("by matches won?"),
+      ],
+      expectAll: [/Umag/i],
+      expectAny: [/most match wins is/i, /don't have enough match-level history/i],
+      rejectAny: [/Could you clarify/i, /Top ATP spots today/i],
+    },
+    {
       id: "best_performer_queens_past4y",
       messages: [mkUser("who's the best performer at the Queen's in the past 4 years?")],
       expectAll: [/Queen/i],

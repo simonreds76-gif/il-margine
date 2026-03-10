@@ -1361,6 +1361,151 @@ export async function tournamentPastWinners(tournamentName: string): Promise<Row
 }
 
 /**
+ * Tournament leaderboard by total match wins (W-L) across matched editions.
+ * Optional `windowYears` keeps only the most recent N distinct season years.
+ */
+export async function tournamentBestByMatchesWon(
+  tournamentName: string,
+  windowYears?: number,
+  endYear?: number,
+  startYear?: number
+): Promise<Row> {
+  const searchTerms = resolveSearchTerms(tournamentName);
+  let allTours: Row[] = [];
+  for (const term of searchTerms) {
+    const { data } = await sb
+      .from("oncourt_tours")
+      .select("id, name, date, rank")
+      .ilike("name", `%${term}%`)
+      .order("date", { ascending: false })
+      .limit(300);
+    if (data?.length) allTours = [...allTours, ...data];
+  }
+  if (!allTours.length) {
+    return {
+      found: false,
+      tournament: tournamentName,
+      message: "No tournament editions found for that name.",
+    };
+  }
+
+  const mainTours = allTours.filter((t) => isMainTour(str(t.name)));
+  const toursBase = mainTours.length ? mainTours : allTours;
+  const tourById = new Map<number, Row>();
+  for (const t of toursBase) {
+    const id = num(t.id);
+    if (id > 0 && !tourById.has(id)) tourById.set(id, t);
+  }
+  const tours = [...tourById.values()];
+
+  const yearsDesc = [...new Set(tours.map((t) => num(str(t.date).slice(0, 4))).filter((y) => y > 1900))].sort(
+    (a, b) => b - a
+  );
+  const hasRange =
+    Number.isFinite(endYear as number) &&
+    Number.isFinite(startYear as number) &&
+    (startYear as number) > 1900 &&
+    (endYear as number) > 1900 &&
+    (startYear as number) <= (endYear as number);
+  const window = Number.isFinite(windowYears as number) ? Math.max(1, Math.floor(windowYears as number)) : 0;
+  const pickedYears = hasRange
+    ? yearsDesc.filter((y) => y >= (startYear as number) && y <= (endYear as number))
+    : window > 0
+      ? yearsDesc.slice(0, window)
+      : yearsDesc;
+  const pickedYearSet = new Set<number>(pickedYears);
+  const selectedTours = tours.filter((t) => pickedYearSet.has(num(str(t.date).slice(0, 4))));
+  if (!selectedTours.length) {
+    return {
+      found: false,
+      tournament: tournamentName,
+      message: "No tournament editions found for the requested window.",
+      available_years: yearsDesc,
+    };
+  }
+
+  const tourIds = selectedTours.map((t) => num(t.id)).filter((id) => id > 0);
+  const games: Row[] = [];
+  for (let i = 0; i < tourIds.length; i += 100) {
+    const chunk = tourIds.slice(i, i + 100);
+    const { data } = await sb
+      .from("oncourt_games")
+      .select("winner_id, loser_id, tour_id, date")
+      .in("tour_id", chunk)
+      .limit(5000);
+    if (data?.length) games.push(...data);
+  }
+  if (!games.length) {
+    return {
+      found: false,
+      tournament: tournamentName,
+      message: "No match rows found for those editions.",
+      years: pickedYears.length ? `${Math.min(...pickedYears)}-${Math.max(...pickedYears)}` : "",
+      editions: selectedTours.length,
+    };
+  }
+
+  const playerIds = [...new Set(games.flatMap((g) => [num(g.winner_id), num(g.loser_id)]).filter((id) => id > 0))];
+  const players: Row[] = [];
+  for (let i = 0; i < playerIds.length; i += 500) {
+    const chunk = playerIds.slice(i, i + 500);
+    const { data } = await sb.from("oncourt_players").select("id, name").in("id", chunk);
+    if (data?.length) players.push(...data);
+  }
+  const playerName = new Map<number, string>((players ?? []).map((p) => [num(p.id), str(p.name)]));
+
+  const rec = new Map<number, { wins: number; losses: number }>();
+  for (const g of games) {
+    const wid = num(g.winner_id);
+    const lid = num(g.loser_id);
+    const wName = playerName.get(wid) ?? "";
+    const lName = playerName.get(lid) ?? "";
+    if (!wid || !lid) continue;
+    if (!wName || !lName) continue;
+    if (wName.includes("/") || lName.includes("/")) continue;
+    const wRec = rec.get(wid) ?? { wins: 0, losses: 0 };
+    wRec.wins += 1;
+    rec.set(wid, wRec);
+    const lRec = rec.get(lid) ?? { wins: 0, losses: 0 };
+    lRec.losses += 1;
+    rec.set(lid, lRec);
+  }
+
+  const leaderboard = [...rec.entries()]
+    .map(([playerId, r]) => {
+      const matches = r.wins + r.losses;
+      const winPct = matches > 0 ? (r.wins / matches) * 100.0 : 0.0;
+      return {
+        player_id: playerId,
+        player_name: playerName.get(playerId) ?? `Player ${playerId}`,
+        wins: r.wins,
+        losses: r.losses,
+        matches,
+        win_pct: Math.round(winPct * 10) / 10,
+      };
+    })
+    .filter((r) => r.matches > 0)
+    .sort((a, b) => {
+      if (b.wins !== a.wins) return b.wins - a.wins;
+      if (b.win_pct !== a.win_pct) return b.win_pct - a.win_pct;
+      return b.matches - a.matches;
+    });
+
+  const yearsLabel = pickedYears.length ? `${Math.min(...pickedYears)}-${Math.max(...pickedYears)}` : "";
+  const displayName = str(selectedTours[0]?.name) || str(tours[0]?.name) || tournamentName;
+  return {
+    found: true,
+    tournament: displayName,
+    years: yearsLabel,
+    editions: selectedTours.length,
+    match_count: games.length,
+    player_count: leaderboard.length,
+    top: leaderboard.slice(0, 10),
+    available_years: yearsDesc,
+  };
+}
+
+/**
  * Match-level results for a specific tournament edition, with optional round/player filters.
  * Example: French Open 2025, round=QF, player=Alcaraz.
  */
