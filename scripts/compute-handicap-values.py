@@ -303,26 +303,34 @@ def main():
         fo, pin, home_is_p1 = m["fair"], m["pinnacle"], m["home_is_p1"]
         p_a = float(fo.get("p_a") or 0)
         p_b = float(fo.get("p_b") or 0)
-        line = float(pin.get("spread_line") or 4.5)
+        pin_line = float(pin.get("spread_line") or 0.0)
 
-        # Pinnacle: odds1 = home +line, odds2 = away -line (the two market sides).
-        # When home_is_p1: P1+ = home+ = odds1, P2- = away- = odds2.
-        # When !home_is_p1: P1+ = away+ (complement of away-), P2- = away- = odds2.
-        # away+ is not offered; implied prob = 1 - 1/odds2, so fair odds = odds2/(odds2-1).
+        # Snapshot semantics (after scrape normalization):
+        #   spread_line: signed handicap for snapshot player1
+        #   spread_odds1: odds for snapshot player1 at spread_line
+        #   spread_odds2: odds for snapshot player2 at -spread_line
+        #
+        # Convert into OUR row orientation:
+        #   spread_line := signed handicap for OUR player1
+        #   spread_odds1 := odds for OUR player1 at spread_line
+        #   spread_odds2 := odds for OUR player2 at -spread_line
         pin_o1 = float(pin.get("spread_odds1") or 0)
         pin_o2 = float(pin.get("spread_odds2") or 0)
         if home_is_p1:
+            line = pin_line
             spread_odds1 = pin_o1
             spread_odds2 = pin_o2
         else:
-            # P1=away: P1+ = away+ = complement of away-; P2- = away- = odds2.
-            spread_odds1 = pin_o2 / (pin_o2 - 1) if pin_o2 > 1 else 0
-            spread_odds2 = pin_o2
+            line = -pin_line
+            spread_odds1 = pin_o2
+            spread_odds2 = pin_o1
 
         if spread_odds1 <= 1 or spread_odds2 <= 1:
             continue
 
-        # P1 +line: P(games_P1 - games_P2 > -line). Same formula for fav or dog.
+        # Signed line from OUR P1 perspective:
+        #   +x => P1 +x
+        #   -x => P1 -x
         model_p1_raw = prob_p1_covers_plus(p_a, p_b, line)
         model_p1_shifted = prob_p1_covers_plus(p_a, p_b, line + calibration.line_shift)
         model_p1 = _calibrate_prob(model_p1_shifted, calibration)
@@ -332,7 +340,7 @@ def main():
         raw_edge1 = (model_p1_raw - implied1) / implied1 * 100 if implied1 > 0 else None
         edge1 = (model_p1 - implied1) / implied1 * 100 if implied1 > 0 else None
 
-        # P2 -line is complementary to P1 +line on .5 spreads.
+        # Opposite side (OUR P2 at -line), complementary on .5 spreads.
         implied2 = 1.0 / spread_odds2
         edge2 = (model_p2 - implied2) / implied2 * 100 if implied2 > 0 else None
 

@@ -160,6 +160,13 @@ function fmtProb(v: number | undefined): string {
   return `${(v * 100).toFixed(0)}%`;
 }
 
+function fmtSignedLine(v: number | undefined): string {
+  if (v == null || Number.isNaN(v)) return "—";
+  const abs = Math.abs(v);
+  const body = Number.isInteger(abs) ? String(abs) : abs.toFixed(1);
+  return `${v >= 0 ? "+" : "−"}${body}`;
+}
+
 const SURFACE_COLORS: Record<string, string> = {
   Hard: "bg-blue-500/15 text-blue-400 border-blue-500/25",
   Clay: "bg-orange-500/15 text-orange-400 border-orange-500/25",
@@ -286,7 +293,7 @@ export default function FairOddsPage() {
               Value % = (Pinnacle / Our odds) - 1; positive = value at Pinnacle.
             </span>
             <span className="text-slate-600">
-              Spread: ±line = game handicap (P1 +line / P2 −line). Odds = Pinnacle; edge % = model vs market (positive = value).
+              Spread: line is signed from P1 side (e.g. P1 −1.0 / P2 +1.0). Odds = Pinnacle; edge % = model vs market (positive = value).
             </span>
             {data.policy?.mode === "strict" && (
               <span className="text-emerald-300/90">
@@ -505,14 +512,14 @@ function MatchRow({ match, showStats }: { match: FairOddsMatch; showStats: boole
       <td className="px-2 py-2.5 min-w-[140px]">
         {m.spread_line != null ? (
           <div className="text-[11px] font-mono tabular-nums space-y-1">
-            <div className="text-slate-500 font-medium text-center">±{m.spread_line}</div>
+            <div className="text-slate-500 font-medium text-center">{fmtSignedLine(m.spread_line)}</div>
             <div className="grid grid-cols-[1fr_auto_auto] gap-x-2 gap-y-0.5 items-center">
-              <span className="text-slate-400 truncate">P1 +{m.spread_line}</span>
+              <span className="text-slate-400 truncate">P1 {fmtSignedLine(m.spread_line)}</span>
               <span className="text-slate-300">{m.spread_odds1 != null ? m.spread_odds1.toFixed(2) : "—"}</span>
               <span className={`min-w-[3rem] text-right ${valueColor(m.handicap_edge_p1)}`}>
                 {m.handicap_edge_p1 != null ? `${m.handicap_edge_p1 > 0 ? "+" : ""}${m.handicap_edge_p1.toFixed(1)}%` : "—"}
               </span>
-              <span className="text-slate-400 truncate">P2 −{m.spread_line}</span>
+              <span className="text-slate-400 truncate">P2 {fmtSignedLine(-m.spread_line)}</span>
               <span className="text-slate-300">{m.spread_odds2 != null ? m.spread_odds2.toFixed(2) : "—"}</span>
               <span className={`min-w-[3rem] text-right ${valueColor(m.handicap_edge_p2)}`}>
                 {m.handicap_edge_p2 != null ? `${m.handicap_edge_p2 > 0 ? "+" : ""}${m.handicap_edge_p2.toFixed(1)}%` : "—"}

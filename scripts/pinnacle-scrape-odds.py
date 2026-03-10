@@ -251,16 +251,25 @@ def _extract_best_spread(markets: list[dict] | None) -> dict | None:
         prices = mkt.get("prices", []) or []
         if len(prices) < 2:
             continue
-        # points: [4.5, -4.5] = home +4.5, away -4.5
-        pts = prices[0].get("points")
-        try:
-            line = abs(float(pts))
-        except (TypeError, ValueError):
+        # Keep the sign from home points:
+        #   home points = +4.5 -> player1 +4.5
+        #   home points = -1.0 -> player1 -1.0
+        home_row = next((p for p in prices if p.get("designation") == "home"), None)
+        away_row = next((p for p in prices if p.get("designation") == "away"), None)
+        if home_row is None or away_row is None:
             continue
-        home_p = next((p["price"] for p in prices if p.get("designation") == "home"), None)
-        away_p = next((p["price"] for p in prices if p.get("designation") == "away"), None)
+        home_p = home_row.get("price")
+        away_p = away_row.get("price")
         if home_p is None or away_p is None:
             continue
+        try:
+            home_points = float(home_row.get("points"))
+        except (TypeError, ValueError):
+            try:
+                home_points = -float(away_row.get("points"))
+            except (TypeError, ValueError):
+                continue
+        line_abs = abs(home_points)
         odds1 = american_to_decimal(home_p)
         odds2 = american_to_decimal(away_p)
         if odds1 <= 1 or odds2 <= 1:
@@ -268,7 +277,8 @@ def _extract_best_spread(markets: list[dict] | None) -> dict | None:
         margin = compute_margin(odds1, odds2)
         is_alt = bool(mkt.get("isAlternate", False))
         candidates.append({
-            "line": line,
+            "line": round(home_points, 2),  # signed line from player1 perspective
+            "line_abs": round(line_abs, 2),
             "odds1": odds1,
             "odds2": odds2,
             "margin": margin,
@@ -281,7 +291,7 @@ def _extract_best_spread(markets: list[dict] | None) -> dict | None:
     pool = non_alt if non_alt else candidates
     # Prefer common main lines (3.5, 4.5, 5.5)
     main_lines = {3.5, 4.5, 5.5}
-    in_main = [c for c in pool if c["line"] in main_lines]
+    in_main = [c for c in pool if c["line_abs"] in main_lines]
     pool = in_main if in_main else pool
     # Pick lowest margin (most balanced)
     return min(pool, key=lambda c: c["margin"])
