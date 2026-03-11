@@ -416,10 +416,20 @@ function inferPlayerFromBestSlamQuery(query: string, contextTexts: string[]): st
   );
   if (direct?.[1]) return direct[1].trim();
 
+  const doesHave = query.match(
+    /\b(?:does|did)\s+([A-Za-z][A-Za-z.'-]*(?:\s+[A-Za-z][A-Za-z.'-]*){0,3})\s+have\b/i
+  );
+  if (doesHave?.[1]) return doesHave[1].trim();
+
   const lead = query.match(
     /^([A-Za-z][A-Za-z.'-]*(?:\s+[A-Za-z][A-Za-z.'-]*){0,3})\s+(?:best|deepest|furthest)\b/i
   );
   if (lead?.[1]) return lead[1].trim();
+
+  const possessive = query.match(
+    /\b([A-Za-z][A-Za-z.'-]*(?:\s+[A-Za-z][A-Za-z.'-]*){0,3})['’]s\s+(?:best|deepest|furthest)\b/i
+  );
+  if (possessive?.[1]) return possessive[1].trim();
 
   for (const text of contextTexts) {
     const m = text.match(/\b([A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3})\b/);
@@ -466,6 +476,7 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
   const asksBestGrandSlamResult =
     /\b(grand slam|slam)\b/i.test(q) &&
     (/\bbest result\b/i.test(q) ||
+      /\bbest record\b/i.test(q) ||
       (/\b(best|deepest|furthest)\b/i.test(q) && /\b(result|run|finish|performance)\b/i.test(q)));
   if (asksBestGrandSlamResult) {
     const playerQuery = inferPlayerFromBestSlamQuery(q, contextTexts);
