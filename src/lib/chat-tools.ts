@@ -1307,6 +1307,122 @@ export async function playerRecordByRound(playerId: number): Promise<Row> {
   return { by_round: rounds };
 }
 
+function slamNameFromTourName(tourName: string): string | null {
+  const n = str(tourName).toLowerCase();
+  if (n.includes("australian open")) return "Australian Open";
+  if (n.includes("french open") || n.includes("roland garros")) return "French Open";
+  if (n.includes("wimbledon")) return "Wimbledon";
+  if (n.includes("u.s. open") || n.includes("us open")) return "US Open";
+  return null;
+}
+
+function yearFromDate(value: unknown): number | null {
+  const y = Number(str(value).slice(0, 4));
+  return Number.isFinite(y) && y >= 1900 ? y : null;
+}
+
+/** Best main-draw Grand Slam round for a player (Australian/French/Wimbledon/US Open). */
+export async function playerBestGrandSlamResult(playerId: number): Promise<Row> {
+  if (!Number.isFinite(playerId) || playerId <= 0) {
+    return { found: false, message: "Invalid player_id." };
+  }
+
+  const { data: player } = await sb
+    .from("oncourt_players")
+    .select("id, name")
+    .eq("id", playerId)
+    .maybeSingle();
+
+  const slamTerms = ["Australian Open", "French Open", "Roland Garros", "Wimbledon", "US Open", "U.S. Open"];
+  let tours: Row[] = [];
+  for (const term of slamTerms) {
+    const { data } = await sb
+      .from("oncourt_tours")
+      .select("id, name, date")
+      .ilike("name", `%${term}%`)
+      .order("date", { ascending: false })
+      .limit(300);
+    if (data?.length) tours = [...tours, ...data];
+  }
+
+  const tourMap = new Map<number, Row>();
+  for (const t of tours) {
+    const id = num(t.id);
+    const name = str(t.name);
+    if (!id || !name) continue;
+    if (!isMainTour(name)) continue;
+    if (!slamNameFromTourName(name)) continue;
+    if (!tourMap.has(id)) tourMap.set(id, t);
+  }
+  if (!tourMap.size) {
+    return { found: false, message: "No Grand Slam tournament data found." };
+  }
+
+  const tourIds = [...tourMap.keys()];
+  const { data: wins } = await sb
+    .from("oncourt_games")
+    .select("tour_id, round_id, date, result")
+    .eq("winner_id", playerId)
+    .in("tour_id", tourIds);
+
+  const { data: losses } = await sb
+    .from("oncourt_games")
+    .select("tour_id, round_id, date, result")
+    .eq("loser_id", playerId)
+    .in("tour_id", tourIds);
+
+  const mainRoundIds = new Set([1, 2, 3, 7, 9, 10, 12]);
+  const allMainDraw = [...(wins ?? []), ...(losses ?? [])].filter((m) => mainRoundIds.has(num(m.round_id)));
+
+  const playerName = str(player?.name) || `Player ${playerId}`;
+  if (!allMainDraw.length) {
+    return {
+      found: true,
+      player_id: playerId,
+      player_name: playerName,
+      best_round_id: null,
+      best_round: null,
+      tournament: null,
+      season_year: null,
+      reached_qf_or_better: false,
+      grand_slam_matches: 0,
+    };
+  }
+
+  const enriched = allMainDraw.map((m) => {
+    const t = tourMap.get(num(m.tour_id));
+    const roundId = num(m.round_id);
+    return {
+      round_id: roundId,
+      round_label: roundLabel(roundId),
+      slam: slamNameFromTourName(str(t?.name)) ?? "Grand Slam",
+      season_year: yearFromDate(t?.date ?? m.date),
+      date: str(m.date),
+      result: str(m.result),
+    };
+  });
+
+  const best = enriched.sort((a, b) => {
+    if (b.round_id !== a.round_id) return b.round_id - a.round_id;
+    const ay = a.season_year ?? 0;
+    const by = b.season_year ?? 0;
+    if (by !== ay) return by - ay;
+    return b.date.localeCompare(a.date);
+  })[0];
+
+  return {
+    found: true,
+    player_id: playerId,
+    player_name: playerName,
+    best_round_id: best.round_id,
+    best_round: best.round_label,
+    tournament: best.slam,
+    season_year: best.season_year,
+    reached_qf_or_better: best.round_id >= 9,
+    grand_slam_matches: enriched.length,
+  };
+}
+
 /* ── Tournament past winners ──────────────────────────────── */
 
 export async function tournamentPastWinners(tournamentName: string): Promise<Row[]> {
@@ -1335,7 +1451,8 @@ export async function tournamentPastWinners(tournamentName: string): Promise<Row
   );
 
   const results = [];
-  for (const t of tours.slice(0, 20)) {
+  // Use broader history window for title leaders (not just last 20 editions).
+  for (const t of tours.slice(0, 80)) {
     const { data: finals } = await sb
       .from("oncourt_games")
       .select("winner_id, loser_id, result")

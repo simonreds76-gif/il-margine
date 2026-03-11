@@ -1,13 +1,14 @@
 import { createGroq } from "@ai-sdk/groq";
-import { streamText, stepCountIs, convertToModelMessages } from "ai";
+import { streamText, stepCountIs, convertToModelMessages, generateText, createUIMessageStreamResponse } from "ai";
 import { z } from "zod";
 import * as tools from "@/lib/chat-tools";
 import { retrieveContext } from "@/lib/chat-rag";
 
 export const maxDuration = 30;
 
-// Groq: Llama 4 Maverick 17B was decommissioned. Use GPT OSS 120B (or override via GROQ_MODEL).
-const CHAT_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
+// Primary model. Override via GROQ_MODEL. Backup used on parse errors.
+const CHAT_MODEL = process.env.GROQ_MODEL || "meta-llama/llama-4-maverick-17b-128e-instruct";
+const BACKUP_MODEL = "llama-3.3-70b-versatile";
 
 function asNum(v: unknown, fallback = 0): number {
   if (v == null || v === "") return fallback;
@@ -41,6 +42,61 @@ function uiTextStreamResponse(text: string): Response {
       "Content-Type": "text/event-stream; charset=utf-8",
       "Cache-Control": "no-cache, no-transform",
       Connection: "keep-alive",
+    },
+  });
+}
+
+function ensureNonEmptyAssistantTextStream(
+  stream: ReadableStream<Record<string, unknown>>,
+  fallbackText: string
+): ReadableStream<Record<string, unknown>> {
+  return new ReadableStream<Record<string, unknown>>({
+    async start(controller) {
+      const reader = stream.getReader();
+      let sawStart = false;
+      let sawText = false;
+      let sawAny = false;
+      let finishPart: Record<string, unknown> | null = null;
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          if (!value || typeof value !== "object") continue;
+          sawAny = true;
+          const type = String(value.type ?? "");
+          if (type === "start") sawStart = true;
+          if (type === "text-delta") {
+            const delta = String(value.delta ?? "");
+            if (delta.trim().length > 0) sawText = true;
+          }
+          if (type === "finish") {
+            finishPart = value;
+            continue;
+          }
+          controller.enqueue(value);
+        }
+
+        if (!sawAny) {
+          controller.enqueue({ type: "start" });
+        } else if (!sawStart) {
+          controller.enqueue({ type: "start" });
+        }
+
+        if (!sawText) {
+          controller.enqueue({ type: "start-step" });
+          controller.enqueue({ type: "text-start", id: "txt-fallback" });
+          controller.enqueue({ type: "text-delta", id: "txt-fallback", delta: fallbackText });
+          controller.enqueue({ type: "text-end", id: "txt-fallback" });
+          controller.enqueue({ type: "finish-step" });
+        }
+
+        controller.enqueue(finishPart ?? { type: "finish", finishReason: "stop" });
+      } finally {
+        reader.releaseLock();
+      }
+
+      controller.close();
     },
   });
 }
@@ -330,6 +386,24 @@ function findMentionedPlayer(query: string, player1: string, player2: string): s
   return null;
 }
 
+function inferPlayerFromBestSlamQuery(query: string, contextTexts: string[]): string | null {
+  const direct = query.match(
+    /\b(?:for|of)\s+([A-Za-z][A-Za-z.'-]*(?:\s+[A-Za-z][A-Za-z.'-]*){0,3})(?=\s+(?:in|at)\s+(?:a\s+)?(?:grand\s+slam|slam)\b|\?|$)/i
+  );
+  if (direct?.[1]) return direct[1].trim();
+
+  const lead = query.match(
+    /^([A-Za-z][A-Za-z.'-]*(?:\s+[A-Za-z][A-Za-z.'-]*){0,3})\s+(?:best|deepest|furthest)\b/i
+  );
+  if (lead?.[1]) return lead[1].trim();
+
+  for (const text of contextTexts) {
+    const m = text.match(/\b([A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3})\b/);
+    if (m?.[1]) return m[1].trim();
+  }
+  return null;
+}
+
 const FAQ_GETTING_STARTED = `Getting started is simple:
 1. Visit the website: All tips (football player props, ATP tennis) are published on the website. Check the relevant pages for today's selections.
 2. Anytime goalscorer markets and bet builders are coming very soon.
@@ -363,6 +437,36 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
 
   if ((lower.includes("do you use") || lower.includes("use your")) && (lower.includes("model") || lower.includes("algorithm"))) {
     return "I use ATP match stats and market data from the database to give a straight, data-backed read.";
+  }
+
+  const asksBestGrandSlamResult =
+    /\b(grand slam|slam)\b/i.test(q) &&
+    (/\bbest result\b/i.test(q) ||
+      (/\b(best|deepest|furthest)\b/i.test(q) && /\b(result|run|finish|performance)\b/i.test(q)));
+  if (asksBestGrandSlamResult) {
+    const playerQuery = inferPlayerFromBestSlamQuery(q, contextTexts);
+    if (playerQuery) {
+      const matches = await tools.searchPlayer(playerQuery);
+      const top = matches[0] as Record<string, unknown> | undefined;
+      const playerId = asNum(top?.id);
+      const playerName = asStr(top?.name) || playerQuery;
+      if (playerId > 0) {
+        const best = await tools.playerBestGrandSlamResult(playerId);
+        if (!(best as Record<string, unknown>).found) {
+          const msg = asStr((best as Record<string, unknown>).message);
+          return msg || `I couldn't find Grand Slam history for ${playerName}.`;
+        }
+        const bestRound = asStr((best as Record<string, unknown>).best_round);
+        const tournament = asStr((best as Record<string, unknown>).tournament);
+        const seasonYear = asNum((best as Record<string, unknown>).season_year);
+        if (!bestRound) return `${playerName} has not reached a main-draw round at a Grand Slam in this dataset.`;
+        const yearText = seasonYear > 0 ? ` (${seasonYear})` : "";
+        return tournament
+          ? `${playerName}'s best Grand Slam singles result is ${bestRound} at ${tournament}${yearText}.`
+          : `${playerName}'s best Grand Slam singles result is ${bestRound}${yearText}.`;
+      }
+      return `I couldn't find a player match for "${playerQuery}".`;
+    }
   }
 
   const asksBestRecordGeneric =
@@ -1319,6 +1423,50 @@ function safeExecute<T, A extends unknown[]>(
   };
 }
 
+function extractFailedGeneration(err: unknown): string | undefined {
+  const errObj = err as Record<string, unknown> | null;
+  if (!errObj) return undefined;
+  if (typeof errObj.failed_generation === "string" && errObj.failed_generation.trim()) {
+    return errObj.failed_generation;
+  }
+  const body = errObj.body ?? errObj.data ?? errObj.response;
+  if (body && typeof body === "object" && "failed_generation" in body) {
+    const fg = (body as { failed_generation?: unknown }).failed_generation;
+    if (typeof fg === "string" && fg.trim()) return fg;
+  }
+  if (typeof body === "string") {
+    try {
+      const parsed = JSON.parse(body) as { failed_generation?: unknown; error?: { failed_generation?: unknown } };
+      if (typeof parsed.failed_generation === "string" && parsed.failed_generation.trim()) return parsed.failed_generation;
+      if (typeof parsed.error?.failed_generation === "string" && parsed.error.failed_generation.trim()) {
+        return parsed.error.failed_generation;
+      }
+    } catch {
+      // ignore malformed JSON payload
+    }
+  }
+  return undefined;
+}
+
+function getErrorText(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (typeof err === "string") return err;
+  try {
+    return JSON.stringify(err);
+  } catch {
+    return String(err);
+  }
+}
+
+function isParseError(err: unknown): boolean {
+  const msg = getErrorText(err).toLowerCase();
+  if (extractFailedGeneration(err)) return true;
+  if (msg.includes("parsing failed") || msg.includes("could not be parsed")) return true;
+  if (msg.includes("invalid") && msg.includes("tool")) return true;
+  if (msg.includes("no such tool")) return true;
+  return false;
+}
+
 export async function POST(req: Request) {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
@@ -1326,27 +1474,95 @@ export async function POST(req: Request) {
   }
 
   const groq = createGroq({ apiKey });
+  let uiMessages: unknown[] = [];
+  let lastUserText = "";
 
   try {
-  const { messages: uiMessages } = await req.json();
+  const reqBody = await req.json();
+  uiMessages = Array.isArray(reqBody?.messages) ? reqBody.messages : [];
+  const modelOverride = typeof reqBody?.model === "string" && reqBody.model.trim() ? reqBody.model.trim() : undefined;
   const modelMessages = await convertToModelMessages(uiMessages);
 
-  const lastUserText = getLastUserMessageText(Array.isArray(uiMessages) ? uiMessages : []);
+  lastUserText = getLastUserMessageText(uiMessages);
   if (lastUserText) {
-    const fast = await deterministicAnswer(lastUserText, Array.isArray(uiMessages) ? uiMessages : undefined);
+    const fast = await deterministicAnswer(lastUserText, uiMessages);
     if (fast) {
       return uiTextStreamResponse(fast);
     }
   }
   const ragContext = lastUserText ? await retrieveContext(lastUserText) : undefined;
   const intentHints = lastUserText ? buildIntentHints(lastUserText) : "";
+  const systemPrompt = buildSystemPrompt(ragContext, intentHints);
 
-  const result = streamText({
-    model: groq(CHAT_MODEL),
-    system: buildSystemPrompt(ragContext, intentHints),
+  let modelId = modelOverride ?? CHAT_MODEL;
+  let lastErr: unknown = null;
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const model = groq(modelId);
+      const result = streamText({
+        model,
+        system: systemPrompt,
     messages: modelMessages,
     maxRetries: 2,
     stopWhen: stepCountIs(8),
+    temperature: 0.3,
+    providerOptions: {
+      groq: { strictJsonSchema: true },
+    },
+    experimental_repairToolCall: async ({ toolCall, tools, error, messages, system }) => {
+      try {
+        const repairResult = await generateText({
+          model,
+          system,
+          messages: [
+            ...messages,
+            {
+              role: "assistant" as const,
+              content: [
+                {
+                  type: "tool-call" as const,
+                  toolCallId: toolCall.toolCallId,
+                  toolName: toolCall.toolName,
+                  input: toolCall.input,
+                },
+              ],
+            },
+            {
+              role: "tool" as const,
+              content: [
+                {
+                  type: "tool-result" as const,
+                  toolCallId: toolCall.toolCallId,
+                  toolName: toolCall.toolName,
+                  output: error.message,
+                },
+              ],
+            },
+          ],
+          tools,
+          temperature: 0.2,
+        });
+        const newToolCall = repairResult.toolCalls?.find((tc) => tc.toolName === toolCall.toolName);
+        if (!newToolCall) return null;
+        return {
+          type: "tool-call" as const,
+          toolCallId: toolCall.toolCallId,
+          toolName: toolCall.toolName,
+          input: JSON.stringify(newToolCall.input),
+        };
+      } catch (repairErr) {
+        console.error("[chat] repairToolCall failed:", repairErr);
+        return null;
+      }
+    },
+    onError: ({ error }) => {
+      const failedGeneration = extractFailedGeneration(error);
+      if (failedGeneration) {
+        console.error("[chat] streamText failed_generation:", failedGeneration);
+      }
+      console.error("[chat] streamText error:", error);
+    },
     tools: {
       search_player: {
         description: "Search for a player by name (partial match). Returns player IDs, names, ranks. Always use this first to find the correct player_id before calling other tools.",
@@ -1482,6 +1698,17 @@ export async function POST(req: Request) {
         ),
       },
 
+      player_best_grand_slam_result: {
+        description: "Get a player's best GRAND SLAM singles result (Australian Open, French Open, Wimbledon, US Open). Returns best round, tournament, and season.",
+        inputSchema: z.object({
+          player_id: z.string().describe("OnCourt player ID as string"),
+        }),
+        execute: safeExecute(
+          async ({ player_id }) => tools.playerBestGrandSlamResult(await resolvePlayerId(player_id)),
+          "player_best_grand_slam_result"
+        ),
+      },
+
       player_record_by_surface: {
         description: "Get a player's W-L record broken down by surface (Hard, Clay, Grass). Use this when asked about a player's record on a specific surface or their overall surface breakdown. Returns wins, losses, win percentage per surface.",
         inputSchema: z.object({
@@ -1606,30 +1833,81 @@ export async function POST(req: Request) {
     },
   });
 
-  return result.toUIMessageStreamResponse();
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    const lower = message.toLowerCase();
-    // Extract failed_generation from API error (parsing failures)
-    let failedGeneration: string | undefined;
-    const errObj = err as Record<string, unknown> | null;
-    if (errObj) {
-      failedGeneration = errObj.failed_generation as string | undefined;
-      if (!failedGeneration) {
-        const body = errObj.body ?? errObj.data ?? errObj.response;
-        if (body && typeof body === "object" && "failed_generation" in body) {
-          failedGeneration = (body as { failed_generation?: string }).failed_generation;
-        } else if (typeof body === "string") {
-          try {
-            const parsed = JSON.parse(body) as { failed_generation?: string };
-            failedGeneration = parsed.failed_generation;
-          } catch {
-            /* ignore */
+      const uiStream = result.toUIMessageStream({
+        onError: (error) => {
+          const message = getErrorText(error);
+          const lower = message.toLowerCase();
+          const failedGeneration = extractFailedGeneration(error);
+          if (failedGeneration) {
+            console.error("[chat] stream response failed_generation:", failedGeneration);
           }
-        }
+          console.error("[chat] stream response error:", error);
+
+          if (process.env.NODE_ENV === "development" && failedGeneration) {
+            const trimmed = failedGeneration.slice(0, 400);
+            return `Parsing failed. Malformed model output: ${trimmed}${failedGeneration.length > 400 ? "..." : ""}`;
+          }
+          if (lower.includes("parsing failed") || lower.includes("could not be parsed")) {
+            return "Roger glitched on that one. Please retry the same question.";
+          }
+          return "Roger hit an error while streaming that answer. Please try again.";
+        },
+      });
+      const safeStream = ensureNonEmptyAssistantTextStream(
+        uiStream as unknown as ReadableStream<Record<string, unknown>>,
+        "I couldn't find enough data for that. Try rephrasing or naming the player or tournament."
+      );
+      return createUIMessageStreamResponse({ stream: safeStream });
+    } catch (err) {
+      lastErr = err;
+      if (attempt === 0 && isParseError(err) && modelId !== BACKUP_MODEL) {
+        console.warn("[chat] Parse error, retrying with backup model:", BACKUP_MODEL);
+        modelId = BACKUP_MODEL;
+        continue;
       }
-      if (failedGeneration) console.error("[chat] failed_generation:", failedGeneration);
+      break;
     }
+  }
+
+  const err = lastErr;
+  if (err) {
+    const message = getErrorText(err);
+    const lower = message.toLowerCase();
+    const failedGeneration = extractFailedGeneration(err);
+    if (failedGeneration) console.error("[chat] failed_generation:", failedGeneration);
+    if (lastUserText) console.error("[chat] last_user_text:", lastUserText);
+    if (uiMessages.length) console.error("[chat] message_count:", uiMessages.length);
+    console.error("[chat] Error:", err);
+    if (process.env.NODE_ENV === "development") {
+      const devMsg = failedGeneration
+        ? `Parsing failed. Malformed model output:\n\n${failedGeneration.slice(0, 2000)}${failedGeneration.length > 2000 ? "..." : ""}`
+        : `Error (dev): ${message}`;
+      return new Response(devMsg, { status: 500 });
+    }
+    let userMessage = "Sorry, I'm a bit busy right now. Please try again in a moment.";
+    if (lower.includes("over capacity") || lower.includes("overcapacity")) {
+      userMessage = "Roger is overloaded right now. Try again in a minute.";
+    } else if (lower.includes("rate limit") || lower.includes("quota") || lower.includes("429")) {
+      userMessage = "I've hit my daily question limit. Please try again in an hour or so.";
+    } else if (lower.includes("timeout") || lower.includes("timed out")) {
+      userMessage = "Request timed out. Please try again.";
+    } else if (lower.includes("api key") || lower.includes("unauthorized") || lower.includes("401")) {
+      userMessage = "Roger is temporarily unavailable. We're looking into it.";
+    } else if (lower.includes("parsing failed") || lower.includes("could not be parsed")) {
+      userMessage = "Roger glitched on that one. Try rephrasing or ask again in a moment.";
+    } else if (message.length < 200 && !message.includes("key") && !message.includes("secret")) {
+      userMessage = `Roger hit an error: ${message}`;
+    }
+    return new Response(userMessage, { status: 503 });
+  }
+  return new Response("Unexpected error.", { status: 500 });
+  } catch (err) {
+    const message = getErrorText(err);
+    const lower = message.toLowerCase();
+    const failedGeneration = extractFailedGeneration(err);
+    if (failedGeneration) console.error("[chat] failed_generation:", failedGeneration);
+    if (lastUserText) console.error("[chat] last_user_text:", lastUserText);
+    if (uiMessages.length) console.error("[chat] message_count:", uiMessages.length);
     console.error("[chat] Error:", err);
     if (process.env.NODE_ENV === "development") {
       const devMsg = failedGeneration
