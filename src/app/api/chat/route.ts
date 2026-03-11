@@ -46,6 +46,21 @@ function uiTextStreamResponse(text: string): Response {
   });
 }
 
+function asyncIterableToReadableStream<T>(iterable: AsyncIterable<T>): ReadableStream<T> {
+  return new ReadableStream({
+    async start(controller) {
+      try {
+        for await (const chunk of iterable) {
+          controller.enqueue(chunk);
+        }
+        controller.close();
+      } catch (e) {
+        controller.error(e);
+      }
+    },
+  });
+}
+
 function ensureNonEmptyAssistantTextStream(
   stream: ReadableStream<Record<string, unknown>>,
   fallbackText: string
@@ -1853,8 +1868,9 @@ export async function POST(req: Request) {
           return "Roger hit an error while streaming that answer. Please try again.";
         },
       });
+      const readableStream = asyncIterableToReadableStream(uiStream);
       const safeStream = ensureNonEmptyAssistantTextStream(
-        uiStream as unknown as ReadableStream<Record<string, unknown>>,
+        readableStream as unknown as ReadableStream<Record<string, unknown>>,
         "I couldn't find enough data for that. Try rephrasing or naming the player or tournament."
       );
       return createUIMessageStreamResponse({ stream: safeStream });
