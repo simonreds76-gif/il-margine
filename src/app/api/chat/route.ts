@@ -305,6 +305,31 @@ function extractAgainstPlayerName(query: string): string | null {
   return name || null;
 }
 
+function inferVsPairFromContextTexts(contextTexts: string[]): [string, string] | null {
+  for (const text of contextTexts) {
+    const pair = extractVsNames(text);
+    if (pair) return pair;
+    const m = text.match(
+      /\b([A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3})\s+vs\s+([A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3})\b/
+    );
+    if (m?.[1] && m?.[2]) return [m[1].trim(), m[2].trim()];
+  }
+  return null;
+}
+
+function findMentionedPlayer(query: string, player1: string, player2: string): string | null {
+  const q = query.toLowerCase();
+  const candidates = [player1, player2].filter(Boolean);
+  for (const name of candidates) {
+    const full = name.toLowerCase();
+    if (q.includes(full)) return name;
+    const parts = full.split(/\s+/).filter(Boolean);
+    const last = parts[parts.length - 1];
+    if (last && q.includes(last)) return name;
+  }
+  return null;
+}
+
 const FAQ_GETTING_STARTED = `Getting started is simple:
 1. Visit the website: All tips (football player props, ATP tennis) are published on the website. Check the relevant pages for today's selections.
 2. Anytime goalscorer markets and bet builders are coming very soon.
@@ -625,7 +650,11 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
 
   const isH2hIntent = /\b(h2h|head to head|head-to-head)\b/i.test(q);
   if (isH2hIntent) {
-    const pair = extractVsNames(q);
+    const asksTodayAllH2H =
+      /\b(today|today's|todays)\b/i.test(q) &&
+      /\b(all|matches|fixtures|games)\b/i.test(q);
+
+    const pair = asksTodayAllH2H ? null : (extractVsNames(q) ?? inferVsPairFromContextTexts(contextTexts));
     if (pair) {
       const [a, b] = pair;
       const pa = await tools.searchPlayer(a);
@@ -652,10 +681,6 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
         return `${aName} vs ${bName} historical H2H: ${oW}-${oL}.${surf ? ` Surface split: ${surf}.` : ""} This is historical data, not today's fixture list.`;
       }
     }
-
-    const asksTodayAllH2H =
-      /\b(today|today's|todays)\b/i.test(q) &&
-      /\b(all|matches|fixtures|games)\b/i.test(q);
     if (asksTodayAllH2H) {
       const out = await tools.todayMatchH2H(40);
       const found = Boolean((out as Record<string, unknown>).found);
@@ -877,8 +902,72 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
   const againstName = extractAgainstPlayerName(q);
   const asksPick = /\b(pick|picks|tip|tips|lean|fancy|who do you like|who wins)\b/i.test(q);
   const vsPairForPick = extractVsNames(q);
+  const vsPairFromContext = inferVsPairFromContextTexts(contextTexts);
+  const asksChance = /\b(chance|live|shot|upset)\b/i.test(q) || /\bcan\s+(?:he|she|they|[A-Za-z][A-Za-z.'-]+)\s+win\b/i.test(q);
+  const asksChanceFollowUp = asksChance && (/\b(today|tonight|then)\b/i.test(q) || !!vsPairFromContext);
+
+  if (asksChanceFollowUp) {
+    const pair = extractVsNames(q) ?? vsPairFromContext;
+    if (pair) {
+      const [a, b] = pair;
+      const rowsA = await tools.matchPrediction(a);
+      const rowsB = await tools.matchPrediction(b);
+      const rows = [...rowsA, ...rowsB].filter((r) => asStr((r as Record<string, unknown>).player1) && asStr((r as Record<string, unknown>).player2));
+      const target = rows.find((r) => {
+        const rr = r as Record<string, unknown>;
+        const p1 = asStr(rr.player1).toLowerCase();
+        const p2 = asStr(rr.player2).toLowerCase();
+        return (p1.includes(a.toLowerCase()) || p2.includes(a.toLowerCase())) && (p1.includes(b.toLowerCase()) || p2.includes(b.toLowerCase()));
+      });
+      if (target) {
+        const rr = target as Record<string, unknown>;
+        const p1Name = asStr(rr.player1);
+        const p2Name = asStr(rr.player2);
+        const p1Pct = asNum(rr.p1_win_pct);
+        const p2Pct = asNum(rr.p2_win_pct);
+        const favName = p1Pct >= p2Pct ? p1Name : p2Name;
+        const favPct = Math.max(p1Pct, p2Pct);
+        const dogName = p1Pct < p2Pct ? p1Name : p2Name;
+        const dogPct = Math.min(p1Pct, p2Pct);
+        const mentioned = findMentionedPlayer(q, p1Name, p2Name);
+        if (mentioned) {
+          const mentionedPct = mentioned === p1Name ? p1Pct : p2Pct;
+          if (mentioned === favName) {
+            return `${mentioned} is the favourite today in ${p1Name} vs ${p2Name} (${mentionedPct.toFixed(1)}%).`;
+          }
+          return `${mentioned} is live today at ${mentionedPct.toFixed(1)}%, but I'd still lean ${favName} (${favPct.toFixed(1)}%) in ${p1Name} vs ${p2Name}.`;
+        }
+        return `${dogName} has a chance at ${dogPct.toFixed(1)}%, but I'd still lean ${favName} (${favPct.toFixed(1)}%) in ${p1Name} vs ${p2Name}.`;
+      }
+      return `${a} vs ${b} is not listed in today's ATP main-draw fixtures, so I can't give a live probability right now.`;
+    }
+  }
+
   if (vsPairForPick && asksPick) {
     const [a, b] = vsPairForPick;
+    const rowsA = await tools.matchPrediction(a);
+    const rowsB = await tools.matchPrediction(b);
+    const rows = [...rowsA, ...rowsB].filter((r) => asStr((r as Record<string, unknown>).player1) && asStr((r as Record<string, unknown>).player2));
+    const target = rows.find((r) => {
+      const rr = r as Record<string, unknown>;
+      const p1 = asStr(rr.player1).toLowerCase();
+      const p2 = asStr(rr.player2).toLowerCase();
+      return (p1.includes(a.toLowerCase()) || p2.includes(a.toLowerCase())) && (p1.includes(b.toLowerCase()) || p2.includes(b.toLowerCase()));
+    });
+    if (target) {
+      const rr = target as Record<string, unknown>;
+      const p1 = asNum(rr.p1_win_pct);
+      const p2 = asNum(rr.p2_win_pct);
+      const fav = p1 >= p2 ? asStr(rr.player1) : asStr(rr.player2);
+      const favPct = Math.max(p1, p2).toFixed(1);
+      const dog = p1 < p2 ? asStr(rr.player1) : asStr(rr.player2);
+      const dogPct = Math.min(p1, p2).toFixed(1);
+      return `For ${asStr(rr.player1)} vs ${asStr(rr.player2)} today, I'd lean ${fav} (${favPct}%). ${dog} is live at ${dogPct}% if you want the dog angle.`;
+    }
+    return `${a} vs ${b} is not listed in today's ATP main-draw fixtures, so I can't give a live tip right now.`;
+  }
+  if (!vsPairForPick && !againstName && asksPick && vsPairFromContext) {
+    const [a, b] = vsPairFromContext;
     const rowsA = await tools.matchPrediction(a);
     const rowsB = await tools.matchPrediction(b);
     const rows = [...rowsA, ...rowsB].filter((r) => asStr((r as Record<string, unknown>).player1) && asStr((r as Record<string, unknown>).player2));

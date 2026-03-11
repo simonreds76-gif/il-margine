@@ -125,6 +125,49 @@ function buildCases() {
       rejectAny: [/Top ATP spots today:/i],
     },
     {
+      id: "chance_followup_after_h2h_specific_match",
+      messages: [
+        mkUser("what's Medvedev vs Michelsen h2h?"),
+        mkAssistant("Daniil Medvedev vs Alex Michelsen historical H2H: 3-0. Surface split: Grass 1-0, Hard 2-0. This is historical data, not today's fixture list."),
+        mkUser("do you think Michelsen has a chance today then?"),
+      ],
+      expectAll: [/Michelsen/i, /Medvedev/i, /%/i],
+      expectAny: [/has a chance/i, /is live today/i, /I'd still lean/i],
+      rejectAny: [/Top ATP spots today:/i, /Could you clarify/i],
+    },
+    {
+      id: "chance_followup_pronoun_after_h2h",
+      messages: [
+        mkUser("what's Medvedev vs Michelsen h2h?"),
+        mkAssistant("Daniil Medvedev vs Alex Michelsen historical H2H: 3-0. Surface split: Grass 1-0, Hard 2-0. This is historical data, not today's fixture list."),
+        mkUser("do you think he has a chance then?"),
+      ],
+      expectAll: [/Medvedev/i, /Michelsen/i, /%/i],
+      expectAny: [/has a chance/i, /is live today/i, /I'd still lean/i],
+      rejectAny: [/Top ATP spots today:/i, /Could you clarify/i],
+    },
+    {
+      id: "pick_followup_after_h2h_without_names",
+      messages: [
+        mkUser("what's Medvedev vs Michelsen h2h?"),
+        mkAssistant("Daniil Medvedev vs Alex Michelsen historical H2H: 3-0. Surface split: Grass 1-0, Hard 2-0. This is historical data, not today's fixture list."),
+        mkUser("who wins then?"),
+      ],
+      expectAll: [/Medvedev/i, /Michelsen/i, /%/i],
+      expectAny: [/I'd lean/i, /is live/i],
+      rejectAny: [/Top ATP spots today:/i, /Could you clarify/i],
+    },
+    {
+      id: "h2h_followup_without_names",
+      messages: [
+        mkUser("tiafoe vs zverev h2h"),
+        mkAssistant("Frances Tiafoe vs Alexander Zverev historical H2H: 1-8. Surface split: Clay 0-1, Grass 0-1, Hard 1-3, I.hard 0-3. This is historical data, not today's fixture list."),
+        mkUser("and their h2h?"),
+      ],
+      expectAll: [/historical H2H:/i, /Tiafoe|Frances/i, /Zverev|Alexander/i],
+      rejectAny: [/Top ATP spots today:/i, /Could you clarify/i],
+    },
+    {
       id: "h2h_today_all_matches",
       messages: [mkUser("what about the h2h for all today's matches?")],
       expectAll: [/Today's ATP main-draw H2H:/i],
