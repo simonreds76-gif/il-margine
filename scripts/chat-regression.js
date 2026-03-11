@@ -177,6 +177,20 @@ function buildCases() {
       rejectAny: [/I don't have access/i],
     },
     {
+      id: "who_won_wimbledon_the_most",
+      messages: [mkUser("who won Wimbledon the most?")],
+      expectAll: [/Roger Federer/i, /8/i],
+      expectAny: [/all-time/i, /men's singles/i],
+      rejectAny: [/Djokovic has won Wimbledon the most/i, /I don't have access/i],
+    },
+    {
+      id: "most_titles_at_wimbledon",
+      messages: [mkUser("who has most titles at Wimbledon?")],
+      expectAll: [/Roger Federer/i, /8/i],
+      expectAny: [/all-time/i, /men's singles/i],
+      rejectAny: [/Djokovic has won Wimbledon the most/i, /I don't have access/i],
+    },
+    {
       id: "rg_qf_followup_context",
       messages: [
         mkUser("who won roland garros last year?"),

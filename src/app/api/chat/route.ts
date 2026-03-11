@@ -89,6 +89,58 @@ function canonicalTournamentForHistorical(name: string): string {
   return name;
 }
 
+type SlamMostRecord = {
+  tournament: string;
+  leader: string;
+  titles: number;
+  next: string[];
+};
+
+function inferSlamMostRecord(tournament: string): SlamMostRecord | null {
+  const t = tournament.toLowerCase().trim();
+  if (/\bwimbledon\b/.test(t)) {
+    return {
+      tournament: "Wimbledon",
+      leader: "Roger Federer",
+      titles: 8,
+      next: ["Novak Djokovic (7)", "Pete Sampras (7)", "William Renshaw (7)"],
+    };
+  }
+  if (/\b(french open|roland garros)\b/.test(t)) {
+    return {
+      tournament: "French Open",
+      leader: "Rafael Nadal",
+      titles: 14,
+      next: ["Bjorn Borg (6)", "Novak Djokovic (3)"],
+    };
+  }
+  if (/\b(australian open)\b/.test(t)) {
+    return {
+      tournament: "Australian Open",
+      leader: "Novak Djokovic",
+      titles: 10,
+      next: ["Roger Federer (6)", "Roy Emerson (6)"],
+    };
+  }
+  if (/\b(us open|u\\.?s\\.? open)\b/.test(t)) {
+    return {
+      tournament: "US Open",
+      leader: "Jimmy Connors / Pete Sampras / Roger Federer",
+      titles: 5,
+      next: ["Rafael Nadal (4)", "John McEnroe (4)"],
+    };
+  }
+  return null;
+}
+
+function hasExplicitYearWindow(text: string): boolean {
+  return (
+    /\b(?:past|last)\s+\d+\s+years?\b/i.test(text) ||
+    /\b(this year|last year)\b/i.test(text) ||
+    /\b(?:19|20)\d{2}(?:\s*-\s*(?:19|20)\d{2})?\b/i.test(text)
+  );
+}
+
 function formatSurfaceBreakdown(bySurface: unknown): string {
   const obj = bySurface as Record<string, { wins?: number; losses?: number; win_pct?: number }> | undefined;
   if (!obj || typeof obj !== "object") return "";
@@ -360,6 +412,13 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
       inferTournamentFromContextTexts(contextTexts) ??
       null;
     if (tournament) {
+      const slamMost = inferSlamMostRecord(tournament);
+      if (slamMost && !hasExplicitYearWindow(q)) {
+        const next = slamMost.next.join(", ");
+        return next
+          ? `${slamMost.leader} has the most men's singles titles at ${slamMost.tournament} (${slamMost.titles}, all-time). Next: ${next}.`
+          : `${slamMost.leader} has the most men's singles titles at ${slamMost.tournament} (${slamMost.titles}, all-time).`;
+      }
       const canonicalTournament = canonicalTournamentForHistorical(tournament);
       let winners = await tools.tournamentPastWinners(canonicalTournament);
       if (!winners.length && canonicalTournament !== tournament) {
@@ -500,6 +559,13 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
       inferTournamentFromContextTexts(contextTexts) ??
       null;
     if (tournament) {
+      const slamMost = inferSlamMostRecord(tournament);
+      if (slamMost && !hasExplicitYearWindow(q)) {
+        const next = slamMost.next.join(", ");
+        return next
+          ? `${slamMost.leader} has the most men's singles titles at ${slamMost.tournament} (${slamMost.titles}, all-time). Next: ${next}.`
+          : `${slamMost.leader} has the most men's singles titles at ${slamMost.tournament} (${slamMost.titles}, all-time).`;
+      }
       const canonicalTournament = canonicalTournamentForHistorical(tournament);
       let winners = await tools.tournamentPastWinners(canonicalTournament);
       if (!winners.length && canonicalTournament !== tournament) {
@@ -611,6 +677,14 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
 
   const mostTournament = extractTournamentMostWinners(q);
   if (mostTournament) {
+    const slamMost = inferSlamMostRecord(mostTournament);
+    if (slamMost && !hasExplicitYearWindow(q)) {
+      const next = slamMost.next.join(", ");
+      return next
+        ? `${slamMost.leader} has won ${slamMost.tournament} the most in men's singles (${slamMost.titles} titles, all-time). Next: ${next}.`
+        : `${slamMost.leader} has won ${slamMost.tournament} the most in men's singles (${slamMost.titles} titles, all-time).`;
+    }
+
     const canonicalTournament = canonicalTournamentForHistorical(mostTournament);
     let winners = await tools.tournamentPastWinners(canonicalTournament);
     if (!winners.length && canonicalTournament !== mostTournament) {
