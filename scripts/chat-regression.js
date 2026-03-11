@@ -184,6 +184,18 @@ function buildCases() {
       rejectAny: [/Djokovic has won Wimbledon the most/i, /I don't have access/i],
     },
     {
+      id: "who_won_indian_wells_the_most_tie",
+      messages: [mkUser("Who's won Indian Wells the most?")],
+      expectAll: [/Indian Wells/i, /tied/i, /Novak Djokovic/i, /Roger Federer/i, /\(5\)/],
+      rejectAny: [/has won Indian Wells the most in this dataset/i, /Could you clarify/i],
+    },
+    {
+      id: "who_won_indian_wells_most_past_4_years",
+      messages: [mkUser("who won Indian Wells the most in the past 4 years?")],
+      expectAll: [/Indian Wells/i, /\(2022-2025\)/i, /titles/i],
+      rejectAny: [/all-time/i, /Could you clarify/i],
+    },
+    {
       id: "most_titles_at_wimbledon",
       messages: [mkUser("who has most titles at Wimbledon?")],
       expectAll: [/Roger Federer/i, /8/i],

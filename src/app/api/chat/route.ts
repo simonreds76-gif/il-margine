@@ -697,19 +697,79 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
       winners = await tools.tournamentPastWinners(mostTournament);
     }
     if (!winners.length) return `I don't have past-winner data for ${mostTournament} in this dataset.`;
+    const rows = winners
+      .map((r) => ({
+        tournament: asStr((r as Record<string, unknown>).tournament),
+        winner: asStr((r as Record<string, unknown>).winner),
+        year: asNum((r as Record<string, unknown>).year),
+      }))
+      .filter((r) => r.winner && r.year > 0)
+      .sort((a, b) => b.year - a.year);
+    if (!rows.length) return `I don't have complete winners data for ${mostTournament} right now.`;
+
+    const requestedYears = inferWindowYears(q);
+    const explicitRange = inferYearRange(q);
+    const explicitYearMatch = q.match(/\b(20\d{2})\b/);
+    const explicitEndYear = explicitYearMatch ? Number(explicitYearMatch[1]) : null;
+    const isPastWindowQuery = /\b(?:past|last)\s+\d+\s+years?\b/i.test(q);
+    const uniqueYears = [...new Set(rows.map((r) => r.year))].sort((a, b) => b - a);
+    const windowEndYear = explicitEndYear ?? (/\bthis year\b/i.test(q) ? nowYear : nowYear - 1);
+
+    const selectedYears = explicitRange
+      ? uniqueYears.filter((y) => y >= explicitRange.start && y <= explicitRange.end)
+      : isPastWindowQuery && requestedYears
+        ? uniqueYears.filter((y) => y >= (windowEndYear - requestedYears + 1) && y <= windowEndYear)
+        : requestedYears
+          ? uniqueYears.slice(0, requestedYears)
+          : explicitEndYear
+            ? uniqueYears.filter((y) => y === explicitEndYear)
+            : uniqueYears;
+    if (!selectedYears.length) return `I don't have winners data for ${mostTournament} in that time window.`;
+
+    const selectedSet = new Set(selectedYears);
+    const scoped = rows.filter((r) => selectedSet.has(r.year));
+    if (!scoped.length) return `I don't have winners data for ${mostTournament} in that time window.`;
+
     const counts = new Map<string, number>();
-    for (const row of winners) {
-      const w = asStr((row as Record<string, unknown>).winner);
-      if (!w) continue;
-      counts.set(w, (counts.get(w) ?? 0) + 1);
+    for (const row of scoped) counts.set(row.winner, (counts.get(row.winner) ?? 0) + 1);
+    const ranked = [...counts.entries()].sort((a, b) => (b[1] - a[1]) || a[0].localeCompare(b[0]));
+    if (!ranked.length) return `I don't have complete winners data for ${mostTournament} right now.`;
+
+    const topCount = ranked[0]?.[1] ?? 0;
+    const leadersAll = ranked.filter(([, n]) => n === topCount);
+    const leaders = leadersAll.slice(0, 4);
+    const hiddenTied = leadersAll.length - leaders.length;
+    const tied = leaders.map(([name, n]) => `${name} (${n})`).join(", ");
+    const tiedText = hiddenTied > 0 ? `${tied} (+${hiddenTied} more)` : tied;
+    const recentText = tiedLeadersRecencyText(
+      scoped.map((r) => ({ winner: r.winner, year: r.year })),
+      leadersAll.map(([name]) => name),
+      3
+    );
+    const next = ranked
+      .filter(([, n]) => n < topCount)
+      .slice(0, 2)
+      .map(([name, n]) => `${name} (${n})`)
+      .join(", ");
+
+    const yearMin = Math.min(...selectedYears);
+    const yearMax = Math.max(...selectedYears);
+    const yearLabel = yearMin === yearMax ? `${yearMax}` : `${yearMin}-${yearMax}`;
+    const displayTournament = scoped[0]?.tournament || rows[0]?.tournament || mostTournament;
+    const usesFullDataset =
+      !explicitRange && !requestedYears && !explicitEndYear && selectedYears.length === uniqueYears.length;
+    const scopeLabel = usesFullDataset ? "in this dataset" : `(${yearLabel})`;
+
+    if (leaders.length > 1) {
+      return next
+        ? `${displayTournament} ${scopeLabel}: most titles is tied: ${tiedText}.${recentText} Next: ${next}.`
+        : `${displayTournament} ${scopeLabel}: most titles is tied: ${tiedText}.${recentText}`;
     }
-    const top = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3);
-    if (!top.length) return `I don't have complete winners data for ${mostTournament} right now.`;
-    const lead = top[0];
-    const chasers = top.slice(1).map(([name, n]) => `${name} (${n})`).join(", ");
-    return chasers
-      ? `${lead[0]} has won ${mostTournament} the most in this dataset (${lead[1]} titles). Next: ${chasers}.`
-      : `${lead[0]} has won ${mostTournament} the most in this dataset (${lead[1]} titles).`;
+
+    const [leader, n] = ranked[0];
+    return next
+      ? `${displayTournament} ${scopeLabel}: ${leader} has won it the most (${n} titles). Next: ${next}.`
+      : `${displayTournament} ${scopeLabel}: ${leader} has won it the most (${n} titles).`;
   }
 
   const asksFavDogTerm =
