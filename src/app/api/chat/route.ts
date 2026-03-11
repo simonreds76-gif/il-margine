@@ -1610,9 +1610,32 @@ export async function POST(req: Request) {
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     const lower = message.toLowerCase();
+    // Extract failed_generation from API error (parsing failures)
+    let failedGeneration: string | undefined;
+    const errObj = err as Record<string, unknown> | null;
+    if (errObj) {
+      failedGeneration = errObj.failed_generation as string | undefined;
+      if (!failedGeneration) {
+        const body = errObj.body ?? errObj.data ?? errObj.response;
+        if (body && typeof body === "object" && "failed_generation" in body) {
+          failedGeneration = (body as { failed_generation?: string }).failed_generation;
+        } else if (typeof body === "string") {
+          try {
+            const parsed = JSON.parse(body) as { failed_generation?: string };
+            failedGeneration = parsed.failed_generation;
+          } catch {
+            /* ignore */
+          }
+        }
+      }
+      if (failedGeneration) console.error("[chat] failed_generation:", failedGeneration);
+    }
     console.error("[chat] Error:", err);
     if (process.env.NODE_ENV === "development") {
-      return new Response(`Error (dev): ${message}`, { status: 500 });
+      const devMsg = failedGeneration
+        ? `Parsing failed. Malformed model output:\n\n${failedGeneration.slice(0, 2000)}${failedGeneration.length > 2000 ? "..." : ""}`
+        : `Error (dev): ${message}`;
+      return new Response(devMsg, { status: 500 });
     }
     let userMessage = "Sorry, I'm a bit busy right now. Please try again in a moment.";
     if (lower.includes("over capacity") || lower.includes("overcapacity")) {
@@ -1623,6 +1646,8 @@ export async function POST(req: Request) {
       userMessage = "Request timed out. Please try again.";
     } else if (lower.includes("api key") || lower.includes("unauthorized") || lower.includes("401")) {
       userMessage = "Roger is temporarily unavailable. We're looking into it.";
+    } else if (lower.includes("parsing failed") || lower.includes("could not be parsed")) {
+      userMessage = "Roger glitched on that one. Try rephrasing or ask again in a moment.";
     } else if (message.length < 200 && !message.includes("key") && !message.includes("secret")) {
       userMessage = `Roger hit an error: ${message}`;
     }
