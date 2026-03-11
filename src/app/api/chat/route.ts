@@ -1,5 +1,14 @@
 import { createGroq } from "@ai-sdk/groq";
-import { streamText, stepCountIs, convertToModelMessages, generateText, createUIMessageStreamResponse } from "ai";
+import {
+  streamText,
+  stepCountIs,
+  convertToModelMessages,
+  generateText,
+  createUIMessageStreamResponse,
+  type UIMessage,
+  type ModelMessage,
+  type UIMessageChunk,
+} from "ai";
 import { z } from "zod";
 import * as tools from "@/lib/chat-tools";
 import { retrieveContext } from "@/lib/chat-rag";
@@ -1496,7 +1505,9 @@ export async function POST(req: Request) {
   const reqBody = await req.json();
   uiMessages = Array.isArray(reqBody?.messages) ? reqBody.messages : [];
   const modelOverride = typeof reqBody?.model === "string" && reqBody.model.trim() ? reqBody.model.trim() : undefined;
-  const modelMessages = await convertToModelMessages(uiMessages);
+  const modelMessages = await convertToModelMessages(
+    uiMessages as Array<Omit<UIMessage, "id">>
+  );
 
   lastUserText = getLastUserMessageText(uiMessages);
   if (lastUserText) {
@@ -1554,7 +1565,7 @@ export async function POST(req: Request) {
                 },
               ],
             },
-          ],
+          ] as ModelMessage[],
           tools,
           temperature: 0.2,
         });
@@ -1873,7 +1884,9 @@ export async function POST(req: Request) {
         readableStream as unknown as ReadableStream<Record<string, unknown>>,
         "I couldn't find enough data for that. Try rephrasing or naming the player or tournament."
       );
-      return createUIMessageStreamResponse({ stream: safeStream });
+      return createUIMessageStreamResponse({
+        stream: safeStream as ReadableStream<UIMessageChunk>,
+      });
     } catch (err) {
       lastErr = err;
       if (attempt === 0 && isParseError(err) && modelId !== BACKUP_MODEL) {
