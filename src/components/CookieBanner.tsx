@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
 import GoogleAnalyticsRouteTracker from "./GoogleAnalyticsRouteTracker";
+import AiReferralTracker from "./AiReferralTracker";
 
 const CONSENT_KEY = "ilmargine_cookie_consent";
 
@@ -23,15 +24,13 @@ const POLICY_PATHS = ["/cookies-policy", "/privacy-policy"];
 
 export default function CookieBanner({ measurementId }: Props) {
   const pathname = usePathname();
-  const [consent, setConsent] = useState<"accepted" | "rejected" | "pending" | null>(null);
+  const [consent, setConsent] = useState<"accepted" | "rejected" | "pending" | null>(() => {
+    if (typeof window === "undefined") return null;
+    const stored = localStorage.getItem(CONSENT_KEY);
+    return stored === "1" ? "accepted" : stored === "0" ? "rejected" : "pending";
+  });
 
   const isPolicyPage = pathname && POLICY_PATHS.some((p) => pathname.startsWith(p));
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const stored = localStorage.getItem(CONSENT_KEY);
-    setConsent(stored === "1" ? "accepted" : stored === "0" ? "rejected" : "pending");
-  }, []);
 
   const accept = () => {
     localStorage.setItem(CONSENT_KEY, "1");
@@ -59,6 +58,7 @@ export default function CookieBanner({ measurementId }: Props) {
               {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${measurementId}');`}
             </Script>
             <GoogleAnalyticsRouteTracker measurementId={measurementId} />
+            <AiReferralTracker />
           </>
         )}
       </>

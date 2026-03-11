@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 declare global {
@@ -15,11 +15,18 @@ interface Props {
 
 export default function GoogleAnalyticsRouteTracker({ measurementId }: Props) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (typeof window === "undefined" || !window.gtag) return;
-    window.gtag("config", measurementId, { page_path: pathname || "/" });
-  }, [pathname, measurementId]);
+    const query = searchParams?.toString();
+    const pagePath = query ? `${pathname || "/"}?${query}` : pathname || "/";
+    window.gtag("config", measurementId, {
+      page_path: pagePath,
+      page_location: window.location.href,
+      page_referrer: document.referrer || undefined,
+    });
+  }, [pathname, searchParams, measurementId]);
 
   return null;
 }

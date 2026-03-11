@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { BASE_URL, BOOKMAKERS_INDEXABLE } from '@/lib/config';
+import { BASE_URL, BOOKMAKERS_INDEXABLE, FAIR_ODDS_INDEXABLE } from '@/lib/config';
 import { supabase } from '@/lib/supabase';
 import { slugifyTip } from '@/lib/slugify';
 
@@ -49,6 +49,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.7,
     },
+    ...(FAIR_ODDS_INDEXABLE
+      ? [{
+          url: `${BASE_URL}/fair-odds`,
+          lastModified: new Date(),
+          changeFrequency: 'daily' as const,
+          priority: 0.8,
+        }]
+      : []),
     {
       url: `${BASE_URL}/the-edge`,
       lastModified: new Date(),
@@ -84,6 +92,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 0.5,
+    },
+    {
+      url: `${BASE_URL}/llms.txt`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.4,
+    },
+    {
+      url: `${BASE_URL}/llms-full.txt`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.3,
     },
     {
       url: `${BASE_URL}/faq`,

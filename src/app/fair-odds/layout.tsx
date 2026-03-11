@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BASE_URL } from "@/lib/config";
+import { BASE_URL, FAIR_ODDS_INDEXABLE } from "@/lib/config";
 
 const title = "Fair Odds & Match Analysis | Daily Tennis";
 const description =
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: url },
-  robots: { index: false, follow: true },
+  robots: { index: FAIR_ODDS_INDEXABLE, follow: true },
 };
 
 export default function FairOddsLayout({

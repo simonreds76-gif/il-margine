@@ -18,5 +18,8 @@ export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || "";
 /** When true: /bookmakers is indexable and included in sitemap. When false (default): noindex and excluded from sitemap. */
 export const BOOKMAKERS_INDEXABLE = process.env.BOOKMAKERS_INDEXABLE === "true";
 
+/** When true (default): /fair-odds is indexable and included in sitemap. Set FAIR_ODDS_INDEXABLE=false to hide from search. */
+export const FAIR_ODDS_INDEXABLE = process.env.FAIR_ODDS_INDEXABLE !== "false";
+
 /** Google Analytics 4 measurement ID (e.g. G-XXXXXXXX). Set NEXT_PUBLIC_GA_MEASUREMENT_ID in Vercel / .env. */
 export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "";
