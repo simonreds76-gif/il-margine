@@ -191,6 +191,34 @@ function buildCases() {
       rejectAny: [/Djokovic has won Wimbledon the most/i, /I don't have access/i],
     },
     {
+      id: "who_won_french_open_the_most",
+      messages: [mkUser("who won French Open the most?")],
+      expectAll: [/Rafael Nadal/i, /14/i],
+      expectAny: [/all-time/i, /men's singles/i],
+      rejectAny: [/I don't have access/i],
+    },
+    {
+      id: "who_won_australian_open_the_most",
+      messages: [mkUser("who won Australian Open the most?")],
+      expectAll: [/Novak Djokovic/i, /10/i],
+      expectAny: [/all-time/i, /men's singles/i],
+      rejectAny: [/I don't have access/i],
+    },
+    {
+      id: "who_won_us_open_the_most",
+      messages: [mkUser("who won US Open the most?")],
+      expectAll: [/5/i, /all-time|men's singles/i],
+      expectAny: [/Jimmy Connors/i, /Pete Sampras/i, /Roger Federer/i],
+      rejectAny: [/I don't have access/i],
+    },
+    {
+      id: "wimbledon_titles_past_4_years_not_all_time",
+      messages: [mkUser("who has most titles at Wimbledon in the past 4 years?")],
+      expectAll: [/Wimbledon/i],
+      expectAny: [/\(2022-2025\)/i, /best performer by titles/i],
+      rejectAny: [/all-time/i, /most men's singles titles at Wimbledon \(8/i, /Could you clarify/i],
+    },
+    {
       id: "rg_qf_followup_context",
       messages: [
         mkUser("who won roland garros last year?"),
