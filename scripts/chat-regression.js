@@ -219,6 +219,12 @@ function buildCases() {
       rejectAny: [/all-time/i, /most men's singles titles at Wimbledon \(8/i, /Could you clarify/i],
     },
     {
+      id: "us_open_most_wins_past_3_years",
+      messages: [mkUser("who has the most wins at the Us Open in the past 3 years?")],
+      expectAll: [/U\.?S\.?\s*Open/i, /most match wins is/i],
+      rejectAny: [/best performer by titles/i, /crowned three different champs/i, /Could you clarify/i, /\(2024-2026\)/i],
+    },
+    {
       id: "rg_qf_followup_context",
       messages: [
         mkUser("who won roland garros last year?"),

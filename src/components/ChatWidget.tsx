@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo, FormEvent } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback, FormEvent } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useChatContext } from "@/contexts/ChatContext";
@@ -15,12 +15,15 @@ const SUGGESTED = [
 ];
 
 const ROGER_ENABLED = true;
+const ROGER_VERSION = "v1.0";
 
 export default function ChatWidget() {
   const ctx = useChatContext();
   const [localOpen, setLocalOpen] = useState(false);
   const open = ctx?.open ?? localOpen;
   const setOpen = ctx?.setOpen ?? setLocalOpen;
+  const pendingMessage = ctx?.pendingMessage;
+  const clearPendingMessage = ctx?.clearPendingMessage;
   const [inputValue, setInputValue] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -41,27 +44,28 @@ export default function ChatWidget() {
     if (open && inputRef.current) inputRef.current.focus();
   }, [open]);
 
-  // When opened with a pending message (e.g. from Roger page), submit it
-  useEffect(() => {
-    if (open && ctx?.pendingMessage && !isLoading) {
-      const msg = ctx.pendingMessage;
-      ctx.clearPendingMessage();
-      submit(msg);
-    }
-  }, [open, ctx?.pendingMessage, ctx?.clearPendingMessage, isLoading, submit]);
-
-  function submit(text: string) {
+  const submit = useCallback((text: string) => {
     if (!text.trim() || isLoading) return;
     clearError();
     track("roger_query", { query: text.trim() });
     sendMessage({ text });
     setInputValue("");
-  }
+  }, [isLoading, clearError, sendMessage]);
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
     submit(inputValue);
   }
+
+  // When opened with a pending message (e.g. from Roger page), submit it
+  useEffect(() => {
+    if (open && pendingMessage && !isLoading) {
+      const msg = pendingMessage;
+      clearPendingMessage?.();
+      const id = window.setTimeout(() => submit(msg), 0);
+      return () => window.clearTimeout(id);
+    }
+  }, [open, pendingMessage, clearPendingMessage, isLoading, submit]);
 
   function getTextContent(msg: (typeof messages)[number]): string {
     return msg.parts
@@ -101,7 +105,12 @@ export default function ChatWidget() {
           <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800/60 bg-[#0d0f14] shrink-0">
             <img src="/favicon.png" alt="Il Margine" className="w-8 h-8 object-contain shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-slate-100">Roger</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-semibold text-slate-100">Roger</p>
+                <span className="inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-300">
+                  {ROGER_VERSION}
+                </span>
+              </div>
               <p className="text-[11px] text-slate-500 hidden sm:block">Tennis stats chatbot. H2H, tournaments, records</p>
             </div>
             <button

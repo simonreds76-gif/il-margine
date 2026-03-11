@@ -344,7 +344,7 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
     /\bbest record\b/i.test(q) &&
     !/\b(title|titles|most titles|won\s+.+\s+the\s+most)\b/i.test(q);
   const asksTournamentMatchesWon =
-    (/\b(by\s+matches?\s+won|matches?\s+won|most\s+match\s+wins?|match\s+wins?)\b/i.test(q) || asksBestRecordGeneric) &&
+    (/\b(by\s+matches?\s+won|matches?\s+won|most\s+match\s+wins?|match\s+wins?|most\s+wins?)\b/i.test(q) || asksBestRecordGeneric) &&
     (/\bthere\b/i.test(q) || /\b(at|in)\b/i.test(q) || contextTexts.length > 0);
   if (asksTournamentMatchesWon) {
     const tournament =
@@ -357,9 +357,15 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
       const windowYears =
         inferWindowYears(q) ??
         contextTexts.map((t) => inferWindowYears(t)).find((n): n is number => n != null);
-      const explicitRange =
+      let explicitRange =
         inferYearRange(q) ??
         contextTexts.map((t) => inferYearRange(t)).find((r): r is { start: number; end: number } => r != null);
+      const asksPastWindow = /\b(?:past|last)\s+\d+\s+years?\b/i.test(q);
+      if (!explicitRange && asksPastWindow && windowYears) {
+        // Use completed seasons by default: "past 3 years" in 2026 => 2023-2025.
+        const endYear = /\bthis year\b/i.test(q) ? nowYear : nowYear - 1;
+        explicitRange = { start: endYear - windowYears + 1, end: endYear };
+      }
       const canonicalTournament = canonicalTournamentForHistorical(tournament);
       let stats = await tools.tournamentBestByMatchesWon(
         canonicalTournament,
