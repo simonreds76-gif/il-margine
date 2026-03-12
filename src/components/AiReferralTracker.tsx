@@ -12,31 +12,46 @@ declare global {
   }
 }
 
-type AiSource = "chatgpt" | "perplexity" | "copilot" | "gemini";
+type AiSource = "chatgpt" | "perplexity" | "claude" | "copilot" | "gemini" | "grok";
 
 function sourceFromText(value: string): AiSource | null {
   const v = value.toLowerCase();
   if (v.includes("chatgpt") || v.includes("openai")) return "chatgpt";
   if (v.includes("perplexity")) return "perplexity";
+  if (v.includes("claude") || v.includes("anthropic")) return "claude";
   if (v.includes("copilot")) return "copilot";
   if (v.includes("gemini")) return "gemini";
+  if (v.includes("grok") || v.includes("x.ai")) return "grok";
   return null;
 }
 
-function detectAiReferral(searchParams: URLSearchParams, referrer: string): { source: AiSource; via: "utm" | "referrer" } | null {
+function sourceFromReferrer(referrer: string): AiSource | null {
+  try {
+    if (!referrer) return null;
+    const url = new URL(referrer);
+    const host = url.hostname.toLowerCase();
+    const path = url.pathname.toLowerCase();
+    if (host === "x.com" && path.startsWith("/i/grok")) return "grok";
+    const fromHost = sourceFromText(host);
+    if (fromHost) return fromHost;
+    const fullReferrer = `${host}${path}${url.search}`.toLowerCase();
+    return sourceFromText(fullReferrer);
+  } catch {
+    return null;
+  }
+}
+
+function detectAiReferral(
+  searchParams: URLSearchParams,
+  referrer: string
+): { source: AiSource; via: "utm" | "referrer" } | null {
   const utmSource = searchParams.get("utm_source");
   const sourceFromUtm = utmSource ? sourceFromText(utmSource) : null;
   if (sourceFromUtm) return { source: sourceFromUtm, via: "utm" };
 
-  try {
-    if (!referrer) return null;
-    const host = new URL(referrer).hostname.toLowerCase();
-    const sourceFromReferrer = sourceFromText(host);
-    if (!sourceFromReferrer) return null;
-    return { source: sourceFromReferrer, via: "referrer" };
-  } catch {
-    return null;
-  }
+  const sourceFromRef = sourceFromReferrer(referrer);
+  if (!sourceFromRef) return null;
+  return { source: sourceFromRef, via: "referrer" };
 }
 
 export default function AiReferralTracker() {
