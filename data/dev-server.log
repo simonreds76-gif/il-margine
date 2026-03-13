@@ -1,0 +1,52 @@
+
+> il-margine@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.5.0.2:3000
+- Environments: .env.local
+
+✓ Starting...
+Creating turbopack project { dir: 'c:\\Users\\44746\\Downloads\\il-margine', testMode: true }
+✓ Ready in 3.7s
+{
+  message: "Failed to call a function. Please adjust your prompt. See 'failed_generation' for more details.",
+  type: 'invalid_request_error'
+}
+ POST /api/chat 200 in 2.8s (compile: 1015ms, render: 1768ms)
+ POST /api/chat 200 in 20.7s (compile: 11ms, render: 20.7s)
+{
+  message: "Failed to call a function. Please adjust your prompt. See 'failed_generation' for more details.",
+  type: 'invalid_request_error'
+}
+ POST /api/chat 200 in 30.5s (compile: 3ms, render: 30.5s)
+ POST /api/chat 200 in 998ms (compile: 3ms, render: 995ms)
+ POST /api/chat 200 in 729ms (compile: 453ms, render: 276ms)
+ POST /api/chat 200 in 184ms (compile: 2ms, render: 182ms)
+ POST /api/chat 200 in 6.7s (compile: 3ms, render: 6.7s)
+ POST /api/chat 200 in 282ms (compile: 4ms, render: 278ms)
+ POST /api/chat 200 in 267ms (compile: 3ms, render: 264ms)
+ POST /api/chat 200 in 8ms (compile: 3ms, render: 6ms)
+ POST /api/chat 200 in 3.3s (compile: 2ms, render: 3.3s)
+ POST /api/chat 200 in 16.6s (compile: 4ms, render: 16.6s)
+ POST /api/chat 200 in 2.1s (compile: 275ms, render: 1812ms)
+ POST /api/chat 200 in 1064ms (compile: 399ms, render: 665ms)
+ POST /api/chat 200 in 18ms (compile: 5ms, render: 13ms)
+ POST /api/chat 200 in 762ms (compile: 3ms, render: 758ms)
+ POST /api/chat 200 in 4.0s (compile: 3ms, render: 4.0s)
+ POST /api/chat 200 in 132ms (compile: 4ms, render: 128ms)
+ POST /api/chat 200 in 260ms (compile: 3ms, render: 257ms)
+ POST /api/chat 200 in 3.2s (compile: 1411ms, render: 1833ms)
+ POST /api/chat 200 in 317ms (compile: 5ms, render: 311ms)
+ POST /api/chat 200 in 320ms (compile: 4ms, render: 316ms)
+ POST /api/chat 200 in 17.1s (compile: 3ms, render: 17.1s)
+ POST /api/chat 200 in 2.4s (compile: 1910µs, render: 2.4s)
+ POST /api/chat 200 in 220ms (compile: 3ms, render: 217ms)
+ POST /api/chat 200 in 154ms (compile: 3ms, render: 151ms)
+ POST /api/chat 200 in 306ms (compile: 3ms, render: 303ms)
+ POST /api/chat 200 in 4.5s (compile: 1957µs, render: 4.5s)
+ POST /api/chat 200 in 6ms (compile: 2ms, render: 4ms)
+ POST /api/chat 200 in 1092ms (compile: 246ms, render: 847ms)
+ POST /api/chat 200 in 968ms (compile: 222ms, render: 747ms)
+[?25h

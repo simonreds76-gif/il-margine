@@ -1,0 +1,32 @@
+Strict Policy Settled Performance
+Generated UTC: 2026-03-13T14:14:40+00:00
+As-of date: 2026-03-12
+Window: 2026-03-06 -> 2026-03-12 (7d)
+Source: overlay-compare
+Settlement backfill from strict-signals: patched_rows=0, patched_to_settled=0
+
+Window performance (combined)
+  BASE    signals=  53 settled=  53 unsettled=   0 W-L= 12- 41 staked=53.00u pnl=-20.40u ROI=-38.49% WR=22.64% avg_value=30.49% avg_pin=4.521 invalid_odds=0
+  OVERLAY signals=  15 settled=  15 unsettled=   0 W-L=  5- 10 staked=15.00u pnl=-6.07u ROI=-40.46% WR=33.33% avg_value=19.19% avg_pin=1.974 invalid_odds=0
+  DELTA overlay-base: signals=-38 settled=-38 pnl=+14.33u roi=-1.97pp
+
+All-time performance (combined)
+  BASE    signals=  79 settled=  79 unsettled=   0 W-L= 22- 57 staked=79.00u pnl=-18.55u ROI=-23.48% WR=27.85% avg_value=30.89% avg_pin=4.099 invalid_odds=0
+  OVERLAY signals=  25 settled=  25 unsettled=   0 W-L=  9- 16 staked=25.00u pnl=-7.85u ROI=-31.41% WR=36.00% avg_value=20.84% avg_pin=2.054 invalid_odds=0
+  DELTA overlay-base: signals=-54 settled=-54 pnl=+10.70u roi=-7.93pp
+
+Window performance by bet type (ML vs Handicap)
+  [ML (match winner)]
+    BASE    signals=  52 settled=  52 backlog=   0 W-L= 12- 40 ROI=-37.31% pnl=-19.40u
+    OVERLAY signals=  15 settled=  15 backlog=   0 W-L=  5- 10 ROI=-40.46% pnl=-6.07u
+  [Handicap (spread)]
+    BASE    signals=   1 settled=   1 backlog=   0 W-L=  0-  1 ROI=-100.00% pnl=-1.00u
+    OVERLAY signals=   0 settled=   0 backlog=   0 W-L=  0-  0 ROI=n/a pnl=0.00u
+
+All-time performance by bet type (ML vs Handicap)
+  [ML (match winner)]
+    BASE    signals=  78 settled=  78 backlog=   0 W-L= 22- 56 ROI=-22.50% pnl=-17.55u
+    OVERLAY signals=  25 settled=  25 backlog=   0 W-L=  9- 16 ROI=-31.41% pnl=-7.85u
+  [Handicap (spread)]
+    BASE    signals=   1 settled=   1 backlog=   0 W-L=  0-  1 ROI=-100.00% pnl=-1.00u
+    OVERLAY signals=   0 settled=   0 backlog=   0 W-L=  0-  0 ROI=n/a pnl=0.00u

@@ -1,0 +1,833 @@
+#!/usr/bin/env python3
+"""
+Audit live strict-policy scrape odds against tennis-data Pinnacle closing odds.
+
+Purpose:
+- Determine whether live strict bets are getting positive CLV relative to close.
+- Quantify whether the apparent edge exists at scrape time or evaporates by close.
+
+Default scope:
+- data/backtest/strict-signals.csv
+- ML bets only (spread rows are reported and skipped)
+- settled rows only
+- closing odds from data/backtest/atp-2026.xlsx
+
+Outputs:
+- data/backtest/strict-clv-audit-2026.csv
+- data/backtest/strict-clv-audit-2026.txt
+
+Positive CLV convention in this script:
+- clv_implied_delta = (1 / closing_odds) - (1 / scrape_odds)
+- positive = the market moved toward our bet (good)
+- negative = the market moved away from our bet (bad)
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import importlib.util
+import os
+import re
+import sys
+import unicodedata
+from collections import Counter, defaultdict
+from dataclasses import dataclass
+from datetime import date, datetime, time, timedelta, timezone
+from pathlib import Path
+from statistics import mean, median
+from typing import Any
+
+import requests
+
+
+ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = ROOT / "data" / "backtest"
+ONCOURT_DIR = ROOT / "data" / "oncourt"
+HTTP_TIMEOUT = 30
+
+DEFAULT_SIGNALS = DATA_DIR / "strict-signals.csv"
+DEFAULT_XLSX = DATA_DIR / "atp-2026.xlsx"
+DEFAULT_DETAIL_CSV = DATA_DIR / "strict-clv-audit-2026.csv"
+DEFAULT_SUMMARY_TXT = DATA_DIR / "strict-clv-audit-2026.txt"
+
+KEY_FIELDS = ["date", "player1", "player2", "surface", "series", "confidence", "side"]
+
+
+@dataclass
+class ClosingMatch:
+    date_iso: str
+    date_ord: int
+    surface: str
+    series: str
+    tournament: str
+    location: str
+    player1_id: int
+    player2_id: int
+    close_odds1: float
+    close_odds2: float
+
+
+@dataclass
+class HistoryRow:
+    capture_date: str
+    captured_at: str
+    captured_ts: datetime
+    capture_mode: str
+    league: str
+    player1_name: str
+    player2_name: str
+    odds1: float
+    odds2: float
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Audit live strict scrape odds vs tennis-data Pinnacle closing odds.")
+    parser.add_argument("--signals", default=str(DEFAULT_SIGNALS), help="Strict signal CSV to audit.")
+    parser.add_argument("--xlsx", default=str(DEFAULT_XLSX), help="Tennis-data ATP XLSX with closing Pinnacle odds.")
+    parser.add_argument("--detail-csv", default=str(DEFAULT_DETAIL_CSV), help="Detailed audit CSV output.")
+    parser.add_argument("--summary-txt", default=str(DEFAULT_SUMMARY_TXT), help="Summary text output.")
+    parser.add_argument("--dry-run", action="store_true", help="Do not write outputs; print summary only.")
+    return parser.parse_args()
+
+
+def norm(v: str | None) -> str:
+    return (v or "").strip().lower()
+
+
+def parse_float(v: Any) -> float | None:
+    if v is None:
+        return None
+    txt = str(v).strip()
+    if not txt:
+        return None
+    try:
+        return float(txt)
+    except ValueError:
+        return None
+
+
+def parse_int(v: Any) -> int | None:
+    f = parse_float(v)
+    if f is None:
+        return None
+    try:
+        return int(f)
+    except (TypeError, ValueError):
+        return None
+
+
+def parse_iso_date(v: str | None) -> date | None:
+    if v is None:
+        return None
+    txt = str(v).strip()
+    if not txt:
+        return None
+    try:
+        return date.fromisoformat(txt[:10])
+    except ValueError:
+        return None
+
+
+def parse_signal_ts(signal_date: str | None, time_utc: str | None) -> datetime | None:
+    d = parse_iso_date(signal_date)
+    if d is None:
+        return None
+    txt = (time_utc or "").strip()
+    if not txt:
+        return datetime.combine(d, time.min, tzinfo=timezone.utc)
+    for fmt in ("%H:%M:%S", "%H:%M"):
+        try:
+            t = datetime.strptime(txt, fmt).time()
+            return datetime.combine(d, t, tzinfo=timezone.utc)
+        except ValueError:
+            continue
+    return datetime.combine(d, time.min, tzinfo=timezone.utc)
+
+
+def parse_timestamp(v: str | None) -> datetime | None:
+    txt = (v or "").strip()
+    if not txt:
+        return None
+    try:
+        return datetime.fromisoformat(txt.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def pct(v: float) -> str:
+    return f"{v:+.3f}%"
+
+
+def row_key(row: dict[str, str], include_mode: bool = True) -> tuple[str, ...]:
+    out = [norm(row.get(f)) for f in KEY_FIELDS]
+    if include_mode:
+        out.append(norm(row.get("policy_mode") or "base"))
+    return tuple(out)
+
+
+def is_settled(row: dict[str, str]) -> bool:
+    return norm(row.get("settlement_status")) == "settled"
+
+
+def dedupe_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    by_key: dict[tuple[str, ...], dict[str, str]] = {}
+    for row in rows:
+        k = row_key(row, include_mode=True)
+        prev = by_key.get(k)
+        if prev is None:
+            by_key[k] = row
+            continue
+        if is_settled(row) and not is_settled(prev):
+            by_key[k] = row
+    return list(by_key.values())
+
+
+def load_csv_rows(path: Path) -> list[dict[str, str]]:
+    with path.open("r", encoding="utf-8-sig", newline="") as f:
+        return [dict(r) for r in csv.DictReader(f)]
+
+
+def load_env() -> None:
+    for name in [".env.local", "env.local"]:
+        path = ROOT / name
+        if not path.exists():
+            continue
+        for line in path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+
+def get_supabase_rest() -> tuple[str, dict[str, str]]:
+    load_env()
+    url = (os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or "").rstrip("/")
+    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or ""
+    if not url or not key:
+        raise RuntimeError("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.local")
+    return f"{url}/rest/v1", {"apikey": key, "Authorization": f"Bearer {key}"}
+
+
+def load_backtest_module() -> Any:
+    path = ROOT / "scripts" / "backtest-fair-odds.py"
+    module_name = "backtest_fair_odds_mod"
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Unable to load {path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def load_closing_matches(xlsx_path: Path) -> tuple[list[ClosingMatch], dict[str, Any]]:
+    mod = load_backtest_module()
+    matches, skip, short_names = mod._load_backtest_matches([xlsx_path])
+    players_path = ONCOURT_DIR / "players_atp.csv"
+    games_path = ONCOURT_DIR / "games_atp.csv"
+    tours_path = ONCOURT_DIR / "tours_atp.csv"
+    courts_path = ONCOURT_DIR / "courts.csv"
+    for p in (players_path, games_path, tours_path, courts_path):
+        if not p.exists():
+            raise FileNotFoundError(f"Missing required OnCourt file: {p}")
+
+    oncourt_players = mod._load_oncourt_players(players_path)
+    players_by_id = {int(r["id"]): r for r in oncourt_players}
+    tours = mod._load_tour_info(tours_path, courts_path)
+    popularity_by_pid = mod._load_player_popularity(games_path, players_by_id, tours)
+    name_map, map_report = mod._build_tennis_data_name_map(short_names, oncourt_players, popularity_by_pid=popularity_by_pid)
+
+    closing_matches: list[ClosingMatch] = []
+    skipped = Counter()
+    for m in matches:
+        wid = name_map.get(m.winner_name_short)
+        lid = name_map.get(m.loser_name_short)
+        if wid is None:
+            skipped["unmapped_winner"] += 1
+            continue
+        if lid is None:
+            skipped["unmapped_loser"] += 1
+            continue
+        if wid == lid:
+            skipped["same_player_after_mapping"] += 1
+            continue
+        close_odds1 = float(m.psw)
+        close_odds2 = float(m.psl)
+        closing_matches.append(
+            ClosingMatch(
+                date_iso=m.date_iso,
+                date_ord=m.date_ord,
+                surface=m.surface,
+                series=m.series,
+                tournament=m.tournament,
+                location=m.location,
+                player1_id=int(wid),
+                player2_id=int(lid),
+                close_odds1=close_odds1,
+                close_odds2=close_odds2,
+            )
+        )
+
+    meta = {
+        "xlsx_matches_loaded": len(matches),
+        "xlsx_skip": dict(skip),
+        "name_map_report": map_report,
+        "closing_matches_mapped": len(closing_matches),
+        "closing_matches_skipped": dict(skipped),
+    }
+    return closing_matches, meta
+
+
+def _norm_pinnacle_name(s: str) -> str:
+    t = (s or "").strip().lower()
+    t = unicodedata.normalize("NFD", t)
+    t = "".join(c for c in t if unicodedata.category(c) != "Mn")
+    return t.replace("-", "").replace("'", "")
+
+
+def _tokenise_pinnacle_name(name: str) -> list[str]:
+    cleaned = (name or "").replace(",", " ").replace("-", " ")
+    cleaned = re.sub(r"\s*\([^)]*\)", " ", cleaned)
+    cleaned = re.sub(r"\s*\[[^\]]*\]", " ", cleaned)
+    return [
+        _norm_pinnacle_name(tok)
+        for tok in cleaned.split()
+        if tok and not re.match(r"^[a-z]$", _norm_pinnacle_name(tok))
+    ]
+
+
+def _surname_keys(name: str) -> list[str]:
+    tokens = _tokenise_pinnacle_name(name)
+    if not tokens:
+        return []
+    out = {tokens[-1]}
+    if len(tokens) >= 2:
+        out.add(tokens[-2])
+        out.add(f"{tokens[-2]} {tokens[-1]}")
+        out.add(f"{tokens[-2]}{tokens[-1]}")
+    return list(out)
+
+
+def _make_pair_keys(a: str, b: str) -> list[str]:
+    out = set()
+    for ka in _surname_keys(a):
+        for kb in _surname_keys(b):
+            out.add(f"{ka}|{kb}")
+    return list(out)
+
+
+def _first_word(name: str) -> str:
+    tokens = _tokenise_pinnacle_name(name)
+    return tokens[0] if tokens else ""
+
+
+def _full_name(name: str) -> str:
+    return " ".join(_tokenise_pinnacle_name(name))
+
+
+def _is_doubles_name(name: str | None) -> bool:
+    return "/" in (name or "") or "&" in (name or "")
+
+
+def fetch_history_rows(start_date: date, end_date: date) -> tuple[list[HistoryRow], dict[str, Any]]:
+    try:
+        base, headers = get_supabase_rest()
+    except Exception as exc:
+        return [], {"enabled": False, "error": str(exc)}
+
+    all_rows: list[HistoryRow] = []
+    offset = 0
+    limit = 1000
+    while True:
+        query = [
+            ("select", "capture_date,captured_at,capture_mode,league,player1_name,player2_name,odds1,odds2"),
+            ("bookmaker", "eq.Pinnacle"),
+            ("capture_date", f"gte.{start_date.isoformat()}"),
+            ("capture_date", f"lte.{end_date.isoformat()}"),
+            ("order", "captured_at.desc"),
+            ("limit", str(limit)),
+            ("offset", str(offset)),
+        ]
+        try:
+            resp = requests.get(f"{base}/bookmaker_odds_history", headers=headers, params=query, timeout=HTTP_TIMEOUT)
+            if resp.status_code == 404:
+                return [], {"enabled": False, "error": "bookmaker_odds_history table not found"}
+            if not resp.ok:
+                return [], {"enabled": False, "error": f"HTTP {resp.status_code}: {resp.text[:200]}"}
+            batch = resp.json()
+        except requests.RequestException as exc:
+            return [], {"enabled": False, "error": str(exc)}
+
+        if not batch:
+            break
+        for row in batch:
+            ts = parse_timestamp(row.get("captured_at"))
+            if ts is None:
+                continue
+            all_rows.append(
+                HistoryRow(
+                    capture_date=str(row.get("capture_date") or ""),
+                    captured_at=str(row.get("captured_at") or ""),
+                    captured_ts=ts,
+                    capture_mode=str(row.get("capture_mode") or ""),
+                    league=str(row.get("league") or ""),
+                    player1_name=str(row.get("player1_name") or ""),
+                    player2_name=str(row.get("player2_name") or ""),
+                    odds1=float(row.get("odds1") or 0),
+                    odds2=float(row.get("odds2") or 0),
+                )
+            )
+        if len(batch) < limit:
+            break
+        offset += limit
+
+    return all_rows, {
+        "enabled": True,
+        "rows": len(all_rows),
+        "start_date": start_date.isoformat(),
+        "end_date": end_date.isoformat(),
+    }
+
+
+def lag_bucket(lag_days: int) -> str:
+    if lag_days <= 0:
+        return "same_day"
+    if lag_days == 1:
+        return "plus_1_day"
+    if lag_days <= 3:
+        return "plus_2_3_days"
+    return "plus_4plus_days"
+
+
+def value_bucket(value_pct: float) -> str:
+    if value_pct < 10:
+        return "5-10%"
+    if value_pct < 15:
+        return "10-15%"
+    if value_pct < 20:
+        return "15-20%"
+    return "20%+"
+
+
+def build_closing_index(matches: list[ClosingMatch]) -> dict[frozenset[int], list[ClosingMatch]]:
+    out: dict[frozenset[int], list[ClosingMatch]] = defaultdict(list)
+    for m in matches:
+        out[frozenset({m.player1_id, m.player2_id})].append(m)
+    for pair in out:
+        out[pair].sort(key=lambda x: x.date_ord)
+    return out
+
+
+def build_history_lookup(rows: list[HistoryRow]) -> dict[str, list[tuple[HistoryRow, bool]]]:
+    out: dict[str, list[tuple[HistoryRow, bool]]] = defaultdict(list)
+    for row in rows:
+        if _is_doubles_name(row.player1_name) or _is_doubles_name(row.player2_name):
+            continue
+        for key in _make_pair_keys(row.player1_name, row.player2_name):
+            out[key].append((row, False))
+        for key in _make_pair_keys(row.player2_name, row.player1_name):
+            out[key].append((row, True))
+    return out
+
+
+def match_signal_to_history(
+    row: dict[str, str],
+    lookup: dict[str, list[tuple[HistoryRow, bool]]],
+) -> tuple[HistoryRow | None, bool, str]:
+    signal_ts = parse_signal_ts(row.get("date"), row.get("time_utc"))
+    match_dt = parse_iso_date(row.get("match_date"))
+    p1 = (row.get("player1") or "").strip()
+    p2 = (row.get("player2") or "").strip()
+    if signal_ts is None:
+        return None, False, "missing_signal_ts"
+    if match_dt is None:
+        return None, False, "missing_match_date"
+    if not p1 or not p2:
+        return None, False, "missing_player_names"
+
+    cutoff_ts = datetime.combine(match_dt + timedelta(days=1), time.min, tzinfo=timezone.utc)
+    candidate_map: dict[str, tuple[HistoryRow, bool, int]] = {}
+    for key in _make_pair_keys(p1, p2):
+        for hist, reversed_for_signal in lookup.get(key, []):
+            if hist.captured_ts < signal_ts or hist.captured_ts >= cutoff_ts:
+                continue
+            ident = f"{hist.captured_at}|{hist.player1_name}|{hist.player2_name}|{'R' if reversed_for_signal else 'N'}"
+            if ident in candidate_map:
+                prev = candidate_map[ident]
+                candidate_map[ident] = (prev[0], prev[1], prev[2] + 1)
+            else:
+                candidate_map[ident] = (hist, reversed_for_signal, 1)
+
+    if not candidate_map:
+        return None, False, "history_not_found"
+
+    fo_p1_first = _first_word(p1)
+    fo_p2_first = _first_word(p2)
+    fo_p1_full = _full_name(p1)
+    fo_p2_full = _full_name(p2)
+
+    for ident, (hist, reversed_for_signal, score) in list(candidate_map.items()):
+        hist_p1 = hist.player2_name if reversed_for_signal else hist.player1_name
+        hist_p2 = hist.player1_name if reversed_for_signal else hist.player2_name
+        if fo_p1_first and fo_p1_first == _first_word(hist_p1):
+            score += 2
+        if fo_p2_first and fo_p2_first == _first_word(hist_p2):
+            score += 2
+        if fo_p1_full and fo_p1_full == _full_name(hist_p1):
+            score += 4
+        if fo_p2_full and fo_p2_full == _full_name(hist_p2):
+            score += 4
+        candidate_map[ident] = (hist, reversed_for_signal, score)
+
+    ranked = sorted(candidate_map.values(), key=lambda x: (-x[2], -x[0].captured_ts.timestamp()))
+    if len(ranked) > 1 and ranked[0][2] == ranked[1][2] and ranked[0][0].captured_ts == ranked[1][0].captured_ts:
+        return None, False, "history_ambiguous"
+    hist, reversed_for_signal, _ = ranked[0]
+    return hist, reversed_for_signal, "history"
+
+
+def match_signal_to_close(
+    row: dict[str, str],
+    index: dict[frozenset[int], list[ClosingMatch]],
+) -> tuple[ClosingMatch | None, str]:
+    p1 = parse_int(row.get("player1_id"))
+    p2 = parse_int(row.get("player2_id"))
+    match_dt = parse_iso_date(row.get("match_date"))
+    if p1 is None or p2 is None:
+        return None, "missing_player_ids"
+    if match_dt is None:
+        return None, "missing_match_date"
+    candidates = index.get(frozenset({p1, p2}), [])
+    if not candidates:
+        return None, "pair_not_found"
+
+    exact = [m for m in candidates if m.date_ord == match_dt.toordinal()]
+    if len(exact) == 1:
+        return exact[0], "exact"
+
+    pool = exact if exact else [m for m in candidates if abs(m.date_ord - match_dt.toordinal()) <= 1]
+    if not pool:
+        return None, "date_not_found"
+
+    series = (row.get("series") or "").strip()
+    surface = (row.get("surface") or "").strip()
+    if series:
+        exact_series = [m for m in pool if m.series == series]
+        if len(exact_series) == 1:
+            return exact_series[0], "series"
+        if exact_series:
+            pool = exact_series
+    if surface:
+        exact_surface = [m for m in pool if m.surface == surface]
+        if len(exact_surface) == 1:
+            return exact_surface[0], "surface"
+        if exact_surface:
+            pool = exact_surface
+    if len(pool) == 1:
+        return pool[0], "date_window"
+    return None, "ambiguous"
+
+
+def summarize_bucket(rows: list[dict[str, Any]], key: str) -> list[str]:
+    lines: list[str] = []
+    groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        groups[str(row.get(key) or "n/a")].append(row)
+    for bucket, sample in sorted(groups.items()):
+        deltas = [float(r["clv_implied_delta_pct"]) for r in sample]
+        pos = sum(1 for x in deltas if x > 0)
+        lines.append(
+            f"  {bucket:>14} n={len(sample):>3} avg_clv={mean(deltas):+6.3f}% median={median(deltas):+6.3f}% pos={pos}/{len(sample)}"
+        )
+    return lines
+
+
+def write_detail_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+    fields = [
+        "signal_date",
+        "time_utc",
+        "match_date",
+        "lag_days",
+        "lag_bucket",
+        "player1",
+        "player2",
+        "player1_id",
+        "player2_id",
+        "surface",
+        "series",
+        "confidence",
+        "side",
+        "value_pct",
+        "scrape_odds",
+        "closing_odds",
+        "scrape_implied_pct",
+        "closing_implied_pct",
+        "clv_implied_delta_pct",
+        "odds_move_pct",
+        "clv_direction",
+        "bet_outcome",
+        "won_bet",
+        "match_status",
+        "match_method",
+        "closing_source",
+        "history_capture_mode",
+        "history_captured_at",
+        "tournament",
+        "location",
+        "signal_profile",
+        "policy_mode",
+    ]
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fields)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({k: row.get(k, "") for k in fields})
+
+
+def main() -> None:
+    args = parse_args()
+    signals_path = Path(args.signals) if Path(args.signals).is_absolute() else (ROOT / args.signals)
+    xlsx_path = Path(args.xlsx) if Path(args.xlsx).is_absolute() else (ROOT / args.xlsx)
+    detail_csv_path = Path(args.detail_csv) if Path(args.detail_csv).is_absolute() else (ROOT / args.detail_csv)
+    summary_txt_path = Path(args.summary_txt) if Path(args.summary_txt).is_absolute() else (ROOT / args.summary_txt)
+
+    raw_rows = load_csv_rows(signals_path)
+    rows = dedupe_rows(raw_rows)
+    all_settled = [r for r in rows if is_settled(r)]
+    ml_rows = [r for r in all_settled if norm(r.get("bet_type") or "match") != "spread" and norm(r.get("side")) in {"p1", "p2"}]
+    spread_rows = [r for r in all_settled if r not in ml_rows]
+
+    signal_dates = sorted(parse_iso_date(r.get("date")) for r in all_settled if parse_iso_date(r.get("date")))
+    match_dates = sorted(parse_iso_date(r.get("match_date")) for r in all_settled if parse_iso_date(r.get("match_date")))
+
+    history_rows: list[HistoryRow] = []
+    history_meta: dict[str, Any] = {"enabled": False, "error": "no settled rows"}
+    history_lookup: dict[str, list[tuple[HistoryRow, bool]]] = {}
+    if signal_dates and match_dates:
+        history_rows, history_meta = fetch_history_rows(signal_dates[0], match_dates[-1])
+        history_lookup = build_history_lookup(history_rows) if history_rows else {}
+
+    closing_matches, meta = load_closing_matches(xlsx_path)
+    index = build_closing_index(closing_matches)
+
+    match_method_counts = Counter()
+    unmatched_reasons = Counter()
+    source_counts = Counter()
+    detailed_rows: list[dict[str, Any]] = []
+
+    for row in ml_rows:
+        p1 = parse_int(row.get("player1_id"))
+        p2 = parse_int(row.get("player2_id"))
+        if p1 is None or p2 is None:
+            unmatched_reasons["missing_player_ids"] += 1
+            continue
+        signal_dt = parse_iso_date(row.get("date"))
+        match_dt = parse_iso_date(row.get("match_date"))
+        if signal_dt is None or match_dt is None:
+            unmatched_reasons["missing_signal_or_match_date"] += 1
+            continue
+
+        closing_odds = None
+        method = ""
+        tournament = ""
+        location = ""
+        closing_source = ""
+        history_capture_mode = ""
+        history_captured_at = ""
+
+        hist_row, hist_reversed, hist_method = match_signal_to_history(row, history_lookup) if history_lookup else (None, False, "history_unavailable")
+        if hist_row is not None:
+            method = hist_method
+            match_method_counts[method] += 1
+            source_counts["history"] += 1
+            closing_source = "bookmaker_odds_history"
+            history_capture_mode = hist_row.capture_mode
+            history_captured_at = hist_row.captured_at
+            tournament = ""
+            location = ""
+            close_p1 = hist_row.odds2 if hist_reversed else hist_row.odds1
+            close_p2 = hist_row.odds1 if hist_reversed else hist_row.odds2
+            side = norm(row.get("side"))
+            closing_odds = close_p1 if side == "p1" else close_p2
+        else:
+            matched, method = match_signal_to_close(row, index)
+            if matched is None:
+                unmatched_reasons[hist_method if hist_method not in {"history_not_found", "history_unavailable"} else method] += 1
+                continue
+            match_method_counts[method] += 1
+            source_counts["tennis_data"] += 1
+            closing_source = "tennis_data"
+            tournament = matched.tournament
+            location = matched.location
+            if matched.player1_id == p1 and matched.player2_id == p2:
+                close_p1 = matched.close_odds1
+                close_p2 = matched.close_odds2
+            elif matched.player1_id == p2 and matched.player2_id == p1:
+                close_p1 = matched.close_odds2
+                close_p2 = matched.close_odds1
+            else:
+                unmatched_reasons["orientation_mismatch"] += 1
+                continue
+            side = norm(row.get("side"))
+            closing_odds = close_p1 if side == "p1" else close_p2
+
+        side = norm(row.get("side"))
+        scrape_odds = parse_float(row.get("pin_odds1") if side == "p1" else row.get("pin_odds2"))
+        if scrape_odds is None or scrape_odds <= 1 or closing_odds <= 1:
+            unmatched_reasons["bad_odds"] += 1
+            continue
+
+        scrape_implied = 1.0 / scrape_odds
+        closing_implied = 1.0 / closing_odds
+        clv_delta = (closing_implied - scrape_implied) * 100.0
+        odds_move_pct = (closing_odds / scrape_odds - 1.0) * 100.0
+        lag_days = (match_dt - signal_dt).days
+
+        detailed_rows.append(
+            {
+                "signal_date": signal_dt.isoformat(),
+                "time_utc": row.get("time_utc") or "",
+                "match_date": match_dt.isoformat(),
+                "lag_days": lag_days,
+                "lag_bucket": lag_bucket(lag_days),
+                "player1": row.get("player1") or "",
+                "player2": row.get("player2") or "",
+                "player1_id": p1,
+                "player2_id": p2,
+                "surface": row.get("surface") or "",
+                "series": row.get("series") or "",
+                "confidence": row.get("confidence") or "",
+                "side": row.get("side") or "",
+                "value_pct": parse_float(row.get("value_pct")),
+                "scrape_odds": scrape_odds,
+                "closing_odds": closing_odds,
+                "scrape_implied_pct": scrape_implied * 100.0,
+                "closing_implied_pct": closing_implied * 100.0,
+                "clv_implied_delta_pct": clv_delta,
+                "odds_move_pct": odds_move_pct,
+                "clv_direction": "positive" if clv_delta > 0 else "negative" if clv_delta < 0 else "flat",
+                "bet_outcome": row.get("bet_outcome") or "",
+                "won_bet": row.get("won_bet") or "",
+                "match_status": "matched",
+                "match_method": method,
+                "closing_source": closing_source,
+                "history_capture_mode": history_capture_mode,
+                "history_captured_at": history_captured_at,
+                "tournament": tournament,
+                "location": location,
+                "signal_profile": row.get("signal_profile") or "",
+                "policy_mode": row.get("policy_mode") or "base",
+            }
+        )
+
+    unique_match_keys = {
+        (row.get("match_date") or "", row.get("player1_id") or "", row.get("player2_id") or "", row.get("side") or "")
+        for row in ml_rows
+    }
+    clv_values = [float(r["clv_implied_delta_pct"]) for r in detailed_rows]
+    positive_clv = sum(1 for v in clv_values if v > 0)
+    closing_dates = sorted(date.fromisoformat(m.date_iso) for m in closing_matches)
+    coverage_warning = None
+    if match_dates and closing_dates and max(closing_dates) < min(match_dates):
+        coverage_warning = (
+            f"Closing file is stale for this live sample: latest closing date {max(closing_dates).isoformat()} "
+            f"but earliest settled match date is {min(match_dates).isoformat()}."
+        )
+
+    history_note = history_meta.get("error", "")
+    if not history_note:
+        history_note = f"window {history_meta.get('start_date', 'n/a')} -> {history_meta.get('end_date', 'n/a')}"
+
+    summary_lines = [
+        "Strict CLV Audit vs Captured/Closing Pinnacle Odds",
+        f"Generated UTC: {date.today().isoformat()}",
+        f"Signals file: {signals_path}",
+        f"Closing odds file: {xlsx_path}",
+        "",
+        "Input coverage",
+        f"  Raw strict rows: {len(raw_rows)}",
+        f"  Deduped strict rows: {len(rows)}",
+        f"  Settled strict rows: {len(all_settled)}",
+        f"  Settled ML rows audited: {len(ml_rows)}",
+        f"  Settled spread rows skipped: {len(spread_rows)}",
+        f"  Unique settled ML match+side keys: {len(unique_match_keys)}",
+        f"  Signal date range: {signal_dates[0].isoformat() if signal_dates else 'n/a'} -> {signal_dates[-1].isoformat() if signal_dates else 'n/a'}",
+        f"  Settled match-date range: {match_dates[0].isoformat() if match_dates else 'n/a'} -> {match_dates[-1].isoformat() if match_dates else 'n/a'}",
+        "",
+        "Captured-history coverage",
+        f"  Enabled: {history_meta.get('enabled', False)}",
+        f"  History rows loaded: {history_meta.get('rows', 0)}",
+        f"  History note: {history_note}",
+        "",
+        "Closing-file mapping",
+        f"  XLSX matches loaded: {meta['xlsx_matches_loaded']}",
+        f"  Closing matches mapped to OnCourt IDs: {meta['closing_matches_mapped']}",
+        f"  Closing date range: {closing_dates[0].isoformat() if closing_dates else 'n/a'} -> {closing_dates[-1].isoformat() if closing_dates else 'n/a'}",
+        f"  XLSX skips: {meta['xlsx_skip']}",
+        f"  Name-map report: {meta['name_map_report']}",
+        f"  Closing match skips: {meta['closing_matches_skipped']}",
+        "",
+        "Audit matching",
+        f"  Matched ML rows: {len(detailed_rows)} / {len(ml_rows)}",
+        f"  Closing sources: {dict(source_counts)}",
+        f"  Match methods: {dict(match_method_counts)}",
+        f"  Unmatched reasons: {dict(unmatched_reasons)}",
+    ]
+    if coverage_warning:
+        summary_lines.extend(["", f"Coverage warning", f"  {coverage_warning}"])
+
+    if detailed_rows:
+        summary_lines.extend(
+            [
+                "",
+                "CLV summary",
+                f"  Avg CLV implied delta: {pct(mean(clv_values))}",
+                f"  Median CLV implied delta: {pct(median(clv_values))}",
+                f"  Positive CLV share: {positive_clv}/{len(clv_values)} ({positive_clv / len(clv_values) * 100:.2f}%)",
+                f"  Avg odds move pct: {pct(mean(float(r['odds_move_pct']) for r in detailed_rows))}",
+                "",
+                "By lag bucket",
+                *summarize_bucket(detailed_rows, "lag_bucket"),
+                "",
+                "By value bucket",
+                *summarize_bucket(
+                    [{**r, "value_bucket": value_bucket(float(r["value_pct"]))} for r in detailed_rows if r.get("value_pct") is not None],
+                    "value_bucket",
+                ),
+                "",
+                "By outcome",
+                *summarize_bucket(detailed_rows, "bet_outcome"),
+            ]
+        )
+
+        best_rows = sorted(detailed_rows, key=lambda r: float(r["clv_implied_delta_pct"]), reverse=True)[:5]
+        worst_rows = sorted(detailed_rows, key=lambda r: float(r["clv_implied_delta_pct"]))[:5]
+        summary_lines.extend(["", "Best CLV rows"])
+        for row in best_rows:
+            summary_lines.append(
+                f"  {row['signal_date']} {row['player1']} vs {row['player2']} {row['side']} "
+                f"scrape={row['scrape_odds']:.3f} close={row['closing_odds']:.3f} clv={pct(float(row['clv_implied_delta_pct']))}"
+            )
+        summary_lines.extend(["", "Worst CLV rows"])
+        for row in worst_rows:
+            summary_lines.append(
+                f"  {row['signal_date']} {row['player1']} vs {row['player2']} {row['side']} "
+                f"scrape={row['scrape_odds']:.3f} close={row['closing_odds']:.3f} clv={pct(float(row['clv_implied_delta_pct']))}"
+            )
+    else:
+        summary_lines.extend(["", "No matched ML rows to summarize."])
+
+    summary_text = "\n".join(summary_lines)
+    print(summary_text)
+
+    if not args.dry_run:
+        write_detail_csv(detail_csv_path, detailed_rows)
+        summary_txt_path.parent.mkdir(parents=True, exist_ok=True)
+        summary_txt_path.write_text(summary_text + "\n", encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()

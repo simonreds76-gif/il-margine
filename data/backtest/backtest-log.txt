@@ -1,0 +1,21 @@
+Backtest run log
+Mode: ATP (tennis-data XLSX)
+Files: C:\Users\44746\Downloads\il-margine\data\backtest\atp-2022.xlsx, C:\Users\44746\Downloads\il-margine\data\backtest\atp-2023.xlsx, C:\Users\44746\Downloads\il-margine\data\backtest\atp-2024.xlsx, C:\Users\44746\Downloads\il-margine\data\backtest\atp-2025.xlsx
+Loaded matches: 10148
+Mapped matches: 9889
+Predicted matches: 9889
+Skip from xlsx: {'non_completed': 394, 'missing_pinnacle_odds': 138, 'bad_pinnacle_odds': 2}
+Skip after mapping: {'unmapped_winner': 107, 'unmapped_loser': 149, 'same_player_after_mapping': 3}
+Policy filter: ATP500 Hard short favorites excluded (fav_odds<1.80, confidence=['high'])
+Name mapping report: {'source_names': 500, 'mapped_names': 490, 'unmapped_names': 10, 'oncourt_index_players': 41793, 'method_counts': {'initial_last_short': 422, 'short_popularity': 42, 'short_custom': 2, 'last_only_short': 15, 'short_fuzzy': 9}, 'unmapped_examples': ['Blanch D.', 'Bu Y.', 'Guillen Meza A.', 'Ivanov I.', 'Lopez San Martin A.', 'Martin A.', 'Mukund S.', 'Munar J.', 'Ramos A.', 'Watanuki Y.']}
+Unmapped short-name examples:
+  - Blanch D.
+  - Bu Y.
+  - Guillen Meza A.
+  - Ivanov I.
+  - Lopez San Martin A.
+  - Martin A.
+  - Mukund S.
+  - Munar J.
+  - Ramos A.
+  - Watanuki Y.

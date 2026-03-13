@@ -1830,8 +1830,10 @@ def main():
                     row["bp_convert_rate"] = _float(s.get("bp_convert_rate"))
                 return row
 
-            row1 = _build_matchup_row(s1, hold1, ret1)
-            row2 = _build_matchup_row(s2, hold2, ret2)
+            # Use SPW-scale adjusted values (hold*_eff/ret*_eff), consistent with
+            # the fallback branch and tennis_prob expectations.
+            row1 = _build_matchup_row(s1, hold1_eff, ret1_eff)
+            row2 = _build_matchup_row(s2, hold2_eff, ret2_eff)
             stats_a = MatchupStats.from_db_row(row1)
             stats_b = MatchupStats.from_db_row(row2)
             p_a, p_b, _ = compute_match_point_probs(stats_a, stats_b, surface)

@@ -56,11 +56,11 @@ def apply_class_gap(
     rank1: Optional[int] = None,
     rank2: Optional[int] = None,
     # Thresholds
-    elo_gap_onset: float = 250,     # start adjusting at 250 Elo gap
-    elo_gap_full: float = 500,      # full adjustment at 500+ Elo gap
-    rank_gap_onset: int = 40,       # start adjusting at 40 rank gap
-    rank_gap_full: int = 120,       # full adjustment at 120+ rank gap
-    max_blend: float = 0.85,         # max weight given to Elo-based prob (vs model)
+    elo_gap_onset: float = 150,     # start adjusting at 150 Elo gap
+    elo_gap_full: float = 350,      # full adjustment at 350+ Elo gap
+    rank_gap_onset: int = 30,       # start adjusting at 30 rank gap
+    rank_gap_full: int = 100,       # full adjustment at 100+ rank gap
+    max_blend: float = 0.90,        # max weight given to Elo-based prob (vs model)
 ) -> float:
     """
     Adjust model probability for extreme class gaps.
@@ -79,7 +79,7 @@ def apply_class_gap(
       elo_gap_full:   Elo gap where adjustment reaches max_blend
       rank_gap_onset: rank gap (in positions) where adjustment starts
       rank_gap_full:  rank gap where adjustment reaches max_blend
-      max_blend:      maximum weight given to Elo probability
+      max_blend:      maximum weight given to Elo probability (vs model)
 
     Returns:
       adjusted P(player 1 wins)

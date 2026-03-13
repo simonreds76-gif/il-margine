@@ -4,6 +4,9 @@ Compute handicap (spread) value for daily_fair_odds matches using Pinnacle sprea
 
 Run after: (1) oncourt-compute-fair-odds.py, (2) pinnacle-scrape-odds.py
 
+If daily_fair_odds is recomputed later (e.g. via Supabase), spread columns get overwritten
+with null. Re-run this script or the full pipeline (run-daily-odds.py) to restore handicaps.
+
 Matches daily_fair_odds (with p_a, p_b) to bookmaker_odds_snapshot (with spread_line,
 spread_odds1, spread_odds2), computes model edge via handicap_probs.handicap_value,
 and PATCHes daily_fair_odds with spread + handicap_edge columns.
@@ -79,15 +82,136 @@ def load_env():
                         os.environ[k.strip()] = v
 
 
-def norm(s):
+import unicodedata
+import re
+
+
+def _norm(s: str) -> str:
+    """Lowercase, strip accents, hyphens, apostrophes (align with API matchPinnacle)."""
     if not s:
         return ""
-    return (s or "").strip().lower().replace(".", "").replace("-", " ")
+    t = (s or "").strip().lower()
+    t = unicodedata.normalize("NFD", t)
+    t = "".join(c for c in t if unicodedata.category(c) != "Mn")
+    t = t.replace("-", "").replace("'", "")
+    return t
 
 
-def surname(name):
-    parts = norm(name).split()
-    return parts[-1] if parts else ""
+def _tokenise_name(name: str) -> list[str]:
+    """Split name into tokens, drop initials (align with API)."""
+    cleaned = (name or "").replace(",", " ").replace("-", " ")
+    cleaned = re.sub(r"\s*\([^)]*\)", " ", cleaned)
+    cleaned = re.sub(r"\s*\[[^\]]*\]", " ", cleaned)
+    tokens = [_norm(t) for t in cleaned.split() if t and not re.match(r"^[a-z]$", _norm(t))]
+    return tokens
+
+
+def _surname_keys(name: str) -> list[str]:
+    """Multi-key surname set for hyphen/compound variants (align with API normaliseSurnameKeys)."""
+    t = _tokenise_name(name)
+    if not t:
+        return []
+    out = set()
+    n = len(t)
+    out.add(t[-1])
+    if n >= 2:
+        out.add(t[-2])
+        out.add(f"{t[-2]} {t[-1]}")
+        out.add(f"{t[-2]}{t[-1]}")
+    return list(out)
+
+
+def _make_pair_keys(a: str, b: str) -> list[str]:
+    """Pair keys for lookup (align with API makePairKeys)."""
+    a_keys = _surname_keys(a)
+    b_keys = _surname_keys(b)
+    out = set()
+    for ka in a_keys:
+        for kb in b_keys:
+            out.add(f"{ka}|{kb}")
+    return list(out)
+
+
+def _first_word(name: str) -> str:
+    t = _tokenise_name(name)
+    return t[0] if t else ""
+
+
+def _full_name(name: str) -> str:
+    return " ".join(_tokenise_name(name))
+
+
+def _match_fair_to_pinnacle(
+    fair_rows: list[dict],
+    pin_with_spread: list[dict],
+) -> list[dict]:
+    """
+    Match fair-odds rows to Pinnacle spread rows using same logic as API matchPinnacle.
+    Returns list of {"fair": fo, "pinnacle": pin, "pin_reversed_for_fair": bool}.
+    pin_reversed_for_fair=True means our player1 maps to Pinnacle player2.
+    """
+    pin_lookup: dict[str, list[tuple[dict, bool]]] = {}
+    for pin in pin_with_spread:
+        p1 = (pin.get("player1_name") or "").strip()
+        p2 = (pin.get("player2_name") or "").strip()
+        for key in _make_pair_keys(p1, p2):
+            pin_lookup.setdefault(key, []).append((pin, False))
+        for key in _make_pair_keys(p2, p1):
+            pin_lookup.setdefault(key, []).append((pin, True))
+
+    matched: list[dict] = []
+    used_pin_keys: set[tuple[str, str]] = set()
+
+    for fo in fair_rows:
+        p1_our = (fo.get("p1_name") or "").strip()
+        p2_our = (fo.get("p2_name") or "").strip()
+        pair_keys = _make_pair_keys(p1_our, p2_our)
+
+        candidates: dict[str, tuple[dict, bool, int]] = {}
+        for key in pair_keys:
+            for pin, rev in pin_lookup.get(key, []):
+                pk = (pin.get("player1_name") or "", pin.get("player2_name") or "")
+                id_ = f"{pk[0]}|{pk[1]}|{'R' if rev else 'N'}"
+                if id_ in candidates:
+                    candidates[id_] = (candidates[id_][0], candidates[id_][1], candidates[id_][2] + 1)
+                else:
+                    candidates[id_] = (pin, rev, 1)
+
+        if not candidates:
+            continue
+
+        fo_p1_first = _first_word(p1_our)
+        fo_p2_first = _first_word(p2_our)
+        fo_p1_full = _full_name(p1_our)
+        fo_p2_full = _full_name(p2_our)
+
+        for id_, (pin, rev, score) in list(candidates.items()):
+            pin_p1 = (pin.get("player2_name") if rev else pin.get("player1_name")) or ""
+            pin_p2 = (pin.get("player1_name") if rev else pin.get("player2_name")) or ""
+            if fo_p1_first and fo_p1_first == _first_word(pin_p1):
+                score += 2
+            if fo_p2_first and fo_p2_first == _first_word(pin_p2):
+                score += 2
+            if fo_p1_full and fo_p1_full == _full_name(pin_p1):
+                score += 4
+            if fo_p2_full and fo_p2_full == _full_name(pin_p2):
+                score += 4
+            candidates[id_] = (pin, rev, score)
+
+        ranked = [
+            (pin, rev, score)
+            for (pin, rev, score) in sorted(candidates.values(), key=lambda x: -x[2])
+            if (pin.get("player1_name"), pin.get("player2_name")) not in used_pin_keys
+        ]
+        if not ranked:
+            continue
+        if len(ranked) > 1 and ranked[0][2] == ranked[1][2]:
+            continue
+        pin, pin_reversed_for_fair, _ = ranked[0]
+        used_pin_keys.add((pin.get("player1_name"), pin.get("player2_name")))
+        matched.append({"fair": fo, "pinnacle": pin, "pin_reversed_for_fair": pin_reversed_for_fair})
+
+    return matched
 
 
 def parse_args() -> argparse.Namespace:
@@ -244,7 +368,7 @@ def main():
         row["p1_name"] = players.get(row.get("player1_id"), "")
         row["p2_name"] = players.get(row.get("player2_id"), "")
 
-    # 2) Load Pinnacle snapshot with spread (ATP only)
+    # 2) Load Pinnacle snapshot with spread (ATP + Challenger)
     r = requests.get(
         f"{url}/rest/v1/bookmaker_odds_snapshot",
         headers=headers,
@@ -252,7 +376,7 @@ def main():
             "select": "player1_name,player2_name,odds1,odds2,spread_line,spread_odds1,spread_odds2,league",
             "bookmaker": "eq.Pinnacle",
             "capture_date": f"eq.{capture_date}",
-            "league": "eq.ATP",
+            "league": "in.(ATP,Challenger)",
             "order": "captured_at.desc",
             "limit": 500,
         },
@@ -261,7 +385,7 @@ def main():
     r.raise_for_status()
     pin_rows = r.json()
     if not pin_rows:
-        print(f"No Pinnacle ATP snapshot for {capture_date}. Run pinnacle-scrape-odds.py first.")
+        print(f"No Pinnacle ATP/Challenger snapshot for {capture_date}. Run pinnacle-scrape-odds.py first.")
         sys.exit(1)
 
     # Filter for rows with spread
@@ -270,29 +394,8 @@ def main():
         print(f"No Pinnacle spread data for {capture_date}. Ensure spread columns exist (docs/supabase-bookmaker-spread-columns.sql)")
         sys.exit(1)
 
-    # 3) Match by surname
-    matched = []
-    for pin in pin_with_spread:
-        p1_pin = (pin.get("player1_name") or "").strip()
-        p2_pin = (pin.get("player2_name") or "").strip()
-        s1 = surname(p1_pin)
-        s2 = surname(p2_pin)
-        if not s1 or not s2:
-            continue
-        for fo in fair_rows:
-            p1_our = fo.get("p1_name") or ""
-            p2_our = fo.get("p2_name") or ""
-            s1_our = surname(p1_our)
-            s2_our = surname(p2_our)
-            if not s1_our or not s2_our:
-                continue
-            if s1 == s1_our and s2 == s2_our:
-                matched.append({"fair": fo, "pinnacle": pin, "home_is_p1": True})
-                break
-            if s1 == s2_our and s2 == s1_our:
-                matched.append({"fair": fo, "pinnacle": pin, "home_is_p1": False})
-                break
-
+    # 3) Match using same logic as API matchPinnacle (surname keys, first name, full name)
+    matched = _match_fair_to_pinnacle(fair_rows, pin_with_spread)
     print(f"Matched {len(matched)} of {len(fair_rows)} fair-odds rows to Pinnacle spread")
 
     updated = 0
@@ -300,7 +403,7 @@ def main():
     edge_cal_p1: list[float] = []
     edge_cal_p2: list[float] = []
     for m in matched:
-        fo, pin, home_is_p1 = m["fair"], m["pinnacle"], m["home_is_p1"]
+        fo, pin, pin_reversed_for_fair = m["fair"], m["pinnacle"], m["pin_reversed_for_fair"]
         p_a = float(fo.get("p_a") or 0)
         p_b = float(fo.get("p_b") or 0)
         pin_line = float(pin.get("spread_line") or 0.0)
@@ -316,14 +419,14 @@ def main():
         #   spread_odds2 := odds for OUR player2 at -spread_line
         pin_o1 = float(pin.get("spread_odds1") or 0)
         pin_o2 = float(pin.get("spread_odds2") or 0)
-        if home_is_p1:
-            line = pin_line
-            spread_odds1 = pin_o1
-            spread_odds2 = pin_o2
-        else:
+        if pin_reversed_for_fair:
             line = -pin_line
             spread_odds1 = pin_o2
             spread_odds2 = pin_o1
+        else:
+            line = pin_line
+            spread_odds1 = pin_o1
+            spread_odds2 = pin_o2
 
         if spread_odds1 <= 1 or spread_odds2 <= 1:
             continue

@@ -1,0 +1,11 @@
+---
+description: Do not auto-deploy; user promotes in Vercel
+alwaysApply: true
+---
+
+# Deploy after changes
+
+**Do not deploy to production automatically.** Git is disconnected from Vercel. The user promotes in Vercel after reviewing and merging PRs.
+
+- Do **not** run `vercel --prod` or `git push origin main` as part of a task.
+- Only push feature branches and open PRs. The user will merge and promote when ready.

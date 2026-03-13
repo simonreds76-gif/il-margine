@@ -1,0 +1,38 @@
+---
+description: Golden production version and branch workflow — main is never "old"
+alwaysApply: true
+---
+
+# Golden live and branch workflow
+
+**Golden live commit (only source of truth):** `6c4057f`
+
+**Do NOT touch `main` unless the user explicitly tells you to fast-forward it from a reviewed/merged PR.**
+
+## Process for every task
+
+1. **Start from golden**
+   - `git fetch --all`
+   - `git checkout main`
+   - `git reset --hard 6c4057f`
+
+2. **Create feature branch from this exact state**
+   - `git checkout -b <feature-name>`
+
+3. **Make changes** (only on the feature branch).
+
+4. **Before pushing, prove what changed**
+   - `git diff --stat 6c4057f..HEAD`
+   - Confirm only intended files are listed.
+
+5. **Push only the feature branch**
+   - `git push -u origin <feature-name>`
+   - Do **NOT** push to `main`.
+
+6. **Open a PR** (user merges and promotes in Vercel; do not push to `main` directly).
+
+## Rules
+
+- **Never** push to `main`. Never run `git push origin main` unless the user explicitly asks you to fast-forward `main` after they have merged a PR.
+- **Never** reset or change `main` except: at the start of a task, run `git checkout main` then `git reset --hard 6c4057f` so that new branches are created from golden.
+- To inspect the golden version of a file: `git show 6c4057f:path/to/file`.

@@ -1,0 +1,27 @@
+
+> il-margine@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.5.0.2:3000
+- Environments: .env.local
+
+✓ Starting...
+Creating turbopack project { dir: 'C:\\Users\\44746\\Downloads\\il-margine', testMode: true }
+✓ Ready in 2.3s
+ POST /api/chat 200 in 3.3s (compile: 1038ms, render: 2.3s)
+ POST /api/chat 200 in 570ms (compile: 6ms, render: 564ms)
+ POST /api/chat 200 in 244ms (compile: 2ms, render: 242ms)
+ POST /api/chat 200 in 764ms (compile: 346ms, render: 418ms)
+ POST /api/chat 200 in 247ms (compile: 2ms, render: 244ms)
+ POST /api/chat 200 in 1183ms (compile: 514ms, render: 669ms)
+ POST /api/chat 200 in 208ms (compile: 4ms, render: 204ms)
+ POST /api/chat 200 in 323ms (compile: 4ms, render: 320ms)
+ POST /api/chat 200 in 810ms (compile: 245ms, render: 565ms)
+○ Compiling /fair-odds ...
+ GET /fair-odds 200 in 4.0s (compile: 3.5s, render: 490ms)
+[fair-odds] Challenger filter enabled: 24/30 rows kept.
+[fair-odds] Pinnacle matching: 24/24 matched, 24 Pinnacle rows, 0 Pinnacle-only (no fair odds).
+ GET /api/fair-odds 200 in 1065ms (compile: 166ms, render: 899ms)
+^C

@@ -95,6 +95,29 @@ def prob_match_best_of_3(p_a: float, p_b: float) -> float:
     return s1 * s2 + s1 * (1 - s2) * s1 + (1 - s1) * s2 * s1
 
 
+def prob_match_best_of_5(p_a: float, p_b: float) -> float:
+    """P(A wins best-of-5). Grand Slam format. Serve order: A,B,A,B,A for sets 1-5."""
+    s1 = prob_set(p_a, p_b, a_serves_first=True)
+    s2 = prob_set(p_a, p_b, a_serves_first=False)
+    s3 = prob_set(p_a, p_b, a_serves_first=True)
+    s4 = prob_set(p_a, p_b, a_serves_first=False)
+    s5 = prob_set(p_a, p_b, a_serves_first=True)
+    # A wins 3-0
+    p_30 = s1 * s2 * s3
+    # A wins 3-1 (A loses one of s1,s2,s3; A must win s4 to close)
+    p_31 = (1 - s1) * s2 * s3 * s4 + s1 * (1 - s2) * s3 * s4 + s1 * s2 * (1 - s3) * s4
+    # A wins 3-2 (A loses two of s1..s4 only; A must win s5)
+    p_32 = (
+        (1 - s1) * (1 - s2) * s3 * s4 * s5
+        + (1 - s1) * s2 * (1 - s3) * s4 * s5
+        + (1 - s1) * s2 * s3 * (1 - s4) * s5
+        + s1 * (1 - s2) * (1 - s3) * s4 * s5
+        + s1 * (1 - s2) * s3 * (1 - s4) * s5
+        + s1 * s2 * (1 - s3) * (1 - s4) * s5
+    )
+    return p_30 + p_31 + p_32
+
+
 @lru_cache(maxsize=8192)
 def _expected_games_set(a: int, b: int, pa_int: int, pb_int: int, a_serves: bool) -> float:
     """Expected number of games REMAINING in the set from (a,b) to finish. Tiebreak counts as 1 game."""
@@ -131,6 +154,29 @@ def expected_total_games_best_of_3(p_a: float, p_b: float) -> float:
     p_2_0 = s1 * s2 + (1 - s1) * (1 - s2)
     p_2_1 = 1.0 - p_2_0
     return p_2_0 * (e_s1 + e_s2) + p_2_1 * (e_s1 + e_s2 + e_s1)
+
+
+def expected_total_games_best_of_5(p_a: float, p_b: float) -> float:
+    """Expected total games in a best-of-5 match (Grand Slam). Same serve order as prob_match_best_of_5."""
+    e_a = expected_games_set(p_a, p_b, a_serves_first=True)
+    e_b = expected_games_set(p_a, p_b, a_serves_first=False)
+    s1 = prob_set(p_a, p_b, a_serves_first=True)
+    s2 = prob_set(p_a, p_b, a_serves_first=False)
+    s3 = prob_set(p_a, p_b, a_serves_first=True)
+    s4 = prob_set(p_a, p_b, a_serves_first=False)
+    s5 = prob_set(p_a, p_b, a_serves_first=True)
+    # 3-0: 3 sets (A wins or B wins)
+    p_30 = s1 * s2 * s3 + (1 - s1) * (1 - s2) * (1 - s3)
+    # 3-1: 4 sets (A wins 3-1 or B wins 1-3)
+    p_31_a = (1 - s1) * s2 * s3 * s4 + s1 * (1 - s2) * s3 * s4 + s1 * s2 * (1 - s3) * s4  # A loses 1,2,or 3
+    p_31_b = s1 * (1 - s2) * (1 - s3) * (1 - s4) + (1 - s1) * s2 * (1 - s3) * (1 - s4) + (1 - s1) * (1 - s2) * s3 * (1 - s4) + (1 - s1) * (1 - s2) * (1 - s3) * s4  # B loses 1,2,3,or 4
+    p_31 = p_31_a + p_31_b
+    # 3-2: 5 sets
+    p_32 = 1.0 - p_30 - p_31
+    e_3 = e_a + e_b + e_a
+    e_4 = e_a + e_b + e_a + e_b
+    e_5 = e_a + e_b + e_a + e_b + e_a
+    return p_30 * e_3 + p_31 * e_4 + p_32 * e_5
 
 
 # ── O/U game distribution ──────────────────────────────────────────

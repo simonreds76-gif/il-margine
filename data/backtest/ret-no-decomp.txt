@@ -1,0 +1,66 @@
+﻿Loading tennis-data files...
+CPI overlay: disabled
+Backtest matches loaded: 5,012
+  Skipped while reading XLSX: {'non_completed': 220, 'missing_pinnacle_odds': 114, 'bad_pinnacle_odds': 1}
+Loading OnCourt players/tours...
+Mapping tennis-data names to OnCourt IDs...
+  OnCourt players: 124,676
+  Lefties from categories_atp.csv: 1,199
+  OnCourt index players (singles only): 41,786
+  Popularity rows: 32,624
+  Tennis-data short names: 366
+  Mapped short names: 358
+  Unmapped short names: 8
+  Mapping methods: {'initial_last_short': 307, 'short_popularity': 32, 'short_custom': 1, 'last_only_short': 10, 'short_fuzzy': 8}
+Matches after ID mapping: 4,857
+  Skipped after mapping: {'unmapped_winner': 65, 'unmapped_loser': 88, 'same_player_after_mapping': 2}
+Loading historical OnCourt stat/games...
+  History events loaded: 738,053
+  History skipped: {'doubles_or_team': 162938, 'unsupported_tour': 285204, 'unknown_player_id': 32, 'missing_player_row': 3}
+  Games for fatigue: 129,491 rows, 6,578 players
+Running strict chronological backtest (no future matches in features)...
+Filter: Hard | Masters 1000 only (863 of 4,857 matches)
+Completed predictions: 4,857
+  Confidence: {'high': 3059, 'medium': 1246, 'low': 552}
+  Matchup model path by year (decomposed vs fallback):
+    2024: both_decomposed=2233 (87.9%), fallback/mixed=308 (12.1%)
+    2025: both_decomposed=2072 (89.5%), fallback/mixed=244 (10.5%)
+  Misprice filter (model vs Pin fav implied gap >10pp): excluded=214
+  Misprice filter (model fav odds <1.25): excluded=51
+  Total excluded from ROI: 240
+
+=== Model vs Pinnacle (No-Vig) ===
+Matches evaluated: 863
+Log loss: ours=0.62465 | pinnacle=0.61469 | delta=+0.00996
+Brier score: ours=0.21717 | pinnacle=0.21363 | delta=+0.00354
+Accuracy (favorite wins): ours=66.280% | pinnacle=66.280%
+
+=== Calibration (favorite probability bins) ===
+  50-55%  n=  36  pred=0.546  actual=0.556  gap=+0.009
+  55-60%  n= 227  pred=0.576  actual=0.533  gap=-0.043
+  60-65%  n= 206  pred=0.625  actual=0.680  gap=+0.055
+  65-70%  n= 143  pred=0.674  actual=0.699  gap=+0.025
+  70-75%  n= 117  pred=0.725  actual=0.726  gap=+0.002
+  75-80%  n=  83  pred=0.776  actual=0.771  gap=-0.005
+  80-85%  n=  37  pred=0.819  actual=0.811  gap=-0.008
+  85-90%  n=   8  pred=0.879  actual=0.875  gap=-0.004
+  90-95%  n=   3  pred=0.916  actual=0.667  gap=-0.250
+
+=== ROI by Value% threshold ===
+Value>2.0%  bets= 488  wins= 220  ROI=+11.408%  P/L=+55.67u  maxLosingStreak=10
+Value>5.0%  bets= 405  wins= 177  ROI=+13.025%  P/L=+52.75u  maxLosingStreak=10
+Value>10.0%  bets= 303  wins= 123  ROI=+13.865%  P/L=+42.01u  maxLosingStreak=12
+
+=== Segmentation (threshold 5.0%) by Surface ===
+    Hard  n= 863  logloss=0.62465  ROI=+13.025%
+
+=== Segmentation (threshold 5.0%) by Series ===
+Masters 1000  n= 863  logloss=0.62465  ROI=+13.025%
+
+=== Non-Technical Summary ===
+The model did not beat Pinnacle's closing no-vig line on log loss in this sample.
+Best flat-stake ROI occurred at Value>10.0% with ROI +13.86%.
+Treat this as a validation signal, not production proof, until you repeat across periods and check stability.
+Wrote 2,541 rows -> C:\Users\44746\Downloads\il-margine\data\backtest\backtest-results-2024.csv
+Wrote 2,316 rows -> C:\Users\44746\Downloads\il-margine\data\backtest\backtest-results-2025.csv
+Wrote log -> C:\Users\44746\Downloads\il-margine\data\backtest\backtest-log.txt

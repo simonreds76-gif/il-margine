@@ -1,0 +1,38 @@
+Strict CLV Audit vs Captured/Closing Pinnacle Odds
+Generated UTC: 2026-03-13
+Signals file: C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals.csv
+Closing odds file: C:\Users\44746\Downloads\il-margine\data\backtest\atp-2026.xlsx
+
+Input coverage
+  Raw strict rows: 93
+  Deduped strict rows: 80
+  Settled strict rows: 80
+  Settled ML rows audited: 78
+  Settled spread rows skipped: 2
+  Unique settled ML match+side keys: 57
+  Signal date range: 2026-03-04 -> 2026-03-11
+  Settled match-date range: 2026-03-08 -> 2026-03-13
+
+Captured-history coverage
+  Enabled: True
+  History rows loaded: 14
+  History note: window 2026-03-04 -> 2026-03-13
+
+Closing-file mapping
+  XLSX matches loaded: 69
+  Closing matches mapped to OnCourt IDs: 68
+  Closing date range: 2026-01-04 -> 2026-01-13
+  XLSX skips: {'missing_pinnacle_odds': 447, 'non_completed': 17}
+  Name-map report: {'source_names': 74, 'mapped_names': 73, 'unmapped_names': 1, 'oncourt_index_players': 41793, 'method_counts': {'initial_last_short': 59, 'short_popularity': 9, 'last_only_short': 4, 'short_fuzzy': 1}, 'unmapped_examples': ['Munar J.']}
+  Closing match skips: {'unmapped_winner': 1}
+
+Audit matching
+  Matched ML rows: 0 / 78
+  Closing sources: {}
+  Match methods: {}
+  Unmatched reasons: {'pair_not_found': 78}
+
+Coverage warning
+  Closing file is stale for this live sample: latest closing date 2026-01-13 but earliest settled match date is 2026-03-08.
+
+No matched ML rows to summarize.

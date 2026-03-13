@@ -314,6 +314,7 @@ def scrape_pinnacle() -> list[dict]:
       4. Return list of match dicts
     """
     results = []
+    spread_sign_mismatches = []
 
     # ── Step 1: Get tennis leagues ──
     # default: active only (all=false); fallback/debug: --all-leagues (all=true)
@@ -503,6 +504,30 @@ def scrape_pinnacle() -> list[dict]:
                 "league": league_tag,
                 "league_name": league_name,
             }
+            # Sanity check spread sign vs ML favourite side.
+            # If P1 is ML favourite (odds1 < odds2), spread_line should usually be <= 0.
+            # If P1 is ML underdog (odds1 > odds2), spread_line should usually be >= 0.
+            sline = row.get("spread_line")
+            if sline is not None:
+                try:
+                    o1 = float(row["odds1"])
+                    o2 = float(row["odds2"])
+                    lf = float(sline)
+                    if abs(o1 - o2) > 0.01 and abs(lf) > 1e-6:
+                        p1_fav = o1 < o2
+                        if (p1_fav and lf > 0) or ((not p1_fav) and lf < 0):
+                            spread_sign_mismatches.append(
+                                {
+                                    "player1_name": row["player1_name"],
+                                    "player2_name": row["player2_name"],
+                                    "odds1": o1,
+                                    "odds2": o2,
+                                    "spread_line": lf,
+                                    "league_name": row["league_name"],
+                                }
+                            )
+                except (TypeError, ValueError):
+                    pass
             results.append(row)
             league_count += 1
 
@@ -521,6 +546,20 @@ def scrape_pinnacle() -> list[dict]:
         else:
             seen[key] = r
     results = list(seen.values())
+
+    if spread_sign_mismatches:
+        print(
+            f"  WARNING: {len(spread_sign_mismatches)} spread/ML sign mismatches detected "
+            "(possible mapping issue)."
+        )
+        if VERBOSE:
+            for mm in spread_sign_mismatches[:15]:
+                print(
+                    "    "
+                    f"{mm['player1_name']} vs {mm['player2_name']} | "
+                    f"ML {mm['odds1']:.3f}/{mm['odds2']:.3f} | "
+                    f"spread_line={mm['spread_line']:+.1f} | {mm['league_name']}"
+                )
 
     return results
 
@@ -901,6 +940,17 @@ def main():
     print(f"\n  Summary: {len(results)} matches ({atp} ATP/Challenger, {wta} WTA), {ou_count} with O/U, {spread_count} with spread")
     if chall:
         print(f"    ({chall} of which are Challenger)")
+    # Per-league spread breakdown
+    by_league: dict[str, tuple[int, int]] = {}
+    for r in results:
+        lg = r.get("league") or "?"
+        n, s = by_league.get(lg, (0, 0))
+        by_league[lg] = (n + 1, s + (1 if r.get("spread_line") is not None else 0))
+    if by_league:
+        print("  Per league (matches / with spread):")
+        for lg in sorted(by_league.keys()):
+            n, s = by_league[lg]
+            print(f"    {lg}: {n} / {s}")
 
     if VERBOSE:
         print()

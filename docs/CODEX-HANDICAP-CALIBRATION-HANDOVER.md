@@ -188,24 +188,21 @@ python scripts/handicap-backtest.py --files data/backtest/backtest-results-2024.
 
 ---
 
-## 8.1 Handicap Signals and Settlement (NOT YET IMPLEMENTED)
-
-**These were not in the original calibration scope but are required for production use.**
+## 8.1 Handicap Signals and Settlement (IMPLEMENTED 2026-03-09)
 
 ### Handicap signal generation
 
-- Extend the strict policy so it can emit **spread signals** when `handicap_edge_p1` or `handicap_edge_p2` exceeds a threshold (e.g. 10%).
-- Add `handicap_value_p1`, `handicap_value_p2` (or equivalent) to the strict policy output.
-- Include handicap signals in the daily strict report (`strict-signals.csv` or equivalent) with: match id, side (P1+ or P2−), line, odds, edge %.
+- **strict-policy-report.py**: Emits spread signals when `handicap_edge_p1` or `handicap_edge_p2` >= 20% (`HANDICAP_MIN_EDGE_PCT`).
+- Adds rows with `bet_type=spread`, `side=P1+` or `P2-`, `spread_line`, `spread_odds`, `value_pct` (handicap edge).
+- Same segment/confidence filters as match winner. Dedup key includes `bet_type` and `side`.
 
 ### Handicap settlement
 
-- Extend `settle-strict-signals.py` (or equivalent) to settle handicap bets:
-  - Parse final score → game margin (use `parse_score` from `handicap-backtest.py`).
+- **settle-strict-signals.py**: Settles handicap bets when `side` is P1+ or P2-:
+  - Fetches `result` from `oncourt_games` (or `oncourt_today` fallback).
+  - Parses score → game margin (winner-first convention).
   - P1+ covers when `margin > −line`; P2− covers when `margin < −line`.
-  - Mark win/loss for each handicap bet in the settlement output.
-
-**Files to modify:** `scripts/strict-policy-report.py`, `scripts/settle-strict-signals.py`, `src/app/api/fair-odds/route.ts` (if policy payload needs handicap fields).
+  - Writes `game_margin`, `result` (P1+ or P2-), `bet_outcome`, `won_bet`.
 
 ---
 

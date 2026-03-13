@@ -1,0 +1,105 @@
+{
+  "generated_at_utc": "2026-03-09T16:29:45Z",
+  "files": [
+    "data/backtest/backtest-results-2022.csv",
+    "data/backtest/backtest-results-2023.csv",
+    "data/backtest/backtest-results-2024.csv",
+    "data/backtest/backtest-results-2025.csv"
+  ],
+  "lines": [
+    -5.5,
+    -4.5,
+    -3.5,
+    -2.5,
+    -1.5,
+    -0.5,
+    0.5,
+    1.5,
+    2.5,
+    3.5,
+    4.5,
+    5.5
+  ],
+  "sample_count": 110136,
+  "years": [
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "holdout_year": 2025,
+  "skipped": {
+    "file_missing": 0,
+    "no_prob": 0,
+    "no_score": 1,
+    "no_winner": 0,
+    "bad_date": 0,
+    "bad_margin": 710
+  },
+  "best": {
+    "line_shift": -1.4,
+    "platt_a": 3.035505,
+    "platt_b": 1.076144,
+    "objective": 0.2637074613937845,
+    "train_raw": {
+      "n": 84624,
+      "hit_rate": 0.865782756664776,
+      "mean_pred": 0.4757851718140971,
+      "bias": -0.3899975848506789,
+      "brier": 0.26115824434679347,
+      "log_loss": 0.7710136109276696
+    },
+    "train_cal": {
+      "n": 84624,
+      "hit_rate": 0.865782756664776,
+      "mean_pred": 0.8657827566289055,
+      "bias": -3.587052876952157e-11,
+      "brier": 0.08305948587336667,
+      "log_loss": 0.26621322020069543
+    },
+    "test_raw": {
+      "n": 25512,
+      "hit_rate": 0.8611633740984634,
+      "mean_pred": 0.4784891908772677,
+      "bias": -0.38267418322119573,
+      "brier": 0.25345764487404976,
+      "log_loss": 0.7464808361523042
+    },
+    "test_cal": {
+      "n": 25512,
+      "hit_rate": 0.8611633740984634,
+      "mean_pred": 0.8676523065281581,
+      "bias": 0.006488932429694616,
+      "brier": 0.08183544065108829,
+      "log_loss": 0.26143633504339137
+    }
+  },
+  "surface_eval": {
+    "clay": {
+      "n": 7944,
+      "raw_bias": -0.3813035275289777,
+      "cal_bias": 0.012228001115651366,
+      "raw_log_loss": 0.7280152886684216,
+      "cal_log_loss": 0.2576104927762353
+    },
+    "grass": {
+      "n": 2964,
+      "raw_bias": -0.39206547308295814,
+      "cal_bias": -0.009323236134807678,
+      "raw_log_loss": 0.7907909186168788,
+      "cal_log_loss": 0.2614072731105274
+    },
+    "hard": {
+      "n": 14604,
+      "raw_bias": -0.38151372756991647,
+      "cal_bias": 0.006576382622171306,
+      "raw_log_loss": 0.7475322758117785,
+      "cal_log_loss": 0.2635233474520671
+    }
+  },
+  "usage": {
+    "HANDICAP_LINE_SHIFT": -1.4,
+    "HANDICAP_PLATT_A": 3.035505,
+    "HANDICAP_PLATT_B": 1.076144
+  }
+}

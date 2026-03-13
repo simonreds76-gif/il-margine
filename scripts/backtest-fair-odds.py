@@ -16,7 +16,17 @@ Outputs:
 Run:
   python scripts/backtest-fair-odds.py
   python scripts/backtest-fair-odds.py --include-2026
+  python scripts/backtest-fair-odds.py --challenger   # Challenger from oncourt_games + data/pinnacle-odds-*.csv
   python scripts/backtest-fair-odds.py --dry-run --limit-matches 300
+
+V2 formula (SPW-inversion fix for p_a/p_b double-counting):
+  python scripts/backtest-fair-odds.py --files data/backtest/atp-2024.xlsx --v2
+  # Output: data/backtest/backtest-results-2024-v2.csv
+
+Temperature calibration (apples-to-apples ROI check):
+  python scripts/backtest-fair-odds.py --files data/backtest/atp-2024.xlsx --temperature 1.18
+  # Output: data/backtest/backtest-results-2024-calibrated.csv
+  python scripts/edge-analysis.py --files data/backtest/backtest-results-2024-calibrated.csv
 """
 
 from __future__ import annotations
@@ -43,8 +53,26 @@ if str(ROOT) not in sys.path:
 if str(Path(__file__).resolve().parent) not in sys.path:
     sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from src.lib.tennis_prob import prob_match_best_of_3
+from src.lib.tennis_prob import prob_match_best_of_3, prob_match_best_of_5
 import sackmann_tml_id_map as idmap
+
+try:
+    from hybrid_v2 import compute_point_probs_bc
+    HAS_HYBRID_V2 = True
+except ImportError:
+    HAS_HYBRID_V2 = False
+
+try:
+    from matchup_model import MatchupStats, compute_match_point_probs
+    HAS_MATCHUP_MODEL = True
+except ImportError:
+    HAS_MATCHUP_MODEL = False
+
+try:
+    from fatigue_model import build_recent_matches, compute_fatigue_rust_delta
+    HAS_FATIGUE_MODEL = True
+except ImportError:
+    HAS_FATIGUE_MODEL = False
 
 # Core fair-odds constants (mirrors oncourt-compute-fair-odds.py where applicable)
 DEFAULT_ELO = 1500.0
@@ -174,6 +202,7 @@ class BacktestMatch:
     psl: float
     winner_id: int | None = None
     loser_id: int | None = None
+    score: str | None = None  # e.g. "6-3 7-5" for handicap settlement
 
 
 @dataclass
@@ -183,8 +212,8 @@ class HistoryEvent:
     loser_id: int
     surface: str
     tour_key: str
-    winner_stats: tuple[int, int, int, int] | None
-    loser_stats: tuple[int, int, int, int] | None
+    winner_stats: tuple[int, ...] | None  # (svc_w, svc_t, ret_w, ret_t) or +5 decomposed
+    loser_stats: tuple[int, ...] | None
 
 
 def _float(v: Any, default: float | None = None) -> float | None:
@@ -224,6 +253,12 @@ def _sigmoid(z: float) -> float:
 
 def _safe_prob(p: float) -> float:
     return _clamp(p, 1e-6, 1.0 - 1e-6)
+
+
+def _apply_temperature(p: float, T: float = 1.18) -> float:
+    """Post-hoc temperature scaling: p_cal = sigmoid(logit(p) / T). T>1 reduces overconfidence."""
+    p = _safe_prob(p)
+    return 1.0 / (1.0 + math.exp(-_logit(p) / T))
 
 
 def _mean_std(values: list[float]) -> tuple[float, float]:
@@ -555,33 +590,77 @@ def _build_tennis_data_name_map(
 
 
 def _empty_hist() -> dict[str, list[int]]:
-    return {"d": [], "svc_w": [0], "svc_t": [0], "ret_w": [0], "ret_t": [0]}
+    return {
+        "d": [],
+        "svc_w": [0], "svc_t": [0], "ret_w": [0], "ret_t": [0],
+        "first_in": [0], "first_attempts": [0], "first_won": [0],
+        "second_attempts": [0], "second_won": [0],
+        "ret_vs_first_won": [0], "ret_vs_first_faced": [0],
+        "ret_vs_second_won": [0], "ret_vs_second_faced": [0],
+    }
 
 
-def _hist_add(hist: dict[str, list[int]], d: int, svc_w: int, svc_t: int, ret_w: int, ret_t: int) -> None:
+def _hist_add(
+    hist: dict[str, list[int]],
+    d: int,
+    svc_w: int,
+    svc_t: int,
+    ret_w: int,
+    ret_t: int,
+    first_in: int = 0,
+    first_attempts: int = 0,
+    first_won: int = 0,
+    second_attempts: int = 0,
+    second_won: int = 0,
+    ret_vs_first_won: int = 0,
+    ret_vs_first_faced: int = 0,
+    ret_vs_second_won: int = 0,
+    ret_vs_second_faced: int = 0,
+) -> None:
     hist["d"].append(d)
     hist["svc_w"].append(hist["svc_w"][-1] + svc_w)
     hist["svc_t"].append(hist["svc_t"][-1] + svc_t)
     hist["ret_w"].append(hist["ret_w"][-1] + ret_w)
     hist["ret_t"].append(hist["ret_t"][-1] + ret_t)
+    hist["first_in"].append(hist["first_in"][-1] + first_in)
+    hist["first_attempts"].append(hist["first_attempts"][-1] + first_attempts)
+    hist["first_won"].append(hist["first_won"][-1] + first_won)
+    hist["second_attempts"].append(hist["second_attempts"][-1] + second_attempts)
+    hist["second_won"].append(hist["second_won"][-1] + second_won)
+    hist["ret_vs_first_won"].append(hist["ret_vs_first_won"][-1] + ret_vs_first_won)
+    hist["ret_vs_first_faced"].append(hist["ret_vs_first_faced"][-1] + ret_vs_first_faced)
+    hist["ret_vs_second_won"].append(hist["ret_vs_second_won"][-1] + ret_vs_second_won)
+    hist["ret_vs_second_faced"].append(hist["ret_vs_second_faced"][-1] + ret_vs_second_faced)
 
 
-def _hist_query(hist: dict[str, list[int]] | None, date_ord: int, window_days: int) -> tuple[int, int, int, int, int]:
+def _hist_query(hist: dict[str, list[int]] | None, date_ord: int, window_days: int) -> tuple[int, int, int, int, int, int, int, int, int, int, int, int, int, int]:
+    """Returns (n, svc_w, svc_t, ret_w, ret_t, first_in, first_attempts, first_won, second_attempts, second_won,
+    ret_vs_first_won, ret_vs_first_faced, ret_vs_second_won, ret_vs_second_faced)."""
     if not hist:
-        return (0, 0, 0, 0, 0)
+        return (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
     dates = hist["d"]
     if not dates:
-        return (0, 0, 0, 0, 0)
+        return (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
     hi = bisect_left(dates, date_ord)
     lo = bisect_left(dates, date_ord - window_days, 0, hi)
     if hi <= lo:
-        return (0, 0, 0, 0, 0)
+        return (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
     n = hi - lo
     svc_w = hist["svc_w"][hi] - hist["svc_w"][lo]
     svc_t = hist["svc_t"][hi] - hist["svc_t"][lo]
     ret_w = hist["ret_w"][hi] - hist["ret_w"][lo]
     ret_t = hist["ret_t"][hi] - hist["ret_t"][lo]
-    return (n, svc_w, svc_t, ret_w, ret_t)
+    first_in = hist["first_in"][hi] - hist["first_in"][lo]
+    first_attempts = hist["first_attempts"][hi] - hist["first_attempts"][lo]
+    first_won = hist["first_won"][hi] - hist["first_won"][lo]
+    second_attempts = hist["second_attempts"][hi] - hist["second_attempts"][lo]
+    second_won = hist["second_won"][hi] - hist["second_won"][lo]
+    rvf_w = hist["ret_vs_first_won"][hi] - hist["ret_vs_first_won"][lo]
+    rvf_f = hist["ret_vs_first_faced"][hi] - hist["ret_vs_first_faced"][lo]
+    rvs_w = hist["ret_vs_second_won"][hi] - hist["ret_vs_second_won"][lo]
+    rvs_f = hist["ret_vs_second_faced"][hi] - hist["ret_vs_second_faced"][lo]
+    return (n, svc_w, svc_t, ret_w, ret_t, first_in, first_attempts, first_won, second_attempts, second_won,
+            rvf_w, rvf_f, rvs_w, rvs_f)
 
 
 class ModelState:
@@ -647,12 +726,28 @@ class ModelState:
 
         if ev.winner_stats:
             ws = ev.winner_stats
-            _hist_add(self.point_hist[(w, surf)], ev.date_ord, ws[0], ws[1], ws[2], ws[3])
-            _hist_add(self.point_hist[(w, "N/A")], ev.date_ord, ws[0], ws[1], ws[2], ws[3])
+            dec = (ws[4], ws[5], ws[6], ws[7], ws[8]) if len(ws) >= 9 else (0, 0, 0, 0, 0)
+            # Winner's return vs opponent (loser) serve: loser's first_in - first_won, etc.
+            ls = ev.loser_stats
+            if ls and len(ls) >= 9:
+                rvf_w, rvf_f = max(0, ls[4] - ls[6]), ls[4]
+                rvs_w, rvs_f = max(0, ls[7] - ls[8]), ls[7]
+            else:
+                rvf_w, rvf_f, rvs_w, rvs_f = 0, 0, 0, 0
+            _hist_add(self.point_hist[(w, surf)], ev.date_ord, ws[0], ws[1], ws[2], ws[3], *dec, rvf_w, rvf_f, rvs_w, rvs_f)
+            _hist_add(self.point_hist[(w, "N/A")], ev.date_ord, ws[0], ws[1], ws[2], ws[3], *dec, rvf_w, rvf_f, rvs_w, rvs_f)
         if ev.loser_stats:
             ls = ev.loser_stats
-            _hist_add(self.point_hist[(l, surf)], ev.date_ord, ls[0], ls[1], ls[2], ls[3])
-            _hist_add(self.point_hist[(l, "N/A")], ev.date_ord, ls[0], ls[1], ls[2], ls[3])
+            dec = (ls[4], ls[5], ls[6], ls[7], ls[8]) if len(ls) >= 9 else (0, 0, 0, 0, 0)
+            # Loser's return vs opponent (winner) serve
+            ws = ev.winner_stats
+            if ws and len(ws) >= 9:
+                rvf_w, rvf_f = max(0, ws[4] - ws[6]), ws[4]
+                rvs_w, rvs_f = max(0, ws[7] - ws[8]), ws[7]
+            else:
+                rvf_w, rvf_f, rvs_w, rvs_f = 0, 0, 0, 0
+            _hist_add(self.point_hist[(l, surf)], ev.date_ord, ls[0], ls[1], ls[2], ls[3], *dec, rvf_w, rvf_f, rvs_w, rvs_f)
+            _hist_add(self.point_hist[(l, "N/A")], ev.date_ord, ls[0], ls[1], ls[2], ls[3], *dec, rvf_w, rvf_f, rvs_w, rvs_f)
 
         if l in lefties:
             vl = self.vs_leftie[(w, surf)]
@@ -676,10 +771,16 @@ class ModelState:
     def player_stats(self, pid: int, surface: str, date_ord: int) -> dict[str, Any]:
         for s in _surface_candidates(surface):
             hist = self.point_hist.get((pid, s))
-            n12, svc_w12, svc_t12, ret_w12, ret_t12 = _hist_query(hist, date_ord, POINT_WINDOW_12M_DAYS)
-            n36, svc_w36, svc_t36, ret_w36, ret_t36 = _hist_query(hist, date_ord, POINT_WINDOW_36M_DAYS)
+            q12 = _hist_query(hist, date_ord, POINT_WINDOW_12M_DAYS)
+            q36 = _hist_query(hist, date_ord, POINT_WINDOW_36M_DAYS)
+            n12, svc_w12, svc_t12, ret_w12, ret_t12 = q12[0], q12[1], q12[2], q12[3], q12[4]
+            n36, svc_w36, svc_t36, ret_w36, ret_t36 = q36[0], q36[1], q36[2], q36[3], q36[4]
+            fi12, fa12, fw12, sa12, sw12 = q12[5], q12[6], q12[7], q12[8], q12[9]
+            fi36, fa36, fw36, sa36, sw36 = q36[5], q36[6], q36[7], q36[8], q36[9]
+            rvf_w12, rvf_f12, rvs_w12, rvs_f12 = q12[10], q12[11], q12[12], q12[13]
+            rvf_w36, rvf_f36, rvs_w36, rvs_f36 = q36[10], q36[11], q36[12], q36[13]
             if n12 > 0 or n36 > 0:
-                return {
+                out: dict[str, Any] = {
                     "surface_used": s,
                     "hold_pct": (svc_w12 / svc_t12) if svc_t12 > 0 else None,
                     "return_pct": (ret_w12 / ret_t12) if ret_t12 > 0 else None,
@@ -689,6 +790,25 @@ class ModelState:
                     "service_pts": svc_t12,
                     "return_pts": ret_t12,
                 }
+                if fa12 > 0:
+                    out["first_serve_pct"] = fi12 / fa12
+                    out["first_serve_win_pct"] = fw12 / fi12 if fi12 > 0 else None
+                if sa12 > 0:
+                    out["second_serve_win_pct"] = sw12 / sa12
+                if fa36 > 0:
+                    out["first_serve_pct_long"] = fi36 / fa36
+                    out["first_serve_win_pct_long"] = fw36 / fi36 if fi36 > 0 else None
+                if sa36 > 0:
+                    out["second_serve_win_pct_long"] = sw36 / sa36
+                if rvf_f12 > 0:
+                    out["ret_vs_first_win_pct"] = rvf_w12 / rvf_f12
+                if rvs_f12 > 0:
+                    out["ret_vs_second_win_pct"] = rvs_w12 / rvs_f12
+                if rvf_f36 > 0:
+                    out["ret_vs_first_win_pct_long"] = rvf_w36 / rvf_f36
+                if rvs_f36 > 0:
+                    out["ret_vs_second_win_pct_long"] = rvs_w36 / rvs_f36
+                return out
         return {
             "surface_used": None,
             "hold_pct": None,
@@ -911,12 +1031,13 @@ def _recent_reliability(activity: dict[str, Any] | None, birthdate: str | None, 
     return 0.80
 
 
-def _form_fatigue_rust(
+def _form_component_only(
     activity: dict[str, Any] | None,
     player_elo_surface: float,
     birthdate: str | None,
     match_date: date,
 ) -> float:
+    """Form only: outperformance vs expected given opponent quality. No fatigue/rust."""
     if not activity:
         age = _age_years_at(birthdate, match_date)
         penalty = MISSING_ACTIVITY_BASE_PENALTY
@@ -935,6 +1056,19 @@ def _form_fatigue_rust(
         expected_wr = 1.0 / (1.0 + 10.0 ** ((avg_opp - player_elo_surface) / 400.0))
         delta_form = (float(wr) - expected_wr) * FORM_WEIGHT
         delta_form = _clamp(delta_form, -FORM_CAP, FORM_CAP)
+    return delta_form
+
+
+def _form_fatigue_rust(
+    activity: dict[str, Any] | None,
+    player_elo_surface: float,
+    birthdate: str | None,
+    match_date: date,
+) -> float:
+    """Legacy: form + V4 fatigue + rust. Used when fatigue model not available."""
+    delta_form = _form_component_only(activity, player_elo_surface, birthdate, match_date)
+    if not activity:
+        return delta_form
 
     delta_fatigue = 0.0
     if activity.get("played_yesterday"):
@@ -1059,6 +1193,9 @@ def _compute_match_probability(
     birthdate_by_player: dict[int, str | None],
     lefties: set[int],
     *,
+    use_v2_formula: bool = False,
+    use_matchup_model: bool = True,
+    use_decomposed_return: bool = True,
     cpi_enabled: bool = False,
     cpi_lookup: dict[tuple[int, str, str], float] | None = None,
     cpi_year_surface_stats: dict[tuple[int, str], tuple[float, float]] | None = None,
@@ -1067,6 +1204,8 @@ def _compute_match_probability(
     cpi_match_weight: float = DEFAULT_CPI_MATCH_WEIGHT,
     cpi_match_cap: float = DEFAULT_CPI_MATCH_CAP,
     cpi_z_cap: float = DEFAULT_CPI_Z_CAP,
+    games_by_player: dict[int, list[dict[str, Any]]] | None = None,
+    tour_surface_map: dict[int, str] | None = None,
 ) -> tuple[float, str, dict[str, Any]]:
     p1 = int(match.winner_id)  # player1 is row winner (actual outcome)
     p2 = int(match.loser_id)
@@ -1130,9 +1269,59 @@ def _compute_match_probability(
     league_avg = SURFACE_LEAGUE_AVG.get(surface, SURFACE_LEAGUE_AVG["N/A"])
     if league_avg <= 0.0 or league_avg >= 1.0:
         league_avg = 0.64
-    p_a = _clamp((hold1_eff * (1.0 - ret2_eff)) / league_avg, POINT_CLAMP[0], POINT_CLAMP[1])
-    p_b = _clamp((hold2_eff * (1.0 - ret1_eff)) / league_avg, POINT_CLAMP[0], POINT_CLAMP[1])
-    p_serve_return = prob_match_best_of_3(p_a, p_b)
+
+    matchup_method = "legacy"
+    if use_matchup_model and HAS_MATCHUP_MODEL and (s1 or s2):
+        def _blend(s: dict[str, Any], k12: str, klong: str) -> float | None:
+            v12 = _float(s.get(k12))
+            vlong = _float(s.get(klong), v12)
+            if v12 is None:
+                return vlong
+            if vlong is None:
+                return v12
+            return recent_weight * v12 + (1.0 - recent_weight) * vlong
+
+        def _build_matchup_row(s: dict[str, Any], hold_val: float, ret_val: float) -> dict[str, Any]:
+            row: dict[str, Any] = {
+                "hold_pct": hold_val,
+                "return_pct": ret_val,
+                "match_count": int(s.get("match_count") or 0),
+                "service_pts": int(s.get("service_pts") or 0),
+            }
+            if s.get("first_serve_pct") is not None:
+                row["first_serve_pct"] = _blend(s, "first_serve_pct", "first_serve_pct_long")
+                row["first_serve_win_pct"] = _blend(s, "first_serve_win_pct", "first_serve_win_pct_long")
+                row["second_serve_win_pct"] = _blend(s, "second_serve_win_pct", "second_serve_win_pct_long")
+            if use_decomposed_return and s.get("ret_vs_first_win_pct") is not None:
+                row["ret_vs_first_win_pct"] = _blend(s, "ret_vs_first_win_pct", "ret_vs_first_win_pct_long")
+            if use_decomposed_return and s.get("ret_vs_second_win_pct") is not None:
+                row["ret_vs_second_win_pct"] = _blend(s, "ret_vs_second_win_pct", "ret_vs_second_win_pct_long")
+            return row
+
+        # Use SPW/RPW-scale adjusted values so matchup branch is consistent with
+        # the fallback branch and live fair-odds pipeline.
+        row1 = _build_matchup_row(s1 or {}, hold1_eff, ret1_eff)
+        row2 = _build_matchup_row(s2 or {}, hold2_eff, ret2_eff)
+        stats_a = MatchupStats.from_db_row(row1)
+        stats_b = MatchupStats.from_db_row(row2)
+        p_a, p_b, _ = compute_match_point_probs(stats_a, stats_b, surface)
+        # Classify for decomposed-vs-fallback diagnostic
+        if stats_a.has_decomposed and stats_b.has_decomposed:
+            matchup_method = "both_decomposed"
+        elif stats_a.has_decomposed or stats_b.has_decomposed:
+            matchup_method = "one_decomposed"
+        else:
+            matchup_method = "neither_decomposed"
+    elif use_v2_formula and HAS_HYBRID_V2:
+        p_a, p_b = compute_point_probs_bc(
+            hold1_eff, ret1_eff, hold2_eff, ret2_eff,
+            surface, league_avg=SURFACE_LEAGUE_AVG
+        )
+    else:
+        p_a = _clamp((hold1_eff * (1.0 - ret2_eff)) / league_avg, POINT_CLAMP[0], POINT_CLAMP[1])
+        p_b = _clamp((hold2_eff * (1.0 - ret1_eff)) / league_avg, POINT_CLAMP[0], POINT_CLAMP[1])
+    is_best_of_5 = (match.series or "").strip() == "Grand Slam"
+    p_serve_return = prob_match_best_of_5(p_a, p_b) if is_best_of_5 else prob_match_best_of_3(p_a, p_b)
 
     e1_s = state.elo_surface.get((p1, surface), DEFAULT_ELO)
     e2_s = state.elo_surface.get((p2, surface), DEFAULT_ELO)
@@ -1308,9 +1497,28 @@ def _compute_match_probability(
         cpi_delta = _clamp(cpi_z * style_edge * cpi_match_weight, -cpi_match_cap, cpi_match_cap)
         delta_p1 += structural_mult * cpi_delta
 
-    p1_form = _form_fatigue_rust(act1, e1_s, birthdate_by_player.get(p1), match_dt)
-    p2_form = _form_fatigue_rust(act2, e2_s, birthdate_by_player.get(p2), match_dt)
-    delta_form = _clamp(form_mult * 0.5 * (p1_form - p2_form), -FORM_TOTAL_CAP, FORM_TOTAL_CAP)
+    if HAS_FATIGUE_MODEL and games_by_player is not None and tour_surface_map is not None:
+        p1_form = _form_component_only(act1, e1_s, birthdate_by_player.get(p1), match_dt)
+        p2_form = _form_component_only(act2, e2_s, birthdate_by_player.get(p2), match_dt)
+        delta_form_part = form_mult * 0.5 * (p1_form - p2_form)
+        p1_recent = build_recent_matches(
+            p1, games_by_player.get(p1, []), tour_surface_map, match_dt, lookback_days=21
+        )
+        p2_recent = build_recent_matches(
+            p2, games_by_player.get(p2, []), tour_surface_map, match_dt, lookback_days=21
+        )
+        delta_fatigue_rust, _ = compute_fatigue_rust_delta(
+            p1_recent, p2_recent, match_dt, surface, tour_id=None, debug=False
+        )
+        delta_form = _clamp(
+            delta_form_part + structural_mult * delta_fatigue_rust,
+            -FORM_TOTAL_CAP,
+            FORM_TOTAL_CAP,
+        )
+    else:
+        p1_form = _form_fatigue_rust(act1, e1_s, birthdate_by_player.get(p1), match_dt)
+        p2_form = _form_fatigue_rust(act2, e2_s, birthdate_by_player.get(p2), match_dt)
+        delta_form = _clamp(form_mult * 0.5 * (p1_form - p2_form), -FORM_TOTAL_CAP, FORM_TOTAL_CAP)
     delta_p1 += delta_form
 
     p1_rf = _results_form_component(p1_results)
@@ -1348,12 +1556,149 @@ def _compute_match_probability(
         "p_elo": p_elo,
         "p_rank": p_rank,
         "p_raw": p1_raw,
+        "p_a": p_a,
+        "p_b": p_b,
         "cpi_value": cpi_value,
         "cpi_year": cpi_year,
         "cpi_z": cpi_z,
         "cpi_delta": cpi_delta,
+        "matchup_method": matchup_method,
     }
     return p1_win, confidence, debug
+
+
+def _normalize_name_for_match(name: str) -> str:
+    """Normalize for Challenger Pinnacle vs OnCourt name matching."""
+    s = (name or "").strip().lower()
+    s = " ".join(s.split())
+    return s
+
+
+def _load_challenger_matches(
+    games_path: Path,
+    tours_path: Path,
+    players_path: Path,
+    courts_path: Path,
+    pinnacle_data_dir: Path,
+) -> tuple[list[BacktestMatch], Counter, set[str]]:
+    """Load Challenger matches from oncourt_games + local pinnacle-odds CSV files.
+    Only includes matches where we have both a result and Pinnacle odds for that date."""
+    tours = _load_tour_info(tours_path, courts_path)
+    challenger_tour_ids = {tid for tid, t in tours.items() if "CHALLENGER" in (t.get("name") or "").upper()}
+    if not challenger_tour_ids:
+        return [], Counter({"no_challenger_tours": 1}), set()
+
+    players_by_id: dict[int, str] = {}
+    with open(players_path, "r", encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            pid = _int(row.get("id"))
+            if pid is not None:
+                players_by_id[pid] = (row.get("name") or "").strip()
+
+    # Build pinnacle lookup: (capture_date, norm_p1, norm_p2) -> (odds1, odds2)
+    pinnacle_lookup: dict[tuple[str, str, str], tuple[float, float]] = {}
+    pinnacle_dates: set[str] = set()
+    pinnacle_files = sorted(pinnacle_data_dir.glob("pinnacle-odds-*.csv"))
+    for p in pinnacle_files:
+        m = re.search(r"(\d{4}-\d{2}-\d{2})", p.name)
+        capture_date = m.group(1) if m else ""
+        if not capture_date:
+            continue
+        with open(p, "r", encoding="utf-8-sig", newline="") as f:
+            for row in csv.DictReader(f):
+                if str(row.get("league") or "").strip() != "Challenger":
+                    continue
+                p1 = _normalize_name_for_match(row.get("player1_name"))
+                p2 = _normalize_name_for_match(row.get("player2_name"))
+                if not p1 or not p2:
+                    continue
+                o1 = _float(row.get("odds1"))
+                o2 = _float(row.get("odds2"))
+                if o1 is None or o2 is None or o1 <= 1.0 or o2 <= 1.0:
+                    continue
+                key = (capture_date, p1, p2)
+                pinnacle_lookup[key] = (float(o1), float(o2))
+                pinnacle_dates.add(capture_date)
+
+    if not pinnacle_dates:
+        return [], Counter({"no_pinnacle_challenger_odds": 1}), set()
+
+    matches: list[BacktestMatch] = []
+    short_names = set()
+    skip = Counter()
+
+    with open(games_path, "r", encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            tid = _int(row.get("tour_id"))
+            if tid not in challenger_tour_ids:
+                continue
+            date_str = (row.get("date") or "").strip()[:10]
+            if not date_str or date_str not in pinnacle_dates:
+                skip["date_not_in_pinnacle"] += 1
+                continue
+            wid = _int(row.get("winner_id"))
+            lid = _int(row.get("loser_id"))
+            if wid is None or lid is None:
+                skip["missing_ids"] += 1
+                continue
+            winner_name = players_by_id.get(wid, "")
+            loser_name = players_by_id.get(lid, "")
+            if not winner_name or not loser_name:
+                skip["unknown_player"] += 1
+                continue
+            if "/" in winner_name or "/" in loser_name:
+                skip["doubles"] += 1
+                continue
+
+            dt = _to_date(date_str)
+            if dt is None:
+                skip["bad_date"] += 1
+                continue
+
+            wn = _normalize_name_for_match(winner_name)
+            ln = _normalize_name_for_match(loser_name)
+            key1 = (date_str, wn, ln)
+            key2 = (date_str, ln, wn)
+            if key1 in pinnacle_lookup:
+                psw, psl = pinnacle_lookup[key1]
+            elif key2 in pinnacle_lookup:
+                psl, psw = pinnacle_lookup[key2]
+            else:
+                skip["no_pinnacle_odds"] += 1
+                continue
+
+            tour_info = tours.get(tid, {})
+            surface = tour_info.get("surface", "Hard")
+            tournament = tour_info.get("name", "Challenger")
+
+            bt = BacktestMatch(
+                year=dt.year,
+                date_ord=dt.toordinal(),
+                date_iso=date_str,
+                tournament=tournament,
+                location="",
+                tournament_key=_tour_key(tournament),
+                surface=surface,
+                round_name="",
+                series="Challenger",
+                winner_name_short=winner_name,
+                loser_name_short=loser_name,
+                winner_rank=None,
+                loser_rank=None,
+                winner_pts=None,
+                loser_pts=None,
+                psw=psw,
+                psl=psl,
+                winner_id=wid,
+                loser_id=lid,
+                score=(row.get("result") or "").strip() or None,
+            )
+            matches.append(bt)
+            short_names.add(winner_name)
+            short_names.add(loser_name)
+
+    matches.sort(key=lambda x: (x.date_ord, x.tournament, x.winner_name_short, x.loser_name_short))
+    return matches, skip, short_names
 
 
 def _load_backtest_matches(paths: list[Path]) -> tuple[list[BacktestMatch], Counter, set[str]]:
@@ -1368,75 +1713,92 @@ def _load_backtest_matches(paths: list[Path]) -> tuple[list[BacktestMatch], Coun
         file_year = int(m.group(1)) if m else 0
 
         wb = load_workbook(path, read_only=True, data_only=True)
-        ws = wb.active
-        rows = ws.iter_rows(values_only=True)
-        header = [str(h) if h is not None else "" for h in next(rows)]
-        idx = {k: i for i, k in enumerate(header)}
-
         required = ["Date", "Tournament", "Surface", "Court", "Round", "Series", "Winner", "Loser", "PSW", "PSL", "Comment"]
-        for key in required:
-            if key not in idx:
-                raise RuntimeError(f"{path.name}: missing required column {key}")
-
-        for row in rows:
-            comment = str(row[idx["Comment"]] or "").strip()
-            if comment != "Completed":
-                skip["non_completed"] += 1
+        for ws in wb.worksheets:
+            rows = ws.iter_rows(values_only=True)
+            try:
+                first_row = next(rows)
+            except StopIteration:
                 continue
+            header = [str(h) if h is not None else "" for h in first_row]
+            idx = {k: i for i, k in enumerate(header)}
+            if any(key not in idx for key in required):
+                continue  # skip sheets without required columns (e.g. notes)
+            for row in rows:
+                comment = str(row[idx["Comment"]] or "").strip()
+                if comment != "Completed":
+                    skip["non_completed"] += 1
+                    continue
 
-            dt = _to_date(row[idx["Date"]])
-            if dt is None:
-                skip["missing_date"] += 1
-                continue
-            winner = str(row[idx["Winner"]] or "").strip()
-            loser = str(row[idx["Loser"]] or "").strip()
-            if not winner or not loser:
-                skip["missing_name"] += 1
-                continue
+                dt = _to_date(row[idx["Date"]])
+                if dt is None:
+                    skip["missing_date"] += 1
+                    continue
+                winner = str(row[idx["Winner"]] or "").strip()
+                loser = str(row[idx["Loser"]] or "").strip()
+                if not winner or not loser:
+                    skip["missing_name"] += 1
+                    continue
 
-            psw = _float(row[idx["PSW"]])
-            psl = _float(row[idx["PSL"]])
-            if psw is None or psl is None:
-                skip["missing_pinnacle_odds"] += 1
-                continue
-            if psw <= 1.0 or psl <= 1.0:
-                skip["bad_pinnacle_odds"] += 1
-                continue
+                psw = _float(row[idx["PSW"]])
+                psl = _float(row[idx["PSL"]])
+                if psw is None or psl is None:
+                    skip["missing_pinnacle_odds"] += 1
+                    continue
+                if psw <= 1.0 or psl <= 1.0:
+                    skip["bad_pinnacle_odds"] += 1
+                    continue
 
-            surface = _court_to_surface(str(row[idx["Court"]] or ""), str(row[idx["Surface"]] or ""))
-            tournament = str(row[idx["Tournament"]] or "").strip()
-            location = str(row[idx.get("Location", -1)] or "").strip() if "Location" in idx else ""
-            tournament_key = _tour_key(f"{tournament} - {location}".strip(" -"))
-            if not tournament_key:
-                tournament_key = _tour_key(tournament)
+                surface = _court_to_surface(str(row[idx["Court"]] or ""), str(row[idx["Surface"]] or ""))
+                tournament = str(row[idx["Tournament"]] or "").strip()
+                location = str(row[idx.get("Location", -1)] or "").strip() if "Location" in idx else ""
+                tournament_key = _tour_key(f"{tournament} - {location}".strip(" -"))
+                if not tournament_key:
+                    tournament_key = _tour_key(tournament)
 
-            winner_rank = _int(row[idx.get("WRank")]) if "WRank" in idx else None
-            loser_rank = _int(row[idx.get("LRank")]) if "LRank" in idx else None
-            winner_pts = _float(row[idx.get("WPts")]) if "WPts" in idx else None
-            loser_pts = _float(row[idx.get("LPts")]) if "LPts" in idx else None
+                winner_rank = _int(row[idx.get("WRank")]) if "WRank" in idx else None
+                loser_rank = _int(row[idx.get("LRank")]) if "LRank" in idx else None
+                winner_pts = _float(row[idx.get("WPts")]) if "WPts" in idx else None
+                loser_pts = _float(row[idx.get("LPts")]) if "LPts" in idx else None
 
-            bt = BacktestMatch(
-                year=file_year,
-                date_ord=dt.toordinal(),
-                date_iso=dt.isoformat(),
-                tournament=tournament,
-                location=location,
-                tournament_key=tournament_key,
-                surface=surface,
-                round_name=str(row[idx["Round"]] or "").strip(),
-                series=str(row[idx["Series"]] or "").strip(),
-                winner_name_short=winner,
-                loser_name_short=loser,
-                winner_rank=winner_rank,
-                loser_rank=loser_rank,
-                winner_pts=winner_pts,
-                loser_pts=loser_pts,
-                psw=float(psw),
-                psl=float(psl),
-            )
-            matches.append(bt)
-            short_names.add(winner)
-            short_names.add(loser)
+                score_str = None
+                if all(k in idx for k in ["W1", "L1", "W2", "L2"]):
+                    w1 = _int(row[idx["W1"]])
+                    l1 = _int(row[idx["L1"]])
+                    w2 = _int(row[idx["W2"]])
+                    l2 = _int(row[idx["L2"]])
+                    if w1 is not None and l1 is not None and w2 is not None and l2 is not None:
+                        parts = [f"{w1}-{l1}", f"{w2}-{l2}"]
+                        if "W3" in idx and "L3" in idx:
+                            w3 = _int(row[idx["W3"]])
+                            l3 = _int(row[idx["L3"]])
+                            if w3 is not None and l3 is not None:
+                                parts.append(f"{w3}-{l3}")
+                        score_str = " ".join(parts)
+
+                bt = BacktestMatch(
+                    year=file_year,
+                    date_ord=dt.toordinal(),
+                    date_iso=dt.isoformat(),
+                    tournament=tournament,
+                    location=location,
+                    tournament_key=tournament_key,
+                    surface=surface,
+                    round_name=str(row[idx["Round"]] or "").strip(),
+                    series=str(row[idx["Series"]] or "").strip(),
+                    winner_name_short=winner,
+                    loser_name_short=loser,
+                    winner_rank=winner_rank,
+                    loser_rank=loser_rank,
+                    winner_pts=winner_pts,
+                    loser_pts=loser_pts,
+                    psw=float(psw),
+                    psl=float(psl),
+                    score=score_str,
+                )
+                matches.append(bt)
+                short_names.add(winner)
+                short_names.add(loser)
 
     matches.sort(key=lambda x: (x.date_ord, x.year, x.tournament, x.winner_name_short, x.loser_name_short))
     return matches, skip, short_names
@@ -1531,9 +1893,50 @@ def _load_tour_info(tours_path: Path, courts_path: Path) -> dict[int, dict[str, 
                 "date_ord": d.toordinal() if d else None,
                 "surface": surface,
                 "tour_key": _tour_key(name),
-                "is_supported": _is_supported_tour(name, rank),
-            }
+            "is_supported": _is_supported_tour(name, rank),
+        }
     return out
+
+
+def _load_games_for_fatigue(
+    games_path: Path,
+    tours: dict[int, dict[str, Any]],
+    max_date_ord: int,
+    player_ids: set[int] | None = None,
+) -> tuple[dict[int, list[dict[str, Any]]], dict[int, str]]:
+    """Load games from games_atp.csv, index by player, for fatigue model.
+    If player_ids is set, only load games for those players (saves memory)."""
+    tour_surface_map = {tid: str(t.get("surface") or "Hard") for tid, t in tours.items()}
+    games_by_player: dict[int, list[dict[str, Any]]] = defaultdict(list)
+
+    with open(games_path, "r", encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            w = _int(row.get("winner_id"))
+            l = _int(row.get("loser_id"))
+            t = _int(row.get("tour_id"))
+            if w is None or l is None:
+                continue
+            if player_ids is not None and w not in player_ids and l not in player_ids:
+                continue
+            gd = _to_date(row.get("date"))
+            if not gd:
+                continue
+            if gd.toordinal() >= max_date_ord:
+                continue
+            rec = {
+                "winner_id": w,
+                "loser_id": l,
+                "tour_id": t,
+                "round_id": _int(row.get("round_id")),
+                "result": (row.get("result") or row.get("score") or "").strip(),
+                "date": gd,
+            }
+            games_by_player[w].append(rec)
+            games_by_player[l].append(rec)
+
+    for pid in games_by_player:
+        games_by_player[pid].sort(key=lambda g: g["date"], reverse=True)
+    return dict(games_by_player), tour_surface_map
 
 
 def _load_player_popularity(
@@ -1574,6 +1977,8 @@ def _load_stat_map(path: Path) -> dict[tuple[int, int, int, int], deque[tuple[in
             if w is None or l is None or t is None:
                 continue
             key = (w, l, t, int(rd or 0))
+            w_fs = int(_int(row.get("w_fs"), 0) or 0)  # first serves in (OnCourt)
+            l_fs = int(_int(row.get("l_fs"), 0) or 0)
             stat_map[key].append(
                 (
                     int(_int(row.get("w_w1s"), 0) or 0),
@@ -1588,6 +1993,8 @@ def _load_stat_map(path: Path) -> dict[tuple[int, int, int, int], deque[tuple[in
                     int(_int(row.get("l_w2sof"), 0) or 0),
                     int(_int(row.get("l_rpw"), 0) or 0),
                     int(_int(row.get("l_rpwof"), 0) or 0),
+                    w_fs,
+                    l_fs,
                 )
             )
     return stat_map
@@ -1650,22 +2057,32 @@ def _history_from_oncourt(
             winner_stats = None
             loser_stats = None
             if stat_row:
-                (
-                    w_w1s,
-                    w_w2s,
-                    w_fsof,
-                    w_w2sof,
+                w_w1s, w_w2s, w_fsof, w_w2sof, w_rpw, w_rpwof = stat_row[0], stat_row[1], stat_row[2], stat_row[3], stat_row[4], stat_row[5]
+                l_w1s, l_w2s, l_fsof, l_w2sof, l_rpw, l_rpwof = stat_row[6], stat_row[7], stat_row[8], stat_row[9], stat_row[10], stat_row[11]
+                w_fs = stat_row[12] if len(stat_row) >= 14 else 0
+                l_fs = stat_row[13] if len(stat_row) >= 14 else 0
+                winner_stats = (
+                    w_w1s + w_w2s,
+                    w_fsof + w_w2sof,
                     w_rpw,
                     w_rpwof,
-                    l_w1s,
-                    l_w2s,
-                    l_fsof,
-                    l_w2sof,
+                    w_fs,
+                    w_fsof,
+                    w_w1s,
+                    w_w2sof,
+                    w_w2s,
+                )
+                loser_stats = (
+                    l_w1s + l_w2s,
+                    l_fsof + l_w2sof,
                     l_rpw,
                     l_rpwof,
-                ) = stat_row
-                winner_stats = (w_w1s + w_w2s, w_fsof + w_w2sof, w_rpw, w_rpwof)
-                loser_stats = (l_w1s + l_w2s, l_fsof + l_w2sof, l_rpw, l_rpwof)
+                    l_fs,
+                    l_fsof,
+                    l_w1s,
+                    l_w2sof,
+                    l_w2s,
+                )
                 if loser_stats[1] == 0 or loser_stats[3] == 0:
                     loser_stats = None
                 if winner_stats[1] == 0 or winner_stats[3] == 0:
@@ -1711,6 +2128,41 @@ def _summarize_calibration(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             }
         )
     return out
+
+
+# Suppress when model and Pinnacle disagree on favourite pricing by >10pp.
+# Phantom underdog edges (model 1.15 vs Pin 1.02) cause guaranteed losses.
+MISPRICE_IMPLIED_GAP_PP = 0.10
+# Skip matches where model favourite odds < threshold. Model cannot price extreme mismatches.
+DEFAULT_MISPRICE_MODEL_FAV_ODDS_MIN = 1.25
+
+
+def _is_mispriced_model_fav_odds(row: dict[str, Any], min_odds: float = DEFAULT_MISPRICE_MODEL_FAV_ODDS_MIN) -> bool:
+    """Exclude match if model favourite odds < min_odds (both sides unreliable)."""
+    p = _safe_prob(float(row.get("p_model_winner") or 0.5))
+    our_odds_w = 1.0 / p
+    our_odds_l = 1.0 / _safe_prob(1.0 - p)
+    model_fav_odds = min(our_odds_w, our_odds_l)
+    return model_fav_odds < min_odds
+
+
+def _is_mispriced_pinnacle_fav_odds(row: dict[str, Any], min_odds: float = DEFAULT_MISPRICE_MODEL_FAV_ODDS_MIN) -> bool:
+    """Exclude match if Pinnacle favourite odds < min_odds. Market massacre = don't bet the dog."""
+    psw = float(row.get("psw") or 0)
+    psl = float(row.get("psl") or 0)
+    if psw <= 0 or psl <= 0:
+        return False
+    pin_fav_odds = min(psw, psl)
+    return pin_fav_odds < min_odds
+
+
+def _is_mispriced_model_vs_pinnacle(row: dict[str, Any]) -> bool:
+    """Exclude match if model fav implied and Pinnacle fav implied differ by >10pp."""
+    p_model = _safe_prob(float(row.get("p_model_winner") or 0.5))
+    p_pin = _safe_prob(float(row.get("pinnacle_prob_novig") or 0.5))
+    model_fav_implied = max(p_model, 1.0 - p_model)
+    pin_fav_implied = max(p_pin, 1.0 - p_pin)
+    return abs(model_fav_implied - pin_fav_implied) > MISPRICE_IMPLIED_GAP_PP
 
 
 def _policy_excludes_atp500_hard_short_favorite(
@@ -1824,7 +2276,10 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         "p_serve_return",
         "p_elo",
         "p_rank",
+        "p_a",
+        "p_b",
         "confidence",
+        "score",
     ]
     with open(path, "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fields)
@@ -1845,6 +2300,11 @@ def main() -> None:
     parser.add_argument("--thresholds", default="2,5,10", help="Value%% thresholds (percent, comma-separated)")
     parser.add_argument("--limit-matches", type=int, default=None, help="Process first N matches after sorting (debug)")
     parser.add_argument("--dry-run", action="store_true", help="Do not write CSV/log outputs.")
+    parser.add_argument("--v2", action="store_true", help="Use hybrid_v2 SPW-inversion p_a/p_b formula (fixes double-counting).")
+    parser.add_argument("--no-matchup", action="store_true", help="Disable matchup model; use legacy/hybrid_v2 p_a/p_b (for A/B comparison).")
+    parser.add_argument("--no-decomposed-return", action="store_true", help="Disable return decomposition in matchup model; use aggregate return_pct (for A/B comparison).")
+    parser.add_argument("--filter-hard-m1000", action="store_true", help="Restrict ROI/calibration to Hard | Masters 1000 only (live pipeline segment).")
+    parser.add_argument("--temperature", type=float, default=None, metavar="T", help="Apply temperature scaling to final probs (e.g. 1.18). Output: backtest-results-YYYY-calibrated.csv")
     parser.add_argument("--show-unmatched", action="store_true", help="Print unmatched tennis-data names.")
     parser.add_argument("--unmatched-limit", type=int, default=40)
     parser.add_argument("--enable-cpi-overlay", action="store_true", help="Enable optional CPI/surface-speed overlay in model probabilities.")
@@ -1873,14 +2333,33 @@ def main() -> None:
         default="high",
         help="Policy: confidence levels to exclude (comma-separated, default: high).",
     )
+    parser.add_argument(
+        "--no-misprice-fav-odds",
+        action="store_true",
+        help="Disable model and Pinnacle fav odds <1.25 filters (for A/B test).",
+    )
+    parser.add_argument(
+        "--misprice-fav-odds-min",
+        type=float,
+        default=DEFAULT_MISPRICE_MODEL_FAV_ODDS_MIN,
+        help="Exclude matches where model fav odds < this (default: 1.25). Try 1.35 for stricter.",
+    )
+    parser.add_argument(
+        "--challenger",
+        action="store_true",
+        help="Backtest Challenger matches from oncourt_games + pinnacle-odds CSV (requires data/pinnacle-odds-*.csv).",
+    )
     args = parser.parse_args()
 
     backtest_dir = ROOT / "data" / "backtest"
-    if args.files:
+    data_dir = ROOT / "data"
+    if args.challenger:
+        xlsx_paths = []
+    elif args.files:
         xlsx_paths = [Path(p) if Path(p).is_absolute() else (ROOT / p) for p in args.files]
     else:
         xlsx_paths = [backtest_dir / "atp-2024.xlsx", backtest_dir / "atp-2025.xlsx"]
-    if args.include_2026:
+    if args.include_2026 and not args.challenger:
         p2026 = backtest_dir / "atp-2026.xlsx"
         if p2026 not in xlsx_paths:
             xlsx_paths.append(p2026)
@@ -1900,6 +2379,23 @@ def main() -> None:
     policy_exclude_fn: Callable[[dict[str, Any]], bool] | None = None
     policy_allowed_conf: set[str] = set()
     policy_max_odds = max(1.01, float(args.policy_short_fav_max_odds))
+
+    def _combined_policy_exclude(row: dict[str, Any]) -> bool:
+        # Always apply misprice filter (model vs Pinnacle fav implied gap >10pp)
+        if _is_mispriced_model_vs_pinnacle(row):
+            return True
+        # Skip matches where model favourite odds < threshold (both sides unreliable)
+        # Set --no-misprice-fav-odds to disable for A/B test
+        min_odds = getattr(args, "misprice_fav_odds_min", DEFAULT_MISPRICE_MODEL_FAV_ODDS_MIN)
+        if not getattr(args, "no_misprice_fav_odds", False) and _is_mispriced_model_fav_odds(row, min_odds):
+            return True
+        # Skip matches where Pinnacle favourite odds < threshold. Market massacre = don't bet the dog.
+        if not getattr(args, "no_misprice_fav_odds", False) and _is_mispriced_pinnacle_fav_odds(row, min_odds):
+            return True
+        if policy_exclude_fn:
+            return policy_exclude_fn(row)
+        return False
+
     if args.policy_exclude_atp500_hard_short_favs:
         policy_allowed_conf = {
             x.strip().lower()
@@ -1918,6 +2414,9 @@ def main() -> None:
 
         policy_exclude_fn = _policy_exclude
 
+    # Use combined filter (misprice + optional ATP500) for ROI/segments
+    effective_policy_exclude_fn = _combined_policy_exclude
+
     cpi_enabled = bool(args.enable_cpi_overlay)
     cpi_file = Path(args.cpi_file) if Path(args.cpi_file).is_absolute() else (ROOT / args.cpi_file)
     cpi_fallback_years = max(0, int(args.cpi_fallback_years))
@@ -1928,8 +2427,20 @@ def main() -> None:
     cpi_year_surface_stats: dict[tuple[int, str], tuple[float, float]] = {}
     cpi_surface_stats: dict[str, tuple[float, float]] = {}
 
-    print("Loading tennis-data files...")
-    matches, skip_from_xlsx, short_names = _load_backtest_matches(xlsx_paths)
+    if args.challenger:
+        data_oncourt = ROOT / "data" / "oncourt"
+        pinnacle_dir = ROOT / "data"
+        print("Loading Challenger matches (oncourt_games + pinnacle-odds CSV)...")
+        matches, skip_from_xlsx, short_names = _load_challenger_matches(
+            data_oncourt / "games_atp.csv",
+            data_oncourt / "tours_atp.csv",
+            data_oncourt / "players_atp.csv",
+            data_oncourt / "courts.csv",
+            pinnacle_dir,
+        )
+    else:
+        print("Loading tennis-data files...")
+        matches, skip_from_xlsx, short_names = _load_backtest_matches(xlsx_paths)
     if args.limit_matches:
         matches = matches[: args.limit_matches]
     if not matches:
@@ -1945,6 +2456,15 @@ def main() -> None:
         )
     else:
         print("CPI overlay: disabled")
+
+    if getattr(args, "v2", False):
+        if HAS_HYBRID_V2:
+            print("V2 formula: SPW-inversion p_a/p_b (hybrid_v2.compute_point_probs_bc) enabled.")
+        else:
+            print("V2 formula requested but hybrid_v2 not found; falling back to V4.")
+
+    if args.temperature is not None:
+        print(f"Temperature scaling: T={args.temperature:.2f} (output: *-calibrated.csv)")
 
     print(f"Backtest matches loaded: {len(matches):,}")
     if skip_from_xlsx:
@@ -1970,31 +2490,39 @@ def main() -> None:
     tours = _load_tour_info(tours_path, courts_path)
     popularity_by_pid = _load_player_popularity(games_path, players_by_id, tours)
 
-    print("Mapping tennis-data names to OnCourt IDs...")
-    name_map, map_report = _build_tennis_data_name_map(
-        short_names,
-        oncourt_players,
-        popularity_by_pid=popularity_by_pid,
-    )
-
-    print(f"  OnCourt players: {len(oncourt_players):,}")
-    print(f"  Lefties from categories_atp.csv: {len(lefties):,}")
-    print(f"  OnCourt index players (singles only): {map_report['oncourt_index_players']:,}")
-    print(f"  Popularity rows: {len(popularity_by_pid):,}")
-    print(f"  Tennis-data short names: {map_report['source_names']:,}")
-    print(f"  Mapped short names: {map_report['mapped_names']:,}")
-    print(f"  Unmapped short names: {map_report['unmapped_names']:,}")
-    print(f"  Mapping methods: {map_report['method_counts']}")
-    if args.show_unmatched and map_report["unmapped_examples"]:
-        print("  Unmapped examples:")
-        for nm in map_report["unmapped_examples"][: args.unmatched_limit]:
-            print(f"    - {nm}")
+    if args.challenger:
+        name_map = {}
+        map_report = {"source_names": 0, "mapped_names": 0, "unmapped_names": 0}
+        print("Challenger: using OnCourt IDs directly (no tennis-data mapping).")
+    else:
+        print("Mapping tennis-data names to OnCourt IDs...")
+        name_map, map_report = _build_tennis_data_name_map(
+            short_names,
+            oncourt_players,
+            popularity_by_pid=popularity_by_pid,
+        )
+        print(f"  OnCourt players: {len(oncourt_players):,}")
+        print(f"  Lefties from categories_atp.csv: {len(lefties):,}")
+        print(f"  OnCourt index players (singles only): {map_report['oncourt_index_players']:,}")
+        print(f"  Popularity rows: {len(popularity_by_pid):,}")
+        print(f"  Tennis-data short names: {map_report['source_names']:,}")
+        print(f"  Mapped short names: {map_report['mapped_names']:,}")
+        print(f"  Unmapped short names: {map_report['unmapped_names']:,}")
+        print(f"  Mapping methods: {map_report['method_counts']}")
+        if args.show_unmatched and map_report.get("unmapped_examples"):
+            print("  Unmapped examples:")
+            for nm in map_report["unmapped_examples"][: args.unmatched_limit]:
+                print(f"    - {nm}")
 
     skipped = Counter()
     filtered_matches: list[BacktestMatch] = []
     for m in matches:
-        wid = name_map.get(m.winner_name_short)
-        lid = name_map.get(m.loser_name_short)
+        if args.challenger:
+            wid = m.winner_id
+            lid = m.loser_id
+        else:
+            wid = name_map.get(m.winner_name_short)
+            lid = name_map.get(m.loser_name_short)
         if wid is None:
             skipped["unmapped_winner"] += 1
             continue
@@ -2030,12 +2558,23 @@ def main() -> None:
     if history_skip:
         print(f"  History skipped: {dict(history_skip)}")
 
+    games_by_player: dict[int, list[dict[str, Any]]] | None = None
+    tour_surface_map: dict[int, str] | None = None
+    if HAS_FATIGUE_MODEL:
+        backtest_player_ids = {m.winner_id for m in filtered_matches} | {m.loser_id for m in filtered_matches}
+        games_by_player, tour_surface_map = _load_games_for_fatigue(
+            games_path, tours, max_date_ord, player_ids=backtest_player_ids
+        )
+        total_games = sum(len(v) for v in games_by_player.values()) // 2
+        print(f"  Games for fatigue: {total_games:,} rows, {len(games_by_player):,} players")
+
     print("Running strict chronological backtest (no future matches in features)...")
     state = ModelState()
     hist_idx = 0
     results: list[dict[str, Any]] = []
     confidence_counts = Counter()
     by_year_rows: dict[int, list[dict[str, Any]]] = defaultdict(list)
+    matchup_method_by_year: dict[int, dict[str, int]] = defaultdict(lambda: {"both_decomposed": 0, "one_decomposed": 0, "neither_decomposed": 0, "legacy": 0})
 
     for m in filtered_matches:
         while hist_idx < len(history_events) and history_events[hist_idx].date_ord < m.date_ord:
@@ -2047,6 +2586,9 @@ def main() -> None:
             state,
             birthdate_by_player,
             lefties,
+            use_v2_formula=getattr(args, "v2", False),
+            use_matchup_model=not getattr(args, "no_matchup", False),
+            use_decomposed_return=not getattr(args, "no_decomposed_return", False),
             cpi_enabled=cpi_enabled,
             cpi_lookup=cpi_lookup,
             cpi_year_surface_stats=cpi_year_surface_stats,
@@ -2055,8 +2597,15 @@ def main() -> None:
             cpi_match_weight=cpi_match_weight,
             cpi_match_cap=cpi_match_cap,
             cpi_z_cap=cpi_z_cap,
+            games_by_player=games_by_player,
+            tour_surface_map=tour_surface_map,
         )
+        if args.temperature is not None:
+            p_winner = _apply_temperature(p_winner, args.temperature)
         confidence_counts[confidence] += 1
+        mm = debug.get("matchup_method") or "legacy"
+        if mm in matchup_method_by_year[m.year]:
+            matchup_method_by_year[m.year][mm] += 1
 
         our_odds_w = 1.0 / _safe_prob(p_winner)
         our_odds_l = 1.0 / _safe_prob(1.0 - p_winner)
@@ -2106,11 +2655,14 @@ def main() -> None:
             "p_serve_return": debug.get("p_serve_return"),
             "p_elo": debug.get("p_elo"),
             "p_rank": debug.get("p_rank"),
+            "p_a": debug.get("p_a"),
+            "p_b": debug.get("p_b"),
             "p_raw": float(debug.get("p_raw") or p_winner),
             "cpi_value": debug.get("cpi_value"),
             "cpi_year": debug.get("cpi_year"),
             "cpi_z": debug.get("cpi_z"),
             "cpi_delta": debug.get("cpi_delta"),
+            "score": m.score,
         }
         results.append(record)
         by_year_rows[m.year].append(record)
@@ -2119,8 +2671,26 @@ def main() -> None:
         print("No model results produced.")
         return
 
+    filter_hard_m1000 = getattr(args, "filter_hard_m1000", False)
+    eval_results = results
+    if filter_hard_m1000:
+        eval_results = [r for r in results if r["surface"] == "Hard" and r["series"] == "Masters 1000"]
+        print(f"Filter: Hard | Masters 1000 only ({len(eval_results):,} of {len(results):,} matches)")
+
     print(f"Completed predictions: {len(results):,}")
     print(f"  Confidence: {dict(confidence_counts)}")
+    if matchup_method_by_year:
+        print("  Matchup model path by year (decomposed vs fallback):")
+        for yr in sorted(matchup_method_by_year.keys()):
+            d = matchup_method_by_year[yr]
+            total = sum(d.values())
+            both = d.get("both_decomposed", 0)
+            one = d.get("one_decomposed", 0)
+            neither = d.get("neither_decomposed", 0)
+            legacy = d.get("legacy", 0)
+            pct_both = 100.0 * both / total if total else 0
+            pct_fallback = 100.0 * (one + neither + legacy) / total if total else 0
+            print(f"    {yr}: both_decomposed={both} ({pct_both:.1f}%), fallback/mixed={one + neither + legacy} ({pct_fallback:.1f}%)")
     if cpi_enabled:
         cpi_resolved = sum(1 for r in results if r.get("cpi_value") is not None)
         cpi_adjusted = sum(1 for r in results if abs(float(r.get("cpi_delta") or 0.0)) > 1e-9)
@@ -2128,29 +2698,45 @@ def main() -> None:
             f"  CPI overlay usage: resolved={cpi_resolved}/{len(results)} "
             f"adjusted={cpi_adjusted} (weight={cpi_match_weight:.3f}, cap={cpi_match_cap:.3f})"
         )
+    misprice_min = getattr(args, "misprice_fav_odds_min", DEFAULT_MISPRICE_MODEL_FAV_ODDS_MIN)
+    misprice_excluded = sum(1 for r in eval_results if _is_mispriced_model_vs_pinnacle(r))
+    misprice_model_fav_excluded = sum(
+        1 for r in eval_results if _is_mispriced_model_fav_odds(r, misprice_min)
+    )
+    misprice_pin_fav_excluded = sum(
+        1 for r in eval_results if _is_mispriced_pinnacle_fav_odds(r, misprice_min)
+    )
+    excluded_count = sum(1 for r in eval_results if effective_policy_exclude_fn(r))
+    print(
+        f"  Misprice filter (model vs Pin fav implied gap >{MISPRICE_IMPLIED_GAP_PP*100:.0f}pp): excluded={misprice_excluded}"
+    )
+    print(
+        f"  Misprice filter (model fav odds <{misprice_min}): excluded={misprice_model_fav_excluded}"
+    )
+    print(
+        f"  Misprice filter (Pinnacle fav odds <{misprice_min}): excluded={misprice_pin_fav_excluded}"
+    )
     if policy_exclude_fn:
-        excluded_count = sum(1 for r in results if policy_exclude_fn(r))
         print(
-            "  Policy filter: ATP500 Hard short favorites excluded "
-            f"(fav_odds<{policy_max_odds:.2f}, confidence={sorted(policy_allowed_conf)}), "
-            f"rows flagged={excluded_count}"
+            f"  ATP500 Hard short-fav filter: fav_odds<{policy_max_odds:.2f}, conf={sorted(policy_allowed_conf)}"
         )
+    print(f"  Total excluded from ROI: {excluded_count}")
 
-    ll_ours = mean(_log_loss(r["p_model_winner"]) for r in results)
-    ll_pin = mean(_log_loss(r["p_pin_winner"]) for r in results)
-    brier_ours = mean((1.0 - r["p_model_winner"]) ** 2 for r in results)
-    brier_pin = mean((1.0 - r["p_pin_winner"]) ** 2 for r in results)
-    acc_ours = mean(1.0 if r["p_model_winner"] >= 0.5 else 0.0 for r in results)
-    acc_pin = mean(1.0 if r["p_pin_winner"] >= 0.5 else 0.0 for r in results)
+    ll_ours = mean(_log_loss(r["p_model_winner"]) for r in eval_results)
+    ll_pin = mean(_log_loss(r["p_pin_winner"]) for r in eval_results)
+    brier_ours = mean((1.0 - r["p_model_winner"]) ** 2 for r in eval_results)
+    brier_pin = mean((1.0 - r["p_pin_winner"]) ** 2 for r in eval_results)
+    acc_ours = mean(1.0 if r["p_model_winner"] >= 0.5 else 0.0 for r in eval_results)
+    acc_pin = mean(1.0 if r["p_pin_winner"] >= 0.5 else 0.0 for r in eval_results)
 
     print("\n=== Model vs Pinnacle (No-Vig) ===")
-    print(f"Matches evaluated: {len(results):,}")
+    print(f"Matches evaluated: {len(eval_results):,}")
     print(f"Log loss: ours={ll_ours:.5f} | pinnacle={ll_pin:.5f} | delta={ll_ours - ll_pin:+.5f}")
     print(f"Brier score: ours={brier_ours:.5f} | pinnacle={brier_pin:.5f} | delta={brier_ours - brier_pin:+.5f}")
     print(f"Accuracy (favorite wins): ours={acc_ours:.3%} | pinnacle={acc_pin:.3%}")
 
     print("\n=== Calibration (favorite probability bins) ===")
-    for row in _summarize_calibration(results):
+    for row in _summarize_calibration(eval_results):
         if row["n"] == 0:
             print(f"{row['bin']:>8}  n=0")
         else:
@@ -2160,7 +2746,7 @@ def main() -> None:
 
     print("\n=== ROI by Value% threshold ===")
     for th in thresholds:
-        r = _roi_for_threshold(results, th, policy_exclude_fn)
+        r = _roi_for_threshold(eval_results, th, effective_policy_exclude_fn)
         print(
             f"Value>{th*100:.1f}%  bets={r['bets']:4d}  wins={r['wins']:4d}  "
             f"ROI={r['roi']:+.3%}  P/L={r['profit_units']:+.2f}u  "
@@ -2169,11 +2755,11 @@ def main() -> None:
 
     base_threshold = thresholds[1] if len(thresholds) >= 2 else thresholds[0]
     print(f"\n=== Segmentation (threshold {base_threshold*100:.1f}%) by Surface ===")
-    for surf, n, ll, roi in _segment_stats(results, base_threshold, "surface", policy_exclude_fn):
+    for surf, n, ll, roi in _segment_stats(eval_results, base_threshold, "surface", effective_policy_exclude_fn):
         print(f"{surf:>8}  n={n:4d}  logloss={ll:.5f}  ROI={roi:+.3%}")
 
     print(f"\n=== Segmentation (threshold {base_threshold*100:.1f}%) by Series ===")
-    for tier, n, ll, roi in _segment_stats(results, base_threshold, "series", policy_exclude_fn):
+    for tier, n, ll, roi in _segment_stats(eval_results, base_threshold, "series", effective_policy_exclude_fn):
         print(f"{tier:>12}  n={n:4d}  logloss={ll:.5f}  ROI={roi:+.3%}")
 
     print("\n=== Non-Technical Summary ===")
@@ -2181,7 +2767,7 @@ def main() -> None:
         print("The model beat Pinnacle's closing no-vig line on log loss in this sample.")
     else:
         print("The model did not beat Pinnacle's closing no-vig line on log loss in this sample.")
-    best_roi = max((_roi_for_threshold(results, th, policy_exclude_fn)["roi"], th) for th in thresholds)
+    best_roi = max((_roi_for_threshold(eval_results, th, effective_policy_exclude_fn)["roi"], th) for th in thresholds)
     print(f"Best flat-stake ROI occurred at Value>{best_roi[1]*100:.1f}% with ROI {best_roi[0]:+.2%}.")
     print("Treat this as a validation signal, not production proof, until you repeat across periods and check stability.")
 
@@ -2193,7 +2779,7 @@ def main() -> None:
                 side = "winner" if r["value_w"] >= r["value_l"] else "loser"
                 value = r["value_w"] if r["value_w"] >= r["value_l"] else r["value_l"]
                 bet_result = "skip"
-                policy_excluded = bool(policy_exclude_fn and policy_exclude_fn(r))
+                policy_excluded = bool(effective_policy_exclude_fn and effective_policy_exclude_fn(r))
                 if value > threshold_default and not policy_excluded:
                     bet_result = "win" if side == "winner" else "loss"
                 elif value > threshold_default and policy_excluded:
@@ -2225,23 +2811,32 @@ def main() -> None:
                         "p_serve_return": round(float(r.get("p_serve_return") or 0.0), 6),
                         "p_elo": round(float(r.get("p_elo") or 0.0), 6),
                         "p_rank": "" if r.get("p_rank") is None else round(float(r["p_rank"]), 6),
+                        "p_a": r.get("p_a"),
+                        "p_b": r.get("p_b"),
                         "confidence": r.get("confidence"),
+                        "score": r.get("score") or "",
                     }
                 )
-            out_path = backtest_dir / f"backtest-results-{year}.csv"
+            suffix = "-v2" if getattr(args, "v2", False) else ""
+            if args.temperature is not None:
+                suffix = suffix + "-calibrated" if suffix else "-calibrated"
+            prefix = "challenger-" if args.challenger else ""
+            out_path = backtest_dir / f"backtest-results-{prefix}{year}{suffix}.csv"
             _write_csv(out_path, out_rows)
             print(f"Wrote {len(out_rows):,} rows -> {out_path}")
 
-        log_path = backtest_dir / "backtest-log.txt"
+        log_path = backtest_dir / ("backtest-log-challenger.txt" if args.challenger else "backtest-log.txt")
         with open(log_path, "w", encoding="utf-8") as f:
             f.write("Backtest run log\n")
-            f.write(f"Files: {', '.join(str(p) for p in xlsx_paths)}\n")
+            f.write(f"Mode: {'Challenger (oncourt + pinnacle-odds)' if args.challenger else 'ATP (tennis-data XLSX)'}\n")
+            if xlsx_paths:
+                f.write(f"Files: {', '.join(str(p) for p in xlsx_paths)}\n")
             f.write(f"Loaded matches: {len(matches)}\n")
             f.write(f"Mapped matches: {len(filtered_matches)}\n")
             f.write(f"Predicted matches: {len(results)}\n")
             f.write(f"Skip from xlsx: {dict(skip_from_xlsx)}\n")
             f.write(f"Skip after mapping: {dict(skipped)}\n")
-            if policy_exclude_fn:
+            if effective_policy_exclude_fn:
                 f.write(
                     "Policy filter: ATP500 Hard short favorites excluded "
                     f"(fav_odds<{policy_max_odds:.2f}, confidence={sorted(policy_allowed_conf)})\n"

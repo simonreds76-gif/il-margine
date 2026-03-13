@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { formatStake } from "@/lib/format";
 
 /* â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
@@ -49,6 +50,23 @@ interface FairOddsMatch {
   confidence?: string;
   series_bucket?: string;
   policy_match?: boolean;
+  shadow_match?: boolean;
+  blocked_reason?: string;
+}
+
+interface SignalSummary {
+  id: number;
+  player1_name: string;
+  player2_name: string;
+  side: string;
+  value_pct: number;
+  pinnacle_odds?: number;
+  stake_units?: number;
+  stake_gbp?: number;
+  bet_type: string;
+  spread_line?: number;
+  tournament: string;
+  surface: string;
 }
 
 interface StrictPolicyMeta {
@@ -73,7 +91,11 @@ interface ApiResponse {
   pinnacle_count: number;
   pinnacle_matched_count: number;
   pinnacle_hint?: string;
+  spread_hint?: string;
   policy?: StrictPolicyMeta;
+  shadow_profile?: "off" | "volume_275" | "volume_200" | string;
+  signals_strict?: SignalSummary[];
+  signals_volume?: SignalSummary[];
   error?: string;
 }
 
@@ -119,6 +141,18 @@ function parseOULines(match: FairOddsMatch): OULine[] {
   return lines;
 }
 
+function shadowProfileLabel(profile?: string): string {
+  if (profile === "volume_200") return "Volume 200";
+  if (profile === "volume_275") return "Volume 275";
+  return "Volume";
+}
+
+function shadowProfileBadge(profile?: string): string {
+  if (profile === "volume_200") return "VOL200";
+  if (profile === "volume_275") return "VOL275";
+  return "VOL";
+}
+
 function valueColor(v: number | undefined): string {
   if (v == null) return "text-slate-500";
   if (Math.abs(v) < 1) return "text-slate-400";
@@ -145,6 +179,15 @@ function valueBg(v: number | undefined): string {
   return "";
 }
 
+function bestValueBadge(m: FairOddsMatch): { side: string; value: number } | null {
+  const v1 = m.value_p1;
+  const v2 = m.value_p2;
+  if (v1 == null && v2 == null) return null;
+  if (v1 == null) return v2 != null ? { side: "P2", value: v2 } : null;
+  if (v2 == null) return { side: "P1", value: v1 };
+  return v1 >= v2 ? { side: "P1", value: v1 } : { side: "P2", value: v2 };
+}
+
 function fmtOdds(v: number | undefined): string {
   if (v == null || v <= 0) return "—";
   return v.toFixed(2);
@@ -165,6 +208,32 @@ function fmtSignedLine(v: number | undefined): string {
   const abs = Math.abs(v);
   const body = Number.isInteger(abs) ? String(abs) : abs.toFixed(1);
   return `${v >= 0 ? "+" : "−"}${body}`;
+}
+
+function formatSignalBet(s: SignalSummary): { matchLabel: string; betLine: string } {
+  const player = s.side.startsWith("P1") ? s.player1_name : s.player2_name;
+  const odds = s.pinnacle_odds != null ? s.pinnacle_odds.toFixed(2) : "—";
+  const units = s.stake_units != null ? s.stake_units : 1;
+  const gbp = s.stake_gbp != null ? Math.round(s.stake_gbp) : 100;
+  const stakePart = `× ${formatStake(units)}u (or £${gbp})`;
+
+  if (s.bet_type === "spread" && s.spread_line != null) {
+    const line = s.side === "P1+" ? s.spread_line : -s.spread_line;
+    return {
+      matchLabel: `${s.player1_name} vs ${s.player2_name}`,
+      betLine: `${player} ${fmtSignedLine(line)}HC ${odds} ${stakePart}`,
+    };
+  }
+  return {
+    matchLabel: `${s.player1_name} vs ${s.player2_name}`,
+    betLine: `${player} ML ${odds} ${stakePart}`,
+  };
+}
+
+function signalTypeCounts(signals?: SignalSummary[]): { total: number; ml: number; spread: number } {
+  const total = signals?.length ?? 0;
+  const spread = (signals ?? []).filter((s) => (s.bet_type ?? "match") === "spread").length;
+  return { total, spread, ml: total - spread };
 }
 
 const SURFACE_COLORS: Record<string, string> = {
@@ -207,7 +276,7 @@ export default function FairOddsPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/fair-odds");
+      const res = await fetch(`/api/fair-odds?ts=${Date.now()}`, { cache: "no-store" });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error || `HTTP ${res.status}`);
@@ -289,6 +358,9 @@ export default function FairOddsPage() {
             {data.pinnacle_hint && (
               <span className="text-amber-400/80">{data.pinnacle_hint}</span>
             )}
+            {data.spread_hint && (
+              <span className="text-amber-400/80">{data.spread_hint}</span>
+            )}
             <span className="text-slate-600">
               Value % = (Pinnacle / Our odds) - 1; positive = value at Pinnacle.
             </span>
@@ -306,6 +378,70 @@ export default function FairOddsPage() {
                 )}
               </span>
             )}
+          </div>
+        )}
+
+        {/* Signal summary: Strict + Volume_275 */}
+        {!loading && !error && data && matches.length > 0 && (
+          <div className="mb-6 rounded-xl border border-slate-700/60 bg-slate-900/40 p-4">
+            <h2 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-3">Today&apos;s recommended bets</h2>
+            <p className="mb-3 text-[11px] text-slate-500">
+              Active shadow profile: <span className="font-semibold text-amber-300">{shadowProfileLabel(data.shadow_profile)}</span>.
+              {" "}Signals are mixed below but still counted separately as ML vs spread in tracking and weekly reports.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <h3 className="text-xs font-semibold text-emerald-400/90 uppercase tracking-wider mb-2 flex items-center gap-2">
+                  <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
+                  Strict policy
+                </h3>
+                <p className="mb-2 text-[11px] text-slate-500">
+                  ML {signalTypeCounts(data.signals_strict).ml} | Spread {signalTypeCounts(data.signals_strict).spread}
+                </p>
+                {data.signals_strict?.length ? (
+                  <ul className="space-y-1.5">
+                    {data.signals_strict.map((s) => {
+                      const { matchLabel, betLine } = formatSignalBet(s);
+                      return (
+                        <li key={s.id} className="text-sm py-2 px-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
+                          <div className="text-slate-400 text-[11px] font-medium truncate mb-0.5">{matchLabel}</div>
+                          <div className="font-mono text-emerald-300 font-semibold tabular-nums text-[13px]">{betLine}</div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p className="text-xs text-slate-500 italic">No strict signals today</p>
+                )}
+              </div>
+              <div>
+                <h3 className="text-xs font-semibold text-amber-400/90 uppercase tracking-wider mb-2 flex items-center gap-2">
+                  <span className="inline-block w-2 h-2 rounded-full bg-amber-500" />
+                  {shadowProfileLabel(data.shadow_profile)} (shadow)
+                </h3>
+                <p className="mb-2 text-[11px] text-slate-500">
+                  ML {signalTypeCounts(data.signals_volume).ml} | Spread {signalTypeCounts(data.signals_volume).spread}
+                </p>
+                {data.signals_volume?.length ? (
+                  <ul className="space-y-1.5">
+                    {data.signals_volume.map((s) => {
+                      const { matchLabel, betLine } = formatSignalBet(s);
+                      return (
+                        <li key={s.id} className="text-sm py-2 px-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
+                          <div className="text-slate-400 text-[11px] font-medium truncate mb-0.5">{matchLabel}</div>
+                          <div className="font-mono text-amber-300 font-semibold tabular-nums text-[13px]">{betLine}</div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p className="text-xs text-slate-500 italic">No {shadowProfileLabel(data.shadow_profile).toLowerCase()} signals today</p>
+                )}
+              </div>
+            </div>
+            <p className="mt-3 text-[11px] text-slate-500">
+              Stake: value-tiered for match (5–10%→0.5u, 10–15%→1u, 15–20%→1.5u, 20%+→2u); spread 1u flat. 1u = £100.
+            </p>
           </div>
         )}
 
@@ -390,6 +526,7 @@ export default function FairOddsPage() {
                     matches={tMatches}
                     showStats={showStats}
                     colSpan={TABLE_COL_COUNT}
+                    shadowProfile={data?.shadow_profile}
                   />
                 ))}
               </tbody>
@@ -415,11 +552,13 @@ function TournamentGroup({
   matches,
   showStats,
   colSpan,
+  shadowProfile,
 }: {
   tournament: string;
   matches: FairOddsMatch[];
   showStats: boolean;
   colSpan: number;
+  shadowProfile?: string;
 }) {
   return (
     <>
@@ -432,7 +571,7 @@ function TournamentGroup({
         </td>
       </tr>
       {matches.map((m) => (
-        <MatchRow key={m.id} match={m} showStats={showStats} />
+        <MatchRow key={m.id} match={m} showStats={showStats} shadowProfile={shadowProfile} />
       ))}
     </>
   );
@@ -440,7 +579,15 @@ function TournamentGroup({
 
 /* â”€â”€â”€ Match Row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
-function MatchRow({ match, showStats }: { match: FairOddsMatch; showStats: boolean }) {
+function MatchRow({
+  match,
+  showStats,
+  shadowProfile,
+}: {
+  match: FairOddsMatch;
+  showStats: boolean;
+  shadowProfile?: string;
+}) {
   const m = match;
   const ouLines = SHOW_OU_COLUMNS ? parseOULines(m) : [];
   const hasPinnacle = m.pinnacle_odds1 != null && m.pinnacle_odds1 > 0;
@@ -457,7 +604,7 @@ function MatchRow({ match, showStats }: { match: FairOddsMatch; showStats: boole
             <span className="text-slate-600 mx-1.5 font-normal text-xs">vs</span>
             {m.player2_name || "TBD"}
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-[10px] text-slate-400 font-mono tabular-nums">{fmtProb(m.p1_win_prob)} - {fmtProb(m.p2_win_prob)}</span>
             <span
               className={`inline-flex items-center rounded border px-1.5 py-0.5 text-[9px] font-semibold tracking-wide ${confidenceMeta(m.confidence).cls}`}
@@ -465,12 +612,30 @@ function MatchRow({ match, showStats }: { match: FairOddsMatch; showStats: boole
             >
               {confidenceMeta(m.confidence).label}
             </span>
+            {bestValueBadge(m) && (
+              <span
+                className={`inline-flex items-center rounded px-1.5 py-0.5 text-[9px] font-semibold tabular-nums ${valueColor(bestValueBadge(m)!.value)} ${valueBg(bestValueBadge(m)!.value)}`}
+                title="Value % = (Pinnacle / Our odds) - 1"
+              >
+                {bestValueBadge(m)!.side} {fmtPct(bestValueBadge(m)!.value)}
+              </span>
+            )}
             {m.policy_match && (
               <span className="inline-flex items-center rounded border border-emerald-500/30 bg-emerald-500/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-emerald-300">
-                POLICY
+                STRICT
+              </span>
+            )}
+            {m.shadow_match && !m.policy_match && (
+              <span className="inline-flex items-center rounded border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-amber-300">
+                {shadowProfileBadge(shadowProfile)}
               </span>
             )}
           </div>
+          {m.blocked_reason && !m.policy_match && !m.shadow_match && (
+            <div className="text-[10px] text-amber-300/75 leading-snug">
+              {m.blocked_reason}
+            </div>
+          )}
         </div>
       </td>
 

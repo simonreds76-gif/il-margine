@@ -1,0 +1,54 @@
+Run UTC: 2026-03-04T17:39:56.696254+00:00
+Years requested: [2022, 2023, 2024, 2025, 2026]
+Rolling window: 4
+Previous editions windows: True
+Phase 3 trust mode: all
+Alias file: C:\Users\44746\Downloads\il-margine\data\backtest\tournament-aliases.csv (rows=0)
+Backtest rows loaded: 9,957
+Seed/entry rows loaded: 12,393
+Seed/entry rows by source: sackmann=6,062, tml=6,331
+Seed/entry source by season year:
+  sackmann: [2023, 2024]
+  tml: [2022, 2025, 2026]
+Missing Sackmann files (3):
+  - C:\Users\44746\Downloads\il-margine\data\sackmann\atp_matches_2022.csv
+  - C:\Users\44746\Downloads\il-margine\data\sackmann\atp_matches_2025.csv
+  - C:\Users\44746\Downloads\il-margine\data\sackmann\atp_matches_2026.csv
+Phase 0 coverage:
+  backtest unique: 87/87 (100.00%)
+  backtest rows:   9957/9957 (100.00%)
+  sackmann unique: 244/244 (100.00%)
+  sackmann rows:   6062/6062 (100.00%)
+  tml unique: 238/238 (100.00%)
+  tml rows:   6331/6331 (100.00%)
+Phase 1 rows written: 818
+Phase 2 rows written: 11,418
+Phase 3 join stats:
+  eligible: 9957
+  joined_total_all: 9274
+  join_rate_all: 0.9314
+  joined_total: 9274
+  skipped_no_sackmann_year: 0
+  skipped_no_tkey: 0
+  skipped_no_name: 0
+  unmatched: 683
+  join_rate: 0.9314
+  trust_high: 7938
+  trust_medium: 908
+  trust_low: 428
+  join_methods:
+    cross_stage_full_unique: 6444
+    tkey_stage_full: 1494
+    cross_stage_full_date_gap: 387
+    cross_stage_initial_last_unique: 351
+    cross_stage_first_last_unique: 319
+    tkey_stage_first_last: 93
+    tkey_stage_initial_last: 71
+    cross_stage_first_last_compact_unique: 59
+    cross_stage_initial_last_date_gap: 19
+    cross_stage_first_last_date_gap: 18
+    tkey_stage_first_last_compact: 15
+    cross_stage_first_last_compact_date_gap: 3
+    cross_year_full_unique: 1
+Phase 3 gate: PASS (min_join_rate=0.90)
+Phase 3 rows written: 12,319

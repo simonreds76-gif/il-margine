@@ -4,8 +4,11 @@ Phase 1.3: Load OnCourt CSVs into Supabase via PostgREST API.
 Usage:
   python scripts/oncourt-load-supabase.py          # full load (first time)
   python scripts/oncourt-load-supabase.py --quick   # daily: players/tours/today only
+  python scripts/oncourt-load-supabase.py --quick --skip-players  # daily: tours/today only
   python scripts/oncourt-load-supabase.py --recent  # last 365 days of games/stat
+  python scripts/oncourt-load-supabase.py --batch 10000   # larger batches (faster, may hit limits)
 
+Default batch: 5,000 rows. Use --batch N to try larger (e.g. 10000) for faster loads.
 Uses requests (no supabase pip package needed).
 Reads credentials from .env.local in project root.
 """
@@ -25,7 +28,6 @@ import requests
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "oncourt"
 MIGRATION_SQL = ROOT / "docs" / "supabase-player-hand-reference-fix.sql"
-BATCH = 5000
 HAND_SOURCE_CANDIDATES = (
     "oncourt",
     "categories_atp",
@@ -38,7 +40,20 @@ HAND_SOURCE_CANDIDATES = (
 
 QUICK = "--quick" in sys.argv
 RECENT = "--recent" in sys.argv
+SKIP_PLAYERS = "--skip-players" in sys.argv
 RECENT_DAYS = 365
+
+# Batch size: 5k default. Try --batch 10000 for faster loads (Supabase may allow up to 10k).
+def _parse_batch():
+    for i, a in enumerate(sys.argv):
+        if a == "--batch" and i + 1 < len(sys.argv):
+            try:
+                return int(sys.argv[i + 1])
+            except ValueError:
+                pass
+    return 5000
+
+BATCH = _parse_batch()
 
 
 def _load_env():
@@ -134,6 +149,15 @@ def _insert(table: str, data: list, retries: int = 3):
 def _safe_int(val, default=0):
     try:
         return int(val) if val else default
+    except (ValueError, TypeError):
+        return default
+
+
+def _safe_float(val, default=None):
+    try:
+        if val is None or val == "":
+            return default
+        return float(val)
     except (ValueError, TypeError):
         return default
 
@@ -437,6 +461,8 @@ def main():
 
     key_type = "service_role" if os.environ.get("SUPABASE_SERVICE_ROLE_KEY") else "anon"
     mode = "QUICK (players/tours/today only)" if QUICK else "RECENT (last 365d games/stat)" if RECENT else "FULL"
+    if SKIP_PLAYERS:
+        mode += " + SKIP_PLAYERS"
     print(f"  Supabase: {SUPABASE_URL[:40]}... (key: {key_type})")
     print(f"  Mode: {mode}  |  Batch: {BATCH:,}")
     print()
@@ -452,17 +478,24 @@ def main():
         print(f"  oncourt_courts: {len(data)} rows")
 
     # 2. Players
-    _upload_batched(
-        "oncourt_players",
-        load_csv(DATA_DIR / "players_atp.csv"),
-        "id",
-        lambda r: {
-            "id": _safe_int(r["id"]),
-            "name": r.get("name", ""),
-            "birthdate": r.get("birthdate") or None,
-            "country": r.get("country", ""),
-        },
-    )
+    if SKIP_PLAYERS:
+        print("  oncourt_players: SKIPPED (--skip-players)")
+    else:
+        _upload_batched(
+            "oncourt_players",
+            load_csv(DATA_DIR / "players_atp.csv"),
+            "id",
+            lambda r: {
+                "id": _safe_int(r["id"]),
+                "name": r.get("name", ""),
+                "birthdate": r.get("birthdate") or None,
+                "country": r.get("country", ""),
+                "atp_rank": _safe_int(r.get("atp_rank"), None),
+                "hard_points": _safe_float(r.get("hard_points"), None),
+                "clay_points": _safe_float(r.get("clay_points"), None),
+                "grass_points": _safe_float(r.get("grass_points"), None),
+            },
+        )
 
     # 3. Tours
     _upload_batched(

@@ -1,0 +1,205 @@
+{\rtf1\ansi\deff0
+{\fonttbl{\f0 Calibri;}}
+\f0\fs22
+
+\b Role and task\b0
+\par
+You are a senior model analyst in the trading department of a major sportsbook, with 25 years' experience building and hardening tennis models for high ROI. Your job is to take existing models and turn them into robust, capital-ready systems: strong calibration, clear edge, and sustainable returns.
+\par
+I need you to \b use our current tennis fair-odds model and pipeline and transform it\b0  so it is robust and capable of high ROI.
+\par
+
+\b What we have (your starting point)\b0
+\par
+- Probabilistic model: serve/return, Elo, form, H2H, advanced stats, tier-aware calibration; outputs match win probabilities and fair odds.
+\par
+- Model version: \b Iteration 4 baseline (locked).\b0  Changes require explicit approval and backtest comparison. See docs/FAIR-ODDS-POLICY-LOCK.md for the full lock document.
+\par
+- Iteration 4 includes: tier-aware calibration/damping, ATP250 favorite guard, ATP500 hard calibration blend (conservative), series/confidence-specific delta multipliers, crisis downweight on rank in lower tiers.
+\par
+- Backtest vs Pinnacle closing (tennis-data, 2022-2025). Strict policy (Hard|Masters 1000, high confidence, value >= 10%) has shown ~+11-13% ROI in validation.
+\par
+- Live pipeline: daily fair odds, Pinnacle scrape, strict-policy signals, settlement (weekly), H2H/advanced-stats (weekly).
+\par
+- Codebase: scripts/backtest-fair-odds.py, scripts/oncourt-compute-fair-odds.py, and related scripts.
+\par
+
+\b Strict live policy (locked)\b0
+\par
+- API strict mode is ON.
+\par
+- Segment: Hard|Masters 1000.
+\par
+- Confidence: high.
+\par
+- Minimum value threshold: 10%.
+\par
+- This is the POLICY signal shown on the fair-odds page and used for strict reporting.
+\par
+- ATP500 hard short-favorite exclusion is wired (model favourite odds < 1.8, confidence = high) but only relevant if strict segments expand beyond Masters 1000.
+\par
+
+\b Tournament side-policy overlay (optional, off by default)\b0
+\par
+- Production mode supports base (strict only) or overlay (strict + tournament-segment filter). Default is base.
+\par
+- Enable with STRICT_POLICY_PRODUCTION_MODE=overlay plus overlay env vars (see FAIR-ODDS-POLICY-LOCK.md for full list).
+\par
+- Recommended: run strict report with overlay first for a few weeks; compare settled outcomes; enable in API only if evidence is good.
+\par
+
+\b Injury overlay (optional, off by default)\b0
+\par
+- Data: data/injured-players-tennisexplorer.csv from scripts/scrape-tennisexplorer-injured.py.
+\par
+- Strict/API: always computes injury flags (recent_injured_p1/p2/any). Optional filter overlay excludes candidates when a player is flagged.
+\par
+- Model: optional probability downweight (FAIR_ODDS_INJURY_DOWNWEIGHT_ENABLED, default false; delta 0.02, capped; cannot flip favourite).
+\par
+- Both overlays off in production until validation confirms improvement.
+\par
+
+\b Pinnacle scraper and daily pipeline\b0
+\par
+- Pinnacle odds are scraped via public guest API (guest.api.arcadia.pinnacle.com), men's singles only (ATP main/quals + Challenger), written to bookmaker_odds_snapshot in Supabase.
+\par
+- Daily pipeline: scripts/run-daily-odds.py runs at 23:55 UTC via scheduled task. It does: (1) Pinnacle scrape, (2) fair-odds compute, (3) strict policy report (appends signals to data/backtest/strict-signals.csv, plus overlay comparison in strict-signals-overlay-compare.csv).
+\par
+- The fair-odds API (src/app/api/fair-odds/route.ts) now falls back to yesterday's Pinnacle snapshot if today has no rows, so the page works between midnight UTC and the next scrape without errors.
+\par
+
+\b Settlement and weekly pipeline\b0
+\par
+- Settlement runs weekly (Sunday 22:00) via scripts/oncourt-weekly.ps1. Steps: OnCourt extract, Supabase sync, league averages, tournament averages, recent activity, Pinnacle scrape, fair-odds compute, strict report, settlement (scripts/settle-strict-signals.py on both base and overlay-compare CSVs), performance report (scripts/strict-policy-performance.py).
+\par
+- Pinnacle odds are the reference for measurement; 1 unit per bet (flat stakes).
+\par
+- Strict signals in data/backtest/strict-signals.csv are settled against actual match results; overlay comparison in strict-signals-overlay-compare.csv.
+\par
+
+\b Individual tip pages (SEO-indexed)\b0
+\par
+- Each bet/tip has its own page at /tips/[slugId] (e.g. /tips/altmaier-vs-kecmanovic-42).
+\par
+- Slug is auto-generated from event name + id (src/lib/slugify.ts). No DB column needed.
+\par
+- Page is server-rendered with full SEO metadata (unique title, description, canonical, OpenGraph). Revalidates every 60 seconds.
+\par
+- Hero layout: player name large and bold, selection as emerald subtitle (e.g. "Moneyline" not "ML"), match as context. 3-column card for odds, stake, bookmaker.
+\par
+- Old /tips/123 URLs redirect to the slug URL.
+\par
+- All tip listing pages (tennis-tips, player-props, homepage) link each event to its tip page.
+\par
+- Sitemap (src/app/sitemap.ts) is async and includes up to 500 tip URLs from Supabase so Google can discover and index them.
+\par
+- Google will index individual match tips (e.g. "Sakatsume vs Parks betting tip"). Long-tail match-specific queries are the main SEO target.
+\par
+
+\b William Hill affiliate tracking\b0
+\par
+- Click tracking: /api/go/william-hill redirects to the C.ashx URL (https://campaigns.williamhill.com/C.ashx?btag=a_214702b_1456c_&affid=1744894&siteid=214702&adid=1456&c=).
+\par
+- Impression tracking: S.ashx script loads on /bookmakers page via Next.js Script (lazyOnload).
+\par
+- Supabase: bookmakers table, William Hill row, affiliate_link = /api/go/william-hill.
+\par
+- Welcome offer updated to: Bet \u163?10 Get \u163?40 in Free Bets (promo code G40, 4x\u163?10, 7 days expiry). Full T&Cs on page.
+\par
+
+\b Where the files are (use these, don't search)\b0
+\par
+- Backtest (historical vs Pinnacle): scripts/backtest-fair-odds.py
+\par
+- Historical data: data/backtest/atp-2022.xlsx, atp-2023.xlsx, atp-2024.xlsx, atp-2025.xlsx, optional atp-2026.xlsx
+\par
+- Live fair-odds compute: scripts/oncourt-compute-fair-odds.py
+\par
+- Daily pipeline: scripts/run-daily-odds.py
+\par
+- Strict policy report: scripts/strict-policy-report.py
+\par
+- Settlement: scripts/settle-strict-signals.py
+\par
+- Performance report: scripts/strict-policy-performance.py
+\par
+- Injury scraper: scripts/scrape-tennisexplorer-injured.py
+\par
+- Injury overlay: scripts/injury_overlay.py
+\par
+- Walk-forward tuning: scripts/backtest-walkforward-tune.py
+\par
+- Tournament historical stats: scripts/build-tournament-historical-stats.py
+\par
+- Weekly pipeline: scripts/oncourt-weekly.ps1
+\par
+- Daily pipeline (scheduled): scripts/oncourt-daily.ps1
+\par
+- API + page: src/app/api/fair-odds/route.ts, src/app/fair-odds/page.tsx
+\par
+- Tip page: src/app/tips/[slugId]/page.tsx
+\par
+- Slug utility: src/lib/slugify.ts
+\par
+- Sitemap: src/app/sitemap.ts
+\par
+- Bookmakers page: src/app/bookmakers/page.tsx, src/app/bookmakers/layout.tsx
+\par
+- William Hill redirect: src/app/api/go/william-hill/route.ts
+\par
+- Policy lock doc: docs/FAIR-ODDS-POLICY-LOCK.md
+\par
+- Bookmaker logos + admin doc: docs/BOOKMAKER_LOGOS_AND_ADMIN.md
+\par
+- Docs/schemas: docs/ (e.g. CODEX-HANDOFF.md, supabase-*.sql)
+\par
+
+\b Commands you can run (no need to discover)\b0
+\par
+- Backtest one year: python scripts/backtest-fair-odds.py --files data/backtest/atp-2024.xlsx
+\par
+- Backtest all years: python scripts/backtest-fair-odds.py --files data/backtest/atp-2022.xlsx data/backtest/atp-2023.xlsx data/backtest/atp-2024.xlsx data/backtest/atp-2025.xlsx
+\par
+- Dry-run (no DB write): python scripts/backtest-fair-odds.py --dry-run
+\par
+- Dry-run live compute: python scripts/oncourt-compute-fair-odds.py --dry-run
+\par
+- Full daily pipeline: python scripts/run-daily-odds.py
+\par
+- Strict report only: python scripts/strict-policy-report.py --append
+\par
+- Settlement: python scripts/settle-strict-signals.py
+\par
+- Performance report: python scripts/strict-policy-performance.py --days 7
+\par
+- Injury scrape: python scripts/scrape-tennisexplorer-injured.py --max-pages 2
+\par
+- Walk-forward with overlay: python scripts/backtest-walkforward-tune.py --train data/backtest/backtest-results-2024.csv --test data/backtest/backtest-results-2025.csv --threshold 5 --min-bets 80 --enable-tournament-side-policy --segment-policy-file data/backtest/tournament-segment-roi.csv --segment-policy-window prior_editions --segment-policy-family seed --segment-policy-min-n 50 --segment-policy-min-roi-pct -5 --segment-policy-missing-mode skip
+\par
+
+\b Testing horizon and decision gates\b0
+\par
+- Phase 1 (1-2 weeks): pipeline stability and settlement correctness.
+\par
+- Phase 2 (6-8 weeks): early directional read from CLV and settled outcomes.
+\par
+- Phase 3 (4-6 months): medium confidence ROI read (target roughly 250-400 settled bets).
+\par
+- Phase 4 (9-12 months): high-confidence performance read (target 500+ settled bets).
+\par
+- Use CLV earlier as a faster signal; use settled ROI over longer windows to avoid noise.
+\par
+
+\b What I need you to do\b0
+\par
+- Use this model and codebase to propose and, where possible, implement changes that make it more robust and higher-ROI.
+\par
+- Apply the standards you would use in a professional trading environment: calibration, edge by segment, risk control, and repeatability.
+\par
+- Aim for a transformed setup that you would be willing to run with real capital: robust, well-calibrated, and targeting high ROI.
+\par
+- You can act as senior analyst, quant, or model lead; the bar is institutional-grade transformation of our current model.
+\par
+- Respect the policy lock (docs/FAIR-ODDS-POLICY-LOCK.md): any model or policy change requires explicit approval, backtest comparison vs locked baseline, rolling year-slice checks, and a note in the lock document.
+\par
+}

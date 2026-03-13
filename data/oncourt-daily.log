@@ -1,0 +1,2624 @@
+23:55:04 ============================================
+23:55:04   Daily Pipeline started at 2026-03-02 23:55:04
+23:55:04 ============================================
+23:55:04 === Step 1/4: OnCourt extract ===
+23:55:09 Extracting...
+23:55:09   players_atp: 124,550 rows -> players_atp.csv
+23:55:09   tours_atp: 20,908 rows -> tours_atp.csv
+23:55:09   courts: 7 rows -> courts.csv
+23:55:09   today_atp: 956 rows -> today_atp.csv
+23:55:09 
+23:55:09 Done.
+23:55:09 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-games.py
+23:55:09 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+23:55:09 
+23:55:09 --- oncourt-extract-rest ---
+23:55:09 
+23:55:09 All extractions done.
+23:55:09 === Step 2/4: Supabase sync (quick) ===
+23:55:48   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+23:55:48   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+23:55:48 
+23:55:48   oncourt_courts: 7 rows
+23:55:48   oncourt_players: 5,000 / 124,550  (1617 rows/s, ~74s left)
+23:55:48   oncourt_players: 10,000 / 124,550  (2047 rows/s, ~56s left)
+23:55:48   oncourt_players: 15,000 / 124,550  (2552 rows/s, ~43s left)
+23:55:48   oncourt_players: 20,000 / 124,550  (2517 rows/s, ~42s left)
+23:55:48   oncourt_players: 25,000 / 124,550  (2560 rows/s, ~39s left)
+23:55:48   oncourt_players: 30,000 / 124,550  (2730 rows/s, ~35s left)
+23:55:48   oncourt_players: 35,000 / 124,550  (2842 rows/s, ~32s left)
+23:55:48   oncourt_players: 40,000 / 124,550  (3027 rows/s, ~28s left)
+23:55:48   oncourt_players: 45,000 / 124,550  (3154 rows/s, ~25s left)
+23:55:48   oncourt_players: 50,000 / 124,550  (3297 rows/s, ~23s left)
+23:55:48   oncourt_players: 55,000 / 124,550  (3408 rows/s, ~20s left)
+23:55:48   oncourt_players: 60,000 / 124,550  (3510 rows/s, ~18s left)
+23:55:48   oncourt_players: 65,000 / 124,550  (3591 rows/s, ~17s left)
+23:55:48   oncourt_players: 70,000 / 124,550  (3696 rows/s, ~15s left)
+23:55:48   oncourt_players: 75,000 / 124,550  (3729 rows/s, ~13s left)
+23:55:48   oncourt_players: 80,000 / 124,550  (3753 rows/s, ~12s left)
+23:55:48   oncourt_players: 85,000 / 124,550  (3843 rows/s, ~10s left)
+23:55:48   oncourt_players: 90,000 / 124,550  (3926 rows/s, ~9s left)
+23:55:48   oncourt_players: 95,000 / 124,550  (4000 rows/s, ~7s left)
+23:55:48   oncourt_players: 100,000 / 124,550  (4081 rows/s, ~6s left)
+23:55:48   oncourt_players: 105,000 / 124,550  (4156 rows/s, ~5s left)
+23:55:48   oncourt_players: 110,000 / 124,550  (4230 rows/s, ~3s left)
+23:55:48   oncourt_players: 115,000 / 124,550  (4292 rows/s, ~2s left)
+23:55:48   oncourt_players: 120,000 / 124,550  (4344 rows/s, ~1s left)
+23:55:48   oncourt_players: 124,550 / 124,550  (4351 rows/s, ~0s left)
+23:55:48   oncourt_players: 124,550 rows done in 28.6s
+23:55:48   oncourt_tours: 5,000 / 20,908  (4486 rows/s, ~4s left)
+23:55:48   oncourt_tours: 10,000 / 20,908  (4581 rows/s, ~2s left)
+23:55:48   oncourt_tours: 15,000 / 20,908  (4594 rows/s, ~1s left)
+23:55:48   oncourt_tours: 20,000 / 20,908  (4638 rows/s, ~0s left)
+23:55:48   oncourt_tours: 20,908 / 20,908  (4214 rows/s, ~0s left)
+23:55:48   oncourt_tours: 20,908 rows done in 5.0s
+23:55:48   oncourt_games: SKIPPED (--quick mode)
+23:55:48   oncourt_stat: SKIPPED (--quick mode)
+23:55:48   oncourt_today: 956 rows
+23:55:48 
+23:55:48 Done.
+23:55:48 === Step 3/4: Compute player stats ===
+23:57:16 Using 12m window: 2025-03-02 to today; long window: 2023-03-03 to today (1095 days)
+23:57:16 
+23:57:16 Loading games, tours, courts...
+23:57:16   Games in 12m window: 71,775, long window: 207,123
+23:57:16 Loading stat...
+23:57:16 Computed 9,465 (player_id, surface) rows
+23:57:16   By surface: {'Clay': 4001, 'Hard': 4722, 'Carpet': 211, 'Grass': 531}
+23:57:17 
+23:57:17 Upserting to player_surface_stats...
+23:57:17   5,000 / 9,465
+23:57:17   9,465 / 9,465
+23:57:17 Done.
+23:57:17 === Step 4/4: Pinnacle odds + fair odds ===
+23:57:25 ============================================================
+23:57:25   Pinnacle Tennis Odds Scraper (API edition)
+23:57:25   2026-03-02 23:57 UTC
+23:57:25   Mode: LIVE | WTA: excluded
+23:57:25 ============================================================
+23:57:25 
+23:57:25   Summary: 52 matches (52 ATP/Challenger, 0 WTA), 52 with O/U
+23:57:25     (45 of which are Challenger)
+23:57:25   CSV: data\pinnacle-odds-2026-03-02.csv
+23:57:25   Upserted 52 rows (52 ATP, 0 WTA)
+23:57:25 
+23:57:25   Done.
+00:02:15 Fixtures: 796 (deduped from 956)
+00:02:15   Fixtures with no result (unplayed): 408
+00:02:15   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 178
+00:02:15   Loaded 20,908 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+00:02:15   Elo: 181,525 rows (surface + Overall 50/50 blend)
+00:02:15   Lefties: 40, vs-leftie stats: 33,169 rows
+00:02:15   Big servers: 86 (player,surface), vs-big-server stats: 6,485 rows
+00:02:15   Venue: loaded 0 rows (fixture players/tours only)
+00:02:15   Venue stats: 0 rows (none û run venue pipeline or create table)
+00:02:15   Altitude stats: 682 rows (player record at altitude active)
+00:02:15   League avg (surface): 4 from DB, rest constants
+00:02:15   Tournament totals shift: 0 rows (run oncourt-compute-tournament-avg-games.py)
+00:02:15   Recent activity: 211 rows (form/fatigue active)
+00:02:15   Players (birthdate + atp_rank): 262 with birthdate, 183 with rank, 182 with surface points
+00:02:15   WARNING: Same surname 'alboran' for multiple players in today's fixtures: [(33284, 'Nicolas Moreno De Alboran'), (126727, 'Tristan Boyer/Nicolas Moreno De Alboran')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'schiessl' for multiple players in today's fixtures: [(115717, 'Pedro Boscardin Dias/Joao Eduardo Schiessl'), (89099, 'Joao Eduardo Schiessl')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'sanchez-izquierdo' for multiple players in today's fixtures: [(41484, 'Nikolas Sanchez-Izquierdo'), (126558, 'Miguel Damas/Nikolas Sanchez-Izquierdo')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'wendelken' for multiple players in today's fixtures: [(65558, 'Harry Wendelken'), (88519, 'Tom Hands/Harry Wendelken')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'kolar' for multiple players in today's fixtures: [(125983, 'Filip Duda/Zdenek Kolar'), (30856, 'Zdenek Kolar')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'rocha' for multiple players in today's fixtures: [(89135, 'Jaime Faria/Henrique Rocha'), (83794, 'Henrique Rocha')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'silva' for multiple players in today's fixtures: [(7732, 'Daniel Dutra Da Silva'), (126724, 'Thiago Moura Monteiro/Joao Lucas Reis Da Silva'), (50000, 'Joao Lucas Reis Da Silva'), (20396, 'Frederico Ferreira Silva'), (83392, 'Boris Arias/Daniel Dutra Da Silva')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'erhard' for multiple players in today's fixtures: [(100917, 'Eliakim Coulibaly/Mathys Erhard'), (50118, 'Mathys Erhard')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'kopp' for multiple players in today's fixtures: [(126708, 'Filip Cristian Jianu/Sandro Kopp'), (44209, 'Sandro Kopp')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'houkes' for multiple players in today's fixtures: [(126710, 'Jay Clarke/Max Houkes'), (68393, 'Max Houkes')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'schwaerzler' for multiple players in today's fixtures: [(97369, 'Joel Schwaerzler'), (102323, 'Jerome Kym/Joel Schwaerzler')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'santos' for multiple players in today's fixtures: [(67172, 'Paulo Saraiva Dos Santos'), (126725, 'Pedro Sakamoto/Paulo Saraiva Dos Santos')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'barrera' for multiple players in today's fixtures: [(35986, 'Adria Soriano Barrera'), (126714, 'Mario Mansilla Diez/Adria Soriano Barrera')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'pavlovic' for multiple players in today's fixtures: [(53909, 'Luka Pavlovic'), (111603, 'Stefan Latinovic/Luka Pavlovic')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'henning' for multiple players in today's fixtures: [(58005, 'Philip Henning'), (126715, 'Constantin Bittoun Kouzmine/Philip Henning')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'oberleitner' for multiple players in today's fixtures: [(125597, 'N.Sriram Balaji/Neil Oberleitner'), (55634, 'Neil Oberleitner')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'miguel' for multiple players in today's fixtures: [(110769, 'Luis Queiroz Miguel'), (121532, 'Luis Felipe Miguel/Luis Queiroz Miguel'), (90616, 'Luis Felipe Miguel')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'ribeiro' for multiple players in today's fixtures: [(44217, 'Eduardo Ribeiro'), (125856, 'Igor Ribeiro Marcondes/Eduardo Ribeiro')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'trungelliti' for multiple players in today's fixtures: [(84190, 'Roberto Carballes Baena/Marco Trungelliti'), (12653, 'Marco Trungelliti')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'shelbayh' for multiple players in today's fixtures: [(76009, 'Abedallah Shelbayh'), (85255, 'Daniel Rincon/Abedallah Shelbayh')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'batalla' for multiple players in today's fixtures: [(126703, 'Pol Martin Tiffon/Oriol Roca Batalla'), (18771, 'Oriol Roca Batalla')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'ouakaa' for multiple players in today's fixtures: [(45300, 'Aziz Ouakaa'), (126706, 'Florent Bax/Aziz Ouakaa')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'mikrut' for multiple players in today's fixtures: [(126704, 'Corentin Denolly/Luka Mikrut'), (85851, 'Luka Mikrut')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'pereira' for multiple players in today's fixtures: [(126711, 'Michael Geerts/Tiago Pereira'), (92649, 'Tiago Pereira')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'neumayer' for multiple players in today's fixtures: [(126716, 'Tom Gentzsch/Lukas Neumayer'), (83314, 'Lukas Neumayer')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'coppejans' for multiple players in today's fixtures: [(126718, 'Jacopo Berrettini/Kimmer Coppejans'), (23298, 'Kimmer Coppejans')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'jones' for multiple players in today's fixtures: [(126719, 'Robin Bertrand/Maximus Jones'), (82696, 'Maximus Jones')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'alves' for multiple players in today's fixtures: [(36617, 'Felipe Meligeni Alves'), (116136, 'Gustavo Heide/Felipe Meligeni Alves')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'roncadelli' for multiple players in today's fixtures: [(126726, 'Santiago De La Fuente/Franco Roncadelli'), (58723, 'Franco Roncadelli')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'tsitsipas' for multiple players in today's fixtures: [(90932, 'Pavlos Tsitsipas'), (90999, 'Pavlos Tsitsipas/Petros Tsitsipas')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15   WARNING: Same surname 'jover' for multiple players in today's fixtures: [(126410, 'Gianluca Cadenasso/Carlos Sanchez Jover'), (42963, 'Carlos Sanchez Jover')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:02:15 Computed 178 fair odds rows
+00:02:15   Fixture surfaces (from tour_id): {'Clay': 73, 'Hard': 105}
+00:02:15   Skipped: no player1/player2 = 0
+00:02:15   Elo/rank fallback (missing stats): both = 49, P1 only = 16, P2 only = 18
+00:02:15   Confidence: high=74, medium=21, low=76, none=7
+00:02:15   P1=18771 P2=44990 surface=Clay P1=0.6206 odds1=1.61 odds2=2.64
+00:02:15   P1=30743 P2=61537 surface=Clay P1=0.3227 odds1=3.1 odds2=1.48
+00:02:15   P1=32764 P2=96934 surface=Clay P1=0.5857 odds1=1.71 odds2=2.41
+00:02:15   Cleared existing daily_fair_odds rows.
+00:02:15 Done.
+00:02:15 === 1/2 Pinnacle scraper (writes to bookmaker_odds_snapshot) ===
+00:02:15 
+00:02:15 
+00:02:15 === 2/2 Fair odds pipeline ===
+00:02:15 
+00:02:15 
+00:02:15 Done. Pinnacle snapshot + daily_fair_odds updated.
+00:02:15 ============================================
+00:02:15   Daily Pipeline finished at 2026-03-03 00:02:15
+00:02:15 ============================================
+23:55:06 ============================================
+23:55:07   Daily Pipeline started at 2026-03-03 23:55:06
+23:55:07 ============================================
+23:55:07 === Step 1/5: OnCourt extract ===
+23:56:04 Extracting...
+23:56:04   players_atp: 124,637 rows -> players_atp.csv
+23:56:04   tours_atp: 20,931 rows -> tours_atp.csv
+23:56:04   courts: 7 rows -> courts.csv
+23:56:04   today_atp: 1,527 rows -> today_atp.csv
+23:56:04 
+23:56:04 Done.
+23:56:05 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-games.py
+23:56:05 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+23:56:05 
+23:56:05 --- oncourt-extract-rest ---
+23:56:05 
+23:56:05 All extractions done.
+23:56:06 === Step 2/5: Supabase sync (--quick) ===
+23:57:24   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+23:57:25   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+23:57:25 
+23:57:25   oncourt_courts: 7 rows
+23:57:25   oncourt_players: 5,000 / 124,637  (1605 rows/s, ~75s left)
+23:57:26   oncourt_players: 10,000 / 124,637  (2044 rows/s, ~56s left)
+23:57:26   oncourt_players: 15,000 / 124,637  (2370 rows/s, ~46s left)
+23:57:26   oncourt_players: 20,000 / 124,637  (2539 rows/s, ~41s left)
+23:57:26   oncourt_players: 25,000 / 124,637  (2634 rows/s, ~38s left)
+23:57:26   oncourt_players: 30,000 / 124,637  (2681 rows/s, ~35s left)
+23:57:26   oncourt_players: 35,000 / 124,637  (2795 rows/s, ~32s left)
+23:57:26   oncourt_players: 40,000 / 124,637  (2869 rows/s, ~29s left)
+23:57:26   oncourt_players: 45,000 / 124,637  (2951 rows/s, ~27s left)
+23:57:26   oncourt_players: 50,000 / 124,637  (3022 rows/s, ~25s left)
+23:57:26   oncourt_players: 55,000 / 124,637  (3066 rows/s, ~23s left)
+23:57:26   oncourt_players: 60,000 / 124,637  (3033 rows/s, ~21s left)
+23:57:26   oncourt_players: 65,000 / 124,637  (3081 rows/s, ~19s left)
+23:57:26   oncourt_players: 70,000 / 124,637  (3119 rows/s, ~18s left)
+23:57:26   oncourt_players: 75,000 / 124,637  (2651 rows/s, ~19s left)
+23:57:26   oncourt_players: 80,000 / 124,637  (2682 rows/s, ~17s left)
+23:57:26   oncourt_players: 85,000 / 124,637  (2709 rows/s, ~15s left)
+23:57:26   oncourt_players: 90,000 / 124,637  (2754 rows/s, ~13s left)
+23:57:26   oncourt_players: 95,000 / 124,637  (2768 rows/s, ~11s left)
+23:57:26   oncourt_players: 100,000 / 124,637  (2791 rows/s, ~9s left)
+23:57:26   oncourt_players: 105,000 / 124,637  (2807 rows/s, ~7s left)
+23:57:26   oncourt_players: 110,000 / 124,637  (2836 rows/s, ~5s left)
+23:57:26   oncourt_players: 115,000 / 124,637  (2717 rows/s, ~4s left)
+23:57:26   oncourt_players: 120,000 / 124,637  (2584 rows/s, ~2s left)
+23:57:26   oncourt_players: 124,637 / 124,637  (2548 rows/s, ~0s left)
+23:57:26   oncourt_players: 124,637 rows done in 48.9s
+23:57:26   oncourt_tours: 5,000 / 20,931  (1280 rows/s, ~12s left)
+23:57:26   oncourt_tours: 10,000 / 20,931  (1435 rows/s, ~8s left)
+23:57:26   oncourt_tours: 15,000 / 20,931  (1783 rows/s, ~3s left)
+23:57:26   oncourt_tours: 20,000 / 20,931  (2020 rows/s, ~0s left)
+23:57:26   oncourt_tours: 20,931 / 20,931  (1899 rows/s, ~0s left)
+23:57:26   oncourt_tours: 20,931 rows done in 11.0s
+23:57:26   oncourt_games: SKIPPED (--quick mode)
+23:57:26   oncourt_stat: SKIPPED (--quick mode)
+23:57:26   oncourt_today: 1527 rows
+23:57:26 
+23:57:26 Done.
+23:57:27 === Step 3/5: Compute player stats ===
+00:02:18 Using 12m window: 2025-03-03 to today; long window: 2023-03-04 to today (1095 days)
+00:02:18 
+00:02:18 Loading games, tours, courts...
+00:02:18   Games in 12m window: 71,515, long window: 207,039
+00:02:18 Loading stat...
+00:02:18 Computed 9,458 (player_id, surface) rows
+00:02:18   By surface: {'Clay': 3999, 'Hard': 4717, 'Carpet': 211, 'Grass': 531}
+00:02:18 
+00:02:18 Upserting to player_surface_stats...
+00:02:18   5,000 / 9,458
+00:02:18   9,458 / 9,458
+00:02:18 Done.
+00:02:19 === Step 4/5: Pinnacle odds + fair odds ===
+00:02:36 ============================================================
+00:02:36   Pinnacle Tennis Odds Scraper (API edition)
+00:02:36   2026-03-04 00:02 UTC
+00:02:36   Mode: LIVE | WTA: excluded
+00:02:36 ============================================================
+00:02:36 
+00:02:36   Summary: 42 matches (42 ATP/Challenger, 0 WTA), 42 with O/U
+00:02:36     (15 of which are Challenger)
+00:02:36   CSV: data\pinnacle-odds-2026-03-04.csv
+00:02:36   Upserted 42 rows (27 ATP, 15 Challenger, 0 WTA)
+00:02:36 
+00:02:36   Done.
+00:10:24 Fixtures: 878 (deduped from 1000)
+00:10:24   Fixtures with no result (unplayed): 353
+00:10:25   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 177
+00:10:25   Loaded 20,931 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+00:10:25   Surface priors (raw stats): Hard hold=0.454 ret=0.383, Clay hold=0.439 ret=0.407
+00:10:25   Elo: 181,525 rows (surface + Overall 50/50 blend)
+00:10:25   Lefties: 40, vs-leftie stats: 33,169 rows
+00:10:25   Big servers: 86 (player,surface), vs-big-server stats: 6,485 rows
+00:10:25   Venue: loaded 0 rows (fixture players/tours only)
+00:10:25   Venue stats: 0 rows (none û run venue pipeline or create table)
+00:10:25   Altitude stats: 724 rows (player record at altitude active)
+00:10:25   League avg (surface): 4 from DB, rest constants
+00:10:25   Tournament totals shift: 0 rows (run oncourt-compute-tournament-avg-games.py)
+00:10:25   Match history: 219/243 players with matches since 2021-01-01, tournament-history keys: 14,218
+00:10:25   Recent activity: 205 rows (form/fatigue active)
+00:10:25   H2H: 33,497 rows (active)
+00:10:25   Advanced stats: 4,018 rows (active)
+00:10:25   Players (birthdate + atp_rank): 243 with birthdate, 185 with rank, 185 with surface points
+00:10:25   WARNING: Same surname 'schiessl' for multiple players in today's fixtures: [(115717, 'Pedro Boscardin Dias/Joao Eduardo Schiessl'), (89099, 'Joao Eduardo Schiessl')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'sanchez-izquierdo' for multiple players in today's fixtures: [(41484, 'Nikolas Sanchez-Izquierdo'), (126558, 'Miguel Damas/Nikolas Sanchez-Izquierdo')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'wendelken' for multiple players in today's fixtures: [(65558, 'Harry Wendelken'), (88519, 'Tom Hands/Harry Wendelken')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'kolar' for multiple players in today's fixtures: [(125983, 'Filip Duda/Zdenek Kolar'), (30856, 'Zdenek Kolar')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'rocha' for multiple players in today's fixtures: [(89135, 'Jaime Faria/Henrique Rocha'), (83794, 'Henrique Rocha')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'silva' for multiple players in today's fixtures: [(7732, 'Daniel Dutra Da Silva'), (126724, 'Thiago Moura Monteiro/Joao Lucas Reis Da Silva'), (50000, 'Joao Lucas Reis Da Silva'), (83392, 'Boris Arias/Daniel Dutra Da Silva')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'cerundolo' for multiple players in today's fixtures: [(52279, 'Francisco Cerundolo'), (52934, 'Juan Manuel Cerundolo')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'barrera' for multiple players in today's fixtures: [(35986, 'Adria Soriano Barrera'), (126714, 'Mario Mansilla Diez/Adria Soriano Barrera')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'pavlovic' for multiple players in today's fixtures: [(53909, 'Luka Pavlovic'), (111603, 'Stefan Latinovic/Luka Pavlovic')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'miguel' for multiple players in today's fixtures: [(110769, 'Luis Queiroz Miguel'), (121532, 'Luis Felipe Miguel/Luis Queiroz Miguel')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'ribeiro' for multiple players in today's fixtures: [(44217, 'Eduardo Ribeiro'), (125856, 'Igor Ribeiro Marcondes/Eduardo Ribeiro')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'trungelliti' for multiple players in today's fixtures: [(84190, 'Roberto Carballes Baena/Marco Trungelliti'), (12653, 'Marco Trungelliti')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'shelbayh' for multiple players in today's fixtures: [(76009, 'Abedallah Shelbayh'), (85255, 'Daniel Rincon/Abedallah Shelbayh')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'mikrut' for multiple players in today's fixtures: [(126704, 'Corentin Denolly/Luka Mikrut'), (85851, 'Luka Mikrut')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'pereira' for multiple players in today's fixtures: [(126711, 'Michael Geerts/Tiago Pereira'), (92649, 'Tiago Pereira')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'neumayer' for multiple players in today's fixtures: [(126716, 'Tom Gentzsch/Lukas Neumayer'), (83314, 'Lukas Neumayer')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'coppejans' for multiple players in today's fixtures: [(126718, 'Jacopo Berrettini/Kimmer Coppejans'), (23298, 'Kimmer Coppejans')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'tsitsipas' for multiple players in today's fixtures: [(30470, 'Stefanos Tsitsipas'), (90932, 'Pavlos Tsitsipas'), (90999, 'Pavlos Tsitsipas/Petros Tsitsipas')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'alves' for multiple players in today's fixtures: [(36617, 'Felipe Meligeni Alves'), (116136, 'Gustavo Heide/Felipe Meligeni Alves')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'roncadelli' for multiple players in today's fixtures: [(126726, 'Santiago De La Fuente/Franco Roncadelli'), (58723, 'Franco Roncadelli')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25   WARNING: Same surname 'jover' for multiple players in today's fixtures: [(126410, 'Gianluca Cadenasso/Carlos Sanchez Jover'), (42963, 'Carlos Sanchez Jover')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:10:25 Computed 69 fair odds rows
+00:10:25   Fixture surfaces (from tour_id): {'Clay': 23, 'Hard': 46}
+00:10:25   Skipped: no player1/player2 = 0, same-player = 31, unknown = 51, doubles/team (name contains / or &) = 26
+00:10:25   Elo/rank fallback (missing stats): both = 0, P1 only = 0, P2 only = 0
+00:10:25   Confidence: high=64, medium=5, low=0, none=0
+00:10:25   P1=50118 P2=97369 surface=Clay P1=0.4047 odds1=2.47 odds2=1.68
+00:10:25   P1=71357 P2=30856 surface=Clay P1=0.5882 odds1=1.7 odds2=2.43
+00:10:25   P1=61537 P2=44990 surface=Clay P1=0.6038 odds1=1.66 odds2=2.52
+00:10:25   Cleared existing daily_fair_odds rows.
+00:10:25 Done.
+00:10:25 === 1/2 Pinnacle scraper (writes to bookmaker_odds_snapshot) ===
+00:10:25 
+00:10:25 
+00:10:25 === 2/2 Fair odds pipeline ===
+00:10:25 
+00:10:25 
+00:10:25 Done. Pinnacle snapshot + daily_fair_odds updated.
+00:10:25 === Step 5/5: Strict policy report (--append) ===
+00:10:31 Strict policy report ù 2026-03-04 UTC
+00:10:31 Segment: Hard|Masters 1000  |  Confidence: high, medium  |  Min value: 5.0%
+00:10:31 Signals: 15
+00:10:31 
+00:10:31   Juan Manuel Cerundolo vs Botic Van De Zandschulp  |  P1 value +18.6%  |  our 2.48/1.67  Pin 2.94/1.44
+00:10:31   Nuno Borges vs Emilio Nava  |  P2 value +5.8%  |  our 1.72/2.40  Pin 1.56/2.54
+00:10:31   Hubert Hurkacz vs Aleksandar Kovacevic  |  P2 value +34.4%  |  our 1.71/2.41  Pin 1.38/3.24
+00:10:31   Fabian Marozsan vs Roberto Bautista Agut  |  P2 value +35.6%  |  our 1.61/2.64  Pin 1.32/3.58
+00:10:31   Sebastian Korda vs Francisco Comesana  |  P2 value +62.8%  |  our 1.45/3.20  Pin 1.19/5.21
+00:10:31   Alejandro Tabilo vs Rafael Jodar  |  P1 value +27.4%  |  our 1.68/2.47  Pin 2.14/1.76
+00:10:31   Jacob Fearnley vs Damir Dzumhur  |  P2 value +23.5%  |  our 2.20/1.83  Pin 1.69/2.26
+00:10:31   Mattia Bellucci vs Gabriel Diallo  |  P2 value +7.1%  |  our 2.47/1.68  Pin 2.09/1.80
+00:10:31   Daniel Altmaier vs Miomir Kecmanovic  |  P1 value +82.1%  |  our 2.51/1.66  Pin 4.57/1.23
+00:10:31   Camilo Ugo Carabelli vs Martin Damm  |  P1 value +12.9%  |  our 2.24/1.81  Pin 2.53/1.56
+00:10:31   Matteo Berrettini vs Adrian Mannarino  |  P2 value +21.1%  |  our 1.64/2.56  Pin 1.41/3.10
+00:10:31   Reilly Opelka vs Ethan Quinn  |  P2 value +6.2%  |  our 2.31/1.76  Pin 2.01/1.87
+00:10:31   Quentin Halys vs Adam Walton  |  P2 value +7.5%  |  our 1.72/2.39  Pin 1.55/2.57
+00:10:31   Mariano Navone vs Marcos Giron  |  P1 value +16.2%  |  our 2.65/1.61  Pin 3.08/1.41
+00:10:31   Zizou Bergs vs Jan-Lennard Struff  |  P1 value +5.4%  |  our 1.76/2.32  Pin 1.85/2.02
+00:10:31 
+00:10:31 Appended 15 rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals.csv
+00:10:31 ============================================
+00:10:31   Daily Pipeline finished at 2026-03-04 00:10:31
+00:10:31 ============================================
+23:55:05 ============================================
+23:55:05   Daily Pipeline started at 2026-03-04 23:55:05
+23:55:05 ============================================
+23:55:05 === Step 1/5: OnCourt extract ===
+23:55:13 Extracting...
+23:55:13   players_atp: 124,647 rows -> players_atp.csv
+23:55:13   tours_atp: 20,931 rows -> tours_atp.csv
+23:55:13   courts: 7 rows -> courts.csv
+23:55:13   today_atp: 1,573 rows -> today_atp.csv
+23:55:13 
+23:55:13 Done.
+23:55:13 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-games.py
+23:55:13 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+23:55:13 
+23:55:13 --- oncourt-extract-rest ---
+23:55:13 
+23:55:13 All extractions done.
+23:55:13 === Step 2/5: Supabase sync (--quick) ===
+23:55:51   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+23:55:51   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+23:55:51 
+23:55:51   oncourt_courts: 7 rows
+23:55:51   oncourt_players: 5,000 / 124,647  (2404 rows/s, ~50s left)
+23:55:51   oncourt_players: 10,000 / 124,647  (3098 rows/s, ~37s left)
+23:55:51   oncourt_players: 15,000 / 124,647  (3538 rows/s, ~31s left)
+23:55:51   oncourt_players: 20,000 / 124,647  (3844 rows/s, ~27s left)
+23:55:51   oncourt_players: 25,000 / 124,647  (4059 rows/s, ~25s left)
+23:55:51   oncourt_players: 30,000 / 124,647  (4127 rows/s, ~23s left)
+23:55:51   oncourt_players: 35,000 / 124,647  (4261 rows/s, ~21s left)
+23:55:51   oncourt_players: 40,000 / 124,647  (4383 rows/s, ~19s left)
+23:55:51   oncourt_players: 45,000 / 124,647  (4447 rows/s, ~18s left)
+23:55:51   oncourt_players: 50,000 / 124,647  (4393 rows/s, ~17s left)
+23:55:51   oncourt_players: 55,000 / 124,647  (4334 rows/s, ~16s left)
+23:55:51   oncourt_players: 60,000 / 124,647  (4363 rows/s, ~15s left)
+23:55:51   oncourt_players: 65,000 / 124,647  (4386 rows/s, ~14s left)
+23:55:51   oncourt_players: 70,000 / 124,647  (4433 rows/s, ~12s left)
+23:55:51   oncourt_players: 75,000 / 124,647  (4406 rows/s, ~11s left)
+23:55:51   oncourt_players: 80,000 / 124,647  (4456 rows/s, ~10s left)
+23:55:51   oncourt_players: 85,000 / 124,647  (4520 rows/s, ~9s left)
+23:55:51   oncourt_players: 90,000 / 124,647  (4537 rows/s, ~8s left)
+23:55:51   oncourt_players: 95,000 / 124,647  (4599 rows/s, ~6s left)
+23:55:51   oncourt_players: 100,000 / 124,647  (4669 rows/s, ~5s left)
+23:55:51   oncourt_players: 105,000 / 124,647  (4555 rows/s, ~4s left)
+23:55:51   oncourt_players: 110,000 / 124,647  (4454 rows/s, ~3s left)
+23:55:51   oncourt_players: 115,000 / 124,647  (4386 rows/s, ~2s left)
+23:55:51   oncourt_players: 120,000 / 124,647  (4436 rows/s, ~1s left)
+23:55:51   oncourt_players: 124,647 / 124,647  (4334 rows/s, ~0s left)
+23:55:51   oncourt_players: 124,647 rows done in 28.8s
+23:55:51   oncourt_tours: 5,000 / 20,931  (2697 rows/s, ~6s left)
+23:55:51   oncourt_tours: 10,000 / 20,931  (3089 rows/s, ~4s left)
+23:55:51   oncourt_tours: 15,000 / 20,931  (3569 rows/s, ~2s left)
+23:55:51   oncourt_tours: 20,000 / 20,931  (3854 rows/s, ~0s left)
+23:55:51   oncourt_tours: 20,931 / 20,931  (3596 rows/s, ~0s left)
+23:55:51   oncourt_tours: 20,931 rows done in 5.8s
+23:55:51   oncourt_games: SKIPPED (--quick mode)
+23:55:51   oncourt_stat: SKIPPED (--quick mode)
+23:55:51   oncourt_today: 1573 rows
+23:55:51 
+23:55:51 Done.
+23:55:51 === Step 3/5: Compute player stats ===
+23:56:46 Using 12m window: 2025-03-04 to today; long window: 2023-03-05 to today (1095 days)
+23:56:46 
+23:56:46 Loading games, tours, courts...
+23:56:46   Games in 12m window: 71,296, long window: 206,991
+23:56:46 Loading stat...
+23:56:46 Computed 9,442 (player_id, surface) rows
+23:56:46   By surface: {'Clay': 3997, 'Hard': 4714, 'Carpet': 200, 'Grass': 531}
+23:56:46 
+23:56:46 Upserting to player_surface_stats...
+23:56:46   5,000 / 9,442
+23:56:46   9,442 / 9,442
+23:56:46 Done.
+23:56:46 === Step 4/6: Refresh injured players list (TennisExplorer) ===
+23:56:51 Scraping injured list...
+23:56:51   100 rows
+23:56:51 Scraping returning list...
+23:56:51   156 rows
+23:56:51 Wrote C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv (256 rows)
+23:56:51 === Step 5/6: Pinnacle odds + fair odds ===
+23:57:04 ============================================================
+23:57:04   Pinnacle Tennis Odds Scraper (API edition)
+23:57:04   2026-03-04 23:56 UTC
+23:57:04   Mode: LIVE | WTA: excluded
+23:57:04 ============================================================
+23:57:04 
+23:57:04   Summary: 35 matches (35 ATP/Challenger, 0 WTA), 34 with O/U
+23:57:04     (13 of which are Challenger)
+23:57:04   CSV: data\pinnacle-odds-2026-03-04.csv
+23:57:04   Upserted 35 rows (22 ATP, 13 Challenger, 0 WTA)
+23:57:04 
+23:57:04   Done.
+00:01:18 Fixtures: 939 (deduped from 1000)
+00:01:18   Fixtures with no result (unplayed): 230
+00:01:18   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 122
+00:01:18   Loaded 20,931 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+00:01:18   Surface priors (raw stats): Hard hold=0.454 ret=0.383, Clay hold=0.439 ret=0.407
+00:01:18   Elo: 181,525 rows (surface + Overall 50/50 blend)
+00:01:18   Lefties: 40, vs-leftie stats: 33,169 rows
+00:01:18   Big servers: 86 (player,surface), vs-big-server stats: 6,485 rows
+00:01:18   Venue: loaded 0 rows (fixture players/tours only)
+00:01:18   Venue stats: 0 rows (none û run venue pipeline or create table)
+00:01:18   Altitude stats: 536 rows (player record at altitude active)
+00:01:18   League avg (surface): 4 from DB, rest constants
+00:01:18   Tournament totals shift: 0 rows (run oncourt-compute-tournament-avg-games.py)
+00:01:18   Match history: 157/172 players with matches since 2021-01-01, tournament-history keys: 10,029
+00:01:18   Recent activity: 143 rows (form/fatigue active)
+00:01:18   H2H: 33,497 rows (active)
+00:01:18   Advanced stats: 4,018 rows (active)
+00:01:18   Players (birthdate + atp_rank): 172 with birthdate, 136 with rank, 136 with surface points
+00:01:18   WARNING: Same surname 'schiessl' for multiple players in today's fixtures: [(115717, 'Pedro Boscardin Dias/Joao Eduardo Schiessl'), (89099, 'Joao Eduardo Schiessl')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:01:18   WARNING: Same surname 'rocha' for multiple players in today's fixtures: [(89135, 'Jaime Faria/Henrique Rocha'), (83794, 'Henrique Rocha')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:01:18   WARNING: Same surname 'cerundolo' for multiple players in today's fixtures: [(52279, 'Francisco Cerundolo'), (52934, 'Juan Manuel Cerundolo')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:01:18   WARNING: Same surname 'pavlovic' for multiple players in today's fixtures: [(53909, 'Luka Pavlovic'), (111603, 'Stefan Latinovic/Luka Pavlovic')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:01:18   WARNING: Same surname 'miguel' for multiple players in today's fixtures: [(110769, 'Luis Queiroz Miguel'), (121532, 'Luis Felipe Miguel/Luis Queiroz Miguel')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:01:18   WARNING: Same surname 'ribeiro' for multiple players in today's fixtures: [(44217, 'Eduardo Ribeiro'), (125856, 'Igor Ribeiro Marcondes/Eduardo Ribeiro')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+00:01:18   Injury list: 76/256 recent rows (lookback 14d, downweight=off, delta=0.020)
+00:01:18 Computed 54 fair odds rows
+00:01:18   Fixture surfaces (from tour_id): {'Clay': 10, 'Hard': 44}
+00:01:18   Skipped: no player1/player2 = 0, same-player = 22, unknown = 30, doubles/team (name contains / or &) = 16
+00:01:18   Elo/rank fallback (missing stats): both = 0, P1 only = 0, P2 only = 0
+00:01:18   Confidence: high=53, medium=1, low=0, none=0
+00:01:18   Injury flags: P1=0, P2=2, adjusted_matches=0 (downweight=off)
+00:01:18   P1=12653 P2=97369 surface=Clay P1=0.5624 odds1=1.78 odds2=2.29
+00:01:18   P1=20104 P2=76298 surface=Clay P1=0.3752 odds1=2.67 odds2=1.6
+00:01:18   P1=53909 P2=20465 surface=Clay P1=0.4859 odds1=2.06 odds2=1.95
+00:01:18   Cleared existing daily_fair_odds rows.
+00:01:18 Done.
+00:01:18 
+00:01:18 === 1/3 Pinnacle scraper (writes to bookmaker_odds_snapshot) ===
+00:01:18 
+00:01:18 
+00:01:18 === 2/3 Fair odds pipeline ===
+00:01:18 
+00:01:18 
+00:01:18 === 3/3 Strict report skipped (--skip-strict-report) ===
+00:01:18 
+00:01:18 Done. Pinnacle snapshot + daily_fair_odds updated.
+00:01:18 === Step 6/6: Strict policy report (--append) ===
+00:01:25 Strict policy report - 2026-03-05 UTC
+00:01:25 Segment: Hard|Masters 1000  |  Confidence: high  |  Min value: 10.0%
+00:01:25 Exclusion: ATP500 Hard short favorites skipped (confidence high, favorite odds < 1.80)
+00:01:25 Production mode: base
+00:01:25 Signals (production): 0
+00:01:25 Injury list: path=C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv recent_rows=76/256 lookback=14d flagged_candidates=1 overlay=off skipped=0
+00:01:25 
+00:01:25 No POLICY signals today.
+00:01:25 
+00:01:25 Appended 0/0 production rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals.csv (deduped).
+00:01:25 ============================================
+00:01:25   Daily Pipeline finished at 2026-03-05 00:01:25
+00:01:25 ============================================
+23:55:06 ============================================
+23:55:06   Daily Pipeline started at 2026-03-05 23:55:06
+23:55:06 ============================================
+23:55:06 === Step 1/7: OnCourt extract ===
+23:55:11 Extracting...
+23:55:11   players_atp: 124,647 rows -> players_atp.csv
+23:55:11   tours_atp: 20,931 rows -> tours_atp.csv
+23:55:11   courts: 7 rows -> courts.csv
+23:55:11   today_atp: 1,509 rows -> today_atp.csv
+23:55:11 
+23:55:11 Done.
+23:55:11 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-games.py
+23:55:11 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+23:55:11 
+23:55:11 --- oncourt-extract-rest ---
+23:55:11 
+23:55:11 All extractions done.
+23:55:11 === Step 2/7: Supabase sync (--quick) ===
+23:55:58   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+23:55:58   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+23:55:58 
+23:55:58   oncourt_courts: 7 rows
+23:55:58   oncourt_players: 5,000 / 124,647  (1481 rows/s, ~81s left)
+23:55:58   oncourt_players: 10,000 / 124,647  (2114 rows/s, ~54s left)
+23:55:58   oncourt_players: 15,000 / 124,647  (2607 rows/s, ~42s left)
+23:55:58   oncourt_players: 20,000 / 124,647  (2782 rows/s, ~38s left)
+23:55:58   oncourt_players: 25,000 / 124,647  (3143 rows/s, ~32s left)
+23:55:58   oncourt_players: 30,000 / 124,647  (3449 rows/s, ~27s left)
+23:55:58   oncourt_players: 35,000 / 124,647  (3691 rows/s, ~24s left)
+23:55:58   oncourt_players: 40,000 / 124,647  (3616 rows/s, ~23s left)
+23:55:58   oncourt_players: 45,000 / 124,647  (3710 rows/s, ~21s left)
+23:55:58   oncourt_players: 50,000 / 124,647  (3837 rows/s, ~19s left)
+23:55:58   oncourt_players: 55,000 / 124,647  (3619 rows/s, ~19s left)
+23:55:58   oncourt_players: 60,000 / 124,647  (3610 rows/s, ~18s left)
+23:55:58   oncourt_players: 65,000 / 124,647  (3664 rows/s, ~16s left)
+23:55:58   oncourt_players: 70,000 / 124,647  (3701 rows/s, ~15s left)
+23:55:58   oncourt_players: 75,000 / 124,647  (3730 rows/s, ~13s left)
+23:55:58   oncourt_players: 80,000 / 124,647  (3787 rows/s, ~12s left)
+23:55:58   oncourt_players: 85,000 / 124,647  (3840 rows/s, ~10s left)
+23:55:58   oncourt_players: 90,000 / 124,647  (3893 rows/s, ~9s left)
+23:55:58   oncourt_players: 95,000 / 124,647  (3954 rows/s, ~7s left)
+23:55:58   oncourt_players: 100,000 / 124,647  (4013 rows/s, ~6s left)
+23:55:58   oncourt_players: 105,000 / 124,647  (4051 rows/s, ~5s left)
+23:55:58   oncourt_players: 110,000 / 124,647  (4084 rows/s, ~4s left)
+23:55:58   oncourt_players: 115,000 / 124,647  (4130 rows/s, ~2s left)
+23:55:58   oncourt_players: 120,000 / 124,647  (4168 rows/s, ~1s left)
+23:55:58   oncourt_players: 124,647 / 124,647  (4177 rows/s, ~0s left)
+23:55:58   oncourt_players: 124,647 rows done in 29.8s
+23:55:58   oncourt_tours: 5,000 / 20,931  (3629 rows/s, ~4s left)
+23:55:58   oncourt_tours: 10,000 / 20,931  (3669 rows/s, ~3s left)
+23:55:58   oncourt_tours: 15,000 / 20,931  (3745 rows/s, ~2s left)
+23:55:58   oncourt_tours: 20,000 / 20,931  (3903 rows/s, ~0s left)
+23:55:58   oncourt_tours: 20,931 / 20,931  (3571 rows/s, ~0s left)
+23:55:58   oncourt_tours: 20,931 rows done in 5.9s
+23:55:58   oncourt_games: SKIPPED (--quick mode)
+23:55:58   oncourt_stat: SKIPPED (--quick mode)
+23:55:58   player_hand_reference: skipped 1 rows (player_id missing in players_atp.csv)
+23:55:58   player_hand_reference: 1,199 left-handed players (source=tml)
+23:55:58   oncourt_today: 1509 rows
+23:55:58 
+23:55:58 Done.
+23:55:58 === Step 3/7: Compute player stats ===
+23:57:07 Using 12m window: 2025-03-05 to today; long window: 2023-03-06 to today (1095 days)
+23:57:07 
+23:57:07 Loading games, tours, courts...
+23:57:07   Games in 12m window: 71,091, long window: 206,711
+23:57:08 Loading stat...
+23:57:08 Computed 9,426 (player_id, surface) rows
+23:57:08   By surface: {'Clay': 3995, 'Hard': 4707, 'Carpet': 193, 'Grass': 531}
+23:57:08 
+23:57:08 Upserting to player_surface_stats...
+23:57:08   5,000 / 9,426
+23:55:04 ============================================
+23:55:04   Daily Pipeline started at 2026-03-06 23:55:04
+23:55:04 ============================================
+23:55:04 === Step 1/7: OnCourt extract ===
+23:55:07 Extracting...
+23:55:07   players_atp: 124,654 rows -> players_atp.csv
+23:55:07   tours_atp: 20,930 rows -> tours_atp.csv
+23:55:07   courts: 7 rows -> courts.csv
+23:55:07   today_atp: 1,482 rows -> today_atp.csv
+23:55:07 
+23:55:07 Done.
+23:55:07 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-games.py
+23:55:07 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+23:55:07 
+23:55:07 --- oncourt-extract-rest ---
+23:55:07 
+23:55:07 All extractions done.
+23:55:07 === Step 2/7: Supabase sync (--quick) ===
+23:55:50   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+23:55:50   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+23:55:50 
+23:55:50   oncourt_courts: 7 rows
+23:55:50   oncourt_players: 5,000 / 124,654  (2004 rows/s, ~60s left)
+23:55:50   oncourt_players: 10,000 / 124,654  (707 rows/s, ~162s left)
+23:55:50   oncourt_players: 15,000 / 124,654  (998 rows/s, ~110s left)
+23:55:50   oncourt_players: 20,000 / 124,654  (1251 rows/s, ~84s left)
+23:55:50   oncourt_players: 25,000 / 124,654  (1494 rows/s, ~67s left)
+23:55:50   oncourt_players: 30,000 / 124,654  (1719 rows/s, ~55s left)
+23:55:50   oncourt_players: 35,000 / 124,654  (1918 rows/s, ~47s left)
+23:55:50   oncourt_players: 40,000 / 124,654  (2100 rows/s, ~40s left)
+23:55:50   oncourt_players: 45,000 / 124,654  (2268 rows/s, ~35s left)
+23:55:50   oncourt_players: 50,000 / 124,654  (2426 rows/s, ~31s left)
+23:55:50   oncourt_players: 55,000 / 124,654  (2579 rows/s, ~27s left)
+23:55:50   oncourt_players: 60,000 / 124,654  (2717 rows/s, ~24s left)
+23:55:50   oncourt_players: 65,000 / 124,654  (2835 rows/s, ~21s left)
+23:55:50   oncourt_players: 70,000 / 124,654  (2958 rows/s, ~18s left)
+23:55:50   oncourt_players: 75,000 / 124,654  (3072 rows/s, ~16s left)
+23:55:50   oncourt_players: 80,000 / 124,654  (3186 rows/s, ~14s left)
+23:55:50   oncourt_players: 85,000 / 124,654  (3294 rows/s, ~12s left)
+23:55:50   oncourt_players: 90,000 / 124,654  (3396 rows/s, ~10s left)
+23:55:50   oncourt_players: 95,000 / 124,654  (3488 rows/s, ~9s left)
+23:55:50   oncourt_players: 100,000 / 124,654  (3584 rows/s, ~7s left)
+23:55:50   oncourt_players: 105,000 / 124,654  (3669 rows/s, ~5s left)
+23:55:50   oncourt_players: 110,000 / 124,654  (3755 rows/s, ~4s left)
+23:55:50   oncourt_players: 115,000 / 124,654  (3831 rows/s, ~3s left)
+23:55:50   oncourt_players: 120,000 / 124,654  (3907 rows/s, ~1s left)
+23:55:50   oncourt_players: 124,654 / 124,654  (3954 rows/s, ~0s left)
+23:55:50   oncourt_players: 124,654 rows done in 31.5s
+23:55:50   oncourt_tours: 5,000 / 20,930  (4744 rows/s, ~3s left)
+23:55:50   oncourt_tours: 10,000 / 20,930  (5218 rows/s, ~2s left)
+23:55:50   oncourt_tours: 15,000 / 20,930  (5598 rows/s, ~1s left)
+23:55:50   oncourt_tours: 20,000 / 20,930  (5785 rows/s, ~0s left)
+23:55:50   oncourt_tours: 20,930 / 20,930  (5429 rows/s, ~0s left)
+23:55:50   oncourt_tours: 20,930 rows done in 3.9s
+23:55:50   oncourt_games: SKIPPED (--quick mode)
+23:55:50   oncourt_stat: SKIPPED (--quick mode)
+23:55:50   player_hand_reference: skipped 1 rows (player_id missing in players_atp.csv)
+23:55:50   player_hand_reference: 1,199 left-handed players (source=tml)
+23:55:50   oncourt_today: 1482 rows
+23:55:50 
+23:55:50 Done.
+23:55:50 === Step 3/7: Compute player stats ===
+23:56:15 Using 12m window: 2025-03-06 to today; long window: 2023-03-07 to today (1095 days)
+23:56:15 
+23:56:15 Loading games, tours, courts...
+23:56:15   Games in 12m window: 70,904, long window: 206,509
+23:56:15 Loading stat...
+23:56:15 Computed 9,402 (player_id, surface) rows
+23:56:15   By surface: {'Clay': 3988, 'Hard': 4699, 'Carpet': 184, 'Grass': 531}
+23:56:15 
+23:56:15 Upserting to player_surface_stats...
+23:56:15   5,000 / 9,402
+23:56:15   9,402 / 9,402
+23:56:15 Done.
+23:56:15 === Step 4/7: Refresh injured players list (TennisExplorer) ===
+23:56:17 Scraping injured list...
+23:56:17   100 rows
+23:56:17 Scraping returning list...
+23:56:17   158 rows
+23:56:17 Wrote C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv (258 rows)
+23:56:17 === Step 5/7: Refresh CPI surface-speed table ===
+23:56:20 2025: 64 rows
+23:56:20 2026: 17 rows
+23:56:20 Wrote 79 deduped rows to C:\Users\44746\Downloads\il-margine\data\backtest\tennisabstract-atp-surface-speed.csv
+23:56:20 Years covered: 2025-2026 (2 years)
+23:56:21 Upserted 79 rows into 'tournament_surface_speed'.
+23:56:21 === Step 6/7: Pinnacle odds + fair odds ===
+23:56:30 ============================================================
+23:56:30   Pinnacle Tennis Odds Scraper (API edition)
+23:56:30   2026-03-06 23:56 UTC
+23:56:30   Mode: LIVE | WTA: excluded
+23:56:30 ============================================================
+23:56:30 
+23:56:30   Summary: 28 matches (28 ATP/Challenger, 0 WTA), 28 with O/U
+23:56:30     (5 of which are Challenger)
+23:56:30   CSV: data\pinnacle-odds-2026-03-06.csv
+23:56:30   Upserted 28 rows (23 ATP, 5 Challenger, 0 WTA)
+23:56:30   Outrights: 16 rows for 1 tournaments
+23:56:30 
+23:56:30   Done.
+23:58:55 Fixtures: 968 (deduped from 1000)
+23:58:55   Fixtures with no result (unplayed): 117
+23:58:55   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 65
+23:58:55   Loaded 20,931 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+23:58:55   Loaded 9,402 rows from player_surface_stats_v2 (matchup model)
+23:58:55   Surface priors (raw stats): Hard hold=0.447 ret=0.385, Clay hold=0.431 ret=0.409
+23:58:55   Elo: 181,525 rows (surface + Overall 50/50 blend)
+23:58:55   Lefties: 1199, vs-leftie stats: 33,169 rows
+23:58:55   Big servers: 86 (player,surface), vs-big-server stats: 6,485 rows
+23:58:55   Venue: loaded 0 rows (fixture players/tours only)
+23:58:55   Venue stats: 0 rows (none û run venue pipeline or create table)
+23:58:55   Altitude stats: 358 rows (player record at altitude active)
+23:58:55   League avg (surface): 4 from DB, rest constants
+23:58:55   Tournament totals shift: 0 rows (run oncourt-compute-tournament-avg-games.py)
+23:58:55   Match history: 100/102 players with matches since 2021-01-01, tournament-history keys: 6,356
+23:58:55   Recent activity: 96 rows (form/fatigue active)
+23:58:55   Warning: player_surface_stats_v2 fetch failed (Header part ((21498, 125597, 126550, 9)) from ('apikey', (21498, 125597, 126550, 9)) must be of type str or bytes, not <class 'tuple'>). Matchup model will use fallback.
+23:58:55   V2 stats: 0 rows (0 with decomposed serve)
+23:58:55   Recent games: 0 rows for 0 players
+23:58:55   H2H: 33,497 rows (active)
+23:58:55   Advanced stats: 4,018 rows (active)
+23:58:55   Players (birthdate + atp_rank): 102 with birthdate, 91 with rank, 91 with surface points
+23:58:55   WARNING: Same surname 'wendelken' for multiple players in today's fixtures: [(65558, 'Harry Wendelken'), (88519, 'Tom Hands/Harry Wendelken')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:58:55   WARNING: Same surname 'rocha' for multiple players in today's fixtures: [(89135, 'Jaime Faria/Henrique Rocha'), (83794, 'Henrique Rocha')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:58:55   WARNING: Same surname 'cerundolo' for multiple players in today's fixtures: [(52279, 'Francisco Cerundolo'), (52934, 'Juan Manuel Cerundolo')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:58:55   WARNING: Same surname 'ribeiro' for multiple players in today's fixtures: [(44217, 'Eduardo Ribeiro'), (125856, 'Igor Ribeiro Marcondes/Eduardo Ribeiro')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:58:55   Injury list: 85/258 recent rows (lookback 14d, downweight=off, delta=0.020)
+23:58:55   CPI rows: disabled (set FAIR_ODDS_CPI_ENABLED=true to activate)
+23:58:55 Computed 45 fair odds rows
+23:58:55   V2 model: 0/45 matchup (0%), 45 fallback, 45 fatigue computed
+23:58:55   Fixture surfaces (from tour_id): {'Clay': 6, 'Hard': 39}
+23:58:55   Skipped: no player1/player2 = 0, same-player = 14, unknown = 2, doubles/team (name contains / or &) = 4
+23:58:55   Elo/rank fallback (missing stats): both = 0, P1 only = 0, P2 only = 0
+23:58:55   Confidence: high=45, medium=0, low=0, none=0
+23:58:55   Injury flags: P1=1, P2=2, adjusted_matches=0 (downweight=off)
+23:58:55   P1=97369 P2=20104 surface=Clay P1=0.5594 odds1=1.79 odds2=2.27
+23:58:55   P1=20465 P2=87277 surface=Clay P1=0.3901 odds1=2.56 odds2=1.64
+23:58:55   P1=83314 P2=65558 surface=Hard P1=0.5252 odds1=1.9 odds2=2.11
+23:58:55   Cleared existing daily_fair_odds rows.
+23:58:55 Done.
+23:58:55 
+23:58:55 === 1/3 Pinnacle scraper (writes to bookmaker_odds_snapshot) ===
+23:58:55 
+23:58:55 
+23:58:55 === 2/3 Fair odds pipeline ===
+23:58:55 
+23:58:55 
+23:58:55 === 3/3 Strict report skipped (--skip-strict-report) ===
+23:58:55 
+23:58:55 Done. Pinnacle snapshot + daily_fair_odds updated.
+23:58:55 === Step 7/7: Strict policy report (--append --compare-overlay) ===
+23:58:57 Strict policy report - 2026-03-06 UTC
+23:58:57 Segment: Hard|Masters 1000  |  Confidence: high  |  Min value: 10.0%
+23:58:57 Exclusion: ATP500 Hard short favorites skipped (confidence high, favorite odds < 1.80)
+23:58:57 Production mode: base
+23:58:57 Signals (production): 14
+23:58:57 Injury list: path=C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv recent_rows=85/258 lookback=14d flagged_candidates=2 overlay=off skipped=0
+23:58:57 Overlay config: window=prior_editions family=seed min_n=50 min_roi_pct=-5.00 missing=skip keys=628 key_side=172
+23:58:57 Overlay pass count: 3 / 14  skip_reasons={'min_roi': 11}
+23:58:57 Compare mode: base=14 overlay=3
+23:58:57 
+23:58:57   Alexander Shevchenko vs Casper Ruud  |  P1 value +46.5%  |  our 3.29/1.44  Pin 4.82/1.21
+23:58:57   Roberto Bautista Agut vs Jack Draper  |  P1 value +59.4%  |  our 3.99/1.33  Pin 6.36/1.14
+23:58:57   Sebastian Baez vs Jiri Lehecka  |  P1 value +18.5%  |  our 2.76/1.57  Pin 3.27/1.37
+23:58:57   Jacob Fearnley vs Taylor Harry Fritz  |  P1 value +10.5%  |  our 4.29/1.30  Pin 4.74/1.22
+23:58:57   Zizou Bergs vs Tommy Paul  |  P1 value +47.2%  |  our 2.84/1.54  Pin 4.18/1.27
+23:58:57   Dalibor Svrcina vs Jannik Sinner  |  P1 value +316.1%  |  our 7.68/1.15  Pin 31.96/1.02
+23:58:57   Carlos Alcaraz vs Grigor Dimitrov  |  P2 value +24.9%  |  our 1.08/13.50  Pin 1.04/16.86
+23:58:57   Valentin Vacherot vs Nuno Borges  |  P1 value +14.6%  |  our 1.51/2.96  Pin 1.73/2.19
+23:58:57   Alexander Bublik vs Vit Kopriva  |  P2 value +18.1%  |  our 1.42/3.37  Pin 1.28/3.98
+23:58:57   Novak Djokovic vs Kamil Majchrzak  |  P2 value +107.1%  |  our 1.33/4.06  Pin 1.10/8.41
+23:58:57   Francisco Cerundolo vs Benjamin Bonzi  |  P2 value +20.0%  |  our 1.54/2.85  Pin 1.35/3.42
+23:58:57   Daniil Medvedev vs Alejandro Tabilo  |  P2 value +32.4%  |  our 1.46/3.18  Pin 1.26/4.21
+23:58:57   Karen Khachanov vs Joao Fonseca  |  P1 value +36.7%  |  our 1.69/2.44  Pin 2.31/1.68
+23:58:57   Tomas Martin Etcheverry vs Denis Shapovalov  |  P1 value +51.1%  |  our 1.80/2.26  Pin 2.72/1.51
+23:58:57 
+23:58:57 Appended 10/14 production rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals.csv (deduped).
+23:58:57 Appended 12/17 comparison rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-overlay-compare.csv (deduped).
+23:58:57 ============================================
+23:58:57   Daily Pipeline finished at 2026-03-06 23:58:57
+23:58:57 ============================================
+12:38:23 ============================================
+12:38:23   Daily Pipeline started at 2026-03-07 12:38:23
+12:38:23 ============================================
+12:38:23 === Step 1/7: OnCourt extract ===
+12:38:25 Extracting...
+12:38:25   players_atp: 124,654 rows -> players_atp.csv
+12:38:25   tours_atp: 20,930 rows -> tours_atp.csv
+12:38:25   courts: 7 rows -> courts.csv
+12:38:25   today_atp: 1,482 rows -> today_atp.csv
+12:38:25 
+12:38:25 Done.
+12:38:25 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-games.py
+12:38:25 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+12:38:25 
+12:38:25 --- oncourt-extract-rest ---
+12:38:25 
+12:38:25 All extractions done.
+12:38:25 === Step 2/7: Supabase sync (--quick) ===
+12:38:59   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+12:38:59   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+12:38:59 
+12:38:59   oncourt_courts: 7 rows
+12:38:59   oncourt_players: 5,000 / 124,654  (2262 rows/s, ~53s left)
+12:38:59   oncourt_players: 10,000 / 124,654  (3149 rows/s, ~36s left)
+12:38:59   oncourt_players: 15,000 / 124,654  (3696 rows/s, ~30s left)
+12:38:59   oncourt_players: 20,000 / 124,654  (4118 rows/s, ~25s left)
+12:38:59   oncourt_players: 25,000 / 124,654  (4441 rows/s, ~22s left)
+12:38:59   oncourt_players: 30,000 / 124,654  (4659 rows/s, ~20s left)
+12:38:59   oncourt_players: 35,000 / 124,654  (4693 rows/s, ~19s left)
+12:38:59   oncourt_players: 40,000 / 124,654  (4894 rows/s, ~17s left)
+12:38:59   oncourt_players: 45,000 / 124,654  (5025 rows/s, ~16s left)
+12:38:59   oncourt_players: 50,000 / 124,654  (5163 rows/s, ~14s left)
+12:38:59   oncourt_players: 55,000 / 124,654  (4846 rows/s, ~14s left)
+12:38:59   oncourt_players: 60,000 / 124,654  (4851 rows/s, ~13s left)
+12:38:59   oncourt_players: 65,000 / 124,654  (4883 rows/s, ~12s left)
+12:38:59   oncourt_players: 70,000 / 124,654  (4930 rows/s, ~11s left)
+12:38:59   oncourt_players: 75,000 / 124,654  (4973 rows/s, ~10s left)
+12:38:59   oncourt_players: 80,000 / 124,654  (4969 rows/s, ~9s left)
+12:38:59   oncourt_players: 85,000 / 124,654  (5045 rows/s, ~8s left)
+12:38:59   oncourt_players: 90,000 / 124,654  (5116 rows/s, ~7s left)
+12:38:59   oncourt_players: 95,000 / 124,654  (5141 rows/s, ~6s left)
+12:38:59   oncourt_players: 100,000 / 124,654  (5216 rows/s, ~5s left)
+12:38:59   oncourt_players: 105,000 / 124,654  (5249 rows/s, ~4s left)
+12:38:59   oncourt_players: 110,000 / 124,654  (5279 rows/s, ~3s left)
+12:38:59   oncourt_players: 115,000 / 124,654  (5311 rows/s, ~2s left)
+12:38:59   oncourt_players: 120,000 / 124,654  (5360 rows/s, ~1s left)
+12:38:59   oncourt_players: 124,654 / 124,654  (5399 rows/s, ~0s left)
+12:38:59   oncourt_players: 124,654 rows done in 23.1s
+12:38:59   oncourt_tours: 5,000 / 20,930  (4644 rows/s, ~3s left)
+12:38:59   oncourt_tours: 10,000 / 20,930  (4406 rows/s, ~2s left)
+12:38:59   oncourt_tours: 15,000 / 20,930  (4542 rows/s, ~1s left)
+12:38:59   oncourt_tours: 20,000 / 20,930  (4816 rows/s, ~0s left)
+12:38:59   oncourt_tours: 20,930 / 20,930  (4498 rows/s, ~0s left)
+12:38:59   oncourt_tours: 20,930 rows done in 4.7s
+12:38:59   oncourt_games: SKIPPED (--quick mode)
+12:38:59   oncourt_stat: SKIPPED (--quick mode)
+12:38:59   player_hand_reference: skipped 1 rows (player_id missing in players_atp.csv)
+12:38:59   player_hand_reference: 1,199 left-handed players (source=tml)
+12:38:59   oncourt_today: 1482 rows
+12:38:59 
+12:38:59 Done.
+12:38:59 === Step 3/7: Compute player stats ===
+12:39:25 Using 12m window: 2025-03-07 to today; long window: 2023-03-08 to today (1095 days)
+12:39:25 
+12:39:25 Loading games, tours, courts...
+12:39:25   Games in 12m window: 70,745, long window: 206,284
+12:39:25 Loading stat...
+12:39:25 Computed 9,392 (player_id, surface) rows
+12:39:25   By surface: {'Clay': 3984, 'Hard': 4694, 'Carpet': 183, 'Grass': 531}
+12:39:25 
+12:39:25 Upserting to player_surface_stats...
+12:39:25   5,000 / 9,392
+12:39:25   9,392 / 9,392
+12:39:25 Done.
+12:39:25 === Step 4/7: Refresh injured players list (TennisExplorer) ===
+12:39:27 Scraping injured list...
+12:39:27   100 rows
+12:39:27 Scraping returning list...
+12:39:27   158 rows
+12:39:27 Wrote C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv (258 rows)
+12:39:27 === Step 5/7: Refresh CPI surface-speed table ===
+12:39:31 2025: 64 rows
+12:39:31 2026: 17 rows
+12:39:31 Wrote 79 deduped rows to C:\Users\44746\Downloads\il-margine\data\backtest\tennisabstract-atp-surface-speed.csv
+12:39:31 Years covered: 2025-2026 (2 years)
+12:39:31 Upserted 79 rows into 'tournament_surface_speed'.
+12:39:31 === Step 6/7: Pinnacle odds + fair odds ===
+12:39:41 ============================================================
+12:39:41   Pinnacle Tennis Odds Scraper (API edition)
+12:39:41   2026-03-07 12:39 UTC
+12:39:41   Mode: LIVE | WTA: excluded
+12:39:41 ============================================================
+12:39:41 
+12:39:41   Summary: 30 matches (30 ATP/Challenger, 0 WTA), 30 with O/U
+12:39:41     (6 of which are Challenger)
+12:39:41   CSV: data\pinnacle-odds-2026-03-07.csv
+12:39:41   Upserted 30 rows (24 ATP, 6 Challenger, 0 WTA)
+12:39:41   Outrights: 15 rows for 1 tournaments
+12:39:41 
+12:39:41   Done.
+12:43:00 Fixtures: 982 (deduped from 1000)
+12:43:00   Fixtures with no result (unplayed): 62
+12:43:00   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 41
+12:43:00   Loaded 20,931 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+12:43:00   Loaded 9,402 rows from player_surface_stats_v2 (matchup model)
+12:43:00   Surface priors (raw stats): Hard hold=0.447 ret=0.385, Clay hold=0.431 ret=0.409
+12:43:00   Elo: 181,525 rows (surface + Overall 50/50 blend)
+12:43:00   Lefties: 1199, vs-leftie stats: 33,169 rows
+12:43:00   Big servers: 86 (player,surface), vs-big-server stats: 6,485 rows
+12:43:00   Venue: loaded 0 rows (fixture players/tours only)
+12:43:00   Venue stats: 0 rows (none û run venue pipeline or create table)
+12:43:00   Altitude stats: 251 rows (player record at altitude active)
+12:43:00   League avg (surface): 4 from DB, rest constants
+12:43:00   Tournament totals shift: 0 rows (run oncourt-compute-tournament-avg-games.py)
+12:43:00   Match history: 65/67 players with matches since 2021-01-01, tournament-history keys: 4,212
+12:43:00   Recent activity: 64 rows (form/fatigue active)
+12:43:00   V2 stats: 180 rows (180 with decomposed serve)
+12:43:00   Recent games: 496 rows for 161 players
+12:43:00   H2H: 33,497 rows (active)
+12:43:00   Advanced stats: 4,018 rows (active)
+12:43:00   Players (birthdate + atp_rank): 67 with birthdate, 62 with rank, 62 with surface points
+12:43:00   WARNING: Same surname 'rocha' for multiple players in today's fixtures: [(89135, 'Jaime Faria/Henrique Rocha'), (83794, 'Henrique Rocha')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+12:43:00   WARNING: Same surname 'cerundolo' for multiple players in today's fixtures: [(52279, 'Francisco Cerundolo'), (52934, 'Juan Manuel Cerundolo')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+12:43:00   Injury list: 79/258 recent rows (lookback 14d, downweight=off, delta=0.020)
+12:43:00   CPI rows: disabled (set FAIR_ODDS_CPI_ENABLED=true to activate)
+12:43:00 Computed 30 fair odds rows
+12:43:00   V2 model: 30/30 matchup (100%), 0 fallback, 30 fatigue computed
+12:43:01   Fixture surfaces (from tour_id): {'Clay': 3, 'Hard': 27}
+12:43:01   Skipped: no player1/player2 = 0, same-player = 7, unknown = 2, doubles/team (name contains / or &) = 2
+12:43:01   Elo/rank fallback (missing stats): both = 0, P1 only = 0, P2 only = 0
+12:43:01   Confidence: high=30, medium=0, low=0, none=0
+12:43:01   Injury flags: P1=0, P2=0, adjusted_matches=0 (downweight=off)
+12:43:01   P1=97369 P2=20465 surface=Clay P1=0.5132 odds1=1.95 odds2=2.05
+12:43:01   P1=65558 P2=79068 surface=Hard P1=0.3295 odds1=3.03 odds2=1.49
+12:43:01   P1=46747 P2=27547 surface=Hard P1=0.6362 odds1=1.57 odds2=2.75
+12:43:01   Cleared existing daily_fair_odds rows.
+12:43:01 Done.
+12:43:01 
+12:43:01 === 1/3 Pinnacle scraper (writes to bookmaker_odds_snapshot) ===
+12:43:01 
+12:43:01 
+12:43:01 === 2/3 Fair odds pipeline ===
+12:43:01 
+12:43:01 
+12:43:01 === 3/3 Strict report skipped (--skip-strict-report) ===
+12:43:01 
+12:43:01 Done. Pinnacle snapshot + daily_fair_odds updated.
+12:43:01 === Step 7/7: Strict policy report (--append --compare-overlay) ===
+12:43:02 Strict policy report - 2026-03-07 UTC
+12:43:02 Segment: Hard|Masters 1000  |  Confidence: high  |  Min value: 10.0%
+12:43:02 Exclusion: ATP500 Hard short favorites skipped (confidence high, favorite odds < 1.80)
+12:43:02 Production mode: base
+12:43:02 Signals (production): 9
+12:43:02 Injury list: path=C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv recent_rows=79/258 lookback=14d flagged_candidates=0 overlay=off skipped=0
+12:43:02 Overlay config: window=prior_editions family=seed min_n=50 min_roi_pct=-5.00 missing=skip keys=628 key_side=172
+12:43:02 Overlay pass count: 2 / 9  skip_reasons={'min_roi': 7}
+12:43:02 Compare mode: base=9 overlay=2
+12:43:02 
+12:43:02   Carlos Alcaraz vs Grigor Dimitrov  |  P2 value +27.8%  |  our 1.08/13.50  Pin 1.04/17.25
+12:43:02   Alexander Bublik vs Vit Kopriva  |  P2 value +10.8%  |  our 1.37/3.72  Pin 1.27/4.12
+12:43:02   Francisco Cerundolo vs Benjamin Bonzi  |  P2 value +12.7%  |  our 1.50/2.99  Pin 1.36/3.37
+12:43:02   Roberto Bautista Agut vs Jack Draper  |  P1 value +20.0%  |  our 5.45/1.22  Pin 6.54/1.14
+12:43:02   Daniil Medvedev vs Alejandro Tabilo  |  P2 value +10.5%  |  our 1.38/3.62  Pin 1.28/4.00
+12:43:02   Karen Khachanov vs Joao Fonseca  |  P1 value +32.8%  |  our 1.71/2.40  Pin 2.27/1.69
+12:43:02   Marton Fucsovics vs Arthur Fils  |  P1 value +13.5%  |  our 2.74/1.58  Pin 3.11/1.41
+12:43:02   Brandon Nakashima vs Alexander Zverev  |  P1 value +15.1%  |  our 3.25/1.44  Pin 3.74/1.31
+12:43:02   Ben Shelton vs Learner Tien  |  P1 value +11.3%  |  our 1.58/2.71  Pin 1.76/2.17
+12:43:02 
+12:43:02 Appended 9/9 production rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals.csv (deduped).
+12:43:02 Appended 11/11 comparison rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-overlay-compare.csv (deduped).
+12:43:02 ============================================
+12:43:02   Daily Pipeline finished at 2026-03-07 12:43:02
+12:43:02 ============================================
+23:55:03 ============================================
+23:55:03   Daily Pipeline started at 2026-03-07 23:55:03
+23:55:03 ============================================
+23:55:03 === Step 1/7: OnCourt extract ===
+23:55:05 Extracting...
+23:55:05   players_atp: 124,654 rows -> players_atp.csv
+23:55:05   tours_atp: 20,930 rows -> tours_atp.csv
+23:55:05   courts: 7 rows -> courts.csv
+23:55:05   today_atp: 1,482 rows -> today_atp.csv
+23:55:05 
+23:55:05 Done.
+23:55:05 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-games.py
+23:55:05 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+23:55:05 
+23:55:05 --- oncourt-extract-rest ---
+23:55:05 
+23:55:05 All extractions done.
+23:55:05 === Step 2/7: Supabase sync (--quick) ===
+23:55:39   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+23:55:39   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+23:55:39 
+23:55:39   oncourt_courts: 7 rows
+23:55:39   oncourt_players: 5,000 / 124,654  (1932 rows/s, ~62s left)
+23:55:39   oncourt_players: 10,000 / 124,654  (2871 rows/s, ~40s left)
+23:55:39   oncourt_players: 15,000 / 124,654  (3477 rows/s, ~32s left)
+23:55:39   oncourt_players: 20,000 / 124,654  (3927 rows/s, ~27s left)
+23:55:39   oncourt_players: 25,000 / 124,654  (4172 rows/s, ~24s left)
+23:55:39   oncourt_players: 30,000 / 124,654  (4438 rows/s, ~21s left)
+23:55:39   oncourt_players: 35,000 / 124,654  (4680 rows/s, ~19s left)
+23:55:39   oncourt_players: 40,000 / 124,654  (4854 rows/s, ~17s left)
+23:55:39   oncourt_players: 45,000 / 124,654  (5031 rows/s, ~16s left)
+23:55:39   oncourt_players: 50,000 / 124,654  (5196 rows/s, ~14s left)
+23:55:39   oncourt_players: 55,000 / 124,654  (4551 rows/s, ~15s left)
+23:55:39   oncourt_players: 60,000 / 124,654  (4527 rows/s, ~14s left)
+23:55:39   oncourt_players: 65,000 / 124,654  (4598 rows/s, ~13s left)
+23:55:39   oncourt_players: 70,000 / 124,654  (4704 rows/s, ~12s left)
+23:55:39   oncourt_players: 75,000 / 124,654  (4795 rows/s, ~10s left)
+23:55:39   oncourt_players: 80,000 / 124,654  (4882 rows/s, ~9s left)
+23:55:39   oncourt_players: 85,000 / 124,654  (4959 rows/s, ~8s left)
+23:55:39   oncourt_players: 90,000 / 124,654  (5033 rows/s, ~7s left)
+23:55:39   oncourt_players: 95,000 / 124,654  (5098 rows/s, ~6s left)
+23:55:39   oncourt_players: 100,000 / 124,654  (5174 rows/s, ~5s left)
+23:55:39   oncourt_players: 105,000 / 124,654  (5230 rows/s, ~4s left)
+23:55:39   oncourt_players: 110,000 / 124,654  (5298 rows/s, ~3s left)
+23:55:39   oncourt_players: 115,000 / 124,654  (5352 rows/s, ~2s left)
+23:55:39   oncourt_players: 120,000 / 124,654  (5409 rows/s, ~1s left)
+23:55:39   oncourt_players: 124,654 / 124,654  (5452 rows/s, ~0s left)
+23:55:39   oncourt_players: 124,654 rows done in 22.9s
+23:55:39   oncourt_tours: 5,000 / 20,930  (4986 rows/s, ~3s left)
+23:55:39   oncourt_tours: 10,000 / 20,930  (5348 rows/s, ~2s left)
+23:55:39   oncourt_tours: 15,000 / 20,930  (5560 rows/s, ~1s left)
+23:55:39   oncourt_tours: 20,000 / 20,930  (5671 rows/s, ~0s left)
+23:55:39   oncourt_tours: 20,930 / 20,930  (5338 rows/s, ~0s left)
+23:55:39   oncourt_tours: 20,930 rows done in 3.9s
+23:55:39   oncourt_games: SKIPPED (--quick mode)
+23:55:39   oncourt_stat: SKIPPED (--quick mode)
+23:55:39   player_hand_reference: skipped 1 rows (player_id missing in players_atp.csv)
+23:55:39   player_hand_reference: 1,199 left-handed players (source=tml)
+23:55:39   oncourt_today: 1482 rows
+23:55:39 
+23:55:39 Done.
+23:55:39 === Step 3/7: Compute player stats ===
+23:56:04 Using 12m window: 2025-03-07 to today; long window: 2023-03-08 to today (1095 days)
+23:56:04 
+23:56:04 Loading games, tours, courts...
+23:56:04   Games in 12m window: 70,745, long window: 206,284
+23:56:04 Loading stat...
+23:56:04 Computed 9,392 (player_id, surface) rows
+23:56:04   By surface: {'Clay': 3984, 'Hard': 4694, 'Carpet': 183, 'Grass': 531}
+23:56:04 
+23:56:04 Upserting to player_surface_stats...
+23:56:04   5,000 / 9,392
+23:56:04   9,392 / 9,392
+23:56:04 Done.
+23:56:04 === Step 4/7: Refresh injured players list (TennisExplorer) ===
+23:56:07 Scraping injured list...
+23:56:07   100 rows
+23:56:07 Scraping returning list...
+23:56:07   152 rows
+23:56:07 Wrote C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv (252 rows)
+23:56:07 === Step 5/7: Refresh CPI surface-speed table ===
+23:56:10 2025: 64 rows
+23:56:10 2026: 17 rows
+23:56:10 Wrote 79 deduped rows to C:\Users\44746\Downloads\il-margine\data\backtest\tennisabstract-atp-surface-speed.csv
+23:56:10 Years covered: 2025-2026 (2 years)
+23:56:10 Upserted 79 rows into 'tournament_surface_speed'.
+23:56:10 === Step 6/7: Pinnacle odds + fair odds ===
+23:56:19 ============================================================
+23:56:19   Pinnacle Tennis Odds Scraper (API edition)
+23:56:19   2026-03-07 23:56 UTC
+23:56:19   Mode: LIVE | WTA: excluded
+23:56:19 ============================================================
+23:56:19 
+23:56:19   Summary: 34 matches (34 ATP/Challenger, 0 WTA), 34 with O/U, 34 with spread
+23:56:19     (20 of which are Challenger)
+23:56:19   CSV: data\pinnacle-odds-2026-03-07.csv
+23:56:19   Upserted 34 rows (14 ATP, 20 Challenger, 0 WTA)
+23:56:19   Outrights: 15 rows for 1 tournaments
+23:56:19 
+23:56:19   Done.
+23:58:25 Fixtures: 982 (deduped from 1000)
+23:58:25   Fixtures with no result (unplayed): 62
+23:58:25   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 41
+23:58:25   Loaded 20,931 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+23:58:25   Loaded 9,402 rows from player_surface_stats_v2 (matchup model)
+23:58:25   Surface priors (raw stats): Hard hold=0.447 ret=0.385, Clay hold=0.431 ret=0.409
+23:58:25   Elo: 181,525 rows (surface + Overall 50/50 blend)
+23:58:25   Lefties: 1199, vs-leftie stats: 33,169 rows
+23:58:25   Big servers: 86 (player,surface), vs-big-server stats: 6,485 rows
+23:58:25   Venue: loaded 0 rows (fixture players/tours only)
+23:58:25   Venue stats: 0 rows (none û run venue pipeline or create table)
+23:58:25   Altitude stats: 251 rows (player record at altitude active)
+23:58:25   League avg (surface): 4 from DB, rest constants
+23:58:25   Tournament totals shift: 0 rows (run oncourt-compute-tournament-avg-games.py)
+23:58:25   Match history: 65/67 players with matches since 2021-01-01, tournament-history keys: 4,022
+23:58:25   Recent activity: 64 rows (form/fatigue active)
+23:58:25   V2 stats: 9,402 rows (9,401 with decomposed serve)
+23:58:25   Recent games: 496 rows for 161 players
+23:58:25   H2H: 33,497 rows (active)
+23:58:25   Advanced stats: 4,018 rows (active)
+23:58:25   Players (birthdate + atp_rank): 67 with birthdate, 62 with rank, 62 with surface points
+23:58:25   WARNING: Same surname 'rocha' for multiple players in today's fixtures: [(89135, 'Jaime Faria/Henrique Rocha'), (83794, 'Henrique Rocha')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:58:25   WARNING: Same surname 'cerundolo' for multiple players in today's fixtures: [(52279, 'Francisco Cerundolo'), (52934, 'Juan Manuel Cerundolo')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:58:25   Injury list: 76/252 recent rows (lookback 14d, downweight=off, delta=0.020)
+23:58:25   CPI rows: disabled (set FAIR_ODDS_CPI_ENABLED=true to activate)
+23:58:25 Computed 30 fair odds rows
+23:58:25   V2 model: 30/30 matchup (100%), 0 fallback, 30 fatigue computed
+23:58:25   Fixture surfaces (from tour_id): {'Clay': 3, 'Hard': 27}
+23:58:25   Skipped: no player1/player2 = 0, same-player = 7, unknown = 2, doubles/team (name contains / or &) = 2
+23:58:25   Elo/rank fallback (missing stats): both = 0, P1 only = 0, P2 only = 0
+23:58:25   Confidence: high=30, medium=0, low=0, none=0
+23:58:25   Injury flags: P1=0, P2=0, adjusted_matches=0 (downweight=off)
+23:58:25   P1=97369 P2=20465 surface=Clay P1=0.6575 odds1=1.52 odds2=2.92
+23:58:25   P1=65558 P2=79068 surface=Hard P1=0.3554 odds1=2.81 odds2=1.55
+23:58:25   P1=46747 P2=27547 surface=Hard P1=0.6942 odds1=1.44 odds2=3.27
+23:58:25   Cleared existing daily_fair_odds rows.
+23:58:25 Done.
+23:58:25 
+23:58:25 === 1/3 Pinnacle scraper (writes to bookmaker_odds_snapshot) ===
+23:58:25 
+23:58:25 
+23:58:25 === 2/3 Fair odds pipeline ===
+23:58:25 
+23:58:25 
+23:58:25 === 3/3 Strict report skipped (--skip-strict-report) ===
+23:58:25 
+23:58:25 Done. Pinnacle snapshot + daily_fair_odds updated.
+23:58:25 === Step 7/7: Strict policy report (--append --compare-overlay) ===
+23:58:27 Strict policy report - 2026-03-07 UTC
+23:58:27 Segment: Hard|Masters 1000  |  Confidence: high  |  Public: >=10.0%  |  Internal: >=5.0%
+23:58:27 Exclusion: ATP500 Hard short favorites skipped (confidence high, favorite odds < 1.80)
+23:58:27 Production mode: base
+23:58:27 Signals (public >=10.0%): 5  |  Internal (5%+): 7
+23:58:27 Injury list: path=C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv recent_rows=76/252 lookback=14d flagged_candidates=0 overlay=off skipped=0
+23:58:27 Overlay config: window=prior_editions family=seed min_n=50 min_roi_pct=-5.00 missing=skip keys=628 key_side=172
+23:58:27 Overlay pass count: 3 / 7  skip_reasons={'min_roi': 4}
+23:58:27 Compare mode: base=7 overlay=3
+23:58:27 
+23:58:27   Rinky Hijikata vs Luciano Darderi  |  P1 value +21.3%  |  our 2.58/1.63  Pin 3.13/1.41
+23:58:27   Ugo Humbert vs Alex Michelsen  |  P1 value +15.3%  |  our 1.76/2.32  Pin 2.03/1.86
+23:58:27   Jacob Fearnley vs Taylor Harry Fritz  |  P1 value +27.2%  |  our 3.78/1.36  Pin 4.81/1.22
+23:58:27   Marton Fucsovics vs Arthur Fils  |  P1 value +14.2%  |  our 2.75/1.57  Pin 3.14/1.41
+23:58:27   Brandon Nakashima vs Alexander Zverev  |  P1 value +25.2%  |  our 3.02/1.49  Pin 3.78/1.31
+23:58:27 
+23:58:27 Appended 3/5 public rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals.csv (deduped).
+23:58:27 Appended 1/7 internal (5%+) rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-internal-5pct.csv (deduped).
+23:58:27 Appended 6/10 comparison rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-overlay-compare.csv (deduped).
+23:58:27 ============================================
+23:58:27   Daily Pipeline finished at 2026-03-07 23:58:27
+23:58:27 ============================================
+11:00:04 ============================================
+11:00:04   Daily Pipeline started at 2026-03-08 11:00:04
+11:00:04 ============================================
+11:00:04 === Step 1/7: OnCourt extract ===
+11:00:06 Extracting...
+11:00:06   players_atp: 124,676 rows -> players_atp.csv
+11:00:06   tours_atp: 20,930 rows -> tours_atp.csv
+11:00:06   courts: 7 rows -> courts.csv
+11:00:06   today_atp: 2,142 rows -> today_atp.csv
+11:00:06 
+11:00:06 Done.
+11:00:06 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-games.py
+11:00:06 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+11:00:06 
+11:00:06 --- oncourt-extract-rest ---
+11:00:06 
+11:00:06 All extractions done.
+11:00:06 === Step 2/7: Supabase sync (--quick) ===
+11:00:45   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+11:00:45   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+11:00:45 
+11:00:45   oncourt_courts: 7 rows
+11:00:45   oncourt_players: 5,000 / 124,676  (1778 rows/s, ~67s left)
+11:00:45   oncourt_players: 10,000 / 124,676  (2485 rows/s, ~46s left)
+11:00:45   oncourt_players: 15,000 / 124,676  (3032 rows/s, ~36s left)
+11:00:45   oncourt_players: 20,000 / 124,676  (3393 rows/s, ~31s left)
+11:00:45   oncourt_players: 25,000 / 124,676  (3671 rows/s, ~27s left)
+11:00:45   oncourt_players: 30,000 / 124,676  (3909 rows/s, ~24s left)
+11:00:45   oncourt_players: 35,000 / 124,676  (4066 rows/s, ~22s left)
+11:00:45   oncourt_players: 40,000 / 124,676  (4201 rows/s, ~20s left)
+11:00:45   oncourt_players: 45,000 / 124,676  (4315 rows/s, ~18s left)
+11:00:45   oncourt_players: 50,000 / 124,676  (4430 rows/s, ~17s left)
+11:00:45   oncourt_players: 55,000 / 124,676  (4524 rows/s, ~15s left)
+11:00:45   oncourt_players: 60,000 / 124,676  (4386 rows/s, ~15s left)
+11:00:45   oncourt_players: 65,000 / 124,676  (4423 rows/s, ~13s left)
+11:00:45   oncourt_players: 70,000 / 124,676  (4468 rows/s, ~12s left)
+11:00:45   oncourt_players: 75,000 / 124,676  (4509 rows/s, ~11s left)
+11:00:45   oncourt_players: 80,000 / 124,676  (4556 rows/s, ~10s left)
+11:00:45   oncourt_players: 85,000 / 124,676  (4611 rows/s, ~9s left)
+11:00:45   oncourt_players: 90,000 / 124,676  (4640 rows/s, ~7s left)
+11:00:45   oncourt_players: 95,000 / 124,676  (4666 rows/s, ~6s left)
+11:00:45   oncourt_players: 100,000 / 124,676  (4709 rows/s, ~5s left)
+11:00:45   oncourt_players: 105,000 / 124,676  (4733 rows/s, ~4s left)
+11:00:45   oncourt_players: 110,000 / 124,676  (4758 rows/s, ~3s left)
+11:00:45   oncourt_players: 115,000 / 124,676  (4812 rows/s, ~2s left)
+11:00:45   oncourt_players: 120,000 / 124,676  (4857 rows/s, ~1s left)
+11:00:45   oncourt_players: 124,676 / 124,676  (4858 rows/s, ~0s left)
+11:00:45   oncourt_players: 124,676 rows done in 25.7s
+11:00:45   oncourt_tours: 5,000 / 20,930  (4824 rows/s, ~3s left)
+11:00:45   oncourt_tours: 10,000 / 20,930  (5166 rows/s, ~2s left)
+11:00:45   oncourt_tours: 15,000 / 20,930  (4427 rows/s, ~1s left)
+11:00:45   oncourt_tours: 20,000 / 20,930  (4447 rows/s, ~0s left)
+11:00:45   oncourt_tours: 20,930 / 20,930  (4087 rows/s, ~0s left)
+11:00:45   oncourt_tours: 20,930 rows done in 5.1s
+11:00:45   oncourt_games: SKIPPED (--quick mode)
+11:00:45   oncourt_stat: SKIPPED (--quick mode)
+11:00:45   player_hand_reference: skipped 1 rows (player_id missing in players_atp.csv)
+11:00:45   player_hand_reference: 1,199 left-handed players (source=tml)
+11:00:45   oncourt_today: 2142 rows
+11:00:45 
+11:00:45 Done.
+11:00:46 === Step 3/7: Compute player stats ===
+11:01:25 Using 12m window: 2025-03-08 to today; long window: 2023-03-09 to today (1095 days)
+11:01:25 
+11:01:25 Loading games, tours, courts...
+11:01:25   Games in 12m window: 70,637, long window: 206,069
+11:01:25 Loading stat...
+11:01:25 Computed 9,383 (player_id, surface) rows
+11:01:25   By surface: {'Clay': 3982, 'Hard': 4691, 'Carpet': 179, 'Grass': 531}
+11:01:25 
+11:01:25 Upserting to player_surface_stats...
+11:01:25   5,000 / 9,383
+11:01:25   9,383 / 9,383
+11:01:25 Done.
+11:01:25 === Step 4/7: Refresh injured players list (TennisExplorer) ===
+11:01:27 Scraping injured list...
+11:01:27   100 rows
+11:01:27 Scraping returning list...
+11:01:27   154 rows
+11:01:27 Wrote C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv (254 rows)
+11:01:27 === Step 5/7: Refresh CPI surface-speed table ===
+11:01:34 2025: 64 rows
+11:01:34 2026: 17 rows
+11:01:34 Wrote 79 deduped rows to C:\Users\44746\Downloads\il-margine\data\backtest\tennisabstract-atp-surface-speed.csv
+11:01:34 Years covered: 2025-2026 (2 years)
+11:01:34 Upserted 79 rows into 'tournament_surface_speed'.
+11:01:34 === Step 6/7: Pinnacle odds + fair odds ===
+11:01:38 ============================================================
+11:01:38   Pinnacle Tennis Odds Scraper (API edition)
+11:01:38   2026-03-08 11:01 UTC
+11:01:38   Mode: LIVE | WTA: excluded
+11:01:38 ============================================================
+11:01:38   WARNING: API returned 503 for sports/33/leagues?all=false (attempt 1)
+11:01:38   WARNING: API returned 503 for sports/33/leagues?all=false (attempt 2)
+11:01:38   WARNING: API returned 503 for sports/33/leagues?all=false (attempt 3)
+11:01:38 ERROR: Failed to fetch tennis leagues from API.
+11:01:38 
+11:01:38   No matches scraped. Possible causes:
+11:01:38   1. No tennis scheduled right now on Pinnacle
+11:01:38   2. API key may have changed (check PINNACLE_API_KEY)
+11:01:38   3. Network/geo-blocking (try VPN)
+11:04:44 Fixtures: 989 (deduped from 1000)
+11:04:44   Fixtures with no result (unplayed): 57
+11:04:44   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 24
+11:04:44   Loaded 20,931 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+11:04:44   Loaded 9,402 rows from player_surface_stats_v2 (matchup model)
+11:04:44   Surface priors (raw stats): Hard hold=0.447 ret=0.385, Clay hold=0.431 ret=0.409
+11:04:44   Elo: 181,525 rows (surface + Overall 50/50 blend)
+11:04:44   Lefties: 1199, vs-leftie stats: 33,169 rows
+11:04:44   Big servers: 86 (player,surface), vs-big-server stats: 6,485 rows
+11:04:44   Venue: loaded 0 rows (fixture players/tours only)
+11:04:44   Venue stats: 0 rows (none û run venue pipeline or create table)
+11:04:44   Altitude stats: 158 rows (player record at altitude active)
+11:04:44   League avg (surface): 4 from DB, rest constants
+11:04:44   Tournament totals shift: 0 rows (run oncourt-compute-tournament-avg-games.py)
+11:04:44   Match history: 41/41 players with matches since 2021-01-01, tournament-history keys: 2,530
+11:04:44   Recent activity: 40 rows (form/fatigue active)
+11:04:44   V2 stats: 9,402 rows (9,401 with decomposed serve)
+11:04:44   Recent games: 296 rows for 120 players
+11:04:44   H2H: 33,497 rows (active)
+11:04:44   Advanced stats: 4,018 rows (active)
+11:04:44   Players (birthdate + atp_rank): 41 with birthdate, 40 with rank, 40 with surface points
+11:04:44   Injury list: 77/254 recent rows (lookback 14d, downweight=off, delta=0.020)
+11:04:44   CPI rows: disabled (set FAIR_ODDS_CPI_ENABLED=true to activate)
+11:04:44 Computed 20 fair odds rows
+11:04:44   V2 model: 20/20 matchup (100%), 0 fallback, 20 fatigue computed
+11:04:44   Fixture surfaces (from tour_id): {'Clay': 2, 'Hard': 18}
+11:04:44   Skipped: no player1/player2 = 0, same-player = 4, unknown = 0, doubles/team (name contains / or &) = 0
+11:04:44   Elo/rank fallback (missing stats): both = 0, P1 only = 0, P2 only = 0
+11:04:44   Confidence: high=20, medium=0, low=0, none=0
+11:04:44   Injury flags: P1=1, P2=0, adjusted_matches=0 (downweight=off)
+11:04:44   P1=97369 P2=20465 surface=Clay P1=0.6575 odds1=1.52 odds2=2.92
+11:04:44   P1=65558 P2=79068 surface=Hard P1=0.3552 odds1=2.82 odds2=1.55
+11:04:44   P1=27547 P2=104215 surface=Hard P1=0.2911 odds1=3.44 odds2=1.41
+11:04:44   Cleared existing daily_fair_odds rows.
+11:04:44 Done.
+11:04:44 
+11:04:44 === 1/3 Pinnacle scraper (writes to bookmaker_odds_snapshot) ===
+11:04:44 
+11:04:44 
+11:04:44 === 2/3 Fair odds pipeline ===
+11:04:44 
+11:04:44 
+11:04:44 === 3/3 Strict report skipped (--skip-strict-report) ===
+11:04:44 
+11:04:44 Done. Pinnacle snapshot + daily_fair_odds updated.
+11:04:44 === Step 7/7: Strict policy report (--append --compare-overlay) ===
+11:04:46 Strict policy report - 2026-03-08 UTC
+11:04:46 Segment: Hard|Masters 1000  |  Confidence: high  |  Public: >=10.0%  |  Internal: >=5.0%
+11:04:46 Exclusion: ATP500 Hard short favorites skipped (confidence high, favorite odds < 1.80)
+11:04:46 Production mode: base
+11:04:46 Signals (public >=10.0%): 0  |  Internal (5%+): 0
+11:04:46 Injury list: path=C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv recent_rows=77/254 lookback=14d flagged_candidates=1 overlay=off skipped=0
+11:04:46 Overlay config: window=prior_editions family=seed min_n=50 min_roi_pct=-5.00 missing=skip keys=628 key_side=172
+11:04:46 Overlay pass count: 0 / 0  skip_reasons={}
+11:04:46 Compare mode: base=0 overlay=0
+11:04:46 
+11:04:46 No POLICY signals today (public threshold).
+11:04:46 
+11:04:46 Appended 0/0 public rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals.csv (deduped).
+11:04:46 Appended 0/0 internal (5%+) rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-internal-5pct.csv (deduped).
+11:04:46 Appended 0/0 comparison rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-overlay-compare.csv (deduped).
+11:04:46 ============================================
+11:04:46   Daily Pipeline finished at 2026-03-08 11:04:46
+11:04:46 ============================================
+11:14:31 ============================================
+11:14:31   Daily Pipeline started at 2026-03-08 11:14:31
+11:14:31 ============================================
+11:14:31 === Step 1/7: OnCourt extract ===
+11:14:34 Extracting...
+11:14:34   players_atp: 124,676 rows -> players_atp.csv
+11:14:34   tours_atp: 20,930 rows -> tours_atp.csv
+11:14:34   courts: 7 rows -> courts.csv
+11:14:34   today_atp: 2,142 rows -> today_atp.csv
+11:14:34 
+11:14:34 Done.
+11:14:34 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-games.py
+11:14:34 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+11:14:34 
+11:14:34 --- oncourt-extract-rest ---
+11:14:34 
+11:14:34 All extractions done.
+11:14:34 === Step 2/7: Supabase sync (--quick) ===
+11:15:07   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+11:15:07   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+11:15:07 
+11:15:07   oncourt_courts: 7 rows
+11:15:07   oncourt_players: 5,000 / 124,676  (2130 rows/s, ~56s left)
+11:15:07   oncourt_players: 10,000 / 124,676  (3075 rows/s, ~37s left)
+11:15:07   oncourt_players: 15,000 / 124,676  (3640 rows/s, ~30s left)
+11:15:07   oncourt_players: 20,000 / 124,676  (4086 rows/s, ~26s left)
+11:15:07   oncourt_players: 25,000 / 124,676  (4304 rows/s, ~23s left)
+11:15:07   oncourt_players: 30,000 / 124,676  (4510 rows/s, ~21s left)
+11:15:07   oncourt_players: 35,000 / 124,676  (4699 rows/s, ~19s left)
+11:15:07   oncourt_players: 40,000 / 124,676  (4875 rows/s, ~17s left)
+11:15:07   oncourt_players: 45,000 / 124,676  (4549 rows/s, ~18s left)
+11:15:07   oncourt_players: 50,000 / 124,676  (4559 rows/s, ~16s left)
+11:15:07   oncourt_players: 55,000 / 124,676  (4608 rows/s, ~15s left)
+11:15:07   oncourt_players: 60,000 / 124,676  (4687 rows/s, ~14s left)
+11:15:07   oncourt_players: 65,000 / 124,676  (4736 rows/s, ~13s left)
+11:15:07   oncourt_players: 70,000 / 124,676  (4764 rows/s, ~11s left)
+11:15:07   oncourt_players: 75,000 / 124,676  (4745 rows/s, ~10s left)
+11:15:07   oncourt_players: 80,000 / 124,676  (4803 rows/s, ~9s left)
+11:15:07   oncourt_players: 85,000 / 124,676  (4781 rows/s, ~8s left)
+11:15:07   oncourt_players: 90,000 / 124,676  (4847 rows/s, ~7s left)
+11:15:07   oncourt_players: 95,000 / 124,676  (4870 rows/s, ~6s left)
+11:15:07   oncourt_players: 100,000 / 124,676  (4930 rows/s, ~5s left)
+11:15:07   oncourt_players: 105,000 / 124,676  (4981 rows/s, ~4s left)
+11:15:07   oncourt_players: 110,000 / 124,676  (5031 rows/s, ~3s left)
+11:15:07   oncourt_players: 115,000 / 124,676  (5082 rows/s, ~2s left)
+11:15:07   oncourt_players: 120,000 / 124,676  (5136 rows/s, ~1s left)
+11:15:07   oncourt_players: 124,676 / 124,676  (5175 rows/s, ~0s left)
+11:15:07   oncourt_players: 124,676 rows done in 24.1s
+11:15:07   oncourt_tours: 5,000 / 20,930  (5197 rows/s, ~3s left)
+11:15:07   oncourt_tours: 10,000 / 20,930  (5426 rows/s, ~2s left)
+11:15:07   oncourt_tours: 15,000 / 20,930  (5534 rows/s, ~1s left)
+11:15:07   oncourt_tours: 20,000 / 20,930  (5678 rows/s, ~0s left)
+11:15:07   oncourt_tours: 20,930 / 20,930  (5249 rows/s, ~0s left)
+11:15:07   oncourt_tours: 20,930 rows done in 4.0s
+11:15:07   oncourt_games: SKIPPED (--quick mode)
+11:15:07   oncourt_stat: SKIPPED (--quick mode)
+11:15:07   player_hand_reference: skipped 1 rows (player_id missing in players_atp.csv)
+11:15:07   player_hand_reference: 1,199 left-handed players (source=tml)
+11:15:07   oncourt_today: 2142 rows
+11:15:07 
+11:15:07 Done.
+11:15:07 === Step 3/7: Compute player stats ===
+11:15:32 Using 12m window: 2025-03-08 to today; long window: 2023-03-09 to today (1095 days)
+11:15:32 
+11:15:32 Loading games, tours, courts...
+11:15:32   Games in 12m window: 70,637, long window: 206,069
+11:15:32 Loading stat...
+11:15:32 Computed 9,383 (player_id, surface) rows
+11:15:32   By surface: {'Clay': 3982, 'Hard': 4691, 'Carpet': 179, 'Grass': 531}
+11:15:32 
+11:15:32 Upserting to player_surface_stats...
+11:15:32   5,000 / 9,383
+11:15:32   9,383 / 9,383
+11:15:32 Done.
+11:15:32 === Step 4/7: Refresh injured players list (TennisExplorer) ===
+11:15:35 Scraping injured list...
+11:15:35   100 rows
+11:15:35 Scraping returning list...
+11:15:35   154 rows
+11:15:35 Wrote C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv (254 rows)
+11:15:35 === Step 5/7: Refresh CPI surface-speed table ===
+11:15:38 2025: 64 rows
+11:15:38 2026: 17 rows
+11:15:38 Wrote 79 deduped rows to C:\Users\44746\Downloads\il-margine\data\backtest\tennisabstract-atp-surface-speed.csv
+11:15:38 Years covered: 2025-2026 (2 years)
+11:15:38 Upserted 79 rows into 'tournament_surface_speed'.
+11:15:39 === Step 6/7: Pinnacle odds + fair odds ===
+11:15:42 ============================================================
+11:15:42   Pinnacle Tennis Odds Scraper (API edition)
+11:15:42   2026-03-08 11:15 UTC
+11:15:42   Mode: LIVE | WTA: excluded
+11:15:42 ============================================================
+11:15:42   WARNING: API returned 503 for sports/33/leagues?all=false (attempt 1)
+11:15:42   WARNING: API returned 503 for sports/33/leagues?all=false (attempt 2)
+11:15:42   WARNING: API returned 503 for sports/33/leagues?all=false (attempt 3)
+11:15:42 ERROR: Failed to fetch tennis leagues from API.
+11:15:42 
+11:15:42   No matches scraped. Possible causes:
+11:15:42   1. No tennis scheduled right now on Pinnacle
+11:15:42   2. API key may have changed (check PINNACLE_API_KEY)
+11:15:42   3. Network/geo-blocking (try VPN)
+11:17:50 Fixtures: 989 (deduped from 1000)
+11:17:50   Fixtures with no result (unplayed): 57
+11:17:50   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 24
+11:17:50   Loaded 20,931 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+11:17:50   Loaded 9,402 rows from player_surface_stats_v2 (matchup model)
+11:17:50   Surface priors (raw stats): Hard hold=0.447 ret=0.385, Clay hold=0.431 ret=0.409
+11:17:50   Elo: 181,525 rows (surface + Overall 50/50 blend)
+11:17:50   Lefties: 1199, vs-leftie stats: 33,169 rows
+11:17:50   Big servers: 86 (player,surface), vs-big-server stats: 6,485 rows
+11:17:50   Venue: loaded 0 rows (fixture players/tours only)
+11:17:50   Venue stats: 0 rows (none û run venue pipeline or create table)
+11:17:50   Altitude stats: 158 rows (player record at altitude active)
+11:17:50   League avg (surface): 4 from DB, rest constants
+11:17:50   Tournament totals shift: 0 rows (run oncourt-compute-tournament-avg-games.py)
+11:17:50   Match history: 41/41 players with matches since 2021-01-01, tournament-history keys: 2,530
+11:17:50   Recent activity: 40 rows (form/fatigue active)
+11:17:50   V2 stats: 9,402 rows (9,401 with decomposed serve)
+11:17:50   Recent games: 296 rows for 120 players
+11:17:50   H2H: 33,497 rows (active)
+11:17:50   Advanced stats: 4,018 rows (active)
+11:17:50   Players (birthdate + atp_rank): 41 with birthdate, 40 with rank, 40 with surface points
+11:17:50   Injury list: 77/254 recent rows (lookback 14d, downweight=off, delta=0.020)
+11:17:50   CPI rows: disabled (set FAIR_ODDS_CPI_ENABLED=true to activate)
+11:17:50 Computed 20 fair odds rows
+11:17:50   V2 model: 20/20 matchup (100%), 0 fallback, 20 fatigue computed
+11:17:50   Fixture surfaces (from tour_id): {'Clay': 2, 'Hard': 18}
+11:17:50   Skipped: no player1/player2 = 0, same-player = 4, unknown = 0, doubles/team (name contains / or &) = 0
+11:17:50   Elo/rank fallback (missing stats): both = 0, P1 only = 0, P2 only = 0
+11:17:50   Confidence: high=20, medium=0, low=0, none=0
+11:17:50   Injury flags: P1=1, P2=0, adjusted_matches=0 (downweight=off)
+11:17:50   P1=97369 P2=20465 surface=Clay P1=0.6575 odds1=1.52 odds2=2.92
+11:17:50   P1=65558 P2=79068 surface=Hard P1=0.3552 odds1=2.82 odds2=1.55
+11:17:50   P1=27547 P2=104215 surface=Hard P1=0.2911 odds1=3.44 odds2=1.41
+11:17:50   Cleared existing daily_fair_odds rows.
+11:17:50 Done.
+11:17:50 
+11:17:50 === 1/3 Pinnacle scraper (writes to bookmaker_odds_snapshot) ===
+11:17:50 
+11:17:50 
+11:17:50 === 2/3 Fair odds pipeline ===
+11:17:50 
+11:17:50 
+11:17:50 === 3/3 Strict report skipped (--skip-strict-report) ===
+11:17:50 
+11:17:50 Done. Pinnacle snapshot + daily_fair_odds updated.
+11:17:50 === Step 7/7: Strict policy report (--append --compare-overlay) ===
+11:17:52 Strict policy report - 2026-03-08 UTC
+11:17:52 Segment: Hard|Masters 1000  |  Confidence: high  |  Public: >=10.0%  |  Internal: >=5.0%
+11:17:52 Exclusion: ATP500 Hard short favorites skipped (confidence high, favorite odds < 1.80)
+11:17:52 Production mode: base
+11:17:52 Signals (public >=10.0%): 0  |  Internal (5%+): 0
+11:17:52 Injury list: path=C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv recent_rows=77/254 lookback=14d flagged_candidates=1 overlay=off skipped=0
+11:17:52 Overlay config: window=prior_editions family=seed min_n=50 min_roi_pct=-5.00 missing=skip keys=628 key_side=172
+11:17:52 Overlay pass count: 0 / 0  skip_reasons={}
+11:17:52 Compare mode: base=0 overlay=0
+11:17:52 
+11:17:52 No POLICY signals today (public threshold).
+11:17:52 
+11:17:52 Appended 0/0 public rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals.csv (deduped).
+11:17:52 Appended 0/0 internal (5%+) rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-internal-5pct.csv (deduped).
+11:17:52 Appended 0/0 comparison rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-overlay-compare.csv (deduped).
+11:17:52 ============================================
+11:17:52   Daily Pipeline finished at 2026-03-08 11:17:52
+11:17:52 ============================================
+11:24:04 ============================================
+11:24:04   Daily Pipeline started at 2026-03-08 11:24:04
+11:24:04 ============================================
+11:24:04 === Step 1/7: OnCourt extract ===
+11:24:05 Extracting...
+11:24:05   players_atp: 124,676 rows -> players_atp.csv
+11:24:05   tours_atp: 20,930 rows -> tours_atp.csv
+11:24:05   courts: 7 rows -> courts.csv
+11:24:05   today_atp: 2,142 rows -> today_atp.csv
+11:24:05 
+11:24:05 Done.
+11:24:05 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-games.py
+11:24:05 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+11:24:05 
+11:24:05 --- oncourt-extract-rest ---
+11:24:05 
+11:24:05 All extractions done.
+11:24:05 === Step 2/7: Supabase sync (--quick) ===
+11:24:35   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+11:24:35   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+11:24:35 
+11:24:35   oncourt_courts: 7 rows
+11:24:35   oncourt_players: 5,000 / 124,676  (1662 rows/s, ~72s left)
+11:24:35   oncourt_players: 10,000 / 124,676  (2614 rows/s, ~44s left)
+11:24:35   oncourt_players: 15,000 / 124,676  (3262 rows/s, ~34s left)
+11:24:35   oncourt_players: 20,000 / 124,676  (3747 rows/s, ~28s left)
+11:24:35   oncourt_players: 25,000 / 124,676  (4151 rows/s, ~24s left)
+11:24:35   oncourt_players: 30,000 / 124,676  (4495 rows/s, ~21s left)
+11:24:35   oncourt_players: 35,000 / 124,676  (4754 rows/s, ~19s left)
+11:24:35   oncourt_players: 40,000 / 124,676  (4976 rows/s, ~17s left)
+11:24:35   oncourt_players: 45,000 / 124,676  (5159 rows/s, ~15s left)
+11:24:35   oncourt_players: 50,000 / 124,676  (5274 rows/s, ~14s left)
+11:24:35   oncourt_players: 55,000 / 124,676  (5387 rows/s, ~13s left)
+11:24:35   oncourt_players: 60,000 / 124,676  (5497 rows/s, ~12s left)
+11:24:35   oncourt_players: 65,000 / 124,676  (5578 rows/s, ~11s left)
+11:24:35   oncourt_players: 70,000 / 124,676  (5666 rows/s, ~10s left)
+11:24:35   oncourt_players: 75,000 / 124,676  (5757 rows/s, ~9s left)
+11:24:35   oncourt_players: 80,000 / 124,676  (5814 rows/s, ~8s left)
+11:24:35   oncourt_players: 85,000 / 124,676  (5868 rows/s, ~7s left)
+11:24:35   oncourt_players: 90,000 / 124,676  (5920 rows/s, ~6s left)
+11:24:35   oncourt_players: 95,000 / 124,676  (5953 rows/s, ~5s left)
+11:24:35   oncourt_players: 100,000 / 124,676  (6009 rows/s, ~4s left)
+11:24:35   oncourt_players: 105,000 / 124,676  (6044 rows/s, ~3s left)
+11:24:35   oncourt_players: 110,000 / 124,676  (6053 rows/s, ~2s left)
+11:24:35   oncourt_players: 115,000 / 124,676  (6067 rows/s, ~2s left)
+11:24:35   oncourt_players: 120,000 / 124,676  (6076 rows/s, ~1s left)
+11:24:35   oncourt_players: 124,676 / 124,676  (6087 rows/s, ~0s left)
+11:24:35   oncourt_players: 124,676 rows done in 20.5s
+11:24:35   oncourt_tours: 5,000 / 20,930  (5132 rows/s, ~3s left)
+11:24:35   oncourt_tours: 10,000 / 20,930  (5720 rows/s, ~2s left)
+11:24:35   oncourt_tours: 15,000 / 20,930  (5852 rows/s, ~1s left)
+11:24:36   oncourt_tours: 20,000 / 20,930  (5908 rows/s, ~0s left)
+11:24:36   oncourt_tours: 20,930 / 20,930  (5331 rows/s, ~0s left)
+11:24:36   oncourt_tours: 20,930 rows done in 3.9s
+11:24:36   oncourt_games: SKIPPED (--quick mode)
+11:24:36   oncourt_stat: SKIPPED (--quick mode)
+11:24:36   player_hand_reference: skipped 1 rows (player_id missing in players_atp.csv)
+11:24:36   player_hand_reference: 1,199 left-handed players (source=tml)
+11:24:36   oncourt_today: 2142 rows
+11:24:36 
+11:24:36 Done.
+11:24:36 === Step 3/7: Compute player stats ===
+11:25:04 Using 12m window: 2025-03-08 to today; long window: 2023-03-09 to today (1095 days)
+11:25:04 
+11:25:04 Loading games, tours, courts...
+11:25:04   Games in 12m window: 70,637, long window: 206,069
+11:25:04 Loading stat...
+11:25:04 Computed 9,383 (player_id, surface) rows
+11:25:04   By surface: {'Clay': 3982, 'Hard': 4691, 'Carpet': 179, 'Grass': 531}
+11:25:04 
+11:25:04 Upserting to player_surface_stats...
+11:25:04   5,000 / 9,383
+11:25:04   9,383 / 9,383
+11:25:04 Done.
+11:25:04 === Step 4/7: Refresh injured players list (TennisExplorer) ===
+11:25:07 Scraping injured list...
+11:25:07   100 rows
+11:25:07 Scraping returning list...
+11:25:07   154 rows
+11:25:07 Wrote C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv (254 rows)
+11:25:07 === Step 5/7: Refresh CPI surface-speed table ===
+11:25:10 2025: 64 rows
+11:25:10 2026: 17 rows
+11:25:10 Wrote 79 deduped rows to C:\Users\44746\Downloads\il-margine\data\backtest\tennisabstract-atp-surface-speed.csv
+11:25:10 Years covered: 2025-2026 (2 years)
+11:25:10 Upserted 79 rows into 'tournament_surface_speed'.
+11:25:10 === Step 6/7: Pinnacle odds + fair odds ===
+11:25:14 ============================================================
+11:25:14   Pinnacle Tennis Odds Scraper (API edition)
+11:25:14   2026-03-08 11:25 UTC
+11:25:14   Mode: LIVE | WTA: excluded
+11:25:14 ============================================================
+11:25:14   WARNING: API returned 503 for sports/33/leagues?all=false (attempt 1)
+11:25:14   WARNING: API returned 503 for sports/33/leagues?all=false (attempt 2)
+11:25:14   WARNING: API returned 503 for sports/33/leagues?all=false (attempt 3)
+11:25:14 ERROR: Failed to fetch tennis leagues from API.
+11:25:14 
+11:25:14   No matches scraped. Possible causes:
+11:25:14   1. No tennis scheduled right now on Pinnacle
+11:25:14   2. API key may have changed (check PINNACLE_API_KEY)
+11:25:14   3. Network/geo-blocking (try VPN)
+23:55:08 ============================================
+23:55:08   Daily Pipeline started at 2026-03-08 23:55:08
+23:55:08 ============================================
+23:55:08 === Step 1/7: OnCourt extract ===
+23:55:10 Unknown ep_atp schema. Columns: ['id1_g', 'id2_g', 'id_t_g', 'id_r_g', 'result_g', 'date_g']
+23:55:10 
+23:55:10 --- oncourt-extract-games ---
+11:00:04 ============================================
+11:00:04   Daily Pipeline started at 2026-03-09 11:00:04
+11:00:04 ============================================
+11:00:04 === Step 1/7: OnCourt extract ===
+11:00:32   games_atp: 1,178,168 rows -> games_atp.csv
+11:00:35 Extracting...
+11:00:35   players_atp: 124,730 rows -> players_atp.csv
+11:00:35   tours_atp: 20,930 rows -> tours_atp.csv
+11:00:35   courts: 7 rows -> courts.csv
+11:00:35   today_atp: 1,397 rows -> today_atp.csv
+11:00:35 
+11:00:35 Done.
+11:00:35 
+11:00:35 --- oncourt-extract-games ---
+11:00:35 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+11:00:35 
+11:00:35 --- oncourt-extract-rest ---
+11:00:35 
+11:00:35 All extractions done.
+11:00:35 === Step 2/7: Supabase sync (--quick) ===
+11:01:20   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+11:01:20   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+11:01:20 
+11:01:20   oncourt_courts: 7 rows
+11:01:20   oncourt_players: 5,000 / 124,730  (1987 rows/s, ~60s left)
+11:01:20   oncourt_players: 10,000 / 124,730  (2643 rows/s, ~43s left)
+11:01:20   oncourt_players: 15,000 / 124,730  (3076 rows/s, ~36s left)
+11:01:20   oncourt_players: 20,000 / 124,730  (2836 rows/s, ~37s left)
+11:01:20   oncourt_players: 25,000 / 124,730  (3057 rows/s, ~33s left)
+11:01:20   oncourt_players: 30,000 / 124,730  (3312 rows/s, ~29s left)
+11:01:20   oncourt_players: 35,000 / 124,730  (3525 rows/s, ~25s left)
+11:01:20   oncourt_players: 40,000 / 124,730  (3717 rows/s, ~23s left)
+11:01:20   oncourt_players: 45,000 / 124,730  (3859 rows/s, ~21s left)
+11:01:20   oncourt_players: 50,000 / 124,730  (3911 rows/s, ~19s left)
+11:01:20   oncourt_players: 55,000 / 124,730  (3105 rows/s, ~22s left)
+11:01:20   oncourt_players: 60,000 / 124,730  (2902 rows/s, ~22s left)
+11:01:20   oncourt_players: 65,000 / 124,730  (3017 rows/s, ~20s left)
+11:01:20   oncourt_players: 70,000 / 124,730  (3115 rows/s, ~18s left)
+11:01:20   oncourt_players: 75,000 / 124,730  (3210 rows/s, ~15s left)
+11:01:20   oncourt_players: 80,000 / 124,730  (3301 rows/s, ~14s left)
+11:01:20   oncourt_players: 85,000 / 124,730  (3381 rows/s, ~12s left)
+11:01:20   oncourt_players: 90,000 / 124,730  (3453 rows/s, ~10s left)
+11:01:20   oncourt_players: 95,000 / 124,730  (3538 rows/s, ~8s left)
+11:01:20   oncourt_players: 100,000 / 124,730  (3611 rows/s, ~7s left)
+11:01:20   oncourt_players: 105,000 / 124,730  (3653 rows/s, ~5s left)
+11:01:20   oncourt_players: 110,000 / 124,730  (3717 rows/s, ~4s left)
+11:01:20   oncourt_players: 115,000 / 124,730  (3780 rows/s, ~3s left)
+11:01:20   oncourt_players: 120,000 / 124,730  (3820 rows/s, ~1s left)
+11:01:20   oncourt_players: 124,730 / 124,730  (3869 rows/s, ~0s left)
+11:01:20   oncourt_players: 124,730 rows done in 32.2s
+11:01:20   oncourt_tours: 5,000 / 20,930  (3444 rows/s, ~5s left)
+11:01:20   oncourt_tours: 10,000 / 20,930  (4144 rows/s, ~3s left)
+11:01:20   oncourt_tours: 15,000 / 20,930  (4353 rows/s, ~1s left)
+11:01:20   oncourt_tours: 20,000 / 20,930  (4597 rows/s, ~0s left)
+11:01:20   oncourt_tours: 20,930 / 20,930  (4335 rows/s, ~0s left)
+11:01:20   oncourt_tours: 20,930 rows done in 4.8s
+11:01:20   oncourt_games: SKIPPED (--quick mode)
+11:01:20   oncourt_stat: SKIPPED (--quick mode)
+11:01:20   player_hand_reference: skipped 1 rows (player_id missing in players_atp.csv)
+11:01:20   player_hand_reference: 1,199 left-handed players (source=tml)
+11:01:20   oncourt_today: 1397 rows
+11:01:20 
+11:01:20 Done.
+11:01:20 === Step 3/7: Compute player stats ===
+11:02:00 Using 12m window: 2025-03-09 to today; long window: 2023-03-10 to today (1095 days)
+11:02:00 
+11:02:00 Loading games, tours, courts...
+11:02:00   Games in 12m window: 70,535, long window: 203,829
+11:02:00 Loading stat...
+11:02:00 Computed 9,380 (player_id, surface) rows
+11:02:00   By surface: {'Clay': 3981, 'Hard': 4689, 'Carpet': 179, 'Grass': 531}
+11:02:00 
+11:02:00 Upserting to player_surface_stats...
+11:02:00   5,000 / 9,380
+11:02:00   9,380 / 9,380
+11:02:00 Done.
+11:02:00 === Step 4/7: Refresh injured players list (TennisExplorer) ===
+11:02:03 Scraping injured list...
+11:02:03   100 rows
+11:02:03 Scraping returning list...
+11:02:03   142 rows
+11:02:03 Wrote C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv (242 rows)
+11:02:03 === Step 5/7: Refresh CPI surface-speed table ===
+11:02:07 2025: 64 rows
+11:02:07 2026: 17 rows
+11:02:07 Wrote 79 deduped rows to C:\Users\44746\Downloads\il-margine\data\backtest\tennisabstract-atp-surface-speed.csv
+11:02:07 Years covered: 2025-2026 (2 years)
+11:02:07 Upserted 79 rows into 'tournament_surface_speed'.
+11:02:07 === Step 6/7: Pinnacle odds + fair odds ===
+11:02:23 ============================================================
+11:02:23   Pinnacle Tennis Odds Scraper (API edition)
+11:02:23   2026-03-09 11:02 UTC
+11:02:23   Mode: LIVE | WTA: excluded
+11:02:23 ============================================================
+11:02:23 
+11:02:23   Summary: 52 matches (52 ATP/Challenger, 0 WTA), 52 with O/U, 52 with spread
+11:02:23     (40 of which are Challenger)
+11:02:23   CSV: data\pinnacle-odds-2026-03-09.csv
+11:02:23   Upserted 52 rows (12 ATP, 40 Challenger, 0 WTA)
+11:02:23 
+11:02:23   Done.
+11:07:10 Fixtures: 848 (deduped from 1000)
+11:07:10   Fixtures with no result (unplayed): 372
+11:07:10   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 177
+11:07:10   Loaded 20,931 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+11:07:10   Loaded 9,402 rows from player_surface_stats_v2 (matchup model)
+11:07:10   Surface priors (raw stats): Hard hold=0.447 ret=0.385, Clay hold=0.431 ret=0.409
+11:07:10   Elo: 181,525 rows (surface + Overall 50/50 blend)
+11:07:10   Lefties: 1199, vs-leftie stats: 33,169 rows
+11:07:10   Big servers: 86 (player,surface), vs-big-server stats: 6,485 rows
+11:07:10   Venue: loaded 0 rows (fixture players/tours only)
+11:07:10   Venue stats: 0 rows (none û run venue pipeline or create table)
+11:07:10   Altitude stats: 788 rows (player record at altitude active)
+11:07:10   League avg (surface): 4 from DB, rest constants
+11:07:10   Tournament totals shift: 0 rows (run oncourt-compute-tournament-avg-games.py)
+11:07:10   Match history: 242/258 players with matches since 2021-01-01, tournament-history keys: 15,924
+11:07:10   Recent activity: 214 rows (form/fatigue active)
+11:07:10   V2 stats: 9,402 rows (9,401 with decomposed serve)
+11:07:10   Recent games: 1,736 rows for 516 players
+11:07:10   H2H: 33,497 rows (active)
+11:07:10   Advanced stats: 4,018 rows (active)
+11:07:10   Players (birthdate + atp_rank): 258 with birthdate, 200 with rank, 199 with surface points
+11:07:10   WARNING: Same surname 'martin' for multiple players in today's fixtures: [(8721, 'Andrej Martin'), (79066, 'Andres Martin')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   WARNING: Same surname 'wendelken' for multiple players in today's fixtures: [(65558, 'Harry Wendelken'), (88519, 'Tom Hands/Harry Wendelken')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   WARNING: Same surname 'moutet' for multiple players in today's fixtures: [(124000, 'Flavio Cobolli/Corentin Moutet'), (36263, 'Corentin Moutet')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   WARNING: Same surname 'bertrand' for multiple players in today's fixtures: [(83555, 'Robin Bertrand'), (126873, 'Simone Agostini/Robin Bertrand')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   WARNING: Same surname 'sinner' for multiple players in today's fixtures: [(88209, 'Reilly Opelka/Jannik Sinner'), (47275, 'Jannik Sinner')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   WARNING: Same surname 'henning' for multiple players in today's fixtures: [(58005, 'Philip Henning'), (126715, 'Constantin Bittoun Kouzmine/Philip Henning')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   WARNING: Same surname 'tiafoe' for multiple players in today's fixtures: [(120318, 'Brandon Nakashima/Frances Tiafoe'), (29939, 'Frances Tiafoe')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   WARNING: Same surname 'fils' for multiple players in today's fixtures: [(83135, 'Arthur Fils'), (110917, 'Alejandro Davidovich Fokina/Arthur Fils')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   WARNING: Same surname 'jones' for multiple players in today's fixtures: [(79067, 'Jack Pinnington Jones'), (82696, 'Maximus Jones'), (126874, 'Buvaysar Gadamauri/Maximus Jones'), (36842, 'Ben Jones')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   WARNING: Same surname 'xilas' for multiple players in today's fixtures: [(78052, 'Ioannis Xilas'), (126872, 'Stefan Dostanic/Ioannis Xilas')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   WARNING: Same surname 'silva' for multiple players in today's fixtures: [(101107, 'Pedro Boscardin Dias/Joao Lucas Reis Da Silva'), (83392, 'Boris Arias/Daniel Dutra Da Silva')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   WARNING: Same surname 'pereira' for multiple players in today's fixtures: [(126711, 'Michael Geerts/Tiago Pereira'), (92649, 'Tiago Pereira')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   WARNING: Same surname 'tsitsipas' for multiple players in today's fixtures: [(90932, 'Pavlos Tsitsipas'), (126836, 'Novak Djokovic/Stefanos Tsitsipas'), (90999, 'Pavlos Tsitsipas/Petros Tsitsipas')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   WARNING: Same surname 'zeballos' for multiple players in today's fixtures: [(126875, 'Miguel-Angel Reyes-Varela/Federico Zeballos'), (79810, 'Marcel Granollers/Horacio Zeballos')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   WARNING: Same surname 'zverev' for multiple players in today's fixtures: [(24008, 'Alexander Zverev'), (65532, 'Marcelo Melo/Alexander Zverev')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:07:10   Injury list: 74/242 recent rows (lookback 14d, downweight=off, delta=0.020)
+11:07:10   CPI rows: disabled (set FAIR_ODDS_CPI_ENABLED=true to activate)
+11:07:10 Computed 89 fair odds rows
+11:07:10   V2 model: 89/89 matchup (100%), 0 fallback, 89 fatigue computed
+11:07:10   Fixture surfaces (from tour_id): {'Hard': 76, 'Clay': 13}
+11:07:10   Skipped: no player1/player2 = 0, same-player = 34, unknown = 30, doubles/team (name contains / or &) = 24
+11:07:10   Elo/rank fallback (missing stats): both = 0, P1 only = 0, P2 only = 0
+11:07:10   Confidence: high=72, medium=16, low=1, none=0
+11:07:10   Injury flags: P1=2, P2=0, adjusted_matches=0 (downweight=off)
+11:07:10   P1=82371 P2=30230 surface=Hard P1=0.78 odds1=1.28 odds2=4.55
+11:07:10   P1=93550 P2=53532 surface=Hard P1=0.5655 odds1=1.77 odds2=2.3
+11:07:10   P1=39310 P2=37492 surface=Hard P1=0.8301 odds1=1.2 odds2=5.89
+11:07:10   Cleared existing daily_fair_odds rows.
+11:07:10 Done.
+11:07:20 Matched 12 of 89 fair-odds rows to Pinnacle spread
+11:07:20 Updated 12 rows with spread + handicap edge
+11:07:20 Done.
+11:07:20 
+11:07:20 === 1/4 Pinnacle scraper (writes to bookmaker_odds_snapshot) ===
+11:07:20 
+11:07:20 
+11:07:20 === 2/4 Fair odds pipeline ===
+11:07:20 
+11:07:20 
+11:07:20 === 3/4 Handicap values (spread edge) ===
+11:07:20 
+11:07:20 
+11:07:20 === 4/4 Strict report skipped (--skip-strict-report) ===
+11:07:20 
+11:07:20 Done. Pinnacle snapshot + daily_fair_odds updated.
+11:07:20 === Step 7/7: Strict policy report (--append --compare-overlay) ===
+11:07:22 Strict policy report - 2026-03-09 UTC
+11:07:22 Segment: Hard|Masters 1000  |  Confidence: high  |  Public: >=10.0%  |  Internal: >=5.0%
+11:07:22 Exclusion: ATP500 Hard short favorites skipped (confidence high, favorite odds < 1.80)
+11:07:22 Production mode: base
+11:07:22 Signals (public >=10.0%): 4  |  Internal (5%+): 5
+11:07:22 Injury list: path=C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv recent_rows=74/242 lookback=14d flagged_candidates=1 overlay=off skipped=0
+11:07:22 Overlay config: window=prior_editions family=seed min_n=50 min_roi_pct=-5.00 missing=skip keys=628 key_side=172
+11:07:22 Overlay pass count: 1 / 5  skip_reasons={'min_roi': 4}
+11:07:22 Compare mode: base=5 overlay=1
+11:07:23 
+11:07:23   Francisco Cerundolo vs Jack Draper  |  P1 value +11.4%  |  our 2.27/1.79  Pin 2.53/1.59
+11:07:23   Frances Tiafoe vs Alexander Zverev  |  P1 value +21.9%  |  our 2.87/1.54  Pin 3.50/1.34
+11:07:23   Learner Tien vs Alejandro Davidovich Fokina  |  P2 value +16.8%  |  our 2.27/1.79  Pin 1.81/2.09
+11:07:23   Alexander Bublik vs Rinky Hijikata  |  P2 value +26.1%  |  our 1.39/3.56  Pin 1.25/4.49
+11:07:23 
+11:07:23 Appended 4/4 public rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals.csv (deduped).
+11:07:23 Appended 4/5 internal (5%+) rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-internal-5pct.csv (deduped).
+11:07:23 Appended 5/6 comparison rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-overlay-compare.csv (deduped).
+11:07:23 ============================================
+11:07:23   Daily Pipeline finished at 2026-03-09 11:07:23
+11:07:23 ============================================
+23:55:04 ============================================
+23:55:04   Daily Pipeline started at 2026-03-09 23:55:04
+23:55:04 ============================================
+23:55:04 === Step 1/7: OnCourt extract ===
+23:55:29   games_atp: 1,178,168 rows -> games_atp.csv
+23:55:33 Extracting...
+23:55:33   players_atp: 124,730 rows -> players_atp.csv
+23:55:33   tours_atp: 20,930 rows -> tours_atp.csv
+23:55:33   courts: 7 rows -> courts.csv
+23:55:33   today_atp: 1,397 rows -> today_atp.csv
+23:55:33 
+23:55:33 Done.
+23:55:33 
+23:55:33 --- oncourt-extract-games ---
+23:55:33 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+23:55:33 
+23:55:33 --- oncourt-extract-rest ---
+23:55:33 
+23:55:33 All extractions done.
+23:55:33 === Step 2/7: Supabase sync (--quick) ===
+23:56:06   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+23:56:06   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+23:56:06 
+23:56:06   oncourt_courts: 7 rows
+23:56:06   oncourt_players: 5,000 / 124,730  (1701 rows/s, ~70s left)
+23:56:06   oncourt_players: 10,000 / 124,730  (2514 rows/s, ~46s left)
+23:56:06   oncourt_players: 15,000 / 124,730  (3112 rows/s, ~35s left)
+23:56:06   oncourt_players: 20,000 / 124,730  (3542 rows/s, ~30s left)
+23:56:06   oncourt_players: 25,000 / 124,730  (3856 rows/s, ~26s left)
+23:56:06   oncourt_players: 30,000 / 124,730  (4137 rows/s, ~23s left)
+23:56:06   oncourt_players: 35,000 / 124,730  (4325 rows/s, ~21s left)
+23:56:06   oncourt_players: 40,000 / 124,730  (4512 rows/s, ~19s left)
+23:56:06   oncourt_players: 45,000 / 124,730  (4665 rows/s, ~17s left)
+23:56:06   oncourt_players: 50,000 / 124,730  (4827 rows/s, ~15s left)
+23:56:06   oncourt_players: 55,000 / 124,730  (4951 rows/s, ~14s left)
+23:56:06   oncourt_players: 60,000 / 124,730  (4959 rows/s, ~13s left)
+23:56:06   oncourt_players: 65,000 / 124,730  (5042 rows/s, ~12s left)
+23:56:06   oncourt_players: 70,000 / 124,730  (5131 rows/s, ~11s left)
+23:56:06   oncourt_players: 75,000 / 124,730  (5219 rows/s, ~10s left)
+23:56:06   oncourt_players: 80,000 / 124,730  (5228 rows/s, ~9s left)
+23:56:06   oncourt_players: 85,000 / 124,730  (5312 rows/s, ~7s left)
+23:56:06   oncourt_players: 90,000 / 124,730  (5383 rows/s, ~6s left)
+23:56:06   oncourt_players: 95,000 / 124,730  (5450 rows/s, ~5s left)
+23:56:06   oncourt_players: 100,000 / 124,730  (5518 rows/s, ~4s left)
+23:56:06   oncourt_players: 105,000 / 124,730  (5557 rows/s, ~4s left)
+23:56:06   oncourt_players: 110,000 / 124,730  (5619 rows/s, ~3s left)
+23:56:06   oncourt_players: 115,000 / 124,730  (5664 rows/s, ~2s left)
+23:56:06   oncourt_players: 120,000 / 124,730  (5716 rows/s, ~1s left)
+23:56:06   oncourt_players: 124,730 / 124,730  (5758 rows/s, ~0s left)
+23:56:06   oncourt_players: 124,730 rows done in 21.7s
+23:56:06   oncourt_tours: 5,000 / 20,930  (4920 rows/s, ~3s left)
+23:56:06   oncourt_tours: 10,000 / 20,930  (5124 rows/s, ~2s left)
+23:56:06   oncourt_tours: 15,000 / 20,930  (5390 rows/s, ~1s left)
+23:56:06   oncourt_tours: 20,000 / 20,930  (5618 rows/s, ~0s left)
+23:56:06   oncourt_tours: 20,930 / 20,930  (5263 rows/s, ~0s left)
+23:56:06   oncourt_tours: 20,930 rows done in 4.0s
+23:56:06   oncourt_games: SKIPPED (--quick mode)
+23:56:06   oncourt_stat: SKIPPED (--quick mode)
+23:56:06   player_hand_reference: skipped 1 rows (player_id missing in players_atp.csv)
+23:56:06   player_hand_reference: 1,199 left-handed players (source=tml)
+23:56:06   oncourt_today: 1397 rows
+23:56:06 
+23:56:06 Done.
+23:56:06 === Step 3/7: Compute player stats ===
+23:56:34 Using 12m window: 2025-03-09 to today; long window: 2023-03-10 to today (1095 days)
+23:56:34 
+23:56:34 Loading games, tours, courts...
+23:56:34   Games in 12m window: 70,535, long window: 203,829
+23:56:34 Loading stat...
+23:56:34 Computed 9,380 (player_id, surface) rows
+23:56:34   By surface: {'Clay': 3981, 'Hard': 4689, 'Carpet': 179, 'Grass': 531}
+23:56:34 
+23:56:34 Upserting to player_surface_stats...
+23:56:34   5,000 / 9,380
+23:56:34   9,380 / 9,380
+23:56:34 Done.
+23:56:34 === Step 4/7: Refresh injured players list (TennisExplorer) ===
+23:56:37 Scraping injured list...
+23:56:37   100 rows
+23:56:37 Scraping returning list...
+23:56:37   144 rows
+23:56:37 Wrote C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv (244 rows)
+23:56:37 === Step 5/7: Refresh CPI surface-speed table ===
+23:56:48 2025: 64 rows
+23:56:48 2026: 17 rows
+23:56:48 Wrote 79 deduped rows to C:\Users\44746\Downloads\il-margine\data\backtest\tennisabstract-atp-surface-speed.csv
+23:56:48 Years covered: 2025-2026 (2 years)
+23:56:48 Upserted 79 rows into 'tournament_surface_speed'.
+23:56:48 === Step 6/7: Pinnacle odds + fair odds ===
+23:56:58 ============================================================
+23:56:58   Pinnacle Tennis Odds Scraper (API edition)
+23:56:58   2026-03-09 23:56 UTC
+23:56:58   Mode: LIVE | WTA: excluded
+23:56:58 ============================================================
+23:56:58 
+23:56:58   Summary: 38 matches (38 ATP/Challenger, 0 WTA), 38 with O/U, 38 with spread
+23:56:58     (32 of which are Challenger)
+23:56:58   CSV: data\pinnacle-odds-2026-03-09.csv
+23:56:58   Upserted 38 rows (6 ATP, 32 Challenger, 0 WTA)
+23:56:58   Outrights: 11 rows for 1 tournaments
+23:56:58 
+23:56:58   Done.
+23:59:50 Fixtures: 848 (deduped from 1000)
+23:59:50   Fixtures with no result (unplayed): 372
+23:59:50   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 177
+23:59:50   Loaded 20,931 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+23:59:50   Loaded 9,402 rows from player_surface_stats_v2 (matchup model)
+23:59:50   Surface priors (raw stats): Hard hold=0.447 ret=0.385, Clay hold=0.431 ret=0.409
+23:59:50   Elo: 181,525 rows (surface + Overall 50/50 blend)
+23:59:50   Lefties: 1199, vs-leftie stats: 33,169 rows
+23:59:50   Big servers: 86 (player,surface), vs-big-server stats: 6,485 rows
+23:59:50   Venue: loaded 0 rows (fixture players/tours only)
+23:59:50   Venue stats: 0 rows (none û run venue pipeline or create table)
+23:59:50   Altitude stats: 788 rows (player record at altitude active)
+23:59:50   League avg (surface): 4 from DB, rest constants
+23:59:50   Tournament totals shift: 0 rows (run oncourt-compute-tournament-avg-games.py)
+23:59:50   Match history: 242/258 players with matches since 2021-01-01, tournament-history keys: 15,935
+23:59:50   Recent activity: 214 rows (form/fatigue active)
+23:59:50   V2 stats: 9,402 rows (9,401 with decomposed serve)
+23:59:50   Recent games: 1,736 rows for 516 players
+23:59:50   H2H: 12,309 rows from oncourt_games (9,663 source rows)
+23:59:50   Advanced stats: 4,018 rows (active)
+23:59:50   Players (birthdate + atp_rank): 258 with birthdate, 200 with rank, 199 with surface points
+23:59:50   WARNING: Same surname 'martin' for multiple players in today's fixtures: [(8721, 'Andrej Martin'), (79066, 'Andres Martin')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   WARNING: Same surname 'wendelken' for multiple players in today's fixtures: [(65558, 'Harry Wendelken'), (88519, 'Tom Hands/Harry Wendelken')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   WARNING: Same surname 'moutet' for multiple players in today's fixtures: [(124000, 'Flavio Cobolli/Corentin Moutet'), (36263, 'Corentin Moutet')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   WARNING: Same surname 'bertrand' for multiple players in today's fixtures: [(83555, 'Robin Bertrand'), (126873, 'Simone Agostini/Robin Bertrand')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   WARNING: Same surname 'sinner' for multiple players in today's fixtures: [(88209, 'Reilly Opelka/Jannik Sinner'), (47275, 'Jannik Sinner')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   WARNING: Same surname 'henning' for multiple players in today's fixtures: [(58005, 'Philip Henning'), (126715, 'Constantin Bittoun Kouzmine/Philip Henning')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   WARNING: Same surname 'tiafoe' for multiple players in today's fixtures: [(120318, 'Brandon Nakashima/Frances Tiafoe'), (29939, 'Frances Tiafoe')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   WARNING: Same surname 'fils' for multiple players in today's fixtures: [(83135, 'Arthur Fils'), (110917, 'Alejandro Davidovich Fokina/Arthur Fils')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   WARNING: Same surname 'jones' for multiple players in today's fixtures: [(79067, 'Jack Pinnington Jones'), (82696, 'Maximus Jones'), (126874, 'Buvaysar Gadamauri/Maximus Jones'), (36842, 'Ben Jones')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   WARNING: Same surname 'xilas' for multiple players in today's fixtures: [(78052, 'Ioannis Xilas'), (126872, 'Stefan Dostanic/Ioannis Xilas')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   WARNING: Same surname 'silva' for multiple players in today's fixtures: [(101107, 'Pedro Boscardin Dias/Joao Lucas Reis Da Silva'), (83392, 'Boris Arias/Daniel Dutra Da Silva')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   WARNING: Same surname 'pereira' for multiple players in today's fixtures: [(126711, 'Michael Geerts/Tiago Pereira'), (92649, 'Tiago Pereira')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   WARNING: Same surname 'tsitsipas' for multiple players in today's fixtures: [(90932, 'Pavlos Tsitsipas'), (126836, 'Novak Djokovic/Stefanos Tsitsipas'), (90999, 'Pavlos Tsitsipas/Petros Tsitsipas')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   WARNING: Same surname 'zeballos' for multiple players in today's fixtures: [(126875, 'Miguel-Angel Reyes-Varela/Federico Zeballos'), (79810, 'Marcel Granollers/Horacio Zeballos')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   WARNING: Same surname 'zverev' for multiple players in today's fixtures: [(24008, 'Alexander Zverev'), (65532, 'Marcelo Melo/Alexander Zverev')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+23:59:50   Injury list: 72/244 recent rows (lookback 14d, downweight=off, delta=0.020)
+23:59:50   CPI rows: disabled (set FAIR_ODDS_CPI_ENABLED=true to activate)
+23:59:50 Computed 89 fair odds rows
+23:59:50   V2 model: 89/89 matchup (100%), 0 fallback, 89 fatigue computed
+23:59:50   Fixture surfaces (from tour_id): {'Hard': 76, 'Clay': 13}
+23:59:50   Skipped: no player1/player2 = 0, same-player = 34, unknown = 30, doubles/team (name contains / or &) = 24
+23:59:50   Elo/rank fallback (missing stats): both = 0, P1 only = 0, P2 only = 0
+23:59:50   Confidence: high=72, medium=16, low=1, none=0
+23:59:50   Injury flags: P1=3, P2=1, adjusted_matches=0 (downweight=off)
+23:59:50   P1=82371 P2=30230 surface=Hard P1=0.7718 odds1=1.3 odds2=4.38
+23:59:50   P1=93550 P2=53532 surface=Hard P1=0.5655 odds1=1.77 odds2=2.3
+23:59:50   P1=39310 P2=37492 surface=Hard P1=0.8307 odds1=1.2 odds2=5.91
+23:59:50   Cleared existing daily_fair_odds rows.
+23:59:50 Done.
+23:59:54 Handicap calibration: ON (shift=-0.500, a=-0.0278, b=+0.5610) source=C:\Users\44746\Downloads\il-margine\data\backtest\handicap-calibration-params.json
+23:59:54 Matched 6 of 89 fair-odds rows to Pinnacle spread
+23:59:54 Updated 6 rows with spread + handicap edge
+23:59:54 Edge diagnostics (P1 +line):
+23:59:54   raw: n=6 mean=+36.44% median=+38.38% p10=+0.54% p90=+72.85% >=10%=83.3% >=20%=66.7%
+23:59:54   cal: n=6 mean=+16.13% median=+13.24% p10=-2.66% p90=+46.43% >=10%=50.0% >=20%=50.0%
+23:59:54 Edge diagnostics (P2 -line, calibrated):
+23:59:54   cal: n=6 mean=-22.29% median=-21.48% p10=-47.65% p90=-3.90% >=10%=0.0% >=20%=0.0%
+23:59:54 Done.
+23:59:54 
+23:59:54 === 1/4 Pinnacle scraper (writes to bookmaker_odds_snapshot) ===
+23:59:54 
+23:59:54 
+23:59:54 === 2/4 Fair odds pipeline ===
+23:59:54 
+23:59:54 
+23:59:54 === 3/4 Handicap values (spread edge) ===
+23:59:54 
+23:59:54 
+23:59:54 === 4/4 Strict report skipped (--skip-strict-report) ===
+23:59:54 
+23:59:54 Done. Pinnacle snapshot + daily_fair_odds updated.
+23:59:54 === Step 7/7: Strict policy report (--append --compare-overlay) ===
+23:59:57 Strict policy report - 2026-03-09 UTC
+23:59:57 Segment: Hard|Masters 1000  |  Confidence: high  |  Public: >=10.0%  |  Internal: >=5.0%  |  Handicap: >=20.0%
+23:59:57 Exclusion: ATP500 Hard short favorites skipped (confidence high, favorite odds < 1.80)
+23:59:57 Production mode: base
+23:59:57 Signals (public >=10.0%): 2  |  Internal (5%+): 3
+23:59:57 Injury list: path=C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv recent_rows=72/244 lookback=14d flagged_candidates=1 overlay=off skipped=0
+23:59:57 Overlay config: window=prior_editions family=seed min_n=50 min_roi_pct=-5.00 missing=skip keys=628 key_side=172
+23:59:57 Overlay pass count: 2 / 3  skip_reasons={'min_roi': 1}
+23:59:57 Compare mode: base=3 overlay=2
+23:59:57 
+23:59:57   Frances Tiafoe vs Alexander Zverev  |  P1 value +16.6%  |  our 3.01/1.50  Pin 3.51/1.34
+23:59:57   Learner Tien vs Alejandro Davidovich Fokina  |  P2 value +17.3%  |  our 2.27/1.79  Pin 1.81/2.10
+23:59:57 
+23:59:57 Appended 0/2 public rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals.csv (deduped).
+23:59:57 Appended 0/3 internal (5%+) rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-internal-5pct.csv (deduped).
+23:59:57 Appended 5/5 comparison rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-overlay-compare.csv (deduped).
+23:59:57 ============================================
+23:59:57   Daily Pipeline finished at 2026-03-09 23:59:57
+23:59:57 ============================================
+11:00:04 ============================================
+11:00:04   Daily Pipeline started at 2026-03-10 11:00:04
+11:00:04 ============================================
+11:00:04 === Step 1/7: OnCourt extract ===
+11:00:17   games_atp: 1,178,408 rows -> games_atp.csv
+11:00:18 Extracting...
+11:00:18   players_atp: 124,808 rows -> players_atp.csv
+11:00:18   tours_atp: 20,930 rows -> tours_atp.csv
+11:00:18   courts: 7 rows -> courts.csv
+11:00:18   today_atp: 1,499 rows -> today_atp.csv
+11:00:18 
+11:00:18 Done.
+11:00:18 
+11:00:18 --- oncourt-extract-games ---
+11:00:18 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+11:00:18 
+11:00:18 --- oncourt-extract-rest ---
+11:00:18 
+11:00:18 All extractions done.
+11:00:18 === Step 2/7: Supabase sync (--quick) ===
+11:00:52   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+11:00:52   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+11:00:52 
+11:00:52   oncourt_courts: 7 rows
+11:00:52   oncourt_players: 5,000 / 124,808  (1695 rows/s, ~71s left)
+11:00:52   oncourt_players: 10,000 / 124,808  (2574 rows/s, ~45s left)
+11:00:52   oncourt_players: 15,000 / 124,808  (3191 rows/s, ~34s left)
+11:00:52   oncourt_players: 20,000 / 124,808  (3629 rows/s, ~29s left)
+11:00:52   oncourt_players: 25,000 / 124,808  (4006 rows/s, ~25s left)
+11:00:52   oncourt_players: 30,000 / 124,808  (4298 rows/s, ~22s left)
+11:00:52   oncourt_players: 35,000 / 124,808  (4539 rows/s, ~20s left)
+11:00:52   oncourt_players: 40,000 / 124,808  (4698 rows/s, ~18s left)
+11:00:52   oncourt_players: 45,000 / 124,808  (4872 rows/s, ~16s left)
+11:00:52   oncourt_players: 50,000 / 124,808  (4999 rows/s, ~15s left)
+11:00:52   oncourt_players: 55,000 / 124,808  (5103 rows/s, ~14s left)
+11:00:52   oncourt_players: 60,000 / 124,808  (4628 rows/s, ~14s left)
+11:00:52   oncourt_players: 65,000 / 124,808  (4711 rows/s, ~13s left)
+11:00:52   oncourt_players: 70,000 / 124,808  (4812 rows/s, ~11s left)
+11:00:52   oncourt_players: 75,000 / 124,808  (4900 rows/s, ~10s left)
+11:00:52   oncourt_players: 80,000 / 124,808  (4981 rows/s, ~9s left)
+11:00:52   oncourt_players: 85,000 / 124,808  (5056 rows/s, ~8s left)
+11:00:52   oncourt_players: 90,000 / 124,808  (5128 rows/s, ~7s left)
+11:00:52   oncourt_players: 95,000 / 124,808  (5211 rows/s, ~6s left)
+11:00:52   oncourt_players: 100,000 / 124,808  (5267 rows/s, ~5s left)
+11:00:52   oncourt_players: 105,000 / 124,808  (5337 rows/s, ~4s left)
+11:00:52   oncourt_players: 110,000 / 124,808  (5402 rows/s, ~3s left)
+11:00:52   oncourt_players: 115,000 / 124,808  (5465 rows/s, ~2s left)
+11:00:52   oncourt_players: 120,000 / 124,808  (5501 rows/s, ~1s left)
+11:00:52   oncourt_players: 124,808 / 124,808  (5552 rows/s, ~0s left)
+11:00:52   oncourt_players: 124,808 rows done in 22.5s
+11:00:52   oncourt_tours: 5,000 / 20,930  (5661 rows/s, ~3s left)
+11:00:52   oncourt_tours: 10,000 / 20,930  (5790 rows/s, ~2s left)
+11:00:52   oncourt_tours: 15,000 / 20,930  (6047 rows/s, ~1s left)
+11:00:52   oncourt_tours: 20,000 / 20,930  (6178 rows/s, ~0s left)
+11:00:52   oncourt_tours: 20,930 / 20,930  (5758 rows/s, ~0s left)
+11:00:52   oncourt_tours: 20,930 rows done in 3.6s
+11:00:52   oncourt_games: SKIPPED (--quick mode)
+11:00:52   oncourt_stat: SKIPPED (--quick mode)
+11:00:52   player_hand_reference: skipped 1 rows (player_id missing in players_atp.csv)
+11:00:52   player_hand_reference: 1,199 left-handed players (source=tml)
+11:00:52   oncourt_today: 1499 rows
+11:00:52 
+11:00:52 Done.
+11:00:52 === Step 3/7: Compute player stats ===
+11:01:19 Using 12m window: 2025-03-10 to today; long window: 2023-03-11 to today (1095 days)
+11:01:19 
+11:01:19 Loading games, tours, courts...
+11:01:19   Games in 12m window: 70,379, long window: 203,960
+11:01:19 Loading stat...
+11:01:19 Computed 9,371 (player_id, surface) rows
+11:01:19   By surface: {'Clay': 3980, 'Hard': 4682, 'Grass': 531, 'Carpet': 178}
+11:01:19 
+11:01:19 Upserting to player_surface_stats...
+11:01:19   5,000 / 9,371
+11:01:19   9,371 / 9,371
+11:01:19 Done.
+11:01:19 === Step 4/7: Refresh injured players list (TennisExplorer) ===
+11:01:21 Scraping injured list...
+11:01:21   100 rows
+11:01:21 Scraping returning list...
+11:01:21   154 rows
+11:01:22 Wrote C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv (254 rows)
+11:01:22 === Step 5/7: Refresh CPI surface-speed table ===
+11:01:26 2025: 64 rows
+11:01:26 2026: 17 rows
+11:01:26 Wrote 79 deduped rows to C:\Users\44746\Downloads\il-margine\data\backtest\tennisabstract-atp-surface-speed.csv
+11:01:26 Years covered: 2025-2026 (2 years)
+11:01:26 Upserted 79 rows into 'tournament_surface_speed'.
+11:01:26 === Step 6/7: Pinnacle odds + fair odds ===
+11:01:36 ============================================================
+11:01:36   Pinnacle Tennis Odds Scraper (API edition)
+11:01:36   2026-03-10 11:01 UTC
+11:01:36   Mode: LIVE | WTA: excluded
+11:01:36 ============================================================
+11:01:36 
+11:01:36   Summary: 42 matches (42 ATP/Challenger, 0 WTA), 42 with O/U, 42 with spread
+11:01:36     (34 of which are Challenger)
+11:01:36   CSV: data\pinnacle-odds-2026-03-10.csv
+11:01:36   Upserted 42 rows (8 ATP, 34 Challenger, 0 WTA)
+11:01:36   Outrights: 9 rows for 1 tournaments
+11:01:36 
+11:01:36   Done.
+11:02:28 Fixtures: 842 (deduped from 1000)
+11:02:28   Fixtures with no result (unplayed): 417
+11:02:28   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 140
+11:02:28   Loaded 20,931 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+11:02:28   Loaded 9,402 rows from player_surface_stats_v2 (matchup model)
+11:02:28   Surface priors (raw stats): Hard hold=0.447 ret=0.385, Clay hold=0.431 ret=0.409
+23:55:08 ============================================
+11:00:04 ============================================
+11:00:04   Daily Pipeline started at 2026-03-11 11:00:04
+11:00:04 ============================================
+11:00:04 === Step 1/7: OnCourt extract ===
+11:00:20   games_atp: 1,178,665 rows -> games_atp.csv
+11:00:21 Extracting...
+11:00:21   players_atp: 124,818 rows -> players_atp.csv
+11:00:21   tours_atp: 20,930 rows -> tours_atp.csv
+11:00:21   courts: 7 rows -> courts.csv
+11:00:21   today_atp: 1,560 rows -> today_atp.csv
+11:00:21 
+11:00:21 Done.
+11:00:21 
+11:00:21 --- oncourt-extract-games ---
+11:00:21 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+11:00:21 
+11:00:21 --- oncourt-extract-rest ---
+11:00:21 
+11:00:21 All extractions done.
+11:00:21 === Step 2/7: Supabase sync (--quick) ===
+11:01:04   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+11:01:04   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+11:01:04 
+11:01:04   oncourt_courts: 7 rows
+11:01:04   oncourt_players: 5,000 / 124,818  (2334 rows/s, ~51s left)
+11:01:04   oncourt_players: 10,000 / 124,818  (2881 rows/s, ~40s left)
+11:01:04   oncourt_players: 15,000 / 124,818  (3329 rows/s, ~33s left)
+11:01:04   oncourt_players: 20,000 / 124,818  (3623 rows/s, ~29s left)
+11:01:04   oncourt_players: 25,000 / 124,818  (3837 rows/s, ~26s left)
+11:01:04   oncourt_players: 30,000 / 124,818  (3190 rows/s, ~30s left)
+11:01:04   oncourt_players: 35,000 / 124,818  (3310 rows/s, ~27s left)
+11:01:04   oncourt_players: 40,000 / 124,818  (3444 rows/s, ~25s left)
+11:01:04   oncourt_players: 45,000 / 124,818  (3590 rows/s, ~22s left)
+11:01:04   oncourt_players: 50,000 / 124,818  (3683 rows/s, ~20s left)
+11:01:04   oncourt_players: 55,000 / 124,818  (3759 rows/s, ~19s left)
+11:01:04   oncourt_players: 60,000 / 124,818  (3850 rows/s, ~17s left)
+11:01:04   oncourt_players: 65,000 / 124,818  (3935 rows/s, ~15s left)
+11:01:04   oncourt_players: 70,000 / 124,818  (4015 rows/s, ~14s left)
+11:01:04   oncourt_players: 75,000 / 124,818  (4022 rows/s, ~12s left)
+11:01:04   oncourt_players: 80,000 / 124,818  (4084 rows/s, ~11s left)
+11:01:04   oncourt_players: 85,000 / 124,818  (4167 rows/s, ~10s left)
+11:01:04   oncourt_players: 90,000 / 124,818  (4238 rows/s, ~8s left)
+11:01:04   oncourt_players: 95,000 / 124,818  (4271 rows/s, ~7s left)
+11:01:04   oncourt_players: 100,000 / 124,818  (4329 rows/s, ~6s left)
+11:01:04   oncourt_players: 105,000 / 124,818  (4356 rows/s, ~5s left)
+11:01:04   oncourt_players: 110,000 / 124,818  (4386 rows/s, ~3s left)
+11:01:04   oncourt_players: 115,000 / 124,818  (4392 rows/s, ~2s left)
+11:01:04   oncourt_players: 120,000 / 124,818  (4401 rows/s, ~1s left)
+11:01:04   oncourt_players: 124,818 / 124,818  (4416 rows/s, ~0s left)
+11:01:04   oncourt_players: 124,818 rows done in 28.3s
+11:01:04   oncourt_tours: 5,000 / 20,930  (3588 rows/s, ~4s left)
+11:01:04   oncourt_tours: 10,000 / 20,930  (4060 rows/s, ~3s left)
+11:01:04   oncourt_tours: 15,000 / 20,930  (4265 rows/s, ~1s left)
+11:01:04   oncourt_tours: 20,000 / 20,930  (4437 rows/s, ~0s left)
+11:01:04   oncourt_tours: 20,930 / 20,930  (4087 rows/s, ~0s left)
+11:01:04   oncourt_tours: 20,930 rows done in 5.1s
+11:01:04   oncourt_games: SKIPPED (--quick mode)
+11:01:04   oncourt_stat: SKIPPED (--quick mode)
+11:01:04   player_hand_reference: skipped 1 rows (player_id missing in players_atp.csv)
+11:01:04   player_hand_reference: 1,199 left-handed players (source=tml)
+11:01:04   oncourt_today: 1560 rows
+11:01:04 
+11:01:04 Done.
+11:01:04 === Step 3/7: Compute player stats ===
+11:01:44 Using 12m window: 2025-03-11 to today; long window: 2023-03-12 to today (1095 days)
+11:01:44 
+11:01:44 Loading games, tours, courts...
+11:01:44   Games in 12m window: 70,343, long window: 204,137
+11:01:44 Loading stat...
+11:01:44 Computed 9,359 (player_id, surface) rows
+11:01:45   By surface: {'Clay': 3979, 'Hard': 4671, 'Grass': 531, 'Carpet': 178}
+11:01:45 
+11:01:45 Upserting to player_surface_stats...
+11:01:45   5,000 / 9,359
+11:01:45   9,359 / 9,359
+11:01:45 Done.
+11:01:45 === Step 4/7: Refresh injured players list (TennisExplorer) ===
+11:01:47 Scraping injured list...
+11:01:47   100 rows
+11:01:47 Scraping returning list...
+11:01:47   134 rows
+11:01:47 Wrote C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv (234 rows)
+11:01:47 === Step 5/7: Refresh CPI surface-speed table ===
+11:01:50 2025: 64 rows
+11:01:50 2026: 17 rows
+11:01:50 Wrote 79 deduped rows to C:\Users\44746\Downloads\il-margine\data\backtest\tennisabstract-atp-surface-speed.csv
+11:01:50 Years covered: 2025-2026 (2 years)
+11:01:50 Upserted 79 rows into 'tournament_surface_speed'.
+11:01:50 === Step 6/7: Pinnacle odds + fair odds ===
+11:02:01 ============================================================
+11:02:02   Pinnacle Tennis Odds Scraper (API edition)
+11:02:02   2026-03-11 11:01 UTC
+11:02:02   Mode: LIVE | WTA: excluded
+11:02:02 ============================================================
+11:02:02 
+11:02:02   Summary: 17 matches (17 ATP/Challenger, 0 WTA), 17 with O/U, 17 with spread
+11:02:02     (11 of which are Challenger)
+11:02:02   CSV: data\pinnacle-odds-2026-03-11.csv
+11:02:02   Upserted 17 rows (6 ATP, 11 Challenger, 0 WTA)
+11:02:02 
+11:02:02   Done.
+11:05:35 Fixtures: 913 (deduped from 1000)
+11:05:35   Fixtures with no result (unplayed): 318
+11:05:35   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 103
+11:05:35   Loaded 20,931 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+11:05:35   Loaded 9,402 rows from player_surface_stats_v2 (matchup model)
+11:05:35   Surface priors (raw stats): Hard hold=0.447 ret=0.385, Clay hold=0.431 ret=0.409
+11:05:35   Elo: 181,525 rows (surface + Overall 50/50 blend)
+11:05:35   Lefties: 1199, vs-leftie stats: 33,169 rows
+11:05:35   Big servers: 86 (player,surface), vs-big-server stats: 6,485 rows
+11:05:35   Venue: loaded 0 rows (fixture players/tours only)
+11:05:35   Venue stats: 0 rows (none û run venue pipeline or create table)
+11:05:35   Altitude stats: 418 rows (player record at altitude active)
+11:05:35   League avg (surface): 4 from DB, rest constants
+11:05:35   Tournament totals shift: 0 rows (run oncourt-compute-tournament-avg-games.py)
+11:05:35   Match history: 127/138 players with matches since 2021-01-01, tournament-history keys: 8,760
+11:05:35   Recent activity: 110 rows (form/fatigue active)
+11:05:35   V2 stats: 9,402 rows (9,401 with decomposed serve)
+11:05:35   Recent games: 842 rows for 342 players
+11:05:35   H2H: 3,990 rows from oncourt_games (3,260 source rows)
+11:05:35   Advanced stats: 4,018 rows (active)
+11:05:35   Players (birthdate + atp_rank): 138 with birthdate, 105 with rank, 105 with surface points
+11:05:35   WARNING: Same surname 'bertrand' for multiple players in today's fixtures: [(83555, 'Robin Bertrand'), (126873, 'Simone Agostini/Robin Bertrand')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:05:35   WARNING: Same surname 'henning' for multiple players in today's fixtures: [(58005, 'Philip Henning'), (126715, 'Constantin Bittoun Kouzmine/Philip Henning')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:05:35   WARNING: Same surname 'silva' for multiple players in today's fixtures: [(101107, 'Pedro Boscardin Dias/Joao Lucas Reis Da Silva'), (83392, 'Boris Arias/Daniel Dutra Da Silva')]. If odds look wrong, check OnCourt today_atp has the correct player ID for each match (e.g. F. vs J.M. Cerundolo).
+11:05:35   Injury list: 66/234 recent rows (lookback 14d, downweight=off, delta=0.020)
+11:05:35   CPI rows: disabled (set FAIR_ODDS_CPI_ENABLED=true to activate)
+11:05:35 Computed 46 fair odds rows
+11:05:35   V2 model: 46/46 matchup (100%), 0 fallback, 46 fatigue computed
+11:05:35   Fixture surfaces (from tour_id): {'Hard': 39, 'Clay': 7}
+11:05:35   Skipped: no player1/player2 = 0, same-player = 27, unknown = 16, doubles/team (name contains / or &) = 14
+11:05:35   Elo/rank fallback (missing stats): both = 0, P1 only = 0, P2 only = 0
+11:05:35   Confidence: high=41, medium=5, low=0, none=0
+11:05:35   Injury flags: P1=0, P2=0, adjusted_matches=0 (downweight=off)
+11:05:35   P1=18094 P2=94493 surface=Hard P1=0.5856 odds1=1.71 odds2=2.41
+11:05:35   P1=47557 P2=37492 surface=Hard P1=0.5827 odds1=1.72 odds2=2.4
+11:05:35   P1=82371 P2=67986 surface=Hard P1=0.6449 odds1=1.55 odds2=2.82
+11:05:35   Cleared existing daily_fair_odds rows.
+11:05:35 Done.
+11:05:39 Handicap calibration: ON (shift=-0.500, a=-0.0278, b=+0.5610) source=C:\Users\44746\Downloads\il-margine\data\backtest\handicap-calibration-params.json
+11:05:39 Matched 6 of 46 fair-odds rows to Pinnacle spread
+11:05:39 Updated 6 rows with spread + handicap edge
+11:05:39 Edge diagnostics (P1 +line):
+11:05:39   raw: n=6 mean=-3.51% median=+1.04% p10=-70.03% p90=+51.76% >=10%=50.0% >=20%=33.3%
+11:05:39   cal: n=6 mean=-12.24% median=-8.17% p10=-59.24% p90=+29.50% >=10%=33.3% >=20%=16.7%
+11:05:39 Edge diagnostics (P2 -line, calibrated):
+11:05:39   cal: n=6 mean=+7.57% median=+2.10% p10=-35.07% p90=+53.54% >=10%=50.0% >=20%=33.3%
+11:05:39 Done.
+11:05:39 
+11:05:39 === 1/4 Pinnacle scraper (writes to bookmaker_odds_snapshot) ===
+11:05:39 
+11:05:39 
+11:05:39 === 2/4 Fair odds pipeline ===
+11:05:39 
+11:05:39 
+11:05:39 === 3/4 Handicap values (spread edge) ===
+11:05:39 
+11:05:39 
+11:05:39 === 4/4 Strict report skipped (--skip-strict-report) ===
+11:05:39 
+11:05:39 Done. Pinnacle snapshot + daily_fair_odds updated.
+11:05:39 === Step 7/7: Strict policy report (--append --compare-overlay) ===
+11:05:41 Strict policy report - 2026-03-11 UTC
+11:05:41 Segment: Hard|Masters 1000  |  Confidence: high  |  Public: >=10.0%  |  Internal: >=5.0%  |  Handicap: >=20.0%
+11:05:41 Exclusion: ATP500 Hard short favorites skipped (confidence high, favorite odds < 1.80)
+11:05:41 Production mode: base
+11:05:41 Signals (public >=10.0%): 4  |  Internal (5%+): 4
+11:05:41 Injury list: path=C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv recent_rows=66/234 lookback=14d flagged_candidates=0 overlay=off skipped=0
+11:05:41 Overlay config: window=prior_editions family=seed min_n=50 min_roi_pct=-5.00 missing=skip keys=628 key_side=172
+11:05:41 Overlay pass count: 2 / 4  skip_reasons={'min_roi': 2}
+11:05:41 Compare mode: base=4 overlay=2
+11:05:41 
+11:05:41   Daniil Medvedev vs Alex Michelsen  |  P2 value +23.0%  |  our 1.51/2.96  Pin 1.33/3.64
+11:05:41   Daniil Medvedev vs Alex Michelsen  |  P2- (spread +/--3.5) edge +40.2%  |  odds 2.1
+11:05:41   Rinky Hijikata vs Cameron Norrie  |  P1 value +20.6%  |  our 2.87/1.53  Pin 3.46/1.36
+11:05:41   Novak Djokovic vs Jack Draper  |  P1 value +13.1%  |  our 1.54/2.85  Pin 1.74/2.22
+11:05:41 
+11:05:41 Appended 4/4 public rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals.csv (deduped).
+11:05:41 Appended 4/4 internal (5%+) rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-internal-5pct.csv (deduped).
+11:05:41 Appended 5/6 comparison rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-overlay-compare.csv (deduped).
+11:05:41 ============================================
+11:05:41   Daily Pipeline finished at 2026-03-11 11:05:41
+11:05:41 ============================================
+23:55:03 ============================================
+11:00:05 ============================================
+11:00:05   Daily Pipeline started at 2026-03-12 11:00:05
+11:00:05 ============================================
+11:00:05 === Step 1/7: OnCourt extract ===
+11:00:24   games_atp: 1,178,881 rows -> games_atp.csv
+11:00:26 Extracting...
+11:00:26   players_atp: 124,818 rows -> players_atp.csv
+11:00:26   tours_atp: 20,930 rows -> tours_atp.csv
+11:00:26   courts: 7 rows -> courts.csv
+11:00:26   today_atp: 1,560 rows -> today_atp.csv
+11:00:26 
+11:00:26 Done.
+11:00:26 
+11:00:26 --- oncourt-extract-games ---
+11:00:26 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+11:00:26 
+11:00:26 --- oncourt-extract-rest ---
+11:00:26 
+11:00:26 All extractions done.
+11:00:27 === Step 2/7: Supabase sync (--quick) ===
+11:01:02   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+11:01:02   Mode: QUICK (players/tours/today only)  |  Batch: 5,000
+11:01:02 
+11:01:02   oncourt_courts: 7 rows
+11:01:02   oncourt_players: 5,000 / 124,818  (1591 rows/s, ~75s left)
+11:01:02   oncourt_players: 10,000 / 124,818  (2360 rows/s, ~49s left)
+11:01:02   oncourt_players: 15,000 / 124,818  (2917 rows/s, ~38s left)
+11:01:02   oncourt_players: 20,000 / 124,818  (3325 rows/s, ~32s left)
+11:01:02   oncourt_players: 25,000 / 124,818  (3401 rows/s, ~29s left)
+11:01:02   oncourt_players: 30,000 / 124,818  (3627 rows/s, ~26s left)
+11:01:02   oncourt_players: 35,000 / 124,818  (3788 rows/s, ~24s left)
+11:01:02   oncourt_players: 40,000 / 124,818  (4010 rows/s, ~21s left)
+11:01:02   oncourt_players: 45,000 / 124,818  (4220 rows/s, ~19s left)
+11:01:02   oncourt_players: 50,000 / 124,818  (4367 rows/s, ~17s left)
+11:01:02   oncourt_players: 55,000 / 124,818  (4401 rows/s, ~16s left)
+11:01:02   oncourt_players: 60,000 / 124,818  (4507 rows/s, ~14s left)
+11:01:02   oncourt_players: 65,000 / 124,818  (4633 rows/s, ~13s left)
+11:01:02   oncourt_players: 70,000 / 124,818  (4742 rows/s, ~12s left)
+11:01:02   oncourt_players: 75,000 / 124,818  (4848 rows/s, ~10s left)
+11:01:02   oncourt_players: 80,000 / 124,818  (4907 rows/s, ~9s left)
+11:01:02   oncourt_players: 85,000 / 124,818  (4979 rows/s, ~8s left)
+11:01:02   oncourt_players: 90,000 / 124,818  (5066 rows/s, ~7s left)
+11:01:02   oncourt_players: 95,000 / 124,818  (5125 rows/s, ~6s left)
+11:01:02   oncourt_players: 100,000 / 124,818  (5187 rows/s, ~5s left)
+11:01:02   oncourt_players: 105,000 / 124,818  (5248 rows/s, ~4s left)
+11:01:02   oncourt_players: 110,000 / 124,818  (5295 rows/s, ~3s left)
+11:01:02   oncourt_players: 115,000 / 124,818  (5349 rows/s, ~2s left)
+11:01:02   oncourt_players: 120,000 / 124,818  (5401 rows/s, ~1s left)
+11:01:02   oncourt_players: 124,818 / 124,818  (5447 rows/s, ~0s left)
+11:01:02   oncourt_players: 124,818 rows done in 22.9s
+11:01:02   oncourt_tours: 5,000 / 20,930  (5574 rows/s, ~3s left)
+11:01:02   oncourt_tours: 10,000 / 20,930  (5650 rows/s, ~2s left)
+11:01:02   oncourt_tours: 15,000 / 20,930  (5336 rows/s, ~1s left)
+11:01:02   oncourt_tours: 20,000 / 20,930  (5521 rows/s, ~0s left)
+11:01:02   oncourt_tours: 20,930 / 20,930  (5026 rows/s, ~0s left)
+11:01:02   oncourt_tours: 20,930 rows done in 4.2s
+11:01:02   oncourt_games: SKIPPED (--quick mode)
+11:01:02   oncourt_stat: SKIPPED (--quick mode)
+11:01:02   player_hand_reference: skipped 1 rows (player_id missing in players_atp.csv)
+11:01:02   player_hand_reference: 1,199 left-handed players (source=tml)
+11:01:02   oncourt_today: 1560 rows
+11:01:02 
+11:01:02 Done.
+11:01:02 === Step 3/7: Compute player stats ===
+11:01:47 Using 12m window: 2025-03-12 to today; long window: 2023-03-13 to today (1095 days)
+11:01:47 
+11:01:47 Loading games, tours, courts...
+11:01:47   Games in 12m window: 70,266, long window: 203,999
+11:01:47 Loading stat...
+11:01:47 Computed 9,339 (player_id, surface) rows
+11:01:47   By surface: {'Clay': 3977, 'Hard': 4658, 'Grass': 526, 'Carpet': 178}
+11:01:47 
+11:01:47 Upserting to player_surface_stats...
+11:01:47   5,000 / 9,339
+11:01:47   9,339 / 9,339
+11:01:47 Done.
+11:01:47 === Step 4/7: Refresh injured players list (TennisExplorer) ===
+11:01:51 Scraping injured list...
+11:01:51   100 rows
+11:01:51 Scraping returning list...
+11:01:51   126 rows
+11:01:51 Wrote C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv (226 rows)
+11:01:51 === Step 5/7: Refresh CPI surface-speed table ===
+11:01:57 2025: 64 rows
+11:01:57 2026: 17 rows
+11:01:57 Wrote 79 deduped rows to C:\Users\44746\Downloads\il-margine\data\backtest\tennisabstract-atp-surface-speed.csv
+11:01:57 Years covered: 2025-2026 (2 years)
+11:01:57 Upserted 79 rows into 'tournament_surface_speed'.
+11:01:57 === Step 6/7: Pinnacle odds + fair odds ===
+11:02:14 ============================================================
+11:02:14   Pinnacle Tennis Odds Scraper (API edition)
+11:02:14   2026-03-12 11:01 UTC
+11:02:14   Mode: LIVE | WTA: excluded
+11:02:14 ============================================================
+11:02:14 
+11:02:14   Summary: 24 matches (24 ATP/Challenger, 0 WTA), 24 with O/U, 24 with spread
+11:02:14     (20 of which are Challenger)
+11:02:14   CSV: data\pinnacle-odds-2026-03-12.csv
+11:02:14   Upserted 24 rows (4 ATP, 20 Challenger, 0 WTA)
+11:02:14   Outrights: 6 rows for 1 tournaments
+11:02:14 
+11:02:14   Done.
+11:05:58 Fixtures: 955 (deduped from 1000)
+11:05:59   Fixtures with no result (unplayed): 187
+11:05:59   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 68
+11:06:00   Loaded 20,931 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+11:06:00   Loaded 9,402 rows from player_surface_stats_v2 (matchup model)
+11:06:00   Surface priors (raw stats): Hard hold=0.447 ret=0.385, Clay hold=0.431 ret=0.409
+11:06:00   Elo: 181,525 rows (surface + Overall 50/50 blend)
+11:06:00   Lefties: 1199, vs-leftie stats: 33,169 rows
+11:06:00   Big servers: 86 (player,surface), vs-big-server stats: 6,485 rows
+11:06:00   Venue: loaded 0 rows (fixture players/tours only)
+11:06:00   Venue stats: 0 rows (none û run venue pipeline or create table)
+11:06:00   Altitude stats: 297 rows (player record at altitude active)
+11:06:00   League avg (surface): 4 from DB, rest constants
+11:06:00   Tournament totals shift: 0 rows (run oncourt-compute-tournament-avg-games.py)
+11:06:00   Match history: 87/93 players with matches since 2021-01-01, tournament-history keys: 5,894
+11:06:00   Recent activity: 77 rows (form/fatigue active)
+11:06:00   V2 stats: 9,402 rows (9,401 with decomposed serve)
+11:06:00   Recent games: 548 rows for 252 players
+11:06:00   H2H: 1,928 rows from oncourt_games (1,633 source rows)
+11:06:00   Advanced stats: 4,018 rows (active)
+11:06:00   Players (birthdate + atp_rank): 93 with birthdate, 74 with rank, 74 with surface points
+11:06:00   Injury list: 73/226 recent rows (lookback 14d, downweight=off, delta=0.020)
+11:06:00   CPI rows: disabled (set FAIR_ODDS_CPI_ENABLED=true to activate)
+11:06:00 Computed 36 fair odds rows
+11:06:00   V2 model: 36/36 matchup (100%), 0 fallback, 36 fatigue computed
+11:06:00   Fixture surfaces (from tour_id): {'Hard': 31, 'Clay': 5}
+11:06:00   Skipped: no player1/player2 = 0, same-player = 21, unknown = 3, doubles/team (name contains / or &) = 8
+11:06:00   Elo/rank fallback (missing stats): both = 0, P1 only = 0, P2 only = 0
+11:06:00   Confidence: high=34, medium=2, low=0, none=0
+11:06:00   Injury flags: P1=1, P2=0, adjusted_matches=0 (downweight=off)
+11:06:00   P1=34337 P2=18094 surface=Hard P1=0.5796 odds1=1.73 odds2=2.38
+11:06:00   P1=37492 P2=47752 surface=Hard P1=0.387 odds1=2.58 odds2=1.63
+11:06:00   P1=26473 P2=72578 surface=Hard P1=0.5934 odds1=1.69 odds2=2.46
+11:06:00   Cleared existing daily_fair_odds rows.
+11:06:00 Done.
+11:06:06 Handicap calibration: ON (shift=-0.500, a=-0.0278, b=+0.5610) source=C:\Users\44746\Downloads\il-margine\data\backtest\handicap-calibration-params.json
+11:06:06 Matched 4 of 36 fair-odds rows to Pinnacle spread
+11:06:06 Updated 4 rows with spread + handicap edge
+11:06:06 Edge diagnostics (P1 +line):
+11:06:06   raw: n=4 mean=+5.50% median=+15.82% p10=-71.39% p90=+61.75% >=10%=75.0% >=20%=50.0%
+11:06:06   cal: n=4 mean=-7.03% median=+3.77% p10=-61.08% p90=+25.42% >=10%=25.0% >=20%=25.0%
+11:06:06 Edge diagnostics (P2 -line, calibrated):
+11:06:06   cal: n=4 mean=+1.94% median=-9.74% p10=-32.40% p90=+59.62% >=10%=25.0% >=20%=25.0%
+11:06:06 Done.
+11:06:06 
+11:06:06 === 1/4 Pinnacle scraper (writes to bookmaker_odds_snapshot) ===
+11:06:06 
+11:06:06 
+11:06:06 === 2/4 Fair odds pipeline ===
+11:06:06 
+11:06:06 
+11:06:06 === 3/4 Handicap values (spread edge) ===
+11:06:06 
+11:06:06 
+11:06:06 === 4/4 Strict report skipped (--skip-strict-report) ===
+11:06:06 
+11:06:06 Done. Pinnacle snapshot + daily_fair_odds updated.
+11:06:06 === Step 7/7: Strict policy report (--append --compare-overlay) ===
+11:06:08 Strict policy report - 2026-03-12 UTC
+11:06:08 Segment: Hard|Masters 1000  |  Confidence: high  |  Public: >=10.0%  |  Internal: >=5.0%  |  Handicap: >=20.0%
+11:06:08 Exclusion: ATP500 Hard short favorites skipped (confidence high, favorite odds < 1.80)
+11:06:08 Production mode: base
+11:06:08 Signals (public >=10.0%): 0  |  Internal (5%+): 2
+11:06:08 Injury list: path=C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv recent_rows=73/226 lookback=14d flagged_candidates=0 overlay=off skipped=0
+11:06:08 Overlay config: window=prior_editions family=seed min_n=50 min_roi_pct=-5.00 missing=skip keys=628 key_side=172
+11:06:08 Overlay pass count: 1 / 2  skip_reasons={'min_roi': 1}
+11:06:08 Compare mode: base=2 overlay=1
+11:06:08 
+11:06:08 No POLICY signals today (public threshold).
+11:06:08 
+11:06:08 Appended 0/0 public rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals.csv (deduped).
+11:06:08 Appended 2/2 internal (5%+) rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-internal-5pct.csv (deduped).
+11:06:08 Appended 3/3 comparison rows to C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-overlay-compare.csv (deduped).
+11:06:08 ============================================
+11:06:08   Daily Pipeline finished at 2026-03-12 11:06:08
+11:06:08 ============================================
+23:55:04 ============================================
+23:55:05   Daily Pipeline started at 2026-03-12 23:55:04
+23:55:05 ============================================
+23:55:05 === Step 1/7: OnCourt extract ===
+23:55:37   games_atp: 1,178,997 rows -> games_atp.csv
+23:55:39 Extracting...
+23:55:39   players_atp: 124,818 rows -> players_atp.csv
+23:55:39   tours_atp: 20,930 rows -> tours_atp.csv
+23:55:39   courts: 7 rows -> courts.csv
+23:55:39   today_atp: 1,560 rows -> today_atp.csv
+23:55:39 
+23:55:39 Done.
+23:55:39 
+23:55:39 --- oncourt-extract-games ---
+23:55:39 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+23:55:39 
+23:55:39 --- oncourt-extract-rest ---
+23:55:39 
+23:55:39 All extractions done.
+23:55:39 === Step 2/7: Supabase sync (--quick --skip-players) ===
+23:55:57   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+23:55:57   Mode: QUICK (players/tours/today only) + SKIP_PLAYERS  |  Batch: 5,000
+23:55:57 
+23:55:57   oncourt_courts: 7 rows
+23:55:57   oncourt_players: SKIPPED (--skip-players)
+23:55:57   oncourt_tours: 5,000 / 20,930  (1838 rows/s, ~9s left)
+23:55:57   oncourt_tours: 10,000 / 20,930  (2516 rows/s, ~4s left)
+23:55:57   oncourt_tours: 15,000 / 20,930  (2808 rows/s, ~2s left)
+23:55:57   oncourt_tours: 20,000 / 20,930  (3031 rows/s, ~0s left)
+23:55:57   oncourt_tours: 20,930 / 20,930  (2837 rows/s, ~0s left)
+23:55:57   oncourt_tours: 20,930 rows done in 7.4s
+23:55:57   oncourt_games: SKIPPED (--quick mode)
+23:55:57   oncourt_stat: SKIPPED (--quick mode)
+23:55:57   player_hand_reference: skipped 1 rows (player_id missing in players_atp.csv)
+23:55:57   player_hand_reference: 1,199 left-handed players (source=tml)
+23:55:57   oncourt_today: 1560 rows
+23:55:57 
+23:55:57 Done.
+23:55:57 === Step 3/7: Compute player stats ===
+23:56:42 Using 12m window: 2025-03-12 to today; long window: 2023-03-13 to today (1095 days)
+23:56:42 
+23:56:42 Loading games, tours, courts...
+23:56:42   Games in 12m window: 70,382, long window: 204,115
+23:56:42 Loading stat...
+23:56:42 Computed 9,339 (player_id, surface) rows
+23:56:42   By surface: {'Clay': 3977, 'Hard': 4658, 'Grass': 526, 'Carpet': 178}
+23:56:42 
+23:56:42 Upserting to player_surface_stats...
+23:56:42   5,000 / 9,339
+23:56:42   9,339 / 9,339
+23:56:42 Done.
+23:56:42 === Step 4/7: Refresh injured players list (TennisExplorer) ===
+23:56:45 Scraping injured list...
+23:56:45   100 rows
+23:56:45 Scraping returning list...
+23:56:45   120 rows
+23:56:45 Wrote C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv (220 rows)
+23:56:45 === Step 5/7: Refresh CPI surface-speed table ===
+23:56:48 2025: 64 rows
+23:56:48 2026: 17 rows
+23:56:48 Wrote 79 deduped rows to C:\Users\44746\Downloads\il-margine\data\backtest\tennisabstract-atp-surface-speed.csv
+23:56:48 Years covered: 2025-2026 (2 years)
+23:56:48 Upserted 79 rows into 'tournament_surface_speed'.
+23:56:48 === Step 6/8: Pinnacle odds + fair odds ===
+23:56:59 ============================================================
+23:56:59   Pinnacle Tennis Odds Scraper (API edition)
+23:56:59   2026-03-12 23:56 UTC
+23:56:59   Mode: LIVE | WTA: excluded
+23:56:59 ============================================================
+23:56:59 
+23:56:59   Summary: 7 matches (7 ATP/Challenger, 0 WTA), 7 with O/U, 7 with spread
+23:56:59     (5 of which are Challenger)
+23:56:59   CSV: data\pinnacle-odds-2026-03-12.csv
+23:56:59   Upserted 7 rows (2 ATP, 5 Challenger, 0 WTA)
+23:56:59   Outrights: 6 rows for 1 tournaments
+23:56:59 
+23:56:59   Done.
+00:00:28 Fixtures: 982 (deduped from 1000)
+00:00:29   Fixtures with no result (unplayed): 135
+00:00:29   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 50
+00:00:29   Loaded 20,931 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+00:00:29   Loaded 9,402 rows from player_surface_stats_v2 (matchup model)
+00:00:29   Surface priors (raw stats): Hard hold=0.447 ret=0.385, Clay hold=0.431 ret=0.409
+00:00:29   Elo: 181,525 rows (surface + Overall 50/50 blend)
+00:00:29   Lefties: 1199, vs-leftie stats: 33,169 rows
+00:00:29   Big servers: 86 (player,surface), vs-big-server stats: 6,485 rows
+00:00:29   Venue: loaded 0 rows (fixture players/tours only)
+00:00:29   Venue stats: 0 rows (none û run venue pipeline or create table)
+00:00:29   Altitude stats: 225 rows (player record at altitude active)
+00:00:29   League avg (surface): 4 from DB, rest constants
+00:00:29   Tournament totals shift: 0 rows (run oncourt-compute-tournament-avg-games.py)
+00:00:29   Match history: 64/67 players with matches since 2021-01-01, tournament-history keys: 4,326
+00:00:29   Recent activity: 57 rows (form/fatigue active)
+00:00:29   V2 stats: 9,402 rows (9,401 with decomposed serve)
+00:00:29   Recent games: 392 rows for 183 players
+00:00:29   H2H: 1,312 rows from oncourt_games (1,187 source rows)
+00:00:29   Advanced stats: 4,018 rows (active)
+00:00:29   Players (birthdate + atp_rank): 67 with birthdate, 57 with rank, 57 with surface points
+00:00:29   Injury list: 74/220 recent rows (lookback 14d, downweight=off, delta=0.020)
+00:00:29   CPI rows: disabled (set FAIR_ODDS_CPI_ENABLED=true to activate)
+00:00:29 Computed 27 fair odds rows
+00:00:29   V2 model: 27/27 matchup (100%), 0 fallback, 27 fatigue computed
+00:00:29   Fixture surfaces (from tour_id): {'Hard': 23, 'Clay': 4}
+00:00:29   Skipped: no player1/player2 = 0, same-player = 16, unknown = 3, doubles/team (name contains / or &) = 4
+00:00:29   Elo/rank fallback (missing stats): both = 0, P1 only = 0, P2 only = 0
+00:00:29   Confidence: high=25, medium=2, low=0, none=0
+00:00:29   Injury flags: P1=1, P2=0, adjusted_matches=0 (downweight=off)
+00:00:29   P1=34337 P2=18094 surface=Hard P1=0.5388 odds1=1.86 odds2=2.17
+00:00:29   P1=37492 P2=47752 surface=Hard P1=0.3803 odds1=2.63 odds2=1.61
+00:00:29   P1=26473 P2=72578 surface=Hard P1=0.6132 odds1=1.63 odds2=2.59
+00:00:29   Cleared existing daily_fair_odds rows.
+00:00:29 Done.
+00:00:31 Handicap calibration: ON (shift=-0.500, a=-0.0278, b=+0.5610) source=C:\Users\44746\Downloads\il-margine\data\backtest\handicap-calibration-params.json
+00:00:31 No Pinnacle ATP snapshot for 2026-03-13. Run pinnacle-scrape-odds.py first.
+00:00:31 
+00:00:31 === 1/4 Pinnacle scraper (writes to bookmaker_odds_snapshot) ===
+00:00:31 
+00:00:31 
+00:00:31 === 2/4 Fair odds pipeline ===
+00:00:31 
+00:00:31 
+00:00:31 === 3/4 Handicap values (spread edge) ===
+00:00:31 
+00:00:31 
+00:00:31 WARNING: 3/4 Handicap values (spread edge) failed (exit 1). Continuing.
+00:00:31 
+00:00:31 === 4/4 Strict report skipped (--skip-strict-report) ===
+00:00:31 
+00:00:31 Done. Pinnacle snapshot + daily_fair_odds updated.
+00:00:31 === Step 7/8: Strict policy report (--append --compare-overlay) ===
+00:00:32 Strict policy report - 2026-03-13 UTC
+00:00:32 Profile: strict  |  Segment: Hard|Masters 1000  |  Confidence: high  |  Public: >=10.0%  |  Internal: >=5.0%  |  Handicap: >=20.0%
+11:00:04 ============================================
+11:00:04   Daily Pipeline started at 2026-03-13 11:00:04
+11:00:04 ============================================
+11:00:04 === Step 1/7: OnCourt extract ===
+11:00:17   games_atp: 1,179,050 rows -> games_atp.csv
+11:00:19 Extracting...
+11:00:19   players_atp: 124,818 rows -> players_atp.csv
+11:00:19   tours_atp: 20,930 rows -> tours_atp.csv
+11:00:19   courts: 7 rows -> courts.csv
+11:00:19   today_atp: 1,560 rows -> today_atp.csv
+11:00:19 
+11:00:19 Done.
+11:00:19 
+11:00:19 --- oncourt-extract-games ---
+11:00:19 Missing C:\Users\44746\Downloads\il-margine\scripts\oncourt-extract-stats.py
+11:00:19 
+11:00:19 --- oncourt-extract-rest ---
+11:00:19 
+11:00:19 All extractions done.
+11:00:19 === Step 2/7: Supabase sync (--quick --skip-players) ===
+11:00:33   Supabase: https://nuqcgzbagxtbxlqrhtvc.supabase.co... (key: service_role)
+11:00:33   Mode: QUICK (players/tours/today only) + SKIP_PLAYERS  |  Batch: 5,000
+11:00:33 
+11:00:33   oncourt_courts: 7 rows
+11:00:33   oncourt_players: SKIPPED (--skip-players)
+11:00:33   oncourt_tours: 5,000 / 20,930  (1793 rows/s, ~9s left)
+11:00:33   oncourt_tours: 10,000 / 20,930  (2656 rows/s, ~4s left)
+11:00:33   oncourt_tours: 15,000 / 20,930  (3238 rows/s, ~2s left)
+11:00:33   oncourt_tours: 20,000 / 20,930  (3688 rows/s, ~0s left)
+11:00:33   oncourt_tours: 20,930 / 20,930  (3570 rows/s, ~0s left)
+11:00:33   oncourt_tours: 20,930 rows done in 5.9s
+11:00:33   oncourt_games: SKIPPED (--quick mode)
+11:00:33   oncourt_stat: SKIPPED (--quick mode)
+11:00:33   player_hand_reference: skipped 1 rows (player_id missing in players_atp.csv)
+11:00:33   player_hand_reference: 1,199 left-handed players (source=tml)
+11:00:33   oncourt_today: 1560 rows
+11:00:33 
+11:00:33 Done.
+11:00:33 === Step 3/7: Compute player stats ===
+11:00:56 Using 12m window: 2025-03-13 to today; long window: 2023-03-14 to today (1095 days)
+11:00:56 
+11:00:56 Loading games, tours, courts...
+11:00:56   Games in 12m window: 70,174, long window: 203,898
+11:00:56 Loading stat...
+11:00:56 Computed 9,300 (player_id, surface) rows
+11:00:56   By surface: {'Clay': 3971, 'Hard': 4628, 'Grass': 523, 'Carpet': 178}
+11:00:56 
+11:00:56 Upserting to player_surface_stats...
+11:00:56   5,000 / 9,300
+11:00:56   9,300 / 9,300
+11:00:56 Done.
+11:00:56 === Step 4/7: Refresh injured players list (TennisExplorer) ===
+11:00:58 Scraping injured list...
+11:00:58   100 rows
+11:00:58 Scraping returning list...
+11:00:58   120 rows
+11:00:58 Wrote C:\Users\44746\Downloads\il-margine\data\injured-players-tennisexplorer.csv (220 rows)
+11:00:59 === Step 5/7: Refresh CPI surface-speed table ===
+11:01:02 2025: 64 rows
+11:01:02 2026: 17 rows
+11:01:02 Wrote 79 deduped rows to C:\Users\44746\Downloads\il-margine\data\backtest\tennisabstract-atp-surface-speed.csv
+11:01:02 Years covered: 2025-2026 (2 years)
+11:01:02 Upserted 79 rows into 'tournament_surface_speed'.
+11:01:02 === Step 6/8: Pinnacle odds + fair odds ===
+11:01:11 ============================================================
+11:01:11   Pinnacle Tennis Odds Scraper (API edition)
+11:01:11   2026-03-13 11:01 UTC
+11:01:11   Mode: LIVE | WTA: excluded
+11:01:11 ============================================================
+11:01:11 
+11:01:11   Summary: 13 matches (13 ATP/Challenger, 0 WTA), 13 with O/U, 13 with spread
+11:01:11     (11 of which are Challenger)
+11:01:11   CSV: data\pinnacle-odds-2026-03-13.csv
+11:01:11   Upserted 13 rows (2 ATP, 11 Challenger, 0 WTA)
+11:01:11   Outrights: 4 rows for 1 tournaments
+11:01:11 
+11:01:11   Done.
+11:03:02 Fixtures: 993 (deduped from 1000)
+11:03:02   Fixtures with no result (unplayed): 102
+11:03:02   Fixtures after ATP/Challenger only (excl. M15/M25/ITF): 39
+11:03:02   Loaded 20,931 tours -> surface, 11,885 with altitude (run oncourt-derive-altitude.py + migration if 0)
+11:03:02   Loaded 9,402 rows from player_surface_stats_v2 (matchup model)
+11:03:02   Surface priors (raw stats): Hard hold=0.447 ret=0.385, Clay hold=0.431 ret=0.409
+11:03:02   Elo: 181,525 rows (surface + Overall 50/50 blend)
+11:03:02   Lefties: 1199, vs-leftie stats: 33,169 rows
+11:03:02   Big servers: 86 (player,surface), vs-big-server stats: 6,485 rows
+11:03:02   Venue: loaded 0 rows (fixture players/tours only)
+11:03:02   Venue stats: 0 rows (none û run venue pipeline or create table)
+11:03:02   Altitude stats: 167 rows (player record at altitude active)
+11:03:02   League avg (surface): 4 from DB, rest constants
+11:03:02   Tournament totals shift: 0 rows (run oncourt-compute-tournament-avg-games.py)
+11:03:02   Match history: 49/52 players with matches since 2021-01-01, tournament-history keys: 3,460
+11:03:02   Recent activity: 43 rows (form/fatigue active)
+11:03:02   V2 stats: 9,402 rows (9,401 with decomposed serve)
+11:03:02   Recent games: 306 rows for 159 players
+11:03:02   H2H: 706 rows from oncourt_games (630 source rows)
+11:03:02   Advanced stats: 4,018 rows (active)
+11:03:02   Players (birthdate + atp_rank): 52 with birthdate, 42 with rank, 42 with surface points
+11:03:02   Injury list: 74/220 recent rows (lookback 14d, downweight=off, delta=0.020)
+11:03:02   CPI rows: disabled (set FAIR_ODDS_CPI_ENABLED=true to activate)
+11:03:02 Computed 20 fair odds rows
+11:03:02   V2 model: 20/20 matchup (100%), 0 fallback, 20 fatigue computed
+11:03:02   Fixture surfaces (from tour_id): {'Hard': 17, 'Clay': 3}
+11:03:02   Skipped: no player1/player2 = 0, same-player = 13, unknown = 2, doubles/team (name contains / or &) = 4
+11:03:02   Elo/rank fallback (missing stats): both = 0, P1 only = 0, P2 only = 0
+11:03:02   Confidence: high=20, medium=0, low=0, none=0
+11:03:02   Injury flags: P1=0, P2=0, adjusted_matches=0 (downweight=off)
+11:03:02   P1=34337 P2=47752 surface=Hard P1=0.6643 odds1=1.51 odds2=2.98
+11:03:02   P1=72578 P2=84235 surface=Hard P1=0.2452 odds1=4.08 odds2=1.32
+11:03:02   P1=88766 P2=71166 surface=Hard P1=0.5995 odds1=1.67 odds2=2.5
+11:03:02   Cleared existing daily_fair_odds rows.
+11:03:02 Done.
+11:03:04 Handicap calibration: ON (shift=-0.500, a=-0.0278, b=+0.5610) source=C:\Users\44746\Downloads\il-margine\data\backtest\handicap-calibration-params.json
+11:03:04 Matched 2 of 20 fair-odds rows to Pinnacle spread
+11:03:04 Updated 2 rows with spread + handicap edge
+11:03:04 Edge diagnostics (P1 +line):
+11:03:04   raw: n=2 mean=-29.71% median=-29.71% p10=-31.60% p90=-27.83% >=10%=0.0% >=20%=0.0%
+11:03:04   cal: n=2 mean=-24.60% median=-24.60% p10=-31.86% p90=-17.34% >=10%=0.0% >=20%=0.0%
+11:03:04 Edge diagnostics (P2 -line, calibrated):
+11:03:04   cal: n=2 mean=+15.52% median=+15.52% p10=+8.33% p90=+22.70% >=10%=50.0% >=20%=50.0%
+11:03:04 Done.
+11:03:04 
+11:03:04 === 1/4 Pinnacle scraper (writes to bookmaker_odds_snapshot) ===
+11:03:04 
+11:03:04 
+11:03:04 === 2/4 Fair odds pipeline ===
+11:03:04 
+11:03:04 
+11:03:04 === 3/4 Handicap values (spread edge) ===
+11:03:04 
+11:03:04 
+11:03:04 === 4/4 Strict report skipped (--skip-strict-report) ===
+11:03:04 
+11:03:04 Done. Pinnacle snapshot + daily_fair_odds updated.
+11:03:04 === Step 7/8: Strict policy report (--append --compare-overlay) ===
+11:03:06 Strict policy report - 2026-03-13 UTC
+11:03:06 Profile: strict  |  Segment: Hard|Masters 1000  |  Confidence: high  |  Public: >=10.0%  |  Internal: >=5.0%  |  Handicap: >=20.0%

@@ -1,0 +1,77 @@
+========================================================================
+  SEGMENT EDGE VALIDATION: Grass|all
+  Threshold: >=10%
+========================================================================
+
+  -- Test 1: Year-by-Year Stability --
+    Year      N     ROI%    CI Lo    CI Hi    WinR       t       p
+    2022     78    -2.0%   -32.5%   +28.5%  37.2%  -0.129  1.000
+    2023    101   +19.4%    -8.9%   +47.8%  45.5%   1.344  0.090
+    2024     82   -27.7%   -53.4%    -1.9%  29.3%  -2.108  1.000
+    2025     74   -26.7%   -57.6%    +4.3%  28.4%  -1.686  1.000
+
+  [WARN] Negative ROI in year(s): [2022, 2024, 2025] - edge may not be stable.
+
+  -- Test 2: Multiple Comparison Correction --
+  Segments tested: 12
+  Best segment: Hard|Grand Slam (ROI: +8.6%)
+  Corrected p-value: 1.0000
+  Interpretation: not significant (could be chance)
+
+  Top segments (ROI at >=10% edge):
+    Hard|Grand Slam                   +8.6%
+    Hard|Masters Cup                  +8.5%
+    Hard|Masters 1000                 +8.4%
+    Grass|ATP500                      +7.0% <- focal
+    Clay|ATP500                       +4.4%
+    Hard|ATP500                       -3.6%
+    Hard|ATP250                       -4.3%
+    Clay|Masters 1000                 -8.9%
+    Grass|Grand Slam                  -9.6% <- focal
+    Grass|ATP250                     -11.9% <- focal
+
+  -- Test 3: Log-Loss Gap (Model - Pinnacle, smaller = better) --
+  Segment                             N  Model LL    Pin LL     Gap    Rel%
+  Grass|ATP500                       70    0.8449    1.1156 -0.2708  -24.3% <-
+  Clay|Grand Slam                   102    0.8751    1.1433 -0.2682  -23.5%
+  Hard|Grand Slam                   193    0.8846    1.1472 -0.2626  -22.9%
+  Hard|Masters 1000                 561    0.8838    1.1458 -0.2619  -22.9%
+  Grass|Grand Slam                   98    0.8207    1.0807 -0.2600  -24.1% <-
+  Grass|ATP250                      167    0.7358    0.9926 -0.2567  -25.9% <-
+  Hard|ATP250                       590    0.7992    1.0537 -0.2545  -24.2%
+  Hard|ATP500                       215    0.7955    1.0492 -0.2536  -24.2%
+  Clay|ATP250                       433    0.7886    1.0370 -0.2484  -24.0%
+  Clay|Masters 1000                 313    0.9202    1.1683 -0.2481  -21.2%
+  Clay|ATP500                        75    0.8839    1.1148 -0.2309  -20.7%
+
+  -- Forward Projection: 6m, ~6 bets/month --
+  Historical ROI: -7.3% (335 bets)
+  Projected bets: 36
+  Expected PnL: -2.6 units
+  P(profit) normal approx: 37.4%
+  P(profit) Monte Carlo: 36.4%
+
+  -- Forward Projection: 6m, ~10 bets/month --
+  Historical ROI: -7.3% (335 bets)
+  Projected bets: 60
+  Expected PnL: -4.4 units
+  P(profit) normal approx: 34.0%
+  P(profit) Monte Carlo: 32.7%
+
+  -- Forward Projection: 12m, ~8 bets/month --
+  Historical ROI: -7.3% (335 bets)
+  Projected bets: 96
+  Expected PnL: -7.0 units
+  P(profit) normal approx: 30.0%
+  P(profit) Monte Carlo: 29.3%
+
+========================================================================
+  VERDICT
+========================================================================
+
+  [WEAK] The Grass|all edge does not pass validation.
+    The positive ROI may be due to chance (multiple comparisons)
+    or a small sample. Do not rely on this for capital allocation.
+    Continue collecting data; reassess after 200+ settled bets in segment.
+
+========================================================================

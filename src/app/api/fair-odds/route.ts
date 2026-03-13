@@ -3,6 +3,9 @@ import { NextResponse } from "next/server";
 import fs from "node:fs";
 import path from "node:path";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 /** Service role used only for bookmaker_odds_snapshot so Pinnacle shows even if RLS blocks anon. */
@@ -52,6 +55,10 @@ export interface FairOddsRow {
   confidence?: string;
   series_bucket?: string;
   policy_match?: boolean;
+  spread_eligible?: boolean;
+  shadow_match?: boolean;
+  shadow_spread_eligible?: boolean;
+  blocked_reason?: string;
   recent_injured_p1?: boolean;
   recent_injured_p2?: boolean;
   recent_injured_any?: boolean;
@@ -61,6 +68,7 @@ export interface FairOddsRow {
 
 type StrictPolicyMode = "base" | "overlay";
 type OverlayMissingMode = "skip" | "allow";
+type ShadowProfile = "off" | "volume_275" | "volume_200";
 
 interface OverlayPolicySummary {
   enabled: boolean;
@@ -104,7 +112,8 @@ interface StrictPolicyPayload {
 
 const API_TIMEOUT_MS = 15000;
 const STRICT_POLICY_MODE = true;
-const STRICT_POLICY_MIN_VALUE_PCT = 10;
+const STRICT_POLICY_INTERNAL_MIN_VALUE_PCT = 5;
+const STRICT_POLICY_PUBLIC_MIN_VALUE_PCT = 10;
 const STRICT_POLICY_ALLOWED_SEGMENTS = new Set<string>(["Hard|Masters 1000"]);
 const STRICT_POLICY_ALLOWED_CONFIDENCE = new Set<string>(["high"]);
 const STRICT_POLICY_EXCLUDE_ATP500_HARD_SHORT_FAVORITES = true;
@@ -131,6 +140,23 @@ const STRICT_INJURY_OVERLAY_ENABLED = parseBoolEnv("STRICT_INJURY_OVERLAY_ENABLE
 const STRICT_INJURY_LOOKBACK_DAYS = parseNumberEnv("STRICT_INJURY_LOOKBACK_DAYS", 14);
 const INJURED_PLAYERS_CSV =
   process.env.INJURED_PLAYERS_CSV ?? path.join("data", "injured-players-tennisexplorer.csv");
+
+const HANDICAP_MIN_EDGE_PCT = 20;
+const STRICT_UNIT_GBP = parseNumberEnv("STRICT_UNIT_GBP", 100);
+const SHADOW_POLICY_MODE = normalizeShadowProfile(process.env.STRICT_POLICY_VOLUME_MODE);
+function computeStakeUnits(
+  ourOdds1: number,
+  ourOdds2: number,
+  pinOdds1: number,
+  pinOdds2: number,
+  side: "P1" | "P2",
+  valuePct: number
+): { units: number; gbp: number } {
+  // value_tiered: 5–10% → 0.5u, 10–15% → 1u, 15–20% → 1.5u, 20%+ → 2u
+  const units =
+    valuePct >= 20 ? 2 : valuePct >= 15 ? 1.5 : valuePct >= 10 ? 1 : valuePct >= 5 ? 0.5 : 0.5;
+  return { units, gbp: units * STRICT_UNIT_GBP };
+}
 
 function parseNumberEnv(name: string, fallback: number): number {
   const parsed = Number(process.env[name]);
@@ -169,7 +195,7 @@ function buildStrictPolicyPayload(
   return {
     mode: STRICT_POLICY_MODE ? "strict" : "off",
     production_mode: STRICT_POLICY_PRODUCTION_MODE,
-    min_value_pct: STRICT_POLICY_MIN_VALUE_PCT,
+    min_value_pct: STRICT_POLICY_PUBLIC_MIN_VALUE_PCT,
     allowed_segments: Array.from(STRICT_POLICY_ALLOWED_SEGMENTS),
     allowed_confidence: Array.from(STRICT_POLICY_ALLOWED_CONFIDENCE),
     exclusion_rules: exclusionRules,
@@ -228,6 +254,78 @@ function strictPolicyExcludedByShortFavorite(
   if (!(favProb > 0 && favProb < 1)) return false;
   const favOdds = 1 / favProb;
   return favOdds < STRICT_POLICY_SHORT_FAVORITE_MAX_ODDS;
+}
+
+/** Volume_275 profile rules (shadow-test ~275 bets/year). Same exclusions as strict. */
+const VOLUME_275_RULES: Array<{
+  surface: string;
+  series: string;
+  confidence: Set<string>;
+  min_value_pct: number;
+}> = [
+  { surface: "Hard", series: "Masters 1000", confidence: new Set(["high"]), min_value_pct: 15 },
+  { surface: "Hard", series: "Masters 1000", confidence: new Set(["medium"]), min_value_pct: 30 },
+  { surface: "Clay", series: "Masters 1000", confidence: new Set(["high"]), min_value_pct: 20 },
+  { surface: "Hard", series: "Grand Slam", confidence: new Set(["high", "medium"]), min_value_pct: 5 },
+  { surface: "Grass", series: "ATP500", confidence: new Set(["high", "medium"]), min_value_pct: 10 },
+  { surface: "Hard", series: "ATP250", confidence: new Set(["high", "medium"]), min_value_pct: 20 },
+];
+
+const VOLUME_200_RULES = VOLUME_275_RULES.filter(
+  (rule) => !(rule.surface === "Clay" && rule.series === "Masters 1000")
+);
+
+function normalizeShadowProfile(raw: string | undefined): ShadowProfile {
+  const value = (raw ?? "volume_200").trim().toLowerCase();
+  if (value === "off" || value === "volume_275" || value === "volume_200") return value;
+  return "volume_200";
+}
+
+function shadowMinValueFor(surface: string, seriesBucket: string, confidence: string): number | null {
+  const rules =
+    SHADOW_POLICY_MODE === "volume_275"
+      ? VOLUME_275_RULES
+      : SHADOW_POLICY_MODE === "volume_200"
+        ? VOLUME_200_RULES
+        : [];
+  let minVal: number | null = null;
+  for (const rule of rules) {
+    if (surface !== rule.surface || seriesBucket !== rule.series) continue;
+    if (!rule.confidence.has(confidence)) continue;
+    const v = rule.min_value_pct;
+    if (minVal == null || v < minVal) minVal = v;
+  }
+  return minVal;
+}
+
+function shadowProfileLabel(profile: ShadowProfile): string {
+  if (profile === "volume_200") return "volume_200";
+  if (profile === "volume_275") return "volume_275";
+  return "shadow";
+}
+
+function firstBlockedReason(params: {
+  hasPositiveRawValue: boolean;
+  anySignal: boolean;
+  recentInjuredAny: boolean;
+  pinnacleShortFavoriteExcluded: boolean;
+  modelShortFavoriteExcluded: boolean;
+  atp500HardShortFavoriteExcluded: boolean;
+  shadowMinVal: number | null;
+  rawValueP1?: number;
+  rawValueP2?: number;
+}): string | undefined {
+  if (!params.hasPositiveRawValue || params.anySignal) return undefined;
+  if (params.recentInjuredAny) return "Blocked: recent injury flag";
+  if (params.pinnacleShortFavoriteExcluded) return "Blocked: Pinnacle fav <1.25";
+  if (params.modelShortFavoriteExcluded) return "Blocked: model fav <1.25";
+  if (params.atp500HardShortFavoriteExcluded) return "Blocked: ATP500 Hard short favorite filter";
+  if (params.shadowMinVal == null) return `Blocked: not in ${shadowProfileLabel(SHADOW_POLICY_MODE)} segment`;
+  const bestRawValue = Math.max(params.rawValueP1 ?? Number.NEGATIVE_INFINITY, params.rawValueP2 ?? Number.NEGATIVE_INFINITY);
+  if (Number.isFinite(bestRawValue) && bestRawValue < params.shadowMinVal) {
+    return `Blocked: below ${shadowProfileLabel(SHADOW_POLICY_MODE)} threshold`;
+  }
+  return "Blocked: filtered by policy";
 }
 
 function isChallengerTour(tourName?: string): boolean {
@@ -697,15 +795,7 @@ async function run(): Promise<Response> {
       });
     }
   }
-  const mainTourOddsRows = oddsRows.filter((r) => {
-    const tourName = r.tour_id != null ? tours.get(r.tour_id)?.name ?? "" : "";
-    return !isChallengerTour(tourName);
-  });
-  if (mainTourOddsRows.length !== oddsRows.length) {
-    console.log(
-      `[fair-odds] Challenger filter enabled: ${mainTourOddsRows.length}/${oddsRows.length} rows kept.`
-    );
-  }
+  const mainTourOddsRows = oddsRows;
 
   const normalizeSurfaceKey = (surface?: string | null): string => {
     const s = (surface ?? "").trim().toLowerCase();
@@ -799,7 +889,7 @@ async function run(): Promise<Response> {
 
   if (rawSnapshot?.length) {
     pinnacleRows = rawSnapshot
-      .filter((row: { league?: string }) => row.league === "ATP")
+      .filter((row: { league?: string }) => row.league === "ATP" || row.league === "Challenger")
       .map((row) => ({
       player1_name: (row.player1_name ?? "").trim(),
       player2_name: (row.player2_name ?? "").trim(),
@@ -1028,23 +1118,28 @@ async function run(): Promise<Response> {
     );
     const modelFavOddsMispriceExcluded =
       STRICT_POLICY_MODE && Math.min(ourOdds1, ourOdds2) < STRICT_POLICY_MISPRICE_FAV_ODDS_MIN;
+    const pinFavOddsMispriceExcluded =
+      STRICT_POLICY_MODE &&
+      pinnacle != null &&
+      Math.min(pinnacle.pinnacle_odds1 ?? 0, pinnacle.pinnacle_odds2 ?? 0) < STRICT_POLICY_MISPRICE_FAV_ODDS_MIN;
     const injuryExcluded = STRICT_POLICY_MODE && STRICT_INJURY_OVERLAY_ENABLED && recentInjuredAny;
+    const mispriceExcluded = modelFavOddsMispriceExcluded || pinFavOddsMispriceExcluded;
     if (
       policyBaseAllows &&
-      (shortFavoriteExcluded || modelFavOddsMispriceExcluded || injuryExcluded)
+      (shortFavoriteExcluded || mispriceExcluded || injuryExcluded)
     )
       strictPolicyExcludedCount += 1;
     if (policyBaseAllows && injuryExcluded) injurySkippedCount += 1;
     const policyAllows =
       policyBaseAllows &&
       !shortFavoriteExcluded &&
-      !modelFavOddsMispriceExcluded &&
+      !mispriceExcluded &&
       !injuryExcluded;
     if (policyAllows) strictPolicyEligibleCount += 1;
     const strictCandidateValueP1 =
-      policyAllows && rawValueP1 != null && rawValueP1 >= STRICT_POLICY_MIN_VALUE_PCT ? rawValueP1 : undefined;
+      policyAllows && rawValueP1 != null && rawValueP1 >= STRICT_POLICY_INTERNAL_MIN_VALUE_PCT ? rawValueP1 : undefined;
     const strictCandidateValueP2 =
-      policyAllows && rawValueP2 != null && rawValueP2 >= STRICT_POLICY_MIN_VALUE_PCT ? rawValueP2 : undefined;
+      policyAllows && rawValueP2 != null && rawValueP2 >= STRICT_POLICY_INTERNAL_MIN_VALUE_PCT ? rawValueP2 : undefined;
     let strictValueP1 = strictCandidateValueP1;
     let strictValueP2 = strictCandidateValueP2;
 
@@ -1077,10 +1172,60 @@ async function run(): Promise<Response> {
         }
       }
     }
-    const valueP1 = STRICT_POLICY_MODE ? strictValueP1 : confidence === "none" ? undefined : rawValueP1;
-    const valueP2 = STRICT_POLICY_MODE ? strictValueP2 : confidence === "none" ? undefined : rawValueP2;
+    const strictPublicValueP1 =
+      strictValueP1 != null && strictValueP1 >= STRICT_POLICY_PUBLIC_MIN_VALUE_PCT ? strictValueP1 : undefined;
+    const strictPublicValueP2 =
+      strictValueP2 != null && strictValueP2 >= STRICT_POLICY_PUBLIC_MIN_VALUE_PCT ? strictValueP2 : undefined;
+    const valueP1 = STRICT_POLICY_MODE ? strictPublicValueP1 : confidence === "none" ? undefined : rawValueP1;
+    const valueP2 = STRICT_POLICY_MODE ? strictPublicValueP2 : confidence === "none" ? undefined : rawValueP2;
     const policyMatch = STRICT_POLICY_MODE ? valueP1 != null || valueP2 != null : false;
+    const displayValueP1 = pinnacle && ourOdds1 > 1 && pinnacle.pinnacle_odds1 > 1 ? rawValueP1 : undefined;
+    const displayValueP2 = pinnacle && ourOdds2 > 1 && pinnacle.pinnacle_odds2 > 1 ? rawValueP2 : undefined;
     if (policyMatch) strictPolicySignaledCount += 1;
+
+    // Active shadow profile: same exclusions as strict, different segment/value rules (no overlay)
+    const volumeMinVal = SHADOW_POLICY_MODE === "off" ? null : shadowMinValueFor(r.surface ?? "", seriesBucket, confidence ?? "");
+    const volumeExcluded =
+      shortFavoriteExcluded || mispriceExcluded || injuryExcluded;
+    const volumeValueP1 =
+      volumeMinVal != null &&
+      !volumeExcluded &&
+      rawValueP1 != null &&
+      rawValueP1 >= volumeMinVal
+        ? rawValueP1
+        : undefined;
+    const volumeValueP2 =
+      volumeMinVal != null &&
+      !volumeExcluded &&
+      rawValueP2 != null &&
+      rawValueP2 >= volumeMinVal
+        ? rawValueP2
+        : undefined;
+    const shadowMatch = volumeValueP1 != null || volumeValueP2 != null;
+    const shadowSpreadEligible = volumeMinVal != null && !volumeExcluded;
+    const strictSpreadWouldSignal =
+      policyBaseAllows &&
+      !shortFavoriteExcluded &&
+      !mispriceExcluded &&
+      !recentInjuredAny &&
+      ((r.handicap_edge_p1 != null && Number(r.handicap_edge_p1) >= 20) ||
+        (r.handicap_edge_p2 != null && Number(r.handicap_edge_p2) >= 20));
+    const shadowSpreadWouldSignal =
+      shadowSpreadEligible &&
+      ((r.handicap_edge_p1 != null && Number(r.handicap_edge_p1) >= 20) ||
+        (r.handicap_edge_p2 != null && Number(r.handicap_edge_p2) >= 20));
+    const hasPositiveRawValue = (rawValueP1 ?? Number.NEGATIVE_INFINITY) > 0 || (rawValueP2 ?? Number.NEGATIVE_INFINITY) > 0;
+    const blockedReason = firstBlockedReason({
+      hasPositiveRawValue,
+      anySignal: policyMatch || strictSpreadWouldSignal || shadowMatch || shadowSpreadWouldSignal,
+      recentInjuredAny,
+      pinnacleShortFavoriteExcluded: pinFavOddsMispriceExcluded,
+      modelShortFavoriteExcluded: modelFavOddsMispriceExcluded,
+      atp500HardShortFavoriteExcluded: shortFavoriteExcluded,
+      shadowMinVal: volumeMinVal,
+      rawValueP1,
+      rawValueP2,
+    });
 
     return {
       id: r.id,
@@ -1121,11 +1266,15 @@ async function run(): Promise<Response> {
       spread_odds2: r.spread_odds2 != null ? Number(r.spread_odds2) : undefined,
       handicap_edge_p1: r.handicap_edge_p1 != null ? Number(r.handicap_edge_p1) : undefined,
       handicap_edge_p2: r.handicap_edge_p2 != null ? Number(r.handicap_edge_p2) : undefined,
-      value_p1: valueP1,
-      value_p2: valueP2,
+      value_p1: displayValueP1,
+      value_p2: displayValueP2,
       confidence,
       series_bucket: seriesBucket,
       policy_match: policyMatch,
+      spread_eligible: policyBaseAllows && !shortFavoriteExcluded && !mispriceExcluded && !recentInjuredAny,
+      shadow_match: shadowMatch,
+      shadow_spread_eligible: shadowSpreadEligible,
+      blocked_reason: blockedReason,
       recent_injured_p1: p1Injury.matched,
       recent_injured_p2: p2Injury.matched,
       recent_injured_any: recentInjuredAny,
@@ -1177,12 +1326,135 @@ async function run(): Promise<Response> {
         ? "Pinnacle snapshot loaded but no matches linked (name mismatch?). Check server log for match counts."
         : undefined;
 
+  function toSignal(m: (typeof matches)[0]) {
+    const side = (m.value_p1 ?? -Infinity) >= (m.value_p2 ?? -Infinity) ? "P1" : "P2";
+    const valuePct = side === "P1" ? m.value_p1 : m.value_p2;
+    const pinnacleOdds = side === "P1" ? m.pinnacle_odds1 : m.pinnacle_odds2;
+    const pin1 = m.pinnacle_odds1 ?? 0;
+    const pin2 = m.pinnacle_odds2 ?? 0;
+    const valuePctNum = valuePct ?? 0;
+    const { units, gbp } =
+      pin1 > 0 && pin2 > 0
+        ? computeStakeUnits(m.odds1, m.odds2, pin1, pin2, side as "P1" | "P2", valuePctNum)
+        : { units: 1, gbp: STRICT_UNIT_GBP };
+    return {
+      id: m.id,
+      player1_name: m.player1_name,
+      player2_name: m.player2_name,
+      side,
+      value_pct: valuePct ?? 0,
+      pinnacle_odds: pinnacleOdds,
+      stake_units: Math.round(units * 100) / 100,
+      stake_gbp: Math.round(gbp * 100) / 100,
+      bet_type: "match" as const,
+      tournament: m.tournament,
+      surface: m.surface,
+    };
+  }
+
+  const matchSignalsStrict = matches.filter((m) => m.policy_match).map((m) => toSignal(m));
+
+  function toSpreadSignal(
+    m: (typeof matches)[0],
+    side: "P1+" | "P2-",
+    edgePct: number,
+    pinOdds: number,
+    spreadLine: number
+  ) {
+    return {
+      id: m.id * 1000 + (side === "P1+" ? 1 : 2),
+      player1_name: m.player1_name,
+      player2_name: m.player2_name,
+      side,
+      value_pct: edgePct,
+      pinnacle_odds: pinOdds,
+      stake_units: 1,
+      stake_gbp: STRICT_UNIT_GBP,
+      bet_type: "spread" as const,
+      spread_line: spreadLine,
+      tournament: m.tournament,
+      surface: m.surface,
+    };
+  }
+
+  const spreadSignalsStrict: typeof matchSignalsStrict = [];
+  for (const m of matches) {
+    const spreadOk =
+      (m.policy_match || m.spread_eligible) &&
+      !m.recent_injured_any &&
+      m.spread_line != null &&
+      m.spread_odds1 != null &&
+      m.spread_odds2 != null &&
+      m.handicap_edge_p1 != null &&
+      m.handicap_edge_p2 != null;
+    if (!spreadOk) continue;
+    const sl = m.spread_line;
+    const he1 = m.handicap_edge_p1;
+    const he2 = m.handicap_edge_p2;
+    if (he1 >= HANDICAP_MIN_EDGE_PCT) {
+      spreadSignalsStrict.push(toSpreadSignal(m, "P1+", he1, m.spread_odds1, sl));
+    }
+    if (he2 >= HANDICAP_MIN_EDGE_PCT) {
+      spreadSignalsStrict.push(toSpreadSignal(m, "P2-", he2, m.spread_odds2, sl));
+    }
+  }
+
+  const signals_strict = [...matchSignalsStrict, ...spreadSignalsStrict];
+  const matchSignalsVolume = matches.filter((m) => m.shadow_match).map((m) => toSignal(m));
+  const spreadSignalsVolume: typeof matchSignalsStrict = [];
+  for (const m of matches) {
+    const spreadOk =
+      (m.shadow_match || m.shadow_spread_eligible) &&
+      !m.recent_injured_any &&
+      m.spread_line != null &&
+      m.spread_odds1 != null &&
+      m.spread_odds2 != null &&
+      m.handicap_edge_p1 != null &&
+      m.handicap_edge_p2 != null;
+    if (!spreadOk) continue;
+    const sl = m.spread_line;
+    const he1 = m.handicap_edge_p1;
+    const he2 = m.handicap_edge_p2;
+    if (he1 >= HANDICAP_MIN_EDGE_PCT) {
+      spreadSignalsVolume.push(toSpreadSignal(m, "P1+", he1, m.spread_odds1, sl));
+    }
+    if (he2 >= HANDICAP_MIN_EDGE_PCT) {
+      spreadSignalsVolume.push(toSpreadSignal(m, "P2-", he2, m.spread_odds2, sl));
+    }
+  }
+  const signals_volume = [...matchSignalsVolume, ...spreadSignalsVolume];
+
+  const matchesWithSpread = matches.filter(
+    (m) =>
+      m.spread_line != null &&
+      m.spread_odds1 != null &&
+      m.spread_odds2 != null &&
+      m.handicap_edge_p1 != null &&
+      m.handicap_edge_p2 != null
+  );
+  const spreadStrictEligible = matchesWithSpread.filter(
+    (m) => (m.policy_match || m.spread_eligible) && !m.recent_injured_any
+  );
+  const spreadWithEdge20 = spreadStrictEligible.filter(
+    (m) => (m.handicap_edge_p1 ?? 0) >= HANDICAP_MIN_EDGE_PCT || (m.handicap_edge_p2 ?? 0) >= HANDICAP_MIN_EDGE_PCT
+  );
+  const spreadHint =
+    matchesWithSpread.length === 0
+      ? "Spread data missing. Run: python scripts/compute-handicap-values.py (or full pipeline: python scripts/run-daily-odds.py)"
+      : spreadSignalsStrict.length === 0
+        ? `Spread: ${matchesWithSpread.length} matches have data, ${spreadStrictEligible.length} pass strict policy, ${spreadWithEdge20.length} have edge ≥20%.`
+        : undefined;
+
   return NextResponse.json({
     matches,
     pinnacle_count: pinnacleRows.length,
     pinnacle_matched_count: pinnacleMap.size,
     policy,
+    shadow_profile: SHADOW_POLICY_MODE,
+    signals_strict,
+    signals_volume,
     ...(pinnacleHint ? { pinnacle_hint: pinnacleHint } : {}),
+    ...(spreadHint ? { spread_hint: spreadHint } : {}),
   });
 }
 
