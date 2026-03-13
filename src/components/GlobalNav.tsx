@@ -6,14 +6,11 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 export default function GlobalNav() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [tipsMenuOpen, setTipsMenuOpen] = useState(false);
+  const [mobileMenuPath, setMobileMenuPath] = useState<string | null>(null);
+  const [tipsMenuPath, setTipsMenuPath] = useState<string | null>(null);
   const pathname = usePathname();
-
-  useEffect(() => {
-    setMobileMenuOpen(false);
-    setTipsMenuOpen(false);
-  }, [pathname]);
+  const mobileMenuOpen = mobileMenuPath === pathname;
+  const tipsMenuOpen = tipsMenuPath === pathname;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -34,7 +31,7 @@ export default function GlobalNav() {
           
           {/* Mobile Menu Button */}
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={() => setMobileMenuPath(mobileMenuOpen ? null : pathname)}
             className="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center p-2 text-slate-400 hover:text-slate-100 transition-colors"
             aria-label="Toggle menu"
           >
@@ -52,8 +49,8 @@ export default function GlobalNav() {
             {/* Tips Dropdown */}
             <div className="relative">
               <button 
-                onClick={() => setTipsMenuOpen(!tipsMenuOpen)}
-                onBlur={() => setTimeout(() => setTipsMenuOpen(false), 150)}
+                onClick={() => setTipsMenuPath(tipsMenuOpen ? null : pathname)}
+                onBlur={() => setTimeout(() => setTipsMenuPath(null), 150)}
                 className={`flex items-center gap-1 ${linkClass(isTipsActive)}`}
               >
                 Tips
@@ -84,7 +81,7 @@ export default function GlobalNav() {
           <div className="md:hidden border-t border-slate-800/50 py-4 space-y-1">
             <div className="px-4">
               <button 
-                onClick={() => setTipsMenuOpen(!tipsMenuOpen)}
+                onClick={() => setTipsMenuPath(tipsMenuOpen ? null : pathname)}
                 className={`w-full min-h-[44px] flex items-center justify-between text-base font-medium rounded px-3 py-3 transition-colors ${isTipsActive ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}
               >
                 <span>Tips</span>
@@ -109,13 +106,13 @@ export default function GlobalNav() {
                 </div>
               )}
             </div>
-            <Link href="/the-edge" onClick={() => setMobileMenuOpen(false)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/the-edge" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
+            <Link href="/the-edge" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/the-edge" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
               The Edge
             </Link>
-            <Link href="/track-record" onClick={() => setMobileMenuOpen(false)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/track-record" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
+            <Link href="/track-record" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/track-record" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
               Track Record
             </Link>
-            <Link href="/model-monitor" onClick={() => setMobileMenuOpen(false)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/model-monitor" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
+            <Link href="/model-monitor" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/model-monitor" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
               Monitor
             </Link>
             <Link href="/bookmakers" className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/bookmakers' ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
