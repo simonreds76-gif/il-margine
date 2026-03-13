@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
@@ -21,25 +21,43 @@ interface Props {
 }
 
 const POLICY_PATHS = ["/cookies-policy", "/privacy-policy"];
+const CONSENT_EVENT = "ilmargine-consent-change";
+
+type ConsentState = "accepted" | "rejected" | "pending" | null;
+
+function readConsentSnapshot(): ConsentState {
+  if (typeof window === "undefined") return null;
+  const stored = window.localStorage.getItem(CONSENT_KEY);
+  return stored === "1" ? "accepted" : stored === "0" ? "rejected" : "pending";
+}
+
+function subscribeToConsent(onStoreChange: () => void) {
+  if (typeof window === "undefined") return () => {};
+  const handler = () => onStoreChange();
+  window.addEventListener("storage", handler);
+  window.addEventListener(CONSENT_EVENT, handler);
+  return () => {
+    window.removeEventListener("storage", handler);
+    window.removeEventListener(CONSENT_EVENT, handler);
+  };
+}
 
 export default function CookieBanner({ measurementId }: Props) {
   const pathname = usePathname();
-  const [consent, setConsent] = useState<"accepted" | "rejected" | "pending" | null>(() => {
-    if (typeof window === "undefined") return null;
-    const stored = localStorage.getItem(CONSENT_KEY);
-    return stored === "1" ? "accepted" : stored === "0" ? "rejected" : "pending";
-  });
+  const consent = useSyncExternalStore(subscribeToConsent, readConsentSnapshot, () => null);
+  const [sessionDismissed, setSessionDismissed] = useState(false);
 
   const isPolicyPage = pathname && POLICY_PATHS.some((p) => pathname.startsWith(p));
 
   const accept = () => {
-    localStorage.setItem(CONSENT_KEY, "1");
-    setConsent("accepted");
+    window.localStorage.setItem(CONSENT_KEY, "1");
+    setSessionDismissed(false);
+    window.dispatchEvent(new Event(CONSENT_EVENT));
   };
 
   const reject = () => {
     // Don't persist — modal will show again on next visit. Only Accept gets you off the hook.
-    setConsent("rejected");
+    setSessionDismissed(true);
   };
 
   if (!measurementId) return null;
@@ -69,6 +87,8 @@ export default function CookieBanner({ measurementId }: Props) {
     // They clicked "Essential only" — dismiss for this session only. No persist, so modal reappears on next visit.
     return null;
   }
+
+  if (sessionDismissed) return null;
 
   // On policy pages, never block — let the user read the policy before deciding.
   if (isPolicyPage) return null;

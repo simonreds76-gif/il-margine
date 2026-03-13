@@ -281,6 +281,26 @@ export default async function ModelMonitorPage() {
   const overlayAllRoi = perfValue(strictOverlay.combinedAll, "roi_pct", parseFloatMaybe);
   const matchedMl = clv.matchedMl ?? 0;
   const auditedMl = clv.matchedMlTotal ?? clv.settledMlAudited ?? 0;
+  const strictAsOf = strictBase.combinedAll?.as_of_date;
+  const volumeAsOf = volumeBase.combinedAll?.as_of_date;
+  const shadowProfile = profileMap.get("volume_200");
+  const legacyShadowProfile = profileMap.get("volume_275");
+  const missingReports = [
+    !strictPerfCsv ? "strict weekly performance" : null,
+    !volumePerfCsv ? "volume_200 weekly performance" : null,
+    !clvAuditTxt ? "CLV audit" : null,
+    !profileTxt ? "policy profile backtest" : null,
+  ].filter(Boolean) as string[];
+  const strictDiagnosis =
+    strictAllRoi == null
+      ? "Strict live has no settled ROI yet."
+      : strictAllRoi < 0
+        ? `Strict live control is negative at ${formatPct(strictAllRoi)} as of ${strictAsOf ?? "n/a"}.`
+        : `Strict live control is positive at ${formatPct(strictAllRoi)} as of ${strictAsOf ?? "n/a"}.`;
+  const shadowDiagnosis =
+    perfValue(volumeBase.combinedAll, "settled", parseIntMaybe) === 0
+      ? "Volume 200 shadow has no settled sample yet."
+      : `Volume 200 shadow has settled enough to start comparing against strict on live results.`;
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.10),_transparent_22%),#0b0f14] text-slate-100">
@@ -314,8 +334,21 @@ export default async function ModelMonitorPage() {
           </div>
         </section>
 
+        {missingReports.length > 0 ? (
+          <section className="mb-8 rounded-2xl border border-amber-500/25 bg-amber-500/10 p-4 text-sm text-amber-100">
+            Reports not found for: <span className="font-semibold">{missingReports.join(", ")}</span>. Run the daily/weekly pipeline locally or deploy fresh report files.
+          </section>
+        ) : null}
+
+        <div className="mb-3 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-semibold text-slate-100">Quick View</h2>
+            <p className="mt-1 text-sm text-slate-400">At-a-glance metrics. Detailed live breakdown sits below.</p>
+          </div>
+        </div>
+
         <div className="mb-8 grid gap-4 lg:grid-cols-4">
-          <MonitorCard title="Strict Live Control" subtitle="Hard | Masters 1000 | high | public >=10%">
+          <MonitorCard title="Strict Live Control" subtitle={`Hard | Masters 1000 | high | public >=10%${strictAsOf ? ` | as of ${strictAsOf}` : ""}`}>
             <div className="grid gap-3">
               <Stat label="All-time ROI" value={formatPct(strictAllRoi)} tone={metricTone(strictAllRoi)} />
               <Stat label="7d ROI" value={formatPct(strictWindowRoi)} tone={metricTone(strictWindowRoi)} />
@@ -324,7 +357,7 @@ export default async function ModelMonitorPage() {
             </div>
           </MonitorCard>
 
-          <MonitorCard title="Volume 200 Shadow" subtitle="Active shadow profile, ML + spread tracked together">
+          <MonitorCard title="Volume 200 Shadow" subtitle={`Active shadow profile, ML + spread tracked together${volumeAsOf ? ` | as of ${volumeAsOf}` : ""}`}>
             <div className="grid gap-3">
               <Stat label="All-time ROI" value={formatPct(volumeAllRoi)} tone={metricTone(volumeAllRoi)} />
               <Stat label="Signals" value={`${perfValue(volumeBase.combinedAll, "signals", parseIntMaybe) ?? 0}`} />
@@ -342,7 +375,7 @@ export default async function ModelMonitorPage() {
             </div>
           </MonitorCard>
 
-          <MonitorCard title="Historical Best Read" subtitle="Exact policy-profile backtest from current CSV outputs">
+          <MonitorCard title="Historical Summary" subtitle="Exact policy-profile backtest from current CSV outputs">
             <div className="grid gap-3">
               <Stat label="Strict Tier ROI" value={formatPct(profileMap.get("strict")?.tierRoiPct)} tone={metricTone(profileMap.get("strict")?.tierRoiPct)} />
               <Stat label="Vol200 Tier ROI" value={formatPct(profileMap.get("volume_200")?.tierRoiPct)} tone={metricTone(profileMap.get("volume_200")?.tierRoiPct)} />
@@ -353,7 +386,7 @@ export default async function ModelMonitorPage() {
         </div>
 
         <div className="mb-8 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-          <MonitorCard title="Live Performance" subtitle="Current weekly settlement reports">
+          <MonitorCard title="Live Performance Detail" subtitle="Current weekly settlement reports with ML vs spread split">
             <div className="grid gap-6 lg:grid-cols-2">
               <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-4">
                 <div className="mb-4 flex items-center justify-between">
@@ -393,14 +426,20 @@ export default async function ModelMonitorPage() {
                 <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Overlay reference</div>
                 <div className={`text-2xl font-semibold ${metricTone(overlayAllRoi)}`}>{formatPct(overlayAllRoi)}</div>
                 <p className="mt-2 text-sm text-slate-400">
-                  Existing overlay comparison remains negative. Keep it as context, not as production proof.
+                  {overlayAllRoi == null
+                    ? "Overlay comparison has no settled ROI yet."
+                    : `Overlay all-time ROI is ${formatPct(overlayAllRoi)} as of ${strictOverlay.combinedAll?.as_of_date ?? "n/a"}. Keep it as context, not as production proof.`}
                 </p>
               </div>
               <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
                 <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Current diagnosis</div>
-                <p className="text-sm leading-6 text-slate-300">
-                  Strict live is still materially negative. Shadow has not settled enough to judge. Historical exact profiles favor <span className="font-semibold text-amber-300">volume_200</span>, but live promotion is not justified yet.
-                </p>
+                <ul className="space-y-2 text-sm leading-6 text-slate-300">
+                  <li>{strictDiagnosis}</li>
+                  <li>{shadowDiagnosis}</li>
+                  <li>
+                    Historical exact profiles still favor <span className="font-semibold text-amber-300">volume_200</span>, but live promotion is not justified until shadow settles and CLV coverage overlaps the sample.
+                  </li>
+                </ul>
               </div>
             </div>
           </MonitorCard>
@@ -425,7 +464,7 @@ export default async function ModelMonitorPage() {
           </MonitorCard>
         </div>
 
-        <MonitorCard title="Historical Policy Profiles" subtitle="Exact 2022-2025 ATP ML-only backtest from generated backtest CSVs">
+        <MonitorCard title="Historical Policy Profiles Detail" subtitle="Exact 2022-2025 ATP ML-only backtest from generated backtest CSVs">
           <div className="grid gap-4 lg:grid-cols-3">
             {profiles.map((profile) => (
               <div key={profile.name} className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
@@ -461,8 +500,30 @@ export default async function ModelMonitorPage() {
         </MonitorCard>
 
         <div className="mt-8 grid gap-6 xl:grid-cols-2">
-          <MonitorCard title="Shadow Decision" subtitle="Current comparison summary">
-            <pre className="overflow-x-auto whitespace-pre-wrap text-sm leading-6 text-slate-300">{shadowComparisonTxt ?? "Missing shadow comparison report."}</pre>
+          <MonitorCard title="Shadow Decision Summary" subtitle="Compact read, with raw comparison available on demand">
+            <div className="space-y-4 text-sm leading-6 text-slate-300">
+              <ul className="space-y-2">
+                <li>
+                  Active shadow candidate: <span className="font-semibold text-amber-300">volume_200</span>
+                  {shadowProfile?.tierRoiPct != null && shadowProfile?.avgPerYear != null
+                    ? ` (${formatPct(shadowProfile.tierRoiPct)} tier ROI, ${shadowProfile.avgPerYear.toFixed(1)} bets/year historical).`
+                    : "."}
+                </li>
+                <li>
+                  Legacy comparison: <span className="font-semibold text-slate-100">volume_275</span>
+                  {legacyShadowProfile?.tierRoiPct != null && legacyShadowProfile?.avgPerYear != null
+                    ? ` (${formatPct(legacyShadowProfile.tierRoiPct)} tier ROI, ${legacyShadowProfile.avgPerYear.toFixed(1)} bets/year historical).`
+                    : "."}
+                </li>
+                <li>
+                  Live volume_200 tracking: {perfValue(volumeBase.combinedAll, "signals", parseIntMaybe) ?? 0} signals, {perfValue(volumeBase.combinedAll, "settled", parseIntMaybe) ?? 0} settled, {formatPct(volumeAllRoi)} ROI.
+                </li>
+              </ul>
+              <details className="rounded-xl border border-slate-800 bg-slate-950/35 p-3">
+                <summary className="cursor-pointer text-sm font-semibold text-slate-200">Show raw comparison report</summary>
+                <pre className="mt-3 overflow-x-auto whitespace-pre-wrap text-xs leading-6 text-slate-400">{shadowComparisonTxt ?? "Missing shadow comparison report."}</pre>
+              </details>
+            </div>
           </MonitorCard>
           <MonitorCard title="Practical Use" subtitle="What this page means operationally">
             <div className="space-y-4 text-sm leading-6 text-slate-300">
