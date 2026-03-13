@@ -1389,13 +1389,11 @@ async function run(): Promise<Response> {
       m.handicap_edge_p2 != null;
     if (!spreadOk) continue;
     const sl = m.spread_line;
-    const he1 = m.handicap_edge_p1;
-    const he2 = m.handicap_edge_p2;
-    if (he1 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsStrict.push(toSpreadSignal(m, "P1+", he1, m.spread_odds1, sl));
+    if (m.handicap_edge_p1 != null && m.handicap_edge_p1 >= HANDICAP_MIN_EDGE_PCT) {
+      spreadSignalsStrict.push(toSpreadSignal(m, "P1+", m.handicap_edge_p1, m.spread_odds1, sl));
     }
-    if (he2 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsStrict.push(toSpreadSignal(m, "P2-", he2, m.spread_odds2, sl));
+    if (m.handicap_edge_p2 != null && m.handicap_edge_p2 >= HANDICAP_MIN_EDGE_PCT) {
+      spreadSignalsStrict.push(toSpreadSignal(m, "P2-", m.handicap_edge_p2, m.spread_odds2, sl));
     }
   }
 
@@ -1413,13 +1411,11 @@ async function run(): Promise<Response> {
       m.handicap_edge_p2 != null;
     if (!spreadOk) continue;
     const sl = m.spread_line;
-    const he1 = m.handicap_edge_p1;
-    const he2 = m.handicap_edge_p2;
-    if (he1 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsVolume.push(toSpreadSignal(m, "P1+", he1, m.spread_odds1, sl));
+    if (m.handicap_edge_p1 != null && m.handicap_edge_p1 >= HANDICAP_MIN_EDGE_PCT) {
+      spreadSignalsVolume.push(toSpreadSignal(m, "P1+", m.handicap_edge_p1, m.spread_odds1, sl));
     }
-    if (he2 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsVolume.push(toSpreadSignal(m, "P2-", he2, m.spread_odds2, sl));
+    if (m.handicap_edge_p2 != null && m.handicap_edge_p2 >= HANDICAP_MIN_EDGE_PCT) {
+      spreadSignalsVolume.push(toSpreadSignal(m, "P2-", m.handicap_edge_p2, m.spread_odds2, sl));
     }
   }
   const signals_volume = [...matchSignalsVolume, ...spreadSignalsVolume];
