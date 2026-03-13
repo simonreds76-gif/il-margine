@@ -72,6 +72,7 @@ export default function GlobalNav() {
             </div>
             <Link href="/the-edge" className={linkClass(pathname === "/the-edge")}>The Edge</Link>
             <Link href="/track-record" className={linkClass(pathname === "/track-record")}>Track Record</Link>
+            <Link href="/model-monitor" className={linkClass(pathname === "/model-monitor")}>Monitor</Link>
             <Link href="/bookmakers" className={linkClass(pathname === '/bookmakers')}>Bookmakers</Link>
             <Link href="/calculator" className={linkClass(pathname === '/calculator')}>Calculator</Link>
             <Link href="/resources" className={linkClass(pathname === '/resources' || pathname.startsWith('/resources/'))}>Resources</Link>
@@ -113,6 +114,9 @@ export default function GlobalNav() {
             </Link>
             <Link href="/track-record" onClick={() => setMobileMenuOpen(false)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/track-record" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
               Track Record
+            </Link>
+            <Link href="/model-monitor" onClick={() => setMobileMenuOpen(false)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/model-monitor" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
+              Monitor
             </Link>
             <Link href="/bookmakers" className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/bookmakers' ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
               Bookmakers

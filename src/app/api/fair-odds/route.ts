@@ -1377,7 +1377,7 @@ async function run(): Promise<Response> {
     };
   }
 
-  const spreadSignalsStrict: typeof matchSignalsStrict = [];
+  const spreadSignalsStrict: Array<ReturnType<typeof toSpreadSignal>> = [];
   for (const m of matches) {
     const spreadOk =
       (m.policy_match || m.spread_eligible) &&
@@ -1389,17 +1389,22 @@ async function run(): Promise<Response> {
       m.handicap_edge_p2 != null;
     if (!spreadOk) continue;
     const sl = m.spread_line;
-    if (m.handicap_edge_p1 != null && m.handicap_edge_p1 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsStrict.push(toSpreadSignal(m, "P1+", m.handicap_edge_p1, m.spread_odds1, sl));
+    const so1 = m.spread_odds1;
+    const so2 = m.spread_odds2;
+    const he1 = m.handicap_edge_p1;
+    const he2 = m.handicap_edge_p2;
+    if (sl == null || so1 == null || so2 == null || he1 == null || he2 == null) continue;
+    if (he1 >= HANDICAP_MIN_EDGE_PCT) {
+      spreadSignalsStrict.push(toSpreadSignal(m, "P1+", he1, so1, sl));
     }
-    if (m.handicap_edge_p2 != null && m.handicap_edge_p2 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsStrict.push(toSpreadSignal(m, "P2-", m.handicap_edge_p2, m.spread_odds2, sl));
+    if (he2 >= HANDICAP_MIN_EDGE_PCT) {
+      spreadSignalsStrict.push(toSpreadSignal(m, "P2-", he2, so2, sl));
     }
   }
 
   const signals_strict = [...matchSignalsStrict, ...spreadSignalsStrict];
   const matchSignalsVolume = matches.filter((m) => m.shadow_match).map((m) => toSignal(m));
-  const spreadSignalsVolume: typeof matchSignalsStrict = [];
+  const spreadSignalsVolume: Array<ReturnType<typeof toSpreadSignal>> = [];
   for (const m of matches) {
     const spreadOk =
       (m.shadow_match || m.shadow_spread_eligible) &&
@@ -1411,11 +1416,16 @@ async function run(): Promise<Response> {
       m.handicap_edge_p2 != null;
     if (!spreadOk) continue;
     const sl = m.spread_line;
-    if (m.handicap_edge_p1 != null && m.handicap_edge_p1 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsVolume.push(toSpreadSignal(m, "P1+", m.handicap_edge_p1, m.spread_odds1, sl));
+    const so1 = m.spread_odds1;
+    const so2 = m.spread_odds2;
+    const he1 = m.handicap_edge_p1;
+    const he2 = m.handicap_edge_p2;
+    if (sl == null || so1 == null || so2 == null || he1 == null || he2 == null) continue;
+    if (he1 >= HANDICAP_MIN_EDGE_PCT) {
+      spreadSignalsVolume.push(toSpreadSignal(m, "P1+", he1, so1, sl));
     }
-    if (m.handicap_edge_p2 != null && m.handicap_edge_p2 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsVolume.push(toSpreadSignal(m, "P2-", m.handicap_edge_p2, m.spread_odds2, sl));
+    if (he2 >= HANDICAP_MIN_EDGE_PCT) {
+      spreadSignalsVolume.push(toSpreadSignal(m, "P2-", he2, so2, sl));
     }
   }
   const signals_volume = [...matchSignalsVolume, ...spreadSignalsVolume];
