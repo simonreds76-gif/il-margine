@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
 
-const title = "Anytime Goalscorer Betting Tips & Analysis";
+const title = "Goalscorer Model | Anytime Goalscorer Fair Odds In Development";
 const description =
-  "Anytime goalscorer betting tips with analytical breakdowns based on roles, xG data and match context.";
+  "Il Margine's in-development goalscorer model for anytime-goalscorer fair odds, built around minutes, xG, penalty role, and opponent defensive context.";
 const url = `${BASE_URL}/anytime-goalscorer`;
 
 export const metadata: Metadata = {
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     siteName: "Il Margine",
     title,
     description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Il Margine - Anytime Goalscorer" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Il Margine - Goalscorer Model" }],
   },
   twitter: {
     card: "summary_large_image",

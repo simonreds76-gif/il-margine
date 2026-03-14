@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { questionSlug } from "@/lib/parse-faq";
-import { supabase, MarketStats } from "@/lib/supabase";
+import { supabase, type Bet, type Bookmaker, type MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import MarketBadge from "@/components/MarketBadge";
@@ -20,12 +20,15 @@ interface CombinedMarketStats {
   total_profit: number;
 }
 
+type HomepageBet = Bet & {
+  bookmaker?: Bookmaker | Bookmaker[] | null;
+};
+
 export default function Home() {
   const [activeMarket, setActiveMarket] = useState("props");
   const [loading, setLoading] = useState(true);
-  const [marketStats, setMarketStats] = useState<MarketStats[]>([]);
-  const [recentBets, setRecentBets] = useState<any[]>([]);
-  const [pendingBets, setPendingBets] = useState<any[]>([]);
+  const [recentBets, setRecentBets] = useState<HomepageBet[]>([]);
+  const [pendingBets, setPendingBets] = useState<HomepageBet[]>([]);
   const [last7DaysProfit, setLast7DaysProfit] = useState<number>(0);
   const [last7DaysCount, setLast7DaysCount] = useState<number>(0);
   const [combinedStats, setCombinedStats] = useState<{
@@ -33,86 +36,6 @@ export default function Home() {
     tennis: CombinedMarketStats;
     overall: CombinedMarketStats;
   } | null>(null);
-
-  // Fetch live data from database
-  useEffect(() => {
-    fetchData();
-
-    // Set up real-time subscription to update when bets change
-    const channel = supabase
-      .channel('bets-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
-          schema: 'public',
-          table: 'bets'
-        },
-        (payload) => {
-          // When any bet is added, updated, or deleted, refresh the data
-          console.log('Bet changed:', payload.eventType);
-          fetchData();
-        }
-      )
-      .subscribe();
-
-    // Cleanup subscription on unmount
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
-
-  const fetchData = async () => {
-    setLoading(true);
-    
-    // Fetch market stats
-    const { data: stats, error: statsError } = await supabase
-      .from("market_stats")
-      .select("*");
-    
-    if (stats) setMarketStats(stats);
-    if (statsError) console.error("Error fetching market stats:", statsError);
-
-    // Fetch recent settled bets (max 5 shown on homepage)
-    const { data: recent, error: recentError } = await supabase
-      .from("bets")
-      .select("*, bookmaker:bookmakers(*)")
-      .in("status", ["won", "lost", "void"])
-      .order("settled_at", { ascending: false })
-      .limit(5);
-    
-    if (recent) setRecentBets(recent);
-    if (recentError) console.error("Error fetching recent bets:", recentError);
-
-    // Fetch pending bets for "Active Picks" (same max 5)
-    const { data: pending, error: pendingError } = await supabase
-      .from("bets")
-      .select("*, bookmaker:bookmakers(*)")
-      .eq("status", "pending")
-      .order("posted_at", { ascending: false })
-      .limit(5);
-    
-    if (pending) setPendingBets(pending);
-    if (pendingError) console.error("Error fetching pending bets:", pendingError);
-
-    // Fetch last 7 days P/L from server API (bypasses RLS, ensures all bets included)
-    try {
-      const res = await fetch("/api/last7-profit", { cache: "no-store" });
-      const json = await res.json();
-      if (res.ok && typeof json.total === "number") {
-        setLast7DaysProfit(json.total);
-        setLast7DaysCount(typeof json.count === "number" ? json.count : 0);
-      }
-    } catch (e) {
-      console.error("Error fetching last 7 days:", e);
-    }
-
-    // Calculate combined stats - always call this, even if stats is empty
-    // It will use baseline values when there's no live data
-    calculateCombinedStats(stats || []);
-    
-    setLoading(false);
-  };
 
   const calculateCombinedStats = (liveStats: MarketStats[]) => {
     const propsLive = liveStats.find(s => s.market === "props");
@@ -224,6 +147,83 @@ export default function Home() {
     });
   };
 
+  const fetchData = useCallback(async () => {
+    const [statsResponse, recentResponse, pendingResponse] = await Promise.all([
+      supabase.from("market_stats").select("*"),
+      supabase
+        .from("bets")
+        .select("*, bookmaker:bookmakers(*)")
+        .in("status", ["won", "lost", "void"])
+        .order("settled_at", { ascending: false })
+        .limit(5),
+      supabase
+        .from("bets")
+        .select("*, bookmaker:bookmakers(*)")
+        .eq("status", "pending")
+        .order("posted_at", { ascending: false })
+        .limit(5),
+    ]);
+
+    const { data: stats, error: statsError } = statsResponse;
+    const { data: recent, error: recentError } = recentResponse;
+    const { data: pending, error: pendingError } = pendingResponse;
+
+    if (statsError) console.error("Error fetching market stats:", statsError);
+    if (recentError) console.error("Error fetching recent bets:", recentError);
+    if (pendingError) console.error("Error fetching pending bets:", pendingError);
+
+    if (recent) setRecentBets(recent as HomepageBet[]);
+    if (pending) setPendingBets(pending as HomepageBet[]);
+
+    // Fetch last 7 days P/L from server API (bypasses RLS, ensures all bets included)
+    try {
+      const res = await fetch("/api/last7-profit", { cache: "no-store" });
+      const json = await res.json();
+      if (res.ok && typeof json.total === "number") {
+        setLast7DaysProfit(json.total);
+        setLast7DaysCount(typeof json.count === "number" ? json.count : 0);
+      }
+    } catch (e) {
+      console.error("Error fetching last 7 days:", e);
+    }
+
+    // Always compute display stats, even if live stats are empty.
+    calculateCombinedStats((stats as MarketStats[] | null) ?? []);
+
+    setLoading(false);
+  }, []);
+
+  // Fetch live data from database
+  useEffect(() => {
+    const initialFetchId = window.setTimeout(() => {
+      void fetchData();
+    }, 0);
+
+    // Set up real-time subscription to update when bets change
+    const channel = supabase
+      .channel("bets-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*", // Listen to all events (INSERT, UPDATE, DELETE)
+          schema: "public",
+          table: "bets",
+        },
+        (payload) => {
+          // When any bet is added, updated, or deleted, refresh the data.
+          console.log("Bet changed:", payload.eventType);
+          void fetchData();
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscription on unmount
+    return () => {
+      window.clearTimeout(initialFetchId);
+      void supabase.removeChannel(channel);
+    };
+  }, [fetchData]);
+
   const displayStats = combinedStats ?? getBaselineDisplayStats();
   const markets = [
     { 
@@ -243,7 +243,7 @@ export default function Home() {
       profit: `${displayStats.tennis.roi > 0 ? "+" : ""}${displayStats.tennis.roi.toFixed(1)}% ROI` 
     },
     { id: "builders", name: "Bet Builders", description: "Same-game combinations", status: "coming" },
-    { id: "atg", name: "ATG", description: "Anytime goalscorer markets", status: "coming" },
+    { id: "atg", name: "Goalscorer Model", description: "Anytime goalscorer fair odds", status: "active", bets: "Build", profit: "In development" },
   ];
 
   return (
@@ -321,7 +321,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {markets.map((market) => {
-              const href = market.id === "props" ? "/player-props" : market.id === "atp" ? "/tennis-tips" : "";
+              const href = market.id === "props" ? "/player-props" : market.id === "atp" ? "/tennis-tips" : market.id === "atg" ? "/anytime-goalscorer" : "";
               const isActive = market.status === "active";
               
               const cardContent = (
@@ -331,7 +331,9 @@ export default function Home() {
                     {market.status === "coming" ? (
                       <span className="text-xs font-mono text-slate-600 bg-slate-800/50 px-2 py-0.5 rounded">SOON</span>
                     ) : (
-                      <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">LIVE</span>
+                      <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
+                        {market.id === "atg" ? "MODEL" : "LIVE"}
+                      </span>
                     )}
                   </div>
                   <p className="text-sm text-slate-500 mb-4">{market.description}</p>

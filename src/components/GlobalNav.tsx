@@ -20,7 +20,7 @@ export default function GlobalNav() {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  const isTipsActive = ["/tennis-tips", "/player-props", "/anytime-goalscorer", "/bet-builders"].includes(pathname);
+  const isTipsActive = ["/tennis-tips", "/player-props", "/bet-builders"].includes(pathname);
   const linkClass = (active: boolean) =>
     `text-base font-medium transition-colors ${active ? "text-emerald-400" : "text-slate-400 hover:text-slate-100"}`;
 
@@ -65,12 +65,12 @@ export default function GlobalNav() {
                 <div className="absolute top-full left-0 mt-2 w-48 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-50">
                   <Link href="/tennis-tips" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Tennis Tips</Link>
                   <Link href="/player-props" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Player Props</Link>
-                  <Link href="/anytime-goalscorer" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Anytime Goalscorer</Link>
                   <Link href="/bet-builders" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Bet Builders</Link>
                 </div>
               )}
             </div>
             <Link href="/the-edge" className={linkClass(pathname === "/the-edge")}>The Edge</Link>
+            <Link href="/anytime-goalscorer" className={linkClass(pathname === "/anytime-goalscorer")}>Goalscorer Model</Link>
             <Link href="/track-record" className={linkClass(pathname === "/track-record")}>Track Record</Link>
             {showMonitorLink ? <Link href="/model-monitor" className={linkClass(pathname === "/model-monitor")}>Monitor</Link> : null}
             <Link href="/bookmakers" className={linkClass(pathname === '/bookmakers')}>Bookmakers</Link>
@@ -100,9 +100,6 @@ export default function GlobalNav() {
                   <Link href="/player-props" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/player-props' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
                     Player Props
                   </Link>
-                  <Link href="/anytime-goalscorer" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/anytime-goalscorer' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
-                    Anytime Goalscorer
-                  </Link>
                   <Link href="/bet-builders" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/bet-builders' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
                     Bet Builders
                   </Link>
@@ -111,6 +108,9 @@ export default function GlobalNav() {
             </div>
             <Link href="/the-edge" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/the-edge" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
               The Edge
+            </Link>
+            <Link href="/anytime-goalscorer" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/anytime-goalscorer" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
+              Goalscorer Model
             </Link>
             <Link href="/track-record" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/track-record" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
               Track Record
