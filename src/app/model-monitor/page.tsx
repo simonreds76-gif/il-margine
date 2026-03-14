@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { promises as fs } from "fs";
 import path from "path";
+import { notFound } from "next/navigation";
 
 type CsvRow = Record<string, string>;
 
@@ -39,6 +40,10 @@ type ProfileSummary = {
 };
 
 export const dynamic = "force-dynamic";
+
+const MODEL_MONITOR_PUBLIC =
+  process.env.MODEL_MONITOR_PUBLIC === "1" ||
+  process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
 
 function parseCsvLine(line: string): string[] {
   const out: string[] = [];
@@ -108,13 +113,17 @@ function lastMatching(rows: CsvRow[], predicate: (row: CsvRow) => boolean): CsvR
 }
 
 function parsePerf(rows: CsvRow[], policyMode: string): PerfSnapshot {
+  const isOverall = (row: CsvRow) => {
+    const evalPeriod = row.eval_period ?? "";
+    return !evalPeriod || evalPeriod === "overall";
+  };
   return {
-    combinedAll: lastMatching(rows, (row) => row.scope === "all_time" && row.policy_mode === policyMode && !row.bet_type),
-    combinedWindow: lastMatching(rows, (row) => row.scope === "window" && row.policy_mode === policyMode && !row.bet_type),
-    mlAll: lastMatching(rows, (row) => row.scope === "all_time" && row.policy_mode === policyMode && row.bet_type === "ml"),
-    handicapAll: lastMatching(rows, (row) => row.scope === "all_time" && row.policy_mode === policyMode && row.bet_type === "handicap"),
-    mlWindow: lastMatching(rows, (row) => row.scope === "window" && row.policy_mode === policyMode && row.bet_type === "ml"),
-    handicapWindow: lastMatching(rows, (row) => row.scope === "window" && row.policy_mode === policyMode && row.bet_type === "handicap"),
+    combinedAll: lastMatching(rows, (row) => row.scope === "all_time" && row.policy_mode === policyMode && !row.bet_type && isOverall(row)),
+    combinedWindow: lastMatching(rows, (row) => row.scope === "window" && row.policy_mode === policyMode && !row.bet_type && isOverall(row)),
+    mlAll: lastMatching(rows, (row) => row.scope === "all_time" && row.policy_mode === policyMode && row.bet_type === "ml" && isOverall(row)),
+    handicapAll: lastMatching(rows, (row) => row.scope === "all_time" && row.policy_mode === policyMode && row.bet_type === "handicap" && isOverall(row)),
+    mlWindow: lastMatching(rows, (row) => row.scope === "window" && row.policy_mode === policyMode && row.bet_type === "ml" && isOverall(row)),
+    handicapWindow: lastMatching(rows, (row) => row.scope === "window" && row.policy_mode === policyMode && row.bet_type === "handicap" && isOverall(row)),
   };
 }
 
@@ -244,6 +253,10 @@ function FileStamp({ label, value }: { label: string; value: string | null }) {
 }
 
 export default async function ModelMonitorPage() {
+  if (process.env.NODE_ENV === "production" && !MODEL_MONITOR_PUBLIC) {
+    notFound();
+  }
+
   const [
     strictPerfCsv,
     volumePerfCsv,
