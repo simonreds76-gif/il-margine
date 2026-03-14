@@ -3,31 +3,31 @@ import Link from "next/link";
 const roadmap = [
   {
     step: "1",
-    title: "Serie A Data Pipeline",
-    text: "FBref player-match logs, team xG/xGA, minutes, shots, non-penalty xG, and penalty events collected chronologically for leakage-safe modelling.",
+    title: "Internal Model, Public Release",
+    text: "The edge already exists internally. The work now is turning it into a stable public product without watering down what makes it valuable.",
   },
   {
     step: "2",
-    title: "Poisson Probability Engine",
-    text: "Anytime-goalscorer probabilities built from expected minutes, non-penalty xG rate, opponent defensive strength, home/away context, and penalty-role adjustment.",
+    title: "Probability Calibration",
+    text: "Probabilities from minutes, shot quality, opponent context, and role.",
   },
   {
     step: "3",
-    title: "Odds Capture",
-    text: "Historical and live anytime-goalscorer prices archived so the model can be tested against real bookmaker markets rather than theoretical fair odds only.",
+    title: "Market Feed",
+    text: "Live and historical goalscorer prices captured and checked against model output before launch.",
   },
   {
     step: "4",
-    title: "Live Value Signals",
-    text: "Once calibration is strong and odds capture is stable, the page will surface live goalscorer value spots the same way fair odds does for tennis.",
+    title: "Website Launch",
+    text: "Once the data layer is stable, this page will publish live goalscorer fair odds and market edges on site.",
   },
 ];
 
 const focusPoints = [
   "Serie A first. Smaller scope, cleaner validation, faster iteration.",
-  "Confirmed lineups matter. Minutes are the biggest source of goalscorer-model error.",
-  "Penalty-role changes are a real edge source. Markets are slow to react.",
-  "Calibration comes before ROI claims. If the probabilities are wrong, nothing else matters.",
+  "We're tracking player role and market context that matter for goalscorer probability.",
+  "Calibration comes before public rollout. We want the website version sharp, stable, and usable.",
+  "The aim is to publish with confidence, not rush out a half-finished model.",
 ];
 
 export default function AnytimeGoalscorerPage() {
@@ -51,9 +51,8 @@ export default function AnytimeGoalscorerPage() {
               Goalscorer Model
             </h1>
             <p className="max-w-3xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              We&apos;re building a football anytime-goalscorer fair-odds model focused on Serie A. The goal is
-              simple: estimate clean scoring probabilities from minutes, shot quality, team context, and penalty
-              role, then compare those probabilities against soft-book goalscorer prices.
+              We already rate this market internally and have seen enough to know it belongs on the site. The public
+              version is being calibrated, hardened, and prepared for release, with Serie A as the first league.
             </p>
           </div>
         </div>
@@ -97,13 +96,13 @@ export default function AnytimeGoalscorerPage() {
               <div className="mb-4 text-xs font-mono uppercase tracking-[0.22em] text-emerald-400">Status</div>
               <div className="space-y-3 text-sm text-slate-300">
                 <p>
-                  The model is not publishing live picks yet. We are still in the build-and-validate stage:
-                  scraper quality, probability calibration, and odds capture all need to be right before anything
-                  goes live.
+                  This is not a concept page. The model already exists internally and has been beating prices in
+                  private testing; the current work is about calibration, data quality, and making the on-site
+                  version robust enough to publish.
                 </p>
                 <p>
-                  When this is ready, this page will show live goalscorer fair odds and value flags, not generic
-                  “tips”.
+                  When this is ready, this page will show live goalscorer fair odds and value flags, not recycled
+                  tips and not a watered-down version of the underlying model.
                 </p>
               </div>
             </div>
@@ -111,9 +110,9 @@ export default function AnytimeGoalscorerPage() {
             <div className="rounded-2xl border border-slate-800 bg-[linear-gradient(135deg,rgba(16,185,129,0.12),rgba(15,23,42,0.92))] p-6">
               <h3 className="mb-3 text-lg font-semibold text-slate-100">Why this market matters</h3>
               <p className="mb-5 text-sm leading-6 text-slate-300">
-                Goalscorer markets are softer than top-tier tennis moneylines. The opportunity is in player role,
-                minutes, and penalty duties, not in pretending we can outguess a sharp closing market with vague
-                narrative.
+                Soft-book goalscorer markets leave more room for edge than the sharpest headline markets. The
+                opportunity is already there; the job now is making the public version clean enough to release
+                without giving away the recipe.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link
