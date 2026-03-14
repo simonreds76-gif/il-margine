@@ -16,7 +16,9 @@ import { retrieveContext } from "@/lib/chat-rag";
 export const maxDuration = 30;
 
 // Primary model. Override via GROQ_MODEL. Backup used on parse errors.
-const CHAT_MODEL = process.env.GROQ_MODEL || "meta-llama/llama-4-maverick-17b-128e-instruct";
+// Maverick was decommissioned on Groq; keep a supported default here so Roger
+// does not fail if the env override is missing.
+const CHAT_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
 const BACKUP_MODEL = "llama-3.3-70b-versatile";
 
 function asNum(v: unknown, fallback = 0): number {
