@@ -324,14 +324,14 @@ export default function Home() {
             We focus on markets where bookmaker pricing is inefficient. No mainstream match odds. No markets where the bookies have perfect data.
           </p>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-3 items-stretch">
             {markets.map((market) => {
               const href = market.id === "props" ? "/player-props" : market.id === "atp" ? "/tennis-tips" : market.id === "atg" ? "/anytime-goalscorer" : "";
               const isActive = market.status === "active";
               
               const cardContent = (
-                <div className="flex flex-col h-full min-h-[140px]">
-                  <div className="flex items-center justify-between gap-3 mb-4 shrink-0">
+                <div className="flex flex-col h-full min-h-[120px]">
+                  <div className="flex items-center justify-between gap-3 mb-3 shrink-0">
                     <h3 className="font-semibold shrink-0">{market.name}</h3>
                     {market.status === "coming" ? (
                       <span className="text-xs font-mono text-slate-600 bg-slate-800/50 px-2 py-0.5 rounded shrink-0 min-w-[3.5rem] text-right">SOON</span>
@@ -341,7 +341,7 @@ export default function Home() {
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-slate-500 flex-1 min-h-[2.5rem]">{market.description}</p>
+                  <p className="text-sm text-slate-500 flex-1 min-h-[2rem]">{market.description}</p>
                   {market.status === "active" && (
                     <div className="flex gap-4 text-sm items-baseline shrink-0 mt-auto">
                       {market.id === "atg" ? (
@@ -357,7 +357,7 @@ export default function Home() {
                 </div>
               );
               
-              const cardClass = `p-6 sm:p-8 rounded-xl border transition-all cursor-pointer flex flex-col h-full ${
+              const cardClass = `p-4 sm:p-5 rounded-lg border transition-all cursor-pointer flex flex-col h-full ${
                 market.status === "coming"
                   ? "bg-slate-900/30 border-slate-800/50 opacity-60"
                   : activeMarket === market.id
