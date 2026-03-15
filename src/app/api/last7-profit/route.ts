@@ -12,9 +12,9 @@ export async function GET() {
     return NextResponse.json({ error: "Server misconfigured", total: 0, count: 0 }, { status: 500 });
   }
 
+  // Rolling 7 days from now (matches scripts/check-last7.js)
   const sevenDaysAgo = new Date();
-  sevenDaysAgo.setUTCDate(sevenDaysAgo.getUTCDate() - 7);
-  sevenDaysAgo.setUTCHours(0, 0, 0, 0);
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
   const cutoff = sevenDaysAgo.toISOString();
 
   const { data, error } = await supabase
