@@ -29,8 +29,9 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [recentBets, setRecentBets] = useState<HomepageBet[]>([]);
   const [pendingBets, setPendingBets] = useState<HomepageBet[]>([]);
-  const [last7DaysProfit, setLast7DaysProfit] = useState<number>(0);
+  const [last7DaysProfit, setLast7DaysProfit] = useState<number | null>(null);
   const [last7DaysCount, setLast7DaysCount] = useState<number>(0);
+  const [last7Error, setLast7Error] = useState<boolean>(false);
   const [combinedStats, setCombinedStats] = useState<{
     props: CombinedMarketStats;
     tennis: CombinedMarketStats;
@@ -177,14 +178,18 @@ export default function Home() {
 
     // Fetch last 7 days P/L from server API (bypasses RLS, ensures all bets included)
     try {
+      setLast7Error(false);
       const res = await fetch("/api/last7-profit", { cache: "no-store" });
       const json = await res.json();
       if (res.ok && typeof json.total === "number") {
         setLast7DaysProfit(json.total);
         setLast7DaysCount(typeof json.count === "number" ? json.count : 0);
+      } else {
+        setLast7Error(true);
       }
     } catch (e) {
       console.error("Error fetching last 7 days:", e);
+      setLast7Error(true);
     }
 
     // Always compute display stats, even if live stats are empty.
@@ -239,7 +244,7 @@ export default function Home() {
       name: "ATP Tennis", 
       description: "Pre-match singles markets", 
       status: "active", 
-      bets: `${displayStats.tennis.total_bets}`, 
+      bets: `${displayStats.tennis.total_bets}+`, 
       profit: `${displayStats.tennis.roi > 0 ? "+" : ""}${displayStats.tennis.roi.toFixed(1)}% ROI` 
     },
     { id: "builders", name: "Bet Builders", description: "Same-game combinations", status: "coming" },
@@ -326,20 +331,20 @@ export default function Home() {
               
               const cardContent = (
                 <>
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold">{market.name}</h3>
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <h3 className="font-semibold shrink-0">{market.name}</h3>
                     {market.status === "coming" ? (
-                      <span className="text-xs font-mono text-slate-600 bg-slate-800/50 px-2 py-0.5 rounded">SOON</span>
+                      <span className="text-xs font-mono text-slate-600 bg-slate-800/50 px-2 py-0.5 rounded shrink-0 min-w-[3.5rem] text-right">SOON</span>
                     ) : (
-                      <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
+                      <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded shrink-0 min-w-[3.5rem] text-right">
                         {market.id === "atg" ? "MODEL" : "LIVE"}
                       </span>
                     )}
                   </div>
                   <p className="text-sm text-slate-500 mb-4">{market.description}</p>
                   {market.status === "active" && (
-                    <div className="flex gap-4 text-sm">
-                      <span className="text-slate-400">{market.bets} bets</span>
+                    <div className="flex gap-4 text-sm items-baseline">
+                      <span className="text-slate-400 min-w-[5rem]">{market.bets} bets</span>
                       <span className="text-emerald-400 font-mono">{market.profit}</span>
                     </div>
                   )}
@@ -480,9 +485,18 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-4">
               <span className="text-xs sm:text-sm text-emerald-400 font-mono">
-                Last 7 days: {last7DaysProfit > 0 ? "+" : ""}{last7DaysProfit.toFixed(2)}u
-                {last7DaysCount > 0 && (
-                  <span className="text-slate-500 font-normal ml-1">({last7DaysCount} bet{last7DaysCount !== 1 ? "s" : ""})</span>
+                Last 7 days:{" "}
+                {last7Error ? (
+                  "—"
+                ) : last7DaysProfit === null ? (
+                  <span className="text-slate-500">…</span>
+                ) : (
+                  <>
+                    {last7DaysProfit > 0 ? "+" : ""}{last7DaysProfit.toFixed(2)}u
+                    <span className="text-slate-500 font-normal ml-1">
+                      ({last7DaysCount} bet{last7DaysCount !== 1 ? "s" : ""})
+                    </span>
+                  </>
                 )}
               </span>
             </div>
