@@ -248,7 +248,7 @@ export default function Home() {
       profit: `${displayStats.tennis.roi > 0 ? "+" : ""}${displayStats.tennis.roi.toFixed(1)}% ROI` 
     },
     { id: "builders", name: "Bet Builders", description: "Same-game combinations", status: "coming" },
-    { id: "atg", name: "Goalscorer Model", description: "Anytime goalscorer fair odds", status: "active", bets: "—", profit: "In development" },
+    { id: "atg", name: "Goalscorer Model", description: "Anytime goalscorer fair odds", status: "active", bets: "Build", profit: "In development" },
   ];
 
   return (
@@ -324,14 +324,14 @@ export default function Home() {
             We focus on markets where bookmaker pricing is inefficient. No mainstream match odds. No markets where the bookies have perfect data.
           </p>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
             {markets.map((market) => {
               const href = market.id === "props" ? "/player-props" : market.id === "atp" ? "/tennis-tips" : market.id === "atg" ? "/anytime-goalscorer" : "";
               const isActive = market.status === "active";
               
               const cardContent = (
-                <>
-                  <div className="flex items-center justify-between gap-3 mb-4">
+                <div className="flex flex-col h-full min-h-[140px]">
+                  <div className="flex items-center justify-between gap-3 mb-4 shrink-0">
                     <h3 className="font-semibold shrink-0">{market.name}</h3>
                     {market.status === "coming" ? (
                       <span className="text-xs font-mono text-slate-600 bg-slate-800/50 px-2 py-0.5 rounded shrink-0 min-w-[3.5rem] text-right">SOON</span>
@@ -341,17 +341,17 @@ export default function Home() {
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-slate-500 mb-4">{market.description}</p>
+                  <p className="text-sm text-slate-500 flex-1 min-h-[2.5rem]">{market.description}</p>
                   {market.status === "active" && (
-                    <div className="grid grid-cols-[5rem_1fr] gap-4 text-sm items-baseline">
-                      <span className="text-slate-400 tabular-nums">{market.bets} bets</span>
-                      <span className="text-emerald-400 font-mono min-w-0">{market.profit}</span>
+                    <div className="flex gap-4 text-sm items-baseline shrink-0 mt-auto">
+                      <span className="text-slate-400 tabular-nums w-[5rem]">{market.bets} bets</span>
+                      <span className="text-emerald-400 font-mono">{market.profit}</span>
                     </div>
                   )}
-                </>
+                </div>
               );
               
-              const cardClass = `p-6 sm:p-8 rounded-xl border transition-all cursor-pointer block ${
+              const cardClass = `p-6 sm:p-8 rounded-xl border transition-all cursor-pointer flex flex-col h-full ${
                 market.status === "coming"
                   ? "bg-slate-900/30 border-slate-800/50 opacity-60"
                   : activeMarket === market.id
