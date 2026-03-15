@@ -248,7 +248,7 @@ export default function Home() {
       profit: `${displayStats.tennis.roi > 0 ? "+" : ""}${displayStats.tennis.roi.toFixed(1)}% ROI` 
     },
     { id: "builders", name: "Bet Builders", description: "Same-game combinations", status: "coming" },
-    { id: "atg", name: "Goalscorer Model", description: "Anytime goalscorer fair odds", status: "active", bets: "Build", profit: "In development" },
+    { id: "atg", name: "Goalscorer Model", description: "Anytime goalscorer fair odds", status: "active", bets: "—", profit: "In development" },
   ];
 
   return (
@@ -343,9 +343,9 @@ export default function Home() {
                   </div>
                   <p className="text-sm text-slate-500 mb-4">{market.description}</p>
                   {market.status === "active" && (
-                    <div className="flex gap-4 text-sm items-baseline">
-                      <span className="text-slate-400 min-w-[5rem]">{market.bets} bets</span>
-                      <span className="text-emerald-400 font-mono">{market.profit}</span>
+                    <div className="grid grid-cols-[5rem_1fr] gap-4 text-sm items-baseline">
+                      <span className="text-slate-400 tabular-nums">{market.bets} bets</span>
+                      <span className="text-emerald-400 font-mono min-w-0">{market.profit}</span>
                     </div>
                   )}
                 </>
@@ -478,28 +478,19 @@ export default function Home() {
       {/* Latest Results */}
       <section className="py-12 md:py-16 border-b border-slate-800/50 bg-slate-900/20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 sm:mb-10">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 sm:mb-10">
             <div>
               <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">LATEST RESULTS</span>
               <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Recent Selections</h2>
             </div>
-            <div className="flex items-center gap-4">
+            {last7DaysProfit != null && !last7Error && last7DaysProfit > 0 && (
               <span className="text-xs sm:text-sm text-emerald-400 font-mono">
-                Last 7 days:{" "}
-                {last7Error ? (
-                  "—"
-                ) : last7DaysProfit === null ? (
-                  <span className="text-slate-500">…</span>
-                ) : (
-                  <>
-                    {last7DaysProfit > 0 ? "+" : ""}{last7DaysProfit.toFixed(2)}u
-                    <span className="text-slate-500 font-normal ml-1">
-                      ({last7DaysCount} bet{last7DaysCount !== 1 ? "s" : ""})
-                    </span>
-                  </>
-                )}
+                Last 7 days: +{last7DaysProfit.toFixed(2)}u
+                <span className="text-slate-500 font-normal ml-1">
+                  ({last7DaysCount} bet{last7DaysCount !== 1 ? "s" : ""})
+                </span>
               </span>
-            </div>
+            )}
           </div>
           <p className="text-slate-500 text-xs mb-6">Stake in units (1u = your standard stake). We typically recommend 0.5u–2u per pick.</p>
           {recentBets.length > 0 ? (
