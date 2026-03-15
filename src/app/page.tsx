@@ -248,7 +248,7 @@ export default function Home() {
       profit: `${displayStats.tennis.roi > 0 ? "+" : ""}${displayStats.tennis.roi.toFixed(1)}% ROI` 
     },
     { id: "builders", name: "Bet Builders", description: "Same-game combinations", status: "coming" },
-    { id: "atg", name: "Goalscorer Model", description: "Anytime goalscorer fair odds", status: "active", bets: "Build", profit: "In development" },
+    { id: "atg", name: "Goalscorer Model", description: "Anytime goalscorer fair odds", status: "active", profit: "In development" },
   ];
 
   return (
@@ -344,8 +344,14 @@ export default function Home() {
                   <p className="text-sm text-slate-500 flex-1 min-h-[2.5rem]">{market.description}</p>
                   {market.status === "active" && (
                     <div className="flex gap-4 text-sm items-baseline shrink-0 mt-auto">
-                      <span className="text-slate-400 tabular-nums w-[5rem]">{market.bets} bets</span>
-                      <span className="text-emerald-400 font-mono">{market.profit}</span>
+                      {market.id === "atg" ? (
+                        <span className="text-emerald-400 font-mono">{market.profit}</span>
+                      ) : (
+                        <>
+                          <span className="text-slate-400 tabular-nums w-[5rem]">{market.bets} bets</span>
+                          <span className="text-emerald-400 font-mono">{market.profit}</span>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
