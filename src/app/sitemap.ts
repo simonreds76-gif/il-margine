@@ -27,6 +27,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily',
       priority: 0.9,
     },
+    {
+      url: `${BASE_URL}/penalty-takers`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
     ...(showGoalscorerPage
       ? [{
           url: `${BASE_URL}/anytime-goalscorer`,

@@ -73,6 +73,7 @@ export default function GlobalNav() {
               )}
             </div>
             <Link href="/the-edge" className={linkClass(pathname === "/the-edge")}>The Edge</Link>
+            <Link href="/penalty-takers" className={linkClass(pathname === "/penalty-takers")}>Penalty Takers</Link>
             {showGoalscorerLink ? (
               <Link href="/anytime-goalscorer" className={linkClass(pathname === "/anytime-goalscorer")}>Goalscorer Model</Link>
             ) : null}
@@ -113,6 +114,9 @@ export default function GlobalNav() {
             </div>
             <Link href="/the-edge" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/the-edge" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
               The Edge
+            </Link>
+            <Link href="/penalty-takers" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/penalty-takers" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
+              Penalty Takers
             </Link>
             {showGoalscorerLink ? (
               <Link href="/anytime-goalscorer" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/anytime-goalscorer" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>

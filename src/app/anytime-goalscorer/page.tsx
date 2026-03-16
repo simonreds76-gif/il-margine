@@ -270,6 +270,20 @@ function formatResultDate(value: string): string {
   }).format(new Date(stamp));
 }
 
+function slugifyAnchor(value: string): string {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&/g, " and ")
+    .replace(/[^a-zA-Z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .toLowerCase();
+}
+
+function getPenaltyTakersHref(row: ShadowRow): string {
+  return `/penalty-takers#${row.leagueKey}-${slugifyAnchor(row.team)}`;
+}
+
 function getShadowMetrics(settledRows: ShadowRow[]) {
   const settledCount = settledRows.length;
   const wins = settledRows.filter((row) => row.betOutcome.toLowerCase() === "won").length;
@@ -484,7 +498,11 @@ export default async function AnytimeGoalscorerPage() {
           <p className="max-w-3xl text-sm leading-7 text-neutral-400 sm:text-base">
             Selective anytime-goalscorer signals across Serie A, Premier League, La Liga, Bundesliga and Ligue 1. This is the
             future public-facing picks surface, but it stays in preview mode until the shadow tracker has enough settled
-            evidence behind it.
+            evidence behind it. For team-by-team spot-kick order, use the{" "}
+            <Link href="/penalty-takers" className="text-emerald-300 transition-colors hover:text-emerald-200">
+              penalty takers reference
+            </Link>
+            .
           </p>
 
           <div className="mt-5 flex flex-wrap gap-2">
@@ -659,6 +677,12 @@ export default async function AnytimeGoalscorerPage() {
                         <p className="mt-2 text-sm text-neutral-400">
                           {row.match} / {formatLeagueTime(row.kickoff)}
                         </p>
+                        <Link
+                          href={getPenaltyTakersHref(row)}
+                          className="mt-2 inline-flex text-xs text-emerald-300 transition-colors hover:text-emerald-200"
+                        >
+                          View {row.team} penalty order
+                        </Link>
                       </div>
 
                       <div className="shrink-0 text-left lg:text-right">
