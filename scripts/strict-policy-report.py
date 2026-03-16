@@ -410,17 +410,13 @@ def compute_stake_units(
 ) -> tuple[float, float, str]:
     """
     Compute stake units and GBP amount.
-    - Match bets: value_tiered (5–10%→0.5u, 10–15%→1u, 15–20%→1.5u, 20%+→2u).
-    - Spread bets: flat 1u.
+    - Match bets: flat 1u.
+    - Spread bets: flat 2u.
     """
     if (bet_type or "").strip().lower() == "spread":
-        return 1.0, 1.0 * STRICT_UNIT_GBP, "flat_spread"
+        return 2.0, 2.0 * STRICT_UNIT_GBP, "flat_spread"
 
-    if value_pct is not None:
-        units = 2.0 if value_pct >= 20 else 1.5 if value_pct >= 15 else 1.0 if value_pct >= 10 else 0.5 if value_pct >= 5 else 0.5
-        return units, units * STRICT_UNIT_GBP, "value_tiered"
-
-    return 1.0, 1.0 * STRICT_UNIT_GBP, "flat"
+    return 1.0, 1.0 * STRICT_UNIT_GBP, "flat_match"
 
 
 def format_signed_line(v: float | None) -> str:
@@ -1083,8 +1079,7 @@ def main() -> int:
         print(f"Profile: {args.signal_profile}  |  {SHADOW_PROFILE_LABELS.get(args.signal_profile, args.signal_profile)}")
     print(
         "Stake sizing: "
-        f"value_tiered (5-10%=0.5u, 10-15%=1u, 15-20%=1.5u, 20%+=2u); "
-        f"spread 1u flat; unit_gbp={STRICT_UNIT_GBP:.2f}"
+        f"match 1u flat; spread 2u flat; unit_gbp={STRICT_UNIT_GBP:.2f}"
     )
     if EXCLUDE_ATP500_HARD_SHORT_FAVORITES:
         print(

@@ -146,18 +146,8 @@ const INJURED_PLAYERS_CSV =
 const HANDICAP_MIN_EDGE_PCT = 20;
 const STRICT_UNIT_GBP = parseNumberEnv("STRICT_UNIT_GBP", 100);
 const SHADOW_POLICY_MODE = normalizeShadowProfile(process.env.STRICT_POLICY_VOLUME_MODE);
-function computeStakeUnits(
-  ourOdds1: number,
-  ourOdds2: number,
-  pinOdds1: number,
-  pinOdds2: number,
-  side: "P1" | "P2",
-  valuePct: number
-): { units: number; gbp: number } {
-  // value_tiered: 5–10% → 0.5u, 10–15% → 1u, 15–20% → 1.5u, 20%+ → 2u
-  const units =
-    valuePct >= 20 ? 2 : valuePct >= 15 ? 1.5 : valuePct >= 10 ? 1 : valuePct >= 5 ? 0.5 : 0.5;
-  return { units, gbp: units * STRICT_UNIT_GBP };
+function computeStakeUnits(): { units: number; gbp: number } {
+  return { units: 1, gbp: STRICT_UNIT_GBP };
 }
 
 function parseNumberEnv(name: string, fallback: number): number {
@@ -1152,6 +1142,7 @@ async function run(): Promise<Response> {
       policyAllows && rawValueP1 != null && rawValueP1 >= STRICT_POLICY_INTERNAL_MIN_VALUE_PCT ? rawValueP1 : undefined;
     const strictCandidateValueP2 =
       policyAllows && rawValueP2 != null && rawValueP2 >= STRICT_POLICY_INTERNAL_MIN_VALUE_PCT ? rawValueP2 : undefined;
+    const strictShadowCandidate = strictCandidateValueP1 != null || strictCandidateValueP2 != null;
     let strictValueP1 = strictCandidateValueP1;
     let strictValueP2 = strictCandidateValueP2;
 
@@ -1201,6 +1192,7 @@ async function run(): Promise<Response> {
       shortFavoriteExcluded || mispriceExcluded || injuryExcluded;
     const volumeValueP1 =
       volumeMinVal != null &&
+      !strictShadowCandidate &&
       !volumeExcluded &&
       rawValueP1 != null &&
       rawValueP1 >= volumeMinVal
@@ -1208,6 +1200,7 @@ async function run(): Promise<Response> {
         : undefined;
     const volumeValueP2 =
       volumeMinVal != null &&
+      !strictShadowCandidate &&
       !volumeExcluded &&
       rawValueP2 != null &&
       rawValueP2 >= volumeMinVal
@@ -1216,6 +1209,7 @@ async function run(): Promise<Response> {
     const shadowMatch = volumeValueP1 != null || volumeValueP2 != null;
     const shadowSpreadEligible =
       volumeMinVal != null &&
+      !policyBaseAllows &&
       !shortFavoriteExcluded &&
       !injuryExcluded;
     const spreadShadowReason = spreadShadowReasonFor(r.surface ?? "", seriesBucket, confidence ?? "");
@@ -1391,8 +1385,8 @@ async function run(): Promise<Response> {
       side,
       value_pct: edgePct,
       pinnacle_odds: pinOdds,
-      stake_units: 1,
-      stake_gbp: STRICT_UNIT_GBP,
+      stake_units: 2,
+      stake_gbp: STRICT_UNIT_GBP * 2,
       bet_type: "spread" as const,
       spread_line: spreadLine,
       tournament: m.tournament,
