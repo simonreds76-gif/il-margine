@@ -143,6 +143,12 @@ if ($null -ne $volumeCfg) {
     Log "=== Step 11b/14: Volume settlement skipped (STRICT_POLICY_VOLUME_MODE=$volumeMode) ==="
 }
 
+Log "=== Step 11c/14: Settle spread shadow CSV ==="
+& python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-spreadshadow.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: strict-signals-spreadshadow settlement failed (exit $LASTEXITCODE), continuing..."
+}
+
 # Step 12: Weekly settled performance (base vs overlay)
 Log "=== Step 12/14: Strict policy settled performance ==="
 & python scripts\strict-policy-performance.py --days 7 2>&1 | ForEach-Object { Log $_ }
@@ -159,6 +165,12 @@ if ($null -ne $volumeCfg) {
     }
 } else {
     Log "=== Step 12b/14: Volume performance skipped (STRICT_POLICY_VOLUME_MODE=$volumeMode) ==="
+}
+
+Log "=== Step 12c/14: Spread shadow settled performance ==="
+& python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-spreadshadow.csv --compare data\backtest\strict-signals-spreadshadow-compare.csv --report-txt data\backtest\strict-policy-performance-spreadshadow-weekly.txt --summary-csv data\backtest\strict-policy-performance-spreadshadow-weekly.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: strict-policy-performance spread_shadow failed (exit $LASTEXITCODE), continuing..."
 }
 
 # Step 13: Weekly CLV audit (history first, tennis-data fallback)

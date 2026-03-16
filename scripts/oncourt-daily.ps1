@@ -116,6 +116,12 @@ if ($null -ne $volumeCfg) {
     Log "=== Step 8/9: Volume shadow skipped (STRICT_POLICY_VOLUME_MODE=$volumeMode) ==="
 }
 
+Log "=== Step 8b/9: Spread shadow (20%+ handicap edges; Clay + non-policy tournaments) ==="
+& python scripts\strict-policy-report.py --append --signal-profile spread_shadow --output "data\backtest\strict-signals-spreadshadow.csv" 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: spread_shadow append failed (exit $LASTEXITCODE), continuing..."
+}
+
 Log "============================================"
 Log "  Daily Pipeline finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Log "============================================"

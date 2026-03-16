@@ -48,12 +48,16 @@ DEFAULT_VOLUME_275_OUTPUT = DATA_DIR / "strict-signals-volume275.csv"
 DEFAULT_VOLUME_275_INTERNAL_OUTPUT = DATA_DIR / "strict-signals-volume275-internal.csv"
 DEFAULT_VOLUME_200_OUTPUT = DATA_DIR / "strict-signals-volume200.csv"
 DEFAULT_VOLUME_200_INTERNAL_OUTPUT = DATA_DIR / "strict-signals-volume200-internal.csv"
+DEFAULT_SPREAD_SHADOW_OUTPUT = DATA_DIR / "strict-signals-spreadshadow.csv"
+DEFAULT_SPREAD_SHADOW_INTERNAL_OUTPUT = DATA_DIR / "strict-signals-spreadshadow-internal.csv"
 
 STRICT_MIN_VALUE_PCT = 10.0  # Public-facing high-conviction signals
 INTERNAL_TRACK_MIN_VALUE_PCT = 5.0  # Internal tracking for 200-bet confirmation
 HANDICAP_MIN_EDGE_PCT = 20.0  # Handicap signal: model edge vs Pinnacle spread
+SPREAD_SHADOW_MIN_EDGE_PCT = 20.0  # Separate shadow lane for handicaps outside current strict match policy
 ALLOWED_SEGMENT = "Hard|Masters 1000"
 ALLOWED_CONFIDENCE = {"high"}
+SPREAD_SHADOW_CONFIDENCE = {"high", "medium"}
 EXCLUDE_ATP500_HARD_SHORT_FAVORITES = True
 EXCLUDE_SHORT_FAV_MAX_ODDS = 1.8
 EXCLUDE_SHORT_FAV_CONFIDENCE = {"high"}
@@ -103,12 +107,32 @@ SHADOW_PROFILE_RULES: dict[str, list[dict[str, Any]]] = {
 SHADOW_PROFILE_OUTPUTS: dict[str, tuple[Path, Path]] = {
     "volume_275": (DEFAULT_VOLUME_275_OUTPUT, DEFAULT_VOLUME_275_INTERNAL_OUTPUT),
     "volume_200": (DEFAULT_VOLUME_200_OUTPUT, DEFAULT_VOLUME_200_INTERNAL_OUTPUT),
+    "spread_shadow": (DEFAULT_SPREAD_SHADOW_OUTPUT, DEFAULT_SPREAD_SHADOW_INTERNAL_OUTPUT),
 }
 
 SHADOW_PROFILE_LABELS: dict[str, str] = {
     "volume_275": "Volume 275 (legacy shadow; includes Clay Masters)",
     "volume_200": "Volume 200 (trimmed shadow; no Clay Masters)",
+    "spread_shadow": "Spread shadow (20%+ handicap edges; Clay + non-policy tournaments)",
 }
+
+
+def _append_key_value(field: str, value: Any) -> str:
+    if field == "policy_mode":
+        return str(value or "base").strip().lower()
+    if field == "bet_type":
+        return str(value or "match").strip().lower()
+    if field == "signal_profile":
+        return str(value or "strict").strip().lower()
+    if field == "spread_line":
+        txt = str(value or "").strip()
+        if not txt:
+            return ""
+        try:
+            return f"{float(txt):g}"
+        except ValueError:
+            return txt.lower()
+    return str(value or "").strip().lower()
 
 
 def load_env() -> None:
@@ -358,6 +382,22 @@ def shadow_profile_min_value_for(profile_name: str, surface: str, series_bucket:
     return min(vals)
 
 
+def spread_shadow_reason_for(surface: str, series_bucket: str, confidence: str) -> str | None:
+    conf = (confidence or "").strip().lower()
+    if conf not in SPREAD_SHADOW_CONFIDENCE:
+        return None
+
+    in_strict_match_segment = strict_min_value_for(surface, series_bucket, conf) is not None
+    is_clay = surface == "Clay"
+    if is_clay and not in_strict_match_segment:
+        return "clay_non_policy"
+    if is_clay:
+        return "clay"
+    if not in_strict_match_segment:
+        return "non_policy"
+    return None
+
+
 def compute_stake_units(
     *,
     our_odds1: float,
@@ -475,26 +515,26 @@ def append_rows_dedup(path: Path, rows: list[dict[str, Any]], key_fields: list[s
     if not path.exists() and not rows:
         return 0
     path.parent.mkdir(parents=True, exist_ok=True)
-    existing_rows: list[dict[str, str]] = []
+    existing_by_key: dict[tuple[str, ...], dict[str, str]] = {}
     existing_fields: list[str] = []
-    existing_keys: set[tuple[str, ...]] = set()
     if path.exists():
         with path.open("r", encoding="utf-8", newline="") as f:
             rd = csv.DictReader(f)
             existing_fields = list(rd.fieldnames or [])
             for r in rd:
-                existing_rows.append(dict(r))
-                key = tuple(str(r.get(k) or "").strip().lower() for k in key_fields)
-                existing_keys.add(key)
+                row = dict(r)
+                key = tuple(_append_key_value(k, row.get(k)) for k in key_fields)
+                existing_by_key[key] = row
 
-    out_rows = list(existing_rows)
+    out_rows = list(existing_by_key.values())
     added = 0
     for r in rows:
-        key = tuple(str(r.get(k) or "").strip().lower() for k in key_fields)
-        if key in existing_keys:
+        key = tuple(_append_key_value(k, r.get(k)) for k in key_fields)
+        if key in existing_by_key:
             continue
-        existing_keys.add(key)
-        out_rows.append({k: ("" if v is None else str(v)) for k, v in r.items()})
+        normalized = {k: ("" if v is None else str(v)) for k, v in r.items()}
+        existing_by_key[key] = normalized
+        out_rows.append(normalized)
         added += 1
 
     fieldnames = list(existing_fields)
@@ -527,7 +567,7 @@ def main() -> int:
     parser.add_argument("--append", action="store_true", help="Append production-mode signals to strict-signals.csv")
     parser.add_argument(
         "--signal-profile",
-        choices=("strict", "volume_275", "volume_200"),
+        choices=("strict", "volume_275", "volume_200", "spread_shadow"),
         default=(os.environ.get("STRICT_SIGNAL_PROFILE", "strict") or "strict").strip().lower(),
         help="Signal profile to evaluate/write (strict live policy or one of the shadow volume profiles).",
     )
@@ -570,9 +610,12 @@ def main() -> int:
     if not args.output:
         args.output = str(DEFAULT_OUTPUT if args.signal_profile == "strict" else SHADOW_PROFILE_OUTPUTS[args.signal_profile][0])
     if not args.internal_output:
-        args.internal_output = str(
-            DEFAULT_INTERNAL_OUTPUT if args.signal_profile == "strict" else SHADOW_PROFILE_OUTPUTS[args.signal_profile][1]
-        )
+        if args.signal_profile == "spread_shadow":
+            args.internal_output = ""
+        else:
+            args.internal_output = str(
+                DEFAULT_INTERNAL_OUTPUT if args.signal_profile == "strict" else SHADOW_PROFILE_OUTPUTS[args.signal_profile][1]
+            )
     if args.signal_profile != "strict" and args.policy_mode == "overlay":
         print(f"WARNING: overlay mode applies to strict profile only; forcing policy-mode=base for {args.signal_profile}.")
         args.policy_mode = "base"
@@ -697,10 +740,12 @@ def main() -> int:
         strict_min_value = strict_min_value_for(surface, series_bucket, confidence)
         volume_min_value = (
             shadow_profile_min_value_for(args.signal_profile, surface, series_bucket, confidence)
-            if args.signal_profile != "strict"
+            if args.signal_profile not in {"strict", "spread_shadow"}
             else None
         )
-        if strict_min_value is None and volume_min_value is None:
+        spread_shadow_reason = spread_shadow_reason_for(surface, series_bucket, confidence)
+        spread_shadow_eligible = args.signal_profile == "spread_shadow" and spread_shadow_reason is not None
+        if strict_min_value is None and volume_min_value is None and not spread_shadow_eligible:
             continue
 
         our_odds1 = r.get("odds1")
@@ -709,11 +754,10 @@ def main() -> int:
             continue
         our_odds1 = float(our_odds1)
         our_odds2 = float(our_odds2)
-        # Skip matches where model favourite odds < 1.25.
-        # The model cannot price extreme mismatches — both sides are unreliable.
+        # ML only: skip matches where model favourite odds < 1.25.
+        # Keep spreads eligible; this filter is for dog-moneyline distortions.
         model_fav_odds = min(our_odds1, our_odds2)
-        if model_fav_odds < MISPRICE_MODEL_FAV_ODDS_MIN:
-            continue
+        model_ml_excluded = model_fav_odds < MISPRICE_MODEL_FAV_ODDS_MIN
         if is_excluded_short_favorite(surface, series_bucket, confidence, our_odds1, our_odds2):
             continue
 
@@ -729,10 +773,9 @@ def main() -> int:
         if not pin or (pin["odds1"] or 0) <= 0 or (pin["odds2"] or 0) <= 0:
             continue
 
-        # Skip when Pinnacle favourite odds < 1.25. Market massacre = don't bet the dog.
+        # ML only: skip when Pinnacle favourite odds < 1.25. Keep spreads eligible.
         pin_fav_odds = min(float(pin["odds1"] or 0), float(pin["odds2"] or 0))
-        if pin_fav_odds > 0 and pin_fav_odds < MISPRICE_MODEL_FAV_ODDS_MIN:
-            continue
+        pin_ml_excluded = pin_fav_odds > 0 and pin_fav_odds < MISPRICE_MODEL_FAV_ODDS_MIN
 
         value_p1 = (pin["odds1"] / our_odds1 - 1) * 100 if our_odds1 > 1 else None
         value_p2 = (pin["odds2"] / our_odds2 - 1) * 100 if our_odds2 > 1 else None
@@ -748,12 +791,16 @@ def main() -> int:
         )
         strict_match = (
             strict_min_value is not None
+            and not model_ml_excluded
+            and not pin_ml_excluded
             and has_internal_ml_value
             and value_pct is not None
             and value_pct >= strict_min_value
         )
         volume_match = (
             volume_min_value is not None
+            and not model_ml_excluded
+            and not pin_ml_excluded
             and has_internal_ml_value
             and value_pct is not None
             and value_pct >= volume_min_value
@@ -767,7 +814,7 @@ def main() -> int:
         bet_side = "fav" if side == fav_side else "dog"
         tname = tour_meta.get("name") or ""
         tkey = tour_key(tname)
-        if strict_match or volume_match:
+        if args.signal_profile != "spread_shadow" and (strict_match or volume_match):
             stake_units, stake_gbp, stake_model = compute_stake_units(
                 our_odds1=our_odds1,
                 our_odds2=our_odds2,
@@ -813,6 +860,8 @@ def main() -> int:
                     "_tournament_name": tname,
                     "_strict_match": strict_match,
                     "_volume_match": volume_match,
+                    "_spread_shadow_match": False,
+                    "shadow_reason": "",
                 }
             )
 
@@ -823,7 +872,8 @@ def main() -> int:
         spread_o2 = r.get("spread_odds2")
         he_p1 = r.get("handicap_edge_p1")
         he_p2 = r.get("handicap_edge_p2")
-        if (strict_spread_eligible or volume_spread_eligible) and (
+        profile_spread_eligible = strict_spread_eligible or volume_spread_eligible or spread_shadow_eligible
+        if profile_spread_eligible and (
             spread_line is not None
             and spread_o1 is not None
             and spread_o2 is not None
@@ -836,7 +886,7 @@ def main() -> int:
             so2 = float(spread_o2)
             he1 = float(he_p1)
             he2 = float(he_p2)
-            if he1 >= HANDICAP_MIN_EDGE_PCT:
+            if he1 >= (SPREAD_SHADOW_MIN_EDGE_PCT if args.signal_profile == "spread_shadow" else HANDICAP_MIN_EDGE_PCT):
                 stake_units_h1, stake_gbp_h1, stake_model_h1 = compute_stake_units(
                     our_odds1=our_odds1,
                     our_odds2=our_odds2,
@@ -882,9 +932,11 @@ def main() -> int:
                         "_tournament_name": tname,
                         "_strict_match": strict_spread_eligible,
                         "_volume_match": volume_spread_eligible,
+                        "_spread_shadow_match": spread_shadow_eligible,
+                        "shadow_reason": spread_shadow_reason or "",
                     }
                 )
-            if he2 >= HANDICAP_MIN_EDGE_PCT:
+            if he2 >= (SPREAD_SHADOW_MIN_EDGE_PCT if args.signal_profile == "spread_shadow" else HANDICAP_MIN_EDGE_PCT):
                 stake_units_h2, stake_gbp_h2, stake_model_h2 = compute_stake_units(
                     our_odds1=our_odds1,
                     our_odds2=our_odds2,
@@ -930,6 +982,8 @@ def main() -> int:
                         "_tournament_name": tname,
                         "_strict_match": strict_spread_eligible,
                         "_volume_match": volume_spread_eligible,
+                        "_spread_shadow_match": spread_shadow_eligible,
+                        "shadow_reason": spread_shadow_reason or "",
                     }
                 )
 
@@ -942,7 +996,12 @@ def main() -> int:
             segment_family=args.overlay_family,
         )
 
-    profile_key = "_strict_match" if args.signal_profile == "strict" else "_volume_match"
+    if args.signal_profile == "strict":
+        profile_key = "_strict_match"
+    elif args.signal_profile == "spread_shadow":
+        profile_key = "_spread_shadow_match"
+    else:
+        profile_key = "_volume_match"
     profile_candidates = [x for x in candidates if x.get(profile_key)]
     base_signals: list[dict[str, Any]] = [dict(x) for x in profile_candidates]
     overlay_signals: list[dict[str, Any]] = []
@@ -995,6 +1054,12 @@ def main() -> int:
             s["signal_profile"] = "strict"
         public_signals = [s for s in signals if (s.get("value_pct") or 0) >= STRICT_MIN_VALUE_PCT]
         internal_signals = signals  # All 5%+ for confirmation tracking
+    elif args.signal_profile == "spread_shadow":
+        for s in signals:
+            s["threshold_tier"] = "profile"
+            s["signal_profile"] = "spread_shadow"
+        public_signals = signals
+        internal_signals = []
     else:
         for s in signals:
             s["threshold_tier"] = "profile"
@@ -1080,26 +1145,28 @@ def main() -> int:
             r.pop("_tournament_name", None)
             r.pop("_strict_match", None)
             r.pop("_volume_match", None)
+            r.pop("_spread_shadow_match", None)
 
     if args.append:
         out_path = Path(args.output)
         added = append_rows_dedup(
             out_path,
             public_signals,
-            key_fields=["date", "player1", "player2", "bet_type", "side", "policy_mode"],
+            key_fields=["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"],
         )
         print(f"\nAppended {added}/{len(public_signals)} public rows to {out_path} (deduped).")
 
-        internal_path = Path(args.internal_output)
-        added_internal = append_rows_dedup(
-            internal_path,
-            internal_signals,
-            key_fields=["date", "player1", "player2", "bet_type", "side", "policy_mode"],
-        )
-        if args.signal_profile == "strict":
-            print(f"Appended {added_internal}/{len(internal_signals)} internal (5%+) rows to {internal_path} (deduped).")
-        else:
-            print(f"Appended {added_internal}/{len(internal_signals)} profile rows to {internal_path} (deduped).")
+        if internal_signals and args.internal_output:
+            internal_path = Path(args.internal_output)
+            added_internal = append_rows_dedup(
+                internal_path,
+                internal_signals,
+                key_fields=["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"],
+            )
+            if args.signal_profile == "strict":
+                print(f"Appended {added_internal}/{len(internal_signals)} internal (5%+) rows to {internal_path} (deduped).")
+            else:
+                print(f"Appended {added_internal}/{len(internal_signals)} profile rows to {internal_path} (deduped).")
 
         if args.signal_profile == "strict" and args.compare_overlay:
             compare_rows = base_signals + overlay_signals
@@ -1107,7 +1174,7 @@ def main() -> int:
             added_cmp = append_rows_dedup(
                 compare_path,
                 compare_rows,
-                key_fields=["date", "player1", "player2", "bet_type", "side", "policy_mode"],
+                key_fields=["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"],
             )
             print(f"Appended {added_cmp}/{len(compare_rows)} comparison rows to {compare_path} (deduped).")
 
