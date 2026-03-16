@@ -249,7 +249,7 @@ function BookmakerCard({ bm }: { bm: (typeof BOOKMAKERS)[0] }) {
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 border-t border-slate-800">
           <div className="flex items-baseline gap-2 flex-wrap">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-300">New customers</span>
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400">New customers</span>
             <span className="text-slate-500">·</span>
             <span className="text-sm font-semibold text-slate-100">{bm.welcomeOffer}</span>
           </div>
@@ -277,7 +277,7 @@ function BookmakerCard({ bm }: { bm: (typeof BOOKMAKERS)[0] }) {
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-300 mb-1.5">Strengths</p>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400 mb-1.5">Strengths</p>
               <ul className="list-disc pl-4 text-slate-400 text-sm space-y-0.5">
                 {bm.strengths.map((s, i) => <li key={i}>{s}</li>)}
               </ul>
@@ -316,7 +316,7 @@ export default function BookmakersPage() {
 
         {/* Hero */}
         <section className="mb-10 md:mb-12">
-          <span className="text-[11px] font-semibold uppercase tracking-widest text-emerald-300 mb-2 block">Bookmakers</span>
+          <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">BOOKMAKERS</span>
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">
             £250+ in Welcome Offers
           </h1>
@@ -363,7 +363,7 @@ export default function BookmakersPage() {
 
           {/* Must-have: William Hill first */}
           <div className="mb-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300/80 mb-3">Must-have — we use it often</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400/80 mb-3">Must-have — we use it often</p>
             <div className="space-y-6">
               {BOOKMAKERS.filter((bm) => bm.id === "william-hill").map((bm) => (
                 <BookmakerCard key={bm.id} bm={bm} />
@@ -373,7 +373,7 @@ export default function BookmakersPage() {
 
           {/* Entain trio */}
           <div className="mb-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300/80 mb-3">The Entain trio (open all three)</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400/80 mb-3">The Entain trio (open all three)</p>
             <div className="space-y-6">
               {BOOKMAKERS.filter((bm) => ["bwin", "coral", "ladbrokes"].includes(bm.id)).map((bm) => (
                 <BookmakerCard key={bm.id} bm={bm} />

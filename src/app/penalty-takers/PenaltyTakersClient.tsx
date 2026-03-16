@@ -1,3 +1,5 @@
+import Link from "next/link";
+import Image from "next/image";
 import Footer from "@/components/Footer";
 
 type TeamEntry = {
@@ -135,13 +137,17 @@ export default function PenaltyTakersClient({ leagues, totalTeams, currentSeason
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <main className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
-        <section className="border-b border-slate-800/50 py-10 sm:py-14">
+        <section className="border-b border-slate-800/50 pt-6 pb-12 md:pt-6 md:pb-16">
           <div className="max-w-4xl">
-            <div className="mb-4 font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Reference page</div>
-            <h1 className="text-4xl font-bold tracking-tight text-slate-100 sm:text-5xl md:text-6xl">
-              Penalty takers <span className="text-emerald-400">{currentSeason}</span>
+            <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8">
+              <Image src="/favicon.png" alt="" width={40} height={40} className="h-10 w-10 object-contain shrink-0" />
+              <span>&larr; Home</span>
+            </Link>
+            <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">IL MARGINE INTELLIGENCE</span>
+            <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4">
+              Penalty Takers <span className="text-emerald-400">{currentSeason}</span>
             </h1>
-            <p className="mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg">
+            <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
               First, second and third-choice penalty takers for every club in Europe&apos;s top five leagues.
               Built as a live reference for bettors, fantasy players and anyone who needs the actual hierarchy,
               not a stale one-name list from August.

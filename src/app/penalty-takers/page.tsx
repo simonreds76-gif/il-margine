@@ -74,7 +74,7 @@ const LEAGUES: LeagueConfig[] = [
     short: "SA",
     file: "data/goalscorer/serie-a-penalty-takers.json",
     logoPath: "/league-logos/serie-a.png",
-    tabClasses: "border-emerald-400/80 text-stone-300 hover:border-emerald-300 hover:text-stone-100",
+    tabClasses: "border-emerald-400/80 text-slate-300 hover:border-emerald-300 hover:text-slate-100",
     cardGlowClasses: "hover:shadow-[0_24px_70px_rgba(16,185,129,0.08)]",
     heading: `Serie A penalty takers ${CURRENT_SEASON}`,
     summary:
@@ -90,7 +90,7 @@ const LEAGUES: LeagueConfig[] = [
     short: "PL",
     file: "data/goalscorer/epl-penalty-takers.json",
     logoPath: "/league-logos/epl.png",
-    tabClasses: "border-indigo-300/80 text-stone-300 hover:border-indigo-200 hover:text-stone-100",
+    tabClasses: "border-indigo-300/80 text-slate-300 hover:border-indigo-200 hover:text-slate-100",
     cardGlowClasses: "hover:shadow-[0_24px_70px_rgba(129,140,248,0.08)]",
     heading: `Premier League penalty takers ${CURRENT_SEASON}`,
     summary:
@@ -106,7 +106,7 @@ const LEAGUES: LeagueConfig[] = [
     short: "LL",
     file: "data/goalscorer/la-liga-penalty-takers.json",
     logoPath: "/league-logos/la-liga.png",
-    tabClasses: "border-amber-300/80 text-stone-300 hover:border-amber-200 hover:text-stone-100",
+    tabClasses: "border-amber-300/80 text-slate-300 hover:border-amber-200 hover:text-slate-100",
     cardGlowClasses: "hover:shadow-[0_24px_70px_rgba(245,158,11,0.08)]",
     heading: `La Liga penalty takers ${CURRENT_SEASON}`,
     summary:
@@ -122,7 +122,7 @@ const LEAGUES: LeagueConfig[] = [
     short: "BL",
     file: "data/goalscorer/bundesliga-penalty-takers.json",
     logoPath: "/league-logos/bundesliga.png",
-    tabClasses: "border-rose-300/80 text-stone-300 hover:border-rose-200 hover:text-stone-100",
+    tabClasses: "border-rose-300/80 text-slate-300 hover:border-rose-200 hover:text-slate-100",
     cardGlowClasses: "hover:shadow-[0_24px_70px_rgba(248,113,113,0.08)]",
     heading: `Bundesliga penalty takers ${CURRENT_SEASON}`,
     summary:
@@ -138,7 +138,7 @@ const LEAGUES: LeagueConfig[] = [
     short: "L1",
     file: "data/goalscorer/ligue-1-penalty-takers.json",
     logoPath: "/league-logos/ligue-1.png",
-    tabClasses: "border-cyan-300/80 text-stone-300 hover:border-cyan-200 hover:text-stone-100",
+    tabClasses: "border-cyan-300/80 text-slate-300 hover:border-cyan-200 hover:text-slate-100",
     cardGlowClasses: "hover:shadow-[0_24px_70px_rgba(96,165,250,0.08)]",
     heading: `Ligue 1 penalty takers ${CURRENT_SEASON}`,
     summary:
