@@ -1348,10 +1348,9 @@ async function run(): Promise<Response> {
     const pinnacleOdds = side === "P1" ? m.pinnacle_odds1 : m.pinnacle_odds2;
     const pin1 = m.pinnacle_odds1 ?? 0;
     const pin2 = m.pinnacle_odds2 ?? 0;
-    const valuePctNum = valuePct ?? 0;
     const { units, gbp } =
       pin1 > 0 && pin2 > 0
-        ? computeStakeUnits(m.odds1, m.odds2, pin1, pin2, side as "P1" | "P2", valuePctNum)
+        ? computeStakeUnits()
         : { units: 1, gbp: STRICT_UNIT_GBP };
     return {
       id: m.id,
