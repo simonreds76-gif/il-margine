@@ -38,8 +38,6 @@ type TeamEntry = {
   primary: string;
   secondary: string;
   tertiary: string;
-  lastUpdated: string;
-  lastUpdatedIso: string;
   logoPath: string;
   initials: string;
 };
@@ -56,12 +54,11 @@ type LeagueEntry = {
   summary: string;
   paragraphs: string[];
   teamCount: number;
-  updatedLabel: string;
-  updatedIso: string;
+  subtitle: string;
   teams: TeamEntry[];
 };
 
-type LeagueConfig = Omit<LeagueEntry, "teamCount" | "updatedLabel" | "updatedIso" | "teams">;
+type LeagueConfig = Omit<LeagueEntry, "teamCount" | "subtitle" | "teams">;
 
 const EMPTY_LOGO_MANIFEST: LogoManifest = {
   leagues: {},
@@ -243,27 +240,6 @@ function buildInitials(team: string): string {
     .join("");
 }
 
-function formatDate(value?: string): string {
-  if (!value) return "Unknown";
-  const stamp = Date.parse(value);
-  if (!Number.isFinite(stamp)) return cleanText(value);
-  return new Intl.DateTimeFormat("en-GB", {
-    month: "short",
-    day: "numeric",
-  }).format(new Date(stamp));
-}
-
-function formatDateLong(value?: string): string {
-  if (!value) return "";
-  const stamp = Date.parse(value);
-  if (!Number.isFinite(stamp)) return cleanText(value);
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(stamp));
-}
-
 function findLogoPath(
   leagueKey: string,
   team: string,
@@ -285,15 +261,9 @@ export default async function PenaltyTakersPage() {
   const leagues: LeagueEntry[] = await Promise.all(
     LEAGUES.map(async (league) => {
       const penaltyFile = await readJson<PenaltyFile>(league.file);
-      const latestStamp = Object.values(penaltyFile)
-        .map((entry) => Date.parse(entry.last_updated || ""))
-        .filter((value) => Number.isFinite(value))
-        .sort((left, right) => right - left)[0];
-
       const teams = Object.entries(penaltyFile)
         .map(([teamName, entry]) => {
           const team = cleanText(teamName);
-          const lastUpdatedIso = entry.last_updated || "";
 
           return {
             team,
@@ -301,21 +271,16 @@ export default async function PenaltyTakersPage() {
             primary: cleanText(entry.primary) || "TBC",
             secondary: cleanText(entry.secondary) || "TBC",
             tertiary: cleanText(entry.tertiary),
-            lastUpdated: formatDate(lastUpdatedIso),
-            lastUpdatedIso,
             logoPath: findLogoPath(league.key, teamName, logoManifest),
             initials: buildInitials(team),
           };
         })
         .sort((left, right) => left.team.localeCompare(right.team, "en"));
 
-      const updatedIso = Number.isFinite(latestStamp) ? new Date(latestStamp).toISOString() : "";
-
       return {
         ...league,
         teamCount: teams.length,
-        updatedLabel: updatedIso ? formatDateLong(updatedIso) : "Updated weekly",
-        updatedIso,
+        subtitle: `${teams.length} teams · current hierarchy`,
         teams,
       };
     }),

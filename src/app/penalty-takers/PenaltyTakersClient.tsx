@@ -8,7 +8,6 @@ type TeamEntry = {
   primary: string;
   secondary: string;
   tertiary: string;
-  lastUpdated: string;
   logoPath: string;
   initials: string;
 };
@@ -18,7 +17,7 @@ type LeagueEntry = {
   label: string;
   short: string;
   teamCount: number;
-  updatedLabel: string;
+  subtitle: string;
   logoPath: string;
   tabClasses: string;
   cardGlowClasses: string;
@@ -47,7 +46,7 @@ function Crest({
 }) {
   const wrapperClass =
     size === "league"
-      ? "flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-700/80 bg-slate-900/85"
+      ? "flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-300/70 bg-gradient-to-b from-white to-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]"
       : "flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-700/80 bg-slate-900/85";
   const imageClass = size === "league" ? "h-7 w-7 object-contain" : "h-6 w-6 object-contain";
 
@@ -84,9 +83,6 @@ function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
           >
             {team.team}
           </a>
-        </div>
-        <div className="shrink-0 rounded-md border border-slate-800 bg-slate-950/70 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-slate-500">
-          {team.lastUpdated}
         </div>
       </div>
 
@@ -217,7 +213,7 @@ export default function PenaltyTakersClient({ leagues, totalTeams, currentSeason
                 href={`#${league.key}`}
                 className={`relative whitespace-nowrap border-b-2 px-5 py-4 text-sm font-medium transition ${league.tabClasses} hover:text-slate-100`}
               >
-                <span className="mr-2 inline-flex h-5 w-5 items-center justify-center overflow-hidden rounded-md border border-slate-700/80 bg-slate-900/90 align-middle">
+                <span className="mr-2 inline-flex h-5 w-5 items-center justify-center overflow-hidden rounded-md border border-slate-300/70 bg-gradient-to-b from-white to-slate-100 align-middle shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={league.logoPath} alt={league.label} className="h-3.5 w-3.5 object-contain" />
                 </span>
@@ -234,9 +230,7 @@ export default function PenaltyTakersClient({ leagues, totalTeams, currentSeason
                 <Crest logoPath={league.logoPath} team={league.label} initials={league.short} size="league" />
                 <div>
                   <h2 className="text-3xl font-semibold tracking-tight text-slate-100">{league.heading}</h2>
-                  <p className="text-sm text-slate-500">
-                    {league.teamCount} teams · {league.updatedLabel}
-                  </p>
+                  <p className="text-sm text-slate-500">{league.subtitle}</p>
                 </div>
               </div>
 
