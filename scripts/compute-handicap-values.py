@@ -7,9 +7,12 @@ Run after: (1) oncourt-compute-fair-odds.py, (2) pinnacle-scrape-odds.py
 If daily_fair_odds is recomputed later (e.g. via Supabase), spread columns get overwritten
 with null. Re-run this script or the full pipeline (run-daily-odds.py) to restore handicaps.
 
-Matches daily_fair_odds (with p_a, p_b) to bookmaker_odds_snapshot (with spread_line,
-spread_odds1, spread_odds2), computes model edge via handicap_probs.handicap_value,
-and PATCHes daily_fair_odds with spread + handicap_edge columns.
+Matches daily_fair_odds to bookmaker_odds_snapshot, rebuilds a point-probability pair that
+is consistent with the *final* blended match win probability (`p1_win_prob`), then computes
+model spread edges and PATCHes daily_fair_odds with spread + handicap_edge columns.
+
+This avoids the old mismatch where ML fair odds used the final blended probability but
+handicaps were still priced from the earlier pre-blend `p_a/p_b` layer.
 
 Usage:
   python scripts/compute-handicap-values.py
@@ -26,9 +29,17 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from statistics import mean, median
 
-# Add scripts dir for handicap_probs
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Add scripts dir + project root for local imports
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, _SCRIPT_DIR)
+sys.path.insert(0, os.path.dirname(_SCRIPT_DIR))
 from handicap_probs import prob_p1_covers_plus
+from src.lib.tennis_prob import prob_match_best_of_3
+
+
+POINT_CLAMP = (0.42, 0.80)
+SURFACE_LEAGUE_AVG = {"Hard": 0.64, "Clay": 0.62, "Grass": 0.67, "I.hard": 0.64, "N/A": 0.64}
+MIN_VENUE_SPW_MATCHES = 50
 
 
 def _root_dir() -> str:
@@ -43,6 +54,60 @@ class HandicapCalibration:
     platt_a: float
     platt_b: float
     source: str
+
+
+def _chunked(values: list[int], size: int):
+    for start in range(0, len(values), size):
+        yield values[start : start + size]
+
+
+def _solve_spw_for_match_prob(
+    p1_win: float,
+    avg_spw: float,
+    clamp_lo: float = POINT_CLAMP[0],
+    clamp_hi: float = POINT_CLAMP[1],
+    tol: float = 5e-4,
+    max_iter: int = 60,
+):
+    """
+    Solve symmetric point-win probabilities around avg_spw such that the implied
+    best-of-3 match win probability matches the final fair-odds `p1_win`.
+    """
+    p1_win = _clamp(p1_win, 0.02, 0.98)
+    avg_spw = _clamp(avg_spw, clamp_lo + 0.01, clamp_hi - 0.01)
+    max_delta = min(avg_spw - clamp_lo, clamp_hi - avg_spw)
+    lo, hi = -max_delta, max_delta
+    for _ in range(max_iter):
+        mid = (lo + hi) / 2.0
+        p_a = _clamp(avg_spw + mid, clamp_lo, clamp_hi)
+        p_b = _clamp(avg_spw - mid, clamp_lo, clamp_hi)
+        implied = prob_match_best_of_3(p_a, p_b)
+        if abs(implied - p1_win) < tol:
+            return (p_a, p_b)
+        if implied < p1_win:
+            lo = mid
+        else:
+            hi = mid
+    mid = (lo + hi) / 2.0
+    return (
+        _clamp(avg_spw + mid, clamp_lo, clamp_hi),
+        _clamp(avg_spw - mid, clamp_lo, clamp_hi),
+    )
+
+
+def _court_to_surface(court_name: str | None) -> str:
+    if not court_name:
+        return "N/A"
+    c = court_name.upper()
+    if "CLAY" in c or "TERRE" in c:
+        return "Clay"
+    if "GRASS" in c:
+        return "Grass"
+    if "INDOOR" in c and "HARD" in c:
+        return "I.hard"
+    if "HARD" in c or "DECOTURF" in c or "ACRYLIC" in c:
+        return "Hard"
+    return "N/A"
 
 
 def _clamp(x: float, lo: float, hi: float) -> float:
@@ -262,6 +327,8 @@ def load_handicap_calibration(args: argparse.Namespace) -> HandicapCalibration:
     mode = (os.environ.get("HANDICAP_CALIBRATION_MODE") or "auto").strip().lower()
     if mode in {"off", "false", "0", "none"}:
         return HandicapCalibration(False, 0.0, 0.0, 1.0, "disabled-by-env")
+    if mode == "auto":
+        return HandicapCalibration(False, 0.0, 0.0, 1.0, "auto-disabled:legacy-calibration-mismatch")
 
     default_path = os.path.join(_root_dir(), "data", "backtest", "handicap-calibration-params.json")
     cal_path = (
@@ -302,6 +369,37 @@ def summarize_edges(label: str, edges: list[float]) -> None:
     )
 
 
+def resolve_capture_date(base_url: str, headers: dict[str, str], explicit_date: str | None) -> str:
+    if explicit_date:
+        return explicit_date
+
+    import requests
+
+    fallback = datetime.now(timezone.utc).date().isoformat()
+    try:
+        resp = requests.get(
+            f"{base_url}/rest/v1/bookmaker_odds_snapshot",
+            headers=headers,
+            params={
+                "select": "capture_date,captured_at",
+                "bookmaker": "eq.Pinnacle",
+                "league": "in.(ATP,Challenger)",
+                "order": "captured_at.desc",
+                "limit": 1,
+            },
+            timeout=15,
+        )
+        resp.raise_for_status()
+        rows = resp.json()
+        if rows:
+            latest = (rows[0].get("capture_date") or "").strip()
+            if latest:
+                return latest
+    except Exception:
+        pass
+    return fallback
+
+
 def main():
     load_env()
     import requests
@@ -314,7 +412,7 @@ def main():
         sys.exit(1)
     headers = {"apikey": key, "Authorization": f"Bearer {key}"}
 
-    capture_date = args.date or datetime.now(timezone.utc).date().isoformat()
+    capture_date = resolve_capture_date(url, headers, args.date)
     calibration = load_handicap_calibration(args)
     if calibration.enabled:
         print(
@@ -325,11 +423,11 @@ def main():
     else:
         print(f"Handicap calibration: OFF ({calibration.source})")
 
-    # 1) Load daily_fair_odds with p_a, p_b
+    # 1) Load daily_fair_odds with final blended win probability + surface context
     r = requests.get(
         f"{url}/rest/v1/daily_fair_odds",
         headers=headers,
-        params={"select": "id,tour_id,player1_id,player2_id,p1_win_prob,p_a,p_b"},
+        params={"select": "id,tour_id,player1_id,player2_id,p1_win_prob,p_a,p_b,surface"},
         timeout=30,
     )
     r.raise_for_status()
@@ -338,18 +436,15 @@ def main():
         print("No rows in daily_fair_odds. Run oncourt-compute-fair-odds.py first.")
         sys.exit(1)
 
-    # Check for p_a, p_b
-    sample = fair_rows[0]
-    if sample.get("p_a") is None or sample.get("p_b") is None:
-        print("daily_fair_odds missing p_a/p_b. Run migration docs/supabase-daily-fair-odds-pa-pb.sql")
-        sys.exit(1)
-
     player_ids = set()
+    tour_ids = set()
     for row in fair_rows:
         if row.get("player1_id") is not None:
             player_ids.add(row["player1_id"])
         if row.get("player2_id") is not None:
             player_ids.add(row["player2_id"])
+        if row.get("tour_id") is not None:
+            tour_ids.add(int(row["tour_id"]))
     player_ids = list(player_ids)
     players = {}
     for i in range(0, len(player_ids), 100):
@@ -367,6 +462,98 @@ def main():
     for row in fair_rows:
         row["p1_name"] = players.get(row.get("player1_id"), "")
         row["p2_name"] = players.get(row.get("player2_id"), "")
+
+    league_avg_by_surface = dict(SURFACE_LEAGUE_AVG)
+    try:
+        r = requests.get(
+            f"{url}/rest/v1/surface_league_averages",
+            headers=headers,
+            params={"select": "surface,serve_point_win_pct", "limit": 20},
+            timeout=30,
+        )
+        r.raise_for_status()
+        for row in r.json():
+            surf = (row.get("surface") or "N/A").strip() or "N/A"
+            pct = row.get("serve_point_win_pct")
+            if pct is None:
+                continue
+            try:
+                league_avg_by_surface[surf] = float(pct)
+            except (TypeError, ValueError):
+                continue
+    except Exception:
+        pass
+
+    tour_meta: dict[int, dict] = {}
+    if tour_ids:
+        for chunk in _chunked(sorted(tour_ids), 200):
+            r = requests.get(
+                f"{url}/rest/v1/oncourt_tours",
+                headers=headers,
+                params={
+                    "id": "in.(" + ",".join(str(x) for x in chunk) + ")",
+                    "select": "id,name,rank,court_id",
+                    "limit": len(chunk),
+                },
+                timeout=30,
+            )
+            r.raise_for_status()
+            for row in r.json():
+                if row.get("id") is None:
+                    continue
+                tour_meta[int(row["id"])] = row
+
+    court_ids = sorted(
+        {
+            int(meta["court_id"])
+            for meta in tour_meta.values()
+            if meta.get("court_id") is not None
+        }
+    )
+    courts: dict[int, str] = {}
+    if court_ids:
+        for chunk in _chunked(court_ids, 200):
+            r = requests.get(
+                f"{url}/rest/v1/oncourt_courts",
+                headers=headers,
+                params={
+                    "id": "in.(" + ",".join(str(x) for x in chunk) + ")",
+                    "select": "id,name",
+                    "limit": len(chunk),
+                },
+                timeout=30,
+            )
+            r.raise_for_status()
+            for row in r.json():
+                if row.get("id") is None:
+                    continue
+                courts[int(row["id"])] = (row.get("name") or "").strip()
+
+    venue_serve_lookup: dict[tuple[int, str], float] = {}
+    if tour_ids:
+        for chunk in _chunked(sorted(tour_ids), 200):
+            r = requests.get(
+                f"{url}/rest/v1/tournament_serve_profile",
+                headers=headers,
+                params={
+                    "tour_id": "in.(" + ",".join(str(x) for x in chunk) + ")",
+                    "select": "tour_id,surface,venue_avg_spw,match_count",
+                    "limit": 500,
+                },
+                timeout=30,
+            )
+            r.raise_for_status()
+            for row in r.json():
+                tid = row.get("tour_id")
+                surf = (row.get("surface") or "N/A").strip() or "N/A"
+                spw = row.get("venue_avg_spw")
+                n = int(row.get("match_count") or 0)
+                if tid is None or spw is None or n < MIN_VENUE_SPW_MATCHES:
+                    continue
+                try:
+                    venue_serve_lookup[(int(tid), surf)] = float(spw)
+                except (TypeError, ValueError):
+                    continue
 
     # 2) Load Pinnacle snapshot with spread (ATP + Challenger)
     r = requests.get(
@@ -402,10 +589,30 @@ def main():
     edge_raw_p1: list[float] = []
     edge_cal_p1: list[float] = []
     edge_cal_p2: list[float] = []
+    implied_match_old: list[float] = []
+    implied_match_new: list[float] = []
     for m in matched:
         fo, pin, pin_reversed_for_fair = m["fair"], m["pinnacle"], m["pin_reversed_for_fair"]
-        p_a = float(fo.get("p_a") or 0)
-        p_b = float(fo.get("p_b") or 0)
+        p1_win_prob = float(fo.get("p1_win_prob") or 0.0)
+        surface = (fo.get("surface") or "").strip() or "N/A"
+        tid = fo.get("tour_id")
+        if surface == "N/A" and tid is not None:
+            meta = tour_meta.get(int(tid))
+            court_name = courts.get(int(meta["court_id"])) if meta and meta.get("court_id") is not None else ""
+            surface = _court_to_surface(court_name)
+        avg_spw_surface = league_avg_by_surface.get(surface, SURFACE_LEAGUE_AVG.get(surface, SURFACE_LEAGUE_AVG["N/A"]))
+        if tid is not None:
+            avg_spw_surface = venue_serve_lookup.get((int(tid), surface), avg_spw_surface)
+        p_a, p_b = _solve_spw_for_match_prob(p1_win_prob, avg_spw_surface)
+
+        p_a_old = fo.get("p_a")
+        p_b_old = fo.get("p_b")
+        if p_a_old is not None and p_b_old is not None:
+            try:
+                implied_match_old.append(prob_match_best_of_3(float(p_a_old), float(p_b_old)))
+            except (TypeError, ValueError):
+                pass
+        implied_match_new.append(prob_match_best_of_3(p_a, p_b))
         pin_line = float(pin.get("spread_line") or 0.0)
 
         # Snapshot semantics (after scrape normalization):
@@ -475,6 +682,16 @@ def main():
 
     action = "Would update" if args.dry_run else "Updated"
     print(f"{action} {updated} rows with spread + handicap edge")
+    if implied_match_new:
+        print(
+            "Match-prob consistency: "
+            f"rebuilt mean={mean(implied_match_new):.4f}"
+            + (
+                f" vs legacy mean={mean(implied_match_old):.4f}"
+                if implied_match_old
+                else ""
+            )
+        )
     print("Edge diagnostics (P1 +line):")
     summarize_edges("raw", edge_raw_p1)
     summarize_edges("cal", edge_cal_p1)
