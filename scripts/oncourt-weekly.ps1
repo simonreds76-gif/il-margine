@@ -97,91 +97,36 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: CPI surface-speed refresh failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 8: Weekly strict-signals analysis
-Log "=== Step 8/14: Refresh Tennis-Data ATP season file ==="
+# Step 8: Run settlement/performance before slower external fetches.
+Log "=== Step 8/14: Nightly-style settlement/performance refresh ==="
+& powershell -ExecutionPolicy Bypass -NoProfile -File scripts\oncourt-settle-nightly.ps1 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: nightly settlement refresh failed (exit $LASTEXITCODE), continuing..."
+}
+
+# Step 9: Weekly strict-signals analysis
+Log "=== Step 9/14: Refresh Tennis-Data ATP season file ==="
 & python scripts\fetch-tennis-data-atp.py --year 2026 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: tennis-data ATP refresh failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 9: Weekly strict-signals analysis
-Log "=== Step 9/14: Analyse strict signals ==="
+# Step 10: Weekly strict-signals analysis
+Log "=== Step 10/14: Analyse strict signals ==="
 & python scripts\analyse-strict-signals.py --days 7 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-signals analysis failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 10: Settle strict signals from OnCourt results
-Log "=== Step 10/14: Settle strict signals (production CSV, 10%+) ==="
-& python scripts\settle-strict-signals.py 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: strict-signals settlement failed (exit $LASTEXITCODE), continuing..."
-}
-
-# Step 10b: Settle internal 5%+ tracking (confirmation window)
-Log "=== Step 10b/14: Settle strict signals (internal 5%+ CSV) ==="
-& python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-internal-5pct.csv 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: strict-signals-internal-5pct settlement failed (exit $LASTEXITCODE), continuing..."
-}
-
-# Step 11: Settle strict signals overlay-compare rows
-Log "=== Step 11/14: Settle strict signals (overlay-compare CSV) ==="
-& python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-overlay-compare.csv 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: strict-signals overlay-compare settlement failed (exit $LASTEXITCODE), continuing..."
-}
-
-# Step 11b: Optional settle shadow-volume signals (env-gated)
-if ($null -ne $volumeCfg) {
-    Log "=== Step 11b/14: Settle strict signals ($($volumeCfg.Label) shadow CSV) ==="
-    & python scripts\settle-strict-signals.py --csv "data\backtest\strict-signals-$($volumeCfg.Tag).csv" 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        Log "WARNING: strict-signals-$($volumeCfg.Tag) settlement failed (exit $LASTEXITCODE), continuing..."
-    }
-} else {
-    Log "=== Step 11b/14: Volume settlement skipped (STRICT_POLICY_VOLUME_MODE=$volumeMode) ==="
-}
-
-Log "=== Step 11c/14: Settle spread shadow CSV ==="
-& python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-spreadshadow.csv 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: strict-signals-spreadshadow settlement failed (exit $LASTEXITCODE), continuing..."
-}
-
-# Step 12: Weekly settled performance (base vs overlay)
-Log "=== Step 12/14: Strict policy settled performance ==="
-& python scripts\strict-policy-performance.py --days 7 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: strict-policy-performance failed (exit $LASTEXITCODE), continuing..."
-}
-
-# Step 12b: Optional weekly settled performance for shadow volume profile (env-gated)
-if ($null -ne $volumeCfg) {
-    Log "=== Step 12b/14: $($volumeCfg.Label) settled performance ==="
-    & python scripts\strict-policy-performance.py --days 7 --signals "data\backtest\strict-signals-$($volumeCfg.Tag).csv" --compare "data\backtest\strict-signals-$($volumeCfg.Tag)-compare.csv" --report-txt "data\backtest\strict-policy-performance-$($volumeCfg.Tag)-weekly.txt" --summary-csv "data\backtest\strict-policy-performance-$($volumeCfg.Tag)-weekly.csv" 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        Log "WARNING: strict-policy-performance $($volumeCfg.Profile) failed (exit $LASTEXITCODE), continuing..."
-    }
-} else {
-    Log "=== Step 12b/14: Volume performance skipped (STRICT_POLICY_VOLUME_MODE=$volumeMode) ==="
-}
-
-Log "=== Step 12c/14: Spread shadow settled performance ==="
-& python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-spreadshadow.csv --compare data\backtest\strict-signals-spreadshadow-compare.csv --report-txt data\backtest\strict-policy-performance-spreadshadow-weekly.txt --summary-csv data\backtest\strict-policy-performance-spreadshadow-weekly.csv 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: strict-policy-performance spread_shadow failed (exit $LASTEXITCODE), continuing..."
-}
-
-# Step 13: Weekly CLV audit (history first, tennis-data fallback)
-Log "=== Step 13/14: Strict CLV audit ==="
+# Step 11: Weekly CLV audit (history first, tennis-data fallback)
+Log "=== Step 11/14: Strict CLV audit ==="
 & python scripts\audit-strict-clv.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 14: Append Pinnacle history capture (weekly checkpoint)
-Log "=== Step 14/14: Append Pinnacle history capture (weekly) ==="
+# Step 12: Append Pinnacle history capture (weekly checkpoint)
+Log "=== Step 12/14: Append Pinnacle history capture (weekly) ==="
 & python scripts\pinnacle-capture-history.py --capture-mode weekly 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Pinnacle history append failed (exit $LASTEXITCODE), continuing..."

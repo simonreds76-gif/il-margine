@@ -11,6 +11,7 @@ Run: python scripts/oncourt-compute-fair-odds.py [--dry-run] [--debug [name1,nam
 import math
 import os
 import re
+import subprocess
 import sys
 from datetime import date
 
@@ -494,6 +495,7 @@ def main():
             return default
 
     do_dry_run = "--dry-run" in sys.argv
+    do_skip_handicap_values = "--skip-handicap-values" in sys.argv
     if do_dry_run:
         print("Dry run: will not write to Supabase\n")
 
@@ -506,6 +508,192 @@ def main():
     base = url.rstrip("/") + "/rest/v1"
     headers = {"apikey": _supabase_key, "Authorization": f"Bearer {_supabase_key}"}
     REQ_TIMEOUT = 45  # avoid hanging on slow Supabase
+
+    def _daily_row_key(row):
+        return (
+            str(row.get("tour_id") or ""),
+            str(row.get("player1_id") or ""),
+            str(row.get("player2_id") or ""),
+            str(row.get("surface") or ""),
+            str(row.get("round_id") or ""),
+            str(row.get("draw") or ""),
+        )
+
+    def _chunked(values, size):
+        for start in range(0, len(values), size):
+            yield values[start : start + size]
+
+    def _fetch_existing_daily_rows():
+        r = requests.get(
+            f"{base}/daily_fair_odds",
+            headers=headers,
+            params={"select": "id,tour_id,player1_id,player2_id,surface,round_id,draw", "limit": 5000},
+            timeout=REQ_TIMEOUT,
+        )
+        r.raise_for_status()
+        return r.json()
+
+    def _load_known_player_ids(player_ids):
+        known_ids = set()
+        ids = sorted({str(pid) for pid in player_ids if str(pid).strip()})
+        for chunk in _chunked(ids, 200):
+            r = requests.get(
+                f"{base}/oncourt_players",
+                headers=headers,
+                params={"select": "id", "id": f"in.({','.join(chunk)})", "limit": len(chunk)},
+                timeout=REQ_TIMEOUT,
+            )
+            r.raise_for_status()
+            for item in r.json():
+                if item.get("id") is not None:
+                    known_ids.add(str(item["id"]))
+        return known_ids
+
+    def _filter_rows_with_known_players(rows):
+        needed_ids = {
+            str(row.get("player1_id") or "")
+            for row in rows
+        } | {
+            str(row.get("player2_id") or "")
+            for row in rows
+        }
+        known_ids = _load_known_player_ids(needed_ids)
+        missing_ids = sorted(pid for pid in needed_ids if pid and pid not in known_ids)
+        if missing_ids:
+            print(
+                "  Warning: skipping rows with missing oncourt_players ids: "
+                + ", ".join(missing_ids[:20])
+                + (" ..." if len(missing_ids) > 20 else "")
+            )
+            print("  Run `python scripts/oncourt-load-supabase.py --quick` to backfill those players.")
+
+        filtered = [
+            row
+            for row in rows
+            if str(row.get("player1_id") or "") in known_ids and str(row.get("player2_id") or "") in known_ids
+        ]
+        return filtered
+
+    def _find_existing_daily_row_id(row):
+        queries = []
+
+        exact_params = {
+            "select": "id",
+            "tour_id": f"eq.{row['tour_id']}",
+            "player1_id": f"eq.{row['player1_id']}",
+            "player2_id": f"eq.{row['player2_id']}",
+            "surface": f"eq.{row['surface']}",
+            "round_id": f"eq.{row['round_id']}",
+            "limit": 5,
+        }
+        draw = row.get("draw")
+        if draw is None or draw == "":
+            exact_params["draw"] = "is.null"
+        else:
+            exact_params["draw"] = f"eq.{draw}"
+        queries.append(exact_params)
+
+        queries.append(
+            {
+                "select": "id",
+                "tour_id": f"eq.{row['tour_id']}",
+                "player1_id": f"eq.{row['player1_id']}",
+                "player2_id": f"eq.{row['player2_id']}",
+                "limit": 5,
+            }
+        )
+        queries.append(
+            {
+                "select": "id",
+                "player1_id": f"eq.{row['player1_id']}",
+                "player2_id": f"eq.{row['player2_id']}",
+                "surface": f"eq.{row['surface']}",
+                "limit": 5,
+            }
+        )
+
+        for params in queries:
+            r = requests.get(f"{base}/daily_fair_odds", headers=headers, params=params, timeout=REQ_TIMEOUT)
+            r.raise_for_status()
+            payload = r.json()
+            if payload:
+                return payload[0].get("id")
+        return None
+
+    def _sync_daily_fair_odds(rows):
+        rows_by_key = {}
+        for row in rows:
+            rows_by_key[_daily_row_key(row)] = row
+
+        current_rows = list(rows_by_key.values())
+        existing_rows = _fetch_existing_daily_rows()
+        existing_by_key = {
+            _daily_row_key(row): row
+            for row in existing_rows
+            if row.get("id") is not None
+        }
+        keep_existing_ids = set()
+
+        headers_write = {**headers, "Content-Type": "application/json", "Prefer": "return=minimal"}
+        inserted = 0
+        updated = 0
+        recovered = 0
+
+        for row in current_rows:
+            key = _daily_row_key(row)
+            existing = existing_by_key.get(key)
+            if existing is not None:
+                r = requests.patch(
+                    f"{base}/daily_fair_odds?id=eq.{existing['id']}",
+                    headers=headers_write,
+                    json=row,
+                    timeout=REQ_TIMEOUT,
+                )
+                r.raise_for_status()
+                keep_existing_ids.add(str(existing["id"]))
+                updated += 1
+                continue
+
+            r = requests.post(f"{base}/daily_fair_odds", headers=headers_write, json=row, timeout=REQ_TIMEOUT)
+            if r.status_code == 409:
+                existing_id = _find_existing_daily_row_id(row)
+                if existing_id is None:
+                    print(f"  daily_fair_odds conflict body: {r.text}")
+                    r.raise_for_status()
+                patch_r = requests.patch(
+                    f"{base}/daily_fair_odds?id=eq.{existing_id}",
+                    headers=headers_write,
+                    json=row,
+                    timeout=REQ_TIMEOUT,
+                )
+                patch_r.raise_for_status()
+                keep_existing_ids.add(str(existing_id))
+                recovered += 1
+                continue
+
+            r.raise_for_status()
+            inserted += 1
+
+        stale_ids = [
+            str(existing["id"])
+            for existing in existing_by_key.values()
+            if existing.get("id") is not None and str(existing["id"]) not in keep_existing_ids
+        ]
+        deleted = 0
+        for chunk in _chunked(stale_ids, 100):
+            r = requests.delete(
+                f"{base}/daily_fair_odds",
+                headers={k: v for k, v in headers.items() if k != "Content-Type"},
+                params={"id": f"in.({','.join(chunk)})"},
+                timeout=REQ_TIMEOUT,
+            )
+            r.raise_for_status()
+            deleted += len(chunk)
+
+        print(
+            "  Synced daily_fair_odds: "
+            f"{len(current_rows)} current / {inserted} inserted / {updated} updated / {recovered} recovered / {deleted} stale removed"
+        )
 
     # 1) Today's fixtures (dedupe by match key so same match isn't listed twice)
     r = requests.get(f"{base}/oncourt_today", headers=headers, params={"select": "*", "limit": 1000}, timeout=REQ_TIMEOUT)
@@ -2436,24 +2624,21 @@ def main():
         print("\nDry run done. Run without --dry-run to upsert to daily_fair_odds.")
         return
 
-    # Replace daily_fair_odds with this run only (clear old so we don't show stale/duplicate days)
-    try:
-        r = requests.delete(
-            f"{base}/daily_fair_odds",
-            headers={k: v for k, v in headers.items() if k != "Content-Type"},
-            params={"id": "gte.0"},
-            timeout=30,
-        )
-        r.raise_for_status()
-        print("  Cleared existing daily_fair_odds rows.")
-    except Exception as e:
-        print(f"  Warning: could not clear daily_fair_odds ({e}). Old rows may remain.")
+    out = _filter_rows_with_known_players(out)
+    _sync_daily_fair_odds(out)
+    if do_skip_handicap_values:
+        print("Skipped handicap-value refresh (--skip-handicap-values).")
+        print("Done.")
+        return
 
-    # Insert current run's rows only
-    headers_post = {**headers, "Content-Type": "application/json", "Prefer": "return=minimal"}
-    for row in out:
-        r = requests.post(f"{base}/daily_fair_odds", headers=headers_post, json=row, timeout=30)
-        r.raise_for_status()
+    print("  Refreshing handicap values...")
+    handicap_result = subprocess.run(
+        [sys.executable, os.path.join(_script_dir, "compute-handicap-values.py")],
+        cwd=os.path.join(_script_dir, ".."),
+    )
+    if handicap_result.returncode != 0:
+        print(f"ERROR: compute-handicap-values failed (exit {handicap_result.returncode}).")
+        sys.exit(handicap_result.returncode)
     print("Done.")
 
 

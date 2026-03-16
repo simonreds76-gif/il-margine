@@ -58,6 +58,8 @@ export interface FairOddsRow {
   spread_eligible?: boolean;
   shadow_match?: boolean;
   shadow_spread_eligible?: boolean;
+  spread_shadow_eligible?: boolean;
+  spread_shadow_reason?: string;
   blocked_reason?: string;
   recent_injured_p1?: boolean;
   recent_injured_p2?: boolean;
@@ -304,6 +306,20 @@ function shadowProfileLabel(profile: ShadowProfile): string {
   return "shadow";
 }
 
+function spreadShadowReasonFor(surface: string, seriesBucket: string, confidence?: string): string | null {
+  const conf = (confidence ?? "").trim().toLowerCase();
+  if (!(conf === "high" || conf === "medium")) return null;
+
+  const inStrictMatchSegment =
+    STRICT_POLICY_ALLOWED_SEGMENTS.has(`${surface}|${seriesBucket}`) &&
+    STRICT_POLICY_ALLOWED_CONFIDENCE.has(conf);
+  const isClay = surface === "Clay";
+  if (isClay && !inStrictMatchSegment) return "clay_non_policy";
+  if (isClay) return "clay";
+  if (!inStrictMatchSegment) return "non_policy";
+  return null;
+}
+
 function firstBlockedReason(params: {
   hasPositiveRawValue: boolean;
   anySignal: boolean;
@@ -326,10 +342,6 @@ function firstBlockedReason(params: {
     return `Blocked: below ${shadowProfileLabel(SHADOW_POLICY_MODE)} threshold`;
   }
   return "Blocked: filtered by policy";
-}
-
-function isChallengerTour(tourName?: string): boolean {
-  return /\bCHALLENGER\b/i.test(tourName ?? "");
 }
 
 type OverlayLookupValue = { n: number; roi_pct_shrunk: number };
@@ -1202,11 +1214,15 @@ async function run(): Promise<Response> {
         ? rawValueP2
         : undefined;
     const shadowMatch = volumeValueP1 != null || volumeValueP2 != null;
-    const shadowSpreadEligible = volumeMinVal != null && !volumeExcluded;
+    const shadowSpreadEligible =
+      volumeMinVal != null &&
+      !shortFavoriteExcluded &&
+      !injuryExcluded;
+    const spreadShadowReason = spreadShadowReasonFor(r.surface ?? "", seriesBucket, confidence ?? "");
+    const spreadShadowEligible = spreadShadowReason != null && !shortFavoriteExcluded && !injuryExcluded;
     const strictSpreadWouldSignal =
       policyBaseAllows &&
       !shortFavoriteExcluded &&
-      !mispriceExcluded &&
       !recentInjuredAny &&
       ((r.handicap_edge_p1 != null && Number(r.handicap_edge_p1) >= 20) ||
         (r.handicap_edge_p2 != null && Number(r.handicap_edge_p2) >= 20));
@@ -1214,10 +1230,14 @@ async function run(): Promise<Response> {
       shadowSpreadEligible &&
       ((r.handicap_edge_p1 != null && Number(r.handicap_edge_p1) >= 20) ||
         (r.handicap_edge_p2 != null && Number(r.handicap_edge_p2) >= 20));
+    const spreadShadowWouldSignal =
+      spreadShadowEligible &&
+      ((r.handicap_edge_p1 != null && Number(r.handicap_edge_p1) >= HANDICAP_MIN_EDGE_PCT) ||
+        (r.handicap_edge_p2 != null && Number(r.handicap_edge_p2) >= HANDICAP_MIN_EDGE_PCT));
     const hasPositiveRawValue = (rawValueP1 ?? Number.NEGATIVE_INFINITY) > 0 || (rawValueP2 ?? Number.NEGATIVE_INFINITY) > 0;
     const blockedReason = firstBlockedReason({
       hasPositiveRawValue,
-      anySignal: policyMatch || strictSpreadWouldSignal || shadowMatch || shadowSpreadWouldSignal,
+      anySignal: policyMatch || strictSpreadWouldSignal || shadowMatch || shadowSpreadWouldSignal || spreadShadowWouldSignal,
       recentInjuredAny,
       pinnacleShortFavoriteExcluded: pinFavOddsMispriceExcluded,
       modelShortFavoriteExcluded: modelFavOddsMispriceExcluded,
@@ -1271,9 +1291,11 @@ async function run(): Promise<Response> {
       confidence,
       series_bucket: seriesBucket,
       policy_match: policyMatch,
-      spread_eligible: policyBaseAllows && !shortFavoriteExcluded && !mispriceExcluded && !recentInjuredAny,
+      spread_eligible: policyBaseAllows && !shortFavoriteExcluded && !recentInjuredAny,
       shadow_match: shadowMatch,
       shadow_spread_eligible: shadowSpreadEligible,
+      spread_shadow_eligible: spreadShadowEligible,
+      spread_shadow_reason: spreadShadowReason ?? undefined,
       blocked_reason: blockedReason,
       recent_injured_p1: p1Injury.matched,
       recent_injured_p2: p2Injury.matched,
@@ -1359,7 +1381,8 @@ async function run(): Promise<Response> {
     side: "P1+" | "P2-",
     edgePct: number,
     pinOdds: number,
-    spreadLine: number
+    spreadLine: number,
+    extra?: { shadow_reason?: string }
   ) {
     return {
       id: m.id * 1000 + (side === "P1+" ? 1 : 2),
@@ -1374,6 +1397,7 @@ async function run(): Promise<Response> {
       spread_line: spreadLine,
       tournament: m.tournament,
       surface: m.surface,
+      ...(extra?.shadow_reason ? { shadow_reason: extra.shadow_reason } : {}),
     };
   }
 
@@ -1429,6 +1453,34 @@ async function run(): Promise<Response> {
     }
   }
   const signals_volume = [...matchSignalsVolume, ...spreadSignalsVolume];
+  const spreadSignalsSpreadShadow: Array<ReturnType<typeof toSpreadSignal>> = [];
+  for (const m of matches) {
+    const spreadOk =
+      m.spread_shadow_eligible &&
+      !m.recent_injured_any &&
+      m.spread_line != null &&
+      m.spread_odds1 != null &&
+      m.spread_odds2 != null &&
+      m.handicap_edge_p1 != null &&
+      m.handicap_edge_p2 != null;
+    if (!spreadOk) continue;
+    const sl = m.spread_line;
+    const so1 = m.spread_odds1;
+    const so2 = m.spread_odds2;
+    const he1 = m.handicap_edge_p1;
+    const he2 = m.handicap_edge_p2;
+    if (sl == null || so1 == null || so2 == null || he1 == null || he2 == null) continue;
+    if (he1 >= HANDICAP_MIN_EDGE_PCT) {
+      spreadSignalsSpreadShadow.push(
+        toSpreadSignal(m, "P1+", he1, so1, sl, { shadow_reason: m.spread_shadow_reason })
+      );
+    }
+    if (he2 >= HANDICAP_MIN_EDGE_PCT) {
+      spreadSignalsSpreadShadow.push(
+        toSpreadSignal(m, "P2-", he2, so2, sl, { shadow_reason: m.spread_shadow_reason })
+      );
+    }
+  }
 
   const matchesWithSpread = matches.filter(
     (m) =>
@@ -1459,6 +1511,7 @@ async function run(): Promise<Response> {
     shadow_profile: SHADOW_POLICY_MODE,
     signals_strict,
     signals_volume,
+    signals_spread_shadow: spreadSignalsSpreadShadow,
     ...(pinnacleHint ? { pinnacle_hint: pinnacleHint } : {}),
     ...(spreadHint ? { spread_hint: spreadHint } : {}),
   });

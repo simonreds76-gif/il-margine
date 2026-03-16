@@ -37,6 +37,8 @@ import requests
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CSV = ROOT / "data" / "backtest" / "strict-signals.csv"
+LOCAL_PLAYERS_CSV = ROOT / "data" / "oncourt" / "players_atp.csv"
+LOCAL_GAMES_CSV = ROOT / "data" / "oncourt" / "games_atp.csv"
 
 SETTLEMENT_FIELDS = [
     "settlement_status",
@@ -192,6 +194,13 @@ def fetch_all_players(base: str, headers: dict[str, str]) -> list[dict[str, Any]
     return out
 
 
+def load_local_players(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    with path.open("r", encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f))
+
+
 def fetch_today_completed(base: str, headers: dict[str, str], cache: dict[str, list[dict[str, Any]]]) -> list[dict[str, Any]]:
     """Fetch oncourt_today rows with non-empty result (completed matches). Fallback when oncourt_games lacks recent results."""
     key = "_today_completed"
@@ -290,6 +299,27 @@ def fetch_games_window(base: str, headers: dict[str, str], start_d: date, end_d:
     return rows_all
 
 
+def load_local_games_window(path: Path, start_d: date, end_d: date) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    rows_all: list[dict[str, Any]] = []
+    with path.open("r", encoding="utf-8", newline="") as f:
+        rd = csv.DictReader(f)
+        for row in rd:
+            wd = parse_date(row.get("date"))
+            if wd is None or wd < start_d or wd > end_d:
+                continue
+            try:
+                w = int(row.get("winner_id") or 0)
+                l = int(row.get("loser_id") or 0)
+            except (TypeError, ValueError):
+                continue
+            if not w or not l:
+                continue
+            rows_all.append({"winner_id": w, "loser_id": l, "date": wd, "result": row.get("result")})
+    return rows_all
+
+
 def choose_match_for_signal(signal_date: date, cand1: set[int], cand2: set[int], games: list[dict[str, Any]]) -> tuple[str, dict[str, Any] | None, str]:
     matched = [g for g in games if (g["winner_id"] in cand1 and g["loser_id"] in cand2) or (g["winner_id"] in cand2 and g["loser_id"] in cand1)]
     if not matched:
@@ -353,7 +383,6 @@ def main() -> int:
     args = parser.parse_args()
 
     load_env()
-    base, headers = supabase_base_and_headers()
 
     csv_path = Path(args.csv)
     if not csv_path.exists():
@@ -374,9 +403,29 @@ def main() -> int:
 
     out_fields = ensure_fieldnames(rows, fieldnames)
 
-    print("Loading oncourt_players...")
-    players = fetch_all_players(base, headers)
-    print(f"  loaded players: {len(players):,}")
+    pending_dates: list[date] = []
+    for row in rows:
+        if not should_process_row(row, args.resettle):
+            continue
+        signal_date = parse_date(row.get("date"))
+        if signal_date is not None:
+            pending_dates.append(signal_date)
+
+    local_games_rows: list[dict[str, Any]] = []
+    if pending_dates:
+        local_start = min(pending_dates) - timedelta(days=max(0, args.before_days))
+        local_end = max(pending_dates) + timedelta(days=max(0, args.after_days))
+        local_games_rows = load_local_games_window(LOCAL_GAMES_CSV, local_start, local_end)
+        print(f"Loaded local games fallback rows: {len(local_games_rows):,}")
+
+    print("Loading player index...")
+    players = load_local_players(LOCAL_PLAYERS_CSV)
+    source = "local players_atp.csv"
+    if not players:
+        base, headers = supabase_base_and_headers()
+        players = fetch_all_players(base, headers)
+        source = "Supabase oncourt_players"
+    print(f"  loaded players: {len(players):,} ({source})")
     p_index = build_player_index(players)
 
     games_cache: dict[tuple[str, str], list[dict[str, Any]]] = {}
@@ -413,10 +462,22 @@ def main() -> int:
 
         start_d = signal_date - timedelta(days=max(0, args.before_days))
         end_d = signal_date + timedelta(days=max(0, args.after_days))
-        games = fetch_games_window(base, headers, start_d, end_d, games_cache)
+        games = local_games_rows
+        if not games:
+            if "base" not in locals() or "headers" not in locals():
+                base, headers = supabase_base_and_headers()
+            games = fetch_games_window(base, headers, start_d, end_d, games_cache)
 
         status, match, note = choose_match_for_signal(signal_date, cand1, cand2, games)
+        if status == "no_match" and local_games_rows:
+            row["settlement_status"] = "no_match"
+            row["settlement_note"] = note
+            stats["no_match"] += 1
+            changed += 1
+            continue
         if status == "no_match":
+            if "base" not in locals() or "headers" not in locals():
+                base, headers = supabase_base_and_headers()
             today_rows = fetch_today_completed(base, headers, today_cache)
             if today_rows:
                 status, match, note = choose_match_for_signal(signal_date, cand1, cand2, today_rows)

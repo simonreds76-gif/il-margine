@@ -77,7 +77,7 @@ def main() -> int:
     )
 
     run_cmd(
-        [sys.executable, str(ROOT / "scripts" / "oncourt-compute-fair-odds.py")],
+        [sys.executable, str(ROOT / "scripts" / "oncourt-compute-fair-odds.py"), "--skip-handicap-values"],
         label="2/4 Fair odds pipeline",
         fatal=True,
     )

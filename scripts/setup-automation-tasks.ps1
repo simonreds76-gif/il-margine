@@ -18,6 +18,10 @@ schtasks /Create /TN "IlMargine-Daily" /SC DAILY /ST 23:55 /TR "$dailyCmd" /F | 
 schtasks /Create /TN "IlMargine-Daily-AM" /SC DAILY /ST 11:00 /TR "$dailyCmd" /F | Out-Host
 schtasks /Create /TN "IlMargine-Weekly" /SC WEEKLY /D SUN /ST 22:00 /TR "$weeklyCmd" /F | Out-Host
 
+if ((schtasks /Query /TN "IlMargine-Tennis-Shadow-Settle" 2>$null) -and $LASTEXITCODE -eq 0) {
+    schtasks /Delete /TN "IlMargine-Tennis-Shadow-Settle" /F | Out-Host
+}
+
 Write-Host ""
 Write-Host "Tasks created/updated:"
 schtasks /Query /TN "IlMargine-Daily" | Out-Host

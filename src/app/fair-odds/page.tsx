@@ -67,6 +67,7 @@ interface SignalSummary {
   spread_line?: number;
   tournament: string;
   surface: string;
+  shadow_reason?: string;
 }
 
 interface StrictPolicyMeta {
@@ -96,6 +97,7 @@ interface ApiResponse {
   shadow_profile?: "off" | "volume_275" | "volume_200" | string;
   signals_strict?: SignalSummary[];
   signals_volume?: SignalSummary[];
+  signals_spread_shadow?: SignalSummary[];
   error?: string;
 }
 
@@ -234,6 +236,13 @@ function signalTypeCounts(signals?: SignalSummary[]): { total: number; ml: numbe
   const total = signals?.length ?? 0;
   const spread = (signals ?? []).filter((s) => (s.bet_type ?? "match") === "spread").length;
   return { total, spread, ml: total - spread };
+}
+
+function spreadShadowReasonLabel(reason?: string): string {
+  if (reason === "clay_non_policy") return "Clay + non-policy";
+  if (reason === "clay") return "Clay";
+  if (reason === "non_policy") return "Non-policy";
+  return "Spread shadow";
 }
 
 const SURFACE_COLORS: Record<string, string> = {
@@ -389,7 +398,7 @@ export default function FairOddsPage() {
               Active shadow profile: <span className="font-semibold text-amber-300">{shadowProfileLabel(data.shadow_profile)}</span>.
               {" "}Signals are mixed below but still counted separately as ML vs spread in tracking and weekly reports.
             </p>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 lg:grid-cols-3">
               <div>
                 <h3 className="text-xs font-semibold text-emerald-400/90 uppercase tracking-wider mb-2 flex items-center gap-2">
                   <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
@@ -436,6 +445,35 @@ export default function FairOddsPage() {
                   </ul>
                 ) : (
                   <p className="text-xs text-slate-500 italic">No {shadowProfileLabel(data.shadow_profile).toLowerCase()} signals today</p>
+                )}
+              </div>
+              <div>
+                <h3 className="text-xs font-semibold text-cyan-400/90 uppercase tracking-wider mb-2 flex items-center gap-2">
+                  <span className="inline-block w-2 h-2 rounded-full bg-cyan-400" />
+                  Spread shadow
+                </h3>
+                <p className="mb-2 text-[11px] text-slate-500">
+                  Clay and non-policy handicap bets, 20%+ edge. Spread {signalTypeCounts(data.signals_spread_shadow).spread}
+                </p>
+                {data.signals_spread_shadow?.length ? (
+                  <ul className="space-y-1.5">
+                    {data.signals_spread_shadow.map((s) => {
+                      const { matchLabel, betLine } = formatSignalBet(s);
+                      return (
+                        <li key={s.id} className="text-sm py-2 px-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
+                          <div className="flex items-center justify-between gap-2 mb-0.5">
+                            <div className="text-slate-400 text-[11px] font-medium truncate">{matchLabel}</div>
+                            <span className="shrink-0 rounded border border-cyan-500/25 bg-cyan-500/10 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-cyan-300">
+                              {spreadShadowReasonLabel(s.shadow_reason)}
+                            </span>
+                          </div>
+                          <div className="font-mono text-cyan-300 font-semibold tabular-nums text-[13px]">{betLine}</div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p className="text-xs text-slate-500 italic">No spread shadow signals today</p>
                 )}
               </div>
             </div>

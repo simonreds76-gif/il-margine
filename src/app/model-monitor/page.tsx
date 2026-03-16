@@ -39,6 +39,25 @@ type ProfileSummary = {
   years: Array<{ year: string; bets?: number; tierRoiPct?: number }>;
 };
 
+type MonitorSignalRow = {
+  date: string;
+  timeUtc: string;
+  player1: string;
+  player2: string;
+  surface: string;
+  series: string;
+  confidence: string;
+  side: string;
+  valuePct?: number;
+  betType: string;
+  spreadLine?: number;
+  spreadOdds?: number;
+  signalProfile: string;
+  settlementStatus: string;
+  betOutcome: string;
+  settlementNote: string;
+};
+
 export const dynamic = "force-dynamic";
 
 const MODEL_MONITOR_PUBLIC =
@@ -113,17 +132,27 @@ function lastMatching(rows: CsvRow[], predicate: (row: CsvRow) => boolean): CsvR
 }
 
 function parsePerf(rows: CsvRow[], policyMode: string): PerfSnapshot {
-  const isOverall = (row: CsvRow) => {
-    const evalPeriod = row.eval_period ?? "";
-    return !evalPeriod || evalPeriod === "overall";
+  const matchEval = (row: CsvRow, evalPeriod: string) => {
+    const value = row.eval_period ?? "";
+    if (!value) return evalPeriod === "overall";
+    return value === evalPeriod;
   };
+  const preferEval = (scope: string, betType: string, evalPeriod: string) =>
+    lastMatching(
+      rows,
+      (row) =>
+        row.scope === scope &&
+        row.policy_mode === policyMode &&
+        (betType ? row.bet_type === betType : !row.bet_type) &&
+        matchEval(row, evalPeriod)
+    );
   return {
-    combinedAll: lastMatching(rows, (row) => row.scope === "all_time" && row.policy_mode === policyMode && !row.bet_type && isOverall(row)),
-    combinedWindow: lastMatching(rows, (row) => row.scope === "window" && row.policy_mode === policyMode && !row.bet_type && isOverall(row)),
-    mlAll: lastMatching(rows, (row) => row.scope === "all_time" && row.policy_mode === policyMode && row.bet_type === "ml" && isOverall(row)),
-    handicapAll: lastMatching(rows, (row) => row.scope === "all_time" && row.policy_mode === policyMode && row.bet_type === "handicap" && isOverall(row)),
-    mlWindow: lastMatching(rows, (row) => row.scope === "window" && row.policy_mode === policyMode && row.bet_type === "ml" && isOverall(row)),
-    handicapWindow: lastMatching(rows, (row) => row.scope === "window" && row.policy_mode === policyMode && row.bet_type === "handicap" && isOverall(row)),
+    combinedAll: preferEval("all_time", "", "clean") ?? preferEval("all_time", "", "overall"),
+    combinedWindow: preferEval("window", "", "clean") ?? preferEval("window", "", "overall"),
+    mlAll: preferEval("all_time", "ml", "clean") ?? preferEval("all_time", "ml", "overall"),
+    handicapAll: preferEval("all_time", "handicap", "clean") ?? preferEval("all_time", "handicap", "overall"),
+    mlWindow: preferEval("window", "ml", "clean") ?? preferEval("window", "ml", "overall"),
+    handicapWindow: preferEval("window", "handicap", "clean") ?? preferEval("window", "handicap", "overall"),
   };
 }
 
@@ -205,6 +234,21 @@ function perfValue(row: CsvRow | undefined, key: string, parser: (value?: string
   return parser(row?.[key]);
 }
 
+function perfVoidCount(row: CsvRow | undefined): number {
+  const settled = perfValue(row, "settled", parseIntMaybe) ?? 0;
+  const wins = perfValue(row, "wins", parseIntMaybe) ?? 0;
+  const losses = perfValue(row, "losses", parseIntMaybe) ?? 0;
+  const voids = settled - wins - losses;
+  return voids > 0 ? voids : 0;
+}
+
+function perfWlv(row: CsvRow | undefined): string {
+  const wins = perfValue(row, "wins", parseIntMaybe) ?? 0;
+  const losses = perfValue(row, "losses", parseIntMaybe) ?? 0;
+  const voids = perfVoidCount(row);
+  return `${wins}/${losses}/${voids}`;
+}
+
 function MonitorCard({
   title,
   subtitle,
@@ -231,15 +275,39 @@ function Stat({
   label,
   value,
   tone = "text-slate-100",
+  compact = false,
 }: {
   label: string;
   value: string;
   tone?: string;
+  compact?: boolean;
 }) {
   return (
     <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 px-3 py-3">
       <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">{label}</div>
-      <div className={`mt-1 text-lg font-semibold ${tone}`}>{value}</div>
+      <div className={`mt-1 font-semibold ${compact ? "text-base leading-5" : "text-lg"} ${tone}`}>{value}</div>
+    </div>
+  );
+}
+
+function SplitBucket({
+  title,
+  roi,
+  roiTone,
+  wlv,
+}: {
+  title: string;
+  roi: string;
+  roiTone?: string;
+  wlv: string;
+}) {
+  return (
+    <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3">
+      <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">{title}</div>
+      <div className="grid gap-2">
+        <Stat label="ROI" value={roi} tone={roiTone} compact />
+        <Stat label="W/L/V" value={wlv} tone="text-slate-100" compact />
+      </div>
     </div>
   );
 }
@@ -252,6 +320,44 @@ function FileStamp({ label, value }: { label: string; value: string | null }) {
   );
 }
 
+function parseSignalRows(text: string | null): MonitorSignalRow[] {
+  if (!text) return [];
+  return parseCsv(text).map((row) => ({
+    date: row.date ?? "",
+    timeUtc: row.time_utc ?? "",
+    player1: row.player1 ?? "",
+    player2: row.player2 ?? "",
+    surface: row.surface ?? "",
+    series: row.series ?? "",
+    confidence: row.confidence ?? "",
+    side: row.side ?? "",
+    valuePct: parseFloatMaybe(row.value_pct),
+    betType: row.bet_type ?? "",
+    spreadLine: parseFloatMaybe(row.spread_line),
+    spreadOdds: parseFloatMaybe(row.spread_odds),
+    signalProfile: row.signal_profile ?? "",
+    settlementStatus: row.settlement_status ?? "",
+    betOutcome: row.bet_outcome ?? "",
+    settlementNote: row.settlement_note ?? "",
+  }));
+}
+
+function signalTimestamp(row: MonitorSignalRow): number {
+  const stamp = Date.parse(`${row.date}T${row.timeUtc || "00:00:00"}Z`);
+  return Number.isFinite(stamp) ? stamp : 0;
+}
+
+function getUnsettledSignalRows(rows: MonitorSignalRow[]): MonitorSignalRow[] {
+  return rows
+    .filter((row) => (row.settlementStatus || "").trim().toLowerCase() !== "settled")
+    .sort((left, right) => signalTimestamp(right) - signalTimestamp(left));
+}
+
+function formatSignedLine(value?: number): string {
+  if (value == null || Number.isNaN(value)) return "n/a";
+  return `${value > 0 ? "+" : ""}${value.toFixed(value % 1 === 0 ? 0 : 1)}`;
+}
+
 export default async function ModelMonitorPage() {
   if (process.env.NODE_ENV === "production" && !MODEL_MONITOR_PUBLIC) {
     notFound();
@@ -260,47 +366,62 @@ export default async function ModelMonitorPage() {
   const [
     strictPerfCsv,
     volumePerfCsv,
+    spreadShadowPerfCsv,
     clvAuditTxt,
     profileTxt,
     shadowComparisonTxt,
+    spreadShadowSignalsCsv,
     strictPerfMtime,
     volumePerfMtime,
+    spreadShadowPerfMtime,
     clvAuditMtime,
     profileMtime,
+    spreadShadowSignalsMtime,
   ] = await Promise.all([
     readLocalFile("data/backtest/strict-policy-performance-weekly.csv"),
     readLocalFile("data/backtest/strict-policy-performance-volume200-weekly.csv"),
+    readLocalFile("data/backtest/strict-policy-performance-spreadshadow-weekly.csv"),
     readLocalFile("data/backtest/strict-clv-audit-2026.txt"),
     readLocalFile("data/backtest/policy-profile-backtest-2022-2025.txt"),
     readLocalFile("data/backtest/shadow-profile-comparison.txt"),
+    readLocalFile("data/backtest/strict-signals-spreadshadow.csv"),
     readLocalMtime("data/backtest/strict-policy-performance-weekly.csv"),
     readLocalMtime("data/backtest/strict-policy-performance-volume200-weekly.csv"),
+    readLocalMtime("data/backtest/strict-policy-performance-spreadshadow-weekly.csv"),
     readLocalMtime("data/backtest/strict-clv-audit-2026.txt"),
     readLocalMtime("data/backtest/policy-profile-backtest-2022-2025.txt"),
+    readLocalMtime("data/backtest/strict-signals-spreadshadow.csv"),
   ]);
 
   const strictRows = strictPerfCsv ? parseCsv(strictPerfCsv) : [];
   const volumeRows = volumePerfCsv ? parseCsv(volumePerfCsv) : [];
+  const spreadShadowRows = spreadShadowPerfCsv ? parseCsv(spreadShadowPerfCsv) : [];
   const strictBase = parsePerf(strictRows, "base");
   const strictOverlay = parsePerf(strictRows, "overlay");
   const volumeBase = parsePerf(volumeRows, "base");
+  const spreadShadowBase = parsePerf(spreadShadowRows, "base");
   const clv = parseClvAudit(clvAuditTxt);
   const profiles = parsePolicyProfiles(profileTxt);
   const profileMap = new Map(profiles.map((profile) => [profile.name, profile]));
+  const spreadShadowSignals = parseSignalRows(spreadShadowSignalsCsv);
+  const spreadShadowQueue = getUnsettledSignalRows(spreadShadowSignals);
 
   const strictAllRoi = perfValue(strictBase.combinedAll, "roi_pct", parseFloatMaybe);
   const volumeAllRoi = perfValue(volumeBase.combinedAll, "roi_pct", parseFloatMaybe);
+  const spreadShadowAllRoi = perfValue(spreadShadowBase.combinedAll, "roi_pct", parseFloatMaybe);
   const strictWindowRoi = perfValue(strictBase.combinedWindow, "roi_pct", parseFloatMaybe);
   const overlayAllRoi = perfValue(strictOverlay.combinedAll, "roi_pct", parseFloatMaybe);
   const matchedMl = clv.matchedMl ?? 0;
   const auditedMl = clv.matchedMlTotal ?? clv.settledMlAudited ?? 0;
   const strictAsOf = strictBase.combinedAll?.as_of_date;
   const volumeAsOf = volumeBase.combinedAll?.as_of_date;
+  const spreadShadowAsOf = spreadShadowBase.combinedAll?.as_of_date;
   const shadowProfile = profileMap.get("volume_200");
   const legacyShadowProfile = profileMap.get("volume_275");
   const missingReports = [
     !strictPerfCsv ? "strict weekly performance" : null,
     !volumePerfCsv ? "volume_200 weekly performance" : null,
+    !spreadShadowPerfCsv ? "spread shadow weekly performance" : null,
     !clvAuditTxt ? "CLV audit" : null,
     !profileTxt ? "policy profile backtest" : null,
   ].filter(Boolean) as string[];
@@ -314,6 +435,12 @@ export default async function ModelMonitorPage() {
     perfValue(volumeBase.combinedAll, "settled", parseIntMaybe) === 0
       ? "Volume 200 shadow has no settled sample yet."
       : `Volume 200 shadow has settled enough to start comparing against strict on live results.`;
+  const spreadShadowDiagnosis =
+    spreadShadowSignals.length === 0
+      ? "Spread shadow is wired in, but it has not logged a qualifying 20%+ clay/non-policy handicap row yet."
+      : perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) === 0
+        ? `Spread shadow has ${spreadShadowSignals.length} tracked rows, but no settled sample yet.`
+        : `Spread shadow is tracking ${perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? 0} rows with ${perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) ?? 0} settled so far.`;
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.10),_transparent_22%),#0b0f14] text-slate-100">
@@ -344,8 +471,10 @@ export default async function ModelMonitorPage() {
             <div className="grid gap-2 sm:grid-cols-2">
               <FileStamp label="Strict perf" value={strictPerfMtime} />
               <FileStamp label="Shadow perf" value={volumePerfMtime} />
+              <FileStamp label="Spread shadow perf" value={spreadShadowPerfMtime} />
               <FileStamp label="CLV audit" value={clvAuditMtime} />
               <FileStamp label="Profile backtest" value={profileMtime} />
+              <FileStamp label="Spread shadow signals" value={spreadShadowSignalsMtime} />
             </div>
           </div>
         </section>
@@ -363,22 +492,31 @@ export default async function ModelMonitorPage() {
           </div>
         </div>
 
-        <div className="mb-8 grid gap-4 lg:grid-cols-4">
-          <MonitorCard title="Strict Live Control" subtitle={`Hard | Masters 1000 | high | public >=10%${strictAsOf ? ` | as of ${strictAsOf}` : ""}`}>
+        <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+          <MonitorCard title="Strict Live Control" subtitle={`Clean sample first: Hard | Masters 1000 | high | public >=10%${strictAsOf ? ` | as of ${strictAsOf}` : ""}`}>
             <div className="grid gap-3">
-              <Stat label="All-time ROI" value={formatPct(strictAllRoi)} tone={metricTone(strictAllRoi)} />
-              <Stat label="7d ROI" value={formatPct(strictWindowRoi)} tone={metricTone(strictWindowRoi)} />
+              <Stat label="Clean ROI" value={formatPct(strictAllRoi)} tone={metricTone(strictAllRoi)} />
+              <Stat label="Clean 7d ROI" value={formatPct(strictWindowRoi)} tone={metricTone(strictWindowRoi)} />
               <Stat label="Settled" value={`${perfValue(strictBase.combinedAll, "settled", parseIntMaybe) ?? 0}`} />
-              <Stat label="W-L" value={`${perfValue(strictBase.combinedAll, "wins", parseIntMaybe) ?? 0}-${perfValue(strictBase.combinedAll, "losses", parseIntMaybe) ?? 0}`} />
+              <Stat label="Open" value={`${perfValue(strictBase.combinedAll, "unsettled", parseIntMaybe) ?? 0}`} />
             </div>
           </MonitorCard>
 
-          <MonitorCard title="Volume 200 Shadow" subtitle={`Active shadow profile, ML + spread tracked together${volumeAsOf ? ` | as of ${volumeAsOf}` : ""}`}>
+          <MonitorCard title="Volume 200 Shadow" subtitle={`Clean sample first, ML + spread tracked together${volumeAsOf ? ` | as of ${volumeAsOf}` : ""}`}>
             <div className="grid gap-3">
-              <Stat label="All-time ROI" value={formatPct(volumeAllRoi)} tone={metricTone(volumeAllRoi)} />
+              <Stat label="Clean ROI" value={formatPct(volumeAllRoi)} tone={metricTone(volumeAllRoi)} />
               <Stat label="Signals" value={`${perfValue(volumeBase.combinedAll, "signals", parseIntMaybe) ?? 0}`} />
               <Stat label="Unsettled" value={`${perfValue(volumeBase.combinedAll, "unsettled", parseIntMaybe) ?? 0}`} />
               <Stat label="Avg Value" value={formatPct(perfValue(volumeBase.combinedAll, "avg_value_pct", parseFloatMaybe))} tone="text-amber-300" />
+            </div>
+          </MonitorCard>
+
+          <MonitorCard title="Spread Shadow" subtitle={`Clean sample first, clay + non-policy handicap lane${spreadShadowAsOf ? ` | as of ${spreadShadowAsOf}` : ""}`}>
+            <div className="grid gap-3">
+              <Stat label="Clean ROI" value={formatPct(spreadShadowAllRoi)} tone={metricTone(spreadShadowAllRoi)} />
+              <Stat label="Signals" value={`${perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? spreadShadowSignals.length}`} />
+              <Stat label="Settled" value={`${perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) ?? 0}`} />
+              <Stat label="Unsettled" value={`${perfValue(spreadShadowBase.combinedAll, "unsettled", parseIntMaybe) ?? spreadShadowQueue.length}`} />
             </div>
           </MonitorCard>
 
@@ -401,9 +539,9 @@ export default async function ModelMonitorPage() {
           </MonitorCard>
         </div>
 
-        <div className="mb-8 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+        <div className="mb-8 grid gap-6 2xl:grid-cols-[1.2fr_0.8fr]">
           <MonitorCard title="Live Performance Detail" subtitle="Current weekly settlement reports with ML vs spread split">
-            <div className="grid gap-6 lg:grid-cols-2">
+            <div className="grid gap-6 2xl:grid-cols-2">
               <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-4">
                 <div className="mb-4 flex items-center justify-between">
                   <h3 className="text-base font-semibold text-white">Strict Base</h3>
@@ -412,12 +550,24 @@ export default async function ModelMonitorPage() {
                   </span>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <Stat label="All-time ROI" value={formatPct(strictAllRoi)} tone={metricTone(strictAllRoi)} />
-                  <Stat label="7d ROI" value={formatPct(strictWindowRoi)} tone={metricTone(strictWindowRoi)} />
-                  <Stat label="All-time P/L" value={formatUnits(perfValue(strictBase.combinedAll, "pnl_units", parseFloatMaybe))} tone={metricTone(perfValue(strictBase.combinedAll, "pnl_units", parseFloatMaybe))} />
-                  <Stat label="Win Rate" value={formatPct(perfValue(strictBase.combinedAll, "win_rate_pct", parseFloatMaybe))} tone="text-slate-100" />
-                  <Stat label="ML ROI" value={formatPct(perfValue(strictBase.mlAll, "roi_pct", parseFloatMaybe))} tone={metricTone(perfValue(strictBase.mlAll, "roi_pct", parseFloatMaybe))} />
-                  <Stat label="Spread ROI" value={formatPct(perfValue(strictBase.handicapAll, "roi_pct", parseFloatMaybe))} tone={metricTone(perfValue(strictBase.handicapAll, "roi_pct", parseFloatMaybe))} />
+                  <Stat label="Clean ROI" value={formatPct(strictAllRoi)} tone={metricTone(strictAllRoi)} compact />
+                  <Stat label="Clean 7d ROI" value={formatPct(strictWindowRoi)} tone={metricTone(strictWindowRoi)} compact />
+                  <Stat label="Clean P/L" value={formatUnits(perfValue(strictBase.combinedAll, "pnl_units", parseFloatMaybe))} tone={metricTone(perfValue(strictBase.combinedAll, "pnl_units", parseFloatMaybe))} compact />
+                  <Stat label="Overall W/L/V" value={perfWlv(strictBase.combinedAll)} tone="text-slate-100" compact />
+                </div>
+                <div className="mt-3 space-y-3">
+                  <SplitBucket
+                    title="ML"
+                    roi={formatPct(perfValue(strictBase.mlAll, "roi_pct", parseFloatMaybe))}
+                    roiTone={metricTone(perfValue(strictBase.mlAll, "roi_pct", parseFloatMaybe))}
+                    wlv={perfWlv(strictBase.mlAll)}
+                  />
+                  <SplitBucket
+                    title="Spread"
+                    roi={formatPct(perfValue(strictBase.handicapAll, "roi_pct", parseFloatMaybe))}
+                    roiTone={metricTone(perfValue(strictBase.handicapAll, "roi_pct", parseFloatMaybe))}
+                    wlv={perfWlv(strictBase.handicapAll)}
+                  />
                 </div>
               </div>
 
@@ -427,17 +577,51 @@ export default async function ModelMonitorPage() {
                   <span className="rounded-full bg-amber-500/15 px-2 py-1 text-xs font-semibold text-amber-300">shadow</span>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <Stat label="All-time ROI" value={formatPct(volumeAllRoi)} tone={metricTone(volumeAllRoi)} />
-                  <Stat label="Signals" value={`${perfValue(volumeBase.combinedAll, "signals", parseIntMaybe) ?? 0}`} />
-                  <Stat label="Settled" value={`${perfValue(volumeBase.combinedAll, "settled", parseIntMaybe) ?? 0}`} />
-                  <Stat label="Unsettled" value={`${perfValue(volumeBase.combinedAll, "unsettled", parseIntMaybe) ?? 0}`} />
-                  <Stat label="ML Signals" value={`${perfValue(volumeBase.mlAll, "signals", parseIntMaybe) ?? 0}`} />
-                  <Stat label="Spread Signals" value={`${perfValue(volumeBase.handicapAll, "signals", parseIntMaybe) ?? 0}`} />
+                  <Stat label="Clean ROI" value={formatPct(volumeAllRoi)} tone={metricTone(volumeAllRoi)} compact />
+                  <Stat label="Signals" value={`${perfValue(volumeBase.combinedAll, "signals", parseIntMaybe) ?? 0}`} compact />
+                  <Stat label="Settled" value={`${perfValue(volumeBase.combinedAll, "settled", parseIntMaybe) ?? 0}`} compact />
+                  <Stat label="Unsettled" value={`${perfValue(volumeBase.combinedAll, "unsettled", parseIntMaybe) ?? 0}`} compact />
+                </div>
+                <div className="mt-3 space-y-3">
+                  <SplitBucket
+                    title="ML"
+                    roi={formatPct(perfValue(volumeBase.mlAll, "roi_pct", parseFloatMaybe))}
+                    roiTone={metricTone(perfValue(volumeBase.mlAll, "roi_pct", parseFloatMaybe))}
+                    wlv={perfWlv(volumeBase.mlAll)}
+                  />
+                  <SplitBucket
+                    title="Spread"
+                    roi={formatPct(perfValue(volumeBase.handicapAll, "roi_pct", parseFloatMaybe))}
+                    roiTone={metricTone(perfValue(volumeBase.handicapAll, "roi_pct", parseFloatMaybe))}
+                    wlv={perfWlv(volumeBase.handicapAll)}
+                  />
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-4">
+                <div className="mb-4 flex items-center justify-between">
+                  <h3 className="text-base font-semibold text-white">Spread Shadow</h3>
+                  <span className="rounded-full bg-cyan-500/15 px-2 py-1 text-xs font-semibold text-cyan-300">clay / non-policy</span>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Stat label="Clean ROI" value={formatPct(spreadShadowAllRoi)} tone={metricTone(spreadShadowAllRoi)} compact />
+                  <Stat label="Signals" value={`${perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? spreadShadowSignals.length}`} compact />
+                  <Stat label="Settled" value={`${perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) ?? 0}`} compact />
+                  <Stat label="Unsettled" value={`${perfValue(spreadShadowBase.combinedAll, "unsettled", parseIntMaybe) ?? spreadShadowQueue.length}`} compact />
+                  <Stat label="Avg Value" value={formatPct(perfValue(spreadShadowBase.combinedAll, "avg_value_pct", parseFloatMaybe))} tone="text-cyan-200" compact />
+                </div>
+                <div className="mt-3">
+                  <SplitBucket
+                    title="Spread"
+                    roi={formatPct(perfValue(spreadShadowBase.handicapAll, "roi_pct", parseFloatMaybe))}
+                    roiTone={metricTone(perfValue(spreadShadowBase.handicapAll, "roi_pct", parseFloatMaybe))}
+                    wlv={perfWlv(spreadShadowBase.handicapAll)}
+                  />
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
               <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
                 <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Overlay reference</div>
                 <div className={`text-2xl font-semibold ${metricTone(overlayAllRoi)}`}>{formatPct(overlayAllRoi)}</div>
@@ -452,10 +636,42 @@ export default async function ModelMonitorPage() {
                 <ul className="space-y-2 text-sm leading-6 text-slate-300">
                   <li>{strictDiagnosis}</li>
                   <li>{shadowDiagnosis}</li>
+                  <li>{spreadShadowDiagnosis}</li>
                   <li>
                     Historical exact profiles still favor <span className="font-semibold text-amber-300">volume_200</span>, but live promotion is not justified until shadow settles and CLV coverage overlaps the sample.
                   </li>
                 </ul>
+              </div>
+
+              <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
+                <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Spread Shadow Queue</div>
+                {spreadShadowQueue.length === 0 ? (
+                  <p className="text-sm leading-6 text-slate-400">
+                    No open spread-shadow bets right now. When a 20%+ clay or non-policy handicap signal qualifies, it will appear here.
+                  </p>
+                ) : (
+                  <div className="space-y-3">
+                    {spreadShadowQueue.slice(0, 6).map((row) => (
+                      <div key={`${row.date}-${row.player1}-${row.player2}-${row.side}-${row.spreadLine}`} className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <div className="font-semibold text-slate-100">{row.player1} vs {row.player2}</div>
+                            <div className="mt-1 text-xs text-slate-500">
+                              {row.surface} | {row.series} | {row.confidence} | {row.date} {row.timeUtc}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-sm font-semibold text-cyan-300">{row.side} {formatSignedLine(row.spreadLine)}</div>
+                            <div className="mt-1 text-xs text-slate-500">@ {row.spreadOdds?.toFixed(3) ?? "n/a"}</div>
+                          </div>
+                        </div>
+                        <div className="mt-2 text-xs text-slate-400">
+                          edge {formatPct(row.valuePct)} | status {(row.settlementStatus || "pending").replace(/_/g, " ")}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </MonitorCard>
@@ -534,6 +750,9 @@ export default async function ModelMonitorPage() {
                 <li>
                   Live volume_200 tracking: {perfValue(volumeBase.combinedAll, "signals", parseIntMaybe) ?? 0} signals, {perfValue(volumeBase.combinedAll, "settled", parseIntMaybe) ?? 0} settled, {formatPct(volumeAllRoi)} ROI.
                 </li>
+                <li>
+                  Spread shadow tracking: {perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? spreadShadowSignals.length} signals, {perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) ?? 0} settled, {formatPct(spreadShadowAllRoi)} ROI.
+                </li>
               </ul>
               <details className="rounded-xl border border-slate-800 bg-slate-950/35 p-3">
                 <summary className="cursor-pointer text-sm font-semibold text-slate-200">Show raw comparison report</summary>
@@ -554,6 +773,9 @@ export default async function ModelMonitorPage() {
               </p>
               <p>
                 <span className="font-semibold text-slate-100">Current interpretation:</span> strict live control is negative, shadow is too young, and CLV diagnosis is blocked by missing overlap from historical close data. Your own Pinnacle history capture is now the right path to fix that.
+              </p>
+              <p>
+                <span className="font-semibold text-slate-100">Spread shadow:</span> this is now a separate clay/non-policy handicap lane. If it has no open picks, that means the tracker found nothing above the 20% threshold, not that the lane is broken.
               </p>
             </div>
           </MonitorCard>

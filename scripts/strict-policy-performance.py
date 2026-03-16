@@ -33,8 +33,9 @@ DEFAULT_SIGNALS = DATA_DIR / "strict-signals.csv"
 DEFAULT_COMPARE = DATA_DIR / "strict-signals-overlay-compare.csv"
 DEFAULT_REPORT_TXT = DATA_DIR / "strict-policy-performance-weekly.txt"
 DEFAULT_SUMMARY_CSV = DATA_DIR / "strict-policy-performance-weekly.csv"
+CLEAN_EVAL_START = date(2026, 3, 14)
 
-KEY_FIELDS = ["date", "player1", "player2", "surface", "series", "confidence", "side"]
+KEY_FIELDS = ["date", "player1", "player2", "surface", "series", "confidence", "side", "bet_type", "spread_line"]
 BET_TYPE_ML = "ml"
 BET_TYPE_HANDICAP = "handicap"
 
@@ -97,15 +98,23 @@ def norm_key_val(v: str | None) -> str:
     return (v or "").strip().lower()
 
 
+def row_key_val(row: dict[str, str], field: str) -> str:
+    if field == "policy_mode":
+        return norm_key_val(row.get(field) or "base")
+    if field == "bet_type":
+        return norm_key_val(row.get(field) or "match")
+    return norm_key_val(row.get(field))
+
+
 def row_key(row: dict[str, str], include_mode: bool = True) -> tuple[str, ...]:
-    out = [norm_key_val(row.get(f)) for f in KEY_FIELDS]
+    out = [row_key_val(row, f) for f in KEY_FIELDS]
     if include_mode:
-        out.append(norm_key_val(row.get("policy_mode") or "base"))
+        out.append(row_key_val(row, "policy_mode"))
     return tuple(out)
 
 
 def lookup_key(row: dict[str, str]) -> tuple[str, ...]:
-    return tuple(norm_key_val(row.get(f)) for f in KEY_FIELDS)
+    return tuple(row_key_val(row, f) for f in KEY_FIELDS)
 
 
 def is_settled(row: dict[str, str]) -> bool:
@@ -126,9 +135,10 @@ def dedupe_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
         if prev is None:
             by_key[k] = r
             continue
-        # Prefer settled row if duplicates exist.
-        if is_settled(r) and not is_settled(prev):
-            by_key[k] = r
+        # Prefer settled rows; otherwise keep the latest row seen in file order.
+        if is_settled(prev) and not is_settled(r):
+            continue
+        by_key[k] = r
     return list(by_key.values())
 
 
@@ -142,8 +152,9 @@ def build_settlement_lookup(rows: list[dict[str, str]]) -> dict[tuple[str, ...],
         if prev is None:
             out[k] = r
             continue
-        if is_settled(r) and not is_settled(prev):
-            out[k] = r
+        if is_settled(prev) and not is_settled(r):
+            continue
+        out[k] = r
     return out
 
 
@@ -320,11 +331,13 @@ def as_summary_row(
     mode_summary: ModeSummary,
     source: str,
     bet_type: str = "",
+    eval_period: str = "overall",
 ) -> dict[str, str]:
     row = {
         "generated_utc": generated_utc,
         "as_of_date": as_of.isoformat(),
         "scope": scope,
+        "eval_period": eval_period,
         "window_days": str(window_days),
         "source_file": source,
         "policy_mode": mode_summary.mode,
@@ -349,13 +362,29 @@ def append_summary(path: Path, rows: list[dict[str, str]]) -> None:
     if not rows:
         return
     path.parent.mkdir(parents=True, exist_ok=True)
+    existing_rows: list[dict[str, str]] = []
     fields = list(rows[0].keys())
-    write_header = not path.exists()
-    with path.open("a", encoding="utf-8", newline="") as f:
+    if path.exists():
+        with path.open("r", encoding="utf-8", newline="") as f:
+            rd = csv.DictReader(f)
+            existing_fields = list(rd.fieldnames or [])
+            existing_rows = [dict(r) for r in rd]
+        for field in existing_fields:
+            if field not in fields:
+                fields.append(field)
+    for row in existing_rows:
+        for field in row.keys():
+            if field not in fields:
+                fields.append(field)
+    normalized_existing = [{field: row.get(field, "") for field in fields} for row in existing_rows]
+    normalized_new = [{field: row.get(field, "") for field in fields} for row in rows]
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    with tmp.open("w", encoding="utf-8", newline="") as f:
         wr = csv.DictWriter(f, fieldnames=fields)
-        if write_header:
-            wr.writeheader()
-        wr.writerows(rows)
+        wr.writeheader()
+        wr.writerows(normalized_existing)
+        wr.writerows(normalized_new)
+    tmp.replace(path)
 
 
 def filter_window(rows: list[dict[str, str]], start: date, end: date) -> list[dict[str, str]]:
@@ -398,9 +427,12 @@ def main() -> int:
 
     use_compare = compare_path.exists()
     if use_compare:
-        report_rows = dedupe_rows(load_csv_rows(compare_path))
+        compare_rows = dedupe_rows(load_csv_rows(compare_path))
         settlement_lookup = build_settlement_lookup(signal_rows)
-        patched, patched_settled = attach_settlement(report_rows, settlement_lookup)
+        patched, patched_settled = attach_settlement(compare_rows, settlement_lookup)
+        base_rows = [{**r, "policy_mode": (r.get("policy_mode") or "base")} for r in signal_rows]
+        overlay_rows = [r for r in compare_rows if norm_key_val(r.get("policy_mode")) == "overlay"]
+        report_rows = base_rows + overlay_rows
     else:
         report_rows = signal_rows
         patched = 0
@@ -422,6 +454,10 @@ def main() -> int:
     window_start = as_of - timedelta(days=window_days - 1)
     window_rows = filter_window(report_rows, window_start, as_of)
     all_rows = [r for r in report_rows if parse_iso_date(r.get("date")) is not None and parse_iso_date(r.get("date")) <= as_of]
+    legacy_rows = [r for r in all_rows if (parse_iso_date(r.get("date")) or CLEAN_EVAL_START) < CLEAN_EVAL_START]
+    clean_rows = [r for r in all_rows if (parse_iso_date(r.get("date")) or date.min) >= CLEAN_EVAL_START]
+    clean_window_start = max(window_start, CLEAN_EVAL_START)
+    clean_window_rows = filter_window(clean_rows, clean_window_start, as_of) if as_of >= CLEAN_EVAL_START else []
 
     modes = sorted({norm_key_val(r.get("policy_mode") or "base") or "base" for r in all_rows})
     if "base" in modes and "overlay" in modes:
@@ -431,13 +467,19 @@ def main() -> int:
 
     window_summary = {m: summarize_mode(window_rows, m) for m in ordered_modes}
     all_summary = {m: summarize_mode(all_rows, m) for m in ordered_modes}
+    legacy_summary = {m: summarize_mode(legacy_rows, m) for m in ordered_modes}
+    clean_summary = {m: summarize_mode(clean_rows, m) for m in ordered_modes}
+    clean_window_summary = {m: summarize_mode(clean_window_rows, m) for m in ordered_modes}
 
     lines: list[str] = []
     lines.append("Strict Policy Settled Performance")
     lines.append(f"Generated UTC: {generated_utc}")
     lines.append(f"As-of date: {as_of.isoformat()}")
     lines.append(f"Window: {window_start.isoformat()} -> {as_of.isoformat()} ({window_days}d)")
-    lines.append(f"Source: {'overlay-compare' if use_compare else 'strict-signals only'}")
+    lines.append(f"Clean evaluation start: {CLEAN_EVAL_START.isoformat()}")
+    lines.append(
+        f"Source: {'base from strict-signals + overlay from overlay-compare' if use_compare else 'strict-signals only'}"
+    )
     if use_compare:
         lines.append(
             f"Settlement backfill from strict-signals: patched_rows={patched}, patched_to_settled={patched_settled}"
@@ -490,11 +532,20 @@ def main() -> int:
 
     add_scope("Window performance (combined)", window_summary)
     add_scope("All-time performance (combined)", all_summary)
+    add_scope("Legacy period (mixed-vintage, all-time)", legacy_summary)
+    add_scope("Clean period (all-time)", clean_summary)
+    add_scope("Clean period window (combined)", clean_window_summary)
 
     window_by_bt = {m: summarize_mode_by_bet_type(window_rows, m) for m in ordered_modes}
     all_by_bt = {m: summarize_mode_by_bet_type(all_rows, m) for m in ordered_modes}
+    legacy_by_bt = {m: summarize_mode_by_bet_type(legacy_rows, m) for m in ordered_modes}
+    clean_by_bt = {m: summarize_mode_by_bet_type(clean_rows, m) for m in ordered_modes}
+    clean_window_by_bt = {m: summarize_mode_by_bet_type(clean_window_rows, m) for m in ordered_modes}
     add_scope_by_bet_type("Window performance by bet type (ML vs Handicap)", window_by_bt)
     add_scope_by_bet_type("All-time performance by bet type (ML vs Handicap)", all_by_bt)
+    add_scope_by_bet_type("Legacy period by bet type (ML vs Handicap)", legacy_by_bt)
+    add_scope_by_bet_type("Clean period by bet type (ML vs Handicap)", clean_by_bt)
+    add_scope_by_bet_type("Clean period window by bet type (ML vs Handicap)", clean_window_by_bt)
 
     report_text = "\n".join(lines).rstrip() + "\n"
     print(report_text)
@@ -503,7 +554,7 @@ def main() -> int:
         report_path.parent.mkdir(parents=True, exist_ok=True)
         report_path.write_text(report_text, encoding="utf-8")
 
-        source_name = compare_path.name if use_compare else signals_path.name
+        source_name = f"{signals_path.name}+{compare_path.name}" if use_compare else signals_path.name
         summary_rows: list[dict[str, str]] = []
         window_by_bt = {m: summarize_mode_by_bet_type(window_rows, m) for m in ordered_modes}
         all_by_bt = {m: summarize_mode_by_bet_type(all_rows, m) for m in ordered_modes}
@@ -514,6 +565,7 @@ def main() -> int:
                     generated_utc=generated_utc,
                     as_of=as_of,
                     scope="window",
+                    eval_period="overall",
                     window_days=window_days,
                     mode_summary=window_summary[mode],
                     source=source_name,
@@ -525,6 +577,7 @@ def main() -> int:
                     generated_utc=generated_utc,
                     as_of=as_of,
                     scope="all_time",
+                    eval_period="overall",
                     window_days=window_days,
                     mode_summary=all_summary[mode],
                     source=source_name,
@@ -538,6 +591,7 @@ def main() -> int:
                         generated_utc=generated_utc,
                         as_of=as_of,
                         scope="window",
+                        eval_period="overall",
                         window_days=window_days,
                         mode_summary=window_by_bt[mode][bt],
                         source=source_name,
@@ -549,8 +603,82 @@ def main() -> int:
                         generated_utc=generated_utc,
                         as_of=as_of,
                         scope="all_time",
+                        eval_period="overall",
                         window_days=window_days,
                         mode_summary=all_by_bt[mode][bt],
+                        source=source_name,
+                        bet_type=bt,
+                    )
+                )
+            summary_rows.append(
+                as_summary_row(
+                    generated_utc=generated_utc,
+                    as_of=as_of,
+                    scope="all_time",
+                    eval_period="legacy",
+                    window_days=window_days,
+                    mode_summary=legacy_summary[mode],
+                    source=source_name,
+                    bet_type="",
+                )
+            )
+            summary_rows.append(
+                as_summary_row(
+                    generated_utc=generated_utc,
+                    as_of=as_of,
+                    scope="all_time",
+                    eval_period="clean",
+                    window_days=window_days,
+                    mode_summary=clean_summary[mode],
+                    source=source_name,
+                    bet_type="",
+                )
+            )
+            summary_rows.append(
+                as_summary_row(
+                    generated_utc=generated_utc,
+                    as_of=as_of,
+                    scope="window",
+                    eval_period="clean",
+                    window_days=window_days,
+                    mode_summary=clean_window_summary[mode],
+                    source=source_name,
+                    bet_type="",
+                )
+            )
+            for bt in [BET_TYPE_ML, BET_TYPE_HANDICAP]:
+                summary_rows.append(
+                    as_summary_row(
+                        generated_utc=generated_utc,
+                        as_of=as_of,
+                        scope="all_time",
+                        eval_period="legacy",
+                        window_days=window_days,
+                        mode_summary=legacy_by_bt[mode][bt],
+                        source=source_name,
+                        bet_type=bt,
+                    )
+                )
+                summary_rows.append(
+                    as_summary_row(
+                        generated_utc=generated_utc,
+                        as_of=as_of,
+                        scope="all_time",
+                        eval_period="clean",
+                        window_days=window_days,
+                        mode_summary=clean_by_bt[mode][bt],
+                        source=source_name,
+                        bet_type=bt,
+                    )
+                )
+                summary_rows.append(
+                    as_summary_row(
+                        generated_utc=generated_utc,
+                        as_of=as_of,
+                        scope="window",
+                        eval_period="clean",
+                        window_days=window_days,
+                        mode_summary=clean_window_by_bt[mode][bt],
                         source=source_name,
                         bet_type=bt,
                     )

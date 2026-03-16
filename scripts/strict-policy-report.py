@@ -799,6 +799,7 @@ def main() -> int:
         )
         volume_match = (
             volume_min_value is not None
+            and not strict_match
             and not model_ml_excluded
             and not pin_ml_excluded
             and has_internal_ml_value
@@ -806,7 +807,7 @@ def main() -> int:
             and value_pct >= volume_min_value
         )
         strict_spread_eligible = strict_min_value is not None
-        volume_spread_eligible = volume_min_value is not None
+        volume_spread_eligible = volume_min_value is not None and not strict_spread_eligible
         if not strict_match and not volume_match:
             if not strict_spread_eligible and not volume_spread_eligible:
                 continue
