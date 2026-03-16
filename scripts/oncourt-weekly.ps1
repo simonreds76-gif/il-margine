@@ -36,7 +36,7 @@ Log "  Weekly Full Load started at $timestamp"
 Log "============================================"
 
 # Step 1: Extract from OnCourt (32-bit Python for .mdb)
-Log "=== Step 1/12: OnCourt extract ==="
+Log "=== Step 1/13: OnCourt extract ==="
 $py32 = "C:\Python312-32\python.exe"
 if (Test-Path $py32) {
     & $py32 scripts\oncourt-extract-all.py 2>&1 | ForEach-Object { Log $_ }
@@ -48,7 +48,7 @@ if (Test-Path $py32) {
 }
 
 # Step 2: FULL sync to Supabase
-Log "=== Step 2/12: Supabase FULL sync ==="
+Log "=== Step 2/13: Supabase FULL sync ==="
 & python scripts\oncourt-load-supabase.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "ERROR: Supabase full sync failed (exit $LASTEXITCODE)"
@@ -56,77 +56,84 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 # Step 3: Compute player stats
-Log "=== Step 3/12: Compute player stats ==="
+Log "=== Step 3/13: Compute player stats ==="
 & python scripts\oncourt-compute-player-stats.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Player stats failed (exit $LASTEXITCODE), continuing..."
 }
 
 # Step 3b: Extended player stats (v2 table — decomposed serve profiles)
-Log "=== Step 3b/12: Compute extended player stats (v2) ==="
+Log "=== Step 3b/13: Compute extended player stats (v2) ==="
 & python scripts\oncourt-compute-player-stats-extended.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Extended player stats failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 4: Recompute H2H
-Log "=== Step 4/12: Recompute H2H ==="
+# Step 4: Refresh Sackmann ATP source files
+Log "=== Step 4/13: Refresh Sackmann ATP source files ==="
+& python scripts\sackmann-refresh-data.py --start-year 2023 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: Sackmann refresh failed (exit $LASTEXITCODE), continuing..."
+}
+
+# Step 5: Recompute H2H
+Log "=== Step 5/13: Recompute H2H ==="
 & python scripts\sackmann-compute-h2h.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: H2H recompute failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 5: Recompute advanced stats
-Log "=== Step 5/12: Recompute advanced stats ==="
+# Step 6: Recompute advanced stats
+Log "=== Step 6/13: Recompute advanced stats ==="
 & python scripts\sackmann-compute-advanced-stats.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Advanced stats recompute failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 6: Refresh TennisExplorer injured/returning CSV
-Log "=== Step 6/12: Refresh injured players list (TennisExplorer) ==="
+# Step 7: Refresh TennisExplorer injured/returning CSV
+Log "=== Step 7/13: Refresh injured players list (TennisExplorer) ==="
 & python scripts\scrape-tennisexplorer-injured.py --max-pages 2 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: injured players scrape failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 7: Refresh Tennis Abstract CPI/surface-speed table
-Log "=== Step 7/12: Refresh CPI surface-speed table ==="
+# Step 8: Refresh Tennis Abstract CPI/surface-speed table
+Log "=== Step 8/13: Refresh CPI surface-speed table ==="
 & python scripts\scrape-tennisabstract-surface-speed.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: CPI surface-speed refresh failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 8: Run settlement/performance before slower external fetches.
-Log "=== Step 8/14: Nightly-style settlement/performance refresh ==="
+# Step 9: Run settlement/performance before slower external fetches.
+Log "=== Step 9/13: Nightly-style settlement/performance refresh ==="
 & powershell -ExecutionPolicy Bypass -NoProfile -File scripts\oncourt-settle-nightly.ps1 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: nightly settlement refresh failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 9: Weekly strict-signals analysis
-Log "=== Step 9/14: Refresh Tennis-Data ATP season file ==="
+# Step 10: Weekly strict-signals analysis
+Log "=== Step 10/13: Refresh Tennis-Data ATP season file ==="
 & python scripts\fetch-tennis-data-atp.py --year 2026 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: tennis-data ATP refresh failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 10: Weekly strict-signals analysis
-Log "=== Step 10/14: Analyse strict signals ==="
+# Step 11: Weekly strict-signals analysis
+Log "=== Step 11/13: Analyse strict signals ==="
 & python scripts\analyse-strict-signals.py --days 7 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-signals analysis failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 11: Weekly CLV audit (history first, tennis-data fallback)
-Log "=== Step 11/14: Strict CLV audit ==="
+# Step 12: Weekly CLV audit (history first, tennis-data fallback)
+Log "=== Step 12/13: Strict CLV audit ==="
 & python scripts\audit-strict-clv.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 12: Append Pinnacle history capture (weekly checkpoint)
-Log "=== Step 12/14: Append Pinnacle history capture (weekly) ==="
+# Step 13: Append Pinnacle history capture (weekly checkpoint)
+Log "=== Step 13/13: Append Pinnacle history capture (weekly) ==="
 & python scripts\pinnacle-capture-history.py --capture-mode weekly 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Pinnacle history append failed (exit $LASTEXITCODE), continuing..."
