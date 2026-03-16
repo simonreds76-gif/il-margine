@@ -1,137 +1,612 @@
 import Link from "next/link";
+import { promises as fs } from "fs";
+import path from "path";
 
-const roadmap = [
+export const dynamic = "force-dynamic";
+
+type LeagueKey = "serie-a" | "epl" | "la-liga" | "bundesliga";
+
+type CsvRow = Record<string, string>;
+
+type ShadowRow = {
+  leagueKey: LeagueKey;
+  leagueLabel: string;
+  leagueShort: string;
+  competition: string;
+  date: string;
+  kickoff: string;
+  match: string;
+  player: string;
+  team: string;
+  opponent: string;
+  signalType: string;
+  finishingLuck: number;
+  fixtureSwing: number;
+  penaltyTransfer: boolean;
+  penaltyTransferFrom: string;
+  positionUpgrade: boolean;
+  lineupState: string;
+  modelProb: number;
+  fairOdds: number;
+  bestBookmaker: string;
+  bestOdds: number;
+  ev: number;
+  confidence: string;
+  comparedAt: string;
+  settled: boolean;
+  goalsScored: number;
+  betOutcome: string;
+  settledAt: string;
+  pnlUnits: number;
+};
+
+type LeagueSource = {
+  key: LeagueKey;
+  label: string;
+  short: string;
+  file: string;
+  badgeClass: string;
+};
+
+const LEAGUE_SOURCES: LeagueSource[] = [
   {
-    step: "1",
-    title: "Internal Model, Public Release",
-    text: "The edge already exists internally. The work now is turning it into a stable public product without watering down what makes it valuable.",
+    key: "serie-a",
+    label: "Serie A",
+    short: "ITA",
+    file: "data/goalscorer/goalscorer-shadow-signals.csv",
+    badgeClass: "border-emerald-500/30 bg-emerald-500/12 text-emerald-300",
   },
   {
-    step: "2",
-    title: "Probability Calibration",
-    text: "Probabilities from minutes, shot quality, opponent context, and role.",
+    key: "epl",
+    label: "Premier League",
+    short: "ENG",
+    file: "data/goalscorer/epl-shadow-signals.csv",
+    badgeClass: "border-indigo-500/30 bg-indigo-500/12 text-indigo-200",
   },
   {
-    step: "3",
-    title: "Market Feed",
-    text: "Live and historical goalscorer prices captured and checked against model output before launch.",
+    key: "la-liga",
+    label: "La Liga",
+    short: "ESP",
+    file: "data/goalscorer/la-liga-shadow-signals.csv",
+    badgeClass: "border-amber-500/30 bg-amber-500/12 text-amber-200",
   },
   {
-    step: "4",
-    title: "Website Launch",
-    text: "Once the data layer is stable, this page will publish live goalscorer fair odds and market edges on site.",
+    key: "bundesliga",
+    label: "Bundesliga",
+    short: "GER",
+    file: "data/goalscorer/bundesliga-shadow-signals.csv",
+    badgeClass: "border-rose-500/30 bg-rose-500/12 text-rose-200",
   },
 ];
 
-const focusPoints = [
-  "Serie A first. Smaller scope, cleaner validation, faster iteration.",
-  "We're tracking player role and market context that matter for goalscorer probability.",
-  "Calibration comes before public rollout. We want the website version sharp, stable, and usable.",
-  "The aim is to publish with confidence, not rush out a half-finished model.",
+const HOW_STEPS = [
+  "We track high-confidence ATGS signals only, not every model edge.",
+  "Confirmed lineups reprice the board around actual starters, not projected minutes.",
+  "Penalty transfers and role changes add conviction when the market is slow to react.",
 ];
 
-export default function AnytimeGoalscorerPage() {
+function parseCsvLine(line: string): string[] {
+  const out: string[] = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let idx = 0; idx < line.length; idx += 1) {
+    const ch = line[idx];
+    if (ch === '"') {
+      if (inQuotes && line[idx + 1] === '"') {
+        current += '"';
+        idx += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+    if (ch === "," && !inQuotes) {
+      out.push(current);
+      current = "";
+      continue;
+    }
+    current += ch;
+  }
+
+  out.push(current);
+  return out;
+}
+
+function parseCsv(text: string): CsvRow[] {
+  const lines = text
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter(Boolean);
+
+  if (!lines.length) return [];
+
+  const headers = parseCsvLine(lines[0]);
+  return lines.slice(1).map((line) => {
+    const values = parseCsvLine(line);
+    const row: CsvRow = {};
+    headers.forEach((header, index) => {
+      row[header] = values[index] ?? "";
+    });
+    return row;
+  });
+}
+
+async function readLocalFile(relativePath: string): Promise<string | null> {
+  try {
+    return await fs.readFile(path.join(process.cwd(), relativePath), "utf8");
+  } catch {
+    return null;
+  }
+}
+
+function parseNumber(value?: string): number {
+  const n = Number.parseFloat(value ?? "");
+  return Number.isFinite(n) ? n : 0;
+}
+
+function parseBoolean(value?: string): boolean {
+  const text = (value ?? "").trim().toLowerCase();
+  return text === "1" || text === "true" || text === "yes" || text === "settled" || text === "won";
+}
+
+function parseShadowRow(row: CsvRow, league: LeagueSource): ShadowRow {
+  return {
+    leagueKey: league.key,
+    leagueLabel: league.label,
+    leagueShort: league.short,
+    competition: row.competition || league.label,
+    date: row.date || "",
+    kickoff: row.kickoff || "",
+    match: row.match || "",
+    player: row.player || "",
+    team: row.team || "",
+    opponent: row.opponent || "",
+    signalType: row.signal_type || "",
+    finishingLuck: parseNumber(row.finishing_luck),
+    fixtureSwing: parseNumber(row.fixture_swing),
+    penaltyTransfer: parseBoolean(row.penalty_transfer),
+    penaltyTransferFrom: row.penalty_transfer_from || "",
+    positionUpgrade: parseBoolean(row.position_upgrade),
+    lineupState: row.lineup_state || "",
+    modelProb: parseNumber(row.model_p_atgs),
+    fairOdds: parseNumber(row.model_fair_odds),
+    bestBookmaker: row.best_bookmaker || "",
+    bestOdds: parseNumber(row.best_bookmaker_odds),
+    ev: parseNumber(row.ev),
+    confidence: row.confidence || "",
+    comparedAt: row.compared_at || "",
+    settled: parseBoolean(row.settled),
+    goalsScored: parseNumber(row.goals_scored),
+    betOutcome: row.bet_outcome || "",
+    settledAt: row.settled_at || "",
+    pnlUnits: parseNumber(row.pnl_units),
+  };
+}
+
+async function loadShadowRows(): Promise<ShadowRow[]> {
+  const loaded = await Promise.all(
+    LEAGUE_SOURCES.map(async (league) => {
+      const text = await readLocalFile(league.file);
+      if (!text) return [] as ShadowRow[];
+      return parseCsv(text).map((row) => parseShadowRow(row, league));
+    }),
+  );
+
+  return loaded.flat();
+}
+
+function isUnsettled(row: ShadowRow): boolean {
+  return !row.settled;
+}
+
+function getPendingSignals(rows: ShadowRow[]): ShadowRow[] {
+  return rows
+    .filter((row) => row.confidence.toLowerCase() === "high")
+    .filter((row) => isUnsettled(row))
+    .sort((left, right) => {
+      const leftKickoff = Date.parse(left.kickoff || left.date);
+      const rightKickoff = Date.parse(right.kickoff || right.date);
+      if (Number.isFinite(leftKickoff) && Number.isFinite(rightKickoff) && leftKickoff !== rightKickoff) {
+        return leftKickoff - rightKickoff;
+      }
+      return right.ev - left.ev;
+    });
+}
+
+function getSettledSignals(rows: ShadowRow[]): ShadowRow[] {
+  return rows
+    .filter((row) => row.settled)
+    .sort((left, right) => {
+      const leftTime = Date.parse(left.settledAt || left.kickoff || left.date);
+      const rightTime = Date.parse(right.settledAt || right.kickoff || right.date);
+      return rightTime - leftTime;
+    });
+}
+
+function formatPct(value: number, digits = 1): string {
+  return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}%`;
+}
+
+function formatUnits(value: number): string {
+  return `${value >= 0 ? "+" : ""}${value.toFixed(2)}u`;
+}
+
+function formatOdds(value: number): string {
+  return value > 0 ? value.toFixed(2) : "n/a";
+}
+
+function formatLeagueTime(value: string): string {
+  const stamp = Date.parse(value);
+  if (!Number.isFinite(stamp)) return value || "TBC";
+
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(new Date(stamp));
+}
+
+function formatResultDate(value: string): string {
+  const stamp = Date.parse(value);
+  if (!Number.isFinite(stamp)) return value || "";
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    day: "numeric",
+    month: "short",
+  }).format(new Date(stamp));
+}
+
+function getShadowMetrics(settledRows: ShadowRow[]) {
+  const settledCount = settledRows.length;
+  const wins = settledRows.filter((row) => row.betOutcome.toLowerCase() === "won").length;
+  const pnlUnits = settledRows.reduce((sum, row) => sum + row.pnlUnits, 0);
+  const avgOdds =
+    settledCount > 0 ? settledRows.reduce((sum, row) => sum + row.bestOdds, 0) / settledCount : 0;
+
+  return {
+    settledCount,
+    wins,
+    pnlUnits,
+    winRate: settledCount > 0 ? (wins / settledCount) * 100 : 0,
+    roi: settledCount > 0 ? (pnlUnits / settledCount) * 100 : 0,
+    avgOdds,
+  };
+}
+
+function getSignalStrip(row: ShadowRow): string {
+  const flags =
+    (row.signalType === "stacked" || row.signalType === "both" ? 1 : 0) +
+    (row.penaltyTransfer ? 1 : 0) +
+    (row.positionUpgrade ? 1 : 0);
+
+  if (flags >= 3) return "Multi-signal";
+  if (row.penaltyTransfer) return "Penalty transfer";
+  if (row.positionUpgrade) return "Position upgrade";
+  return "High conviction";
+}
+
+function getWhyText(row: ShadowRow): string {
+  const fragments: string[] = [];
+
+  fragments.push(`Finishing luck ${row.finishingLuck.toFixed(2)}`);
+
+  if (row.fixtureSwing > 0) {
+    fragments.push(`fixture swing ${row.fixtureSwing.toFixed(2)}x`);
+  }
+
+  if (row.penaltyTransfer && row.penaltyTransferFrom) {
+    fragments.push(`penalty duty inherited from ${row.penaltyTransferFrom}`);
+  }
+
+  if (row.positionUpgrade) {
+    fragments.push("confirmed positional upgrade");
+  }
+
+  fragments.push(`model fair ${formatOdds(row.fairOdds)}`);
+
+  return `${fragments.join(" · ")}.`;
+}
+
+function getLeagueBadgeClass(leagueKey: LeagueKey): string {
+  return LEAGUE_SOURCES.find((league) => league.key === leagueKey)?.badgeClass ?? "border-slate-700 bg-slate-900 text-slate-300";
+}
+
+function getPnlClass(value: number): string {
+  return value >= 0 ? "text-emerald-300" : "text-rose-300";
+}
+
+function getStripClass(strip: string): string {
+  if (strip === "Multi-signal") return "border-emerald-500/30 bg-emerald-500/10 text-emerald-300";
+  if (strip === "Penalty transfer") return "border-amber-500/30 bg-amber-500/10 text-amber-200";
+  if (strip === "Position upgrade") return "border-sky-500/30 bg-sky-500/10 text-sky-200";
+  return "border-slate-700/70 bg-slate-900/80 text-slate-200";
+}
+
+function getLondonNow() {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(new Date());
+
+  const lookup = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  const hour = Number.parseInt(lookup.hour ?? "0", 10);
+  const minute = Number.parseInt(lookup.minute ?? "0", 10);
+  return { hour, minute };
+}
+
+function getNextScanText(): string {
+  const { hour, minute } = getLondonNow();
+  const minutesOfDay = hour * 60 + minute;
+  const windowStart = 12 * 60;
+  const windowEnd = 23 * 60 + 30;
+
+  let diff = 0;
+  if (minutesOfDay < windowStart) {
+    diff = windowStart - minutesOfDay;
+  } else if (minutesOfDay > windowEnd) {
+    diff = 24 * 60 - minutesOfDay + windowStart;
+  } else {
+    const nextSlot = Math.floor(minutesOfDay / 30) * 30 + 30;
+    diff = nextSlot - minutesOfDay;
+  }
+
+  if (diff < 60) return `${diff} min`;
+  const hours = Math.floor(diff / 60);
+  const mins = diff % 60;
+  return mins === 0 ? `${hours}h` : `${hours}h ${mins}m`;
+}
+
+export default async function AnytimeGoalscorerPage() {
+  const allRows = await loadShadowRows();
+  const pendingSignals = getPendingSignals(allRows);
+  const settledSignals = getSettledSignals(allRows);
+  const metrics = getShadowMetrics(settledSignals);
+  const nextScan = getNextScanText();
+  const showRealStats = metrics.settledCount >= 15;
+  const showRecentResults = metrics.settledCount >= 5;
+
   return (
-    <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <section className="border-b border-slate-800/50 pt-6 pb-12 md:pt-6 md:pb-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-4 flex items-center gap-2">
-            <Link href="/" className="text-sm text-slate-500 hover:text-slate-300">
+    <div className="min-h-screen bg-[#0d0d0d] text-neutral-200">
+      <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="mb-10">
+          <div className="mb-5 flex items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-emerald-400">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_16px_rgba(16,185,129,0.8)]" />
+            <span>Live signals</span>
+          </div>
+          <div className="mb-4 flex items-center gap-2 text-sm text-neutral-500">
+            <Link href="/" className="transition-colors hover:text-neutral-300">
               Home
             </Link>
-            <span className="text-slate-600">/</span>
-            <span className="text-sm text-emerald-400">Goalscorer Model</span>
+            <span>/</span>
+            <span className="text-neutral-300">Goalscorer Value Picks</span>
           </div>
+          <h1 className="mb-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+            Goalscorer value picks
+          </h1>
+          <p className="max-w-3xl text-sm leading-7 text-neutral-400 sm:text-base">
+            Selective anytime-goalscorer signals across Serie A, Premier League, La Liga, and Bundesliga. Picks are
+            only surfaced from the private shadow tracker once the confirmed-XI rerun is live and the filters align.
+          </p>
+        </div>
 
-          <div className="max-w-4xl">
-            <div className="mb-4 inline-flex items-center rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-300">
-              In Development
-            </div>
-            <h1 className="mb-4 text-3xl font-semibold tracking-tight text-slate-100 sm:text-4xl">
-              Goalscorer Model
-            </h1>
-            <p className="max-w-3xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              We already rate this market internally and have seen enough to know it belongs on the site. The public
-              version is being calibrated, hardened, and prepared for release, with Serie A as the first league.
+        <div className="mb-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {showRealStats ? (
+            <>
+              <div className="rounded-2xl border border-neutral-800 bg-neutral-950/70 p-4">
+                <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">ROI</div>
+                <div className="mt-2 text-2xl font-semibold text-emerald-300">{formatPct(metrics.roi, 1)}</div>
+                <div className="mt-1 text-xs text-neutral-500">shadow tracker settled sample</div>
+              </div>
+              <div className="rounded-2xl border border-neutral-800 bg-neutral-950/70 p-4">
+                <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Settled picks</div>
+                <div className="mt-2 text-2xl font-semibold text-white">{metrics.settledCount}</div>
+                <div className="mt-1 text-xs text-neutral-500">across four leagues</div>
+              </div>
+              <div className="rounded-2xl border border-neutral-800 bg-neutral-950/70 p-4">
+                <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Win rate</div>
+                <div className="mt-2 text-2xl font-semibold text-white">{metrics.winRate.toFixed(1)}%</div>
+                <div className="mt-1 text-xs text-neutral-500">
+                  {metrics.wins}/{metrics.settledCount} winners
+                </div>
+              </div>
+              <div className="rounded-2xl border border-neutral-800 bg-neutral-950/70 p-4">
+                <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">P/L</div>
+                <div className={`mt-2 text-2xl font-semibold ${getPnlClass(metrics.pnlUnits)}`}>
+                  {formatUnits(metrics.pnlUnits)}
+                </div>
+                <div className="mt-1 text-xs text-neutral-500">avg odds {formatOdds(metrics.avgOdds)}</div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="rounded-2xl border border-neutral-800 bg-neutral-950/70 p-4">
+                <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Status</div>
+                <div className="mt-2 text-xl font-semibold text-emerald-300">Shadow tracking live</div>
+                <div className="mt-1 text-xs text-neutral-500">public record turns on after 15 settled picks</div>
+              </div>
+              <div className="rounded-2xl border border-neutral-800 bg-neutral-950/70 p-4">
+                <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Coverage</div>
+                <div className="mt-2 text-xl font-semibold text-white">4 leagues</div>
+                <div className="mt-1 text-xs text-neutral-500">Serie A, EPL, La Liga, Bundesliga</div>
+              </div>
+              <div className="rounded-2xl border border-neutral-800 bg-neutral-950/70 p-4">
+                <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Pricing mode</div>
+                <div className="mt-2 text-xl font-semibold text-white">Confirmed XI rerun</div>
+                <div className="mt-1 text-xs text-neutral-500">starters only, non-starters suppressed</div>
+              </div>
+              <div className="rounded-2xl border border-neutral-800 bg-neutral-950/70 p-4">
+                <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Next scan</div>
+                <div className="mt-2 text-xl font-semibold text-white">{nextScan}</div>
+                <div className="mt-1 text-xs text-neutral-500">automated live polling window</div>
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">Live picks</h2>
+            <p className="mt-1 text-sm text-neutral-500">
+              Only unsettled high-confidence shadow signals appear here. No broad model spray.
             </p>
           </div>
+          <span className="rounded-full border border-neutral-800 bg-neutral-950/70 px-3 py-1 text-xs text-neutral-400">
+            {pendingSignals.length} live qualifier{pendingSignals.length === 1 ? "" : "s"}
+          </span>
         </div>
-      </section>
 
-      <section className="py-12 md:py-16">
-        <div className="mx-auto grid max-w-6xl gap-6 px-4 sm:px-6 lg:grid-cols-[1.25fr,0.75fr] lg:px-8">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6 shadow-[0_20px_50px_rgba(0,0,0,0.25)]">
-            <div className="mb-5 flex items-center gap-2">
-              <span className="text-xs font-mono uppercase tracking-[0.22em] text-emerald-400">Roadmap</span>
+        <div className="space-y-4">
+          {pendingSignals.length === 0 ? (
+            <div className="rounded-2xl border border-neutral-800 bg-neutral-950/60 p-6">
+              <div className="text-sm font-semibold text-white">No qualified live picks right now</div>
+              <p className="mt-2 max-w-2xl text-sm leading-7 text-neutral-400">
+                That is expected. This page only surfaces high-confidence stacked signals from the shadow tracker, so
+                some matchwindows will have no public-facing plays at all.
+              </p>
             </div>
-            <div className="space-y-4">
-              {roadmap.map((item) => (
-                <div key={item.step} className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4">
-                  <div className="mb-2 flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/15 text-sm font-semibold text-emerald-300">
-                      {item.step}
-                    </div>
-                    <h2 className="text-lg font-semibold text-slate-100">{item.title}</h2>
+          ) : (
+            pendingSignals.map((row) => {
+              const strip = getSignalStrip(row);
+              return (
+                <article
+                  key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}`}
+                  className="overflow-hidden rounded-3xl border border-neutral-800 bg-[#141414]"
+                >
+                  <div className="border-b border-neutral-800 px-5 py-3">
+                    <span className={`inline-flex rounded-full border px-3 py-1 text-[11px] font-medium ${getStripClass(strip)}`}>
+                      {strip}
+                    </span>
                   </div>
-                  <p className="text-sm leading-6 text-slate-300">{item.text}</p>
+
+                  <div className="border-b border-neutral-800 px-5 py-5">
+                    <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+                      <div>
+                        <div className="mb-3 flex flex-wrap items-center gap-2">
+                          <span className={`inline-flex rounded-md border px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] ${getLeagueBadgeClass(row.leagueKey)}`}>
+                            {row.leagueLabel.toUpperCase()}
+                          </span>
+                          <span className="inline-flex rounded-md border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] text-emerald-300">
+                            CONFIRMED XI
+                          </span>
+                          {row.penaltyTransfer ? (
+                            <span className="inline-flex rounded-md border border-amber-500/25 bg-amber-500/10 px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] text-amber-200">
+                              PEN TRANSFER
+                            </span>
+                          ) : null}
+                          {row.positionUpgrade ? (
+                            <span className="inline-flex rounded-md border border-sky-500/25 bg-sky-500/10 px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] text-sky-200">
+                              POS UPGRADE
+                            </span>
+                          ) : null}
+                        </div>
+
+                        <h3 className="text-2xl font-semibold tracking-tight text-white">
+                          {row.player} <span className="text-lg font-normal text-neutral-400">to score</span>
+                        </h3>
+                        <p className="mt-2 text-sm text-neutral-400">
+                          {row.match} · {formatLeagueTime(row.kickoff)}
+                        </p>
+                      </div>
+
+                      <div className="shrink-0 text-left lg:text-right">
+                        <div className="text-3xl font-semibold text-emerald-300">{formatOdds(row.bestOdds)}</div>
+                        <div className="mt-1 text-xs uppercase tracking-[0.18em] text-neutral-500">
+                          best @ {row.bestBookmaker || "market"}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-5 bg-[#181818] px-5 py-5 lg:grid-cols-[1.4fr,0.8fr]">
+                    <div>
+                      <div className="mb-2 text-[11px] uppercase tracking-[0.22em] text-neutral-500">Why this pick</div>
+                      <p className="text-sm leading-7 text-neutral-300">{getWhyText(row)}</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2">
+                      <div className="rounded-2xl border border-neutral-800 bg-neutral-950/70 p-3 text-center">
+                        <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">EV</div>
+                        <div className="mt-2 text-lg font-semibold text-emerald-300">{formatPct(row.ev * 100, 0)}</div>
+                      </div>
+                      <div className="rounded-2xl border border-neutral-800 bg-neutral-950/70 p-3 text-center">
+                        <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Luck</div>
+                        <div className="mt-2 text-lg font-semibold text-amber-200">{row.finishingLuck.toFixed(2)}</div>
+                      </div>
+                      <div className="rounded-2xl border border-neutral-800 bg-neutral-950/70 p-3 text-center">
+                        <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Swing</div>
+                        <div className="mt-2 text-lg font-semibold text-white">{row.fixtureSwing.toFixed(2)}</div>
+                      </div>
+                      <div className="rounded-2xl border border-neutral-800 bg-neutral-950/70 p-3 text-center">
+                        <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Fair</div>
+                        <div className="mt-2 text-lg font-semibold text-white">{formatOdds(row.fairOdds)}</div>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              );
+            })
+          )}
+        </div>
+
+        {showRecentResults ? (
+          <section className="mt-12">
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <div>
+                <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">Recent results</h2>
+                <p className="mt-1 text-sm text-neutral-500">Last 10 settled shadow picks</p>
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-3xl border border-neutral-800">
+              {settledSignals.slice(0, 10).map((row, index) => (
+                <div
+                  key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}-settled`}
+                  className={`flex flex-wrap items-center gap-3 px-5 py-4 ${index % 2 === 0 ? "bg-[#141414]" : "bg-[#181818]"}`}
+                >
+                  <span className={`h-2.5 w-2.5 rounded-full ${row.betOutcome === "won" ? "bg-emerald-400" : "bg-rose-400"}`} />
+                  <span className="w-16 text-sm text-neutral-500">{formatResultDate(row.date)}</span>
+                  <span className={`inline-flex rounded-md border px-2 py-0.5 text-[10px] font-semibold tracking-[0.16em] ${getLeagueBadgeClass(row.leagueKey)}`}>
+                    {row.leagueShort}
+                  </span>
+                  <span className="min-w-[160px] flex-1 text-sm text-neutral-200">
+                    {row.player} vs {row.opponent}
+                  </span>
+                  <span className="text-sm text-neutral-500">@ {formatOdds(row.bestOdds)}</span>
+                  <span className={`ml-auto text-sm font-semibold ${getPnlClass(row.pnlUnits)}`}>
+                    {formatUnits(row.pnlUnits)}
+                  </span>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
+        ) : null}
 
-          <div className="space-y-6">
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-              <div className="mb-4 text-xs font-mono uppercase tracking-[0.22em] text-emerald-400">Current Focus</div>
-              <ul className="space-y-3 text-sm leading-6 text-slate-300">
-                {focusPoints.map((point) => (
-                  <li key={point} className="flex gap-3">
-                    <span className="mt-1 h-2 w-2 rounded-full bg-emerald-400" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-              <div className="mb-4 text-xs font-mono uppercase tracking-[0.22em] text-emerald-400">Status</div>
-              <div className="space-y-3 text-sm text-slate-300">
-                <p>
-                  This is not a concept page. The model already exists internally and has been beating prices in
-                  private testing; the current work is about calibration, data quality, and making the on-site
-                  version robust enough to publish.
-                </p>
-                <p>
-                  When this is ready, this page will show live goalscorer fair odds and value flags, not recycled
-                  tips and not a watered-down version of the underlying model.
-                </p>
+        <section className="mt-12 rounded-3xl border border-neutral-800 bg-[#141414] p-6">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">How it works</h2>
+          <div className="mt-6 grid gap-5 md:grid-cols-3">
+            {HOW_STEPS.map((step, index) => (
+              <div key={step}>
+                <div className="text-2xl font-semibold text-white/90">0{index + 1}</div>
+                <p className="mt-3 text-sm leading-7 text-neutral-400">{step}</p>
               </div>
-            </div>
-
-            <div className="rounded-2xl border border-slate-800 bg-[linear-gradient(135deg,rgba(16,185,129,0.12),rgba(15,23,42,0.92))] p-6">
-              <h3 className="mb-3 text-lg font-semibold text-slate-100">Why this market matters</h3>
-              <p className="mb-5 text-sm leading-6 text-slate-300">
-                Soft-book goalscorer markets leave more room for edge than the sharpest headline markets. The
-                opportunity is already there; the job now is making the public version clean enough to release
-                without giving away the recipe.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/the-edge"
-                  className="inline-flex items-center rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-400"
-                >
-                  Read The Edge
-                </Link>
-                <Link
-                  href="/bookmakers"
-                  className="inline-flex items-center rounded-lg border border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:border-slate-500 hover:bg-slate-800/50"
-                >
-                  Bookmaker Context
-                </Link>
-              </div>
-            </div>
+            ))}
           </div>
+        </section>
+
+        <div className="mt-8 rounded-2xl border border-neutral-800 bg-neutral-950/70 px-5 py-4 text-center text-sm text-neutral-500">
+          Signals update automatically with confirmed lineups. Next scan in {nextScan}.
         </div>
-      </section>
+      </div>
     </div>
   );
 }
