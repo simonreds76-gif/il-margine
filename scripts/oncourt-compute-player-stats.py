@@ -41,6 +41,15 @@ ROLLING_DAYS = 365
 ROLLING_DAYS_LONG = 1095  # 36 months for blend (general ability, not just recent form)
 BLEND_RECENT_WEIGHT = 0.7  # hold_blend = BLEND_RECENT_WEIGHT * hold_12m + (1 - BLEND_RECENT_WEIGHT) * hold_long
 BATCH = 500
+TOUR_CLASS_WEIGHTS = {
+    4: 1.08,  # Grand Slams
+    3: 1.04,  # Masters / Tour Finals
+    2: 1.00,  # ATP Tour level
+    1: 0.72,  # Challengers
+    0: 0.42,  # ITF / Futures
+    5: 0.88,  # Davis Cup / team events
+    6: 0.15,  # Juniors
+}
 
 
 def load_csv(path):
@@ -73,6 +82,30 @@ def _int(r, key, default=0):
         return int(v)
     except ValueError:
         return default
+
+
+def _weighted_count(value):
+    if value is None:
+        return 0
+    if value <= 0:
+        return 0
+    return max(1, int(round(value)))
+
+
+def _tour_class_weight(tour_rank, tour_name):
+    try:
+        rank = int(tour_rank) if tour_rank is not None else None
+    except (TypeError, ValueError):
+        rank = None
+
+    name = (tour_name or "").upper()
+    if "JUNIOR" in name:
+        return TOUR_CLASS_WEIGHTS[6]
+    if "DAVIS CUP" in name or "BILLIE JEAN KING" in name:
+        return TOUR_CLASS_WEIGHTS[5]
+    if rank in TOUR_CLASS_WEIGHTS:
+        return TOUR_CLASS_WEIGHTS[rank]
+    return 0.80
 
 
 def main():
@@ -126,6 +159,7 @@ def main():
         return court_name
 
     tour_id_to_surface = {}
+    tour_id_to_weight = {}
     for r in tours:
         tid = r.get("id")
         cid = r.get("court_id")
@@ -133,7 +167,9 @@ def main():
             try:
                 raw = court_id_to_surface.get(int(cid), "N/A")
                 surface = _court_to_surface(raw) if raw != "N/A" else raw
-                tour_id_to_surface[int(tid)] = surface
+                tid_int = int(tid)
+                tour_id_to_surface[tid_int] = surface
+                tour_id_to_weight[tid_int] = _tour_class_weight(r.get("rank"), r.get("name"))
             except ValueError:
                 pass
 
@@ -151,10 +187,11 @@ def main():
         if dt is None:
             continue
         surface = tour_id_to_surface.get(t, "N/A")
+        weight = tour_id_to_weight.get(t, 0.80)
         if dt >= cutoff:
-            game_key_to_info[(w, l, t, rd)] = (dt, surface)
+            game_key_to_info[(w, l, t, rd)] = (dt, surface, weight)
         if dt >= cutoff_long:
-            game_key_to_info_long[(w, l, t, rd)] = (dt, surface)
+            game_key_to_info_long[(w, l, t, rd)] = (dt, surface, weight)
 
     print(f"  Games in 12m window: {len(game_key_to_info):,}, long window: {len(game_key_to_info_long):,}")
 
@@ -175,7 +212,7 @@ def main():
         in_long = key in game_key_to_info_long
         if not in_12m and not in_long:
             continue
-        _date, surface = game_key_to_info.get(key) or game_key_to_info_long[key]
+        _date, surface, class_weight = game_key_to_info.get(key) or game_key_to_info_long[key]
 
         w_fsof = _int(r, "w_fsof")
         w_w2sof = _int(r, "w_w2sof")
@@ -194,19 +231,19 @@ def main():
             if not use:
                 continue
             if w_fsof + w_w2sof > 0:
-                ag[(w, surface)]["hold_num"] += w_w1s + w_w2s
-                ag[(w, surface)]["hold_den"] += w_fsof + w_w2sof
+                ag[(w, surface)]["hold_num"] += (w_w1s + w_w2s) * class_weight
+                ag[(w, surface)]["hold_den"] += (w_fsof + w_w2sof) * class_weight
             if w_rpwof > 0:
-                ag[(w, surface)]["return_num"] += w_rpw
-                ag[(w, surface)]["return_den"] += w_rpwof
-            ag[(w, surface)]["matches"] += 1
+                ag[(w, surface)]["return_num"] += w_rpw * class_weight
+                ag[(w, surface)]["return_den"] += w_rpwof * class_weight
+            ag[(w, surface)]["matches"] += class_weight
             if l_fsof + l_w2sof > 0:
-                ag[(l, surface)]["hold_num"] += l_w1s + l_w2s
-                ag[(l, surface)]["hold_den"] += l_fsof + l_w2sof
+                ag[(l, surface)]["hold_num"] += (l_w1s + l_w2s) * class_weight
+                ag[(l, surface)]["hold_den"] += (l_fsof + l_w2sof) * class_weight
             if l_rpwof > 0:
-                ag[(l, surface)]["return_num"] += l_rpw
-                ag[(l, surface)]["return_den"] += l_rpwof
-            ag[(l, surface)]["matches"] += 1
+                ag[(l, surface)]["return_num"] += l_rpw * class_weight
+                ag[(l, surface)]["return_den"] += l_rpwof * class_weight
+            ag[(l, surface)]["matches"] += class_weight
 
     # Build rows for player_surface_stats (12m + long-window columns)
     out = []
@@ -226,16 +263,16 @@ def main():
             "surface": surface,
             "hold_pct": round(hold_pct, 4) if hold_pct is not None else None,
             "return_pct": round(return_pct, 4) if return_pct is not None else None,
-            "match_count": v["matches"],
-            "service_pts": v["hold_den"],
-            "return_pts": v["return_den"],
+            "match_count": _weighted_count(v["matches"]),
+            "service_pts": _weighted_count(v["hold_den"]),
+            "return_pts": _weighted_count(v["return_den"]),
         }
         if hold_pct_long is not None:
             row["hold_pct_long"] = round(hold_pct_long, 4)
         if return_pct_long is not None:
             row["return_pct_long"] = round(return_pct_long, 4)
         if match_count_long:
-            row["match_count_long"] = match_count_long
+            row["match_count_long"] = _weighted_count(match_count_long)
         out.append(row)
 
     print(f"Computed {len(out):,} (player_id, surface) rows")

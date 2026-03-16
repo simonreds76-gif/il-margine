@@ -64,6 +64,16 @@ ROLLING_DAYS = 365
 ROLLING_DAYS_LONG = 1095  # 36 months
 BATCH = 500
 
+TOUR_CLASS_WEIGHTS = {
+    4: 1.08,  # Grand Slams
+    3: 1.04,  # Masters / Tour Finals
+    2: 1.00,  # ATP Tour level
+    1: 0.72,  # Challengers
+    0: 0.42,  # ITF / Futures
+    5: 0.88,  # Davis Cup / team events
+    6: 0.15,  # Juniors
+}
+
 
 def load_csv(path):
     if not os.path.exists(path):
@@ -102,6 +112,30 @@ def _safe_div(num, den, ndigits=4):
     if den > 0:
         return round(num / den, ndigits)
     return None
+
+
+def _weighted_count(value):
+    if value is None:
+        return 0
+    if value <= 0:
+        return 0
+    return max(1, int(round(value)))
+
+
+def _tour_class_weight(tour_rank, tour_name):
+    try:
+        rank = int(tour_rank) if tour_rank is not None else None
+    except (TypeError, ValueError):
+        rank = None
+
+    name = (tour_name or "").upper()
+    if "JUNIOR" in name:
+        return TOUR_CLASS_WEIGHTS[6]
+    if "DAVIS CUP" in name or "BILLIE JEAN KING" in name:
+        return TOUR_CLASS_WEIGHTS[5]
+    if rank in TOUR_CLASS_WEIGHTS:
+        return TOUR_CLASS_WEIGHTS[rank]
+    return 0.80
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -203,13 +237,16 @@ def main():
         return court_name
 
     tour_id_to_surface = {}
+    tour_id_to_weight = {}
     for r in tours:
         tid = r.get("id")
         cid = r.get("court_id")
         if tid and cid:
             try:
                 raw = court_id_to_surface.get(int(cid), "N/A")
-                tour_id_to_surface[int(tid)] = _court_to_surface(raw) if raw != "N/A" else raw
+                tid_int = int(tid)
+                tour_id_to_surface[tid_int] = _court_to_surface(raw) if raw != "N/A" else raw
+                tour_id_to_weight[tid_int] = _tour_class_weight(r.get("rank"), r.get("name"))
             except ValueError:
                 pass
 
@@ -227,10 +264,11 @@ def main():
         if dt is None:
             continue
         surface = tour_id_to_surface.get(t, "N/A")
+        weight = tour_id_to_weight.get(t, 0.80)
         if dt >= cutoff:
-            game_key_to_info[(w, l, t, rd)] = (dt, surface)
+            game_key_to_info[(w, l, t, rd)] = (dt, surface, weight)
         if dt >= cutoff_long:
-            game_key_to_info_long[(w, l, t, rd)] = (dt, surface)
+            game_key_to_info_long[(w, l, t, rd)] = (dt, surface, weight)
 
     print(f"  Games in 12m: {len(game_key_to_info):,}, 36m: {len(game_key_to_info_long):,}")
 
@@ -327,7 +365,7 @@ def main():
         in_long = key in game_key_to_info_long
         if not in_12m and not in_long:
             continue
-        _date, surface = game_key_to_info.get(key) or game_key_to_info_long[key]
+        _date, surface, class_weight = game_key_to_info.get(key) or game_key_to_info_long[key]
 
         # Read all stat columns for winner and loser
         # We need BOTH sides to compute return decomposition
@@ -374,43 +412,43 @@ def main():
 
                 # Existing hold/return
                 if ps["fsof"] + ps["w2sof"] > 0:
-                    ag[k]["hold_num"] += ps["w1s"] + ps["w2s"]
-                    ag[k]["hold_den"] += ps["fsof"] + ps["w2sof"]
+                    ag[k]["hold_num"] += (ps["w1s"] + ps["w2s"]) * class_weight
+                    ag[k]["hold_den"] += (ps["fsof"] + ps["w2sof"]) * class_weight
                 if ps["rpwof"] > 0:
-                    ag[k]["return_num"] += ps["rpw"]
-                    ag[k]["return_den"] += ps["rpwof"]
+                    ag[k]["return_num"] += ps["rpw"] * class_weight
+                    ag[k]["return_den"] += ps["rpwof"] * class_weight
 
                 # Serve decomposition (own serve stats)
-                ag[k]["first_attempts"] += ps["fsof"]
-                ag[k]["first_in"] += ps["first_in"]
-                ag[k]["first_won"] += ps["first_won"]
-                ag[k]["second_attempts"] += ps["w2sof"]
-                ag[k]["second_won"] += ps["w2s"]
-                ag[k]["aces"] += ps["aces"]
-                ag[k]["dfs"] += ps["dfs"]
-                ag[k]["total_serve_pts"] += ps["svpt"]
+                ag[k]["first_attempts"] += ps["fsof"] * class_weight
+                ag[k]["first_in"] += ps["first_in"] * class_weight
+                ag[k]["first_won"] += ps["first_won"] * class_weight
+                ag[k]["second_attempts"] += ps["w2sof"] * class_weight
+                ag[k]["second_won"] += ps["w2s"] * class_weight
+                ag[k]["aces"] += ps["aces"] * class_weight
+                ag[k]["dfs"] += ps["dfs"] * class_weight
+                ag[k]["total_serve_pts"] += ps["svpt"] * class_weight
 
                 # Return decomposition (from OPPONENT's serve stats)
                 # My return vs opponent's first serve:
                 #   opponent had first_in first serves in, won first_won of them
                 #   → I won (first_in - first_won) return points vs their first serve
                 if opp["first_in"] > 0:
-                    ag[k]["ret_vs_first_won"] += opp["first_in"] - opp["first_won"]
-                    ag[k]["ret_vs_first_faced"] += opp["first_in"]
+                    ag[k]["ret_vs_first_won"] += (opp["first_in"] - opp["first_won"]) * class_weight
+                    ag[k]["ret_vs_first_faced"] += opp["first_in"] * class_weight
                 # My return vs opponent's second serve:
                 #   opponent had w2sof second serves, won w2s of them
                 #   → I won (w2sof - w2s) return points vs their second serve
                 if opp["w2sof"] > 0:
-                    ag[k]["ret_vs_second_won"] += opp["w2sof"] - opp["w2s"]
-                    ag[k]["ret_vs_second_faced"] += opp["w2sof"]
+                    ag[k]["ret_vs_second_won"] += (opp["w2sof"] - opp["w2s"]) * class_weight
+                    ag[k]["ret_vs_second_faced"] += opp["w2sof"] * class_weight
 
                 # Pressure
-                ag[k]["bp_saved"] += ps["bp_saved"]
-                ag[k]["bp_faced"] += ps["bp_faced"]
-                ag[k]["bp_won"] += ps["bp_won"]
-                ag[k]["bp_opp_faced"] += ps["bp_opp_faced"]
+                ag[k]["bp_saved"] += ps["bp_saved"] * class_weight
+                ag[k]["bp_faced"] += ps["bp_faced"] * class_weight
+                ag[k]["bp_won"] += ps["bp_won"] * class_weight
+                ag[k]["bp_opp_faced"] += ps["bp_opp_faced"] * class_weight
 
-                ag[k]["matches"] += 1
+                ag[k]["matches"] += class_weight
 
     # ── Build output rows ──
     print("Building output rows...")
@@ -421,9 +459,9 @@ def main():
         row = {
             "player_id": player_id,
             "surface": surface,
-            "match_count": v["matches"],
-            "service_pts": v["hold_den"],
-            "return_pts": v["return_den"],
+            "match_count": _weighted_count(v["matches"]),
+            "service_pts": _weighted_count(v["hold_den"]),
+            "return_pts": _weighted_count(v["return_den"]),
 
             # ── Existing stats (12m) ──
             "hold_pct": _safe_div(v["hold_num"], v["hold_den"]),
@@ -432,7 +470,7 @@ def main():
             # ── Existing stats (36m) ──
             "hold_pct_long": _safe_div(vlong["hold_num"], vlong["hold_den"]),
             "return_pct_long": _safe_div(vlong["return_num"], vlong["return_den"]),
-            "match_count_long": vlong["matches"],
+            "match_count_long": _weighted_count(vlong["matches"]),
 
             # ── NEW: Serve decomposition (12m) ──
             "first_serve_pct": _safe_div(v["first_in"], v["first_attempts"]),
@@ -450,12 +488,12 @@ def main():
             "ret_vs_second_win_pct": _safe_div(v["ret_vs_second_won"], v["ret_vs_second_faced"]),
 
             # ── NEW: Raw counts for downstream use ──
-            "aces_total": v["aces"],
-            "dfs_total": v["dfs"],
-            "bp_faced_total": v["bp_faced"],
-            "bp_saved_total": v["bp_saved"],
-            "ret_vs_first_faced_total": v["ret_vs_first_faced"],
-            "ret_vs_second_faced_total": v["ret_vs_second_faced"],
+            "aces_total": _weighted_count(v["aces"]),
+            "dfs_total": _weighted_count(v["dfs"]),
+            "bp_faced_total": _weighted_count(v["bp_faced"]),
+            "bp_saved_total": _weighted_count(v["bp_saved"]),
+            "ret_vs_first_faced_total": _weighted_count(v["ret_vs_first_faced"]),
+            "ret_vs_second_faced_total": _weighted_count(v["ret_vs_second_faced"]),
 
             # ── NEW: Serve decomposition (36m) ──
             "first_serve_pct_long": _safe_div(vlong["first_in"], vlong["first_attempts"]),

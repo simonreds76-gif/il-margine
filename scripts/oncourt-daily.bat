@@ -48,10 +48,10 @@ if %ERRORLEVEL% neq 0 (
 )
 echo.
 
-REM --- Step 3: Compute player stats ---
-echo === Step 3/6: Compute player stats ===
+REM --- Step 3: Compute player stats (extended writes both v2 and legacy tables) ---
+echo === Step 3/6: Compute player stats (extended) ===
 echo.
-python scripts\oncourt-compute-player-stats.py
+python scripts\oncourt-compute-player-stats-extended.py
 if %ERRORLEVEL% neq 0 (
     echo.
     echo ERROR: Player stats computation failed.

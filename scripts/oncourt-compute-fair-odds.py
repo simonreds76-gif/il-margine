@@ -179,6 +179,12 @@ MISSING_ACTIVITY_BASE_PENALTY = 0.010
 MISSING_ACTIVITY_AGE_START = 31
 MISSING_ACTIVITY_AGE_WEIGHT = 0.0020
 MISSING_ACTIVITY_PENALTY_CAP = 0.035
+LOW_CONF_DOG_MIN_MATCHES = 6
+LOW_CONF_DOG_ESTABLISHED_RANK = 120
+LOW_CONF_DOG_ESTABLISHED_ELO = 1775
+LOW_CONF_DOG_MODEL_ANCHOR_GAP = 0.04
+LOW_CONF_DOG_BLEND_MIN = 0.45
+LOW_CONF_DOG_BLEND_MAX = 0.85
 
 # Post-hoc probability calibration (fit on historical backtest; 2024 train).
 # Favorite-space Platt transform blended by tour tier to avoid overcorrection
@@ -412,6 +418,98 @@ def _series_rank_weight_multiplier(series_bucket, confidence):
     if series_bucket == "ATP500":
         return {"high": 0.95, "medium": 0.78, "low": 0.65}.get(confidence, 1.0)
     return 1.0
+
+
+def _is_established_player(rank, elo_surface, elo_overall, match_count):
+    if rank is not None and rank > 0 and rank <= LOW_CONF_DOG_ESTABLISHED_RANK:
+        return True
+    if elo_surface is not None and float(elo_surface) >= LOW_CONF_DOG_ESTABLISHED_ELO:
+        return True
+    if elo_overall is not None and float(elo_overall) >= LOW_CONF_DOG_ESTABLISHED_ELO:
+        return True
+    if match_count is not None and int(match_count or 0) >= 12:
+        return True
+    return False
+
+
+def _apply_low_confidence_dog_guard(
+    p1_win,
+    p_elo,
+    p_rank,
+    confidence,
+    has_s1,
+    has_s2,
+    mc1_12,
+    mc2_12,
+    e1_is_real,
+    e2_is_real,
+    e1_s,
+    e2_s,
+    e1_o,
+    e2_o,
+    r1,
+    r2,
+):
+    if confidence != "low":
+        return p1_win, 0.0
+
+    underdog_is_p1 = p1_win < 0.5
+    underdog_has_stats = has_s1 if underdog_is_p1 else has_s2
+    underdog_matches = mc1_12 if underdog_is_p1 else mc2_12
+    underdog_elo_real = e1_is_real if underdog_is_p1 else e2_is_real
+    favourite_matches = mc2_12 if underdog_is_p1 else mc1_12
+    favourite_rank = r2 if underdog_is_p1 else r1
+    favourite_elo_surface = e2_s if underdog_is_p1 else e1_s
+    favourite_elo_overall = e2_o if underdog_is_p1 else e1_o
+
+    weak_underdog_profile = (
+        (not underdog_has_stats)
+        or underdog_matches < LOW_CONF_DOG_MIN_MATCHES
+        or (not underdog_elo_real)
+    )
+    if not weak_underdog_profile:
+        return p1_win, 0.0
+
+    if not _is_established_player(favourite_rank, favourite_elo_surface, favourite_elo_overall, favourite_matches):
+        return p1_win, 0.0
+
+    anchor_probs = [p_elo]
+    if p_rank is not None:
+        anchor_probs.append(p_rank)
+
+    if underdog_is_p1:
+        anchor_p1 = min(anchor_probs)
+        if p1_win <= anchor_p1 + LOW_CONF_DOG_MODEL_ANCHOR_GAP:
+            return p1_win, 0.0
+    else:
+        anchor_p1 = max(anchor_probs)
+        if p1_win >= anchor_p1 - LOW_CONF_DOG_MODEL_ANCHOR_GAP:
+            return p1_win, 0.0
+
+    elo_gap = abs(float(e1_s or DEFAULT_ELO) - float(e2_s or DEFAULT_ELO))
+    rank_gap = abs((r1 or 9999) - (r2 or 9999)) if (r1 and r2 and r1 > 0 and r2 > 0) else 0
+    gap_strength = max(
+        _clamp((elo_gap - 120.0) / 260.0, 0.0, 1.0),
+        _clamp((rank_gap - 40.0) / 160.0, 0.0, 1.0),
+    )
+
+    blend = LOW_CONF_DOG_BLEND_MIN
+    if not underdog_has_stats:
+        blend += 0.20
+    if underdog_matches < 4:
+        blend += 0.10
+    if not underdog_elo_real:
+        blend += 0.10
+    blend += 0.10 * gap_strength
+    blend = _clamp(blend, LOW_CONF_DOG_BLEND_MIN, LOW_CONF_DOG_BLEND_MAX)
+
+    adjusted = (1.0 - blend) * p1_win + blend * anchor_p1
+    if underdog_is_p1:
+        adjusted = min(p1_win, adjusted)
+    else:
+        adjusted = max(p1_win, adjusted)
+
+    return adjusted, adjusted - p1_win
 
 
 def _series_delta_multipliers(series_bucket, surface, confidence):
@@ -2437,6 +2535,27 @@ def main():
         p1_win = _apply_series_probability_guard(p1_win, series_bucket, surface, confidence)
         p2_win = 1.0 - p1_win
 
+        low_conf_dog_delta = 0.0
+        p1_win, low_conf_dog_delta = _apply_low_confidence_dog_guard(
+            p1_win,
+            p_elo,
+            p_rank,
+            confidence,
+            has_s1,
+            has_s2,
+            mc1_12,
+            mc2_12,
+            e1_is_real,
+            e2_is_real,
+            e1_s,
+            e2_s,
+            e1_o,
+            e2_o,
+            r1,
+            r2,
+        )
+        p2_win = 1.0 - p1_win
+
         injury_delta_p1 = 0.0
         if injury_downweight_enabled and injury_delta > 0.0:
             if p1_recent_injured and not p2_recent_injured:
@@ -2562,7 +2681,7 @@ def main():
                     f"    H2H={h2h_delta:+.4f} ADV={adv_delta:+.4f} "
                     f"form_base={delta_p1_form:+.4f} results_form={results_form_delta:+.4f} "
                     f"tour_hist={tour_history_delta:+.4f} crisis_shock={crisis_shock_delta:+.4f} "
-                    f"total_delta={delta_p1:+.4f} "
+                    f"total_delta={delta_p1:+.4f} low_conf_guard={low_conf_dog_delta:+.4f} "
                     f"crisis(P1/P2)={p1_crisis}/{p2_crisis}"
                 )
                 o1 = 1.0 / p1_win if p1_win > 0 else 0

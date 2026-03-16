@@ -61,9 +61,9 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# Step 3: Compute player stats
-Log "=== Step 3/10: Compute player stats ==="
-& python scripts\oncourt-compute-player-stats.py 2>&1 | ForEach-Object { Log $_ }
+# Step 3: Compute player stats (extended writes both v2 and backwards-compat tables)
+Log "=== Step 3/10: Compute player stats (extended) ==="
+& python scripts\oncourt-compute-player-stats-extended.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Player stats failed (exit $LASTEXITCODE), continuing..."
 }
