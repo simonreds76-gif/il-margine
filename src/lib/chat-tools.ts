@@ -1814,6 +1814,71 @@ export async function courtPace(tournamentName: string): Promise<Row> {
   };
 }
 
+function normalizeSurfaceQuery(surfaceQuery: string): "Hard" | "Clay" | "Grass" | "I.hard" | null {
+  const q = str(surfaceQuery).toLowerCase();
+  if (!q) return null;
+  if (q.includes("indoor") && q.includes("hard")) return "I.hard";
+  if (q.includes("grass")) return "Grass";
+  if (q.includes("clay")) return "Clay";
+  if (q.includes("hard")) return "Hard";
+  return null;
+}
+
+export async function courtPaceLeaderboard(surfaceQuery: string, seasonYear?: number, limit = 5): Promise<Row> {
+  const surface = normalizeSurfaceQuery(surfaceQuery);
+  if (!surface) return { found: false, surface: surfaceQuery, reason: "unsupported_surface" };
+
+  let targetYear = seasonYear;
+  if (!targetYear) {
+    const { data: latestRows } = await sb
+      .from("tournament_surface_speed")
+      .select("season_year")
+      .eq("surface", surface)
+      .order("season_year", { ascending: false })
+      .limit(1);
+    const latest = latestRows?.[0];
+    targetYear = latest ? num(latest.season_year) : 0;
+  }
+
+  if (!targetYear) return { found: false, surface, reason: "no_rows" };
+
+  const fetchLimit = Math.max(limit * 4, 20);
+  const { data } = await sb
+    .from("tournament_surface_speed")
+    .select("tournament_name, season_year, cpi, surface, sample_size")
+    .eq("surface", surface)
+    .eq("season_year", targetYear)
+    .order("cpi", { ascending: false })
+    .limit(fetchLimit);
+
+  const deduped = new Map<string, Row>();
+  for (const row of data ?? []) {
+    const tournament = str(row.tournament_name);
+    if (!tournament || deduped.has(tournament)) continue;
+    deduped.set(tournament, {
+      tournament,
+      season_year: num(row.season_year),
+      cpi: Math.round(num(row.cpi) * 100) / 100,
+      surface: str(row.surface),
+      sample_size: num(row.sample_size),
+    });
+  }
+
+  const top = [...deduped.values()]
+    .sort((a, b) => num(b.cpi) - num(a.cpi))
+    .slice(0, Math.max(1, limit));
+
+  if (!top.length) return { found: false, surface, seasonYear: targetYear, reason: "no_rows" };
+
+  return {
+    found: true,
+    surface,
+    season_year: targetYear,
+    leader: top[0],
+    top,
+  };
+}
+
 /* ── Tournament fav/dog ROI (from backtest CSVs) ───────────── */
 
 function parseCsv(content: string): Record<string, string>[] {

@@ -239,6 +239,13 @@ function buildCases() {
       rejectAny: [/all-time/i, /Could you clarify/i],
     },
     {
+      id: "highest_cpi_hard_courts",
+      messages: [mkUser("which tournament has the highest cpi on hard courts?")],
+      expectAll: [/highest CPI/i, /hard/i],
+      expectAny: [/Next:/i, /\d\.\d{2}/],
+      rejectAny: [/Roger hit an error/i, /Could you clarify/i, /I don't have access/i],
+    },
+    {
       id: "most_titles_at_wimbledon",
       messages: [mkUser("who has most titles at Wimbledon?")],
       expectAll: [/Roger Federer/i, /8/i],

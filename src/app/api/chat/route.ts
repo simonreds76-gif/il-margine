@@ -153,6 +153,15 @@ function inferWindowYears(text: string): number | null {
   return Math.max(1, Math.min(20, n));
 }
 
+function inferSurfaceFromQuery(text: string): "Hard" | "Clay" | "Grass" | "I.hard" | null {
+  const q = text.toLowerCase();
+  if (q.includes("indoor hard")) return "I.hard";
+  if (q.includes("grass")) return "Grass";
+  if (q.includes("clay")) return "Clay";
+  if (q.includes("hard")) return "Hard";
+  return null;
+}
+
 function inferTournamentFromWindowPhrase(text: string): string | null {
   const m = text.match(
     /\b(?:at|in)\s+([A-Za-z][A-Za-z0-9\s.'-]{1,80}?)(?:\s+(?:in|over)\s+the\s+(?:past|last)\s+\d+\s+years?|\s+(?:past|last)\s+\d+\s+years?|\?|$)/i
@@ -789,6 +798,39 @@ async function deterministicAnswer(userText: string, uiMessages?: unknown[]): Pr
     }
   }
 
+  const asksCourtPaceLeaderboard =
+    /\b(cpi|court pace|court speed|pace)\b/i.test(q) &&
+    /\b(highest|fastest|quickest|top)\b/i.test(q);
+  if (asksCourtPaceLeaderboard) {
+    const surface = inferSurfaceFromQuery(q);
+    if (surface) {
+      const seasonYear =
+        inferYear(q, nowYear) ??
+        contextTexts.map((t) => inferYear(t, nowYear)).find((y): y is number => y != null) ??
+        undefined;
+      const result = await tools.courtPaceLeaderboard(surface, seasonYear);
+      if (Boolean((result as Record<string, unknown>).found)) {
+        const yearOut = asNum((result as Record<string, unknown>).season_year);
+        const leader = ((result as Record<string, unknown>).leader as Record<string, unknown> | undefined) ?? {};
+        const top = ((result as Record<string, unknown>).top as Array<Record<string, unknown>> | undefined) ?? [];
+        const leaderTournament = asStr(leader.tournament);
+        const leaderCpi = asNum(leader.cpi).toFixed(2);
+        const next = top
+          .slice(1, 4)
+          .map((r) => `${asStr(r.tournament)} (${asNum(r.cpi).toFixed(2)})`)
+          .join(", ");
+        const surfaceLabel =
+          surface === "Hard" ? "outdoor hard" :
+          surface === "I.hard" ? "indoor hard" :
+          surface.toLowerCase();
+        return next
+          ? `For ${surfaceLabel} courts in ${yearOut}, the highest CPI in this dataset is ${leaderTournament} at ${leaderCpi}. Next: ${next}.`
+          : `For ${surfaceLabel} courts in ${yearOut}, the highest CPI in this dataset is ${leaderTournament} at ${leaderCpi}.`;
+      }
+      return `I don't have enough CPI data for ${surface.toLowerCase()} courts${seasonYear ? ` in ${seasonYear}` : ""}.`;
+    }
+  }
+
   const isH2hIntent = /\b(h2h|head to head|head-to-head)\b/i.test(q);
   if (isH2hIntent) {
     const asksTodayAllH2H =
@@ -1332,6 +1374,9 @@ function buildIntentHints(userText: string): string {
   if (q.includes("big server")) {
     hints.push("- Intent hint: This is a vs-big-servers query. Call search_player, then player_record_vs_big_server.");
   }
+  if ((q.includes("cpi") || q.includes("court pace") || q.includes("court speed") || q.includes("pace")) && (q.includes("highest") || q.includes("fastest") || q.includes("quickest") || q.includes("top"))) {
+    hints.push("- Intent hint: This asks for the fastest / highest-CPI tournaments by surface. Use court_pace_leaderboard, not court_pace.");
+  }
 
   const asksTournamentWinner = q.includes("who wins") && !hasVs;
   if (asksTournamentWinner) {
@@ -1775,6 +1820,19 @@ export async function POST(req: Request) {
           tournament_name: z.string().describe("Tournament name or partial name"),
         }),
         execute: safeExecute(async ({ tournament_name }) => tools.courtPace(tournament_name), "court_pace"),
+      },
+
+      court_pace_leaderboard: {
+        description: "Get the highest-CPI / fastest tournaments for a given surface and year. Use this for questions like 'which tournament has the highest CPI on hard courts?' or 'what are the fastest clay tournaments?'. Defaults to the latest season for that surface if year is omitted.",
+        inputSchema: z.object({
+          surface: z.string().describe("Surface to rank: Hard, Clay, Grass, or indoor hard"),
+          season_year: z.string().optional().describe("Optional season year, e.g. 2024"),
+        }),
+        execute: safeExecute(
+          async ({ surface, season_year }) =>
+            tools.courtPaceLeaderboard(surface, season_year && /^\d{4}$/.test(season_year) ? Number(season_year) : undefined),
+          "court_pace_leaderboard"
+        ),
       },
 
       tournament_past_winners: {
