@@ -51,8 +51,7 @@ type LeagueEntry = {
   tabClasses: string;
   cardGlowClasses: string;
   heading: string;
-  summary: string;
-  paragraphs: string[];
+  intro: string;
   teamCount: number;
   subtitle: string;
   teams: TeamEntry[];
@@ -74,12 +73,8 @@ const LEAGUES: LeagueConfig[] = [
     tabClasses: "border-emerald-400/80 text-slate-300 hover:border-emerald-300 hover:text-slate-100",
     cardGlowClasses: "hover:shadow-[0_24px_70px_rgba(16,185,129,0.08)]",
     heading: `Serie A penalty takers ${CURRENT_SEASON}`,
-    summary:
-      "Serie A is the most volatile hierarchy on the page: coaching changes, veteran transfers and mid-season reshuffles can move a taker from first to third in a week.",
-    paragraphs: [
-      "Serie A is usually the best place to track a full three-man hierarchy rather than just a single name. Clubs such as Juventus, Fiorentina, Genoa and Pisa have already needed adjustments because the first answer in August was no longer the right answer by spring.",
-      "That matters for fantasy, but it matters even more for live goalscorer markets. If the first-choice taker is missing from the confirmed XI, you want to know immediately who moves up and who sits behind him. This section is built around that exact use case.",
-    ],
+    intro:
+      "Serie A changes quickly: coaching shifts, transfers and mid-season reshuffles can move a taker from first to third in a week. That makes the full order especially useful when lineups drop and the obvious name is missing.",
   },
   {
     key: "epl",
@@ -90,12 +85,8 @@ const LEAGUES: LeagueConfig[] = [
     tabClasses: "border-indigo-300/80 text-slate-300 hover:border-indigo-200 hover:text-slate-100",
     cardGlowClasses: "hover:shadow-[0_24px_70px_rgba(129,140,248,0.08)]",
     heading: `Premier League penalty takers ${CURRENT_SEASON}`,
-    summary:
-      "The Premier League is the sharpest market here, but it is still worth tracking the full order because backup takers become relevant the moment a star attacker is rested or taken off the pitch.",
-    paragraphs: [
-      "Most public penalty-taker pages stop at one name. That is rarely enough in the Premier League, where substitutions come early, rotations are heavier in busy weeks and multiple clubs have a clear first and second option rather than one untouchable taker.",
-      "The point of this section is not just to tell you who takes the next penalty in a vacuum. It is to tell you who the hierarchy becomes when the regular taker is benched, suspended or simply no longer on the field.",
-    ],
+    intro:
+      "The Premier League market is sharp, but the backup order still matters when rotation, suspensions and substitutions bring the second name into play. This is where the full hierarchy matters more than a one-name list.",
   },
   {
     key: "la-liga",
@@ -106,12 +97,8 @@ const LEAGUES: LeagueConfig[] = [
     tabClasses: "border-amber-300/80 text-slate-300 hover:border-amber-200 hover:text-slate-100",
     cardGlowClasses: "hover:shadow-[0_24px_70px_rgba(245,158,11,0.08)]",
     heading: `La Liga penalty takers ${CURRENT_SEASON}`,
-    summary:
-      "La Liga gives you both obvious elite names and a long tail of clubs where the backup order matters because the designated taker is less stable than the market assumes.",
-    paragraphs: [
-      "At the top end the hierarchy is straightforward, but the league gets more interesting lower down. Several teams have already shown that the second and third line matter when injuries, missed penalties or coach preference changes the order.",
-      "For searchers looking for who takes penalties for Atletico Madrid, Barcelona, Real Madrid or Villarreal, this section is meant to answer the question in one visit without sending you through multiple thin pages.",
-    ],
+    intro:
+      "Whether you're checking Atletico, Barcelona, Real Madrid or Villarreal, the key question is not just who takes the first penalty, but who is next if the regular taker is off the pitch. La Liga has enough movement underneath the headline names to make that worth tracking properly.",
   },
   {
     key: "bundesliga",
@@ -122,12 +109,8 @@ const LEAGUES: LeagueConfig[] = [
     tabClasses: "border-rose-300/80 text-slate-300 hover:border-rose-200 hover:text-slate-100",
     cardGlowClasses: "hover:shadow-[0_24px_70px_rgba(248,113,113,0.08)]",
     heading: `Bundesliga penalty takers ${CURRENT_SEASON}`,
-    summary:
-      "Bundesliga penalty hierarchies are often cleaner than Serie A, but when they do change they tend to change quickly and matter immediately in pricing.",
-    paragraphs: [
-      "Bundesliga teams often have clearer first-choice takers, yet the second and third slots still matter because injuries and tactical rotations can create short windows where a backup becomes relevant before the broader market catches up.",
-      "This section keeps the hierarchy compact and readable: first, second and third-choice penalty takers for every club, with no need to bounce between separate club articles.",
-    ],
+    intro:
+      "Bundesliga hierarchies are often cleaner than Serie A, but when they do change they matter immediately. A reliable second name is often the difference between being early and being late when pricing catches up.",
   },
   {
     key: "ligue-1",
@@ -138,12 +121,8 @@ const LEAGUES: LeagueConfig[] = [
     tabClasses: "border-cyan-300/80 text-slate-300 hover:border-cyan-200 hover:text-slate-100",
     cardGlowClasses: "hover:shadow-[0_24px_70px_rgba(96,165,250,0.08)]",
     heading: `Ligue 1 penalty takers ${CURRENT_SEASON}`,
-    summary:
-      "Ligue 1 is useful because the public penalty-taker coverage is thinner, which makes a clear, updated hierarchy more valuable for both research and market prep.",
-    paragraphs: [
-      "Ligue 1 is less saturated with good reference pages than the Premier League or Serie A, which makes freshness more important. If you are checking who takes penalties for PSG, Marseille, Monaco, Lyon or Lille, you should be able to land here and get the answer immediately.",
-      "The goal is simple: keep the page strong enough to work as a top-level reference, while still staying practical for people who need the second and third names as much as the headline taker.",
-    ],
+    intro:
+      "Ligue 1 needs freshness more than reputation. If you're checking PSG, Marseille, Monaco, Lyon or Lille, this section is built to give you the current order quickly, including the second name that becomes relevant the moment the headline taker is missing.",
   },
 ];
 
@@ -280,7 +259,7 @@ export default async function PenaltyTakersPage() {
       return {
         ...league,
         teamCount: teams.length,
-        subtitle: `${teams.length} teams · current hierarchy`,
+        subtitle: `${teams.length} teams | current hierarchy`,
         teams,
       };
     }),

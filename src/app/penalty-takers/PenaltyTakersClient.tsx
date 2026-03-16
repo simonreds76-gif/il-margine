@@ -22,8 +22,7 @@ type LeagueEntry = {
   tabClasses: string;
   cardGlowClasses: string;
   heading: string;
-  summary: string;
-  paragraphs: string[];
+  intro: string;
   teams: TeamEntry[];
 };
 
@@ -145,7 +144,7 @@ export default function PenaltyTakersClient({ leagues, totalTeams, currentSeason
             </h1>
             <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
               First, second and third-choice penalty takers for every club in Europe&apos;s top five leagues.
-              Built as a live reference for bettors, fantasy players and anyone who needs the actual hierarchy,
+              Built as a live reference for bettors, fantasy players and anyone who needs the full hierarchy,
               not a stale one-name list from August.
             </p>
 
@@ -170,36 +169,19 @@ export default function PenaltyTakersClient({ leagues, totalTeams, currentSeason
           <div className="rounded-xl border border-slate-800/60 bg-slate-900/55 p-6">
             <div className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-400">Why this matters</div>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-100">One page, full hierarchy</h2>
-            <div className="mt-4 space-y-4 text-[15px] leading-7 text-slate-300">
-              <p>
-                Most penalty-taker pages stop at the headline name. That breaks the moment the first-choice taker
-                is benched, suspended or off the pitch. This page is built around the real question: who is next?
-              </p>
-              <p>
-                That is why every team card tracks the first, second and third option. For live goalscorer markets
-                and fantasy decisions, the backup order is often the part that matters most.
-              </p>
-            </div>
+            <p className="mt-4 text-[15px] leading-7 text-slate-300">
+              Most penalty-taker pages stop at the headline name. That breaks the moment the first-choice taker is
+              benched, suspended or off the pitch. This page is built around the real question: who is next?
+            </p>
           </div>
 
           <div className="rounded-xl border border-slate-800/60 bg-slate-900/55 p-6">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <div className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-400">Editorial standard</div>
-                <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-100">How we keep it current</h2>
-              </div>
-              <span className="rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-emerald-300">
-                evidence first
-              </span>
-            </div>
+            <div className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-400">Editorial standard</div>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-100">How we keep it current</h2>
             <div className="mt-4 space-y-4 text-[15px] leading-7 text-slate-300">
               <p>
                 We only move a hierarchy when there is credible evidence behind it: match evidence, team news,
                 injuries, suspensions, transfers, missed penalties or a strong league-specific reference source.
-              </p>
-              <p>
-                Quiet cleanup and old mistakes are not dressed up as breaking changes. The goal is a stable reference
-                page you can trust when lineups drop.
               </p>
             </div>
           </div>
@@ -235,14 +217,8 @@ export default function PenaltyTakersClient({ leagues, totalTeams, currentSeason
               </div>
 
               <div className="mb-8 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-                <div className="space-y-4 text-[15px] leading-7 text-slate-300">
-                  {league.paragraphs.map((paragraph) => (
-                    <p key={`${league.key}-${paragraph.slice(0, 24)}`}>{paragraph}</p>
-                  ))}
-                </div>
-                <div className="rounded-xl border border-slate-800/60 bg-slate-900/55 p-5">
-                  <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-slate-500">Quick read</div>
-                  <p className="mt-3 text-[15px] leading-7 text-slate-300">{league.summary}</p>
+                <div className="lg:max-w-4xl">
+                  <p className="text-[15px] leading-7 text-slate-300">{league.intro}</p>
                 </div>
               </div>
 
