@@ -25,6 +25,9 @@ type HomepageBet = Bet & {
 };
 
 export default function Home() {
+  const showGoalscorerMarket =
+    process.env.NODE_ENV !== "production" ||
+    process.env.NEXT_PUBLIC_ENABLE_GOALSCORER_PAGE === "1";
   const [activeMarket, setActiveMarket] = useState("props");
   const [loading, setLoading] = useState(true);
   const [recentBets, setRecentBets] = useState<HomepageBet[]>([]);
@@ -249,7 +252,7 @@ export default function Home() {
     },
     { id: "builders", name: "Bet Builders", description: "Same-game combinations", status: "coming" },
     { id: "atg", name: "Goalscorer Model", description: "Anytime goalscorer fair odds", status: "active", profit: "In development" },
-  ];
+  ].filter((market) => showGoalscorerMarket || market.id !== "atg");
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">

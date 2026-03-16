@@ -4,6 +4,10 @@ import { supabase } from '@/lib/supabase';
 import { slugifyTip } from '@/lib/slugify';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const showGoalscorerPage =
+    process.env.NODE_ENV !== 'production' ||
+    process.env.GOALSCORER_PAGE_PUBLIC === '1' ||
+    process.env.NEXT_PUBLIC_ENABLE_GOALSCORER_PAGE === '1';
   const entries: MetadataRoute.Sitemap = [
     {
       url: BASE_URL,
@@ -23,12 +27,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily',
       priority: 0.9,
     },
-    {
-      url: `${BASE_URL}/anytime-goalscorer`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
+    ...(showGoalscorerPage
+      ? [{
+          url: `${BASE_URL}/anytime-goalscorer`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly' as const,
+          priority: 0.8,
+        }]
+      : []),
     {
       url: `${BASE_URL}/bet-builders`,
       lastModified: new Date(),
