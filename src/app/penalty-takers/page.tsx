@@ -1,7 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
 import type { Metadata } from "next";
-import { Instrument_Serif, JetBrains_Mono, Manrope } from "next/font/google";
 import { BASE_URL } from "@/lib/config";
 import PenaltyTakersClient from "./PenaltyTakersClient";
 
@@ -10,13 +9,6 @@ const PAGE_TITLE = `Penalty Takers ${CURRENT_SEASON}: Serie A, Premier League, L
 const PAGE_DESCRIPTION =
   "Penalty takers 2025/26 for every club in Serie A, the Premier League, La Liga, Bundesliga and Ligue 1. See the current first, second and third-choice penalty taker for all 96 teams in one place.";
 const PAGE_URL = `${BASE_URL}/penalty-takers`;
-
-const manrope = Manrope({ subsets: ["latin"] });
-const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-});
-const jetBrainsMono = JetBrains_Mono({ subsets: ["latin"] });
 
 type PenaltyTeamRow = {
   primary?: string;
@@ -70,14 +62,6 @@ type LeagueEntry = {
 };
 
 type LeagueConfig = Omit<LeagueEntry, "teamCount" | "updatedLabel" | "updatedIso" | "teams">;
-
-type ChangeItem = {
-  date: string;
-  league: string;
-  team: string;
-  summary: string;
-  href: string;
-};
 
 const EMPTY_LOGO_MANIFEST: LogoManifest = {
   leagues: {},
@@ -293,10 +277,6 @@ function findLogoPath(
   return matched?.[1]?.logo_path ? cleanText(matched[1].logo_path) : "";
 }
 
-function buildRecentChanges(): ChangeItem[] {
-  return [];
-}
-
 export default async function PenaltyTakersPage() {
   const logoManifest = await readJson<LogoManifest>("data/goalscorer/team-logo-map.json").catch(
     () => EMPTY_LOGO_MANIFEST,
@@ -342,8 +322,6 @@ export default async function PenaltyTakersPage() {
   );
 
   const totalTeams = leagues.reduce((sum, league) => sum + league.teamCount, 0);
-  const recentChanges = buildRecentChanges();
-
   const breadcrumbData = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -412,16 +390,7 @@ export default async function PenaltyTakersPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListData) }}
       />
-      <div className={manrope.className}>
-        <PenaltyTakersClient
-          leagues={leagues}
-          totalTeams={totalTeams}
-          serifClass={instrumentSerif.className}
-          monoClass={jetBrainsMono.className}
-          recentChanges={recentChanges}
-          currentSeason={CURRENT_SEASON}
-        />
-      </div>
+      <PenaltyTakersClient leagues={leagues} totalTeams={totalTeams} currentSeason={CURRENT_SEASON} />
     </>
   );
 }
