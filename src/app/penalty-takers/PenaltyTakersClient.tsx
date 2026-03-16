@@ -66,8 +66,8 @@ function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
   const takers = [
     { label: "First choice", value: team.primary, tier: "1" as const },
     { label: "Second choice", value: team.secondary, tier: "2" as const },
-    ...(team.tertiary ? [{ label: "Third choice", value: team.tertiary, tier: "3" as const }] : []),
-  ];
+    { label: "Third choice", value: team.tertiary, tier: "3" as const },
+  ].filter((taker) => taker.value);
 
   return (
     <article
