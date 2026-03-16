@@ -185,6 +185,36 @@ LOW_CONF_DOG_ESTABLISHED_ELO = 1775
 LOW_CONF_DOG_MODEL_ANCHOR_GAP = 0.04
 LOW_CONF_DOG_BLEND_MIN = 0.45
 LOW_CONF_DOG_BLEND_MAX = 0.85
+ONE_SIDED_RANK_EVENT_MIN = 2.0
+ONE_SIDED_RANK_BASE = 700
+ONE_SIDED_RANK_EVENT_STEP = 250
+ONE_SIDED_RANK_NO_EXPOSURE = 250
+ONE_SIDED_RANK_THIN_EXPOSURE = 120
+ONE_SIDED_RANK_RECENT_DEFICIT_UNIT = 250
+ONE_SIDED_RANK_LOW_MATCH_BONUS = 80
+ONE_SIDED_RANK_MED_MATCH_BONUS = 40
+ONE_SIDED_RANK_LOW_CONF_BONUS = 120
+ONE_SIDED_RANK_MEDIUM_CONF_BONUS = 60
+ONE_SIDED_RANK_RECENT_NEAR_LEVEL_DISCOUNT = 120
+ONE_SIDED_RANK_MULTI_MATCH_DISCOUNT = 80
+ONE_SIDED_RANK_CAP = 2200
+CLASS_JUMP_EVENT_MIN = 2.0
+CLASS_JUMP_DEFICIT_ONSET = 0.55
+CLASS_JUMP_ELO_PER_CLASS = 34.0
+CLASS_JUMP_NO_EXPOSURE_BONUS = 34.0
+CLASS_JUMP_THIN_EXPOSURE_BONUS = 16.0
+CLASS_JUMP_LOW_CONF_BONUS = 16.0
+CLASS_JUMP_MEDIUM_CONF_BONUS = 10.0
+CLASS_JUMP_OPP_ESTABLISHED_BONUS = 10.0
+CLASS_JUMP_LOW_MATCH_BONUS = 8.0
+CLASS_JUMP_MAX_ELO = 120.0
+CLASS_JUMP_SAMPLE_MULT_MIN = 0.18
+STEPUP_DOG_GUARD_EVENT_MIN = 2.0
+STEPUP_DOG_GUARD_MIN_RECENT_DEFICIT = 0.75
+STEPUP_DOG_GUARD_ANCHOR_GAP = 0.02
+STEPUP_DOG_GUARD_BLEND_LOW = 0.36
+STEPUP_DOG_GUARD_BLEND_MEDIUM = 0.24
+STEPUP_DOG_GUARD_BLEND_MAX = 0.72
 
 # Post-hoc probability calibration (fit on historical backtest; 2024 train).
 # Favorite-space Platt transform blended by tour tier to avoid overcorrection
@@ -398,6 +428,30 @@ def _series_bucket_from_tour(tour_name, tour_rank):
     return "ATP250"
 
 
+def _tour_class_score(tour_rank, tour_name):
+    name = (tour_name or "").upper()
+    try:
+        rank = int(tour_rank) if tour_rank is not None else None
+    except (TypeError, ValueError):
+        rank = None
+
+    if "JUNIOR" in name:
+        return 0.0
+    if "DAVIS CUP" in name or "BILLIE JEAN KING" in name:
+        return 2.3
+    if rank == 4 or "GRAND SLAM" in name:
+        return 4.0
+    if rank == 3 or "MASTERS" in name or "ATP FINALS" in name or "TOUR FINALS" in name:
+        return 3.0
+    if rank == 2 or "ATP" in name:
+        return 2.0
+    if rank == 1 or "CHALLENGER" in name:
+        return 1.0
+    if rank == 0 or "ITF" in name or "FUTURES" in name or re.search(r"\b[MW]\d{1,2}\b", name):
+        return 0.0
+    return 1.0
+
+
 def _series_calibration_blend(series_bucket, surface, confidence):
     blend = PROB_CAL_SERIES_BLEND.get(series_bucket, 1.0)
     if series_bucket in ("ATP250", "ATP500"):
@@ -509,6 +563,167 @@ def _apply_low_confidence_dog_guard(
     else:
         adjusted = max(p1_win, adjusted)
 
+    return adjusted, adjusted - p1_win
+
+
+def _recent_matches_at_current_level(rec, current_class_score):
+    if current_class_score >= 4.0:
+        return int(rec.get("recent_slam_plus_matches") or 0)
+    if current_class_score >= 3.0:
+        return int(rec.get("recent_masters_plus_matches") or 0)
+    if current_class_score >= 2.0:
+        return int(rec.get("recent_atp_plus_matches") or 0)
+    if current_class_score >= 1.0:
+        return int(rec.get("recent_challenger_plus_matches") or 0)
+    return int(rec.get("matches_total") or 0)
+
+
+def _synthetic_rank_for_unranked(rec, current_class_score, confidence, opponent_established):
+    if current_class_score < ONE_SIDED_RANK_EVENT_MIN or not opponent_established:
+        return None
+
+    recent_avg = _float(rec.get("recent_class_avg"), 0.0) or 0.0
+    current_plus_matches = _recent_matches_at_current_level(rec, current_class_score)
+    matches_total = int(rec.get("matches_total") or 0)
+    deficit = max(0.0, current_class_score - recent_avg)
+
+    synthetic = ONE_SIDED_RANK_BASE + max(0.0, current_class_score - 2.0) * ONE_SIDED_RANK_EVENT_STEP
+    synthetic += max(0.0, deficit) * ONE_SIDED_RANK_RECENT_DEFICIT_UNIT
+
+    if current_plus_matches <= 0:
+        synthetic += ONE_SIDED_RANK_NO_EXPOSURE
+    elif current_plus_matches <= 2:
+        synthetic += ONE_SIDED_RANK_THIN_EXPOSURE
+    elif current_plus_matches >= 5:
+        synthetic -= ONE_SIDED_RANK_MULTI_MATCH_DISCOUNT
+
+    if recent_avg >= current_class_score - 0.25:
+        synthetic -= ONE_SIDED_RANK_RECENT_NEAR_LEVEL_DISCOUNT
+
+    if matches_total < 8:
+        synthetic += ONE_SIDED_RANK_LOW_MATCH_BONUS
+    elif matches_total < 15:
+        synthetic += ONE_SIDED_RANK_MED_MATCH_BONUS
+
+    if confidence == "low":
+        synthetic += ONE_SIDED_RANK_LOW_CONF_BONUS
+    elif confidence == "medium":
+        synthetic += ONE_SIDED_RANK_MEDIUM_CONF_BONUS
+
+    return int(round(_clamp(synthetic, 350.0, ONE_SIDED_RANK_CAP)))
+
+
+def _class_jump_adjustment(rec, current_class_score, confidence, opponent_established):
+    if current_class_score < CLASS_JUMP_EVENT_MIN:
+        return 0.0, 1.0
+
+    if not rec:
+        deficit = current_class_score
+        matches_total = 0
+        current_plus_matches = 0
+    else:
+        avg_class = float(rec.get("recent_class_avg") or 0.0)
+        deficit = current_class_score - avg_class
+        matches_total = int(rec.get("matches_total") or 0)
+        current_plus_matches = _recent_matches_at_current_level(rec, current_class_score)
+
+    if deficit <= CLASS_JUMP_DEFICIT_ONSET and current_plus_matches >= 3:
+        return 0.0, 1.0
+
+    penalty = max(0.0, (deficit - 0.10) * CLASS_JUMP_ELO_PER_CLASS)
+    if current_plus_matches == 0:
+        penalty += CLASS_JUMP_NO_EXPOSURE_BONUS
+    elif current_plus_matches <= 2:
+        penalty += CLASS_JUMP_THIN_EXPOSURE_BONUS
+
+    if matches_total < 12:
+        penalty += CLASS_JUMP_LOW_MATCH_BONUS
+
+    if confidence == "low":
+        penalty += CLASS_JUMP_LOW_CONF_BONUS
+    elif confidence == "medium":
+        penalty += CLASS_JUMP_MEDIUM_CONF_BONUS
+
+    if opponent_established:
+        penalty += CLASS_JUMP_OPP_ESTABLISHED_BONUS
+
+    penalty = _clamp(penalty, 0.0, CLASS_JUMP_MAX_ELO)
+    sample_multiplier = _clamp(1.0 - penalty / 150.0, CLASS_JUMP_SAMPLE_MULT_MIN, 1.0)
+    return penalty, sample_multiplier
+
+
+def _apply_stepup_dog_guard(
+    p1_win,
+    p_elo,
+    p_rank,
+    confidence,
+    current_class_score,
+    p1_hist,
+    p2_hist,
+    r1,
+    r2,
+    p1_established,
+    p2_established,
+):
+    if confidence not in ("low", "medium") or current_class_score < STEPUP_DOG_GUARD_EVENT_MIN:
+        return p1_win, 0.0
+
+    underdog_is_p1 = p1_win < 0.5
+    underdog_hist = p1_hist if underdog_is_p1 else p2_hist
+    favourite_established = p2_established if underdog_is_p1 else p1_established
+    underdog_rank = r1 if underdog_is_p1 else r2
+    favourite_rank = r2 if underdog_is_p1 else r1
+
+    if not favourite_established:
+        return p1_win, 0.0
+
+    recent_avg = _float(underdog_hist.get("recent_class_avg"), 0.0) or 0.0
+    current_plus_matches = _recent_matches_at_current_level(underdog_hist, current_class_score)
+    matches_total = int(underdog_hist.get("matches_total") or 0)
+    deficit = max(0.0, current_class_score - recent_avg)
+
+    weak_step_up_profile = (
+        deficit >= STEPUP_DOG_GUARD_MIN_RECENT_DEFICIT
+        and current_plus_matches <= 1
+        and ((underdog_rank is None) or underdog_rank > 350 or matches_total < 12)
+    )
+    if confidence == "medium" and not weak_step_up_profile:
+        return p1_win, 0.0
+    if confidence == "low" and deficit < 0.45 and current_plus_matches >= 3:
+        return p1_win, 0.0
+
+    anchor_probs = [p_elo]
+    if p_rank is not None:
+        anchor_probs.append(p_rank)
+
+    if underdog_is_p1:
+        anchor_p1 = min(anchor_probs)
+        if p1_win <= anchor_p1 + STEPUP_DOG_GUARD_ANCHOR_GAP:
+            return p1_win, 0.0
+    else:
+        anchor_p1 = max(anchor_probs)
+        if p1_win >= anchor_p1 - STEPUP_DOG_GUARD_ANCHOR_GAP:
+            return p1_win, 0.0
+
+    blend = STEPUP_DOG_GUARD_BLEND_LOW if confidence == "low" else STEPUP_DOG_GUARD_BLEND_MEDIUM
+    if current_plus_matches <= 0:
+        blend += 0.12
+    elif current_plus_matches == 1:
+        blend += 0.05
+    if underdog_rank is None:
+        blend += 0.08
+    elif underdog_rank > 600:
+        blend += 0.04
+    if favourite_rank is not None and favourite_rank <= 120:
+        blend += 0.05
+    blend += _clamp((deficit - 0.50) * 0.14, 0.0, 0.14)
+    blend = _clamp(blend, STEPUP_DOG_GUARD_BLEND_MEDIUM, STEPUP_DOG_GUARD_BLEND_MAX)
+
+    adjusted = (1.0 - blend) * p1_win + blend * anchor_p1
+    if underdog_is_p1:
+        adjusted = min(p1_win, adjusted)
+    else:
+        adjusted = max(p1_win, adjusted)
     return adjusted, adjusted - p1_win
 
 
@@ -1388,10 +1603,15 @@ def main():
                             continue
                         seen_hist.add(rec_key)
 
+                        class_score = _tour_class_score(
+                            tour_rank_by_id.get(tid_hist),
+                            tour_name_by_id.get(tid_hist, ""),
+                        )
+
                         if w in player_history:
-                            player_history[w].append((d_hist, True, tid_hist))
+                            player_history[w].append((d_hist, True, tid_hist, class_score))
                         if l in player_history:
-                            player_history[l].append((d_hist, False, tid_hist))
+                            player_history[l].append((d_hist, False, tid_hist, class_score))
 
                     off += len(data)
                     if len(data) < 1000:
@@ -1405,18 +1625,18 @@ def main():
             total_n = len(hist)
             ytd_hist = [h for h in hist if h[0] >= ytd_start]
             ytd_n = len(ytd_hist)
-            ytd_w = sum(1 for _, is_win, _ in ytd_hist if is_win)
+            ytd_w = sum(1 for _, is_win, _, _ in ytd_hist if is_win)
 
             last5_hist = hist[:5]
             last5_n = len(last5_hist)
-            last5_w = sum(1 for _, is_win, _ in last5_hist if is_win)
+            last5_w = sum(1 for _, is_win, _, _ in last5_hist if is_win)
 
             win_streak = 0
             loss_streak = 0
             if hist:
                 first_is_win = hist[0][1]
                 streak = 0
-                for _, is_win, _ in hist:
+                for _, is_win, _, _ in hist:
                     if is_win == first_is_win:
                         streak += 1
                     else:
@@ -1425,6 +1645,14 @@ def main():
                     win_streak = streak
                 else:
                     loss_streak = streak
+
+            recent12 = hist[:12]
+            class_vals = [float(cls) for _, _, _, cls in recent12 if cls is not None]
+            recent_class_avg = (sum(class_vals) / len(class_vals)) if class_vals else None
+            recent_challenger_plus = sum(1 for _, _, _, cls in recent12 if cls is not None and cls >= 1.0)
+            recent_atp_plus = sum(1 for _, _, _, cls in recent12 if cls is not None and cls >= 2.0)
+            recent_masters_plus = sum(1 for _, _, _, cls in recent12 if cls is not None and cls >= 3.0)
+            recent_slam_plus = sum(1 for _, _, _, cls in recent12 if cls is not None and cls >= 4.0)
 
             recent_results_by_player[pid] = {
                 "matches_total": total_n,
@@ -1436,10 +1664,15 @@ def main():
                 "last5_win_rate": (last5_w / last5_n) if last5_n > 0 else None,
                 "win_streak": win_streak,
                 "loss_streak": loss_streak,
+                "recent_class_avg": recent_class_avg,
+                "recent_challenger_plus_matches": recent_challenger_plus,
+                "recent_atp_plus_matches": recent_atp_plus,
+                "recent_masters_plus_matches": recent_masters_plus,
+                "recent_slam_plus_matches": recent_slam_plus,
             }
 
             per_tour = {}
-            for _, is_win, tid_hist in hist:
+            for _, is_win, tid_hist, _ in hist:
                 if tid_hist is None:
                     continue
                 tkey = tour_key_by_id.get(tid_hist, "")
@@ -1990,6 +2223,7 @@ def main():
         surface = (tour_to_surface.get(tid) or "N/A") if tid is not None else "N/A"
         surface_counts[surface] = surface_counts.get(surface, 0) + 1
         series_bucket = _series_bucket_from_tour(tour_name_by_id.get(tid, ""), tour_rank_by_id.get(tid))
+        current_class_score = _tour_class_score(tour_rank_by_id.get(tid), tour_name_by_id.get(tid, ""))
         is_best_of_5 = series_bucket == "Grand Slam"
 
         cpi_value = None
@@ -2039,6 +2273,37 @@ def main():
         mc1_12 = int((s1 or {}).get("match_count") or 0) if has_s1 else 0
         mc2_12 = int((s2 or {}).get("match_count") or 0) if has_s2 else 0
         min_matches_12 = min(mc1_12, mc2_12)
+        r1 = atp_rank_by_player.get(p1)
+        r2 = atp_rank_by_player.get(p2)
+        p1_hist = recent_results_by_player.get(p1) or {}
+        p2_hist = recent_results_by_player.get(p2) or {}
+        both_elo_default = not e1_is_real and not e2_is_real
+
+        if both_elo_default and p1_hist.get("matches_total", 0) == 0 and p2_hist.get("matches_total", 0) == 0 and not has_s1 and not has_s2:
+            confidence = "none"
+        elif not has_s1 and not has_s2:
+            confidence = "low"
+        elif not has_s1 or not has_s2:
+            confidence = "low" if min(mc1_12, mc2_12) < 5 else "medium"
+        elif min(mc1_12, mc2_12) < 5:
+            confidence = "medium"
+        elif min(mc1_12, mc2_12) >= 10:
+            confidence = "high"
+        else:
+            confidence = "medium"
+
+        if confidence in ("high", "medium"):
+            if p1 not in recent_activity_by_player or p2 not in recent_activity_by_player:
+                confidence = "medium" if confidence == "high" else "low"
+
+        p1_established = _is_established_player(r1, e1_s, e1_o, mc1_12)
+        p2_established = _is_established_player(r2, e2_s, e2_o, mc2_12)
+        class_penalty_elo_1, class_sample_mult_1 = _class_jump_adjustment(
+            p1_hist, current_class_score, confidence, p2_established
+        )
+        class_penalty_elo_2, class_sample_mult_2 = _class_jump_adjustment(
+            p2_hist, current_class_score, confidence, p1_established
+        )
 
         if min_matches_12 >= 25:
             recent_weight = 0.75
@@ -2060,8 +2325,10 @@ def main():
         ret2_raw = recent_weight * r2_12 + (1.0 - recent_weight) * r2_long
 
         # Shrinkage toward surface priors when sample is low
-        alpha1 = mc1_12 / (mc1_12 + SHRINKAGE_N) if mc1_12 else 0.0
-        alpha2 = mc2_12 / (mc2_12 + SHRINKAGE_N) if mc2_12 else 0.0
+        mc1_eff = mc1_12 * class_sample_mult_1
+        mc2_eff = mc2_12 * class_sample_mult_2
+        alpha1 = mc1_eff / (mc1_eff + SHRINKAGE_N) if mc1_eff else 0.0
+        alpha2 = mc2_eff / (mc2_eff + SHRINKAGE_N) if mc2_eff else 0.0
         hold1 = alpha1 * hold1_raw + (1.0 - alpha1) * surf_hold if alpha1 > 0 else surf_hold
         ret1 = alpha1 * ret1_raw + (1.0 - alpha1) * surf_ret if alpha1 > 0 else surf_ret
         hold2 = alpha2 * hold2_raw + (1.0 - alpha2) * surf_hold if alpha2 > 0 else surf_hold
@@ -2168,34 +2435,46 @@ def main():
         elo_reliability = 0.5 * (rel1 + rel2)
 
         # Reliability-adjust Elo per player (directional; stale player is penalized individually)
-        e1_s_eff = DEFAULT_ELO + rel1 * (e1_s - DEFAULT_ELO)
-        e2_s_eff = DEFAULT_ELO + rel2 * (e2_s - DEFAULT_ELO)
+        e1_s_eff = DEFAULT_ELO + rel1 * ((e1_s - class_penalty_elo_1) - DEFAULT_ELO)
+        e2_s_eff = DEFAULT_ELO + rel2 * ((e2_s - class_penalty_elo_2) - DEFAULT_ELO)
         p_elo_surface = 1.0 / (1.0 + 10.0 ** ((e2_s_eff - e1_s_eff) / 400.0))
 
         if e1_o is not None and e2_o is not None:
-            e1_o_eff = DEFAULT_ELO + rel1 * (float(e1_o) - DEFAULT_ELO)
-            e2_o_eff = DEFAULT_ELO + rel2 * (float(e2_o) - DEFAULT_ELO)
+            e1_o_eff = DEFAULT_ELO + rel1 * ((float(e1_o) - class_penalty_elo_1 * 0.75) - DEFAULT_ELO)
+            e2_o_eff = DEFAULT_ELO + rel2 * ((float(e2_o) - class_penalty_elo_2 * 0.75) - DEFAULT_ELO)
             p_elo_overall = 1.0 / (1.0 + 10.0 ** ((e2_o_eff - e1_o_eff) / 400.0))
             p_elo = 0.5 * p_elo_surface + 0.5 * p_elo_overall
         else:
             p_elo = p_elo_surface
 
         # Rank/points prior (stronger class-gap separation than old linear blend)
-        r1, r2 = atp_rank_by_player.get(p1), atp_rank_by_player.get(p2)
         pts1 = surface_points_by_player.get(p1, {}).get(surface) if surface in ("Hard", "Clay", "Grass", "I.hard") else None
         pts2 = surface_points_by_player.get(p2, {}).get(surface) if surface in ("Hard", "Clay", "Grass", "I.hard") else None
 
         p_rank = None
         p_rank_atp = None
         p_rank_points = None
+        synthetic_r1 = None
+        synthetic_r2 = None
 
-        if r1 is not None and r2 is not None and r1 > 0 and r2 > 0:
-            log_ratio = math.log(max(1.0, float(r2)) / max(1.0, float(r1)))
+        rank1_eff = r1
+        rank2_eff = r2
+        if (rank1_eff is None or rank1_eff <= 0) and (rank2_eff is not None and rank2_eff > 0):
+            synthetic_r1 = _synthetic_rank_for_unranked(p1_hist, current_class_score, confidence, p2_established)
+            if synthetic_r1 is not None:
+                rank1_eff = synthetic_r1
+        if (rank2_eff is None or rank2_eff <= 0) and (rank1_eff is not None and rank1_eff > 0):
+            synthetic_r2 = _synthetic_rank_for_unranked(p2_hist, current_class_score, confidence, p1_established)
+            if synthetic_r2 is not None:
+                rank2_eff = synthetic_r2
+
+        if rank1_eff is not None and rank2_eff is not None and rank1_eff > 0 and rank2_eff > 0:
+            log_ratio = math.log(max(1.0, float(rank2_eff)) / max(1.0, float(rank1_eff)))
             p_rank_atp = _sigmoid(log_ratio / RANK_LOGIT_SCALE)
-            rr = max(r1, r2) / float(min(r1, r2))
+            rr = max(rank1_eff, rank2_eff) / float(min(rank1_eff, rank2_eff))
             if rr >= RANK_CLASS_GAP_RATIO_START:
                 extra = min(RANK_CLASS_GAP_CAP, math.log(rr / RANK_CLASS_GAP_RATIO_START) * 0.08)
-                p_rank_atp = _clamp(p_rank_atp + (extra if r1 < r2 else -extra), 0.02, 0.98)
+                p_rank_atp = _clamp(p_rank_atp + (extra if rank1_eff < rank2_eff else -extra), 0.02, 0.98)
 
         if pts1 is not None and pts2 is not None and (pts1 > 0 or pts2 > 0):
             log_pts_ratio = math.log((max(0.0, pts1) + POINTS_MIN_BASE) / (max(0.0, pts2) + POINTS_MIN_BASE))
@@ -2208,37 +2487,19 @@ def main():
         elif p_rank_points is not None:
             p_rank = p_rank_points
 
-        both_elo_default = not e1_is_real and not e2_is_real
-
-        # Confidence
-        if both_elo_default and p_rank is None and not has_s1 and not has_s2:
-            confidence = "none"
-        elif not has_s1 and not has_s2:
-            confidence = "low"
-        elif not has_s1 or not has_s2:
-            confidence = "low" if min(mc1_12, mc2_12) < 5 else "medium"
-        elif min(mc1_12, mc2_12) < 5:
-            confidence = "medium"
-        elif min(mc1_12, mc2_12) >= 10:
-            confidence = "high"
-        else:
-            confidence = "medium"
-
-        if confidence in ("high", "medium"):
-            if p1 not in recent_activity_by_player or p2 not in recent_activity_by_player:
-                confidence = "medium" if confidence == "high" else "low"
         form_mult, results_mult, structural_mult, cap_mult = _series_delta_multipliers(series_bucket, surface, confidence)
 
         # Blend in logit space (better behavior than linear prob mix when components disagree)
-        serve_rel = min(1.0, min_matches_12 / float(HYBRID_ELO_WEIGHT_MIN_MATCHES)) if (has_s1 and has_s2) else 0.0
+        serve_rel = min(1.0, min(mc1_eff, mc2_eff) / float(HYBRID_ELO_WEIGHT_MIN_MATCHES)) if (has_s1 and has_s2) else 0.0
         w_sr = (1.0 - HYBRID_ELO_WEIGHT_DEFAULT) * (0.35 + 0.65 * serve_rel) if (has_s1 and has_s2) else 0.0
+        w_sr *= math.sqrt(class_sample_mult_1 * class_sample_mult_2)
         w_elo = HYBRID_ELO_WEIGHT_DEFAULT * (0.65 + 0.35 * elo_reliability)
 
         w_rank = 0.0
         rank_gap_strength = 0.0
         if p_rank is not None:
-            if r1 is not None and r2 is not None and r1 > 0 and r2 > 0:
-                rr = max(r1, r2) / float(min(r1, r2))
+            if rank1_eff is not None and rank2_eff is not None and rank1_eff > 0 and rank2_eff > 0:
+                rr = max(rank1_eff, rank2_eff) / float(min(rank1_eff, rank2_eff))
                 rank_strength = _clamp((rr - 1.0) / 3.0, 0.25, 1.0)
             else:
                 rank_strength = 0.45
@@ -2521,7 +2782,7 @@ def main():
         # Class gap: push heavy mismatches toward Elo expectation (before normalisation)
         p1_win = apply_class_gap(
             p1_win, e1_s, e2_s, e1_o, e2_o,
-            atp_rank_by_player.get(p1), atp_rank_by_player.get(p2),
+            rank1_eff, rank2_eff,
         )
         p2_win = 1.0 - p1_win
 
@@ -2553,6 +2814,22 @@ def main():
             e2_o,
             r1,
             r2,
+        )
+        p2_win = 1.0 - p1_win
+
+        stepup_dog_delta = 0.0
+        p1_win, stepup_dog_delta = _apply_stepup_dog_guard(
+            p1_win,
+            p_elo,
+            p_rank,
+            confidence,
+            current_class_score,
+            p1_hist,
+            p2_hist,
+            r1,
+            r2,
+            p1_established,
+            p2_established,
         )
         p2_win = 1.0 - p1_win
 
@@ -2664,9 +2941,13 @@ def main():
                 print(f"    Elo surface: P1={e1_s:.0f} P2={e2_s:.0f}  Overall: P1={e1_o} P2={e2_o}  real_elo: P1={e1_is_real} P2={e2_is_real}  confidence={confidence}")
                 mc1 = (s1 or {}).get("match_count"); sp1 = (s1 or {}).get("service_pts"); mc2 = (s2 or {}).get("match_count"); sp2 = (s2 or {}).get("service_pts")
                 print(f"    Hold/return 12m: P1 hold={hold1:.3f} ret={ret1:.3f}  P2 hold={hold2:.3f} ret={ret2:.3f}  (P1 matches={mc1} svc_pts={sp1}  P2 matches={mc2} svc_pts={sp2})")
-                print(f"    Shrinkage: alpha1={alpha1:.3f} alpha2={alpha2:.3f}  (SHRINKAGE_N={SHRINKAGE_N})")
-                print(f"    ATP rank: P1={atp_rank_by_player.get(p1)} P2={atp_rank_by_player.get(p2)}  p_rank={p_rank}  both_elo_default={both_elo_default}")
+                print(f"    Shrinkage: alpha1={alpha1:.3f} alpha2={alpha2:.3f}  mc_eff=({mc1_eff:.1f}/{mc2_eff:.1f})  class_mult=({class_sample_mult_1:.2f}/{class_sample_mult_2:.2f})  (SHRINKAGE_N={SHRINKAGE_N})")
+                print(
+                    f"    ATP rank: P1={atp_rank_by_player.get(p1)} P2={atp_rank_by_player.get(p2)} "
+                    f"synthetic=({synthetic_r1}/{synthetic_r2}) p_rank={p_rank}  both_elo_default={both_elo_default}"
+                )
                 print(f"    p_elo={p_elo:.4f} p_rank={p_rank} p_serve_return={p_serve_return:.4f} weights(sr/elo/rank)=({sr_weight:.2f}/{elo_weight:.2f}/{rank_weight:.2f}) -> p1_win={p1_win:.4f} (after adj+cal), series={series_bucket}")
+                print(f"    Class jump: current={current_class_score:.1f} recent_avg=({p1_hist.get('recent_class_avg')}/{p2_hist.get('recent_class_avg')})  elo_penalty=({class_penalty_elo_1:.1f}/{class_penalty_elo_2:.1f})")
                 print(f"    Effective SPW inputs: P1 serve={hold1_eff:.3f} ret={ret1_eff:.3f} | P2 serve={hold2_eff:.3f} ret={ret2_eff:.3f} | shifts hold={hold_shift:+.3f} ret={ret_shift:+.3f}")
                 print(
                     f"    Injury: p1={p1_recent_injured}({p1_injury_mode}) "
@@ -2682,6 +2963,7 @@ def main():
                     f"form_base={delta_p1_form:+.4f} results_form={results_form_delta:+.4f} "
                     f"tour_hist={tour_history_delta:+.4f} crisis_shock={crisis_shock_delta:+.4f} "
                     f"total_delta={delta_p1:+.4f} low_conf_guard={low_conf_dog_delta:+.4f} "
+                    f"stepup_guard={stepup_dog_delta:+.4f} "
                     f"crisis(P1/P2)={p1_crisis}/{p2_crisis}"
                 )
                 o1 = 1.0 / p1_win if p1_win > 0 else 0
