@@ -64,17 +64,17 @@ function Crest({
 
 function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
   const takers = [
-    { label: "Primary", value: team.primary, tier: "1" as const },
-    { label: "Secondary", value: team.secondary, tier: "2" as const },
-    ...(team.tertiary ? [{ label: "Tertiary", value: team.tertiary, tier: "3" as const }] : []),
+    { label: "First choice", value: team.primary, tier: "1" as const },
+    { label: "Second choice", value: team.secondary, tier: "2" as const },
+    ...(team.tertiary ? [{ label: "Third choice", value: team.tertiary, tier: "3" as const }] : []),
   ];
 
   return (
     <article
       id={`${league.key}-${team.slug}`}
-      className={`group scroll-mt-28 rounded-xl border border-slate-800/70 bg-slate-900/55 p-5 transition hover:-translate-y-0.5 hover:border-slate-700 hover:bg-slate-900/80 ${league.cardGlowClasses}`}
+      className={`group scroll-mt-28 rounded-xl border border-slate-800/70 bg-slate-900/55 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition hover:-translate-y-0.5 hover:border-slate-700 hover:bg-slate-900/80 ${league.cardGlowClasses}`}
     >
-      <div className="mb-4 flex items-start gap-3 border-b border-slate-800/70 pb-4">
+      <div className="mb-3.5 flex items-start gap-3 border-b border-slate-800/70 pb-3.5">
         <Crest logoPath={team.logoPath} team={team.team} initials={team.initials} />
         <div className="min-w-0 flex-1 pt-0.5">
           <a
@@ -86,9 +86,9 @@ function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
         </div>
       </div>
 
-      <div className="space-y-1.5">
+      <div className="space-y-1">
         {takers.map((taker) => (
-          <div key={`${team.team}-${taker.label}`} className="grid grid-cols-[30px_minmax(0,1fr)_auto] items-center gap-3 py-2.5">
+          <div key={`${team.team}-${taker.label}`} className="grid grid-cols-[30px_minmax(0,1fr)_auto] items-center gap-3 py-2">
             <div
               className={
                 taker.tier === "1"
@@ -114,10 +114,10 @@ function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
             <span
               className={
                 taker.tier === "1"
-                  ? "rounded-md bg-emerald-500/10 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-emerald-300"
+                  ? "rounded-md bg-emerald-500/10 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-emerald-300"
                   : taker.tier === "2"
-                    ? "rounded-md bg-slate-950/80 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-slate-400"
-                    : "rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-slate-600"
+                    ? "rounded-md bg-slate-950/80 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-slate-400"
+                    : "rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-slate-600"
               }
             >
               {taker.label}
@@ -211,7 +211,7 @@ export default function PenaltyTakersClient({ leagues, totalTeams, currentSeason
               <a
                 key={league.key}
                 href={`#${league.key}`}
-                className={`relative whitespace-nowrap border-b-2 px-5 py-4 text-sm font-medium transition ${league.tabClasses} hover:text-slate-100`}
+                className={`relative whitespace-nowrap border-b-2 px-5 py-4 text-sm font-medium transition ${league.tabClasses} hover:bg-slate-900/40 hover:text-slate-100`}
               >
                 <span className="mr-2 inline-flex h-5 w-5 items-center justify-center overflow-hidden rounded-md border border-slate-300/70 bg-gradient-to-b from-white to-slate-100 align-middle shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
