@@ -26,7 +26,7 @@ import math
 import os
 import sys
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from statistics import mean, median
 
 # Add scripts dir + project root for local imports
@@ -556,23 +556,35 @@ def main():
                     continue
 
     # 2) Load Pinnacle snapshot with spread (ATP + Challenger)
-    r = requests.get(
-        f"{url}/rest/v1/bookmaker_odds_snapshot",
-        headers=headers,
-        params={
-            "select": "player1_name,player2_name,odds1,odds2,spread_line,spread_odds1,spread_odds2,league",
-            "bookmaker": "eq.Pinnacle",
-            "capture_date": f"eq.{capture_date}",
-            "league": "in.(ATP,Challenger)",
-            "order": "captured_at.desc",
-            "limit": 500,
-        },
-        timeout=30,
-    )
-    r.raise_for_status()
-    pin_rows = r.json()
+    def _fetch_pin_rows(d: str):
+        r = requests.get(
+            f"{url}/rest/v1/bookmaker_odds_snapshot",
+            headers=headers,
+            params={
+                "select": "player1_name,player2_name,odds1,odds2,spread_line,spread_odds1,spread_odds2,league",
+                "bookmaker": "eq.Pinnacle",
+                "capture_date": f"eq.{d}",
+                "league": "in.(ATP,Challenger)",
+                "order": "captured_at.desc",
+                "limit": 500,
+            },
+            timeout=30,
+        )
+        r.raise_for_status()
+        return r.json()
+
+    pin_rows = _fetch_pin_rows(capture_date)
     if not pin_rows:
-        print(f"No Pinnacle ATP/Challenger snapshot for {capture_date}. Run pinnacle-scrape-odds.py first.")
+        # Fallback: try yesterday (handles 23:55 run crossing midnight or scraper timing)
+        try:
+            yd = (datetime.strptime(capture_date, "%Y-%m-%d").date() - timedelta(days=1)).strftime("%Y-%m-%d")
+            pin_rows = _fetch_pin_rows(yd)
+            if pin_rows:
+                print(f"No snapshot for {capture_date}; using {yd} (yesterday)")
+        except Exception:
+            pass
+    if not pin_rows:
+        print(f"No Pinnacle ATP/Challenger snapshot for {capture_date} (or yesterday). Run pinnacle-scrape-odds.py first.")
         sys.exit(1)
 
     # Filter for rows with spread
