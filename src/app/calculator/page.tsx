@@ -1,8 +1,6 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { supabase, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, getBaselineDisplayStats } from "@/lib/baseline";
 import { track } from "@/lib/analytics";
@@ -12,6 +10,7 @@ import KellyCalculatorCard from "@/components/calculator/KellyCalculatorCard";
 import HowItWorks from "@/components/calculator/HowItWorks";
 import AssumptionsCallout from "@/components/calculator/AssumptionsCallout";
 import FaqAccordion from "@/components/calculator/FaqAccordion";
+import PageHomeLink from "@/components/PageHomeLink";
 
 interface CombinedMarketStats {
   total_bets: number;
@@ -113,10 +112,7 @@ export default function CalculatorPage() {
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       {/* Hero: two calculators side by side */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 md:pb-16 border-b border-slate-800/50">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8">
-          <Image src="/favicon.png" alt="" width={40} height={40} className="h-10 w-10 object-contain shrink-0" />
-          <span>← Home</span>
-        </Link>
+        <PageHomeLink className="mb-8" />
         <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">CALCULATORS</span>
         <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-8">
           Returns & Kelly
@@ -130,7 +126,7 @@ export default function CalculatorPage() {
                 Returns Calculator
               </h2>
               <p className="text-sm text-slate-400 leading-relaxed mb-4">
-                How much you would have won or lost following our settled bets with a fixed stake per bet (e.g. £25, £50, £100).
+                How much you would have won or lost following our settled bets with a fixed stake per bet (e.g. Â£25, Â£50, Â£100).
                 Based on our verified track record. No projections.
               </p>
             </div>
@@ -217,3 +213,6 @@ export default function CalculatorPage() {
     </div>
   );
 }
+
+
+

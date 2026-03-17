@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import Footer from "@/components/Footer";
 import { RESOURCES, RESOURCE_CATEGORIES, type ResourceCategory } from "@/lib/resources";
+import PageHomeLink from "@/components/PageHomeLink";
 
 export default function ResourcesPage() {
   const [categoryFilter, setCategoryFilter] = useState<ResourceCategory | "">("");
@@ -18,19 +18,7 @@ export default function ResourcesPage() {
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <section className="pt-6 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8"
-          >
-            <Image
-              src="/favicon.png"
-              alt=""
-              width={40}
-              height={40}
-              className="h-10 w-10 object-contain shrink-0"
-            />
-            <span>← Home</span>
-          </Link>
+          <PageHomeLink className="mb-8" />
           <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">
             RESOURCES
           </span>
@@ -89,7 +77,7 @@ export default function ResourcesPage() {
                   {resource.minRead} min read
                 </span>
                 <span className="text-sm font-medium text-emerald-400 group-hover:text-emerald-300">
-                  Read article →
+                  Read article â†’
                 </span>
               </div>
             </Link>
@@ -107,3 +95,4 @@ export default function ResourcesPage() {
     </div>
   );
 }
+

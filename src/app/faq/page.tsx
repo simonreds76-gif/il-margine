@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import fs from "fs";
 import path from "path";
 import Link from "next/link";
-import Image from "next/image";
 import Footer from "@/components/Footer";
 import FaqAnswer from "@/components/FaqAnswer";
 import FaqOpenByHash from "@/components/FaqOpenByHash";
 import { parseFaqMd, questionSlug, type FaqSection } from "@/lib/parse-faq";
 import { BASE_URL } from "@/lib/config";
+import PageHomeLink from "@/components/PageHomeLink";
 
 export const metadata: Metadata = {
   title: "FAQ",
@@ -60,19 +60,7 @@ export default function FaqPage() {
       <FaqOpenByHash />
       <section className="pt-6 pb-8 md:pt-6 md:pb-10 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8"
-          >
-            <Image
-              src="/favicon.png"
-              alt=""
-              width={40}
-              height={40}
-              className="h-10 w-10 object-contain shrink-0"
-            />
-            <span>← Home</span>
-          </Link>
+          <PageHomeLink className="mb-8" />
 
           <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">QUESTIONS</span>
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">
@@ -164,3 +152,4 @@ export default function FaqPage() {
     </div>
   );
 }
+

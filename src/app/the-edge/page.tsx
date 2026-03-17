@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/Footer";
 import { BASE_URL } from "@/lib/config";
+import PageHomeLink from "@/components/PageHomeLink";
 
 export const metadata: Metadata = {
   title: "The Edge",
@@ -68,10 +69,7 @@ export default function TheEdgePage() {
           <Image src="/banner.png" alt="" width={1200} height={400} className="w-full max-w-6xl h-auto object-contain" />
         </div>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8">
-            <Image src="/favicon.png" alt="" width={40} height={40} className="h-10 w-10 object-contain shrink-0" />
-            <span>← Home</span>
-          </Link>
+          <PageHomeLink className="mb-8" />
           <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">WHY IT WORKS</span>
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">The Edge</h1>
           <p className="text-lg text-slate-400 font-medium mb-6 sm:mb-8">Il Margine: Mind the margin.</p>
@@ -120,9 +118,9 @@ export default function TheEdgePage() {
             <p>Not every market is worth betting. Most aren&apos;t.</p>
             <p>Bookmakers dedicate their resources unevenly. Premier League match odds get teams of traders, live monitoring, and sophisticated algorithms. Player props get template pricing and minimal oversight.</p>
             <p><strong className="text-slate-100">Our focus areas:</strong></p>
-            <p><strong className="text-slate-200">Player Props</strong> — Individual player statistics: shots on target, fouls committed, tackles made, cards received. These markets receive a fraction of the analytical attention that match odds do. Bookmakers use historical averages with minimal matchup-specific adjustment. When opponent defensive stats, tactical setups, or referee tendencies create outliers, value emerges.</p>
-            <p><strong className="text-slate-200">ATP Tennis (men&apos;s)</strong> — Match odds, handicaps, and totals across ATP events, particularly 250s and Challengers. These tournaments get less market attention than Grand Slams. Surface-specific performance differentials are systematically underweighted. A player who&apos;s elite on clay but average on grass will still be priced closer to their universal ranking than their surface-specific form suggests.</p>
-            <p><strong className="text-slate-200">Bet Builders</strong> <span className="text-slate-500">(Coming Soon)</span> — Same-game multiples where correlation is mispriced. When bookmakers price legs independently that are actually correlated, mathematical edges appear.</p>
+            <p><strong className="text-slate-200">Player Props</strong> â€” Individual player statistics: shots on target, fouls committed, tackles made, cards received. These markets receive a fraction of the analytical attention that match odds do. Bookmakers use historical averages with minimal matchup-specific adjustment. When opponent defensive stats, tactical setups, or referee tendencies create outliers, value emerges.</p>
+            <p><strong className="text-slate-200">ATP Tennis (men&apos;s)</strong> â€” Match odds, handicaps, and totals across ATP events, particularly 250s and Challengers. These tournaments get less market attention than Grand Slams. Surface-specific performance differentials are systematically underweighted. A player who&apos;s elite on clay but average on grass will still be priced closer to their universal ranking than their surface-specific form suggests.</p>
+            <p><strong className="text-slate-200">Bet Builders</strong> <span className="text-slate-500">(Coming Soon)</span> â€” Same-game multiples where correlation is mispriced. When bookmakers price legs independently that are actually correlated, mathematical edges appear.</p>
             <p><strong className="text-slate-100">What we don&apos;t bet:</strong> High-profile match odds in major leagues unless clear mispricing exists. We&apos;re not competing with bookmaker traders on markets they prioritize. We operate where their models are weakest.</p>
           </div>
         </section>
@@ -147,8 +145,8 @@ export default function TheEdgePage() {
             <p>Most betting services are run by professional bettors who learned by betting. Valuable, but limited perspective. I learned by <em>building the prices</em> bookmakers use.</p>
             <p><strong className="text-slate-100">What you see from the compiler side:</strong></p>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong className="text-slate-200">Template pricing dominates.</strong> Player props aren&apos;t individually crafted for each match. They&apos;re generated from historical averages. Opponent-specific factors, tactical matchups—these often aren&apos;t in the template.</li>
-              <li><strong className="text-slate-200">Margin allocation varies.</strong> Match odds: 3–5%. Player props: 10–15%. Less efficient markets get wider margins and less sophisticated pricing.</li>
+              <li><strong className="text-slate-200">Template pricing dominates.</strong> Player props aren&apos;t individually crafted for each match. They&apos;re generated from historical averages. Opponent-specific factors, tactical matchupsâ€”these often aren&apos;t in the template.</li>
+              <li><strong className="text-slate-200">Margin allocation varies.</strong> Match odds: 3â€“5%. Player props: 10â€“15%. Less efficient markets get wider margins and less sophisticated pricing.</li>
               <li><strong className="text-slate-200">Copy-paste pricing.</strong> Smaller bookmakers copy larger ones. When the original price is wrong, everyone&apos;s price is wrong.</li>
               <li><strong className="text-slate-200">Risk management priorities.</strong> Bookmakers monitor winning accounts on match odds aggressively. Player props? Less so. That&apos;s your window.</li>
             </ul>
@@ -243,7 +241,7 @@ export default function TheEdgePage() {
             href="/player-props"
             className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
           >
-            → View Player Props
+            â†’ View Player Props
           </Link>
         </section>
       </div>
@@ -256,3 +254,4 @@ export default function TheEdgePage() {
     </div>
   );
 }
+

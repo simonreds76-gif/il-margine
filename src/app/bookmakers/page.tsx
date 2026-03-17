@@ -1,17 +1,17 @@
-import Link from "next/link";
-import Image from "next/image";
+﻿import Link from "next/link";
 import Footer from "@/components/Footer";
 import BookmakerLogo from "@/components/BookmakerLogo";
+import PageHomeLink from "@/components/PageHomeLink";
 
 const BOOKMAKERS = [
   {
     id: "midnite",
     name: "Midnite",
-    stars: "⭐⭐⭐⭐½",
+    stars: "â­â­â­â­Â½",
     rating: "4.5/5",
     propsScore: "8/10",
     tennisScore: "7/10",
-    welcomeOffer: "Bet £10 Get £20 Free Bets",
+    welcomeOffer: "Bet Â£10 Get Â£20 Free Bets",
     welcomeTerms: "Min odds 1.50, free bets valid 7 days",
     strengths: [
       "Strong player props coverage across major leagues",
@@ -26,7 +26,7 @@ const BOOKMAKERS = [
       "Limited tennis coverage outside ATP/WTA top events",
       "Fewer niche markets than established competitors",
       "Bet builder available on major matches",
-      "Stake limits can be conservative on props (£50-100 typical max)",
+      "Stake limits can be conservative on props (Â£50-100 typical max)",
       "Less track record for account longevity under sustained winning",
     ],
     usageTips: "Midnite is one of the newer operators worth attention. Built from scratch with modern infrastructure, the platform is fast and intuitive. Best used for Premier League and Championship player props where their odds are often competitive with or better than legacy books. Coverage of shots on target, fouls committed, and cards received is solid. Account longevity appears reasonable based on limited testing, but treat as unproven until you've run a few months of profitable action. Start conservatively and scale if the account survives. Avoid for tennis beyond major tournaments. Stick to football props where they're strongest.",
@@ -36,11 +36,11 @@ const BOOKMAKERS = [
   {
     id: "betvictor",
     name: "BetVictor",
-    stars: "⭐⭐⭐⭐",
+    stars: "â­â­â­â­",
     rating: "4/5",
     propsScore: "8/10",
     tennisScore: "8/10",
-    welcomeOffer: "Bet £10 Get £40 in Bonuses",
+    welcomeOffer: "Bet Â£10 Get Â£40 in Bonuses",
     welcomeTerms: "Min odds 2.00, various bonus types, T&Cs apply",
     strengths: [
       "Excellent player props depth across all major leagues",
@@ -49,7 +49,7 @@ const BOOKMAKERS = [
       "Good ATP 250/500 tournament coverage",
       "Established operator with reliable platform",
       "Reasonable withdrawal processing (24-48 hours typical)",
-      "Accepts larger stakes than many UK books (£200+ props, £500+ tennis)",
+      "Accepts larger stakes than many UK books (Â£200+ props, Â£500+ tennis)",
       ],
     weaknesses: [
       "Player props margins can be 12-14% (slightly wider than best in class)",
@@ -63,42 +63,42 @@ const BOOKMAKERS = [
   {
     id: "william-hill",
     name: "William Hill",
-    stars: "⭐⭐⭐⭐",
+    stars: "â­â­â­â­",
     rating: "4/5",
     propsScore: "8/10",
     tennisScore: "7/10",
-    welcomeOffer: "Bet £10 Get £40 in Free Bets",
-    welcomeTerms: "New UK customers, promo code G40. Deposit & place £10 cash single bet (min odds 1/2) on sportsbook (excl. Virtuals). Get £40 in Free Bets (4x£10), valid 7 days, must use in full (£10 each). Not valid via PayPal, Neosurf, Paysafe, Apple Pay, NETELLER, Skrill, ecoPayz, Kalibra/Postpay or WH PLUS Card. One per customer. Full T&Cs apply.",
+    welcomeOffer: "Bet Â£10 Get Â£40 in Free Bets",
+    welcomeTerms: "New UK customers, promo code G40. Deposit & place Â£10 cash single bet (min odds 1/2) on sportsbook (excl. Virtuals). Get Â£40 in Free Bets (4xÂ£10), valid 7 days, must use in full (Â£10 each). Not valid via PayPal, Neosurf, Paysafe, Apple Pay, NETELLER, Skrill, ecoPayz, Kalibra/Postpay or WH PLUS Card. One per customer. Full T&Cs apply.",
     strengths: [
-      "Must-have in our rotation — we use it regularly for props and tennis",
+      "Must-have in our rotation â€” we use it regularly for props and tennis",
       "Stake limits hold up better than many UK books we've tested",
       "Comprehensive player props across Premier League, Championship, major European leagues",
       "Solid tennis markets on ATP 250+; game handicaps and totals competently priced",
       "Reliable platform, withdrawal processing and liquidity",
       "Good bet builder; correlation mispricing appears on lower-profile matches",
-      "Established operator — one of the books we rely on most",
+      "Established operator â€” one of the books we rely on most",
     ],
     weaknesses: [
       "Props margins 10-13% (in line with market)",
       "Tennis coverage drops off below ATP 250",
       "Platform can feel dated next to newer apps",
     ],
-    usageTips: "William Hill is a must-have. We use it regularly for both player props and tennis. Limits have held up better than at several other UK books in our experience — we still get meaningful stakes on props and tennis months in. For props: strong coverage across Premier League, Championship, La Liga, Bundesliga, Serie A. Odds are competitive often enough that we always check them when line shopping. Bet builder markets are decent and correlation mispricing does appear, especially on lower-profile matches. For tennis: solid for ATP 250 and above; game handicaps and totals are competently priced and often within a few percent of sharp closing lines. Withdrawal processing is reliable. Open this account early and keep it in your core set. One of the books we'd replace last.",
-    bestFor: "Must-have — we use it often, limits hold up",
+    usageTips: "William Hill is a must-have. We use it regularly for both player props and tennis. Limits have held up better than at several other UK books in our experience â€” we still get meaningful stakes on props and tennis months in. For props: strong coverage across Premier League, Championship, La Liga, Bundesliga, Serie A. Odds are competitive often enough that we always check them when line shopping. Bet builder markets are decent and correlation mispricing does appear, especially on lower-profile matches. For tennis: solid for ATP 250 and above; game handicaps and totals are competently priced and often within a few percent of sharp closing lines. Withdrawal processing is reliable. Open this account early and keep it in your core set. One of the books we'd replace last.",
+    bestFor: "Must-have â€” we use it often, limits hold up",
     offerUrl: "/api/go/william-hill",
   },
   {
     id: "bwin",
     name: "Bwin",
-    stars: "⭐⭐⭐⭐",
+    stars: "â­â­â­â­",
     rating: "4/5",
     propsScore: "8/10",
     tennisScore: "7/10",
-    welcomeOffer: "Bet £5 Get £20 in Free Bets",
-    welcomeTerms: "Min £5 bet on sports at odds 1/2+. 4×£5 free bets, valid 7 days, stake not returned. T&Cs apply.",
+    welcomeOffer: "Bet Â£5 Get Â£20 in Free Bets",
+    welcomeTerms: "Min Â£5 bet on sports at odds 1/2+. 4Ã—Â£5 free bets, valid 7 days, stake not returned. T&Cs apply.",
     strengths: [
       "Comprehensive player props across all major leagues",
-      "Part of Entain (shares group with Coral, Ladbrokes – separate account)",
+      "Part of Entain (shares group with Coral, Ladbrokes â€“ separate account)",
       "Solid odds quality on props markets",
       "Good bet builder functionality",
       "Modern online platform",
@@ -117,11 +117,11 @@ const BOOKMAKERS = [
   {
     id: "coral",
     name: "Coral",
-    stars: "⭐⭐⭐⭐",
+    stars: "â­â­â­â­",
     rating: "4/5",
     propsScore: "8/10",
     tennisScore: "7/10",
-    welcomeOffer: "Bet £10 Get £30 in Free Bets",
+    welcomeOffer: "Bet Â£10 Get Â£30 in Free Bets",
     welcomeTerms: "Min odds 1.50, free bets valid 7 days",
     strengths: [
       "Comprehensive player props across all major leagues",
@@ -144,11 +144,11 @@ const BOOKMAKERS = [
   {
     id: "ladbrokes",
     name: "Ladbrokes",
-    stars: "⭐⭐⭐⭐",
+    stars: "â­â­â­â­",
     rating: "4/5",
     propsScore: "8/10",
     tennisScore: "7/10",
-    welcomeOffer: "Bet £5 Get £20 in Free Bets",
+    welcomeOffer: "Bet Â£5 Get Â£20 in Free Bets",
     welcomeTerms: "Min odds 1.50, free bets valid 7 days",
     strengths: [
       "Identical strengths to Coral (same pricing engine)",
@@ -169,11 +169,11 @@ const BOOKMAKERS = [
   {
     id: "betmgm",
     name: "BetMGM",
-    stars: "⭐⭐⭐⭐",
+    stars: "â­â­â­â­",
     rating: "4/5",
     propsScore: "8/10",
     tennisScore: "7/10",
-    welcomeOffer: "Bet £10 Get £40 in Free Bets",
+    welcomeOffer: "Bet Â£10 Get Â£40 in Free Bets",
     welcomeTerms: "Min odds 1.50, free bets valid 7 days",
     strengths: [
       "Operates on LeoVegas platform (acquired by MGM), independent pricing from other UK operators",
@@ -197,14 +197,14 @@ const BOOKMAKERS = [
   {
     id: "betfred",
     name: "Betfred",
-    stars: "⭐⭐⭐⭐",
+    stars: "â­â­â­â­",
     rating: "4/5",
     propsScore: "7/10",
     tennisScore: "7/10",
-    welcomeOffer: "Bet £10 Get £40 in Bonuses",
-    welcomeTerms: "£30 in free bets + £10 casino bonus, min odds 2.00 for sports bets",
+    welcomeOffer: "Bet Â£10 Get Â£40 in Bonuses",
+    welcomeTerms: "Â£30 in free bets + Â£10 casino bonus, min odds 2.00 for sports bets",
     strengths: [
-      "Higher welcome offer than most competitors (£40 total)",
+      "Higher welcome offer than most competitors (Â£40 total)",
       "Good props coverage on major leagues",
       "Decent tennis markets ATP 250+",
       "Fast withdrawals",
@@ -217,21 +217,21 @@ const BOOKMAKERS = [
       "Platform can be clunky",
       "Fewer bet builder markets than competitors",
     ],
-    usageTips: "Betfred's biggest draw is the £40 welcome offer. Being independently owned (not part of a large group), they operate with different risk parameters. For props: Solid coverage on major leagues. Odds are rarely best-in-class but occasionally competitive. Check them alongside others for line shopping. Cards markets (yellow/red) are often better priced here than elsewhere. If you're targeting card markets specifically, Betfred is worth priority consideration. For tennis: Adequate for ATP 250+. Not exceptional, but functional. Good as a third or fourth props account. Essential if targeting cards markets.",
+    usageTips: "Betfred's biggest draw is the Â£40 welcome offer. Being independently owned (not part of a large group), they operate with different risk parameters. For props: Solid coverage on major leagues. Odds are rarely best-in-class but occasionally competitive. Check them alongside others for line shopping. Cards markets (yellow/red) are often better priced here than elsewhere. If you're targeting card markets specifically, Betfred is worth priority consideration. For tennis: Adequate for ATP 250+. Not exceptional, but functional. Good as a third or fourth props account. Essential if targeting cards markets.",
     bestFor: "Cards markets, higher welcome offer",
     offerUrl: "#",
   },
 ];
 
 const COMPARISON_ROWS = [
-  { name: "Midnite", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Modern platform, major league props" },
-  { name: "BetVictor", props: "8/10", tennis: "8/10", offer: "£40 bonuses", bestFor: "All-rounder, strong tennis" },
-  { name: "William Hill", props: "8/10", tennis: "7/10", offer: "£40 free bets", bestFor: "Must-have — we use it often, limits hold up" },
-  { name: "Bwin", props: "8/10", tennis: "7/10", offer: "£5 → £20 free bets", bestFor: "Pair with Coral and Ladbrokes for extended access" },
-  { name: "Coral", props: "8/10", tennis: "7/10", offer: "£30 free bets", bestFor: "Pair with Ladbrokes for extended access" },
-  { name: "Ladbrokes", props: "8/10", tennis: "7/10", offer: "£20 free bets", bestFor: "Pair with Coral for extended access" },
-  { name: "BetMGM", props: "8/10", tennis: "7/10", offer: "£40 free bets", bestFor: "Player props & tennis, independent pricing for line shopping" },
-  { name: "Betfred", props: "7/10", tennis: "7/10", offer: "£40 bonuses", bestFor: "Cards markets, higher welcome offer" },
+  { name: "Midnite", props: "8/10", tennis: "7/10", offer: "Â£20 free bets", bestFor: "Modern platform, major league props" },
+  { name: "BetVictor", props: "8/10", tennis: "8/10", offer: "Â£40 bonuses", bestFor: "All-rounder, strong tennis" },
+  { name: "William Hill", props: "8/10", tennis: "7/10", offer: "Â£40 free bets", bestFor: "Must-have â€” we use it often, limits hold up" },
+  { name: "Bwin", props: "8/10", tennis: "7/10", offer: "Â£5 â†’ Â£20 free bets", bestFor: "Pair with Coral and Ladbrokes for extended access" },
+  { name: "Coral", props: "8/10", tennis: "7/10", offer: "Â£30 free bets", bestFor: "Pair with Ladbrokes for extended access" },
+  { name: "Ladbrokes", props: "8/10", tennis: "7/10", offer: "Â£20 free bets", bestFor: "Pair with Coral for extended access" },
+  { name: "BetMGM", props: "8/10", tennis: "7/10", offer: "Â£40 free bets", bestFor: "Player props & tennis, independent pricing for line shopping" },
+  { name: "Betfred", props: "7/10", tennis: "7/10", offer: "Â£40 bonuses", bestFor: "Cards markets, higher welcome offer" },
 ];
 
 function BookmakerCard({ bm }: { bm: (typeof BOOKMAKERS)[0] }) {
@@ -243,14 +243,14 @@ function BookmakerCard({ bm }: { bm: (typeof BOOKMAKERS)[0] }) {
           <BookmakerLogo bookmaker={{ id: 0, name: bm.name, short_name: bm.name, affiliate_link: bm.offerUrl !== "#" ? bm.offerUrl : null, active: true }} size="md" />
           <div>
             <h3 className="font-semibold text-slate-100">{bm.name}</h3>
-            <span className="text-xs text-slate-500">{bm.stars} · Props {bm.propsScore} · Tennis {bm.tennisScore}</span>
+            <span className="text-xs text-slate-500">{bm.stars} Â· Props {bm.propsScore} Â· Tennis {bm.tennisScore}</span>
           </div>
           <span className="sm:ml-auto text-[10px] font-medium px-2 py-0.5 rounded bg-slate-800 text-slate-400 shrink-0 max-w-full sm:max-w-[200px] truncate" title={bm.bestFor}>{bm.bestFor}</span>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 border-t border-slate-800">
           <div className="flex items-baseline gap-2 flex-wrap">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400">New customers</span>
-            <span className="text-slate-500">·</span>
+            <span className="text-slate-500">Â·</span>
             <span className="text-sm font-semibold text-slate-100">{bm.welcomeOffer}</span>
           </div>
           <a
@@ -259,14 +259,14 @@ function BookmakerCard({ bm }: { bm: (typeof BOOKMAKERS)[0] }) {
             rel={bm.offerUrl !== "#" ? "noopener noreferrer nofollow" : undefined}
             className="inline-block w-full sm:w-auto text-center bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors shrink-0"
           >
-            Claim {bm.name} Offer →
+            Claim {bm.name} Offer â†’
           </a>
         </div>
       </div>
       {/* Expandable details */}
       <details className="group border-t border-slate-800">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-5 md:px-6 py-3.5 text-sm rounded-b-xl hover:bg-slate-800/50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50">
-          <span className="text-slate-300 font-medium">Read full review — click to expand</span>
+          <span className="text-slate-300 font-medium">Read full review â€” click to expand</span>
           <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180" aria-hidden>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
           </span>
@@ -297,28 +297,25 @@ function BookmakerCard({ bm }: { bm: (typeof BOOKMAKERS)[0] }) {
 }
 
 const FAQ_ITEMS = [
-  { q: "Should I open all eight accounts at once?", a: "Yes. Welcome offers alone provide £250+ value. More importantly, having eight accounts active extends your operational window to 18-24 months before restrictions become severe across all platforms. Open them all, claim all offers, use them strategically." },
+  { q: "Should I open all eight accounts at once?", a: "Yes. Welcome offers alone provide Â£250+ value. More importantly, having eight accounts active extends your operational window to 18-24 months before restrictions become severe across all platforms. Open them all, claim all offers, use them strategically." },
   { q: "What if odds are better elsewhere?", a: "Always take best price. Line shop across all eight before placing any bet. Over 100 bets, even 2-3% better average odds compounds significantly. Never settle for worse odds out of loyalty or convenience." },
   { q: "Do affiliate links affect your recommendations?", a: "No. These bookmakers were selected through months of real-money testing before any affiliate discussions began. We sought partnerships with books we already used, not vice versa. If a bookmaker deteriorates in quality or changes practices, we'll remove them regardless of commercial arrangements." },
-  { q: "Are welcome bonuses worth it?", a: "Absolutely. Combined, these eight offer £250+ in bonuses. Even accounting for rollover requirements, expected value is positive. Claim all of them. Use them on +EV opportunities where possible, or on lower-variance markets if rollover requirements demand it." },
+  { q: "Are welcome bonuses worth it?", a: "Absolutely. Combined, these eight offer Â£250+ in bonuses. Even accounting for rollover requirements, expected value is positive. Claim all of them. Use them on +EV opportunities where possible, or on lower-variance markets if rollover requirements demand it." },
   { q: "Can I use Ladbrokes, Coral, and Bwin together?", a: "Yes, and you should. They're part of the same group (Entain) and share identical pricing, but account management is separate. Opening all three extends your access window to Entain odds significantly. This trio is essential if you're serious about line shopping." },
-  { q: "What happens when I get restricted?", a: "Stake limits reduce gradually, eventually hitting £5-20 maximum. The account remains active but becomes operationally useless for serious betting. This is inevitable for winning accounts. Plan for it by having multiple accounts active. When one restricts, continue with others.", linkToFaq: true },
+  { q: "What happens when I get restricted?", a: "Stake limits reduce gradually, eventually hitting Â£5-20 maximum. The account remains active but becomes operationally useless for serious betting. This is inevitable for winning accounts. Plan for it by having multiple accounts active. When one restricts, continue with others.", linkToFaq: true },
 ];
 
 export default function BookmakersPage() {
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8 md:pb-12">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8">
-          <Image src="/favicon.png" alt="" width={40} height={40} className="h-10 w-10 object-contain shrink-0" />
-          <span>← Home</span>
-        </Link>
+        <PageHomeLink className="mb-8" />
 
         {/* Hero */}
         <section className="mb-10 md:mb-12">
           <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">BOOKMAKERS</span>
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">
-            £250+ in Welcome Offers
+            Â£250+ in Welcome Offers
           </h1>
           <p className="text-lg text-slate-300 max-w-2xl mb-4">
             Eight bookmakers. One strategy. Field tested for props and tennis. We bet here and we&apos;re honest about restrictions.
@@ -349,7 +346,7 @@ export default function BookmakersPage() {
                   rel={bm.offerUrl !== "#" ? "noopener noreferrer nofollow" : undefined}
                   className="mt-auto text-xs font-semibold text-emerald-400 hover:text-emerald-300"
                 >
-                  {bm.offerUrl !== "#" ? "Claim offer →" : "View offer"}
+                  {bm.offerUrl !== "#" ? "Claim offer â†’" : "View offer"}
                 </a>
               </div>
             ))}
@@ -363,7 +360,7 @@ export default function BookmakersPage() {
 
           {/* Must-have: William Hill first */}
           <div className="mb-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400/80 mb-3">Must-have — we use it often</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400/80 mb-3">Must-have â€” we use it often</p>
             <div className="space-y-6">
               {BOOKMAKERS.filter((bm) => bm.id === "william-hill").map((bm) => (
                 <BookmakerCard key={bm.id} bm={bm} />
@@ -454,7 +451,7 @@ export default function BookmakersPage() {
               <div className="px-6 md:px-8 pb-4 pt-0">
                 <div className="text-slate-300 text-sm leading-relaxed space-y-3">
                   <p>Bookmakers restrict profitable accounts. This is inevitable, not personal.</p>
-                  <p>Factors accelerating restrictions: consistent profitability, only betting props/niche markets, only odds ≥2.00, large stakes, withdrawing more than depositing. See <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ</Link> for guidance.</p>
+                  <p>Factors accelerating restrictions: consistent profitability, only betting props/niche markets, only odds â‰¥2.00, large stakes, withdrawing more than depositing. See <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ</Link> for guidance.</p>
                 </div>
               </div>
             </details>
@@ -469,14 +466,14 @@ export default function BookmakersPage() {
                 <div className="text-slate-300 text-sm leading-relaxed space-y-4">
                   <p>Bookmakers flag accounts that only take value. Blending typical punters&apos; behaviour can extend lifespan:</p>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li><strong className="text-slate-100">Mix in recreational bets:</strong> For every 3–4 value bets, place one bet at standard odds (e.g. match winner, favourite). Don&apos;t only bet when you spot edge.</li>
+                    <li><strong className="text-slate-100">Mix in recreational bets:</strong> For every 3â€“4 value bets, place one bet at standard odds (e.g. match winner, favourite). Don&apos;t only bet when you spot edge.</li>
                     <li><strong className="text-slate-100">Stick to popular markets:</strong> Premier League, Champions League, major events. Avoid obscure leagues unless you bet there regularly anyway.</li>
                     <li><strong className="text-slate-100">Bet at normal times:</strong> Weekends, before kick-off. Avoid only betting during sharp odds moves.</li>
                     <li><strong className="text-slate-100">Vary stakes:</strong> Use rounded amounts (10, 20, 25). Avoid odd decimals or constant max stakes.</li>
                     <li><strong className="text-slate-100">Use bet builders and accas occasionally:</strong> Popular with casual punters. Small acca or correlated builder now and then helps.</li>
                     <li><strong className="text-slate-100">Occasional in-play:</strong> Small random in-play bets mirror typical betting habits.</li>
                   </ul>
-                  <p>Also: Deposit regularly. Delay withdrawals 2–3 weeks. Avoid patterns (same time, same league only). These tactics extend lifespan by 20–40%, not indefinitely. Restrictions are inevitable; plan rollover to new accounts.</p>
+                  <p>Also: Deposit regularly. Delay withdrawals 2â€“3 weeks. Avoid patterns (same time, same league only). These tactics extend lifespan by 20â€“40%, not indefinitely. Restrictions are inevitable; plan rollover to new accounts.</p>
                 </div>
               </div>
             </details>
@@ -532,10 +529,10 @@ export default function BookmakersPage() {
           <div className="text-slate-300 text-sm leading-relaxed space-y-4">
             <p><strong className="text-slate-100">Account opening sequence:</strong></p>
             <ol className="list-decimal pl-6 space-y-2">
-              <li>Open all eight accounts — welcome offers alone provide £250+ value</li>
+              <li>Open all eight accounts â€” welcome offers alone provide Â£250+ value</li>
               <li>Prioritise by market focus: Props primary: BetVictor, Midnite, William Hill, Coral, Ladbrokes, Bwin. Tennis primary: BetVictor, William Hill. Mixed: all eight for line shopping</li>
-              <li>Always open Coral AND Ladbrokes — never one without the other</li>
-              <li>Use BetMGM for line shopping — independent pricing often differs from other UK operators</li>
+              <li>Always open Coral AND Ladbrokes â€” never one without the other</li>
+              <li>Use BetMGM for line shopping â€” independent pricing often differs from other UK operators</li>
             </ol>
             <p><strong className="text-slate-100">Line shopping workflow:</strong> Before placing any bet: check odds across all eight, identify best price, place at bookmaker offering highest odds, track which books consistently offer best price, adjust priority accordingly.</p>
             <p>Over time, accounts will restrict at different rates. By opening all eight, you extend total operational window to 18-24 months before severe restrictions across all accounts. See <Link href="/track-record" className="text-emerald-400 hover:text-emerald-300 underline">Track Record</Link> for our performance context.</p>
@@ -553,13 +550,13 @@ export default function BookmakersPage() {
               </summary>
               <div className="px-6 md:px-8 pb-4 pt-0">
                 <dl className="text-slate-300 text-sm space-y-3">
-                  <div><dt className="font-semibold text-emerald-400/90">Gubbing / Getting Gubbed</dt><dd>When a bookmaker restricts your account to minimal stake levels (£5-10 max). The inevitable end-point for consistent winners on recreational bookmakers.</dd></div>
+                  <div><dt className="font-semibold text-emerald-400/90">Gubbing / Getting Gubbed</dt><dd>When a bookmaker restricts your account to minimal stake levels (Â£5-10 max). The inevitable end-point for consistent winners on recreational bookmakers.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Mug Punter / Recreational Bettor</dt><dd>Casual bettor who uses promotions, backs favourites in accumulators. Bookmakers&apos; ideal customer.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Sharp / Sharp Bettor</dt><dd>Professional or highly profitable bettor with analytical edge. If you&apos;re consistently sharp, you&apos;ll get gubbed.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Stake / Staking</dt><dd>The amount wagered. &quot;Max stake&quot; = maximum bookmaker allows; decreases as you win.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Void / Voided Bet</dt><dd>Bet cancelled with stake returned. Common in player props when player doesn&apos;t start.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Value Bet / +EV</dt><dd>Bet where your calculated probability exceeds the bookmaker&apos;s implied probability. Long-term profitability comes from consistent +EV.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">ROI</dt><dd>(Total Profit ÷ Total Staked) × 100. e.g. +20% = £20 profit per £100 wagered.</dd></div>
+                  <div><dt className="font-semibold text-emerald-400/90">ROI</dt><dd>(Total Profit Ã· Total Staked) Ã— 100. e.g. +20% = Â£20 profit per Â£100 wagered.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Units</dt><dd>Standardised bet sizing. 1 unit = your standard stake (typically 1-2% of bankroll).</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Closing Line Value (CLV)</dt><dd>Comparing odds you took vs final odds before event. Positive CLV indicates sharp betting.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Bankroll</dt><dd>Total funds dedicated to betting. Recommended: 40-50 units minimum.</dd></div>
@@ -593,7 +590,7 @@ export default function BookmakersPage() {
                   <div><dt className="font-semibold text-emerald-400/90">Free Bet / Bonus Bet</dt><dd>Stake provided by bookmaker. &quot;Stake Not Returned&quot; (SNR) = winnings exclude original stake.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Cash Out</dt><dd>Settling bet before event finishes at current odds. Usually -EV but can help account profile.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">In-Play / Live Betting</dt><dd>Betting after event starts. Odds update in real-time.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Acca / Accumulator</dt><dd>Multiple bets combined; all must win. Margins compound — we don&apos;t recommend accas.</dd></div>
+                  <div><dt className="font-semibold text-emerald-400/90">Acca / Accumulator</dt><dd>Multiple bets combined; all must win. Margins compound â€” we don&apos;t recommend accas.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Each-Way (E/W)</dt><dd>Win + place bet. Common in horse racing.</dd></div>
                 </dl>
               </div>
@@ -605,14 +602,14 @@ export default function BookmakersPage() {
               </summary>
               <div className="px-6 md:px-8 pb-4 pt-0">
                 <dl className="text-slate-300 text-sm space-y-3">
-                  <div><dt className="font-semibold text-emerald-400/90">Ton / Century</dt><dd>£100 stake.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Pony</dt><dd>£25. Score = £20. Monkey = £500. Grand / K = £1,000.</dd></div>
+                  <div><dt className="font-semibold text-emerald-400/90">Ton / Century</dt><dd>Â£100 stake.</dd></div>
+                  <div><dt className="font-semibold text-emerald-400/90">Pony</dt><dd>Â£25. Score = Â£20. Monkey = Â£500. Grand / K = Â£1,000.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Drifting</dt><dd>Odds increasing (getting longer).</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Shortening / Steaming In</dt><dd>Odds decreasing; usually sharp money.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Nap</dt><dd>Best bet of the day.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Odds On / Odds Against</dt><dd>Odds &lt;2.00 (favourite) vs &gt;2.00 (underdog).</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Rag / Jolly</dt><dd>Outsider vs favourite.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Certs / Banker</dt><dd>Perceived sure thing. No such thing — red flag if claimed.</dd></div>
+                  <div><dt className="font-semibold text-emerald-400/90">Certs / Banker</dt><dd>Perceived sure thing. No such thing â€” red flag if claimed.</dd></div>
                 </dl>
               </div>
             </details>
@@ -624,10 +621,10 @@ export default function BookmakersPage() {
               <div className="px-6 md:px-8 pb-4 pt-0">
                 <dl className="text-slate-300 text-sm space-y-3">
                   <div><dt className="font-semibold text-emerald-400/90">Bookmaker Margin / Overround</dt><dd>Sum of implied probabilities exceeds 100%. e.g. 105% = 5% margin.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Implied vs True Probability</dt><dd>1 ÷ decimal odds = implied. True probability from your analysis. When true &gt; implied = value.</dd></div>
+                  <div><dt className="font-semibold text-emerald-400/90">Implied vs True Probability</dt><dd>1 Ã· decimal odds = implied. True probability from your analysis. When true &gt; implied = value.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Expected Value (EV)</dt><dd>Average result if bet repeated. Positive EV = profitable long-term.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Variance / Sample Size</dt><dd>Short-term deviation from expected. Need 100+ bets, preferably 200+, for edge to show.</dd></div>
-                  <div><dt className="font-semibold text-emerald-400/90">Kelly Criterion</dt><dd>Staking formula. Most use fractional Kelly (¼ or ½).</dd></div>
+                  <div><dt className="font-semibold text-emerald-400/90">Kelly Criterion</dt><dd>Staking formula. Most use fractional Kelly (Â¼ or Â½).</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Line Shopping</dt><dd>Comparing odds across bookmakers. Essential for maximising edge.</dd></div>
                   <div><dt className="font-semibold text-emerald-400/90">Steam Move / RLM</dt><dd>Sudden sharp odds movement; or odds moving opposite to public %.</dd></div>
                 </dl>
@@ -713,3 +710,4 @@ export default function BookmakersPage() {
     </div>
   );
 }
+

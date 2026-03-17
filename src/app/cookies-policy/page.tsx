@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import Footer from "@/components/Footer";
 import { BASE_URL } from "@/lib/config";
+import PageHomeLink from "@/components/PageHomeLink";
 
 export const metadata: Metadata = {
   title: "Cookies Policy",
@@ -18,13 +18,7 @@ export default function CookiesPolicyPage() {
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <section className="pt-6 pb-10 md:pt-6 md:pb-12 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8"
-          >
-            <Image src="/favicon.png" alt="" width={40} height={40} className="h-10 w-10 object-contain shrink-0" />
-            <span>← Home</span>
-          </Link>
+          <PageHomeLink className="mb-8" />
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-8">Cookies Policy</h1>
           <div className="prose prose-invert prose-slate max-w-none text-slate-300 space-y-4 text-sm leading-relaxed">
             <p>
@@ -57,3 +51,4 @@ export default function CookiesPolicyPage() {
     </div>
   );
 }
+

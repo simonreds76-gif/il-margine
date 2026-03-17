@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import Footer from "@/components/Footer";
 import { BASE_URL } from "@/lib/config";
+import PageHomeLink from "@/components/PageHomeLink";
 
 export const metadata: Metadata = {
   title: "Closing Line Value (CLV): The Only Metric That Matters | Il Margine",
@@ -43,7 +43,7 @@ const TOC_ITEMS = [
   { id: "beat-closing", label: "How to Beat the Closing Line" },
   { id: "tracking", label: "Tracking Your CLV" },
   { id: "mistakes", label: "Common CLV Mistakes" },
-  { id: "practice", label: "CLV in Practice — Player Props & Tennis" },
+  { id: "practice", label: "CLV in Practice â€” Player Props & Tennis" },
   { id: "conclusion", label: "Conclusion" },
 ];
 
@@ -58,19 +58,7 @@ export default function ClosingLineValuePage() {
       {/* Header */}
       <section className="pt-6 pb-8 md:pt-6 md:pb-10 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-6"
-          >
-            <Image
-              src="/favicon.png"
-              alt=""
-              width={40}
-              height={40}
-              className="h-10 w-10 object-contain shrink-0"
-            />
-            <span>← Home</span>
-          </Link>
+          <PageHomeLink className="mb-6" />
           <nav className="flex items-center gap-2 text-sm text-slate-500 mb-6">
             <Link href="/" className="hover:text-slate-300">
               Home
@@ -130,13 +118,13 @@ export default function ClosingLineValuePage() {
                 <strong className="text-slate-200">Closing Line Value (CLV)</strong>.
               </p>
               <p className="mb-4">
-                CLV measures whether you&apos;re getting better odds than the final market price before an event starts. If you consistently beat the closing line — even when your bets lose — you&apos;re a winning bettor. If you consistently get worse odds than the closing line — even when your bets win — you&apos;re a losing bettor who&apos;s temporarily lucky.
+                CLV measures whether you&apos;re getting better odds than the final market price before an event starts. If you consistently beat the closing line â€” even when your bets lose â€” you&apos;re a winning bettor. If you consistently get worse odds than the closing line â€” even when your bets win â€” you&apos;re a losing bettor who&apos;s temporarily lucky.
               </p>
               <p className="mb-4">
                 This isn&apos;t theory. Academic research and professional betting data prove it: bettors who achieve positive CLV over large sample sizes are profitable. Those who don&apos;t are not. The correlation is that strong.
               </p>
               <p className="mb-4">
-                In this guide, we&apos;ll explain what CLV is, why the closing line represents the market&apos;s most accurate assessment, how to calculate and track your CLV, and most importantly — how to consistently beat it.
+                In this guide, we&apos;ll explain what CLV is, why the closing line represents the market&apos;s most accurate assessment, how to calculate and track your CLV, and most importantly â€” how to consistently beat it.
               </p>
             </section>
 
@@ -169,13 +157,13 @@ export default function ClosingLineValuePage() {
                 <strong className="text-slate-200">Positive CLV (+CLV):</strong> Your odds were better than the closing line. You beat the market.
               </p>
               <p className="mb-4">
-                <strong className="text-slate-200">Example:</strong> Bet Djokovic -3.5 games at 1.85 → closes at 1.75. Result: +CLV (you got better odds)
+                <strong className="text-slate-200">Example:</strong> Bet Djokovic -3.5 games at 1.85 â†’ closes at 1.75. Result: +CLV (you got better odds)
               </p>
               <p className="mb-4">
                 <strong className="text-slate-200">Negative CLV (-CLV):</strong> Your odds were worse than the closing line. The market moved against you.
               </p>
               <p className="mb-4">
-                <strong className="text-slate-200">Example:</strong> Bet Liverpool -1 at 2.10 → closes at 2.30. Result: -CLV (you took a worse number)
+                <strong className="text-slate-200">Example:</strong> Bet Liverpool -1 at 2.10 â†’ closes at 2.30. Result: -CLV (you took a worse number)
               </p>
 
               <h3 className="text-xl font-semibold text-slate-100 mb-4 mt-8">
@@ -191,7 +179,7 @@ export default function ClosingLineValuePage() {
                 <li><strong className="text-slate-200">Bookmaker adjustments complete:</strong> Operators have balanced their books and sharpened their numbers</li>
               </ol>
               <p className="mb-4">
-                The closing line isn&apos;t perfect — no forecast is — but it&apos;s the most accurate publicly available probability estimate. Decades of data confirm this: closing lines predict outcomes better than opening lines, media predictions, or betting models.
+                The closing line isn&apos;t perfect â€” no forecast is â€” but it&apos;s the most accurate publicly available probability estimate. Decades of data confirm this: closing lines predict outcomes better than opening lines, media predictions, or betting models.
               </p>
             </section>
 
@@ -238,11 +226,11 @@ export default function ClosingLineValuePage() {
                   CLV Quick Summary
                 </h4>
                 <ul className="text-slate-300 text-sm space-y-2 list-none">
-                  <li>• Measures if you beat the final market price (closing line)</li>
-                  <li>• Positive CLV = winning bettor (even when losing short-term)</li>
-                  <li>• Negative CLV = losing bettor (even when winning short-term)</li>
-                  <li>• Track every bet against Pinnacle&apos;s closing line</li>
-                  <li>• Requires 100+ bets for meaningful analysis</li>
+                  <li>â€¢ Measures if you beat the final market price (closing line)</li>
+                  <li>â€¢ Positive CLV = winning bettor (even when losing short-term)</li>
+                  <li>â€¢ Negative CLV = losing bettor (even when winning short-term)</li>
+                  <li>â€¢ Track every bet against Pinnacle&apos;s closing line</li>
+                  <li>â€¢ Requires 100+ bets for meaningful analysis</li>
                 </ul>
               </div>
 
@@ -280,10 +268,10 @@ export default function ClosingLineValuePage() {
                   Example: CLV Calculation
                 </h4>
                 <p className="text-slate-300 mb-2">
-                  <strong className="text-slate-200">Step 1:</strong> Your odds 2.10 → Implied probability = 1 / 2.10 = 47.6%
+                  <strong className="text-slate-200">Step 1:</strong> Your odds 2.10 â†’ Implied probability = 1 / 2.10 = 47.6%
                 </p>
                 <p className="text-slate-300 mb-2">
-                  <strong className="text-slate-200">Step 2:</strong> Closing odds 1.95 → Implied probability = 1 / 1.95 = 51.3%
+                  <strong className="text-slate-200">Step 2:</strong> Closing odds 1.95 â†’ Implied probability = 1 / 1.95 = 51.3%
                 </p>
                 <p className="text-slate-300 mb-0">
                   <strong className="text-slate-200">Step 3:</strong> CLV = Closing probability - Your probability = 51.3% - 47.6% ={" "}
@@ -363,7 +351,7 @@ export default function ClosingLineValuePage() {
                 Strategy 2: Line Shopping (Non-Negotiable)
               </h3>
               <p className="mb-4">
-                Having accounts at multiple bookmakers is essential. Bookmaker A: Liverpool -1 at 2.05. Bookmaker B: Liverpool -1 at 2.15. Closing line: 2.10. Bet at B → +CLV. Bet at A → -CLV. Maintain accounts at 4-6 bookmakers for football, 3-4 for tennis.
+                Having accounts at multiple bookmakers is essential. Bookmaker A: Liverpool -1 at 2.05. Bookmaker B: Liverpool -1 at 2.15. Closing line: 2.10. Bet at B â†’ +CLV. Bet at A â†’ -CLV. Maintain accounts at 4-6 bookmakers for football, 3-4 for tennis.
               </p>
 
               <h3 className="text-xl font-semibold text-slate-100 mb-4 mt-8">
@@ -387,7 +375,7 @@ export default function ClosingLineValuePage() {
                 Strategy 5: React to News Faster
               </h3>
               <p className="mb-4">
-                Injury announcements, lineup changes, and weather updates move lines. If you process this information faster than bookmakers adjust, you secure CLV. Example: key defender ruled out 2 hours before match — bet opposition player props before bookmakers tighten lines. Requirement: be first.
+                Injury announcements, lineup changes, and weather updates move lines. If you process this information faster than bookmakers adjust, you secure CLV. Example: key defender ruled out 2 hours before match â€” bet opposition player props before bookmakers tighten lines. Requirement: be first.
               </p>
 
               <h3 className="text-xl font-semibold text-slate-100 mb-4 mt-8">
@@ -449,10 +437,10 @@ export default function ClosingLineValuePage() {
 
               <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-6 my-6">
                 <h4 className="text-amber-400 font-semibold mb-3">
-                  ⚠️ The Winning Bettor Trap
+                  âš ï¸ The Winning Bettor Trap
                 </h4>
                 <p className="text-slate-300 mb-0">
-                  Short-term profits with negative CLV are borrowed time. If your average CLV is -2% over 100+ bets but you&apos;re still up, you&apos;re lucky — not skilled. The market is telling you to fix your process before variance catches up.
+                  Short-term profits with negative CLV are borrowed time. If your average CLV is -2% over 100+ bets but you&apos;re still up, you&apos;re lucky â€” not skilled. The market is telling you to fix your process before variance catches up.
                 </p>
               </div>
             </section>
@@ -460,7 +448,7 @@ export default function ClosingLineValuePage() {
             {/* Section 8: Practice */}
             <section id="practice">
               <h2 className="text-2xl sm:text-3xl font-semibold text-slate-100 mb-6 mt-12">
-                CLV in Practice — Player Props & Tennis
+                CLV in Practice â€” Player Props & Tennis
               </h2>
 
               <h3 className="text-xl font-semibold text-slate-100 mb-4 mt-8">
@@ -492,10 +480,10 @@ export default function ClosingLineValuePage() {
                 <strong className="text-slate-200">Why lower-tier tennis offers better CLV:</strong> Less media coverage means slower information incorporation; lower betting volume reduces market sharpness; bookmakers allocate fewer resources to pricing these matches; surface-specific performance often underpriced at smaller events.
               </p>
               <p className="mb-4">
-                <strong className="text-slate-200">General principle:</strong> The less popular the market, the more opportunity to beat the closing line — if you have an analytical edge.
+                <strong className="text-slate-200">General principle:</strong> The less popular the market, the more opportunity to beat the closing line â€” if you have an analytical edge.
               </p>
               <p className="mb-4">
-                At Il Margine, CLV tracking is central to our process. We measure every bet against Pinnacle&apos;s closing line to verify our analytical approach is producing genuine value, not just short-term luck. This discipline — caring more about process than immediate results — is what separates systematic betting from gambling.
+                At Il Margine, CLV tracking is central to our process. We measure every bet against Pinnacle&apos;s closing line to verify our analytical approach is producing genuine value, not just short-term luck. This discipline â€” caring more about process than immediate results â€” is what separates systematic betting from gambling.
               </p>
             </section>
 
@@ -508,7 +496,7 @@ export default function ClosingLineValuePage() {
                 Closing Line Value is the only betting metric that matters before sample size proves profitability. Win rate lies. ROI fluctuates. Short-term results mislead. But CLV tells the truth: are you beating the market&apos;s best estimate?
               </p>
               <p className="mb-4">
-                If yes, you&apos;re a winning bettor — even when variance says otherwise. If no, you&apos;re a losing bettor — even when luck makes it seem otherwise. The mathematics are unforgiving: consistently beat the closing line and you will profit.
+                If yes, you&apos;re a winning bettor â€” even when variance says otherwise. If no, you&apos;re a losing bettor â€” even when luck makes it seem otherwise. The mathematics are unforgiving: consistently beat the closing line and you will profit.
               </p>
               <p className="mb-4 font-semibold text-slate-200">
                 Track your CLV religiously. Bet when you have an edge. Ignore short-term results. Trust the process.
@@ -576,3 +564,4 @@ export default function ClosingLineValuePage() {
     </div>
   );
 }
+

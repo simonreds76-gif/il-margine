@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { promises as fs } from "fs";
 import path from "path";
 import { notFound } from "next/navigation";
@@ -28,12 +28,31 @@ type FixtureLineup = {
   awayPlayers: LineupPlayer[];
 };
 
+type ShadowSummary = {
+  signals: number;
+  settled: number;
+  open: number;
+  wins: number;
+  losses: number;
+  voids: number;
+  roi: number;
+  winRate: number;
+  pnlUnits: number;
+};
+
 export const dynamic = "force-dynamic";
 
 const MODEL_MONITOR_PUBLIC =
   process.env.MODEL_MONITOR_PUBLIC === "1" ||
   process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
 const ROTOWIRE_LINEUPS_URL = "https://www.rotowire.com/soccer/lineups.php?league=SERI";
+const SHADOW_SIGNAL_FILES = [
+  "data/goalscorer/goalscorer-shadow-signals.csv",
+  "data/goalscorer/epl-shadow-signals.csv",
+  "data/goalscorer/la-liga-shadow-signals.csv",
+  "data/goalscorer/bundesliga-shadow-signals.csv",
+  "data/goalscorer/ligue-1-shadow-signals.csv",
+];
 const TEAM_ALIASES: Record<string, string> = {
   "ac milan": "milan",
   milan: "milan",
@@ -122,10 +141,10 @@ function decodeHtml(text: string): string {
     .replace(/&rsquo;/g, "'")
     .replace(/&ldquo;/g, '"')
     .replace(/&rdquo;/g, '"')
-    .replace(/&uuml;/g, "ü")
-    .replace(/&ouml;/g, "ö")
-    .replace(/&eacute;/g, "é")
-    .replace(/&Eacute;/g, "É");
+    .replace(/&uuml;/g, "Ã¼")
+    .replace(/&ouml;/g, "Ã¶")
+    .replace(/&eacute;/g, "Ã©")
+    .replace(/&Eacute;/g, "Ã‰");
 }
 
 async function readLocalFile(relPath: string): Promise<string | null> {
@@ -166,6 +185,13 @@ function parseFloatMaybe(value?: string): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
+function parseIntMaybe(value?: string): number | undefined {
+  if (!value) return undefined;
+  const cleaned = value.replace(/,/g, "").trim();
+  const n = Number.parseInt(cleaned, 10);
+  return Number.isFinite(n) ? n : undefined;
+}
+
 function formatPct(value?: number, digits = 1): string {
   if (value == null || Number.isNaN(value)) return "n/a";
   return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}%`;
@@ -179,6 +205,10 @@ function formatDecimal(value?: number, digits = 2): string {
 function formatSigned(value?: number, digits = 2): string {
   if (value == null || Number.isNaN(value)) return "n/a";
   return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}`;
+}
+
+function formatWLV(wins: number, losses: number, voids: number): string {
+  return `${wins}/${losses}/${voids}`;
 }
 
 function toneForAction(action?: string): string {
@@ -395,6 +425,47 @@ function resolveLineupRows(lineupPlayers: LineupPlayer[], teamRows: CsvRow[]): A
   });
 }
 
+function parseSummaryMetrics(text: string | null): Record<string, string> {
+  if (!text) return {};
+  const metrics: Record<string, string> = {};
+  for (const rawLine of text.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!line || /^=+$/.test(line)) continue;
+    const match = line.match(/^(.+?)\s{2,}(.+)$/);
+    if (!match) continue;
+    metrics[match[1].trim()] = match[2].trim();
+  }
+  return metrics;
+}
+
+function isSettledShadowRow(row: CsvRow): boolean {
+  const value = (row.settled ?? "").trim().toLowerCase();
+  return value === "1" || value === "true" || value === "yes" || value === "settled";
+}
+
+function computeShadowSummary(rows: CsvRow[]): ShadowSummary {
+  const settled = rows.filter(isSettledShadowRow);
+  const wins = settled.filter((row) => (row.bet_outcome ?? "").trim().toLowerCase() === "won").length;
+  const losses = settled.filter((row) => (row.bet_outcome ?? "").trim().toLowerCase() === "lost").length;
+  const voids = settled.filter((row) => {
+    const outcome = (row.bet_outcome ?? "").trim().toLowerCase();
+    return outcome === "void" || outcome === "push";
+  }).length;
+  const pnlUnits = settled.reduce((sum, row) => sum + (parseFloatMaybe(row.pnl_units) ?? 0), 0);
+
+  return {
+    signals: rows.length,
+    settled: settled.length,
+    open: Math.max(0, rows.length - settled.length),
+    wins,
+    losses,
+    voids,
+    roi: settled.length > 0 ? (pnlUnits / settled.length) * 100 : 0,
+    winRate: settled.length > 0 ? (wins / settled.length) * 100 : 0,
+    pnlUnits,
+  };
+}
+
 function Stat({
   label,
   value,
@@ -567,14 +638,28 @@ export default async function GoalscorerMonitorPage() {
     notFound();
   }
 
-  const [comparisonCsv, comparisonTxt, comparisonMtime, rotowireHtml] = await Promise.all([
+  const [comparisonCsv, comparisonTxt, comparisonMtime, rotowireHtml, shadowContents] = await Promise.all([
     readLocalFile("data/goalscorer/goalscorer-live-comparison.csv"),
     readLocalFile("data/goalscorer/goalscorer-live-comparison.txt"),
     readLocalMtime("data/goalscorer/goalscorer-live-comparison.csv"),
     fetchRotowireHtml(),
+    Promise.all(SHADOW_SIGNAL_FILES.map((file) => readLocalFile(file))),
   ]);
 
   const rows = comparisonCsv ? parseCsv(comparisonCsv) : [];
+  const shadowRows = shadowContents.flatMap((text) => (text ? parseCsv(text) : []));
+  const shadowSummary = computeShadowSummary(shadowRows);
+  const settledShadowRows = shadowRows
+    .filter(isSettledShadowRow)
+    .sort((left, right) => {
+      const leftTime = Date.parse(left.settled_at || left.kickoff || left.date || "");
+      const rightTime = Date.parse(right.settled_at || right.kickoff || right.date || "");
+      return rightTime - leftTime;
+    });
+  const openShadowRows = shadowRows
+    .filter((row) => !isSettledShadowRow(row))
+    .sort((left, right) => (parseFloatMaybe(right.ev) ?? 0) - (parseFloatMaybe(left.ev) ?? 0));
+  const liveSummary = parseSummaryMetrics(comparisonTxt);
   const publicRows = rows.filter((row) => {
     const action = row.public_action ?? "";
     const ev = parseFloatMaybe(row.ev) ?? 0;
@@ -597,6 +682,12 @@ export default async function GoalscorerMonitorPage() {
   const historyResolved = rows.filter((row) => row.resolver_source === "history").length;
   const rosterResolved = rows.filter((row) => row.resolver_source === "live_roster").length;
   const lowConfidence = rows.filter((row) => row.signal_confidence === "low").length;
+  const starterRows = rows.filter((row) => (row.lineup_state ?? "").toLowerCase() === "starter").length;
+  const benchRows = rows.filter((row) => (row.lineup_state ?? "").toLowerCase() === "bench").length;
+  const notInSquadRows = rows.filter((row) => (row.lineup_state ?? "").toLowerCase() === "not_in_squad").length;
+  const missingHistoryRows = parseIntMaybe(liveSummary["Missing Player History"]) ?? 0;
+  const fallbackRows = parseIntMaybe(liveSummary["Fallback Rows"]) ?? 0;
+  const fixturesWithConfirmedLineups = parseIntMaybe(liveSummary["Fixtures With Confirmed Lineups"]) ?? 0;
   const fixtures = buildFixtureGroups(rows);
   const lineupFixtures = parseRotowireLineups(rotowireHtml ?? "");
   const lineupMap = new Map(
@@ -640,21 +731,141 @@ export default async function GoalscorerMonitorPage() {
           </section>
         ) : null}
 
-        <div className="mb-8 grid gap-4 lg:grid-cols-6">
-          <Stat label="Matched Rows" value={`${matchedRows}`} />
-          <Stat label="Public High" value={`${highRows.length}`} tone="text-emerald-300" />
-          <Stat label="Public Caveats" value={`${caveatRows.length}`} tone="text-amber-300" />
-          <Stat label="Suppressed" value={`${suppressedRows.length}`} tone="text-slate-400" />
-          <Stat label="History Resolver" value={`${historyResolved}`} tone="text-emerald-300" />
-          <Stat label="Live Roster Resolver" value={`${rosterResolved}`} tone="text-amber-300" />
-        </div>
+        <section className="mb-8 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+          <div className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold text-slate-100">What this page is actually showing</h2>
+              <p className="mt-1 text-sm text-slate-400">
+                The top half is the latest live comparison run: every player we matched to bookmaker ATGS odds, plus the
+                rows that would be public-ready right now. The shadow tracker is separate and sits below as its own history.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <Stat label="Matched Prices" value={`${matchedRows}`} />
+              <Stat label="Current Public-Ready" value={`${highRows.length}`} tone="text-emerald-300" />
+              <Stat label="Current Caveats" value={`${caveatRows.length}`} tone="text-amber-300" />
+              <Stat label="Suppressed" value={`${suppressedRows.length}`} tone="text-slate-400" />
+              <Stat label="Starter Rows" value={`${starterRows}`} tone="text-emerald-300" />
+              <Stat label="Bench Rows" value={`${benchRows}`} tone="text-amber-300" />
+              <Stat label="Not In Squad" value={`${notInSquadRows}`} tone="text-rose-300" />
+              <Stat
+                label="Fixtures With Confirmed XI"
+                value={`${fixturesWithConfirmedLineups}`}
+                tone="text-slate-200"
+              />
+            </div>
+            <div className="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm leading-6 text-slate-300">
+              <div className="font-medium text-slate-100">Void policy</div>
+              <p className="mt-1 text-slate-400">
+                With the current confirmed-XI flow, a player who does not start is filtered out before a shadow pick is logged.
+                So this board does not treat non-starters as settled voids later. They simply never enter the historical file.
+              </p>
+            </div>
+          </div>
 
-        <div className="mb-8 grid gap-4 lg:grid-cols-4">
-          <Stat label="Average EV" value={formatPct((avgEv ?? 0) * 100, 1)} tone={avgEv != null && avgEv >= 0 ? "text-emerald-300" : "text-rose-300"} />
-          <Stat label="Low Confidence Rows" value={`${lowConfidence}`} tone="text-slate-400" />
-          <Stat label="Top Public EV" value={formatPct((parseFloatMaybe(publicRows[0]?.ev) ?? 0) * 100, 1)} tone={toneForAction(publicRows[0]?.public_action)} />
-          <Stat label="Top Public Fair Odds" value={formatDecimal(parseFloatMaybe(publicRows[0]?.model_fair_odds_atgs), 2)} />
-        </div>
+          <div className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold text-slate-100">Resolver quality</h2>
+              <p className="mt-1 text-sm text-slate-400">
+                These counts explain how the player row was matched before confidence is assigned. History-resolved rows are
+                cleaner. Live-roster rows are usable, but less proven.
+              </p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Stat label="Mapped By History" value={`${historyResolved}`} tone="text-emerald-300" />
+              <Stat label="Mapped By Live Roster" value={`${rosterResolved}`} tone="text-amber-300" />
+              <Stat label="Missing Player History" value={`${missingHistoryRows}`} tone="text-rose-300" />
+              <Stat label="Fallback Rows" value={`${fallbackRows}`} tone="text-slate-300" />
+              <Stat
+                label="Average EV"
+                value={formatPct((avgEv ?? 0) * 100, 1)}
+                tone={avgEv != null && avgEv >= 0 ? "text-emerald-300" : "text-rose-300"}
+              />
+              <Stat label="Low Confidence Rows" value={`${lowConfidence}`} tone="text-slate-400" />
+            </div>
+            <div className="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm leading-6 text-slate-400">
+              <div><span className="font-medium text-slate-200">History resolver:</span> matched directly to historical player logs.</div>
+              <div><span className="font-medium text-slate-200">Live roster resolver:</span> matched through the current lineup and roster layer when the clean historical match was weaker.</div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mb-8 rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
+          <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-slate-100">Shadow tracker history</h2>
+              <p className="mt-1 text-sm text-slate-400">
+                This is the actual historical record for public-ready goalscorer picks. Right now it is almost empty because
+                the tracker only logs high-confidence starters after the lineup rerun, and we have not built a settled sample yet.
+              </p>
+            </div>
+            <Link
+              href="/anytime-goalscorer"
+              className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300"
+            >
+              Public preview
+            </Link>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
+            <Stat label="Tracked Signals" value={`${shadowSummary.signals}`} />
+            <Stat label="Settled" value={`${shadowSummary.settled}`} />
+            <Stat label="Open" value={`${shadowSummary.open}`} tone="text-amber-300" />
+            <Stat label="W/L/V" value={formatWLV(shadowSummary.wins, shadowSummary.losses, shadowSummary.voids)} tone="text-slate-200" />
+            <Stat label="ROI" value={formatPct(shadowSummary.roi, 1)} tone={shadowSummary.roi >= 0 ? "text-emerald-300" : "text-rose-300"} />
+            <Stat label="P/L Units" value={formatSigned(shadowSummary.pnlUnits, 2)} tone={shadowSummary.pnlUnits >= 0 ? "text-emerald-300" : "text-rose-300"} />
+          </div>
+
+          <div className="mt-4 grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+            <div className="rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">What counts as public-high history</h3>
+              <p className="mt-3 text-sm leading-6 text-slate-400">
+                Only rows that pass the high-confidence filter and confirm as starters get written into the shadow tracker. So
+                this section is the real historical record for eventual public picks, not the whole comparison board.
+              </p>
+              <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/60 p-3 text-sm text-slate-300">
+                Win rate {formatPct(shadowSummary.winRate, 1)} | voids are typically zero because bench and not-in-squad rows are filtered before logging.
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">Latest tracked rows</h3>
+              {shadowRows.length === 0 ? (
+                <div className="mt-3 rounded-xl border border-slate-800/80 bg-slate-950/50 p-4 text-sm leading-6 text-slate-500">
+                  No goalscorer shadow signals have been logged yet. The live monitor can still show current public-ready rows,
+                  but there is no historical shadow sample to judge yet.
+                </div>
+              ) : (
+                <div className="mt-3 space-y-3">
+                  {openShadowRows.slice(0, 3).map((row) => (
+                    <div key={`open-${row.date}-${row.player}-${row.match}`} className="rounded-xl border border-emerald-500/15 bg-emerald-500/5 p-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="font-medium text-slate-100">{row.player}</div>
+                          <div className="text-sm text-slate-400">{row.match}</div>
+                        </div>
+                        <div className="text-sm font-medium text-emerald-300">EV {formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1)}</div>
+                      </div>
+                    </div>
+                  ))}
+                  {settledShadowRows.slice(0, 2).map((row) => (
+                    <div key={`settled-${row.date}-${row.player}-${row.match}`} className="rounded-xl border border-slate-800/80 bg-slate-950/50 p-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="font-medium text-slate-100">{row.player}</div>
+                          <div className="text-sm text-slate-400">{row.match}</div>
+                        </div>
+                        <div className={(row.bet_outcome ?? "").toLowerCase() === "won" ? "text-sm font-medium text-emerald-300" : "text-sm font-medium text-rose-300"}>
+                          {(row.bet_outcome ?? "open").toUpperCase()}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
 
         <section className="mb-8 rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
           <div className="mb-5 flex items-start justify-between gap-4">
@@ -673,7 +884,7 @@ export default async function GoalscorerMonitorPage() {
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <h3 className="text-lg font-semibold text-white">{fixture.homeTeam} vs {fixture.awayTeam}</h3>
-                    <p className="text-sm text-slate-400">{fixture.matchDate} · {fixture.bookmaker}</p>
+                    <p className="text-sm text-slate-400">{fixture.matchDate} | {fixture.bookmaker}</p>
                   </div>
                   <div className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs text-slate-300">
                     {fixture.homeRows.length + fixture.awayRows.length} matched player prices
@@ -715,8 +926,11 @@ export default async function GoalscorerMonitorPage() {
           <section className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
             <div className="mb-4 flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-lg font-semibold text-slate-100">High-confidence signals</h2>
-                <p className="mt-1 text-sm text-slate-400">History-resolved, model-backed, and above the minimum historical-minutes gate.</p>
+                <h2 className="text-lg font-semibold text-slate-100">Current public-ready rows</h2>
+                <p className="mt-1 text-sm text-slate-400">
+                  These are the live comparison rows that would qualify cleanly right now. They are not historical settled picks
+                  unless they also exist in the shadow tracker above.
+                </p>
               </div>
             </div>
             <div className="overflow-x-auto">
@@ -747,7 +961,7 @@ export default async function GoalscorerMonitorPage() {
                   ))}
                   {highRows.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-3 py-6 text-center text-slate-500">No high-confidence public signals yet.</td>
+                      <td colSpan={6} className="px-3 py-6 text-center text-slate-500">No clean public-ready rows in the latest run.</td>
                     </tr>
                   ) : null}
                 </tbody>
@@ -758,8 +972,10 @@ export default async function GoalscorerMonitorPage() {
           <section className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
             <div className="mb-4 flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-lg font-semibold text-slate-100">Caveated signals</h2>
-                <p className="mt-1 text-sm text-slate-400">Model-backed rows resolved via the live roster layer. Useful to inspect, not to expose cleanly yet.</p>
+                <h2 className="text-lg font-semibold text-slate-100">Current caveated rows</h2>
+                <p className="mt-1 text-sm text-slate-400">
+                  These still look interesting, but they lean on the live roster resolver rather than the cleaner historical match layer.
+                </p>
               </div>
             </div>
             <div className="space-y-3">
@@ -804,3 +1020,4 @@ export default async function GoalscorerMonitorPage() {
     </div>
   );
 }
+

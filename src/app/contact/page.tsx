@@ -1,8 +1,7 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import Image from "next/image";
+﻿import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import { BASE_URL } from "@/lib/config";
+import PageHomeLink from "@/components/PageHomeLink";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -35,13 +34,7 @@ export default function ContactPage() {
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <section className="pt-6 pb-10 md:pt-6 md:pb-12 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 mb-8"
-          >
-            <Image src="/favicon.png" alt="" width={40} height={40} className="h-10 w-10 object-contain shrink-0" />
-            <span>← Home</span>
-          </Link>
+          <PageHomeLink className="mb-8" />
 
           <div className="flex flex-col sm:flex-row sm:items-start gap-6 sm:gap-8 mb-10">
             <div className="w-16 h-16 sm:w-20 sm:h-20 shrink-0 rounded-xl bg-slate-800/60 border border-slate-700/50 flex items-center justify-center p-4">
@@ -91,3 +84,4 @@ export default function ContactPage() {
     </div>
   );
 }
+
