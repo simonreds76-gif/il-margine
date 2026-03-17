@@ -315,7 +315,7 @@ export default function BookmakersPage() {
         <section className="mb-10 md:mb-12">
           <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">BOOKMAKERS</span>
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-2">
-            Â£250+ in Welcome Offers
+            £250+ in Welcome Offers
           </h1>
           <p className="text-lg text-slate-300 max-w-2xl mb-4">
             Eight bookmakers. One strategy. Field tested for props and tennis. We bet here and we&apos;re honest about restrictions.
