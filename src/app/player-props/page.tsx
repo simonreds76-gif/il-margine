@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { supabase, Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
@@ -10,6 +9,7 @@ import MarketBadge from "@/components/MarketBadge";
 
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
+import PageHomeLink from "@/components/PageHomeLink";
 import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
 import { slugifyTip } from "@/lib/slugify";
 
@@ -221,43 +221,56 @@ export default function PlayerProps() {
       {/* Hero */}
       <section className="pt-6 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 mb-4">
-            <Link href="/" className="text-sm text-slate-500 hover:text-slate-300">Home</Link>
-            <span className="text-slate-600">/</span>
-            <span className="text-sm text-emerald-400">Player Props</span>
+          <div className="mb-6 flex flex-wrap items-center gap-3">
+            <PageHomeLink />
+            <span className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">Player Props</span>
           </div>
           
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">Football Player Props</h1>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">
+            Football Player <span className="text-emerald-400">Props</span>
+          </h1>
           <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
-            Individual player markets represent one of the most inefficient pricing areas in football betting. 
-            While bookmakers dedicate significant resources to match odds, player props receive far less attention.
+            Player props are one of the softest pricing areas in football. We focus on shots, tackles, fouls and cards
+            where market depth is thinner, limits are lower and mispriced lines show up more often than they do in match odds.
           </p>
 
-          <div className="flex flex-wrap gap-2 mb-6 sm:mb-8">
-            <span className="px-3 py-1.5 bg-slate-800/50 rounded text-xs font-mono text-slate-400 border border-slate-700/50">Shots</span>
-            <span className="px-3 py-1.5 bg-slate-800/50 rounded text-xs font-mono text-slate-400 border border-slate-700/50">Shots on Target</span>
-            <span className="px-3 py-1.5 bg-slate-800/50 rounded text-xs font-mono text-slate-400 border border-slate-700/50">Fouls</span>
-            <span className="px-3 py-1.5 bg-slate-800/50 rounded text-xs font-mono text-slate-400 border border-slate-700/50">Tackles</span>
-            <span className="px-3 py-1.5 bg-slate-800/50 rounded text-xs font-mono text-slate-400 border border-slate-700/50">Cards</span>
+          <div className="mt-6 flex flex-wrap gap-2">
+            <span className="rounded-full border border-slate-700/60 bg-slate-900/50 px-3 py-1.5 text-xs font-mono text-slate-400">Shots</span>
+            <span className="rounded-full border border-slate-700/60 bg-slate-900/50 px-3 py-1.5 text-xs font-mono text-slate-400">Shots on Target</span>
+            <span className="rounded-full border border-slate-700/60 bg-slate-900/50 px-3 py-1.5 text-xs font-mono text-slate-400">Fouls</span>
+            <span className="rounded-full border border-slate-700/60 bg-slate-900/50 px-3 py-1.5 text-xs font-mono text-slate-400">Tackles</span>
+            <span className="rounded-full border border-slate-700/60 bg-slate-900/50 px-3 py-1.5 text-xs font-mono text-slate-400">Cards</span>
           </div>
 
-          <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-6">
-            <h3 className="font-semibold mb-4 text-emerald-400">Why Player Props?</h3>
-            <div className="grid md:grid-cols-3 gap-6 text-sm text-slate-400">
-              <div>
-                <span className="text-slate-200 font-medium block mb-2">Market Inefficiency</span>
-                Bookmakers apply wider margins but their pricing models are far less sophisticated than match odds. 
-                Significant discrepancies exist between bookies.
+          <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-900/55 p-6 sm:p-7">
+            <div className="mb-5">
+              <div className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">Our methodology</div>
+              <h2 className="mt-2 text-xl sm:text-2xl font-semibold text-slate-100">How the edge is built</h2>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">01</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Softer markets</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  Player props usually carry wider margins, but the underlying models are less mature than match odds.
+                  That leaves more room for obvious disagreement between books.
+                </p>
               </div>
-              <div>
-                <span className="text-slate-200 font-medium block mb-2">Lower Limits, Higher Edge</span>
-                Stakes are capped lower than match betting. But edges are substantially larger. 
-                +25% ROI on capped stakes beats +2% ROI on unlimited stakes.
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">02</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Role and matchup first</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  We care about role, volume and tactical matchup. A shots line means one thing for a pressing winger
+                  and something very different for a full-back.
+                </p>
               </div>
-              <div>
-                <span className="text-slate-200 font-medium block mb-2">Data-Driven Selection</span>
-                Every pick is backed by statistical analysis: player performance, 
-                opponent metrics, tactical matchups. Pure numbers.
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">03</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Price before hype</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  Bigger edges matter more than bigger names. The goal is to find the wrong line, not to chase the most
+                  obvious player on the slate.
+                </p>
               </div>
             </div>
           </div>
@@ -326,7 +339,7 @@ export default function PlayerProps() {
         </div>
       </section>
 
-      {/* Active Picks – id for deep link from homepage */}
+      {/* Active Picks - id for deep link from homepage */}
       <section id="picks" className="py-12 md:py-16 border-b border-slate-800/50 scroll-mt-6">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-6">
@@ -336,7 +349,7 @@ export default function PlayerProps() {
             </div>
             <span className="text-xs text-slate-500 hidden sm:block">Updated in real-time on site</span>
           </div>
-          <p className="text-slate-500 text-xs mb-6">Stake in units (1u = your standard stake). We typically recommend 0.5u–2u per pick.</p>
+          <p className="text-slate-500 text-xs mb-6">Stake in units (1u = your standard stake). We typically recommend 0.5u-2u per pick.</p>
 
           {loading ? (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
@@ -406,7 +419,7 @@ export default function PlayerProps() {
                           {pick.event}
                         </Link>
                         <div className="text-sm text-slate-400 mb-1">
-                          {pick.player && <span>{pick.player} • </span>}
+                          {pick.player && <span>{pick.player} | </span>}
                           {pick.selection}
                         </div>
                       </div>
@@ -530,7 +543,7 @@ export default function PlayerProps() {
                           {result.event}
                         </Link>
                         <div className="text-sm text-slate-400 mb-1">
-                          {result.player && <span>{result.player} • </span>}
+                          {result.player && <span>{result.player} | </span>}
                           {result.selection}
                         </div>
                       </div>

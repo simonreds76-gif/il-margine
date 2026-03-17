@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { supabase, Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import MarketBadge from "@/components/MarketBadge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
+import PageHomeLink from "@/components/PageHomeLink";
 import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
 import { slugifyTip } from "@/lib/slugify";
 
@@ -221,32 +221,49 @@ export default function TennisTips() {
       {/* Hero */}
       <section className="pt-6 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 mb-4">
-            <Link href="/" className="text-sm text-slate-500 hover:text-slate-300">Home</Link>
-            <span className="text-slate-600">/</span>
-            <span className="text-sm text-emerald-400">Tennis Tips</span>
+          <div className="mb-6 flex flex-wrap items-center gap-3">
+            <PageHomeLink />
+            <span className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">Tennis Tips</span>
           </div>
           
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">Tennis Betting Tips</h1>
+          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">
+            Tennis Betting <span className="text-emerald-400">Tips</span>
+          </h1>
           <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
-            Daily tennis betting tips covering ATP, Challenger and Grand Slam matches, with analytical previews and disciplined staking.
+            Daily ATP, Challenger and Grand Slam picks built around price, not noise. We focus on market mistakes,
+            disciplined staking and a clear split between what is live now and what has already settled.
           </p>
 
           {/* Methodology */}
-          <div className="bg-slate-900/50 rounded-lg border border-slate-800 p-6 mb-8 mt-8">
-            <h3 className="font-semibold mb-4 text-emerald-400">Our Methodology</h3>
-            <div className="grid md:grid-cols-3 gap-6 text-sm text-slate-400">
-              <div>
-                <span className="text-slate-200 font-medium block mb-2">Surface Specific Modeling</span>
-                Our proprietary model incorporates surface specific ELO ratings, historical serve and return point win percentages over the past 12 months, and fatigue factors. We identify instances where bookmakers systematically underweight surface specific statistical edges, particularly on hard courts versus clay, where performance differentials are substantial yet frequently mispriced.
+          <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-900/55 p-6 sm:p-7">
+            <div className="mb-5">
+              <div className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">Our methodology</div>
+              <h2 className="mt-2 text-xl sm:text-2xl font-semibold text-slate-100">How the edge is built</h2>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">01</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Surface over generic form</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  We weight surface-specific strength, recent serve and return form, and fatigue so hard-court pricing
+                  is not treated like clay.
+                </p>
               </div>
-              <div>
-                <span className="text-slate-200 font-medium block mb-2">Tournament Tier Focus</span>
-                ATP 250 and 500 events, along with Challenger tournaments, exhibit thinner market depth where pricing inefficiencies persist longer than Grand Slams. Our analytical framework accounts for tournament context and market depth when evaluating value propositions.
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">02</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Tournament context matters</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  ATP 250s, 500s and Challenger events often stay softer for longer than Slams, so tier and market
+                  depth are part of the price.
+                </p>
               </div>
-              <div>
-                <span className="text-slate-200 font-medium block mb-2">Line Value, Not Outcomes</span>
-                We do not predict match outcomes. Rather, we identify instances where bookmakers have mispriced game handicaps and totals through systematic analysis of our proprietary modeling framework, which incorporates multiple variables we cannot disclose publicly.
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">03</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Line value before outcomes</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  We are looking for bad numbers, not pretending to predict every winner. That is where moneylines,
+                  handicaps and totals become interesting.
+                </p>
               </div>
             </div>
           </div>
@@ -324,8 +341,10 @@ export default function TennisTips() {
               <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Current Picks</h2>
             </div>
           </div>
-          <p className="text-slate-500 text-xs mb-6">Stake in units (1u = your standard stake). We typically recommend 0.5u–2u per pick.</p>
-          <p className="text-slate-500 text-xs mb-6 italic"><strong className="text-slate-400 not-italic">ML (Moneyline):</strong> A bet on the outright winner of the match. The term comes from American sports betting, where the “money line” originally referred to the odds shown for each team; over time it became shorthand for straight win/loss bets without handicaps or spreads.</p>
+          <p className="text-slate-500 text-xs mb-3">Stake in units (1u = your standard stake). We typically recommend 0.5u-2u per pick.</p>
+          <p className="text-slate-500 text-xs mb-6 italic">
+            <strong className="text-slate-400 not-italic">ML (Moneyline):</strong> A straight win bet with no handicap attached.
+          </p>
 
           {loading ? (
             <div className="bg-slate-900/30 rounded-lg border border-slate-800 p-8 text-center">
@@ -361,7 +380,7 @@ export default function TennisTips() {
                             {pick.event}
                           </Link>
                         </td>
-                        <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{pick.player || "–"}</td>
+                        <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{pick.player || "-"}</td>
                         <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{pick.selection}</td>
                         <td className="px-4 py-4 text-center border-r border-slate-800/50">
                           <span className="font-mono text-slate-200">{formatOdds(pick.odds)}</span>
@@ -395,7 +414,7 @@ export default function TennisTips() {
                           {pick.event}
                         </Link>
                         <div className="text-sm text-slate-400">
-                          {pick.player && <span>{pick.player} · </span>}
+                          {pick.player && <span>{pick.player} | </span>}
                           {pick.selection}
                         </div>
                       </div>
@@ -477,7 +496,7 @@ export default function TennisTips() {
                             {result.event}
                           </Link>
                         </td>
-                        <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{result.player || "–"}</td>
+                        <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{result.player || "-"}</td>
                         <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{result.selection}</td>
                         <td className="px-4 py-4 text-center border-r border-slate-800/50">
                           <span className="font-mono text-slate-200">{formatOdds(result.odds)}</span>
@@ -514,7 +533,7 @@ export default function TennisTips() {
                           {result.event}
                         </Link>
                         <div className="text-sm text-slate-400">
-                          {result.player && <span>{result.player} · </span>}
+                          {result.player && <span>{result.player} | </span>}
                           {result.selection}
                         </div>
                       </div>

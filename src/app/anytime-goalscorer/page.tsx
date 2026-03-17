@@ -555,7 +555,7 @@ export default async function AnytimeGoalscorerPage() {
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
                 <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Coverage</div>
-                <div className="mt-2 text-xl font-semibold text-white">4 leagues</div>
+                <div className="mt-2 text-xl font-semibold text-white">{LEAGUE_SOURCES.length} leagues</div>
                 <div className="mt-1 text-xs text-neutral-500">Serie A, EPL, La Liga, Bundesliga, Ligue 1</div>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
