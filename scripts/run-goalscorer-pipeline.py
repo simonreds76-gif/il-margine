@@ -80,6 +80,17 @@ LEAGUE_CONFIGS = {
         "shadow_summary": "data/goalscorer/bundesliga-shadow-performance.txt",
         "live_out_dir": "data/goalscorer/bundesliga",
     },
+    "ligue-1": {
+        "label": "Ligue 1",
+        "data_glob": "data/goalscorer/ligue-1-player-match-logs-*.csv",
+        "penalty_hierarchy": "data/goalscorer/ligue-1-penalty-takers.json",
+        "lineups": "data/goalscorer/ligue-1-confirmed-lineups.json",
+        "player_log": "data/goalscorer/ligue-1-player-match-logs-2025-2026.csv",
+        "league_id": 53,
+        "shadow_signals": "data/goalscorer/ligue-1-shadow-signals.csv",
+        "shadow_summary": "data/goalscorer/ligue-1-shadow-performance.txt",
+        "live_out_dir": "data/goalscorer/ligue-1",
+    },
 }
 
 
@@ -114,6 +125,7 @@ def main() -> None:
     parser.add_argument("--odds-api-bookmakers", default="Bet365,William Hill", help="Comma-separated bookmakers for odds-api.io")
     parser.add_argument("--fetch-pinnacle", action="store_true", help="Fetch live Pinnacle ATGS prices into the inbox first")
     parser.add_argument("--fetch-lineups", action="store_true", help="Fetch confirmed league lineups from FotMob before live compare")
+    parser.add_argument("--lineup-days-ahead", type=int, default=3, help="Fetch FotMob lineups across this many days ahead")
     parser.add_argument("--historical-backtest", action="store_true", help="Run goalscorer-historical-backtest.py after compare")
     parser.add_argument("--live-only", action="store_true", help="Skip historical model/compare work and run only the live odds + lineup refresh path")
     parser.add_argument(
@@ -185,6 +197,8 @@ def main() -> None:
             [
                 sys.executable,
                 fotmob_lineups_script,
+                "--days-ahead",
+                str(args.lineup_days_ahead),
                 "--league-id",
                 str(league_config["league_id"]),
                 "--player-log",

@@ -25,7 +25,12 @@ from typing import Dict, Iterable, List
 
 import requests
 
-from goalscorer_penalty_utils import best_name_match, load_penalty_hierarchy, penalty_transfer_info
+from goalscorer_penalty_utils import (
+    best_name_match,
+    load_penalty_hierarchy,
+    penalty_transfer_info,
+    player_match_score as shared_player_match_score,
+)
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -126,39 +131,7 @@ def _np_goals(goals: int, penalties_scored: int) -> int:
 
 
 def _player_match_score(query_key: str, candidate_key: str) -> int:
-    if not query_key or not candidate_key:
-        return 0
-    if query_key == candidate_key:
-        return 100
-
-    q_tokens = query_key.split()
-    c_tokens = candidate_key.split()
-    if not q_tokens or not c_tokens:
-        return 0
-
-    q_first = q_tokens[0]
-    q_last = q_tokens[-1]
-    c_first = c_tokens[0]
-    c_last = c_tokens[-1]
-
-    if q_last == c_last:
-        if q_first == c_first:
-            return 95
-        if q_first.startswith(c_first) or c_first.startswith(q_first):
-            return 90
-        return 80
-
-    if len(c_tokens) == 1 and c_tokens[0] in q_tokens:
-        return 72
-    if len(q_tokens) == 1 and q_tokens[0] in c_tokens:
-        return 72
-    if candidate_key in query_key or query_key in candidate_key:
-        return 74
-
-    overlap = len(set(q_tokens) & set(c_tokens))
-    if overlap >= 2:
-        return 65
-    return 0
+    return shared_player_match_score(query_key, candidate_key)
 
 
 def _fixture_season_start(match_date_str: str) -> str:

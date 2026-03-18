@@ -32,6 +32,9 @@ def player_match_score(left: str, right: str) -> int:
 
     left_tokens = left_key.split()
     right_tokens = right_key.split()
+    if len(left_tokens) == len(right_tokens) and sorted(left_tokens) == sorted(right_tokens):
+        return 94
+
     left_first = left_tokens[0]
     right_first = right_tokens[0]
     left_last = left_tokens[-1]

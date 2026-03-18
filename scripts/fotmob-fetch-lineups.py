@@ -19,7 +19,7 @@ import json
 import re
 import runpy
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List
 from zoneinfo import ZoneInfo
@@ -35,6 +35,7 @@ DEFAULT_PLAYER_LOG = ROOT / "data" / "goalscorer" / "serie-a-player-match-logs-2
 SERIE_A_LEAGUE_ID = 55
 LEAGUE_LABELS = {
     47: "Premier League",
+    53: "Ligue 1",
     54: "Bundesliga",
     55: "Serie A",
     87: "La Liga",
@@ -62,6 +63,14 @@ ROLE_GROUPS = {
 
 def _today_fotmob_date() -> str:
     return datetime.now(ZoneInfo("Europe/London")).strftime("%Y%m%d")
+
+
+def _fotmob_date_window(start_date: str, days_ahead: int) -> List[str]:
+    base = datetime.strptime(start_date, "%Y%m%d").replace(tzinfo=ZoneInfo("Europe/London"))
+    return [
+        (base + timedelta(days=offset)).strftime("%Y%m%d")
+        for offset in range(max(days_ahead, 0) + 1)
+    ]
 
 
 def _team_key_func():
@@ -329,6 +338,7 @@ def write_output(path: Path, fixtures: List[dict]) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Fetch confirmed league lineups from FotMob")
     parser.add_argument("--date", default=_today_fotmob_date(), help="FotMob date in YYYYMMDD format")
+    parser.add_argument("--days-ahead", type=int, default=0, help="Also fetch subsequent FotMob dates up to this many days ahead")
     parser.add_argument("--league-id", type=int, default=SERIE_A_LEAGUE_ID, help="FotMob league id")
     parser.add_argument("--out", default=str(DEFAULT_OUTPUT), help="Output JSON path")
     parser.add_argument("--player-log", default=str(DEFAULT_PLAYER_LOG), help="Current Understat-style player log for name matching")
@@ -340,11 +350,34 @@ def main() -> None:
     print("\n" + "=" * 64)
     print("  IL MARGINE - FotMob Confirmed Lineups")
     print("=" * 64)
-    print(f"  Date:                 {args.date}")
+    date_window = _fotmob_date_window(args.date, args.days_ahead)
+    print(
+        "  Date Window:          "
+        f"{date_window[0]}{' -> ' + date_window[-1] if len(date_window) > 1 else ''}"
+    )
     print(f"  League:               {LEAGUE_LABELS.get(args.league_id, 'League ' + str(args.league_id))}")
     print(f"  League ID:            {args.league_id}")
 
-    fixtures, stats = fetch_confirmed_lineups(args.date, args.league_id, roster_by_team, team_key_func)
+    fixtures: List[dict] = []
+    stats = {
+        "league_matches": 0,
+        "page_fetches": 0,
+        "confirmed_fixtures": 0,
+        "predicted_only": 0,
+        "missing_lineup_payload": 0,
+    }
+    seen_keys = set()
+    for date_str in date_window:
+        daily_fixtures, daily_stats = fetch_confirmed_lineups(date_str, args.league_id, roster_by_team, team_key_func)
+        stats = {key: stats[key] + daily_stats.get(key, 0) for key in stats}
+        for fixture in daily_fixtures:
+            key = (fixture.get("match_date", ""), fixture.get("home_team", ""), fixture.get("away_team", ""))
+            if key in seen_keys:
+                continue
+            seen_keys.add(key)
+            fixtures.append(fixture)
+
+    fixtures.sort(key=lambda item: (item["match_date"], item["home_team"], item["away_team"]))
     write_output(Path(args.out), fixtures)
 
     print(f"  League fixtures:      {stats['league_matches']:,}")
