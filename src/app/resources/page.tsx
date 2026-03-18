@@ -77,7 +77,7 @@ export default function ResourcesPage() {
                   {resource.minRead} min read
                 </span>
                 <span className="text-sm font-medium text-emerald-400 group-hover:text-emerald-300">
-                  Read article â†’
+                  Read article →
                 </span>
               </div>
             </Link>

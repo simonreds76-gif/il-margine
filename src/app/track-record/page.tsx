@@ -74,9 +74,9 @@ export default function TrackRecordPage() {
           <h3 className="text-sm font-semibold text-slate-200 mb-3">18-Month Baseline</h3>
           <p className="text-slate-300 leading-relaxed mb-4">Performance data from private tracking period (validation phase):</p>
           <ul className="space-y-3 text-slate-300 leading-relaxed list-none">
-            <li><strong className="text-slate-100">Player Props</strong> â€” <span className="text-emerald-400 font-medium">780+</span> bets | <span className="text-emerald-400 font-medium">+25.0%</span> ROI | <span className="text-emerald-400 font-medium">58%</span> win rate</li>
-            <li><strong className="text-slate-100">ATP Tennis</strong> â€” <span className="text-emerald-400 font-medium">447</span> bets | <span className="text-emerald-400 font-medium">+8.6%</span> ROI | <span className="text-emerald-400 font-medium">54%</span> win rate | Tipstrr verified</li>
-            <li><strong className="text-slate-100">Combined</strong> â€” <span className="text-emerald-400 font-medium">1,227+</span> total bets | <span className="text-emerald-400 font-medium">+19.0%</span> overall ROI | 18 months</li>
+            <li><strong className="text-slate-100">Player Props</strong> — <span className="text-emerald-400 font-medium">780+</span> bets | <span className="text-emerald-400 font-medium">+25.0%</span> ROI | <span className="text-emerald-400 font-medium">58%</span> win rate</li>
+            <li><strong className="text-slate-100">ATP Tennis</strong> — <span className="text-emerald-400 font-medium">447</span> bets | <span className="text-emerald-400 font-medium">+8.6%</span> ROI | <span className="text-emerald-400 font-medium">54%</span> win rate | Tipstrr verified</li>
+            <li><strong className="text-slate-100">Combined</strong> — <span className="text-emerald-400 font-medium">1,227+</span> total bets | <span className="text-emerald-400 font-medium">+19.0%</span> overall ROI | 18 months</li>
           </ul>
           <p className="text-slate-400 text-sm mt-4">Stakes: Variable (0.05u to 5u based on edge confidence)</p>
           <p className="text-slate-400 text-sm mt-2">This data reflects actual settled bets used to validate our methodology. Live public tracking with full transparency is now ongoing.</p>
@@ -99,7 +99,7 @@ export default function TrackRecordPage() {
             <li><strong className="text-slate-100">Variance is real.</strong> Winning months and losing months happen. Even with positive long-term edge, short-term results fluctuate. This is normal.</li>
             <li><strong className="text-slate-100">Sample size matters.</strong> Performance over 20 bets is mostly noise. Over 100 bets, signal emerges. Over 200 bets, edge becomes clear. Judge long term, not week to week.</li>
             <li><strong className="text-slate-100">ROI varies by market.</strong> Player props typically higher ROI than tennis (wider margins, more exploitable). Match odds lower ROI (tighter margins). Staking adapts accordingly.</li>
-            <li><strong className="text-slate-100">Stakes can get limited.</strong> If you follow picks successfully, bookmakers may reduce your stake sizes over time. See our <Link href="/bookmakers" className="text-emerald-400 hover:text-emerald-300 underline">bookmakers</Link> and <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ</Link> for contextâ€”it&apos;s a sign the approach works.</li>
+            <li><strong className="text-slate-100">Stakes can get limited.</strong> If you follow picks successfully, bookmakers may reduce your stake sizes over time. See our <Link href="/bookmakers" className="text-emerald-400 hover:text-emerald-300 underline">bookmakers</Link> and <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ</Link> for context—it&apos;s a sign the approach works.</li>
             <li><strong className="text-slate-100">Losses get logged.</strong> Every selection gets recorded, winner or loser. Transparency over marketing.</li>
           </ul>
         </section>
@@ -138,13 +138,13 @@ export default function TrackRecordPage() {
         <section className="bg-emerald-500/10 rounded-xl border border-emerald-500/30 p-6 md:p-8 text-center">
           <h2 className="text-xl font-semibold text-emerald-400 mb-2">Follow The Picks</h2>
           <p className="text-slate-300 text-base mb-6 max-w-xl mx-auto leading-relaxed">
-            All selections â€” player props and tennis â€” posted on site with full analysis.
+            All selections — player props and tennis — posted on site with full analysis.
           </p>
           <Link
             href="/player-props"
             className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
           >
-            â†’ View Player Props
+            → View Player Props
           </Link>
         </section>
 

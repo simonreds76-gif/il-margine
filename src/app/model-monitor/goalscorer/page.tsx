@@ -141,10 +141,10 @@ function decodeHtml(text: string): string {
     .replace(/&rsquo;/g, "'")
     .replace(/&ldquo;/g, '"')
     .replace(/&rdquo;/g, '"')
-    .replace(/&uuml;/g, "Ã¼")
-    .replace(/&ouml;/g, "Ã¶")
-    .replace(/&eacute;/g, "Ã©")
-    .replace(/&Eacute;/g, "Ã‰");
+    .replace(/&uuml;/g, "ü")
+    .replace(/&ouml;/g, "ö")
+    .replace(/&eacute;/g, "é")
+    .replace(/&Eacute;/g, "É");
 }
 
 async function readLocalFile(relPath: string): Promise<string | null> {

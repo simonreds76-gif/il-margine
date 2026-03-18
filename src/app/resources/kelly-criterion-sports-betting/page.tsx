@@ -38,9 +38,9 @@ const ARTICLE_SCHEMA = {
 const TOC_ITEMS = [
   { id: "introduction", label: "Introduction" },
   { id: "mathematics", label: "The Mathematics Explained" },
-  { id: "practice", label: "Kelly in Practice â€” Player Props & Tennis" },
+  { id: "practice", label: "Kelly in Practice — Player Props & Tennis" },
   { id: "limitations", label: "The Critical Limitations" },
-  { id: "fractional", label: "Fractional Kelly â€” Which Multiple to Use" },
+  { id: "fractional", label: "Fractional Kelly — Which Multiple to Use" },
   { id: "implementation", label: "Practical Implementation" },
   { id: "comparison", label: "Kelly vs Other Staking Plans" },
   { id: "conclusion", label: "Conclusion" },
@@ -117,7 +117,7 @@ export default function KellyCriterionPage() {
                   The difference between profitable bettors and losing punters often
                   comes down to one critical factor: stake sizing. You can identify
                   value in the market, build a data-driven selection process, and
-                  maintain discipline â€” but if you bet too much on any single outcome,
+                  maintain discipline — but if you bet too much on any single outcome,
                   variance will eventually destroy your bankroll. Bet too little, and
                   you leave profit on the table.
                 </p>
@@ -200,7 +200,7 @@ export default function KellyCriterionPage() {
                     (decimal) or -110 (American)
                   </li>
                   <li>
-                    <strong className="text-slate-200">Your bankroll:</strong> Â£1,000
+                    <strong className="text-slate-200">Your bankroll:</strong> £1,000
                   </li>
                 </ul>
                 <p className="mb-4">First, calculate the variables:</p>
@@ -217,7 +217,7 @@ export default function KellyCriterionPage() {
                 </ul>
                 <p className="mb-4">Now apply the formula:</p>
                 <p className="mb-4 font-mono text-emerald-400">
-                  f* = (0.91 Ã— 0.55 - 0.45) / 0.91
+                  f* = (0.91 × 0.55 - 0.45) / 0.91
                   <br />
                   f* = (0.5005 - 0.45) / 0.91
                   <br />
@@ -228,7 +228,7 @@ export default function KellyCriterionPage() {
                 <p className="mb-4">
                   The Kelly Criterion recommends staking{" "}
                   <strong className="text-slate-200">5.5% of your bankroll</strong>,
-                  which equals <strong className="text-slate-200">Â£55</strong> on this
+                  which equals <strong className="text-slate-200">£55</strong> on this
                   bet.
                 </p>
 
@@ -256,7 +256,7 @@ export default function KellyCriterionPage() {
                 </ol>
                 <p className="mb-4">
                   Crucially, if the Kelly formula returns zero or a negative number,
-                  it tells you not to bet â€” the odds don&apos;t justify the risk. This
+                  it tells you not to bet — the odds don&apos;t justify the risk. This
                   built-in safeguard prevents you from placing wagers where you
                   don&apos;t have a genuine edge.
                 </p>
@@ -287,14 +287,14 @@ export default function KellyCriterionPage() {
                     Kelly Criterion Quick Summary
                   </h4>
                   <ul className="text-slate-300 text-sm space-y-2 list-none">
-                    <li>â€¢ Calculates optimal bet size based on your edge</li>
+                    <li>• Calculates optimal bet size based on your edge</li>
                     <li>
-                      â€¢ Formula:{" "}
+                      • Formula:{" "}
                       <code className="text-emerald-400 font-mono">f* = (bp - q) / b</code>
                     </li>
-                    <li>â€¢ Use fractional Kelly (one-tenth for props, quarter for tennis)</li>
-                    <li>â€¢ Never bet more than 5% of bankroll on single bet</li>
-                    <li>â€¢ Only works if you have a genuine edge</li>
+                    <li>• Use fractional Kelly (one-tenth for props, quarter for tennis)</li>
+                    <li>• Never bet more than 5% of bankroll on single bet</li>
+                    <li>• Only works if you have a genuine edge</li>
                   </ul>
                 </div>
               </section>
@@ -302,15 +302,15 @@ export default function KellyCriterionPage() {
               {/* Section 3: Practice */}
               <section id="practice">
                 <h2 className="text-2xl sm:text-3xl font-semibold text-slate-100 mb-6 mt-12">
-                  Kelly in Practice â€” Player Props & Tennis
+                  Kelly in Practice — Player Props & Tennis
                 </h2>
 
                 <h3 className="text-xl font-semibold text-slate-100 mb-4 mt-8">
                   Applying Kelly to Football Player Props
                 </h3>
                 <p className="mb-4">
-                  Player props markets â€” shots on target, fouls committed, tackles
-                  won â€” are where bookmakers often misprice individual player
+                  Player props markets — shots on target, fouls committed, tackles
+                  won — are where bookmakers often misprice individual player
                   performance. Here&apos;s how Kelly applies:
                 </p>
 
@@ -323,21 +323,21 @@ export default function KellyCriterionPage() {
                     Rice 2+ tackles won vs Aston Villa
                   </p>
                   <ul className="text-slate-300 text-sm space-y-2 mb-4">
-                    <li>â€¢ Rice averages 2.3 tackles per game in the Premier League</li>
-                    <li>â€¢ Villa&apos;s midfield tends to give up tackle opportunities</li>
-                    <li>â€¢ Your matchup analysis suggests 58% probability of 2+ tackles won</li>
-                    <li>â€¢ Bookmaker offers 2.00 (decimal)</li>
+                    <li>• Rice averages 2.3 tackles per game in the Premier League</li>
+                    <li>• Villa&apos;s midfield tends to give up tackle opportunities</li>
+                    <li>• Your matchup analysis suggests 58% probability of 2+ tackles won</li>
+                    <li>• Bookmaker offers 2.00 (decimal)</li>
                   </ul>
                   <p className="text-slate-300 mb-2">Kelly calculation:</p>
                   <p className="text-slate-300 mb-0">
-                    b = 1.00, p = 0.58, q = 0.42 â†’{" "}
+                    b = 1.00, p = 0.58, q = 0.42 →{" "}
                     <code className="text-emerald-400 font-mono">f* = 16%</code>
                   </p>
                 </div>
 
                 <p className="mb-4">
-                  Full Kelly suggests staking 16% of your bankroll. On Â£1,000 that&apos;s
-                  Â£160 on a single prop bet. One bad result and you&apos;ve lost a big
+                  Full Kelly suggests staking 16% of your bankroll. On £1,000 that&apos;s
+                  £160 on a single prop bet. One bad result and you&apos;ve lost a big
                   chunk. Player props are more volatile than match outcomes (individual
                   performance swings harder), and probability estimates are less reliable
                   than in liquid tennis markets. That&apos;s too aggressive. This is why
@@ -374,12 +374,12 @@ export default function KellyCriterionPage() {
                   <strong className="text-slate-200">one-tenth Kelly</strong>:
                 </p>
                 <p className="mb-4">
-                  Full Kelly: 16% â†’ One-tenth Kelly: 16% Ã— 0.1 ={" "}
+                  Full Kelly: 16% → One-tenth Kelly: 16% × 0.1 ={" "}
                   <strong className="text-slate-200">1.6%</strong> of bankroll
                 </p>
                 <p className="mb-4">
-                  On a Â£1,000 bankroll, that&apos;s{" "}
-                  <strong className="text-slate-200">Â£16</strong> instead of Â£160.
+                  On a £1,000 bankroll, that&apos;s{" "}
+                  <strong className="text-slate-200">£16</strong> instead of £160.
                 </p>
 
                 <h3 className="text-xl font-semibold text-slate-100 mb-4 mt-8">
@@ -390,18 +390,18 @@ export default function KellyCriterionPage() {
                 </p>
                 <p className="mb-4">
                   <strong className="text-slate-200">1. Probability Estimation
-                  Error</strong> â€” You&apos;re never 100% certain of your assessed
+                  Error</strong> — You&apos;re never 100% certain of your assessed
                   probability. Fractional Kelly provides a safety buffer.
                 </p>
                 <p className="mb-4">
-                  <strong className="text-slate-200">2. Variance Tolerance</strong> â€”
+                  <strong className="text-slate-200">2. Variance Tolerance</strong> —
                   Full Kelly produces violent bankroll swings. Half Kelly reduces
                   volatility dramatically while sacrificing only 25% of long-term
                   growth rate.
                 </p>
                 <p className="mb-4">
                   <strong className="text-slate-200">3. Multiple Simultaneous
-                  Bets</strong> â€” If you&apos;re betting 20-30 props per week, full
+                  Bets</strong> — If you&apos;re betting 20-30 props per week, full
                   Kelly on each bet would have you massively overexposed. Fractional
                   Kelly allows you to spread risk across a portfolio of bets.
                 </p>
@@ -421,13 +421,13 @@ export default function KellyCriterionPage() {
                     set winner
                   </p>
                   <ul className="text-slate-300 text-sm space-y-2 mb-4">
-                    <li>â€¢ Your model: Player A has 58% chance to win first set</li>
-                    <li>â€¢ Pinnacle (closing line): 1.85 (implies 54% probability)</li>
-                    <li>â€¢ You&apos;ve found a 4% edge</li>
+                    <li>• Your model: Player A has 58% chance to win first set</li>
+                    <li>• Pinnacle (closing line): 1.85 (implies 54% probability)</li>
+                    <li>• You&apos;ve found a 4% edge</li>
                   </ul>
                   <p className="text-slate-300 mb-2">Kelly: f* = 6.95%. With quarter Kelly: 1.74%</p>
                   <p className="text-slate-300 mb-0">
-                    On Â£2,000 bankroll: <strong className="text-slate-200">Â£34.80</strong> stake
+                    On £2,000 bankroll: <strong className="text-slate-200">£34.80</strong> stake
                   </p>
                 </div>
                 <p className="mb-4">
@@ -497,12 +497,12 @@ export default function KellyCriterionPage() {
 
                 <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-6 my-6">
                   <h4 className="text-amber-400 font-semibold mb-3">
-                    âš ï¸ The Danger of Overconfidence
+                    ⚠️ The Danger of Overconfidence
                   </h4>
                   <p className="text-slate-300 mb-0">
                     If you estimate 60% win probability but true probability is 55%,
                     you&apos;ll bet nearly 4x too much. This is why professionals use
-                    fractional Kelly (one-tenth or quarter) â€” it provides a safety margin
+                    fractional Kelly (one-tenth or quarter) — it provides a safety margin
                     against estimation errors.
                   </p>
                 </div>
@@ -558,7 +558,7 @@ export default function KellyCriterionPage() {
                   7. No Edge? Don&apos;t Bet
                 </h3>
                 <p className="mb-4">
-                  If Kelly returns zero or negative, you don&apos;t have an edge â€” regardless
+                  If Kelly returns zero or negative, you don&apos;t have an edge — regardless
                   of how confident you feel. The formula is brutally honest.
                 </p>
 
@@ -577,7 +577,7 @@ export default function KellyCriterionPage() {
               {/* Section 5: Fractional Kelly */}
               <section id="fractional">
                 <h2 className="text-2xl sm:text-3xl font-semibold text-slate-100 mb-6 mt-12">
-                  Fractional Kelly â€” Which Multiple to Use
+                  Fractional Kelly — Which Multiple to Use
                 </h2>
 
                 <p className="mb-4">
@@ -629,18 +629,18 @@ export default function KellyCriterionPage() {
                     How Il Margine Approaches It
                   </h3>
                   <p className="text-slate-300 mb-4">
-                    We use <strong className="text-slate-200">one-tenth Kelly for prop bets</strong> â€” they&apos;re more volatile and our probability estimates are less reliable. For tennis (match / first set markets), where edges are easier to quantify and markets are more liquid, we use <strong className="text-slate-200">quarter Kelly</strong>.
+                    We use <strong className="text-slate-200">one-tenth Kelly for prop bets</strong> — they&apos;re more volatile and our probability estimates are less reliable. For tennis (match / first set markets), where edges are easier to quantify and markets are more liquid, we use <strong className="text-slate-200">quarter Kelly</strong>.
                   </p>
                   <p className="text-slate-300 mb-4">
                     Our stake range is generally <strong className="text-slate-200">0.5u to 2u</strong>, where 1 unit â‰ˆ 1% of bankroll. That means:
                   </p>
                   <ul className="text-slate-300 text-sm space-y-2 list-none mb-4">
-                    <li>â€¢ <strong className="text-slate-200">Minimum:</strong> ~0.5% of bankroll</li>
-                    <li>â€¢ <strong className="text-slate-200">Maximum:</strong> ~2% of bankroll</li>
-                    <li>â€¢ <strong className="text-slate-200">Typical:</strong> 1u (1% of bankroll)</li>
+                    <li>• <strong className="text-slate-200">Minimum:</strong> ~0.5% of bankroll</li>
+                    <li>• <strong className="text-slate-200">Maximum:</strong> ~2% of bankroll</li>
+                    <li>• <strong className="text-slate-200">Typical:</strong> 1u (1% of bankroll)</li>
                   </ul>
                   <p className="text-slate-300 mb-0">
-                    We cap at ~2% because of estimation uncertainty, multiple simultaneous bets, and account longevity. Most professionals avoid staking more than 1â€“2% per bet; 2â€“4% is aggressive and rarely justified for props.
+                    We cap at ~2% because of estimation uncertainty, multiple simultaneous bets, and account longevity. Most professionals avoid staking more than 1–2% per bet; 2–4% is aggressive and rarely justified for props.
                   </p>
                 </div>
 
@@ -667,31 +667,31 @@ export default function KellyCriterionPage() {
                 </h3>
                 <ol className="list-decimal pl-6 mb-4 space-y-3">
                   <li>
-                    <strong className="text-slate-200">Assess True Probability</strong> â€”
+                    <strong className="text-slate-200">Assess True Probability</strong> —
                     Analyze data, estimate win probability, err conservative
                   </li>
                   <li>
-                    <strong className="text-slate-200">Calculate Implied Probability</strong> â€”
+                    <strong className="text-slate-200">Calculate Implied Probability</strong> —
                     Implied probability = 1 / odds
                   </li>
                   <li>
-                    <strong className="text-slate-200">Determine Your Edge</strong> â€”
+                    <strong className="text-slate-200">Determine Your Edge</strong> —
                     Edge = your probability - implied probability
                   </li>
                   <li>
-                    <strong className="text-slate-200">Apply Kelly Formula</strong> â€”
+                    <strong className="text-slate-200">Apply Kelly Formula</strong> —
                     f* = (bp - q) / b
                   </li>
                   <li>
-                    <strong className="text-slate-200">Apply Fractional Kelly</strong> â€”
+                    <strong className="text-slate-200">Apply Fractional Kelly</strong> —
                     Multiply by 0.1 for props, 0.25 for tennis/match markets
                   </li>
                   <li>
-                    <strong className="text-slate-200">Calculate Stake in Currency</strong> â€”
+                    <strong className="text-slate-200">Calculate Stake in Currency</strong> —
                     Multiply percentage by bankroll
                   </li>
                   <li>
-                    <strong className="text-slate-200">Track & Adjust</strong> â€”
+                    <strong className="text-slate-200">Track & Adjust</strong> —
                     Record bets, recalculate bankroll regularly
                   </li>
                 </ol>
@@ -716,7 +716,7 @@ export default function KellyCriterionPage() {
                   <li>Never bet more than 5% of bankroll on a single bet</li>
                   <li>Use one-tenth Kelly for props, quarter Kelly for tennis</li>
                   <li>Recalculate bankroll monthly</li>
-                  <li>If Kelly says don&apos;t bet, don&apos;t bet â€” no exceptions</li>
+                  <li>If Kelly says don&apos;t bet, don&apos;t bet — no exceptions</li>
                   <li>Track everything</li>
                 </ol>
               </section>
@@ -729,7 +729,7 @@ export default function KellyCriterionPage() {
 
                 <p className="mb-4">
                   <strong className="text-slate-200">Flat Staking:</strong> Simple but
-                  suboptimal â€” treats all bets equally.
+                  suboptimal — treats all bets equally.
                 </p>
                 <p className="mb-4">
                   <strong className="text-slate-200">Percentage Staking:</strong> Better
@@ -737,7 +737,7 @@ export default function KellyCriterionPage() {
                 </p>
                 <p className="mb-4">
                   <strong className="text-slate-200">Martingale:</strong> Mathematically
-                  unsound â€” guarantees ruin with insufficient bankroll.
+                  unsound — guarantees ruin with insufficient bankroll.
                 </p>
                 <p className="mb-4">
                   <strong className="text-slate-200">Kelly Criterion:</strong> Mathematically

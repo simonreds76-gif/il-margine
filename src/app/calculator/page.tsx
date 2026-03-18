@@ -126,7 +126,7 @@ export default function CalculatorPage() {
                 Returns Calculator
               </h2>
               <p className="text-sm text-slate-400 leading-relaxed mb-4">
-                How much you would have won or lost following our settled bets with a fixed stake per bet (e.g. Â£25, Â£50, Â£100).
+                How much you would have won or lost following our settled bets with a fixed stake per bet (e.g. £25, £50, £100).
                 Based on our verified track record. No projections.
               </p>
             </div>

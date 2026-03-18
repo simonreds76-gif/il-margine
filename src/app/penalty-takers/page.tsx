@@ -169,11 +169,11 @@ async function readJson<T>(relativePath: string): Promise<T> {
 function repairMojibake(value: string): string {
   if (!value) return value;
   const normalized = value.normalize("NFC");
-  if (!/[ÃÂâ]/.test(normalized)) return normalized;
+  if (!/[\u00C3\u00C2\u00E2]/.test(normalized)) return normalized;
 
   try {
     const repaired = Buffer.from(normalized, "latin1").toString("utf8").normalize("NFC");
-    const penaltyScore = (text: string) => (text.match(/[ÃÂâ�]/g) ?? []).length;
+    const penaltyScore = (text: string) => (text.match(/[\u00C3\u00C2\u00E2\uFFFD]/g) ?? []).length;
     return penaltyScore(repaired) < penaltyScore(normalized) ? repaired : normalized;
   } catch {
     return normalized;
