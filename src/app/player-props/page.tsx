@@ -231,42 +231,6 @@ export default function PlayerProps() {
             <span className="rounded-full border border-slate-700/60 bg-slate-900/50 px-3 py-1.5 text-xs font-mono text-slate-400">Tackles</span>
             <span className="rounded-full border border-slate-700/60 bg-slate-900/50 px-3 py-1.5 text-xs font-mono text-slate-400">Cards</span>
           </div>
-
-          <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-900/55 p-6 sm:p-7">
-            <div className="mb-5">
-              <div className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">Our methodology</div>
-              <h2 className="mt-2 text-xl sm:text-2xl font-semibold text-slate-100">How the edge is built</h2>
-            </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
-                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">01</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Less efficient than main markets</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400">
-                  Match odds attract the sharpest pricing and the most attention. Props usually do not. The margins are
-                  wider, but the modelling is also thinner, which leaves more room for one bookmaker to hang a number
-                  that another would never copy.
-                </p>
-              </div>
-              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
-                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">02</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Role and matchup before averages</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400">
-                  A prop line only makes sense in context. We care about role, likely minutes, set-piece share, team
-                  shape, opponent tendencies and referee profile. A shots line for a high-volume winger means something
-                  very different from the same number on a full-back.
-                </p>
-              </div>
-              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
-                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">03</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Price before player name</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400">
-                  We are not trying to bet the most famous player on the slate. We are trying to take the best number.
-                  Sometimes that means a star in a strong spot; sometimes it means a less glamorous role player whose
-                  line has been copied without enough thought.
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -456,6 +420,46 @@ export default function PlayerProps() {
           
           <div className="mt-6 p-4 bg-slate-900/30 rounded-lg border border-slate-800 text-center">
             <p className="text-sm text-slate-400">All selections posted here in real time. Bookmark this page.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 md:py-16 border-b border-slate-800/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/55 p-6 sm:p-7">
+            <div className="mb-5">
+              <div className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">Our methodology</div>
+              <h2 className="mt-2 text-2xl sm:text-3xl font-semibold text-slate-100">How the edge is built</h2>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">01</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Less efficient than main markets</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  Match odds attract the sharpest pricing and the most attention. Props usually do not. The margins are
+                  wider, but the modelling is also thinner, which leaves more room for one bookmaker to hang a number
+                  that another would never copy.
+                </p>
+              </div>
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">02</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Role and matchup before averages</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  A prop line only makes sense in context. We care about role, likely minutes, set-piece share, team
+                  shape, opponent tendencies and referee profile. A shots line for a high-volume winger means something
+                  very different from the same number on a full-back.
+                </p>
+              </div>
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
+                <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">03</div>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Price before player name</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  We are not trying to bet the most famous player on the slate. We are trying to take the best number.
+                  Sometimes that means a star in a strong spot; sometimes it means a less glamorous role player whose
+                  line has been copied without enough thought.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
