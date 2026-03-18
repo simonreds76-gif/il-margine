@@ -376,6 +376,24 @@ Over time, strong CLV is one of the best signs that you are taking the right sid
 
 ---
 
+### Q: Why is closing line value such an important benchmark?
+
+**A:** Because the closing line is usually the most informed public price in the market.
+
+By the time a market closes, it has absorbed:
+
+- opening prices
+- modelled adjustments
+- public money
+- sharper money
+- team news, lineups and injuries
+
+That does not make the close perfect. It does make it a very strong benchmark. If you repeatedly beat that benchmark, you are usually finding prices before the market fully corrects. If you repeatedly lose to it, short-term wins can flatter a weak process.
+
+That is why serious bettors care so much about CLV. It is not a vanity metric. It is the best real-world audit trail most betting processes have.
+
+---
+
 ### Q: What does value mean in betting?
 
 **A:** Value means the odds are better than they should be.
@@ -454,11 +472,82 @@ That conversion is the starting point for almost every value judgement in bettin
 
 ### Q: What is Elo and how do you use it in tennis?
 
-**A:** Elo is a rating system that measures relative player strength.
+**A:** Elo is a recursive rating system. After every match, a player gains or loses rating points based on three things:
 
-For tennis, the important point is that a useful Elo model is not one flat number for every surface. Hard, clay and grass need to be treated differently, because player quality does not transfer perfectly across them.
+- their prior rating
+- their opponent's rating
+- the gap between expected result and actual result
 
-We use Elo as part of the picture, not as the whole picture.
+That sounds simple, but a useful tennis Elo is not one global number pasted onto every match.
+
+A serious tennis implementation needs to think about:
+
+- **surface separation**: hard, clay and grass do not reward the same skills
+- **recency weighting**: a player's current level matters more than what he was two seasons ago
+- **opposition strength**: beating weak fields can inflate a rating if you do not control for level properly
+- **tier effects**: ATP main-tour results should not be treated the same as weaker-circuit results
+
+Even then, Elo is only one layer. Tennis pricing also needs hold and break dynamics, serve and return quality, matchup shape, event context and market comparison. Elo is useful because it is robust, transparent and hard to fake. It is not useful when people mistake it for a complete model.
+
+---
+
+### Q: What makes a betting model well calibrated?
+
+**A:** A model is well calibrated when its probabilities mean what they say.
+
+If a model tags a large group of bets at **60%**, those bets should win roughly **60%** of the time over a big enough sample. If they win materially less or materially more, the model may still rank bets in the right order, but the probabilities themselves are not trustworthy.
+
+That distinction matters. A model can be:
+
+- **good at ranking** edges
+- but **poorly calibrated** in the size of those edges
+
+For betting, that affects:
+
+- stake sizing
+- expected value estimates
+- which markets qualify as real bets and which should stay as monitor-only signals
+
+Calibration is one of the main things that separates a clever model from a reliable one.
+
+---
+
+### Q: How do you know a betting model is overfit?
+
+**A:** Overfitting usually shows up when a model explains the past too neatly and the future not nearly well enough.
+
+Typical warning signs are:
+
+- strong backtests that disappear out of sample
+- a strategy that only works in one narrow slice of history
+- too many tuned rules sitting on top of a weak core signal
+- unstable performance once pricing sources, player pools or league context change
+
+The answer is not one magic statistic. It is process discipline:
+
+- train on one period, test on another
+- use walk-forward testing instead of one lucky split
+- compare model prices to market closes
+- prefer robust edges that survive across seasons and conditions
+
+A good betting model should degrade gracefully when conditions change. An overfit one usually falls apart the moment the market stops looking exactly like the sample it learned from.
+
+---
+
+### Q: If tennis is an efficient market, how can a model still have an edge?
+
+**A:** Because "efficient" does not mean "unbeatable." It means the market is harder to beat casually.
+
+Mainstream tennis prices are usually sharper than football props, but they are still built under practical constraints:
+
+- models have to generalise across hundreds of players
+- lower-attention events get less scrutiny
+- injury, schedule and surface transitions are hard to price perfectly
+- secondary markets can inherit assumptions from the main line
+
+That is where a specialised model can still compete, especially if it has been refined over a long period and tested against real prices rather than theory alone.
+
+For us, tennis is not a "soft market" story. It is a selective-pricing story. The edge comes from doing hard things slightly better than the market in the right spots, not from pretending the whole sport is asleep.
 
 ---
 
@@ -470,8 +559,9 @@ Broadly:
 
 - **player props** lean on role, volume, matchup, team context and market comparison
 - **tennis** leans on surface strength, serve and return profile, event context, market structure and price comparison
+- **anytime goalscorers** lean on role, minutes, shot share, penalty duties, lineup confirmation and price comparison
 
-The key point is not whether a model sounds clever. The key point is whether it produces better prices than the market often enough to matter.
+The key point is not whether a model sounds clever. The key point is whether it produces better prices than the market often enough to matter, and whether those prices remain defensible once the sample moves from backtest to live tracking.
 
 ---
 
