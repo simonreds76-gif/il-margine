@@ -4,11 +4,11 @@
 
 ### Q: What is Il Margine?
 
-**A:** Il Margine is a sports betting analysis site focused on markets where bookmaker pricing is softer than the main match odds. The two core areas are **football player props** and **ATP tennis**.
+**A:** Il Margine is a sports betting analysis site focused on markets where we believe our pricing can be stronger than the number on offer. The two core areas are **football player props** and **ATP tennis**.
 
 The idea is simple: we are not trying to have an opinion on every match on the board. We are trying to find prices that look wrong relative to the true probability of the event.
 
-That means looking for edges in places where bookmakers are more likely to rely on templates, lighter oversight, or slower adjustments.
+That means looking for edges in places where the market is either structurally weaker, or where our own modelling and bookmaker-side experience give us a better read on the price.
 
 ---
 
@@ -84,16 +84,13 @@ That is what edge means: not certainty, not vibes, not "I fancy this one". Just 
 
 ### Q: Why do you focus on player props and tennis instead of mainstream match odds?
 
-**A:** Because the main match odds are usually the hardest numbers to beat.
+**A:** The two markets are there for different reasons.
 
-Bookmakers spend the most time, liquidity and risk management on headline markets like 1X2. Player props and many tennis markets are different:
+**Player props** are there because they are often softer. Bookmakers lean more heavily on templates, generic averages and lighter manual oversight, which means role, matchup and game-state detail can move the true price more than the market reflects.
 
-- they are modelled less carefully
-- they are copied more often
-- they react more slowly to contextual changes
-- they can stay wrong for longer
+**ATP tennis** is different. Tennis is generally a more efficient market than props, especially at the top end. We focus on it because we trust our pricing there: surface-adjusted ratings, serve and return data, event context, and years of bookmaker-side experience have gone into a model we have refined over a long period. The edge is not \"tennis is easy\". The edge is that we believe our read of specific tennis prices is strong enough to bet selectively.
 
-We would rather work where the market is weaker than try to out-muscle the sharpest line on the board.
+So the answer is not \"we only bet soft markets\". The answer is: we bet where we think we can price better than the number on the screen.
 
 ---
 
@@ -397,10 +394,10 @@ Typical examples include:
 
 - football player props
 - lower-profile football markets
-- ATP 250 and Challenger tennis lines
 - niche same-game combinations
+- selected secondary tennis markets or lower-attention event segments
 
-That is where bookmakers are more likely to be copied, slower, or overly generic in their assumptions.
+The point is not that an entire sport is soft. The point is that some markets and some slices of a market are more vulnerable to copied pricing, slow adjustment, or generic assumptions.
 
 ---
 
@@ -472,7 +469,7 @@ We use Elo as part of the picture, not as the whole picture.
 Broadly:
 
 - **player props** lean on role, volume, matchup, team context and market comparison
-- **tennis** leans on surface strength, serve and return profile, event context and price comparison
+- **tennis** leans on surface strength, serve and return profile, event context, market structure and price comparison
 
 The key point is not whether a model sounds clever. The key point is whether it produces better prices than the market often enough to matter.
 

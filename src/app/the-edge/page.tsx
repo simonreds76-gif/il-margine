@@ -21,11 +21,11 @@ const FAQ_ITEMS = [
   },
   {
     q: "What's your typical ROI?",
-    a: "We target positive ROI across market types. Player props historically higher ROI than tennis (wider margins = more exploitable). Exact figures vary by market and time period. See Track Record for current data.",
+    a: "We target positive ROI across market types. Player props and tennis should not be judged the same way: props are softer structurally, while tennis is a more efficient market where we bet selectively because we trust the model. Exact figures vary by market and time period. See Track Record for current data.",
   },
   {
     q: "Do you bet on match odds or just props?",
-    a: "Primarily player props and ATP tennis (men's). Occasionally match odds when clear mispricing exists. We bet wherever edge exists, but focus on less efficient markets where value is more frequent.",
+    a: "Primarily player props and ATP tennis (men's). Occasionally match odds when clear mispricing exists. Props are there because the market is often softer. Tennis is there because we believe our pricing is strong enough to compete selectively, not because the whole sport is easy to beat.",
   },
   {
     q: "Why don't you share your model?",
@@ -119,7 +119,7 @@ export default function TheEdgePage() {
             <p>Bookmakers dedicate their resources unevenly. Premier League match odds get teams of traders, live monitoring, and sophisticated algorithms. Player props get template pricing and minimal oversight.</p>
             <p><strong className="text-slate-100">Our focus areas:</strong></p>
             <p><strong className="text-slate-200">Player Props</strong> — Individual player statistics: shots on target, fouls committed, tackles made, cards received. These markets receive a fraction of the analytical attention that match odds do. Bookmakers use historical averages with minimal matchup-specific adjustment. When opponent defensive stats, tactical setups, or referee tendencies create outliers, value emerges.</p>
-            <p><strong className="text-slate-200">ATP Tennis (men&apos;s)</strong> — Match odds, handicaps, and totals across ATP events, particularly 250s and Challengers. These tournaments get less market attention than Grand Slams. Surface-specific performance differentials are systematically underweighted. A player who&apos;s elite on clay but average on grass will still be priced closer to their universal ranking than their surface-specific form suggests.</p>
+            <p><strong className="text-slate-200">ATP Tennis (men&apos;s)</strong> — Tennis is not a soft market in the same way props are. We focus on it because our model work is deeper there: surface-adjusted ratings, serve and return strength, event context, and years of pricing experience. The edge comes from pricing specific matches and derivatives better, not from pretending tennis markets are broadly asleep.</p>
             <p><strong className="text-slate-200">Bet Builders</strong> <span className="text-slate-500">(Coming Soon)</span> — Same-game multiples where correlation is mispriced. When bookmakers price legs independently that are actually correlated, mathematical edges appear.</p>
             <p><strong className="text-slate-100">What we don&apos;t bet:</strong> High-profile match odds in major leagues unless clear mispricing exists. We&apos;re not competing with bookmaker traders on markets they prioritize. We operate where their models are weakest.</p>
           </div>
@@ -220,7 +220,7 @@ export default function TheEdgePage() {
                 <div className="px-6 md:px-8 pb-4 pt-0">
                   <p className="text-slate-400 text-base leading-relaxed">
                     {item.a.includes("Track Record") ? (
-                      <>We target positive ROI across market types. Player props historically higher ROI than tennis (wider margins = more exploitable). Exact figures vary by market and time period. See <Link href="/track-record" className="text-emerald-400 hover:text-emerald-300 underline">Track Record</Link> for current data.</>
+                      <>We target positive ROI across market types. Player props and tennis should not be judged the same way: props are softer structurally, while tennis is generally more efficient and more model-dependent. Exact figures vary by market and time period. See <Link href="/track-record" className="text-emerald-400 hover:text-emerald-300 underline">Track Record</Link> for current data.</>
                     ) : (
                       item.a
                     )}

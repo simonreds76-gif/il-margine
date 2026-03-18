@@ -324,7 +324,7 @@ export default function Home() {
           
           <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4 sm:mb-6">Where we find edge</h2>
           <p className="text-base sm:text-lg text-slate-300 mb-12 sm:mb-14 max-w-2xl">
-            We focus on markets where bookmaker pricing is inefficient. No mainstream match odds. No markets where the bookies have perfect data.
+            We focus on markets where we believe our pricing can be stronger than the number on offer. In practice that usually means football player props and selective ATP tennis rather than generic mainstream match odds.
           </p>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-3 items-stretch">

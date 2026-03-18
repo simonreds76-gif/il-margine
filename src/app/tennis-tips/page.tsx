@@ -447,9 +447,10 @@ export default function TennisTips() {
                 <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">02</div>
                 <h3 className="mt-3 text-base font-semibold text-slate-100">Context changes the price</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  The same player can be priced very differently depending on the event. ATP 250s, 500s and
-                  Challengers often hold softer numbers for longer than the majors, so tournament tier, market depth,
-                  travel spots and scheduling pressure are part of the edge, not background noise.
+                  The same player can be priced very differently depending on the event. Tournament tier, market depth,
+                  travel spots and scheduling pressure all matter, and they matter even more outside the biggest stages.
+                  That does not make tennis broadly soft; it means specific segments and derivatives can be priced less
+                  cleanly than the headline market.
                 </p>
               </div>
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">

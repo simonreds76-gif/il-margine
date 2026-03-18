@@ -368,7 +368,7 @@ export default function ClosingLineValuePage() {
                 <strong className="text-slate-200">More efficient (harder to beat):</strong> Premier League match odds, NFL point spreads, Grand Slam tennis main markets.
               </p>
               <p className="mb-4">
-                <strong className="text-slate-200">Less efficient (easier to beat):</strong> Player props (shots, fouls, tackles), lower-tier tennis (ATP 250, Challengers), alternative handicaps, live betting if you&apos;re faster than books.
+                <strong className="text-slate-200">Less efficient (easier to beat):</strong> Player props (shots, fouls, tackles), alternative handicaps, live betting if you&apos;re faster than books, and selected lower-attention tennis spots rather than tennis as a whole.
               </p>
 
               <h3 className="text-xl font-semibold text-slate-100 mb-4 mt-8">
@@ -474,11 +474,11 @@ export default function ClosingLineValuePage() {
                 <strong className="text-slate-200">More efficient (harder to beat):</strong> Grand Slams, ATP Masters 1000 events, match winner markets.
               </p>
               <p className="mb-4">
-                <strong className="text-slate-200">Less efficient (more CLV opportunity):</strong> ATP 250 and Challenger events, game handicaps and total games markets, qualification rounds and early-round matches.
-              </p>
-              <p className="mb-4">
-                <strong className="text-slate-200">Why lower-tier tennis offers better CLV:</strong> Less media coverage means slower information incorporation; lower betting volume reduces market sharpness; bookmakers allocate fewer resources to pricing these matches; surface-specific performance often underpriced at smaller events.
-              </p>
+                <strong className="text-slate-200">More CLV opportunity:</strong> selected ATP 250 and Challenger events, game handicaps and total games markets, qualification rounds and early-round matches.
+                </p>
+                <p className="mb-4">
+                <strong className="text-slate-200">Why those tennis segments can offer better CLV:</strong> less attention, lower liquidity, and surface or scheduling context can create mispricing at the edges. That is different from claiming tennis itself is broadly soft.
+                </p>
               <p className="mb-4">
                 <strong className="text-slate-200">General principle:</strong> The less popular the market, the more opportunity to beat the closing line — if you have an analytical edge.
               </p>

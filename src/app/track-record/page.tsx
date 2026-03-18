@@ -9,7 +9,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Why track props and tennis separately?",
-    a: "Player props and tennis are different markets. Props markets are less efficient; bookmakers misprice them more often, creating larger edges. However, they restrict stakes quickly. Tennis markets are sharper but allow higher stakes. Tracking them separately shows where value exists and how each market performs.",
+    a: "Player props and tennis are different markets and should not be blended into one headline number. Props are structurally softer, while tennis is generally sharper and more model-dependent. Tracking them separately shows whether the edge is actually coming from soft football props, selective tennis pricing, or both.",
   },
   {
     q: "How do you handle losing runs?",
@@ -98,7 +98,7 @@ export default function TrackRecordPage() {
           <ul className="space-y-3 text-slate-300 leading-relaxed">
             <li><strong className="text-slate-100">Variance is real.</strong> Winning months and losing months happen. Even with positive long-term edge, short-term results fluctuate. This is normal.</li>
             <li><strong className="text-slate-100">Sample size matters.</strong> Performance over 20 bets is mostly noise. Over 100 bets, signal emerges. Over 200 bets, edge becomes clear. Judge long term, not week to week.</li>
-            <li><strong className="text-slate-100">ROI varies by market.</strong> Player props typically higher ROI than tennis (wider margins, more exploitable). Match odds lower ROI (tighter margins). Staking adapts accordingly.</li>
+            <li><strong className="text-slate-100">ROI varies by market.</strong> Player props and tennis should not be judged by the same expectations. Props are structurally softer; tennis is generally sharper and depends more on model quality and segment selection.</li>
             <li><strong className="text-slate-100">Stakes can get limited.</strong> If you follow picks successfully, bookmakers may reduce your stake sizes over time. See our <Link href="/bookmakers" className="text-emerald-400 hover:text-emerald-300 underline">bookmakers</Link> and <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ</Link> for context—it&apos;s a sign the approach works.</li>
             <li><strong className="text-slate-100">Losses get logged.</strong> Every selection gets recorded, winner or loser. Transparency over marketing.</li>
           </ul>

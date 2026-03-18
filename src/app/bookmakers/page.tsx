@@ -401,9 +401,10 @@ export default function BookmakersPage() {
               <div className="px-6 md:px-8 pb-4 pt-0">
                 <div className="text-slate-300 text-sm leading-relaxed space-y-3">
                   <p>Not all markets are priced equally. Bookmakers allocate resources based on betting volume and risk exposure.</p>
-                  <p><strong className="text-slate-100">Efficient Markets:</strong> Premier League match odds: Teams of traders, real-time monitoring, 3-5% margin. High liquidity + sharp money = minimal edge opportunity.</p>
-                  <p><strong className="text-slate-100">Inefficient Markets:</strong> Player props: Template pricing, minimal oversight, 10-15% margin. Lower-tier tennis: Algorithmic pricing, limited trader attention, 8-12% margin. Bet builders: Correlation mispricing common, 10-15% margin.</p>
-                  <p>Our approach: We bet across all markets when we identify genuine edge. Player props and tennis handicaps are our primary focus because mispricing is more frequent, but we&apos;ll take value wherever it exists. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">The Edge</Link> for methodology.</p>
+                  <p><strong className="text-slate-100">Efficient Markets:</strong> Premier League match odds are the clearest example. Teams of traders, real-time monitoring and heavy liquidity make those lines hard to beat consistently.</p>
+                  <p><strong className="text-slate-100">Softer Markets:</strong> Player props are the clearest soft market for us: template pricing, lighter oversight and wider margins. Bet builders can also misprice correlation.</p>
+                  <p><strong className="text-slate-100">Tennis sits in the middle.</strong> It is generally more efficient than props, but selected ATP and Challenger spots, especially in handicaps and totals, can still be worth betting when our model prices them better than the market.</p>
+                  <p>Our approach: we bet wherever we identify genuine edge. Props and selective tennis prices are the main focus, but for different reasons. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">The Edge</Link> for methodology.</p>
                 </div>
               </div>
             </details>
@@ -486,7 +487,7 @@ export default function BookmakersPage() {
               </summary>
               <div className="px-6 md:px-8 pb-4 pt-0">
                 <div className="text-slate-300 text-sm leading-relaxed space-y-3">
-                  <p>Most bookmakers use template pricing for player props and lower-tier tennis. Example: bookmaker pulls player&apos;s last 10 matches, calculates average (e.g. 2.3 SOT), applies 12% margin, outputs odds. What templates miss: opponent-specific factors, tactical matchups, referee tendencies, venue factors, motivation. When your analysis incorporates these and the template doesn&apos;t, odds diverge from true probability. That&apos;s where we operate. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">The Edge</Link>.</p>
+                  <p>Most bookmakers use template pricing for player props, and far more generic automation on parts of the tennis board than the average bettor realises. Example: bookmaker pulls a player&apos;s last 10 matches, calculates an average, applies margin, and pushes out a number. What those shortcuts miss: opponent-specific factors, tactical matchups, referee tendencies, venue context, surface effects, and scheduling pressure. When your analysis captures those things and the template doesn&apos;t, price and true probability drift apart. That&apos;s where we operate. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">The Edge</Link>.</p>
                 </div>
               </div>
             </details>
