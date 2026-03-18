@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { supabase, Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
@@ -38,42 +38,7 @@ export default function PlayerProps() {
     cyan: { border: "border-cyan-500/50", text: "text-cyan-400", bg: "bg-cyan-500/10", bar: "from-cyan-500 to-cyan-400" },
   };
 
-  useEffect(() => {
-    fetchData();
-
-    // Set up real-time subscription to update when bets change
-    const channel = supabase
-      .channel('props-bets-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
-          schema: 'public',
-          table: 'bets',
-          filter: 'market=eq.props'
-        },
-        (payload) => {
-          console.log('Props bet changed:', payload.eventType);
-          fetchData();
-        }
-      )
-      .subscribe();
-
-    // Cleanup subscription on unmount
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
-
-  // Scroll to #picks when landing from homepage link (client-side nav doesn't scroll to hash)
-  useEffect(() => {
-    if (typeof window === "undefined" || window.location.hash !== "#picks" || loading) return;
-    const el = document.getElementById("picks");
-    if (!el) return;
-    requestAnimationFrame(() => requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" })));
-  }, [loading]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     
     const { data: pending } = await supabase
@@ -102,9 +67,46 @@ export default function PlayerProps() {
       .eq("market", "props");
     
     if (categoryStats) setStats(categoryStats);
-
     setLoading(false);
-  };
+  }, []);
+
+  useEffect(() => {
+    const initialFetch = window.setTimeout(() => {
+      void fetchData();
+    }, 0);
+
+    // Set up real-time subscription to update when bets change
+    const channel = supabase
+      .channel('props-bets-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
+          schema: 'public',
+          table: 'bets',
+          filter: 'market=eq.props'
+        },
+        (payload) => {
+          console.log('Props bet changed:', payload.eventType);
+          fetchData();
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscription on unmount
+    return () => {
+      window.clearTimeout(initialFetch);
+      supabase.removeChannel(channel);
+    };
+  }, [fetchData]);
+
+  // Scroll to #picks when landing from homepage link (client-side nav doesn't scroll to hash)
+  useEffect(() => {
+    if (typeof window === "undefined" || window.location.hash !== "#picks" || loading) return;
+    const el = document.getElementById("picks");
+    if (!el) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" })));
+  }, [loading]);
 
   const getStatsForLeague = (leagueId: string) => {
     if (leagueId === "all") {
@@ -199,19 +201,6 @@ export default function PlayerProps() {
   const activeColor = leagueConfig.find(l => l.id === activeLeague)?.color || "emerald";
   const currentStats = getStatsForLeague(activeLeague);
 
-  const timeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
-    if (diffDays > 0) return `${diffDays}d ago`;
-    if (diffHours > 0) return `${diffHours}h ago`;
-    if (diffMins > 0) return `${diffMins}m ago`;
-    return "Just now";
-  };
-
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       {/* Nav */}
@@ -230,8 +219,9 @@ export default function PlayerProps() {
             Football Player <span className="text-emerald-400">Props</span>
           </h1>
           <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
-            Player props are one of the softest pricing areas in football. We focus on shots, tackles, fouls and cards
-            where market depth is thinner, limits are lower and mispriced lines show up more often than they do in match odds.
+            Player props are one of the few football markets where detailed matchup work still pays. We focus on
+            shots, tackles, fouls and cards where role, volume and game state move faster than the bookmaker template,
+            and where the wrong line appears more often than it does in the main match odds.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-2">
@@ -250,26 +240,29 @@ export default function PlayerProps() {
             <div className="grid gap-4 md:grid-cols-3">
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
                 <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">01</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Softer markets</h3>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Less efficient than main markets</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  Player props usually carry wider margins, but the underlying models are less mature than match odds.
-                  That leaves more room for obvious disagreement between books.
+                  Match odds attract the sharpest pricing and the most attention. Props usually do not. The margins are
+                  wider, but the modelling is also thinner, which leaves more room for one bookmaker to hang a number
+                  that another would never copy.
                 </p>
               </div>
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
                 <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">02</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Role and matchup first</h3>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Role and matchup before averages</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  We care about role, volume and tactical matchup. A shots line means one thing for a pressing winger
-                  and something very different for a full-back.
+                  A prop line only makes sense in context. We care about role, likely minutes, set-piece share, team
+                  shape, opponent tendencies and referee profile. A shots line for a high-volume winger means something
+                  very different from the same number on a full-back.
                 </p>
               </div>
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
                 <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">03</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Price before hype</h3>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Price before player name</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  Bigger edges matter more than bigger names. The goal is to find the wrong line, not to chase the most
-                  obvious player on the slate.
+                  We are not trying to bet the most famous player on the slate. We are trying to take the best number.
+                  Sometimes that means a star in a strong spot; sometimes it means a less glamorous role player whose
+                  line has been copied without enough thought.
                 </p>
               </div>
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { supabase, Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
@@ -43,43 +43,7 @@ export default function TennisTips() {
     indigo: { border: "border-indigo-500/50", text: "text-indigo-400", bg: "bg-indigo-500/10", bar: "from-indigo-500 to-indigo-400" },
   };
 
-  // Fetch data on load
-  useEffect(() => {
-    fetchData();
-
-    // Set up real-time subscription to update when bets change
-    const channel = supabase
-      .channel('tennis-bets-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'bets',
-          filter: 'market=eq.tennis'
-        },
-        (payload) => {
-          console.log('Tennis bet changed:', payload.eventType);
-          fetchData();
-        }
-      )
-      .subscribe();
-
-    // Cleanup subscription on unmount
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
-
-  // Scroll to #picks when landing from homepage link (client-side nav doesn't scroll to hash)
-  useEffect(() => {
-    if (typeof window === "undefined" || window.location.hash !== "#picks" || loading) return;
-    const el = document.getElementById("picks");
-    if (!el) return;
-    requestAnimationFrame(() => requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" })));
-  }, [loading]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     
     // Fetch pending bets
@@ -111,9 +75,47 @@ export default function TennisTips() {
       .eq("market", "tennis");
     
     if (categoryStats) setStats(categoryStats);
-
     setLoading(false);
-  };
+  }, []);
+
+  // Fetch data on load
+  useEffect(() => {
+    const initialFetch = window.setTimeout(() => {
+      void fetchData();
+    }, 0);
+
+    // Set up real-time subscription to update when bets change
+    const channel = supabase
+      .channel('tennis-bets-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'bets',
+          filter: 'market=eq.tennis'
+        },
+        (payload) => {
+          console.log('Tennis bet changed:', payload.eventType);
+          fetchData();
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscription on unmount
+    return () => {
+      window.clearTimeout(initialFetch);
+      supabase.removeChannel(channel);
+    };
+  }, [fetchData]);
+
+  // Scroll to #picks when landing from homepage link (client-side nav doesn't scroll to hash)
+  useEffect(() => {
+    if (typeof window === "undefined" || window.location.hash !== "#picks" || loading) return;
+    const el = document.getElementById("picks");
+    if (!el) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" })));
+  }, [loading]);
 
   // Calculate stats for display
   const getStatsForCategory = (categoryId: string) => {
@@ -230,8 +232,9 @@ export default function TennisTips() {
             Tennis Betting <span className="text-emerald-400">Tips</span>
           </h1>
           <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
-            Daily ATP, Challenger and Grand Slam picks built around price, not noise. We focus on market mistakes,
-            disciplined staking and a clear split between what is live now and what has already settled.
+            Daily ATP, Challenger and Grand Slam picks built around price rather than noise. The aim is not to
+            pretend we can call every winner in isolation; it is to find numbers that are too big, handicaps that
+            are a touch loose, and totals that have been shaped by generic assumptions instead of the actual match.
           </p>
 
           {/* Methodology */}
@@ -243,26 +246,30 @@ export default function TennisTips() {
             <div className="grid gap-4 md:grid-cols-3">
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
                 <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">01</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Surface over generic form</h3>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Surface before reputation</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  We weight surface-specific strength, recent serve and return form, and fatigue so hard-court pricing
-                  is not treated like clay.
+                  Tennis is not one sport priced the same everywhere. Clay, grass and hard courts reward different
+                  players, and we lean heavily on surface-specific serve and return strength, recent workload, and
+                  matchup shape rather than headline ranking alone.
                 </p>
               </div>
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
                 <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">02</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Tournament context matters</h3>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Context changes the price</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  ATP 250s, 500s and Challenger events often stay softer for longer than Slams, so tier and market
-                  depth are part of the price.
+                  The same player can be priced very differently depending on the event. ATP 250s, 500s and
+                  Challengers often hold softer numbers for longer than the majors, so tournament tier, market depth,
+                  travel spots and scheduling pressure are part of the edge, not background noise.
                 </p>
               </div>
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
                 <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">03</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Line value before outcomes</h3>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Line value over outcomes</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  We are looking for bad numbers, not pretending to predict every winner. That is where moneylines,
-                  handicaps and totals become interesting.
+                  This is the part that matters most. A losing bet can still be the right bet if the number was good,
+                  and a winning bet can still be poor if the price was wrong. We care about whether a moneyline,
+                  handicap or total beats the market by the close, because that is the cleanest signal that the
+                  process is sound.
                 </p>
               </div>
             </div>
