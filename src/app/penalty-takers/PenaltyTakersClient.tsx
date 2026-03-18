@@ -161,29 +161,7 @@ export default function PenaltyTakersClient({ leagues, totalTeams, currentSeason
           </div>
         </section>
 
-        <section className="grid gap-4 py-10 lg:grid-cols-[1.15fr_0.85fr]">
-          <div className="rounded-xl border border-slate-800/60 bg-slate-900/55 p-6">
-            <div className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-400">Why this matters</div>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-100">One page, full hierarchy</h2>
-            <p className="mt-4 text-[15px] leading-7 text-slate-300">
-              Most penalty-taker pages stop at the headline name. That breaks the moment the first-choice taker is
-              benched, suspended or off the pitch. This page is built around the real question: who is next?
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-slate-800/60 bg-slate-900/55 p-6">
-            <div className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-400">Editorial standard</div>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-100">How we keep it current</h2>
-            <div className="mt-4 space-y-4 text-[15px] leading-7 text-slate-300">
-              <p>
-                We only move a hierarchy when there is credible evidence behind it: match evidence, team news,
-                injuries, suspensions, transfers, missed penalties or a strong league-specific reference source.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <div className="sticky top-0 z-20 -mx-4 mb-10 border-y border-slate-800/70 bg-[#0f1117]/95 px-4 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div className="sticky top-0 z-20 -mx-4 my-10 border-y border-slate-800/70 bg-[#0f1117]/95 px-4 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <nav aria-label="League jump links" className="flex overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {leagues.map((league) => (
               <a
@@ -228,21 +206,25 @@ export default function PenaltyTakersClient({ leagues, totalTeams, currentSeason
         </section>
 
         <section className="mt-14 border-t border-slate-800/50 py-10">
-          <div className="rounded-xl border border-slate-800/60 bg-slate-900/55 p-6">
-            <div className="flex items-start gap-4">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10">
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                  <circle cx="10" cy="10" r="8.5" stroke="currentColor" strokeWidth="1" className="text-emerald-300" />
-                  <path d="M10 6v4.5l3 1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" className="text-emerald-300" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-[15px] font-semibold text-slate-100">Updated every matchweek</h3>
-                <p className="mt-1 text-[15px] leading-7 text-slate-300">
-                  This is a reference page, not a disposable article. When a hierarchy changes because of a missed
-                  penalty, a transfer, an injury or a coach decision, this page should move with it.
-                </p>
-              </div>
+          <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="rounded-xl border border-slate-800/60 bg-slate-900/55 p-6">
+              <div className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-400">Using the hierarchy</div>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-100">What the order tells you</h2>
+              <p className="mt-4 text-[15px] leading-7 text-slate-300">
+                The first name is the current likeliest taker. The second and third names matter when the regular
+                taker is benched, suspended, injured or substituted. That is usually where a quick one-name list
+                stops being useful.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-slate-800/60 bg-slate-900/55 p-6">
+              <div className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-400">When it changes</div>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-100">Only on real evidence</h2>
+              <p className="mt-4 text-[15px] leading-7 text-slate-300">
+                We only move a team when the hierarchy actually changes on the pitch or in the squad context:
+                penalties taken, penalties missed, injuries, suspensions, transfers, coach decisions or strong
+                league-specific reporting.
+              </p>
             </div>
           </div>
 

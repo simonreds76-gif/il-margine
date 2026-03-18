@@ -96,6 +96,11 @@ const bookmakerDisplayNames: Record<string, string> = {
 const logoScale: Record<string, number> = {
   pinnacle: 2,
   ladbrokes: 0.85,
+  bwin: 1.05,
+};
+
+const logoFrameClasses: Record<string, string> = {
+  bwin: "rounded-md border border-slate-200/90 bg-white p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
 };
 
 // Prefer SVG for crisp scaling (avoids pixelation when PNG is low-res)
@@ -120,6 +125,9 @@ export default function BookmakerLogo({
   noLink = false,
 }: BookmakerLogoProps) {
   const bookmaker = Array.isArray(bookmakerProp) ? bookmakerProp[0] : bookmakerProp;
+  const [srcIndex, setSrcIndex] = useState(0);
+  const [imageFailed, setImageFailed] = useState(false);
+
   if (!bookmaker) {
     return (
       <span className={`text-xs text-slate-600 ${className}`}>-</span>
@@ -150,8 +158,6 @@ export default function BookmakerLogo({
             `/bookmakers/${logoBase}.svg`,
           ]
     : [];
-  const [srcIndex, setSrcIndex] = useState(0);
-  const [imageFailed, setImageFailed] = useState(false);
   const currentSrc = logoPaths[srcIndex] || null;
 
   const link = bookmaker.affiliate_link || "#";
@@ -159,6 +165,7 @@ export default function BookmakerLogo({
 
   const showImage = currentSrc && !imageFailed;
   const scale = logoScale[scaleKey] ?? 1;
+  const frameClassName = logoFrameClasses[scaleKey] ?? "";
 
   // Prefer name for display; use override so "CR" shows as "Coral" etc.
   const displayName =
@@ -170,23 +177,27 @@ export default function BookmakerLogo({
   const content = (
     <div className={`flex items-center justify-center gap-2 ${className}`}>
       {showImage ? (
-        <div className={`${sizeClasses[size]} min-w-[2rem] min-h-[2rem] relative flex-shrink-0 mx-auto overflow-hidden`}>
-          <div className="absolute inset-0" style={{ transform: `scale(${scale})` }}>
-            <Image
-              src={currentSrc}
-              alt={displayName}
-              fill
-              sizes="48px"
-              className="object-contain"
-              unoptimized
-              onError={() => {
-                if (srcIndex < logoPaths.length - 1) {
-                  setSrcIndex((i) => i + 1);
-                } else {
-                  setImageFailed(true);
-                }
-              }}
-            />
+        <div
+          className={`${sizeClasses[size]} min-w-[2rem] min-h-[2rem] relative flex-shrink-0 mx-auto overflow-hidden ${frameClassName}`}
+        >
+          <div className="relative h-full w-full">
+            <div className="absolute inset-0" style={{ transform: `scale(${scale})` }}>
+              <Image
+                src={currentSrc}
+                alt={displayName}
+                fill
+                sizes="48px"
+                className="object-contain"
+                unoptimized
+                onError={() => {
+                  if (srcIndex < logoPaths.length - 1) {
+                    setSrcIndex((i) => i + 1);
+                  } else {
+                    setImageFailed(true);
+                  }
+                }}
+              />
+            </div>
           </div>
         </div>
       ) : (
