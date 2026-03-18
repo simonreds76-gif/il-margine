@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { promises as fs } from "fs";
-import path from "path";
 import { notFound } from "next/navigation";
+
+import { readGoalscorerLiveFile } from "@/lib/goalscorer-live-files";
 
 export const dynamic = "force-dynamic";
 
@@ -145,14 +145,6 @@ function parseCsv(text: string): CsvRow[] {
   });
 }
 
-async function readLocalFile(relativePath: string): Promise<string | null> {
-  try {
-    return await fs.readFile(path.join(process.cwd(), relativePath), "utf8");
-  } catch {
-    return null;
-  }
-}
-
 function parseNumber(value?: string): number {
   const n = Number.parseFloat(value ?? "");
   return Number.isFinite(n) ? n : 0;
@@ -200,7 +192,7 @@ function parseShadowRow(row: CsvRow, league: LeagueSource): ShadowRow {
 async function loadShadowRows(): Promise<ShadowRow[]> {
   const loaded = await Promise.all(
     LEAGUE_SOURCES.map(async (league) => {
-      const text = await readLocalFile(league.file);
+      const text = await readGoalscorerLiveFile(league.file);
       if (!text) return [] as ShadowRow[];
       return parseCsv(text).map((row) => parseShadowRow(row, league));
     }),

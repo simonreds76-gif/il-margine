@@ -144,6 +144,7 @@ def main() -> None:
     parser.add_argument("--settle-shadow", action="store_true", help="Run shadow-settlement/summary only")
     parser.add_argument("--shadow-output", default="", help="Shadow signals CSV path")
     parser.add_argument("--shadow-summary", default="", help="Shadow performance summary TXT path")
+    parser.add_argument("--upload-live-snapshot", action="store_true", help="Upload the current live goalscorer files snapshot to Supabase")
     args = parser.parse_args()
     league_config = LEAGUE_CONFIGS[args.league]
 
@@ -164,6 +165,7 @@ def main() -> None:
     historical_backtest_script = str(ROOT / "scripts" / "goalscorer-historical-backtest.py")
     live_compare_script = str(ROOT / "scripts" / "goalscorer-live-compare.py")
     shadow_tracker_script = str(ROOT / "scripts" / "goalscorer-shadow-tracker.py")
+    live_snapshot_script = str(ROOT / "scripts" / "goalscorer-live-snapshot.py")
     odds_api_script = str(ROOT / "scripts" / "odds-api-scrape-goalscorer.py")
     pinnacle_script = str(ROOT / "scripts" / "pinnacle-scrape-goalscorer.py")
     fotmob_lineups_script = str(ROOT / "scripts" / "fotmob-fetch-lineups.py")
@@ -275,6 +277,9 @@ def main() -> None:
                 _run(shadow_cmd)
         else:
             print("  No goalscorer odds archive found. Skipping comparison.")
+
+    if args.upload_live_snapshot:
+        _run([sys.executable, live_snapshot_script, "--supabase"])
 
     print("\n  Done.\n")
 

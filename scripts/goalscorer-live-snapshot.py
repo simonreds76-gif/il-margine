@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""
+Build and optionally upload a hosted snapshot of the live goalscorer files.
+
+This keeps the deployed pages close to the local machine output without
+rewriting the existing parsers. We snapshot the current CSV/TXT/JSON files into
+one JSON blob and upsert that blob to Supabase.
+
+Examples:
+  python scripts/goalscorer-live-snapshot.py
+  python scripts/goalscorer-live-snapshot.py --supabase
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Dict
+
+
+ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_OUTPUT = ROOT / "data" / "goalscorer" / "goalscorer-live-snapshot.json"
+DEFAULT_SNAPSHOT_KEY = "live_state"
+SNAPSHOT_FILES = [
+    "data/goalscorer/goalscorer-shadow-signals.csv",
+    "data/goalscorer/epl-shadow-signals.csv",
+    "data/goalscorer/la-liga-shadow-signals.csv",
+    "data/goalscorer/bundesliga-shadow-signals.csv",
+    "data/goalscorer/ligue-1-shadow-signals.csv",
+    "data/goalscorer/goalscorer-live-comparison.csv",
+    "data/goalscorer/goalscorer-live-comparison.txt",
+    "data/goalscorer/confirmed-lineups.json",
+    "data/goalscorer/epl/goalscorer-live-comparison.csv",
+    "data/goalscorer/epl/goalscorer-live-comparison.txt",
+    "data/goalscorer/epl-confirmed-lineups.json",
+    "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
+    "data/goalscorer/la-liga/goalscorer-live-comparison.txt",
+    "data/goalscorer/la-liga-confirmed-lineups.json",
+    "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
+    "data/goalscorer/bundesliga/goalscorer-live-comparison.txt",
+    "data/goalscorer/bundesliga-confirmed-lineups.json",
+    "data/goalscorer/ligue-1/goalscorer-live-comparison.csv",
+    "data/goalscorer/ligue-1/goalscorer-live-comparison.txt",
+    "data/goalscorer/ligue-1-confirmed-lineups.json",
+]
+
+
+def load_env() -> None:
+    for name in (".env.local", "env.local"):
+        path = ROOT / name
+        if not path.exists():
+            continue
+        for raw_line in path.read_text(encoding="utf-8").splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            os.environ[key.strip()] = value.strip().strip('"').strip("'")
+
+
+def build_snapshot() -> Dict[str, object]:
+    generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    files: Dict[str, Dict[str, object]] = {}
+    missing: list[str] = []
+
+    for rel_path in SNAPSHOT_FILES:
+        abs_path = ROOT / rel_path
+        if not abs_path.exists():
+            missing.append(rel_path)
+            continue
+        text = abs_path.read_text(encoding="utf-8")
+        stat = abs_path.stat()
+        files[rel_path] = {
+            "content": text,
+            "mtime": datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+            "size_bytes": stat.st_size,
+        }
+
+    return {
+        "generated_at": generated_at,
+        "file_count": len(files),
+        "missing_files": missing,
+        "files": files,
+    }
+
+
+def write_snapshot(path: Path, payload: Dict[str, object]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def upload_snapshot(snapshot_key: str, payload: Dict[str, object]) -> None:
+    import requests
+
+    load_env()
+    base = (os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or os.environ.get("SUPABASE_URL") or "").rstrip("/")
+    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY")
+    if not base or not key:
+        raise SystemExit("Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to upload the live snapshot.")
+
+    row = {
+        "snapshot_key": snapshot_key,
+        "updated_at": payload["generated_at"],
+        "payload": payload,
+    }
+    headers = {
+        "apikey": key,
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json",
+        "Prefer": "resolution=merge-duplicates,return=representation",
+    }
+    url = f"{base}/rest/v1/goalscorer_live_snapshot?on_conflict=snapshot_key"
+    response = requests.post(url, headers=headers, json=[row], timeout=30)
+    if not response.ok:
+        raise SystemExit(f"Supabase upload failed: {response.status_code} {response.text[:400]}")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Snapshot live goalscorer files for hosted page reads")
+    parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Local snapshot JSON path")
+    parser.add_argument("--snapshot-key", default=DEFAULT_SNAPSHOT_KEY, help="Supabase snapshot_key value")
+    parser.add_argument("--supabase", action="store_true", help="Upload snapshot payload to Supabase")
+    args = parser.parse_args()
+
+    print("\n" + "=" * 64)
+    print("  IL MARGINE - Goalscorer Live Snapshot")
+    print("=" * 64)
+
+    payload = build_snapshot()
+    output_path = Path(args.output)
+    write_snapshot(output_path, payload)
+
+    print(f"  Generated at: {payload['generated_at']}")
+    print(f"  Files stored: {payload['file_count']}")
+    print(f"  Missing files: {len(payload['missing_files'])}")
+    print(f"  Saved: {output_path}")
+
+    if args.supabase:
+        upload_snapshot(args.snapshot_key, payload)
+        print(f"  Uploaded snapshot '{args.snapshot_key}' to goalscorer_live_snapshot")
+
+    print("\n  Done.\n")
+
+
+if __name__ == "__main__":
+    main()

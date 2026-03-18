@@ -1,7 +1,6 @@
 ﻿import Link from "next/link";
-import { promises as fs } from "fs";
-import path from "path";
 import { notFound } from "next/navigation";
+import { readGoalscorerLiveFile, readGoalscorerLiveMtime } from "@/lib/goalscorer-live-files";
 
 type CsvRow = Record<string, string>;
 type FixtureGroup = {
@@ -200,23 +199,6 @@ function decodeHtml(text: string): string {
     .replace(/&ouml;/g, "ö")
     .replace(/&eacute;/g, "é")
     .replace(/&Eacute;/g, "É");
-}
-
-async function readLocalFile(relPath: string): Promise<string | null> {
-  try {
-    return await fs.readFile(path.join(process.cwd(), relPath), "utf8");
-  } catch {
-    return null;
-  }
-}
-
-async function readLocalMtime(relPath: string): Promise<string | null> {
-  try {
-    const stat = await fs.stat(path.join(process.cwd(), relPath));
-    return stat.mtime.toISOString();
-  } catch {
-    return null;
-  }
 }
 
 function parseStoredLineups(text: string | null, leagueKey: string): FixtureLineup[] {
@@ -695,10 +677,10 @@ export default async function GoalscorerMonitorPage() {
     Promise.all(
       LIVE_COMPARE_CONFIGS.map(async (config) => {
         const [comparisonCsv, comparisonTxt, comparisonMtime, lineupsJson] = await Promise.all([
-          readLocalFile(config.comparisonCsv),
-          readLocalFile(config.comparisonTxt),
-          readLocalMtime(config.comparisonCsv),
-          readLocalFile(config.lineupsJson),
+          readGoalscorerLiveFile(config.comparisonCsv),
+          readGoalscorerLiveFile(config.comparisonTxt),
+          readGoalscorerLiveMtime(config.comparisonCsv),
+          readGoalscorerLiveFile(config.lineupsJson),
         ]);
         const rows = comparisonCsv ? parseCsv(comparisonCsv) : [];
         const fixtures = buildFixtureGroups(rows, config.key, config.label);
@@ -723,7 +705,7 @@ export default async function GoalscorerMonitorPage() {
         };
       }),
     ),
-    Promise.all(SHADOW_SIGNAL_FILES.map((file) => readLocalFile(file))),
+    Promise.all(SHADOW_SIGNAL_FILES.map((file) => readGoalscorerLiveFile(file))),
   ]);
 
   const rows = leagueDatasets.flatMap((dataset) => dataset.rows);

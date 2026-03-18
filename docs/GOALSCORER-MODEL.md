@@ -79,6 +79,10 @@ Odds workflow:
     - `signal_confidence`
     - `public_action`
   - writes both the current live comparison and a timestamped snapshot under `data/goalscorer/live-history/`
+- `scripts/goalscorer-live-snapshot.py`
+  - snapshots the live comparison, shadow tracker and lineup files into one JSON payload
+  - optional `--supabase` upload to `goalscorer_live_snapshot`
+  - intended for deployed Next.js pages that cannot see the local runtime CSVs directly
 
 Recommended odds workflow right now:
 
@@ -101,6 +105,7 @@ Historical backtest outputs:
 
 Supabase schema:
 - `docs/supabase-goalscorer-odds-history.sql`
+- `docs/supabase-goalscorer-live-snapshot.sql`
 
 One-command workflow:
 - `scripts/run-goalscorer-pipeline.py`
