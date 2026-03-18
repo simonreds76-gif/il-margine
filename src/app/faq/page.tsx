@@ -10,9 +10,9 @@ import { BASE_URL } from "@/lib/config";
 import PageHomeLink from "@/components/PageHomeLink";
 
 export const metadata: Metadata = {
-  title: "FAQ",
+  title: "Sports Betting FAQ | Player Props, Tennis, Bookmakers and Bankroll",
   description:
-    "Frequently asked questions about Il Margine: betting tips, player props, tennis, ROI, bookmakers, bankroll management, and more.",
+    "A straight-talking sports betting FAQ covering player props, ATP tennis, value betting, ROI, bookmakers, bankroll management and how Il Margine works.",
   alternates: {
     canonical: `${BASE_URL}/faq`,
   },
@@ -67,7 +67,7 @@ export default function FaqPage() {
             Frequently Asked Questions
           </h1>
           <p className="text-slate-400 text-base mb-8">
-            Betting with mathematical edge. Player props, tennis, ROI, bookmakers, and more.
+            Straight answers on player props, tennis, pricing, bookmakers, staking and how we think about edge.
           </p>
 
           {/* Section navigation - numbered list for clear structure */}
@@ -152,4 +152,3 @@ export default function FaqPage() {
     </div>
   );
 }
-

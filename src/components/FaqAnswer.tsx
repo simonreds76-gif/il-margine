@@ -21,6 +21,25 @@ function parseMarkdownTable(block: string): string[][] {
   return rows;
 }
 
+function isUnorderedList(block: string): boolean {
+  const lines = block.trim().split("\n").filter(Boolean);
+  return lines.length > 0 && lines.every((line) => /^[-*]\s+/.test(line.trim()));
+}
+
+function isOrderedList(block: string): boolean {
+  const lines = block.trim().split("\n").filter(Boolean);
+  return lines.length > 0 && lines.every((line) => /^\d+\.\s+/.test(line.trim()));
+}
+
+function parseListItems(block: string, ordered: boolean): string[] {
+  const pattern = ordered ? /^\d+\.\s+/ : /^[-*]\s+/;
+  return block
+    .trim()
+    .split("\n")
+    .map((line) => line.trim().replace(pattern, ""))
+    .filter(Boolean);
+}
+
 /**
  * Renders FAQ answer: paragraphs, **bold**, [text](url), and markdown tables as proper HTML tables.
  */
@@ -66,6 +85,26 @@ export default function FaqAnswer({ text }: { text: string }) {
                 </tbody>
               </table>
             </div>
+          );
+        }
+        if (isUnorderedList(trimmed)) {
+          const items = parseListItems(trimmed, false);
+          return (
+            <ul key={i} className="list-disc space-y-2 pl-5 text-slate-300">
+              {items.map((item, j) => (
+                <li key={j}>{renderInline(item)}</li>
+              ))}
+            </ul>
+          );
+        }
+        if (isOrderedList(trimmed)) {
+          const items = parseListItems(trimmed, true);
+          return (
+            <ol key={i} className="list-decimal space-y-2 pl-5 text-slate-300">
+              {items.map((item, j) => (
+                <li key={j}>{renderInline(item)}</li>
+              ))}
+            </ol>
           );
         }
         return (
