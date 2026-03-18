@@ -39,6 +39,15 @@ UNDERSTAT_LEAGUE_SLUGS = {
     "epl": "EPL",
     "la-liga": "La_liga",
     "bundesliga": "Bundesliga",
+    "ligue-1": "Ligue_1",
+}
+
+LEAGUE_COMPETITION_VARIANTS = {
+    "serie-a": {"italy serie a", "serie a"},
+    "epl": {"england premier league", "premier league"},
+    "la-liga": {"spain la liga", "la liga"},
+    "bundesliga": {"germany bundesliga", "bundesliga"},
+    "ligue-1": {"france ligue 1", "ligue 1", "ligue 1 mcdonalds"},
 }
 MIN_PUBLIC_HISTORY_MINUTES = 500.0
 CONFIRMED_STARTER_MINUTES = 85.0
@@ -271,9 +280,10 @@ def _load_csv(path: str) -> List[dict]:
         return list(csv.DictReader(handle))
 
 
-def load_odds_rows(path: str, bookmaker_filter: str = "") -> List[dict]:
+def load_odds_rows(path: str, bookmaker_filter: str = "", league: str = "serie-a") -> List[dict]:
     rows = _load_csv(path)
     bookmaker_norm = _norm_text(bookmaker_filter) if bookmaker_filter else ""
+    league_variants = LEAGUE_COMPETITION_VARIANTS.get(league, set())
     loaded: List[dict] = []
     for row in rows:
         bookmaker = (row.get("bookmaker") or "").strip()
@@ -286,6 +296,9 @@ def load_odds_rows(path: str, bookmaker_filter: str = "") -> List[dict]:
         home_team = (row.get("home_team") or "").strip()
         away_team = (row.get("away_team") or "").strip()
         player_name = (row.get("player_name") or "").strip()
+        competition = (row.get("competition") or "").strip()
+        if league_variants and _norm_text(competition) not in league_variants:
+            continue
         if not match_date or not home_team or not away_team or not player_name:
             continue
         loaded.append(
@@ -293,7 +306,7 @@ def load_odds_rows(path: str, bookmaker_filter: str = "") -> List[dict]:
                 "captured_at": (row.get("captured_at") or "").strip(),
                 "match_date": match_date,
                 "bookmaker": bookmaker,
-                "competition": (row.get("competition") or "").strip(),
+                "competition": competition,
                 "home_team": home_team,
                 "away_team": away_team,
                 "player_name": player_name,
@@ -709,7 +722,7 @@ def main() -> None:
     penalty_hierarchy = load_penalty_hierarchy(ROOT / args.penalty_hierarchy, team_key_func=team_key_func)
 
     historical_rows = load_match_logs(args.data)
-    odds_rows = load_odds_rows(args.odds, bookmaker_filter=args.bookmaker)
+    odds_rows = load_odds_rows(args.odds, bookmaker_filter=args.bookmaker, league=args.league)
     if not args.all_captures:
         odds_rows = latest_rows_per_market(odds_rows)
     compared_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")

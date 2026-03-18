@@ -6,6 +6,9 @@ import { notFound } from "next/navigation";
 type CsvRow = Record<string, string>;
 type FixtureGroup = {
   key: string;
+  leagueKey: string;
+  leagueLabel: string;
+  competition: string;
   matchDate: string;
   bookmaker: string;
   homeTeam: string;
@@ -18,6 +21,7 @@ type LineupPlayer = {
   position: string;
 };
 type FixtureLineup = {
+  leagueKey: string;
   homeTeam: string;
   awayTeam: string;
   homeKey: string;
@@ -45,7 +49,6 @@ export const dynamic = "force-dynamic";
 const MODEL_MONITOR_PUBLIC =
   process.env.MODEL_MONITOR_PUBLIC === "1" ||
   process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
-const ROTOWIRE_LINEUPS_URL = "https://www.rotowire.com/soccer/lineups.php?league=SERI";
 const SHADOW_SIGNAL_FILES = [
   "data/goalscorer/goalscorer-shadow-signals.csv",
   "data/goalscorer/epl-shadow-signals.csv",
@@ -53,6 +56,43 @@ const SHADOW_SIGNAL_FILES = [
   "data/goalscorer/bundesliga-shadow-signals.csv",
   "data/goalscorer/ligue-1-shadow-signals.csv",
 ];
+const LIVE_COMPARE_CONFIGS = [
+  {
+    key: "serie-a",
+    label: "Serie A",
+    comparisonCsv: "data/goalscorer/goalscorer-live-comparison.csv",
+    comparisonTxt: "data/goalscorer/goalscorer-live-comparison.txt",
+    lineupsJson: "data/goalscorer/confirmed-lineups.json",
+  },
+  {
+    key: "epl",
+    label: "Premier League",
+    comparisonCsv: "data/goalscorer/epl/goalscorer-live-comparison.csv",
+    comparisonTxt: "data/goalscorer/epl/goalscorer-live-comparison.txt",
+    lineupsJson: "data/goalscorer/epl-confirmed-lineups.json",
+  },
+  {
+    key: "la-liga",
+    label: "La Liga",
+    comparisonCsv: "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
+    comparisonTxt: "data/goalscorer/la-liga/goalscorer-live-comparison.txt",
+    lineupsJson: "data/goalscorer/la-liga-confirmed-lineups.json",
+  },
+  {
+    key: "bundesliga",
+    label: "Bundesliga",
+    comparisonCsv: "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
+    comparisonTxt: "data/goalscorer/bundesliga/goalscorer-live-comparison.txt",
+    lineupsJson: "data/goalscorer/bundesliga-confirmed-lineups.json",
+  },
+  {
+    key: "ligue-1",
+    label: "Ligue 1",
+    comparisonCsv: "data/goalscorer/ligue-1/goalscorer-live-comparison.csv",
+    comparisonTxt: "data/goalscorer/ligue-1/goalscorer-live-comparison.txt",
+    lineupsJson: "data/goalscorer/ligue-1-confirmed-lineups.json",
+  },
+] as const;
 const TEAM_ALIASES: Record<string, string> = {
   "ac milan": "milan",
   milan: "milan",
@@ -128,10 +168,6 @@ function parseCsv(text: string): CsvRow[] {
   });
 }
 
-function stripTags(text: string): string {
-  return text.replace(/<[^>]+>/g, " ");
-}
-
 function decodeHtml(text: string): string {
   return text
     .replace(/&amp;/g, "&")
@@ -164,18 +200,65 @@ async function readLocalMtime(relPath: string): Promise<string | null> {
   }
 }
 
-async function fetchRotowireHtml(): Promise<string | null> {
+function parseStoredLineups(text: string | null, leagueKey: string): FixtureLineup[] {
+  if (!text) return [];
   try {
-    const response = await fetch(ROTOWIRE_LINEUPS_URL, {
-      headers: {
-        "User-Agent": "Mozilla/5.0",
-      },
-      next: { revalidate: 300 },
-    });
-    if (!response.ok) return null;
-    return await response.text();
+    const payload = JSON.parse(text) as {
+      fixtures?: Array<{
+        home_team?: string;
+        away_team?: string;
+        home_status?: string;
+        away_status?: string;
+        home_starters?: Array<{ name?: string; role_group?: string }>;
+        away_starters?: Array<{ name?: string; role_group?: string }>;
+        home_players?: string[];
+        away_players?: string[];
+      }>;
+    };
+    return (payload.fixtures ?? [])
+      .map((fixture) => {
+        const homeTeam = decodeHtml(fixture.home_team ?? "").trim();
+        const awayTeam = decodeHtml(fixture.away_team ?? "").trim();
+        const homeStarterEntries = fixture.home_starters ?? [];
+        const awayStarterEntries = fixture.away_starters ?? [];
+        const homePlayers =
+          homeStarterEntries.length > 0
+            ? homeStarterEntries.map((entry) => ({
+                name: decodeHtml(entry.name ?? "").trim(),
+                position: decodeHtml(entry.role_group ?? "").trim(),
+              }))
+            : (fixture.home_players ?? []).map((name) => ({
+                name: decodeHtml(name).trim(),
+                position: "",
+              }));
+        const awayPlayers =
+          awayStarterEntries.length > 0
+            ? awayStarterEntries.map((entry) => ({
+                name: decodeHtml(entry.name ?? "").trim(),
+                position: decodeHtml(entry.role_group ?? "").trim(),
+              }))
+            : (fixture.away_players ?? []).map((name) => ({
+                name: decodeHtml(name).trim(),
+                position: "",
+              }));
+
+        if (!homeTeam || !awayTeam || !homePlayers.length || !awayPlayers.length) return null;
+
+        return {
+          leagueKey,
+          homeTeam,
+          awayTeam,
+          homeKey: teamKey(homeTeam),
+          awayKey: teamKey(awayTeam),
+          homeStatus: decodeHtml(fixture.home_status ?? "").trim(),
+          awayStatus: decodeHtml(fixture.away_status ?? "").trim(),
+          homePlayers,
+          awayPlayers,
+        } satisfies FixtureLineup;
+      })
+      .filter((fixture): fixture is FixtureLineup => fixture !== null);
   } catch {
-    return null;
+    return [];
   }
 }
 
@@ -281,67 +364,18 @@ function playerMatchScore(left?: string, right?: string): number {
   return 0;
 }
 
-function parseLineupPlayers(listHtml: string): LineupPlayer[] {
-  const players: LineupPlayer[] = [];
-  const playerRegex =
-    /<li class="lineup__player">[\s\S]*?<div class="lineup__pos[^"]*">([^<]*)<\/div>[\s\S]*?<a[^>]*title="([^"]+)"[\s\S]*?<\/li>/g;
-  let match = playerRegex.exec(listHtml);
-  while (match && players.length < 11) {
-    players.push({
-      position: decodeHtml(stripTags(match[1])).trim(),
-      name: decodeHtml(match[2]).trim(),
-    });
-    match = playerRegex.exec(listHtml);
-  }
-  return players;
-}
-
-function parseRotowireLineups(html: string): FixtureLineup[] {
-  const blocks = html
-    .split('<div class="lineup is-soccer')
-    .slice(1)
-    .map((part) => `<div class="lineup is-soccer${part}`);
-  const parsed: FixtureLineup[] = [];
-
-  for (const block of blocks) {
-    const homeTeamMatch = block.match(/<div class="lineup__mteam is-home">\s*([\s\S]*?)<span class="lineup__wl">/);
-    const awayTeamMatch = block.match(/<div class="lineup__mteam is-visit">\s*([\s\S]*?)<span class="lineup__wl">/);
-    const homeListMatch = block.match(/<ul class="lineup__list is-home">([\s\S]*?)<\/ul>/);
-    const awayListMatch = block.match(/<ul class="lineup__list is-visit">([\s\S]*?)<\/ul>/);
-    if (!homeTeamMatch || !awayTeamMatch || !homeListMatch || !awayListMatch) continue;
-
-    const homeTeam = decodeHtml(stripTags(homeTeamMatch[1])).trim();
-    const awayTeam = decodeHtml(stripTags(awayTeamMatch[1])).trim();
-    const homeStatus = decodeHtml(stripTags(homeListMatch[1].match(/<li class="lineup__status[^"]*">([\s\S]*?)<\/li>/)?.[1] ?? "")).trim();
-    const awayStatus = decodeHtml(stripTags(awayListMatch[1].match(/<li class="lineup__status[^"]*">([\s\S]*?)<\/li>/)?.[1] ?? "")).trim();
-    const homePlayers = parseLineupPlayers(homeListMatch[1]);
-    const awayPlayers = parseLineupPlayers(awayListMatch[1]);
-    if (!homePlayers.length || !awayPlayers.length) continue;
-
-    parsed.push({
-      homeTeam,
-      awayTeam,
-      homeKey: teamKey(homeTeam),
-      awayKey: teamKey(awayTeam),
-      homeStatus,
-      awayStatus,
-      homePlayers,
-      awayPlayers,
-    });
-  }
-
-  return parsed;
-}
-
-function buildFixtureGroups(rows: CsvRow[]): FixtureGroup[] {
+function buildFixtureGroups(rows: CsvRow[], leagueKey: string, leagueLabel: string): FixtureGroup[] {
   const fixtureMap = new Map<string, FixtureGroup>();
   for (const row of rows) {
     const homeTeam = row.home_team ?? "";
     const awayTeam = row.away_team ?? "";
     if (!homeTeam || !awayTeam) continue;
     const key = `${row.match_date}|${row.bookmaker}|${homeTeam}|${awayTeam}`;
-    const existing = fixtureMap.get(key) ?? {
+      const existing = fixtureMap.get(key) ?? {
       key,
+      leagueKey,
+      leagueLabel,
+      competition: row.competition ?? leagueLabel,
       matchDate: row.match_date ?? "",
       bookmaker: row.bookmaker ?? "",
       homeTeam,
@@ -567,7 +601,7 @@ function TeamPitch({
           <h3 className="text-lg font-semibold text-white">{team}</h3>
           <p className="text-xs leading-5 text-emerald-100/75">
             {hasLineup
-              ? `${lineupStatus || "Predicted Lineup"} from RotoWire. Tiles show fair odds and EV where a model row exists.`
+              ? `${lineupStatus || "Confirmed Lineup"} from the local FotMob feed. Tiles show fair odds and EV where a model row exists.`
               : "Projected priced XI from expected minutes. GK is not part of ATGS pricing."}
           </p>
         </div>
@@ -638,15 +672,42 @@ export default async function GoalscorerMonitorPage() {
     notFound();
   }
 
-  const [comparisonCsv, comparisonTxt, comparisonMtime, rotowireHtml, shadowContents] = await Promise.all([
-    readLocalFile("data/goalscorer/goalscorer-live-comparison.csv"),
-    readLocalFile("data/goalscorer/goalscorer-live-comparison.txt"),
-    readLocalMtime("data/goalscorer/goalscorer-live-comparison.csv"),
-    fetchRotowireHtml(),
+  const [leagueDatasets, shadowContents] = await Promise.all([
+    Promise.all(
+      LIVE_COMPARE_CONFIGS.map(async (config) => {
+        const [comparisonCsv, comparisonTxt, comparisonMtime, lineupsJson] = await Promise.all([
+          readLocalFile(config.comparisonCsv),
+          readLocalFile(config.comparisonTxt),
+          readLocalMtime(config.comparisonCsv),
+          readLocalFile(config.lineupsJson),
+        ]);
+        const rows = comparisonCsv ? parseCsv(comparisonCsv) : [];
+        const fixtures = buildFixtureGroups(rows, config.key, config.label);
+        const lineupFixtures = parseStoredLineups(lineupsJson, config.key);
+        const lineupMap = new Map(
+          lineupFixtures.map((fixture) => [
+            `${config.key}|${fixture.homeKey}|${fixture.awayKey}`,
+            fixture,
+          ]),
+        );
+
+        return {
+          ...config,
+          comparisonCsv,
+          comparisonTxt,
+          comparisonMtime,
+          lineupsJson,
+          rows,
+          fixtures,
+          lineupMap,
+          summary: parseSummaryMetrics(comparisonTxt),
+        };
+      }),
+    ),
     Promise.all(SHADOW_SIGNAL_FILES.map((file) => readLocalFile(file))),
   ]);
 
-  const rows = comparisonCsv ? parseCsv(comparisonCsv) : [];
+  const rows = leagueDatasets.flatMap((dataset) => dataset.rows);
   const shadowRows = shadowContents.flatMap((text) => (text ? parseCsv(text) : []));
   const shadowSummary = computeShadowSummary(shadowRows);
   const settledShadowRows = shadowRows
@@ -659,7 +720,6 @@ export default async function GoalscorerMonitorPage() {
   const openShadowRows = shadowRows
     .filter((row) => !isSettledShadowRow(row))
     .sort((left, right) => (parseFloatMaybe(right.ev) ?? 0) - (parseFloatMaybe(left.ev) ?? 0));
-  const liveSummary = parseSummaryMetrics(comparisonTxt);
   const publicRows = rows.filter((row) => {
     const action = row.public_action ?? "";
     const ev = parseFloatMaybe(row.ev) ?? 0;
@@ -673,7 +733,17 @@ export default async function GoalscorerMonitorPage() {
   highRows.sort((a, b) => (parseFloatMaybe(b.ev) ?? 0) - (parseFloatMaybe(a.ev) ?? 0));
   caveatRows.sort((a, b) => (parseFloatMaybe(b.ev) ?? 0) - (parseFloatMaybe(a.ev) ?? 0));
 
-  const comparedAt = rows[0]?.compared_at ?? "n/a";
+  const comparedAt = rows
+    .map((row) => row.compared_at ?? "")
+    .filter(Boolean)
+    .sort()
+    .at(-1) ?? "n/a";
+  const comparisonMtime =
+    leagueDatasets
+      .map((dataset) => dataset.comparisonMtime ?? "")
+      .filter(Boolean)
+      .sort()
+      .at(-1) ?? null;
   const matchedRows = rows.length;
   const avgEv =
     rows.length > 0
@@ -685,14 +755,57 @@ export default async function GoalscorerMonitorPage() {
   const starterRows = rows.filter((row) => (row.lineup_state ?? "").toLowerCase() === "starter").length;
   const benchRows = rows.filter((row) => (row.lineup_state ?? "").toLowerCase() === "bench").length;
   const notInSquadRows = rows.filter((row) => (row.lineup_state ?? "").toLowerCase() === "not_in_squad").length;
-  const missingHistoryRows = parseIntMaybe(liveSummary["Missing Player History"]) ?? 0;
-  const fallbackRows = parseIntMaybe(liveSummary["Fallback Rows"]) ?? 0;
-  const fixturesWithConfirmedLineups = parseIntMaybe(liveSummary["Fixtures With Confirmed Lineups"]) ?? 0;
-  const fixtures = buildFixtureGroups(rows);
-  const lineupFixtures = parseRotowireLineups(rotowireHtml ?? "");
-  const lineupMap = new Map(
-    lineupFixtures.map((fixture) => [`${fixture.homeKey}|${fixture.awayKey}`, fixture]),
+  const missingHistoryRows = leagueDatasets.reduce(
+    (sum, dataset) => sum + (parseIntMaybe(dataset.summary["Missing Player History"]) ?? 0),
+    0,
   );
+  const fallbackRows = leagueDatasets.reduce(
+    (sum, dataset) => sum + (parseIntMaybe(dataset.summary["Fallback Rows"]) ?? 0),
+    0,
+  );
+  const fixturesWithConfirmedLineups = leagueDatasets.reduce(
+    (sum, dataset) => sum + (parseIntMaybe(dataset.summary["Fixtures With Confirmed Lineups"]) ?? 0),
+    0,
+  );
+  const fixtures = leagueDatasets.flatMap((dataset) => dataset.fixtures);
+  const lineupMap = new Map(
+    leagueDatasets.flatMap((dataset) =>
+      [...dataset.lineupMap.entries()].map(([key, value]) => [key, value] as const),
+    ),
+  );
+  const liveSummaryAvailable = leagueDatasets.filter((dataset) => dataset.comparisonCsv);
+  const leagueStatus = leagueDatasets.map((dataset) => {
+    const leagueRows = dataset.rows;
+    const leaguePublicRows = leagueRows.filter((row) => {
+      const action = row.public_action ?? "";
+      const ev = parseFloatMaybe(row.ev) ?? 0;
+      return ev >= 0.05 && (action === "surface" || action === "surface_with_caveat");
+    });
+    return {
+      key: dataset.key,
+      label: dataset.label,
+      hasOutput: Boolean(dataset.comparisonCsv),
+      hasLineups: Boolean(dataset.lineupsJson),
+      rows: leagueRows.length,
+      publicHigh: leagueRows.filter((row) => row.public_action === "surface" && (parseFloatMaybe(row.ev) ?? 0) >= 0.05).length,
+      publicCaveats: leagueRows.filter((row) => row.public_action === "surface_with_caveat" && (parseFloatMaybe(row.ev) ?? 0) >= 0.05).length,
+      totalPublic: leaguePublicRows.length,
+      competition: leagueRows[0]?.competition ?? dataset.label,
+      updatedAt: dataset.comparisonMtime,
+    };
+  });
+  const rawMonitorSummary = leagueDatasets
+    .filter((dataset) => dataset.comparisonTxt)
+    .map((dataset) => {
+      const updated = dataset.comparisonMtime
+        ? `Updated ${new Date(dataset.comparisonMtime).toLocaleString("en-GB", {
+            dateStyle: "medium",
+            timeStyle: "short",
+          })}`
+        : "Update time unavailable";
+      return `=== ${dataset.label} | ${updated} ===\n${dataset.comparisonTxt ?? "Missing goalscorer live summary."}`;
+    })
+    .join("\n\n");
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.08),_transparent_22%),#0b0f14] text-slate-100">
@@ -725,9 +838,9 @@ export default async function GoalscorerMonitorPage() {
           </div>
         </section>
 
-        {!comparisonCsv ? (
+        {liveSummaryAvailable.length === 0 ? (
           <section className="rounded-2xl border border-amber-500/25 bg-amber-500/10 p-4 text-sm text-amber-100">
-            Missing `data/goalscorer/goalscorer-live-comparison.csv`. Run the goalscorer live compare pipeline locally first.
+            No live comparison files found. Run the goalscorer live compare pipeline locally first.
           </section>
         ) : null}
 
@@ -753,6 +866,22 @@ export default async function GoalscorerMonitorPage() {
                 value={`${fixturesWithConfirmedLineups}`}
                 tone="text-slate-200"
               />
+            </div>
+            <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+              {leagueStatus.map((league) => (
+                <div key={league.key} className="rounded-xl border border-slate-800/80 bg-slate-950/35 px-4 py-3">
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">{league.label}</div>
+                  <div className="mt-2 flex items-center justify-between gap-3">
+                    <div className="text-lg font-semibold text-slate-100">{league.rows}</div>
+                    <div className={league.hasOutput ? "text-xs text-emerald-300" : "text-xs text-amber-300"}>
+                      {league.hasOutput ? "live file" : "not run yet"}
+                    </div>
+                  </div>
+                  <div className="mt-2 text-xs text-slate-400">
+                    public {league.totalPublic} | lineups {league.hasLineups ? "yes" : "no"}
+                  </div>
+                </div>
+              ))}
             </div>
             <div className="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm leading-6 text-slate-300">
               <div className="font-medium text-slate-100">Void policy</div>
@@ -883,6 +1012,9 @@ export default async function GoalscorerMonitorPage() {
               <div key={fixture.key} className="rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4">
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                   <div>
+                    <div className="mb-1 text-[11px] uppercase tracking-[0.18em] text-emerald-300">
+                      {fixture.competition || fixture.leagueLabel}
+                    </div>
                     <h3 className="text-lg font-semibold text-white">{fixture.homeTeam} vs {fixture.awayTeam}</h3>
                     <p className="text-sm text-slate-400">{fixture.matchDate} | {fixture.bookmaker}</p>
                   </div>
@@ -893,7 +1025,7 @@ export default async function GoalscorerMonitorPage() {
 
                 <div className="grid gap-5 xl:grid-cols-2">
                   {(() => {
-                    const lineup = lineupMap.get(`${teamKey(fixture.homeTeam)}|${teamKey(fixture.awayTeam)}`);
+                    const lineup = lineupMap.get(`${fixture.leagueKey}|${teamKey(fixture.homeTeam)}|${teamKey(fixture.awayTeam)}`);
                     return (
                       <>
                         <TeamPitch
@@ -937,6 +1069,7 @@ export default async function GoalscorerMonitorPage() {
               <table className="min-w-full text-sm">
                 <thead className="text-left text-slate-500">
                   <tr className="border-b border-slate-800">
+                    <th className="px-3 py-3 font-medium">League</th>
                     <th className="px-3 py-3 font-medium">Player</th>
                     <th className="px-3 py-3 font-medium">Fixture</th>
                     <th className="px-3 py-3 font-medium">Odds</th>
@@ -948,6 +1081,7 @@ export default async function GoalscorerMonitorPage() {
                 <tbody>
                   {highRows.map((row) => (
                     <tr key={`${row.player_name}-${row.match_date}-${row.bookmaker}`} className="border-b border-slate-900/80">
+                      <td className="px-3 py-3 text-xs text-slate-500">{row.competition || row.league || "n/a"}</td>
                       <td className="px-3 py-3">
                         <div className="font-medium text-slate-100">{row.player_name}</div>
                         <div className="text-xs text-slate-500">{row.player_team}</div>
@@ -961,7 +1095,7 @@ export default async function GoalscorerMonitorPage() {
                   ))}
                   {highRows.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-3 py-6 text-center text-slate-500">No clean public-ready rows in the latest run.</td>
+                      <td colSpan={7} className="px-3 py-6 text-center text-slate-500">No clean public-ready rows in the latest run.</td>
                     </tr>
                   ) : null}
                 </tbody>
@@ -1013,7 +1147,7 @@ export default async function GoalscorerMonitorPage() {
             </div>
           </div>
           <pre className="overflow-x-auto whitespace-pre-wrap rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-xs leading-6 text-slate-300">
-            {comparisonTxt ?? "Missing goalscorer live summary."}
+            {rawMonitorSummary || "Missing goalscorer live summary."}
           </pre>
         </section>
       </div>
