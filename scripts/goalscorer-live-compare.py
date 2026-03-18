@@ -56,6 +56,13 @@ STACKED_RECENT_WINDOW = 8
 STACKED_FIXTURE_WINDOW = 3
 USUAL_POSITION_WINDOW = 10
 USUAL_POSITION_SHARE_MIN = 0.80
+PUBLIC_ATTACKING_POSITIONS = {"FW", "FWR", "FWL", "AMC", "AMR", "AML"}
+PUBLIC_MIDFIELD_EXCEPTIONS = {"MC", "ML", "MR", "DMC"}
+PUBLIC_MAX_FAIR_ODDS = 10.0
+PUBLIC_EXCEPTION_MAX_FAIR_ODDS = 14.0
+PUBLIC_MIN_EXPECTED_MINUTES = 65.0
+PUBLIC_MIN_NPXG90_ATTACK = 0.12
+PUBLIC_MIN_NPXG90_EXCEPTION = 0.20
 
 POSITION_SCORES = {
     "GK": 0,
@@ -376,6 +383,40 @@ def _classify_confidence(
         reasons.append("confirmed_starter")
     action = "surface" if ev >= min_ev else "monitor"
     return "high", action, ",".join(reasons)
+
+
+def _public_publish_gate(
+    position: str,
+    fair_odds: float,
+    expected_minutes: float,
+    recent_npxg_per90: float,
+    penalty_transfer: bool,
+    penalty_share: float,
+    position_upgrade: bool,
+) -> str:
+    coarse_position = _coarse_position_text(position)
+
+    if expected_minutes < PUBLIC_MIN_EXPECTED_MINUTES:
+        return "minutes_lt_65"
+
+    if coarse_position in PUBLIC_ATTACKING_POSITIONS:
+        if fair_odds <= PUBLIC_MAX_FAIR_ODDS and recent_npxg_per90 >= PUBLIC_MIN_NPXG90_ATTACK:
+            return ""
+        if (
+            fair_odds <= PUBLIC_EXCEPTION_MAX_FAIR_ODDS
+            and (penalty_transfer or position_upgrade or recent_npxg_per90 >= PUBLIC_MIN_NPXG90_EXCEPTION)
+        ):
+            return ""
+        return "attacker_profile_too_thin"
+
+    if coarse_position in PUBLIC_MIDFIELD_EXCEPTIONS:
+        if penalty_transfer or penalty_share >= 0.18 or position_upgrade:
+            if fair_odds <= PUBLIC_EXCEPTION_MAX_FAIR_ODDS and recent_npxg_per90 >= PUBLIC_MIN_NPXG90_EXCEPTION:
+                return ""
+            return "midfielder_profile_too_thin"
+        return "non_attacking_role"
+
+    return "defensive_role"
 
 
 def _stacked_signal_features(player_history, opponent_summary: dict | None) -> dict:
@@ -1070,6 +1111,20 @@ def main() -> None:
                 fixture_lineup,
                 candidate["is_home"],
             )
+            public_gate_reason = ""
+            if public_action in {"surface", "surface_with_caveat"}:
+                public_gate_reason = _public_publish_gate(
+                    candidate["position"],
+                    fair_odds,
+                    candidate["expected_minutes"],
+                    stacked_features["recent_npxg_per90_8"],
+                    penalty_transfer,
+                    prediction["penalty_share"],
+                    bool(position_signal["position_upgrade"]),
+                )
+                if public_gate_reason:
+                    public_action = "monitor"
+                    confidence_reason = f"{confidence_reason},{public_gate_reason}" if confidence_reason else public_gate_reason
             signal_eligible = candidate.get("lineup_state", "unknown") not in {"bench", "not_in_squad"}
             if ev >= args.min_ev and signal_eligible:
                 stats["qualified_rows"] += 1
