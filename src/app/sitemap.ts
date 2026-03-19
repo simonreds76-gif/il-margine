@@ -1,7 +1,5 @@
 import { MetadataRoute } from 'next';
 import { BASE_URL, BOOKMAKERS_INDEXABLE, FAIR_ODDS_INDEXABLE } from '@/lib/config';
-import { supabase } from '@/lib/supabase';
-import { slugifyTip } from '@/lib/slugify';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const showGoalscorerPage =
@@ -154,29 +152,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.85,
     },
   ];
-
-  // Individual tip pages (so Google can index e.g. "Sakatsume vs Parks")
-  try {
-    const { data: bets } = await supabase
-      .from('bets')
-      .select('id, event, posted_at, settled_at')
-      .order('posted_at', { ascending: false })
-      .limit(500);
-    if (bets?.length) {
-      for (const bet of bets) {
-        const lastMod = bet.settled_at || bet.posted_at;
-        const slug = slugifyTip(bet.event ?? 'tip', bet.id);
-        entries.push({
-          url: `${BASE_URL}/tips/${slug}`,
-          lastModified: lastMod ? new Date(lastMod) : new Date(),
-          changeFrequency: 'weekly' as const,
-          priority: 0.6,
-        });
-      }
-    }
-  } catch {
-    // Supabase may be unavailable at build time; static entries still work
-  }
 
   return entries;
 }

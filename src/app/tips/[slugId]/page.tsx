@@ -65,7 +65,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description,
     },
-    robots: "index, follow",
+    robots: {
+      index: false,
+      follow: true,
+    },
   };
 }
 

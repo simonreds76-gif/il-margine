@@ -473,12 +473,36 @@ export default function Home() {
               <p className="text-slate-400 mb-4">No active picks right now. Check back later.</p>
             </div>
           )}
-          <div className="mt-6 flex flex-wrap justify-center gap-4 sm:gap-6">
-            <Link href="/tennis-tips#picks" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
-              View latest tennis tips →
+          <div className="mx-auto mt-6 grid w-full max-w-2xl gap-3 sm:grid-cols-2">
+            <Link
+              href="/tennis-tips#picks"
+              className="group rounded-2xl border border-slate-700/70 bg-slate-900/45 px-5 py-4 text-left transition-all hover:border-emerald-500/35 hover:bg-slate-900/70 hover:shadow-[0_18px_50px_rgba(0,0,0,0.28)]"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">Tennis</div>
+                  <div className="mt-1 text-base font-semibold text-slate-100">Open latest tennis tips</div>
+                  <p className="mt-1 text-sm leading-6 text-slate-400">Go straight to the live card and latest results.</p>
+                </div>
+                <span className="rounded-full border border-slate-700/80 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold text-slate-300 transition-colors group-hover:border-emerald-500/40 group-hover:text-emerald-300">
+                  Open
+                </span>
+              </div>
             </Link>
-            <Link href="/player-props#picks" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
-              View latest player props →
+            <Link
+              href="/player-props#picks"
+              className="group rounded-2xl border border-slate-700/70 bg-slate-900/45 px-5 py-4 text-left transition-all hover:border-emerald-500/35 hover:bg-slate-900/70 hover:shadow-[0_18px_50px_rgba(0,0,0,0.28)]"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">Props</div>
+                  <div className="mt-1 text-base font-semibold text-slate-100">Open latest player props</div>
+                  <p className="mt-1 text-sm leading-6 text-slate-400">Jump into the current board and recent settled picks.</p>
+                </div>
+                <span className="rounded-full border border-slate-700/80 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold text-slate-300 transition-colors group-hover:border-emerald-500/40 group-hover:text-emerald-300">
+                  Open
+                </span>
+              </div>
             </Link>
           </div>
         </div>
@@ -614,12 +638,36 @@ export default function Home() {
           )}
           
           {recentBets.length > 0 && (
-            <div className="mt-6 flex justify-center gap-4">
-              <Link href="/tennis-tips#picks" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
-                View Tennis Tips Results →
+            <div className="mx-auto mt-6 grid w-full max-w-2xl gap-3 sm:grid-cols-2">
+              <Link
+                href="/tennis-tips#picks"
+                className="group rounded-2xl border border-slate-700/70 bg-slate-900/45 px-5 py-4 text-left transition-all hover:border-emerald-500/35 hover:bg-slate-900/70 hover:shadow-[0_18px_50px_rgba(0,0,0,0.28)]"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">Tennis</div>
+                    <div className="mt-1 text-base font-semibold text-slate-100">Review tennis results</div>
+                    <p className="mt-1 text-sm leading-6 text-slate-400">See the latest settled picks and recent form.</p>
+                  </div>
+                  <span className="rounded-full border border-slate-700/80 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold text-slate-300 transition-colors group-hover:border-emerald-500/40 group-hover:text-emerald-300">
+                    Open
+                  </span>
+                </div>
               </Link>
-              <Link href="/player-props#picks" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
-                View Player Props Results →
+              <Link
+                href="/player-props#picks"
+                className="group rounded-2xl border border-slate-700/70 bg-slate-900/45 px-5 py-4 text-left transition-all hover:border-emerald-500/35 hover:bg-slate-900/70 hover:shadow-[0_18px_50px_rgba(0,0,0,0.28)]"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">Props</div>
+                    <div className="mt-1 text-base font-semibold text-slate-100">Review player props results</div>
+                    <p className="mt-1 text-sm leading-6 text-slate-400">Jump straight to the settled props board.</p>
+                  </div>
+                  <span className="rounded-full border border-slate-700/80 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold text-slate-300 transition-colors group-hover:border-emerald-500/40 group-hover:text-emerald-300">
+                    Open
+                  </span>
+                </div>
               </Link>
             </div>
           )}
@@ -700,3 +748,4 @@ export default function Home() {
     </div>
   );
 }
+
