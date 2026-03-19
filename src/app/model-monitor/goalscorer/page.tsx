@@ -828,7 +828,7 @@ export default async function GoalscorerMonitorPage() {
               </div>
               <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">Goalscorer live monitor</h1>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">
-                This page reads the latest local goalscorer comparison output directly. It is for internal review only:
+                This page reads the latest live goalscorer comparison output directly. It is for internal review only:
                 high-confidence signals are separated from caveated roster-resolved rows before anything touches the public site.
               </p>
             </div>
@@ -919,6 +919,91 @@ export default async function GoalscorerMonitorPage() {
             </div>
           </div>
         </section>
+
+        <div className="mb-8 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+          <section className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
+            <div className="mb-4 flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-semibold text-slate-100">Current public-ready rows</h2>
+                <p className="mt-1 text-sm text-slate-400">
+                  These are the live comparison rows that would qualify cleanly right now. They are not historical settled picks
+                  unless they also exist in the shadow tracker above.
+                </p>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead className="text-left text-slate-500">
+                  <tr className="border-b border-slate-800">
+                    <th className="px-3 py-3 font-medium">League</th>
+                    <th className="px-3 py-3 font-medium">Player</th>
+                    <th className="px-3 py-3 font-medium">Fixture</th>
+                    <th className="px-3 py-3 font-medium">Odds</th>
+                    <th className="px-3 py-3 font-medium">Fair</th>
+                    <th className="px-3 py-3 font-medium">EV</th>
+                    <th className="px-3 py-3 font-medium">Hist Min</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {highRows.map((row) => (
+                    <tr key={`${row.player_name}-${row.match_date}-${row.bookmaker}`} className="border-b border-slate-900/80">
+                      <td className="px-3 py-3 text-xs text-slate-500">{row.competition || row.league || "n/a"}</td>
+                      <td className="px-3 py-3">
+                        <div className="font-medium text-slate-100">{row.player_name}</div>
+                        <div className="text-xs text-slate-500">{row.player_team}</div>
+                      </td>
+                      <td className="px-3 py-3 text-slate-300">{row.player_team} vs {row.opponent}</td>
+                      <td className="px-3 py-3 text-slate-300">{formatDecimal(parseFloatMaybe(row.odds_decimal), 2)}</td>
+                      <td className="px-3 py-3 text-slate-300">{formatDecimal(parseFloatMaybe(row.model_fair_odds_atgs), 2)}</td>
+                      <td className="px-3 py-3 text-emerald-300">{formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1)}</td>
+                      <td className="px-3 py-3 text-slate-400">{formatSigned(parseFloatMaybe(row.historical_minutes), 0)}</td>
+                    </tr>
+                  ))}
+                  {highRows.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="px-3 py-6 text-center text-slate-500">No clean public-ready rows in the latest run.</td>
+                    </tr>
+                  ) : null}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
+            <div className="mb-4 flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-semibold text-slate-100">Current caveated rows</h2>
+                <p className="mt-1 text-sm text-slate-400">
+                  These still look interesting, but they lean on the live roster resolver rather than the cleaner historical match layer.
+                </p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              {caveatRows.map((row) => (
+                <div key={`${row.player_name}-${row.match_date}-${row.bookmaker}`} className="rounded-xl border border-amber-500/15 bg-amber-500/5 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="font-medium text-slate-100">{row.player_name}</div>
+                      <div className="text-sm text-slate-400">{row.player_team} vs {row.opponent}</div>
+                    </div>
+                    <span className={`rounded-full border px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] ${badgeClass(row.public_action)}`}>
+                      {row.signal_confidence}
+                    </span>
+                  </div>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-3 text-sm">
+                    <div className="text-slate-300">Odds {formatDecimal(parseFloatMaybe(row.odds_decimal), 2)}</div>
+                    <div className="text-slate-300">Fair {formatDecimal(parseFloatMaybe(row.model_fair_odds_atgs), 2)}</div>
+                    <div className="text-amber-300">EV {formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1)}</div>
+                  </div>
+                  <div className="mt-2 text-xs text-slate-500">{row.confidence_reason}</div>
+                </div>
+              ))}
+              {caveatRows.length === 0 ? (
+                <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">No caveated signals in the latest run.</div>
+              ) : null}
+            </div>
+          </section>
+        </div>
 
         <section className="mb-8 rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
           <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
@@ -1054,91 +1139,6 @@ export default async function GoalscorerMonitorPage() {
             ) : null}
           </div>
         </section>
-
-        <div className="mb-8 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-          <section className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
-            <div className="mb-4 flex items-start justify-between gap-4">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-100">Current public-ready rows</h2>
-                <p className="mt-1 text-sm text-slate-400">
-                  These are the live comparison rows that would qualify cleanly right now. They are not historical settled picks
-                  unless they also exist in the shadow tracker above.
-                </p>
-              </div>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-sm">
-                <thead className="text-left text-slate-500">
-                  <tr className="border-b border-slate-800">
-                    <th className="px-3 py-3 font-medium">League</th>
-                    <th className="px-3 py-3 font-medium">Player</th>
-                    <th className="px-3 py-3 font-medium">Fixture</th>
-                    <th className="px-3 py-3 font-medium">Odds</th>
-                    <th className="px-3 py-3 font-medium">Fair</th>
-                    <th className="px-3 py-3 font-medium">EV</th>
-                    <th className="px-3 py-3 font-medium">Hist Min</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {highRows.map((row) => (
-                    <tr key={`${row.player_name}-${row.match_date}-${row.bookmaker}`} className="border-b border-slate-900/80">
-                      <td className="px-3 py-3 text-xs text-slate-500">{row.competition || row.league || "n/a"}</td>
-                      <td className="px-3 py-3">
-                        <div className="font-medium text-slate-100">{row.player_name}</div>
-                        <div className="text-xs text-slate-500">{row.player_team}</div>
-                      </td>
-                      <td className="px-3 py-3 text-slate-300">{row.player_team} vs {row.opponent}</td>
-                      <td className="px-3 py-3 text-slate-300">{formatDecimal(parseFloatMaybe(row.odds_decimal), 2)}</td>
-                      <td className="px-3 py-3 text-slate-300">{formatDecimal(parseFloatMaybe(row.model_fair_odds_atgs), 2)}</td>
-                      <td className="px-3 py-3 text-emerald-300">{formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1)}</td>
-                      <td className="px-3 py-3 text-slate-400">{formatSigned(parseFloatMaybe(row.historical_minutes), 0)}</td>
-                    </tr>
-                  ))}
-                  {highRows.length === 0 ? (
-                    <tr>
-                      <td colSpan={7} className="px-3 py-6 text-center text-slate-500">No clean public-ready rows in the latest run.</td>
-                    </tr>
-                  ) : null}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
-            <div className="mb-4 flex items-start justify-between gap-4">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-100">Current caveated rows</h2>
-                <p className="mt-1 text-sm text-slate-400">
-                  These still look interesting, but they lean on the live roster resolver rather than the cleaner historical match layer.
-                </p>
-              </div>
-            </div>
-            <div className="space-y-3">
-              {caveatRows.map((row) => (
-                <div key={`${row.player_name}-${row.match_date}-${row.bookmaker}`} className="rounded-xl border border-amber-500/15 bg-amber-500/5 p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="font-medium text-slate-100">{row.player_name}</div>
-                      <div className="text-sm text-slate-400">{row.player_team} vs {row.opponent}</div>
-                    </div>
-                    <span className={`rounded-full border px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] ${badgeClass(row.public_action)}`}>
-                      {row.signal_confidence}
-                    </span>
-                  </div>
-                  <div className="mt-3 grid gap-2 sm:grid-cols-3 text-sm">
-                    <div className="text-slate-300">Odds {formatDecimal(parseFloatMaybe(row.odds_decimal), 2)}</div>
-                    <div className="text-slate-300">Fair {formatDecimal(parseFloatMaybe(row.model_fair_odds_atgs), 2)}</div>
-                    <div className="text-amber-300">EV {formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1)}</div>
-                  </div>
-                  <div className="mt-2 text-xs text-slate-500">{row.confidence_reason}</div>
-                </div>
-              ))}
-              {caveatRows.length === 0 ? (
-                <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">No caveated signals in the latest run.</div>
-              ) : null}
-            </div>
-          </section>
-        </div>
 
         <section className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
           <div className="mb-4 flex items-start justify-between gap-4">
