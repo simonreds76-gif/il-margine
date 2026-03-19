@@ -431,36 +431,36 @@ export default function TennisTips() {
           <div className="rounded-2xl border border-slate-800 bg-slate-900/55 p-6 sm:p-7">
             <div className="mb-5">
               <div className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">Our methodology</div>
-              <h2 className="mt-2 text-2xl sm:text-3xl font-semibold text-slate-100">How the edge is built</h2>
+              <h2 className="mt-2 text-2xl sm:text-3xl font-semibold text-slate-100">How the model builds the card</h2>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
                 <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">01</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Surface before reputation</h3>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Every match starts as fair odds</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  Tennis is not one sport priced the same everywhere. Clay, grass and hard courts reward different
-                  players, and we lean heavily on surface-specific serve and return strength, recent workload, and
-                  matchup shape rather than headline ranking alone.
+                  We do not begin with a tip or a hunch. We begin by pricing the match. Surface-specific serve and
+                  return data are blended with Elo so the model captures both underlying level and actual conditions,
+                  then a point-by-point tennis engine turns that into fair moneyline, handicap and total prices.
                 </p>
               </div>
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
                 <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">02</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Context changes the price</h3>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">Raw output gets calibrated hard</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  The same player can be priced very differently depending on the event. Tournament tier, market depth,
-                  travel spots and scheduling pressure all matter, and they matter even more outside the biggest stages.
-                  That does not make tennis broadly soft; it means specific segments and derivatives can be priced less
-                  cleanly than the headline market.
+                  Raw probabilities are not enough, especially below the very top tier. We shrink thin samples, weight
+                  tournament class properly, and account for things like venue speed, recent workload, rust, form and
+                  matchup shape. The point is not to force fake monster edges; it is to stop the fair odds drifting
+                  away from tennis reality.
                 </p>
               </div>
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-5">
                 <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">03</div>
-                <h3 className="mt-3 text-base font-semibold text-slate-100">Line value over outcomes</h3>
+                <h3 className="mt-3 text-base font-semibold text-slate-100">We only bet when the price is wrong</h3>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  This is the part that matters most. A losing bet can still be the right bet if the number was good,
-                  and a winning bet can still be poor if the price was wrong. We care about whether a moneyline,
-                  handicap or total beats the market by the close, because that is the cleanest signal that the
-                  process is sound.
+                  Once our fair odds are set, we compare them to the live market and only move when the gap is worth
+                  taking. Sometimes that means moneyline, sometimes games, sometimes totals, and very often it means
+                  passing. The proof is not a lucky day; it is whether the number was strong enough to beat the market
+                  by the close.
                 </p>
               </div>
             </div>
