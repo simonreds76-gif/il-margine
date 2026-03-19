@@ -547,33 +547,53 @@ function PlayerSignalRow({
   const hasRow = Boolean(row);
   const action = row?.public_action;
   const evPct = row ? formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1) : "unpriced";
+  const metrics = [
+    {
+      label: "Odds",
+      value: hasRow ? formatDecimal(parseFloatMaybe(row?.odds_decimal), 2) : "n/a",
+      tone: "text-slate-200",
+    },
+    {
+      label: "Fair",
+      value: hasRow ? formatDecimal(parseFloatMaybe(row?.model_fair_odds_atgs), 2) : "n/a",
+      tone: "text-slate-300",
+    },
+    {
+      label: "EV",
+      value: evPct,
+      tone: hasRow ? toneForAction(action) : "text-slate-500",
+    },
+    {
+      label: "Min",
+      value: hasRow ? formatDecimal(parseFloatMaybe(row?.expected_minutes), 0) : "n/a",
+      tone: "text-slate-500",
+    },
+  ];
 
   return (
     <div className={`rounded-xl border px-3 py-3 ${signalRowClass(action, hasRow)}`}>
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex flex-col gap-3 xl:grid xl:grid-cols-[minmax(0,1.4fr)_minmax(260px,0.9fr)_auto] xl:items-center">
         <div className="min-w-0">
-          <div className="truncate text-sm font-semibold text-slate-100">{name}</div>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-slate-500">
-            <span>{position || "UTIL"}</span>
-            {note ? <span className="normal-case tracking-normal text-slate-500">{note}</span> : null}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="text-sm font-semibold leading-tight text-slate-100">{name}</div>
+            <span className="rounded-full border border-slate-700/80 bg-slate-950/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+              {position || "UTIL"}
+            </span>
           </div>
+          {note ? <div className="mt-1 text-xs text-slate-500">{note}</div> : null}
         </div>
-        <span className={`rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${signalBadge(action)}`}>
-          {hasRow ? (action === "surface" ? "live" : action || "monitor") : "unpriced"}
-        </span>
-      </div>
-      <div className="mt-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
-        <div className="rounded-lg bg-black/15 px-2 py-1.5 text-slate-300">
-          Odds {hasRow ? formatDecimal(parseFloatMaybe(row?.odds_decimal), 2) : "n/a"}
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:gap-1.5">
+          {metrics.map((metric) => (
+            <div key={metric.label} className="rounded-lg bg-black/15 px-2 py-1.5">
+              <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">{metric.label}</div>
+              <div className={`mt-1 text-sm font-semibold ${metric.tone}`}>{metric.value}</div>
+            </div>
+          ))}
         </div>
-        <div className="rounded-lg bg-black/15 px-2 py-1.5 text-slate-300">
-          Fair {hasRow ? formatDecimal(parseFloatMaybe(row?.model_fair_odds_atgs), 2) : "n/a"}
-        </div>
-        <div className={`rounded-lg bg-black/15 px-2 py-1.5 ${hasRow ? toneForAction(action) : "text-slate-500"}`}>
-          EV {evPct}
-        </div>
-        <div className="rounded-lg bg-black/15 px-2 py-1.5 text-slate-500">
-          Min {hasRow ? formatDecimal(parseFloatMaybe(row?.expected_minutes), 0) : "n/a"}
+        <div className="xl:justify-self-end">
+          <span className={`inline-flex rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${signalBadge(action)}`}>
+            {hasRow ? (action === "surface" ? "live" : action || "monitor") : "unpriced"}
+          </span>
         </div>
       </div>
     </div>
@@ -594,7 +614,7 @@ function GroupBlock({
   }>;
 }) {
   return (
-    <div className="rounded-2xl border border-white/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.01))] p-3">
+    <div className="rounded-2xl border border-white/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-3">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{title}</div>
         <div className="text-xs text-slate-500">{items.length}</div>
@@ -710,14 +730,14 @@ function TeamPitch({
       };
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(28,40,56,0.96),rgba(13,19,28,0.98))] p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.03)]">
+    <div className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(23,32,44,0.96),rgba(12,18,28,0.98))] p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.03)]">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold text-white">{team}</h3>
           <p className="text-xs leading-5 text-slate-300/80">
             {hasLineup
-              ? `${lineupStatus || "Confirmed Lineup"} from the local FotMob feed. Rows keep unpriced starters visible instead of hiding them.`
-              : "Projected priced team sheet from expected minutes. This is a monitor panel, not a tactical pitch."}
+              ? `${lineupStatus || "Confirmed Lineup"} from the local FotMob feed. Starters stay visible even when the market has not priced them yet.`
+              : "Projected team list from expected minutes. Grouped by role, with market numbers shown where we have a current price."}
           </p>
         </div>
         <div className="rounded-full border border-slate-700/70 bg-slate-950/35 px-3 py-1 text-xs text-slate-200">
@@ -1182,7 +1202,7 @@ export default async function GoalscorerMonitorPage() {
         <section className="mb-8 rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
           <div className="mb-5 flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-lg font-semibold text-slate-100">Fixture pitch view</h2>
+              <h2 className="text-lg font-semibold text-slate-100">Fixture lineup view</h2>
               <p className="mt-1 text-sm text-slate-400">
                 This is the shape you described: team vs team, player by player, with fair odds and EV visible at a glance.
                 For now it is a projected priced XI based on expected minutes, not a true probable-lineup feed.
