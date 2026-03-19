@@ -396,6 +396,35 @@ function buildFixtureGroups(rows: CsvRow[], leagueKey: string, leagueLabel: stri
   return [...fixtureMap.values()].sort((a, b) => a.key.localeCompare(b.key));
 }
 
+function isoDateInTimezone(timeZone: string): string {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const year = parts.find((part) => part.type === "year")?.value ?? "0000";
+  const month = parts.find((part) => part.type === "month")?.value ?? "01";
+  const day = parts.find((part) => part.type === "day")?.value ?? "01";
+  return `${year}-${month}-${day}`;
+}
+
+function addDaysIso(isoDate: string, days: number): string {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  const date = new Date(Date.UTC(year, (month || 1) - 1, day || 1));
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+function filterActiveRows(rows: CsvRow[]): CsvRow[] {
+  const today = isoDateInTimezone("Europe/London");
+  const horizon = addDaysIso(today, 3);
+  return rows.filter((row) => {
+    const matchDate = (row.match_date ?? "").slice(0, 10);
+    return Boolean(matchDate) && matchDate >= today && matchDate <= horizon;
+  });
+}
+
 function rankTeamRows(rows: CsvRow[]): CsvRow[] {
   return [...rows].sort((a, b) => {
     const minuteDiff = (parseFloatMaybe(b.expected_minutes) ?? 0) - (parseFloatMaybe(a.expected_minutes) ?? 0);
@@ -547,32 +576,10 @@ function PlayerSignalRow({
   const hasRow = Boolean(row);
   const action = row?.public_action;
   const evPct = row ? formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1) : "unpriced";
-  const metrics = [
-    {
-      label: "Odds",
-      value: hasRow ? formatDecimal(parseFloatMaybe(row?.odds_decimal), 2) : "n/a",
-      tone: "text-slate-200",
-    },
-    {
-      label: "Fair",
-      value: hasRow ? formatDecimal(parseFloatMaybe(row?.model_fair_odds_atgs), 2) : "n/a",
-      tone: "text-slate-300",
-    },
-    {
-      label: "EV",
-      value: evPct,
-      tone: hasRow ? toneForAction(action) : "text-slate-500",
-    },
-    {
-      label: "Min",
-      value: hasRow ? formatDecimal(parseFloatMaybe(row?.expected_minutes), 0) : "n/a",
-      tone: "text-slate-500",
-    },
-  ];
 
   return (
     <div className={`rounded-xl border px-3 py-3 ${signalRowClass(action, hasRow)}`}>
-      <div className="flex flex-col gap-3 xl:grid xl:grid-cols-[minmax(0,1.4fr)_minmax(260px,0.9fr)_auto] xl:items-center">
+      <div className="flex flex-col gap-3 lg:grid lg:grid-cols-[minmax(0,1.7fr)_72px_72px_72px_64px_auto] lg:items-center">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <div className="text-sm font-semibold leading-tight text-slate-100">{name}</div>
@@ -582,15 +589,25 @@ function PlayerSignalRow({
           </div>
           {note ? <div className="mt-1 text-xs text-slate-500">{note}</div> : null}
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:gap-1.5">
-          {metrics.map((metric) => (
-            <div key={metric.label} className="rounded-lg bg-black/15 px-2 py-1.5">
-              <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">{metric.label}</div>
-              <div className={`mt-1 text-sm font-semibold ${metric.tone}`}>{metric.value}</div>
-            </div>
-          ))}
+        <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4 lg:contents">
+          <div className="rounded-lg bg-black/15 px-2 py-1.5 lg:bg-transparent lg:px-0 lg:py-0">
+            <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Odds</div>
+            <div className="mt-1 font-semibold text-slate-200">{hasRow ? formatDecimal(parseFloatMaybe(row?.odds_decimal), 2) : "n/a"}</div>
+          </div>
+          <div className="rounded-lg bg-black/15 px-2 py-1.5 lg:bg-transparent lg:px-0 lg:py-0">
+            <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Fair</div>
+            <div className="mt-1 font-semibold text-slate-300">{hasRow ? formatDecimal(parseFloatMaybe(row?.model_fair_odds_atgs), 2) : "n/a"}</div>
+          </div>
+          <div className="rounded-lg bg-black/15 px-2 py-1.5 lg:bg-transparent lg:px-0 lg:py-0">
+            <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">EV</div>
+            <div className={`mt-1 font-semibold ${hasRow ? toneForAction(action) : "text-slate-500"}`}>{evPct}</div>
+          </div>
+          <div className="rounded-lg bg-black/15 px-2 py-1.5 lg:bg-transparent lg:px-0 lg:py-0">
+            <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Min</div>
+            <div className="mt-1 font-semibold text-slate-500">{hasRow ? formatDecimal(parseFloatMaybe(row?.expected_minutes), 0) : "n/a"}</div>
+          </div>
         </div>
-        <div className="xl:justify-self-end">
+        <div className="lg:justify-self-end">
           <span className={`inline-flex rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${signalBadge(action)}`}>
             {hasRow ? (action === "surface" ? "live" : action || "monitor") : "unpriced"}
           </span>
@@ -654,6 +671,9 @@ function TeamPitch({
   const lineupRows = lineupPlayers ? resolveLineupRows(lineupPlayers, rows) : [];
   const hasLineup = lineupRows.length > 0;
   const pitch = buildProjectedPitch(rows);
+  const displayedCount = hasLineup
+    ? lineupRows.length
+    : pitch.attackers.length + pitch.midfielders.length + pitch.defenders.length + (pitch.keeper ? 1 : 0);
   const lineupKeeper = lineupRows.find((item) => positionBand(item.lineup.position) === "gk");
   const lineupOutfield = lineupRows.filter((item) => positionBand(item.lineup.position) !== "gk");
   const lineupDefenders = lineupOutfield.filter((item) => positionBand(item.lineup.position) === "def");
@@ -741,11 +761,11 @@ function TeamPitch({
           </p>
         </div>
         <div className="rounded-full border border-slate-700/70 bg-slate-950/35 px-3 py-1 text-xs text-slate-200">
-          {hasLineup ? `${lineupRows.length} lineup players` : `${rows.length} priced players`}
+          {hasLineup ? `${displayedCount} lineup players` : `${displayedCount} shown | ${rows.length} priced`}
         </div>
       </div>
 
-      <div className="grid gap-3 xl:grid-cols-3">
+      <div className="space-y-3">
         <GroupBlock title="Attack" items={groupedItems.attackers} />
         <GroupBlock title="Midfield" items={groupedItems.midfielders} />
         <GroupBlock title="Defence" items={groupedItems.defenders} />
@@ -799,7 +819,8 @@ export default async function GoalscorerMonitorPage() {
           readGoalscorerLiveMtime(config.comparisonCsv),
           readGoalscorerLiveFile(config.lineupsJson),
         ]);
-        const rows = comparisonCsv ? parseCsv(comparisonCsv) : [];
+        const rawRows = comparisonCsv ? parseCsv(comparisonCsv) : [];
+        const rows = filterActiveRows(rawRows);
         const fixtures = buildFixtureGroups(rows, config.key, config.label);
         const lineupFixtures = parseStoredLineups(lineupsJson, config.key);
         const lineupMap = new Map(
@@ -1204,8 +1225,8 @@ export default async function GoalscorerMonitorPage() {
             <div>
               <h2 className="text-lg font-semibold text-slate-100">Fixture lineup view</h2>
               <p className="mt-1 text-sm text-slate-400">
-                This is the shape you described: team vs team, player by player, with fair odds and EV visible at a glance.
-                For now it is a projected priced XI based on expected minutes, not a true probable-lineup feed.
+                Upcoming fixtures only, capped to the next three days. Teams are grouped by role, with player prices,
+                fair odds and EV shown in a readable list rather than a pitch diagram.
               </p>
             </div>
           </div>
@@ -1251,7 +1272,7 @@ export default async function GoalscorerMonitorPage() {
             ))}
             {fixtures.length === 0 ? (
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">
-                No fixture groups yet. Run the live comparison first.
+                No upcoming fixture groups in the next three days.
               </div>
             ) : null}
           </div>
