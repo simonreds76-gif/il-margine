@@ -473,36 +473,20 @@ export default function Home() {
               <p className="text-slate-400 mb-4">No active picks right now. Check back later.</p>
             </div>
           )}
-          <div className="mx-auto mt-6 grid w-full max-w-2xl gap-3 sm:grid-cols-2">
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Link
               href="/tennis-tips#picks"
-              className="group rounded-2xl border border-slate-700/70 bg-slate-900/45 px-5 py-4 text-left transition-all hover:border-emerald-500/35 hover:bg-slate-900/70 hover:shadow-[0_18px_50px_rgba(0,0,0,0.28)]"
+              className="inline-flex items-center gap-3 rounded-full border border-slate-700/70 bg-slate-900/45 px-4 py-2.5 text-sm text-slate-200 transition-all hover:border-emerald-500/35 hover:bg-slate-900/70 hover:text-white"
             >
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">Tennis</div>
-                  <div className="mt-1 text-base font-semibold text-slate-100">Open latest tennis tips</div>
-                  <p className="mt-1 text-sm leading-6 text-slate-400">Go straight to the live card and latest results.</p>
-                </div>
-                <span className="rounded-full border border-slate-700/80 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold text-slate-300 transition-colors group-hover:border-emerald-500/40 group-hover:text-emerald-300">
-                  Open
-                </span>
-              </div>
+              <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">Tennis</span>
+              <span className="font-medium">Open latest tips</span>
             </Link>
             <Link
               href="/player-props#picks"
-              className="group rounded-2xl border border-slate-700/70 bg-slate-900/45 px-5 py-4 text-left transition-all hover:border-emerald-500/35 hover:bg-slate-900/70 hover:shadow-[0_18px_50px_rgba(0,0,0,0.28)]"
+              className="inline-flex items-center gap-3 rounded-full border border-slate-700/70 bg-slate-900/45 px-4 py-2.5 text-sm text-slate-200 transition-all hover:border-emerald-500/35 hover:bg-slate-900/70 hover:text-white"
             >
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">Props</div>
-                  <div className="mt-1 text-base font-semibold text-slate-100">Open latest player props</div>
-                  <p className="mt-1 text-sm leading-6 text-slate-400">Jump into the current board and recent settled picks.</p>
-                </div>
-                <span className="rounded-full border border-slate-700/80 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold text-slate-300 transition-colors group-hover:border-emerald-500/40 group-hover:text-emerald-300">
-                  Open
-                </span>
-              </div>
+              <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">Props</span>
+              <span className="font-medium">Open latest props</span>
             </Link>
           </div>
         </div>
@@ -638,36 +622,12 @@ export default function Home() {
           )}
           
           {recentBets.length > 0 && (
-            <div className="mx-auto mt-6 grid w-full max-w-2xl gap-3 sm:grid-cols-2">
-              <Link
-                href="/tennis-tips#picks"
-                className="group rounded-2xl border border-slate-700/70 bg-slate-900/45 px-5 py-4 text-left transition-all hover:border-emerald-500/35 hover:bg-slate-900/70 hover:shadow-[0_18px_50px_rgba(0,0,0,0.28)]"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">Tennis</div>
-                    <div className="mt-1 text-base font-semibold text-slate-100">Review tennis results</div>
-                    <p className="mt-1 text-sm leading-6 text-slate-400">See the latest settled picks and recent form.</p>
-                  </div>
-                  <span className="rounded-full border border-slate-700/80 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold text-slate-300 transition-colors group-hover:border-emerald-500/40 group-hover:text-emerald-300">
-                    Open
-                  </span>
-                </div>
+            <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
+              <Link href="/tennis-tips#picks" className="text-slate-400 transition-colors hover:text-emerald-400">
+                Review tennis results →
               </Link>
-              <Link
-                href="/player-props#picks"
-                className="group rounded-2xl border border-slate-700/70 bg-slate-900/45 px-5 py-4 text-left transition-all hover:border-emerald-500/35 hover:bg-slate-900/70 hover:shadow-[0_18px_50px_rgba(0,0,0,0.28)]"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <div className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">Props</div>
-                    <div className="mt-1 text-base font-semibold text-slate-100">Review player props results</div>
-                    <p className="mt-1 text-sm leading-6 text-slate-400">Jump straight to the settled props board.</p>
-                  </div>
-                  <span className="rounded-full border border-slate-700/80 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold text-slate-300 transition-colors group-hover:border-emerald-500/40 group-hover:text-emerald-300">
-                    Open
-                  </span>
-                </div>
+              <Link href="/player-props#picks" className="text-slate-400 transition-colors hover:text-emerald-400">
+                Review player props results →
               </Link>
             </div>
           )}
