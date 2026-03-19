@@ -186,8 +186,23 @@ function parseCsv(text: string): CsvRow[] {
   });
 }
 
+function repairMojibake(value: string): string {
+  if (!value) return value;
+  const normalized = value.normalize("NFC");
+  if (!/[\u00C3\u00C2\u00E2]/.test(normalized)) return normalized;
+
+  try {
+    const repaired = Buffer.from(normalized, "latin1").toString("utf8").normalize("NFC");
+    const penaltyScore = (text: string) => (text.match(/[\u00C3\u00C2\u00E2\uFFFD]/g) ?? []).length;
+    return penaltyScore(repaired) < penaltyScore(normalized) ? repaired : normalized;
+  } catch {
+    return normalized;
+  }
+}
+
 function decodeHtml(text: string): string {
-  return text
+  return repairMojibake(
+    text
     .replace(/&amp;/g, "&")
     .replace(/&#039;/g, "'")
     .replace(/&quot;/g, '"')
@@ -198,7 +213,8 @@ function decodeHtml(text: string): string {
     .replace(/&uuml;/g, "ü")
     .replace(/&ouml;/g, "ö")
     .replace(/&eacute;/g, "é")
-    .replace(/&Eacute;/g, "É");
+    .replace(/&Eacute;/g, "É"),
+  );
 }
 
 function parseStoredLineups(text: string | null, leagueKey: string): FixtureLineup[] {

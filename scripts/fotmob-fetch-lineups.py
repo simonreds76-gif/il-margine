@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 """
-Fetch confirmed league lineups from FotMob and write them in the JSON shape
-expected by the goalscorer pipeline.
+Fetch FotMob league lineups and write them in the JSON shape expected by the
+goalscorer pipeline and monitor.
 
-Confirmed lineups are read from the match page's embedded Next.js payload:
+Lineups are read from the match page's embedded Next.js payload:
   props.pageProps.content.lineup
 
 Important detail:
-  - lineupType == "predicted"   -> probable XI, skip by default
-  - lineupType == "standard"    -> confirmed XI, keep
+  - lineupType == "predicted"   -> expected / probable XI
+  - lineupType == "standard"    -> confirmed XI
+
+Both are saved for display. Only confirmed XIs should affect starter-state
+logic in the pricing pipeline.
 """
 
 from __future__ import annotations
@@ -245,7 +248,7 @@ def fetch_confirmed_lineups(date_str: str, league_id: int, roster_by_team: Dict[
         "league_matches": len(serie_matches),
         "page_fetches": 0,
         "confirmed_fixtures": 0,
-        "predicted_only": 0,
+        "predicted_fixtures": 0,
         "missing_lineup_payload": 0,
     }
 
@@ -269,8 +272,7 @@ def fetch_confirmed_lineups(date_str: str, league_id: int, roster_by_team: Dict[
             continue
 
         lineup_type = str(lineup.get("lineupType") or "").strip().lower()
-        if lineup_type != "standard":
-            stats["predicted_only"] += 1
+        if lineup_type not in {"standard", "predicted"}:
             continue
 
         home_team = str(general.get("homeTeam", {}).get("name") or lineup.get("homeTeam", {}).get("name") or match.get("home", {}).get("name") or "").strip()
@@ -307,8 +309,8 @@ def fetch_confirmed_lineups(date_str: str, league_id: int, roster_by_team: Dict[
                 "match_date": match_date,
                 "home_team": home_team,
                 "away_team": away_team,
-                "home_status": "Confirmed Lineup",
-                "away_status": "Confirmed Lineup",
+                "home_status": "Confirmed Lineup" if lineup_type == "standard" else "FotMob Expected XI",
+                "away_status": "Confirmed Lineup" if lineup_type == "standard" else "FotMob Expected XI",
                 "lineup_type": lineup_type,
                 "home_formation": home_formation,
                 "away_formation": away_formation,
@@ -322,7 +324,10 @@ def fetch_confirmed_lineups(date_str: str, league_id: int, roster_by_team: Dict[
                 "away_unavailable": away_unavailable,
             }
         )
-        stats["confirmed_fixtures"] += 1
+        if lineup_type == "standard":
+            stats["confirmed_fixtures"] += 1
+        else:
+            stats["predicted_fixtures"] += 1
 
     fixtures.sort(key=lambda item: (item["match_date"], item["home_team"], item["away_team"]))
     return fixtures, stats
@@ -336,7 +341,7 @@ def write_output(path: Path, fixtures: List[dict]) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Fetch confirmed league lineups from FotMob")
+    parser = argparse.ArgumentParser(description="Fetch FotMob league lineups")
     parser.add_argument("--date", default=_today_fotmob_date(), help="FotMob date in YYYYMMDD format")
     parser.add_argument("--days-ahead", type=int, default=0, help="Also fetch subsequent FotMob dates up to this many days ahead")
     parser.add_argument("--league-id", type=int, default=SERIE_A_LEAGUE_ID, help="FotMob league id")
@@ -363,7 +368,7 @@ def main() -> None:
         "league_matches": 0,
         "page_fetches": 0,
         "confirmed_fixtures": 0,
-        "predicted_only": 0,
+        "predicted_fixtures": 0,
         "missing_lineup_payload": 0,
     }
     seen_keys = set()
@@ -383,7 +388,7 @@ def main() -> None:
     print(f"  League fixtures:      {stats['league_matches']:,}")
     print(f"  Page fetches:         {stats['page_fetches']:,}")
     print(f"  Confirmed lineups:    {stats['confirmed_fixtures']:,}")
-    print(f"  Predicted only:       {stats['predicted_only']:,}")
+    print(f"  Expected XIs:         {stats['predicted_fixtures']:,}")
     print(f"  Missing payload:      {stats['missing_lineup_payload']:,}")
     print(f"  Saved:                {args.out}")
     print("\n  Done.\n")

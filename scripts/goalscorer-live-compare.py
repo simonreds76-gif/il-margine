@@ -553,8 +553,14 @@ def _lineup_match_name(player_name: str, names: List[str]) -> str:
     return best_name_match(player_name, names) or ""
 
 
-def _resolve_lineup_state(player_name: str, fixture_lineup: dict | None, is_home: bool) -> tuple[str, str]:
+def _is_confirmed_lineup(fixture_lineup: dict | None) -> bool:
     if fixture_lineup is None:
+        return False
+    return str(fixture_lineup.get("lineup_type") or "").strip().lower() == "standard"
+
+
+def _resolve_lineup_state(player_name: str, fixture_lineup: dict | None, is_home: bool) -> tuple[str, str]:
+    if fixture_lineup is None or not _is_confirmed_lineup(fixture_lineup):
         return "unknown", ""
 
     starter_names = fixture_lineup.get("home_players" if is_home else "away_players", [])
@@ -577,7 +583,7 @@ def _resolve_lineup_state(player_name: str, fixture_lineup: dict | None, is_home
 
 
 def _resolve_starter_entry(player_name: str, fixture_lineup: dict | None, is_home: bool) -> dict | None:
-    if fixture_lineup is None:
+    if fixture_lineup is None or not _is_confirmed_lineup(fixture_lineup):
         return None
     starter_entries = fixture_lineup.get("home_starters" if is_home else "away_starters", [])
     if not starter_entries:
@@ -935,11 +941,11 @@ def main() -> None:
             lineup_map.get((fixture_sample["match_date"], fixture_home_key, fixture_away_key))
             or lineup_map.get(("", fixture_home_key, fixture_away_key))
         )
-        if fixture_lineup is not None:
+        if _is_confirmed_lineup(fixture_lineup):
             stats["fixtures_with_confirmed_lineups"] += 1
 
         team_penalty_events: Dict[str, dict] = {}
-        if fixture_lineup is not None:
+        if _is_confirmed_lineup(fixture_lineup):
             team_penalty_events[fixture_home_key] = {
                 **penalty_transfer_info(
                     penalty_hierarchy.get(fixture_home_key),

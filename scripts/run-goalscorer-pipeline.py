@@ -124,7 +124,7 @@ def main() -> None:
     parser.add_argument("--fetch-odds-api", action="store_true", help="Fetch live league ATGS prices from odds-api.io into the inbox first")
     parser.add_argument("--odds-api-bookmakers", default="Bet365,William Hill", help="Comma-separated bookmakers for odds-api.io")
     parser.add_argument("--fetch-pinnacle", action="store_true", help="Fetch live Pinnacle ATGS prices into the inbox first")
-    parser.add_argument("--fetch-lineups", action="store_true", help="Fetch confirmed league lineups from FotMob before live compare")
+    parser.add_argument("--fetch-lineups", action="store_true", help="Fetch FotMob expected/confirmed lineups before live compare")
     parser.add_argument("--lineup-days-ahead", type=int, default=3, help="Fetch FotMob lineups across this many days ahead")
     parser.add_argument("--historical-backtest", action="store_true", help="Run goalscorer-historical-backtest.py after compare")
     parser.add_argument("--live-only", action="store_true", help="Skip historical model/compare work and run only the live odds + lineup refresh path")
