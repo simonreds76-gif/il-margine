@@ -686,10 +686,7 @@ function TeamPitch({
 }) {
   const lineupRows = lineupPlayers ? resolveLineupRows(lineupPlayers, rows) : [];
   const hasLineup = lineupRows.length > 0;
-  const pitch = buildProjectedPitch(rows);
-  const displayedCount = hasLineup
-    ? lineupRows.length
-    : pitch.attackers.length + pitch.midfielders.length + pitch.defenders.length + (pitch.keeper ? 1 : 0);
+  const displayedCount = lineupRows.length;
   const lineupKeeper = lineupRows.find((item) => positionBand(item.lineup.position) === "gk");
   const lineupOutfield = lineupRows.filter((item) => positionBand(item.lineup.position) !== "gk");
   const lineupDefenders = lineupOutfield.filter((item) => positionBand(item.lineup.position) === "def");
@@ -737,32 +734,10 @@ function TeamPitch({
           : null,
       }
     : {
-        attackers: pitch.attackers.map((row) => ({
-          key: `${row.player_name}-${row.player_team}-${row.bookmaker}`,
-          name: row.player_name ?? "",
-          position: row.position || "UTIL",
-          row,
-        })),
-        midfielders: pitch.midfielders.map((row) => ({
-          key: `${row.player_name}-${row.player_team}-${row.bookmaker}`,
-          name: row.player_name ?? "",
-          position: row.position || "UTIL",
-          row,
-        })),
-        defenders: pitch.defenders.map((row) => ({
-          key: `${row.player_name}-${row.player_team}-${row.bookmaker}`,
-          name: row.player_name ?? "",
-          position: row.position || "UTIL",
-          row,
-        })),
-        keeper: pitch.keeper
-          ? {
-              key: `${pitch.keeper.player_name}-${pitch.keeper.player_team}-${pitch.keeper.bookmaker}`,
-              name: pitch.keeper.player_name ?? "",
-              position: pitch.keeper.position || "GK",
-              row: pitch.keeper,
-            }
-          : null,
+        attackers: [],
+        midfielders: [],
+        defenders: [],
+        keeper: null,
       };
 
   return (
@@ -773,50 +748,52 @@ function TeamPitch({
           <p className="text-xs leading-5 text-slate-300/80">
             {hasLineup
               ? `${lineupStatus || "Confirmed Lineup"} from the local FotMob feed. Starters stay visible even when the market has not priced them yet.`
-              : "Projected team list from expected minutes. Grouped by role, with market numbers shown where we have a current price."}
+              : "No FotMob expected XI for this team yet. We hide the model fallback here rather than pretending it is a probable lineup."}
           </p>
         </div>
         <div className="rounded-full border border-slate-700/70 bg-slate-950/35 px-3 py-1 text-xs text-slate-200">
-          {hasLineup ? `${displayedCount} lineup players` : `${displayedCount} shown | ${rows.length} priced`}
+          {hasLineup ? `${displayedCount} lineup players` : `${rows.length} priced rows`}
         </div>
       </div>
 
-      <div className="space-y-3">
-        <GroupBlock title="Attack" items={groupedItems.attackers} />
-        <GroupBlock title="Midfield" items={groupedItems.midfielders} />
-        <GroupBlock title="Defence" items={groupedItems.defenders} />
-      </div>
-
-      <div className="mt-3 rounded-2xl border border-white/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-3">
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">Goalkeeper / extra context</div>
-          <div className="text-xs text-slate-500">{hasLineup ? "starter lens" : "projection lens"}</div>
-        </div>
-        {groupedItems.keeper ? (
-          <PlayerSignalRow
-            name={groupedItems.keeper.name}
-            position={groupedItems.keeper.position}
-            row={groupedItems.keeper.row}
-            note={groupedItems.keeper.note}
-          />
-        ) : (
-          <div className="rounded-xl border border-dashed border-slate-800/80 bg-slate-950/20 px-3 py-3 text-sm text-slate-500">
-            Goalkeeper is not part of ATGS pricing.
+      {hasLineup ? (
+        <>
+          <div className="space-y-3">
+            <GroupBlock title="Attack" items={groupedItems.attackers} />
+            <GroupBlock title="Midfield" items={groupedItems.midfielders} />
+            <GroupBlock title="Defence" items={groupedItems.defenders} />
           </div>
-        )}
-      </div>
 
-      <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-slate-400">
-        <span>
-          {hasLineup
-            ? `${lineupRows.filter((item) => item.row).length}/${lineupRows.length} lineup players matched to current model rows`
-            : pitch.omittedCount > 0
-              ? `${pitch.omittedCount} additional priced players hidden`
-              : "Top priced XI shown"}
-        </span>
-        <span className="rounded-full border border-emerald-500/20 bg-emerald-500/8 px-2 py-1 text-emerald-200">high = public-ready</span>
-        <span className="rounded-full border border-amber-500/20 bg-amber-500/8 px-2 py-1 text-amber-100">medium = caveat</span>
-      </div>
+          <div className="mt-3 rounded-2xl border border-white/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-3">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">Goalkeeper / extra context</div>
+              <div className="text-xs text-slate-500">starter lens</div>
+            </div>
+            {groupedItems.keeper ? (
+              <PlayerSignalRow
+                name={groupedItems.keeper.name}
+                position={groupedItems.keeper.position}
+                row={groupedItems.keeper.row}
+                note={groupedItems.keeper.note}
+              />
+            ) : (
+              <div className="rounded-xl border border-dashed border-slate-800/80 bg-slate-950/20 px-3 py-3 text-sm text-slate-500">
+                Goalkeeper is not part of ATGS pricing.
+              </div>
+            )}
+          </div>
+
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-slate-400">
+            <span>{`${lineupRows.filter((item) => item.row).length}/${lineupRows.length} lineup players matched to current model rows`}</span>
+            <span className="rounded-full border border-emerald-500/20 bg-emerald-500/8 px-2 py-1 text-emerald-200">high = public-ready</span>
+            <span className="rounded-full border border-amber-500/20 bg-amber-500/8 px-2 py-1 text-amber-100">medium = caveat</span>
+          </div>
+        </>
+      ) : (
+        <div className="rounded-2xl border border-dashed border-slate-800/80 bg-slate-950/20 p-4 text-sm text-slate-400">
+          No FotMob lineup published yet for this team. The monitor still prices the market in the table above, but this team panel waits for a real expected or confirmed XI instead of inventing one from model minutes.
+        </div>
+      )}
     </div>
   );
 }
