@@ -18,6 +18,7 @@ type FixtureGroup = {
 type LineupPlayer = {
   name: string;
   position: string;
+  positionId?: number;
 };
 type FixtureLineup = {
   leagueKey: string;
@@ -226,14 +227,13 @@ function parseStoredLineups(text: string | null, leagueKey: string): FixtureLine
         away_team?: string;
         home_status?: string;
         away_status?: string;
-        home_starters?: Array<{ name?: string; role_group?: string }>;
-        away_starters?: Array<{ name?: string; role_group?: string }>;
+        home_starters?: Array<{ name?: string; role_group?: string; position_id?: number | string }>;
+        away_starters?: Array<{ name?: string; role_group?: string; position_id?: number | string }>;
         home_players?: string[];
         away_players?: string[];
       }>;
     };
-    return (payload.fixtures ?? [])
-      .map((fixture) => {
+    const fixtures = (payload.fixtures ?? []).map((fixture): FixtureLineup | null => {
         const homeTeam = decodeHtml(fixture.home_team ?? "").trim();
         const awayTeam = decodeHtml(fixture.away_team ?? "").trim();
         const homeStarterEntries = fixture.home_starters ?? [];
@@ -243,20 +243,24 @@ function parseStoredLineups(text: string | null, leagueKey: string): FixtureLine
             ? homeStarterEntries.map((entry) => ({
                 name: decodeHtml(entry.name ?? "").trim(),
                 position: decodeHtml(entry.role_group ?? "").trim(),
+                positionId: Number.isFinite(Number(entry.position_id)) ? Number(entry.position_id) : undefined,
               }))
             : (fixture.home_players ?? []).map((name) => ({
                 name: decodeHtml(name).trim(),
                 position: "",
+                positionId: undefined,
               }));
         const awayPlayers =
           awayStarterEntries.length > 0
             ? awayStarterEntries.map((entry) => ({
                 name: decodeHtml(entry.name ?? "").trim(),
                 position: decodeHtml(entry.role_group ?? "").trim(),
+                positionId: Number.isFinite(Number(entry.position_id)) ? Number(entry.position_id) : undefined,
               }))
             : (fixture.away_players ?? []).map((name) => ({
                 name: decodeHtml(name).trim(),
                 position: "",
+                positionId: undefined,
               }));
 
         if (!homeTeam || !awayTeam || !homePlayers.length || !awayPlayers.length) return null;
@@ -272,8 +276,8 @@ function parseStoredLineups(text: string | null, leagueKey: string): FixtureLine
           homePlayers,
           awayPlayers,
         } satisfies FixtureLineup;
-      })
-      .filter((fixture): fixture is FixtureLineup => fixture !== null);
+      });
+    return fixtures.filter((fixture): fixture is FixtureLineup => fixture !== null);
   } catch {
     return [];
   }
@@ -342,14 +346,73 @@ function confidenceRank(confidence?: string): number {
   return 1;
 }
 
-function positionBand(position?: string): "gk" | "def" | "mid" | "att" | "util" {
+const FULL_BACK_POSITION_IDS = new Set([32, 38, 62, 68, 71, 72, 78, 79]);
+const CENTRE_BACK_POSITION_IDS = new Set([33, 34, 35, 36, 37]);
+const MIDFIELD_POSITION_IDS = new Set([64, 65, 66, 73, 74, 75, 76, 77, 84, 85, 86]);
+const ATTACKING_MID_WIDE_POSITION_IDS = new Set([82, 83, 87, 88]);
+
+function positionBand(position?: string, positionId?: number): "gk" | "cb" | "wide" | "mid" | "att" | "util" {
   const text = (position ?? "").split(",")[0].trim().toUpperCase();
   if (!text) return "util";
   if (text.startsWith("GK")) return "gk";
-  if (text.startsWith("D")) return "def";
-  if (text.startsWith("M")) return "mid";
-  if (text.startsWith("F")) return "att";
+  if (FULL_BACK_POSITION_IDS.has(positionId ?? -1)) return "wide";
+  if (CENTRE_BACK_POSITION_IDS.has(positionId ?? -1)) return "cb";
+  if (MIDFIELD_POSITION_IDS.has(positionId ?? -1)) return "mid";
+  if (ATTACKING_MID_WIDE_POSITION_IDS.has(positionId ?? -1)) return "mid";
+  if (text === "DMC" || text === "MID" || text === "AM") return "mid";
+  if (text === "DEF") return "cb";
+  if (text === "FW") return "att";
   return "util";
+}
+
+function positionLabel(position?: string, positionId?: number): string {
+  const id = positionId ?? -1;
+  const text = (position ?? "").trim().toUpperCase();
+  const labels: Record<number, string> = {
+    11: "GK",
+    32: "RB",
+    33: "RCB",
+    34: "RCB",
+    35: "CB",
+    36: "LCB",
+    37: "LCB",
+    38: "LB",
+    62: "RM/WB",
+    64: "DM",
+    65: "DM",
+    66: "DM",
+    68: "LM/WB",
+    71: "RWB",
+    72: "RM",
+    73: "RCM",
+    74: "CM",
+    75: "CM",
+    76: "CM",
+    77: "LCM",
+    78: "LM",
+    79: "LWB",
+    82: "RAM",
+    83: "RW/AM",
+    84: "AM",
+    85: "AM",
+    86: "AM",
+    87: "LW/AM",
+    88: "LAM",
+    103: "RF",
+    104: "ST",
+    105: "ST",
+    106: "ST",
+    107: "LF",
+    115: "ST",
+  };
+  if (labels[id]) return labels[id];
+  if (text === "DMC") return "DM";
+  if (text === "MID") return "MID";
+  if (text === "AM") return "AM";
+  if (text === "DEF") return "DEF";
+  if (text === "FW") return "FW";
+  if (text === "GK") return "GK";
+  return text || "UTIL";
 }
 
 function normText(value?: string): string {
@@ -463,28 +526,32 @@ function buildProjectedPitch(rows: CsvRow[]) {
   const keeper = ranked.find((row) => positionBand(row.position) === "gk");
   const outfield = ranked.filter((row) => positionBand(row.position) !== "gk").slice(0, 10);
 
-  const defenders: CsvRow[] = [];
+  const centreBacks: CsvRow[] = [];
+  const widePlayers: CsvRow[] = [];
   const midfielders: CsvRow[] = [];
   const attackers: CsvRow[] = [];
   const utilities: CsvRow[] = [];
 
   for (const row of outfield) {
     const band = positionBand(row.position);
-    if (band === "def") defenders.push(row);
+    if (band === "cb") centreBacks.push(row);
+    else if (band === "wide") widePlayers.push(row);
     else if (band === "mid") midfielders.push(row);
     else if (band === "att") attackers.push(row);
     else utilities.push(row);
   }
 
   for (const row of utilities) {
-    if (midfielders.length <= defenders.length && midfielders.length <= attackers.length) midfielders.push(row);
-    else if (attackers.length <= defenders.length) attackers.push(row);
-    else defenders.push(row);
+    if (midfielders.length <= centreBacks.length && midfielders.length <= attackers.length) midfielders.push(row);
+    else if (widePlayers.length <= centreBacks.length) widePlayers.push(row);
+    else if (attackers.length <= centreBacks.length) attackers.push(row);
+    else centreBacks.push(row);
   }
 
   return {
     keeper,
-    defenders,
+    centreBacks,
+    widePlayers,
     midfielders,
     attackers,
     omittedCount: Math.max(0, ranked.length - (keeper ? 11 : 10)),
@@ -694,47 +761,56 @@ function TeamPitch({
   const lineupRows = lineupPlayers ? resolveLineupRows(lineupPlayers, rows) : [];
   const hasLineup = lineupRows.length > 0;
   const displayedCount = lineupRows.length;
-  const lineupKeeper = lineupRows.find((item) => positionBand(item.lineup.position) === "gk");
-  const lineupOutfield = lineupRows.filter((item) => positionBand(item.lineup.position) !== "gk");
-  const lineupDefenders = lineupOutfield.filter((item) => positionBand(item.lineup.position) === "def");
-  const lineupMidfielders = lineupOutfield.filter((item) => positionBand(item.lineup.position) === "mid");
-  const lineupAttackers = lineupOutfield.filter((item) => positionBand(item.lineup.position) === "att");
-  const lineupUtilities = lineupOutfield.filter((item) => positionBand(item.lineup.position) === "util");
+  const lineupKeeper = lineupRows.find((item) => positionBand(item.lineup.position, item.lineup.positionId) === "gk");
+  const lineupOutfield = lineupRows.filter((item) => positionBand(item.lineup.position, item.lineup.positionId) !== "gk");
+  const lineupCentreBacks = lineupOutfield.filter((item) => positionBand(item.lineup.position, item.lineup.positionId) === "cb");
+  const lineupWidePlayers = lineupOutfield.filter((item) => positionBand(item.lineup.position, item.lineup.positionId) === "wide");
+  const lineupMidfielders = lineupOutfield.filter((item) => positionBand(item.lineup.position, item.lineup.positionId) === "mid");
+  const lineupAttackers = lineupOutfield.filter((item) => positionBand(item.lineup.position, item.lineup.positionId) === "att");
+  const lineupUtilities = lineupOutfield.filter((item) => positionBand(item.lineup.position, item.lineup.positionId) === "util");
 
   for (const item of lineupUtilities) {
-    if (lineupMidfielders.length <= lineupDefenders.length && lineupMidfielders.length <= lineupAttackers.length) lineupMidfielders.push(item);
-    else if (lineupAttackers.length <= lineupDefenders.length) lineupAttackers.push(item);
-    else lineupDefenders.push(item);
+    if (lineupMidfielders.length <= lineupCentreBacks.length && lineupMidfielders.length <= lineupAttackers.length) lineupMidfielders.push(item);
+    else if (lineupWidePlayers.length <= lineupCentreBacks.length) lineupWidePlayers.push(item);
+    else if (lineupAttackers.length <= lineupCentreBacks.length) lineupAttackers.push(item);
+    else lineupCentreBacks.push(item);
   }
 
   const groupedItems = hasLineup
     ? {
         attackers: lineupAttackers.map(({ lineup, row }) => ({
-          key: `${lineup.name}-${lineup.position}`,
+          key: `${lineup.name}-${lineup.position}-${lineup.positionId ?? ""}`,
           name: lineup.name,
-          position: lineup.position || row?.position || "UTIL",
+          position: positionLabel(lineup.position || row?.position, lineup.positionId),
           row: row ? { ...row, position: lineup.position || row.position } : undefined,
           note: row ? undefined : "No price matched",
         })),
         midfielders: lineupMidfielders.map(({ lineup, row }) => ({
-          key: `${lineup.name}-${lineup.position}`,
+          key: `${lineup.name}-${lineup.position}-${lineup.positionId ?? ""}`,
           name: lineup.name,
-          position: lineup.position || row?.position || "UTIL",
+          position: positionLabel(lineup.position || row?.position, lineup.positionId),
           row: row ? { ...row, position: lineup.position || row.position } : undefined,
           note: row ? undefined : "No price matched",
         })),
-        defenders: lineupDefenders.map(({ lineup, row }) => ({
-          key: `${lineup.name}-${lineup.position}`,
+        widePlayers: lineupWidePlayers.map(({ lineup, row }) => ({
+          key: `${lineup.name}-${lineup.position}-${lineup.positionId ?? ""}`,
           name: lineup.name,
-          position: lineup.position || row?.position || "UTIL",
+          position: positionLabel(lineup.position || row?.position, lineup.positionId),
+          row: row ? { ...row, position: lineup.position || row.position } : undefined,
+          note: row ? undefined : "No price matched",
+        })),
+        centreBacks: lineupCentreBacks.map(({ lineup, row }) => ({
+          key: `${lineup.name}-${lineup.position}-${lineup.positionId ?? ""}`,
+          name: lineup.name,
+          position: positionLabel(lineup.position || row?.position, lineup.positionId),
           row: row ? { ...row, position: lineup.position || row.position } : undefined,
           note: row ? undefined : "No price matched",
         })),
         keeper: lineupKeeper
           ? {
-              key: `${lineupKeeper.lineup.name}-${lineupKeeper.lineup.position}`,
+              key: `${lineupKeeper.lineup.name}-${lineupKeeper.lineup.position}-${lineupKeeper.lineup.positionId ?? ""}`,
               name: lineupKeeper.lineup.name,
-              position: lineupKeeper.lineup.position || "GK",
+              position: positionLabel(lineupKeeper.lineup.position || "GK", lineupKeeper.lineup.positionId),
               row: lineupKeeper.row ? { ...lineupKeeper.row, position: lineupKeeper.lineup.position || lineupKeeper.row.position } : undefined,
               note: lineupKeeper.row ? undefined : "ATGS not priced",
             }
@@ -743,7 +819,8 @@ function TeamPitch({
     : {
         attackers: [],
         midfielders: [],
-        defenders: [],
+        widePlayers: [],
+        centreBacks: [],
         keeper: null,
       };
 
@@ -768,7 +845,8 @@ function TeamPitch({
           <div className="space-y-3">
             <GroupBlock title="Attack" items={groupedItems.attackers} />
             <GroupBlock title="Midfield" items={groupedItems.midfielders} />
-            <GroupBlock title="Defence" items={groupedItems.defenders} />
+            <GroupBlock title="Wide / Full-backs" items={groupedItems.widePlayers} />
+            <GroupBlock title="Centre-backs" items={groupedItems.centreBacks} />
           </div>
 
           <div className="mt-3 rounded-2xl border border-white/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-3">
