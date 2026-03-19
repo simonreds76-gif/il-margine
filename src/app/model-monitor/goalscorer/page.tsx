@@ -311,6 +311,13 @@ function formatWLV(wins: number, losses: number, voids: number): string {
   return `${wins}/${losses}/${voids}`;
 }
 
+function formatLineupLabel(row: CsvRow): string {
+  if (row.lineup_status) return row.lineup_status;
+  if (row.lineup_input === "confirmed_xi") return "Confirmed XI";
+  if (row.lineup_input === "expected_xi") return "FotMob Expected XI";
+  return "No XI yet";
+}
+
 function toneForAction(action?: string): string {
   if (action === "surface") return "text-emerald-300";
   if (action === "surface_with_caveat") return "text-amber-300";
@@ -885,8 +892,11 @@ export default async function GoalscorerMonitorPage() {
   const rosterResolved = rows.filter((row) => row.resolver_source === "live_roster").length;
   const lowConfidence = rows.filter((row) => row.signal_confidence === "low").length;
   const starterRows = rows.filter((row) => (row.lineup_state ?? "").toLowerCase() === "starter").length;
+  const expectedStarterRows = rows.filter((row) => (row.lineup_state ?? "").toLowerCase() === "expected_starter").length;
   const benchRows = rows.filter((row) => (row.lineup_state ?? "").toLowerCase() === "bench").length;
+  const expectedBenchRows = rows.filter((row) => (row.lineup_state ?? "").toLowerCase() === "expected_bench").length;
   const notInSquadRows = rows.filter((row) => (row.lineup_state ?? "").toLowerCase() === "not_in_squad").length;
+  const expectedOutRows = rows.filter((row) => (row.lineup_state ?? "").toLowerCase() === "expected_out").length;
   const missingHistoryRows = leagueDatasets.reduce(
     (sum, dataset) => sum + (parseIntMaybe(dataset.summary["Missing Player History"]) ?? 0),
     0,
@@ -897,6 +907,10 @@ export default async function GoalscorerMonitorPage() {
   );
   const fixturesWithConfirmedLineups = leagueDatasets.reduce(
     (sum, dataset) => sum + (parseIntMaybe(dataset.summary["Fixtures With Confirmed Lineups"]) ?? 0),
+    0,
+  );
+  const fixturesWithExpectedXIs = leagueDatasets.reduce(
+    (sum, dataset) => sum + (parseIntMaybe(dataset.summary["Fixtures With Expected Lineups"]) ?? 0),
     0,
   );
   const fixtures = leagueDatasets.flatMap((dataset) => dataset.fixtures);
@@ -960,7 +974,7 @@ export default async function GoalscorerMonitorPage() {
               <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">Goalscorer live monitor</h1>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">
                 This page reads the latest live goalscorer comparison output directly. It is for internal review only:
-                high-confidence signals are separated from caveated roster-resolved rows before anything touches the public site.
+                confirmed-XI signals are separated from softer expected-XI or no-XI reads before anything touches the public site.
               </p>
             </div>
             <div className="rounded-2xl border border-slate-800/80 bg-slate-950/40 px-4 py-3 text-sm text-slate-300">
@@ -982,7 +996,7 @@ export default async function GoalscorerMonitorPage() {
               <h2 className="text-lg font-semibold text-slate-100">What this page is actually showing</h2>
               <p className="mt-1 text-sm text-slate-400">
                 The top half is the latest live comparison run: every player we matched to bookmaker ATGS odds, plus the
-                rows that would be public-ready right now. The shadow tracker is separate and sits below as its own history.
+                rows that would be public-ready right now. Expected XIs feed a soft pre-lineup simulation; confirmed XIs are still the hard trigger for tracked bets.
               </p>
             </div>
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -991,12 +1005,20 @@ export default async function GoalscorerMonitorPage() {
               <Stat label="Current Caveats" value={`${caveatRows.length}`} tone="text-amber-300" />
               <Stat label="Suppressed" value={`${suppressedRows.length}`} tone="text-slate-400" />
               <Stat label="Starter Rows" value={`${starterRows}`} tone="text-emerald-300" />
+              <Stat label="Expected Starters" value={`${expectedStarterRows}`} tone="text-cyan-300" />
               <Stat label="Bench Rows" value={`${benchRows}`} tone="text-amber-300" />
+              <Stat label="Expected Bench" value={`${expectedBenchRows}`} tone="text-amber-200" />
               <Stat label="Not In Squad" value={`${notInSquadRows}`} tone="text-rose-300" />
+              <Stat label="Expected Out" value={`${expectedOutRows}`} tone="text-rose-200" />
               <Stat
                 label="Fixtures With Confirmed XI"
                 value={`${fixturesWithConfirmedLineups}`}
                 tone="text-slate-200"
+              />
+              <Stat
+                label="Fixtures With Expected XI"
+                value={`${fixturesWithExpectedXIs}`}
+                tone="text-cyan-300"
               />
             </div>
             <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
@@ -1072,6 +1094,7 @@ export default async function GoalscorerMonitorPage() {
                     <th className="px-3 py-3 font-medium">Odds</th>
                     <th className="px-3 py-3 font-medium">Fair</th>
                     <th className="px-3 py-3 font-medium">EV</th>
+                    <th className="px-3 py-3 font-medium">XI</th>
                     <th className="px-3 py-3 font-medium">Hist Min</th>
                   </tr>
                 </thead>
@@ -1087,12 +1110,13 @@ export default async function GoalscorerMonitorPage() {
                       <td className="px-3 py-3 text-slate-300">{formatDecimal(parseFloatMaybe(row.odds_decimal), 2)}</td>
                       <td className="px-3 py-3 text-slate-300">{formatDecimal(parseFloatMaybe(row.model_fair_odds_atgs), 2)}</td>
                       <td className="px-3 py-3 text-emerald-300">{formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1)}</td>
+                      <td className="px-3 py-3 text-xs text-slate-400">{formatLineupLabel(row)}</td>
                       <td className="px-3 py-3 text-slate-400">{formatSigned(parseFloatMaybe(row.historical_minutes), 0)}</td>
                     </tr>
                   ))}
                   {highRows.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="px-3 py-6 text-center text-slate-500">No clean public-ready rows in the latest run.</td>
+                      <td colSpan={8} className="px-3 py-6 text-center text-slate-500">No clean public-ready rows in the latest run.</td>
                     </tr>
                   ) : null}
                 </tbody>
@@ -1105,7 +1129,7 @@ export default async function GoalscorerMonitorPage() {
               <div>
                 <h2 className="text-lg font-semibold text-slate-100">Current caveated rows</h2>
                 <p className="mt-1 text-sm text-slate-400">
-                  These still look interesting, but they lean on the live roster resolver rather than the cleaner historical match layer.
+                  These are the live pre-lineup ideas: expected-XI simulations, no-XI reads, or weaker resolver cases that still need confirmation.
                 </p>
               </div>
             </div>
@@ -1126,6 +1150,7 @@ export default async function GoalscorerMonitorPage() {
                     <div className="text-slate-300">Fair {formatDecimal(parseFloatMaybe(row.model_fair_odds_atgs), 2)}</div>
                     <div className="text-amber-300">EV {formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1)}</div>
                   </div>
+                  <div className="mt-2 text-xs text-slate-500">{formatLineupLabel(row)}</div>
                   <div className="mt-2 text-xs text-slate-500">{row.confidence_reason}</div>
                 </div>
               ))}

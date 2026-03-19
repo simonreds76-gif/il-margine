@@ -57,6 +57,8 @@ LEAGUE_COMPETITION_VARIANTS = {
 MIN_PUBLIC_HISTORY_MINUTES = 500.0
 CONFIRMED_STARTER_MINUTES = 85.0
 CONFIRMED_BENCH_MINUTES = 14.0
+EXPECTED_STARTER_MINUTES = 78.0
+EXPECTED_BENCH_MINUTES = 18.0
 STACKED_RECENT_WINDOW = 8
 STACKED_FIXTURE_WINDOW = 3
 USUAL_POSITION_WINDOW = 10
@@ -328,12 +330,12 @@ def _classify_confidence(
 ) -> tuple[str, str, str]:
     reasons: List[str] = []
 
-    if lineup_state == "not_in_squad":
-        reasons.append("not_in_squad")
+    if lineup_state in {"not_in_squad", "expected_out"}:
+        reasons.append("not_in_squad" if lineup_state == "not_in_squad" else "expected_out")
         return "low", "suppress", ",".join(reasons)
 
-    if lineup_state == "bench":
-        reasons.append("confirmed_bench")
+    if lineup_state in {"bench", "expected_bench"}:
+        reasons.append("confirmed_bench" if lineup_state == "bench" else "expected_bench")
         return "low", "suppress", ",".join(reasons)
 
     if method != "model":
@@ -343,6 +345,15 @@ def _classify_confidence(
     if history_minutes < MIN_PUBLIC_HISTORY_MINUTES:
         reasons.append("history_lt_500")
         return "low", "suppress", ",".join(reasons)
+
+    if lineup_state == "expected_starter":
+        reasons.append("expected_xi")
+        action = "surface_with_caveat" if ev >= min_ev else "monitor"
+        if resolver_source == "live_roster":
+            reasons.insert(0, "live_roster_resolver")
+        else:
+            reasons.insert(0, "history_resolver")
+        return "medium", action, ",".join(reasons)
 
     if resolver_source == "live_roster":
         reasons.append("live_roster_resolver")
@@ -354,8 +365,12 @@ def _classify_confidence(
     reasons.append("history_resolver")
     if lineup_state == "starter":
         reasons.append("confirmed_starter")
-    action = "surface" if ev >= min_ev else "monitor"
-    return "high", action, ",".join(reasons)
+        action = "surface" if ev >= min_ev else "monitor"
+        return "high", action, ",".join(reasons)
+
+    reasons.append("no_xi_yet")
+    action = "surface_with_caveat" if ev >= min_ev else "monitor"
+    return "medium", action, ",".join(reasons)
 
 
 def _public_publish_gate(
@@ -559,8 +574,22 @@ def _is_confirmed_lineup(fixture_lineup: dict | None) -> bool:
     return str(fixture_lineup.get("lineup_type") or "").strip().lower() == "standard"
 
 
+def _is_expected_lineup(fixture_lineup: dict | None) -> bool:
+    if fixture_lineup is None:
+        return False
+    return str(fixture_lineup.get("lineup_type") or "").strip().lower() == "predicted"
+
+
+def _lineup_input_label(fixture_lineup: dict | None) -> str:
+    if _is_confirmed_lineup(fixture_lineup):
+        return "confirmed_xi"
+    if _is_expected_lineup(fixture_lineup):
+        return "expected_xi"
+    return "none"
+
+
 def _resolve_lineup_state(player_name: str, fixture_lineup: dict | None, is_home: bool) -> tuple[str, str]:
-    if fixture_lineup is None or not _is_confirmed_lineup(fixture_lineup):
+    if fixture_lineup is None:
         return "unknown", ""
 
     starter_names = fixture_lineup.get("home_players" if is_home else "away_players", [])
@@ -569,21 +598,21 @@ def _resolve_lineup_state(player_name: str, fixture_lineup: dict | None, is_home
 
     starter_match = _lineup_match_name(player_name, starter_names)
     if starter_match:
-        return "starter", starter_match
+        return ("starter" if _is_confirmed_lineup(fixture_lineup) else "expected_starter"), starter_match
 
     bench_match = _lineup_match_name(player_name, bench_names)
     if bench_match:
-        return "bench", bench_match
+        return ("bench" if _is_confirmed_lineup(fixture_lineup) else "expected_bench"), bench_match
 
     unavailable_match = _lineup_match_name(player_name, unavailable_names)
     if unavailable_match:
-        return "not_in_squad", unavailable_match
+        return ("not_in_squad" if _is_confirmed_lineup(fixture_lineup) else "expected_out"), unavailable_match
 
-    return "not_in_squad", ""
+    return "unknown", ""
 
 
 def _resolve_starter_entry(player_name: str, fixture_lineup: dict | None, is_home: bool) -> dict | None:
-    if fixture_lineup is None or not _is_confirmed_lineup(fixture_lineup):
+    if fixture_lineup is None:
         return None
     starter_entries = fixture_lineup.get("home_starters" if is_home else "away_starters", [])
     if not starter_entries:
@@ -693,8 +722,12 @@ def write_outputs(rows: List[dict], stats: dict, out_dir: str, compared_at: str)
             "penalty_transfer_rows",
             "position_upgrade_rows",
             "fixtures_with_confirmed_lineups",
+            "fixtures_with_expected_lineups",
             "confirmed_starter_rows",
             "confirmed_bench_rows",
+            "expected_starter_rows",
+            "expected_bench_rows",
+            "expected_out_rows",
             "not_in_squad_rows",
         ):
             handle.write(f"{key.replace('_', ' ').title():<24} {stats.get(key, 0):,}\n")
@@ -846,8 +879,12 @@ def main() -> None:
         "penalty_transfer_rows": 0,
         "position_upgrade_rows": 0,
         "fixtures_with_confirmed_lineups": 0,
+        "fixtures_with_expected_lineups": 0,
         "confirmed_starter_rows": 0,
         "confirmed_bench_rows": 0,
+        "expected_starter_rows": 0,
+        "expected_bench_rows": 0,
+        "expected_out_rows": 0,
         "not_in_squad_rows": 0,
         "avg_ev": 0.0,
     }
@@ -943,9 +980,11 @@ def main() -> None:
         )
         if _is_confirmed_lineup(fixture_lineup):
             stats["fixtures_with_confirmed_lineups"] += 1
+        elif _is_expected_lineup(fixture_lineup):
+            stats["fixtures_with_expected_lineups"] += 1
 
         team_penalty_events: Dict[str, dict] = {}
-        if _is_confirmed_lineup(fixture_lineup):
+        if fixture_lineup is not None:
             team_penalty_events[fixture_home_key] = {
                 **penalty_transfer_info(
                     penalty_hierarchy.get(fixture_home_key),
@@ -970,12 +1009,21 @@ def main() -> None:
             if lineup_state == "starter":
                 candidate["expected_minutes"] = CONFIRMED_STARTER_MINUTES
                 stats["confirmed_starter_rows"] += 1
+            elif lineup_state == "expected_starter":
+                candidate["expected_minutes"] = max(candidate["expected_minutes"], EXPECTED_STARTER_MINUTES)
+                stats["expected_starter_rows"] += 1
             elif lineup_state == "bench":
                 candidate["expected_minutes"] = CONFIRMED_BENCH_MINUTES
                 stats["confirmed_bench_rows"] += 1
+            elif lineup_state == "expected_bench":
+                candidate["expected_minutes"] = min(candidate["expected_minutes"], EXPECTED_BENCH_MINUTES)
+                stats["expected_bench_rows"] += 1
             elif lineup_state == "not_in_squad":
                 candidate["expected_minutes"] = 0.0
                 stats["not_in_squad_rows"] += 1
+            elif lineup_state == "expected_out":
+                candidate["expected_minutes"] = 0.0
+                stats["expected_out_rows"] += 1
 
         team_buckets: Dict[str, List[dict]] = defaultdict(list)
         unique_predictions: Dict[tuple[str, str], dict] = {}
@@ -1104,7 +1152,7 @@ def main() -> None:
                 if public_gate_reason:
                     public_action = "monitor"
                     confidence_reason = f"{confidence_reason},{public_gate_reason}" if confidence_reason else public_gate_reason
-            signal_eligible = candidate.get("lineup_state", "unknown") not in {"bench", "not_in_squad"}
+            signal_eligible = candidate.get("lineup_state", "unknown") not in {"bench", "not_in_squad", "expected_bench", "expected_out"}
             if ev >= args.min_ev and signal_eligible:
                 stats["qualified_rows"] += 1
             if signal_confidence == "high":
@@ -1154,6 +1202,7 @@ def main() -> None:
                     "penalty_transfer_level": team_penalty_event.get("transfer_level", "") if penalty_transfer else "",
                     "penalty_transfer_boost_xg": 0.07 if penalty_transfer else 0.0,
                     "lineup_state": candidate.get("lineup_state", "unknown"),
+                    "lineup_input": _lineup_input_label(fixture_lineup),
                     "lineup_match_name": candidate.get("lineup_match_name", ""),
                     "usual_position": position_signal["usual_position"],
                     "usual_position_score": position_signal["usual_position_score"],
@@ -1224,8 +1273,12 @@ def main() -> None:
     print(f"  Penalty transfers:    {stats['penalty_transfer_rows']:,}")
     print(f"  Position upgrades:    {stats['position_upgrade_rows']:,}")
     print(f"  Fixtures w/ lineups:  {stats['fixtures_with_confirmed_lineups']:,}")
+    print(f"  Fixtures w/ exp XI:   {stats['fixtures_with_expected_lineups']:,}")
     print(f"  Confirmed starters:   {stats['confirmed_starter_rows']:,}")
     print(f"  Confirmed bench:      {stats['confirmed_bench_rows']:,}")
+    print(f"  Expected starters:    {stats['expected_starter_rows']:,}")
+    print(f"  Expected bench:       {stats['expected_bench_rows']:,}")
+    print(f"  Expected out:         {stats['expected_out_rows']:,}")
     print(f"  Not in squad:         {stats['not_in_squad_rows']:,}")
     print(f"  Average EV:           {stats['avg_ev']:.4f}")
 
