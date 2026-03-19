@@ -518,52 +518,104 @@ function Stat({
   );
 }
 
-function PlayerTile({ row }: { row: CsvRow }) {
+function signalRowClass(action?: string, hasRow = true): string {
+  if (!hasRow) return "border-dashed border-slate-700/70 bg-slate-950/25";
+  if (action === "surface") return "border-emerald-500/20 bg-emerald-500/8";
+  if (action === "surface_with_caveat") return "border-amber-500/20 bg-amber-500/8";
+  if (action === "suppress") return "border-slate-800/80 bg-slate-950/30 opacity-80";
+  return "border-slate-800/80 bg-slate-950/35";
+}
+
+function signalBadge(action?: string): string {
+  if (action === "surface") return "border-emerald-500/20 bg-emerald-500/10 text-emerald-300";
+  if (action === "surface_with_caveat") return "border-amber-500/20 bg-amber-500/10 text-amber-200";
+  if (action === "suppress") return "border-slate-700/80 bg-slate-900/80 text-slate-500";
+  return "border-slate-700/80 bg-slate-900/80 text-slate-300";
+}
+
+function PlayerSignalRow({
+  name,
+  position,
+  row,
+  note,
+}: {
+  name: string;
+  position: string;
+  row?: CsvRow;
+  note?: string;
+}) {
+  const hasRow = Boolean(row);
+  const action = row?.public_action;
+  const evPct = row ? formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1) : "unpriced";
+
   return (
-    <div className={`min-w-[124px] rounded-xl border px-3 py-2 text-center shadow-[0_8px_25px_rgba(0,0,0,0.18)] ${confidenceClass(row.signal_confidence)}`}>
-      <div className="truncate text-sm font-semibold text-slate-100">{row.player_name}</div>
-      <div className="mt-1 text-[11px] uppercase tracking-[0.16em] text-slate-500">{row.position || "UTIL"}</div>
-      <div className="mt-2 grid gap-1 text-xs">
-        <div className="text-slate-300">Fair {formatDecimal(parseFloatMaybe(row.model_fair_odds_atgs), 2)}</div>
-        <div className={toneForAction(row.public_action)}>EV {formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1)}</div>
-        <div className="text-slate-500">Min {formatDecimal(parseFloatMaybe(row.expected_minutes), 0)}</div>
+    <div className={`rounded-xl border px-3 py-3 ${signalRowClass(action, hasRow)}`}>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="truncate text-sm font-semibold text-slate-100">{name}</div>
+          <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-slate-500">
+            <span>{position || "UTIL"}</span>
+            {note ? <span className="normal-case tracking-normal text-slate-500">{note}</span> : null}
+          </div>
+        </div>
+        <span className={`rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${signalBadge(action)}`}>
+          {hasRow ? (action === "surface" ? "live" : action || "monitor") : "unpriced"}
+        </span>
+      </div>
+      <div className="mt-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
+        <div className="rounded-lg bg-black/15 px-2 py-1.5 text-slate-300">
+          Odds {hasRow ? formatDecimal(parseFloatMaybe(row?.odds_decimal), 2) : "n/a"}
+        </div>
+        <div className="rounded-lg bg-black/15 px-2 py-1.5 text-slate-300">
+          Fair {hasRow ? formatDecimal(parseFloatMaybe(row?.model_fair_odds_atgs), 2) : "n/a"}
+        </div>
+        <div className={`rounded-lg bg-black/15 px-2 py-1.5 ${hasRow ? toneForAction(action) : "text-slate-500"}`}>
+          EV {evPct}
+        </div>
+        <div className="rounded-lg bg-black/15 px-2 py-1.5 text-slate-500">
+          Min {hasRow ? formatDecimal(parseFloatMaybe(row?.expected_minutes), 0) : "n/a"}
+        </div>
       </div>
     </div>
   );
 }
 
-function LineupTile({ lineup, row }: { lineup: LineupPlayer; row?: CsvRow }) {
-  if (!row) {
-    return (
-      <div className="min-w-[124px] rounded-xl border border-dashed border-slate-700/80 bg-slate-950/45 px-3 py-2 text-center shadow-[0_8px_25px_rgba(0,0,0,0.18)]">
-        <div className="truncate text-sm font-semibold text-slate-100">{lineup.name}</div>
-        <div className="mt-1 text-[11px] uppercase tracking-[0.16em] text-slate-500">{lineup.position || "UTIL"}</div>
-        <div className="mt-2 text-xs text-slate-500">No price matched</div>
+function GroupBlock({
+  title,
+  items,
+}: {
+  title: string;
+  items: Array<{
+    key: string;
+    name: string;
+    position: string;
+    row?: CsvRow;
+    note?: string;
+  }>;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.01))] p-3">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{title}</div>
+        <div className="text-xs text-slate-500">{items.length}</div>
       </div>
-    );
-  }
-
-  return <PlayerTile row={{ ...row, position: lineup.position || row.position }} />;
-}
-
-function PitchRow({ rows }: { rows: CsvRow[] }) {
-  if (!rows.length) return <div className="min-h-8" />;
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-3">
-      {rows.map((row) => (
-        <PlayerTile key={`${row.player_name}-${row.player_team}-${row.bookmaker}`} row={row} />
-      ))}
-    </div>
-  );
-}
-
-function LineupPitchRow({ rows }: { rows: Array<{ lineup: LineupPlayer; row?: CsvRow }> }) {
-  if (!rows.length) return <div className="min-h-8" />;
-  return (
-    <div className="flex flex-wrap items-center justify-center gap-3">
-      {rows.map(({ lineup, row }) => (
-        <LineupTile key={`${lineup.name}-${lineup.position}`} lineup={lineup} row={row} />
-      ))}
+      <div className="space-y-2.5">
+        {items.length > 0 ? (
+          items.map((item) => (
+            <PlayerSignalRow
+              key={item.key}
+              name={item.name}
+              position={item.position}
+              row={item.row}
+              note={item.note}
+            />
+          ))
+        ) : (
+          <div className="rounded-xl border border-dashed border-slate-800/80 bg-slate-950/20 px-3 py-3 text-sm text-slate-500">
+            No players in this band.
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -595,15 +647,77 @@ function TeamPitch({
     else lineupDefenders.push(item);
   }
 
+  const groupedItems = hasLineup
+    ? {
+        attackers: lineupAttackers.map(({ lineup, row }) => ({
+          key: `${lineup.name}-${lineup.position}`,
+          name: lineup.name,
+          position: lineup.position || row?.position || "UTIL",
+          row: row ? { ...row, position: lineup.position || row.position } : undefined,
+          note: row ? undefined : "No price matched",
+        })),
+        midfielders: lineupMidfielders.map(({ lineup, row }) => ({
+          key: `${lineup.name}-${lineup.position}`,
+          name: lineup.name,
+          position: lineup.position || row?.position || "UTIL",
+          row: row ? { ...row, position: lineup.position || row.position } : undefined,
+          note: row ? undefined : "No price matched",
+        })),
+        defenders: lineupDefenders.map(({ lineup, row }) => ({
+          key: `${lineup.name}-${lineup.position}`,
+          name: lineup.name,
+          position: lineup.position || row?.position || "UTIL",
+          row: row ? { ...row, position: lineup.position || row.position } : undefined,
+          note: row ? undefined : "No price matched",
+        })),
+        keeper: lineupKeeper
+          ? {
+              key: `${lineupKeeper.lineup.name}-${lineupKeeper.lineup.position}`,
+              name: lineupKeeper.lineup.name,
+              position: lineupKeeper.lineup.position || "GK",
+              row: lineupKeeper.row ? { ...lineupKeeper.row, position: lineupKeeper.lineup.position || lineupKeeper.row.position } : undefined,
+              note: lineupKeeper.row ? undefined : "ATGS not priced",
+            }
+          : null,
+      }
+    : {
+        attackers: pitch.attackers.map((row) => ({
+          key: `${row.player_name}-${row.player_team}-${row.bookmaker}`,
+          name: row.player_name ?? "",
+          position: row.position || "UTIL",
+          row,
+        })),
+        midfielders: pitch.midfielders.map((row) => ({
+          key: `${row.player_name}-${row.player_team}-${row.bookmaker}`,
+          name: row.player_name ?? "",
+          position: row.position || "UTIL",
+          row,
+        })),
+        defenders: pitch.defenders.map((row) => ({
+          key: `${row.player_name}-${row.player_team}-${row.bookmaker}`,
+          name: row.player_name ?? "",
+          position: row.position || "UTIL",
+          row,
+        })),
+        keeper: pitch.keeper
+          ? {
+              key: `${pitch.keeper.player_name}-${pitch.keeper.player_team}-${pitch.keeper.bookmaker}`,
+              name: pitch.keeper.player_name ?? "",
+              position: pitch.keeper.position || "GK",
+              row: pitch.keeper,
+            }
+          : null,
+      };
+
   return (
-    <div className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(32,73,58,0.95),rgba(20,52,42,0.98))] p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.03)]">
+    <div className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(28,40,56,0.96),rgba(13,19,28,0.98))] p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.03)]">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold text-white">{team}</h3>
-          <p className="text-xs leading-5 text-emerald-100/75">
+          <p className="text-xs leading-5 text-slate-300/80">
             {hasLineup
-              ? `${lineupStatus || "Confirmed Lineup"} from the local FotMob feed. Tiles show fair odds and EV where a model row exists.`
-              : "Projected priced XI from expected minutes. GK is not part of ATGS pricing."}
+              ? `${lineupStatus || "Confirmed Lineup"} from the local FotMob feed. Rows keep unpriced starters visible instead of hiding them.`
+              : "Projected priced team sheet from expected minutes. This is a monitor panel, not a tactical pitch."}
           </p>
         </div>
         <div className="rounded-full border border-slate-700/70 bg-slate-950/35 px-3 py-1 text-xs text-slate-200">
@@ -611,45 +725,28 @@ function TeamPitch({
         </div>
       </div>
 
-      <div className="space-y-5 rounded-2xl border border-white/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-4">
-        {hasLineup ? (
-          <>
-            <LineupPitchRow rows={lineupAttackers} />
-            <div className="h-px bg-white/10" />
-            <LineupPitchRow rows={lineupMidfielders} />
-            <div className="h-px bg-white/10" />
-            <LineupPitchRow rows={lineupDefenders} />
-            <div className="h-px bg-white/10" />
-            <div className="flex justify-center">
-              {lineupKeeper ? (
-                <LineupTile lineup={lineupKeeper.lineup} row={lineupKeeper.row} />
-              ) : (
-                <div className="min-w-[124px] rounded-xl border border-dashed border-slate-700/80 bg-slate-950/35 px-3 py-2 text-center">
-                  <div className="text-sm font-semibold text-slate-200">GK</div>
-                  <div className="mt-1 text-xs text-slate-500">Not priced in ATGS</div>
-                </div>
-              )}
-            </div>
-          </>
+      <div className="grid gap-3 xl:grid-cols-3">
+        <GroupBlock title="Attack" items={groupedItems.attackers} />
+        <GroupBlock title="Midfield" items={groupedItems.midfielders} />
+        <GroupBlock title="Defence" items={groupedItems.defenders} />
+      </div>
+
+      <div className="mt-3 rounded-2xl border border-white/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-3">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">Goalkeeper / extra context</div>
+          <div className="text-xs text-slate-500">{hasLineup ? "starter lens" : "projection lens"}</div>
+        </div>
+        {groupedItems.keeper ? (
+          <PlayerSignalRow
+            name={groupedItems.keeper.name}
+            position={groupedItems.keeper.position}
+            row={groupedItems.keeper.row}
+            note={groupedItems.keeper.note}
+          />
         ) : (
-          <>
-            <PitchRow rows={pitch.attackers} />
-            <div className="h-px bg-white/10" />
-            <PitchRow rows={pitch.midfielders} />
-            <div className="h-px bg-white/10" />
-            <PitchRow rows={pitch.defenders} />
-            <div className="h-px bg-white/10" />
-            <div className="flex justify-center">
-              {pitch.keeper ? (
-                <PlayerTile row={pitch.keeper} />
-              ) : (
-                <div className="min-w-[124px] rounded-xl border border-dashed border-slate-700/80 bg-slate-950/35 px-3 py-2 text-center">
-                  <div className="text-sm font-semibold text-slate-200">GK</div>
-                  <div className="mt-1 text-xs text-slate-500">Not priced in ATGS</div>
-                </div>
-              )}
-            </div>
-          </>
+          <div className="rounded-xl border border-dashed border-slate-800/80 bg-slate-950/20 px-3 py-3 text-sm text-slate-500">
+            Goalkeeper is not part of ATGS pricing.
+          </div>
         )}
       </div>
 
