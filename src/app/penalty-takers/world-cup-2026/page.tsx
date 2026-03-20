@@ -60,7 +60,7 @@ const CONFEDERATION_STYLES: Record<
   UEFA: {
     badge: "border-sky-400/30 bg-sky-400/10 text-sky-200",
     panel: "from-sky-500/20 via-sky-400/8 to-slate-950",
-    glow: "hover:shadow-[0_26px_70px_rgba(56,189,248,0.08)]",
+    glow: "shadow-none sm:hover:shadow-[0_26px_70px_rgba(56,189,248,0.08)]",
     primary: "text-sky-100",
     secondary: "text-sky-200",
     accent: "bg-sky-300",
@@ -68,7 +68,7 @@ const CONFEDERATION_STYLES: Record<
   CONMEBOL: {
     badge: "border-emerald-400/30 bg-emerald-400/10 text-emerald-200",
     panel: "from-emerald-500/20 via-emerald-400/8 to-slate-950",
-    glow: "hover:shadow-[0_26px_70px_rgba(16,185,129,0.08)]",
+    glow: "shadow-none sm:hover:shadow-[0_26px_70px_rgba(16,185,129,0.08)]",
     primary: "text-emerald-100",
     secondary: "text-emerald-200",
     accent: "bg-emerald-300",
@@ -76,7 +76,7 @@ const CONFEDERATION_STYLES: Record<
   Concacaf: {
     badge: "border-cyan-400/30 bg-cyan-400/10 text-cyan-200",
     panel: "from-cyan-500/20 via-cyan-400/8 to-slate-950",
-    glow: "hover:shadow-[0_26px_70px_rgba(34,211,238,0.08)]",
+    glow: "shadow-none sm:hover:shadow-[0_26px_70px_rgba(34,211,238,0.08)]",
     primary: "text-cyan-100",
     secondary: "text-cyan-200",
     accent: "bg-cyan-300",
@@ -84,7 +84,7 @@ const CONFEDERATION_STYLES: Record<
   AFC: {
     badge: "border-amber-400/30 bg-amber-400/10 text-amber-100",
     panel: "from-amber-500/20 via-amber-400/8 to-slate-950",
-    glow: "hover:shadow-[0_26px_70px_rgba(251,191,36,0.08)]",
+    glow: "shadow-none sm:hover:shadow-[0_26px_70px_rgba(251,191,36,0.08)]",
     primary: "text-amber-50",
     secondary: "text-amber-200",
     accent: "bg-amber-300",
@@ -92,7 +92,7 @@ const CONFEDERATION_STYLES: Record<
   CAF: {
     badge: "border-rose-400/30 bg-rose-400/10 text-rose-200",
     panel: "from-rose-500/20 via-rose-400/8 to-slate-950",
-    glow: "hover:shadow-[0_26px_70px_rgba(251,113,133,0.08)]",
+    glow: "shadow-none sm:hover:shadow-[0_26px_70px_rgba(251,113,133,0.08)]",
     primary: "text-rose-100",
     secondary: "text-rose-200",
     accent: "bg-rose-300",
@@ -100,7 +100,7 @@ const CONFEDERATION_STYLES: Record<
   OFC: {
     badge: "border-violet-400/30 bg-violet-400/10 text-violet-200",
     panel: "from-violet-500/20 via-violet-400/8 to-slate-950",
-    glow: "hover:shadow-[0_26px_70px_rgba(167,139,250,0.08)]",
+    glow: "shadow-none sm:hover:shadow-[0_26px_70px_rgba(167,139,250,0.08)]",
     primary: "text-violet-100",
     secondary: "text-violet-200",
     accent: "bg-violet-300",
@@ -230,11 +230,11 @@ export default async function WorldCup2026PenaltyTakersPage() {
         <section className="pt-6 pb-12 md:pb-16">
           <PageHomeLink className="mb-8" />
 
-          <div className="relative overflow-hidden rounded-[32px] border border-slate-800/80 bg-[linear-gradient(160deg,rgba(4,10,18,0.98),rgba(6,22,20,0.96))] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.28)] sm:p-8 lg:p-10">
+          <div className="relative overflow-hidden rounded-[32px] border border-slate-800/80 bg-[linear-gradient(160deg,rgba(4,10,18,0.98),rgba(6,22,20,0.96))] p-5 shadow-[0_18px_48px_rgba(0,0,0,0.24)] sm:p-8 sm:shadow-[0_28px_80px_rgba(0,0,0,0.28)] lg:p-10">
             <div className="pointer-events-none absolute inset-0">
-              <div className="absolute -left-10 top-0 h-44 w-44 rounded-full bg-emerald-400/10 blur-3xl" />
-              <div className="absolute right-0 top-10 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl" />
-              <div className="absolute bottom-0 left-1/3 h-36 w-36 rounded-full bg-amber-400/10 blur-3xl" />
+              <div className="absolute -left-10 top-0 hidden h-44 w-44 rounded-full bg-emerald-400/10 blur-3xl sm:block" />
+              <div className="absolute right-0 top-10 hidden h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl sm:block" />
+              <div className="absolute bottom-0 left-1/3 hidden h-36 w-36 rounded-full bg-amber-400/10 blur-3xl sm:block" />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/world-cup-trophy.svg"
@@ -288,19 +288,19 @@ export default async function WorldCup2026PenaltyTakersPage() {
               </div>
 
               <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-5">
+                <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
                   <div className="font-mono text-3xl font-semibold text-emerald-400">{data.qualified_count}</div>
                   <div className="mt-1 text-sm text-slate-400">Confirmed teams</div>
                 </div>
-                <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-5">
+                <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
                   <div className="font-mono text-3xl font-semibold text-emerald-400">{UEFA_PLAYOFF_PATHS.length}</div>
                   <div className="mt-1 text-sm text-slate-400">UEFA paths live</div>
                 </div>
-                <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-5">
+                <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
                   <div className="font-mono text-3xl font-semibold text-emerald-400">{data.playoff_teams.length}</div>
                   <div className="mt-1 text-sm text-slate-400">Intercontinental hopefuls</div>
                 </div>
-                <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-5">
+                <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
                   <div className="font-mono text-xl font-semibold text-emerald-400">{data.last_verified}</div>
                   <div className="mt-1 text-sm text-slate-400">Last verified</div>
                 </div>
@@ -309,7 +309,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
           </div>
         </section>
 
-        <section className="mt-2 rounded-3xl border border-slate-800/80 bg-slate-900/70 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+        <section className="mt-2 rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
           <div className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-400">Most searched team pages</div>
           <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
             <div>
@@ -335,7 +335,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
 
         <WorldCupTeamIndex teams={alphabeticalIndexTeams} confederations={indexFilters} />
 
-        <section className="mt-12 space-y-14">
+        <section className="mt-10 space-y-10 sm:mt-12 sm:space-y-14">
           {grouped.map((group) => {
             const style = CONFEDERATION_STYLES[group.confederation] ?? CONFEDERATION_STYLES.CONMEBOL;
             return (
@@ -455,8 +455,8 @@ export default async function WorldCup2026PenaltyTakersPage() {
           })}
         </section>
 
-        <section className="mt-14 grid gap-6 xl:grid-cols-[1.05fr,0.95fr]">
-          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+        <section className="mt-14 grid gap-4 sm:gap-6 xl:grid-cols-[1.05fr,0.95fr]">
+          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Still Outside The Field</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Play-off watchlist</h2>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">
@@ -494,7 +494,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">How The Board Moves</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">How the page gets tightened</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
@@ -506,7 +506,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
         </section>
 
         <section className="mt-6">
-          <div className="rounded-3xl border border-emerald-400/18 bg-[linear-gradient(140deg,rgba(6,26,20,0.94),rgba(10,15,24,0.96))] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+          <div className="rounded-3xl border border-emerald-400/18 bg-[linear-gradient(140deg,rgba(6,26,20,0.94),rgba(10,15,24,0.96))] p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Help Tighten The Board</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Closer to one of the squads?</h2>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">

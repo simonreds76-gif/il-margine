@@ -47,7 +47,7 @@ export default function WorldCupTeamIndex({ teams, confederations }: Props) {
   }, [activeFilter, teams]);
 
   return (
-    <section className="mt-6 rounded-3xl border border-slate-800/80 bg-slate-900/70 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+    <section className="mt-6 rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
       <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Nation Index</div>
       <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
         <div>
@@ -64,12 +64,12 @@ export default function WorldCupTeamIndex({ teams, confederations }: Props) {
         </Link>
       </div>
 
-      <div className="sticky top-3 z-20 mt-6 rounded-2xl border border-slate-800/80 bg-slate-950/92 p-3 backdrop-blur">
-        <div className="flex flex-wrap gap-2">
+      <div className="mt-6 rounded-2xl border border-slate-800/80 bg-slate-950/96 p-3 lg:sticky lg:top-4 lg:z-20 lg:backdrop-blur">
+        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
           <button
             type="button"
             onClick={() => setActiveFilter(ALL_FILTER)}
-            className={`rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] transition ${
+            className={`shrink-0 rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] transition ${
               activeFilter === ALL_FILTER
                 ? "border-emerald-400/30 bg-emerald-400/12 text-emerald-200"
                 : "border-slate-700 bg-slate-950 text-slate-400 hover:border-slate-500 hover:text-slate-200"
@@ -82,7 +82,7 @@ export default function WorldCupTeamIndex({ teams, confederations }: Props) {
               key={confederation.key}
               type="button"
               onClick={() => setActiveFilter(confederation.key)}
-              className={`rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] transition ${
+              className={`shrink-0 rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] transition ${
                 activeFilter === confederation.key
                   ? confederation.badgeClassName
                   : "border-slate-700 bg-slate-950 text-slate-400 hover:border-slate-500 hover:text-slate-200"
@@ -93,22 +93,24 @@ export default function WorldCupTeamIndex({ teams, confederations }: Props) {
           ))}
         </div>
 
-        <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-400">
-          <span className="text-slate-500">Jump to editorial notes:</span>
+        <div className="mt-3">
+          <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Jump to editorial notes</div>
+          <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
           {confederations.map((confederation) => (
             <a
               key={`jump-${confederation.key}`}
               href={`#${confederation.key.toLowerCase()}`}
               onClick={() => setActiveFilter(confederation.key)}
-              className="rounded-full border border-slate-700 bg-slate-950 px-2.5 py-1 text-[11px] text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
+              className="shrink-0 rounded-full border border-slate-700 bg-slate-950 px-2.5 py-1 text-[11px] text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
             >
               {confederation.key}
             </a>
           ))}
+          </div>
         </div>
       </div>
 
-      <div className="mt-6 flex items-center justify-between gap-3">
+      <div className="mt-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div className="text-sm text-slate-400">
           Showing <span className="text-slate-100">{filteredTeams.length}</span>{" "}
           {activeFilter === ALL_FILTER ? "qualified teams" : `${activeFilter} teams`}

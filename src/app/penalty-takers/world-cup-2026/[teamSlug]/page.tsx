@@ -235,17 +235,17 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
             <span className="text-slate-200">{team.team}</span>
           </div>
 
-          <div className="relative overflow-hidden rounded-[32px] border border-slate-800/80 bg-[linear-gradient(160deg,rgba(4,10,18,0.98),rgba(6,22,20,0.96))] shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
-            <div className={`pointer-events-none absolute inset-x-0 top-0 h-20 sm:h-28 bg-gradient-to-r ${style.band}`} />
+          <div className="relative overflow-hidden rounded-[32px] border border-slate-800/80 bg-[linear-gradient(160deg,rgba(4,10,18,0.98),rgba(6,22,20,0.96))] shadow-[0_18px_48px_rgba(0,0,0,0.24)] sm:shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
+            <div className={`pointer-events-none absolute inset-x-0 top-0 h-16 sm:h-28 bg-gradient-to-r ${style.band}`} />
             <div className="pointer-events-none absolute inset-0">
-              <div className="absolute -left-6 top-0 h-44 w-44 rounded-full bg-emerald-400/10 blur-3xl" />
-              <div className="absolute right-0 top-8 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl" />
+              <div className="absolute -left-6 top-0 hidden h-44 w-44 rounded-full bg-emerald-400/10 blur-3xl sm:block" />
+              <div className="absolute right-0 top-8 hidden h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl sm:block" />
               <div className="absolute right-8 top-4 hidden text-[120px] font-semibold tracking-[-0.08em] text-white/5 xl:block">
                 {initials(team.team)}
               </div>
             </div>
 
-            <div className="relative p-5 pt-20 sm:p-8 sm:pt-28 lg:p-10 lg:pt-32">
+            <div className="relative p-4 pt-16 sm:p-8 sm:pt-28 lg:p-10 lg:pt-32">
               <div className="grid gap-8 xl:grid-cols-[1.08fr,0.92fr] xl:items-start">
                 <div className="max-w-4xl">
                   <div className="flex flex-col items-start gap-4 sm:flex-row">
@@ -287,7 +287,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                   </div>
                 </div>
 
-                <aside className={`overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-br p-5 shadow-[0_22px_60px_rgba(0,0,0,0.22)] ${style.surface}`}>
+                <aside className={`overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-br p-4 shadow-[0_14px_36px_rgba(0,0,0,0.18)] sm:p-5 sm:shadow-[0_22px_60px_rgba(0,0,0,0.22)] ${style.surface}`}>
                   <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-slate-300">Penalty hierarchy</div>
 
                   <div className="mt-4 space-y-3">
@@ -332,8 +332,8 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
           </div>
         </section>
 
-        <section className="mt-2 grid gap-6 xl:grid-cols-[1.08fr,0.92fr]">
-          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+        <section className="mt-2 grid gap-4 sm:gap-6 xl:grid-cols-[1.08fr,0.92fr]">
+          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Evidence And Context</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">{team.team} at a glance</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
@@ -346,7 +346,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">What Moves It</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">What would move the order?</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
@@ -363,8 +363,8 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
           </div>
         </section>
 
-        <section className="mt-8 grid gap-6 xl:grid-cols-[1.02fr,0.98fr]">
-          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+        <section className="mt-8 grid gap-4 sm:gap-6 xl:grid-cols-[1.02fr,0.98fr]">
+          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Evidence Trail</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Why the board looks like this</h2>
             <div className="mt-5 space-y-4">
@@ -386,7 +386,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
           </div>
 
           <div className="space-y-6">
-            <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+            <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
               <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Sources Reviewed</div>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Primary trail and supporting checks</h2>
               <div className="mt-5 flex flex-wrap gap-2.5">
@@ -404,7 +404,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+            <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
               <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Related Pages</div>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">More routes through the field</h2>
               {groupMates.length > 0 ? (
@@ -460,7 +460,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
           </div>
         </section>
 
-        <section className="mt-10 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+        <section className="mt-10 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
           <div className="text-sm text-slate-300">
             <span className="text-slate-100">Keep moving through the board:</span> the team pages are ordered so the whole
             World Cup field is easy to review country by country.
