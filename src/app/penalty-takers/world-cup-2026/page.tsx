@@ -245,24 +245,26 @@ export default async function WorldCup2026PenaltyTakersPage() {
             <div className="relative grid gap-8 xl:grid-cols-[1.15fr,0.85fr] xl:items-start">
               <div className="max-w-4xl">
                 <div className="mb-5 flex flex-wrap items-center gap-3">
-                  <div className="flex items-center rounded-[20px] border border-white/15 bg-white/95 px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.2)]">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-[24px] border border-amber-400/20 bg-[linear-gradient(180deg,rgba(38,30,16,0.85),rgba(14,16,24,0.9))] shadow-[0_16px_40px_rgba(0,0,0,0.24)]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/world-cup-2026-horizontal.svg"
+                      src="/world-cup-2026-logo.png"
                       alt="Official FIFA World Cup 2026 emblem"
-                      className="h-7 w-auto object-contain"
+                      className="h-12 w-12 object-contain"
                     />
                   </div>
-                  <div className="flex items-center rounded-[20px] border border-white/15 bg-white px-4 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.2)]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/fifa-logo.svg" alt="FIFA logo" className="h-4 w-auto object-contain" />
+                  <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex items-center rounded-full border border-white/15 bg-white px-4 py-2 shadow-[0_10px_24px_rgba(0,0,0,0.2)]">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/fifa-logo.svg" alt="FIFA logo" className="h-3.5 w-auto object-contain" />
+                    </div>
+                    <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-200">
+                      Il Margine Intelligence
+                    </span>
+                    <span className="rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-300">
+                      11 Jun to 19 Jul 2026
+                    </span>
                   </div>
-                  <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-200">
-                    Il Margine Intelligence
-                  </span>
-                  <span className="rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-300">
-                    11 Jun to 19 Jul 2026
-                  </span>
                 </div>
 
                 <h1 className="text-4xl font-semibold tracking-tight text-slate-100 sm:text-6xl sm:leading-[0.98]">
@@ -276,23 +278,16 @@ export default async function WorldCup2026PenaltyTakersPage() {
                   One hub to scan the field, then a proper page for each national team.
                 </p>
 
-                <div className="mt-6 flex flex-wrap items-center gap-2">
-                  <span className="rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                    Host nations
-                  </span>
-                  <span className="rounded-full border border-sky-400/25 bg-sky-400/10 px-3 py-1 text-xs font-medium text-sky-100">
-                    USA
-                  </span>
-                  <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-100">
-                    Mexico
-                  </span>
-                  <span className="rounded-full border border-rose-400/25 bg-rose-400/10 px-3 py-1 text-xs font-medium text-rose-100">
-                    Canada
-                  </span>
-                  <span className="rounded-full border border-amber-300/20 bg-amber-400/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-100">
-                    Qualified board live
-                  </span>
-                </div>
+                <p className="mt-6 text-[12px] font-mono uppercase tracking-[0.18em] text-slate-500">
+                  Hosts{" "}
+                  <span className="text-sky-200">USA</span>
+                  <span className="text-slate-600"> / </span>
+                  <span className="text-emerald-200">Mexico</span>
+                  <span className="text-slate-600"> / </span>
+                  <span className="text-rose-200">Canada</span>
+                  <span className="text-slate-600"> · </span>
+                  <span className="text-amber-100">Qualified board live</span>
+                </p>
 
                 <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-5">
@@ -315,40 +310,6 @@ export default async function WorldCup2026PenaltyTakersPage() {
               </div>
 
               <aside className="space-y-4">
-                <div className="rounded-3xl border border-slate-800/80 bg-slate-950/55 p-5">
-                  <div className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-400">Official tournament marks</div>
-                  <div className="mt-4 grid gap-3 sm:grid-cols-[1.15fr,0.85fr]">
-                    <div className="flex items-center justify-center rounded-2xl border border-white/15 bg-white/95 px-4 py-4">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="/world-cup-2026-horizontal.svg"
-                        alt="Official FIFA World Cup 2026 emblem"
-                        className="h-9 w-auto object-contain"
-                      />
-                    </div>
-                    <div className="flex items-center justify-center rounded-2xl border border-white/15 bg-white px-4 py-4">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="/fifa-logo.svg" alt="FIFA logo" className="h-5 w-auto object-contain" />
-                    </div>
-                    <div className="sm:col-span-2 flex items-center gap-4 rounded-2xl border border-amber-400/20 bg-[linear-gradient(135deg,rgba(32,24,10,0.85),rgba(17,24,39,0.96))] p-4">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="/world-cup-trophy.svg"
-                        alt="FIFA World Cup trophy graphic"
-                        className="h-16 w-auto shrink-0 object-contain"
-                      />
-                      <div>
-                        <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-200">
-                          World Cup trophy
-                        </div>
-                        <p className="mt-1 text-sm leading-6 text-slate-300">
-                          The 2026 board now carries the tournament emblem, FIFA wordmark and trophy graphic in the hero system.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 <div className="rounded-3xl border border-slate-800/80 bg-slate-950/55 p-5">
                   <div className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-400">Most searched team pages</div>
                   <div className="mt-4 grid gap-2 sm:grid-cols-2">

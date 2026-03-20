@@ -180,12 +180,12 @@ export default function PenaltyTakersClient({
           >
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-amber-400/20 bg-amber-500/10 text-amber-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-amber-400/20 bg-amber-500/10 text-amber-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/world-cup-2026-logo.png"
                     alt="FIFA World Cup 2026 logo"
-                    className="h-8 w-8 object-contain"
+                    className="h-10 w-10 object-contain"
                   />
                 </div>
                 <div className="min-w-0">
@@ -198,23 +198,16 @@ export default function PenaltyTakersClient({
                   <p className="mt-1 text-sm leading-6 text-slate-400">
                     All qualified nations, full hierarchy, country pages built for tournament search.
                   </p>
-                  <div className="mt-3 flex flex-wrap items-center gap-2">
-                    <span className="rounded-full border border-slate-700/80 bg-slate-950/75 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400">
-                      Host nations
-                    </span>
-                    <span className="rounded-full border border-sky-400/25 bg-sky-400/10 px-2.5 py-1 text-[11px] font-medium text-sky-100">
-                      USA
-                    </span>
-                    <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-[11px] font-medium text-emerald-100">
-                      Mexico
-                    </span>
-                    <span className="rounded-full border border-rose-400/25 bg-rose-400/10 px-2.5 py-1 text-[11px] font-medium text-rose-100">
-                      Canada
-                    </span>
-                    <span className="rounded-full border border-amber-300/20 bg-amber-400/8 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-amber-100">
-                      11 Jun to 19 Jul 2026
-                    </span>
-                  </div>
+                  <p className="mt-2 text-[12px] font-mono uppercase tracking-[0.18em] text-slate-500">
+                    Hosts{" "}
+                    <span className="text-sky-200">USA</span>
+                    <span className="text-slate-600"> / </span>
+                    <span className="text-emerald-200">Mexico</span>
+                    <span className="text-slate-600"> / </span>
+                    <span className="text-rose-200">Canada</span>
+                    <span className="text-slate-600"> · </span>
+                    <span className="text-amber-100">11 Jun to 19 Jul 2026</span>
+                  </p>
                 </div>
               </div>
               <div className="inline-flex items-center gap-2 text-sm font-medium text-amber-200 transition group-hover:translate-x-0.5 group-hover:text-amber-100">
