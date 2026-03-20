@@ -50,6 +50,7 @@ DEFAULT_SIGNALS = DATA_DIR / "strict-signals.csv"
 DEFAULT_XLSX = DATA_DIR / "atp-2026.xlsx"
 DEFAULT_DETAIL_CSV = DATA_DIR / "strict-clv-audit-2026.csv"
 DEFAULT_SUMMARY_TXT = DATA_DIR / "strict-clv-audit-2026.txt"
+DEFAULT_LOCAL_HISTORY_DIR = ROOT / "data" / "pinnacle-history"
 
 KEY_FIELDS = ["date", "player1", "player2", "surface", "series", "confidence", "side"]
 
@@ -74,6 +75,7 @@ class HistoryRow:
     captured_at: str
     captured_ts: datetime
     capture_mode: str
+    source: str
     league: str
     player1_name: str
     player2_name: str
@@ -87,6 +89,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--xlsx", default=str(DEFAULT_XLSX), help="Tennis-data ATP XLSX with closing Pinnacle odds.")
     parser.add_argument("--detail-csv", default=str(DEFAULT_DETAIL_CSV), help="Detailed audit CSV output.")
     parser.add_argument("--summary-txt", default=str(DEFAULT_SUMMARY_TXT), help="Summary text output.")
+    parser.add_argument(
+        "--local-history-dir",
+        default=str(DEFAULT_LOCAL_HISTORY_DIR),
+        help="Directory containing local Pinnacle capture CSVs to merge into CLV history coverage.",
+    )
     parser.add_argument("--dry-run", action="store_true", help="Do not write outputs; print summary only.")
     return parser.parse_args()
 
@@ -331,7 +338,7 @@ def _is_doubles_name(name: str | None) -> bool:
     return "/" in (name or "") or "&" in (name or "")
 
 
-def fetch_history_rows(start_date: date, end_date: date) -> tuple[list[HistoryRow], dict[str, Any]]:
+def fetch_supabase_history_rows(start_date: date, end_date: date) -> tuple[list[HistoryRow], dict[str, Any]]:
     try:
         base, headers = get_supabase_rest()
     except Exception as exc:
@@ -372,6 +379,7 @@ def fetch_history_rows(start_date: date, end_date: date) -> tuple[list[HistoryRo
                     captured_at=str(row.get("captured_at") or ""),
                     captured_ts=ts,
                     capture_mode=str(row.get("capture_mode") or ""),
+                    source="supabase",
                     league=str(row.get("league") or ""),
                     player1_name=str(row.get("player1_name") or ""),
                     player2_name=str(row.get("player2_name") or ""),
@@ -388,6 +396,91 @@ def fetch_history_rows(start_date: date, end_date: date) -> tuple[list[HistoryRo
         "rows": len(all_rows),
         "start_date": start_date.isoformat(),
         "end_date": end_date.isoformat(),
+    }
+
+
+def load_local_history_rows(history_dir: Path, start_date: date, end_date: date) -> tuple[list[HistoryRow], dict[str, Any]]:
+    if not history_dir.exists():
+        return [], {"enabled": False, "error": f"missing directory: {history_dir}"}
+
+    rows: list[HistoryRow] = []
+    files_scanned = 0
+    for path in sorted(history_dir.glob("pinnacle-history-*.csv")):
+        files_scanned += 1
+        try:
+            with path.open("r", encoding="utf-8-sig", newline="") as f:
+                for raw in csv.DictReader(f):
+                    if norm(raw.get("bookmaker")) not in {"", "pinnacle"}:
+                        continue
+                    capture_date = parse_iso_date(raw.get("capture_date"))
+                    if capture_date is None or capture_date < start_date or capture_date > end_date:
+                        continue
+                    ts = parse_timestamp(raw.get("captured_at"))
+                    if ts is None:
+                        continue
+                    odds1 = parse_float(raw.get("odds1"))
+                    odds2 = parse_float(raw.get("odds2"))
+                    if odds1 is None or odds2 is None or odds1 <= 1 or odds2 <= 1:
+                        continue
+                    rows.append(
+                        HistoryRow(
+                            capture_date=capture_date.isoformat(),
+                            captured_at=str(raw.get("captured_at") or ""),
+                            captured_ts=ts,
+                            capture_mode=str(raw.get("capture_mode") or ""),
+                            source="local_csv",
+                            league=str(raw.get("league") or ""),
+                            player1_name=str(raw.get("player1_name") or ""),
+                            player2_name=str(raw.get("player2_name") or ""),
+                            odds1=odds1,
+                            odds2=odds2,
+                        )
+                    )
+        except OSError:
+            continue
+
+    return rows, {
+        "enabled": True,
+        "rows": len(rows),
+        "files_scanned": files_scanned,
+        "start_date": start_date.isoformat(),
+        "end_date": end_date.isoformat(),
+    }
+
+
+def merge_history_rows(primary: list[HistoryRow], secondary: list[HistoryRow]) -> list[HistoryRow]:
+    by_key: dict[tuple[str, str, str, str, float, float, str], HistoryRow] = {}
+    source_priority = {"supabase": 2, "local_csv": 1}
+    for row in [*primary, *secondary]:
+        key = (
+            row.captured_at,
+            row.capture_mode,
+            row.player1_name,
+            row.player2_name,
+            row.odds1,
+            row.odds2,
+            row.league,
+        )
+        prev = by_key.get(key)
+        if prev is None or source_priority.get(row.source, 0) > source_priority.get(prev.source, 0):
+            by_key[key] = row
+    return sorted(by_key.values(), key=lambda r: r.captured_ts)
+
+
+def load_history_rows(history_dir: Path, start_date: date, end_date: date) -> tuple[list[HistoryRow], dict[str, Any]]:
+    supabase_rows, supabase_meta = fetch_supabase_history_rows(start_date, end_date)
+    local_rows, local_meta = load_local_history_rows(history_dir, start_date, end_date)
+    combined = merge_history_rows(supabase_rows, local_rows)
+    return combined, {
+        "enabled": bool(combined),
+        "rows": len(combined),
+        "start_date": start_date.isoformat(),
+        "end_date": end_date.isoformat(),
+        "supabase_rows": len(supabase_rows),
+        "local_rows": len(local_rows),
+        "local_files_scanned": local_meta.get("files_scanned", 0),
+        "supabase_error": supabase_meta.get("error", ""),
+        "local_error": local_meta.get("error", ""),
     }
 
 
@@ -593,6 +686,7 @@ def main() -> None:
     xlsx_path = Path(args.xlsx) if Path(args.xlsx).is_absolute() else (ROOT / args.xlsx)
     detail_csv_path = Path(args.detail_csv) if Path(args.detail_csv).is_absolute() else (ROOT / args.detail_csv)
     summary_txt_path = Path(args.summary_txt) if Path(args.summary_txt).is_absolute() else (ROOT / args.summary_txt)
+    history_dir = Path(args.local_history_dir) if Path(args.local_history_dir).is_absolute() else (ROOT / args.local_history_dir)
 
     raw_rows = load_csv_rows(signals_path)
     rows = dedupe_rows(raw_rows)
@@ -607,7 +701,7 @@ def main() -> None:
     history_meta: dict[str, Any] = {"enabled": False, "error": "no settled rows"}
     history_lookup: dict[str, list[tuple[HistoryRow, bool]]] = {}
     if signal_dates and match_dates:
-        history_rows, history_meta = fetch_history_rows(signal_dates[0], match_dates[-1])
+        history_rows, history_meta = load_history_rows(history_dir, signal_dates[0], match_dates[-1])
         history_lookup = build_history_lookup(history_rows) if history_rows else {}
 
     closing_matches, meta = load_closing_matches(xlsx_path)
@@ -642,8 +736,8 @@ def main() -> None:
         if hist_row is not None:
             method = hist_method
             match_method_counts[method] += 1
-            source_counts["history"] += 1
-            closing_source = "bookmaker_odds_history"
+            source_counts[hist_row.source] += 1
+            closing_source = "bookmaker_odds_history" if hist_row.source == "supabase" else "local_pinnacle_history"
             history_capture_mode = hist_row.capture_mode
             history_captured_at = hist_row.captured_at
             tournament = ""
@@ -737,9 +831,12 @@ def main() -> None:
             f"but earliest settled match date is {min(match_dates).isoformat()}."
         )
 
-    history_note = history_meta.get("error", "")
-    if not history_note:
-        history_note = f"window {history_meta.get('start_date', 'n/a')} -> {history_meta.get('end_date', 'n/a')}"
+    history_note_parts = [f"window {history_meta.get('start_date', 'n/a')} -> {history_meta.get('end_date', 'n/a')}"]
+    if history_meta.get("supabase_error"):
+        history_note_parts.append(f"supabase: {history_meta['supabase_error']}")
+    if history_meta.get("local_error"):
+        history_note_parts.append(f"local: {history_meta['local_error']}")
+    history_note = "; ".join(history_note_parts)
 
     summary_lines = [
         "Strict CLV Audit vs Captured/Closing Pinnacle Odds",
@@ -760,6 +857,9 @@ def main() -> None:
         "Captured-history coverage",
         f"  Enabled: {history_meta.get('enabled', False)}",
         f"  History rows loaded: {history_meta.get('rows', 0)}",
+        f"  Supabase rows loaded: {history_meta.get('supabase_rows', 0)}",
+        f"  Local rows loaded: {history_meta.get('local_rows', 0)}",
+        f"  Local files scanned: {history_meta.get('local_files_scanned', 0)}",
         f"  History note: {history_note}",
         "",
         "Closing-file mapping",

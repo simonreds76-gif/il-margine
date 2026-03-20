@@ -125,18 +125,24 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-signals analysis failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 12: Weekly CLV audit (history first, tennis-data fallback)
-Log "=== Step 12/13: Strict CLV audit ==="
+# Step 12: Append Pinnacle history capture (weekly checkpoint)
+Log "=== Step 12/13: Append Pinnacle history capture (weekly) ==="
+& python scripts\pinnacle-capture-history.py --capture-mode weekly 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: Pinnacle history append failed (exit $LASTEXITCODE), continuing..."
+}
+
+# Step 13: Weekly CLV audits (captured history first, tennis-data fallback)
+Log "=== Step 13/13: Strict CLV audit ==="
 & python scripts\audit-strict-clv.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
-# Step 13: Append Pinnacle history capture (weekly checkpoint)
-Log "=== Step 13/13: Append Pinnacle history capture (weekly) ==="
-& python scripts\pinnacle-capture-history.py --capture-mode weekly 2>&1 | ForEach-Object { Log $_ }
+Log "=== Step 13/13: Volume 200 CLV audit ==="
+& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-volume200.csv --detail-csv data\backtest\strict-clv-audit-volume200-2026.csv --summary-txt data\backtest\strict-clv-audit-volume200-2026.txt 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: Pinnacle history append failed (exit $LASTEXITCODE), continuing..."
+    Log "WARNING: volume_200 CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "============================================"
