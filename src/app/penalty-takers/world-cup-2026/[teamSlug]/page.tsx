@@ -231,7 +231,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
           </div>
 
           <div className="relative overflow-hidden rounded-[32px] border border-slate-800/80 bg-[linear-gradient(160deg,rgba(4,10,18,0.98),rgba(6,22,20,0.96))] shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
-            <div className={`pointer-events-none absolute inset-x-0 top-0 h-24 sm:h-28 bg-gradient-to-r ${style.band}`} />
+            <div className={`pointer-events-none absolute inset-x-0 top-0 h-20 sm:h-28 bg-gradient-to-r ${style.band}`} />
             <div className="pointer-events-none absolute inset-0">
               <div className="absolute -left-6 top-0 h-44 w-44 rounded-full bg-emerald-400/10 blur-3xl" />
               <div className="absolute right-0 top-8 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl" />
@@ -240,43 +240,43 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="relative p-6 pt-24 sm:p-8 sm:pt-28 lg:p-10 lg:pt-32">
+            <div className="relative p-5 pt-20 sm:p-8 sm:pt-28 lg:p-10 lg:pt-32">
               <div className="grid gap-8 xl:grid-cols-[1.08fr,0.92fr] xl:items-start">
                 <div className="max-w-4xl">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] border border-slate-700/80 bg-slate-950/90 shadow-[0_12px_30px_rgba(0,0,0,0.18)]">
+                  <div className="flex flex-col items-start gap-4 sm:flex-row">
+                    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[20px] border border-slate-700/80 bg-slate-950/90 shadow-[0_12px_30px_rgba(0,0,0,0.18)] sm:h-20 sm:w-20 sm:rounded-[24px]">
                       {flagImageUrl(team.team) ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={flagImageUrl(team.team)}
                           alt={`${team.team} flag`}
-                          className="h-11 w-14 rounded-[6px] object-cover shadow-sm"
+                          className="h-9 w-11 rounded-[6px] object-cover shadow-sm sm:h-11 sm:w-14"
                         />
                       ) : (
                         <span className="font-mono text-base font-semibold text-slate-200">{initials(team.team)}</span>
                       )}
                     </div>
-                    <div>
-                      <h1 className="text-3xl font-semibold tracking-tight text-slate-100 sm:text-5xl sm:leading-[1.02]">
+                    <div className="min-w-0">
+                      <h1 className="text-[2.1rem] font-semibold leading-[0.98] tracking-tight text-slate-100 sm:text-5xl sm:leading-[1.02]">
                         {team.team} <span className="text-emerald-400">penalty taker</span>
                       </h1>
-                      <p className="mt-4 max-w-3xl text-base leading-8 text-slate-300 sm:text-lg">
+                      <p className="mt-4 max-w-3xl text-[15px] leading-7 text-slate-300 sm:text-lg sm:leading-8">
                         {buildWorldCupTeamLead(team)}
                       </p>
                     </div>
                   </div>
 
                   <div className="mt-6 flex flex-wrap gap-2">
-                    <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300">
+                    <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-300 sm:text-[10px] sm:tracking-[0.18em]">
                       World Cup 2026 team page
                     </span>
-                    <span className={`rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] ${style.badge}`}>
+                    <span className={`rounded-full border px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] sm:text-[10px] sm:tracking-[0.18em] ${style.badge}`}>
                       {team.confederation}
                     </span>
-                    <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
+                    <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300 sm:text-xs sm:tracking-[0.18em]">
                       Current file: {data.last_verified}
                     </span>
-                    <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-400">
+                    <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] text-slate-400 sm:text-xs">
                       {team.source_urls?.length ?? 0} sources reviewed
                     </span>
                   </div>

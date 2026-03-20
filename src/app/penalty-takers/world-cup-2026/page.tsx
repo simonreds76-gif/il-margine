@@ -245,49 +245,57 @@ export default async function WorldCup2026PenaltyTakersPage() {
             <div className="relative grid gap-8 xl:grid-cols-[1.15fr,0.85fr] xl:items-start">
               <div className="max-w-4xl">
                 <div className="mb-5 flex flex-wrap items-center gap-3">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-[24px] border border-amber-400/20 bg-[linear-gradient(180deg,rgba(38,30,16,0.85),rgba(14,16,24,0.9))] shadow-[0_16px_40px_rgba(0,0,0,0.24)]">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-[20px] border border-amber-400/20 bg-[linear-gradient(180deg,rgba(38,30,16,0.85),rgba(14,16,24,0.9))] shadow-[0_16px_40px_rgba(0,0,0,0.24)] sm:h-20 sm:w-20 sm:rounded-[24px]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/world-cup-2026-logo.png"
                       alt="Official FIFA World Cup 2026 emblem"
-                      className="h-12 w-12 object-contain"
+                      className="h-10 w-10 object-contain sm:h-12 sm:w-12"
                     />
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <div className="flex items-center rounded-full border border-white/15 bg-white px-4 py-2 shadow-[0_10px_24px_rgba(0,0,0,0.2)]">
+                    <div className="flex items-center rounded-full border border-white/15 bg-white px-3 py-1.5 shadow-[0_10px_24px_rgba(0,0,0,0.2)] sm:px-4 sm:py-2">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="/fifa-logo.svg" alt="FIFA logo" className="h-3.5 w-auto object-contain" />
                     </div>
-                    <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-200">
+                    <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-emerald-200 sm:text-[10px] sm:tracking-[0.22em]">
                       Il Margine Intelligence
                     </span>
-                    <span className="rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-300">
+                    <span className="rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-300 sm:text-[10px] sm:tracking-[0.22em]">
                       11 Jun to 19 Jul 2026
                     </span>
                   </div>
                 </div>
 
-                <h1 className="text-4xl font-semibold tracking-tight text-slate-100 sm:text-6xl sm:leading-[0.98]">
+                <h1 className="text-[2.3rem] font-semibold leading-[0.96] tracking-tight text-slate-100 sm:text-6xl sm:leading-[0.98]">
                   FIFA World Cup <span className="text-emerald-400">2026</span>
                   <br />
                   penalty takers
                 </h1>
-                <p className="mt-5 max-w-3xl text-base leading-8 text-slate-300 sm:text-lg">
+                <p className="mt-5 max-w-3xl text-[15px] leading-7 text-slate-300 sm:text-lg sm:leading-8">
                   The World Cup board for the exact country query people search. Germany penalty taker,
                   France penalty taker, Brazil penalty taker, Japan penalty taker, Curacao penalty taker.
                   One hub to scan the field, then a proper page for each national team.
                 </p>
 
-                <p className="mt-6 text-[12px] font-mono uppercase tracking-[0.18em] text-slate-500">
-                  Hosts{" "}
-                  <span className="text-sky-200">USA</span>
-                  <span className="text-slate-600"> / </span>
-                  <span className="text-emerald-200">Mexico</span>
-                  <span className="text-slate-600"> / </span>
-                  <span className="text-rose-200">Canada</span>
-                  <span className="text-slate-600"> · </span>
-                  <span className="text-amber-100">Qualified board live</span>
-                </p>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <span className="rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                    Host nations
+                  </span>
+                  <span className="rounded-full border border-sky-400/25 bg-sky-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-200">
+                    USA
+                  </span>
+                  <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200">
+                    Mexico
+                  </span>
+                  <span className="rounded-full border border-rose-400/25 bg-rose-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-rose-200">
+                    Canada
+                  </span>
+                  <span className="rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-100">
+                    Qualified board live
+                  </span>
+                </div>
+
 
                 <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-5">
@@ -312,15 +320,15 @@ export default async function WorldCup2026PenaltyTakersPage() {
               <aside className="space-y-4">
                 <div className="rounded-3xl border border-slate-800/80 bg-slate-950/55 p-5">
                   <div className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-400">Most searched team pages</div>
-                  <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                  <div className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-2">
                     {featuredTeams.map((team) => (
                       <Link
                         key={team.team}
                         href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(team.team)}`}
-                        className="rounded-2xl border border-slate-800 bg-slate-900/80 px-4 py-3 transition hover:border-slate-600 hover:bg-slate-900"
+                        className="rounded-2xl border border-slate-800 bg-slate-900/80 px-3 py-3 transition hover:border-slate-600 hover:bg-slate-900 sm:px-4"
                       >
-                        <div className="text-sm font-semibold text-slate-100">{team.team}</div>
-                        <div className="mt-1 text-xs text-slate-400">{team.likely_primary || "Board still building"}</div>
+                        <div className="truncate text-sm font-semibold text-slate-100">{team.team}</div>
+                        <div className="mt-1 truncate text-xs text-slate-400">{team.likely_primary || "Board still building"}</div>
                       </Link>
                     ))}
                   </div>
@@ -328,25 +336,25 @@ export default async function WorldCup2026PenaltyTakersPage() {
 
                 <div className="rounded-3xl border border-slate-800/80 bg-slate-950/55 p-5">
                   <div className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-400">Host nations</div>
-                  <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                     {hostTeams.map((team) => (
                       <Link
                         key={team.team}
                         href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(team.team)}`}
-                        className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 transition hover:border-slate-600 hover:bg-slate-900"
+                        className="rounded-2xl border border-slate-800 bg-slate-900/80 p-3 transition hover:border-slate-600 hover:bg-slate-900 sm:p-4"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-950/90">
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-950/90 sm:h-10 sm:w-10">
                             {flagImageUrl(team.team) ? (
                               // eslint-disable-next-line @next/next/no-img-element
-                              <img src={flagImageUrl(team.team)} alt={`${team.team} flag`} className="h-6 w-8 rounded-[4px] object-cover" />
+                              <img src={flagImageUrl(team.team)} alt={`${team.team} flag`} className="h-5 w-7 rounded-[4px] object-cover sm:h-6 sm:w-8" />
                             ) : (
                               <span className="font-mono text-xs text-slate-200">{initials(team.team)}</span>
                             )}
                           </div>
-                          <div>
-                            <div className="text-sm font-semibold text-slate-100">{team.team}</div>
-                            <div className="text-xs text-slate-400">{team.likely_primary || "Board still building"}</div>
+                          <div className="min-w-0">
+                            <div className="truncate text-sm font-semibold text-slate-100">{team.team}</div>
+                            <div className="truncate text-xs text-slate-400">{team.likely_primary || "Board still building"}</div>
                           </div>
                         </div>
                       </Link>
@@ -376,7 +384,53 @@ export default async function WorldCup2026PenaltyTakersPage() {
               </Link>
             </div>
 
-            <div className="mt-6 overflow-hidden rounded-2xl border border-slate-800/80">
+            <div className="mt-6 space-y-4 md:hidden">
+              {atGlanceTeams.map((team) => {
+                const style = CONFEDERATION_STYLES[team.confederation] ?? CONFEDERATION_STYLES.CONMEBOL;
+                return (
+                  <Link
+                    key={`glance-mobile-${team.team}`}
+                    href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(team.team)}`}
+                    className="block rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4 transition hover:border-slate-600 hover:bg-slate-950"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-900/80">
+                        {flagImageUrl(team.team) ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={flagImageUrl(team.team)} alt={`${team.team} flag`} className="h-6 w-8 rounded-[4px] object-cover" />
+                        ) : (
+                          <span className="font-mono text-xs text-slate-200">{initials(team.team)}</span>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <div className="text-base font-semibold text-slate-100">{team.team}</div>
+                          <div className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] ${style.badge}`}>
+                            {team.confederation}
+                          </div>
+                        </div>
+                        <div className="mt-3 grid gap-3 text-sm">
+                          <div>
+                            <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Primary</div>
+                            <div className="mt-1 font-semibold text-slate-100">{team.likely_primary || "Building"}</div>
+                          </div>
+                          <div>
+                            <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Challenger</div>
+                            <div className="mt-1 text-slate-300">{team.likely_secondary || "No named backup yet"}</div>
+                          </div>
+                          <div>
+                            <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Latest key evidence</div>
+                            <div className="mt-1 leading-6 text-slate-400">{trimEvidence(team.last_evidence, 120)}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            <div className="mt-6 hidden overflow-hidden rounded-2xl border border-slate-800/80 md:block">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-slate-800/80">
                   <thead className="bg-slate-950/80">
