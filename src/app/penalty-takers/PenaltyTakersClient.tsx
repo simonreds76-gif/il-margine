@@ -128,7 +128,7 @@ function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
                   ? "flex h-7 w-7 items-center justify-center rounded-lg border border-emerald-500/30 bg-emerald-500/10 font-mono text-[11px] font-semibold text-emerald-300"
                   : taker.tier === "2"
                     ? "flex h-7 w-7 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-950/80 font-mono text-[11px] font-semibold text-slate-300"
-                    : "flex h-7 w-7 items-center justify-center rounded-lg border border-slate-800 bg-slate-950/60 font-mono text-[11px] font-semibold text-slate-500"
+                    : "flex h-7 w-7 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-950/70 font-mono text-[11px] font-semibold text-slate-300"
               }
             >
               {taker.tier}
@@ -139,7 +139,7 @@ function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
                   ? "truncate text-[14px] font-medium text-slate-100"
                   : taker.tier === "2"
                     ? "truncate text-[14px] text-slate-300"
-                    : "truncate text-[14px] text-slate-400"
+                    : "truncate text-[14px] text-slate-300"
               }
             >
               {taker.value}
@@ -150,7 +150,7 @@ function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
                   ? "rounded-md bg-emerald-500/10 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-emerald-300"
                   : taker.tier === "2"
                     ? "rounded-md bg-slate-950/80 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-slate-400"
-                    : "rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-slate-600"
+                    : "rounded-md bg-slate-950/70 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-slate-400"
               }
             >
               {taker.label}
@@ -198,16 +198,9 @@ export default function PenaltyTakersClient({
                   <p className="mt-1 text-sm leading-6 text-slate-400">
                     All qualified nations, full hierarchy, country pages built for tournament search.
                   </p>
-                  <p className="mt-2 text-[12px] font-mono uppercase tracking-[0.18em] text-slate-500">
-                    Hosts{" "}
-                    <span className="text-sky-200">USA</span>
-                    <span className="text-slate-600"> / </span>
-                    <span className="text-emerald-200">Mexico</span>
-                    <span className="text-slate-600"> / </span>
-                    <span className="text-rose-200">Canada</span>
-                    <span className="text-slate-600"> · </span>
-                    <span className="text-amber-100">11 Jun to 19 Jul 2026</span>
-                  </p>
+                  <div className="mt-2 inline-flex items-center rounded-full border border-amber-300/20 bg-amber-400/8 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-amber-100">
+                    11 Jun to 19 Jul 2026
+                  </div>
                 </div>
               </div>
               <div className="inline-flex items-center gap-2 text-sm font-medium text-amber-200 transition group-hover:translate-x-0.5 group-hover:text-amber-100">
