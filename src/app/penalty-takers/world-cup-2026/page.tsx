@@ -132,9 +132,9 @@ export const metadata: Metadata = {
     siteName: "Il Margine",
     images: [
       {
-        url: `${BASE_URL}/banner.png`,
+        url: `${BASE_URL}/penalty-takers/world-cup-2026/opengraph-image`,
         width: 1200,
-        height: 400,
+        height: 630,
         alt: "Il Margine World Cup 2026 penalty takers",
       },
     ],
@@ -143,7 +143,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${PAGE_TITLE} | Il Margine`,
     description: PAGE_DESCRIPTION,
-    images: [`${BASE_URL}/banner.png`],
+    images: [`${BASE_URL}/penalty-takers/world-cup-2026/opengraph-image`],
   },
   robots: {
     index: true,
@@ -647,6 +647,25 @@ export default async function WorldCup2026PenaltyTakersPage() {
               <p>Official senior in-match penalties come first. Federation confirmation comes next. Local-language reporting and event timelines tighten the call when the file is still mixed.</p>
               <p>Shoot-outs can support the order, but they do not automatically overrule a stronger recent in-match trail. When the file is mixed, the page says so plainly in the note instead of hiding behind a vague label.</p>
               <p>The hub is built to scan fast. The country pages exist so every team can stand on its own for searches like <span className="text-slate-100">Germany penalty taker</span>, <span className="text-slate-100">France penalty taker</span> or <span className="text-slate-100">Curacao penalty taker</span>. The page that is live, crawlable and updated fastest once squads are confirmed is the page that has the best shot when tournament demand spikes.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-6">
+          <div className="rounded-3xl border border-emerald-400/18 bg-[linear-gradient(140deg,rgba(6,26,20,0.94),rgba(10,15,24,0.96))] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Help Tighten The Board</div>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Closer to one of the squads?</h2>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
+              If you cover one of the qualified teams locally, work around the squad, or simply have stronger reporting than we do on a live hierarchy shift, send it through. Useful corrections beat stale consensus every time.
+            </p>
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <a
+                href="mailto:contact@ilmargine.bet"
+                className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-sm text-emerald-100 hover:border-emerald-300/40 hover:bg-emerald-400/14"
+              >
+                contact@ilmargine.bet
+              </a>
+              <span className="text-sm text-slate-400">Spot an error, a new taker, or a better local source? Let us know.</span>
             </div>
           </div>
         </section>

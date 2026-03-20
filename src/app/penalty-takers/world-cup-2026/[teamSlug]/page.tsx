@@ -231,7 +231,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
           </div>
 
           <div className="relative overflow-hidden rounded-[32px] border border-slate-800/80 bg-[linear-gradient(160deg,rgba(4,10,18,0.98),rgba(6,22,20,0.96))] shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
-            <div className={`pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-r ${style.band}`} />
+            <div className={`pointer-events-none absolute inset-x-0 top-0 h-24 sm:h-28 bg-gradient-to-r ${style.band}`} />
             <div className="pointer-events-none absolute inset-0">
               <div className="absolute -left-6 top-0 h-44 w-44 rounded-full bg-emerald-400/10 blur-3xl" />
               <div className="absolute right-0 top-8 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl" />
@@ -240,18 +240,9 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="relative p-6 pt-16 sm:p-8 sm:pt-20 lg:p-10 lg:pt-24">
+            <div className="relative p-6 pt-24 sm:p-8 sm:pt-28 lg:p-10 lg:pt-32">
               <div className="grid gap-8 xl:grid-cols-[1.08fr,0.92fr] xl:items-start">
                 <div className="max-w-4xl">
-                  <div className="mb-4 flex flex-wrap gap-2">
-                    <span className="rounded-full border border-slate-700 bg-slate-950/80 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-300">
-                      World Cup 2026 team page
-                    </span>
-                    <span className={`rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] ${style.badge}`}>
-                      {team.confederation}
-                    </span>
-                  </div>
-
                   <div className="flex items-start gap-4">
                     <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[24px] border border-slate-700/80 bg-slate-950/90 shadow-[0_12px_30px_rgba(0,0,0,0.18)]">
                       {flagImageUrl(team.team) ? (
@@ -276,6 +267,12 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                   </div>
 
                   <div className="mt-6 flex flex-wrap gap-2">
+                    <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300">
+                      World Cup 2026 team page
+                    </span>
+                    <span className={`rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] ${style.badge}`}>
+                      {team.confederation}
+                    </span>
                     <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
                       Current file: {data.last_verified}
                     </span>
@@ -350,6 +347,13 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
               <p>A fresh in-match penalty can change this page quickly, especially if it contradicts the current lead or happens with the full-strength tournament pool on the pitch.</p>
               <p>For the more conditional boards, one more clean senior penalty is often enough to sharpen the backup line or flip the order outright.</p>
+              <p>
+                Spot a hierarchy shift, a squad-specific wrinkle or a better local source?{" "}
+                <a href="mailto:contact@ilmargine.bet" className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300">
+                  Contact us here
+                </a>
+                . If you are close to the {team.team} setup and have stronger information, that is exactly the kind of update we want.
+              </p>
             </div>
           </div>
         </section>
@@ -361,7 +365,13 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
             <div className="mt-5 space-y-4">
               {(team.evidence_log?.length ? team.evidence_log : ["Evidence trail still being built."]).map((entry, index) => (
                 <div key={`${team.team}-${entry}`} className="flex gap-3">
-                  <div className={`mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-slate-700 bg-slate-900 text-[11px] font-semibold text-slate-300 ${index === 0 ? style.accent + " text-slate-950 border-transparent" : ""}`}>
+                  <div
+                    className={`mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-[11px] font-semibold ${
+                      index === 0
+                        ? "border-emerald-300 bg-emerald-300 text-[#04110d] shadow-[0_0_0_1px_rgba(16,185,129,0.18)]"
+                        : "border-slate-700 bg-slate-900 text-slate-300"
+                    }`}
+                  >
                     {index + 1}
                   </div>
                   <div className="text-sm leading-7 text-slate-300">{entry}</div>

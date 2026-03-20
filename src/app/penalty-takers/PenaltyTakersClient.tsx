@@ -7,6 +7,8 @@ type TeamEntry = {
   primary: string;
   secondary: string;
   tertiary: string;
+  lastUpdated: string;
+  lastUpdatedLabel: string;
   logoPath: string;
   initials: string;
 };
@@ -29,7 +31,36 @@ type Props = {
   leagues: LeagueEntry[];
   totalTeams: number;
   currentSeason: string;
+  lastUpdatedLabel: string;
+  lastUpdatedIso: string;
+  recentChanges: {
+    team: string;
+    slug: string;
+    leagueKey: string;
+    leagueLabel: string;
+    primary: string;
+    secondary: string;
+    lastUpdated: string;
+    lastUpdatedLabel: string;
+  }[];
 };
+
+function getLeagueDotClass(leagueKey: string): string {
+  switch (leagueKey) {
+    case "serie-a":
+      return "bg-emerald-400";
+    case "epl":
+      return "bg-indigo-400";
+    case "la-liga":
+      return "bg-amber-400";
+    case "bundesliga":
+      return "bg-rose-400";
+    case "ligue-1":
+      return "bg-cyan-400";
+    default:
+      return "bg-slate-500";
+  }
+}
 
 function Crest({
   logoPath,
@@ -61,6 +92,7 @@ function Crest({
 }
 
 function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
+  const anchorId = `${league.key}-${team.slug}`;
   const takers = [
     { label: "First choice", value: team.primary, tier: "1" as const },
     { label: "Second choice", value: team.secondary, tier: "2" as const },
@@ -69,18 +101,21 @@ function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
 
   return (
     <article
-      id={`${league.key}-${team.slug}`}
       className={`group scroll-mt-28 rounded-xl border border-slate-800/70 bg-slate-900/55 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition hover:-translate-y-0.5 hover:border-slate-700 hover:bg-slate-900/80 ${league.cardGlowClasses}`}
     >
       <div className="mb-3.5 flex items-start gap-3 border-b border-slate-800/70 pb-3.5">
         <Crest logoPath={team.logoPath} team={team.team} initials={team.initials} />
         <div className="min-w-0 flex-1 pt-0.5">
-          <a
-            href={`#${league.key}-${team.slug}`}
-            className="truncate text-[15px] font-semibold tracking-[0.01em] text-slate-100 transition hover:text-emerald-400"
-          >
-            {team.team}
-          </a>
+          <h3 id={anchorId} className="scroll-mt-28 truncate text-[15px] font-semibold tracking-[0.01em] text-slate-100">
+            <a href={`#${anchorId}`} className="transition hover:text-emerald-400">
+              {team.team}
+            </a>
+          </h3>
+          {team.lastUpdated ? (
+            <p className="mt-1 text-[11px] font-mono uppercase tracking-[0.14em] text-slate-500">
+              Updated {team.lastUpdatedLabel || team.lastUpdated}
+            </p>
+          ) : null}
         </div>
       </div>
 
@@ -127,10 +162,55 @@ function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
   );
 }
 
-export default function PenaltyTakersClient({ leagues, totalTeams, currentSeason }: Props) {
+export default function PenaltyTakersClient({
+  leagues,
+  totalTeams,
+  currentSeason,
+  lastUpdatedLabel,
+  lastUpdatedIso,
+  recentChanges,
+}: Props) {
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <main className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+        <section className="pt-6">
+          <a
+            href="/penalty-takers/world-cup-2026"
+            className="group block overflow-hidden rounded-[26px] border border-amber-400/20 bg-[linear-gradient(135deg,rgba(20,18,12,0.98),rgba(16,18,24,0.98))] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.18)] transition hover:-translate-y-0.5 hover:border-amber-300/35"
+          >
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-amber-400/20 bg-amber-500/10 text-amber-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/world-cup-2026-logo.png"
+                    alt="FIFA World Cup 2026 logo"
+                    className="h-8 w-8 object-contain"
+                  />
+                </div>
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm font-semibold text-slate-100">World Cup 2026 Penalty Takers</span>
+                    <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-300">
+                      New
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm leading-6 text-slate-400">
+                    All qualified nations, full hierarchy, country pages built for tournament search.
+                  </p>
+                  <p className="mt-1 text-xs font-mono uppercase tracking-[0.16em] text-slate-500">
+                    USA / Mexico / Canada · 11 Jun - 19 Jul 2026
+                  </p>
+                </div>
+              </div>
+              <div className="inline-flex items-center gap-2 text-sm font-medium text-amber-200 transition group-hover:translate-x-0.5 group-hover:text-amber-100">
+                <span>Open World Cup board</span>
+                <span aria-hidden="true">→</span>
+              </div>
+            </div>
+          </a>
+        </section>
+
         <section className="border-b border-slate-800/50 pt-6 pb-12 md:pt-6 md:pb-16">
           <div className="max-w-4xl">
             <PageHomeLink className="mb-8" />
@@ -158,6 +238,54 @@ export default function PenaltyTakersClient({ leagues, totalTeams, currentSeason
                 <div className="mt-1 text-sm text-slate-400">Current season</div>
               </div>
             </div>
+
+            <div className="mt-5 inline-flex flex-wrap items-center gap-2 rounded-2xl border border-slate-800/70 bg-slate-900/65 px-4 py-3 text-xs text-slate-300">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70 opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+              </span>
+              <span className="font-mono uppercase tracking-[0.18em] text-emerald-300">Latest file edit</span>
+              <time dateTime={lastUpdatedIso || undefined}>{lastUpdatedLabel || "Live"}</time>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-8 rounded-[28px] border border-slate-800/70 bg-slate-900/55 p-6 shadow-[0_12px_40px_rgba(0,0,0,0.16)]">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <div className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-400">Recent changes</div>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Latest hierarchy updates</h2>
+              <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-400">
+                The newest team-level edits and re-checks across the five leagues, pulled from the latest club files rather than a full-page reset.
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-slate-500">Freshest edit</div>
+              <div className="mt-1 text-sm text-slate-300">{lastUpdatedLabel || "Live"}</div>
+            </div>
+          </div>
+
+          <div className="mt-6 overflow-hidden rounded-2xl border border-slate-800/80 bg-slate-950/70">
+            {recentChanges.map((change, index) => (
+              <a
+                key={`${change.leagueKey}-${change.slug}-${change.lastUpdated}`}
+                href={`#${change.leagueKey}-${change.slug}`}
+                className={`grid grid-cols-[84px_20px_minmax(0,1fr)] items-center gap-3 px-4 py-3 transition hover:bg-slate-900/80 sm:grid-cols-[108px_20px_minmax(0,1fr)] ${index > 0 ? "border-t border-slate-800/80" : ""}`}
+              >
+                <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-slate-500">
+                  {change.lastUpdatedLabel}
+                </span>
+                <span className={`h-2.5 w-2.5 rounded-full ${getLeagueDotClass(change.leagueKey)}`} />
+                <span className="min-w-0 text-sm leading-6 text-slate-300">
+                  <strong className="font-semibold text-slate-100">{change.team}</strong>
+                  <span className="text-slate-500"> — </span>
+                  <span>{change.primary}</span>
+                  {change.secondary && change.secondary !== "TBC" ? (
+                    <span className="text-slate-500"> next: {change.secondary}</span>
+                  ) : null}
+                </span>
+              </a>
+            ))}
           </div>
         </section>
 
@@ -194,6 +322,24 @@ export default function PenaltyTakersClient({ leagues, totalTeams, currentSeason
                 <div className="lg:max-w-4xl">
                   <p className="text-[15px] leading-7 text-slate-300">{league.intro}</p>
                 </div>
+                <div className="rounded-2xl border border-slate-800/70 bg-slate-900/50 p-4">
+                  <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-emerald-400">Jump to team</div>
+                  <div className="mt-3 flex flex-wrap items-center text-sm leading-6 text-slate-400">
+                    {league.teams.map((team, index) => (
+                      <div key={`jump-${league.key}-${team.slug}`} className="contents">
+                        <a
+                          href={`#${league.key}-${team.slug}`}
+                          className="py-0.5 transition hover:text-emerald-300"
+                        >
+                          {team.team}
+                        </a>
+                        {index < league.teams.length - 1 ? (
+                          <span className="px-2 text-slate-600">·</span>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -209,7 +355,7 @@ export default function PenaltyTakersClient({ leagues, totalTeams, currentSeason
           <div className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
             <div className="rounded-xl border border-slate-800/60 bg-slate-900/55 p-6">
               <div className="font-mono text-xs uppercase tracking-[0.22em] text-emerald-400">Using the hierarchy</div>
-              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-100">What the order tells you</h2>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-100">Why the full order matters</h2>
               <p className="mt-4 text-[15px] leading-7 text-slate-300">
                 The first name is the current likeliest taker. The second and third names matter when the regular
                 taker is benched, suspended, injured or substituted. That is usually where a quick one-name list
@@ -229,6 +375,17 @@ export default function PenaltyTakersClient({ leagues, totalTeams, currentSeason
           </div>
 
           <div className="mt-5 px-1 text-sm leading-6 text-slate-400">
+            Need the international board too?{" "}
+            <a
+              href="/penalty-takers/world-cup-2026"
+              className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300"
+            >
+              World Cup 2026 penalty takers
+            </a>
+            .{" "}
+          </div>
+
+          <div className="mt-2 px-1 text-sm leading-6 text-slate-400">
             Spot an error or a hierarchy shift?{" "}
             <a href="mailto:contact@ilmargine.bet" className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300">
               Let us know

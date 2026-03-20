@@ -38,8 +38,21 @@ type TeamEntry = {
   primary: string;
   secondary: string;
   tertiary: string;
+  lastUpdated: string;
+  lastUpdatedLabel: string;
   logoPath: string;
   initials: string;
+};
+
+type RecentChange = {
+  team: string;
+  slug: string;
+  leagueKey: string;
+  leagueLabel: string;
+  primary: string;
+  secondary: string;
+  lastUpdated: string;
+  lastUpdatedLabel: string;
 };
 
 type LeagueEntry = {
@@ -148,11 +161,20 @@ export const metadata: Metadata = {
     title: `${PAGE_TITLE} | Il Margine`,
     description: PAGE_DESCRIPTION,
     siteName: "Il Margine",
+    images: [
+      {
+        url: `${BASE_URL}/penalty-takers/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: "Penalty Takers 2025/26 | Il Margine",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${PAGE_TITLE} | Il Margine`,
     description: PAGE_DESCRIPTION,
+    images: [`${BASE_URL}/penalty-takers/opengraph-image`],
   },
   robots: {
     index: true,
@@ -219,6 +241,23 @@ function buildInitials(team: string): string {
     .join("");
 }
 
+function parseDateOnly(value?: string): number {
+  if (!value) return Number.NaN;
+  return Date.parse(`${value}T12:00:00Z`);
+}
+
+function formatDateLabel(value?: string): string {
+  const stamp = parseDateOnly(value);
+  if (!Number.isFinite(stamp)) return value ?? "";
+
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(stamp));
+}
+
 function findLogoPath(
   leagueKey: string,
   team: string,
@@ -250,6 +289,8 @@ export default async function PenaltyTakersPage() {
             primary: cleanText(entry.primary) || "TBC",
             secondary: cleanText(entry.secondary) || "TBC",
             tertiary: cleanText(entry.tertiary),
+            lastUpdated: cleanText(entry.last_updated),
+            lastUpdatedLabel: formatDateLabel(cleanText(entry.last_updated)),
             logoPath: findLogoPath(league.key, teamName, logoManifest),
             initials: buildInitials(team),
           };
@@ -266,6 +307,40 @@ export default async function PenaltyTakersPage() {
   );
 
   const totalTeams = leagues.reduce((sum, league) => sum + league.teamCount, 0);
+  const flattenedTeams = leagues.flatMap((league) =>
+    league.teams.map((team) => ({
+      ...team,
+      leagueKey: league.key,
+      leagueLabel: league.label,
+    })),
+  );
+  const sortedByUpdate = [...flattenedTeams]
+    .filter((team) => team.lastUpdated)
+    .sort((left, right) => {
+      const rightStamp = parseDateOnly(right.lastUpdated);
+      const leftStamp = parseDateOnly(left.lastUpdated);
+      if (Number.isFinite(rightStamp) && Number.isFinite(leftStamp) && rightStamp !== leftStamp) {
+        return rightStamp - leftStamp;
+      }
+
+      if (left.leagueLabel !== right.leagueLabel) {
+        return left.leagueLabel.localeCompare(right.leagueLabel, "en");
+      }
+
+      return left.team.localeCompare(right.team, "en");
+    });
+  const latestUpdate = sortedByUpdate[0]?.lastUpdated ?? "";
+  const lastUpdatedLabel = formatDateLabel(latestUpdate);
+  const recentChanges: RecentChange[] = sortedByUpdate.slice(0, 5).map((team) => ({
+    team: team.team,
+    slug: team.slug,
+    leagueKey: team.leagueKey,
+    leagueLabel: team.leagueLabel,
+    primary: team.primary,
+    secondary: team.secondary,
+    lastUpdated: team.lastUpdated,
+    lastUpdatedLabel: formatDateLabel(team.lastUpdated),
+  }));
   const breadcrumbData = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -285,13 +360,14 @@ export default async function PenaltyTakersPage() {
     ],
   };
 
-  const collectionData = {
+  const webPageData = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
+    "@type": "WebPage",
     name: PAGE_TITLE,
     description: PAGE_DESCRIPTION,
     url: PAGE_URL,
     inLanguage: "en-GB",
+    dateModified: latestUpdate || undefined,
     isPartOf: {
       "@type": "WebSite",
       name: "Il Margine",
@@ -307,17 +383,15 @@ export default async function PenaltyTakersPage() {
   const itemListData = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: `${CURRENT_SEASON} penalty takers by team`,
-    numberOfItems: totalTeams,
-    itemListElement: leagues.flatMap((league, leagueIndex) =>
-      league.teams.map((team, teamIndex) => ({
+    name: `${CURRENT_SEASON} penalty takers by league`,
+    numberOfItems: leagues.length,
+    itemListElement: leagues.map((league, leagueIndex) => ({
         "@type": "ListItem",
-        position: leagueIndex * 100 + teamIndex + 1,
-        url: `${PAGE_URL}#${league.key}-${team.slug}`,
-        name: `${team.team} penalty takers`,
-        description: [team.primary, team.secondary, team.tertiary].filter(Boolean).join(", "),
+        position: leagueIndex + 1,
+        url: `${PAGE_URL}#${league.key}`,
+        name: league.heading,
+        description: `${league.teamCount} teams tracked in ${league.label}.`,
       })),
-    ),
   };
 
   return (
@@ -328,13 +402,20 @@ export default async function PenaltyTakersPage() {
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionData) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageData) }}
       />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListData) }}
       />
-      <PenaltyTakersClient leagues={leagues} totalTeams={totalTeams} currentSeason={CURRENT_SEASON} />
+      <PenaltyTakersClient
+        leagues={leagues}
+        totalTeams={totalTeams}
+        currentSeason={CURRENT_SEASON}
+        lastUpdatedLabel={lastUpdatedLabel}
+        lastUpdatedIso={latestUpdate}
+        recentChanges={recentChanges}
+      />
     </>
   );
 }

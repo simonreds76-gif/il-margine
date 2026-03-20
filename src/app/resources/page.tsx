@@ -34,6 +34,46 @@ export default function ResourcesPage() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         {/* Category filter - visible on mobile, optional on desktop for future */}
+        <section className="mb-8 md:mb-10 grid gap-4 lg:grid-cols-2">
+          <Link
+            href="/penalty-takers"
+            className="rounded-xl border border-slate-800 bg-slate-900/55 p-6 transition-colors hover:border-emerald-500/30"
+          >
+            <div className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">
+              Reference page
+            </div>
+            <h2 className="mt-3 text-2xl font-semibold text-slate-100">
+              Penalty Takers 2025/26
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-slate-400">
+              First, second and third-choice takers for every club across the top five
+              leagues, all on one page.
+            </p>
+            <div className="mt-4 text-sm font-medium text-emerald-400">
+              Open penalty takers →
+            </div>
+          </Link>
+
+          <Link
+            href="/penalty-takers/world-cup-2026"
+            className="rounded-xl border border-amber-500/20 bg-[linear-gradient(135deg,rgba(15,17,23,1),rgba(43,31,12,0.88))] p-6 transition-colors hover:border-amber-400/35"
+          >
+            <div className="text-xs font-mono uppercase tracking-[0.18em] text-amber-300">
+              Tournament board
+            </div>
+            <h2 className="mt-3 text-2xl font-semibold text-slate-100">
+              World Cup 2026 Penalty Takers
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-slate-300">
+              Country-by-country hierarchy pages for the tournament, built for queries
+              like Germany penalty taker or Brazil penalty taker.
+            </p>
+            <div className="mt-4 text-sm font-medium text-amber-200">
+              Open World Cup board →
+            </div>
+          </Link>
+        </section>
+
         <div className="mb-8 md:mb-10">
           <label htmlFor="category-filter" className="sr-only">
             Filter by category
