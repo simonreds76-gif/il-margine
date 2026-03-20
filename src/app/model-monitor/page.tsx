@@ -631,7 +631,7 @@ export default async function ModelMonitorPage() {
           </MonitorCard>
         </div>
 
-        <div className="mb-8 grid gap-6 2xl:grid-cols-[1.2fr_0.8fr]">
+        <div className="mb-8">
           <MonitorCard title="Live Performance Detail" subtitle="Current weekly settlement reports with ML vs spread split">
             <div className="grid gap-6 2xl:grid-cols-2">
               <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-4">
@@ -836,70 +836,90 @@ export default async function ModelMonitorPage() {
               </div>
             </div>
           </MonitorCard>
+        </div>
 
-          <div className="grid gap-6 xl:grid-cols-2">
-            <MonitorCard title="Strict CLV Coverage" subtitle="This decides whether strict live-vs-backtest drift can be diagnosed cleanly">
-              <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
-                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                  <Stat label="Strict Rows" value={`${clv.rawRows ?? 0}`} />
-                  <Stat label="Settled ML Audited" value={`${clv.settledMlAudited ?? 0}`} />
-                  <Stat label="Matched ML" value={`${matchedMl}/${auditedMl || 0}`} tone={matchedMl > 0 ? "text-emerald-300" : "text-amber-300"} />
-                  <Stat label="History Captures" value={`${clv.historyRows ?? 0}`} />
-                  <Stat label="Avg CLV" value={formatPct(clv.avgClvPct, 3)} tone={metricTone(clv.avgClvPct)} />
-                  <Stat label="Median CLV" value={formatPct(clv.medianClvPct, 3)} tone={metricTone(clv.medianClvPct)} />
-                  <Stat
-                    label="Positive Share"
-                    value={
-                      clv.positiveClvCount != null && clv.positiveClvTotal != null
-                        ? `${clv.positiveClvCount}/${clv.positiveClvTotal} (${formatPct(clv.positiveClvSharePct, 2)})`
-                        : "n/a"
-                    }
-                    tone={metricTone((clv.positiveClvSharePct ?? 0) - 50)}
-                  />
-                  <Stat label="Avg Odds Move" value={formatPct(clv.avgOddsMovePct, 3)} tone={metricTone(clv.avgOddsMovePct)} />
+        <div className="mb-8 grid gap-6 2xl:grid-cols-2">
+          <MonitorCard title="Strict CLV Coverage" subtitle="This decides whether strict live-vs-backtest drift can be diagnosed cleanly">
+            <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Stat label="Strict Rows" value={`${clv.rawRows ?? 0}`} compact />
+                <Stat label="Settled ML Audited" value={`${clv.settledMlAudited ?? 0}`} compact />
+                <Stat label="Matched ML" value={`${matchedMl}/${auditedMl || 0}`} tone={matchedMl > 0 ? "text-emerald-300" : "text-amber-300"} compact />
+                <Stat label="History Captures" value={`${clv.historyRows ?? 0}`} compact />
+                <Stat label="Avg CLV" value={formatPct(clv.avgClvPct, 3)} tone={metricTone(clv.avgClvPct)} compact />
+                <Stat label="Median CLV" value={formatPct(clv.medianClvPct, 3)} tone={metricTone(clv.medianClvPct)} compact />
+                <Stat
+                  label="Positive Share"
+                  value={
+                    clv.positiveClvCount != null && clv.positiveClvTotal != null
+                      ? `${clv.positiveClvCount}/${clv.positiveClvTotal} (${formatPct(clv.positiveClvSharePct, 2)})`
+                      : "n/a"
+                  }
+                  tone={metricTone((clv.positiveClvSharePct ?? 0) - 50)}
+                  compact
+                />
+                <Stat label="Avg Odds Move" value={formatPct(clv.avgOddsMovePct, 3)} tone={metricTone(clv.avgOddsMovePct)} compact />
+              </div>
+              <div className="mt-4 grid gap-3 md:grid-cols-3">
+                <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3 text-sm text-slate-300">
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Signals</div>
+                  <div className="mt-1">{clv.signalDateRange ?? "n/a"}</div>
                 </div>
-                <div className="mt-4 space-y-2 text-sm text-slate-300">
-                  <p><span className="text-slate-500">Signals:</span> {clv.signalDateRange ?? "n/a"}</p>
-                  <p><span className="text-slate-500">Settled matches:</span> {clv.matchDateRange ?? "n/a"}</p>
-                  <p><span className="text-slate-500">Tennis-Data close range:</span> {clv.closingDateRange ?? "n/a"}</p>
+                <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3 text-sm text-slate-300">
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Settled Matches</div>
+                  <div className="mt-1">{clv.matchDateRange ?? "n/a"}</div>
                 </div>
-                <div className="mt-4 rounded-2xl border border-amber-500/20 bg-amber-500/8 p-4 text-sm leading-6 text-amber-100">
-                  {clv.warning ?? "No CLV coverage warning present."}
+                <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3 text-sm text-slate-300">
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Tennis-Data Close Range</div>
+                  <div className="mt-1">{clv.closingDateRange ?? "n/a"}</div>
                 </div>
               </div>
-            </MonitorCard>
+              <div className="mt-4 rounded-2xl border border-amber-500/20 bg-amber-500/8 p-4 text-sm leading-6 text-amber-100">
+                {clv.warning ?? "No CLV coverage warning present."}
+              </div>
+            </div>
+          </MonitorCard>
 
-            <MonitorCard title="Volume 200 CLV Coverage" subtitle="Same CLV read, but for the shadow profile rather than strict">
-              <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
-                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                  <Stat label="Shadow Rows" value={`${clvVolume.rawRows ?? 0}`} />
-                  <Stat label="Settled ML Audited" value={`${clvVolume.settledMlAudited ?? 0}`} />
-                  <Stat label="Matched ML" value={`${matchedMlVolume}/${auditedMlVolume || 0}`} tone={matchedMlVolume > 0 ? "text-emerald-300" : "text-amber-300"} />
-                  <Stat label="History Captures" value={`${clvVolume.historyRows ?? 0}`} />
-                  <Stat label="Avg CLV" value={formatPct(clvVolume.avgClvPct, 3)} tone={metricTone(clvVolume.avgClvPct)} />
-                  <Stat label="Median CLV" value={formatPct(clvVolume.medianClvPct, 3)} tone={metricTone(clvVolume.medianClvPct)} />
-                  <Stat
-                    label="Positive Share"
-                    value={
-                      clvVolume.positiveClvCount != null && clvVolume.positiveClvTotal != null
-                        ? `${clvVolume.positiveClvCount}/${clvVolume.positiveClvTotal} (${formatPct(clvVolume.positiveClvSharePct, 2)})`
-                        : "n/a"
-                    }
-                    tone={metricTone((clvVolume.positiveClvSharePct ?? 0) - 50)}
-                  />
-                  <Stat label="Avg Odds Move" value={formatPct(clvVolume.avgOddsMovePct, 3)} tone={metricTone(clvVolume.avgOddsMovePct)} />
+          <MonitorCard title="Volume 200 CLV Coverage" subtitle="Same CLV read, but for the shadow profile rather than strict">
+            <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Stat label="Shadow Rows" value={`${clvVolume.rawRows ?? 0}`} compact />
+                <Stat label="Settled ML Audited" value={`${clvVolume.settledMlAudited ?? 0}`} compact />
+                <Stat label="Matched ML" value={`${matchedMlVolume}/${auditedMlVolume || 0}`} tone={matchedMlVolume > 0 ? "text-emerald-300" : "text-amber-300"} compact />
+                <Stat label="History Captures" value={`${clvVolume.historyRows ?? 0}`} compact />
+                <Stat label="Avg CLV" value={formatPct(clvVolume.avgClvPct, 3)} tone={metricTone(clvVolume.avgClvPct)} compact />
+                <Stat label="Median CLV" value={formatPct(clvVolume.medianClvPct, 3)} tone={metricTone(clvVolume.medianClvPct)} compact />
+                <Stat
+                  label="Positive Share"
+                  value={
+                    clvVolume.positiveClvCount != null && clvVolume.positiveClvTotal != null
+                      ? `${clvVolume.positiveClvCount}/${clvVolume.positiveClvTotal} (${formatPct(clvVolume.positiveClvSharePct, 2)})`
+                      : "n/a"
+                  }
+                  tone={metricTone((clvVolume.positiveClvSharePct ?? 0) - 50)}
+                  compact
+                />
+                <Stat label="Avg Odds Move" value={formatPct(clvVolume.avgOddsMovePct, 3)} tone={metricTone(clvVolume.avgOddsMovePct)} compact />
+              </div>
+              <div className="mt-4 grid gap-3 md:grid-cols-3">
+                <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3 text-sm text-slate-300">
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Signals</div>
+                  <div className="mt-1">{clvVolume.signalDateRange ?? "n/a"}</div>
                 </div>
-                <div className="mt-4 space-y-2 text-sm text-slate-300">
-                  <p><span className="text-slate-500">Signals:</span> {clvVolume.signalDateRange ?? "n/a"}</p>
-                  <p><span className="text-slate-500">Settled matches:</span> {clvVolume.matchDateRange ?? "n/a"}</p>
-                  <p><span className="text-slate-500">Tennis-Data close range:</span> {clvVolume.closingDateRange ?? "n/a"}</p>
+                <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3 text-sm text-slate-300">
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Settled Matches</div>
+                  <div className="mt-1">{clvVolume.matchDateRange ?? "n/a"}</div>
                 </div>
-                <div className="mt-4 rounded-2xl border border-amber-500/20 bg-amber-500/8 p-4 text-sm leading-6 text-amber-100">
-                  {clvVolume.warning ?? "No CLV coverage warning present."}
+                <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3 text-sm text-slate-300">
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Tennis-Data Close Range</div>
+                  <div className="mt-1">{clvVolume.closingDateRange ?? "n/a"}</div>
                 </div>
               </div>
-            </MonitorCard>
-          </div>
+              <div className="mt-4 rounded-2xl border border-amber-500/20 bg-amber-500/8 p-4 text-sm leading-6 text-amber-100">
+                {clvVolume.warning ?? "No CLV coverage warning present."}
+              </div>
+            </div>
+          </MonitorCard>
         </div>
 
         <MonitorCard title="Historical Policy Profiles Detail" subtitle="Exact 2022-2025 ATP ML-only backtest from generated backtest CSVs">
