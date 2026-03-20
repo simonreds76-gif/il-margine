@@ -8,6 +8,7 @@ export type Confidence = "high" | "medium" | "researching";
 export type TeamRow = {
   team: string;
   confederation: string;
+  group?: string;
   status: "qualified" | "playoff";
   research_status: ResearchStatus;
   confidence: Confidence;

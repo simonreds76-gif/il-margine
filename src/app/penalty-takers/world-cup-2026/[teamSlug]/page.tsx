@@ -162,6 +162,11 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
   const description = buildWorldCupTeamDescription(team);
   const pageUrl = worldCupTeamUrl(team.team);
   const style = CONFEDERATION_STYLES[team.confederation] ?? CONFEDERATION_STYLES.CONMEBOL;
+  const groupMates = team.group
+    ? data.teams
+        .filter((candidate) => candidate.group === team.group && candidate.team !== team.team)
+        .sort((left, right) => left.team.localeCompare(right.team, "en"))
+    : [];
   const peers = data.teams
     .filter((candidate) => candidate.confederation === team.confederation && candidate.team !== team.team)
     .sort((left, right) => left.team.localeCompare(right.team, "en"))
@@ -334,9 +339,9 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
               <p>{team.note}</p>
               <p>
-                This page is built for the specific country query. If someone is searching for{" "}
-                <span className="text-slate-100">{team.team} penalty taker</span>, this is the cleanest World Cup
-                read we are willing to publish right now.
+                This page is meant to answer the question quickly, then show the trail underneath it. The hierarchy
+                at the top is the cleanest World Cup read we are willing to publish on{" "}
+                <span className="text-slate-100">{team.team}</span> right now.
               </p>
             </div>
           </div>
@@ -401,17 +406,41 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
 
             <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
               <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Related Pages</div>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">More from the same confederation</h2>
-              <div className="mt-5 flex flex-wrap gap-2.5">
-                {peers.map((peer) => (
-                  <Link
-                    key={peer.team}
-                    href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(peer.team)}`}
-                    className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-500 hover:text-slate-100"
-                  >
-                    {peer.team}
-                  </Link>
-                ))}
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">More routes through the field</h2>
+              {groupMates.length > 0 ? (
+                <div className="mt-5">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+                    Group {team.group}
+                  </div>
+                  <div className="mt-3 grid gap-2">
+                    {groupMates.map((mate) => (
+                      <Link
+                        key={`group-${mate.team}`}
+                        href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(mate.team)}`}
+                        className="flex items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-300 hover:border-slate-500 hover:text-slate-100"
+                      >
+                        <span className="font-medium text-slate-100">{mate.team}</span>
+                        <span className="truncate text-xs text-slate-400">{mate.likely_primary || "Building"}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+              <div className={groupMates.length > 0 ? "mt-6" : "mt-5"}>
+                <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+                  More from {team.confederation}
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2.5">
+                  {peers.map((peer) => (
+                    <Link
+                      key={peer.team}
+                      href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(peer.team)}`}
+                      className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-500 hover:text-slate-100"
+                    >
+                      {peer.team}
+                    </Link>
+                  ))}
+                </div>
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
