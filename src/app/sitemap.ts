@@ -1,7 +1,12 @@
 import { MetadataRoute } from 'next';
 import { BASE_URL, BOOKMAKERS_INDEXABLE, FAIR_ODDS_INDEXABLE } from '@/lib/config';
+import { readWorldCupData, worldCupTeamUrl, WORLD_CUP_PENALTIES_URL } from '@/lib/world-cup-penalties';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const worldCupData = await readWorldCupData().catch(() => null);
+  const worldCupLastModified = worldCupData?.last_verified
+    ? new Date(`${worldCupData.last_verified}T12:00:00Z`)
+    : new Date();
   const showGoalscorerPage =
     process.env.NODE_ENV !== 'production' ||
     process.env.GOALSCORER_PAGE_PUBLIC === '1' ||
@@ -31,6 +36,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.85,
     },
+    ...(worldCupData
+      ? [
+          {
+            url: WORLD_CUP_PENALTIES_URL,
+            lastModified: worldCupLastModified,
+            changeFrequency: 'weekly' as const,
+            priority: 0.9,
+          },
+          ...worldCupData.teams.map((team) => ({
+            url: worldCupTeamUrl(team.team),
+            lastModified: worldCupLastModified,
+            changeFrequency: 'weekly' as const,
+            priority: 0.65,
+          })),
+        ]
+      : []),
     ...(showGoalscorerPage
       ? [{
           url: `${BASE_URL}/anytime-goalscorer`,
