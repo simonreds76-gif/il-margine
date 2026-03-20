@@ -31,12 +31,68 @@ export type WorldCupPenaltyData = {
     team: string;
     confederation: string;
     status: "playoff";
+    slot?: string;
+    group?: string;
   }>;
 };
 
 export const WORLD_CUP_PENALTIES_URL = `${BASE_URL}/penalty-takers/world-cup-2026`;
 
 export const CONFEDERATION_ORDER = ["UEFA", "CONMEBOL", "Concacaf", "AFC", "CAF", "OFC"];
+export const WORLD_CUP_GROUP_ORDER = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
+
+export const UEFA_PLAYOFF_PATHS = [
+  {
+    path: "Path A",
+    destinationGroup: "B",
+    fixtures: ["Italy vs Northern Ireland", "Wales vs Bosnia and Herzegovina"],
+  },
+  {
+    path: "Path B",
+    destinationGroup: "F",
+    fixtures: ["Ukraine vs Sweden", "Poland vs Albania"],
+  },
+  {
+    path: "Path C",
+    destinationGroup: "D",
+    fixtures: ["Turkey vs Romania", "Slovakia vs Kosovo"],
+  },
+  {
+    path: "Path D",
+    destinationGroup: "A",
+    fixtures: ["Denmark vs North Macedonia", "Czechia vs Republic of Ireland"],
+  },
+] as const;
+
+export const INTERCONTINENTAL_PLAYOFF_SLOTS = [
+  {
+    slot: "Intercontinental Play-Off 1",
+    label: "Intercontinental Play-Off 1 winner",
+    destinationGroup: "K",
+    teams: ["Bolivia", "Iraq", "Suriname"],
+  },
+  {
+    slot: "Intercontinental Play-Off 2",
+    label: "Intercontinental Play-Off 2 winner",
+    destinationGroup: "I",
+    teams: ["Congo DR", "Jamaica", "New Caledonia"],
+  },
+] as const;
+
+export const WORLD_CUP_GROUPS: Record<string, string[]> = {
+  A: ["Mexico", "Korea Republic", "South Africa", "UEFA Path D winner"],
+  B: ["Canada", "Qatar", "Switzerland", "UEFA Path A winner"],
+  C: ["Brazil", "Morocco", "Scotland", "Haiti"],
+  D: ["USA", "Paraguay", "Australia", "UEFA Path C winner"],
+  E: ["Germany", "Cote d'Ivoire", "Ecuador", "Curacao"],
+  F: ["Netherlands", "Japan", "Tunisia", "UEFA Path B winner"],
+  G: ["Belgium", "Egypt", "IR Iran", "New Zealand"],
+  H: ["Spain", "Saudi Arabia", "Uruguay", "Cabo Verde"],
+  I: ["France", "Senegal", "Norway", "Intercontinental Play-Off 2 winner"],
+  J: ["Argentina", "Algeria", "Austria", "Jordan"],
+  K: ["Portugal", "Uzbekistan", "Colombia", "Intercontinental Play-Off 1 winner"],
+  L: ["England", "Ghana", "Panama", "Croatia"],
+};
 
 export const TEAM_FLAG_CODES: Record<string, string> = {
   Algeria: "DZ",
@@ -129,10 +185,32 @@ export function worldCupTeamUrl(team: string): string {
   return `${WORLD_CUP_PENALTIES_URL}/${worldCupTeamSlug(team)}`;
 }
 
+export function getGroupForTeam(team: string): string | undefined {
+  return WORLD_CUP_GROUP_ORDER.find((group) => WORLD_CUP_GROUPS[group]?.includes(team));
+}
+
+export function getIntercontinentalSlotForTeam(team: string): { slot?: string; group?: string } {
+  const match = INTERCONTINENTAL_PLAYOFF_SLOTS.find((slot) => (slot.teams as readonly string[]).includes(team));
+  if (!match) return {};
+  return { slot: match.slot, group: match.destinationGroup };
+}
+
 export async function readWorldCupData(): Promise<WorldCupPenaltyData> {
   const fullPath = path.join(process.cwd(), "data/goalscorer/world-cup-2026-penalty-takers.json");
   const raw = await fs.readFile(fullPath, "utf8");
-  return JSON.parse(raw) as WorldCupPenaltyData;
+  const parsed = JSON.parse(raw) as WorldCupPenaltyData;
+
+  return {
+    ...parsed,
+    teams: parsed.teams.map((team) => ({
+      ...team,
+      group: team.group ?? getGroupForTeam(team.team),
+    })),
+    playoff_teams: parsed.playoff_teams.map((team) => ({
+      ...team,
+      ...getIntercontinentalSlotForTeam(team.team),
+    })),
+  };
 }
 
 export function getWorldCupTeamBySlug(data: WorldCupPenaltyData, slug: string): TeamRow | undefined {

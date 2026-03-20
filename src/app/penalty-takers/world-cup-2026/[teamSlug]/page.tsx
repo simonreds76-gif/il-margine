@@ -278,6 +278,11 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                     <span className={`rounded-full border px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] sm:text-[10px] sm:tracking-[0.18em] ${style.badge}`}>
                       {team.confederation}
                     </span>
+                    {team.group ? (
+                      <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300 sm:text-xs sm:tracking-[0.18em]">
+                        Group {team.group}
+                      </span>
+                    ) : null}
                     <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300 sm:text-xs sm:tracking-[0.18em]">
                       Current file: {data.last_verified}
                     </span>

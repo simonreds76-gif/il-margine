@@ -5,7 +5,11 @@ import PageHomeLink from "@/components/PageHomeLink";
 import WorldCupTeamIndex from "./WorldCupTeamIndex";
 import {
   CONFEDERATION_ORDER,
+  INTERCONTINENTAL_PLAYOFF_SLOTS,
+  UEFA_PLAYOFF_PATHS,
   WORLD_CUP_PENALTIES_URL,
+  WORLD_CUP_GROUP_ORDER,
+  WORLD_CUP_GROUPS,
   readWorldCupData,
   worldCupTeamSlug,
   worldCupTeamUrl,
@@ -19,24 +23,6 @@ const PAGE_DESCRIPTION =
   "First-choice and backup penalty takers for every qualified nation at the 2026 FIFA World Cup. Updated from official match reports, federation sources and native-language reporting across six confederations.";
 
 const FEATURED_TEAMS = ["Germany", "France", "Brazil", "Argentina", "England", "Spain", "Japan", "Netherlands", "USA", "Mexico"];
-const UEFA_PLAYOFF_PATHS = [
-  {
-    path: "Path A",
-    fixtures: ["Italy vs Northern Ireland", "Wales vs Bosnia and Herzegovina"],
-  },
-  {
-    path: "Path B",
-    fixtures: ["Ukraine vs Sweden", "Poland vs Albania"],
-  },
-  {
-    path: "Path C",
-    fixtures: ["Turkey vs Romania", "Slovakia vs Kosovo"],
-  },
-  {
-    path: "Path D",
-    fixtures: ["Denmark vs North Macedonia", "Czechia vs Republic of Ireland"],
-  },
-];
 
 const CONFEDERATION_INTROS: Record<string, string> = {
   UEFA:
@@ -172,6 +158,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
   const alphabeticalIndexTeams = alphabeticalTeams.map((team) => ({
     team: team.team,
     confederation: team.confederation,
+    group: team.group,
     likely_primary: team.likely_primary,
     slug: worldCupTeamSlug(team.team),
     flagUrl: flagImageUrl(team.team),
@@ -182,6 +169,34 @@ export default async function WorldCup2026PenaltyTakersPage() {
     count: group.teams.length,
     badgeClassName: CONFEDERATION_STYLES[group.confederation]?.badge ?? CONFEDERATION_STYLES.CONMEBOL.badge,
   }));
+  const indexGroups = WORLD_CUP_GROUP_ORDER.map((group) => ({
+    key: group,
+    count: WORLD_CUP_GROUPS[group]?.length ?? 0,
+    entries: (WORLD_CUP_GROUPS[group] ?? []).map((entry) => {
+      const team = data.teams.find((candidate) => candidate.team === entry);
+      if (team) {
+        return {
+          kind: "team" as const,
+          team: team.team,
+          confederation: team.confederation,
+          group,
+          likely_primary: team.likely_primary,
+          slug: worldCupTeamSlug(team.team),
+          flagUrl: flagImageUrl(team.team),
+          initials: initials(team.team),
+        };
+      }
+
+      return {
+        kind: "placeholder" as const,
+        team: entry,
+        group,
+        initials: initials(entry),
+        note: entry.startsWith("UEFA Path") ? "Winner slots in after 31 March" : "Winner slots in after the play-off tournament",
+      };
+    }),
+  }));
+  const remainingSpots = 48 - data.qualified_count;
 
   const breadcrumbData = {
     "@context": "https://schema.org",
@@ -289,16 +304,19 @@ export default async function WorldCup2026PenaltyTakersPage() {
 
               <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
-                  <div className="font-mono text-3xl font-semibold text-emerald-400">{data.qualified_count}</div>
-                  <div className="mt-1 text-sm text-slate-400">Confirmed teams</div>
+                  <div className="font-mono text-3xl font-semibold text-emerald-400">
+                    {data.qualified_count}
+                    <span className="text-lg text-emerald-200/70">/48</span>
+                  </div>
+                  <div className="mt-1 text-sm text-slate-400">Confirmed spots filled</div>
                 </div>
                 <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
                   <div className="font-mono text-3xl font-semibold text-emerald-400">{UEFA_PLAYOFF_PATHS.length}</div>
                   <div className="mt-1 text-sm text-slate-400">UEFA paths live</div>
                 </div>
                 <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
-                  <div className="font-mono text-3xl font-semibold text-emerald-400">{data.playoff_teams.length}</div>
-                  <div className="mt-1 text-sm text-slate-400">Intercontinental hopefuls</div>
+                  <div className="font-mono text-3xl font-semibold text-emerald-400">{remainingSpots}</div>
+                  <div className="mt-1 text-sm text-slate-400">Spots still open</div>
                 </div>
                 <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
                   <div className="font-mono text-xl font-semibold text-emerald-400">{data.last_verified}</div>
@@ -333,7 +351,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
           </div>
         </section>
 
-        <WorldCupTeamIndex teams={alphabeticalIndexTeams} confederations={indexFilters} />
+        <WorldCupTeamIndex teams={alphabeticalIndexTeams} confederations={indexFilters} groups={indexGroups} />
 
         <section className="mt-10 space-y-10 sm:mt-12 sm:space-y-14">
           {grouped.map((group) => {
@@ -471,6 +489,16 @@ export default async function WorldCup2026PenaltyTakersPage() {
                     </span>
                     <span className="text-xs text-slate-500">Final on 31 Mar</span>
                   </div>
+                  <div className="mt-3 rounded-xl border border-slate-800 bg-slate-900/80 px-3 py-2 text-sm text-slate-300">
+                    Winner goes to{" "}
+                    <span className="font-semibold text-slate-100">Group {path.destinationGroup}</span>{" "}
+                    with{" "}
+                    <span className="text-slate-200">
+                      {WORLD_CUP_GROUPS[path.destinationGroup]
+                        .filter((team) => !team.startsWith("UEFA Path") && !team.startsWith("Intercontinental"))
+                        .join(", ")}
+                    </span>
+                  </div>
                   <div className="mt-4 space-y-2 text-sm text-slate-300">
                     {path.fixtures.map((fixture) => (
                       <div key={fixture} className="rounded-xl border border-slate-800 bg-slate-900/80 px-3 py-2">
@@ -484,11 +512,30 @@ export default async function WorldCup2026PenaltyTakersPage() {
 
             <div className="mt-6 rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4">
               <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-emerald-400">Intercontinental race</div>
-              <div className="mt-4 flex flex-wrap gap-2.5">
-                {data.playoff_teams.map((team) => (
-                  <span key={team.team} className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300">
-                    {team.team} <span className="text-slate-500">({team.confederation})</span>
-                  </span>
+              <div className="mt-4 grid gap-3 lg:grid-cols-2">
+                {INTERCONTINENTAL_PLAYOFF_SLOTS.map((slot) => (
+                  <div key={slot.slot} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="text-sm font-semibold text-slate-100">{slot.slot}</div>
+                      <div className="text-xs text-slate-500">Group {slot.destinationGroup}</div>
+                    </div>
+                    <div className="mt-2 text-xs leading-6 text-slate-400">
+                      Winner goes to Group {slot.destinationGroup} with{" "}
+                      {WORLD_CUP_GROUPS[slot.destinationGroup]
+                        .filter((team) => !team.startsWith("UEFA Path") && !team.startsWith("Intercontinental"))
+                        .join(", ")}
+                      .
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {data.playoff_teams
+                        .filter((team) => team.slot === slot.slot)
+                        .map((team) => (
+                          <span key={team.team} className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300">
+                            {team.team} <span className="text-slate-500">({team.confederation})</span>
+                          </span>
+                        ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
