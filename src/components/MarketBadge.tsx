@@ -1,7 +1,14 @@
 "use client";
 
+type MarketConfig = {
+  src: string;
+  label: string;
+  invertForDark?: boolean;
+  wide?: boolean;
+};
+
 /** Maps market + category to SVG icon path and label. Used in picks tables. */
-const MARKET_CONFIG: Record<string, { src: string; label: string; invertForDark?: boolean }> = {
+const MARKET_CONFIG: Record<string, MarketConfig> = {
   tennis: { src: "/icons/markets/tennis.svg", label: "Tennis" },
   atp: { src: "/icons/markets/tennis.svg", label: "ATP" },
   challenger: { src: "/icons/markets/tennis.svg", label: "Challenger" },
@@ -9,7 +16,7 @@ const MARKET_CONFIG: Record<string, { src: string; label: string; invertForDark?
   rolandgarros: { src: "/icons/markets/tennis.svg", label: "Roland Garros" },
   wimbledon: { src: "/icons/markets/tennis.svg", label: "Wimbledon" },
   usopen: { src: "/icons/markets/tennis.svg", label: "US Open" },
-  pl: { src: "/icons/markets/pl.svg", label: "Premier League" },
+  pl: { src: "/icons/markets/pl.svg", label: "Premier League", wide: true },
   seriea: { src: "/icons/markets/seriea.svg", label: "Serie A" },
   ucl: { src: "/icons/markets/ucl-official.svg", label: "Champions League", invertForDark: true },
   other: { src: "/icons/markets/other.svg", label: "Other" },
@@ -18,12 +25,39 @@ const MARKET_CONFIG: Record<string, { src: string; label: string; invertForDark?
   atg: { src: "/icons/markets/other.svg", label: "ATG" },
 };
 
-function getConfig(market: string, category: string): { src: string; label: string; invertForDark?: boolean } {
-  if (market === "tennis") return MARKET_CONFIG.tennis;
-  if (market === "betbuilders") return MARKET_CONFIG.betbuilders;
-  if (market === "atg") return MARKET_CONFIG.atg;
-  const key = category?.toLowerCase() || "other";
-  return MARKET_CONFIG[key] ?? MARKET_CONFIG.other;
+function normalizeCategory(value: string): string {
+  const raw = (value ?? "").trim().toLowerCase();
+  if (!raw) return "other";
+  const compact = raw.replace(/[\s_-]+/g, "");
+
+  if (compact === "pl" || compact === "epl" || compact === "premierleague" || compact === "englishpremierleague") {
+    return "pl";
+  }
+  if (compact === "seriea" || compact === "italianseriea" || compact === "seriaa") {
+    return "seriea";
+  }
+  if (compact === "ucl" || compact === "championsleague" || compact === "uefachampionsleague") {
+    return "ucl";
+  }
+  if (compact === "atp" || compact === "challenger" || compact === "ausopen" || compact === "rolandgarros" || compact === "wimbledon" || compact === "usopen") {
+    return compact;
+  }
+  return compact;
+}
+
+function getConfig(market: string, category: string): MarketConfig {
+  const marketKey = (market ?? "").trim().toLowerCase();
+  const categoryKey = normalizeCategory(category ?? "");
+
+  if (marketKey === "tennis") {
+    return MARKET_CONFIG[categoryKey] ?? MARKET_CONFIG.tennis;
+  }
+
+  if (marketKey === "betbuilders" || marketKey === "atg" || marketKey === "props") {
+    return MARKET_CONFIG[categoryKey] ?? MARKET_CONFIG[marketKey] ?? MARKET_CONFIG.other;
+  }
+
+  return MARKET_CONFIG[categoryKey] ?? MARKET_CONFIG.other;
 }
 
 interface MarketBadgeProps {
@@ -36,19 +70,21 @@ interface MarketBadgeProps {
 }
 
 export default function MarketBadge({ market, category, showLabel = false, className = "", hideOnMobile = false }: MarketBadgeProps) {
-  const { src, label, invertForDark } = getConfig(market, category ?? "");
+  const { src, label, invertForDark, wide } = getConfig(market, category ?? "");
   return (
     <span
       className={`inline-flex items-center gap-1.5 ${hideOnMobile ? "hidden lg:inline-flex" : ""} ${className}`}
       title={label}
     >
-      <img
-        src={`${src}?v=3`}
-        alt={label}
-        width={24}
-        height={24}
-        className={`h-6 w-6 shrink-0 ${invertForDark ? "brightness-0 invert" : ""}`}
-      />
+      <span className={`inline-flex items-center justify-center shrink-0 ${wide ? "h-6 w-8" : "h-6 w-6"}`}>
+        <img
+          src={`${src}?v=4`}
+          alt={label}
+          width={wide ? 32 : 24}
+          height={24}
+          className={`${wide ? "h-[18px] w-auto" : "h-6 w-auto"} object-contain shrink-0 ${invertForDark ? "brightness-0 invert" : ""}`}
+        />
+      </span>
       {showLabel && <span className="text-xs font-medium text-slate-400">{label}</span>}
     </span>
   );
