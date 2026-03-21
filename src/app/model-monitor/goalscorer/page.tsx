@@ -2080,6 +2080,7 @@ export default async function GoalscorerMonitorPage() {
                   );
                   const isQuarantined = fixtureHealth?.trust_tier === "T3";
                   const isDegraded = fixtureHealth?.trust_tier === "T2";
+                  const isAwaitingLineup = fixtureHealth?.trust_tier === "T2" && fixtureHealth?.lineup_input === "none";
                   const hasHomeLineup = (lineup?.homePlayers?.length ?? 0) > 0;
                   const hasAwayLineup = (lineup?.awayPlayers?.length ?? 0) > 0;
                   const hasAnyLineup = hasHomeLineup || hasAwayLineup;
@@ -2105,7 +2106,7 @@ export default async function GoalscorerMonitorPage() {
                         </div>
                       </div>
 
-                      {fixtureHealth && (isDegraded || isQuarantined) ? (
+                      {fixtureHealth && (isQuarantined || (isDegraded && !isAwaitingLineup)) ? (
                         <div className={`mb-4 rounded-xl border p-3 text-sm ${isQuarantined ? "border-rose-500/20 bg-rose-500/8 text-rose-100" : "border-amber-500/20 bg-amber-500/8 text-amber-100"}`}>
                           <div className="font-medium">
                             {isQuarantined
