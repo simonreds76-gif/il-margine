@@ -1574,8 +1574,18 @@ export default async function GoalscorerMonitorPage() {
   const hiddenPendingFixtures = liveWindowFixtureHealthRows.filter(
     (fixture) => fixture.trust_tier === "T2" && fixture.lineup_input === "none",
   ).length;
+  const hiddenExpectedFixtures = liveWindowFixtureHealthRows.filter(
+    (fixture) => fixture.trust_tier === "T2" && fixture.lineup_input === "expected_xi" && (parseFloatMaybe(fixture.corruption_score) ?? 0) <= 0,
+  ).length;
   const flaggedFixtures = liveWindowFixtureHealthRows
-    .filter((fixture) => fixture.trust_tier === "T3" || (fixture.trust_tier === "T2" && fixture.lineup_input !== "none"))
+    .filter((fixture) => {
+      if (fixture.trust_tier === "T3") return true;
+      if (fixture.trust_tier !== "T2") return false;
+      const corruptionScore = parseFloatMaybe(fixture.corruption_score) ?? 0;
+      if (fixture.lineup_input === "none") return false;
+      if (fixture.lineup_input === "expected_xi" && corruptionScore <= 0) return false;
+      return corruptionScore > 0 || (fixture.corruption_flags ?? []).length > 0;
+    })
     .sort((left, right) => {
       const leftRank = left.trust_tier === "T3" ? 2 : 1;
       const rightRank = right.trust_tier === "T3" ? 2 : 1;
@@ -1978,21 +1988,22 @@ export default async function GoalscorerMonitorPage() {
             <div>
               <h2 className="text-lg font-semibold text-slate-100">Lineup trust watchlist</h2>
               <p className="mt-1 text-sm text-slate-400">
-                Fixture-level health checks run before the player-level monitor logic. This watchlist is now trimmed to the
-                live window and only shows actionable states: expected-XI fixtures and real structural problems. Empty
-                no-payload fixtures stay hidden until there is something worth reviewing.
+                Fixture-level health checks run before the player-level monitor logic. This watchlist is now reserved for
+                real structural problems only. Normal expected-XI fixtures and empty no-payload fixtures stay in the fixture
+                lineup view below instead of being repeated here.
               </p>
             </div>
             <div className="rounded-2xl border border-slate-800/80 bg-slate-950/35 px-4 py-3 text-sm text-slate-300">
-              <div><span className="text-slate-500">Actionable fixtures:</span> {flaggedFixtures.length}</div>
+              <div><span className="text-slate-500">Visible issues:</span> {flaggedFixtures.length}</div>
               <div><span className="text-slate-500">Quarantined:</span> {quarantinedFixtures}</div>
+              <div><span className="text-slate-500">Hidden expected XIs:</span> {hiddenExpectedFixtures}</div>
               <div><span className="text-slate-500">Hidden pending lineups:</span> {hiddenPendingFixtures}</div>
             </div>
           </div>
 
           {flaggedFixtures.length === 0 ? (
             <div className="rounded-xl border border-emerald-500/15 bg-emerald-500/5 p-4 text-sm text-emerald-200">
-              No degraded or quarantined lineup payloads in the current live window.
+              No structural lineup issues in the current live window.
             </div>
           ) : (
             <div className="space-y-4">
