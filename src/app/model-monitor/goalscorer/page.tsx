@@ -818,6 +818,15 @@ function addDaysIso(isoDate: string, days: number): string {
   return date.toISOString().slice(0, 10);
 }
 
+function fixtureInLiveWindow(
+  fixture: Pick<FixtureHealth, "match_date">,
+  startIso: string,
+  endIso: string,
+): boolean {
+  const matchDate = (fixture.match_date ?? "").slice(0, 10);
+  return Boolean(matchDate) && matchDate >= startIso && matchDate <= endIso;
+}
+
 function filterActiveRows(rows: CsvRow[]): CsvRow[] {
   const today = isoDateInTimezone("Europe/London");
   const horizon = addDaysIso(today, 3);
@@ -1126,12 +1135,19 @@ function penaltyRoleLabel(role?: string): string {
   return humanizeToken(role);
 }
 
-function penaltyComponentSummary(row?: CsvRow): string | null {
+function penaltyComponentMeta(row?: CsvRow): { compact: string; detail: string } | null {
   if (!row) return null;
   const role = (row.penalty_role ?? "").trim().toLowerCase();
   const penaltyLambda = parseFloatMaybe(row.penalty_lambda) ?? 0;
   const penaltyShare = parseFloatMaybe(row.penalty_share) ?? 0;
   const baselinePenaltyShare = parseFloatMaybe(row.baseline_penalty_share) ?? 0;
+  const baselinePenaltySample = parseFloatMaybe(row.baseline_penalty_sample) ?? 0;
+  const baselinePenaltySource = (row.baseline_penalty_source ?? "").trim().toLowerCase();
+  const careerPlayerPenalties = parseFloatMaybe(row.career_player_penalties) ?? 0;
+  const careerTeamPenalties = parseFloatMaybe(row.career_team_penalties) ?? 0;
+  const evidenceShare = parseFloatMaybe(row.penalty_evidence_share) ?? 0;
+  const evidenceSample = parseFloatMaybe(row.penalty_evidence_sample) ?? 0;
+  const evidenceSource = (row.penalty_evidence_source ?? "").trim().toLowerCase();
   const penaltyPrior = parseFloatMaybe(row.penalty_share_prior) ?? parseFloatMaybe(row.penalty_share_floor) ?? 0;
   const penaltyPriorWeight = parseFloatMaybe(row.penalty_share_prior_weight) ?? 0;
   const nonPenLambda = parseFloatMaybe(row.non_pen_lambda) ?? 0;
@@ -1139,23 +1155,51 @@ function penaltyComponentSummary(row?: CsvRow): string | null {
   if (role === "none" && penaltyLambda <= 0.0001 && baselinePenaltyShare <= 0.0001 && penaltyPrior <= 0.0001) {
     return null;
   }
+  if ((role === "tertiary" || role === "none") && penaltyShare < 0.08 && penaltyLambda < 0.005) {
+    return null;
+  }
 
-  const bits = [
+  const detailBits = [
     role !== "none" ? `pen duty ${penaltyRoleLabel(role)}` : "pen component",
     `share ${(penaltyShare * 100).toFixed(1)}%`,
     `base ${(baselinePenaltyShare * 100).toFixed(1)}%`,
   ];
 
   if (penaltyPrior > 0) {
-    bits.push(`prior ${(penaltyPrior * 100).toFixed(1)}%`);
+    detailBits.push(`prior ${(penaltyPrior * 100).toFixed(1)}%`);
   }
   if (penaltyPriorWeight > 0) {
-    bits.push(`w ${penaltyPriorWeight.toFixed(1)}`);
+    detailBits.push(`w ${penaltyPriorWeight.toFixed(1)}`);
   }
-  bits.push(`λpen ${penaltyLambda.toFixed(3)}`);
-  bits.push(`λopen ${nonPenLambda.toFixed(3)}`);
+  if (baselinePenaltySource && baselinePenaltySource !== "none") {
+    detailBits.push(`src ${baselinePenaltySource.replace(/_/g, "+")}`);
+  }
+  if (baselinePenaltySample > 0) {
+    detailBits.push(`sample ${baselinePenaltySample.toFixed(1)}`);
+  }
+  if (careerPlayerPenalties > 0 && careerTeamPenalties > 0) {
+    detailBits.push(`career ${careerPlayerPenalties.toFixed(0)}/${careerTeamPenalties.toFixed(0)}`);
+  }
+  if (evidenceSample > 0) {
+    detailBits.push(`ev ${(evidenceShare * 100).toFixed(1)}%`);
+    detailBits.push(`evs ${evidenceSample.toFixed(1)}`);
+  }
+  if (evidenceSource) {
+    detailBits.push(`evsrc ${evidenceSource.replace(/_/g, "+")}`);
+  }
+  detailBits.push(`λpen ${penaltyLambda.toFixed(3)}`);
+  detailBits.push(`λopen ${nonPenLambda.toFixed(3)}`);
 
-  return bits.join(" · ");
+  const compactBits = [
+    role !== "none" ? `${penaltyRoleLabel(role)} pen` : "Pen angle",
+    `${(penaltyShare * 100).toFixed(0)}% share`,
+    `λ ${penaltyLambda.toFixed(3)}`,
+  ];
+
+  return {
+    compact: compactBits.join(" · "),
+    detail: detailBits.join(" · "),
+  };
 }
 
 function PlayerSignalRow({
@@ -1172,11 +1216,11 @@ function PlayerSignalRow({
   const hasRow = Boolean(row);
   const action = effectiveMonitorAction(row);
   const evPct = row ? formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1) : "unpriced";
-  const penaltySummary = penaltyComponentSummary(row);
+  const penaltyMeta = penaltyComponentMeta(row);
 
   return (
-    <div className={`rounded-xl border px-3 py-3 ${signalRowClass(action, hasRow)}`}>
-      <div className="flex flex-col gap-3 2xl:grid 2xl:grid-cols-[minmax(0,1.7fr)_72px_72px_72px_64px_auto] 2xl:items-center">
+    <div className={`rounded-xl border px-3 py-2.5 ${signalRowClass(action, hasRow)}`}>
+      <div className="flex flex-col gap-2.5 xl:grid xl:grid-cols-[minmax(0,1.45fr)_64px_64px_64px_54px_auto] xl:items-start xl:gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <div className="min-w-0 break-words text-sm font-semibold leading-tight text-slate-100">{name}</div>
@@ -1185,27 +1229,33 @@ function PlayerSignalRow({
             </span>
           </div>
           {note ? <div className="mt-1 text-xs text-slate-500">{note}</div> : null}
-          {penaltySummary ? <div className="mt-1 text-xs leading-5 text-cyan-200/90">{penaltySummary}</div> : null}
+          {penaltyMeta ? (
+            <div className="mt-1.5 xl:pr-3" title={penaltyMeta.detail}>
+              <span className="inline-flex rounded-full border border-cyan-500/20 bg-cyan-500/8 px-2 py-1 text-[11px] font-medium leading-none text-cyan-200/90">
+                {penaltyMeta.compact}
+              </span>
+            </div>
+          ) : null}
         </div>
-        <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4 2xl:contents">
-          <div className="rounded-lg bg-black/15 px-2 py-1.5 2xl:bg-transparent 2xl:px-0 2xl:py-0">
+        <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4 xl:contents">
+          <div className="rounded-lg bg-black/15 px-2 py-1.5 xl:bg-transparent xl:px-0 xl:py-0">
             <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Odds</div>
             <div className="mt-1 font-semibold text-slate-200">{hasRow ? formatDecimal(parseFloatMaybe(row?.odds_decimal), 2) : "n/a"}</div>
           </div>
-          <div className="rounded-lg bg-black/15 px-2 py-1.5 2xl:bg-transparent 2xl:px-0 2xl:py-0">
+          <div className="rounded-lg bg-black/15 px-2 py-1.5 xl:bg-transparent xl:px-0 xl:py-0">
             <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Fair</div>
             <div className="mt-1 font-semibold text-slate-300">{hasRow ? formatDecimal(parseFloatMaybe(row?.model_fair_odds_atgs), 2) : "n/a"}</div>
           </div>
-          <div className="rounded-lg bg-black/15 px-2 py-1.5 2xl:bg-transparent 2xl:px-0 2xl:py-0">
+          <div className="rounded-lg bg-black/15 px-2 py-1.5 xl:bg-transparent xl:px-0 xl:py-0">
             <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">EV</div>
             <div className={`mt-1 font-semibold ${hasRow ? toneForAction(action) : "text-slate-500"}`}>{evPct}</div>
           </div>
-          <div className="rounded-lg bg-black/15 px-2 py-1.5 2xl:bg-transparent 2xl:px-0 2xl:py-0">
+          <div className="rounded-lg bg-black/15 px-2 py-1.5 xl:bg-transparent xl:px-0 xl:py-0">
             <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Min</div>
             <div className="mt-1 font-semibold text-slate-500">{hasRow ? formatDecimal(parseFloatMaybe(row?.expected_minutes), 0) : "n/a"}</div>
           </div>
         </div>
-        <div className="2xl:justify-self-end">
+        <div className="xl:justify-self-end">
           <span className={`inline-flex rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${signalBadge(action)}`}>
             {hasRow ? effectiveMonitorActionLabel(row) : "unpriced"}
           </span>
@@ -1227,14 +1277,14 @@ function GroupBlock({
     row?: CsvRow;
     note?: string;
   }>;
-}) {
+  }) {
   return (
     <div className="rounded-2xl border border-white/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-3">
-      <div className="mb-3 flex items-center justify-between gap-3">
+      <div className="mb-2.5 flex items-center justify-between gap-3">
         <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">{title}</div>
         <div className="text-xs text-slate-500">{items.length}</div>
       </div>
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         {items.length > 0 ? (
           items.map((item) => (
             <PlayerSignalRow
@@ -1350,7 +1400,7 @@ function TeamPitch({
 
       {hasLineup ? (
         <>
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <GroupBlock title="Attack" items={groupedItems.attackers} />
             <GroupBlock title="Midfield" items={groupedItems.midfielders} />
             <GroupBlock title="Wide / Full-backs" items={groupedItems.widePlayers} />
@@ -1472,6 +1522,8 @@ export default async function GoalscorerMonitorPage() {
     .filter(Boolean)
     .sort()
     .at(-1) ?? "n/a";
+  const liveWindowStart = isoDateInTimezone("Europe/London");
+  const liveWindowEnd = addDaysIso(liveWindowStart, 3);
   const comparisonMtime =
     leagueDatasets
       .map((dataset) => dataset.comparisonMtime ?? "")
@@ -1481,17 +1533,23 @@ export default async function GoalscorerMonitorPage() {
   const comparisonFreshness = freshnessBadge(comparisonMtime);
   const snapshotFreshness = freshnessBadge(snapshotGeneratedAt);
   const fixtureHealthRows = leagueDatasets.flatMap((dataset) => dataset.fixtureHealth);
+  const liveWindowFixtureHealthRows = fixtureHealthRows.filter((fixture) =>
+    fixtureInLiveWindow(fixture, liveWindowStart, liveWindowEnd),
+  );
   const fixtureHealthMap = new Map(
     fixtureHealthRows.map((fixture) => [
       fixtureHealthKey(fixture.league, fixture.match_date, fixture.home_team, fixture.away_team),
       fixture,
     ]),
   );
-  const cleanFixtures = fixtureHealthRows.filter((fixture) => fixture.trust_tier === "T1").length;
-  const degradedFixtures = fixtureHealthRows.filter((fixture) => fixture.trust_tier === "T2").length;
-  const quarantinedFixtures = fixtureHealthRows.filter((fixture) => fixture.trust_tier === "T3").length;
-  const flaggedFixtures = fixtureHealthRows
-    .filter((fixture) => fixture.trust_tier === "T2" || fixture.trust_tier === "T3")
+  const cleanFixtures = liveWindowFixtureHealthRows.filter((fixture) => fixture.trust_tier === "T1").length;
+  const degradedFixtures = liveWindowFixtureHealthRows.filter((fixture) => fixture.trust_tier === "T2").length;
+  const quarantinedFixtures = liveWindowFixtureHealthRows.filter((fixture) => fixture.trust_tier === "T3").length;
+  const hiddenPendingFixtures = liveWindowFixtureHealthRows.filter(
+    (fixture) => fixture.trust_tier === "T2" && fixture.lineup_input === "none",
+  ).length;
+  const flaggedFixtures = liveWindowFixtureHealthRows
+    .filter((fixture) => fixture.trust_tier === "T3" || (fixture.trust_tier === "T2" && fixture.lineup_input !== "none"))
     .sort((left, right) => {
       const leftRank = left.trust_tier === "T3" ? 2 : 1;
       const rightRank = right.trust_tier === "T3" ? 2 : 1;
@@ -1539,7 +1597,9 @@ export default async function GoalscorerMonitorPage() {
     const leagueRows = dataset.rows;
     const leaguePublicRows = leagueRows.filter((row) => (row.public_action ?? "") === "surface");
     const leagueShadowRows = leagueRows.filter((row) => (row.shadow_action ?? "") === "shadow_track" && (row.public_action ?? "") !== "surface");
-    const leagueFixtures = dataset.fixtureHealth;
+    const leagueFixtures = dataset.fixtureHealth.filter((fixture) =>
+      fixtureInLiveWindow(fixture, liveWindowStart, liveWindowEnd),
+    );
     return {
       key: dataset.key,
       label: dataset.label,
@@ -1892,13 +1952,15 @@ export default async function GoalscorerMonitorPage() {
             <div>
               <h2 className="text-lg font-semibold text-slate-100">Lineup trust watchlist</h2>
               <p className="mt-1 text-sm text-slate-400">
-                Fixture-level health checks run before the player-level monitor logic. This section is for real structural issues,
-                expected-XI states, and fixtures that are simply waiting on an official lineup payload.
+                Fixture-level health checks run before the player-level monitor logic. This watchlist is now trimmed to the
+                live window and only shows actionable states: expected-XI fixtures and real structural problems. Empty
+                no-payload fixtures stay hidden until there is something worth reviewing.
               </p>
             </div>
             <div className="rounded-2xl border border-slate-800/80 bg-slate-950/35 px-4 py-3 text-sm text-slate-300">
-              <div><span className="text-slate-500">Non-clean fixtures:</span> {flaggedFixtures.length}</div>
+              <div><span className="text-slate-500">Actionable fixtures:</span> {flaggedFixtures.length}</div>
               <div><span className="text-slate-500">Quarantined:</span> {quarantinedFixtures}</div>
+              <div><span className="text-slate-500">Hidden pending lineups:</span> {hiddenPendingFixtures}</div>
             </div>
           </div>
 
