@@ -422,7 +422,7 @@ export default function Home() {
                           key={bet.id}
                           className="border-b border-slate-700 hover:bg-slate-800/30"
                         >
-                          <td className="px-2.5 py-3.5 border-r border-slate-800/50 align-top">
+                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-top">
                             <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
                           </td>
                           <td className="px-2.5 py-3.5 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap align-top">{formatMatchDate(bet.match_date)}</td>
@@ -551,7 +551,7 @@ export default function Home() {
                           key={bet.id}
                           className="border-b border-slate-700 hover:bg-slate-800/30"
                         >
-                          <td className="px-2.5 py-3.5 border-r border-slate-800/50 align-top">
+                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-top">
                             <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
                           </td>
                           <td className="px-2.5 py-3.5 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap align-top">{formatMatchDate(bet.match_date)}</td>

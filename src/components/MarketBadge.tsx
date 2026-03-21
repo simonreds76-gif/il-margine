@@ -5,12 +5,19 @@ type MarketConfig = {
   label: string;
   invertForDark?: boolean;
   wide?: boolean;
+  containerClassName?: string;
+  imageClassName?: string;
 };
 
 /** Maps market + category to SVG icon path and label. Used in picks tables. */
 const MARKET_CONFIG: Record<string, MarketConfig> = {
   tennis: { src: "/icons/markets/tennis.svg", label: "Tennis" },
-  atp: { src: "/icons/markets/tennis.svg", label: "ATP" },
+  atp: {
+    src: "/icons/markets/atp-brandmark-cropped.png",
+    label: "ATP Tour",
+    containerClassName: "h-7 w-7",
+    imageClassName: "h-full w-full object-contain",
+  },
   challenger: { src: "/icons/markets/tennis.svg", label: "Challenger" },
   ausopen: { src: "/icons/markets/tennis.svg", label: "Aus Open" },
   rolandgarros: { src: "/icons/markets/tennis.svg", label: "Roland Garros" },
@@ -70,19 +77,19 @@ interface MarketBadgeProps {
 }
 
 export default function MarketBadge({ market, category, showLabel = false, className = "", hideOnMobile = false }: MarketBadgeProps) {
-  const { src, label, invertForDark, wide } = getConfig(market, category ?? "");
+  const { src, label, invertForDark, wide, containerClassName, imageClassName } = getConfig(market, category ?? "");
   return (
     <span
       className={`inline-flex items-center gap-1.5 ${hideOnMobile ? "hidden lg:inline-flex" : ""} ${className}`}
       title={label}
     >
-      <span className={`inline-flex items-center justify-center shrink-0 ${wide ? "h-6 w-8" : "h-6 w-6"}`}>
+      <span className={`inline-flex items-center justify-center shrink-0 ${containerClassName ?? (wide ? "h-6 w-8" : "h-6 w-6")}`}>
         <img
-          src={`${src}?v=4`}
+          src={`${src}?v=8`}
           alt={label}
           width={wide ? 32 : 24}
           height={24}
-          className={`${wide ? "h-[18px] w-auto" : "h-6 w-auto"} object-contain shrink-0 ${invertForDark ? "brightness-0 invert" : ""}`}
+          className={`${imageClassName ?? (wide ? "h-[18px] w-auto" : "h-6 w-auto")} object-contain shrink-0 ${invertForDark ? "brightness-0 invert" : ""}`}
         />
       </span>
       {showLabel && <span className="text-xs font-medium text-slate-400">{label}</span>}
