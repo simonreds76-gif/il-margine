@@ -5,6 +5,8 @@ type MarketConfig = {
   label: string;
   invertForDark?: boolean;
   wide?: boolean;
+  frameClassName?: string;
+  imageClassName?: string;
 };
 
 /** Maps market + category to SVG icon path and label. Used in picks tables. */
@@ -16,9 +18,26 @@ const MARKET_CONFIG: Record<string, MarketConfig> = {
   rolandgarros: { src: "/icons/markets/tennis.svg", label: "Roland Garros" },
   wimbledon: { src: "/icons/markets/tennis.svg", label: "Wimbledon" },
   usopen: { src: "/icons/markets/tennis.svg", label: "US Open" },
-  pl: { src: "/icons/markets/pl.svg", label: "Premier League", wide: true },
-  seriea: { src: "/icons/markets/seriea.svg", label: "Serie A" },
-  ucl: { src: "/icons/markets/ucl-official.svg", label: "Champions League", invertForDark: true },
+  pl: {
+    src: "/icons/markets/pl.svg",
+    label: "Premier League",
+    wide: true,
+    frameClassName: "rounded-md border border-fuchsia-500/25 bg-[#33003d] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]",
+    imageClassName: "h-[13px] w-auto",
+  },
+  seriea: {
+    src: "/icons/markets/seriea.svg",
+    label: "Serie A",
+    frameClassName: "rounded-md border border-sky-400/20 bg-white shadow-[0_0_0_1px_rgba(255,255,255,0.04)]",
+    imageClassName: "h-[18px] w-auto",
+  },
+  ucl: {
+    src: "/icons/markets/ucl-official.svg",
+    label: "Champions League",
+    invertForDark: true,
+    frameClassName: "rounded-md border border-sky-400/20 bg-[#071a39] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]",
+    imageClassName: "h-[16px] w-auto",
+  },
   other: { src: "/icons/markets/other.svg", label: "Other" },
   worldcup: { src: "/icons/markets/other.svg", label: "World Cup" },
   betbuilders: { src: "/icons/markets/other.svg", label: "Bet Builders" },
@@ -70,19 +89,21 @@ interface MarketBadgeProps {
 }
 
 export default function MarketBadge({ market, category, showLabel = false, className = "", hideOnMobile = false }: MarketBadgeProps) {
-  const { src, label, invertForDark, wide } = getConfig(market, category ?? "");
+  const { src, label, invertForDark, wide, frameClassName, imageClassName } = getConfig(market, category ?? "");
   return (
     <span
       className={`inline-flex items-center gap-1.5 ${hideOnMobile ? "hidden lg:inline-flex" : ""} ${className}`}
       title={label}
     >
-      <span className={`inline-flex items-center justify-center shrink-0 ${wide ? "h-6 w-8" : "h-6 w-6"}`}>
+      <span
+        className={`inline-flex items-center justify-center shrink-0 ${wide ? "h-6 w-10 px-1.5" : "h-6 w-7 px-1"} ${frameClassName ?? ""}`}
+      >
         <img
-          src={`${src}?v=4`}
+          src={`${src}?v=5`}
           alt={label}
-          width={wide ? 32 : 24}
+          width={wide ? 40 : 28}
           height={24}
-          className={`${wide ? "h-[18px] w-auto" : "h-6 w-auto"} object-contain shrink-0 ${invertForDark ? "brightness-0 invert" : ""}`}
+          className={`${imageClassName ?? (wide ? "h-[18px] w-auto" : "h-6 w-auto")} object-contain shrink-0 ${invertForDark ? "brightness-0 invert" : ""}`}
         />
       </span>
       {showLabel && <span className="text-xs font-medium text-slate-400">{label}</span>}
