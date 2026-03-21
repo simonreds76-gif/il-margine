@@ -1159,7 +1159,7 @@ function penaltyComponentMeta(row?: CsvRow): { compact: string; detail: string }
   const evidenceShare = parseFloatMaybe(row.penalty_evidence_share) ?? 0;
   const evidenceSample = parseFloatMaybe(row.penalty_evidence_sample) ?? 0;
   const evidenceSource = (row.penalty_evidence_source ?? "").trim().toLowerCase();
-  const penaltyPrior = parseFloatMaybe(row.penalty_share_prior) ?? parseFloatMaybe(row.penalty_share_floor) ?? 0;
+  const penaltyPrior = parseFloatMaybe(row.penalty_share_prior) ?? 0;
   const penaltyPriorWeight = parseFloatMaybe(row.penalty_share_prior_weight) ?? 0;
   const nonPenLambda = parseFloatMaybe(row.non_pen_lambda) ?? 0;
 

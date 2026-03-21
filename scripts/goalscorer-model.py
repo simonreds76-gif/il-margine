@@ -42,7 +42,7 @@ DEFAULT_SUB_MINUTES = 24.0
 DEFAULT_UNKNOWN_MINUTES = 62.0
 UNALLOCATED_SHARE_FLOOR = 0.10
 
-LEAGUE_AVG = {
+BASE_LEAGUE_AVG = {
     "npxg_per_90": 0.20,
     "team_npxg_per_match": 1.21,
     "team_xg_per_match": 1.30,
@@ -50,6 +50,16 @@ LEAGUE_AVG = {
     "penalties_per_match": 0.12,
     "penalty_conversion": 0.77,
 }
+
+LEAGUE_AVG_OVERRIDES = {
+    "serie-a": {"penalties_per_match": 0.12},
+    "epl": {"penalties_per_match": 0.19},
+    "la-liga": {"penalties_per_match": 0.16},
+    "bundesliga": {"penalties_per_match": 0.17},
+    "ligue-1": {"penalties_per_match": 0.15},
+}
+
+LEAGUE_AVG = dict(BASE_LEAGUE_AVG)
 
 POSITION_PRIORS = {
     "FW": 0.34,
@@ -306,6 +316,24 @@ def _shrink(value: float, sample: float, prior_value: float, prior_sample: float
     if sample <= 0:
         return prior_value
     return ((value * sample) + (prior_value * prior_sample)) / (sample + prior_sample)
+
+
+def league_avg_for(league: str = "", penalties_per_match: Optional[float] = None) -> dict:
+    avg = dict(BASE_LEAGUE_AVG)
+    avg.update(LEAGUE_AVG_OVERRIDES.get((league or "").strip().lower(), {}))
+    if penalties_per_match is not None and penalties_per_match > 0:
+        avg["penalties_per_match"] = penalties_per_match
+    return avg
+
+
+def infer_league_penalties_per_match(rows: Iterable["NormalizedRow"]) -> float:
+    team_match_penalties: Dict[tuple[str, str, str, bool], float] = {}
+    for row in rows:
+        key = (row.match_date_str, row.team_key, row.opponent_key, row.is_home)
+        team_match_penalties[key] = team_match_penalties.get(key, 0.0) + float(row.penalties_attempted or 0.0)
+    if not team_match_penalties:
+        return 0.0
+    return sum(team_match_penalties.values()) / len(team_match_penalties)
 
 
 def _parse_date(value: str) -> Optional[date]:
@@ -676,13 +704,23 @@ def build_penalty_component(
     evidence_share: float = 0.0,
     evidence_sample: float = 0.0,
     evidence_source: str = "",
+    league_avg: Optional[dict] = None,
 ) -> tuple[float, float, dict]:
-    team_pen_rate = LEAGUE_AVG["penalties_per_match"]
+    """
+    Build the penalty-goal component for a player row.
+
+    The live pipeline usually calls this twice:
+    1. baseline pass with `prior_share=0.0` to establish the historical floor
+    2. final pass with hierarchy priors to produce the live penalty lambda
+    """
+
+    current_league_avg = league_avg or LEAGUE_AVG
+    team_pen_rate = current_league_avg["penalties_per_match"]
     if team_summary is not None:
         team_pen_rate = _shrink(
             team_summary["penalties_per_match"],
             team_summary["n_matches"],
-            LEAGUE_AVG["penalties_per_match"],
+            current_league_avg["penalties_per_match"],
             TEAM_SHRINK_MATCHES,
         )
 
@@ -725,7 +763,7 @@ def build_penalty_component(
     baseline_sample = share_sample
 
     penalty_share = _clamp(_shrink(penalty_share, share_sample, max(prior_share, 0.0), max(prior_sample, 0.0)), 0.0, 1.0)
-    penalty_lambda = team_pen_rate * penalty_share * LEAGUE_AVG["penalty_conversion"] * (expected_minutes / 90.0)
+    penalty_lambda = team_pen_rate * penalty_share * current_league_avg["penalty_conversion"] * (expected_minutes / 90.0)
     return penalty_lambda, penalty_share, {
         "baseline_share": baseline_share,
         "baseline_sample": baseline_sample,
@@ -1097,9 +1135,10 @@ def write_outputs(results: List[dict], stats: dict, out_dir: str) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Serie A goalscorer calibration model")
+    parser = argparse.ArgumentParser(description="Goalscorer calibration model")
     parser.add_argument("--data", nargs="+", required=True, help="CSV files or globs for player match logs")
     parser.add_argument("--out-dir", default="data/goalscorer")
+    parser.add_argument("--league", choices=sorted(LEAGUE_AVG_OVERRIDES), default="serie-a")
     args = parser.parse_args()
 
     print("\n" + "=" * 64)
@@ -1110,6 +1149,9 @@ def main() -> None:
     if not rows:
         print("  No rows loaded.")
         raise SystemExit(1)
+
+    observed_penalty_rate = infer_league_penalties_per_match(rows)
+    globals()["LEAGUE_AVG"] = league_avg_for(args.league, observed_penalty_rate)
 
     print(f"  Normalized rows: {len(rows):,}")
     results, stats = run_backtest(rows)

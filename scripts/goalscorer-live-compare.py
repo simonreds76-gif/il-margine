@@ -1377,6 +1377,8 @@ def main() -> None:
     build_player_propensity = model_mod["build_player_propensity"]
     build_team_expected_npxg = model_mod["build_team_expected_npxg"]
     build_penalty_component = model_mod["build_penalty_component"]
+    league_avg_for = model_mod["league_avg_for"]
+    infer_league_penalties_per_match = model_mod["infer_league_penalties_per_match"]
     prob_at_least_one = model_mod["prob_at_least_one"]
     shrink_func = model_mod["_shrink"]
     TEAM_SHRINK_MATCHES = model_mod["TEAM_SHRINK_MATCHES"]
@@ -1387,6 +1389,10 @@ def main() -> None:
     shadow_min_ev = args.shadow_min_ev
 
     historical_rows = load_match_logs(args.data)
+    observed_penalty_rate = infer_league_penalties_per_match(historical_rows)
+    model_mod["LEAGUE_AVG"].clear()
+    model_mod["LEAGUE_AVG"].update(league_avg_for(args.league, observed_penalty_rate))
+    globals()["LEAGUE_AVG"] = model_mod["LEAGUE_AVG"]
     odds_rows = load_odds_rows(args.odds, bookmaker_filter=args.bookmaker, league=args.league)
     if not args.all_captures:
         odds_rows = latest_rows_per_market(odds_rows)
@@ -1825,6 +1831,7 @@ def main() -> None:
                             evidence_share=evidence_share,
                             evidence_sample=evidence_sample,
                             evidence_source=evidence_source,
+                            league_avg=LEAGUE_AVG,
                         )
                         baseline_penalty_share = float(baseline_meta.get("baseline_share", 0.0) or 0.0)
                         baseline_penalty_sample = float(baseline_meta.get("baseline_sample", 0.0) or 0.0)
@@ -1842,10 +1849,8 @@ def main() -> None:
                             evidence_share=evidence_share,
                             evidence_sample=evidence_sample,
                             evidence_source=evidence_source,
+                            league_avg=LEAGUE_AVG,
                         )
-                        evidence_share = float(penalty_meta.get("evidence_share", evidence_share) or 0.0)
-                        evidence_sample = float(penalty_meta.get("evidence_sample", evidence_sample) or 0.0)
-                        evidence_source = str(penalty_meta.get("evidence_source") or evidence_source)
                         hierarchy_penalty_boost_xg = max(0.0, penalty_lambda - baseline_penalty_lambda)
                 computed_predictions[(candidate["player_id"], candidate["player_team_key"])] = {
                     "base_rate": base_rate,
@@ -1865,7 +1870,6 @@ def main() -> None:
                     "penalty_evidence_note": override_note if method == "model" else "",
                     "penalty_role": penalty_role,
                     "is_penalty_taker": int(penalty_role != "none"),
-                    "hierarchy_penalty_share_floor": hierarchy_share_prior,
                     "hierarchy_penalty_share_prior": hierarchy_share_prior,
                     "hierarchy_penalty_share_prior_weight": hierarchy_share_prior_weight,
                     "hierarchy_penalty_boost_xg": hierarchy_penalty_boost_xg,
@@ -2028,14 +2032,12 @@ def main() -> None:
                     "penalty_evidence_note": prediction["penalty_evidence_note"],
                     "is_penalty_taker": int(prediction["is_penalty_taker"]),
                     "penalty_role": prediction["penalty_role"],
-                    "penalty_share_floor": round(prediction["hierarchy_penalty_share_floor"], 4),
                     "penalty_share_prior": round(prediction["hierarchy_penalty_share_prior"], 4),
                     "penalty_share_prior_weight": round(prediction["hierarchy_penalty_share_prior_weight"], 2),
                     "penalty_hierarchy_boost_xg": round(prediction["hierarchy_penalty_boost_xg"], 4),
                     "penalty_transfer": int(penalty_transfer),
                     "penalty_transfer_from": team_penalty_event.get("inherited_from", "") if penalty_transfer else "",
                     "penalty_transfer_level": team_penalty_event.get("transfer_level", "") if penalty_transfer else "",
-                    "penalty_transfer_boost_xg": 0.07 if penalty_transfer else 0.0,
                     "lineup_state": candidate.get("lineup_state", "unknown"),
                     "lineup_status": lineup_status,
                     "lineup_source": lineup_source,

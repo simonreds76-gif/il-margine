@@ -169,6 +169,8 @@ def _build_editorial_note(
 
     if review_type == "primary_held":
         context_bits.append("No hierarchy change implied from this event.")
+    elif review_type == "primary_reclaimed_from_bench":
+        context_bits.append("Low-priority note: the benched primary later reclaimed the duty after coming on, so the hierarchy likely still stands.")
     elif review_type == "expected_backup_shift":
         context_bits.append("Looks like the expected backup took over because the primary was unavailable or inactive.")
     elif review_type == "backup_jump_with_primary_available":
@@ -200,6 +202,9 @@ def _classify_review_type(
     active_slot = (context.get("active_slot_pre_match") or "").strip().lower()
     if actual_role == "primary":
         if active_slot and active_slot != "primary":
+            primary_status = (context.get("primary_lineup_status") or "").strip()
+            if primary_status in {"confirmed_bench", "expected_bench"}:
+                return "primary_reclaimed_from_bench"
             return "needs_manual_review"
         if primary_available:
             return "primary_held"
