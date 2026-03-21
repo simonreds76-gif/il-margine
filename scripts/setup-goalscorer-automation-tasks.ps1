@@ -11,6 +11,13 @@ $healthScript = Join-Path $root "scripts\goalscorer-health-check.ps1"
 $settleScript = Join-Path $root "scripts\goalscorer-shadow-settle.ps1"
 $psExe = "$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe"
 
+$currentIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$currentPrincipal = New-Object Security.Principal.WindowsPrincipal($currentIdentity)
+$isElevated = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if (-not $isElevated) {
+    throw "Run this script from an elevated PowerShell window (Run as Administrator)."
+}
+
 if (!(Test-Path $liveScript)) { throw "Missing $liveScript" }
 if (!(Test-Path $healthScript)) { throw "Missing $healthScript" }
 if (!(Test-Path $settleScript)) { throw "Missing $settleScript" }
