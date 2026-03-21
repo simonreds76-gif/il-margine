@@ -736,6 +736,9 @@ function fixtureStatusLabel(fixture?: FixtureHealth): string {
   if (fixture.trust_tier === "T2" && fixture.lineup_input === "expected_xi" && corruptionScore <= 0) {
     return "Expected XI";
   }
+  if (fixture.trust_tier === "T2" && fixture.lineup_input === "none") {
+    return "Awaiting Lineup";
+  }
   return fixtureTrustLabel(fixture.trust_tier);
 }
 

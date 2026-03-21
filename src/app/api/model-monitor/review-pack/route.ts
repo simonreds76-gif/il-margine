@@ -18,6 +18,8 @@ const REVIEW_FILES = [
   "scripts/goalscorer_penalty_utils.py",
   "scripts/goalscorer-live-compare.py",
   "scripts/goalscorer-model.py",
+  "scripts/goalscorer-penalty-review.py",
+  "scripts/goalscorer-live-penalty-review.py",
   "scripts/run-goalscorer-pipeline.py",
   "scripts/build-penalty-baseline-evidence.py",
   "scripts/goalscorer-shadow-tracker.py",
