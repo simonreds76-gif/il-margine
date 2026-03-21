@@ -525,6 +525,8 @@ class PlayerHistory:
         weighted_shots = sum(match["shots"] * weight for match, weight in zip(recent, weights))
         weighted_player_pens = sum(match["penalties_attempted"] * weight for match, weight in zip(recent, weights))
         weighted_team_pens = sum(match["team_penalties_attempted"] * weight for match, weight in zip(recent, weights))
+        career_player_pens = float(sum(match["penalties_attempted"] for match in self.matches))
+        career_team_pens = float(sum(match["team_penalties_attempted"] for match in self.matches))
 
         return {
             "n_matches": len(recent),
@@ -540,6 +542,9 @@ class PlayerHistory:
             "player_pen_weighted": weighted_player_pens,
             "team_pen_weighted": weighted_team_pens,
             "penalty_share": (weighted_player_pens / weighted_team_pens) if weighted_team_pens > 0 else 0.0,
+            "career_player_penalties": career_player_pens,
+            "career_team_penalties": career_team_pens,
+            "career_penalty_share": (career_player_pens / career_team_pens) if career_team_pens > 0 else 0.0,
         }
 
 
@@ -666,7 +671,12 @@ def build_penalty_component(
     player_long: Optional[dict],
     team_summary: Optional[dict],
     expected_minutes: float,
-) -> tuple[float, float]:
+    prior_share: float = 0.0,
+    prior_sample: float = 1.5,
+    evidence_share: float = 0.0,
+    evidence_sample: float = 0.0,
+    evidence_source: str = "",
+) -> tuple[float, float, dict]:
     team_pen_rate = LEAGUE_AVG["penalties_per_match"]
     if team_summary is not None:
         team_pen_rate = _shrink(
@@ -678,13 +688,55 @@ def build_penalty_component(
 
     penalty_share = player_recent["penalty_share"]
     share_sample = player_recent["team_pen_weighted"]
+    baseline_source = "recent" if share_sample > 0 else "none"
+    career_player_pens = float(player_recent.get("career_player_penalties", 0.0) or 0.0)
+    career_team_pens = float(player_recent.get("career_team_penalties", 0.0) or 0.0)
+    career_penalty_share = float(player_recent.get("career_penalty_share", 0.0) or 0.0)
     if player_long is not None and player_long["team_pen_weighted"] > 0:
         penalty_share = (RECENT_BLEND * penalty_share) + ((1.0 - RECENT_BLEND) * player_long["penalty_share"])
         share_sample = max(share_sample, player_long["team_pen_weighted"])
+        baseline_source = "recent_long"
+        career_player_pens = max(career_player_pens, float(player_long.get("career_player_penalties", 0.0) or 0.0))
+        career_team_pens = max(career_team_pens, float(player_long.get("career_team_penalties", 0.0) or 0.0))
+        career_penalty_share = max(career_penalty_share, float(player_long.get("career_penalty_share", 0.0) or 0.0))
 
-    penalty_share = _clamp(_shrink(penalty_share, share_sample, 0.0, 1.5), 0.0, 1.0)
+    if share_sample <= 0 and career_player_pens > 0 and career_team_pens > 0:
+        penalty_share = career_penalty_share
+        share_sample = min(career_team_pens, 6.0)
+        baseline_source = "career"
+
+    applied_evidence_share = max(float(evidence_share or 0.0), 0.0)
+    applied_evidence_sample = max(float(evidence_sample or 0.0), 0.0)
+    applied_evidence_source = str(evidence_source or "").strip()
+    if applied_evidence_sample > 0:
+        if share_sample > 0:
+            combined_sample = share_sample + applied_evidence_sample
+            penalty_share = (
+                (penalty_share * share_sample) + (applied_evidence_share * applied_evidence_sample)
+            ) / combined_sample
+            share_sample = combined_sample
+            baseline_source = f"{baseline_source}+{applied_evidence_source or 'evidence'}"
+        else:
+            penalty_share = applied_evidence_share
+            share_sample = applied_evidence_sample
+            baseline_source = applied_evidence_source or "evidence"
+
+    baseline_share = penalty_share
+    baseline_sample = share_sample
+
+    penalty_share = _clamp(_shrink(penalty_share, share_sample, max(prior_share, 0.0), max(prior_sample, 0.0)), 0.0, 1.0)
     penalty_lambda = team_pen_rate * penalty_share * LEAGUE_AVG["penalty_conversion"] * (expected_minutes / 90.0)
-    return penalty_lambda, penalty_share
+    return penalty_lambda, penalty_share, {
+        "baseline_share": baseline_share,
+        "baseline_sample": baseline_sample,
+        "baseline_source": baseline_source,
+        "career_player_penalties": career_player_pens,
+        "career_team_penalties": career_team_pens,
+        "career_penalty_share": career_penalty_share,
+        "evidence_share": applied_evidence_share,
+        "evidence_sample": applied_evidence_sample,
+        "evidence_source": applied_evidence_source,
+    }
 
 
 def prob_at_least_one(lam: float) -> float:
@@ -840,8 +892,16 @@ def run_backtest(rows: List[NormalizedRow]) -> tuple[List[dict], dict]:
                 )
                 penalty_lambda = 0.0
                 penalty_share = 0.0
+                penalty_meta = {
+                    "baseline_share": 0.0,
+                    "baseline_sample": 0.0,
+                    "baseline_source": "none",
+                    "career_player_penalties": 0.0,
+                    "career_team_penalties": 0.0,
+                    "career_penalty_share": 0.0,
+                }
                 if method == "model":
-                    penalty_lambda, penalty_share = build_penalty_component(
+                    penalty_lambda, penalty_share, penalty_meta = build_penalty_component(
                         player_recent,
                         player_long,
                         team_summary,
@@ -856,6 +916,7 @@ def run_backtest(rows: List[NormalizedRow]) -> tuple[List[dict], dict]:
                         "method": method,
                         "penalty_lambda": penalty_lambda,
                         "penalty_share": penalty_share,
+                        "penalty_meta": penalty_meta,
                     }
                 )
                 raw_share_total += raw_share

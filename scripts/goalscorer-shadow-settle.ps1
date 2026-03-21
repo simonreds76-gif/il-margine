@@ -11,7 +11,7 @@ New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
 $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 $logFile = Join-Path $dataDir "goalscorer-live.log"
 $leagues = if ([string]::IsNullOrWhiteSpace($env:GOALSCORER_LEAGUES)) {
-    @("serie-a", "epl", "la-liga", "bundesliga")
+    @("serie-a", "epl", "la-liga", "bundesliga", "ligue-1")
 } else {
     $env:GOALSCORER_LEAGUES.Split(",") | ForEach-Object { $_.Trim() } | Where-Object { $_ }
 }
@@ -21,6 +21,7 @@ $dataGlobs = @{
     "epl" = "data\goalscorer\epl-player-match-logs-*.csv"
     "la-liga" = "data\goalscorer\la-liga-player-match-logs-*.csv"
     "bundesliga" = "data\goalscorer\bundesliga-player-match-logs-*.csv"
+    "ligue-1" = "data\goalscorer\ligue-1-player-match-logs-*.csv"
 }
 
 $shadowOutputs = @{
@@ -28,6 +29,7 @@ $shadowOutputs = @{
     "epl" = "data\goalscorer\epl-shadow-signals.csv"
     "la-liga" = "data\goalscorer\la-liga-shadow-signals.csv"
     "bundesliga" = "data\goalscorer\bundesliga-shadow-signals.csv"
+    "ligue-1" = "data\goalscorer\ligue-1-shadow-signals.csv"
 }
 
 $shadowSummaries = @{
@@ -35,6 +37,47 @@ $shadowSummaries = @{
     "epl" = "data\goalscorer\epl-shadow-performance.txt"
     "la-liga" = "data\goalscorer\la-liga-shadow-performance.txt"
     "bundesliga" = "data\goalscorer\bundesliga-shadow-performance.txt"
+    "ligue-1" = "data\goalscorer\ligue-1-shadow-performance.txt"
+}
+
+$penaltyContextCurrent = @{
+    "serie-a" = "data\goalscorer\penalty-duty-context.json"
+    "epl" = "data\goalscorer\epl\penalty-duty-context.json"
+    "la-liga" = "data\goalscorer\la-liga\penalty-duty-context.json"
+    "bundesliga" = "data\goalscorer\bundesliga\penalty-duty-context.json"
+    "ligue-1" = "data\goalscorer\ligue-1\penalty-duty-context.json"
+}
+
+$penaltyContextHistory = @{
+    "serie-a" = "data\goalscorer\live-history\penalty-duty-context-*.json"
+    "epl" = "data\goalscorer\epl\live-history\penalty-duty-context-*.json"
+    "la-liga" = "data\goalscorer\la-liga\live-history\penalty-duty-context-*.json"
+    "bundesliga" = "data\goalscorer\bundesliga\live-history\penalty-duty-context-*.json"
+    "ligue-1" = "data\goalscorer\ligue-1\live-history\penalty-duty-context-*.json"
+}
+
+$penaltyReviewOutputs = @{
+    "serie-a" = "data\goalscorer\penalty-duty-review.csv"
+    "epl" = "data\goalscorer\epl-penalty-duty-review.csv"
+    "la-liga" = "data\goalscorer\la-liga-penalty-duty-review.csv"
+    "bundesliga" = "data\goalscorer\bundesliga-penalty-duty-review.csv"
+    "ligue-1" = "data\goalscorer\ligue-1-penalty-duty-review.csv"
+}
+
+$penaltyReviewJsonOutputs = @{
+    "serie-a" = "data\goalscorer\penalty-duty-review.json"
+    "epl" = "data\goalscorer\epl-penalty-duty-review.json"
+    "la-liga" = "data\goalscorer\la-liga-penalty-duty-review.json"
+    "bundesliga" = "data\goalscorer\bundesliga-penalty-duty-review.json"
+    "ligue-1" = "data\goalscorer\ligue-1-penalty-duty-review.json"
+}
+
+$requiredPlayerLogs = @{
+    "serie-a" = "data\goalscorer\serie-a-player-match-logs-2025-2026.csv"
+    "epl" = "data\goalscorer\epl-player-match-logs-2025-2026.csv"
+    "la-liga" = "data\goalscorer\la-liga-player-match-logs-2025-2026.csv"
+    "bundesliga" = "data\goalscorer\bundesliga-player-match-logs-2025-2026.csv"
+    "ligue-1" = "data\goalscorer\ligue-1-player-match-logs-2025-2026.csv"
 }
 
 function Log($msg) {
@@ -43,17 +86,41 @@ function Log($msg) {
     Add-Content -Path $logFile -Value $line
 }
 
+function Resolve-PythonExe {
+    $cmd = Get-Command python -ErrorAction SilentlyContinue
+    if ($cmd -and $cmd.Source) {
+        return $cmd.Source
+    }
+
+    $fallbacks = @(
+        "C:\Python314\python.exe",
+        "C:\Python313\python.exe",
+        "C:\Python312\python.exe",
+        "C:\Python311\python.exe"
+    )
+
+    foreach ($candidate in $fallbacks) {
+        if (Test-Path $candidate) {
+            return $candidate
+        }
+    }
+
+    throw "Python executable not found for goalscorer shadow settlement."
+}
+
 $today = Get-Date
 $startYear = if ($today.Month -ge 7) { $today.Year } else { $today.Year - 1 }
 $seasonLabel = "{0}-{1}" -f $startYear, ($startYear + 1)
+$pythonExe = Resolve-PythonExe
 
 Log "============================================"
 Log "  Goalscorer shadow settlement started at $timestamp"
 Log "============================================"
+Log "Python executable: $pythonExe"
 Log "Current season refresh: $seasonLabel"
 Log "Leagues:               $($leagues -join ', ')"
 
-& python scripts\understat-scrape-serie-a.py --league $leagues --season $seasonLabel --resume 2>&1 | ForEach-Object { Log $_ }
+& $pythonExe scripts\understat-scrape-serie-a.py --league $leagues --season $seasonLabel --resume 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "ERROR: Understat refresh failed (exit $LASTEXITCODE)"
     exit 1
@@ -61,13 +128,39 @@ if ($LASTEXITCODE -ne 0) {
 
 foreach ($league in $leagues) {
     Log "---- Settle league: $league ----"
-    & python scripts\goalscorer-shadow-tracker.py `
+    $requiredLog = $requiredPlayerLogs[$league]
+    if (-not [string]::IsNullOrWhiteSpace($requiredLog) -and -not (Test-Path $requiredLog)) {
+        Log "SKIP: current player log missing for $league ($requiredLog)"
+        continue
+    }
+    & $pythonExe scripts\goalscorer-shadow-tracker.py `
         --settle-only `
         --output $shadowOutputs[$league] `
         --summary $shadowSummaries[$league] `
         --data $dataGlobs[$league] 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "ERROR: shadow settlement failed for $league (exit $LASTEXITCODE)"
+        exit 1
+    }
+
+    $contextArgs = @(
+        $penaltyContextCurrent[$league],
+        $penaltyContextHistory[$league]
+    )
+    & $pythonExe scripts\goalscorer-penalty-review.py `
+        --context $contextArgs `
+        --data $dataGlobs[$league] `
+        --days-back 21 `
+        --output $penaltyReviewOutputs[$league] `
+        --json-output $penaltyReviewJsonOutputs[$league] 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "ERROR: penalty-duty review failed for $league (exit $LASTEXITCODE)"
+        exit 1
+    }
+
+    & $pythonExe scripts\build-penalty-baseline-evidence.py --league $league 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "ERROR: penalty baseline evidence build failed for $league (exit $LASTEXITCODE)"
         exit 1
     }
 }

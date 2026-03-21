@@ -20,9 +20,11 @@ from __future__ import annotations
 
 import argparse
 import glob
+import json
 import os
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, List
 
@@ -40,6 +42,8 @@ LEAGUE_CONFIGS = {
         "label": "Serie A",
         "data_glob": DEFAULT_DATA_GLOB,
         "penalty_hierarchy": DEFAULT_PENALTY_HIERARCHY,
+        "penalty_baseline_evidence": "data/goalscorer/penalty-baseline-evidence.json",
+        "penalty_baseline_overrides": "data/goalscorer/penalty-baseline-overrides.json",
         "lineups": DEFAULT_CONFIRMED_LINEUPS,
         "player_log": "data/goalscorer/serie-a-player-match-logs-2025-2026.csv",
         "league_id": 55,
@@ -51,6 +55,8 @@ LEAGUE_CONFIGS = {
         "label": "Premier League",
         "data_glob": "data/goalscorer/epl-player-match-logs-*.csv",
         "penalty_hierarchy": "data/goalscorer/epl-penalty-takers.json",
+        "penalty_baseline_evidence": "data/goalscorer/epl-penalty-baseline-evidence.json",
+        "penalty_baseline_overrides": "data/goalscorer/epl-penalty-baseline-overrides.json",
         "lineups": "data/goalscorer/epl-confirmed-lineups.json",
         "player_log": "data/goalscorer/epl-player-match-logs-2025-2026.csv",
         "league_id": 47,
@@ -62,6 +68,8 @@ LEAGUE_CONFIGS = {
         "label": "La Liga",
         "data_glob": "data/goalscorer/la-liga-player-match-logs-*.csv",
         "penalty_hierarchy": "data/goalscorer/la-liga-penalty-takers.json",
+        "penalty_baseline_evidence": "data/goalscorer/la-liga-penalty-baseline-evidence.json",
+        "penalty_baseline_overrides": "data/goalscorer/la-liga-penalty-baseline-overrides.json",
         "lineups": "data/goalscorer/la-liga-confirmed-lineups.json",
         "player_log": "data/goalscorer/la-liga-player-match-logs-2025-2026.csv",
         "league_id": 87,
@@ -73,6 +81,8 @@ LEAGUE_CONFIGS = {
         "label": "Bundesliga",
         "data_glob": "data/goalscorer/bundesliga-player-match-logs-*.csv",
         "penalty_hierarchy": "data/goalscorer/bundesliga-penalty-takers.json",
+        "penalty_baseline_evidence": "data/goalscorer/bundesliga-penalty-baseline-evidence.json",
+        "penalty_baseline_overrides": "data/goalscorer/bundesliga-penalty-baseline-overrides.json",
         "lineups": "data/goalscorer/bundesliga-confirmed-lineups.json",
         "player_log": "data/goalscorer/bundesliga-player-match-logs-2025-2026.csv",
         "league_id": 54,
@@ -84,6 +94,8 @@ LEAGUE_CONFIGS = {
         "label": "Ligue 1",
         "data_glob": "data/goalscorer/ligue-1-player-match-logs-*.csv",
         "penalty_hierarchy": "data/goalscorer/ligue-1-penalty-takers.json",
+        "penalty_baseline_evidence": "data/goalscorer/ligue-1-penalty-baseline-evidence.json",
+        "penalty_baseline_overrides": "data/goalscorer/ligue-1-penalty-baseline-overrides.json",
         "lineups": "data/goalscorer/ligue-1-confirmed-lineups.json",
         "player_log": "data/goalscorer/ligue-1-player-match-logs-2025-2026.csv",
         "league_id": 53,
@@ -107,6 +119,50 @@ def _expand_paths(paths: Iterable[str]) -> List[str]:
 def _run(cmd: List[str]) -> None:
     print("  >", " ".join(cmd))
     subprocess.run(cmd, check=True, cwd=ROOT)
+
+
+def _write_merged_live_board() -> None:
+    merged_rows = []
+    leagues = []
+    generated_at = ""
+
+    for league_key, config in LEAGUE_CONFIGS.items():
+        board_path = ROOT / config["live_out_dir"] / "live-board.json"
+        if not board_path.exists():
+            continue
+
+        payload = json.loads(board_path.read_text(encoding="utf-8"))
+        rows = payload.get("rows", [])
+        if not isinstance(rows, list):
+            rows = []
+        merged_rows.extend(rows)
+
+        league_generated_at = str(payload.get("generated_at") or "")
+        if league_generated_at and league_generated_at > generated_at:
+            generated_at = league_generated_at
+
+        leagues.append(
+            {
+                "league": league_key,
+                "label": config["label"],
+                "path": str(board_path.relative_to(ROOT)).replace("\\", "/"),
+                "row_count": len(rows),
+                "generated_at": league_generated_at,
+            }
+        )
+
+    output_path = ROOT / "data" / "goalscorer" / "all-leagues-live-board.json"
+    payload = {
+        "schema_version": 1,
+        "generated_at": generated_at
+        or datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "league_count": len(leagues),
+        "row_count": len(merged_rows),
+        "leagues": leagues,
+        "rows": merged_rows,
+    }
+    output_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"  Saved: {output_path}")
 
 
 def main() -> None:
@@ -140,6 +196,8 @@ def main() -> None:
     parser.add_argument("--skip-compare", action="store_true", help="Skip goalscorer-compare-odds.py")
     parser.add_argument("--lineups", default="", help="Optional confirmed-lineup JSON for live penalty-transfer detection")
     parser.add_argument("--penalty-hierarchy", default="", help="Penalty taker hierarchy JSON")
+    parser.add_argument("--penalty-baseline-evidence", default="", help="Penalty baseline evidence JSON")
+    parser.add_argument("--penalty-baseline-overrides", default="", help="Manual penalty baseline overrides JSON")
     parser.add_argument("--track-shadow", action="store_true", help="Append/settle private stacked-signal shadow picks after live compare")
     parser.add_argument("--settle-shadow", action="store_true", help="Run shadow-settlement/summary only")
     parser.add_argument("--shadow-output", default="", help="Shadow signals CSV path")
@@ -249,7 +307,14 @@ def main() -> None:
             penalty_hierarchy = args.penalty_hierarchy or str(ROOT / league_config["penalty_hierarchy"])
             if penalty_hierarchy:
                 live_cmd.extend(["--penalty-hierarchy", penalty_hierarchy])
+            penalty_baseline_evidence = args.penalty_baseline_evidence or str(ROOT / league_config["penalty_baseline_evidence"])
+            if penalty_baseline_evidence:
+                live_cmd.extend(["--penalty-baseline-evidence", penalty_baseline_evidence])
+            penalty_baseline_overrides = args.penalty_baseline_overrides or str(ROOT / league_config["penalty_baseline_overrides"])
+            if penalty_baseline_overrides:
+                live_cmd.extend(["--penalty-baseline-overrides", penalty_baseline_overrides])
             _run(live_cmd)
+            _write_merged_live_board()
 
             if args.track_shadow or args.settle_shadow:
                 shadow_output = args.shadow_output or league_config["shadow_signals"]

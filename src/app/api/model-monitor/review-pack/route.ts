@@ -14,9 +14,13 @@ const REVIEW_PACK_TOKEN =
   "";
 
 const REVIEW_FILES = [
+  "scripts/fotmob-fetch-lineups.py",
   "scripts/goalscorer_penalty_utils.py",
   "scripts/goalscorer-live-compare.py",
   "scripts/goalscorer-model.py",
+  "scripts/run-goalscorer-pipeline.py",
+  "scripts/build-penalty-baseline-evidence.py",
+  "scripts/goalscorer-shadow-tracker.py",
   "src/lib/goalscorer-live-files.ts",
   "src/app/model-monitor/goalscorer/page.tsx",
 ] as const;

@@ -145,3 +145,19 @@ def penalty_transfer_info(
         "inherited_from": "",
         "transfer_level": "",
     }
+
+
+def penalty_role_for_player(
+    hierarchy: Optional[dict],
+    player_name: str,
+) -> str:
+    if not hierarchy or not player_name:
+        return "none"
+
+    for slot in HIERARCHY_SLOTS:
+        slot_name = hierarchy.get(slot, "")
+        if not slot_name:
+            continue
+        if best_name_match(player_name, [slot_name]) is not None:
+            return slot
+    return "none"

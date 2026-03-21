@@ -730,6 +730,15 @@ function fixtureTrustLabel(trustTier?: string): string {
   return "Lineup Clean";
 }
 
+function fixtureStatusLabel(fixture?: FixtureHealth): string {
+  if (!fixture) return fixtureTrustLabel();
+  const corruptionScore = parseFloatMaybe(fixture.corruption_score) ?? 0;
+  if (fixture.trust_tier === "T2" && fixture.lineup_input === "expected_xi" && corruptionScore <= 0) {
+    return "Expected XI";
+  }
+  return fixtureTrustLabel(fixture.trust_tier);
+}
+
 function fixtureHealthSummary(fixture: FixtureHealth): string {
   if (fixture.trust_tier === "T3") {
     return "Structural lineup issue detected. Keep this fixture out of trust-sensitive decisions until the feed is sane again.";
@@ -1155,6 +1164,9 @@ function penaltyComponentMeta(row?: CsvRow): { compact: string; detail: string }
   const nonPenLambda = parseFloatMaybe(row.non_pen_lambda) ?? 0;
 
   if (role === "none" && penaltyLambda <= 0.0001 && baselinePenaltyShare <= 0.0001 && penaltyPrior <= 0.0001) {
+    return null;
+  }
+  if (penaltyShare <= 0.01 && penaltyLambda <= 0.001) {
     return null;
   }
   if ((role === "tertiary" || role === "none") && penaltyShare < 0.08 && penaltyLambda < 0.005) {
@@ -1701,7 +1713,7 @@ export default async function GoalscorerMonitorPage() {
                 <span className={snapshotFreshness.className}>({snapshotFreshness.label})</span>
               </div>
               <div>
-                <span className="text-slate-500">Fixture health:</span>{" "}
+                <span className="text-slate-500">Fixture health (live window):</span>{" "}
                 <span className="text-emerald-300">{cleanFixtures} clean</span> |{" "}
                 <span className="text-amber-300">{degradedFixtures} degraded</span> |{" "}
                 <span className="text-rose-300">{quarantinedFixtures} quarantined</span>
@@ -1924,7 +1936,7 @@ export default async function GoalscorerMonitorPage() {
                 this section is the real historical record for eventual public picks, not the whole comparison board.
               </p>
               <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/60 p-3 text-sm text-slate-300">
-                Win rate {formatPct(shadowSummary.winRate, 1)} | voids are typically zero because bench and not-in-squad rows are filtered before logging.
+                Win rate {formatPct(shadowSummary.winRate, 1)} | ROI sample {shadowSummary.settled} settled picks, so treat the headline ROI as directional only until the book is much larger.
               </div>
             </div>
 
@@ -1993,7 +2005,7 @@ export default async function GoalscorerMonitorPage() {
                       </div>
                     </div>
                     <div className={`rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${fixtureTrustBadgeClass(fixture.trust_tier)}`}>
-                      {fixtureTrustLabel(fixture.trust_tier)}
+                      {fixtureStatusLabel(fixture)}
                     </div>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -2065,6 +2077,9 @@ export default async function GoalscorerMonitorPage() {
                   );
                   const isQuarantined = fixtureHealth?.trust_tier === "T3";
                   const isDegraded = fixtureHealth?.trust_tier === "T2";
+                  const hasHomeLineup = (lineup?.homePlayers?.length ?? 0) > 0;
+                  const hasAwayLineup = (lineup?.awayPlayers?.length ?? 0) > 0;
+                  const hasAnyLineup = hasHomeLineup || hasAwayLineup;
                   return (
                     <>
                       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -2078,7 +2093,7 @@ export default async function GoalscorerMonitorPage() {
                         <div className="flex flex-wrap items-center gap-2">
                           {fixtureHealth ? (
                             <div className={`rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] ${fixtureTrustBadgeClass(fixtureHealth.trust_tier)}`}>
-                              {fixtureTrustLabel(fixtureHealth.trust_tier)}
+                              {fixtureStatusLabel(fixtureHealth)}
                             </div>
                           ) : null}
                           <div className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs text-slate-300">
@@ -2109,6 +2124,12 @@ export default async function GoalscorerMonitorPage() {
                       {isQuarantined ? (
                         <div className="rounded-xl border border-dashed border-rose-500/25 bg-rose-500/5 p-4 text-sm text-rose-100">
                           Player-level output is still stored for audit, but this fixture should not be trusted for public or shadow decisions until the lineup payload is sane again.
+                        </div>
+                      ) : !hasAnyLineup ? (
+                        <div className="rounded-xl border border-dashed border-slate-800/80 bg-slate-950/20 p-4 text-sm text-slate-400">
+                          No FotMob lineup has landed for this fixture yet. The monitor still has{" "}
+                          <span className="font-medium text-slate-200">{fixture.homeRows.length + fixture.awayRows.length}</span> matched player prices,
+                          but the lineup view stays collapsed until a real expected or confirmed XI arrives.
                         </div>
                       ) : (
                         <div className="grid gap-5 xl:grid-cols-2">

@@ -220,11 +220,6 @@ def resolve_best_price(signal_row: dict, archive_lookup: Dict[tuple[str, str, st
 
 
 def qualify_signal(row: dict, best_price: dict) -> tuple[bool, str]:
-    if (row.get("signal_confidence") or "").strip().lower() != REQUIRED_CONFIDENCE:
-        return False, ""
-    if (row.get("lineup_state") or "").strip().lower() != REQUIRED_LINEUP_STATE:
-        return False, ""
-
     position_group = (row.get("position_group") or "").strip()
     finishing_luck = _parse_float(row.get("finishing_luck_8"))
     fixture_swing = _parse_float(row.get("fixture_swing_3"))
@@ -242,6 +237,26 @@ def qualify_signal(row: dict, best_price: dict) -> tuple[bool, str]:
         and best_ev >= STACKED_MIN_BEST_EV
     )
     transfer = penalty_transfer and best_ev >= TRANSFER_MIN_BEST_EV
+
+    if stacked and transfer:
+        derived_signal_type = "both"
+    elif stacked:
+        derived_signal_type = "stacked"
+    elif transfer:
+        derived_signal_type = "penalty_transfer"
+    else:
+        derived_signal_type = "shadow_track"
+
+    shadow_action = (row.get("shadow_action") or "").strip().lower()
+    if shadow_action:
+        if shadow_action != "shadow_track":
+            return False, ""
+        return True, derived_signal_type
+
+    if (row.get("signal_confidence") or "").strip().lower() != REQUIRED_CONFIDENCE:
+        return False, ""
+    if (row.get("lineup_state") or "").strip().lower() != REQUIRED_LINEUP_STATE:
+        return False, ""
 
     if stacked and transfer:
         return True, "both"

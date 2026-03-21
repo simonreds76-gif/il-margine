@@ -29,9 +29,6 @@ from zoneinfo import ZoneInfo
 
 import requests
 
-from goalscorer_penalty_utils import best_name_match
-
-
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = ROOT / "data" / "goalscorer" / "confirmed-lineups.json"
 DEFAULT_PLAYER_LOG = ROOT / "data" / "goalscorer" / "serie-a-player-match-logs-2025-2026.csv"
@@ -119,9 +116,7 @@ def _extract_next_payload(html_text: str) -> dict:
 
 
 def _resolve_player_name(raw_name: str, team_name: str, roster_by_team: Dict[str, List[str]], team_key_func) -> str:
-    team_candidates = roster_by_team.get(team_key_func(team_name), [])
-    matched_name = best_name_match(raw_name, team_candidates)
-    return matched_name or raw_name
+    return str(raw_name or "").strip()
 
 
 def _resolve_player_names(players: List[dict], team_name: str, roster_by_team: Dict[str, List[str]], team_key_func) -> List[str]:

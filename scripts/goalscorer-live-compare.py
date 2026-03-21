@@ -28,6 +28,7 @@ import requests
 from goalscorer_penalty_utils import (
     best_name_match,
     load_penalty_hierarchy,
+    penalty_role_for_player,
     penalty_transfer_info,
     player_match_score as shared_player_match_score,
 )
@@ -38,6 +39,8 @@ DEFAULT_DATA = ["data/goalscorer/serie-a-player-match-logs-*.csv"]
 DEFAULT_ODDS = "data/goalscorer/goalscorer-odds-history.csv"
 DEFAULT_OUT_DIR = "data/goalscorer"
 DEFAULT_PENALTY_HIERARCHY = "data/goalscorer/serie-a-penalty-takers.json"
+DEFAULT_PENALTY_BASELINE_EVIDENCE = "data/goalscorer/penalty-baseline-evidence.json"
+DEFAULT_PENALTY_BASELINE_OVERRIDES = "data/goalscorer/penalty-baseline-overrides.json"
 UNDERSTAT_LEAGUE_URL = "https://understat.com/getLeagueData/{league_slug}/{season_start}"
 UNDERSTAT_LEAGUE_SLUGS = {
     "serie-a": "Serie_A",
@@ -67,9 +70,13 @@ PUBLIC_ATTACKING_POSITIONS = {"FW", "FWR", "FWL", "AMC", "AMR", "AML"}
 PUBLIC_MIDFIELD_EXCEPTIONS = {"MC", "ML", "MR", "DMC"}
 PUBLIC_MAX_FAIR_ODDS = 10.0
 PUBLIC_EXCEPTION_MAX_FAIR_ODDS = 14.0
-PUBLIC_MIN_EXPECTED_MINUTES = 65.0
+PUBLIC_MIN_EXPECTED_MINUTES = 70.0
 PUBLIC_MIN_NPXG90_ATTACK = 0.12
 PUBLIC_MIN_NPXG90_EXCEPTION = 0.20
+PUBLIC_SURFACE_MIN_EV = 0.08
+SHADOW_TRACK_MIN_EV = 0.05
+SHADOW_MAX_FAIR_ODDS = 20.0
+SHADOW_MIN_EXPECTED_MINUTES = 60.0
 
 POSITION_SCORES = {
     "GK": 0,
@@ -104,6 +111,10 @@ LEAGUE_AVG = {
     "team_xga_per_match": 1.30,
     "penalty_conversion": 0.77,
 }
+
+TRUST_TIER_CONFIRMED = "T1"
+TRUST_TIER_PROVISIONAL = "T2"
+TRUST_TIER_QUARANTINED = "T3"
 
 
 def _norm_text(value: str) -> str:
@@ -454,6 +465,12 @@ def _write_csv(path: str, rows: List[dict]) -> None:
             writer.writerow(["no_rows"])
 
 
+def _write_json(path: str, payload: dict) -> None:
+    with open(path, "w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2, ensure_ascii=False)
+        handle.write("\n")
+
+
 def _coerce_lineup_names(values) -> List[str]:
     if not isinstance(values, list):
         return []
@@ -564,6 +581,109 @@ def load_confirmed_lineup_map(path: str, team_key_func) -> Dict[tuple[str, str, 
     return loaded
 
 
+def load_penalty_baseline_evidence(path: str, team_key_func) -> Dict[str, Dict[str, dict]]:
+    if not path or not os.path.exists(path):
+        return {}
+
+    with open(path, "r", encoding="utf-8") as handle:
+        payload = json.load(handle)
+
+    rows = payload.get("rows", []) if isinstance(payload, dict) else []
+    loaded: Dict[str, Dict[str, dict]] = defaultdict(dict)
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        team = str(row.get("team") or "").strip()
+        player_name = str(row.get("player_name") or "").strip()
+        if not team or not player_name:
+            continue
+        team_key = str(row.get("team_key") or team_key_func(team)).strip()
+        player_key = str(row.get("player_key") or _norm_text(player_name)).strip()
+        if not team_key or not player_key:
+            continue
+        loaded[team_key][player_key] = {
+            "share": float(row.get("observed_share") or 0.0),
+            "sample": float(row.get("observed_sample") or 0.0),
+            "source": str(row.get("evidence_source") or "review_events").strip(),
+            "event_count": int(row.get("event_count") or 0),
+            "player_penalties": float(row.get("observed_player_penalties") or 0.0),
+            "team_penalties": float(row.get("observed_team_penalties") or 0.0),
+        }
+    return loaded
+
+
+def load_penalty_baseline_overrides(path: str, team_key_func) -> Dict[str, List[dict]]:
+    if not path or not os.path.exists(path):
+        return {}
+
+    with open(path, "r", encoding="utf-8") as handle:
+        payload = json.load(handle)
+
+    loaded: Dict[str, List[dict]] = defaultdict(list)
+    teams_payload = payload.get("teams", payload) if isinstance(payload, dict) else {}
+    for raw_team, entries in teams_payload.items():
+        team_key = team_key_func(str(raw_team or "").strip())
+        if not team_key:
+            continue
+        if isinstance(entries, dict):
+            entries = [entries]
+        if not isinstance(entries, list):
+            continue
+        for entry in entries:
+            if not isinstance(entry, dict):
+                continue
+            player_name = str(entry.get("player_name") or entry.get("player") or "").strip()
+            if not player_name:
+                continue
+            loaded[team_key].append(
+                {
+                    "player_name": player_name,
+                    "player_key": _norm_text(player_name),
+                    "share": float(entry.get("observed_share") or entry.get("share") or 0.0),
+                    "sample": float(entry.get("observed_sample") or entry.get("sample") or 0.0),
+                    "source": str(entry.get("source") or "manual_override").strip(),
+                    "note": str(entry.get("note") or "").strip(),
+                    "when_role": str(entry.get("when_role") or "").strip().lower(),
+                    "when_active_slot": str(entry.get("when_active_slot") or "").strip().lower(),
+                    "when_lineup_state": str(entry.get("when_lineup_state") or "").strip().lower(),
+                }
+            )
+    return loaded
+
+
+def _select_penalty_baseline_override(
+    overrides_by_team: Dict[str, List[dict]],
+    *,
+    team_key: str,
+    player_name: str,
+    penalty_role: str,
+    active_slot: str,
+    lineup_state: str,
+) -> dict:
+    entries = overrides_by_team.get(team_key, [])
+    if not entries:
+        return {}
+
+    matched_name = best_name_match(player_name, [entry.get("player_name", "") for entry in entries])
+    if not matched_name:
+        return {}
+
+    for entry in entries:
+        if entry.get("player_name") != matched_name:
+            continue
+        when_role = str(entry.get("when_role") or "").strip().lower()
+        when_active_slot = str(entry.get("when_active_slot") or "").strip().lower()
+        when_lineup_state = str(entry.get("when_lineup_state") or "").strip().lower()
+        if when_role and when_role != (penalty_role or "").strip().lower():
+            continue
+        if when_active_slot and when_active_slot != (active_slot or "").strip().lower():
+            continue
+        if when_lineup_state and when_lineup_state != (lineup_state or "").strip().lower():
+            continue
+        return entry
+    return {}
+
+
 def _lineup_match_name(player_name: str, names: List[str]) -> str:
     return best_name_match(player_name, names) or ""
 
@@ -588,6 +708,254 @@ def _lineup_input_label(fixture_lineup: dict | None) -> str:
     return "none"
 
 
+def _canonical_lineup_source(fixture_lineup: dict | None) -> str:
+    if _is_confirmed_lineup(fixture_lineup):
+        return "fotmob_confirmed"
+    if _is_expected_lineup(fixture_lineup):
+        return "fotmob_expected"
+    return "none"
+
+
+def _canonical_lineup_status(lineup_state: str) -> str:
+    mapping = {
+        "starter": "confirmed_starter",
+        "bench": "confirmed_bench",
+        "expected_starter": "expected_starter",
+        "expected_bench": "expected_bench",
+        "not_in_squad": "not_in_squad",
+        "expected_out": "expected_out",
+        "unknown": "unknown",
+    }
+    return mapping.get((lineup_state or "").strip().lower(), "unknown")
+
+
+def _known_team_keys_for_player(
+    player_name: str,
+    latest_player_meta: Dict[str, dict],
+    roster_by_player_key: Dict[str, List[dict]],
+) -> set[str]:
+    player_key = _norm_text(player_name)
+    if not player_key:
+        return set()
+
+    team_keys: set[str] = set()
+    exact = latest_player_meta.get(player_key)
+    if exact is not None:
+        exact_team_key = str(exact.get("team_key") or "").strip()
+        if exact_team_key:
+            team_keys.add(exact_team_key)
+        for team_key in exact.get("team_keys", []) or []:
+            if team_key:
+                team_keys.add(str(team_key).strip())
+
+    for entry in roster_by_player_key.get(player_key, []):
+        team_key = str(entry.get("team_key") or "").strip()
+        if team_key:
+            team_keys.add(team_key)
+        for extra_team_key in entry.get("team_keys", []) or []:
+            if extra_team_key:
+                team_keys.add(str(extra_team_key).strip())
+    return {team_key for team_key in team_keys if team_key}
+
+
+def _player_plausibility(
+    player_name: str,
+    fixture_team_key: str,
+    latest_player_meta: Dict[str, dict],
+    roster_by_player_key: Dict[str, List[dict]],
+    players_by_team_key: Dict[str, List[dict]],
+    roster_by_team_key: Dict[str, List[dict]],
+) -> dict:
+    known_team_keys = sorted(_known_team_keys_for_player(player_name, latest_player_meta, roster_by_player_key))
+    team_candidates = [
+        candidate.get("player_name", "")
+        for candidate in players_by_team_key.get(fixture_team_key, [])
+    ] + [
+        candidate.get("player_name", "")
+        for candidate in roster_by_team_key.get(fixture_team_key, [])
+    ]
+    if best_name_match(player_name, [name for name in team_candidates if name]) is not None:
+        return {
+            "status": "plausible",
+            "score": 0.0,
+            "flag": "",
+            "known_team_keys": sorted(set(known_team_keys or [fixture_team_key])),
+        }
+    if not known_team_keys:
+        return {
+            "status": "untracked",
+            "score": 0.0,
+            "flag": "",
+            "known_team_keys": [],
+            "caps_trust_tier": "",
+        }
+    if fixture_team_key in known_team_keys:
+        return {
+            "status": "plausible",
+            "score": 0.0,
+            "flag": "",
+            "known_team_keys": known_team_keys,
+            "caps_trust_tier": "",
+        }
+    return {
+        "status": "transfer_unverified",
+        "score": 0.0,
+        "flag": "",
+        "known_team_keys": known_team_keys,
+        "caps_trust_tier": "",
+    }
+
+
+def _build_matchday_player_fixtures(
+    lineup_map: Dict[tuple[str, str, str], dict],
+) -> Dict[str, Dict[str, set[str]]]:
+    matchday_players: Dict[str, Dict[str, set[str]]] = defaultdict(lambda: defaultdict(set))
+    seen_fixtures: set[str] = set()
+    for (match_date, home_key, away_key), fixture in lineup_map.items():
+        if not match_date:
+            continue
+        fixture_id = f"{match_date}|{home_key}|{away_key}"
+        if fixture_id in seen_fixtures:
+            continue
+        seen_fixtures.add(fixture_id)
+
+        for raw_name in fixture.get("home_players", []) + fixture.get("away_players", []):
+            player_key = _norm_text(raw_name)
+            if player_key:
+                matchday_players[match_date][player_key].add(fixture_id)
+    return matchday_players
+
+
+def _compute_fixture_health(
+    *,
+    fixture_lineup: dict | None,
+    match_date: str,
+    home_key: str,
+    away_key: str,
+    latest_player_meta: Dict[str, dict],
+    roster_by_player_key: Dict[str, List[dict]],
+    players_by_team_key: Dict[str, List[dict]],
+    roster_by_team_key: Dict[str, List[dict]],
+    matchday_player_fixtures: Dict[str, Dict[str, set[str]]],
+) -> dict:
+    if fixture_lineup is None:
+        return {
+            "lineup_input": "none",
+            "corruption_score": 1.0,
+            "corruption_flags": ["no_lineup_payload"],
+            "trust_tier": TRUST_TIER_PROVISIONAL,
+            "home_player_checks": [],
+            "away_player_checks": [],
+        }
+
+    corruption_score = 0.0
+    corruption_flags: List[str] = []
+    caps_trust_tier = ""
+    home_player_checks: List[dict] = []
+    away_player_checks: List[dict] = []
+
+    def inspect_side(side: str, team_key: str, starter_entries: List[dict], starter_names: List[str], collector: List[dict]) -> None:
+        nonlocal corruption_score
+        nonlocal caps_trust_tier
+
+        if len(starter_names) != 11:
+            corruption_score += 3.0
+            corruption_flags.append(f"{side}_starter_count:{len(starter_names)}")
+
+        normalized_names = [_norm_text(name) for name in starter_names if _norm_text(name)]
+        if len(set(normalized_names)) != len(normalized_names):
+            corruption_score += 3.0
+            corruption_flags.append(f"{side}_duplicate_starters")
+
+        gk_count = sum(
+            1
+            for entry in starter_entries
+            if str(entry.get("role_group") or "").strip().upper() == "GK"
+            or str(entry.get("position_id") or "").strip() == "11"
+        )
+        if starter_entries and gk_count != 1:
+            corruption_score += 3.0
+            corruption_flags.append(f"{side}_gk_count:{gk_count}")
+
+        for idx, player_name in enumerate(starter_names):
+            starter_entry = starter_entries[idx] if idx < len(starter_entries) else {}
+            is_goalkeeper = (
+                idx == 0
+                or str(starter_entry.get("role_group") or "").strip().upper() == "GK"
+                or str(starter_entry.get("position_id") or "").strip() == "11"
+            )
+            plausibility = _player_plausibility(
+                player_name,
+                team_key,
+                latest_player_meta,
+                roster_by_player_key,
+                players_by_team_key,
+                roster_by_team_key,
+            )
+            player_key = _norm_text(player_name)
+            fixture_ids = matchday_player_fixtures.get(match_date, {}).get(player_key, set())
+            cross_fixture_flag = ""
+            cross_fixture_score = 0.0
+            if player_key and len(fixture_ids) > 1:
+                cross_fixture_score = 2.0
+                cross_fixture_flag = f"cross_fixture:{player_name}:{len(fixture_ids)}"
+
+            base_score = float(plausibility["score"])
+            base_flag = plausibility["flag"]
+            if is_goalkeeper and plausibility["status"] == "untracked":
+                base_score = 0.0
+                base_flag = ""
+
+            total_score = base_score + cross_fixture_score
+            if base_flag:
+                corruption_flags.append(plausibility["flag"])
+            if cross_fixture_flag:
+                corruption_flags.append(cross_fixture_flag)
+            corruption_score += total_score
+            collector.append(
+                {
+                    "name": player_name,
+                    "status": plausibility["status"] if not cross_fixture_flag else "cross_fixture",
+                    "known_team_keys": plausibility["known_team_keys"],
+                    "score": round(total_score, 2),
+                    "flags": [flag for flag in [base_flag, cross_fixture_flag] if flag],
+                }
+            )
+
+    inspect_side(
+        "home",
+        home_key,
+        fixture_lineup.get("home_starters", []),
+        fixture_lineup.get("home_players", []),
+        home_player_checks,
+    )
+    inspect_side(
+        "away",
+        away_key,
+        fixture_lineup.get("away_starters", []),
+        fixture_lineup.get("away_players", []),
+        away_player_checks,
+    )
+
+    unique_flags = list(dict.fromkeys(flag for flag in corruption_flags if flag))
+    lineup_input = _lineup_input_label(fixture_lineup)
+    if corruption_score >= 3.0:
+        trust_tier = TRUST_TIER_QUARANTINED
+    elif lineup_input == "confirmed_xi" and corruption_score <= 1.0 and caps_trust_tier != TRUST_TIER_PROVISIONAL:
+        trust_tier = TRUST_TIER_CONFIRMED
+    else:
+        trust_tier = TRUST_TIER_PROVISIONAL
+
+    return {
+        "lineup_input": lineup_input,
+        "corruption_score": round(corruption_score, 2),
+        "corruption_flags": unique_flags,
+        "trust_tier": trust_tier,
+        "home_player_checks": home_player_checks,
+        "away_player_checks": away_player_checks,
+    }
+
+
 def _resolve_lineup_state(player_name: str, fixture_lineup: dict | None, is_home: bool) -> tuple[str, str]:
     if fixture_lineup is None:
         return "unknown", ""
@@ -609,6 +977,132 @@ def _resolve_lineup_state(player_name: str, fixture_lineup: dict | None, is_home
         return ("not_in_squad" if _is_confirmed_lineup(fixture_lineup) else "expected_out"), unavailable_match
 
     return "unknown", ""
+
+
+def _resolve_lineup_side(player_name: str, fixture_lineup: dict | None) -> tuple[bool | None, str]:
+    if fixture_lineup is None:
+        return None, ""
+
+    home_candidates = (
+        fixture_lineup.get("home_players", [])
+        + fixture_lineup.get("home_subs", [])
+        + fixture_lineup.get("home_unavailable", [])
+    )
+    away_candidates = (
+        fixture_lineup.get("away_players", [])
+        + fixture_lineup.get("away_subs", [])
+        + fixture_lineup.get("away_unavailable", [])
+    )
+
+    home_match = _lineup_match_name(player_name, home_candidates)
+    away_match = _lineup_match_name(player_name, away_candidates)
+
+    if home_match and not away_match:
+        return True, home_match
+    if away_match and not home_match:
+        return False, away_match
+    return None, ""
+
+
+def _team_pen_rate(team_summary: Optional[dict], shrink_func, shrink_matches: float) -> float:
+    team_pen_rate = LEAGUE_AVG["penalties_per_match"]
+    if team_summary is None:
+        return team_pen_rate
+    return shrink_func(
+        team_summary.get("penalties_per_match", 0.0),
+        team_summary.get("n_matches", 0.0),
+        LEAGUE_AVG["penalties_per_match"],
+        shrink_matches,
+    )
+
+
+def _penalty_share_prior(role: str, active_slot: str, lineup_state: str) -> tuple[float, float]:
+    role_key = (role or "").strip().lower()
+    active_key = (active_slot or "").strip().lower()
+    lineup_key = (lineup_state or "").strip().lower()
+    if role_key not in {"primary", "secondary", "tertiary"}:
+        return 0.0, 0.0
+
+    if lineup_key not in {"starter", "expected_starter", "unknown"}:
+        return 0.0, 0.0
+
+    if active_key:
+        if role_key != active_key:
+            return 0.0, 0.0
+        confirmed_active = {
+            "primary": 0.80,
+            "secondary": 0.60,
+            "tertiary": 0.40,
+        }
+        expected_active = {
+            "primary": 0.74,
+            "secondary": 0.50,
+            "tertiary": 0.36,
+        }
+        prior_map = expected_active if lineup_key == "expected_starter" else confirmed_active
+        prior_share = prior_map.get(role_key, 0.0)
+        prior_sample = 6.0 if lineup_key == "expected_starter" else 8.0
+        return prior_share, prior_sample
+
+    fallback = {
+        "primary": 0.42,
+        "secondary": 0.15,
+        "tertiary": 0.06,
+    }
+    fallback_expected = {
+        "primary": 0.36,
+        "secondary": 0.12,
+        "tertiary": 0.05,
+    }
+    prior_map = fallback_expected if lineup_key == "expected_starter" else fallback
+    prior_share = prior_map.get(role_key, 0.0)
+    prior_sample = 2.0 if lineup_key == "expected_starter" else 3.0
+    return prior_share, prior_sample
+
+
+def _compute_public_action(
+    signal_confidence: str,
+    lineup_status: str,
+    ev: float,
+    fair_odds: float,
+    expected_minutes: float,
+    gate_reason: str,
+    min_ev: float,
+) -> str:
+    if (signal_confidence or "").strip().lower() == "low":
+        return "no_action"
+    if lineup_status != "confirmed_starter":
+        return "no_action"
+    if ev < min_ev:
+        return "no_action"
+    if fair_odds > PUBLIC_MAX_FAIR_ODDS:
+        return "no_action"
+    if expected_minutes < PUBLIC_MIN_EXPECTED_MINUTES:
+        return "no_action"
+    if gate_reason:
+        return "no_action"
+    return "surface"
+
+
+def _compute_shadow_action(
+    signal_confidence: str,
+    lineup_status: str,
+    ev: float,
+    fair_odds: float,
+    expected_minutes: float,
+    min_ev: float,
+) -> str:
+    if (signal_confidence or "").strip().lower() == "low":
+        return "no_action"
+    if lineup_status not in {"confirmed_starter", "expected_starter"}:
+        return "no_action"
+    if ev < min_ev:
+        return "no_action"
+    if fair_odds > SHADOW_MAX_FAIR_ODDS:
+        return "no_action"
+    if expected_minutes < SHADOW_MIN_EXPECTED_MINUTES:
+        return "no_action"
+    return "shadow_track"
 
 
 def _resolve_starter_entry(player_name: str, fixture_lineup: dict | None, is_home: bool) -> dict | None:
@@ -688,18 +1182,120 @@ def _position_upgrade_summary(player_name: str, player_history, fixture_lineup: 
     }
 
 
-def write_outputs(rows: List[dict], stats: dict, out_dir: str, compared_at: str) -> None:
+def _build_team_penalty_context(
+    *,
+    league_key: str,
+    compared_at: str,
+    match_date: str,
+    home_team: str,
+    away_team: str,
+    team_name: str,
+    team_key: str,
+    opponent_name: str,
+    opponent_key: str,
+    is_home: bool,
+    fixture_lineup: dict | None,
+    hierarchy_entry: dict | None,
+    team_penalty_event: dict | None,
+    fixture_health: dict,
+) -> dict:
+    team_penalty_event = team_penalty_event or {}
+    starter_names = fixture_lineup.get("home_players" if is_home else "away_players", []) if fixture_lineup else []
+    bench_names = fixture_lineup.get("home_subs" if is_home else "away_subs", []) if fixture_lineup else []
+    unavailable_names = fixture_lineup.get("home_unavailable" if is_home else "away_unavailable", []) if fixture_lineup else []
+
+    def slot_state(slot: str) -> tuple[str, str]:
+        slot_name = (hierarchy_entry or {}).get(slot, "")
+        if not slot_name:
+            return "", ""
+        raw_state, matched_name = _resolve_lineup_state(slot_name, fixture_lineup, is_home)
+        return _canonical_lineup_status(raw_state), matched_name
+
+    primary_status, primary_match = slot_state("primary")
+    secondary_status, secondary_match = slot_state("secondary")
+    tertiary_status, tertiary_match = slot_state("tertiary")
+
+    return {
+        "league": league_key,
+        "compared_at": compared_at,
+        "match_date": match_date,
+        "home_team": home_team,
+        "away_team": away_team,
+        "team": team_name,
+        "team_key": team_key,
+        "opponent": opponent_name,
+        "opponent_key": opponent_key,
+        "is_home": int(is_home),
+        "lineup_input": _lineup_input_label(fixture_lineup),
+        "trust_tier": fixture_health.get("trust_tier", TRUST_TIER_PROVISIONAL),
+        "fixture_corruption_score": fixture_health.get("corruption_score", 0.0),
+        "fixture_corruption_flags": fixture_health.get("corruption_flags", []),
+        "team_lineup_status": _canonical_lineup_status((team_penalty_event or {}).get("lineup_status", "")),
+        "starter_names": starter_names,
+        "bench_names": bench_names,
+        "unavailable_names": unavailable_names,
+        "primary": (hierarchy_entry or {}).get("primary", ""),
+        "secondary": (hierarchy_entry or {}).get("secondary", ""),
+        "tertiary": (hierarchy_entry or {}).get("tertiary", ""),
+        "primary_lineup_status": primary_status,
+        "primary_match_name": primary_match,
+        "secondary_lineup_status": secondary_status,
+        "secondary_match_name": secondary_match,
+        "tertiary_lineup_status": tertiary_status,
+        "tertiary_match_name": tertiary_match,
+        "active_taker_pre_match": team_penalty_event.get("active_taker", ""),
+        "active_slot_pre_match": team_penalty_event.get("active_slot", ""),
+        "penalty_transfer_pre_match": int(bool(team_penalty_event.get("penalty_transfer"))),
+        "inherited_from_pre_match": team_penalty_event.get("inherited_from", ""),
+        "transfer_level_pre_match": team_penalty_event.get("transfer_level", ""),
+    }
+
+
+def write_outputs(
+    rows: List[dict],
+    penalty_context_rows: List[dict],
+    fixture_health_rows: List[dict],
+    stats: dict,
+    out_dir: str,
+    compared_at: str,
+    league_key: str,
+) -> None:
     os.makedirs(out_dir, exist_ok=True)
     csv_path = os.path.join(out_dir, "goalscorer-live-comparison.csv")
     txt_path = os.path.join(out_dir, "goalscorer-live-comparison.txt")
+    json_path = os.path.join(out_dir, "live-board.json")
+    penalty_context_path = os.path.join(out_dir, "penalty-duty-context.json")
     snapshot_dir = os.path.join(out_dir, "live-history")
     stamp = compared_at.replace("-", "").replace(":", "").replace("T", "-").replace("Z", "")
     snapshot_csv_path = os.path.join(snapshot_dir, f"goalscorer-live-comparison-{stamp}.csv")
     snapshot_txt_path = os.path.join(snapshot_dir, f"goalscorer-live-comparison-{stamp}.txt")
+    snapshot_json_path = os.path.join(snapshot_dir, f"live-board-{stamp}.json")
+    snapshot_penalty_context_path = os.path.join(snapshot_dir, f"penalty-duty-context-{stamp}.json")
+
+    live_payload = {
+        "schema_version": 1,
+        "generated_at": compared_at,
+        "league": league_key,
+        "row_count": len(rows),
+        "stats": stats,
+        "fixtures": fixture_health_rows,
+        "rows": rows,
+    }
+    penalty_context_payload = {
+        "schema_version": 1,
+        "generated_at": compared_at,
+        "league": league_key,
+        "row_count": len(penalty_context_rows),
+        "rows": penalty_context_rows,
+    }
 
     _write_csv(csv_path, rows)
+    _write_json(json_path, live_payload)
+    _write_json(penalty_context_path, penalty_context_payload)
     os.makedirs(snapshot_dir, exist_ok=True)
     _write_csv(snapshot_csv_path, rows)
+    _write_json(snapshot_json_path, live_payload)
+    _write_json(snapshot_penalty_context_path, penalty_context_payload)
 
     with open(txt_path, "w", encoding="utf-8") as handle:
         handle.write("Goalscorer Live Comparison\n")
@@ -719,10 +1315,14 @@ def write_outputs(rows: List[dict], stats: dict, out_dir: str, compared_at: str)
             "low_confidence_rows",
             "public_high_signals",
             "public_caveat_signals",
+            "shadow_track_rows",
             "penalty_transfer_rows",
             "position_upgrade_rows",
             "fixtures_with_confirmed_lineups",
             "fixtures_with_expected_lineups",
+            "fixtures_clean",
+            "fixtures_degraded",
+            "fixtures_quarantined",
             "confirmed_starter_rows",
             "confirmed_bench_rows",
             "expected_starter_rows",
@@ -736,8 +1336,12 @@ def write_outputs(rows: List[dict], stats: dict, out_dir: str, compared_at: str)
         handle.write(Path(txt_path).read_text(encoding="utf-8"))
     print(f"  Saved: {csv_path}")
     print(f"  Saved: {txt_path}")
+    print(f"  Saved: {json_path}")
+    print(f"  Saved: {penalty_context_path}")
     print(f"  Saved: {snapshot_csv_path}")
     print(f"  Saved: {snapshot_txt_path}")
+    print(f"  Saved: {snapshot_json_path}")
+    print(f"  Saved: {snapshot_penalty_context_path}")
 
 
 def main() -> None:
@@ -747,10 +1351,14 @@ def main() -> None:
     parser.add_argument("--odds", default=DEFAULT_ODDS, help="Canonical ATGS odds history CSV")
     parser.add_argument("--out-dir", default=DEFAULT_OUT_DIR)
     parser.add_argument("--bookmaker", default="")
-    parser.add_argument("--min-ev", type=float, default=0.05)
+    parser.add_argument("--min-ev", type=float, default=0.05, help="Legacy EV floor; public surface uses at least 8% regardless")
+    parser.add_argument("--public-min-ev", type=float, default=PUBLIC_SURFACE_MIN_EV, help="Minimum EV for public surface actions")
+    parser.add_argument("--shadow-min-ev", type=float, default=SHADOW_TRACK_MIN_EV, help="Minimum EV for shadow tracking")
     parser.add_argument("--all-captures", action="store_true")
     parser.add_argument("--lineups", default="", help="Optional confirmed-lineup JSON for penalty-transfer detection")
     parser.add_argument("--penalty-hierarchy", default=DEFAULT_PENALTY_HIERARCHY, help="Penalty taker hierarchy JSON")
+    parser.add_argument("--penalty-baseline-evidence", default=DEFAULT_PENALTY_BASELINE_EVIDENCE, help="Optional penalty baseline evidence JSON")
+    parser.add_argument("--penalty-baseline-overrides", default=DEFAULT_PENALTY_BASELINE_OVERRIDES, help="Optional manual penalty baseline override JSON")
     args = parser.parse_args()
 
     print("\n" + "=" * 64)
@@ -770,9 +1378,13 @@ def main() -> None:
     build_team_expected_npxg = model_mod["build_team_expected_npxg"]
     build_penalty_component = model_mod["build_penalty_component"]
     prob_at_least_one = model_mod["prob_at_least_one"]
+    shrink_func = model_mod["_shrink"]
+    TEAM_SHRINK_MATCHES = model_mod["TEAM_SHRINK_MATCHES"]
     team_key_func = model_mod["_team_key"]
     coarse_position = model_mod["coarse_position"]
     penalty_hierarchy = load_penalty_hierarchy(ROOT / args.penalty_hierarchy, team_key_func=team_key_func)
+    public_min_ev = max(args.min_ev, args.public_min_ev)
+    shadow_min_ev = args.shadow_min_ev
 
     historical_rows = load_match_logs(args.data)
     odds_rows = load_odds_rows(args.odds, bookmaker_filter=args.bookmaker, league=args.league)
@@ -780,6 +1392,9 @@ def main() -> None:
         odds_rows = latest_rows_per_market(odds_rows)
     compared_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     lineup_map = load_confirmed_lineup_map(args.lineups, team_key_func)
+    penalty_baseline_evidence = load_penalty_baseline_evidence(str(ROOT / args.penalty_baseline_evidence), team_key_func)
+    penalty_baseline_overrides = load_penalty_baseline_overrides(str(ROOT / args.penalty_baseline_overrides), team_key_func)
+    matchday_player_fixtures = _build_matchday_player_fixtures(lineup_map)
 
     latest_player_meta: Dict[str, dict] = {}
     players_by_team_key: Dict[str, List[dict]] = defaultdict(list)
@@ -862,6 +1477,8 @@ def main() -> None:
 
     history_index = 0
     results: List[dict] = []
+    penalty_context_rows: List[dict] = []
+    fixture_health_rows: List[dict] = []
     stats = {
         "historical_rows": len(historical_rows),
         "odds_rows": len(odds_rows),
@@ -876,10 +1493,14 @@ def main() -> None:
         "low_confidence_rows": 0,
         "public_high_signals": 0,
         "public_caveat_signals": 0,
+        "shadow_track_rows": 0,
         "penalty_transfer_rows": 0,
         "position_upgrade_rows": 0,
         "fixtures_with_confirmed_lineups": 0,
         "fixtures_with_expected_lineups": 0,
+        "fixtures_clean": 0,
+        "fixtures_degraded": 0,
+        "fixtures_quarantined": 0,
         "confirmed_starter_rows": 0,
         "confirmed_bench_rows": 0,
         "expected_starter_rows": 0,
@@ -889,7 +1510,7 @@ def main() -> None:
         "avg_ev": 0.0,
     }
 
-    def resolve_candidate(odds_row: dict) -> Optional[dict]:
+    def resolve_candidate(odds_row: dict, fixture_lineup: dict | None = None) -> Optional[dict]:
         home_team = odds_row["home_team"]
         away_team = odds_row["away_team"]
         home_key = team_key_func(home_team)
@@ -917,6 +1538,14 @@ def main() -> None:
             if len(roster_team_keys) == 1:
                 player_team_key = roster_team_keys[0]
                 player_team = home_team if player_team_key == home_key else away_team
+            elif fixture_lineup is not None:
+                inferred_is_home, _ = _resolve_lineup_side(odds_row["player_name"], fixture_lineup)
+                if inferred_is_home is True:
+                    player_team_key = home_key
+                    player_team = home_team
+                elif inferred_is_home is False:
+                    player_team_key = away_key
+                    player_team = away_team
         if player_team_key == home_key:
             opponent = away_team
             opponent_key = away_key
@@ -962,15 +1591,6 @@ def main() -> None:
         }
 
     def evaluate_fixture_rows(fixture_rows: List[dict]) -> None:
-        resolved_rows = []
-        for odds_row in fixture_rows:
-            candidate = resolve_candidate(odds_row)
-            if candidate is not None:
-                resolved_rows.append(candidate)
-
-        if not resolved_rows:
-            return
-
         fixture_sample = fixture_rows[0]
         fixture_home_key = team_key_func(fixture_sample["home_team"])
         fixture_away_key = team_key_func(fixture_sample["away_team"])
@@ -978,6 +1598,49 @@ def main() -> None:
             lineup_map.get((fixture_sample["match_date"], fixture_home_key, fixture_away_key))
             or lineup_map.get(("", fixture_home_key, fixture_away_key))
         )
+        fixture_health = _compute_fixture_health(
+            fixture_lineup=fixture_lineup,
+            match_date=fixture_sample["match_date"],
+            home_key=fixture_home_key,
+            away_key=fixture_away_key,
+            latest_player_meta=latest_player_meta,
+            roster_by_player_key=roster_by_player_key,
+            players_by_team_key=players_by_team_key,
+            roster_by_team_key=roster_by_team_key,
+            matchday_player_fixtures=matchday_player_fixtures,
+        )
+        fixture_health_rows.append(
+            {
+                "match_date": fixture_sample["match_date"],
+                "home_team": fixture_sample["home_team"],
+                "away_team": fixture_sample["away_team"],
+                "league": args.league,
+                "competition": fixture_sample.get("competition", ""),
+                "bookmaker": fixture_sample.get("bookmaker", ""),
+                "lineup_input": fixture_health["lineup_input"],
+                "trust_tier": fixture_health["trust_tier"],
+                "corruption_score": fixture_health["corruption_score"],
+                "corruption_flags": fixture_health["corruption_flags"],
+                "home_player_checks": fixture_health["home_player_checks"],
+                "away_player_checks": fixture_health["away_player_checks"],
+            }
+        )
+        if fixture_health["trust_tier"] == TRUST_TIER_CONFIRMED:
+            stats["fixtures_clean"] += 1
+        elif fixture_health["trust_tier"] == TRUST_TIER_QUARANTINED:
+            stats["fixtures_quarantined"] += 1
+        else:
+            stats["fixtures_degraded"] += 1
+
+        resolved_rows = []
+        for odds_row in fixture_rows:
+            candidate = resolve_candidate(odds_row, fixture_lineup)
+            if candidate is not None:
+                resolved_rows.append(candidate)
+
+        if not resolved_rows:
+            return
+
         if _is_confirmed_lineup(fixture_lineup):
             stats["fixtures_with_confirmed_lineups"] += 1
         elif _is_expected_lineup(fixture_lineup):
@@ -999,6 +1662,43 @@ def main() -> None:
                 ),
                 "lineup_status": fixture_lineup.get("away_status", ""),
             }
+
+        penalty_context_rows.append(
+            _build_team_penalty_context(
+                league_key=args.league,
+                compared_at=compared_at,
+                match_date=fixture_sample["match_date"],
+                home_team=fixture_sample["home_team"],
+                away_team=fixture_sample["away_team"],
+                team_name=fixture_sample["home_team"],
+                team_key=fixture_home_key,
+                opponent_name=fixture_sample["away_team"],
+                opponent_key=fixture_away_key,
+                is_home=True,
+                fixture_lineup=fixture_lineup,
+                hierarchy_entry=penalty_hierarchy.get(fixture_home_key),
+                team_penalty_event=team_penalty_events.get(fixture_home_key, {}),
+                fixture_health=fixture_health,
+            )
+        )
+        penalty_context_rows.append(
+            _build_team_penalty_context(
+                league_key=args.league,
+                compared_at=compared_at,
+                match_date=fixture_sample["match_date"],
+                home_team=fixture_sample["home_team"],
+                away_team=fixture_sample["away_team"],
+                team_name=fixture_sample["away_team"],
+                team_key=fixture_away_key,
+                opponent_name=fixture_sample["home_team"],
+                opponent_key=fixture_home_key,
+                is_home=False,
+                fixture_lineup=fixture_lineup,
+                hierarchy_entry=penalty_hierarchy.get(fixture_away_key),
+                team_penalty_event=team_penalty_events.get(fixture_away_key, {}),
+                fixture_health=fixture_health,
+            )
+        )
 
         for candidate in resolved_rows:
             player_display_name = candidate["player_meta"].get("player_name", candidate["odds_row"]["player_name"])
@@ -1038,6 +1738,7 @@ def main() -> None:
             sample = team_candidates[0]
             team_summary = team_histories[team_key].summary()
             opponent_summary = team_histories[sample["opponent_key"]].summary()
+            team_pen_rate = _team_pen_rate(team_summary, shrink_func, TEAM_SHRINK_MATCHES)
             (
                 team_expected_npxg,
                 attack_factor,
@@ -1048,12 +1749,55 @@ def main() -> None:
 
             team_propensity_total = 0.0
             for candidate in team_candidates:
+                player_display_name = candidate["player_meta"].get("player_name", candidate["odds_row"]["player_name"])
+                hierarchy_entry = penalty_hierarchy.get(candidate["player_team_key"])
+                team_penalty_event = team_penalty_events.get(candidate["player_team_key"], {})
+                evidence_entry = penalty_baseline_evidence.get(candidate["player_team_key"], {}).get(_norm_text(player_display_name), {})
+                penalty_role = penalty_role_for_player(hierarchy_entry, player_display_name)
+                manual_override = _select_penalty_baseline_override(
+                    penalty_baseline_overrides,
+                    team_key=candidate["player_team_key"],
+                    player_name=player_display_name,
+                    penalty_role=penalty_role,
+                    active_slot=str(team_penalty_event.get("active_slot") or ""),
+                    lineup_state=str(candidate.get("lineup_state") or ""),
+                )
+                evidence_share = float(evidence_entry.get("share", 0.0) or 0.0)
+                evidence_sample = float(evidence_entry.get("sample", 0.0) or 0.0)
+                evidence_source = str(evidence_entry.get("source") or "").strip()
+                override_share = float(manual_override.get("share", 0.0) or 0.0)
+                override_sample = float(manual_override.get("sample", 0.0) or 0.0)
+                override_source = str(manual_override.get("source") or "").strip()
+                override_note = str(manual_override.get("note") or "").strip()
+                if override_sample > 0:
+                    if evidence_sample > 0:
+                        combined_sample = evidence_sample + override_sample
+                        evidence_share = ((evidence_share * evidence_sample) + (override_share * override_sample)) / combined_sample
+                        evidence_sample = combined_sample
+                        evidence_source = "+".join(part for part in [evidence_source, override_source] if part)
+                    else:
+                        evidence_share = override_share
+                        evidence_sample = override_sample
+                        evidence_source = override_source
+                hierarchy_share_prior, hierarchy_share_prior_weight = _penalty_share_prior(
+                    penalty_role,
+                    team_penalty_event.get("active_slot", ""),
+                    candidate.get("lineup_state", "unknown"),
+                )
+
                 if candidate.get("lineup_state") == "not_in_squad":
                     propensity = 0.0
                     base_rate = 0.0
                     method = "model"
                     penalty_lambda = 0.0
                     penalty_share = 0.0
+                    baseline_penalty_share = 0.0
+                    baseline_penalty_sample = 0.0
+                    baseline_penalty_source = "none"
+                    career_player_penalties = 0.0
+                    career_team_penalties = 0.0
+                    career_penalty_share = 0.0
+                    hierarchy_penalty_boost_xg = 0.0
                 else:
                     propensity, base_rate, method = build_player_propensity(
                         candidate["player_recent"],
@@ -1063,19 +1807,68 @@ def main() -> None:
                     )
                     penalty_lambda = 0.0
                     penalty_share = 0.0
+                    baseline_penalty_share = 0.0
+                    baseline_penalty_sample = 0.0
+                    baseline_penalty_source = "none"
+                    career_player_penalties = 0.0
+                    career_team_penalties = 0.0
+                    career_penalty_share = 0.0
+                    hierarchy_penalty_boost_xg = 0.0
                     if method == "model":
-                        penalty_lambda, penalty_share = build_penalty_component(
+                        baseline_penalty_lambda, _baseline_share, baseline_meta = build_penalty_component(
                             candidate["player_recent"],
                             candidate["player_long"],
                             team_summary,
                             candidate["expected_minutes"],
+                            prior_share=0.0,
+                            prior_sample=1.5,
+                            evidence_share=evidence_share,
+                            evidence_sample=evidence_sample,
+                            evidence_source=evidence_source,
                         )
+                        baseline_penalty_share = float(baseline_meta.get("baseline_share", 0.0) or 0.0)
+                        baseline_penalty_sample = float(baseline_meta.get("baseline_sample", 0.0) or 0.0)
+                        baseline_penalty_source = str(baseline_meta.get("baseline_source") or "none")
+                        career_player_penalties = float(baseline_meta.get("career_player_penalties", 0.0) or 0.0)
+                        career_team_penalties = float(baseline_meta.get("career_team_penalties", 0.0) or 0.0)
+                        career_penalty_share = float(baseline_meta.get("career_penalty_share", 0.0) or 0.0)
+                        penalty_lambda, penalty_share, penalty_meta = build_penalty_component(
+                            candidate["player_recent"],
+                            candidate["player_long"],
+                            team_summary,
+                            candidate["expected_minutes"],
+                            prior_share=hierarchy_share_prior,
+                            prior_sample=hierarchy_share_prior_weight,
+                            evidence_share=evidence_share,
+                            evidence_sample=evidence_sample,
+                            evidence_source=evidence_source,
+                        )
+                        evidence_share = float(penalty_meta.get("evidence_share", evidence_share) or 0.0)
+                        evidence_sample = float(penalty_meta.get("evidence_sample", evidence_sample) or 0.0)
+                        evidence_source = str(penalty_meta.get("evidence_source") or evidence_source)
+                        hierarchy_penalty_boost_xg = max(0.0, penalty_lambda - baseline_penalty_lambda)
                 computed_predictions[(candidate["player_id"], candidate["player_team_key"])] = {
                     "base_rate": base_rate,
                     "method": method,
                     "propensity": propensity,
                     "penalty_lambda": penalty_lambda,
                     "penalty_share": penalty_share,
+                    "baseline_penalty_share": baseline_penalty_share if method == "model" else 0.0,
+                    "baseline_penalty_sample": baseline_penalty_sample if method == "model" else 0.0,
+                    "baseline_penalty_source": baseline_penalty_source if method == "model" else "none",
+                    "career_player_penalties": career_player_penalties if method == "model" else 0.0,
+                    "career_team_penalties": career_team_penalties if method == "model" else 0.0,
+                    "career_penalty_share": career_penalty_share if method == "model" else 0.0,
+                    "penalty_evidence_share": evidence_share if method == "model" else 0.0,
+                    "penalty_evidence_sample": evidence_sample if method == "model" else 0.0,
+                    "penalty_evidence_source": evidence_source if method == "model" else "",
+                    "penalty_evidence_note": override_note if method == "model" else "",
+                    "penalty_role": penalty_role,
+                    "is_penalty_taker": int(penalty_role != "none"),
+                    "hierarchy_penalty_share_floor": hierarchy_share_prior,
+                    "hierarchy_penalty_share_prior": hierarchy_share_prior,
+                    "hierarchy_penalty_share_prior_weight": hierarchy_share_prior_weight,
+                    "hierarchy_penalty_boost_xg": hierarchy_penalty_boost_xg,
                     "team_expected_npxg": team_expected_npxg,
                     "attack_factor": attack_factor,
                     "opp_factor": opp_factor,
@@ -1109,6 +1902,8 @@ def main() -> None:
             prediction = computed_predictions[(candidate["player_id"], candidate["player_team_key"])]
             method = prediction["method"]
             stacked_features = candidate["stacked_features"]
+            lineup_status = _canonical_lineup_status(candidate.get("lineup_state", "unknown"))
+            lineup_source = _canonical_lineup_source(fixture_lineup)
             if method == "fallback":
                 stats["fallback_rows"] += 1
 
@@ -1117,12 +1912,12 @@ def main() -> None:
             odds_decimal = odds_row["odds_decimal"]
             implied_prob = odds_row["implied_prob"] or (1.0 / odds_decimal if odds_decimal > 1.0 else 0.0)
             ev = (model_prob * odds_decimal) - 1.0 if odds_decimal > 1.0 else 0.0
-            signal_confidence, public_action, confidence_reason = _classify_confidence(
+            signal_confidence, legacy_public_action, confidence_reason = _classify_confidence(
                 candidate["player_meta"].get("source", "history"),
                 method,
                 candidate["history_minutes"],
                 ev,
-                args.min_ev,
+                public_min_ev,
                 candidate.get("lineup_state", "unknown"),
             )
             team_penalty_event = team_penalty_events.get(candidate["player_team_key"], {})
@@ -1139,7 +1934,7 @@ def main() -> None:
                 candidate["is_home"],
             )
             public_gate_reason = ""
-            if public_action in {"surface", "surface_with_caveat"}:
+            if signal_confidence != "low" and lineup_status == "confirmed_starter" and ev >= public_min_ev:
                 public_gate_reason = _public_publish_gate(
                     candidate["position"],
                     fair_odds,
@@ -1149,11 +1944,33 @@ def main() -> None:
                     prediction["penalty_share"],
                     bool(position_signal["position_upgrade"]),
                 )
-                if public_gate_reason:
-                    public_action = "monitor"
-                    confidence_reason = f"{confidence_reason},{public_gate_reason}" if confidence_reason else public_gate_reason
+            public_action = _compute_public_action(
+                signal_confidence,
+                lineup_status,
+                ev,
+                fair_odds,
+                candidate["expected_minutes"],
+                public_gate_reason if fixture_health["trust_tier"] == TRUST_TIER_CONFIRMED else "trust_tier_block",
+                public_min_ev,
+            )
+            shadow_action = _compute_shadow_action(
+                signal_confidence,
+                lineup_status,
+                ev,
+                fair_odds,
+                candidate["expected_minutes"],
+                shadow_min_ev,
+            )
+            if fixture_health["trust_tier"] == TRUST_TIER_QUARANTINED:
+                shadow_action = "no_action"
+            if public_gate_reason and confidence_reason:
+                confidence_reason = f"{confidence_reason},{public_gate_reason}"
+            elif public_gate_reason:
+                confidence_reason = public_gate_reason
+            if fixture_health["trust_tier"] != TRUST_TIER_CONFIRMED:
+                confidence_reason = f"{confidence_reason},fixture_{fixture_health['trust_tier'].lower()}" if confidence_reason else f"fixture_{fixture_health['trust_tier'].lower()}"
             signal_eligible = candidate.get("lineup_state", "unknown") not in {"bench", "not_in_squad", "expected_bench", "expected_out"}
-            if ev >= args.min_ev and signal_eligible:
+            if ev >= shadow_min_ev and signal_eligible:
                 stats["qualified_rows"] += 1
             if signal_confidence == "high":
                 stats["high_confidence_rows"] += 1
@@ -1161,10 +1978,12 @@ def main() -> None:
                 stats["medium_confidence_rows"] += 1
             else:
                 stats["low_confidence_rows"] += 1
-            if ev >= args.min_ev and signal_eligible and public_action == "surface":
+            if public_action == "surface":
                 stats["public_high_signals"] += 1
-            elif ev >= args.min_ev and signal_eligible and public_action == "surface_with_caveat":
+            if legacy_public_action == "surface_with_caveat":
                 stats["public_caveat_signals"] += 1
+            if shadow_action == "shadow_track":
+                stats["shadow_track_rows"] += 1
             if penalty_transfer:
                 stats["penalty_transfer_rows"] += 1
             if position_signal["position_upgrade"]:
@@ -1197,13 +2016,35 @@ def main() -> None:
                     "non_pen_lambda": round(prediction["non_pen_lambda"], 4),
                     "penalty_lambda": round(prediction["penalty_lambda"], 4),
                     "penalty_share": round(prediction["penalty_share"], 4),
+                    "baseline_penalty_share": round(prediction["baseline_penalty_share"], 4),
+                    "baseline_penalty_sample": round(prediction["baseline_penalty_sample"], 2),
+                    "baseline_penalty_source": prediction["baseline_penalty_source"],
+                    "career_player_penalties": round(prediction["career_player_penalties"], 2),
+                    "career_team_penalties": round(prediction["career_team_penalties"], 2),
+                    "career_penalty_share": round(prediction["career_penalty_share"], 4),
+                    "penalty_evidence_share": round(prediction["penalty_evidence_share"], 4),
+                    "penalty_evidence_sample": round(prediction["penalty_evidence_sample"], 2),
+                    "penalty_evidence_source": prediction["penalty_evidence_source"],
+                    "penalty_evidence_note": prediction["penalty_evidence_note"],
+                    "is_penalty_taker": int(prediction["is_penalty_taker"]),
+                    "penalty_role": prediction["penalty_role"],
+                    "penalty_share_floor": round(prediction["hierarchy_penalty_share_floor"], 4),
+                    "penalty_share_prior": round(prediction["hierarchy_penalty_share_prior"], 4),
+                    "penalty_share_prior_weight": round(prediction["hierarchy_penalty_share_prior_weight"], 2),
+                    "penalty_hierarchy_boost_xg": round(prediction["hierarchy_penalty_boost_xg"], 4),
                     "penalty_transfer": int(penalty_transfer),
                     "penalty_transfer_from": team_penalty_event.get("inherited_from", "") if penalty_transfer else "",
                     "penalty_transfer_level": team_penalty_event.get("transfer_level", "") if penalty_transfer else "",
                     "penalty_transfer_boost_xg": 0.07 if penalty_transfer else 0.0,
                     "lineup_state": candidate.get("lineup_state", "unknown"),
+                    "lineup_status": lineup_status,
+                    "lineup_source": lineup_source,
                     "lineup_input": _lineup_input_label(fixture_lineup),
                     "lineup_match_name": candidate.get("lineup_match_name", ""),
+                    "trust_tier": fixture_health["trust_tier"],
+                    "fixture_corruption_score": fixture_health["corruption_score"],
+                    "fixture_corruption_flags": "|".join(fixture_health["corruption_flags"]),
+                    "minutes_estimate": round(candidate["expected_minutes"], 1),
                     "usual_position": position_signal["usual_position"],
                     "usual_position_score": position_signal["usual_position_score"],
                     "usual_position_share_10": round(position_signal["usual_position_share"], 4),
@@ -1230,9 +2071,11 @@ def main() -> None:
                     "resolver_source": candidate["player_meta"].get("source", "history"),
                     "historical_minutes": round(candidate["history_minutes"], 1),
                     "signal_confidence": signal_confidence,
+                    "legacy_public_action": legacy_public_action,
                     "public_action": public_action,
+                    "shadow_action": shadow_action,
                     "confidence_reason": confidence_reason,
-                    "lineup_status": team_penalty_event.get("lineup_status", ""),
+                    "team_lineup_status": team_penalty_event.get("lineup_status", ""),
                     "source": odds_row["source"],
                     "notes": odds_row["notes"],
                 }
@@ -1270,10 +2113,14 @@ def main() -> None:
     print(f"  Low-confidence:       {stats['low_confidence_rows']:,}")
     print(f"  Public high signals:  {stats['public_high_signals']:,}")
     print(f"  Public caveats:       {stats['public_caveat_signals']:,}")
+    print(f"  Shadow track rows:    {stats['shadow_track_rows']:,}")
     print(f"  Penalty transfers:    {stats['penalty_transfer_rows']:,}")
     print(f"  Position upgrades:    {stats['position_upgrade_rows']:,}")
     print(f"  Fixtures w/ lineups:  {stats['fixtures_with_confirmed_lineups']:,}")
     print(f"  Fixtures w/ exp XI:   {stats['fixtures_with_expected_lineups']:,}")
+    print(f"  Fixtures clean:      {stats['fixtures_clean']:,}")
+    print(f"  Fixtures degraded:   {stats['fixtures_degraded']:,}")
+    print(f"  Fixtures quarant.:   {stats['fixtures_quarantined']:,}")
     print(f"  Confirmed starters:   {stats['confirmed_starter_rows']:,}")
     print(f"  Confirmed bench:      {stats['confirmed_bench_rows']:,}")
     print(f"  Expected starters:    {stats['expected_starter_rows']:,}")
@@ -1282,7 +2129,7 @@ def main() -> None:
     print(f"  Not in squad:         {stats['not_in_squad_rows']:,}")
     print(f"  Average EV:           {stats['avg_ev']:.4f}")
 
-    write_outputs(results, stats, args.out_dir, compared_at)
+    write_outputs(results, penalty_context_rows, fixture_health_rows, stats, args.out_dir, compared_at, args.league)
     print("\n  Done.\n")
 
 
