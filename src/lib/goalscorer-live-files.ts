@@ -58,6 +58,16 @@ export async function readGoalscorerLiveFile(relativePath: string): Promise<stri
   }
 }
 
+export async function readGoalscorerLiveJson<T>(relativePath: string): Promise<T | null> {
+  const text = await readGoalscorerLiveFile(relativePath);
+  if (!text) return null;
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    return null;
+  }
+}
+
 export async function readGoalscorerLiveMtime(relativePath: string): Promise<string | null> {
   const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.mtime;
   if (typeof hosted === "string") return hosted;
