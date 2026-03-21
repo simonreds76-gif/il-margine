@@ -69,6 +69,8 @@ export const dynamic = "force-dynamic";
 const MODEL_MONITOR_PUBLIC =
   process.env.MODEL_MONITOR_PUBLIC === "1" ||
   process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
+const MODEL_MONITOR_ENABLED =
+  MODEL_MONITOR_PUBLIC || process.env.VERCEL_ENV === "preview";
 
 function parseCsvLine(line: string): string[] {
   const out: string[] = [];
@@ -381,7 +383,7 @@ function formatSignedLine(value?: number): string {
 }
 
 export default async function ModelMonitorPage() {
-  if (process.env.NODE_ENV === "production" && !MODEL_MONITOR_PUBLIC) {
+  if (process.env.NODE_ENV === "production" && !MODEL_MONITOR_ENABLED) {
     notFound();
   }
 

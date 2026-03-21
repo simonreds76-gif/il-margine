@@ -4,6 +4,9 @@ import path from "path";
 const MODEL_MONITOR_PUBLIC =
   process.env.MODEL_MONITOR_PUBLIC === "1" ||
   process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
+const MODEL_MONITOR_ENABLED =
+  MODEL_MONITOR_PUBLIC || process.env.VERCEL_ENV === "preview";
+const PREVIEW_REVIEW_PACK_OPEN = process.env.VERCEL_ENV === "preview";
 
 const REVIEW_PACK_TOKEN =
   process.env.MODEL_MONITOR_REVIEW_PACK_TOKEN ||
@@ -37,23 +40,25 @@ function getSuppliedToken(request: Request): string {
 }
 
 export async function GET(request: Request) {
-  if (process.env.NODE_ENV === "production" && !MODEL_MONITOR_PUBLIC) {
+  if (process.env.NODE_ENV === "production" && !MODEL_MONITOR_ENABLED) {
     return new Response("Not found", { status: 404 });
   }
 
-  if (!REVIEW_PACK_TOKEN) {
+  if (!PREVIEW_REVIEW_PACK_OPEN && !REVIEW_PACK_TOKEN) {
     return Response.json(
       { error: "Review pack token is not configured." },
       { status: 503, headers: { "Cache-Control": "no-store" } },
     );
   }
 
-  const suppliedToken = getSuppliedToken(request);
-  if (!suppliedToken || suppliedToken !== REVIEW_PACK_TOKEN) {
-    return Response.json(
-      { error: "Unauthorized" },
-      { status: 401, headers: { "Cache-Control": "no-store" } },
-    );
+  if (!PREVIEW_REVIEW_PACK_OPEN) {
+    const suppliedToken = getSuppliedToken(request);
+    if (!suppliedToken || suppliedToken !== REVIEW_PACK_TOKEN) {
+      return Response.json(
+        { error: "Unauthorized" },
+        { status: 401, headers: { "Cache-Control": "no-store" } },
+      );
+    }
   }
 
   const files: ReviewPackFile[] = [];

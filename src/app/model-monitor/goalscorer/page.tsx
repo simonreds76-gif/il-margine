@@ -113,6 +113,8 @@ export const dynamic = "force-dynamic";
 const MODEL_MONITOR_PUBLIC =
   process.env.MODEL_MONITOR_PUBLIC === "1" ||
   process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
+const MODEL_MONITOR_ENABLED =
+  MODEL_MONITOR_PUBLIC || process.env.VERCEL_ENV === "preview";
 const SHADOW_SIGNAL_FILES = [
   "data/goalscorer/goalscorer-shadow-signals.csv",
   "data/goalscorer/epl-shadow-signals.csv",
@@ -1442,7 +1444,7 @@ function TeamPitch({
 }
 
 export default async function GoalscorerMonitorPage() {
-  if (process.env.NODE_ENV === "production" && !MODEL_MONITOR_PUBLIC) {
+  if (process.env.NODE_ENV === "production" && !MODEL_MONITOR_ENABLED) {
     notFound();
   }
 
