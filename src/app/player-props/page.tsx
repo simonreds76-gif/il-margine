@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { supabase, Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
@@ -14,6 +15,7 @@ import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
 import { slugifyTip } from "@/lib/slugify";
 
 export default function PlayerProps() {
+  const router = useRouter();
   const [activeLeague, setActiveLeague] = useState("all");
   const [pendingBets, setPendingBets] = useState<Bet[]>([]);
   const [recentBets, setRecentBets] = useState<Bet[]>([]);
@@ -366,15 +368,27 @@ export default function PlayerProps() {
               {/* Mobile Cards */}
               <div className="md:hidden divide-y divide-slate-600">
                 {displayedPending.map((pick) => (
-                  <div key={pick.id} className="p-5 hover:bg-slate-800/20">
+                  <div
+                    key={pick.id}
+                    role="link"
+                    tabIndex={0}
+                    className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
+                    onClick={() => router.push(`/tips/${slugifyTip(pick.event, pick.id)}`)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        router.push(`/tips/${slugifyTip(pick.event, pick.id)}`);
+                      }
+                    }}
+                  >
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
                         </div>
-                        <Link href={`/tips/${slugifyTip(pick.event, pick.id)}`} className="font-medium text-slate-200 mb-1 hover:text-emerald-400 transition-colors block">
+                        <div className="font-medium text-slate-200 mb-1 block">
                           {pick.event}
-                        </Link>
+                        </div>
                         <div className="text-sm text-slate-400 mb-1">
                           {pick.player && <span>{pick.player} | </span>}
                           {pick.selection}
@@ -387,7 +401,7 @@ export default function PlayerProps() {
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-4">
                         <span className="font-mono text-slate-200">{formatOdds(pick.odds)}</span>
-                        <BookmakerLogo bookmaker={pick.bookmaker} size="sm" />
+                        <BookmakerLogo bookmaker={pick.bookmaker} size="sm" stopPropagationOnClick />
                         <span className="font-mono text-slate-100 font-bold min-w-[2.5rem] text-right">{formatStake(pick.stake)}u</span>
                       </div>
                     </div>
@@ -530,15 +544,27 @@ export default function PlayerProps() {
               {/* Mobile Cards */}
               <div className="md:hidden divide-y divide-slate-600">
                 {displayedRecent.map((result) => (
-                  <div key={result.id} className="p-5 hover:bg-slate-800/20">
+                  <div
+                    key={result.id}
+                    role="link"
+                    tabIndex={0}
+                    className="block cursor-pointer p-5 hover:bg-slate-800/20 active:bg-slate-800/30"
+                    onClick={() => router.push(`/tips/${slugifyTip(result.event, result.id)}`)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        router.push(`/tips/${slugifyTip(result.event, result.id)}`);
+                      }
+                    }}
+                  >
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(result.match_date)}</span>
                         </div>
-                        <Link href={`/tips/${slugifyTip(result.event, result.id)}`} className="font-medium text-slate-200 mb-1 hover:text-emerald-400 transition-colors block">
+                        <div className="font-medium text-slate-200 mb-1 block">
                           {result.event}
-                        </Link>
+                        </div>
                         <div className="text-sm text-slate-400 mb-1">
                           {result.player && <span>{result.player} | </span>}
                           {result.selection}
@@ -551,7 +577,7 @@ export default function PlayerProps() {
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-4">
                         <span className="font-mono text-slate-200">{formatOdds(result.odds)}</span>
-                        <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
+                        <BookmakerLogo bookmaker={result.bookmaker} size="sm" stopPropagationOnClick />
                         <span className="font-mono text-slate-100 font-bold min-w-[2.5rem] text-right">{formatStake(result.stake)}u</span>
                       </div>
                       <span className={`font-mono font-medium shrink-0 ${result.status === "void" ? "text-slate-400" : result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>

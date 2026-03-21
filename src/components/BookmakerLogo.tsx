@@ -13,6 +13,8 @@ interface BookmakerLogoProps {
   className?: string;
   /** When true, render logo only (no Link). Use when already inside a Link to avoid invalid nested anchors. */
   noLink?: boolean;
+  /** When true, prevent parent click handlers from firing when the logo link is tapped. */
+  stopPropagationOnClick?: boolean;
 }
 
 // Map bookmaker short_name / name (from DB or copy) to logo filename in public/bookmakers/.
@@ -123,6 +125,7 @@ export default function BookmakerLogo({
   showName = false,
   className = "",
   noLink = false,
+  stopPropagationOnClick = false,
 }: BookmakerLogoProps) {
   const bookmaker = Array.isArray(bookmakerProp) ? bookmakerProp[0] : bookmakerProp;
   const [srcIndex, setSrcIndex] = useState(0);
@@ -225,6 +228,9 @@ export default function BookmakerLogo({
       rel="noopener noreferrer"
       className="hover:opacity-80 transition-opacity"
       title={hasAffiliate ? `Visit ${displayName}` : undefined}
+      onClick={stopPropagationOnClick ? (event) => event.stopPropagation() : undefined}
+      onMouseDown={stopPropagationOnClick ? (event) => event.stopPropagation() : undefined}
+      onTouchStart={stopPropagationOnClick ? (event) => event.stopPropagation() : undefined}
     >
       {content}
     </Link>

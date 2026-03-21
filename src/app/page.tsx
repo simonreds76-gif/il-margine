@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { questionSlug } from "@/lib/parse-faq";
 import { supabase, type Bet, type Bookmaker, type MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
@@ -25,6 +26,7 @@ type HomepageBet = Bet & {
 };
 
 export default function Home() {
+  const router = useRouter();
   const showGoalscorerMarket =
     process.env.NODE_ENV !== "production" ||
     process.env.NEXT_PUBLIC_ENABLE_GOALSCORER_PAGE === "1";
@@ -449,7 +451,19 @@ export default function Home() {
               </div>
               <div className="md:hidden divide-y divide-slate-600">
                 {displayedPendingBets.map((bet) => (
-                    <Link key={bet.id} href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="block p-5 hover:bg-slate-800/30 active:bg-slate-800/40">
+                    <div
+                      key={bet.id}
+                      role="link"
+                      tabIndex={0}
+                      className="block cursor-pointer p-5 hover:bg-slate-800/30 active:bg-slate-800/40"
+                      onClick={() => router.push(`/tips/${slugifyTip(bet.event, bet.id)}`)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          router.push(`/tips/${slugifyTip(bet.event, bet.id)}`);
+                        }
+                      }}
+                    >
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(bet.match_date)}</span>
                         <span className="text-xs font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-400">PENDING</span>
@@ -462,11 +476,11 @@ export default function Home() {
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-4">
                           <span className="font-mono text-slate-200 font-semibold">{formatOdds(bet.odds)}</span>
-                          <BookmakerLogo bookmaker={bet.bookmaker} size="sm" noLink />
+                          <BookmakerLogo bookmaker={bet.bookmaker} size="sm" stopPropagationOnClick />
                           <span className="font-mono text-slate-100 font-bold min-w-[2.5rem] text-right">{formatStake(bet.stake)}u</span>
                         </div>
                       </div>
-                    </Link>
+                    </div>
                 ))}
               </div>
               {pendingBets.length > 5 && (
@@ -587,7 +601,19 @@ export default function Home() {
               {/* Mobile Cards */}
               <div className="md:hidden divide-y divide-slate-600">
                 {recentBets.slice(0, 5).map((bet) => (
-                    <Link key={bet.id} href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="block p-5 hover:bg-slate-800/30 active:bg-slate-800/40">
+                    <div
+                      key={bet.id}
+                      role="link"
+                      tabIndex={0}
+                      className="block cursor-pointer p-5 hover:bg-slate-800/30 active:bg-slate-800/40"
+                      onClick={() => router.push(`/tips/${slugifyTip(bet.event, bet.id)}`)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          router.push(`/tips/${slugifyTip(bet.event, bet.id)}`);
+                        }
+                      }}
+                    >
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
@@ -606,14 +632,14 @@ export default function Home() {
                       <div className="flex items-center justify-between text-sm">
                         <div className="flex items-center gap-4">
                           <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
-                          <BookmakerLogo bookmaker={bet.bookmaker} size="sm" noLink />
+                          <BookmakerLogo bookmaker={bet.bookmaker} size="sm" stopPropagationOnClick />
                           <span className="font-mono text-slate-100 font-bold min-w-[2.5rem] text-right">{formatStake(bet.stake)}u</span>
                         </div>
                         <span className={`font-mono font-medium shrink-0 ${bet.status === "void" ? "text-slate-400" : bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
                           {bet.status === "void" ? "0.00" : `${bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}${bet.profit_loss?.toFixed(2)}`}u
                         </span>
                       </div>
-                    </Link>
+                    </div>
                 ))}
               </div>
             </div>
