@@ -21,6 +21,7 @@ import csv
 import glob
 import math
 import os
+import unicodedata
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date, datetime
@@ -171,6 +172,7 @@ TEAM_ALIASES = {
     "forest": "nottingham forest",
     "southampton": "southampton",
     "sunderland": "sunderland",
+    "sunderland afc": "sunderland",
     "tottenham": "tottenham",
     "tottenham hotspur": "tottenham",
     "spurs": "tottenham",
@@ -298,7 +300,9 @@ class NormalizedRow:
 def _team_key(name: str) -> str:
     import re
 
-    cleaned = re.sub(r"[^a-z0-9]+", " ", (name or "").strip().lower())
+    normalized = unicodedata.normalize("NFD", (name or "").strip().lower())
+    normalized = "".join(ch for ch in normalized if unicodedata.category(ch) != "Mn")
+    cleaned = re.sub(r"[^a-z0-9]+", " ", normalized)
     cleaned = re.sub(r"\s+", " ", cleaned).strip()
     return TEAM_ALIASES.get(cleaned, cleaned)
 
