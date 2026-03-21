@@ -424,26 +424,26 @@ export default function Home() {
                           key={bet.id}
                           className="border-b border-slate-700 hover:bg-slate-800/30"
                         >
-                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-top">
+                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-middle">
                             <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
                           </td>
-                          <td className="px-2.5 py-3.5 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap align-top">{formatMatchDate(bet.match_date)}</td>
-                          <td className="px-3 py-3.5 font-medium text-slate-200 border-r border-slate-800/50 align-top">
+                          <td className="px-2.5 py-3.5 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap align-middle">{formatMatchDate(bet.match_date)}</td>
+                          <td className="px-3 py-3.5 font-medium text-slate-200 border-r border-slate-800/50 align-middle">
                             <Link href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="block truncate hover:text-emerald-400 transition-colors" title={bet.event}>
                               {bet.event}
                             </Link>
                           </td>
-                          <td className="px-3 py-3.5 text-slate-300 border-r border-slate-800/50 align-top"><span className="block truncate">{bet.player || "–"}</span></td>
-                          <td className="px-3 py-3.5 text-slate-300 border-r border-slate-800/50 align-top"><span className="block whitespace-normal break-words leading-snug" title={bet.selection}>{bet.selection}</span></td>
-                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-top">
+                          <td className="px-3 py-3.5 text-slate-300 border-r border-slate-800/50 align-middle"><span className="block truncate">{bet.player || "–"}</span></td>
+                          <td className="px-3 py-3.5 text-slate-300 border-r border-slate-800/50 align-middle"><span className="block whitespace-normal break-words leading-snug" title={bet.selection}>{bet.selection}</span></td>
+                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-middle">
                             <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
                           </td>
-                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-top">
+                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-middle">
                             <div className="flex justify-center">
                               <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
                             </div>
                           </td>
-                          <td className="px-2.5 py-3.5 text-center font-mono text-slate-200 border-r border-slate-800/50 align-top">{formatStake(bet.stake)}u</td>
+                          <td className="px-2.5 py-3.5 text-center font-mono text-slate-200 border-r border-slate-800/50 align-middle">{formatStake(bet.stake)}u</td>
                         </tr>
                       ))}
                   </tbody>
@@ -565,32 +565,32 @@ export default function Home() {
                           key={bet.id}
                           className="border-b border-slate-700 hover:bg-slate-800/30"
                         >
-                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-top">
+                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-middle">
                             <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
                           </td>
-                          <td className="px-2.5 py-3.5 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap align-top">{formatMatchDate(bet.match_date)}</td>
-                          <td className="px-3 py-3.5 font-medium text-slate-200 border-r border-slate-800/50 align-top">
+                          <td className="px-2.5 py-3.5 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap align-middle">{formatMatchDate(bet.match_date)}</td>
+                          <td className="px-3 py-3.5 font-medium text-slate-200 border-r border-slate-800/50 align-middle">
                             <Link href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="block truncate hover:text-emerald-400 transition-colors" title={bet.event}>
                               {bet.event}
                             </Link>
                           </td>
-                          <td className="px-3 py-3.5 text-slate-300 border-r border-slate-800/50 align-top"><span className="block truncate">{bet.player || "–"}</span></td>
-                          <td className="px-3 py-3.5 text-slate-300 border-r border-slate-800/50 align-top"><span className="block whitespace-normal break-words leading-snug" title={bet.selection}>{bet.selection}</span></td>
-                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-top">
+                          <td className="px-3 py-3.5 text-slate-300 border-r border-slate-800/50 align-middle"><span className="block truncate">{bet.player || "–"}</span></td>
+                          <td className="px-3 py-3.5 text-slate-300 border-r border-slate-800/50 align-middle"><span className="block whitespace-normal break-words leading-snug" title={bet.selection}>{bet.selection}</span></td>
+                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-middle">
                             <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
                           </td>
-                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-top">
+                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-middle">
                             <div className="flex justify-center">
                               <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
                             </div>
                           </td>
-                          <td className="px-2.5 py-3.5 text-center font-mono text-slate-200 border-r border-slate-800/50 align-top">{formatStake(bet.stake)}u</td>
-                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-top">
+                          <td className="px-2.5 py-3.5 text-center font-mono text-slate-200 border-r border-slate-800/50 align-middle">{formatStake(bet.stake)}u</td>
+                          <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-middle">
                             <span className={`inline-flex min-w-[3.5rem] justify-center text-[10px] font-mono px-1.5 py-1 rounded ${bet.status === "won" ? "text-emerald-400 bg-emerald-500/10" : bet.status === "void" ? "text-slate-400 bg-slate-500/10" : "text-red-400 bg-red-500/10"}`}>
                               {bet.status.toUpperCase()}
                             </span>
                           </td>
-                          <td className={`px-2.5 py-3.5 text-right font-mono text-sm font-medium align-top ${bet.status === "void" ? "text-slate-400" : bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                          <td className={`px-2.5 py-3.5 text-right font-mono text-sm font-medium align-middle ${bet.status === "void" ? "text-slate-400" : bet.profit_loss && bet.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
                             {bet.status === "void" ? "0.00" : `${bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}${bet.profit_loss?.toFixed(2) || "0.00"}`}u
                           </td>
                         </tr>
