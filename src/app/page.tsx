@@ -410,9 +410,9 @@ export default function Home() {
                     <tr className="border-b border-slate-700 bg-slate-900/50 text-[11px] text-slate-500 uppercase">
                       <th className="w-11 px-2.5 py-3 text-left border-r border-slate-800"></th>
                       <th className="w-16 px-2.5 py-3 text-left border-r border-slate-800">Date</th>
-                      <th className="w-[28%] px-3 py-3 text-left border-r border-slate-800">Match</th>
-                      <th className="w-[16%] px-3 py-3 text-left border-r border-slate-800">Player</th>
-                      <th className="w-[12%] px-3 py-3 text-left border-r border-slate-800">Selection</th>
+                      <th className="w-[24%] px-3 py-3 text-left border-r border-slate-800">Match</th>
+                      <th className="w-[14%] px-3 py-3 text-left border-r border-slate-800">Player</th>
+                      <th className="w-[17%] px-3 py-3 text-left border-r border-slate-800">Selection</th>
                       <th className="w-16 px-2.5 py-3 text-center border-r border-slate-800">Odds</th>
                       <th className="w-20 px-2.5 py-3 text-center border-r border-slate-800">Bookmaker</th>
                       <th className="w-16 px-2.5 py-3 text-center border-r border-slate-800">Stake</th>
@@ -429,12 +429,12 @@ export default function Home() {
                           </td>
                           <td className="px-2.5 py-3.5 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap align-top">{formatMatchDate(bet.match_date)}</td>
                           <td className="px-3 py-3.5 font-medium text-slate-200 border-r border-slate-800/50 align-top">
-                            <Link href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="block leading-snug break-words hover:text-emerald-400 transition-colors">
+                            <Link href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="block truncate hover:text-emerald-400 transition-colors" title={bet.event}>
                               {bet.event}
                             </Link>
                           </td>
                           <td className="px-3 py-3.5 text-slate-300 border-r border-slate-800/50 align-top"><span className="block truncate">{bet.player || "–"}</span></td>
-                          <td className="px-3 py-3.5 text-slate-300 border-r border-slate-800/50 align-top"><span className="block truncate">{bet.selection}</span></td>
+                          <td className="px-3 py-3.5 text-slate-300 border-r border-slate-800/50 align-top"><span className="block whitespace-normal break-words leading-snug" title={bet.selection}>{bet.selection}</span></td>
                           <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-top">
                             <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
                           </td>
@@ -549,9 +549,9 @@ export default function Home() {
                     <tr className="border-b border-slate-700 bg-slate-900/50 text-[11px] text-slate-500 uppercase">
                       <th className="w-11 px-2.5 py-3 text-left border-r border-slate-800"></th>
                       <th className="w-16 px-2.5 py-3 text-left border-r border-slate-800">Date</th>
-                      <th className="w-[28%] px-3 py-3 text-left border-r border-slate-800">Match</th>
-                      <th className="w-[16%] px-3 py-3 text-left border-r border-slate-800">Player</th>
-                      <th className="w-[12%] px-3 py-3 text-left border-r border-slate-800">Selection</th>
+                      <th className="w-[24%] px-3 py-3 text-left border-r border-slate-800">Match</th>
+                      <th className="w-[14%] px-3 py-3 text-left border-r border-slate-800">Player</th>
+                      <th className="w-[17%] px-3 py-3 text-left border-r border-slate-800">Selection</th>
                       <th className="w-16 px-2.5 py-3 text-center border-r border-slate-800">Odds</th>
                       <th className="w-20 px-2.5 py-3 text-center border-r border-slate-800">Bookmaker</th>
                       <th className="w-16 px-2.5 py-3 text-center border-r border-slate-800">Stake</th>
@@ -570,12 +570,12 @@ export default function Home() {
                           </td>
                           <td className="px-2.5 py-3.5 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap align-top">{formatMatchDate(bet.match_date)}</td>
                           <td className="px-3 py-3.5 font-medium text-slate-200 border-r border-slate-800/50 align-top">
-                            <Link href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="block leading-snug break-words hover:text-emerald-400 transition-colors">
+                            <Link href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="block truncate hover:text-emerald-400 transition-colors" title={bet.event}>
                               {bet.event}
                             </Link>
                           </td>
                           <td className="px-3 py-3.5 text-slate-300 border-r border-slate-800/50 align-top"><span className="block truncate">{bet.player || "–"}</span></td>
-                          <td className="px-3 py-3.5 text-slate-300 border-r border-slate-800/50 align-top"><span className="block truncate">{bet.selection}</span></td>
+                          <td className="px-3 py-3.5 text-slate-300 border-r border-slate-800/50 align-top"><span className="block whitespace-normal break-words leading-snug" title={bet.selection}>{bet.selection}</span></td>
                           <td className="px-2.5 py-3.5 text-center border-r border-slate-800/50 align-top">
                             <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
                           </td>
@@ -750,4 +750,6 @@ export default function Home() {
     </div>
   );
 }
+
+
 
