@@ -87,6 +87,7 @@ TEAM_ALIASES = {
     "milan": "milan",
     "inter": "inter",
     "inter milan": "inter",
+    "inter milano": "inter",
     "internazionale": "inter",
     "lazio rome": "lazio",
     "hellas verona": "verona",

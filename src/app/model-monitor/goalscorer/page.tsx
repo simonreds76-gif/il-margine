@@ -179,6 +179,7 @@ const TEAM_ALIASES: Record<string, string> = {
   milan: "milan",
   inter: "inter",
   "inter milan": "inter",
+  "inter milano": "inter",
   internazionale: "inter",
   "lazio rome": "lazio",
   lazio: "lazio",
@@ -968,6 +969,15 @@ function computeShadowSummary(rows: CsvRow[]): ShadowSummary {
   };
 }
 
+function shadowRowActivityTime(row: CsvRow): number {
+  const candidates = [row.settled_at, row.compared_at, row.kickoff, row.date];
+  for (const candidate of candidates) {
+    const parsed = Date.parse(candidate ?? "");
+    if (!Number.isNaN(parsed)) return parsed;
+  }
+  return 0;
+}
+
 function shadowStakeLabel(row: CsvRow): string {
   const explicitStake =
     parseFloatMaybe(row.stake_units) ??
@@ -1524,16 +1534,7 @@ export default async function GoalscorerMonitorPage() {
   const rows = leagueDatasets.flatMap((dataset) => dataset.rows);
   const shadowRows = shadowContents.flatMap((text) => (text ? parseCsv(text) : []));
   const shadowSummary = computeShadowSummary(shadowRows);
-  const settledShadowRows = shadowRows
-    .filter(isSettledShadowRow)
-    .sort((left, right) => {
-      const leftTime = Date.parse(left.settled_at || left.kickoff || left.date || "");
-      const rightTime = Date.parse(right.settled_at || right.kickoff || right.date || "");
-      return rightTime - leftTime;
-    });
-  const openShadowRows = shadowRows
-    .filter((row) => !isSettledShadowRow(row))
-    .sort((left, right) => (parseFloatMaybe(right.ev) ?? 0) - (parseFloatMaybe(left.ev) ?? 0));
+  const latestTrackedRows = [...shadowRows].sort((left, right) => shadowRowActivityTime(right) - shadowRowActivityTime(left));
   const publicRows = rows.filter((row) => (row.public_action ?? "") === "surface");
   const highRows = [...publicRows];
   const caveatRows = rows.filter((row) => (row.shadow_action ?? "") === "shadow_track" && (row.public_action ?? "") !== "surface");
@@ -1929,8 +1930,8 @@ export default async function GoalscorerMonitorPage() {
             <div>
               <h2 className="text-lg font-semibold text-slate-100">Shadow tracker history</h2>
               <p className="mt-1 text-sm text-slate-400">
-                This is the actual historical record for public-ready goalscorer picks. Right now it is almost empty because
-                the tracker only logs high-confidence starters after the lineup rerun, and we have not built a settled sample yet.
+                This is the actual historical record for goalscorer rows that were logged into shadow tracking. It includes
+                softer monitor-only ideas as well as cleaner starter cases, so it is the place to check what we actually tracked yesterday.
               </p>
             </div>
             <Link
@@ -1954,8 +1955,8 @@ export default async function GoalscorerMonitorPage() {
             <div className="rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4">
               <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">What counts as public-high history</h3>
               <p className="mt-3 text-sm leading-6 text-slate-400">
-                Only rows that pass the high-confidence filter and confirm as starters get written into the shadow tracker. So
-                this section is the real historical record for eventual public picks, not the whole comparison board.
+                Only rows that the live pipeline explicitly marks for shadow tracking get written here. So this section is the
+                real log of tracked goalscorer ideas, not the whole comparison board and not just the current live shortlist.
               </p>
               <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/60 p-3 text-sm text-slate-300">
                 Win rate {formatPct(shadowSummary.winRate, 1)} | ROI sample {shadowSummary.settled} settled picks, so treat the headline ROI as directional only until the book is much larger.
@@ -1966,18 +1967,69 @@ export default async function GoalscorerMonitorPage() {
               <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">Latest tracked rows</h3>
               {shadowRows.length === 0 ? (
                 <div className="mt-3 rounded-xl border border-slate-800/80 bg-slate-950/50 p-4 text-sm leading-6 text-slate-500">
-                  No goalscorer shadow signals have been logged yet. The live monitor can still show current public-ready rows,
-                  but there is no historical shadow sample to judge yet.
+                  No goalscorer shadow signals have been logged yet. The live monitor can still show current rows, but there is
+                  no historical shadow sample to judge yet.
                 </div>
               ) : (
-                <div className="mt-3 space-y-3">
-                  {openShadowRows.slice(0, 3).map((row) => (
-                    <ShadowTrackedRowCard key={`open-${row.date}-${row.player}-${row.match}`} row={row} />
-                  ))}
-                  {settledShadowRows.slice(0, 2).map((row) => (
-                    <ShadowTrackedRowCard key={`settled-${row.date}-${row.player}-${row.match}`} row={row} />
-                  ))}
-                </div>
+                <>
+                  <div className="mt-3 space-y-3">
+                    {latestTrackedRows.slice(0, 8).map((row) => (
+                      <ShadowTrackedRowCard
+                        key={`${isSettledShadowRow(row) ? "settled" : "open"}-${row.date}-${row.player}-${row.match}`}
+                        row={row}
+                      />
+                    ))}
+                  </div>
+                  <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/50 p-3">
+                    <div className="mb-3 text-[11px] uppercase tracking-[0.18em] text-slate-500">Recent tracked archive</div>
+                    <div className="max-h-80 overflow-auto">
+                      <table className="min-w-full text-sm">
+                        <thead className="sticky top-0 bg-slate-950/95 text-left text-slate-500">
+                          <tr className="border-b border-slate-800">
+                            <th className="px-3 py-2 font-medium">Time</th>
+                            <th className="px-3 py-2 font-medium">Player</th>
+                            <th className="px-3 py-2 font-medium">Match</th>
+                            <th className="px-3 py-2 font-medium">Type</th>
+                            <th className="px-3 py-2 font-medium">XI</th>
+                            <th className="px-3 py-2 font-medium">Odds / Fair</th>
+                            <th className="px-3 py-2 font-medium">EV</th>
+                            <th className="px-3 py-2 font-medium">Result</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {latestTrackedRows.slice(0, 50).map((row) => {
+                            const settled = isSettledShadowRow(row);
+                            const resultLabel = settled ? (row.bet_outcome ?? "settled").toUpperCase() : "OPEN";
+                            const resultTone = shadowResultTone(row);
+                            return (
+                              <tr key={`archive-${row.date}-${row.player}-${row.match}-${row.compared_at ?? ""}`} className="border-b border-slate-900/80">
+                                <td className="px-3 py-2 text-xs text-slate-500">
+                                  {formatDateTime(row.settled_at || row.compared_at || row.kickoff || row.date)}
+                                </td>
+                                <td className="px-3 py-2">
+                                  <div className="font-medium text-slate-100">{row.player || "Unknown player"}</div>
+                                  <div className="text-xs text-slate-500">{row.team || "Unknown team"}</div>
+                                </td>
+                                <td className="px-3 py-2 text-slate-300">{row.match || "Unknown match"}</td>
+                                <td className="px-3 py-2 text-xs text-slate-400">{humanizeToken(row.signal_type || "shadow_track")}</td>
+                                <td className="px-3 py-2 text-xs text-slate-400">{humanizeToken(row.lineup_state || "unknown")}</td>
+                                <td className="px-3 py-2 text-slate-300">
+                                  {(parseFloatMaybe(row.best_bookmaker_odds) != null ? formatDecimal(parseFloatMaybe(row.best_bookmaker_odds), 2) : "n/a")}
+                                  {" / "}
+                                  {(parseFloatMaybe(row.model_fair_odds) != null ? formatDecimal(parseFloatMaybe(row.model_fair_odds), 2) : "n/a")}
+                                </td>
+                                <td className={`px-3 py-2 font-medium ${(parseFloatMaybe(row.ev) ?? 0) >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                                  {parseFloatMaybe(row.ev) != null ? formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1) : "n/a"}
+                                </td>
+                                <td className={`px-3 py-2 text-xs font-semibold ${resultTone}`}>{resultLabel}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           </div>

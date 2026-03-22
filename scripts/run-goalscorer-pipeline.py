@@ -250,9 +250,10 @@ def main() -> None:
         _run([sys.executable, pinnacle_script, "--out-dir", str(ROOT / "data" / "goalscorer" / "inbox")])
         odds_paths = _expand_paths(args.odds_input)
 
-    lineups_path = args.lineups
+    configured_lineups_path = str(ROOT / league_config["lineups"])
+    lineups_path = args.lineups or (configured_lineups_path if os.path.exists(configured_lineups_path) else "")
     if args.fetch_lineups:
-        lineups_path = lineups_path or str(ROOT / league_config["lineups"])
+        lineups_path = lineups_path or configured_lineups_path
         _run(
             [
                 sys.executable,
