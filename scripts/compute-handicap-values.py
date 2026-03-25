@@ -7,12 +7,14 @@ Run after: (1) oncourt-compute-fair-odds.py, (2) pinnacle-scrape-odds.py
 If daily_fair_odds is recomputed later (e.g. via Supabase), spread columns get overwritten
 with null. Re-run this script or the full pipeline (run-daily-odds.py) to restore handicaps.
 
-Matches daily_fair_odds to bookmaker_odds_snapshot, rebuilds a point-probability pair that
-is consistent with the *final* blended match win probability (`p1_win_prob`), then computes
-model spread edges and PATCHes daily_fair_odds with spread + handicap_edge columns.
+Matches daily_fair_odds to bookmaker_odds_snapshot, uses the stored matchup point-probability
+pair (`p_a`, `p_b`) when available, and only falls back to a reverse-solved symmetric pair
+from the final blended match win probability (`p1_win_prob`) if those fields are missing.
+It then computes model spread edges and PATCHes daily_fair_odds with spread + handicap_edge
+columns.
 
-This avoids the old mismatch where ML fair odds used the final blended probability but
-handicaps were still priced from the earlier pre-blend `p_a/p_b` layer.
+Using stored `p_a` / `p_b` keeps the handicap path tied to the actual matchup model rather
+than reconstructing a synthetic symmetric margin shape around the league average.
 
 Usage:
   python scripts/compute-handicap-values.py
@@ -93,6 +95,18 @@ def _solve_spw_for_match_prob(
         _clamp(avg_spw + mid, clamp_lo, clamp_hi),
         _clamp(avg_spw - mid, clamp_lo, clamp_hi),
     )
+
+
+def _parse_point_prob(value) -> float | None:
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(v):
+        return None
+    if not (0.0 < v < 1.0):
+        return None
+    return v
 
 
 def _court_to_surface(court_name: str | None) -> str:
@@ -603,6 +617,8 @@ def main():
     edge_cal_p2: list[float] = []
     implied_match_old: list[float] = []
     implied_match_new: list[float] = []
+    used_stored_point_probs = 0
+    fallback_solved_point_probs = 0
     for m in matched:
         fo, pin, pin_reversed_for_fair = m["fair"], m["pinnacle"], m["pin_reversed_for_fair"]
         p1_win_prob = float(fo.get("p1_win_prob") or 0.0)
@@ -615,15 +631,15 @@ def main():
         avg_spw_surface = league_avg_by_surface.get(surface, SURFACE_LEAGUE_AVG.get(surface, SURFACE_LEAGUE_AVG["N/A"]))
         if tid is not None:
             avg_spw_surface = venue_serve_lookup.get((int(tid), surface), avg_spw_surface)
-        p_a, p_b = _solve_spw_for_match_prob(p1_win_prob, avg_spw_surface)
-
-        p_a_old = fo.get("p_a")
-        p_b_old = fo.get("p_b")
+        p_a_old = _parse_point_prob(fo.get("p_a"))
+        p_b_old = _parse_point_prob(fo.get("p_b"))
         if p_a_old is not None and p_b_old is not None:
-            try:
-                implied_match_old.append(prob_match_best_of_3(float(p_a_old), float(p_b_old)))
-            except (TypeError, ValueError):
-                pass
+            p_a, p_b = p_a_old, p_b_old
+            used_stored_point_probs += 1
+            implied_match_old.append(prob_match_best_of_3(p_a_old, p_b_old))
+        else:
+            p_a, p_b = _solve_spw_for_match_prob(p1_win_prob, avg_spw_surface)
+            fallback_solved_point_probs += 1
         implied_match_new.append(prob_match_best_of_3(p_a, p_b))
         pin_line = float(pin.get("spread_line") or 0.0)
 
@@ -696,14 +712,19 @@ def main():
     print(f"{action} {updated} rows with spread + handicap edge")
     if implied_match_new:
         print(
-            "Match-prob consistency: "
+            "Handicap input implied match prob: "
             f"rebuilt mean={mean(implied_match_new):.4f}"
             + (
-                f" vs legacy mean={mean(implied_match_old):.4f}"
+                f" vs stored reference mean={mean(implied_match_old):.4f}"
                 if implied_match_old
                 else ""
             )
         )
+    print(
+        "Point-probability source: "
+        f"stored_p_a_p_b={used_stored_point_probs} "
+        f"fallback_reverse_solve={fallback_solved_point_probs}"
+    )
     print("Edge diagnostics (P1 +line):")
     summarize_edges("raw", edge_raw_p1)
     summarize_edges("cal", edge_cal_p1)
