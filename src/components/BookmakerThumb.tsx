@@ -21,6 +21,10 @@ const SIZE_CLASSES = {
   lg: "w-12 h-12",
 } as const;
 
+const LOGO_SCALE: Record<string, number> = {
+  betway: 1.14,
+};
+
 interface BookmakerThumbProps {
   id: string;
   name: string;
@@ -41,6 +45,7 @@ export default function BookmakerThumb({ id, name, size = "md", className = "" }
 
   const currentSrc = logoPaths[srcIndex] ?? null;
   const showImage = currentSrc && !failed;
+  const scale = LOGO_SCALE[logoBase] ?? 1;
 
   const handleError = () => {
     if (srcIndex < logoPaths.length - 1) {
@@ -59,6 +64,7 @@ export default function BookmakerThumb({ id, name, size = "md", className = "" }
             src={currentSrc}
             alt={name}
             className="w-full h-full object-contain"
+            style={{ transform: `scale(${scale})` }}
             onError={handleError}
           />
         </div>

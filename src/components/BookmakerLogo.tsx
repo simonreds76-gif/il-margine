@@ -99,6 +99,7 @@ const logoScale: Record<string, number> = {
   pinnacle: 2,
   ladbrokes: 0.85,
   bwin: 1.05,
+  betway: 1.14,
 };
 
 const logoFrameClasses: Record<string, string> = {
