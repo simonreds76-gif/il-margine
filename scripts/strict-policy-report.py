@@ -67,6 +67,7 @@ EXCLUDE_SHORT_FAV_CONFIDENCE = {"high"}
 # Skip matches where model favourite odds < 1.25.
 # The model cannot price extreme mismatches — both sides are unreliable.
 MISPRICE_MODEL_FAV_ODDS_MIN = 1.25
+HEAVY_FAV_DOG_GUARD_MIN_FAV_PROB = 0.74
 
 DEFAULT_OVERLAY_POLICY_FILE = DATA_DIR / "tournament-segment-roi.csv"
 DEFAULT_OVERLAY_WINDOW = "prior_editions"
@@ -358,6 +359,20 @@ def is_excluded_short_favorite(surface: str, series_bucket: str, confidence: str
     if confidence not in EXCLUDE_SHORT_FAV_CONFIDENCE:
         return False
     return min(our_odds1, our_odds2) < EXCLUDE_SHORT_FAV_MAX_ODDS
+
+
+def is_excluded_heavy_favorite_dog(
+    surface: str,
+    series_bucket: str,
+    favorite_prob: float,
+    side: str,
+    favorite_side: str,
+) -> bool:
+    if surface != "Hard" or series_bucket != "Masters 1000":
+        return False
+    if side == favorite_side:
+        return False
+    return float(favorite_prob or 0.0) >= HEAVY_FAV_DOG_GUARD_MIN_FAV_PROB
 
 
 def strict_min_value_for(surface: str, series_bucket: str, confidence: str) -> float | None:
@@ -655,7 +670,7 @@ def main() -> int:
         f"{base}/daily_fair_odds",
         headers=headers,
         params={
-            "select": "id,tour_id,player1_id,player2_id,surface,odds1,odds2,confidence,spread_line,spread_odds1,spread_odds2,handicap_edge_p1,handicap_edge_p2",
+            "select": "id,tour_id,player1_id,player2_id,surface,p1_win_prob,p2_win_prob,odds1,odds2,confidence,spread_line,spread_odds1,spread_odds2,handicap_edge_p1,handicap_edge_p2",
             "limit": 2000,
         },
         timeout=30,
@@ -750,6 +765,10 @@ def main() -> int:
             continue
         our_odds1 = float(our_odds1)
         our_odds2 = float(our_odds2)
+        p1_win_prob = float(r.get("p1_win_prob") or 0.0)
+        p2_win_prob = float(r.get("p2_win_prob") or 0.0)
+        model_favorite_prob = max(p1_win_prob, p2_win_prob)
+        model_favorite_side = "P1" if p1_win_prob >= p2_win_prob else "P2"
         # ML only: skip matches where model favourite odds < 1.25.
         # Keep spreads eligible; this filter is for dog-moneyline distortions.
         model_fav_odds = min(our_odds1, our_odds2)
@@ -792,6 +811,7 @@ def main() -> int:
             and has_internal_ml_value
             and value_pct is not None
             and value_pct >= strict_min_value
+            and not is_excluded_heavy_favorite_dog(surface, series_bucket, model_favorite_prob, side, model_favorite_side)
         )
         volume_match = (
             volume_min_value is not None

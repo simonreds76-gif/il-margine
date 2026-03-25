@@ -136,6 +136,10 @@ const STRICT_POLICY_SHORT_FAVORITE_MAX_ODDS = 1.8;
 const STRICT_POLICY_SHORT_FAVORITE_CONFIDENCE = new Set<string>(["high"]);
 // Skip matches where model favourite odds < 1.25. Model cannot price extreme mismatches — both sides unreliable.
 const STRICT_POLICY_MISPRICE_FAV_ODDS_MIN = 1.25;
+// Proxy for the bad strict tail we found in backtesting: heavy-favourite Masters hard
+// matches where dog ML strict signals underperform. We keep this narrow and leave the
+// broader Masters calibration untouched.
+const STRICT_POLICY_HEAVY_FAV_DOG_GUARD_MIN_FAV_PROB = 0.74;
 const STRICT_POLICY_PRODUCTION_MODE: StrictPolicyMode =
   (process.env.STRICT_POLICY_PRODUCTION_MODE ?? "base").trim().toLowerCase() === "overlay"
     ? "overlay"
@@ -197,6 +201,11 @@ function buildStrictPolicyPayload(
       )}d`
     );
   }
+  exclusionRules.push(
+    `Exclude strict underdog MLs in Hard Masters 1000 when calibrated favourite win probability >= ${(
+      STRICT_POLICY_HEAVY_FAV_DOG_GUARD_MIN_FAV_PROB * 100
+    ).toFixed(0)}%`
+  );
   return {
     mode: STRICT_POLICY_MODE ? "strict" : "off",
     production_mode: STRICT_POLICY_PRODUCTION_MODE,
@@ -259,6 +268,19 @@ function strictPolicyExcludedByShortFavorite(
   if (!(favProb > 0 && favProb < 1)) return false;
   const favOdds = 1 / favProb;
   return favOdds < STRICT_POLICY_SHORT_FAVORITE_MAX_ODDS;
+}
+
+function strictPolicyExcludedByHeavyFavoriteDog(
+  surface: string,
+  seriesBucket: string,
+  favoriteProb: number,
+  side: "P1" | "P2",
+  favoriteSide: "P1" | "P2"
+): boolean {
+  if (!STRICT_POLICY_MODE) return false;
+  if (!(surface === "Hard" && seriesBucket === "Masters 1000")) return false;
+  if (side === favoriteSide) return false;
+  return favoriteProb >= STRICT_POLICY_HEAVY_FAV_DOG_GUARD_MIN_FAV_PROB;
 }
 
 /** Volume_275 profile rules (shadow-test ~275 bets/year). Same exclusions as strict. */
@@ -330,6 +352,7 @@ function firstBlockedReason(params: {
   pinnacleShortFavoriteExcluded: boolean;
   modelShortFavoriteExcluded: boolean;
   atp500HardShortFavoriteExcluded: boolean;
+  heavyFavoriteDogExcluded: boolean;
   shadowMinVal: number | null;
   rawValueP1?: number;
   rawValueP2?: number;
@@ -339,6 +362,7 @@ function firstBlockedReason(params: {
   if (params.pinnacleShortFavoriteExcluded) return "Blocked: Pinnacle fav <1.25";
   if (params.modelShortFavoriteExcluded) return "Blocked: model fav <1.25";
   if (params.atp500HardShortFavoriteExcluded) return "Blocked: ATP500 Hard short favorite filter";
+  if (params.heavyFavoriteDogExcluded) return "Blocked: Masters hard heavy-favorite dog ML guard";
   if (params.shadowMinVal == null) return `Blocked: not in ${shadowProfileLabel(SHADOW_POLICY_MODE)} segment`;
   const bestRawValue = Math.max(params.rawValueP1 ?? Number.NEGATIVE_INFINITY, params.rawValueP2 ?? Number.NEGATIVE_INFINITY);
   if (Number.isFinite(bestRawValue) && bestRawValue < params.shadowMinVal) {
@@ -1110,6 +1134,8 @@ async function run(): Promise<Response> {
     const confidence = confidenceRaw ? confidenceRaw.toLowerCase() : undefined;
     const p1WinProb = r.p1_win_prob != null ? Number(r.p1_win_prob) : 0;
     const p2WinProb = r.p2_win_prob != null ? Number(r.p2_win_prob) : 0;
+    const modelFavoriteProb = Math.max(p1WinProb, p2WinProb);
+    const modelFavoriteSide: "P1" | "P2" = p1WinProb >= p2WinProb ? "P1" : "P2";
     const p1Injury = isRecentInjuredPlayer(p1Name, injuryIndex);
     const p2Injury = isRecentInjuredPlayer(p2Name, injuryIndex);
     const recentInjuredAny = p1Injury.matched || p2Injury.matched;
@@ -1153,10 +1179,39 @@ async function run(): Promise<Response> {
       !mispriceExcluded &&
       !injuryExcluded;
     if (policyAllows) strictPolicyEligibleCount += 1;
-    const strictCandidateValueP1 =
+    const strictCandidateValueP1Base =
       policyAllows && rawValueP1 != null && rawValueP1 >= STRICT_POLICY_INTERNAL_MIN_VALUE_PCT ? rawValueP1 : undefined;
-    const strictCandidateValueP2 =
+    const strictCandidateValueP2Base =
       policyAllows && rawValueP2 != null && rawValueP2 >= STRICT_POLICY_INTERNAL_MIN_VALUE_PCT ? rawValueP2 : undefined;
+    const strictHeavyFavoriteDogExcludedP1 =
+      strictCandidateValueP1Base != null &&
+      strictPolicyExcludedByHeavyFavoriteDog(
+        r.surface ?? "",
+        seriesBucket,
+        modelFavoriteProb,
+        "P1",
+        modelFavoriteSide
+      );
+    const strictHeavyFavoriteDogExcludedP2 =
+      strictCandidateValueP2Base != null &&
+      strictPolicyExcludedByHeavyFavoriteDog(
+        r.surface ?? "",
+        seriesBucket,
+        modelFavoriteProb,
+        "P2",
+        modelFavoriteSide
+      );
+    if (
+      policyBaseAllows &&
+      !shortFavoriteExcluded &&
+      !mispriceExcluded &&
+      !injuryExcluded &&
+      (strictHeavyFavoriteDogExcludedP1 || strictHeavyFavoriteDogExcludedP2)
+    ) {
+      strictPolicyExcludedCount += 1;
+    }
+    const strictCandidateValueP1 = strictHeavyFavoriteDogExcludedP1 ? undefined : strictCandidateValueP1Base;
+    const strictCandidateValueP2 = strictHeavyFavoriteDogExcludedP2 ? undefined : strictCandidateValueP2Base;
     const strictShadowCandidate = strictCandidateValueP1 != null || strictCandidateValueP2 != null;
     let strictValueP1 = strictCandidateValueP1;
     let strictValueP2 = strictCandidateValueP2;
@@ -1253,6 +1308,7 @@ async function run(): Promise<Response> {
       pinnacleShortFavoriteExcluded: pinFavOddsMispriceExcluded,
       modelShortFavoriteExcluded: modelFavOddsMispriceExcluded,
       atp500HardShortFavoriteExcluded: shortFavoriteExcluded,
+      heavyFavoriteDogExcluded: strictHeavyFavoriteDogExcludedP1 || strictHeavyFavoriteDogExcludedP2,
       shadowMinVal: volumeMinVal,
       rawValueP1,
       rawValueP2,
