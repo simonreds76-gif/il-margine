@@ -4,7 +4,7 @@ import { BASE_URL, BOOKMAKERS_INDEXABLE } from "@/lib/config";
 
 const title = "Recommended Bookmakers | 8 Field-Tested Operators & Betting Glossary";
 const description =
-  "Eight recommended bookmakers (Midnite, BetVictor, Bwin, Coral, Ladbrokes, BetMGM, William Hill, Betfred): honest reviews, welcome offers, key concepts, comparison table, and industry glossary.";
+  "Eight recommended bookmakers (Midnite, BetVictor, Bwin, Coral, Ladbrokes, BetMGM, William Hill, Betway): honest reviews, welcome offers, key concepts, comparison table, and industry glossary.";
 const url = `${BASE_URL}/bookmakers`;
 
 export const metadata: Metadata = {

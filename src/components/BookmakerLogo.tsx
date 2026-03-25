@@ -110,6 +110,7 @@ const preferSvg: Record<string, boolean> = {
   bet365: true,
   williamhill: true,
   skybet: true,
+  betway: true,
 };
 
 // All logos one step larger so thumbnails are easier to recognise (was 24/32/40px)

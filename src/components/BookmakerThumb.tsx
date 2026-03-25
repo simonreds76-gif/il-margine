@@ -11,6 +11,7 @@ const LOGO_MAP: Record<string, string> = {
   betmgm: "betmgm",
   "william-hill": "williamhill",
   betfred: "betfred",
+  betway: "betway",
 };
 
 const SIZE_CLASSES = {
