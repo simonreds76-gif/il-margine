@@ -13,19 +13,29 @@ const REVIEW_PACK_TOKEN =
   process.env.MODEL_MONITOR_REVIEW_TOKEN ||
   "";
 
-const REVIEW_FILES = [
-  "scripts/fotmob-fetch-lineups.py",
-  "scripts/goalscorer_penalty_utils.py",
-  "scripts/goalscorer-live-compare.py",
-  "scripts/goalscorer-model.py",
-  "scripts/goalscorer-penalty-review.py",
-  "scripts/goalscorer-live-penalty-review.py",
-  "scripts/run-goalscorer-pipeline.py",
-  "scripts/build-penalty-baseline-evidence.py",
-  "scripts/goalscorer-shadow-tracker.py",
-  "src/lib/goalscorer-live-files.ts",
-  "src/app/model-monitor/goalscorer/page.tsx",
-] as const;
+const REVIEW_PACKS = {
+  goalscorer: [
+    "scripts/fotmob-fetch-lineups.py",
+    "scripts/goalscorer_penalty_utils.py",
+    "scripts/goalscorer-live-compare.py",
+    "scripts/goalscorer-model.py",
+    "scripts/goalscorer-penalty-review.py",
+    "scripts/goalscorer-live-penalty-review.py",
+    "scripts/run-goalscorer-pipeline.py",
+    "scripts/build-penalty-baseline-evidence.py",
+    "scripts/goalscorer-shadow-tracker.py",
+    "src/lib/goalscorer-live-files.ts",
+    "src/app/model-monitor/goalscorer/page.tsx",
+  ],
+  tennis: [
+    "src/lib/tennis_prob.py",
+    "scripts/oncourt-compute-fair-odds.py",
+    "scripts/compute-handicap-values.py",
+    "scripts/shrinkage_v2.py",
+  ],
+} as const;
+
+type ReviewPackName = keyof typeof REVIEW_PACKS;
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -43,6 +53,12 @@ function getSuppliedToken(request: Request): string {
     request.headers.get("x-review-token")?.trim() ||
     ""
   );
+}
+
+function getRequestedPack(request: Request): ReviewPackName {
+  const url = new URL(request.url);
+  const requested = (url.searchParams.get("pack")?.trim().toLowerCase() || "goalscorer") as ReviewPackName;
+  return requested in REVIEW_PACKS ? requested : "goalscorer";
 }
 
 export async function GET(request: Request) {
@@ -67,9 +83,11 @@ export async function GET(request: Request) {
     }
   }
 
+  const pack = getRequestedPack(request);
+  const reviewFiles = REVIEW_PACKS[pack];
   const files: ReviewPackFile[] = [];
 
-  for (const relativePath of REVIEW_FILES) {
+  for (const relativePath of reviewFiles) {
     const absolutePath = path.join(process.cwd(), relativePath);
     const content = await fs.readFile(absolutePath, "utf8");
     files.push({
@@ -82,6 +100,8 @@ export async function GET(request: Request) {
   return Response.json(
     {
       generated_at: new Date().toISOString(),
+      pack,
+      available_packs: Object.keys(REVIEW_PACKS),
       file_count: files.length,
       files,
     },
