@@ -206,6 +206,7 @@ function buildStrictPolicyPayload(
       STRICT_POLICY_HEAVY_FAV_DOG_GUARD_MIN_FAV_PROB * 100
     ).toFixed(0)}%`
   );
+  exclusionRules.push("Suppress strict dog MLs when the same match also shows a favourite handicap signal");
   return {
     mode: STRICT_POLICY_MODE ? "strict" : "off",
     production_mode: STRICT_POLICY_PRODUCTION_MODE,
@@ -283,6 +284,17 @@ function strictPolicyExcludedByHeavyFavoriteDog(
   return favoriteProb >= STRICT_POLICY_HEAVY_FAV_DOG_GUARD_MIN_FAV_PROB;
 }
 
+function strictPolicyConflictWithFavoriteSpread(
+  favoriteSide: "P1" | "P2",
+  spreadLine: number | null | undefined,
+  handicapEdgeP1: number | null | undefined,
+  handicapEdgeP2: number | null | undefined
+): boolean {
+  if (spreadLine == null || handicapEdgeP1 == null || handicapEdgeP2 == null) return false;
+  if (favoriteSide === "P1") return spreadLine < 0 && handicapEdgeP1 >= HANDICAP_MIN_EDGE_PCT;
+  return spreadLine > 0 && handicapEdgeP2 >= HANDICAP_MIN_EDGE_PCT;
+}
+
 /** Volume_275 profile rules (shadow-test ~275 bets/year). Same exclusions as strict. */
 const VOLUME_275_RULES: Array<{
   surface: string;
@@ -353,6 +365,7 @@ function firstBlockedReason(params: {
   modelShortFavoriteExcluded: boolean;
   atp500HardShortFavoriteExcluded: boolean;
   heavyFavoriteDogExcluded: boolean;
+  favoriteSpreadConflictExcluded: boolean;
   shadowMinVal: number | null;
   rawValueP1?: number;
   rawValueP2?: number;
@@ -363,6 +376,7 @@ function firstBlockedReason(params: {
   if (params.modelShortFavoriteExcluded) return "Blocked: model fav <1.25";
   if (params.atp500HardShortFavoriteExcluded) return "Blocked: ATP500 Hard short favorite filter";
   if (params.heavyFavoriteDogExcluded) return "Blocked: Masters hard heavy-favorite dog ML guard";
+  if (params.favoriteSpreadConflictExcluded) return "Blocked: same-match favourite handicap conflict";
   if (params.shadowMinVal == null) return `Blocked: not in ${shadowProfileLabel(SHADOW_POLICY_MODE)} segment`;
   const bestRawValue = Math.max(params.rawValueP1 ?? Number.NEGATIVE_INFINITY, params.rawValueP2 ?? Number.NEGATIVE_INFINITY);
   if (Number.isFinite(bestRawValue) && bestRawValue < params.shadowMinVal) {
@@ -1136,6 +1150,9 @@ async function run(): Promise<Response> {
     const p2WinProb = r.p2_win_prob != null ? Number(r.p2_win_prob) : 0;
     const modelFavoriteProb = Math.max(p1WinProb, p2WinProb);
     const modelFavoriteSide: "P1" | "P2" = p1WinProb >= p2WinProb ? "P1" : "P2";
+    const spreadLine = r.spread_line != null ? Number(r.spread_line) : undefined;
+    const handicapEdgeP1 = r.handicap_edge_p1 != null ? Number(r.handicap_edge_p1) : undefined;
+    const handicapEdgeP2 = r.handicap_edge_p2 != null ? Number(r.handicap_edge_p2) : undefined;
     const p1Injury = isRecentInjuredPlayer(p1Name, injuryIndex);
     const p2Injury = isRecentInjuredPlayer(p2Name, injuryIndex);
     const recentInjuredAny = p1Injury.matched || p2Injury.matched;
@@ -1201,17 +1218,38 @@ async function run(): Promise<Response> {
         "P2",
         modelFavoriteSide
       );
+    const strictFavoriteSpreadConflict =
+      policyBaseAllows &&
+      !shortFavoriteExcluded &&
+      !recentInjuredAny &&
+      strictPolicyConflictWithFavoriteSpread(
+        modelFavoriteSide,
+        spreadLine,
+        handicapEdgeP1,
+        handicapEdgeP2
+      );
+    const strictFavoriteSpreadConflictP1 =
+      strictCandidateValueP1Base != null && modelFavoriteSide !== "P1" && strictFavoriteSpreadConflict;
+    const strictFavoriteSpreadConflictP2 =
+      strictCandidateValueP2Base != null && modelFavoriteSide !== "P2" && strictFavoriteSpreadConflict;
     if (
       policyBaseAllows &&
       !shortFavoriteExcluded &&
       !mispriceExcluded &&
       !injuryExcluded &&
-      (strictHeavyFavoriteDogExcludedP1 || strictHeavyFavoriteDogExcludedP2)
+      (
+        strictHeavyFavoriteDogExcludedP1 ||
+        strictHeavyFavoriteDogExcludedP2 ||
+        strictFavoriteSpreadConflictP1 ||
+        strictFavoriteSpreadConflictP2
+      )
     ) {
       strictPolicyExcludedCount += 1;
     }
-    const strictCandidateValueP1 = strictHeavyFavoriteDogExcludedP1 ? undefined : strictCandidateValueP1Base;
-    const strictCandidateValueP2 = strictHeavyFavoriteDogExcludedP2 ? undefined : strictCandidateValueP2Base;
+    const strictCandidateValueP1 =
+      strictHeavyFavoriteDogExcludedP1 || strictFavoriteSpreadConflictP1 ? undefined : strictCandidateValueP1Base;
+    const strictCandidateValueP2 =
+      strictHeavyFavoriteDogExcludedP2 || strictFavoriteSpreadConflictP2 ? undefined : strictCandidateValueP2Base;
     const strictShadowCandidate = strictCandidateValueP1 != null || strictCandidateValueP2 != null;
     let strictValueP1 = strictCandidateValueP1;
     let strictValueP2 = strictCandidateValueP2;
@@ -1309,6 +1347,7 @@ async function run(): Promise<Response> {
       modelShortFavoriteExcluded: modelFavOddsMispriceExcluded,
       atp500HardShortFavoriteExcluded: shortFavoriteExcluded,
       heavyFavoriteDogExcluded: strictHeavyFavoriteDogExcludedP1 || strictHeavyFavoriteDogExcludedP2,
+      favoriteSpreadConflictExcluded: strictFavoriteSpreadConflictP1 || strictFavoriteSpreadConflictP2,
       shadowMinVal: volumeMinVal,
       rawValueP1,
       rawValueP2,

@@ -375,6 +375,19 @@ def is_excluded_heavy_favorite_dog(
     return float(favorite_prob or 0.0) >= HEAVY_FAV_DOG_GUARD_MIN_FAV_PROB
 
 
+def has_favorite_spread_conflict(
+    favorite_side: str,
+    spread_line: float | None,
+    handicap_edge_p1: float | None,
+    handicap_edge_p2: float | None,
+) -> bool:
+    if spread_line is None or handicap_edge_p1 is None or handicap_edge_p2 is None:
+        return False
+    if favorite_side == "P1":
+        return spread_line < 0 and handicap_edge_p1 >= HANDICAP_MIN_EDGE_PCT
+    return spread_line > 0 and handicap_edge_p2 >= HANDICAP_MIN_EDGE_PCT
+
+
 def strict_min_value_for(surface: str, series_bucket: str, confidence: str) -> float | None:
     segment_key = f"{surface}|{series_bucket}"
     if segment_key != ALLOWED_SEGMENT:
@@ -798,11 +811,28 @@ def main() -> int:
             injury_skipped_matches += 1
             continue
 
+        spread_line = r.get("spread_line")
+        spread_o1 = r.get("spread_odds1")
+        spread_o2 = r.get("spread_odds2")
+        he_p1 = r.get("handicap_edge_p1")
+        he_p2 = r.get("handicap_edge_p2")
+        sl = float(spread_line) if spread_line is not None else None
+        so1 = float(spread_o1) if spread_o1 is not None else None
+        so2 = float(spread_o2) if spread_o2 is not None else None
+        he1 = float(he_p1) if he_p1 is not None else None
+        he2 = float(he_p2) if he_p2 is not None else None
+
         side = "P1" if (value_p1 or 0) >= (value_p2 or 0) else "P2"
         value_pct = value_p1 if side == "P1" else value_p2
         has_internal_ml_value = (
             (value_p1 is not None and value_p1 >= INTERNAL_TRACK_MIN_VALUE_PCT)
             or (value_p2 is not None and value_p2 >= INTERNAL_TRACK_MIN_VALUE_PCT)
+        )
+        strict_favorite_spread_conflict = (
+            strict_min_value is not None
+            and not inj_any
+            and has_favorite_spread_conflict(model_favorite_side, sl, he1, he2)
+            and side != model_favorite_side
         )
         strict_match = (
             strict_min_value is not None
@@ -812,6 +842,7 @@ def main() -> int:
             and value_pct is not None
             and value_pct >= strict_min_value
             and not is_excluded_heavy_favorite_dog(surface, series_bucket, model_favorite_prob, side, model_favorite_side)
+            and not strict_favorite_spread_conflict
         )
         volume_match = (
             volume_min_value is not None
@@ -884,11 +915,6 @@ def main() -> int:
 
         # Handicap signals: when handicap_edge >= 20% on P1+ or P2-
         # Keep them flat 1u and profile-gated the same way as match signals.
-        spread_line = r.get("spread_line")
-        spread_o1 = r.get("spread_odds1")
-        spread_o2 = r.get("spread_odds2")
-        he_p1 = r.get("handicap_edge_p1")
-        he_p2 = r.get("handicap_edge_p2")
         profile_spread_eligible = strict_spread_eligible or volume_spread_eligible or spread_shadow_eligible
         if profile_spread_eligible and (
             spread_line is not None
@@ -898,11 +924,6 @@ def main() -> int:
             and he_p2 is not None
             and not inj_any
         ):
-            sl = float(spread_line)
-            so1 = float(spread_o1)
-            so2 = float(spread_o2)
-            he1 = float(he_p1)
-            he2 = float(he_p2)
             if he1 >= (SPREAD_SHADOW_MIN_EDGE_PCT if args.signal_profile == "spread_shadow" else HANDICAP_MIN_EDGE_PCT):
                 stake_units_h1, stake_gbp_h1, stake_model_h1 = compute_stake_units(
                     our_odds1=our_odds1,
