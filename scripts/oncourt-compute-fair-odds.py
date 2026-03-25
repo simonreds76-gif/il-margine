@@ -171,6 +171,9 @@ ADV_DISCIPLINE_WEIGHT = 0.03
 ADV_TOTAL_CAP = 0.015
 
 INCLUDE_TOUR_RANK_MAX = 3
+
+# PostgREST caps each request; today_atp often has 1500+ rows — a single limit=1000 drops later tours (e.g. Naples Challenger).
+ONCOURT_TODAY_PAGE_SIZE = 1000
 UNKNOWN_PLAYER_IDS = {3699, 3700}
 
 ELO_RELIABILITY_MIN = 0.50
@@ -1009,12 +1012,33 @@ def main():
         )
 
     # 1) Today's fixtures (dedupe by match key so same match isn't listed twice)
-    r = requests.get(f"{base}/oncourt_today", headers=headers, params={"select": "*", "limit": 1000}, timeout=REQ_TIMEOUT)
-    r.raise_for_status()
-    raw_fixtures = r.json()
+    raw_fixtures = []
+    off = 0
+    while True:
+        r = requests.get(
+            f"{base}/oncourt_today",
+            headers=headers,
+            params={
+                "select": "*",
+                "limit": ONCOURT_TODAY_PAGE_SIZE,
+                "offset": off,
+                # Stable order so pagination is complete (default order can hide high tour_ids past the first page).
+                "order": "tour_id.asc,round_id.asc,draw.asc,player1_id.asc,player2_id.asc",
+            },
+            timeout=REQ_TIMEOUT,
+        )
+        r.raise_for_status()
+        chunk = r.json()
+        if not chunk:
+            break
+        raw_fixtures.extend(chunk)
+        if len(chunk) < ONCOURT_TODAY_PAGE_SIZE:
+            break
+        off += len(chunk)
     if not raw_fixtures:
         print("No rows in oncourt_today. Run sync first.")
         return
+    print(f"  oncourt_today: {len(raw_fixtures)} rows from API (paginated if >{ONCOURT_TODAY_PAGE_SIZE})")
     seen = set()
     fixtures = []
     for f in raw_fixtures:

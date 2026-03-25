@@ -726,7 +726,8 @@ async function run(): Promise<Response> {
   }
   const supabase = createClient(url, anonKey);
 
-  const FAIR_ODDS_LIMIT = 2000;
+  /** Must cover all singles rows from daily_fair_odds after full oncourt_today pagination (was 2000; dropped high tour_id). */
+  const FAIR_ODDS_LIMIT = 5000;
 
   const { data: oddsRows, error: oddsErr } = await supabase
     .from("daily_fair_odds")
