@@ -401,7 +401,11 @@ def filter_window(rows: list[dict[str, str]], start: date, end: date) -> list[di
 def main() -> int:
     parser = argparse.ArgumentParser(description="Compare settled base vs overlay policy performance.")
     parser.add_argument("--signals", default=str(DEFAULT_SIGNALS), help="Path to strict-signals.csv")
-    parser.add_argument("--compare", default=str(DEFAULT_COMPARE), help="Path to strict-signals-overlay-compare.csv")
+    parser.add_argument(
+        "--compare",
+        default="",
+        help="Path to strict-signals-overlay-compare.csv (defaults only for main strict-signals.csv runs)",
+    )
     parser.add_argument("--report-txt", default=str(DEFAULT_REPORT_TXT), help="Output text report")
     parser.add_argument("--summary-csv", default=str(DEFAULT_SUMMARY_CSV), help="Append-only summary CSV")
     parser.add_argument("--days", type=int, default=7, help="Window size in days (default: 7)")
@@ -410,7 +414,7 @@ def main() -> int:
     args = parser.parse_args()
 
     signals_path = Path(args.signals)
-    compare_path = Path(args.compare)
+    compare_path = Path(args.compare) if args.compare else (DEFAULT_COMPARE if signals_path == DEFAULT_SIGNALS else None)
     report_path = Path(args.report_txt)
     summary_path = Path(args.summary_csv)
     window_days = max(1, int(args.days))
@@ -423,9 +427,39 @@ def main() -> int:
     signal_rows = dedupe_rows(load_csv_rows(signals_path))
     if not signal_rows:
         print(f"No rows in signals file: {signals_path}")
+        # Header-only CSV (e.g. spread_shadow before first 20%+ handicap) — write zero stub so
+        # model monitor / Vercel have a valid weekly CSV instead of missing file + settle errors.
+        if args.dry_run:
+            return 0
+        as_of_stub = date.today()
+        source_name = f"{signals_path.name}+{compare_path.name}" if compare_path and compare_path.exists() else signals_path.name
+        z = summarize_mode([], "base")
+        z_ml = _summarize_mode_subset([], "base", BET_TYPE_ML)
+        z_hc = _summarize_mode_subset([], "base", BET_TYPE_HANDICAP)
+        stub_rows = [
+            as_summary_row(generated_utc, as_of_stub, "window", window_days, z, source_name, "", "overall"),
+            as_summary_row(generated_utc, as_of_stub, "all_time", window_days, z, source_name, "", "overall"),
+            as_summary_row(generated_utc, as_of_stub, "all_time", window_days, z, source_name, "", "clean"),
+            as_summary_row(generated_utc, as_of_stub, "window", window_days, z, source_name, "", "clean"),
+            as_summary_row(generated_utc, as_of_stub, "all_time", window_days, z_ml, source_name, BET_TYPE_ML, "overall"),
+            as_summary_row(generated_utc, as_of_stub, "all_time", window_days, z_ml, source_name, BET_TYPE_ML, "clean"),
+            as_summary_row(generated_utc, as_of_stub, "all_time", window_days, z_hc, source_name, BET_TYPE_HANDICAP, "overall"),
+            as_summary_row(generated_utc, as_of_stub, "all_time", window_days, z_hc, source_name, BET_TYPE_HANDICAP, "clean"),
+        ]
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(
+            "Strict Policy Settled Performance\n"
+            f"Generated UTC: {generated_utc}\n"
+            f"As-of date: {as_of_stub.isoformat()}\n"
+            f"No signal rows in {signals_path.name}; stub summary (all zeros).\n",
+            encoding="utf-8",
+        )
+        append_summary(summary_path, stub_rows)
+        print(f"Wrote empty stub: {report_path}")
+        print(f"Appended summary CSV: {summary_path}")
         return 0
 
-    use_compare = compare_path.exists()
+    use_compare = compare_path is not None and compare_path.exists()
     if use_compare:
         compare_rows = dedupe_rows(load_csv_rows(compare_path))
         settlement_lookup = build_settlement_lookup(signal_rows)

@@ -136,6 +136,18 @@ def _append_key_value(field: str, value: Any) -> str:
     return str(value or "").strip().lower()
 
 
+def _clean_fieldnames(fieldnames: list[str]) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    for raw in fieldnames:
+        name = str(raw or "").lstrip("\ufeff")
+        if not name or name in seen:
+            continue
+        seen.add(name)
+        out.append(name)
+    return out
+
+
 def load_env() -> None:
     for name in [".env.local", "env.local"]:
         path = ROOT / name
@@ -536,15 +548,48 @@ def resolve_overlay_policy(
 
 
 def append_rows_dedup(path: Path, rows: list[dict[str, Any]], key_fields: list[str]) -> int:
+    # spread_shadow (and similar) often appends 0/0 until a qualifying 20%+ handicap exists.
+    # Old behavior: skip writing → file never created → settle-strict-signals.py and
+    # strict-policy-performance.py report "file not found" forever. Seed header-only CSV.
     if not path.exists() and not rows:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        fieldnames: list[str] = []
+        if DEFAULT_OUTPUT.exists():
+            with DEFAULT_OUTPUT.open("r", encoding="utf-8-sig", newline="") as f:
+                fieldnames = _clean_fieldnames(list(csv.DictReader(f).fieldnames or []))
+        for k in MANDATORY_APPEND_FIELDS:
+            if k not in fieldnames:
+                fieldnames.append(k)
+        if not fieldnames:
+            fieldnames = [
+                "date",
+                "time_utc",
+                "player1",
+                "player2",
+                "surface",
+                "series",
+                "confidence",
+                "side",
+                "value_pct",
+                "bet_type",
+                "spread_line",
+                "spread_odds",
+                "policy_mode",
+                "signal_profile",
+                "shadow_reason",
+                "settlement_status",
+            ]
+        with path.open("w", encoding="utf-8", newline="") as f:
+            wr = csv.DictWriter(f, fieldnames=fieldnames)
+            wr.writeheader()
         return 0
     path.parent.mkdir(parents=True, exist_ok=True)
     existing_by_key: dict[tuple[str, ...], dict[str, str]] = {}
     existing_fields: list[str] = []
     if path.exists():
-        with path.open("r", encoding="utf-8", newline="") as f:
+        with path.open("r", encoding="utf-8-sig", newline="") as f:
             rd = csv.DictReader(f)
-            existing_fields = list(rd.fieldnames or [])
+            existing_fields = _clean_fieldnames(list(rd.fieldnames or []))
             for r in rd:
                 row = dict(r)
                 key = tuple(_append_key_value(k, row.get(k)) for k in key_fields)
@@ -575,6 +620,7 @@ def append_rows_dedup(path: Path, rows: list[dict[str, Any]], key_fields: list[s
             fieldnames.append(k)
     if not fieldnames and rows:
         fieldnames = list(rows[0].keys())
+    fieldnames = _clean_fieldnames(fieldnames)
 
     with path.open("w", encoding="utf-8", newline="") as f:
         wr = csv.DictWriter(f, fieldnames=fieldnames)
@@ -855,8 +901,11 @@ def main() -> int:
         )
         strict_spread_eligible = strict_min_value is not None
         volume_spread_eligible = volume_min_value is not None and not strict_spread_eligible
+        # spread_shadow lane targets clay/non-policy HC edges; those segments often have no
+        # strict_min_value (non-policy). The API still shows them — do not drop the row here
+        # or handicap rows never reach candidates (0/0 append forever).
         if not strict_match and not volume_match:
-            if not strict_spread_eligible and not volume_spread_eligible:
+            if not strict_spread_eligible and not volume_spread_eligible and not spread_shadow_eligible:
                 continue
         fav_side = "P1" if our_odds1 <= our_odds2 else "P2"
         bet_side = "fav" if side == fav_side else "dog"
