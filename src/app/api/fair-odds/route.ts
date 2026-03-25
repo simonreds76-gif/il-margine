@@ -11,6 +11,11 @@ const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 /** Service role used only for bookmaker_odds_snapshot so Pinnacle shows even if RLS blocks anon. */
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+/** Pinnacle snapshot: only ATP + Challenger singles; cap must exceed busy days (many events) or rows past the limit never load (e.g. Naples Challenger). */
+const PINNACLE_SNAPSHOT_SELECT =
+  "player1_name, player2_name, odds1, odds2, ou_line, ou_over, ou_under, league, captured_at";
+const PINNACLE_SNAPSHOT_ROW_CAP = 12000;
+
 export interface FairOddsRow {
   id: number;
   tournament: string;
@@ -52,10 +57,18 @@ export interface FairOddsRow {
   handicap_edge_p2?: number;
   value_p1?: number;
   value_p2?: number;
+  strict_signal_value_p1?: number;
+  strict_signal_value_p2?: number;
+  shadow_profile_value_p1?: number;
+  shadow_profile_value_p2?: number;
+  shadow_value_p1?: number;
+  shadow_value_p2?: number;
   confidence?: string;
   series_bucket?: string;
   policy_match?: boolean;
   spread_eligible?: boolean;
+  shadow_profile_match?: boolean;
+  shadow_overlap_match?: boolean;
   shadow_match?: boolean;
   shadow_spread_eligible?: boolean;
   spread_shadow_eligible?: boolean;
@@ -870,22 +883,24 @@ async function run(): Promise<Response> {
 
   const { data: snapshotData } = await snapshotClient
     .from("bookmaker_odds_snapshot")
-    .select("player1_name, player2_name, odds1, odds2, ou_line, ou_over, ou_under, league, captured_at")
+    .select(PINNACLE_SNAPSHOT_SELECT)
     .eq("bookmaker", "Pinnacle")
     .eq("capture_date", today)
+    .or("league.eq.ATP,league.eq.Challenger")
     .order("captured_at", { ascending: false })
-    .limit(2000);
+    .limit(PINNACLE_SNAPSHOT_ROW_CAP);
 
   let rawSnapshot = snapshotData;
 
   if (!rawSnapshot?.length) {
     const { data: yesterdayData } = await snapshotClient
       .from("bookmaker_odds_snapshot")
-      .select("player1_name, player2_name, odds1, odds2, ou_line, ou_over, ou_under, league, captured_at")
+      .select(PINNACLE_SNAPSHOT_SELECT)
       .eq("bookmaker", "Pinnacle")
       .eq("capture_date", yesterday)
+      .or("league.eq.ATP,league.eq.Challenger")
       .order("captured_at", { ascending: false })
-      .limit(2000);
+      .limit(PINNACLE_SNAPSHOT_ROW_CAP);
     rawSnapshot = yesterdayData;
   }
 
@@ -1026,8 +1041,7 @@ async function run(): Promise<Response> {
         .filter((c) => !matchedPinRows.has(c.row))
         .sort((a, b) => b.score - a.score);
       if (!ranked.length) continue;
-      if (ranked.length > 1 && ranked[0].score === ranked[1].score) continue; // keep unique-only behavior
-
+      // When tied, prefer first (avoids skipping matches that would otherwise match)
       const best = ranked[0];
       const pin = best.row;
       matchedPinRows.add(pin);
@@ -1077,7 +1091,7 @@ async function run(): Promise<Response> {
       player2_name: (r.player2_id != null ? players.get(r.player2_id) : null) ?? "",
     }))
     .filter((r) => !isDoubles(r.player1_name) && !isDoubles(r.player2_name));
-  const { matched: pinnacleMap } = matchPinnacle(fairOddsRowsForMatch, pinnacleRows);
+  const { matched: pinnacleMap, pinnacleOnly } = matchPinnacle(fairOddsRowsForMatch, pinnacleRows);
 
   let strictPolicyEligibleCount = 0;
   let strictPolicyExcludedCount = 0;
@@ -1190,22 +1204,24 @@ async function run(): Promise<Response> {
     const volumeMinVal = SHADOW_POLICY_MODE === "off" ? null : shadowMinValueFor(r.surface ?? "", seriesBucket, confidence ?? "");
     const volumeExcluded =
       shortFavoriteExcluded || mispriceExcluded || injuryExcluded;
-    const volumeValueP1 =
+    const volumeProfileValueP1 =
       volumeMinVal != null &&
-      !strictShadowCandidate &&
       !volumeExcluded &&
       rawValueP1 != null &&
       rawValueP1 >= volumeMinVal
         ? rawValueP1
         : undefined;
-    const volumeValueP2 =
+    const volumeProfileValueP2 =
       volumeMinVal != null &&
-      !strictShadowCandidate &&
       !volumeExcluded &&
       rawValueP2 != null &&
       rawValueP2 >= volumeMinVal
         ? rawValueP2
         : undefined;
+    const shadowProfileMatch = volumeProfileValueP1 != null || volumeProfileValueP2 != null;
+    const shadowOverlapMatch = shadowProfileMatch && strictShadowCandidate;
+    const volumeValueP1 = !strictShadowCandidate ? volumeProfileValueP1 : undefined;
+    const volumeValueP2 = !strictShadowCandidate ? volumeProfileValueP2 : undefined;
     const shadowMatch = volumeValueP1 != null || volumeValueP2 != null;
     const shadowSpreadEligible =
       volumeMinVal != null &&
@@ -1282,10 +1298,18 @@ async function run(): Promise<Response> {
       handicap_edge_p2: r.handicap_edge_p2 != null ? Number(r.handicap_edge_p2) : undefined,
       value_p1: displayValueP1,
       value_p2: displayValueP2,
+      strict_signal_value_p1: strictPublicValueP1,
+      strict_signal_value_p2: strictPublicValueP2,
+      shadow_profile_value_p1: volumeProfileValueP1,
+      shadow_profile_value_p2: volumeProfileValueP2,
+      shadow_value_p1: volumeValueP1,
+      shadow_value_p2: volumeValueP2,
       confidence,
       series_bucket: seriesBucket,
       policy_match: policyMatch,
       spread_eligible: policyBaseAllows && !shortFavoriteExcluded && !recentInjuredAny,
+      shadow_profile_match: shadowProfileMatch,
+      shadow_overlap_match: shadowOverlapMatch,
       shadow_match: shadowMatch,
       shadow_spread_eligible: shadowSpreadEligible,
       spread_shadow_eligible: spreadShadowEligible,
@@ -1342,9 +1366,14 @@ async function run(): Promise<Response> {
         ? "Pinnacle snapshot loaded but no matches linked (name mismatch?). Check server log for match counts."
         : undefined;
 
-  function toSignal(m: (typeof matches)[0]) {
-    const side = (m.value_p1 ?? -Infinity) >= (m.value_p2 ?? -Infinity) ? "P1" : "P2";
-    const valuePct = side === "P1" ? m.value_p1 : m.value_p2;
+  function toSignal(
+    m: (typeof matches)[0],
+    opts?: { valueKeyP1?: "strict_signal_value_p1" | "shadow_profile_value_p1" | "shadow_value_p1"; valueKeyP2?: "strict_signal_value_p2" | "shadow_profile_value_p2" | "shadow_value_p2" }
+  ) {
+    const valueKeyP1 = opts?.valueKeyP1 ?? "strict_signal_value_p1";
+    const valueKeyP2 = opts?.valueKeyP2 ?? "strict_signal_value_p2";
+    const side = ((m[valueKeyP1] ?? -Infinity) as number) >= ((m[valueKeyP2] ?? -Infinity) as number) ? "P1" : "P2";
+    const valuePct = side === "P1" ? (m[valueKeyP1] as number | undefined) : (m[valueKeyP2] as number | undefined);
     const pinnacleOdds = side === "P1" ? m.pinnacle_odds1 : m.pinnacle_odds2;
     const pin1 = m.pinnacle_odds1 ?? 0;
     const pin2 = m.pinnacle_odds2 ?? 0;
@@ -1420,9 +1449,61 @@ async function run(): Promise<Response> {
   }
 
   const signals_strict = [...matchSignalsStrict, ...spreadSignalsStrict];
-  const matchSignalsVolume = matches.filter((m) => m.shadow_match).map((m) => toSignal(m));
+  const matchSignalsVolumeProfile = matches
+    .filter((m) => m.shadow_profile_match)
+    .map((m) =>
+      toSignal(m, {
+        valueKeyP1: "shadow_profile_value_p1",
+        valueKeyP2: "shadow_profile_value_p2",
+      })
+    );
+  const matchSignalsVolumeOverlap = matches
+    .filter((m) => m.shadow_overlap_match)
+    .map((m) =>
+      toSignal(m, {
+        valueKeyP1: "shadow_profile_value_p1",
+        valueKeyP2: "shadow_profile_value_p2",
+      })
+    );
+  const matchSignalsVolume = matches
+    .filter((m) => m.shadow_match)
+    .map((m) =>
+      toSignal(m, {
+        valueKeyP1: "shadow_value_p1",
+        valueKeyP2: "shadow_value_p2",
+      })
+    );
+  const matchSignalsVolumeAdditional = [...matchSignalsVolume];
+  const spreadSignalsVolumeProfile: Array<ReturnType<typeof toSpreadSignal>> = [];
+  const spreadSignalsVolumeOverlap: Array<ReturnType<typeof toSpreadSignal>> = [];
   const spreadSignalsVolume: Array<ReturnType<typeof toSpreadSignal>> = [];
   for (const m of matches) {
+    const spreadProfileOk =
+      m.shadow_profile_match &&
+      !m.recent_injured_any &&
+      m.spread_line != null &&
+      m.spread_odds1 != null &&
+      m.spread_odds2 != null &&
+      m.handicap_edge_p1 != null &&
+      m.handicap_edge_p2 != null;
+    if (spreadProfileOk) {
+      const sl = m.spread_line;
+      const so1 = m.spread_odds1;
+      const so2 = m.spread_odds2;
+      const he1 = m.handicap_edge_p1;
+      const he2 = m.handicap_edge_p2;
+      if (sl != null && so1 != null && so2 != null && he1 != null && he2 != null) {
+        if (he1 >= HANDICAP_MIN_EDGE_PCT) {
+          spreadSignalsVolumeProfile.push(toSpreadSignal(m, "P1+", he1, so1, sl));
+          if (m.shadow_overlap_match) spreadSignalsVolumeOverlap.push(toSpreadSignal(m, "P1+", he1, so1, sl));
+        }
+        if (he2 >= HANDICAP_MIN_EDGE_PCT) {
+          spreadSignalsVolumeProfile.push(toSpreadSignal(m, "P2-", he2, so2, sl));
+          if (m.shadow_overlap_match) spreadSignalsVolumeOverlap.push(toSpreadSignal(m, "P2-", he2, so2, sl));
+        }
+      }
+    }
+
     const spreadOk =
       (m.shadow_match || m.shadow_spread_eligible) &&
       !m.recent_injured_any &&
@@ -1446,6 +1527,9 @@ async function run(): Promise<Response> {
     }
   }
   const signals_volume = [...matchSignalsVolume, ...spreadSignalsVolume];
+  const signals_volume_profile = [...matchSignalsVolumeProfile, ...spreadSignalsVolumeProfile];
+  const signals_volume_overlap = [...matchSignalsVolumeOverlap, ...spreadSignalsVolumeOverlap];
+  const signals_volume_additional = [...matchSignalsVolumeAdditional, ...spreadSignalsVolume];
   const spreadSignalsSpreadShadow: Array<ReturnType<typeof toSpreadSignal>> = [];
   for (const m of matches) {
     const spreadOk =
@@ -1496,13 +1580,27 @@ async function run(): Promise<Response> {
         ? `Spread: ${matchesWithSpread.length} matches have data, ${spreadStrictEligible.length} pass strict policy, ${spreadWithEdge20.length} have edge ≥20%.`
         : undefined;
 
+  const pinnacle_only = pinnacleOnly.map((p) => ({
+    player1_name: p.player1_name,
+    player2_name: p.player2_name,
+    odds1: p.odds1,
+    odds2: p.odds2,
+    ou_line: p.ou_line,
+    ou_over: p.ou_over,
+    ou_under: p.ou_under,
+  }));
+
   return NextResponse.json({
     matches,
     pinnacle_count: pinnacleRows.length,
     pinnacle_matched_count: pinnacleMap.size,
+    pinnacle_only,
     policy,
     shadow_profile: SHADOW_POLICY_MODE,
     signals_strict,
+    signals_volume_profile,
+    signals_volume_overlap,
+    signals_volume_additional,
     signals_volume,
     signals_spread_shadow: spreadSignalsSpreadShadow,
     ...(pinnacleHint ? { pinnacle_hint: pinnacleHint } : {}),

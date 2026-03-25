@@ -1069,13 +1069,16 @@ export async function valuePicksToday(limit = 5, minValuePct = 3): Promise<Row> 
   const yesterday = `${y.getUTCFullYear()}-${String(y.getUTCMonth() + 1).padStart(2, "0")}-${String(y.getUTCDate()).padStart(2, "0")}`;
 
   let captureDate = today;
+  /** Match fair-odds API: avoid truncating busy days (was 2000 mixed rows). ATP-only here for value picks. */
+  const pinSnapCap = 12000;
   let { data: snap } = await sb
     .from("bookmaker_odds_snapshot")
     .select("player1_name, player2_name, odds1, odds2, league")
     .eq("bookmaker", "Pinnacle")
     .eq("capture_date", today)
+    .eq("league", "ATP")
     .order("captured_at", { ascending: false })
-    .limit(2000);
+    .limit(pinSnapCap);
 
   if (!snap?.length) {
     const fallback = await sb
@@ -1083,8 +1086,9 @@ export async function valuePicksToday(limit = 5, minValuePct = 3): Promise<Row> 
       .select("player1_name, player2_name, odds1, odds2, league")
       .eq("bookmaker", "Pinnacle")
       .eq("capture_date", yesterday)
+      .eq("league", "ATP")
       .order("captured_at", { ascending: false })
-      .limit(2000);
+      .limit(pinSnapCap);
     snap = fallback.data ?? [];
     captureDate = yesterday;
   }
