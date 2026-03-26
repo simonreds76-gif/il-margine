@@ -6,7 +6,7 @@ All chatbot changes live in the codebase. This doc summarises what's built and t
 
 | File | Purpose |
 |------|---------|
-| `src/app/api/chat/route.ts` | API route, system prompt, tool definitions, Groq/Kimi K2 |
+| `src/app/api/chat/route.ts` | API route, system prompt, tool definitions, Groq chat model routing |
 | `src/lib/chat-tools.ts` | All Supabase query functions (tools) |
 | `src/lib/chat-rag.ts` | RAG retrieval: entity extraction + parallel tool calls, pre-fetches context for the LLM |
 | `src/components/ChatWidget.tsx` | Chat UI, hidden in production |
@@ -63,7 +63,7 @@ Before each LLM call, we run retrieval over the user's last message:
 ## Env
 
 - `GROQ_API_KEY` — required
-- `GROQ_MODEL` — optional, default `moonshotai/kimi-k2-instruct`
+- `GROQ_MODEL` — optional, default `openai/gpt-oss-120b`
 - `SUPABASE_SERVICE_ROLE_KEY` — for tools
 - `NEXT_PUBLIC_SUPABASE_URL` — for tools
 
