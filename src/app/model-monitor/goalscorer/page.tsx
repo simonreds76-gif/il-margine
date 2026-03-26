@@ -997,13 +997,25 @@ function shadowResultTone(row: CsvRow): string {
   return "text-amber-200";
 }
 
+function shadowResultLabel(row: CsvRow): string {
+  if (isSettledShadowRow(row)) {
+    return (row.bet_outcome ?? "settled").toUpperCase();
+  }
+  const kickoff = Date.parse(row.kickoff ?? row.date ?? "");
+  const hasSettlementNote = ((row.settlement_note ?? "").trim().length || 0) > 0;
+  if ((!Number.isNaN(kickoff) && kickoff < Date.now()) || hasSettlementNote) {
+    return "PENDING";
+  }
+  return "OPEN";
+}
+
 function ShadowTrackedRowCard({ row }: { row: CsvRow }) {
   const fairOdds = parseFloatMaybe(row.model_fair_odds);
   const bookOdds = parseFloatMaybe(row.best_bookmaker_odds);
   const evPct = parseFloatMaybe(row.ev);
   const pnlUnits = parseFloatMaybe(row.pnl_units);
   const settled = isSettledShadowRow(row);
-  const resultLabel = settled ? (row.bet_outcome ?? "settled").toUpperCase() : "OPEN";
+  const resultLabel = shadowResultLabel(row);
   const resultTone = shadowResultTone(row);
 
   return (
@@ -1999,7 +2011,7 @@ export default async function GoalscorerMonitorPage() {
                         <tbody>
                           {latestTrackedRows.slice(0, 50).map((row) => {
                             const settled = isSettledShadowRow(row);
-                            const resultLabel = settled ? (row.bet_outcome ?? "settled").toUpperCase() : "OPEN";
+                            const resultLabel = shadowResultLabel(row);
                             const resultTone = shadowResultTone(row);
                             return (
                               <tr key={`archive-${row.date}-${row.player}-${row.match}-${row.compared_at ?? ""}`} className="border-b border-slate-900/80">

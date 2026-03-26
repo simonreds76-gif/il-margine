@@ -388,16 +388,9 @@ def settle_rows(path: Path, data_paths: Iterable[str]) -> dict:
             )
         if historical is None:
             if ((row.get("date") or "").strip(), team_key, opp_key) in match_lookup:
-                row["settled"] = "1"
-                row["goals_scored"] = "0"
-                row["bet_outcome"] = "void"
-                row["settled_at"] = now_iso
-                row["pnl_units"] = "0.0000"
-                row["settlement_note"] = "player_did_not_play"
-                settled_now += 1
-                continue
-
-            row["settlement_note"] = "waiting_on_match_logs"
+                row["settlement_note"] = "unresolved_missing_player_log"
+            else:
+                row["settlement_note"] = "waiting_on_match_logs"
             pending += 1
             continue
 
