@@ -1290,8 +1290,28 @@ async function run(): Promise<Response> {
     const valueP1 = STRICT_POLICY_MODE ? strictPublicValueP1 : confidence === "none" ? undefined : rawValueP1;
     const valueP2 = STRICT_POLICY_MODE ? strictPublicValueP2 : confidence === "none" ? undefined : rawValueP2;
     const policyMatch = STRICT_POLICY_MODE ? valueP1 != null || valueP2 != null : false;
-    const displayValueP1 = pinnacle && ourOdds1 > 1 && pinnacle.pinnacle_odds1 > 1 ? rawValueP1 : undefined;
-    const displayValueP2 = pinnacle && ourOdds2 > 1 && pinnacle.pinnacle_odds2 > 1 ? rawValueP2 : undefined;
+    // The main fair-odds table is user-facing, so don't surface raw dog ML "value"
+    // in the same extreme-favourite / contradiction zones we already suppress in
+    // the strict lane. Keep the raw probabilities and handicap edges, but blank the
+    // visible ML value cell when the match winner edge is known to be misleading.
+    const suppressDisplayValueP1 =
+      confidence === "none" ||
+      mispriceExcluded ||
+      strictHeavyFavoriteDogExcludedP1 ||
+      strictFavoriteSpreadConflictP1;
+    const suppressDisplayValueP2 =
+      confidence === "none" ||
+      mispriceExcluded ||
+      strictHeavyFavoriteDogExcludedP2 ||
+      strictFavoriteSpreadConflictP2;
+    const displayValueP1 =
+      pinnacle && ourOdds1 > 1 && pinnacle.pinnacle_odds1 > 1 && !suppressDisplayValueP1
+        ? rawValueP1
+        : undefined;
+    const displayValueP2 =
+      pinnacle && ourOdds2 > 1 && pinnacle.pinnacle_odds2 > 1 && !suppressDisplayValueP2
+        ? rawValueP2
+        : undefined;
     if (policyMatch) strictPolicySignaledCount += 1;
 
     // Active shadow profile: same exclusions as strict, different segment/value rules (no overlay)
