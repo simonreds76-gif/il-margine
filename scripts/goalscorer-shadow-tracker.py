@@ -350,11 +350,13 @@ def settle_rows(path: Path, data_paths: Iterable[str]) -> dict:
         return {"settled_now": 0, "already_settled": 0, "pending": 0}
 
     historical_rows = load_match_logs(list(data_paths))
+    match_lookup: set[tuple[str, str, str]] = set()
     lookup_by_player_id: Dict[tuple[str, str, str, str], Any] = {}
     lookup_by_name: Dict[tuple[str, str, str, str], Any] = {}
     for row in historical_rows:
         team_key = team_key_func(row.team)
         opp_key = team_key_func(row.opponent)
+        match_lookup.add((row.match_date_str, team_key, opp_key))
         lookup_by_player_id[(row.match_date_str, row.player_id, team_key, opp_key)] = row
         lookup_by_name[(row.match_date_str, _norm_text(row.player_name), team_key, opp_key)] = row
 
@@ -385,7 +387,17 @@ def settle_rows(path: Path, data_paths: Iterable[str]) -> dict:
                 ((row.get("date") or "").strip(), _norm_text(row.get("player") or ""), team_key, opp_key)
             )
         if historical is None:
-            row["settlement_note"] = "no_understat_match"
+            if ((row.get("date") or "").strip(), team_key, opp_key) in match_lookup:
+                row["settled"] = "1"
+                row["goals_scored"] = "0"
+                row["bet_outcome"] = "void"
+                row["settled_at"] = now_iso
+                row["pnl_units"] = "0.0000"
+                row["settlement_note"] = "player_did_not_play"
+                settled_now += 1
+                continue
+
+            row["settlement_note"] = "waiting_on_match_logs"
             pending += 1
             continue
 
