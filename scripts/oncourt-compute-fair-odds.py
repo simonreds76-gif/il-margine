@@ -233,6 +233,10 @@ PROB_CAL_SERIES_BLEND = {
 }
 SERIES_FAVORITE_PROB_CAP = {
     "ATP250": {"high": 0.89, "medium": 0.85, "low": 0.82},
+    "ATP500": {"high": 0.91, "medium": 0.87, "low": 0.84},
+    "Masters 1000": {"high": 0.93, "medium": 0.90, "low": 0.87},
+    "Grand Slam": {"high": 0.95, "medium": 0.92, "low": 0.89},
+    "Masters Cup": {"high": 0.94, "medium": 0.91, "low": 0.88},
     "Challenger": {"high": 0.84, "medium": 0.80, "low": 0.76},
 }
 CHALLENGER_ELO_WEIGHT_MULTIPLIER = {"high": 0.74, "medium": 0.66, "low": 0.58, "none": 0.58}
@@ -475,7 +479,7 @@ def _series_calibration_blend(series_bucket, surface, confidence):
         elif confidence == "low":
             blend *= 0.35
         if series_bucket == "ATP500" and surface == "Hard":
-            blend *= 0.00
+            blend = max(0.20, blend)
         elif surface in ("Clay", "Grass"):
             blend *= 0.75
     return _clamp(blend, 0.0, 1.0)
