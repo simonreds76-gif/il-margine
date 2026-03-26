@@ -207,6 +207,7 @@ function buildStrictPolicyPayload(
     ).toFixed(0)}%`
   );
   exclusionRules.push("Suppress strict dog MLs when the same match also shows a favourite handicap signal");
+  exclusionRules.push("Suppress displayed ML value when the opposite side also has a handicap edge");
   return {
     mode: STRICT_POLICY_MODE ? "strict" : "off",
     production_mode: STRICT_POLICY_PRODUCTION_MODE,
@@ -295,6 +296,15 @@ function strictPolicyConflictWithFavoriteSpread(
   return spreadLine > 0 && handicapEdgeP2 >= HANDICAP_MIN_EDGE_PCT;
 }
 
+function oppositeSideHandicapConflict(
+  side: "P1" | "P2",
+  handicapEdgeP1: number | null | undefined,
+  handicapEdgeP2: number | null | undefined
+): boolean {
+  if (side === "P1") return handicapEdgeP2 != null && handicapEdgeP2 >= HANDICAP_MIN_EDGE_PCT;
+  return handicapEdgeP1 != null && handicapEdgeP1 >= HANDICAP_MIN_EDGE_PCT;
+}
+
 /** Volume_275 profile rules (shadow-test ~275 bets/year). Same exclusions as strict. */
 const VOLUME_275_RULES: Array<{
   surface: string;
@@ -366,6 +376,7 @@ function firstBlockedReason(params: {
   atp500HardShortFavoriteExcluded: boolean;
   heavyFavoriteDogExcluded: boolean;
   favoriteSpreadConflictExcluded: boolean;
+  oppositeSideHandicapConflictExcluded: boolean;
   shadowMinVal: number | null;
   rawValueP1?: number;
   rawValueP2?: number;
@@ -377,6 +388,7 @@ function firstBlockedReason(params: {
   if (params.atp500HardShortFavoriteExcluded) return "Blocked: ATP500 Hard short favorite filter";
   if (params.heavyFavoriteDogExcluded) return "Blocked: Masters hard heavy-favorite dog ML guard";
   if (params.favoriteSpreadConflictExcluded) return "Blocked: same-match favourite handicap conflict";
+  if (params.oppositeSideHandicapConflictExcluded) return "Blocked: same-match mixed-side ML/handicap conflict";
   if (params.shadowMinVal == null) return `Blocked: not in ${shadowProfileLabel(SHADOW_POLICY_MODE)} segment`;
   const bestRawValue = Math.max(params.rawValueP1 ?? Number.NEGATIVE_INFINITY, params.rawValueP2 ?? Number.NEGATIVE_INFINITY);
   if (Number.isFinite(bestRawValue) && bestRawValue < params.shadowMinVal) {
@@ -395,6 +407,7 @@ function mlDisplayGuardReason(params: {
   modelShortFavoriteExcluded: boolean;
   heavyFavoriteDogExcluded: boolean;
   favoriteSpreadConflictExcluded: boolean;
+  oppositeSideHandicapConflictExcluded: boolean;
 }): string | undefined {
   const positiveSuppressedP1 = params.suppressDisplayValueP1 && (params.rawValueP1 ?? Number.NEGATIVE_INFINITY) > 0;
   const positiveSuppressedP2 = params.suppressDisplayValueP2 && (params.rawValueP2 ?? Number.NEGATIVE_INFINITY) > 0;
@@ -407,6 +420,9 @@ function mlDisplayGuardReason(params: {
   }
   if (params.favoriteSpreadConflictExcluded) {
     return "ML value hidden: same-match handicap conflict";
+  }
+  if (params.oppositeSideHandicapConflictExcluded) {
+    return "ML value hidden: opposite-side handicap signal";
   }
   if (params.confidence === "none") {
     return "ML value hidden: low-confidence row";
@@ -1261,6 +1277,12 @@ async function run(): Promise<Response> {
       strictCandidateValueP1Base != null && modelFavoriteSide !== "P1" && strictFavoriteSpreadConflict;
     const strictFavoriteSpreadConflictP2 =
       strictCandidateValueP2Base != null && modelFavoriteSide !== "P2" && strictFavoriteSpreadConflict;
+    const strictOppositeHandicapConflictP1 =
+      strictCandidateValueP1Base != null &&
+      oppositeSideHandicapConflict("P1", handicapEdgeP1, handicapEdgeP2);
+    const strictOppositeHandicapConflictP2 =
+      strictCandidateValueP2Base != null &&
+      oppositeSideHandicapConflict("P2", handicapEdgeP1, handicapEdgeP2);
     if (
       policyBaseAllows &&
       !shortFavoriteExcluded &&
@@ -1270,15 +1292,25 @@ async function run(): Promise<Response> {
         strictHeavyFavoriteDogExcludedP1 ||
         strictHeavyFavoriteDogExcludedP2 ||
         strictFavoriteSpreadConflictP1 ||
-        strictFavoriteSpreadConflictP2
+        strictFavoriteSpreadConflictP2 ||
+        strictOppositeHandicapConflictP1 ||
+        strictOppositeHandicapConflictP2
       )
     ) {
       strictPolicyExcludedCount += 1;
     }
     const strictCandidateValueP1 =
-      strictHeavyFavoriteDogExcludedP1 || strictFavoriteSpreadConflictP1 ? undefined : strictCandidateValueP1Base;
+      strictHeavyFavoriteDogExcludedP1 ||
+      strictFavoriteSpreadConflictP1 ||
+      strictOppositeHandicapConflictP1
+        ? undefined
+        : strictCandidateValueP1Base;
     const strictCandidateValueP2 =
-      strictHeavyFavoriteDogExcludedP2 || strictFavoriteSpreadConflictP2 ? undefined : strictCandidateValueP2Base;
+      strictHeavyFavoriteDogExcludedP2 ||
+      strictFavoriteSpreadConflictP2 ||
+      strictOppositeHandicapConflictP2
+        ? undefined
+        : strictCandidateValueP2Base;
     const strictShadowCandidate = strictCandidateValueP1 != null || strictCandidateValueP2 != null;
     let strictValueP1 = strictCandidateValueP1;
     let strictValueP2 = strictCandidateValueP2;
@@ -1327,12 +1359,14 @@ async function run(): Promise<Response> {
       confidence === "none" ||
       mispriceExcluded ||
       strictHeavyFavoriteDogExcludedP1 ||
-      strictFavoriteSpreadConflictP1;
+      strictFavoriteSpreadConflictP1 ||
+      strictOppositeHandicapConflictP1;
     const suppressDisplayValueP2 =
       confidence === "none" ||
       mispriceExcluded ||
       strictHeavyFavoriteDogExcludedP2 ||
-      strictFavoriteSpreadConflictP2;
+      strictFavoriteSpreadConflictP2 ||
+      strictOppositeHandicapConflictP2;
     const displayValueP1 =
       pinnacle && ourOdds1 > 1 && pinnacle.pinnacle_odds1 > 1 && !suppressDisplayValueP1
         ? rawValueP1
@@ -1350,6 +1384,7 @@ async function run(): Promise<Response> {
     const volumeProfileValueP1 =
       volumeMinVal != null &&
       !volumeExcluded &&
+      !strictOppositeHandicapConflictP1 &&
       rawValueP1 != null &&
       rawValueP1 >= volumeMinVal
         ? rawValueP1
@@ -1357,6 +1392,7 @@ async function run(): Promise<Response> {
     const volumeProfileValueP2 =
       volumeMinVal != null &&
       !volumeExcluded &&
+      !strictOppositeHandicapConflictP2 &&
       rawValueP2 != null &&
       rawValueP2 >= volumeMinVal
         ? rawValueP2
@@ -1398,6 +1434,8 @@ async function run(): Promise<Response> {
       modelShortFavoriteExcluded: modelFavOddsMispriceExcluded,
       heavyFavoriteDogExcluded: strictHeavyFavoriteDogExcludedP1 || strictHeavyFavoriteDogExcludedP2,
       favoriteSpreadConflictExcluded: strictFavoriteSpreadConflictP1 || strictFavoriteSpreadConflictP2,
+      oppositeSideHandicapConflictExcluded:
+        strictOppositeHandicapConflictP1 || strictOppositeHandicapConflictP2,
     });
     const blockedReason = displayGuardReason ?? firstBlockedReason({
       hasPositiveRawValue,
@@ -1408,6 +1446,8 @@ async function run(): Promise<Response> {
       atp500HardShortFavoriteExcluded: shortFavoriteExcluded,
       heavyFavoriteDogExcluded: strictHeavyFavoriteDogExcludedP1 || strictHeavyFavoriteDogExcludedP2,
       favoriteSpreadConflictExcluded: strictFavoriteSpreadConflictP1 || strictFavoriteSpreadConflictP2,
+      oppositeSideHandicapConflictExcluded:
+        strictOppositeHandicapConflictP1 || strictOppositeHandicapConflictP2,
       shadowMinVal: volumeMinVal,
       rawValueP1,
       rawValueP2,
