@@ -30,6 +30,7 @@ const REVIEW_PACKS = {
   tennis: [
     "src/lib/tennis_prob.py",
     "scripts/oncourt-compute-fair-odds.py",
+    "scripts/class_gap.py",
     "scripts/compute-handicap-values.py",
     "scripts/shrinkage_v2.py",
   ],

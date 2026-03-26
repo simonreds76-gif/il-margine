@@ -233,6 +233,18 @@ PROB_CAL_SERIES_BLEND = {
 }
 SERIES_FAVORITE_PROB_CAP = {
     "ATP250": {"high": 0.89, "medium": 0.85, "low": 0.82},
+    "Challenger": {"high": 0.84, "medium": 0.80, "low": 0.76},
+}
+CHALLENGER_ELO_WEIGHT_MULTIPLIER = {"high": 0.74, "medium": 0.66, "low": 0.58, "none": 0.58}
+ELO_MAGNITUDE_GUARD_RANK_LOGIT_GAP = 1.5
+ELO_MAGNITUDE_GUARD_SR_LOGIT_GAP = 1.0
+ELO_MAGNITUDE_GUARD_MIN_DAMP = 0.50
+CHALLENGER_CLASS_GAP_KWARGS = {
+    "elo_gap_onset": 220,
+    "elo_gap_full": 480,
+    "rank_gap_onset": 60,
+    "rank_gap_full": 180,
+    "max_blend": 0.32,
 }
 DEFAULT_INJURY_CSV = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -475,6 +487,42 @@ def _series_rank_weight_multiplier(series_bucket, confidence):
     if series_bucket == "ATP500":
         return {"high": 0.95, "medium": 0.78, "low": 0.65}.get(confidence, 1.0)
     return 1.0
+
+
+def _is_challenger_tour(tour_name):
+    return "CHALLENGER" in (tour_name or "").upper()
+
+
+def _series_elo_weight_multiplier(series_bucket, confidence, is_challenger):
+    if is_challenger:
+        return CHALLENGER_ELO_WEIGHT_MULTIPLIER.get(confidence, CHALLENGER_ELO_WEIGHT_MULTIPLIER["medium"])
+    return 1.0
+
+
+def _apply_elo_magnitude_guard(w_sr, w_elo, w_rank, p_serve_return, p_elo, p_rank, is_challenger):
+    if p_rank is None or p_serve_return is None:
+        return w_sr, w_elo, w_rank, 0.0
+
+    elo_rank_logit_gap = abs(_logit(p_elo) - _logit(_clamp(p_rank, 0.01, 0.99)))
+    elo_sr_logit_gap = abs(_logit(p_elo) - _logit(_clamp(p_serve_return, 0.01, 0.99)))
+    if elo_rank_logit_gap <= ELO_MAGNITUDE_GUARD_RANK_LOGIT_GAP or elo_sr_logit_gap <= ELO_MAGNITUDE_GUARD_SR_LOGIT_GAP:
+        return w_sr, w_elo, w_rank, 0.0
+
+    dampener = max(
+        ELO_MAGNITUDE_GUARD_MIN_DAMP,
+        1.0 - 0.25 * min(elo_rank_logit_gap / 3.0, 1.0),
+    )
+    if is_challenger:
+        dampener *= 0.82
+    dampener = max(0.38, dampener)
+
+    w_elo_before = w_elo
+    w_elo *= dampener
+    released = max(0.0, w_elo_before - w_elo)
+    if released > 0:
+        w_sr += released * 0.55
+        w_rank += released * 0.45
+    return w_sr, w_elo, w_rank, released
 
 
 def _is_established_player(rank, elo_surface, elo_overall, match_count):
@@ -763,8 +811,9 @@ def _series_crisis_rank_multiplier(series_bucket):
     return RANK_WEIGHT_CRISIS_MULT
 
 
-def _apply_series_probability_guard(p1_win, series_bucket, surface, confidence):
-    caps = SERIES_FAVORITE_PROB_CAP.get(series_bucket)
+def _apply_series_probability_guard(p1_win, series_bucket, surface, confidence, is_challenger=False):
+    cap_bucket = "Challenger" if is_challenger else series_bucket
+    caps = SERIES_FAVORITE_PROB_CAP.get(cap_bucket)
     if not caps:
         return _clamp(float(p1_win), 1e-6, 1.0 - 1e-6)
     cap = float(caps.get(confidence, 0.90))
@@ -2246,8 +2295,10 @@ def main():
             tid = None
         surface = (tour_to_surface.get(tid) or "N/A") if tid is not None else "N/A"
         surface_counts[surface] = surface_counts.get(surface, 0) + 1
-        series_bucket = _series_bucket_from_tour(tour_name_by_id.get(tid, ""), tour_rank_by_id.get(tid))
-        current_class_score = _tour_class_score(tour_rank_by_id.get(tid), tour_name_by_id.get(tid, ""))
+        tour_name = tour_name_by_id.get(tid, "")
+        series_bucket = _series_bucket_from_tour(tour_name, tour_rank_by_id.get(tid))
+        is_challenger = _is_challenger_tour(tour_name)
+        current_class_score = _tour_class_score(tour_rank_by_id.get(tid), tour_name)
         is_best_of_5 = series_bucket == "Grand Slam"
 
         cpi_value = None
@@ -2518,9 +2569,11 @@ def main():
         w_sr = (1.0 - HYBRID_ELO_WEIGHT_DEFAULT) * (0.35 + 0.65 * serve_rel) if (has_s1 and has_s2) else 0.0
         w_sr *= math.sqrt(class_sample_mult_1 * class_sample_mult_2)
         w_elo = HYBRID_ELO_WEIGHT_DEFAULT * (0.65 + 0.35 * elo_reliability)
+        w_elo *= _series_elo_weight_multiplier(series_bucket, confidence, is_challenger)
 
         w_rank = 0.0
         rank_gap_strength = 0.0
+        elo_magnitude_release = 0.0
         if p_rank is not None:
             if rank1_eff is not None and rank2_eff is not None and rank1_eff > 0 and rank2_eff > 0:
                 rr = max(rank1_eff, rank2_eff) / float(min(rank1_eff, rank2_eff))
@@ -2536,6 +2589,15 @@ def main():
                 w_sr *= max(0.70, 1.0 - 0.35 * rank_gap_strength)
                 w_rank += 0.18 * rank_gap_strength
             w_rank *= _series_rank_weight_multiplier(series_bucket, confidence)
+            w_sr, w_elo, w_rank, elo_magnitude_release = _apply_elo_magnitude_guard(
+                w_sr,
+                w_elo,
+                w_rank,
+                p_serve_return,
+                p_elo,
+                p_rank,
+                is_challenger,
+            )
 
         if not has_s1 or not has_s2:
             w_sr *= 0.15
@@ -2804,9 +2866,11 @@ def main():
         p2_win -= delta_p1
 
         # Class gap: push heavy mismatches toward Elo expectation (before normalisation)
+        class_gap_kwargs = CHALLENGER_CLASS_GAP_KWARGS if is_challenger else {}
         p1_win = apply_class_gap(
             p1_win, e1_s, e2_s, e1_o, e2_o,
             rank1_eff, rank2_eff,
+            **class_gap_kwargs,
         )
         p2_win = 1.0 - p1_win
 
@@ -2817,7 +2881,13 @@ def main():
 
         # Post-hoc calibration by tour tier (trained on historical backtest).
         p1_win = _calibrate_match_probability(p1_win, series_bucket, surface, confidence)
-        p1_win = _apply_series_probability_guard(p1_win, series_bucket, surface, confidence)
+        p1_win = _apply_series_probability_guard(
+            p1_win,
+            series_bucket,
+            surface,
+            confidence,
+            is_challenger=is_challenger,
+        )
         p2_win = 1.0 - p1_win
 
         low_conf_dog_delta = 0.0
@@ -2970,7 +3040,7 @@ def main():
                     f"    ATP rank: P1={atp_rank_by_player.get(p1)} P2={atp_rank_by_player.get(p2)} "
                     f"synthetic=({synthetic_r1}/{synthetic_r2}) p_rank={p_rank}  both_elo_default={both_elo_default}"
                 )
-                print(f"    p_elo={p_elo:.4f} p_rank={p_rank} p_serve_return={p_serve_return:.4f} weights(sr/elo/rank)=({sr_weight:.2f}/{elo_weight:.2f}/{rank_weight:.2f}) -> p1_win={p1_win:.4f} (after adj+cal), series={series_bucket}")
+                print(f"    p_elo={p_elo:.4f} p_rank={p_rank} p_serve_return={p_serve_return:.4f} weights(sr/elo/rank)=({sr_weight:.2f}/{elo_weight:.2f}/{rank_weight:.2f}) -> p1_win={p1_win:.4f} (after adj+cal), series={series_bucket}, challenger={is_challenger}")
                 print(f"    Class jump: current={current_class_score:.1f} recent_avg=({p1_hist.get('recent_class_avg')}/{p2_hist.get('recent_class_avg')})  elo_penalty=({class_penalty_elo_1:.1f}/{class_penalty_elo_2:.1f})")
                 print(f"    Effective SPW inputs: P1 serve={hold1_eff:.3f} ret={ret1_eff:.3f} | P2 serve={hold2_eff:.3f} ret={ret2_eff:.3f} | shifts hold={hold_shift:+.3f} ret={ret_shift:+.3f}")
                 print(
@@ -2986,7 +3056,7 @@ def main():
                     f"    H2H={h2h_delta:+.4f} ADV={adv_delta:+.4f} "
                     f"form_base={delta_p1_form:+.4f} results_form={results_form_delta:+.4f} "
                     f"tour_hist={tour_history_delta:+.4f} crisis_shock={crisis_shock_delta:+.4f} "
-                    f"total_delta={delta_p1:+.4f} low_conf_guard={low_conf_dog_delta:+.4f} "
+                    f"total_delta={delta_p1:+.4f} elo_mag_release={elo_magnitude_release:+.4f} low_conf_guard={low_conf_dog_delta:+.4f} "
                     f"stepup_guard={stepup_dog_delta:+.4f} "
                     f"crisis(P1/P2)={p1_crisis}/{p2_crisis}"
                 )
