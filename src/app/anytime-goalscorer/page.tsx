@@ -380,14 +380,14 @@ function LeagueLogo({
     variant === "card"
       ? "flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-300/70 bg-gradient-to-b from-white to-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]"
       : variant === "row"
-        ? "flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-300/70 bg-gradient-to-b from-white to-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]"
-        : "flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-300/70 bg-gradient-to-b from-white to-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]";
+        ? "flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-300/70 bg-gradient-to-b from-white to-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]"
+        : "flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-300/70 bg-gradient-to-b from-white to-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]";
   const imageClass =
     variant === "card"
       ? "h-7 w-7 object-contain"
       : variant === "row"
-        ? "h-4 w-4 object-contain"
-        : "h-3.5 w-3.5 object-contain";
+        ? "h-4.5 w-4.5 object-contain"
+        : "h-4 w-4 object-contain";
 
   return (
     <span className={wrapperClass}>
