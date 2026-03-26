@@ -942,6 +942,36 @@ function parseSummaryMetrics(text: string | null): Record<string, string> {
   return metrics;
 }
 
+function leagueOutputStatus(summary: Record<string, string>, hasOutput: boolean): {
+  label: string;
+  className: string;
+  detail?: string;
+} {
+  if (!hasOutput) {
+    return {
+      label: "not run yet",
+      className: "text-xs text-amber-300",
+    };
+  }
+
+  const historicalRows = parseIntMaybe(summary["Historical Rows"]) ?? 0;
+  const oddsRows = parseIntMaybe(summary["Odds Rows"]) ?? 0;
+  const matchedRows = parseIntMaybe(summary["Matched Rows"]) ?? 0;
+
+  if (historicalRows > 0 && oddsRows === 0 && matchedRows === 0) {
+    return {
+      label: "no ATGS feed",
+      className: "text-xs text-amber-300",
+      detail: "Source feed returned 0 current ATGS rows for this league window.",
+    };
+  }
+
+  return {
+    label: "live file",
+    className: "text-xs text-emerald-300",
+  };
+}
+
 function isSettledShadowRow(row: CsvRow): boolean {
   const value = (row.settled ?? "").trim().toLowerCase();
   return value === "1" || value === "true" || value === "yes" || value === "settled";
@@ -1653,10 +1683,11 @@ export default async function GoalscorerMonitorPage() {
     const leagueFixtures = dataset.fixtureHealth.filter((fixture) =>
       fixtureInLiveWindow(fixture, liveWindowStart, liveWindowEnd),
     );
+    const hasOutput = Boolean(dataset.comparisonJson || dataset.comparisonCsv);
     return {
       key: dataset.key,
       label: dataset.label,
-      hasOutput: Boolean(dataset.comparisonJson || dataset.comparisonCsv),
+      hasOutput,
       hasLineups: Boolean(dataset.lineupsJson),
       rows: leagueRows.length,
       publicHigh: leaguePublicRows.length,
@@ -1667,8 +1698,10 @@ export default async function GoalscorerMonitorPage() {
       quarantinedFixtures: leagueFixtures.filter((fixture) => fixture.trust_tier === "T3").length,
       competition: leagueRows[0]?.competition ?? dataset.label,
       updatedAt: dataset.comparisonMtime,
+      outputStatus: leagueOutputStatus(dataset.summary, hasOutput),
     };
   });
+  const sourceFeedGapLeagues = leagueStatus.filter((league) => league.outputStatus.detail);
   const rawMonitorSummary = leagueDatasets
     .filter((dataset) => dataset.comparisonTxt)
     .map((dataset) => {
@@ -1807,16 +1840,28 @@ export default async function GoalscorerMonitorPage() {
                   <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">{league.label}</div>
                   <div className="mt-2 flex items-center justify-between gap-3">
                     <div className="text-lg font-semibold text-slate-100">{league.rows}</div>
-                    <div className={league.hasOutput ? "text-xs text-emerald-300" : "text-xs text-amber-300"}>
-                      {league.hasOutput ? "live file" : "not run yet"}
+                    <div className={league.outputStatus.className}>
+                      {league.outputStatus.label}
                     </div>
                   </div>
                   <div className="mt-2 text-xs text-slate-400">
                     public {league.totalPublic} | clean {league.cleanFixtures} | degraded {league.degradedFixtures} | quarantine {league.quarantinedFixtures}
                   </div>
+                  {league.outputStatus.detail ? (
+                    <div className="mt-2 text-[11px] leading-5 text-amber-200/90">
+                      {league.outputStatus.detail}
+                    </div>
+                  ) : null}
                 </div>
               ))}
             </div>
+            {sourceFeedGapLeagues.length > 0 ? (
+              <div className="mt-4 rounded-2xl border border-amber-500/20 bg-amber-500/8 p-4 text-sm leading-6 text-amber-100">
+                {sourceFeedGapLeagues.map((league) => league.label).join(", ")} currently has pipeline output and historical logs,
+                but the upstream ATGS source feed returned no current events for the live window. That league will stay at zero
+                matched prices until the feed comes back.
+              </div>
+            ) : null}
             <div className="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm leading-6 text-slate-300">
               <div className="font-medium text-slate-100">Void policy</div>
               <p className="mt-1 text-slate-400">

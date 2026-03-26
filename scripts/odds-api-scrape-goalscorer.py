@@ -14,7 +14,7 @@ import os
 import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Iterable, List, Optional
+from typing import Dict, Iterable, List, Optional
 
 import requests
 
@@ -47,6 +47,12 @@ LEAGUE_CONFIGS = {
         "slug": "germany-bundesliga",
         "name_variants": {"germany - bundesliga", "bundesliga"},
         "competition": "Bundesliga",
+    },
+    "ligue-1": {
+        "label": "Ligue 1",
+        "slug": "france-ligue-1",
+        "name_variants": {"france - ligue 1", "ligue 1", "ligue 1 mcdonalds"},
+        "competition": "Ligue 1",
     },
 }
 
@@ -242,6 +248,58 @@ def chunked(values: List[str], size: int) -> Iterable[List[str]]:
         yield values[start : start + size]
 
 
+def parse_bookmakers(raw: str) -> List[str]:
+    seen = set()
+    bookmakers: List[str] = []
+    for value in (raw or "").split(","):
+        bookmaker = value.strip()
+        if not bookmaker:
+            continue
+        key = bookmaker.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        bookmakers.append(bookmaker)
+    return bookmakers
+
+
+def discover_league_events(
+    api_key: str,
+    league_config: dict,
+    bookmakers: List[str],
+    now: datetime,
+    days_ahead: int,
+) -> List[dict]:
+    base_params = {
+        "apiKey": api_key,
+        "sport": "football",
+        "status": "pending",
+        "from": now.replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "to": (now + timedelta(days=days_ahead)).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+    }
+    discovered: Dict[str, dict] = {}
+
+    for bookmaker in bookmakers:
+        params = {**base_params, "bookmaker": bookmaker}
+        events = fetch_json("events", params)
+        if not isinstance(events, list):
+            continue
+        for event in events:
+            if not _looks_like_league(event.get("league") or {}, league_config):
+                continue
+            event_id = str(event.get("id") or "")
+            if event_id:
+                discovered[event_id] = event
+
+    if discovered:
+        return list(discovered.values())
+
+    events = fetch_json("events", base_params)
+    if not isinstance(events, list):
+        return []
+    return [event for event in events if _looks_like_league(event.get("league") or {}, league_config)]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Scrape league ATGS prices from odds-api.io")
     parser.add_argument("--league", choices=sorted(LEAGUE_CONFIGS), default="serie-a")
@@ -264,26 +322,19 @@ def main() -> None:
     print(f"  League: {league_config['label']}")
 
     now = datetime.now(timezone.utc)
-    params = {
-        "apiKey": api_key,
-        "sport": "football",
-        "status": "pending",
-        "bookmaker": args.bookmakers.split(",")[0].strip(),
-        "from": now.replace(microsecond=0).isoformat().replace("+00:00", "Z"),
-        "to": (now + timedelta(days=args.days_ahead)).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
-    }
-    events = fetch_json("events", params)
-    if not isinstance(events, list):
-        raise SystemExit(f"Unexpected events response: {events}")
+    bookmakers = parse_bookmakers(args.bookmakers)
+    if not bookmakers:
+        raise SystemExit("Provide at least one bookmaker name via --bookmakers.")
+    print(f"  Event discovery books: {', '.join(bookmakers)}")
 
-    target_events = [event for event in events if _looks_like_league(event.get("league") or {}, league_config)]
+    target_events = discover_league_events(api_key, league_config, bookmakers, now, args.days_ahead)
     print(f"  {league_config['label']} events found: {len(target_events):,}")
     if not target_events:
-        print(f"  No {league_config['label']} events returned for the configured bookmaker filter.")
+        print(f"  No {league_config['label']} events returned from the current source feed.")
         return
 
     all_rows: List[dict] = []
-    bookmaker_list = args.bookmakers
+    bookmaker_list = ",".join(bookmakers)
     for event_ids in chunked([str(event["id"]) for event in target_events], 10):
         odds_payload = fetch_json(
             "odds/multi",
