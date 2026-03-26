@@ -10,6 +10,7 @@ export const dynamic = "force-dynamic";
 
 const GOALSCORER_PAGE_PUBLIC =
   process.env.NODE_ENV !== "production" ||
+  process.env.VERCEL_ENV === "preview" ||
   process.env.GOALSCORER_PAGE_PUBLIC === "1" ||
   process.env.NEXT_PUBLIC_ENABLE_GOALSCORER_PAGE === "1";
 

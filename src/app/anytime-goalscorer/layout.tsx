@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
 
-const title = "Goalscorer Value Picks | Confirmed Starter ATGS";
+const title = "Anytime Goalscorer Picks | Confirmed Starters";
 const description =
-  "Confirmed-starter anytime-goalscorer value picks from Il Margine's live model, filtered by clean fixtures, disciplined odds bands and public staking rules.";
+  "Confirmed-starter anytime goalscorer picks from Il Margine's live model, filtered by clean fixtures, disciplined odds bands and public staking rules.";
 const url = `${BASE_URL}/anytime-goalscorer`;
 
 export const metadata: Metadata = {
