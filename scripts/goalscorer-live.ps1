@@ -19,7 +19,18 @@ $warningMessages = New-Object System.Collections.Generic.List[string]
 function Log($msg) {
     $line = "$(Get-Date -Format 'HH:mm:ss') $msg"
     Write-Host $line
-    Add-Content -Path $logFile -Value $line
+    $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+    for ($attempt = 0; $attempt -lt 3; $attempt++) {
+        try {
+            [System.IO.File]::AppendAllText($logFile, $line + [Environment]::NewLine, $utf8NoBom)
+            return
+        } catch {
+            if ($attempt -eq 2) {
+                throw
+            }
+            Start-Sleep -Milliseconds 150
+        }
+    }
 }
 
 function Read-JsonFile($path) {
@@ -131,7 +142,7 @@ try {
         }
 
         Log "---- League: $league live penalty review ----"
-        & $pythonExe scripts\goalscorer-live-penalty-review.py --league $league 2>&1 | ForEach-Object { Log $_ }
+        & $pythonExe scripts\goalscorer-live-penalty-review.py --league $league --days-back 6 2>&1 | ForEach-Object { Log $_ }
         if ($LASTEXITCODE -ne 0) {
             $warning = "same-night penalty review failed for $league (exit $LASTEXITCODE)"
             $warningMessages.Add($warning) | Out-Null

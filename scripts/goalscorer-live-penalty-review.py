@@ -17,7 +17,7 @@ import json
 import re
 import runpy
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, Iterable, List
 from zoneinfo import ZoneInfo
@@ -103,6 +103,14 @@ FIELDNAMES = [
 
 def _today_fotmob_date() -> str:
     return datetime.now(ZoneInfo("Europe/London")).strftime("%Y%m%d")
+
+
+def _fotmob_date_window(end_date: str, days_back: int) -> List[str]:
+    base = datetime.strptime(end_date, "%Y%m%d").replace(tzinfo=ZoneInfo("Europe/London"))
+    return [
+        (base - timedelta(days=offset)).strftime("%Y%m%d")
+        for offset in range(max(days_back, 0), -1, -1)
+    ]
 
 
 def _fetch_json(url: str, params: dict) -> dict:
@@ -246,7 +254,7 @@ def _summarise_event_type(types: Iterable[str]) -> str:
     return " / ".join(distinct)
 
 
-def build_live_review_rows(league_key: str, fotmob_date: str) -> List[dict]:
+def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List[dict]:
     config = LEAGUE_CONFIGS[league_key]
     model_mod = runpy.run_path(str(ROOT / "scripts" / "goalscorer-model.py"), run_name="goalscorer_model")
     team_key_func = model_mod["_team_key"]
@@ -267,112 +275,118 @@ def build_live_review_rows(league_key: str, fotmob_date: str) -> List[dict]:
 
     context_map = _load_context_map(config["context"])
 
-    matches_payload = _fetch_json(
-        MATCHES_URL,
-        {"date": fotmob_date, "timezone": "Europe/London", "ccode3": "GBR"},
-    )
-    leagues = matches_payload.get("leagues", [])
-    league_matches = [
-        match
-        for league in leagues
-        if league.get("id") == config["league_id"]
-        for match in league.get("matches", [])
-    ]
-
     grouped_events: Dict[tuple[str, str, str, str], List[dict]] = defaultdict(list)
     distinct_takers_by_team_match: Dict[tuple[str, str, str], set[str]] = defaultdict(set)
+    seen_match_ids: set[int] = set()
 
-    for match in league_matches:
-        status = match.get("status", {}) or {}
-        if not status.get("started") and not status.get("finished"):
-            continue
-        match_id = match.get("id")
-        if not match_id:
-            continue
+    for fotmob_date in fotmob_dates:
+        matches_payload = _fetch_json(
+            MATCHES_URL,
+            {"date": fotmob_date, "timezone": "Europe/London", "ccode3": "GBR"},
+        )
+        leagues = matches_payload.get("leagues", [])
+        league_matches = [
+            match
+            for league in leagues
+            if league.get("id") == config["league_id"]
+            for match in league.get("matches", [])
+        ]
 
-        try:
-            match_payload = _fetch_match_payload(int(match_id))
-        except Exception as exc:
-            print(f"WARNING: failed to fetch FotMob match {match_id}: {exc}")
-            continue
-
-        page_props = match_payload.get("props", {}).get("pageProps", {})
-        general = page_props.get("general", {}) or {}
-        content = page_props.get("content", {}) or {}
-        shotmap = content.get("shotmap", {}) or {}
-        shots = shotmap.get("shots", [])
-        if not isinstance(shots, list):
-            shots = []
-
-        home_team = str(
-            general.get("homeTeam", {}).get("name")
-            or match.get("home", {}).get("longName")
-            or match.get("home", {}).get("name")
-            or ""
-        ).strip()
-        away_team = str(
-            general.get("awayTeam", {}).get("name")
-            or match.get("away", {}).get("longName")
-            or match.get("away", {}).get("name")
-            or ""
-        ).strip()
-        match_date = str(general.get("matchTimeUTCDate") or status.get("utcTime") or "").strip()[:10]
-        if not home_team or not away_team or not match_date:
-            continue
-
-        home_id = int(general.get("homeTeam", {}).get("id") or match.get("home", {}).get("id") or 0)
-        away_id = int(general.get("awayTeam", {}).get("id") or match.get("away", {}).get("id") or 0)
-
-        for shot in shots:
-            if str(shot.get("situation") or "").strip().lower() != "penalty":
+        for match in league_matches:
+            status = match.get("status", {}) or {}
+            if not status.get("started") and not status.get("finished"):
                 continue
-            if str(shot.get("period") or "").strip().lower() == "penaltyshootout":
+            match_id = match.get("id")
+            if not match_id:
+                continue
+            match_id = int(match_id)
+            if match_id in seen_match_ids:
+                continue
+            seen_match_ids.add(match_id)
+
+            try:
+                match_payload = _fetch_match_payload(match_id)
+            except Exception as exc:
+                print(f"WARNING: failed to fetch FotMob match {match_id}: {exc}")
                 continue
 
-            team_id = int(shot.get("teamId") or 0)
-            if team_id == home_id:
-                team_name = home_team
-                opponent_name = away_team
-                is_home = True
-            elif team_id == away_id:
-                team_name = away_team
-                opponent_name = home_team
-                is_home = False
-            else:
+            page_props = match_payload.get("props", {}).get("pageProps", {})
+            general = page_props.get("general", {}) or {}
+            content = page_props.get("content", {}) or {}
+            shotmap = content.get("shotmap", {}) or {}
+            shots = shotmap.get("shots", [])
+            if not isinstance(shots, list):
+                shots = []
+
+            home_team = str(
+                general.get("homeTeam", {}).get("name")
+                or match.get("home", {}).get("longName")
+                or match.get("home", {}).get("name")
+                or ""
+            ).strip()
+            away_team = str(
+                general.get("awayTeam", {}).get("name")
+                or match.get("away", {}).get("longName")
+                or match.get("away", {}).get("name")
+                or ""
+            ).strip()
+            match_date = str(general.get("matchTimeUTCDate") or status.get("utcTime") or "").strip()[:10]
+            if not home_team or not away_team or not match_date:
                 continue
 
-            player_name = str(shot.get("fullName") or shot.get("playerName") or "").strip()
-            if not player_name:
-                continue
+            home_id = int(general.get("homeTeam", {}).get("id") or match.get("home", {}).get("id") or 0)
+            away_id = int(general.get("awayTeam", {}).get("id") or match.get("away", {}).get("id") or 0)
 
-            team_key = team_key_func(team_name)
-            opponent_key = team_key_func(opponent_name)
-            if not team_key or not opponent_key:
-                continue
+            for shot in shots:
+                if str(shot.get("situation") or "").strip().lower() != "penalty":
+                    continue
+                if str(shot.get("period") or "").strip().lower() == "penaltyshootout":
+                    continue
 
-            minute = int(shot.get("min") or 0)
-            event_type = str(shot.get("eventType") or "").strip()
-            event_result, scored_flag = _normalize_event_result(event_type)
-            team_match_key = (match_date, team_key, opponent_key)
-            taker_key = (match_date, team_key, opponent_key, player_name)
+                team_id = int(shot.get("teamId") or 0)
+                if team_id == home_id:
+                    team_name = home_team
+                    opponent_name = away_team
+                    is_home = True
+                elif team_id == away_id:
+                    team_name = away_team
+                    opponent_name = home_team
+                    is_home = False
+                else:
+                    continue
 
-            distinct_takers_by_team_match[team_match_key].add(player_name)
-            grouped_events[taker_key].append(
-                {
-                    "date": match_date,
-                    "match": f"{home_team} vs {away_team}",
-                    "team": team_name,
-                    "opponent": opponent_name,
-                    "team_key": team_key,
-                    "opponent_key": opponent_key,
-                    "is_home": is_home,
-                    "player_name": player_name,
-                    "minute": minute,
-                    "event_type": event_type,
-                    "event_result": event_result,
-                    "penalties_scored": scored_flag,
-                }
-            )
+                player_name = str(shot.get("fullName") or shot.get("playerName") or "").strip()
+                if not player_name:
+                    continue
+
+                team_key = team_key_func(team_name)
+                opponent_key = team_key_func(opponent_name)
+                if not team_key or not opponent_key:
+                    continue
+
+                minute = int(shot.get("min") or 0)
+                event_type = str(shot.get("eventType") or "").strip()
+                event_result, scored_flag = _normalize_event_result(event_type)
+                team_match_key = (match_date, team_key, opponent_key)
+                taker_key = (match_date, team_key, opponent_key, player_name)
+
+                distinct_takers_by_team_match[team_match_key].add(player_name)
+                grouped_events[taker_key].append(
+                    {
+                        "date": match_date,
+                        "match": f"{home_team} vs {away_team}",
+                        "team": team_name,
+                        "opponent": opponent_name,
+                        "team_key": team_key,
+                        "opponent_key": opponent_key,
+                        "is_home": is_home,
+                        "player_name": player_name,
+                        "minute": minute,
+                        "event_type": event_type,
+                        "event_result": event_result,
+                        "penalties_scored": scored_flag,
+                    }
+                )
 
     rows: List[dict] = []
     for (match_date, team_key, opponent_key, player_name), events in grouped_events.items():
@@ -465,12 +479,13 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Build a same-night FotMob penalty review queue")
     parser.add_argument("--league", choices=sorted(LEAGUE_CONFIGS), required=True, help="League to fetch")
     parser.add_argument("--date", default=_today_fotmob_date(), help="FotMob date in YYYYMMDD format")
+    parser.add_argument("--days-back", type=int, default=6, help="Include this many days before --date in the live review queue")
     parser.add_argument("--output", default="", help="Override CSV output path")
     parser.add_argument("--json-output", default="", help="Override JSON output path")
     args = parser.parse_args()
 
     config = LEAGUE_CONFIGS[args.league]
-    rows = build_live_review_rows(args.league, args.date)
+    rows = build_live_review_rows(args.league, _fotmob_date_window(args.date, args.days_back))
     output_csv = Path(args.output) if args.output else config["output_csv"]
     output_json = Path(args.json_output) if args.json_output else config["output_json"]
     _write_csv(output_csv, rows)
@@ -487,6 +502,7 @@ def main() -> None:
 
     print(f"League:      {args.league}")
     print(f"FotMob date: {args.date}")
+    print(f"Days back:   {args.days_back}")
     print(f"Rows:        {len(rows)}")
     print(f"Saved CSV:   {output_csv}")
     print(f"Saved JSON:  {output_json}")
