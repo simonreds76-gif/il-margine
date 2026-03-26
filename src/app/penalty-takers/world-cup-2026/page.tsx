@@ -18,9 +18,9 @@ import {
 } from "@/lib/world-cup-penalties";
 import { BASE_URL } from "@/lib/config";
 
-const PAGE_TITLE = "FIFA World Cup 2026 Penalty Takers";
+const PAGE_TITLE = "World Cup 2026 Penalty Takers by Nation";
 const PAGE_DESCRIPTION =
-  "First-choice and backup penalty takers for every qualified nation at the 2026 FIFA World Cup. Updated from official match reports, federation sources and native-language reporting across six confederations.";
+  "Who takes penalties for every qualified nation at the 2026 FIFA World Cup? First-choice and backup penalty takers, updated from official match reports, federation sources and native-language reporting across six confederations.";
 
 const FEATURED_TEAMS = ["Germany", "France", "Brazil", "Argentina", "England", "Spain", "Japan", "Netherlands", "USA", "Mexico"];
 
@@ -102,6 +102,12 @@ export const metadata: Metadata = {
   keywords: [
     "world cup 2026 penalty takers",
     "fifa world cup 2026 penalty takers",
+    "who takes penalties in the world cup",
+    "national team penalty takers",
+    "germany penalty taker",
+    "france penalty taker",
+    "brazil penalty taker",
+    "australia penalty taker",
     "germany penalty taker world cup 2026",
     "france penalty taker world cup 2026",
     "brazil penalty taker world cup 2026",
@@ -290,7 +296,8 @@ export default async function WorldCup2026PenaltyTakersPage() {
               </h1>
               <p className="mt-5 max-w-3xl text-[15px] leading-7 text-slate-300 sm:text-lg sm:leading-8">
                 First-choice and backup penalty takers for every qualified nation at the 2026 FIFA World Cup.
-                Updated from official match reports, federation sources and native-language reporting across six confederations.
+                If you are searching for France penalty taker, Germany penalty taker or Australia penalty taker, each
+                nation page gives the current World Cup call, backup order and evidence trail.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-2">
@@ -333,7 +340,8 @@ export default async function WorldCup2026PenaltyTakersPage() {
             <div>
               <h2 className="text-2xl font-semibold tracking-tight text-slate-100">Fastest route to the likely answer</h2>
               <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-400">
-                The highest-volume team queries first. Open the country page and the answer is at the top, with the supporting trail straight underneath it.
+                The highest-volume country queries first. Open the nation page and the penalty-taker answer is at the
+                top, with the supporting trail straight underneath it.
               </p>
             </div>
           </div>
@@ -344,7 +352,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
                 href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(team.team)}`}
                 className="rounded-2xl border border-slate-800 bg-slate-900/80 px-3 py-3 transition hover:border-slate-600 hover:bg-slate-900 sm:px-4"
               >
-                <div className="truncate text-sm font-semibold text-slate-100">{team.team}</div>
+                <div className="truncate text-sm font-semibold text-slate-100">{team.team} penalty taker</div>
                 <div className="mt-1 truncate text-xs text-slate-400">{team.likely_primary || "Board still building"}</div>
               </Link>
             ))}
@@ -404,12 +412,12 @@ export default async function WorldCup2026PenaltyTakersPage() {
                                     )}
                                   </Link>
                                   <div>
-                                    <Link
-                                      href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(team.team)}`}
-                                      className="text-2xl font-semibold tracking-tight text-slate-100 hover:text-emerald-300"
-                                    >
-                                      {team.team}
-                                    </Link>
+                              <Link
+                                href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(team.team)}`}
+                                className="text-2xl font-semibold tracking-tight text-slate-100 hover:text-emerald-300"
+                              >
+                                {team.team} penalty taker
+                              </Link>
                                     <div className="mt-2 flex flex-wrap gap-2">
                                       <span className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${style.badge}`}>
                                         {team.confederation}
@@ -459,7 +467,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
                                 href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(team.team)}`}
                                 className="rounded-full border border-slate-700 bg-slate-950 px-4 py-2 text-xs text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
                               >
-                                Open {team.team} page
+                                Open {team.team} penalty taker
                               </Link>
                             </div>
                           </div>

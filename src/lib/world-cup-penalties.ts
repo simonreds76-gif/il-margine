@@ -218,16 +218,16 @@ export function getWorldCupTeamBySlug(data: WorldCupPenaltyData, slug: string): 
 }
 
 export function buildWorldCupTeamTitle(team: TeamRow): string {
-  return `${team.team} Penalty Taker for FIFA World Cup 2026`;
+  return `${team.team} Penalty Taker | World Cup 2026`;
 }
 
 export function buildWorldCupTeamDescription(team: TeamRow): string {
   const primary = team.likely_primary?.trim() || "still being researched";
   const secondary = team.likely_secondary?.trim();
   if (secondary) {
-    return `${team.team}'s current World Cup 2026 penalty call: ${primary} leads the order, with ${secondary} the closest challenger. Read the evidence trail and current backup context.`;
+    return `Who is ${team.team}'s penalty taker for the 2026 World Cup? ${primary} is the current first-choice call, with ${secondary} next in line if the order shifts. Read the evidence trail and backup context.`;
   }
-  return `${team.team}'s current World Cup 2026 penalty call: ${primary}. Read the latest evidence trail and why the backup order is still thinner than the lead.`;
+  return `Who is ${team.team}'s penalty taker for the 2026 World Cup? ${primary} is the current first-choice call. Read the latest evidence trail and why the backup order is still thinner than the lead.`;
 }
 
 export function buildWorldCupTeamLead(team: TeamRow): string {
@@ -235,12 +235,12 @@ export function buildWorldCupTeamLead(team: TeamRow): string {
   const secondary = team.likely_secondary?.trim();
 
   if (!primary) {
-    return `${team.team}'s board still needs another clean senior penalty signal before we publish a firmer World Cup call.`;
+    return `We are still building the ${team.team} penalty taker file for World Cup 2026 and need another clean senior signal before we publish a firmer first-choice call.`;
   }
 
   if (secondary) {
-    return `${primary} is the current World Cup penalty lead for ${team.team}, with ${secondary} the closest challenger if the order changes.`;
+    return `${primary} is our current ${team.team} penalty taker call for World Cup 2026, with ${secondary} the closest backup if the order changes.`;
   }
 
-  return `${primary} is the current World Cup penalty lead for ${team.team}. The board does not name a challenger yet because the backup order is still too thin or too mixed.`;
+  return `${primary} is our current ${team.team} penalty taker call for World Cup 2026. We do not name a backup yet because the secondary order is still too thin or too mixed.`;
 }

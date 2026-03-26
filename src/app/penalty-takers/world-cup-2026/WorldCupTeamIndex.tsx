@@ -83,7 +83,7 @@ export default function WorldCupTeamIndex({ teams, confederations, groups }: Pro
           <h2 className="text-2xl font-semibold tracking-tight text-slate-100">Quick answers by nation</h2>
           <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-400">
             Use confederation view for the qualification context, or flip to groups for the tournament lens.
-            Every live nation card jumps straight to the country page with the evidence trail underneath it.
+            Every live nation card jumps straight to the penalty-taker page with the evidence trail underneath it.
           </p>
         </div>
         <Link
@@ -238,7 +238,7 @@ export default function WorldCupTeamIndex({ teams, confederations, groups }: Pro
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <div className="truncate text-sm font-semibold text-slate-100">{team.team}</div>
+                    <div className="truncate text-sm font-semibold text-slate-100">{team.team} penalty taker</div>
                     <div className="rounded-full border border-slate-700 bg-slate-950 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-slate-400">
                       {team.confederation}
                     </div>

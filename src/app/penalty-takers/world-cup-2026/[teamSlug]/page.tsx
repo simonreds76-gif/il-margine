@@ -116,8 +116,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     keywords: [
       `${team.team} penalty taker`,
+      `who is ${team.team} penalty taker`,
       `${team.team} world cup penalty taker`,
+      `${team.team} penalty taker world cup 2026`,
       `${team.team} world cup 2026 penalties`,
+      `${team.team} first choice penalty taker`,
+      `who takes penalties for ${team.team}`,
       `${team.team} likely penalty taker`,
       `${team.team} penalty takers`,
     ],
@@ -132,7 +136,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
           url: `${BASE_URL}/banner.png`,
           width: 1200,
           height: 400,
-          alt: `${team.team} World Cup 2026 penalty takers`,
+          alt: `${team.team} penalty taker for World Cup 2026`,
         },
       ],
     },
@@ -162,6 +166,8 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
   const description = buildWorldCupTeamDescription(team);
   const pageUrl = worldCupTeamUrl(team.team);
   const style = CONFEDERATION_STYLES[team.confederation] ?? CONFEDERATION_STYLES.CONMEBOL;
+  const primary = team.likely_primary?.trim();
+  const secondary = team.likely_secondary?.trim();
   const groupMates = team.group
     ? data.teams
         .filter((candidate) => candidate.group === team.group && candidate.team !== team.team)
@@ -214,10 +220,46 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
     },
   };
 
+  const quickAnswer = !primary
+    ? `We are still researching ${team.team}'s penalty order for World Cup 2026 and need another clean senior signal before naming a first-choice taker.`
+    : secondary
+      ? `${primary} is our current ${team.team} penalty taker call, with ${secondary} next in line if the order changes.`
+      : `${primary} is our current ${team.team} penalty taker call. We do not name a firm backup yet because the secondary order is still too thin or too mixed.`;
+
+  const worldCupAnswer = !primary
+    ? `Right now we are not willing to publish a firmer World Cup 2026 penalty order for ${team.team} until the evidence file tightens.`
+    : secondary
+      ? `For World Cup 2026, ${primary} is the current first-choice call for ${team.team}, with ${secondary} the closest backup if the tournament order shifts.`
+      : `For World Cup 2026, ${primary} is the current first-choice call for ${team.team}. The backup line stays open because the next layer of evidence is still mixed.`;
+
+  const faqData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: `Who is ${team.team}'s penalty taker?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: quickAnswer,
+        },
+      },
+      {
+        "@type": "Question",
+        name: `Who takes penalties for ${team.team} at World Cup 2026?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: worldCupAnswer,
+        },
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }} />
 
       <main className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
         <section className="pt-6 pb-12 md:pb-16">
@@ -273,7 +315,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
 
                   <div className="mt-6 flex flex-wrap gap-2">
                     <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-300 sm:text-[10px] sm:tracking-[0.18em]">
-                      World Cup 2026 team page
+                      World Cup penalty board
                     </span>
                     <span className={`rounded-full border px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] sm:text-[10px] sm:tracking-[0.18em] ${style.badge}`}>
                       {team.confederation}
@@ -339,23 +381,25 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
 
         <section className="mt-2 grid gap-4 sm:gap-6 xl:grid-cols-[1.08fr,0.92fr]">
           <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
-            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Evidence And Context</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">{team.team} at a glance</h2>
+            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Quick Answer</div>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Who is {team.team}&apos;s penalty taker?</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
+              <p>{quickAnswer}</p>
               <p>{team.note}</p>
               <p>
-                This page is meant to answer the question quickly, then show the trail underneath it. The hierarchy
-                at the top is the cleanest World Cup read we are willing to publish on{" "}
-                <span className="text-slate-100">{team.team}</span> right now.
+                If you searched for <span className="text-slate-100">{team.team} penalty taker</span>, the hierarchy
+                at the top is the quickest answer we are willing to publish right now. The evidence trail underneath
+                shows why that order makes the cut.
               </p>
             </div>
           </div>
 
           <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
-            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">What Moves It</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">What would move the order?</h2>
+            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Tournament Context</div>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Who takes penalties for {team.team} at World Cup 2026?</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
-              <p>A fresh in-match penalty can change this page quickly, especially if it contradicts the current lead or happens with the full-strength tournament pool on the pitch.</p>
+              <p>{worldCupAnswer}</p>
+              <p>A fresh in-match penalty can move this page quickly, especially if it contradicts the current lead or happens with the full-strength tournament pool on the pitch.</p>
               <p>For the more conditional boards, one more clean senior penalty is often enough to sharpen the backup line or flip the order outright.</p>
               <p>
                 Spot a hierarchy shift, a squad-specific wrinkle or a better local source?{" "}
@@ -424,7 +468,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                         href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(mate.team)}`}
                         className="flex items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-300 hover:border-slate-500 hover:text-slate-100"
                       >
-                        <span className="font-medium text-slate-100">{mate.team}</span>
+                        <span className="font-medium text-slate-100">{mate.team} penalty taker</span>
                         <span className="truncate text-xs text-slate-400">{mate.likely_primary || "Building"}</span>
                       </Link>
                     ))}
@@ -442,7 +486,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                       href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(peer.team)}`}
                       className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-500 hover:text-slate-100"
                     >
-                      {peer.team}
+                      {peer.team} penalty taker
                     </Link>
                   ))}
                 </div>
@@ -452,7 +496,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                   href="/penalty-takers/world-cup-2026"
                   className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-2 text-sm text-emerald-100 hover:border-emerald-300/40 hover:bg-emerald-400/14"
                 >
-                  Back to full World Cup board
+                  Back to World Cup penalty takers
                 </Link>
                 <Link
                   href="/penalty-takers"
@@ -476,7 +520,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                 href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(previousAndNext.previous.team)}`}
                 className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-500 hover:text-slate-100"
               >
-                Prev: {previousAndNext.previous.team}
+                Prev: {previousAndNext.previous.team} penalty taker
               </Link>
             ) : null}
             {previousAndNext.next ? (
@@ -484,7 +528,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                 href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(previousAndNext.next.team)}`}
                 className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-500 hover:text-slate-100"
               >
-                Next: {previousAndNext.next.team}
+                Next: {previousAndNext.next.team} penalty taker
               </Link>
             ) : null}
           </div>
