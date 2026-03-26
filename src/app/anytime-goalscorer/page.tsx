@@ -371,18 +371,33 @@ function getStakeTone(row: PublicRow): string {
 
 function LeagueLogo({
   league,
-  sizeClass = "h-4 w-4",
+  variant = "chip",
 }: {
   league: LeagueSource;
-  sizeClass?: string;
+  variant?: "chip" | "card" | "row";
 }) {
+  const wrapperClass =
+    variant === "card"
+      ? "flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-300/70 bg-gradient-to-b from-white to-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]"
+      : variant === "row"
+        ? "flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-300/70 bg-gradient-to-b from-white to-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]"
+        : "flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-300/70 bg-gradient-to-b from-white to-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]";
+  const imageClass =
+    variant === "card"
+      ? "h-7 w-7 object-contain"
+      : variant === "row"
+        ? "h-4 w-4 object-contain"
+        : "h-3.5 w-3.5 object-contain";
+
   return (
-    <img
-      src={league.logoPath}
-      alt={`${league.label} logo`}
-      className={`${sizeClass} rounded-full object-contain`}
-      loading="lazy"
-    />
+    <span className={wrapperClass}>
+      <img
+        src={league.logoPath}
+        alt={`${league.label} logo`}
+        className={imageClass}
+        loading="lazy"
+      />
+    </span>
   );
 }
 
@@ -444,7 +459,7 @@ export default async function AnytimeGoalscorerPage() {
                 key={league.key}
                 className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] ${league.badgeClass}`}
               >
-                <LeagueLogo league={league} />
+                <LeagueLogo league={league} variant="chip" />
                 <span>{league.label.toUpperCase()}</span>
                 {league.live > 0 ? <span className="text-[9px] opacity-75">{league.live} live</span> : null}
               </span>
@@ -521,7 +536,7 @@ export default async function AnytimeGoalscorerPage() {
                 <div className="border-b border-white/10 px-5 py-3">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-3">
-                      {getLeagueSource(row.leagueKey) ? <LeagueLogo league={getLeagueSource(row.leagueKey)!} sizeClass="h-9 w-9" /> : null}
+                      {getLeagueSource(row.leagueKey) ? <LeagueLogo league={getLeagueSource(row.leagueKey)!} variant="card" /> : null}
                       <div>
                         <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-400">{row.leagueLabel}</div>
                         <div className="mt-1 text-sm text-neutral-500">{row.match}</div>
@@ -622,7 +637,7 @@ export default async function AnytimeGoalscorerPage() {
                 >
                   <span className="text-neutral-500">{formatResultDate(row.date)}</span>
                   <span className="flex items-center gap-2">
-                    {getLeagueSource(row.leagueKey) ? <LeagueLogo league={getLeagueSource(row.leagueKey)!} sizeClass="h-4 w-4" /> : null}
+                    {getLeagueSource(row.leagueKey) ? <LeagueLogo league={getLeagueSource(row.leagueKey)!} variant="row" /> : null}
                     <span className={`inline-flex rounded-md border px-2 py-0.5 text-[10px] font-semibold tracking-[0.16em] ${getLeagueBadgeClass(row.leagueKey)}`}>
                       {row.leagueShort}
                     </span>
