@@ -45,6 +45,7 @@ type LeagueSource = {
   label: string;
   short: string;
   file: string;
+  logoPath: string;
   badgeClass: string;
 };
 
@@ -54,6 +55,7 @@ const LEAGUE_SOURCES: LeagueSource[] = [
     label: "Serie A",
     short: "ITA",
     file: "data/goalscorer/goalscorer-public-signals.csv",
+    logoPath: "/league-logos/serie-a.png",
     badgeClass: "border-emerald-500/30 bg-emerald-500/12 text-emerald-300",
   },
   {
@@ -61,6 +63,7 @@ const LEAGUE_SOURCES: LeagueSource[] = [
     label: "Premier League",
     short: "ENG",
     file: "data/goalscorer/epl-public-signals.csv",
+    logoPath: "/league-logos/epl.png",
     badgeClass: "border-indigo-500/30 bg-indigo-500/12 text-indigo-200",
   },
   {
@@ -68,6 +71,7 @@ const LEAGUE_SOURCES: LeagueSource[] = [
     label: "La Liga",
     short: "ESP",
     file: "data/goalscorer/la-liga-public-signals.csv",
+    logoPath: "/league-logos/la-liga.png",
     badgeClass: "border-amber-500/30 bg-amber-500/12 text-amber-200",
   },
   {
@@ -75,6 +79,7 @@ const LEAGUE_SOURCES: LeagueSource[] = [
     label: "Bundesliga",
     short: "GER",
     file: "data/goalscorer/bundesliga-public-signals.csv",
+    logoPath: "/league-logos/bundesliga.png",
     badgeClass: "border-rose-500/30 bg-rose-500/12 text-rose-200",
   },
   {
@@ -82,17 +87,9 @@ const LEAGUE_SOURCES: LeagueSource[] = [
     label: "Ligue 1",
     short: "FRA",
     file: "data/goalscorer/ligue-1-public-signals.csv",
+    logoPath: "/league-logos/ligue-1.png",
     badgeClass: "border-cyan-500/30 bg-cyan-500/12 text-cyan-200",
   },
-];
-
-const RULE_BADGES = [
-  "Confirmed starters only",
-  "Clean T1 fixtures only",
-  "Attacking roles only",
-  "Odds 1.60 to 7.00",
-  "Minimum edge +8%",
-  "Banded public staking",
 ];
 
 function parseCsvLine(line: string): string[] {
@@ -323,6 +320,10 @@ function getLeagueBadgeClass(leagueKey: LeagueKey): string {
   );
 }
 
+function getLeagueSource(leagueKey: LeagueKey): LeagueSource | undefined {
+  return LEAGUE_SOURCES.find((league) => league.key === leagueKey);
+}
+
 function getLondonNow() {
   const parts = new Intl.DateTimeFormat("en-GB", {
     timeZone: "Europe/London",
@@ -368,6 +369,23 @@ function getStakeTone(row: PublicRow): string {
   return "border-amber-500/25 bg-amber-500/10 text-amber-200";
 }
 
+function LeagueLogo({
+  league,
+  sizeClass = "h-4 w-4",
+}: {
+  league: LeagueSource;
+  sizeClass?: string;
+}) {
+  return (
+    <img
+      src={league.logoPath}
+      alt={`${league.label} logo`}
+      className={`${sizeClass} rounded-full object-contain`}
+      loading="lazy"
+    />
+  );
+}
+
 export default async function AnytimeGoalscorerPage() {
   const [allRows, snapshotGeneratedAt] = await Promise.all([
     loadPublicRows(),
@@ -378,6 +396,7 @@ export default async function AnytimeGoalscorerPage() {
   const metrics = getMetrics(settledSignals);
   const leagueSummaries = getLeagueSummaries(allRows);
   const nextScan = getNextScanText();
+  const showMetrics = settledSignals.length >= 5;
 
   return (
     <div className="min-h-screen overflow-hidden bg-[#0b0d10] text-neutral-200">
@@ -392,10 +411,10 @@ export default async function AnytimeGoalscorerPage() {
           <div className="mb-5 flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-emerald-400">
               <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_18px_rgba(16,185,129,0.8)]" />
-              <span>ATGS beta</span>
+              <span>Beta</span>
             </div>
             <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-neutral-400">
-              Confirmed-lineup only
+              Confirmed lineups only
             </span>
           </div>
 
@@ -408,11 +427,11 @@ export default async function AnytimeGoalscorerPage() {
           </div>
 
           <h1 className="mb-3 text-3xl font-semibold tracking-tight text-white sm:text-[2.35rem]">
-            Goalscorer value picks
+            Anytime goalscorer picks
           </h1>
           <p className="max-w-3xl text-sm leading-7 text-neutral-400 sm:text-base">
-            Confirmed-starter anytime goalscorer picks only. This page is the public-facing ruleset in beta: clean T1 fixtures,
-            attacking roles, disciplined odds bands, and fixed published stake bands. For team-by-team spot-kick order, use the{" "}
+            Published only when a confirmed starter clears the full public filter: verified lineup, attacking role, disciplined odds
+            band, and a real edge worth staking. For team-by-team spot-kick order, use the{" "}
             <Link href="/penalty-takers" className="text-emerald-300 transition-colors hover:text-emerald-200">
               penalty takers reference
             </Link>
@@ -420,68 +439,60 @@ export default async function AnytimeGoalscorerPage() {
           </p>
 
           <div className="mt-5 flex flex-wrap gap-2">
-            {RULE_BADGES.map((rule) => (
-              <span
-                key={rule}
-                className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] text-neutral-300"
-              >
-                {rule}
-              </span>
-            ))}
-          </div>
-
-          <div className="mt-5 flex flex-wrap gap-2">
             {leagueSummaries.map((league) => (
               <span
                 key={league.key}
                 className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] ${league.badgeClass}`}
               >
+                <LeagueLogo league={league} />
                 <span>{league.label.toUpperCase()}</span>
-                <span className="text-[9px] opacity-75">{league.live} live</span>
+                {league.live > 0 ? <span className="text-[9px] opacity-75">{league.live} live</span> : null}
               </span>
             ))}
           </div>
         </div>
 
-        <div className="mb-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
-            <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Live picks</div>
-            <div className="mt-2 text-2xl font-semibold text-emerald-300">{liveSignals.length}</div>
-            <div className="mt-1 text-xs text-neutral-500">current published qualifiers</div>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
-            <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Settled record</div>
-            <div className="mt-2 text-2xl font-semibold text-white">{metrics.settledCount}</div>
-            <div className="mt-1 text-xs text-neutral-500">published picks only</div>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
-            <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">W / L</div>
-            <div className="mt-2 text-2xl font-semibold text-white">
-              {metrics.wins} / {metrics.losses}
+        {showMetrics ? (
+          <div className="mb-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+              <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Live picks</div>
+              <div className="mt-2 text-2xl font-semibold text-emerald-300">{liveSignals.length}</div>
+              <div className="mt-1 text-xs text-neutral-500">current published qualifiers</div>
             </div>
-            <div className="mt-1 text-xs text-neutral-500">voids kept off the public record</div>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+              <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Settled record</div>
+              <div className="mt-2 text-2xl font-semibold text-white">{metrics.settledCount}</div>
+              <div className="mt-1 text-xs text-neutral-500">published picks only</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+              <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">W / L</div>
+              <div className="mt-2 text-2xl font-semibold text-white">
+                {metrics.wins} / {metrics.losses}
+              </div>
+              <div className="mt-1 text-xs text-neutral-500">voids kept off the public record</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+              <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">ROI</div>
+              <div className={`mt-2 text-2xl font-semibold ${getPnlClass(metrics.roi)}`}>{formatPct(metrics.roi, 1)}</div>
+              <div className="mt-1 text-xs text-neutral-500">on {metrics.stakedUnits.toFixed(2)}u staked</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+              <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">P/L</div>
+              <div className={`mt-2 text-2xl font-semibold ${getPnlClass(metrics.pnlUnits)}`}>{formatUnits(metrics.pnlUnits)}</div>
+              <div className="mt-1 text-xs text-neutral-500">updated {formatDateTime(snapshotGeneratedAt)}</div>
+            </div>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
-            <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">ROI</div>
-            <div className={`mt-2 text-2xl font-semibold ${getPnlClass(metrics.roi)}`}>{formatPct(metrics.roi, 1)}</div>
-            <div className="mt-1 text-xs text-neutral-500">on {metrics.stakedUnits.toFixed(2)}u staked</div>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
-            <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">P/L</div>
-            <div className={`mt-2 text-2xl font-semibold ${getPnlClass(metrics.pnlUnits)}`}>{formatUnits(metrics.pnlUnits)}</div>
-            <div className="mt-1 text-xs text-neutral-500">updated {formatDateTime(snapshotGeneratedAt)}</div>
-          </div>
-        </div>
+        ) : null}
 
         <div className="mb-4 flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">Live card</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">Live picks</h2>
             <p className="mt-1 text-sm text-neutral-500">
               Only confirmed-starter picks that clear the full public policy are shown here. Once a pick is logged, the record stays append-only.
             </p>
           </div>
           <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-neutral-400">
-            Next scan in {nextScan}
+            Updates in {nextScan}
           </span>
         </div>
 
@@ -490,48 +501,19 @@ export default async function AnytimeGoalscorerPage() {
             <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#121417]">
               <div className="border-b border-white/10 px-5 py-4">
                 <span className="inline-flex rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-[11px] font-medium text-emerald-300">
-                  Waiting for the next qualified spot
+                  No picks live right now
                 </span>
               </div>
 
-              <div className="grid gap-6 px-5 py-6 lg:grid-cols-[1.2fr,0.8fr]">
-                <div>
-                  <h3 className="text-xl font-semibold text-white">No published ATGS pick right now</h3>
-                  <p className="mt-3 max-w-2xl text-sm leading-7 text-neutral-400">
-                    That is normal. The public lane is intentionally strict: confirmed starter, clean fixture, attacking role,
-                    edge threshold cleared, and a stake band that fits the price. If lineups are not confirmed yet, or no player
-                    clears the public filters, this page stays quiet.
-                  </p>
-                  <p className="mt-3 text-sm leading-7 text-neutral-500">
-                    Internal monitoring can still have softer shadow rows in the background, but this page stays quiet unless a pick is genuinely publishable.
-                  </p>
-                </div>
-
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-                  {leagueSummaries.map((league) => (
-                    <div
-                      key={league.key}
-                      className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3"
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <span
-                          className={`inline-flex rounded-md border px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] ${league.badgeClass}`}
-                        >
-                          {league.short}
-                        </span>
-                        <span className="text-[11px] uppercase tracking-[0.16em] text-neutral-500">
-                          {league.live} live / {league.settled} settled
-                        </span>
-                      </div>
-                      <div className="mt-3 text-sm font-medium text-white">{league.label}</div>
-                      <div className="mt-1 text-xs text-neutral-500">
-                        {league.total > 0
-                          ? "Published ledger is active in this league."
-                          : "No published picks logged here yet."}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div className="px-5 py-6">
+                <h3 className="text-xl font-semibold text-white">Nothing publishable yet</h3>
+                <p className="mt-3 max-w-3xl text-sm leading-7 text-neutral-400">
+                  No picks are live right now. This page only publishes when a confirmed starter clears every filter: verified lineup,
+                  fixture quality, odds band, and edge threshold. When a player qualifies, the pick appears here automatically.
+                </p>
+                <p className="mt-4 text-xs uppercase tracking-[0.18em] text-neutral-500">
+                  Hosted snapshot last refreshed {formatDateTime(snapshotGeneratedAt)}
+                </p>
               </div>
             </div>
           ) : (
@@ -541,22 +523,27 @@ export default async function AnytimeGoalscorerPage() {
                 className="overflow-hidden rounded-[28px] border border-white/10 bg-[#121417] shadow-[0_12px_40px_rgba(0,0,0,0.25)]"
               >
                 <div className="border-b border-white/10 px-5 py-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className={`inline-flex rounded-md border px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] ${getLeagueBadgeClass(row.leagueKey)}`}>
-                      {row.leagueLabel.toUpperCase()}
-                    </span>
-                    <span className="inline-flex rounded-md border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] text-emerald-300">
-                      CONFIRMED STARTER
-                    </span>
-                    <span className={`inline-flex rounded-md border px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] ${getStakeTone(row)}`}>
-                      {row.stakeLabel || `${row.stakeUnits.toFixed(2)}u`}
-                    </span>
-                    {row.penaltyDependent ? (
-                      <span className="inline-flex rounded-md border border-amber-500/25 bg-amber-500/10 px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] text-amber-200">
-                        INCLUDES PENALTY COMPONENT
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-3">
+                      {getLeagueSource(row.leagueKey) ? <LeagueLogo league={getLeagueSource(row.leagueKey)!} sizeClass="h-9 w-9" /> : null}
+                      <div>
+                        <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-400">{row.leagueLabel}</div>
+                        <div className="mt-1 text-sm text-neutral-500">{row.match}</div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="inline-flex rounded-md border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] text-emerald-300">
+                        CONFIRMED STARTER
                       </span>
-                    ) : null}
+                      <span className={`inline-flex rounded-md border px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] ${getStakeTone(row)}`}>
+                        {row.stakeLabel || `${row.stakeUnits.toFixed(2)}u`}
+                      </span>
+                    </div>
                   </div>
+                  {row.penaltyDependent ? (
+                    <div className="mt-3 text-xs text-amber-200">Includes penalty component</div>
+                  ) : null}
                 </div>
 
                 <div className="border-b border-white/10 px-5 py-5">
@@ -566,7 +553,7 @@ export default async function AnytimeGoalscorerPage() {
                         {row.player} <span className="text-lg font-normal text-neutral-400">to score</span>
                       </h3>
                       <p className="mt-2 text-sm text-neutral-400">
-                        {row.match} / {formatLeagueTime(row.kickoff)}
+                        {formatLeagueTime(row.kickoff)}
                       </p>
                       <div className="mt-3 flex flex-wrap gap-3 text-sm text-neutral-400">
                         <span>Book {formatOdds(row.bestOdds)} @ {row.bestBookmaker || "market"}</span>
@@ -622,7 +609,7 @@ export default async function AnytimeGoalscorerPage() {
             </div>
           ) : (
             <div className="overflow-hidden rounded-[28px] border border-white/10">
-              <div className="grid grid-cols-[80px,90px,1.4fr,120px,110px,90px,90px,100px] gap-3 bg-[#171a1f] px-5 py-3 text-[11px] uppercase tracking-[0.18em] text-neutral-500">
+              <div className="grid grid-cols-[80px,110px,1.8fr,120px,110px,90px,90px,100px] gap-3 bg-[#171a1f] px-5 py-3 text-[11px] uppercase tracking-[0.18em] text-neutral-500">
                 <span>Date</span>
                 <span>League</span>
                 <span>Pick</span>
@@ -635,17 +622,18 @@ export default async function AnytimeGoalscorerPage() {
               {settledSignals.slice(0, 30).map((row, index) => (
                 <div
                   key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}-settled`}
-                  className={`grid grid-cols-[80px,90px,1.4fr,120px,110px,90px,90px,100px] gap-3 px-5 py-4 text-sm ${index % 2 === 0 ? "bg-[#121417]" : "bg-[#171a1f]"}`}
+                  className={`grid grid-cols-[80px,110px,1.8fr,120px,110px,90px,90px,100px] gap-3 px-5 py-4 text-sm ${index % 2 === 0 ? "bg-[#121417]" : "bg-[#171a1f]"}`}
                 >
                   <span className="text-neutral-500">{formatResultDate(row.date)}</span>
-                  <span>
+                  <span className="flex items-center gap-2">
+                    {getLeagueSource(row.leagueKey) ? <LeagueLogo league={getLeagueSource(row.leagueKey)!} sizeClass="h-4 w-4" /> : null}
                     <span className={`inline-flex rounded-md border px-2 py-0.5 text-[10px] font-semibold tracking-[0.16em] ${getLeagueBadgeClass(row.leagueKey)}`}>
                       {row.leagueShort}
                     </span>
                   </span>
                   <span className="text-neutral-200">
                     <span className="font-medium text-white">{row.player}</span>
-                    <span className="text-neutral-500"> vs {row.opponent}</span>
+                    <span className="mt-1 block text-xs text-neutral-500">{row.match}</span>
                   </span>
                   <span className="text-neutral-300">{formatOdds(row.bestOdds)} / {formatOdds(row.fairOdds)}</span>
                   <span className="text-neutral-300">{row.stakeUnits.toFixed(2)}u</span>
@@ -666,7 +654,7 @@ export default async function AnytimeGoalscorerPage() {
             <div>
               <div className="text-2xl font-semibold text-white/90">01</div>
               <p className="mt-3 text-sm leading-7 text-neutral-400">
-                Confirmed starters only, clean T1 fixtures only, and attacking roles only. Expected-XI rows and speculative defenders stay off this page.
+                Confirmed starters only, verified fixtures only, and attacking roles only. Expected-lineup rows and speculative defenders stay off this page.
               </p>
             </div>
             <div>
