@@ -488,7 +488,7 @@ export default async function AnytimeGoalscorerPage() {
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">Live picks</h2>
             <p className="mt-1 text-sm text-neutral-500">
-              Only confirmed-starter picks that clear the full public policy are shown here. Once a pick is logged, the record stays append-only.
+              Once a pick is logged, the record stays append-only.
             </p>
           </div>
           <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-neutral-400">
@@ -506,13 +506,9 @@ export default async function AnytimeGoalscorerPage() {
               </div>
 
               <div className="px-5 py-6">
-                <h3 className="text-xl font-semibold text-white">Nothing publishable yet</h3>
-                <p className="mt-3 max-w-3xl text-sm leading-7 text-neutral-400">
+                <p className="max-w-3xl text-sm leading-7 text-neutral-400">
                   No picks are live right now. This page only publishes when a confirmed starter clears every filter: verified lineup,
                   fixture quality, odds band, and edge threshold. When a player qualifies, the pick appears here automatically.
-                </p>
-                <p className="mt-4 text-xs uppercase tracking-[0.18em] text-neutral-500">
-                  Hosted snapshot last refreshed {formatDateTime(snapshotGeneratedAt)}
                 </p>
               </div>
             </div>
@@ -605,7 +601,7 @@ export default async function AnytimeGoalscorerPage() {
 
           {settledSignals.length === 0 ? (
             <div className="rounded-[28px] border border-white/10 bg-[#121417] px-5 py-6 text-sm leading-7 text-neutral-400">
-              No settled public picks yet. The record will start filling as soon as confirmed-lineup picks are published and then settled.
+              No settled picks yet.
             </div>
           ) : (
             <div className="overflow-hidden rounded-[28px] border border-white/10">
