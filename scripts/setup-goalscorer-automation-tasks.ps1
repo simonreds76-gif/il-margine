@@ -2,7 +2,7 @@
 # Creates:
 #   - a daily live polling task with 30-minute repetition from 12:00 to 23:30
 #   - a daytime watchdog task that checks freshness every 15 minutes
-#   - a daily shadow settlement task at 02:15
+#   - a daily shadow settlement task at 10:00
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
@@ -28,7 +28,8 @@ $settleCmd = "$psExe -ExecutionPolicy Bypass -NoProfile -File `"$settleScript`""
 
 schtasks /Create /TN "IlMargine-Goalscorer-Live" /SC DAILY /ST 12:00 /RI 30 /DU 11:30 /RL HIGHEST /TR "$liveCmd" /F | Out-Host
 schtasks /Create /TN "IlMargine-Goalscorer-Health" /SC DAILY /ST 12:15 /RI 15 /DU 11:45 /RL HIGHEST /TR "$healthCmd" /F | Out-Host
-schtasks /Create /TN "IlMargine-Goalscorer-Shadow-Settle" /SC DAILY /ST 02:15 /RL HIGHEST /TR "$settleCmd" /F | Out-Host
+# Run the daily settlement as SYSTEM so it can execute unattended during the day.
+schtasks /Create /TN "IlMargine-Goalscorer-Shadow-Settle" /SC DAILY /ST 10:00 /RL HIGHEST /RU SYSTEM /TR "$settleCmd" /F | Out-Host
 
 Write-Host ""
 Write-Host "Goalscorer tasks created/updated."
