@@ -301,6 +301,10 @@ def fetch_confirmed_lineups(date_str: str, league_id: int, roster_by_team: Dict[
 
         fixtures.append(
             {
+                "fotmob_match_id": int(match_id),
+                "fotmob_page_url": page_url,
+                "home_fotmob_team_id": int(general.get("homeTeam", {}).get("id") or match.get("home", {}).get("id") or 0),
+                "away_fotmob_team_id": int(general.get("awayTeam", {}).get("id") or match.get("away", {}).get("id") or 0),
                 "match_date": match_date,
                 "home_team": home_team,
                 "away_team": away_team,

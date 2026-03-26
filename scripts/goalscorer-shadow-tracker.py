@@ -485,6 +485,7 @@ def main() -> None:
     parser.add_argument("--output", default=str(DEFAULT_SIGNALS), help="Append-only shadow signals CSV")
     parser.add_argument("--summary", default=str(DEFAULT_SUMMARY), help="Shadow performance summary TXT")
     parser.add_argument("--settle-only", action="store_true", help="Skip appending new rows and settle existing signals only")
+    parser.add_argument("--append-only", action="store_true", help="Append new rows but skip settlement")
     args = parser.parse_args()
 
     output_path = Path(args.output)
@@ -508,9 +509,14 @@ def main() -> None:
             _write_csv(output_path, [], OUTPUT_FIELDS)
         print("  Settle-only mode:       yes")
 
-    settlement_stats = settle_rows(output_path, args.data)
+    if args.append_only:
+        settlement_stats = {"settled_now": 0, "already_settled": 0, "pending": 0}
+    else:
+        settlement_stats = settle_rows(output_path, args.data)
     write_summary(summary_path, output_path)
 
+    if args.append_only:
+        print("  Settlement skipped:     yes")
     print(f"  Settled now:            {settlement_stats['settled_now']:,}")
     print(f"  Already settled:        {settlement_stats['already_settled']:,}")
     print(f"  Pending:                {settlement_stats['pending']:,}")

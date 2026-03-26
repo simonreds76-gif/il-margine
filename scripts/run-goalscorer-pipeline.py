@@ -223,6 +223,7 @@ def main() -> None:
     historical_backtest_script = str(ROOT / "scripts" / "goalscorer-historical-backtest.py")
     live_compare_script = str(ROOT / "scripts" / "goalscorer-live-compare.py")
     shadow_tracker_script = str(ROOT / "scripts" / "goalscorer-shadow-tracker.py")
+    settle_script = str(ROOT / "scripts" / "goalscorer-settle.py")
     live_snapshot_script = str(ROOT / "scripts" / "goalscorer-live-snapshot.py")
     odds_api_script = str(ROOT / "scripts" / "odds-api-scrape-goalscorer.py")
     pinnacle_script = str(ROOT / "scripts" / "pinnacle-scrape-goalscorer.py")
@@ -320,27 +321,35 @@ def main() -> None:
             if args.track_shadow or args.settle_shadow:
                 shadow_output = args.shadow_output or league_config["shadow_signals"]
                 shadow_summary = args.shadow_summary or league_config["shadow_summary"]
-                shadow_cmd = [
-                    sys.executable,
-                    shadow_tracker_script,
-                    "--output",
-                    str(ROOT / shadow_output),
-                    "--summary",
-                    str(ROOT / shadow_summary),
-                    "--odds-archive",
-                    str(archive_path),
-                ]
-                if not args.settle_shadow:
-                    shadow_cmd.extend(
+                if args.settle_shadow:
+                    _run(
                         [
-                            "--live-compare",
-                            str(ROOT / league_config["live_out_dir"] / "goalscorer-live-comparison.csv"),
+                            sys.executable,
+                            settle_script,
+                            "--league",
+                            args.league,
+                            "--signals",
+                            str(ROOT / shadow_output),
+                            "--summary",
+                            str(ROOT / shadow_summary),
                         ]
                     )
                 else:
-                    shadow_cmd.append("--settle-only")
-                shadow_cmd.extend(["--data", *data_paths])
-                _run(shadow_cmd)
+                    shadow_cmd = [
+                        sys.executable,
+                        shadow_tracker_script,
+                        "--output",
+                        str(ROOT / shadow_output),
+                        "--summary",
+                        str(ROOT / shadow_summary),
+                        "--odds-archive",
+                        str(archive_path),
+                        "--append-only",
+                        "--live-compare",
+                        str(ROOT / league_config["live_out_dir"] / "goalscorer-live-comparison.csv"),
+                    ]
+                    shadow_cmd.extend(["--data", *data_paths])
+                    _run(shadow_cmd)
         else:
             print("  No goalscorer odds archive found. Skipping comparison.")
 

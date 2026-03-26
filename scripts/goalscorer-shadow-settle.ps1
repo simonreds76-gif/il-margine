@@ -83,7 +83,18 @@ $requiredPlayerLogs = @{
 function Log($msg) {
     $line = "$(Get-Date -Format 'HH:mm:ss') $msg"
     Write-Host $line
-    Add-Content -Path $logFile -Value $line
+    $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+    for ($attempt = 0; $attempt -lt 3; $attempt++) {
+        try {
+            [System.IO.File]::AppendAllText($logFile, $line + [Environment]::NewLine, $utf8NoBom)
+            return
+        } catch {
+            if ($attempt -eq 2) {
+                throw
+            }
+            Start-Sleep -Milliseconds 150
+        }
+    }
 }
 
 function Resolve-PythonExe {
@@ -120,6 +131,13 @@ Log "Python executable: $pythonExe"
 Log "Current season refresh: $seasonLabel"
 Log "Leagues:               $($leagues -join ', ')"
 
+Log "---- Fetching recent FotMob match detail ----"
+& $pythonExe scripts\fotmob-fetch-match-detail.py --league $leagues --days-back 3 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "ERROR: FotMob match detail fetch failed (exit $LASTEXITCODE)"
+    exit 1
+}
+
 & $pythonExe scripts\understat-scrape-serie-a.py --league $leagues --season $seasonLabel --resume 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "ERROR: Understat refresh failed (exit $LASTEXITCODE)"
@@ -128,19 +146,19 @@ if ($LASTEXITCODE -ne 0) {
 
 foreach ($league in $leagues) {
     Log "---- Settle league: $league ----"
+    & $pythonExe scripts\goalscorer-settle.py `
+        --league $league `
+        --signals $shadowOutputs[$league] `
+        --summary $shadowSummaries[$league] 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "ERROR: FotMob shadow settlement failed for $league (exit $LASTEXITCODE)"
+        exit 1
+    }
+
     $requiredLog = $requiredPlayerLogs[$league]
     if (-not [string]::IsNullOrWhiteSpace($requiredLog) -and -not (Test-Path $requiredLog)) {
-        Log "SKIP: current player log missing for $league ($requiredLog)"
+        Log "SKIP: current player log missing for $league ($requiredLog) - penalty review/evidence only"
         continue
-    }
-    & $pythonExe scripts\goalscorer-shadow-tracker.py `
-        --settle-only `
-        --output $shadowOutputs[$league] `
-        --summary $shadowSummaries[$league] `
-        --data $dataGlobs[$league] 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        Log "ERROR: shadow settlement failed for $league (exit $LASTEXITCODE)"
-        exit 1
     }
 
     $contextArgs = @(
@@ -163,6 +181,13 @@ foreach ($league in $leagues) {
         Log "ERROR: penalty baseline evidence build failed for $league (exit $LASTEXITCODE)"
         exit 1
     }
+}
+
+Log "---- Uploading hosted live snapshot ----"
+& $pythonExe scripts\goalscorer-live-snapshot.py --supabase 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "ERROR: goalscorer live snapshot upload failed after settlement (exit $LASTEXITCODE)"
+    exit 1
 }
 
 Log "============================================"

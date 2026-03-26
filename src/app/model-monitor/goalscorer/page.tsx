@@ -61,6 +61,7 @@ type FixtureLineup = {
 type ShadowSummary = {
   signals: number;
   settled: number;
+  pending: number;
   open: number;
   wins: number;
   losses: number;
@@ -948,6 +949,8 @@ function isSettledShadowRow(row: CsvRow): boolean {
 
 function computeShadowSummary(rows: CsvRow[]): ShadowSummary {
   const settled = rows.filter(isSettledShadowRow);
+  const pendingRows = rows.filter((row) => !isSettledShadowRow(row) && shadowResultLabel(row) === "PENDING");
+  const openRows = rows.filter((row) => !isSettledShadowRow(row) && shadowResultLabel(row) === "OPEN");
   const wins = settled.filter((row) => (row.bet_outcome ?? "").trim().toLowerCase() === "won").length;
   const losses = settled.filter((row) => (row.bet_outcome ?? "").trim().toLowerCase() === "lost").length;
   const voids = settled.filter((row) => {
@@ -959,7 +962,8 @@ function computeShadowSummary(rows: CsvRow[]): ShadowSummary {
   return {
     signals: rows.length,
     settled: settled.length,
-    open: Math.max(0, rows.length - settled.length),
+    pending: pendingRows.length,
+    open: openRows.length,
     wins,
     losses,
     voids,
@@ -1957,7 +1961,7 @@ export default async function GoalscorerMonitorPage() {
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
             <Stat label="Tracked Signals" value={`${shadowSummary.signals}`} />
             <Stat label="Settled" value={`${shadowSummary.settled}`} />
-            <Stat label="Open" value={`${shadowSummary.open}`} tone="text-amber-300" />
+            <Stat label="Pending" value={`${shadowSummary.pending}`} tone="text-amber-300" />
             <Stat label="W/L/V" value={formatWLV(shadowSummary.wins, shadowSummary.losses, shadowSummary.voids)} tone="text-slate-200" />
             <Stat label="ROI" value={formatPct(shadowSummary.roi, 1)} tone={shadowSummary.roi >= 0 ? "text-emerald-300" : "text-rose-300"} />
             <Stat label="P/L Units" value={formatSigned(shadowSummary.pnlUnits, 2)} tone={shadowSummary.pnlUnits >= 0 ? "text-emerald-300" : "text-rose-300"} />
