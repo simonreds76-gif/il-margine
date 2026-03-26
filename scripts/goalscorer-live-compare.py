@@ -67,13 +67,16 @@ STACKED_FIXTURE_WINDOW = 3
 USUAL_POSITION_WINDOW = 10
 USUAL_POSITION_SHARE_MIN = 0.80
 PUBLIC_ATTACKING_POSITIONS = {"FW", "FWR", "FWL", "AMC", "AMR", "AML"}
-PUBLIC_MIDFIELD_EXCEPTIONS = {"MC", "ML", "MR", "DMC"}
-PUBLIC_MAX_FAIR_ODDS = 10.0
-PUBLIC_EXCEPTION_MAX_FAIR_ODDS = 14.0
+PUBLIC_MIN_HISTORY_MINUTES = 600.0
+PUBLIC_MIN_BEST_ODDS = 1.60
+PUBLIC_MAX_BEST_ODDS = 7.00
+PUBLIC_MAX_FAIR_ODDS = 6.00
 PUBLIC_MIN_EXPECTED_MINUTES = 70.0
-PUBLIC_MIN_NPXG90_ATTACK = 0.12
-PUBLIC_MIN_NPXG90_EXCEPTION = 0.20
+PUBLIC_MAX_PENALTY_DEPENDENCE_SHARE = 0.40
+PUBLIC_PENALTY_DEPENDENT_MAX_ODDS = 4.50
 PUBLIC_SURFACE_MIN_EV = 0.08
+PUBLIC_CORE_MIN_EV = 0.10
+PUBLIC_EXTENDED_MIN_EV = 0.12
 SHADOW_TRACK_MIN_EV = 0.05
 SHADOW_MAX_FAIR_ODDS = 20.0
 SHADOW_MIN_EXPECTED_MINUTES = 60.0
@@ -386,36 +389,66 @@ def _classify_confidence(
 
 def _public_publish_gate(
     position: str,
+    best_odds: float,
     fair_odds: float,
     expected_minutes: float,
-    recent_npxg_per90: float,
-    penalty_transfer: bool,
-    penalty_share: float,
-    position_upgrade: bool,
+    history_minutes: float,
+    penalty_dependency_share: float,
 ) -> str:
     coarse_position = _coarse_position_text(position)
 
+    if best_odds < PUBLIC_MIN_BEST_ODDS:
+        return "odds_below_public_floor"
+    if best_odds > PUBLIC_MAX_BEST_ODDS:
+        return "odds_above_public_cap"
     if expected_minutes < PUBLIC_MIN_EXPECTED_MINUTES:
-        return "minutes_lt_65"
-
-    if coarse_position in PUBLIC_ATTACKING_POSITIONS:
-        if fair_odds <= PUBLIC_MAX_FAIR_ODDS and recent_npxg_per90 >= PUBLIC_MIN_NPXG90_ATTACK:
-            return ""
-        if (
-            fair_odds <= PUBLIC_EXCEPTION_MAX_FAIR_ODDS
-            and (penalty_transfer or position_upgrade or recent_npxg_per90 >= PUBLIC_MIN_NPXG90_EXCEPTION)
-        ):
-            return ""
-        return "attacker_profile_too_thin"
-
-    if coarse_position in PUBLIC_MIDFIELD_EXCEPTIONS:
-        if penalty_transfer or penalty_share >= 0.18 or position_upgrade:
-            if fair_odds <= PUBLIC_EXCEPTION_MAX_FAIR_ODDS and recent_npxg_per90 >= PUBLIC_MIN_NPXG90_EXCEPTION:
-                return ""
-            return "midfielder_profile_too_thin"
+        return "minutes_lt_70"
+    if history_minutes < PUBLIC_MIN_HISTORY_MINUTES:
+        return "history_lt_600"
+    if fair_odds > PUBLIC_MAX_FAIR_ODDS:
+        return "fair_odds_above_public_cap"
+    if coarse_position not in PUBLIC_ATTACKING_POSITIONS:
         return "non_attacking_role"
+    if penalty_dependency_share > PUBLIC_MAX_PENALTY_DEPENDENCE_SHARE and best_odds > PUBLIC_PENALTY_DEPENDENT_MAX_ODDS:
+        return "penalty_dependent_too_long"
+    return ""
 
-    return "defensive_role"
+
+def _penalty_dependency_share(total_lambda: float, penalty_lambda: float) -> float:
+    total = max(float(total_lambda or 0.0), 0.0)
+    if total <= 0.0:
+        return 0.0
+    return max(0.0, min(1.0, float(penalty_lambda or 0.0) / total))
+
+
+def _recommended_public_stake(best_odds: float, ev: float, penalty_dependency_share: float) -> tuple[float, str, str]:
+    units = 0.0
+    band = ""
+    label = ""
+
+    if PUBLIC_MIN_BEST_ODDS <= best_odds <= 3.50 and ev >= PUBLIC_CORE_MIN_EV:
+        units = 1.25
+        band = "core"
+        label = "1.25u Core"
+    elif PUBLIC_MIN_BEST_ODDS <= best_odds <= 5.00 and ev >= PUBLIC_SURFACE_MIN_EV:
+        units = 1.00
+        band = "standard"
+        label = "1.00u Standard"
+    elif 5.00 < best_odds <= PUBLIC_MAX_BEST_ODDS and ev >= PUBLIC_EXTENDED_MIN_EV:
+        units = 0.50
+        band = "extended"
+        label = "0.50u Extended"
+
+    if units <= 0.0:
+        return 0.0, "", ""
+
+    if penalty_dependency_share > PUBLIC_MAX_PENALTY_DEPENDENCE_SHARE:
+        if band == "core":
+            return 1.00, "standard", "1.00u Standard"
+        if band == "standard":
+            return 0.50, "extended", "0.50u Extended"
+
+    return units, band, label
 
 
 def _stacked_signal_features(player_history, opponent_summary: dict | None) -> dict:
@@ -1938,16 +1971,27 @@ def main() -> None:
                 candidate["is_home"],
             )
             public_gate_reason = ""
+            penalty_dependency_share = _penalty_dependency_share(prediction["total_lambda"], prediction["penalty_lambda"])
+            recommended_stake_units = 0.0
+            recommended_stake_band = ""
+            recommended_stake_label = ""
             if signal_confidence != "low" and lineup_status == "confirmed_starter" and ev >= public_min_ev:
                 public_gate_reason = _public_publish_gate(
                     candidate["position"],
+                    odds_decimal,
                     fair_odds,
                     candidate["expected_minutes"],
-                    stacked_features["recent_npxg_per90_8"],
-                    penalty_transfer,
-                    prediction["penalty_share"],
-                    bool(position_signal["position_upgrade"]),
+                    candidate["history_minutes"],
+                    penalty_dependency_share,
                 )
+                if not public_gate_reason:
+                    recommended_stake_units, recommended_stake_band, recommended_stake_label = _recommended_public_stake(
+                        odds_decimal,
+                        ev,
+                        penalty_dependency_share,
+                    )
+                    if recommended_stake_units <= 0.0:
+                        public_gate_reason = "stake_band_fail"
             public_action = _compute_public_action(
                 signal_confidence,
                 lineup_status,
@@ -2019,6 +2063,8 @@ def main() -> None:
                     "team_share": round(prediction["team_share"], 4),
                     "non_pen_lambda": round(prediction["non_pen_lambda"], 4),
                     "penalty_lambda": round(prediction["penalty_lambda"], 4),
+                    "penalty_dependency_share": round(penalty_dependency_share, 4),
+                    "penalty_dependent": int(penalty_dependency_share > PUBLIC_MAX_PENALTY_DEPENDENCE_SHARE),
                     "penalty_share": round(prediction["penalty_share"], 4),
                     "baseline_penalty_share": round(prediction["baseline_penalty_share"], 4),
                     "baseline_penalty_sample": round(prediction["baseline_penalty_sample"], 2),
@@ -2075,6 +2121,10 @@ def main() -> None:
                     "signal_confidence": signal_confidence,
                     "legacy_public_action": legacy_public_action,
                     "public_action": public_action,
+                    "public_policy_reason": public_gate_reason,
+                    "recommended_stake_units": round(recommended_stake_units, 2) if recommended_stake_units > 0 else 0.0,
+                    "recommended_stake_band": recommended_stake_band,
+                    "recommended_stake_label": recommended_stake_label,
                     "shadow_action": shadow_action,
                     "confidence_reason": confidence_reason,
                     "team_lineup_status": team_penalty_event.get("lineup_status", ""),

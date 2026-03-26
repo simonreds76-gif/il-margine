@@ -30,6 +30,8 @@ DEFAULT_LIVE_COMPARE = ROOT / "data" / "goalscorer" / "goalscorer-live-compariso
 DEFAULT_ODDS_ARCHIVE = ROOT / "data" / "goalscorer" / "goalscorer-odds-history.csv"
 DEFAULT_SIGNALS = ROOT / "data" / "goalscorer" / "goalscorer-shadow-signals.csv"
 DEFAULT_SUMMARY = ROOT / "data" / "goalscorer" / "goalscorer-shadow-performance.txt"
+DEFAULT_PUBLIC_SIGNALS = ROOT / "data" / "goalscorer" / "goalscorer-public-signals.csv"
+DEFAULT_PUBLIC_SUMMARY = ROOT / "data" / "goalscorer" / "goalscorer-public-performance.txt"
 DEFAULT_DATA = [
     "data/goalscorer/serie-a-player-match-logs-2023-2024.csv",
     "data/goalscorer/serie-a-player-match-logs-2024-2025.csv",
@@ -72,6 +74,16 @@ OUTPUT_FIELDS = [
     "home_team",
     "away_team",
     "position_group",
+    "position",
+    "historical_minutes",
+    "trust_tier",
+    "public_action",
+    "public_policy_reason",
+    "penalty_dependent",
+    "penalty_dependency_share",
+    "recommended_stake_units",
+    "recommended_stake_band",
+    "recommended_stake_label",
     "settled",
     "goals_scored",
     "bet_outcome",
@@ -311,6 +323,84 @@ def build_shadow_rows(live_rows: List[dict], archive_lookup: Dict[tuple[str, str
                 "home_team": home_team,
                 "away_team": away_team,
                 "position_group": (row.get("position_group") or "").strip(),
+                "position": (row.get("position") or "").strip(),
+                "historical_minutes": f"{_parse_float(row.get('historical_minutes')):.1f}",
+                "trust_tier": (row.get("trust_tier") or "").strip(),
+                "public_action": (row.get("public_action") or "").strip(),
+                "public_policy_reason": (row.get("public_policy_reason") or "").strip(),
+                "penalty_dependent": "1" if str(row.get("penalty_dependent") or "").strip() in {"1", "true", "True"} else "0",
+                "penalty_dependency_share": f"{_parse_float(row.get('penalty_dependency_share')):.4f}",
+                "recommended_stake_units": f"{_parse_float(row.get('recommended_stake_units')):.2f}",
+                "recommended_stake_band": (row.get("recommended_stake_band") or "").strip(),
+                "recommended_stake_label": (row.get("recommended_stake_label") or "").strip(),
+                "settled": "",
+                "goals_scored": "",
+                "bet_outcome": "",
+                "settled_at": "",
+                "pnl_units": "",
+                "settlement_note": "",
+            }
+        )
+    return output
+
+
+def build_public_rows(live_rows: List[dict], archive_lookup: Dict[tuple[str, str, str, str], List[dict]]) -> List[dict]:
+    output: List[dict] = []
+    for row in dedupe_live_rows(live_rows):
+        if (row.get("public_action") or "").strip().lower() != "surface":
+            continue
+
+        stake_units = _parse_float(row.get("recommended_stake_units"))
+        if stake_units <= 0.0:
+            continue
+
+        best_price = resolve_best_price(row, archive_lookup)
+        model_prob = _parse_float(row.get("model_p_atgs"))
+        fair_odds = _parse_float(row.get("model_fair_odds_atgs"))
+        best_odds = _parse_float(best_price.get("odds_decimal"))
+        best_ev = (model_prob * best_odds) - 1.0 if best_odds > 1.0 else 0.0
+        home_team = (row.get("home_team") or "").strip()
+        away_team = (row.get("away_team") or "").strip()
+        canonical_player = (row.get("canonical_player_name") or row.get("player_name") or "").strip()
+
+        output.append(
+            {
+                "date": (row.get("match_date") or "").strip(),
+                "kickoff": (best_price.get("kickoff_at") or row.get("match_date") or "").strip(),
+                "match": f"{home_team} vs {away_team}",
+                "competition": (row.get("competition") or "").strip(),
+                "player": canonical_player,
+                "team": (row.get("player_team") or "").strip(),
+                "opponent": (row.get("opponent") or "").strip(),
+                "signal_type": "public_pick",
+                "finishing_luck": f"{_parse_float(row.get('finishing_luck_8')):.4f}",
+                "fixture_swing": f"{_parse_float(row.get('fixture_swing_3')):.4f}",
+                "penalty_transfer": "1" if str(row.get("penalty_transfer") or "").strip() in {"1", "true", "True"} else "0",
+                "penalty_transfer_from": (row.get("penalty_transfer_from") or "").strip(),
+                "position_upgrade": "1" if str(row.get("position_upgrade") or "").strip() in {"1", "true", "True"} else "0",
+                "lineup_state": (row.get("lineup_state") or "").strip(),
+                "model_p_atgs": f"{model_prob:.6f}",
+                "model_fair_odds": f"{fair_odds:.4f}",
+                "best_bookmaker": (best_price.get("bookmaker") or "").strip(),
+                "best_bookmaker_odds": f"{best_odds:.4f}",
+                "ev": f"{best_ev:.6f}",
+                "confidence": (row.get("signal_confidence") or "").strip(),
+                "compared_at": (row.get("compared_at") or "").strip(),
+                "player_id": (row.get("player_id") or "").strip(),
+                "market_player_name": (row.get("player_name") or "").strip(),
+                "home_team": home_team,
+                "away_team": away_team,
+                "position_group": (row.get("position_group") or "").strip(),
+                "position": (row.get("position") or "").strip(),
+                "historical_minutes": f"{_parse_float(row.get('historical_minutes')):.1f}",
+                "trust_tier": (row.get("trust_tier") or "").strip(),
+                "public_action": (row.get("public_action") or "").strip(),
+                "public_policy_reason": (row.get("public_policy_reason") or "").strip(),
+                "penalty_dependent": "1" if str(row.get("penalty_dependent") or "").strip() in {"1", "true", "True"} else "0",
+                "penalty_dependency_share": f"{_parse_float(row.get('penalty_dependency_share')):.4f}",
+                "recommended_stake_units": f"{stake_units:.2f}",
+                "recommended_stake_band": (row.get("recommended_stake_band") or "").strip(),
+                "recommended_stake_label": (row.get("recommended_stake_label") or "").strip(),
                 "settled": "",
                 "goals_scored": "",
                 "bet_outcome": "",
@@ -415,13 +505,18 @@ def _summary_metrics(rows: List[dict]) -> dict:
     settled_rows = [row for row in rows if (row.get("settled") or "").strip().lower() in {"1", "true", "yes", "settled"}]
     pnl = sum(_parse_float(row.get("pnl_units")) for row in settled_rows)
     wins = sum(1 for row in settled_rows if (row.get("bet_outcome") or "").strip().lower() == "won")
+    staked_units = 0.0
+    for row in settled_rows:
+        recommended = _parse_float(row.get("recommended_stake_units"))
+        staked_units += recommended if recommended > 0 else 1.0
     return {
         "signals": len(rows),
         "settled": len(settled_rows),
         "unsettled": len(rows) - len(settled_rows),
-        "roi": (pnl / len(settled_rows)) if settled_rows else 0.0,
+        "roi": (pnl / staked_units) if staked_units else 0.0,
         "win_rate": (wins / len(settled_rows)) if settled_rows else 0.0,
         "pnl_units": pnl,
+        "staked_units": staked_units,
     }
 
 
@@ -458,6 +553,7 @@ def write_summary(path: Path, signals_path: Path) -> None:
                 f"  ROI:        {metrics['roi']:+.2%}",
                 f"  win rate:   {metrics['win_rate']:.2%}",
                 f"  P/L units:  {metrics['pnl_units']:+.2f}",
+                f"  Staked:     {metrics['staked_units']:.2f}",
                 "",
             ]
         )
@@ -484,12 +580,16 @@ def main() -> None:
     parser.add_argument("--data", nargs="+", default=DEFAULT_DATA, help="Historical player-log CSVs or globs")
     parser.add_argument("--output", default=str(DEFAULT_SIGNALS), help="Append-only shadow signals CSV")
     parser.add_argument("--summary", default=str(DEFAULT_SUMMARY), help="Shadow performance summary TXT")
+    parser.add_argument("--public-output", default="", help="Optional append-only public signals CSV")
+    parser.add_argument("--public-summary", default="", help="Optional public performance summary TXT")
     parser.add_argument("--settle-only", action="store_true", help="Skip appending new rows and settle existing signals only")
     parser.add_argument("--append-only", action="store_true", help="Append new rows but skip settlement")
     args = parser.parse_args()
 
     output_path = Path(args.output)
     summary_path = Path(args.summary)
+    public_output_path = Path(args.public_output) if args.public_output else None
+    public_summary_path = Path(args.public_summary) if args.public_summary else None
 
     print("\n" + "=" * 64)
     print("  IL MARGINE - Goalscorer Shadow Tracker")
@@ -501,12 +601,23 @@ def main() -> None:
         archive_lookup = build_best_price_lookup(archive_rows)
         shadow_rows = build_shadow_rows(live_rows, archive_lookup)
         added = append_rows_dedup(output_path, shadow_rows)
+        public_added = 0
+        public_rows = build_public_rows(live_rows, archive_lookup)
+        if public_output_path is not None:
+            public_added = append_rows_dedup(public_output_path, public_rows)
+            if public_summary_path is not None:
+                write_summary(public_summary_path, public_output_path)
         print(f"  Live compare rows:      {len(live_rows):,}")
         print(f"  Shadow qualifiers:      {len(shadow_rows):,}")
         print(f"  Appended new signals:   {added:,}")
+        if public_output_path is not None:
+            print(f"  Public qualifiers:      {len(public_rows):,}")
+            print(f"  Appended public picks:  {public_added:,}")
     else:
         if not output_path.exists():
             _write_csv(output_path, [], OUTPUT_FIELDS)
+        if public_output_path is not None and not public_output_path.exists():
+            _write_csv(public_output_path, [], OUTPUT_FIELDS)
         print("  Settle-only mode:       yes")
 
     if args.append_only:
@@ -522,6 +633,10 @@ def main() -> None:
     print(f"  Pending:                {settlement_stats['pending']:,}")
     print(f"  Saved:                  {output_path}")
     print(f"  Saved:                  {summary_path}")
+    if public_output_path is not None:
+        print(f"  Saved:                  {public_output_path}")
+    if public_summary_path is not None:
+        print(f"  Saved:                  {public_summary_path}")
     print("\n  Done.\n")
 
 

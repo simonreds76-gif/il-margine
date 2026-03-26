@@ -40,6 +40,22 @@ $shadowSummaries = @{
     "ligue-1" = "data\goalscorer\ligue-1-shadow-performance.txt"
 }
 
+$publicOutputs = @{
+    "serie-a" = "data\goalscorer\goalscorer-public-signals.csv"
+    "epl" = "data\goalscorer\epl-public-signals.csv"
+    "la-liga" = "data\goalscorer\la-liga-public-signals.csv"
+    "bundesliga" = "data\goalscorer\bundesliga-public-signals.csv"
+    "ligue-1" = "data\goalscorer\ligue-1-public-signals.csv"
+}
+
+$publicSummaries = @{
+    "serie-a" = "data\goalscorer\goalscorer-public-performance.txt"
+    "epl" = "data\goalscorer\epl-public-performance.txt"
+    "la-liga" = "data\goalscorer\la-liga-public-performance.txt"
+    "bundesliga" = "data\goalscorer\bundesliga-public-performance.txt"
+    "ligue-1" = "data\goalscorer\ligue-1-public-performance.txt"
+}
+
 $penaltyContextCurrent = @{
     "serie-a" = "data\goalscorer\penalty-duty-context.json"
     "epl" = "data\goalscorer\epl\penalty-duty-context.json"
@@ -152,6 +168,15 @@ foreach ($league in $leagues) {
         --summary $shadowSummaries[$league] 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "ERROR: FotMob shadow settlement failed for $league (exit $LASTEXITCODE)"
+        exit 1
+    }
+
+    & $pythonExe scripts\goalscorer-settle.py `
+        --league $league `
+        --signals $publicOutputs[$league] `
+        --summary $publicSummaries[$league] 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "ERROR: FotMob public settlement failed for $league (exit $LASTEXITCODE)"
         exit 1
     }
 

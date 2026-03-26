@@ -305,7 +305,10 @@ def main() -> None:
             continue
 
         odds = _parse_float(row.get("best_bookmaker_odds"))
-        pnl_units = 0.0 if outcome == "void" else ((odds - 1.0) if outcome == "won" else -1.0)
+        stake_units = _parse_float(row.get("recommended_stake_units"))
+        if stake_units <= 0.0:
+            stake_units = 1.0
+        pnl_units = 0.0 if outcome == "void" else ((stake_units * (odds - 1.0)) if outcome == "won" else -stake_units)
         row["settled"] = "1"
         row["goals_scored"] = str(goals_scored)
         row["bet_outcome"] = outcome

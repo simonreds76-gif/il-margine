@@ -36,6 +36,8 @@ DEFAULT_PENALTY_HIERARCHY = "data/goalscorer/serie-a-penalty-takers.json"
 DEFAULT_CONFIRMED_LINEUPS = "data/goalscorer/confirmed-lineups.json"
 DEFAULT_SHADOW_SIGNALS = "data/goalscorer/goalscorer-shadow-signals.csv"
 DEFAULT_SHADOW_SUMMARY = "data/goalscorer/goalscorer-shadow-performance.txt"
+DEFAULT_PUBLIC_SIGNALS = "data/goalscorer/goalscorer-public-signals.csv"
+DEFAULT_PUBLIC_SUMMARY = "data/goalscorer/goalscorer-public-performance.txt"
 
 LEAGUE_CONFIGS = {
     "serie-a": {
@@ -49,6 +51,8 @@ LEAGUE_CONFIGS = {
         "league_id": 55,
         "shadow_signals": DEFAULT_SHADOW_SIGNALS,
         "shadow_summary": DEFAULT_SHADOW_SUMMARY,
+        "public_signals": DEFAULT_PUBLIC_SIGNALS,
+        "public_summary": DEFAULT_PUBLIC_SUMMARY,
         "live_out_dir": "data/goalscorer",
     },
     "epl": {
@@ -62,6 +66,8 @@ LEAGUE_CONFIGS = {
         "league_id": 47,
         "shadow_signals": "data/goalscorer/epl-shadow-signals.csv",
         "shadow_summary": "data/goalscorer/epl-shadow-performance.txt",
+        "public_signals": "data/goalscorer/epl-public-signals.csv",
+        "public_summary": "data/goalscorer/epl-public-performance.txt",
         "live_out_dir": "data/goalscorer/epl",
     },
     "la-liga": {
@@ -75,6 +81,8 @@ LEAGUE_CONFIGS = {
         "league_id": 87,
         "shadow_signals": "data/goalscorer/la-liga-shadow-signals.csv",
         "shadow_summary": "data/goalscorer/la-liga-shadow-performance.txt",
+        "public_signals": "data/goalscorer/la-liga-public-signals.csv",
+        "public_summary": "data/goalscorer/la-liga-public-performance.txt",
         "live_out_dir": "data/goalscorer/la-liga",
     },
     "bundesliga": {
@@ -88,6 +96,8 @@ LEAGUE_CONFIGS = {
         "league_id": 54,
         "shadow_signals": "data/goalscorer/bundesliga-shadow-signals.csv",
         "shadow_summary": "data/goalscorer/bundesliga-shadow-performance.txt",
+        "public_signals": "data/goalscorer/bundesliga-public-signals.csv",
+        "public_summary": "data/goalscorer/bundesliga-public-performance.txt",
         "live_out_dir": "data/goalscorer/bundesliga",
     },
     "ligue-1": {
@@ -101,6 +111,8 @@ LEAGUE_CONFIGS = {
         "league_id": 53,
         "shadow_signals": "data/goalscorer/ligue-1-shadow-signals.csv",
         "shadow_summary": "data/goalscorer/ligue-1-shadow-performance.txt",
+        "public_signals": "data/goalscorer/ligue-1-public-signals.csv",
+        "public_summary": "data/goalscorer/ligue-1-public-performance.txt",
         "live_out_dir": "data/goalscorer/ligue-1",
     },
 }
@@ -321,6 +333,8 @@ def main() -> None:
             if args.track_shadow or args.settle_shadow:
                 shadow_output = args.shadow_output or league_config["shadow_signals"]
                 shadow_summary = args.shadow_summary or league_config["shadow_summary"]
+                public_output = league_config.get("public_signals", DEFAULT_PUBLIC_SIGNALS)
+                public_summary = league_config.get("public_summary", DEFAULT_PUBLIC_SUMMARY)
                 if args.settle_shadow:
                     _run(
                         [
@@ -334,6 +348,18 @@ def main() -> None:
                             str(ROOT / shadow_summary),
                         ]
                     )
+                    _run(
+                        [
+                            sys.executable,
+                            settle_script,
+                            "--league",
+                            args.league,
+                            "--signals",
+                            str(ROOT / public_output),
+                            "--summary",
+                            str(ROOT / public_summary),
+                        ]
+                    )
                 else:
                     shadow_cmd = [
                         sys.executable,
@@ -342,6 +368,10 @@ def main() -> None:
                         str(ROOT / shadow_output),
                         "--summary",
                         str(ROOT / shadow_summary),
+                        "--public-output",
+                        str(ROOT / public_output),
+                        "--public-summary",
+                        str(ROOT / public_summary),
                         "--odds-archive",
                         str(archive_path),
                         "--append-only",

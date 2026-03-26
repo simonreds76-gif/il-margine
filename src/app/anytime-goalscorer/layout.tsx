@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
 
-const title = "Goalscorer Value Picks | Shadow Tracking Live";
+const title = "Goalscorer Value Picks | Confirmed Starter ATGS";
 const description =
-  "Selective anytime-goalscorer value picks from Il Margine's live shadow tracker, updated around confirmed lineups across four major leagues.";
+  "Confirmed-starter anytime-goalscorer value picks from Il Margine's live model, filtered by clean fixtures, disciplined odds bands and public staking rules.";
 const url = `${BASE_URL}/anytime-goalscorer`;
 
 export const metadata: Metadata = {
