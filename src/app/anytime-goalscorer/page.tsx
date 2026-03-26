@@ -1,5 +1,4 @@
 ﻿import Link from "next/link";
-import { notFound } from "next/navigation";
 
 import {
   readGoalscorerLiveFile,
@@ -8,11 +7,6 @@ import {
 
 export const dynamic = "force-dynamic";
 
-const GOALSCORER_PAGE_PUBLIC =
-  process.env.NODE_ENV !== "production" ||
-  process.env.VERCEL_ENV === "preview" ||
-  process.env.GOALSCORER_PAGE_PUBLIC === "1" ||
-  process.env.NEXT_PUBLIC_ENABLE_GOALSCORER_PAGE === "1";
 
 type LeagueKey = "serie-a" | "epl" | "la-liga" | "bundesliga" | "ligue-1";
 type CsvRow = Record<string, string>;
@@ -375,10 +369,6 @@ function getStakeTone(row: PublicRow): string {
 }
 
 export default async function AnytimeGoalscorerPage() {
-  if (!GOALSCORER_PAGE_PUBLIC) {
-    notFound();
-  }
-
   const [allRows, snapshotGeneratedAt] = await Promise.all([
     loadPublicRows(),
     readGoalscorerLiveSnapshotGeneratedAt(),
@@ -509,7 +499,8 @@ export default async function AnytimeGoalscorerPage() {
                   <h3 className="text-xl font-semibold text-white">No published ATGS pick right now</h3>
                   <p className="mt-3 max-w-2xl text-sm leading-7 text-neutral-400">
                     That is normal. The public lane is intentionally strict: confirmed starter, clean fixture, attacking role,
-                    edge threshold cleared, and a stake band that fits the price.
+                    edge threshold cleared, and a stake band that fits the price. If lineups are not confirmed yet, or no player
+                    clears the public filters, this page stays quiet.
                   </p>
                   <p className="mt-3 text-sm leading-7 text-neutral-500">
                     Internal monitoring can still have softer shadow rows in the background, but this page stays quiet unless a pick is genuinely publishable.
