@@ -7,14 +7,17 @@ Run after: (1) oncourt-compute-fair-odds.py, (2) pinnacle-scrape-odds.py
 If daily_fair_odds is recomputed later (e.g. via Supabase), spread columns get overwritten
 with null. Re-run this script or the full pipeline (run-daily-odds.py) to restore handicaps.
 
-Matches daily_fair_odds to bookmaker_odds_snapshot, uses the stored matchup point-probability
-pair (`p_a`, `p_b`) when available, and only falls back to a reverse-solved symmetric pair
-from the final blended match win probability (`p1_win_prob`) if those fields are missing.
+Matches daily_fair_odds to bookmaker_odds_snapshot, prefers the stored matchup point-probability
+pair (`p_a`, `p_b`) when available, but only if those stored values imply a best-of-3 match
+win probability close enough to the final blended match win probability (`p1_win_prob`).
+If the gap is too large, it falls back to a reverse-solved symmetric pair from the final
+blended match win probability so the match-winner and handicap paths stay consistent.
 It then computes model spread edges and PATCHes daily_fair_odds with spread + handicap_edge
 columns.
 
-Using stored `p_a` / `p_b` keeps the handicap path tied to the actual matchup model rather
-than reconstructing a synthetic symmetric margin shape around the league average.
+Using stored `p_a` / `p_b` preserves the richer serve/return shape when the serve model and
+the final blended model broadly agree. Falling back to the solved pair on large divergences
+prevents same-match ML/HC contradictions in Elo- or rank-dominated spots.
 
 Usage:
   python scripts/compute-handicap-values.py
@@ -42,6 +45,7 @@ from src.lib.tennis_prob import prob_match_best_of_3
 POINT_CLAMP = (0.42, 0.80)
 SURFACE_LEAGUE_AVG = {"Hard": 0.64, "Clay": 0.62, "Grass": 0.67, "I.hard": 0.64, "N/A": 0.64}
 MIN_VENUE_SPW_MATCHES = 50
+POINT_PROB_MATCH_PROB_GAP_MAX = 0.12
 
 
 def _root_dir() -> str:
@@ -619,6 +623,7 @@ def main():
     implied_match_new: list[float] = []
     used_stored_point_probs = 0
     fallback_solved_point_probs = 0
+    fallback_divergent_point_probs = 0
     for m in matched:
         fo, pin, pin_reversed_for_fair = m["fair"], m["pinnacle"], m["pin_reversed_for_fair"]
         p1_win_prob = float(fo.get("p1_win_prob") or 0.0)
@@ -634,9 +639,15 @@ def main():
         p_a_old = _parse_point_prob(fo.get("p_a"))
         p_b_old = _parse_point_prob(fo.get("p_b"))
         if p_a_old is not None and p_b_old is not None:
-            p_a, p_b = p_a_old, p_b_old
-            used_stored_point_probs += 1
-            implied_match_old.append(prob_match_best_of_3(p_a_old, p_b_old))
+            implied_from_stored = prob_match_best_of_3(p_a_old, p_b_old)
+            implied_match_old.append(implied_from_stored)
+            if abs(implied_from_stored - p1_win_prob) <= POINT_PROB_MATCH_PROB_GAP_MAX:
+                p_a, p_b = p_a_old, p_b_old
+                used_stored_point_probs += 1
+            else:
+                p_a, p_b = _solve_spw_for_match_prob(p1_win_prob, avg_spw_surface)
+                fallback_solved_point_probs += 1
+                fallback_divergent_point_probs += 1
         else:
             p_a, p_b = _solve_spw_for_match_prob(p1_win_prob, avg_spw_surface)
             fallback_solved_point_probs += 1
@@ -723,7 +734,8 @@ def main():
     print(
         "Point-probability source: "
         f"stored_p_a_p_b={used_stored_point_probs} "
-        f"fallback_reverse_solve={fallback_solved_point_probs}"
+        f"fallback_reverse_solve={fallback_solved_point_probs} "
+        f"fallback_divergent_gap={fallback_divergent_point_probs}"
     )
     print("Edge diagnostics (P1 +line):")
     summarize_edges("raw", edge_raw_p1)
