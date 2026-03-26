@@ -430,8 +430,8 @@ export default async function AnytimeGoalscorerPage() {
             Anytime goalscorer picks
           </h1>
           <p className="max-w-3xl text-sm leading-7 text-neutral-400 sm:text-base">
-            Published only when a confirmed starter clears the full public filter: verified lineup, attacking role, disciplined odds
-            band, and a real edge worth staking. For team-by-team spot-kick order, use the{" "}
+            Published only when the lineup is confirmed, the role is right, the price is disciplined, and the edge is
+            worth staking. For team-by-team spot-kick order, use the{" "}
             <Link href="/penalty-takers" className="text-emerald-300 transition-colors hover:text-emerald-200">
               penalty takers reference
             </Link>
@@ -507,8 +507,8 @@ export default async function AnytimeGoalscorerPage() {
 
               <div className="px-5 py-6">
                 <p className="max-w-3xl text-sm leading-7 text-neutral-400">
-                  No picks are live right now. This page only publishes when a confirmed starter clears every filter: verified lineup,
-                  fixture quality, odds band, and edge threshold. When a player qualifies, the pick appears here automatically.
+                  No picks are live right now. This page only publishes when a confirmed starter clears our full filter on
+                  lineup, role, price band, and edge. When someone qualifies, the pick appears here automatically.
                 </p>
               </div>
             </div>
@@ -594,7 +594,7 @@ export default async function AnytimeGoalscorerPage() {
             <div>
               <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">Published record</h2>
               <p className="mt-1 text-sm text-neutral-500">
-                Settled public picks only. Non-runners stay in the internal audit trail but are kept off this public-facing record.
+                Settled public picks only. Non-runners stay in the internal audit trail and are kept off the public record.
               </p>
             </div>
           </div>
@@ -669,7 +669,7 @@ export default async function AnytimeGoalscorerPage() {
         </section>
 
         <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 text-center text-sm text-neutral-500 backdrop-blur">
-          Beta preview. Signals update automatically with confirmed lineups. Hosted snapshot last refreshed {formatDateTime(snapshotGeneratedAt)}.
+          Beta preview. Signals update automatically once confirmed lineups land. Hosted snapshot last refreshed {formatDateTime(snapshotGeneratedAt)}.
         </div>
       </div>
     </div>
