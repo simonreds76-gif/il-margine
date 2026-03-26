@@ -385,6 +385,35 @@ function firstBlockedReason(params: {
   return "Blocked: filtered by policy";
 }
 
+function mlDisplayGuardReason(params: {
+  confidence?: string;
+  rawValueP1?: number;
+  rawValueP2?: number;
+  suppressDisplayValueP1: boolean;
+  suppressDisplayValueP2: boolean;
+  pinnacleShortFavoriteExcluded: boolean;
+  modelShortFavoriteExcluded: boolean;
+  heavyFavoriteDogExcluded: boolean;
+  favoriteSpreadConflictExcluded: boolean;
+}): string | undefined {
+  const positiveSuppressedP1 = params.suppressDisplayValueP1 && (params.rawValueP1 ?? Number.NEGATIVE_INFINITY) > 0;
+  const positiveSuppressedP2 = params.suppressDisplayValueP2 && (params.rawValueP2 ?? Number.NEGATIVE_INFINITY) > 0;
+  if (!positiveSuppressedP1 && !positiveSuppressedP2) return undefined;
+  if (params.pinnacleShortFavoriteExcluded || params.modelShortFavoriteExcluded) {
+    return "ML value hidden: favourite <1.25";
+  }
+  if (params.heavyFavoriteDogExcluded) {
+    return "ML value hidden: heavy-favourite dog guard";
+  }
+  if (params.favoriteSpreadConflictExcluded) {
+    return "ML value hidden: same-match handicap conflict";
+  }
+  if (params.confidence === "none") {
+    return "ML value hidden: low-confidence row";
+  }
+  return "ML value hidden by guard";
+}
+
 type OverlayLookupValue = { n: number; roi_pct_shrunk: number };
 type OverlayLookup = Map<string, OverlayLookupValue>;
 type OverlayYearsByKeySide = Map<string, number[]>;
@@ -1359,7 +1388,18 @@ async function run(): Promise<Response> {
       ((r.handicap_edge_p1 != null && Number(r.handicap_edge_p1) >= HANDICAP_MIN_EDGE_PCT) ||
         (r.handicap_edge_p2 != null && Number(r.handicap_edge_p2) >= HANDICAP_MIN_EDGE_PCT));
     const hasPositiveRawValue = (rawValueP1 ?? Number.NEGATIVE_INFINITY) > 0 || (rawValueP2 ?? Number.NEGATIVE_INFINITY) > 0;
-    const blockedReason = firstBlockedReason({
+    const displayGuardReason = mlDisplayGuardReason({
+      confidence,
+      rawValueP1,
+      rawValueP2,
+      suppressDisplayValueP1,
+      suppressDisplayValueP2,
+      pinnacleShortFavoriteExcluded: pinFavOddsMispriceExcluded,
+      modelShortFavoriteExcluded: modelFavOddsMispriceExcluded,
+      heavyFavoriteDogExcluded: strictHeavyFavoriteDogExcludedP1 || strictHeavyFavoriteDogExcludedP2,
+      favoriteSpreadConflictExcluded: strictFavoriteSpreadConflictP1 || strictFavoriteSpreadConflictP2,
+    });
+    const blockedReason = displayGuardReason ?? firstBlockedReason({
       hasPositiveRawValue,
       anySignal: policyMatch || strictSpreadWouldSignal || shadowMatch || shadowSpreadWouldSignal || spreadShadowWouldSignal,
       recentInjuredAny,
