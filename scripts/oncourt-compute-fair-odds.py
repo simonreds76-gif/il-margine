@@ -250,6 +250,43 @@ CHALLENGER_CLASS_GAP_KWARGS = {
     "rank_gap_full": 180,
     "max_blend": 0.32,
 }
+SERIES_CLASS_GAP_KWARGS = {
+    "Grand Slam": {
+        "elo_gap_onset": 250,
+        "elo_gap_full": 500,
+        "rank_gap_onset": 50,
+        "rank_gap_full": 150,
+        "max_blend": 0.85,
+    },
+    "Masters Cup": {
+        "elo_gap_onset": 250,
+        "elo_gap_full": 500,
+        "rank_gap_onset": 50,
+        "rank_gap_full": 150,
+        "max_blend": 0.85,
+    },
+    "Masters 1000": {
+        "elo_gap_onset": 200,
+        "elo_gap_full": 450,
+        "rank_gap_onset": 40,
+        "rank_gap_full": 130,
+        "max_blend": 0.65,
+    },
+    "ATP500": {
+        "elo_gap_onset": 220,
+        "elo_gap_full": 450,
+        "rank_gap_onset": 50,
+        "rank_gap_full": 150,
+        "max_blend": 0.50,
+    },
+    "ATP250": {
+        "elo_gap_onset": 220,
+        "elo_gap_full": 450,
+        "rank_gap_onset": 50,
+        "rank_gap_full": 150,
+        "max_blend": 0.42,
+    },
+}
 DEFAULT_INJURY_CSV = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     "data",
@@ -2870,7 +2907,10 @@ def main():
         p2_win -= delta_p1
 
         # Class gap: push heavy mismatches toward Elo expectation (before normalisation)
-        class_gap_kwargs = CHALLENGER_CLASS_GAP_KWARGS if is_challenger else {}
+        if is_challenger:
+            class_gap_kwargs = CHALLENGER_CLASS_GAP_KWARGS
+        else:
+            class_gap_kwargs = SERIES_CLASS_GAP_KWARGS.get(series_bucket, {})
         p1_win = apply_class_gap(
             p1_win, e1_s, e2_s, e1_o, e2_o,
             rank1_eff, rank2_eff,
