@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import type { ElementType, ReactNode } from "react";
 import Link from "next/link";
 import Footer from "@/components/Footer";
@@ -62,20 +61,12 @@ function Reveal({
   className?: string;
   as?: ElementType;
 }) {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => setShow(true), delay);
-    return () => window.clearTimeout(timer);
-  }, [delay]);
-
   return (
     <Tag
       className={className}
       style={{
-        opacity: show ? 1 : 0,
-        transform: show ? "translateY(0)" : "translateY(18px)",
-        transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
+        animation: "page-reveal 0.7s cubic-bezier(0.16,1,0.3,1) both",
+        animationDelay: `${delay}ms`,
       }}
     >
       {children}
@@ -90,20 +81,6 @@ function EdgeCard() {
     ["Our Fair Odds", "1.89"],
     ["True Probability", "52.91%"],
   ] as const;
-
-  const [step, setStep] = useState(-1);
-
-  useEffect(() => {
-    const timers = rows.map((_, index) =>
-      window.setTimeout(() => setStep(index), 600 + index * 220)
-    );
-    const finalTimer = window.setTimeout(() => setStep(rows.length), 600 + rows.length * 220);
-
-    return () => {
-      timers.forEach((timer) => window.clearTimeout(timer));
-      window.clearTimeout(finalTimer);
-    };
-  }, [rows.length]);
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0c0f14] p-5 md:p-6">
@@ -144,8 +121,8 @@ function EdgeCard() {
               key={label}
               className="flex items-center justify-between border-b border-slate-800/50 py-[9px]"
               style={{
-                opacity: step >= index ? 1 : 0.08,
-                transition: "opacity 0.5s cubic-bezier(0.16,1,0.3,1)",
+                animation: "edge-card-row-reveal 0.5s cubic-bezier(0.16,1,0.3,1) both",
+                animationDelay: `${600 + index * 220}ms`,
               }}
             >
               <span className="text-slate-500">{label}</span>
@@ -156,12 +133,10 @@ function EdgeCard() {
           <div
             className="-mx-1.5 mt-3 flex items-center justify-between rounded-xl border px-4 py-3.5"
             style={{
-              borderColor:
-                step >= rows.length ? "rgba(16,185,129,0.35)" : "rgba(16,185,129,0.08)",
-              background: step >= rows.length ? "rgba(16,185,129,0.08)" : "transparent",
-              opacity: step >= rows.length ? 1 : 0.15,
-              transform: step >= rows.length ? "scale(1)" : "scale(0.98)",
-              transition: "all 0.6s cubic-bezier(0.16,1,0.3,1)",
+              borderColor: "rgba(16,185,129,0.35)",
+              background: "rgba(16,185,129,0.08)",
+              animation: "edge-card-result-reveal 0.6s cubic-bezier(0.16,1,0.3,1) both",
+              animationDelay: `${600 + rows.length * 220}ms`,
             }}
           >
             <span className="text-[13px] font-semibold text-emerald-400">Mathematical Edge</span>
@@ -176,7 +151,38 @@ function EdgeCard() {
         </p>
       </div>
 
-      <style jsx>{`
+      <style jsx global>{`
+        @keyframes page-reveal {
+          from {
+            opacity: 0;
+            transform: translateY(18px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes edge-card-row-reveal {
+          from {
+            opacity: 0.08;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes edge-card-result-reveal {
+          from {
+            opacity: 0.15;
+            transform: scale(0.98);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
         @keyframes pulse {
           0%,
           100% {

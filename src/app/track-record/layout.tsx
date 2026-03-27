@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
 
-const title = "Track Record | Verified Betting Results | Il Margine";
+const title = "Track Record | Verified Betting Results";
 const description =
   "Verified betting track record: 1,227+ settled bets, +19% combined ROI across player props and ATP tennis. Pre-match timestamps, immutable records.";
 const url = `${BASE_URL}/track-record`;
@@ -39,4 +39,3 @@ export default function TrackRecordLayout({
 }) {
   return children;
 }
-

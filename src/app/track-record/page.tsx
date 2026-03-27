@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import Footer from "@/components/Footer";
@@ -60,20 +59,12 @@ function Reveal({
   delay?: number;
   className?: string;
 }) {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => setShow(true), delay);
-    return () => window.clearTimeout(timer);
-  }, [delay]);
-
   return (
     <div
       className={className}
       style={{
-        opacity: show ? 1 : 0,
-        transform: show ? "translateY(0)" : "translateY(18px)",
-        transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
+        animation: "page-reveal 0.7s cubic-bezier(0.16,1,0.3,1) both",
+        animationDelay: `${delay}ms`,
       }}
     >
       {children}
@@ -94,22 +85,14 @@ function StatCard({
   accent?: boolean;
   delay?: number;
 }) {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => setShow(true), delay);
-    return () => window.clearTimeout(timer);
-  }, [delay]);
-
   return (
     <div
       className={`relative overflow-hidden rounded-2xl border p-5 md:p-6 ${
         accent ? "border-emerald-500/20 bg-[#0c0f14]" : "border-slate-700/40 bg-[#0c0f14]"
       }`}
       style={{
-        opacity: show ? 1 : 0,
-        transform: show ? "translateY(0)" : "translateY(12px)",
-        transition: "all 0.6s cubic-bezier(0.16,1,0.3,1)",
+        animation: "track-record-stat-reveal 0.6s cubic-bezier(0.16,1,0.3,1) both",
+        animationDelay: `${delay}ms`,
       }}
     >
       {accent ? (
@@ -533,6 +516,30 @@ export default function TrackRecordPage() {
       </div>
 
       <Footer />
+
+      <style jsx global>{`
+        @keyframes page-reveal {
+          from {
+            opacity: 0;
+            transform: translateY(18px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes track-record-stat-reveal {
+          from {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 }

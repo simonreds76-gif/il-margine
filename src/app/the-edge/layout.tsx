@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
 
-const title = "Our Methodology | How We Find Betting Edge | Il Margine";
+const title = "Our Methodology | How We Find Betting Edge";
 const description =
   "Former odds compiler methodology: how Il Margine strips bookmaker margin to find mathematical edge in player props and ATP tennis markets.";
 const url = `${BASE_URL}/the-edge`;
