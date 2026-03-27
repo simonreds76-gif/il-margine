@@ -22,6 +22,19 @@ const FRACTION_PRESETS = [
 
 const STAKE_PRESETS = [25, 50, 100, 250] as const;
 
+const CALCULATOR_FAQS = [
+  {
+    question: "What do these calculators show?",
+    answer:
+      "The Returns Calculator shows what you would have won or lost following our settled bets at a chosen stake. The Kelly Calculator computes the stake for any bet from your bankroll, the odds, and your estimated win probability. Both use real arithmetic. Neither is a prediction of future results.",
+  },
+  {
+    question: "What if live data is unavailable?",
+    answer:
+      "If the live results feed is temporarily down, the Returns Calculator falls back to the last recorded baseline numbers. The Kelly Calculator always works because it uses only your inputs.",
+  },
+] as const;
+
 interface RecordSummary {
   totalBets: number;
   wins: number;
@@ -312,6 +325,19 @@ function ReturnsChart({
 }
 
 export default function CalculatorPage() {
+  const faqSchema = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: CALCULATOR_FAQS.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  });
+
   const [activeTab, setActiveTab] = useState<"returns" | "kelly">("returns");
   const [recordSummary, setRecordSummary] = useState<RecordSummary>(() => {
     const baseline = getBaselineDisplayStats();
@@ -454,6 +480,11 @@ export default function CalculatorPage() {
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-200">
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: faqSchema }}
+      />
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-80"
         style={{
@@ -877,18 +908,7 @@ export default function CalculatorPage() {
           <h2 className="mb-4 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-slate-500">
             FAQ
           </h2>
-          {[
-            {
-              question: "What do these calculators show?",
-              answer:
-                "The Returns Calculator shows what you would have won or lost following our settled bets at a chosen stake. The Kelly Calculator computes the stake for any bet from your bankroll, the odds, and your estimated win probability. Both use real arithmetic. Neither is a prediction of future results.",
-            },
-            {
-              question: "What if live data is unavailable?",
-              answer:
-                "If the live results feed is temporarily down, the Returns Calculator falls back to the last recorded baseline numbers. The Kelly Calculator always works because it uses only your inputs.",
-            },
-          ].map((item) => (
+          {CALCULATOR_FAQS.map((item) => (
             <details
               key={item.question}
               className="mb-2 overflow-hidden rounded-xl border border-slate-700/40 bg-slate-800/40 group"
