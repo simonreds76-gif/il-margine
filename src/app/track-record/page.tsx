@@ -1,162 +1,283 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import Footer from "@/components/Footer";
 import PageHomeLink from "@/components/PageHomeLink";
 
 const FAQ_ITEMS = [
   {
-    q: "How is performance calculated?",
-    a: "ROI (Return on Investment) is calculated as total profit divided by total stakes across all bets. We use industry-standard metrics: win rate, average odds, and profit/loss in units. All calculations are transparent and verifiable.",
+    question: "How is performance calculated?",
+    answer:
+      "ROI is total profit divided by total stakes across settled bets. We use standard metrics such as win rate, bet count, and return on investment. The point is transparent accounting, not marketing spin.",
   },
   {
-    q: "Why track props and tennis separately?",
-    a: "Player props and tennis are different markets and should not be blended into one headline number. Props are structurally softer, while tennis is generally sharper and more model-dependent. Tracking them separately shows whether the edge is actually coming from soft football props, selective tennis pricing, or both.",
+    question: "How often do you post picks?",
+    answer:
+      "Irregularly. We only post when we identify value. Some weeks have volume. Some weeks have none. We do not force bets to maintain a schedule.",
   },
   {
-    q: "How do you handle losing runs?",
-    a: "They're displayed exactly as they happen. Losing streaks are normal in value betting. What matters is long-term edge, not short-term results. We don't hide drawdowns or cherry-pick periods. The full record stays public, wins and losses.",
+    question: "How do you handle losing runs?",
+    answer:
+      "They stay visible. Losing streaks are part of value betting. We do not hide drawdowns, cherry-pick hot stretches, or pretend variance stops existing when the sample turns against us.",
   },
   {
-    q: "Can past picks be edited?",
-    a: "No. Once logged on the site, data can't be retroactively changed or deleted.",
+    question: "Can past picks be edited?",
+    answer:
+      "No. Once a pick is logged on the site, the record is not retroactively changed or deleted. That is the whole point of public tracking.",
   },
-  {
-    q: "What's wrong with most tipster services?",
-    a: "They're frauds. \"Cappers\" posting plays of the year with no timestamps, 20-unit max bets that vanish when they lose, and records conveniently edited after the fact. It's not analysis. It's gambling repackaged as expertise to sell subscriptions. These aren't professionals, they're marketers who discovered that confidence sells better than honesty. Real edge shows up in verifiable data: immutable timestamps, closing line value, and a public record that includes every losing streak. If they're hiding on social media instead of posting transparent results, you already know why.",
-  },
-];
+] as const;
 
-export default function TrackRecordPage() {
-  const faqSchema = {
+function FaqSchema() {
+  const schema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: FAQ_ITEMS.map(({ q, a }) => ({
+    mainEntity: FAQ_ITEMS.map((item) => ({
       "@type": "Question",
-      name: q,
-      acceptedAnswer: { "@type": "Answer", text: a },
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
     })),
   };
 
   return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+function SectionCard({
+  children,
+  highlighted = false,
+}: {
+  children: React.ReactNode;
+  highlighted?: boolean;
+}) {
+  return (
+    <section
+      className={`rounded-2xl border p-6 md:p-8 ${
+        highlighted
+          ? "border-emerald-500/20 bg-slate-800/50"
+          : "border-slate-700/50 bg-slate-800/50"
+      }`}
+    >
+      {children}
+    </section>
+  );
+}
+
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return <h2 className="mb-4 text-xl font-semibold text-emerald-400 md:text-2xl">{children}</h2>;
+}
+
+function StatCard({
+  label,
+  value,
+  sub,
+  accent = false,
+}: {
+  label: string;
+  value: string;
+  sub: string;
+  accent?: boolean;
+}) {
+  return (
+    <div className="rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4">
+      <div className="text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-slate-500">{label}</div>
+      <div className={`mt-2 font-mono text-xl font-bold tabular-nums md:text-2xl ${accent ? "text-emerald-400" : "text-slate-100"}`}>
+        {value}
+      </div>
+      <div className="mt-2 font-mono text-[10px] text-slate-600">{sub}</div>
+    </div>
+  );
+}
+
+export default function TrackRecordPage() {
+  return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8 md:pt-6 md:pb-12">
-        <PageHomeLink className="mb-8" />
+      <FaqSchema />
 
-        {/* Hero */}
-        <section className="mb-12 md:mb-16">
-          <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">TRACK RECORD</span>
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-3">Track Record</h1>
-          <p className="text-lg text-slate-300 max-w-2xl mb-2">
-            Performance data across betting markets.
+      <section className="relative overflow-hidden border-b border-slate-800/50 pt-6 pb-12 md:pb-16">
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-80"
+          style={{
+            background:
+              "radial-gradient(ellipse 860px 340px at 50% -40px, rgba(16,185,129,0.10), transparent)",
+          }}
+        />
+        <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <PageHomeLink className="mb-8" />
+          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400">
+            Track Record
+          </span>
+          <h1 className="mt-3 text-3xl font-semibold text-slate-100 sm:text-4xl">Track Record</h1>
+          <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slate-400">
+            Every bet posted before kick-off. Every result logged after settlement. No edits, no deletions.
           </p>
-          <p className="text-base text-slate-400 max-w-2xl leading-relaxed">
-            All selections posted on site before kick-off. Results logged after settlement. No edits, no deletions. See <Link href="/the-edge" className="text-emerald-400 hover:text-emerald-300 underline">The Edge</Link> for our methodology.
-          </p>
-        </section>
+          <Link
+            href="/the-edge"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-300"
+          >
+            See our methodology <span aria-hidden="true">?</span>
+          </Link>
+        </div>
+      </section>
 
-        {/* 1. Current Data */}
-        <section className="bg-[#1a1d24] rounded-xl border border-slate-800 p-6 md:p-8 mb-8">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-4">Performance Overview</h2>
-          <div className="text-slate-300 leading-relaxed space-y-3">
-            <p>Historical tracking across ATP tennis and player props markets. Data reflects actual bets placed and settled.</p>
-            <p><strong className="text-slate-100">Player Props:</strong> Posted on site when value is identified. Odds move quickly so selections are shared as soon as possible.</p>
-            <p><strong className="text-slate-100">Tennis:</strong> Posted on site with full analysis. More stable markets allow detailed writeups.</p>
-            <p>Performance data updates as bets settle. What&apos;s tracked stays tracked.</p>
+      <div className="mx-auto max-w-6xl space-y-10 px-4 py-12 sm:px-6 lg:px-8 md:py-16">
+        <SectionCard>
+          <SectionHeading>Performance Numbers</SectionHeading>
+          <div className="grid gap-4 md:grid-cols-3">
+            <StatCard
+              label="Player Props"
+              value="780+ bets"
+              sub="+25.0% ROI · 58% win rate"
+            />
+            <StatCard
+              label="ATP Tennis"
+              value="447 bets"
+              sub="+8.6% ROI · 54% win rate · Tipstrr verified"
+              accent
+            />
+            <StatCard
+              label="Combined"
+              value="1,227+ bets"
+              sub="+19.0% ROI · 18 months"
+              accent
+            />
           </div>
-        </section>
-
-        {/* Historical Performance */}
-        <section className="bg-[#1a1d24] rounded-xl border border-emerald-500/20 p-6 md:p-8 mb-8">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-4">Historical Performance</h2>
-          <h3 className="text-sm font-semibold text-slate-200 mb-3">18-Month Baseline</h3>
-          <p className="text-slate-300 leading-relaxed mb-4">Performance data from private tracking period (validation phase):</p>
-          <ul className="space-y-3 text-slate-300 leading-relaxed list-none">
-            <li><strong className="text-slate-100">Player Props</strong> — <span className="text-emerald-400 font-medium">780+</span> bets | <span className="text-emerald-400 font-medium">+25.0%</span> ROI | <span className="text-emerald-400 font-medium">58%</span> win rate</li>
-            <li><strong className="text-slate-100">ATP Tennis</strong> — <span className="text-emerald-400 font-medium">447</span> bets | <span className="text-emerald-400 font-medium">+8.6%</span> ROI | <span className="text-emerald-400 font-medium">54%</span> win rate | Tipstrr verified</li>
-            <li><strong className="text-slate-100">Combined</strong> — <span className="text-emerald-400 font-medium">1,227+</span> total bets | <span className="text-emerald-400 font-medium">+19.0%</span> overall ROI | 18 months</li>
-          </ul>
-          <p className="text-slate-400 text-sm mt-4">Stakes: Variable (0.05u to 5u based on edge confidence)</p>
-          <p className="text-slate-400 text-sm mt-2">This data reflects actual settled bets used to validate our methodology. Live public tracking with full transparency is now ongoing.</p>
-        </section>
-
-        {/* 2. How Tracking Works */}
-        <section className="bg-[#1a1d24] rounded-xl border border-slate-800 p-6 md:p-8 mb-8">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-4">Verification System</h2>
-          <ul className="space-y-3 text-slate-300 leading-relaxed list-none">
-            <li><strong className="text-slate-100">Pre-match posting:</strong> Every selection posted on site before event starts. Timestamps are immutable and can&apos;t be edited retroactively.</li>
-            <li><strong className="text-slate-100">Post-match settlement:</strong> After result, bet is logged here with outcome (win/loss/void), profit/loss in units, and link to original post where applicable.</li>
-            <li><strong className="text-slate-100">No editing:</strong> Once logged, bets cannot be changed or deleted. What&apos;s posted is permanent.</li>
-          </ul>
-        </section>
-
-        {/* 3. What To Expect */}
-        <section className="bg-[#1a1d24] rounded-xl border border-slate-800 p-6 md:p-8 mb-8">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-4">Realistic Expectations</h2>
-          <ul className="space-y-3 text-slate-300 leading-relaxed">
-            <li><strong className="text-slate-100">Variance is real.</strong> Winning months and losing months happen. Even with positive long-term edge, short-term results fluctuate. This is normal.</li>
-            <li><strong className="text-slate-100">Sample size matters.</strong> Performance over 20 bets is mostly noise. Over 100 bets, signal emerges. Over 200 bets, edge becomes clear. Judge long term, not week to week.</li>
-            <li><strong className="text-slate-100">ROI varies by market.</strong> Player props and tennis should not be judged by the same expectations. Props are structurally softer; tennis is generally sharper and depends more on model quality and segment selection.</li>
-            <li><strong className="text-slate-100">Stakes can get limited.</strong> If you follow picks successfully, bookmakers may reduce your stake sizes over time. See our <Link href="/bookmakers" className="text-emerald-400 hover:text-emerald-300 underline">bookmakers</Link> and <Link href="/faq" className="text-emerald-400 hover:text-emerald-300 underline">FAQ</Link> for context—it&apos;s a sign the approach works.</li>
-            <li><strong className="text-slate-100">Losses get logged.</strong> Every selection gets recorded, winner or loser. Transparency over marketing.</li>
-          </ul>
-        </section>
-
-        {/* 4. How It Works - Pick Distribution */}
-        <section className="bg-[#1a1d24] rounded-xl border border-emerald-500/20 p-6 md:p-8 mb-8">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-4">Pick Distribution</h2>
-          <div className="text-slate-300 leading-relaxed space-y-3">
-            <p><strong className="text-slate-100">Player Props:</strong> Posted on site when value is identified. Props move quickly, so selections are shared in real time then logged after settlement.</p>
-            <p><strong className="text-slate-100">Tennis:</strong> Posted on the website with full analysis. These markets are more stable, allowing time for proper writeups.</p>
-            <p>Results are tracked and logged transparently. What gets posted stays posted.</p>
+          <div className="mt-4 space-y-2 text-sm leading-relaxed text-slate-400">
+            <p>Stakes: variable (0.05u to 5u based on edge confidence).</p>
+            <p>Validation-phase data from private tracking. Live public tracking is now ongoing.</p>
           </div>
-        </section>
+        </SectionCard>
 
-        {/* 5. FAQ */}
-        <section className="bg-[#1a1d24] rounded-xl border border-slate-800 overflow-hidden mb-8">
-          <h2 className="text-xl font-semibold text-emerald-400 p-6 md:p-8 pb-2">Frequently Asked Questions</h2>
-          <div className="divide-y divide-slate-800">
-            {FAQ_ITEMS.map((item, i) => (
-              <details key={i} className="group">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-6 md:px-8 py-4 text-left font-medium text-slate-200 hover:bg-slate-800/30 transition-colors">
-                  <span>{item.q}</span>
-                  <span className="text-emerald-400 shrink-0 transition-transform group-open:rotate-180">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+        <SectionCard>
+          <SectionHeading>Verification System</SectionHeading>
+          <div className="space-y-4 text-base leading-relaxed text-slate-300">
+            <p>
+              <strong className="text-slate-100">Pre-match posting.</strong> Every selection is published on
+              site before kick-off or before the match starts.
+            </p>
+            <p>
+              <strong className="text-slate-100">Post-match settlement.</strong> Once the event settles, the
+              result is logged with outcome and performance impact.
+            </p>
+            <p>
+              <strong className="text-slate-100">No editing.</strong> The public record is not retroactively
+              cleaned up. What is posted stays posted.
+            </p>
+          </div>
+        </SectionCard>
+
+        <SectionCard>
+          <SectionHeading>Realistic Expectations</SectionHeading>
+          <ul className="space-y-3 text-base leading-relaxed text-slate-300">
+            <li>
+              <strong className="text-slate-100">Variance is real.</strong> Good process still comes with
+              losing runs and ugly short-term swings.
+            </li>
+            <li>
+              <strong className="text-slate-100">Sample size matters.</strong> Twenty bets tells you almost
+              nothing. Hundreds tell you much more.
+            </li>
+            <li>
+              <strong className="text-slate-100">ROI varies by market.</strong> Props and tennis are not the
+              same type of edge and should not be judged with the same expectations.
+            </li>
+            <li>
+              <strong className="text-slate-100">Posting is irregular.</strong> We post when value exists, not
+              because a content calendar needs feeding.
+            </li>
+            <li>
+              <strong className="text-slate-100">Stakes can get limited.</strong> If you win consistently,
+              bookmakers may cut your size. See our{" "}
+              <Link href="/bookmakers" className="text-emerald-400 underline underline-offset-2 transition-colors hover:text-emerald-300">
+                bookmakers guide
+              </Link>{" "}
+              and{" "}
+              <Link href="/faq" className="text-emerald-400 underline underline-offset-2 transition-colors hover:text-emerald-300">
+                FAQ
+              </Link>{" "}
+              for context.
+            </li>
+            <li>
+              <strong className="text-slate-100">Losses get logged.</strong> Transparency matters more than a
+              pretty feed.
+            </li>
+            <li>
+              <strong className="text-slate-100">This is not a get-rich-quick pitch.</strong> The whole point
+              is long-term discipline, not theatrical certainty.
+            </li>
+          </ul>
+        </SectionCard>
+
+        <SectionCard highlighted>
+          <SectionHeading>The Tipster Problem</SectionHeading>
+          <div className="space-y-4 text-base leading-relaxed text-slate-300">
+            <p>
+              Most tipster services are not businesses built on edge. They are marketing funnels built on
+              confidence.
+            </p>
+            <p>
+              Think of the usual playbook: plays of the year with no timestamps, giant unit claims that
+              quietly vanish when they lose, cherry-picked winner screenshots, and a record that somehow gets
+              cleaner after the fact.
+            </p>
+            <p>
+              That is not analysis. It is gambling repackaged as expertise because confidence sells better than
+              honesty. Real edge looks boring by comparison: immutable timestamps, visible losses, transparent
+              settlement, and a public record that keeps the bad runs as well as the good ones.
+            </p>
+          </div>
+        </SectionCard>
+
+        <section>
+          <SectionHeading>Frequently Asked Questions</SectionHeading>
+          <div className="space-y-2">
+            {FAQ_ITEMS.map((item) => (
+              <details
+                key={item.question}
+                className="group overflow-hidden rounded-xl border border-slate-700/50 bg-slate-800/50"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-5 py-4 text-left font-medium text-slate-200 transition-colors hover:bg-slate-700/20">
+                  <span>{item.question}</span>
+                  <span className="shrink-0 text-emerald-400/60 transition-transform group-open:rotate-180">
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                    </svg>
                   </span>
                 </summary>
-                <div className="px-6 md:px-8 pb-4 pt-0">
-                  <p className="text-slate-400 text-base leading-relaxed">{item.a}</p>
+                <div className="border-t border-slate-700/30 px-5 py-4 text-sm leading-relaxed text-slate-400">
+                  {item.answer}
                 </div>
               </details>
             ))}
           </div>
         </section>
 
-        {/* 6. CTA */}
-        <section className="bg-emerald-500/10 rounded-xl border border-emerald-500/30 p-6 md:p-8 text-center">
-          <h2 className="text-xl font-semibold text-emerald-400 mb-2">Follow The Picks</h2>
-          <p className="text-slate-300 text-base mb-6 max-w-xl mx-auto leading-relaxed">
-            All selections — player props and tennis — posted on site with full analysis.
+        <section className="rounded-2xl border border-emerald-500/20 bg-emerald-500/8 p-6 text-center md:p-8">
+          <h2 className="text-xl font-semibold text-emerald-400">Follow the picks</h2>
+          <p className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-slate-300">
+            All selections posted on the website with full analysis.
           </p>
           <Link
             href="/player-props"
-            className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-emerald-400"
           >
-            → View Player Props
+            View Tips <span aria-hidden="true">?</span>
           </Link>
         </section>
 
-        <div className="text-center text-sm text-slate-500 pt-4 pb-8">
-          <p>Betting involves risk. Past performance doesn&apos;t guarantee future results.</p>
-          <p className="mt-1">18+ only. Gamble responsibly. <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400/80 hover:text-emerald-400">BeGambleAware.org</a></p>
+        <div className="rounded-xl border border-amber-500/15 bg-amber-500/[0.04] px-5 py-4 text-[13px] leading-relaxed text-slate-400">
+          <strong className="text-amber-400/90">Responsible gambling:</strong> Past performance does not
+          guarantee future results. Only bet what you can afford to lose. <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 text-slate-300">BeGambleAware</a>{" "}
+          · <a href="https://www.gamcare.org.uk" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 text-slate-300">GamCare</a>
         </div>
       </div>
+
       <Footer />
     </div>
   );
 }
-
-
 
