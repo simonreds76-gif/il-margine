@@ -104,7 +104,7 @@ function StatCard({
   return (
     <div
       className={`relative overflow-hidden rounded-2xl border p-5 md:p-6 ${
-        accent ? "border-emerald-500/20 bg-[#0a0d12]" : "border-slate-800/40 bg-[#0a0d12]"
+        accent ? "border-emerald-500/20 bg-[#0c0f14]" : "border-slate-700/40 bg-[#0c0f14]"
       }`}
       style={{
         opacity: show ? 1 : 0,
@@ -129,12 +129,12 @@ function StatCard({
         {value.replace(/[^0-9.%+]/g, "")}
       </span>
       <div className="relative">
-        <div className="text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-slate-600">
+        <div className="text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-slate-500">
           {label}
         </div>
         <div
-          className={`mt-3 font-mono text-[2.4rem] font-black leading-none tracking-tighter tabular-nums md:text-[2.8rem] ${
-            accent ? "text-emerald-400" : "text-white"
+          className={`mt-3 font-mono text-[2.2rem] font-extrabold leading-none tracking-tight tabular-nums md:text-[2.5rem] ${
+            accent ? "text-emerald-400" : "text-slate-100"
           }`}
         >
           {value}
@@ -187,19 +187,19 @@ export default function TrackRecordPage() {
           </Reveal>
 
           <Reveal delay={100}>
-            <span className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-emerald-400/90">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/90">
               Track Record
             </span>
           </Reveal>
 
           <Reveal delay={200}>
-            <h1 className="mt-4 text-[3rem] font-extrabold leading-[0.95] tracking-[-0.03em] text-white sm:text-[4rem] lg:text-[4.5rem]">
+            <h1 className="mt-4 text-3xl font-semibold leading-tight tracking-tight text-slate-100 sm:text-4xl md:text-5xl">
               Track Record
             </h1>
           </Reveal>
 
           <Reveal delay={320}>
-            <p className="mt-6 max-w-xl text-[17px] leading-[1.75] text-slate-400">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
               Every bet posted before kick-off. Every result logged after settlement. No edits, no
               deletions.
             </p>
@@ -208,7 +208,7 @@ export default function TrackRecordPage() {
           <Reveal delay={420}>
             <Link
               href="/the-edge"
-              className="mt-4 inline-flex items-center gap-1.5 text-[14px] text-slate-500 transition-colors hover:text-emerald-400"
+              className="mt-4 inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors hover:text-emerald-400"
             >
               See our methodology
               <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -253,7 +253,7 @@ export default function TrackRecordPage() {
           <span className="mb-3 block text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/80">
             How we prove it
           </span>
-          <h2 className="mb-8 text-[1.6rem] font-extrabold tracking-tight text-white sm:text-[1.9rem]">
+          <h2 className="mb-8 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
             Verification system
           </h2>
 
@@ -319,13 +319,13 @@ export default function TrackRecordPage() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="group rounded-2xl border border-slate-800/40 bg-[#0a0d12] p-5 transition-all duration-300 hover:border-slate-700/50 md:p-6"
+                className="group rounded-2xl border border-slate-700/40 bg-[#0c0f14] p-5 transition-all duration-300 hover:border-slate-600/60 md:p-6"
               >
                 <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg border border-emerald-500/15 bg-emerald-500/[0.06]">
                   {item.icon}
                 </div>
-                <h3 className="mb-2 text-[15px] font-bold text-slate-200">{item.title}</h3>
-                <p className="text-[13px] leading-[1.65] text-slate-500 transition-colors duration-300 group-hover:text-slate-400">
+                <h3 className="mb-2 text-base font-semibold text-slate-200">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-slate-500 transition-colors duration-300 group-hover:text-slate-400">
                   {item.body}
                 </p>
               </div>
@@ -337,7 +337,7 @@ export default function TrackRecordPage() {
           <span className="mb-3 block text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/80">
             Before you follow
           </span>
-          <h2 className="mb-8 text-[1.6rem] font-extrabold tracking-tight text-white sm:text-[1.9rem]">
+          <h2 className="mb-8 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
             Realistic expectations
           </h2>
 
@@ -371,8 +371,8 @@ export default function TrackRecordPage() {
               <div key={item.t} className="flex items-start gap-3.5">
                 <div className="mt-[7px] h-[6px] w-[6px] shrink-0 rounded-full border border-emerald-500/40 bg-emerald-500/20" />
                 <div>
-                  <span className="text-[14px] font-bold text-slate-200">{item.t}.</span>{" "}
-                  <span className="text-[14px] leading-[1.7] text-slate-500">{item.d}</span>
+                  <span className="text-base font-semibold text-slate-200">{item.t}.</span>{" "}
+                  <span className="text-base leading-relaxed text-slate-500">{item.d}</span>
                 </div>
               </div>
             ))}
@@ -380,7 +380,7 @@ export default function TrackRecordPage() {
         </section>
 
         <section className="border-b border-slate-800/30 py-16 md:py-20">
-          <div className="relative overflow-hidden rounded-2xl border border-emerald-500/15 bg-[#0a0d12] p-6 md:p-8 lg:p-10">
+          <div className="relative overflow-hidden rounded-2xl border border-emerald-500/15 bg-[#0c0f14] p-6 md:p-8 lg:p-10">
             <div
               className="absolute top-0 left-0 right-0 h-px"
               style={{
@@ -395,10 +395,10 @@ export default function TrackRecordPage() {
                 <span className="mb-3 block text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/80">
                   Why we're different
                 </span>
-                <h2 className="mb-5 text-[1.6rem] font-extrabold tracking-tight text-white sm:text-[1.9rem]">
+                <h2 className="mb-5 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
                   The tipster problem
                 </h2>
-                <div className="space-y-4 text-[15px] leading-[1.75] text-slate-400">
+                <div className="space-y-4 text-base leading-relaxed text-slate-400">
                   <p>
                     Most tipster services are not businesses built on edge. They are marketing funnels built
                     on confidence.
@@ -416,7 +416,7 @@ export default function TrackRecordPage() {
               </div>
 
               <div className="flex items-center">
-                <div className="w-full rounded-xl border border-slate-800/50 bg-[#080a0e] p-5">
+                <div className="w-full rounded-xl border border-slate-700/40 bg-[#0f1117] p-5">
                   <div className="mb-4 text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-emerald-400/70">
                     What real edge looks like
                   </div>
@@ -440,7 +440,7 @@ export default function TrackRecordPage() {
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
-                        <span className="text-[13px] text-slate-400">{item}</span>
+                        <span className="text-sm text-slate-400">{item}</span>
                       </div>
                     ))}
                   </div>
@@ -451,7 +451,7 @@ export default function TrackRecordPage() {
         </section>
 
         <section className="border-b border-slate-800/30 py-16 md:py-20">
-          <h2 className="mb-6 text-[1.3rem] font-extrabold text-white">FAQ</h2>
+          <h2 className="mb-6 text-xl font-semibold text-slate-100">FAQ</h2>
           <div className="max-w-3xl space-y-2">
             <FAQ
               q="How is performance calculated?"
@@ -474,7 +474,7 @@ export default function TrackRecordPage() {
 
         <section className="py-16 md:py-20">
           <div className="relative overflow-hidden rounded-2xl border border-emerald-500/15 p-10 text-center md:p-14">
-            <div className="absolute inset-0 bg-[#0a0d12]" />
+            <div className="absolute inset-0 bg-[#0c0f14]" />
             <div
               className="pointer-events-none absolute inset-0"
               style={{
@@ -491,15 +491,15 @@ export default function TrackRecordPage() {
             />
 
             <div className="relative">
-              <h2 className="text-[1.6rem] font-extrabold tracking-tight text-white sm:text-3xl">
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
                 Follow the picks
               </h2>
-              <p className="mx-auto mt-4 max-w-md text-[15px] leading-[1.7] text-slate-500">
+              <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-slate-400">
                 All selections posted on the website with full analysis.
               </p>
               <Link
                 href="/player-props"
-                className="mt-7 inline-flex items-center gap-2.5 rounded-lg bg-emerald-500 px-7 py-3 text-[14px] font-bold text-white transition-all hover:bg-emerald-400 hover:shadow-[0_0_40px_rgba(16,185,129,0.20)]"
+                className="mt-7 inline-flex items-center gap-2.5 rounded-lg bg-emerald-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-400"
               >
                 View Tips →
               </Link>

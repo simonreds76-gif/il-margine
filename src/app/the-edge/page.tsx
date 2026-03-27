@@ -106,7 +106,7 @@ function EdgeCard() {
   }, [rows.length]);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-slate-700/40 bg-[#090c10] p-5 md:p-6">
+    <div className="relative overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0c0f14] p-5 md:p-6">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.03]"
         style={{
@@ -236,19 +236,19 @@ export default function TheEdgePage() {
           <div className="grid items-start gap-12 lg:grid-cols-[1.2fr,0.8fr] lg:gap-16">
             <div>
               <Reveal delay={100}>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-emerald-400/90">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/90">
                   Methodology
                 </span>
               </Reveal>
 
               <Reveal delay={200}>
-                <h1 className="mt-4 text-[3rem] font-extrabold leading-[0.95] tracking-[-0.03em] text-white sm:text-[4rem] lg:text-[4.5rem]">
+                <h1 className="mt-4 text-3xl font-semibold leading-tight tracking-tight text-slate-100 sm:text-4xl md:text-5xl">
                   The Edge
                 </h1>
               </Reveal>
 
               <Reveal delay={350}>
-                <p className="mt-6 max-w-lg text-[17px] leading-[1.75] text-slate-400">
+                <p className="mt-6 max-w-lg text-base leading-relaxed text-slate-300 sm:text-lg">
                   25 years in the betting industry. Former odds compiler. I built the prices bookmakers use
                   and now I use that knowledge against them.
                 </p>
@@ -258,14 +258,14 @@ export default function TheEdgePage() {
                 <div className="mt-8 flex flex-wrap items-center gap-4">
                   <Link
                     href="/player-props"
-                    className="group inline-flex items-center gap-2.5 rounded-lg bg-emerald-500 px-6 py-3 text-[14px] font-bold text-white transition-all hover:bg-emerald-400 hover:shadow-[0_0_40px_rgba(16,185,129,0.20)]"
+                    className="group inline-flex items-center gap-2.5 rounded-lg bg-emerald-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-400"
                   >
                     View Tips
                     <span className="transition-transform group-hover:translate-x-0.5">→</span>
                   </Link>
                   <Link
                     href="/track-record"
-                    className="group inline-flex items-center gap-1.5 text-[14px] text-slate-500 transition-colors hover:text-emerald-400"
+                    className="group inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors hover:text-emerald-400"
                   >
                     Track record
                     <svg
@@ -298,12 +298,12 @@ export default function TheEdgePage() {
                   Insider knowledge
                 </span>
               </div>
-              <h2 className="text-[1.6rem] font-extrabold leading-[1.15] tracking-tight text-white sm:text-[1.9rem]">
+              <h2 className="text-2xl font-semibold leading-tight tracking-tight text-slate-100 sm:text-3xl">
                 Why the other side
                 <br />
                 knows better
               </h2>
-              <p className="mt-4 text-[14px] leading-[1.7] text-slate-500">
+              <p className="mt-4 text-sm leading-relaxed text-slate-500">
                 Most services learn by betting.
                 <br />
                 I learned by building the prices.
@@ -335,15 +335,15 @@ export default function TheEdgePage() {
               ].map((item) => (
                 <div
                   key={item.n}
-                  className="group relative overflow-hidden rounded-xl border border-slate-800/40 bg-[#0a0d12] p-5 transition-all duration-300 hover:border-slate-700/50 hover:bg-[#0c1015]"
+                  className="group relative overflow-hidden rounded-xl border border-slate-700/40 bg-[#0c0f14] p-5 transition-all duration-300 hover:border-slate-600/60"
                 >
                   <span className="pointer-events-none absolute -right-2 -top-4 select-none font-mono text-[72px] font-black leading-none text-white/[0.02]">
                     {item.n}
                   </span>
                   <div className="relative">
                     <span className="font-mono text-[11px] font-bold text-emerald-500/40">{item.n}</span>
-                    <h3 className="mt-1.5 text-[15px] font-bold text-slate-200">{item.t}</h3>
-                    <p className="mt-2 text-[13px] leading-[1.65] text-slate-500 transition-colors duration-300 group-hover:text-slate-400">
+                    <h3 className="mt-1.5 text-base font-semibold text-slate-200">{item.t}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-slate-500 transition-colors duration-300 group-hover:text-slate-400">
                       {item.d}
                     </p>
                   </div>
@@ -357,7 +357,7 @@ export default function TheEdgePage() {
           <span className="mb-3 block text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/80">
             Where we operate
           </span>
-          <h2 className="mb-8 text-[1.6rem] font-extrabold tracking-tight text-white sm:text-[1.9rem]">
+          <h2 className="mb-8 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
             Market selection
           </h2>
 
@@ -403,8 +403,8 @@ export default function TheEdgePage() {
                 key={market.name}
                 className={`group relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-[2px] md:p-6 ${
                   market.active
-                    ? "border-emerald-500/15 bg-[#0a0d12] hover:border-emerald-500/30 hover:shadow-[0_8px_40px_rgba(16,185,129,0.04)]"
-                    : "border-slate-800/40 bg-[#0a0d12] hover:border-slate-700/50"
+                    ? "border-emerald-500/20 bg-[#0c0f14] hover:border-emerald-500/30"
+                    : "border-slate-700/40 bg-[#0c0f14] hover:border-slate-600/60"
                 }`}
               >
                 {market.active ? (
@@ -418,7 +418,7 @@ export default function TheEdgePage() {
                 ) : null}
                 <div className="relative">
                   <div className="mb-3 flex items-center gap-2.5">
-                    <h3 className="text-[15px] font-bold text-slate-200">{market.name}</h3>
+                    <h3 className="text-base font-semibold text-slate-200">{market.name}</h3>
                     {market.tag ? (
                       <span
                         className={`rounded-full border px-2.5 py-[3px] text-[8px] font-mono font-bold uppercase tracking-[0.15em] ${
@@ -431,7 +431,7 @@ export default function TheEdgePage() {
                       </span>
                     ) : null}
                   </div>
-                  <p className="text-[13px] leading-[1.7] text-slate-500 transition-colors duration-300 group-hover:text-slate-400">
+                  <p className="text-sm leading-relaxed text-slate-500 transition-colors duration-300 group-hover:text-slate-400">
                     {market.desc}
                   </p>
                   {market.extra}
@@ -447,10 +447,10 @@ export default function TheEdgePage() {
               <span className="mb-3 block text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/80">
                 Core concept
               </span>
-              <h2 className="mb-6 text-[1.6rem] font-extrabold tracking-tight text-white sm:text-[1.9rem]">
+              <h2 className="mb-6 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
                 How value betting works
               </h2>
-              <div className="space-y-5 text-[15px] leading-[1.75] text-slate-400">
+              <div className="space-y-5 text-base leading-relaxed text-slate-400">
                 <p>
                   <strong className="font-semibold text-slate-200">It is not about predicting winners.</strong>{" "}
                   It is about finding spots where the price does not reflect the true probability.
@@ -468,7 +468,7 @@ export default function TheEdgePage() {
             </div>
 
             <div className="lg:mt-14">
-              <div className="relative overflow-hidden rounded-2xl border border-emerald-500/15 bg-[#0a0d12] p-6">
+              <div className="relative overflow-hidden rounded-2xl border border-emerald-500/15 bg-[#0c0f14] p-6">
                 <div
                   className="absolute top-0 left-[10%] right-[10%] h-px"
                   style={{
@@ -481,11 +481,11 @@ export default function TheEdgePage() {
                   <div className="mb-5 text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-emerald-400/70">
                     Key insight
                   </div>
-                  <p className="text-[20px] font-bold leading-[1.45] tracking-tight text-white">
+                  <p className="text-xl font-semibold leading-relaxed tracking-tight text-slate-100">
                     A winning bet and a <span className="text-emerald-400">correct</span> bet are not the
                     same thing.
                   </p>
-                  <p className="mt-3 text-[13px] leading-[1.65] text-slate-500">
+                  <p className="mt-3 text-sm leading-relaxed text-slate-500">
                     A bet is correct when the odds were wrong in your favour — regardless of the outcome.
                   </p>
                 </div>
@@ -498,7 +498,7 @@ export default function TheEdgePage() {
           <span className="mb-3 block text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/80">
             Principles
           </span>
-          <h2 className="mb-8 text-[1.6rem] font-extrabold tracking-tight text-white sm:text-[1.9rem]">
+          <h2 className="mb-8 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
             The philosophy
           </h2>
 
@@ -528,15 +528,15 @@ export default function TheEdgePage() {
             ].map((item) => (
               <div
                 key={item.n}
-                className="group relative flex flex-col overflow-hidden rounded-xl border border-slate-800/40 bg-[#0a0d12] p-4 transition-colors duration-300 hover:border-slate-700/40"
+                className="group relative flex flex-col overflow-hidden rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 transition-colors duration-300 hover:border-slate-600/60"
               >
                 <span className="pointer-events-none absolute -right-1 -top-3 select-none font-mono text-[56px] font-black leading-none text-white/[0.015]">
                   {item.n}
                 </span>
                 <div className="relative">
                   <span className="font-mono text-[10px] font-bold text-emerald-500/35">{item.n}</span>
-                  <h3 className="mt-1 text-[13px] font-bold leading-snug text-slate-200">{item.t}</h3>
-                  <p className="mt-1.5 text-[11px] leading-[1.55] text-slate-600 transition-colors duration-300 group-hover:text-slate-500">
+                  <h3 className="mt-1 text-sm font-semibold leading-snug text-slate-200">{item.t}</h3>
+                  <p className="mt-1.5 text-xs leading-relaxed text-slate-600 transition-colors duration-300 group-hover:text-slate-500">
                     {item.d}
                   </p>
                 </div>
@@ -546,7 +546,7 @@ export default function TheEdgePage() {
         </section>
 
         <section className="border-b border-slate-800/30 py-16 md:py-20">
-          <h2 className="mb-6 text-[1.3rem] font-extrabold text-white">FAQ</h2>
+          <h2 className="mb-6 text-xl font-semibold text-slate-100">FAQ</h2>
           <div className="max-w-3xl space-y-2">
             <FAQ
               q="What's your typical ROI?"
@@ -581,7 +581,7 @@ export default function TheEdgePage() {
 
         <section className="py-16 md:py-20">
           <div className="relative overflow-hidden rounded-2xl border border-emerald-500/15 p-10 text-center md:p-14">
-            <div className="absolute inset-0 bg-[#0a0d12]" />
+            <div className="absolute inset-0 bg-[#0c0f14]" />
             <div
               className="pointer-events-none absolute inset-0"
               style={{
@@ -598,16 +598,16 @@ export default function TheEdgePage() {
             />
 
             <div className="relative">
-              <h2 className="text-[1.6rem] font-extrabold tracking-tight text-white sm:text-3xl">
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
                 See the edge in practice
               </h2>
-              <p className="mx-auto mt-4 max-w-md text-[15px] leading-[1.7] text-slate-500">
+              <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-slate-400">
                 Every pick: match, market, selection, odds, stake. When we find value, you see it before the
                 line moves.
               </p>
               <Link
                 href="/player-props"
-                className="mt-7 inline-flex items-center gap-2.5 rounded-lg bg-emerald-500 px-7 py-3 text-[14px] font-bold text-white transition-all hover:bg-emerald-400 hover:shadow-[0_0_40px_rgba(16,185,129,0.20)]"
+                className="mt-7 inline-flex items-center gap-2.5 rounded-lg bg-emerald-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-400"
               >
                 View Tips →
               </Link>
