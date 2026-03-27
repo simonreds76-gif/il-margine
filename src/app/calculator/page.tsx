@@ -1,6 +1,7 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { supabase, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, getBaselineDisplayStats } from "@/lib/baseline";
 import { track } from "@/lib/analytics";
@@ -30,11 +31,6 @@ function computeOverallROI(
 
 export default function CalculatorPage() {
   const [loading, setLoading] = useState(true);
-  const [categoryStats, setCategoryStats] = useState<CategoryStats[]>([]);
-  const [combinedStats, setCombinedStats] = useState<{
-    props: CombinedMarketStats;
-    tennis: CombinedMarketStats;
-  } | null>(null);
   const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(null);
 
   const fetchData = useCallback(async () => {
@@ -42,17 +38,19 @@ export default function CalculatorPage() {
     try {
       const { data } = await supabase.from("category_stats").select("*");
       const stats = data ?? [];
-      if (stats.length) setCategoryStats(stats);
 
       const propsRows = stats.filter((s: CategoryStats) => s.market === "props");
       const tennisRows = stats.filter((s: CategoryStats) => s.market === "tennis");
 
       const propsLiveBets = propsRows.reduce((sum, s) => sum + (s.total_bets || 0), 0);
       const propsLiveProfit = propsRows.reduce((sum, s) => sum + (Number(s.total_profit) || 0), 0);
-      const propsLiveStake = propsRows.reduce((sum, s) => sum + (Number(s.total_stake) || 0), 0) || propsLiveBets;
+      const propsLiveStake =
+        propsRows.reduce((sum, s) => sum + (Number(s.total_stake) || 0), 0) || propsLiveBets;
       const tennisLiveBets = tennisRows.reduce((sum, s) => sum + (s.total_bets || 0), 0);
-      const tennisLiveProfit = tennisRows.reduce((sum, s) => sum + (Number(s.total_profit) || 0), 0);
-      const tennisLiveStake = tennisRows.reduce((sum, s) => sum + (Number(s.total_stake) || 0), 0) || tennisLiveBets;
+      const tennisLiveProfit =
+        tennisRows.reduce((sum, s) => sum + (Number(s.total_profit) || 0), 0);
+      const tennisLiveStake =
+        tennisRows.reduce((sum, s) => sum + (Number(s.total_stake) || 0), 0) || tennisLiveBets;
 
       const propsProfit = BASELINE_STATS.props.total_profit + propsLiveProfit;
       const propsStake = BASELINE_STATS.props.total_stake + propsLiveStake;
@@ -72,18 +70,21 @@ export default function CalculatorPage() {
         total_stake: tennisStake,
       };
 
-      setCombinedStats({ props: propsCombined, tennis: tennisCombined });
       const overallROI = computeOverallROI(propsCombined, tennisCombined);
       const nBets = propsCombined.total_bets + tennisCombined.total_bets;
       setCalculatorData({ roi: overallROI, nBets, source: "live" });
       track("calculator_data_loaded", { roi_used: overallROI, bets_count: nBets });
-    } catch (e) {
+    } catch (_e) {
       track("calculator_error", { type: "data_fetch" });
       const baseline = getBaselineDisplayStats();
       const fallbackRoi = baseline.overall.roi;
       const fallbackBets = baseline.overall.total_bets;
       setCalculatorData({ roi: fallbackRoi, nBets: fallbackBets, source: "fallback" });
-      track("calculator_data_loaded", { roi_used: fallbackRoi, bets_count: fallbackBets, fallback: true });
+      track("calculator_data_loaded", {
+        roi_used: fallbackRoi,
+        bets_count: fallbackBets,
+        fallback: true,
+      });
     } finally {
       setLoading(false);
     }
@@ -97,113 +98,143 @@ export default function CalculatorPage() {
       .channel("calculator-bets-changes")
       .on("postgres_changes", { event: "*", schema: "public", table: "bets" }, () => fetchData())
       .subscribe();
+
     return () => {
       supabase.removeChannel(channel);
     };
   }, [fetchData]);
 
-  // Fallback when no combined stats yet (e.g. empty DB) but no throw
-  const displayData = calculatorData ?? (() => {
-    const baseline = getBaselineDisplayStats();
-    return { roi: baseline.overall.roi, nBets: baseline.overall.total_bets, source: "fallback" as const };
-  })();
+  const displayData =
+    calculatorData ??
+    (() => {
+      const baseline = getBaselineDisplayStats();
+      return {
+        roi: baseline.overall.roi,
+        nBets: baseline.overall.total_bets,
+        source: "fallback" as const,
+      };
+    })();
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      {/* Hero: two calculators side by side */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 md:pb-16 border-b border-slate-800/50">
-        <PageHomeLink className="mb-8" />
-        <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">CALCULATORS</span>
-        <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-8">
-          Returns & Kelly
-        </h1>
+      <section className="border-b border-slate-800/50 pb-12 pt-6 md:pb-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <PageHomeLink className="mb-8" />
+          <span className="mb-3 block text-xs font-mono tracking-wider text-emerald-400">
+            CALCULATORS
+          </span>
+          <h1 className="text-3xl font-semibold text-slate-100 sm:text-4xl">
+            Betting calculators
+          </h1>
+          <p className="mt-4 max-w-3xl text-base leading-relaxed text-slate-400 sm:text-lg">
+            Track your returns from our settled bets, or size your stakes with the Kelly Criterion.
+          </p>
 
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-start">
-          {/* Returns Calculator */}
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-xl font-semibold text-slate-100 mb-2">
-                Returns Calculator
-              </h2>
-              <p className="text-sm text-slate-400 leading-relaxed mb-4">
-                How much you would have won or lost following our settled bets with a fixed stake per bet (e.g. £25, £50, £100).
-                Based on our verified track record. No projections.
-              </p>
+          <div className="mt-10 grid items-start gap-10 lg:grid-cols-2 lg:gap-12">
+            <div className="space-y-4">
+              <div>
+                <h2 className="mb-2 text-xl font-semibold text-slate-100">
+                  Returns calculator
+                </h2>
+                <p className="mb-4 text-sm leading-relaxed text-slate-400">
+                  See what a flat-stake approach would have returned across our settled bets.
+                  Based on our{" "}
+                  <Link
+                    href="/track-record"
+                    className="text-emerald-400 underline underline-offset-2 transition-colors hover:text-emerald-300"
+                  >
+                    verified track record
+                  </Link>
+                  . No projections.
+                </p>
+              </div>
+              <CalculatorCard loading={loading} data={displayData} />
+              {displayData.source === "fallback" && (
+                <p className="text-sm text-amber-400/90">
+                  Data notice: Live updates temporarily unavailable. Using last recorded results.
+                </p>
+              )}
             </div>
-            <CalculatorCard loading={loading} data={displayData} />
-            {displayData.source === "fallback" && (
-              <p className="text-sm text-amber-400/90">
-                Data notice: Live updates temporarily unavailable. Using last recorded results.
-              </p>
-            )}
-          </div>
 
-          {/* Kelly Calculator */}
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-xl font-semibold text-slate-100 mb-2">
-                Kelly Criterion
-              </h2>
-              <p className="text-sm text-slate-400 leading-relaxed mb-4">
-                Optimal bet size based on your edge. Input bankroll, decimal odds, and your estimated win probability.
-                Use fractional Kelly (quarter recommended) to reduce variance.
-              </p>
+            <div className="flex items-center gap-4 text-slate-600 lg:hidden">
+              <div className="h-px flex-1 bg-slate-800/70" />
+              <span className="text-[11px] font-mono uppercase tracking-[0.24em]">Or</span>
+              <div className="h-px flex-1 bg-slate-800/70" />
             </div>
-            <KellyCalculatorCard />
+
+            <div className="space-y-4">
+              <div>
+                <h2 className="mb-2 text-xl font-semibold text-slate-100">
+                  Kelly criterion calculator
+                </h2>
+                <p className="mb-4 text-sm leading-relaxed text-slate-400">
+                  Size a stake from your edge: bankroll, price, probability, then choose
+                  the Kelly fraction that fits the market.
+                </p>
+              </div>
+              <KellyCalculatorCard />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="py-12 md:py-16 border-b border-slate-800/50">
+      <section className="border-b border-slate-800/50 py-12 md:py-16">
         <HowItWorks />
       </section>
 
-      {/* Assumptions (collapsed) */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <section className="border-b border-slate-800/50 py-10">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/6 p-6 sm:p-7">
+            <span className="text-xs font-mono uppercase tracking-[0.22em] text-emerald-300">
+              Why we use fractional Kelly
+            </span>
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300 sm:text-base">
+              We use one-tenth Kelly for player props and quarter Kelly for tennis. Full
+              Kelly maximizes long-run bankroll growth on paper, but it also creates
+              violent swings in the real world. Fractional Kelly gives up a little growth
+              to cut variance dramatically.
+            </p>
+            <Link
+              href="/resources/kelly-criterion-sports-betting"
+              className="mt-4 inline-flex items-center gap-2 text-sm text-emerald-400 transition-colors hover:text-emerald-300"
+            >
+              Read the full Kelly guide →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         <AssumptionsCallout />
       </section>
 
-      {/* Mind the margin: slim full-width divider (subtle brand transition before FAQ) */}
-      <section
-        className="relative w-full overflow-hidden border-y border-slate-800/50"
-        aria-hidden
-      >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <img
-            src="/banner-mind-the-margin.png"
-            alt=""
-            className="w-full max-w-4xl object-contain object-center opacity-[0.18] select-none pointer-events-none"
-          />
-        </div>
-        <div className="relative py-6 md:py-8 min-h-[72px] flex items-center justify-center">
-          <span className="text-slate-500/80 text-sm font-medium tracking-wide">
-            Mind the margin.
-          </span>
-        </div>
-      </section>
-
-      {/* FAQ accordion */}
-      <section className="py-12 md:py-16 border-b border-slate-800/50">
+      <section className="border-b border-slate-800/50 py-12 md:py-16">
         <div className="px-4 sm:px-6 lg:px-8">
           <FaqAccordion />
         </div>
       </section>
 
-      {/* Responsible gambling notice */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-5">
-          <p className="text-sm text-slate-300 leading-relaxed">
-            <strong className="text-amber-400/95">Responsible gambling:</strong> Past performance does not guarantee future results. These calculations are illustrative. Only bet what you can afford to lose. If you need help, visit BeGambleAware or GamCare.
+          <p className="text-sm leading-relaxed text-slate-300">
+            <strong className="text-amber-400/95">Responsible gambling:</strong> Past
+            performance does not guarantee future results. These calculations are
+            illustrative. Only bet what you can afford to lose. If you need help, visit
+            BeGambleAware or GamCare.
           </p>
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="rounded-xl border border-slate-700/50 bg-slate-800/40 p-6 text-center">
-          <p className="text-slate-300 font-medium mb-2">Looking for today&apos;s picks?</p>
-          <p className="text-sm text-slate-500 mb-4">All selections posted free on the website with full analysis.</p>
-          <a href="/tennis-tips" className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors">
+          <p className="mb-2 font-medium text-slate-300">Looking for today&apos;s picks?</p>
+          <p className="mb-4 text-sm text-slate-500">
+            All selections are posted free on the website with full analysis.
+          </p>
+          <a
+            href="/tennis-tips"
+            className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-emerald-400"
+          >
             View Tips
           </a>
         </div>
@@ -213,6 +244,3 @@ export default function CalculatorPage() {
     </div>
   );
 }
-
-
-

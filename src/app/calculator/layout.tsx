@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
 
-const title = "Calculator | Potential Winnings Calculator";
+const title = "Betting Calculators | Returns & Kelly Criterion | Il Margine";
 const description =
-  "Calculate your potential returns based on our historical performance. All calculations are based on our verified track record and assume you follow our unit recommendations.";
+  "Track returns from our verified settled bets and size stakes with the Kelly Criterion. Includes bankroll, ROI, and fractional Kelly tools for sports betting.";
 const url = `${BASE_URL}/calculator`;
 
 export const metadata: Metadata = {
