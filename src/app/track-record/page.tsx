@@ -434,6 +434,9 @@ export default function TrackRecordPage() {
         </section>
 
         <section className="border-b border-slate-800/30 py-16 md:py-20">
+          <span className="mb-3 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/90">
+            Common questions
+          </span>
           <h2 className="mb-6 text-xl font-semibold text-slate-100">FAQ</h2>
           <div className="max-w-3xl space-y-2">
             <FAQ
@@ -482,7 +485,7 @@ export default function TrackRecordPage() {
               </p>
               <Link
                 href="/player-props"
-                className="mt-7 inline-flex items-center gap-2.5 rounded-lg bg-emerald-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-400"
+                className="mt-7 inline-flex items-center gap-2.5 rounded-lg bg-emerald-500 px-8 py-3.5 text-base font-semibold text-white transition-colors hover:bg-emerald-400"
               >
                 View Tips →
               </Link>
