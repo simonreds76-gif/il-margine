@@ -496,10 +496,10 @@ export default function CalculatorPage() {
       <div className="relative mx-auto max-w-6xl px-4 pb-8 pt-6 sm:px-6 lg:px-8 md:pb-12">
         <PageHomeLink className="mb-8" />
 
-        <div className="mx-auto max-w-[940px]">
+        <div>
           <div className="mb-8">
             <span className="mb-3 block text-xs font-mono tracking-wider text-emerald-400">
-              Calculators
+              CALCULATORS
             </span>
             <h1 className="mb-3 text-3xl font-semibold text-slate-100 sm:text-4xl">
               Betting calculators
@@ -848,7 +848,7 @@ export default function CalculatorPage() {
           </div>
 
           <div className="mt-12">
-            <h2 className="mb-5 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-slate-500">
+            <h2 className="mb-4 text-xl font-semibold text-emerald-400">
               How it works
             </h2>
             <div className="grid gap-3 md:grid-cols-2">
@@ -890,10 +890,10 @@ export default function CalculatorPage() {
           </div>
 
           <div className="mt-6 rounded-xl border border-emerald-500/15 bg-emerald-500/[0.03] px-5 py-4">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-emerald-400">
+            <h2 className="mb-3 text-xl font-semibold text-emerald-400">
               Why fractional Kelly?
-            </span>
-            <p className="mt-2 text-[13px] leading-relaxed text-slate-400">
+            </h2>
+            <p className="text-base leading-relaxed text-slate-300">
               Full Kelly maximises long-term growth but creates violent drawdowns. Quarter Kelly gives up some theoretical growth in exchange for much lower variance. We use 0.1x for props and 0.25x for tennis.
               {" "}
               <Link
@@ -906,7 +906,7 @@ export default function CalculatorPage() {
           </div>
 
           <div className="mt-10">
-            <h2 className="mb-4 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-slate-500">
+            <h2 className="mb-4 text-xl font-semibold text-emerald-400">
               FAQ
             </h2>
             {CALCULATOR_FAQS.map((item) => (
