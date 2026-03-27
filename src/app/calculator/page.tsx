@@ -268,6 +268,8 @@ function ReturnsChart({
   width?: number;
   height?: number;
 }) {
+  const endValue = points[points.length - 1] ?? startBankroll;
+  const returnPct = startBankroll > 0 ? ((endValue - startBankroll) / startBankroll) * 100 : 0;
   const maxV = Math.max(...points);
   const minV = Math.min(...points, startBankroll * 0.95);
   const range = maxV - minV || 1;
@@ -293,11 +295,14 @@ function ReturnsChart({
         </linearGradient>
       </defs>
       <line x1={padLeft} y1={y(startBankroll)} x2={width - padRight} y2={y(startBankroll)} stroke="rgba(255,255,255,0.08)" strokeDasharray="4 3" strokeWidth="1" />
+      <text x={padLeft - 6} y={y(startBankroll) + 3} textAnchor="end" fill="rgba(255,255,255,0.25)" fontSize="9" fontFamily="ui-monospace,SFMono-Regular,monospace">
+        {formatCompactCurrency(startBankroll)}
+      </text>
       <path d={area} fill="url(#returns-gradient)" />
       <path d={line} fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinejoin="round" />
       <circle cx={x(n)} cy={y(points[n])} r="4" fill="#22c55e" />
       <text x={x(n) - 6} y={y(points[n]) - 9} textAnchor="end" fill="#22c55e" fontSize="11" fontWeight="700" fontFamily="ui-monospace,SFMono-Regular,monospace">
-        {points[n] >= 1000 ? `£${(points[n] / 1000).toFixed(1)}k` : `£${points[n].toFixed(0)}`}
+        {formatCompactCurrency(endValue)} ({returnPct >= 0 ? "+" : ""}{returnPct.toFixed(0)}%)
       </text>
       <text x={padLeft + chartW / 2} y={height - 3} textAnchor="middle" fill="rgba(255,255,255,0.15)" fontSize="8" fontFamily="ui-monospace,SFMono-Regular,monospace">
         settled bets →
@@ -327,7 +332,7 @@ export default function CalculatorPage() {
   const [fraction, setFraction] = useState<number>(0.25);
 
   const [stake, setStake] = useState("50");
-  const [returnsBankroll, setReturnsBankroll] = useState("1000");
+  const [returnsBankroll, setReturnsBankroll] = useState("");
 
   const fetchData = useCallback(async () => {
     try {
@@ -431,6 +436,8 @@ export default function CalculatorPage() {
   const flatProfit = totalStaked * (recordSummary.roi / 100);
   const returnsBankrollValue = Math.max(0, parseNum(returnsBankroll));
   const endingBalance = returnsBankrollValue > 0 ? returnsBankrollValue + flatProfit : null;
+  const endingReturnPct =
+    returnsBankrollValue > 0 ? (flatProfit / returnsBankrollValue) * 100 : null;
   const returnsPoints = useMemo(
     () =>
       returnsBankrollValue > 0 && stakeValue > 0
@@ -531,6 +538,7 @@ export default function CalculatorPage() {
                     placeholder="Custom"
                     value={STAKE_PRESETS.includes(stakeValue as (typeof STAKE_PRESETS)[number]) ? "" : stake}
                     onChange={(e) => setStake(e.target.value)}
+                    onFocus={(e) => e.target.select()}
                     className="w-28 rounded-lg border border-slate-600 bg-[#0c0f14] px-4 py-2.5 font-mono text-[15px] text-slate-100 placeholder:text-slate-600 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/30"
                   />
                 </div>
@@ -584,22 +592,30 @@ export default function CalculatorPage() {
                 <div className="mb-3 flex flex-wrap items-end gap-4">
                   <label className="block min-w-[220px] flex-1">
                     <span className={labelClassName}>Optional: starting bankroll (£)</span>
-                    <input
-                      type="number"
-                      value={returnsBankroll}
-                      onChange={(e) => setReturnsBankroll(e.target.value)}
-                      className={inputClassName}
-                    />
-                  </label>
-                  {endingBalance != null ? (
-                    <div className="pb-1">
-                      <span className={labelClassName}>Ending balance</span>
-                      <div className="mt-1 font-mono text-lg font-bold text-emerald-400">
-                        £{endingBalance.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                      </div>
+                  <input
+                    type="number"
+                    value={returnsBankroll}
+                    onChange={(e) => setReturnsBankroll(e.target.value)}
+                    onFocus={(e) => e.target.select()}
+                    placeholder="e.g. 1000"
+                    className={inputClassName}
+                  />
+                </label>
+                {endingBalance != null ? (
+                  <div className="pb-1">
+                    <span className={labelClassName}>Ending balance</span>
+                    <div className="mt-1 font-mono text-lg font-bold text-emerald-400">
+                      {formatCurrency(endingBalance)}
                     </div>
-                  ) : null}
-                </div>
+                    {endingReturnPct != null ? (
+                      <div className="font-mono text-[10px] text-slate-600">
+                        {endingReturnPct >= 0 ? "+" : ""}
+                        {endingReturnPct.toFixed(1)}% return
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
 
                 {returnsPoints.length > 0 ? (
                   <ChartShell title="Illustrative bankroll curve" subtitle="flat stake · aggregate record">
@@ -657,6 +673,7 @@ export default function CalculatorPage() {
                     type="number"
                     value={bankroll}
                     onChange={(e) => setBankroll(e.target.value)}
+                    onFocus={(e) => e.target.select()}
                     className={inputClassName}
                   />
                 </label>
@@ -666,6 +683,7 @@ export default function CalculatorPage() {
                     type="text"
                     value={odds}
                     onChange={(e) => setOdds(e.target.value)}
+                    onFocus={(e) => e.target.select()}
                     className={inputClassName}
                   />
                 </label>
@@ -675,6 +693,7 @@ export default function CalculatorPage() {
                     type="number"
                     value={probability}
                     onChange={(e) => setProbability(e.target.value)}
+                    onFocus={(e) => e.target.select()}
                     className={inputClassName}
                   />
                 </label>
