@@ -493,44 +493,45 @@ export default function CalculatorPage() {
         }}
       />
 
-      <div className="relative mx-auto max-w-[940px] px-5 pb-20 pt-6">
+      <div className="relative mx-auto max-w-6xl px-4 pb-8 pt-6 sm:px-6 lg:px-8 md:pb-12">
         <PageHomeLink className="mb-8" />
 
-        <div className="mb-8">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400">
-            Calculators
-          </span>
-          <h1 className="mt-2 text-[34px] font-semibold leading-tight tracking-tight text-slate-100">
-            Betting calculators
-          </h1>
-          <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate-400">
-            Track returns from our settled bets, or size your stakes with the Kelly Criterion.
-          </p>
-        </div>
-
-        <div className="overflow-hidden rounded-2xl border border-slate-700/50 bg-slate-800/50 shadow-lg">
-          <div className="flex border-b border-slate-700/50">
-            {[
-              { key: "returns", label: "Returns" },
-              { key: "kelly", label: "Kelly criterion" },
-            ].map((tab) => (
-              <button
-                key={tab.key}
-                type="button"
-                onClick={() => setActiveTab(tab.key as "returns" | "kelly")}
-                className={`border-b-2 px-6 py-3 text-[11px] font-mono font-bold uppercase tracking-[0.12em] transition-all ${
-                  activeTab === tab.key
-                    ? "border-emerald-400 text-white"
-                    : "border-transparent text-slate-500 hover:text-slate-300"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+        <div className="mx-auto max-w-[940px]">
+          <div className="mb-8">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400">
+              Calculators
+            </span>
+            <h1 className="mt-2 text-[34px] font-semibold leading-tight tracking-tight text-slate-100">
+              Betting calculators
+            </h1>
+            <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate-400">
+              Track returns from our settled bets, or size your stakes with the Kelly Criterion.
+            </p>
           </div>
 
-          {activeTab === "returns" ? (
-            <div className="p-7">
+          <div className="overflow-hidden rounded-2xl border border-slate-700/50 bg-slate-800/50 shadow-lg">
+            <div className="flex border-b border-slate-700/50">
+              {[
+                { key: "returns", label: "Returns" },
+                { key: "kelly", label: "Kelly criterion" },
+              ].map((tab) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setActiveTab(tab.key as "returns" | "kelly")}
+                  className={`border-b-2 px-6 py-3 text-[11px] font-mono font-bold uppercase tracking-[0.12em] transition-all ${
+                    activeTab === tab.key
+                      ? "border-emerald-400 text-white"
+                      : "border-transparent text-slate-500 hover:text-slate-300"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {activeTab === "returns" ? (
+              <div className="p-7">
               <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
                 <h2 className="text-xl font-semibold text-slate-100">Returns calculator</h2>
                 <Link
@@ -664,9 +665,9 @@ export default function CalculatorPage() {
                   Live track-record data is temporarily unavailable. Using the last recorded baseline numbers.
                 </div>
               ) : null}
-            </div>
-          ) : (
-            <div className="p-7">
+              </div>
+            ) : (
+              <div className="p-7">
               <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
                 <h2 className="text-xl font-semibold text-slate-100">Kelly Criterion</h2>
                 <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-500/25 bg-emerald-500/8 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-[0.12em] text-emerald-300">
@@ -842,102 +843,103 @@ export default function CalculatorPage() {
                   No edge at these inputs. Kelly says do not bet.
                 </div>
               ) : null}
-            </div>
-          )}
-        </div>
-
-        <div className="mt-12">
-          <h2 className="mb-5 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-slate-500">
-            How it works
-          </h2>
-          <div className="grid gap-3 md:grid-cols-2">
-            {[
-              {
-                title: "Returns",
-                steps: [
-                  "Choose a flat stake: 25, 50, 100, 250, or your own number.",
-                  "See total staked, profit/loss, ROI, and win rate from the verified record.",
-                  "Add a starting bankroll to see an illustrative ending balance.",
-                ],
-              },
-              {
-                title: "Kelly Criterion",
-                steps: [
-                  "Enter bankroll, decimal odds, and your win probability estimate.",
-                  "Pick a fraction: 0.1x for props, 0.25x for tennis, or larger if you accept more variance.",
-                  "Read the recommended stake. If there is no edge, Kelly tells you not to bet.",
-                ],
-              },
-            ].map((section) => (
-              <div key={section.title} className="rounded-xl border border-slate-700/40 bg-slate-800/40 p-5">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-emerald-400">
-                  {section.title}
-                </span>
-                <div className="mt-4 space-y-3">
-                  {section.steps.map((step, index) => (
-                    <div key={step} className="flex items-start gap-3">
-                      <span className="mt-0.5 w-5 shrink-0 font-mono text-[11px] font-bold text-slate-700">
-                        0{index + 1}
-                      </span>
-                      <span className="text-[13px] leading-relaxed text-slate-400">{step}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
+            )}
+          </div>
+
+          <div className="mt-12">
+            <h2 className="mb-5 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-slate-500">
+              How it works
+            </h2>
+            <div className="grid gap-3 md:grid-cols-2">
+              {[
+                {
+                  title: "Returns",
+                  steps: [
+                    "Choose a flat stake: 25, 50, 100, 250, or your own number.",
+                    "See total staked, profit/loss, ROI, and win rate from the verified record.",
+                    "Add a starting bankroll to see an illustrative ending balance.",
+                  ],
+                },
+                {
+                  title: "Kelly Criterion",
+                  steps: [
+                    "Enter bankroll, decimal odds, and your win probability estimate.",
+                    "Pick a fraction: 0.1x for props, 0.25x for tennis, or larger if you accept more variance.",
+                    "Read the recommended stake. If there is no edge, Kelly tells you not to bet.",
+                  ],
+                },
+              ].map((section) => (
+                <div key={section.title} className="rounded-xl border border-slate-700/40 bg-slate-800/40 p-5">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-emerald-400">
+                    {section.title}
+                  </span>
+                  <div className="mt-4 space-y-3">
+                    {section.steps.map((step, index) => (
+                      <div key={step} className="flex items-start gap-3">
+                        <span className="mt-0.5 w-5 shrink-0 font-mono text-[11px] font-bold text-slate-700">
+                          0{index + 1}
+                        </span>
+                        <span className="text-[13px] leading-relaxed text-slate-400">{step}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-xl border border-emerald-500/15 bg-emerald-500/[0.03] px-5 py-4">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-emerald-400">
+              Why fractional Kelly?
+            </span>
+            <p className="mt-2 text-[13px] leading-relaxed text-slate-400">
+              Full Kelly maximises long-term growth but creates violent drawdowns. Quarter Kelly gives up some theoretical growth in exchange for much lower variance. We use 0.1x for props and 0.25x for tennis.
+              {" "}
+              <Link
+                href="/resources/kelly-criterion-sports-betting"
+                className="text-emerald-400 transition-colors hover:text-emerald-300"
+              >
+                Read the full guide {"->"}
+              </Link>
+            </p>
+          </div>
+
+          <div className="mt-10">
+            <h2 className="mb-4 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-slate-500">
+              FAQ
+            </h2>
+            {CALCULATOR_FAQS.map((item) => (
+              <details
+                key={item.question}
+                className="mb-2 overflow-hidden rounded-xl border border-slate-700/40 bg-slate-800/40 group"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-3.5 text-[14px] font-medium text-slate-200 transition-colors hover:bg-slate-700/20">
+                  {item.question}
+                  <span className="ml-3 shrink-0 text-emerald-400/60 transition-transform group-open:rotate-180">
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </span>
+                </summary>
+                <div className="border-t border-slate-700/30 px-5 py-3.5 text-[13px] leading-relaxed text-slate-400">
+                  {item.answer}
+                </div>
+              </details>
             ))}
           </div>
-        </div>
 
-        <div className="mt-6 rounded-xl border border-emerald-500/15 bg-emerald-500/[0.03] px-5 py-4">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-emerald-400">
-            Why fractional Kelly?
-          </span>
-          <p className="mt-2 text-[13px] leading-relaxed text-slate-400">
-            Full Kelly maximises long-term growth but creates violent drawdowns. Quarter Kelly gives up some theoretical growth in exchange for much lower variance. We use 0.1x for props and 0.25x for tennis.
+          <div className="mt-8 rounded-xl border border-amber-500/15 bg-amber-500/[0.03] px-5 py-3.5 text-[13px] leading-relaxed text-slate-400">
+            <strong className="text-amber-400/90">Responsible gambling:</strong> Past performance does not guarantee future results. Only bet what you can afford to lose.
             {" "}
-            <Link
-              href="/resources/kelly-criterion-sports-betting"
-              className="text-emerald-400 transition-colors hover:text-emerald-300"
-            >
-              Read the full guide {"->"}
-            </Link>
-          </p>
-        </div>
-
-        <div className="mt-10">
-          <h2 className="mb-4 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-slate-500">
-            FAQ
-          </h2>
-          {CALCULATOR_FAQS.map((item) => (
-            <details
-              key={item.question}
-              className="mb-2 overflow-hidden rounded-xl border border-slate-700/40 bg-slate-800/40 group"
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-3.5 text-[14px] font-medium text-slate-200 transition-colors hover:bg-slate-700/20">
-                {item.question}
-                <span className="ml-3 shrink-0 text-emerald-400/60 transition-transform group-open:rotate-180">
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </span>
-              </summary>
-              <div className="border-t border-slate-700/30 px-5 py-3.5 text-[13px] leading-relaxed text-slate-400">
-                {item.answer}
-              </div>
-            </details>
-          ))}
-        </div>
-
-        <div className="mt-8 rounded-xl border border-amber-500/15 bg-amber-500/[0.03] px-5 py-3.5 text-[13px] leading-relaxed text-slate-400">
-          <strong className="text-amber-400/90">Responsible gambling:</strong> Past performance does not guarantee future results. Only bet what you can afford to lose.
-          {" "}
-          <a href="https://www.begambleaware.org" className="text-slate-300 underline underline-offset-2">
-            BeGambleAware
-          </a>
-          {" · "}
-          <a href="https://www.gamcare.org.uk" className="text-slate-300 underline underline-offset-2">
-            GamCare
-          </a>
+            <a href="https://www.begambleaware.org" className="text-slate-300 underline underline-offset-2">
+              BeGambleAware
+            </a>
+            {" · "}
+            <a href="https://www.gamcare.org.uk" className="text-slate-300 underline underline-offset-2">
+              GamCare
+            </a>
+          </div>
         </div>
       </div>
 
