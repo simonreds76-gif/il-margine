@@ -498,13 +498,13 @@ export default function CalculatorPage() {
 
         <div className="mx-auto max-w-[940px]">
           <div className="mb-8">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400">
+            <span className="mb-3 block text-xs font-mono tracking-wider text-emerald-400">
               Calculators
             </span>
-            <h1 className="mt-2 text-[34px] font-semibold leading-tight tracking-tight text-slate-100">
+            <h1 className="mb-3 text-3xl font-semibold text-slate-100 sm:text-4xl">
               Betting calculators
             </h1>
-            <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate-400">
+            <p className="max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
               Track returns from our settled bets, or size your stakes with the Kelly Criterion.
             </p>
           </div>
@@ -541,7 +541,7 @@ export default function CalculatorPage() {
                   View track record →
                 </Link>
               </div>
-              <p className="mb-6 max-w-lg text-sm leading-relaxed text-slate-400">
+              <p className="mb-6 max-w-2xl text-base leading-relaxed text-slate-300">
                 What a flat-stake approach would have returned across our verified settled bets. No projections, just the record.
               </p>
 
@@ -675,7 +675,7 @@ export default function CalculatorPage() {
                   Pre-filled example
                 </span>
               </div>
-              <p className="mb-6 max-w-lg text-sm leading-relaxed text-slate-400">
+              <p className="mb-6 max-w-2xl text-base leading-relaxed text-slate-300">
                 Adjust the fields and watch the stake update live.
                 <button
                   type="button"
@@ -685,7 +685,7 @@ export default function CalculatorPage() {
                     setProbability("54");
                     setFraction(0.25);
                   }}
-                  className="ml-1 bg-transparent p-0 text-sm text-emerald-400 underline underline-offset-2 transition-colors hover:text-emerald-300"
+                  className="ml-1 bg-transparent p-0 text-base text-emerald-400 underline underline-offset-2 transition-colors hover:text-emerald-300"
                 >
                   Reset to example
                 </button>
