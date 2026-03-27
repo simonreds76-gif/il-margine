@@ -694,7 +694,7 @@ export default function CalculatorPage() {
                   href="/resources/kelly-criterion-sports-betting"
                   className="text-slate-500 transition-colors hover:text-emerald-400"
                 >
-                  Full guide {"->"}
+                  Full guide →
                 </Link>
               </p>
 
@@ -870,17 +870,17 @@ export default function CalculatorPage() {
                   ],
                 },
               ].map((section) => (
-                <div key={section.title} className="rounded-xl border border-slate-700/40 bg-slate-800/40 p-5">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-emerald-400">
+                <div key={section.title} className="rounded-xl border border-slate-700/40 bg-slate-800/40 p-6">
+                  <h3 className="mb-4 text-lg font-semibold text-emerald-400">
                     {section.title}
-                  </span>
-                  <div className="mt-4 space-y-3">
+                  </h3>
+                  <div className="space-y-3">
                     {section.steps.map((step, index) => (
                       <div key={step} className="flex items-start gap-3">
-                        <span className="mt-0.5 w-5 shrink-0 font-mono text-[11px] font-bold text-slate-700">
+                        <span className="mt-0.5 w-5 shrink-0 font-mono text-[11px] font-bold text-emerald-400/80">
                           0{index + 1}
                         </span>
-                        <span className="text-[13px] leading-relaxed text-slate-400">{step}</span>
+                        <span className="text-sm leading-relaxed text-slate-300">{step}</span>
                       </div>
                     ))}
                   </div>
@@ -900,7 +900,7 @@ export default function CalculatorPage() {
                 href="/resources/kelly-criterion-sports-betting"
                 className="text-emerald-400 transition-colors hover:text-emerald-300"
               >
-                Read the full guide {"->"}
+                Read the full guide →
               </Link>
             </p>
           </div>
