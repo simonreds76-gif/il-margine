@@ -332,7 +332,7 @@ export default function CalculatorPage() {
   const [fraction, setFraction] = useState<number>(0.25);
 
   const [stake, setStake] = useState("50");
-  const [returnsBankroll, setReturnsBankroll] = useState("");
+  const [returnsBankroll, setReturnsBankroll] = useState("1000");
 
   const fetchData = useCallback(async () => {
     try {
