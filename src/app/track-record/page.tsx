@@ -170,7 +170,7 @@ export default function TrackRecordPage() {
           </Reveal>
 
           <Reveal delay={100}>
-            <span className="text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/90">
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
               Track Record
             </span>
           </Reveal>
@@ -233,7 +233,7 @@ export default function TrackRecordPage() {
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <section className="border-b border-slate-800/30 py-16 md:py-20">
-          <span className="mb-3 block text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/80">
+          <span className="mb-3 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/90">
             How we prove it
           </span>
           <h2 className="mb-8 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
@@ -317,7 +317,7 @@ export default function TrackRecordPage() {
         </section>
 
         <section className="border-b border-slate-800/30 py-16 md:py-20">
-          <span className="mb-3 block text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/80">
+          <span className="mb-3 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/90">
             Before you follow
           </span>
           <h2 className="mb-8 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
@@ -375,7 +375,7 @@ export default function TrackRecordPage() {
 
             <div className="relative grid gap-10 lg:grid-cols-[1fr,0.6fr] lg:gap-14">
               <div>
-                <span className="mb-3 block text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/80">
+                <span className="mb-3 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/90">
                   Why we're different
                 </span>
                 <h2 className="mb-5 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
@@ -400,7 +400,7 @@ export default function TrackRecordPage() {
 
               <div className="flex items-center">
                 <div className="w-full rounded-xl border border-slate-700/40 bg-[#0f1117] p-5">
-                  <div className="mb-4 text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-emerald-400/70">
+                  <div className="mb-4 text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-emerald-400/80">
                     What real edge looks like
                   </div>
                   <div className="space-y-3">

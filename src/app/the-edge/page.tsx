@@ -101,7 +101,7 @@ function EdgeCard() {
 
       <div className="relative">
         <div className="mb-5 flex items-center justify-between">
-          <span className="text-[9px] font-mono font-bold uppercase tracking-[0.24em] text-emerald-400/80">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-emerald-400/85">
             How we find edge
           </span>
           <span className="flex items-center gap-1.5">
@@ -109,7 +109,7 @@ function EdgeCard() {
               className="h-[5px] w-[5px] rounded-full bg-emerald-400"
               style={{ animation: "pulse 2s ease-in-out infinite" }}
             />
-            <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-slate-600">
+            <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-slate-600">
               Live example
             </span>
           </span>
@@ -242,7 +242,7 @@ export default function TheEdgePage() {
           <div className="grid items-start gap-12 lg:grid-cols-[1.2fr,0.8fr] lg:gap-16">
             <div>
               <Reveal delay={100}>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/90">
+                <span className="text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
                   Methodology
                 </span>
               </Reveal>
@@ -300,7 +300,7 @@ export default function TheEdgePage() {
             <div className="lg:sticky lg:top-28 lg:self-start">
               <div className="mb-5 flex items-center gap-3">
                 <div className="h-10 w-[3px] rounded-full bg-emerald-500" />
-                <span className="text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/80">
+                <span className="text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/90">
                   Insider knowledge
                 </span>
               </div>
@@ -360,7 +360,7 @@ export default function TheEdgePage() {
         </section>
 
         <section className="border-b border-slate-800/30 py-16 md:py-20">
-          <span className="mb-3 block text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/80">
+          <span className="mb-3 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/90">
             Where we operate
           </span>
           <h2 className="mb-8 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
@@ -450,7 +450,7 @@ export default function TheEdgePage() {
         <section className="border-b border-slate-800/30 py-16 md:py-20">
           <div className="grid items-start gap-10 lg:grid-cols-[1fr,0.55fr] lg:gap-14">
             <div>
-              <span className="mb-3 block text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/80">
+              <span className="mb-3 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/90">
                 Core concept
               </span>
               <h2 className="mb-6 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
@@ -484,7 +484,7 @@ export default function TheEdgePage() {
                 />
                 <div className="pointer-events-none absolute -right-16 -bottom-16 h-40 w-40 rounded-full bg-emerald-500/[0.04] blur-[50px]" />
                 <div className="relative">
-                  <div className="mb-5 text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-emerald-400/70">
+                  <div className="mb-5 text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-emerald-400/80">
                     Key insight
                   </div>
                   <p className="text-xl font-semibold leading-relaxed tracking-tight text-slate-100">
@@ -501,7 +501,7 @@ export default function TheEdgePage() {
         </section>
 
         <section className="border-b border-slate-800/30 py-16 md:py-20">
-          <span className="mb-3 block text-[10px] font-mono font-bold uppercase tracking-[0.22em] text-emerald-400/80">
+          <span className="mb-3 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/90">
             Principles
           </span>
           <h2 className="mb-8 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
