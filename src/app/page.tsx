@@ -315,7 +315,7 @@ function ExploreCard({ href, title, body }: { href: string; title: string; body:
       <h3 className="mb-1 text-[14px] font-semibold text-slate-200 transition-colors group-hover:text-white">{title}</h3>
       <p className="text-[12px] leading-[1.6] text-slate-600 transition-colors group-hover:text-slate-500">{body}</p>
       <span className="mt-auto inline-flex w-full items-center justify-between pt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-400/45 transition-colors group-hover:text-emerald-400/85">
-        View page -&gt;
+        View page {"\u2192"}
       </span>
     </Link>
   );
@@ -1105,7 +1105,7 @@ export default function Home() {
                 <h3 className="mb-2 text-[15px] font-medium text-slate-200 transition-colors group-hover:text-white">{item.title}</h3>
                 <p className="text-sm leading-relaxed text-slate-500 transition-colors group-hover:text-slate-400">{item.summary}</p>
                 <span className="mt-auto pt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-400/45 transition-colors group-hover:text-emerald-400/85">
-                  Read answer -&gt;
+                  Read answer {"\u2192"}
                 </span>
               </Link>
             ))}
