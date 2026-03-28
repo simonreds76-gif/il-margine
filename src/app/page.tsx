@@ -142,7 +142,7 @@ function HomepageReveal({ children, delay = 0, className = "" }: { children: Rea
 
 function HomepageEdgeCard() {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-slate-700/35 bg-[#0a0d12] p-6 shadow-2xl shadow-black/35 md:p-8">
+    <div className="relative overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0a0d12] p-6 shadow-2xl shadow-black/35 md:p-7">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.02]"
         style={{
@@ -165,43 +165,43 @@ function HomepageEdgeCard() {
 
       <div className="relative">
         <div className="mb-4 flex items-center justify-between">
-          <span className="text-xs font-mono font-bold uppercase tracking-[0.14em] text-emerald-400/95">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-emerald-400/90">
             How we find edge
           </span>
           <span className="flex items-center gap-1.5">
             <span className="h-[5px] w-[5px] rounded-full bg-emerald-400" style={{ animation: "homepage-pulse 2s ease-in-out infinite" }} />
-            <span className="text-[10px] font-mono uppercase tracking-[0.12em] text-slate-600">Live example</span>
+            <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-slate-600">Live example</span>
           </span>
         </div>
 
-        <div className="font-mono text-[15px] md:text-base">
+        <div className="font-mono text-[14px] md:text-[15px]">
           {EDGE_ROWS.map(([label, value], index) => (
             <div
               key={label}
-              className="flex items-center justify-between border-b border-slate-800/40 py-[10px]"
+              className="flex items-center justify-between border-b border-slate-800/40 py-[9px]"
               style={{
                 animation: "homepage-edge-row 0.55s cubic-bezier(0.16,1,0.3,1) both",
                 animationDelay: `${700 + index * 180}ms`,
               }}
             >
-              <span className="text-slate-300">{label}</span>
-              <span className="text-[17px] font-semibold tabular-nums text-slate-100 md:text-[18px]">{value}</span>
+              <span className="text-slate-400">{label}</span>
+              <span className="text-[15px] font-semibold tabular-nums text-slate-100 md:text-base">{value}</span>
             </div>
           ))}
 
           <div
-            className="-mx-1.5 mt-3 flex items-center justify-between rounded-xl border px-4 py-4"
+            className="-mx-1.5 mt-3 flex items-center justify-between rounded-xl border px-4 py-3.5"
             style={{
               animation: "homepage-edge-result 0.7s cubic-bezier(0.16,1,0.3,1) both",
               animationDelay: "1450ms",
             }}
           >
-            <span className="text-[17px] font-semibold text-emerald-400 md:text-[18px]">Edge</span>
-            <span className="font-mono text-[34px] font-black tracking-[-0.04em] text-emerald-400 md:text-[40px]">+11.1%</span>
+            <span className="text-[14px] font-semibold text-emerald-400 md:text-[15px]">Mathematical Edge</span>
+            <span className="font-mono text-[30px] font-black tracking-[-0.04em] text-emerald-400 md:text-[32px]">+11.1%</span>
           </div>
         </div>
 
-        <p className="mt-3 font-mono text-xs uppercase tracking-[0.12em] text-slate-600">
+        <p className="mt-3 font-mono text-[10px] leading-relaxed text-slate-600">
           When their price exceeds fair value, we act.
         </p>
       </div>
@@ -239,11 +239,11 @@ function ProofStatCard({
         {value.replace(/[^0-9.%+]/g, "")}
       </span>
       <div className="relative">
-        <div className="text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-slate-500">{label}</div>
-        <div className={`mt-3 font-mono text-[2.1rem] font-extrabold leading-none tracking-tight tabular-nums md:text-[2.4rem] ${accent ? "text-emerald-400" : "text-slate-100"}`}>
+        <div className="text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-slate-500">{label}</div>
+        <div className={`mt-3 font-mono text-[2.2rem] font-extrabold leading-none tracking-tight tabular-nums md:text-[2.5rem] ${accent ? "text-emerald-400" : "text-slate-100"}`}>
           {value}
         </div>
-        <div className="mt-2.5 font-mono text-[10px] leading-relaxed text-slate-500/80">{sub}</div>
+        <div className="mt-3 font-mono text-[11px] leading-relaxed text-slate-500">{sub}</div>
       </div>
     </div>
   );
@@ -545,7 +545,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <style jsx global>{HOMEPAGE_KEYFRAMES}</style>
 
-      <section className="relative overflow-hidden border-b border-slate-800/30 pt-6 pb-16 md:pb-20 lg:pb-24">
+      <section className="relative overflow-hidden border-b border-slate-800/40 pt-6 pb-16 md:pb-20 lg:pb-24">
         <div
           className="pointer-events-none absolute inset-x-0 -top-24 h-[640px]"
           style={{ background: "radial-gradient(ellipse 1200px 550px at 50% -120px, rgba(16,185,129,0.08), transparent)" }}
@@ -562,7 +562,7 @@ export default function Home() {
               </HomepageReveal>
 
               <HomepageReveal delay={120}>
-                <h1 className="mt-5 text-4xl font-bold leading-[1.02] tracking-tight text-white sm:text-5xl md:text-6xl">
+                <h1 className="mt-5 text-4xl font-semibold leading-[1.02] tracking-tight text-white sm:text-5xl md:text-6xl">
                   Betting with
                   <br className="hidden md:block" />{" "}
                   <span className="relative inline-block text-emerald-400">
@@ -595,19 +595,19 @@ export default function Home() {
                     href="/player-props"
                     className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-6 py-3 text-base font-semibold text-white transition-all hover:bg-emerald-400 hover:shadow-[0_0_40px_rgba(16,185,129,0.2)]"
                   >
-                    Player Props Tips -&gt;
+                    Player Props Tips {"\u2192"}
                   </Link>
                   <Link
                     href="/tennis-tips"
                     className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-6 py-3 text-base font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
                   >
-                    ATP Tennis Tips -&gt;
+                    ATP Tennis Tips {"\u2192"}
                   </Link>
                   <Link
                     href="/the-edge"
                     className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 transition-colors hover:text-emerald-400"
                   >
-                    How It Works -&gt;
+                    How It Works {"\u2192"}
                   </Link>
                 </div>
               </HomepageReveal>
@@ -635,7 +635,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="border-b border-slate-800/30 py-14 md:py-16">
+      <section className="border-b border-slate-800/30 py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -645,7 +645,7 @@ export default function Home() {
               <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Track record</h2>
             </div>
             <Link href="/track-record" className="shrink-0 text-sm font-medium text-slate-500 transition-colors hover:text-emerald-400">
-              Full details -&gt;
+              Full details {"\u2192"}
             </Link>
           </div>
 
@@ -1135,13 +1135,13 @@ export default function Home() {
                   href="/player-props"
                   className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-8 py-3.5 text-[15px] font-semibold text-white transition-all hover:bg-emerald-400 hover:shadow-[0_0_50px_rgba(16,185,129,0.22)]"
                 >
-                  Player Props Tips -&gt;
+                  Player Props Tips {"\u2192"}
                 </Link>
                 <Link
                   href="/tennis-tips"
                   className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-8 py-3.5 text-[15px] font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
                 >
-                  ATP Tennis Tips -&gt;
+                  ATP Tennis Tips {"\u2192"}
                 </Link>
               </div>
             </div>
@@ -1152,9 +1152,9 @@ export default function Home() {
       <div className="mx-auto max-w-6xl px-4 pb-14 sm:px-6 lg:px-8">
         <div className="rounded-xl border border-amber-500/10 bg-amber-500/[0.03] px-5 py-4 text-[12px] leading-relaxed text-slate-500">
           <strong className="text-amber-400/80">Responsible gambling:</strong> Past performance does not guarantee future results. Only bet what you can afford to lose.{" "}
-          <a href="https://www.begambleaware.org" className="text-slate-400 underline underline-offset-2">BeGambleAware</a>
+          <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-slate-400 underline underline-offset-2">BeGambleAware</a>
           <span className="px-1.5 text-slate-500">·</span>
-          <a href="https://www.gamcare.org.uk" className="text-slate-400 underline underline-offset-2">GamCare</a>
+          <a href="https://www.gamcare.org.uk" target="_blank" rel="noopener noreferrer" className="text-slate-400 underline underline-offset-2">GamCare</a>
         </div>
       </div>
 
