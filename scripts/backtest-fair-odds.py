@@ -153,6 +153,11 @@ DEFAULT_CPI_LOOKBACK_YEARS = 3
 DEFAULT_CPI_MATCH_WEIGHT = 0.025
 DEFAULT_CPI_MATCH_CAP = 0.012
 DEFAULT_CPI_Z_CAP = 2.0
+MIN_TOURNAMENT_SPEED_MATCHES = 50
+TOURNAMENT_SPEED_LOOKBACK_DAYS = 365 * 3
+TOURNAMENT_SPEED_VENUE_FULL_MATCHES = 150
+DEFAULT_TOURNAMENT_SPEED_POINT_WEIGHT = 0.18
+SPEED_RATIO_CLAMP = (0.92, 1.08)
 
 POINT_WINDOW_12M_DAYS = 365
 POINT_WINDOW_36M_DAYS = 1095
@@ -189,6 +194,7 @@ class BacktestMatch:
     tournament: str
     location: str
     tournament_key: str
+    tournament_speed_key: str
     surface: str
     round_name: str
     series: str
@@ -212,6 +218,7 @@ class HistoryEvent:
     loser_id: int
     surface: str
     tour_key: str
+    tournament_speed_key: str
     winner_stats: tuple[int, ...] | None  # (svc_w, svc_t, ret_w, ret_t) or +5 decomposed
     loser_stats: tuple[int, ...] | None
 
@@ -236,6 +243,51 @@ def _int(v: Any, default: int | None = None) -> int | None:
 
 def _clamp(x: float, lo: float, hi: float) -> float:
     return max(lo, min(hi, x))
+
+
+def _sample_scale(match_count: int | None, full_matches: int) -> float:
+    if match_count is None:
+        return 0.0
+    if full_matches <= 0:
+        return 1.0
+    return _clamp(float(match_count) / float(full_matches), 0.0, 1.0)
+
+
+def _compute_tournament_speed_signal(
+    *,
+    league_avg: float,
+    venue_entry: dict[str, Any] | None,
+) -> tuple[float, dict[str, Any]]:
+    if league_avg <= 0.0:
+        return 0.0, {}
+
+    debug = {
+        "venue_spw": None,
+        "venue_spw_matches": 0,
+        "venue_ratio": None,
+        "venue_signal": 0.0,
+    }
+    if not venue_entry:
+        return 0.0, debug
+
+    venue_spw = _float(venue_entry.get("venue_avg_spw"))
+    venue_n = int(venue_entry.get("match_count") or 0)
+    if venue_spw is None or venue_spw <= 0.0:
+        return 0.0, debug
+
+    speed_ratio_span = max(SPEED_RATIO_CLAMP[1] - 1.0, 1.0 - SPEED_RATIO_CLAMP[0], 1e-6)
+    ratio = _clamp(venue_spw / league_avg, SPEED_RATIO_CLAMP[0], SPEED_RATIO_CLAMP[1])
+    signal = _clamp((ratio - 1.0) / speed_ratio_span, -1.0, 1.0)
+    signal *= _sample_scale(venue_n, TOURNAMENT_SPEED_VENUE_FULL_MATCHES)
+    debug.update(
+        {
+            "venue_spw": venue_spw,
+            "venue_spw_matches": venue_n,
+            "venue_ratio": ratio,
+            "venue_signal": signal,
+        }
+    )
+    return signal, debug
 
 
 def _logit(p: float) -> float:
@@ -300,6 +352,38 @@ def _tour_key(name: str) -> str:
     core = re.sub(r"\b(challenger|qualifiers?|qualifying|qualification|atp|wta)\b", " ", core)
     core = re.sub(r"[^a-z0-9]+", " ", core)
     return " ".join(core.split())
+
+
+def _normalize_speed_fragment(text: str | None) -> str:
+    raw = (text or "").strip().lower()
+    if not raw:
+        return ""
+    raw = raw.replace("&", " and ")
+    raw = raw.replace("’", "'")
+    raw = re.sub(r"\bu[\.\s]*s[\.\s]*\b", "us ", raw)
+    raw = re.sub(r"\bmen[' ]s\b", "mens", raw)
+    raw = re.sub(r"\bwomen[' ]s\b", "womens", raw)
+    raw = re.sub(r"\bchampionships\b", "championship", raw)
+    raw = re.sub(r"\bqualifiers?\b|\bqualifying\b|\bqualification\b", " ", raw)
+    raw = re.sub(r"\b(challenger|atp|wta)\b", " ", raw)
+    raw = re.sub(r"\b\d{4}\b", " ", raw)
+    raw = re.sub(r"[^a-z0-9]+", " ", raw)
+    return " ".join(raw.split())
+
+
+def _tournament_speed_key(name: str | None, location: str | None = None) -> str:
+    raw = (name or "").strip()
+    loc = (location or "").strip()
+    if not raw and not loc:
+        return ""
+    parts = [p.strip() for p in re.split(r"\s*-\s*", raw) if p.strip()]
+    title = parts[0] if parts else raw
+    inferred_location = parts[-1] if len(parts) >= 2 else ""
+    title_key = _normalize_speed_fragment(title)
+    location_key = _normalize_speed_fragment(loc or inferred_location)
+    if title_key and location_key:
+        return f"{title_key} {location_key}"
+    return title_key or location_key
 
 
 def _tour_key_candidates(*names: str) -> list[str]:
@@ -678,6 +762,9 @@ class ModelState:
         self.result_outcomes: dict[int, list[int]] = defaultdict(list)
 
         self.tour_history: dict[tuple[int, str], list[int]] = defaultdict(lambda: [0, 0])  # wins, matches
+        self.tournament_speed_hist: dict[tuple[str, str], dict[str, list[float] | list[int]]] = defaultdict(
+            lambda: {"dates": [], "serve_won_prefix": [0.0], "serve_total_prefix": [0.0], "match_prefix": [0]}
+        )
         self.h2h: dict[tuple[int, int, str], list[int]] = defaultdict(lambda: [0, 0, 0])  # wins_a, wins_b, matches
         self.vs_leftie: dict[tuple[int, str], list[int]] = defaultdict(lambda: [0, 0])  # wins, matches
 
@@ -714,6 +801,21 @@ class ModelState:
             tr_w[1] += 1
             tr_l = self.tour_history[(l, ev.tour_key)]
             tr_l[1] += 1
+            if ev.winner_stats and ev.loser_stats:
+                ws = ev.winner_stats
+                ls = ev.loser_stats
+                serve_won = float(ws[0] + ls[0])
+                serve_total = float(ws[1] + ls[1])
+                if serve_total > 0 and ev.tournament_speed_key:
+                    hist = self.tournament_speed_hist[(ev.tournament_speed_key, surf)]
+                    dates = hist["dates"]
+                    won_prefix = hist["serve_won_prefix"]
+                    total_prefix = hist["serve_total_prefix"]
+                    match_prefix = hist["match_prefix"]
+                    dates.append(ev.date_ord)
+                    won_prefix.append(won_prefix[-1] + serve_won)
+                    total_prefix.append(total_prefix[-1] + serve_total)
+                    match_prefix.append(match_prefix[-1] + 1)
 
         a, b = (w, l) if w < l else (l, w)
         for s in (surf, "N/A"):
@@ -923,6 +1025,36 @@ class ModelState:
         if not rec:
             return (0, 0)
         return (int(rec[0]), int(rec[1]))
+
+    def tournament_speed_profile(
+        self,
+        tournament_speed_key: str,
+        surface: str,
+        date_ord: int,
+        *,
+        lookback_days: int = TOURNAMENT_SPEED_LOOKBACK_DAYS,
+        min_matches: int = MIN_TOURNAMENT_SPEED_MATCHES,
+    ) -> dict[str, Any] | None:
+        if not tournament_speed_key:
+            return None
+        for s in _surface_candidates(surface):
+            hist = self.tournament_speed_hist.get((tournament_speed_key, s))
+            if not hist:
+                continue
+            dates = hist["dates"]
+            hi = bisect_left(dates, date_ord)
+            lo = bisect_left(dates, date_ord - lookback_days, 0, hi)
+            matches = hist["match_prefix"][hi] - hist["match_prefix"][lo]
+            serve_total = hist["serve_total_prefix"][hi] - hist["serve_total_prefix"][lo]
+            if matches < min_matches or serve_total <= 0:
+                continue
+            serve_won = hist["serve_won_prefix"][hi] - hist["serve_won_prefix"][lo]
+            return {
+                "surface_used": s,
+                "match_count": int(matches),
+                "venue_avg_spw": serve_won / serve_total,
+            }
+        return None
 
     def h2h_record(self, p1: int, p2: int, surface: str) -> tuple[int, int, int, int, int] | None:
         a, b = (p1, p2) if p1 < p2 else (p2, p1)
@@ -1204,6 +1336,8 @@ def _compute_match_probability(
     cpi_match_weight: float = DEFAULT_CPI_MATCH_WEIGHT,
     cpi_match_cap: float = DEFAULT_CPI_MATCH_CAP,
     cpi_z_cap: float = DEFAULT_CPI_Z_CAP,
+    tournament_speed_enabled: bool = True,
+    tournament_speed_point_weight: float = DEFAULT_TOURNAMENT_SPEED_POINT_WEIGHT,
     games_by_player: dict[int, list[dict[str, Any]]] | None = None,
     tour_surface_map: dict[int, str] | None = None,
 ) -> tuple[float, str, dict[str, Any]]:
@@ -1269,6 +1403,26 @@ def _compute_match_probability(
     league_avg = SURFACE_LEAGUE_AVG.get(surface, SURFACE_LEAGUE_AVG["N/A"])
     if league_avg <= 0.0 or league_avg >= 1.0:
         league_avg = 0.64
+    tour_speed_signal = 0.0
+    tour_speed_multiplier = 0.0
+    tour_speed_debug: dict[str, Any] = {}
+    hold1_model = hold1_eff
+    hold2_model = hold2_eff
+    ret1_model = ret1_eff
+    ret2_model = ret2_eff
+    if tournament_speed_enabled and tournament_speed_point_weight > 0.0:
+        venue_entry = state.tournament_speed_profile(match.tournament_speed_key, surface, match.date_ord)
+        tour_speed_signal, tour_speed_debug = _compute_tournament_speed_signal(
+            league_avg=league_avg,
+            venue_entry=venue_entry,
+        )
+        if abs(tour_speed_signal) > 1e-9:
+            tour_speed_multiplier = _clamp(tour_speed_signal * tournament_speed_point_weight, -0.35, 0.35)
+            return_baseline = 1.0 - league_avg
+            hold1_model = _clamp(league_avg + (hold1_eff - league_avg) * (1.0 + tour_speed_multiplier), POINT_CLAMP[0], POINT_CLAMP[1])
+            hold2_model = _clamp(league_avg + (hold2_eff - league_avg) * (1.0 + tour_speed_multiplier), POINT_CLAMP[0], POINT_CLAMP[1])
+            ret1_model = _clamp(return_baseline + (ret1_eff - return_baseline) * (1.0 - tour_speed_multiplier), RETURN_CLAMP[0], RETURN_CLAMP[1])
+            ret2_model = _clamp(return_baseline + (ret2_eff - return_baseline) * (1.0 - tour_speed_multiplier), RETURN_CLAMP[0], RETURN_CLAMP[1])
 
     matchup_method = "legacy"
     if use_matchup_model and HAS_MATCHUP_MODEL and (s1 or s2):
@@ -1298,10 +1452,10 @@ def _compute_match_probability(
                 row["ret_vs_second_win_pct"] = _blend(s, "ret_vs_second_win_pct", "ret_vs_second_win_pct_long")
             return row
 
-        # Use SPW/RPW-scale adjusted values so matchup branch is consistent with
+        # Use venue-speed adjusted SPW/RPW values so matchup branch is consistent with
         # the fallback branch and live fair-odds pipeline.
-        row1 = _build_matchup_row(s1 or {}, hold1_eff, ret1_eff)
-        row2 = _build_matchup_row(s2 or {}, hold2_eff, ret2_eff)
+        row1 = _build_matchup_row(s1 or {}, hold1_model, ret1_model)
+        row2 = _build_matchup_row(s2 or {}, hold2_model, ret2_model)
         stats_a = MatchupStats.from_db_row(row1)
         stats_b = MatchupStats.from_db_row(row2)
         p_a, p_b, _ = compute_match_point_probs(stats_a, stats_b, surface)
@@ -1314,12 +1468,12 @@ def _compute_match_probability(
             matchup_method = "neither_decomposed"
     elif use_v2_formula and HAS_HYBRID_V2:
         p_a, p_b = compute_point_probs_bc(
-            hold1_eff, ret1_eff, hold2_eff, ret2_eff,
+            hold1_model, ret1_model, hold2_model, ret2_model,
             surface, league_avg=SURFACE_LEAGUE_AVG
         )
     else:
-        p_a = _clamp((hold1_eff * (1.0 - ret2_eff)) / league_avg, POINT_CLAMP[0], POINT_CLAMP[1])
-        p_b = _clamp((hold2_eff * (1.0 - ret1_eff)) / league_avg, POINT_CLAMP[0], POINT_CLAMP[1])
+        p_a = _clamp((hold1_model * (1.0 - ret2_model)) / league_avg, POINT_CLAMP[0], POINT_CLAMP[1])
+        p_b = _clamp((hold2_model * (1.0 - ret1_model)) / league_avg, POINT_CLAMP[0], POINT_CLAMP[1])
     is_best_of_5 = (match.series or "").strip() == "Grand Slam"
     p_serve_return = prob_match_best_of_5(p_a, p_b) if is_best_of_5 else prob_match_best_of_3(p_a, p_b)
 
@@ -1562,6 +1716,10 @@ def _compute_match_probability(
         "cpi_year": cpi_year,
         "cpi_z": cpi_z,
         "cpi_delta": cpi_delta,
+        "tournament_speed_signal": tour_speed_signal,
+        "tournament_speed_multiplier": tour_speed_multiplier,
+        "tournament_speed_venue_spw": tour_speed_debug.get("venue_spw"),
+        "tournament_speed_match_count": tour_speed_debug.get("venue_spw_matches"),
         "matchup_method": matchup_method,
     }
     return p1_win, confidence, debug
@@ -1678,6 +1836,7 @@ def _load_challenger_matches(
                 tournament=tournament,
                 location="",
                 tournament_key=_tour_key(tournament),
+                tournament_speed_key=_tournament_speed_key(tournament),
                 surface=surface,
                 round_name="",
                 series="Challenger",
@@ -1755,6 +1914,7 @@ def _load_backtest_matches(paths: list[Path]) -> tuple[list[BacktestMatch], Coun
                 tournament_key = _tour_key(f"{tournament} - {location}".strip(" -"))
                 if not tournament_key:
                     tournament_key = _tour_key(tournament)
+                tournament_speed_key = _tournament_speed_key(tournament, location)
 
                 winner_rank = _int(row[idx.get("WRank")]) if "WRank" in idx else None
                 loser_rank = _int(row[idx.get("LRank")]) if "LRank" in idx else None
@@ -1783,6 +1943,7 @@ def _load_backtest_matches(paths: list[Path]) -> tuple[list[BacktestMatch], Coun
                     tournament=tournament,
                     location=location,
                     tournament_key=tournament_key,
+                    tournament_speed_key=tournament_speed_key,
                     surface=surface,
                     round_name=str(row[idx["Round"]] or "").strip(),
                     series=str(row[idx["Series"]] or "").strip(),
@@ -1893,8 +2054,9 @@ def _load_tour_info(tours_path: Path, courts_path: Path) -> dict[int, dict[str, 
                 "date_ord": d.toordinal() if d else None,
                 "surface": surface,
                 "tour_key": _tour_key(name),
-            "is_supported": _is_supported_tour(name, rank),
-        }
+                "tournament_speed_key": _tournament_speed_key(name),
+                "is_supported": _is_supported_tour(name, rank),
+            }
     return out
 
 
@@ -2095,6 +2257,7 @@ def _history_from_oncourt(
                     loser_id=int(l),
                     surface=str(tour.get("surface") or "N/A"),
                     tour_key=str(tour.get("tour_key") or ""),
+                    tournament_speed_key=str(tour.get("tournament_speed_key") or ""),
                     winner_stats=winner_stats,
                     loser_stats=loser_stats,
                 )
@@ -2317,6 +2480,8 @@ def main() -> None:
     parser.add_argument("--cpi-match-weight", type=float, default=DEFAULT_CPI_MATCH_WEIGHT)
     parser.add_argument("--cpi-match-cap", type=float, default=DEFAULT_CPI_MATCH_CAP)
     parser.add_argument("--cpi-z-cap", type=float, default=DEFAULT_CPI_Z_CAP)
+    parser.add_argument("--no-tournament-speed-overlay", action="store_true", help="Disable tournament-speed overlay based on prior editions of the same event.")
+    parser.add_argument("--tournament-speed-point-weight", type=float, default=DEFAULT_TOURNAMENT_SPEED_POINT_WEIGHT)
     parser.add_argument(
         "--policy-exclude-atp500-hard-short-favs",
         action="store_true",
@@ -2423,6 +2588,8 @@ def main() -> None:
     cpi_match_weight = _clamp(float(args.cpi_match_weight), 0.0, 0.15)
     cpi_match_cap = _clamp(float(args.cpi_match_cap), 0.0, 0.08)
     cpi_z_cap = _clamp(float(args.cpi_z_cap), 0.2, 6.0)
+    tournament_speed_enabled = not bool(getattr(args, "no_tournament_speed_overlay", False))
+    tournament_speed_point_weight = _clamp(float(args.tournament_speed_point_weight), 0.0, 0.40)
     cpi_lookup: dict[tuple[int, str, str], float] = {}
     cpi_year_surface_stats: dict[tuple[int, str], tuple[float, float]] = {}
     cpi_surface_stats: dict[str, tuple[float, float]] = {}
@@ -2456,6 +2623,12 @@ def main() -> None:
         )
     else:
         print("CPI overlay: disabled")
+    print(
+        "Tournament speed overlay: "
+        f"{'enabled' if tournament_speed_enabled else 'disabled'} "
+        f"(weight={tournament_speed_point_weight:.3f}, lookback_days={TOURNAMENT_SPEED_LOOKBACK_DAYS}, "
+        f"min_matches={MIN_TOURNAMENT_SPEED_MATCHES})"
+    )
 
     if getattr(args, "v2", False):
         if HAS_HYBRID_V2:
@@ -2597,6 +2770,8 @@ def main() -> None:
             cpi_match_weight=cpi_match_weight,
             cpi_match_cap=cpi_match_cap,
             cpi_z_cap=cpi_z_cap,
+            tournament_speed_enabled=tournament_speed_enabled,
+            tournament_speed_point_weight=tournament_speed_point_weight,
             games_by_player=games_by_player,
             tour_surface_map=tour_surface_map,
         )
@@ -2662,6 +2837,10 @@ def main() -> None:
             "cpi_year": debug.get("cpi_year"),
             "cpi_z": debug.get("cpi_z"),
             "cpi_delta": debug.get("cpi_delta"),
+            "tournament_speed_signal": debug.get("tournament_speed_signal"),
+            "tournament_speed_multiplier": debug.get("tournament_speed_multiplier"),
+            "tournament_speed_venue_spw": debug.get("tournament_speed_venue_spw"),
+            "tournament_speed_match_count": debug.get("tournament_speed_match_count"),
             "score": m.score,
         }
         results.append(record)
@@ -2697,6 +2876,13 @@ def main() -> None:
         print(
             f"  CPI overlay usage: resolved={cpi_resolved}/{len(results)} "
             f"adjusted={cpi_adjusted} (weight={cpi_match_weight:.3f}, cap={cpi_match_cap:.3f})"
+        )
+    if tournament_speed_enabled:
+        speed_resolved = sum(1 for r in results if abs(float(r.get("tournament_speed_signal") or 0.0)) > 1e-9)
+        speed_adjusted = sum(1 for r in results if abs(float(r.get("tournament_speed_multiplier") or 0.0)) > 1e-9)
+        print(
+            f"  Tournament speed usage: resolved={speed_resolved}/{len(results)} "
+            f"adjusted={speed_adjusted} (weight={tournament_speed_point_weight:.3f})"
         )
     misprice_min = getattr(args, "misprice_fav_odds_min", DEFAULT_MISPRICE_MODEL_FAV_ODDS_MIN)
     misprice_excluded = sum(1 for r in eval_results if _is_mispriced_model_vs_pinnacle(r))

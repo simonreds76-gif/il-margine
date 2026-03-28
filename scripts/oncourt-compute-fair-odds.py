@@ -106,6 +106,12 @@ TOURNAMENT_TOTAL_SHIFT_CAP = 1.5
 MIN_TOUR_MATCHES_FOR_SHIFT = 30
 MIN_VENUE_SPW_MATCHES = 50
 SPEED_RATIO_CLAMP = (0.92, 1.08)
+TOURNAMENT_SPEED_VENUE_COMPONENT_WEIGHT = 0.75
+TOURNAMENT_SPEED_SHIFT_COMPONENT_WEIGHT = 0.25
+TOURNAMENT_SPEED_VENUE_FULL_MATCHES = 150
+TOURNAMENT_SPEED_SHIFT_FULL_MATCHES = 90
+TOURNAMENT_SPEED_SHIFT_SIGNAL_SCALE = 2.0
+DEFAULT_TOURNAMENT_SPEED_POINT_WEIGHT = 0.18
 
 FORM_WEIGHT = 0.07
 FORM_CAP = 0.03
@@ -371,6 +377,81 @@ def _solve_spw_for_match_prob(p1_win, avg_spw, clamp_lo=0.48, clamp_hi=0.82, tol
 
 def _clamp(x, lo, hi):
     return max(lo, min(hi, x))
+
+
+def _sample_scale(match_count, full_matches):
+    if match_count is None:
+        return 0.0
+    if full_matches <= 0:
+        return 1.0
+    return _clamp(float(match_count) / float(full_matches), 0.0, 1.0)
+
+
+def _compute_tournament_speed_signal(
+    *,
+    league_avg,
+    venue_entry,
+    tour_shift_entry,
+):
+    if league_avg is None or league_avg <= 0.0:
+        return 0.0, {}
+
+    parts = []
+    debug = {
+        "venue_spw": None,
+        "venue_spw_matches": 0,
+        "venue_ratio": None,
+        "venue_signal": 0.0,
+        "tour_shift": None,
+        "tour_shift_matches": 0,
+        "tour_shift_signal": 0.0,
+    }
+
+    speed_ratio_span = max(SPEED_RATIO_CLAMP[1] - 1.0, 1.0 - SPEED_RATIO_CLAMP[0], 1e-6)
+
+    if venue_entry:
+        venue_spw = _float(venue_entry.get("venue_avg_spw"))
+        venue_n = int(venue_entry.get("match_count") or 0)
+        if venue_spw is not None and venue_spw > 0.0:
+            ratio = _clamp(venue_spw / league_avg, SPEED_RATIO_CLAMP[0], SPEED_RATIO_CLAMP[1])
+            signal = _clamp((ratio - 1.0) / speed_ratio_span, -1.0, 1.0)
+            weight = TOURNAMENT_SPEED_VENUE_COMPONENT_WEIGHT * _sample_scale(venue_n, TOURNAMENT_SPEED_VENUE_FULL_MATCHES)
+            if weight > 0.0:
+                parts.append((signal, weight))
+            debug.update(
+                {
+                    "venue_spw": venue_spw,
+                    "venue_spw_matches": venue_n,
+                    "venue_ratio": ratio,
+                    "venue_signal": signal,
+                }
+            )
+
+    if tour_shift_entry:
+        shift = _float(tour_shift_entry.get("shift_from_surface"))
+        shift_n = int(tour_shift_entry.get("match_count") or 0)
+        if shift is not None:
+            signal = _clamp(shift / TOURNAMENT_SPEED_SHIFT_SIGNAL_SCALE, -1.0, 1.0)
+            weight = TOURNAMENT_SPEED_SHIFT_COMPONENT_WEIGHT * _sample_scale(shift_n, TOURNAMENT_SPEED_SHIFT_FULL_MATCHES)
+            if weight > 0.0:
+                parts.append((signal, weight))
+            debug.update(
+                {
+                    "tour_shift": shift,
+                    "tour_shift_matches": shift_n,
+                    "tour_shift_signal": signal,
+                }
+            )
+
+    if not parts:
+        return 0.0, debug
+
+    total_weight = sum(weight for _signal, weight in parts)
+    if total_weight <= 0.0:
+        return 0.0, debug
+
+    blended_signal = sum(signal * weight for signal, weight in parts) / total_weight
+    return _clamp(blended_signal, -1.0, 1.0), debug
 
 
 def _logit(p):
@@ -1613,7 +1694,10 @@ def main():
                     shift = row.get("shift_from_surface")
                     n = int(row.get("match_count") or 0)
                     if tid is not None and surf and shift is not None and n >= MIN_TOUR_MATCHES_FOR_SHIFT:
-                        tour_shift_lookup[(int(tid), surf)] = float(shift)
+                        tour_shift_lookup[(int(tid), surf)] = {
+                            "shift_from_surface": float(shift),
+                            "match_count": n,
+                        }
         except Exception:
             pass
     print(f"  Tournament totals shift: {len(tour_shift_lookup):,} rows" + (" (active)" if tour_shift_lookup else " (run oncourt-compute-tournament-avg-games.py)"))
@@ -1634,7 +1718,10 @@ def main():
                     spw = row.get("venue_avg_spw")
                     n = int(row.get("match_count") or 0)
                     if tid is not None and surf and spw is not None and n >= MIN_VENUE_SPW_MATCHES:
-                        venue_serve_lookup[(int(tid), surf)] = float(spw)
+                        venue_serve_lookup[(int(tid), surf)] = {
+                            "venue_avg_spw": float(spw),
+                            "match_count": n,
+                        }
         except Exception:
             pass
     if venue_serve_lookup:
@@ -2153,6 +2240,11 @@ def main():
         0.0,
         1.0,
     )
+    tournament_speed_point_weight = _clamp(
+        _env_float("FAIR_ODDS_TOUR_SPEED_POINT_WEIGHT", DEFAULT_TOURNAMENT_SPEED_POINT_WEIGHT),
+        0.0,
+        0.40,
+    )
 
     cpi_lookup = {}
     cpi_year_surface_stats = {}
@@ -2161,6 +2253,8 @@ def main():
     cpi_delta_applied_matches = 0
     cpi_total_used_matches = 0
     cpi_rows_loaded = 0
+    tournament_speed_resolved_matches = 0
+    tournament_speed_adjusted_matches = 0
 
     if cpi_enabled:
         fixture_tour_ids = set()
@@ -2463,12 +2557,42 @@ def main():
         league_avg = league_avg_by_surface.get(surface, 0.64)
         if league_avg <= 0 or league_avg >= 1:
             league_avg = 0.64
+        tour_speed_signal = 0.0
+        tour_speed_debug = {}
+        if tournament_speed_point_weight > 0.0 and tour_id is not None:
+            venue_entry = venue_serve_lookup.get((int(tour_id), surface))
+            tour_shift_entry = tour_shift_lookup.get((int(tour_id), surface))
+            tour_speed_signal, tour_speed_debug = _compute_tournament_speed_signal(
+                league_avg=league_avg,
+                venue_entry=venue_entry,
+                tour_shift_entry=tour_shift_entry,
+            )
+            if abs(tour_speed_signal) > 1e-9:
+                tournament_speed_resolved_matches += 1
+
+        hold1_model = hold1_eff
+        hold2_model = hold2_eff
+        ret1_model = ret1_eff
+        ret2_model = ret2_eff
+        tour_speed_multiplier = 0.0
+        if abs(tour_speed_signal) > 1e-9 and tournament_speed_point_weight > 0.0:
+            tour_speed_multiplier = _clamp(
+                tour_speed_signal * tournament_speed_point_weight,
+                -0.35,
+                0.35,
+            )
+            return_baseline = 1.0 - league_avg
+            hold1_model = _clamp(league_avg + (hold1_eff - league_avg) * (1.0 + tour_speed_multiplier), POINT_CLAMP[0], POINT_CLAMP[1])
+            hold2_model = _clamp(league_avg + (hold2_eff - league_avg) * (1.0 + tour_speed_multiplier), POINT_CLAMP[0], POINT_CLAMP[1])
+            ret1_model = _clamp(return_baseline + (ret1_eff - return_baseline) * (1.0 - tour_speed_multiplier), RETURN_CLAMP[0], RETURN_CLAMP[1])
+            ret2_model = _clamp(return_baseline + (ret2_eff - return_baseline) * (1.0 - tour_speed_multiplier), RETURN_CLAMP[0], RETURN_CLAMP[1])
+            tournament_speed_adjusted_matches += 1
 
         if v2_model is not None:
             p_a, p_b, _ = v2_model.point_probs(
                 p1, p2, surface,
-                hold1=hold1_eff, ret1=ret1_eff,
-                hold2=hold2_eff, ret2=ret2_eff,
+                hold1=hold1_model, ret1=ret1_model,
+                hold2=hold2_model, ret2=ret2_model,
                 league_avg=league_avg,
             )
             p_a = _clamp(p_a, POINT_CLAMP[0], POINT_CLAMP[1])
@@ -2499,16 +2623,16 @@ def main():
                     row["bp_convert_rate"] = _float(s.get("bp_convert_rate"))
                 return row
 
-            # Use SPW-scale adjusted values (hold*_eff/ret*_eff), consistent with
+            # Use venue-speed adjusted SPW values when available, consistent with
             # the fallback branch and tennis_prob expectations.
-            row1 = _build_matchup_row(s1, hold1_eff, ret1_eff)
-            row2 = _build_matchup_row(s2, hold2_eff, ret2_eff)
+            row1 = _build_matchup_row(s1, hold1_model, ret1_model)
+            row2 = _build_matchup_row(s2, hold2_model, ret2_model)
             stats_a = MatchupStats.from_db_row(row1)
             stats_b = MatchupStats.from_db_row(row2)
             p_a, p_b, _ = compute_match_point_probs(stats_a, stats_b, surface)
         else:
-            p_a = (hold1_eff * (1.0 - ret2_eff)) / league_avg
-            p_b = (hold2_eff * (1.0 - ret1_eff)) / league_avg
+            p_a = (hold1_model * (1.0 - ret2_model)) / league_avg
+            p_b = (hold2_model * (1.0 - ret1_model)) / league_avg
             p_a = _clamp(p_a, POINT_CLAMP[0], POINT_CLAMP[1])
             p_b = _clamp(p_b, POINT_CLAMP[0], POINT_CLAMP[1])
 
@@ -2997,7 +3121,8 @@ def main():
         # avg_spw for this surface (used as centre point for the solve)
         avg_spw_surface_base = league_avg_by_surface.get(surface, 0.64)
         avg_spw_surface = avg_spw_surface_base
-        venue_spw = venue_serve_lookup.get((tid, surface)) if tid is not None else None
+        venue_entry = venue_serve_lookup.get((tid, surface)) if tid is not None else None
+        venue_spw = _float((venue_entry or {}).get("venue_avg_spw"))
         cpi_ratio = 1.0
         cpi_used_in_totals = False
 
@@ -3034,7 +3159,8 @@ def main():
         exp_games = expected_total_games_best_of_5(p_a_eg, p_b_eg) if is_best_of_5 else expected_total_games_best_of_3(p_a_eg, p_b_eg)
 
         # Tournament residual shift (e.g. court speed effects not captured by venue SPW)
-        tour_shift = tour_shift_lookup.get((tid, surface)) if tid is not None else None
+        tour_shift_entry = tour_shift_lookup.get((tid, surface)) if tid is not None else None
+        tour_shift = _float((tour_shift_entry or {}).get("shift_from_surface"))
         if tour_shift is not None:
             raw_add = TOURNAMENT_TOTAL_WEIGHT * tour_shift
             exp_games += max(-TOURNAMENT_TOTAL_SHIFT_CAP, min(TOURNAMENT_TOTAL_SHIFT_CAP, raw_add))
@@ -3087,6 +3213,17 @@ def main():
                 print(f"    p_elo={p_elo:.4f} p_rank={p_rank} p_serve_return={p_serve_return:.4f} weights(sr/elo/rank)=({sr_weight:.2f}/{elo_weight:.2f}/{rank_weight:.2f}) -> p1_win={p1_win:.4f} (after adj+cal), series={series_bucket}, challenger={is_challenger}")
                 print(f"    Class jump: current={current_class_score:.1f} recent_avg=({p1_hist.get('recent_class_avg')}/{p2_hist.get('recent_class_avg')})  elo_penalty=({class_penalty_elo_1:.1f}/{class_penalty_elo_2:.1f})")
                 print(f"    Effective SPW inputs: P1 serve={hold1_eff:.3f} ret={ret1_eff:.3f} | P2 serve={hold2_eff:.3f} ret={ret2_eff:.3f} | shifts hold={hold_shift:+.3f} ret={ret_shift:+.3f}")
+                print(
+                    f"    Tournament speed: signal={tour_speed_signal:+.3f} mult={tour_speed_multiplier:+.3f} "
+                    f"venue_spw={tour_speed_debug.get('venue_spw')} n={tour_speed_debug.get('venue_spw_matches')} "
+                    f"ratio={tour_speed_debug.get('venue_ratio')} shift={tour_speed_debug.get('tour_shift')} "
+                    f"shift_n={tour_speed_debug.get('tour_shift_matches')}"
+                )
+                if abs(tour_speed_multiplier) > 1e-9:
+                    print(
+                        f"    Venue-adjusted SPW: P1 serve={hold1_model:.3f} ret={ret1_model:.3f} | "
+                        f"P2 serve={hold2_model:.3f} ret={ret2_model:.3f}"
+                    )
                 print(
                     f"    Injury: p1={p1_recent_injured}({p1_injury_mode}) "
                     f"p2={p2_recent_injured}({p2_injury_mode}) "
@@ -3155,6 +3292,12 @@ def main():
             f"rows={cpi_rows_loaded:,}, resolved_matches={cpi_resolved_matches}, "
             f"delta_applied={cpi_delta_applied_matches}, totals_used={cpi_total_used_matches}"
         )
+    print(
+        "  Tournament speed overlay: "
+        f"weight={tournament_speed_point_weight:.3f}, "
+        f"resolved_matches={tournament_speed_resolved_matches}, "
+        f"adjusted_matches={tournament_speed_adjusted_matches}"
+    )
     if out:
         for row in out[:3]:
             print(f"  P1={row['player1_id']} P2={row['player2_id']} surface={row['surface']} P1={row['p1_win_prob']} odds1={row['odds1']} odds2={row['odds2']}")
