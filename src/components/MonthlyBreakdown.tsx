@@ -70,13 +70,16 @@ export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBrea
   const hasMore = rows.length > INITIAL_ROWS;
 
   return (
-    <div className="rounded-lg border border-slate-800 bg-slate-900/50 overflow-hidden">
-      <div className="px-4 py-3 border-b border-slate-800">
-        <h3 className="text-sm font-semibold text-slate-200">Monthly breakdown</h3>
-        <p className="text-xs text-slate-500 mt-0.5">{SUBTITLE_BY_SCOPE[scope]}</p>
+    <div className="overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0c0f14]">
+      <div className="border-b border-slate-800/40 px-5 py-4">
+        <span className="block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
+          Month by month
+        </span>
+        <h3 className="mt-2 text-xl font-semibold text-slate-100">Monthly breakdown</h3>
+        <p className="mt-1 text-sm text-slate-500">{SUBTITLE_BY_SCOPE[scope]}</p>
       </div>
       {/* Mobile: tap to expand each month */}
-      <div className="md:hidden divide-y divide-slate-800/50">
+      <div className="divide-y divide-slate-800/40 md:hidden">
         {displayed.map((r) => {
           const isOpen = openMonth === r.month;
           return (
@@ -84,10 +87,10 @@ export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBrea
               key={r.month}
               type="button"
               onClick={() => setOpenMonth(isOpen ? null : r.month)}
-              className="w-full px-4 py-3 text-left transition-colors active:bg-slate-800/50"
+              className="w-full px-4 py-3 text-left transition-colors active:bg-slate-800/35"
             >
               <div className="flex items-center justify-between gap-2">
-                <span className="text-slate-200 font-medium">{formatMonth(r.month)}</span>
+                <span className="font-medium text-slate-200">{formatMonth(r.month)}</span>
                 <span className="flex items-center gap-2">
                   <span className={`font-mono font-medium ${Number(r.total_profit) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
                     {Number(r.total_profit) >= 0 ? "+" : ""}{Number(r.total_profit).toFixed(2)}u
@@ -100,7 +103,7 @@ export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBrea
                 </span>
               </div>
               {isOpen && (
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-mono text-slate-500 mt-2 pt-2 border-t border-slate-800/50">
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 border-t border-slate-800/40 pt-2 text-xs font-mono text-slate-500">
                   <span>{r.total_bets} bets</span>
                   <span>{r.wins}-{r.losses}</span>
                   <span>{Number(r.total_stake).toFixed(1)}u staked</span>
@@ -117,7 +120,7 @@ export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBrea
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase">
+            <tr className="border-b border-slate-800/40 text-[11px] uppercase text-slate-500">
               <th className="px-4 py-3 text-left">Month</th>
               <th className="px-4 py-3 text-right">Bets</th>
               <th className="px-4 py-3 text-right">W-L</th>
@@ -128,7 +131,7 @@ export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBrea
           </thead>
           <tbody>
             {displayed.map((r) => (
-              <tr key={r.month} className="border-b border-slate-800/50">
+              <tr key={r.month} className="border-b border-slate-800/40 last:border-b-0">
                 <td className="px-4 py-3 text-slate-200">{formatMonth(r.month)}</td>
                 <td className="px-4 py-3 text-right font-mono text-slate-300">{r.total_bets}</td>
                 <td className="px-4 py-3 text-right font-mono text-slate-300">{r.wins}-{r.losses}</td>
@@ -145,7 +148,7 @@ export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBrea
         </table>
       </div>
       {hasMore && !displayAll && (
-        <div className="px-4 py-3 border-t border-slate-800 text-center">
+        <div className="border-t border-slate-800/40 px-4 py-3 text-center">
           <button
             onClick={() => setExpanded(true)}
             className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
@@ -155,7 +158,7 @@ export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBrea
         </div>
       )}
       {hasMore && displayAll && !showAll && (
-        <div className="px-4 py-2 border-t border-slate-800 text-center">
+        <div className="border-t border-slate-800/40 px-4 py-2 text-center">
           <button
             onClick={() => setExpanded(false)}
             className="text-xs text-slate-500 hover:text-slate-400 transition-colors"
@@ -167,3 +170,4 @@ export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBrea
     </div>
   );
 }
+

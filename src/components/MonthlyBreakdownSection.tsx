@@ -32,10 +32,11 @@ export default function MonthlyBreakdownSection({ scope }: MonthlyBreakdownSecti
   if (show !== true) return null;
 
   return (
-    <section className="py-12 md:py-16 border-b border-slate-800/50 bg-slate-900/20">
+    <section className="border-b border-slate-800/30 py-16 md:py-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <MonthlyBreakdown scope={scope} />
       </div>
     </section>
   );
 }
+
