@@ -157,6 +157,8 @@ MIN_TOURNAMENT_SPEED_MATCHES = 50
 TOURNAMENT_SPEED_LOOKBACK_DAYS = 365 * 3
 TOURNAMENT_SPEED_VENUE_FULL_MATCHES = 150
 DEFAULT_TOURNAMENT_SPEED_POINT_WEIGHT = 0.18
+DEFAULT_TOURNAMENT_SPEED_ARCHETYPE_WEIGHT = 1.25
+DEFAULT_TOURNAMENT_SPEED_ARCHETYPE_CAP = 0.012
 SPEED_RATIO_CLAMP = (0.92, 1.08)
 
 POINT_WINDOW_12M_DAYS = 365
@@ -288,6 +290,28 @@ def _compute_tournament_speed_signal(
         }
     )
     return signal, debug
+
+
+def _compute_tournament_speed_archetype_delta(
+    *,
+    tour_speed_signal: float,
+    hold1: float,
+    ret1: float,
+    hold2: float,
+    ret2: float,
+    weight: float,
+    cap: float,
+) -> tuple[float, dict[str, float]]:
+    serve_adv = hold1 - hold2
+    return_adv = ret1 - ret2
+    style_edge = serve_adv - return_adv
+    delta = _clamp(tour_speed_signal * style_edge * weight, -cap, cap)
+    return delta, {
+        "serve_adv": serve_adv,
+        "return_adv": return_adv,
+        "style_edge": style_edge,
+        "shape_signal": style_edge,
+    }
 
 
 def _logit(p: float) -> float:
@@ -1343,6 +1367,9 @@ def _compute_match_probability(
     cpi_z_cap: float = DEFAULT_CPI_Z_CAP,
     tournament_speed_enabled: bool = True,
     tournament_speed_point_weight: float = DEFAULT_TOURNAMENT_SPEED_POINT_WEIGHT,
+    tournament_speed_archetype_enabled: bool = False,
+    tournament_speed_archetype_weight: float = DEFAULT_TOURNAMENT_SPEED_ARCHETYPE_WEIGHT,
+    tournament_speed_archetype_cap: float = DEFAULT_TOURNAMENT_SPEED_ARCHETYPE_CAP,
     games_by_player: dict[int, list[dict[str, Any]]] | None = None,
     tour_surface_map: dict[int, str] | None = None,
 ) -> tuple[float, str, dict[str, Any]]:
@@ -1636,6 +1663,9 @@ def _compute_match_probability(
         p1_win = _sigmoid(z)
 
     delta_p1 = 0.0
+    serve_adv = hold1_eff - hold2_eff
+    return_adv = ret1_eff - ret2_eff
+    style_edge = serve_adv - return_adv
     h2h_row = state.h2h_record(p1, p2, surface)
     if h2h_row:
         a, _b, wins_a, wins_b, h2h_n = h2h_row
@@ -1652,9 +1682,31 @@ def _compute_match_probability(
     cpi_delta = 0.0
     if cpi_enabled and cpi_value is not None and cpi_match_weight > 0.0:
         # Same conservative style-speed interaction as live fair-odds.
-        style_edge = (hold1 - hold2) - (ret1 - ret2)
         cpi_delta = _clamp(cpi_z * style_edge * cpi_match_weight, -cpi_match_cap, cpi_match_cap)
         delta_p1 += structural_mult * cpi_delta
+
+    tournament_speed_archetype_delta = 0.0
+    tournament_speed_archetype_debug: dict[str, float] = {
+        "serve_adv": serve_adv,
+        "return_adv": return_adv,
+        "style_edge": style_edge,
+    }
+    if (
+        tournament_speed_archetype_enabled
+        and tournament_speed_archetype_weight > 0.0
+        and tournament_speed_archetype_cap > 0.0
+        and abs(tour_speed_signal) > 1e-9
+    ):
+        tournament_speed_archetype_delta, tournament_speed_archetype_debug = _compute_tournament_speed_archetype_delta(
+            tour_speed_signal=tour_speed_signal,
+            hold1=hold1_eff,
+            ret1=ret1_eff,
+            hold2=hold2_eff,
+            ret2=ret2_eff,
+            weight=tournament_speed_archetype_weight,
+            cap=tournament_speed_archetype_cap,
+        )
+        delta_p1 += structural_mult * tournament_speed_archetype_delta
 
     if HAS_FATIGUE_MODEL and games_by_player is not None and tour_surface_map is not None:
         p1_form = _form_component_only(act1, e1_s, birthdate_by_player.get(p1), match_dt)
@@ -1695,6 +1747,7 @@ def _compute_match_probability(
     cap_components = [
         VS_LEFTIE_CAP,
         cpi_match_cap if cpi_enabled else 0.0,
+        tournament_speed_archetype_cap if tournament_speed_archetype_enabled else 0.0,
         AGE_CAP,
         FORM_TOTAL_CAP,
         RESULTS_FORM_TOTAL_CAP,
@@ -1725,6 +1778,11 @@ def _compute_match_probability(
         "tournament_speed_multiplier": tour_speed_multiplier,
         "tournament_speed_venue_spw": tour_speed_debug.get("venue_spw"),
         "tournament_speed_match_count": tour_speed_debug.get("venue_spw_matches"),
+        "tournament_speed_archetype_delta": tournament_speed_archetype_delta,
+        "tournament_speed_style_edge": tournament_speed_archetype_debug.get("style_edge"),
+        "tournament_speed_serve_adv": tournament_speed_archetype_debug.get("serve_adv"),
+        "tournament_speed_return_adv": tournament_speed_archetype_debug.get("return_adv"),
+        "tournament_speed_shape_signal": tournament_speed_archetype_debug.get("shape_signal"),
         "matchup_method": matchup_method,
     }
     return p1_win, confidence, debug
@@ -2447,6 +2505,10 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         "p_a",
         "p_b",
         "confidence",
+        "tournament_speed_signal",
+        "tournament_speed_multiplier",
+        "tournament_speed_archetype_delta",
+        "tournament_speed_style_edge",
         "score",
     ]
     with open(path, "w", encoding="utf-8", newline="") as f:
@@ -2487,6 +2549,23 @@ def main() -> None:
     parser.add_argument("--cpi-z-cap", type=float, default=DEFAULT_CPI_Z_CAP)
     parser.add_argument("--no-tournament-speed-overlay", action="store_true", help="Disable tournament-speed overlay based on prior editions of the same event.")
     parser.add_argument("--tournament-speed-point-weight", type=float, default=DEFAULT_TOURNAMENT_SPEED_POINT_WEIGHT)
+    parser.add_argument(
+        "--enable-tournament-speed-archetype-overlay",
+        action="store_true",
+        help="Add a conservative style-aware venue-speed delta (penalize return-led profiles in fast venues, and vice versa).",
+    )
+    parser.add_argument(
+        "--tournament-speed-archetype-weight",
+        type=float,
+        default=DEFAULT_TOURNAMENT_SPEED_ARCHETYPE_WEIGHT,
+        help="Weight for style-aware tournament-speed delta (default: 1.25).",
+    )
+    parser.add_argument(
+        "--tournament-speed-archetype-cap",
+        type=float,
+        default=DEFAULT_TOURNAMENT_SPEED_ARCHETYPE_CAP,
+        help="Cap for style-aware tournament-speed delta (default: 0.012).",
+    )
     parser.add_argument(
         "--policy-exclude-atp500-hard-short-favs",
         action="store_true",
@@ -2595,6 +2674,9 @@ def main() -> None:
     cpi_z_cap = _clamp(float(args.cpi_z_cap), 0.2, 6.0)
     tournament_speed_enabled = not bool(getattr(args, "no_tournament_speed_overlay", False))
     tournament_speed_point_weight = _clamp(float(args.tournament_speed_point_weight), 0.0, 0.40)
+    tournament_speed_archetype_enabled = bool(getattr(args, "enable_tournament_speed_archetype_overlay", False))
+    tournament_speed_archetype_weight = _clamp(float(args.tournament_speed_archetype_weight), 0.0, 3.0)
+    tournament_speed_archetype_cap = _clamp(float(args.tournament_speed_archetype_cap), 0.0, 0.05)
     cpi_lookup: dict[tuple[int, str, str], float] = {}
     cpi_year_surface_stats: dict[tuple[int, str], tuple[float, float]] = {}
     cpi_surface_stats: dict[str, tuple[float, float]] = {}
@@ -2777,6 +2859,9 @@ def main() -> None:
             cpi_z_cap=cpi_z_cap,
             tournament_speed_enabled=tournament_speed_enabled,
             tournament_speed_point_weight=tournament_speed_point_weight,
+            tournament_speed_archetype_enabled=tournament_speed_archetype_enabled,
+            tournament_speed_archetype_weight=tournament_speed_archetype_weight,
+            tournament_speed_archetype_cap=tournament_speed_archetype_cap,
             games_by_player=games_by_player,
             tour_surface_map=tour_surface_map,
         )
@@ -2846,6 +2931,10 @@ def main() -> None:
             "tournament_speed_multiplier": debug.get("tournament_speed_multiplier"),
             "tournament_speed_venue_spw": debug.get("tournament_speed_venue_spw"),
             "tournament_speed_match_count": debug.get("tournament_speed_match_count"),
+            "tournament_speed_archetype_delta": debug.get("tournament_speed_archetype_delta"),
+            "tournament_speed_style_edge": debug.get("tournament_speed_style_edge"),
+            "tournament_speed_serve_adv": debug.get("tournament_speed_serve_adv"),
+            "tournament_speed_return_adv": debug.get("tournament_speed_return_adv"),
             "score": m.score,
         }
         results.append(record)
@@ -2888,6 +2977,12 @@ def main() -> None:
         print(
             f"  Tournament speed usage: resolved={speed_resolved}/{len(results)} "
             f"adjusted={speed_adjusted} (weight={tournament_speed_point_weight:.3f})"
+        )
+    if tournament_speed_archetype_enabled:
+        arche_adjusted = sum(1 for r in results if abs(float(r.get("tournament_speed_archetype_delta") or 0.0)) > 1e-9)
+        print(
+            f"  Tournament speed archetype usage: adjusted={arche_adjusted}/{len(results)} "
+            f"(weight={tournament_speed_archetype_weight:.3f}, cap={tournament_speed_archetype_cap:.3f})"
         )
     misprice_min = getattr(args, "misprice_fav_odds_min", DEFAULT_MISPRICE_MODEL_FAV_ODDS_MIN)
     misprice_excluded = sum(1 for r in eval_results if _is_mispriced_model_vs_pinnacle(r))
