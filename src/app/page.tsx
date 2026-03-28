@@ -601,7 +601,7 @@ export default function Home() {
                     href="/tennis-tips"
                     className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-6 py-3 text-base font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
                   >
-                    ATP Tennis Tips
+                    ATP Tennis Tips -&gt;
                   </Link>
                   <Link
                     href="/the-edge"
@@ -1141,7 +1141,7 @@ export default function Home() {
                   href="/tennis-tips"
                   className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-8 py-3.5 text-[15px] font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
                 >
-                  ATP Tennis Tips
+                  ATP Tennis Tips -&gt;
                 </Link>
               </div>
             </div>

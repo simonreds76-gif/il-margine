@@ -10,7 +10,7 @@ const ROGER_ENABLED = true;
 // Match Tailwind sm (640px): ChatWidget uses full overlay below this, compact card above
 const MOBILE_MAX_WIDTH_PX = 640;
 
-const TENNIS_PAGES = ["/", "/tennis-tips", "/player-props", "/atp-tennis", "/fair-odds"];
+const TENNIS_PAGES = ["/tennis-tips", "/player-props", "/atp-tennis", "/fair-odds"];
 
 export default function RogerTeaser() {
   const pathname = usePathname();
