@@ -142,7 +142,7 @@ function HomepageReveal({ children, delay = 0, className = "" }: { children: Rea
 
 function HomepageEdgeCard() {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-slate-700/35 bg-[#0a0d12] p-5 shadow-2xl shadow-black/35 md:p-6">
+    <div className="relative overflow-hidden rounded-2xl border border-slate-700/35 bg-[#0a0d12] p-6 shadow-2xl shadow-black/35 md:p-7">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.02]"
         style={{
@@ -165,16 +165,16 @@ function HomepageEdgeCard() {
 
       <div className="relative">
         <div className="mb-4 flex items-center justify-between">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/85">
+          <span className="text-[11px] font-mono font-bold uppercase tracking-[0.16em] text-emerald-400/90">
             How we find edge
           </span>
           <span className="flex items-center gap-1.5">
             <span className="h-[5px] w-[5px] rounded-full bg-emerald-400" style={{ animation: "homepage-pulse 2s ease-in-out infinite" }} />
-            <span className="text-[8px] font-mono uppercase tracking-[0.16em] text-slate-600">Live example</span>
+            <span className="text-[9px] font-mono uppercase tracking-[0.14em] text-slate-600">Live example</span>
           </span>
         </div>
 
-        <div className="font-mono text-[13px]">
+        <div className="font-mono text-[14px] md:text-[15px]">
           {EDGE_ROWS.map(([label, value], index) => (
             <div
               key={label}
@@ -184,8 +184,8 @@ function HomepageEdgeCard() {
                 animationDelay: `${700 + index * 180}ms`,
               }}
             >
-              <span className="text-slate-500">{label}</span>
-              <span className="font-medium tabular-nums text-slate-200">{value}</span>
+              <span className="text-slate-400">{label}</span>
+              <span className="text-[15px] font-semibold tabular-nums text-slate-100 md:text-base">{value}</span>
             </div>
           ))}
 
@@ -196,12 +196,12 @@ function HomepageEdgeCard() {
               animationDelay: "1450ms",
             }}
           >
-            <span className="text-[13px] font-semibold text-emerald-400">Edge</span>
-            <span className="font-mono text-[28px] font-black tracking-[-0.04em] text-emerald-400">+11.1%</span>
+            <span className="text-[15px] font-semibold text-emerald-400">Edge</span>
+            <span className="font-mono text-[32px] font-black tracking-[-0.04em] text-emerald-400 md:text-[36px]">+11.1%</span>
           </div>
         </div>
 
-        <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-slate-600">
+        <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.12em] text-slate-600">
           When their price exceeds fair value, we act.
         </p>
       </div>
@@ -310,11 +310,11 @@ function ExploreCard({ href, title, body }: { href: string; title: string; body:
   return (
     <Link
       href={href}
-      className="group rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 transition-all duration-300 hover:-translate-y-[1px] hover:border-emerald-500/20 sm:p-5"
+      className="group flex h-full flex-col rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 transition-all duration-300 hover:-translate-y-[1px] hover:border-emerald-500/20 sm:p-5"
     >
       <h3 className="mb-1 text-[14px] font-semibold text-slate-200 transition-colors group-hover:text-white">{title}</h3>
       <p className="text-[12px] leading-[1.6] text-slate-600 transition-colors group-hover:text-slate-500">{body}</p>
-      <span className="mt-3 inline-flex font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-400/45 transition-colors group-hover:text-emerald-400/85">
+      <span className="mt-auto pt-4 inline-flex font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-400/45 transition-colors group-hover:text-emerald-400/85">
         View -&gt;
       </span>
     </Link>
@@ -1066,39 +1066,42 @@ export default function Home() {
             {(
               [
                 {
-                  q: "What is Il Margine?",
-                  title: "What is Il Margine?",
-                  summary: "A professional betting analysis service from a former odds compiler. We find edge in player props and ATP tennis.",
+                  q: "What does \"betting with mathematical edge\" mean?",
+                  title: "What does \"betting with mathematical edge\" mean?",
+                  summary: "It means pricing the bet first, then only acting when the odds on offer are bigger than the true probability.",
                 },
                 {
-                  q: "How do I start following Il Margine's betting tips?",
+                  q: "Why do you focus on player props and tennis instead of mainstream match odds?",
+                  title: "Why focus on props and tennis?",
+                  summary: "Because those markets give us more room to price better than the number on offer than generic headline markets do.",
+                },
+                {
+                  q: "How do I follow Il Margine's betting tips?",
                   title: "How do I follow the tips?",
-                  summary: "All tips are posted directly on the website. Tennis tips, player props, and all selections are free - no payment, no sign-up required.",
+                  summary: "Everything is posted directly on the site. No Telegram, no paywall, no sign-up needed to start.",
                 },
                 {
-                  q: "What is ROI and why does it matter more than win rate?",
-                  title: "What is ROI and why does it matter?",
-                  summary: "Return on investment. It matters more than win rate. You can win often and still lose money.",
+                  q: "Why does ROI matter more than win rate?",
+                  title: "Why does ROI matter more than win rate?",
+                  summary: "Because winning often means nothing if the prices are poor. ROI tells you whether the process is actually profitable.",
                 },
                 {
-                  q: "How much does Il Margine cost?",
-                  title: "How much does it cost?",
-                  summary: "Free. We're growing our follower base; all tips are free with no trial or card required.",
-                },
-                {
-                  q: "What are player props in football betting?",
-                  title: "What are player props?",
-                  summary: "Bets on individual player stats (e.g. shots on target, fouls) rather than the match result.",
+                  q: "Do I need Telegram or a paid subscription to follow the tips?",
+                  title: "Do I need Telegram or a subscription?",
+                  summary: "No. The picks are published on the website itself, so you can just take the price and follow from there.",
                 },
               ] as const
             ).map((item) => (
               <Link
                 key={item.q}
                 href={`/faq#${questionSlug(item.q)}`}
-                className="block rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 text-left transition-colors hover:border-emerald-500/25 sm:p-5"
+                className="group flex h-full flex-col rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 text-left transition-all duration-300 hover:-translate-y-[1px] hover:border-emerald-500/25 sm:p-5"
               >
-                <h3 className="mb-1 font-medium text-slate-200">{item.title}</h3>
-                <p className="text-sm text-slate-500">{item.summary}</p>
+                <h3 className="mb-2 text-[15px] font-medium text-slate-200 transition-colors group-hover:text-white">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-slate-500 transition-colors group-hover:text-slate-400">{item.summary}</p>
+                <span className="mt-auto pt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-400/45 transition-colors group-hover:text-emerald-400/85">
+                  Read answer -&gt;
+                </span>
               </Link>
             ))}
           </div>
