@@ -361,6 +361,8 @@ def _normalize_speed_fragment(text: str | None) -> str:
     raw = raw.replace("&", " and ")
     raw = raw.replace("’", "'")
     raw = re.sub(r"\bu[\.\s]*s[\.\s]*\b", "us ", raw)
+    raw = re.sub(r"\bmens[' ]s\b", "mens", raw)
+    raw = re.sub(r"\bwomens[' ]s\b", "womens", raw)
     raw = re.sub(r"\bmen[' ]s\b", "mens", raw)
     raw = re.sub(r"\bwomen[' ]s\b", "womens", raw)
     raw = re.sub(r"\bchampionships\b", "championship", raw)
@@ -805,7 +807,10 @@ class ModelState:
                 ws = ev.winner_stats
                 ls = ev.loser_stats
                 serve_won = float(ws[0] + ls[0])
-                serve_total = float(ws[1] + ls[1])
+                if len(ws) >= 6 and len(ls) >= 6:
+                    serve_total = float(ws[5] + ls[5])
+                else:
+                    serve_total = float(ws[1] + ls[1])
                 if serve_total > 0 and ev.tournament_speed_key:
                     hist = self.tournament_speed_hist[(ev.tournament_speed_key, surf)]
                     dates = hist["dates"]

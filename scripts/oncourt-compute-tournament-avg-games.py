@@ -131,6 +131,8 @@ def _normalize_speed_fragment(text: str | None) -> str:
     raw = raw.replace("&", " and ")
     raw = raw.replace("’", "'")
     raw = re.sub(r"\bu[\.\s]*s[\.\s]*\b", "us ", raw)
+    raw = re.sub(r"\bmens[' ]s\b", "mens", raw)
+    raw = re.sub(r"\bwomens[' ]s\b", "womens", raw)
     raw = re.sub(r"\bmen[' ]s\b", "mens", raw)
     raw = re.sub(r"\bwomen[' ]s\b", "womens", raw)
     raw = re.sub(r"\bchampionships\b", "championship", raw)
@@ -233,12 +235,9 @@ def _aggregate_tour_stats(tours: dict[int, TourMeta]) -> dict[int, TourAgg]:
                 + int(row.get("l_w1s") or 0)
                 + int(row.get("l_w2s") or 0)
             )
-            serve_total = (
-                int(row.get("w_fsof") or 0)
-                + int(row.get("w_w2sof") or 0)
-                + int(row.get("l_fsof") or 0)
-                + int(row.get("l_w2sof") or 0)
-            )
+            # OnCourt total service points are carried by *_fsof. The *_w2sof
+            # columns are second-serve opportunities, not extra points.
+            serve_total = int(row.get("w_fsof") or 0) + int(row.get("l_fsof") or 0)
             if serve_total <= 0:
                 continue
             agg = aggs[tid]
