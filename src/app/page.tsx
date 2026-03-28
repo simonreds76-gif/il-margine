@@ -595,13 +595,19 @@ export default function Home() {
                     href="/player-props"
                     className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-6 py-3 text-base font-semibold text-white transition-all hover:bg-emerald-400 hover:shadow-[0_0_40px_rgba(16,185,129,0.2)]"
                   >
-                    View Tips -&gt;
+                    Player Props Tips -&gt;
+                  </Link>
+                  <Link
+                    href="/tennis-tips"
+                    className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-6 py-3 text-base font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
+                  >
+                    ATP Tennis Tips
                   </Link>
                   <Link
                     href="/the-edge"
-                    className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-6 py-3 text-base font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 transition-colors hover:text-emerald-400"
                   >
-                    How It Works
+                    How It Works -&gt;
                   </Link>
                 </div>
               </HomepageReveal>
@@ -1124,12 +1130,20 @@ export default function Home() {
               <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-slate-300">
                 Free selections posted on site. Match, market, selection, odds, bookmaker, and stake. Everything needed to place the bet with clarity.
               </p>
-              <Link
-                href="/player-props"
-                className="mt-8 inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-8 py-3.5 text-[15px] font-semibold text-white transition-all hover:bg-emerald-400 hover:shadow-[0_0_50px_rgba(16,185,129,0.22)]"
-              >
-                View Tips -&gt;
-              </Link>
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                <Link
+                  href="/player-props"
+                  className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-8 py-3.5 text-[15px] font-semibold text-white transition-all hover:bg-emerald-400 hover:shadow-[0_0_50px_rgba(16,185,129,0.22)]"
+                >
+                  Player Props Tips -&gt;
+                </Link>
+                <Link
+                  href="/tennis-tips"
+                  className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-8 py-3.5 text-[15px] font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
+                >
+                  ATP Tennis Tips
+                </Link>
+              </div>
             </div>
           </div>
         </div>
