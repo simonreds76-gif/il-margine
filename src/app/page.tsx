@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
@@ -142,7 +142,7 @@ function HomepageReveal({ children, delay = 0, className = "" }: { children: Rea
 
 function HomepageEdgeCard() {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-slate-700/35 bg-[#0a0d12] p-6 shadow-2xl shadow-black/35 md:p-7">
+    <div className="relative overflow-hidden rounded-2xl border border-slate-700/35 bg-[#0a0d12] p-6 shadow-2xl shadow-black/35 md:p-8">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.02]"
         style={{
@@ -165,43 +165,43 @@ function HomepageEdgeCard() {
 
       <div className="relative">
         <div className="mb-4 flex items-center justify-between">
-          <span className="text-[11px] font-mono font-bold uppercase tracking-[0.16em] text-emerald-400/90">
+          <span className="text-xs font-mono font-bold uppercase tracking-[0.14em] text-emerald-400/95">
             How we find edge
           </span>
           <span className="flex items-center gap-1.5">
             <span className="h-[5px] w-[5px] rounded-full bg-emerald-400" style={{ animation: "homepage-pulse 2s ease-in-out infinite" }} />
-            <span className="text-[9px] font-mono uppercase tracking-[0.14em] text-slate-600">Live example</span>
+            <span className="text-[10px] font-mono uppercase tracking-[0.12em] text-slate-600">Live example</span>
           </span>
         </div>
 
-        <div className="font-mono text-[14px] md:text-[15px]">
+        <div className="font-mono text-[15px] md:text-base">
           {EDGE_ROWS.map(([label, value], index) => (
             <div
               key={label}
-              className="flex items-center justify-between border-b border-slate-800/40 py-[9px]"
+              className="flex items-center justify-between border-b border-slate-800/40 py-[10px]"
               style={{
                 animation: "homepage-edge-row 0.55s cubic-bezier(0.16,1,0.3,1) both",
                 animationDelay: `${700 + index * 180}ms`,
               }}
             >
-              <span className="text-slate-400">{label}</span>
-              <span className="text-[15px] font-semibold tabular-nums text-slate-100 md:text-base">{value}</span>
+              <span className="text-slate-300">{label}</span>
+              <span className="text-[17px] font-semibold tabular-nums text-slate-100 md:text-[18px]">{value}</span>
             </div>
           ))}
 
           <div
-            className="-mx-1.5 mt-3 flex items-center justify-between rounded-xl border px-4 py-3.5"
+            className="-mx-1.5 mt-3 flex items-center justify-between rounded-xl border px-4 py-4"
             style={{
               animation: "homepage-edge-result 0.7s cubic-bezier(0.16,1,0.3,1) both",
               animationDelay: "1450ms",
             }}
           >
-            <span className="text-[15px] font-semibold text-emerald-400">Edge</span>
-            <span className="font-mono text-[32px] font-black tracking-[-0.04em] text-emerald-400 md:text-[36px]">+11.1%</span>
+            <span className="text-[17px] font-semibold text-emerald-400 md:text-[18px]">Edge</span>
+            <span className="font-mono text-[34px] font-black tracking-[-0.04em] text-emerald-400 md:text-[40px]">+11.1%</span>
           </div>
         </div>
 
-        <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.12em] text-slate-600">
+        <p className="mt-3 font-mono text-xs uppercase tracking-[0.12em] text-slate-600">
           When their price exceeds fair value, we act.
         </p>
       </div>
@@ -314,8 +314,8 @@ function ExploreCard({ href, title, body }: { href: string; title: string; body:
     >
       <h3 className="mb-1 text-[14px] font-semibold text-slate-200 transition-colors group-hover:text-white">{title}</h3>
       <p className="text-[12px] leading-[1.6] text-slate-600 transition-colors group-hover:text-slate-500">{body}</p>
-      <span className="mt-auto pt-4 inline-flex font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-400/45 transition-colors group-hover:text-emerald-400/85">
-        View -&gt;
+      <span className="mt-auto inline-flex w-full items-center justify-between pt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-400/45 transition-colors group-hover:text-emerald-400/85">
+        View page -&gt;
       </span>
     </Link>
   );
@@ -874,9 +874,13 @@ export default function Home() {
                 <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">Latest results</span>
                 <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Recent selections</h2>
               </div>
-              {last7DaysProfit != null && !last7Error && last7DaysProfit > 0 ? (
-                <span className="font-mono text-xs text-emerald-400 sm:text-sm">
-                  Last 7 days: +{last7DaysProfit.toFixed(2)}u
+              {last7DaysProfit != null && !last7Error && last7DaysCount > 0 ? (
+                <span
+                  className={`font-mono text-xs sm:text-sm ${
+                    last7DaysProfit > 0 ? "text-emerald-400" : last7DaysProfit < 0 ? "text-red-400" : "text-slate-300"
+                  }`}
+                >
+                  Last 7 days: {last7DaysProfit > 0 ? "+" : ""}{last7DaysProfit.toFixed(2)}u
                   <span className="ml-1 font-normal text-slate-500">
                     ({last7DaysCount} bet{last7DaysCount !== 1 ? "s" : ""})
                   </span>
@@ -1067,28 +1071,23 @@ export default function Home() {
               [
                 {
                   q: "What does \"betting with mathematical edge\" mean?",
-                  title: "What does \"betting with mathematical edge\" mean?",
-                  summary: "It means pricing the bet first, then only acting when the odds on offer are bigger than the true probability.",
+                  title: "What makes a bet value instead of just a guess?",
+                  summary: "We price the event first, then only act when the odds on screen are bigger than the true probability.",
                 },
                 {
                   q: "Why do you focus on player props and tennis instead of mainstream match odds?",
-                  title: "Why focus on props and tennis?",
-                  summary: "Because those markets give us more room to price better than the number on offer than generic headline markets do.",
+                  title: "Why these markets instead of headline match odds?",
+                  summary: "Because player props and selective ATP tennis give us more room to beat the screen than generic top-line markets do.",
                 },
                 {
                   q: "How do I follow Il Margine's betting tips?",
-                  title: "How do I follow the tips?",
-                  summary: "Everything is posted directly on the site. No Telegram, no paywall, no sign-up needed to start.",
+                  title: "Where do the tips actually get posted?",
+                  summary: "Directly on the site. You get the market, price, bookmaker, and stake there without Telegram or a paywall.",
                 },
                 {
                   q: "Why does ROI matter more than win rate?",
-                  title: "Why does ROI matter more than win rate?",
-                  summary: "Because winning often means nothing if the prices are poor. ROI tells you whether the process is actually profitable.",
-                },
-                {
-                  q: "Do I need Telegram or a paid subscription to follow the tips?",
-                  title: "Do I need Telegram or a subscription?",
-                  summary: "No. The picks are published on the website itself, so you can just take the price and follow from there.",
+                  title: "How should I judge whether the picks actually work?",
+                  summary: "Not by raw win rate. ROI tells you whether the prices taken are genuinely profitable over a real sample.",
                 },
               ] as const
             ).map((item) => (
@@ -1139,7 +1138,8 @@ export default function Home() {
       <div className="mx-auto max-w-6xl px-4 pb-14 sm:px-6 lg:px-8">
         <div className="rounded-xl border border-amber-500/10 bg-amber-500/[0.03] px-5 py-4 text-[12px] leading-relaxed text-slate-500">
           <strong className="text-amber-400/80">Responsible gambling:</strong> Past performance does not guarantee future results. Only bet what you can afford to lose.{" "}
-          <a href="https://www.begambleaware.org" className="text-slate-400 underline underline-offset-2">BeGambleAware</a> ·{" "}
+          <a href="https://www.begambleaware.org" className="text-slate-400 underline underline-offset-2">BeGambleAware</a>
+          <span className="px-1.5 text-slate-500">·</span>
           <a href="https://www.gamcare.org.uk" className="text-slate-400 underline underline-offset-2">GamCare</a>
         </div>
       </div>
@@ -1148,4 +1148,7 @@ export default function Home() {
     </div>
   );
 }
+
+
+
 
