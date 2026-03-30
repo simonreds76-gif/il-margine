@@ -29,6 +29,7 @@ export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState<"add" | "pending" | "recent" | "settings">("add");
   const [bookmakers, setBookmakers] = useState<Bookmaker[]>([]);
   const [pendingBets, setPendingBets] = useState<Bet[]>([]);
+  const [pendingCount, setPendingCount] = useState<number | null>(null);
   const [recentBets, setRecentBets] = useState<Bet[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -177,13 +178,32 @@ export default function AdminPanel() {
         .select("*, bookmaker:bookmakers(*)")
         .eq("status", "pending")
         .order("posted_at", { ascending: false });
-      if (data) setPendingBets(data);
+      if (data) {
+        setPendingBets(data);
+        setPendingCount(data.length);
+      }
       if (error) console.error("Pending bets error:", error);
     } catch (e) {
       console.error("fetchPendingBets:", e);
       if (!adminError) setAdminError("Could not load data.");
     }
   }, [adminError]);
+
+  const fetchPendingCount = useCallback(async () => {
+    try {
+      const { count, error } = await supabase
+        .from("bets")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "pending");
+      if (error) {
+        console.error("Pending bet count error:", error);
+        return;
+      }
+      setPendingCount(count ?? 0);
+    } catch (e) {
+      console.error("fetchPendingCount:", e);
+    }
+  }, []);
 
   const fetchRecentBets = useCallback(async () => {
     try {
@@ -231,11 +251,12 @@ export default function AdminPanel() {
     if (!isLoggedIn) return;
 
     const timeoutId = window.setTimeout(() => {
+      void fetchPendingCount();
       void ensureTabData(activeTab);
     }, 0);
 
     return () => window.clearTimeout(timeoutId);
-  }, [activeTab, ensureTabData, isLoggedIn]);
+  }, [activeTab, ensureTabData, fetchPendingCount, isLoggedIn]);
 
   const handleAddBet = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -263,6 +284,7 @@ export default function AdminPanel() {
       setMessage({ type: "success", text: "Bet added successfully!" });
       setForm({ ...form, event: "", player: "", selection: "", odds: "", match_date: new Date().toISOString().slice(0, 10), notes: "" });
       fetchPendingBets();
+      fetchPendingCount();
     } else {
       setMessage({ type: "error", text: data.error || "Failed to add bet" });
     }
@@ -291,6 +313,7 @@ export default function AdminPanel() {
     if (res.ok) {
       setMessage({ type: "success", text: `Bet marked as ${status}. P/L: ${profitLoss > 0 ? "+" : ""}${profitLoss.toFixed(2)}u` });
       await fetchPendingBets();
+      await fetchPendingCount();
       await fetchRecentBets();
     } else {
       setMessage({ type: "error", text: data.error || "Failed to settle" });
@@ -304,6 +327,7 @@ export default function AdminPanel() {
     if (res.ok) {
       setMessage({ type: "success", text: "Bet deleted" });
       fetchPendingBets();
+      fetchPendingCount();
       fetchRecentBets();
     } else {
       setMessage({ type: "error", text: data.error || "Failed to delete" });
@@ -374,6 +398,7 @@ export default function AdminPanel() {
       setMessage({ type: "success", text: "Pick updated. Stats will reflect the change." });
       setEditingBet(null);
       await fetchPendingBets();
+      await fetchPendingCount();
       await fetchRecentBets();
     } else {
       setMessage({ type: "error", text: data.error || "Failed to update" });
@@ -452,7 +477,7 @@ export default function AdminPanel() {
         <div className="max-w-4xl mx-auto flex">
           {[
             { id: "add", label: "Add Bet" },
-            { id: "pending", label: "Pending" },
+            { id: "pending", label: "Pending", count: pendingCount },
             { id: "recent", label: "Recent" },
             { id: "settings", label: "Settings" },
           ].map((tab) => (
@@ -465,7 +490,16 @@ export default function AdminPanel() {
                   : "text-slate-400 hover:text-slate-100"
               }`}
             >
-              {tab.label}
+              <span>{tab.label}</span>
+              {tab.id === "pending" && tab.count != null ? (
+                <span
+                  className={`ml-2 inline-flex min-w-6 items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                    activeTab === tab.id ? "bg-emerald-500/20 text-emerald-300" : "bg-slate-800 text-slate-300"
+                  }`}
+                >
+                  {tab.count}
+                </span>
+              ) : null}
             </button>
           ))}
         </div>
