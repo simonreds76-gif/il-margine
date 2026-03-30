@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import fs from "node:fs";
-import path from "node:path";
+import { resolveConfiguredProjectFilePath } from "@/lib/project-file-paths";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -144,8 +144,10 @@ const STRICT_POLICY_PRODUCTION_MODE: StrictPolicyMode =
   (process.env.STRICT_POLICY_PRODUCTION_MODE ?? "base").trim().toLowerCase() === "overlay"
     ? "overlay"
     : "base";
-const STRICT_OVERLAY_POLICY_FILE =
-  process.env.STRICT_OVERLAY_POLICY_FILE ?? path.join("data", "backtest", "tournament-segment-roi.csv");
+const STRICT_OVERLAY_POLICY_FILE = resolveConfiguredProjectFilePath(
+  process.env.STRICT_OVERLAY_POLICY_FILE,
+  "data/backtest/tournament-segment-roi.csv",
+);
 const STRICT_OVERLAY_WINDOW = process.env.STRICT_OVERLAY_WINDOW ?? "prior_editions";
 const STRICT_OVERLAY_FAMILY: "seed" | "entry" =
   (process.env.STRICT_OVERLAY_FAMILY ?? "seed").trim().toLowerCase() === "entry" ? "entry" : "seed";
@@ -157,8 +159,10 @@ const STRICT_OVERLAY_MISSING_MODE: OverlayMissingMode =
     : "skip";
 const STRICT_INJURY_OVERLAY_ENABLED = parseBoolEnv("STRICT_INJURY_OVERLAY_ENABLED", false);
 const STRICT_INJURY_LOOKBACK_DAYS = parseNumberEnv("STRICT_INJURY_LOOKBACK_DAYS", 14);
-const INJURED_PLAYERS_CSV =
-  process.env.INJURED_PLAYERS_CSV ?? path.join("data", "injured-players-tennisexplorer.csv");
+const INJURED_PLAYERS_CSV = resolveConfiguredProjectFilePath(
+  process.env.INJURED_PLAYERS_CSV,
+  "data/injured-players-tennisexplorer.csv",
+);
 
 const HANDICAP_MIN_EDGE_PCT = 20;
 const STRICT_UNIT_GBP = parseNumberEnv("STRICT_UNIT_GBP", 100);
@@ -628,7 +632,7 @@ function parseIsoDateOnly(value: string): Date | null {
 }
 
 function loadInjuryIndex(todayIso: string): InjuryIndex {
-  const csvPath = path.resolve(process.cwd(), INJURED_PLAYERS_CSV);
+  const csvPath = INJURED_PLAYERS_CSV;
   const out: InjuryIndex = {
     csvPath,
     lookbackDays: Math.max(0, Math.floor(STRICT_INJURY_LOOKBACK_DAYS)),
@@ -693,7 +697,7 @@ function isRecentInjuredPlayer(playerName: string, injuryIndex: InjuryIndex): { 
 function loadOverlayPolicyLookup(): OverlayLookupIndex {
   const out: OverlayLookup = new Map();
   const yearsByKeySide: OverlayYearsByKeySide = new Map();
-  const absPath = path.resolve(process.cwd(), STRICT_OVERLAY_POLICY_FILE);
+  const absPath = STRICT_OVERLAY_POLICY_FILE;
   if (!fs.existsSync(absPath)) return { lookup: out, yearsByKeySide };
 
   let text = "";
@@ -1523,7 +1527,7 @@ async function run(): Promise<Response> {
     STRICT_POLICY_MODE && STRICT_POLICY_PRODUCTION_MODE === "overlay"
       ? {
           enabled: true,
-          policy_file: path.resolve(process.cwd(), STRICT_OVERLAY_POLICY_FILE),
+          policy_file: STRICT_OVERLAY_POLICY_FILE,
           window: STRICT_OVERLAY_WINDOW,
           family: STRICT_OVERLAY_FAMILY,
           min_n: STRICT_OVERLAY_MIN_N,

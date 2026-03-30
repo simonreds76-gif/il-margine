@@ -1,9 +1,9 @@
 import "server-only";
 
 import { promises as fs } from "fs";
-import path from "path";
 import { cache } from "react";
 
+import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
 type SnapshotFileEntry =
@@ -52,7 +52,9 @@ export async function readGoalscorerLiveFile(relativePath: string): Promise<stri
   if (typeof hosted === "string") return hosted;
 
   try {
-    return await fs.readFile(path.join(process.cwd(), relativePath), "utf8");
+    const fullPath = tryGetKnownProjectFilePath(relativePath);
+    if (!fullPath) return null;
+    return await fs.readFile(fullPath, "utf8");
   } catch {
     return null;
   }
@@ -73,7 +75,9 @@ export async function readGoalscorerLiveMtime(relativePath: string): Promise<str
   if (typeof hosted === "string") return hosted;
 
   try {
-    const stat = await fs.stat(path.join(process.cwd(), relativePath));
+    const fullPath = tryGetKnownProjectFilePath(relativePath);
+    if (!fullPath) return null;
+    const stat = await fs.stat(fullPath);
     return stat.mtime.toISOString();
   } catch {
     return null;

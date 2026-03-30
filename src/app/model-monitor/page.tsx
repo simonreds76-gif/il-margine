@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { promises as fs } from "fs";
-import path from "path";
+import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
 import { notFound } from "next/navigation";
 
 type CsvRow = Record<string, string>;
@@ -117,7 +117,9 @@ function parseCsv(text: string): CsvRow[] {
 
 async function readLocalFile(relPath: string): Promise<string | null> {
   try {
-    return await fs.readFile(path.join(process.cwd(), relPath), "utf8");
+    const fullPath = tryGetKnownProjectFilePath(relPath);
+    if (!fullPath) return null;
+    return await fs.readFile(fullPath, "utf8");
   } catch {
     return null;
   }
@@ -125,7 +127,9 @@ async function readLocalFile(relPath: string): Promise<string | null> {
 
 async function readLocalMtime(relPath: string): Promise<string | null> {
   try {
-    const stat = await fs.stat(path.join(process.cwd(), relPath));
+    const fullPath = tryGetKnownProjectFilePath(relPath);
+    if (!fullPath) return null;
+    const stat = await fs.stat(fullPath);
     return stat.mtime.toISOString();
   } catch {
     return null;

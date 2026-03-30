@@ -435,6 +435,7 @@ export default function CalculatorPage() {
   const impliedProbability = oddsValue > 0 ? 100 / oddsValue : 0;
   const edge = probabilityValue - impliedProbability;
   const hasEdge = rawKelly > 0;
+  const kellyChartBankroll = bankrollValue > 0 ? bankrollValue : 1000;
 
   const kellyPaths = useMemo(() => {
     const colors: Record<number, string> = {
@@ -449,13 +450,13 @@ export default function CalculatorPage() {
       color: colors[preset.value],
       active: preset.value === fraction,
       pts: simulateKellyGrowth(
-        Math.max(bankrollValue, 1000),
+        kellyChartBankroll,
         oddsValue > 1 ? oddsValue : 2.1,
         probabilityValue > 0 ? probabilityValue : 54,
         preset.value
       ),
     }));
-  }, [bankrollValue, oddsValue, probabilityValue, fraction]);
+  }, [kellyChartBankroll, oddsValue, probabilityValue, fraction]);
 
   const stakeValue = Math.max(0, parseNum(stake));
   const totalStaked = stakeValue * recordSummary.totalBets;
@@ -741,8 +742,13 @@ export default function CalculatorPage() {
 
               <div className="mb-5">
                 <ChartShell title="Expected bankroll growth" subtitle="200 bets · fractional Kelly curves">
-                  <GrowthChart paths={kellyPaths} baseline={Math.max(bankrollValue, 1000)} />
+                  <GrowthChart paths={kellyPaths} baseline={kellyChartBankroll} />
                 </ChartShell>
+                {!hasEdge ? (
+                  <div className="mt-3 rounded-lg border border-rose-500/20 bg-rose-500/[0.05] px-4 py-3 font-mono text-[13px] text-rose-300">
+                    No edge at these inputs. Kelly says do not bet, so the bankroll curve stays flat at your starting bankroll.
+                  </div>
+                ) : null}
                 <div className="mt-3 flex flex-wrap gap-3">
                   {kellyPaths.map((path) => (
                     <button
@@ -838,11 +844,6 @@ export default function CalculatorPage() {
                 </div>
               </div>
 
-              {!hasEdge ? (
-                <div className="rounded-lg border border-rose-500/20 bg-rose-500/[0.05] px-4 py-3 font-mono text-[13px] text-rose-300">
-                  No edge at these inputs. Kelly says do not bet.
-                </div>
-              ) : null}
               </div>
             )}
           </div>

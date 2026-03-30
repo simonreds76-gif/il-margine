@@ -1,5 +1,5 @@
 import { promises as fs } from "fs";
-import path from "path";
+import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
 
 const MODEL_MONITOR_PUBLIC =
   process.env.MODEL_MONITOR_PUBLIC === "1" ||
@@ -89,7 +89,13 @@ export async function GET(request: Request) {
   const files: ReviewPackFile[] = [];
 
   for (const relativePath of reviewFiles) {
-    const absolutePath = path.join(process.cwd(), relativePath);
+    const absolutePath = tryGetKnownProjectFilePath(relativePath);
+    if (!absolutePath) {
+      return Response.json(
+        { error: `Unknown review-pack path: ${relativePath}` },
+        { status: 500, headers: { "Cache-Control": "no-store" } },
+      );
+    }
     const content = await fs.readFile(absolutePath, "utf8");
     files.push({
       path: relativePath,

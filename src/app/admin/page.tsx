@@ -1,12 +1,29 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import dynamic from "next/dynamic";
 import { supabase, Bet, Bookmaker } from "@/lib/supabase";
 import { formatOdds } from "@/lib/format";
-import MonthlyBreakdown from "@/components/MonthlyBreakdown";
+
+const MonthlyBreakdown = dynamic(() => import("@/components/MonthlyBreakdown"), {
+  ssr: false,
+  loading: () => (
+    <div className="rounded-lg border border-slate-800 bg-slate-900/40 px-4 py-6 text-sm text-slate-500">
+      Loading monthly breakdown...
+    </div>
+  ),
+});
+
+const SETTING_KEYS = {
+  combined: "monthly_breakdown_combined_public",
+  props: "monthly_breakdown_props_public",
+  tennis: "monthly_breakdown_tennis_public",
+} as const;
 
 export default function AdminPanel() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    () => typeof window !== "undefined" && localStorage.getItem("admin_logged_in") === "true"
+  );
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [activeTab, setActiveTab] = useState<"add" | "pending" | "recent" | "settings">("add");
@@ -23,6 +40,12 @@ export default function AdminPanel() {
   });
   const [settingsLoading, setSettingsLoading] = useState<string | null>(null);
   const [adminError, setAdminError] = useState<string | null>(null);
+  const loadedTabsRef = useRef({
+    bookmakers: false,
+    pending: false,
+    recent: false,
+    settings: false,
+  });
   const [editForm, setEditForm] = useState({
     market: "props" as "props" | "tennis" | "betbuilders" | "atg",
     category: "",
@@ -95,23 +118,7 @@ export default function AdminPanel() {
     }
   };
 
-  useEffect(() => {
-    if (localStorage.getItem("admin_logged_in") === "true") setIsLoggedIn(true);
-  }, []);
-
-  // Fetch bookmakers and settings
-  useEffect(() => {
-    if (isLoggedIn) {
-      fetchBookmakers();
-      fetchPendingBets();
-      fetchRecentBets();
-      fetchSettings();
-    }
-  }, [isLoggedIn]);
-
-  const SETTING_KEYS = { combined: "monthly_breakdown_combined_public", props: "monthly_breakdown_props_public", tennis: "monthly_breakdown_tennis_public" } as const;
-
-  const fetchSettings = async () => {
+  const fetchSettings = useCallback(async () => {
     try {
       const keys = Object.values(SETTING_KEYS);
       const { data: rows } = await supabase.from("site_settings").select("key, value").in("key", keys);
@@ -125,7 +132,7 @@ export default function AdminPanel() {
       console.error("fetchSettings:", e);
       setAdminError("Could not load settings. Check Supabase env vars.");
     }
-  };
+  }, []);
 
   const toggleMonthlyBreakdownPublic = async (scope: "combined" | "props" | "tennis") => {
     setSettingsLoading(scope);
@@ -148,7 +155,7 @@ export default function AdminPanel() {
     }
   };
 
-  const fetchBookmakers = async () => {
+  const fetchBookmakers = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from("bookmakers")
@@ -161,9 +168,9 @@ export default function AdminPanel() {
       console.error("fetchBookmakers:", e);
       setAdminError("Could not connect to Supabase. Check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
     }
-  };
+  }, []);
 
-  const fetchPendingBets = async () => {
+  const fetchPendingBets = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from("bets")
@@ -176,9 +183,9 @@ export default function AdminPanel() {
       console.error("fetchPendingBets:", e);
       if (!adminError) setAdminError("Could not load data.");
     }
-  };
+  }, [adminError]);
 
-  const fetchRecentBets = async () => {
+  const fetchRecentBets = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from("bets")
@@ -192,7 +199,43 @@ export default function AdminPanel() {
       console.error("fetchRecentBets:", e);
       if (!adminError) setAdminError("Could not load data.");
     }
-  };
+  }, [adminError]);
+
+  const ensureTabData = useCallback(
+    async (tab: typeof activeTab) => {
+      if (tab === "add" && !loadedTabsRef.current.bookmakers) {
+        loadedTabsRef.current.bookmakers = true;
+        await fetchBookmakers();
+      }
+
+      if (tab === "pending" && !loadedTabsRef.current.pending) {
+        loadedTabsRef.current.pending = true;
+        await fetchPendingBets();
+      }
+
+      if (tab === "recent" && !loadedTabsRef.current.recent) {
+        loadedTabsRef.current.recent = true;
+        await fetchRecentBets();
+      }
+
+      if (tab === "settings" && !loadedTabsRef.current.settings) {
+        loadedTabsRef.current.settings = true;
+        await fetchSettings();
+      }
+    },
+    [fetchBookmakers, fetchPendingBets, fetchRecentBets, fetchSettings]
+  );
+
+  // Lazy-load tab data so the initial admin screen doesn't fetch everything at once.
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    const timeoutId = window.setTimeout(() => {
+      void ensureTabData(activeTab);
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [activeTab, ensureTabData, isLoggedIn]);
 
   const handleAddBet = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -409,8 +452,8 @@ export default function AdminPanel() {
         <div className="max-w-4xl mx-auto flex">
           {[
             { id: "add", label: "Add Bet" },
-            { id: "pending", label: `Pending (${pendingBets.length})` },
-            { id: "recent", label: `Recent (${recentBets.length})` },
+            { id: "pending", label: "Pending" },
+            { id: "recent", label: "Recent" },
             { id: "settings", label: "Settings" },
           ].map((tab) => (
             <button
