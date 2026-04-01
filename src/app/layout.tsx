@@ -7,8 +7,7 @@ import ComplianceBar from "@/components/ComplianceBar";
 import StructuredData from "@/components/StructuredData";
 import CookieBanner from "@/components/CookieBanner";
 import SpeedInsightsClient from "@/components/SpeedInsightsClient";
-import ChatWidget from "@/components/ChatWidget";
-import RogerTeaser from "@/components/RogerTeaser";
+import RouteScopedOverlays from "@/components/RouteScopedOverlays";
 import { ChatProvider } from "@/contexts/ChatContext";
 import { BASE_URL, GA_MEASUREMENT_ID } from "@/lib/config";
 
@@ -83,8 +82,7 @@ export default function RootLayout({
           <div className="site-content w-full min-h-screen">
             {children}
           </div>
-          <ChatWidget />
-          <RogerTeaser />
+          <RouteScopedOverlays />
         </ChatProvider>
       </body>
     </html>

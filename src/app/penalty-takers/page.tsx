@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
-import path from "path";
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
+import { getKnownProjectFilePath, type KnownProjectFile } from "@/lib/project-file-paths";
 import PenaltyTakersClient from "./PenaltyTakersClient";
 
 const CURRENT_SEASON = "2025/26";
@@ -70,7 +70,17 @@ type LeagueEntry = {
   teams: TeamEntry[];
 };
 
-type LeagueConfig = Omit<LeagueEntry, "teamCount" | "subtitle" | "teams">;
+type PenaltyDataFile =
+  | "data/goalscorer/team-logo-map.json"
+  | "data/goalscorer/serie-a-penalty-takers.json"
+  | "data/goalscorer/epl-penalty-takers.json"
+  | "data/goalscorer/la-liga-penalty-takers.json"
+  | "data/goalscorer/bundesliga-penalty-takers.json"
+  | "data/goalscorer/ligue-1-penalty-takers.json";
+
+type LeagueConfig = Omit<LeagueEntry, "teamCount" | "subtitle" | "teams"> & {
+  file: PenaltyDataFile;
+};
 
 const EMPTY_LOGO_MANIFEST: LogoManifest = {
   leagues: {},
@@ -182,8 +192,8 @@ export const metadata: Metadata = {
   },
 };
 
-async function readJson<T>(relativePath: string): Promise<T> {
-  const fullPath = path.join(process.cwd(), relativePath);
+async function readJson<T>(relativePath: PenaltyDataFile | KnownProjectFile): Promise<T> {
+  const fullPath = getKnownProjectFilePath(relativePath);
   const raw = await fs.readFile(fullPath, "utf8");
   return JSON.parse(raw) as T;
 }

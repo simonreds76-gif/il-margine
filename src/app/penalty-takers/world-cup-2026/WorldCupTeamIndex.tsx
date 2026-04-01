@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
+import FlagMark from "@/components/FlagMark";
 
 type ConfederationFilter = {
   key: string;
@@ -58,12 +59,10 @@ function filterFromHash(hash: string): string {
 
 export default function WorldCupTeamIndex({ teams, confederations, groups }: Props) {
   const [viewMode, setViewMode] = useState<"confederation" | "group">("confederation");
-  const [activeFilter, setActiveFilter] = useState<string>(ALL_FILTER);
+  const [activeFilter, setActiveFilter] = useState<string>(() =>
+    typeof window === "undefined" ? ALL_FILTER : filterFromHash(window.location.hash),
+  );
   const [activeGroup, setActiveGroup] = useState<string>(ALL_GROUPS);
-
-  useEffect(() => {
-    setActiveFilter(filterFromHash(window.location.hash));
-  }, []);
 
   const filteredTeams = useMemo(() => {
     if (activeFilter === ALL_FILTER) return teams;
@@ -228,14 +227,17 @@ export default function WorldCupTeamIndex({ teams, confederations, groups }: Pro
                 href={`/penalty-takers/world-cup-2026/${team.slug}`}
                 className="flex items-center gap-3 rounded-2xl border border-slate-800/80 bg-slate-950/70 px-3 py-3 transition hover:border-slate-600 hover:bg-slate-950"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-900/80">
-                  {team.flagUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={team.flagUrl} alt={`${team.team} flag`} className="h-6 w-8 rounded-[3px] object-cover" />
-                  ) : (
-                    <span className="font-mono text-[11px] text-slate-200">{team.initials}</span>
-                  )}
-                </div>
+                <FlagMark
+                  src={team.flagUrl}
+                  alt={`${team.team} flag`}
+                  fallbackText={team.initials}
+                  wrapperClassName="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-900/80"
+                  imageClassName="h-6 w-8 rounded-[3px] object-cover"
+                  fallbackClassName="font-mono text-[11px] text-slate-200"
+                  width={32}
+                  height={24}
+                  sizes="32px"
+                />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <div className="truncate text-sm font-semibold text-slate-100">{team.team} penalty taker</div>
@@ -276,14 +278,17 @@ export default function WorldCupTeamIndex({ teams, confederations, groups }: Pro
                       href={`/penalty-takers/world-cup-2026/${entry.slug}`}
                       className="flex items-center gap-3 rounded-2xl border border-slate-800/80 bg-slate-950/80 px-3 py-3 transition hover:border-slate-600 hover:bg-slate-950"
                     >
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-900/80">
-                        {entry.flagUrl ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={entry.flagUrl} alt={`${entry.team} flag`} className="h-6 w-8 rounded-[3px] object-cover" />
-                        ) : (
-                          <span className="font-mono text-[11px] text-slate-200">{entry.initials}</span>
-                        )}
-                      </div>
+                      <FlagMark
+                        src={entry.flagUrl}
+                        alt={`${entry.team} flag`}
+                        fallbackText={entry.initials}
+                        wrapperClassName="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-900/80"
+                        imageClassName="h-6 w-8 rounded-[3px] object-cover"
+                        fallbackClassName="font-mono text-[11px] text-slate-200"
+                        width={32}
+                        height={24}
+                        sizes="32px"
+                      />
                       <div className="min-w-0 flex-1">
                         <div className="truncate text-sm font-semibold text-slate-100">{entry.team}</div>
                         <div className="mt-1 truncate text-xs text-slate-400">{entry.likely_primary || "Board still being built"}</div>

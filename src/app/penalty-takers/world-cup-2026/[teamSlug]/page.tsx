@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Footer from "@/components/Footer";
+import FlagMark from "@/components/FlagMark";
 import PageHomeLink from "@/components/PageHomeLink";
 import {
   WORLD_CUP_PENALTIES_URL,
@@ -165,6 +166,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
   const title = buildWorldCupTeamTitle(team);
   const description = buildWorldCupTeamDescription(team);
   const pageUrl = worldCupTeamUrl(team.team);
+  const heroFlagUrl = flagImageUrl(team.team);
   const style = CONFEDERATION_STYLES[team.confederation] ?? CONFEDERATION_STYLES.CONMEBOL;
   const primary = team.likely_primary?.trim();
   const secondary = team.likely_secondary?.trim();
@@ -291,18 +293,18 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
               <div className="grid gap-8 xl:grid-cols-[1.08fr,0.92fr] xl:items-start">
                 <div className="max-w-4xl">
                   <div className="flex flex-col items-start gap-4 sm:flex-row">
-                    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[20px] border border-slate-700/80 bg-slate-950/90 shadow-[0_12px_30px_rgba(0,0,0,0.18)] sm:h-20 sm:w-20 sm:rounded-[24px]">
-                      {flagImageUrl(team.team) ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={flagImageUrl(team.team)}
-                          alt={`${team.team} flag`}
-                          className="h-9 w-11 rounded-[6px] object-cover shadow-sm sm:h-11 sm:w-14"
-                        />
-                      ) : (
-                        <span className="font-mono text-base font-semibold text-slate-200">{initials(team.team)}</span>
-                      )}
-                    </div>
+                    <FlagMark
+                      src={heroFlagUrl}
+                      alt={`${team.team} flag`}
+                      fallbackText={initials(team.team)}
+                      wrapperClassName="flex h-16 w-16 shrink-0 items-center justify-center rounded-[20px] border border-slate-700/80 bg-slate-950/90 shadow-[0_12px_30px_rgba(0,0,0,0.18)] sm:h-20 sm:w-20 sm:rounded-[24px]"
+                      imageClassName="h-9 w-11 rounded-[6px] object-cover shadow-sm sm:h-11 sm:w-14"
+                      fallbackClassName="font-mono text-base font-semibold text-slate-200"
+                      width={56}
+                      height={44}
+                      sizes="(min-width: 640px) 56px, 44px"
+                      priority
+                    />
                     <div className="min-w-0">
                       <h1 className="text-[2.1rem] font-semibold leading-[0.98] tracking-tight text-slate-100 sm:text-5xl sm:leading-[1.02]">
                         {team.team} <span className="text-emerald-400">penalty taker</span>
