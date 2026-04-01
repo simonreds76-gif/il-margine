@@ -5,8 +5,6 @@ import PageHomeLink from "@/components/PageHomeLink";
 import WorldCupTeamIndex from "./WorldCupTeamIndex";
 import {
   CONFEDERATION_ORDER,
-  INTERCONTINENTAL_PLAYOFF_SLOTS,
-  UEFA_PLAYOFF_PATHS,
   WORLD_CUP_PENALTIES_URL,
   WORLD_CUP_GROUP_ORDER,
   WORLD_CUP_GROUPS,
@@ -23,6 +21,7 @@ const PAGE_DESCRIPTION =
   "Who takes penalties for every qualified nation at the 2026 FIFA World Cup? First-choice and backup penalty takers, updated from official match reports, federation sources and native-language reporting across six confederations.";
 
 const FEATURED_TEAMS = ["Germany", "France", "Brazil", "Argentina", "England", "Spain", "Japan", "Netherlands", "USA", "Mexico"];
+const LATE_QUALIFIER_TEAMS = ["Bosnia and Herzegovina", "Sweden", "Turkiye", "Czechia", "Congo DR", "Iraq"];
 
 const CONFEDERATION_INTROS: Record<string, string> = {
   UEFA:
@@ -160,6 +159,10 @@ export default async function WorldCup2026PenaltyTakersPage() {
     const match = data.teams.find((team) => team.team === name);
     return match ? [match] : [];
   });
+  const lateQualifiers = LATE_QUALIFIER_TEAMS.flatMap((name) => {
+    const match = data.teams.find((team) => team.team === name);
+    return match ? [match] : [];
+  });
   const alphabeticalTeams = [...data.teams].sort((left, right) => left.team.localeCompare(right.team, "en"));
   const alphabeticalIndexTeams = alphabeticalTeams.map((team) => ({
     team: team.team,
@@ -202,8 +205,6 @@ export default async function WorldCup2026PenaltyTakersPage() {
       };
     }),
   }));
-  const remainingSpots = 48 - data.qualified_count;
-
   const breadcrumbData = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -305,7 +306,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
                   Hosts: Canada, Mexico, USA
                 </span>
                 <span className="rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-100">
-                  Qualified board live
+                  Field complete: 48/48
                 </span>
               </div>
 
@@ -318,12 +319,12 @@ export default async function WorldCup2026PenaltyTakersPage() {
                   <div className="mt-1 text-sm text-slate-400">Confirmed spots filled</div>
                 </div>
                 <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
-                  <div className="font-mono text-3xl font-semibold text-emerald-400">{UEFA_PLAYOFF_PATHS.length}</div>
-                  <div className="mt-1 text-sm text-slate-400">UEFA paths live</div>
+                  <div className="font-mono text-3xl font-semibold text-emerald-400">{lateQualifiers.length}</div>
+                  <div className="mt-1 text-sm text-slate-400">Late qualifiers added</div>
                 </div>
                 <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
-                  <div className="font-mono text-3xl font-semibold text-emerald-400">{remainingSpots}</div>
-                  <div className="mt-1 text-sm text-slate-400">Spots still open</div>
+                  <div className="font-mono text-3xl font-semibold text-emerald-400">{WORLD_CUP_GROUP_ORDER.length}</div>
+                  <div className="mt-1 text-sm text-slate-400">Groups locked in</div>
                 </div>
                 <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4 sm:p-5">
                   <div className="font-mono text-xl font-semibold text-emerald-400">{data.last_verified}</div>
@@ -483,79 +484,55 @@ export default async function WorldCup2026PenaltyTakersPage() {
 
         <section className="mt-14 grid gap-4 sm:gap-6 xl:grid-cols-[1.05fr,0.95fr]">
           <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
-            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Still Outside The Field</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Play-off watchlist</h2>
+            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Freshly Added</div>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">The last six teams are now on the board</h2>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">
-              The last qualification layer is live now. UEFA semi-finals are on <span className="text-slate-200">26 March 2026</span>, UEFA finals are on <span className="text-slate-200">31 March 2026</span>, and the intercontinental bracket still has six teams chasing the final two spots.
+              The March play-offs closed the field and the World Cup page is now a full 48-team board. These were the six teams that landed late, so they are the ones most likely to have thinner penalty files or more cautious confidence labels than the older qualifiers.
             </p>
             <div className="mt-6 grid gap-4 lg:grid-cols-2">
-              {UEFA_PLAYOFF_PATHS.map((path) => (
-                <div key={path.path} className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="rounded-full border border-sky-400/25 bg-sky-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-sky-200">
-                      {path.path}
-                    </span>
-                    <span className="text-xs text-slate-500">Final on 31 Mar</span>
-                  </div>
-                  <div className="mt-3 rounded-xl border border-slate-800 bg-slate-900/80 px-3 py-2 text-sm text-slate-300">
-                    Winner goes to{" "}
-                    <span className="font-semibold text-slate-100">Group {path.destinationGroup}</span>{" "}
-                    with{" "}
-                    <span className="text-slate-200">
-                      {WORLD_CUP_GROUPS[path.destinationGroup]
-                        .filter((team) => !team.startsWith("UEFA Path") && !team.startsWith("Intercontinental"))
-                        .join(", ")}
-                    </span>
-                  </div>
-                  <div className="mt-4 space-y-2 text-sm text-slate-300">
-                    {path.fixtures.map((fixture) => (
-                      <div key={fixture} className="rounded-xl border border-slate-800 bg-slate-900/80 px-3 py-2">
-                        {fixture}
+              {lateQualifiers.map((team) => (
+                <Link
+                  key={team.team}
+                  href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(team.team)}`}
+                  className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4 transition hover:border-slate-600 hover:bg-slate-900/90"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-slate-700/80 bg-slate-950/90">
+                      {flagImageUrl(team.team) ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={flagImageUrl(team.team)} alt={`${team.team} flag`} className="h-7 w-9 rounded-[4px] object-cover shadow-sm" />
+                      ) : (
+                        <span className="font-mono text-[12px] font-semibold text-slate-200">{initials(team.team)}</span>
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-base font-semibold tracking-tight text-slate-100">{team.team}</span>
+                        <span className="rounded-full border border-slate-700 bg-slate-900/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300">
+                          Group {team.group}
+                        </span>
+                        <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200">
+                          {team.confidence}
+                        </span>
                       </div>
-                    ))}
+                      <div className="mt-2 text-sm text-slate-300">
+                        <span className="text-slate-500">Current call:</span> {team.likely_primary || "Still building"}{team.likely_secondary ? `, with ${team.likely_secondary} next.` : "."}
+                      </div>
+                      <div className="mt-2 text-xs leading-6 text-slate-400">{team.last_evidence || "Fresh file added after qualification."}</div>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
-            </div>
-
-            <div className="mt-6 rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4">
-              <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-emerald-400">Intercontinental race</div>
-              <div className="mt-4 grid gap-3 lg:grid-cols-2">
-                {INTERCONTINENTAL_PLAYOFF_SLOTS.map((slot) => (
-                  <div key={slot.slot} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="text-sm font-semibold text-slate-100">{slot.slot}</div>
-                      <div className="text-xs text-slate-500">Group {slot.destinationGroup}</div>
-                    </div>
-                    <div className="mt-2 text-xs leading-6 text-slate-400">
-                      Winner goes to Group {slot.destinationGroup} with{" "}
-                      {WORLD_CUP_GROUPS[slot.destinationGroup]
-                        .filter((team) => !team.startsWith("UEFA Path") && !team.startsWith("Intercontinental"))
-                        .join(", ")}
-                      .
-                    </div>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {data.playoff_teams
-                        .filter((team) => team.slot === slot.slot)
-                        .map((team) => (
-                          <span key={team.team} className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300">
-                            {team.team} <span className="text-slate-500">({team.confederation})</span>
-                          </span>
-                        ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
 
           <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">How The Board Moves</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">How the page gets tightened</h2>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">How the finished board gets tightened</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
               <p>Official senior in-match penalties come first. Federation confirmation comes next. Local-language reporting and event timelines tighten the call when the file is still mixed.</p>
               <p>Shoot-outs can support the order, but they do not automatically overrule a stronger recent in-match trail. When the file is mixed, the page says so plainly in the note instead of hiding behind a vague label.</p>
-              <p>When the final qualifying paths resolve, the winners get slotted into the main board straight away. The goal is simple: give the country-level answer quickly, then show the evidence that justifies it.</p>
+              <p>Now that the field is complete, the live work is less about qualification slots and more about hierarchy drift. The goal is simple: give the country-level answer quickly, then show the evidence that justifies it.</p>
             </div>
           </div>
         </section>

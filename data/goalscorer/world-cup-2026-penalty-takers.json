@@ -1,76 +1,51 @@
 {
   "tournament": "FIFA World Cup 2026",
   "season": "2026",
-  "last_verified": "2026-03-20",
-  "qualified_count": 42,
-  "playoff_count": 6,
+  "last_verified": "2026-04-01",
+  "qualified_count": 48,
+  "playoff_count": 0,
   "teams": [
     {
-      "team": "Canada",
-      "confederation": "Concacaf",
+      "team": "Algeria",
+      "confederation": "CAF",
       "status": "qualified",
       "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Jonathan David",
-      "likely_secondary": "Cyle Larin",
-      "last_evidence": "Gold Cup: Canada 2-0 El Salvador, 25 Jun 2025",
-      "note": "Jonathan David is the strongest current Canada call and should be treated as the leading World Cup candidate. He was trusted with an in-match Gold Cup penalty against El Salvador in June 2025 and also opened Canada's shootout order in major knockout matches, which fits the wider reality that he is the senior side's main scoring reference. Cyle Larin is the clearest secondary because he remains Canada's other senior central scorer and the most natural fallback if David is absent or has already gone off.",
+      "confidence": "medium",
+      "likely_primary": "Riyad Mahrez",
+      "likely_secondary": "Mohamed Amoura",
+      "last_evidence": "AFCON 2025: Algeria 1-0 Burkina Faso, 28 Dec 2025",
+      "note": "Riyad Mahrez is the best current Algeria penalty call. The strongest recent evidence is his AFCON 2025 winner from the spot against Burkina Faso, which restored him as the clearest direct senior signal after the more mixed 2024 period. Mohamed Amoura is the most plausible challenger from the current attacking core, but Mahrez still has the strongest national-team penalty claim.",
       "source_urls": [
-        "https://www.sofascore.com/football/match/el-salvador-canada/cVbsAWb",
-        "https://canadasoccer.com/national-team-match-live/?matchId=6235",
-        "https://news.canadasoccer.com/canmnt-advance-to-copa-america-semifinal--le-canmnt-se-qualifie-pour-la-demi-finale-de-la-copa-america",
-        "https://www.transfermarkt.com/kanada/elfmeterschuetzen/verein/3510"
+        "https://www.sofascore.com/football/match/burkina-faso-algeria/QTbsZUb",
+        "https://supersport.com/news/684d253d-e5cc-438b-a266-5ad5b9d09557/into-the-last-16-mahrez-gives-algeria-win-over-burkina-faso",
+        "https://www.lemonde.fr/afrique/article/2024/09/12/le-footballeur-riyad-mahrez-sujet-de-debat-en-algerie_6315002_3212.html"
       ],
       "evidence_log": [
-        "25 Jun 2025: SofaScore shows Jonathan David took Canada's in-match penalty against El Salvador in the Gold Cup; the attempt was saved before he later scored in open play.",
-        "29 Jun 2025: Canada Soccer's Guatemala quarter-final match centre lists Jonathan David as the first Canada taker in the shootout order.",
-        "5 Jul 2024: Canada Soccer's Copa America quarter-final report against Venezuela also shows Jonathan David taking Canada's first penalty in the shootout.",
-        "Current working view: David is the clearest Canada primary and strong enough now for a high-confidence World Cup label, with Cyle Larin the best fallback by seniority and striker profile."
+        "28 Dec 2025: SofaScore and Reuters/SuperSport reporting show Riyad Mahrez scored Algeria's in-match penalty against Burkina Faso at AFCON 2025.",
+        "5 Sep 2024: CAF's AFCON qualifying report against Equatorial Guinea shows Mahrez also missed an in-match penalty in a match Algeria still won 2-0.",
+        "The 2024-25 cycle was therefore mixed rather than spotless, which is why Algeria sits at medium rather than high confidence.",
+        "Current working view: Mahrez remains Algeria's clearest World Cup primary, with Amoura the most plausible challenger from the present attack."
       ]
     },
     {
-      "team": "Mexico",
-      "confederation": "Concacaf",
+      "team": "Argentina",
+      "confederation": "CONMEBOL",
       "status": "qualified",
       "research_status": "reviewed",
       "confidence": "high",
-      "likely_primary": "Raul Jimenez",
-      "likely_secondary": "Santiago Gimenez",
-      "last_evidence": "Concacaf Nations League Final: Mexico 2-1 Panama, 24 Mar 2025",
-      "note": "Raul Jimenez is Mexico's strongest current World Cup penalty candidate. The key direct evidence is his stoppage-time winning penalty against Panama in the 2025 Concacaf Nations League final, and that sits comfortably with his broader role as the senior side's most trusted central finisher in the current cycle. Santiago Gimenez is the clearest secondary because he is the other leading centre-forward in Mexico's pool and the most obvious attacking fallback if Jimenez is not the taker on the pitch.",
-      "source_urls": [
-        "https://www.concacaf.com/nations-league/news/jimenez-shines-again-to-deliver-mexico-s-first-cnl-trophy/",
-        "https://www.concacaf.com/en/gold-cup/news/road-to-the-2025-concacaf-gold-cup-mexico/",
-        "https://www.sofascore.com/football/match/panama-mexico/GVbsodc"
-      ],
+      "likely_primary": "Lionel Messi",
+      "likely_secondary": "Julian Alvarez",
+      "last_evidence": "Argentina 5-0 Zambia, 1 Apr 2026: Messi handed a second-half penalty to Nicolas Otamendi in his final home appearance",
+      "note": "Lionel Messi remains Argentina's obvious first-choice taker when available, and the March 2026 Zambia friendly actually reinforced that rather than weakening it. Argentina won a second-half penalty and Messi, who was already on the scoresheet, handed the ball to Nicolas Otamendi for an emotional final home goal before the defender's post-World-Cup retirement. That was a gesture, not a hierarchy shift. Julian Alvarez remains the best secondary because he is the most credible tournament-era alternative from Argentina's core attack once you strip out one-off ceremonial moments.",
       "evidence_log": [
-        "24 Mar 2025: Raul Jimenez scored Mexico's winning penalty vs Panama in the Concacaf Nations League final.",
-        "Concacaf's tournament recap also framed Jimenez as the decisive figure in Mexico's Nations League title run.",
-        "Current working view: Jimenez is the clearest Mexico primary and strong enough now for a high-confidence label, with Santiago Gimenez the best fallback in the likely tournament striker rotation."
-      ]
-    },
-    {
-      "team": "USA",
-      "confederation": "Concacaf",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Christian Pulisic",
-      "likely_secondary": "Malik Tillman",
-      "last_evidence": "USMNT 3-0 Uzbekistan, 9 Sep 2023, plus 2025 Gold Cup alternate-squad evidence",
-      "note": "Christian Pulisic remains the strongest USA penalty candidate when the main squad is together. The freshest clean senior in-match conversion in the official trail is his penalty against Uzbekistan in 2023, while the 2025 Gold Cup showed an alternate US squad using Malik Tillman from the spot when Pulisic was absent. In full-strength A-team context, the balance of evidence still points clearly to Pulisic, with Tillman now the best named backup because he is the only other recent senior in-match taker in the file.",
-      "source_urls": [
-        "https://www.ussoccer.com/stories/2023/09/international-friendly-usmnt-3-uzbekistan-0-match-report-stats-standings/",
-        "https://www.ussoccer.com/stories/2021/06/concacaf-nations-league-final-usmnt-3-mexico-2-match-report-stats-standings/",
-        "https://www.concacaf.com/es/gold-cup/noticias/freese-brilla-en-los-penales-y-ee-uu-supera-a-costa-rica-para-avanzar-a-semifinales/",
-        "https://www.transfermarkt.com/jumplist/elfmeterschuetzen/verein/3505",
-        "https://www.sofascore.com/football/match/usa-uzbekistan/yUbszUb"
+        "1 Apr 2026: ESPN and Sky Sports both show Nicolas Otamendi scored Argentina's second-half penalty against Zambia, with reporting making clear Lionel Messi gave him the kick in an emotional home send-off moment.",
+        "Because that penalty was explicitly ceded by Messi rather than taken in a neutral hierarchy moment, it does not move Otamendi above Messi or Julian Alvarez in the World Cup order.",
+        "Current working view: Messi remains Argentina's first-choice taker, with Alvarez still the cleanest backup in a competitive tournament setting."
       ],
-      "evidence_log": [
-        "9 Sep 2023: U.S. Soccer and SofaScore both show Christian Pulisic converted the late in-match penalty in the 3-0 win over Uzbekistan.",
-        "6 Jun 2021: U.S. Soccer's Nations League final report shows Pulisic scored the decisive extra-time penalty against Mexico in a major senior final.",
-        "30 Jun 2025: Concacaf's Gold Cup quarter-final report shows Malik Tillman took and missed the USA's in-match penalty against Costa Rica with a different tournament squad, which supports the idea that the order can change when Pulisic is absent rather than disproving Pulisic's full-strength status.",
-        "Current working view: for the likely World Cup A-team, Pulisic remains the clearest USA primary, with Tillman the best current fallback signal."
+      "source_urls": [
+        "https://www.espn.co.uk/football/story/_/id/48363223/messi-leads-argentina-5-0-victory-final-home-world-cup-tune-up",
+        "https://www.skysports.com/football/argentina-vs-zambia/teams/555174",
+        "https://www.tntsports.co.uk/football/international-friendlies/2026/live-argentina-zambia_mtc1661558/live.shtml"
       ]
     },
     {
@@ -95,6 +70,414 @@
       ]
     },
     {
+      "team": "Austria",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Marko Arnautovic",
+      "likely_secondary": "Marcel Sabitzer",
+      "last_evidence": "Austria 5-1 Ghana, 27 Mar 2026: Marcel Sabitzer scored the in-match penalty in Vienna",
+      "note": "Marko Arnautovic still looks like Austria's safest World Cup first call because the stronger competitive trail from 2024-25 still points to him. But the March 2026 friendly window gave Marcel Sabitzer the freshest direct evidence: he converted Austria's early penalty in the 5-1 win over Ghana while Arnautovic started on the bench. So the live Austria picture is now clearer: Arnautovic remains the most trusted headline call, but Sabitzer is a real active alternative rather than just a theoretical fallback.",
+      "source_urls": [
+        "https://www.espn.co.uk/football/match/_/gameId/401856593",
+        "https://www.sofascore.com/football/match/ghana-austria/tUbsoVb",
+        "https://www.uefa.com/european-qualifiers/news/029f-1f3625266d2c-ab3722bbcd9a-1000--european-qualifiers-for-the-2026-world-cup-round-up-spain/"
+      ],
+      "evidence_log": [
+        "27 Mar 2026: ESPN and SofaScore both show Marcel Sabitzer converted Austria's in-match penalty in the 5-1 friendly win over Ghana.",
+        "That is the freshest Austria penalty evidence in the final pre-World Cup camp and strengthens Sabitzer as a live alternative.",
+        "The broader competitive qualifying trail from 2024-25 still leans toward Marko Arnautovic as the safest first call when Austria field their strongest side.",
+        "Current working view: Arnautovic remains Austria's primary, with Sabitzer now carrying the freshest backup evidence."
+      ]
+    },
+    {
+      "team": "Belgium",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "medium",
+      "likely_primary": "Kevin De Bruyne",
+      "likely_secondary": "Romelu Lukaku",
+      "last_evidence": "SofaScore: Wales 2-4 Belgium, 13 Oct 2025",
+      "note": "Kevin De Bruyne is Belgium's strongest current direct penalty signal. The freshest competitive evidence is emphatic rather than thin: he scored both of Belgium's penalties in the 4-2 World Cup qualifying win away to Wales in October 2025. Belgium still stays at medium confidence, though, because the live hierarchy question is what happens when Romelu Lukaku and De Bruyne are both fully available in the same frontline. Until that is settled by a clean like-for-like match sample, De Bruyne is the best current answer and Lukaku remains the clearest challenger.",
+      "source_urls": [
+        "https://www.sofascore.com/football/match/belgium-wales/cUbsrUb",
+        "https://bdnews24.com/sport/b81e74a6469d"
+      ],
+      "evidence_log": [
+        "13 Oct 2025: SofaScore and French-language match reporting on Wales vs Belgium show Kevin De Bruyne converted both of Belgium's in-match penalties in the 4-2 World Cup qualifying win away to Wales.",
+        "Two penalties in the same competitive match is unusually strong direct evidence in De Bruyne's favour.",
+        "The remaining caveat is still the Lukaku coexistence question, because Belgium's long-term order looked different when Lukaku was the clear focal point and the October 2025 window did not cleanly settle that scenario.",
+        "Current working view: De Bruyne is Belgium's best present-day answer, with Lukaku the clearest secondary until a both-available match proves otherwise."
+      ]
+    },
+    {
+      "team": "Bosnia and Herzegovina",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "medium",
+      "likely_primary": "Edin Dzeko",
+      "likely_secondary": "Haris Tabakovic",
+      "last_evidence": "World Cup play-offs, 26-31 Mar 2026: Bosnia beat Wales and Italy on penalties, with Tabakovic scoring against Italy and converting in both shootouts",
+      "note": "Bosnia and Herzegovina are no longer a pure blank file after the March play-offs. There still is not a clean recent Bosnia in-match penalty to settle the order by itself, so this should not be treated as a high-confidence board, but the knockout run did add meaningful pressure evidence. Edin Dzeko remains the safest first-call projection because he is still Bosnia's captain and biggest decisive-match attacking reference, and he scored the crucial late equaliser against Wales. Haris Tabakovic now becomes the best secondary because he scored Bosnia's equaliser against Italy and then converted in both successful shootouts against Wales and Italy. That is enough to move the file into the reviewed medium-confidence bucket.",
+      "source_urls": [
+        "https://www.espn.co.uk/football/match/_/gameId/761381/bosnia-and-herzegovina-wales",
+        "https://www.espn.co.uk/football/match/_/gameId/761952",
+        "https://www.theguardian.com/football/live/2026/mar/31/bosnia-and-herzegovina-v-italy-world-cup-playoff-live"
+      ],
+      "evidence_log": [
+        "26 Mar 2026: ESPN's Wales vs Bosnia shootout log shows Bosnia converted with Ermedin Demirovic, Haris Tabakovic, Ivan Basic, Amir Hadziahmetovic and Kerim-Sam Alajbegovic after Edin Dzeko had equalised late in normal time.",
+        "31 Mar 2026: ESPN's Bosnia vs Italy final score page shows Bosnia again won on penalties, with Benjamin Tahirovic, Haris Tabakovic, Kerim-Sam Alajbegovic and Esmir Bajraktarevic all converting.",
+        "Tabakovic also scored Bosnia's equaliser against Italy before converting in the shootout, which gives him the strongest fresh backup signal in the file.",
+        "Current working view: Dzeko remains the safest first-call projection, but Tabakovic now has the best live secondary evidence and Bosnia move into the medium-confidence reviewed bucket."
+      ]
+    },
+    {
+      "team": "Brazil",
+      "confederation": "CONMEBOL",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Raphinha",
+      "likely_secondary": "Vinicius Junior",
+      "last_evidence": "CBF: Brazil 3-1 Croatia, 31 Mar 2026, plus Raphinha vs Colombia on 20 Mar 2025",
+      "note": "Raphinha still looks like Brazil's safest first-choice call because the latest competitive senior penalty on the board remains his conversion against Colombia in March 2025. Vinicius Junior remains the best tournament-level secondary because he is still the strongest realistic alternative when Brazil's top attacking XI is together. The March 2026 friendly window did add a useful live wrinkle, though: Igor Thiago converted Brazil's late penalty against Croatia after Endrick won it, which means he now enters the conversation as the freshest direct backup signal from camp rather than displacing Vinicius in the likely World Cup order. If Neymar were to return and make the final picture more crowded, Brazil would need another quick hierarchy check before the tournament.",
+      "evidence_log": [
+        "20 Mar 2025: CBF's qualifier report states Raphinha scored Brazil's penalty against Colombia.",
+        "31 Mar 2026: CBF reported Igor Thiago converted Brazil's late penalty in the 3-1 friendly win over Croatia after Endrick won the foul, which gives Thiago the freshest direct camp evidence behind the established order.",
+        "Vinicius Junior still remains the strongest realistic tournament backup when Brazil's best front line is available, so Thiago's March penalty is treated as a live camp signal rather than a full reshuffle.",
+        "Current working view: Raphinha leads the Brazil order, Vinicius Junior is still the best secondary, and Igor Thiago now sits in the next band of realistic options from the final pre-World-Cup window."
+      ],
+      "source_urls": [
+        "https://www.cbf.com.br/selecao-brasileira/noticias/noticias/a/brasil-vence-colombia-por-2-a-1-e-assume-o-2-lugar-nas-eliminatorias",
+        "https://www.cbf.com.br/selecao-brasileira/noticias/selecao-masculina/a/raphinha-todos-precisavam-dessa-vitoria",
+        "https://www.sofascore.com/football/match/colombia-brazil/YUbsvWb",
+        "https://www.cbf.com.br/selecao-brasileira/noticias/selecao-masculina/a/brasil-vence-croacia-com-autoridade-3-a-1"
+      ]
+    },
+    {
+      "team": "Cabo Verde",
+      "confederation": "CAF",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Ryan Mendes",
+      "likely_secondary": "Bebe",
+      "last_evidence": "AFCON 2024 vs Mauritania; AFCON qualifying vs Egypt, 2024",
+      "note": "Ryan Mendes is one of the cleaner African calls on the board. CAF reported him scoring the late AFCON knockout penalty against Mauritania, and SofaScore later shows him converting Cabo Verde's qualifier penalty against Egypt in November 2024. Bebe remains the clearest fallback scorer in the side, but the penalty trail is firmly with Mendes.",
+      "source_urls": [
+        "https://www.cafonline.com/afcon2025/news/mendes-penalty-sends-cape-verde-into-quarter-finals/",
+        "https://www.sofascore.com/es/football/match/egypt-cape-verde/dVbsiVb",
+        "https://www.sofascore.com/football/match/mozambique-cape-verde/dVbsIVb",
+        "https://www.inforpress.cv/article-6029"
+      ],
+      "evidence_log": [
+        "29 Jan 2024: CAF reported Ryan Mendes scored Cabo Verde's decisive in-match penalty against Mauritania in the AFCON last 16.",
+        "15 Nov 2024: SofaScore shows Ryan Mendes also converted Cabo Verde's penalty against Egypt in AFCON qualifying.",
+        "Current working view: two clean recent senior penalties for the same player make Mendes a high-confidence World Cup primary."
+      ]
+    },
+    {
+      "team": "Canada",
+      "confederation": "Concacaf",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Jonathan David",
+      "likely_secondary": "Cyle Larin",
+      "last_evidence": "Gold Cup: Canada 2-0 El Salvador, 25 Jun 2025",
+      "note": "Jonathan David is the strongest current Canada call and should be treated as the leading World Cup candidate. He was trusted with an in-match Gold Cup penalty against El Salvador in June 2025 and also opened Canada's shootout order in major knockout matches, which fits the wider reality that he is the senior side's main scoring reference. Cyle Larin is the clearest secondary because he remains Canada's other senior central scorer and the most natural fallback if David is absent or has already gone off.",
+      "source_urls": [
+        "https://www.sofascore.com/football/match/el-salvador-canada/cVbsAWb",
+        "https://canadasoccer.com/national-team-match-live/?matchId=6235",
+        "https://news.canadasoccer.com/canmnt-advance-to-copa-america-semifinal--le-canmnt-se-qualifie-pour-la-demi-finale-de-la-copa-america",
+        "https://www.transfermarkt.com/kanada/elfmeterschuetzen/verein/3510"
+      ],
+      "evidence_log": [
+        "25 Jun 2025: SofaScore shows Jonathan David took Canada's in-match penalty against El Salvador in the Gold Cup; the attempt was saved before he later scored in open play.",
+        "29 Jun 2025: Canada Soccer's Guatemala quarter-final match centre lists Jonathan David as the first Canada taker in the shootout order.",
+        "5 Jul 2024: Canada Soccer's Copa America quarter-final report against Venezuela also shows Jonathan David taking Canada's first penalty in the shootout.",
+        "Current working view: David is the clearest Canada primary and strong enough now for a high-confidence World Cup label, with Cyle Larin the best fallback by seniority and striker profile."
+      ]
+    },
+    {
+      "team": "Colombia",
+      "confederation": "CONMEBOL",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "medium",
+      "likely_primary": "James Rodriguez",
+      "likely_secondary": "Luis Diaz",
+      "last_evidence": "FCF: Colombia 3-0 Australia, 18 Nov 2025",
+      "note": "James Rodriguez is still the best current Colombia call, but the hierarchy should stay at medium because it has looked genuinely disputed rather than fully locked. FCF's November 2025 report states he opened the scoring from the penalty spot against Australia, which is the freshest clean direct evidence. The wider Lorenzo-era picture is messier, though: Colombia's qualifier against Ecuador exposed James, Rafael Santos Borre and Luis Diaz all hovering around the same kick. James remains the best World Cup answer on seniority, technique and present-day evidence, while Luis Diaz stays the clearest challenger.",
+      "source_urls": [
+        "https://fcf.com.co/2025/11/18/colombia-cierra-la-doble-fecha-fifa-con-puntaje-perfecto-tras-vencer-3-0-a-australia/",
+        "https://fcf.com.co/2025/11/19/seleccion-colombia-masculina-de-mayores-amistosos-internacionales-fecha-fifa-de-noviembre/",
+        "https://www.sofascore.com/football/match/colombia-australia/QUbsvWb"
+      ],
+      "evidence_log": [
+        "18 Nov 2025: FCF reported James Rodriguez scored Colombia's penalty in the 3-0 friendly win over Australia.",
+        "SofaScore's event timeline confirms James as the in-match penalty taker in that match.",
+        "17 Oct 2023: Colombian reporting around Ecuador vs Colombia described a visibly disputed penalty sequence involving James Rodriguez, Rafael Santos Borre and Luis Diaz before Diaz took and missed.",
+        "Current working view: James is Colombia's strongest present-day penalty call, but the board stays medium because the hierarchy has shown real fluidity under Lorenzo."
+      ]
+    },
+    {
+      "team": "Congo DR",
+      "confederation": "CAF",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "medium",
+      "likely_primary": "Yoane Wissa",
+      "likely_secondary": "Cedric Bakambu",
+      "last_evidence": "AFCON quarter-final: DR Congo 3-1 Guinea, 2 Feb 2024",
+      "note": "Yoane Wissa is the strongest DR Congo call because CAF explicitly recorded him scoring the crucial in-match penalty in the AFCON quarter-final win over Guinea. That is still the clearest clean senior spot-kick evidence in the file and it is good enough to move DR Congo into the reviewed bucket now that qualification is confirmed. The confidence stays medium because the national-team sample is thinner than the best UEFA boards and Congo still have experienced attacking alternatives, with Cedric Bakambu the clearest fallback by senior striker status.",
+      "source_urls": [
+        "https://www.cafonline.com/afcon2025/news/wissa-dr-congo-focused-on-flying-flag-high-at-totalenergies-caf-afcon/",
+        "https://www.transfermarkt.com/yoane-wissa/elfmetertore/spieler/388165",
+        "https://www.fifa.com/en/articles/play-off-tournament-teams-confirmed"
+      ],
+      "evidence_log": [
+        "2 Feb 2024: CAF reported Yoane Wissa scored the crucial in-match penalty in DR Congo's 3-1 AFCON quarter-final win over Guinea.",
+        "Transfermarkt's Yoane Wissa penalty profile supports the broader idea that he is comfortable taking penalties rather than this being a one-off emergency event.",
+        "Current working view: Wissa is the strongest DR Congo primary signal, with Cedric Bakambu the best fallback by seniority and striker profile."
+      ]
+    },
+    {
+      "team": "Cote d'Ivoire",
+      "confederation": "CAF",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "medium",
+      "likely_primary": "Franck Kessie",
+      "likely_secondary": "Oumar Diakite",
+      "last_evidence": "AFCON 2024 vs Senegal and AFCON qualifier vs Sierra Leone, 2024",
+      "note": "Franck Kessie is still the best current Cote d'Ivoire answer. He took and scored the huge AFCON knockout penalty against Senegal and also converted the decisive final kick in the shootout. Later qualifier evidence against Sierra Leone showed Cote d'Ivoire using two takers in the same match, with Kessie taking the first penalty and Oumar Diakite scoring the second. That keeps the hierarchy at medium rather than high, but it still leaves Kessie as the strongest primary on both big-match status and order.",
+      "source_urls": [
+        "https://www.cafonline.com/caf-africa-cup-of-nations/news/cote-divoire-stun-holders-senegal-in-shootout-to-reach-quarter-finals/",
+        "https://www.sofascore.com/football/match/cote-divoire-senegal/OUbstVb",
+        "https://www.cafonline.com/caf-africa-cup-of-nations/news/cote-divoire-edge-closer-to-totalenergies-caf-afcon-qualification-comoros-stun-tunisia/"
+      ],
+      "evidence_log": [
+        "29 Jan 2024: CAF and SofaScore show Franck Kessie converted Cote d'Ivoire's in-match penalty against Senegal in the AFCON last 16 and later scored the winning shootout kick.",
+        "11 Oct 2024: French-language reporting on Cote d'Ivoire vs Sierra Leone described Kessie scoring the first Ivorian penalty before Oumar Diakite added a second later in the same match.",
+        "Current working view: Kessie is still the best big-match primary, with Diakite the right secondary from the freshest qualifier evidence."
+      ]
+    },
+    {
+      "team": "Croatia",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Luka Modric",
+      "likely_secondary": "Andrej Kramaric",
+      "last_evidence": "Nations League pressure-order trail plus Dalic quote, 2023-2025",
+      "note": "Luka Modric should now be treated as a high-confidence Croatia primary, with one important caveat: at his age, availability and minutes still matter. The deeper Croatia picture is a dual-taker system rather than a contradiction. Andrej Kramaric has taken routine competitive penalties when Modric was off or when the order was delegated, but Modric remains the designated first-choice for the biggest moments. The Dalic quote already pointed that way, and the Nations League evidence backs it up: Modric took the decisive extra-time penalty against the Netherlands, while Kramaric remains the clearest secondary when the captain is not the taker on the pitch.",
+      "source_urls": [
+        "https://www.uefa.com/uefanationsleague/news/0297-1d535bbdaa0d-50f4ebd253a0-1000--croatia-2-0-france-hosts-take-two-goal-advantage-into-secon/",
+        "https://www.vecernji.hr/sport/evo-zasto-je-kramaric-a-ne-modric-izveo-penal-protiv-francuske-poznato-i-tko-ce-ubuduce-pucati-1847284",
+        "https://www.vecernji.hr/sport/luka-modric-je-sinoc-svima-pokazao-kakav-je-covjek-kapetanov-potez-ce-se-dugo-pamtiti-1868416",
+        "https://www.index.hr/sport/clanak/modric-budimir-me-pitao-moze-li-pucati-penal-a-i-bolje-je-da-ja-ne-pucam-dvaput/2679445.aspx"
+      ],
+      "evidence_log": [
+        "14 Jun 2023: Croatia's Nations League semi-final against the Netherlands showed Andrej Kramaric scoring the earlier in-match penalty before Luka Modric later converted the decisive extra-time penalty with the game on the line.",
+        "20 Mar 2025: UEFA reported Andrej Kramaric took Croatia's early penalty against France and missed.",
+        "21 Mar 2025: Croatian reporting quoted Zlatko Dalic saying Luka Modric was Croatia's first penalty taker, but he gave that France penalty to Kramaric.",
+        "9 Jun 2025: Croatian reporting on the 5-1 win over Czechia showed Modric scored Croatia's first penalty before later letting Ante Budimir take the second one.",
+        "Current working view: if Modric is on the pitch, Croatia's biggest penalties still belong to him; Kramaric is the strongest named fallback when the order shifts."
+      ]
+    },
+    {
+      "team": "Curacao",
+      "confederation": "Concacaf",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "medium",
+      "likely_primary": "Leandro Bacuna",
+      "likely_secondary": "Jordi Paulina",
+      "last_evidence": "Concacaf qualifying: Bermuda 0-7 Curacao, 9 Oct 2025",
+      "note": "Curacao is now strong enough for a medium reviewed call. The official Bermuda qualifier report gave the first in-match penalty to Leandro Bacuna, then later showed Jordi Paulina winning and scoring another penalty in the same match. That makes Bacuna the clearest lead and Paulina the clearest challenger, even if the full order is not completely rigid yet.",
+      "source_urls": [
+        "https://www.concacaf.com/en/world-cup-qualifying-men/news/curacao-defeats-bermuda-to-inch-closer-to-world-cup-berth/",
+        "https://www.concacaf.com/nations-league/news/curacao-finished-in-first-place-in-group-b-and-qualified-for-the-gold-cup/"
+      ],
+      "evidence_log": [
+        "9 Oct 2025: Concacaf's Bermuda report shows Leandro Bacuna scored Curacao's first in-match penalty in World Cup qualifying.",
+        "The same official report shows Jordi Paulina later won and converted another penalty in that 7-0 victory.",
+        "That same-match sequence is strong enough to stop treating Curacao as a blank or purely speculative board.",
+        "Current working view: Bacuna is a medium-confidence Curacao primary, with Paulina the clearest challenger."
+      ]
+    },
+    {
+      "team": "Czechia",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "medium",
+      "likely_primary": "Patrik Schick",
+      "likely_secondary": "Tomas Soucek",
+      "last_evidence": "World Cup play-offs, 26-31 Mar 2026: Schick scored the in-match penalty vs Republic of Ireland; Soucek also scored in the Denmark shootout",
+      "note": "Czechia's March play-off run sharpened the file. Patrik Schick scored the in-match penalty against Republic of Ireland in the semi-final, which is now the strongest direct evidence in the current Czech trail. Tomas Soucek still matters because he remains captain, scored in the shootout against Ireland and again in the successful shootout against Denmark, so this is not a one-name board. The best present read is Schick first, Soucek second, with the confidence staying medium because the Czechs still showed multiple trusted takers across the two knockout matches.",
+      "source_urls": [
+        "https://www.skysports.com/football/czech-republic-vs-republic-of-ireland/live/550188",
+        "https://www.espn.co.uk/football/match/_/gameId/761378/irlanda-republica-checa",
+        "https://www.espn.co.uk/football/report/_/gameId/761955",
+        "https://www.vanguardngr.com/2026/03/czech-republic-beat-denmark-on-penalties-to-reach-world-cup/"
+      ],
+      "evidence_log": [
+        "26 Mar 2026: Sky Sports and ESPN show Patrik Schick converted Czechia's in-match penalty against the Republic of Ireland in the World Cup play-off semi-final.",
+        "26 Mar 2026: the same shootout log also shows Tomas Soucek scored in the semi-final shootout against Ireland.",
+        "31 Mar 2026: reporting from the Denmark final shows Tomas Chory and Tomas Soucek both converted in the successful Czechia shootout, with Michal Sadilek scoring the clincher.",
+        "Current working view: Schick now has the strongest direct in-match claim, while Soucek remains the clearest secondary because he also carried high-pressure shootout responsibility in both wins."
+      ]
+    },
+    {
+      "team": "Ecuador",
+      "confederation": "CONMEBOL",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Enner Valencia",
+      "likely_secondary": "Gonzalo Plata",
+      "last_evidence": "CONMEBOL: Ecuador 1-0 Argentina, 9 Sep 2025",
+      "note": "CONMEBOL reported Enner Valencia scored Ecuador's winner from the penalty spot against Argentina in the final qualifying matchday. That is strong recent first-choice evidence. Gonzalo Plata is the clearest secondary because he is the most natural attacking fallback in Ecuador's likely front line once Valencia is absent or withdrawn.",
+      "evidence_log": [
+        "9 Sep 2025: Enner Valencia scored Ecuador's penalty winner vs Argentina in World Cup qualifying.",
+        "This is strong recent senior evidence that he remains Ecuador's primary taker.",
+        "Current working view: Valencia first, Gonzalo Plata second, with Plata the strongest attacking fallback in Ecuador's likely tournament side."
+      ],
+      "source_urls": [
+        "https://www.conmebol.com/noticias/ecuador-cierra-con-broche-de-oro/",
+        "https://www.sofascore.com/football/match/argentina-ecuador/hVbsuWb"
+      ]
+    },
+    {
+      "team": "Egypt",
+      "confederation": "CAF",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Mohamed Salah",
+      "likely_secondary": "Omar Marmoush",
+      "last_evidence": "CAF AFCON 2025: Egypt 1-0 South Africa, 10 Jan 2026",
+      "note": "Mohamed Salah remains Egypt's clear first-choice taker, but Omar Marmoush is the right secondary now. CAF's World Cup qualifying round-up against Ethiopia explicitly listed both players converting penalties in the same match, which is strong direct evidence of the order behind Salah when Egypt get more than one kick in a game.",
+      "evidence_log": [
+        "10 Jan 2026: Mohamed Salah scored Egypt's match-winning penalty vs South Africa in AFCON quarter-final play.",
+        "21 Mar 2025: CAF's World Cup qualifying round-up against Ethiopia listed two Egypt penalties, converted by Mohamed Salah and Omar Marmoush.",
+        "Current working view: Salah is still first, with Marmoush now the clearest secondary."
+      ],
+      "source_urls": [
+        "https://www.cafonline.com/afcon2025/news/angola-and-zimbabwe-share-spoils-in-exciting-group-b-stalemate/",
+        "https://www.cafonline.com/afcon2025/news/match-stats-angola-vs-egypt-totalenergies-caf-africa-cup-of-nations-morocco-2025-group-b/",
+        "https://www.cafonline.com/afcon2025/news/live-updates-on-todays-matches-and-key-events-at-afcon-2025-in-morocco/"
+      ]
+    },
+    {
+      "team": "England",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Harry Kane",
+      "likely_secondary": "Bukayo Saka",
+      "last_evidence": "UEFA: Latvia 0-5 England, 14 Oct 2025",
+      "note": "UEFA's qualifier report states Kane added a first-half penalty as England sealed qualification in Riga. That keeps him as England's clear first-choice taker, with Bukayo Saka the strongest secondary on both club-level role and England's Euro 2024 shootout order once Kane had already gone off. Cole Palmer is the best third-choice fallback after taking the first kick in that Switzerland shootout.",
+      "evidence_log": [
+        "14 Oct 2025: Harry Kane scored England's penalty vs Latvia in World Cup qualifying.",
+        "Sofascore timeline for the same match records Kane winning and converting the penalty sequence.",
+        "Euro 2024 quarter-final shootout vs Switzerland: Palmer took England's first penalty, Bellingham second, Saka third, Toney fourth and Alexander-Arnold fifth after Kane had already been substituted.",
+        "That order, plus Saka's Arsenal penalty role, makes Saka the clearest England backup with Palmer the strongest tertiary option."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/european-qualifiers/news/029e-1eeba1581bf0-f1ad83579d94-1000--european-qualifiers-for-the-2026-world-cup-highlights-spa/",
+        "https://www.sofascore.com/football/match/england-latvia/gUbsnUb"
+      ]
+    },
+    {
+      "team": "France",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Kylian Mbappe",
+      "likely_secondary": "Ousmane Dembele",
+      "last_evidence": "FFF: France 4-0 Ukraine, 13 Nov 2025",
+      "note": "The FFF match report lists Mbappe scoring from the spot against Ukraine in a World Cup qualifier, which keeps him as France's clear first-choice taker. With Griezmann retired from internationals, the backup order is less settled, but Ousmane Dembele is the strongest available secondary because he is a regular France starter and arrives with a live club-level penalty profile from PSG.",
+      "evidence_log": [
+        "13 Nov 2025: Kylian Mbappe scored France's penalty vs Ukraine in World Cup qualifying.",
+        "He remains the default senior taker when available; no stronger recent evidence suggests a hierarchy change.",
+        "With Antoine Griezmann out of the international picture, the backup line is less settled, but Ousmane Dembele is the strongest available secondary on current role and club-level penalty profile."
+      ],
+      "source_urls": [
+        "https://www.fff.fr/article/15721-l-amerique-les-voila-.html",
+        "https://www.sofascore.com/football/match/ukraine-france/GObsbUb"
+      ]
+    },
+    {
+      "team": "Germany",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Joshua Kimmich",
+      "likely_secondary": "Kai Havertz",
+      "last_evidence": "DFB: Germany 4-0 Luxembourg, 10 Oct 2025",
+      "note": "Joshua Kimmich is still the best current Germany lead because he actually took and scored the World Cup qualifying penalty against Luxembourg on 10 October 2025. Kai Havertz remains the clearest alternative, but he missed the qualifying campaign through injury, which is why the live file still leans Kimmich rather than assuming Havertz would step back in immediately. Germany should still be treated as a two-name board, not a one-man answer.",
+      "source_urls": [
+        "https://www.dfb.de/en/news/statement-4-0-victory-over-luxembourg-in-sinsheim",
+        "https://datencenter.dfb.de/en/data-center/qualifiers/2025-2026/group-a/2395273",
+        "https://datencenter.dfb.de/en/data-center/uefa-nations-league-division-a/18977/quarterfinal/2391434",
+        "https://www.sofascore.com/football/match/germany-italy/hUbslUb"
+      ],
+      "evidence_log": [
+        "10 Oct 2025: Bundesliga.com's Germany 4-0 Luxembourg report states Joshua Kimmich converted Germany's in-match World Cup qualifying penalty.",
+        "Kai Havertz missed the whole qualifying campaign through injury, which is the key context around any future shift in the Germany order if he is fully fit by the tournament.",
+        "Current working view: Kimmich first, Havertz second, with Havertz fitness the main variable that could change the board before World Cup 2026."
+      ]
+    },
+    {
+      "team": "Ghana",
+      "confederation": "CAF",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Jordan Ayew",
+      "likely_secondary": "Mohammed Kudus",
+      "last_evidence": "AFCON 2024 vs Mozambique; World Cup qualifying vs Chad, 2025",
+      "note": "Jordan Ayew is Ghana's clear current penalty taker. CAF reported him scoring twice from the spot against Mozambique at AFCON 2024, and he then converted Ghana's World Cup qualifying penalty against Chad in March 2025. Mohammed Kudus remains the most dangerous alternative in the attack, but the penalty trail itself is firmly with Ayew.",
+      "source_urls": [
+        "https://www.cafonline.com/afcon2025/news/mozambique-stun-ghana-with-stunning-late-double/",
+        "https://www.cafonline.com/news/ghana-run-rampant-in-accra-cote-d-ivoire-labour-to-victory/"
+      ],
+      "evidence_log": [
+        "22 Jan 2024: CAF reported Jordan Ayew scored both of Ghana's in-match penalties against Mozambique at AFCON.",
+        "21 Mar 2025: CAF's World Cup qualifying round-up reported Ayew also converted Ghana's penalty in the 5-0 win over Chad.",
+        "Current working view: repeated recent senior penalties make Ayew a high-confidence World Cup primary."
+      ]
+    },
+    {
+      "team": "Haiti",
+      "confederation": "Concacaf",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Duckens Nazon",
+      "likely_secondary": "Frantzdy Pierrot",
+      "last_evidence": "Concacaf Nations League vs Aruba, 11 and 14 Oct 2024",
+      "note": "Duckens Nazon is Haiti's strongest current penalty taker. The Concacaf match notes show him scoring three penalties across two Nations League matches against Aruba in October 2024, while Frantzdy Pierrot added a later penalty in the second meeting. That gives Haiti a much cleaner recent order than it first looked.",
+      "source_urls": [
+        "https://www.concacaf.com/en/world-cup-qualifying-men/news/aruba-belize-seek-victories-to-close-qualifying-campaigns/"
+      ],
+      "evidence_log": [
+        "11 Oct 2024: Concacaf's historical series note shows Duckens Nazon scored two penalties in Haiti's 3-1 Nations League win over Aruba.",
+        "14 Oct 2024: the same Concacaf note shows Nazon scored another penalty in Haiti's 5-3 win over Aruba, with Frantzdy Pierrot later converting one as well.",
+        "Current working view: Nazon is a high-confidence Haiti primary, with Pierrot the clearest fallback."
+      ]
+    },
+    {
       "team": "IR Iran",
       "confederation": "AFC",
       "status": "qualified",
@@ -113,6 +496,27 @@
         "31 Jan 2024: AFC reported Mehdi Taremi scored Iran's in-match penalty in the Asian Cup round-of-16 tie against Syria.",
         "26 Mar 2025: AFC again framed Taremi as Iran's decisive scorer when qualification was sealed against Uzbekistan.",
         "Current working view: Taremi remains the clearest first-choice signal in the Iran setup, with Azmoun the best fallback by role when Iran's main attacking core is together."
+      ]
+    },
+    {
+      "team": "Iraq",
+      "confederation": "AFC",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "medium",
+      "likely_primary": "Amir Al-Ammari",
+      "likely_secondary": "Aymen Hussein",
+      "last_evidence": "World Cup qualifying: Iraq 2-1 UAE, 18 Nov 2025",
+      "note": "Amir Al-Ammari has the strongest direct Iraq evidence right now because Transfermarkt's national-team penalty log records him converting Iraq's late World Cup qualifying penalty against the UAE in November 2025. That is the cleanest recent senior spot-kick in the file and it is enough to review Iraq into the main board. Aymen Hussein remains the best secondary because he is still Iraq's main centre-forward and biggest open-play scorer, so he is the likeliest fallback if Al-Ammari is absent or the order shifts.",
+      "source_urls": [
+        "https://www.transfermarkt.com/irak/elfmeterschuetzen/verein/3560",
+        "https://www.transfermarkt.com/amir-al-ammari/elfmetertore/spieler/303766",
+        "https://www.the-afc.com/en/national/asian_qualifiers.html/news/group-b-iraq-1-0-palestine"
+      ],
+      "evidence_log": [
+        "18 Nov 2025: Transfermarkt's Iraq national-team penalty log records Amir Al-Ammari converting in World Cup qualifying against the UAE.",
+        "Amir Al-Ammari's broader penalty profile also shows previous Iraq qualifying spot-kick responsibility, which strengthens the case that the November 2025 penalty was not a random one-off.",
+        "Current working view: Al-Ammari is the best present-day Iraq primary, with Aymen Hussein the strongest fallback by attacking status and goal volume."
       ]
     },
     {
@@ -185,6 +589,188 @@
       ]
     },
     {
+      "team": "Mexico",
+      "confederation": "Concacaf",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Raul Jimenez",
+      "likely_secondary": "Santiago Gimenez",
+      "last_evidence": "Concacaf Nations League Final: Mexico 2-1 Panama, 24 Mar 2025",
+      "note": "Raul Jimenez is Mexico's strongest current World Cup penalty candidate. The key direct evidence is his stoppage-time winning penalty against Panama in the 2025 Concacaf Nations League final, and that sits comfortably with his broader role as the senior side's most trusted central finisher in the current cycle. Santiago Gimenez is the clearest secondary because he is the other leading centre-forward in Mexico's pool and the most obvious attacking fallback if Jimenez is not the taker on the pitch.",
+      "source_urls": [
+        "https://www.concacaf.com/nations-league/news/jimenez-shines-again-to-deliver-mexico-s-first-cnl-trophy/",
+        "https://www.concacaf.com/en/gold-cup/news/road-to-the-2025-concacaf-gold-cup-mexico/",
+        "https://www.sofascore.com/football/match/panama-mexico/GVbsodc"
+      ],
+      "evidence_log": [
+        "24 Mar 2025: Raul Jimenez scored Mexico's winning penalty vs Panama in the Concacaf Nations League final.",
+        "Concacaf's tournament recap also framed Jimenez as the decisive figure in Mexico's Nations League title run.",
+        "Current working view: Jimenez is the clearest Mexico primary and strong enough now for a high-confidence label, with Santiago Gimenez the best fallback in the likely tournament striker rotation."
+      ]
+    },
+    {
+      "team": "Morocco",
+      "confederation": "CAF",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "medium",
+      "likely_primary": "Brahim Diaz",
+      "likely_secondary": "Achraf Hakimi",
+      "last_evidence": "CAF AFCON 2025 Final: Senegal 1-0 Morocco aet, 18 Jan 2026",
+      "note": "Brahim Diaz is the clearest current Morocco primary. The deeper AFCON 2025 scan now strengthens rather than weakens that call: he took the March 2025 World Cup qualifying penalty against Tanzania, scored again from the spot against Mali at AFCON, and was then trusted with the huge late penalty in the AFCON final against Senegal ahead of Hakimi and the rest of Morocco's attack. The Panenka miss in that final was bad execution, not a hierarchy change. Hakimi remains the clearest challenger if the order shifts.",
+      "source_urls": [
+        "https://www.cafonline.com/afcon2025/news/match-stats-morocco-vs-tanzania-totalenergies-caf-africa-cup-of-nations-morocco-2025-round-of-16/",
+        "https://www.sofascore.com/football/match/mali-morocco/DVbsGWb",
+        "https://www.cafonline.com/afcon2025/news/gueye-extra-time-stunner-hands-senegal-totalenergies-afcon-title/",
+        "https://www.sofascore.com/football/match/morocco-south-africa/LUbsDVb",
+        "https://africanfootball.com/news/836306/Daz-apologises-for-AFCON-final-penalty-blunder"
+      ],
+      "evidence_log": [
+        "25 Mar 2025: CAF match stats recorded Brahim Diaz scoring Morocco's penalty in the 2-0 win over Tanzania.",
+        "26 Dec 2025: SofaScore timeline shows Morocco again gave Brahim Diaz the penalty against Mali at AFCON and he converted it.",
+        "18 Jan 2026: CAF's AFCON final report shows Morocco again turned to Diaz for a huge late in-match penalty against Senegal, even though Edouard Mendy saved the Panenka attempt.",
+        "30 Jan 2024: SofaScore match timeline shows Achraf Hakimi took and missed Morocco's late penalty against South Africa at AFCON, which makes him the clearest alternative if the order changes.",
+        "Current working view: Diaz is Morocco's first-choice taker, and the AFCON final penalty actually strengthens that call because he was chosen for the biggest possible spot kick."
+      ]
+    },
+    {
+      "team": "Netherlands",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Memphis Depay",
+      "likely_secondary": "Cody Gakpo",
+      "last_evidence": "OnsOranje / UEFA World Cup qualifying and Nations League, Mar-Nov 2025",
+      "note": "Memphis Depay is the Netherlands' primary penalty taker when he starts. The 2025 evidence trail is strong enough to stop hedging: Depay took and scored the big senior penalties against Spain and Finland, while Cody Gakpo only stepped in when Depay was not the taker on the pitch.",
+      "source_urls": [
+        "https://www.onsoranje.nl/teams/185184/toernooien/7996/wedstrijd/334508",
+        "https://www.onsoranje.nl/toernooien/7996/wedstrijd/334511",
+        "https://www.onsoranje.nl/teams/185184/programma/wedstrijd/334507",
+        "https://www.uefa.com/uefanationsleague/news/0297-1d597367b2ea-b01b9ce22e51-1000--spain-3-3-netherlands-agg-5-5-5-4-pens-champions-hold-nerve/",
+        "https://www.sofascore.com/football/match/netherlands-spain/YTbsfUb",
+        "https://www.sofascore.com/football/match/netherlands-malta/IObsfUb",
+        "https://www.sofascore.com/football/match/lithuania-netherlands/fUbsBVb"
+      ],
+      "evidence_log": [
+        "23 Mar 2025: Memphis Depay scored the Netherlands' penalty vs Spain in the Nations League quarter-final.",
+        "12 Oct 2025: Memphis Depay scored the Netherlands' penalty vs Finland in World Cup qualifying.",
+        "9 Oct 2025 and 17 Nov 2025: Cody Gakpo scored Netherlands penalties vs Malta and Lithuania in World Cup qualifying when Depay was not the taker on the pitch.",
+        "Current working view: Depay is strong enough now for a high-confidence World Cup label, with Gakpo the clearest fallback."
+      ]
+    },
+    {
+      "team": "New Zealand",
+      "confederation": "OFC",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "medium",
+      "likely_primary": "Chris Wood",
+      "likely_secondary": "Ben Waine",
+      "last_evidence": "All Whites 2024-2025 qualifying run and Fiji penalty sequence",
+      "note": "Chris Wood remains the obvious New Zealand primary because he is the captain, the central scorer and the focal point of the side that qualified. The clearest secondary clue comes from the Fiji qualifier, where Wood had already gone off and Ben Waine then took and missed a late penalty. That is enough to move New Zealand into the reviewed bucket at medium confidence, with Waine the best fallback name for now.",
+      "source_urls": [
+        "https://www.nzfootball.co.nz/newsarticle/147548",
+        "https://www.nzfootball.co.nz/newsarticle/151120",
+        "https://www.sofascore.com/football/match/fiji-new-zealand/JVbsUkd"
+      ],
+      "evidence_log": [
+        "The All Whites' 2024-25 qualification run was built around Chris Wood as captain and main scorer.",
+        "21 Mar 2025: SofaScore shows New Zealand were awarded a late penalty against Fiji after Chris Wood had already been substituted, and Ben Waine missed it.",
+        "That Fiji sequence makes Ben Waine the clearest current fallback rather than leaving the backup slot blank.",
+        "Current working view: Wood is still the obvious World Cup primary, with Ben Waine the clearest fallback, even if the sample is not strong enough to call it a high-confidence board."
+      ]
+    },
+    {
+      "team": "Norway",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Erling Haaland",
+      "likely_secondary": "Martin Odegaard",
+      "last_evidence": "UEFA: Norway 5-0 Israel, 11 Oct 2025",
+      "note": "UEFA reported Haaland missed an early penalty and still scored a hat-trick against Israel. The miss does not change the hierarchy; it is still direct evidence that he is Norway's first-choice taker. Martin Odegaard is the obvious backup if Haaland is unavailable or has already gone off.",
+      "evidence_log": [
+        "11 Oct 2025: Erling Haaland took Norway's penalty vs Israel in World Cup qualifying and missed.",
+        "A miss is still direct hierarchy evidence; it confirms he remained the first-choice taker in that match context.",
+        "Martin Odegaard is the cleanest secondary on leadership profile and club-level penalty credibility."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/european-qualifiers/news/029e-1eeba1581bf0-f1ad83579d94-1000--european-qualifiers-for-the-2026-world-cup-round-up-spain-po/",
+        "https://www.sofascore.com/football/match/israel-norway/AObsFOb"
+      ]
+    },
+    {
+      "team": "Panama",
+      "confederation": "Concacaf",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "medium",
+      "likely_primary": "Ismael Diaz",
+      "likely_secondary": "Jose Fajardo",
+      "last_evidence": "Concacaf Nations League and Gold Cup, Nov 2024 to Jun 2025",
+      "note": "Panama is still one of the most mixed boards in Concacaf, but it is now strong enough for a medium reviewed call. Jose Fajardo scored the Nations League quarter-final penalty against Costa Rica in November 2024, Adalberto Carrasquilla then scored Panama's penalty in the 2025 Nations League final, Eduardo Guerrero converted one against Guadeloupe at the 2025 Gold Cup, and Ismael Diaz scored another against Jamaica days later. Diaz is the best current lead because he has the latest clean Gold Cup penalty, while Fajardo remains the clearest earlier knockout-stage challenger.",
+      "source_urls": [
+        "https://www.concacaf.com/nations-league/news/fajardo-strikes-panama-to-victory-in-costa-rica/",
+        "https://www.concacaf.com/en/gold-cup/news/road-to-the-2025-concacaf-gold-cup-panama/",
+        "https://www.concacaf.com/en/gold-cup/news/diaz-brace-propels-panama-past-guadeloupe/",
+        "https://www.concacaf.com/en/gold-cup/news/ismael-diaz-hat-trick-in-panama-s-win-over-jamaica/"
+      ],
+      "evidence_log": [
+        "14 Nov 2024: Concacaf reported Jose Fajardo scored Panama's Nations League penalty against Costa Rica.",
+        "23 Mar 2025: Concacaf's Gold Cup road report notes Adalberto Carrasquilla scored Panama's penalty in the Nations League final against Mexico.",
+        "16 Jun 2025: Concacaf reported Eduardo Guerrero converted Panama's penalty against Guadeloupe at the Gold Cup.",
+        "24 Jun 2025: Concacaf then reported Ismael Diaz scored Panama's penalty against Jamaica.",
+        "Current working view: Diaz is the freshest lead, Fajardo is the strongest earlier challenger, and Panama's four-taker run is now better handled as a reviewed but fluid board than as a blank holdout."
+      ]
+    },
+    {
+      "team": "Paraguay",
+      "confederation": "CONMEBOL",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "medium",
+      "likely_primary": "Julio Enciso",
+      "likely_secondary": "Miguel Almiron",
+      "last_evidence": "APF / Sofascore: Paraguay 2-0 Uruguay, 5 Jun 2025",
+      "note": "Julio Enciso is the clearest current Paraguay taker. The key point is not just that he scored against Uruguay in June 2025, but that Paraguay kept faith with him after the earlier Venezuela miss. Spanish-language reporting on that October 2024 match said Gustavo Alfaro explicitly authorised Enciso to take the penalty, which is useful hierarchy evidence in itself. Enciso then kept the role and converted the next major chance, which is exactly the pattern you want to see from a designated taker. Miguel Almiron remains the closest alternative by seniority and role, even without stronger direct penalty evidence.",
+      "source_urls": [
+        "https://www.apf.org.py/noticias/la-albirroja-triunfa-y-da-otro-paso-clave",
+        "https://www.apf.org.py/noticias/paraguay-clasificado-los-numeros-que-nos-llevaron-al-mundial-2026",
+        "https://www.sofascore.com/football/match/paraguay-uruguay/AUbsOVb",
+        "https://www.transfermarkt.com/julio-enciso/elfmetertore/spieler/660867"
+      ],
+      "evidence_log": [
+        "15 Oct 2024: Spanish-language reporting on Paraguay vs Venezuela said Gustavo Alfaro authorised Julio Enciso to take Paraguay's penalty, and Enciso missed.",
+        "5 Jun 2025: APF reported Julio Enciso scored Paraguay's penalty in the 2-0 qualifying win over Uruguay.",
+        "SofaScore's match timeline confirms Enciso as the in-match penalty taker in that same game.",
+        "Current working view: Enciso kept the job after a miss, which is strong evidence that he is Paraguay's designated first-choice taker, with Almiron the best profile-led fallback."
+      ]
+    },
+    {
+      "team": "Portugal",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Cristiano Ronaldo",
+      "likely_secondary": "Bruno Fernandes",
+      "last_evidence": "UEFA: Portugal 1-0 Republic of Ireland, 14 Oct 2025",
+      "note": "UEFA reported Ronaldo took Portugal's penalty against Republic of Ireland, even though Kelleher saved it. That keeps him as Portugal's primary taker in the current cycle, with Bruno Fernandes the clearest next option if Ronaldo is rested, substituted or absent.",
+      "evidence_log": [
+        "15 Nov 2024: FPF match file for Portugal 5-1 Poland records Cristiano Ronaldo scoring Portugal's in-match penalty.",
+        "23 Mar 2025: UEFA quarter-final report shows Ronaldo again took Portugal's penalty against Denmark, even though Kasper Schmeichel saved it.",
+        "Current working view: that combination of continued first-choice responsibility and recent senior evidence keeps Ronaldo as Portugal's clear primary candidate when he starts.",
+        "Bruno Fernandes is the strongest secondary on overall penalty profile and is the logical fallback when Ronaldo is not on the pitch."
+      ],
+      "source_urls": [
+        "https://www.fpf.pt/pt/selecoes/futebol-masculino/selecao-a/jogos/ficha-de-jogo/match/2103450",
+        "https://www.uefa.com/uefanationsleague/news/0297-1d597bc326c5-9a0931e9abb7-1000--nations-league-quarter-finals-francisco-trincao-double-he/"
+      ]
+    },
+    {
       "team": "Qatar",
       "confederation": "AFC",
       "status": "qualified",
@@ -229,157 +815,26 @@
       ]
     },
     {
-      "team": "Uzbekistan",
-      "confederation": "AFC",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Eldor Shomurodov",
-      "likely_secondary": "Otabek Shukurov",
-      "last_evidence": "Olympics 2024, WCQ 2025 and later shootout order",
-      "note": "Eldor Shomurodov should now be treated as a high-confidence Uzbekistan primary. The pattern is very consistent: captain, all-time leading scorer, penalty taker in historic moments, and still trusted after misses. He scored Uzbekistan's first-ever Olympic goal from the spot against Spain, then later took and missed the World Cup qualifying penalty against Kyrgyz Republic without losing status, and still led the later shootout order. Otabek Shukurov remains the best named secondary because he is the only other direct recent Uzbekistan taker in the file, but this page should be centred clearly around Shomurodov.",
-      "source_urls": [
-        "https://championat.asia/oz/news/ozbekiston-qirgiziston-tarkiblar-malum",
-        "https://championat.asia/oz/m/news/cafa-nations-cup-ozbekiston-qirgiz-respublikasi-matnli-translyaciya",
-        "https://www.sofascore.com/football/match/iran-uzbekistan/yUbsqVb"
-      ],
-      "evidence_log": [
-        "24 Jul 2024: Shomurodov scored Uzbekistan's first-ever Olympic goal from the penalty spot against Spain.",
-        "20 Mar 2025: Championat.asia's World Cup qualifying report states Eldor Shomurodov took Uzbekistan's in-match penalty against Kyrgyz Republic and the goalkeeper saved it.",
-        "5 Sep 2025: Championat.asia's CAFA coverage shows Otabek Shukurov later converted a penalty for Uzbekistan against Kyrgyz Republic.",
-        "18 Nov 2025: SofaScore's shootout order against Iran shows Shomurodov still taking the first Uzbekistan penalty in the tiebreak.",
-        "Current working view: Shomurodov is a high-confidence Uzbekistan primary, with Shukurov the clearest named fallback rather than a true rival for the lead role."
-      ]
-    },
-    {
-      "team": "Algeria",
-      "confederation": "CAF",
+      "team": "Scotland",
+      "confederation": "UEFA",
       "status": "qualified",
       "research_status": "reviewed",
       "confidence": "medium",
-      "likely_primary": "Riyad Mahrez",
-      "likely_secondary": "Mohamed Amoura",
-      "last_evidence": "AFCON 2025: Algeria 1-0 Burkina Faso, 28 Dec 2025",
-      "note": "Riyad Mahrez is the best current Algeria penalty call. The strongest recent evidence is his AFCON 2025 winner from the spot against Burkina Faso, which restored him as the clearest direct senior signal after the more mixed 2024 period. Mohamed Amoura is the most plausible challenger from the current attacking core, but Mahrez still has the strongest national-team penalty claim.",
+      "likely_primary": "Scott McTominay",
+      "likely_secondary": "Che Adams",
+      "last_evidence": "UEFA Nations League play-off: Greece 0-1 Scotland, 20 Mar 2025",
+      "note": "McTominay is the best current Scotland penalty call. He won and converted the decisive spot kick against Greece in March 2025, and there is no stronger recent senior evidence pointing elsewhere. Che Adams remains the clearest fallback in the pool, but McTominay is the name that fits the current national-team evidence best.",
       "source_urls": [
-        "https://www.sofascore.com/football/match/burkina-faso-algeria/QTbsZUb",
-        "https://supersport.com/news/684d253d-e5cc-438b-a266-5ad5b9d09557/into-the-last-16-mahrez-gives-algeria-win-over-burkina-faso",
-        "https://www.lemonde.fr/afrique/article/2024/09/12/le-footballeur-riyad-mahrez-sujet-de-debat-en-algerie_6315002_3212.html"
+        "https://www.uefa.com/uefanationsleague/match/2043039--greece-vs-scotland/",
+        "https://feeds.bbci.co.uk/sport/football/live/c798jwn4z07t",
+        "https://www.transfermarkt.com/scott-mctominay/elfmetertore/spieler/315969",
+        "https://www.sofascore.com/football/match/belarus-scotland/VTbsTUb"
       ],
       "evidence_log": [
-        "28 Dec 2025: SofaScore and Reuters/SuperSport reporting show Riyad Mahrez scored Algeria's in-match penalty against Burkina Faso at AFCON 2025.",
-        "5 Sep 2024: CAF's AFCON qualifying report against Equatorial Guinea shows Mahrez also missed an in-match penalty in a match Algeria still won 2-0.",
-        "The 2024-25 cycle was therefore mixed rather than spotless, which is why Algeria sits at medium rather than high confidence.",
-        "Current working view: Mahrez remains Algeria's clearest World Cup primary, with Amoura the most plausible challenger from the present attack."
-      ]
-    },
-    {
-      "team": "Cabo Verde",
-      "confederation": "CAF",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Ryan Mendes",
-      "likely_secondary": "Bebe",
-      "last_evidence": "AFCON 2024 vs Mauritania; AFCON qualifying vs Egypt, 2024",
-      "note": "Ryan Mendes is one of the cleaner African calls on the board. CAF reported him scoring the late AFCON knockout penalty against Mauritania, and SofaScore later shows him converting Cabo Verde's qualifier penalty against Egypt in November 2024. Bebe remains the clearest fallback scorer in the side, but the penalty trail is firmly with Mendes.",
-      "source_urls": [
-        "https://www.cafonline.com/afcon2025/news/mendes-penalty-sends-cape-verde-into-quarter-finals/",
-        "https://www.sofascore.com/es/football/match/egypt-cape-verde/dVbsiVb",
-        "https://www.sofascore.com/football/match/mozambique-cape-verde/dVbsIVb",
-        "https://www.inforpress.cv/article-6029"
-      ],
-      "evidence_log": [
-        "29 Jan 2024: CAF reported Ryan Mendes scored Cabo Verde's decisive in-match penalty against Mauritania in the AFCON last 16.",
-        "15 Nov 2024: SofaScore shows Ryan Mendes also converted Cabo Verde's penalty against Egypt in AFCON qualifying.",
-        "Current working view: two clean recent senior penalties for the same player make Mendes a high-confidence World Cup primary."
-      ]
-    },
-    {
-      "team": "Cote d'Ivoire",
-      "confederation": "CAF",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "medium",
-      "likely_primary": "Franck Kessie",
-      "likely_secondary": "Oumar Diakite",
-      "last_evidence": "AFCON 2024 vs Senegal and AFCON qualifier vs Sierra Leone, 2024",
-      "note": "Franck Kessie is still the best current Cote d'Ivoire answer. He took and scored the huge AFCON knockout penalty against Senegal and also converted the decisive final kick in the shootout. Later qualifier evidence against Sierra Leone showed Cote d'Ivoire using two takers in the same match, with Kessie taking the first penalty and Oumar Diakite scoring the second. That keeps the hierarchy at medium rather than high, but it still leaves Kessie as the strongest primary on both big-match status and order.",
-      "source_urls": [
-        "https://www.cafonline.com/caf-africa-cup-of-nations/news/cote-divoire-stun-holders-senegal-in-shootout-to-reach-quarter-finals/",
-        "https://www.sofascore.com/football/match/cote-divoire-senegal/OUbstVb",
-        "https://www.cafonline.com/caf-africa-cup-of-nations/news/cote-divoire-edge-closer-to-totalenergies-caf-afcon-qualification-comoros-stun-tunisia/"
-      ],
-      "evidence_log": [
-        "29 Jan 2024: CAF and SofaScore show Franck Kessie converted Cote d'Ivoire's in-match penalty against Senegal in the AFCON last 16 and later scored the winning shootout kick.",
-        "11 Oct 2024: French-language reporting on Cote d'Ivoire vs Sierra Leone described Kessie scoring the first Ivorian penalty before Oumar Diakite added a second later in the same match.",
-        "Current working view: Kessie is still the best big-match primary, with Diakite the right secondary from the freshest qualifier evidence."
-      ]
-    },
-    {
-      "team": "Egypt",
-      "confederation": "CAF",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Mohamed Salah",
-      "likely_secondary": "Omar Marmoush",
-      "last_evidence": "CAF AFCON 2025: Egypt 1-0 South Africa, 10 Jan 2026",
-      "note": "Mohamed Salah remains Egypt's clear first-choice taker, but Omar Marmoush is the right secondary now. CAF's World Cup qualifying round-up against Ethiopia explicitly listed both players converting penalties in the same match, which is strong direct evidence of the order behind Salah when Egypt get more than one kick in a game.",
-      "evidence_log": [
-        "10 Jan 2026: Mohamed Salah scored Egypt's match-winning penalty vs South Africa in AFCON quarter-final play.",
-        "21 Mar 2025: CAF's World Cup qualifying round-up against Ethiopia listed two Egypt penalties, converted by Mohamed Salah and Omar Marmoush.",
-        "Current working view: Salah is still first, with Marmoush now the clearest secondary."
-      ],
-      "source_urls": [
-        "https://www.cafonline.com/afcon2025/news/angola-and-zimbabwe-share-spoils-in-exciting-group-b-stalemate/",
-        "https://www.cafonline.com/afcon2025/news/match-stats-angola-vs-egypt-totalenergies-caf-africa-cup-of-nations-morocco-2025-group-b/",
-        "https://www.cafonline.com/afcon2025/news/live-updates-on-todays-matches-and-key-events-at-afcon-2025-in-morocco/"
-      ]
-    },
-    {
-      "team": "Ghana",
-      "confederation": "CAF",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Jordan Ayew",
-      "likely_secondary": "Mohammed Kudus",
-      "last_evidence": "AFCON 2024 vs Mozambique; World Cup qualifying vs Chad, 2025",
-      "note": "Jordan Ayew is Ghana's clear current penalty taker. CAF reported him scoring twice from the spot against Mozambique at AFCON 2024, and he then converted Ghana's World Cup qualifying penalty against Chad in March 2025. Mohammed Kudus remains the most dangerous alternative in the attack, but the penalty trail itself is firmly with Ayew.",
-      "source_urls": [
-        "https://www.cafonline.com/afcon2025/news/mozambique-stun-ghana-with-stunning-late-double/",
-        "https://www.cafonline.com/news/ghana-run-rampant-in-accra-cote-d-ivoire-labour-to-victory/"
-      ],
-      "evidence_log": [
-        "22 Jan 2024: CAF reported Jordan Ayew scored both of Ghana's in-match penalties against Mozambique at AFCON.",
-        "21 Mar 2025: CAF's World Cup qualifying round-up reported Ayew also converted Ghana's penalty in the 5-0 win over Chad.",
-        "Current working view: repeated recent senior penalties make Ayew a high-confidence World Cup primary."
-      ]
-    },
-    {
-      "team": "Morocco",
-      "confederation": "CAF",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "medium",
-      "likely_primary": "Brahim Diaz",
-      "likely_secondary": "Achraf Hakimi",
-      "last_evidence": "CAF AFCON 2025 Final: Senegal 1-0 Morocco aet, 18 Jan 2026",
-      "note": "Brahim Diaz is the clearest current Morocco primary. The deeper AFCON 2025 scan now strengthens rather than weakens that call: he took the March 2025 World Cup qualifying penalty against Tanzania, scored again from the spot against Mali at AFCON, and was then trusted with the huge late penalty in the AFCON final against Senegal ahead of Hakimi and the rest of Morocco's attack. The Panenka miss in that final was bad execution, not a hierarchy change. Hakimi remains the clearest challenger if the order shifts.",
-      "source_urls": [
-        "https://www.cafonline.com/afcon2025/news/match-stats-morocco-vs-tanzania-totalenergies-caf-africa-cup-of-nations-morocco-2025-round-of-16/",
-        "https://www.sofascore.com/football/match/mali-morocco/DVbsGWb",
-        "https://www.cafonline.com/afcon2025/news/gueye-extra-time-stunner-hands-senegal-totalenergies-afcon-title/",
-        "https://www.sofascore.com/football/match/morocco-south-africa/LUbsDVb",
-        "https://africanfootball.com/news/836306/Daz-apologises-for-AFCON-final-penalty-blunder"
-      ],
-      "evidence_log": [
-        "25 Mar 2025: CAF match stats recorded Brahim Diaz scoring Morocco's penalty in the 2-0 win over Tanzania.",
-        "26 Dec 2025: SofaScore timeline shows Morocco again gave Brahim Diaz the penalty against Mali at AFCON and he converted it.",
-        "18 Jan 2026: CAF's AFCON final report shows Morocco again turned to Diaz for a huge late in-match penalty against Senegal, even though Edouard Mendy saved the Panenka attempt.",
-        "30 Jan 2024: SofaScore match timeline shows Achraf Hakimi took and missed Morocco's late penalty against South Africa at AFCON, which makes him the clearest alternative if the order changes.",
-        "Current working view: Diaz is Morocco's first-choice taker, and the AFCON final penalty actually strengthens that call because he was chosen for the biggest possible spot kick."
+        "20 Mar 2025: McTominay won and converted Scotland's penalty away to Greece in the Nations League play-off first leg.",
+        "Transfermarkt's national-team penalty log records that Greece match as McTominay's senior Scotland penalty goal in the cycle.",
+        "Belarus vs Scotland later included a Che Adams penalty appeal that was overturned, which is context only rather than a competing conversion.",
+        "Current working view: McTominay is the best present-day Scotland primary, with Che Adams the clearest fallback."
       ]
     },
     {
@@ -427,6 +882,75 @@
       ]
     },
     {
+      "team": "Spain",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Mikel Oyarzabal",
+      "likely_secondary": "Ferran Torres",
+      "last_evidence": "UEFA: Spain 4-0 Bulgaria, 14 Oct 2025",
+      "note": "UEFA reported Oyarzabal converted Spain's late penalty against Bulgaria and had already scored from the spot against the Netherlands in March 2025. He is the strongest current first-choice signal for Spain, but not a nailed-on starter in every big match. Ferran Torres is now the better backup name to carry on the page because Luis de la Fuente explicitly referenced him as a Spain penalty option in 2025 press comments, which is stronger direct hierarchy evidence than a generic club-level fallback guess.",
+      "evidence_log": [
+        "14 Oct 2025: Mikel Oyarzabal scored Spain's penalty vs Bulgaria in World Cup qualifying.",
+        "23 Mar 2025: Oyarzabal also scored Spain's penalty against the Netherlands in the Nations League quarter-final.",
+        "Two recent senior penalties in major competition make him the strongest current first-choice signal when he starts.",
+        "2025: Diario AS reported Luis de la Fuente explicitly mentioned Ferran Torres as a Spain penalty taker option in press comments, which is the strongest current backup signal behind Oyarzabal.",
+        "Because Oyarzabal is not guaranteed to start every major match, Ferran Torres is now the best backup name to carry on the page."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/european-qualifiers/news/029e-1eeba1581bf0-f1ad83579d94-1000--european-qualifiers-for-the-2026-world-cup-belgium-and-germ/",
+        "https://www.uefa.com/uefanationsleague/news/0297-1d597367b2ea-b01b9ce22e51-1000--spain-3-3-netherlands-agg-5-5-5-4-pens-champions-hold-nerve/",
+        "https://www.sofascore.com/football/match/netherlands-spain/YTbsfUb"
+      ]
+    },
+    {
+      "team": "Sweden",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "medium",
+      "likely_primary": "Viktor Gyokeres",
+      "likely_secondary": "Alexander Isak",
+      "last_evidence": "UEFA: Gyokeres won and scored Sweden's penalty vs Ukraine in the World Cup play-off semi-final on 26 Mar 2026",
+      "note": "Viktor Gyokeres is now the right Sweden World Cup call. The decisive evidence is the March 2026 play-off semi-final against Ukraine, where UEFA recorded him winning and converting the penalty as part of his hat-trick in Sweden's biggest match of the cycle. Ken Sema still owns the older direct in-match penalty against Algeria in June 2025, so he stays in the file as supporting evidence, but that is no longer the clean headline answer once Gyokeres has taken and scored a play-off penalty under real World Cup pressure. Alexander Isak remains the best secondary for tournament projection because he is still one of Sweden's elite attacking names and a credible taker if fully fit, but he missed the March play-offs through injury rather than being pushed down the order on the pitch.",
+      "source_urls": [
+        "https://www.uefa.com/european-qualifiers/news/02a3-203dbf45b100-5ecc63ed1293-1000--world-cup-2026-european-play-off-semi-finals-round-up-ita/",
+        "https://www.svenskfotboll.se/nyheter/landslag/2026/03/herrtrupp-playoff/",
+        "https://omni.se/slot-tror-inte-att-isak-kan-spela-i-sveriges-vm-playoff/a/K8Mlly",
+        "https://www.svenskfotboll.se/nyheter/landslag/2025/06/herr-highlights-algeriet/"
+      ],
+      "evidence_log": [
+        "26 Mar 2026: UEFA's official play-off semi-final round-up says Viktor Gyokeres smashed in Sweden's penalty against Ukraine to complete his hat-trick.",
+        "18 Mar 2026: Svensk Fotboll's official March squad release included Gyokeres in the play-off squad while Alexander Isak was absent.",
+        "14 Mar 2026: reporting around the camp said Isak was not expected to be fit for Sweden's March World Cup play-off matches, which explains his absence without implying he is out of the World Cup itself.",
+        "10 Jun 2025: Ken Sema scored Sweden's earlier in-match penalty against Algeria, so he remains part of the evidence trail even if Gyokeres is now the cleaner headline call.",
+        "Current working view: Gyokeres is Sweden's best World Cup primary, with Isak the strongest high-end alternative if he is fit by the tournament."
+      ]
+    },
+    {
+      "team": "Switzerland",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Granit Xhaka",
+      "likely_secondary": "Ricardo Rodriguez",
+      "last_evidence": "Swiss FA / UEFA qualifiers vs Sweden, 10 Oct and 15 Nov 2025",
+      "note": "Granit Xhaka is Switzerland's clearest current penalty taker. The Swiss FA's official match logs and report show him converting penalties against Sweden in both qualifier meetings in October and November 2025, which is the kind of repeated recent evidence that moves a team straight into the high-confidence bucket. Ricardo Rodriguez remains the clearest secondary because of his long-standing Switzerland penalty history and set-piece role when Xhaka is not the taker.",
+      "source_urls": [
+        "https://www.football.ch/it/asf/squadre-nazionali/nazionale-a/statistiche-e-risultati.aspx/tg-4091936/",
+        "https://www.football.ch/fr/asf/equipes-nationales/equipe-a/statistiques-et-resultats.aspx/tg-4091940/",
+        "https://www.football.ch/sfv/nationalteams/a-team/news/maenner-nationalteam-die-schweiz-ist-dem-wm-ticket-ganz-nahe.aspx",
+        "https://www.uefa.com/european-qualifiers/news/029f-1f3625266d2c-ab3722bbcd9a-1000--european-qualifiers-for-the-2026-world-cup-round-up-spain/"
+      ],
+      "evidence_log": [
+        "10 Oct 2025: the Swiss FA results page shows Granit Xhaka scored Switzerland's penalty in the 2-0 qualifier win away to Sweden.",
+        "15 Nov 2025: the Swiss FA report and result log show Xhaka again converted Switzerland's penalty in the 4-1 home win over Sweden.",
+        "Current working view: two straight recent qualifier penalties from the same taker make Xhaka one of the cleaner high-confidence calls on the board, with Ricardo Rodriguez the best fallback from Switzerland's older penalty order."
+      ]
+    },
+    {
       "team": "Tunisia",
       "confederation": "CAF",
       "status": "qualified",
@@ -451,174 +975,48 @@
       ]
     },
     {
-      "team": "Curacao",
+      "team": "Turkiye",
+      "confederation": "UEFA",
+      "status": "qualified",
+      "research_status": "reviewed",
+      "confidence": "high",
+      "likely_primary": "Hakan Calhanoglu",
+      "likely_secondary": "Arda Guler",
+      "last_evidence": "World Cup qualifying: Turkiye 2-0 Bulgaria, 15 Nov 2025",
+      "note": "Hakan Calhanoglu is one of the cleaner calls in the whole tournament file. Transfermarkt's Turkiye national-team penalty log shows him converting against Bulgaria in World Cup qualifying in November 2025 and against Germany in the March 2025 Nations League play-off, which is exactly the kind of repeated recent senior evidence that moves a side into the high-confidence bucket. Arda Guler is the best secondary name to carry because he is Turkiye's other elite technical attacker and the most believable alternative if Calhanoglu is absent or cedes the duty.",
+      "source_urls": [
+        "https://www.transfermarkt.com/turkei/elfmeterschuetzen/verein/3381",
+        "https://www.transfermarkt.com/hakan-calhanoglu/elfmetertore/spieler/126414",
+        "https://www.uefa.com/uefanationsleague/teams/players/250022829/"
+      ],
+      "evidence_log": [
+        "15 Nov 2025: Transfermarkt's Turkiye national-team penalty log records Hakan Calhanoglu converting in the 2-0 World Cup qualifying win over Bulgaria.",
+        "23 Mar 2025: the same national-team log also records Calhanoglu converting Turkiye's penalty against Germany in the Nations League play-off.",
+        "Current working view: two recent senior penalties from the same taker make Calhanoglu a strong high-confidence World Cup call, with Arda Guler the clearest technical fallback."
+      ]
+    },
+    {
+      "team": "USA",
       "confederation": "Concacaf",
       "status": "qualified",
       "research_status": "reviewed",
-      "confidence": "medium",
-      "likely_primary": "Leandro Bacuna",
-      "likely_secondary": "Jordi Paulina",
-      "last_evidence": "Concacaf qualifying: Bermuda 0-7 Curacao, 9 Oct 2025",
-      "note": "Curacao is now strong enough for a medium reviewed call. The official Bermuda qualifier report gave the first in-match penalty to Leandro Bacuna, then later showed Jordi Paulina winning and scoring another penalty in the same match. That makes Bacuna the clearest lead and Paulina the clearest challenger, even if the full order is not completely rigid yet.",
-      "source_urls": [
-        "https://www.concacaf.com/en/world-cup-qualifying-men/news/curacao-defeats-bermuda-to-inch-closer-to-world-cup-berth/",
-        "https://www.concacaf.com/nations-league/news/curacao-finished-in-first-place-in-group-b-and-qualified-for-the-gold-cup/"
-      ],
-      "evidence_log": [
-        "9 Oct 2025: Concacaf's Bermuda report shows Leandro Bacuna scored Curacao's first in-match penalty in World Cup qualifying.",
-        "The same official report shows Jordi Paulina later won and converted another penalty in that 7-0 victory.",
-        "That same-match sequence is strong enough to stop treating Curacao as a blank or purely speculative board.",
-        "Current working view: Bacuna is a medium-confidence Curacao primary, with Paulina the clearest challenger."
-      ]
-    },
-    {
-      "team": "Haiti",
-      "confederation": "Concacaf",
-      "status": "qualified",
-      "research_status": "reviewed",
       "confidence": "high",
-      "likely_primary": "Duckens Nazon",
-      "likely_secondary": "Frantzdy Pierrot",
-      "last_evidence": "Concacaf Nations League vs Aruba, 11 and 14 Oct 2024",
-      "note": "Duckens Nazon is Haiti's strongest current penalty taker. The Concacaf match notes show him scoring three penalties across two Nations League matches against Aruba in October 2024, while Frantzdy Pierrot added a later penalty in the second meeting. That gives Haiti a much cleaner recent order than it first looked.",
+      "likely_primary": "Christian Pulisic",
+      "likely_secondary": "Malik Tillman",
+      "last_evidence": "USMNT 3-0 Uzbekistan, 9 Sep 2023, plus 2025 Gold Cup alternate-squad evidence",
+      "note": "Christian Pulisic remains the strongest USA penalty candidate when the main squad is together. The freshest clean senior in-match conversion in the official trail is his penalty against Uzbekistan in 2023, while the 2025 Gold Cup showed an alternate US squad using Malik Tillman from the spot when Pulisic was absent. In full-strength A-team context, the balance of evidence still points clearly to Pulisic, with Tillman now the best named backup because he is the only other recent senior in-match taker in the file.",
       "source_urls": [
-        "https://www.concacaf.com/en/world-cup-qualifying-men/news/aruba-belize-seek-victories-to-close-qualifying-campaigns/"
+        "https://www.ussoccer.com/stories/2023/09/international-friendly-usmnt-3-uzbekistan-0-match-report-stats-standings/",
+        "https://www.ussoccer.com/stories/2021/06/concacaf-nations-league-final-usmnt-3-mexico-2-match-report-stats-standings/",
+        "https://www.concacaf.com/es/gold-cup/noticias/freese-brilla-en-los-penales-y-ee-uu-supera-a-costa-rica-para-avanzar-a-semifinales/",
+        "https://www.transfermarkt.com/jumplist/elfmeterschuetzen/verein/3505",
+        "https://www.sofascore.com/football/match/usa-uzbekistan/yUbszUb"
       ],
       "evidence_log": [
-        "11 Oct 2024: Concacaf's historical series note shows Duckens Nazon scored two penalties in Haiti's 3-1 Nations League win over Aruba.",
-        "14 Oct 2024: the same Concacaf note shows Nazon scored another penalty in Haiti's 5-3 win over Aruba, with Frantzdy Pierrot later converting one as well.",
-        "Current working view: Nazon is a high-confidence Haiti primary, with Pierrot the clearest fallback."
-      ]
-    },
-    {
-      "team": "Panama",
-      "confederation": "Concacaf",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "medium",
-      "likely_primary": "Ismael Diaz",
-      "likely_secondary": "Jose Fajardo",
-      "last_evidence": "Concacaf Nations League and Gold Cup, Nov 2024 to Jun 2025",
-      "note": "Panama is still one of the most mixed boards in Concacaf, but it is now strong enough for a medium reviewed call. Jose Fajardo scored the Nations League quarter-final penalty against Costa Rica in November 2024, Adalberto Carrasquilla then scored Panama's penalty in the 2025 Nations League final, Eduardo Guerrero converted one against Guadeloupe at the 2025 Gold Cup, and Ismael Diaz scored another against Jamaica days later. Diaz is the best current lead because he has the latest clean Gold Cup penalty, while Fajardo remains the clearest earlier knockout-stage challenger.",
-      "source_urls": [
-        "https://www.concacaf.com/nations-league/news/fajardo-strikes-panama-to-victory-in-costa-rica/",
-        "https://www.concacaf.com/en/gold-cup/news/road-to-the-2025-concacaf-gold-cup-panama/",
-        "https://www.concacaf.com/en/gold-cup/news/diaz-brace-propels-panama-past-guadeloupe/",
-        "https://www.concacaf.com/en/gold-cup/news/ismael-diaz-hat-trick-in-panama-s-win-over-jamaica/"
-      ],
-      "evidence_log": [
-        "14 Nov 2024: Concacaf reported Jose Fajardo scored Panama's Nations League penalty against Costa Rica.",
-        "23 Mar 2025: Concacaf's Gold Cup road report notes Adalberto Carrasquilla scored Panama's penalty in the Nations League final against Mexico.",
-        "16 Jun 2025: Concacaf reported Eduardo Guerrero converted Panama's penalty against Guadeloupe at the Gold Cup.",
-        "24 Jun 2025: Concacaf then reported Ismael Diaz scored Panama's penalty against Jamaica.",
-        "Current working view: Diaz is the freshest lead, Fajardo is the strongest earlier challenger, and Panama's four-taker run is now better handled as a reviewed but fluid board than as a blank holdout."
-      ]
-    },
-    {
-      "team": "Argentina",
-      "confederation": "CONMEBOL",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Lionel Messi",
-      "likely_secondary": "Julian Alvarez",
-      "last_evidence": "AFA / FIFA World Cup 26 qualifying cycle review, updated Sep 2025",
-      "note": "Lionel Messi remains the obvious Argentina first-choice taker when available. Even without a fresh official in-match penalty logged in the current file, there is no credible competing claimant in the senior setup, and AFA still frames him as the central attacking reference and top scorer from the qualifying cycle. Julian Alvarez is now the clearest fallback because he has already converted in both Argentina's 2022 World Cup final shootout and the 2024 Copa America quarter-final shootout against Ecuador.",
-      "evidence_log": [
-        "AFA's qualifying wrap records Lionel Messi as Argentina's top scorer on the road to World Cup 2026.",
-        "There is no stronger current senior evidence pointing to another first-choice penalty taker when Messi is on the pitch.",
-        "Julian Alvarez converted in Argentina's 2022 World Cup final shootout and again in the 2024 Copa America quarter-final shootout against Ecuador, which gives the backup line more real tournament evidence than before.",
-        "Current working view: Messi is still the clear Argentina primary, with Julian Alvarez the cleanest secondary if Messi is absent or substituted."
-      ],
-      "source_urls": [
-        "https://www.afa.com.ar/1/posts/lionel-messi-fue-el-maximo-goleador-de-las-eliminatorias-sudamericanas-rumbo-a-la-copa-del-mundo-2026",
-        "https://www.fifa.com/en/articles/south-america-conmebol-qualifying-fixtures-maches-results-world-cup-2026"
-      ]
-    },
-    {
-      "team": "Brazil",
-      "confederation": "CONMEBOL",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Raphinha",
-      "likely_secondary": "Vinicius Junior",
-      "last_evidence": "CBF: Brazil 2-1 Colombia, 20 Mar 2025",
-      "note": "Raphinha is the clearest current Brazil primary after taking the March 2025 qualifier penalty against Colombia. Vinicius Junior remains the strongest challenger because Brazil had trusted him from the spot earlier in the cycle before the order appeared to tilt toward Raphinha.",
-      "evidence_log": [
-        "20 Mar 2025: CBF's qualifier report states Raphinha scored Brazil's penalty against Colombia.",
-        "Vinicius Junior had already been trusted from the spot earlier in the cycle, which keeps him as the clearest challenger rather than leaving the secondary line blank.",
-        "Current working view: Raphinha leads the Brazil order, with Vinicius Junior next in line if the hierarchy shifts again."
-      ],
-      "source_urls": [
-        "https://www.cbf.com.br/selecao-brasileira/noticias/noticias/a/brasil-vence-colombia-por-2-a-1-e-assume-o-2-lugar-nas-eliminatorias",
-        "https://www.cbf.com.br/selecao-brasileira/noticias/selecao-masculina/a/raphinha-todos-precisavam-dessa-vitoria",
-        "https://www.sofascore.com/football/match/colombia-brazil/YUbsvWb"
-      ]
-    },
-    {
-      "team": "Colombia",
-      "confederation": "CONMEBOL",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "medium",
-      "likely_primary": "James Rodriguez",
-      "likely_secondary": "Luis Diaz",
-      "last_evidence": "FCF: Colombia 3-0 Australia, 18 Nov 2025",
-      "note": "James Rodriguez is still the best current Colombia call, but the hierarchy should stay at medium because it has looked genuinely disputed rather than fully locked. FCF's November 2025 report states he opened the scoring from the penalty spot against Australia, which is the freshest clean direct evidence. The wider Lorenzo-era picture is messier, though: Colombia's qualifier against Ecuador exposed James, Rafael Santos Borre and Luis Diaz all hovering around the same kick. James remains the best World Cup answer on seniority, technique and present-day evidence, while Luis Diaz stays the clearest challenger.",
-      "source_urls": [
-        "https://fcf.com.co/2025/11/18/colombia-cierra-la-doble-fecha-fifa-con-puntaje-perfecto-tras-vencer-3-0-a-australia/",
-        "https://fcf.com.co/2025/11/19/seleccion-colombia-masculina-de-mayores-amistosos-internacionales-fecha-fifa-de-noviembre/",
-        "https://www.sofascore.com/football/match/colombia-australia/QUbsvWb"
-      ],
-      "evidence_log": [
-        "18 Nov 2025: FCF reported James Rodriguez scored Colombia's penalty in the 3-0 friendly win over Australia.",
-        "SofaScore's event timeline confirms James as the in-match penalty taker in that match.",
-        "17 Oct 2023: Colombian reporting around Ecuador vs Colombia described a visibly disputed penalty sequence involving James Rodriguez, Rafael Santos Borre and Luis Diaz before Diaz took and missed.",
-        "Current working view: James is Colombia's strongest present-day penalty call, but the board stays medium because the hierarchy has shown real fluidity under Lorenzo."
-      ]
-    },
-    {
-      "team": "Ecuador",
-      "confederation": "CONMEBOL",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Enner Valencia",
-      "likely_secondary": "Gonzalo Plata",
-      "last_evidence": "CONMEBOL: Ecuador 1-0 Argentina, 9 Sep 2025",
-      "note": "CONMEBOL reported Enner Valencia scored Ecuador's winner from the penalty spot against Argentina in the final qualifying matchday. That is strong recent first-choice evidence. Gonzalo Plata is the clearest secondary because he is the most natural attacking fallback in Ecuador's likely front line once Valencia is absent or withdrawn.",
-      "evidence_log": [
-        "9 Sep 2025: Enner Valencia scored Ecuador's penalty winner vs Argentina in World Cup qualifying.",
-        "This is strong recent senior evidence that he remains Ecuador's primary taker.",
-        "Current working view: Valencia first, Gonzalo Plata second, with Plata the strongest attacking fallback in Ecuador's likely tournament side."
-      ],
-      "source_urls": [
-        "https://www.conmebol.com/noticias/ecuador-cierra-con-broche-de-oro/",
-        "https://www.sofascore.com/football/match/argentina-ecuador/hVbsuWb"
-      ]
-    },
-    {
-      "team": "Paraguay",
-      "confederation": "CONMEBOL",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "medium",
-      "likely_primary": "Julio Enciso",
-      "likely_secondary": "Miguel Almiron",
-      "last_evidence": "APF / Sofascore: Paraguay 2-0 Uruguay, 5 Jun 2025",
-      "note": "Julio Enciso is the clearest current Paraguay taker. The key point is not just that he scored against Uruguay in June 2025, but that Paraguay kept faith with him after the earlier Venezuela miss. Spanish-language reporting on that October 2024 match said Gustavo Alfaro explicitly authorised Enciso to take the penalty, which is useful hierarchy evidence in itself. Enciso then kept the role and converted the next major chance, which is exactly the pattern you want to see from a designated taker. Miguel Almiron remains the closest alternative by seniority and role, even without stronger direct penalty evidence.",
-      "source_urls": [
-        "https://www.apf.org.py/noticias/la-albirroja-triunfa-y-da-otro-paso-clave",
-        "https://www.apf.org.py/noticias/paraguay-clasificado-los-numeros-que-nos-llevaron-al-mundial-2026",
-        "https://www.sofascore.com/football/match/paraguay-uruguay/AUbsOVb",
-        "https://www.transfermarkt.com/julio-enciso/elfmetertore/spieler/660867"
-      ],
-      "evidence_log": [
-        "15 Oct 2024: Spanish-language reporting on Paraguay vs Venezuela said Gustavo Alfaro authorised Julio Enciso to take Paraguay's penalty, and Enciso missed.",
-        "5 Jun 2025: APF reported Julio Enciso scored Paraguay's penalty in the 2-0 qualifying win over Uruguay.",
-        "SofaScore's match timeline confirms Enciso as the in-match penalty taker in that same game.",
-        "Current working view: Enciso kept the job after a miss, which is strong evidence that he is Paraguay's designated first-choice taker, with Almiron the best profile-led fallback."
+        "9 Sep 2023: U.S. Soccer and SofaScore both show Christian Pulisic converted the late in-match penalty in the 3-0 win over Uzbekistan.",
+        "6 Jun 2021: U.S. Soccer's Nations League final report shows Pulisic scored the decisive extra-time penalty against Mexico in a major senior final.",
+        "30 Jun 2025: Concacaf's Gold Cup quarter-final report shows Malik Tillman took and missed the USA's in-match penalty against Costa Rica with a different tournament squad, which supports the idea that the order can change when Pulisic is absent rather than disproving Pulisic's full-strength status.",
+        "Current working view: for the likely World Cup A-team, Pulisic remains the clearest USA primary, with Tillman the best current fallback signal."
       ]
     },
     {
@@ -629,340 +1027,42 @@
       "confidence": "high",
       "likely_primary": "Federico Valverde",
       "likely_secondary": "Giorgian De Arrascaeta",
-      "last_evidence": "Copa America 2024 shootout order vs Brazil and Canada, Jul 2024",
-      "note": "Federico Valverde should now be treated as a high-confidence Uruguay primary. The key evidence is not a one-off spot kick but repeated tournament pressure order: he opened Uruguay's shootouts against both Brazil in the Copa America quarter-final and Canada in the third-place match, which is the designated-trust slot in back-to-back major knockout games. Giorgian De Arrascaeta remains the right secondary from the same trusted core, while Darwin Nunez being available but unused in those shootouts matters in Valverde's favour rather than against it.",
+      "last_evidence": "England 1-1 Uruguay, 27 Mar 2026: Federico Valverde scored the stoppage-time penalty at Wembley",
+      "note": "Federico Valverde is now an even cleaner Uruguay primary. The older Copa America shootout order already pointed strongly in his favour, but the March 2026 friendly at Wembley added the freshest direct evidence when he converted Uruguay's stoppage-time penalty against England. That is exactly the kind of late-cycle senior spot-kick that removes most of the remaining doubt. Giorgian De Arrascaeta still profiles as the best secondary from Uruguay's trusted attacking core, but the lead call should now sit very firmly with Valverde.",
       "source_urls": [
-        "https://www.auf.org.uy/uruguay-brasil-conmebol-copa-america-2024/",
-        "https://www.auf.org.uy/canada-uruguay-conmebol-copa-america-2024/",
-        "https://www.conmebol.com/noticias/uruguay-conquista-el-bronce-en-la-conmebol-copa-america-usa-2024/",
-        "https://www.espn.com.pa/futbol/mundial-clubes/nota/_/id/15327401/cuantos-penales-fallo-federico-valverde-a-lo-largo-de-su-carrera"
+        "https://www.espn.co.uk/football/report/_/gameId/762553",
+        "https://www.sofascore.com/football/match/uruguay-england/nUbsAUb",
+        "https://www.sofascore.com/news/england-1-1-uruguay-valverdes-late-penalty/"
       ],
       "evidence_log": [
-        "6 Jul 2024: AUF and wider Spanish-language reporting on Uruguay vs Brazil show Federico Valverde took and scored Uruguay's first penalty in the Copa America quarter-final shootout.",
-        "13 Jul 2024: AUF and CONMEBOL reporting on Canada vs Uruguay again show Federico Valverde leading the order in the third-place shootout, with Giorgian De Arrascaeta also among the successful senior takers.",
-        "Darwin Nunez was available in that Copa America window but did not lead or even feature in the decisive shootout order, which is useful negative evidence for the hierarchy behind Valverde.",
-        "Current working view: Valverde is now a high-confidence Uruguay primary, with De Arrascaeta the clearest challenger from the same trusted group."
+        "27 Mar 2026: ESPN and SofaScore both show Federico Valverde scored Uruguay's 90+4 minute penalty in the 1-1 friendly draw with England at Wembley.",
+        "That gives Uruguay a fresh direct in-match penalty event on top of Valverde's already strong pressure-order evidence from the 2024 Copa America shootouts.",
+        "Current working view: Valverde is a high-confidence Uruguay primary, with De Arrascaeta still the clearest backup from the same trusted group."
       ]
     },
     {
-      "team": "New Zealand",
-      "confederation": "OFC",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "medium",
-      "likely_primary": "Chris Wood",
-      "likely_secondary": "Ben Waine",
-      "last_evidence": "All Whites 2024-2025 qualifying run and Fiji penalty sequence",
-      "note": "Chris Wood remains the obvious New Zealand primary because he is the captain, the central scorer and the focal point of the side that qualified. The clearest secondary clue comes from the Fiji qualifier, where Wood had already gone off and Ben Waine then took and missed a late penalty. That is enough to move New Zealand into the reviewed bucket at medium confidence, with Waine the best fallback name for now.",
-      "source_urls": [
-        "https://www.nzfootball.co.nz/newsarticle/147548",
-        "https://www.nzfootball.co.nz/newsarticle/151120",
-        "https://www.sofascore.com/football/match/fiji-new-zealand/JVbsUkd"
-      ],
-      "evidence_log": [
-        "The All Whites' 2024-25 qualification run was built around Chris Wood as captain and main scorer.",
-        "21 Mar 2025: SofaScore shows New Zealand were awarded a late penalty against Fiji after Chris Wood had already been substituted, and Ben Waine missed it.",
-        "That Fiji sequence makes Ben Waine the clearest current fallback rather than leaving the backup slot blank.",
-        "Current working view: Wood is still the obvious World Cup primary, with Ben Waine the clearest fallback, even if the sample is not strong enough to call it a high-confidence board."
-      ]
-    },
-    {
-      "team": "Austria",
-      "confederation": "UEFA",
+      "team": "Uzbekistan",
+      "confederation": "AFC",
       "status": "qualified",
       "research_status": "reviewed",
       "confidence": "high",
-      "likely_primary": "Marko Arnautovic",
-      "likely_secondary": "Marcel Sabitzer",
-      "last_evidence": "UEFA / SofaScore: Cyprus 0-2 Austria, 15 Nov 2025",
-      "note": "Marko Arnautovic should now be treated as a high-confidence Austria primary. The 2025 qualifying trail is strong enough to stop hedging: he kept penalty responsibility against San Marino even after already scoring twice, then converted again against Cyprus in November, and UEFA's EURO 2024 report had him taking and scoring against Poland as well. Marcel Sabitzer is the correct secondary because Austria also trusted him with a qualifier penalty in the same campaign when the order shifted.",
+      "likely_primary": "Eldor Shomurodov",
+      "likely_secondary": "Otabek Shukurov",
+      "last_evidence": "Olympics 2024, WCQ 2025 and later shootout order",
+      "note": "Eldor Shomurodov should now be treated as a high-confidence Uzbekistan primary. The pattern is very consistent: captain, all-time leading scorer, penalty taker in historic moments, and still trusted after misses. He scored Uzbekistan's first-ever Olympic goal from the spot against Spain, then later took and missed the World Cup qualifying penalty against Kyrgyz Republic without losing status, and still led the later shootout order. Otabek Shukurov remains the best named secondary because he is the only other direct recent Uzbekistan taker in the file, but this page should be centred clearly around Shomurodov.",
       "source_urls": [
-        "https://www.sofascore.com/football/match/austria-cyprus/HObstUb",
-        "https://www.uefa.com/european-qualifiers/news/029f-1f3625266d2c-ab3722bbcd9a-1000--european-qualifiers-for-the-2026-world-cup-round-up-spain/",
-        "https://fr.uefa.com/uefaeuro/history/news/028e-1b2fd89c865d-3a0cd3bc019e-1000--poland-1-3-austria-rangnick-s-men-break-through-in-berlin/"
+        "https://championat.asia/oz/news/ozbekiston-qirgiziston-tarkiblar-malum",
+        "https://championat.asia/oz/m/news/cafa-nations-cup-ozbekiston-qirgiz-respublikasi-matnli-translyaciya",
+        "https://www.sofascore.com/football/match/iran-uzbekistan/yUbsqVb"
       ],
       "evidence_log": [
-        "10 Jun 2025: German-language reporting on Austria vs San Marino noted Arnautovic scored twice and still took Austria's late penalty, missing it but retaining clear first-choice responsibility.",
-        "15 Nov 2025: SofaScore shows Marko Arnautovic converted Austria's in-match penalty in the 2-0 World Cup qualifying win over Cyprus.",
-        "9 Sep 2025: German-language reporting on Austria's other Cyprus qualifier shows Marcel Sabitzer taking and scoring from the spot when the order changed.",
-        "21 Jun 2024: UEFA's EURO 2024 report states Arnautovic also scored Austria's penalty against Poland in Berlin.",
-        "Current working view: repeated competitive penalties across 2024 and 2025 make Arnautovic a high-confidence Austria primary, with Sabitzer the confirmed backup."
-      ]
-    },
-    {
-      "team": "Belgium",
-      "confederation": "UEFA",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "medium",
-      "likely_primary": "Kevin De Bruyne",
-      "likely_secondary": "Romelu Lukaku",
-      "last_evidence": "SofaScore: Wales 2-4 Belgium, 13 Oct 2025",
-      "note": "Kevin De Bruyne is Belgium's strongest current direct penalty signal. The freshest competitive evidence is emphatic rather than thin: he scored both of Belgium's penalties in the 4-2 World Cup qualifying win away to Wales in October 2025. Belgium still stays at medium confidence, though, because the live hierarchy question is what happens when Romelu Lukaku and De Bruyne are both fully available in the same frontline. Until that is settled by a clean like-for-like match sample, De Bruyne is the best current answer and Lukaku remains the clearest challenger.",
-      "source_urls": [
-        "https://www.sofascore.com/football/match/belgium-wales/cUbsrUb",
-        "https://bdnews24.com/sport/b81e74a6469d"
-      ],
-      "evidence_log": [
-        "13 Oct 2025: SofaScore and French-language match reporting on Wales vs Belgium show Kevin De Bruyne converted both of Belgium's in-match penalties in the 4-2 World Cup qualifying win away to Wales.",
-        "Two penalties in the same competitive match is unusually strong direct evidence in De Bruyne's favour.",
-        "The remaining caveat is still the Lukaku coexistence question, because Belgium's long-term order looked different when Lukaku was the clear focal point and the October 2025 window did not cleanly settle that scenario.",
-        "Current working view: De Bruyne is Belgium's best present-day answer, with Lukaku the clearest secondary until a both-available match proves otherwise."
-      ]
-    },
-    {
-      "team": "Croatia",
-      "confederation": "UEFA",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Luka Modric",
-      "likely_secondary": "Andrej Kramaric",
-      "last_evidence": "Nations League pressure-order trail plus Dalic quote, 2023-2025",
-      "note": "Luka Modric should now be treated as a high-confidence Croatia primary, with one important caveat: at his age, availability and minutes still matter. The deeper Croatia picture is a dual-taker system rather than a contradiction. Andrej Kramaric has taken routine competitive penalties when Modric was off or when the order was delegated, but Modric remains the designated first-choice for the biggest moments. The Dalic quote already pointed that way, and the Nations League evidence backs it up: Modric took the decisive extra-time penalty against the Netherlands, while Kramaric remains the clearest secondary when the captain is not the taker on the pitch.",
-      "source_urls": [
-        "https://www.uefa.com/uefanationsleague/news/0297-1d535bbdaa0d-50f4ebd253a0-1000--croatia-2-0-france-hosts-take-two-goal-advantage-into-secon/",
-        "https://www.vecernji.hr/sport/evo-zasto-je-kramaric-a-ne-modric-izveo-penal-protiv-francuske-poznato-i-tko-ce-ubuduce-pucati-1847284",
-        "https://www.vecernji.hr/sport/luka-modric-je-sinoc-svima-pokazao-kakav-je-covjek-kapetanov-potez-ce-se-dugo-pamtiti-1868416",
-        "https://www.index.hr/sport/clanak/modric-budimir-me-pitao-moze-li-pucati-penal-a-i-bolje-je-da-ja-ne-pucam-dvaput/2679445.aspx"
-      ],
-      "evidence_log": [
-        "14 Jun 2023: Croatia's Nations League semi-final against the Netherlands showed Andrej Kramaric scoring the earlier in-match penalty before Luka Modric later converted the decisive extra-time penalty with the game on the line.",
-        "20 Mar 2025: UEFA reported Andrej Kramaric took Croatia's early penalty against France and missed.",
-        "21 Mar 2025: Croatian reporting quoted Zlatko Dalic saying Luka Modric was Croatia's first penalty taker, but he gave that France penalty to Kramaric.",
-        "9 Jun 2025: Croatian reporting on the 5-1 win over Czechia showed Modric scored Croatia's first penalty before later letting Ante Budimir take the second one.",
-        "Current working view: if Modric is on the pitch, Croatia's biggest penalties still belong to him; Kramaric is the strongest named fallback when the order shifts."
-      ]
-    },
-    {
-      "team": "England",
-      "confederation": "UEFA",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Harry Kane",
-      "likely_secondary": "Bukayo Saka",
-      "last_evidence": "UEFA: Latvia 0-5 England, 14 Oct 2025",
-      "note": "UEFA's qualifier report states Kane added a first-half penalty as England sealed qualification in Riga. That keeps him as England's clear first-choice taker, with Bukayo Saka the strongest secondary on both club-level role and England's Euro 2024 shootout order once Kane had already gone off. Cole Palmer is the best third-choice fallback after taking the first kick in that Switzerland shootout.",
-      "evidence_log": [
-        "14 Oct 2025: Harry Kane scored England's penalty vs Latvia in World Cup qualifying.",
-        "Sofascore timeline for the same match records Kane winning and converting the penalty sequence.",
-        "Euro 2024 quarter-final shootout vs Switzerland: Palmer took England's first penalty, Bellingham second, Saka third, Toney fourth and Alexander-Arnold fifth after Kane had already been substituted.",
-        "That order, plus Saka's Arsenal penalty role, makes Saka the clearest England backup with Palmer the strongest tertiary option."
-      ],
-      "source_urls": [
-        "https://www.uefa.com/european-qualifiers/news/029e-1eeba1581bf0-f1ad83579d94-1000--european-qualifiers-for-the-2026-world-cup-highlights-spa/",
-        "https://www.sofascore.com/football/match/england-latvia/gUbsnUb"
-      ]
-    },
-    {
-      "team": "France",
-      "confederation": "UEFA",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Kylian Mbappe",
-      "likely_secondary": "Ousmane Dembele",
-      "last_evidence": "FFF: France 4-0 Ukraine, 13 Nov 2025",
-      "note": "The FFF match report lists Mbappe scoring from the spot against Ukraine in a World Cup qualifier, which keeps him as France's clear first-choice taker. With Griezmann retired from internationals, the backup order is less settled, but Ousmane Dembele is the strongest available secondary because he is a regular France starter and arrives with a live club-level penalty profile from PSG.",
-      "evidence_log": [
-        "13 Nov 2025: Kylian Mbappe scored France's penalty vs Ukraine in World Cup qualifying.",
-        "He remains the default senior taker when available; no stronger recent evidence suggests a hierarchy change.",
-        "With Antoine Griezmann out of the international picture, the backup line is less settled, but Ousmane Dembele is the strongest available secondary on current role and club-level penalty profile."
-      ],
-      "source_urls": [
-        "https://www.fff.fr/article/15721-l-amerique-les-voila-.html",
-        "https://www.sofascore.com/football/match/ukraine-france/GObsbUb"
-      ]
-    },
-    {
-      "team": "Germany",
-      "confederation": "UEFA",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Joshua Kimmich",
-      "likely_secondary": "Kai Havertz",
-      "last_evidence": "DFB: Germany 4-0 Luxembourg, 10 Oct 2025",
-      "note": "Joshua Kimmich is still the best current Germany lead because he actually took and scored the World Cup qualifying penalty against Luxembourg on 10 October 2025. Kai Havertz remains the clearest alternative, but he missed the qualifying campaign through injury, which is why the live file still leans Kimmich rather than assuming Havertz would step back in immediately. Germany should still be treated as a two-name board, not a one-man answer.",
-      "source_urls": [
-        "https://www.dfb.de/en/news/statement-4-0-victory-over-luxembourg-in-sinsheim",
-        "https://datencenter.dfb.de/en/data-center/qualifiers/2025-2026/group-a/2395273",
-        "https://datencenter.dfb.de/en/data-center/uefa-nations-league-division-a/18977/quarterfinal/2391434",
-        "https://www.sofascore.com/football/match/germany-italy/hUbslUb"
-      ],
-      "evidence_log": [
-        "10 Oct 2025: Bundesliga.com's Germany 4-0 Luxembourg report states Joshua Kimmich converted Germany's in-match World Cup qualifying penalty.",
-        "Kai Havertz missed the whole qualifying campaign through injury, which is the key context around any future shift in the Germany order if he is fully fit by the tournament.",
-        "Current working view: Kimmich first, Havertz second, with Havertz fitness the main variable that could change the board before World Cup 2026."
-      ]
-    },
-    {
-      "team": "Netherlands",
-      "confederation": "UEFA",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Memphis Depay",
-      "likely_secondary": "Cody Gakpo",
-      "last_evidence": "OnsOranje / UEFA World Cup qualifying and Nations League, Mar-Nov 2025",
-      "note": "Memphis Depay is the Netherlands' primary penalty taker when he starts. The 2025 evidence trail is strong enough to stop hedging: Depay took and scored the big senior penalties against Spain and Finland, while Cody Gakpo only stepped in when Depay was not the taker on the pitch.",
-      "source_urls": [
-        "https://www.onsoranje.nl/teams/185184/toernooien/7996/wedstrijd/334508",
-        "https://www.onsoranje.nl/toernooien/7996/wedstrijd/334511",
-        "https://www.onsoranje.nl/teams/185184/programma/wedstrijd/334507",
-        "https://www.uefa.com/uefanationsleague/news/0297-1d597367b2ea-b01b9ce22e51-1000--spain-3-3-netherlands-agg-5-5-5-4-pens-champions-hold-nerve/",
-        "https://www.sofascore.com/football/match/netherlands-spain/YTbsfUb",
-        "https://www.sofascore.com/football/match/netherlands-malta/IObsfUb",
-        "https://www.sofascore.com/football/match/lithuania-netherlands/fUbsBVb"
-      ],
-      "evidence_log": [
-        "23 Mar 2025: Memphis Depay scored the Netherlands' penalty vs Spain in the Nations League quarter-final.",
-        "12 Oct 2025: Memphis Depay scored the Netherlands' penalty vs Finland in World Cup qualifying.",
-        "9 Oct 2025 and 17 Nov 2025: Cody Gakpo scored Netherlands penalties vs Malta and Lithuania in World Cup qualifying when Depay was not the taker on the pitch.",
-        "Current working view: Depay is strong enough now for a high-confidence World Cup label, with Gakpo the clearest fallback."
-      ]
-    },
-    {
-      "team": "Norway",
-      "confederation": "UEFA",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Erling Haaland",
-      "likely_secondary": "Martin Odegaard",
-      "last_evidence": "UEFA: Norway 5-0 Israel, 11 Oct 2025",
-      "note": "UEFA reported Haaland missed an early penalty and still scored a hat-trick against Israel. The miss does not change the hierarchy; it is still direct evidence that he is Norway's first-choice taker. Martin Odegaard is the obvious backup if Haaland is unavailable or has already gone off.",
-      "evidence_log": [
-        "11 Oct 2025: Erling Haaland took Norway's penalty vs Israel in World Cup qualifying and missed.",
-        "A miss is still direct hierarchy evidence; it confirms he remained the first-choice taker in that match context.",
-        "Martin Odegaard is the cleanest secondary on leadership profile and club-level penalty credibility."
-      ],
-      "source_urls": [
-        "https://www.uefa.com/european-qualifiers/news/029e-1eeba1581bf0-f1ad83579d94-1000--european-qualifiers-for-the-2026-world-cup-round-up-spain-po/",
-        "https://www.sofascore.com/football/match/israel-norway/AObsFOb"
-      ]
-    },
-    {
-      "team": "Portugal",
-      "confederation": "UEFA",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Cristiano Ronaldo",
-      "likely_secondary": "Bruno Fernandes",
-      "last_evidence": "UEFA: Portugal 1-0 Republic of Ireland, 14 Oct 2025",
-      "note": "UEFA reported Ronaldo took Portugal's penalty against Republic of Ireland, even though Kelleher saved it. That keeps him as Portugal's primary taker in the current cycle, with Bruno Fernandes the clearest next option if Ronaldo is rested, substituted or absent.",
-      "evidence_log": [
-        "15 Nov 2024: FPF match file for Portugal 5-1 Poland records Cristiano Ronaldo scoring Portugal's in-match penalty.",
-        "23 Mar 2025: UEFA quarter-final report shows Ronaldo again took Portugal's penalty against Denmark, even though Kasper Schmeichel saved it.",
-        "Current working view: that combination of continued first-choice responsibility and recent senior evidence keeps Ronaldo as Portugal's clear primary candidate when he starts.",
-        "Bruno Fernandes is the strongest secondary on overall penalty profile and is the logical fallback when Ronaldo is not on the pitch."
-      ],
-      "source_urls": [
-        "https://www.fpf.pt/pt/selecoes/futebol-masculino/selecao-a/jogos/ficha-de-jogo/match/2103450",
-        "https://www.uefa.com/uefanationsleague/news/0297-1d597bc326c5-9a0931e9abb7-1000--nations-league-quarter-finals-francisco-trincao-double-he/"
-      ]
-    },
-    {
-      "team": "Scotland",
-      "confederation": "UEFA",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "medium",
-      "likely_primary": "Scott McTominay",
-      "likely_secondary": "Che Adams",
-      "last_evidence": "UEFA Nations League play-off: Greece 0-1 Scotland, 20 Mar 2025",
-      "note": "McTominay is the best current Scotland penalty call. He won and converted the decisive spot kick against Greece in March 2025, and there is no stronger recent senior evidence pointing elsewhere. Che Adams remains the clearest fallback in the pool, but McTominay is the name that fits the current national-team evidence best.",
-      "source_urls": [
-        "https://www.uefa.com/uefanationsleague/match/2043039--greece-vs-scotland/",
-        "https://feeds.bbci.co.uk/sport/football/live/c798jwn4z07t",
-        "https://www.transfermarkt.com/scott-mctominay/elfmetertore/spieler/315969",
-        "https://www.sofascore.com/football/match/belarus-scotland/VTbsTUb"
-      ],
-      "evidence_log": [
-        "20 Mar 2025: McTominay won and converted Scotland's penalty away to Greece in the Nations League play-off first leg.",
-        "Transfermarkt's national-team penalty log records that Greece match as McTominay's senior Scotland penalty goal in the cycle.",
-        "Belarus vs Scotland later included a Che Adams penalty appeal that was overturned, which is context only rather than a competing conversion.",
-        "Current working view: McTominay is the best present-day Scotland primary, with Che Adams the clearest fallback."
-      ]
-    },
-    {
-      "team": "Spain",
-      "confederation": "UEFA",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Mikel Oyarzabal",
-      "likely_secondary": "Ferran Torres",
-      "last_evidence": "UEFA: Spain 4-0 Bulgaria, 14 Oct 2025",
-      "note": "UEFA reported Oyarzabal converted Spain's late penalty against Bulgaria and had already scored from the spot against the Netherlands in March 2025. He is the strongest current first-choice signal for Spain, but not a nailed-on starter in every big match. Ferran Torres is now the better backup name to carry on the page because Luis de la Fuente explicitly referenced him as a Spain penalty option in 2025 press comments, which is stronger direct hierarchy evidence than a generic club-level fallback guess.",
-      "evidence_log": [
-        "14 Oct 2025: Mikel Oyarzabal scored Spain's penalty vs Bulgaria in World Cup qualifying.",
-        "23 Mar 2025: Oyarzabal also scored Spain's penalty against the Netherlands in the Nations League quarter-final.",
-        "Two recent senior penalties in major competition make him the strongest current first-choice signal when he starts.",
-        "2025: Diario AS reported Luis de la Fuente explicitly mentioned Ferran Torres as a Spain penalty taker option in press comments, which is the strongest current backup signal behind Oyarzabal.",
-        "Because Oyarzabal is not guaranteed to start every major match, Ferran Torres is now the best backup name to carry on the page."
-      ],
-      "source_urls": [
-        "https://www.uefa.com/european-qualifiers/news/029e-1eeba1581bf0-f1ad83579d94-1000--european-qualifiers-for-the-2026-world-cup-belgium-and-germ/",
-        "https://www.uefa.com/uefanationsleague/news/0297-1d597367b2ea-b01b9ce22e51-1000--spain-3-3-netherlands-agg-5-5-5-4-pens-champions-hold-nerve/",
-        "https://www.sofascore.com/football/match/netherlands-spain/YTbsfUb"
-      ]
-    },
-    {
-      "team": "Switzerland",
-      "confederation": "UEFA",
-      "status": "qualified",
-      "research_status": "reviewed",
-      "confidence": "high",
-      "likely_primary": "Granit Xhaka",
-      "likely_secondary": "Ricardo Rodriguez",
-      "last_evidence": "Swiss FA / UEFA qualifiers vs Sweden, 10 Oct and 15 Nov 2025",
-      "note": "Granit Xhaka is Switzerland's clearest current penalty taker. The Swiss FA's official match logs and report show him converting penalties against Sweden in both qualifier meetings in October and November 2025, which is the kind of repeated recent evidence that moves a team straight into the high-confidence bucket. Ricardo Rodriguez remains the clearest secondary because of his long-standing Switzerland penalty history and set-piece role when Xhaka is not the taker.",
-      "source_urls": [
-        "https://www.football.ch/it/asf/squadre-nazionali/nazionale-a/statistiche-e-risultati.aspx/tg-4091936/",
-        "https://www.football.ch/fr/asf/equipes-nationales/equipe-a/statistiques-et-resultats.aspx/tg-4091940/",
-        "https://www.football.ch/sfv/nationalteams/a-team/news/maenner-nationalteam-die-schweiz-ist-dem-wm-ticket-ganz-nahe.aspx",
-        "https://www.uefa.com/european-qualifiers/news/029f-1f3625266d2c-ab3722bbcd9a-1000--european-qualifiers-for-the-2026-world-cup-round-up-spain/"
-      ],
-      "evidence_log": [
-        "10 Oct 2025: the Swiss FA results page shows Granit Xhaka scored Switzerland's penalty in the 2-0 qualifier win away to Sweden.",
-        "15 Nov 2025: the Swiss FA report and result log show Xhaka again converted Switzerland's penalty in the 4-1 home win over Sweden.",
-        "Current working view: two straight recent qualifier penalties from the same taker make Xhaka one of the cleaner high-confidence calls on the board, with Ricardo Rodriguez the best fallback from Switzerland's older penalty order."
+        "24 Jul 2024: Shomurodov scored Uzbekistan's first-ever Olympic goal from the penalty spot against Spain.",
+        "20 Mar 2025: Championat.asia's World Cup qualifying report states Eldor Shomurodov took Uzbekistan's in-match penalty against Kyrgyz Republic and the goalkeeper saved it.",
+        "5 Sep 2025: Championat.asia's CAFA coverage shows Otabek Shukurov later converted a penalty for Uzbekistan against Kyrgyz Republic.",
+        "18 Nov 2025: SofaScore's shootout order against Iran shows Shomurodov still taking the first Uzbekistan penalty in the tiebreak.",
+        "Current working view: Shomurodov is a high-confidence Uzbekistan primary, with Shukurov the clearest named fallback rather than a true rival for the lead role."
       ]
     }
   ],
-  "playoff_teams": [
-    {
-      "team": "Bolivia",
-      "confederation": "CONMEBOL",
-      "status": "playoff"
-    },
-    {
-      "team": "Congo DR",
-      "confederation": "CAF",
-      "status": "playoff"
-    },
-    {
-      "team": "Iraq",
-      "confederation": "AFC",
-      "status": "playoff"
-    },
-    {
-      "team": "Jamaica",
-      "confederation": "Concacaf",
-      "status": "playoff"
-    },
-    {
-      "team": "New Caledonia",
-      "confederation": "OFC",
-      "status": "playoff"
-    },
-    {
-      "team": "Suriname",
-      "confederation": "Concacaf",
-      "status": "playoff"
-    }
-  ]
+  "playoff_teams": []
 }
