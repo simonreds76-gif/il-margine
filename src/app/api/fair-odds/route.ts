@@ -1,7 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import fs from "node:fs";
-import { resolveConfiguredProjectFilePath } from "@/lib/project-file-paths";
+import {
+  getKnownProjectFilePath,
+  resolveConfiguredProjectFilePath,
+} from "@/lib/project-file-paths";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -20,6 +23,7 @@ export interface FairOddsRow {
   id: number;
   tournament: string;
   surface: string;
+  league?: "ATP" | "Challenger";
   player1_id: number;
   player2_id: number;
   player1_name: string;
@@ -55,6 +59,11 @@ export interface FairOddsRow {
   spread_odds2?: number;
   handicap_edge_p1?: number;
   handicap_edge_p2?: number;
+  p_a?: number;
+  p_b?: number;
+  handicap_point_prob_source?: "stored_p_a_p_b" | "fallback_divergent_gap" | "fallback_missing";
+  handicap_reverse_solve?: boolean;
+  handicap_point_prob_gap?: number;
   value_p1?: number;
   value_p2?: number;
   strict_signal_value_p1?: number;
@@ -79,6 +88,12 @@ export interface FairOddsRow {
   recent_injured_any?: boolean;
   recent_injured_p1_mode?: string;
   recent_injured_p2_mode?: string;
+  tournament_speed_signal?: number;
+  fast_clay_flag?: boolean;
+  fast_clay_selected_side?: "P1" | "P2";
+  fast_clay_archetype?: "both" | "serve_led" | "return_led" | "contrarian";
+  fast_clay_return_led_flag?: boolean;
+  row_signals?: ShadowSignalSummary[];
 }
 
 type StrictPolicyMode = "base" | "overlay";
@@ -134,7 +149,7 @@ const STRICT_POLICY_ALLOWED_CONFIDENCE = new Set<string>(["high"]);
 const STRICT_POLICY_EXCLUDE_ATP500_HARD_SHORT_FAVORITES = true;
 const STRICT_POLICY_SHORT_FAVORITE_MAX_ODDS = 1.8;
 const STRICT_POLICY_SHORT_FAVORITE_CONFIDENCE = new Set<string>(["high"]);
-// Skip matches where model favourite odds < 1.25. Model cannot price extreme mismatches — both sides unreliable.
+// Skip matches where model favourite odds < 1.25. Model cannot price extreme mismatches - both sides unreliable.
 const STRICT_POLICY_MISPRICE_FAV_ODDS_MIN = 1.25;
 // Proxy for the bad strict tail we found in backtesting: heavy-favourite Masters hard
 // matches where dog ML strict signals underperform. We keep this narrow and leave the
@@ -167,8 +182,96 @@ const INJURED_PLAYERS_CSV = resolveConfiguredProjectFilePath(
 const HANDICAP_MIN_EDGE_PCT = 20;
 const STRICT_UNIT_GBP = parseNumberEnv("STRICT_UNIT_GBP", 100);
 const SHADOW_POLICY_MODE = normalizeShadowProfile(process.env.STRICT_POLICY_VOLUME_MODE);
+const SURFACE_LEAGUE_AVG: Record<string, number> = {
+  hard: 0.64,
+  clay: 0.62,
+  grass: 0.67,
+  "i.hard": 0.64,
+  "n/a": 0.64,
+};
+const MIN_TOUR_MATCHES_FOR_SHIFT = 30;
+const MIN_VENUE_SPW_MATCHES = 50;
+const POINT_PROB_MATCH_PROB_GAP_MAX = 0.12;
+const SPEED_RATIO_CLAMP: [number, number] = [0.92, 1.08];
+const TOURNAMENT_SPEED_VENUE_COMPONENT_WEIGHT = 0.75;
+const TOURNAMENT_SPEED_SHIFT_COMPONENT_WEIGHT = 0.25;
+const TOURNAMENT_SPEED_VENUE_FULL_MATCHES = 150;
+const TOURNAMENT_SPEED_SHIFT_FULL_MATCHES = 90;
+const TOURNAMENT_SPEED_SHIFT_SIGNAL_SCALE = 2.0;
+const FAST_CLAY_SPEED_THRESHOLD = 0.1;
+const CLAY_2026_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-claycal.csv");
+const SPREAD_SHADOW_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-spreadshadow.csv");
+type MatchSide = "P1" | "P2";
+type FastClayArchetype = "both" | "serve_led" | "return_led" | "contrarian";
+type ShadowSignalKind = "clay_2026" | "spread_shadow";
+
+interface ShadowSignalSummary {
+  id: number;
+  kind: ShadowSignalKind;
+  player1_id?: number;
+  player2_id?: number;
+  player1_name: string;
+  player2_name: string;
+  side: string;
+  value_pct: number;
+  pinnacle_odds?: number;
+  stake_units?: number;
+  stake_gbp?: number;
+  bet_type: "match" | "spread";
+  spread_line?: number;
+  tournament: string;
+  surface: string;
+  league?: "ATP" | "Challenger";
+  shadow_reason?: string;
+  tournament_speed_signal?: number;
+  clay_speed_tier?: "fast" | "normal";
+  raw_value_p1?: number;
+  raw_value_p2?: number;
+  clay_2026_raw_value_same_side?: number;
+  clay_2026_value_p1?: number;
+  clay_2026_value_p2?: number;
+  clay_2026_raw_odds1?: number;
+  clay_2026_raw_odds2?: number;
+  clay_2026_calibrated_odds1?: number;
+  clay_2026_calibrated_odds2?: number;
+  clay_2026_selected_prob?: number;
+  handicap_point_prob_source?: "stored_p_a_p_b" | "fallback_divergent_gap" | "fallback_missing";
+}
+
+interface SignalAttachmentDiagnostics {
+  loaded: number;
+  attached: number;
+  unmatched: number;
+}
+
 function computeStakeUnits(): { units: number; gbp: number } {
   return { units: 1, gbp: STRICT_UNIT_GBP };
+}
+
+function signalMatchKey(player1Id: number, player2Id: number): string {
+  return `${player1Id}|${player2Id}`;
+}
+
+function normaliseSignalName(name: string): string {
+  return (name ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[-'.,]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function signalNameKey(player1Name: string, player2Name: string): string {
+  return `name|${normaliseSignalName(player1Name)}|${normaliseSignalName(player2Name)}`;
+}
+
+function spreadConflictDirection(signal: ShadowSignalSummary): MatchSide | null {
+  if (signal.kind !== "spread_shadow" || signal.bet_type !== "spread" || signal.spread_line == null) return null;
+  if (Math.abs(signal.spread_line) > 1.0) return null;
+  if (signal.side === "P1+") return "P1";
+  if (signal.side === "P2-") return "P2";
+  return null;
 }
 
 function parseNumberEnv(name: string, fallback: number): number {
@@ -180,6 +283,175 @@ function parseBoolEnv(name: string, fallback: boolean): boolean {
   const raw = process.env[name];
   if (raw == null) return fallback;
   return ["1", "true", "yes", "on"].includes(raw.trim().toLowerCase());
+}
+
+function clamp(value: number, lo: number, hi: number): number {
+  return Math.max(lo, Math.min(hi, value));
+}
+
+function parsePointProb(value: unknown): number | undefined {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return undefined;
+  if (!(parsed > 0 && parsed < 1)) return undefined;
+  return parsed;
+}
+
+function probGame(pointProb: number): number {
+  if (pointProb <= 0 || pointProb >= 1) return clamp(pointProb, 0, 1);
+  const deuceProb = (pointProb * pointProb) / (1 - 2 * pointProb * (1 - pointProb));
+  return (
+    pointProb ** 4 +
+    4 * pointProb ** 4 * (1 - pointProb) +
+    10 * pointProb ** 4 * (1 - pointProb) ** 2 +
+    20 * pointProb ** 3 * (1 - pointProb) ** 3 * deuceProb
+  );
+}
+
+function tbServerIsA(totalPoints: number): boolean {
+  return totalPoints % 4 === 0 || totalPoints % 4 === 3;
+}
+
+function probTiebreak(pA: number, pB: number, aServesFirst = true): number {
+  const pointA = clamp(pA, 0.01, 0.99);
+  const pointB = clamp(pB, 0.01, 0.99);
+  const maxPts = 30;
+  const dp: number[][] = Array.from({ length: maxPts + 1 }, () => Array(maxPts + 1).fill(0));
+
+  const pWinPoint = (total: number) => {
+    const serverA = aServesFirst ? tbServerIsA(total) : !tbServerIsA(total);
+    return serverA ? pointA : 1 - pointB;
+  };
+
+  for (let a = maxPts; a >= 0; a -= 1) {
+    for (let b = maxPts; b >= 0; b -= 1) {
+      if (a >= 7 && a - b >= 2) {
+        dp[a][b] = 1;
+      } else if (b >= 7 && b - a >= 2) {
+        dp[a][b] = 0;
+      } else if (a + b >= 12 && a === b && a > 6) {
+        const total = a + b;
+        const p = pWinPoint(total);
+        const pNextA = pWinPoint(total + 1);
+        const pNextB = pWinPoint(total + 2);
+        const denom = 1 - (p * (1 - pNextA) + (1 - p) * (1 - pNextB));
+        dp[a][b] = Math.abs(denom) >= 1e-9 ? (p * pNextA) / denom : 0.5;
+      } else {
+        const total = a + b;
+        const p = pWinPoint(total);
+        const nextA = a + 1 <= maxPts ? dp[a + 1][b] : 0.5;
+        const nextB = b + 1 <= maxPts ? dp[a][b + 1] : 0.5;
+        dp[a][b] = p * nextA + (1 - p) * nextB;
+      }
+    }
+  }
+
+  return dp[0][0];
+}
+
+function probSet(pA: number, pB: number, aServesFirst = true): number {
+  const pointA = clamp(pA, 0.01, 0.99);
+  const pointB = clamp(pB, 0.01, 0.99);
+  const cache = new Map<string, number>();
+
+  const solve = (a: number, b: number, aServes: boolean): number => {
+    const key = `${a}:${b}:${aServes ? 1 : 0}`;
+    const hit = cache.get(key);
+    if (hit != null) return hit;
+    let out = 0;
+    if (a >= 6 && a - b >= 2) {
+      out = 1;
+    } else if (b >= 6 && b - a >= 2) {
+      out = 0;
+    } else if (a === 6 && b === 6) {
+      out = probTiebreak(pointA, pointB, aServes);
+    } else {
+      const pGameA = probGame(pointA);
+      const pGameB = probGame(pointB);
+      const pWinGame = aServes ? pGameA : 1 - pGameB;
+      out = pWinGame * solve(a + 1, b, !aServes) + (1 - pWinGame) * solve(a, b + 1, !aServes);
+    }
+    cache.set(key, out);
+    return out;
+  };
+
+  return solve(0, 0, aServesFirst);
+}
+
+function probMatchBestOf3(pA: number, pB: number): number {
+  const s1 = probSet(pA, pB, true);
+  const s2 = probSet(pA, pB, false);
+  return s1 * s2 + s1 * (1 - s2) * s1 + (1 - s1) * s2 * s1;
+}
+
+function sampleScale(matchCount: number | null | undefined, fullMatches: number): number {
+  if (!Number.isFinite(matchCount as number)) return 0;
+  if (fullMatches <= 0) return 1;
+  return clamp(Number(matchCount) / fullMatches, 0, 1);
+}
+
+function computeTournamentSpeedSignal(params: {
+  leagueAvg: number;
+  venueEntry?: { venue_avg_spw: number; match_count: number };
+  shiftEntry?: { shift_from_surface: number; match_count: number };
+}): number {
+  const { leagueAvg, venueEntry, shiftEntry } = params;
+  if (!(leagueAvg > 0)) return 0;
+
+  const parts: Array<{ signal: number; weight: number }> = [];
+  const speedRatioSpan = Math.max(
+    SPEED_RATIO_CLAMP[1] - 1,
+    1 - SPEED_RATIO_CLAMP[0],
+    1e-6
+  );
+
+  if (venueEntry && Number.isFinite(venueEntry.venue_avg_spw) && venueEntry.venue_avg_spw > 0) {
+    const ratio = clamp(venueEntry.venue_avg_spw / leagueAvg, SPEED_RATIO_CLAMP[0], SPEED_RATIO_CLAMP[1]);
+    const signal = clamp((ratio - 1) / speedRatioSpan, -1, 1);
+    const weight =
+      TOURNAMENT_SPEED_VENUE_COMPONENT_WEIGHT *
+      sampleScale(venueEntry.match_count, TOURNAMENT_SPEED_VENUE_FULL_MATCHES);
+    if (weight > 0) parts.push({ signal, weight });
+  }
+
+  if (shiftEntry && Number.isFinite(shiftEntry.shift_from_surface)) {
+    const signal = clamp(shiftEntry.shift_from_surface / TOURNAMENT_SPEED_SHIFT_SIGNAL_SCALE, -1, 1);
+    const weight =
+      TOURNAMENT_SPEED_SHIFT_COMPONENT_WEIGHT *
+      sampleScale(shiftEntry.match_count, TOURNAMENT_SPEED_SHIFT_FULL_MATCHES);
+    if (weight > 0) parts.push({ signal, weight });
+  }
+
+  if (!parts.length) return 0;
+  const totalWeight = parts.reduce((sum, part) => sum + part.weight, 0);
+  if (!(totalWeight > 0)) return 0;
+  return clamp(
+    parts.reduce((sum, part) => sum + part.signal * part.weight, 0) / totalWeight,
+    -1,
+    1
+  );
+}
+
+function pickSideByValues(p1?: number, p2?: number): MatchSide | undefined {
+  const v1 = Number.isFinite(p1 as number) ? Number(p1) : Number.NEGATIVE_INFINITY;
+  const v2 = Number.isFinite(p2 as number) ? Number(p2) : Number.NEGATIVE_INFINITY;
+  if (!(v1 > Number.NEGATIVE_INFINITY) && !(v2 > Number.NEGATIVE_INFINITY)) return undefined;
+  return v1 >= v2 ? "P1" : "P2";
+}
+
+function classifySelectedArchetype(
+  side: MatchSide | undefined,
+  p1Stats: { hold_pct: number; return_pct: number } | null,
+  p2Stats: { hold_pct: number; return_pct: number } | null
+): FastClayArchetype | undefined {
+  if (!side || !p1Stats || !p2Stats) return undefined;
+  const serveAdv =
+    side === "P1" ? p1Stats.hold_pct - p2Stats.hold_pct : p2Stats.hold_pct - p1Stats.hold_pct;
+  const returnAdv =
+    side === "P1" ? p1Stats.return_pct - p2Stats.return_pct : p2Stats.return_pct - p1Stats.return_pct;
+  if (serveAdv > 0 && returnAdv > 0) return "both";
+  if (serveAdv > 0 && returnAdv <= 0) return "serve_led";
+  if (returnAdv > 0 && serveAdv <= 0) return "return_led";
+  return "contrarian";
 }
 
 function buildStrictPolicyPayload(
@@ -327,6 +599,9 @@ const VOLUME_275_RULES: Array<{
 const VOLUME_200_RULES = VOLUME_275_RULES.filter(
   (rule) => !(rule.surface === "Clay" && rule.series === "Masters 1000")
 );
+const HOUSTON_SHADOW_MIN_VALUE_PCT = 20;
+const HOUSTON_SHADOW_CONFIDENCE = new Set(["high", "medium"]);
+const VALIDATED_FAST_CLAY_TOUR_KEYS = new Set(["houston", "madrid"]);
 
 function normalizeShadowProfile(raw: string | undefined): ShadowProfile {
   const value = (raw ?? "volume_200").trim().toLowerCase();
@@ -334,7 +609,22 @@ function normalizeShadowProfile(raw: string | undefined): ShadowProfile {
   return "volume_200";
 }
 
-function shadowMinValueFor(surface: string, seriesBucket: string, confidence: string): number | null {
+function isHoustonClayShadowException(surface: string, tournamentName?: string): boolean {
+  if (surface !== "Clay") return false;
+  return tourKeyCandidates(tournamentName).includes("houston");
+}
+
+function isValidatedFastClayVenue(surface: string, tournamentName?: string): boolean {
+  if (surface !== "Clay") return false;
+  return tourKeyCandidates(tournamentName).some((key) => VALIDATED_FAST_CLAY_TOUR_KEYS.has(key));
+}
+
+function shadowMinValueFor(
+  surface: string,
+  seriesBucket: string,
+  confidence: string,
+  tournamentName?: string
+): number | null {
   const rules =
     SHADOW_POLICY_MODE === "volume_275"
       ? VOLUME_275_RULES
@@ -342,6 +632,13 @@ function shadowMinValueFor(surface: string, seriesBucket: string, confidence: st
         ? VOLUME_200_RULES
         : [];
   let minVal: number | null = null;
+  if (
+    SHADOW_POLICY_MODE !== "off" &&
+    isHoustonClayShadowException(surface, tournamentName) &&
+    HOUSTON_SHADOW_CONFIDENCE.has(confidence)
+  ) {
+    minVal = HOUSTON_SHADOW_MIN_VALUE_PCT;
+  }
   for (const rule of rules) {
     if (surface !== rule.surface || seriesBucket !== rule.series) continue;
     if (!rule.confidence.has(confidence)) continue;
@@ -357,9 +654,15 @@ function shadowProfileLabel(profile: ShadowProfile): string {
   return "shadow";
 }
 
-function spreadShadowReasonFor(surface: string, seriesBucket: string, confidence?: string): string | null {
+function spreadShadowReasonFor(
+  surface: string,
+  seriesBucket: string,
+  confidence?: string,
+  tournamentName?: string
+): string | null {
   const conf = (confidence ?? "").trim().toLowerCase();
   if (!(conf === "high" || conf === "medium")) return null;
+  if (isHoustonClayShadowException(surface, tournamentName)) return null;
 
   const inStrictMatchSegment =
     STRICT_POLICY_ALLOWED_SEGMENTS.has(`${surface}|${seriesBucket}`) &&
@@ -373,7 +676,6 @@ function spreadShadowReasonFor(surface: string, seriesBucket: string, confidence
 
 function firstBlockedReason(params: {
   hasPositiveRawValue: boolean;
-  anySignal: boolean;
   recentInjuredAny: boolean;
   pinnacleShortFavoriteExcluded: boolean;
   modelShortFavoriteExcluded: boolean;
@@ -385,7 +687,7 @@ function firstBlockedReason(params: {
   rawValueP1?: number;
   rawValueP2?: number;
 }): string | undefined {
-  if (!params.hasPositiveRawValue || params.anySignal) return undefined;
+  if (!params.hasPositiveRawValue) return undefined;
   if (params.recentInjuredAny) return "Blocked: recent injury flag";
   if (params.pinnacleShortFavoriteExcluded) return "Blocked: Pinnacle fav <1.25";
   if (params.modelShortFavoriteExcluded) return "Blocked: model fav <1.25";
@@ -393,10 +695,10 @@ function firstBlockedReason(params: {
   if (params.heavyFavoriteDogExcluded) return "Blocked: Masters hard heavy-favorite dog ML guard";
   if (params.favoriteSpreadConflictExcluded) return "Blocked: same-match favourite handicap conflict";
   if (params.oppositeSideHandicapConflictExcluded) return "Blocked: same-match mixed-side ML/handicap conflict";
-  if (params.shadowMinVal == null) return `Blocked: not in ${shadowProfileLabel(SHADOW_POLICY_MODE)} segment`;
+  if (params.shadowMinVal == null) return `ML only: not in ${shadowProfileLabel(SHADOW_POLICY_MODE)} segment`;
   const bestRawValue = Math.max(params.rawValueP1 ?? Number.NEGATIVE_INFINITY, params.rawValueP2 ?? Number.NEGATIVE_INFINITY);
   if (Number.isFinite(bestRawValue) && bestRawValue < params.shadowMinVal) {
-    return `Blocked: below ${shadowProfileLabel(SHADOW_POLICY_MODE)} threshold`;
+    return `ML only: below ${shadowProfileLabel(SHADOW_POLICY_MODE)} threshold`;
   }
   return "Blocked: filtered by policy";
 }
@@ -514,6 +816,114 @@ function parseCsvLine(line: string): string[] {
   }
   out.push(cur);
   return out.map((x) => x.trim());
+}
+
+function parseCsvNumber(value: string | undefined): number | undefined {
+  if (value == null) return undefined;
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+  const parsed = Number(trimmed);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+function parseCsvLeague(value: string | undefined): "ATP" | "Challenger" | undefined {
+  const normalized = (value ?? "").trim();
+  if (normalized === "ATP" || normalized === "Challenger") return normalized;
+  return undefined;
+}
+
+function loadActiveShadowSignals(csvPath: string, kind: ShadowSignalKind, activeDate?: string): ShadowSignalSummary[] {
+  if (!fs.existsSync(csvPath)) return [];
+
+  let text = "";
+  try {
+    text = fs.readFileSync(csvPath, "utf8");
+  } catch (e) {
+    console.warn(`[fair-odds] Could not read shadow signal CSV: ${csvPath}`, e);
+    return [];
+  }
+
+  const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+  if (lines.length < 2) return [];
+
+  const header = parseCsvLine(lines[0]);
+  const index = new Map<string, number>();
+  header.forEach((h, i) => index.set(h, i));
+  const required = ["player1", "player2", "side", "value_pct", "bet_type", "settlement_status"];
+  if (required.some((k) => !index.has(k))) return [];
+
+  const get = (cols: string[], name: string) => cols[index.get(name) ?? -1] ?? "";
+  const latestBySignalKey = new Map<string, ShadowSignalSummary & { settlement_status: string }>();
+
+  for (let i = 1; i < lines.length; i += 1) {
+    const cols = parseCsvLine(lines[i]);
+    const rowDate = get(cols, "date").trim();
+    if (activeDate && rowDate && rowDate !== activeDate) continue;
+    const player1Id = parseCsvNumber(get(cols, "player1_id"));
+    const player2Id = parseCsvNumber(get(cols, "player2_id"));
+    const player1Name = get(cols, "player1");
+    const player2Name = get(cols, "player2");
+    if (!player1Name || !player2Name) continue;
+    const side = get(cols, "side");
+    const betType = (get(cols, "bet_type") || "match").trim().toLowerCase() === "spread" ? "spread" : "match";
+    const spreadLine = parseCsvNumber(get(cols, "spread_line"));
+    const signalIdentity =
+      player1Id != null && player2Id != null
+        ? `${player1Id}|${player2Id}`
+        : signalNameKey(player1Name, player2Name);
+    const signalKey =
+      kind === "spread_shadow"
+        ? `${kind}|${signalIdentity}|${side}|${betType}|${spreadLine ?? ""}`
+        : `${kind}|${signalIdentity}|${side}|${betType}`;
+
+    latestBySignalKey.set(signalKey, {
+      id: i,
+      kind,
+      player1_id: player1Id,
+      player2_id: player2Id,
+      player1_name: player1Name,
+      player2_name: player2Name,
+      side,
+      value_pct: parseCsvNumber(get(cols, "value_pct")) ?? 0,
+      pinnacle_odds: parseCsvNumber(get(cols, "spread_odds")) ?? parseCsvNumber(get(cols, side === "P1" || side === "P1+" ? "pin_odds1" : "pin_odds2")),
+      stake_units: parseCsvNumber(get(cols, "stake_units")),
+      stake_gbp: parseCsvNumber(get(cols, "stake_gbp")),
+      bet_type: betType,
+      spread_line: spreadLine,
+      tournament: get(cols, "series"),
+      surface: get(cols, "surface"),
+      league: parseCsvLeague(get(cols, "league")),
+      shadow_reason: get(cols, "shadow_reason") || undefined,
+      tournament_speed_signal: parseCsvNumber(get(cols, "tournament_speed_signal")),
+      clay_speed_tier:
+        (get(cols, "clay_speed_tier") || "") === "fast"
+          ? "fast"
+          : (get(cols, "clay_speed_tier") || "") === "normal"
+            ? "normal"
+            : undefined,
+      raw_value_p1: parseCsvNumber(get(cols, "raw_value_p1")) ?? parseCsvNumber(get(cols, "value_p1")),
+      raw_value_p2: parseCsvNumber(get(cols, "raw_value_p2")) ?? parseCsvNumber(get(cols, "value_p2")),
+      clay_2026_raw_value_same_side: parseCsvNumber(get(cols, "raw_value_same_side")),
+      clay_2026_value_p1: parseCsvNumber(get(cols, "value_p1")),
+      clay_2026_value_p2: parseCsvNumber(get(cols, "value_p2")),
+      clay_2026_raw_odds1: parseCsvNumber(get(cols, "raw_odds1_shadow")),
+      clay_2026_raw_odds2: parseCsvNumber(get(cols, "raw_odds2_shadow")),
+      clay_2026_calibrated_odds1: parseCsvNumber(get(cols, "calibrated_odds1")),
+      clay_2026_calibrated_odds2: parseCsvNumber(get(cols, "calibrated_odds2")),
+      clay_2026_selected_prob: parseCsvNumber(get(cols, "calibrated_selected_prob")),
+      handicap_point_prob_source:
+        (get(cols, "handicap_point_prob_source") as FairOddsRow["handicap_point_prob_source"]) || undefined,
+      settlement_status: get(cols, "settlement_status").trim().toLowerCase(),
+    });
+  }
+
+  return Array.from(latestBySignalKey.values())
+    .filter((row) => row.settlement_status !== "settled")
+    .map((row) => {
+      const { settlement_status, ...rest } = row;
+      void settlement_status;
+      return rest;
+    });
 }
 
 interface InjuryIndex {
@@ -818,7 +1228,7 @@ async function run(): Promise<Response> {
 
   const { data: oddsRows, error: oddsErr } = await supabase
     .from("daily_fair_odds")
-    .select("id, tour_id, player1_id, player2_id, surface, p1_win_prob, p2_win_prob, odds1, odds2, expected_total_games, ou_line_1, ou_over_1, ou_under_1, ou_line_2, ou_over_2, ou_under_2, ou_line_3, ou_over_3, ou_under_3, confidence, spread_line, spread_odds1, spread_odds2, handicap_edge_p1, handicap_edge_p2")
+    .select("id, tour_id, player1_id, player2_id, surface, p1_win_prob, p2_win_prob, odds1, odds2, p_a, p_b, expected_total_games, ou_line_1, ou_over_1, ou_under_1, ou_line_2, ou_over_2, ou_under_2, ou_line_3, ou_over_3, ou_under_3, confidence, spread_line, spread_odds1, spread_odds2, handicap_edge_p1, handicap_edge_p2")
     .order("tour_id")
     .order("draw")
     .order("round_id")
@@ -877,6 +1287,28 @@ async function run(): Promise<Response> {
           )
         )
       : [];
+  const tourShiftChunks =
+    tourIdArr.length > 0
+      ? await Promise.all(
+          Array.from({ length: Math.ceil(tourIdArr.length / BATCH) }, (_, i) =>
+            supabase
+              .from("tournament_game_averages")
+              .select("tour_id, surface, shift_from_surface, match_count")
+              .in("tour_id", tourIdArr.slice(i * BATCH, (i + 1) * BATCH))
+          )
+        )
+      : [];
+  const serveProfileChunks =
+    tourIdArr.length > 0
+      ? await Promise.all(
+          Array.from({ length: Math.ceil(tourIdArr.length / BATCH) }, (_, i) =>
+            supabase
+              .from("tournament_serve_profile")
+              .select("tour_id, surface, venue_avg_spw, match_count")
+              .in("tour_id", tourIdArr.slice(i * BATCH, (i + 1) * BATCH))
+          )
+        )
+      : [];
 
   const players = new Map<number, string>();
   for (const res of playersChunks) {
@@ -916,14 +1348,41 @@ async function run(): Promise<Response> {
     if (s === "hard") return ["hard", "i.hard", "n/a"];
     return [s, "n/a"];
   };
+  const tourShiftLookup = new Map<string, { shift_from_surface: number; match_count: number }>();
+  for (const res of tourShiftChunks) {
+    for (const row of res.data ?? []) {
+      const tid = row.tour_id != null ? Number(row.tour_id) : NaN;
+      const shift = row.shift_from_surface != null ? Number(row.shift_from_surface) : NaN;
+      const matchCount = row.match_count != null ? Number(row.match_count) : 0;
+      if (!Number.isFinite(tid) || !Number.isFinite(shift) || matchCount < MIN_TOUR_MATCHES_FOR_SHIFT) continue;
+      tourShiftLookup.set(`${tid}:${normalizeSurfaceKey(row.surface)}`, {
+        shift_from_surface: shift,
+        match_count: matchCount,
+      });
+    }
+  }
+  const serveProfileLookup = new Map<string, { venue_avg_spw: number; match_count: number }>();
+  for (const res of serveProfileChunks) {
+    for (const row of res.data ?? []) {
+      const tid = row.tour_id != null ? Number(row.tour_id) : NaN;
+      const venueAvgSpw = row.venue_avg_spw != null ? Number(row.venue_avg_spw) : NaN;
+      const matchCount = row.match_count != null ? Number(row.match_count) : 0;
+      if (!Number.isFinite(tid) || !Number.isFinite(venueAvgSpw) || matchCount < MIN_VENUE_SPW_MATCHES) continue;
+      serveProfileLookup.set(`${tid}:${normalizeSurfaceKey(row.surface)}`, {
+        venue_avg_spw: venueAvgSpw,
+        match_count: matchCount,
+      });
+    }
+  }
   const stats = new Map<string, { hold_pct: number; return_pct: number }>();
   for (const res of statsChunks) {
     for (const s of res.data ?? []) {
       const pid = s.player_id != null ? Number(s.player_id) : NaN;
       if (!Number.isFinite(pid)) continue;
       const key = `${pid}:${normalizeSurfaceKey(s.surface)}`;
-      const hold = s.hold_pct != null ? Number(s.hold_pct) : 0;
-      const ret = s.return_pct != null ? Number(s.return_pct) : 0;
+      const hold = s.hold_pct != null ? Number(s.hold_pct) : NaN;
+      const ret = s.return_pct != null ? Number(s.return_pct) : NaN;
+      if (!Number.isFinite(hold) || !Number.isFinite(ret)) continue;
       stats.set(key, { hold_pct: hold, return_pct: ret });
     }
   }
@@ -934,6 +1393,14 @@ async function run(): Promise<Response> {
       if (row) return row;
     }
     return null;
+  };
+  const getTournamentLookup = <T,>(lookup: Map<string, T>, tourId?: number | null, surface?: string | null): T | undefined => {
+    if (tourId == null) return undefined;
+    for (const surf of surfaceCandidates(surface)) {
+      const row = lookup.get(`${tourId}:${surf}`);
+      if (row) return row;
+    }
+    return undefined;
   };
 
   // Use UTC date so it matches script: datetime.now(timezone.utc).date().isoformat()
@@ -960,6 +1427,7 @@ async function run(): Promise<Response> {
     ou_line?: number;
     ou_over?: number;
     ou_under?: number;
+    league?: "ATP" | "Challenger";
   }[] = [];
   const snapshotClient = url && serviceRoleKey ? createClient(url, serviceRoleKey) : supabase;
 
@@ -996,14 +1464,15 @@ async function run(): Promise<Response> {
     pinnacleRows = rawSnapshot
       .filter((row: { league?: string }) => row.league === "ATP" || row.league === "Challenger")
       .map((row) => ({
-      player1_name: (row.player1_name ?? "").trim(),
-      player2_name: (row.player2_name ?? "").trim(),
-      odds1: Number(row.odds1 ?? 0),
-      odds2: Number(row.odds2 ?? 0),
-      ou_line: row.ou_line != null ? Number(row.ou_line) : undefined,
-      ou_over: row.ou_over != null ? Number(row.ou_over) : undefined,
-      ou_under: row.ou_under != null ? Number(row.ou_under) : undefined,
-    }));
+        player1_name: (row.player1_name ?? "").trim(),
+        player2_name: (row.player2_name ?? "").trim(),
+        odds1: Number(row.odds1 ?? 0),
+        odds2: Number(row.odds2 ?? 0),
+        ou_line: row.ou_line != null ? Number(row.ou_line) : undefined,
+        ou_over: row.ou_over != null ? Number(row.ou_over) : undefined,
+        ou_under: row.ou_under != null ? Number(row.ou_under) : undefined,
+        league: row.league === "Challenger" ? "Challenger" : "ATP",
+      }));
   }
 
   /** Normalise for lookup: lowercase, strip accents, hyphens, apostrophes. */
@@ -1029,6 +1498,11 @@ async function run(): Promise<Response> {
       .map(norm)
       .filter(Boolean)
       .filter((t) => !/^[a-z]$/.test(t)); // drop initials
+  }
+
+  function inferLeagueFromTournament(tournamentName: string, pinnacleLeague?: string): "ATP" | "Challenger" {
+    if (pinnacleLeague === "ATP" || pinnacleLeague === "Challenger") return pinnacleLeague;
+    return (tournamentName ?? "").toUpperCase().includes("CHALLENGER") ? "Challenger" : "ATP";
   }
 
   /** Multi-key surname set to match hyphen/compound variants safely. */
@@ -1064,10 +1538,32 @@ async function run(): Promise<Response> {
     fairOddsRows: { id: number; player1_name: string; player2_name: string }[],
     pinRows: PinnacleRow[]
   ): {
-    matched: Map<number, { pinnacle_odds1: number; pinnacle_odds2: number; pinnacle_margin: number; pinnacle_ou_line?: number; pinnacle_ou_over?: number; pinnacle_ou_under?: number }>;
+    matched: Map<
+      number,
+      {
+        pinnacle_odds1: number;
+        pinnacle_odds2: number;
+        pinnacle_margin: number;
+        pinnacle_ou_line?: number;
+        pinnacle_ou_over?: number;
+        pinnacle_ou_under?: number;
+        pinnacle_league?: "ATP" | "Challenger";
+      }
+    >;
     pinnacleOnly: PinnacleRow[];
   } {
-    const matched = new Map<number, { pinnacle_odds1: number; pinnacle_odds2: number; pinnacle_margin: number; pinnacle_ou_line?: number; pinnacle_ou_over?: number; pinnacle_ou_under?: number }>();
+    const matched = new Map<
+      number,
+      {
+        pinnacle_odds1: number;
+        pinnacle_odds2: number;
+        pinnacle_margin: number;
+        pinnacle_ou_line?: number;
+        pinnacle_ou_over?: number;
+        pinnacle_ou_under?: number;
+        pinnacle_league?: "ATP" | "Challenger";
+      }
+    >();
     const matchedPinRows = new Set<PinnacleRow>();
     const pinLookup = new Map<string, Array<{ row: PinnacleRow; reversed: boolean }>>();
 
@@ -1143,6 +1639,7 @@ async function run(): Promise<Response> {
           pinnacle_ou_line: pin.ou_line,
           pinnacle_ou_over: pin.ou_over,
           pinnacle_ou_under: pin.ou_under,
+          pinnacle_league: pin.league,
         });
       } else {
         matched.set(fo.id, {
@@ -1152,6 +1649,7 @@ async function run(): Promise<Response> {
           pinnacle_ou_line: pin.ou_line,
           pinnacle_ou_over: pin.ou_over,
           pinnacle_ou_under: pin.ou_under,
+          pinnacle_league: pin.league,
         });
       }
     }
@@ -1185,28 +1683,61 @@ async function run(): Promise<Response> {
   let strictPolicyExcludedCount = 0;
   let strictPolicySignaledCount = 0;
 
-  const matches: FairOddsRow[] = mainTourOddsRows.map((r) => {
+  const rawMatches: FairOddsRow[] = mainTourOddsRows.map((r) => {
     const p1Stats = getSurfaceStats(r.player1_id, r.surface);
     const p2Stats = getSurfaceStats(r.player2_id, r.surface);
     const p1Name = (r.player1_id != null ? players.get(r.player1_id) : null) ?? "";
     const p2Name = (r.player2_id != null ? players.get(r.player2_id) : null) ?? "";
+    const surfaceKey = normalizeSurfaceKey(r.surface);
     const tourMeta = r.tour_id != null ? tours.get(r.tour_id) : undefined;
     const tournamentName = tourMeta?.name ?? "";
+    const pinnacle = pinnacleRows.length ? pinnacleMap.get(r.id) ?? null : null;
+    const league = inferLeagueFromTournament(tournamentName, pinnacle?.pinnacle_league);
     const seriesBucket = seriesBucketFromTour(tournamentName, tourMeta?.rank);
+    const tournamentSpeedSignal =
+      surfaceKey === "clay"
+        ? computeTournamentSpeedSignal({
+            leagueAvg: SURFACE_LEAGUE_AVG[surfaceKey] ?? SURFACE_LEAGUE_AVG["n/a"],
+            venueEntry: getTournamentLookup(serveProfileLookup, r.tour_id, r.surface),
+            shiftEntry: getTournamentLookup(tourShiftLookup, r.tour_id, r.surface),
+          })
+        : 0;
+    const fastClayFlag =
+      surfaceKey === "clay" &&
+      tournamentSpeedSignal >= FAST_CLAY_SPEED_THRESHOLD &&
+      isValidatedFastClayVenue(r.surface ?? "", tournamentName);
     const confidenceRaw = (r as { confidence?: string }).confidence;
     const confidence = confidenceRaw ? confidenceRaw.toLowerCase() : undefined;
     const p1WinProb = r.p1_win_prob != null ? Number(r.p1_win_prob) : 0;
     const p2WinProb = r.p2_win_prob != null ? Number(r.p2_win_prob) : 0;
+    const storedPA = parsePointProb((r as { p_a?: number | string | null }).p_a);
+    const storedPB = parsePointProb((r as { p_b?: number | string | null }).p_b);
+    const storedMatchProb =
+      storedPA != null && storedPB != null ? probMatchBestOf3(storedPA, storedPB) : undefined;
+    const handicapPointProbGap =
+      storedMatchProb != null ? storedMatchProb - p1WinProb : undefined;
+    const handicapPointProbSource: FairOddsRow["handicap_point_prob_source"] =
+      storedMatchProb == null || handicapPointProbGap == null
+        ? "fallback_missing"
+        : Math.abs(handicapPointProbGap) <= POINT_PROB_MATCH_PROB_GAP_MAX
+          ? "stored_p_a_p_b"
+          : "fallback_divergent_gap";
     const modelFavoriteProb = Math.max(p1WinProb, p2WinProb);
     const modelFavoriteSide: "P1" | "P2" = p1WinProb >= p2WinProb ? "P1" : "P2";
-    const spreadLine = r.spread_line != null ? Number(r.spread_line) : undefined;
-    const handicapEdgeP1 = r.handicap_edge_p1 != null ? Number(r.handicap_edge_p1) : undefined;
-    const handicapEdgeP2 = r.handicap_edge_p2 != null ? Number(r.handicap_edge_p2) : undefined;
+    const hasCurrentSpreadData =
+      pinnacle != null &&
+      r.spread_line != null &&
+      r.spread_odds1 != null &&
+      r.spread_odds2 != null &&
+      r.handicap_edge_p1 != null &&
+      r.handicap_edge_p2 != null;
+    const spreadLine = hasCurrentSpreadData ? Number(r.spread_line) : undefined;
+    const handicapEdgeP1 = hasCurrentSpreadData ? Number(r.handicap_edge_p1) : undefined;
+    const handicapEdgeP2 = hasCurrentSpreadData ? Number(r.handicap_edge_p2) : undefined;
     const p1Injury = isRecentInjuredPlayer(p1Name, injuryIndex);
     const p2Injury = isRecentInjuredPlayer(p2Name, injuryIndex);
     const recentInjuredAny = p1Injury.matched || p2Injury.matched;
     if (recentInjuredAny) injuryFlaggedCount += 1;
-    const pinnacle = pinnacleRows.length ? pinnacleMap.get(r.id) ?? null : null;
     const ourOdds1 = r.odds1 != null ? Number(r.odds1) : 0;
     const ourOdds2 = r.odds2 != null ? Number(r.odds2) : 0;
     const rawValueP1 =
@@ -1355,10 +1886,9 @@ async function run(): Promise<Response> {
     const valueP1 = STRICT_POLICY_MODE ? strictPublicValueP1 : confidence === "none" ? undefined : rawValueP1;
     const valueP2 = STRICT_POLICY_MODE ? strictPublicValueP2 : confidence === "none" ? undefined : rawValueP2;
     const policyMatch = STRICT_POLICY_MODE ? valueP1 != null || valueP2 != null : false;
-    // The main fair-odds table is user-facing, so don't surface raw dog ML "value"
-    // in the same extreme-favourite / contradiction zones we already suppress in
-    // the strict lane. Keep the raw probabilities and handicap edges, but blank the
-    // visible ML value cell when the match winner edge is known to be misleading.
+    // Always surface the raw ML value in the fair-odds table when both our fair
+    // odds and Pinnacle odds are present. Policy / signal routing still applies
+    // separately; this only affects what the user can inspect on the board.
     const suppressDisplayValueP1 =
       confidence === "none" ||
       mispriceExcluded ||
@@ -1372,17 +1902,20 @@ async function run(): Promise<Response> {
       strictFavoriteSpreadConflictP2 ||
       strictOppositeHandicapConflictP2;
     const displayValueP1 =
-      pinnacle && ourOdds1 > 1 && pinnacle.pinnacle_odds1 > 1 && !suppressDisplayValueP1
+      pinnacle && ourOdds1 > 1 && pinnacle.pinnacle_odds1 > 1
         ? rawValueP1
         : undefined;
     const displayValueP2 =
-      pinnacle && ourOdds2 > 1 && pinnacle.pinnacle_odds2 > 1 && !suppressDisplayValueP2
+      pinnacle && ourOdds2 > 1 && pinnacle.pinnacle_odds2 > 1
         ? rawValueP2
         : undefined;
     if (policyMatch) strictPolicySignaledCount += 1;
 
     // Active shadow profile: same exclusions as strict, different segment/value rules (no overlay)
-    const volumeMinVal = SHADOW_POLICY_MODE === "off" ? null : shadowMinValueFor(r.surface ?? "", seriesBucket, confidence ?? "");
+    const volumeMinVal =
+      SHADOW_POLICY_MODE === "off"
+        ? null
+        : shadowMinValueFor(r.surface ?? "", seriesBucket, confidence ?? "", tournamentName);
     const volumeExcluded =
       shortFavoriteExcluded || mispriceExcluded || injuryExcluded;
     const volumeProfileValueP1 =
@@ -1406,27 +1939,23 @@ async function run(): Promise<Response> {
     const volumeValueP1 = !strictShadowCandidate ? volumeProfileValueP1 : undefined;
     const volumeValueP2 = !strictShadowCandidate ? volumeProfileValueP2 : undefined;
     const shadowMatch = volumeValueP1 != null || volumeValueP2 != null;
+    const fastClaySelectedSide =
+      policyMatch
+        ? pickSideByValues(strictPublicValueP1, strictPublicValueP2)
+        : shadowMatch
+          ? pickSideByValues(volumeValueP1, volumeValueP2)
+          : pickSideByValues(displayValueP1, displayValueP2);
+    const fastClayArchetype = fastClayFlag
+      ? classifySelectedArchetype(fastClaySelectedSide, p1Stats, p2Stats)
+      : undefined;
+    const fastClayReturnLedFlag = fastClayFlag && fastClayArchetype === "return_led";
     const shadowSpreadEligible =
       volumeMinVal != null &&
       !policyBaseAllows &&
       !shortFavoriteExcluded &&
       !injuryExcluded;
-    const spreadShadowReason = spreadShadowReasonFor(r.surface ?? "", seriesBucket, confidence ?? "");
+    const spreadShadowReason = spreadShadowReasonFor(r.surface ?? "", seriesBucket, confidence ?? "", tournamentName);
     const spreadShadowEligible = spreadShadowReason != null && !shortFavoriteExcluded && !injuryExcluded;
-    const strictSpreadWouldSignal =
-      policyBaseAllows &&
-      !shortFavoriteExcluded &&
-      !recentInjuredAny &&
-      ((r.handicap_edge_p1 != null && Number(r.handicap_edge_p1) >= 20) ||
-        (r.handicap_edge_p2 != null && Number(r.handicap_edge_p2) >= 20));
-    const shadowSpreadWouldSignal =
-      shadowSpreadEligible &&
-      ((r.handicap_edge_p1 != null && Number(r.handicap_edge_p1) >= 20) ||
-        (r.handicap_edge_p2 != null && Number(r.handicap_edge_p2) >= 20));
-    const spreadShadowWouldSignal =
-      spreadShadowEligible &&
-      ((r.handicap_edge_p1 != null && Number(r.handicap_edge_p1) >= HANDICAP_MIN_EDGE_PCT) ||
-        (r.handicap_edge_p2 != null && Number(r.handicap_edge_p2) >= HANDICAP_MIN_EDGE_PCT));
     const hasPositiveRawValue = (rawValueP1 ?? Number.NEGATIVE_INFINITY) > 0 || (rawValueP2 ?? Number.NEGATIVE_INFINITY) > 0;
     const displayGuardReason = mlDisplayGuardReason({
       confidence,
@@ -1443,7 +1972,6 @@ async function run(): Promise<Response> {
     });
     const blockedReason = displayGuardReason ?? firstBlockedReason({
       hasPositiveRawValue,
-      anySignal: policyMatch || strictSpreadWouldSignal || shadowMatch || shadowSpreadWouldSignal || spreadShadowWouldSignal,
       recentInjuredAny,
       pinnacleShortFavoriteExcluded: pinFavOddsMispriceExcluded,
       modelShortFavoriteExcluded: modelFavOddsMispriceExcluded,
@@ -1461,6 +1989,7 @@ async function run(): Promise<Response> {
       id: r.id,
       tournament: tournamentName,
       surface: r.surface ?? "",
+      league,
       player1_id: r.player1_id ?? 0,
       player2_id: r.player2_id ?? 0,
       player1_name: p1Name,
@@ -1469,6 +1998,8 @@ async function run(): Promise<Response> {
       p2_win_prob: p2WinProb,
       odds1: ourOdds1,
       odds2: ourOdds2,
+      p_a: storedPA,
+      p_b: storedPB,
       p1_serve: p1Stats ? Math.round(p1Stats.hold_pct * 1000) / 10 : undefined,
       p1_return: p1Stats ? Math.round(p1Stats.return_pct * 1000) / 10 : undefined,
       p1_total: p1Stats ? Math.round((p1Stats.hold_pct + p1Stats.return_pct) * 1000) / 10 : undefined,
@@ -1491,11 +2022,14 @@ async function run(): Promise<Response> {
       pinnacle_ou_line: pinnacle?.pinnacle_ou_line,
       pinnacle_ou_over: pinnacle?.pinnacle_ou_over,
       pinnacle_ou_under: pinnacle?.pinnacle_ou_under,
-      spread_line: r.spread_line != null ? Number(r.spread_line) : undefined,
-      spread_odds1: r.spread_odds1 != null ? Number(r.spread_odds1) : undefined,
-      spread_odds2: r.spread_odds2 != null ? Number(r.spread_odds2) : undefined,
-      handicap_edge_p1: r.handicap_edge_p1 != null ? Number(r.handicap_edge_p1) : undefined,
-      handicap_edge_p2: r.handicap_edge_p2 != null ? Number(r.handicap_edge_p2) : undefined,
+      spread_line: spreadLine,
+      spread_odds1: hasCurrentSpreadData ? Number(r.spread_odds1) : undefined,
+      spread_odds2: hasCurrentSpreadData ? Number(r.spread_odds2) : undefined,
+      handicap_edge_p1: handicapEdgeP1,
+      handicap_edge_p2: handicapEdgeP2,
+      handicap_point_prob_source: handicapPointProbSource,
+      handicap_reverse_solve: handicapPointProbSource !== "stored_p_a_p_b",
+      handicap_point_prob_gap: handicapPointProbGap,
       value_p1: displayValueP1,
       value_p2: displayValueP2,
       strict_signal_value_p1: strictPublicValueP1,
@@ -1520,8 +2054,124 @@ async function run(): Promise<Response> {
       recent_injured_any: recentInjuredAny,
       recent_injured_p1_mode: p1Injury.mode,
       recent_injured_p2_mode: p2Injury.mode,
+      tournament_speed_signal:
+        fastClayFlag || Math.abs(tournamentSpeedSignal) >= FAST_CLAY_SPEED_THRESHOLD
+          ? Math.round(tournamentSpeedSignal * 1000) / 1000
+          : undefined,
+      fast_clay_flag: fastClayFlag,
+      fast_clay_selected_side: fastClaySelectedSide,
+      fast_clay_archetype: fastClayArchetype,
+      fast_clay_return_led_flag: fastClayReturnLedFlag,
     };
   });
+
+  const clay2026SignalsCsv = loadActiveShadowSignals(CLAY_2026_SIGNAL_CSV, "clay_2026", today);
+  const spreadShadowSignalsCsv = loadActiveShadowSignals(SPREAD_SHADOW_SIGNAL_CSV, "spread_shadow", today);
+  const rowSignalsByMatch = new Map<string, ShadowSignalSummary[]>();
+  const addSignalToRowKey = (key: string, signal: ShadowSignalSummary) => {
+    const existing = rowSignalsByMatch.get(key);
+    if (existing) existing.push(signal);
+    else rowSignalsByMatch.set(key, [signal]);
+  };
+  const signalLookupKeys = (signal: ShadowSignalSummary): string[] => {
+    const keys: string[] = [];
+    if (signal.player1_id != null && signal.player2_id != null) {
+      keys.push(signalMatchKey(signal.player1_id, signal.player2_id));
+    }
+    if (signal.player1_name && signal.player2_name) {
+      keys.push(signalNameKey(signal.player1_name, signal.player2_name));
+    }
+    return Array.from(new Set(keys));
+  };
+  for (const signal of [...clay2026SignalsCsv, ...spreadShadowSignalsCsv]) {
+    for (const key of signalLookupKeys(signal)) addSignalToRowKey(key, signal);
+  }
+  for (const signals of rowSignalsByMatch.values()) {
+    signals.sort((a, b) => {
+      if (a.kind !== b.kind) return a.kind === "clay_2026" ? -1 : 1;
+      if (a.bet_type !== b.bet_type) return a.bet_type === "match" ? -1 : 1;
+      return a.side.localeCompare(b.side);
+    });
+  }
+
+  const matches: FairOddsRow[] = rawMatches.map((m) => {
+    let rowSignals = Array.from(
+      new Map(
+        [signalMatchKey(m.player1_id, m.player2_id), signalNameKey(m.player1_name, m.player2_name)]
+          .flatMap((key) => (rowSignalsByMatch.get(key) ?? []).map((signal) => [`${signal.kind}|${signal.id}`, signal] as const))
+      ).values()
+    ).sort((a, b) => {
+      if (a.kind !== b.kind) return a.kind === "clay_2026" ? -1 : 1;
+      if (a.bet_type !== b.bet_type) return a.bet_type === "match" ? -1 : 1;
+      return a.side.localeCompare(b.side);
+    });
+    if (m.handicap_point_prob_source !== "stored_p_a_p_b") {
+      rowSignals = rowSignals.filter((signal) => signal.kind !== "spread_shadow");
+    }
+
+    let claySignal = rowSignals.find((signal) => signal.kind === "clay_2026" && signal.bet_type === "match");
+    let spreadSignal = rowSignals.find((signal) => signal.kind === "spread_shadow" && signal.bet_type === "spread");
+    const spreadDirection = spreadSignal ? spreadConflictDirection(spreadSignal) : null;
+    const clayDirection = claySignal?.side === "P2" ? "P2" : claySignal?.side === "P1" ? "P1" : null;
+
+    if (claySignal && spreadSignal && clayDirection && spreadDirection && clayDirection !== spreadDirection) {
+      const claySignalId = claySignal.id;
+      rowSignals = rowSignals.filter((signal) => !(signal.kind === "clay_2026" && signal.id === claySignalId));
+      claySignal = undefined;
+      spreadSignal = rowSignals.find((signal) => signal.kind === "spread_shadow" && signal.bet_type === "spread");
+    }
+
+    return {
+      ...m,
+      league: claySignal?.league ?? spreadSignal?.league ?? m.league,
+      tournament_speed_signal: m.tournament_speed_signal,
+      spread_shadow_eligible: rowSignals.some((signal) => signal.kind === "spread_shadow" && signal.bet_type === "spread"),
+      spread_shadow_reason: spreadSignal?.shadow_reason ?? m.spread_shadow_reason,
+      row_signals: rowSignals,
+    };
+  });
+
+  const attachedByKind: Record<ShadowSignalKind, Set<number>> = {
+    clay_2026: new Set<number>(),
+    spread_shadow: new Set<number>(),
+  };
+  let matchesWithRowSignals = 0;
+  for (const match of matches) {
+    const rowSignals = match.row_signals ?? [];
+    if (rowSignals.length) matchesWithRowSignals += 1;
+    for (const signal of rowSignals) attachedByKind[signal.kind].add(signal.id);
+  }
+  const signal_attachment: Record<ShadowSignalKind, SignalAttachmentDiagnostics> = {
+    clay_2026: {
+      loaded: clay2026SignalsCsv.length,
+      attached: attachedByKind.clay_2026.size,
+      unmatched: Math.max(0, clay2026SignalsCsv.length - attachedByKind.clay_2026.size),
+    },
+    spread_shadow: {
+      loaded: spreadShadowSignalsCsv.length,
+      attached: attachedByKind.spread_shadow.size,
+      unmatched: Math.max(0, spreadShadowSignalsCsv.length - attachedByKind.spread_shadow.size),
+    },
+  };
+  const unmatchedSignals = {
+    clay_2026: clay2026SignalsCsv.filter((signal) => !attachedByKind.clay_2026.has(signal.id)),
+    spread_shadow: spreadShadowSignalsCsv.filter((signal) => !attachedByKind.spread_shadow.has(signal.id)),
+  };
+  if (unmatchedSignals.clay_2026.length) {
+    console.warn(
+      "[fair-odds] Unmatched Clay 2026 signals:",
+      unmatchedSignals.clay_2026.map((signal) => `${signal.id}: ${signal.player1_name} vs ${signal.player2_name} | ${signal.side}`)
+    );
+  }
+  if (unmatchedSignals.spread_shadow.length) {
+    console.warn(
+      "[fair-odds] Unmatched spread-shadow signals:",
+      unmatchedSignals.spread_shadow.map(
+        (signal) =>
+          `${signal.id}: ${signal.player1_name} vs ${signal.player2_name} | ${signal.side}${signal.spread_line != null ? ` ${signal.spread_line}` : ""}`
+      )
+    );
+  }
 
   const overlaySummary: OverlayPolicySummary | undefined =
     STRICT_POLICY_MODE && STRICT_POLICY_PRODUCTION_MODE === "overlay"
@@ -1568,7 +2218,10 @@ async function run(): Promise<Response> {
 
   function toSignal(
     m: (typeof matches)[0],
-    opts?: { valueKeyP1?: "strict_signal_value_p1" | "shadow_profile_value_p1" | "shadow_value_p1"; valueKeyP2?: "strict_signal_value_p2" | "shadow_profile_value_p2" | "shadow_value_p2" }
+    opts?: {
+      valueKeyP1?: "strict_signal_value_p1" | "shadow_profile_value_p1" | "shadow_value_p1";
+      valueKeyP2?: "strict_signal_value_p2" | "shadow_profile_value_p2" | "shadow_value_p2";
+    }
   ) {
     const valueKeyP1 = opts?.valueKeyP1 ?? "strict_signal_value_p1";
     const valueKeyP2 = opts?.valueKeyP2 ?? "strict_signal_value_p2";
@@ -1593,6 +2246,10 @@ async function run(): Promise<Response> {
       bet_type: "match" as const,
       tournament: m.tournament,
       surface: m.surface,
+      league: m.league,
+      tournament_speed_signal: m.tournament_speed_signal,
+      raw_value_p1: m.value_p1,
+      raw_value_p2: m.value_p2,
     };
   }
 
@@ -1604,7 +2261,10 @@ async function run(): Promise<Response> {
     edgePct: number,
     pinOdds: number,
     spreadLine: number,
-    extra?: { shadow_reason?: string }
+    extra?: {
+      shadow_reason?: string;
+      handicap_point_prob_source?: FairOddsRow["handicap_point_prob_source"];
+    }
   ) {
     return {
       id: m.id * 1000 + (side === "P1+" ? 1 : 2),
@@ -1619,6 +2279,10 @@ async function run(): Promise<Response> {
       spread_line: spreadLine,
       tournament: m.tournament,
       surface: m.surface,
+      league: m.league,
+      ...(extra?.handicap_point_prob_source
+        ? { handicap_point_prob_source: extra.handicap_point_prob_source }
+        : {}),
       ...(extra?.shadow_reason ? { shadow_reason: extra.shadow_reason } : {}),
     };
   }
@@ -1641,10 +2305,18 @@ async function run(): Promise<Response> {
     const he2 = m.handicap_edge_p2;
     if (sl == null || so1 == null || so2 == null || he1 == null || he2 == null) continue;
     if (he1 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsStrict.push(toSpreadSignal(m, "P1+", he1, so1, sl));
+      spreadSignalsStrict.push(
+        toSpreadSignal(m, "P1+", he1, so1, sl, {
+          handicap_point_prob_source: m.handicap_point_prob_source,
+        })
+      );
     }
     if (he2 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsStrict.push(toSpreadSignal(m, "P2-", he2, so2, sl));
+      spreadSignalsStrict.push(
+        toSpreadSignal(m, "P2-", he2, so2, sl, {
+          handicap_point_prob_source: m.handicap_point_prob_source,
+        })
+      );
     }
   }
 
@@ -1694,12 +2366,30 @@ async function run(): Promise<Response> {
       const he2 = m.handicap_edge_p2;
       if (sl != null && so1 != null && so2 != null && he1 != null && he2 != null) {
         if (he1 >= HANDICAP_MIN_EDGE_PCT) {
-          spreadSignalsVolumeProfile.push(toSpreadSignal(m, "P1+", he1, so1, sl));
-          if (m.shadow_overlap_match) spreadSignalsVolumeOverlap.push(toSpreadSignal(m, "P1+", he1, so1, sl));
+          spreadSignalsVolumeProfile.push(
+            toSpreadSignal(m, "P1+", he1, so1, sl, {
+              handicap_point_prob_source: m.handicap_point_prob_source,
+            })
+          );
+          if (m.shadow_overlap_match)
+            spreadSignalsVolumeOverlap.push(
+              toSpreadSignal(m, "P1+", he1, so1, sl, {
+                handicap_point_prob_source: m.handicap_point_prob_source,
+              })
+            );
         }
         if (he2 >= HANDICAP_MIN_EDGE_PCT) {
-          spreadSignalsVolumeProfile.push(toSpreadSignal(m, "P2-", he2, so2, sl));
-          if (m.shadow_overlap_match) spreadSignalsVolumeOverlap.push(toSpreadSignal(m, "P2-", he2, so2, sl));
+          spreadSignalsVolumeProfile.push(
+            toSpreadSignal(m, "P2-", he2, so2, sl, {
+              handicap_point_prob_source: m.handicap_point_prob_source,
+            })
+          );
+          if (m.shadow_overlap_match)
+            spreadSignalsVolumeOverlap.push(
+              toSpreadSignal(m, "P2-", he2, so2, sl, {
+                handicap_point_prob_source: m.handicap_point_prob_source,
+              })
+            );
         }
       }
     }
@@ -1720,44 +2410,26 @@ async function run(): Promise<Response> {
     const he2 = m.handicap_edge_p2;
     if (sl == null || so1 == null || so2 == null || he1 == null || he2 == null) continue;
     if (he1 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsVolume.push(toSpreadSignal(m, "P1+", he1, so1, sl));
+      spreadSignalsVolume.push(
+        toSpreadSignal(m, "P1+", he1, so1, sl, {
+          handicap_point_prob_source: m.handicap_point_prob_source,
+        })
+      );
     }
     if (he2 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsVolume.push(toSpreadSignal(m, "P2-", he2, so2, sl));
+      spreadSignalsVolume.push(
+        toSpreadSignal(m, "P2-", he2, so2, sl, {
+          handicap_point_prob_source: m.handicap_point_prob_source,
+        })
+      );
     }
   }
   const signals_volume = [...matchSignalsVolume, ...spreadSignalsVolume];
   const signals_volume_profile = [...matchSignalsVolumeProfile, ...spreadSignalsVolumeProfile];
   const signals_volume_overlap = [...matchSignalsVolumeOverlap, ...spreadSignalsVolumeOverlap];
   const signals_volume_additional = [...matchSignalsVolumeAdditional, ...spreadSignalsVolume];
-  const spreadSignalsSpreadShadow: Array<ReturnType<typeof toSpreadSignal>> = [];
-  for (const m of matches) {
-    const spreadOk =
-      m.spread_shadow_eligible &&
-      !m.recent_injured_any &&
-      m.spread_line != null &&
-      m.spread_odds1 != null &&
-      m.spread_odds2 != null &&
-      m.handicap_edge_p1 != null &&
-      m.handicap_edge_p2 != null;
-    if (!spreadOk) continue;
-    const sl = m.spread_line;
-    const so1 = m.spread_odds1;
-    const so2 = m.spread_odds2;
-    const he1 = m.handicap_edge_p1;
-    const he2 = m.handicap_edge_p2;
-    if (sl == null || so1 == null || so2 == null || he1 == null || he2 == null) continue;
-    if (he1 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsSpreadShadow.push(
-        toSpreadSignal(m, "P1+", he1, so1, sl, { shadow_reason: m.spread_shadow_reason })
-      );
-    }
-    if (he2 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsSpreadShadow.push(
-        toSpreadSignal(m, "P2-", he2, so2, sl, { shadow_reason: m.spread_shadow_reason })
-      );
-    }
-  }
+  const signals_clay_2026 = clay2026SignalsCsv;
+  const spreadSignalsSpreadShadow = spreadShadowSignalsCsv;
 
   const matchesWithSpread = matches.filter(
     (m) =>
@@ -1777,7 +2449,7 @@ async function run(): Promise<Response> {
     matchesWithSpread.length === 0
       ? "Spread data missing. Run: python scripts/compute-handicap-values.py (or full pipeline: python scripts/run-daily-odds.py)"
       : spreadSignalsStrict.length === 0
-        ? `Spread: ${matchesWithSpread.length} matches have data, ${spreadStrictEligible.length} pass strict policy, ${spreadWithEdge20.length} have edge ≥20%.`
+        ? `Spread: ${matchesWithSpread.length} matches have data, ${spreadStrictEligible.length} pass strict policy, ${spreadWithEdge20.length} have edge >=20%.`
         : undefined;
 
   const pinnacle_only = pinnacleOnly.map((p) => ({
@@ -1792,6 +2464,7 @@ async function run(): Promise<Response> {
 
   return NextResponse.json({
     matches,
+    matches_with_row_signals: matchesWithRowSignals,
     pinnacle_count: pinnacleRows.length,
     pinnacle_matched_count: pinnacleMap.size,
     pinnacle_only,
@@ -1802,7 +2475,9 @@ async function run(): Promise<Response> {
     signals_volume_overlap,
     signals_volume_additional,
     signals_volume,
+    signals_clay_2026,
     signals_spread_shadow: spreadSignalsSpreadShadow,
+    signal_attachment,
     ...(pinnacleHint ? { pinnacle_hint: pinnacleHint } : {}),
     ...(spreadHint ? { spread_hint: spreadHint } : {}),
   });

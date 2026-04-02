@@ -1,7 +1,8 @@
 """
 Run Pinnacle scraper then fair-odds pipeline in sequence.
 Optionally runs strict policy reporting (base production mode by default)
-with side-by-side base/overlay tracking.
+with side-by-side base/overlay tracking, plus the Clay 2026 and
+Spread Shadow appenders.
 
 Usage:
   python scripts/run-daily-odds.py
@@ -41,7 +42,9 @@ def run_cmd(cmd: list[str], label: str, fatal: bool = True) -> int:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Daily odds pipeline: Pinnacle -> fair odds -> strict report")
+    parser = argparse.ArgumentParser(
+        description="Daily odds pipeline: Pinnacle -> fair odds -> strict report + shadow profiles"
+    )
     parser.add_argument("--skip-strict-report", action="store_true", help="Skip strict policy report step")
     parser.add_argument("--strict-policy-mode", choices=("base", "overlay"), default=os.environ.get("STRICT_POLICY_PRODUCTION_MODE", "base"))
     parser.add_argument("--strict-report-date", default="", help="Optional UTC date YYYY-MM-DD passed to strict report")
@@ -117,17 +120,50 @@ def main() -> int:
 
         run_cmd(
             strict_cmd,
-            label=f"4/4 Strict report (production mode: {args.strict_policy_mode}; compare: {args.strict_compare_overlay})",
+            label=f"4/6 Strict report (production mode: {args.strict_policy_mode}; compare: {args.strict_compare_overlay})",
+            fatal=False,
+        )
+
+        clay_cmd = [
+            sys.executable,
+            str(ROOT / "scripts" / "strict-policy-report.py"),
+            "--append",
+            "--signal-profile",
+            "clay_calibrated",
+        ]
+        if args.strict_report_date:
+            clay_cmd.extend(["--date", args.strict_report_date])
+        run_cmd(
+            clay_cmd,
+            label="5/6 Clay 2026 shadow append",
+            fatal=False,
+        )
+
+        spread_cmd = [
+            sys.executable,
+            str(ROOT / "scripts" / "strict-policy-report.py"),
+            "--append",
+            "--signal-profile",
+            "spread_shadow",
+        ]
+        if args.strict_report_date:
+            spread_cmd.extend(["--date", args.strict_report_date])
+        run_cmd(
+            spread_cmd,
+            label="6/6 Spread Shadow append",
             fatal=False,
         )
     else:
-        print("\n=== 4/4 Strict report skipped (--skip-strict-report) ===")
+        print("\n=== 4/6 Strict report skipped (--skip-strict-report) ===")
+        print("=== 5/6 Clay 2026 shadow skipped (--skip-strict-report) ===")
+        print("=== 6/6 Spread Shadow skipped (--skip-strict-report) ===")
 
     print("\nDone. Pinnacle snapshot + daily_fair_odds updated.")
     if not args.skip_strict_report:
         print(f"Strict signals updated at {args.strict_report_output}.")
         if args.strict_compare_overlay:
             print(f"Overlay comparison rows updated at {args.strict_compare_output}.")
+        print("Clay 2026 and Spread Shadow CSVs appended.")
     return 0
 
 
