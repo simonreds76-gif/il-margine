@@ -190,7 +190,7 @@ def main() -> None:
     parser.add_argument("--bookmaker", default="", help="Optional bookmaker filter for the comparison summary")
     parser.add_argument("--supabase", action="store_true", help="Upload imported odds rows to Supabase")
     parser.add_argument("--fetch-odds-api", action="store_true", help="Fetch live league ATGS prices from odds-api.io into the inbox first")
-    parser.add_argument("--odds-api-bookmakers", default="Bet365,William Hill", help="Comma-separated bookmakers for odds-api.io")
+    parser.add_argument("--odds-api-bookmakers", default="Bet365,Ladbrokes", help="Comma-separated bookmakers for odds-api.io")
     parser.add_argument("--fetch-pinnacle", action="store_true", help="Fetch live Pinnacle ATGS prices into the inbox first")
     parser.add_argument("--fetch-lineups", action="store_true", help="Fetch FotMob expected/confirmed lineups before live compare")
     parser.add_argument("--lineup-days-ahead", type=int, default=3, help="Fetch FotMob lineups across this many days ahead")

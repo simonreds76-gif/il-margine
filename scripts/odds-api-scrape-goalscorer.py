@@ -3,7 +3,7 @@
 Scrape league-specific anytime-goalscorer prices from odds-api.io.
 
 This is the preferred live source when an Odds-API.io key is configured,
-because it can return soft-book prices like Bet365 and William Hill.
+because it can return soft-book prices like Bet365 and Ladbrokes.
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ import requests
 
 BASE_URL = "https://api.odds-api.io/v3"
 DEFAULT_OUT_DIR = "data/goalscorer/inbox"
-DEFAULT_BOOKMAKERS = "Bet365,William Hill"
+DEFAULT_BOOKMAKERS = "Bet365,Ladbrokes"
 
 LEAGUE_CONFIGS = {
     "serie-a": {
