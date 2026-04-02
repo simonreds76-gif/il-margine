@@ -20,6 +20,7 @@ type SnapshotPayload = {
 
 const SNAPSHOT_TABLE = "goalscorer_live_snapshot";
 const SNAPSHOT_KEY = process.env.GOALSCORER_LIVE_SNAPSHOT_KEY || "live_state";
+const RUNNING_ON_VERCEL = process.env.VERCEL === "1" || Boolean(process.env.VERCEL_ENV);
 
 const loadHostedSnapshot = cache(async (): Promise<SnapshotPayload | null> => {
   try {
@@ -48,16 +49,29 @@ function getSnapshotFileEntry(payload: SnapshotPayload | null, relativePath: str
 }
 
 export async function readGoalscorerLiveFile(relativePath: string): Promise<string | null> {
+  const readLocal = async (): Promise<string | null> => {
+    try {
+      const fullPath = tryGetKnownProjectFilePath(relativePath);
+      if (!fullPath) return null;
+      return await fs.readFile(fullPath, "utf8");
+    } catch {
+      return null;
+    }
+  };
+
+  if (!RUNNING_ON_VERCEL) {
+    const local = await readLocal();
+    if (typeof local === "string") return local;
+  }
+
   const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.content;
   if (typeof hosted === "string") return hosted;
 
-  try {
-    const fullPath = tryGetKnownProjectFilePath(relativePath);
-    if (!fullPath) return null;
-    return await fs.readFile(fullPath, "utf8");
-  } catch {
-    return null;
+  if (RUNNING_ON_VERCEL) {
+    return await readLocal();
   }
+
+  return null;
 }
 
 export async function readGoalscorerLiveJson<T>(relativePath: string): Promise<T | null> {
@@ -71,17 +85,30 @@ export async function readGoalscorerLiveJson<T>(relativePath: string): Promise<T
 }
 
 export async function readGoalscorerLiveMtime(relativePath: string): Promise<string | null> {
+  const readLocalMtime = async (): Promise<string | null> => {
+    try {
+      const fullPath = tryGetKnownProjectFilePath(relativePath);
+      if (!fullPath) return null;
+      const stat = await fs.stat(fullPath);
+      return stat.mtime.toISOString();
+    } catch {
+      return null;
+    }
+  };
+
+  if (!RUNNING_ON_VERCEL) {
+    const localMtime = await readLocalMtime();
+    if (typeof localMtime === "string") return localMtime;
+  }
+
   const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.mtime;
   if (typeof hosted === "string") return hosted;
 
-  try {
-    const fullPath = tryGetKnownProjectFilePath(relativePath);
-    if (!fullPath) return null;
-    const stat = await fs.stat(fullPath);
-    return stat.mtime.toISOString();
-  } catch {
-    return null;
+  if (RUNNING_ON_VERCEL) {
+    return await readLocalMtime();
   }
+
+  return null;
 }
 
 export async function readGoalscorerLiveSnapshotGeneratedAt(): Promise<string | null> {

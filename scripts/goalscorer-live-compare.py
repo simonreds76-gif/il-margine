@@ -53,7 +53,16 @@ UNDERSTAT_LEAGUE_SLUGS = {
 LEAGUE_COMPETITION_VARIANTS = {
     "serie-a": {"italy serie a", "serie a"},
     "epl": {"england premier league", "premier league"},
-    "la-liga": {"spain la liga", "la liga"},
+    "la-liga": {
+        "spain la liga",
+        "la liga",
+        "laliga",
+        "laliga ea sports",
+        "spain laliga",
+        "spain la liga ea sports",
+        "spain primera division",
+        "primera division",
+    },
     "bundesliga": {"germany bundesliga", "bundesliga"},
     "ligue-1": {"france ligue 1", "ligue 1", "ligue 1 mcdonalds"},
 }

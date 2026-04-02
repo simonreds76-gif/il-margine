@@ -10,8 +10,10 @@ from __future__ import annotations
 
 import argparse
 import csv
+import html
 import os
 import re
+import unicodedata
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional
@@ -39,7 +41,17 @@ LEAGUE_CONFIGS = {
     "la-liga": {
         "label": "La Liga",
         "slug": "spain-la-liga",
-        "name_variants": {"spain - la liga", "la liga"},
+        "slug_variants": {"spain-laliga", "spain-la-liga-ea-sports", "spain-primera-division"},
+        "name_variants": {
+            "spain - la liga",
+            "la liga",
+            "laliga",
+            "laliga ea sports",
+            "spain - laliga",
+            "spain - la liga ea sports",
+            "spain - primera division",
+            "primera division",
+        },
         "competition": "La Liga",
     },
     "bundesliga": {
@@ -55,6 +67,14 @@ LEAGUE_CONFIGS = {
         "competition": "Ligue 1",
     },
 }
+
+
+def _norm_league_text(value: str) -> str:
+    normalized = html.unescape((value or "").strip().lower())
+    normalized = unicodedata.normalize("NFD", normalized)
+    normalized = "".join(ch for ch in normalized if unicodedata.category(ch) != "Mn")
+    cleaned = re.sub(r"[^a-z0-9]+", " ", normalized)
+    return re.sub(r"\s+", " ", cleaned).strip()
 
 
 def load_env() -> None:
@@ -88,9 +108,36 @@ def _first_decimal(*values) -> Optional[float]:
 
 
 def _looks_like_league(league: dict, config: dict) -> bool:
-    name = str(league.get("name") or "").lower()
-    slug = str(league.get("slug") or "").lower()
-    return slug == config["slug"] or name in config["name_variants"]
+    name = _norm_league_text(str(league.get("name") or ""))
+    slug = _norm_league_text(str(league.get("slug") or ""))
+    slug_variants = {_norm_league_text(config["slug"])} | {
+        _norm_league_text(value) for value in config.get("slug_variants", set())
+    }
+    name_variants = {_norm_league_text(value) for value in config["name_variants"]}
+    return slug in slug_variants or name in name_variants
+
+
+def _debug_candidate_leagues(events: list, league_key: str) -> list[str]:
+    hints = {
+        "la-liga": ("spain", "liga", "laliga", "primera"),
+        "serie-a": ("italy", "serie"),
+        "epl": ("england", "premier"),
+        "bundesliga": ("germany", "bundesliga"),
+        "ligue-1": ("france", "ligue"),
+    }
+    wanted = hints.get(league_key, tuple())
+    seen: list[str] = []
+    for event in events or []:
+        league = event.get("league") or {}
+        name = str(league.get("name") or "").strip()
+        slug = str(league.get("slug") or "").strip()
+        haystack = _norm_league_text(f"{name} {slug}")
+        if wanted and not any(token in haystack for token in wanted):
+            continue
+        label = f"name={name or '-'} | slug={slug or '-'}"
+        if label not in seen:
+            seen.append(label)
+    return seen[:10]
 
 
 def _market_is_atgs(name: str) -> bool:
@@ -265,6 +312,7 @@ def parse_bookmakers(raw: str) -> List[str]:
 
 def discover_league_events(
     api_key: str,
+    league_key: str,
     league_config: dict,
     bookmakers: List[str],
     now: datetime,
@@ -297,7 +345,14 @@ def discover_league_events(
     events = fetch_json("events", base_params)
     if not isinstance(events, list):
         return []
-    return [event for event in events if _looks_like_league(event.get("league") or {}, league_config)]
+    matched = [event for event in events if _looks_like_league(event.get("league") or {}, league_config)]
+    if not matched:
+        candidates = _debug_candidate_leagues(events, league_key)
+        if candidates:
+            print("  Nearby league labels from source feed:")
+            for label in candidates:
+                print(f"    {label}")
+    return matched
 
 
 def main() -> None:
@@ -327,7 +382,7 @@ def main() -> None:
         raise SystemExit("Provide at least one bookmaker name via --bookmakers.")
     print(f"  Event discovery books: {', '.join(bookmakers)}")
 
-    target_events = discover_league_events(api_key, league_config, bookmakers, now, args.days_ahead)
+    target_events = discover_league_events(api_key, args.league, league_config, bookmakers, now, args.days_ahead)
     print(f"  {league_config['label']} events found: {len(target_events):,}")
     if not target_events:
         print(f"  No {league_config['label']} events returned from the current source feed.")
