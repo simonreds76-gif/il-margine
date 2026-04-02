@@ -71,6 +71,37 @@ type ShadowSummary = {
   pnlUnits: number;
 };
 
+type ShadowLeagueDataset = {
+  key: string;
+  label: string;
+  file: string;
+  rows: CsvRow[];
+  mtime: string | null;
+};
+
+type LeagueScoreRow = {
+  key: string;
+  label: string;
+  statusLabel: string;
+  statusClassName: string;
+  statusDetail?: string;
+  updatedAt: string | null;
+  liveRows: number;
+  publicNow: number;
+  shadowNow: number;
+  cleanFixtures: number;
+  degradedFixtures: number;
+  quarantinedFixtures: number;
+  trackedSignals: number;
+  settledSignals: number;
+  openSignals: number;
+  wins: number;
+  losses: number;
+  voids: number;
+  roi: number;
+  pnlUnits: number;
+};
+
 type PenaltyReviewRow = {
   date?: string;
   league?: string;
@@ -116,13 +147,13 @@ const MODEL_MONITOR_PUBLIC =
   process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
 const MODEL_MONITOR_ENABLED =
   MODEL_MONITOR_PUBLIC || process.env.VERCEL_ENV === "preview";
-const SHADOW_SIGNAL_FILES = [
-  "data/goalscorer/goalscorer-shadow-signals.csv",
-  "data/goalscorer/epl-shadow-signals.csv",
-  "data/goalscorer/la-liga-shadow-signals.csv",
-  "data/goalscorer/bundesliga-shadow-signals.csv",
-  "data/goalscorer/ligue-1-shadow-signals.csv",
-];
+const SHADOW_SIGNAL_CONFIGS = [
+  { key: "serie-a", label: "Serie A", file: "data/goalscorer/goalscorer-shadow-signals.csv" },
+  { key: "epl", label: "Premier League", file: "data/goalscorer/epl-shadow-signals.csv" },
+  { key: "la-liga", label: "La Liga", file: "data/goalscorer/la-liga-shadow-signals.csv" },
+  { key: "bundesliga", label: "Bundesliga", file: "data/goalscorer/bundesliga-shadow-signals.csv" },
+  { key: "ligue-1", label: "Ligue 1", file: "data/goalscorer/ligue-1-shadow-signals.csv" },
+] as const;
 const LIVE_COMPARE_CONFIGS = [
   {
     key: "serie-a",
@@ -251,6 +282,19 @@ const TEAM_ALIASES: Record<string, string> = {
   "angers sco": "angers",
   "aj auxerre": "auxerre",
   "stade brest 29": "brest",
+  "real betis": "real betis",
+  "real betis seville": "real betis",
+  "real betis balompie": "real betis",
+  espanyol: "espanyol",
+  "rcd espanyol": "espanyol",
+  "espanyol barcelona": "espanyol",
+  "real sociedad": "real sociedad",
+  "real sociedad san sebastian": "real sociedad",
+  "real sociedad de futbol": "real sociedad",
+  elche: "elche",
+  "elche cf": "elche",
+  levante: "levante",
+  "levante ud": "levante",
   "paris saint germain": "paris saint germain",
   "paris saint-germain": "paris saint germain",
 };
@@ -476,6 +520,18 @@ function formatDateTime(value?: string | null): string {
   });
 }
 
+function formatUnits(value?: number, digits = 2): string {
+  if (value == null || Number.isNaN(value)) return "n/a";
+  return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}u`;
+}
+
+function metricTone(value?: number): string {
+  if (value == null || Number.isNaN(value)) return "text-slate-300";
+  if (value > 0) return "text-emerald-300";
+  if (value < 0) return "text-rose-300";
+  return "text-slate-300";
+}
+
 function freshnessBadge(value?: string | null): { label: string; className: string } {
   if (!value) {
     return { label: "missing", className: "text-rose-300" };
@@ -629,18 +685,6 @@ function badgeClass(action?: string): string {
   if (action === "shadow_track") return "border-amber-500/30 bg-amber-500/10 text-amber-200";
   if (action === "surface_with_caveat") return "border-amber-500/30 bg-amber-500/10 text-amber-200";
   return "border-slate-700 bg-slate-900 text-slate-300";
-}
-
-function confidenceClass(confidence?: string): string {
-  if (confidence === "high") return "border-emerald-500/20 bg-emerald-500/8";
-  if (confidence === "medium") return "border-amber-500/20 bg-amber-500/8";
-  return "border-slate-800/80 bg-slate-950/45";
-}
-
-function confidenceRank(confidence?: string): number {
-  if (confidence === "high") return 3;
-  if (confidence === "medium") return 2;
-  return 1;
 }
 
 const FULL_BACK_POSITION_IDS = new Set([32, 38, 62, 68, 71, 72, 78, 79]);
@@ -861,53 +905,6 @@ function filterActiveRows(rows: CsvRow[]): CsvRow[] {
   });
 }
 
-function rankTeamRows(rows: CsvRow[]): CsvRow[] {
-  return [...rows].sort((a, b) => {
-    const minuteDiff = (parseFloatMaybe(b.expected_minutes) ?? 0) - (parseFloatMaybe(a.expected_minutes) ?? 0);
-    if (minuteDiff !== 0) return minuteDiff;
-    const confidenceDiff = confidenceRank(b.signal_confidence) - confidenceRank(a.signal_confidence);
-    if (confidenceDiff !== 0) return confidenceDiff;
-    return (parseFloatMaybe(b.ev) ?? 0) - (parseFloatMaybe(a.ev) ?? 0);
-  });
-}
-
-function buildProjectedPitch(rows: CsvRow[]) {
-  const ranked = rankTeamRows(rows);
-  const keeper = ranked.find((row) => positionBand(row.position) === "gk");
-  const outfield = ranked.filter((row) => positionBand(row.position) !== "gk").slice(0, 10);
-
-  const centreBacks: CsvRow[] = [];
-  const widePlayers: CsvRow[] = [];
-  const midfielders: CsvRow[] = [];
-  const attackers: CsvRow[] = [];
-  const utilities: CsvRow[] = [];
-
-  for (const row of outfield) {
-    const band = positionBand(row.position);
-    if (band === "cb") centreBacks.push(row);
-    else if (band === "wide") widePlayers.push(row);
-    else if (band === "mid") midfielders.push(row);
-    else if (band === "att") attackers.push(row);
-    else utilities.push(row);
-  }
-
-  for (const row of utilities) {
-    if (midfielders.length <= centreBacks.length && midfielders.length <= attackers.length) midfielders.push(row);
-    else if (widePlayers.length <= centreBacks.length) widePlayers.push(row);
-    else if (attackers.length <= centreBacks.length) attackers.push(row);
-    else centreBacks.push(row);
-  }
-
-  return {
-    keeper,
-    centreBacks,
-    widePlayers,
-    midfielders,
-    attackers,
-    omittedCount: Math.max(0, ranked.length - (keeper ? 11 : 10)),
-  };
-}
-
 function resolveLineupRows(lineupPlayers: LineupPlayer[], teamRows: CsvRow[]): Array<{ lineup: LineupPlayer; row?: CsvRow }> {
   const used = new Set<number>();
   return lineupPlayers.map((lineupPlayer) => {
@@ -1001,6 +998,10 @@ function computeShadowSummary(rows: CsvRow[]): ShadowSummary {
     winRate: settled.length > 0 ? (wins / settled.length) * 100 : 0,
     pnlUnits,
   };
+}
+
+function shadowUnsettledCount(summary: ShadowSummary): number {
+  return summary.pending + summary.open;
 }
 
 function shadowRowActivityTime(row: CsvRow): number {
@@ -1109,6 +1110,28 @@ function Stat({
       <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">{label}</div>
       <div className={`mt-1 text-lg font-semibold ${tone}`}>{value}</div>
     </div>
+  );
+}
+
+function MonitorCard({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
+      <div className="mb-4 flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-lg font-semibold text-slate-100">{title}</h2>
+          {subtitle ? <p className="mt-1 text-sm text-slate-400">{subtitle}</p> : null}
+        </div>
+      </div>
+      {children}
+    </section>
   );
 }
 
@@ -1528,7 +1551,7 @@ export default async function GoalscorerMonitorPage() {
     notFound();
   }
 
-  const [leagueDatasets, shadowContents, snapshotGeneratedAt] = await Promise.all([
+  const [leagueDatasets, shadowDatasets, snapshotGeneratedAt] = await Promise.all([
     Promise.all(
       LIVE_COMPARE_CONFIGS.map(async (config) => {
         const [comparisonJson, comparisonCsv, comparisonTxt, comparisonJsonMtime, comparisonCsvMtime, lineupsJson, penaltyReviewJson, livePenaltyReviewJson] = await Promise.all([
@@ -1573,12 +1596,24 @@ export default async function GoalscorerMonitorPage() {
         };
       }),
     ),
-    Promise.all(SHADOW_SIGNAL_FILES.map((file) => readGoalscorerLiveFile(file))),
+    Promise.all(
+      SHADOW_SIGNAL_CONFIGS.map(async (config): Promise<ShadowLeagueDataset> => {
+        const [text, mtime] = await Promise.all([
+          readGoalscorerLiveFile(config.file),
+          readGoalscorerLiveMtime(config.file),
+        ]);
+        return {
+          ...config,
+          rows: text ? parseCsv(text) : [],
+          mtime,
+        };
+      }),
+    ),
     readGoalscorerLiveSnapshotGeneratedAt(),
   ]);
 
   const rows = leagueDatasets.flatMap((dataset) => dataset.rows);
-  const shadowRows = shadowContents.flatMap((text) => (text ? parseCsv(text) : []));
+  const shadowRows = shadowDatasets.flatMap((dataset) => dataset.rows);
   const shadowSummary = computeShadowSummary(shadowRows);
   const latestTrackedRows = [...shadowRows].sort((left, right) => shadowRowActivityTime(right) - shadowRowActivityTime(left));
   const publicRows = rows.filter((row) => (row.public_action ?? "") === "surface");
@@ -1649,10 +1684,6 @@ export default async function GoalscorerMonitorPage() {
   const lowConfidence = rows.filter((row) => row.signal_confidence === "low").length;
   const starterRows = rows.filter((row) => (row.lineup_status ?? "").toLowerCase() === "confirmed_starter").length;
   const expectedStarterRows = rows.filter((row) => (row.lineup_status ?? "").toLowerCase() === "expected_starter").length;
-  const benchRows = rows.filter((row) => (row.lineup_status ?? "").toLowerCase() === "confirmed_bench").length;
-  const expectedBenchRows = rows.filter((row) => (row.lineup_status ?? "").toLowerCase() === "expected_bench").length;
-  const notInSquadRows = rows.filter((row) => (row.lineup_status ?? "").toLowerCase() === "not_in_squad").length;
-  const expectedOutRows = rows.filter((row) => (row.lineup_status ?? "").toLowerCase() === "expected_out").length;
   const missingHistoryRows = leagueDatasets.reduce(
     (sum, dataset) => sum + (parseIntMaybe(dataset.summary["Missing Player History"]) ?? 0),
     0,
@@ -1676,6 +1707,9 @@ export default async function GoalscorerMonitorPage() {
     ),
   );
   const liveSummaryAvailable = leagueDatasets.filter((dataset) => dataset.comparisonJson || dataset.comparisonCsv);
+  const shadowSummaryByLeague = new Map(
+    shadowDatasets.map((dataset) => [dataset.key, computeShadowSummary(dataset.rows)] as const),
+  );
   const leagueStatus = leagueDatasets.map((dataset) => {
     const leagueRows = dataset.rows;
     const leaguePublicRows = leagueRows.filter((row) => (row.public_action ?? "") === "surface");
@@ -1699,6 +1733,31 @@ export default async function GoalscorerMonitorPage() {
       competition: leagueRows[0]?.competition ?? dataset.label,
       updatedAt: dataset.comparisonMtime,
       outputStatus: leagueOutputStatus(dataset.summary, hasOutput),
+    };
+  });
+  const leagueScoreRows: LeagueScoreRow[] = leagueStatus.map((league) => {
+    const shadow = shadowSummaryByLeague.get(league.key) ?? computeShadowSummary([]);
+    return {
+      key: league.key,
+      label: league.label,
+      statusLabel: league.outputStatus.label,
+      statusClassName: league.outputStatus.className,
+      statusDetail: league.outputStatus.detail,
+      updatedAt: league.updatedAt,
+      liveRows: league.rows,
+      publicNow: league.totalPublic,
+      shadowNow: league.publicCaveats,
+      cleanFixtures: league.cleanFixtures,
+      degradedFixtures: league.degradedFixtures,
+      quarantinedFixtures: league.quarantinedFixtures,
+      trackedSignals: shadow.signals,
+      settledSignals: shadow.settled,
+      openSignals: shadowUnsettledCount(shadow),
+      wins: shadow.wins,
+      losses: shadow.losses,
+      voids: shadow.voids,
+      roi: shadow.roi,
+      pnlUnits: shadow.pnlUnits,
     };
   });
   const sourceFeedGapLeagues = leagueStatus.filter((league) => league.outputStatus.detail);
@@ -1800,86 +1859,117 @@ export default async function GoalscorerMonitorPage() {
           </section>
         ) : null}
 
-        <section className="mb-8 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-          <div className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold text-slate-100">What this page is actually showing</h2>
-              <p className="mt-1 text-sm text-slate-400">
-                The top half is the latest live comparison run: every player we matched to bookmaker ATGS odds, plus the
-                rows that would be public-ready right now. Expected XIs feed a soft pre-lineup simulation; confirmed XIs are still the hard trigger for tracked bets.
-              </p>
+        <div className="mb-3 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-semibold text-slate-100">Quick View</h2>
+            <p className="mt-1 text-sm text-slate-400">
+              League-first scoreboard for the live board and the tracked shadow history. Fixture health reads as clean / degraded / quarantined.
+            </p>
+          </div>
+        </div>
+
+        <div className="mb-8">
+          <MonitorCard title="League Scoreboard" subtitle="Same read as the tennis monitor, but grouped by league instead of policy. Open = pending + unsettled shadow rows.">
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="border-b border-slate-800 text-left text-[11px] uppercase tracking-[0.18em] text-slate-500">
+                    <th className="px-3 py-3 font-semibold">League</th>
+                    <th className="px-3 py-3 font-semibold">Live Rows</th>
+                    <th className="px-3 py-3 font-semibold">Public</th>
+                    <th className="px-3 py-3 font-semibold">Shadow</th>
+                    <th className="px-3 py-3 font-semibold">C/D/Q</th>
+                    <th className="px-3 py-3 font-semibold">Signals</th>
+                    <th className="px-3 py-3 font-semibold">Settled</th>
+                    <th className="px-3 py-3 font-semibold">Open</th>
+                    <th className="px-3 py-3 font-semibold">W/L/V</th>
+                    <th className="px-3 py-3 font-semibold">ROI</th>
+                    <th className="px-3 py-3 font-semibold">P/L</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {leagueScoreRows.map((row) => (
+                    <tr key={row.key} className="border-b border-slate-900/80 text-slate-200">
+                      <td className="px-3 py-3">
+                        <div className="font-semibold text-white">{row.label}</div>
+                        <div className={`mt-1 text-xs ${row.statusClassName}`}>
+                          {row.statusLabel}
+                          {row.updatedAt ? ` · ${formatDateTime(row.updatedAt)}` : ""}
+                        </div>
+                      </td>
+                      <td className="px-3 py-3 font-mono tabular-nums">{row.liveRows}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-emerald-300">{row.publicNow}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-amber-300">{row.shadowNow}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-slate-300">
+                        {row.cleanFixtures}/{row.degradedFixtures}/{row.quarantinedFixtures}
+                      </td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.trackedSignals}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.settledSignals}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.openSignals}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{formatWLV(row.wins, row.losses, row.voids)}</td>
+                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.roi)}`}>{formatPct(row.roi, 1)}</td>
+                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.pnlUnits)}`}>{formatUnits(row.pnlUnits, 2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <p className="mt-3 text-xs leading-6 text-slate-500">
+              Public = current starter-grade rows. Shadow = current monitor-only rows. Historical signals, W/L/V, ROI, and P/L come from the tracked shadow CSV for that league, so the scoreboard stays aligned between localhost and the hosted snapshot path.
+            </p>
+          </MonitorCard>
+        </div>
+
+        {sourceFeedGapLeagues.length > 0 ? (
+          <div className="mb-8 rounded-2xl border border-amber-500/20 bg-amber-500/8 p-4 text-sm leading-6 text-amber-100">
+            {sourceFeedGapLeagues.map((league) => league.label).join(", ")} currently has pipeline output and historical logs,
+            but the upstream ATGS source feed returned no current events for the live window. That league will stay at zero
+            matched prices until the feed comes back.
+          </div>
+        ) : null}
+
+        <section className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <MonitorCard title="Live Board Snapshot" subtitle="Current matched prices and where the live board would split rows right now.">
+            <div className="grid gap-3">
               <Stat label="Matched Prices" value={`${matchedRows}`} />
-              <Stat label="Current Public-Ready" value={`${highRows.length}`} tone="text-emerald-300" />
-              <Stat label="Current Shadow Track" value={`${caveatRows.length}`} tone="text-amber-300" />
+              <Stat label="Public-Ready" value={`${highRows.length}`} tone="text-emerald-300" />
+              <Stat label="Shadow Track" value={`${caveatRows.length}`} tone="text-amber-300" />
               <Stat label="Suppressed" value={`${suppressedRows.length}`} tone="text-slate-400" />
               <Stat label="Starter Rows" value={`${starterRows}`} tone="text-emerald-300" />
               <Stat label="Expected Starters" value={`${expectedStarterRows}`} tone="text-cyan-300" />
-              <Stat label="Bench Rows" value={`${benchRows}`} tone="text-amber-300" />
-              <Stat label="Expected Bench" value={`${expectedBenchRows}`} tone="text-amber-200" />
-              <Stat label="Not In Squad" value={`${notInSquadRows}`} tone="text-rose-300" />
-              <Stat label="Expected Out" value={`${expectedOutRows}`} tone="text-rose-200" />
-              <Stat
-                label="Fixtures With Confirmed XI"
-                value={`${fixturesWithConfirmedLineups}`}
-                tone="text-slate-200"
-              />
-              <Stat
-                label="Fixtures With Expected XI"
-                value={`${fixturesWithExpectedXIs}`}
-                tone="text-cyan-300"
-              />
-              <Stat label="Clean Fixtures" value={`${cleanFixtures}`} tone="text-emerald-300" />
-              <Stat label="Degraded Fixtures" value={`${degradedFixtures}`} tone="text-amber-300" />
-              <Stat label="Quarantined Fixtures" value={`${quarantinedFixtures}`} tone="text-rose-300" />
             </div>
-            <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-              {leagueStatus.map((league) => (
-                <div key={league.key} className="rounded-xl border border-slate-800/80 bg-slate-950/35 px-4 py-3">
-                  <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">{league.label}</div>
-                  <div className="mt-2 flex items-center justify-between gap-3">
-                    <div className="text-lg font-semibold text-slate-100">{league.rows}</div>
-                    <div className={league.outputStatus.className}>
-                      {league.outputStatus.label}
-                    </div>
-                  </div>
-                  <div className="mt-2 text-xs text-slate-400">
-                    public {league.totalPublic} | clean {league.cleanFixtures} | degraded {league.degradedFixtures} | quarantine {league.quarantinedFixtures}
-                  </div>
-                  {league.outputStatus.detail ? (
-                    <div className="mt-2 text-[11px] leading-5 text-amber-200/90">
-                      {league.outputStatus.detail}
-                    </div>
-                  ) : null}
-                </div>
-              ))}
+            <div className="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm leading-6 text-slate-400">
+              Expected XIs feed the softer monitor layer. Confirmed XIs are still the hard trigger before anything should be treated as genuinely public-ready.
             </div>
-            {sourceFeedGapLeagues.length > 0 ? (
-              <div className="mt-4 rounded-2xl border border-amber-500/20 bg-amber-500/8 p-4 text-sm leading-6 text-amber-100">
-                {sourceFeedGapLeagues.map((league) => league.label).join(", ")} currently has pipeline output and historical logs,
-                but the upstream ATGS source feed returned no current events for the live window. That league will stay at zero
-                matched prices until the feed comes back.
-              </div>
-            ) : null}
-            <div className="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm leading-6 text-slate-300">
-              <div className="font-medium text-slate-100">Void policy</div>
-              <p className="mt-1 text-slate-400">
-                With the current confirmed-XI flow, a player who does not start is filtered out before a shadow pick is logged.
-                So this board does not treat non-starters as settled voids later. They simply never enter the historical file.
-              </p>
-            </div>
-          </div>
+          </MonitorCard>
 
-          <div className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold text-slate-100">Resolver quality</h2>
-              <p className="mt-1 text-sm text-slate-400">
-                These counts explain how the player row was matched before confidence is assigned. History-resolved rows are
-                cleaner. Live-roster rows are usable, but less proven.
-              </p>
+          <MonitorCard title="Shadow History" subtitle="Tracked goalscorer rows across all leagues. This is the actual logged sample, not the full live board.">
+            <div className="grid gap-3">
+              <Stat label="Tracked Signals" value={`${shadowSummary.signals}`} />
+              <Stat label="Settled" value={`${shadowSummary.settled}`} />
+              <Stat label="Open" value={`${shadowUnsettledCount(shadowSummary)}`} tone="text-amber-300" />
+              <Stat label="W/L/V" value={formatWLV(shadowSummary.wins, shadowSummary.losses, shadowSummary.voids)} tone="text-slate-200" />
+              <Stat label="ROI" value={formatPct(shadowSummary.roi, 1)} tone={metricTone(shadowSummary.roi)} />
+              <Stat label="P/L Units" value={formatUnits(shadowSummary.pnlUnits, 2)} tone={metricTone(shadowSummary.pnlUnits)} />
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm leading-6 text-slate-400">
+              Non-starters are filtered out before a shadow pick is logged, so this history does not rely on later voiding them away.
+            </div>
+          </MonitorCard>
+
+          <MonitorCard title="Fixture Health" subtitle="How clean the current live window is before we even look at player EV.">
+            <div className="grid gap-3">
+              <Stat label="Clean Fixtures" value={`${cleanFixtures}`} tone="text-emerald-300" />
+              <Stat label="Degraded" value={`${degradedFixtures}`} tone="text-amber-300" />
+              <Stat label="Quarantined" value={`${quarantinedFixtures}`} tone="text-rose-300" />
+              <Stat label="Confirmed XI" value={`${fixturesWithConfirmedLineups}`} tone="text-slate-200" />
+              <Stat label="Expected XI" value={`${fixturesWithExpectedXIs}`} tone="text-cyan-300" />
+              <Stat label="Visible Issues" value={`${flaggedFixtures.length}`} tone={flaggedFixtures.length > 0 ? "text-amber-300" : "text-emerald-300"} />
+            </div>
+          </MonitorCard>
+
+          <MonitorCard title="Resolver Quality" subtitle="How the live row was matched before confidence is assigned.">
+            <div className="grid gap-3">
               <Stat label="Mapped By History" value={`${historyResolved}`} tone="text-emerald-300" />
               <Stat label="Mapped By Live Roster" value={`${rosterResolved}`} tone="text-amber-300" />
               <Stat label="Missing Player History" value={`${missingHistoryRows}`} tone="text-rose-300" />
@@ -1891,11 +1981,7 @@ export default async function GoalscorerMonitorPage() {
               />
               <Stat label="Low Confidence Rows" value={`${lowConfidence}`} tone="text-slate-400" />
             </div>
-            <div className="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm leading-6 text-slate-400">
-              <div><span className="font-medium text-slate-200">History resolver:</span> matched directly to historical player logs.</div>
-              <div><span className="font-medium text-slate-200">Live roster resolver:</span> matched through the current lineup and roster layer when the clean historical match was weaker.</div>
-            </div>
-          </div>
+          </MonitorCard>
         </section>
 
         <div className="mb-8 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
@@ -2059,7 +2145,6 @@ export default async function GoalscorerMonitorPage() {
                         </thead>
                         <tbody>
                           {latestTrackedRows.slice(0, 50).map((row) => {
-                            const settled = isSettledShadowRow(row);
                             const resultLabel = shadowResultLabel(row);
                             const resultTone = shadowResultTone(row);
                             return (
