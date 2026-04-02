@@ -483,26 +483,21 @@ export default function Home() {
     const initialFetchId = window.setTimeout(() => {
       void fetchData();
     }, 0);
-
-    const channel = supabase
-      .channel("bets-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "bets",
-        },
-        (payload) => {
-          console.log("Bet changed:", payload.eventType);
-          void fetchData();
-        }
-      )
-      .subscribe();
+    const handleFocus = () => {
+      void fetchData();
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        void fetchData();
+      }
+    };
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
       window.clearTimeout(initialFetchId);
-      void supabase.removeChannel(channel);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [fetchData]);
 

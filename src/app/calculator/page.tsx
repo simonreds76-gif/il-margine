@@ -412,15 +412,24 @@ export default function CalculatorPage() {
 
   useEffect(() => {
     track("calculator_view");
-    fetchData();
-
-    const channel = supabase
-      .channel("calculator-bets-changes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "bets" }, () => fetchData())
-      .subscribe();
+    const initialFetch = window.setTimeout(() => {
+      void fetchData();
+    }, 0);
+    const handleFocus = () => {
+      void fetchData();
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        void fetchData();
+      }
+    };
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
-      supabase.removeChannel(channel);
+      window.clearTimeout(initialFetch);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [fetchData]);
 

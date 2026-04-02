@@ -85,29 +85,21 @@ export default function TennisTips() {
     const initialFetch = window.setTimeout(() => {
       void fetchData();
     }, 0);
+    const handleFocus = () => {
+      void fetchData();
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        void fetchData();
+      }
+    };
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibility);
 
-    // Set up real-time subscription to update when bets change
-    const channel = supabase
-      .channel('tennis-bets-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'bets',
-          filter: 'market=eq.tennis'
-        },
-        (payload) => {
-          console.log('Tennis bet changed:', payload.eventType);
-          fetchData();
-        }
-      )
-      .subscribe();
-
-    // Cleanup subscription on unmount
     return () => {
       window.clearTimeout(initialFetch);
-      supabase.removeChannel(channel);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [fetchData]);
 

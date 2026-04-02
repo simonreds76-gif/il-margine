@@ -76,29 +76,21 @@ export default function PlayerProps() {
     const initialFetch = window.setTimeout(() => {
       void fetchData();
     }, 0);
+    const handleFocus = () => {
+      void fetchData();
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        void fetchData();
+      }
+    };
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibility);
 
-    // Set up real-time subscription to update when bets change
-    const channel = supabase
-      .channel('props-bets-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
-          schema: 'public',
-          table: 'bets',
-          filter: 'market=eq.props'
-        },
-        (payload) => {
-          console.log('Props bet changed:', payload.eventType);
-          fetchData();
-        }
-      )
-      .subscribe();
-
-    // Cleanup subscription on unmount
     return () => {
       window.clearTimeout(initialFetch);
-      supabase.removeChannel(channel);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [fetchData]);
 
