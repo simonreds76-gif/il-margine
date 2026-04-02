@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { promises as fs } from "fs";
-import { notFound } from "next/navigation";
 import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
+import { notFound } from "next/navigation";
 
 type CsvRow = Record<string, string>;
 
@@ -51,56 +51,20 @@ type MonitorSignalRow = {
   player1: string;
   player2: string;
   surface: string;
-  league: string;
   series: string;
   confidence: string;
   side: string;
   valuePct?: number;
-  claySpeedTier: string;
-  tournamentSpeedSignal?: number;
   betType: string;
   spreadLine?: number;
   spreadOdds?: number;
-  pinOdds1?: number;
-  pinOdds2?: number;
-  stakeUnits?: number;
   signalProfile: string;
   settlementStatus: string;
   betOutcome: string;
   settlementNote: string;
 };
 
-type SignalCohortSummary = {
-  signals: number;
-  settled: number;
-  unsettled: number;
-  wins: number;
-  losses: number;
-  voids: number;
-  stakedUnits: number;
-  pnlUnits: number;
-  roiPct?: number;
-  avgValuePct?: number;
-};
-
-type PolicyScoreRow = {
-  name: string;
-  settled: number;
-  signals: number;
-  open: number;
-  wlv: string;
-  roi?: number;
-  flatStakePounds?: number;
-  flatTotalStakedPounds?: number;
-  unitTotalStakedPounds?: number;
-  unitStakePounds?: number;
-  winRate?: number;
-  clv?: number;
-  clvLabel?: string;
-};
-
 export const dynamic = "force-dynamic";
-const CLEAN_EVAL_START = "2026-03-14";
 
 const MODEL_MONITOR_PUBLIC =
   process.env.MODEL_MONITOR_PUBLIC === "1" ||
@@ -185,16 +149,11 @@ function parsePerf(rows: CsvRow[], policyMode: string): PerfSnapshot {
     if (!value) return evalPeriod === "overall";
     return value === evalPeriod;
   };
-  const matchLeagueScope = (row: CsvRow) => {
-    const value = (row.league_scope ?? "").trim();
-    return value === "" || value === "combined";
-  };
   const preferEval = (scope: string, betType: string, evalPeriod: string) =>
     lastMatching(
       rows,
       (row) =>
         row.scope === scope &&
-        matchLeagueScope(row) &&
         row.policy_mode === policyMode &&
         (betType ? row.bet_type === betType : !row.bet_type) &&
         matchEval(row, evalPeriod)
@@ -229,15 +188,6 @@ function formatPct(value?: number, digits = 2): string {
 function formatUnits(value?: number, digits = 2): string {
   if (value == null || Number.isNaN(value)) return "n/a";
   return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}u`;
-}
-
-function formatPounds(value?: number, digits = 0): string {
-  if (value == null || Number.isNaN(value)) return "n/a";
-  const abs = Math.abs(value);
-  return `${value >= 0 ? "+" : "-"}£${abs.toLocaleString("en-GB", {
-    minimumFractionDigits: digits,
-    maximumFractionDigits: digits,
-  })}`;
 }
 
 function metricTone(value?: number): string {
@@ -396,97 +346,18 @@ function parseSignalRows(text: string | null): MonitorSignalRow[] {
     player1: row.player1 ?? "",
     player2: row.player2 ?? "",
     surface: row.surface ?? "",
-    league: row.league ?? "",
     series: row.series ?? "",
     confidence: row.confidence ?? "",
     side: row.side ?? "",
     valuePct: parseFloatMaybe(row.value_pct),
-    claySpeedTier: row.clay_speed_tier ?? "",
-    tournamentSpeedSignal: parseFloatMaybe(row.tournament_speed_signal),
     betType: row.bet_type ?? "",
     spreadLine: parseFloatMaybe(row.spread_line),
     spreadOdds: parseFloatMaybe(row.spread_odds),
-    pinOdds1: parseFloatMaybe(row.pin_odds1),
-    pinOdds2: parseFloatMaybe(row.pin_odds2),
-    stakeUnits: parseFloatMaybe(row.stake_units),
     signalProfile: row.signal_profile ?? "",
     settlementStatus: row.settlement_status ?? "",
     betOutcome: row.bet_outcome ?? "",
     settlementNote: row.settlement_note ?? "",
   }));
-}
-
-function normalizeLeague(league?: string): "ATP" | "Challenger" {
-  return league === "Challenger" ? "Challenger" : "ATP";
-}
-
-function summarizeSignalCohort(
-  rows: MonitorSignalRow[],
-  league?: "ATP" | "Challenger",
-  stakeMode: "recorded" | "flat" = "recorded",
-): SignalCohortSummary {
-  const filtered = league ? rows.filter((row) => normalizeLeague(row.league) === league) : rows;
-  let settled = 0;
-  let wins = 0;
-  let losses = 0;
-  let stakedUnits = 0;
-  let pnlUnits = 0;
-  const values: number[] = [];
-
-  for (const row of filtered) {
-    if (row.valuePct != null) values.push(row.valuePct);
-    if ((row.settlementStatus || "").trim().toLowerCase() !== "settled") continue;
-    settled += 1;
-
-    const outcome = (row.betOutcome || "").trim().toLowerCase();
-    const side = (row.side || "").trim().toLowerCase();
-    const stakeUnitsRow =
-      stakeMode === "flat" ? 1.0 : row.stakeUnits && row.stakeUnits > 0 ? row.stakeUnits : 1.0;
-    let odds: number | undefined;
-    if (row.betType === "spread") {
-      odds = row.spreadOdds;
-    } else if (side === "p1") {
-      odds = row.pinOdds1;
-    } else if (side === "p2") {
-      odds = row.pinOdds2;
-    }
-    if (outcome === "win" && odds != null && odds > 1) {
-      wins += 1;
-      stakedUnits += stakeUnitsRow;
-      pnlUnits += stakeUnitsRow * (odds - 1);
-    } else if (outcome === "loss") {
-      losses += 1;
-      stakedUnits += stakeUnitsRow;
-      pnlUnits -= stakeUnitsRow;
-    }
-  }
-
-  const voids = settled - wins - losses;
-  return {
-    signals: filtered.length,
-    settled,
-    unsettled: filtered.length - settled,
-    wins,
-    losses,
-    voids: voids > 0 ? voids : 0,
-    stakedUnits,
-    pnlUnits,
-    roiPct: stakedUnits > 0 ? (pnlUnits / stakedUnits) * 100 : undefined,
-    avgValuePct: values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : undefined,
-  };
-}
-
-function filterCleanSignalRows(rows: MonitorSignalRow[]): MonitorSignalRow[] {
-  return rows.filter((row) => (row.date || "") >= CLEAN_EVAL_START);
-}
-
-function cohortWlv(summary: SignalCohortSummary): string {
-  return `${summary.wins}/${summary.losses}/${summary.voids}`;
-}
-
-function formatClvCell(value?: number, label = "n/a"): string {
-  if (value == null || Number.isNaN(value)) return label;
-  return formatPct(value, 3);
 }
 
 function signalTimestamp(row: MonitorSignalRow): number {
@@ -524,93 +395,61 @@ export default async function ModelMonitorPage() {
     strictPerfCsv,
     volumePerfCsv,
     spreadShadowPerfCsv,
-    clay2026PerfCsv,
-    strictSignalsCsv,
     clvAuditTxt,
     clvAuditVolumeTxt,
     profileTxt,
     shadowComparisonTxt,
     volumeSignalsCsv,
     spreadShadowSignalsCsv,
-    clay2026SignalsCsv,
     strictPerfMtime,
     volumePerfMtime,
     spreadShadowPerfMtime,
-    clay2026PerfMtime,
     clvAuditMtime,
     clvAuditVolumeMtime,
     profileMtime,
     volumeSignalsMtime,
     spreadShadowSignalsMtime,
-    clay2026SignalsMtime,
   ] = await Promise.all([
     readLocalFile("data/backtest/strict-policy-performance-weekly.csv"),
     readLocalFile("data/backtest/strict-policy-performance-volume200-weekly.csv"),
     readLocalFile("data/backtest/strict-policy-performance-spreadshadow-weekly.csv"),
-    readLocalFile("data/backtest/strict-policy-performance-clay2026-weekly.csv"),
-    readLocalFile("data/backtest/strict-signals.csv"),
     readLocalFile("data/backtest/strict-clv-audit-2026.txt"),
     readLocalFile("data/backtest/strict-clv-audit-volume200-2026.txt"),
     readLocalFile("data/backtest/policy-profile-backtest-2022-2025.txt"),
     readLocalFile("data/backtest/shadow-profile-comparison.txt"),
     readLocalFile("data/backtest/strict-signals-volume200.csv"),
     readLocalFile("data/backtest/strict-signals-spreadshadow.csv"),
-    readLocalFile("data/backtest/strict-signals-claycal.csv"),
     readLocalMtime("data/backtest/strict-policy-performance-weekly.csv"),
     readLocalMtime("data/backtest/strict-policy-performance-volume200-weekly.csv"),
     readLocalMtime("data/backtest/strict-policy-performance-spreadshadow-weekly.csv"),
-    readLocalMtime("data/backtest/strict-policy-performance-clay2026-weekly.csv"),
     readLocalMtime("data/backtest/strict-clv-audit-2026.txt"),
     readLocalMtime("data/backtest/strict-clv-audit-volume200-2026.txt"),
     readLocalMtime("data/backtest/policy-profile-backtest-2022-2025.txt"),
     readLocalMtime("data/backtest/strict-signals-volume200.csv"),
     readLocalMtime("data/backtest/strict-signals-spreadshadow.csv"),
-    readLocalMtime("data/backtest/strict-signals-claycal.csv"),
   ]);
 
   const strictRows = strictPerfCsv ? parseCsv(strictPerfCsv) : [];
   const volumeRows = volumePerfCsv ? parseCsv(volumePerfCsv) : [];
   const spreadShadowRows = spreadShadowPerfCsv ? parseCsv(spreadShadowPerfCsv) : [];
-  const clay2026Rows = clay2026PerfCsv ? parseCsv(clay2026PerfCsv) : [];
   const strictBase = parsePerf(strictRows, "base");
   const strictOverlay = parsePerf(strictRows, "overlay");
   const volumeBase = parsePerf(volumeRows, "base");
   const spreadShadowBase = parsePerf(spreadShadowRows, "base");
-  const clay2026Base = parsePerf(clay2026Rows, "base");
   const clv = parseClvAudit(clvAuditTxt);
   const clvVolume = parseClvAudit(clvAuditVolumeTxt);
   const profiles = parsePolicyProfiles(profileTxt);
   const profileMap = new Map(profiles.map((profile) => [profile.name, profile]));
-  const strictSignals = parseSignalRows(strictSignalsCsv);
-  const strictSignalsClean = filterCleanSignalRows(strictSignals);
   const volumeSignals = parseSignalRows(volumeSignalsCsv);
-  const volumeSignalsClean = filterCleanSignalRows(volumeSignals);
   const volumeQueue = getActiveQueueRows(volumeSignals);
   const volumeNoMatchRows = getNoMatchRows(volumeSignals);
   const spreadShadowSignals = parseSignalRows(spreadShadowSignalsCsv);
-  const spreadShadowSignalsClean = filterCleanSignalRows(spreadShadowSignals);
   const spreadShadowQueue = getActiveQueueRows(spreadShadowSignals);
   const spreadShadowNoMatchRows = getNoMatchRows(spreadShadowSignals);
-  const clay2026Signals = parseSignalRows(clay2026SignalsCsv);
-  const clay2026SignalsClean = filterCleanSignalRows(clay2026Signals);
-  const clay2026Queue = getActiveQueueRows(clay2026Signals);
-  const clay2026NoMatchRows = getNoMatchRows(clay2026Signals);
-  const clay2026AllCohort = summarizeSignalCohort(clay2026Signals);
-  const clay2026AtpCohort = summarizeSignalCohort(clay2026Signals, "ATP");
-  const clay2026ChallengerCohort = summarizeSignalCohort(clay2026Signals, "Challenger");
-  const strictRecordedCohort = summarizeSignalCohort(strictSignalsClean);
-  const volumeRecordedCohort = summarizeSignalCohort(volumeSignalsClean);
-  const spreadShadowRecordedCohort = summarizeSignalCohort(spreadShadowSignalsClean);
-  const clay2026RecordedCohort = summarizeSignalCohort(clay2026SignalsClean);
-  const strictFlatCohort = summarizeSignalCohort(strictSignalsClean, undefined, "flat");
-  const volumeFlatCohort = summarizeSignalCohort(volumeSignalsClean, undefined, "flat");
-  const spreadShadowFlatCohort = summarizeSignalCohort(spreadShadowSignalsClean, undefined, "flat");
-  const clay2026FlatCohort = summarizeSignalCohort(clay2026SignalsClean, undefined, "flat");
 
   const strictAllRoi = perfValue(strictBase.combinedAll, "roi_pct", parseFloatMaybe);
   const volumeAllRoi = perfValue(volumeBase.combinedAll, "roi_pct", parseFloatMaybe);
   const spreadShadowAllRoi = perfValue(spreadShadowBase.combinedAll, "roi_pct", parseFloatMaybe);
-  const clay2026AllRoi = perfValue(clay2026Base.combinedAll, "roi_pct", parseFloatMaybe);
   const strictWindowRoi = perfValue(strictBase.combinedWindow, "roi_pct", parseFloatMaybe);
   const overlayAllRoi = perfValue(strictOverlay.combinedAll, "roi_pct", parseFloatMaybe);
   const matchedMl = clv.matchedMl ?? 0;
@@ -620,14 +459,12 @@ export default async function ModelMonitorPage() {
   const strictAsOf = strictBase.combinedAll?.as_of_date;
   const volumeAsOf = volumeBase.combinedAll?.as_of_date;
   const spreadShadowAsOf = spreadShadowBase.combinedAll?.as_of_date;
-  const clay2026AsOf = clay2026Base.combinedAll?.as_of_date;
   const shadowProfile = profileMap.get("volume_200");
   const legacyShadowProfile = profileMap.get("volume_275");
   const missingReports = [
     !strictPerfCsv ? "strict weekly performance" : null,
     !volumePerfCsv ? "volume_200 weekly performance" : null,
     !spreadShadowPerfCsv ? "spread shadow weekly performance" : null,
-    !clay2026PerfCsv ? "Clay 2026 weekly performance" : null,
     !clvAuditTxt ? "strict CLV audit" : null,
     !clvAuditVolumeTxt ? "volume_200 CLV audit" : null,
     !profileTxt ? "policy profile backtest" : null,
@@ -656,92 +493,22 @@ export default async function ModelMonitorPage() {
       : perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) === 0
         ? `Spread shadow has ${spreadShadowSignals.length} tracked rows, but no settled sample yet.`
         : `Spread shadow is tracking ${perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? 0} rows with ${perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) ?? 0} settled so far.`;
-  const clay2026Diagnosis =
-    !clay2026SignalsCsv
-      ? "Clay 2026 has no live CSV on disk right now, which usually means the calibrated lane has not written a qualifying row yet."
-      : clay2026Queue.length === 0 && clay2026NoMatchRows.length > 0
-      ? `Clay 2026 has ${clay2026NoMatchRows.length} unresolved no_match rows, but no true live queue right now.`
-      : clay2026Signals.length === 0
-      ? "Clay 2026 is wired in, but it has not logged a qualifying calibrated-favorite row yet."
-      : clay2026AllCohort.settled === 0
-        ? `Clay 2026 has ${clay2026Signals.length} tracked rows (ATP ${clay2026AtpCohort.signals}, Challenger ${clay2026ChallengerCohort.signals}), but no settled sample yet. Challenger remains observational only.`
-        : `Clay 2026 is tracking ${clay2026AllCohort.signals} rows with ${clay2026AllCohort.settled} settled so far. ATP and Challenger are shown separately; Challenger remains observational only.`;
   const volumeQueueMlCount = volumeQueue.filter((row) => row.betType !== "spread").length;
   const volumeQueueSpreadCount = volumeQueue.filter((row) => row.betType === "spread").length;
-  const volumeSettledMlCount =
-    perfValue(volumeBase.mlAll, "settled", parseIntMaybe) ??
-    volumeSignals.filter((row) => row.betType !== "spread" && (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
-  const volumeSettledSpreadCount =
-    perfValue(volumeBase.handicapAll, "settled", parseIntMaybe) ??
-    volumeSignals.filter((row) => row.betType === "spread" && (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
-  const volumeTrackedCount = perfValue(volumeBase.combinedAll, "signals", parseIntMaybe) ?? volumeSignals.length;
-  const volumeOpenCount = perfValue(volumeBase.combinedAll, "unsettled", parseIntMaybe) ?? volumeQueue.length;
+  const volumeSettledMlCount = volumeSignals.filter(
+    (row) => row.betType !== "spread" && (row.settlementStatus || "").trim().toLowerCase() === "settled",
+  ).length;
+  const volumeSettledSpreadCount = volumeSignals.filter(
+    (row) => row.betType === "spread" && (row.settlementStatus || "").trim().toLowerCase() === "settled",
+  ).length;
+  const volumeTrackedCount = volumeSignals.length || (perfValue(volumeBase.combinedAll, "signals", parseIntMaybe) ?? 0);
+  const volumeOpenCount = volumeQueue.length;
   const volumeNoMatchCount = volumeNoMatchRows.length;
   const volumeSettledCount =
     perfValue(volumeBase.combinedAll, "settled", parseIntMaybe) ??
     volumeSignals.filter((row) => (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
   const spreadShadowTrackedCount = perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? spreadShadowSignals.length;
   const spreadShadowSettledCount = perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) ?? 0;
-  const clay2026TrackedCount = perfValue(clay2026Base.combinedAll, "signals", parseIntMaybe) ?? clay2026Signals.length;
-  const clay2026SettledCount = perfValue(clay2026Base.combinedAll, "settled", parseIntMaybe) ?? 0;
-  const policyScoreRows: PolicyScoreRow[] = [
-    {
-      name: "Strict",
-      settled: perfValue(strictBase.combinedAll, "settled", parseIntMaybe) ?? 0,
-      signals: perfValue(strictBase.combinedAll, "signals", parseIntMaybe) ?? 0,
-      open: perfValue(strictBase.combinedAll, "unsettled", parseIntMaybe) ?? 0,
-      wlv: perfWlv(strictBase.combinedAll),
-      roi: strictAllRoi,
-      flatStakePounds: strictFlatCohort.pnlUnits * 100,
-      flatTotalStakedPounds: strictFlatCohort.stakedUnits * 100,
-      unitTotalStakedPounds: strictRecordedCohort.stakedUnits * 100,
-      unitStakePounds: strictRecordedCohort.pnlUnits * 100,
-      winRate: perfValue(strictBase.combinedAll, "win_rate_pct", parseFloatMaybe),
-      clv: clv.avgClvPct,
-    },
-    {
-      name: "Volume 200",
-      settled: volumeSettledCount,
-      signals: volumeTrackedCount,
-      open: volumeOpenCount,
-      wlv: perfWlv(volumeBase.combinedAll),
-      roi: volumeAllRoi,
-      flatStakePounds: volumeFlatCohort.pnlUnits * 100,
-      flatTotalStakedPounds: volumeFlatCohort.stakedUnits * 100,
-      unitTotalStakedPounds: volumeRecordedCohort.stakedUnits * 100,
-      unitStakePounds: volumeRecordedCohort.pnlUnits * 100,
-      winRate: perfValue(volumeBase.combinedAll, "win_rate_pct", parseFloatMaybe),
-      clv: clvVolume.avgClvPct,
-    },
-    {
-      name: "Spread Shadow",
-      settled: spreadShadowSettledCount,
-      signals: spreadShadowTrackedCount,
-      open: perfValue(spreadShadowBase.combinedAll, "unsettled", parseIntMaybe) ?? spreadShadowQueue.length,
-      wlv: perfWlv(spreadShadowBase.handicapAll ?? spreadShadowBase.combinedAll),
-      roi: spreadShadowAllRoi,
-      flatStakePounds: spreadShadowFlatCohort.pnlUnits * 100,
-      flatTotalStakedPounds: spreadShadowFlatCohort.stakedUnits * 100,
-      unitTotalStakedPounds: spreadShadowRecordedCohort.stakedUnits * 100,
-      unitStakePounds: spreadShadowRecordedCohort.pnlUnits * 100,
-      winRate: perfValue(spreadShadowBase.handicapAll ?? spreadShadowBase.combinedAll, "win_rate_pct", parseFloatMaybe),
-      clvLabel: "n/a",
-    },
-    {
-      name: "Clay 2026",
-      settled: clay2026SettledCount,
-      signals: clay2026TrackedCount,
-      open: perfValue(clay2026Base.combinedAll, "unsettled", parseIntMaybe) ?? clay2026Queue.length,
-      wlv: perfWlv(clay2026Base.mlAll ?? clay2026Base.combinedAll),
-      roi: clay2026AllRoi,
-      flatStakePounds: clay2026FlatCohort.pnlUnits * 100,
-      flatTotalStakedPounds: clay2026FlatCohort.stakedUnits * 100,
-      unitTotalStakedPounds: clay2026RecordedCohort.stakedUnits * 100,
-      unitStakePounds: clay2026RecordedCohort.pnlUnits * 100,
-      winRate: perfValue(clay2026Base.mlAll ?? clay2026Base.combinedAll, "win_rate_pct", parseFloatMaybe),
-      clvLabel: "n/a",
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.10),_transparent_22%),#0b0f14] text-slate-100">
@@ -779,13 +546,11 @@ export default async function ModelMonitorPage() {
               <FileStamp label="Strict perf" value={strictPerfMtime} />
               <FileStamp label="Shadow perf" value={volumePerfMtime} />
               <FileStamp label="Spread shadow perf" value={spreadShadowPerfMtime} />
-              <FileStamp label="Clay 2026 perf" value={clay2026PerfMtime} />
               <FileStamp label="Strict CLV" value={clvAuditMtime} />
               <FileStamp label="Vol200 CLV" value={clvAuditVolumeMtime} />
               <FileStamp label="Profile backtest" value={profileMtime} />
               <FileStamp label="Vol200 signals" value={volumeSignalsMtime} />
               <FileStamp label="Spread shadow signals" value={spreadShadowSignalsMtime} />
-              <FileStamp label="Clay 2026 signals" value={clay2026SignalsMtime} />
             </div>
           </div>
         </section>
@@ -803,56 +568,7 @@ export default async function ModelMonitorPage() {
           </div>
         </div>
 
-        <div className="mb-8">
-          <MonitorCard title="Policy Scoreboard" subtitle="Uniform live read across the main tennis lanes. Total bets = settled bets.">
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-sm">
-                <thead>
-                  <tr className="border-b border-slate-800 text-left text-[11px] uppercase tracking-[0.18em] text-slate-500">
-                    <th className="px-3 py-3 font-semibold">Policy</th>
-                    <th className="px-3 py-3 font-semibold">Total Bets</th>
-                    <th className="px-3 py-3 font-semibold">Signals</th>
-                    <th className="px-3 py-3 font-semibold">Open</th>
-                    <th className="px-3 py-3 font-semibold">W/L/V</th>
-                    <th className="px-3 py-3 font-semibold">ROI</th>
-                    <th className="px-3 py-3 font-semibold">GBP100 / Bet</th>
-                    <th className="px-3 py-3 font-semibold">Staked / Bet</th>
-                    <th className="px-3 py-3 font-semibold">Staked / Unit</th>
-                    <th className="px-3 py-3 font-semibold">GBP100 / Unit</th>
-                    <th className="px-3 py-3 font-semibold">Win Rate</th>
-                    <th className="px-3 py-3 font-semibold">CLV</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {policyScoreRows.map((row) => (
-                    <tr key={row.name} className="border-b border-slate-900/80 text-slate-200">
-                      <td className="px-3 py-3 font-semibold text-white">{row.name}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums">{row.settled}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.signals}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.open}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.wlv}</td>
-                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.roi)}`}>{formatPct(row.roi)}</td>
-                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.flatStakePounds)}`}>{formatPounds(row.flatStakePounds)}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-slate-200">{formatPounds(row.flatTotalStakedPounds)}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-slate-200">{formatPounds(row.unitTotalStakedPounds)}</td>
-                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.unitStakePounds)}`}>{formatPounds(row.unitStakePounds)}</td>
-                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone((row.winRate ?? 0) - 50)}`}>{formatPct(row.winRate)}</td>
-                      <td className={`px-3 py-3 font-mono tabular-nums ${row.clv != null ? metricTone(row.clv) : "text-slate-500"}`}>
-                        {formatClvCell(row.clv, row.clvLabel ?? "n/a")}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <p className="mt-3 text-xs leading-6 text-slate-500">
-              GBP100 / Bet and Staked / Bet assume a flat GBP100 stake on each settled priced bet. Staked / Unit and GBP100 / Unit use recorded stake units with 1u = GBP100, so 2u spreads count as GBP200 risk. All four use the current clean settled sample.{" "}
-              CLV is only audited on the ML lanes with dedicated history coverage right now. Spread Shadow and Clay 2026 show <span className="font-semibold text-slate-400">n/a</span> until that audit exists.
-            </p>
-          </MonitorCard>
-        </div>
-
-        <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-7">
+        <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-6">
           <MonitorCard title="Strict Live Control" subtitle={`Clean sample first: Hard | Masters 1000 | high | public >=10%${strictAsOf ? ` | as of ${strictAsOf}` : ""}`}>
             <div className="grid gap-3">
               <Stat label="Clean ROI" value={formatPct(strictAllRoi)} tone={metricTone(strictAllRoi)} />
@@ -877,17 +593,6 @@ export default async function ModelMonitorPage() {
               <Stat label="Signals" value={`${spreadShadowTrackedCount}`} />
               <Stat label="Settled" value={`${spreadShadowSettledCount}`} />
               <Stat label="Unsettled" value={`${perfValue(spreadShadowBase.combinedAll, "unsettled", parseIntMaybe) ?? spreadShadowQueue.length}`} />
-            </div>
-          </MonitorCard>
-
-          <MonitorCard title="Clay 2026" subtitle={`ATP validated lane, Challenger observational${clay2026AsOf ? ` | as of ${clay2026AsOf}` : ""}`}>
-            <div className="grid gap-3">
-              <Stat label="Clean ROI" value={formatPct(clay2026AllRoi)} tone={metricTone(clay2026AllRoi)} />
-              <Stat label="Signals" value={`${clay2026TrackedCount}`} />
-              <Stat label="Settled" value={`${clay2026SettledCount}`} />
-              <Stat label="Unsettled" value={`${perfValue(clay2026Base.combinedAll, "unsettled", parseIntMaybe) ?? clay2026Queue.length}`} />
-              <Stat label="ATP Signals" value={`${clay2026AtpCohort.signals}`} tone="text-emerald-300" />
-              <Stat label="CH Signals" value={`${clay2026ChallengerCohort.signals}`} tone="text-amber-300" />
             </div>
           </MonitorCard>
 
@@ -1018,51 +723,6 @@ export default async function ModelMonitorPage() {
                   />
                 </div>
               </div>
-
-              <div className="rounded-2xl border border-orange-500/20 bg-orange-500/5 p-4">
-                <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-base font-semibold text-white">Clay 2026</h3>
-                  <span className="rounded-full bg-orange-500/15 px-2 py-1 text-xs font-semibold text-orange-200">calibrated lane</span>
-                </div>
-                <p className="mb-3 text-sm leading-6 text-slate-400">
-                  ATP is the historically validated cohort. Challenger stays in the shadow stream, but it is observational only and should not drive promotion decisions.
-                </p>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <Stat label="Clean ROI" value={formatPct(clay2026AllRoi)} tone={metricTone(clay2026AllRoi)} compact />
-                  <Stat label="Signals" value={`${clay2026TrackedCount}`} compact />
-                  <Stat label="Settled" value={`${clay2026SettledCount}`} compact />
-                  <Stat label="Unsettled" value={`${perfValue(clay2026Base.combinedAll, "unsettled", parseIntMaybe) ?? clay2026Queue.length}`} compact />
-                  <Stat label="Avg Value" value={formatPct(perfValue(clay2026Base.combinedAll, "avg_value_pct", parseFloatMaybe))} tone="text-orange-200" compact />
-                </div>
-                <div className="mt-3">
-                  <SplitBucket
-                    title="ML"
-                    roi={formatPct(perfValue(clay2026Base.mlAll, "roi_pct", parseFloatMaybe))}
-                    roiTone={metricTone(perfValue(clay2026Base.mlAll, "roi_pct", parseFloatMaybe))}
-                    wlv={perfWlv(clay2026Base.mlAll)}
-                  />
-                </div>
-                <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                  <SplitBucket
-                    title="ATP only"
-                    roi={formatPct(clay2026AtpCohort.roiPct)}
-                    roiTone={metricTone(clay2026AtpCohort.roiPct)}
-                    wlv={cohortWlv(clay2026AtpCohort)}
-                  />
-                  <SplitBucket
-                    title="Challenger only"
-                    roi={formatPct(clay2026ChallengerCohort.roiPct)}
-                    roiTone={metricTone(clay2026ChallengerCohort.roiPct)}
-                    wlv={cohortWlv(clay2026ChallengerCohort)}
-                  />
-                  <SplitBucket
-                    title="Combined signals"
-                    roi={formatPct(clay2026AllCohort.roiPct)}
-                    roiTone={metricTone(clay2026AllCohort.roiPct)}
-                    wlv={cohortWlv(clay2026AllCohort)}
-                  />
-                </div>
-              </div>
             </div>
 
             <div className="mt-6 grid gap-4 md:grid-cols-3">
@@ -1081,7 +741,6 @@ export default async function ModelMonitorPage() {
                   <li>{strictDiagnosis}</li>
                   <li>{shadowDiagnosis}</li>
                   <li>{spreadShadowDiagnosis}</li>
-                  <li>{clay2026Diagnosis}</li>
                   <li>
                     Historical exact profiles still favor <span className="font-semibold text-amber-300">volume_200</span>, but live promotion is not justified until shadow settles and CLV coverage overlaps the sample.
                   </li>
@@ -1104,9 +763,7 @@ export default async function ModelMonitorPage() {
                           <div>
                             <div className="font-semibold text-slate-100">{row.player1} vs {row.player2}</div>
                             <div className="mt-1 text-xs text-slate-500">
-                              {row.surface} | {row.league || "ATP"} | {row.series} | {row.confidence}
-                              {row.claySpeedTier ? ` | ${row.claySpeedTier}${row.tournamentSpeedSignal != null ? ` ${row.tournamentSpeedSignal > 0 ? "+" : ""}${row.tournamentSpeedSignal.toFixed(3)}` : ""}` : ""}
-                              {" | "}{row.date} {row.timeUtc}
+                              {row.surface} | {row.series} | {row.confidence} | {row.date} {row.timeUtc}
                             </div>
                           </div>
                           <div className="text-right">
@@ -1144,7 +801,7 @@ export default async function ModelMonitorPage() {
                         <div key={`nomatch-${row.date}-${row.player1}-${row.player2}-${row.side}-${row.spreadLine}`} className="rounded-lg border border-slate-800/80 bg-slate-900/70 px-3 py-2 text-sm text-slate-300">
                           <div className="font-medium text-slate-100">{row.player1} vs {row.player2}</div>
                           <div className="mt-1 text-xs text-slate-500">
-                            {row.date} {row.timeUtc} | {row.surface} | {row.league || "ATP"} | {row.series} | {row.side} | {row.betType === "spread" ? `spread ${formatSignedLine(row.spreadLine)}` : "match"}
+                            {row.date} {row.timeUtc} | {row.surface} | {row.series} | {row.side} | {row.betType === "spread" ? `spread ${formatSignedLine(row.spreadLine)}` : "match"}
                           </div>
                           {row.settlementNote ? <div className="mt-1 text-[11px] text-rose-200/80">{row.settlementNote}</div> : null}
                         </div>
@@ -1170,9 +827,7 @@ export default async function ModelMonitorPage() {
                           <div>
                             <div className="font-semibold text-slate-100">{row.player1} vs {row.player2}</div>
                             <div className="mt-1 text-xs text-slate-500">
-                              {row.surface} | {row.league || "ATP"} | {row.series} | {row.confidence}
-                              {row.claySpeedTier ? ` | ${row.claySpeedTier}${row.tournamentSpeedSignal != null ? ` ${row.tournamentSpeedSignal > 0 ? "+" : ""}${row.tournamentSpeedSignal.toFixed(3)}` : ""}` : ""}
-                              {" | "}{row.date} {row.timeUtc}
+                              {row.surface} | {row.series} | {row.confidence} | {row.date} {row.timeUtc}
                             </div>
                           </div>
                           <div className="text-right">
@@ -1183,55 +838,6 @@ export default async function ModelMonitorPage() {
                         <div className="mt-2 text-xs text-slate-400">
                           edge {formatPct(row.valuePct)} | status {(row.settlementStatus || "pending").replace(/_/g, " ")}
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
-                <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Clay 2026 Queue</div>
-                {clay2026Queue.length === 0 ? (
-                  <p className="text-sm leading-6 text-slate-400">
-                    {clay2026SignalsCsv
-                      ? "No open Clay 2026 bets right now. When the calibrated clay lane finds a qualifying 55-65% favorite, it will appear here."
-                      : "No Clay 2026 CSV on disk right now. That usually means the lane has not written a qualifying row yet."}
-                  </p>
-                ) : (
-                  <div className="space-y-3">
-                    {clay2026Queue.slice(0, 6).map((row) => (
-                      <div key={`${row.date}-${row.player1}-${row.player2}-${row.side}-${row.spreadLine}`} className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3">
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <div className="font-semibold text-slate-100">{row.player1} vs {row.player2}</div>
-                              {normalizeLeague(row.league) === "Challenger" ? (
-                                <span className="rounded-full border border-amber-500/25 bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-200">
-                                  Unvalidated CH
-                                </span>
-                              ) : (
-                                <span className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-300">
-                                  ATP validated
-                                </span>
-                              )}
-                            </div>
-                            <div className="mt-1 text-xs text-slate-500">
-                              {row.surface} | {row.league || "ATP"} | {row.series} | {row.confidence}
-                              {row.claySpeedTier ? ` | ${row.claySpeedTier}${row.tournamentSpeedSignal != null ? ` ${row.tournamentSpeedSignal > 0 ? "+" : ""}${row.tournamentSpeedSignal.toFixed(3)}` : ""}` : ""}
-                              {" | "}{row.date} {row.timeUtc}
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-sm font-semibold text-orange-200">{row.side}</div>
-                            <div className="mt-1 text-xs text-slate-500">match lane</div>
-                          </div>
-                        </div>
-                        <div className="mt-2 text-xs text-slate-400">
-                          edge {formatPct(row.valuePct)} | status {(row.settlementStatus || "pending").replace(/_/g, " ")}
-                        </div>
-                        {row.settlementNote ? (
-                          <div className="mt-1 text-[11px] text-slate-500">{row.settlementNote}</div>
-                        ) : null}
                       </div>
                     ))}
                   </div>
@@ -1381,9 +987,6 @@ export default async function ModelMonitorPage() {
                 </li>
                 <li>
                   Spread shadow tracking: {spreadShadowTrackedCount} signals, {spreadShadowSettledCount} settled, {formatPct(spreadShadowAllRoi)} ROI.
-                </li>
-                <li>
-                  Clay 2026 tracking: {clay2026TrackedCount} signals, {clay2026SettledCount} settled, {formatPct(clay2026AllRoi)} ROI. ATP {clay2026AtpCohort.signals} tracked / {clay2026AtpCohort.settled} settled; Challenger {clay2026ChallengerCohort.signals} tracked / {clay2026ChallengerCohort.settled} settled and remains observational.
                 </li>
               </ul>
               <details className="rounded-xl border border-slate-800 bg-slate-950/35 p-3">
