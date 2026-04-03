@@ -995,7 +995,7 @@ export default async function ModelMonitorPage() {
                     <p className="text-sm leading-6 text-slate-400">No settled rows logged for this date.</p>
                   ) : (
                     <div className="space-y-3">
-                      {group.rows.map(({ source, lane, accent, row }) => {
+                      {group.rows.map(({ source, lane, accent, row }, idx) => {
                         const selectedOdds = getSelectedOdds(row);
                         const accentClasses =
                           accent === "rose"
@@ -1012,7 +1012,10 @@ export default async function ModelMonitorPage() {
                               ? "border-rose-500/20 bg-rose-500/10 text-rose-300"
                               : "border-slate-700/80 bg-slate-900/80 text-slate-300";
                         return (
-                          <div key={`${group.label}-${source}-${row.player1}-${row.player2}-${row.side}-${row.spreadLine ?? "ml"}`} className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3">
+                          <div
+                            key={`${group.label}-${source}-${row.date}-${row.timeUtc}-${row.settledAt}-${row.player1}-${row.player2}-${row.side}-${row.spreadLine ?? "ml"}-${idx}`}
+                            className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3"
+                          >
                             <div className="flex flex-wrap items-start justify-between gap-3">
                               <div>
                                 <div className="flex flex-wrap items-center gap-2">
