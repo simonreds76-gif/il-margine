@@ -14,6 +14,7 @@ Examples:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from datetime import datetime, timezone
@@ -120,17 +121,36 @@ def build_snapshot() -> Dict[str, object]:
             "size_bytes": stat.st_size,
         }
 
+    hashed_payload = {
+        "file_count": len(files),
+        "missing_files": missing,
+        "files": files,
+    }
+    payload_hash = hashlib.sha256(
+        json.dumps(hashed_payload, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    ).hexdigest()
+
     return {
         "generated_at": generated_at,
         "file_count": len(files),
         "missing_files": missing,
         "files": files,
+        "payload_hash": payload_hash,
     }
 
 
 def write_snapshot(path: Path, payload: Dict[str, object]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def read_existing_snapshot(path: Path) -> Dict[str, object] | None:
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
 
 
 def upload_snapshot(snapshot_key: str, payload: Dict[str, object]) -> None:
@@ -170,18 +190,25 @@ def main() -> None:
     print("  IL MARGINE - Goalscorer Live Snapshot")
     print("=" * 64)
 
-    payload = build_snapshot()
     output_path = Path(args.output)
+    previous_payload = read_existing_snapshot(output_path)
+    payload = build_snapshot()
     write_snapshot(output_path, payload)
 
     print(f"  Generated at: {payload['generated_at']}")
     print(f"  Files stored: {payload['file_count']}")
     print(f"  Missing files: {len(payload['missing_files'])}")
     print(f"  Saved: {output_path}")
+    unchanged = bool(previous_payload) and previous_payload.get("payload_hash") == payload.get("payload_hash")
+    if unchanged:
+        print("  Snapshot payload unchanged")
 
     if args.supabase:
-        upload_snapshot(args.snapshot_key, payload)
-        print(f"  Uploaded snapshot '{args.snapshot_key}' to goalscorer_live_snapshot")
+        if unchanged:
+            print(f"  Skipped Supabase upload for snapshot '{args.snapshot_key}' (unchanged payload)")
+        else:
+            upload_snapshot(args.snapshot_key, payload)
+            print(f"  Uploaded snapshot '{args.snapshot_key}' to goalscorer_live_snapshot")
 
     print("\n  Done.\n")
 

@@ -4,6 +4,7 @@
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $root
+. (Join-Path $root "scripts\task-lock.ps1")
 
 $dataDir = Join-Path $root "data\goalscorer"
 New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
@@ -114,6 +115,13 @@ if ($previousStatus -and $previousStatus.last_successful_finished_at) {
     $lastSuccessfulFinishedAt = [string]$previousStatus.last_successful_finished_at
 }
 
+$lockHandle = Enter-TaskLock -LockName "goalscorer-automation" -RootPath $root
+if ($null -eq $lockHandle) {
+    Log "Another goalscorer automation run is already active; exiting."
+    Write-Status -State "skipped" -Message "Another goalscorer automation run is already active" -ExitCode 0
+    exit 0
+}
+
 try {
     Log "============================================"
     Log "  Goalscorer live poll started at $timestamp"
@@ -182,4 +190,6 @@ try {
     Log "FATAL: $message"
     Write-Status -State "failed" -Message $message -ExitCode 1
     exit 1
+} finally {
+    Exit-TaskLock $lockHandle
 }
