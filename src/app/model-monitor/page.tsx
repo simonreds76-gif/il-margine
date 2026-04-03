@@ -925,10 +925,10 @@ export default async function ModelMonitorPage() {
                     <th className="px-3 py-3 font-semibold">Open</th>
                     <th className="px-3 py-3 font-semibold">W/L/V</th>
                     <th className="px-3 py-3 font-semibold">ROI</th>
-                    <th className="px-3 py-3 font-semibold">GBP100 / Bet</th>
-                    <th className="px-3 py-3 font-semibold">Staked / Bet</th>
-                    <th className="px-3 py-3 font-semibold">Staked / Unit</th>
-                    <th className="px-3 py-3 font-semibold">GBP100 / Unit</th>
+                    <th className="px-3 py-3 font-semibold">Flat P/L (£100)</th>
+                    <th className="px-3 py-3 font-semibold">Flat Stake (£100)</th>
+                    <th className="px-3 py-3 font-semibold">Recorded Stake (£100/u)</th>
+                    <th className="px-3 py-3 font-semibold">Recorded P/L (£100/u)</th>
                     <th className="px-3 py-3 font-semibold">Win Rate</th>
                     <th className="px-3 py-3 font-semibold">CLV</th>
                   </tr>
@@ -958,7 +958,7 @@ export default async function ModelMonitorPage() {
               </table>
             </div>
             <p className="mt-3 text-xs leading-6 text-slate-500">
-              GBP100 / Bet and Staked / Bet assume a flat GBP100 stake on each settled priced bet. Staked / Unit and GBP100 / Unit use recorded stake units with 1u = GBP100, so 2u spreads count as GBP200 risk. All four use the current clean settled sample.{" "}
+              Flat P/L and Flat Stake assume a flat £100 stake on every settled priced bet. Recorded Stake and Recorded P/L convert the stored unit stakes into pounds using 1u = £100, so a 2u spread counts as £200 risk. All four use the current clean settled sample.{" "}
               CLV is only audited on the ML lanes with dedicated history coverage right now. Spread Shadow and Clay 2026 show <span className="font-semibold text-slate-400">n/a</span> until that audit exists.
             </p>
             <div className="mt-4 grid gap-3 lg:grid-cols-3">
