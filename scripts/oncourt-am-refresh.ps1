@@ -1,5 +1,5 @@
 # Il Margine - AM Tennis Refresh
-# Lighter daytime refresh: odds/fair-odds/shadow append/settlement without a full OnCourt sync.
+# Lighter daytime refresh: refresh today's OnCourt schedule/tours, then odds/fair-odds/shadow append/settlement.
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
@@ -43,28 +43,46 @@ try {
     Log "  AM Tennis Refresh started at $timestamp"
     Log "============================================"
 
-    Log "=== Step 1/6: Pinnacle odds + fair odds ==="
-    $step1Output = & python scripts\run-daily-odds.py --skip-strict-report 2>&1
-    $step1Exit = $LASTEXITCODE
-    $step1Lines = @($step1Output | ForEach-Object { "$_" })
-    $step1Lines | ForEach-Object { Log $_ }
-    if ($step1Exit -ne 0) {
-        Log "ERROR: Pinnacle/fair-odds failed (exit $step1Exit)"
+    Log "=== Step 1/8: OnCourt extract (fresh today/tours CSVs) ==="
+    $py32 = "C:\Python312-32\python.exe"
+    if (Test-Path $py32) {
+        & $py32 scripts\oncourt-extract-all.py 2>&1 | ForEach-Object { Log $_ }
+        if ($LASTEXITCODE -ne 0) {
+            Log "WARNING: OnCourt extract had errors (exit $LASTEXITCODE), continuing..."
+        }
+    } else {
+        Log "WARNING: 32-bit Python not found at $py32, skipping extract"
+    }
+
+    Log "=== Step 2/8: Supabase sync (--quick --skip-players) ==="
+    & python scripts\oncourt-load-supabase.py --quick --skip-players 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "ERROR: Supabase sync failed (exit $LASTEXITCODE)"
         exit 1
     }
-    $step1Synced = $step1Lines | Select-String -SimpleMatch "Synced daily_fair_odds:"
-    if (-not $step1Synced) {
+
+    Log "=== Step 3/8: Pinnacle odds + fair odds ==="
+    $step3Output = & python scripts\run-daily-odds.py --skip-strict-report 2>&1
+    $step3Exit = $LASTEXITCODE
+    $step3Lines = @($step3Output | ForEach-Object { "$_" })
+    $step3Lines | ForEach-Object { Log $_ }
+    if ($step3Exit -ne 0) {
+        Log "ERROR: Pinnacle/fair-odds failed (exit $step3Exit)"
+        exit 1
+    }
+    $step3Synced = $step3Lines | Select-String -SimpleMatch "Synced daily_fair_odds:"
+    if (-not $step3Synced) {
         Log "ERROR: Pinnacle/fair-odds completed without confirming daily_fair_odds sync"
         exit 1
     }
 
-    Log "=== Step 2/6: Append Pinnacle history capture (daily) ==="
+    Log "=== Step 4/8: Append Pinnacle history capture (daily) ==="
     & python scripts\pinnacle-capture-history.py --capture-mode daily 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "WARNING: Pinnacle history append failed (exit $LASTEXITCODE), continuing..."
     }
 
-    Log "=== Step 3/6: Strict policy report (--append --compare-overlay) ==="
+    Log "=== Step 5/8: Strict policy report (--append --compare-overlay) ==="
     & python scripts\strict-policy-report.py --append --compare-overlay 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "ERROR: strict-policy-report failed (exit $LASTEXITCODE)"
@@ -72,16 +90,16 @@ try {
     }
 
     if ($null -ne $volumeCfg) {
-        Log "=== Step 4/6: $($volumeCfg.Label) shadow (signal-profile=$($volumeCfg.Profile)) ==="
+        Log "=== Step 6/8: $($volumeCfg.Label) shadow (signal-profile=$($volumeCfg.Profile)) ==="
         & python scripts\strict-policy-report.py --append --signal-profile $volumeCfg.Profile --output "data\backtest\strict-signals-$($volumeCfg.Tag).csv" --internal-output "data\backtest\strict-signals-$($volumeCfg.Tag)-internal.csv" 2>&1 | ForEach-Object { Log $_ }
         if ($LASTEXITCODE -ne 0) {
             Log "WARNING: $($volumeCfg.Profile) shadow append failed (exit $LASTEXITCODE), continuing..."
         }
     } else {
-        Log "=== Step 4/6: Volume shadow skipped (STRICT_POLICY_VOLUME_MODE=$volumeMode) ==="
+        Log "=== Step 6/8: Volume shadow skipped (STRICT_POLICY_VOLUME_MODE=$volumeMode) ==="
     }
 
-    Log "=== Step 5/6: Spread shadow + Clay 2026 shadow ==="
+    Log "=== Step 7/8: Spread shadow + Clay 2026 shadow ==="
     & python scripts\strict-policy-report.py --append --signal-profile spread_shadow --output "data\backtest\strict-signals-spreadshadow.csv" 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "WARNING: spread_shadow append failed (exit $LASTEXITCODE), continuing..."
@@ -91,7 +109,7 @@ try {
         Log "WARNING: clay_calibrated append failed (exit $LASTEXITCODE), continuing..."
     }
 
-    Log "=== Step 6/6: Nightly-style tennis settlement/performance ==="
+    Log "=== Step 8/8: Nightly-style tennis settlement/performance ==="
     & powershell -ExecutionPolicy Bypass -NoProfile -File scripts\oncourt-settle-nightly.ps1 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "WARNING: nightly tennis settlement failed (exit $LASTEXITCODE), continuing..."
