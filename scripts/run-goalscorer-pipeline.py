@@ -240,6 +240,7 @@ def main() -> None:
     odds_api_script = str(ROOT / "scripts" / "odds-api-scrape-goalscorer.py")
     pinnacle_script = str(ROOT / "scripts" / "pinnacle-scrape-goalscorer.py")
     fotmob_lineups_script = str(ROOT / "scripts" / "fotmob-fetch-lineups.py")
+    validate_live_outputs_script = str(ROOT / "scripts" / "validate-goalscorer-live-outputs.py")
 
     if not args.skip_model and not args.live_only:
         _run([sys.executable, model_script, "--data", *data_paths])
@@ -329,6 +330,19 @@ def main() -> None:
                 live_cmd.extend(["--penalty-baseline-overrides", penalty_baseline_overrides])
             _run(live_cmd)
             _write_merged_live_board()
+            validate_cmd = [
+                sys.executable,
+                validate_live_outputs_script,
+                "--league",
+                args.league,
+                "--live-board",
+                str(ROOT / league_config["live_out_dir"] / "live-board.json"),
+                "--merged-live-board",
+                str(ROOT / "data" / "goalscorer" / "all-leagues-live-board.json"),
+            ]
+            if lineups_path:
+                validate_cmd.extend(["--lineups", lineups_path])
+            _run(validate_cmd)
 
             if args.track_shadow or args.settle_shadow:
                 shadow_output = args.shadow_output or league_config["shadow_signals"]
