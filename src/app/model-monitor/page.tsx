@@ -48,6 +48,7 @@ type ProfileSummary = {
 type MonitorSignalRow = {
   date: string;
   timeUtc: string;
+  matchDate: string;
   player1: string;
   player2: string;
   surface: string;
@@ -66,7 +67,9 @@ type MonitorSignalRow = {
   stakeUnits?: number;
   signalProfile: string;
   settlementStatus: string;
+  result: string;
   betOutcome: string;
+  settledAt: string;
   settlementNote: string;
 };
 
@@ -83,8 +86,10 @@ type SignalCohortSummary = {
   avgValuePct?: number;
 };
 
-type PolicyScoreRow = {
-  name: string;
+type LaneScoreRow = {
+  policy: string;
+  lane: string;
+  marketType: string;
   settled: number;
   signals: number;
   open: number;
@@ -393,6 +398,7 @@ function parseSignalRows(text: string | null): MonitorSignalRow[] {
   return parseCsv(text).map((row) => ({
     date: row.date ?? "",
     timeUtc: row.time_utc ?? "",
+    matchDate: row.match_date ?? "",
     player1: row.player1 ?? "",
     player2: row.player2 ?? "",
     surface: row.surface ?? "",
@@ -411,7 +417,9 @@ function parseSignalRows(text: string | null): MonitorSignalRow[] {
     stakeUnits: parseFloatMaybe(row.stake_units),
     signalProfile: row.signal_profile ?? "",
     settlementStatus: row.settlement_status ?? "",
+    result: row.result ?? "",
     betOutcome: row.bet_outcome ?? "",
+    settledAt: row.settled_at ?? "",
     settlementNote: row.settlement_note ?? "",
   }));
 }
@@ -424,8 +432,13 @@ function summarizeSignalCohort(
   rows: MonitorSignalRow[],
   league?: "ATP" | "Challenger",
   stakeMode: "recorded" | "flat" = "recorded",
+  betType?: "match" | "spread",
 ): SignalCohortSummary {
-  const filtered = league ? rows.filter((row) => normalizeLeague(row.league) === league) : rows;
+  const filtered = rows.filter((row) => {
+    if (league && normalizeLeague(row.league) !== league) return false;
+    if (betType && row.betType !== betType) return false;
+    return true;
+  });
   let settled = 0;
   let wins = 0;
   let losses = 0;
@@ -510,6 +523,31 @@ function getNoMatchRows(rows: MonitorSignalRow[]): MonitorSignalRow[] {
     .sort((left, right) => signalTimestamp(right) - signalTimestamp(left));
 }
 
+function getSettledSignalRows(rows: MonitorSignalRow[]): MonitorSignalRow[] {
+  return rows
+    .filter((row) => (row.settlementStatus || "").trim().toLowerCase() === "settled")
+    .sort((left, right) => {
+      const leftStamp = Date.parse(left.settledAt || "") || signalTimestamp(left);
+      const rightStamp = Date.parse(right.settledAt || "") || signalTimestamp(right);
+      return rightStamp - leftStamp;
+    });
+}
+
+function getSelectedOdds(row: MonitorSignalRow): number | undefined {
+  if (row.betType === "spread") return row.spreadOdds;
+  return row.side === "P2" ? row.pinOdds2 : row.pinOdds1;
+}
+
+function getSettlementDate(row: MonitorSignalRow): string {
+  return row.settledAt ? row.settledAt.slice(0, 10) : row.matchDate || row.date;
+}
+
+function shiftIsoDate(isoDate: string, days: number): string {
+  const stamp = Date.parse(`${isoDate}T00:00:00Z`);
+  if (!Number.isFinite(stamp)) return isoDate;
+  return new Date(stamp + days * 86400000).toISOString().slice(0, 10);
+}
+
 function formatSignedLine(value?: number): string {
   if (value == null || Number.isNaN(value)) return "n/a";
   return `${value > 0 ? "+" : ""}${value.toFixed(value % 1 === 0 ? 0 : 1)}`;
@@ -583,29 +621,37 @@ export default async function ModelMonitorPage() {
   const profileMap = new Map(profiles.map((profile) => [profile.name, profile]));
   const strictSignals = parseSignalRows(strictSignalsCsv);
   const strictSignalsClean = filterCleanSignalRows(strictSignals);
+  const strictSettledRows = getSettledSignalRows(strictSignals);
   const volumeSignals = parseSignalRows(volumeSignalsCsv);
   const volumeSignalsClean = filterCleanSignalRows(volumeSignals);
   const volumeQueue = getActiveQueueRows(volumeSignals);
   const volumeNoMatchRows = getNoMatchRows(volumeSignals);
+  const volumeSettledRows = getSettledSignalRows(volumeSignals);
   const spreadShadowSignals = parseSignalRows(spreadShadowSignalsCsv);
   const spreadShadowSignalsClean = filterCleanSignalRows(spreadShadowSignals);
   const spreadShadowQueue = getActiveQueueRows(spreadShadowSignals);
   const spreadShadowNoMatchRows = getNoMatchRows(spreadShadowSignals);
+  const spreadShadowSettledRows = getSettledSignalRows(spreadShadowSignals);
   const clay2026Signals = parseSignalRows(clay2026SignalsCsv);
   const clay2026SignalsClean = filterCleanSignalRows(clay2026Signals);
   const clay2026Queue = getActiveQueueRows(clay2026Signals);
   const clay2026NoMatchRows = getNoMatchRows(clay2026Signals);
+  const clay2026SettledRows = getSettledSignalRows(clay2026Signals);
   const clay2026AllCohort = summarizeSignalCohort(clay2026Signals);
   const clay2026AtpCohort = summarizeSignalCohort(clay2026Signals, "ATP");
   const clay2026ChallengerCohort = summarizeSignalCohort(clay2026Signals, "Challenger");
-  const strictRecordedCohort = summarizeSignalCohort(strictSignalsClean);
-  const volumeRecordedCohort = summarizeSignalCohort(volumeSignalsClean);
-  const spreadShadowRecordedCohort = summarizeSignalCohort(spreadShadowSignalsClean);
-  const clay2026RecordedCohort = summarizeSignalCohort(clay2026SignalsClean);
-  const strictFlatCohort = summarizeSignalCohort(strictSignalsClean, undefined, "flat");
-  const volumeFlatCohort = summarizeSignalCohort(volumeSignalsClean, undefined, "flat");
-  const spreadShadowFlatCohort = summarizeSignalCohort(spreadShadowSignalsClean, undefined, "flat");
-  const clay2026FlatCohort = summarizeSignalCohort(clay2026SignalsClean, undefined, "flat");
+  const strictMlRecordedCohort = summarizeSignalCohort(strictSignalsClean, undefined, "recorded", "match");
+  const strictSpreadRecordedCohort = summarizeSignalCohort(strictSignalsClean, undefined, "recorded", "spread");
+  const strictMlFlatCohort = summarizeSignalCohort(strictSignalsClean, undefined, "flat", "match");
+  const strictSpreadFlatCohort = summarizeSignalCohort(strictSignalsClean, undefined, "flat", "spread");
+  const volumeMlRecordedCohort = summarizeSignalCohort(volumeSignalsClean, undefined, "recorded", "match");
+  const volumeSpreadRecordedCohort = summarizeSignalCohort(volumeSignalsClean, undefined, "recorded", "spread");
+  const volumeMlFlatCohort = summarizeSignalCohort(volumeSignalsClean, undefined, "flat", "match");
+  const volumeSpreadFlatCohort = summarizeSignalCohort(volumeSignalsClean, undefined, "flat", "spread");
+  const spreadShadowSpreadRecordedCohort = summarizeSignalCohort(spreadShadowSignalsClean, undefined, "recorded", "spread");
+  const spreadShadowSpreadFlatCohort = summarizeSignalCohort(spreadShadowSignalsClean, undefined, "flat", "spread");
+  const clay2026MlRecordedCohort = summarizeSignalCohort(clay2026SignalsClean, undefined, "recorded", "match");
+  const clay2026MlFlatCohort = summarizeSignalCohort(clay2026SignalsClean, undefined, "flat", "match");
 
   const strictAllRoi = perfValue(strictBase.combinedAll, "roi_pct", parseFloatMaybe);
   const volumeAllRoi = perfValue(volumeBase.combinedAll, "roi_pct", parseFloatMaybe);
@@ -684,60 +730,120 @@ export default async function ModelMonitorPage() {
   const spreadShadowSettledCount = perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) ?? 0;
   const clay2026TrackedCount = perfValue(clay2026Base.combinedAll, "signals", parseIntMaybe) ?? clay2026Signals.length;
   const clay2026SettledCount = perfValue(clay2026Base.combinedAll, "settled", parseIntMaybe) ?? 0;
-  const policyScoreRows: PolicyScoreRow[] = [
+  const strictMlOpenCount = strictSignals.filter((row) => row.betType !== "spread" && (row.settlementStatus || "").trim().toLowerCase() !== "settled" && (row.settlementStatus || "").trim().toLowerCase() !== "no_match").length;
+  const strictSpreadOpenCount = strictSignals.filter((row) => row.betType === "spread" && (row.settlementStatus || "").trim().toLowerCase() !== "settled" && (row.settlementStatus || "").trim().toLowerCase() !== "no_match").length;
+  const volumeMlOpenCount = volumeQueueMlCount;
+  const volumeSpreadOpenCount = volumeQueueSpreadCount;
+  const spreadShadowOpenCount = spreadShadowQueue.length;
+  const clay2026OpenCount = clay2026Queue.length;
+  const resultsAsOfDate = clay2026AsOf ?? spreadShadowAsOf ?? volumeAsOf ?? strictAsOf ?? new Date().toISOString().slice(0, 10);
+  const priorResultsDate = shiftIsoDate(resultsAsOfDate, -1);
+  const latestSettledRows = [
+    ...strictSettledRows.map((row) => ({ source: "Strict", lane: row.betType === "spread" ? "Strict Spread" : "Strict ML", accent: "rose" as const, row })),
+    ...volumeSettledRows.map((row) => ({ source: "Volume 200", lane: row.betType === "spread" ? "Volume 200 Spread" : "Volume 200 ML", accent: "amber" as const, row })),
+    ...spreadShadowSettledRows.map((row) => ({ source: "Spread Shadow", lane: "Spread Shadow HC", accent: "cyan" as const, row })),
+    ...clay2026SettledRows.map((row) => ({ source: "Clay 2026", lane: "Clay 2026 ML", accent: "orange" as const, row })),
+  ].sort((left, right) => {
+    const leftStamp = Date.parse(left.row.settledAt || "") || signalTimestamp(left.row);
+    const rightStamp = Date.parse(right.row.settledAt || "") || signalTimestamp(right.row);
+    return rightStamp - leftStamp;
+  });
+  const settledTodayRows = latestSettledRows.filter((entry) => getSettlementDate(entry.row) === resultsAsOfDate).slice(0, 10);
+  const settledYesterdayRows = latestSettledRows.filter((entry) => getSettlementDate(entry.row) === priorResultsDate).slice(0, 10);
+  const laneScoreRows: LaneScoreRow[] = [
     {
-      name: "Strict",
-      settled: perfValue(strictBase.combinedAll, "settled", parseIntMaybe) ?? 0,
-      signals: perfValue(strictBase.combinedAll, "signals", parseIntMaybe) ?? 0,
-      open: perfValue(strictBase.combinedAll, "unsettled", parseIntMaybe) ?? 0,
-      wlv: perfWlv(strictBase.combinedAll),
-      roi: strictAllRoi,
-      flatStakePounds: strictFlatCohort.pnlUnits * 100,
-      flatTotalStakedPounds: strictFlatCohort.stakedUnits * 100,
-      unitTotalStakedPounds: strictRecordedCohort.stakedUnits * 100,
-      unitStakePounds: strictRecordedCohort.pnlUnits * 100,
-      winRate: perfValue(strictBase.combinedAll, "win_rate_pct", parseFloatMaybe),
+      policy: "Strict",
+      lane: "ML",
+      marketType: "Match winner",
+      settled: perfValue(strictBase.mlAll, "settled", parseIntMaybe) ?? strictMlRecordedCohort.settled,
+      signals: perfValue(strictBase.mlAll, "signals", parseIntMaybe) ?? strictMlRecordedCohort.signals,
+      open: perfValue(strictBase.mlAll, "unsettled", parseIntMaybe) ?? strictMlOpenCount,
+      wlv: perfWlv(strictBase.mlAll),
+      roi: perfValue(strictBase.mlAll, "roi_pct", parseFloatMaybe),
+      flatStakePounds: strictMlFlatCohort.pnlUnits * 100,
+      flatTotalStakedPounds: strictMlFlatCohort.stakedUnits * 100,
+      unitTotalStakedPounds: strictMlRecordedCohort.stakedUnits * 100,
+      unitStakePounds: strictMlRecordedCohort.pnlUnits * 100,
+      winRate: perfValue(strictBase.mlAll, "win_rate_pct", parseFloatMaybe),
       clv: clv.avgClvPct,
     },
     {
-      name: "Volume 200",
-      settled: volumeSettledCount,
-      signals: volumeTrackedCount,
-      open: volumeOpenCount,
-      wlv: perfWlv(volumeBase.combinedAll),
-      roi: volumeAllRoi,
-      flatStakePounds: volumeFlatCohort.pnlUnits * 100,
-      flatTotalStakedPounds: volumeFlatCohort.stakedUnits * 100,
-      unitTotalStakedPounds: volumeRecordedCohort.stakedUnits * 100,
-      unitStakePounds: volumeRecordedCohort.pnlUnits * 100,
-      winRate: perfValue(volumeBase.combinedAll, "win_rate_pct", parseFloatMaybe),
+      policy: "Strict",
+      lane: "Spread",
+      marketType: "Handicap",
+      settled: perfValue(strictBase.handicapAll, "settled", parseIntMaybe) ?? strictSpreadRecordedCohort.settled,
+      signals: perfValue(strictBase.handicapAll, "signals", parseIntMaybe) ?? strictSpreadRecordedCohort.signals,
+      open: perfValue(strictBase.handicapAll, "unsettled", parseIntMaybe) ?? strictSpreadOpenCount,
+      wlv: perfWlv(strictBase.handicapAll),
+      roi: perfValue(strictBase.handicapAll, "roi_pct", parseFloatMaybe),
+      flatStakePounds: strictSpreadFlatCohort.pnlUnits * 100,
+      flatTotalStakedPounds: strictSpreadFlatCohort.stakedUnits * 100,
+      unitTotalStakedPounds: strictSpreadRecordedCohort.stakedUnits * 100,
+      unitStakePounds: strictSpreadRecordedCohort.pnlUnits * 100,
+      winRate: perfValue(strictBase.handicapAll, "win_rate_pct", parseFloatMaybe),
+      clvLabel: "n/a",
+    },
+    {
+      policy: "Volume 200",
+      lane: "ML",
+      marketType: "Match winner",
+      settled: perfValue(volumeBase.mlAll, "settled", parseIntMaybe) ?? volumeMlRecordedCohort.settled,
+      signals: perfValue(volumeBase.mlAll, "signals", parseIntMaybe) ?? volumeMlRecordedCohort.signals,
+      open: perfValue(volumeBase.mlAll, "unsettled", parseIntMaybe) ?? volumeMlOpenCount,
+      wlv: perfWlv(volumeBase.mlAll),
+      roi: perfValue(volumeBase.mlAll, "roi_pct", parseFloatMaybe),
+      flatStakePounds: volumeMlFlatCohort.pnlUnits * 100,
+      flatTotalStakedPounds: volumeMlFlatCohort.stakedUnits * 100,
+      unitTotalStakedPounds: volumeMlRecordedCohort.stakedUnits * 100,
+      unitStakePounds: volumeMlRecordedCohort.pnlUnits * 100,
+      winRate: perfValue(volumeBase.mlAll, "win_rate_pct", parseFloatMaybe),
       clv: clvVolume.avgClvPct,
     },
     {
-      name: "Spread Shadow",
+      policy: "Volume 200",
+      lane: "Spread",
+      marketType: "Handicap",
+      settled: perfValue(volumeBase.handicapAll, "settled", parseIntMaybe) ?? volumeSpreadRecordedCohort.settled,
+      signals: perfValue(volumeBase.handicapAll, "signals", parseIntMaybe) ?? volumeSpreadRecordedCohort.signals,
+      open: perfValue(volumeBase.handicapAll, "unsettled", parseIntMaybe) ?? volumeSpreadOpenCount,
+      wlv: perfWlv(volumeBase.handicapAll),
+      roi: perfValue(volumeBase.handicapAll, "roi_pct", parseFloatMaybe),
+      flatStakePounds: volumeSpreadFlatCohort.pnlUnits * 100,
+      flatTotalStakedPounds: volumeSpreadFlatCohort.stakedUnits * 100,
+      unitTotalStakedPounds: volumeSpreadRecordedCohort.stakedUnits * 100,
+      unitStakePounds: volumeSpreadRecordedCohort.pnlUnits * 100,
+      winRate: perfValue(volumeBase.handicapAll, "win_rate_pct", parseFloatMaybe),
+      clvLabel: "n/a",
+    },
+    {
+      policy: "Spread Shadow",
+      lane: "HC",
+      marketType: "Handicap",
       settled: spreadShadowSettledCount,
       signals: spreadShadowTrackedCount,
-      open: perfValue(spreadShadowBase.combinedAll, "unsettled", parseIntMaybe) ?? spreadShadowQueue.length,
+      open: perfValue(spreadShadowBase.combinedAll, "unsettled", parseIntMaybe) ?? spreadShadowOpenCount,
       wlv: perfWlv(spreadShadowBase.handicapAll ?? spreadShadowBase.combinedAll),
-      roi: spreadShadowAllRoi,
-      flatStakePounds: spreadShadowFlatCohort.pnlUnits * 100,
-      flatTotalStakedPounds: spreadShadowFlatCohort.stakedUnits * 100,
-      unitTotalStakedPounds: spreadShadowRecordedCohort.stakedUnits * 100,
-      unitStakePounds: spreadShadowRecordedCohort.pnlUnits * 100,
+      roi: perfValue(spreadShadowBase.handicapAll ?? spreadShadowBase.combinedAll, "roi_pct", parseFloatMaybe),
+      flatStakePounds: spreadShadowSpreadFlatCohort.pnlUnits * 100,
+      flatTotalStakedPounds: spreadShadowSpreadFlatCohort.stakedUnits * 100,
+      unitTotalStakedPounds: spreadShadowSpreadRecordedCohort.stakedUnits * 100,
+      unitStakePounds: spreadShadowSpreadRecordedCohort.pnlUnits * 100,
       winRate: perfValue(spreadShadowBase.handicapAll ?? spreadShadowBase.combinedAll, "win_rate_pct", parseFloatMaybe),
       clvLabel: "n/a",
     },
     {
-      name: "Clay 2026",
+      policy: "Clay 2026",
+      lane: "ML",
+      marketType: "Match winner",
       settled: clay2026SettledCount,
       signals: clay2026TrackedCount,
-      open: perfValue(clay2026Base.combinedAll, "unsettled", parseIntMaybe) ?? clay2026Queue.length,
+      open: perfValue(clay2026Base.combinedAll, "unsettled", parseIntMaybe) ?? clay2026OpenCount,
       wlv: perfWlv(clay2026Base.mlAll ?? clay2026Base.combinedAll),
       roi: clay2026AllRoi,
-      flatStakePounds: clay2026FlatCohort.pnlUnits * 100,
-      flatTotalStakedPounds: clay2026FlatCohort.stakedUnits * 100,
-      unitTotalStakedPounds: clay2026RecordedCohort.stakedUnits * 100,
-      unitStakePounds: clay2026RecordedCohort.pnlUnits * 100,
+      flatStakePounds: clay2026MlFlatCohort.pnlUnits * 100,
+      flatTotalStakedPounds: clay2026MlFlatCohort.stakedUnits * 100,
+      unitTotalStakedPounds: clay2026MlRecordedCohort.stakedUnits * 100,
+      unitStakePounds: clay2026MlRecordedCohort.pnlUnits * 100,
       winRate: perfValue(clay2026Base.mlAll ?? clay2026Base.combinedAll, "win_rate_pct", parseFloatMaybe),
       clvLabel: "n/a",
     },
@@ -798,18 +904,20 @@ export default async function ModelMonitorPage() {
 
         <div className="mb-3 flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold text-slate-100">Quick View</h2>
-            <p className="mt-1 text-sm text-slate-400">At-a-glance metrics. Detailed live breakdown sits below.</p>
+            <h2 className="text-xl font-semibold text-slate-100">Operations Board</h2>
+            <p className="mt-1 text-sm text-slate-400">Lane-by-lane scoreboard first, latest settled results second, deeper diagnostics below.</p>
           </div>
         </div>
 
         <div className="mb-8">
-          <MonitorCard title="Policy Scoreboard" subtitle="Uniform live read across the main tennis lanes. Total bets = settled bets.">
+          <MonitorCard title="Lane Scoreboard" subtitle="Every lane on its own row so ML and spread can be judged separately. Total Bets = settled bets.">
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
                 <thead>
                   <tr className="border-b border-slate-800 text-left text-[11px] uppercase tracking-[0.18em] text-slate-500">
                     <th className="px-3 py-3 font-semibold">Policy</th>
+                    <th className="px-3 py-3 font-semibold">Lane</th>
+                    <th className="px-3 py-3 font-semibold">Market</th>
                     <th className="px-3 py-3 font-semibold">Total Bets</th>
                     <th className="px-3 py-3 font-semibold">Signals</th>
                     <th className="px-3 py-3 font-semibold">Open</th>
@@ -824,9 +932,11 @@ export default async function ModelMonitorPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {policyScoreRows.map((row) => (
-                    <tr key={row.name} className="border-b border-slate-900/80 text-slate-200">
-                      <td className="px-3 py-3 font-semibold text-white">{row.name}</td>
+                  {laneScoreRows.map((row) => (
+                    <tr key={`${row.policy}-${row.lane}`} className="border-b border-slate-900/80 text-slate-200">
+                      <td className="px-3 py-3 font-semibold text-white">{row.policy}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.lane}</td>
+                      <td className="px-3 py-3 text-slate-300">{row.marketType}</td>
                       <td className="px-3 py-3 font-mono tabular-nums">{row.settled}</td>
                       <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.signals}</td>
                       <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.open}</td>
@@ -849,6 +959,96 @@ export default async function ModelMonitorPage() {
               GBP100 / Bet and Staked / Bet assume a flat GBP100 stake on each settled priced bet. Staked / Unit and GBP100 / Unit use recorded stake units with 1u = GBP100, so 2u spreads count as GBP200 risk. All four use the current clean settled sample.{" "}
               CLV is only audited on the ML lanes with dedicated history coverage right now. Spread Shadow and Clay 2026 show <span className="font-semibold text-slate-400">n/a</span> until that audit exists.
             </p>
+            <div className="mt-4 grid gap-3 lg:grid-cols-3">
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
+                <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Clay 2026 Split</div>
+                <div className="mt-2">ATP only: {cohortWlv(clay2026AtpCohort)} | {formatPct(clay2026AtpCohort.roiPct)}</div>
+                <div className="mt-1">Challenger: {cohortWlv(clay2026ChallengerCohort)} | {formatPct(clay2026ChallengerCohort.roiPct)}</div>
+              </div>
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
+                <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Volume 200 Open</div>
+                <div className="mt-2">ML {volumeMlOpenCount} | Spread {volumeSpreadOpenCount}</div>
+                <div className="mt-1 text-slate-500">No-match rows parked: {volumeNoMatchCount}</div>
+              </div>
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
+                <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Board Dates</div>
+                <div className="mt-2">Settled today: {resultsAsOfDate}</div>
+                <div className="mt-1">Settled yesterday: {priorResultsDate}</div>
+              </div>
+            </div>
+          </MonitorCard>
+        </div>
+
+        <div className="mb-8">
+          <MonitorCard title="Latest Settled Results" subtitle="Fastest way to answer questions like “did Clay 2026 win yesterday?” without digging through the raw CSVs.">
+            <div className="grid gap-4 xl:grid-cols-2">
+              {[
+                { label: `Settled Today (${resultsAsOfDate})`, rows: settledTodayRows },
+                { label: `Settled Yesterday (${priorResultsDate})`, rows: settledYesterdayRows },
+              ].map((group) => (
+                <div key={group.label} className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{group.label}</div>
+                    <div className="text-xs text-slate-500">{group.rows.length} rows</div>
+                  </div>
+                  {group.rows.length === 0 ? (
+                    <p className="text-sm leading-6 text-slate-400">No settled rows logged for this date.</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {group.rows.map(({ source, lane, accent, row }) => {
+                        const selectedOdds = getSelectedOdds(row);
+                        const accentClasses =
+                          accent === "rose"
+                            ? "border-rose-500/20 bg-rose-500/5 text-rose-200"
+                            : accent === "amber"
+                              ? "border-amber-500/20 bg-amber-500/5 text-amber-200"
+                              : accent === "cyan"
+                                ? "border-cyan-500/20 bg-cyan-500/5 text-cyan-200"
+                                : "border-orange-500/20 bg-orange-500/5 text-orange-200";
+                        const outcomeClasses =
+                          row.betOutcome === "WIN"
+                            ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
+                            : row.betOutcome === "LOSS"
+                              ? "border-rose-500/20 bg-rose-500/10 text-rose-300"
+                              : "border-slate-700/80 bg-slate-900/80 text-slate-300";
+                        return (
+                          <div key={`${group.label}-${source}-${row.player1}-${row.player2}-${row.side}-${row.spreadLine ?? "ml"}`} className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3">
+                            <div className="flex flex-wrap items-start justify-between gap-3">
+                              <div>
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${accentClasses}`}>
+                                    {lane}
+                                  </span>
+                                  <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${outcomeClasses}`}>
+                                    {row.betOutcome || "settled"}
+                                  </span>
+                                </div>
+                                <div className="mt-2 font-semibold text-slate-100">
+                                  {row.player1} vs {row.player2}
+                                </div>
+                                <div className="mt-1 text-xs text-slate-500">
+                                  {row.surface} | {row.league || "ATP"} | {row.series} | {source}
+                                  {row.claySpeedTier ? ` | ${row.claySpeedTier}` : ""}
+                                  {row.settledAt ? ` | settled ${row.settledAt.replace("T", " ").slice(0, 16)} UTC` : ""}
+                                </div>
+                              </div>
+                              <div className="text-right text-sm">
+                                <div className="font-semibold text-slate-100">
+                                  {row.betType === "spread" ? `${row.side} ${formatSignedLine(row.spreadLine)}` : `${row.side} ML`}
+                                </div>
+                                <div className="mt-1 text-xs text-slate-500">
+                                  @ {selectedOdds?.toFixed(3) ?? "n/a"} | edge {formatPct(row.valuePct)}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </MonitorCard>
         </div>
 
