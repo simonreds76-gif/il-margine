@@ -1,6 +1,7 @@
 # One-time task registration for the goalscorer live pipeline.
 # Creates:
-#   - a daily live polling task with 60-minute repetition from 12:00 to 23:00
+#   - a daily live polling task with 10-minute repetition from 08:00 to 00:00
+#     (the script self-throttles by cold / warm / hot kickoff windows)
 #   - a daily shadow settlement task at 10:00
 
 $ErrorActionPreference = "Stop"
@@ -31,7 +32,7 @@ if (Test-ScheduledTaskExists "IlMargine-Goalscorer-Health") {
     schtasks /Delete /TN "IlMargine-Goalscorer-Health" /F | Out-Host
 }
 
-schtasks /Create /TN "IlMargine-Goalscorer-Live" /SC DAILY /ST 12:00 /RI 60 /DU 11:00 /RL HIGHEST /TR "$liveCmd" /F | Out-Host
+schtasks /Create /TN "IlMargine-Goalscorer-Live" /SC DAILY /ST 08:00 /RI 10 /DU 16:00 /RL HIGHEST /TR "$liveCmd" /F | Out-Host
 # Run the daily settlement as SYSTEM so it can execute unattended during the day.
 schtasks /Create /TN "IlMargine-Goalscorer-Shadow-Settle" /SC DAILY /ST 10:00 /RL HIGHEST /RU SYSTEM /TR "$settleCmd" /F | Out-Host
 
