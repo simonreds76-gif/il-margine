@@ -226,9 +226,10 @@ function parseIntMaybe(value?: string): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
-function formatPct(value?: number, digits = 2): string {
+function formatPct(value?: number, digits = 2, showSign = true): string {
   if (value == null || Number.isNaN(value)) return "n/a";
-  return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}%`;
+  const prefix = value < 0 ? "-" : showSign && value > 0 ? "+" : "";
+  return `${prefix}${Math.abs(value).toFixed(digits)}%`;
 }
 
 function formatUnits(value?: number, digits = 2): string {
@@ -236,10 +237,11 @@ function formatUnits(value?: number, digits = 2): string {
   return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}u`;
 }
 
-function formatPounds(value?: number, digits = 0): string {
+function formatPounds(value?: number, digits = 0, showSign = true): string {
   if (value == null || Number.isNaN(value)) return "n/a";
   const abs = Math.abs(value);
-  return `${value >= 0 ? "+" : "-"}£${abs.toLocaleString("en-GB", {
+  const prefix = value < 0 ? "-" : showSign && value > 0 ? "+" : "";
+  return `${prefix}GBP ${abs.toLocaleString("en-GB", {
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
   })}`;
@@ -499,7 +501,7 @@ function cohortWlv(summary: SignalCohortSummary): string {
 
 function formatClvCell(value?: number, label = "n/a"): string {
   if (value == null || Number.isNaN(value)) return label;
-  return formatPct(value, 3);
+  return formatPct(value, 3, false);
 }
 
 function signalTimestamp(row: MonitorSignalRow): number {
@@ -941,12 +943,12 @@ export default async function ModelMonitorPage() {
                       <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.signals}</td>
                       <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.open}</td>
                       <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.wlv}</td>
-                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.roi)}`}>{formatPct(row.roi)}</td>
-                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.flatStakePounds)}`}>{formatPounds(row.flatStakePounds)}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-slate-200">{formatPounds(row.flatTotalStakedPounds)}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-slate-200">{formatPounds(row.unitTotalStakedPounds)}</td>
-                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.unitStakePounds)}`}>{formatPounds(row.unitStakePounds)}</td>
-                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone((row.winRate ?? 0) - 50)}`}>{formatPct(row.winRate)}</td>
+                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.roi)}`}>{formatPct(row.roi, 2, false)}</td>
+                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.flatStakePounds)}`}>{formatPounds(row.flatStakePounds, 0, true)}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-slate-200">{formatPounds(row.flatTotalStakedPounds, 0, false)}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-slate-200">{formatPounds(row.unitTotalStakedPounds, 0, false)}</td>
+                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.unitStakePounds)}`}>{formatPounds(row.unitStakePounds, 0, true)}</td>
+                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone((row.winRate ?? 0) - 50)}`}>{formatPct(row.winRate, 2, false)}</td>
                       <td className={`px-3 py-3 font-mono tabular-nums ${row.clv != null ? metricTone(row.clv) : "text-slate-500"}`}>
                         {formatClvCell(row.clv, row.clvLabel ?? "n/a")}
                       </td>
