@@ -925,9 +925,6 @@ export default async function ModelMonitorPage() {
                     <th className="px-3 py-3 font-semibold">Open</th>
                     <th className="px-3 py-3 font-semibold">W/L/V</th>
                     <th className="px-3 py-3 font-semibold">ROI</th>
-                    <th className="px-3 py-3 font-semibold">Flat P/L (£100)</th>
-                    <th className="px-3 py-3 font-semibold">Flat Stake (£100)</th>
-                    <th className="px-3 py-3 font-semibold">Recorded Stake (£100/u)</th>
                     <th className="px-3 py-3 font-semibold">Recorded P/L (£100/u)</th>
                     <th className="px-3 py-3 font-semibold">Win Rate</th>
                     <th className="px-3 py-3 font-semibold">CLV</th>
@@ -944,9 +941,6 @@ export default async function ModelMonitorPage() {
                       <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.open}</td>
                       <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.wlv}</td>
                       <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.roi)}`}>{formatPct(row.roi, 2, false)}</td>
-                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.flatStakePounds)}`}>{formatPounds(row.flatStakePounds, 0, true)}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-slate-200">{formatPounds(row.flatTotalStakedPounds, 0, false)}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-slate-200">{formatPounds(row.unitTotalStakedPounds, 0, false)}</td>
                       <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.unitStakePounds)}`}>{formatPounds(row.unitStakePounds, 0, true)}</td>
                       <td className={`px-3 py-3 font-mono tabular-nums ${metricTone((row.winRate ?? 0) - 50)}`}>{formatPct(row.winRate, 2, false)}</td>
                       <td className={`px-3 py-3 font-mono tabular-nums ${row.clv != null ? metricTone(row.clv) : "text-slate-500"}`}>
@@ -958,8 +952,7 @@ export default async function ModelMonitorPage() {
               </table>
             </div>
             <p className="mt-3 text-xs leading-6 text-slate-500">
-              Flat P/L and Flat Stake assume a flat £100 stake on every settled priced bet. Recorded Stake and Recorded P/L convert the stored unit stakes into pounds using 1u = £100, so a 2u spread counts as £200 risk. All four use the current clean settled sample.{" "}
-              CLV is only audited on the ML lanes with dedicated history coverage right now. Spread Shadow and Clay 2026 show <span className="font-semibold text-slate-400">n/a</span> until that audit exists.
+              Default board uses one money column only: <span className="font-semibold text-slate-300">Recorded P/L (£100/u)</span>. That is the actual settled P/L from stored unit sizes with 1u = £100. CLV is only audited on the ML lanes with dedicated history coverage right now. Spread Shadow and Clay 2026 show <span className="font-semibold text-slate-400">n/a</span> until that audit exists.
             </p>
             <div className="mt-4 grid gap-3 lg:grid-cols-3">
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
@@ -978,6 +971,37 @@ export default async function ModelMonitorPage() {
                 <div className="mt-1">Settled yesterday: {priorResultsDate}</div>
               </div>
             </div>
+            <details className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/35 p-3">
+              <summary className="cursor-pointer text-sm font-medium text-slate-200">Stake basis detail</summary>
+              <p className="mt-2 text-xs leading-6 text-slate-500">
+                Flat view assumes every settled bet risked £100. Recorded view converts the stored unit stakes into pounds at 1u = £100. When a lane uses mixed 1u and 2u staking, recorded P/L will diverge from flat P/L.
+              </p>
+              <div className="mt-3 grid gap-3 lg:grid-cols-2">
+                {laneScoreRows.map((row) => (
+                  <div key={`stake-basis-${row.policy}-${row.lane}`} className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3 text-sm text-slate-300">
+                    <div className="font-semibold text-slate-100">{row.policy} {row.lane}</div>
+                    <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                      <div>
+                        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Flat P/L (£100)</div>
+                        <div className={`mt-1 font-mono tabular-nums ${metricTone(row.flatStakePounds)}`}>{formatPounds(row.flatStakePounds, 0, true)}</div>
+                      </div>
+                      <div>
+                        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Flat Stake (£100)</div>
+                        <div className="mt-1 font-mono tabular-nums text-slate-200">{formatPounds(row.flatTotalStakedPounds, 0, false)}</div>
+                      </div>
+                      <div>
+                        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Recorded P/L (£100/u)</div>
+                        <div className={`mt-1 font-mono tabular-nums ${metricTone(row.unitStakePounds)}`}>{formatPounds(row.unitStakePounds, 0, true)}</div>
+                      </div>
+                      <div>
+                        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Recorded Stake (£100/u)</div>
+                        <div className="mt-1 font-mono tabular-nums text-slate-200">{formatPounds(row.unitTotalStakedPounds, 0, false)}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </details>
           </MonitorCard>
         </div>
 
