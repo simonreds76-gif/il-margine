@@ -4,6 +4,7 @@
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $root
+. (Join-Path $root "scripts\task-lock.ps1")
 
 $dataDir = Join-Path $root "data"
 New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
@@ -36,6 +37,14 @@ function Log($msg) {
     Write-Host $line
     Add-Content -Path $logFile -Value $line
 }
+
+$lockHandle = Enter-TaskLock -LockName "tennis-automation" -RootPath $root
+if ($null -eq $lockHandle) {
+    Log "Another tennis automation run is already active; exiting."
+    exit 0
+}
+
+try {
 
 Log "============================================"
 Log "  Daily Pipeline started at $timestamp"
@@ -84,9 +93,18 @@ if ($LASTEXITCODE -ne 0) {
 
 # Step 6: Pinnacle odds + fair odds
 Log "=== Step 6/10: Pinnacle odds + fair odds ==="
-& python scripts\run-daily-odds.py --skip-strict-report 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "ERROR: Pinnacle/fair-odds failed (exit $LASTEXITCODE)"
+$step6Output = & python scripts\run-daily-odds.py --skip-strict-report 2>&1
+$step6Exit = $LASTEXITCODE
+$step6Lines = @($step6Output | ForEach-Object { "$_" })
+$step6Lines | ForEach-Object { Log $_ }
+if ($step6Exit -ne 0) {
+    Log "ERROR: Pinnacle/fair-odds failed (exit $step6Exit)"
+    exit 1
+}
+
+$step6Synced = $step6Lines | Select-String -SimpleMatch "Synced daily_fair_odds:"
+if (-not $step6Synced) {
+    Log "ERROR: Pinnacle/fair-odds completed without confirming daily_fair_odds sync"
     exit 1
 }
 
@@ -121,6 +139,12 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: spread_shadow append failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Step 8c/10: Clay 2026 shadow (new-after-calibration favorites 55-65%) ==="
+& python scripts\strict-policy-report.py --append --signal-profile clay_calibrated --output "data\backtest\strict-signals-claycal.csv" --internal-output "data\backtest\strict-signals-claycal-internal.csv" 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: clay_calibrated append failed (exit $LASTEXITCODE), continuing..."
+}
+
 # Step 9: Settle/report immediately after nightly append so results are ready by the next morning.
 Log "=== Step 9/10: Nightly tennis settlement/performance ==="
 & powershell -ExecutionPolicy Bypass -NoProfile -File scripts\oncourt-settle-nightly.ps1 2>&1 | ForEach-Object { Log $_ }
@@ -131,3 +155,7 @@ if ($LASTEXITCODE -ne 0) {
 Log "============================================"
 Log "  Daily Pipeline finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Log "============================================"
+}
+finally {
+    Exit-TaskLock $lockHandle
+}

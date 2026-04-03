@@ -5,6 +5,7 @@
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $root
+. (Join-Path $root "scripts\task-lock.ps1")
 
 $dataDir = Join-Path $root "data"
 New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
@@ -17,10 +18,21 @@ function Log($msg) {
     Add-Content -Path $logFile -Value $line
 }
 
-Log "=== Pinnacle close capture start ==="
-& python scripts\pinnacle-capture-history.py --capture-mode close 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "ERROR: pinnacle close capture failed (exit $LASTEXITCODE)"
-    exit 1
+$lockHandle = Enter-TaskLock -LockName "tennis-automation" -RootPath $root
+if ($null -eq $lockHandle) {
+    Log "Another tennis automation run is already active; skipping close capture."
+    exit 0
 }
-Log "=== Pinnacle close capture done ==="
+
+try {
+    Log "=== Pinnacle close capture start ==="
+    & python scripts\pinnacle-capture-history.py --capture-mode close 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "ERROR: pinnacle close capture failed (exit $LASTEXITCODE)"
+        exit 1
+    }
+    Log "=== Pinnacle close capture done ==="
+}
+finally {
+    Exit-TaskLock $lockHandle
+}
