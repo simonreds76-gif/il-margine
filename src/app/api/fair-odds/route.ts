@@ -849,8 +849,9 @@ function loadActiveShadowSignals(csvPath: string, kind: ShadowSignalKind, active
   const header = parseCsvLine(lines[0]);
   const index = new Map<string, number>();
   header.forEach((h, i) => index.set(h, i));
-  const required = ["player1", "player2", "side", "value_pct", "bet_type", "settlement_status"];
+  const required = ["player1", "player2", "side", "value_pct", "bet_type"];
   if (required.some((k) => !index.has(k))) return [];
+  const hasSettlementStatus = index.has("settlement_status");
 
   const get = (cols: string[], name: string) => cols[index.get(name) ?? -1] ?? "";
   const latestBySignalKey = new Map<string, ShadowSignalSummary & { settlement_status: string }>();
@@ -917,7 +918,7 @@ function loadActiveShadowSignals(csvPath: string, kind: ShadowSignalKind, active
       clay_2026_selected_prob: parseCsvNumber(get(cols, "calibrated_selected_prob")),
       handicap_point_prob_source:
         (get(cols, "handicap_point_prob_source") as FairOddsRow["handicap_point_prob_source"]) || undefined,
-      settlement_status: get(cols, "settlement_status").trim().toLowerCase(),
+      settlement_status: hasSettlementStatus ? get(cols, "settlement_status").trim().toLowerCase() : "open",
     });
   }
 
