@@ -34,9 +34,11 @@ from typing import Any
 
 import requests
 
+from signal_storage import STRICT_SIGNAL_PATHS
+
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_CSV = ROOT / "data" / "backtest" / "strict-signals.csv"
+DEFAULT_CSV = STRICT_SIGNAL_PATHS.archive
 LOCAL_PLAYERS_CSV = ROOT / "data" / "oncourt" / "players_atp.csv"
 LOCAL_GAMES_CSV = ROOT / "data" / "oncourt" / "games_atp.csv"
 LOCAL_TODAY_CSV = ROOT / "data" / "oncourt" / "today_atp.csv"

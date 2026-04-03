@@ -26,10 +26,12 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
+from signal_storage import STRICT_SIGNAL_PATHS
+
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "backtest"
-DEFAULT_SIGNALS = DATA_DIR / "strict-signals.csv"
+DEFAULT_SIGNALS = STRICT_SIGNAL_PATHS.archive
 DEFAULT_COMPARE = DATA_DIR / "strict-signals-overlay-compare.csv"
 DEFAULT_REPORT_TXT = DATA_DIR / "strict-policy-performance-weekly.txt"
 DEFAULT_SUMMARY_CSV = DATA_DIR / "strict-policy-performance-weekly.csv"

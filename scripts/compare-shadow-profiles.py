@@ -13,6 +13,8 @@ import csv
 import runpy
 from pathlib import Path
 
+from signal_storage import VOLUME_200_SIGNAL_PATHS, VOLUME_275_SIGNAL_PATHS
+
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "backtest"
@@ -96,8 +98,8 @@ def main() -> int:
     hist_200 = summarize(score_profile(rows, profile_rules["volume_200"]))
     hist_275 = summarize(score_profile(rows, profile_rules["volume_275"]))
 
-    live_200 = settled_summary(DATA_DIR / "strict-signals-volume200.csv")
-    live_275 = settled_summary(DATA_DIR / "strict-signals-volume275.csv")
+    live_200 = settled_summary(VOLUME_200_SIGNAL_PATHS.archive)
+    live_275 = settled_summary(VOLUME_275_SIGNAL_PATHS.archive)
     weekly_200 = latest_summary(DATA_DIR / "strict-policy-performance-volume200-weekly.csv")
     weekly_275 = latest_summary(DATA_DIR / "strict-policy-performance-volume275-weekly.csv")
 

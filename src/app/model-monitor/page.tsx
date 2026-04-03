@@ -565,14 +565,18 @@ export default async function ModelMonitorPage() {
     volumePerfCsv,
     spreadShadowPerfCsv,
     clay2026PerfCsv,
-    strictSignalsCsv,
+    strictSignalsArchiveCsv,
+    strictSignalsLiveCsv,
     clvAuditTxt,
     clvAuditVolumeTxt,
     profileTxt,
     shadowComparisonTxt,
-    volumeSignalsCsv,
-    spreadShadowSignalsCsv,
-    clay2026SignalsCsv,
+    volumeSignalsArchiveCsv,
+    volumeSignalsLiveCsv,
+    spreadShadowSignalsArchiveCsv,
+    spreadShadowSignalsLiveCsv,
+    clay2026SignalsArchiveCsv,
+    clay2026SignalsLiveCsv,
     strictPerfMtime,
     volumePerfMtime,
     spreadShadowPerfMtime,
@@ -580,6 +584,7 @@ export default async function ModelMonitorPage() {
     clvAuditMtime,
     clvAuditVolumeMtime,
     profileMtime,
+    strictSignalsLiveMtime,
     volumeSignalsMtime,
     spreadShadowSignalsMtime,
     clay2026SignalsMtime,
@@ -588,14 +593,18 @@ export default async function ModelMonitorPage() {
     readLocalFile("data/backtest/strict-policy-performance-volume200-weekly.csv"),
     readLocalFile("data/backtest/strict-policy-performance-spreadshadow-weekly.csv"),
     readLocalFile("data/backtest/strict-policy-performance-clay2026-weekly.csv"),
-    readLocalFile("data/backtest/strict-signals.csv"),
+    readLocalFile("data/backtest/strict-signals-archive.csv"),
+    readLocalFile("data/backtest/strict-signals-live.csv"),
     readLocalFile("data/backtest/strict-clv-audit-2026.txt"),
     readLocalFile("data/backtest/strict-clv-audit-volume200-2026.txt"),
     readLocalFile("data/backtest/policy-profile-backtest-2022-2025.txt"),
     readLocalFile("data/backtest/shadow-profile-comparison.txt"),
-    readLocalFile("data/backtest/strict-signals-volume200.csv"),
-    readLocalFile("data/backtest/strict-signals-spreadshadow.csv"),
-    readLocalFile("data/backtest/strict-signals-claycal.csv"),
+    readLocalFile("data/backtest/strict-signals-volume200-archive.csv"),
+    readLocalFile("data/backtest/strict-signals-volume200-live.csv"),
+    readLocalFile("data/backtest/strict-signals-spreadshadow-archive.csv"),
+    readLocalFile("data/backtest/strict-signals-spreadshadow-live.csv"),
+    readLocalFile("data/backtest/strict-signals-claycal-archive.csv"),
+    readLocalFile("data/backtest/strict-signals-claycal-live.csv"),
     readLocalMtime("data/backtest/strict-policy-performance-weekly.csv"),
     readLocalMtime("data/backtest/strict-policy-performance-volume200-weekly.csv"),
     readLocalMtime("data/backtest/strict-policy-performance-spreadshadow-weekly.csv"),
@@ -603,9 +612,10 @@ export default async function ModelMonitorPage() {
     readLocalMtime("data/backtest/strict-clv-audit-2026.txt"),
     readLocalMtime("data/backtest/strict-clv-audit-volume200-2026.txt"),
     readLocalMtime("data/backtest/policy-profile-backtest-2022-2025.txt"),
-    readLocalMtime("data/backtest/strict-signals-volume200.csv"),
-    readLocalMtime("data/backtest/strict-signals-spreadshadow.csv"),
-    readLocalMtime("data/backtest/strict-signals-claycal.csv"),
+    readLocalMtime("data/backtest/strict-signals-live.csv"),
+    readLocalMtime("data/backtest/strict-signals-volume200-live.csv"),
+    readLocalMtime("data/backtest/strict-signals-spreadshadow-live.csv"),
+    readLocalMtime("data/backtest/strict-signals-claycal-live.csv"),
   ]);
 
   const strictRows = strictPerfCsv ? parseCsv(strictPerfCsv) : [];
@@ -621,27 +631,32 @@ export default async function ModelMonitorPage() {
   const clvVolume = parseClvAudit(clvAuditVolumeTxt);
   const profiles = parsePolicyProfiles(profileTxt);
   const profileMap = new Map(profiles.map((profile) => [profile.name, profile]));
-  const strictSignals = parseSignalRows(strictSignalsCsv);
-  const strictSignalsClean = filterCleanSignalRows(strictSignals);
-  const strictSettledRows = getSettledSignalRows(strictSignals);
-  const volumeSignals = parseSignalRows(volumeSignalsCsv);
-  const volumeSignalsClean = filterCleanSignalRows(volumeSignals);
-  const volumeQueue = getActiveQueueRows(volumeSignals);
-  const volumeNoMatchRows = getNoMatchRows(volumeSignals);
-  const volumeSettledRows = getSettledSignalRows(volumeSignals);
-  const spreadShadowSignals = parseSignalRows(spreadShadowSignalsCsv);
-  const spreadShadowSignalsClean = filterCleanSignalRows(spreadShadowSignals);
-  const spreadShadowQueue = getActiveQueueRows(spreadShadowSignals);
-  const spreadShadowNoMatchRows = getNoMatchRows(spreadShadowSignals);
-  const spreadShadowSettledRows = getSettledSignalRows(spreadShadowSignals);
-  const clay2026Signals = parseSignalRows(clay2026SignalsCsv);
-  const clay2026SignalsClean = filterCleanSignalRows(clay2026Signals);
-  const clay2026Queue = getActiveQueueRows(clay2026Signals);
-  const clay2026NoMatchRows = getNoMatchRows(clay2026Signals);
-  const clay2026SettledRows = getSettledSignalRows(clay2026Signals);
-  const clay2026AllCohort = summarizeSignalCohort(clay2026Signals);
-  const clay2026AtpCohort = summarizeSignalCohort(clay2026Signals, "ATP");
-  const clay2026ChallengerCohort = summarizeSignalCohort(clay2026Signals, "Challenger");
+  const strictSignalsArchive = parseSignalRows(strictSignalsArchiveCsv);
+  const strictSignalsLive = parseSignalRows(strictSignalsLiveCsv);
+  const strictSignalsClean = filterCleanSignalRows(strictSignalsArchive);
+  const strictSettledRows = getSettledSignalRows(strictSignalsArchive);
+  const strictQueue = getActiveQueueRows(strictSignalsLive);
+  const volumeSignalsArchive = parseSignalRows(volumeSignalsArchiveCsv);
+  const volumeSignalsLive = parseSignalRows(volumeSignalsLiveCsv);
+  const volumeSignalsClean = filterCleanSignalRows(volumeSignalsArchive);
+  const volumeQueue = getActiveQueueRows(volumeSignalsLive);
+  const volumeNoMatchRows = getNoMatchRows(volumeSignalsArchive);
+  const volumeSettledRows = getSettledSignalRows(volumeSignalsArchive);
+  const spreadShadowSignalsArchive = parseSignalRows(spreadShadowSignalsArchiveCsv);
+  const spreadShadowSignalsLive = parseSignalRows(spreadShadowSignalsLiveCsv);
+  const spreadShadowSignalsClean = filterCleanSignalRows(spreadShadowSignalsArchive);
+  const spreadShadowQueue = getActiveQueueRows(spreadShadowSignalsLive);
+  const spreadShadowNoMatchRows = getNoMatchRows(spreadShadowSignalsArchive);
+  const spreadShadowSettledRows = getSettledSignalRows(spreadShadowSignalsArchive);
+  const clay2026SignalsArchive = parseSignalRows(clay2026SignalsArchiveCsv);
+  const clay2026SignalsLive = parseSignalRows(clay2026SignalsLiveCsv);
+  const clay2026SignalsClean = filterCleanSignalRows(clay2026SignalsArchive);
+  const clay2026Queue = getActiveQueueRows(clay2026SignalsLive);
+  const clay2026NoMatchRows = getNoMatchRows(clay2026SignalsArchive);
+  const clay2026SettledRows = getSettledSignalRows(clay2026SignalsArchive);
+  const clay2026AllCohort = summarizeSignalCohort(clay2026SignalsArchive);
+  const clay2026AtpCohort = summarizeSignalCohort(clay2026SignalsArchive, "ATP");
+  const clay2026ChallengerCohort = summarizeSignalCohort(clay2026SignalsArchive, "Challenger");
   const strictMlRecordedCohort = summarizeSignalCohort(strictSignalsClean, undefined, "recorded", "match");
   const strictSpreadRecordedCohort = summarizeSignalCohort(strictSignalsClean, undefined, "recorded", "spread");
   const strictMlFlatCohort = summarizeSignalCohort(strictSignalsClean, undefined, "flat", "match");
@@ -687,7 +702,7 @@ export default async function ModelMonitorPage() {
         ? `Strict live control is negative at ${formatPct(strictAllRoi)} as of ${strictAsOf ?? "n/a"}.`
         : `Strict live control is positive at ${formatPct(strictAllRoi)} as of ${strictAsOf ?? "n/a"}.`;
   const shadowDiagnosis =
-    volumeSignals.length === 0
+    volumeSignalsLive.length === 0
       ? "Volume 200 shadow file is empty right now."
       : volumeQueue.length === 0 && volumeNoMatchRows.length > 0
       ? `Volume 200 has ${volumeNoMatchRows.length} unresolved settlement rows marked no_match, but no true live queue at the moment.`
@@ -695,45 +710,45 @@ export default async function ModelMonitorPage() {
       ? "Volume 200 shadow has no settled sample yet."
       : `Volume 200 shadow has settled enough to start comparing against strict on live results.`;
   const spreadShadowDiagnosis =
-    !spreadShadowSignalsCsv
+    !spreadShadowSignalsLiveCsv
       ? "Spread shadow has no live CSV on disk right now, which usually means no qualifying clay/non-policy handicap row has been written yet."
       : spreadShadowQueue.length === 0 && spreadShadowNoMatchRows.length > 0
       ? `Spread shadow has ${spreadShadowNoMatchRows.length} unresolved no_match rows, but no true live queue right now.`
-      : spreadShadowSignals.length === 0
+      : spreadShadowSignalsLive.length === 0
       ? "Spread shadow is wired in, but it has not logged a qualifying 20%+ clay/non-policy handicap row yet."
       : perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) === 0
-        ? `Spread shadow has ${spreadShadowSignals.length} tracked rows, but no settled sample yet.`
+        ? `Spread shadow has ${spreadShadowSignalsArchive.length} tracked rows, but no settled sample yet.`
         : `Spread shadow is tracking ${perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? 0} rows with ${perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) ?? 0} settled so far.`;
   const clay2026Diagnosis =
-    !clay2026SignalsCsv
+    !clay2026SignalsLiveCsv
       ? "Clay 2026 has no live CSV on disk right now, which usually means the calibrated lane has not written a qualifying row yet."
       : clay2026Queue.length === 0 && clay2026NoMatchRows.length > 0
       ? `Clay 2026 has ${clay2026NoMatchRows.length} unresolved no_match rows, but no true live queue right now.`
-      : clay2026Signals.length === 0
+      : clay2026SignalsLive.length === 0
       ? "Clay 2026 is wired in, but it has not logged a qualifying calibrated-favorite row yet."
       : clay2026AllCohort.settled === 0
-        ? `Clay 2026 has ${clay2026Signals.length} tracked rows (ATP ${clay2026AtpCohort.signals}, Challenger ${clay2026ChallengerCohort.signals}), but no settled sample yet. Challenger remains observational only.`
+        ? `Clay 2026 has ${clay2026SignalsArchive.length} tracked rows (ATP ${clay2026AtpCohort.signals}, Challenger ${clay2026ChallengerCohort.signals}), but no settled sample yet. Challenger remains observational only.`
         : `Clay 2026 is tracking ${clay2026AllCohort.signals} rows with ${clay2026AllCohort.settled} settled so far. ATP and Challenger are shown separately; Challenger remains observational only.`;
   const volumeQueueMlCount = volumeQueue.filter((row) => row.betType !== "spread").length;
   const volumeQueueSpreadCount = volumeQueue.filter((row) => row.betType === "spread").length;
   const volumeSettledMlCount =
     perfValue(volumeBase.mlAll, "settled", parseIntMaybe) ??
-    volumeSignals.filter((row) => row.betType !== "spread" && (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
+    volumeSignalsArchive.filter((row) => row.betType !== "spread" && (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
   const volumeSettledSpreadCount =
     perfValue(volumeBase.handicapAll, "settled", parseIntMaybe) ??
-    volumeSignals.filter((row) => row.betType === "spread" && (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
-  const volumeTrackedCount = perfValue(volumeBase.combinedAll, "signals", parseIntMaybe) ?? volumeSignals.length;
+    volumeSignalsArchive.filter((row) => row.betType === "spread" && (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
+  const volumeTrackedCount = perfValue(volumeBase.combinedAll, "signals", parseIntMaybe) ?? volumeSignalsArchive.length;
   const volumeOpenCount = perfValue(volumeBase.combinedAll, "unsettled", parseIntMaybe) ?? volumeQueue.length;
   const volumeNoMatchCount = volumeNoMatchRows.length;
   const volumeSettledCount =
     perfValue(volumeBase.combinedAll, "settled", parseIntMaybe) ??
-    volumeSignals.filter((row) => (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
-  const spreadShadowTrackedCount = perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? spreadShadowSignals.length;
+    volumeSignalsArchive.filter((row) => (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
+  const spreadShadowTrackedCount = perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? spreadShadowSignalsArchive.length;
   const spreadShadowSettledCount = perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) ?? 0;
-  const clay2026TrackedCount = perfValue(clay2026Base.combinedAll, "signals", parseIntMaybe) ?? clay2026Signals.length;
+  const clay2026TrackedCount = perfValue(clay2026Base.combinedAll, "signals", parseIntMaybe) ?? clay2026SignalsArchive.length;
   const clay2026SettledCount = perfValue(clay2026Base.combinedAll, "settled", parseIntMaybe) ?? 0;
-  const strictMlOpenCount = strictSignals.filter((row) => row.betType !== "spread" && (row.settlementStatus || "").trim().toLowerCase() !== "settled" && (row.settlementStatus || "").trim().toLowerCase() !== "no_match").length;
-  const strictSpreadOpenCount = strictSignals.filter((row) => row.betType === "spread" && (row.settlementStatus || "").trim().toLowerCase() !== "settled" && (row.settlementStatus || "").trim().toLowerCase() !== "no_match").length;
+  const strictMlOpenCount = strictQueue.filter((row) => row.betType !== "spread").length;
+  const strictSpreadOpenCount = strictQueue.filter((row) => row.betType === "spread").length;
   const volumeMlOpenCount = volumeQueueMlCount;
   const volumeSpreadOpenCount = volumeQueueSpreadCount;
   const spreadShadowOpenCount = spreadShadowQueue.length;
@@ -891,6 +906,7 @@ export default async function ModelMonitorPage() {
               <FileStamp label="Strict CLV" value={clvAuditMtime} />
               <FileStamp label="Vol200 CLV" value={clvAuditVolumeMtime} />
               <FileStamp label="Profile backtest" value={profileMtime} />
+              <FileStamp label="Strict signals" value={strictSignalsLiveMtime} />
               <FileStamp label="Vol200 signals" value={volumeSignalsMtime} />
               <FileStamp label="Spread shadow signals" value={spreadShadowSignalsMtime} />
               <FileStamp label="Clay 2026 signals" value={clay2026SignalsMtime} />
@@ -1387,7 +1403,7 @@ export default async function ModelMonitorPage() {
                 <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Spread Shadow Queue</div>
                 {spreadShadowQueue.length === 0 ? (
                   <p className="text-sm leading-6 text-slate-400">
-                    {spreadShadowSignalsCsv
+                    {spreadShadowSignalsLiveCsv
                       ? "No open spread-shadow bets right now. When a 20%+ clay or non-policy handicap signal qualifies, it will appear here."
                       : "No spread-shadow CSV on disk right now. That usually means the lane has not written a qualifying row yet."}
                   </p>
@@ -1422,7 +1438,7 @@ export default async function ModelMonitorPage() {
                 <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Clay 2026 Queue</div>
                 {clay2026Queue.length === 0 ? (
                   <p className="text-sm leading-6 text-slate-400">
-                    {clay2026SignalsCsv
+                    {clay2026SignalsLiveCsv
                       ? "No open Clay 2026 bets right now. When the calibrated clay lane finds a qualifying 55-65% favorite, it will appear here."
                       : "No Clay 2026 CSV on disk right now. That usually means the lane has not written a qualifying row yet."}
                   </p>

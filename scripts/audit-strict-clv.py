@@ -40,13 +40,15 @@ from typing import Any
 
 import requests
 
+from signal_storage import STRICT_SIGNAL_PATHS
+
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "backtest"
 ONCOURT_DIR = ROOT / "data" / "oncourt"
 HTTP_TIMEOUT = 30
 
-DEFAULT_SIGNALS = DATA_DIR / "strict-signals.csv"
+DEFAULT_SIGNALS = STRICT_SIGNAL_PATHS.archive
 DEFAULT_XLSX = DATA_DIR / "atp-2026.xlsx"
 DEFAULT_DETAIL_CSV = DATA_DIR / "strict-clv-audit-2026.csv"
 DEFAULT_SUMMARY_TXT = DATA_DIR / "strict-clv-audit-2026.txt"

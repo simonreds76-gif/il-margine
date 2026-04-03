@@ -122,7 +122,7 @@ if ($LASTEXITCODE -ne 0) {
 
 # Step 11: Weekly strict-signals analysis
 Log "=== Step 11/12: Analyse strict signals ==="
-& python scripts\analyse-strict-signals.py --days 7 2>&1 | ForEach-Object { Log $_ }
+& python scripts\analyse-strict-signals.py --days 7 --input data\backtest\strict-signals-archive.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-signals analysis failed (exit $LASTEXITCODE), continuing..."
 }
@@ -136,13 +136,13 @@ if ($LASTEXITCODE -ne 0) {
 
 # Weekly CLV audits (captured history first, tennis-data fallback)
 Log "=== Post-step: Strict CLV audit ==="
-& python scripts\audit-strict-clv.py 2>&1 | ForEach-Object { Log $_ }
+& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-archive.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Post-step: Volume 200 CLV audit ==="
-& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-volume200.csv --detail-csv data\backtest\strict-clv-audit-volume200-2026.csv --summary-txt data\backtest\strict-clv-audit-volume200-2026.txt 2>&1 | ForEach-Object { Log $_ }
+& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-volume200-archive.csv --detail-csv data\backtest\strict-clv-audit-volume200-2026.csv --summary-txt data\backtest\strict-clv-audit-volume200-2026.txt 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: volume_200 CLV audit failed (exit $LASTEXITCODE), continuing..."
 }

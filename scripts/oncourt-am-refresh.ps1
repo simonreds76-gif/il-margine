@@ -91,7 +91,7 @@ try {
 
     if ($null -ne $volumeCfg) {
         Log "=== Step 6/8: $($volumeCfg.Label) shadow (signal-profile=$($volumeCfg.Profile)) ==="
-        & python scripts\strict-policy-report.py --append --signal-profile $volumeCfg.Profile --output "data\backtest\strict-signals-$($volumeCfg.Tag).csv" --internal-output "data\backtest\strict-signals-$($volumeCfg.Tag)-internal.csv" 2>&1 | ForEach-Object { Log $_ }
+        & python scripts\strict-policy-report.py --append --signal-profile $volumeCfg.Profile --output "data\backtest\strict-signals-$($volumeCfg.Tag)-live.csv" --internal-output "data\backtest\strict-signals-$($volumeCfg.Tag)-internal-live.csv" 2>&1 | ForEach-Object { Log $_ }
         if ($LASTEXITCODE -ne 0) {
             Log "WARNING: $($volumeCfg.Profile) shadow append failed (exit $LASTEXITCODE), continuing..."
         }
@@ -100,11 +100,11 @@ try {
     }
 
     Log "=== Step 7/8: Spread shadow + Clay 2026 shadow ==="
-    & python scripts\strict-policy-report.py --append --signal-profile spread_shadow --output "data\backtest\strict-signals-spreadshadow.csv" 2>&1 | ForEach-Object { Log $_ }
+    & python scripts\strict-policy-report.py --append --signal-profile spread_shadow --output "data\backtest\strict-signals-spreadshadow-live.csv" 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "WARNING: spread_shadow append failed (exit $LASTEXITCODE), continuing..."
     }
-    & python scripts\strict-policy-report.py --append --signal-profile clay_calibrated --output "data\backtest\strict-signals-claycal.csv" --internal-output "data\backtest\strict-signals-claycal-internal.csv" 2>&1 | ForEach-Object { Log $_ }
+    & python scripts\strict-policy-report.py --append --signal-profile clay_calibrated --output "data\backtest\strict-signals-claycal-live.csv" --internal-output "data\backtest\strict-signals-claycal-internal-live.csv" 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "WARNING: clay_calibrated append failed (exit $LASTEXITCODE), continuing..."
     }

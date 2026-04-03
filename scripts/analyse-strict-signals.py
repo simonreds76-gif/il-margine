@@ -8,9 +8,11 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
+from signal_storage import STRICT_SIGNAL_PATHS
+
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_INPUT = ROOT / "data" / "backtest" / "strict-signals.csv"
+DEFAULT_INPUT = STRICT_SIGNAL_PATHS.archive
 DEFAULT_REPORT_TXT = ROOT / "data" / "backtest" / "strict-signals-weekly.txt"
 DEFAULT_SUMMARY_CSV = ROOT / "data" / "backtest" / "strict-signals-weekly.csv"
 

@@ -1,0 +1,61 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = ROOT / "data" / "backtest"
+
+
+@dataclass(frozen=True)
+class SignalCsvPaths:
+    legacy: Path
+    live: Path
+    archive: Path
+
+
+def derive_signal_csv_paths(path: Path | str) -> SignalCsvPaths:
+    requested = Path(path)
+    suffix = requested.suffix or ".csv"
+    stem = requested.stem
+
+    if stem.endswith("-live"):
+        base_stem = stem[:-5]
+        live = requested
+        archive = requested.with_name(f"{base_stem}-archive{suffix}")
+        legacy = requested.with_name(f"{base_stem}{suffix}")
+        return SignalCsvPaths(legacy=legacy, live=live, archive=archive)
+
+    if stem.endswith("-archive"):
+        base_stem = stem[:-8]
+        live = requested.with_name(f"{base_stem}-live{suffix}")
+        archive = requested
+        legacy = requested.with_name(f"{base_stem}{suffix}")
+        return SignalCsvPaths(legacy=legacy, live=live, archive=archive)
+
+    legacy = requested
+    live = requested.with_name(f"{stem}-live{suffix}")
+    archive = requested.with_name(f"{stem}-archive{suffix}")
+    return SignalCsvPaths(legacy=legacy, live=live, archive=archive)
+
+
+STRICT_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals.csv")
+STRICT_INTERNAL_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-internal-5pct.csv")
+VOLUME_275_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-volume275.csv")
+VOLUME_275_INTERNAL_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-volume275-internal.csv")
+VOLUME_200_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-volume200.csv")
+VOLUME_200_INTERNAL_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-volume200-internal.csv")
+SPREAD_SHADOW_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-spreadshadow.csv")
+CLAY_CALIBRATED_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-claycal.csv")
+CLAY_CALIBRATED_INTERNAL_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-claycal-internal.csv")
+
+SIGNAL_PROFILE_PATHS: dict[str, tuple[SignalCsvPaths, SignalCsvPaths | None]] = {
+    "strict": (STRICT_SIGNAL_PATHS, STRICT_INTERNAL_SIGNAL_PATHS),
+    "volume_275": (VOLUME_275_SIGNAL_PATHS, VOLUME_275_INTERNAL_SIGNAL_PATHS),
+    "volume_200": (VOLUME_200_SIGNAL_PATHS, VOLUME_200_INTERNAL_SIGNAL_PATHS),
+    "spread_shadow": (SPREAD_SHADOW_SIGNAL_PATHS, None),
+    "clay_calibrated": (CLAY_CALIBRATED_SIGNAL_PATHS, CLAY_CALIBRATED_INTERNAL_SIGNAL_PATHS),
+}
+
+SIGNALS_CURRENT_JSON = DATA_DIR / "signals-current.json"

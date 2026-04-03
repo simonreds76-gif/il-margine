@@ -28,6 +28,7 @@ import csv
 import json
 import os
 import re
+import shutil
 import sys
 import unicodedata
 from collections import Counter, defaultdict
@@ -39,21 +40,21 @@ from bisect import bisect_left
 import requests
 
 from injury_overlay import env_bool, load_recent_injury_index
+from signal_storage import (
+    SIGNAL_PROFILE_PATHS,
+    SIGNALS_CURRENT_JSON,
+    STRICT_INTERNAL_SIGNAL_PATHS,
+    STRICT_SIGNAL_PATHS,
+    SignalCsvPaths,
+    derive_signal_csv_paths,
+)
 
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "backtest"
-DEFAULT_OUTPUT = DATA_DIR / "strict-signals.csv"
-DEFAULT_INTERNAL_OUTPUT = DATA_DIR / "strict-signals-internal-5pct.csv"
+DEFAULT_OUTPUT = STRICT_SIGNAL_PATHS.live
+DEFAULT_INTERNAL_OUTPUT = STRICT_INTERNAL_SIGNAL_PATHS.live
 DEFAULT_COMPARE_OUTPUT = DATA_DIR / "strict-signals-overlay-compare.csv"
-DEFAULT_VOLUME_275_OUTPUT = DATA_DIR / "strict-signals-volume275.csv"
-DEFAULT_VOLUME_275_INTERNAL_OUTPUT = DATA_DIR / "strict-signals-volume275-internal.csv"
-DEFAULT_VOLUME_200_OUTPUT = DATA_DIR / "strict-signals-volume200.csv"
-DEFAULT_VOLUME_200_INTERNAL_OUTPUT = DATA_DIR / "strict-signals-volume200-internal.csv"
-DEFAULT_SPREAD_SHADOW_OUTPUT = DATA_DIR / "strict-signals-spreadshadow.csv"
-DEFAULT_SPREAD_SHADOW_INTERNAL_OUTPUT = DATA_DIR / "strict-signals-spreadshadow-internal.csv"
-DEFAULT_CLAY_CALIBRATED_OUTPUT = DATA_DIR / "strict-signals-claycal.csv"
-DEFAULT_CLAY_CALIBRATED_INTERNAL_OUTPUT = DATA_DIR / "strict-signals-claycal-internal.csv"
 DEFAULT_CLAY_CALIBRATION_FILE = DATA_DIR / "clay-prob-calibration.json"
 
 STRICT_MIN_VALUE_PCT = 10.0  # Public-facing high-conviction signals
@@ -108,13 +109,6 @@ VOLUME_200_RULES: list[dict[str, Any]] = [
 SHADOW_PROFILE_RULES: dict[str, list[dict[str, Any]]] = {
     "volume_275": VOLUME_275_RULES,
     "volume_200": VOLUME_200_RULES,
-}
-
-SHADOW_PROFILE_OUTPUTS: dict[str, tuple[Path, Path]] = {
-    "volume_275": (DEFAULT_VOLUME_275_OUTPUT, DEFAULT_VOLUME_275_INTERNAL_OUTPUT),
-    "volume_200": (DEFAULT_VOLUME_200_OUTPUT, DEFAULT_VOLUME_200_INTERNAL_OUTPUT),
-    "spread_shadow": (DEFAULT_SPREAD_SHADOW_OUTPUT, DEFAULT_SPREAD_SHADOW_INTERNAL_OUTPUT),
-    "clay_calibrated": (DEFAULT_CLAY_CALIBRATED_OUTPUT, DEFAULT_CLAY_CALIBRATED_INTERNAL_OUTPUT),
 }
 
 SHADOW_PROFILE_LABELS: dict[str, str] = {
@@ -742,85 +736,123 @@ def append_rows_dedup(path: Path, rows: list[dict[str, Any]], key_fields: list[s
     return added
 
 
-def upsert_rows_by_lane(
+def write_live_snapshot(
     path: Path,
     rows: list[dict[str, Any]],
     dedup_key_fields: list[str],
     lane_key_fields: list[str],
 ) -> int:
-    # Live signal files should expose the current same-day snapshot for still-open lanes,
-    # not an append log of every intraday flip. Two protections matter here:
-    # 1. collapse duplicate incoming rows for the same lane, keeping the latest;
-    # 2. remove existing same-day non-settled rows before writing the new snapshot.
-    if not rows:
-        return append_rows_dedup(path, rows, dedup_key_fields)
-
-    incoming_rows_by_lane: dict[tuple[str, ...], dict[str, Any]] = {}
-    incoming_dates: set[str] = set()
-    for row in rows:
-        lane_key = tuple(_append_key_value(k, row.get(k)) for k in lane_key_fields)
-        incoming_rows_by_lane[lane_key] = row
-        incoming_dates.add((_append_key_value("date", row.get("date")) or "").strip())
-    incoming_lane_keys = set(incoming_rows_by_lane.keys())
-
-    def _is_settled_status(raw: Any) -> bool:
-        status = str(raw or "").strip().lower()
-        return status == "settled"
-
-    retained_rows: list[dict[str, str]] = []
+    # Live signal files should be a clean, current snapshot only.
+    # Keep the latest row per lane from the current run and rewrite the file.
     existing_fields: list[str] = []
     if path.exists():
         with path.open("r", encoding="utf-8-sig", newline="") as f:
-            rd = csv.DictReader(f)
-            existing_fields = _clean_fieldnames(list(rd.fieldnames or []))
-            for raw in rd:
-                row = dict(raw)
-                row_date = (_append_key_value("date", row.get("date")) or "").strip()
-                if row_date in incoming_dates and not _is_settled_status(row.get("settlement_status")):
-                    continue
-                lane_key = tuple(_append_key_value(k, row.get(k)) for k in lane_key_fields)
-                if lane_key in incoming_lane_keys:
-                    continue
-                retained_rows.append(row)
+            existing_fields = _clean_fieldnames(list(csv.DictReader(f).fieldnames or []))
 
-    merged_rows = retained_rows + [
-        {k: ("" if v is None else str(v)) for k, v in row.items()}
-        for row in incoming_rows_by_lane.values()
-    ]
+    incoming_rows_by_lane: dict[tuple[str, ...], dict[str, str]] = {}
+    for row in rows:
+        lane_key = tuple(_append_key_value(k, row.get(k)) for k in lane_key_fields)
+        incoming_rows_by_lane[lane_key] = {k: ("" if v is None else str(v)) for k, v in row.items()}
+
+    ordered_rows: list[dict[str, str]] = []
+    seen_keys: dict[tuple[str, ...], int] = {}
+    for row in incoming_rows_by_lane.values():
+        key = tuple(_append_key_value(k, row.get(k)) for k in dedup_key_fields)
+        if key in seen_keys:
+            ordered_rows[seen_keys[key]] = row
+            continue
+        seen_keys[key] = len(ordered_rows)
+        ordered_rows.append(row)
 
     fieldnames = list(existing_fields)
-    for row in merged_rows:
+    for row in ordered_rows:
         for key in row.keys():
             if key not in fieldnames:
                 fieldnames.append(key)
     for key in MANDATORY_APPEND_FIELDS:
         if key not in fieldnames:
             fieldnames.append(key)
-    if not fieldnames and merged_rows:
-        fieldnames = list(merged_rows[0].keys())
+    if not fieldnames:
+        fieldnames = [
+            "date",
+            "time_utc",
+            "player1",
+            "player2",
+            "surface",
+            "series",
+            "confidence",
+            "side",
+            "value_pct",
+            "bet_type",
+            "spread_line",
+            "spread_odds",
+            "policy_mode",
+            "signal_profile",
+            "shadow_reason",
+            "settlement_status",
+        ]
     fieldnames = _clean_fieldnames(fieldnames)
 
-    deduped_by_key: dict[tuple[str, ...], dict[str, str]] = {}
-    ordered_rows: list[dict[str, str]] = []
-    for row in merged_rows:
-        key = tuple(_append_key_value(k, row.get(k)) for k in dedup_key_fields)
-        if key in deduped_by_key:
-            deduped_by_key[key] = row
-            for idx, existing in enumerate(ordered_rows):
-                existing_key = tuple(_append_key_value(k, existing.get(k)) for k in dedup_key_fields)
-                if existing_key == key:
-                    ordered_rows[idx] = row
-                    break
-            continue
-        deduped_by_key[key] = row
-        ordered_rows.append(row)
-
+    path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as f:
         wr = csv.DictWriter(f, fieldnames=fieldnames)
         wr.writeheader()
         wr.writerows(ordered_rows)
 
-    return len(incoming_rows_by_lane)
+    return len(ordered_rows)
+
+
+def mirror_live_snapshot(paths: SignalCsvPaths) -> None:
+    if paths.legacy == paths.live:
+        return
+    paths.legacy.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(paths.live, paths.legacy)
+
+
+def _load_csv_rows(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+    with path.open("r", encoding="utf-8-sig", newline="") as f:
+        return [dict(row) for row in csv.DictReader(f)]
+
+
+def write_signals_current_artifact() -> None:
+    payload: dict[str, Any] = {
+        "generated_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        "profiles": {},
+        "signals": [],
+    }
+    for profile, (public_paths, _) in SIGNAL_PROFILE_PATHS.items():
+        live_rows = _load_csv_rows(public_paths.live)
+        payload["profiles"][profile] = {
+            "live_file": str(public_paths.live.relative_to(ROOT)),
+            "legacy_file": str(public_paths.legacy.relative_to(ROOT)),
+            "archive_file": str(public_paths.archive.relative_to(ROOT)),
+            "row_count": len(live_rows),
+        }
+        for row in live_rows:
+            payload["signals"].append(
+                {
+                    "date": row.get("date", ""),
+                    "time_utc": row.get("time_utc", ""),
+                    "player1": row.get("player1", ""),
+                    "player2": row.get("player2", ""),
+                    "side": row.get("side", ""),
+                    "bet_type": row.get("bet_type") or "match",
+                    "spread_line": row.get("spread_line", ""),
+                    "value_pct": row.get("value_pct", ""),
+                    "signal_profile": row.get("signal_profile") or profile,
+                    "policy_mode": row.get("policy_mode") or "base",
+                    "stake_units": row.get("stake_units", ""),
+                    "stake_gbp": row.get("stake_gbp", ""),
+                    "pin_odds1": row.get("pin_odds1", ""),
+                    "pin_odds2": row.get("pin_odds2", ""),
+                    "spread_odds": row.get("spread_odds", ""),
+                    "shadow_reason": row.get("shadow_reason", ""),
+                }
+            )
+    SIGNALS_CURRENT_JSON.parent.mkdir(parents=True, exist_ok=True)
+    SIGNALS_CURRENT_JSON.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
 def main() -> int:
@@ -828,15 +860,15 @@ def main() -> int:
 
     parser = argparse.ArgumentParser(description="Strict policy signals report with optional tournament-overlay mode.")
     parser.add_argument("--date", default="", help="UTC date YYYY-MM-DD (default: today)")
-    parser.add_argument("--append", action="store_true", help="Append production-mode signals to strict-signals.csv")
+    parser.add_argument("--append", action="store_true", help="Write live snapshot CSVs and append archive CSVs")
     parser.add_argument(
         "--signal-profile",
         choices=("strict", "volume_275", "volume_200", "spread_shadow", "clay_calibrated"),
         default=(os.environ.get("STRICT_SIGNAL_PROFILE", "strict") or "strict").strip().lower(),
         help="Signal profile to evaluate/write (strict live policy or one of the shadow volume profiles).",
     )
-    parser.add_argument("--output", default="", help="Output CSV path for profile signals (auto by profile if omitted)")
-    parser.add_argument("--internal-output", default="", help="Internal-tracking CSV path (auto by profile if omitted)")
+    parser.add_argument("--output", default="", help="Live output CSV path for profile signals (auto by profile if omitted)")
+    parser.add_argument("--internal-output", default="", help="Internal live CSV path (auto by profile if omitted)")
     parser.add_argument("--policy-mode", choices=("base", "overlay"), default="base", help="Production mode")
     parser.add_argument("--compare-overlay", action="store_true", help="Compute and print base vs overlay side-by-side")
     parser.add_argument("--compare-output", default=str(DEFAULT_COMPARE_OUTPUT), help="CSV path for side-by-side tracking")
@@ -876,15 +908,14 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    profile_public_paths, profile_internal_paths = SIGNAL_PROFILE_PATHS[args.signal_profile]
     if not args.output:
-        args.output = str(DEFAULT_OUTPUT if args.signal_profile == "strict" else SHADOW_PROFILE_OUTPUTS[args.signal_profile][0])
+        args.output = str(profile_public_paths.live)
     if not args.internal_output:
         if args.signal_profile == "spread_shadow":
             args.internal_output = ""
         else:
-            args.internal_output = str(
-                DEFAULT_INTERNAL_OUTPUT if args.signal_profile == "strict" else SHADOW_PROFILE_OUTPUTS[args.signal_profile][1]
-            )
+            args.internal_output = str((profile_internal_paths or STRICT_INTERNAL_SIGNAL_PATHS).live)
     if args.signal_profile != "strict" and args.policy_mode == "overlay":
         print(f"WARNING: overlay mode applies to strict profile only; forcing policy-mode=base for {args.signal_profile}.")
         args.policy_mode = "base"
@@ -1540,27 +1571,51 @@ def main() -> int:
             r.pop("_clay_calibrated_match", None)
 
     if args.append:
-        out_path = Path(args.output)
-        added = upsert_rows_by_lane(
-            out_path,
+        live_dedup_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
+        lane_key_fields = ["date", "player1", "player2", "bet_type", "spread_line", "policy_mode", "signal_profile"]
+        archive_key_fields = ["date", "time_utc", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
+        out_paths = derive_signal_csv_paths(Path(args.output))
+        live_count = write_live_snapshot(
+            out_paths.live,
             public_signals,
-            dedup_key_fields=["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"],
-            lane_key_fields=["date", "player1", "player2", "bet_type", "spread_line", "policy_mode", "signal_profile"],
+            dedup_key_fields=live_dedup_fields,
+            lane_key_fields=lane_key_fields,
         )
-        print(f"\nUpserted {added}/{len(public_signals)} public rows to {out_path} (same-day lane replace).")
+        archive_added = append_rows_dedup(
+            out_paths.archive,
+            public_signals,
+            key_fields=archive_key_fields,
+        )
+        mirror_live_snapshot(out_paths)
+        print(
+            f"\nWrote {live_count}/{len(public_signals)} public live rows to {out_paths.live} "
+            f"and appended {archive_added} archive rows to {out_paths.archive}."
+        )
 
-        if internal_signals and args.internal_output:
-            internal_path = Path(args.internal_output)
-            added_internal = upsert_rows_by_lane(
-                internal_path,
+        if args.internal_output:
+            internal_paths = derive_signal_csv_paths(Path(args.internal_output))
+            live_internal_count = write_live_snapshot(
+                internal_paths.live,
                 internal_signals,
-                dedup_key_fields=["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"],
-                lane_key_fields=["date", "player1", "player2", "bet_type", "spread_line", "policy_mode", "signal_profile"],
+                dedup_key_fields=live_dedup_fields,
+                lane_key_fields=lane_key_fields,
             )
+            internal_archive_added = append_rows_dedup(
+                internal_paths.archive,
+                internal_signals,
+                key_fields=archive_key_fields,
+            )
+            mirror_live_snapshot(internal_paths)
             if args.signal_profile == "strict":
-                print(f"Upserted {added_internal}/{len(internal_signals)} internal (5%+) rows to {internal_path} (same-day lane replace).")
+                print(
+                    f"Wrote {live_internal_count}/{len(internal_signals)} internal live rows to {internal_paths.live} "
+                    f"and appended {internal_archive_added} internal archive rows to {internal_paths.archive}."
+                )
             else:
-                print(f"Upserted {added_internal}/{len(internal_signals)} profile rows to {internal_path} (same-day lane replace).")
+                print(
+                    f"Wrote {live_internal_count}/{len(internal_signals)} profile live rows to {internal_paths.live} "
+                    f"and appended {internal_archive_added} archive rows to {internal_paths.archive}."
+                )
 
         if args.signal_profile == "strict" and args.compare_overlay:
             compare_rows = base_signals + overlay_signals
@@ -1568,9 +1623,11 @@ def main() -> int:
             added_cmp = append_rows_dedup(
                 compare_path,
                 compare_rows,
-                key_fields=["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"],
+                key_fields=["date", "time_utc", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"],
             )
             print(f"Appended {added_cmp}/{len(compare_rows)} comparison rows to {compare_path} (deduped).")
+        write_signals_current_artifact()
+        print(f"Updated signals artifact at {SIGNALS_CURRENT_JSON}.")
 
     return 0
 

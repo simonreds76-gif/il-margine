@@ -125,7 +125,7 @@ if ($LASTEXITCODE -ne 0) {
 # Step 8: Optional shadow volume profile (env-gated)
 if ($null -ne $volumeCfg) {
     Log "=== Step 8/10: $($volumeCfg.Label) shadow (signal-profile=$($volumeCfg.Profile)) ==="
-    & python scripts\strict-policy-report.py --append --signal-profile $volumeCfg.Profile --output "data\backtest\strict-signals-$($volumeCfg.Tag).csv" --internal-output "data\backtest\strict-signals-$($volumeCfg.Tag)-internal.csv" 2>&1 | ForEach-Object { Log $_ }
+    & python scripts\strict-policy-report.py --append --signal-profile $volumeCfg.Profile --output "data\backtest\strict-signals-$($volumeCfg.Tag)-live.csv" --internal-output "data\backtest\strict-signals-$($volumeCfg.Tag)-internal-live.csv" 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "WARNING: $($volumeCfg.Profile) shadow append failed (exit $LASTEXITCODE), continuing..."
     }
@@ -134,13 +134,13 @@ if ($null -ne $volumeCfg) {
 }
 
 Log "=== Step 8b/10: Spread shadow (20%+ handicap edges; Clay + non-policy tournaments) ==="
-& python scripts\strict-policy-report.py --append --signal-profile spread_shadow --output "data\backtest\strict-signals-spreadshadow.csv" 2>&1 | ForEach-Object { Log $_ }
+& python scripts\strict-policy-report.py --append --signal-profile spread_shadow --output "data\backtest\strict-signals-spreadshadow-live.csv" 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: spread_shadow append failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Step 8c/10: Clay 2026 shadow (new-after-calibration favorites 55-65%) ==="
-& python scripts\strict-policy-report.py --append --signal-profile clay_calibrated --output "data\backtest\strict-signals-claycal.csv" --internal-output "data\backtest\strict-signals-claycal-internal.csv" 2>&1 | ForEach-Object { Log $_ }
+& python scripts\strict-policy-report.py --append --signal-profile clay_calibrated --output "data\backtest\strict-signals-claycal-live.csv" --internal-output "data\backtest\strict-signals-claycal-internal-live.csv" 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: clay_calibrated append failed (exit $LASTEXITCODE), continuing..."
 }

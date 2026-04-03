@@ -18,6 +18,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from signal_storage import STRICT_SIGNAL_PATHS
+
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -48,7 +50,7 @@ def main() -> int:
     parser.add_argument("--skip-strict-report", action="store_true", help="Skip strict policy report step")
     parser.add_argument("--strict-policy-mode", choices=("base", "overlay"), default=os.environ.get("STRICT_POLICY_PRODUCTION_MODE", "base"))
     parser.add_argument("--strict-report-date", default="", help="Optional UTC date YYYY-MM-DD passed to strict report")
-    parser.add_argument("--strict-report-output", default=str(ROOT / "data" / "backtest" / "strict-signals.csv"))
+    parser.add_argument("--strict-report-output", default=str(STRICT_SIGNAL_PATHS.live))
     parser.add_argument("--strict-compare-output", default=str(ROOT / "data" / "backtest" / "strict-signals-overlay-compare.csv"))
 
     parser.add_argument("--overlay-policy-file", default=str(ROOT / "data" / "backtest" / "tournament-segment-roi.csv"))

@@ -10,6 +10,14 @@ from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
 
+from signal_storage import (
+    STRICT_INTERNAL_SIGNAL_PATHS,
+    STRICT_SIGNAL_PATHS,
+    VOLUME_200_INTERNAL_SIGNAL_PATHS,
+    VOLUME_200_SIGNAL_PATHS,
+    VOLUME_275_SIGNAL_PATHS,
+)
+
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPORT_DIR = ROOT / "data" / "exports"
@@ -141,12 +149,12 @@ def main() -> None:
     readme_sheet.title = "README"
 
     fair_odds_sources = [
-        ("fair_odds_base", ROOT / "data" / "backtest" / "strict-signals.csv"),
+        ("fair_odds_base", STRICT_SIGNAL_PATHS.archive),
         ("fair_odds_overlay", ROOT / "data" / "backtest" / "strict-signals-overlay-compare.csv"),
-        ("fair_odds_volume200", ROOT / "data" / "backtest" / "strict-signals-volume200.csv"),
-        ("fair_odds_vol200_int", ROOT / "data" / "backtest" / "strict-signals-volume200-internal.csv"),
-        ("fair_odds_internal5", ROOT / "data" / "backtest" / "strict-signals-internal-5pct.csv"),
-        ("fair_odds_volume275", ROOT / "data" / "backtest" / "strict-signals-volume275.csv"),
+        ("fair_odds_volume200", VOLUME_200_SIGNAL_PATHS.archive),
+        ("fair_odds_vol200_int", VOLUME_200_INTERNAL_SIGNAL_PATHS.archive),
+        ("fair_odds_internal5", STRICT_INTERNAL_SIGNAL_PATHS.archive),
+        ("fair_odds_volume275", VOLUME_275_SIGNAL_PATHS.archive),
     ]
     backup_sources = [
         ("bak_base", "strict-signals.bak-*.csv"),
