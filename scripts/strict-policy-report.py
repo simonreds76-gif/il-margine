@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import os
 import re
 import sys
@@ -33,6 +34,7 @@ from collections import Counter, defaultdict
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
+from bisect import bisect_left
 
 import requests
 
@@ -50,6 +52,9 @@ DEFAULT_VOLUME_200_OUTPUT = DATA_DIR / "strict-signals-volume200.csv"
 DEFAULT_VOLUME_200_INTERNAL_OUTPUT = DATA_DIR / "strict-signals-volume200-internal.csv"
 DEFAULT_SPREAD_SHADOW_OUTPUT = DATA_DIR / "strict-signals-spreadshadow.csv"
 DEFAULT_SPREAD_SHADOW_INTERNAL_OUTPUT = DATA_DIR / "strict-signals-spreadshadow-internal.csv"
+DEFAULT_CLAY_CALIBRATED_OUTPUT = DATA_DIR / "strict-signals-claycal.csv"
+DEFAULT_CLAY_CALIBRATED_INTERNAL_OUTPUT = DATA_DIR / "strict-signals-claycal-internal.csv"
+DEFAULT_CLAY_CALIBRATION_FILE = DATA_DIR / "clay-prob-calibration.json"
 
 STRICT_MIN_VALUE_PCT = 10.0  # Public-facing high-conviction signals
 INTERNAL_TRACK_MIN_VALUE_PCT = 5.0  # Internal tracking for 200-bet confirmation
@@ -109,13 +114,20 @@ SHADOW_PROFILE_OUTPUTS: dict[str, tuple[Path, Path]] = {
     "volume_275": (DEFAULT_VOLUME_275_OUTPUT, DEFAULT_VOLUME_275_INTERNAL_OUTPUT),
     "volume_200": (DEFAULT_VOLUME_200_OUTPUT, DEFAULT_VOLUME_200_INTERNAL_OUTPUT),
     "spread_shadow": (DEFAULT_SPREAD_SHADOW_OUTPUT, DEFAULT_SPREAD_SHADOW_INTERNAL_OUTPUT),
+    "clay_calibrated": (DEFAULT_CLAY_CALIBRATED_OUTPUT, DEFAULT_CLAY_CALIBRATED_INTERNAL_OUTPUT),
 }
 
 SHADOW_PROFILE_LABELS: dict[str, str] = {
     "volume_275": "Volume 275 (legacy shadow; includes Clay Masters)",
-    "volume_200": "Volume 200 (trimmed shadow; no Clay Masters)",
+    "volume_200": "Volume 200 (trimmed shadow; no Clay Masters, Houston clay exception)",
     "spread_shadow": "Spread shadow (20%+ handicap edges; Clay + non-policy tournaments)",
+    "clay_calibrated": "Clay calibrated shadow (new-after-calibration favorite 55-65%)",
 }
+HOUSTON_SHADOW_MIN_VALUE_PCT = 20.0
+HOUSTON_SHADOW_CONFIDENCE = {"high", "medium"}
+CLAY_CALIBRATED_MIN_VALUE_PCT = 5.0
+CLAY_CALIBRATED_PROB_MIN = 0.55
+CLAY_CALIBRATED_PROB_MAX = 0.65
 
 
 def _append_key_value(field: str, value: Any) -> str:
@@ -180,6 +192,14 @@ def series_bucket_from_tour(tour_name: str | None, tour_rank: int | None) -> str
     return "ATP250"
 
 
+def league_bucket_from_tour(tour_name: str | None, pin_league: str | None = None) -> str:
+    league = (pin_league or "").strip()
+    if league in {"ATP", "Challenger"}:
+        return league
+    u = (tour_name or "").upper()
+    return "Challenger" if "CHALLENGER" in u else "ATP"
+
+
 def tour_key(name: str | None) -> str:
     core = (name or "").strip().lower()
     if not core:
@@ -212,6 +232,75 @@ def tour_key_candidates(name: str | None) -> list[str]:
             seen.add(c)
             out.append(c)
     return out
+
+
+def _safe_prob(p: float) -> float:
+    return max(1e-6, min(1.0 - 1e-6, float(p)))
+
+
+def _load_piecewise_prob_map(path: Path) -> list[tuple[float, float]]:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    raw_points = payload.get("favorite_prob_map") if isinstance(payload, dict) else payload
+    if not isinstance(raw_points, list):
+        return []
+    points: list[tuple[float, float]] = []
+    last_x = -1.0
+    last_y = -1.0
+    for item in raw_points:
+        try:
+            x = _safe_prob(float(item.get("raw_prob")))
+            y = _safe_prob(float(item.get("cal_prob")))
+        except (AttributeError, TypeError, ValueError):
+            continue
+        if x < 0.5 or x <= last_x or y < last_y:
+            continue
+        points.append((x, y))
+        last_x = x
+        last_y = y
+    return points
+
+
+def _interp_piecewise(points: list[tuple[float, float]], x: float) -> float:
+    if not points:
+        return x
+    if x <= points[0][0]:
+        return points[0][1]
+    if x >= points[-1][0]:
+        return points[-1][1]
+    xs = [pt[0] for pt in points]
+    idx = bisect_left(xs, x)
+    x0, y0 = points[idx - 1]
+    x1, y1 = points[idx]
+    if abs(x1 - x0) <= 1e-9:
+        return y1
+    if abs(y1 - y0) <= 1e-9:
+        start = idx - 1
+        end = idx
+        while start > 0 and abs(points[start - 1][1] - y0) <= 1e-9:
+            start -= 1
+        while end < len(points) - 1 and abs(points[end + 1][1] - y1) <= 1e-9:
+            end += 1
+        prev = start - 1 if start > 0 else start
+        nxt = end + 1 if end < len(points) - 1 else end
+        xa, ya = points[prev]
+        xb, yb = points[nxt]
+        if abs(xb - xa) <= 1e-9 or abs(yb - ya) <= 1e-9:
+            return y0
+        t = max(0.0, min(1.0, (x - xa) / (xb - xa)))
+        return ya + t * (yb - ya)
+    t = (x - x0) / (x1 - x0)
+    return y0 + t * (y1 - y0)
+
+
+def _apply_piecewise_favorite_remap(p: float, points: list[tuple[float, float]]) -> float:
+    p = _safe_prob(p)
+    fav_is_p1 = p >= 0.5
+    q = p if fav_is_p1 else (1.0 - p)
+    q_cal = _safe_prob(_interp_piecewise(points, q))
+    return q_cal if fav_is_p1 else (1.0 - q_cal)
 
 
 def norm_name(s: str | None) -> str:
@@ -283,7 +372,7 @@ def _is_doubles_name(name: str | None) -> bool:
 def match_pinnacle_rows(
     fair_rows: list[dict[str, Any]],
     pin_rows: list[dict[str, Any]],
-) -> dict[int, dict[str, float]]:
+) -> dict[int, dict[str, Any]]:
     pin_lookup: dict[str, list[tuple[dict[str, Any], bool]]] = {}
     for pin in pin_rows:
         p1 = (pin.get("player1_name") or "").strip()
@@ -295,7 +384,7 @@ def match_pinnacle_rows(
         for key in _make_pair_keys(p2, p1):
             pin_lookup.setdefault(key, []).append((pin, True))
 
-    matched: dict[int, dict[str, float]] = {}
+    matched: dict[int, dict[str, Any]] = {}
     used_pin_keys: set[tuple[str, str]] = set()
 
     for fo in fair_rows:
@@ -355,9 +444,9 @@ def match_pinnacle_rows(
         if o1 is None or o2 is None:
             continue
         matched[int(fo_id)] = (
-            {"odds1": float(o2), "odds2": float(o1)}
+            {"odds1": float(o2), "odds2": float(o1), "league": (pin.get("league") or "").strip()}
             if reversed_for_fair
-            else {"odds1": float(o1), "odds2": float(o2)}
+            else {"odds1": float(o1), "odds2": float(o2), "league": (pin.get("league") or "").strip()}
         )
 
     return matched
@@ -409,8 +498,20 @@ def strict_min_value_for(surface: str, series_bucket: str, confidence: str) -> f
     return INTERNAL_TRACK_MIN_VALUE_PCT
 
 
-def shadow_profile_min_value_for(profile_name: str, surface: str, series_bucket: str, confidence: str) -> float | None:
+def shadow_profile_min_value_for(
+    profile_name: str,
+    surface: str,
+    series_bucket: str,
+    confidence: str,
+    tournament_name: str = "",
+) -> float | None:
     vals: list[float] = []
+    if (
+        profile_name in {"volume_275", "volume_200"}
+        and is_houston_clay_shadow_exception(surface, tournament_name)
+        and confidence in HOUSTON_SHADOW_CONFIDENCE
+    ):
+        vals.append(HOUSTON_SHADOW_MIN_VALUE_PCT)
     for rule in SHADOW_PROFILE_RULES.get(profile_name, []):
         if surface != rule["surface"] or series_bucket != rule["series"]:
             continue
@@ -422,9 +523,11 @@ def shadow_profile_min_value_for(profile_name: str, surface: str, series_bucket:
     return min(vals)
 
 
-def spread_shadow_reason_for(surface: str, series_bucket: str, confidence: str) -> str | None:
+def spread_shadow_reason_for(surface: str, series_bucket: str, confidence: str, tournament_name: str = "") -> str | None:
     conf = (confidence or "").strip().lower()
     if conf not in SPREAD_SHADOW_CONFIDENCE:
+        return None
+    if is_houston_clay_shadow_exception(surface, tournament_name):
         return None
 
     in_strict_match_segment = strict_min_value_for(surface, series_bucket, conf) is not None
@@ -547,6 +650,12 @@ def resolve_overlay_policy(
     return None, cands[0], None, "missing"
 
 
+def is_houston_clay_shadow_exception(surface: str, tournament_name: str) -> bool:
+    if surface != "Clay":
+        return False
+    return "houston" in tour_key_candidates(tournament_name)
+
+
 def append_rows_dedup(path: Path, rows: list[dict[str, Any]], key_fields: list[str]) -> int:
     # spread_shadow (and similar) often appends 0/0 until a qualifying 20%+ handicap exists.
     # Old behavior: skip writing → file never created → settle-strict-signals.py and
@@ -599,9 +708,13 @@ def append_rows_dedup(path: Path, rows: list[dict[str, Any]], key_fields: list[s
     added = 0
     for r in rows:
         key = tuple(_append_key_value(k, r.get(k)) for k in key_fields)
-        if key in existing_by_key:
-            continue
         normalized = {k: ("" if v is None else str(v)) for k, v in r.items()}
+        if key in existing_by_key:
+            existing = existing_by_key[key]
+            for k, v in normalized.items():
+                if (k not in existing or existing.get(k, "") == "") and v != "":
+                    existing[k] = v
+            continue
         existing_by_key[key] = normalized
         out_rows.append(normalized)
         added += 1
@@ -629,6 +742,87 @@ def append_rows_dedup(path: Path, rows: list[dict[str, Any]], key_fields: list[s
     return added
 
 
+def upsert_rows_by_lane(
+    path: Path,
+    rows: list[dict[str, Any]],
+    dedup_key_fields: list[str],
+    lane_key_fields: list[str],
+) -> int:
+    # Live signal files should expose the current same-day snapshot for still-open lanes,
+    # not an append log of every intraday flip. Two protections matter here:
+    # 1. collapse duplicate incoming rows for the same lane, keeping the latest;
+    # 2. remove existing same-day non-settled rows before writing the new snapshot.
+    if not rows:
+        return append_rows_dedup(path, rows, dedup_key_fields)
+
+    incoming_rows_by_lane: dict[tuple[str, ...], dict[str, Any]] = {}
+    incoming_dates: set[str] = set()
+    for row in rows:
+        lane_key = tuple(_append_key_value(k, row.get(k)) for k in lane_key_fields)
+        incoming_rows_by_lane[lane_key] = row
+        incoming_dates.add((_append_key_value("date", row.get("date")) or "").strip())
+    incoming_lane_keys = set(incoming_rows_by_lane.keys())
+
+    def _is_settled_status(raw: Any) -> bool:
+        status = str(raw or "").strip().lower()
+        return status == "settled"
+
+    retained_rows: list[dict[str, str]] = []
+    existing_fields: list[str] = []
+    if path.exists():
+        with path.open("r", encoding="utf-8-sig", newline="") as f:
+            rd = csv.DictReader(f)
+            existing_fields = _clean_fieldnames(list(rd.fieldnames or []))
+            for raw in rd:
+                row = dict(raw)
+                row_date = (_append_key_value("date", row.get("date")) or "").strip()
+                if row_date in incoming_dates and not _is_settled_status(row.get("settlement_status")):
+                    continue
+                lane_key = tuple(_append_key_value(k, row.get(k)) for k in lane_key_fields)
+                if lane_key in incoming_lane_keys:
+                    continue
+                retained_rows.append(row)
+
+    merged_rows = retained_rows + [
+        {k: ("" if v is None else str(v)) for k, v in row.items()}
+        for row in incoming_rows_by_lane.values()
+    ]
+
+    fieldnames = list(existing_fields)
+    for row in merged_rows:
+        for key in row.keys():
+            if key not in fieldnames:
+                fieldnames.append(key)
+    for key in MANDATORY_APPEND_FIELDS:
+        if key not in fieldnames:
+            fieldnames.append(key)
+    if not fieldnames and merged_rows:
+        fieldnames = list(merged_rows[0].keys())
+    fieldnames = _clean_fieldnames(fieldnames)
+
+    deduped_by_key: dict[tuple[str, ...], dict[str, str]] = {}
+    ordered_rows: list[dict[str, str]] = []
+    for row in merged_rows:
+        key = tuple(_append_key_value(k, row.get(k)) for k in dedup_key_fields)
+        if key in deduped_by_key:
+            deduped_by_key[key] = row
+            for idx, existing in enumerate(ordered_rows):
+                existing_key = tuple(_append_key_value(k, existing.get(k)) for k in dedup_key_fields)
+                if existing_key == key:
+                    ordered_rows[idx] = row
+                    break
+            continue
+        deduped_by_key[key] = row
+        ordered_rows.append(row)
+
+    with path.open("w", encoding="utf-8", newline="") as f:
+        wr = csv.DictWriter(f, fieldnames=fieldnames)
+        wr.writeheader()
+        wr.writerows(ordered_rows)
+
+    return len(incoming_rows_by_lane)
+
+
 def main() -> int:
     load_env()
 
@@ -637,7 +831,7 @@ def main() -> int:
     parser.add_argument("--append", action="store_true", help="Append production-mode signals to strict-signals.csv")
     parser.add_argument(
         "--signal-profile",
-        choices=("strict", "volume_275", "volume_200", "spread_shadow"),
+        choices=("strict", "volume_275", "volume_200", "spread_shadow", "clay_calibrated"),
         default=(os.environ.get("STRICT_SIGNAL_PROFILE", "strict") or "strict").strip().lower(),
         help="Signal profile to evaluate/write (strict live policy or one of the shadow volume profiles).",
     )
@@ -675,6 +869,11 @@ def main() -> int:
         "--injury-csv",
         default=os.environ.get("INJURED_PLAYERS_CSV", str(DEFAULT_INJURY_CSV)),
     )
+    parser.add_argument(
+        "--clay-calibration-file",
+        default=str(DEFAULT_CLAY_CALIBRATION_FILE),
+        help="Clay-only favorite-probability remap JSON for the calibrated shadow lane.",
+    )
     args = parser.parse_args()
 
     if not args.output:
@@ -692,6 +891,10 @@ def main() -> int:
     if args.signal_profile != "strict" and args.compare_overlay:
         print(f"WARNING: --compare-overlay applies to strict profile only; disabling for {args.signal_profile}.")
         args.compare_overlay = False
+    clay_prob_map = _load_piecewise_prob_map(Path(args.clay_calibration_file))
+    if args.signal_profile == "clay_calibrated" and not clay_prob_map:
+        print(f"Clay calibrated profile requested but no valid remap points loaded from {args.clay_calibration_file}", file=sys.stderr)
+        return 1
 
     url = (os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or "").rstrip("/")
     key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
@@ -780,7 +983,7 @@ def main() -> int:
         f"{base}/bookmaker_odds_snapshot",
         headers=headers,
         params={
-            "select": "player1_name,player2_name,odds1,odds2",
+            "select": "player1_name,player2_name,odds1,odds2,league",
             "bookmaker": "eq.Pinnacle",
             "capture_date": "eq." + today,
             "league": "in.(ATP,Challenger)",
@@ -804,18 +1007,27 @@ def main() -> int:
     for r in rows:
         surface = (r.get("surface") or "").strip()
         confidence = (r.get("confidence") or "").strip().lower()
+        tournament_speed_signal = float(r.get("tournament_speed_signal") or 0.0)
+        clay_speed_tier = (
+            "fast" if surface == "Clay" and tournament_speed_signal >= 0.10 else "normal" if surface == "Clay" else ""
+        )
         tour_id = r.get("tour_id")
         tour_meta = tours.get(tour_id, {}) if tour_id is not None else {}
+        tournament_name = tour_meta.get("name") or ""
         series_bucket = series_bucket_from_tour(tour_meta.get("name"), tour_meta.get("rank"))
         strict_min_value = strict_min_value_for(surface, series_bucket, confidence)
         volume_min_value = (
-            shadow_profile_min_value_for(args.signal_profile, surface, series_bucket, confidence)
+            shadow_profile_min_value_for(args.signal_profile, surface, series_bucket, confidence, tournament_name)
             if args.signal_profile not in {"strict", "spread_shadow"}
             else None
         )
-        spread_shadow_reason = spread_shadow_reason_for(surface, series_bucket, confidence)
+        if args.signal_profile == "clay_calibrated":
+            strict_min_value = None
+            volume_min_value = None
+        spread_shadow_reason = spread_shadow_reason_for(surface, series_bucket, confidence, tournament_name)
         spread_shadow_eligible = args.signal_profile == "spread_shadow" and spread_shadow_reason is not None
-        if strict_min_value is None and volume_min_value is None and not spread_shadow_eligible:
+        clay_calibrated_enabled = args.signal_profile == "clay_calibrated" and surface == "Clay"
+        if strict_min_value is None and volume_min_value is None and not spread_shadow_eligible and not clay_calibrated_enabled:
             continue
 
         our_odds1 = r.get("odds1")
@@ -846,6 +1058,7 @@ def main() -> int:
         pin = matched_pinnacle.get(int(row_id)) if row_id is not None else None
         if not pin or (pin["odds1"] or 0) <= 0 or (pin["odds2"] or 0) <= 0:
             continue
+        league = league_bucket_from_tour(tournament_name, pin.get("league"))
 
         # ML only: skip when Pinnacle favourite odds < 1.25. Keep spreads eligible.
         pin_fav_odds = min(float(pin["odds1"] or 0), float(pin["odds2"] or 0))
@@ -853,6 +1066,16 @@ def main() -> int:
 
         value_p1 = (pin["odds1"] / our_odds1 - 1) * 100 if our_odds1 > 1 else None
         value_p2 = (pin["odds2"] / our_odds2 - 1) * 100 if our_odds2 > 1 else None
+        calibrated_p1_win_prob = _apply_piecewise_favorite_remap(p1_win_prob, clay_prob_map) if surface == "Clay" and clay_prob_map else p1_win_prob
+        calibrated_p2_win_prob = _safe_prob(1.0 - calibrated_p1_win_prob)
+        calibrated_odds1 = 1.0 / _safe_prob(calibrated_p1_win_prob)
+        calibrated_odds2 = 1.0 / _safe_prob(calibrated_p2_win_prob)
+        calibrated_value_p1 = (pin["odds1"] / calibrated_odds1 - 1) * 100 if calibrated_odds1 > 1 else None
+        calibrated_value_p2 = (pin["odds2"] / calibrated_odds2 - 1) * 100 if calibrated_odds2 > 1 else None
+        calibrated_side = "P1" if (calibrated_value_p1 or 0) >= (calibrated_value_p2 or 0) else "P2"
+        calibrated_value_pct = calibrated_value_p1 if calibrated_side == "P1" else calibrated_value_p2
+        calibrated_selected_prob = calibrated_p1_win_prob if calibrated_side == "P1" else calibrated_p2_win_prob
+        raw_value_same_side = value_p1 if calibrated_side == "P1" else value_p2
         if args.injury_overlay_enabled and inj_any:
             injury_skipped_matches += 1
             continue
@@ -870,6 +1093,7 @@ def main() -> int:
 
         side = "P1" if (value_p1 or 0) >= (value_p2 or 0) else "P2"
         value_pct = value_p1 if side == "P1" else value_p2
+        fav_side = "P1" if our_odds1 <= our_odds2 else "P2"
         has_internal_ml_value = (
             (value_p1 is not None and value_p1 >= INTERNAL_TRACK_MIN_VALUE_PCT)
             or (value_p2 is not None and value_p2 >= INTERNAL_TRACK_MIN_VALUE_PCT)
@@ -899,17 +1123,26 @@ def main() -> int:
             and value_pct is not None
             and value_pct >= volume_min_value
         )
+        clay_calibrated_match = (
+            clay_calibrated_enabled
+            and not model_ml_excluded
+            and not pin_ml_excluded
+            and calibrated_value_pct is not None
+            and calibrated_value_pct >= CLAY_CALIBRATED_MIN_VALUE_PCT
+            and (raw_value_same_side is None or raw_value_same_side < CLAY_CALIBRATED_MIN_VALUE_PCT)
+            and calibrated_selected_prob >= CLAY_CALIBRATED_PROB_MIN
+            and calibrated_selected_prob < CLAY_CALIBRATED_PROB_MAX
+        )
         strict_spread_eligible = strict_min_value is not None
         volume_spread_eligible = volume_min_value is not None and not strict_spread_eligible
         # spread_shadow lane targets clay/non-policy HC edges; those segments often have no
         # strict_min_value (non-policy). The API still shows them — do not drop the row here
         # or handicap rows never reach candidates (0/0 append forever).
         if not strict_match and not volume_match:
-            if not strict_spread_eligible and not volume_spread_eligible and not spread_shadow_eligible:
+            if not strict_spread_eligible and not volume_spread_eligible and not spread_shadow_eligible and not clay_calibrated_match:
                 continue
-        fav_side = "P1" if our_odds1 <= our_odds2 else "P2"
         bet_side = "fav" if side == fav_side else "dog"
-        tname = tour_meta.get("name") or ""
+        tname = tournament_name
         tkey = tour_key(tname)
         if args.signal_profile != "spread_shadow" and (strict_match or volume_match):
             stake_units, stake_gbp, stake_model = compute_stake_units(
@@ -929,6 +1162,7 @@ def main() -> int:
                     "player1": p1_name,
                     "player2": p2_name,
                     "surface": surface,
+                    "league": league,
                     "series": series_bucket,
                     "confidence": confidence,
                     "our_odds1": round(our_odds1, 4),
@@ -962,6 +1196,73 @@ def main() -> int:
                 }
             )
 
+        if clay_calibrated_match:
+            stake_units_cal, stake_gbp_cal, stake_model_cal = compute_stake_units(
+                our_odds1=calibrated_odds1,
+                our_odds2=calibrated_odds2,
+                pin_odds1=pin["odds1"],
+                pin_odds2=pin["odds2"],
+                side=calibrated_side,
+                bet_type="match",
+                value_pct=calibrated_value_pct,
+            )
+            candidates.append(
+                {
+                    "date": today,
+                    "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
+                    "player1": p1_name,
+                    "player2": p2_name,
+                    "surface": surface,
+                    "league": league,
+                    "series": series_bucket,
+                    "confidence": confidence,
+                    "our_odds1": round(calibrated_odds1, 4),
+                    "our_odds2": round(calibrated_odds2, 4),
+                    "pin_odds1": round(pin["odds1"], 4),
+                    "pin_odds2": round(pin["odds2"], 4),
+                    "value_p1": round(calibrated_value_p1, 2) if calibrated_value_p1 is not None else None,
+                    "value_p2": round(calibrated_value_p2, 2) if calibrated_value_p2 is not None else None,
+                    "side": calibrated_side,
+                    "value_pct": round(calibrated_value_pct, 2),
+                    "stake_units": round(stake_units_cal, 4),
+                    "stake_gbp": round(stake_gbp_cal, 2),
+                    "stake_model": stake_model_cal,
+                    "bet_type": "match",
+                    "policy_mode": "base",
+                    "overlay_n": "",
+                    "overlay_roi_pct_shrunk": "",
+                    "overlay_reason": "",
+                    "recent_injured_p1": p1_inj,
+                    "recent_injured_p2": p2_inj,
+                    "recent_injured_any": inj_any,
+                    "recent_injured_p1_mode": p1_inj_mode,
+                    "recent_injured_p2_mode": p2_inj_mode,
+                    "raw_p1_win_prob": round(p1_win_prob, 4),
+                    "raw_p2_win_prob": round(p2_win_prob, 4),
+                    "calibrated_p1_win_prob": round(calibrated_p1_win_prob, 4),
+                    "calibrated_p2_win_prob": round(calibrated_p2_win_prob, 4),
+                    "raw_odds1_shadow": round(our_odds1, 4),
+                    "raw_odds2_shadow": round(our_odds2, 4),
+                    "calibrated_odds1": round(calibrated_odds1, 4),
+                    "calibrated_odds2": round(calibrated_odds2, 4),
+                    "raw_value_p1": round(value_p1, 2) if value_p1 is not None else None,
+                    "raw_value_p2": round(value_p2, 2) if value_p2 is not None else None,
+                    "raw_value_same_side": round(raw_value_same_side, 2) if raw_value_same_side is not None else None,
+                    "calibrated_selected_prob": round(calibrated_selected_prob, 4),
+                    "calibration_new_edge": True,
+                    "tournament_speed_signal": round(tournament_speed_signal, 4),
+                    "clay_speed_tier": clay_speed_tier,
+                    "_bet_side": "fav",
+                    "_tournament_key": tkey,
+                    "_tournament_name": tname,
+                    "_strict_match": False,
+                    "_volume_match": False,
+                    "_spread_shadow_match": False,
+                    "_clay_calibrated_match": True,
+                    "shadow_reason": "new_after_calibration_favorite_55_65",
+                }
+            )
+
         # Handicap signals: when handicap_edge >= 20% on P1+ or P2-
         # Keep them flat 1u and profile-gated the same way as match signals.
         profile_spread_eligible = strict_spread_eligible or volume_spread_eligible or spread_shadow_eligible
@@ -989,6 +1290,7 @@ def main() -> int:
                         "player1": p1_name,
                         "player2": p2_name,
                         "surface": surface,
+                        "league": league,
                         "series": series_bucket,
                         "confidence": confidence,
                         "our_odds1": "",
@@ -1039,6 +1341,7 @@ def main() -> int:
                         "player1": p1_name,
                         "player2": p2_name,
                         "surface": surface,
+                        "league": league,
                         "series": series_bucket,
                         "confidence": confidence,
                         "our_odds1": "",
@@ -1087,6 +1390,8 @@ def main() -> int:
         profile_key = "_strict_match"
     elif args.signal_profile == "spread_shadow":
         profile_key = "_spread_shadow_match"
+    elif args.signal_profile == "clay_calibrated":
+        profile_key = "_clay_calibrated_match"
     else:
         profile_key = "_volume_match"
     profile_candidates = [x for x in candidates if x.get(profile_key)]
@@ -1232,27 +1537,30 @@ def main() -> int:
             r.pop("_strict_match", None)
             r.pop("_volume_match", None)
             r.pop("_spread_shadow_match", None)
+            r.pop("_clay_calibrated_match", None)
 
     if args.append:
         out_path = Path(args.output)
-        added = append_rows_dedup(
+        added = upsert_rows_by_lane(
             out_path,
             public_signals,
-            key_fields=["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"],
+            dedup_key_fields=["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"],
+            lane_key_fields=["date", "player1", "player2", "bet_type", "spread_line", "policy_mode", "signal_profile"],
         )
-        print(f"\nAppended {added}/{len(public_signals)} public rows to {out_path} (deduped).")
+        print(f"\nUpserted {added}/{len(public_signals)} public rows to {out_path} (same-day lane replace).")
 
         if internal_signals and args.internal_output:
             internal_path = Path(args.internal_output)
-            added_internal = append_rows_dedup(
+            added_internal = upsert_rows_by_lane(
                 internal_path,
                 internal_signals,
-                key_fields=["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"],
+                dedup_key_fields=["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"],
+                lane_key_fields=["date", "player1", "player2", "bet_type", "spread_line", "policy_mode", "signal_profile"],
             )
             if args.signal_profile == "strict":
-                print(f"Appended {added_internal}/{len(internal_signals)} internal (5%+) rows to {internal_path} (deduped).")
+                print(f"Upserted {added_internal}/{len(internal_signals)} internal (5%+) rows to {internal_path} (same-day lane replace).")
             else:
-                print(f"Appended {added_internal}/{len(internal_signals)} profile rows to {internal_path} (deduped).")
+                print(f"Upserted {added_internal}/{len(internal_signals)} profile rows to {internal_path} (same-day lane replace).")
 
         if args.signal_profile == "strict" and args.compare_overlay:
             compare_rows = base_signals + overlay_signals
