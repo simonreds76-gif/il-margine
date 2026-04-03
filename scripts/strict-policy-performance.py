@@ -36,8 +36,10 @@ DEFAULT_SUMMARY_CSV = DATA_DIR / "strict-policy-performance-weekly.csv"
 CLEAN_EVAL_START = date(2026, 3, 14)
 
 KEY_FIELDS = ["date", "player1", "player2", "surface", "series", "confidence", "side", "bet_type", "spread_line"]
+LANE_FIELDS = ["date", "player1", "player2", "bet_type", "spread_line", "signal_profile"]
 BET_TYPE_ML = "ml"
 BET_TYPE_HANDICAP = "handicap"
+LEAGUE_SCOPES = ["combined", "ATP", "Challenger"]
 
 SETTLEMENT_FIELDS = [
     "settlement_status",
@@ -113,6 +115,13 @@ def row_key(row: dict[str, str], include_mode: bool = True) -> tuple[str, ...]:
     return tuple(out)
 
 
+def lane_key(row: dict[str, str], include_mode: bool = True) -> tuple[str, ...]:
+    out = [row_key_val(row, f) for f in LANE_FIELDS]
+    if include_mode:
+        out.append(row_key_val(row, "policy_mode"))
+    return tuple(out)
+
+
 def lookup_key(row: dict[str, str]) -> tuple[str, ...]:
     return tuple(row_key_val(row, f) for f in KEY_FIELDS)
 
@@ -130,7 +139,7 @@ def load_csv_rows(path: Path) -> list[dict[str, str]]:
 def dedupe_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
     by_key: dict[tuple[str, ...], dict[str, str]] = {}
     for r in rows:
-        k = row_key(r, include_mode=True)
+        k = lane_key(r, include_mode=True)
         prev = by_key.get(k)
         if prev is None:
             by_key[k] = r
@@ -317,6 +326,13 @@ def summarize_mode_by_bet_type(
     }
 
 
+def filter_rows_by_league(rows: list[dict[str, str]], league_scope: str) -> list[dict[str, str]]:
+    if league_scope == "combined":
+        return rows
+    target = norm_key_val(league_scope)
+    return [r for r in rows if norm_key_val(r.get("league")) == target]
+
+
 def fmt_num(v: float | None, digits: int = 2, suffix: str = "") -> str:
     if v is None:
         return "n/a"
@@ -332,12 +348,14 @@ def as_summary_row(
     source: str,
     bet_type: str = "",
     eval_period: str = "overall",
+    league_scope: str = "combined",
 ) -> dict[str, str]:
     row = {
         "generated_utc": generated_utc,
         "as_of_date": as_of.isoformat(),
         "scope": scope,
         "eval_period": eval_period,
+        "league_scope": league_scope,
         "window_days": str(window_days),
         "source_file": source,
         "policy_mode": mode_summary.mode,
@@ -590,36 +608,28 @@ def main() -> int:
 
         source_name = f"{signals_path.name}+{compare_path.name}" if use_compare else signals_path.name
         summary_rows: list[dict[str, str]] = []
-        window_by_bt = {m: summarize_mode_by_bet_type(window_rows, m) for m in ordered_modes}
-        all_by_bt = {m: summarize_mode_by_bet_type(all_rows, m) for m in ordered_modes}
-        for mode in ordered_modes:
-            # Combined (legacy)
-            summary_rows.append(
-                as_summary_row(
-                    generated_utc=generated_utc,
-                    as_of=as_of,
-                    scope="window",
-                    eval_period="overall",
-                    window_days=window_days,
-                    mode_summary=window_summary[mode],
-                    source=source_name,
-                    bet_type="",
-                )
-            )
-            summary_rows.append(
-                as_summary_row(
-                    generated_utc=generated_utc,
-                    as_of=as_of,
-                    scope="all_time",
-                    eval_period="overall",
-                    window_days=window_days,
-                    mode_summary=all_summary[mode],
-                    source=source_name,
-                    bet_type="",
-                )
-            )
-            # ML and handicap separately (for settlement ROI and backlog)
-            for bt in [BET_TYPE_ML, BET_TYPE_HANDICAP]:
+        league_scopes = (
+            LEAGUE_SCOPES
+            if any(norm_key_val(r.get("league")) in {"atp", "challenger"} for r in signal_rows)
+            else ["combined"]
+        )
+        for league_scope in league_scopes:
+            window_rows_scope = filter_rows_by_league(window_rows, league_scope)
+            all_rows_scope = filter_rows_by_league(all_rows, league_scope)
+            legacy_rows_scope = filter_rows_by_league(legacy_rows, league_scope)
+            clean_rows_scope = filter_rows_by_league(clean_rows, league_scope)
+            clean_window_rows_scope = filter_rows_by_league(clean_window_rows, league_scope)
+            window_summary_scope = {m: summarize_mode(window_rows_scope, m) for m in ordered_modes}
+            all_summary_scope = {m: summarize_mode(all_rows_scope, m) for m in ordered_modes}
+            legacy_summary_scope = {m: summarize_mode(legacy_rows_scope, m) for m in ordered_modes}
+            clean_summary_scope = {m: summarize_mode(clean_rows_scope, m) for m in ordered_modes}
+            clean_window_summary_scope = {m: summarize_mode(clean_window_rows_scope, m) for m in ordered_modes}
+            window_by_bt_scope = {m: summarize_mode_by_bet_type(window_rows_scope, m) for m in ordered_modes}
+            all_by_bt_scope = {m: summarize_mode_by_bet_type(all_rows_scope, m) for m in ordered_modes}
+            legacy_by_bt_scope = {m: summarize_mode_by_bet_type(legacy_rows_scope, m) for m in ordered_modes}
+            clean_by_bt_scope = {m: summarize_mode_by_bet_type(clean_rows_scope, m) for m in ordered_modes}
+            clean_window_by_bt_scope = {m: summarize_mode_by_bet_type(clean_window_rows_scope, m) for m in ordered_modes}
+            for mode in ordered_modes:
                 summary_rows.append(
                     as_summary_row(
                         generated_utc=generated_utc,
@@ -627,9 +637,10 @@ def main() -> int:
                         scope="window",
                         eval_period="overall",
                         window_days=window_days,
-                        mode_summary=window_by_bt[mode][bt],
+                        mode_summary=window_summary_scope[mode],
                         source=source_name,
-                        bet_type=bt,
+                        bet_type="",
+                        league_scope=league_scope,
                     )
                 )
                 summary_rows.append(
@@ -639,48 +650,39 @@ def main() -> int:
                         scope="all_time",
                         eval_period="overall",
                         window_days=window_days,
-                        mode_summary=all_by_bt[mode][bt],
+                        mode_summary=all_summary_scope[mode],
                         source=source_name,
-                        bet_type=bt,
+                        bet_type="",
+                        league_scope=league_scope,
                     )
                 )
-            summary_rows.append(
-                as_summary_row(
-                    generated_utc=generated_utc,
-                    as_of=as_of,
-                    scope="all_time",
-                    eval_period="legacy",
-                    window_days=window_days,
-                    mode_summary=legacy_summary[mode],
-                    source=source_name,
-                    bet_type="",
-                )
-            )
-            summary_rows.append(
-                as_summary_row(
-                    generated_utc=generated_utc,
-                    as_of=as_of,
-                    scope="all_time",
-                    eval_period="clean",
-                    window_days=window_days,
-                    mode_summary=clean_summary[mode],
-                    source=source_name,
-                    bet_type="",
-                )
-            )
-            summary_rows.append(
-                as_summary_row(
-                    generated_utc=generated_utc,
-                    as_of=as_of,
-                    scope="window",
-                    eval_period="clean",
-                    window_days=window_days,
-                    mode_summary=clean_window_summary[mode],
-                    source=source_name,
-                    bet_type="",
-                )
-            )
-            for bt in [BET_TYPE_ML, BET_TYPE_HANDICAP]:
+                for bt in [BET_TYPE_ML, BET_TYPE_HANDICAP]:
+                    summary_rows.append(
+                        as_summary_row(
+                            generated_utc=generated_utc,
+                            as_of=as_of,
+                            scope="window",
+                            eval_period="overall",
+                            window_days=window_days,
+                            mode_summary=window_by_bt_scope[mode][bt],
+                            source=source_name,
+                            bet_type=bt,
+                            league_scope=league_scope,
+                        )
+                    )
+                    summary_rows.append(
+                        as_summary_row(
+                            generated_utc=generated_utc,
+                            as_of=as_of,
+                            scope="all_time",
+                            eval_period="overall",
+                            window_days=window_days,
+                            mode_summary=all_by_bt_scope[mode][bt],
+                            source=source_name,
+                            bet_type=bt,
+                            league_scope=league_scope,
+                        )
+                    )
                 summary_rows.append(
                     as_summary_row(
                         generated_utc=generated_utc,
@@ -688,9 +690,10 @@ def main() -> int:
                         scope="all_time",
                         eval_period="legacy",
                         window_days=window_days,
-                        mode_summary=legacy_by_bt[mode][bt],
+                        mode_summary=legacy_summary_scope[mode],
                         source=source_name,
-                        bet_type=bt,
+                        bet_type="",
+                        league_scope=league_scope,
                     )
                 )
                 summary_rows.append(
@@ -700,9 +703,10 @@ def main() -> int:
                         scope="all_time",
                         eval_period="clean",
                         window_days=window_days,
-                        mode_summary=clean_by_bt[mode][bt],
+                        mode_summary=clean_summary_scope[mode],
                         source=source_name,
-                        bet_type=bt,
+                        bet_type="",
+                        league_scope=league_scope,
                     )
                 )
                 summary_rows.append(
@@ -712,11 +716,52 @@ def main() -> int:
                         scope="window",
                         eval_period="clean",
                         window_days=window_days,
-                        mode_summary=clean_window_by_bt[mode][bt],
+                        mode_summary=clean_window_summary_scope[mode],
                         source=source_name,
-                        bet_type=bt,
+                        bet_type="",
+                        league_scope=league_scope,
                     )
                 )
+                for bt in [BET_TYPE_ML, BET_TYPE_HANDICAP]:
+                    summary_rows.append(
+                        as_summary_row(
+                            generated_utc=generated_utc,
+                            as_of=as_of,
+                            scope="all_time",
+                            eval_period="legacy",
+                            window_days=window_days,
+                            mode_summary=legacy_by_bt_scope[mode][bt],
+                            source=source_name,
+                            bet_type=bt,
+                            league_scope=league_scope,
+                        )
+                    )
+                    summary_rows.append(
+                        as_summary_row(
+                            generated_utc=generated_utc,
+                            as_of=as_of,
+                            scope="all_time",
+                            eval_period="clean",
+                            window_days=window_days,
+                            mode_summary=clean_by_bt_scope[mode][bt],
+                            source=source_name,
+                            bet_type=bt,
+                            league_scope=league_scope,
+                        )
+                    )
+                    summary_rows.append(
+                        as_summary_row(
+                            generated_utc=generated_utc,
+                            as_of=as_of,
+                            scope="window",
+                            eval_period="clean",
+                            window_days=window_days,
+                            mode_summary=clean_window_by_bt_scope[mode][bt],
+                            source=source_name,
+                            bet_type=bt,
+                            league_scope=league_scope,
+                        )
+                    )
         append_summary(summary_path, summary_rows)
         print(f"Wrote report: {report_path}")
         print(f"Appended summary CSV: {summary_path}")

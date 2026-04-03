@@ -39,6 +39,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CSV = ROOT / "data" / "backtest" / "strict-signals.csv"
 LOCAL_PLAYERS_CSV = ROOT / "data" / "oncourt" / "players_atp.csv"
 LOCAL_GAMES_CSV = ROOT / "data" / "oncourt" / "games_atp.csv"
+LOCAL_TODAY_CSV = ROOT / "data" / "oncourt" / "today_atp.csv"
 
 SETTLEMENT_FIELDS = [
     "settlement_status",
@@ -299,6 +300,32 @@ def fetch_games_window(base: str, headers: dict[str, str], start_d: date, end_d:
     return rows_all
 
 
+def load_local_today_rows(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    rows_all: list[dict[str, Any]] = []
+    with path.open("r", encoding="utf-8", newline="") as f:
+        rd = csv.DictReader(f)
+        for row in rd:
+            try:
+                p1 = int(row.get("player1_id") or 0)
+                p2 = int(row.get("player2_id") or 0)
+            except (TypeError, ValueError):
+                continue
+            if not p1 or not p2:
+                continue
+            rows_all.append(
+                {
+                    "player1_id": p1,
+                    "player2_id": p2,
+                    "round_id": row.get("round_id"),
+                    "tour_id": row.get("tour_id"),
+                    "result": row.get("result") or "",
+                }
+            )
+    return rows_all
+
+
 def load_local_games_window(path: Path, start_d: date, end_d: date) -> list[dict[str, Any]]:
     if not path.exists():
         return []
@@ -332,6 +359,15 @@ def choose_match_for_signal(signal_date: date, cand1: set[int], cand2: set[int],
     if len(best) == 1:
         return "ok", best[0], f"Picked closest date among {len(matched)} candidates"
     return "ambiguous", None, f"{len(best)} matches tied at closest date (from {len(matched)} candidates)"
+
+
+def has_today_pair(cand1: set[int], cand2: set[int], rows: list[dict[str, Any]]) -> bool:
+    for row in rows:
+        p1 = row.get("player1_id")
+        p2 = row.get("player2_id")
+        if (p1 in cand1 and p2 in cand2) or (p1 in cand2 and p2 in cand1):
+            return True
+    return False
 
 
 def ensure_fieldnames(rows: list[dict[str, str]], fieldnames: list[str]) -> list[str]:
@@ -371,6 +407,44 @@ def should_process_row(row: dict[str, str], resettle: bool) -> bool:
     return True
 
 
+def _lane_key_value(row: dict[str, str], field: str) -> str:
+    raw = row.get(field)
+    if field == "policy_mode":
+        return (raw or "base").strip().lower()
+    if field == "bet_type":
+        return (raw or "match").strip().lower()
+    if field == "signal_profile":
+        return (raw or "strict").strip().lower()
+    if field == "spread_line":
+        txt = (raw or "").strip()
+        if not txt:
+            return ""
+        try:
+            return f"{float(txt):g}"
+        except ValueError:
+            return txt.lower()
+    return (raw or "").strip().lower()
+
+
+def dedupe_rows_by_lane(rows: list[dict[str, str]]) -> tuple[list[dict[str, str]], int]:
+    lane_fields = ["date", "player1", "player2", "bet_type", "spread_line", "policy_mode", "signal_profile"]
+    by_lane: dict[tuple[str, ...], dict[str, str]] = {}
+    for row in rows:
+        lane_key = tuple(_lane_key_value(row, f) for f in lane_fields)
+        prev = by_lane.get(lane_key)
+        if prev is None:
+            by_lane[lane_key] = row
+            continue
+        prev_settled = (prev.get("settlement_status") or "").strip().lower() == "settled"
+        curr_settled = (row.get("settlement_status") or "").strip().lower() == "settled"
+        # Prefer settled rows; otherwise keep the latest row seen in file order.
+        if prev_settled and not curr_settled:
+            continue
+        by_lane[lane_key] = row
+    deduped = list(by_lane.values())
+    return deduped, max(0, len(rows) - len(deduped))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Settle strict-policy signals from strict-signals.csv using OnCourt results.")
     parser.add_argument("--csv", default=str(DEFAULT_CSV), help="Path to strict-signals.csv")
@@ -401,6 +475,8 @@ def main() -> int:
         print(f"CSV is empty: {csv_path}")
         return 0
 
+    rows, deduped_removed = dedupe_rows_by_lane(rows)
+
     out_fields = ensure_fieldnames(rows, fieldnames)
 
     pending_dates: list[date] = []
@@ -412,11 +488,14 @@ def main() -> int:
             pending_dates.append(signal_date)
 
     local_games_rows: list[dict[str, Any]] = []
+    local_today_rows: list[dict[str, Any]] = []
     if pending_dates:
         local_start = min(pending_dates) - timedelta(days=max(0, args.before_days))
         local_end = max(pending_dates) + timedelta(days=max(0, args.after_days))
         local_games_rows = load_local_games_window(LOCAL_GAMES_CSV, local_start, local_end)
+        local_today_rows = load_local_today_rows(LOCAL_TODAY_CSV)
         print(f"Loaded local games fallback rows: {len(local_games_rows):,}")
+        print(f"Loaded local today schedule rows: {len(local_today_rows):,}")
 
     print("Loading player index...")
     players = load_local_players(LOCAL_PLAYERS_CSV)
@@ -432,7 +511,7 @@ def main() -> int:
     today_cache: dict[str, list[dict[str, Any]]] = {}
     now_iso = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     stats = Counter()
-    changed = 0
+    changed = deduped_removed
 
     for i, row in enumerate(rows, start=1):
         stats["rows_total"] += 1
@@ -469,6 +548,12 @@ def main() -> int:
             games = fetch_games_window(base, headers, start_d, end_d, games_cache)
 
         status, match, note = choose_match_for_signal(signal_date, cand1, cand2, games)
+        if status == "no_match" and has_today_pair(cand1, cand2, local_today_rows):
+            row["settlement_status"] = "pending"
+            row["settlement_note"] = "Match still present in local today_atp schedule; awaiting completed result"
+            stats["pending"] += 1
+            changed += 1
+            continue
         if status == "no_match" and local_games_rows:
             row["settlement_status"] = "no_match"
             row["settlement_note"] = note
@@ -604,8 +689,11 @@ def main() -> int:
 
     print("\nSettlement summary")
     print(f"  Rows total: {stats['rows_total']:,}")
+    if deduped_removed:
+        print(f"  Duplicate same-lane rows removed before settlement: {deduped_removed:,}")
     print(f"  Already settled skipped: {stats['already_settled_skipped']:,}")
     print(f"  Settled now: {stats['settled_now']:,}")
+    print(f"  Pending today schedule: {stats['pending']:,}")
     print(f"  No match (will retry next run): {stats['no_match']:,}")
     print(f"  Ambiguous: {stats['ambiguous']:,}")
     print(f"  Unmatched name: {stats['unmatched_name']:,}")
