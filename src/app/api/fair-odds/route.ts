@@ -871,10 +871,14 @@ function loadActiveShadowSignals(csvPath: string, kind: ShadowSignalKind, active
       player1Id != null && player2Id != null
         ? `${player1Id}|${player2Id}`
         : signalNameKey(player1Name, player2Name);
+    // Keep only the latest active signal per live market lane.
+    // The CSV append flow can legitimately record an earlier side and a later side
+    // for the same match on the same day; the fair-odds page should show the latest
+    // current lane, not both stale and current sides together.
     const signalKey =
       kind === "spread_shadow"
-        ? `${kind}|${signalIdentity}|${side}|${betType}|${spreadLine ?? ""}`
-        : `${kind}|${signalIdentity}|${side}|${betType}`;
+        ? `${kind}|${signalIdentity}|${betType}|${spreadLine ?? ""}`
+        : `${kind}|${signalIdentity}|${betType}`;
 
     latestBySignalKey.set(signalKey, {
       id: i,
