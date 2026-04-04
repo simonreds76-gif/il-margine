@@ -7,8 +7,8 @@ import {
   readGoalscorerLiveSnapshotGeneratedAt,
 } from "@/lib/goalscorer-live-files";
 import { readPenaltyReviewState } from "@/lib/goalscorer-penalty-review-state";
-import { ClientOnly } from "./ClientOnly";
-import { PenaltyReviewActions } from "./PenaltyReviewActions";
+import { ClientOnly } from "../ClientOnly";
+import { PenaltyReviewActions } from "../PenaltyReviewActions";
 
 type CsvRow = Record<string, string>;
 type FixtureGroup = {
@@ -2337,6 +2337,201 @@ export default async function GoalscorerMonitorPage() {
     </CollapsibleMonitorSection>
   );
   const showInlineFixtureLineups = false;
+  const lineupsOnlyMode = true;
+
+  if (lineupsOnlyMode) {
+    return (
+      <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(59,130,246,0.08),_transparent_22%),#0b0f14] text-slate-100">
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="mb-8 flex flex-wrap items-center gap-3">
+            <Link
+              href="/model-monitor/goalscorer"
+              className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300"
+            >
+              Goalscorer Monitor
+            </Link>
+            <Link
+              href="/model-monitor"
+              className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300"
+            >
+              Model Monitor
+            </Link>
+            <Link
+              href="/anytime-goalscorer"
+              className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300"
+            >
+              Anytime Goalscorer
+            </Link>
+          </div>
+
+          <section className="mb-8 overflow-hidden rounded-3xl border border-slate-800 bg-[linear-gradient(135deg,rgba(16,185,129,0.12),rgba(15,23,42,0.92)_42%,rgba(59,130,246,0.08))] p-6 sm:p-8">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl">
+                <div className="mb-3 inline-flex items-center rounded-full border border-cyan-500/25 bg-cyan-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-200">
+                  Reference View
+                </div>
+                <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+                  Fixture lineups
+                </h1>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">
+                  Full starter-by-starter goalscorer reference, moved off the main monitor so the operator board stays focused on live bets and review work.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-slate-800/80 bg-slate-950/40 px-4 py-3 text-sm text-slate-300">
+                <div>
+                  <span className="text-slate-500">Live board updated:</span> {formatDateTime(comparisonMtime)}
+                </div>
+                <div>
+                  <span className="text-slate-500">Hosted snapshot:</span> {formatDateTime(snapshotGeneratedAt)}
+                </div>
+                <div>
+                  <span className="text-slate-500">Fixture groups:</span> {fixtures.length}
+                </div>
+                <div>
+                  <span className="text-slate-500">Trust split:</span>{" "}
+                  <span className="text-emerald-300">{cleanFixtures} clean</span> /{" "}
+                  <span className="text-amber-300">{degradedFixtures} degraded</span> /{" "}
+                  <span className="text-rose-300">{quarantinedFixtures} quarantined</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {sourceFeedGapLeagues.length > 0 ? (
+            <div className="mb-8 rounded-2xl border border-amber-500/20 bg-amber-500/8 p-4 text-sm leading-6 text-amber-100">
+              {sourceFeedGapLeagues.map((league) => league.label).join(", ")} currently has historical goalscorer data but no active ATGS source feed for the live window. The lineup reference below still renders from the latest stored lineup payloads.
+            </div>
+          ) : null}
+
+          <ClientOnly
+            fallback={
+              <MonitorCard
+                title="Fixture lineups"
+                subtitle="Reference view only. Hydrates client-side so the heavy lineup tree cannot mismatch during SSR."
+              >
+                <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">
+                  Loading lineup reference view...
+                </div>
+              </MonitorCard>
+            }
+          >
+            <MonitorCard
+              title="Fixture lineups"
+              subtitle="Starter-by-starter reference across the next three days of tracked goalscorer fixtures."
+            >
+              <div className="space-y-6">
+                {fixtures.map((fixture) => (
+                  <div key={fixture.key} className="rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4">
+                    {(() => {
+                      const lineup = lineupMap.get(`${fixture.leagueKey}|${teamKey(fixture.homeTeam)}|${teamKey(fixture.awayTeam)}`);
+                      const fixtureHealth = fixtureHealthMap.get(
+                        fixtureHealthKey(fixture.leagueKey, fixture.matchDate, fixture.homeTeam, fixture.awayTeam),
+                      );
+                      const isQuarantined = fixtureHealth?.trust_tier === "T3";
+                      const isDegraded = fixtureHealth?.trust_tier === "T2";
+                      const isAwaitingLineup = fixtureHealth?.trust_tier === "T2" && fixtureHealth?.lineup_input === "none";
+                      const hasHomeLineup = (lineup?.homePlayers?.length ?? 0) > 0;
+                      const hasAwayLineup = (lineup?.awayPlayers?.length ?? 0) > 0;
+                      const hasAnyLineup = hasHomeLineup || hasAwayLineup;
+
+                      return (
+                        <>
+                          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                            <div>
+                              <div className="mb-1 text-[11px] uppercase tracking-[0.18em] text-emerald-300">
+                                {fixture.competition || fixture.leagueLabel}
+                              </div>
+                              <h2 className="text-lg font-semibold text-white">
+                                {fixture.homeTeam} vs {fixture.awayTeam}
+                              </h2>
+                              <p className="text-sm text-slate-400">
+                                {formatKickoff(fixture.kickoff || fixture.matchDate)} / {fixture.bookmaker}
+                              </p>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-2">
+                              {fixtureHealth ? (
+                                <div
+                                  className={`rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] ${fixtureTrustBadgeClass(fixtureHealth.trust_tier)}`}
+                                >
+                                  {fixtureStatusLabel(fixtureHealth)}
+                                </div>
+                              ) : null}
+                              <div className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs text-slate-300">
+                                {fixture.homeRows.length + fixture.awayRows.length} matched player prices
+                              </div>
+                            </div>
+                          </div>
+
+                          {fixtureHealth && (isQuarantined || (isDegraded && !isAwaitingLineup)) ? (
+                            <div
+                              className={`mb-4 rounded-xl border p-3 text-sm ${isQuarantined ? "border-rose-500/20 bg-rose-500/8 text-rose-100" : "border-amber-500/20 bg-amber-500/8 text-amber-100"}`}
+                            >
+                              <div className="font-medium">
+                                {isQuarantined
+                                  ? "This fixture is quarantined from trust-sensitive decisions."
+                                  : fixtureHealthSummary(fixtureHealth)}
+                              </div>
+                              {(fixtureHealth.corruption_flags ?? []).length > 0 ? (
+                                <div className="mt-2 flex flex-wrap gap-2 text-[11px]">
+                                  {(fixtureHealth.corruption_flags ?? []).slice(0, 8).map((flag) => (
+                                    <span
+                                      key={`${fixture.key}-${flag}`}
+                                      className="rounded-full border border-slate-700/80 bg-slate-950/45 px-2 py-1 text-slate-200"
+                                    >
+                                      {flag}
+                                    </span>
+                                  ))}
+                                </div>
+                              ) : null}
+                            </div>
+                          ) : null}
+
+                          {isQuarantined ? (
+                            <div className="rounded-xl border border-dashed border-rose-500/25 bg-rose-500/5 p-4 text-sm text-rose-100">
+                              Player-level output is still stored for audit, but this fixture should not be trusted for public or shadow decisions until the lineup payload is sane again.
+                            </div>
+                          ) : !hasAnyLineup ? (
+                            <div className="rounded-xl border border-dashed border-slate-800/80 bg-slate-950/20 p-4 text-sm text-slate-400">
+                              No FotMob lineup has landed for this fixture yet. The monitor still has{" "}
+                              <span className="font-medium text-slate-200">
+                                {fixture.homeRows.length + fixture.awayRows.length}
+                              </span>{" "}
+                              matched player prices, but the lineup view stays collapsed until a real expected or confirmed XI arrives.
+                            </div>
+                          ) : (
+                            <div className="grid gap-5 xl:grid-cols-2">
+                              <TeamPitch
+                                team={fixture.homeTeam}
+                                rows={fixture.homeRows}
+                                lineupPlayers={lineup?.homePlayers}
+                                lineupStatus={lineup?.homeStatus}
+                              />
+                              <TeamPitch
+                                team={fixture.awayTeam}
+                                rows={fixture.awayRows}
+                                lineupPlayers={lineup?.awayPlayers}
+                                lineupStatus={lineup?.awayStatus}
+                              />
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </div>
+                ))}
+
+                {fixtures.length === 0 ? (
+                  <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">
+                    No upcoming fixture groups in the next three days.
+                  </div>
+                ) : null}
+              </div>
+            </MonitorCard>
+          </ClientOnly>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.08),_transparent_22%),#0b0f14] text-slate-100">
