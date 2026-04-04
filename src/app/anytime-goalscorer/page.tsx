@@ -195,7 +195,12 @@ async function loadPublicRows(): Promise<PublicRow[]> {
 
 function getLiveSignals(rows: PublicRow[]): PublicRow[] {
   return rows
-    .filter((row) => !row.settled)
+    .filter((row) => {
+      if (row.settled) return false;
+      const kickoff = Date.parse(row.kickoff || row.date);
+      if (!Number.isFinite(kickoff)) return true;
+      return kickoff > Date.now();
+    })
     .sort((left, right) => {
       const leftKickoff = Date.parse(left.kickoff || left.date);
       const rightKickoff = Date.parse(right.kickoff || right.date);
@@ -235,9 +240,10 @@ function getMetrics(rows: PublicRow[]) {
 }
 
 function getLeagueSummaries(rows: PublicRow[]) {
+  const liveRows = getLiveSignals(rows);
   return LEAGUE_SOURCES.map((league) => {
     const leagueRows = rows.filter((row) => row.leagueKey === league.key);
-    const live = leagueRows.filter((row) => !row.settled).length;
+    const live = liveRows.filter((row) => row.leagueKey === league.key).length;
     const settled = leagueRows.filter((row) => row.settled && row.betOutcome.toLowerCase() !== "void").length;
     return {
       ...league,
