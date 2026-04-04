@@ -28,6 +28,22 @@ function Test-ScheduledTaskExists([string]$taskName) {
     return ($LASTEXITCODE -eq 0)
 }
 
+function Set-ScheduledTaskBatteryFriendly([string]$taskName) {
+    $xml = schtasks /Query /TN $taskName /XML
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($xml)) {
+        throw "Unable to read scheduled task XML for $taskName"
+    }
+
+    $patchedXml = $xml `
+        -replace '<DisallowStartIfOnBatteries>true</DisallowStartIfOnBatteries>', '<DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>' `
+        -replace '<StopIfGoingOnBatteries>true</StopIfGoingOnBatteries>', '<StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>'
+
+    $tmpPath = Join-Path ([System.IO.Path]::GetTempPath()) "$taskName.xml"
+    Set-Content -Path $tmpPath -Value $patchedXml -Encoding Unicode
+    schtasks /Create /TN $taskName /XML $tmpPath /F | Out-Null
+    Remove-Item -LiteralPath $tmpPath -Force -ErrorAction SilentlyContinue
+}
+
 if (Test-ScheduledTaskExists "IlMargine-Goalscorer-Health") {
     schtasks /Delete /TN "IlMargine-Goalscorer-Health" /F | Out-Host
 }
@@ -35,6 +51,9 @@ if (Test-ScheduledTaskExists "IlMargine-Goalscorer-Health") {
 schtasks /Create /TN "IlMargine-Goalscorer-Live" /SC DAILY /ST 08:00 /RI 10 /DU 16:00 /RL HIGHEST /TR "$liveCmd" /F | Out-Host
 # Run the daily settlement as SYSTEM so it can execute unattended during the day.
 schtasks /Create /TN "IlMargine-Goalscorer-Shadow-Settle" /SC DAILY /ST 10:00 /RL HIGHEST /RU SYSTEM /TR "$settleCmd" /F | Out-Host
+
+Set-ScheduledTaskBatteryFriendly "IlMargine-Goalscorer-Live"
+Set-ScheduledTaskBatteryFriendly "IlMargine-Goalscorer-Shadow-Settle"
 
 Write-Host ""
 Write-Host "Goalscorer tasks created/updated."

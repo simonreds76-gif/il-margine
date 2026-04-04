@@ -32,6 +32,22 @@ function Remove-ScheduledTaskIfExists([string]$taskName) {
     }
 }
 
+function Set-ScheduledTaskBatteryFriendly([string]$taskName) {
+    $xml = schtasks /Query /TN $taskName /XML
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($xml)) {
+        throw "Unable to read scheduled task XML for $taskName"
+    }
+
+    $patchedXml = $xml `
+        -replace '<DisallowStartIfOnBatteries>true</DisallowStartIfOnBatteries>', '<DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>' `
+        -replace '<StopIfGoingOnBatteries>true</StopIfGoingOnBatteries>', '<StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>'
+
+    $tmpPath = Join-Path ([System.IO.Path]::GetTempPath()) "$taskName.xml"
+    Set-Content -Path $tmpPath -Value $patchedXml -Encoding Unicode
+    schtasks /Create /TN $taskName /XML $tmpPath /F | Out-Null
+    Remove-Item -LiteralPath $tmpPath -Force -ErrorAction SilentlyContinue
+}
+
 Remove-ScheduledTaskIfExists "OnCourt Daily Sync"
 Remove-ScheduledTaskIfExists "OnCourt Weekly"
 Remove-ScheduledTaskIfExists "IlMargine-PinnacleCloseCapture"
@@ -40,6 +56,11 @@ schtasks /Create /TN "IlMargine-Daily" /SC DAILY /ST 23:55 /TR "$dailyCmd" /F | 
 schtasks /Create /TN "IlMargine-Daily-AM" /SC DAILY /ST 11:00 /TR "$amRefreshCmd" /F | Out-Host
 schtasks /Create /TN "IlMargine-Weekly" /SC WEEKLY /D SUN /ST 03:00 /TR "$weeklyCmd" /F | Out-Host
 schtasks /Create /TN "IlMargine-Tennis-Close-Capture" /SC DAILY /ST 08:00 /RI 30 /DU 16:00 /TR "$closeCaptureCmd" /F | Out-Host
+
+Set-ScheduledTaskBatteryFriendly "IlMargine-Daily"
+Set-ScheduledTaskBatteryFriendly "IlMargine-Daily-AM"
+Set-ScheduledTaskBatteryFriendly "IlMargine-Weekly"
+Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Close-Capture"
 
 if (Test-ScheduledTaskExists "IlMargine-Tennis-Shadow-Settle") {
     schtasks /Delete /TN "IlMargine-Tennis-Shadow-Settle" /F | Out-Host
