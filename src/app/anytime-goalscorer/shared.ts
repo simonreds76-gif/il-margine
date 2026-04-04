@@ -346,7 +346,7 @@ export function getContextSignals(
     });
   } else if (row.finishingLuck >= 0.8) {
     signals.push({
-      label: "Finishing running hot",
+      label: "Recent finishing above xG",
       className: "border-white/10 bg-white/[0.04] text-neutral-300",
     });
   }

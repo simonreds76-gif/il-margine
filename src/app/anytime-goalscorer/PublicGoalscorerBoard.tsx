@@ -130,7 +130,7 @@ function LivePickCard({ row, todayIso }: { row: PublicRow; todayIso: string }) {
             <div className="flex flex-wrap items-center gap-2 text-sm text-neutral-300">
               {league ? <LeagueLogo league={league} variant="row" /> : null}
               <span>{row.leagueLabel}</span>
-              <span className="text-neutral-600">/</span>
+              <span className="text-neutral-600">·</span>
               <span className="truncate text-white">{row.match}</span>
             </div>
           </div>
@@ -161,7 +161,7 @@ function LivePickCard({ row, todayIso }: { row: PublicRow; todayIso: string }) {
               <span>{row.opponent}</span>
               {row.position ? (
                 <>
-                  <span className="text-neutral-600">/</span>
+                  <span className="text-neutral-600">·</span>
                   <span>{row.position}</span>
                 </>
               ) : null}
@@ -282,7 +282,7 @@ function RecordTable({ rows }: { rows: PublicRow[] }) {
           <article key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}-mobile`} className="rounded-2xl border border-white/10 bg-[#121417] px-4 py-4">
             <div className="flex items-start justify-between gap-3">
               <div className="text-sm text-neutral-400">
-                {formatResultDate(row.date)} / {row.leagueShort}
+                {formatResultDate(row.date)} · {row.leagueShort}
               </div>
               <div className={`text-sm font-semibold ${row.betOutcome.toLowerCase() === "won" ? "text-emerald-300" : "text-rose-300"}`}>
                 {row.betOutcome.toUpperCase()} {formatUnits(row.pnlUnits)}
@@ -291,7 +291,7 @@ function RecordTable({ rows }: { rows: PublicRow[] }) {
             <div className="mt-2 text-base font-semibold text-white">{row.player} to score</div>
             <div className="mt-1 text-sm text-neutral-400">{row.match}</div>
             <div className="mt-2 text-sm text-neutral-300">
-              {formatOdds(row.bestOdds)} / {formatPct(row.ev * 100, 1)} / {row.stakeLabel || `${row.stakeUnits.toFixed(2)}u`}
+              {formatOdds(row.bestOdds)} · {formatPct(row.ev * 100, 1)} · {row.stakeLabel || `${row.stakeUnits.toFixed(2)}u`}
             </div>
           </article>
         ))}
@@ -346,11 +346,11 @@ export default function PublicGoalscorerBoard({
     <>
       <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-neutral-400">
         <span className="text-neutral-200">{selectedLeagueLabel}</span>
-        <span className="mx-2 text-neutral-600">/</span>
+        <span className="mx-2 text-neutral-600">·</span>
         <span>{filteredLiveSignals.length} live</span>
-        <span className="mx-2 text-neutral-600">/</span>
+        <span className="mx-2 text-neutral-600">·</span>
         <span>{filteredSettledSignals.length} settled</span>
-        <span className="mx-2 text-neutral-600">/</span>
+        <span className="mx-2 text-neutral-600">·</span>
         <span>Snapshot {formatDateTime(snapshotGeneratedAt)}</span>
       </div>
 
@@ -427,7 +427,7 @@ export default function PublicGoalscorerBoard({
         <div className="mb-4">
           <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-200">Published record</h2>
           <p className="mt-2 text-sm text-neutral-400">
-            W{metrics.wins} / L{metrics.losses} / {formatPct(metrics.roi, 1)} ROI / {formatUnits(metrics.pnlUnits)} on {metrics.stakedUnits.toFixed(2)}u staked
+            W{metrics.wins} · L{metrics.losses} · {formatPct(metrics.roi, 1)} ROI · {formatUnits(metrics.pnlUnits)} on {metrics.stakedUnits.toFixed(2)}u staked
           </p>
         </div>
 
