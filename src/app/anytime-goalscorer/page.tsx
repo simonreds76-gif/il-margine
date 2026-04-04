@@ -575,15 +575,11 @@ export default async function AnytimeGoalscorerPage() {
     const meta = kickoffMeta(row.kickoff || row.date, todayIso);
     return meta.minutesUntil != null && meta.minutesUntil >= 0 && meta.minutesUntil <= 60;
   });
-  const todaySignals = liveSignals.filter((row) => {
-    const meta = kickoffMeta(row.kickoff || row.date, todayIso);
-    return meta.dateKey === todayIso && (meta.minutesUntil == null || meta.minutesUntil > 60);
-  });
-  const laterSignals = liveSignals.filter((row) => {
-    const meta = kickoffMeta(row.kickoff || row.date, todayIso);
-    return meta.dateKey !== todayIso;
-  });
   const nextKickoffLabel = liveSignals[0] ? kickoffMeta(liveSignals[0].kickoff || liveSignals[0].date, todayIso).label : "n/a";
+  const liveLeagueSections = LEAGUE_SOURCES.map((league) => ({
+    ...league,
+    rows: liveSignals.filter((row) => row.leagueKey === league.key),
+  })).filter((league) => league.rows.length > 0);
 
   return (
     <div className="min-h-screen overflow-hidden bg-[#0b0d10] text-neutral-200">
@@ -627,14 +623,25 @@ export default async function AnytimeGoalscorerPage() {
 
           <div className="mt-5 flex flex-wrap gap-2">
             {leagueSummaries.map((league) => (
-              <span
-                key={league.key}
-                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] ${league.badgeClass}`}
-              >
-                <LeagueLogo league={league} variant="chip" />
-                <span>{league.label.toUpperCase()}</span>
-                {league.live > 0 ? <span className="text-[9px] opacity-75">{league.live} live</span> : null}
-              </span>
+              league.live > 0 ? (
+                <Link
+                  key={league.key}
+                  href={`#league-${league.key}`}
+                  className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] ${league.badgeClass} transition-transform hover:-translate-y-0.5`}
+                >
+                  <LeagueLogo league={league} variant="chip" />
+                  <span>{league.label.toUpperCase()}</span>
+                  <span className="text-[9px] opacity-75">{league.live} live</span>
+                </Link>
+              ) : (
+                <span
+                  key={league.key}
+                  className={`inline-flex cursor-default items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] opacity-60 ${league.badgeClass}`}
+                >
+                  <LeagueLogo league={league} variant="chip" />
+                  <span>{league.label.toUpperCase()}</span>
+                </span>
+              )
             ))}
           </div>
         </div>
@@ -689,36 +696,17 @@ export default async function AnytimeGoalscorerPage() {
           </div>
         ) : null}
 
-        {startingSoonSignals.length > 0 ? (
-          <section className="mb-10">
-            <div className="mb-4 flex items-center justify-between gap-4">
-              <div>
-                <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">Starting soon</h2>
-                <p className="mt-1 text-sm text-neutral-500">
-                  Published picks inside the next hour, sorted by kickoff.
-                </p>
-              </div>
-            </div>
-            <div className="space-y-4">
-              {startingSoonSignals.map((row) => (
-                <LivePickCard key={`soon-${row.leagueKey}-${row.date}-${row.player}-${row.match}`} row={row} todayIso={todayIso} />
-              ))}
-            </div>
-          </section>
-        ) : null}
-
         <section className="mb-10">
           <div className="mb-4 flex items-center justify-between gap-4">
             <div>
-              <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">Today</h2>
+              <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">Live board</h2>
               <p className="mt-1 text-sm text-neutral-500">
-                Current published picks for today, with kickoff first so the soonest match stays on top.
+                Published picks grouped by league, with kickoff first. Use the league chips above to jump straight to the right section.
               </p>
             </div>
           </div>
 
-          <div className="space-y-4">
-            {liveSignals.length === 0 ? (
+          {liveSignals.length === 0 ? (
             <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#121417]">
               <div className="border-b border-white/10 px-5 py-4">
                 <span className="inline-flex rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-[11px] font-medium text-emerald-300">
@@ -733,35 +721,30 @@ export default async function AnytimeGoalscorerPage() {
                 </p>
               </div>
             </div>
-          ) : todaySignals.length > 0 ? (
-            todaySignals.map((row) => (
-              <LivePickCard key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}`} row={row} todayIso={todayIso} />
-            ))
           ) : (
-            <div className="rounded-[28px] border border-white/10 bg-[#121417] px-5 py-6 text-sm leading-7 text-neutral-400">
-              No additional picks later today. Any live qualifiers are already in the starting-soon block above.
-            </div>
-          )}
-          </div>
-        </section>
-
-        {laterSignals.length > 0 ? (
-          <section className="mb-10">
-            <div className="mb-4 flex items-center justify-between gap-4">
-              <div>
-                <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">Later window</h2>
-                <p className="mt-1 text-sm text-neutral-500">
-                  Tomorrow and later. Kept separate so today’s action does not get buried.
-                </p>
-              </div>
-            </div>
-            <div className="space-y-4">
-              {laterSignals.map((row) => (
-                <LivePickCard key={`later-${row.leagueKey}-${row.date}-${row.player}-${row.match}`} row={row} todayIso={todayIso} />
+            <div className="space-y-8">
+              {liveLeagueSections.map((league) => (
+                <section key={league.key} id={`league-${league.key}`} className="scroll-mt-24">
+                  <div className="mb-4 flex flex-wrap items-center gap-3">
+                    <span className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-semibold tracking-[0.16em] ${league.badgeClass}`}>
+                      <LeagueLogo league={league} variant="chip" />
+                      <span>{league.label.toUpperCase()}</span>
+                      <span className="text-[9px] opacity-75">{league.rows.length} live</span>
+                    </span>
+                    <span className="text-sm text-neutral-500">
+                      {league.rows.length === 1 ? "1 published pick" : `${league.rows.length} published picks`}
+                    </span>
+                  </div>
+                  <div className="space-y-4">
+                    {league.rows.map((row) => (
+                      <LivePickCard key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}`} row={row} todayIso={todayIso} />
+                    ))}
+                  </div>
+                </section>
               ))}
             </div>
-          </section>
-        ) : null}
+          )}
+        </section>
 
         <section className="mt-12">
           <div className="mb-4 flex items-center justify-between gap-4">
@@ -778,46 +761,52 @@ export default async function AnytimeGoalscorerPage() {
               No settled picks yet.
             </div>
           ) : (
-            <div className="overflow-hidden rounded-[28px] border border-white/10">
-              <div className="overflow-x-auto">
-                <div className="min-w-[860px]">
-                  <div className="grid grid-cols-[80px,110px,1.8fr,120px,110px,90px,90px,100px] gap-3 bg-[#171a1f] px-5 py-3 text-[11px] uppercase tracking-[0.18em] text-neutral-500">
-                    <span>Date</span>
-                    <span>League</span>
-                    <span>Pick</span>
-                    <span>Odds / Fair</span>
-                    <span>Stake</span>
-                    <span>Result</span>
-                    <span>P/L</span>
-                    <span>Book</span>
-                  </div>
-                  {settledSignals.slice(0, 30).map((row, index) => (
-                    <div
-                      key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}-settled`}
-                      className={`grid grid-cols-[80px,110px,1.8fr,120px,110px,90px,90px,100px] gap-3 px-5 py-4 text-sm ${index % 2 === 0 ? "bg-[#121417]" : "bg-[#171a1f]"}`}
-                    >
-                      <span className="text-neutral-500">{formatResultDate(row.date)}</span>
-                      <span className="flex items-center gap-2">
+            <div className="grid gap-4 md:grid-cols-2">
+              {settledSignals.slice(0, 30).map((row) => (
+                <article
+                  key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}-settled`}
+                  className="rounded-[24px] border border-white/10 bg-[#121417] p-5"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <div className="text-sm text-neutral-500">{formatResultDate(row.date)}</div>
+                      <div className="mt-2 flex items-center gap-2">
                         {getLeagueSource(row.leagueKey) ? <LeagueLogo league={getLeagueSource(row.leagueKey)!} variant="row" /> : null}
-                        <span className={`inline-flex rounded-md border px-2 py-0.5 text-[10px] font-semibold tracking-[0.16em] ${getLeagueBadgeClass(row.leagueKey)}`}>
+                        <span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] ${getLeagueBadgeClass(row.leagueKey)}`}>
                           {row.leagueShort}
                         </span>
-                      </span>
-                      <span className="text-neutral-200">
-                        <span className="font-medium text-white">{row.player}</span>
-                        <span className="mt-1 block text-xs text-neutral-500">{row.match}</span>
-                      </span>
-                      <span className="text-neutral-300">{formatOdds(row.bestOdds)} / {formatOdds(row.fairOdds)}</span>
-                      <span className="text-neutral-300">{row.stakeUnits.toFixed(2)}u</span>
-                      <span className={row.betOutcome.toLowerCase() === "won" ? "text-emerald-300" : "text-rose-300"}>
-                        {row.betOutcome.toUpperCase()}
-                      </span>
-                      <span className={getPnlClass(row.pnlUnits)}>{formatUnits(row.pnlUnits)}</span>
-                      <span className="text-neutral-500">{row.bestBookmaker || "market"}</span>
+                      </div>
                     </div>
-                  ))}
-                </div>
-              </div>
+                    <div className={`text-sm font-semibold ${row.betOutcome.toLowerCase() === "won" ? "text-emerald-300" : "text-rose-300"}`}>
+                      {row.betOutcome.toUpperCase()}
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <div className="text-xl font-semibold text-white">{row.player}</div>
+                    <div className="mt-1 text-sm text-neutral-500">{row.match}</div>
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                    <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-2">
+                      <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Odds / Fair</div>
+                      <div className="mt-1 text-neutral-200">{formatOdds(row.bestOdds)} / {formatOdds(row.fairOdds)}</div>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-2">
+                      <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Stake</div>
+                      <div className="mt-1 text-neutral-200">{row.stakeUnits.toFixed(2)}u</div>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-2">
+                      <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">P/L</div>
+                      <div className={`mt-1 font-semibold ${getPnlClass(row.pnlUnits)}`}>{formatUnits(row.pnlUnits)}</div>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-2">
+                      <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Book</div>
+                      <div className="mt-1 text-neutral-200">{row.bestBookmaker || "market"}</div>
+                    </div>
+                  </div>
+                </article>
+              ))}
             </div>
           )}
         </section>
