@@ -141,6 +141,21 @@ type PenaltyReviewPayload = {
   rows?: PenaltyReviewRow[];
 };
 
+type GoalscorerMonitorRow = {
+  key: string;
+  status: "PUBLIC" | "SHADOW";
+  league: string;
+  player: string;
+  match: string;
+  kickoff: string;
+  lineupShort: string;
+  lineupLabel: string;
+  odds?: number;
+  fair?: number;
+  edgePct?: number;
+  row: CsvRow;
+};
+
 export const dynamic = "force-dynamic";
 
 const MODEL_MONITOR_PUBLIC =
@@ -542,6 +557,104 @@ function formatKickoff(value?: string | null): string {
   }).format(new Date(parsed));
 }
 
+function isoDateForValueInTimezone(value?: string | null, timeZone = "Europe/London"): string | null {
+  if (!value) return null;
+  if (isDateOnly(value)) return value.trim().slice(0, 10);
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return null;
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(parsed);
+  const year = parts.find((part) => part.type === "year")?.value ?? "0000";
+  const month = parts.find((part) => part.type === "month")?.value ?? "01";
+  const day = parts.find((part) => part.type === "day")?.value ?? "01";
+  return `${year}-${month}-${day}`;
+}
+
+function formatOpsKickoff(value?: string | null, todayIso = isoDateInTimezone("Europe/London")): string {
+  if (!value) return "TBC";
+  if (isDateOnly(value)) return formatShortDate(value);
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return value;
+
+  const dateIso = isoDateForValueInTimezone(value);
+  const tomorrowIso = addDaysIso(todayIso, 1);
+  const timeLabel = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(parsed);
+
+  if (dateIso === todayIso) return timeLabel;
+  if (dateIso === tomorrowIso) return `Tomorrow ${timeLabel}`;
+
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(parsed);
+}
+
+function kickoffUrgencyMeta(value?: string | null): { label: string; className: string; startsSoon: boolean } {
+  if (!value || isDateOnly(value)) {
+    return {
+      label: "scheduled",
+      className: "text-slate-400",
+      startsSoon: false,
+    };
+  }
+
+  const kickoff = Date.parse(value);
+  if (Number.isNaN(kickoff)) {
+    return {
+      label: "scheduled",
+      className: "text-slate-400",
+      startsSoon: false,
+    };
+  }
+
+  const minutesUntil = Math.round((kickoff - Date.now()) / 60000);
+  if (minutesUntil < 0) {
+    return {
+      label: "started",
+      className: "text-rose-300",
+      startsSoon: false,
+    };
+  }
+  if (minutesUntil < 30) {
+    return {
+      label: "<30m",
+      className: "font-semibold text-rose-300",
+      startsSoon: true,
+    };
+  }
+  if (minutesUntil < 60) {
+    return {
+      label: "<60m",
+      className: "font-semibold text-amber-300",
+      startsSoon: true,
+    };
+  }
+  if (minutesUntil < 180) {
+    return {
+      label: "today",
+      className: "text-slate-200",
+      startsSoon: false,
+    };
+  }
+  return {
+    label: "later",
+    className: "text-slate-400",
+    startsSoon: false,
+  };
+}
+
 function formatUnits(value?: number, digits = 2): string {
   if (value == null || Number.isNaN(value)) return "n/a";
   return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}u`;
@@ -759,18 +872,30 @@ function formatLineupLabel(row: CsvRow): string {
   return "No XI yet";
 }
 
+function lineupShortLabel(row: CsvRow): string {
+  const canonical = (row.lineup_status ?? "").trim().toLowerCase();
+  if (canonical === "confirmed_starter") return "✓";
+  if (canonical === "expected_starter") return "~";
+  if (canonical === "confirmed_bench" || canonical === "expected_bench") return "B";
+  if (canonical === "not_in_squad" || canonical === "expected_out") return "✗";
+  return "?";
+}
+
+function leagueShortLabel(value?: string): string {
+  const normalized = (value ?? "").trim().toLowerCase();
+  if (normalized.includes("premier league")) return "PL";
+  if (normalized.includes("serie a")) return "SA";
+  if (normalized.includes("la liga")) return "LL";
+  if (normalized.includes("bundesliga")) return "BL";
+  if (normalized.includes("ligue 1")) return "L1";
+  return (value ?? "n/a").slice(0, 3).toUpperCase();
+}
+
 function toneForAction(action?: string): string {
   if (action === "surface") return "text-emerald-300";
   if (action === "shadow_track") return "text-amber-300";
   if (action === "surface_with_caveat") return "text-amber-300";
   return "text-slate-400";
-}
-
-function badgeClass(action?: string): string {
-  if (action === "surface") return "border-emerald-500/30 bg-emerald-500/10 text-emerald-300";
-  if (action === "shadow_track") return "border-amber-500/30 bg-amber-500/10 text-amber-200";
-  if (action === "surface_with_caveat") return "border-amber-500/30 bg-amber-500/10 text-amber-200";
-  return "border-slate-700 bg-slate-900 text-slate-300";
 }
 
 const FULL_BACK_POSITION_IDS = new Set([32, 38, 62, 68, 71, 72, 78, 79]);
@@ -1233,6 +1358,170 @@ function MonitorCard({
       </div>
       {children}
     </section>
+  );
+}
+
+function statusPillClass(status: GoalscorerMonitorRow["status"]): string {
+  return status === "PUBLIC"
+    ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+    : "border-slate-700/80 bg-slate-900/80 text-slate-300";
+}
+
+function CollapsibleMonitorSection({
+  title,
+  subtitle,
+  defaultOpen = false,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <details
+      open={defaultOpen}
+      className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] shadow-[0_20px_60px_rgba(0,0,0,0.28)] open:border-slate-700"
+    >
+      <summary className="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 marker:hidden">
+        <div>
+          <h2 className="text-lg font-semibold text-slate-100">{title}</h2>
+          {subtitle ? <p className="mt-1 text-sm text-slate-400">{subtitle}</p> : null}
+        </div>
+        <span className="rounded-full border border-slate-700/80 bg-slate-950/50 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-slate-400">
+          toggle
+        </span>
+      </summary>
+      <div className="border-t border-slate-800 px-5 py-5">{children}</div>
+    </details>
+  );
+}
+
+function LiveBetsTable({
+  rows,
+  todayIso,
+  emptyLabel,
+}: {
+  rows: GoalscorerMonitorRow[];
+  todayIso: string;
+  emptyLabel: string;
+}) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-sm">
+        <thead className="text-left text-slate-500">
+          <tr className="border-b border-slate-800">
+            <th className="px-3 py-3 font-medium">Kickoff</th>
+            <th className="px-3 py-3 font-medium">Player</th>
+            <th className="px-3 py-3 font-medium">Match</th>
+            <th className="px-3 py-3 font-medium">League</th>
+            <th className="px-3 py-3 font-medium">XI</th>
+            <th className="px-3 py-3 font-medium">Odds</th>
+            <th className="px-3 py-3 font-medium">Fair</th>
+            <th className="px-3 py-3 font-medium">Edge</th>
+            <th className="px-3 py-3 font-medium">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((item) => {
+            const urgency = kickoffUrgencyMeta(item.kickoff);
+            return (
+              <tr key={item.key} className="border-b border-slate-900/80">
+                <td className={`px-3 py-3 ${urgency.className}`}>
+                  <div>{formatOpsKickoff(item.kickoff, todayIso)}</div>
+                  <div className="mt-1 text-[11px] uppercase tracking-[0.16em] text-slate-500">{urgency.label}</div>
+                </td>
+                <td className="px-3 py-3">
+                  <div className="font-medium text-slate-100">{item.player}</div>
+                </td>
+                <td className="px-3 py-3 text-slate-300">{item.match}</td>
+                <td className="px-3 py-3 text-xs text-slate-400">{item.league}</td>
+                <td className="px-3 py-3">
+                  <span
+                    title={item.lineupLabel}
+                    className={`inline-flex h-7 w-7 items-center justify-center rounded-full border text-xs font-semibold ${
+                      item.lineupShort === "✓"
+                        ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-300"
+                        : item.lineupShort === "~"
+                          ? "border-amber-500/25 bg-amber-500/10 text-amber-200"
+                          : item.lineupShort === "✗"
+                            ? "border-rose-500/25 bg-rose-500/10 text-rose-300"
+                            : "border-slate-700/80 bg-slate-900/80 text-slate-300"
+                    }`}
+                  >
+                    {item.lineupShort}
+                  </span>
+                </td>
+                <td className="px-3 py-3 text-slate-300">{formatDecimal(item.odds, 2)}</td>
+                <td className="px-3 py-3 text-slate-300">{formatDecimal(item.fair, 2)}</td>
+                <td className={`px-3 py-3 font-medium ${metricTone(item.edgePct)}`}>{formatPct(item.edgePct, 1)}</td>
+                <td className="px-3 py-3">
+                  <span className={`rounded-full border px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] ${statusPillClass(item.status)}`}>
+                    {item.status}
+                  </span>
+                </td>
+              </tr>
+            );
+          })}
+          {rows.length === 0 ? (
+            <tr>
+              <td colSpan={9} className="px-3 py-6 text-center text-slate-500">
+                {emptyLabel}
+              </td>
+            </tr>
+          ) : null}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function SettledRowsTable({ rows }: { rows: CsvRow[] }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-sm">
+        <thead className="text-left text-slate-500">
+          <tr className="border-b border-slate-800">
+            <th className="px-3 py-2 font-medium">Time</th>
+            <th className="px-3 py-2 font-medium">Player</th>
+            <th className="px-3 py-2 font-medium">Match</th>
+            <th className="px-3 py-2 font-medium">XI</th>
+            <th className="px-3 py-2 font-medium">Odds / Fair</th>
+            <th className="px-3 py-2 font-medium">EV</th>
+            <th className="px-3 py-2 font-medium">Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, idx) => (
+            <tr key={`settled-${row.date}-${row.player}-${row.match}-${idx}`} className="border-b border-slate-900/80">
+              <td className="px-3 py-2 text-xs text-slate-500">{formatDateTime(row.settled_at || row.compared_at || row.kickoff || row.date)}</td>
+              <td className="px-3 py-2">
+                <div className="font-medium text-slate-100">{row.player || "Unknown player"}</div>
+                <div className="text-xs text-slate-500">{row.team || "Unknown team"}</div>
+              </td>
+              <td className="px-3 py-2 text-slate-300">{row.match || "Unknown match"}</td>
+              <td className="px-3 py-2 text-xs text-slate-400">{humanizeToken(row.lineup_state || "unknown")}</td>
+              <td className="px-3 py-2 text-slate-300">
+                {parseFloatMaybe(row.best_bookmaker_odds) != null ? formatDecimal(parseFloatMaybe(row.best_bookmaker_odds), 2) : "n/a"}
+                {" / "}
+                {parseFloatMaybe(row.model_fair_odds) != null ? formatDecimal(parseFloatMaybe(row.model_fair_odds), 2) : "n/a"}
+              </td>
+              <td className={`px-3 py-2 font-medium ${(parseFloatMaybe(row.ev) ?? 0) >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                {parseFloatMaybe(row.ev) != null ? formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1) : "n/a"}
+              </td>
+              <td className={`px-3 py-2 text-xs font-semibold ${shadowResultTone(row)}`}>{shadowResultLabel(row)}</td>
+            </tr>
+          ))}
+          {rows.length === 0 ? (
+            <tr>
+              <td colSpan={7} className="px-3 py-6 text-center text-slate-500">
+                No settled rows in this window.
+              </td>
+            </tr>
+          ) : null}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -1727,12 +2016,48 @@ export default async function GoalscorerMonitorPage() {
   highRows.sort((a, b) => compareRowsByKickoffThenEv(a, b, kickoffLookup));
   caveatRows.sort((a, b) => compareRowsByKickoffThenEv(a, b, kickoffLookup));
 
+  const todayIso = isoDateInTimezone("Europe/London");
+  const yesterdayIso = addDaysIso(todayIso, -1);
+  const liveMonitorRows: GoalscorerMonitorRow[] = [...highRows, ...caveatRows]
+    .map((row) => {
+      const kickoff = resolveRowKickoff(row, kickoffLookup);
+      return {
+        key: `${row.player_name}-${row.match_date}-${row.bookmaker}-${effectiveMonitorAction(row)}`,
+        status: ((row.public_action ?? "") === "surface" ? "PUBLIC" : "SHADOW") as GoalscorerMonitorRow["status"],
+        league: leagueShortLabel(row.competition || row.league),
+        player: row.player_name || "Unknown player",
+        match: `${row.player_team || "Unknown team"} vs ${row.opponent || "Unknown opponent"}`,
+        kickoff,
+        lineupShort: lineupShortLabel(row),
+        lineupLabel: formatLineupLabel(row),
+        odds: parseFloatMaybe(row.odds_decimal),
+        fair: parseFloatMaybe(row.model_fair_odds_atgs),
+        edgePct: (parseFloatMaybe(row.ev) ?? 0) * 100,
+        row,
+      };
+    })
+    .sort((left, right) => {
+      const kickoffDiff = kickoffSortValue(left.kickoff) - kickoffSortValue(right.kickoff);
+      if (kickoffDiff !== 0) return kickoffDiff;
+      if (left.status !== right.status) return left.status === "PUBLIC" ? -1 : 1;
+      return (right.edgePct ?? 0) - (left.edgePct ?? 0);
+    });
+  const startingSoonRows = liveMonitorRows.filter((item) => kickoffUrgencyMeta(item.kickoff).startsSoon);
+  const todayRows = liveMonitorRows.filter((item) => isoDateForValueInTimezone(item.kickoff) === todayIso);
+  const laterRows = liveMonitorRows.filter((item) => isoDateForValueInTimezone(item.kickoff) !== todayIso);
+  const settledTodayRows = latestTrackedRows.filter(
+    (row) => isSettledShadowRow(row) && isoDateForValueInTimezone(row.settled_at || row.date) === todayIso,
+  );
+  const settledYesterdayRows = latestTrackedRows.filter(
+    (row) => isSettledShadowRow(row) && isoDateForValueInTimezone(row.settled_at || row.date) === yesterdayIso,
+  );
+
   const comparedAt = rows
     .map((row) => row.compared_at ?? "")
     .filter(Boolean)
     .sort()
     .at(-1) ?? "n/a";
-  const liveWindowStart = isoDateInTimezone("Europe/London");
+  const liveWindowStart = todayIso;
   const liveWindowEnd = addDaysIso(liveWindowStart, 3);
   const comparisonMtime =
     leagueDatasets
@@ -1963,17 +2288,67 @@ export default async function GoalscorerMonitorPage() {
           </section>
         ) : null}
 
-        <div className="mb-3 flex items-center justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-semibold text-slate-100">Quick View</h2>
-            <p className="mt-1 text-sm text-slate-400">
-              League-first scoreboard for the live board and the tracked shadow history. Fixture health reads as clean / degraded / quarantined.
-            </p>
+        <section className="mb-8 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+          <Stat label="Last refresh" value={formatDateTime(comparisonMtime)} tone={comparisonFreshness.className} />
+          <Stat label="Public live" value={`${highRows.length}`} tone="text-emerald-300" />
+          <Stat label="Shadow live" value={`${caveatRows.length}`} tone="text-slate-300" />
+          <Stat label="Starting <60m" value={`${liveMonitorRows.filter((item) => kickoffUrgencyMeta(item.kickoff).label === "<60m" || kickoffUrgencyMeta(item.kickoff).label === "<30m").length}`} tone="text-amber-300" />
+          <Stat label="Health" value={`${cleanFixtures}/${degradedFixtures}/${quarantinedFixtures}`} tone="text-slate-200" />
+        </section>
+
+        {sourceFeedGapLeagues.length > 0 ? (
+          <div className="mb-8 rounded-2xl border border-amber-500/20 bg-amber-500/8 p-4 text-sm leading-6 text-amber-100">
+            {sourceFeedGapLeagues.map((league) => league.label).join(", ")} currently has pipeline output and historical logs,
+            but the upstream ATGS source feed returned no current events for the live window. That league will stay at zero
+            matched prices until the feed comes back.
           </div>
+        ) : null}
+
+        {startingSoonRows.length > 0 ? (
+          <div className="mb-8">
+            <MonitorCard title="Starting soon" subtitle="Rows kicking off within the next hour. This is the action zone.">
+              <LiveBetsTable rows={startingSoonRows} todayIso={todayIso} emptyLabel="No rows starting soon." />
+            </MonitorCard>
+          </div>
+        ) : null}
+
+        <div className="mb-8">
+          <MonitorCard title="Live bets" subtitle="Public and shadow rows in one urgency-sorted board, with kickoff first and the rest of the model detail pushed out of the default view.">
+            <LiveBetsTable rows={todayRows} todayIso={todayIso} emptyLabel="No active goalscorer rows for today." />
+          </MonitorCard>
+        </div>
+
+        {laterRows.length > 0 ? (
+          <div className="mb-8">
+            <CollapsibleMonitorSection
+              title="Later window"
+              subtitle="Upcoming rows outside today. Useful for planning, but not worth cluttering the main action area."
+            >
+              <LiveBetsTable rows={laterRows} todayIso={todayIso} emptyLabel="No later rows in the live horizon." />
+            </CollapsibleMonitorSection>
+          </div>
+        ) : null}
+
+        <div className="mb-8 grid gap-6 xl:grid-cols-2">
+          <CollapsibleMonitorSection
+            title={`Settled today (${todayIso})`}
+            subtitle="Closed by default so the live board stays usable during the day."
+          >
+            <SettledRowsTable rows={settledTodayRows} />
+          </CollapsibleMonitorSection>
+          <CollapsibleMonitorSection
+            title={`Settled yesterday (${yesterdayIso})`}
+            subtitle="Quick review block for yesterday without sending you into the archive."
+          >
+            <SettledRowsTable rows={settledYesterdayRows} />
+          </CollapsibleMonitorSection>
         </div>
 
         <div className="mb-8">
-          <MonitorCard title="League Scoreboard" subtitle="Same read as the tennis monitor, but grouped by league instead of policy. Open = pending + unsettled shadow rows.">
+          <CollapsibleMonitorSection
+            title="League scoreboard"
+            subtitle="League-level summary for review. Still useful, but no longer in the way when you just need the live bets."
+          >
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
                 <thead>
@@ -2018,384 +2393,165 @@ export default async function GoalscorerMonitorPage() {
                 </tbody>
               </table>
             </div>
-            <p className="mt-3 text-xs leading-6 text-slate-500">
-              Public = current starter-grade rows. Shadow = current monitor-only rows. Historical signals, W/L/V, ROI, and P/L come from the tracked shadow CSV for that league, so the scoreboard stays aligned between localhost and the hosted snapshot path.
-            </p>
-          </MonitorCard>
+          </CollapsibleMonitorSection>
         </div>
 
-        {sourceFeedGapLeagues.length > 0 ? (
-          <div className="mb-8 rounded-2xl border border-amber-500/20 bg-amber-500/8 p-4 text-sm leading-6 text-amber-100">
-            {sourceFeedGapLeagues.map((league) => league.label).join(", ")} currently has pipeline output and historical logs,
-            but the upstream ATGS source feed returned no current events for the live window. That league will stay at zero
-            matched prices until the feed comes back.
-          </div>
-        ) : null}
-
-        <section className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <MonitorCard title="Live Board Snapshot" subtitle="Current matched prices and where the live board would split rows right now.">
-            <div className="grid gap-3">
-              <Stat label="Matched Prices" value={`${matchedRows}`} />
-              <Stat label="Public-Ready" value={`${highRows.length}`} tone="text-emerald-300" />
-              <Stat label="Shadow Track" value={`${caveatRows.length}`} tone="text-amber-300" />
-              <Stat label="Suppressed" value={`${suppressedRows.length}`} tone="text-slate-400" />
-              <Stat label="Starter Rows" value={`${starterRows}`} tone="text-emerald-300" />
-              <Stat label="Expected Starters" value={`${expectedStarterRows}`} tone="text-cyan-300" />
-            </div>
-            <div className="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm leading-6 text-slate-400">
-              Expected XIs feed the softer monitor layer. Confirmed XIs are still the hard trigger before anything should be treated as genuinely public-ready.
-            </div>
-          </MonitorCard>
-
-          <MonitorCard title="Shadow History" subtitle="Tracked goalscorer rows across all leagues. This is the actual logged sample, not the full live board.">
-            <div className="grid gap-3">
-              <Stat label="Tracked Signals" value={`${shadowSummary.signals}`} />
-              <Stat label="Settled" value={`${shadowSummary.settled}`} />
-              <Stat label="Open" value={`${shadowUnsettledCount(shadowSummary)}`} tone="text-amber-300" />
-              <Stat label="W/L/V" value={formatWLV(shadowSummary.wins, shadowSummary.losses, shadowSummary.voids)} tone="text-slate-200" />
-              <Stat label="ROI" value={formatPct(shadowSummary.roi, 1)} tone={metricTone(shadowSummary.roi)} />
-              <Stat label="P/L Units" value={formatUnits(shadowSummary.pnlUnits, 2)} tone={metricTone(shadowSummary.pnlUnits)} />
-            </div>
-            <div className="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm leading-6 text-slate-400">
-              Non-starters are filtered out before a shadow pick is logged, so this history does not rely on later voiding them away.
-            </div>
-          </MonitorCard>
-
-          <MonitorCard title="Fixture Health" subtitle="How clean the current live window is before we even look at player EV.">
-            <div className="grid gap-3">
-              <Stat label="Clean Fixtures" value={`${cleanFixtures}`} tone="text-emerald-300" />
-              <Stat label="Degraded" value={`${degradedFixtures}`} tone="text-amber-300" />
-              <Stat label="Quarantined" value={`${quarantinedFixtures}`} tone="text-rose-300" />
-              <Stat label="Confirmed XI" value={`${fixturesWithConfirmedLineups}`} tone="text-slate-200" />
-              <Stat label="Expected XI" value={`${fixturesWithExpectedXIs}`} tone="text-cyan-300" />
-              <Stat label="Visible Issues" value={`${flaggedFixtures.length}`} tone={flaggedFixtures.length > 0 ? "text-amber-300" : "text-emerald-300"} />
-            </div>
-          </MonitorCard>
-
-          <MonitorCard title="Resolver Quality" subtitle="How the live row was matched before confidence is assigned.">
-            <div className="grid gap-3">
-              <Stat label="Mapped By History" value={`${historyResolved}`} tone="text-emerald-300" />
-              <Stat label="Mapped By Live Roster" value={`${rosterResolved}`} tone="text-amber-300" />
-              <Stat label="Missing Player History" value={`${missingHistoryRows}`} tone="text-rose-300" />
-              <Stat label="Fallback Rows" value={`${fallbackRows}`} tone="text-slate-300" />
-              <Stat
-                label="Average EV"
-                value={formatPct((avgEv ?? 0) * 100, 1)}
-                tone={avgEv != null && avgEv >= 0 ? "text-emerald-300" : "text-rose-300"}
-              />
-              <Stat label="Low Confidence Rows" value={`${lowConfidence}`} tone="text-slate-400" />
-            </div>
-          </MonitorCard>
-        </section>
-
-        <div className="mb-8 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-          <section className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
-            <div className="mb-4 flex items-start justify-between gap-4">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-100">Current public-ready rows</h2>
-                <p className="mt-1 text-sm text-slate-400">
-                  These are the live comparison rows that would qualify cleanly right now. They are not historical settled picks
-                  unless they also exist in the shadow tracker above.
-                </p>
+        <div className="mb-8">
+          <CollapsibleMonitorSection
+            title="Shadow tracker history"
+            subtitle="Historical review block for the shadow log. Useful when you need context, but out of the way by default."
+          >
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
+                <Stat label="Tracked Signals" value={`${shadowSummary.signals}`} />
+                <Stat label="Settled" value={`${shadowSummary.settled}`} />
+                <Stat label="Pending" value={`${shadowSummary.pending}`} tone="text-amber-300" />
+                <Stat label="W/L/V" value={formatWLV(shadowSummary.wins, shadowSummary.losses, shadowSummary.voids)} tone="text-slate-200" />
+                <Stat label="ROI" value={formatPct(shadowSummary.roi, 1)} tone={shadowSummary.roi >= 0 ? "text-emerald-300" : "text-rose-300"} />
+                <Stat label="P/L Units" value={formatSigned(shadowSummary.pnlUnits, 2)} tone={shadowSummary.pnlUnits >= 0 ? "text-emerald-300" : "text-rose-300"} />
               </div>
+              <Link
+                href="/anytime-goalscorer"
+                className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300"
+              >
+                Public preview
+              </Link>
             </div>
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-sm">
-                <thead className="text-left text-slate-500">
-                  <tr className="border-b border-slate-800">
-                    <th className="px-3 py-3 font-medium">League</th>
-                    <th className="px-3 py-3 font-medium">Player</th>
-                    <th className="px-3 py-3 font-medium">Fixture</th>
-                    <th className="px-3 py-3 font-medium">Kickoff (UK)</th>
-                    <th className="px-3 py-3 font-medium">Odds</th>
-                    <th className="px-3 py-3 font-medium">Fair</th>
-                    <th className="px-3 py-3 font-medium">EV</th>
-                    <th className="px-3 py-3 font-medium">XI</th>
-                    <th className="px-3 py-3 font-medium">Hist Min</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {highRows.map((row) => (
-                    <tr key={`${row.player_name}-${row.match_date}-${row.bookmaker}`} className="border-b border-slate-900/80">
-                      <td className="px-3 py-3 text-xs text-slate-500">{row.competition || row.league || "n/a"}</td>
-                      <td className="px-3 py-3">
-                        <div className="font-medium text-slate-100">{row.player_name}</div>
-                        <div className="text-xs text-slate-500">{row.player_team}</div>
-                      </td>
-                      <td className="px-3 py-3 text-slate-300">{row.player_team} vs {row.opponent}</td>
-                      <td className="px-3 py-3 text-xs text-slate-400">{formatKickoff(resolveRowKickoff(row, kickoffLookup))}</td>
-                      <td className="px-3 py-3 text-slate-300">{formatDecimal(parseFloatMaybe(row.odds_decimal), 2)}</td>
-                      <td className="px-3 py-3 text-slate-300">{formatDecimal(parseFloatMaybe(row.model_fair_odds_atgs), 2)}</td>
-                      <td className="px-3 py-3 text-emerald-300">{formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1)}</td>
-                      <td className="px-3 py-3 text-xs text-slate-400">{formatLineupLabel(row)}</td>
-                      <td className="px-3 py-3 text-slate-400">{formatSigned(parseFloatMaybe(row.historical_minutes), 0)}</td>
-                    </tr>
+
+            {shadowRows.length === 0 ? (
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/50 p-4 text-sm leading-6 text-slate-500">
+                No goalscorer shadow signals have been logged yet.
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="space-y-3">
+                  {latestTrackedRows.slice(0, 8).map((row) => (
+                    <ShadowTrackedRowCard
+                      key={`${isSettledShadowRow(row) ? "settled" : "open"}-${row.date}-${row.player}-${row.match}`}
+                      row={row}
+                    />
                   ))}
-                  {highRows.length === 0 ? (
-                    <tr>
-                      <td colSpan={9} className="px-3 py-6 text-center text-slate-500">No clean public-ready rows in the latest run.</td>
-                    </tr>
-                  ) : null}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
-            <div className="mb-4 flex items-start justify-between gap-4">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-100">Current shadow-track rows</h2>
-                <p className="mt-1 text-sm text-slate-400">
-                  These are the monitor-only rows we still want to follow: expected-starter angles and softer pre-KO ideas that clear the shadow threshold but do not belong on the public page yet.
-                </p>
-              </div>
-            </div>
-            <div className="space-y-3">
-              {caveatRows.map((row) => (
-                <div key={`${row.player_name}-${row.match_date}-${row.bookmaker}`} className="rounded-xl border border-amber-500/15 bg-amber-500/5 p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="font-medium text-slate-100">{row.player_name}</div>
-                      <div className="text-sm text-slate-400">{row.player_team} vs {row.opponent}</div>
-                      <div className="mt-1 text-xs text-slate-500">{formatKickoff(resolveRowKickoff(row, kickoffLookup))}</div>
-                    </div>
-                    <span className={`rounded-full border px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] ${badgeClass(effectiveMonitorAction(row))}`}>
-                      {effectiveMonitorActionLabel(row)}
-                    </span>
-                  </div>
-                  <div className="mt-3 grid gap-2 sm:grid-cols-3 text-sm">
-                    <div className="text-slate-300">Odds {formatDecimal(parseFloatMaybe(row.odds_decimal), 2)}</div>
-                    <div className="text-slate-300">Fair {formatDecimal(parseFloatMaybe(row.model_fair_odds_atgs), 2)}</div>
-                    <div className="text-amber-300">EV {formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1)}</div>
-                  </div>
-                  <div className="mt-2 text-xs text-slate-500">{formatLineupLabel(row)}</div>
-                  <div className="mt-2 text-xs text-slate-500">{row.confidence_reason}</div>
                 </div>
-              ))}
-              {caveatRows.length === 0 ? (
-                <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">No caveated signals in the latest run.</div>
-              ) : null}
-            </div>
-          </section>
+                <div className="rounded-xl border border-slate-800/80 bg-slate-950/50 p-3">
+                  <div className="mb-3 text-[11px] uppercase tracking-[0.18em] text-slate-500">Recent tracked archive</div>
+                  <div className="max-h-80 overflow-auto">
+                    <SettledRowsTable rows={latestTrackedRows.slice(0, 50)} />
+                  </div>
+                </div>
+              </div>
+            )}
+          </CollapsibleMonitorSection>
         </div>
 
-        <section className="mb-8 rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
-          <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-slate-100">Shadow tracker history</h2>
-              <p className="mt-1 text-sm text-slate-400">
-                This is the actual historical record for goalscorer rows that were logged into shadow tracking. It includes
-                softer monitor-only ideas as well as cleaner starter cases, so it is the place to check what we actually tracked yesterday.
-              </p>
-            </div>
-            <Link
-              href="/anytime-goalscorer"
-              className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300"
-            >
-              Public preview
-            </Link>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
-            <Stat label="Tracked Signals" value={`${shadowSummary.signals}`} />
-            <Stat label="Settled" value={`${shadowSummary.settled}`} />
-            <Stat label="Pending" value={`${shadowSummary.pending}`} tone="text-amber-300" />
-            <Stat label="W/L/V" value={formatWLV(shadowSummary.wins, shadowSummary.losses, shadowSummary.voids)} tone="text-slate-200" />
-            <Stat label="ROI" value={formatPct(shadowSummary.roi, 1)} tone={shadowSummary.roi >= 0 ? "text-emerald-300" : "text-rose-300"} />
-            <Stat label="P/L Units" value={formatSigned(shadowSummary.pnlUnits, 2)} tone={shadowSummary.pnlUnits >= 0 ? "text-emerald-300" : "text-rose-300"} />
-          </div>
-
-          <div className="mt-4 grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-            <div className="rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4">
-              <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">What counts as public-high history</h3>
-              <p className="mt-3 text-sm leading-6 text-slate-400">
-                Only rows that the live pipeline explicitly marks for shadow tracking get written here. So this section is the
-                real log of tracked goalscorer ideas, not the whole comparison board and not just the current live shortlist.
-              </p>
-              <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/60 p-3 text-sm text-slate-300">
-                Win rate {formatPct(shadowSummary.winRate, 1)} | ROI sample {shadowSummary.settled} settled picks, so treat the headline ROI as directional only until the book is much larger.
-              </div>
+        <div className="mb-8">
+          <CollapsibleMonitorSection
+            title="Diagnostics"
+            subtitle="Health and resolver checks for when something looks off. Hidden by default so the page stays operational first."
+          >
+            <div className="mb-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <Stat label="Matched Prices" value={`${matchedRows}`} />
+              <Stat label="Suppressed" value={`${suppressedRows.length}`} tone="text-slate-400" />
+              <Stat label="Confirmed XI" value={`${fixturesWithConfirmedLineups}`} tone="text-emerald-300" />
+              <Stat label="Expected XI" value={`${fixturesWithExpectedXIs}`} tone="text-cyan-300" />
+              <Stat label="History mapped" value={`${historyResolved}`} tone="text-emerald-300" />
+              <Stat label="Roster mapped" value={`${rosterResolved}`} tone="text-amber-300" />
+              <Stat label="Fallback rows" value={`${fallbackRows}`} tone="text-slate-300" />
+              <Stat label="Low confidence" value={`${lowConfidence}`} tone="text-slate-400" />
             </div>
 
-            <div className="rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4">
-              <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">Latest tracked rows</h3>
-              {shadowRows.length === 0 ? (
-                <div className="mt-3 rounded-xl border border-slate-800/80 bg-slate-950/50 p-4 text-sm leading-6 text-slate-500">
-                  No goalscorer shadow signals have been logged yet. The live monitor can still show current rows, but there is
-                  no historical shadow sample to judge yet.
-                </div>
-              ) : (
-                <>
-                  <div className="mt-3 space-y-3">
-                    {latestTrackedRows.slice(0, 8).map((row) => (
-                      <ShadowTrackedRowCard
-                        key={`${isSettledShadowRow(row) ? "settled" : "open"}-${row.date}-${row.player}-${row.match}`}
-                        row={row}
-                      />
-                    ))}
-                  </div>
-                  <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/50 p-3">
-                    <div className="mb-3 text-[11px] uppercase tracking-[0.18em] text-slate-500">Recent tracked archive</div>
-                    <div className="max-h-80 overflow-auto">
-                      <table className="min-w-full text-sm">
-                        <thead className="sticky top-0 bg-slate-950/95 text-left text-slate-500">
-                          <tr className="border-b border-slate-800">
-                            <th className="px-3 py-2 font-medium">Time</th>
-                            <th className="px-3 py-2 font-medium">Player</th>
-                            <th className="px-3 py-2 font-medium">Match</th>
-                            <th className="px-3 py-2 font-medium">Type</th>
-                            <th className="px-3 py-2 font-medium">XI</th>
-                            <th className="px-3 py-2 font-medium">Odds / Fair</th>
-                            <th className="px-3 py-2 font-medium">EV</th>
-                            <th className="px-3 py-2 font-medium">Result</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {latestTrackedRows.slice(0, 50).map((row) => {
-                            const resultLabel = shadowResultLabel(row);
-                            const resultTone = shadowResultTone(row);
-                            return (
-                              <tr key={`archive-${row.date}-${row.player}-${row.match}-${row.compared_at ?? ""}`} className="border-b border-slate-900/80">
-                                <td className="px-3 py-2 text-xs text-slate-500">
-                                  {formatDateTime(row.settled_at || row.compared_at || row.kickoff || row.date)}
-                                </td>
-                                <td className="px-3 py-2">
-                                  <div className="font-medium text-slate-100">{row.player || "Unknown player"}</div>
-                                  <div className="text-xs text-slate-500">{row.team || "Unknown team"}</div>
-                                </td>
-                                <td className="px-3 py-2 text-slate-300">{row.match || "Unknown match"}</td>
-                                <td className="px-3 py-2 text-xs text-slate-400">{humanizeToken(row.signal_type || "shadow_track")}</td>
-                                <td className="px-3 py-2 text-xs text-slate-400">{humanizeToken(row.lineup_state || "unknown")}</td>
-                                <td className="px-3 py-2 text-slate-300">
-                                  {(parseFloatMaybe(row.best_bookmaker_odds) != null ? formatDecimal(parseFloatMaybe(row.best_bookmaker_odds), 2) : "n/a")}
-                                  {" / "}
-                                  {(parseFloatMaybe(row.model_fair_odds) != null ? formatDecimal(parseFloatMaybe(row.model_fair_odds), 2) : "n/a")}
-                                </td>
-                                <td className={`px-3 py-2 font-medium ${(parseFloatMaybe(row.ev) ?? 0) >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
-                                  {parseFloatMaybe(row.ev) != null ? formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1) : "n/a"}
-                                </td>
-                                <td className={`px-3 py-2 text-xs font-semibold ${resultTone}`}>{resultLabel}</td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        </section>
-
-        <section className="mb-8 rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
-          <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-slate-100">Lineup trust watchlist</h2>
-              <p className="mt-1 text-sm text-slate-400">
-                Fixture-level health checks run before the player-level monitor logic. This watchlist is now reserved for
-                real structural problems only. Normal expected-XI fixtures and empty no-payload fixtures stay in the fixture
-                lineup view below instead of being repeated here.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-slate-800/80 bg-slate-950/35 px-4 py-3 text-sm text-slate-300">
+            <div className="mb-5 rounded-2xl border border-slate-800/80 bg-slate-950/35 px-4 py-3 text-sm text-slate-300">
               <div><span className="text-slate-500">Visible issues:</span> {flaggedFixtures.length}</div>
               <div><span className="text-slate-500">Quarantined:</span> {quarantinedFixtures}</div>
               <div><span className="text-slate-500">Hidden expected XIs:</span> {hiddenExpectedFixtures}</div>
               <div><span className="text-slate-500">Hidden pending lineups:</span> {hiddenPendingFixtures}</div>
+              <div><span className="text-slate-500">Average EV:</span> {formatPct((avgEv ?? 0) * 100, 1)}</div>
+              <div><span className="text-slate-500">Missing player history:</span> {missingHistoryRows}</div>
+              <div><span className="text-slate-500">Starter rows:</span> {starterRows}</div>
+              <div><span className="text-slate-500">Expected starters:</span> {expectedStarterRows}</div>
             </div>
-          </div>
 
-          {flaggedFixtures.length === 0 ? (
-            <div className="rounded-xl border border-emerald-500/15 bg-emerald-500/5 p-4 text-sm text-emerald-200">
-              No structural lineup issues in the current live window.
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {flaggedFixtures.map((fixture) => (
-                <div
-                  key={`trust-${fixtureHealthKey(fixture.league, fixture.match_date, fixture.home_team, fixture.away_team)}`}
-                  className={`rounded-xl border p-4 ${fixture.trust_tier === "T3" ? "border-rose-500/20 bg-rose-500/8" : "border-amber-500/20 bg-amber-500/8"}`}
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">
-                        {fixture.competition || fixture.league}
-                      </div>
-                      <div className="mt-1 text-base font-semibold text-white">
-                        {fixture.home_team} vs {fixture.away_team}
-                      </div>
-                      <div className="mt-1 text-sm text-slate-300">
-                        {fixture.match_date} | corruption score {fixture.corruption_score || "0"}
-                      </div>
-                      <div className="mt-2 max-w-3xl text-sm leading-6 text-slate-300/90">
-                        {fixtureHealthSummary(fixture)}
-                      </div>
-                    </div>
-                    <div className={`rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${fixtureTrustBadgeClass(fixture.trust_tier)}`}>
-                      {fixtureStatusLabel(fixture)}
-                    </div>
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {(fixture.corruption_flags ?? []).slice(0, 8).map((flag) => (
-                      <span key={`${fixture.home_team}-${fixture.away_team}-${flag}`} className="rounded-full border border-slate-700/80 bg-slate-950/50 px-2 py-1 text-[11px] text-slate-300">
-                        {flag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
-
-        <section className="mb-8 rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
-          <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-slate-100">Penalty duty watchlist</h2>
-              <p className="mt-1 text-sm text-slate-400">
-                This is the daily editorial queue for the penalty-taker boards. It compares who actually took recent penalties
-                against the pre-match hierarchy and flags anything that looks like a real shift rather than normal hold behaviour.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-slate-800/80 bg-slate-950/35 px-4 py-3 text-sm text-slate-300">
-              <div><span className="text-slate-500">Latest review:</span> {latestPenaltyReviewAt ?? "missing"}</div>
-              <div><span className="text-slate-500">Rows:</span> {penaltyReviewRows.length}</div>
-            </div>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <Stat label="High Priority" value={`${highPenaltyReviewRows.length}`} tone="text-rose-300" />
-            <Stat label="Medium Priority" value={`${mediumPenaltyReviewRows.length}`} tone="text-amber-300" />
-            <Stat label="Low Priority" value={`${lowPenaltyReviewRows.length}`} tone="text-slate-300" />
-            <Stat label="Recent Events" value={`${penaltyReviewRows.length}`} />
-          </div>
-
-          <div className="mt-5 space-y-4">
-            {penaltyReviewRows.map((row, idx) => (
-              <PenaltyReviewCard key={`${row.date}-${row.team}-${row.actual_taker}-${idx}`} row={row} />
-            ))}
-            {penaltyReviewRows.length === 0 ? (
-              <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">
-                No penalty-duty review rows yet. Once recent league contexts and settled player logs overlap, this fills with
-                real hierarchy holds and review flags.
+            {flaggedFixtures.length === 0 ? (
+              <div className="rounded-xl border border-emerald-500/15 bg-emerald-500/5 p-4 text-sm text-emerald-200">
+                No structural lineup issues in the current live window.
               </div>
-            ) : null}
-          </div>
-        </section>
+            ) : (
+              <div className="space-y-4">
+                {flaggedFixtures.map((fixture) => (
+                  <div
+                    key={`trust-${fixtureHealthKey(fixture.league, fixture.match_date, fixture.home_team, fixture.away_team)}`}
+                    className={`rounded-xl border p-4 ${fixture.trust_tier === "T3" ? "border-rose-500/20 bg-rose-500/8" : "border-amber-500/20 bg-amber-500/8"}`}
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400">
+                          {fixture.competition || fixture.league}
+                        </div>
+                        <div className="mt-1 text-base font-semibold text-white">
+                          {fixture.home_team} vs {fixture.away_team}
+                        </div>
+                        <div className="mt-1 text-sm text-slate-300">
+                          {fixture.match_date} | corruption score {fixture.corruption_score || "0"}
+                        </div>
+                        <div className="mt-2 max-w-3xl text-sm leading-6 text-slate-300/90">
+                          {fixtureHealthSummary(fixture)}
+                        </div>
+                      </div>
+                      <div className={`rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${fixtureTrustBadgeClass(fixture.trust_tier)}`}>
+                        {fixtureStatusLabel(fixture)}
+                      </div>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {(fixture.corruption_flags ?? []).slice(0, 8).map((flag) => (
+                        <span key={`${fixture.home_team}-${fixture.away_team}-${flag}`} className="rounded-full border border-slate-700/80 bg-slate-950/50 px-2 py-1 text-[11px] text-slate-300">
+                          {flag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CollapsibleMonitorSection>
+        </div>
 
-        <section className="mb-8 rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
-          <div className="mb-5 flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-lg font-semibold text-slate-100">Fixture lineup view</h2>
-              <p className="mt-1 text-sm text-slate-400">
-                Upcoming fixtures only, capped to the next three days. Teams are grouped by role, with player prices,
-                fair odds and EV shown in a readable list rather than a pitch diagram.
-              </p>
+        <div className="mb-8">
+          <CollapsibleMonitorSection
+            title="Penalty duty watchlist"
+            subtitle="Editorial review queue for taker hierarchy changes. Useful, but not part of the live decision board."
+          >
+            <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+              <div className="rounded-2xl border border-slate-800/80 bg-slate-950/35 px-4 py-3 text-sm text-slate-300">
+                <div><span className="text-slate-500">Latest review:</span> {latestPenaltyReviewAt ?? "missing"}</div>
+                <div><span className="text-slate-500">Rows:</span> {penaltyReviewRows.length}</div>
+              </div>
             </div>
-          </div>
 
-          <div className="space-y-6">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <Stat label="High Priority" value={`${highPenaltyReviewRows.length}`} tone="text-rose-300" />
+              <Stat label="Medium Priority" value={`${mediumPenaltyReviewRows.length}`} tone="text-amber-300" />
+              <Stat label="Low Priority" value={`${lowPenaltyReviewRows.length}`} tone="text-slate-300" />
+              <Stat label="Recent Events" value={`${penaltyReviewRows.length}`} />
+            </div>
+
+            <div className="mt-5 space-y-4">
+              {penaltyReviewRows.map((row, idx) => (
+                <PenaltyReviewCard key={`${row.date}-${row.team}-${row.actual_taker}-${idx}`} row={row} />
+              ))}
+              {penaltyReviewRows.length === 0 ? (
+                <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">
+                  No penalty-duty review rows yet.
+                </div>
+              ) : null}
+            </div>
+          </CollapsibleMonitorSection>
+        </div>
+
+        <div className="mb-8">
+          <CollapsibleMonitorSection
+            title="Fixture lineups"
+            subtitle="Reference view only. Kept off the main board so the urgent bets are visible without a long scroll."
+          >
+            <div className="space-y-6">
             {fixtures.map((fixture) => (
               <div key={fixture.key} className="rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4">
                 {(() => {
@@ -2486,20 +2642,18 @@ export default async function GoalscorerMonitorPage() {
                 No upcoming fixture groups in the next three days.
               </div>
             ) : null}
-          </div>
-        </section>
-
-        <section className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
-          <div className="mb-4 flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-lg font-semibold text-slate-100">Raw monitor summary</h2>
-              <p className="mt-1 text-sm text-slate-400">Direct text output from the latest comparison run.</p>
             </div>
-          </div>
+          </CollapsibleMonitorSection>
+        </div>
+
+        <CollapsibleMonitorSection
+          title="Raw monitor summary"
+          subtitle="Direct text output from the latest comparison run. Debug only."
+        >
           <pre className="overflow-x-auto whitespace-pre-wrap rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-xs leading-6 text-slate-300">
             {rawMonitorSummary || "Missing goalscorer live summary."}
           </pre>
-        </section>
+        </CollapsibleMonitorSection>
       </div>
     </div>
   );
