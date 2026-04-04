@@ -56,7 +56,7 @@ export function PenaltyReviewActions({ rowId, resolvedStatus }: Props) {
           Restore row
         </button>
         <span className="text-xs text-slate-500">
-          {resolvedStatus === "done" ? "Marked as updated taker data." : "Marked as no action needed."}
+          {resolvedStatus === "done" ? "Marked as hierarchy updated." : "Marked as keep current order."}
         </span>
         {isPending ? <span className="text-xs text-cyan-200">Saving...</span> : null}
         {!isPending && statusText ? <span className="text-xs text-emerald-300">{statusText}</span> : null}
@@ -69,19 +69,19 @@ export function PenaltyReviewActions({ rowId, resolvedStatus }: Props) {
     <div className="mt-4 flex flex-wrap items-center gap-2">
       <button
         type="button"
-        onClick={() => handleClick("done", "Saved as updated")}
+        onClick={() => handleClick("done", "Saved as hierarchy updated")}
         disabled={isPending}
         className="inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-200 transition-colors hover:border-emerald-400/40 hover:text-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        Updated taker data
+        Hierarchy updated
       </button>
       <button
         type="button"
-        onClick={() => handleClick("dismissed", "Saved as no action")}
+        onClick={() => handleClick("dismissed", "Saved as keep current order")}
         disabled={isPending}
         className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-950/60 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-slate-300 transition-colors hover:border-slate-500/80 hover:text-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        No action needed
+        Keep current order
       </button>
       {isPending ? <span className="text-xs text-cyan-200">Saving...</span> : null}
       {!isPending && statusText ? <span className="text-xs text-emerald-300">{statusText}</span> : null}
