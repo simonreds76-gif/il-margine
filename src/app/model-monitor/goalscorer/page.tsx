@@ -7,6 +7,7 @@ import {
   readGoalscorerLiveSnapshotGeneratedAt,
 } from "@/lib/goalscorer-live-files";
 import { readPenaltyReviewState } from "@/lib/goalscorer-penalty-review-state";
+import { ClientOnly } from "./ClientOnly";
 import { PenaltyReviewActions } from "./PenaltyReviewActions";
 
 type CsvRow = Record<string, string>;
@@ -2654,103 +2655,116 @@ export default async function GoalscorerMonitorPage() {
         ) : null}
 
         <div id="fixture-lineups" className="mb-8">
-          <CollapsibleMonitorSection
-            title="Fixture lineups"
-            subtitle="Reference view only. Kept off the main board so the urgent bets are visible without a long scroll."
+          <ClientOnly
+            fallback={
+              <CollapsibleMonitorSection
+                title="Fixture lineups"
+                subtitle="Reference view only. Kept off the main board so the urgent bets are visible without a long scroll."
+              >
+                <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">
+                  Loading lineup reference view...
+                </div>
+              </CollapsibleMonitorSection>
+            }
           >
-            <div className="space-y-6">
-            {fixtures.map((fixture) => (
-              <div key={fixture.key} className="rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4">
-                {(() => {
-                  const lineup = lineupMap.get(`${fixture.leagueKey}|${teamKey(fixture.homeTeam)}|${teamKey(fixture.awayTeam)}`);
-                  const fixtureHealth = fixtureHealthMap.get(
-                    fixtureHealthKey(fixture.leagueKey, fixture.matchDate, fixture.homeTeam, fixture.awayTeam),
-                  );
-                  const isQuarantined = fixtureHealth?.trust_tier === "T3";
-                  const isDegraded = fixtureHealth?.trust_tier === "T2";
-                  const isAwaitingLineup = fixtureHealth?.trust_tier === "T2" && fixtureHealth?.lineup_input === "none";
-                  const hasHomeLineup = (lineup?.homePlayers?.length ?? 0) > 0;
-                  const hasAwayLineup = (lineup?.awayPlayers?.length ?? 0) > 0;
-                  const hasAnyLineup = hasHomeLineup || hasAwayLineup;
-                  return (
-                    <>
-                      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                        <div>
-                          <div className="mb-1 text-[11px] uppercase tracking-[0.18em] text-emerald-300">
-                            {fixture.competition || fixture.leagueLabel}
-                          </div>
-                          <h3 className="text-lg font-semibold text-white">{fixture.homeTeam} vs {fixture.awayTeam}</h3>
-                          <p className="text-sm text-slate-400">{formatKickoff(fixture.kickoff || fixture.matchDate)} | {fixture.bookmaker}</p>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-2">
-                          {fixtureHealth ? (
-                            <div className={`rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] ${fixtureTrustBadgeClass(fixtureHealth.trust_tier)}`}>
-                              {fixtureStatusLabel(fixtureHealth)}
+            <CollapsibleMonitorSection
+              title="Fixture lineups"
+              subtitle="Reference view only. Kept off the main board so the urgent bets are visible without a long scroll."
+            >
+              <div className="space-y-6">
+              {fixtures.map((fixture) => (
+                <div key={fixture.key} className="rounded-2xl border border-slate-800/80 bg-slate-950/35 p-4">
+                  {(() => {
+                    const lineup = lineupMap.get(`${fixture.leagueKey}|${teamKey(fixture.homeTeam)}|${teamKey(fixture.awayTeam)}`);
+                    const fixtureHealth = fixtureHealthMap.get(
+                      fixtureHealthKey(fixture.leagueKey, fixture.matchDate, fixture.homeTeam, fixture.awayTeam),
+                    );
+                    const isQuarantined = fixtureHealth?.trust_tier === "T3";
+                    const isDegraded = fixtureHealth?.trust_tier === "T2";
+                    const isAwaitingLineup = fixtureHealth?.trust_tier === "T2" && fixtureHealth?.lineup_input === "none";
+                    const hasHomeLineup = (lineup?.homePlayers?.length ?? 0) > 0;
+                    const hasAwayLineup = (lineup?.awayPlayers?.length ?? 0) > 0;
+                    const hasAnyLineup = hasHomeLineup || hasAwayLineup;
+                    return (
+                      <>
+                        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                          <div>
+                            <div className="mb-1 text-[11px] uppercase tracking-[0.18em] text-emerald-300">
+                              {fixture.competition || fixture.leagueLabel}
                             </div>
-                          ) : null}
-                          <div className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs text-slate-300">
-                            {fixture.homeRows.length + fixture.awayRows.length} matched player prices
+                            <h3 className="text-lg font-semibold text-white">{fixture.homeTeam} vs {fixture.awayTeam}</h3>
+                            <p className="text-sm text-slate-400">{formatKickoff(fixture.kickoff || fixture.matchDate)} | {fixture.bookmaker}</p>
                           </div>
-                        </div>
-                      </div>
-
-                      {fixtureHealth && (isQuarantined || (isDegraded && !isAwaitingLineup)) ? (
-                        <div className={`mb-4 rounded-xl border p-3 text-sm ${isQuarantined ? "border-rose-500/20 bg-rose-500/8 text-rose-100" : "border-amber-500/20 bg-amber-500/8 text-amber-100"}`}>
-                          <div className="font-medium">
-                            {isQuarantined
-                              ? "This fixture is quarantined from trust-sensitive decisions."
-                              : fixtureHealthSummary(fixtureHealth)}
-                          </div>
-                          {(fixtureHealth.corruption_flags ?? []).length > 0 ? (
-                            <div className="mt-2 flex flex-wrap gap-2 text-[11px]">
-                              {(fixtureHealth.corruption_flags ?? []).slice(0, 8).map((flag) => (
-                                <span key={`${fixture.key}-${flag}`} className="rounded-full border border-slate-700/80 bg-slate-950/45 px-2 py-1 text-slate-200">
-                                  {flag}
-                                </span>
-                              ))}
+                          <div className="flex flex-wrap items-center gap-2">
+                            {fixtureHealth ? (
+                              <div className={`rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] ${fixtureTrustBadgeClass(fixtureHealth.trust_tier)}`}>
+                                {fixtureStatusLabel(fixtureHealth)}
+                              </div>
+                            ) : null}
+                            <div className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-xs text-slate-300">
+                              {fixture.homeRows.length + fixture.awayRows.length} matched player prices
                             </div>
-                          ) : null}
+                          </div>
                         </div>
-                      ) : null}
 
-                      {isQuarantined ? (
-                        <div className="rounded-xl border border-dashed border-rose-500/25 bg-rose-500/5 p-4 text-sm text-rose-100">
-                          Player-level output is still stored for audit, but this fixture should not be trusted for public or shadow decisions until the lineup payload is sane again.
-                        </div>
-                      ) : !hasAnyLineup ? (
-                        <div className="rounded-xl border border-dashed border-slate-800/80 bg-slate-950/20 p-4 text-sm text-slate-400">
-                          No FotMob lineup has landed for this fixture yet. The monitor still has{" "}
-                          <span className="font-medium text-slate-200">{fixture.homeRows.length + fixture.awayRows.length}</span> matched player prices,
-                          but the lineup view stays collapsed until a real expected or confirmed XI arrives.
-                        </div>
-                      ) : (
-                        <div className="grid gap-5 xl:grid-cols-2">
-                          <TeamPitch
-                            team={fixture.homeTeam}
-                            rows={fixture.homeRows}
-                            lineupPlayers={lineup?.homePlayers}
-                            lineupStatus={lineup?.homeStatus}
-                          />
-                          <TeamPitch
-                            team={fixture.awayTeam}
-                            rows={fixture.awayRows}
-                            lineupPlayers={lineup?.awayPlayers}
-                            lineupStatus={lineup?.awayStatus}
-                          />
-                        </div>
-                      )}
-                    </>
-                  );
-                })()}
+                        {fixtureHealth && (isQuarantined || (isDegraded && !isAwaitingLineup)) ? (
+                          <div className={`mb-4 rounded-xl border p-3 text-sm ${isQuarantined ? "border-rose-500/20 bg-rose-500/8 text-rose-100" : "border-amber-500/20 bg-amber-500/8 text-amber-100"}`}>
+                            <div className="font-medium">
+                              {isQuarantined
+                                ? "This fixture is quarantined from trust-sensitive decisions."
+                                : fixtureHealthSummary(fixtureHealth)}
+                            </div>
+                            {(fixtureHealth.corruption_flags ?? []).length > 0 ? (
+                              <div className="mt-2 flex flex-wrap gap-2 text-[11px]">
+                                {(fixtureHealth.corruption_flags ?? []).slice(0, 8).map((flag) => (
+                                  <span key={`${fixture.key}-${flag}`} className="rounded-full border border-slate-700/80 bg-slate-950/45 px-2 py-1 text-slate-200">
+                                    {flag}
+                                  </span>
+                                ))}
+                              </div>
+                            ) : null}
+                          </div>
+                        ) : null}
+
+                        {isQuarantined ? (
+                          <div className="rounded-xl border border-dashed border-rose-500/25 bg-rose-500/5 p-4 text-sm text-rose-100">
+                            Player-level output is still stored for audit, but this fixture should not be trusted for public or shadow decisions until the lineup payload is sane again.
+                          </div>
+                        ) : !hasAnyLineup ? (
+                          <div className="rounded-xl border border-dashed border-slate-800/80 bg-slate-950/20 p-4 text-sm text-slate-400">
+                            No FotMob lineup has landed for this fixture yet. The monitor still has{" "}
+                            <span className="font-medium text-slate-200">{fixture.homeRows.length + fixture.awayRows.length}</span> matched player prices,
+                            but the lineup view stays collapsed until a real expected or confirmed XI arrives.
+                          </div>
+                        ) : (
+                          <div className="grid gap-5 xl:grid-cols-2">
+                            <TeamPitch
+                              team={fixture.homeTeam}
+                              rows={fixture.homeRows}
+                              lineupPlayers={lineup?.homePlayers}
+                              lineupStatus={lineup?.homeStatus}
+                            />
+                            <TeamPitch
+                              team={fixture.awayTeam}
+                              rows={fixture.awayRows}
+                              lineupPlayers={lineup?.awayPlayers}
+                              lineupStatus={lineup?.awayStatus}
+                            />
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()}
+                </div>
+              ))}
+              {fixtures.length === 0 ? (
+                <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">
+                  No upcoming fixture groups in the next three days.
+                </div>
+              ) : null}
               </div>
-            ))}
-            {fixtures.length === 0 ? (
-              <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">
-                No upcoming fixture groups in the next three days.
-              </div>
-            ) : null}
-            </div>
-          </CollapsibleMonitorSection>
+            </CollapsibleMonitorSection>
+          </ClientOnly>
         </div>
 
         <CollapsibleMonitorSection
