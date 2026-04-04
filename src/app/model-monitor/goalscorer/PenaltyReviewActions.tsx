@@ -58,7 +58,7 @@ export function PenaltyReviewActions({ rowId, resolvedStatus }: Props) {
         <span className="text-xs text-slate-500">
           {resolvedStatus === "done" ? "Marked as updated taker data." : "Marked as no action needed."}
         </span>
-        {isPending ? <span className="text-xs text-cyan-200">Saving…</span> : null}
+        {isPending ? <span className="text-xs text-cyan-200">Saving...</span> : null}
         {!isPending && statusText ? <span className="text-xs text-emerald-300">{statusText}</span> : null}
         {error ? <span className="text-xs text-rose-300">{error}</span> : null}
       </div>
@@ -83,9 +83,10 @@ export function PenaltyReviewActions({ rowId, resolvedStatus }: Props) {
       >
         No action needed
       </button>
-      {isPending ? <span className="text-xs text-cyan-200">Saving…</span> : null}
+      {isPending ? <span className="text-xs text-cyan-200">Saving...</span> : null}
       {!isPending && statusText ? <span className="text-xs text-emerald-300">{statusText}</span> : null}
       {error ? <span className="text-xs text-rose-300">{error}</span> : null}
     </div>
   );
 }
+

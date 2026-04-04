@@ -836,22 +836,6 @@ function penaltyReviewIdentity(row: PenaltyReviewRow): string {
     .join("|");
 }
 
-function penaltyReviewIsOlderThan(row: PenaltyReviewRow, cutoffIso: string): boolean {
-  const rowDate = (row.date ?? "").slice(0, 10);
-  if (!rowDate) return false;
-  return rowDate < cutoffIso;
-}
-
-function penaltyReviewDaysUntilStale(row: PenaltyReviewRow, todayIso: string): number | null {
-  const rowDate = (row.date ?? "").slice(0, 10);
-  if (!rowDate) return null;
-  const rowStamp = Date.parse(`${rowDate}T00:00:00Z`);
-  const todayStamp = Date.parse(`${todayIso}T00:00:00Z`);
-  if (!Number.isFinite(rowStamp) || !Number.isFinite(todayStamp)) return null;
-  const ageDays = Math.floor((todayStamp - rowStamp) / 86400000);
-  return Math.max(0, 7 - ageDays);
-}
-
 function mergePenaltyReviewRows(rows: PenaltyReviewRow[]): PenaltyReviewRow[] {
   const merged = new Map<string, PenaltyReviewRow>();
   for (const row of rows) {
@@ -1543,12 +1527,10 @@ function PenaltyReviewCard({
   row,
   rowId,
   resolvedStatus,
-  daysUntilStale,
 }: {
   row: PenaltyReviewRow;
   rowId: string;
   resolvedStatus?: "dismissed" | "done";
-  daysUntilStale?: number | null;
 }) {
   const attempts = Number.parseInt(String(row.penalties_attempted ?? "0"), 10) || 0;
   const scored = Number.parseInt(String(row.penalties_scored ?? "0"), 10) || 0;
@@ -1604,8 +1586,7 @@ function PenaltyReviewCard({
 
       <p className="mt-3 text-sm leading-6 text-slate-300">{row.editorial_note || "No editorial note."}</p>
       <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500">
-        <span>Auto-hides after 7 days if untouched.</span>
-        {daysUntilStale != null ? <span>Ages out in {daysUntilStale}d.</span> : null}
+        <span>Stays in the review queue until you mark it as updated or no action needed.</span>
       </div>
       <PenaltyReviewActions rowId={rowId} resolvedStatus={resolvedStatus} />
     </div>
@@ -2284,19 +2265,13 @@ export default async function GoalscorerMonitorPage() {
       .sort()
       .at(-1) ?? null;
   const penaltyReviewState = await readPenaltyReviewState();
-  const penaltyReviewCutoffIso = addDaysIso(todayIso, -7);
   const penaltyReviewRowsWithIds = penaltyReviewRows.map((row) => ({
     row,
     id: penaltyReviewIdentity(row),
   }));
   const resolvedPenaltyReviewRows = penaltyReviewRowsWithIds.filter(({ id }) => Boolean(id && penaltyReviewState[id]));
   const hiddenResolvedPenaltyRows = resolvedPenaltyReviewRows.length;
-  const hiddenStalePenaltyRows = penaltyReviewRowsWithIds.filter(
-    ({ id, row }) => !penaltyReviewState[id] && penaltyReviewIsOlderThan(row, penaltyReviewCutoffIso),
-  ).length;
-  const visiblePenaltyReviewRows = penaltyReviewRowsWithIds.filter(
-    ({ id, row }) => !penaltyReviewState[id] && !penaltyReviewIsOlderThan(row, penaltyReviewCutoffIso),
-  );
+  const visiblePenaltyReviewRows = penaltyReviewRowsWithIds.filter(({ id }) => !penaltyReviewState[id]);
   const visibleHighPenaltyReviewRows = visiblePenaltyReviewRows.filter(({ row }) => row.review_priority === "high");
   const visibleMediumPenaltyReviewRows = visiblePenaltyReviewRows.filter(({ row }) => row.review_priority === "medium");
   const visibleLowPenaltyReviewRows = visiblePenaltyReviewRows.filter(({ row }) => row.review_priority === "low");
@@ -2307,7 +2282,7 @@ export default async function GoalscorerMonitorPage() {
   const renderPenaltyWatchlistSection = (defaultOpen: boolean) => (
     <CollapsibleMonitorSection
       title="Penalty duty watchlist"
-      subtitle="Editorial review queue for taker hierarchy changes. Treated like a checklist now, with manual clear states and a 7-day stale cutoff."
+      subtitle="Editorial review queue for taker hierarchy changes. Rows stay here until we manually clear them."
       defaultOpen={defaultOpen}
     >
       <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
@@ -2315,7 +2290,6 @@ export default async function GoalscorerMonitorPage() {
           <div><span className="text-slate-500">Latest review:</span> {latestPenaltyReviewAt ?? "missing"}</div>
           <div><span className="text-slate-500">Visible rows:</span> {visiblePenaltyReviewRows.length}</div>
           <div><span className="text-slate-500">Resolved hidden:</span> {hiddenResolvedPenaltyRows}</div>
-          <div><span className="text-slate-500">Aged out:</span> {hiddenStalePenaltyRows}</div>
         </div>
       </div>
 
@@ -2332,14 +2306,13 @@ export default async function GoalscorerMonitorPage() {
             key={`${row.date}-${row.team}-${row.actual_taker}-${idx}`}
             row={row}
             rowId={id}
-            daysUntilStale={penaltyReviewDaysUntilStale(row, todayIso)}
           />
         ))}
         {visibleWatchlistRows.length === 0 ? (
           <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">
             {visibleHighPenaltyReviewRows.length > 0
               ? "Only high-priority rows are active right now, and they are surfaced in the block above."
-              : "No active penalty-duty review rows. Old untouched rows now age out after 7 days, and manual done/dismiss clears them immediately."}
+              : "No active penalty-duty review rows. Reviewed rows stay hidden once we mark them updated or no action needed."}
           </div>
         ) : null}
       </div>
