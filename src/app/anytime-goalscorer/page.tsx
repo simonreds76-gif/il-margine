@@ -199,7 +199,8 @@ function getLiveSignals(rows: PublicRow[]): PublicRow[] {
       if (row.settled) return false;
       const kickoff = Date.parse(row.kickoff || row.date);
       if (!Number.isFinite(kickoff)) return true;
-      return kickoff > Date.now();
+      const graceWindowMs = 15 * 60 * 1000;
+      return kickoff > Date.now() - graceWindowMs;
     })
     .sort((left, right) => {
       const leftKickoff = Date.parse(left.kickoff || left.date);
@@ -380,6 +381,17 @@ function kickoffMeta(value: string, todayIso: string) {
   }
 
   const minutesUntil = Math.round((stamp - Date.now()) / 60000);
+  if (minutesUntil < 0 && minutesUntil >= -15) {
+    return {
+      sortValue: stamp,
+      minutesUntil,
+      label,
+      tone: "text-rose-300",
+      badge: "Live",
+      badgeClass: "border-rose-500/30 bg-rose-500/10 text-rose-200",
+      dateKey,
+    };
+  }
   if (minutesUntil <= 30) {
     return {
       sortValue: stamp,
