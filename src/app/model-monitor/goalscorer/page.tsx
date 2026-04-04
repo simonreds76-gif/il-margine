@@ -809,6 +809,16 @@ function penaltyReviewIsOlderThan(row: PenaltyReviewRow, cutoffIso: string): boo
   return rowDate < cutoffIso;
 }
 
+function penaltyReviewDaysUntilStale(row: PenaltyReviewRow, todayIso: string): number | null {
+  const rowDate = (row.date ?? "").slice(0, 10);
+  if (!rowDate) return null;
+  const rowStamp = Date.parse(`${rowDate}T00:00:00Z`);
+  const todayStamp = Date.parse(`${todayIso}T00:00:00Z`);
+  if (!Number.isFinite(rowStamp) || !Number.isFinite(todayStamp)) return null;
+  const ageDays = Math.floor((todayStamp - rowStamp) / 86400000);
+  return Math.max(0, 7 - ageDays);
+}
+
 function mergePenaltyReviewRows(rows: PenaltyReviewRow[]): PenaltyReviewRow[] {
   const merged = new Map<string, PenaltyReviewRow>();
   for (const row of rows) {
@@ -1246,17 +1256,6 @@ function shadowRowActivityTime(row: CsvRow): number {
   return 0;
 }
 
-function shadowStakeLabel(row: CsvRow): string {
-  const explicitStake =
-    parseFloatMaybe(row.stake_units) ??
-    parseFloatMaybe(row.stake) ??
-    parseFloatMaybe(row.stake_u);
-  if (explicitStake != null) {
-    return `${formatDecimal(explicitStake, explicitStake % 1 === 0 ? 0 : 2)}u`;
-  }
-  return "1u level";
-}
-
 function shadowResultTone(row: CsvRow): string {
   const outcome = (row.bet_outcome ?? "").trim().toLowerCase();
   if (outcome === "won") return "text-emerald-300";
@@ -1275,59 +1274,6 @@ function shadowResultLabel(row: CsvRow): string {
     return "PENDING";
   }
   return "OPEN";
-}
-
-function ShadowTrackedRowCard({ row }: { row: CsvRow }) {
-  const fairOdds = parseFloatMaybe(row.model_fair_odds);
-  const bookOdds = parseFloatMaybe(row.best_bookmaker_odds);
-  const evPct = parseFloatMaybe(row.ev);
-  const pnlUnits = parseFloatMaybe(row.pnl_units);
-  const settled = isSettledShadowRow(row);
-  const resultLabel = shadowResultLabel(row);
-  const resultTone = shadowResultTone(row);
-
-  return (
-    <div className="rounded-xl border border-slate-800/80 bg-slate-950/50 p-3">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="font-medium text-slate-100">{row.player || "Unknown player"}</div>
-          <div className="text-sm text-slate-400">{row.match || "Unknown match"}</div>
-          <div className="mt-1 text-xs text-slate-500">
-            {formatKickoff(row.kickoff || row.date)} · {((row.competition ?? "").trim() || "Goalscorer shadow")}
-            {row.lineup_state ? ` · ${humanizeToken(row.lineup_state)}` : ""}
-          </div>
-        </div>
-        <div className={`text-sm font-medium ${resultTone}`}>{resultLabel}</div>
-      </div>
-
-      <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-lg bg-black/15 px-3 py-2">
-          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Odds / Fair</div>
-          <div className="mt-1 text-slate-200">
-            {bookOdds != null ? formatDecimal(bookOdds, 2) : "n/a"} / {fairOdds != null ? formatDecimal(fairOdds, 2) : "n/a"}
-          </div>
-        </div>
-        <div className="rounded-lg bg-black/15 px-3 py-2">
-          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Book / Stake</div>
-          <div className="mt-1 text-slate-200">
-            {(row.best_bookmaker ?? "n/a").trim() || "n/a"} / {shadowStakeLabel(row)}
-          </div>
-        </div>
-        <div className="rounded-lg bg-black/15 px-3 py-2">
-          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">EV</div>
-          <div className={`mt-1 font-medium ${evPct != null && evPct >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
-            {evPct != null ? formatPct(evPct * 100, 1) : "n/a"}
-          </div>
-        </div>
-        <div className="rounded-lg bg-black/15 px-3 py-2">
-          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">P/L</div>
-          <div className={`mt-1 font-medium ${pnlUnits != null && pnlUnits >= 0 ? "text-emerald-300" : pnlUnits != null ? "text-rose-300" : "text-slate-400"}`}>
-            {pnlUnits != null ? `${formatSigned(pnlUnits, 2)}u` : settled ? "0.00u" : "pending"}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 function Stat({
@@ -1533,7 +1479,17 @@ function SettledRowsTable({ rows }: { rows: CsvRow[] }) {
   );
 }
 
-function PenaltyReviewCard({ row, rowId }: { row: PenaltyReviewRow; rowId: string }) {
+function PenaltyReviewCard({
+  row,
+  rowId,
+  resolvedStatus,
+  daysUntilStale,
+}: {
+  row: PenaltyReviewRow;
+  rowId: string;
+  resolvedStatus?: "dismissed" | "done";
+  daysUntilStale?: number | null;
+}) {
   const attempts = Number.parseInt(String(row.penalties_attempted ?? "0"), 10) || 0;
   const scored = Number.parseInt(String(row.penalties_scored ?? "0"), 10) || 0;
   const minuteLabel = (row.minute ?? "").trim();
@@ -1587,10 +1543,11 @@ function PenaltyReviewCard({ row, rowId }: { row: PenaltyReviewRow; rowId: strin
       </div>
 
       <p className="mt-3 text-sm leading-6 text-slate-300">{row.editorial_note || "No editorial note."}</p>
-      <div className="mt-2 text-xs text-slate-500">
-        Auto-hides after 7 days if untouched. Use done or dismiss to clear it now.
+      <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500">
+        <span>Auto-hides after 7 days if untouched.</span>
+        {daysUntilStale != null ? <span>Ages out in {daysUntilStale}d.</span> : null}
       </div>
-      <PenaltyReviewActions rowId={rowId} />
+      <PenaltyReviewActions rowId={rowId} resolvedStatus={resolvedStatus} />
     </div>
   );
 }
@@ -2055,7 +2012,9 @@ export default async function GoalscorerMonitorPage() {
       return (right.edgePct ?? 0) - (left.edgePct ?? 0);
     });
   const startingSoonRows = liveMonitorRows.filter((item) => kickoffUrgencyMeta(item.kickoff).startsSoon);
-  const todayRows = liveMonitorRows.filter((item) => isoDateForValueInTimezone(item.kickoff) === todayIso);
+  const todayRows = liveMonitorRows.filter(
+    (item) => isoDateForValueInTimezone(item.kickoff) === todayIso && !kickoffUrgencyMeta(item.kickoff).startsSoon,
+  );
   const laterRows = liveMonitorRows.filter((item) => isoDateForValueInTimezone(item.kickoff) !== todayIso);
   const settledTodayRows = latestTrackedRows.filter(
     (row) => isSettledShadowRow(row) && isoDateForValueInTimezone(row.settled_at || row.date) === todayIso,
@@ -2249,7 +2208,8 @@ export default async function GoalscorerMonitorPage() {
     row,
     id: penaltyReviewIdentity(row),
   }));
-  const hiddenResolvedPenaltyRows = penaltyReviewRowsWithIds.filter(({ id }) => Boolean(id && penaltyReviewState[id])).length;
+  const resolvedPenaltyReviewRows = penaltyReviewRowsWithIds.filter(({ id }) => Boolean(id && penaltyReviewState[id]));
+  const hiddenResolvedPenaltyRows = resolvedPenaltyReviewRows.length;
   const hiddenStalePenaltyRows = penaltyReviewRowsWithIds.filter(
     ({ id, row }) => !penaltyReviewState[id] && penaltyReviewIsOlderThan(row, penaltyReviewCutoffIso),
   ).length;
@@ -2259,6 +2219,10 @@ export default async function GoalscorerMonitorPage() {
   const visibleHighPenaltyReviewRows = visiblePenaltyReviewRows.filter(({ row }) => row.review_priority === "high");
   const visibleMediumPenaltyReviewRows = visiblePenaltyReviewRows.filter(({ row }) => row.review_priority === "medium");
   const visibleLowPenaltyReviewRows = visiblePenaltyReviewRows.filter(({ row }) => row.review_priority === "low");
+  const visibleWatchlistRows =
+    visibleHighPenaltyReviewRows.length > 0
+      ? visiblePenaltyReviewRows.filter(({ row }) => row.review_priority !== "high")
+      : visiblePenaltyReviewRows;
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.08),_transparent_22%),#0b0f14] text-slate-100">
@@ -2271,7 +2235,7 @@ export default async function GoalscorerMonitorPage() {
             Download Bet Archive
           </Link>
           <Link href="/anytime-goalscorer" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300">
-            Public Placeholder
+            Anytime Goalscorer
           </Link>
         </div>
 
@@ -2326,6 +2290,32 @@ export default async function GoalscorerMonitorPage() {
             {sourceFeedGapLeagues.map((league) => league.label).join(", ")} currently has pipeline output and historical logs,
             but the upstream ATGS source feed returned no current events for the live window. That league will stay at zero
             matched prices until the feed comes back.
+          </div>
+        ) : null}
+
+        {visibleHighPenaltyReviewRows.length > 0 ? (
+          <div className="mb-8 rounded-2xl border border-rose-500/20 bg-rose-500/8 p-5">
+            <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-rose-200">High-priority watchlist</div>
+                <div className="mt-1 text-lg font-semibold text-white">
+                  Penalty duty needs manual review before this gets buried under the live board.
+                </div>
+                <div className="mt-1 text-sm text-rose-100/80">
+                  {visibleHighPenaltyReviewRows.length} high-priority row{visibleHighPenaltyReviewRows.length === 1 ? "" : "s"} active.
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              {visibleHighPenaltyReviewRows.slice(0, 3).map(({ row, id }, idx) => (
+                <PenaltyReviewCard
+                  key={`priority-${row.date}-${row.team}-${row.actual_taker}-${idx}`}
+                  row={row}
+                  rowId={id}
+                  daysUntilStale={penaltyReviewDaysUntilStale(row, todayIso)}
+                />
+              ))}
+            </div>
           </div>
         ) : null}
 
@@ -2448,20 +2438,10 @@ export default async function GoalscorerMonitorPage() {
                 No goalscorer shadow signals have been logged yet.
               </div>
             ) : (
-              <div className="space-y-4">
-                <div className="space-y-3">
-                  {latestTrackedRows.slice(0, 8).map((row) => (
-                    <ShadowTrackedRowCard
-                      key={`${isSettledShadowRow(row) ? "settled" : "open"}-${row.date}-${row.player}-${row.match}`}
-                      row={row}
-                    />
-                  ))}
-                </div>
-                <div className="rounded-xl border border-slate-800/80 bg-slate-950/50 p-3">
-                  <div className="mb-3 text-[11px] uppercase tracking-[0.18em] text-slate-500">Recent tracked archive</div>
-                  <div className="max-h-80 overflow-auto">
-                    <SettledRowsTable rows={latestTrackedRows.slice(0, 50)} />
-                  </div>
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/50 p-3">
+                <div className="mb-3 text-[11px] uppercase tracking-[0.18em] text-slate-500">Recent tracked archive</div>
+                <div className="max-h-80 overflow-auto">
+                  <SettledRowsTable rows={latestTrackedRows.slice(0, 50)} />
                 </div>
               </div>
             )}
@@ -2543,6 +2523,7 @@ export default async function GoalscorerMonitorPage() {
           <CollapsibleMonitorSection
             title="Penalty duty watchlist"
             subtitle="Editorial review queue for taker hierarchy changes. Treated like a checklist now, with manual clear states and a 7-day stale cutoff."
+            defaultOpen={visibleHighPenaltyReviewRows.length > 0}
           >
             <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
               <div className="rounded-2xl border border-slate-800/80 bg-slate-950/35 px-4 py-3 text-sm text-slate-300">
@@ -2561,15 +2542,39 @@ export default async function GoalscorerMonitorPage() {
             </div>
 
             <div className="mt-5 space-y-4">
-              {visiblePenaltyReviewRows.map(({ row, id }, idx) => (
-                <PenaltyReviewCard key={`${row.date}-${row.team}-${row.actual_taker}-${idx}`} row={row} rowId={id} />
+              {visibleWatchlistRows.map(({ row, id }, idx) => (
+                <PenaltyReviewCard
+                  key={`${row.date}-${row.team}-${row.actual_taker}-${idx}`}
+                  row={row}
+                  rowId={id}
+                  daysUntilStale={penaltyReviewDaysUntilStale(row, todayIso)}
+                />
               ))}
-              {visiblePenaltyReviewRows.length === 0 ? (
+              {visibleWatchlistRows.length === 0 ? (
                 <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">
-                  No active penalty-duty review rows. Old untouched rows now age out after 7 days, and manual done/dismiss clears them immediately.
+                  {visibleHighPenaltyReviewRows.length > 0
+                    ? "Only high-priority rows are active right now, and they are surfaced in the block above."
+                    : "No active penalty-duty review rows. Old untouched rows now age out after 7 days, and manual done/dismiss clears them immediately."}
                 </div>
               ) : null}
             </div>
+            {resolvedPenaltyReviewRows.length > 0 ? (
+              <details className="mt-5 rounded-xl border border-slate-800/80 bg-slate-950/35">
+                <summary className="cursor-pointer px-4 py-3 text-sm font-medium text-slate-300">
+                  Show {resolvedPenaltyReviewRows.length} resolved row{resolvedPenaltyReviewRows.length === 1 ? "" : "s"}
+                </summary>
+                <div className="space-y-4 border-t border-slate-800 px-4 py-4">
+                  {resolvedPenaltyReviewRows.map(({ row, id }, idx) => (
+                    <PenaltyReviewCard
+                      key={`resolved-${row.date}-${row.team}-${row.actual_taker}-${idx}`}
+                      row={row}
+                      rowId={id}
+                      resolvedStatus={penaltyReviewState[id]?.status}
+                    />
+                  ))}
+                </div>
+              </details>
+            ) : null}
           </CollapsibleMonitorSection>
         </div>
 

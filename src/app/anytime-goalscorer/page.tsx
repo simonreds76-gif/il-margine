@@ -1,4 +1,5 @@
-﻿import Link from "next/link";
+﻿import Image from "next/image";
+import Link from "next/link";
 
 import {
   readGoalscorerLiveFile,
@@ -406,49 +407,30 @@ function kickoffMeta(value: string, todayIso: string) {
   };
 }
 
-function getLondonNow() {
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/London",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-  }).formatToParts(new Date());
-
-  const lookup = Object.fromEntries(parts.map((part) => [part.type, part.value]));
-  const hour = Number.parseInt(lookup.hour ?? "0", 10);
-  const minute = Number.parseInt(lookup.minute ?? "0", 10);
-  return { hour, minute };
-}
-
-function getNextScanText(): string {
-  const { hour, minute } = getLondonNow();
-  const minutesOfDay = hour * 60 + minute;
-  const windowStart = 12 * 60;
-  const windowEnd = 23 * 60 + 30;
-
-  let diff = 0;
-  if (minutesOfDay < windowStart) {
-    diff = windowStart - minutesOfDay;
-  } else if (minutesOfDay > windowEnd) {
-    diff = 24 * 60 - minutesOfDay + windowStart;
-  } else {
-    const nextSlot = Math.floor(minutesOfDay / 30) * 30 + 30;
-    diff = nextSlot - minutesOfDay;
-  }
-
-  if (diff < 60) return `${diff} min`;
-  const hours = Math.floor(diff / 60);
-  const mins = diff % 60;
-  return mins === 0 ? `${hours}h` : `${hours}h ${mins}m`;
-}
-
 function getStakeTone(row: PublicRow): string {
   if (row.stakeBand === "core") return "border-emerald-500/25 bg-emerald-500/10 text-emerald-300";
   if (row.stakeBand === "standard") return "border-cyan-500/25 bg-cyan-500/10 text-cyan-200";
   return "border-amber-500/25 bg-amber-500/10 text-amber-200";
+}
+
+function lineupBadgeMeta(row: PublicRow): { label: string; className: string } {
+  const state = row.lineupState.trim().toLowerCase();
+  if (state === "confirmed_starter") {
+    return {
+      label: "Confirmed starter",
+      className: "border-emerald-500/25 bg-emerald-500/10 text-emerald-300",
+    };
+  }
+  if (state === "expected_starter") {
+    return {
+      label: "Expected starter",
+      className: "border-amber-500/25 bg-amber-500/10 text-amber-200",
+    };
+  }
+  return {
+    label: "Lineup watch",
+    className: "border-white/10 bg-white/[0.04] text-neutral-300",
+  };
 }
 
 function LeagueLogo({
@@ -473,18 +455,15 @@ function LeagueLogo({
 
   return (
     <span className={wrapperClass}>
-      <img
-        src={league.logoPath}
-        alt={`${league.label} logo`}
-        className={imageClass}
-        loading="lazy"
-      />
+      <Image src={league.logoPath} alt={`${league.label} logo`} width={variant === "card" ? 28 : variant === "row" ? 18 : 16} height={variant === "card" ? 28 : variant === "row" ? 18 : 16} className={imageClass} loading="lazy" />
     </span>
   );
 }
 
 function LivePickCard({ row, todayIso }: { row: PublicRow; todayIso: string }) {
   const kickoff = kickoffMeta(row.kickoff || row.date, todayIso);
+  const lineupBadge = lineupBadgeMeta(row);
+  const fairProb = row.fairOdds > 0 ? 100 / row.fairOdds : null;
 
   return (
     <article className="overflow-hidden rounded-[24px] border border-white/10 bg-[#121417] shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
@@ -511,6 +490,10 @@ function LivePickCard({ row, todayIso }: { row: PublicRow; todayIso: string }) {
       <div className="px-5 py-5">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="min-w-0">
+            <div className="mb-3">
+              <div className="text-[11px] uppercase tracking-[0.18em] text-neutral-500">Edge</div>
+              <div className="mt-1 text-3xl font-semibold tracking-tight text-emerald-300">{formatPct(row.ev * 100, 1)}</div>
+            </div>
             <h3 className="text-2xl font-semibold tracking-tight text-white">
               {row.player} <span className="text-lg font-normal text-neutral-400">to score</span>
             </h3>
@@ -520,12 +503,17 @@ function LivePickCard({ row, todayIso }: { row: PublicRow; todayIso: string }) {
               <span>{row.opponent}</span>
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
-              <span className="inline-flex rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-300">
-                Confirmed starter
+              <span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${lineupBadge.className}`}>
+                {lineupBadge.label}
               </span>
               {row.penaltyDependent ? (
                 <span className="inline-flex rounded-full border border-amber-500/25 bg-amber-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-amber-200">
                   Penalty component
+                </span>
+              ) : null}
+              {row.penaltyTransfer ? (
+                <span className="inline-flex rounded-full border border-rose-500/25 bg-rose-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-rose-200">
+                  Penalty transfer
                 </span>
               ) : null}
               {row.positionUpgrade ? (
@@ -542,21 +530,23 @@ function LivePickCard({ row, todayIso }: { row: PublicRow; todayIso: string }) {
             </Link>
           </div>
 
-          <div className="grid min-w-[280px] grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
-              <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Book</div>
-              <div className="mt-2 text-lg font-semibold text-emerald-300">{formatOdds(row.bestOdds)}</div>
-              <div className="mt-1 text-[11px] text-neutral-500">{row.bestBookmaker || "market"}</div>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
-              <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Fair</div>
-              <div className="mt-2 text-lg font-semibold text-white">{formatOdds(row.fairOdds)}</div>
-              <div className="mt-1 text-[11px] text-neutral-500">model price</div>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
-              <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Edge</div>
-              <div className="mt-2 text-lg font-semibold text-emerald-300">{formatPct(row.ev * 100, 1)}</div>
-              <div className="mt-1 text-[11px] text-neutral-500">vs fair line</div>
+            <div className="grid min-w-[280px] grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2">
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
+                <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Book</div>
+                <div className="mt-2 text-lg font-semibold text-emerald-300">{formatOdds(row.bestOdds)}</div>
+                <div className="mt-1 text-[11px] text-neutral-500">{row.bestBookmaker || "market"}</div>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
+                <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Fair</div>
+                <div className="mt-2 text-lg font-semibold text-white">{formatOdds(row.fairOdds)}</div>
+                <div className="mt-1 text-[11px] text-neutral-500">
+                  {fairProb != null ? `${fairProb.toFixed(0)}% implied` : "model price"}
+                </div>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
+                <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Edge</div>
+                <div className="mt-2 text-lg font-semibold text-emerald-300">{formatPct(row.ev * 100, 1)}</div>
+                <div className="mt-1 text-[11px] text-neutral-500">vs fair line</div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
               <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Stake</div>
@@ -580,7 +570,6 @@ export default async function AnytimeGoalscorerPage() {
   const settledSignals = getSettledPublished(allRows);
   const metrics = getMetrics(settledSignals);
   const leagueSummaries = getLeagueSummaries(allRows);
-  const nextScan = getNextScanText();
   const showMetrics = settledSignals.length >= 5;
   const startingSoonSignals = liveSignals.filter((row) => {
     const meta = kickoffMeta(row.kickoff || row.date, todayIso);
@@ -650,7 +639,7 @@ export default async function AnytimeGoalscorerPage() {
           </div>
         </div>
 
-        <div className="mb-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+        <div className="mb-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
             <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Live picks</div>
             <div className="mt-2 text-2xl font-semibold text-emerald-300">{liveSignals.length}</div>
@@ -667,14 +656,9 @@ export default async function AnytimeGoalscorerPage() {
             <div className="mt-1 text-xs text-neutral-500">next published qualifier</div>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
-            <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Next scan</div>
-            <div className="mt-2 text-2xl font-semibold text-white">{nextScan}</div>
-            <div className="mt-1 text-xs text-neutral-500">pipeline heartbeat</div>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
-            <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Snapshot</div>
-            <div className="mt-2 text-lg font-semibold text-white">{formatDateTime(snapshotGeneratedAt)}</div>
-            <div className="mt-1 text-xs text-neutral-500">last hosted refresh</div>
+            <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Published record</div>
+            <div className="mt-2 text-2xl font-semibold text-white">{metrics.settledCount}</div>
+            <div className="mt-1 text-xs text-neutral-500">settled public picks</div>
           </div>
         </div>
 
@@ -683,24 +667,24 @@ export default async function AnytimeGoalscorerPage() {
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
               <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Settled record</div>
               <div className="mt-2 text-2xl font-semibold text-white">{metrics.settledCount}</div>
-              <div className="mt-1 text-xs text-neutral-500">published picks only</div>
+              <div className="mt-1 text-xs text-neutral-500">published picks only · n={metrics.settledCount}</div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
               <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">W / L</div>
               <div className="mt-2 text-2xl font-semibold text-white">
                 {metrics.wins} / {metrics.losses}
               </div>
-              <div className="mt-1 text-xs text-neutral-500">voids kept off the public record</div>
+              <div className="mt-1 text-xs text-neutral-500">voids kept off the public record · n={metrics.settledCount}</div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
               <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">ROI</div>
               <div className={`mt-2 text-2xl font-semibold ${getPnlClass(metrics.roi)}`}>{formatPct(metrics.roi, 1)}</div>
-              <div className="mt-1 text-xs text-neutral-500">on {metrics.stakedUnits.toFixed(2)}u staked</div>
+              <div className="mt-1 text-xs text-neutral-500">on {metrics.stakedUnits.toFixed(2)}u staked · n={metrics.settledCount}</div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
               <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">P/L</div>
               <div className={`mt-2 text-2xl font-semibold ${getPnlClass(metrics.pnlUnits)}`}>{formatUnits(metrics.pnlUnits)}</div>
-              <div className="mt-1 text-xs text-neutral-500">published history only</div>
+              <div className="mt-1 text-xs text-neutral-500">published history only · snapshot {formatDateTime(snapshotGeneratedAt)}</div>
             </div>
           </div>
         ) : null}
@@ -795,41 +779,45 @@ export default async function AnytimeGoalscorerPage() {
             </div>
           ) : (
             <div className="overflow-hidden rounded-[28px] border border-white/10">
-              <div className="grid grid-cols-[80px,110px,1.8fr,120px,110px,90px,90px,100px] gap-3 bg-[#171a1f] px-5 py-3 text-[11px] uppercase tracking-[0.18em] text-neutral-500">
-                <span>Date</span>
-                <span>League</span>
-                <span>Pick</span>
-                <span>Odds / Fair</span>
-                <span>Stake</span>
-                <span>Result</span>
-                <span>P/L</span>
-                <span>Book</span>
-              </div>
-              {settledSignals.slice(0, 30).map((row, index) => (
-                <div
-                  key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}-settled`}
-                  className={`grid grid-cols-[80px,110px,1.8fr,120px,110px,90px,90px,100px] gap-3 px-5 py-4 text-sm ${index % 2 === 0 ? "bg-[#121417]" : "bg-[#171a1f]"}`}
-                >
-                  <span className="text-neutral-500">{formatResultDate(row.date)}</span>
-                  <span className="flex items-center gap-2">
-                    {getLeagueSource(row.leagueKey) ? <LeagueLogo league={getLeagueSource(row.leagueKey)!} variant="row" /> : null}
-                    <span className={`inline-flex rounded-md border px-2 py-0.5 text-[10px] font-semibold tracking-[0.16em] ${getLeagueBadgeClass(row.leagueKey)}`}>
-                      {row.leagueShort}
-                    </span>
-                  </span>
-                  <span className="text-neutral-200">
-                    <span className="font-medium text-white">{row.player}</span>
-                    <span className="mt-1 block text-xs text-neutral-500">{row.match}</span>
-                  </span>
-                  <span className="text-neutral-300">{formatOdds(row.bestOdds)} / {formatOdds(row.fairOdds)}</span>
-                  <span className="text-neutral-300">{row.stakeUnits.toFixed(2)}u</span>
-                  <span className={row.betOutcome.toLowerCase() === "won" ? "text-emerald-300" : "text-rose-300"}>
-                    {row.betOutcome.toUpperCase()}
-                  </span>
-                  <span className={getPnlClass(row.pnlUnits)}>{formatUnits(row.pnlUnits)}</span>
-                  <span className="text-neutral-500">{row.bestBookmaker || "market"}</span>
+              <div className="overflow-x-auto">
+                <div className="min-w-[860px]">
+                  <div className="grid grid-cols-[80px,110px,1.8fr,120px,110px,90px,90px,100px] gap-3 bg-[#171a1f] px-5 py-3 text-[11px] uppercase tracking-[0.18em] text-neutral-500">
+                    <span>Date</span>
+                    <span>League</span>
+                    <span>Pick</span>
+                    <span>Odds / Fair</span>
+                    <span>Stake</span>
+                    <span>Result</span>
+                    <span>P/L</span>
+                    <span>Book</span>
+                  </div>
+                  {settledSignals.slice(0, 30).map((row, index) => (
+                    <div
+                      key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}-settled`}
+                      className={`grid grid-cols-[80px,110px,1.8fr,120px,110px,90px,90px,100px] gap-3 px-5 py-4 text-sm ${index % 2 === 0 ? "bg-[#121417]" : "bg-[#171a1f]"}`}
+                    >
+                      <span className="text-neutral-500">{formatResultDate(row.date)}</span>
+                      <span className="flex items-center gap-2">
+                        {getLeagueSource(row.leagueKey) ? <LeagueLogo league={getLeagueSource(row.leagueKey)!} variant="row" /> : null}
+                        <span className={`inline-flex rounded-md border px-2 py-0.5 text-[10px] font-semibold tracking-[0.16em] ${getLeagueBadgeClass(row.leagueKey)}`}>
+                          {row.leagueShort}
+                        </span>
+                      </span>
+                      <span className="text-neutral-200">
+                        <span className="font-medium text-white">{row.player}</span>
+                        <span className="mt-1 block text-xs text-neutral-500">{row.match}</span>
+                      </span>
+                      <span className="text-neutral-300">{formatOdds(row.bestOdds)} / {formatOdds(row.fairOdds)}</span>
+                      <span className="text-neutral-300">{row.stakeUnits.toFixed(2)}u</span>
+                      <span className={row.betOutcome.toLowerCase() === "won" ? "text-emerald-300" : "text-rose-300"}>
+                        {row.betOutcome.toUpperCase()}
+                      </span>
+                      <span className={getPnlClass(row.pnlUnits)}>{formatUnits(row.pnlUnits)}</span>
+                      <span className="text-neutral-500">{row.bestBookmaker || "market"}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           )}
         </section>
@@ -865,3 +853,5 @@ export default async function AnytimeGoalscorerPage() {
     </div>
   );
 }
+
+
