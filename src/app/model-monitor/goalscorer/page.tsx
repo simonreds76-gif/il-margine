@@ -14,6 +14,7 @@ type FixtureGroup = {
   leagueLabel: string;
   competition: string;
   matchDate: string;
+  kickoff: string;
   bookmaker: string;
   homeTeam: string;
   awayTeam: string;
@@ -147,6 +148,7 @@ const MODEL_MONITOR_PUBLIC =
   process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
 const MODEL_MONITOR_ENABLED =
   MODEL_MONITOR_PUBLIC || process.env.VERCEL_ENV === "preview";
+const GOALSCORER_ODDS_HISTORY_FILE = "data/goalscorer/goalscorer-odds-history.csv";
 const SHADOW_SIGNAL_CONFIGS = [
   { key: "serie-a", label: "Serie A", file: "data/goalscorer/goalscorer-shadow-signals.csv" },
   { key: "epl", label: "Premier League", file: "data/goalscorer/epl-shadow-signals.csv" },
@@ -520,6 +522,26 @@ function formatDateTime(value?: string | null): string {
   });
 }
 
+function isDateOnly(value?: string | null): boolean {
+  return Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value.trim()));
+}
+
+function formatKickoff(value?: string | null): string {
+  if (!value) return "TBC";
+  if (isDateOnly(value)) return formatShortDate(value);
+  const parsed = Date.parse(value);
+  if (Number.isNaN(parsed)) return value;
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(new Date(parsed));
+}
+
 function formatUnits(value?: number, digits = 2): string {
   if (value == null || Number.isNaN(value)) return "n/a";
   return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}u`;
@@ -563,6 +585,70 @@ function formatShortDate(value?: string): string {
     month: "short",
     year: "numeric",
   });
+}
+
+function kickoffSortValue(value?: string | null): number {
+  if (!value) return Number.MAX_SAFE_INTEGER;
+  if (isDateOnly(value)) {
+    const parsedDateOnly = Date.parse(`${value}T23:59:59Z`);
+    return Number.isNaN(parsedDateOnly) ? Number.MAX_SAFE_INTEGER : parsedDateOnly;
+  }
+  const parsed = Date.parse(value);
+  return Number.isNaN(parsed) ? Number.MAX_SAFE_INTEGER : parsed;
+}
+
+function extractEventId(value?: string): string {
+  const match = (value ?? "").match(/(?:^|;)event_id=([^;]+)/);
+  return match?.[1]?.trim() ?? "";
+}
+
+function buildKickoffLookup(text: string | null, eventIds: Set<string>): Map<string, string> {
+  const lookup = new Map<string, string>();
+  if (!text || eventIds.size === 0) return lookup;
+
+  const lines = text
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter(Boolean);
+  if (lines.length < 2) return lookup;
+
+  const headers = parseCsvLine(lines[0]);
+  const eventIdIndex = headers.indexOf("event_id");
+  const kickoffIndex = headers.indexOf("kickoff_at");
+  if (eventIdIndex === -1 || kickoffIndex === -1) return lookup;
+
+  for (const line of lines.slice(1)) {
+    const values = parseCsvLine(line);
+    const eventId = (values[eventIdIndex] ?? "").trim();
+    if (!eventIds.has(eventId) || lookup.has(eventId)) continue;
+    const kickoff = (values[kickoffIndex] ?? "").trim();
+    if (!kickoff) continue;
+    lookup.set(eventId, kickoff);
+    if (lookup.size >= eventIds.size) break;
+  }
+
+  return lookup;
+}
+
+function resolveRowKickoff(row: CsvRow, kickoffLookup: Map<string, string>): string {
+  const explicitKickoff = (row.kickoff ?? "").trim();
+  if (explicitKickoff) return explicitKickoff;
+
+  const eventId = extractEventId(row.notes);
+  if (eventId) {
+    const archiveKickoff = kickoffLookup.get(eventId);
+    if (archiveKickoff) return archiveKickoff;
+  }
+
+  return (row.match_date ?? "").trim();
+}
+
+function compareRowsByKickoffThenEv(left: CsvRow, right: CsvRow, kickoffLookup: Map<string, string>): number {
+  const kickoffDiff =
+    kickoffSortValue(resolveRowKickoff(left, kickoffLookup)) -
+    kickoffSortValue(resolveRowKickoff(right, kickoffLookup));
+  if (kickoffDiff !== 0) return kickoffDiff;
+  return (parseFloatMaybe(right.ev) ?? 0) - (parseFloatMaybe(left.ev) ?? 0);
 }
 
 function priorityRank(priority?: string): number {
@@ -836,19 +922,26 @@ function playerMatchScore(left?: string, right?: string): number {
   return 0;
 }
 
-function buildFixtureGroups(rows: CsvRow[], leagueKey: string, leagueLabel: string): FixtureGroup[] {
+function buildFixtureGroups(
+  rows: CsvRow[],
+  leagueKey: string,
+  leagueLabel: string,
+  kickoffLookup: Map<string, string>,
+): FixtureGroup[] {
   const fixtureMap = new Map<string, FixtureGroup>();
   for (const row of rows) {
     const homeTeam = row.home_team ?? "";
     const awayTeam = row.away_team ?? "";
     if (!homeTeam || !awayTeam) continue;
     const key = `${row.match_date}|${row.bookmaker}|${homeTeam}|${awayTeam}`;
-      const existing = fixtureMap.get(key) ?? {
+    const rowKickoff = resolveRowKickoff(row, kickoffLookup);
+    const existing = fixtureMap.get(key) ?? {
       key,
       leagueKey,
       leagueLabel,
       competition: row.competition ?? leagueLabel,
       matchDate: row.match_date ?? "",
+      kickoff: rowKickoff,
       bookmaker: row.bookmaker ?? "",
       homeTeam,
       awayTeam,
@@ -862,9 +955,16 @@ function buildFixtureGroups(rows: CsvRow[], leagueKey: string, leagueLabel: stri
     } else if (isAway) {
       existing.awayRows.push(row);
     }
+    if (kickoffSortValue(rowKickoff) < kickoffSortValue(existing.kickoff)) {
+      existing.kickoff = rowKickoff;
+    }
     fixtureMap.set(key, existing);
   }
-  return [...fixtureMap.values()].sort((a, b) => a.key.localeCompare(b.key));
+  return [...fixtureMap.values()].sort((a, b) => {
+    const kickoffDiff = kickoffSortValue(a.kickoff) - kickoffSortValue(b.kickoff);
+    if (kickoffDiff !== 0) return kickoffDiff;
+    return a.key.localeCompare(b.key);
+  });
 }
 
 function isoDateInTimezone(timeZone: string): string {
@@ -1060,7 +1160,8 @@ function ShadowTrackedRowCard({ row }: { row: CsvRow }) {
           <div className="font-medium text-slate-100">{row.player || "Unknown player"}</div>
           <div className="text-sm text-slate-400">{row.match || "Unknown match"}</div>
           <div className="mt-1 text-xs text-slate-500">
-            {(row.competition ?? "").trim() || "Goalscorer shadow"}{row.lineup_state ? ` · ${humanizeToken(row.lineup_state)}` : ""}
+            {formatKickoff(row.kickoff || row.date)} · {((row.competition ?? "").trim() || "Goalscorer shadow")}
+            {row.lineup_state ? ` · ${humanizeToken(row.lineup_state)}` : ""}
           </div>
         </div>
         <div className={`text-sm font-medium ${resultTone}`}>{resultLabel}</div>
@@ -1551,7 +1652,7 @@ export default async function GoalscorerMonitorPage() {
     notFound();
   }
 
-  const [leagueDatasets, shadowDatasets, snapshotGeneratedAt] = await Promise.all([
+  const [leagueDatasets, shadowDatasets, snapshotGeneratedAt, oddsHistoryText] = await Promise.all([
     Promise.all(
       LIVE_COMPARE_CONFIGS.map(async (config) => {
         const [comparisonJson, comparisonCsv, comparisonTxt, comparisonJsonMtime, comparisonCsvMtime, lineupsJson, penaltyReviewJson, livePenaltyReviewJson] = await Promise.all([
@@ -1568,7 +1669,6 @@ export default async function GoalscorerMonitorPage() {
         const fixtureHealth = parseLiveBoardFixtures(comparisonJson, config.key);
         const rawRows = jsonRows.length > 0 ? jsonRows : comparisonCsv ? parseCsv(comparisonCsv) : [];
         const rows = filterActiveRows(rawRows);
-        const fixtures = buildFixtureGroups(rows, config.key, config.label);
         const lineupFixtures = parseStoredLineups(lineupsJson, config.key);
         const lineupMap = new Map(
           lineupFixtures.map((fixture) => [
@@ -1585,7 +1685,6 @@ export default async function GoalscorerMonitorPage() {
           comparisonMtime: comparisonJsonMtime ?? comparisonCsvMtime,
           lineupsJson,
           rows,
-          fixtures,
           fixtureHealth,
           lineupMap,
           penaltyReviewRows: Array.isArray(penaltyReviewJson?.rows) ? penaltyReviewJson.rows : [],
@@ -1610,10 +1709,13 @@ export default async function GoalscorerMonitorPage() {
       }),
     ),
     readGoalscorerLiveSnapshotGeneratedAt(),
+    readGoalscorerLiveFile(GOALSCORER_ODDS_HISTORY_FILE),
   ]);
 
   const rows = leagueDatasets.flatMap((dataset) => dataset.rows);
   const shadowRows = shadowDatasets.flatMap((dataset) => dataset.rows);
+  const rowEventIds = new Set(rows.map((row) => extractEventId(row.notes)).filter(Boolean));
+  const kickoffLookup = buildKickoffLookup(oddsHistoryText, rowEventIds);
   const shadowSummary = computeShadowSummary(shadowRows);
   const latestTrackedRows = [...shadowRows].sort((left, right) => shadowRowActivityTime(right) - shadowRowActivityTime(left));
   const publicRows = rows.filter((row) => (row.public_action ?? "") === "surface");
@@ -1621,9 +1723,9 @@ export default async function GoalscorerMonitorPage() {
   const caveatRows = rows.filter((row) => (row.shadow_action ?? "") === "shadow_track" && (row.public_action ?? "") !== "surface");
   const suppressedRows = rows.filter((row) => effectiveMonitorAction(row) === "suppress");
 
-  publicRows.sort((a, b) => (parseFloatMaybe(b.ev) ?? 0) - (parseFloatMaybe(a.ev) ?? 0));
-  highRows.sort((a, b) => (parseFloatMaybe(b.ev) ?? 0) - (parseFloatMaybe(a.ev) ?? 0));
-  caveatRows.sort((a, b) => (parseFloatMaybe(b.ev) ?? 0) - (parseFloatMaybe(a.ev) ?? 0));
+  publicRows.sort((a, b) => compareRowsByKickoffThenEv(a, b, kickoffLookup));
+  highRows.sort((a, b) => compareRowsByKickoffThenEv(a, b, kickoffLookup));
+  caveatRows.sort((a, b) => compareRowsByKickoffThenEv(a, b, kickoffLookup));
 
   const comparedAt = rows
     .map((row) => row.compared_at ?? "")
@@ -1700,7 +1802,9 @@ export default async function GoalscorerMonitorPage() {
     (sum, dataset) => sum + (parseIntMaybe(dataset.summary["Fixtures With Expected Lineups"]) ?? 0),
     0,
   );
-  const fixtures = leagueDatasets.flatMap((dataset) => dataset.fixtures);
+  const fixtures = leagueDatasets.flatMap((dataset) =>
+    buildFixtureGroups(dataset.rows, dataset.key, dataset.label, kickoffLookup),
+  );
   const lineupMap = new Map(
     leagueDatasets.flatMap((dataset) =>
       [...dataset.lineupMap.entries()].map(([key, value]) => [key, value] as const),
@@ -2002,6 +2106,7 @@ export default async function GoalscorerMonitorPage() {
                     <th className="px-3 py-3 font-medium">League</th>
                     <th className="px-3 py-3 font-medium">Player</th>
                     <th className="px-3 py-3 font-medium">Fixture</th>
+                    <th className="px-3 py-3 font-medium">Kickoff (UK)</th>
                     <th className="px-3 py-3 font-medium">Odds</th>
                     <th className="px-3 py-3 font-medium">Fair</th>
                     <th className="px-3 py-3 font-medium">EV</th>
@@ -2018,6 +2123,7 @@ export default async function GoalscorerMonitorPage() {
                         <div className="text-xs text-slate-500">{row.player_team}</div>
                       </td>
                       <td className="px-3 py-3 text-slate-300">{row.player_team} vs {row.opponent}</td>
+                      <td className="px-3 py-3 text-xs text-slate-400">{formatKickoff(resolveRowKickoff(row, kickoffLookup))}</td>
                       <td className="px-3 py-3 text-slate-300">{formatDecimal(parseFloatMaybe(row.odds_decimal), 2)}</td>
                       <td className="px-3 py-3 text-slate-300">{formatDecimal(parseFloatMaybe(row.model_fair_odds_atgs), 2)}</td>
                       <td className="px-3 py-3 text-emerald-300">{formatPct((parseFloatMaybe(row.ev) ?? 0) * 100, 1)}</td>
@@ -2027,7 +2133,7 @@ export default async function GoalscorerMonitorPage() {
                   ))}
                   {highRows.length === 0 ? (
                     <tr>
-                      <td colSpan={8} className="px-3 py-6 text-center text-slate-500">No clean public-ready rows in the latest run.</td>
+                      <td colSpan={9} className="px-3 py-6 text-center text-slate-500">No clean public-ready rows in the latest run.</td>
                     </tr>
                   ) : null}
                 </tbody>
@@ -2051,6 +2157,7 @@ export default async function GoalscorerMonitorPage() {
                     <div>
                       <div className="font-medium text-slate-100">{row.player_name}</div>
                       <div className="text-sm text-slate-400">{row.player_team} vs {row.opponent}</div>
+                      <div className="mt-1 text-xs text-slate-500">{formatKickoff(resolveRowKickoff(row, kickoffLookup))}</div>
                     </div>
                     <span className={`rounded-full border px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] ${badgeClass(effectiveMonitorAction(row))}`}>
                       {effectiveMonitorActionLabel(row)}
@@ -2310,7 +2417,7 @@ export default async function GoalscorerMonitorPage() {
                             {fixture.competition || fixture.leagueLabel}
                           </div>
                           <h3 className="text-lg font-semibold text-white">{fixture.homeTeam} vs {fixture.awayTeam}</h3>
-                          <p className="text-sm text-slate-400">{fixture.matchDate} | {fixture.bookmaker}</p>
+                          <p className="text-sm text-slate-400">{formatKickoff(fixture.kickoff || fixture.matchDate)} | {fixture.bookmaker}</p>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
                           {fixtureHealth ? (
