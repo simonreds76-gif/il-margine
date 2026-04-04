@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -130,7 +130,7 @@ function LivePickCard({ row, todayIso }: { row: PublicRow; todayIso: string }) {
             <div className="flex flex-wrap items-center gap-2 text-sm text-neutral-300">
               {league ? <LeagueLogo league={league} variant="row" /> : null}
               <span>{row.leagueLabel}</span>
-              <span className="text-neutral-600">·</span>
+              <span className="text-neutral-600">/</span>
               <span className="truncate text-white">{row.match}</span>
             </div>
           </div>
@@ -161,7 +161,7 @@ function LivePickCard({ row, todayIso }: { row: PublicRow; todayIso: string }) {
               <span>{row.opponent}</span>
               {row.position ? (
                 <>
-                  <span className="text-neutral-600">·</span>
+                  <span className="text-neutral-600">/</span>
                   <span>{row.position}</span>
                 </>
               ) : null}
@@ -170,7 +170,7 @@ function LivePickCard({ row, todayIso }: { row: PublicRow; todayIso: string }) {
           </div>
 
           <div className="text-right">
-            <div className="text-[11px] uppercase tracking-[0.18em] text-neutral-500">Value edge</div>
+            <div className="text-[11px] uppercase tracking-[0.18em] text-neutral-500">Edge</div>
             <div className="mt-1 text-3xl font-semibold tracking-tight text-emerald-300">{formatPct(row.ev * 100, 1)}</div>
             <div className="mt-2 text-xs text-neutral-500">{formatPublishedLabel(row.comparedAt)}</div>
           </div>
@@ -186,7 +186,7 @@ function LivePickCard({ row, todayIso }: { row: PublicRow; todayIso: string }) {
             <div className="mt-1 text-lg font-semibold text-white">{marketProb != null ? `${marketProb.toFixed(0)}%` : "n/a"}</div>
           </div>
           <div>
-            <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Fair / Book</div>
+            <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Fair to Market</div>
             <div className="mt-1 text-lg font-semibold text-white">{formatOdds(row.fairOdds)} / {formatOdds(row.bestOdds)}</div>
           </div>
           <div>
@@ -203,7 +203,7 @@ function LivePickCard({ row, todayIso }: { row: PublicRow; todayIso: string }) {
           </span>
           {row.penaltyDependent ? (
             <span className="inline-flex rounded-full border border-amber-500/25 bg-amber-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-amber-200">
-              Set piece component{row.penaltyDependencyShare > 0 ? ` ${Math.round(row.penaltyDependencyShare * 100)}%` : ""}
+              Set piece component{row.penaltyDependencyShare >= 0.1 ? ` ${Math.round(row.penaltyDependencyShare * 100)}%` : ""}
             </span>
           ) : null}
           {row.penaltyTransfer ? (
@@ -217,8 +217,8 @@ function LivePickCard({ row, todayIso }: { row: PublicRow; todayIso: string }) {
             </span>
           ) : null}
           {contextSignals.map((signal) => (
-            <span key={signal} className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-300">
-              {signal}
+            <span key={signal.label} className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${signal.className}`}>
+              {signal.label}
             </span>
           ))}
           {(row.penaltyDependent || row.penaltyTransfer) ? (
@@ -282,7 +282,7 @@ function RecordTable({ rows }: { rows: PublicRow[] }) {
           <article key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}-mobile`} className="rounded-2xl border border-white/10 bg-[#121417] px-4 py-4">
             <div className="flex items-start justify-between gap-3">
               <div className="text-sm text-neutral-400">
-                {formatResultDate(row.date)} · {row.leagueShort}
+                {formatResultDate(row.date)} / {row.leagueShort}
               </div>
               <div className={`text-sm font-semibold ${row.betOutcome.toLowerCase() === "won" ? "text-emerald-300" : "text-rose-300"}`}>
                 {row.betOutcome.toUpperCase()} {formatUnits(row.pnlUnits)}
@@ -291,7 +291,7 @@ function RecordTable({ rows }: { rows: PublicRow[] }) {
             <div className="mt-2 text-base font-semibold text-white">{row.player} to score</div>
             <div className="mt-1 text-sm text-neutral-400">{row.match}</div>
             <div className="mt-2 text-sm text-neutral-300">
-              {formatOdds(row.bestOdds)} · {formatPct(row.ev * 100, 1)} · {row.stakeLabel || `${row.stakeUnits.toFixed(2)}u`}
+              {formatOdds(row.bestOdds)} / {formatPct(row.ev * 100, 1)} / {row.stakeLabel || `${row.stakeUnits.toFixed(2)}u`}
             </div>
           </article>
         ))}
@@ -346,11 +346,11 @@ export default function PublicGoalscorerBoard({
     <>
       <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-neutral-400">
         <span className="text-neutral-200">{selectedLeagueLabel}</span>
-        <span className="mx-2 text-neutral-600">·</span>
+        <span className="mx-2 text-neutral-600">/</span>
         <span>{filteredLiveSignals.length} live</span>
-        <span className="mx-2 text-neutral-600">·</span>
+        <span className="mx-2 text-neutral-600">/</span>
         <span>{filteredSettledSignals.length} settled</span>
-        <span className="mx-2 text-neutral-600">·</span>
+        <span className="mx-2 text-neutral-600">/</span>
         <span>Snapshot {formatDateTime(snapshotGeneratedAt)}</span>
       </div>
 
@@ -394,37 +394,40 @@ export default function PublicGoalscorerBoard({
           </div>
         ) : null}
 
-        <div>
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <div>
-              <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-200">Live board</h2>
-              <p className="mt-1 text-sm text-neutral-500">Filtered by league, sorted by kickoff, with the strongest context left visible.</p>
+        {filteredLiveSignals.length === 0 ? (
+          <div>
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-200">Live board</h2>
+                <p className="mt-1 text-sm text-neutral-500">Filtered by league, sorted by kickoff, with the strongest context left visible.</p>
+              </div>
             </div>
-          </div>
-
-          {filteredLiveSignals.length === 0 ? (
             <div className="rounded-[24px] border border-white/10 bg-[#121417] px-5 py-6 text-sm leading-7 text-neutral-400">
               No live public picks in this view right now. Settled history stays available below.
             </div>
-          ) : remainingRows.length === 0 ? (
-            <div className="rounded-[24px] border border-white/10 bg-[#121417] px-5 py-6 text-sm leading-7 text-neutral-400">
-              All current picks are already in the up-next block above.
+          </div>
+        ) : remainingRows.length > 0 ? (
+          <div>
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-200">Live board</h2>
+                <p className="mt-1 text-sm text-neutral-500">Filtered by league, sorted by kickoff, with the strongest context left visible.</p>
+              </div>
             </div>
-          ) : (
             <div className="space-y-4">
               {remainingRows.map((row) => (
                 <LivePickCard key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}-live`} row={row} todayIso={todayIso} />
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        ) : null}
       </section>
 
       <section className="mt-12">
         <div className="mb-4">
           <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-200">Published record</h2>
           <p className="mt-2 text-sm text-neutral-400">
-            W{metrics.wins} · L{metrics.losses} · {formatPct(metrics.roi, 1)} ROI · {formatUnits(metrics.pnlUnits)} on {metrics.stakedUnits.toFixed(2)}u staked
+            W{metrics.wins} / L{metrics.losses} / {formatPct(metrics.roi, 1)} ROI / {formatUnits(metrics.pnlUnits)} on {metrics.stakedUnits.toFixed(2)}u staked
           </p>
         </div>
 
@@ -439,3 +442,5 @@ export default function PublicGoalscorerBoard({
     </>
   );
 }
+
+

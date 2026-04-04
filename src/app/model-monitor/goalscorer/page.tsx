@@ -559,6 +559,19 @@ function formatDateTime(value?: string | null): string {
   });
 }
 
+function formatRelativeAgeShort(value?: string | null): string {
+  if (!value) return "n/a";
+  const stamp = Date.parse(value);
+  if (Number.isNaN(stamp)) return "n/a";
+  const diffMs = Date.now() - stamp;
+  if (diffMs < 0) return "just now";
+  const diffMinutes = Math.round(diffMs / 60000);
+  if (diffMinutes < 60) return `${diffMinutes}m ago`;
+  const diffHours = Math.round(diffMinutes / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
+  return ">1d";
+}
+
 function isDateOnly(value?: string | null): boolean {
   return Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value.trim()));
 }
@@ -1416,6 +1429,7 @@ function LiveBetsTable({
             <th className="px-3 py-3 font-medium">Odds</th>
             <th className="px-3 py-3 font-medium">Fair</th>
             <th className="px-3 py-3 font-medium">Edge</th>
+            <th className="px-3 py-3 font-medium">Stake</th>
             <th className="px-3 py-3 font-medium">Status</th>
           </tr>
         </thead>
@@ -1452,6 +1466,9 @@ function LiveBetsTable({
                 <td className="px-3 py-3 text-slate-300">{formatDecimal(item.odds, 2)}</td>
                 <td className="px-3 py-3 text-slate-300">{formatDecimal(item.fair, 2)}</td>
                 <td className={`px-3 py-3 font-medium ${metricTone(item.edgePct)}`}>{formatPct(item.edgePct, 1)}</td>
+                <td className="px-3 py-3 text-slate-300">
+                  {item.row.recommended_stake_label || item.row.recommended_stake_band || "-"}
+                </td>
                 <td className="px-3 py-3">
                   <span className={`rounded-full border px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] ${statusPillClass(item.status)}`}>
                     {item.status}
@@ -1462,7 +1479,7 @@ function LiveBetsTable({
           })}
           {rows.length === 0 ? (
             <tr>
-              <td colSpan={9} className="px-3 py-6 text-center text-slate-500">
+              <td colSpan={10} className="px-3 py-6 text-center text-slate-500">
                 {emptyLabel}
               </td>
             </tr>
@@ -2428,7 +2445,7 @@ export default async function GoalscorerMonitorPage() {
                 <thead>
                   <tr className="border-b border-slate-800/80 text-left text-[10px] uppercase tracking-[0.22em] text-slate-500">
                     <th className="px-3 py-3 font-semibold" colSpan={6}>Live pipeline — current window</th>
-                    <th className="border-l border-slate-700 px-3 py-3 font-semibold bg-slate-950/10" colSpan={4}>Public record — cumulative</th>
+                    <th className="border-l border-slate-700 px-3 py-3 font-semibold bg-slate-950/10" colSpan={3}>Public record — cumulative</th>
                     <th className="border-l border-slate-700 px-3 py-3 font-semibold bg-slate-950/20" colSpan={6}>Shadow log — cumulative</th>
                   </tr>
                   <tr className="border-b border-slate-800 text-left text-[11px] uppercase tracking-[0.18em] text-slate-500">
@@ -2438,8 +2455,7 @@ export default async function GoalscorerMonitorPage() {
                     <th className="px-3 py-3 font-semibold">Pub now</th>
                     <th className="px-3 py-3 font-semibold">Shadow now</th>
                     <th className="px-3 py-3 font-semibold">Fixtures</th>
-                    <th className="border-l border-slate-700 bg-slate-950/10 px-3 py-3 font-semibold">Pub settled</th>
-                    <th className="bg-slate-950/10 px-3 py-3 font-semibold">Pub W/L</th>
+                    <th className="border-l border-slate-700 bg-slate-950/10 px-3 py-3 font-semibold">Pub record</th>
                     <th className="bg-slate-950/10 px-3 py-3 font-semibold">Pub ROI</th>
                     <th className="bg-slate-950/10 px-3 py-3 font-semibold">Pub P/L</th>
                     <th className="border-l border-slate-700 bg-slate-950/20 px-3 py-3 font-semibold">Tracked</th>
@@ -2456,7 +2472,7 @@ export default async function GoalscorerMonitorPage() {
                       <td className="px-3 py-3">
                         <div className="font-semibold text-white">{row.label}</div>
                         <div className="mt-1 text-xs text-slate-500">
-                          {row.updatedAt ? formatDateTime(row.updatedAt) : "No timestamp"}
+                          {row.updatedAt ? formatRelativeAgeShort(row.updatedAt) : "n/a"}
                         </div>
                       </td>
                       <td className="px-3 py-3">
@@ -2474,8 +2490,9 @@ export default async function GoalscorerMonitorPage() {
                         <span className="px-1 text-slate-600">·</span>
                         <span className="text-rose-300">{row.quarantinedFixtures}</span>
                       </td>
-                      <td className="border-l border-slate-700 bg-slate-950/10 px-3 py-3 font-mono tabular-nums text-slate-100">{row.publicSettled}</td>
-                      <td className="bg-slate-950/10 px-3 py-3 font-mono tabular-nums text-slate-100">{formatWLV(row.publicWins, row.publicLosses, 0)}</td>
+                      <td className="border-l border-slate-700 bg-slate-950/10 px-3 py-3 font-mono tabular-nums text-slate-100">
+                        {formatWLV(row.publicWins, row.publicLosses, 0)} ({row.publicSettled})
+                      </td>
                       <td className={`bg-slate-950/10 px-3 py-3 font-mono tabular-nums ${metricTone(row.publicRoi)}`}>{formatPct(row.publicRoi, 1)}</td>
                       <td className={`bg-slate-950/10 px-3 py-3 font-mono tabular-nums ${metricTone(row.publicPnlUnits)}`}>{formatUnits(row.publicPnlUnits, 2)}</td>
                       <td className="border-l border-slate-700 bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-100">{row.trackedSignals}</td>
@@ -2505,15 +2522,8 @@ export default async function GoalscorerMonitorPage() {
                 </div>
               </div>
             </div>
-            <div className="space-y-4">
-              {visibleHighPenaltyReviewRows.slice(0, 3).map(({ row, id }, idx) => (
-                <PenaltyReviewCard
-                  key={`priority-${row.date}-${row.team}-${row.actual_taker}-${idx}`}
-                  row={row}
-                  rowId={id}
-                  daysUntilStale={penaltyReviewDaysUntilStale(row, todayIso)}
-                />
-              ))}
+            <div className="text-sm text-rose-100/80">
+              Review the full watchlist below. High-priority items are opened automatically so they do not get buried.
             </div>
           </div>
         ) : null}

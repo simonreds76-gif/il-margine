@@ -335,11 +335,27 @@ export function bookmakerLogoPath(bookmaker: string): string | null {
   return mapping[normalized] ?? null;
 }
 
-export function getContextSignals(row: Pick<PublicRow, "finishingLuck" | "fixtureSwing">): string[] {
-  const signals: string[] = [];
-  if (row.finishingLuck <= -0.8) signals.push("Finishing running cold");
-  else if (row.finishingLuck >= 0.8) signals.push("Finishing running hot");
+export function getContextSignals(
+  row: Pick<PublicRow, "finishingLuck" | "fixtureSwing">,
+): Array<{ label: string; className: string }> {
+  const signals: Array<{ label: string; className: string }> = [];
+  if (row.finishingLuck <= -0.8) {
+    signals.push({
+      label: "Finishing running cold",
+      className: "border-amber-500/25 bg-amber-500/10 text-amber-200",
+    });
+  } else if (row.finishingLuck >= 0.8) {
+    signals.push({
+      label: "Finishing running hot",
+      className: "border-white/10 bg-white/[0.04] text-neutral-300",
+    });
+  }
 
-  if (row.fixtureSwing >= 1.1) signals.push("Fixture swing in favour");
+  if (row.fixtureSwing >= 1.1) {
+    signals.push({
+      label: "Fixture swing in favour",
+      className: "border-cyan-500/25 bg-cyan-500/10 text-cyan-200",
+    });
+  }
   return signals;
 }
