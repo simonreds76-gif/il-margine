@@ -259,21 +259,6 @@ function formatOdds(value: number): string {
   return value > 0 ? value.toFixed(2) : "n/a";
 }
 
-function formatLeagueTime(value: string): string {
-  const stamp = Date.parse(value);
-  if (!Number.isFinite(stamp)) return value || "TBC";
-
-  return new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/London",
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-  }).format(new Date(stamp));
-}
-
 function formatResultDate(value: string): string {
   const stamp = Date.parse(value);
   if (!Number.isFinite(stamp)) return value || "";
@@ -322,6 +307,103 @@ function getLeagueBadgeClass(leagueKey: LeagueKey): string {
 
 function getLeagueSource(leagueKey: LeagueKey): LeagueSource | undefined {
   return LEAGUE_SOURCES.find((league) => league.key === leagueKey);
+}
+
+function getTodayIsoLondon(): string {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const year = parts.find((part) => part.type === "year")?.value ?? "0000";
+  const month = parts.find((part) => part.type === "month")?.value ?? "01";
+  const day = parts.find((part) => part.type === "day")?.value ?? "01";
+  return `${year}-${month}-${day}`;
+}
+
+function addDaysIso(isoDate: string, days: number): string {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  const date = new Date(Date.UTC(year || 0, (month || 1) - 1, day || 1));
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+function kickoffMeta(value: string, todayIso: string) {
+  const stamp = Date.parse(value);
+  if (!Number.isFinite(stamp)) {
+    return {
+      sortValue: Number.POSITIVE_INFINITY,
+      minutesUntil: null as number | null,
+      label: value || "TBC",
+      tone: "text-neutral-400",
+      badge: "TBC",
+      badgeClass: "border-white/10 bg-white/[0.04] text-neutral-400",
+      dateKey: "",
+    };
+  }
+
+  const dateKey = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/London",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(stamp));
+  const tomorrowIso = addDaysIso(todayIso, 1);
+  const timeLabel = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/London",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(new Date(stamp));
+
+  let label = timeLabel;
+  if (dateKey === tomorrowIso) {
+    label = `Tomorrow ${timeLabel}`;
+  } else if (dateKey !== todayIso) {
+    label = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/London",
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    }).format(new Date(stamp));
+  }
+
+  const minutesUntil = Math.round((stamp - Date.now()) / 60000);
+  if (minutesUntil <= 30) {
+    return {
+      sortValue: stamp,
+      minutesUntil,
+      label,
+      tone: "text-rose-300",
+      badge: "Soon",
+      badgeClass: "border-rose-500/30 bg-rose-500/10 text-rose-200",
+      dateKey,
+    };
+  }
+  if (minutesUntil <= 60) {
+    return {
+      sortValue: stamp,
+      minutesUntil,
+      label,
+      tone: "text-amber-300",
+      badge: "<60m",
+      badgeClass: "border-amber-500/30 bg-amber-500/10 text-amber-200",
+      dateKey,
+    };
+  }
+  return {
+    sortValue: stamp,
+    minutesUntil,
+    label,
+    tone: "text-neutral-200",
+    badge: dateKey === todayIso ? "Today" : dateKey === tomorrowIso ? "Tomorrow" : "Upcoming",
+    badgeClass: "border-white/10 bg-white/[0.04] text-neutral-300",
+    dateKey,
+  };
 }
 
 function getLondonNow() {
@@ -401,17 +483,118 @@ function LeagueLogo({
   );
 }
 
+function LivePickCard({ row, todayIso }: { row: PublicRow; todayIso: string }) {
+  const kickoff = kickoffMeta(row.kickoff || row.date, todayIso);
+
+  return (
+    <article className="overflow-hidden rounded-[24px] border border-white/10 bg-[#121417] shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
+      <div className="border-b border-white/10 px-5 py-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <div className={`text-sm font-semibold ${kickoff.tone}`}>{kickoff.label}</div>
+            <div className="mt-1 text-xs uppercase tracking-[0.18em] text-neutral-500">{row.match}</div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${kickoff.badgeClass}`}>
+              {kickoff.badge}
+            </span>
+            <span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${getLeagueBadgeClass(row.leagueKey)}`}>
+              {row.leagueShort}
+            </span>
+            <span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${getStakeTone(row)}`}>
+              {row.stakeLabel || `${row.stakeUnits.toFixed(2)}u`}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-5 py-5">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div className="min-w-0">
+            <h3 className="text-2xl font-semibold tracking-tight text-white">
+              {row.player} <span className="text-lg font-normal text-neutral-400">to score</span>
+            </h3>
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-neutral-400">
+              <span>{row.team}</span>
+              <span className="text-neutral-600">/</span>
+              <span>{row.opponent}</span>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <span className="inline-flex rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-300">
+                Confirmed starter
+              </span>
+              {row.penaltyDependent ? (
+                <span className="inline-flex rounded-full border border-amber-500/25 bg-amber-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-amber-200">
+                  Penalty component
+                </span>
+              ) : null}
+              {row.positionUpgrade ? (
+                <span className="inline-flex rounded-full border border-cyan-500/25 bg-cyan-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-200">
+                  Role upgrade
+                </span>
+              ) : null}
+            </div>
+            <Link
+              href={getPenaltyTakersHref(row)}
+              className="mt-4 inline-flex text-xs text-emerald-300 transition-colors hover:text-emerald-200"
+            >
+              View {row.team} penalty order
+            </Link>
+          </div>
+
+          <div className="grid min-w-[280px] grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
+              <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Book</div>
+              <div className="mt-2 text-lg font-semibold text-emerald-300">{formatOdds(row.bestOdds)}</div>
+              <div className="mt-1 text-[11px] text-neutral-500">{row.bestBookmaker || "market"}</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
+              <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Fair</div>
+              <div className="mt-2 text-lg font-semibold text-white">{formatOdds(row.fairOdds)}</div>
+              <div className="mt-1 text-[11px] text-neutral-500">model price</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
+              <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Edge</div>
+              <div className="mt-2 text-lg font-semibold text-emerald-300">{formatPct(row.ev * 100, 1)}</div>
+              <div className="mt-1 text-[11px] text-neutral-500">vs fair line</div>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
+              <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Stake</div>
+              <div className="mt-2 text-lg font-semibold text-white">{row.stakeUnits.toFixed(2)}u</div>
+              <div className="mt-1 text-[11px] text-neutral-500">{row.stakeBand || "banded"}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export default async function AnytimeGoalscorerPage() {
   const [allRows, snapshotGeneratedAt] = await Promise.all([
     loadPublicRows(),
     readGoalscorerLiveSnapshotGeneratedAt(),
   ]);
+  const todayIso = getTodayIsoLondon();
   const liveSignals = getLiveSignals(allRows);
   const settledSignals = getSettledPublished(allRows);
   const metrics = getMetrics(settledSignals);
   const leagueSummaries = getLeagueSummaries(allRows);
   const nextScan = getNextScanText();
   const showMetrics = settledSignals.length >= 5;
+  const startingSoonSignals = liveSignals.filter((row) => {
+    const meta = kickoffMeta(row.kickoff || row.date, todayIso);
+    return meta.minutesUntil != null && meta.minutesUntil >= 0 && meta.minutesUntil <= 60;
+  });
+  const todaySignals = liveSignals.filter((row) => {
+    const meta = kickoffMeta(row.kickoff || row.date, todayIso);
+    return meta.dateKey === todayIso && (meta.minutesUntil == null || meta.minutesUntil > 60);
+  });
+  const laterSignals = liveSignals.filter((row) => {
+    const meta = kickoffMeta(row.kickoff || row.date, todayIso);
+    return meta.dateKey !== todayIso;
+  });
+  const nextKickoffLabel = liveSignals[0] ? kickoffMeta(liveSignals[0].kickoff || liveSignals[0].date, todayIso).label : "n/a";
 
   return (
     <div className="min-h-screen overflow-hidden bg-[#0b0d10] text-neutral-200">
@@ -467,13 +650,36 @@ export default async function AnytimeGoalscorerPage() {
           </div>
         </div>
 
+        <div className="mb-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+            <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Live picks</div>
+            <div className="mt-2 text-2xl font-semibold text-emerald-300">{liveSignals.length}</div>
+            <div className="mt-1 text-xs text-neutral-500">current published qualifiers</div>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+            <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Starting soon</div>
+            <div className="mt-2 text-2xl font-semibold text-amber-300">{startingSoonSignals.length}</div>
+            <div className="mt-1 text-xs text-neutral-500">kickoff inside 60 min</div>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+            <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Next kickoff</div>
+            <div className="mt-2 text-xl font-semibold text-white">{nextKickoffLabel}</div>
+            <div className="mt-1 text-xs text-neutral-500">next published qualifier</div>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+            <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Next scan</div>
+            <div className="mt-2 text-2xl font-semibold text-white">{nextScan}</div>
+            <div className="mt-1 text-xs text-neutral-500">pipeline heartbeat</div>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+            <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Snapshot</div>
+            <div className="mt-2 text-lg font-semibold text-white">{formatDateTime(snapshotGeneratedAt)}</div>
+            <div className="mt-1 text-xs text-neutral-500">last hosted refresh</div>
+          </div>
+        </div>
+
         {showMetrics ? (
-          <div className="mb-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
-              <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Live picks</div>
-              <div className="mt-2 text-2xl font-semibold text-emerald-300">{liveSignals.length}</div>
-              <div className="mt-1 text-xs text-neutral-500">current published qualifiers</div>
-            </div>
+          <div className="mb-10 grid gap-3 sm:grid-cols-3 xl:grid-cols-4">
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
               <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Settled record</div>
               <div className="mt-2 text-2xl font-semibold text-white">{metrics.settledCount}</div>
@@ -494,25 +700,41 @@ export default async function AnytimeGoalscorerPage() {
             <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
               <div className="text-[11px] uppercase tracking-[0.22em] text-neutral-500">P/L</div>
               <div className={`mt-2 text-2xl font-semibold ${getPnlClass(metrics.pnlUnits)}`}>{formatUnits(metrics.pnlUnits)}</div>
-              <div className="mt-1 text-xs text-neutral-500">updated {formatDateTime(snapshotGeneratedAt)}</div>
+              <div className="mt-1 text-xs text-neutral-500">published history only</div>
             </div>
           </div>
         ) : null}
 
-        <div className="mb-4 flex items-center justify-between gap-4">
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">Live picks</h2>
-            <p className="mt-1 text-sm text-neutral-500">
-              Once a pick is logged, the record stays append-only.
-            </p>
-          </div>
-          <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-neutral-400">
-            Updates in {nextScan}
-          </span>
-        </div>
+        {startingSoonSignals.length > 0 ? (
+          <section className="mb-10">
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <div>
+                <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">Starting soon</h2>
+                <p className="mt-1 text-sm text-neutral-500">
+                  Published picks inside the next hour, sorted by kickoff.
+                </p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              {startingSoonSignals.map((row) => (
+                <LivePickCard key={`soon-${row.leagueKey}-${row.date}-${row.player}-${row.match}`} row={row} todayIso={todayIso} />
+              ))}
+            </div>
+          </section>
+        ) : null}
 
-        <div className="space-y-4">
-          {liveSignals.length === 0 ? (
+        <section className="mb-10">
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">Today</h2>
+              <p className="mt-1 text-sm text-neutral-500">
+                Current published picks for today, with kickoff first so the soonest match stays on top.
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            {liveSignals.length === 0 ? (
             <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#121417]">
               <div className="border-b border-white/10 px-5 py-4">
                 <span className="inline-flex rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 text-[11px] font-medium text-emerald-300">
@@ -527,82 +749,35 @@ export default async function AnytimeGoalscorerPage() {
                 </p>
               </div>
             </div>
-          ) : (
-            liveSignals.map((row) => (
-              <article
-                key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}`}
-                className="overflow-hidden rounded-[28px] border border-white/10 bg-[#121417] shadow-[0_12px_40px_rgba(0,0,0,0.25)]"
-              >
-                <div className="border-b border-white/10 px-5 py-3">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-center gap-3">
-                      {getLeagueSource(row.leagueKey) ? <LeagueLogo league={getLeagueSource(row.leagueKey)!} variant="card" /> : null}
-                      <div>
-                        <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-400">{row.leagueLabel}</div>
-                        <div className="mt-1 text-sm text-neutral-500">{row.match}</div>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="inline-flex rounded-md border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] text-emerald-300">
-                        CONFIRMED STARTER
-                      </span>
-                      <span className={`inline-flex rounded-md border px-2.5 py-1 text-[10px] font-semibold tracking-[0.16em] ${getStakeTone(row)}`}>
-                        {row.stakeLabel || `${row.stakeUnits.toFixed(2)}u`}
-                      </span>
-                    </div>
-                  </div>
-                  {row.penaltyDependent ? (
-                    <div className="mt-3 text-xs text-amber-200">Includes penalty component</div>
-                  ) : null}
-                </div>
-
-                <div className="border-b border-white/10 px-5 py-5">
-                  <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-                    <div>
-                      <h3 className="text-2xl font-semibold tracking-tight text-white">
-                        {row.player} <span className="text-lg font-normal text-neutral-400">to score</span>
-                      </h3>
-                      <p className="mt-2 text-sm text-neutral-400">
-                        {formatLeagueTime(row.kickoff)}
-                      </p>
-                      <div className="mt-3 flex flex-wrap gap-3 text-sm text-neutral-400">
-                        <span>Book {formatOdds(row.bestOdds)} @ {row.bestBookmaker || "market"}</span>
-                        <span>Fair {formatOdds(row.fairOdds)}</span>
-                        <span className="text-emerald-300">EV {formatPct(row.ev * 100, 1)}</span>
-                      </div>
-                      <Link
-                        href={getPenaltyTakersHref(row)}
-                        className="mt-3 inline-flex text-xs text-emerald-300 transition-colors hover:text-emerald-200"
-                      >
-                        View {row.team} penalty order
-                      </Link>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2">
-                      <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
-                        <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Stake</div>
-                        <div className="mt-2 text-lg font-semibold text-white">{row.stakeUnits.toFixed(2)}u</div>
-                      </div>
-                      <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
-                        <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Odds</div>
-                        <div className="mt-2 text-lg font-semibold text-emerald-300">{formatOdds(row.bestOdds)}</div>
-                      </div>
-                      <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
-                        <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Fair</div>
-                        <div className="mt-2 text-lg font-semibold text-white">{formatOdds(row.fairOdds)}</div>
-                      </div>
-                      <div className="rounded-2xl border border-white/10 bg-black/20 p-3 text-center">
-                        <div className="text-[10px] uppercase tracking-[0.18em] text-neutral-500">Edge</div>
-                        <div className="mt-2 text-lg font-semibold text-emerald-300">{formatPct(row.ev * 100, 0)}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
+          ) : todaySignals.length > 0 ? (
+            todaySignals.map((row) => (
+              <LivePickCard key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}`} row={row} todayIso={todayIso} />
             ))
+          ) : (
+            <div className="rounded-[28px] border border-white/10 bg-[#121417] px-5 py-6 text-sm leading-7 text-neutral-400">
+              No additional picks later today. Any live qualifiers are already in the starting-soon block above.
+            </div>
           )}
-        </div>
+          </div>
+        </section>
+
+        {laterSignals.length > 0 ? (
+          <section className="mb-10">
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <div>
+                <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-300">Later window</h2>
+                <p className="mt-1 text-sm text-neutral-500">
+                  Tomorrow and later. Kept separate so today’s action does not get buried.
+                </p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              {laterSignals.map((row) => (
+                <LivePickCard key={`later-${row.leagueKey}-${row.date}-${row.player}-${row.match}`} row={row} todayIso={todayIso} />
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <section className="mt-12">
           <div className="mb-4 flex items-center justify-between gap-4">

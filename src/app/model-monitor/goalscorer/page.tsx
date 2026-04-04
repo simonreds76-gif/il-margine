@@ -6,6 +6,8 @@ import {
   readGoalscorerLiveMtime,
   readGoalscorerLiveSnapshotGeneratedAt,
 } from "@/lib/goalscorer-live-files";
+import { readPenaltyReviewState } from "@/lib/goalscorer-penalty-review-state";
+import { PenaltyReviewActions } from "./PenaltyReviewActions";
 
 type CsvRow = Record<string, string>;
 type FixtureGroup = {
@@ -801,6 +803,12 @@ function penaltyReviewIdentity(row: PenaltyReviewRow): string {
     .join("|");
 }
 
+function penaltyReviewIsOlderThan(row: PenaltyReviewRow, cutoffIso: string): boolean {
+  const rowDate = (row.date ?? "").slice(0, 10);
+  if (!rowDate) return false;
+  return rowDate < cutoffIso;
+}
+
 function mergePenaltyReviewRows(rows: PenaltyReviewRow[]): PenaltyReviewRow[] {
   const merged = new Map<string, PenaltyReviewRow>();
   for (const row of rows) {
@@ -1525,7 +1533,7 @@ function SettledRowsTable({ rows }: { rows: CsvRow[] }) {
   );
 }
 
-function PenaltyReviewCard({ row }: { row: PenaltyReviewRow }) {
+function PenaltyReviewCard({ row, rowId }: { row: PenaltyReviewRow; rowId: string }) {
   const attempts = Number.parseInt(String(row.penalties_attempted ?? "0"), 10) || 0;
   const scored = Number.parseInt(String(row.penalties_scored ?? "0"), 10) || 0;
   const minuteLabel = (row.minute ?? "").trim();
@@ -1579,6 +1587,10 @@ function PenaltyReviewCard({ row }: { row: PenaltyReviewRow }) {
       </div>
 
       <p className="mt-3 text-sm leading-6 text-slate-300">{row.editorial_note || "No editorial note."}</p>
+      <div className="mt-2 text-xs text-slate-500">
+        Auto-hides after 7 days if untouched. Use done or dismiss to clear it now.
+      </div>
+      <PenaltyReviewActions rowId={rowId} />
     </div>
   );
 }
@@ -2225,15 +2237,28 @@ export default async function GoalscorerMonitorPage() {
       }
       return `${left.team ?? ""}${left.actual_taker ?? ""}`.localeCompare(`${right.team ?? ""}${right.actual_taker ?? ""}`);
     });
-  const highPenaltyReviewRows = penaltyReviewRows.filter((row) => row.review_priority === "high");
-  const mediumPenaltyReviewRows = penaltyReviewRows.filter((row) => row.review_priority === "medium");
-  const lowPenaltyReviewRows = penaltyReviewRows.filter((row) => row.review_priority === "low");
   const latestPenaltyReviewAt =
     leagueDatasets
       .flatMap((dataset) => [dataset.penaltyReviewGeneratedAt ?? "", dataset.livePenaltyReviewGeneratedAt ?? ""])
       .filter(Boolean)
       .sort()
       .at(-1) ?? null;
+  const penaltyReviewState = await readPenaltyReviewState();
+  const penaltyReviewCutoffIso = addDaysIso(todayIso, -7);
+  const penaltyReviewRowsWithIds = penaltyReviewRows.map((row) => ({
+    row,
+    id: penaltyReviewIdentity(row),
+  }));
+  const hiddenResolvedPenaltyRows = penaltyReviewRowsWithIds.filter(({ id }) => Boolean(id && penaltyReviewState[id])).length;
+  const hiddenStalePenaltyRows = penaltyReviewRowsWithIds.filter(
+    ({ id, row }) => !penaltyReviewState[id] && penaltyReviewIsOlderThan(row, penaltyReviewCutoffIso),
+  ).length;
+  const visiblePenaltyReviewRows = penaltyReviewRowsWithIds.filter(
+    ({ id, row }) => !penaltyReviewState[id] && !penaltyReviewIsOlderThan(row, penaltyReviewCutoffIso),
+  );
+  const visibleHighPenaltyReviewRows = visiblePenaltyReviewRows.filter(({ row }) => row.review_priority === "high");
+  const visibleMediumPenaltyReviewRows = visiblePenaltyReviewRows.filter(({ row }) => row.review_priority === "medium");
+  const visibleLowPenaltyReviewRows = visiblePenaltyReviewRows.filter(({ row }) => row.review_priority === "low");
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.08),_transparent_22%),#0b0f14] text-slate-100">
@@ -2517,29 +2542,31 @@ export default async function GoalscorerMonitorPage() {
         <div className="mb-8">
           <CollapsibleMonitorSection
             title="Penalty duty watchlist"
-            subtitle="Editorial review queue for taker hierarchy changes. Useful, but not part of the live decision board."
+            subtitle="Editorial review queue for taker hierarchy changes. Treated like a checklist now, with manual clear states and a 7-day stale cutoff."
           >
             <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
               <div className="rounded-2xl border border-slate-800/80 bg-slate-950/35 px-4 py-3 text-sm text-slate-300">
                 <div><span className="text-slate-500">Latest review:</span> {latestPenaltyReviewAt ?? "missing"}</div>
-                <div><span className="text-slate-500">Rows:</span> {penaltyReviewRows.length}</div>
+                <div><span className="text-slate-500">Visible rows:</span> {visiblePenaltyReviewRows.length}</div>
+                <div><span className="text-slate-500">Resolved hidden:</span> {hiddenResolvedPenaltyRows}</div>
+                <div><span className="text-slate-500">Aged out:</span> {hiddenStalePenaltyRows}</div>
               </div>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              <Stat label="High Priority" value={`${highPenaltyReviewRows.length}`} tone="text-rose-300" />
-              <Stat label="Medium Priority" value={`${mediumPenaltyReviewRows.length}`} tone="text-amber-300" />
-              <Stat label="Low Priority" value={`${lowPenaltyReviewRows.length}`} tone="text-slate-300" />
-              <Stat label="Recent Events" value={`${penaltyReviewRows.length}`} />
+              <Stat label="High Priority" value={`${visibleHighPenaltyReviewRows.length}`} tone="text-rose-300" />
+              <Stat label="Medium Priority" value={`${visibleMediumPenaltyReviewRows.length}`} tone="text-amber-300" />
+              <Stat label="Low Priority" value={`${visibleLowPenaltyReviewRows.length}`} tone="text-slate-300" />
+              <Stat label="Active Review Rows" value={`${visiblePenaltyReviewRows.length}`} />
             </div>
 
             <div className="mt-5 space-y-4">
-              {penaltyReviewRows.map((row, idx) => (
-                <PenaltyReviewCard key={`${row.date}-${row.team}-${row.actual_taker}-${idx}`} row={row} />
+              {visiblePenaltyReviewRows.map(({ row, id }, idx) => (
+                <PenaltyReviewCard key={`${row.date}-${row.team}-${row.actual_taker}-${idx}`} row={row} rowId={id} />
               ))}
-              {penaltyReviewRows.length === 0 ? (
+              {visiblePenaltyReviewRows.length === 0 ? (
                 <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">
-                  No penalty-duty review rows yet.
+                  No active penalty-duty review rows. Old untouched rows now age out after 7 days, and manual done/dismiss clears them immediately.
                 </div>
               ) : null}
             </div>
