@@ -82,6 +82,14 @@ type ShadowLeagueDataset = {
   mtime: string | null;
 };
 
+type PublicLeagueDataset = {
+  key: string;
+  label: string;
+  file: string;
+  rows: CsvRow[];
+  mtime: string | null;
+};
+
 type LeagueScoreRow = {
   key: string;
   label: string;
@@ -95,6 +103,11 @@ type LeagueScoreRow = {
   cleanFixtures: number;
   degradedFixtures: number;
   quarantinedFixtures: number;
+  publicSettled: number;
+  publicWins: number;
+  publicLosses: number;
+  publicRoi: number;
+  publicPnlUnits: number;
   trackedSignals: number;
   settledSignals: number;
   openSignals: number;
@@ -172,6 +185,13 @@ const SHADOW_SIGNAL_CONFIGS = [
   { key: "la-liga", label: "La Liga", file: "data/goalscorer/la-liga-shadow-signals.csv" },
   { key: "bundesliga", label: "Bundesliga", file: "data/goalscorer/bundesliga-shadow-signals.csv" },
   { key: "ligue-1", label: "Ligue 1", file: "data/goalscorer/ligue-1-shadow-signals.csv" },
+] as const;
+const PUBLIC_SIGNAL_CONFIGS = [
+  { key: "serie-a", label: "Serie A", file: "data/goalscorer/goalscorer-public-signals.csv" },
+  { key: "epl", label: "Premier League", file: "data/goalscorer/epl-public-signals.csv" },
+  { key: "la-liga", label: "La Liga", file: "data/goalscorer/la-liga-public-signals.csv" },
+  { key: "bundesliga", label: "Bundesliga", file: "data/goalscorer/bundesliga-public-signals.csv" },
+  { key: "ligue-1", label: "Ligue 1", file: "data/goalscorer/ligue-1-public-signals.csv" },
 ] as const;
 const LIVE_COMPARE_CONFIGS = [
   {
@@ -512,6 +532,11 @@ function parseIntMaybe(value?: string): number | undefined {
   const cleaned = value.replace(/,/g, "").trim();
   const n = Number.parseInt(cleaned, 10);
   return Number.isFinite(n) ? n : undefined;
+}
+
+function parseBoolean(value?: string): boolean {
+  const text = (value ?? "").trim().toLowerCase();
+  return text === "1" || text === "true" || text === "yes" || text === "settled" || text === "won";
 }
 
 function formatPct(value?: number, digits = 1): string {
@@ -1238,6 +1263,28 @@ function computeShadowSummary(rows: CsvRow[]): ShadowSummary {
   };
 }
 
+function computePublicSummary(rows: CsvRow[]): ShadowSummary {
+  const settled = rows.filter((row) => parseBoolean(row.settled) && (row.bet_outcome ?? "").toLowerCase() !== "void");
+  const wins = settled.filter((row) => (row.bet_outcome ?? "").toLowerCase() === "won").length;
+  const losses = settled.filter((row) => (row.bet_outcome ?? "").toLowerCase() === "lost").length;
+  const voids = rows.filter((row) => (row.bet_outcome ?? "").toLowerCase() === "void").length;
+  const pnlUnits = settled.reduce((sum, row) => sum + (parseFloatMaybe(row.pnl_units) ?? 0), 0);
+  const stakedUnits = settled.reduce((sum, row) => sum + (parseFloatMaybe(row.recommended_stake_units) ?? 1), 0);
+
+  return {
+    signals: rows.length,
+    settled: settled.length,
+    pending: rows.filter((row) => !parseBoolean(row.settled)).length,
+    open: rows.filter((row) => !parseBoolean(row.settled)).length,
+    wins,
+    losses,
+    voids,
+    roi: stakedUnits > 0 ? (pnlUnits / stakedUnits) * 100 : 0,
+    winRate: settled.length > 0 ? (wins / settled.length) * 100 : 0,
+    pnlUnits,
+  };
+}
+
 function shadowUnsettledCount(summary: ShadowSummary): number {
   return summary.pending + summary.open;
 }
@@ -1906,7 +1953,7 @@ export default async function GoalscorerMonitorPage() {
     notFound();
   }
 
-  const [leagueDatasets, shadowDatasets, snapshotGeneratedAt, oddsHistoryText] = await Promise.all([
+  const [leagueDatasets, shadowDatasets, publicDatasets, snapshotGeneratedAt, oddsHistoryText] = await Promise.all([
     Promise.all(
       LIVE_COMPARE_CONFIGS.map(async (config) => {
         const [comparisonJson, comparisonCsv, comparisonTxt, comparisonJsonMtime, comparisonCsvMtime, lineupsJson, penaltyReviewJson, livePenaltyReviewJson] = await Promise.all([
@@ -1951,6 +1998,19 @@ export default async function GoalscorerMonitorPage() {
     ),
     Promise.all(
       SHADOW_SIGNAL_CONFIGS.map(async (config): Promise<ShadowLeagueDataset> => {
+        const [text, mtime] = await Promise.all([
+          readGoalscorerLiveFile(config.file),
+          readGoalscorerLiveMtime(config.file),
+        ]);
+        return {
+          ...config,
+          rows: text ? parseCsv(text) : [],
+          mtime,
+        };
+      }),
+    ),
+    Promise.all(
+      PUBLIC_SIGNAL_CONFIGS.map(async (config): Promise<PublicLeagueDataset> => {
         const [text, mtime] = await Promise.all([
           readGoalscorerLiveFile(config.file),
           readGoalscorerLiveMtime(config.file),
@@ -2105,6 +2165,9 @@ export default async function GoalscorerMonitorPage() {
   const shadowSummaryByLeague = new Map(
     shadowDatasets.map((dataset) => [dataset.key, computeShadowSummary(dataset.rows)] as const),
   );
+  const publicSummaryByLeague = new Map(
+    publicDatasets.map((dataset) => [dataset.key, computePublicSummary(dataset.rows)] as const),
+  );
   const leagueStatus = leagueDatasets.map((dataset) => {
     const leagueRows = dataset.rows;
     const leaguePublicRows = leagueRows.filter((row) => (row.public_action ?? "") === "surface");
@@ -2132,6 +2195,7 @@ export default async function GoalscorerMonitorPage() {
   });
   const leagueScoreRows: LeagueScoreRow[] = leagueStatus.map((league) => {
     const shadow = shadowSummaryByLeague.get(league.key) ?? computeShadowSummary([]);
+    const publicSummary = publicSummaryByLeague.get(league.key) ?? computePublicSummary([]);
     return {
       key: league.key,
       label: league.label,
@@ -2145,6 +2209,11 @@ export default async function GoalscorerMonitorPage() {
       cleanFixtures: league.cleanFixtures,
       degradedFixtures: league.degradedFixtures,
       quarantinedFixtures: league.quarantinedFixtures,
+      publicSettled: publicSummary.settled,
+      publicWins: publicSummary.wins,
+      publicLosses: publicSummary.losses,
+      publicRoi: publicSummary.roi,
+      publicPnlUnits: publicSummary.pnlUnits,
       trackedSignals: shadow.signals,
       settledSignals: shadow.settled,
       openSignals: shadowUnsettledCount(shadow),
@@ -2359,6 +2428,7 @@ export default async function GoalscorerMonitorPage() {
                 <thead>
                   <tr className="border-b border-slate-800/80 text-left text-[10px] uppercase tracking-[0.22em] text-slate-500">
                     <th className="px-3 py-3 font-semibold" colSpan={6}>Live pipeline — current window</th>
+                    <th className="border-l border-slate-700 px-3 py-3 font-semibold bg-slate-950/10" colSpan={4}>Public record — cumulative</th>
                     <th className="border-l border-slate-700 px-3 py-3 font-semibold bg-slate-950/20" colSpan={6}>Shadow log — cumulative</th>
                   </tr>
                   <tr className="border-b border-slate-800 text-left text-[11px] uppercase tracking-[0.18em] text-slate-500">
@@ -2368,6 +2438,10 @@ export default async function GoalscorerMonitorPage() {
                     <th className="px-3 py-3 font-semibold">Pub now</th>
                     <th className="px-3 py-3 font-semibold">Shadow now</th>
                     <th className="px-3 py-3 font-semibold">Fixtures</th>
+                    <th className="border-l border-slate-700 bg-slate-950/10 px-3 py-3 font-semibold">Pub settled</th>
+                    <th className="bg-slate-950/10 px-3 py-3 font-semibold">Pub W/L</th>
+                    <th className="bg-slate-950/10 px-3 py-3 font-semibold">Pub ROI</th>
+                    <th className="bg-slate-950/10 px-3 py-3 font-semibold">Pub P/L</th>
                     <th className="border-l border-slate-700 bg-slate-950/20 px-3 py-3 font-semibold">Tracked</th>
                     <th className="bg-slate-950/20 px-3 py-3 font-semibold">Settled</th>
                     <th className="bg-slate-950/20 px-3 py-3 font-semibold">Unsettled</th>
@@ -2400,6 +2474,10 @@ export default async function GoalscorerMonitorPage() {
                         <span className="px-1 text-slate-600">·</span>
                         <span className="text-rose-300">{row.quarantinedFixtures}</span>
                       </td>
+                      <td className="border-l border-slate-700 bg-slate-950/10 px-3 py-3 font-mono tabular-nums text-slate-100">{row.publicSettled}</td>
+                      <td className="bg-slate-950/10 px-3 py-3 font-mono tabular-nums text-slate-100">{formatWLV(row.publicWins, row.publicLosses, 0)}</td>
+                      <td className={`bg-slate-950/10 px-3 py-3 font-mono tabular-nums ${metricTone(row.publicRoi)}`}>{formatPct(row.publicRoi, 1)}</td>
+                      <td className={`bg-slate-950/10 px-3 py-3 font-mono tabular-nums ${metricTone(row.publicPnlUnits)}`}>{formatUnits(row.publicPnlUnits, 2)}</td>
                       <td className="border-l border-slate-700 bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-100">{row.trackedSignals}</td>
                       <td className="bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-100">{row.settledSignals}</td>
                       <td className="bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-300">{row.openSignals}</td>
