@@ -524,11 +524,6 @@ function formatDecimal(value?: number, digits = 2): string {
   return value.toFixed(digits);
 }
 
-function formatSigned(value?: number, digits = 2): string {
-  if (value == null || Number.isNaN(value)) return "n/a";
-  return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}`;
-}
-
 function formatDateTime(value?: string | null): string {
   if (!value) return "missing";
   const parsed = new Date(value);
@@ -1335,15 +1330,16 @@ function CollapsibleMonitorSection({
   return (
     <details
       open={defaultOpen}
-      className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] shadow-[0_20px_60px_rgba(0,0,0,0.28)] open:border-slate-700"
+      className="group rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(20,25,34,0.96),rgba(11,15,21,0.96))] shadow-[0_20px_60px_rgba(0,0,0,0.28)] open:border-slate-700"
     >
       <summary className="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 marker:hidden">
         <div>
           <h2 className="text-lg font-semibold text-slate-100">{title}</h2>
           {subtitle ? <p className="mt-1 text-sm text-slate-400">{subtitle}</p> : null}
         </div>
-        <span className="rounded-full border border-slate-700/80 bg-slate-950/50 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-slate-400">
-          toggle
+        <span className="inline-flex items-center gap-2 rounded-full border border-slate-700/80 bg-slate-950/50 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-slate-400">
+          <span className="transition-transform group-open:rotate-90">▸</span>
+          <span>Details</span>
         </span>
       </summary>
       <div className="border-t border-slate-800 px-5 py-5">{children}</div>
@@ -1974,7 +1970,6 @@ export default async function GoalscorerMonitorPage() {
   const shadowRows = shadowDatasets.flatMap((dataset) => dataset.rows);
   const rowEventIds = new Set(rows.map((row) => extractEventId(row.notes)).filter(Boolean));
   const kickoffLookup = buildKickoffLookup(oddsHistoryText, rowEventIds);
-  const shadowSummary = computeShadowSummary(shadowRows);
   const latestTrackedRows = [...shadowRows].sort((left, right) => shadowRowActivityTime(right) - shadowRowActivityTime(left));
   const publicRows = rows.filter((row) => (row.public_action ?? "") === "surface");
   const highRows = [...publicRows];
@@ -2223,6 +2218,64 @@ export default async function GoalscorerMonitorPage() {
     visibleHighPenaltyReviewRows.length > 0
       ? visiblePenaltyReviewRows.filter(({ row }) => row.review_priority !== "high")
       : visiblePenaltyReviewRows;
+  const renderPenaltyWatchlistSection = (defaultOpen: boolean) => (
+    <CollapsibleMonitorSection
+      title="Penalty duty watchlist"
+      subtitle="Editorial review queue for taker hierarchy changes. Treated like a checklist now, with manual clear states and a 7-day stale cutoff."
+      defaultOpen={defaultOpen}
+    >
+      <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+        <div className="rounded-2xl border border-slate-800/80 bg-slate-950/35 px-4 py-3 text-sm text-slate-300">
+          <div><span className="text-slate-500">Latest review:</span> {latestPenaltyReviewAt ?? "missing"}</div>
+          <div><span className="text-slate-500">Visible rows:</span> {visiblePenaltyReviewRows.length}</div>
+          <div><span className="text-slate-500">Resolved hidden:</span> {hiddenResolvedPenaltyRows}</div>
+          <div><span className="text-slate-500">Aged out:</span> {hiddenStalePenaltyRows}</div>
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <Stat label="High Priority" value={`${visibleHighPenaltyReviewRows.length}`} tone="text-rose-300" />
+        <Stat label="Medium Priority" value={`${visibleMediumPenaltyReviewRows.length}`} tone="text-amber-300" />
+        <Stat label="Low Priority" value={`${visibleLowPenaltyReviewRows.length}`} tone="text-slate-300" />
+        <Stat label="Active Review Rows" value={`${visiblePenaltyReviewRows.length}`} />
+      </div>
+
+      <div className="mt-5 space-y-4">
+        {visibleWatchlistRows.map(({ row, id }, idx) => (
+          <PenaltyReviewCard
+            key={`${row.date}-${row.team}-${row.actual_taker}-${idx}`}
+            row={row}
+            rowId={id}
+            daysUntilStale={penaltyReviewDaysUntilStale(row, todayIso)}
+          />
+        ))}
+        {visibleWatchlistRows.length === 0 ? (
+          <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">
+            {visibleHighPenaltyReviewRows.length > 0
+              ? "Only high-priority rows are active right now, and they are surfaced in the block above."
+              : "No active penalty-duty review rows. Old untouched rows now age out after 7 days, and manual done/dismiss clears them immediately."}
+          </div>
+        ) : null}
+      </div>
+      {resolvedPenaltyReviewRows.length > 0 ? (
+        <details className="mt-5 rounded-xl border border-slate-800/80 bg-slate-950/35">
+          <summary className="cursor-pointer px-4 py-3 text-sm font-medium text-slate-300">
+            Show {resolvedPenaltyReviewRows.length} resolved row{resolvedPenaltyReviewRows.length === 1 ? "" : "s"}
+          </summary>
+          <div className="space-y-4 border-t border-slate-800 px-4 py-4">
+            {resolvedPenaltyReviewRows.map(({ row, id }, idx) => (
+              <PenaltyReviewCard
+                key={`resolved-${row.date}-${row.team}-${row.actual_taker}-${idx}`}
+                row={row}
+                rowId={id}
+                resolvedStatus={penaltyReviewState[id]?.status}
+              />
+            ))}
+          </div>
+        </details>
+      ) : null}
+    </CollapsibleMonitorSection>
+  );
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.08),_transparent_22%),#0b0f14] text-slate-100">
@@ -2237,6 +2290,9 @@ export default async function GoalscorerMonitorPage() {
           <Link href="/anytime-goalscorer" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300">
             Anytime Goalscorer
           </Link>
+          <a href="#fixture-lineups" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300">
+            Fixture Lineups
+          </a>
         </div>
 
         <section className="mb-8 overflow-hidden rounded-3xl border border-slate-800 bg-[linear-gradient(135deg,rgba(16,185,129,0.12),rgba(15,23,42,0.92)_40%,rgba(244,63,94,0.08))] p-6 sm:p-8">
@@ -2293,6 +2349,71 @@ export default async function GoalscorerMonitorPage() {
           </div>
         ) : null}
 
+        <div className="mb-8">
+          <MonitorCard
+            title="League scoreboard"
+            subtitle="Live pipeline on the left, cumulative shadow log on the right. Public and shadow stay separate so you can tell what is live now versus what is just historical tracking."
+          >
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="border-b border-slate-800/80 text-left text-[10px] uppercase tracking-[0.22em] text-slate-500">
+                    <th className="px-3 py-3 font-semibold" colSpan={6}>Live pipeline — current window</th>
+                    <th className="border-l border-slate-700 px-3 py-3 font-semibold bg-slate-950/20" colSpan={6}>Shadow log — cumulative</th>
+                  </tr>
+                  <tr className="border-b border-slate-800 text-left text-[11px] uppercase tracking-[0.18em] text-slate-500">
+                    <th className="px-3 py-3 font-semibold">League</th>
+                    <th className="px-3 py-3 font-semibold">Feed</th>
+                    <th className="px-3 py-3 font-semibold">Matched</th>
+                    <th className="px-3 py-3 font-semibold">Pub now</th>
+                    <th className="px-3 py-3 font-semibold">Shadow now</th>
+                    <th className="px-3 py-3 font-semibold">Fixtures</th>
+                    <th className="border-l border-slate-700 bg-slate-950/20 px-3 py-3 font-semibold">Tracked</th>
+                    <th className="bg-slate-950/20 px-3 py-3 font-semibold">Settled</th>
+                    <th className="bg-slate-950/20 px-3 py-3 font-semibold">Unsettled</th>
+                    <th className="bg-slate-950/20 px-3 py-3 font-semibold">W/L/V</th>
+                    <th className="bg-slate-950/20 px-3 py-3 font-semibold">ROI</th>
+                    <th className="bg-slate-950/20 px-3 py-3 font-semibold">P/L</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {leagueScoreRows.map((row) => (
+                    <tr key={row.key} className="border-b border-slate-900/80 text-slate-200">
+                      <td className="px-3 py-3">
+                        <div className="font-semibold text-white">{row.label}</div>
+                        <div className="mt-1 text-xs text-slate-500">
+                          {row.updatedAt ? formatDateTime(row.updatedAt) : "No timestamp"}
+                        </div>
+                      </td>
+                      <td className="px-3 py-3">
+                        <span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${row.statusClassName}`}>
+                          {row.statusLabel}
+                        </span>
+                      </td>
+                      <td className="px-3 py-3 font-mono tabular-nums">{row.liveRows}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-emerald-300">{row.publicNow}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-amber-300">{row.shadowNow}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums">
+                        <span className="text-emerald-300">{row.cleanFixtures}</span>
+                        <span className="px-1 text-slate-600">·</span>
+                        <span className="text-amber-300">{row.degradedFixtures}</span>
+                        <span className="px-1 text-slate-600">·</span>
+                        <span className="text-rose-300">{row.quarantinedFixtures}</span>
+                      </td>
+                      <td className="border-l border-slate-700 bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-100">{row.trackedSignals}</td>
+                      <td className="bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-100">{row.settledSignals}</td>
+                      <td className="bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-300">{row.openSignals}</td>
+                      <td className="bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-100">{formatWLV(row.wins, row.losses, row.voids)}</td>
+                      <td className={`bg-slate-950/20 px-3 py-3 font-mono tabular-nums ${metricTone(row.roi)}`}>{formatPct(row.roi, 1)}</td>
+                      <td className={`bg-slate-950/20 px-3 py-3 font-mono tabular-nums ${metricTone(row.pnlUnits)}`}>{formatUnits(row.pnlUnits, 2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </MonitorCard>
+        </div>
+
         {visibleHighPenaltyReviewRows.length > 0 ? (
           <div className="mb-8 rounded-2xl border border-rose-500/20 bg-rose-500/8 p-5">
             <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
@@ -2316,6 +2437,12 @@ export default async function GoalscorerMonitorPage() {
                 />
               ))}
             </div>
+          </div>
+        ) : null}
+
+        {visibleHighPenaltyReviewRows.length > 0 ? (
+          <div className="mb-8">
+            {renderPenaltyWatchlistSection(true)}
           </div>
         ) : null}
 
@@ -2361,75 +2488,15 @@ export default async function GoalscorerMonitorPage() {
 
         <div className="mb-8">
           <CollapsibleMonitorSection
-            title="League scoreboard"
-            subtitle="League-level summary for review. Still useful, but no longer in the way when you just need the live bets."
+            title="Shadow archive (recent 50)"
+            subtitle="Recent shadow log only. The headline stats already live in the scoreboard above, so this stays as a drill-down view."
           >
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-sm">
-                <thead>
-                  <tr className="border-b border-slate-800 text-left text-[11px] uppercase tracking-[0.18em] text-slate-500">
-                    <th className="px-3 py-3 font-semibold">League</th>
-                    <th className="px-3 py-3 font-semibold">Live Rows</th>
-                    <th className="px-3 py-3 font-semibold">Public</th>
-                    <th className="px-3 py-3 font-semibold">Shadow</th>
-                    <th className="px-3 py-3 font-semibold">C/D/Q</th>
-                    <th className="px-3 py-3 font-semibold">Signals</th>
-                    <th className="px-3 py-3 font-semibold">Settled</th>
-                    <th className="px-3 py-3 font-semibold">Open</th>
-                    <th className="px-3 py-3 font-semibold">W/L/V</th>
-                    <th className="px-3 py-3 font-semibold">ROI</th>
-                    <th className="px-3 py-3 font-semibold">P/L</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {leagueScoreRows.map((row) => (
-                    <tr key={row.key} className="border-b border-slate-900/80 text-slate-200">
-                      <td className="px-3 py-3">
-                        <div className="font-semibold text-white">{row.label}</div>
-                        <div className={`mt-1 text-xs ${row.statusClassName}`}>
-                          {row.statusLabel}
-                          {row.updatedAt ? ` · ${formatDateTime(row.updatedAt)}` : ""}
-                        </div>
-                      </td>
-                      <td className="px-3 py-3 font-mono tabular-nums">{row.liveRows}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-emerald-300">{row.publicNow}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-amber-300">{row.shadowNow}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-slate-300">
-                        {row.cleanFixtures}/{row.degradedFixtures}/{row.quarantinedFixtures}
-                      </td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.trackedSignals}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.settledSignals}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.openSignals}</td>
-                      <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{formatWLV(row.wins, row.losses, row.voids)}</td>
-                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.roi)}`}>{formatPct(row.roi, 1)}</td>
-                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.pnlUnits)}`}>{formatUnits(row.pnlUnits, 2)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CollapsibleMonitorSection>
-        </div>
-
-        <div className="mb-8">
-          <CollapsibleMonitorSection
-            title="Shadow tracker history"
-            subtitle="Historical review block for the shadow log. Useful when you need context, but out of the way by default."
-          >
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
-                <Stat label="Tracked Signals" value={`${shadowSummary.signals}`} />
-                <Stat label="Settled" value={`${shadowSummary.settled}`} />
-                <Stat label="Pending" value={`${shadowSummary.pending}`} tone="text-amber-300" />
-                <Stat label="W/L/V" value={formatWLV(shadowSummary.wins, shadowSummary.losses, shadowSummary.voids)} tone="text-slate-200" />
-                <Stat label="ROI" value={formatPct(shadowSummary.roi, 1)} tone={shadowSummary.roi >= 0 ? "text-emerald-300" : "text-rose-300"} />
-                <Stat label="P/L Units" value={formatSigned(shadowSummary.pnlUnits, 2)} tone={shadowSummary.pnlUnits >= 0 ? "text-emerald-300" : "text-rose-300"} />
-              </div>
+            <div className="mb-4 flex justify-end">
               <Link
                 href="/anytime-goalscorer"
                 className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300"
               >
-                Public preview
+                Anytime Goalscorer
               </Link>
             </div>
 
@@ -2519,66 +2586,13 @@ export default async function GoalscorerMonitorPage() {
           </CollapsibleMonitorSection>
         </div>
 
-        <div className="mb-8">
-          <CollapsibleMonitorSection
-            title="Penalty duty watchlist"
-            subtitle="Editorial review queue for taker hierarchy changes. Treated like a checklist now, with manual clear states and a 7-day stale cutoff."
-            defaultOpen={visibleHighPenaltyReviewRows.length > 0}
-          >
-            <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-              <div className="rounded-2xl border border-slate-800/80 bg-slate-950/35 px-4 py-3 text-sm text-slate-300">
-                <div><span className="text-slate-500">Latest review:</span> {latestPenaltyReviewAt ?? "missing"}</div>
-                <div><span className="text-slate-500">Visible rows:</span> {visiblePenaltyReviewRows.length}</div>
-                <div><span className="text-slate-500">Resolved hidden:</span> {hiddenResolvedPenaltyRows}</div>
-                <div><span className="text-slate-500">Aged out:</span> {hiddenStalePenaltyRows}</div>
-              </div>
-            </div>
+        {visibleHighPenaltyReviewRows.length === 0 ? (
+          <div className="mb-8">
+            {renderPenaltyWatchlistSection(false)}
+          </div>
+        ) : null}
 
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              <Stat label="High Priority" value={`${visibleHighPenaltyReviewRows.length}`} tone="text-rose-300" />
-              <Stat label="Medium Priority" value={`${visibleMediumPenaltyReviewRows.length}`} tone="text-amber-300" />
-              <Stat label="Low Priority" value={`${visibleLowPenaltyReviewRows.length}`} tone="text-slate-300" />
-              <Stat label="Active Review Rows" value={`${visiblePenaltyReviewRows.length}`} />
-            </div>
-
-            <div className="mt-5 space-y-4">
-              {visibleWatchlistRows.map(({ row, id }, idx) => (
-                <PenaltyReviewCard
-                  key={`${row.date}-${row.team}-${row.actual_taker}-${idx}`}
-                  row={row}
-                  rowId={id}
-                  daysUntilStale={penaltyReviewDaysUntilStale(row, todayIso)}
-                />
-              ))}
-              {visibleWatchlistRows.length === 0 ? (
-                <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-500">
-                  {visibleHighPenaltyReviewRows.length > 0
-                    ? "Only high-priority rows are active right now, and they are surfaced in the block above."
-                    : "No active penalty-duty review rows. Old untouched rows now age out after 7 days, and manual done/dismiss clears them immediately."}
-                </div>
-              ) : null}
-            </div>
-            {resolvedPenaltyReviewRows.length > 0 ? (
-              <details className="mt-5 rounded-xl border border-slate-800/80 bg-slate-950/35">
-                <summary className="cursor-pointer px-4 py-3 text-sm font-medium text-slate-300">
-                  Show {resolvedPenaltyReviewRows.length} resolved row{resolvedPenaltyReviewRows.length === 1 ? "" : "s"}
-                </summary>
-                <div className="space-y-4 border-t border-slate-800 px-4 py-4">
-                  {resolvedPenaltyReviewRows.map(({ row, id }, idx) => (
-                    <PenaltyReviewCard
-                      key={`resolved-${row.date}-${row.team}-${row.actual_taker}-${idx}`}
-                      row={row}
-                      rowId={id}
-                      resolvedStatus={penaltyReviewState[id]?.status}
-                    />
-                  ))}
-                </div>
-              </details>
-            ) : null}
-          </CollapsibleMonitorSection>
-        </div>
-
-        <div className="mb-8">
+        <div id="fixture-lineups" className="mb-8">
           <CollapsibleMonitorSection
             title="Fixture lineups"
             subtitle="Reference view only. Kept off the main board so the urgent bets are visible without a long scroll."
