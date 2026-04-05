@@ -153,6 +153,16 @@ def _complete_team_sheet(team_players: List[dict]) -> bool:
     return len(team_players) >= 14
 
 
+def _has_complete_finished_fallback(match_result: dict, home_team_key: str, away_team_key: str, team_key_func) -> bool:
+    home_score = match_result.get("home_score")
+    away_score = match_result.get("away_score")
+    if home_score is None or away_score is None:
+        return False
+    home_players = _find_team_players(match_result, home_team_key, team_key_func)
+    away_players = _find_team_players(match_result, away_team_key, team_key_func)
+    return _complete_team_sheet(home_players) and _complete_team_sheet(away_players)
+
+
 def settle_row(
     row: dict,
     *,
@@ -184,7 +194,16 @@ def settle_row(
             return "pending", "pending_settlement_data", 0
         return "skip", "match_result_not_found", 0
 
-    if not match_result.get("status_finished"):
+    home_team_key = team_key_func(row.get("home_team") or "")
+    away_team_key = team_key_func(row.get("away_team") or "")
+    match_finished = bool(match_result.get("status_finished")) or _has_complete_finished_fallback(
+        match_result,
+        home_team_key,
+        away_team_key,
+        team_key_func,
+    )
+
+    if not match_finished:
         if match_result.get("status_cancelled"):
             return "pending", "match_cancelled_or_postponed", 0
         return "pending", "match_not_finished", 0
