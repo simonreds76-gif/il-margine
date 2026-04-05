@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import fs from "node:fs";
+import path from "node:path";
 import {
   getKnownProjectFilePath,
   resolveConfiguredProjectFilePath,
@@ -18,6 +19,7 @@ const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const PINNACLE_SNAPSHOT_SELECT =
   "player1_name, player2_name, odds1, odds2, ou_line, ou_over, ou_under, league, captured_at";
 const PINNACLE_SNAPSHOT_ROW_CAP = 12000;
+const LOCAL_PINNACLE_HISTORY_DIR = path.join(process.cwd(), "data", "pinnacle-history");
 
 export interface FairOddsRow {
   id: number;
@@ -832,6 +834,113 @@ function parseCsvLeague(value: string | undefined): "ATP" | "Challenger" | undef
   return undefined;
 }
 
+interface PinnacleSourceRow {
+  player1_name: string;
+  player2_name: string;
+  odds1: number;
+  odds2: number;
+  ou_line?: number;
+  ou_over?: number;
+  ou_under?: number;
+  league?: "ATP" | "Challenger";
+  captured_at?: string;
+}
+
+function normalizePinnaclePairKey(player1Name: string, player2Name: string, league?: "ATP" | "Challenger"): string {
+  return `${league ?? ""}|${normaliseSignalName(player1Name)}|${normaliseSignalName(player2Name)}`;
+}
+
+function sortByCapturedAtDesc<T extends { captured_at?: string }>(rows: T[]): T[] {
+  return [...rows].sort((a, b) => {
+    const aTime = a.captured_at ? Date.parse(a.captured_at) : 0;
+    const bTime = b.captured_at ? Date.parse(b.captured_at) : 0;
+    return bTime - aTime;
+  });
+}
+
+function dedupeLatestPinnacleRows(rows: PinnacleSourceRow[]): PinnacleSourceRow[] {
+  const deduped = new Map<string, PinnacleSourceRow>();
+  for (const row of sortByCapturedAtDesc(rows)) {
+    const key = normalizePinnaclePairKey(row.player1_name, row.player2_name, row.league);
+    if (!key || deduped.has(key)) continue;
+    deduped.set(key, row);
+  }
+  return Array.from(deduped.values());
+}
+
+function loadRecentLocalPinnacleHistory(activeDates: string[]): PinnacleSourceRow[] {
+  if (!fs.existsSync(LOCAL_PINNACLE_HISTORY_DIR)) return [];
+  const dateTokens = new Set(activeDates.map((value) => value.replace(/-/g, "")));
+  const latestByPair = new Map<string, PinnacleSourceRow>();
+
+  let fileNames: string[] = [];
+  try {
+    fileNames = fs
+      .readdirSync(LOCAL_PINNACLE_HISTORY_DIR)
+      .filter((name) => name.startsWith("pinnacle-history-") && name.endsWith(".csv"))
+      .filter((name) => {
+        const token = name.slice("pinnacle-history-".length, "pinnacle-history-".length + 8);
+        return dateTokens.has(token);
+      })
+      .sort()
+      .reverse();
+  } catch (error) {
+    console.warn("[fair-odds] Could not read local Pinnacle history directory", error);
+    return [];
+  }
+
+  for (const fileName of fileNames) {
+    const filePath = path.join(LOCAL_PINNACLE_HISTORY_DIR, fileName);
+    let text = "";
+    try {
+      text = fs.readFileSync(filePath, "utf8");
+    } catch (error) {
+      console.warn(`[fair-odds] Could not read local Pinnacle history file: ${filePath}`, error);
+      continue;
+    }
+    const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+    if (lines.length < 2) continue;
+    const header = parseCsvLine(lines[0]);
+    const index = new Map<string, number>();
+    header.forEach((h, i) => index.set(h, i));
+    const required = ["capture_date", "captured_at", "bookmaker", "league", "player1_name", "player2_name", "odds1", "odds2"];
+    if (required.some((name) => !index.has(name))) continue;
+    const get = (cols: string[], name: string) => cols[index.get(name) ?? -1] ?? "";
+
+    for (let i = 1; i < lines.length; i += 1) {
+      const cols = parseCsvLine(lines[i]);
+      const captureDate = get(cols, "capture_date").trim();
+      if (!dateTokens.has(captureDate.replace(/-/g, ""))) continue;
+      if (get(cols, "bookmaker").trim() !== "Pinnacle") continue;
+      const league = parseCsvLeague(get(cols, "league"));
+      if (!league) continue;
+      const player1Name = get(cols, "player1_name").trim();
+      const player2Name = get(cols, "player2_name").trim();
+      if (!player1Name || !player2Name) continue;
+      const odds1 = parseCsvNumber(get(cols, "odds1"));
+      const odds2 = parseCsvNumber(get(cols, "odds2"));
+      if (odds1 == null || odds2 == null) continue;
+
+      const row: PinnacleSourceRow = {
+        player1_name: player1Name,
+        player2_name: player2Name,
+        odds1,
+        odds2,
+        ou_line: parseCsvNumber(get(cols, "ou_line")),
+        ou_over: parseCsvNumber(get(cols, "ou_over")),
+        ou_under: parseCsvNumber(get(cols, "ou_under")),
+        league,
+        captured_at: get(cols, "captured_at").trim() || undefined,
+      };
+      const key = normalizePinnaclePairKey(row.player1_name, row.player2_name, row.league);
+      if (!key || latestByPair.has(key)) continue;
+      latestByPair.set(key, row);
+    }
+  }
+
+  return Array.from(latestByPair.values());
+}
+
 function loadActiveShadowSignals(csvPath: string, kind: ShadowSignalKind, activeDate?: string): ShadowSignalSummary[] {
   if (!fs.existsSync(csvPath)) return [];
 
@@ -1437,16 +1546,7 @@ async function run(): Promise<Response> {
   let overlaySkippedMissingCount = 0;
   let overlaySkippedMinNCount = 0;
   let overlaySkippedMinRoiCount = 0;
-  let pinnacleRows: {
-    player1_name: string;
-    player2_name: string;
-    odds1: number;
-    odds2: number;
-    ou_line?: number;
-    ou_over?: number;
-    ou_under?: number;
-    league?: "ATP" | "Challenger";
-  }[] = [];
+  let pinnacleRows: PinnacleSourceRow[] = [];
   const snapshotClient = url && serviceRoleKey ? createClient(url, serviceRoleKey) : supabase;
 
   // Try today first; if the scraper ran before midnight UTC (e.g. 23:55), fall back to yesterday.
@@ -1455,42 +1555,47 @@ async function run(): Promise<Response> {
     return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
   })();
 
-  const { data: snapshotData } = await snapshotClient
-    .from("bookmaker_odds_snapshot")
-    .select(PINNACLE_SNAPSHOT_SELECT)
-    .eq("bookmaker", "Pinnacle")
-    .eq("capture_date", today)
-    .or("league.eq.ATP,league.eq.Challenger")
-    .order("captured_at", { ascending: false })
-    .limit(PINNACLE_SNAPSHOT_ROW_CAP);
-
-  let rawSnapshot = snapshotData;
-
-  if (!rawSnapshot?.length) {
-    const { data: yesterdayData } = await snapshotClient
+  const [todaySnapshotRes, yesterdaySnapshotRes] = await Promise.all([
+    snapshotClient
+      .from("bookmaker_odds_snapshot")
+      .select(PINNACLE_SNAPSHOT_SELECT)
+      .eq("bookmaker", "Pinnacle")
+      .eq("capture_date", today)
+      .or("league.eq.ATP,league.eq.Challenger")
+      .order("captured_at", { ascending: false })
+      .limit(PINNACLE_SNAPSHOT_ROW_CAP),
+    snapshotClient
       .from("bookmaker_odds_snapshot")
       .select(PINNACLE_SNAPSHOT_SELECT)
       .eq("bookmaker", "Pinnacle")
       .eq("capture_date", yesterday)
       .or("league.eq.ATP,league.eq.Challenger")
       .order("captured_at", { ascending: false })
-      .limit(PINNACLE_SNAPSHOT_ROW_CAP);
-    rawSnapshot = yesterdayData;
-  }
+      .limit(PINNACLE_SNAPSHOT_ROW_CAP),
+  ]);
 
-  if (rawSnapshot?.length) {
-    pinnacleRows = rawSnapshot
-      .filter((row: { league?: string }) => row.league === "ATP" || row.league === "Challenger")
-      .map((row) => ({
-        player1_name: (row.player1_name ?? "").trim(),
-        player2_name: (row.player2_name ?? "").trim(),
-        odds1: Number(row.odds1 ?? 0),
-        odds2: Number(row.odds2 ?? 0),
-        ou_line: row.ou_line != null ? Number(row.ou_line) : undefined,
-        ou_over: row.ou_over != null ? Number(row.ou_over) : undefined,
-        ou_under: row.ou_under != null ? Number(row.ou_under) : undefined,
-        league: row.league === "Challenger" ? "Challenger" : "ATP",
-      }));
+  const snapshotRows: PinnacleSourceRow[] = [...(todaySnapshotRes.data ?? []), ...(yesterdaySnapshotRes.data ?? [])]
+    .filter((row: { league?: string }) => row.league === "ATP" || row.league === "Challenger")
+    .map((row): PinnacleSourceRow => ({
+      player1_name: (row.player1_name ?? "").trim(),
+      player2_name: (row.player2_name ?? "").trim(),
+      odds1: Number(row.odds1 ?? 0),
+      odds2: Number(row.odds2 ?? 0),
+      ou_line: row.ou_line != null ? Number(row.ou_line) : undefined,
+      ou_over: row.ou_over != null ? Number(row.ou_over) : undefined,
+      ou_under: row.ou_under != null ? Number(row.ou_under) : undefined,
+      league: row.league === "Challenger" ? "Challenger" : "ATP",
+      captured_at: typeof row.captured_at === "string" ? row.captured_at : undefined,
+    }))
+    .filter((row) => row.player1_name && row.player2_name && row.odds1 > 0 && row.odds2 > 0);
+
+  const localHistoryRows = loadRecentLocalPinnacleHistory([today, yesterday]);
+  pinnacleRows = dedupeLatestPinnacleRows([...snapshotRows, ...localHistoryRows]);
+
+  if (localHistoryRows.length > 0) {
+    console.log(
+      `[fair-odds] Local Pinnacle history supplement: ${localHistoryRows.length} recent rows across ${today} / ${yesterday}.`
+    );
   }
 
   /** Normalise for lookup: lowercase, strip accents, hyphens, apostrophes. */
@@ -2123,9 +2228,6 @@ async function run(): Promise<Response> {
       if (a.bet_type !== b.bet_type) return a.bet_type === "match" ? -1 : 1;
       return a.side.localeCompare(b.side);
     });
-    if (m.handicap_point_prob_source !== "stored_p_a_p_b") {
-      rowSignals = rowSignals.filter((signal) => signal.kind !== "spread_shadow");
-    }
 
     let claySignal = rowSignals.find((signal) => signal.kind === "clay_2026" && signal.bet_type === "match");
     let spreadSignal = rowSignals.find((signal) => signal.kind === "spread_shadow" && signal.bet_type === "spread");
