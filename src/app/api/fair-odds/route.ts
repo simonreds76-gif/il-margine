@@ -855,11 +855,24 @@ function loadActiveShadowSignals(csvPath: string, kind: ShadowSignalKind, active
 
   const get = (cols: string[], name: string) => cols[index.get(name) ?? -1] ?? "";
   const latestBySignalKey = new Map<string, ShadowSignalSummary & { settlement_status: string }>();
+  const parsedRows: Array<{ cols: string[]; rowDate: string }> = [];
+  const availableDates = new Set<string>();
 
   for (let i = 1; i < lines.length; i += 1) {
     const cols = parseCsvLine(lines[i]);
     const rowDate = get(cols, "date").trim();
-    if (activeDate && rowDate && rowDate !== activeDate) continue;
+    if (rowDate) availableDates.add(rowDate);
+    parsedRows.push({ cols, rowDate });
+  }
+
+  const effectiveDate =
+    activeDate && availableDates.has(activeDate)
+      ? activeDate
+      : Array.from(availableDates).sort().at(-1);
+
+  for (let i = 0; i < parsedRows.length; i += 1) {
+    const { cols, rowDate } = parsedRows[i];
+    if (effectiveDate && rowDate && rowDate !== effectiveDate) continue;
     const player1Id = parseCsvNumber(get(cols, "player1_id"));
     const player2Id = parseCsvNumber(get(cols, "player2_id"));
     const player1Name = get(cols, "player1");
@@ -882,7 +895,7 @@ function loadActiveShadowSignals(csvPath: string, kind: ShadowSignalKind, active
         : `${kind}|${signalIdentity}|${betType}`;
 
     latestBySignalKey.set(signalKey, {
-      id: i,
+      id: i + 1,
       kind,
       player1_id: player1Id,
       player2_id: player2Id,
