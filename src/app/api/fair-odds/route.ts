@@ -276,6 +276,48 @@ function spreadConflictDirection(signal: ShadowSignalSummary): MatchSide | null 
   return null;
 }
 
+function suppressConflictingClaySignals(
+  claySignals: ShadowSignalSummary[],
+  spreadSignals: ShadowSignalSummary[],
+): ShadowSignalSummary[] {
+  const spreadDirectionsByKey = new Map<string, Set<MatchSide>>();
+
+  for (const signal of spreadSignals) {
+    const direction = spreadConflictDirection(signal);
+    if (!direction) continue;
+    if (signal.player1_id != null && signal.player2_id != null) {
+      const key = signalMatchKey(signal.player1_id, signal.player2_id);
+      if (!spreadDirectionsByKey.has(key)) spreadDirectionsByKey.set(key, new Set<MatchSide>());
+      spreadDirectionsByKey.get(key)!.add(direction);
+    }
+    if (signal.player1_name && signal.player2_name) {
+      const key = signalNameKey(signal.player1_name, signal.player2_name);
+      if (!spreadDirectionsByKey.has(key)) spreadDirectionsByKey.set(key, new Set<MatchSide>());
+      spreadDirectionsByKey.get(key)!.add(direction);
+    }
+  }
+
+  return claySignals.filter((signal) => {
+    const clayDirection = signal.side === "P1" ? "P1" : signal.side === "P2" ? "P2" : null;
+    if (!clayDirection) return true;
+    const lookupKeys: string[] = [];
+    if (signal.player1_id != null && signal.player2_id != null) {
+      lookupKeys.push(signalMatchKey(signal.player1_id, signal.player2_id));
+    }
+    if (signal.player1_name && signal.player2_name) {
+      lookupKeys.push(signalNameKey(signal.player1_name, signal.player2_name));
+    }
+
+    const directions = new Set<MatchSide>();
+    for (const key of lookupKeys) {
+      for (const direction of spreadDirectionsByKey.get(key) ?? []) directions.add(direction);
+    }
+    if (directions.size === 0) return true;
+    if (directions.has(clayDirection)) return true;
+    return false;
+  });
+}
+
 function parseNumberEnv(name: string, fallback: number): number {
   const parsed = Number(process.env[name]);
   return Number.isFinite(parsed) ? parsed : fallback;
@@ -2190,6 +2232,7 @@ async function run(): Promise<Response> {
 
   const clay2026SignalsCsv = loadActiveShadowSignals(CLAY_2026_SIGNAL_CSV, "clay_2026", today);
   const spreadShadowSignalsCsv = loadActiveShadowSignals(SPREAD_SHADOW_SIGNAL_CSV, "spread_shadow", today);
+  const effectiveClay2026SignalsCsv = suppressConflictingClaySignals(clay2026SignalsCsv, spreadShadowSignalsCsv);
   const rowSignalsByMatch = new Map<string, ShadowSignalSummary[]>();
   const addSignalToRowKey = (key: string, signal: ShadowSignalSummary) => {
     const existing = rowSignalsByMatch.get(key);
@@ -2206,7 +2249,7 @@ async function run(): Promise<Response> {
     }
     return Array.from(new Set(keys));
   };
-  for (const signal of [...clay2026SignalsCsv, ...spreadShadowSignalsCsv]) {
+  for (const signal of [...effectiveClay2026SignalsCsv, ...spreadShadowSignalsCsv]) {
     for (const key of signalLookupKeys(signal)) addSignalToRowKey(key, signal);
   }
   for (const signals of rowSignalsByMatch.values()) {
@@ -2263,9 +2306,9 @@ async function run(): Promise<Response> {
   }
   const signal_attachment: Record<ShadowSignalKind, SignalAttachmentDiagnostics> = {
     clay_2026: {
-      loaded: clay2026SignalsCsv.length,
+      loaded: effectiveClay2026SignalsCsv.length,
       attached: attachedByKind.clay_2026.size,
-      unmatched: Math.max(0, clay2026SignalsCsv.length - attachedByKind.clay_2026.size),
+      unmatched: Math.max(0, effectiveClay2026SignalsCsv.length - attachedByKind.clay_2026.size),
     },
     spread_shadow: {
       loaded: spreadShadowSignalsCsv.length,
@@ -2274,7 +2317,7 @@ async function run(): Promise<Response> {
     },
   };
   const unmatchedSignals = {
-    clay_2026: clay2026SignalsCsv.filter((signal) => !attachedByKind.clay_2026.has(signal.id)),
+    clay_2026: effectiveClay2026SignalsCsv.filter((signal) => !attachedByKind.clay_2026.has(signal.id)),
     spread_shadow: spreadShadowSignalsCsv.filter((signal) => !attachedByKind.spread_shadow.has(signal.id)),
   };
   if (unmatchedSignals.clay_2026.length) {
@@ -2548,7 +2591,7 @@ async function run(): Promise<Response> {
   const signals_volume_profile = [...matchSignalsVolumeProfile, ...spreadSignalsVolumeProfile];
   const signals_volume_overlap = [...matchSignalsVolumeOverlap, ...spreadSignalsVolumeOverlap];
   const signals_volume_additional = [...matchSignalsVolumeAdditional, ...spreadSignalsVolume];
-  const signals_clay_2026 = clay2026SignalsCsv;
+  const signals_clay_2026 = effectiveClay2026SignalsCsv;
   const spreadSignalsSpreadShadow = spreadShadowSignalsCsv;
 
   const matchesWithSpread = matches.filter(
