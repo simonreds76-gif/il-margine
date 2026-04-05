@@ -32,9 +32,9 @@ function Log($msg) {
     Add-Content -Path $logFile -Value $line
 }
 
-$lockHandle = Enter-TaskLock -LockName "tennis-automation" -RootPath $root
+$lockHandle = Enter-TaskLock -LockName "tennis-automation" -RootPath $root -WaitSeconds 900 -PollSeconds 10
 if ($null -eq $lockHandle) {
-    Log "Another tennis automation run is already active; exiting."
+    Log "Another tennis automation run stayed active for 15 minutes; exiting."
     exit 0
 }
 

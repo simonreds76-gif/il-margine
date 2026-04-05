@@ -5,23 +5,32 @@ function Enter-TaskLock {
         [Parameter(Mandatory = $true)]
         [string]$LockName,
         [Parameter(Mandatory = $true)]
-        [string]$RootPath
+        [string]$RootPath,
+        [int]$WaitSeconds = 0,
+        [int]$PollSeconds = 5
     )
 
     $locksDir = Join-Path $RootPath "data\locks"
     New-Item -ItemType Directory -Force -Path $locksDir | Out-Null
 
     $lockPath = Join-Path $locksDir ($LockName + ".lock")
+    $deadline = if ($WaitSeconds -gt 0) { (Get-Date).AddSeconds($WaitSeconds) } else { $null }
 
-    try {
-        $stream = [System.IO.File]::Open(
-            $lockPath,
-            [System.IO.FileMode]::OpenOrCreate,
-            [System.IO.FileAccess]::ReadWrite,
-            [System.IO.FileShare]::None
-        )
-    } catch {
-        return $null
+    while ($true) {
+        try {
+            $stream = [System.IO.File]::Open(
+                $lockPath,
+                [System.IO.FileMode]::OpenOrCreate,
+                [System.IO.FileAccess]::ReadWrite,
+                [System.IO.FileShare]::None
+            )
+            break
+        } catch {
+            if ($null -eq $deadline -or (Get-Date) -ge $deadline) {
+                return $null
+            }
+            Start-Sleep -Seconds ([Math]::Max(1, $PollSeconds))
+        }
     }
 
     $payload = @(
