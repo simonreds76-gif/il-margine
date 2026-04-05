@@ -1415,12 +1415,26 @@ async function run(): Promise<Response> {
     });
   }
 
+  const { data: oncourtTodayRows, error: oncourtTodayErr } = await supabase
+    .from("oncourt_today")
+    .select("tour_id, player1_id, player2_id")
+    .limit(FAIR_ODDS_LIMIT);
+  if (oncourtTodayErr) {
+    console.warn("[fair-odds] Could not load oncourt_today for Pinnacle-only current-gap filtering", oncourtTodayErr.message);
+  }
+  const currentOncourtRows = oncourtTodayRows ?? [];
+
   const playerIds = new Set<number>();
   const tourIds = new Set<number>();
   for (const r of oddsRows) {
     if (r.player1_id != null) playerIds.add(r.player1_id);
     if (r.player2_id != null) playerIds.add(r.player2_id);
     if (r.tour_id != null) tourIds.add(r.tour_id);
+  }
+  for (const r of currentOncourtRows) {
+    if (r.player1_id != null) playerIds.add(Number(r.player1_id));
+    if (r.player2_id != null) playerIds.add(Number(r.player2_id));
+    if (r.tour_id != null) tourIds.add(Number(r.tour_id));
   }
 
   const BATCH = 100;
@@ -1670,6 +1684,21 @@ async function run(): Promise<Response> {
     return (tournamentName ?? "").toUpperCase().includes("CHALLENGER") ? "Challenger" : "ATP";
   }
 
+  const currentOncourtPairKeys = new Set<string>();
+  for (const row of currentOncourtRows) {
+    const p1Id = row.player1_id != null ? Number(row.player1_id) : NaN;
+    const p2Id = row.player2_id != null ? Number(row.player2_id) : NaN;
+    const tourId = row.tour_id != null ? Number(row.tour_id) : NaN;
+    if (!Number.isFinite(p1Id) || !Number.isFinite(p2Id)) continue;
+    const p1Name = players.get(p1Id);
+    const p2Name = players.get(p2Id);
+    if (!p1Name || !p2Name) continue;
+    const tourMeta = Number.isFinite(tourId) ? tours.get(tourId) : undefined;
+    const league = inferLeagueFromTournament(tourMeta?.name ?? "");
+    currentOncourtPairKeys.add(normalizePinnaclePairKey(p1Name, p2Name, league));
+    currentOncourtPairKeys.add(normalizePinnaclePairKey(p2Name, p1Name, league));
+  }
+
   /** Multi-key surname set to match hyphen/compound variants safely. */
   function normaliseSurnameKeys(name: string): string[] {
     const t = tokeniseName(name);
@@ -1843,13 +1872,26 @@ async function run(): Promise<Response> {
       if (p2Opponents && !p2Opponents.has(p1Key)) return true;
       return false;
     };
+    const isInCurrentOncourtSchedule = (row: PinnacleRow) => {
+      if (currentOncourtPairKeys.size === 0) return true;
+      const directKey = normalizePinnaclePairKey(row.player1_name ?? "", row.player2_name ?? "", row.league);
+      const reverseKey = normalizePinnaclePairKey(row.player2_name ?? "", row.player1_name ?? "", row.league);
+      return currentOncourtPairKeys.has(directKey) || currentOncourtPairKeys.has(reverseKey);
+    };
     const rawPinnacleOnly = singlesPin.filter((p) => !matchedPinRows.has(p));
     const staleAlternativePairings = rawPinnacleOnly.filter(isStaleAlternativePairing);
-    const pinnacleOnly = rawPinnacleOnly.filter((p) => !isStaleAlternativePairing(p));
+    const notInCurrentSchedule = rawPinnacleOnly.filter((p) => !isStaleAlternativePairing(p) && !isInCurrentOncourtSchedule(p));
+    const pinnacleOnly = rawPinnacleOnly.filter((p) => !isStaleAlternativePairing(p) && isInCurrentOncourtSchedule(p));
     if (staleAlternativePairings.length > 0) {
       console.log(
         `[fair-odds] Suppressed stale Pinnacle-only rows that conflict with current fair-odds pairings:`,
         staleAlternativePairings.map((p) => `${p.player1_name} vs ${p.player2_name}`)
+      );
+    }
+    if (notInCurrentSchedule.length > 0) {
+      console.log(
+        `[fair-odds] Suppressed Pinnacle-only rows not present in current oncourt_today schedule:`,
+        notInCurrentSchedule.map((p) => `${p.player1_name} vs ${p.player2_name}`)
       );
     }
     if (pinnacleOnly.length > 0) {
