@@ -1820,7 +1820,38 @@ async function run(): Promise<Response> {
     }
 
     const singlesPin = pinRows.filter((p) => !isDoublesPin(p));
-    const pinnacleOnly = singlesPin.filter((p) => !matchedPinRows.has(p));
+    const currentOpponentsByPlayer = new Map<string, Set<string>>();
+    const addCurrentOpponent = (playerName: string, opponentName: string) => {
+      const playerKey = normaliseFullName(playerName ?? "");
+      const opponentKey = normaliseFullName(opponentName ?? "");
+      if (!playerKey || !opponentKey) return;
+      const existing = currentOpponentsByPlayer.get(playerKey) ?? new Set<string>();
+      existing.add(opponentKey);
+      currentOpponentsByPlayer.set(playerKey, existing);
+    };
+    for (const fo of fairOddsRows) {
+      addCurrentOpponent(fo.player1_name ?? "", fo.player2_name ?? "");
+      addCurrentOpponent(fo.player2_name ?? "", fo.player1_name ?? "");
+    }
+    const isStaleAlternativePairing = (row: PinnacleRow) => {
+      const p1Key = normaliseFullName(row.player1_name ?? "");
+      const p2Key = normaliseFullName(row.player2_name ?? "");
+      if (!p1Key || !p2Key) return false;
+      const p1Opponents = currentOpponentsByPlayer.get(p1Key);
+      if (p1Opponents && !p1Opponents.has(p2Key)) return true;
+      const p2Opponents = currentOpponentsByPlayer.get(p2Key);
+      if (p2Opponents && !p2Opponents.has(p1Key)) return true;
+      return false;
+    };
+    const rawPinnacleOnly = singlesPin.filter((p) => !matchedPinRows.has(p));
+    const staleAlternativePairings = rawPinnacleOnly.filter(isStaleAlternativePairing);
+    const pinnacleOnly = rawPinnacleOnly.filter((p) => !isStaleAlternativePairing(p));
+    if (staleAlternativePairings.length > 0) {
+      console.log(
+        `[fair-odds] Suppressed stale Pinnacle-only rows that conflict with current fair-odds pairings:`,
+        staleAlternativePairings.map((p) => `${p.player1_name} vs ${p.player2_name}`)
+      );
+    }
     if (pinnacleOnly.length > 0) {
       console.log(
         `[fair-odds] Unmatched Pinnacle rows (e.g. Indian Wells not in OnCourt today):`,
