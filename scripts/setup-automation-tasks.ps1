@@ -1,5 +1,5 @@
 # One-time task registration for fully automatic pipeline.
-# Daily fair-odds refresh: 11:00 and 23:55.
+# Daily fair-odds refresh: 10:05 and 23:55.
 # Tennis Pinnacle history capture: every 30 minutes from 08:00 to 23:30.
 
 $ErrorActionPreference = "Stop"
@@ -53,7 +53,7 @@ Remove-ScheduledTaskIfExists "OnCourt Weekly"
 Remove-ScheduledTaskIfExists "IlMargine-PinnacleCloseCapture"
 
 schtasks /Create /TN "IlMargine-Daily" /SC DAILY /ST 23:55 /TR "$dailyCmd" /F | Out-Host
-schtasks /Create /TN "IlMargine-Daily-AM" /SC DAILY /ST 11:00 /TR "$amRefreshCmd" /F | Out-Host
+schtasks /Create /TN "IlMargine-Daily-AM" /SC DAILY /ST 10:05 /TR "$amRefreshCmd" /F | Out-Host
 schtasks /Create /TN "IlMargine-Weekly" /SC WEEKLY /D SUN /ST 03:00 /TR "$weeklyCmd" /F | Out-Host
 schtasks /Create /TN "IlMargine-Tennis-Close-Capture" /SC DAILY /ST 08:00 /RI 30 /DU 16:00 /TR "$closeCaptureCmd" /F | Out-Host
 

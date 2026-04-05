@@ -550,7 +550,16 @@ def main() -> int:
             games = fetch_games_window(base, headers, start_d, end_d, games_cache)
 
         status, match, note = choose_match_for_signal(signal_date, cand1, cand2, games)
-        if status == "no_match" and has_today_pair(cand1, cand2, local_today_rows):
+        local_today_pair_pending = status == "no_match" and has_today_pair(cand1, cand2, local_today_rows)
+        if status == "no_match":
+            if "base" not in locals() or "headers" not in locals():
+                base, headers = supabase_base_and_headers()
+            today_rows = fetch_today_completed(base, headers, today_cache)
+            if today_rows:
+                status, match, note = choose_match_for_signal(signal_date, cand1, cand2, today_rows)
+                if status == "ok" and match:
+                    note = (note or "") + " [from oncourt_today fallback]"
+        if status == "no_match" and local_today_pair_pending:
             row["settlement_status"] = "pending"
             row["settlement_note"] = "Match still present in local today_atp schedule; awaiting completed result"
             stats["pending"] += 1
@@ -562,14 +571,6 @@ def main() -> int:
             stats["no_match"] += 1
             changed += 1
             continue
-        if status == "no_match":
-            if "base" not in locals() or "headers" not in locals():
-                base, headers = supabase_base_and_headers()
-            today_rows = fetch_today_completed(base, headers, today_cache)
-            if today_rows:
-                status, match, note = choose_match_for_signal(signal_date, cand1, cand2, today_rows)
-                if status == "ok" and match:
-                    note = (note or "") + " [from oncourt_today fallback]"
         if status == "no_match":
             row["settlement_status"] = "no_match"
             row["settlement_note"] = note
