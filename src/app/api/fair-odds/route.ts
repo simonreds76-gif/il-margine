@@ -203,6 +203,7 @@ const TOURNAMENT_SPEED_SHIFT_SIGNAL_SCALE = 2.0;
 const FAST_CLAY_SPEED_THRESHOLD = 0.1;
 const CLAY_2026_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-claycal-live.csv");
 const SPREAD_SHADOW_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-spreadshadow-live.csv");
+const FAIR_ODDS_CLAY_2026_ENABLED = parseBoolEnv("FAIR_ODDS_CLAY_2026_ENABLED", false);
 type MatchSide = "P1" | "P2";
 type FastClayArchetype = "both" | "serve_led" | "return_led" | "contrarian";
 type ShadowSignalKind = "clay_2026" | "spread_shadow";
@@ -2303,7 +2304,9 @@ async function run(): Promise<Response> {
     };
   });
 
-  const clay2026SignalsCsv = loadActiveShadowSignals(CLAY_2026_SIGNAL_CSV, "clay_2026", today);
+  const clay2026SignalsCsv = FAIR_ODDS_CLAY_2026_ENABLED
+    ? loadActiveShadowSignals(CLAY_2026_SIGNAL_CSV, "clay_2026", today)
+    : [];
   const spreadShadowSignalsCsv = loadActiveShadowSignals(SPREAD_SHADOW_SIGNAL_CSV, "spread_shadow", today);
   const effectiveClay2026SignalsCsv = suppressConflictingClaySignals(clay2026SignalsCsv, spreadShadowSignalsCsv);
   const rowSignalsByMatch = new Map<string, ShadowSignalSummary[]>();
@@ -2398,6 +2401,9 @@ async function run(): Promise<Response> {
       "[fair-odds] Unmatched Clay 2026 signals:",
       unmatchedSignals.clay_2026.map((signal) => `${signal.id}: ${signal.player1_name} vs ${signal.player2_name} | ${signal.side}`)
     );
+  }
+  if (!FAIR_ODDS_CLAY_2026_ENABLED) {
+    console.warn("[fair-odds] Clay 2026 lane disabled on live fair-odds route.");
   }
   if (unmatchedSignals.spread_shadow.length) {
     console.warn(
