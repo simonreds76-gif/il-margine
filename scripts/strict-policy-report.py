@@ -1107,6 +1107,11 @@ def main() -> int:
         calibrated_value_pct = calibrated_value_p1 if calibrated_side == "P1" else calibrated_value_p2
         calibrated_selected_prob = calibrated_p1_win_prob if calibrated_side == "P1" else calibrated_p2_win_prob
         raw_value_same_side = value_p1 if calibrated_side == "P1" else value_p2
+        raw_side = "P1" if (value_p1 or 0) >= (value_p2 or 0) else "P2"
+        raw_favorite_side = "P1" if p1_win_prob >= 0.5 else "P2"
+        calibrated_favorite_side = "P1" if calibrated_p1_win_prob >= 0.5 else "P2"
+        clay_calibration_side_flip = calibrated_side != raw_side
+        clay_calibration_favorite_flip = calibrated_favorite_side != raw_favorite_side
         if args.injury_overlay_enabled and inj_any:
             injury_skipped_matches += 1
             continue
@@ -1122,7 +1127,7 @@ def main() -> int:
         he1 = float(he_p1) if he_p1 is not None else None
         he2 = float(he_p2) if he_p2 is not None else None
 
-        side = "P1" if (value_p1 or 0) >= (value_p2 or 0) else "P2"
+        side = raw_side
         value_pct = value_p1 if side == "P1" else value_p2
         fav_side = "P1" if our_odds1 <= our_odds2 else "P2"
         has_internal_ml_value = (
@@ -1163,6 +1168,11 @@ def main() -> int:
             and (raw_value_same_side is None or raw_value_same_side < CLAY_CALIBRATED_MIN_VALUE_PCT)
             and calibrated_selected_prob >= CLAY_CALIBRATED_PROB_MIN
             and calibrated_selected_prob < CLAY_CALIBRATED_PROB_MAX
+            # Calibration can tighten price on the same side, but if it crosses
+            # through 50/50 and invents the opposite side, the lane becomes
+            # unstable from one refresh to the next.
+            and not clay_calibration_side_flip
+            and not clay_calibration_favorite_flip
         )
         strict_spread_eligible = strict_min_value is not None
         volume_spread_eligible = volume_min_value is not None and not strict_spread_eligible
