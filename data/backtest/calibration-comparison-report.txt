@@ -1,0 +1,57 @@
+Surface Calibration Validation Report
+Generated: 2026-04-06T09:56:19+00:00
+Train: 2022, 2023
+Validation: 2024
+Holdout: 2025
+
+=== Fitted parameters ===
+Clay: A=0.0000 B=0.7320 n_train=1535 backend=grid
+  blend_by_series: ATP250=1.00, ATP500=1.00, Grand Slam=0.00, Masters 1000=1.00, Masters Cup=1.00
+Grass: A=0.0000 B=0.8540 n_train=622 backend=grid
+  blend_by_series: ATP250=1.00, ATP500=1.00, Grand Slam=0.00, Masters 1000=1.00, Masters Cup=0.00
+Hard: A=0.0940 B=0.5800 n_train=2875 backend=grid
+  blend_by_series: ATP250=1.00, ATP500=0.77, Grand Slam=0.00, Masters 1000=1.00, Masters Cup=0.82
+
+=== Calibration quality ===
+[Clay]
+  train      n=1535 ECE raw/cal/pin=0.0465/0.0219/0.0199 logloss raw/cal/pin=0.6224/0.6146/0.5886 brier raw/cal/pin=0.2151/0.2133/0.2028
+  validation n= 804 ECE raw/cal/pin=0.0623/0.0540/0.0275 logloss raw/cal/pin=0.6828/0.6541/0.5871 brier raw/cal/pin=0.2293/0.2246/0.2019
+  holdout    n= 707 ECE raw/cal/pin=0.0572/0.0260/0.0378 logloss raw/cal/pin=0.6215/0.6154/0.5936 brier raw/cal/pin=0.2170/0.2146/0.2045
+
+[Grass]
+  train      n= 622 ECE raw/cal/pin=0.0309/0.0216/0.0382 logloss raw/cal/pin=0.6189/0.6147/0.5883 brier raw/cal/pin=0.2153/0.2140/0.2038
+  validation n= 309 ECE raw/cal/pin=0.0687/0.0530/0.0450 logloss raw/cal/pin=0.6224/0.6183/0.5459 brier raw/cal/pin=0.2169/0.2155/0.1844
+  holdout    n= 274 ECE raw/cal/pin=0.0525/0.0593/0.0760 logloss raw/cal/pin=0.6516/0.6503/0.6030 brier raw/cal/pin=0.2270/0.2267/0.2066
+
+[Hard]
+  train      n=2875 ECE raw/cal/pin=0.0491/0.0120/0.0219 logloss raw/cal/pin=0.6391/0.6262/0.5773 brier raw/cal/pin=0.2202/0.2174/0.1979
+  validation n=1428 ECE raw/cal/pin=0.0441/0.0095/0.0136 logloss raw/cal/pin=0.6297/0.6168/0.5837 brier raw/cal/pin=0.2173/0.2146/0.2002
+  holdout    n=1335 ECE raw/cal/pin=0.0439/0.0253/0.0540 logloss raw/cal/pin=0.6301/0.6159/0.5960 brier raw/cal/pin=0.2172/0.2140/0.2064
+
+=== Holdout ROI impact (flat stake, 10% threshold) ===
+Surface | Series | Raw N / ROI | Cal N / ROI
+Clay     | ATP250       | 140 / -0.1397 | 146 / -0.1581
+Clay     | ATP500       |  54 / 0.4235 |  75 / 0.2524
+Clay     | Grand Slam   |  71 / 0.3077 |  71 / 0.3077
+Clay     | Masters 1000 | 115 / -0.1200 | 133 / -0.0726
+Grass    | ATP250       |  60 / -0.2202 |  57 / -0.2384
+Grass    | ATP500       |  36 / -0.1294 |  40 / -0.0557
+Grass    | Grand Slam   |  75 / -0.0460 |  75 / -0.0460
+Hard     | ATP250       | 225 / 0.0802 | 239 / 0.1036
+Hard     | ATP500       | 129 / -0.0767 | 146 / -0.2205
+Hard     | Grand Slam   | 140 / -0.2806 | 140 / -0.2806
+Hard     | Masters 1000 | 240 / 0.1026 | 260 / 0.1624
+Hard     | Masters Cup  |   8 / 0.0900 |  13 / -0.3292
+
+=== Clay diagnostics bins ===
+Dataset Year Bin       N  RawPred CalPred Pinn Pred Actual  RawGap  CalGap
+validation 2024 0.50-0.60  253 0.547   0.536   0.538   0.498   +0.049  +0.038
+validation 2024 0.60-0.70  181 0.644   0.612   0.621   0.641   +0.004  -0.028
+validation 2024 0.70-0.80  156 0.749   0.700   0.691   0.756   -0.007  -0.057
+validation 2024 0.80-0.90  133 0.849   0.794   0.712   0.722   +0.127  +0.072
+validation 2024 0.90-1.00   81 0.939   0.898   0.755   0.704   +0.235  +0.195
+holdout   2025 0.50-0.60  216 0.549   0.537   0.535   0.500   +0.049  +0.037
+holdout   2025 0.60-0.70  173 0.650   0.617   0.602   0.567   +0.083  +0.050
+holdout   2025 0.70-0.80  156 0.754   0.704   0.681   0.705   +0.049  -0.001
+holdout   2025 0.80-0.90  110 0.845   0.791   0.759   0.800   +0.045  -0.009
+holdout   2025 0.90-1.00   52 0.940   0.902   0.858   0.885   +0.055  +0.018

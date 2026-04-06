@@ -1,0 +1,76 @@
+{
+  "generated_utc": "2026-04-06T09:56:19+00:00",
+  "train_years": [
+    2022,
+    2023
+  ],
+  "validation_year": 2024,
+  "holdout_year": 2025,
+  "notes": [
+    "Favorite-space Platt calibration fitted from backtest results.",
+    "A is constrained >= 0 and B > 0 so calibration cannot flip the favorite through 50%.",
+    "This artefact is diagnostic only until wired into the live fair-odds model."
+  ],
+  "surfaces": {
+    "Clay": {
+      "A": 0.0,
+      "B": 0.732,
+      "blend_by_series": {
+        "ATP250": 1.0,
+        "ATP500": 1.0,
+        "Grand Slam": 0.0,
+        "Masters 1000": 1.0,
+        "Masters Cup": 1.0
+      },
+      "n_train": 1535,
+      "train_ece": 0.021917,
+      "validation_ece": 0.053953,
+      "holdout_ece": 0.026009,
+      "fit_backend": "grid",
+      "fit_meta": {
+        "backend": "grid",
+        "nll": 0.6153715450883437
+      }
+    },
+    "Grass": {
+      "A": 0.0,
+      "B": 0.854,
+      "blend_by_series": {
+        "ATP250": 1.0,
+        "ATP500": 1.0,
+        "Grand Slam": 0.0,
+        "Masters 1000": 1.0,
+        "Masters Cup": 0.0
+      },
+      "n_train": 622,
+      "train_ece": 0.021556,
+      "validation_ece": 0.052967,
+      "holdout_ece": 0.059256,
+      "fit_backend": "grid",
+      "fit_meta": {
+        "backend": "grid",
+        "nll": 0.6172560988414225
+      }
+    },
+    "Hard": {
+      "A": 0.094,
+      "B": 0.58,
+      "blend_by_series": {
+        "ATP250": 1.0,
+        "ATP500": 0.77,
+        "Grand Slam": 0.0,
+        "Masters 1000": 1.0,
+        "Masters Cup": 0.82
+      },
+      "n_train": 2875,
+      "train_ece": 0.011984,
+      "validation_ece": 0.009505,
+      "holdout_ece": 0.025292,
+      "fit_backend": "grid",
+      "fit_meta": {
+        "backend": "grid",
+        "nll": 0.6246485723714822
+      }
+    }
+  }
+}
