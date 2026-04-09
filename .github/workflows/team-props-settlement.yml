@@ -20,6 +20,7 @@ jobs:
         with:
           ref: golden-with-speed-insights
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - uses: actions/setup-python@v6
         with:
@@ -45,5 +46,5 @@ jobs:
           fi
           git commit -m "chore: hosted team props settlement"
           git fetch origin golden-with-speed-insights
-          git pull --rebase origin golden-with-speed-insights
+          git rebase origin/golden-with-speed-insights
           git push origin HEAD:golden-with-speed-insights
