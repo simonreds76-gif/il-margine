@@ -43,6 +43,10 @@ function pf(val: string | undefined, fallback = 0): number {
   return isNaN(n) ? fallback : n;
 }
 
+function normalizePinnacleTeamName(value: string | undefined): string {
+  return (value ?? "").replace(/\s*\(Corners\)\s*$/i, "").trim();
+}
+
 async function readFile(relativePath: string): Promise<string | null> {
   const resolved = tryGetKnownProjectFilePath(relativePath);
   if (!resolved) return null;
@@ -226,13 +230,15 @@ export default async function CornersMonitorPage() {
   };
   const _pinnacleByMatch = new Map<string, PinnacleMatchRow>();
   for (const row of pinnacleRows) {
-    const mk = `${row.match_date}|${(row.home_team ?? "").toLowerCase()}|${(row.away_team ?? "").toLowerCase()}`;
+    const homeTeam = normalizePinnacleTeamName(row.home_team);
+    const awayTeam = normalizePinnacleTeamName(row.away_team);
+    const mk = `${row.match_date}|${homeTeam.toLowerCase()}|${awayTeam.toLowerCase()}`;
     if (!_pinnacleByMatch.has(mk)) {
       _pinnacleByMatch.set(mk, {
         match_date: row.match_date ?? "",
         league: row.league ?? "",
-        home_team: row.home_team ?? "",
-        away_team: row.away_team ?? "",
+        home_team: homeTeam,
+        away_team: awayTeam,
         lines: {},
       });
     }
@@ -398,6 +404,9 @@ export default async function CornersMonitorPage() {
         {/* Value bets (the shortlist) */}
         {valueBets.length > 0 && (
           <MonitorCard title={`Current Bettable Signals - ${valueBets.length} found`}>
+            <p className="mb-3 text-xs text-slate-500">
+              Same match can appear more than once here when different corner lines are bettable.
+            </p>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
