@@ -219,7 +219,7 @@ export default async function CornersMonitorPage() {
       .sort()
       .at(-1) ?? null;
 
-  // Build grouped Pinnacle table: latest odds per match Ãƒâ€” line
+  // Build grouped Pinnacle table: latest odds per match and line
   type PinnacleMatchRow = {
     match_date: string; league: string; home_team: string; away_team: string;
     lines: Record<string, { over: number; under: number }>;
@@ -279,7 +279,13 @@ export default async function CornersMonitorPage() {
 
   const recentPredictions = predictions.slice(-80).reverse();
   const schedulerHeartbeatAt =
-    pipelineStatus?.last_successful_finished_at ?? pipelineStatus?.updated_at ?? null;
+    pipelineStatus?.last_successful_finished_at ??
+    pipelineStatus?.updated_at ??
+    shortlistMtime ??
+    predictionsMtime ??
+    latestPinnacleCaptureAt ??
+    pinnacleCornersMtime ??
+    null;
   const pipelineTone =
     pipelineStatus?.state === "failed"
       ? "red"
@@ -356,14 +362,14 @@ export default async function CornersMonitorPage() {
             <Stat
               label="Pinnacle odds"
               value={formatDateTime(latestPinnacleCaptureAt ?? pinnacleCornersMtime)}
-              sub={`${pinnacleMatches.length} fixtures Â· ${formatRelativeAgeShort(latestPinnacleCaptureAt ?? pinnacleCornersMtime)}`}
+              sub={`${pinnacleMatches.length} fixtures - ${formatRelativeAgeShort(latestPinnacleCaptureAt ?? pinnacleCornersMtime)}`}
               tone={pinnacleMatches.length > 0 ? "default" : "amber"}
             />
           </div>
           <div className="mt-3 text-xs text-slate-400">
             <span className="text-slate-500">State:</span> {pipelineStatus?.state ?? "missing"}
             {pipelineStatus?.current_step ? (
-              <span className="text-slate-500"> Ãƒâ€šÃ‚Â· Step:</span>
+              <span className="text-slate-500"> - Step:</span>
             ) : null}{" "}
             {pipelineStatus?.current_step ?? null}
           </div>
@@ -389,7 +395,7 @@ export default async function CornersMonitorPage() {
 
         {/* Value bets (the shortlist) */}
         {valueBets.length > 0 && (
-          <MonitorCard title={`Bettable Value Bets ? ${valueBets.length} found`}>
+          <MonitorCard title={`Bettable Value Bets - ${valueBets.length} found`}>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
@@ -542,7 +548,7 @@ export default async function CornersMonitorPage() {
 
         {/* Live P&L */}
         <div className="mt-6">
-          <MonitorCard title={`Live P&L ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ${liveSettled.length} settled${livePending.length > 0 ? `, ${livePending.length} pending` : ""}`}>
+          <MonitorCard title={`Live P&L - ${liveSettled.length} settled${livePending.length > 0 ? `, ${livePending.length} pending` : ""}`}>
             {liveSettled.length === 0 ? (
               <p className="text-sm text-slate-500">
                 No settled bets yet. Run{" "}
@@ -643,7 +649,7 @@ export default async function CornersMonitorPage() {
                               </td>
                               <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{(pf(row.edge) * 100).toFixed(1)}%</td>
                               <td className="py-1.5 pr-3 font-mono tabular-nums">{pf(row.bookie_odds).toFixed(2)}</td>
-                              <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{row.actual_total_corners || "ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â"}</td>
+                              <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{row.actual_total_corners || "-"}</td>
                               <td className="py-1.5 pr-3">
                                 <span className={`font-medium ${won ? "text-emerald-300" : "text-rose-300"}`}>{won ? "W" : "L"}</span>
                               </td>
@@ -665,7 +671,7 @@ export default async function CornersMonitorPage() {
         {/* Upcoming signals (model predictions for today) */}
         {signals.length > 0 && (
           <div className="mt-6">
-            <MonitorCard title={`All Model Fixtures ? ${signals.length} fixtures`}>
+            <MonitorCard title={`All Model Fixtures - ${signals.length} fixtures`}>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead>
@@ -763,22 +769,22 @@ export default async function CornersMonitorPage() {
                             {m.home_team} v {m.away_team}
                           </td>
                           <td className="py-1.5 pr-1 text-center font-mono tabular-nums text-slate-300">
-                            {l95.over > 0 ? l95.over.toFixed(2) : "Ã¢â‚¬â€"}
+                            {l95.over > 0 ? l95.over.toFixed(2) : "-"}
                           </td>
                           <td className="py-1.5 pr-3 text-center font-mono tabular-nums text-slate-500">
-                            {l95.under > 0 ? l95.under.toFixed(2) : "Ã¢â‚¬â€"}
+                            {l95.under > 0 ? l95.under.toFixed(2) : "-"}
                           </td>
                           <td className="py-1.5 pr-1 text-center font-mono tabular-nums text-sky-200/90">
-                            {l105.over > 0 ? l105.over.toFixed(2) : "Ã¢â‚¬â€"}
+                            {l105.over > 0 ? l105.over.toFixed(2) : "-"}
                           </td>
                           <td className="py-1.5 pr-3 text-center font-mono tabular-nums text-sky-300/60">
-                            {l105.under > 0 ? l105.under.toFixed(2) : "Ã¢â‚¬â€"}
+                            {l105.under > 0 ? l105.under.toFixed(2) : "-"}
                           </td>
                           <td className="py-1.5 pr-1 text-center font-mono tabular-nums text-slate-300">
-                            {l115.over > 0 ? l115.over.toFixed(2) : "Ã¢â‚¬â€"}
+                            {l115.over > 0 ? l115.over.toFixed(2) : "-"}
                           </td>
                           <td className="py-1.5 text-center font-mono tabular-nums text-slate-500">
-                            {l115.under > 0 ? l115.under.toFixed(2) : "Ã¢â‚¬â€"}
+                            {l115.under > 0 ? l115.under.toFixed(2) : "-"}
                           </td>
                         </tr>
                       );
@@ -863,7 +869,7 @@ export default async function CornersMonitorPage() {
         </div>
 
         <footer className="mt-12 border-t border-slate-800/60 pt-4 text-center text-[11px] text-slate-600">
-          Corners O/U Model Monitor ? Il Margine
+          Corners O/U Model Monitor - Il Margine
         </footer>
       </div>
     </div>
