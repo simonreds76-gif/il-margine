@@ -915,11 +915,63 @@ function LiveLineTable({
     );
   }
 
+  const evaluatedLines = lines
+    .map((line) => {
+      const metrics = computeLineMetrics(row, side, line, calibration);
+      if (!metrics) return null;
+      const overShadow = qualifiesForShadow(metrics.overEdge, line.overOdds, line.line);
+      const underShadow = qualifiesForShadow(metrics.underEdge, line.underOdds, line.line);
+      const bestEdge = Math.max(metrics.overEdge ?? -999, metrics.underEdge ?? -999);
+      const positiveCount = [metrics.overEdge, metrics.underEdge].filter(
+        (edge) => edge !== null && edge > 0,
+      ).length;
+      return {
+        line,
+        metrics,
+        overShadow,
+        underShadow,
+        shadow: overShadow || underShadow,
+        bestEdge,
+        positiveCount,
+      };
+    })
+    .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry))
+    .sort((a, b) => {
+      if (a.shadow !== b.shadow) return a.shadow ? -1 : 1;
+      if (a.positiveCount !== b.positiveCount) return b.positiveCount - a.positiveCount;
+      if (a.bestEdge !== b.bestEdge) return b.bestEdge - a.bestEdge;
+      return a.line.line - b.line.line || a.line.bookmaker.localeCompare(b.line.bookmaker);
+    });
+
+  const focusLines = evaluatedLines.filter((entry) => entry.shadow || entry.bestEdge > 0);
+  const primaryLines = (focusLines.length > 0 ? focusLines : evaluatedLines).slice(0, 4);
+  const extraLines = evaluatedLines.slice(primaryLines.length);
+  const bestLive = primaryLines[0];
+  const bestShadow = evaluatedLines.find((entry) => entry.shadow);
+
   return (
     <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/40">
       <div className="border-b border-slate-800 px-4 py-3">
         <div className="text-sm font-medium text-slate-100">{teamName}</div>
         <div className="text-xs text-slate-500">lambda {lambda.toFixed(2)}</div>
+        <div className="mt-2 grid gap-2 text-[11px] sm:grid-cols-2">
+          <div className="rounded-lg border border-slate-800 bg-slate-900/60 px-2 py-1.5 text-slate-300">
+            Best live:{" "}
+            <span className="font-mono text-emerald-300">
+              {bestLive
+                ? `${bestLive.line.bookmaker} ${bestLive.line.lineLabel} ${bestLive.bestEdge.toFixed(1)}%`
+                : "-"}
+            </span>
+          </div>
+          <div className="rounded-lg border border-slate-800 bg-slate-900/60 px-2 py-1.5 text-slate-300">
+            Best shadow:{" "}
+            <span className="font-mono text-emerald-300">
+              {bestShadow
+                ? `${bestShadow.line.bookmaker} ${bestShadow.line.lineLabel} ${bestShadow.bestEdge.toFixed(1)}%`
+                : "none"}
+            </span>
+          </div>
+        </div>
       </div>
       <table className="w-full text-left text-xs">
         <thead>
@@ -933,11 +985,7 @@ function LiveLineTable({
           </tr>
         </thead>
         <tbody>
-          {lines.map((line, i) => {
-            const metrics = computeLineMetrics(row, side, line, calibration);
-            if (!metrics) return null;
-            const overShadow = qualifiesForShadow(metrics.overEdge, line.overOdds, line.line);
-            const underShadow = qualifiesForShadow(metrics.underEdge, line.underOdds, line.line);
+          {primaryLines.map(({ line, metrics, overShadow, underShadow }, i) => {
             return (
               <tr key={`${line.bookmaker}-${line.lineLabel}-${i}`} className="border-b border-slate-800/40">
                 <td className="py-2 pl-4 pr-3 text-slate-300">{line.bookmaker}</td>
@@ -971,6 +1019,47 @@ function LiveLineTable({
           })}
         </tbody>
       </table>
+      {extraLines.length > 0 ? (
+        <details className="border-t border-slate-800">
+          <summary className="cursor-pointer px-4 py-2 text-xs text-slate-400 hover:text-slate-200">
+            Show all lines ({evaluatedLines.length})
+          </summary>
+          <table className="w-full text-left text-xs">
+            <tbody>
+              {extraLines.map(({ line, metrics, overShadow, underShadow }, i) => (
+                <tr key={`extra-${line.bookmaker}-${line.lineLabel}-${i}`} className="border-t border-slate-800/40">
+                  <td className="py-2 pl-4 pr-3 text-slate-300">{line.bookmaker}</td>
+                  <td className="py-2 pr-3">
+                    <span className={`rounded-full px-1.5 py-0.5 text-[10px] uppercase ${
+                      overShadow || underShadow
+                        ? "bg-emerald-500/15 text-emerald-300"
+                        : "bg-slate-700/30 text-slate-500"
+                    }`}>
+                      {overShadow || underShadow ? "yes" : "no"}
+                    </span>
+                  </td>
+                  <td className="py-2 pr-3 font-mono tabular-nums text-slate-100">{line.lineLabel}</td>
+                  <td className="py-2 pr-3 font-mono tabular-nums text-slate-400">
+                    {metrics.fairOver.toFixed(2)} / {metrics.fairUnder.toFixed(2)}
+                  </td>
+                  <td className="py-2 pr-3 font-mono tabular-nums text-slate-100">
+                    {line.overOdds ? line.overOdds.toFixed(2) : "-"} / {line.underOdds ? line.underOdds.toFixed(2) : "-"}
+                  </td>
+                  <td className="py-2 pr-4 font-mono tabular-nums">
+                    <span className={metrics.overEdge !== null && metrics.overEdge >= 0 ? "text-emerald-300" : "text-slate-500"}>
+                      {formatSignedPercent(metrics.overEdge)}
+                    </span>
+                    <span className="text-slate-600"> / </span>
+                    <span className={metrics.underEdge !== null && metrics.underEdge >= 0 ? "text-emerald-300" : "text-slate-500"}>
+                      {formatSignedPercent(metrics.underEdge)}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </details>
+      ) : null}
     </div>
   );
 }
