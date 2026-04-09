@@ -397,7 +397,7 @@ export default async function CornersMonitorPage() {
 
         {/* Value bets (the shortlist) */}
         {valueBets.length > 0 && (
-          <MonitorCard title={`Bettable Value Bets - ${valueBets.length} found`}>
+          <MonitorCard title={`Current Bettable Signals - ${valueBets.length} found`}>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
@@ -550,7 +550,7 @@ export default async function CornersMonitorPage() {
 
         {/* Live P&L */}
         <div className="mt-6">
-          <MonitorCard title={`Live P&L - ${liveSettled.length} settled${livePending.length > 0 ? `, ${livePending.length} pending` : ""}`}>
+          <MonitorCard title={`Live P&L Archive - ${liveSettled.length} settled${livePending.length > 0 ? `, ${livePending.length} pending tracked` : ""}`}>
             {liveSettled.length === 0 ? (
               <p className="text-sm text-slate-500">
                 No settled bets yet. Run{" "}
