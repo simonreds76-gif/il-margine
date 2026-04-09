@@ -28,6 +28,10 @@ DEFAULT_SNAPSHOT_KEY = "live_state"
 SNAPSHOT_FILES = [
     "data/goalscorer/goalscorer-shadow-signals.csv",
     "data/goalscorer/goalscorer-public-signals.csv",
+    "data/goalscorer/goalscorer-live-status.json",
+    "data/goalscorer/goalscorer-live-schedule-state.json",
+    "data/goalscorer/goalscorer-health-status.json",
+    "data/goalscorer/goalscorer-live.log",
     "data/goalscorer/epl-shadow-signals.csv",
     "data/goalscorer/epl-public-signals.csv",
     "data/goalscorer/la-liga-shadow-signals.csv",
@@ -113,7 +117,7 @@ def build_snapshot() -> Dict[str, object]:
         if not abs_path.exists():
             missing.append(rel_path)
             continue
-        text = abs_path.read_text(encoding="utf-8")
+        text = abs_path.read_text(encoding="utf-8", errors="replace")
         stat = abs_path.stat()
         files[rel_path] = {
             "content": text,
