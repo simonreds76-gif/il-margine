@@ -181,7 +181,7 @@ const TEAM_ALIASES: Record<string, string> = {
   "sunderland afc": "sunderland",
 };
 
-const TRACKED_SHADOW_LINES = new Set([9.5, 10.5, 11.5]);
+const TRACKED_SHADOW_LINES = new Set([9.5, 10.5, 11.5, 12.5, 13.5]);
 
 
 
@@ -319,6 +319,27 @@ function sigmoid(value: number): number {
   return expValue / (1 + expValue);
 }
 
+function poissonPmf(k: number, lam: number): number {
+  if (lam <= 0) return k === 0 ? 1 : 0;
+  return Math.exp(-lam) * (lam ** k) / factorial(k);
+}
+
+function factorial(n: number): number {
+  let out = 1;
+  for (let i = 2; i <= n; i += 1) out *= i;
+  return out;
+}
+
+function poissonCdf(k: number, lam: number): number {
+  let total = 0;
+  for (let i = 0; i <= k; i += 1) total += poissonPmf(i, lam);
+  return total;
+}
+
+function poissonProbOver(line: number, lam: number): number {
+  return 1 - poissonCdf(Math.trunc(line), lam);
+}
+
 function formatSignedPercent(edge: number | null): string {
   if (edge === null || Number.isNaN(edge)) return "-";
   return `${edge >= 0 ? "+" : ""}${edge.toFixed(1)}%`;
@@ -331,8 +352,12 @@ function calibratedOverProbability(
   calibration: CalibrationPayload | null,
 ): number | null {
   const key = `${side}_p_over_${line.toFixed(1)}`;
-  const raw = pf(row[key], Number.NaN);
-  if (Number.isNaN(raw) || raw <= 0 || raw >= 1) return null;
+  let raw = pf(row[key], Number.NaN);
+  if (Number.isNaN(raw) || raw <= 0 || raw >= 1) {
+    const lam = pf(row[`${side}_lambda`], Number.NaN);
+    if (Number.isNaN(lam) || lam <= 0) return null;
+    raw = poissonProbOver(line, lam);
+  }
   const params = calibration?.lines?.[line.toFixed(1)];
   if (!params) return raw;
   const logit = Math.log(raw / (1 - raw));

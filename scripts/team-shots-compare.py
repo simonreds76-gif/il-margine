@@ -134,6 +134,20 @@ def calibrate_prob(p_raw: float, a: float, b: float) -> float:
     return _sigmoid(a * _logit(p_raw) + b)
 
 
+def poisson_pmf(k: int, lam: float) -> float:
+    if lam <= 0:
+        return 1.0 if k == 0 else 0.0
+    return math.exp(-lam) * (lam ** k) / math.factorial(k)
+
+
+def poisson_cdf(k: int, lam: float) -> float:
+    return sum(poisson_pmf(i, lam) for i in range(k + 1))
+
+
+def prob_over(line: float, lam: float) -> float:
+    return 1.0 - poisson_cdf(int(line), lam)
+
+
 def load_calibration_params(
     path: Path,
 ) -> Optional[Dict[str, Tuple[float, float]]]:
@@ -192,7 +206,7 @@ def load_upcoming(path: Path) -> Dict[str, dict]:
                     "actual_sot": "",
                 }
                 # Must match columns in team-shots-upcoming.csv (books often quote 12.5/13.5).
-                for line in (9.5, 10.5, 11.5, 12.5, 13.5):
+                for line in (8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5, 16.5, 17.5, 19.5, 20.5):
                     pred_row[f"p_over_{line}"] = row.get(f"{side}_p_over_{line}", "")
                     pred_row[f"fair_over_{line}"] = row.get(f"{side}_fair_over_{line}", "")
                     pred_row[f"fair_under_{line}"] = row.get(f"{side}_fair_under_{line}", "")
@@ -275,22 +289,20 @@ def compare(
         if not str(pred.get("lambda_shots", "")).strip():
             continue
 
-        p_over_key = f"p_over_{line}"
-        fair_over_key = f"fair_over_{line}"
-        fair_under_key = f"fair_under_{line}"
-
-        if p_over_key not in pred:
-            continue
-
+        line_key = f"{line:.1f}"
+        p_over_key = f"p_over_{line_key}"
         p_over_raw_str = str(pred.get(p_over_key, "")).strip()
-        if not p_over_raw_str:
-            continue
-
-        model_p_over_raw = _pf(pred.get(p_over_key))
+        if p_over_raw_str:
+            model_p_over_raw = _pf(pred.get(p_over_key))
+        else:
+            lam = _pf(pred.get("lambda_shots"))
+            if lam <= 0:
+                continue
+            model_p_over_raw = prob_over(line, lam)
         model_p_under_raw = 1.0 - model_p_over_raw
 
         # Apply Platt calibration if params available for this line
-        ab = cal_params.get(str(line)) if cal_params else None
+        ab = cal_params.get(line_key) if cal_params else None
         if ab:
             model_p_over = calibrate_prob(model_p_over_raw, ab[0], ab[1])
             model_p_under = 1.0 - model_p_over
