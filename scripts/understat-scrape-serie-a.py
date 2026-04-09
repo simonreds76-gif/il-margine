@@ -5,10 +5,10 @@ Backward-compatible default:
   python scripts/understat-scrape-serie-a.py --season 2025-2026
 
 Extended usage:
-  python scripts/understat-scrape-serie-a.py --league serie-a epl la-liga bundesliga --season 2024-2025 2025-2026
+  python scripts/understat-scrape-serie-a.py --league serie-a epl la-liga bundesliga ligue-1 --season 2024-2025 2025-2026
 
 The script keeps the legacy Serie A filename shape for the active goalscorer
-pipeline, while also supporting EPL and La Liga background data builds.
+pipeline, while also supporting multi-league background data builds.
 """
 
 from __future__ import annotations
@@ -217,6 +217,54 @@ LEAGUE_CONFIGS = {
             "tsg hoffenheim": "hoffenheim",
             "wolfsburg": "wolfsburg",
             "vfl wolfsburg": "wolfsburg",
+        },
+    },
+    "ligue-1": {
+        "label": "Ligue 1",
+        "slug": "Ligue_1",
+        "output_prefix": "ligue-1",
+        "competition": "Ligue 1",
+        "team_aliases": {
+            "angers": "angers",
+            "angers sco": "angers",
+            "aj auxerre": "auxerre",
+            "auxerre": "auxerre",
+            "brest": "brest",
+            "stade brestois": "brest",
+            "stade brestois 29": "brest",
+            "havre": "havre",
+            "havre ac": "havre",
+            "lens": "lens",
+            "rc lens": "lens",
+            "lille": "lille",
+            "losc": "lille",
+            "losc lille": "lille",
+            "lorient": "lorient",
+            "fc lorient": "lorient",
+            "lyon": "lyon",
+            "olympique lyonnais": "lyon",
+            "marseille": "marseille",
+            "om": "marseille",
+            "olympique de marseille": "marseille",
+            "metz": "metz",
+            "fc metz": "metz",
+            "monaco": "monaco",
+            "as monaco": "monaco",
+            "nantes": "nantes",
+            "fc nantes": "nantes",
+            "nice": "nice",
+            "ogc nice": "nice",
+            "paris fc": "paris fc",
+            "paris saint germain": "psg",
+            "paris saint-germain": "psg",
+            "psg": "psg",
+            "rennes": "rennes",
+            "stade rennais": "rennes",
+            "stade rennais fc": "rennes",
+            "strasbourg": "strasbourg",
+            "rc strasbourg alsace": "strasbourg",
+            "toulouse": "toulouse",
+            "toulouse fc": "toulouse",
         },
     },
 }
