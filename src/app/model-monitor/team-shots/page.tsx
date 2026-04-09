@@ -298,6 +298,12 @@ function bestLineSummary(lines: TeamShotsLiveLine[], lambda: number): string {
   return `${best.bookmaker} ${best.lineLabel} ${best.side} ${best.odds.toFixed(2)} (${formatSignedPercent(best.edge)})`;
 }
 
+function bestEligibleLineSummary(lines: TeamShotsLiveLine[], lambda: number): string {
+  const eligibleLines = lines.filter((line) => SHADOW_ELIGIBLE_LINES.has(line.line));
+  if (eligibleLines.length === 0) return "No shadow-eligible line";
+  return bestLineSummary(eligibleLines, lambda);
+}
+
 
 
 async function readFile(relativePath: string): Promise<string | null> {
@@ -741,6 +747,7 @@ function LiveLineTable({
         <thead>
           <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
             <th className="py-2 pl-4 pr-3">Book</th>
+            <th className="py-2 pr-3">Shadow</th>
             <th className="py-2 pr-3 font-mono">Line</th>
             <th className="py-2 pr-3 font-mono">Fair O/U</th>
             <th className="py-2 pr-3 font-mono">Book O/U</th>
@@ -756,6 +763,17 @@ function LiveLineTable({
             return (
               <tr key={`${line.bookmaker}-${line.lineLabel}-${i}`} className="border-b border-slate-800/40">
                 <td className="py-2 pl-4 pr-3 text-slate-300">{line.bookmaker}</td>
+                <td className="py-2 pr-3">
+                  {SHADOW_ELIGIBLE_LINES.has(line.line) ? (
+                    <span className="rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[10px] uppercase text-emerald-300">
+                      yes
+                    </span>
+                  ) : (
+                    <span className="rounded-full bg-slate-700/30 px-1.5 py-0.5 text-[10px] uppercase text-slate-500">
+                      no
+                    </span>
+                  )}
+                </td>
                 <td className="py-2 pr-3 font-mono tabular-nums text-slate-100">{line.lineLabel}</td>
                 <td className="py-2 pr-3 font-mono tabular-nums text-slate-400">
                   {fairOver.toFixed(2)} / {fairUnder.toFixed(2)}
@@ -1079,8 +1097,8 @@ function LiveLineTable({
 
                 <p className="mt-1 text-sm text-slate-500">
 
-                  lambda = expected shots per team. Open a fixture to see the shadow-eligible live bookmaker
-                  lines, fair odds, and value for each team.
+                  lambda = expected shots per team. Open a fixture to see all live bookmaker lines.
+                  Shadow-eligible lines are tagged.
 
                 </p>
 
@@ -1113,12 +1131,10 @@ function LiveLineTable({
                       const homeKey = `${matchKey(date, row.home_team, row.away_team)}|${normalizeTeamName(row.home_team)}`;
                       const awayKey = `${matchKey(date, row.home_team, row.away_team)}|${normalizeTeamName(row.away_team)}`;
                       const homeLines = [...(liveOddsByMatchTeam.get(homeKey)?.values() ?? [])]
-                        .filter((line) => SHADOW_ELIGIBLE_LINES.has(line.line))
                         .sort(
                         (a, b) => a.line - b.line || a.bookmaker.localeCompare(b.bookmaker),
                       );
                       const awayLines = [...(liveOddsByMatchTeam.get(awayKey)?.values() ?? [])]
-                        .filter((line) => SHADOW_ELIGIBLE_LINES.has(line.line))
                         .sort(
                         (a, b) => a.line - b.line || a.bookmaker.localeCompare(b.bookmaker),
                       );
@@ -1139,12 +1155,14 @@ function LiveLineTable({
                                 <div className="rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2">
                                   <div className="text-slate-500">Home</div>
                                   <div className="font-mono text-emerald-300">lambda {pf(row.home_lambda).toFixed(2)}</div>
-                                  <div className="mt-1 text-slate-300">{bestLineSummary(homeLines, pf(row.home_lambda))}</div>
+                                  <div className="mt-1 text-slate-300">Live: {bestLineSummary(homeLines, pf(row.home_lambda))}</div>
+                                  <div className="mt-1 text-slate-500">Shadow: {bestEligibleLineSummary(homeLines, pf(row.home_lambda))}</div>
                                 </div>
                                 <div className="rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2">
                                   <div className="text-slate-500">Away</div>
                                   <div className="font-mono text-emerald-300">lambda {pf(row.away_lambda).toFixed(2)}</div>
-                                  <div className="mt-1 text-slate-300">{bestLineSummary(awayLines, pf(row.away_lambda))}</div>
+                                  <div className="mt-1 text-slate-300">Live: {bestLineSummary(awayLines, pf(row.away_lambda))}</div>
+                                  <div className="mt-1 text-slate-500">Shadow: {bestEligibleLineSummary(awayLines, pf(row.away_lambda))}</div>
                                 </div>
                               </div>
                             </div>
@@ -1171,7 +1189,7 @@ function LiveLineTable({
 
                   <p className="mt-3 text-[11px] text-slate-600">
 
-                    This view is restricted to the same 9.5 / 10.5 / 11.5 line family the shadow tracker can actually log.
+                    All live lines are shown here. The shadow tracker only logs 9.5 / 10.5 / 11.5, so non-eligible lines are marked.
 
                   </p>
 
