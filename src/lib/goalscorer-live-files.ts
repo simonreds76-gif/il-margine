@@ -21,6 +21,7 @@ type SnapshotPayload = {
 const SNAPSHOT_TABLE = "goalscorer_live_snapshot";
 const SNAPSHOT_KEY = process.env.GOALSCORER_LIVE_SNAPSHOT_KEY || "live_state";
 const RUNNING_ON_VERCEL = process.env.VERCEL === "1" || Boolean(process.env.VERCEL_ENV);
+const LOCAL_SNAPSHOT_FILE = "data/goalscorer/goalscorer-live-snapshot.json";
 
 const loadHostedSnapshot = cache(async (): Promise<SnapshotPayload | null> => {
   try {
@@ -46,6 +47,29 @@ function getSnapshotFileEntry(payload: SnapshotPayload | null, relativePath: str
     content: typeof rawEntry.content === "string" ? rawEntry.content : undefined,
     mtime: typeof rawEntry.mtime === "string" ? rawEntry.mtime : undefined,
   };
+}
+
+function newerTimestamp(left: string | null, right: string | null): string | null {
+  const leftMs = left ? Date.parse(left) : Number.NaN;
+  const rightMs = right ? Date.parse(right) : Number.NaN;
+  const leftValid = Number.isFinite(leftMs);
+  const rightValid = Number.isFinite(rightMs);
+  if (leftValid && rightValid) return leftMs >= rightMs ? left : right;
+  if (leftValid) return left;
+  if (rightValid) return right;
+  return right ?? left ?? null;
+}
+
+async function readLocalSnapshotGeneratedAt(): Promise<string | null> {
+  try {
+    const fullPath = tryGetKnownProjectFilePath(LOCAL_SNAPSHOT_FILE);
+    if (!fullPath) return null;
+    const text = await fs.readFile(fullPath, "utf8");
+    const parsed = JSON.parse(text) as SnapshotPayload;
+    return typeof parsed.generated_at === "string" ? parsed.generated_at : null;
+  } catch {
+    return null;
+  }
 }
 
 export async function readGoalscorerLiveFile(relativePath: string): Promise<string | null> {
@@ -113,5 +137,7 @@ export async function readGoalscorerLiveMtime(relativePath: string): Promise<str
 
 export async function readGoalscorerLiveSnapshotGeneratedAt(): Promise<string | null> {
   const payload = await loadHostedSnapshot();
-  return typeof payload?.generated_at === "string" ? payload.generated_at : null;
+  const hostedGeneratedAt = typeof payload?.generated_at === "string" ? payload.generated_at : null;
+  const localGeneratedAt = await readLocalSnapshotGeneratedAt();
+  return newerTimestamp(hostedGeneratedAt, localGeneratedAt);
 }

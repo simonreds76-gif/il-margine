@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   readGoalscorerLiveFile,
@@ -37,6 +37,15 @@ type LiveBoardPayload = {
   stats?: Record<string, number | string>;
   fixtures?: Array<Record<string, unknown>>;
   rows?: Array<Record<string, unknown>>;
+};
+type GoalscorerLiveStatus = {
+  state?: string;
+  updated_at?: string;
+  last_successful_finished_at?: string;
+  message?: string;
+};
+type GoalscorerScheduleState = {
+  updated_at?: string;
 };
 type FixtureHealth = {
   league: string;
@@ -555,8 +564,12 @@ function formatDateTime(value?: string | null): string {
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
   return parsed.toLocaleString("en-GB", {
-    dateStyle: "medium",
-    timeStyle: "short",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
   });
 }
 
@@ -584,9 +597,9 @@ function formatKickoff(value?: string | null): string {
   if (Number.isNaN(parsed)) return value;
   return new Intl.DateTimeFormat("en-GB", {
     timeZone: "Europe/London",
-    weekday: "short",
-    day: "numeric",
-    month: "short",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     hourCycle: "h23",
@@ -615,22 +628,11 @@ function formatOpsKickoff(value?: string | null, todayIso = isoDateInTimezone("E
   if (isDateOnly(value)) return formatShortDate(value);
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
-
-  const dateIso = isoDateForValueInTimezone(value);
-  const tomorrowIso = addDaysIso(todayIso, 1);
-  const timeLabel = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/London",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-  }).format(parsed);
-
-  if (dateIso === todayIso) return timeLabel;
-  if (dateIso === tomorrowIso) return `Tomorrow ${timeLabel}`;
-
   return new Intl.DateTimeFormat("en-GB", {
     timeZone: "Europe/London",
-    weekday: "short",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     hourCycle: "h23",
@@ -721,6 +723,21 @@ function freshnessBadge(value?: string | null): { label: string; className: stri
   return { label: `${ageMinutes}m old`, className: "text-rose-300" };
 }
 
+function newestTimestamp(values: Array<string | null | undefined>): string | null {
+  let newestValue: string | null = null;
+  let newestMs = Number.NEGATIVE_INFINITY;
+  for (const value of values) {
+    if (!value) continue;
+    const parsed = Date.parse(value);
+    if (!Number.isFinite(parsed)) continue;
+    if (parsed > newestMs) {
+      newestMs = parsed;
+      newestValue = value;
+    }
+  }
+  return newestValue;
+}
+
 function formatWLV(wins: number, losses: number, voids: number): string {
   return `${wins}/${losses}/${voids}`;
 }
@@ -731,7 +748,7 @@ function formatShortDate(value?: string): string {
   if (Number.isNaN(parsed)) return value.slice(0, 10) || value;
   return new Date(parsed).toLocaleDateString("en-GB", {
     day: "2-digit",
-    month: "short",
+    month: "2-digit",
     year: "numeric",
   });
 }
@@ -1952,7 +1969,7 @@ export default async function GoalscorerMonitorPage() {
     notFound();
   }
 
-  const [leagueDatasets, shadowDatasets, publicDatasets, snapshotGeneratedAt, oddsHistoryText] = await Promise.all([
+  const [leagueDatasets, shadowDatasets, publicDatasets, snapshotGeneratedAt, snapshotFileMtime, liveLogMtime, oddsHistoryText, liveStatus, scheduleState] = await Promise.all([
     Promise.all(
       LIVE_COMPARE_CONFIGS.map(async (config) => {
         const [comparisonJson, comparisonCsv, comparisonTxt, comparisonJsonMtime, comparisonCsvMtime, lineupsJson, penaltyReviewJson, livePenaltyReviewJson] = await Promise.all([
@@ -2022,7 +2039,11 @@ export default async function GoalscorerMonitorPage() {
       }),
     ),
     readGoalscorerLiveSnapshotGeneratedAt(),
+    readGoalscorerLiveMtime("data/goalscorer/goalscorer-live-snapshot.json"),
+    readGoalscorerLiveMtime("data/goalscorer/goalscorer-live.log"),
     readGoalscorerLiveFile(GOALSCORER_ODDS_HISTORY_FILE),
+    readGoalscorerLiveJson<GoalscorerLiveStatus>("data/goalscorer/goalscorer-live-status.json"),
+    readGoalscorerLiveJson<GoalscorerScheduleState>("data/goalscorer/goalscorer-live-schedule-state.json"),
   ]);
 
   const rows = leagueDatasets.flatMap((dataset) => dataset.rows);
@@ -2076,22 +2097,42 @@ export default async function GoalscorerMonitorPage() {
   const settledYesterdayRows = latestTrackedRows.filter(
     (row) => isSettledShadowRow(row) && isoDateForValueInTimezone(row.settled_at || row.date) === yesterdayIso,
   );
-
-  const comparedAt = rows
-    .map((row) => row.compared_at ?? "")
-    .filter(Boolean)
-    .sort()
-    .at(-1) ?? "n/a";
-  const liveWindowStart = todayIso;
-  const liveWindowEnd = addDaysIso(liveWindowStart, 3);
-  const comparisonMtime =
+  const rawComparisonMtime =
     leagueDatasets
       .map((dataset) => dataset.comparisonMtime ?? "")
       .filter(Boolean)
       .sort()
       .at(-1) ?? null;
+  const signalMtime = newestTimestamp([
+    ...shadowDatasets.map((dataset) => dataset.mtime),
+    ...publicDatasets.map((dataset) => dataset.mtime),
+  ]);
+  const comparedAt =
+    newestTimestamp([
+      ...rows.map((row) => row.compared_at),
+      ...shadowRows.map((row) => row.compared_at),
+      ...publicDatasets.flatMap((dataset) => dataset.rows.map((row) => row.compared_at)),
+      rawComparisonMtime,
+      signalMtime,
+      snapshotGeneratedAt,
+      snapshotFileMtime,
+    ]) ?? "n/a";
+  const liveWindowStart = todayIso;
+  const liveWindowEnd = addDaysIso(liveWindowStart, 3);
+  const comparisonMtime = newestTimestamp([rawComparisonMtime, signalMtime, snapshotGeneratedAt, snapshotFileMtime]);
+  const schedulerHeartbeatAt = newestTimestamp([
+    liveStatus?.last_successful_finished_at,
+    liveStatus?.updated_at,
+    scheduleState?.updated_at,
+    liveLogMtime,
+    signalMtime,
+    snapshotGeneratedAt,
+    snapshotFileMtime,
+  ]);
+  const hostedSnapshotAt = newestTimestamp([snapshotGeneratedAt, snapshotFileMtime]);
   const comparisonFreshness = freshnessBadge(comparisonMtime);
-  const snapshotFreshness = freshnessBadge(snapshotGeneratedAt);
+  const schedulerFreshness = freshnessBadge(schedulerHeartbeatAt);
+  const snapshotFreshness = freshnessBadge(hostedSnapshotAt);
   const fixtureHealthRows = leagueDatasets.flatMap((dataset) => dataset.fixtureHealth);
   const liveWindowFixtureHealthRows = fixtureHealthRows.filter((fixture) =>
     fixtureInLiveWindow(fixture, liveWindowStart, liveWindowEnd),
@@ -2167,6 +2208,8 @@ export default async function GoalscorerMonitorPage() {
   const publicSummaryByLeague = new Map(
     publicDatasets.map((dataset) => [dataset.key, computePublicSummary(dataset.rows)] as const),
   );
+  const shadowMtimeByLeague = new Map(shadowDatasets.map((dataset) => [dataset.key, dataset.mtime] as const));
+  const publicMtimeByLeague = new Map(publicDatasets.map((dataset) => [dataset.key, dataset.mtime] as const));
   const leagueStatus = leagueDatasets.map((dataset) => {
     const leagueRows = dataset.rows;
     const leaguePublicRows = leagueRows.filter((row) => (row.public_action ?? "") === "surface");
@@ -2188,7 +2231,11 @@ export default async function GoalscorerMonitorPage() {
       degradedFixtures: leagueFixtures.filter((fixture) => fixture.trust_tier === "T2").length,
       quarantinedFixtures: leagueFixtures.filter((fixture) => fixture.trust_tier === "T3").length,
       competition: leagueRows[0]?.competition ?? dataset.label,
-      updatedAt: dataset.comparisonMtime,
+      updatedAt: newestTimestamp([
+        dataset.comparisonMtime,
+        publicMtimeByLeague.get(dataset.key),
+        shadowMtimeByLeague.get(dataset.key),
+      ]),
       outputStatus: leagueOutputStatus(dataset.summary, hasOutput),
     };
   });
@@ -2227,11 +2274,13 @@ export default async function GoalscorerMonitorPage() {
   const rawMonitorSummary = leagueDatasets
     .filter((dataset) => dataset.comparisonTxt)
     .map((dataset) => {
-      const updated = dataset.comparisonMtime
-        ? `Updated ${new Date(dataset.comparisonMtime).toLocaleString("en-GB", {
-            dateStyle: "medium",
-            timeStyle: "short",
-          })}`
+      const updatedAt = newestTimestamp([
+        dataset.comparisonMtime,
+        publicMtimeByLeague.get(dataset.key),
+        shadowMtimeByLeague.get(dataset.key),
+      ]);
+      const updated = updatedAt
+        ? `Updated ${formatDateTime(updatedAt)}`
         : "Update time unavailable";
       return `=== ${dataset.label} | ${updated} ===\n${dataset.comparisonTxt ?? "Missing goalscorer live summary."}`;
     })
@@ -2570,7 +2619,12 @@ export default async function GoalscorerMonitorPage() {
                 <span className={comparisonFreshness.className}>({comparisonFreshness.label})</span>
               </div>
               <div>
-                <span className="text-slate-500">Hosted snapshot:</span> {formatDateTime(snapshotGeneratedAt)}{" "}
+                <span className="text-slate-500">Scheduler heartbeat:</span> {formatDateTime(schedulerHeartbeatAt)}{" "}
+                <span className={schedulerFreshness.className}>({schedulerFreshness.label})</span>
+                {liveStatus?.state ? <span className="text-slate-500"> · {liveStatus.state}</span> : null}
+              </div>
+              <div>
+                <span className="text-slate-500">Hosted snapshot:</span> {formatDateTime(hostedSnapshotAt)}{" "}
                 <span className={snapshotFreshness.className}>({snapshotFreshness.label})</span>
               </div>
               <div>
@@ -2590,7 +2644,8 @@ export default async function GoalscorerMonitorPage() {
         ) : null}
 
         <section className="mb-8 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-          <Stat label="Last refresh" value={formatDateTime(comparisonMtime)} tone={comparisonFreshness.className} />
+          <Stat label="Last compare" value={formatDateTime(comparisonMtime)} tone={comparisonFreshness.className} />
+          <Stat label="Scheduler" value={formatDateTime(schedulerHeartbeatAt)} tone={schedulerFreshness.className} />
           <Stat label="Public live" value={`${highRows.length}`} tone="text-emerald-300" />
           <Stat label="Shadow live" value={`${caveatRows.length}`} tone="text-slate-300" />
           <Stat label="Starting <60m" value={`${liveMonitorRows.filter((item) => kickoffUrgencyMeta(item.kickoff).label === "<60m" || kickoffUrgencyMeta(item.kickoff).label === "<30m").length}`} tone="text-amber-300" />
