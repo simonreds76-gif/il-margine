@@ -23,6 +23,15 @@ const MODEL_MONITOR_ENABLED =
 
 
 type CsvRow = Record<string, string>;
+type TeamShotsLiveLine = {
+  bookmaker: string;
+  line: number;
+  lineLabel: string;
+  overOdds?: number;
+  underOdds?: number;
+  overCapturedAt?: string;
+  underCapturedAt?: string;
+};
 
 type TeamPropsStatus = {
 
@@ -207,14 +216,85 @@ function comparisonKey(
   ].join("|");
 }
 
-function oddsKey(
+function normalizeTeamName(value: string | undefined): string {
+  return (value ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter((token) => !["fc", "afc", "sc", "cf", "ac", "club"].includes(token))
+    .join(" ");
+}
+
+function matchKey(
+  date: string | undefined,
   homeTeam: string | undefined,
   awayTeam: string | undefined,
-  team: string | undefined,
-  line: string | undefined,
-  side: string | undefined,
 ): string {
-  return `${comparisonKey(homeTeam, awayTeam, team, line)}|${(side ?? "").trim().toLowerCase()}`;
+  return [
+    (date ?? "").trim(),
+    normalizeTeamName(homeTeam),
+    normalizeTeamName(awayTeam),
+  ].join("|");
+}
+
+function poissonFairOdds(lambda: number, line: number, side: "over" | "under"): number {
+  if (!(lambda > 0) || !(line >= 0)) return 0;
+  const threshold = Math.floor(line);
+  let probability = Math.exp(-lambda);
+  let cumulative = probability;
+  for (let k = 1; k <= threshold; k += 1) {
+    probability = (probability * lambda) / k;
+    cumulative += probability;
+  }
+  const underProb = Math.min(Math.max(cumulative, 1e-9), 1 - 1e-9);
+  const overProb = Math.min(Math.max(1 - underProb, 1e-9), 1 - 1e-9);
+  return side === "over" ? 1 / overProb : 1 / underProb;
+}
+
+function formatSignedPercent(edge: number | null): string {
+  if (edge === null || Number.isNaN(edge)) return "-";
+  return `${edge >= 0 ? "+" : ""}${edge.toFixed(1)}%`;
+}
+
+function bestLineSummary(lines: TeamShotsLiveLine[], lambda: number): string {
+  let best:
+    | { bookmaker: string; lineLabel: string; side: "O" | "U"; odds: number; edge: number }
+    | undefined;
+
+  for (const line of lines) {
+    const fairOver = poissonFairOdds(lambda, line.line, "over");
+    const fairUnder = poissonFairOdds(lambda, line.line, "under");
+    if (line.overOdds) {
+      const edge = (line.overOdds / fairOver - 1) * 100;
+      if (!best || edge > best.edge) {
+        best = {
+          bookmaker: line.bookmaker,
+          lineLabel: line.lineLabel,
+          side: "O",
+          odds: line.overOdds,
+          edge,
+        };
+      }
+    }
+    if (line.underOdds) {
+      const edge = (line.underOdds / fairUnder - 1) * 100;
+      if (!best || edge > best.edge) {
+        best = {
+          bookmaker: line.bookmaker,
+          lineLabel: line.lineLabel,
+          side: "U",
+          odds: line.underOdds,
+          edge,
+        };
+      }
+    }
+  }
+
+  if (!best) return "No live team-shots line";
+  return `${best.bookmaker} ${best.lineLabel} ${best.side} ${best.odds.toFixed(2)} (${formatSignedPercent(best.edge)})`;
 }
 
 
@@ -541,8 +621,6 @@ export default async function TeamShotsMonitorPage() {
 
   const predictions = predictionsCsv ? parseCsv(predictionsCsv) : [];
 
-  const comparisonRows = comparisonCsv ? parseCsv(comparisonCsv) : [];
-
   const oddsArchiveRaw = oddsArchiveCsv ? parseCsv(oddsArchiveCsv) : [];
 
   const oddsArchive = oddsArchiveRaw.filter(
@@ -602,80 +680,102 @@ export default async function TeamShotsMonitorPage() {
 
 
   const upcomingRows = upcomingCsv ? parseCsv(upcomingCsv) : [];
-
-  const comparisonLookup = new Map<string, CsvRow>();
-  for (const row of comparisonRows) {
-    comparisonLookup.set(
-      comparisonKey(row.home_team, row.away_team, row.team, row.line),
-      row,
-  );
-}
-
-const latestOddsLookup = new Map<string, CsvRow>();
-for (const row of oddsArchive) {
-  const key = oddsKey(
-    row.home_team,
-    row.away_team,
-    row.team,
-    row.line,
-    row.side,
-  );
-  const existing = latestOddsLookup.get(key);
-  if (!existing || (row.captured_at ?? "") > (existing.captured_at ?? "")) {
-    latestOddsLookup.set(key, row);
+  const liveOddsByMatchTeam = new Map<string, Map<string, TeamShotsLiveLine>>();
+  for (const row of oddsArchive) {
+    const date = (row.match_date ?? row.kickoff_at ?? "").slice(0, 10);
+    const lineNumber = pf(row.line, Number.NaN);
+    if (!date || Number.isNaN(lineNumber)) continue;
+    const teamKey = `${matchKey(date, row.home_team, row.away_team)}|${normalizeTeamName(row.team)}`;
+    if (!liveOddsByMatchTeam.has(teamKey)) {
+      liveOddsByMatchTeam.set(teamKey, new Map<string, TeamShotsLiveLine>());
+    }
+    const lineKey = `${(row.bookmaker ?? "").trim()}|${(row.line ?? "").trim()}`;
+    const teamLines = liveOddsByMatchTeam.get(teamKey)!;
+    const existing =
+      teamLines.get(lineKey) ??
+      {
+        bookmaker: row.bookmaker ?? "-",
+        line: lineNumber,
+        lineLabel: row.line ?? "",
+      };
+    if ((row.side ?? "").trim().toLowerCase() === "over") {
+      if (!existing.overCapturedAt || (row.captured_at ?? "") >= existing.overCapturedAt) {
+        existing.overOdds = pf(row.odds_decimal);
+        existing.overCapturedAt = row.captured_at ?? "";
+      }
+    }
+    if ((row.side ?? "").trim().toLowerCase() === "under") {
+      if (!existing.underCapturedAt || (row.captured_at ?? "") >= existing.underCapturedAt) {
+        existing.underOdds = pf(row.odds_decimal);
+        existing.underCapturedAt = row.captured_at ?? "";
+      }
+    }
+    teamLines.set(lineKey, existing);
   }
-}
 
-function FairOddsCell({
-  fairOver,
-  fairUnder,
-  bookOverRow,
-  bookUnderRow,
-  toneClass,
+function LiveLineTable({
+  teamName,
+  lambda,
+  lines,
 }: {
-  fairOver: number;
-  fairUnder: number;
-  bookOverRow?: CsvRow;
-  bookUnderRow?: CsvRow;
-  toneClass?: string;
+  teamName: string;
+  lambda: number;
+  lines: TeamShotsLiveLine[];
 }) {
-  const overEdge = bookOverRow ? (pf(bookOverRow.odds_decimal) / fairOver) - 1 : null;
-  const underEdge = bookUnderRow ? (pf(bookUnderRow.odds_decimal) / fairUnder) - 1 : null;
-  return (
-    <div className="space-y-1">
-      <div className={`font-mono tabular-nums ${toneClass ?? "text-slate-300"}`}>
-        {fairOver.toFixed(2)}/{fairUnder.toFixed(2)}
+  if (lines.length === 0) {
+    return (
+      <div className="rounded-2xl border border-slate-800 bg-slate-950/40 p-4 text-sm text-slate-500">
+        No live bookmaker lines yet.
       </div>
-      {bookOverRow ? (
-        <div className="text-[10px] leading-tight">
-          <span className="font-mono text-slate-200">
-            O {pf(bookOverRow.odds_decimal).toFixed(2)}
-          </span>
-          <span
-            className={`ml-1 font-mono ${
-              overEdge !== null && overEdge >= 0 ? "text-emerald-300" : "text-rose-300"
-            }`}
-          >
-            {overEdge !== null && overEdge >= 0 ? "+" : ""}
-            {overEdge !== null ? (overEdge * 100).toFixed(1) : "-"}%
-          </span>
-        </div>
-      ) : null}
-      {bookUnderRow ? (
-        <div className="text-[10px] leading-tight">
-          <span className="font-mono text-slate-200">
-            U {pf(bookUnderRow.odds_decimal).toFixed(2)}
-          </span>
-          <span
-            className={`ml-1 font-mono ${
-              underEdge !== null && underEdge >= 0 ? "text-emerald-300" : "text-rose-300"
-            }`}
-          >
-            {underEdge !== null && underEdge >= 0 ? "+" : ""}
-            {underEdge !== null ? (underEdge * 100).toFixed(1) : "-"}%
-          </span>
-        </div>
-      ) : null}
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/40">
+      <div className="border-b border-slate-800 px-4 py-3">
+        <div className="text-sm font-medium text-slate-100">{teamName}</div>
+        <div className="text-xs text-slate-500">lambda {lambda.toFixed(2)}</div>
+      </div>
+      <table className="w-full text-left text-xs">
+        <thead>
+          <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
+            <th className="py-2 pl-4 pr-3">Book</th>
+            <th className="py-2 pr-3 font-mono">Line</th>
+            <th className="py-2 pr-3 font-mono">Fair O/U</th>
+            <th className="py-2 pr-3 font-mono">Book O/U</th>
+            <th className="py-2 pr-4 font-mono">Value O/U</th>
+          </tr>
+        </thead>
+        <tbody>
+          {lines.map((line, i) => {
+            const fairOver = poissonFairOdds(lambda, line.line, "over");
+            const fairUnder = poissonFairOdds(lambda, line.line, "under");
+            const overEdge = line.overOdds ? (line.overOdds / fairOver - 1) * 100 : null;
+            const underEdge = line.underOdds ? (line.underOdds / fairUnder - 1) * 100 : null;
+            return (
+              <tr key={`${line.bookmaker}-${line.lineLabel}-${i}`} className="border-b border-slate-800/40">
+                <td className="py-2 pl-4 pr-3 text-slate-300">{line.bookmaker}</td>
+                <td className="py-2 pr-3 font-mono tabular-nums text-slate-100">{line.lineLabel}</td>
+                <td className="py-2 pr-3 font-mono tabular-nums text-slate-400">
+                  {fairOver.toFixed(2)} / {fairUnder.toFixed(2)}
+                </td>
+                <td className="py-2 pr-3 font-mono tabular-nums text-slate-100">
+                  {line.overOdds ? line.overOdds.toFixed(2) : "-"} / {line.underOdds ? line.underOdds.toFixed(2) : "-"}
+                </td>
+                <td className="py-2 pr-4 font-mono tabular-nums">
+                  <span className={overEdge !== null && overEdge >= 0 ? "text-emerald-300" : "text-slate-500"}>
+                    {formatSignedPercent(overEdge)}
+                  </span>
+                  <span className="text-slate-600"> / </span>
+                  <span className={underEdge !== null && underEdge >= 0 ? "text-emerald-300" : "text-slate-500"}>
+                    {formatSignedPercent(underEdge)}
+                  </span>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -978,9 +1078,8 @@ function FairOddsCell({
 
                 <p className="mt-1 text-sm text-slate-500">
 
-                  lambda = expected shots per team. Fair odds at 9.5 / 10.5 / 11.5 / 12.5 from
-
-                  the Poisson model (decimal).
+                  lambda = expected shots per team. Open a fixture to see the actual live bookmaker lines,
+                  fair odds, and value for each team.
 
                 </p>
 
@@ -1007,255 +1106,67 @@ function FairOddsCell({
                   title={`${leagueTitle(leagueKey)} (${leagueRows.length})`}
 
                 >
-
-                  <div className="overflow-x-auto">
-
-                    <table className="w-full min-w-[960px] text-left text-xs">
-
-                      <thead>
-
-                        <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
-
-                          <th className="py-2 pr-3">Kickoff (UTC)</th>
-
-                          <th className="py-2 pr-3">Home</th>
-
-                          <th className="py-2 pr-3">Away</th>
-
-                          <th className="py-2 pr-2 font-mono">Lambda H</th>
-
-                          <th className="py-2 pr-2 font-mono">Lambda A</th>
-
-                          <th className="py-2 pr-1 font-mono text-slate-400" colSpan={4}>
-
-                            Home fair / book / value
-
-                          </th>
-
-                          <th className="py-2 pr-2 font-mono text-slate-400" colSpan={4}>
-
-                            Away fair / book / value
-
-                          </th>
-
-                          <th className="py-2 pr-2">Note</th>
-
-                        </tr>
-
-                        <tr className="border-b border-slate-800/80 text-[10px] text-slate-600">
-
-                          <th className="py-1 pr-3" colSpan={5} />
-
-                          <th className="py-1 pr-1 font-mono">9.5</th>
-
-                          <th className="py-1 pr-1 font-mono text-sky-400/80">10.5</th>
-
-                          <th className="py-1 pr-1 font-mono">11.5</th>
-
-                          <th className="py-1 pr-2 font-mono">12.5</th>
-
-                          <th className="py-1 pr-1 font-mono">9.5</th>
-
-                          <th className="py-1 pr-1 font-mono text-sky-400/80">10.5</th>
-
-                          <th className="py-1 pr-1 font-mono">11.5</th>
-
-                          <th className="py-1 pr-2 font-mono">12.5</th>
-
-                          <th className="py-1 pr-2" />
-
-                        </tr>
-
-                      </thead>
-
-                      <tbody>
-
-                        {leagueRows.map((row, i) => {
-
-                          const ho95 = pf(row["home_fair_over_9.5"]);
-
-                          const hu95 = pf(row["home_fair_under_9.5"]);
-
-                          const ho105 = pf(row["home_fair_over_10.5"]);
-
-                          const hu105 = pf(row["home_fair_under_10.5"]);
-
-                          const ho115 = pf(row["home_fair_over_11.5"]);
-
-                          const hu115 = pf(row["home_fair_under_11.5"]);
-
-                          const ho125 = pf(row["home_fair_over_12.5"]);
-
-                          const hu125 = pf(row["home_fair_under_12.5"]);
-
-                          const ao95 = pf(row["away_fair_over_9.5"]);
-
-                          const au95 = pf(row["away_fair_under_9.5"]);
-
-                          const ao105 = pf(row["away_fair_over_10.5"]);
-
-                          const au105 = pf(row["away_fair_under_10.5"]);
-
-                          const ao115 = pf(row["away_fair_over_11.5"]);
-
-                          const au115 = pf(row["away_fair_under_11.5"]);
-
-                          const ao125 = pf(row["away_fair_over_12.5"]);
-
-                          const au125 = pf(row["away_fair_under_12.5"]);
-
-                          const home95Over = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.home_team, "9.5", "over"),
-                          );
-                          const home95Under = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.home_team, "9.5", "under"),
-                          );
-                          const home105Over = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.home_team, "10.5", "over"),
-                          );
-                          const home105Under = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.home_team, "10.5", "under"),
-                          );
-                          const home115Over = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.home_team, "11.5", "over"),
-                          );
-                          const home115Under = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.home_team, "11.5", "under"),
-                          );
-                          const home125Over = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.home_team, "12.5", "over"),
-                          );
-                          const home125Under = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.home_team, "12.5", "under"),
-                          );
-                          const away95Over = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.away_team, "9.5", "over"),
-                          );
-                          const away95Under = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.away_team, "9.5", "under"),
-                          );
-                          const away105Over = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.away_team, "10.5", "over"),
-                          );
-                          const away105Under = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.away_team, "10.5", "under"),
-                          );
-                          const away115Over = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.away_team, "11.5", "over"),
-                          );
-                          const away115Under = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.away_team, "11.5", "under"),
-                          );
-                          const away125Over = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.away_team, "12.5", "over"),
-                          );
-                          const away125Under = latestOddsLookup.get(
-                            oddsKey(row.home_team, row.away_team, row.away_team, "12.5", "under"),
-                          );
-
-                          return (
-
-                            <tr
-
-                              key={`${row.kickoff_iso}-${row.home_team}-${i}`}
-
-                              className="border-b border-slate-800/40 hover:bg-slate-800/20"
-
-                            >
-
-                              <td className="py-2 pr-3 font-mono tabular-nums text-slate-400">
-
-                                {formatKickoffUtc(row.kickoff_iso)}
-
-                              </td>
-
-                              <td className="py-2 pr-3 font-medium text-slate-200">
-
-                                {row.home_team}
-
-                              </td>
-
-                              <td className="py-2 pr-3 font-medium text-slate-200">
-
-                                {row.away_team}
-
-                              </td>
-
-                              <td className="py-2 pr-2 font-mono tabular-nums text-emerald-300">
-
-                                {pf(row.home_lambda).toFixed(2)}
-
-                              </td>
-
-                              <td className="py-2 pr-2 font-mono tabular-nums text-emerald-300">
-
-                                {pf(row.away_lambda).toFixed(2)}
-
-                              </td>
-
-                              <td className="py-2 pr-1 align-top">
-                                <FairOddsCell fairOver={ho95} fairUnder={hu95} bookOverRow={home95Over} bookUnderRow={home95Under} />
-                              </td>
-
-                              <td className="py-2 pr-1 align-top">
-                                <FairOddsCell fairOver={ho105} fairUnder={hu105} bookOverRow={home105Over} bookUnderRow={home105Under} toneClass="text-sky-200/90" />
-                              </td>
-
-                              <td className="py-2 pr-1 align-top">
-                                <FairOddsCell fairOver={ho115} fairUnder={hu115} bookOverRow={home115Over} bookUnderRow={home115Under} />
-                              </td>
-
-                              <td className="py-2 pr-2 align-top">
-                                {ho125 > 0 ? (
-                                  <FairOddsCell fairOver={ho125} fairUnder={hu125} bookOverRow={home125Over} bookUnderRow={home125Under} toneClass="text-slate-500" />
-                                ) : (
-                                  <span className="font-mono tabular-nums text-slate-500">-</span>
-                                )}
-                              </td>
-
-                              <td className="py-2 pr-1 align-top">
-                                <FairOddsCell fairOver={ao95} fairUnder={au95} bookOverRow={away95Over} bookUnderRow={away95Under} />
-                              </td>
-
-                              <td className="py-2 pr-1 align-top">
-                                <FairOddsCell fairOver={ao105} fairUnder={au105} bookOverRow={away105Over} bookUnderRow={away105Under} toneClass="text-sky-200/90" />
-                              </td>
-
-                              <td className="py-2 pr-1 align-top">
-                                <FairOddsCell fairOver={ao115} fairUnder={au115} bookOverRow={away115Over} bookUnderRow={away115Under} />
-                              </td>
-
-                              <td className="py-2 pr-2 align-top">
-                                {ao125 > 0 ? (
-                                  <FairOddsCell fairOver={ao125} fairUnder={au125} bookOverRow={away125Over} bookUnderRow={away125Under} toneClass="text-slate-500" />
-                                ) : (
-                                  <span className="font-mono tabular-nums text-slate-500">-</span>
-                                )}
-                              </td>
-
-                              <td className="py-2 pr-2 text-slate-500">
-
-                                {(row.note ?? "").trim() || "-"}
-
-                              </td>
-
-                            </tr>
-
-                          );
-
-                        })}
-
-                      </tbody>
-
-                    </table>
-
+                  <div className="space-y-3">
+                    {leagueRows.map((row, i) => {
+                      const date = (row.kickoff_iso ?? "").slice(0, 10);
+                      const homeKey = `${matchKey(date, row.home_team, row.away_team)}|${normalizeTeamName(row.home_team)}`;
+                      const awayKey = `${matchKey(date, row.home_team, row.away_team)}|${normalizeTeamName(row.away_team)}`;
+                      const homeLines = [...(liveOddsByMatchTeam.get(homeKey)?.values() ?? [])].sort(
+                        (a, b) => a.line - b.line || a.bookmaker.localeCompare(b.bookmaker),
+                      );
+                      const awayLines = [...(liveOddsByMatchTeam.get(awayKey)?.values() ?? [])].sort(
+                        (a, b) => a.line - b.line || a.bookmaker.localeCompare(b.bookmaker),
+                      );
+                      return (
+                        <details
+                          key={`${row.kickoff_iso}-${row.home_team}-${i}`}
+                          className="group rounded-2xl border border-slate-800 bg-slate-950/30"
+                        >
+                          <summary className="cursor-pointer list-none px-4 py-3">
+                            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                              <div>
+                                <div className="text-xs text-slate-400">{formatKickoffUtc(row.kickoff_iso)}</div>
+                                <div className="mt-1 text-sm font-medium text-slate-100">
+                                  {row.home_team} v {row.away_team}
+                                </div>
+                              </div>
+                              <div className="grid gap-2 text-xs sm:grid-cols-2 lg:min-w-[560px]">
+                                <div className="rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2">
+                                  <div className="text-slate-500">Home</div>
+                                  <div className="font-mono text-emerald-300">lambda {pf(row.home_lambda).toFixed(2)}</div>
+                                  <div className="mt-1 text-slate-300">{bestLineSummary(homeLines, pf(row.home_lambda))}</div>
+                                </div>
+                                <div className="rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2">
+                                  <div className="text-slate-500">Away</div>
+                                  <div className="font-mono text-emerald-300">lambda {pf(row.away_lambda).toFixed(2)}</div>
+                                  <div className="mt-1 text-slate-300">{bestLineSummary(awayLines, pf(row.away_lambda))}</div>
+                                </div>
+                              </div>
+                            </div>
+                            {(row.note ?? "").trim() ? (
+                              <div className="mt-2 text-xs text-slate-500">{row.note}</div>
+                            ) : null}
+                          </summary>
+                          <div className="grid gap-4 border-t border-slate-800 px-4 py-4 lg:grid-cols-2">
+                            <LiveLineTable
+                              teamName={row.home_team ?? "Home"}
+                              lambda={pf(row.home_lambda)}
+                              lines={homeLines}
+                            />
+                            <LiveLineTable
+                              teamName={row.away_team ?? "Away"}
+                              lambda={pf(row.away_lambda)}
+                              lines={awayLines}
+                            />
+                          </div>
+                        </details>
+                      );
+                    })}
                   </div>
 
                   <p className="mt-3 text-[11px] text-slate-600">
 
-                    Cells show decimal fair odds as over/under pairs at each line
-
-                    (Poisson). 10.5 columns highlighted for quick scan. 12.5 shown where model has data.
+                    Each fixture opens to the actual live bookmaker lines for both teams, with fair odds and value computed from lambda.
 
                   </p>
 
