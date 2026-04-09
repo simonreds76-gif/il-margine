@@ -1,0 +1,89 @@
+name: Goalscorer Expected Refresh
+
+on:
+  schedule:
+    - cron: "0 8 * * *"  # 08:00 UTC
+    - cron: "0 13 * * *" # 13:00 UTC
+    - cron: "0 18 * * *" # 18:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: goalscorer-branch-writes
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install Python deps
+        run: pip install requests
+
+      - name: Create .env.local
+        run: |
+          : > .env.local
+          if [ -n "${{ secrets.ODDS_API_KEY }}" ]; then
+            echo "ODDS_API_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
+            echo "ODDS_API_IO_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
+          fi
+          if [ -n "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
+            echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.local
+          else
+            echo "NEXT_PUBLIC_SUPABASE_URL=https://nuqcgzbagxtbxlqrhtvc.supabase.co" >> .env.local
+          fi
+          if [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
+          fi
+
+      - name: Refresh expected lineups + public/shadow board
+        run: |
+          for league in serie-a epl la-liga bundesliga ligue-1; do
+            echo "Running goalscorer expected refresh for ${league}"
+            python scripts/run-goalscorer-pipeline.py \
+              --league "${league}" \
+              --live-only \
+              --bookmaker Bet365 \
+              --fetch-odds-api \
+              --odds-api-bookmakers "Bet365,Ladbrokes" \
+              --fetch-lineups \
+              --lineup-days-ahead 3 \
+              --track-shadow
+          done
+
+      - name: Upload hosted snapshot
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            python scripts/goalscorer-live-snapshot.py --supabase
+          else
+            echo "SUPABASE_SERVICE_ROLE_KEY not configured; skipping hosted snapshot upload."
+          fi
+
+      - name: Commit and push if new data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -d data/goalscorer ]; then
+            git add data/goalscorer/
+          fi
+          if git diff --cached --quiet; then
+            echo "No goalscorer refresh changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: hosted goalscorer expected refresh"
+          git fetch origin golden-with-speed-insights
+          git rebase origin/golden-with-speed-insights
+          git push origin HEAD:golden-with-speed-insights
