@@ -207,10 +207,14 @@ function comparisonKey(
   ].join("|");
 }
 
-function bestComparison(rows: Array<CsvRow | undefined>): CsvRow | undefined {
-  return rows
-    .filter((row): row is CsvRow => Boolean(row))
-    .sort((a, b) => pf(b.edge) - pf(a.edge))[0];
+function oddsKey(
+  homeTeam: string | undefined,
+  awayTeam: string | undefined,
+  team: string | undefined,
+  line: string | undefined,
+  side: string | undefined,
+): string {
+  return `${comparisonKey(homeTeam, awayTeam, team, line)}|${(side ?? "").trim().toLowerCase()}`;
 }
 
 
@@ -607,55 +611,71 @@ export default async function TeamShotsMonitorPage() {
   );
 }
 
+const latestOddsLookup = new Map<string, CsvRow>();
+for (const row of oddsArchive) {
+  const key = oddsKey(
+    row.home_team,
+    row.away_team,
+    row.team,
+    row.line,
+    row.side,
+  );
+  const existing = latestOddsLookup.get(key);
+  if (!existing || (row.captured_at ?? "") > (existing.captured_at ?? "")) {
+    latestOddsLookup.set(key, row);
+  }
+}
+
 function FairOddsCell({
   fairOver,
   fairUnder,
-  signalRow,
+  bookOverRow,
+  bookUnderRow,
   toneClass,
 }: {
   fairOver: number;
   fairUnder: number;
-  signalRow?: CsvRow;
+  bookOverRow?: CsvRow;
+  bookUnderRow?: CsvRow;
   toneClass?: string;
 }) {
-  const edge = pf(signalRow?.edge);
+  const overEdge = bookOverRow ? (pf(bookOverRow.odds_decimal) / fairOver) - 1 : null;
+  const underEdge = bookUnderRow ? (pf(bookUnderRow.odds_decimal) / fairUnder) - 1 : null;
   return (
     <div className="space-y-1">
       <div className={`font-mono tabular-nums ${toneClass ?? "text-slate-300"}`}>
         {fairOver.toFixed(2)}/{fairUnder.toFixed(2)}
       </div>
-      {signalRow ? (
+      {bookOverRow ? (
         <div className="text-[10px] leading-tight">
           <span className="font-mono text-slate-200">
-            {signalRow.side?.slice(0, 1).toUpperCase()} {pf(signalRow.book_odds).toFixed(2)}
+            O {pf(bookOverRow.odds_decimal).toFixed(2)}
           </span>
-          <span className="ml-1 font-mono text-emerald-300">
-            {edge >= 0 ? "+" : ""}
-            {(edge * 100).toFixed(1)}%
+          <span
+            className={`ml-1 font-mono ${
+              overEdge !== null && overEdge >= 0 ? "text-emerald-300" : "text-rose-300"
+            }`}
+          >
+            {overEdge !== null && overEdge >= 0 ? "+" : ""}
+            {overEdge !== null ? (overEdge * 100).toFixed(1) : "-"}%
           </span>
         </div>
       ) : null}
-    </div>
-  );
-}
-
-function LiveValueCell({ signalRow }: { signalRow?: CsvRow }) {
-  if (!signalRow) {
-    return <span className="font-mono tabular-nums text-slate-500">-</span>;
-  }
-
-  const edge = pf(signalRow.edge) * 100;
-  const side = signalRow.side?.slice(0, 1).toUpperCase() ?? "-";
-
-  return (
-    <div className="space-y-1">
-      <div className="font-mono tabular-nums text-slate-100">
-        {signalRow.line} {side} {pf(signalRow.book_odds).toFixed(2)}
-      </div>
-      <div className="text-[10px] leading-tight text-emerald-300">
-        {signalRow.bookmaker ?? "book"} {edge >= 0 ? "+" : ""}
-        {edge.toFixed(1)}%
-      </div>
+      {bookUnderRow ? (
+        <div className="text-[10px] leading-tight">
+          <span className="font-mono text-slate-200">
+            U {pf(bookUnderRow.odds_decimal).toFixed(2)}
+          </span>
+          <span
+            className={`ml-1 font-mono ${
+              underEdge !== null && underEdge >= 0 ? "text-emerald-300" : "text-rose-300"
+            }`}
+          >
+            {underEdge !== null && underEdge >= 0 ? "+" : ""}
+            {underEdge !== null ? (underEdge * 100).toFixed(1) : "-"}%
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -1008,25 +1028,13 @@ function LiveValueCell({ signalRow }: { signalRow?: CsvRow }) {
 
                           <th className="py-2 pr-1 font-mono text-slate-400" colSpan={4}>
 
-                            Home fair O/U
-
-                          </th>
-
-                          <th className="py-2 pr-3 font-mono text-slate-400">
-
-                            Home value
+                            Home fair / book / value
 
                           </th>
 
                           <th className="py-2 pr-2 font-mono text-slate-400" colSpan={4}>
 
-                            Away fair O/U
-
-                          </th>
-
-                          <th className="py-2 pr-3 font-mono text-slate-400">
-
-                            Away value
+                            Away fair / book / value
 
                           </th>
 
@@ -1046,8 +1054,6 @@ function LiveValueCell({ signalRow }: { signalRow?: CsvRow }) {
 
                           <th className="py-1 pr-2 font-mono">12.5</th>
 
-                          <th className="py-1 pr-3" />
-
                           <th className="py-1 pr-1 font-mono">9.5</th>
 
                           <th className="py-1 pr-1 font-mono text-sky-400/80">10.5</th>
@@ -1055,8 +1061,6 @@ function LiveValueCell({ signalRow }: { signalRow?: CsvRow }) {
                           <th className="py-1 pr-1 font-mono">11.5</th>
 
                           <th className="py-1 pr-2 font-mono">12.5</th>
-
-                          <th className="py-1 pr-3" />
 
                           <th className="py-1 pr-2" />
 
@@ -1100,32 +1104,54 @@ function LiveValueCell({ signalRow }: { signalRow?: CsvRow }) {
 
                           const au125 = pf(row["away_fair_under_12.5"]);
 
-                          const home95 = comparisonLookup.get(
-                            comparisonKey(row.home_team, row.away_team, row.home_team, "9.5"),
+                          const home95Over = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.home_team, "9.5", "over"),
                           );
-                          const home105 = comparisonLookup.get(
-                            comparisonKey(row.home_team, row.away_team, row.home_team, "10.5"),
+                          const home95Under = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.home_team, "9.5", "under"),
                           );
-                          const home115 = comparisonLookup.get(
-                            comparisonKey(row.home_team, row.away_team, row.home_team, "11.5"),
+                          const home105Over = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.home_team, "10.5", "over"),
                           );
-                          const home125 = comparisonLookup.get(
-                            comparisonKey(row.home_team, row.away_team, row.home_team, "12.5"),
+                          const home105Under = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.home_team, "10.5", "under"),
                           );
-                          const away95 = comparisonLookup.get(
-                            comparisonKey(row.home_team, row.away_team, row.away_team, "9.5"),
+                          const home115Over = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.home_team, "11.5", "over"),
                           );
-                          const away105 = comparisonLookup.get(
-                            comparisonKey(row.home_team, row.away_team, row.away_team, "10.5"),
+                          const home115Under = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.home_team, "11.5", "under"),
                           );
-                          const away115 = comparisonLookup.get(
-                            comparisonKey(row.home_team, row.away_team, row.away_team, "11.5"),
+                          const home125Over = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.home_team, "12.5", "over"),
                           );
-                          const away125 = comparisonLookup.get(
-                            comparisonKey(row.home_team, row.away_team, row.away_team, "12.5"),
+                          const home125Under = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.home_team, "12.5", "under"),
                           );
-                          const bestHomeValue = bestComparison([home95, home105, home115, home125]);
-                          const bestAwayValue = bestComparison([away95, away105, away115, away125]);
+                          const away95Over = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.away_team, "9.5", "over"),
+                          );
+                          const away95Under = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.away_team, "9.5", "under"),
+                          );
+                          const away105Over = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.away_team, "10.5", "over"),
+                          );
+                          const away105Under = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.away_team, "10.5", "under"),
+                          );
+                          const away115Over = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.away_team, "11.5", "over"),
+                          );
+                          const away115Under = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.away_team, "11.5", "under"),
+                          );
+                          const away125Over = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.away_team, "12.5", "over"),
+                          );
+                          const away125Under = latestOddsLookup.get(
+                            oddsKey(row.home_team, row.away_team, row.away_team, "12.5", "under"),
+                          );
 
                           return (
 
@@ -1168,51 +1194,43 @@ function LiveValueCell({ signalRow }: { signalRow?: CsvRow }) {
                               </td>
 
                               <td className="py-2 pr-1 align-top">
-                                <FairOddsCell fairOver={ho95} fairUnder={hu95} signalRow={home95} />
+                                <FairOddsCell fairOver={ho95} fairUnder={hu95} bookOverRow={home95Over} bookUnderRow={home95Under} />
                               </td>
 
                               <td className="py-2 pr-1 align-top">
-                                <FairOddsCell fairOver={ho105} fairUnder={hu105} signalRow={home105} toneClass="text-sky-200/90" />
+                                <FairOddsCell fairOver={ho105} fairUnder={hu105} bookOverRow={home105Over} bookUnderRow={home105Under} toneClass="text-sky-200/90" />
                               </td>
 
                               <td className="py-2 pr-1 align-top">
-                                <FairOddsCell fairOver={ho115} fairUnder={hu115} signalRow={home115} />
+                                <FairOddsCell fairOver={ho115} fairUnder={hu115} bookOverRow={home115Over} bookUnderRow={home115Under} />
                               </td>
 
                               <td className="py-2 pr-2 align-top">
                                 {ho125 > 0 ? (
-                                  <FairOddsCell fairOver={ho125} fairUnder={hu125} signalRow={home125} toneClass="text-slate-500" />
+                                  <FairOddsCell fairOver={ho125} fairUnder={hu125} bookOverRow={home125Over} bookUnderRow={home125Under} toneClass="text-slate-500" />
                                 ) : (
                                   <span className="font-mono tabular-nums text-slate-500">-</span>
                                 )}
                               </td>
 
-                              <td className="py-2 pr-3 align-top">
-                                <LiveValueCell signalRow={bestHomeValue} />
+                              <td className="py-2 pr-1 align-top">
+                                <FairOddsCell fairOver={ao95} fairUnder={au95} bookOverRow={away95Over} bookUnderRow={away95Under} />
                               </td>
 
                               <td className="py-2 pr-1 align-top">
-                                <FairOddsCell fairOver={ao95} fairUnder={au95} signalRow={away95} />
+                                <FairOddsCell fairOver={ao105} fairUnder={au105} bookOverRow={away105Over} bookUnderRow={away105Under} toneClass="text-sky-200/90" />
                               </td>
 
                               <td className="py-2 pr-1 align-top">
-                                <FairOddsCell fairOver={ao105} fairUnder={au105} signalRow={away105} toneClass="text-sky-200/90" />
-                              </td>
-
-                              <td className="py-2 pr-1 align-top">
-                                <FairOddsCell fairOver={ao115} fairUnder={au115} signalRow={away115} />
+                                <FairOddsCell fairOver={ao115} fairUnder={au115} bookOverRow={away115Over} bookUnderRow={away115Under} />
                               </td>
 
                               <td className="py-2 pr-2 align-top">
                                 {ao125 > 0 ? (
-                                  <FairOddsCell fairOver={ao125} fairUnder={au125} signalRow={away125} toneClass="text-slate-500" />
+                                  <FairOddsCell fairOver={ao125} fairUnder={au125} bookOverRow={away125Over} bookUnderRow={away125Under} toneClass="text-slate-500" />
                                 ) : (
                                   <span className="font-mono tabular-nums text-slate-500">-</span>
                                 )}
-                              </td>
-
-                              <td className="py-2 pr-3 align-top">
-                                <LiveValueCell signalRow={bestAwayValue} />
                               </td>
 
                               <td className="py-2 pr-2 text-slate-500">
