@@ -229,18 +229,25 @@ export default async function CornersMonitorPage() {
       .sort()
       .at(-1) ?? null;
 
-  const currentValueSignals: CurrentValueSignal[] = [...valueBets]
-    .map((row) => {
-      const [homeTeam = "", awayTeam = ""] = (row.match ?? "").split(" vs ");
-      const signalKey = `${(row.league ?? "").trim().toLowerCase()}|${homeTeam.trim().toLowerCase()}|${awayTeam.trim().toLowerCase()}`;
-      const signalRow = signalDateLookup.get(signalKey);
-      return {
-        row,
-        displayDate: (signalRow?.kick_off ?? signalRow?.date ?? "").slice(0, 10) || "-",
-        edgeValue: pf(row.edge),
-      };
-    })
-    .sort((a, b) => b.edgeValue - a.edgeValue);
+  const dedupedCurrentSignals = new Map<string, CurrentValueSignal>();
+  for (const row of valueBets) {
+    const [homeTeam = "", awayTeam = ""] = (row.match ?? "").split(" vs ");
+    const signalKey = `${(row.league ?? "").trim().toLowerCase()}|${homeTeam.trim().toLowerCase()}|${awayTeam.trim().toLowerCase()}`;
+    const signalRow = signalDateLookup.get(signalKey);
+    const currentSignal: CurrentValueSignal = {
+      row,
+      displayDate: (signalRow?.kick_off ?? signalRow?.date ?? "").slice(0, 10) || "-",
+      edgeValue: pf(row.edge),
+    };
+    const dedupeKey = `${(row.league ?? "").trim().toLowerCase()}|${(row.match ?? "").trim().toLowerCase()}|${(row.side ?? "").trim().toLowerCase()}`;
+    const existing = dedupedCurrentSignals.get(dedupeKey);
+    if (!existing || currentSignal.edgeValue > existing.edgeValue) {
+      dedupedCurrentSignals.set(dedupeKey, currentSignal);
+    }
+  }
+  const currentValueSignals: CurrentValueSignal[] = [...dedupedCurrentSignals.values()].sort(
+    (a, b) => b.edgeValue - a.edgeValue,
+  );
 
   // Build grouped Pinnacle table: latest odds per match and line
   type PinnacleMatchRow = {
@@ -422,9 +429,11 @@ export default async function CornersMonitorPage() {
 
         {/* Value bets (the shortlist) */}
         {valueBets.length > 0 && (
-          <MonitorCard title={`Current Bettable Signals - ${valueBets.length} found`}>
+          <MonitorCard
+            title={`Current Bettable Signals - ${currentValueSignals.length} best bets from ${valueBets.length} raw lines`}
+          >
             <p className="mb-3 text-xs text-slate-500">
-              Same match can appear more than once here when different corner lines are bettable.
+              Kept only the best-value line per match and side, so the same over or under is not stacked twice.
             </p>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">

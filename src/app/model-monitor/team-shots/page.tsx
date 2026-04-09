@@ -207,6 +207,12 @@ function comparisonKey(
   ].join("|");
 }
 
+function bestComparison(rows: Array<CsvRow | undefined>): CsvRow | undefined {
+  return rows
+    .filter((row): row is CsvRow => Boolean(row))
+    .sort((a, b) => pf(b.edge) - pf(a.edge))[0];
+}
+
 
 
 async function readFile(relativePath: string): Promise<string | null> {
@@ -633,6 +639,27 @@ function FairOddsCell({
   );
 }
 
+function LiveValueCell({ signalRow }: { signalRow?: CsvRow }) {
+  if (!signalRow) {
+    return <span className="font-mono tabular-nums text-slate-500">-</span>;
+  }
+
+  const edge = pf(signalRow.edge) * 100;
+  const side = signalRow.side?.slice(0, 1).toUpperCase() ?? "-";
+
+  return (
+    <div className="space-y-1">
+      <div className="font-mono tabular-nums text-slate-100">
+        {signalRow.line} {side} {pf(signalRow.book_odds).toFixed(2)}
+      </div>
+      <div className="text-[10px] leading-tight text-emerald-300">
+        {signalRow.bookmaker ?? "book"} {edge >= 0 ? "+" : ""}
+        {edge.toFixed(1)}%
+      </div>
+    </div>
+  );
+}
+
   const upcomingByLeague = groupUpcomingByLeague(upcomingRows);
 
   const upcomingLeagueKeys = sortLeagueKeys([...upcomingByLeague.keys()]);
@@ -985,9 +1012,21 @@ function FairOddsCell({
 
                           </th>
 
+                          <th className="py-2 pr-3 font-mono text-slate-400">
+
+                            Home value
+
+                          </th>
+
                           <th className="py-2 pr-2 font-mono text-slate-400" colSpan={4}>
 
                             Away fair O/U
+
+                          </th>
+
+                          <th className="py-2 pr-3 font-mono text-slate-400">
+
+                            Away value
 
                           </th>
 
@@ -1007,6 +1046,8 @@ function FairOddsCell({
 
                           <th className="py-1 pr-2 font-mono">12.5</th>
 
+                          <th className="py-1 pr-3" />
+
                           <th className="py-1 pr-1 font-mono">9.5</th>
 
                           <th className="py-1 pr-1 font-mono text-sky-400/80">10.5</th>
@@ -1014,6 +1055,8 @@ function FairOddsCell({
                           <th className="py-1 pr-1 font-mono">11.5</th>
 
                           <th className="py-1 pr-2 font-mono">12.5</th>
+
+                          <th className="py-1 pr-3" />
 
                           <th className="py-1 pr-2" />
 
@@ -1081,6 +1124,8 @@ function FairOddsCell({
                           const away125 = comparisonLookup.get(
                             comparisonKey(row.home_team, row.away_team, row.away_team, "12.5"),
                           );
+                          const bestHomeValue = bestComparison([home95, home105, home115, home125]);
+                          const bestAwayValue = bestComparison([away95, away105, away115, away125]);
 
                           return (
 
@@ -1142,6 +1187,10 @@ function FairOddsCell({
                                 )}
                               </td>
 
+                              <td className="py-2 pr-3 align-top">
+                                <LiveValueCell signalRow={bestHomeValue} />
+                              </td>
+
                               <td className="py-2 pr-1 align-top">
                                 <FairOddsCell fairOver={ao95} fairUnder={au95} signalRow={away95} />
                               </td>
@@ -1160,6 +1209,10 @@ function FairOddsCell({
                                 ) : (
                                   <span className="font-mono tabular-nums text-slate-500">-</span>
                                 )}
+                              </td>
+
+                              <td className="py-2 pr-3 align-top">
+                                <LiveValueCell signalRow={bestAwayValue} />
                               </td>
 
                               <td className="py-2 pr-2 text-slate-500">
