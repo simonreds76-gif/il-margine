@@ -11,6 +11,7 @@ const MODEL_MONITOR_ENABLED =
   process.env.VERCEL_ENV === "preview";
 
 type CsvRow = Record<string, string>;
+type CurrentValueSignal = { row: CsvRow; displayDate: string; edgeValue: number };
 type TeamPropsStatus = {
   state?: string;
   updated_at?: string;
@@ -216,12 +217,30 @@ export default async function CornersMonitorPage() {
   const pinnacleRows = pinnacleCornersCsv ? parseCsv(pinnacleCornersCsv) : [];
   const valueBets = valueBetsCsv ? parseCsv(valueBetsCsv) : [];
   const signals = signalsCsv ? parseCsv(signalsCsv) : [];
+  const signalDateLookup = new Map<string, CsvRow>();
+  for (const row of signals) {
+    const key = `${(row.league ?? "").trim().toLowerCase()}|${(row.home_team ?? "").trim().toLowerCase()}|${(row.away_team ?? "").trim().toLowerCase()}`;
+    signalDateLookup.set(key, row);
+  }
   const latestPinnacleCaptureAt =
     [...pinnacleRows]
       .map((r) => r.captured_at ?? "")
       .filter(Boolean)
       .sort()
       .at(-1) ?? null;
+
+  const currentValueSignals: CurrentValueSignal[] = [...valueBets]
+    .map((row) => {
+      const [homeTeam = "", awayTeam = ""] = (row.match ?? "").split(" vs ");
+      const signalKey = `${(row.league ?? "").trim().toLowerCase()}|${homeTeam.trim().toLowerCase()}|${awayTeam.trim().toLowerCase()}`;
+      const signalRow = signalDateLookup.get(signalKey);
+      return {
+        row,
+        displayDate: (signalRow?.kick_off ?? signalRow?.date ?? "").slice(0, 10) || "-",
+        edgeValue: pf(row.edge),
+      };
+    })
+    .sort((a, b) => b.edgeValue - a.edgeValue);
 
   // Build grouped Pinnacle table: latest odds per match and line
   type PinnacleMatchRow = {
@@ -411,33 +430,37 @@ export default async function CornersMonitorPage() {
               <table className="w-full text-left text-xs">
                 <thead>
                   <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
-                    <th className="py-2 pr-3">Match</th>
+                    <th className="py-2 pr-3">Date</th>
                     <th className="py-2 pr-3">League</th>
+                    <th className="py-2 pr-3">Match</th>
                     <th className="py-2 pr-3">Line</th>
                     <th className="py-2 pr-3">Side</th>
+                    <th className="py-2 pr-3 font-mono">Book</th>
                     <th className="py-2 pr-3 font-mono">Fair</th>
-                    <th className="py-2 pr-3 font-mono">Bookie</th>
                     <th className="py-2 pr-3 font-mono">Edge</th>
-                    <th className="py-2 pr-3">Ref bookie</th>
-                    <th className="py-2 pr-3">Tier</th>
-                    <th className="py-2 font-mono">Stake</th>
+                    <th className="py-2 pr-3 font-mono">Stake</th>
+                    <th className="py-2 pr-3">Result</th>
+                    <th className="py-2 pr-3 font-mono">PnL</th>
+                    <th className="py-2 font-mono">PnL (staked)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {[...valueBets]
-                    .sort((a, b) => pf(b.edge) - pf(a.edge))
-                    .map((row, i) => {
-                      const edge = pf(row.edge);
+                  {currentValueSignals.map((item, i) => {
+                      const row = item.row;
+                      const edge = item.edgeValue;
                       return (
                         <tr
                           key={i}
-                          className="border-b border-slate-800/40 hover:bg-slate-800/20"
+                            className="border-b border-slate-800/40 hover:bg-slate-800/20"
                         >
-                          <td className="py-1.5 pr-3 font-medium">
-                            {row.match}
+                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">
+                            {item.displayDate}
                           </td>
                           <td className="py-1.5 pr-3 text-slate-400">
                             {row.league}
+                          </td>
+                          <td className="py-1.5 pr-3 font-medium">
+                            {row.match}
                           </td>
                           <td className="py-1.5 pr-3 font-mono tabular-nums">
                             {row.line}
@@ -453,11 +476,11 @@ export default async function CornersMonitorPage() {
                               {row.side}
                             </span>
                           </td>
-                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">
-                            {pf(row.model_fair).toFixed(2)}
-                          </td>
                           <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-100">
                             {pf(row.bookie_odds).toFixed(2)}
+                          </td>
+                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">
+                            {pf(row.model_fair).toFixed(2)}
                           </td>
                           <td
                             className={`py-1.5 pr-3 font-mono tabular-nums ${
@@ -470,29 +493,16 @@ export default async function CornersMonitorPage() {
                           >
                             {(edge * 100).toFixed(1)}%
                           </td>
-                          <td className="py-1.5 pr-3 text-slate-500 text-[10px]">
-                            {row.bookmaker}
-                          </td>
-                          <td className="py-1.5 pr-3">
-                            <span
-                              className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase ${
-                                row.stake_label === "MAX"
-                                  ? "bg-emerald-500/15 text-emerald-300"
-                                  : row.stake_label === "HIGH"
-                                    ? "bg-amber-500/15 text-amber-300"
-                                    : row.stake_label === "MEDIUM"
-                                      ? "bg-sky-500/15 text-sky-300"
-                                      : row.stake_label === "LOW"
-                                        ? "bg-slate-600/30 text-slate-400"
-                                        : "bg-slate-800/30 text-slate-500"
-                              }`}
-                            >
-                              {row.stake_label || "TINY"}
-                            </span>
-                          </td>
-                          <td className="py-1.5 font-mono tabular-nums text-amber-200">
+                          <td className="py-1.5 pr-3 font-mono tabular-nums text-amber-200">
                             {pf(row.stake).toFixed(1)}u
                           </td>
+                          <td className="py-1.5 pr-3">
+                            <span className="rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase bg-slate-700/30 text-slate-400">
+                              pending
+                            </span>
+                          </td>
+                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-500">-</td>
+                          <td className="py-1.5 font-mono tabular-nums text-slate-500">-</td>
                         </tr>
                       );
                     })}

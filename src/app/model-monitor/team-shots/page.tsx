@@ -193,6 +193,20 @@ function groupUpcomingByLeague(rows: CsvRow[]): Map<string, CsvRow[]> {
 
 }
 
+function comparisonKey(
+  homeTeam: string | undefined,
+  awayTeam: string | undefined,
+  team: string | undefined,
+  line: string | undefined,
+): string {
+  return [
+    (homeTeam ?? "").trim().toLowerCase(),
+    (awayTeam ?? "").trim().toLowerCase(),
+    (team ?? "").trim().toLowerCase(),
+    (line ?? "").trim(),
+  ].join("|");
+}
+
 
 
 async function readFile(relativePath: string): Promise<string | null> {
@@ -517,6 +531,8 @@ export default async function TeamShotsMonitorPage() {
 
   const predictions = predictionsCsv ? parseCsv(predictionsCsv) : [];
 
+  const comparisonRows = comparisonCsv ? parseCsv(comparisonCsv) : [];
+
   const oddsArchiveRaw = oddsArchiveCsv ? parseCsv(oddsArchiveCsv) : [];
 
   const oddsArchive = oddsArchiveRaw.filter(
@@ -576,6 +592,46 @@ export default async function TeamShotsMonitorPage() {
 
 
   const upcomingRows = upcomingCsv ? parseCsv(upcomingCsv) : [];
+
+  const comparisonLookup = new Map<string, CsvRow>();
+  for (const row of comparisonRows) {
+    comparisonLookup.set(
+      comparisonKey(row.home_team, row.away_team, row.team, row.line),
+      row,
+  );
+}
+
+function FairOddsCell({
+  fairOver,
+  fairUnder,
+  signalRow,
+  toneClass,
+}: {
+  fairOver: number;
+  fairUnder: number;
+  signalRow?: CsvRow;
+  toneClass?: string;
+}) {
+  const edge = pf(signalRow?.edge);
+  return (
+    <div className="space-y-1">
+      <div className={`font-mono tabular-nums ${toneClass ?? "text-slate-300"}`}>
+        {fairOver.toFixed(2)}/{fairUnder.toFixed(2)}
+      </div>
+      {signalRow ? (
+        <div className="text-[10px] leading-tight">
+          <span className="font-mono text-slate-200">
+            {signalRow.side?.slice(0, 1).toUpperCase()} {pf(signalRow.book_odds).toFixed(2)}
+          </span>
+          <span className="ml-1 font-mono text-emerald-300">
+            {edge >= 0 ? "+" : ""}
+            {(edge * 100).toFixed(1)}%
+          </span>
+        </div>
+      ) : null}
+    </div>
+  );
+}
 
   const upcomingByLeague = groupUpcomingByLeague(upcomingRows);
 
@@ -1001,6 +1057,31 @@ export default async function TeamShotsMonitorPage() {
 
                           const au125 = pf(row["away_fair_under_12.5"]);
 
+                          const home95 = comparisonLookup.get(
+                            comparisonKey(row.home_team, row.away_team, row.home_team, "9.5"),
+                          );
+                          const home105 = comparisonLookup.get(
+                            comparisonKey(row.home_team, row.away_team, row.home_team, "10.5"),
+                          );
+                          const home115 = comparisonLookup.get(
+                            comparisonKey(row.home_team, row.away_team, row.home_team, "11.5"),
+                          );
+                          const home125 = comparisonLookup.get(
+                            comparisonKey(row.home_team, row.away_team, row.home_team, "12.5"),
+                          );
+                          const away95 = comparisonLookup.get(
+                            comparisonKey(row.home_team, row.away_team, row.away_team, "9.5"),
+                          );
+                          const away105 = comparisonLookup.get(
+                            comparisonKey(row.home_team, row.away_team, row.away_team, "10.5"),
+                          );
+                          const away115 = comparisonLookup.get(
+                            comparisonKey(row.home_team, row.away_team, row.away_team, "11.5"),
+                          );
+                          const away125 = comparisonLookup.get(
+                            comparisonKey(row.home_team, row.away_team, row.away_team, "12.5"),
+                          );
+
                           return (
 
                             <tr
@@ -1041,52 +1122,44 @@ export default async function TeamShotsMonitorPage() {
 
                               </td>
 
-                              <td className="py-2 pr-1 font-mono tabular-nums text-slate-300">
-
-                                {ho95.toFixed(2)}/{hu95.toFixed(2)}
-
+                              <td className="py-2 pr-1 align-top">
+                                <FairOddsCell fairOver={ho95} fairUnder={hu95} signalRow={home95} />
                               </td>
 
-                              <td className="py-2 pr-1 font-mono tabular-nums text-sky-200/90">
-
-                                {ho105.toFixed(2)}/{hu105.toFixed(2)}
-
+                              <td className="py-2 pr-1 align-top">
+                                <FairOddsCell fairOver={ho105} fairUnder={hu105} signalRow={home105} toneClass="text-sky-200/90" />
                               </td>
 
-                              <td className="py-2 pr-1 font-mono tabular-nums text-slate-300">
-
-                                {ho115.toFixed(2)}/{hu115.toFixed(2)}
-
+                              <td className="py-2 pr-1 align-top">
+                                <FairOddsCell fairOver={ho115} fairUnder={hu115} signalRow={home115} />
                               </td>
 
-                              <td className="py-2 pr-2 font-mono tabular-nums text-slate-500">
-
-                                {ho125 > 0 ? `${ho125.toFixed(2)}/${hu125.toFixed(2)}` : "-"}
-
+                              <td className="py-2 pr-2 align-top">
+                                {ho125 > 0 ? (
+                                  <FairOddsCell fairOver={ho125} fairUnder={hu125} signalRow={home125} toneClass="text-slate-500" />
+                                ) : (
+                                  <span className="font-mono tabular-nums text-slate-500">-</span>
+                                )}
                               </td>
 
-                              <td className="py-2 pr-1 font-mono tabular-nums text-slate-300">
-
-                                {ao95.toFixed(2)}/{au95.toFixed(2)}
-
+                              <td className="py-2 pr-1 align-top">
+                                <FairOddsCell fairOver={ao95} fairUnder={au95} signalRow={away95} />
                               </td>
 
-                              <td className="py-2 pr-1 font-mono tabular-nums text-sky-200/90">
-
-                                {ao105.toFixed(2)}/{au105.toFixed(2)}
-
+                              <td className="py-2 pr-1 align-top">
+                                <FairOddsCell fairOver={ao105} fairUnder={au105} signalRow={away105} toneClass="text-sky-200/90" />
                               </td>
 
-                              <td className="py-2 pr-1 font-mono tabular-nums text-slate-300">
-
-                                {ao115.toFixed(2)}/{au115.toFixed(2)}
-
+                              <td className="py-2 pr-1 align-top">
+                                <FairOddsCell fairOver={ao115} fairUnder={au115} signalRow={away115} />
                               </td>
 
-                              <td className="py-2 pr-2 font-mono tabular-nums text-slate-500">
-
-                                {ao125 > 0 ? `${ao125.toFixed(2)}/${au125.toFixed(2)}` : "-"}
-
+                              <td className="py-2 pr-2 align-top">
+                                {ao125 > 0 ? (
+                                  <FairOddsCell fairOver={ao125} fairUnder={au125} signalRow={away125} toneClass="text-slate-500" />
+                                ) : (
+                                  <span className="font-mono tabular-nums text-slate-500">-</span>
+                                )}
                               </td>
 
                               <td className="py-2 pr-2 text-slate-500">
