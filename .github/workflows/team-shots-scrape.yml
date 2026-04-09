@@ -1,23 +1,20 @@
-﻿name: Team Shots Weekly Scrape
+name: Team Shots Weekly Scrape
 
 on:
   schedule:
     - cron: "0 10 * * 4" # Every Thursday 10am UTC = 11am BST
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   scrape:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: golden-with-speed-insights
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
