@@ -29,7 +29,6 @@ DEFAULT_SUMMARY = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-p
 MIN_EDGE = 0.05
 MIN_ODDS = 1.50
 MAX_ODDS = 5.00
-TRACKED_LINES = {9.5, 10.5, 11.5, 12.5, 13.5}
 
 # Edge % → stake units. Same ladder as corners.
 # 5-8%: 0.5u  |  8-12%: 1u  |  12-16%: 1.5u  |  16%+: 2u
@@ -114,8 +113,6 @@ def track_signals(
 
         if edge < min_edge:
             continue
-        if line not in TRACKED_LINES:
-            continue
         if book_odds < MIN_ODDS or book_odds > MAX_ODDS:
             continue
         if bookmaker_filter:
@@ -187,8 +184,6 @@ def current_live_keys(
         line = _pf(comp.get("line"))
 
         if edge < min_edge:
-            continue
-        if line not in TRACKED_LINES:
             continue
         if book_odds < MIN_ODDS or book_odds > MAX_ODDS:
             continue

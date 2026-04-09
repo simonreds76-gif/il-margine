@@ -181,10 +181,6 @@ const TEAM_ALIASES: Record<string, string> = {
   "sunderland afc": "sunderland",
 };
 
-const TRACKED_SHADOW_LINES = new Set([9.5, 10.5, 11.5, 12.5, 13.5]);
-
-
-
 function leagueTitle(id: string): string {
 
   const map: Record<string, string> = {
@@ -386,10 +382,8 @@ function computeLineMetrics(
 function qualifiesForShadow(
   sideEdge: number | null,
   sideOdds?: number,
-  lineNumber?: number,
 ): boolean {
   if (sideEdge === null || sideOdds === undefined) return false;
-  if (lineNumber === undefined || !TRACKED_SHADOW_LINES.has(lineNumber)) return false;
   return sideEdge >= 5 && sideOdds >= 1.5 && sideOdds <= 5.0;
 }
 
@@ -416,7 +410,7 @@ function bestLineSummary(
     if (!metrics) continue;
     if (line.overOdds) {
       const edge = metrics.overEdge ?? Number.NaN;
-      if (shadowOnly && !qualifiesForShadow(metrics.overEdge, line.overOdds, line.line)) continue;
+      if (shadowOnly && !qualifiesForShadow(metrics.overEdge, line.overOdds)) continue;
       if (!best || edge > best.edge) {
         best = {
           bookmaker: line.bookmaker,
@@ -429,7 +423,7 @@ function bestLineSummary(
     }
     if (line.underOdds) {
       const edge = metrics.underEdge ?? Number.NaN;
-      if (shadowOnly && !qualifiesForShadow(metrics.underEdge, line.underOdds, line.line)) continue;
+      if (shadowOnly && !qualifiesForShadow(metrics.underEdge, line.underOdds)) continue;
       if (!best || edge > best.edge) {
         best = {
           bookmaker: line.bookmaker,
@@ -444,6 +438,19 @@ function bestLineSummary(
 
   if (!best) return shadowOnly ? "No shadow-qualified line" : "No live team-shots line";
   return `${best.bookmaker} ${best.lineLabel} ${best.side} ${best.odds.toFixed(2)} (${formatSignedPercent(best.edge)})`;
+}
+
+function bestSummarySide(
+  entry:
+    | {
+        metrics: TeamLineMetrics;
+      }
+    | undefined,
+): "O" | "U" | "-" {
+  if (!entry) return "-";
+  return entry.metrics.overEdge !== null && entry.metrics.overEdge === Math.max(entry.metrics.overEdge ?? -999, entry.metrics.underEdge ?? -999)
+    ? "O"
+    : "U";
 }
 
 
@@ -831,12 +838,9 @@ export default async function TeamShotsMonitorPage() {
 
   const currentShadowLive = [...comparisonRows]
     .filter((row) => {
-      const line = pf(row.line, Number.NaN);
       const edge = pf(row.edge, Number.NaN);
       const odds = pf(row.book_odds, Number.NaN);
       return (
-        !Number.isNaN(line) &&
-        TRACKED_SHADOW_LINES.has(line) &&
         !Number.isNaN(edge) &&
         edge >= 0.05 &&
         !Number.isNaN(odds) &&
@@ -919,8 +923,8 @@ function LiveLineTable({
     .map((line) => {
       const metrics = computeLineMetrics(row, side, line, calibration);
       if (!metrics) return null;
-      const overShadow = qualifiesForShadow(metrics.overEdge, line.overOdds, line.line);
-      const underShadow = qualifiesForShadow(metrics.underEdge, line.underOdds, line.line);
+      const overShadow = qualifiesForShadow(metrics.overEdge, line.overOdds);
+      const underShadow = qualifiesForShadow(metrics.underEdge, line.underOdds);
       const bestEdge = Math.max(metrics.overEdge ?? -999, metrics.underEdge ?? -999);
       const positiveCount = [metrics.overEdge, metrics.underEdge].filter(
         (edge) => edge !== null && edge > 0,
@@ -948,6 +952,16 @@ function LiveLineTable({
   const extraLines = evaluatedLines.slice(primaryLines.length);
   const bestLive = primaryLines[0];
   const bestShadow = evaluatedLines.find((entry) => entry.shadow);
+  const bestLiveText = bestLive
+    ? `${bestLive.line.bookmaker} ${bestLive.line.lineLabel} ${
+        bestLive.metrics.overEdge !== null && bestLive.metrics.overEdge === bestLive.bestEdge ? "O" : "U"
+      } ${formatSignedPercent(bestLive.bestEdge)}`
+    : "-";
+  const bestShadowText = bestShadow
+    ? `${bestShadow.line.bookmaker} ${bestShadow.line.lineLabel} ${
+        bestShadow.metrics.overEdge !== null && bestShadow.metrics.overEdge === bestShadow.bestEdge ? "O" : "U"
+      } ${formatSignedPercent(bestShadow.bestEdge)}`
+    : "none";
 
   return (
     <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/40">
@@ -957,18 +971,22 @@ function LiveLineTable({
         <div className="mt-2 grid gap-2 text-[11px] sm:grid-cols-2">
           <div className="rounded-lg border border-slate-800 bg-slate-900/60 px-2 py-1.5 text-slate-300">
             Best live:{" "}
-            <span className="font-mono text-emerald-300">
-              {bestLive
-                ? `${bestLive.line.bookmaker} ${bestLive.line.lineLabel} ${bestLive.bestEdge.toFixed(1)}%`
-                : "-"}
+            <span
+              className={`font-mono ${
+                bestLive && bestLive.bestEdge >= 0 ? "text-emerald-300" : "text-rose-300"
+              }`}
+            >
+              {bestLiveText}
             </span>
           </div>
           <div className="rounded-lg border border-slate-800 bg-slate-900/60 px-2 py-1.5 text-slate-300">
             Best shadow:{" "}
-            <span className="font-mono text-emerald-300">
-              {bestShadow
-                ? `${bestShadow.line.bookmaker} ${bestShadow.line.lineLabel} ${bestShadow.bestEdge.toFixed(1)}%`
-                : "none"}
+            <span
+              className={`font-mono ${
+                bestShadow ? (bestShadow.bestEdge >= 0 ? "text-emerald-300" : "text-rose-300") : "text-slate-500"
+              }`}
+            >
+              {bestShadowText}
             </span>
           </div>
         </div>
@@ -1477,7 +1495,7 @@ function LiveLineTable({
 
                   <p className="mt-3 text-[11px] text-slate-600">
 
-                    All live lines are shown here. Shadow `yes/no` only applies to the tracked 9.5 / 10.5 / 11.5 line set, with edge at least 5% and book odds between 1.50 and 5.00.
+                    All live lines are shown here. Shadow `yes/no` follows the live tracker policy: edge at least 5% and book odds between 1.50 and 5.00.
 
                   </p>
 
