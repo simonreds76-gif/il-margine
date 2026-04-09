@@ -1,0 +1,40 @@
+name: Team Shots Weekly Scrape
+
+on:
+  schedule:
+    - cron: "0 10 * * 4" # Every Thursday 10am UTC = 11am BST
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install requests
+
+      - name: Create .env.local
+        run: |
+          echo "ODDS_API_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
+          echo "ODDS_API_IO_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
+
+      - name: Scrape odds
+        run: python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365,Ladbrokes"
+
+      - name: Archive odds
+        run: python scripts/team-shots-odds-archive.py
+
+      - name: Commit and push if new data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/team-shots/
+          git diff --cached --quiet || git commit -m "chore: weekly team shots odds scrape"
+          git push origin golden-with-speed-insights
