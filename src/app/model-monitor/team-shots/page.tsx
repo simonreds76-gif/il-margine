@@ -33,6 +33,17 @@ type TeamShotsLiveLine = {
   underCapturedAt?: string;
 };
 
+type CalibrationPayload = {
+  lines?: Record<string, { a: number; b: number }>;
+};
+
+type TeamLineMetrics = {
+  fairOver: number;
+  fairUnder: number;
+  overEdge: number | null;
+  underEdge: number | null;
+};
+
 type TeamPropsStatus = {
 
   state?: string;
@@ -110,7 +121,39 @@ const LEAGUE_ORDER = [
   "ligue-1",
 
 ] as const;
-const SHADOW_ELIGIBLE_LINES = new Set([9.5, 10.5, 11.5]);
+
+const TEAM_ALIASES: Record<string, string> = {
+  "real sociedad san sebastian": "sociedad",
+  "real sociedad de futbol": "sociedad",
+  "real sociedad": "sociedad",
+  sociedad: "sociedad",
+  "deportivo alaves": "alaves",
+  alaves: "alaves",
+  "elche cf": "elche",
+  elche: "elche",
+  "valencia cf": "valencia",
+  valencia: "valencia",
+  "atletico madrid": "atletico madrid",
+  "atletico de madrid": "atletico madrid",
+  "atletico de madrid sad": "atletico madrid",
+  "atletico madrid sad": "atletico madrid",
+  "fc st pauli": "st pauli",
+  "1 fc heidenheim": "heidenheim",
+  "1 fc koln": "fc koln",
+  "1 fc cologne": "fc koln",
+  "deportivo alaves sad": "alaves",
+  "real betis balompie": "real betis",
+  "real betis seville": "real betis",
+  "afc bournemouth": "bournemouth",
+  "brighton and hove albion": "brighton",
+  "brighton hove albion": "brighton",
+  "tottenham hotspur": "tottenham",
+  "wolverhampton wanderers": "wolves",
+  "west ham united": "west ham",
+  "newcastle united": "newcastle",
+  "nottingham forest": "nottingham forest",
+  "sunderland afc": "sunderland",
+};
 
 
 
@@ -218,7 +261,7 @@ function comparisonKey(
 }
 
 function normalizeTeamName(value: string | undefined): string {
-  return (value ?? "")
+  const cleaned = (value ?? "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
@@ -227,6 +270,7 @@ function normalizeTeamName(value: string | undefined): string {
     .filter(Boolean)
     .filter((token) => !["fc", "afc", "sc", "cf", "ac", "club"].includes(token))
     .join(" ");
+  return TEAM_ALIASES[cleaned] ?? cleaned;
 }
 
 function matchKey(
@@ -241,18 +285,10 @@ function matchKey(
   ].join("|");
 }
 
-function poissonFairOdds(lambda: number, line: number, side: "over" | "under"): number {
-  if (!(lambda > 0) || !(line >= 0)) return 0;
-  const threshold = Math.floor(line);
-  let probability = Math.exp(-lambda);
-  let cumulative = probability;
-  for (let k = 1; k <= threshold; k += 1) {
-    probability = (probability * lambda) / k;
-    cumulative += probability;
-  }
-  const underProb = Math.min(Math.max(cumulative, 1e-9), 1 - 1e-9);
-  const overProb = Math.min(Math.max(1 - underProb, 1e-9), 1 - 1e-9);
-  return side === "over" ? 1 / overProb : 1 / underProb;
+function sigmoid(value: number): number {
+  if (value >= 0) return 1 / (1 + Math.exp(-value));
+  const expValue = Math.exp(value);
+  return expValue / (1 + expValue);
 }
 
 function formatSignedPercent(edge: number | null): string {
@@ -260,16 +296,62 @@ function formatSignedPercent(edge: number | null): string {
   return `${edge >= 0 ? "+" : ""}${edge.toFixed(1)}%`;
 }
 
-function bestLineSummary(lines: TeamShotsLiveLine[], lambda: number): string {
+function calibratedOverProbability(
+  row: CsvRow,
+  side: "home" | "away",
+  line: number,
+  calibration: CalibrationPayload | null,
+): number | null {
+  const key = `${side}_p_over_${line.toFixed(1)}`;
+  const raw = pf(row[key], Number.NaN);
+  if (Number.isNaN(raw) || raw <= 0 || raw >= 1) return null;
+  const params = calibration?.lines?.[line.toFixed(1)];
+  if (!params) return raw;
+  const logit = Math.log(raw / (1 - raw));
+  return sigmoid(params.a * logit + params.b);
+}
+
+function computeLineMetrics(
+  row: CsvRow,
+  side: "home" | "away",
+  line: TeamShotsLiveLine,
+  calibration: CalibrationPayload | null,
+): TeamLineMetrics | null {
+  const pOver = calibratedOverProbability(row, side, line.line, calibration);
+  if (pOver === null) return null;
+  const pUnder = 1 - pOver;
+  const fairOver = pOver > 0 ? 1 / pOver : 0;
+  const fairUnder = pUnder > 0 ? 1 / pUnder : 0;
+  return {
+    fairOver,
+    fairUnder,
+    overEdge: line.overOdds ? (pOver * line.overOdds - 1) * 100 : null,
+    underEdge: line.underOdds ? (pUnder * line.underOdds - 1) * 100 : null,
+  };
+}
+
+function qualifiesForShadow(sideEdge: number | null, sideOdds?: number): boolean {
+  if (sideEdge === null || sideOdds === undefined) return false;
+  return sideEdge >= 5 && sideOdds >= 1.5 && sideOdds <= 5.0;
+}
+
+function bestLineSummary(
+  lines: TeamShotsLiveLine[],
+  row: CsvRow,
+  side: "home" | "away",
+  calibration: CalibrationPayload | null,
+  shadowOnly = false,
+): string {
   let best:
     | { bookmaker: string; lineLabel: string; side: "O" | "U"; odds: number; edge: number }
     | undefined;
 
   for (const line of lines) {
-    const fairOver = poissonFairOdds(lambda, line.line, "over");
-    const fairUnder = poissonFairOdds(lambda, line.line, "under");
+    const metrics = computeLineMetrics(row, side, line, calibration);
+    if (!metrics) continue;
     if (line.overOdds) {
-      const edge = (line.overOdds / fairOver - 1) * 100;
+      const edge = metrics.overEdge ?? Number.NaN;
+      if (shadowOnly && !qualifiesForShadow(metrics.overEdge, line.overOdds)) continue;
       if (!best || edge > best.edge) {
         best = {
           bookmaker: line.bookmaker,
@@ -281,7 +363,8 @@ function bestLineSummary(lines: TeamShotsLiveLine[], lambda: number): string {
       }
     }
     if (line.underOdds) {
-      const edge = (line.underOdds / fairUnder - 1) * 100;
+      const edge = metrics.underEdge ?? Number.NaN;
+      if (shadowOnly && !qualifiesForShadow(metrics.underEdge, line.underOdds)) continue;
       if (!best || edge > best.edge) {
         best = {
           bookmaker: line.bookmaker,
@@ -294,14 +377,8 @@ function bestLineSummary(lines: TeamShotsLiveLine[], lambda: number): string {
     }
   }
 
-  if (!best) return "No live team-shots line";
+  if (!best) return shadowOnly ? "No shadow-qualified line" : "No live team-shots line";
   return `${best.bookmaker} ${best.lineLabel} ${best.side} ${best.odds.toFixed(2)} (${formatSignedPercent(best.edge)})`;
-}
-
-function bestEligibleLineSummary(lines: TeamShotsLiveLine[], lambda: number): string {
-  const eligibleLines = lines.filter((line) => SHADOW_ELIGIBLE_LINES.has(line.line));
-  if (eligibleLines.length === 0) return "No shadow-eligible line";
-  return bestLineSummary(eligibleLines, lambda);
 }
 
 
@@ -561,6 +638,7 @@ export default async function TeamShotsMonitorPage() {
   const [
 
     calibrationTxt,
+    calibrationParams,
 
     backtestReportTxt,
 
@@ -591,6 +669,7 @@ export default async function TeamShotsMonitorPage() {
   ] = await Promise.all([
 
     readFile("data/team-shots/team-shots-calibration.txt"),
+    readJson<CalibrationPayload>("data/team-shots/team-shots-calibration-params.json"),
 
     readFile("data/team-shots/team-shots-backtest-report.txt"),
 
@@ -722,17 +801,29 @@ export default async function TeamShotsMonitorPage() {
 
 function LiveLineTable({
   teamName,
-  lambda,
+  row,
+  side,
   lines,
+  calibration,
 }: {
   teamName: string;
-  lambda: number;
+  row: CsvRow;
+  side: "home" | "away";
   lines: TeamShotsLiveLine[];
+  calibration: CalibrationPayload | null;
 }) {
   if (lines.length === 0) {
     return (
       <div className="rounded-2xl border border-slate-800 bg-slate-950/40 p-4 text-sm text-slate-500">
         No live bookmaker lines yet.
+      </div>
+    );
+  }
+  const lambda = pf(row[`${side}_lambda`]);
+  if (!(lambda > 0)) {
+    return (
+      <div className="rounded-2xl border border-slate-800 bg-slate-950/40 p-4 text-sm text-slate-500">
+        No model estimate for this team yet.
       </div>
     );
   }
@@ -756,38 +847,36 @@ function LiveLineTable({
         </thead>
         <tbody>
           {lines.map((line, i) => {
-            const fairOver = poissonFairOdds(lambda, line.line, "over");
-            const fairUnder = poissonFairOdds(lambda, line.line, "under");
-            const overEdge = line.overOdds ? (line.overOdds / fairOver - 1) * 100 : null;
-            const underEdge = line.underOdds ? (line.underOdds / fairUnder - 1) * 100 : null;
+            const metrics = computeLineMetrics(row, side, line, calibration);
+            if (!metrics) return null;
+            const overShadow = qualifiesForShadow(metrics.overEdge, line.overOdds);
+            const underShadow = qualifiesForShadow(metrics.underEdge, line.underOdds);
             return (
               <tr key={`${line.bookmaker}-${line.lineLabel}-${i}`} className="border-b border-slate-800/40">
                 <td className="py-2 pl-4 pr-3 text-slate-300">{line.bookmaker}</td>
                 <td className="py-2 pr-3">
-                  {SHADOW_ELIGIBLE_LINES.has(line.line) ? (
-                    <span className="rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[10px] uppercase text-emerald-300">
-                      yes
-                    </span>
-                  ) : (
-                    <span className="rounded-full bg-slate-700/30 px-1.5 py-0.5 text-[10px] uppercase text-slate-500">
-                      no
-                    </span>
-                  )}
+                  <span className={`rounded-full px-1.5 py-0.5 text-[10px] uppercase ${
+                    overShadow || underShadow
+                      ? "bg-emerald-500/15 text-emerald-300"
+                      : "bg-slate-700/30 text-slate-500"
+                  }`}>
+                    {overShadow || underShadow ? "yes" : "no"}
+                  </span>
                 </td>
                 <td className="py-2 pr-3 font-mono tabular-nums text-slate-100">{line.lineLabel}</td>
                 <td className="py-2 pr-3 font-mono tabular-nums text-slate-400">
-                  {fairOver.toFixed(2)} / {fairUnder.toFixed(2)}
+                  {metrics.fairOver.toFixed(2)} / {metrics.fairUnder.toFixed(2)}
                 </td>
                 <td className="py-2 pr-3 font-mono tabular-nums text-slate-100">
                   {line.overOdds ? line.overOdds.toFixed(2) : "-"} / {line.underOdds ? line.underOdds.toFixed(2) : "-"}
                 </td>
                 <td className="py-2 pr-4 font-mono tabular-nums">
-                  <span className={overEdge !== null && overEdge >= 0 ? "text-emerald-300" : "text-slate-500"}>
-                    {formatSignedPercent(overEdge)}
+                  <span className={metrics.overEdge !== null && metrics.overEdge >= 0 ? "text-emerald-300" : "text-slate-500"}>
+                    {formatSignedPercent(metrics.overEdge)}
                   </span>
                   <span className="text-slate-600"> / </span>
-                  <span className={underEdge !== null && underEdge >= 0 ? "text-emerald-300" : "text-slate-500"}>
-                    {formatSignedPercent(underEdge)}
+                  <span className={metrics.underEdge !== null && metrics.underEdge >= 0 ? "text-emerald-300" : "text-slate-500"}>
+                    {formatSignedPercent(metrics.underEdge)}
                   </span>
                 </td>
               </tr>
@@ -1098,7 +1187,7 @@ function LiveLineTable({
                 <p className="mt-1 text-sm text-slate-500">
 
                   lambda = expected shots per team. Open a fixture to see all live bookmaker lines.
-                  Shadow-eligible lines are tagged.
+                  Value and shadow tags now use the same calibrated edge logic as the comparison tracker.
 
                 </p>
 
@@ -1155,14 +1244,14 @@ function LiveLineTable({
                                 <div className="rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2">
                                   <div className="text-slate-500">Home</div>
                                   <div className="font-mono text-emerald-300">lambda {pf(row.home_lambda).toFixed(2)}</div>
-                                  <div className="mt-1 text-slate-300">Live: {bestLineSummary(homeLines, pf(row.home_lambda))}</div>
-                                  <div className="mt-1 text-slate-500">Shadow: {bestEligibleLineSummary(homeLines, pf(row.home_lambda))}</div>
+                                  <div className="mt-1 text-slate-300">Live: {bestLineSummary(homeLines, row, "home", calibrationParams)}</div>
+                                  <div className="mt-1 text-slate-500">Shadow: {bestLineSummary(homeLines, row, "home", calibrationParams, true)}</div>
                                 </div>
                                 <div className="rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2">
                                   <div className="text-slate-500">Away</div>
                                   <div className="font-mono text-emerald-300">lambda {pf(row.away_lambda).toFixed(2)}</div>
-                                  <div className="mt-1 text-slate-300">Live: {bestLineSummary(awayLines, pf(row.away_lambda))}</div>
-                                  <div className="mt-1 text-slate-500">Shadow: {bestEligibleLineSummary(awayLines, pf(row.away_lambda))}</div>
+                                  <div className="mt-1 text-slate-300">Live: {bestLineSummary(awayLines, row, "away", calibrationParams)}</div>
+                                  <div className="mt-1 text-slate-500">Shadow: {bestLineSummary(awayLines, row, "away", calibrationParams, true)}</div>
                                 </div>
                               </div>
                             </div>
@@ -1173,13 +1262,17 @@ function LiveLineTable({
                           <div className="grid gap-4 border-t border-slate-800 px-4 py-4 lg:grid-cols-2">
                             <LiveLineTable
                               teamName={row.home_team ?? "Home"}
-                              lambda={pf(row.home_lambda)}
+                              row={row}
+                              side="home"
                               lines={homeLines}
+                              calibration={calibrationParams}
                             />
                             <LiveLineTable
                               teamName={row.away_team ?? "Away"}
-                              lambda={pf(row.away_lambda)}
+                              row={row}
+                              side="away"
                               lines={awayLines}
+                              calibration={calibrationParams}
                             />
                           </div>
                         </details>
@@ -1189,7 +1282,7 @@ function LiveLineTable({
 
                   <p className="mt-3 text-[11px] text-slate-600">
 
-                    All live lines are shown here. The shadow tracker only logs 9.5 / 10.5 / 11.5, so non-eligible lines are marked.
+                    All live lines are shown here. Shadow `yes/no` now follows the real tracker rules: edge at least 5% and book odds between 1.50 and 5.00.
 
                   </p>
 

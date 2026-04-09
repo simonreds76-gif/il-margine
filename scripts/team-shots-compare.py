@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import importlib.util
 import json
 import math
 import re
@@ -52,6 +53,23 @@ def _norm(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", text).strip()
 
 
+def _load_team_normalizer():
+    script_path = ROOT / "scripts" / "matchday-shortlist.py"
+    spec = importlib.util.spec_from_file_location("matchday_shortlist", script_path)
+    if spec is None or spec.loader is None:
+        return _norm
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return getattr(module, "normalize_team", _norm)
+
+
+_normalize_team = _load_team_normalizer()
+
+
+def _norm_team(text: str) -> str:
+    return _normalize_team(text or "")
+
+
 def _logit(p: float) -> float:
     p = max(1e-7, min(1.0 - 1e-7, p))
     return math.log(p / (1.0 - p))
@@ -88,7 +106,7 @@ def load_predictions(path: Path) -> Dict[str, dict]:
         return index
     with open(path, "r", encoding="utf-8") as fh:
         for row in csv.DictReader(fh):
-            key = f"{row.get('date', '')}|{_norm(row.get('league', ''))}|{_norm(row.get('team', ''))}"
+            key = f"{row.get('date', '')}|{_norm(row.get('league', ''))}|{_norm_team(row.get('team', ''))}"
             index[key] = row
     return index
 
@@ -125,12 +143,13 @@ def load_upcoming(path: Path) -> Dict[str, dict]:
                     "actual_shots": "",
                     "actual_sot": "",
                 }
-                for line in (9.5, 10.5, 11.5):
+                # Must match columns in team-shots-upcoming.csv (books often quote 12.5/13.5).
+                for line in (9.5, 10.5, 11.5, 12.5, 13.5):
                     pred_row[f"p_over_{line}"] = row.get(f"{side}_p_over_{line}", "")
                     pred_row[f"fair_over_{line}"] = row.get(f"{side}_fair_over_{line}", "")
                     pred_row[f"fair_under_{line}"] = row.get(f"{side}_fair_under_{line}", "")
 
-                key = f"{match_date}|{_norm(league)}|{_norm(team)}"
+                key = f"{match_date}|{_norm(league)}|{_norm_team(team)}"
                 index[key] = pred_row
 
     return index
@@ -148,9 +167,9 @@ def load_odds(path: Path, bookmaker_filter: str = "") -> List[dict]:
             key = "|".join(
                 [
                     (row.get("match_date") or "")[:10],
-                    _norm(row.get("home_team", "")),
-                    _norm(row.get("away_team", "")),
-                    _norm(row.get("team", "")),
+                    _norm_team(row.get("home_team", "")),
+                    _norm_team(row.get("away_team", "")),
+                    _norm_team(row.get("team", "")),
                     str(row.get("line", "")),
                     _norm(row.get("side", "")),
                     _norm(row.get("bookmaker", "")),
@@ -186,7 +205,7 @@ def compare(
             continue
 
         league_norm = _norm(competition)
-        team_norm = _norm(team)
+        team_norm = _norm_team(team)
 
         pred = None
         for league_try in [league_norm, "epl", "serie-a", "la-liga", "bundesliga", "ligue-1"]:
@@ -234,11 +253,11 @@ def compare(
         if side == "over":
             model_prob = model_p_over
             model_prob_raw = model_p_over_raw
-            model_fair = _pf(pred.get(fair_over_key))
+            model_fair = (1.0 / model_prob) if model_prob > 0 else 0.0
         else:
             model_prob = model_p_under
             model_prob_raw = model_p_under_raw
-            model_fair = _pf(pred.get(fair_under_key))
+            model_fair = (1.0 / model_prob) if model_prob > 0 else 0.0
 
         edge = model_prob * book_odds - 1.0
         ev = edge
