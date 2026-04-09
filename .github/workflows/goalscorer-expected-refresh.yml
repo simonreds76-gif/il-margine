@@ -47,6 +47,22 @@ jobs:
             echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
           fi
 
+      - name: Bootstrap Understat player logs if missing
+        run: |
+          missing=0
+          for league in serie-a epl la-liga bundesliga ligue-1; do
+            if ! ls "data/goalscorer/${league}-player-match-logs-"*.csv >/dev/null 2>&1; then
+              missing=1
+            fi
+          done
+          if [ "$missing" -eq 1 ]; then
+            python scripts/understat-scrape-serie-a.py \
+              --league serie-a epl la-liga bundesliga ligue-1 \
+              --season 2023-2024 2024-2025 2025-2026
+          else
+            echo "Goalscorer player logs already present."
+          fi
+
       - name: Refresh expected lineups + public/shadow board
         run: |
           for league in serie-a epl la-liga bundesliga ligue-1; do
