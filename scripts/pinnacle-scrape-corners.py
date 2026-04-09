@@ -105,6 +105,8 @@ def _scrape_league(
         away = next((p["name"] for p in participants if p.get("alignment") == "away"), "")
         if not home or not away:
             continue
+        if "(Bookings)" in home or "(Bookings)" in away:
+            continue
 
         kickoff_iso = match.get("startTime", "")
         match_date = kickoff_iso[:10] if kickoff_iso else ""
