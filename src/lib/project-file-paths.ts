@@ -100,6 +100,7 @@ const KNOWN_PROJECT_FILE_PATHS = {
   "data/shortlist/team-props-status.json": path.join(process.cwd(), "data/shortlist/team-props-status.json"),
   "data/team-shots/team-shots-predictions.csv": path.join(process.cwd(), "data/team-shots/team-shots-predictions.csv"),
   "data/team-shots/team-shots-calibration.txt": path.join(process.cwd(), "data/team-shots/team-shots-calibration.txt"),
+  "data/team-shots/team-shots-calibration-params.json": path.join(process.cwd(), "data/team-shots/team-shots-calibration-params.json"),
   "data/team-shots/team-shots-calibration-diagnostics.txt": path.join(process.cwd(), "data/team-shots/team-shots-calibration-diagnostics.txt"),
   "data/team-shots/team-shots-backtest-results.csv": path.join(process.cwd(), "data/team-shots/team-shots-backtest-results.csv"),
   "data/team-shots/team-shots-backtest-report.txt": path.join(process.cwd(), "data/team-shots/team-shots-backtest-report.txt"),
