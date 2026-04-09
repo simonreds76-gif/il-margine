@@ -1,0 +1,49 @@
+name: Team Props Settlement
+
+on:
+  schedule:
+    - cron: "30 23 * * *" # Nightly settlement after most match windows
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: team-props-branch-writes
+  cancel-in-progress: false
+
+jobs:
+  settle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install Python deps
+        run: pip install requests
+
+      - name: Settle team-shots shadow signals
+        run: python scripts/team-shots-settle.py
+
+      - name: Settle corners shortlist
+        run: python scripts/shortlist-settle.py
+
+      - name: Commit and push if new data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/team-shots/ data/shortlist/
+          if git diff --cached --quiet; then
+            echo "No settlement changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: hosted team props settlement"
+          git fetch origin golden-with-speed-insights
+          git pull --rebase origin golden-with-speed-insights
+          git push origin HEAD:golden-with-speed-insights
