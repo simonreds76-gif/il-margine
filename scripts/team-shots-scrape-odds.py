@@ -111,6 +111,8 @@ def _norm(text: str) -> str:
 
 def _is_team_shots_market(name: str) -> bool:
     text = (name or "").strip().lower()
+    if "on target" in text or "shots on target" in text:
+        return False
     if "shot" in text and ("total" in text or "over" in text or "under" in text or "team" in text):
         return True
     if re.search(r"\bshots?\b", text) and re.search(r"\b(o/?u|over|under|total)\b", text):
