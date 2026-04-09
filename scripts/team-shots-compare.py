@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import argparse
 import csv
-import importlib.util
 import json
 import math
 import re
@@ -46,28 +45,77 @@ def _pf(val, default=0.0):
         return default
 
 
+TEAM_ALIASES = {
+    "liverpool": "liverpool",
+    "liverpool fc": "liverpool",
+    "fulham": "fulham",
+    "fulham fc": "fulham",
+    "nottingham forest": "nottingham forest",
+    "aston villa": "aston villa",
+    "aston villa fc": "aston villa",
+    "manchester united": "manchester united",
+    "manchester united fc": "manchester united",
+    "man utd": "manchester united",
+    "leeds united": "leeds united",
+    "leeds united fc": "leeds united",
+    "fc barcelona": "barcelona",
+    "barcelona": "barcelona",
+    "espanyol": "espanyol",
+    "espanyol barcelona": "espanyol",
+    "real sociedad": "sociedad",
+    "real sociedad san sebastian": "sociedad",
+    "deportivo alaves": "alaves",
+    "deportivo alaves sad": "alaves",
+    "alaves": "alaves",
+    "alav s": "alaves",
+    "ca osasuna": "osasuna",
+    "osasuna": "osasuna",
+    "real betis": "real betis",
+    "real betis seville": "real betis",
+    "real betis balompie": "real betis",
+    "rc celta de vigo": "celta vigo",
+    "celta de vigo": "celta vigo",
+    "celta vigo": "celta vigo",
+    "real oviedo": "oviedo",
+    "oviedo": "oviedo",
+    "athletic club bilbao": "athletic club",
+    "athletic club": "athletic club",
+    "athletic bilbao": "athletic club",
+    "villarreal cf": "villarreal",
+    "villarreal": "villarreal",
+    "sevilla fc": "sevilla",
+    "atletico madrid": "atletico madrid",
+    "atletico de madrid": "atletico madrid",
+    "elche cf": "elche",
+    "valencia cf": "valencia",
+    "sunderland afc": "sunderland",
+    "tottenham hotspur": "tottenham",
+    "wolverhampton wanderers": "wolves",
+    "west ham united": "west ham",
+    "newcastle united": "newcastle",
+    "1 fc heidenheim": "heidenheim",
+    "1 fc koln": "fc koln",
+    "1 fc cologne": "fc koln",
+    "fc st pauli": "st pauli",
+    "brighton and hove albion": "brighton",
+}
+
+
 def _norm(text: str) -> str:
-    text = (text or "").strip().lower()
-    text = unicodedata.normalize("NFD", text)
+    text = unicodedata.normalize("NFD", (text or "").strip().lower())
     text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
-    return re.sub(r"[^a-z0-9]+", " ", text).strip()
-
-
-def _load_team_normalizer():
-    script_path = ROOT / "scripts" / "matchday-shortlist.py"
-    spec = importlib.util.spec_from_file_location("matchday_shortlist", script_path)
-    if spec is None or spec.loader is None:
-        return _norm
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return getattr(module, "normalize_team", _norm)
-
-
-_normalize_team = _load_team_normalizer()
+    text = re.sub(r"[^a-z0-9\s]+", " ", text)
+    text = " ".join(
+        token
+        for token in text.split()
+        if token not in {"fc", "afc", "sc", "cf", "ac", "club", "ca", "rc"}
+    )
+    return text.strip()
 
 
 def _norm_team(text: str) -> str:
-    return _normalize_team(text or "")
+    normalized = _norm(text or "")
+    return TEAM_ALIASES.get(normalized, normalized)
 
 
 def _logit(p: float) -> float:

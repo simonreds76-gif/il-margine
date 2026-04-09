@@ -29,6 +29,7 @@ DEFAULT_SUMMARY = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-p
 MIN_EDGE = 0.05
 MIN_ODDS = 1.50
 MAX_ODDS = 5.00
+TRACKED_LINES = {9.5, 10.5, 11.5}
 
 # Edge % → stake units. Same ladder as corners.
 # 5-8%: 0.5u  |  8-12%: 1u  |  12-16%: 1.5u  |  16%+: 2u
@@ -109,8 +110,11 @@ def track_signals(
     for comp in comparisons:
         edge = _pf(comp.get("edge"))
         book_odds = _pf(comp.get("book_odds"))
+        line = _pf(comp.get("line"))
 
         if edge < min_edge:
+            continue
+        if line not in TRACKED_LINES:
             continue
         if book_odds < MIN_ODDS or book_odds > MAX_ODDS:
             continue
@@ -124,7 +128,6 @@ def track_signals(
             continue
 
         actual = int(_pf(comp.get("actual_shots", 0)))
-        line = _pf(comp.get("line"))
         side = (comp.get("side") or "").strip().lower()
         stake_units = stake_for_edge(edge)
 
@@ -170,6 +173,31 @@ def track_signals(
         existing_keys.add(key)
 
     return new_signals
+
+
+def current_live_keys(
+    comparisons: List[dict],
+    min_edge: float,
+    bookmaker_filter: str = "",
+) -> Set[str]:
+    keys: Set[str] = set()
+    for comp in comparisons:
+        edge = _pf(comp.get("edge"))
+        book_odds = _pf(comp.get("book_odds"))
+        line = _pf(comp.get("line"))
+
+        if edge < min_edge:
+            continue
+        if line not in TRACKED_LINES:
+            continue
+        if book_odds < MIN_ODDS or book_odds > MAX_ODDS:
+            continue
+        if bookmaker_filter:
+            bm = (comp.get("bookmaker") or "").strip().lower()
+            if bm != bookmaker_filter.lower():
+                continue
+        keys.add(_signal_key(comp))
+    return keys
 
 
 def write_signals(all_signals: List[dict], path: Path) -> None:
@@ -257,6 +285,14 @@ def main() -> None:
     print(f"Loading comparisons from {args.comparison}")
     comparisons = load_comparisons(args.comparison)
     print(f"  Comparisons: {len(comparisons)}")
+
+    live_keys = current_live_keys(comparisons, args.min_edge, args.bookmaker)
+    existing = [
+        row
+        for row in existing
+        if row.get("result") in ("won", "lost", "push") or _signal_key(row) in live_keys
+    ]
+    keys = {_signal_key(row) for row in existing}
 
     new = track_signals(comparisons, existing, keys, args.min_edge, args.bookmaker)
     print(f"  New signals: {len(new)}")

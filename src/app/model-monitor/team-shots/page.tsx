@@ -123,27 +123,53 @@ const LEAGUE_ORDER = [
 ] as const;
 
 const TEAM_ALIASES: Record<string, string> = {
+  liverpool: "liverpool",
+  "liverpool fc": "liverpool",
+  fulham: "fulham",
+  "fulham fc": "fulham",
   "real sociedad san sebastian": "sociedad",
   "real sociedad de futbol": "sociedad",
   "real sociedad": "sociedad",
   sociedad: "sociedad",
   "deportivo alaves": "alaves",
+  "deportivo alaves sad": "alaves",
+  "alav s": "alaves",
   alaves: "alaves",
   "elche cf": "elche",
   elche: "elche",
   "valencia cf": "valencia",
   valencia: "valencia",
+  "fc barcelona": "barcelona",
+  barcelona: "barcelona",
+  espanyol: "espanyol",
+  "espanyol barcelona": "espanyol",
   "atletico madrid": "atletico madrid",
   "atletico de madrid": "atletico madrid",
   "atletico de madrid sad": "atletico madrid",
   "atletico madrid sad": "atletico madrid",
+  "manchester united": "manchester united",
+  "manchester united fc": "manchester united",
+  "man utd": "manchester united",
+  "aston villa fc": "aston villa",
+  "leeds united fc": "leeds united",
+  "ca osasuna": "osasuna",
+  osasuna: "osasuna",
+  "real betis": "real betis",
   "fc st pauli": "st pauli",
   "1 fc heidenheim": "heidenheim",
   "1 fc koln": "fc koln",
   "1 fc cologne": "fc koln",
-  "deportivo alaves sad": "alaves",
   "real betis balompie": "real betis",
   "real betis seville": "real betis",
+  "rc celta de vigo": "celta vigo",
+  "celta de vigo": "celta vigo",
+  "real oviedo": "oviedo",
+  oviedo: "oviedo",
+  "athletic club bilbao": "athletic club",
+  "athletic bilbao": "athletic club",
+  "athletic club": "athletic club",
+  "villarreal cf": "villarreal",
+  villarreal: "villarreal",
   "afc bournemouth": "bournemouth",
   "brighton and hove albion": "brighton",
   "brighton hove albion": "brighton",
@@ -154,6 +180,8 @@ const TEAM_ALIASES: Record<string, string> = {
   "nottingham forest": "nottingham forest",
   "sunderland afc": "sunderland",
 };
+
+const TRACKED_SHADOW_LINES = new Set([9.5, 10.5, 11.5]);
 
 
 
@@ -268,7 +296,7 @@ function normalizeTeamName(value: string | undefined): string {
     .replace(/[^a-z0-9\s]/g, " ")
     .split(/\s+/)
     .filter(Boolean)
-    .filter((token) => !["fc", "afc", "sc", "cf", "ac", "club"].includes(token))
+    .filter((token) => !["fc", "afc", "sc", "cf", "ac", "club", "ca", "rc"].includes(token))
     .join(" ");
   return TEAM_ALIASES[cleaned] ?? cleaned;
 }
@@ -330,9 +358,21 @@ function computeLineMetrics(
   };
 }
 
-function qualifiesForShadow(sideEdge: number | null, sideOdds?: number): boolean {
+function qualifiesForShadow(
+  sideEdge: number | null,
+  sideOdds?: number,
+  lineNumber?: number,
+): boolean {
   if (sideEdge === null || sideOdds === undefined) return false;
+  if (lineNumber === undefined || !TRACKED_SHADOW_LINES.has(lineNumber)) return false;
   return sideEdge >= 5 && sideOdds >= 1.5 && sideOdds <= 5.0;
+}
+
+function shadowStakeUnits(edgeDecimal: number): string {
+  if (edgeDecimal >= 0.16) return "2.0u";
+  if (edgeDecimal >= 0.12) return "1.5u";
+  if (edgeDecimal >= 0.08) return "1.0u";
+  return "0.5u";
 }
 
 function bestLineSummary(
@@ -351,7 +391,7 @@ function bestLineSummary(
     if (!metrics) continue;
     if (line.overOdds) {
       const edge = metrics.overEdge ?? Number.NaN;
-      if (shadowOnly && !qualifiesForShadow(metrics.overEdge, line.overOdds)) continue;
+      if (shadowOnly && !qualifiesForShadow(metrics.overEdge, line.overOdds, line.line)) continue;
       if (!best || edge > best.edge) {
         best = {
           bookmaker: line.bookmaker,
@@ -364,7 +404,7 @@ function bestLineSummary(
     }
     if (line.underOdds) {
       const edge = metrics.underEdge ?? Number.NaN;
-      if (shadowOnly && !qualifiesForShadow(metrics.underEdge, line.underOdds)) continue;
+      if (shadowOnly && !qualifiesForShadow(metrics.underEdge, line.underOdds, line.line)) continue;
       if (!best || edge > best.edge) {
         best = {
           bookmaker: line.bookmaker,
@@ -702,6 +742,7 @@ export default async function TeamShotsMonitorPage() {
 
 
   const shadowSignals = shadowSignalsCsv ? parseCsv(shadowSignalsCsv) : [];
+  const comparisonRows = comparisonCsv ? parseCsv(comparisonCsv) : [];
 
   const backtestRows = backtestCsv ? parseCsv(backtestCsv) : [];
 
@@ -762,6 +803,27 @@ export default async function TeamShotsMonitorPage() {
 
 
   const recentPredictions = predictions.slice(-100).reverse();
+
+  const currentShadowLive = [...comparisonRows]
+    .filter((row) => {
+      const line = pf(row.line, Number.NaN);
+      const edge = pf(row.edge, Number.NaN);
+      const odds = pf(row.book_odds, Number.NaN);
+      return (
+        !Number.isNaN(line) &&
+        TRACKED_SHADOW_LINES.has(line) &&
+        !Number.isNaN(edge) &&
+        edge >= 0.05 &&
+        !Number.isNaN(odds) &&
+        odds >= 1.5 &&
+        odds <= 5.0
+      );
+    })
+    .sort((a, b) => {
+      const dateCmp = (a.date ?? "").localeCompare(b.date ?? "");
+      if (dateCmp !== 0) return dateCmp;
+      return pf(b.edge) - pf(a.edge);
+    });
 
 
 
@@ -849,8 +911,8 @@ function LiveLineTable({
           {lines.map((line, i) => {
             const metrics = computeLineMetrics(row, side, line, calibration);
             if (!metrics) return null;
-            const overShadow = qualifiesForShadow(metrics.overEdge, line.overOdds);
-            const underShadow = qualifiesForShadow(metrics.underEdge, line.underOdds);
+            const overShadow = qualifiesForShadow(metrics.overEdge, line.overOdds, line.line);
+            const underShadow = qualifiesForShadow(metrics.underEdge, line.underOdds, line.line);
             return (
               <tr key={`${line.bookmaker}-${line.lineLabel}-${i}`} className="border-b border-slate-800/40">
                 <td className="py-2 pl-4 pr-3 text-slate-300">{line.bookmaker}</td>
@@ -915,11 +977,38 @@ function LiveLineTable({
 
 
 
-  const recentShadow = [...shadowSignals]
+  const recentShadow = [...currentShadowLive]
+    .sort((a, b) => {
+      const dateCmp = (b.date ?? "").localeCompare(a.date ?? "");
+      if (dateCmp !== 0) return dateCmp;
+      return pf(b.edge) - pf(a.edge);
+    })
+    .slice(0, 6);
 
-    .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))
+  const stalePendingShadow = pendingShadow.filter((row) => {
+    const shadowKey = [
+      (row.date ?? "").trim(),
+      normalizeTeamName(row.home_team),
+      normalizeTeamName(row.away_team),
+      normalizeTeamName(row.team),
+      (row.line ?? "").trim(),
+      (row.side ?? "").trim().toLowerCase(),
+      (row.bookmaker ?? "").trim().toLowerCase(),
+    ].join("|");
 
-    .slice(0, 50);
+    return !currentShadowLive.some(
+      (live) =>
+        [
+          (live.date ?? "").trim(),
+          normalizeTeamName(live.home_team),
+          normalizeTeamName(live.away_team),
+          normalizeTeamName(live.team),
+          (live.line ?? "").trim(),
+          (live.side ?? "").trim().toLowerCase(),
+          (live.bookmaker ?? "").trim().toLowerCase(),
+        ].join("|") === shadowKey,
+    );
+  });
 
 
 
@@ -1114,8 +1203,7 @@ function LiveLineTable({
                 </thead>
                 <tbody>
                   {recentShadow.map((row, i) => {
-                    const result = row.result ?? "pending";
-                    const pnlVal = pf(row.pnl);
+                    const result = "pending";
                     return (
                       <tr key={i} className="border-b border-slate-800/40 hover:bg-slate-800/20">
                         <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{row.date}</td>
@@ -1135,30 +1223,18 @@ function LiveLineTable({
                         <td className="py-1.5 pr-3 font-mono tabular-nums">{pf(row.book_odds).toFixed(2)}</td>
                         <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{pf(row.model_fair_odds).toFixed(2)}</td>
                         <td className="py-1.5 pr-3 font-mono tabular-nums text-emerald-300">{(pf(row.edge) * 100).toFixed(1)}%</td>
-                        <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-300">
-                          {row.stake_units ? `${pf(row.stake_units).toFixed(1)}u` : "-"}
-                        </td>
-                        <td className="py-1.5 pr-3 font-mono tabular-nums">
-                          {row.actual_shots || "—"}
-                        </td>
+                        <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-300">{shadowStakeUnits(pf(row.edge))}</td>
+                        <td className="py-1.5 pr-3 font-mono tabular-nums">-</td>
                         <td className="py-1.5 pr-3">
-                          <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase ${
-                            result === "won"
-                              ? "bg-emerald-500/15 text-emerald-300"
-                              : result === "lost"
-                                ? "bg-rose-500/15 text-rose-300"
-                                : result === "push"
-                                  ? "bg-amber-500/15 text-amber-200"
-                                  : "bg-slate-700/30 text-slate-400"
-                          }`}>
+                          <span className="rounded-full bg-slate-700/30 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-400">
                             {result}
                           </span>
                         </td>
-                        <td className={`py-1.5 pr-3 font-mono tabular-nums ${pnlVal > 0 ? "text-emerald-300" : pnlVal < 0 ? "text-rose-300" : "text-slate-400"}`}>
-                          {result !== "pending" ? `${pnlVal >= 0 ? "+" : ""}${pnlVal.toFixed(2)}` : "-"}
+                        <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">
+                          -
                         </td>
-                        <td className={`py-1.5 font-mono tabular-nums ${pf(row.pnl_staked) > 0 ? "text-emerald-300" : pf(row.pnl_staked) < 0 ? "text-rose-300" : "text-slate-400"}`}>
-                          {result !== "pending" && row.pnl_staked ? `${pf(row.pnl_staked) >= 0 ? "+" : ""}${pf(row.pnl_staked).toFixed(2)}` : "-"}
+                        <td className="py-1.5 font-mono tabular-nums text-slate-400">
+                          -
                         </td>
                       </tr>
                     );
@@ -1166,6 +1242,11 @@ function LiveLineTable({
                 </tbody>
               </table>
             </div>
+            {stalePendingShadow.length > 0 && (
+              <p className="mt-3 text-[11px] text-slate-500">
+                {stalePendingShadow.length} stale pending archive row{stalePendingShadow.length === 1 ? "" : "s"} hidden from the live shadow table.
+              </p>
+            )}
           </MonitorCard>
         )}
         {/* Upcoming: both teams lambda + fair lines by league */}
@@ -1282,7 +1363,7 @@ function LiveLineTable({
 
                   <p className="mt-3 text-[11px] text-slate-600">
 
-                    All live lines are shown here. Shadow `yes/no` now follows the real tracker rules: edge at least 5% and book odds between 1.50 and 5.00.
+                    All live lines are shown here. Shadow `yes/no` only applies to the tracked 9.5 / 10.5 / 11.5 line set, with edge at least 5% and book odds between 1.50 and 5.00.
 
                   </p>
 
@@ -1396,11 +1477,11 @@ function LiveLineTable({
 
           <Stat
 
-            label="Shadow signals"
+            label="Shadow live"
 
-            value={shadowSignals.length.toString()}
+            value={currentShadowLive.length.toString()}
 
-            sub={`${pendingShadow.length} pending`}
+            sub={`${pendingShadow.length} pending in archive`}
 
           />
 
