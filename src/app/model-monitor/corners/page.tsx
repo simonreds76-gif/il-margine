@@ -252,8 +252,10 @@ export default async function CornersMonitorPage() {
   const liveWon = liveSettled.filter((r) => r.won === "yes");
   const liveLost = liveSettled.filter((r) => r.won === "no");
   const liveTotalStaked = liveSettled.reduce((s, r) => s + pf(r.stake, 1), 0);
-  const livePnl = liveSettled.reduce((s, r) => s + pf(r.pnl_staked), 0);
-  const liveRoi = liveTotalStaked > 0 ? (livePnl / liveTotalStaked) * 100 : 0;
+  const livePnlFlat = liveSettled.reduce((s, r) => s + pf(r.pnl_units), 0);
+  const livePnlStaked = liveSettled.reduce((s, r) => s + pf(r.pnl_staked), 0);
+  const liveRoiFlat = liveSettled.length > 0 ? (livePnlFlat / liveSettled.length) * 100 : 0;
+  const liveRoiStaked = liveTotalStaked > 0 ? (livePnlStaked / liveTotalStaked) * 100 : 0;
   const liveWinRate = liveSettled.length > 0 ? (liveWon.length / liveSettled.length) * 100 : 0;
   const recentSettled = [...liveSettled]
     .sort((a, b) => (b.match_date ?? "").localeCompare(a.match_date ?? ""))
@@ -559,29 +561,35 @@ export default async function CornersMonitorPage() {
               </p>
             ) : (
               <>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
                   <Stat
-                    label="P&L"
-                    value={`${livePnl >= 0 ? "+" : ""}${livePnl.toFixed(2)}u`}
-                    sub={`${liveTotalStaked.toFixed(1)}u staked`}
-                    tone={livePnl > 0 ? "green" : livePnl < 0 ? "red" : "default"}
+                    label="P&L (flat)"
+                    value={`${livePnlFlat >= 0 ? "+" : ""}${livePnlFlat.toFixed(2)}u`}
+                    sub={`${liveWon.length}W / ${liveLost.length}L`}
+                    tone={livePnlFlat > 0 ? "green" : livePnlFlat < 0 ? "red" : "default"}
                   />
                   <Stat
-                    label="ROI"
-                    value={`${liveRoi >= 0 ? "+" : ""}${liveRoi.toFixed(1)}%`}
-                    sub={`${liveWon.length}W / ${liveLost.length}L`}
-                    tone={liveRoi > 5 ? "green" : liveRoi < -5 ? "red" : "amber"}
+                    label="P&L (staked)"
+                    value={`${livePnlStaked >= 0 ? "+" : ""}${livePnlStaked.toFixed(2)}u`}
+                    sub={`${liveTotalStaked.toFixed(1)}u staked`}
+                    tone={livePnlStaked > 0 ? "green" : livePnlStaked < 0 ? "red" : "default"}
+                  />
+                  <Stat
+                    label="ROI (flat)"
+                    value={`${liveRoiFlat >= 0 ? "+" : ""}${liveRoiFlat.toFixed(1)}%`}
+                    tone={liveRoiFlat > 5 ? "green" : liveRoiFlat < -5 ? "red" : "amber"}
+                  />
+                  <Stat
+                    label="ROI (staked)"
+                    value={`${liveRoiStaked >= 0 ? "+" : ""}${liveRoiStaked.toFixed(1)}%`}
+                    sub={`${liveSettled.length} settled`}
+                    tone={liveRoiStaked > 5 ? "green" : liveRoiStaked < -5 ? "red" : "amber"}
                   />
                   <Stat
                     label="Win rate"
                     value={`${liveWinRate.toFixed(0)}%`}
-                    sub={`${liveSettled.length} settled`}
+                    sub={`${livePending.length} pending`}
                     tone={liveWinRate > 55 ? "green" : liveWinRate < 45 ? "red" : "default"}
-                  />
-                  <Stat
-                    label="Pending"
-                    value={livePending.length.toString()}
-                    sub="awaiting results"
                   />
                 </div>
 
@@ -629,14 +637,17 @@ export default async function CornersMonitorPage() {
                           <th className="py-2 pr-3 font-mono">Edge</th>
                           <th className="py-2 pr-3 font-mono">Odds</th>
                           <th className="py-2 pr-3 font-mono">Total</th>
+                          <th className="py-2 pr-3 font-mono">Stake</th>
                           <th className="py-2 pr-3">W/L</th>
-                          <th className="py-2 font-mono">P&L</th>
+                          <th className="py-2 pr-3 font-mono">P&L</th>
+                          <th className="py-2 font-mono">P&L (staked)</th>
                         </tr>
                       </thead>
                       <tbody>
                         {recentSettled.map((row, i) => {
                           const won = row.won === "yes";
-                          const pnlVal = pf(row.pnl_staked);
+                          const pnlFlat = pf(row.pnl_units);
+                          const pnlStaked = pf(row.pnl_staked);
                           return (
                             <tr key={i} className="border-b border-slate-800/40 hover:bg-slate-800/20">
                               <td className="py-1.5 pr-3 text-slate-400">{row.match_date?.slice(0, 10)}</td>
@@ -650,11 +661,15 @@ export default async function CornersMonitorPage() {
                               <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{(pf(row.edge) * 100).toFixed(1)}%</td>
                               <td className="py-1.5 pr-3 font-mono tabular-nums">{pf(row.bookie_odds).toFixed(2)}</td>
                               <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{row.actual_total_corners || "-"}</td>
+                              <td className="py-1.5 pr-3 font-mono tabular-nums text-amber-200">{pf(row.stake, 1).toFixed(1)}u</td>
                               <td className="py-1.5 pr-3">
                                 <span className={`font-medium ${won ? "text-emerald-300" : "text-rose-300"}`}>{won ? "W" : "L"}</span>
                               </td>
-                              <td className={`py-1.5 font-mono tabular-nums ${pnlVal >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
-                                {pnlVal >= 0 ? "+" : ""}{pnlVal.toFixed(2)}u
+                              <td className={`py-1.5 pr-3 font-mono tabular-nums ${pnlFlat >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                                {pnlFlat >= 0 ? "+" : ""}{pnlFlat.toFixed(2)}u
+                              </td>
+                              <td className={`py-1.5 font-mono tabular-nums ${pnlStaked >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                                {pnlStaked >= 0 ? "+" : ""}{pnlStaked.toFixed(2)}u
                               </td>
                             </tr>
                           );
