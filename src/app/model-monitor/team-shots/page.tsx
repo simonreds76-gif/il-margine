@@ -110,6 +110,7 @@ const LEAGUE_ORDER = [
   "ligue-1",
 
 ] as const;
+const SHADOW_ELIGIBLE_LINES = new Set([9.5, 10.5, 11.5]);
 
 
 
@@ -1078,8 +1079,8 @@ function LiveLineTable({
 
                 <p className="mt-1 text-sm text-slate-500">
 
-                  lambda = expected shots per team. Open a fixture to see the actual live bookmaker lines,
-                  fair odds, and value for each team.
+                  lambda = expected shots per team. Open a fixture to see the shadow-eligible live bookmaker
+                  lines, fair odds, and value for each team.
 
                 </p>
 
@@ -1111,10 +1112,14 @@ function LiveLineTable({
                       const date = (row.kickoff_iso ?? "").slice(0, 10);
                       const homeKey = `${matchKey(date, row.home_team, row.away_team)}|${normalizeTeamName(row.home_team)}`;
                       const awayKey = `${matchKey(date, row.home_team, row.away_team)}|${normalizeTeamName(row.away_team)}`;
-                      const homeLines = [...(liveOddsByMatchTeam.get(homeKey)?.values() ?? [])].sort(
+                      const homeLines = [...(liveOddsByMatchTeam.get(homeKey)?.values() ?? [])]
+                        .filter((line) => SHADOW_ELIGIBLE_LINES.has(line.line))
+                        .sort(
                         (a, b) => a.line - b.line || a.bookmaker.localeCompare(b.bookmaker),
                       );
-                      const awayLines = [...(liveOddsByMatchTeam.get(awayKey)?.values() ?? [])].sort(
+                      const awayLines = [...(liveOddsByMatchTeam.get(awayKey)?.values() ?? [])]
+                        .filter((line) => SHADOW_ELIGIBLE_LINES.has(line.line))
+                        .sort(
                         (a, b) => a.line - b.line || a.bookmaker.localeCompare(b.bookmaker),
                       );
                       return (
@@ -1166,7 +1171,7 @@ function LiveLineTable({
 
                   <p className="mt-3 text-[11px] text-slate-600">
 
-                    Each fixture opens to the actual live bookmaker lines for both teams, with fair odds and value computed from lambda.
+                    This view is restricted to the same 9.5 / 10.5 / 11.5 line family the shadow tracker can actually log.
 
                   </p>
 
