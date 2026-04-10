@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: "0 10 * * 4" # Thursday 10am UTC = 11am BST
     - cron: "0 10 * * 5" # Friday 10am UTC = 11am BST
+    - cron: "0 15 * * 5" # Friday 3pm UTC = 4pm BST
+    - cron: "0 15 * * 6" # Saturday 3pm UTC = 4pm BST
   workflow_dispatch:
 
 permissions:
