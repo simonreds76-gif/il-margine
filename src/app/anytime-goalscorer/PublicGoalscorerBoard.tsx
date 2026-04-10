@@ -70,14 +70,10 @@ function BookmakerPill({ bookmaker }: { bookmaker: string }) {
 }
 
 function getLiveSignals(rows: PublicRow[]): PublicRow[] {
+  // Keep ALL unsettled rows regardless of date — date controls which section they
+  // appear in, not whether they show at all. Rows only leave this list when settled.
   return rows
-    .filter((row) => {
-      if (row.settled) return false;
-      const kickoff = Date.parse(row.kickoff || row.date);
-      if (!Number.isFinite(kickoff)) return true;
-      const graceWindowMs = 15 * 60 * 1000;
-      return kickoff > Date.now() - graceWindowMs;
-    })
+    .filter((row) => !row.settled)
     .sort((left, right) => {
       const leftKickoff = Date.parse(left.kickoff || left.date);
       const rightKickoff = Date.parse(right.kickoff || right.date);
@@ -333,11 +329,30 @@ export default function PublicGoalscorerBoard({
     [settledSignals, selectedLeague],
   );
 
-  const upNextRows = filteredLiveSignals.filter((row) => {
-    const meta = kickoffMeta(row.kickoff || row.date, todayIso);
-    return meta.minutesUntil != null && meta.minutesUntil <= 60;
+  // "Awaiting settlement": kicked off on a previous day, still unsettled
+  const awaitingSettlementRows = filteredLiveSignals.filter((row) => {
+    const dateKey = (row.kickoff || row.date || "").slice(0, 10);
+    return dateKey < todayIso;
   });
-  const remainingRows = filteredLiveSignals.filter((row) => !upNextRows.includes(row));
+  // Today's signals only (kickoff date = today)
+  const todaySignals = filteredLiveSignals.filter((row) => {
+    const dateKey = (row.kickoff || row.date || "").slice(0, 10);
+    return !dateKey || dateKey >= todayIso;
+  });
+  // "Up next": kickoff within 60 minutes (future only — minutesUntil in range [-15, 60])
+  const upNextRows = todaySignals.filter((row) => {
+    const meta = kickoffMeta(row.kickoff || row.date, todayIso);
+    return meta.minutesUntil != null && meta.minutesUntil >= -15 && meta.minutesUntil <= 60;
+  });
+  // "Today's picks": kicked off today but outside the up-next window (minutesUntil < -15)
+  const todayKickedOffRows = todaySignals.filter((row) => {
+    const meta = kickoffMeta(row.kickoff || row.date, todayIso);
+    return meta.minutesUntil != null && meta.minutesUntil < -15;
+  });
+  // Upcoming (future, > 60 min away)
+  const remainingRows = todaySignals.filter(
+    (row) => !upNextRows.includes(row) && !todayKickedOffRows.includes(row),
+  );
   const metrics = getMetrics(filteredSettledSignals);
   const selectedLeagueLabel =
     selectedLeague === "all" ? "All leagues" : LEAGUE_SOURCES.find((league) => league.key === selectedLeague)?.label ?? "Selected league";
@@ -347,7 +362,7 @@ export default function PublicGoalscorerBoard({
       <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-neutral-400">
         <span className="text-neutral-200">{selectedLeagueLabel}</span>
         <span className="mx-2 text-neutral-600">·</span>
-        <span>{filteredLiveSignals.length} live</span>
+        <span>{filteredLiveSignals.length} unsettled</span>
         <span className="mx-2 text-neutral-600">·</span>
         <span>{filteredSettledSignals.length} settled</span>
         <span className="mx-2 text-neutral-600">·</span>
@@ -384,7 +399,7 @@ export default function PublicGoalscorerBoard({
           <div>
             <div className="mb-4 flex items-center gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-200">Up next</h2>
-              <span className="text-sm text-neutral-500">Kickoff inside 60 minutes or live inside the grace window.</span>
+              <span className="text-sm text-neutral-500">Kickoff inside 60 minutes.</span>
             </div>
             <div className="space-y-4">
               {upNextRows.map((row) => (
@@ -394,31 +409,51 @@ export default function PublicGoalscorerBoard({
           </div>
         ) : null}
 
-        {filteredLiveSignals.length === 0 ? (
+        {todayKickedOffRows.length > 0 ? (
           <div>
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <div>
-                <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-200">Live board</h2>
-                <p className="mt-1 text-sm text-neutral-500">Filtered by league, sorted by kickoff, with the strongest context left visible.</p>
-              </div>
+            <div className="mb-4 flex items-center gap-3">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-200">Today&apos;s picks</h2>
+              <span className="text-sm text-neutral-500">Kicked off today — awaiting result.</span>
             </div>
-            <div className="rounded-[24px] border border-white/10 bg-[#121417] px-5 py-6 text-sm leading-7 text-neutral-400">
-              No live public picks in this view right now. Settled history stays available below.
+            <div className="space-y-4">
+              {todayKickedOffRows.map((row) => (
+                <LivePickCard key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}-today`} row={row} todayIso={todayIso} />
+              ))}
             </div>
           </div>
-        ) : remainingRows.length > 0 ? (
+        ) : null}
+
+        {remainingRows.length > 0 ? (
           <div>
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <div>
-                <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-200">Live board</h2>
-                <p className="mt-1 text-sm text-neutral-500">Filtered by league, sorted by kickoff, with the strongest context left visible.</p>
-              </div>
+            <div className="mb-4 flex items-center gap-3">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-200">Upcoming</h2>
+              <span className="text-sm text-neutral-500">Sorted by kickoff, strongest context first.</span>
             </div>
             <div className="space-y-4">
               {remainingRows.map((row) => (
                 <LivePickCard key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}-live`} row={row} todayIso={todayIso} />
               ))}
             </div>
+          </div>
+        ) : null}
+
+        {awaitingSettlementRows.length > 0 ? (
+          <div>
+            <div className="mb-4 flex items-center gap-3">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-neutral-200">Awaiting settlement</h2>
+              <span className="text-sm text-neutral-500">Result not yet recorded — picks from previous days.</span>
+            </div>
+            <div className="space-y-4">
+              {awaitingSettlementRows.map((row) => (
+                <LivePickCard key={`${row.leagueKey}-${row.date}-${row.player}-${row.match}-pending`} row={row} todayIso={todayIso} />
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {filteredLiveSignals.length === 0 ? (
+          <div className="rounded-[24px] border border-white/10 bg-[#121417] px-5 py-6 text-sm leading-7 text-neutral-400">
+            No current picks in this view. Settled history is below.
           </div>
         ) : null}
       </section>

@@ -1,3 +1,5 @@
+import { promises as fs } from "node:fs";
+import path from "node:path";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -152,11 +154,17 @@ type PenaltyReviewRow = {
   active_taker_pre_match?: string;
   active_slot_pre_match?: string;
   team_lineup_status?: string;
+  penalty_transfer_pre_match?: number | string;
+  inherited_from_pre_match?: string;
+  transfer_level_pre_match?: string;
   review_type?: string;
   review_priority?: string;
   editorial_note?: string;
   context_generated_at?: string;
   context_source_path?: string;
+  primary_on_pitch_at_penalty?: string;
+  active_on_pitch_at_penalty?: string;
+  actual_taker_on_pitch_at_penalty?: string;
 };
 
 type PenaltyReviewPayload = {
@@ -164,6 +172,65 @@ type PenaltyReviewPayload = {
   generated_at?: string;
   row_count?: number;
   rows?: PenaltyReviewRow[];
+};
+
+type PenaltyContextRow = {
+  compared_at?: string;
+  match_date?: string;
+  home_team?: string;
+  away_team?: string;
+  team?: string;
+  opponent?: string;
+  primary?: string;
+  secondary?: string;
+  tertiary?: string;
+  primary_lineup_status?: string;
+  secondary_lineup_status?: string;
+  tertiary_lineup_status?: string;
+  active_taker_pre_match?: string;
+  active_slot_pre_match?: string;
+  team_lineup_status?: string;
+  penalty_transfer_pre_match?: number | string;
+  inherited_from_pre_match?: string;
+  transfer_level_pre_match?: string;
+};
+
+type PenaltyContextPayload = {
+  schema_version?: number;
+  generated_at?: string;
+  row_count?: number;
+  rows?: PenaltyContextRow[];
+};
+
+type PenaltyTakerBaselineEntry = {
+  primary?: string;
+  secondary?: string;
+  tertiary?: string;
+  last_updated?: string;
+  source?: string;
+  cross_check?: string;
+};
+
+type PenaltyTakerBaselinePayload = Record<string, PenaltyTakerBaselineEntry>;
+
+type MatchResultPlayer = {
+  name?: string;
+  team?: string;
+  started?: boolean;
+  squad_status?: string;
+  minutes_played?: number;
+  subbed_on?: boolean;
+  subbed_off?: boolean;
+  sub_in_minute?: number;
+  sub_out_minute?: number;
+};
+
+type MatchResultPayload = {
+  league?: string;
+  match_date?: string;
+  home_team?: string;
+  away_team?: string;
+  players?: MatchResultPlayer[];
 };
 
 type GoalscorerMonitorRow = {
@@ -182,6 +249,10 @@ type GoalscorerMonitorRow = {
 };
 
 export const dynamic = "force-dynamic";
+const MATCH_RESULTS_BASE_DIR = path.join(process.cwd(), "data/goalscorer/match-results");
+const MATCH_RESULTS_CACHE_TTL_MS = process.env.NODE_ENV === "development" ? 15 * 1000 : 5 * 60 * 1000;
+const matchResultPathCache = new Map<string, { expiresAt: number; value: string[] }>();
+const matchResultPayloadCache = new Map<string, { expiresAt: number; value: MatchResultPayload | null }>();
 
 const MODEL_MONITOR_PUBLIC =
   process.env.MODEL_MONITOR_PUBLIC === "1" ||
@@ -212,6 +283,8 @@ const LIVE_COMPARE_CONFIGS = [
     lineupsJson: "data/goalscorer/confirmed-lineups.json",
     penaltyReviewJson: "data/goalscorer/penalty-duty-review.json",
     livePenaltyReviewJson: "data/goalscorer/penalty-duty-live-review.json",
+    penaltyContextJson: "data/goalscorer/penalty-duty-context.json",
+    penaltyTakersJson: "data/goalscorer/serie-a-penalty-takers.json",
   },
   {
     key: "epl",
@@ -222,6 +295,8 @@ const LIVE_COMPARE_CONFIGS = [
     lineupsJson: "data/goalscorer/epl-confirmed-lineups.json",
     penaltyReviewJson: "data/goalscorer/epl-penalty-duty-review.json",
     livePenaltyReviewJson: "data/goalscorer/epl-penalty-duty-live-review.json",
+    penaltyContextJson: "data/goalscorer/epl/penalty-duty-context.json",
+    penaltyTakersJson: "data/goalscorer/epl-penalty-takers.json",
   },
   {
     key: "la-liga",
@@ -232,6 +307,8 @@ const LIVE_COMPARE_CONFIGS = [
     lineupsJson: "data/goalscorer/la-liga-confirmed-lineups.json",
     penaltyReviewJson: "data/goalscorer/la-liga-penalty-duty-review.json",
     livePenaltyReviewJson: "data/goalscorer/la-liga-penalty-duty-live-review.json",
+    penaltyContextJson: "data/goalscorer/la-liga/penalty-duty-context.json",
+    penaltyTakersJson: "data/goalscorer/la-liga-penalty-takers.json",
   },
   {
     key: "bundesliga",
@@ -242,6 +319,8 @@ const LIVE_COMPARE_CONFIGS = [
     lineupsJson: "data/goalscorer/bundesliga-confirmed-lineups.json",
     penaltyReviewJson: "data/goalscorer/bundesliga-penalty-duty-review.json",
     livePenaltyReviewJson: "data/goalscorer/bundesliga-penalty-duty-live-review.json",
+    penaltyContextJson: "data/goalscorer/bundesliga/penalty-duty-context.json",
+    penaltyTakersJson: "data/goalscorer/bundesliga-penalty-takers.json",
   },
   {
     key: "ligue-1",
@@ -252,6 +331,8 @@ const LIVE_COMPARE_CONFIGS = [
     lineupsJson: "data/goalscorer/ligue-1-confirmed-lineups.json",
     penaltyReviewJson: "data/goalscorer/ligue-1-penalty-duty-review.json",
     livePenaltyReviewJson: "data/goalscorer/ligue-1-penalty-duty-live-review.json",
+    penaltyContextJson: "data/goalscorer/ligue-1/penalty-duty-context.json",
+    penaltyTakersJson: "data/goalscorer/ligue-1-penalty-takers.json",
   },
 ] as const;
 const TEAM_ALIASES: Record<string, string> = {
@@ -294,6 +375,12 @@ const TEAM_ALIASES: Record<string, string> = {
   "parma calcio": "parma",
   torino: "torino",
   "torino fc": "torino",
+  "ca osasuna": "osasuna",
+  osasuna: "osasuna",
+  "deportivo alaves": "alaves",
+  "deportivo alavés": "alaves",
+  alaves: "alaves",
+  "alavés": "alaves",
   burnley: "burnley",
   "burnley fc": "burnley",
   bournemouth: "bournemouth",
@@ -830,11 +917,37 @@ function penaltyReviewSourceLabel(source?: string): string {
   return "Review";
 }
 
+function repairCommonMojibake(value?: string): string {
+  const raw = String(value ?? "");
+  if (!raw || !/[ÃÂâ]/.test(raw)) return raw;
+  try {
+    const repaired = Buffer.from(raw, "latin1").toString("utf8");
+    return repaired || raw;
+  } catch {
+    return raw;
+  }
+}
+
 function penaltyReviewTakerKey(name?: string): string {
-  const normalized = normText(name);
+  const normalized = normText(repairCommonMojibake(name));
   if (!normalized) return "";
   const tokens = normalized.split(" ").filter(Boolean);
   return tokens[tokens.length - 1] || normalized;
+}
+
+function personKey(name?: string): string {
+  return normText(repairCommonMojibake(name));
+}
+
+function parseMatchMinute(value?: string): number | null {
+  const text = String(value ?? "").trim();
+  if (!text) return null;
+  const match = text.match(/^(\d+)(?:\+(\d+))?/);
+  if (!match) return null;
+  const base = Number.parseInt(match[1] ?? "", 10);
+  const extra = Number.parseInt(match[2] ?? "0", 10);
+  if (!Number.isFinite(base)) return null;
+  return base + (Number.isFinite(extra) ? extra : 0);
 }
 
 function penaltyReviewIdentity(row: PenaltyReviewRow): string {
@@ -872,6 +985,39 @@ function mergePenaltyReviewRows(rows: PenaltyReviewRow[]): PenaltyReviewRow[] {
     const fallback = currentWins ? existing : row;
     const next = { ...fallback, ...preferred };
 
+    const fallbackFields = [
+      "match",
+      "team",
+      "opponent",
+      "primary_pre_match",
+      "secondary_pre_match",
+      "tertiary_pre_match",
+      "primary_lineup_status",
+      "secondary_lineup_status",
+      "tertiary_lineup_status",
+      "active_taker_pre_match",
+      "active_slot_pre_match",
+      "team_lineup_status",
+      "inherited_from_pre_match",
+      "transfer_level_pre_match",
+      "editorial_note",
+    ] as const;
+    for (const field of fallbackFields) {
+      if (!String(next[field] ?? "").trim()) {
+        next[field] = (String(fallback[field] ?? "").trim() ? fallback[field] : row[field]) as never;
+      }
+    }
+
+    if (!String(next.actual_role_pre_match ?? "").trim() || next.actual_role_pre_match === "none") {
+      const fallbackRole = String(fallback.actual_role_pre_match ?? "").trim();
+      const rowRole = String(row.actual_role_pre_match ?? "").trim();
+      if (fallbackRole && fallbackRole !== "none") {
+        next.actual_role_pre_match = fallback.actual_role_pre_match;
+      } else if (rowRole && rowRole !== "none") {
+        next.actual_role_pre_match = row.actual_role_pre_match;
+      }
+    }
+
     if (!next.minute) next.minute = existing.minute || row.minute || "";
     if (!next.event_type) next.event_type = existing.event_type || row.event_type || "";
     if (!next.event_result) next.event_result = existing.event_result || row.event_result || "";
@@ -905,6 +1051,18 @@ function humanizeToken(value?: string): string {
     .filter(Boolean)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
+}
+
+function readableLineupStatus(value?: string): string {
+  const normalized = String(value ?? "").trim().toLowerCase();
+  if (!normalized || normalized === "unknown" || normalized === "none") return "Unknown";
+  if (normalized === "expected_starter") return "Expected starter";
+  if (normalized === "confirmed_starter") return "Confirmed starter";
+  if (normalized === "expected_bench") return "Expected bench";
+  if (normalized === "confirmed_bench") return "Confirmed bench";
+  if (normalized === "expected_out") return "Expected out";
+  if (normalized === "not_in_squad") return "Not in squad";
+  return humanizeToken(normalized);
 }
 
 function formatLineupLabel(row: CsvRow): string {
@@ -1026,6 +1184,293 @@ function normText(value?: string): string {
 function teamKey(name?: string): string {
   const cleaned = normText(name);
   return TEAM_ALIASES[cleaned] ?? cleaned;
+}
+
+function penaltyContextIdentity(row: PenaltyContextRow, leagueKey: string): string {
+  const team = row.team ?? row.home_team ?? "";
+  const opponent =
+    row.opponent ??
+    (teamKey(team) === teamKey(row.home_team) ? row.away_team : row.home_team) ??
+    "";
+  return [
+    row.match_date ?? "",
+    leagueKey,
+    teamKey(team),
+    teamKey(opponent),
+  ]
+    .map((part) => part.trim().toLowerCase())
+    .join("|");
+}
+
+type PenaltyContextMaps = {
+  fixtureMap: Map<string, PenaltyContextRow>;
+  teamMap: Map<string, PenaltyContextRow>;
+  baselineMap: Map<string, PenaltyTakerBaselineEntry>;
+};
+
+function penaltyContextFreshness(row: PenaltyContextRow): number {
+  const comparedAt = Date.parse(row.compared_at ?? "");
+  if (Number.isFinite(comparedAt)) return comparedAt;
+  const matchDate = Date.parse(row.match_date ?? "");
+  if (Number.isFinite(matchDate)) return matchDate;
+  return Number.NEGATIVE_INFINITY;
+}
+
+function buildPenaltyContextMaps(
+  rows: PenaltyContextRow[],
+  baselines: PenaltyTakerBaselinePayload | null | undefined,
+  leagueKey: string,
+): PenaltyContextMaps {
+  const fixtureMap = new Map<string, PenaltyContextRow>();
+  const teamMap = new Map<string, PenaltyContextRow>();
+
+  for (const row of rows) {
+    const fixtureKey = penaltyContextIdentity(row, leagueKey);
+    if (fixtureKey.replace(/\|/g, "")) {
+      fixtureMap.set(fixtureKey, row);
+    }
+
+    const teamLookupKey = `${leagueKey}|${teamKey(row.team ?? "")}`.trim().toLowerCase();
+    if (!teamLookupKey.replace(/\|/g, "")) continue;
+    const existing = teamMap.get(teamLookupKey);
+    if (!existing || penaltyContextFreshness(row) >= penaltyContextFreshness(existing)) {
+      teamMap.set(teamLookupKey, row);
+    }
+  }
+
+  const baselineMap = new Map<string, PenaltyTakerBaselineEntry>();
+  for (const [teamName, entry] of Object.entries(baselines ?? {})) {
+    const key = `${leagueKey}|${teamKey(teamName)}`.trim().toLowerCase();
+    if (!key.replace(/\|/g, "")) continue;
+    baselineMap.set(key, entry);
+  }
+
+  return { fixtureMap, teamMap, baselineMap };
+}
+
+function enrichPenaltyReviewRowFromContext(
+  row: PenaltyReviewRow,
+  leagueKey: string,
+  contextMaps: PenaltyContextMaps,
+): PenaltyReviewRow {
+  const fixtureKey = [
+    row.date ?? "",
+    row.league ?? leagueKey,
+    teamKey(row.team ?? ""),
+    teamKey(row.opponent ?? ""),
+  ]
+    .map((part) => part.trim().toLowerCase())
+    .join("|");
+  const teamLookupKey = `${row.league ?? leagueKey}|${teamKey(row.team ?? "")}`.trim().toLowerCase();
+  const context =
+    contextMaps.fixtureMap.get(fixtureKey) ??
+    contextMaps.teamMap.get(teamLookupKey) ??
+    null;
+  const baseline = context ? null : contextMaps.baselineMap.get(teamLookupKey) ?? null;
+  if (!context && !baseline) return row;
+
+  const preferContextValue = (current?: string, fallback?: string): string => {
+    const currentValue = String(current ?? "").trim();
+    if (currentValue && currentValue.toLowerCase() !== "unknown" && currentValue.toLowerCase() !== "none") {
+      return currentValue;
+    }
+    return String(fallback ?? "").trim();
+  };
+
+  const actualTakerKey = penaltyReviewTakerKey(row.actual_taker);
+  const primaryName = context?.primary ?? baseline?.primary ?? "";
+  const secondaryName = context?.secondary ?? baseline?.secondary ?? "";
+  const tertiaryName = context?.tertiary ?? baseline?.tertiary ?? "";
+  const primaryKey = penaltyReviewTakerKey(primaryName);
+  const secondaryKey = penaltyReviewTakerKey(secondaryName);
+  const tertiaryKey = penaltyReviewTakerKey(tertiaryName);
+  let actualRole = row.actual_role_pre_match;
+  if (!String(actualRole ?? "").trim() || actualRole === "none") {
+    if (actualTakerKey && actualTakerKey === primaryKey) actualRole = "primary";
+    else if (actualTakerKey && actualTakerKey === secondaryKey) actualRole = "secondary";
+    else if (actualTakerKey && actualTakerKey === tertiaryKey) actualRole = "tertiary";
+    else if (
+      actualTakerKey &&
+      actualTakerKey === penaltyReviewTakerKey(context?.active_taker_pre_match) &&
+      String(context?.active_slot_pre_match ?? "").trim()
+    ) {
+      actualRole = context?.active_slot_pre_match;
+    }
+  }
+
+  return {
+    ...row,
+    primary_pre_match: row.primary_pre_match || primaryName || "",
+    secondary_pre_match: row.secondary_pre_match || secondaryName || "",
+    tertiary_pre_match: row.tertiary_pre_match || tertiaryName || "",
+    primary_lineup_status: preferContextValue(row.primary_lineup_status, context?.primary_lineup_status),
+    secondary_lineup_status: preferContextValue(row.secondary_lineup_status, context?.secondary_lineup_status),
+    tertiary_lineup_status: preferContextValue(row.tertiary_lineup_status, context?.tertiary_lineup_status),
+    active_taker_pre_match: preferContextValue(row.active_taker_pre_match, context?.active_taker_pre_match),
+    active_slot_pre_match: preferContextValue(row.active_slot_pre_match, context?.active_slot_pre_match),
+    team_lineup_status: preferContextValue(row.team_lineup_status, context?.team_lineup_status),
+    penalty_transfer_pre_match: row.penalty_transfer_pre_match || context?.penalty_transfer_pre_match || "",
+    inherited_from_pre_match: row.inherited_from_pre_match || context?.inherited_from_pre_match || "",
+    transfer_level_pre_match: row.transfer_level_pre_match || context?.transfer_level_pre_match || "",
+    actual_role_pre_match: actualRole || "",
+  };
+}
+
+async function listMatchResultCandidatePaths(leagueKey: string, matchDate?: string): Promise<string[]> {
+  const date = String(matchDate ?? "").trim();
+  if (!leagueKey || !date) return [];
+
+  const cacheKey = `${leagueKey}|${date}`;
+  const cached = matchResultPathCache.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) return cached.value;
+
+  let value: string[] = [];
+  try {
+    const leagueDir = path.join(MATCH_RESULTS_BASE_DIR, leagueKey);
+    const entries = await fs.readdir(leagueDir, { withFileTypes: true });
+    const prefix = `fotmob-${date}-`;
+    value = entries
+      .filter((entry) => entry.isFile() && entry.name.startsWith(prefix) && entry.name.endsWith(".json"))
+      .map((entry) => `data/goalscorer/match-results/${leagueKey}/${entry.name}`);
+  } catch {
+    value = [];
+  }
+
+  matchResultPathCache.set(cacheKey, {
+    expiresAt: Date.now() + MATCH_RESULTS_CACHE_TTL_MS,
+    value,
+  });
+  return value;
+}
+
+async function readMatchResultPayload(relativePath: string): Promise<MatchResultPayload | null> {
+  const cached = matchResultPayloadCache.get(relativePath);
+  if (cached && cached.expiresAt > Date.now()) return cached.value;
+
+  // Match result files are local-only — read directly from disk, bypassing the
+  // hosted-file machinery (which would fail because these paths are not in the
+  // snapshot and not tracked via KNOWN_PROJECT_FILE_PATHS).
+  let value: MatchResultPayload | null = null;
+  try {
+    const fullPath = path.join(process.cwd(), relativePath);
+    const text = await fs.readFile(fullPath, "utf8");
+    value = JSON.parse(text) as MatchResultPayload;
+  } catch {
+    value = null;
+  }
+
+  matchResultPayloadCache.set(relativePath, {
+    expiresAt: Date.now() + MATCH_RESULTS_CACHE_TTL_MS,
+    value,
+  });
+  return value;
+}
+
+async function findPenaltyMatchResult(row: PenaltyReviewRow): Promise<MatchResultPayload | null> {
+  const leagueKey = String(row.league ?? "").trim();
+  const matchDate = String(row.date ?? "").trim();
+  const team = teamKey(row.team ?? "");
+  const opponent = teamKey(row.opponent ?? "");
+  if (!leagueKey || !matchDate || !team || !opponent) return null;
+
+  const candidatePaths = await listMatchResultCandidatePaths(leagueKey, matchDate);
+  for (const candidatePath of candidatePaths) {
+    const payload = await readMatchResultPayload(candidatePath);
+    if (!payload) continue;
+    const homeKey = teamKey(payload.home_team ?? "");
+    const awayKey = teamKey(payload.away_team ?? "");
+    if ((homeKey === team && awayKey === opponent) || (homeKey === opponent && awayKey === team)) {
+      return payload;
+    }
+  }
+  return null;
+}
+
+function findMatchResultPlayer(
+  payload: MatchResultPayload | null,
+  teamName?: string,
+  playerName?: string,
+): MatchResultPlayer | null {
+  if (!payload || !playerName) return null;
+
+  const team = teamKey(teamName ?? "");
+  const exactKey = personKey(playerName);
+  const lastNameKey = penaltyReviewTakerKey(playerName);
+  const teamPlayers = (payload.players ?? []).filter((entry) => teamKey(entry.team ?? "") === team);
+  if (!teamPlayers.length) return null;
+
+  const exactMatch = teamPlayers.find((entry) => personKey(entry.name) === exactKey);
+  if (exactMatch) return exactMatch;
+
+  const lastNameMatches = teamPlayers.filter((entry) => penaltyReviewTakerKey(entry.name) === lastNameKey);
+  if (lastNameMatches.length === 1) return lastNameMatches[0] ?? null;
+
+  return null;
+}
+
+function hasTeamRoster(payload: MatchResultPayload | null, teamName?: string): boolean {
+  if (!payload) return false;
+  const team = teamKey(teamName ?? "");
+  return (payload.players ?? []).some((entry) => teamKey(entry.team ?? "") === team);
+}
+
+function describePlayerAtPenalty(
+  player: MatchResultPlayer | null,
+  minute: number | null,
+  teamRosterKnown = false,
+): string {
+  if (minute == null) return "Unknown";
+  if (!player) return teamRosterKnown ? "No, not in squad" : "Unknown";
+
+  const squadStatus = String(player.squad_status ?? "").trim().toLowerCase();
+  const started = Boolean(player.started);
+  const subbedOn = Boolean(player.subbed_on);
+  const subbedOff = Boolean(player.subbed_off);
+  const subIn = Number(player.sub_in_minute ?? 0) || 0;
+  const subOut = Number(player.sub_out_minute ?? 0) || 0;
+
+  let onPitch = false;
+  if (started) {
+    onPitch = !subbedOff || subOut <= 0 || minute < subOut;
+  } else if (subbedOn && minute >= subIn) {
+    onPitch = !subbedOff || subOut <= 0 || minute < subOut;
+  }
+
+  if (onPitch) {
+    if (started && subbedOff && subOut > 0) return `Yes, started (off ${subOut}')`;
+    if (started) return "Yes, starter";
+    if (subbedOn && subIn > 0) return `Yes, on from ${subIn}'`;
+    return "Yes";
+  }
+
+  if (subbedOff && subOut > 0) return `No, off ${subOut}'`;
+  if (subbedOn && subIn > 0 && minute < subIn) return `No, on from ${subIn}'`;
+  if (squadStatus === "unavailable") return "No, unavailable";
+  if (squadStatus === "sub") return "No, unused bench";
+  return started ? "No" : "Unknown";
+}
+
+async function enrichPenaltyReviewRowWithMatchResult(row: PenaltyReviewRow): Promise<PenaltyReviewRow> {
+  const minute = parseMatchMinute(row.minute);
+  if (minute == null) return row;
+
+  const payload = await findPenaltyMatchResult(row);
+  if (!payload) return row;
+
+  const primaryPlayer = findMatchResultPlayer(payload, row.team, row.primary_pre_match);
+  const activePlayer = findMatchResultPlayer(payload, row.team, row.active_taker_pre_match);
+  const actualTakerPlayer = findMatchResultPlayer(payload, row.team, row.actual_taker);
+  const rosterKnown = hasTeamRoster(payload, row.team);
+
+  return {
+    ...row,
+    primary_on_pitch_at_penalty:
+      row.primary_on_pitch_at_penalty || describePlayerAtPenalty(primaryPlayer, minute, rosterKnown),
+    active_on_pitch_at_penalty:
+      row.active_on_pitch_at_penalty || describePlayerAtPenalty(activePlayer, minute, rosterKnown),
+    actual_taker_on_pitch_at_penalty:
+      row.actual_taker_on_pitch_at_penalty || describePlayerAtPenalty(actualTakerPlayer, minute, rosterKnown),
+  };
 }
 
 function fixtureHealthKey(leagueKey: string, matchDate?: string, homeTeam?: string, awayTeam?: string): string {
@@ -1197,6 +1642,102 @@ function resolveLineupRows(lineupPlayers: LineupPlayer[], teamRows: CsvRow[]): A
     }
     return { lineup: lineupPlayer };
   });
+}
+
+function parseFixtureHealthRows(rows: CsvRow[], leagueKey: string): FixtureHealth[] {
+  const fixtures = new Map<string, FixtureHealth>();
+  for (const row of rows) {
+    const key = fixtureHealthKey(leagueKey, row.match_date, row.home_team, row.away_team);
+    if (!key.replace(/\|/g, "")) continue;
+    const existing = fixtures.get(key);
+    const corruptionFlags = (row.fixture_corruption_flags ?? "")
+      .split(/[|;,]/)
+      .map((flag) => decodeHtml(flag).trim())
+      .filter(Boolean);
+    const candidate: FixtureHealth = {
+      league: leagueKey,
+      match_date: String(row.match_date ?? ""),
+      home_team: String(row.home_team ?? ""),
+      away_team: String(row.away_team ?? ""),
+      competition: String(row.competition ?? ""),
+      bookmaker: String(row.bookmaker ?? ""),
+      lineup_input: String(row.lineup_input ?? ""),
+      trust_tier: String(row.trust_tier ?? ""),
+      corruption_score: String(row.fixture_corruption_score ?? ""),
+      corruption_flags: corruptionFlags,
+    };
+
+    if (!existing) {
+      fixtures.set(key, candidate);
+      continue;
+    }
+
+    const existingTier = existing.trust_tier === "T3" ? 3 : existing.trust_tier === "T2" ? 2 : 1;
+    const candidateTier = candidate.trust_tier === "T3" ? 3 : candidate.trust_tier === "T2" ? 2 : 1;
+    const keepCandidate =
+      candidateTier > existingTier ||
+      (candidateTier === existingTier &&
+        (parseFloatMaybe(candidate.corruption_score) ?? 0) > (parseFloatMaybe(existing.corruption_score) ?? 0));
+
+    if (keepCandidate) {
+      fixtures.set(key, candidate);
+      continue;
+    }
+
+    if (!existing.competition && candidate.competition) existing.competition = candidate.competition;
+    if (!existing.bookmaker && candidate.bookmaker) existing.bookmaker = candidate.bookmaker;
+    if (!existing.lineup_input && candidate.lineup_input) existing.lineup_input = candidate.lineup_input;
+    if ((existing.corruption_flags ?? []).length === 0 && corruptionFlags.length > 0) {
+      existing.corruption_flags = corruptionFlags;
+    }
+  }
+  return [...fixtures.values()];
+}
+
+function resolveStoredLineupStatus(row: CsvRow, leagueKey: string, lineupMap: Map<string, FixtureLineup>): CsvRow {
+  const fixture = lineupMap.get(`${leagueKey}|${teamKey(row.home_team)}|${teamKey(row.away_team)}`);
+  if (!fixture) return row;
+
+  const rowTeamKey = teamKey(row.player_team);
+  const isHomeRow = (row.is_home ?? "").trim() === "1" || rowTeamKey === fixture.homeKey;
+  const isAwayRow = (row.is_home ?? "").trim() === "0" || rowTeamKey === fixture.awayKey;
+
+  const lineupPlayers = isHomeRow ? fixture.homePlayers : isAwayRow ? fixture.awayPlayers : [];
+  const teamLineupStatus = isHomeRow ? fixture.homeStatus : isAwayRow ? fixture.awayStatus : "";
+  if (!lineupPlayers.length) return row;
+
+  const bestScore = lineupPlayers.reduce((maxScore, player) => {
+    return Math.max(maxScore, playerMatchScore(player.name, row.player_name));
+  }, 0);
+
+  if (bestScore < 68) {
+    return teamLineupStatus ? { ...row, team_lineup_status: teamLineupStatus } : row;
+  }
+
+  const normalizedStatus = teamLineupStatus.trim().toLowerCase();
+  if (normalizedStatus.includes("confirmed")) {
+    return {
+      ...row,
+      lineup_state: "starter",
+      lineup_status: "confirmed_starter",
+      lineup_source: "fotmob_confirmed",
+      lineup_input: "confirmed_xi",
+      team_lineup_status: teamLineupStatus || row.team_lineup_status || "Confirmed Lineup",
+    };
+  }
+
+  if (normalizedStatus.includes("expected")) {
+    return {
+      ...row,
+      lineup_state: "starter",
+      lineup_status: "expected_starter",
+      lineup_source: "fotmob_expected",
+      lineup_input: "expected_xi",
+      team_lineup_status: teamLineupStatus || row.team_lineup_status || "Expected Lineup",
+    };
+  }
+
+  return teamLineupStatus ? { ...row, team_lineup_status: teamLineupStatus } : row;
 }
 
 function parseSummaryMetrics(text: string | null): Record<string, string> {
@@ -1549,6 +2090,24 @@ function PenaltyReviewCard({
   const scored = Number.parseInt(String(row.penalties_scored ?? "0"), 10) || 0;
   const minuteLabel = (row.minute ?? "").trim();
   const sourceLabel = penaltyReviewSourceLabel(row.review_source);
+  const actualRoleLabel = humanizeToken(row.actual_role_pre_match && row.actual_role_pre_match !== "none" ? row.actual_role_pre_match : "untracked");
+  const primaryStatusLabel = readableLineupStatus(row.primary_lineup_status);
+  const activePreMatchLabel = row.active_taker_pre_match
+    ? `${row.active_taker_pre_match}${row.active_slot_pre_match ? ` (${humanizeToken(row.active_slot_pre_match)})` : ""}`
+    : "Unknown";
+  const primaryAvailabilityLabel = row.primary_pre_match
+    ? `${row.primary_pre_match} (${primaryStatusLabel})`
+    : primaryStatusLabel;
+  const primaryAtPenaltyLabel = row.primary_on_pitch_at_penalty || "Unknown";
+  const activeAtPenaltyLabel = row.active_on_pitch_at_penalty || "Unknown";
+  const hasProjectedShift =
+    String(row.penalty_transfer_pre_match ?? "").trim() === "1" ||
+    (!!row.active_taker_pre_match && !!row.inherited_from_pre_match && row.active_taker_pre_match !== row.inherited_from_pre_match);
+  const projectedShiftLabel = hasProjectedShift
+    ? `${row.inherited_from_pre_match || row.primary_pre_match || "Primary"} -> ${row.active_taker_pre_match || "Unknown"}${
+        row.transfer_level_pre_match ? ` (${humanizeToken(row.transfer_level_pre_match)})` : row.active_slot_pre_match ? ` (${humanizeToken(row.active_slot_pre_match)})` : ""
+      }`
+    : "No pre-match shift flagged";
 
   return (
     <div className={`rounded-2xl border p-4 ${penaltyReviewTone(row.review_type)}`}>
@@ -1564,7 +2123,7 @@ function PenaltyReviewCard({
             </span>
           </div>
           <div className="mt-1 text-sm text-slate-400">
-            {row.team || "Unknown team"} vs {row.opponent || "Unknown opponent"} · {formatShortDate(row.date)}
+            {row.team || "Unknown team"} vs {row.opponent || "Unknown opponent"} &middot; {formatShortDate(row.date)}
           </div>
         </div>
         <div className="rounded-full border border-slate-700/80 bg-slate-950/70 px-3 py-1 text-xs text-slate-300">
@@ -1583,17 +2142,40 @@ function PenaltyReviewCard({
         </div>
         <div className="rounded-xl bg-black/15 px-3 py-2">
           <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Actual role</div>
-          <div className="mt-1 text-slate-200">{humanizeToken(row.actual_role_pre_match || "none")}</div>
+          <div className="mt-1 text-slate-200">{actualRoleLabel}</div>
         </div>
         <div className="rounded-xl bg-black/15 px-3 py-2">
           <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Pens</div>
           <div className="mt-1 text-slate-200">
-            {attempts} attempt{attempts === 1 ? "" : "s"} · {scored} scored
+            {attempts} attempt{attempts === 1 ? "" : "s"} &middot; {scored} scored
           </div>
         </div>
         <div className="rounded-xl bg-black/15 px-3 py-2">
           <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Minute</div>
           <div className="mt-1 text-slate-200">{minuteLabel || "Awaiting log"}</div>
+        </div>
+      </div>
+
+      <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+        <div className="rounded-xl bg-black/15 px-3 py-2">
+          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Primary pre-match status</div>
+          <div className="mt-1 text-slate-200">{primaryAvailabilityLabel}</div>
+        </div>
+        <div className="rounded-xl bg-black/15 px-3 py-2">
+          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Active pre-match</div>
+          <div className="mt-1 text-slate-200">{activePreMatchLabel}</div>
+        </div>
+        <div className="rounded-xl bg-black/15 px-3 py-2 sm:col-span-2">
+          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Projected hierarchy shift</div>
+          <div className="mt-1 text-slate-200">{projectedShiftLabel}</div>
+        </div>
+        <div className="rounded-xl bg-black/15 px-3 py-2">
+          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Primary at penalty</div>
+          <div className="mt-1 text-slate-200">{primaryAtPenaltyLabel}</div>
+        </div>
+        <div className="rounded-xl bg-black/15 px-3 py-2">
+          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Active at penalty</div>
+          <div className="mt-1 text-slate-200">{activeAtPenaltyLabel}</div>
         </div>
       </div>
 
@@ -1715,8 +2297,8 @@ function penaltyComponentMeta(row?: CsvRow): { compact: string; detail: string }
   ];
 
   return {
-    compact: compactBits.join(" · "),
-    detail: detailBits.join(" · "),
+    compact: compactBits.join(" &middot; "),
+    detail: detailBits.join(" &middot; "),
   };
 }
 
@@ -1967,20 +2549,16 @@ export default async function GoalscorerMonitorPage() {
   const [leagueDatasets, shadowDatasets, publicDatasets, snapshotGeneratedAt, snapshotFileMtime, liveLogMtime, liveStatus, scheduleState] = await Promise.all([
     Promise.all(
       LIVE_COMPARE_CONFIGS.map(async (config) => {
-        const [comparisonJson, comparisonCsv, comparisonTxt, comparisonJsonMtime, comparisonCsvMtime, lineupsJson, penaltyReviewJson, livePenaltyReviewJson] = await Promise.all([
-          readGoalscorerLiveJson<LiveBoardPayload>(config.comparisonJson),
+        const [comparisonCsv, comparisonTxt, comparisonCsvMtime, lineupsJson, penaltyReviewJson, livePenaltyReviewJson, penaltyContextJson, penaltyTakersJson] = await Promise.all([
           readGoalscorerLiveFile(config.comparisonCsv),
           readGoalscorerLiveFile(config.comparisonTxt),
-          readGoalscorerLiveMtime(config.comparisonJson),
           readGoalscorerLiveMtime(config.comparisonCsv),
           readGoalscorerLiveFile(config.lineupsJson),
           readGoalscorerLiveJson<PenaltyReviewPayload>(config.penaltyReviewJson),
           readGoalscorerLiveJson<PenaltyReviewPayload>(config.livePenaltyReviewJson),
+          readGoalscorerLiveJson<PenaltyContextPayload>(config.penaltyContextJson),
+          readGoalscorerLiveJson<PenaltyTakerBaselinePayload>(config.penaltyTakersJson),
         ]);
-        const jsonRows = parseLiveBoardRows(comparisonJson);
-        const fixtureHealth = parseLiveBoardFixtures(comparisonJson, config.key);
-        const rawRows = jsonRows.length > 0 ? jsonRows : comparisonCsv ? parseCsv(comparisonCsv) : [];
-        const rows = filterActiveRows(rawRows);
         const lineupFixtures = parseStoredLineups(lineupsJson, config.key);
         const lineupMap = new Map(
           lineupFixtures.map((fixture) => [
@@ -1988,13 +2566,16 @@ export default async function GoalscorerMonitorPage() {
             fixture,
           ]),
         );
+        const rawRows = comparisonCsv ? parseCsv(comparisonCsv) : [];
+        const fixtureHealth = parseFixtureHealthRows(rawRows, config.key);
+        const rows = filterActiveRows(rawRows).map((row) => resolveStoredLineupStatus(row, config.key, lineupMap));
 
         return {
           ...config,
-          comparisonJson,
+          comparisonJson: null,
           comparisonCsv,
           comparisonTxt,
-          comparisonMtime: comparisonJsonMtime ?? comparisonCsvMtime,
+          comparisonMtime: comparisonCsvMtime,
           lineupsJson,
           rows,
           fixtureHealth,
@@ -2003,6 +2584,8 @@ export default async function GoalscorerMonitorPage() {
           penaltyReviewGeneratedAt: penaltyReviewJson?.generated_at ?? null,
           livePenaltyReviewRows: Array.isArray(livePenaltyReviewJson?.rows) ? livePenaltyReviewJson.rows : [],
           livePenaltyReviewGeneratedAt: livePenaltyReviewJson?.generated_at ?? null,
+          penaltyContextRows: Array.isArray(penaltyContextJson?.rows) ? penaltyContextJson.rows : [],
+          penaltyTakerBaseline: penaltyTakersJson ?? {},
           summary: parseSummaryMetrics(comparisonTxt),
         };
       }),
@@ -2061,12 +2644,18 @@ export default async function GoalscorerMonitorPage() {
   const liveMonitorRows: GoalscorerMonitorRow[] = [...highRows, ...caveatRows]
     .map((row) => {
       const kickoff = resolveRowKickoff(row, kickoffLookup);
+      const homeTeam = (row.home_team ?? "").trim();
+      const awayTeam = (row.away_team ?? "").trim();
+      const matchLabel =
+        homeTeam && awayTeam
+          ? `${homeTeam} vs ${awayTeam}`
+          : `${row.player_team || "Unknown team"} vs ${row.opponent || "Unknown opponent"}`;
       return {
         key: `${row.player_name}-${row.match_date}-${row.bookmaker}-${effectiveMonitorAction(row)}`,
         status: ((row.public_action ?? "") === "surface" ? "PUBLIC" : "SHADOW") as GoalscorerMonitorRow["status"],
         league: leagueShortLabel(row.competition || row.league),
         player: row.player_name || "Unknown player",
-        match: `${row.player_team || "Unknown team"} vs ${row.opponent || "Unknown opponent"}`,
+        match: matchLabel,
         kickoff,
         lineupShort: lineupShortLabel(row),
         lineupLabel: formatLineupLabel(row),
@@ -2281,20 +2870,27 @@ export default async function GoalscorerMonitorPage() {
       return `=== ${dataset.label} | ${updated} ===\n${dataset.comparisonTxt ?? "Missing goalscorer live summary."}`;
     })
     .join("\n\n");
-  const penaltyReviewRows = leagueDatasets
-    .flatMap((dataset) =>
-      mergePenaltyReviewRows([
-        ...dataset.penaltyReviewRows.map((row) => ({
-          ...row,
-          league: row.league || dataset.key,
-        })),
-        ...dataset.livePenaltyReviewRows.map((row) => ({
-          ...row,
-          league: row.league || dataset.key,
-        })),
-      ]),
+  const penaltyReviewRows = (
+    await Promise.all(
+      leagueDatasets.flatMap((dataset) => {
+        const contextMaps = buildPenaltyContextMaps(
+          dataset.penaltyContextRows ?? [],
+          dataset.penaltyTakerBaseline ?? {},
+          dataset.key,
+        );
+        return mergePenaltyReviewRows([
+          ...dataset.penaltyReviewRows.map((row) => ({
+            ...row,
+            league: row.league || dataset.key,
+          })),
+          ...dataset.livePenaltyReviewRows.map((row) => ({
+            ...row,
+            league: row.league || dataset.key,
+          })),
+        ]).map((row) => enrichPenaltyReviewRowWithMatchResult(enrichPenaltyReviewRowFromContext(row, dataset.key, contextMaps)));
+      }),
     )
-    .sort((left, right) => {
+  ).sort((left, right) => {
       const priorityDiff = priorityRank(right.review_priority) - priorityRank(left.review_priority);
       if (priorityDiff !== 0) return priorityDiff;
       const rightDate = Date.parse(right.date || "");
@@ -2513,9 +3109,9 @@ export default async function GoalscorerMonitorPage() {
                       <td className="px-3 py-3 font-mono tabular-nums text-amber-300">{row.shadowNow}</td>
                       <td className="px-3 py-3 font-mono tabular-nums">
                         <span className="text-emerald-300">{row.cleanFixtures}</span>
-                        <span className="px-1 text-slate-600">·</span>
+                        <span className="px-1 text-slate-600">&middot;</span>
                         <span className="text-amber-300">{row.degradedFixtures}</span>
-                        <span className="px-1 text-slate-600">·</span>
+                        <span className="px-1 text-slate-600">&middot;</span>
                         <span className="text-rose-300">{row.quarantinedFixtures}</span>
                       </td>
                       <td className="border-l border-slate-700/60 bg-sky-950/10 px-3 py-3 font-mono tabular-nums text-slate-300">
@@ -2851,4 +3447,5 @@ export default async function GoalscorerMonitorPage() {
     </div>
   );
 }
+
 

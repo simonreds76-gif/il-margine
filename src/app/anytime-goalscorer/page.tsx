@@ -1,3 +1,4 @@
+import { promises as fs } from "node:fs";
 import Link from "next/link";
 
 import PublicGoalscorerBoard from "./PublicGoalscorerBoard";
@@ -7,9 +8,10 @@ import {
   getTodayIsoLondon,
 } from "./shared";
 import {
-  readGoalscorerLiveFile,
+  readGoalscorerHostedContent,
   readGoalscorerLiveSnapshotGeneratedAt,
 } from "@/lib/goalscorer-live-files";
+import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
 
 export const dynamic = "force-dynamic";
 
@@ -111,9 +113,63 @@ function parsePublicRow(row: CsvRow, league: (typeof LEAGUE_SOURCES)[number]): P
 async function loadPublicRows(): Promise<PublicRow[]> {
   const loaded = await Promise.all(
     LEAGUE_SOURCES.map(async (league) => {
-      const text = await readGoalscorerLiveFile(league.file);
-      if (!text) return [] as PublicRow[];
-      return parseCsv(text).map((row) => parsePublicRow(row, league));
+      const readLocalText = async (): Promise<string | null> => {
+        try {
+          const fullPath = tryGetKnownProjectFilePath(league.file);
+          if (!fullPath) return null;
+          return await fs.readFile(fullPath, "utf8");
+        } catch {
+          return null;
+        }
+      };
+
+      // Read local (settled history) and hosted (current picks) independently.
+      // We always merge both so that fresh hosted current picks are never dropped
+      // just because the local file has a newer mtime from recently settled bets.
+      const [localText, hostedText] = await Promise.all([
+        readLocalText(),
+        readGoalscorerHostedContent(league.file),
+      ]);
+
+      const merged = new Map<string, PublicRow>();
+      const upsert = (row: PublicRow) => {
+        const key = `${row.leagueKey}|${row.date}|${row.player}|${row.match}`;
+        const existing = merged.get(key);
+        if (!existing) {
+          merged.set(key, row);
+          return;
+        }
+
+        const currentSettled = row.settled;
+        const existingSettled = existing.settled;
+        if (currentSettled && !existingSettled) {
+          merged.set(key, row);
+          return;
+        }
+        if (!currentSettled && existingSettled) {
+          return;
+        }
+
+        const currentTs = Date.parse(row.settledAt || row.comparedAt || row.kickoff || row.date);
+        const existingTs = Date.parse(existing.settledAt || existing.comparedAt || existing.kickoff || existing.date);
+        if (Number.isFinite(currentTs) && Number.isFinite(existingTs)) {
+          if (currentTs >= existingTs) merged.set(key, row);
+          return;
+        }
+        if (Number.isFinite(currentTs)) {
+          merged.set(key, row);
+        }
+      };
+
+      // Process local first (settled history), then hosted (current picks)
+      for (const text of [localText, hostedText]) {
+        if (!text) continue;
+        for (const row of parseCsv(text).map((csvRow) => parsePublicRow(csvRow, league))) {
+          upsert(row);
+        }
+      }
+
+      return [...merged.values()];
     }),
   );
 
