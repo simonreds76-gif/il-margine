@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-04-10T15:02:05Z",
+  "league": "bundesliga",
+  "row_count": 3,
+  "rows": [
+    {
+      "team": "Bayer Leverkusen",
+      "team_key": "bayer leverkusen",
+      "player_name": "Alejandro Grimaldo",
+      "player_key": "alejandro grimaldo",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-04"
+    },
+    {
+      "team": "Bayer Leverkusen",
+      "team_key": "bayer leverkusen",
+      "player_name": "Patrik Schick",
+      "player_key": "patrik schick",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-04"
+    },
+    {
+      "team": "Wolfsburg",
+      "team_key": "wolfsburg",
+      "player_name": "Christian Eriksen",
+      "player_key": "christian eriksen",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-04"
+    }
+  ]
+}

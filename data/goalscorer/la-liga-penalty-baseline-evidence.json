@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-04-10T15:00:50Z",
+  "league": "la-liga",
+  "row_count": 2,
+  "rows": [
+    {
+      "team": "Deportivo Alaves",
+      "team_key": "alaves",
+      "player_name": "Lucas Boyé",
+      "player_key": "lucas boy",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-05"
+    },
+    {
+      "team": "Osasuna",
+      "team_key": "osasuna",
+      "player_name": "Ante Budimir",
+      "player_key": "ante budimir",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-05"
+    }
+  ]
+}
