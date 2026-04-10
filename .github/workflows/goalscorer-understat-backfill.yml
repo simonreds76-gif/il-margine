@@ -1,0 +1,78 @@
+name: Goalscorer Understat Backfill
+
+on:
+  workflow_dispatch:
+    inputs:
+      leagues:
+        description: "Space-separated leagues"
+        required: false
+        default: "serie-a epl la-liga bundesliga ligue-1"
+      seasons:
+        description: "Space-separated seasons"
+        required: false
+        default: "2023-2024 2024-2025 2025-2026"
+      max_players:
+        description: "Optional player cap for testing"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: goalscorer-understat-backfill
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install Python deps
+        run: pip install requests
+
+      - name: Run Understat backfill
+        shell: bash
+        env:
+          LEAGUES: ${{ inputs.leagues }}
+          SEASONS: ${{ inputs.seasons }}
+          MAX_PLAYERS: ${{ inputs.max_players }}
+        run: |
+          set -euo pipefail
+          args=(--resume --league ${LEAGUES} --season ${SEASONS})
+          if [ -n "${MAX_PLAYERS}" ]; then
+            args+=(--max-players "${MAX_PLAYERS}")
+          fi
+          python scripts/understat-scrape-serie-a.py "${args[@]}"
+
+      - name: Commit and push if new logs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          shopt -s nullglob
+          files=(data/goalscorer/*-player-match-logs-*.csv data/goalscorer/.understat-progress-*.json)
+          if [ ${#files[@]} -gt 0 ]; then
+            git add -f "${files[@]}"
+          fi
+          git add -u data/goalscorer || true
+          if git diff --cached --quiet; then
+            echo "No Understat backfill changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: goalscorer understat backfill"
+          git fetch origin golden-with-speed-insights
+          git rebase origin/golden-with-speed-insights
+          git push origin HEAD:golden-with-speed-insights
