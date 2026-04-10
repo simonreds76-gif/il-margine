@@ -1137,6 +1137,9 @@ function LiveLineTable({
     pendingState: "upcoming" | "awaiting result";
     currentOdds: number | null;
     delta: number | null;
+    currentLine: string | null;
+    currentBookmaker: string | null;
+    lineMoved: boolean;
   };
 
   const pendingShadowRows: PendingShadowRow[] = pendingShadow
@@ -1146,9 +1149,17 @@ function LiveLineTable({
       const currentTeamLines = liveOddsByMatchTeam.get(teamKey);
       const lineKey = `${(row.bookmaker ?? "").trim()}|${(row.line ?? "").trim()}`;
       const currentLine = currentTeamLines?.get(lineKey);
+      const sameBookLines = [...(currentTeamLines?.values() ?? [])].filter(
+        (line) => line.bookmaker === (row.bookmaker ?? "").trim(),
+      );
+      const fallbackLine =
+        currentLine ??
+        sameBookLines
+          .slice()
+          .sort((a, b) => Math.abs(a.line - pf(row.line, 0)) - Math.abs(b.line - pf(row.line, 0)))[0];
       const currentOdds =
-        currentLine
-          ? (row.side === "over" ? currentLine.overOdds : currentLine.underOdds) ?? null
+        fallbackLine
+          ? (row.side === "over" ? fallbackLine.overOdds : fallbackLine.underOdds) ?? null
           : null;
       const loggedOdds = pf(row.book_odds, Number.NaN);
       const delta =
@@ -1169,6 +1180,9 @@ function LiveLineTable({
         pendingState: matchDate > asOfIso ? "upcoming" : "awaiting result",
         currentOdds,
         delta,
+        currentLine: fallbackLine ? fallbackLine.lineLabel : null,
+        currentBookmaker: fallbackLine ? fallbackLine.bookmaker : null,
+        lineMoved: Boolean(fallbackLine && currentLine !== fallbackLine),
       };
     })
     .sort((a, b) => {
@@ -1467,6 +1481,7 @@ function LiveLineTable({
                             const showMove =
                               row.currentOdds !== null &&
                               delta !== null &&
+                              !row.lineMoved &&
                               !Number.isNaN(loggedOdds) &&
                               Math.abs(delta) >= 0.02;
                             return (
@@ -1495,7 +1510,10 @@ function LiveLineTable({
                                       {delta > 0 ? <>&uarr;</> : <>&darr;</>} {row.currentOdds!.toFixed(2)}
                                     </span>
                                   ) : row.currentOdds !== null ? (
-                                    <span className="text-slate-500">{row.currentOdds.toFixed(2)}</span>
+                                    <span className={row.lineMoved ? "text-amber-300" : "text-slate-500"}>
+                                      {row.currentOdds.toFixed(2)}
+                                      {row.lineMoved && row.currentLine ? ` @ ${row.currentLine}` : ""}
+                                    </span>
                                   ) : (
                                     <span className="text-slate-600">&mdash;</span>
                                   )}
