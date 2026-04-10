@@ -264,7 +264,7 @@
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "3-5-2",
+      "away_formation": "3-1-4-2",
       "home_players": [
         "Kevin Trapp",
         "Adama Camara",
@@ -283,13 +283,13 @@
         "Thilo Kehrer",
         "Denis Zakaria",
         "Wout Faes",
-        "Jordan Teze",
-        "Lamine Camara",
-        "Mamadou Coulibaly",
         "Aladji Bamba",
+        "Jordan Teze",
+        "Mamadou Coulibaly",
+        "Lamine Camara",
         "Simon Adingra",
-        "Ansu Fati",
-        "Folarin Balogun"
+        "Folarin Balogun",
+        "Ansu Fati"
       ],
       "home_starters": [
         {
@@ -399,7 +399,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-5-2",
+          "formation": "3-1-4-2",
           "position_id": 11
         },
         {
@@ -408,7 +408,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
+          "formation": "3-1-4-2",
           "position_id": 33
         },
         {
@@ -417,7 +417,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
+          "formation": "3-1-4-2",
           "position_id": 35
         },
         {
@@ -426,70 +426,70 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
+          "formation": "3-1-4-2",
           "position_id": 37
-        },
-        {
-          "name": "Jordan Teze",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 71
-        },
-        {
-          "name": "Lamine Camara",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 73
-        },
-        {
-          "name": "Mamadou Coulibaly",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 75
         },
         {
           "name": "Aladji Bamba",
           "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 77
+          "line_size": 1,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "3-1-4-2",
+          "position_id": 65
+        },
+        {
+          "name": "Jordan Teze",
+          "line_index": 2,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-1-4-2",
+          "position_id": 82
+        },
+        {
+          "name": "Mamadou Coulibaly",
+          "line_index": 2,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-1-4-2",
+          "position_id": 84
+        },
+        {
+          "name": "Lamine Camara",
+          "line_index": 2,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-1-4-2",
+          "position_id": 86
         },
         {
           "name": "Simon Adingra",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 79
-        },
-        {
-          "name": "Ansu Fati",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-5-2",
-          "position_id": 104
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-1-4-2",
+          "position_id": 88
         },
         {
           "name": "Folarin Balogun",
-          "line_index": 2,
+          "line_index": 3,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-5-2",
+          "formation": "3-1-4-2",
+          "position_id": 104
+        },
+        {
+          "name": "Ansu Fati",
+          "line_index": 3,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-1-4-2",
           "position_id": 106
         }
       ],
@@ -776,7 +776,6 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Lasso Coulibaly",
         "Oussama El Azzouzi"
       ],
       "away_unavailable": [

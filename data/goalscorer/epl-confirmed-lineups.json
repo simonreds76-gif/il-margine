@@ -8,22 +8,22 @@
       "match_date": "2026-04-10",
       "home_team": "West Ham United",
       "away_team": "Wolverhampton Wanderers",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "3-4-2-1",
       "home_players": [
         "Mads Hermansen",
-        "Aaron Wan-Bissaka",
+        "Kyle Walker-Peters",
         "Konstantinos Mavropanos",
         "Axel Disasi",
         "Malick Diouf",
         "Tomás Soucek",
         "Mateus Fernandes",
-        "Adama Traoré",
-        "Pablo",
         "Jarrod Bowen",
+        "Pablo",
+        "Crysencio Summerville",
         "Valentín Castellanos"
       ],
       "away_players": [
@@ -36,7 +36,7 @@
         "João Gomes",
         "Hugo Bueno",
         "Jean-Ricner Bellegarde",
-        "Mateus Mané",
+        "Angel Gomes",
         "Adam Armstrong"
       ],
       "home_starters": [
@@ -50,7 +50,7 @@
           "position_id": 11
         },
         {
-          "name": "Aaron Wan-Bissaka",
+          "name": "Kyle Walker-Peters",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -104,7 +104,7 @@
           "position_id": 66
         },
         {
-          "name": "Adama Traoré",
+          "name": "Jarrod Bowen",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -122,7 +122,7 @@
           "position_id": 85
         },
         {
-          "name": "Jarrod Bowen",
+          "name": "Crysencio Summerville",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -223,7 +223,7 @@
           "position_id": 84
         },
         {
-          "name": "Mateus Mané",
+          "name": "Angel Gomes",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -241,11 +241,29 @@
           "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Alphonse Areola",
+        "Aaron Wan-Bissaka",
         "Jean-Clair Todibo",
-        "Crysencio Summerville",
+        "Oliver Scarles",
+        "Freddie Potts",
+        "Mohamadou Kanté",
+        "Soungoutou Magassa",
+        "Adama Traoré",
+        "Callum Wilson"
+      ],
+      "away_subs": [
+        "Daniel Bentley",
+        "David Møller Wolfe",
+        "Pedro Lima",
+        "Toti Gomes",
+        "Mateus Mané",
+        "Rodrigo Gomes",
+        "Tom Edozie",
+        "Hee-Chan Hwang",
+        "Tolu Arokodare"
+      ],
+      "home_unavailable": [
         "Lukasz Fabianski"
       ],
       "away_unavailable": [
