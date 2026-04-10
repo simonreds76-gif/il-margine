@@ -204,7 +204,7 @@ function Get-SchedulePlan {
 }
 
 $bookmaker = if ([string]::IsNullOrWhiteSpace($env:GOALSCORER_BOOKMAKER)) { "Bet365" } else { $env:GOALSCORER_BOOKMAKER }
-$oddsApiBooks = if ([string]::IsNullOrWhiteSpace($env:GOALSCORER_ODDS_API_BOOKMAKERS)) { "Bet365,Ladbrokes" } else { $env:GOALSCORER_ODDS_API_BOOKMAKERS }
+$oddsApiBooks = if ([string]::IsNullOrWhiteSpace($env:GOALSCORER_ODDS_API_BOOKMAKERS)) { "Bet365" } else { $env:GOALSCORER_ODDS_API_BOOKMAKERS }
 $leagues = if ([string]::IsNullOrWhiteSpace($env:GOALSCORER_LEAGUES)) {
     @("serie-a", "epl", "la-liga", "bundesliga", "ligue-1")
 } else {
@@ -380,6 +380,7 @@ try {
         Log "============================================"
         exit 1
     } else {
+        $lastSuccessfulFinishedAt = (Get-Date).ToUniversalTime().ToString("o")
         Write-Status -State "skipped" -Message "Goalscorer live poll skipped: no leagues due in current cadence window."
     }
     Log "============================================"

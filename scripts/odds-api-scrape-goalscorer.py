@@ -3,7 +3,7 @@
 Scrape league-specific anytime-goalscorer prices from odds-api.io.
 
 This is the preferred live source when an Odds-API.io key is configured,
-because it can return soft-book prices like Bet365 and Ladbrokes.
+because it can return soft-book prices like Bet365.
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ import requests
 
 BASE_URL = "https://api.odds-api.io/v3"
 DEFAULT_OUT_DIR = "data/goalscorer/inbox"
-DEFAULT_BOOKMAKERS = "Bet365,Ladbrokes"
+DEFAULT_BOOKMAKERS = "Bet365"
 
 LEAGUE_CONFIGS = {
     "serie-a": {
@@ -391,15 +391,42 @@ def main() -> None:
     all_rows: List[dict] = []
     bookmaker_list = ",".join(bookmakers)
     for event_ids in chunked([str(event["id"]) for event in target_events], 10):
-        odds_payload = fetch_json(
-            "odds/multi",
-            {"apiKey": api_key, "eventIds": ",".join(event_ids), "bookmakers": bookmaker_list},
-        )
-        if not isinstance(odds_payload, list):
-            continue
-        for event in odds_payload:
-            bookmakers = event.get("bookmakers") or {}
-            for bookmaker, markets in bookmakers.items():
+        payloads: List[dict] = []
+        try:
+            odds_payload = fetch_json(
+                "odds/multi",
+                {"apiKey": api_key, "eventIds": ",".join(event_ids), "bookmakers": bookmaker_list},
+            )
+            if isinstance(odds_payload, list):
+                payloads.extend(odds_payload)
+        except requests.HTTPError as exc:
+            status_code = exc.response.status_code if exc.response is not None else None
+            if status_code == 403:
+                if len(bookmakers) > 1:
+                    print(f"  odds/multi rejected combined bookmaker request ({bookmaker_list}); retrying one book at a time.")
+                    for bookmaker in bookmakers:
+                        try:
+                            single_payload = fetch_json(
+                                "odds/multi",
+                                {"apiKey": api_key, "eventIds": ",".join(event_ids), "bookmakers": bookmaker},
+                            )
+                        except requests.HTTPError as inner_exc:
+                            inner_status = inner_exc.response.status_code if inner_exc.response is not None else None
+                            if inner_status == 403:
+                                print(f"  Skipping bookmaker {bookmaker}: odds/multi returned 403.")
+                                continue
+                            raise
+                        if isinstance(single_payload, list):
+                            payloads.extend(single_payload)
+                else:
+                    print(f"  odds/multi returned 403 for {bookmaker_list}; continuing without fresh odds for this chunk.")
+                    continue
+            else:
+                raise
+
+        for event in payloads:
+            event_bookmakers = event.get("bookmakers") or {}
+            for bookmaker, markets in event_bookmakers.items():
                 for market in markets or []:
                     all_rows.extend(
                         _extract_atgs_rows_for_market(
@@ -421,6 +448,11 @@ def main() -> None:
 
     if args.dry_run:
         print("  Dry run only; no file written.")
+        print("\n  Done.\n")
+        return
+
+    if not all_rows:
+        print("  No fresh ATGS rows returned; nothing written.")
         print("\n  Done.\n")
         return
 

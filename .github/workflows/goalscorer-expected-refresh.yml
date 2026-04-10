@@ -6,6 +6,11 @@ on:
     - cron: "0 13 * * *" # 13:00 UTC
     - cron: "0 18 * * *" # 18:00 UTC
   workflow_dispatch:
+    inputs:
+      force_understat:
+        description: "Re-run Understat scrape even if player-match CSVs already exist"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -48,6 +53,9 @@ jobs:
           fi
 
       - name: Bootstrap Understat player logs if missing
+        env:
+          # Only read github.event.inputs when dispatch (schedule has no inputs — avoid invalid `inputs` context).
+          FORCE_UNDERSTAT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.force_understat == true }}
         run: |
           missing=0
           for league in serie-a epl la-liga bundesliga ligue-1; do
@@ -55,12 +63,19 @@ jobs:
               missing=1
             fi
           done
-          if [ "$missing" -eq 1 ]; then
+          # Scheduled runs: only scrape when any league file is missing. Manual runs can force a full re-scrape.
+          if [ "${FORCE_UNDERSTAT}" = "true" ]; then
+            echo "FORCE_UNDERSTAT: running Understat scrape for all configured leagues/seasons."
+            python scripts/understat-scrape-serie-a.py \
+              --league serie-a epl la-liga bundesliga ligue-1 \
+              --season 2023-2024 2024-2025 2025-2026
+          elif [ "$missing" -eq 1 ]; then
             python scripts/understat-scrape-serie-a.py \
               --league serie-a epl la-liga bundesliga ligue-1 \
               --season 2023-2024 2024-2025 2025-2026
           else
-            echo "Goalscorer player logs already present."
+            echo "Goalscorer player logs already present; skipping Understat bootstrap."
+            echo "  (Use workflow_dispatch with force_understat to re-scrape anyway.)"
           fi
 
       - name: Refresh expected lineups + public/shadow board
@@ -72,7 +87,7 @@ jobs:
               --live-only \
               --bookmaker Bet365 \
               --fetch-odds-api \
-              --odds-api-bookmakers "Bet365,Ladbrokes" \
+              --odds-api-bookmakers "Bet365" \
               --fetch-lineups \
               --lineup-days-ahead 3 \
               --track-shadow
