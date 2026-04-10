@@ -1131,6 +1131,7 @@ function LiveLineTable({
     line: string;
     side: string;
     book_odds: string;
+    logged_at: string;
     model_fair_odds: string;
     edge: string;
     pendingState: "upcoming" | "awaiting result";
@@ -1162,6 +1163,7 @@ function LiveLineTable({
         line: row.line ?? "",
         side: row.side ?? "",
         book_odds: row.book_odds ?? "",
+        logged_at: row.logged_at ?? "",
         model_fair_odds: row.model_fair_odds ?? "",
         edge: row.edge ?? "",
         pendingState: matchDate > asOfIso ? "upcoming" : "awaiting result",
@@ -1446,10 +1448,12 @@ function LiveLineTable({
                             <th className="py-2 pl-4 pr-3">League</th>
                             <th className="py-2 pr-3">Match</th>
                             <th className="py-2 pr-3">Team</th>
-                            <th className="py-2 pr-3 font-mono">Line</th>
+                            <th className="py-2 pr-3">Book</th>
+                            <th className="py-2 pr-3 font-mono">Entry line</th>
                             <th className="py-2 pr-3">Side</th>
-                            <th className="py-2 pr-3 font-mono">Entry</th>
-                            <th className="py-2 pr-3 font-mono">Move</th>
+                            <th className="py-2 pr-3 font-mono">Entry odds</th>
+                            <th className="py-2 pr-3 font-mono">Logged</th>
+                            <th className="py-2 pr-3 font-mono">Latest</th>
                             <th className="py-2 pr-3 font-mono">Fair</th>
                             <th className="py-2 pr-3 font-mono">Edge</th>
                             <th className="py-2 pr-3 font-mono">Stake</th>
@@ -1470,6 +1474,7 @@ function LiveLineTable({
                                 <td className="py-2 pl-4 pr-3 text-slate-400">{row.league}</td>
                                 <td className="py-2 pr-3">{row.home_team} v {row.away_team}</td>
                                 <td className="py-2 pr-3 font-medium text-slate-100">{row.team}</td>
+                                <td className="py-2 pr-3 text-slate-300">{row.bookmaker}</td>
                                 <td className="py-2 pr-3 font-mono tabular-nums text-slate-100">{row.line}</td>
                                 <td className="py-2 pr-3">
                                   <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase ${
@@ -1480,6 +1485,9 @@ function LiveLineTable({
                                 </td>
                                 <td className="py-2 pr-3 font-mono tabular-nums text-slate-100">
                                   {loggedOdds.toFixed(2)}
+                                </td>
+                                <td className="py-2 pr-3 text-[11px] text-slate-500">
+                                  {formatDateTime(row.logged_at)}
                                 </td>
                                 <td className="py-2 pr-3 font-mono tabular-nums">
                                   {showMove ? (
