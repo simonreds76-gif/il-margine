@@ -326,6 +326,20 @@ def _fetch_json(session: requests.Session, url: str) -> dict:
     return response.json()
 
 
+def _fetch_player_json(session: requests.Session, player_url: str) -> Optional[dict]:
+    """
+    GET getPlayerData/{id}. Returns None if Understat has no page (404/410) for this id
+    (league list can still reference removed/merged players). Other errors raise.
+    """
+    response = session.get(player_url, headers=HEADERS, timeout=30)
+    if response.status_code in (404, 410):
+        time.sleep(REQUEST_DELAY)
+        return None
+    response.raise_for_status()
+    time.sleep(REQUEST_DELAY)
+    return response.json()
+
+
 def scrape_season(state: ScrapeState) -> str:
     os.makedirs(state.output_dir, exist_ok=True)
     output_path = os.path.join(state.output_dir, f"{state.output_prefix}-player-match-logs-{state.season_label}.csv")
@@ -369,6 +383,7 @@ def scrape_season(state: ScrapeState) -> str:
     total_players = 0
     skipped_players = 0
     processed_players = 0
+    player_fetch_failures = 0
     join_hits = 0
     join_misses = 0
 
@@ -384,7 +399,19 @@ def scrape_season(state: ScrapeState) -> str:
             continue
 
         print(f"  {player.get('player_name')} ({season_minutes}min)...", end="", flush=True)
-        payload = _fetch_json(state.session, f"https://understat.com/getPlayerData/{player_id}")
+        player_url = f"https://understat.com/getPlayerData/{player_id}"
+        payload = _fetch_player_json(state.session, player_url)
+        if payload is None:
+            print(
+                f" skip (404/410: no player page — often removed/renamed on Understat; id={player_id})",
+                flush=True,
+            )
+            player_fetch_failures += 1
+            done_players.add(player_id)
+            with open(progress_path, "w", encoding="utf-8") as handle:
+                json.dump({"done_players": sorted(done_players)}, handle)
+            continue
+
         matches = payload.get("matches", [])
         shots = payload.get("shots", [])
 
@@ -543,6 +570,8 @@ def scrape_season(state: ScrapeState) -> str:
     print(f"    Players seen:       {total_players:,}")
     print(f"    Players skipped:    {skipped_players:,}")
     print(f"    Players processed:  {processed_players:,}")
+    if player_fetch_failures:
+        print(f"    Player fetch 404/410: {player_fetch_failures:,} (skipped, no rows)")
     print(f"    Match joins:        {join_hits:,} hit / {join_misses:,} miss ({join_rate:.1f}% match rate)")
 
     return output_path
