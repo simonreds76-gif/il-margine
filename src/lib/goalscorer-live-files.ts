@@ -1,7 +1,6 @@
 import "server-only";
 
 import { promises as fs } from "fs";
-import { cache } from "react";
 
 import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
@@ -20,10 +19,10 @@ type SnapshotPayload = {
 
 const SNAPSHOT_TABLE = "goalscorer_live_snapshot";
 const SNAPSHOT_KEY = process.env.GOALSCORER_LIVE_SNAPSHOT_KEY || "live_state";
-const RUNNING_ON_VERCEL = process.env.VERCEL === "1" || Boolean(process.env.VERCEL_ENV);
 const LOCAL_SNAPSHOT_FILE = "data/goalscorer/goalscorer-live-snapshot.json";
+const PREFER_LOCAL = process.env.MONITOR_PREFER_LOCAL === "1";
 
-const loadHostedSnapshot = cache(async (): Promise<SnapshotPayload | null> => {
+async function loadHostedSnapshot(): Promise<SnapshotPayload | null> {
   try {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -37,7 +36,7 @@ const loadHostedSnapshot = cache(async (): Promise<SnapshotPayload | null> => {
   } catch {
     return null;
   }
-});
+}
 
 function getSnapshotFileEntry(payload: SnapshotPayload | null, relativePath: string): { content?: string; mtime?: string } | null {
   const rawEntry = payload?.files?.[relativePath];
@@ -82,16 +81,17 @@ export async function readGoalscorerLiveFile(relativePath: string): Promise<stri
     }
   };
 
-  if (!RUNNING_ON_VERCEL) {
-    const local = await readLocal();
-    if (typeof local === "string") return local;
+  if (!PREFER_LOCAL) {
+    const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.content;
+    if (typeof hosted === "string") return hosted;
   }
 
-  const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.content;
-  if (typeof hosted === "string") return hosted;
+  const local = await readLocal();
+  if (typeof local === "string") return local;
 
-  if (RUNNING_ON_VERCEL) {
-    return await readLocal();
+  if (PREFER_LOCAL) {
+    const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.content;
+    if (typeof hosted === "string") return hosted;
   }
 
   return null;
@@ -119,16 +119,17 @@ export async function readGoalscorerLiveMtime(relativePath: string): Promise<str
     }
   };
 
-  if (!RUNNING_ON_VERCEL) {
-    const localMtime = await readLocalMtime();
-    if (typeof localMtime === "string") return localMtime;
+  if (!PREFER_LOCAL) {
+    const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.mtime;
+    if (typeof hosted === "string") return hosted;
   }
 
-  const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.mtime;
-  if (typeof hosted === "string") return hosted;
+  const localMtime = await readLocalMtime();
+  if (typeof localMtime === "string") return localMtime;
 
-  if (RUNNING_ON_VERCEL) {
-    return await readLocalMtime();
+  if (PREFER_LOCAL) {
+    const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.mtime;
+    if (typeof hosted === "string") return hosted;
   }
 
   return null;
