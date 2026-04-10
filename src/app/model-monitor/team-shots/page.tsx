@@ -1103,19 +1103,25 @@ function LiveLineTable({
     return (b.date ?? "").localeCompare(a.date ?? "");
   });
 
-  // Split by date: upcoming signals live in the fixture cards; past signals go in the awaiting-result table.
-  const todayIso = new Date().toISOString().slice(0, 10);
-  const upcomingShadowCount = recentShadow.filter(r => (r.date ?? "").slice(0, 10) > todayIso).length;
+  // Use a stable snapshot-based day boundary so server/client render the same split.
+  const asOfIso = (
+    snapshotGeneratedAt ??
+    comparisonMtime ??
+    upcomingMtime ??
+    predictionsMtime ??
+    new Date().toISOString()
+  ).slice(0, 10);
+  const upcomingShadowCount = recentShadow.filter(r => (r.date ?? "").slice(0, 10) > asOfIso).length;
   const awaitingResultShadow = recentShadow.filter(r => {
     const d = (r.date ?? "").slice(0, 10);
-    return d && d <= todayIso;
+    return d && d <= asOfIso;
   });
 
   // Shadow signal count per league — counts upcoming signals only (fixture card auto-open logic).
   const shadowCountByLeague = new Map<string, number>();
   for (const row of currentShadowLive) {
     const d = (row.date ?? "").slice(0, 10);
-    if (d > todayIso) {
+    if (d > asOfIso) {
       const lg = (row.league ?? "").trim() || "other";
       shadowCountByLeague.set(lg, (shadowCountByLeague.get(lg) ?? 0) + 1);
     }
@@ -1148,10 +1154,10 @@ function LiveLineTable({
 
   // Archive bets split by date: future = logged bet, odds moved off threshold since logging.
   // Past = genuinely awaiting result, same as the live-tracker rows.
-  const archiveUpcoming = stalePendingShadow.filter(r => (r.date ?? "").slice(0, 10) > todayIso);
+  const archiveUpcoming = stalePendingShadow.filter(r => (r.date ?? "").slice(0, 10) > asOfIso);
   const archivePastAwaiting = stalePendingShadow.filter(r => {
     const d = (r.date ?? "").slice(0, 10);
-    return d && d <= todayIso;
+    return d && d <= asOfIso;
   });
 
 
