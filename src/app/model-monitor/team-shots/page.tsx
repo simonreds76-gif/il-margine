@@ -1470,35 +1470,54 @@ function LiveLineTable({
                         <td colSpan={14} className="py-2 px-3">
                           <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-slate-600">
                             <div className="flex-1 border-t border-slate-800" />
-                            <span>upcoming — odds moved since logging</span>
+                            <span>upcoming — logged bets, P&L settled at logged odds</span>
                             <div className="flex-1 border-t border-slate-800" />
                           </div>
                         </td>
                       </tr>
-                      {archiveUpcoming.map((row, i) => (
-                        <tr key={`arch-up-${i}`} className="border-b border-slate-800/30 hover:bg-slate-800/20">
-                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{row.date}</td>
-                          <td className="py-1.5 pr-3 text-slate-400">{row.league}</td>
-                          <td className="py-1.5 pr-3">{row.home_team} v {row.away_team}</td>
-                          <td className="py-1.5 pr-3 font-medium">{row.team}</td>
-                          <td className="py-1.5 pr-3 font-mono tabular-nums">{row.line}</td>
-                          <td className="py-1.5 pr-3">
-                            <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase ${
-                              row.side === "over" ? "bg-emerald-500/15 text-emerald-300" : "bg-sky-500/15 text-sky-300"
-                            }`}>{row.side}</span>
-                          </td>
-                          <td className="py-1.5 pr-3 font-mono tabular-nums">{pf(row.book_odds).toFixed(2)}</td>
-                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{pf(row.model_fair_odds).toFixed(2)}</td>
-                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-300">{(pf(row.edge) * 100).toFixed(1)}%</td>
-                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-300">{shadowStakeUnits(pf(row.edge))}</td>
-                          <td className="py-1.5 pr-3 font-mono tabular-nums">-</td>
-                          <td className="py-1.5 pr-3">
-                            <span className="rounded-full bg-slate-700/30 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-400">odds moved</span>
-                          </td>
-                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">-</td>
-                          <td className="py-1.5 font-mono tabular-nums text-slate-400">-</td>
-                        </tr>
-                      ))}
+                      {archiveUpcoming.map((row, i) => {
+                        const loggedOdds = pf(row.book_odds);
+                        const matchDate = (row.date ?? "").slice(0, 10);
+                        const teamKey = `${matchKey(matchDate, row.home_team, row.away_team)}|${normalizeTeamName(row.team)}`;
+                        const currentTeamLines = liveOddsByMatchTeam.get(teamKey);
+                        const lineKey = `${(row.bookmaker ?? "").trim()}|${(row.line ?? "").trim()}`;
+                        const currentLine = currentTeamLines?.get(lineKey);
+                        const currentOdds = currentLine
+                          ? (row.side === "over" ? currentLine.overOdds : currentLine.underOdds) ?? null
+                          : null;
+                        const delta = currentOdds !== null ? currentOdds - loggedOdds : null;
+                        return (
+                          <tr key={`arch-up-${i}`} className="border-b border-slate-800/30 hover:bg-slate-800/20">
+                            <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{row.date}</td>
+                            <td className="py-1.5 pr-3 text-slate-400">{row.league}</td>
+                            <td className="py-1.5 pr-3">{row.home_team} v {row.away_team}</td>
+                            <td className="py-1.5 pr-3 font-medium">{row.team}</td>
+                            <td className="py-1.5 pr-3 font-mono tabular-nums">{row.line}</td>
+                            <td className="py-1.5 pr-3">
+                              <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase ${
+                                row.side === "over" ? "bg-emerald-500/15 text-emerald-300" : "bg-sky-500/15 text-sky-300"
+                              }`}>{row.side}</span>
+                            </td>
+                            <td className="py-1.5 pr-3 font-mono tabular-nums">
+                              <span>{loggedOdds.toFixed(2)}</span>
+                              {delta !== null && Math.abs(delta) >= 0.02 && (
+                                <span className={`ml-1.5 text-[10px] ${delta > 0 ? "text-emerald-400" : "text-rose-400"}`}>
+                                  {delta > 0 ? "↑" : "↓"}{currentOdds!.toFixed(2)}
+                                </span>
+                              )}
+                            </td>
+                            <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{pf(row.model_fair_odds).toFixed(2)}</td>
+                            <td className="py-1.5 pr-3 font-mono tabular-nums text-emerald-300">{(pf(row.edge) * 100).toFixed(1)}%</td>
+                            <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-300">{shadowStakeUnits(pf(row.edge))}</td>
+                            <td className="py-1.5 pr-3 font-mono tabular-nums">-</td>
+                            <td className="py-1.5 pr-3">
+                              <span className="rounded-full bg-sky-700/20 px-1.5 py-0.5 text-[10px] font-medium uppercase text-sky-400">pre-match</span>
+                            </td>
+                            <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">-</td>
+                            <td className="py-1.5 font-mono tabular-nums text-slate-400">-</td>
+                          </tr>
+                        );
+                      })}
                     </>
                   )}
                 </tbody>
