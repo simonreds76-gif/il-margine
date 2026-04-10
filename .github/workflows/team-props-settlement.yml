@@ -1,8 +1,8 @@
-name: Pinnacle Corners CLV Capture
+name: Team Props Settlement
 
 on:
   schedule:
-    - cron: "0 8,12,16,19 * * *" # 08:00, 12:00, 16:00, 19:00 UTC daily
+    - cron: "30 23 * * *" # Nightly settlement after most match windows
   workflow_dispatch:
 
 permissions:
@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  capture:
+  settle:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -29,31 +29,40 @@ jobs:
       - name: Install Python deps
         run: pip install requests
 
-      - name: Capture Pinnacle corners odds
-        run: python scripts/pinnacle-scrape-corners.py
+      - name: Settle team-shots shadow signals
+        run: python scripts/team-shots-settle.py
 
-      - name: Upload corners hosted snapshot
+      - name: Settle corners shortlist
+        run: python scripts/shortlist-settle.py
+
+      - name: Upload team-props hosted snapshots
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
             export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://nuqcgzbagxtbxlqrhtvc.supabase.co}"
+            python scripts/team-shots-live-snapshot.py --supabase
             python scripts/corners-live-snapshot.py --supabase
           else
-            echo "SUPABASE_SERVICE_ROLE_KEY not configured; skipping corners snapshot upload."
+            echo "SUPABASE_SERVICE_ROLE_KEY not configured; skipping team-props snapshot upload."
           fi
 
       - name: Commit and push if new data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/corners-ou/pinnacle-corners-odds.csv
+          if [ -d data/team-shots ]; then
+            git add data/team-shots/
+          fi
+          if [ -d data/shortlist ]; then
+            git add data/shortlist/
+          fi
           if git diff --cached --quiet; then
-            echo "No Pinnacle corners CLV changes to commit."
+            echo "No settlement changes to commit."
             exit 0
           fi
-          git commit -m "chore: capture pinnacle corners odds"
+          git commit -m "chore: hosted team props settlement"
           git fetch origin golden-with-speed-insights
           git rebase origin/golden-with-speed-insights
           git push origin HEAD:golden-with-speed-insights

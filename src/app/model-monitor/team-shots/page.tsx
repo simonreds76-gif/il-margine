@@ -1,10 +1,10 @@
 import Link from "next/link";
-
-import { promises as fs } from "fs";
-
 import { notFound } from "next/navigation";
-
-import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
+import {
+  readTeamShotsLiveFile as readFile,
+  readTeamShotsLiveJson as readJson,
+  readTeamShotsLiveMtime as readKnownFileMtime,
+} from "@/lib/team-shots-live-files";
 
 
 
@@ -173,6 +173,19 @@ const TEAM_ALIASES: Record<string, string> = {
   "afc bournemouth": "bournemouth",
   "brighton and hove albion": "brighton",
   "brighton hove albion": "brighton",
+  "cagliari calcio": "cagliari",
+  "us cremonese": "cremonese",
+  "udinese calcio": "udinese",
+  "juventus turin": "juventus",
+  "genoa cfc": "genoa",
+  "sassuolo calcio": "sassuolo",
+  "parma calcio": "parma",
+  "ssc napoli": "napoli",
+  "como 1907": "como",
+  "inter milano": "inter milan",
+  "us lecce": "lecce",
+  "lazio rome": "lazio",
+  "acf fiorentina": "fiorentina",
   "tottenham hotspur": "tottenham",
   "wolverhampton wanderers": "wolves",
   "west ham united": "west ham",
@@ -451,68 +464,6 @@ function bestSummarySide(
   return entry.metrics.overEdge !== null && entry.metrics.overEdge === Math.max(entry.metrics.overEdge ?? -999, entry.metrics.underEdge ?? -999)
     ? "O"
     : "U";
-}
-
-
-
-async function readFile(relativePath: string): Promise<string | null> {
-
-  const resolved = tryGetKnownProjectFilePath(relativePath);
-
-  if (!resolved) return null;
-
-  try {
-
-    return await fs.readFile(resolved, "utf-8");
-
-  } catch {
-
-    return null;
-
-  }
-
-}
-
-
-
-async function readJson<T>(relativePath: string): Promise<T | null> {
-
-  try {
-
-    const text = await readFile(relativePath);
-
-    if (!text) return null;
-
-    return JSON.parse(text) as T;
-
-  } catch {
-
-    return null;
-
-  }
-
-}
-
-
-
-async function readKnownFileMtime(relativePath: string): Promise<string | null> {
-
-  const resolved = tryGetKnownProjectFilePath(relativePath);
-
-  if (!resolved) return null;
-
-  try {
-
-    const stat = await fs.stat(resolved);
-
-    return stat.mtime.toISOString();
-
-  } catch {
-
-    return null;
-
-  }
-
 }
 
 
@@ -1108,13 +1059,19 @@ function LiveLineTable({
 
 
 
-  const recentShadow = [...currentShadowLive]
-    .sort((a, b) => {
-      const dateCmp = (b.date ?? "").localeCompare(a.date ?? "");
-      if (dateCmp !== 0) return dateCmp;
-      return pf(b.edge) - pf(a.edge);
-    })
-    .slice(0, 6);
+  // All comparison rows that pass shadow policy (edge ≥ 5%, odds 1.5–5), sorted by edge.
+  const recentShadow = [...currentShadowLive].sort((a, b) => {
+    const edgeCmp = pf(b.edge) - pf(a.edge);
+    if (Math.abs(edgeCmp) > 1e-9) return edgeCmp;
+    return (b.date ?? "").localeCompare(a.date ?? "");
+  });
+
+  // Shadow signal count per league — used to label collapsed league sections
+  const shadowCountByLeague = new Map<string, number>();
+  for (const row of currentShadowLive) {
+    const lg = (row.league ?? "").trim() || "other";
+    shadowCountByLeague.set(lg, (shadowCountByLeague.get(lg) ?? 0) + 1);
+  }
 
   const stalePendingShadow = pendingShadow.filter((row) => {
     const shadowKey = [
@@ -1310,9 +1267,59 @@ function LiveLineTable({
           </div>
         </MonitorCard>
 
+        {/* KPI strip — model track record before showing live signals */}
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-4">
+          <Stat label="Predictions" value={predictions.length.toLocaleString()} sub="team lambda + fair lines" />
+          <Stat
+            label="Team odds rows"
+            value={oddsArchive.length.toLocaleString()}
+            sub={oddsArchive.length > 0 ? "team total shots from books" : "run scrape when fixtures list team markets"}
+            tone={oddsArchive.length > 0 ? "default" : "amber"}
+          />
+          <Stat
+            label="Backtest bets"
+            value={backtestRows.length.toLocaleString()}
+            sub={`${backtestWins}W / ${backtestRows.length - backtestWins}L`}
+          />
+          <Stat
+            label="Backtest ROI"
+            value={`${backtestRoi >= 0 ? "+" : ""}${backtestRoi.toFixed(1)}%`}
+            sub={`${backtestPnl >= 0 ? "+" : ""}${backtestPnl.toFixed(1)}u PnL`}
+            tone={backtestRoi > 0 ? "green" : backtestRoi < -5 ? "red" : "default"}
+          />
+          <Stat
+            label="Shadow live"
+            value={currentShadowLive.length.toString()}
+            sub={`${pendingShadow.length} pending in archive`}
+          />
+          <Stat
+            label="Shadow PnL"
+            value={settledShadow.length > 0 ? `${shadowPnl >= 0 ? "+" : ""}${shadowPnl.toFixed(1)}u` : "—"}
+            sub={settledShadow.length > 0 ? `${shadowWins}W / ${settledShadow.length - shadowWins}L` : "collecting data"}
+            tone={shadowPnl > 0 ? "green" : shadowPnl < 0 ? "red" : "default"}
+          />
+          <Stat
+            label="Shadow ROI (flat)"
+            value={settledShadow.length > 0 ? `${shadowRoi >= 0 ? "+" : ""}${shadowRoi.toFixed(1)}%` : "—"}
+            tone={shadowRoi > 5 ? "green" : shadowRoi < -5 ? "red" : "default"}
+          />
+          <Stat
+            label="Shadow ROI (staked)"
+            value={settledShadow.length > 0 ? `${shadowRoiStaked >= 0 ? "+" : ""}${shadowRoiStaked.toFixed(1)}%` : "—"}
+            sub={settledShadow.length > 0 ? `${shadowPnlStaked >= 0 ? "+" : ""}${shadowPnlStaked.toFixed(2)}u on ${shadowStakedTotal.toFixed(1)}u` : "collecting data"}
+            tone={shadowRoiStaked > 5 ? "green" : shadowRoiStaked < -5 ? "red" : "default"}
+          />
+        </div>
+
         {recentShadow.length > 0 && (
-          <MonitorCard title={`Shadow Signals (latest ${recentShadow.length})`}>
-            <div className="overflow-x-auto">
+          <MonitorCard
+            title={`Shadow-qualified live signals — ${recentShadow.length} row${recentShadow.length === 1 ? "" : "s"}`}
+          >
+            <p className="mb-3 text-xs text-slate-500">
+              Rows from the live comparison tracker that meet the shadow policy: model edge ≥ 5% and bookmaker odds between 1.50 and 5.00.
+              Sorted by edge, strongest first. <em>Awaiting result</em> means the match date has passed but the result has not been manually settled yet.
+            </p>
+            <div className="max-h-[min(70vh,56rem)] overflow-y-auto overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
                   <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
@@ -1334,7 +1341,9 @@ function LiveLineTable({
                 </thead>
                 <tbody>
                   {recentShadow.map((row, i) => {
-                    const result = "pending";
+                    const matchDate = (row.date ?? "").trim().slice(0, 10);
+                    const todayIso = new Date().toISOString().slice(0, 10);
+                    const result = matchDate && matchDate < todayIso ? "awaiting result" : "pending";
                     return (
                       <tr key={i} className="border-b border-slate-800/40 hover:bg-slate-800/20">
                         <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{row.date}</td>
@@ -1357,16 +1366,16 @@ function LiveLineTable({
                         <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-300">{shadowStakeUnits(pf(row.edge))}</td>
                         <td className="py-1.5 pr-3 font-mono tabular-nums">-</td>
                         <td className="py-1.5 pr-3">
-                          <span className="rounded-full bg-slate-700/30 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-400">
+                          <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase ${
+                            result === "awaiting result"
+                              ? "bg-amber-500/15 text-amber-300"
+                              : "bg-slate-700/30 text-slate-400"
+                          }`}>
                             {result}
                           </span>
                         </td>
-                        <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">
-                          -
-                        </td>
-                        <td className="py-1.5 font-mono tabular-nums text-slate-400">
-                          -
-                        </td>
+                        <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">-</td>
+                        <td className="py-1.5 font-mono tabular-nums text-slate-400">-</td>
                       </tr>
                     );
                   })}
@@ -1419,11 +1428,19 @@ function LiveLineTable({
 
               return (
 
-                <MonitorCard
+                <CollapsibleSection
 
                   key={leagueKey}
 
-                  title={`${leagueTitle(leagueKey)} (${leagueRows.length})`}
+                  defaultOpen={(shadowCountByLeague.get(leagueKey) ?? 0) > 0}
+
+                  title={(() => {
+                    const sc = shadowCountByLeague.get(leagueKey) ?? 0;
+                    return [
+                      `${leagueTitle(leagueKey)} — ${leagueRows.length} fixture${leagueRows.length === 1 ? "" : "s"}`,
+                      sc > 0 ? `${sc} shadow signal${sc === 1 ? "" : "s"}` : null,
+                    ].filter(Boolean).join(" · ");
+                  })()}
 
                 >
                   <div className="space-y-3">
@@ -1453,18 +1470,32 @@ function LiveLineTable({
                                 </div>
                               </div>
                               <div className="grid gap-2 text-xs sm:grid-cols-2 lg:min-w-[560px]">
-                                <div className="rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2">
-                                  <div className="text-slate-500">Home</div>
-                                  <div className="font-mono text-emerald-300">lambda {pf(row.home_lambda).toFixed(2)}</div>
-                                  <div className="mt-1 text-slate-300">Live: {bestLineSummary(homeLines, row, "home", calibrationParams)}</div>
-                                  <div className="mt-1 text-slate-500">Shadow: {bestLineSummary(homeLines, row, "home", calibrationParams, true)}</div>
-                                </div>
-                                <div className="rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2">
-                                  <div className="text-slate-500">Away</div>
-                                  <div className="font-mono text-emerald-300">lambda {pf(row.away_lambda).toFixed(2)}</div>
-                                  <div className="mt-1 text-slate-300">Live: {bestLineSummary(awayLines, row, "away", calibrationParams)}</div>
-                                  <div className="mt-1 text-slate-500">Shadow: {bestLineSummary(awayLines, row, "away", calibrationParams, true)}</div>
-                                </div>
+                                {(() => {
+                                  const homeLive = bestLineSummary(homeLines, row, "home", calibrationParams);
+                                  const homeShadow = bestLineSummary(homeLines, row, "home", calibrationParams, true);
+                                  const awayLive = bestLineSummary(awayLines, row, "away", calibrationParams);
+                                  const awayShadow = bestLineSummary(awayLines, row, "away", calibrationParams, true);
+                                  const hasHomeShadow = !homeShadow.startsWith("No shadow");
+                                  const hasAwayShadow = !awayShadow.startsWith("No shadow");
+                                  const liveColor = (s: string) =>
+                                    s.startsWith("No") ? "text-slate-500" :
+                                    s.includes("(+") ? "text-emerald-300" :
+                                    s.includes("(-") ? "text-rose-400" : "text-slate-300";
+                                  return (
+                                    <>
+                                      <div className="rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2">
+                                        <div className="text-slate-500">Home · λ <span className="font-mono text-emerald-300">{pf(row.home_lambda).toFixed(2)}</span></div>
+                                        <div className={`mt-1 font-mono ${liveColor(homeLive)}`}>{homeLive}</div>
+                                        <div className={`mt-0.5 font-mono ${hasHomeShadow ? "text-emerald-300 font-semibold" : "text-slate-600"}`}>{homeShadow}</div>
+                                      </div>
+                                      <div className="rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2">
+                                        <div className="text-slate-500">Away · λ <span className="font-mono text-emerald-300">{pf(row.away_lambda).toFixed(2)}</span></div>
+                                        <div className={`mt-1 font-mono ${liveColor(awayLive)}`}>{awayLive}</div>
+                                        <div className={`mt-0.5 font-mono ${hasAwayShadow ? "text-emerald-300 font-semibold" : "text-slate-600"}`}>{awayShadow}</div>
+                                      </div>
+                                    </>
+                                  );
+                                })()}
                               </div>
                             </div>
                             {(row.note ?? "").trim() ? (
@@ -1493,12 +1524,10 @@ function LiveLineTable({
                   </div>
 
                   <p className="mt-3 text-[11px] text-slate-600">
-
-                    All live lines are shown here. Shadow `yes/no` follows the live tracker policy: edge at least 5% and book odds between 1.50 and 5.00.
-
+                    Shadow label turns green when any line meets the policy: edge ≥ 5% and book odds 1.50–5.00. Expand a fixture to see all bookmaker lines.
                   </p>
 
-                </MonitorCard>
+                </CollapsibleSection>
 
               );
 
@@ -1558,139 +1587,6 @@ function LiveLineTable({
 
 
 
-        {/* KPI strip */}
-
-        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-4">
-
-          <Stat label="Predictions" value={predictions.length.toLocaleString()} sub="team lambda + fair lines" />
-
-          <Stat
-
-            label="Team odds rows"
-
-            value={oddsArchive.length.toLocaleString()}
-
-            sub={
-
-              oddsArchive.length > 0
-
-                ? "team total shots from books"
-
-                : "run scrape when fixtures list team markets"
-
-            }
-
-            tone={oddsArchive.length > 0 ? "default" : "amber"}
-
-          />
-
-          <Stat
-
-            label="Backtest bets"
-
-            value={backtestRows.length.toLocaleString()}
-
-            sub={`${backtestWins}W / ${backtestRows.length - backtestWins}L`}
-
-          />
-
-          <Stat
-
-            label="Backtest ROI"
-
-            value={`${backtestRoi >= 0 ? "+" : ""}${backtestRoi.toFixed(1)}%`}
-
-            sub={`${backtestPnl >= 0 ? "+" : ""}${backtestPnl.toFixed(1)}u PnL`}
-
-            tone={backtestRoi > 0 ? "green" : backtestRoi < -5 ? "red" : "default"}
-
-          />
-
-          <Stat
-
-            label="Shadow live"
-
-            value={currentShadowLive.length.toString()}
-
-            sub={`${pendingShadow.length} pending in archive`}
-
-          />
-
-          <Stat
-
-            label="Shadow PnL"
-
-            value={
-
-              settledShadow.length > 0
-
-                ? `${shadowPnl >= 0 ? "+" : ""}${shadowPnl.toFixed(1)}u`
-
-                : "—"
-
-            }
-
-            sub={
-
-              settledShadow.length > 0
-
-                ? `${shadowWins}W / ${settledShadow.length - shadowWins}L`
-
-                : "collecting data"
-
-            }
-
-            tone={shadowPnl > 0 ? "green" : shadowPnl < 0 ? "red" : "default"}
-
-          />
-
-          <Stat
-
-            label="Shadow ROI (flat)"
-
-            value={
-
-              settledShadow.length > 0
-
-                ? `${shadowRoi >= 0 ? "+" : ""}${shadowRoi.toFixed(1)}%`
-
-                : "—"
-
-            }
-
-            tone={shadowRoi > 5 ? "green" : shadowRoi < -5 ? "red" : "default"}
-
-          />
-
-          <Stat
-
-            label="Shadow ROI (staked)"
-
-            value={
-
-              settledShadow.length > 0
-
-                ? `${shadowRoiStaked >= 0 ? "+" : ""}${shadowRoiStaked.toFixed(1)}%`
-
-                : "—"
-
-            }
-
-            sub={
-
-              settledShadow.length > 0
-
-                ? `${shadowPnlStaked >= 0 ? "+" : ""}${shadowPnlStaked.toFixed(2)}u on ${shadowStakedTotal.toFixed(1)}u`
-
-                : "collecting data"
-
-            }
-
-            tone={shadowRoiStaked > 5 ? "green" : shadowRoiStaked < -5 ? "red" : "default"}
-
-          />
-
-        </div>
 
         {/* Team total shots odds (latest 50) — empty until Odds-API.io / BetsAPI returns team markets */}
 
@@ -2007,4 +1903,3 @@ function LiveLineTable({
   );
 
 }
-

@@ -1,9 +1,12 @@
-name: Team Shots Weekly Scrape
+name: Team Shots Refresh
 
 on:
   schedule:
-    - cron: "0 10 * * 4" # Thursday 10am UTC = 11am BST
-    - cron: "0 10 * * 5" # Friday 10am UTC = 11am BST
+    - cron: "0 17 * * 2" # Tuesday 17:00 UTC = 18:00 BST
+    - cron: "0 8 * * 3"  # Wednesday 08:00 UTC = 09:00 BST
+    - cron: "0 17 * * 5" # Friday 17:00 UTC = 18:00 BST
+    - cron: "0 8 * * 6"  # Saturday 08:00 UTC = 09:00 BST
+    - cron: "0 8 * * 0"  # Sunday 08:00 UTC = 09:00 BST
   workflow_dispatch:
 
 permissions:
@@ -14,7 +17,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  scrape:
+  refresh:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -27,22 +30,42 @@ jobs:
         with:
           python-version: "3.11"
 
-      - run: pip install requests
+      - name: Install Python deps
+        run: pip install requests
 
       - name: Create .env.local
         run: |
           : > .env.local
-          echo "ODDS_API_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
-          echo "ODDS_API_IO_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
           if [ -n "${{ secrets.THE_ODDS_API_KEY }}" ]; then
             echo "THE_ODDS_API_KEY=${{ secrets.THE_ODDS_API_KEY }}" >> .env.local
           fi
 
-      - name: Scrape odds
-        run: python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365"
+      - name: Refresh Football-Data historical base
+        run: python scripts/footballdata-download-historical.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2025 --overwrite
 
-      - name: Archive odds
-        run: python scripts/team-shots-odds-archive.py
+      - name: Refresh FBRef / Understat shooting data
+        run: python scripts/fbref-download-shooting.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2025
+
+      - name: Run team-shots model
+        run: python scripts/team-shots-model.py
+
+      - name: Fit team-shots calibration
+        run: python scripts/team-shots-fit-calibration.py
+
+      - name: Optional upcoming + compare + shadow
+        env:
+          THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
+        run: |
+          if [ -n "${THE_ODDS_API_KEY:-}" ]; then
+            python scripts/team_shots_upcoming.py --days-ahead 7
+            python scripts/team-shots-compare.py --min-edge 0.05
+            python scripts/team-shots-shadow-tracker.py --min-edge 0.05
+          else
+            echo "THE_ODDS_API_KEY not configured; skipping upcoming/compare/shadow."
+          fi
+
+      - name: Settle team-shots shadow signals
+        run: python scripts/team-shots-settle.py
 
       - name: Upload team-shots hosted snapshot
         env:
@@ -62,10 +85,10 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/team-shots/
           if git diff --cached --quiet; then
-            echo "No team-shots odds changes to commit."
+            echo "No team-shots refresh changes to commit."
             exit 0
           fi
-          git commit -m "chore: weekly team shots odds scrape"
+          git commit -m "chore: hosted team shots refresh"
           git fetch origin golden-with-speed-insights
           git rebase origin/golden-with-speed-insights
           git push origin HEAD:golden-with-speed-insights

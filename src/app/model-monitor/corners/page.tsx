@@ -1,7 +1,10 @@
 import Link from "next/link";
-import { promises as fs } from "fs";
 import { notFound } from "next/navigation";
-import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
+import {
+  readCornersLiveFile as readFile,
+  readCornersLiveJson as readJson,
+  readCornersLiveMtime as readKnownFileMtime,
+} from "@/lib/corners-live-files";
 
 export const dynamic = "force-dynamic";
 
@@ -46,37 +49,6 @@ function pf(val: string | undefined, fallback = 0): number {
 
 function normalizePinnacleTeamName(value: string | undefined): string {
   return (value ?? "").replace(/\s*\(Corners\)\s*$/i, "").trim();
-}
-
-async function readFile(relativePath: string): Promise<string | null> {
-  const resolved = tryGetKnownProjectFilePath(relativePath);
-  if (!resolved) return null;
-  try {
-    return await fs.readFile(resolved, "utf-8");
-  } catch {
-    return null;
-  }
-}
-
-async function readJson<T>(relativePath: string): Promise<T | null> {
-  try {
-    const text = await readFile(relativePath);
-    if (!text) return null;
-    return JSON.parse(text) as T;
-  } catch {
-    return null;
-  }
-}
-
-async function readKnownFileMtime(relativePath: string): Promise<string | null> {
-  const resolved = tryGetKnownProjectFilePath(relativePath);
-  if (!resolved) return null;
-  try {
-    const stat = await fs.stat(resolved);
-    return stat.mtime.toISOString();
-  } catch {
-    return null;
-  }
 }
 
 function formatDateTime(value?: string | null): string {
@@ -217,6 +189,14 @@ export default async function CornersMonitorPage() {
   const pinnacleRows = pinnacleCornersCsv ? parseCsv(pinnacleCornersCsv) : [];
   const valueBets = valueBetsCsv ? parseCsv(valueBetsCsv) : [];
   const signals = signalsCsv ? parseCsv(signalsCsv) : [];
+  // Derive line values from column names so the table isn't hardcoded to 9.5/10.5
+  const signalLineValues = signals.length > 0
+    ? Object.keys(signals[0])
+        .filter(k => k.startsWith("fair_over_"))
+        .map(k => parseFloat(k.replace("fair_over_", "")))
+        .filter(n => !isNaN(n))
+        .sort((a, b) => a - b)
+    : [9.5, 10.5];
   const signalDateLookup = new Map<string, CsvRow>();
   for (const row of signals) {
     const key = `${(row.league ?? "").trim().toLowerCase()}|${(row.home_team ?? "").trim().toLowerCase()}|${(row.away_team ?? "").trim().toLowerCase()}`;
@@ -276,6 +256,11 @@ export default async function CornersMonitorPage() {
   }
   const pinnacleMatches = [..._pinnacleByMatch.values()]
     .sort((a, b) => a.match_date.localeCompare(b.match_date) || a.league.localeCompare(b.league));
+
+  // Collect all line values found across Pinnacle fixtures so the table doesn't silently drop unusual lines
+  const pinnacleLineValues = [...new Set(
+    pinnacleMatches.flatMap(m => Object.keys(m.lines))
+  )].map(l => parseFloat(l)).filter(n => !isNaN(n)).sort((a, b) => a - b);
 
   // Live P&L from settlement
   const settledRows = settledCsv ? parseCsv(settledCsv) : [];
@@ -427,6 +412,60 @@ export default async function CornersMonitorPage() {
           </section>
         )}
 
+        {/* KPI strip */}
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+          <Stat
+            label="Historical matches"
+            value={predictions.length.toLocaleString()}
+            sub="with predictions"
+          />
+          <Stat
+            label="Backtest bets"
+            value={backtestRows.length.toLocaleString()}
+            sub={`${backtestWins}W / ${backtestRows.length - backtestWins}L`}
+          />
+          <Stat
+            label="Backtest ROI"
+            value={`${backtestRoi >= 0 ? "+" : ""}${backtestRoi.toFixed(1)}%`}
+            sub={`${backtestPnl >= 0 ? "+" : ""}${backtestPnl.toFixed(1)}u PnL`}
+            tone={backtestRoi > 0 ? "green" : backtestRoi < -5 ? "red" : "default"}
+          />
+          <Stat
+            label="Today value bets"
+            value={valueBets.length.toString()}
+            sub="from latest shortlist"
+            tone={valueBets.length > 0 ? "amber" : "default"}
+          />
+          <Stat
+            label="Signals tracked"
+            value={signals.length.toString()}
+            sub="upcoming fixtures"
+          />
+          <Stat
+            label="Avg edge"
+            value={
+              valueBets.length > 0
+                ? `${(valueBets.reduce((s, r) => s + pf(r.edge), 0) / valueBets.length * 100).toFixed(1)}%`
+                : "---"
+            }
+            tone={
+              valueBets.length > 0 &&
+              valueBets.reduce((s, r) => s + pf(r.edge), 0) / valueBets.length >
+                0.1
+                ? "green"
+                : "default"
+            }
+          />
+        </div>
+
+        <section className="mb-4 rounded-2xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-400">
+          <strong className="text-slate-200">How to read this page.</strong>{" "}
+          <span className="text-slate-300">All model fixtures</span> is the full slate the corners model priced.
+          <span className="text-slate-300"> Bettable value bets</span> is the smaller subset where current bookmaker odds
+          cleared the edge threshold and staking rules. So if you see 48 fixtures and 32 value bets, that means 32 of the
+          priced fixtures currently qualify as playable rather than 32 separate random signals.
+        </section>
+
         {/* Value bets (the shortlist) */}
         {valueBets.length > 0 && (
           <MonitorCard
@@ -457,6 +496,9 @@ export default async function CornersMonitorPage() {
                   {currentValueSignals.map((item, i) => {
                       const row = item.row;
                       const edge = item.edgeValue;
+                      const matchDate = (item.displayDate ?? "").trim().slice(0, 10);
+                      const todayIso = new Date().toISOString().slice(0, 10);
+                      const result = matchDate && matchDate < todayIso ? "awaiting result" : "pending";
                       return (
                         <tr
                           key={i}
@@ -506,8 +548,12 @@ export default async function CornersMonitorPage() {
                             {pf(row.stake).toFixed(1)}u
                           </td>
                           <td className="py-1.5 pr-3">
-                            <span className="rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase bg-slate-700/30 text-slate-400">
-                              pending
+                            <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase ${
+                              result === "awaiting result"
+                                ? "bg-amber-500/15 text-amber-300"
+                                : "bg-slate-700/30 text-slate-400"
+                            }`}>
+                              {result}
                             </span>
                           </td>
                           <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-500">-</td>
@@ -520,61 +566,6 @@ export default async function CornersMonitorPage() {
             </div>
           </MonitorCard>
         )}
-
-
-        {/* KPI strip */}
-        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
-          <Stat
-            label="Historical matches"
-            value={predictions.length.toLocaleString()}
-            sub="with predictions"
-          />
-          <Stat
-            label="Backtest bets"
-            value={backtestRows.length.toLocaleString()}
-            sub={`${backtestWins}W / ${backtestRows.length - backtestWins}L`}
-          />
-          <Stat
-            label="Backtest ROI"
-            value={`${backtestRoi >= 0 ? "+" : ""}${backtestRoi.toFixed(1)}%`}
-            sub={`${backtestPnl >= 0 ? "+" : ""}${backtestPnl.toFixed(1)}u PnL`}
-            tone={backtestRoi > 0 ? "green" : backtestRoi < -5 ? "red" : "default"}
-          />
-          <Stat
-            label="Today value bets"
-            value={valueBets.length.toString()}
-            sub="from latest shortlist"
-            tone={valueBets.length > 0 ? "amber" : "default"}
-          />
-          <Stat
-            label="Signals tracked"
-            value={signals.length.toString()}
-            sub="upcoming fixtures"
-          />
-          <Stat
-            label="Avg edge"
-            value={
-              valueBets.length > 0
-                ? `${(valueBets.reduce((s, r) => s + pf(r.edge), 0) / valueBets.length * 100).toFixed(1)}%`
-                : "---"
-            }
-            tone={
-              valueBets.length > 0 &&
-              valueBets.reduce((s, r) => s + pf(r.edge), 0) / valueBets.length >
-                0.1
-                ? "green"
-                : "default"
-            }
-          />
-        </div>
-
-        <section className="mb-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-400">
-          <strong className="text-slate-200">How to read this page.</strong>{" "}
-          <span className="text-slate-300">All model fixtures</span> is the full slate the corners model priced.
-          <span className="text-slate-300"> Bettable value bets</span> is the smaller subset where current bookmaker odds
-          cleared the edge threshold and staking rules. So if you see 48 fixtures and 32 value bets, that means 32 of the
-          priced fixtures currently qualify as playable rather than 32 separate random signals.
-        </section>
 
         {/* Live P&L */}
         <div className="mt-6">
@@ -714,7 +705,7 @@ export default async function CornersMonitorPage() {
         {/* Upcoming signals (model predictions for today) */}
         {signals.length > 0 && (
           <div className="mt-6">
-            <MonitorCard title={`All Model Fixtures - ${signals.length} fixtures`}>
+            <CollapsibleSection title={`All Model Fixtures — ${signals.length} fixtures`} defaultOpen={false}>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead>
@@ -724,10 +715,10 @@ export default async function CornersMonitorPage() {
                       <th className="py-2 pr-3 font-mono">Lam H</th>
                       <th className="py-2 pr-3 font-mono">Lam A</th>
                       <th className="py-2 pr-3 font-mono">Total</th>
-                      <th className="py-2 pr-3 font-mono">O 9.5</th>
-                      <th className="py-2 pr-3 font-mono">U 9.5</th>
-                      <th className="py-2 pr-3 font-mono">O 10.5</th>
-                      <th className="py-2 font-mono">U 10.5</th>
+                      {signalLineValues.flatMap((l) => [
+                        <th key={`h-o-${l}`} className="py-2 pr-1 font-mono">O {l.toFixed(1)}</th>,
+                        <th key={`h-u-${l}`} className="py-2 pr-3 font-mono text-slate-500">U {l.toFixed(1)}</th>,
+                      ])}
                     </tr>
                   </thead>
                   <tbody>
@@ -751,31 +742,27 @@ export default async function CornersMonitorPage() {
                         <td className="py-1.5 pr-3 font-mono tabular-nums text-amber-200">
                           {pf(row.lambda_total).toFixed(2)}
                         </td>
-                        <td className="py-1.5 pr-3 font-mono tabular-nums">
-                          {pf(row["fair_over_9.5"]).toFixed(2)}
-                        </td>
-                        <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">
-                          {pf(row["fair_under_9.5"]).toFixed(2)}
-                        </td>
-                        <td className="py-1.5 pr-3 font-mono tabular-nums">
-                          {pf(row["fair_over_10.5"]).toFixed(2)}
-                        </td>
-                        <td className="py-1.5 font-mono tabular-nums text-slate-400">
-                          {pf(row["fair_under_10.5"]).toFixed(2)}
-                        </td>
+                        {signalLineValues.flatMap((l) => [
+                          <td key={`${i}-o-${l}`} className="py-1.5 pr-1 font-mono tabular-nums">
+                            {pf(row[`fair_over_${l}`]).toFixed(2)}
+                          </td>,
+                          <td key={`${i}-u-${l}`} className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">
+                            {pf(row[`fair_under_${l}`]).toFixed(2)}
+                          </td>,
+                        ])}
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-            </MonitorCard>
+            </CollapsibleSection>
           </div>
         )}
 
         <div className="mt-6 space-y-4">
           {/* Pinnacle corners lines */}
           {pinnacleMatches.length > 0 && (
-            <CollapsibleSection title={`Pinnacle Corners Lines (${pinnacleMatches.length} fixtures)`} defaultOpen>
+            <CollapsibleSection title={`Pinnacle Corners Lines (${pinnacleMatches.length} fixtures)`} defaultOpen={false}>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead>
@@ -783,60 +770,46 @@ export default async function CornersMonitorPage() {
                       <th className="py-2 pr-3">Date</th>
                       <th className="py-2 pr-3">League</th>
                       <th className="py-2 pr-3">Match</th>
-                      <th className="py-2 pr-1 text-center" colSpan={2}>9.5</th>
-                      <th className="py-2 pr-1 text-center text-sky-400/80" colSpan={2}>10.5</th>
-                      <th className="py-2 text-center" colSpan={2}>11.5</th>
+                      {pinnacleLineValues.map((l) => (
+                        <th key={l} className="py-2 pr-1 text-center" colSpan={2}>{l.toFixed(1)}</th>
+                      ))}
                     </tr>
                     <tr className="border-b border-slate-800/60 text-[10px] text-slate-600">
                       <th colSpan={3} />
-                      <th className="py-1 pr-1 text-center font-mono">O</th>
-                      <th className="py-1 pr-3 text-center font-mono">U</th>
-                      <th className="py-1 pr-1 text-center font-mono text-sky-400/60">O</th>
-                      <th className="py-1 pr-3 text-center font-mono text-sky-400/60">U</th>
-                      <th className="py-1 pr-1 text-center font-mono">O</th>
-                      <th className="py-1 text-center font-mono">U</th>
+                      {pinnacleLineValues.flatMap((l) => [
+                        <th key={`${l}-o`} className="py-1 pr-1 text-center font-mono">O</th>,
+                        <th key={`${l}-u`} className="py-1 pr-3 text-center font-mono">U</th>,
+                      ])}
                     </tr>
                   </thead>
                   <tbody>
-                    {pinnacleMatches.map((m, i) => {
-                      const l95 = m.lines["9.5"] ?? { over: 0, under: 0 };
-                      const l105 = m.lines["10.5"] ?? { over: 0, under: 0 };
-                      const l115 = m.lines["11.5"] ?? { over: 0, under: 0 };
-                      return (
-                        <tr key={i} className="border-b border-slate-800/40 hover:bg-slate-800/20">
-                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-500">
-                            {m.match_date.slice(5)}
-                          </td>
-                          <td className="py-1.5 pr-3 text-slate-500">{m.league}</td>
-                          <td className="py-1.5 pr-3 font-medium text-slate-200">
-                            {m.home_team} v {m.away_team}
-                          </td>
-                          <td className="py-1.5 pr-1 text-center font-mono tabular-nums text-slate-300">
-                            {l95.over > 0 ? l95.over.toFixed(2) : "-"}
-                          </td>
-                          <td className="py-1.5 pr-3 text-center font-mono tabular-nums text-slate-500">
-                            {l95.under > 0 ? l95.under.toFixed(2) : "-"}
-                          </td>
-                          <td className="py-1.5 pr-1 text-center font-mono tabular-nums text-sky-200/90">
-                            {l105.over > 0 ? l105.over.toFixed(2) : "-"}
-                          </td>
-                          <td className="py-1.5 pr-3 text-center font-mono tabular-nums text-sky-300/60">
-                            {l105.under > 0 ? l105.under.toFixed(2) : "-"}
-                          </td>
-                          <td className="py-1.5 pr-1 text-center font-mono tabular-nums text-slate-300">
-                            {l115.over > 0 ? l115.over.toFixed(2) : "-"}
-                          </td>
-                          <td className="py-1.5 text-center font-mono tabular-nums text-slate-500">
-                            {l115.under > 0 ? l115.under.toFixed(2) : "-"}
-                          </td>
-                        </tr>
-                      );
-                    })}
+                    {pinnacleMatches.map((m, i) => (
+                      <tr key={i} className="border-b border-slate-800/40 hover:bg-slate-800/20">
+                        <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-500">
+                          {m.match_date.slice(5)}
+                        </td>
+                        <td className="py-1.5 pr-3 text-slate-500">{m.league}</td>
+                        <td className="py-1.5 pr-3 font-medium text-slate-200">
+                          {m.home_team} v {m.away_team}
+                        </td>
+                        {pinnacleLineValues.flatMap((l) => {
+                          const lineData = m.lines[l.toFixed(1)] ?? { over: 0, under: 0 };
+                          return [
+                            <td key={`${i}-${l}-o`} className="py-1.5 pr-1 text-center font-mono tabular-nums text-slate-300">
+                              {lineData.over > 0 ? lineData.over.toFixed(2) : "-"}
+                            </td>,
+                            <td key={`${i}-${l}-u`} className="py-1.5 pr-3 text-center font-mono tabular-nums text-slate-500">
+                              {lineData.under > 0 ? lineData.under.toFixed(2) : "-"}
+                            </td>,
+                          ];
+                        })}
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
               <p className="mt-2 text-[11px] text-slate-600">
-                Pinnacle closing-line reference. American odds converted to decimal.
+                Pinnacle closing-line reference. American odds converted to decimal. All lines found in the data are shown.
                 Capture: {latestPinnacleCaptureAt ?? "—"}
               </p>
             </CollapsibleSection>
