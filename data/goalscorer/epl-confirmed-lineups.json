@@ -12,7 +12,7 @@
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "3-4-2-1",
+      "away_formation": "3-5-1-1",
       "home_players": [
         "Mads Hermansen",
         "Kyle Walker-Peters",
@@ -32,10 +32,10 @@
         "Santiago Bueno",
         "Ladislav Krejcí",
         "Jackson Tchatchoua",
+        "Jean-Ricner Bellegarde",
         "André",
         "João Gomes",
         "Hugo Bueno",
-        "Jean-Ricner Bellegarde",
         "Angel Gomes",
         "Adam Armstrong"
       ],
@@ -147,7 +147,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-2-1",
+          "formation": "3-5-1-1",
           "position_id": 11
         },
         {
@@ -156,7 +156,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-5-1-1",
           "position_id": 33
         },
         {
@@ -165,7 +165,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-5-1-1",
           "position_id": 35
         },
         {
@@ -174,62 +174,62 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-5-1-1",
           "position_id": 37
         },
         {
           "name": "Jackson Tchatchoua",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 62
+          "formation": "3-5-1-1",
+          "position_id": 71
+        },
+        {
+          "name": "Jean-Ricner Bellegarde",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 73
         },
         {
           "name": "André",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 64
+          "formation": "3-5-1-1",
+          "position_id": 75
         },
         {
           "name": "João Gomes",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 66
+          "formation": "3-5-1-1",
+          "position_id": 77
         },
         {
           "name": "Hugo Bueno",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 68
-        },
-        {
-          "name": "Jean-Ricner Bellegarde",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84
+          "formation": "3-5-1-1",
+          "position_id": 79
         },
         {
           "name": "Angel Gomes",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 1,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 86
+          "formation": "3-5-1-1",
+          "position_id": 95
         },
         {
           "name": "Adam Armstrong",
@@ -237,8 +237,8 @@
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-2-1",
-          "position_id": 105
+          "formation": "3-5-1-1",
+          "position_id": 115
         }
       ],
       "home_subs": [
@@ -267,8 +267,8 @@
         "Lukasz Fabianski"
       ],
       "away_unavailable": [
-        "Matt Doherty",
         "Sam Johnstone",
+        "Matt Doherty",
         "Enso González"
       ]
     },
