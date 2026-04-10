@@ -108,7 +108,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           if [ -d data/goalscorer ]; then
-            git add data/goalscorer/
+            git add -f data/goalscorer/
+            git add -u data/goalscorer || true
           fi
           if git diff --cached --quiet; then
             echo "No goalscorer refresh changes to commit."
