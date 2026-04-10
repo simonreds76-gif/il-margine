@@ -1111,7 +1111,7 @@ function LiveLineTable({
     new Date().toISOString()
   ).slice(0, 10);
 
-  // Shadow signal count per league â€” counts upcoming signals only (fixture card auto-open logic).
+  // Shadow signal count per league ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â counts upcoming signals only (fixture card auto-open logic).
   const shadowCountByLeague = new Map<string, number>();
   for (const row of currentShadowLive) {
     const d = (row.date ?? "").slice(0, 10);
@@ -1382,7 +1382,7 @@ function LiveLineTable({
           </details>
         </MonitorCard>
 
-        {/* KPI strip â€” model track record before showing live signals */}
+        {/* KPI strip - model track record before showing live signals */}
         <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-4">
           <Stat label="Predictions" value={predictions.length.toLocaleString()} sub="team lambda + fair lines" />
           <Stat
@@ -1410,25 +1410,25 @@ function LiveLineTable({
           />
           <Stat
             label="Shadow PnL"
-            value={settledShadow.length > 0 ? `${shadowPnl >= 0 ? "+" : ""}${shadowPnl.toFixed(1)}u` : "â€”"}
+            value={settledShadow.length > 0 ? `${shadowPnl >= 0 ? "+" : ""}${shadowPnl.toFixed(1)}u` : "-"}
             sub={settledShadow.length > 0 ? `${shadowWins}W / ${settledShadow.length - shadowWins}L` : "collecting data"}
             tone={shadowPnl > 0 ? "green" : shadowPnl < 0 ? "red" : "default"}
           />
           <Stat
             label="Shadow ROI (flat)"
-            value={settledShadow.length > 0 ? `${shadowRoi >= 0 ? "+" : ""}${shadowRoi.toFixed(1)}%` : "â€”"}
+            value={settledShadow.length > 0 ? `${shadowRoi >= 0 ? "+" : ""}${shadowRoi.toFixed(1)}%` : "-"}
             tone={shadowRoi > 5 ? "green" : shadowRoi < -5 ? "red" : "default"}
           />
           <Stat
             label="Shadow ROI (staked)"
-            value={settledShadow.length > 0 ? `${shadowRoiStaked >= 0 ? "+" : ""}${shadowRoiStaked.toFixed(1)}%` : "â€”"}
+            value={settledShadow.length > 0 ? `${shadowRoiStaked >= 0 ? "+" : ""}${shadowRoiStaked.toFixed(1)}%` : "-"}
             sub={settledShadow.length > 0 ? `${shadowPnlStaked >= 0 ? "+" : ""}${shadowPnlStaked.toFixed(2)}u on ${shadowStakedTotal.toFixed(1)}u` : "collecting data"}
             tone={shadowRoiStaked > 5 ? "green" : shadowRoiStaked < -5 ? "red" : "default"}
           />
         </div>
 
         {pendingShadowRows.length > 0 && (
-          <MonitorCard title={`All pending shadow signals — ${pendingShadowRows.length}`}>
+          <MonitorCard title={`All pending shadow signals - ${pendingShadowRows.length}`}>
             <p className="mb-3 text-xs text-slate-500">
               Daily matches stay visible first. Open any other date to review the full pending shadow slate.
               The odds arrow is a price-move / CLV proxy from entry odds to the latest captured odds for the same book and line.
@@ -1594,9 +1594,9 @@ function LiveLineTable({
                   title={(() => {
                     const sc = shadowCountByLeague.get(leagueKey) ?? 0;
                     return [
-                      `${leagueTitle(leagueKey)} â€” ${leagueRows.length} fixture${leagueRows.length === 1 ? "" : "s"}`,
+                      `${leagueTitle(leagueKey)} - ${leagueRows.length} fixture${leagueRows.length === 1 ? "" : "s"}`,
                       sc > 0 ? `${sc} shadow signal${sc === 1 ? "" : "s"}` : null,
-                    ].filter(Boolean).join(" Â· ");
+                    ].filter(Boolean).join(" | ")
                   })()}
 
                 >
@@ -1751,11 +1751,11 @@ function LiveLineTable({
 
 
 
-        {/* Team total shots odds (latest 50) â€” empty until Odds-API.io / BetsAPI returns team markets */}
+        {/* Team total shots odds (latest 50) ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â empty until Odds-API.io / BetsAPI returns team markets */}
 
         {oddsArchive.length > 0 ? (
 
-          <MonitorCard title={`Team total shots â€” book lines (latest ${Math.min(50, oddsArchive.length)})`}>
+          <MonitorCard title={`Team total shots ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â book lines (latest ${Math.min(50, oddsArchive.length)})`}>
 
             <div className="max-h-80 overflow-auto">
 
@@ -2055,7 +2055,7 @@ function LiveLineTable({
 
         <footer className="mt-12 border-t border-slate-800/60 pt-4 text-center text-[11px] text-slate-600">
 
-          Team Shots Model Monitor â€” Il Margine
+          Team Shots Model Monitor ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Il Margine
 
         </footer>
 
