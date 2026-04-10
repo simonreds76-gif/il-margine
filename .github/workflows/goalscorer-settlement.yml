@@ -1,0 +1,213 @@
+name: Goalscorer Settlement
+
+on:
+  schedule:
+    - cron: "30 23 * * *" # Nightly settlement after most European match windows
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: goalscorer-branch-writes
+  cancel-in-progress: false
+
+jobs:
+  settle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install Python deps
+        run: pip install requests
+
+      - name: Create .env.local
+        run: |
+          : > .env.local
+          if [ -n "${{ secrets.ODDS_API_KEY }}" ]; then
+            echo "ODDS_API_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
+            echo "ODDS_API_IO_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
+          fi
+          if [ -n "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
+            echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.local
+          else
+            echo "NEXT_PUBLIC_SUPABASE_URL=https://nuqcgzbagxtbxlqrhtvc.supabase.co" >> .env.local
+          fi
+          if [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
+          fi
+
+      - name: Resolve current season
+        id: season
+        run: |
+          month="$(date -u +%m)"
+          year="$(date -u +%Y)"
+          if [ "$month" -ge 7 ]; then
+            start_year="$year"
+          else
+            start_year="$((year - 1))"
+          fi
+          end_year="$((start_year + 1))"
+          echo "label=${start_year}-${end_year}" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch recent FotMob match detail
+        run: |
+          python scripts/fotmob-fetch-match-detail.py \
+            --league serie-a epl la-liga bundesliga ligue-1 \
+            --days-back 3
+        continue-on-error: true
+
+      - name: Settle public and shadow goalscorer signals
+        run: |
+          declare -A SHADOW_OUTPUTS=(
+            [serie-a]="data/goalscorer/goalscorer-shadow-signals.csv"
+            [epl]="data/goalscorer/epl-shadow-signals.csv"
+            [la-liga]="data/goalscorer/la-liga-shadow-signals.csv"
+            [bundesliga]="data/goalscorer/bundesliga-shadow-signals.csv"
+            [ligue-1]="data/goalscorer/ligue-1-shadow-signals.csv"
+          )
+          declare -A SHADOW_SUMMARIES=(
+            [serie-a]="data/goalscorer/goalscorer-shadow-performance.txt"
+            [epl]="data/goalscorer/epl-shadow-performance.txt"
+            [la-liga]="data/goalscorer/la-liga-shadow-performance.txt"
+            [bundesliga]="data/goalscorer/bundesliga-shadow-performance.txt"
+            [ligue-1]="data/goalscorer/ligue-1-shadow-performance.txt"
+          )
+          declare -A PUBLIC_OUTPUTS=(
+            [serie-a]="data/goalscorer/goalscorer-public-signals.csv"
+            [epl]="data/goalscorer/epl-public-signals.csv"
+            [la-liga]="data/goalscorer/la-liga-public-signals.csv"
+            [bundesliga]="data/goalscorer/bundesliga-public-signals.csv"
+            [ligue-1]="data/goalscorer/ligue-1-public-signals.csv"
+          )
+          declare -A PUBLIC_SUMMARIES=(
+            [serie-a]="data/goalscorer/goalscorer-public-performance.txt"
+            [epl]="data/goalscorer/epl-public-performance.txt"
+            [la-liga]="data/goalscorer/la-liga-public-performance.txt"
+            [bundesliga]="data/goalscorer/bundesliga-public-performance.txt"
+            [ligue-1]="data/goalscorer/ligue-1-public-performance.txt"
+          )
+
+          for league in serie-a epl la-liga bundesliga ligue-1; do
+            echo "---- Settle league: ${league} (shadow)"
+            python scripts/goalscorer-settle.py \
+              --league "${league}" \
+              --signals "${SHADOW_OUTPUTS[$league]}" \
+              --summary "${SHADOW_SUMMARIES[$league]}"
+
+            echo "---- Settle league: ${league} (public)"
+            python scripts/goalscorer-settle.py \
+              --league "${league}" \
+              --signals "${PUBLIC_OUTPUTS[$league]}" \
+              --summary "${PUBLIC_SUMMARIES[$league]}"
+          done
+
+      - name: Refresh current-season Understat logs
+        run: |
+          python scripts/understat-scrape-serie-a.py \
+            --league serie-a epl la-liga bundesliga ligue-1 \
+            --season "${{ steps.season.outputs.label }}" \
+            --resume
+        continue-on-error: true
+
+      - name: Rebuild penalty review and evidence
+        run: |
+          declare -A PLAYER_LOGS=(
+            [serie-a]="data/goalscorer/serie-a-player-match-logs-${{ steps.season.outputs.label }}.csv"
+            [epl]="data/goalscorer/epl-player-match-logs-${{ steps.season.outputs.label }}.csv"
+            [la-liga]="data/goalscorer/la-liga-player-match-logs-${{ steps.season.outputs.label }}.csv"
+            [bundesliga]="data/goalscorer/bundesliga-player-match-logs-${{ steps.season.outputs.label }}.csv"
+            [ligue-1]="data/goalscorer/ligue-1-player-match-logs-${{ steps.season.outputs.label }}.csv"
+          )
+          declare -A DATA_GLOBS=(
+            [serie-a]="data/goalscorer/serie-a-player-match-logs-*.csv"
+            [epl]="data/goalscorer/epl-player-match-logs-*.csv"
+            [la-liga]="data/goalscorer/la-liga-player-match-logs-*.csv"
+            [bundesliga]="data/goalscorer/bundesliga-player-match-logs-*.csv"
+            [ligue-1]="data/goalscorer/ligue-1-player-match-logs-*.csv"
+          )
+          declare -A CONTEXT_CURRENT=(
+            [serie-a]="data/goalscorer/penalty-duty-context.json"
+            [epl]="data/goalscorer/epl/penalty-duty-context.json"
+            [la-liga]="data/goalscorer/la-liga/penalty-duty-context.json"
+            [bundesliga]="data/goalscorer/bundesliga/penalty-duty-context.json"
+            [ligue-1]="data/goalscorer/ligue-1/penalty-duty-context.json"
+          )
+          declare -A CONTEXT_HISTORY=(
+            [serie-a]="data/goalscorer/live-history/penalty-duty-context-*.json"
+            [epl]="data/goalscorer/epl/live-history/penalty-duty-context-*.json"
+            [la-liga]="data/goalscorer/la-liga/live-history/penalty-duty-context-*.json"
+            [bundesliga]="data/goalscorer/bundesliga/live-history/penalty-duty-context-*.json"
+            [ligue-1]="data/goalscorer/ligue-1/live-history/penalty-duty-context-*.json"
+          )
+          declare -A REVIEW_OUTPUTS=(
+            [serie-a]="data/goalscorer/penalty-duty-review.csv"
+            [epl]="data/goalscorer/epl-penalty-duty-review.csv"
+            [la-liga]="data/goalscorer/la-liga-penalty-duty-review.csv"
+            [bundesliga]="data/goalscorer/bundesliga-penalty-duty-review.csv"
+            [ligue-1]="data/goalscorer/ligue-1-penalty-duty-review.csv"
+          )
+          declare -A REVIEW_JSON_OUTPUTS=(
+            [serie-a]="data/goalscorer/penalty-duty-review.json"
+            [epl]="data/goalscorer/epl-penalty-duty-review.json"
+            [la-liga]="data/goalscorer/la-liga-penalty-duty-review.json"
+            [bundesliga]="data/goalscorer/bundesliga-penalty-duty-review.json"
+            [ligue-1]="data/goalscorer/ligue-1-penalty-duty-review.json"
+          )
+
+          for league in serie-a epl la-liga bundesliga ligue-1; do
+            required_log="${PLAYER_LOGS[$league]}"
+            if [ ! -f "$required_log" ]; then
+              echo "SKIP: current player log missing for ${league} (${required_log})"
+              continue
+            fi
+
+            echo "---- Rebuild penalty review: ${league}"
+            python scripts/goalscorer-penalty-review.py \
+              --context "${CONTEXT_CURRENT[$league]}" "${CONTEXT_HISTORY[$league]}" \
+              --data "${DATA_GLOBS[$league]}" \
+              --days-back 21 \
+              --output "${REVIEW_OUTPUTS[$league]}" \
+              --json-output "${REVIEW_JSON_OUTPUTS[$league]}"
+
+            echo "---- Rebuild penalty evidence: ${league}"
+            python scripts/build-penalty-baseline-evidence.py --league "${league}"
+          done
+
+      - name: Generate local hosted snapshot artifact
+        run: python scripts/goalscorer-live-snapshot.py
+
+      - name: Upload hosted snapshot
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            python scripts/goalscorer-live-snapshot.py --supabase
+          else
+            echo "::warning::SUPABASE_SERVICE_ROLE_KEY not configured; goalscorer hosted snapshot upload skipped."
+          fi
+
+      - name: Commit and push if new data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -d data/goalscorer ]; then
+            git add -f data/goalscorer/
+            git add -u data/goalscorer || true
+          fi
+          if git diff --cached --quiet; then
+            echo "No goalscorer settlement changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: hosted goalscorer settlement"
+          git fetch origin golden-with-speed-insights
+          git rebase origin/golden-with-speed-insights
+          git push origin HEAD:golden-with-speed-insights
