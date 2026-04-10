@@ -260,11 +260,11 @@
       "match_date": "2026-04-10",
       "home_team": "Paris FC",
       "away_team": "Monaco",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "3-4-2-1",
+      "away_formation": "3-5-2",
       "home_players": [
         "Kevin Trapp",
         "Adama Camara",
@@ -272,11 +272,11 @@
         "Mamadou Mbow",
         "Nhoa Sangui",
         "Pierre Lees-Melou",
-        "Rudy Matondo",
+        "Maxime Lopez",
         "Jonathan Ikoné",
         "Marshall Munetsi",
         "Moses Simon",
-        "Willem Geubbels"
+        "Ciro Immobile"
       ],
       "away_players": [
         "Lukás Hrádecky",
@@ -286,9 +286,9 @@
         "Jordan Teze",
         "Lamine Camara",
         "Mamadou Coulibaly",
-        "Christian Mawissa",
-        "Maghnes Akliouche",
-        "Aleksandr Golovin",
+        "Aladji Bamba",
+        "Simon Adingra",
+        "Ansu Fati",
         "Folarin Balogun"
       ],
       "home_starters": [
@@ -347,7 +347,7 @@
           "position_id": 64
         },
         {
-          "name": "Rudy Matondo",
+          "name": "Maxime Lopez",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -383,7 +383,7 @@
           "position_id": 87
         },
         {
-          "name": "Willem Geubbels",
+          "name": "Ciro Immobile",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -399,7 +399,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-2-1",
+          "formation": "3-5-2",
           "position_id": 11
         },
         {
@@ -408,7 +408,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-5-2",
           "position_id": 33
         },
         {
@@ -417,7 +417,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-5-2",
           "position_id": 35
         },
         {
@@ -426,75 +426,95 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-5-2",
           "position_id": 37
         },
         {
           "name": "Jordan Teze",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 62
+          "formation": "3-5-2",
+          "position_id": 71
         },
         {
           "name": "Lamine Camara",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 64
+          "formation": "3-5-2",
+          "position_id": 73
         },
         {
           "name": "Mamadou Coulibaly",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 66
+          "formation": "3-5-2",
+          "position_id": 75
         },
         {
-          "name": "Christian Mawissa",
+          "name": "Aladji Bamba",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 68
+          "formation": "3-5-2",
+          "position_id": 77
         },
         {
-          "name": "Maghnes Akliouche",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84
+          "name": "Simon Adingra",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79
         },
         {
-          "name": "Aleksandr Golovin",
+          "name": "Ansu Fati",
           "line_index": 2,
           "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 86
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 104
         },
         {
           "name": "Folarin Balogun",
-          "line_index": 3,
-          "line_size": 1,
+          "line_index": 2,
+          "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-2-1",
-          "position_id": 105
+          "formation": "3-5-2",
+          "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Obed Nkambadio",
+        "Hamari Traoré",
+        "Otávio",
+        "Samir Chergui",
+        "Alimami Gory",
+        "Rudy Matondo",
+        "Ilan Kebbal",
+        "Luca Koleosho",
+        "Willem Geubbels"
+      ],
+      "away_subs": [
+        "Philipp Köhn",
+        "Christian Mawissa",
+        "Eric Dier",
+        "Krépin Diatta",
+        "Pape Cabral",
+        "Paul Pogba",
+        "Stanis Idumbo",
+        "Maghnes Akliouche",
+        "Mika Biereth"
+      ],
       "home_unavailable": [
         "Tuomas Ollila",
         "Julien Lopez",
@@ -503,6 +523,7 @@
         "Jean-Philippe Krasso"
       ],
       "away_unavailable": [
+        "Aleksandr Golovin",
         "Caio Henrique",
         "Mohammed Salisu",
         "Vanderson",
