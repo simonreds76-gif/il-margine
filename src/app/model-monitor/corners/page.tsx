@@ -313,12 +313,12 @@ export default async function CornersMonitorPage() {
 
   const recentPredictions = predictions.slice(-80).reverse();
   const schedulerHeartbeatAt =
-    pipelineStatus?.last_successful_finished_at ??
-    pipelineStatus?.updated_at ??
-    shortlistMtime ??
-    predictionsMtime ??
     latestPinnacleCaptureAt ??
     pinnacleCornersMtime ??
+    shortlistMtime ??
+    predictionsMtime ??
+    pipelineStatus?.last_successful_finished_at ??
+    pipelineStatus?.updated_at ??
     null;
   const pipelineTone =
     pipelineStatus?.state === "failed"

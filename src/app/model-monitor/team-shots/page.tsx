@@ -1087,12 +1087,11 @@ function LiveLineTable({
   const upcomingLeagueKeys = sortLeagueKeys([...upcomingByLeague.keys()]);
 
   const schedulerHeartbeatAt =
-
-    pipelineStatus?.last_successful_finished_at ??
-    pipelineStatus?.updated_at ??
     comparisonMtime ??
     upcomingMtime ??
     predictionsMtime ??
+    pipelineStatus?.last_successful_finished_at ??
+    pipelineStatus?.updated_at ??
     null;
 
   const pipelineTone =
