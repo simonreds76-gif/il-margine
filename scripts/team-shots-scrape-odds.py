@@ -78,9 +78,8 @@ LEAGUE_CONFIGS = {
     },
 }
 
-# Free plan: account is locked to Bet365 + Ladbrokes.
-# To change bookmakers: PUT /bookmakers/selected/clear then re-select via the API.
-DEFAULT_BOOKMAKERS = "Bet365,Ladbrokes"
+# Account selection can be changed from the odds-api.io dashboard/API.
+DEFAULT_BOOKMAKERS = "Bet365"
 
 OUTPUT_FIELDS = [
     "captured_at", "match_date", "event_id", "kickoff_at",
@@ -257,13 +256,7 @@ def scrape_odds_api(
     payload: List[dict] = []
     for i in range(0, len(event_ids), 10):
         chunk = event_ids[i : i + 10]
-        odds_resp = requests.get(
-            f"{BASE_URL_ODDS_API}/odds/multi",
-            params={"apiKey": api_key, "eventIds": ",".join(chunk), "bookmakers": bookmakers_str},
-            timeout=30,
-        )
-        odds_resp.raise_for_status()
-        chunk_payload = odds_resp.json()
+        chunk_payload = _fetch_odds_api_multi_chunk(api_key, chunk, bookmakers_str)
         if isinstance(chunk_payload, list):
             payload.extend(chunk_payload)
 
@@ -314,6 +307,60 @@ def scrape_odds_api(
                 print(f"    - {mn}{shots_flag}")
 
     return rows
+
+
+def _merge_event_payloads(payloads: List[dict]) -> List[dict]:
+    merged: Dict[str, dict] = {}
+    for event in payloads:
+        event_id = str(event.get("id") or "")
+        if not event_id:
+            continue
+        current = merged.get(event_id)
+        if current is None:
+            merged[event_id] = {
+                **event,
+                "bookmakers": dict(event.get("bookmakers") or {}),
+            }
+            continue
+        current_books = current.setdefault("bookmakers", {})
+        for bookmaker, markets in (event.get("bookmakers") or {}).items():
+            current_books[bookmaker] = markets
+    return list(merged.values())
+
+
+def _fetch_odds_api_multi_chunk(api_key: str, event_ids: List[str], bookmakers_str: str) -> List[dict]:
+    params = {"apiKey": api_key, "eventIds": ",".join(event_ids), "bookmakers": bookmakers_str}
+    response = requests.get(f"{BASE_URL_ODDS_API}/odds/multi", params=params, timeout=30)
+    try:
+        response.raise_for_status()
+        payload = response.json()
+        return payload if isinstance(payload, list) else []
+    except requests.HTTPError:
+        bookmakers = [book.strip() for book in bookmakers_str.split(",") if book.strip()]
+        if response.status_code != 403 or len(bookmakers) <= 1:
+            raise
+
+        print(f"  [odds-api.io] Multi-book request blocked for {bookmakers_str}; retrying per bookmaker.")
+        fallback_payloads: List[dict] = []
+        for bookmaker in bookmakers:
+            try:
+                single_resp = requests.get(
+                    f"{BASE_URL_ODDS_API}/odds/multi",
+                    params={"apiKey": api_key, "eventIds": ",".join(event_ids), "bookmakers": bookmaker},
+                    timeout=30,
+                )
+                single_resp.raise_for_status()
+                single_payload = single_resp.json()
+                if isinstance(single_payload, list):
+                    fallback_payloads.extend(single_payload)
+            except requests.HTTPError as exc:
+                print(f"  [odds-api.io] Skipping blocked bookmaker {bookmaker}: {exc}")
+            except requests.RequestException as exc:
+                print(f"  [odds-api.io] Error fetching bookmaker {bookmaker}: {exc}")
+
+        if fallback_payloads:
+            return _merge_event_payloads(fallback_payloads)
+        raise
 
 
 def scrape_betsapi(

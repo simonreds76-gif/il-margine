@@ -1,0 +1,65 @@
+name: Goalscorer Hot Live Poll
+
+on:
+  schedule:
+    - cron: "*/10 8-23 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: goalscorer-branch-writes
+  cancel-in-progress: false
+
+jobs:
+  live-poll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install Python deps
+        run: pip install requests
+
+      - name: Create .env.local
+        run: |
+          : > .env.local
+          if [ -n "${{ secrets.ODDS_API_KEY }}" ]; then
+            echo "ODDS_API_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
+            echo "ODDS_API_IO_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
+          fi
+          if [ -n "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
+            echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.local
+          else
+            echo "NEXT_PUBLIC_SUPABASE_URL=https://nuqcgzbagxtbxlqrhtvc.supabase.co" >> .env.local
+          fi
+          if [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
+          fi
+
+      - name: Run hosted hot live poll
+        run: python scripts/goalscorer-live-hosted.py
+
+      - name: Commit and push if new data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -d data/goalscorer ]; then
+            git add data/goalscorer/
+          fi
+          if git diff --cached --quiet; then
+            echo "No goalscorer live changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: hosted goalscorer hot live poll"
+          git fetch origin golden-with-speed-insights
+          git rebase origin/golden-with-speed-insights
+          git push origin HEAD:golden-with-speed-insights

@@ -2,8 +2,16 @@ name: Team Shots Weekly Scrape
 
 on:
   schedule:
-    - cron: "0 10 * * 4" # Every Thursday 10am UTC = 11am BST
+    - cron: "0 10 * * 4" # Thursday 10am UTC = 11am BST
+    - cron: "0 10 * * 5" # Friday 10am UTC = 11am BST
   workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: team-props-branch-writes
+  cancel-in-progress: false
 
 jobs:
   scrape:
@@ -13,6 +21,7 @@ jobs:
         with:
           ref: golden-with-speed-insights
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - uses: actions/setup-python@v6
         with:
@@ -22,11 +31,15 @@ jobs:
 
       - name: Create .env.local
         run: |
+          : > .env.local
           echo "ODDS_API_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
           echo "ODDS_API_IO_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
+          if [ -n "${{ secrets.THE_ODDS_API_KEY }}" ]; then
+            echo "THE_ODDS_API_KEY=${{ secrets.THE_ODDS_API_KEY }}" >> .env.local
+          fi
 
       - name: Scrape odds
-        run: python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365,Ladbrokes"
+        run: python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365"
 
       - name: Archive odds
         run: python scripts/team-shots-odds-archive.py
@@ -36,5 +49,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/team-shots/
-          git diff --cached --quiet || git commit -m "chore: weekly team shots odds scrape"
-          git push origin golden-with-speed-insights
+          if git diff --cached --quiet; then
+            echo "No team-shots odds changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: weekly team shots odds scrape"
+          git fetch origin golden-with-speed-insights
+          git rebase origin/golden-with-speed-insights
+          git push origin HEAD:golden-with-speed-insights
