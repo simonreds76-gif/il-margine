@@ -39,7 +39,7 @@ jobs:
           fi
 
       - name: Scrape odds
-        run: python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365"
+        run: python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365,Unibet,William Hill,Skybet"
 
       - name: Archive odds
         run: python scripts/team-shots-odds-archive.py

@@ -79,7 +79,8 @@ LEAGUE_CONFIGS = {
 }
 
 # Account selection can be changed from the odds-api.io dashboard/API.
-DEFAULT_BOOKMAKERS = "Bet365"
+DEFAULT_BOOKMAKERS = "Bet365,Unibet,William Hill,Skybet"
+BOOKMAKER_RETRY_FALLBACK = ["Bet365", "Unibet", "William Hill", "Skybet"]
 
 OUTPUT_FIELDS = [
     "captured_at", "match_date", "event_id", "kickoff_at",
@@ -253,13 +254,49 @@ def scrape_odds_api(
     captured = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
     event_ids = [str(e["id"]) for e in matched]
+    payload = _fetch_odds_api_payload(api_key, event_ids, bookmakers_str)
+    rows = _extract_odds_api_rows(payload, config, captured)
+
+    if not rows:
+        requested = [book.strip() for book in bookmakers_str.split(",") if book.strip()]
+        fallback_books = [book for book in BOOKMAKER_RETRY_FALLBACK if book not in requested]
+        if fallback_books:
+            retry_books = ",".join(requested + fallback_books)
+            print(f"  [odds-api.io] No team shots found for {config['label']} with {bookmakers_str}; retrying {retry_books}.")
+            retry_payload = _fetch_odds_api_payload(api_key, event_ids, retry_books)
+            rows = _extract_odds_api_rows(retry_payload, config, captured)
+            if rows:
+                payload = retry_payload
+
+    if not rows:
+        sample_markets: set[str] = set()
+        for event in payload:
+            for bookmaker, markets in (event.get("bookmakers") or {}).items():
+                for market in markets or []:
+                    name = str(market.get("name") or "")
+                    if name:
+                        sample_markets.add(f"{bookmaker}: {name}")
+        if sample_markets:
+            print("  [odds-api.io] Markets available (no team shots found):")
+            for mn in sorted(sample_markets)[:30]:
+                shots_flag = " <-- possible?" if "shot" in mn.lower() else ""
+                print(f"    - {mn}{shots_flag}")
+
+    return rows
+
+
+def _fetch_odds_api_payload(api_key: str, event_ids: List[str], bookmakers_str: str) -> List[dict]:
     payload: List[dict] = []
     for i in range(0, len(event_ids), 10):
         chunk = event_ids[i : i + 10]
         chunk_payload = _fetch_odds_api_multi_chunk(api_key, chunk, bookmakers_str)
         if isinstance(chunk_payload, list):
             payload.extend(chunk_payload)
+    return payload
 
+
+def _extract_odds_api_rows(payload: List[dict], config: dict, captured: str) -> List[dict]:
+    rows: List[dict] = []
     for event in payload:
         home = str(event.get("home") or "")
         away = str(event.get("away") or "")
@@ -293,19 +330,6 @@ def scrape_odds_api(
                         "source": "odds_api_io",
                         "notes": f"market={market_name}",
                     })
-
-    if not rows:
-        sample_markets: set[str] = set()
-        for event in payload:
-            for bookmaker, markets in (event.get("bookmakers") or {}).items():
-                for market in markets or []:
-                    sample_markets.add(str(market.get("name") or ""))
-        if sample_markets:
-            print("  [odds-api.io] Markets available (no team shots found):")
-            for mn in sorted(sample_markets)[:20]:
-                shots_flag = " <-- possible?" if "shot" in mn.lower() else ""
-                print(f"    - {mn}{shots_flag}")
-
     return rows
 
 

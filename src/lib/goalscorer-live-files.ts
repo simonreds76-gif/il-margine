@@ -22,7 +22,9 @@ const SNAPSHOT_TABLE = "goalscorer_live_snapshot";
 const SNAPSHOT_KEY = process.env.GOALSCORER_LIVE_SNAPSHOT_KEY || "live_state";
 const LOCAL_SNAPSHOT_FILE = "data/goalscorer/goalscorer-live-snapshot.json";
 const PREFER_LOCAL = process.env.MONITOR_PREFER_LOCAL === "1";
-const LOCALHOST_PREFERS_LOCAL = process.env.VERCEL !== "1";
+const GITHUB_RAW_BASE =
+  process.env.MONITOR_GITHUB_RAW_BASE ||
+  "https://raw.githubusercontent.com/simonreds76-gif/il-margine/golden-with-speed-insights";
 
 const loadHostedSnapshot = cache(async (): Promise<SnapshotPayload | null> => {
   try {
@@ -33,8 +35,33 @@ const loadHostedSnapshot = cache(async (): Promise<SnapshotPayload | null> => {
       .eq("snapshot_key", SNAPSHOT_KEY)
       .maybeSingle();
 
-    if (error || !data?.payload || typeof data.payload !== "object") return null;
-    return data.payload as SnapshotPayload;
+    if (!error && data?.payload && typeof data.payload === "object") {
+      return data.payload as SnapshotPayload;
+    }
+  } catch {
+    // Fall through to GitHub snapshot fallback.
+  }
+
+  try {
+    const response = await fetch(`${GITHUB_RAW_BASE}/${LOCAL_SNAPSHOT_FILE}`, {
+      cache: "no-store",
+    });
+    if (!response.ok) return null;
+    const data = (await response.json()) as SnapshotPayload;
+    if (!data || typeof data !== "object") return null;
+    return data;
+  } catch {
+    return null;
+  }
+});
+
+const loadHostedRawFile = cache(async (relativePath: string): Promise<string | null> => {
+  try {
+    const response = await fetch(`${GITHUB_RAW_BASE}/${relativePath}`, {
+      cache: "no-store",
+    });
+    if (!response.ok) return null;
+    return await response.text();
   } catch {
     return null;
   }
@@ -104,32 +131,24 @@ export async function readGoalscorerLiveFile(relativePath: string): Promise<stri
     }
   };
 
-  if (PREFER_LOCAL || LOCALHOST_PREFERS_LOCAL) {
-    const local = await readLocal();
-    if (typeof local === "string") return local;
-  }
-
-  if (!PREFER_LOCAL && !LOCALHOST_PREFERS_LOCAL) {
+  if (!PREFER_LOCAL) {
     const payload = await loadHostedSnapshot();
     const hostedEntry = getSnapshotFileEntry(payload, relativePath);
+    const hostedMtime = hostedEntry?.mtime ?? payload?.generated_at ?? null;
     const localMtime = await readLocalMtime();
-    if (typeof hostedEntry?.content === "string" && shouldPreferHosted(hostedEntry.mtime ?? payload?.generated_at ?? null, localMtime)) {
-      return hostedEntry.content;
+    if (shouldPreferHosted(hostedMtime, localMtime)) {
+      if (typeof hostedEntry?.content === "string") return hostedEntry.content;
+      const hostedRaw = await loadHostedRawFile(relativePath);
+      if (typeof hostedRaw === "string") return hostedRaw;
     }
   }
 
   const local = await readLocal();
   if (typeof local === "string") return local;
 
-  if (PREFER_LOCAL || LOCALHOST_PREFERS_LOCAL) {
-    const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.content;
-    if (typeof hosted === "string") return hosted;
-  } else {
-    const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.content;
-    if (typeof hosted === "string") return hosted;
-  }
-
-  return null;
+  const hostedEntry = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath);
+  if (typeof hostedEntry?.content === "string") return hostedEntry.content;
+  return await loadHostedRawFile(relativePath);
 }
 
 export async function readGoalscorerLiveJson<T>(relativePath: string): Promise<T | null> {
@@ -154,12 +173,7 @@ export async function readGoalscorerLiveMtime(relativePath: string): Promise<str
     }
   };
 
-  if (PREFER_LOCAL || LOCALHOST_PREFERS_LOCAL) {
-    const localMtime = await readLocalMtime();
-    if (typeof localMtime === "string") return localMtime;
-  }
-
-  if (!PREFER_LOCAL && !LOCALHOST_PREFERS_LOCAL) {
+  if (!PREFER_LOCAL) {
     const payload = await loadHostedSnapshot();
     const hosted = getSnapshotFileEntry(payload, relativePath)?.mtime ?? payload?.generated_at ?? null;
     const localMtime = await readLocalMtime();
@@ -172,18 +186,10 @@ export async function readGoalscorerLiveMtime(relativePath: string): Promise<str
   const localMtime = await readLocalMtime();
   if (typeof localMtime === "string") return localMtime;
 
-  if (PREFER_LOCAL || LOCALHOST_PREFERS_LOCAL) {
-    const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.mtime;
-    if (typeof hosted === "string") return hosted;
-  }
-
-  return null;
+  return getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.mtime ?? null;
 }
 
 export async function readGoalscorerLiveSnapshotGeneratedAt(): Promise<string | null> {
-  if (PREFER_LOCAL || LOCALHOST_PREFERS_LOCAL) {
-    return await readLocalSnapshotGeneratedAt();
-  }
   const payload = await loadHostedSnapshot();
   const hostedGeneratedAt = typeof payload?.generated_at === "string" ? payload.generated_at : null;
   const localGeneratedAt = await readLocalSnapshotGeneratedAt();
