@@ -32,6 +32,9 @@ jobs:
       - name: Capture Pinnacle corners odds
         run: python scripts/pinnacle-scrape-corners.py
 
+      - name: Generate corners snapshot artifact
+        run: python scripts/corners-live-snapshot.py
+
       - name: Upload corners hosted snapshot
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -41,14 +44,14 @@ jobs:
             export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://nuqcgzbagxtbxlqrhtvc.supabase.co}"
             python scripts/corners-live-snapshot.py --supabase
           else
-            echo "SUPABASE_SERVICE_ROLE_KEY not configured; skipping corners snapshot upload."
+            echo "::warning::SUPABASE_SERVICE_ROLE_KEY not configured; corners hosted snapshot upload skipped."
           fi
 
       - name: Commit and push if new data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/corners-ou/pinnacle-corners-odds.csv
+          git add data/corners-ou/pinnacle-corners-odds.csv data/corners-ou/corners-live-snapshot.json
           if git diff --cached --quiet; then
             echo "No Pinnacle corners CLV changes to commit."
             exit 0

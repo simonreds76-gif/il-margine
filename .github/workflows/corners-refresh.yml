@@ -51,17 +51,20 @@ jobs:
         run: |
           ./scripts/run-corners-pipeline.ps1 -SkipTeamShots -DaysAhead 7 -MinEdge 0.10 -Regions eu
 
+      - name: Generate corners snapshot artifact
+        run: python scripts/corners-live-snapshot.py
+
       - name: Upload corners hosted snapshot
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
-            export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://nuqcgzbagxtbxlqrhtvc.supabase.co}"
-            python scripts/corners-live-snapshot.py --supabase
-          else
-            echo "SUPABASE_SERVICE_ROLE_KEY not configured; skipping corners snapshot upload."
+          if [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            echo "::error::SUPABASE_SERVICE_ROLE_KEY not configured for hosted corners snapshot upload."
+            exit 1
           fi
+          export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://nuqcgzbagxtbxlqrhtvc.supabase.co}"
+          python scripts/corners-live-snapshot.py --supabase
 
       - name: Commit and push if new data
         run: |
