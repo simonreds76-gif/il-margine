@@ -38,6 +38,9 @@ const SNAPSHOT_TABLE = "goalscorer_live_snapshot";
 const SNAPSHOT_KEY = process.env.TEAM_SHOTS_LIVE_SNAPSHOT_KEY || "team_shots_state";
 const LOCAL_SNAPSHOT_FILE = "data/team-shots/team-shots-live-snapshot.json";
 const PREFER_LOCAL = process.env.MONITOR_PREFER_LOCAL === "1";
+const GITHUB_RAW_BASE =
+  process.env.MONITOR_GITHUB_RAW_BASE ||
+  "https://raw.githubusercontent.com/simonreds76-gif/il-margine/golden-with-speed-insights";
 
 const loadHostedSnapshot = cache(async (): Promise<SnapshotPayload | null> => {
   try {
@@ -48,8 +51,21 @@ const loadHostedSnapshot = cache(async (): Promise<SnapshotPayload | null> => {
       .eq("snapshot_key", SNAPSHOT_KEY)
       .maybeSingle();
 
-    if (error || !data?.payload || typeof data.payload !== "object") return null;
-    return data.payload as SnapshotPayload;
+    if (!error && data?.payload && typeof data.payload === "object") {
+      return data.payload as SnapshotPayload;
+    }
+  } catch {
+    // Fall through to GitHub snapshot fallback.
+  }
+
+  try {
+    const response = await fetch(`${GITHUB_RAW_BASE}/${LOCAL_SNAPSHOT_FILE}`, {
+      cache: "no-store",
+    });
+    if (!response.ok) return null;
+    const data = (await response.json()) as SnapshotPayload;
+    if (!data || typeof data !== "object") return null;
+    return data;
   } catch {
     return null;
   }
