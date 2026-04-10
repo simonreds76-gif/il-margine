@@ -1103,11 +1103,22 @@ function LiveLineTable({
     return (b.date ?? "").localeCompare(a.date ?? "");
   });
 
-  // Shadow signal count per league — used to label collapsed league sections
+  // Split by date: upcoming signals live in the fixture cards; past signals go in the awaiting-result table.
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const upcomingShadowCount = recentShadow.filter(r => (r.date ?? "").slice(0, 10) > todayIso).length;
+  const awaitingResultShadow = recentShadow.filter(r => {
+    const d = (r.date ?? "").slice(0, 10);
+    return d && d <= todayIso;
+  });
+
+  // Shadow signal count per league — counts upcoming signals only (fixture card auto-open logic).
   const shadowCountByLeague = new Map<string, number>();
   for (const row of currentShadowLive) {
-    const lg = (row.league ?? "").trim() || "other";
-    shadowCountByLeague.set(lg, (shadowCountByLeague.get(lg) ?? 0) + 1);
+    const d = (row.date ?? "").slice(0, 10);
+    if (d > todayIso) {
+      const lg = (row.league ?? "").trim() || "other";
+      shadowCountByLeague.set(lg, (shadowCountByLeague.get(lg) ?? 0) + 1);
+    }
   }
 
   const stalePendingShadow = pendingShadow.filter((row) => {
@@ -1344,9 +1355,10 @@ function LiveLineTable({
             tone={backtestRoi > 0 ? "green" : backtestRoi < -5 ? "red" : "default"}
           />
           <Stat
-            label="Shadow live"
-            value={currentShadowLive.length.toString()}
-            sub={`${pendingShadow.length} pending in archive`}
+            label="Upcoming signals"
+            value={upcomingShadowCount.toString()}
+            sub={awaitingResultShadow.length > 0 ? `${awaitingResultShadow.length} awaiting result` : `${pendingShadow.length} pending in archive`}
+            tone={upcomingShadowCount > 0 ? "green" : "default"}
           />
           <Stat
             label="Shadow PnL"
@@ -1367,13 +1379,13 @@ function LiveLineTable({
           />
         </div>
 
-        {recentShadow.length > 0 && (
+        {awaitingResultShadow.length > 0 && (
           <MonitorCard
-            title={`Shadow-qualified live signals — ${recentShadow.length} row${recentShadow.length === 1 ? "" : "s"}`}
+            title={`Awaiting result — ${awaitingResultShadow.length} shadow signal${awaitingResultShadow.length === 1 ? "" : "s"}`}
           >
             <p className="mb-3 text-xs text-slate-500">
-              Rows from the live comparison tracker that meet the shadow policy: model edge ≥ 5% and bookmaker odds between 1.50 and 5.00.
-              Sorted by edge, strongest first. <em>Awaiting result</em> means the match date has passed but the result has not been manually settled yet.
+              Past matches that met the shadow policy (edge ≥ 5%, odds 1.50–5.00) but have not been settled yet.
+              Upcoming shadow signals are shown in the fixture cards below (green = shadow-qualified).
             </p>
             <div className="max-h-[min(70vh,56rem)] overflow-y-auto overflow-x-auto">
               <table className="w-full text-left text-xs">
@@ -1396,10 +1408,8 @@ function LiveLineTable({
                   </tr>
                 </thead>
                 <tbody>
-                  {recentShadow.map((row, i) => {
-                    const matchDate = (row.date ?? "").trim().slice(0, 10);
-                    const todayIso = new Date().toISOString().slice(0, 10);
-                    const result = matchDate && matchDate < todayIso ? "awaiting result" : "pending";
+                  {awaitingResultShadow.map((row, i) => {
+                    const result = "awaiting result";
                     return (
                       <tr key={i} className="border-b border-slate-800/40 hover:bg-slate-800/20">
                         <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{row.date}</td>

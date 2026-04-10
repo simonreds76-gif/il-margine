@@ -2462,22 +2462,22 @@ export default async function GoalscorerMonitorPage() {
         ) : null}
 
         <div className="mb-8">
-          <MonitorCard
+          <CollapsibleMonitorSection
             title="League scoreboard"
-            subtitle="Live pipeline on the left, cumulative shadow log on the right. Public and shadow stay separate so you can tell what is live now versus what is just historical tracking."
+            subtitle="Live pipeline on the left, cumulative shadow log on the right."
+            defaultOpen={true}
           >
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
                 <thead>
                   <tr className="border-b border-slate-800/80 text-left text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                    <th className="px-3 py-3 font-semibold" colSpan={6}>Live pipeline — current window</th>
+                    <th className="px-3 py-3 font-semibold" colSpan={5}>Live pipeline — current window</th>
                     <th className="border-l border-slate-700 px-3 py-3 font-semibold bg-slate-950/10" colSpan={3}>Public record — cumulative</th>
-                    <th className="border-l border-slate-700 px-3 py-3 font-semibold bg-slate-950/20" colSpan={6}>Shadow log — cumulative</th>
+                    <th className="border-l border-slate-700 px-3 py-3 font-semibold bg-slate-950/20" colSpan={5}>Shadow log — cumulative</th>
                   </tr>
                   <tr className="border-b border-slate-800 text-left text-[11px] uppercase tracking-[0.18em] text-slate-500">
                     <th className="px-3 py-3 font-semibold">League</th>
                     <th className="px-3 py-3 font-semibold">Feed</th>
-                    <th className="px-3 py-3 font-semibold">Matched</th>
                     <th className="px-3 py-3 font-semibold">Pub now</th>
                     <th className="px-3 py-3 font-semibold">Shadow now</th>
                     <th className="px-3 py-3 font-semibold">Fixtures</th>
@@ -2486,9 +2486,8 @@ export default async function GoalscorerMonitorPage() {
                     <th className="bg-slate-950/10 px-3 py-3 font-semibold">Pub P/L</th>
                     <th className="border-l border-slate-700 bg-slate-950/20 px-3 py-3 font-semibold">Tracked</th>
                     <th className="bg-slate-950/20 px-3 py-3 font-semibold">Settled</th>
-                    <th className="bg-slate-950/20 px-3 py-3 font-semibold">Unsettled</th>
                     <th className="bg-slate-950/20 px-3 py-3 font-semibold">W/L/V</th>
-                    <th className="bg-slate-950/20 px-3 py-3 font-semibold">ROI</th>
+                    <th className="bg-slate-950/20 px-3 py-3 font-semibold">ROI (flat)</th>
                     <th className="bg-slate-950/20 px-3 py-3 font-semibold">P/L</th>
                   </tr>
                 </thead>
@@ -2506,7 +2505,6 @@ export default async function GoalscorerMonitorPage() {
                           {row.statusLabel}
                         </span>
                       </td>
-                      <td className="px-3 py-3 font-mono tabular-nums">{row.liveRows}</td>
                       <td className="px-3 py-3 font-mono tabular-nums text-emerald-300">{row.publicNow}</td>
                       <td className="px-3 py-3 font-mono tabular-nums text-amber-300">{row.shadowNow}</td>
                       <td className="px-3 py-3 font-mono tabular-nums">
@@ -2523,7 +2521,6 @@ export default async function GoalscorerMonitorPage() {
                       <td className={`bg-slate-950/10 px-3 py-3 font-mono tabular-nums ${metricTone(row.publicPnlUnits)}`}>{formatUnits(row.publicPnlUnits, 2)}</td>
                       <td className="border-l border-slate-700 bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-100">{row.trackedSignals}</td>
                       <td className="bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-100">{row.settledSignals}</td>
-                      <td className="bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-300">{row.openSignals}</td>
                       <td className="bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-100">{formatWLV(row.wins, row.losses, row.voids)}</td>
                       <td className={`bg-slate-950/20 px-3 py-3 font-mono tabular-nums ${metricTone(row.roi)}`}>{formatPct(row.roi, 1)}</td>
                       <td className={`bg-slate-950/20 px-3 py-3 font-mono tabular-nums ${metricTone(row.pnlUnits)}`}>{formatUnits(row.pnlUnits, 2)}</td>
@@ -2532,7 +2529,7 @@ export default async function GoalscorerMonitorPage() {
                 </tbody>
               </table>
             </div>
-          </MonitorCard>
+          </CollapsibleMonitorSection>
         </div>
 
         {visibleHighPenaltyReviewRows.length > 0 ? (
