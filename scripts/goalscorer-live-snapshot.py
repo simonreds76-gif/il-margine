@@ -30,7 +30,6 @@ SNAPSHOT_FILES = [
     "data/goalscorer/goalscorer-public-signals.csv",
     "data/goalscorer/goalscorer-live-status.json",
     "data/goalscorer/goalscorer-live-schedule-state.json",
-    "data/goalscorer/goalscorer-health-status.json",
     "data/goalscorer/goalscorer-live.log",
     "data/goalscorer/epl-shadow-signals.csv",
     "data/goalscorer/epl-public-signals.csv",
@@ -40,58 +39,41 @@ SNAPSHOT_FILES = [
     "data/goalscorer/bundesliga-public-signals.csv",
     "data/goalscorer/ligue-1-shadow-signals.csv",
     "data/goalscorer/ligue-1-public-signals.csv",
-    "data/goalscorer/goalscorer-public-performance.txt",
-    "data/goalscorer/epl-public-performance.txt",
-    "data/goalscorer/la-liga-public-performance.txt",
-    "data/goalscorer/bundesliga-public-performance.txt",
-    "data/goalscorer/ligue-1-public-performance.txt",
-    "data/goalscorer/penalty-duty-review.csv",
     "data/goalscorer/penalty-duty-review.json",
-    "data/goalscorer/penalty-duty-live-review.csv",
     "data/goalscorer/penalty-duty-live-review.json",
-    "data/goalscorer/epl-penalty-duty-review.csv",
     "data/goalscorer/epl-penalty-duty-review.json",
-    "data/goalscorer/epl-penalty-duty-live-review.csv",
     "data/goalscorer/epl-penalty-duty-live-review.json",
-    "data/goalscorer/la-liga-penalty-duty-review.csv",
     "data/goalscorer/la-liga-penalty-duty-review.json",
-    "data/goalscorer/la-liga-penalty-duty-live-review.csv",
     "data/goalscorer/la-liga-penalty-duty-live-review.json",
-    "data/goalscorer/bundesliga-penalty-duty-review.csv",
     "data/goalscorer/bundesliga-penalty-duty-review.json",
-    "data/goalscorer/bundesliga-penalty-duty-live-review.csv",
     "data/goalscorer/bundesliga-penalty-duty-live-review.json",
-    "data/goalscorer/ligue-1-penalty-duty-review.csv",
     "data/goalscorer/ligue-1-penalty-duty-review.json",
-    "data/goalscorer/ligue-1-penalty-duty-live-review.csv",
     "data/goalscorer/ligue-1-penalty-duty-live-review.json",
-    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/goalscorer-live-comparison.txt",
-    "data/goalscorer/penalty-duty-context.json",
     "data/goalscorer/confirmed-lineups.json",
     "data/goalscorer/epl/live-board.json",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.txt",
-    "data/goalscorer/epl/penalty-duty-context.json",
     "data/goalscorer/epl-confirmed-lineups.json",
     "data/goalscorer/la-liga/live-board.json",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.txt",
-    "data/goalscorer/la-liga/penalty-duty-context.json",
     "data/goalscorer/la-liga-confirmed-lineups.json",
     "data/goalscorer/bundesliga/live-board.json",
     "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
     "data/goalscorer/bundesliga/goalscorer-live-comparison.txt",
-    "data/goalscorer/bundesliga/penalty-duty-context.json",
     "data/goalscorer/bundesliga-confirmed-lineups.json",
     "data/goalscorer/ligue-1/live-board.json",
     "data/goalscorer/ligue-1/goalscorer-live-comparison.csv",
     "data/goalscorer/ligue-1/goalscorer-live-comparison.txt",
-    "data/goalscorer/ligue-1/penalty-duty-context.json",
     "data/goalscorer/ligue-1-confirmed-lineups.json",
 ]
+
+META_ONLY_FILES = {
+    "data/goalscorer/goalscorer-live.log",
+}
 
 
 def load_env() -> None:
@@ -117,13 +99,14 @@ def build_snapshot() -> Dict[str, object]:
         if not abs_path.exists():
             missing.append(rel_path)
             continue
-        text = abs_path.read_text(encoding="utf-8", errors="replace")
         stat = abs_path.stat()
-        files[rel_path] = {
-            "content": text,
+        entry = {
             "mtime": datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
             "size_bytes": stat.st_size,
         }
+        if rel_path not in META_ONLY_FILES:
+            entry["content"] = abs_path.read_text(encoding="utf-8", errors="replace")
+        files[rel_path] = entry
 
     hashed_payload = {
         "file_count": len(files),
