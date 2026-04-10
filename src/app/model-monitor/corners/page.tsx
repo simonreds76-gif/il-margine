@@ -427,22 +427,16 @@ export default async function CornersMonitorPage() {
               tone={sourceTone(shortlistSource.source)}
             />
           </div>
-          <div className="mt-3 text-xs text-slate-400">
-            <span className="text-slate-500">State:</span> {pipelineStatus?.state ?? "missing"}
-            {pipelineStatus?.current_step ? (
-              <span className="text-slate-500"> - Step:</span>
-            ) : null}{" "}
-            {pipelineStatus?.current_step ?? null}
-          </div>
-          <div className="mt-1 text-xs text-slate-400">
-            <span className="text-slate-500">Message:</span>{" "}
-            {pipelineStatus?.message ?? "No pipeline status JSON yet."}
-          </div>
-          <div className="mt-1 text-xs text-slate-400">
-            <span className="text-slate-500">Source detail:</span>{" "}
-            hosted snapshot {shortlistSource.hostedSnapshotAvailable ? "available" : "missing"} · local snapshot{" "}
-            {shortlistSource.localSnapshotAvailable ? "available" : "missing"} · using {shortlistSource.source}
-          </div>
+          <details className="mt-3">
+            <summary className="cursor-pointer text-[10px] uppercase tracking-wider text-slate-600 hover:text-slate-500 select-none">
+              pipeline detail
+            </summary>
+            <div className="mt-1.5 space-y-0.5 text-[11px] text-slate-600">
+              <div><span className="text-slate-500">State:</span> {pipelineStatus?.state ?? "missing"}{pipelineStatus?.current_step ? <> &middot; {pipelineStatus.current_step}</> : null}</div>
+              <div><span className="text-slate-500">Message:</span> {pipelineStatus?.message ?? "n/a"}</div>
+              <div><span className="text-slate-500">Source:</span> {shortlistSource.source} &middot; hosted {shortlistSource.hostedSnapshotAvailable ? "ok" : "missing"} &middot; local {shortlistSource.localSnapshotAvailable ? "ok" : "missing"}</div>
+            </div>
+          </details>
         </MonitorCard>
 
 
@@ -616,7 +610,10 @@ export default async function CornersMonitorPage() {
 
         {/* Live P&L */}
         <div className="mt-6">
-          <MonitorCard title={`Live P&L Archive - ${liveSettled.length} settled${livePending.length > 0 ? `, ${livePending.length} pending tracked` : ""}`}>
+          <CollapsibleSection
+            title={`Live P&L Archive — ${liveSettled.length} settled${livePending.length > 0 ? `, ${livePending.length} pending` : ""}`}
+            defaultOpen={liveSettled.length > 0}
+          >
             {liveSettled.length === 0 ? (
               <p className="text-sm text-slate-500">
                 No settled bets yet. Run{" "}
@@ -746,7 +743,7 @@ export default async function CornersMonitorPage() {
                 )}
               </>
             )}
-          </MonitorCard>
+          </CollapsibleSection>
         </div>
 
         {/* Upcoming signals (model predictions for today) */}
@@ -873,7 +870,7 @@ export default async function CornersMonitorPage() {
 
           {/* Full shortlist output */}
           {shortlistTxt && (
-            <CollapsibleSection title="Latest Shortlist (full output)" defaultOpen>
+            <CollapsibleSection title="Latest Shortlist (full output)" defaultOpen={false}>
               <pre className="max-h-[600px] overflow-auto whitespace-pre-wrap font-mono text-xs text-slate-300">
                 {shortlistTxt}
               </pre>

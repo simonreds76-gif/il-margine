@@ -1309,29 +1309,16 @@ function LiveLineTable({
 
           </div>
 
-          <div className="mt-3 text-xs text-slate-400">
-
-            <span className="text-slate-500">State:</span> {pipelineStatus?.state ?? "missing"}
-
-            {pipelineStatus?.current_step ? (
-
-              <span className="text-slate-500"> - Step:</span>
-
-            ) : null}{" "}
-
-            {pipelineStatus?.current_step ?? null}
-
-          </div>
-
-          <div className="mt-1 text-xs text-slate-400">
-            <span className="text-slate-500">Message:</span>{" "}
-            {pipelineStatus?.message ?? "No pipeline status JSON yet."}
-          </div>
-          <div className="mt-1 text-xs text-slate-400">
-            <span className="text-slate-500">Source detail:</span>{" "}
-            hosted snapshot {comparisonSource.hostedSnapshotAvailable ? "available" : "missing"} · local snapshot{" "}
-            {comparisonSource.localSnapshotAvailable ? "available" : "missing"} · using {comparisonSource.source}
-          </div>
+          <details className="mt-3">
+            <summary className="cursor-pointer text-[10px] uppercase tracking-wider text-slate-600 hover:text-slate-500 select-none">
+              pipeline detail
+            </summary>
+            <div className="mt-1.5 space-y-0.5 text-[11px] text-slate-600">
+              <div><span className="text-slate-500">State:</span> {pipelineStatus?.state ?? "missing"}{pipelineStatus?.current_step ? <> &middot; {pipelineStatus.current_step}</> : null}</div>
+              <div><span className="text-slate-500">Message:</span> {pipelineStatus?.message ?? "n/a"}</div>
+              <div><span className="text-slate-500">Source:</span> {comparisonSource.source} &middot; hosted {comparisonSource.hostedSnapshotAvailable ? "ok" : "missing"} &middot; local {comparisonSource.localSnapshotAvailable ? "ok" : "missing"}</div>
+            </div>
+          </details>
         </MonitorCard>
 
         {/* KPI strip — model track record before showing live signals */}

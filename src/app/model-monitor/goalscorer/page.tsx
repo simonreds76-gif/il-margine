@@ -2414,26 +2414,30 @@ export default async function GoalscorerMonitorPage() {
               </p>
             </div>
             <div className="rounded-2xl border border-slate-800/80 bg-slate-950/40 px-4 py-3 text-sm text-slate-300">
-              <div><span className="text-slate-500">Compared at:</span> {comparedAt}</div>
               <div>
-                <span className="text-slate-500">Live board updated:</span> {formatDateTime(comparisonMtime)}{" "}
-                <span className={comparisonFreshness.className}>({comparisonFreshness.label})</span>
+                <span className="text-slate-500">Live board:</span>{" "}
+                <span className={comparisonFreshness.className}>{comparisonFreshness.label}</span>
+                {" "}&middot;{" "}
+                <span className="text-slate-500">heartbeat:</span>{" "}
+                <span className={schedulerFreshness.className}>{schedulerFreshness.label}</span>
+                {liveStatus?.state ? <span className="text-slate-600"> &middot; {liveStatus.state}</span> : null}
               </div>
-              <div>
-                <span className="text-slate-500">Scheduler heartbeat:</span> {formatDateTime(schedulerHeartbeatAt)}{" "}
-                <span className={schedulerFreshness.className}>({schedulerFreshness.label})</span>
-                {liveStatus?.state ? <span className="text-slate-500"> · {liveStatus.state}</span> : null}
-              </div>
-              <div>
-                <span className="text-slate-500">Hosted snapshot:</span> {formatDateTime(hostedSnapshotAt)}{" "}
-                <span className={snapshotFreshness.className}>({snapshotFreshness.label})</span>
-              </div>
-              <div>
-                <span className="text-slate-500">Fixture health (live window):</span>{" "}
-                <span className="text-emerald-300">{cleanFixtures} clean</span> |{" "}
-                <span className="text-amber-300">{degradedFixtures} degraded</span> |{" "}
+              <div className="mt-1">
+                <span className="text-slate-500">Fixture health:</span>{" "}
+                <span className="text-emerald-300">{cleanFixtures} clean</span>{" "}
+                <span className="text-slate-700">/</span>{" "}
+                <span className="text-amber-300">{degradedFixtures} degraded</span>{" "}
+                <span className="text-slate-700">/</span>{" "}
                 <span className="text-rose-300">{quarantinedFixtures} quarantined</span>
               </div>
+              <details className="mt-2">
+                <summary className="cursor-pointer text-[10px] uppercase tracking-wider text-slate-600 hover:text-slate-500 select-none">timestamps</summary>
+                <div className="mt-1 space-y-0.5 text-[11px] text-slate-600">
+                  <div><span className="text-slate-500">Compared:</span> {comparedAt}</div>
+                  <div><span className="text-slate-500">Live board:</span> {formatDateTime(comparisonMtime)}</div>
+                  <div><span className="text-slate-500">Hosted snapshot:</span> {formatDateTime(hostedSnapshotAt)}</div>
+                </div>
+              </details>
             </div>
           </div>
         </section>
@@ -2470,10 +2474,10 @@ export default async function GoalscorerMonitorPage() {
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-800/80 text-left text-[10px] uppercase tracking-[0.22em] text-slate-500">
-                    <th className="px-3 py-3 font-semibold" colSpan={5}>Live pipeline — current window</th>
-                    <th className="border-l border-slate-700 px-3 py-3 font-semibold bg-slate-950/10" colSpan={3}>Public record — cumulative</th>
-                    <th className="border-l border-slate-700 px-3 py-3 font-semibold bg-slate-950/20" colSpan={5}>Shadow log — cumulative</th>
+                  <tr className="border-b border-slate-800/60 text-left text-[10px] uppercase tracking-[0.22em]">
+                    <th className="px-3 py-3 font-semibold text-slate-400" colSpan={5}>Live pipeline</th>
+                    <th className="border-l border-slate-700/60 px-3 py-3 font-semibold text-sky-400/70 bg-sky-950/10" colSpan={3}>Public record</th>
+                    <th className="border-l border-slate-700/60 px-3 py-3 font-semibold text-amber-400/70 bg-amber-950/10" colSpan={5}>Shadow log</th>
                   </tr>
                   <tr className="border-b border-slate-800 text-left text-[11px] uppercase tracking-[0.18em] text-slate-500">
                     <th className="px-3 py-3 font-semibold">League</th>
@@ -2481,14 +2485,14 @@ export default async function GoalscorerMonitorPage() {
                     <th className="px-3 py-3 font-semibold">Pub now</th>
                     <th className="px-3 py-3 font-semibold">Shadow now</th>
                     <th className="px-3 py-3 font-semibold">Fixtures</th>
-                    <th className="border-l border-slate-700 bg-slate-950/10 px-3 py-3 font-semibold">Pub record</th>
-                    <th className="bg-slate-950/10 px-3 py-3 font-semibold">Pub ROI</th>
-                    <th className="bg-slate-950/10 px-3 py-3 font-semibold">Pub P/L</th>
-                    <th className="border-l border-slate-700 bg-slate-950/20 px-3 py-3 font-semibold">Tracked</th>
-                    <th className="bg-slate-950/20 px-3 py-3 font-semibold">Settled</th>
-                    <th className="bg-slate-950/20 px-3 py-3 font-semibold">W/L/V</th>
-                    <th className="bg-slate-950/20 px-3 py-3 font-semibold">ROI (flat)</th>
-                    <th className="bg-slate-950/20 px-3 py-3 font-semibold">P/L</th>
+                    <th className="border-l border-slate-700/60 bg-sky-950/10 px-3 py-3 font-semibold">Record</th>
+                    <th className="bg-sky-950/10 px-3 py-3 font-semibold">ROI</th>
+                    <th className="bg-sky-950/10 px-3 py-3 font-semibold">P/L</th>
+                    <th className="border-l border-slate-700/60 bg-amber-950/10 px-3 py-3 font-semibold">Tracked</th>
+                    <th className="bg-amber-950/10 px-3 py-3 font-semibold">Settled</th>
+                    <th className="bg-amber-950/10 px-3 py-3 font-semibold">W/L/V</th>
+                    <th className="bg-amber-950/10 px-3 py-3 font-semibold">ROI</th>
+                    <th className="bg-amber-950/10 px-3 py-3 font-semibold">P/L</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2514,16 +2518,16 @@ export default async function GoalscorerMonitorPage() {
                         <span className="px-1 text-slate-600">·</span>
                         <span className="text-rose-300">{row.quarantinedFixtures}</span>
                       </td>
-                      <td className="border-l border-slate-700 bg-slate-950/10 px-3 py-3 font-mono tabular-nums text-slate-100">
-                        {formatWLV(row.publicWins, row.publicLosses, 0)} ({row.publicSettled})
+                      <td className="border-l border-slate-700/60 bg-sky-950/10 px-3 py-3 font-mono tabular-nums text-slate-300">
+                        {formatWLV(row.publicWins, row.publicLosses, 0)}{row.publicSettled > 0 ? <span className="text-slate-500 text-[10px]"> ({row.publicSettled})</span> : null}
                       </td>
-                      <td className={`bg-slate-950/10 px-3 py-3 font-mono tabular-nums ${metricTone(row.publicRoi)}`}>{formatPct(row.publicRoi, 1)}</td>
-                      <td className={`bg-slate-950/10 px-3 py-3 font-mono tabular-nums ${metricTone(row.publicPnlUnits)}`}>{formatUnits(row.publicPnlUnits, 2)}</td>
-                      <td className="border-l border-slate-700 bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-100">{row.trackedSignals}</td>
-                      <td className="bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-100">{row.settledSignals}</td>
-                      <td className="bg-slate-950/20 px-3 py-3 font-mono tabular-nums text-slate-100">{formatWLV(row.wins, row.losses, row.voids)}</td>
-                      <td className={`bg-slate-950/20 px-3 py-3 font-mono tabular-nums ${metricTone(row.roi)}`}>{formatPct(row.roi, 1)}</td>
-                      <td className={`bg-slate-950/20 px-3 py-3 font-mono tabular-nums ${metricTone(row.pnlUnits)}`}>{formatUnits(row.pnlUnits, 2)}</td>
+                      <td className={`bg-sky-950/10 px-3 py-3 font-mono tabular-nums ${metricTone(row.publicRoi)}`}>{formatPct(row.publicRoi, 1)}</td>
+                      <td className={`bg-sky-950/10 px-3 py-3 font-mono tabular-nums ${metricTone(row.publicPnlUnits)}`}>{formatUnits(row.publicPnlUnits, 2)}</td>
+                      <td className="border-l border-slate-700/60 bg-amber-950/10 px-3 py-3 font-mono tabular-nums text-slate-400">{row.trackedSignals}</td>
+                      <td className="bg-amber-950/10 px-3 py-3 font-mono tabular-nums text-slate-400">{row.settledSignals}</td>
+                      <td className="bg-amber-950/10 px-3 py-3 font-mono tabular-nums text-slate-300">{formatWLV(row.wins, row.losses, row.voids)}</td>
+                      <td className={`bg-amber-950/10 px-3 py-3 font-mono tabular-nums font-semibold ${metricTone(row.roi)}`}>{formatPct(row.roi, 1)}</td>
+                      <td className={`bg-amber-950/10 px-3 py-3 font-mono tabular-nums font-semibold ${metricTone(row.pnlUnits)}`}>{formatUnits(row.pnlUnits, 2)}</td>
                     </tr>
                   ))}
                 </tbody>
