@@ -1,6 +1,7 @@
 import "server-only";
 
 import { promises as fs } from "fs";
+import { cache } from "react";
 
 import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
 import { getSupabaseAdmin } from "@/lib/supabase-server";
@@ -17,12 +18,28 @@ type SnapshotPayload = {
   files?: Record<string, SnapshotFileEntry>;
 };
 
+export type CornersLiveSourceStatus = {
+  source: "hosted" | "local" | "missing";
+  reason:
+    | "hosted_newer"
+    | "local_newer"
+    | "hosted_only"
+    | "local_only"
+    | "no_data";
+  hostedSnapshotAvailable: boolean;
+  localSnapshotAvailable: boolean;
+  hostedGeneratedAt: string | null;
+  localSnapshotGeneratedAt: string | null;
+  hostedFileMtime: string | null;
+  localFileMtime: string | null;
+};
+
 const SNAPSHOT_TABLE = "goalscorer_live_snapshot";
 const SNAPSHOT_KEY = process.env.CORNERS_LIVE_SNAPSHOT_KEY || "corners_state";
 const LOCAL_SNAPSHOT_FILE = "data/corners-ou/corners-live-snapshot.json";
 const PREFER_LOCAL = process.env.MONITOR_PREFER_LOCAL === "1";
 
-async function loadHostedSnapshot(): Promise<SnapshotPayload | null> {
+const loadHostedSnapshot = cache(async (): Promise<SnapshotPayload | null> => {
   try {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -36,7 +53,7 @@ async function loadHostedSnapshot(): Promise<SnapshotPayload | null> {
   } catch {
     return null;
   }
-}
+});
 
 function getSnapshotFileEntry(payload: SnapshotPayload | null, relativePath: string): { content?: string; mtime?: string } | null {
   const rawEntry = payload?.files?.[relativePath];
@@ -57,6 +74,16 @@ function newerTimestamp(left: string | null, right: string | null): string | nul
   if (leftValid) return left;
   if (rightValid) return right;
   return right ?? left ?? null;
+}
+
+function shouldPreferHosted(hostedMtime: string | null, localMtime: string | null): boolean {
+  const hostedMs = hostedMtime ? Date.parse(hostedMtime) : Number.NaN;
+  const localMs = localMtime ? Date.parse(localMtime) : Number.NaN;
+  const hostedValid = Number.isFinite(hostedMs);
+  const localValid = Number.isFinite(localMs);
+  if (hostedValid && localValid) return hostedMs >= localMs;
+  if (hostedValid) return true;
+  return false;
 }
 
 async function readLocalSnapshotGeneratedAt(): Promise<string | null> {
@@ -81,15 +108,33 @@ export async function readCornersLiveFile(relativePath: string): Promise<string 
     }
   };
 
+  const readLocalMtime = async (): Promise<string | null> => {
+    try {
+      const fullPath = tryGetKnownProjectFilePath(relativePath);
+      if (!fullPath) return null;
+      const stat = await fs.stat(fullPath);
+      return stat.mtime.toISOString();
+    } catch {
+      return null;
+    }
+  };
+
   if (!PREFER_LOCAL) {
-    const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.content;
-    if (typeof hosted === "string") return hosted;
+    const payload = await loadHostedSnapshot();
+    const hostedEntry = getSnapshotFileEntry(payload, relativePath);
+    const localMtime = await readLocalMtime();
+    if (typeof hostedEntry?.content === "string" && shouldPreferHosted(hostedEntry.mtime ?? payload?.generated_at ?? null, localMtime)) {
+      return hostedEntry.content;
+    }
   }
 
   const local = await readLocal();
   if (typeof local === "string") return local;
 
   if (PREFER_LOCAL) {
+    const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.content;
+    if (typeof hosted === "string") return hosted;
+  } else {
     const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.content;
     if (typeof hosted === "string") return hosted;
   }
@@ -120,8 +165,13 @@ export async function readCornersLiveMtime(relativePath: string): Promise<string
   };
 
   if (!PREFER_LOCAL) {
-    const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.mtime;
+    const payload = await loadHostedSnapshot();
+    const hosted = getSnapshotFileEntry(payload, relativePath)?.mtime ?? payload?.generated_at ?? null;
+    const localMtime = await readLocalMtime();
+    if (shouldPreferHosted(hosted, localMtime)) return hosted;
+    if (typeof localMtime === "string") return localMtime;
     if (typeof hosted === "string") return hosted;
+    return null;
   }
 
   const localMtime = await readLocalMtime();
@@ -140,4 +190,60 @@ export async function readCornersLiveSnapshotGeneratedAt(): Promise<string | nul
   const hostedGeneratedAt = typeof payload?.generated_at === "string" ? payload.generated_at : null;
   const localGeneratedAt = await readLocalSnapshotGeneratedAt();
   return newerTimestamp(hostedGeneratedAt, localGeneratedAt);
+}
+
+export async function inspectCornersLiveSource(relativePath: string): Promise<CornersLiveSourceStatus> {
+  const payload = await loadHostedSnapshot();
+  const hostedGeneratedAt = typeof payload?.generated_at === "string" ? payload.generated_at : null;
+  const hostedEntry = getSnapshotFileEntry(payload, relativePath);
+  const hostedFileMtime = hostedEntry?.mtime ?? hostedGeneratedAt ?? null;
+  const localSnapshotGeneratedAt = await readLocalSnapshotGeneratedAt();
+
+  let localFileMtime: string | null = null;
+  try {
+    const fullPath = tryGetKnownProjectFilePath(relativePath);
+    if (fullPath) {
+      const stat = await fs.stat(fullPath);
+      localFileMtime = stat.mtime.toISOString();
+    }
+  } catch {
+    localFileMtime = null;
+  }
+
+  if (shouldPreferHosted(hostedFileMtime, localFileMtime)) {
+    return {
+      source: "hosted",
+      reason: localFileMtime ? "hosted_newer" : "hosted_only",
+      hostedSnapshotAvailable: Boolean(payload),
+      localSnapshotAvailable: Boolean(localSnapshotGeneratedAt),
+      hostedGeneratedAt,
+      localSnapshotGeneratedAt,
+      hostedFileMtime,
+      localFileMtime,
+    };
+  }
+
+  if (localFileMtime) {
+    return {
+      source: "local",
+      reason: hostedFileMtime ? "local_newer" : "local_only",
+      hostedSnapshotAvailable: Boolean(payload),
+      localSnapshotAvailable: Boolean(localSnapshotGeneratedAt),
+      hostedGeneratedAt,
+      localSnapshotGeneratedAt,
+      hostedFileMtime,
+      localFileMtime,
+    };
+  }
+
+  return {
+    source: "missing",
+    reason: "no_data",
+    hostedSnapshotAvailable: Boolean(payload),
+    localSnapshotAvailable: Boolean(localSnapshotGeneratedAt),
+    hostedGeneratedAt,
+    localSnapshotGeneratedAt,
+    hostedFileMtime,
+    localFileMtime,
+  };
 }

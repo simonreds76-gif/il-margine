@@ -4,6 +4,8 @@ import {
   readTeamShotsLiveFile as readFile,
   readTeamShotsLiveJson as readJson,
   readTeamShotsLiveMtime as readKnownFileMtime,
+  readTeamShotsLiveSnapshotGeneratedAt,
+  inspectTeamShotsLiveSource,
 } from "@/lib/team-shots-live-files";
 
 
@@ -508,6 +510,30 @@ function formatRelativeAgeShort(value?: string | null): string {
 
 }
 
+function formatSourceReason(
+  reason: "hosted_newer" | "local_newer" | "hosted_only" | "local_only" | "no_data",
+): string {
+  switch (reason) {
+    case "hosted_newer":
+      return "hosted newer";
+    case "local_newer":
+      return "local newer";
+    case "hosted_only":
+      return "hosted only";
+    case "local_only":
+      return "local only";
+    default:
+      return "no data";
+  }
+}
+
+function sourceTone(source: "hosted" | "local" | "missing"): "default" | "green" | "red" | "amber" {
+  if (source === "hosted") return "green";
+  if (source === "local") return "amber";
+  if (source === "missing") return "red";
+  return "default";
+}
+
 
 
 function Stat({
@@ -689,6 +715,10 @@ export default async function TeamShotsMonitorPage() {
 
     upcomingMtime,
 
+    snapshotGeneratedAt,
+
+    comparisonSource,
+
   ] = await Promise.all([
 
     readFile("data/team-shots/team-shots-calibration.txt"),
@@ -719,6 +749,10 @@ export default async function TeamShotsMonitorPage() {
     readKnownFileMtime("data/team-shots/team-shots-comparison.csv"),
 
     readKnownFileMtime("data/team-shots/team-shots-upcoming.csv"),
+
+    readTeamShotsLiveSnapshotGeneratedAt(),
+
+    inspectTeamShotsLiveSource("data/team-shots/team-shots-comparison.csv"),
 
   ]);
 
@@ -1195,7 +1229,7 @@ function LiveLineTable({
 
 
         <MonitorCard title="Pipeline Health">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 xl:grid-cols-6">
 
             <Stat
 
@@ -1245,6 +1279,20 @@ function LiveLineTable({
 
             />
 
+            <Stat
+              label="Hosted snapshot"
+              value={formatDateTime(snapshotGeneratedAt)}
+              sub={formatRelativeAgeShort(snapshotGeneratedAt)}
+              tone={snapshotGeneratedAt ? "green" : "red"}
+            />
+
+            <Stat
+              label="Comparison source"
+              value={comparisonSource.source}
+              sub={formatSourceReason(comparisonSource.reason)}
+              tone={sourceTone(comparisonSource.source)}
+            />
+
           </div>
 
           <div className="mt-3 text-xs text-slate-400">
@@ -1264,6 +1312,11 @@ function LiveLineTable({
           <div className="mt-1 text-xs text-slate-400">
             <span className="text-slate-500">Message:</span>{" "}
             {pipelineStatus?.message ?? "No pipeline status JSON yet."}
+          </div>
+          <div className="mt-1 text-xs text-slate-400">
+            <span className="text-slate-500">Source detail:</span>{" "}
+            hosted snapshot {comparisonSource.hostedSnapshotAvailable ? "available" : "missing"} · local snapshot{" "}
+            {comparisonSource.localSnapshotAvailable ? "available" : "missing"} · using {comparisonSource.source}
           </div>
         </MonitorCard>
 

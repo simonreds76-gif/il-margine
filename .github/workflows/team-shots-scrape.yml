@@ -44,6 +44,9 @@ jobs:
       - name: Archive odds
         run: python scripts/team-shots-odds-archive.py
 
+      - name: Generate team-shots snapshot artifact
+        run: python scripts/team-shots-live-snapshot.py
+
       - name: Upload team-shots hosted snapshot
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -53,7 +56,7 @@ jobs:
             export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://nuqcgzbagxtbxlqrhtvc.supabase.co}"
             python scripts/team-shots-live-snapshot.py --supabase
           else
-            echo "SUPABASE_SERVICE_ROLE_KEY not configured; skipping team-shots snapshot upload."
+            echo "::warning::SUPABASE_SERVICE_ROLE_KEY not configured; team-shots hosted snapshot upload skipped."
           fi
 
       - name: Commit and push if new data

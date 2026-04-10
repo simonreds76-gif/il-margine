@@ -4,6 +4,8 @@ import {
   readCornersLiveFile as readFile,
   readCornersLiveJson as readJson,
   readCornersLiveMtime as readKnownFileMtime,
+  readCornersLiveSnapshotGeneratedAt,
+  inspectCornersLiveSource,
 } from "@/lib/corners-live-files";
 
 export const dynamic = "force-dynamic";
@@ -76,6 +78,30 @@ function formatRelativeAgeShort(value?: string | null): string {
   const diffHours = Math.round(diffMinutes / 60);
   if (diffHours < 24) return `${diffHours}h ago`;
   return ">1d";
+}
+
+function formatSourceReason(
+  reason: "hosted_newer" | "local_newer" | "hosted_only" | "local_only" | "no_data",
+): string {
+  switch (reason) {
+    case "hosted_newer":
+      return "hosted newer";
+    case "local_newer":
+      return "local newer";
+    case "hosted_only":
+      return "hosted only";
+    case "local_only":
+      return "local only";
+    default:
+      return "no data";
+  }
+}
+
+function sourceTone(source: "hosted" | "local" | "missing"): "default" | "green" | "red" | "amber" {
+  if (source === "hosted") return "green";
+  if (source === "local") return "amber";
+  if (source === "missing") return "red";
+  return "default";
 }
 
 function Stat({
@@ -167,6 +193,8 @@ export default async function CornersMonitorPage() {
     pinnacleCornersMtime,
     shortlistMtime,
     predictionsMtime,
+    snapshotGeneratedAt,
+    shortlistSource,
   ] = await Promise.all([
       readFile("data/corners-ou/corners-ou-calibration.txt"),
       readFile("data/corners-ou/corners-ou-backtest-report.txt"),
@@ -182,6 +210,8 @@ export default async function CornersMonitorPage() {
       readKnownFileMtime("data/corners-ou/pinnacle-corners-odds.csv"),
       readKnownFileMtime("data/shortlist/shortlist-latest.txt"),
       readKnownFileMtime("data/corners-ou/corners-ou-predictions.csv"),
+      readCornersLiveSnapshotGeneratedAt(),
+      inspectCornersLiveSource("data/shortlist/signals-latest.csv"),
     ]);
 
   const backtestRows = backtestCsv ? parseCsv(backtestCsv) : [];
@@ -359,7 +389,7 @@ export default async function CornersMonitorPage() {
         </section>
 
         <MonitorCard title="Pipeline Health">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
             <Stat
               label="Scheduler heartbeat"
               value={formatDateTime(schedulerHeartbeatAt)}
@@ -384,6 +414,18 @@ export default async function CornersMonitorPage() {
               sub={`${pinnacleMatches.length} fixtures - ${formatRelativeAgeShort(latestPinnacleCaptureAt ?? pinnacleCornersMtime)}`}
               tone={pinnacleMatches.length > 0 ? "default" : "amber"}
             />
+            <Stat
+              label="Hosted snapshot"
+              value={formatDateTime(snapshotGeneratedAt)}
+              sub={formatRelativeAgeShort(snapshotGeneratedAt)}
+              tone={snapshotGeneratedAt ? "green" : "red"}
+            />
+            <Stat
+              label="Signals source"
+              value={shortlistSource.source}
+              sub={formatSourceReason(shortlistSource.reason)}
+              tone={sourceTone(shortlistSource.source)}
+            />
           </div>
           <div className="mt-3 text-xs text-slate-400">
             <span className="text-slate-500">State:</span> {pipelineStatus?.state ?? "missing"}
@@ -395,6 +437,11 @@ export default async function CornersMonitorPage() {
           <div className="mt-1 text-xs text-slate-400">
             <span className="text-slate-500">Message:</span>{" "}
             {pipelineStatus?.message ?? "No pipeline status JSON yet."}
+          </div>
+          <div className="mt-1 text-xs text-slate-400">
+            <span className="text-slate-500">Source detail:</span>{" "}
+            hosted snapshot {shortlistSource.hostedSnapshotAvailable ? "available" : "missing"} · local snapshot{" "}
+            {shortlistSource.localSnapshotAvailable ? "available" : "missing"} · using {shortlistSource.source}
           </div>
         </MonitorCard>
 

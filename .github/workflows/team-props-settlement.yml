@@ -35,6 +35,11 @@ jobs:
       - name: Settle corners shortlist
         run: python scripts/shortlist-settle.py
 
+      - name: Generate team-props snapshot artifacts
+        run: |
+          python scripts/team-shots-live-snapshot.py
+          python scripts/corners-live-snapshot.py
+
       - name: Upload team-props hosted snapshots
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -45,7 +50,7 @@ jobs:
             python scripts/team-shots-live-snapshot.py --supabase
             python scripts/corners-live-snapshot.py --supabase
           else
-            echo "SUPABASE_SERVICE_ROLE_KEY not configured; skipping team-props snapshot upload."
+            echo "::warning::SUPABASE_SERVICE_ROLE_KEY not configured; team-props hosted snapshot upload skipped."
           fi
 
       - name: Commit and push if new data
@@ -57,6 +62,9 @@ jobs:
           fi
           if [ -d data/shortlist ]; then
             git add data/shortlist/
+          fi
+          if [ -d data/corners-ou ]; then
+            git add data/corners-ou/
           fi
           if git diff --cached --quiet; then
             echo "No settlement changes to commit."

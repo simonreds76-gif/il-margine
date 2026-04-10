@@ -49,7 +49,7 @@ def load_env() -> None:
             os.environ[key.strip()] = value.strip().strip('"').strip("'")
 
 
-def build_snapshot() -> Dict[str, object]:
+def build_snapshot(snapshot_key: str) -> Dict[str, object]:
     generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     files: Dict[str, Dict[str, object]] = {}
     missing: list[str] = []
@@ -77,6 +77,7 @@ def build_snapshot() -> Dict[str, object]:
     ).hexdigest()
 
     return {
+        "snapshot_key": snapshot_key,
         "generated_at": generated_at,
         "file_count": len(files),
         "missing_files": missing,
@@ -138,7 +139,7 @@ def main() -> None:
 
     output_path = Path(args.output)
     previous_payload = read_existing_snapshot(output_path)
-    payload = build_snapshot()
+    payload = build_snapshot(args.snapshot_key)
     write_snapshot(output_path, payload)
 
     print(f"  Generated at: {payload['generated_at']}")
@@ -150,10 +151,10 @@ def main() -> None:
         print("  Snapshot payload unchanged")
 
     if args.supabase:
+        upload_snapshot(args.snapshot_key, payload)
         if unchanged:
-            print(f"  Skipped Supabase upload for snapshot '{args.snapshot_key}' (unchanged payload)")
+            print(f"  Uploaded snapshot '{args.snapshot_key}' to {SNAPSHOT_TABLE} (payload unchanged)")
         else:
-            upload_snapshot(args.snapshot_key, payload)
             print(f"  Uploaded snapshot '{args.snapshot_key}' to {SNAPSHOT_TABLE}")
 
     print("\n  Done.\n")
