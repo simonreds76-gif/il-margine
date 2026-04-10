@@ -30,6 +30,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 DEFAULT_OUT = ROOT / "data" / "team-shots" / "team-shots-upcoming.csv"
 
 DISPLAY_LINES = [9.5, 10.5, 11.5, 12.5, 13.5]
+SUPPORTED_LIVE_LEAGUES = {"epl", "serie-a", "la-liga", "bundesliga"}
 
 
 def _load_module(name: str, path: Path):
@@ -90,6 +91,8 @@ def main() -> None:
     rows_out: List[Dict[str, Any]] = []
 
     for league, sport_key in SPORT_KEYS.items():
+        if league not in SUPPORTED_LIVE_LEAGUES:
+            continue
         events = client.get_upcoming_events(sport_key)
         for ev in events:
             ko = ev.get("commence_time", "")

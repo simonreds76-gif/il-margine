@@ -78,6 +78,8 @@ LEAGUE_CONFIGS = {
     },
 }
 
+LIVE_LEAGUES = ["epl", "serie-a", "la-liga", "bundesliga"]
+
 # Account selection can be changed from the odds-api.io dashboard/API.
 DEFAULT_BOOKMAKERS = "Bet365,Unibet,William Hill,Skybet"
 BOOKMAKER_RETRY_FALLBACK = ["Bet365", "Unibet", "William Hill", "Skybet"]
@@ -499,7 +501,7 @@ def list_available_bookmakers(api_key: str) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Scrape team total shots odds (bet365-style feeds)")
     parser.add_argument("--league", choices=sorted(LEAGUE_CONFIGS), default=None)
-    parser.add_argument("--all-leagues", action="store_true", help="Scrape all Big 5 leagues")
+    parser.add_argument("--all-leagues", action="store_true", help="Scrape all supported live leagues")
     parser.add_argument("--source", choices=["auto", "odds-api", "betsapi"], default="auto")
     parser.add_argument("--bookmakers", default=DEFAULT_BOOKMAKERS)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
@@ -509,7 +511,7 @@ def main() -> None:
                         help="List all bookmakers available on your account and exit")
     args = parser.parse_args()
 
-    leagues = list(LEAGUE_CONFIGS.keys()) if args.all_leagues else [args.league or "epl"]
+    leagues = LIVE_LEAGUES if args.all_leagues else [args.league or "epl"]
 
     load_env()
     odds_api_key = os.environ.get("ODDS_API_KEY") or os.environ.get("ODDS_API_IO_KEY")

@@ -120,8 +120,6 @@ const LEAGUE_ORDER = [
 
   "bundesliga",
 
-  "ligue-1",
-
 ] as const;
 
 const TEAM_ALIASES: Record<string, string> = {
@@ -264,6 +262,7 @@ function groupUpcomingByLeague(rows: CsvRow[]): Map<string, CsvRow[]> {
   for (const row of rows) {
 
     const lg = (row.league ?? "").trim() || "other";
+    if (lg === "ligue-1") continue;
 
     if (!map.has(lg)) map.set(lg, []);
 
@@ -759,7 +758,9 @@ export default async function TeamShotsMonitorPage() {
 
 
   const shadowSignals = shadowSignalsCsv ? parseCsv(shadowSignalsCsv) : [];
-  const comparisonRows = comparisonCsv ? parseCsv(comparisonCsv) : [];
+  const comparisonRows = (comparisonCsv ? parseCsv(comparisonCsv) : []).filter(
+    (row) => (row.league ?? "").trim() !== "ligue-1",
+  );
 
   const backtestRows = backtestCsv ? parseCsv(backtestCsv) : [];
 
@@ -841,7 +842,9 @@ export default async function TeamShotsMonitorPage() {
 
 
 
-  const upcomingRows = upcomingCsv ? parseCsv(upcomingCsv) : [];
+  const upcomingRows = (upcomingCsv ? parseCsv(upcomingCsv) : []).filter(
+    (row) => (row.league ?? "").trim() !== "ligue-1",
+  );
   const liveOddsByMatchTeam = new Map<string, Map<string, TeamShotsLiveLine>>();
   for (const row of oddsArchive) {
     const date = (row.match_date ?? row.kickoff_at ?? "").slice(0, 10);
