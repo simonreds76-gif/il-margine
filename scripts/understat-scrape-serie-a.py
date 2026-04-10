@@ -320,10 +320,51 @@ class ScrapeState:
 
 
 def _fetch_json(session: requests.Session, url: str) -> dict:
-    response = session.get(url, headers=HEADERS, timeout=30)
-    response.raise_for_status()
-    time.sleep(REQUEST_DELAY)
-    return response.json()
+    payload = _fetch_json_with_retry(session, url)
+    if payload is None:
+        raise RuntimeError(f"Unexpected empty payload for {url}")
+    return payload
+
+
+def _sleep_before_retry(attempt: int) -> None:
+    time.sleep(REQUEST_DELAY + min(attempt * 2, 10))
+
+
+def _fetch_json_with_retry(
+    session: requests.Session,
+    url: str,
+    *,
+    allow_missing: bool = False,
+    max_attempts: int = 5,
+) -> Optional[dict]:
+    last_error: Optional[Exception] = None
+    for attempt in range(1, max_attempts + 1):
+        try:
+            response = session.get(url, headers=HEADERS, timeout=30)
+            if allow_missing and response.status_code in (404, 410):
+                time.sleep(REQUEST_DELAY)
+                return None
+            response.raise_for_status()
+            time.sleep(REQUEST_DELAY)
+            return response.json()
+        except requests.HTTPError as exc:
+            last_error = exc
+            status_code = exc.response.status_code if exc.response is not None else None
+            retryable = status_code in (408, 409, 425, 429, 500, 502, 503, 504)
+            if not retryable or attempt == max_attempts:
+                raise
+            print(f" retry {attempt}/{max_attempts} (HTTP {status_code})", end="", flush=True)
+            _sleep_before_retry(attempt)
+        except requests.RequestException as exc:
+            last_error = exc
+            if attempt == max_attempts:
+                raise
+            print(f" retry {attempt}/{max_attempts} ({type(exc).__name__})", end="", flush=True)
+            _sleep_before_retry(attempt)
+
+    if last_error is not None:
+        raise last_error
+    return None
 
 
 def _fetch_player_json(session: requests.Session, player_url: str) -> Optional[dict]:
@@ -331,13 +372,7 @@ def _fetch_player_json(session: requests.Session, player_url: str) -> Optional[d
     GET getPlayerData/{id}. Returns None if Understat has no page (404/410) for this id
     (league list can still reference removed/merged players). Other errors raise.
     """
-    response = session.get(player_url, headers=HEADERS, timeout=30)
-    if response.status_code in (404, 410):
-        time.sleep(REQUEST_DELAY)
-        return None
-    response.raise_for_status()
-    time.sleep(REQUEST_DELAY)
-    return response.json()
+    return _fetch_json_with_retry(session, player_url, allow_missing=True, max_attempts=6)
 
 
 def scrape_season(state: ScrapeState) -> str:
@@ -403,7 +438,7 @@ def scrape_season(state: ScrapeState) -> str:
         payload = _fetch_player_json(state.session, player_url)
         if payload is None:
             print(
-                f" skip (404/410: no player page — often removed/renamed on Understat; id={player_id})",
+                f" skip (404/410: no player page - often removed/renamed on Understat; id={player_id})",
                 flush=True,
             )
             player_fetch_failures += 1
