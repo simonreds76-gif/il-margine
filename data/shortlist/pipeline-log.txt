@@ -42,3 +42,25 @@
 [12:56:55]   Team shots:        http://localhost:3000/model-monitor/team-shots
 [12:56:55]   Files:             data/shortlist/ + data/team-shots/
 [12:56:55] ==========================================
+[13:08:19] ==========================================
+[13:08:19]   TEAM PROPS PIPELINE -- 2026-04-10 13:08:19
+[13:08:19]   (Corners + Team Total Shots)
+[13:08:19] ==========================================
+[13:08:19] 
+[13:08:19] --- CORNERS ---
+[13:08:19] Step 1a: Running corners model...
+[13:08:20]     1134 predictions generated
+[13:08:20] Step 1a2: Fitting Platt calibration...
+[13:08:20] Step 1b: Fetching corner odds and generating shortlist...
+[13:08:53]     Odds API credits remaining: 18872
+[13:08:53] Step 1c: Settling previous corner bets...
+[13:08:53]   No previous corner bets to settle
+[13:08:53] 
+[13:08:53] --- TEAM TOTAL SHOTS ---
+[13:08:53] Skipped (SkipTeamShots switch enabled)
+[13:08:53] 
+[13:08:53] Pipeline complete. Check:
+[13:08:53]   Corners shortlist: http://localhost:3000/model-monitor/corners
+[13:08:53]   Team shots:        http://localhost:3000/model-monitor/team-shots
+[13:08:53]   Files:             data/shortlist/ + data/team-shots/
+[13:08:53] ==========================================
