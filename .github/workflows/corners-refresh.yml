@@ -1,0 +1,71 @@
+name: Corners Refresh
+
+on:
+  schedule:
+    - cron: "0 17 * * 2" # Tuesday 17:00 UTC
+    - cron: "0 8 * * 3"  # Wednesday 08:00 UTC
+    - cron: "0 17 * * 5" # Friday 17:00 UTC
+    - cron: "0 8 * * 6"  # Saturday 08:00 UTC
+    - cron: "0 8 * * 0"  # Sunday 08:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: team-props-branch-writes
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install Python deps
+        run: pip install requests
+
+      - name: Create .env.local
+        run: |
+          : > .env.local
+          if [ -n "${{ secrets.THE_ODDS_API_KEY }}" ]; then
+            echo "THE_ODDS_API_KEY=${{ secrets.THE_ODDS_API_KEY }}" >> .env.local
+          fi
+          if [ -n "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
+            echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.local
+          fi
+          if [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
+          fi
+
+      - name: Run hosted corners refresh
+        shell: pwsh
+        run: |
+          ./scripts/run-corners-pipeline.ps1 -SkipTeamShots -DaysAhead 7 -MinEdge 0.10 -Regions eu
+
+      - name: Commit and push if new data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -d data/shortlist ]; then
+            git add data/shortlist/
+          fi
+          if [ -d data/corners-ou ]; then
+            git add data/corners-ou/
+          fi
+          if git diff --cached --quiet; then
+            echo "No corners refresh changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: hosted corners refresh"
+          git fetch origin golden-with-speed-insights
+          git rebase origin/golden-with-speed-insights
+          git push origin HEAD:golden-with-speed-insights
