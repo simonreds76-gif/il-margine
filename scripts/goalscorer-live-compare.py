@@ -2051,6 +2051,7 @@ def main() -> None:
                     "compared_at": compared_at,
                     "captured_at": odds_row["captured_at"],
                     "match_date": odds_row["match_date"],
+                    "kickoff": odds_row.get("kickoff_at", ""),
                     "bookmaker": odds_row["bookmaker"],
                     "competition": odds_row["competition"],
                     "home_team": odds_row["home_team"],

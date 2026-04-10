@@ -188,7 +188,6 @@ const MODEL_MONITOR_PUBLIC =
   process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
 const MODEL_MONITOR_ENABLED =
   MODEL_MONITOR_PUBLIC || process.env.VERCEL_ENV === "preview";
-const GOALSCORER_ODDS_HISTORY_FILE = "data/goalscorer/goalscorer-odds-history.csv";
 const SHADOW_SIGNAL_CONFIGS = [
   { key: "serie-a", label: "Serie A", file: "data/goalscorer/goalscorer-shadow-signals.csv" },
   { key: "epl", label: "Premier League", file: "data/goalscorer/epl-shadow-signals.csv" },
@@ -469,19 +468,31 @@ function decodeHtml(text: string): string {
 function parseStoredLineups(text: string | null, leagueKey: string): FixtureLineup[] {
   if (!text) return [];
   try {
-    const payload = JSON.parse(text) as {
-      fixtures?: Array<{
-        home_team?: string;
-        away_team?: string;
-        home_status?: string;
-        away_status?: string;
-        home_starters?: Array<{ name?: string; role_group?: string; position_id?: number | string }>;
-        away_starters?: Array<{ name?: string; role_group?: string; position_id?: number | string }>;
-        home_players?: string[];
-        away_players?: string[];
-      }>;
-    };
-    const fixtures = (payload.fixtures ?? []).map((fixture): FixtureLineup | null => {
+    const payload = JSON.parse(text) as
+      | {
+          fixtures?: Array<{
+            home_team?: string;
+            away_team?: string;
+            home_status?: string;
+            away_status?: string;
+            home_starters?: Array<{ name?: string; role_group?: string; position_id?: number | string }>;
+            away_starters?: Array<{ name?: string; role_group?: string; position_id?: number | string }>;
+            home_players?: string[];
+            away_players?: string[];
+          }>;
+        }
+      | Array<{
+          home_team?: string;
+          away_team?: string;
+          home_status?: string;
+          away_status?: string;
+          home_starters?: Array<{ name?: string; role_group?: string; position_id?: number | string }>;
+          away_starters?: Array<{ name?: string; role_group?: string; position_id?: number | string }>;
+          home_players?: string[];
+          away_players?: string[];
+        }>;
+    const rawFixtures = Array.isArray(payload) ? payload : (payload.fixtures ?? []);
+    const fixtures = rawFixtures.map((fixture): FixtureLineup | null => {
         const homeTeam = decodeHtml(fixture.home_team ?? "").trim();
         const awayTeam = decodeHtml(fixture.away_team ?? "").trim();
         const homeStarterEntries = fixture.home_starters ?? [];
@@ -763,49 +774,33 @@ function kickoffSortValue(value?: string | null): number {
   return Number.isNaN(parsed) ? Number.MAX_SAFE_INTEGER : parsed;
 }
 
-function extractEventId(value?: string): string {
-  const match = (value ?? "").match(/(?:^|;)event_id=([^;]+)/);
-  return match?.[1]?.trim() ?? "";
+function rowKickoffKey(row: CsvRow): string {
+  const playerKey = (row.player_id ?? "").trim() || normText(row.player_name ?? "");
+  return [
+    (row.match_date ?? "").slice(0, 10),
+    teamKey(row.home_team),
+    teamKey(row.away_team),
+    playerKey,
+  ].join("|");
 }
 
-function buildKickoffLookup(text: string | null, eventIds: Set<string>): Map<string, string> {
+function buildKickoffLookup(rows: CsvRow[]): Map<string, string> {
   const lookup = new Map<string, string>();
-  if (!text || eventIds.size === 0) return lookup;
-
-  const lines = text
-    .split(/\r?\n/)
-    .map((line) => line.trimEnd())
-    .filter(Boolean);
-  if (lines.length < 2) return lookup;
-
-  const headers = parseCsvLine(lines[0]);
-  const eventIdIndex = headers.indexOf("event_id");
-  const kickoffIndex = headers.indexOf("kickoff_at");
-  if (eventIdIndex === -1 || kickoffIndex === -1) return lookup;
-
-  for (const line of lines.slice(1)) {
-    const values = parseCsvLine(line);
-    const eventId = (values[eventIdIndex] ?? "").trim();
-    if (!eventIds.has(eventId) || lookup.has(eventId)) continue;
-    const kickoff = (values[kickoffIndex] ?? "").trim();
+  for (const row of rows) {
+    const kickoff = (row.kickoff ?? "").trim();
     if (!kickoff) continue;
-    lookup.set(eventId, kickoff);
-    if (lookup.size >= eventIds.size) break;
+    const key = rowKickoffKey(row);
+    if (!key.replace(/\|/g, "") || lookup.has(key)) continue;
+    lookup.set(key, kickoff);
   }
-
   return lookup;
 }
 
 function resolveRowKickoff(row: CsvRow, kickoffLookup: Map<string, string>): string {
   const explicitKickoff = (row.kickoff ?? "").trim();
   if (explicitKickoff) return explicitKickoff;
-
-  const eventId = extractEventId(row.notes);
-  if (eventId) {
-    const archiveKickoff = kickoffLookup.get(eventId);
-    if (archiveKickoff) return archiveKickoff;
-  }
-
+  const linkedKickoff = kickoffLookup.get(rowKickoffKey(row));
+  if (linkedKickoff) return linkedKickoff;
   return (row.match_date ?? "").trim();
 }
 
@@ -1969,7 +1964,7 @@ export default async function GoalscorerMonitorPage() {
     notFound();
   }
 
-  const [leagueDatasets, shadowDatasets, publicDatasets, snapshotGeneratedAt, snapshotFileMtime, liveLogMtime, oddsHistoryText, liveStatus, scheduleState] = await Promise.all([
+  const [leagueDatasets, shadowDatasets, publicDatasets, snapshotGeneratedAt, snapshotFileMtime, liveLogMtime, liveStatus, scheduleState] = await Promise.all([
     Promise.all(
       LIVE_COMPARE_CONFIGS.map(async (config) => {
         const [comparisonJson, comparisonCsv, comparisonTxt, comparisonJsonMtime, comparisonCsvMtime, lineupsJson, penaltyReviewJson, livePenaltyReviewJson] = await Promise.all([
@@ -2041,15 +2036,16 @@ export default async function GoalscorerMonitorPage() {
     readGoalscorerLiveSnapshotGeneratedAt(),
     readGoalscorerLiveMtime("data/goalscorer/goalscorer-live-snapshot.json"),
     readGoalscorerLiveMtime("data/goalscorer/goalscorer-live.log"),
-    readGoalscorerLiveFile(GOALSCORER_ODDS_HISTORY_FILE),
     readGoalscorerLiveJson<GoalscorerLiveStatus>("data/goalscorer/goalscorer-live-status.json"),
     readGoalscorerLiveJson<GoalscorerScheduleState>("data/goalscorer/goalscorer-live-schedule-state.json"),
   ]);
 
   const rows = leagueDatasets.flatMap((dataset) => dataset.rows);
   const shadowRows = shadowDatasets.flatMap((dataset) => dataset.rows);
-  const rowEventIds = new Set(rows.map((row) => extractEventId(row.notes)).filter(Boolean));
-  const kickoffLookup = buildKickoffLookup(oddsHistoryText, rowEventIds);
+  const kickoffLookup = buildKickoffLookup([
+    ...shadowRows,
+    ...publicDatasets.flatMap((dataset) => dataset.rows),
+  ]);
   const latestTrackedRows = [...shadowRows].sort((left, right) => shadowRowActivityTime(right) - shadowRowActivityTime(left));
   const publicRows = rows.filter((row) => (row.public_action ?? "") === "surface");
   const highRows = [...publicRows];

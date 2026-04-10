@@ -64,9 +64,8 @@ async function readLocalSnapshotGeneratedAt(): Promise<string | null> {
   try {
     const fullPath = tryGetKnownProjectFilePath(LOCAL_SNAPSHOT_FILE);
     if (!fullPath) return null;
-    const text = await fs.readFile(fullPath, "utf8");
-    const parsed = JSON.parse(text) as SnapshotPayload;
-    return typeof parsed.generated_at === "string" ? parsed.generated_at : null;
+    const stat = await fs.stat(fullPath);
+    return stat.mtime.toISOString();
   } catch {
     return null;
   }
