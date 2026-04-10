@@ -1366,12 +1366,12 @@ function LiveLineTable({
           />
         </div>
 
-        {awaitingResultShadow.length > 0 && (
+        {(awaitingResultShadow.length > 0 || stalePendingShadow.length > 0) && (
           <MonitorCard
-            title={`Awaiting result — ${awaitingResultShadow.length} shadow signal${awaitingResultShadow.length === 1 ? "" : "s"}`}
+            title={`Awaiting result — ${awaitingResultShadow.length + stalePendingShadow.length} unsettled signal${awaitingResultShadow.length + stalePendingShadow.length === 1 ? "" : "s"}`}
           >
             <p className="mb-3 text-xs text-slate-500">
-              Past matches that met the shadow policy (edge ≥ 5%, odds 1.50–5.00) but have not been settled yet.
+              Past matches that met the shadow policy (edge &ge; 5%, odds 1.50&ndash;5.00) but have not been settled yet.
               Upcoming shadow signals are shown in the fixture cards below (green = shadow-qualified).
             </p>
             <div className="max-h-[min(70vh,56rem)] overflow-y-auto overflow-x-auto">
@@ -1432,14 +1432,46 @@ function LiveLineTable({
                       </tr>
                     );
                   })}
+                  {stalePendingShadow.length > 0 && (
+                    <>
+                      <tr>
+                        <td colSpan={14} className="py-2 px-3">
+                          <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-slate-600">
+                            <div className="flex-1 border-t border-slate-800" />
+                            <span>{stalePendingShadow.length} archive pending — not in live tracker</span>
+                            <div className="flex-1 border-t border-slate-800" />
+                          </div>
+                        </td>
+                      </tr>
+                      {stalePendingShadow.map((row, i) => (
+                        <tr key={`stale-${i}`} className="border-b border-slate-800/30 opacity-60 hover:opacity-100">
+                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-500">{row.date}</td>
+                          <td className="py-1.5 pr-3 text-slate-500">{row.league}</td>
+                          <td className="py-1.5 pr-3 text-slate-400">{row.home_team} v {row.away_team}</td>
+                          <td className="py-1.5 pr-3 font-medium text-slate-400">{row.team}</td>
+                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-500">{row.line}</td>
+                          <td className="py-1.5 pr-3">
+                            <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase ${
+                              row.side === "over" ? "bg-emerald-500/10 text-emerald-400/70" : "bg-sky-500/10 text-sky-400/70"
+                            }`}>{row.side}</span>
+                          </td>
+                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-500">{pf(row.book_odds).toFixed(2)}</td>
+                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-600">{pf(row.model_fair_odds).toFixed(2)}</td>
+                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{(pf(row.edge) * 100).toFixed(1)}%</td>
+                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-500">{shadowStakeUnits(pf(row.edge))}</td>
+                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-600">-</td>
+                          <td className="py-1.5 pr-3">
+                            <span className="rounded-full bg-slate-700/20 px-1.5 py-0.5 text-[10px] font-medium uppercase text-slate-500">archive</span>
+                          </td>
+                          <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-600">-</td>
+                          <td className="py-1.5 font-mono tabular-nums text-slate-600">-</td>
+                        </tr>
+                      ))}
+                    </>
+                  )}
                 </tbody>
               </table>
             </div>
-            {stalePendingShadow.length > 0 && (
-              <p className="mt-3 text-[11px] text-slate-500">
-                {stalePendingShadow.length} stale pending archive row{stalePendingShadow.length === 1 ? "" : "s"} hidden from the live shadow table.
-              </p>
-            )}
           </MonitorCard>
         )}
         {/* Upcoming: both teams lambda + fair lines by league */}
