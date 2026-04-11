@@ -8,9 +8,9 @@
       "match_date": "2026-04-11",
       "home_team": "Borussia Dortmund",
       "away_team": "Bayer Leverkusen",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "3-4-2-1",
       "home_players": [
@@ -23,7 +23,7 @@
         "Marcel Sabitzer",
         "Daniel Svensson",
         "Julian Brandt",
-        "Maximilian Beier",
+        "Fábio Silva",
         "Serhou Guirassy"
       ],
       "away_players": [
@@ -31,13 +31,13 @@
         "Robert Andrich",
         "Loic Badé",
         "Edmond Tapsoba",
-        "Montrell Culbreath",
+        "Nathan Tella",
         "Exequiel Palacios",
         "Aleix García",
         "Alejandro Grimaldo",
         "Ibrahim Maza",
-        "Ernest Poku",
-        "Patrik Schick"
+        "Montrell Culbreath",
+        "Christian Kofane"
       ],
       "home_starters": [
         {
@@ -122,7 +122,7 @@
           "position_id": 84
         },
         {
-          "name": "Maximilian Beier",
+          "name": "Fábio Silva",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -178,7 +178,7 @@
           "position_id": 37
         },
         {
-          "name": "Montrell Culbreath",
+          "name": "Nathan Tella",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -223,7 +223,7 @@
           "position_id": 84
         },
         {
-          "name": "Ernest Poku",
+          "name": "Montrell Culbreath",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -232,7 +232,7 @@
           "position_id": 86
         },
         {
-          "name": "Patrik Schick",
+          "name": "Christian Kofane",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -241,8 +241,28 @@
           "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Alexander Meyer",
+        "Almugera Kabar",
+        "Luca Reggiani",
+        "Niklas Süle",
+        "Carney Chukwuemeka",
+        "Maximilian Beier",
+        "Salih Özcan",
+        "Samuele Inácio",
+        "Mathis Albert"
+      ],
+      "away_subs": [
+        "Janis Blaswich",
+        "Tim Oermann",
+        "Eliesse Ben Seghir",
+        "Ezequiél Fernández",
+        "Ernest Poku",
+        "Jonas Hofmann",
+        "Lucas Vázquez",
+        "Malik Tillman",
+        "Patrik Schick"
+      ],
       "home_unavailable": [
         "Yan Couto",
         "Emre Can",
@@ -264,9 +284,9 @@
       "match_date": "2026-04-11",
       "home_team": "FC Heidenheim",
       "away_team": "Union Berlin",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-4-2",
       "away_formation": "3-4-1-2",
       "home_players": [
@@ -274,13 +294,13 @@
         "Marnon-Thomas Busch",
         "Patrick Mainka",
         "Jonas Föhrenbach",
-        "Omar Traoré",
+        "Hennes Behrens",
         "Eren Dinkçi",
         "Julian Niehues",
-        "Niklas Dorsch",
+        "Jan Schöppner",
         "Mathias Honsak",
-        "Budu Zivzivadze",
-        "Marvin Pieringer"
+        "Marvin Pieringer",
+        "Stefan Schimmer"
       ],
       "away_players": [
         "Frederik Rønnow",
@@ -291,7 +311,7 @@
         "Rani Khedira",
         "András Schäfer",
         "Derrick Köhn",
-        "Woo-Yeong Jeong",
+        "Alex Král",
         "Oliver Burke",
         "Andrej Ilic"
       ],
@@ -333,7 +353,7 @@
           "position_id": 36
         },
         {
-          "name": "Omar Traoré",
+          "name": "Hennes Behrens",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -360,7 +380,7 @@
           "position_id": 74
         },
         {
-          "name": "Niklas Dorsch",
+          "name": "Jan Schöppner",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -378,7 +398,7 @@
           "position_id": 78
         },
         {
-          "name": "Budu Zivzivadze",
+          "name": "Marvin Pieringer",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -387,7 +407,7 @@
           "position_id": 104
         },
         {
-          "name": "Marvin Pieringer",
+          "name": "Stefan Schimmer",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -470,7 +490,7 @@
           "position_id": 68
         },
         {
-          "name": "Woo-Yeong Jeong",
+          "name": "Alex Král",
           "line_index": 2,
           "line_size": 1,
           "role_score": 4,
@@ -497,8 +517,28 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Frank Feller",
+        "Omar Traoré",
+        "Tim Siersleben",
+        "Adrian Beck",
+        "Arijon Ibrahimovic",
+        "Christian Conteh",
+        "Luca Kerber",
+        "Niklas Dorsch",
+        "Budu Zivzivadze"
+      ],
+      "away_subs": [
+        "Carl Klaus",
+        "Aljoscha Kemlein",
+        "Christopher Trimmel",
+        "Josip Juranovic",
+        "Lins Guether",
+        "Tom Rothe",
+        "Ilyas Ansah",
+        "Livan Burcu",
+        "Tim Skarke"
+      ],
       "home_unavailable": [
         "Nick Rothweiler",
         "Leart Paçarada",
@@ -506,6 +546,7 @@
         "Mikkel Kaufmann"
       ],
       "away_unavailable": [
+        "Woo-yeong Jeong",
         "David Preu",
         "Matheo Raab",
         "Robert Skov"
@@ -519,19 +560,19 @@
       "match_date": "2026-04-11",
       "home_team": "RB Leipzig",
       "away_team": "Borussia Mönchengladbach",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-3-3",
       "away_formation": "3-4-2-1",
       "home_players": [
         "Maarten Vandevoordt",
         "Ridle Baku",
         "Willi Orbán",
-        "Nicolas Seiwald",
+        "El Chadaille Bitshiabu",
         "David Raum",
-        "Brajan Gruda",
         "Xaver Schlager",
+        "Nicolas Seiwald",
         "Christoph Baumgartner",
         "Yan Diomande",
         "Rômulo",
@@ -545,9 +586,9 @@
         "Joseph Scally",
         "Rocco Reitz",
         "Yannik Engelhardt",
-        "Jens Castrop",
+        "Lukas Ullrich",
         "Franck Honorat",
-        "Kevin Stöger",
+        "Jens Castrop",
         "Haris Tabakovic"
       ],
       "home_starters": [
@@ -579,7 +620,7 @@
           "position_id": 34
         },
         {
-          "name": "Nicolas Seiwald",
+          "name": "El Chadaille Bitshiabu",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -597,7 +638,7 @@
           "position_id": 38
         },
         {
-          "name": "Brajan Gruda",
+          "name": "Xaver Schlager",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -606,7 +647,7 @@
           "position_id": 73
         },
         {
-          "name": "Xaver Schlager",
+          "name": "Nicolas Seiwald",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -716,7 +757,7 @@
           "position_id": 66
         },
         {
-          "name": "Jens Castrop",
+          "name": "Lukas Ullrich",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -734,7 +775,7 @@
           "position_id": 84
         },
         {
-          "name": "Kevin Stöger",
+          "name": "Jens Castrop",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -752,8 +793,28 @@
           "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Péter Gulácsi",
+        "Benjamin Henrichs",
+        "Lukas Klostermann",
+        "Max Finkgräfe",
+        "Brajan Gruda",
+        "Ezechiel Banzuzi",
+        "Assan Ouédraogo",
+        "Johan Bakayoko",
+        "Tidiam Gomis"
+      ],
+      "away_subs": [
+        "Jan Olschowsky",
+        "Fabio Chiarodia",
+        "Kota Takai",
+        "Florian Neuhaus",
+        "Giovanni Reyna",
+        "Hugo Bolin",
+        "Kevin Stöger",
+        "Wael Mohya",
+        "Shuto Machino"
+      ],
       "home_unavailable": [
         "Kosta Nedeljkovic",
         "Ayodele Thomas",
@@ -762,7 +823,6 @@
         "Viggo Gebel"
       ],
       "away_unavailable": [
-        "Kota Takai",
         "Jan Urbich",
         "Nathan N'Goumou",
         "Robin Hack",
@@ -1036,9 +1096,9 @@
       "match_date": "2026-04-11",
       "home_team": "Wolfsburg",
       "away_team": "Eintracht Frankfurt",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "3-4-3",
       "home_players": [
@@ -1046,9 +1106,9 @@
         "Jeanuël Belocian",
         "Moritz Jenz",
         "Denis Vavro",
-        "Saël Kumbedi",
+        "Aaron Zehnter",
         "Christian Eriksen",
-        "Maximilian Arnold",
+        "Vini Souza",
         "Joakim Mæhle",
         "Patrick Wimmer",
         "Jesper Lindstrøm",
@@ -1059,11 +1119,11 @@
         "Aurèle Amenda",
         "Robin Koch",
         "Arthur Theate",
-        "Ritsu Doan",
-        "Hugo Larsson",
         "Farès Chaïbi",
+        "Hugo Larsson",
+        "Oscar Højlund",
         "Nathaniel Brown",
-        "Ansgar Knauff",
+        "Ayoube Amaimouni-Echghouyab",
         "Jonathan Burkardt",
         "Arnaud Kalimuendo-Muinga"
       ],
@@ -1105,7 +1165,7 @@
           "position_id": 37
         },
         {
-          "name": "Saël Kumbedi",
+          "name": "Aaron Zehnter",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -1123,7 +1183,7 @@
           "position_id": 64
         },
         {
-          "name": "Maximilian Arnold",
+          "name": "Vini Souza",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -1206,7 +1266,7 @@
           "position_id": 37
         },
         {
-          "name": "Ritsu Doan",
+          "name": "Farès Chaïbi",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -1224,7 +1284,7 @@
           "position_id": 74
         },
         {
-          "name": "Farès Chaïbi",
+          "name": "Oscar Højlund",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -1242,7 +1302,7 @@
           "position_id": 78
         },
         {
-          "name": "Ansgar Knauff",
+          "name": "Ayoube Amaimouni-Echghouyab",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -1269,8 +1329,28 @@
           "position_id": 107
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Pavao Pervan",
+        "Jan Bürger",
+        "Jonas Adjetey",
+        "Lovro Majer",
+        "Maximilian Arnold",
+        "Yannick Gerhardt",
+        "Adam Daghim",
+        "Dzenan Pejcinovic",
+        "Kento Shiogai"
+      ],
+      "away_subs": [
+        "Jens Grahl",
+        "Elias Baum",
+        "Can Uzun",
+        "Ellyes Skhiri",
+        "Love Arrhov",
+        "Mario Götze",
+        "Timothy Chandler",
+        "Ansgar Knauff",
+        "Younes Ebnoutalib"
+      ],
       "home_unavailable": [
         "Mattias Svanberg",
         "Kilian Fischer",
@@ -1283,6 +1363,7 @@
         "Jonas Wind"
       ],
       "away_unavailable": [
+        "Ritsu Doan",
         "Nnamdi Collins",
         "Kauã",
         "Rasmus Kristensen",
