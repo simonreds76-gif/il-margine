@@ -21,19 +21,33 @@ from __future__ import annotations
 
 import argparse
 import csv
+import io
 from collections import defaultdict
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 import sys
 from typing import Dict, List, Optional
 import re
 import unicodedata
 
+import requests
+
+from fotmob_match_stats import fetch_fotmob_recent_results
+
 ROOT = Path(__file__).resolve().parent.parent
 SHORTLIST_DIR   = ROOT / "data" / "shortlist"
 HISTORICAL_DIR  = ROOT / "data" / "team-shots" / "historical"
 SETTLED_PATH    = ROOT / "data" / "shortlist" / "settled-pnl.csv"
 PNL_REPORT_PATH = ROOT / "data" / "shortlist" / "corners-live-pnl.txt"
+PINNACLE_ODDS_PATH = ROOT / "data" / "corners-ou" / "pinnacle-corners-odds.csv"
+BASE_URL = "https://www.football-data.co.uk"
+LEAGUE_CODES = {
+    "epl": "E0",
+    "serie-a": "I1",
+    "la-liga": "SP1",
+    "bundesliga": "D1",
+    "ligue-1": "F1",
+}
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -43,11 +57,146 @@ if hasattr(sys.stderr, "reconfigure"):
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
+_TEAM_ALIASES: Dict[str, str] = {
+    # Our model name → Pinnacle name (post-normalization, lowercase, ASCII)
+    "brighton and hove albion": "brighton",
+    "atalanta bc": "atalanta",
+    "tsg hoffenheim": "hoffenheim",
+    "fc augsburg": "augsburg",
+    "inter milan": "internazionale",
+    "fc st pauli": "st pauli",
+    "vfb stuttgart": "stuttgart",
+    "borussia m gladbach": "borussia monchengladbach",
+    "m gladbach": "borussia monchengladbach",
+    "bayer 04 leverkusen": "bayer leverkusen",
+    "sc freiburg": "freiburg",
+    "1 fc union berlin": "union berlin",
+    "wolverhampton wanderers": "wolverhampton",
+    "as roma": "roma",
+    "pisa sc": "pisa",
+    "girona fc": "girona",
+}
+
+
+def _norm_team(text: str) -> str:
+    """Normalize a team name, stripping Pinnacle's '(Corners)' suffix."""
+    text = re.sub(r"\s*\(corners\)\s*$", "", (text or "").strip(), flags=re.IGNORECASE)
+    text = text.strip().lower()
+    text = unicodedata.normalize("NFD", text)
+    text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
+    text = re.sub(r"[^a-z0-9]+", " ", text).strip()
+    return _TEAM_ALIASES.get(text, text)
+
+
+def load_pinnacle_odds_index() -> Dict[str, List[dict]]:
+    """
+    Build an index from the Pinnacle corners odds archive.
+
+    Primary key:   match_date|home_norm|away_norm|line|side
+    Secondary key: home_norm|away_norm|line|side  (dateless fallback for bets
+                   where our match_date is the shortlist run date, not game date)
+    Value: list of {captured_at, kickoff_iso, odds} sorted ascending by captured_at.
+    """
+    index: Dict[str, List[dict]] = {}
+    if not PINNACLE_ODDS_PATH.exists():
+        return index
+    with open(PINNACLE_ODDS_PATH, "r", encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            home = _norm_team(row.get("home_team", ""))
+            away = _norm_team(row.get("away_team", ""))
+            match_date = (row.get("match_date") or "").strip()[:10]
+            line = (row.get("line") or "").strip()
+            side = (row.get("side") or "").strip().lower()
+            if not (home and away and match_date and line and side):
+                continue
+            entry = {
+                "captured_at": (row.get("captured_at") or "").strip(),
+                "kickoff_iso": (row.get("kickoff_iso") or "").strip(),
+                "odds": float(row.get("odds_decimal") or 0),
+            }
+            # Date-keyed (precise)
+            index.setdefault(f"{match_date}|{home}|{away}|{line}|{side}", []).append(entry)
+            # Dateless (fallback for bets logged with wrong match_date)
+            index.setdefault(f"__any__|{home}|{away}|{line}|{side}", []).append(entry)
+    for entries in index.values():
+        entries.sort(key=lambda e: e["captured_at"])
+    return index
+
+
+def find_closing_odds(
+    match: str,
+    match_date_str: str,
+    line: str,
+    side: str,
+    kick_off_raw: str,
+    odds_index: Dict[str, List[dict]],
+) -> Optional[float]:
+    """
+    Return the last Pinnacle odds captured on/before kickoff for this bet.
+    Falls back to match_date 23:59:59 if kickoff_iso is unavailable.
+    """
+    parts = match.split(" vs ", 1)
+    if len(parts) != 2:
+        return None
+    home = _norm_team(parts[0])
+    away = _norm_team(parts[1])
+
+    # Try date-keyed lookup first (exact match_date from the bet file)
+    entries = odds_index.get(f"{match_date_str[:10]}|{home}|{away}|{line}|{side}")
+
+    # Fallback: our match_date may be the shortlist run date, not the actual
+    # game date (happens when kick_off wasn't written to the CSV). Use the
+    # dateless index so we can still find the correct Pinnacle entries.
+    if not entries:
+        entries = odds_index.get(f"__any__|{home}|{away}|{line}|{side}")
+    if not entries:
+        return None
+
+    # Determine cutoff: use kickoff_iso from the archive rows (most reliable),
+    # then the kick_off field from the bet, then date-end fallback.
+    kickoff_candidates = [e["kickoff_iso"] for e in entries if e.get("kickoff_iso")]
+    if kickoff_candidates:
+        cutoff = max(kickoff_candidates)
+    elif kick_off_raw:
+        cutoff = kick_off_raw
+    else:
+        cutoff = f"{match_date_str[:10]}T23:59:59Z"
+
+    candidates = [e for e in entries if e["captured_at"] <= cutoff and e["odds"] > 0]
+    if not candidates:
+        return None
+    return candidates[-1]["odds"]  # already sorted ascending
+
+
+def find_match_kickoff(match: str, odds_index: Dict[str, List[dict]]) -> Optional[str]:
+    """
+    Resolve the fixture kickoff from the Pinnacle archive for bets that were
+    logged before kick_off was written into the shortlist CSV.
+    """
+    parts = match.split(" vs ", 1)
+    if len(parts) != 2:
+        return None
+    home = _norm_team(parts[0])
+    away = _norm_team(parts[1])
+    prefix = f"__any__|{home}|{away}|"
+    kickoff_candidates: List[str] = []
+    for key, entries in odds_index.items():
+        if not key.startswith(prefix):
+            continue
+        kickoff_candidates.extend(
+            entry["kickoff_iso"] for entry in entries if entry.get("kickoff_iso")
+        )
+    if not kickoff_candidates:
+        return None
+    return max(kickoff_candidates)
+
+
 def _norm(text: str) -> str:
     text = (text or "").strip().lower()
     text = unicodedata.normalize("NFD", text)
     text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
-    return re.sub(r"[^a-z0-9]+", " ", text).strip()
+    text = re.sub(r"[^a-z0-9]+", " ", text).strip()
+    return _TEAM_ALIASES.get(text, text)
 
 
 def _parse_date(val: str) -> Optional[date]:
@@ -68,11 +217,17 @@ def _parse_date(val: str) -> Optional[date]:
         return None
 
 
-def _pf(val: str, default: float = 0.0) -> float:
+def _pf(val: object, default: float = 0.0) -> float:
     try:
-        return float((val or "").strip() or default)
-    except ValueError:
+        text = str(val or "").strip()
+        return float(text or default)
+    except (TypeError, ValueError):
         return default
+
+
+def season_code(start_year: int) -> str:
+    end = (start_year + 1) % 100
+    return f"{start_year % 100:02d}{end:02d}"
 
 
 # ── Load actual results ────────────────────────────────────────────────────────
@@ -104,11 +259,49 @@ def load_actual_results() -> Dict[str, dict]:
     return results
 
 
+def fetch_current_season_results(league: str) -> Dict[str, dict]:
+    code = LEAGUE_CODES.get(league)
+    if not code:
+        return {}
+
+    now = datetime.now()
+    start_year = now.year if now.month >= 8 else now.year - 1
+    season = season_code(start_year)
+    url = f"{BASE_URL}/mmz4281/{season}/{code}.csv"
+
+    try:
+        resp = requests.get(url, timeout=30)
+        resp.raise_for_status()
+    except requests.RequestException as exc:
+        print(f"  [WARN] Could not fetch {url}: {exc}")
+        return {}
+
+    results: Dict[str, dict] = {}
+    reader = csv.DictReader(io.StringIO(resp.text))
+    for row in reader:
+        d = _parse_date(row.get("Date", ""))
+        if d is None:
+            continue
+        home = _norm(row.get("HomeTeam", ""))
+        away = _norm(row.get("AwayTeam", ""))
+        hc = (row.get("HC") or "").strip()
+        ac = (row.get("AC") or "").strip()
+        if not hc or not ac:
+            continue
+        key = f"{d.isoformat()}|{home}|{away}"
+        results[key] = {
+            "total_corners": int(hc) + int(ac),
+        }
+    return results
+
+
 # ── Settle ────────────────────────────────────────────────────────────────────
 
 def settle_all(target_date: Optional[str] = None) -> List[dict]:
     actual = load_actual_results()
     print(f"Loaded {len(actual)} historical results with corners")
+    odds_index = load_pinnacle_odds_index()
+    print(f"Loaded {len(odds_index)} Pinnacle odds series")
 
     bet_files = sorted(SHORTLIST_DIR.glob("value-bets-*.csv"))
     if target_date:
@@ -117,6 +310,39 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
     if not bet_files:
         print("No value-bet files found.")
         return []
+
+    target_dates_by_league: Dict[str, set[str]] = defaultdict(set)
+    leagues_needed = sorted({
+        (row.get("league") or "").strip()
+        for path in bet_files
+        for row in csv.DictReader(open(path, "r", encoding="utf-8"))
+        if (row.get("league") or "").strip()
+    })
+    for path in bet_files:
+        file_date_str = path.name.replace("value-bets-", "").replace(".csv", "")
+        for row in csv.DictReader(open(path, "r", encoding="utf-8")):
+            league = (row.get("league") or "").strip()
+            if not league:
+                continue
+            match_str = (row.get("match") or "").strip()
+            kick_off_raw = (row.get("kick_off") or "").strip()
+            if not kick_off_raw and match_str:
+                kick_off_raw = find_match_kickoff(match_str, odds_index) or ""
+            match_date = (_parse_date(kick_off_raw) or _parse_date(file_date_str))
+            if match_date is not None:
+                target_dates_by_league[league].add(match_date.isoformat())
+
+    for league in leagues_needed:
+        fresh = fetch_current_season_results(league)
+        if fresh:
+            latest_available = max((key.split("|", 1)[0] for key in fresh.keys()), default="none")
+            print(f"  [live] {league}: {len(fresh)} matches fetched (latest {latest_available})")
+            actual.update(fresh)
+        fotmob = fetch_fotmob_recent_results(league, target_dates_by_league.get(league, set()))
+        if fotmob:
+            latest_fotmob = max((key.split("|", 1)[0] for key in fotmob.keys()), default="none")
+            print(f"  [fotmob] {league}: {len(fotmob)} matches fetched (latest {latest_fotmob})")
+            actual.update(fotmob)
 
     rows: List[dict] = []
     for path in bet_files:
@@ -131,12 +357,17 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
             home_n = _norm(parts[0])
             away_n = _norm(parts[1])
 
-            # Use kick_off date if present, else fall back to file date
+            # Use kick_off date if present. Older shortlist files may not have
+            # it yet, so backfill from the Pinnacle archive before falling
+            # back to the shortlist run date.
             kick_off_raw = (bet.get("kick_off") or "").strip()
+            if not kick_off_raw:
+                kick_off_raw = find_match_kickoff(match_str, odds_index) or ""
             match_date = _parse_date(kick_off_raw) or _parse_date(file_date_str)
 
             settled = dict(bet)
             settled["file_date"] = file_date_str
+            settled["kick_off"] = kick_off_raw
 
             if match_date is None:
                 settled["match_date"] = ""
@@ -159,14 +390,32 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
                 if result:
                     break
 
+            line_val = float(bet.get("line", 0))
+            side = bet.get("side", "")
+            bookie_odds = _pf(bet.get("bookie_odds", "0"))
+            stake = _pf(bet.get("stake", "1"), 1.0)
+            line_str = str(bet.get("line", "")).strip()
+
+            # CLV: closing Pinnacle odds vs our entry odds
+            closing = find_closing_odds(
+                match=match_str,
+                match_date_str=match_date.isoformat(),
+                line=line_str,
+                side=side,
+                kick_off_raw=kick_off_raw,
+                odds_index=odds_index,
+            )
+            if closing and closing > 0 and bookie_odds > 0:
+                settled["closing_odds"] = round(closing, 4)
+                settled["clv"] = round(bookie_odds / closing - 1, 4)
+            else:
+                settled["closing_odds"] = ""
+                settled["clv"] = ""
+
             if result:
                 total_corners = result["total_corners"]
-                line = float(bet.get("line", 0))
-                side = bet.get("side", "")
-                bookie_odds = _pf(bet.get("bookie_odds", "0"))
-                stake = _pf(bet.get("stake", "1"), 1.0)
 
-                won = (total_corners > line) if side == "over" else (total_corners <= int(line))
+                won = (total_corners > line_val) if side == "over" else (total_corners <= int(line_val))
                 pnl_units = round((bookie_odds - 1.0) if won else -1.0, 3)
                 pnl_staked = round(pnl_units * stake, 3)
 
@@ -183,6 +432,27 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
                 settled["pnl_staked"]           = ""
 
             rows.append(settled)
+
+    # One bet per fixture across all files. When the same match appears in
+    # multiple shortlist runs (e.g. different lines on consecutive days),
+    # keep the single highest-edge signal to avoid correlated over-sizing.
+    # Include the resolved fixture date so repeat fixtures later in the season
+    # do not collapse into one another.
+    best: dict[str, dict] = {}
+    for r in rows:
+        # Normalise the match string so "Genoa vs Sassuolo" always collapses
+        match_norm = (r.get("match") or "").strip().lower()
+        league_norm = (r.get("league") or "").strip().lower()
+        fixture_date = (
+            ((r.get("kick_off") or "").strip()[:10])
+            or (r.get("match_date") or "").strip()[:10]
+            or (r.get("file_date") or "").strip()[:10]
+        )
+        key = f"{league_norm}|{fixture_date}|{match_norm}"
+        existing = best.get(key)
+        if existing is None or _pf(r.get("edge", "0")) > _pf(existing.get("edge", "0")):
+            best[key] = r
+    rows = list(best.values())
 
     return rows
 
@@ -212,7 +482,7 @@ def _section(
 
 
 def build_report(rows: List[dict]) -> str:
-    now = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    now = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
     out: List[str] = [
         "=" * 70,
         "  CORNERS O/U — LIVE P&L TRACKER",
@@ -260,6 +530,12 @@ def build_report(rows: List[dict]) -> str:
     out.append(f"  P&L          : {total_pnl:+.2f}u")
     out.append(f"  ROI          : {roi:+.1f}%")
     out.append(f"  Max drawdown : {max_dd:.1f}u")
+
+    clv_vals = [_pf(b.get("clv", ""), float("nan")) for b in settled if b.get("clv")]
+    clv_vals = [v for v in clv_vals if v == v]  # drop NaN
+    if clv_vals:
+        avg_clv = sum(clv_vals) / len(clv_vals) * 100
+        out.append(f"  Avg CLV      : {avg_clv:+.1f}%  (n={len(clv_vals)}, vs Pinnacle close)")
     out.append("")
 
     out.append("  ── BY LEAGUE ────────────────────────────────────────────────")
@@ -269,7 +545,8 @@ def build_report(rows: List[dict]) -> str:
     out.append("")
 
     out.append("  ── BY LINE ──────────────────────────────────────────────────")
-    for line in ["8.5", "9.5", "10.5", "11.5"]:
+    all_lines = sorted(set(str(b.get("line", "")) for b in settled), key=lambda x: float(x) if x else 0)
+    for line in all_lines:
         subset = [b for b in settled if str(b.get("line", "")) == line]
         if subset:
             _section(out, f"Line {line}", subset)
@@ -324,6 +601,7 @@ SETTLED_FIELDS = [
     "edge", "stake", "stake_label",
     "lambda_h", "lambda_a",
     "settled", "actual_total_corners", "won", "pnl_units", "pnl_staked",
+    "closing_odds", "clv",
 ]
 
 

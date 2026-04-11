@@ -24,6 +24,8 @@ from typing import Dict, List, Optional, Tuple
 
 import requests
 
+from fotmob_match_stats import fetch_fotmob_recent_results
+
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_SIGNALS = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-signals.csv"
 DEFAULT_SUMMARY = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-performance.txt"
@@ -39,9 +41,30 @@ LEAGUE_CODES = {
 SIGNAL_FIELDS = [
     "date", "league", "home_team", "away_team", "team", "venue",
     "bookmaker", "line", "side", "book_odds", "model_prob",
-    "model_fair_odds", "edge", "actual_shots", "result", "pnl",
-    "logged_at",
+    "model_fair_odds", "edge", "stake_units", "actual_shots", "result",
+    "pnl", "pnl_staked", "closing_odds", "clv", "logged_at",
 ]
+
+DEFAULT_ODDS_ARCHIVE = ROOT / "data" / "team-shots" / "team-shots-odds-history.csv"
+
+TEAM_ALIASES = {
+    "brighton and hove albion": "brighton",
+    "atalanta bc": "atalanta",
+    "tsg hoffenheim": "hoffenheim",
+    "fc augsburg": "augsburg",
+    "inter milan": "internazionale",
+    "fc st pauli": "st pauli",
+    "vfb stuttgart": "stuttgart",
+    "borussia m gladbach": "borussia monchengladbach",
+    "m gladbach": "borussia monchengladbach",
+    "bayer 04 leverkusen": "bayer leverkusen",
+    "sc freiburg": "freiburg",
+    "1 fc union berlin": "union berlin",
+    "wolverhampton wanderers": "wolverhampton",
+    "as roma": "roma",
+    "pisa sc": "pisa",
+    "girona fc": "girona",
+}
 
 
 def _pf(val, default=0.0):
@@ -59,6 +82,10 @@ def _norm(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", text).strip()
 
 
+def _norm_team(text: str) -> str:
+    return TEAM_ALIASES.get(_norm(text), _norm(text))
+
+
 def _parse_date(val: str) -> Optional[date]:
     text = (val or "").strip()
     if not text:
@@ -71,12 +98,80 @@ def _parse_date(val: str) -> Optional[date]:
     return None
 
 
+def load_odds_archive(path: Path) -> Dict[str, List[dict]]:
+    """
+    Load odds archive indexed by (match_date|home_norm|away_norm|team_norm|bookmaker_norm|line|side).
+    Each key maps to a list of rows sorted by captured_at ascending.
+    """
+    index: Dict[str, List[dict]] = {}
+    if not path.exists():
+        return index
+    with open(path, "r", encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            match_date = (row.get("match_date") or "").strip()[:10]
+            home = _norm_team(row.get("home_team", ""))
+            away = _norm_team(row.get("away_team", ""))
+            team = _norm_team(row.get("team", ""))
+            bm = _norm(row.get("bookmaker", ""))
+            line = str(row.get("line", "")).strip()
+            side = (row.get("side") or "").strip().lower()
+            if not match_date or not home or not team or not side:
+                continue
+            key = f"{match_date}|{home}|{away}|{team}|{bm}|{line}|{side}"
+            index.setdefault(key, []).append(row)
+    for rows in index.values():
+        rows.sort(key=lambda r: (r.get("captured_at") or ""))
+    return index
+
+
+def find_closing_odds(
+    sig: dict,
+    odds_index: Dict[str, List[dict]],
+) -> Optional[float]:
+    """
+    Return the latest scraped odds for this signal's match/team/line/book/side
+    that were captured on or before the match date (i.e. before kickoff).
+    """
+    match_date = (sig.get("date") or "")[:10]
+    home = _norm_team(sig.get("home_team", ""))
+    away = _norm_team(sig.get("away_team", ""))
+    team = _norm_team(sig.get("team", ""))
+    bm = _norm(sig.get("bookmaker", ""))
+    line = str(sig.get("line", "")).strip()
+    side = (sig.get("side") or "").strip().lower()
+
+    key = f"{match_date}|{home}|{away}|{team}|{bm}|{line}|{side}"
+    rows = odds_index.get(key, [])
+
+    # We do not need an exact kickoff scrape for a useful CLV proxy.
+    # We do need to avoid accidentally using post-kickoff same-day prices.
+    # The odds archive already carries kickoff_at, so use the latest sampled
+    # price captured on/before the stored kickoff timestamp when available.
+    kickoff_candidates = [str(r.get("kickoff_at") or "").strip() for r in rows if str(r.get("kickoff_at") or "").strip()]
+    cutoff = max(kickoff_candidates) if kickoff_candidates else match_date + "T23:59:59"
+    candidates = [r for r in rows if (r.get("captured_at") or "") <= cutoff]
+    if not candidates:
+        return None
+    latest = max(candidates, key=lambda r: (r.get("captured_at") or ""))
+    val = latest.get("odds_decimal", "")
+    try:
+        return float(val) if val else None
+    except (ValueError, TypeError):
+        return None
+
+
 def season_code(start_year: int) -> str:
     end = (start_year + 1) % 100
     return f"{start_year % 100:02d}{end:02d}"
 
 
-def fetch_current_season_results(league: str) -> Dict[str, dict]:
+def current_season_historical_path(historical_dir: Path, league: str) -> Path:
+    now = datetime.now()
+    start_year = now.year if now.month >= 8 else now.year - 1
+    return historical_dir / f"{league}-{start_year}-{start_year + 1}.csv"
+
+
+def fetch_current_season_results(league: str, historical_dir: Optional[Path] = None) -> Dict[str, dict]:
     """
     Fetch the current season's CSV and return a lookup keyed by
     (date, home_team_norm, away_team_norm) -> {HS, AS, HST, AST}.
@@ -97,14 +192,18 @@ def fetch_current_season_results(league: str) -> Dict[str, dict]:
         print(f"  [WARN] Could not fetch {url}: {exc}")
         return {}
 
+    if historical_dir is not None:
+        historical_dir.mkdir(parents=True, exist_ok=True)
+        current_season_historical_path(historical_dir, league).write_text(resp.text, encoding="utf-8")
+
     results: Dict[str, dict] = {}
     reader = csv.DictReader(io.StringIO(resp.text))
     for row in reader:
         d = _parse_date(row.get("Date", ""))
         if d is None:
             continue
-        home = _norm(row.get("HomeTeam", ""))
-        away = _norm(row.get("AwayTeam", ""))
+        home = _norm_team(row.get("HomeTeam", ""))
+        away = _norm_team(row.get("AwayTeam", ""))
         hs = row.get("HS", "")
         as_ = row.get("AS", "")
         if not hs and not as_:
@@ -135,8 +234,8 @@ def load_historical_results(historical_dir: Path) -> Dict[str, dict]:
                 d = _parse_date(row.get("Date", ""))
                 if d is None:
                     continue
-                home = _norm(row.get("HomeTeam", ""))
-                away = _norm(row.get("AwayTeam", ""))
+                home = _norm_team(row.get("HomeTeam", ""))
+                away = _norm_team(row.get("AwayTeam", ""))
                 hs = row.get("HS", "")
                 if not hs:
                     continue
@@ -153,6 +252,7 @@ def load_historical_results(historical_dir: Path) -> Dict[str, dict]:
 def settle_signals(
     signals: List[dict],
     results_lookup: Dict[str, dict],
+    odds_index: Optional[Dict[str, List[dict]]] = None,
 ) -> Tuple[int, int]:
     """Update pending signals in-place. Returns (settled_count, still_pending)."""
     settled = 0
@@ -160,11 +260,18 @@ def settle_signals(
 
     for sig in signals:
         if sig.get("result") not in ("pending", ""):
+            # Already settled — still try to fill missing closing_odds/clv if absent.
+            if odds_index and not sig.get("closing_odds"):
+                closing = find_closing_odds(sig, odds_index)
+                if closing:
+                    entry = _pf(sig.get("book_odds"))
+                    sig["closing_odds"] = round(closing, 3)
+                    sig["clv"] = round(entry / closing - 1, 4) if closing > 0 and entry > 0 else ""
             continue
 
         sig_date_str = (sig.get("date") or "")[:10]
-        home_norm = _norm(sig.get("home_team", ""))
-        away_norm = _norm(sig.get("away_team", ""))
+        home_norm = _norm_team(sig.get("home_team", ""))
+        away_norm = _norm_team(sig.get("away_team", ""))
 
         try:
             sig_date_obj = date.fromisoformat(sig_date_str)
@@ -185,7 +292,7 @@ def settle_signals(
             still_pending += 1
             continue
 
-        team_norm = _norm(sig.get("team", ""))
+        team_norm = _norm_team(sig.get("team", ""))
         if team_norm == home_norm:
             actual_shots = match_data["home_shots"]
         elif team_norm == away_norm:
@@ -215,6 +322,15 @@ def settle_signals(
         sig["actual_shots"] = actual_shots
         sig["result"] = result
         sig["pnl"] = round(pnl, 3)
+        stake_units = _pf(sig.get("stake_units", "1")) or 1.0
+        sig["pnl_staked"] = round(pnl * stake_units, 3)
+
+        # Capture closing odds and CLV from the odds archive.
+        if odds_index:
+            closing = find_closing_odds(sig, odds_index)
+            if closing:
+                sig["closing_odds"] = round(closing, 3)
+                sig["clv"] = round(book_odds / closing - 1, 4) if closing > 0 and book_odds > 0 else ""
         settled += 1
 
     return settled, still_pending
@@ -225,6 +341,7 @@ def main() -> None:
     parser.add_argument("--signals", type=Path, default=DEFAULT_SIGNALS)
     parser.add_argument("--summary", type=Path, default=DEFAULT_SUMMARY)
     parser.add_argument("--historical-dir", type=Path, default=DEFAULT_HISTORICAL)
+    parser.add_argument("--odds-archive", type=Path, default=DEFAULT_ODDS_ARCHIVE)
     args = parser.parse_args()
 
     if not args.signals.exists():
@@ -239,26 +356,51 @@ def main() -> None:
     pending = [s for s in signals if s.get("result") in ("pending", "")]
     print(f"  Total: {len(signals)}, pending: {len(pending)}")
 
+    # Always load the odds archive so we can backfill closing_odds/CLV on
+    # already-settled signals that were logged before this feature existed.
+    missing_clv = [s for s in signals if s.get("result") in ("won", "lost", "push") and not s.get("closing_odds")]
+    print(f"Loading odds archive from {args.odds_archive}")
+    odds_index = load_odds_archive(args.odds_archive)
+    print(f"  {len(odds_index)} odds entries indexed (will backfill CLV for {len(missing_clv)} settled signals)")
+
     if not pending:
-        print("  No pending signals to settle.")
+        print("  No pending signals to settle — running CLV backfill only.")
+        settle_signals(signals, {}, odds_index)
+        if missing_clv:
+            with open(args.signals, "w", newline="", encoding="utf-8") as fh:
+                writer = csv.DictWriter(fh, fieldnames=SIGNAL_FIELDS, extrasaction="ignore")
+                writer.writeheader()
+                writer.writerows(signals)
+            print(f"  CLV backfill written to {args.signals}")
+        _write_summary(signals, args.summary)
         return
 
     leagues_needed = set()
+    target_dates_by_league: Dict[str, set[str]] = {}
     for s in pending:
         league = (s.get("league") or "").strip()
         if league:
             leagues_needed.add(league)
+            sig_date = (s.get("date") or "").strip()[:10]
+            if sig_date:
+                target_dates_by_league.setdefault(league, set()).add(sig_date)
     print(f"  Leagues to fetch: {', '.join(sorted(leagues_needed))}")
 
     all_results: Dict[str, dict] = load_historical_results(args.historical_dir)
     print(f"  Historical results loaded: {len(all_results)}")
 
     for league in leagues_needed:
-        fresh = fetch_current_season_results(league)
-        print(f"  [live] {league}: {len(fresh)} matches fetched")
+        fresh = fetch_current_season_results(league, args.historical_dir)
+        latest_available = max((key.split("|", 1)[0] for key in fresh.keys()), default="none")
+        print(f"  [live] {league}: {len(fresh)} matches fetched (latest {latest_available})")
         all_results.update(fresh)
+        fotmob = fetch_fotmob_recent_results(league, target_dates_by_league.get(league, set()))
+        if fotmob:
+            latest_fotmob = max((key.split("|", 1)[0] for key in fotmob.keys()), default="none")
+            print(f"  [fotmob] {league}: {len(fotmob)} matches fetched (latest {latest_fotmob})")
+            all_results.update(fotmob)
 
-    settled, still_pending = settle_signals(signals, all_results)
+    settled, still_pending = settle_signals(signals, all_results, odds_index)
     print(f"\n  Settled: {settled}, still pending: {still_pending}")
 
     with open(args.signals, "w", newline="", encoding="utf-8") as fh:
@@ -292,6 +434,12 @@ def _write_summary(signals: List[dict], path: Path) -> None:
         lines.append(f"  PnL:            {total_pnl:+.1f}u")
         lines.append(f"  ROI:            {roi:+.1f}%")
         lines.append(f"  Record:         {wins}W / {losses}L / {pushes}P")
+
+        clv_vals = [_pf(s.get("clv"), float("nan")) for s in settled if s.get("clv")]
+        clv_vals = [v for v in clv_vals if v == v]  # drop NaN
+        if clv_vals:
+            avg_clv = sum(clv_vals) / len(clv_vals) * 100
+            lines.append(f"  Avg CLV:        {avg_clv:+.1f}%  (n={len(clv_vals)}, vs Bet365 close)")
 
     lines.append(f"\n  Updated: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}")
     lines.append("=" * 60)
