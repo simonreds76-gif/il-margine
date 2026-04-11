@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-11T19:02:30Z",
+  "updated_at": "2026-04-11T19:44:55Z",
   "reason": "cycle",
   "leagues": {
     "serie-a": {
@@ -47,10 +47,10 @@
       "last_detail_run_at": "2026-04-11T19:02:22Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "hot",
-      "last_decision": "ran",
-      "last_message": "Ran ligue-1 in hot tier (cadence 10m, fixtures 1).",
-      "next_kickoff_utc": "2026-04-11T19:05:00Z"
+      "last_tier": "off",
+      "last_decision": "off",
+      "last_message": "Skip ligue-1: no upcoming fixtures inside schedule window.",
+      "next_kickoff_utc": ""
     }
   }
 }
