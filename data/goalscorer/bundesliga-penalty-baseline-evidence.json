@@ -1,9 +1,25 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-10T17:17:21Z",
+  "generated_at": "2026-04-11T00:09:29Z",
   "league": "bundesliga",
-  "row_count": 3,
+  "row_count": 4,
   "rows": [
+    {
+      "team": "Augsburg",
+      "team_key": "augsburg",
+      "player_name": "Alexis Claude Maurice",
+      "player_key": "alexis claude maurice",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-10"
+    },
     {
       "team": "Bayer Leverkusen",
       "team_key": "bayer leverkusen",
