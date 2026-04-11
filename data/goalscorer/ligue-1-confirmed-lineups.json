@@ -8,17 +8,17 @@
       "match_date": "2026-04-11",
       "home_team": "Auxerre",
       "away_team": "Nantes",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-1-4-1",
       "home_players": [
-        "Théo De Percin",
-        "Lamine Sy",
+        "Donovan Léon",
+        "Marvin Senaya",
         "Sinaly Diomandé",
         "Bryan Okoh",
-        "Marvin Senaya",
+        "Gideon Mensah",
         "Elisha Owusu",
         "Kévin Danois",
         "Romain Faivre",
@@ -29,11 +29,11 @@
       "away_players": [
         "Anthony Lopes",
         "Frédéric Guilbert",
-        "Chidozie Awaziem",
         "Ali Yousef Musrati",
         "Nicolas Cozza",
+        "Deiver Machado",
         "Francis Coquelin",
-        "Fabien Centonze",
+        "Dehmaine Tabibou",
         "Mohamed Kaba",
         "Johann Lepenant",
         "Matthis Abline",
@@ -41,7 +41,7 @@
       ],
       "home_starters": [
         {
-          "name": "Théo De Percin",
+          "name": "Donovan Léon",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
@@ -50,7 +50,7 @@
           "position_id": 11
         },
         {
-          "name": "Lamine Sy",
+          "name": "Marvin Senaya",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -77,7 +77,7 @@
           "position_id": 36
         },
         {
-          "name": "Marvin Senaya",
+          "name": "Gideon Mensah",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -160,7 +160,7 @@
           "position_id": 32
         },
         {
-          "name": "Chidozie Awaziem",
+          "name": "Ali Yousef Musrati",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -169,7 +169,7 @@
           "position_id": 34
         },
         {
-          "name": "Ali Yousef Musrati",
+          "name": "Nicolas Cozza",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -178,7 +178,7 @@
           "position_id": 36
         },
         {
-          "name": "Nicolas Cozza",
+          "name": "Deiver Machado",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -196,7 +196,7 @@
           "position_id": 65
         },
         {
-          "name": "Fabien Centonze",
+          "name": "Dehmaine Tabibou",
           "line_index": 2,
           "line_size": 4,
           "role_score": 4,
@@ -241,8 +241,28 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Théo De Percin",
+        "Clément Akpa",
+        "Francisco Sierralta",
+        "Lamine Sy",
+        "Assane Dioussé",
+        "Lasso Coulibaly",
+        "Naouirou Ahamada",
+        "Mamoudou Cissokho",
+        "Sékou Mara"
+      ],
+      "away_subs": [
+        "Patrik Carlgren",
+        "Chidozie Awaziem",
+        "Fabien Centonze",
+        "Uros Radakovic",
+        "Ibrahima Sissoko",
+        "Louis Leroux",
+        "Mostafa Mohamed",
+        "Rémy Cabella",
+        "Youssef El Arabi"
+      ],
       "home_unavailable": [
         "Oussama El Azzouzi"
       ],
