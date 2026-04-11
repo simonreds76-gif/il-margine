@@ -242,26 +242,26 @@
         }
       ],
       "home_subs": [
-        "Kepa Arrizabalaga",
-        "Cristhian Mosquera",
-        "Marli Salmon",
-        "Piero Hincapié",
-        "Christian Nørgaard",
         "Eberechi Eze",
         "Max Dowman",
+        "Leandro Trossard",
+        "Cristhian Mosquera",
         "Gabriel Jesus",
-        "Leandro Trossard"
+        "Kepa Arrizabalaga",
+        "Marli Salmon",
+        "Piero Hincapié",
+        "Christian Nørgaard"
       ],
       "away_subs": [
-        "Christos Mandas",
-        "Adam Smith",
-        "Bafodé Diakité",
-        "Alex Tóth",
         "Tyler Adams",
-        "Amine Adli",
-        "Ben Gannon Doak",
         "David Brooks",
-        "Enes Ünal"
+        "Alex Tóth",
+        "Adam Smith",
+        "Enes Ünal",
+        "Christos Mandas",
+        "Bafodé Diakité",
+        "Amine Adli",
+        "Ben Gannon Doak"
       ],
       "home_unavailable": [
         "Riccardo Calafiori",
@@ -285,9 +285,9 @@
       "match_date": "2026-04-11",
       "home_team": "Brentford",
       "away_team": "Everton",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -296,8 +296,8 @@
         "Sepp van den Berg",
         "Nathan Collins",
         "Keane Lewis-Potter",
-        "Jordan Henderson",
         "Yehor Yarmoliuk",
+        "Mathias Jensen",
         "Dango Ouattara",
         "Mikkel Damsgaard",
         "Kevin Schade",
@@ -307,10 +307,10 @@
         "Jordan Pickford",
         "Jake O'Brien",
         "James Tarkowski",
-        "Michael Keane",
+        "Jarrad Branthwaite",
         "Vitaliy Mykolenko",
-        "James Garner",
         "Idrissa Gana Gueye",
+        "James Garner",
         "Dwight McNeil",
         "Kiernan Dewsbury-Hall",
         "Iliman Ndiaye",
@@ -363,7 +363,7 @@
           "position_id": 38
         },
         {
-          "name": "Jordan Henderson",
+          "name": "Yehor Yarmoliuk",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -372,7 +372,7 @@
           "position_id": 64
         },
         {
-          "name": "Yehor Yarmoliuk",
+          "name": "Mathias Jensen",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -446,7 +446,7 @@
           "position_id": 34
         },
         {
-          "name": "Michael Keane",
+          "name": "Jarrad Branthwaite",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -464,7 +464,7 @@
           "position_id": 38
         },
         {
-          "name": "James Garner",
+          "name": "Idrissa Gana Gueye",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -473,7 +473,7 @@
           "position_id": 64
         },
         {
-          "name": "Idrissa Gana Gueye",
+          "name": "James Garner",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -518,8 +518,28 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Hákon Rafn Valdimarsson",
+        "Ethan Pinnock",
+        "Joshua Stephenson",
+        "Kristoffer Ajer",
+        "Luka Bentt",
+        "Ollie Shield",
+        "Riley Owen",
+        "Reiss Nelson",
+        "Romelle Donovan"
+      ],
+      "away_subs": [
+        "Mark Travers",
+        "Michael Keane",
+        "Nathan Patterson",
+        "Merlin Röhl",
+        "Séamus Coleman",
+        "Tim Iroegbunam",
+        "Thierno Barry",
+        "Tyler Dibling",
+        "Tyrique George"
+      ],
       "home_unavailable": [
         "Vitaly Janelt",
         "Aaron Hickey",
@@ -540,15 +560,15 @@
       "match_date": "2026-04-11",
       "home_team": "Burnley",
       "away_team": "Brighton & Hove Albion",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Martin Dúbravka",
-        "Kyle Walker",
         "Bashir Humphreys",
+        "Hjalmar Ekdal",
         "Maxime Estève",
         "Quilindschy Hartman",
         "James Ward-Prowse",
@@ -564,11 +584,11 @@
         "Jan Paul van Hecke",
         "Olivier Boscagli",
         "Ferdi Kadioglu",
-        "James Milner",
+        "Yasin Ayari",
         "Pascal Groß",
-        "Yankuba Minteh",
+        "Diego Gómez",
         "Jack Hinshelwood",
-        "Kaoru Mitoma",
+        "Yankuba Minteh",
         "Danny Welbeck"
       ],
       "home_starters": [
@@ -582,7 +602,7 @@
           "position_id": 11
         },
         {
-          "name": "Kyle Walker",
+          "name": "Bashir Humphreys",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -591,7 +611,7 @@
           "position_id": 32
         },
         {
-          "name": "Bashir Humphreys",
+          "name": "Hjalmar Ekdal",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -719,7 +739,7 @@
           "position_id": 38
         },
         {
-          "name": "James Milner",
+          "name": "Yasin Ayari",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -737,7 +757,7 @@
           "position_id": 66
         },
         {
-          "name": "Yankuba Minteh",
+          "name": "Diego Gómez",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -755,7 +775,7 @@
           "position_id": 85
         },
         {
-          "name": "Kaoru Mitoma",
+          "name": "Yankuba Minteh",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -773,11 +793,30 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Max Weiss",
+        "Joe Worrall",
+        "Kyle Walker",
+        "Lucas Pires",
+        "Mike Trésor",
+        "Armando Broja",
+        "Jacob Bruun Larsen",
+        "Loum Tchaouna",
+        "Lyle Foster"
+      ],
+      "away_subs": [
+        "Jason Steele",
+        "Igor Julio",
+        "Joël Veltman",
+        "Maxim De Cuyper",
+        "Carlos Baleba",
+        "Charalampos Kostoulas",
+        "Georginio Rutter",
+        "Kaoru Mitoma",
+        "Solly March"
+      ],
       "home_unavailable": [
         "Axel Tuanzebe",
-        "Mike Trésor",
         "Connor Roberts",
         "Jordan Beyer",
         "Hannibal Mejbri",
