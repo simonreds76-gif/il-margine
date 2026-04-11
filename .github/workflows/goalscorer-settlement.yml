@@ -1,4 +1,4 @@
-name: Goalscorer Settlement
+﻿name: Goalscorer Settlement
 
 on:
   schedule:
@@ -110,14 +110,6 @@ jobs:
               --summary "${PUBLIC_SUMMARIES[$league]}"
           done
 
-      - name: Refresh current-season Understat logs
-        run: |
-          python scripts/understat-scrape-serie-a.py \
-            --league serie-a epl la-liga bundesliga ligue-1 \
-            --season "${{ steps.season.outputs.label }}" \
-            --resume
-        continue-on-error: true
-
       - name: Rebuild penalty review and evidence
         run: |
           declare -A PLAYER_LOGS=(
@@ -211,3 +203,4 @@ jobs:
           git fetch origin golden-with-speed-insights
           git rebase origin/golden-with-speed-insights
           git push origin HEAD:golden-with-speed-insights
+
