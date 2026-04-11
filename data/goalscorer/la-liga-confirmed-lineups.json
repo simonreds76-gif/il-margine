@@ -8,22 +8,22 @@
       "match_date": "2026-04-11",
       "home_team": "Barcelona",
       "away_team": "Espanyol",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Joan García",
-        "Jules Koundé",
         "Ronald Araujo",
         "Pau Cubarsí",
+        "Gerard Martín",
         "Alejandro Balde",
         "Eric García",
         "Gavi",
         "Lamine Yamal",
+        "Pedri",
         "Fermín López",
-        "Marcus Rashford",
         "Ferran Torres"
       ],
       "away_players": [
@@ -37,7 +37,7 @@
         "Cyril Ngonge",
         "Edu Expósito",
         "Tyrhys Dolan",
-        "Roberto Fernández"
+        "Kike García"
       ],
       "home_starters": [
         {
@@ -50,7 +50,7 @@
           "position_id": 11
         },
         {
-          "name": "Jules Koundé",
+          "name": "Ronald Araujo",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -59,7 +59,7 @@
           "position_id": 32
         },
         {
-          "name": "Ronald Araujo",
+          "name": "Pau Cubarsí",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -68,7 +68,7 @@
           "position_id": 34
         },
         {
-          "name": "Pau Cubarsí",
+          "name": "Gerard Martín",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -113,7 +113,7 @@
           "position_id": 83
         },
         {
-          "name": "Fermín López",
+          "name": "Pedri",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -122,7 +122,7 @@
           "position_id": 85
         },
         {
-          "name": "Marcus Rashford",
+          "name": "Fermín López",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -232,7 +232,7 @@
           "position_id": 87
         },
         {
-          "name": "Roberto Fernández",
+          "name": "Kike García",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -241,8 +241,33 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Eder Aller",
+        "Wojciech Szczesny",
+        "Álvaro Cortés",
+        "João Cancelo",
+        "Jules Koundé",
+        "Dani Olmo",
+        "Frenkie de Jong",
+        "Marc Casadó",
+        "Xavi Espart",
+        "Marcus Rashford",
+        "Robert Lewandowski",
+        "Roony Bardghji"
+      ],
+      "away_subs": [
+        "Ángel Fortuno",
+        "Pol Tristán",
+        "José Salinas",
+        "Miguel Rubio",
+        "Rubén Sánchez",
+        "Charles Pickel",
+        "Jofre Carreras",
+        "Ramon Terrats",
+        "Antoniu Roca",
+        "Pere Milla",
+        "Roberto Fernández"
+      ],
       "home_unavailable": [
         "Marc Bernal",
         "Toni Fernández",
