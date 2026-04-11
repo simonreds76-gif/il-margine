@@ -8,9 +8,9 @@
       "match_date": "2026-04-11",
       "home_team": "Arsenal",
       "away_team": "AFC Bournemouth",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -18,7 +18,7 @@
         "Ben White",
         "William Saliba",
         "Gabriel",
-        "Riccardo Calafiori",
+        "Myles Lewis-Skelly",
         "Martín Zubimendi",
         "Declan Rice",
         "Noni Madueke",
@@ -36,7 +36,7 @@
         "Alex Scott",
         "Rayan",
         "Marcus Tavernier",
-        "Amine Adli",
+        "Junior Kroupi",
         "Evanilson"
       ],
       "home_starters": [
@@ -77,7 +77,7 @@
           "position_id": 36
         },
         {
-          "name": "Riccardo Calafiori",
+          "name": "Myles Lewis-Skelly",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -223,7 +223,7 @@
           "position_id": 85
         },
         {
-          "name": "Amine Adli",
+          "name": "Junior Kroupi",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -241,10 +241,30 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Kepa Arrizabalaga",
+        "Cristhian Mosquera",
+        "Marli Salmon",
+        "Piero Hincapié",
+        "Christian Nørgaard",
+        "Eberechi Eze",
+        "Max Dowman",
+        "Gabriel Jesus",
+        "Leandro Trossard"
+      ],
+      "away_subs": [
+        "Christos Mandas",
+        "Adam Smith",
+        "Bafodé Diakité",
+        "Alex Tóth",
+        "Tyler Adams",
+        "Amine Adli",
+        "Ben Gannon Doak",
+        "David Brooks",
+        "Enes Ünal"
+      ],
       "home_unavailable": [
-        "Leandro Trossard",
+        "Riccardo Calafiori",
         "Martin Ødegaard",
         "Bukayo Saka",
         "Jurriën Timber",

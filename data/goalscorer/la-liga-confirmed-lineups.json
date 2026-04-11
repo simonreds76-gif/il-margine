@@ -519,9 +519,9 @@
       "match_date": "2026-04-11",
       "home_team": "Real Sociedad",
       "away_team": "Deportivo Alaves",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-4-2",
       "home_players": [
@@ -529,20 +529,20 @@
         "Jon Aramburu",
         "Aritz Elustondo",
         "Duje Caleta-Car",
-        "Aihen Muñoz",
+        "Sergio Gómez",
         "Beñat Turrientes",
         "Carlos Soler",
-        "Ander Barrenetxea",
+        "Brais Méndez",
         "Luka Sucic",
-        "Gonçalo Guedes",
-        "Mikel Oyarzabal"
+        "Ander Barrenetxea",
+        "Orri Óskarsson"
       ],
       "away_players": [
         "Antonio Sivera",
         "Jonny Otto",
         "Nahuel Tenaglia",
         "Victor Parada",
-        "Youssef Enríquez",
+        "Abderrahman Rebbach",
         "Ángel Pérez",
         "Pablo Ibánez",
         "Antonio Blanco",
@@ -588,7 +588,7 @@
           "position_id": 36
         },
         {
-          "name": "Aihen Muñoz",
+          "name": "Sergio Gómez",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -615,7 +615,7 @@
           "position_id": 66
         },
         {
-          "name": "Ander Barrenetxea",
+          "name": "Brais Méndez",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -633,7 +633,7 @@
           "position_id": 85
         },
         {
-          "name": "Gonçalo Guedes",
+          "name": "Ander Barrenetxea",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -642,7 +642,7 @@
           "position_id": 87
         },
         {
-          "name": "Mikel Oyarzabal",
+          "name": "Orri Óskarsson",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -689,7 +689,7 @@
           "position_id": 36
         },
         {
-          "name": "Youssef Enríquez",
+          "name": "Abderrahman Rebbach",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -752,8 +752,34 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Aitor Fraga",
+        "Unai Marrero",
+        "Aihen Muñoz",
+        "Luken Beitia",
+        "Ibai Aguirre",
+        "Pablo Marín",
+        "Wesley",
+        "Arsen Zakharyan",
+        "Gonçalo Guedes",
+        "Jon Karrikaburu",
+        "Mikel Oyarzabal",
+        "Takefusa Kubo"
+      ],
+      "away_subs": [
+        "Grégoire Swiderski",
+        "Raul Fernández",
+        "Egoitz Muñoz",
+        "Jon Pacheco",
+        "Ville Koski",
+        "Youssef Enríquez",
+        "Ander Guevara",
+        "Calebe",
+        "Carles Aleñá",
+        "Denis Suárez",
+        "Lucas Boyé",
+        "Mariano Díaz"
+      ],
       "home_unavailable": [
         "Álvaro Odriozola",
         "Igor Zubeldia",
@@ -2044,7 +2070,6 @@
       "away_unavailable": [
         "Ángel Ortiz",
         "Junior Firpo",
-        "Giovani Lo Celso",
         "Isco"
       ]
     },
