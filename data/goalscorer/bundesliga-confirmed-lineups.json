@@ -837,9 +837,9 @@
       "match_date": "2026-04-11",
       "home_team": "St. Pauli",
       "away_team": "Bayern München",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -861,11 +861,11 @@
         "Min-Jae Kim",
         "Hiroki Ito",
         "Raphaël Guerreiro",
+        "Joshua Kimmich",
         "Leon Goretzka",
+        "Michael Olise",
         "Tom Bischof",
-        "Serge Gnabry",
         "Jamal Musiala",
-        "Alphonso Davies",
         "Nicolas Jackson"
       ],
       "home_starters": [
@@ -1016,7 +1016,7 @@
           "position_id": 38
         },
         {
-          "name": "Leon Goretzka",
+          "name": "Joshua Kimmich",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1025,7 +1025,7 @@
           "position_id": 64
         },
         {
-          "name": "Tom Bischof",
+          "name": "Leon Goretzka",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1034,7 +1034,7 @@
           "position_id": 66
         },
         {
-          "name": "Serge Gnabry",
+          "name": "Michael Olise",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1043,7 +1043,7 @@
           "position_id": 83
         },
         {
-          "name": "Jamal Musiala",
+          "name": "Tom Bischof",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1052,7 +1052,7 @@
           "position_id": 85
         },
         {
-          "name": "Alphonso Davies",
+          "name": "Jamal Musiala",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1070,8 +1070,28 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Ben Alexander Voll",
+        "Adam Dzwigala",
+        "David Nemeth",
+        "Connor Metcalfe",
+        "Jannik Robatsch",
+        "Louis Oppie",
+        "Abdoulie Ceesay",
+        "Martijn Kaars",
+        "Taichi Hara"
+      ],
+      "away_subs": [
+        "Jonas Urbig",
+        "Alphonso Davies",
+        "Bara Ndiaye",
+        "Dayot Upamecano",
+        "Jonathan Tah",
+        "Josip Stanisic",
+        "Aleksandar Pavlovic",
+        "Harry Kane",
+        "Luis Díaz"
+      ],
       "home_unavailable": [
         "Manolis Saliakas",
         "James Sands",
@@ -1345,9 +1365,9 @@
         "Can Uzun",
         "Ellyes Skhiri",
         "Younes Ebnoutalib",
+        "Love Arrhov",
         "Jens Grahl",
         "Elias Baum",
-        "Love Arrhov",
         "Mario Götze",
         "Timothy Chandler"
       ],
