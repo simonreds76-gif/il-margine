@@ -774,9 +774,9 @@
       "match_date": "2026-04-12",
       "home_team": "Osasuna",
       "away_team": "Real Betis",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -786,7 +786,7 @@
         "Jorge Herrando",
         "Javi Galán",
         "Jon Moncayola",
-        "Lucas Torró",
+        "Iker Muñoz",
         "Rubén Garcia",
         "Aimar Oroz",
         "Víctor Muñoz",
@@ -798,10 +798,10 @@
         "Diego Llorente",
         "Natan",
         "Valentín Gómez",
-        "Sergi Altimira",
         "Sofyan Amrabat",
+        "Sergi Altimira",
         "Antony",
-        "Álvaro Fidalgo",
+        "Pablo Fornals",
         "Abdessamad Ezzalzouli",
         "Juan Hernández"
       ],
@@ -861,7 +861,7 @@
           "position_id": 64
         },
         {
-          "name": "Lucas Torró",
+          "name": "Iker Muñoz",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -953,7 +953,7 @@
           "position_id": 38
         },
         {
-          "name": "Sergi Altimira",
+          "name": "Sofyan Amrabat",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -962,7 +962,7 @@
           "position_id": 64
         },
         {
-          "name": "Sofyan Amrabat",
+          "name": "Sergi Altimira",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -980,7 +980,7 @@
           "position_id": 83
         },
         {
-          "name": "Álvaro Fidalgo",
+          "name": "Pablo Fornals",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1007,8 +1007,32 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Aitor Fernández",
+        "Dimitrios Stamatakis",
+        "Abel Bretones",
+        "Iñigo Arguibide",
+        "Juan Cruz",
+        "Lucas Torró",
+        "Moi Gómez",
+        "Enrique Barja",
+        "Raúl García",
+        "Raúl Moro"
+      ],
+      "away_subs": [
+        "Adrián",
+        "Pau López",
+        "Aitor Ruibal",
+        "Marc Bartra",
+        "Ricardo Rodríguez",
+        "Álvaro Fidalgo",
+        "Giovani Lo Celso",
+        "Marc Roca",
+        "Nelson Deossa",
+        "Ezequiel Ávila",
+        "Pablo García",
+        "Rodrigo Riquelme"
+      ],
       "home_unavailable": [
         "Asier Osambela",
         "Flavien Boyomo",
