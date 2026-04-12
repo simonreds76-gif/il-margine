@@ -8,36 +8,36 @@
       "match_date": "2026-04-12",
       "home_team": "1. FC Köln",
       "away_team": "Werder Bremen",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-4-2",
       "away_formation": "4-3-3",
       "home_players": [
         "Marvin Schwäbe",
         "Sebastian Sebulonsen",
-        "Rav van den Berg",
+        "Jahmai Simpson-Pusey",
         "Cenk Özkacar",
         "Kristoffer Lund Hansen",
         "Jan Thielmann",
         "Eric Martel",
-        "Tom Krauß",
+        "Ísak Bergmann Jóhannesson",
         "Jakub Kaminski",
         "Ragnar Ache",
-        "Malek El Mala"
+        "Saïd El Mala"
       ],
       "away_players": [
         "Mio Backhaus",
-        "Yukinari Sugawara",
+        "Felix Agu",
         "Amos Pieper",
         "Marco Friedl",
         "Olivier Deman",
+        "Yukinari Sugawara",
         "Senne Lynen",
         "Leonardo Bittencourt",
-        "Romano Schmid",
         "Marco Grüll",
         "Justin Njinmah",
-        "Samuel Mbangula"
+        "Romano Schmid"
       ],
       "home_starters": [
         {
@@ -59,7 +59,7 @@
           "position_id": 32
         },
         {
-          "name": "Rav van den Berg",
+          "name": "Jahmai Simpson-Pusey",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -104,7 +104,7 @@
           "position_id": 74
         },
         {
-          "name": "Tom Krauß",
+          "name": "Ísak Bergmann Jóhannesson",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -131,7 +131,7 @@
           "position_id": 104
         },
         {
-          "name": "Malek El Mala",
+          "name": "Saïd El Mala",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -151,7 +151,7 @@
           "position_id": 11
         },
         {
-          "name": "Yukinari Sugawara",
+          "name": "Felix Agu",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -187,7 +187,7 @@
           "position_id": 38
         },
         {
-          "name": "Senne Lynen",
+          "name": "Yukinari Sugawara",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -196,7 +196,7 @@
           "position_id": 73
         },
         {
-          "name": "Leonardo Bittencourt",
+          "name": "Senne Lynen",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -205,7 +205,7 @@
           "position_id": 75
         },
         {
-          "name": "Romano Schmid",
+          "name": "Leonardo Bittencourt",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -232,7 +232,7 @@
           "position_id": 105
         },
         {
-          "name": "Samuel Mbangula",
+          "name": "Romano Schmid",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -241,20 +241,38 @@
           "position_id": 107
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Ron-Robert Zieler",
+        "Rav van den Berg",
+        "Alessio Castro-Montes",
+        "Denis Huseinbasic",
+        "Felipe Chávez",
+        "Gian-Luca Waldschmidt",
+        "Linton Maina",
+        "Tom Krauß",
+        "Marius Bülter"
+      ],
+      "away_subs": [
+        "Markus Kolke",
+        "Karim Coulibaly",
+        "Mick Schmetgens",
+        "Niklas Stark",
+        "Isaac Schmidt",
+        "Patrice Covic",
+        "Jovan Milosevic",
+        "Salim Musah",
+        "Samuel Mbangula"
+      ],
       "home_unavailable": [
         "Joël Schmied",
         "Luca Kilian",
         "Timo Hübers"
       ],
       "away_unavailable": [
-        "Karim Coulibaly",
         "Jens Stage",
         "Karl Hein",
         "Julián Malatini",
         "Maximilian Wöber",
-        "Niklas Stark",
         "Cameron Puertas",
         "Mitchell Weiser",
         "Keke Topp",
