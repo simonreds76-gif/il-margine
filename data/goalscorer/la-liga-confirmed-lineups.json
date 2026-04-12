@@ -264,23 +264,23 @@
       "match_date": "2026-04-12",
       "home_team": "Celta Vigo",
       "away_team": "Real Oviedo",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-3",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Ionut Radu",
         "Álvaro Núñez",
         "Joseph Aidoo",
-        "Carlos Domínguez",
+        "Marcos Alonso",
         "Javi Rueda",
-        "Ilaix Moriba",
-        "Hugo Sotelo",
+        "Matías Vecino",
+        "Andrés Antañón",
         "Sergio Carreira",
         "Fer López",
-        "Ferrán Jutglà",
-        "Pablo Durán"
+        "Pablo Durán",
+        "Williot Swedberg"
       ],
       "away_players": [
         "Aarón Escandell",
@@ -324,7 +324,7 @@
           "position_id": 35
         },
         {
-          "name": "Carlos Domínguez",
+          "name": "Marcos Alonso",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -342,7 +342,7 @@
           "position_id": 72
         },
         {
-          "name": "Ilaix Moriba",
+          "name": "Matías Vecino",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -351,7 +351,7 @@
           "position_id": 74
         },
         {
-          "name": "Hugo Sotelo",
+          "name": "Andrés Antañón",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -378,7 +378,7 @@
           "position_id": 103
         },
         {
-          "name": "Ferrán Jutglà",
+          "name": "Pablo Durán",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -387,7 +387,7 @@
           "position_id": 105
         },
         {
-          "name": "Pablo Durán",
+          "name": "Williot Swedberg",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -497,8 +497,33 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Iván Villar",
+        "Carlos Domínguez",
+        "Manu Fernández",
+        "Yoel Lago",
+        "Franco Cervi",
+        "Hugo Sotelo",
+        "Ilaix Moriba",
+        "Jones El-Abdellaoui",
+        "Óscar Mingueza",
+        "Borja Iglesias",
+        "Ferrán Jutglà",
+        "Iago Aspas"
+      ],
+      "away_subs": [
+        "Horatiu Moldovan",
+        "David Carmo",
+        "David Costas",
+        "Lucas Ahijado",
+        "Rahim Alhassane",
+        "Ovie Ejaria",
+        "Pablo Agudín",
+        "Santi Cazorla",
+        "Santiago Colombatto",
+        "Haissem Hassan",
+        "Thiago Borbas"
+      ],
       "home_unavailable": [
         "Carl Starfelt",
         "Javi Rodríguez",
@@ -754,31 +779,31 @@
         }
       ],
       "home_subs": [
+        "Jan Virgili",
+        "Marash Kumbulla",
+        "Takuma Asano",
         "Iván Cuéllar",
         "Javier Olaizola",
-        "Marash Kumbulla",
         "Mateu Morey",
         "Toni Lato",
         "Antonio Sánchez",
         "Jandro Garcia",
         "Abdón Prats",
-        "Jan Virgili",
         "Javi Llabrés",
-        "Justin Kalumba",
-        "Takuma Asano"
+        "Justin Kalumba"
       ],
       "away_subs": [
+        "Pathé Ciss",
+        "Jorge de Frutos",
+        "Pep Chavarría",
         "Augusto Batalla",
         "Iván Balliu",
         "Luiz Felipe",
-        "Pep Chavarría",
         "Isi Palazón",
         "Óscar Trejo",
-        "Pathé Ciss",
         "Unai López",
         "Alemão",
         "Carlos Martín",
-        "Jorge de Frutos",
         "Sergio Camello"
       ],
       "home_unavailable": [

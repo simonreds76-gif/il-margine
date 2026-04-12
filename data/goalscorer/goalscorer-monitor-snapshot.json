@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-12T15:11:10Z",
+  "generated_at": "2026-04-12T15:52:15Z",
   "source_status": {
-    "compared_at": "2026-04-12T15:11:08Z",
-    "hot_live_updated_at": "2026-04-12T15:11:09Z",
-    "expected_refresh_updated_at": "2026-04-12T15:11:08Z",
+    "compared_at": "2026-04-12T15:52:05Z",
+    "hot_live_updated_at": "2026-04-12T15:52:15Z",
+    "expected_refresh_updated_at": "2026-04-12T15:52:05Z",
     "settlement_updated_at": "2026-04-11T23:59:41Z",
-    "scheduler_heartbeat_at": "2026-04-12T15:11:09Z",
-    "snapshot_generated_at": "2026-04-12T15:11:10Z",
+    "scheduler_heartbeat_at": "2026-04-12T15:52:15Z",
+    "snapshot_generated_at": "2026-04-12T15:52:15Z",
     "live_status_state": "idle",
-    "live_status_message": "Goalscorer live poll finished (5 league(s) ran)."
+    "live_status_message": "Goalscorer live poll finished (4 league(s) ran)."
   },
   "league_cards": [
     {
@@ -18,12 +18,12 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T15:09:50Z",
+      "updated_at": "2026-04-12T15:50:34Z",
       "live_rows": 1,
       "public_now": 0,
       "shadow_now": 1,
-      "clean_fixtures": 2,
-      "degraded_fixtures": 3,
+      "clean_fixtures": 3,
+      "degraded_fixtures": 2,
       "quarantined_fixtures": 0,
       "public_record": {
         "settled": 4,
@@ -49,7 +49,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T15:10:13Z",
+      "updated_at": "2026-04-12T15:50:07Z",
       "live_rows": 8,
       "public_now": 3,
       "shadow_now": 5,
@@ -80,7 +80,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T15:10:33Z",
+      "updated_at": "2026-04-12T15:51:10Z",
       "live_rows": 4,
       "public_now": 1,
       "shadow_now": 3,
@@ -111,7 +111,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T15:10:52Z",
+      "updated_at": "2026-04-12T15:51:39Z",
       "live_rows": 2,
       "public_now": 1,
       "shadow_now": 1,
@@ -142,7 +142,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T15:11:09Z",
+      "updated_at": "2026-04-12T15:52:06Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -257,8 +257,8 @@
       "lineup_label": "Confirmed starter",
       "lineup_status": "confirmed_starter",
       "odds": 8.0,
-      "fair": 5.3691,
-      "edge_pct": 48.999500000000005,
+      "fair": 5.4978,
+      "edge_pct": 45.5139,
       "stake_label": "-"
     },
     {
@@ -526,13 +526,13 @@
         "kickoff": "",
         "home_team": "Bologna FC",
         "away_team": "US Lecce",
-        "trust_tier": "T2",
-        "lineup_input": "expected_xi",
+        "trust_tier": "T1",
+        "lineup_input": "confirmed_xi",
         "corruption_score": 0,
         "corruption_flags": [],
         "notes": [],
-        "status_label": "Expected XI",
-        "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
+        "status_label": "Lineup Clean",
+        "summary": "This fixture is visible in the monitor, but not in a fully confirmed clean state yet."
       },
       {
         "key": "serie-a|2026-04-12|como|inter",
@@ -2096,5 +2096,5 @@
     ]
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "7a82e2651d84e3718afb0495c9ac78e508f32610e054266e566d60d5446387b5"
+  "payload_hash": "367e5cdb8df4c21e17830cbadfd563aa4b2827e5f5d7a3f37228f862583bfaa0"
 }

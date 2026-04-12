@@ -1,9 +1,39 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-12T14:37:45Z",
+  "generated_at": "2026-04-12T15:51:49Z",
   "league": "bundesliga",
-  "row_count": 2,
+  "row_count": 3,
   "rows": [
+    {
+      "date": "2026-04-12",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "match": "1. FC Köln vs Werder Bremen",
+      "team": "Werder Bremen",
+      "opponent": "1. FC Köln",
+      "actual_taker": "Romano Schmid",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "75",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Romano Schmid",
+      "secondary_pre_match": "Marvin Ducksch",
+      "tertiary_pre_match": "Jens Stage",
+      "primary_lineup_status": "confirmed_starter",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "not_in_squad",
+      "active_taker_pre_match": "Romano Schmid",
+      "active_slot_pre_match": "primary",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Romano Schmid took 1 penalty attempt for Werder Bremen vs 1. FC Köln. Primary pre-match: Romano Schmid (confirmed_starter). Secondary pre-match: Marvin Ducksch (unknown). Pre-match active slot was primary -> Romano Schmid. No hierarchy change implied from this event.",
+      "context_generated_at": "2026-04-12T15:51:35Z",
+      "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
+    },
     {
       "date": "2026-04-12",
       "league": "bundesliga",
@@ -31,7 +61,7 @@
       "review_type": "unranked_taker",
       "review_priority": "high",
       "editorial_note": "Saïd El Mala took 1 penalty attempt for 1. FC Köln vs Werder Bremen. Primary pre-match: Gian-Luca Waldschmidt (confirmed_bench). Secondary pre-match: Isak Johannesson (confirmed_starter). Pre-match active slot was secondary -> Ísak Bergmann Jóhannesson. Strong review flag: the taker was not in the tracked top three.",
-      "context_generated_at": "2026-04-12T14:37:33Z",
+      "context_generated_at": "2026-04-12T15:51:35Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -61,7 +91,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Alexis Claude-Maurice took 1 penalty attempt for Augsburg vs Hoffenheim. Primary pre-match: Alexis Claude-Maurice (unknown). Secondary pre-match: Michael Gregoritsch (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-12T14:37:33Z",
+      "context_generated_at": "2026-04-12T15:51:35Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     }
   ]

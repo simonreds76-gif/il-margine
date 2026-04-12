@@ -8,20 +8,20 @@
       "match_date": "2026-04-12",
       "home_team": "Bologna",
       "away_team": "Lecce",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-3-3",
       "away_formation": "4-2-3-1",
       "home_players": [
-        "Federico Ravaglia",
-        "Nadir Zortea",
-        "Martin Vitík",
-        "Torbjørn Heggem",
+        "Massimo Pessina",
+        "João Mário",
+        "Nicolò Casale",
+        "Jhon Lucumí",
         "Juan Miranda",
         "Simon Sohm",
         "Remo Freuler",
-        "Jens Odgaard",
+        "Nikola Moro",
         "Riccardo Orsolini",
         "Santiago Castro",
         "Nicolò Cambiaghi"
@@ -41,7 +41,7 @@
       ],
       "home_starters": [
         {
-          "name": "Federico Ravaglia",
+          "name": "Massimo Pessina",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
@@ -50,7 +50,7 @@
           "position_id": 11
         },
         {
-          "name": "Nadir Zortea",
+          "name": "João Mário",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -59,7 +59,7 @@
           "position_id": 32
         },
         {
-          "name": "Martin Vitík",
+          "name": "Nicolò Casale",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -68,7 +68,7 @@
           "position_id": 34
         },
         {
-          "name": "Torbjørn Heggem",
+          "name": "Jhon Lucumí",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -104,7 +104,7 @@
           "position_id": 75
         },
         {
-          "name": "Jens Odgaard",
+          "name": "Nikola Moro",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -241,8 +241,34 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Federico Ravaglia",
+        "Matteo Franceschelli",
+        "Lorenzo De Silvestri",
+        "Martin Vitík",
+        "Nadir Zortea",
+        "Torbjørn Heggem",
+        "Jens Odgaard",
+        "Tommaso Pobega",
+        "Federico Bernardeschi",
+        "Francesco Castaldo",
+        "Jonathan Rowe"
+      ],
+      "away_subs": [
+        "Christian Früchtl",
+        "Jasper Samooja",
+        "Antonino Gallo",
+        "Gaby Jean",
+        "Matías Pérez",
+        "Álex Sala",
+        "Filip Marchwinski",
+        "Niko Kovac",
+        "Omri Gandelman",
+        "Sadik Fofana",
+        "Thórir Helgason",
+        "Konan N’Dri",
+        "Walid Cheddira"
+      ],
       "home_unavailable": [
         "Eivind Helland",
         "Thijs Dallinga",
