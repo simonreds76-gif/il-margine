@@ -802,7 +802,7 @@
       "home_status": "Confirmed Lineup",
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
-      "home_formation": "5-3-2",
+      "home_formation": "3-5-2",
       "away_formation": "3-4-2-1",
       "home_players": [
         "Zion Suzuki",
@@ -810,10 +810,10 @@
         "Alessandro Circati",
         "Lautaro Valenti",
         "Enrico Del Prato",
-        "Emanuele Valeri",
         "Adrián Bernabé",
-        "Mandela Keita",
         "Hans Nicolussi Caviglia",
+        "Mandela Keita",
+        "Emanuele Valeri",
         "Nesta Elphege",
         "Gabriel Strefezza"
       ],
@@ -826,8 +826,8 @@
         "Stanislav Lobotka",
         "Frank Anguissa",
         "Leonardo Spinazzola",
-        "Scott McTominay",
         "Kevin De Bruyne",
+        "Scott McTominay",
         "Rasmus Højlund"
       ],
       "home_starters": [
@@ -837,80 +837,80 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 11
         },
         {
           "name": "Mariano Troilo",
           "line_index": 0,
-          "line_size": 5,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 33
         },
         {
           "name": "Alessandro Circati",
           "line_index": 0,
-          "line_size": 5,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 35
         },
         {
           "name": "Lautaro Valenti",
           "line_index": 0,
-          "line_size": 5,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 37
         },
         {
           "name": "Enrico Del Prato",
-          "line_index": 0,
+          "line_index": 1,
           "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 51
-        },
-        {
-          "name": "Emanuele Valeri",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 59
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 71
         },
         {
           "name": "Adrián Bernabé",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 73
-        },
-        {
-          "name": "Mandela Keita",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "5-3-2",
-          "position_id": 75
         },
         {
           "name": "Hans Nicolussi Caviglia",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
+          "position_id": 75
+        },
+        {
+          "name": "Mandela Keita",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
           "position_id": 77
+        },
+        {
+          "name": "Emanuele Valeri",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79
         },
         {
           "name": "Nesta Elphege",
@@ -918,7 +918,7 @@
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 104
         },
         {
@@ -927,7 +927,7 @@
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "5-3-2",
+          "formation": "3-5-2",
           "position_id": 106
         }
       ],
@@ -1005,7 +1005,7 @@
           "position_id": 68
         },
         {
-          "name": "Scott McTominay",
+          "name": "Kevin De Bruyne",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -1014,7 +1014,7 @@
           "position_id": 84
         },
         {
-          "name": "Kevin De Bruyne",
+          "name": "Scott McTominay",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
