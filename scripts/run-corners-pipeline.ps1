@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Automated team props pipeline: corners + team total shots in one run.
 
@@ -74,7 +74,10 @@ function Add-CriticalFailure([string]$message) {
 }
 
 function Get-LatestMatchingFile([string]$glob) {
-    return Get-ChildItem $glob -ErrorAction SilentlyContinue | Sort-Object Name | Select-Object -Last 1
+    return Get-ChildItem $glob -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -notmatch "-latest\." } |
+        Sort-Object Name |
+        Select-Object -Last 1
 }
 
 function Sync-LatestArtifact([string]$glob, [string]$targetPath) {
