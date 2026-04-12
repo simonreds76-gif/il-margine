@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-12T14:19:49Z",
+  "generated_at": "2026-04-12T14:38:06Z",
   "source_status": {
-    "compared_at": "2026-04-12T14:19:47Z",
-    "hot_live_updated_at": "2026-04-12T14:19:48Z",
-    "expected_refresh_updated_at": "2026-04-12T14:19:47Z",
+    "compared_at": "2026-04-12T14:37:58Z",
+    "hot_live_updated_at": "2026-04-12T14:38:06Z",
+    "expected_refresh_updated_at": "2026-04-12T14:37:58Z",
     "settlement_updated_at": "2026-04-11T23:59:41Z",
-    "scheduler_heartbeat_at": "2026-04-12T14:19:48Z",
-    "snapshot_generated_at": "2026-04-12T14:19:49Z",
+    "scheduler_heartbeat_at": "2026-04-12T14:38:06Z",
+    "snapshot_generated_at": "2026-04-12T14:38:06Z",
     "live_status_state": "idle",
-    "live_status_message": "Goalscorer live poll finished (4 league(s) ran)."
+    "live_status_message": "Goalscorer live poll finished (5 league(s) ran)."
   },
   "league_cards": [
     {
@@ -18,7 +18,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T14:18:39Z",
+      "updated_at": "2026-04-12T14:36:13Z",
       "live_rows": 1,
       "public_now": 0,
       "shadow_now": 1,
@@ -49,12 +49,12 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T14:19:16Z",
+      "updated_at": "2026-04-12T14:36:37Z",
       "live_rows": 8,
-      "public_now": 3,
-      "shadow_now": 5,
-      "clean_fixtures": 4,
-      "degraded_fixtures": 1,
+      "public_now": 2,
+      "shadow_now": 6,
+      "clean_fixtures": 3,
+      "degraded_fixtures": 2,
       "quarantined_fixtures": 0,
       "public_record": {
         "settled": 3,
@@ -80,7 +80,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T14:18:13Z",
+      "updated_at": "2026-04-12T14:37:04Z",
       "live_rows": 4,
       "public_now": 1,
       "shadow_now": 3,
@@ -111,7 +111,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T14:19:35Z",
+      "updated_at": "2026-04-12T14:37:37Z",
       "live_rows": 1,
       "public_now": 1,
       "shadow_now": 0,
@@ -142,7 +142,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T14:19:48Z",
+      "updated_at": "2026-04-12T14:37:59Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -446,10 +446,10 @@
       "stake_label": "-"
     },
     {
-      "key": "Joao Pedro-2026-04-12-Bet365-surface",
-      "status": "PUBLIC",
-      "action": "surface",
-      "action_label": "Surface",
+      "key": "Joao Pedro-2026-04-12-Bet365-shadow_track",
+      "status": "SHADOW",
+      "action": "shadow_track",
+      "action_label": "Shadow",
       "league_key": "epl",
       "league_label": "PL",
       "competition": "England - Premier League",
@@ -460,13 +460,13 @@
       "match_date": "2026-04-12",
       "kickoff": "2026-04-12T15:30:00Z",
       "bookmaker": "Bet365",
-      "lineup_short": "âœ“",
-      "lineup_label": "Confirmed starter",
-      "lineup_status": "confirmed_starter",
+      "lineup_short": "~",
+      "lineup_label": "FotMob Expected XI",
+      "lineup_status": "expected_starter",
       "odds": 2.875,
-      "fair": 2.2574,
-      "edge_pct": 27.358,
-      "stake_label": "1.25u Core"
+      "fair": 2.5006,
+      "edge_pct": 14.9734,
+      "stake_label": "-"
     },
     {
       "key": "Dominic Calvert-Lewin-2026-04-13-Bet365-shadow_track",
@@ -588,13 +588,13 @@
         "kickoff": "",
         "home_team": "Chelsea FC",
         "away_team": "Manchester City",
-        "trust_tier": "T1",
-        "lineup_input": "confirmed_xi",
+        "trust_tier": "T2",
+        "lineup_input": "expected_xi",
         "corruption_score": 0,
         "corruption_flags": [],
         "notes": [],
-        "status_label": "Lineup Clean",
-        "summary": "This fixture is visible in the monitor, but not in a fully confirmed clean state yet."
+        "status_label": "Expected XI",
+        "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
       },
       {
         "key": "epl|2026-04-12|crystal palace|newcastle united",
@@ -2073,5 +2073,5 @@
     ]
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "8dc301683c6fcb6bfdeee81db147c1389efa2adbaace9332b3e1ca64f0a5eb59"
+  "payload_hash": "f7617cef906178a9ad9cfffa46f20a30a60fc9e83d4b516c8e7dc5d90f860624"
 }

@@ -1,9 +1,39 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-12T13:33:45Z",
+  "generated_at": "2026-04-12T14:37:45Z",
   "league": "bundesliga",
-  "row_count": 1,
+  "row_count": 2,
   "rows": [
+    {
+      "date": "2026-04-12",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "match": "1. FC Köln vs Werder Bremen",
+      "team": "1. FC Köln",
+      "opponent": "Werder Bremen",
+      "actual_taker": "Saïd El Mala",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "7",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Gian-Luca Waldschmidt",
+      "secondary_pre_match": "Isak Johannesson",
+      "tertiary_pre_match": "Florian Kainz",
+      "primary_lineup_status": "confirmed_bench",
+      "secondary_lineup_status": "confirmed_starter",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "Ísak Bergmann Jóhannesson",
+      "active_slot_pre_match": "secondary",
+      "team_lineup_status": "unknown",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Saïd El Mala took 1 penalty attempt for 1. FC Köln vs Werder Bremen. Primary pre-match: Gian-Luca Waldschmidt (confirmed_bench). Secondary pre-match: Isak Johannesson (confirmed_starter). Pre-match active slot was secondary -> Ísak Bergmann Jóhannesson. Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-04-12T14:37:33Z",
+      "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
+    },
     {
       "date": "2026-04-10",
       "league": "bundesliga",
@@ -31,7 +61,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Alexis Claude-Maurice took 1 penalty attempt for Augsburg vs Hoffenheim. Primary pre-match: Alexis Claude-Maurice (unknown). Secondary pre-match: Michael Gregoritsch (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-12T13:33:23Z",
+      "context_generated_at": "2026-04-12T14:37:33Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     }
   ]
