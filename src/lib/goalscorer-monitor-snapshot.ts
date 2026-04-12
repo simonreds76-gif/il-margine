@@ -281,6 +281,32 @@ const execFileAsync = promisify(execFile);
 
 let cache: { expiresAt: number; payload: GoalscorerMonitorSnapshot | null } | null = null;
 
+function repairMojibakeString(value: string): string {
+  if (!/[ÃÂâÎ\ufffd]/.test(value)) return value;
+  try {
+    const repaired = Buffer.from(value, "latin1").toString("utf8");
+    if (repaired) return repaired;
+  } catch {
+    // Fall through to the original value.
+  }
+  return value;
+}
+
+function repairSnapshotValue<T>(value: T): T {
+  if (typeof value === "string") {
+    return repairMojibakeString(value) as T;
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => repairSnapshotValue(item)) as T;
+  }
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, innerValue]) => [key, repairSnapshotValue(innerValue)]),
+    ) as T;
+  }
+  return value;
+}
+
 function parseSnapshotTimestamp(value?: string | null): number {
   if (!value) return Number.NEGATIVE_INFINITY;
   const parsed = Date.parse(value);
@@ -327,6 +353,7 @@ function normalizeSettledRows(rows: GoalscorerSettledRow[] | undefined): Goalsco
 
 function normalizeSnapshot(payload: GoalscorerMonitorSnapshot | null): GoalscorerMonitorSnapshot | null {
   if (!payload) return null;
+  payload = repairSnapshotValue(payload);
   const fixtureHealthRows = payload.fixture_health?.rows || [];
   const flaggedRows =
     payload.fixture_health?.flagged_rows ||
@@ -466,7 +493,7 @@ export async function readGoalscorerMonitorSnapshot(): Promise<GoalscorerMonitor
       readSupabaseSnapshot(),
       readLocalSnapshot(),
     ]);
-    payload = gitSnapshot ?? chooseFreshestSnapshot([supabaseSnapshot, localSnapshot]);
+    payload = chooseFreshestSnapshot([gitSnapshot, supabaseSnapshot, localSnapshot]);
   } else {
     payload = await readSupabaseSnapshot();
     if (!payload) payload = await readGithubSnapshot();

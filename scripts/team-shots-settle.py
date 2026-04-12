@@ -42,7 +42,7 @@ SIGNAL_FIELDS = [
     "date", "league", "home_team", "away_team", "team", "venue",
     "bookmaker", "line", "side", "book_odds", "model_prob",
     "model_fair_odds", "edge", "stake_units", "actual_shots", "result",
-    "pnl", "pnl_staked", "closing_odds", "clv", "logged_at",
+    "pnl", "pnl_staked", "settled_at", "closing_odds", "clv", "logged_at",
 ]
 
 DEFAULT_ODDS_ARCHIVE = ROOT / "data" / "team-shots" / "team-shots-odds-history.csv"
@@ -260,6 +260,8 @@ def settle_signals(
 
     for sig in signals:
         if sig.get("result") not in ("pending", ""):
+            if not sig.get("settled_at"):
+                sig["settled_at"] = sig.get("logged_at", "")
             # Already settled — still try to fill missing closing_odds/clv if absent.
             if odds_index and not sig.get("closing_odds"):
                 closing = find_closing_odds(sig, odds_index)
@@ -324,6 +326,7 @@ def settle_signals(
         sig["pnl"] = round(pnl, 3)
         stake_units = _pf(sig.get("stake_units", "1")) or 1.0
         sig["pnl_staked"] = round(pnl * stake_units, 3)
+        sig["settled_at"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
         # Capture closing odds and CLV from the odds archive.
         if odds_index:

@@ -43,7 +43,7 @@ SIGNAL_FIELDS = [
     "date", "league", "home_team", "away_team", "team", "venue",
     "bookmaker", "line", "side", "book_odds", "model_prob",
     "model_fair_odds", "edge", "stake_units", "actual_shots", "result",
-    "pnl", "pnl_staked", "logged_at",
+    "pnl", "pnl_staked", "settled_at", "closing_odds", "clv", "logged_at",
 ]
 
 
@@ -128,6 +128,7 @@ def track_signals(
         side = (comp.get("side") or "").strip().lower()
         stake_units = stake_for_edge(edge)
 
+        settled_at = ""
         if actual > 0:
             if side == "over":
                 result = "won" if actual > line else "lost"
@@ -140,6 +141,7 @@ def track_signals(
                     result = "lost"
             pnl = _pf(comp.get("pnl"))
             pnl_staked = round(pnl * stake_units, 3)
+            settled_at = now
         else:
             result = "pending"
             pnl = 0.0
@@ -164,35 +166,15 @@ def track_signals(
             "result": result,
             "pnl": round(pnl, 3) if result != "pending" else "",
             "pnl_staked": pnl_staked,
+            "settled_at": settled_at,
+            "closing_odds": "",
+            "clv": "",
             "logged_at": now,
         }
         new_signals.append(signal)
         existing_keys.add(key)
 
     return new_signals
-
-
-def current_live_keys(
-    comparisons: List[dict],
-    min_edge: float,
-    bookmaker_filter: str = "",
-) -> Set[str]:
-    keys: Set[str] = set()
-    for comp in comparisons:
-        edge = _pf(comp.get("edge"))
-        book_odds = _pf(comp.get("book_odds"))
-        line = _pf(comp.get("line"))
-
-        if edge < min_edge:
-            continue
-        if book_odds < MIN_ODDS or book_odds > MAX_ODDS:
-            continue
-        if bookmaker_filter:
-            bm = (comp.get("bookmaker") or "").strip().lower()
-            if bm != bookmaker_filter.lower():
-                continue
-        keys.add(_signal_key(comp))
-    return keys
 
 
 def write_signals(all_signals: List[dict], path: Path) -> None:
@@ -281,12 +263,9 @@ def main() -> None:
     comparisons = load_comparisons(args.comparison)
     print(f"  Comparisons: {len(comparisons)}")
 
-    live_keys = current_live_keys(comparisons, args.min_edge, args.bookmaker)
-    existing = [
-        row
-        for row in existing
-        if row.get("result") in ("won", "lost", "push") or _signal_key(row) in live_keys
-    ]
+    # Never prune pending signals — once logged a signal survives until settled.
+    # (Previously this filtered out pending signals not in the current comparison CSV,
+    # which deleted signals when a match date passed but FBRef hadn't been scraped yet.)
     keys = {_signal_key(row) for row in existing}
 
     new = track_signals(comparisons, existing, keys, args.min_edge, args.bookmaker)

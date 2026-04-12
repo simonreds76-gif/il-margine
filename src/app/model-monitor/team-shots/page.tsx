@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   readTeamShotsLiveFile as readFile,
@@ -7,20 +6,17 @@ import {
   readTeamShotsLiveSnapshotGeneratedAt,
   inspectTeamShotsLiveSource,
 } from "@/lib/team-shots-live-files";
-
-
+import {
+  MODEL_MONITOR_ENABLED,
+  MonitorNav,
+  HeroCard,
+  SectionCard,
+  StatCard,
+  StatusPill,
+  EmptyState,
+} from "../shared";
 
 export const dynamic = "force-dynamic";
-
-
-
-const MODEL_MONITOR_ENABLED =
-
-  process.env.MODEL_MONITOR_PUBLIC === "true" ||
-
-  process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "true" ||
-
-  process.env.VERCEL_ENV === "preview";
 
 
 
@@ -106,6 +102,16 @@ function pf(val: string | undefined, fallback = 0): number {
 
   return isNaN(n) ? fallback : n;
 
+}
+
+function maybeFloat(val: string | undefined): number | null {
+  const n = parseFloat(val ?? "");
+  return Number.isFinite(n) ? n : null;
+}
+
+function formatMaybeFixed(val: string | undefined, digits = 2, placeholder = "--"): string {
+  const n = maybeFloat(val);
+  return n === null ? placeholder : n.toFixed(digits);
 }
 
 
@@ -323,6 +329,24 @@ function matchKey(
   ].join("|");
 }
 
+function comparisonSignalKey(
+  date: string | undefined,
+  homeTeam: string | undefined,
+  awayTeam: string | undefined,
+  team: string | undefined,
+  bookmaker: string | undefined,
+  line: string | undefined,
+  side: string | undefined,
+): string {
+  return [
+    matchKey(date, homeTeam, awayTeam),
+    normalizeTeamName(team),
+    (bookmaker ?? "").trim().toLowerCase(),
+    (line ?? "").trim(),
+    (side ?? "").trim().toLowerCase(),
+  ].join("|");
+}
+
 function sigmoid(value: number): number {
   if (value >= 0) return 1 / (1 + Math.exp(-value));
   const expValue = Math.exp(value);
@@ -535,147 +559,19 @@ function sourceTone(source: "hosted" | "local" | "missing"): "default" | "green"
 
 
 
-function Stat({
-
-  label,
-
-  value,
-
-  sub,
-
-  tone = "default",
-
-}: {
-
-  label: string;
-
-  value: string;
-
-  sub?: string;
-
-  tone?: "default" | "green" | "red" | "amber";
-
-}) {
-
-  const toneMap = {
-
-    default: "border-slate-800 bg-slate-900/60",
-
-    green: "border-emerald-700/40 bg-emerald-950/30",
-
-    red: "border-rose-700/40 bg-rose-950/30",
-
-    amber: "border-amber-700/40 bg-amber-950/30",
-
+// Tone helper: converts "green"/"red"/"amber" to CSS class strings for StatCard.
+function statTone(t?: "default" | "green" | "red" | "amber"): string | undefined {
+  if (!t || t === "default") return undefined;
+  const map: Record<string, string> = {
+    green: "text-emerald-300",
+    red: "text-rose-300",
+    amber: "text-amber-300",
   };
-
-  return (
-
-    <div className={`rounded-2xl border p-4 ${toneMap[tone]}`}>
-
-      <div className="text-[11px] uppercase tracking-wider text-slate-500">
-
-        {label}
-
-      </div>
-
-      <div className="mt-1 font-mono text-xl tabular-nums text-slate-100">
-
-        {value}
-
-      </div>
-
-      {sub && (
-
-        <div className="mt-0.5 text-xs text-slate-400">{sub}</div>
-
-      )}
-
-    </div>
-
-  );
-
+  return map[t];
 }
-
-
-
-function MonitorCard({
-
-  title,
-
-  children,
-
-}: {
-
-  title: string;
-
-  children: React.ReactNode;
-
-}) {
-
-  return (
-
-    <section className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
-
-      <h2 className="mb-3 text-sm font-medium text-slate-300">{title}</h2>
-
-      {children}
-
-    </section>
-
-  );
-
-}
-
-
-
-function CollapsibleSection({
-
-  title,
-
-  defaultOpen = false,
-
-  children,
-
-}: {
-
-  title: string;
-
-  defaultOpen?: boolean;
-
-  children: React.ReactNode;
-
-}) {
-
-  return (
-
-    <details
-
-      open={defaultOpen}
-
-      className="group rounded-2xl border border-slate-800 bg-slate-900/40"
-
-    >
-
-      <summary className="cursor-pointer select-none px-5 py-3 text-sm font-medium text-slate-300 hover:text-slate-100">
-
-        <span className="ml-1">{title}</span>
-
-      </summary>
-
-      <div className="border-t border-slate-800/60 px-5 py-4">{children}</div>
-
-    </details>
-
-  );
-
-}
-
-
 
 export default async function TeamShotsMonitorPage() {
-
-  if (process.env.NODE_ENV === "production" && !MODEL_MONITOR_ENABLED) {
+  if (!MODEL_MONITOR_ENABLED) {
 
     notFound();
 
@@ -804,6 +700,11 @@ export default async function TeamShotsMonitorPage() {
 
     shadowStakedTotal > 0 ? (shadowPnlStaked / shadowStakedTotal) * 100 : 0;
 
+  const clvSettled = settledShadow.filter((r) => r.clv && r.clv.trim() !== "");
+  const avgClv = clvSettled.length > 0
+    ? clvSettled.reduce((s, r) => s + pf(r.clv), 0) / clvSettled.length * 100
+    : null;
+
 
 
   const backtestPnl = backtestRows.reduce((s, r) => s + pf(r.pnl), 0);
@@ -845,6 +746,33 @@ export default async function TeamShotsMonitorPage() {
   const upcomingRows = (upcomingCsv ? parseCsv(upcomingCsv) : []).filter(
     (row) => (row.league ?? "").trim() !== "ligue-1",
   );
+  const upcomingModelByMatchTeam = new Map<string, { row: CsvRow; side: "home" | "away" }>();
+  for (const row of upcomingRows) {
+    const date = (row.kickoff_iso ?? "").slice(0, 10);
+    upcomingModelByMatchTeam.set(
+      `${matchKey(date, row.home_team, row.away_team)}|${normalizeTeamName(row.home_team)}`,
+      { row, side: "home" },
+    );
+    upcomingModelByMatchTeam.set(
+      `${matchKey(date, row.home_team, row.away_team)}|${normalizeTeamName(row.away_team)}`,
+      { row, side: "away" },
+    );
+  }
+  const comparisonRowBySignal = new Map<string, CsvRow>();
+  for (const row of comparisonRows) {
+    comparisonRowBySignal.set(
+      comparisonSignalKey(
+        row.date,
+        row.home_team,
+        row.away_team,
+        row.team,
+        row.bookmaker,
+        row.line,
+        row.side,
+      ),
+      row,
+    );
+  }
   const liveOddsByMatchTeam = new Map<string, Map<string, TeamShotsLiveLine>>();
   for (const row of oddsArchive) {
     const date = (row.match_date ?? row.kickoff_at ?? "").slice(0, 10);
@@ -1111,7 +1039,7 @@ function LiveLineTable({
     new Date().toISOString()
   ).slice(0, 10);
 
-  // Shadow signal count per league ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â counts upcoming signals only (fixture card auto-open logic).
+  // Shadow signal count per league -- counts upcoming signals only (fixture card auto-open logic).
   const shadowCountByLeague = new Map<string, number>();
   for (const row of currentShadowLive) {
     const d = (row.date ?? "").slice(0, 10);
@@ -1134,6 +1062,9 @@ function LiveLineTable({
     logged_at: string;
     model_fair_odds: string;
     edge: string;
+    entryEdgePct: number | null;
+    currentFairOdds: number | null;
+    currentEdgePct: number | null;
     pendingState: "upcoming" | "awaiting result";
     currentOdds: number | null;
     delta: number | null;
@@ -1164,6 +1095,43 @@ function LiveLineTable({
       const loggedOdds = pf(row.book_odds, Number.NaN);
       const delta =
         currentOdds !== null && !Number.isNaN(loggedOdds) ? currentOdds - loggedOdds : null;
+      const currentModel = upcomingModelByMatchTeam.get(teamKey);
+      const currentMetrics =
+        fallbackLine && currentModel
+          ? computeLineMetrics(currentModel.row, currentModel.side, fallbackLine, calibrationParams)
+          : null;
+      let currentFairOdds =
+        currentMetrics
+          ? row.side === "over"
+            ? currentMetrics.fairOver
+            : currentMetrics.fairUnder
+          : null;
+      let currentEdgePct =
+        currentMetrics
+          ? row.side === "over"
+            ? currentMetrics.overEdge
+            : currentMetrics.underEdge
+          : null;
+      if (currentFairOdds === null || currentEdgePct === null) {
+        const currentComparison = comparisonRowBySignal.get(
+          comparisonSignalKey(
+            row.date,
+            row.home_team,
+            row.away_team,
+            row.team,
+            row.bookmaker,
+            row.line,
+            row.side,
+          ),
+        );
+        if (currentComparison) {
+          const fair = pf(currentComparison.model_fair_odds, Number.NaN);
+          const edge = pf(currentComparison.edge, Number.NaN);
+          currentFairOdds = Number.isNaN(fair) ? null : fair;
+          currentEdgePct = Number.isNaN(edge) ? null : edge * 100;
+        }
+      }
+      const storedEdge = pf(row.edge, Number.NaN);
       return {
         date: row.date ?? "",
         league: row.league ?? "",
@@ -1177,6 +1145,9 @@ function LiveLineTable({
         logged_at: row.logged_at ?? "",
         model_fair_odds: row.model_fair_odds ?? "",
         edge: row.edge ?? "",
+        entryEdgePct: Number.isNaN(storedEdge) ? null : storedEdge * 100,
+        currentFairOdds,
+        currentEdgePct,
         pendingState: matchDate > asOfIso ? "upcoming" : "awaiting result",
         currentOdds,
         delta,
@@ -1207,863 +1178,541 @@ function LiveLineTable({
   const defaultOpenPendingDate =
     pendingDateKeys.find((date) => date >= asOfIso) ?? pendingDateKeys[pendingDateKeys.length - 1] ?? null;
 
-
+  const recentSettledShadow = [...settledShadow]
+    .sort((a, b) =>
+      (b.settled_at ?? b.date ?? "").localeCompare(a.settled_at ?? a.date ?? ""),
+    )
+    .slice(0, 15);
 
   return (
+    <div className="min-h-screen bg-[#0a0f19] px-4 py-10 text-slate-200 sm:px-6">
+      <div className="mx-auto flex max-w-7xl flex-col gap-4">
 
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.08),_transparent_22%),#0b0f14] text-slate-100">
-
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-
-        {/* Nav */}
-
-        <nav className="mb-6 flex flex-wrap gap-2 text-xs">
-
-          <Link
-
-            href="/model-monitor"
-
-            className="rounded-full border border-slate-700 px-3 py-1 text-slate-400 hover:text-slate-200"
-
-          >
-
-            Tennis
-
-          </Link>
-
-          <Link
-
-            href="/model-monitor/goalscorer"
-
-            className="rounded-full border border-slate-700 px-3 py-1 text-slate-400 hover:text-slate-200"
-
-          >
-
-            Goalscorer
-
-          </Link>
-
-          <span className="rounded-full border border-emerald-600/40 bg-emerald-500/10 px-3 py-1 text-emerald-300">
-
-            Team Shots
-
-          </span>
-
-          <Link
-
-            href="/model-monitor/corners"
-
-            className="rounded-full border border-slate-700 px-3 py-1 text-slate-400 hover:text-slate-200"
-
-          >
-
-            Corners
-
-          </Link>
-
-        </nav>
-
-
+        <MonitorNav current="team-shots" />
 
         {/* Hero */}
+        <HeroCard title="Team Total Shots Monitor" eyebrow="Team Shots Model">
+          <span className="text-slate-300">Shadow signals | calibrated Poisson | Platt-scaled over/under.</span>
+          <span className="mx-2 text-slate-700">|</span>
+          <span className="text-slate-500">
+            Snapshot {snapshotGeneratedAt ? formatDateTime(snapshotGeneratedAt) : "-"}
+          </span>
+        </HeroCard>
 
-        <section className="mb-8 rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-6">
-
-          <div className="flex items-center gap-3">
-
-            <span className="rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wider text-emerald-300">
-
-              Team Shots Model
-
-            </span>
-
+        {/* Pipeline health */}
+        <SectionCard collapsible title="Pipeline Health" subtitle={pipelineStatus?.state ?? "unknown"}>
+          <div className="grid gap-2 sm:grid-cols-3 xl:grid-cols-6">
+            <StatCard
+              label="Pipeline state"
+              value={pipelineStatus?.state ?? "-"}
+              tone={statTone(pipelineTone)}
+            />
+            <StatCard
+              label="Last heartbeat"
+              value={schedulerHeartbeatAt ? formatRelativeAgeShort(schedulerHeartbeatAt) : "-"}
+            />
+            <StatCard
+              label="Data source"
+              value={comparisonSource?.source ?? "-"}
+              tone={statTone(sourceTone(comparisonSource?.source ?? "missing"))}
+              detail={comparisonSource ? formatSourceReason(comparisonSource.reason) : undefined}
+            />
+            <StatCard label="Predictions" value={predictionsMtime ? formatRelativeAgeShort(predictionsMtime) : "-"} />
+            <StatCard label="Comparison"  value={comparisonMtime  ? formatRelativeAgeShort(comparisonMtime)  : "-"} />
+            <StatCard label="Upcoming"    value={upcomingMtime    ? formatRelativeAgeShort(upcomingMtime)    : "-"} />
           </div>
+          {pipelineStatus?.message ? (
+            <p className="mt-3 rounded-lg border border-slate-700/50 bg-slate-900/50 px-3 py-2 text-xs text-slate-400">
+              {pipelineStatus.message}
+            </p>
+          ) : null}
+          {(pipelineStatus?.warnings?.length ?? 0) > 0 ? (
+            <div className="mt-3 space-y-1">
+              {pipelineStatus!.warnings!.map((w, i) => (
+                <p key={i} className="rounded-lg border border-amber-500/20 bg-amber-500/8 px-3 py-2 text-xs text-amber-300">
+                  {w}
+                </p>
+              ))}
+            </div>
+          ) : null}
+          {(pipelineStatus?.critical_failures?.length ?? 0) > 0 ? (
+            <div className="mt-3 space-y-1">
+              {pipelineStatus!.critical_failures!.map((f, i) => (
+                <p key={i} className="rounded-lg border border-rose-500/20 bg-rose-500/8 px-3 py-2 text-xs text-rose-300">
+                  {f}
+                </p>
+              ))}
+            </div>
+          ) : null}
+        </SectionCard>
 
-          <h1 className="mt-3 text-2xl font-semibold tracking-tight">
-
-            Team Total Shots Monitor
-
-          </h1>
-
-          <p className="mt-1 max-w-2xl text-sm text-slate-400">
-
-            Poisson model for expected team shots (lambda) and fair O/U lines. Upcoming
-
-            fixtures below use The Odds API for kickoff times; book team totals (when
-
-            scraped) come from Odds-API.io / BetsAPI. Scheduled with corners:
-
-            Tue/Wed/Fri/Sat/Sun.
-
-          </p>
-
+        {/* ── KPI strip ── */}
+        <section className="grid gap-2.5 sm:grid-cols-3 xl:grid-cols-5">
+          <StatCard
+            label="Shadow bets"
+            value={String(settledShadow.length + pendingShadow.length)}
+            detail={`${settledShadow.length} settled | ${pendingShadow.length} pending`}
+          />
+          <StatCard
+            label="P&L flat"
+            value={`${shadowPnl >= 0 ? "+" : ""}${shadowPnl.toFixed(2)}u`}
+            tone={shadowPnl >= 0 ? "text-emerald-300" : "text-rose-300"}
+          />
+          <StatCard
+            label="ROI flat"
+            value={`${shadowRoi >= 0 ? "+" : ""}${shadowRoi.toFixed(1)}%`}
+            tone={shadowRoi >= 0 ? "text-emerald-300" : "text-rose-300"}
+            detail={`${shadowWins}/${settledShadow.length} wins`}
+          />
+          <StatCard
+            label="P&L staked"
+            value={`${shadowPnlStaked >= 0 ? "+" : ""}${shadowPnlStaked.toFixed(2)}u`}
+            tone={shadowPnlStaked >= 0 ? "text-emerald-300" : "text-rose-300"}
+          />
+          <StatCard
+            label="Avg CLV"
+            value={avgClv !== null ? `${avgClv >= 0 ? "+" : ""}${avgClv.toFixed(1)}%` : "-"}
+            tone={avgClv !== null ? (avgClv >= 0 ? "text-emerald-300" : "text-rose-300") : undefined}
+          />
         </section>
 
-
-
-
-
-        <MonitorCard title="Pipeline Health">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 xl:grid-cols-6">
-
-            <Stat
-
-              label="Scheduler heartbeat"
-
-              value={formatDateTime(schedulerHeartbeatAt)}
-
-              sub={formatRelativeAgeShort(schedulerHeartbeatAt)}
-
-              tone={pipelineTone}
-
-            />
-
-            <Stat
-
-              label="Predictions file"
-
-              value={formatDateTime(predictionsMtime)}
-
-              sub={formatRelativeAgeShort(predictionsMtime)}
-
-              tone={predictionsMtime ? "default" : "amber"}
-
-            />
-
-            <Stat
-
-              label="Comparison file"
-
-              value={formatDateTime(comparisonMtime)}
-
-              sub={formatRelativeAgeShort(comparisonMtime)}
-
-              tone={comparisonMtime ? "default" : "amber"}
-
-            />
-
-            <Stat
-
-              label="Upcoming file"
-
-              value={formatDateTime(upcomingMtime)}
-
-              sub={formatRelativeAgeShort(upcomingMtime)}
-
-              tone={upcomingMtime ? "default" : "amber"}
-
-            />
-
-            <Stat
-              label="Hosted snapshot"
-              value={formatDateTime(snapshotGeneratedAt)}
-              sub={formatRelativeAgeShort(snapshotGeneratedAt)}
-              tone={snapshotGeneratedAt ? "green" : "red"}
-            />
-
-            <Stat
-              label="Comparison source"
-              value={comparisonSource.source}
-              sub={formatSourceReason(comparisonSource.reason)}
-              tone={sourceTone(comparisonSource.source)}
-            />
-
-          </div>
-
-          <details className="mt-3">
-            <summary className="cursor-pointer text-[10px] uppercase tracking-wider text-slate-600 hover:text-slate-500 select-none">
-              pipeline detail
-            </summary>
-            <div className="mt-1.5 space-y-0.5 text-[11px] text-slate-600">
-              <div><span className="text-slate-500">State:</span> {pipelineStatus?.state ?? "missing"}{pipelineStatus?.current_step ? <> &middot; {pipelineStatus.current_step}</> : null}</div>
-              <div><span className="text-slate-500">Message:</span> {pipelineStatus?.message ?? "n/a"}</div>
-              <div><span className="text-slate-500">Source:</span> {comparisonSource.source} &middot; hosted {comparisonSource.hostedSnapshotAvailable ? "ok" : "missing"} &middot; local {comparisonSource.localSnapshotAvailable ? "ok" : "missing"}</div>
-            </div>
-          </details>
-        </MonitorCard>
-
-        {/* KPI strip - model track record before showing live signals */}
-        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-4">
-          <Stat label="Predictions" value={predictions.length.toLocaleString()} sub="team lambda + fair lines" />
-          <Stat
-            label="Team odds rows"
-            value={oddsArchive.length.toLocaleString()}
-            sub={oddsArchive.length > 0 ? "team total shots from books" : "run scrape when fixtures list team markets"}
-            tone={oddsArchive.length > 0 ? "default" : "amber"}
-          />
-          <Stat
-            label="Backtest bets"
-            value={backtestRows.length.toLocaleString()}
-            sub={`${backtestWins}W / ${backtestRows.length - backtestWins}L`}
-          />
-          <Stat
-            label="Backtest ROI"
-            value={`${backtestRoi >= 0 ? "+" : ""}${backtestRoi.toFixed(1)}%`}
-            sub={`${backtestPnl >= 0 ? "+" : ""}${backtestPnl.toFixed(1)}u PnL`}
-            tone={backtestRoi > 0 ? "green" : backtestRoi < -5 ? "red" : "default"}
-          />
-          <Stat
-            label="Upcoming signals"
-            value={pendingUpcomingCount.toString()}
-            sub={`${pendingAwaitingCount} awaiting result`}
-            tone={pendingUpcomingCount > 0 ? "green" : "default"}
-          />
-          <Stat
-            label="Shadow PnL"
-            value={settledShadow.length > 0 ? `${shadowPnl >= 0 ? "+" : ""}${shadowPnl.toFixed(1)}u` : "-"}
-            sub={settledShadow.length > 0 ? `${shadowWins}W / ${settledShadow.length - shadowWins}L` : "collecting data"}
-            tone={shadowPnl > 0 ? "green" : shadowPnl < 0 ? "red" : "default"}
-          />
-          <Stat
-            label="Shadow ROI (flat)"
-            value={settledShadow.length > 0 ? `${shadowRoi >= 0 ? "+" : ""}${shadowRoi.toFixed(1)}%` : "-"}
-            tone={shadowRoi > 5 ? "green" : shadowRoi < -5 ? "red" : "default"}
-          />
-          <Stat
-            label="Shadow ROI (staked)"
-            value={settledShadow.length > 0 ? `${shadowRoiStaked >= 0 ? "+" : ""}${shadowRoiStaked.toFixed(1)}%` : "-"}
-            sub={settledShadow.length > 0 ? `${shadowPnlStaked >= 0 ? "+" : ""}${shadowPnlStaked.toFixed(2)}u on ${shadowStakedTotal.toFixed(1)}u` : "collecting data"}
-            tone={shadowRoiStaked > 5 ? "green" : shadowRoiStaked < -5 ? "red" : "default"}
-          />
-        </div>
-
-        {pendingShadowRows.length > 0 && (
-          <MonitorCard title={`All pending shadow signals - ${pendingShadowRows.length}`}>
-            <p className="mb-3 text-xs text-slate-500">
-              Daily matches stay visible first. Open any other date to review the full pending shadow slate.
-              The odds arrow is a price-move / CLV proxy from entry odds to the latest captured odds for the same book and line.
-            </p>
-            <div className="space-y-3">
-              {pendingDateKeys.map((dateKey) => {
-                const rows = pendingRowsByDate.get(dateKey) ?? [];
-                const upcomingCount = rows.filter((row) => row.pendingState === "upcoming").length;
-                const awaitingCount = rows.length - upcomingCount;
+        {/* Recent settled shadow bets */}
+        {recentSettledShadow.length > 0 ? (
+          <SectionCard
+            collapsible
+            title={`Recent Settled Shadow Bets - ${settledShadow.length} total`}
+            subtitle={`Last ${recentSettledShadow.length} results`}
+          >
+            {/* Mobile cards */}
+            <div className="space-y-2 lg:hidden">
+              {recentSettledShadow.map((r, i) => {
+                const rowTone =
+                  r.result === "won" ? "bg-emerald-950/25" :
+                  r.result === "lost" ? "bg-rose-950/25" : "";
+                const pnlVal = pf(r.pnl);
+                const edgeRaw = pf(r.edge, Number.NaN);
+                const clvRaw = r.clv && r.clv.trim() ? pf(r.clv, Number.NaN) : Number.NaN;
                 return (
-                  <details
-                    key={dateKey}
-                    open={dateKey === defaultOpenPendingDate}
-                    className="rounded-xl border border-slate-800 bg-slate-950/30"
-                  >
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3">
-                      <div>
-                        <div className="text-sm font-medium text-slate-100">{dateKey}</div>
-                        <div className="mt-1 text-[11px] text-slate-500">
-                          {upcomingCount > 0 ? `${upcomingCount} upcoming` : "no upcoming"} &middot; {awaitingCount} awaiting result
+                  <div key={i} className={`rounded-xl border border-slate-800/60 px-3 py-3 ${rowTone}`}>
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <div className="truncate text-sm font-medium text-white">{r.team}</div>
+                        <div className="text-[11px] text-slate-500">{r.home_team} v {r.away_team}</div>
+                        <div className="text-[11px] text-slate-600">{(r.date ?? "").slice(0, 10)}</div>
+                        {r.settled_at ? (
+                          <div className="text-[11px] text-slate-500">Settled {formatDateTime(r.settled_at)}</div>
+                        ) : null}
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                        <StatusPill
+                          label={r.side === "over" ? "Over" : "Under"}
+                          tone={r.side === "over"
+                            ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                            : "bg-sky-500/10 text-sky-300 border-sky-500/20"}
+                        />
+                        <StatusPill
+                          label={r.result ?? "-"}
+                          tone={r.result === "won"
+                            ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                            : r.result === "lost"
+                            ? "bg-rose-500/10 text-rose-300 border-rose-500/20"
+                            : "bg-slate-700/40 text-slate-400 border-slate-600/40"}
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-2 grid grid-cols-4 gap-1">
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Entry</div>
+                        <div className="mt-0.5 font-mono text-xs text-slate-200">{r.book_odds || "-"}</div>
+                      </div>
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Fair</div>
+                        <div className="mt-0.5 font-mono text-xs text-slate-200">{r.model_fair_odds || "-"}</div>
+                      </div>
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Edge</div>
+                        <div className={`mt-0.5 font-mono text-xs ${!Number.isNaN(edgeRaw) && edgeRaw >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                          {!Number.isNaN(edgeRaw) ? formatSignedPercent(edgeRaw * 100) : "-"}
                         </div>
                       </div>
-                      <span className="rounded-full border border-slate-700 bg-slate-900/60 px-2 py-1 text-[10px] uppercase tracking-wider text-slate-300">
-                        {rows.length} signals
-                      </span>
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">P&L</div>
+                        <div className={`mt-0.5 font-mono text-xs ${pnlVal >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                          {`${pnlVal >= 0 ? "+" : ""}${pnlVal.toFixed(2)}u`}
+                        </div>
+                      </div>
+                    </div>
+                    {!Number.isNaN(clvRaw) ? (
+                      <div className="mt-1.5 text-[11px] text-slate-500">
+                        CLV{" "}
+                        <span className={clvRaw >= 0 ? "text-emerald-400" : "text-rose-400"}>
+                          {formatSignedPercent(clvRaw * 100)}
+                        </span>
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+            {/* Desktop table */}
+            <div className="hidden overflow-x-auto rounded-xl border border-slate-800/60 bg-slate-950/30 lg:block">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
+                    <th className="py-2.5 pl-4 pr-3">Date</th>
+                    <th className="py-2.5 pr-3">Team / Match</th>
+                    <th className="py-2.5 pr-3">Side</th>
+                    <th className="py-2.5 pr-3">Result</th>
+                    <th className="py-2.5 pr-3 font-mono">Entry</th>
+                    <th className="py-2.5 pr-3 font-mono">Fair</th>
+                    <th className="py-2.5 pr-3 font-mono">Edge</th>
+                    <th className="py-2.5 pr-3 font-mono">P&L</th>
+                    <th className="py-2.5 pr-4 font-mono">CLV</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentSettledShadow.map((r, i) => {
+                    const rowTone =
+                      r.result === "won" ? "bg-emerald-950/25" :
+                      r.result === "lost" ? "bg-rose-950/25" : "";
+                    const pnlVal = pf(r.pnl);
+                    const edgeRaw = pf(r.edge, Number.NaN);
+                    const clvRaw = r.clv && r.clv.trim() ? pf(r.clv, Number.NaN) : Number.NaN;
+                    return (
+                      <tr key={i} className={`border-b border-slate-800/40 ${rowTone}`}>
+                        <td className="py-2 pl-4 pr-3 tabular-nums text-slate-400">{(r.date ?? "").slice(0, 10)}</td>
+                        <td className="py-2 pr-3">
+                          <div className="font-medium text-slate-200">{r.team}</div>
+                          <div className="text-[11px] text-slate-500">{r.home_team} v {r.away_team}</div>
+                          {r.settled_at ? (
+                            <div className="text-[11px] text-slate-600">Settled {formatDateTime(r.settled_at)}</div>
+                          ) : null}
+                        </td>
+                        <td className="py-2 pr-3">
+                          <StatusPill
+                            label={r.side === "over" ? "Over" : "Under"}
+                            tone={r.side === "over"
+                              ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                              : "bg-sky-500/10 text-sky-300 border-sky-500/20"}
+                          />
+                        </td>
+                        <td className="py-2 pr-3">
+                          <StatusPill
+                            label={r.result ?? "-"}
+                            tone={r.result === "won"
+                              ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                              : r.result === "lost"
+                              ? "bg-rose-500/10 text-rose-300 border-rose-500/20"
+                              : "bg-slate-700/40 text-slate-400 border-slate-600/40"}
+                          />
+                        </td>
+                        <td className="py-2 pr-3 font-mono tabular-nums text-slate-200">{r.book_odds || "-"}</td>
+                        <td className="py-2 pr-3 font-mono tabular-nums text-slate-400">{r.model_fair_odds || "-"}</td>
+                        <td className={`py-2 pr-3 font-mono tabular-nums ${!Number.isNaN(edgeRaw) && edgeRaw >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                          {!Number.isNaN(edgeRaw) ? formatSignedPercent(edgeRaw * 100) : "-"}
+                        </td>
+                        <td className={`py-2 pr-3 font-mono tabular-nums ${pnlVal >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                          {`${pnlVal >= 0 ? "+" : ""}${pnlVal.toFixed(2)}u`}
+                        </td>
+                        <td className={`py-2 pr-4 font-mono tabular-nums ${!Number.isNaN(clvRaw) ? (clvRaw >= 0 ? "text-emerald-300" : "text-rose-300") : "text-slate-500"}`}>
+                          {!Number.isNaN(clvRaw) ? formatSignedPercent(clvRaw * 100) : "-"}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </SectionCard>
+        ) : null}
+
+        {/* Pending shadow bets */}
+        {pendingShadowRows.length > 0 ? (
+          <SectionCard
+            collapsible
+            title={`Pending Shadow Bets - ${pendingShadowRows.length} total`}
+            subtitle={`${pendingUpcomingCount} upcoming | ${pendingAwaitingCount} awaiting result`}
+          >
+            <div className="space-y-2">
+              {pendingDateKeys.map((dateKey) => {
+                const rows = pendingRowsByDate.get(dateKey) ?? [];
+                return (
+                  <details key={dateKey} open={dateKey === defaultOpenPendingDate} className="group">
+                    <summary className="flex cursor-pointer select-none list-none items-center justify-between rounded-lg border border-slate-800/60 bg-slate-900/40 px-3 py-2 text-xs text-slate-400 hover:text-slate-200 marker:hidden">
+                      <span className="font-medium">{dateKey}</span>
+                      <span className="text-slate-600">{rows.length} bet{rows.length !== 1 ? "s" : ""}</span>
                     </summary>
-                    <div className="overflow-x-auto border-t border-slate-800">
-                      <table className="w-full text-left text-xs">
-                        <thead>
-                          <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
-                            <th className="py-2 pl-4 pr-3">League</th>
-                            <th className="py-2 pr-3">Match</th>
-                            <th className="py-2 pr-3">Team</th>
-                            <th className="py-2 pr-3">Book</th>
-                            <th className="py-2 pr-3 font-mono">Entry line</th>
-                            <th className="py-2 pr-3">Side</th>
-                            <th className="py-2 pr-3 font-mono">Entry odds</th>
-                            <th className="py-2 pr-3 font-mono">Logged</th>
-                            <th className="py-2 pr-3 font-mono">Latest</th>
-                            <th className="py-2 pr-3 font-mono">Fair</th>
-                            <th className="py-2 pr-3 font-mono">Edge</th>
-                            <th className="py-2 pr-3 font-mono">Stake</th>
-                            <th className="py-2 pr-4">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {rows.map((row, i) => {
-                            const loggedOdds = pf(row.book_odds, Number.NaN);
-                            const delta = row.delta;
-                            const showMove =
-                              row.currentOdds !== null &&
-                              delta !== null &&
-                              !row.lineMoved &&
-                              !Number.isNaN(loggedOdds) &&
-                              Math.abs(delta) >= 0.02;
-                            return (
-                              <tr key={`${dateKey}-${row.home_team}-${row.team}-${row.line}-${i}`} className="border-b border-slate-800/40 hover:bg-slate-800/20">
-                                <td className="py-2 pl-4 pr-3 text-slate-400">{row.league}</td>
-                                <td className="py-2 pr-3">{row.home_team} v {row.away_team}</td>
-                                <td className="py-2 pr-3 font-medium text-slate-100">{row.team}</td>
-                                <td className="py-2 pr-3 text-slate-300">{row.bookmaker}</td>
-                                <td className="py-2 pr-3 font-mono tabular-nums text-slate-100">{row.line}</td>
-                                <td className="py-2 pr-3">
-                                  <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase ${
-                                    row.side === "over" ? "bg-emerald-500/15 text-emerald-300" : "bg-sky-500/15 text-sky-300"
-                                  }`}>
-                                    {row.side}
-                                  </span>
-                                </td>
-                                <td className="py-2 pr-3 font-mono tabular-nums text-slate-100">
-                                  {loggedOdds.toFixed(2)}
-                                </td>
-                                <td className="py-2 pr-3 text-[11px] text-slate-500">
-                                  {formatDateTime(row.logged_at)}
-                                </td>
-                                <td className="py-2 pr-3 font-mono tabular-nums">
-                                  {showMove ? (
-                                    <span className={delta > 0 ? "text-emerald-300" : "text-rose-400"}>
-                                      {delta > 0 ? <>&uarr;</> : <>&darr;</>} {row.currentOdds!.toFixed(2)}
+                    <div className="mt-1 space-y-1.5">
+                      {rows.map((row, j) => {
+                        const edgePct = row.entryEdgePct;
+                        const curEdge = row.currentEdgePct;
+                        const deltaOdds = row.delta;
+                        return (
+                          <div key={j} className="rounded-xl border border-slate-800/60 bg-slate-950/40 px-3 py-3">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <div className="truncate text-sm font-medium text-white">{row.team}</div>
+                                <div className="text-[11px] text-slate-500">{row.home_team} v {row.away_team}</div>
+                              </div>
+                              <div className="flex flex-col items-end gap-1">
+                                <StatusPill
+                                  label={row.side === "over" ? "Over" : "Under"}
+                                  tone={row.side === "over"
+                                    ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                                    : "bg-sky-500/10 text-sky-300 border-sky-500/20"}
+                                />
+                                <StatusPill
+                                  label={row.pendingState}
+                                  tone={row.pendingState === "upcoming"
+                                    ? "bg-amber-500/10 text-amber-300 border-amber-500/20"
+                                    : "bg-cyan-500/10 text-cyan-300 border-cyan-500/20"}
+                                />
+                              </div>
+                            </div>
+                            <div className="mt-2 grid grid-cols-2 gap-1 sm:grid-cols-5">
+                              <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                                <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Book</div>
+                                <div className="mt-0.5 text-xs text-slate-300">
+                                  {row.bookmaker} {row.line} {row.side === "over" ? "O" : "U"}
+                                </div>
+                              </div>
+                              <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                                <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Entry odds</div>
+                                <div className="mt-0.5 font-mono text-xs text-slate-200">{row.book_odds || "-"}</div>
+                              </div>
+                              <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                                <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Entry edge</div>
+                                <div className={`mt-0.5 font-mono text-xs ${edgePct !== null && edgePct >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                                  {edgePct !== null ? formatSignedPercent(edgePct) : "-"}
+                                </div>
+                              </div>
+                              <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                                <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Now odds</div>
+                                <div className="mt-0.5 font-mono text-xs text-slate-200">
+                                  {row.currentOdds !== null ? row.currentOdds.toFixed(2) : "-"}
+                                  {deltaOdds !== null ? (
+                                    <span className={`ml-1 ${deltaOdds > 0 ? "text-emerald-300" : deltaOdds < 0 ? "text-rose-300" : "text-slate-500"}`}>
+                                      ({deltaOdds > 0 ? "↑" : "↓"}{Math.abs(deltaOdds).toFixed(2)})
                                     </span>
-                                  ) : row.currentOdds !== null ? (
-                                    <span className={row.lineMoved ? "text-amber-300" : "text-slate-500"}>
-                                      {row.currentOdds.toFixed(2)}
-                                      {row.lineMoved && row.currentLine ? ` @ ${row.currentLine}` : ""}
-                                    </span>
-                                  ) : (
-                                    <span className="text-slate-600">&mdash;</span>
-                                  )}
-                                </td>
-                                <td className="py-2 pr-3 font-mono tabular-nums text-slate-400">{pf(row.model_fair_odds).toFixed(2)}</td>
-                                <td className="py-2 pr-3 font-mono tabular-nums">
-                                  <span className={pf(row.edge) >= 0 ? "text-emerald-300" : "text-rose-400"}>
-                                    {(pf(row.edge) * 100).toFixed(1)}%
-                                  </span>
-                                </td>
-                                <td className="py-2 pr-3 font-mono tabular-nums text-slate-300">{shadowStakeUnits(pf(row.edge))}</td>
-                                <td className="py-2 pr-4">
-                                  <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase ${
-                                    row.pendingState === "upcoming"
-                                      ? "bg-sky-700/20 text-sky-400"
-                                      : "bg-amber-500/15 text-amber-300"
-                                  }`}>
-                                    {row.pendingState === "upcoming" ? "upcoming" : "awaiting result"}
-                                  </span>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
+                                  ) : null}
+                                </div>
+                              </div>
+                              <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                                <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Now edge</div>
+                                <div className={`mt-0.5 font-mono text-xs ${curEdge !== null && curEdge >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                                  {curEdge !== null ? formatSignedPercent(curEdge) : "-"}
+                                </div>
+                              </div>
+                            </div>
+                            {row.lineMoved ? (
+                              <p className="mt-1.5 text-[11px] text-amber-400">
+                                Line moved - now {row.currentBookmaker} {row.currentLine}
+                              </p>
+                            ) : null}
+                          </div>
+                        );
+                      })}
                     </div>
                   </details>
                 );
               })}
             </div>
-          </MonitorCard>
-        )}
-        {/* Upcoming: both teams lambda + fair lines by league */}
-
-        {upcomingRows.length > 0 ? (
-
-          <section className="mb-8 space-y-6">
-
-            <div className="flex flex-wrap items-end justify-between gap-3">
-
-              <div>
-
-                <h2 className="text-lg font-semibold text-slate-100">
-
-                  Upcoming matches - model estimates
-
-                </h2>
-
-                <p className="mt-1 text-sm text-slate-500">
-
-                  lambda = expected shots per team. Open a fixture to see all live bookmaker lines.
-                  Value and shadow tags now use the same calibrated edge logic as the comparison tracker.
-
-                </p>
-
-              </div>
-
-              <span className="rounded-full border border-emerald-700/40 bg-emerald-950/40 px-3 py-1 text-[11px] font-medium text-emerald-300">
-
-                {upcomingRows.length} fixtures
-
-              </span>
-
-            </div>
-
-            {upcomingLeagueKeys.map((leagueKey) => {
-
-              const leagueRows = upcomingByLeague.get(leagueKey) ?? [];
-
-              return (
-
-                <CollapsibleSection
-
-                  key={leagueKey}
-
-                  defaultOpen={(shadowCountByLeague.get(leagueKey) ?? 0) > 0}
-
-                  title={(() => {
-                    const sc = shadowCountByLeague.get(leagueKey) ?? 0;
-                    return [
-                      `${leagueTitle(leagueKey)} - ${leagueRows.length} fixture${leagueRows.length === 1 ? "" : "s"}`,
-                      sc > 0 ? `${sc} shadow signal${sc === 1 ? "" : "s"}` : null,
-                    ].filter(Boolean).join(" | ")
-                  })()}
-
-                >
-                  <div className="space-y-3">
-                    {leagueRows.map((row, i) => {
-                      const date = (row.kickoff_iso ?? "").slice(0, 10);
-                      const homeKey = `${matchKey(date, row.home_team, row.away_team)}|${normalizeTeamName(row.home_team)}`;
-                      const awayKey = `${matchKey(date, row.home_team, row.away_team)}|${normalizeTeamName(row.away_team)}`;
-                      const homeLines = [...(liveOddsByMatchTeam.get(homeKey)?.values() ?? [])]
-                        .sort(
-                        (a, b) => a.line - b.line || a.bookmaker.localeCompare(b.bookmaker),
-                      );
-                      const awayLines = [...(liveOddsByMatchTeam.get(awayKey)?.values() ?? [])]
-                        .sort(
-                        (a, b) => a.line - b.line || a.bookmaker.localeCompare(b.bookmaker),
-                      );
-                      return (
-                        <details
-                          key={`${row.kickoff_iso}-${row.home_team}-${i}`}
-                          className="group rounded-2xl border border-slate-800 bg-slate-950/30"
-                        >
-                          <summary className="cursor-pointer list-none px-4 py-3">
-                            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                              <div>
-                                <div className="text-xs text-slate-400">{formatKickoffUtc(row.kickoff_iso)}</div>
-                                <div className="mt-1 text-sm font-medium text-slate-100">
-                                  {row.home_team} v {row.away_team}
-                                </div>
-                              </div>
-                              <div className="grid gap-2 text-xs sm:grid-cols-2 lg:min-w-[560px]">
-                                {(() => {
-                                  const homeLive = bestLineSummary(homeLines, row, "home", calibrationParams);
-                                  const homeShadow = bestLineSummary(homeLines, row, "home", calibrationParams, true);
-                                  const awayLive = bestLineSummary(awayLines, row, "away", calibrationParams);
-                                  const awayShadow = bestLineSummary(awayLines, row, "away", calibrationParams, true);
-                                  const hasHomeShadow = !homeShadow.startsWith("No shadow");
-                                  const hasAwayShadow = !awayShadow.startsWith("No shadow");
-                                  const homeShadowDisplay = hasHomeShadow
-                                    ? (homeShadow === homeLive ? "Shadow: same as live" : `Shadow: ${homeShadow}`)
-                                    : "Shadow: none";
-                                  const awayShadowDisplay = hasAwayShadow
-                                    ? (awayShadow === awayLive ? "Shadow: same as live" : `Shadow: ${awayShadow}`)
-                                    : "Shadow: none";
-                                  const liveColor = (s: string) =>
-                                    s.startsWith("No") ? "text-slate-500" :
-                                    s.includes("(+") ? "text-emerald-300" :
-                                    s.includes("(-") ? "text-rose-400" : "text-slate-300";
-                                  return (
-                                    <>
-                                      <div className="rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2">
-                                        <div className="text-slate-500">Home &middot; &lambda; <span className="font-mono text-emerald-300">{pf(row.home_lambda).toFixed(2)}</span></div>
-                                        <div className={`mt-1 font-mono ${liveColor(homeLive)}`}>Live: {homeLive}</div>
-                                        <div className={`mt-0.5 font-mono ${hasHomeShadow ? "text-emerald-300 font-semibold" : "text-slate-600"}`}>{homeShadowDisplay}</div>
-                                      </div>
-                                      <div className="rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2">
-                                        <div className="text-slate-500">Away &middot; &lambda; <span className="font-mono text-emerald-300">{pf(row.away_lambda).toFixed(2)}</span></div>
-                                        <div className={`mt-1 font-mono ${liveColor(awayLive)}`}>Live: {awayLive}</div>
-                                        <div className={`mt-0.5 font-mono ${hasAwayShadow ? "text-emerald-300 font-semibold" : "text-slate-600"}`}>{awayShadowDisplay}</div>
-                                      </div>
-                                    </>
-                                  );
-                                })()}
-                              </div>
-                            </div>
-                            {(row.note ?? "").trim() ? (
-                              <div className="mt-2 text-xs text-slate-500">{row.note}</div>
-                            ) : null}
-                          </summary>
-                          <div className="grid gap-4 border-t border-slate-800 px-4 py-4 lg:grid-cols-2">
-                            <LiveLineTable
-                              teamName={row.home_team ?? "Home"}
-                              row={row}
-                              side="home"
-                              lines={homeLines}
-                              calibration={calibrationParams}
-                            />
-                            <LiveLineTable
-                              teamName={row.away_team ?? "Away"}
-                              row={row}
-                              side="away"
-                              lines={awayLines}
-                              calibration={calibrationParams}
-                            />
-                          </div>
-                        </details>
-                      );
-                    })}
-                  </div>
-
-                  <p className="mt-3 text-[11px] text-slate-600">
-                    Shadow label turns green when any line meets the policy: edge &gt;= 5% and book odds 1.50-5.00. Expand a fixture to see all bookmaker lines.
-                  </p>
-
-                </CollapsibleSection>
-
-              );
-
-            })}
-
-          </section>
-
-        ) : (
-
-          <section className="mb-8 rounded-2xl border border-amber-700/30 bg-amber-950/20 p-4 text-sm text-amber-100/90">
-
-            <strong className="text-amber-200">No upcoming fixture file.</strong>{" "}
-
-            Run{" "}
-
-            <code className="rounded bg-slate-900 px-1.5 py-0.5 font-mono text-xs">
-
-              python scripts/team_shots_upcoming.py
-
-            </code>{" "}
-
-            after the team shots model (or run the corners pipeline) to populate{" "}
-
-            <code className="rounded bg-slate-900 px-1.5 py-0.5 font-mono text-xs">
-
-              data/team-shots/team-shots-upcoming.csv
-
-            </code>
-
-            .
-
-          </section>
-
-        )}
-
-
-
-        {/* Missing data alert */}
-
-        {!predictionsCsv && (
-
-          <section className="mb-6 rounded-2xl border border-amber-700/40 bg-amber-950/30 p-4 text-sm text-amber-200">
-
-            No prediction data found. Run{" "}
-
-            <code className="rounded bg-slate-800 px-1.5 py-0.5 text-xs">
-
-              python scripts/run-team-shots-pipeline.py
-
-            </code>{" "}
-
-            to generate model outputs.
-
-          </section>
-
-        )}
-
-
-
-
-        {/* Team total shots odds (latest 50) ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â empty until Odds-API.io / BetsAPI returns team markets */}
-
-        {oddsArchive.length > 0 ? (
-
-          <MonitorCard title={`Team total shots ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â book lines (latest ${Math.min(50, oddsArchive.length)})`}>
-
-            <div className="max-h-80 overflow-auto">
-
-              <table className="w-full text-left text-xs">
-
-                <thead className="sticky top-0 bg-slate-900">
-
-                  <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
-
-                    <th className="py-2 pr-3">Date</th>
-
-                    <th className="py-2 pr-3">League</th>
-
-                    <th className="py-2 pr-3">Match</th>
-
-                    <th className="py-2 pr-3">Team</th>
-
-                    <th className="py-2 pr-3">Line</th>
-
-                    <th className="py-2 pr-3">Side</th>
-
-                    <th className="py-2 pr-3 font-mono">Odds</th>
-
-                    <th className="py-2 pr-3">Book</th>
-
-                  </tr>
-
-                </thead>
-
-                <tbody>
-
-                  {oddsArchive.slice(-50).reverse().map((row, i) => (
-
-                    <tr key={i} className="border-b border-slate-800/40 hover:bg-slate-800/20">
-
-                      <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{row.match_date}</td>
-
-                      <td className="py-1.5 pr-3 text-slate-400">{row.competition}</td>
-
-                      <td className="py-1.5 pr-3">{row.home_team} v {row.away_team}</td>
-
-                      <td className="py-1.5 pr-3 font-medium">{row.team}</td>
-
-                      <td className="py-1.5 pr-3 font-mono tabular-nums">{row.line}</td>
-
-                      <td className="py-1.5 pr-3">
-
-                        <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase ${
-
-                          row.side === "over" ? "bg-emerald-500/15 text-emerald-300" : "bg-sky-500/15 text-sky-300"
-
-                        }`}>{row.side}</span>
-
-                      </td>
-
-                      <td className="py-1.5 pr-3 font-mono tabular-nums">{pf(row.odds_decimal).toFixed(2)}</td>
-
-                      <td className="py-1.5 pr-3 text-slate-500">{row.bookmaker}</td>
-
-                    </tr>
-
-                  ))}
-
-                </tbody>
-
-              </table>
-
-            </div>
-
-          </MonitorCard>
-
-        ) : (
-
-          <section className="mb-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-400">
-
-            No <strong className="text-slate-200">team total shots</strong> lines in the archive yet.
-
-            The pipeline scrapes Odds-API.io / BetsAPI (team markets). The Odds API key used for corners does not list team shots.
-
-          </section>
-
-        )}
-
-
-
-        <div className="mt-6 space-y-4">
-
-          {/* Recent predictions */}
-
-          {recentPredictions.length > 0 && (
-
-            <CollapsibleSection
-
-              title={`Recent Predictions (latest ${recentPredictions.length})`}
-
+          </SectionCard>
+        ) : null}
+
+        {/* ── No upcoming warning ── */}
+        {upcomingLeagueKeys.length === 0 && predictions.length === 0 ? (
+          <SectionCard title="Upcoming Fixtures">
+            <EmptyState message="No upcoming fixture data yet." />
+          </SectionCard>
+        ) : null}
+
+        {/* ── Upcoming by league (with live line tables) ── */}
+        {upcomingLeagueKeys.map((leagueKey) => {
+          const rows = upcomingByLeague.get(leagueKey) ?? [];
+          const shadowCount = shadowCountByLeague.get(leagueKey) ?? 0;
+          return (
+            <SectionCard
+              key={leagueKey}
+              collapsible
+              defaultOpen={shadowCount > 0}
+              title={leagueTitle(leagueKey)}
+              subtitle={`${rows.length} fixture${rows.length !== 1 ? "s" : ""}${shadowCount > 0 ? ` | ${shadowCount} shadow signal${shadowCount !== 1 ? "s" : ""}` : ""}`}
             >
-
-              <div className="max-h-96 overflow-auto">
-
-                <table className="w-full text-left text-xs">
-
-                  <thead className="sticky top-0 bg-slate-900">
-
-                    <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
-
-                      <th className="py-2 pr-3">Date</th>
-
-                      <th className="py-2 pr-3">League</th>
-
-                      <th className="py-2 pr-3">Team</th>
-
-                      <th className="py-2 pr-3">vs</th>
-
-                      <th className="py-2 pr-3">Venue</th>
-
-                      <th className="py-2 pr-3 font-mono">Lambda</th>
-
-                      <th className="py-2 pr-3 font-mono">Actual</th>
-
-                      <th className="py-2 pr-3 font-mono">O10.5</th>
-
-                      <th className="py-2 pr-3 font-mono">U10.5</th>
-
-                      <th className="py-2 pr-3 font-mono">O12.5</th>
-
-                      <th className="py-2 font-mono">U12.5</th>
-
-                    </tr>
-
-                  </thead>
-
-                  <tbody>
-
-                    {recentPredictions.map((row, i) => (
-
-                      <tr
-
-                        key={i}
-
-                        className="border-b border-slate-800/40 hover:bg-slate-800/20"
-
-                      >
-
-                        <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">
-
-                          {row.date}
-
-                        </td>
-
-                        <td className="py-1.5 pr-3 text-slate-400">
-
-                          {row.league}
-
-                        </td>
-
-                        <td className="py-1.5 pr-3 font-medium">{row.team}</td>
-
-                        <td className="py-1.5 pr-3 text-slate-400">
-
-                          {row.opponent}
-
-                        </td>
-
-                        <td className="py-1.5 pr-3 text-slate-500">
-
-                          {row.venue}
-
-                        </td>
-
-                        <td className="py-1.5 pr-3 font-mono tabular-nums text-emerald-300">
-
-                          {pf(row.lambda_shots).toFixed(1)}
-
-                        </td>
-
-                        <td className="py-1.5 pr-3 font-mono tabular-nums">
-
-                          {row.actual_shots}
-
-                        </td>
-
-                        <td className="py-1.5 pr-3 font-mono tabular-nums">
-
-                          {pf(row["fair_over_10.5"]).toFixed(2)}
-
-                        </td>
-
-                        <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">
-
-                          {pf(row["fair_under_10.5"]).toFixed(2)}
-
-                        </td>
-
-                        <td className="py-1.5 pr-3 font-mono tabular-nums">
-
-                          {pf(row["fair_over_12.5"]).toFixed(2)}
-
-                        </td>
-
-                        <td className="py-1.5 font-mono tabular-nums text-slate-400">
-
-                          {pf(row["fair_under_12.5"]).toFixed(2)}
-
-                        </td>
-
-                      </tr>
-
-                    ))}
-
-                  </tbody>
-
-                </table>
-
+              <div className="space-y-4">
+                {rows.map((row, rowIdx) => {
+                  const date = (row.kickoff_iso ?? "").slice(0, 10);
+                  const homeKey = `${matchKey(date, row.home_team, row.away_team)}|${normalizeTeamName(row.home_team)}`;
+                  const awayKey = `${matchKey(date, row.home_team, row.away_team)}|${normalizeTeamName(row.away_team)}`;
+                  const homeLines = [...(liveOddsByMatchTeam.get(homeKey)?.values() ?? [])];
+                  const awayLines = [...(liveOddsByMatchTeam.get(awayKey)?.values() ?? [])];
+                  const bestHome = bestLineSummary(homeLines, row, "home", calibrationParams, true);
+                  const bestAway = bestLineSummary(awayLines, row, "away", calibrationParams, true);
+                  const hasShadow =
+                    bestHome !== "No shadow-qualified line" || bestAway !== "No shadow-qualified line";
+                  return (
+                    <div key={rowIdx} className="rounded-2xl border border-slate-800 bg-slate-900/30 p-4">
+                      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                          <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
+                            {leagueTitle(leagueKey)}
+                          </div>
+                          <div className="mt-0.5 text-sm font-medium text-white">
+                            {row.home_team} v {row.away_team}
+                          </div>
+                          <div className="text-[11px] text-slate-500">{formatKickoffUtc(row.kickoff_iso)}</div>
+                        </div>
+                        {hasShadow ? (
+                          <StatusPill
+                            label="shadow signal"
+                            tone="bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                          />
+                        ) : null}
+                      </div>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <LiveLineTable
+                          teamName={row.home_team}
+                          row={row}
+                          side="home"
+                          lines={homeLines}
+                          calibration={calibrationParams}
+                        />
+                        <LiveLineTable
+                          teamName={row.away_team}
+                          row={row}
+                          side="away"
+                          lines={awayLines}
+                          calibration={calibrationParams}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
+            </SectionCard>
+          );
+        })}
 
-            </CollapsibleSection>
+        {/* ── Book odds archive ── */}
+        {oddsArchive.length > 0 ? (
+          <SectionCard
+            collapsible
+            defaultOpen={false}
+            title="Book Odds Archive"
+            subtitle={`${oddsArchive.length} rows`}
+          >
+            <div className="overflow-x-auto rounded-xl border border-slate-800/60 bg-slate-950/30">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
+                    <th className="py-2.5 pl-4 pr-3">Date</th>
+                    <th className="py-2.5 pr-3">Match</th>
+                    <th className="py-2.5 pr-3">Team</th>
+                    <th className="py-2.5 pr-3">Bookmaker</th>
+                    <th className="py-2.5 pr-3 font-mono">Line</th>
+                    <th className="py-2.5 pr-3">Side</th>
+                    <th className="py-2.5 pr-3 font-mono">Odds</th>
+                    <th className="py-2.5 pr-4">Captured</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {oddsArchive.slice(0, 200).map((r, i) => (
+                    <tr key={i} className="border-b border-slate-800/40">
+                      <td className="py-1.5 pl-4 pr-3 tabular-nums text-slate-400">
+                        {(r.match_date || r.kickoff_at || "").slice(0, 10)}
+                      </td>
+                      <td className="py-1.5 pr-3 text-slate-300">{r.home_team} v {r.away_team}</td>
+                      <td className="py-1.5 pr-3 text-slate-200">{r.team}</td>
+                      <td className="py-1.5 pr-3 text-slate-400">{r.bookmaker}</td>
+                      <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-200">{r.line}</td>
+                      <td className="py-1.5 pr-3">
+                        <StatusPill
+                          label={(r.side ?? "").toLowerCase() === "over" ? "O" : "U"}
+                          tone={(r.side ?? "").toLowerCase() === "over"
+                            ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                            : "bg-sky-500/10 text-sky-300 border-sky-500/20"}
+                        />
+                      </td>
+                      <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-200">{r.odds_decimal || "-"}</td>
+                      <td className="py-1.5 pr-4 text-slate-400">
+                        {r.captured_at ? formatRelativeAgeShort(r.captured_at) : "-"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </SectionCard>
+        ) : null}
 
-          )}
+        {/* ── Diagnostics ── */}
+        {shadowPerformanceTxt ? (
+          <SectionCard collapsible defaultOpen={false} title="Shadow Performance" subtitle="team-shots-shadow-performance.txt">
+            <pre className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/40 p-4 text-[11px] leading-relaxed text-slate-300 whitespace-pre">
+              {shadowPerformanceTxt}
+            </pre>
+          </SectionCard>
+        ) : null}
 
+        {comparisonTxt ? (
+          <SectionCard collapsible defaultOpen={false} title="Comparison Report" subtitle="team-shots-comparison.txt">
+            <pre className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/40 p-4 text-[11px] leading-relaxed text-slate-300 whitespace-pre">
+              {comparisonTxt}
+            </pre>
+          </SectionCard>
+        ) : null}
 
+        {calibrationTxt ? (
+          <SectionCard collapsible defaultOpen={false} title="Calibration Report" subtitle="team-shots-calibration.txt">
+            <pre className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/40 p-4 text-[11px] leading-relaxed text-slate-300 whitespace-pre">
+              {calibrationTxt}
+            </pre>
+          </SectionCard>
+        ) : null}
 
-          {/* Calibration report */}
+        {backtestReportTxt ? (
+          <SectionCard collapsible defaultOpen={false} title="Backtest Report" subtitle="team-shots-backtest-report.txt">
+            <pre className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/40 p-4 text-[11px] leading-relaxed text-slate-300 whitespace-pre">
+              {backtestReportTxt}
+            </pre>
+          </SectionCard>
+        ) : null}
 
-          {calibrationTxt && (
-
-            <CollapsibleSection title="Calibration Report">
-
-              <pre className="max-h-80 overflow-auto whitespace-pre-wrap font-mono text-xs text-slate-300">
-
-                {calibrationTxt}
-
-              </pre>
-
-            </CollapsibleSection>
-
-          )}
-
-
-
-          {/* Backtest report */}
-
-          {backtestReportTxt && (
-
-            <CollapsibleSection title="Backtest Report">
-
-              <pre className="max-h-80 overflow-auto whitespace-pre-wrap font-mono text-xs text-slate-300">
-
-                {backtestReportTxt}
-
-              </pre>
-
-            </CollapsibleSection>
-
-          )}
-
-
-
-          {/* Shadow performance summary */}
-
-          {shadowPerformanceTxt && (
-
-            <CollapsibleSection title="Shadow Performance Summary">
-
-              <pre className="whitespace-pre-wrap font-mono text-xs text-slate-300">
-
-                {shadowPerformanceTxt}
-
-              </pre>
-
-            </CollapsibleSection>
-
-          )}
-
-
-
-          {/* Comparison summary (live odds) */}
-
-          {comparisonTxt && (
-
-            <CollapsibleSection title="Model vs Bookmaker Comparison">
-
-              <pre className="whitespace-pre-wrap font-mono text-xs text-slate-300">
-
-                {comparisonTxt}
-
-              </pre>
-
-            </CollapsibleSection>
-
-          )}
-
-        </div>
-
-
-
-        {/* Footer */}
-
-        <footer className="mt-12 border-t border-slate-800/60 pt-4 text-center text-[11px] text-slate-600">
-
-          Team Shots Model Monitor ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Il Margine
-
-        </footer>
+        {recentPredictions.length > 0 ? (
+          <SectionCard
+            collapsible
+            defaultOpen={false}
+            title="Recent Predictions"
+            subtitle={`Last ${recentPredictions.length} rows`}
+          >
+            <div className="overflow-x-auto rounded-xl border border-slate-800/60 bg-slate-950/30">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
+                    {Object.keys(recentPredictions[0] ?? {}).slice(0, 10).map((col) => (
+                      <th key={col} className="py-2.5 pl-3 pr-3 font-mono">{col}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentPredictions.slice(0, 50).map((r, i) => (
+                    <tr key={i} className="border-b border-slate-800/40">
+                      {Object.keys(recentPredictions[0] ?? {}).slice(0, 10).map((col) => (
+                        <td key={col} className="py-1.5 pl-3 pr-3 font-mono tabular-nums text-slate-300">
+                          {r[col] || "-"}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </SectionCard>
+        ) : null}
 
       </div>
-
     </div>
-
   );
-
 }
+
 
