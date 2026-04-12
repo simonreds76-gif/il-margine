@@ -2,6 +2,8 @@ import "server-only";
 
 import path from "node:path";
 import { promises as fs } from "node:fs";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 
 import { getSupabaseAdmin } from "@/lib/supabase-server";
 
@@ -81,6 +83,7 @@ export type GoalscorerSettledRow = {
   settled: boolean;
   bet_outcome: string;
   settlement_note: string;
+  pnl_units: number | null;
 };
 
 export type GoalscorerFixtureHealthRow = {
@@ -272,14 +275,118 @@ const LOCAL_SNAPSHOT_FILE = "data/goalscorer/goalscorer-monitor-snapshot.json";
 const GITHUB_RAW_BASE =
   process.env.MONITOR_GITHUB_RAW_BASE ||
   "https://raw.githubusercontent.com/simonreds76-gif/il-margine/golden-with-speed-insights";
+const GIT_REMOTE_REF = process.env.MONITOR_GIT_REMOTE_REF || "origin/golden-with-speed-insights";
 const CACHE_TTL_MS = process.env.NODE_ENV === "development" ? 15 * 1000 : 5 * 60 * 1000;
+const execFileAsync = promisify(execFile);
 
 let cache: { expiresAt: number; payload: GoalscorerMonitorSnapshot | null } | null = null;
+
+function parseSnapshotTimestamp(value?: string | null): number {
+  if (!value) return Number.NEGATIVE_INFINITY;
+  const parsed = Date.parse(value);
+  return Number.isFinite(parsed) ? parsed : Number.NEGATIVE_INFINITY;
+}
+
+function snapshotFreshness(payload: GoalscorerMonitorSnapshot | null): number {
+  if (!payload) return Number.NEGATIVE_INFINITY;
+  return Math.max(
+    parseSnapshotTimestamp(payload.source_status?.compared_at),
+    parseSnapshotTimestamp(payload.source_status?.settlement_updated_at),
+    parseSnapshotTimestamp(payload.source_status?.expected_refresh_updated_at),
+    parseSnapshotTimestamp(payload.source_status?.hot_live_updated_at),
+  );
+}
+
+function derivePnlUnits(row: GoalscorerSettledRow): number | null {
+  if (row.pnl_units !== null && row.pnl_units !== undefined && Number.isFinite(row.pnl_units)) {
+    return row.pnl_units;
+  }
+  const outcome = (row.bet_outcome || "").toLowerCase();
+  if (outcome.includes("lost")) return -1;
+  if (outcome.includes("void") || outcome.includes("push")) return 0;
+  if (outcome.includes("won")) {
+    const odds = row.best_bookmaker_odds;
+    return odds !== null && odds !== undefined && Number.isFinite(odds) ? odds - 1 : null;
+  }
+  return null;
+}
+
+function normalizeSettledRows(rows: GoalscorerSettledRow[] | undefined): GoalscorerSettledRow[] {
+  return [...(rows || [])]
+    .filter((row) => row?.settled || Boolean(row?.bet_outcome) || Boolean(row?.settled_at))
+    .map((row) => ({
+      ...row,
+      pnl_units: derivePnlUnits(row),
+    }))
+    .sort((left, right) => {
+      const leftTs = parseSnapshotTimestamp(left?.settled_at || left?.compared_at || left?.kickoff || left?.date);
+      const rightTs = parseSnapshotTimestamp(right?.settled_at || right?.compared_at || right?.kickoff || right?.date);
+      return rightTs - leftTs;
+    });
+}
+
+function normalizeSnapshot(payload: GoalscorerMonitorSnapshot | null): GoalscorerMonitorSnapshot | null {
+  if (!payload) return null;
+  const fixtureHealthRows = payload.fixture_health?.rows || [];
+  const flaggedRows =
+    payload.fixture_health?.flagged_rows ||
+    fixtureHealthRows.filter((row) => row?.trust_tier === "T3" || (row?.corruption_score || 0) > 0);
+  return {
+    ...payload,
+    fixture_health: {
+      rows: fixtureHealthRows,
+      clean_count:
+        payload.fixture_health?.clean_count ??
+        fixtureHealthRows.filter((row) => row?.trust_tier === "T1").length,
+      degraded_count:
+        payload.fixture_health?.degraded_count ??
+        fixtureHealthRows.filter((row) => row?.trust_tier === "T2").length,
+      quarantined_count:
+        payload.fixture_health?.quarantined_count ??
+        fixtureHealthRows.filter((row) => row?.trust_tier === "T3").length,
+      hidden_pending_count: payload.fixture_health?.hidden_pending_count ?? 0,
+      hidden_expected_count: payload.fixture_health?.hidden_expected_count ?? 0,
+      flagged_rows: flaggedRows,
+    },
+    shadow_summary: {
+      ...payload.shadow_summary,
+      recent_rows: normalizeSettledRows(payload.shadow_summary?.recent_rows).slice(0, 50),
+      settled_today: normalizeSettledRows(payload.shadow_summary?.settled_today),
+      settled_yesterday: normalizeSettledRows(payload.shadow_summary?.settled_yesterday),
+    },
+  };
+}
+
+function chooseFreshestSnapshot(candidates: Array<GoalscorerMonitorSnapshot | null>): GoalscorerMonitorSnapshot | null {
+  let best: GoalscorerMonitorSnapshot | null = null;
+  let bestFreshness = Number.NEGATIVE_INFINITY;
+  for (const candidate of candidates) {
+    const freshness = snapshotFreshness(candidate);
+    if (freshness > bestFreshness) {
+      bestFreshness = freshness;
+      best = candidate;
+    }
+  }
+  return best;
+}
 
 async function readLocalSnapshot(): Promise<GoalscorerMonitorSnapshot | null> {
   try {
     const text = await fs.readFile(path.join(process.cwd(), LOCAL_SNAPSHOT_FILE), "utf8");
     return JSON.parse(text) as GoalscorerMonitorSnapshot;
+  } catch {
+    return null;
+  }
+}
+
+async function readGitRemoteSnapshot(): Promise<GoalscorerMonitorSnapshot | null> {
+  if (process.env.NODE_ENV !== "development") return null;
+  try {
+    const { stdout } = await execFileAsync("git", ["show", `${GIT_REMOTE_REF}:${LOCAL_SNAPSHOT_FILE}`], {
+      cwd: process.cwd(),
+      maxBuffer: 64 * 1024 * 1024,
+    });
+    return JSON.parse(stdout) as GoalscorerMonitorSnapshot;
   } catch {
     return null;
   }
@@ -319,14 +426,19 @@ export async function readGoalscorerMonitorSnapshot(): Promise<GoalscorerMonitor
 
   let payload: GoalscorerMonitorSnapshot | null = null;
   if (process.env.NODE_ENV === "development") {
-    payload = await readLocalSnapshot();
-    if (!payload) payload = await readSupabaseSnapshot();
-    if (!payload) payload = await readGithubSnapshot();
+    const [gitSnapshot, supabaseSnapshot, localSnapshot] = await Promise.all([
+      readGitRemoteSnapshot(),
+      readSupabaseSnapshot(),
+      readLocalSnapshot(),
+    ]);
+    payload = gitSnapshot ?? chooseFreshestSnapshot([supabaseSnapshot, localSnapshot]);
   } else {
     payload = await readSupabaseSnapshot();
     if (!payload) payload = await readGithubSnapshot();
     if (!payload) payload = await readLocalSnapshot();
   }
+
+  payload = normalizeSnapshot(payload);
 
   cache = {
     expiresAt: Date.now() + CACHE_TTL_MS,

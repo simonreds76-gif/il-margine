@@ -225,6 +225,21 @@ def _pf(val: object, default: float = 0.0) -> float:
         return default
 
 
+def _fixture_date_for_row(row: dict) -> str:
+    return (
+        ((row.get("kick_off") or "").strip()[:10])
+        or ((row.get("match_date") or "").strip()[:10])
+        or ((row.get("file_date") or "").strip()[:10])
+    )
+
+
+def _row_identity(row: dict) -> str:
+    match_norm = (row.get("match") or "").strip().lower()
+    league_norm = (row.get("league") or "").strip().lower()
+    fixture_date = _fixture_date_for_row(row)
+    return f"{league_norm}|{fixture_date}|{match_norm}"
+
+
 def season_code(start_year: int) -> str:
     end = (start_year + 1) % 100
     return f"{start_year % 100:02d}{end:02d}"
@@ -344,94 +359,103 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
             print(f"  [fotmob] {league}: {len(fotmob)} matches fetched (latest {latest_fotmob})")
             actual.update(fotmob)
 
-    rows: List[dict] = []
+    current_source_rows: List[dict] = []
     for path in bet_files:
-        file_date_str = path.name.replace("value-bets-", "").replace(".csv", "")
-        bets = list(csv.DictReader(open(path, "r", encoding="utf-8")))
+        current_source_rows.extend(list(csv.DictReader(open(path, "r", encoding="utf-8"))))
 
-        for bet in bets:
-            match_str = bet.get("match", "")
-            parts = match_str.split(" vs ")
-            if len(parts) != 2:
-                continue
-            home_n = _norm(parts[0])
-            away_n = _norm(parts[1])
+    existing_source_rows: List[dict] = []
+    if SETTLED_PATH.exists():
+        with open(SETTLED_PATH, "r", encoding="utf-8", newline="") as fh:
+            existing_source_rows = list(csv.DictReader(fh))
 
-            # Use kick_off date if present. Older shortlist files may not have
-            # it yet, so backfill from the Pinnacle archive before falling
-            # back to the shortlist run date.
-            kick_off_raw = (bet.get("kick_off") or "").strip()
-            if not kick_off_raw:
-                kick_off_raw = find_match_kickoff(match_str, odds_index) or ""
-            match_date = _parse_date(kick_off_raw) or _parse_date(file_date_str)
+    current_keys = {_row_identity(row) for row in current_source_rows}
+    source_rows = current_source_rows + [
+        row for row in existing_source_rows if _row_identity(row) not in current_keys
+    ]
 
-            settled = dict(bet)
-            settled["file_date"] = file_date_str
-            settled["kick_off"] = kick_off_raw
+    rows: List[dict] = []
+    for bet in source_rows:
+        file_date_str = (bet.get("file_date") or "").strip() or _fixture_date_for_row(bet)
+        match_str = bet.get("match", "")
+        parts = match_str.split(" vs ")
+        if len(parts) != 2:
+            continue
+        home_n = _norm(parts[0])
+        away_n = _norm(parts[1])
 
-            if match_date is None:
-                settled["match_date"] = ""
-                settled["settled"] = "pending"
-                settled["actual_total_corners"] = ""
-                settled["won"] = ""
-                settled["pnl_units"] = ""
-                settled["pnl_staked"] = ""
-                rows.append(settled)
-                continue
+        # Use kick_off date if present. Older shortlist files may not have
+        # it yet, so backfill from the Pinnacle archive before falling
+        # back to the shortlist run date.
+        kick_off_raw = (bet.get("kick_off") or "").strip()
+        if not kick_off_raw:
+            kick_off_raw = find_match_kickoff(match_str, odds_index) or ""
+        match_date = _parse_date(kick_off_raw) or _parse_date(file_date_str)
 
-            settled["match_date"] = match_date.isoformat()
+        settled = dict(bet)
+        settled["file_date"] = file_date_str
+        settled["kick_off"] = kick_off_raw
 
-            # Try exact date, then ±1 day (timezone/schedule fuzziness)
-            result = None
-            for delta in (0, 1, -1):
-                check_date = match_date + timedelta(days=delta)
-                key = f"{check_date.isoformat()}|{home_n}|{away_n}"
-                result = actual.get(key)
-                if result:
-                    break
-
-            line_val = float(bet.get("line", 0))
-            side = bet.get("side", "")
-            bookie_odds = _pf(bet.get("bookie_odds", "0"))
-            stake = _pf(bet.get("stake", "1"), 1.0)
-            line_str = str(bet.get("line", "")).strip()
-
-            # CLV: closing Pinnacle odds vs our entry odds
-            closing = find_closing_odds(
-                match=match_str,
-                match_date_str=match_date.isoformat(),
-                line=line_str,
-                side=side,
-                kick_off_raw=kick_off_raw,
-                odds_index=odds_index,
-            )
-            if closing and closing > 0 and bookie_odds > 0:
-                settled["closing_odds"] = round(closing, 4)
-                settled["clv"] = round(bookie_odds / closing - 1, 4)
-            else:
-                settled["closing_odds"] = ""
-                settled["clv"] = ""
-
-            if result:
-                total_corners = result["total_corners"]
-
-                won = (total_corners > line_val) if side == "over" else (total_corners <= int(line_val))
-                pnl_units = round((bookie_odds - 1.0) if won else -1.0, 3)
-                pnl_staked = round(pnl_units * stake, 3)
-
-                settled["settled"]              = "yes"
-                settled["actual_total_corners"] = total_corners
-                settled["won"]                  = "yes" if won else "no"
-                settled["pnl_units"]            = pnl_units
-                settled["pnl_staked"]           = pnl_staked
-            else:
-                settled["settled"]              = "pending"
-                settled["actual_total_corners"] = ""
-                settled["won"]                  = ""
-                settled["pnl_units"]            = ""
-                settled["pnl_staked"]           = ""
-
+        if match_date is None:
+            settled["match_date"] = ""
+            settled["settled"] = "pending"
+            settled["actual_total_corners"] = ""
+            settled["won"] = ""
+            settled["pnl_units"] = ""
+            settled["pnl_staked"] = ""
             rows.append(settled)
+            continue
+
+        settled["match_date"] = match_date.isoformat()
+
+        # Try exact date, then +/- 1 day (timezone/schedule fuzziness)
+        result = None
+        for delta in (0, 1, -1):
+            check_date = match_date + timedelta(days=delta)
+            key = f"{check_date.isoformat()}|{home_n}|{away_n}"
+            result = actual.get(key)
+            if result:
+                break
+
+        line_val = float(bet.get("line", 0))
+        side = bet.get("side", "")
+        bookie_odds = _pf(bet.get("bookie_odds", "0"))
+        stake = _pf(bet.get("stake", "1"), 1.0)
+        line_str = str(bet.get("line", "")).strip()
+
+        closing = find_closing_odds(
+            match=match_str,
+            match_date_str=match_date.isoformat(),
+            line=line_str,
+            side=side,
+            kick_off_raw=kick_off_raw,
+            odds_index=odds_index,
+        )
+        if closing and closing > 0 and bookie_odds > 0:
+            settled["closing_odds"] = round(closing, 4)
+            settled["clv"] = round(bookie_odds / closing - 1, 4)
+        else:
+            settled["closing_odds"] = ""
+            settled["clv"] = ""
+
+        if result:
+            total_corners = result["total_corners"]
+            won = (total_corners > line_val) if side == "over" else (total_corners <= int(line_val))
+            pnl_units = round((bookie_odds - 1.0) if won else -1.0, 3)
+            pnl_staked = round(pnl_units * stake, 3)
+
+            settled["settled"] = "yes"
+            settled["actual_total_corners"] = total_corners
+            settled["won"] = "yes" if won else "no"
+            settled["pnl_units"] = pnl_units
+            settled["pnl_staked"] = pnl_staked
+        else:
+            settled["settled"] = "pending"
+            settled["actual_total_corners"] = ""
+            settled["won"] = ""
+            settled["pnl_units"] = ""
+            settled["pnl_staked"] = ""
+
+        rows.append(settled)
 
     # One bet per fixture across all files. When the same match appears in
     # multiple shortlist runs (e.g. different lines on consecutive days),
@@ -441,14 +465,7 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
     best: dict[str, dict] = {}
     for r in rows:
         # Normalise the match string so "Genoa vs Sassuolo" always collapses
-        match_norm = (r.get("match") or "").strip().lower()
-        league_norm = (r.get("league") or "").strip().lower()
-        fixture_date = (
-            ((r.get("kick_off") or "").strip()[:10])
-            or (r.get("match_date") or "").strip()[:10]
-            or (r.get("file_date") or "").strip()[:10]
-        )
-        key = f"{league_norm}|{fixture_date}|{match_norm}"
+        key = _row_identity(r)
         existing = best.get(key)
         if existing is None or _pf(r.get("edge", "0")) > _pf(existing.get("edge", "0")):
             best[key] = r
