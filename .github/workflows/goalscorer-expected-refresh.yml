@@ -93,6 +93,19 @@ jobs:
               --track-shadow
           done
 
+      - name: Build goalscorer monitor snapshot
+        run: python scripts/build-goalscorer-monitor-snapshot.py
+
+      - name: Upload goalscorer monitor snapshot
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            python scripts/build-goalscorer-monitor-snapshot.py --supabase
+          else
+            echo "SUPABASE_SERVICE_ROLE_KEY not configured; skipping monitor snapshot upload."
+          fi
+
       - name: Upload hosted snapshot
         env:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

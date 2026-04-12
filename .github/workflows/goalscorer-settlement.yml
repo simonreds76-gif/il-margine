@@ -1,4 +1,4 @@
-﻿name: Goalscorer Settlement
+name: Goalscorer Settlement
 
 on:
   schedule:
@@ -174,6 +174,19 @@ jobs:
             python scripts/build-penalty-baseline-evidence.py --league "${league}"
           done
 
+      - name: Build goalscorer monitor snapshot
+        run: python scripts/build-goalscorer-monitor-snapshot.py
+
+      - name: Upload goalscorer monitor snapshot
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            python scripts/build-goalscorer-monitor-snapshot.py --supabase
+          else
+            echo "::warning::SUPABASE_SERVICE_ROLE_KEY not configured; goalscorer monitor snapshot upload skipped."
+          fi
+
       - name: Generate local hosted snapshot artifact
         run: python scripts/goalscorer-live-snapshot.py
 
@@ -203,4 +216,3 @@ jobs:
           git fetch origin golden-with-speed-insights
           git rebase origin/golden-with-speed-insights
           git push origin HEAD:golden-with-speed-insights
-
