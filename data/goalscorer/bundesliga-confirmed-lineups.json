@@ -12,7 +12,7 @@
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
       "home_formation": "4-4-2",
-      "away_formation": "3-4-3",
+      "away_formation": "4-2-3-1",
       "home_players": [
         "Marvin Schwäbe",
         "Sebastian Sebulonsen",
@@ -31,13 +31,13 @@
         "Yukinari Sugawara",
         "Amos Pieper",
         "Marco Friedl",
-        "Felix Agu",
+        "Olivier Deman",
         "Senne Lynen",
         "Leonardo Bittencourt",
-        "Olivier Deman",
         "Marco Grüll",
-        "Justin Njinmah",
-        "Romano Schmid"
+        "Romano Schmid",
+        "Felix Agu",
+        "Justin Njinmah"
       ],
       "home_starters": [
         {
@@ -147,98 +147,98 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-3",
+          "formation": "4-2-3-1",
           "position_id": 11
         },
         {
           "name": "Yukinari Sugawara",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-3",
-          "position_id": 33
+          "formation": "4-2-3-1",
+          "position_id": 32
         },
         {
           "name": "Amos Pieper",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-3",
-          "position_id": 35
+          "formation": "4-2-3-1",
+          "position_id": 34
         },
         {
           "name": "Marco Friedl",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-3",
-          "position_id": 37
+          "formation": "4-2-3-1",
+          "position_id": 36
         },
         {
-          "name": "Felix Agu",
-          "line_index": 1,
+          "name": "Olivier Deman",
+          "line_index": 0,
           "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 72
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38
         },
         {
           "name": "Senne Lynen",
           "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 74
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
         },
         {
           "name": "Leonardo Bittencourt",
           "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 76
-        },
-        {
-          "name": "Olivier Deman",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 78
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
         },
         {
           "name": "Marco Grüll",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-4-3",
-          "position_id": 103
-        },
-        {
-          "name": "Justin Njinmah",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-4-3",
-          "position_id": 105
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83
         },
         {
           "name": "Romano Schmid",
           "line_index": 2,
           "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
+        },
+        {
+          "name": "Felix Agu",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87
+        },
+        {
+          "name": "Justin Njinmah",
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-3",
-          "position_id": 107
+          "formation": "4-2-3-1",
+          "position_id": 115
         }
       ],
       "home_subs": [
