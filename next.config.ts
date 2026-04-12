@@ -4,43 +4,23 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: process.cwd(),
   },
-  // Exclude large tennis-model data files from serverless functions that don't need them.
-  // dynamic fs.readFile calls (e.g. goalscorer match-results) cause Next.js to over-trace
-  // the entire data/ tree, pulling in ~160 MB of unrelated oncourt/tml-data/sackmann files.
+  // Keep unrelated tennis-model datasets out of the football monitor functions.
+  // The goalscorer monitor now reads a compact snapshot payload instead of raw league trees.
   outputFileTracingExcludes: {
     "/model-monitor/goalscorer": [
       "./data/oncourt/**",
       "./tml-data/**",
       "./data/sackmann/**",
-      "./data/goalscorer/live-history/**",
-      "./data/goalscorer/epl/**",
-      "./data/goalscorer/la-liga/**",
-      "./data/goalscorer/bundesliga/**",
-      "./data/goalscorer/ligue-1/**",
-      "./data/goalscorer/inbox/**",
-      "./data/goalscorer/**/*player-match-logs*.csv",
-      "./data/goalscorer/goalscorer-live-snapshot.json",
-      "./data/goalscorer/all-leagues-live-board.json",
-      "./data/goalscorer/live-board.json",
-      "./data/goalscorer/goalscorer-odds-history.csv",
-      "./data/team-shots/historical/**",
+    ],
+    "/model-monitor/goalscorer/lineups": [
+      "./data/oncourt/**",
+      "./tml-data/**",
+      "./data/sackmann/**",
     ],
     "/api/model-monitor/goalscorer/penalty-watchlist": [
       "./data/oncourt/**",
       "./tml-data/**",
       "./data/sackmann/**",
-      "./data/goalscorer/live-history/**",
-      "./data/goalscorer/epl/**",
-      "./data/goalscorer/la-liga/**",
-      "./data/goalscorer/bundesliga/**",
-      "./data/goalscorer/ligue-1/**",
-      "./data/goalscorer/inbox/**",
-      "./data/goalscorer/**/*player-match-logs*.csv",
-      "./data/goalscorer/goalscorer-live-snapshot.json",
-      "./data/goalscorer/all-leagues-live-board.json",
-      "./data/goalscorer/live-board.json",
-      "./data/goalscorer/goalscorer-odds-history.csv",
-      "./data/team-shots/historical/**",
     ],
   },
   images: {
