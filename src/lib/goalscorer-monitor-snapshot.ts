@@ -331,6 +331,22 @@ function normalizeSnapshot(payload: GoalscorerMonitorSnapshot | null): Goalscore
   const flaggedRows =
     payload.fixture_health?.flagged_rows ||
     fixtureHealthRows.filter((row) => row?.trust_tier === "T3" || (row?.corruption_score || 0) > 0);
+  const diagnostics = payload.diagnostics || {
+    matched_rows: 0,
+    suppressed_rows: 0,
+    fixtures_with_confirmed_lineups: 0,
+    fixtures_with_expected_xis: 0,
+    history_mapped_rows: 0,
+    roster_mapped_rows: 0,
+    fallback_rows: 0,
+    low_confidence_rows: 0,
+    missing_player_history_rows: 0,
+    starter_rows: 0,
+    expected_starter_rows: 0,
+    avg_ev_pct: null,
+    source_feed_gap_leagues: [],
+    raw_monitor_summary: "",
+  };
   return {
     ...payload,
     fixture_health: {
@@ -353,6 +369,25 @@ function normalizeSnapshot(payload: GoalscorerMonitorSnapshot | null): Goalscore
       recent_rows: normalizeSettledRows(payload.shadow_summary?.recent_rows).slice(0, 50),
       settled_today: normalizeSettledRows(payload.shadow_summary?.settled_today),
       settled_yesterday: normalizeSettledRows(payload.shadow_summary?.settled_yesterday),
+    },
+    diagnostics: {
+      matched_rows: diagnostics.matched_rows ?? 0,
+      suppressed_rows: diagnostics.suppressed_rows ?? 0,
+      fixtures_with_confirmed_lineups: diagnostics.fixtures_with_confirmed_lineups ?? 0,
+      fixtures_with_expected_xis: diagnostics.fixtures_with_expected_xis ?? 0,
+      history_mapped_rows: diagnostics.history_mapped_rows ?? 0,
+      roster_mapped_rows: diagnostics.roster_mapped_rows ?? 0,
+      fallback_rows: diagnostics.fallback_rows ?? 0,
+      low_confidence_rows: diagnostics.low_confidence_rows ?? 0,
+      missing_player_history_rows: diagnostics.missing_player_history_rows ?? 0,
+      starter_rows: diagnostics.starter_rows ?? 0,
+      expected_starter_rows: diagnostics.expected_starter_rows ?? 0,
+      avg_ev_pct:
+        diagnostics.avg_ev_pct !== null && diagnostics.avg_ev_pct !== undefined
+          ? diagnostics.avg_ev_pct
+          : null,
+      source_feed_gap_leagues: diagnostics.source_feed_gap_leagues || [],
+      raw_monitor_summary: diagnostics.raw_monitor_summary || "",
     },
   };
 }
