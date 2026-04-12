@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-12T15:52:15Z",
+  "generated_at": "2026-04-12T16:22:02Z",
   "source_status": {
-    "compared_at": "2026-04-12T15:52:05Z",
-    "hot_live_updated_at": "2026-04-12T15:52:15Z",
-    "expected_refresh_updated_at": "2026-04-12T15:52:05Z",
+    "compared_at": "2026-04-12T16:22:00Z",
+    "hot_live_updated_at": "2026-04-12T16:22:02Z",
+    "expected_refresh_updated_at": "2026-04-12T16:22:00Z",
     "settlement_updated_at": "2026-04-11T23:59:41Z",
-    "scheduler_heartbeat_at": "2026-04-12T15:52:15Z",
-    "snapshot_generated_at": "2026-04-12T15:52:15Z",
+    "scheduler_heartbeat_at": "2026-04-12T16:22:02Z",
+    "snapshot_generated_at": "2026-04-12T16:22:02Z",
     "live_status_state": "idle",
-    "live_status_message": "Goalscorer live poll finished (4 league(s) ran)."
+    "live_status_message": "Goalscorer live poll finished (3 league(s) ran)."
   },
   "league_cards": [
     {
@@ -18,7 +18,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T15:50:34Z",
+      "updated_at": "2026-04-12T16:21:26Z",
       "live_rows": 1,
       "public_now": 0,
       "shadow_now": 1,
@@ -49,7 +49,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T15:50:07Z",
+      "updated_at": "2026-04-12T16:21:05Z",
       "live_rows": 8,
       "public_now": 3,
       "shadow_now": 5,
@@ -80,7 +80,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T15:51:10Z",
+      "updated_at": "2026-04-12T16:21:47Z",
       "live_rows": 4,
       "public_now": 1,
       "shadow_now": 3,
@@ -111,7 +111,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T15:51:39Z",
+      "updated_at": "2026-04-12T16:22:01Z",
       "live_rows": 2,
       "public_now": 1,
       "shadow_now": 1,
@@ -142,7 +142,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T15:52:06Z",
+      "updated_at": "2026-04-12T16:21:05Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -2096,5 +2096,5 @@
     ]
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "367e5cdb8df4c21e17830cbadfd563aa4b2827e5f5d7a3f37228f862583bfaa0"
+  "payload_hash": "9b66afebba9d22077ca898bd9c5dcfae624a2692df7e632939b4e0193bc41184"
 }
