@@ -287,9 +287,9 @@
       "match_date": "2026-04-12",
       "home_team": "Mainz 05",
       "away_team": "Freiburg",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-5-2",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -297,7 +297,7 @@
         "Danny da Costa",
         "Stefan Posch",
         "Dominik Kohr",
-        "Silvan Widmer",
+        "Nikolas Veratschnig",
         "Paul Nebel",
         "Kaishu Sano",
         "Sota Kawasaki",
@@ -307,15 +307,15 @@
       ],
       "away_players": [
         "Noah Atubolu",
-        "Philipp Treu",
+        "Lukas Kübler",
         "Matthias Ginter",
-        "Philipp Lienhart",
+        "Bruno Ogbus",
         "Christian Günter",
         "Maximilian Eggestein",
         "Johan Manzambi",
-        "Jan-Niklas Beste",
-        "Yuito Suzuki",
-        "Vincenzo Grifo",
+        "Cyriaque Irié",
+        "Lucas Höler",
+        "Derry Scherhant",
         "Igor Matanovic"
       ],
       "home_starters": [
@@ -356,7 +356,7 @@
           "position_id": 37
         },
         {
-          "name": "Silvan Widmer",
+          "name": "Nikolas Veratschnig",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -430,7 +430,7 @@
           "position_id": 11
         },
         {
-          "name": "Philipp Treu",
+          "name": "Lukas Kübler",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -448,7 +448,7 @@
           "position_id": 34
         },
         {
-          "name": "Philipp Lienhart",
+          "name": "Bruno Ogbus",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -484,7 +484,7 @@
           "position_id": 66
         },
         {
-          "name": "Jan-Niklas Beste",
+          "name": "Cyriaque Irié",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -493,7 +493,7 @@
           "position_id": 83
         },
         {
-          "name": "Yuito Suzuki",
+          "name": "Lucas Höler",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -502,7 +502,7 @@
           "position_id": 85
         },
         {
-          "name": "Vincenzo Grifo",
+          "name": "Derry Scherhant",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -520,16 +520,34 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Lasse Rieß",
+        "Kacper Potulski",
+        "Anthony Caci",
+        "Lennard Maloney",
         "Nadiem Amiri",
+        "Silvan Widmer",
+        "Armindo Sieb",
+        "Nelson Weiper",
+        "William Bøving"
+      ],
+      "away_subs": [
+        "Florian Müller",
+        "Jordy Makengo",
+        "Philipp Lienhart",
+        "Philipp Treu",
+        "Nicolas Höfler",
+        "Yuito Suzuki",
+        "Jan-Niklas Beste",
+        "Maximilian Philipp",
+        "Vincenzo Grifo"
+      ],
+      "home_unavailable": [
         "Stefan Bell",
         "Robin Zentner",
         "Andreas Hanche-Olsen",
         "Maxim Dal",
         "Maxim Leitsch",
-        "Anthony Caci",
         "Jae-Sung Lee",
         "Benedict Hollerbach",
         "Silas Katompa Mvumpa"
@@ -782,26 +800,26 @@
         }
       ],
       "home_subs": [
+        "Bilal El Khannouss",
+        "Nikolas Nartey",
+        "Tiago Tomás",
         "Fabian Bredlow",
         "Dan-Axel Zagadou",
         "Finn Jeltsch",
         "Josha Vagnoman",
         "Luca Jaquez",
-        "Bilal El Khannouss",
-        "Nikolas Nartey",
-        "Jeremy Arévalo",
-        "Tiago Tomás"
+        "Jeremy Arévalo"
       ],
       "away_subs": [
-        "Hannes Hermann",
+        "Otto Stange",
+        "Robert Glatzel",
         "Nicolás Capaldo",
+        "Giorgi Gocholeishvili",
+        "Hannes Hermann",
         "Noah Katterbach",
         "Shafiq Nandja",
-        "Giorgi Gocholeishvili",
         "Damion Downs",
-        "Otto Stange",
-        "Philip Otele",
-        "Robert Glatzel"
+        "Philip Otele"
       ],
       "home_unavailable": [
         "Justin Diehl",
