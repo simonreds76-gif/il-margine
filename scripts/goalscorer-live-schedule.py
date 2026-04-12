@@ -42,7 +42,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--leagues", default=",".join(LEAGUE_CONFIGS.keys()), help="Comma-separated league keys")
     parser.add_argument("--lookahead-hours", type=int, default=12, help="Only consider fixtures within this window")
     parser.add_argument("--cold-minutes", type=int, default=180, help="Cold tier starts above this many minutes")
-    parser.add_argument("--warm-minutes", type=int, default=60, help="Warm tier starts above this many minutes")
+    parser.add_argument(
+        "--warm-minutes",
+        type=int,
+        default=90,
+        help="Hot tier applies within this many minutes of kickoff; above that and within cold-minutes is warm tier",
+    )
     parser.add_argument("--hot-cadence", type=int, default=10, help="Cadence in minutes for hot fixtures")
     parser.add_argument("--warm-cadence", type=int, default=30, help="Cadence in minutes for warm fixtures")
     parser.add_argument("--cold-cadence", type=int, default=120, help="Cadence in minutes for cold fixtures")
