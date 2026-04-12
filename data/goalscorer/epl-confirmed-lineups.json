@@ -12,15 +12,15 @@
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "4-1-4-1",
+      "away_formation": "4-2-3-1",
       "home_players": [
         "Robert Sánchez",
         "Malo Gusto",
         "Wesley Fofana",
         "Jorrel Hato",
         "Marc Cucurella",
-        "Moisés Caicedo",
         "Andrey Santos",
+        "Moisés Caicedo",
         "Estêvão",
         "Cole Palmer",
         "Pedro Neto",
@@ -33,8 +33,8 @@
         "Marc Guéhi",
         "Nico O'Reilly",
         "Rodri",
-        "Antoine Semenyo",
         "Bernardo Silva",
+        "Antoine Semenyo",
         "Rayan Cherki",
         "Jérémy Doku",
         "Erling Haaland"
@@ -86,7 +86,7 @@
           "position_id": 38
         },
         {
-          "name": "Moisés Caicedo",
+          "name": "Andrey Santos",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -95,7 +95,7 @@
           "position_id": 64
         },
         {
-          "name": "Andrey Santos",
+          "name": "Moisés Caicedo",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -147,7 +147,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 11
         },
         {
@@ -156,7 +156,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 32
         },
         {
@@ -165,7 +165,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 34
         },
         {
@@ -174,7 +174,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 36
         },
         {
@@ -183,53 +183,53 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 38
         },
         {
           "name": "Rodri",
           "line_index": 1,
-          "line_size": 1,
+          "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
-          "formation": "4-1-4-1",
-          "position_id": 65
+          "formation": "4-2-3-1",
+          "position_id": 64
+        },
+        {
+          "name": "Bernardo Silva",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
         },
         {
           "name": "Antoine Semenyo",
           "line_index": 2,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 82
-        },
-        {
-          "name": "Bernardo Silva",
-          "line_index": 2,
-          "line_size": 4,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 84
+          "formation": "4-2-3-1",
+          "position_id": 83
         },
         {
           "name": "Rayan Cherki",
           "line_index": 2,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 86
+          "formation": "4-2-3-1",
+          "position_id": 85
         },
         {
           "name": "Jérémy Doku",
           "line_index": 2,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 88
+          "formation": "4-2-3-1",
+          "position_id": 87
         },
         {
           "name": "Erling Haaland",
@@ -237,31 +237,31 @@
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 115
         }
       ],
       "home_subs": [
-        "Teddy Sharman-Lowe",
-        "Josh Acheampong",
-        "Mamadou Sarr",
-        "Tosin Adarabioyo",
-        "Dário Essugo",
         "Roméo Lavia",
         "Alejandro Garnacho",
         "Liam Delap",
+        "Dário Essugo",
+        "Josh Acheampong",
+        "Teddy Sharman-Lowe",
+        "Mamadou Sarr",
+        "Tosin Adarabioyo",
         "Marc Guiu"
       ],
       "away_subs": [
+        "Rayan Aït-Nouri",
+        "Phil Foden",
+        "Savinho",
+        "Mateo Kovacic",
         "James Trafford",
         "Nathan Aké",
-        "Rayan Aït-Nouri",
-        "Mateo Kovacic",
         "Nico González",
-        "Phil Foden",
         "Tijjani Reijnders",
-        "Omar Marmoush",
-        "Savinho"
+        "Omar Marmoush"
       ],
       "home_unavailable": [
         "Enzo Fernández",

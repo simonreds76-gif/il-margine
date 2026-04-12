@@ -290,20 +290,20 @@
       "home_status": "Confirmed Lineup",
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
-      "home_formation": "3-5-2",
+      "home_formation": "3-1-4-2",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Daniel Batz",
         "Danny da Costa",
         "Stefan Posch",
         "Dominik Kohr",
-        "Nikolas Veratschnig",
-        "Paul Nebel",
         "Kaishu Sano",
+        "Nikolas Veratschnig",
         "Sota Kawasaki",
+        "Paul Nebel",
         "Phillipp Mwene",
-        "Sheraldo Becker",
-        "Phillip Tietz"
+        "Phillip Tietz",
+        "Sheraldo Becker"
       ],
       "away_players": [
         "Noah Atubolu",
@@ -325,7 +325,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-5-2",
+          "formation": "3-1-4-2",
           "position_id": 11
         },
         {
@@ -334,7 +334,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
+          "formation": "3-1-4-2",
           "position_id": 33
         },
         {
@@ -343,7 +343,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
+          "formation": "3-1-4-2",
           "position_id": 35
         },
         {
@@ -352,70 +352,70 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
+          "formation": "3-1-4-2",
           "position_id": 37
-        },
-        {
-          "name": "Nikolas Veratschnig",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 71
-        },
-        {
-          "name": "Paul Nebel",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 73
         },
         {
           "name": "Kaishu Sano",
           "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 75
+          "line_size": 1,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "3-1-4-2",
+          "position_id": 65
+        },
+        {
+          "name": "Nikolas Veratschnig",
+          "line_index": 2,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-1-4-2",
+          "position_id": 82
         },
         {
           "name": "Sota Kawasaki",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 77
+          "line_index": 2,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-1-4-2",
+          "position_id": 84
+        },
+        {
+          "name": "Paul Nebel",
+          "line_index": 2,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-1-4-2",
+          "position_id": 86
         },
         {
           "name": "Phillipp Mwene",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 79
-        },
-        {
-          "name": "Sheraldo Becker",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-5-2",
-          "position_id": 104
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-1-4-2",
+          "position_id": 88
         },
         {
           "name": "Phillip Tietz",
-          "line_index": 2,
+          "line_index": 3,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-5-2",
+          "formation": "3-1-4-2",
+          "position_id": 104
+        },
+        {
+          "name": "Sheraldo Becker",
+          "line_index": 3,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-1-4-2",
           "position_id": 106
         }
       ],
@@ -532,9 +532,9 @@
         "William Bøving"
       ],
       "away_subs": [
+        "Philipp Lienhart",
         "Florian Müller",
         "Jordy Makengo",
-        "Philipp Lienhart",
         "Philipp Treu",
         "Nicolas Höfler",
         "Yuito Suzuki",
@@ -803,12 +803,12 @@
         "Bilal El Khannouss",
         "Nikolas Nartey",
         "Tiago Tomás",
+        "Josha Vagnoman",
+        "Jeremy Arévalo",
         "Fabian Bredlow",
         "Dan-Axel Zagadou",
         "Finn Jeltsch",
-        "Josha Vagnoman",
-        "Luca Jaquez",
-        "Jeremy Arévalo"
+        "Luca Jaquez"
       ],
       "away_subs": [
         "Otto Stange",
