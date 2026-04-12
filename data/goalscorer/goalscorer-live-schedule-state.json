@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-11T23:34:56Z",
+  "updated_at": "2026-04-12T00:02:35Z",
   "reason": "cycle",
   "leagues": {
     "serie-a": {
@@ -23,14 +23,14 @@
       "next_kickoff_utc": ""
     },
     "la-liga": {
-      "last_successful_run_at": "2026-04-11T18:05:54Z",
-      "last_detail_run_at": "2026-04-11T17:47:37Z",
+      "last_successful_run_at": "2026-04-12T00:02:29Z",
+      "last_detail_run_at": "2026-04-12T00:02:29Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip la-liga: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "cold",
+      "last_decision": "ran",
+      "last_message": "Ran la-liga in cold tier (cadence 120m, fixtures 1).",
+      "next_kickoff_utc": "2026-04-12T12:00:00Z"
     },
     "bundesliga": {
       "last_successful_run_at": "2026-04-11T15:59:19Z",
