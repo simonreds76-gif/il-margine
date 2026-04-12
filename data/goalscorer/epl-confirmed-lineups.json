@@ -8,21 +8,21 @@
       "match_date": "2026-04-12",
       "home_team": "Chelsea",
       "away_team": "Manchester City",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-1-4-1",
       "home_players": [
         "Robert Sánchez",
         "Malo Gusto",
         "Wesley Fofana",
-        "Tosin Adarabioyo",
+        "Jorrel Hato",
         "Marc Cucurella",
         "Moisés Caicedo",
-        "Roméo Lavia",
-        "Cole Palmer",
         "Andrey Santos",
+        "Estêvão",
+        "Cole Palmer",
         "Pedro Neto",
         "João Pedro"
       ],
@@ -68,7 +68,7 @@
           "position_id": 34
         },
         {
-          "name": "Tosin Adarabioyo",
+          "name": "Jorrel Hato",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -95,7 +95,7 @@
           "position_id": 64
         },
         {
-          "name": "Roméo Lavia",
+          "name": "Andrey Santos",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -104,7 +104,7 @@
           "position_id": 66
         },
         {
-          "name": "Cole Palmer",
+          "name": "Estêvão",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -113,7 +113,7 @@
           "position_id": 83
         },
         {
-          "name": "Andrey Santos",
+          "name": "Cole Palmer",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -241,8 +241,28 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Teddy Sharman-Lowe",
+        "Josh Acheampong",
+        "Mamadou Sarr",
+        "Tosin Adarabioyo",
+        "Dário Essugo",
+        "Roméo Lavia",
+        "Alejandro Garnacho",
+        "Liam Delap",
+        "Marc Guiu"
+      ],
+      "away_subs": [
+        "James Trafford",
+        "Nathan Aké",
+        "Rayan Aït-Nouri",
+        "Mateo Kovacic",
+        "Nico González",
+        "Phil Foden",
+        "Tijjani Reijnders",
+        "Omar Marmoush",
+        "Savinho"
+      ],
       "home_unavailable": [
         "Enzo Fernández",
         "Filip Jörgensen",
@@ -504,22 +524,22 @@
         "Ismaïla Sarr",
         "Jean-Philippe Mateta",
         "Daichi Kamada",
+        "Borna Sosa",
         "Walter Benítez",
         "Chadi Riad",
-        "Borna Sosa",
         "Justin Devenny",
         "Nathaniel Clyne"
       ],
       "away_subs": [
         "Harvey Barnes",
+        "Jacob Ramsey",
+        "Nick Woltemade",
+        "Anthony Elanga",
+        "Yoane Wissa",
         "Nick Pope",
         "Daniel Burn",
         "Kieran Trippier",
-        "Jacob Ramsey",
-        "Joseph Willock",
-        "Anthony Elanga",
-        "Nick Woltemade",
-        "Yoane Wissa"
+        "Joseph Willock"
       ],
       "home_unavailable": [
         "Evann Guessand",
@@ -775,25 +795,25 @@
       ],
       "home_subs": [
         "Chris Wood",
+        "Nicolás Dominguez",
+        "Ryan Yates",
+        "Dan Ndoye",
         "Stefan Ortega",
         "Luca Netz",
         "Morato",
         "Dilane Bakwa",
-        "James McAtee",
-        "Nicolás Dominguez",
-        "Ryan Yates",
-        "Dan Ndoye"
+        "James McAtee"
       ],
       "away_subs": [
-        "James Wright",
-        "Andrés García",
-        "Ezri Konsa",
-        "Ian Maatsen",
-        "Lamare Bogarde",
         "Douglas Luiz",
+        "Ian Maatsen",
         "Emiliano Buendía",
-        "Leon Bailey",
-        "Tammy Abraham"
+        "Tammy Abraham",
+        "Andrés García",
+        "James Wright",
+        "Ezri Konsa",
+        "Lamare Bogarde",
+        "Leon Bailey"
       ],
       "home_unavailable": [
         "Jair Cunha",
@@ -1049,25 +1069,25 @@
         }
       ],
       "home_subs": [
+        "Trai Hume",
+        "Chemsdine Talbi",
+        "Wilson Isidor",
         "Melker Ellborg",
         "Dennis Cirkin",
         "Jenson Jones",
         "Lutsharel Geertruida",
-        "Trai Hume",
         "Harrison Jones",
-        "Chemsdine Talbi",
-        "Eliezer Mayenda",
-        "Wilson Isidor"
+        "Eliezer Mayenda"
       ],
       "away_subs": [
         "João Palhinha",
         "Pape Sarr",
         "Mathys Tel",
         "Kevin Danso",
+        "Xavi Simons",
         "Brandon Austin",
         "Djed Spence",
         "Radu Dragusin",
-        "Xavi Simons",
         "Yves Bissouma"
       ],
       "home_unavailable": [
