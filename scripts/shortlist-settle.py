@@ -3,7 +3,7 @@
 Settle matchday shortlist value-bets against actual corner results.
 
 Reads all value-bets-{date}.csv files from data/shortlist/, matches each bet
-against actual corner results in data/team-shots/historical/, and writes:
+against actual corner results in data/corners-ou/historical/, and writes:
 
   data/shortlist/settled-pnl.csv          — all bets with result + running P&L
   data/shortlist/corners-live-pnl.txt     — human-readable P&L report
@@ -36,7 +36,8 @@ from fotmob_match_stats import fetch_fotmob_recent_results
 
 ROOT = Path(__file__).resolve().parent.parent
 SHORTLIST_DIR   = ROOT / "data" / "shortlist"
-HISTORICAL_DIR  = ROOT / "data" / "team-shots" / "historical"
+HISTORICAL_DIR  = ROOT / "data" / "corners-ou" / "historical"
+LEGACY_HISTORICAL_DIR = ROOT / "data" / "team-shots" / "historical"
 SETTLED_PATH    = ROOT / "data" / "shortlist" / "settled-pnl.csv"
 PNL_REPORT_PATH = ROOT / "data" / "shortlist" / "corners-live-pnl.txt"
 PINNACLE_ODDS_PATH = ROOT / "data" / "corners-ou" / "pinnacle-corners-odds.csv"
@@ -234,10 +235,43 @@ def _fixture_date_for_row(row: dict) -> str:
 
 
 def _row_identity(row: dict) -> str:
+    """
+    Unique identity for a single logged bet.
+
+    We include file_date, league, fixture_date, match, line, side, AND bookmaker so that:
+      - Multiple bets on the same fixture (different lines or sides) are all preserved.
+      - The same line/side at different bookmakers remains distinct if that ever happens.
+      - The same bet re-appearing across consecutive shortlist runs (same file_date,
+        same line/side) deduplicates correctly.
+      - Old fixture-level deduplication that discarded earlier bets is gone.
+    """
     match_norm = (row.get("match") or "").strip().lower()
     league_norm = (row.get("league") or "").strip().lower()
     fixture_date = _fixture_date_for_row(row)
-    return f"{league_norm}|{fixture_date}|{match_norm}"
+    file_date = (row.get("file_date") or "").strip()[:10]
+    line_norm = str(row.get("line") or "").strip()
+    side_norm = (row.get("side") or "").strip().lower()
+    bookmaker_norm = (row.get("bookmaker") or "").strip().lower()
+    return f"{file_date}|{league_norm}|{fixture_date}|{match_norm}|{line_norm}|{side_norm}|{bookmaker_norm}"
+
+
+def _row_identity_without_file_date(row: dict) -> str:
+    match_norm = (row.get("match") or "").strip().lower()
+    league_norm = (row.get("league") or "").strip().lower()
+    fixture_date = _fixture_date_for_row(row)
+    line_norm = str(row.get("line") or "").strip()
+    side_norm = (row.get("side") or "").strip().lower()
+    bookmaker_norm = (row.get("bookmaker") or "").strip().lower()
+    return f"{league_norm}|{fixture_date}|{match_norm}|{line_norm}|{side_norm}|{bookmaker_norm}"
+
+
+def resolve_historical_dir() -> Path:
+    if HISTORICAL_DIR.exists():
+        return HISTORICAL_DIR
+    if LEGACY_HISTORICAL_DIR.exists():
+        print(f"[warn] corners historical dir missing at {HISTORICAL_DIR}; using legacy {LEGACY_HISTORICAL_DIR}")
+        return LEGACY_HISTORICAL_DIR
+    return HISTORICAL_DIR
 
 
 def season_code(start_year: int) -> str:
@@ -253,7 +287,8 @@ def load_actual_results() -> Dict[str, dict]:
     Key: "{date}|{norm(home)}|{norm(away)}"
     """
     results: Dict[str, dict] = {}
-    for csv_path in sorted(HISTORICAL_DIR.glob("*.csv")):
+    historical_dir = resolve_historical_dir()
+    for csv_path in sorted(historical_dir.glob("*.csv")):
         if "all-historical" in csv_path.name:
             continue
         with open(csv_path, "r", encoding="utf-8") as fh:
@@ -318,7 +353,10 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
     odds_index = load_pinnacle_odds_index()
     print(f"Loaded {len(odds_index)} Pinnacle odds series")
 
-    bet_files = sorted(SHORTLIST_DIR.glob("value-bets-*.csv"))
+    bet_files = sorted(
+        path for path in SHORTLIST_DIR.glob("value-bets-*.csv")
+        if path.name != "value-bets-latest.csv"
+    )
     if target_date:
         bet_files = [f for f in bet_files if target_date in f.name]
 
@@ -361,12 +399,42 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
 
     current_source_rows: List[dict] = []
     for path in bet_files:
-        current_source_rows.extend(list(csv.DictReader(open(path, "r", encoding="utf-8"))))
+        file_date = path.name.replace("value-bets-", "").replace(".csv", "")[:10]
+        with open(path, "r", encoding="utf-8") as fh:
+            for row in csv.DictReader(fh):
+                row = dict(row)
+                if not (row.get("file_date") or "").strip():
+                    row["file_date"] = file_date
+                if not (row.get("kick_off") or "").strip():
+                    row["kick_off"] = find_match_kickoff((row.get("match") or "").strip(), odds_index) or ""
+                current_source_rows.append(row)
 
     existing_source_rows: List[dict] = []
     if SETTLED_PATH.exists():
         with open(SETTLED_PATH, "r", encoding="utf-8", newline="") as fh:
             existing_source_rows = list(csv.DictReader(fh))
+        existing_source_rows = [
+            row for row in existing_source_rows
+            if (row.get("file_date") or "").strip().lower() != "latest"
+        ]
+
+    current_file_dates_by_partial_identity: Dict[str, set[str]] = defaultdict(set)
+    for row in current_source_rows:
+        file_date = (row.get("file_date") or "").strip()[:10]
+        if not file_date:
+            continue
+        current_file_dates_by_partial_identity[_row_identity_without_file_date(row)].add(file_date)
+    for row in existing_source_rows:
+        inferred_file_dates = current_file_dates_by_partial_identity.get(
+            _row_identity_without_file_date(row),
+            set(),
+        )
+        if len(inferred_file_dates) != 1:
+            continue
+        inferred_file_date = next(iter(inferred_file_dates))
+        current_file_date = (row.get("file_date") or "").strip()[:10]
+        if not current_file_date or current_file_date == "latest" or current_file_date != inferred_file_date:
+            row["file_date"] = inferred_file_date
 
     current_keys = {_row_identity(row) for row in current_source_rows}
     source_rows = current_source_rows + [
@@ -439,16 +507,35 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
 
         if result:
             total_corners = result["total_corners"]
-            won = (total_corners > line_val) if side == "over" else (total_corners <= int(line_val))
-            pnl_units = round((bookie_odds - 1.0) if won else -1.0, 3)
-            pnl_staked = round(pnl_units * stake, 3)
+            # Push/void detection: integer lines (8.0, 9.0, 10.0) push when the result
+            # lands exactly on the line. Half-point lines (8.5, 9.5) never push.
+            is_integer_line = (line_val == round(line_val))
+            if is_integer_line and total_corners == round(line_val):
+                # Push: stake returned, P&L is zero.
+                outcome = "push"
+                pnl_units = 0.0
+                pnl_staked = 0.0
+            elif side == "over":
+                won_bool = total_corners > line_val
+                outcome = "yes" if won_bool else "no"
+                pnl_units = round((bookie_odds - 1.0) if won_bool else -1.0, 3)
+                pnl_staked = round(pnl_units * stake, 3)
+            else:  # under — strict less-than for both integer and half-point lines
+                won_bool = total_corners < line_val
+                outcome = "yes" if won_bool else "no"
+                pnl_units = round((bookie_odds - 1.0) if won_bool else -1.0, 3)
+                pnl_staked = round(pnl_units * stake, 3)
 
+            now_iso = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+            # Preserve settled_at from an existing settled row; only set it the first time.
+            settled["settled_at"] = bet.get("settled_at") or now_iso
             settled["settled"] = "yes"
             settled["actual_total_corners"] = total_corners
-            settled["won"] = "yes" if won else "no"
+            settled["won"] = outcome
             settled["pnl_units"] = pnl_units
             settled["pnl_staked"] = pnl_staked
         else:
+            settled["settled_at"] = bet.get("settled_at") or ""
             settled["settled"] = "pending"
             settled["actual_total_corners"] = ""
             settled["won"] = ""
@@ -457,19 +544,19 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
 
         rows.append(settled)
 
-    # One bet per fixture across all files. When the same match appears in
-    # multiple shortlist runs (e.g. different lines on consecutive days),
-    # keep the single highest-edge signal to avoid correlated over-sizing.
-    # Include the resolved fixture date so repeat fixtures later in the season
-    # do not collapse into one another.
-    best: dict[str, dict] = {}
+    # Deduplicate only on the full bet identity
+    # (file_date|league|fixture_date|match|line|side|bookmaker).
+    # Multiple bets on the same fixture (different lines, different sides, or generated on
+    # different days) are ALL preserved. No fixture-level collapse.
+    seen: dict[str, dict] = {}
     for r in rows:
-        # Normalise the match string so "Genoa vs Sassuolo" always collapses
         key = _row_identity(r)
-        existing = best.get(key)
-        if existing is None or _pf(r.get("edge", "0")) > _pf(existing.get("edge", "0")):
-            best[key] = r
-    rows = list(best.values())
+        if key not in seen:
+            seen[key] = r
+        # If the same full identity appears twice (e.g. the shortlist file and the existing
+        # settled CSV), the one already in `seen` wins (current shortlist file was added first
+        # in source_rows, so it takes precedence over the cached settled row).
+    rows = list(seen.values())
 
     return rows
 
@@ -485,15 +572,17 @@ def _section(
     p = " " * indent
     won    = [b for b in bets if b.get("won") == "yes"]
     lost   = [b for b in bets if b.get("won") == "no"]
-    n      = len(won) + len(lost)
+    pushed = [b for b in bets if b.get("won") == "push"]
+    n      = len(won) + len(lost) + len(pushed)
     if n == 0:
         lines.append(f"{p}{label}: no settled bets")
         return
-    pnl    = sum(_pf(b.get("pnl_staked", "")) for b in won + lost)
-    staked = sum(_pf(b.get("stake", "1"), 1.0) for b in won + lost)
+    pnl    = sum(_pf(b.get("pnl_staked", "")) for b in won + lost + pushed)
+    staked = sum(_pf(b.get("stake", "1"), 1.0) for b in won + lost + pushed)
     roi    = pnl / staked * 100 if staked else 0.0
+    push_str = f"/P{len(pushed)}" if pushed else ""
     lines.append(
-        f"{p}{label}: {n} settled  W{len(won)}/L{len(lost)}  "
+        f"{p}{label}: {n} settled  W{len(won)}/L{len(lost)}{push_str}  "
         f"({len(won)/n*100:.0f}%)  P&L {pnl:+.2f}u  ROI {roi:+.1f}%"
     )
 
@@ -521,8 +610,12 @@ def build_report(rows: List[dict]) -> str:
         out.append("=" * 70)
         return "\n".join(out)
 
-    # Sort settled by match_date for running P&L
-    settled_sorted = sorted(settled, key=lambda r: r.get("match_date", ""))
+    # Sort settled by settled_at (when the bet was graded), falling back to match_date.
+    # This ensures "recent" is truly recent even if the settler catches up late.
+    settled_sorted = sorted(
+        settled,
+        key=lambda r: r.get("settled_at") or r.get("match_date", ""),
+    )
 
     # Running P&L
     running = 0.0
@@ -534,15 +627,19 @@ def build_report(rows: List[dict]) -> str:
             peak = running
         max_dd = max(max_dd, peak - running)
 
-    won_all  = [b for b in settled if b.get("won") == "yes"]
-    lost_all = [b for b in settled if b.get("won") == "no"]
+    won_all    = [b for b in settled if b.get("won") == "yes"]
+    lost_all   = [b for b in settled if b.get("won") == "no"]
+    pushed_all = [b for b in settled if b.get("won") == "push"]
     total_staked = sum(_pf(b.get("stake", "1"), 1.0) for b in settled)
     total_pnl    = sum(_pf(b.get("pnl_staked", "")) for b in settled)
     roi = total_pnl / total_staked * 100 if total_staked else 0.0
+    n_decisive = len(won_all) + len(lost_all)  # exclude pushes from win-rate denominator
 
     out.append("  ── OVERALL ──────────────────────────────────────────────────")
-    out.append(f"  Settled: {len(settled)}  W{len(won_all)}/L{len(lost_all)}  "
-               f"({len(won_all)/len(settled)*100:.0f}%)")
+    push_str = f"/P{len(pushed_all)}" if pushed_all else ""
+    out.append(f"  Settled: {len(settled)}  W{len(won_all)}/L{len(lost_all)}{push_str}  "
+               f"({len(won_all)/n_decisive*100:.0f}% ex-push)" if n_decisive else
+               f"  Settled: {len(settled)}  (all pushes)")
     out.append(f"  Total staked : {total_staked:.1f}u")
     out.append(f"  P&L          : {total_pnl:+.2f}u")
     out.append(f"  ROI          : {roi:+.1f}%")
@@ -591,7 +688,7 @@ def build_report(rows: List[dict]) -> str:
     out.append(f"  {'-'*11}  {'-'*28}  {'-'*5}  {'-'*5}  "
                f"{'-'*6}  {'-'*5}  {'-'*3}  {'-'*6}")
     for b in recent:
-        won_str = "W" if b.get("won") == "yes" else "L"
+        won_str = "W" if b.get("won") == "yes" else ("P" if b.get("won") == "push" else "L")
         pnl_str = f"{_pf(b.get('pnl_staked','')):+.2f}u"
         edge_str = f"{_pf(b.get('edge','0')):.0%}"
         out.append(
@@ -617,7 +714,7 @@ SETTLED_FIELDS = [
     "model_prob", "model_prob_raw", "model_fair", "bookmaker", "bookie_odds",
     "edge", "stake", "stake_label",
     "lambda_h", "lambda_a",
-    "settled", "actual_total_corners", "won", "pnl_units", "pnl_staked",
+    "settled", "settled_at", "actual_total_corners", "won", "pnl_units", "pnl_staked",
     "closing_odds", "clv",
 ]
 
@@ -625,10 +722,12 @@ SETTLED_FIELDS = [
 def write_settled_csv(rows: List[dict]) -> None:
     if not rows:
         return
-    # running P&L column — sorted by match_date, pending at end
+    # running P&L column — sorted by settled_at (when graded), then match_date as fallback.
+    # Sorting by settled_at ensures "recent settled" in the monitor reflects actual recency,
+    # not fixture date, which can be misleading when the settler catches up late.
     settled_rows = sorted(
         [r for r in rows if r.get("settled") == "yes"],
-        key=lambda r: r.get("match_date", ""),
+        key=lambda r: r.get("settled_at") or r.get("match_date", ""),
     )
     pending_rows = [r for r in rows if r.get("settled") != "yes"]
 

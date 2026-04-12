@@ -36,7 +36,9 @@ from corners_poisson import (  # noqa: E402
 )
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_INPUT = ROOT / "data" / "team-shots" / "historical" / "all-historical-matches.csv"
+CORNERS_HISTORICAL_DIR = ROOT / "data" / "corners-ou" / "historical"
+LEGACY_HISTORICAL_DIR = ROOT / "data" / "team-shots" / "historical"
+DEFAULT_INPUT = CORNERS_HISTORICAL_DIR / "all-historical-matches.csv"
 DEFAULT_OUTPUT = ROOT / "data" / "corners-ou" / "corners-ou-predictions.csv"
 DEFAULT_CALIBRATION = ROOT / "data" / "corners-ou" / "corners-ou-calibration.txt"
 
@@ -84,6 +86,16 @@ def _parse_date(val: str) -> Optional[date]:
 
 
 # ── Team state tracker ───────────────────────────────────────────────
+
+def resolve_historical_input(path: Path) -> Path:
+    if path.exists():
+        return path
+    legacy = LEGACY_HISTORICAL_DIR / "all-historical-matches.csv"
+    if legacy.exists():
+        print(f"[warn] corners historical base missing at {path}; using legacy {legacy}")
+        return legacy
+    return path
+
 
 @dataclass
 class TeamState:
@@ -440,8 +452,9 @@ def main() -> None:
     parser.add_argument("--holdout-start", type=str, default=None)
     args = parser.parse_args()
 
-    print(f"Loading matches from {args.input}")
-    matches = load_matches(args.input)
+    input_path = resolve_historical_input(args.input)
+    print(f"Loading matches from {input_path}")
+    matches = load_matches(input_path)
     print(f"  {len(matches)} matches loaded")
 
     holdout = None

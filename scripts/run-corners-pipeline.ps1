@@ -174,9 +174,49 @@ try {
     Log ""
     Log "--- CORNERS ---"
 
+    $cornersDir = Join-Path $root "data\corners-ou"
+    $cornersHistoryDir = Join-Path $cornersDir "historical"
+    New-Item -ItemType Directory -Force -Path $cornersDir | Out-Null
+    New-Item -ItemType Directory -Force -Path $cornersHistoryDir | Out-Null
+
+    $cornersLeagues = if ($LeaguesOnly) {
+        $LeaguesOnly.Split(",") | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+    } else {
+        @("epl", "serie-a", "la-liga", "bundesliga", "ligue-1")
+    }
+    $nowLocal = Get-Date
+    $currentSeason = if ($nowLocal.Month -ge 8) { $nowLocal.Year } else { $nowLocal.Year - 1 }
+    $hadCornersHistory = Test-Path (Join-Path $cornersHistoryDir "all-historical-matches.csv")
+    $historyFiles = @(Get-ChildItem $cornersHistoryDir -Filter "*.csv" -ErrorAction SilentlyContinue | Where-Object { $_.Name -ne "all-historical-matches.csv" })
+    $historySeasons = if ($hadCornersHistory -and $historyFiles.Count -gt 0) {
+        @($currentSeason)
+    } else {
+        2014..$currentSeason
+    }
+
+    $currentStep = "corners-history"
+    Write-Status -State "running" -Message "Refreshing corners historical data" -Artifacts (Build-ArtifactsState)
+    if ($historySeasons.Count -gt 1) {
+        Log "Step 1a: Bootstrapping isolated corners historical base ($($historySeasons[0])-$($historySeasons[-1]))..."
+    } else {
+        Log "Step 1a: Refreshing corners current-season history..."
+    }
+    $fdArgs = @("scripts/footballdata-download-historical.py", "--leagues") + $cornersLeagues + @("--seasons") + ($historySeasons | ForEach-Object { "$_" }) + @("--out-dir", $cornersHistoryDir, "--overwrite")
+    $fdResult = & python @fdArgs 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        if (-not $hadCornersHistory) {
+            Add-CriticalFailure "Corners historical refresh returned exit code $LASTEXITCODE with no isolated history base available."
+        } else {
+            Add-WarningMessage "Corners historical refresh returned exit code $LASTEXITCODE; using existing isolated history base."
+        }
+        $fdResult | ForEach-Object { Log "  $_" }
+    } else {
+        Log "  Corners historical refresh complete"
+    }
+
     $currentStep = "corners-model"
     Write-Status -State "running" -Message "Running corners model" -Artifacts (Build-ArtifactsState)
-    Log "Step 1a: Running corners model..."
+    Log "Step 1b: Running corners model..."
     $modelResult = & python scripts/corners-ou-model.py 2>&1
     if ($LASTEXITCODE -ne 0) {
         Add-CriticalFailure "Corners model returned exit code $LASTEXITCODE"
@@ -188,7 +228,7 @@ try {
 
     $currentStep = "corners-calibration"
     Write-Status -State "running" -Message "Fitting corners calibration" -Artifacts (Build-ArtifactsState)
-    Log "Step 1a2: Fitting Platt calibration..."
+    Log "Step 1c: Fitting Platt calibration..."
     $calibResult = & python scripts/corners-fit-calibration.py 2>&1
     if ($LASTEXITCODE -ne 0) {
         Add-WarningMessage "Corners calibration fit failed (exit $LASTEXITCODE); shortlist will use raw probabilities."
@@ -199,7 +239,7 @@ try {
 
     $currentStep = "corners-shortlist"
     Write-Status -State "running" -Message "Generating corners shortlist" -Artifacts (Build-ArtifactsState)
-    Log "Step 1b: Fetching corner odds and generating shortlist..."
+    Log "Step 1d: Fetching corner odds and generating shortlist..."
     $shortlistArgs = @("scripts/matchday-shortlist.py", "--all-leagues", "--min-edge", $MinEdge, "--days-ahead", $DaysAhead, "--regions", $Regions)
     if ($LeaguesOnly) {
         $shortlistArgs = @("scripts/matchday-shortlist.py", "--league", $LeaguesOnly.Split(",")[0], "--min-edge", $MinEdge, "--days-ahead", $DaysAhead, "--regions", $Regions)
@@ -216,7 +256,7 @@ try {
 
     $currentStep = "corners-settle"
     Write-Status -State "running" -Message "Settling corners shortlist" -Artifacts (Build-ArtifactsState)
-    Log "Step 1c: Settling previous corner bets..."
+    Log "Step 1e: Settling previous corner bets..."
     $settleResult = & python scripts/shortlist-settle.py 2>&1
     $settleExitCode = $LASTEXITCODE
     $settleLine = ($settleResult | Select-String "Settled:" | Select-Object -Last 1)

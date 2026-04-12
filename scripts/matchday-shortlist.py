@@ -14,7 +14,7 @@ It will:
   2. Fetch real-time corner O/U odds from The Odds API
   3. Compare model fair odds vs bookmaker prices
   4. Highlight value bets with edge >= threshold
-  5. Apply tiered staking (0.5-2u by edge band; Ligue 1 capped at 0.5u)
+    5. Apply tiered staking (0.25-2u by edge band; Ligue 1 capped at 0.5u)
   6. Output a clean shortlist for manual betting
 
 Also logs everything to data/shortlist/ for ongoing tracking.
@@ -53,6 +53,8 @@ from corners_poisson import (  # noqa: E402
 
 DEFAULT_PREDICTIONS = ROOT / "data" / "corners-ou" / "corners-ou-predictions.csv"
 DEFAULT_OUTPUT_DIR = ROOT / "data" / "shortlist"
+CORNERS_HISTORICAL_DIR = ROOT / "data" / "corners-ou" / "historical"
+LEGACY_HISTORICAL_DIR = ROOT / "data" / "team-shots" / "historical"
 DEFAULT_EDGE_THRESHOLD = 0.10
 CALIBRATION_PARAMS_PATH = ROOT / "data" / "corners-ou" / "corners-calibration-params.json"
 LIGUE1_MAX_STAKE = 0.5  # DD risk: Ligue 1 backtest max DD ~133u vs ~36u Serie A
@@ -81,7 +83,7 @@ STAKE_TIERS = [
 
 CORNER_LINES = [8.5, 9.5, 10.5, 11.5]
 VALUE_BET_FIELDS = [
-    "match", "kick_off", "league", "market", "line", "side",
+    "file_date", "match", "kick_off", "league", "market", "line", "side",
     "model_prob", "model_fair", "bookmaker", "bookie_odds",
     "edge", "stake", "stake_label", "lambda_h", "lambda_a",
 ]
@@ -234,6 +236,59 @@ def normalize_team(name: str) -> str:
 
 # Corners model: compute lambdas for a fixture
 
+
+def resolve_corners_historical_path() -> Path:
+    preferred = CORNERS_HISTORICAL_DIR / "all-historical-matches.csv"
+    if preferred.exists():
+        return preferred
+    legacy = LEGACY_HISTORICAL_DIR / "all-historical-matches.csv"
+    if legacy.exists():
+        print(f"  [warn] corners historical base missing at {preferred}; using legacy {legacy}")
+        return legacy
+    return preferred
+
+
+def fixture_lock_key(league: str, match: str, kick_off: str = "", fallback_date: str = "") -> str:
+    fixture_date = ((kick_off or "").strip()[:10]) or ((fallback_date or "").strip()[:10])
+    return f"{(league or '').strip().lower()}|{fixture_date}|{(match or '').strip().lower()}"
+
+
+def load_existing_logged_fixture_keys(today: str) -> set[str]:
+    locked: set[str] = set()
+
+    for path in sorted(DEFAULT_OUTPUT_DIR.glob("value-bets-*.csv")):
+        file_date = path.name.replace("value-bets-", "").replace(".csv", "")[:10]
+        if file_date == today:
+            continue
+        with open(path, "r", encoding="utf-8") as fh:
+            for row in csv.DictReader(fh):
+                key = fixture_lock_key(
+                    row.get("league", ""),
+                    row.get("match", ""),
+                    row.get("kick_off", ""),
+                    row.get("match_date", "") or row.get("file_date", "") or file_date,
+                )
+                if key.strip("|"):
+                    locked.add(key)
+
+    settled_path = DEFAULT_OUTPUT_DIR / "settled-pnl.csv"
+    if settled_path.exists():
+        with open(settled_path, "r", encoding="utf-8") as fh:
+            for row in csv.DictReader(fh):
+                file_date = (row.get("file_date") or "").strip()[:10]
+                if file_date == today:
+                    continue
+                key = fixture_lock_key(
+                    row.get("league", ""),
+                    row.get("match", ""),
+                    row.get("kick_off", ""),
+                    row.get("match_date", "") or file_date,
+                )
+                if key.strip("|"):
+                    locked.add(key)
+
+    return locked
+
 ROLLING_WINDOW = 20
 MIN_MATCHES = 6
 DECAY = 0.93
@@ -282,7 +337,7 @@ def load_historical_corner_stats() -> Dict[str, TeamCornerStats]:
     """Load all historical matches and build team corner stats."""
     import csv as _csv
     stats: Dict[str, TeamCornerStats] = defaultdict(TeamCornerStats)
-    hist_path = ROOT / "data" / "team-shots" / "historical" / "all-historical-matches.csv"
+    hist_path = resolve_corners_historical_path()
     if not hist_path.exists():
         return stats
 
@@ -324,7 +379,7 @@ def predict_corners_lambda(
     return max(1.0, min(lam, 15.0))
 
 
-# Staking (tiered, 0.5-2u)
+# Staking (tiered, 0.25-2u)
 
 def tier_stake(edge: float) -> Tuple[float, str]:
     """Map edge to stake tier. Returns (stake_units, label)."""
@@ -396,6 +451,7 @@ def find_value_bets(
                 stake_u = round(stake_u * league_mult, 2)
                 if league == "ligue-1":
                     stake_u = min(stake_u, LIGUE1_MAX_STAKE)
+                stake_u = min(stake_u, 2.0)  # hard absolute cap: no bet exceeds 2u
                 value_bets.append({
                     "match": f"{home_team} vs {away_team}",
                     "kick_off": kick_off,
@@ -420,6 +476,7 @@ def find_value_bets(
                 stake_u = round(stake_u * league_mult, 2)
                 if league == "ligue-1":
                     stake_u = min(stake_u, LIGUE1_MAX_STAKE)
+                stake_u = min(stake_u, 2.0)  # hard absolute cap: no bet exceeds 2u
                 value_bets.append({
                     "match": f"{home_team} vs {away_team}",
                     "kick_off": kick_off,
@@ -643,22 +700,56 @@ def main() -> None:
                 signal[f"fair_under_{line_val}"] = fair_decimal(1.0 - p_over)
             all_signals.append(signal)
 
-    # One bet per match: keep only the highest-edge qualifying bet.
-    # Backing multiple correlated lines on the same fixture dilutes bankroll
-    # with correlated outcomes - take the single best opportunity per game.
+    today = date.today().isoformat()
+
+    # One official bet per match per run: keep only the highest-edge qualifying bet.
+    # We also refuse to emit a new official bet for a fixture that was already logged
+    # on an earlier day, which prevents contradictory over/under histories from
+    # building up across repeated shortlist runs.
     best_by_match: dict[str, dict] = {}
     for bet in all_value_bets:
-        key = f'{bet.get("league", "")}|{bet.get("match", "")}|{bet.get("kick_off", "")}'
+        key = fixture_lock_key(
+            bet.get("league", ""),
+            bet.get("match", ""),
+            bet.get("kick_off", ""),
+            today,
+        )
         if key not in best_by_match or bet["edge"] > best_by_match[key]["edge"]:
             best_by_match[key] = bet
-    all_value_bets = sorted(best_by_match.values(), key=lambda b: -b["edge"])
+    existing_fixture_keys = load_existing_logged_fixture_keys(today)
+    skipped_existing: List[dict] = []
+    filtered_value_bets: List[dict] = []
+    for bet in sorted(best_by_match.values(), key=lambda b: -b["edge"]):
+        fixture_key = fixture_lock_key(
+            bet.get("league", ""),
+            bet.get("match", ""),
+            bet.get("kick_off", ""),
+            today,
+        )
+        if fixture_key in existing_fixture_keys:
+            skipped_existing.append(bet)
+            continue
+        bet["file_date"] = today
+        filtered_value_bets.append(bet)
+    all_value_bets = filtered_value_bets
+
+    if skipped_existing:
+        skipped_labels = sorted({
+            f'{b.get("league", "")}: {b.get("match", "")}'
+            for b in skipped_existing
+        })
+        preview = ", ".join(skipped_labels[:5])
+        suffix = " ..." if len(skipped_labels) > 5 else ""
+        print(
+            f"  Skipped {len(skipped_labels)} fixture(s) already logged on earlier day(s): "
+            f"{preview}{suffix}"
+        )
 
     shortlist = format_shortlist(all_value_bets, client.get_credits_remaining())
     print("\n" + shortlist)
 
     output_dir = DEFAULT_OUTPUT_DIR
     output_dir.mkdir(parents=True, exist_ok=True)
-    today = date.today().isoformat()
 
     shortlist_path = output_dir / f"shortlist-{today}.txt"
     with open(shortlist_path, "w", encoding="utf-8") as fh:
