@@ -550,6 +550,12 @@ function shiftIsoDate(isoDate: string, days: number): string {
   return new Date(stamp + days * 86400000).toISOString().slice(0, 10);
 }
 
+function latestIsoDate(...values: Array<string | undefined>): string | null {
+  const valid = values.filter((value): value is string => Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value)));
+  if (valid.length === 0) return null;
+  return [...valid].sort().at(-1) ?? null;
+}
+
 function formatSignedLine(value?: number): string {
   if (value == null || Number.isNaN(value)) return "n/a";
   return `${value > 0 ? "+" : ""}${value.toFixed(value % 1 === 0 ? 0 : 1)}`;
@@ -753,7 +759,9 @@ export default async function ModelMonitorPage() {
   const volumeSpreadOpenCount = volumeQueueSpreadCount;
   const spreadShadowOpenCount = spreadShadowQueue.length;
   const clay2026OpenCount = clay2026Queue.length;
-  const resultsAsOfDate = clay2026AsOf ?? spreadShadowAsOf ?? volumeAsOf ?? strictAsOf ?? new Date().toISOString().slice(0, 10);
+  const resultsAsOfDate =
+    latestIsoDate(clay2026AsOf, spreadShadowAsOf, volumeAsOf, strictAsOf) ??
+    new Date().toISOString().slice(0, 10);
   const priorResultsDate = shiftIsoDate(resultsAsOfDate, -1);
   const latestSettledRows = [
     ...strictSettledRows.map((row) => ({ source: "Strict", lane: row.betType === "spread" ? "Strict Spread" : "Strict ML", accent: "rose" as const, row })),
@@ -941,7 +949,7 @@ export default async function ModelMonitorPage() {
                     <th className="px-3 py-3 font-semibold">Open</th>
                     <th className="px-3 py-3 font-semibold">W/L/V</th>
                     <th className="px-3 py-3 font-semibold">ROI</th>
-                    <th className="px-3 py-3 font-semibold">Recorded P/L (£100/u)</th>
+                    <th className="px-3 py-3 font-semibold">Recorded P/L (GBP100/u)</th>
                     <th className="px-3 py-3 font-semibold">Win Rate</th>
                     <th className="px-3 py-3 font-semibold">CLV</th>
                   </tr>
@@ -968,7 +976,7 @@ export default async function ModelMonitorPage() {
               </table>
             </div>
             <p className="mt-3 text-xs leading-6 text-slate-500">
-              Default board uses one money column only: <span className="font-semibold text-slate-300">Recorded P/L (£100/u)</span>. That is the actual settled P/L from stored unit sizes with 1u = £100. CLV is only audited on the ML lanes with dedicated history coverage right now. Spread Shadow and Clay 2026 show <span className="font-semibold text-slate-400">n/a</span> until that audit exists.
+              Default board uses one money column only: <span className="font-semibold text-slate-300">Recorded P/L (GBP100/u)</span>. That is the actual settled P/L from stored unit sizes with 1u = GBP100. CLV is only audited on the ML lanes with dedicated history coverage right now. Spread Shadow and Clay 2026 show <span className="font-semibold text-slate-400">n/a</span> until that audit exists.
             </p>
             <div className="mt-4 grid gap-3 lg:grid-cols-3">
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
@@ -998,19 +1006,19 @@ export default async function ModelMonitorPage() {
                     <div className="font-semibold text-slate-100">{row.policy} {row.lane}</div>
                     <div className="mt-2 grid gap-2 sm:grid-cols-2">
                       <div>
-                        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Flat P/L (£100)</div>
+                        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Flat P/L (GBP100)</div>
                         <div className={`mt-1 font-mono tabular-nums ${metricTone(row.flatStakePounds)}`}>{formatPounds(row.flatStakePounds, 0, true)}</div>
                       </div>
                       <div>
-                        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Flat Stake (£100)</div>
+                        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Flat Stake (GBP100)</div>
                         <div className="mt-1 font-mono tabular-nums text-slate-200">{formatPounds(row.flatTotalStakedPounds, 0, false)}</div>
                       </div>
                       <div>
-                        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Recorded P/L (£100/u)</div>
+                        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Recorded P/L (GBP100/u)</div>
                         <div className={`mt-1 font-mono tabular-nums ${metricTone(row.unitStakePounds)}`}>{formatPounds(row.unitStakePounds, 0, true)}</div>
                       </div>
                       <div>
-                        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Recorded Stake (£100/u)</div>
+                        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Recorded Stake (GBP100/u)</div>
                         <div className="mt-1 font-mono tabular-nums text-slate-200">{formatPounds(row.unitTotalStakedPounds, 0, false)}</div>
                       </div>
                     </div>
@@ -1022,7 +1030,7 @@ export default async function ModelMonitorPage() {
         </div>
 
         <div className="mb-8">
-          <MonitorCard title="Latest Settled Results" subtitle="Fastest way to answer questions like “did Clay 2026 win yesterday?” without digging through the raw CSVs.">
+          <MonitorCard title="Latest Settled Results" subtitle={'Fastest way to answer questions like "did Clay 2026 win yesterday?" without digging through the raw CSVs.'}>
             <div className="grid gap-4 xl:grid-cols-2">
               {[
                 { label: `Settled Today (${resultsAsOfDate})`, rows: settledTodayRows },
