@@ -32,9 +32,9 @@ DEFAULT_PREDICTIONS = ROOT / "data" / "team-shots" / "team-shots-predictions.csv
 DEFAULT_PARAMS_OUT  = ROOT / "data" / "team-shots" / "team-shots-calibration-params.json"
 DEFAULT_DIAG_OUT    = ROOT / "data" / "team-shots" / "team-shots-calibration-diagnostics.txt"
 
-DEFAULT_FIT_BEFORE = "2022-08-01"
+DEFAULT_FIT_BEFORE = "2026-01-01"
 
-LINES = [9.5, 10.5, 11.5, 12.5, 13.5]
+LINES = [8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5, 16.5, 17.5, 19.5, 20.5]
 
 PLATT_LR    = 0.3
 PLATT_STEPS = 800

@@ -192,6 +192,8 @@ def load_upcoming(path: Path) -> Dict[str, dict]:
             for side in ("home", "away"):
                 team = home_team if side == "home" else away_team
                 lam = row.get(f"{side}_lambda", "")
+                lam_venue = row.get(f"{side}_lambda_venue", "") or lam
+                lam_recent = row.get(f"{side}_lambda_recent", "")
                 pred_row = {
                     "date": match_date,
                     "league": league,
@@ -201,6 +203,8 @@ def load_upcoming(path: Path) -> Dict[str, dict]:
                     "home_team": home_team,
                     "away_team": away_team,
                     "lambda_shots": lam,
+                    "lambda_venue": lam_venue,
+                    "lambda_recent": lam_recent,
                     "xg_lambda": "",
                     "actual_shots": "",
                     "actual_sot": "",
@@ -295,7 +299,7 @@ def compare(
         if p_over_raw_str:
             model_p_over_raw = _pf(pred.get(p_over_key))
         else:
-            lam = _pf(pred.get("lambda_shots"))
+            lam = _pf(pred.get("lambda_venue")) or _pf(pred.get("lambda_shots"))
             if lam <= 0:
                 continue
             model_p_over_raw = prob_over(line, lam)

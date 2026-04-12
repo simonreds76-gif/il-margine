@@ -6,7 +6,9 @@ Uses the same rolling EMA + Poisson logic as team-shots-model.py, with team
 names aligned to historical data via the same normalisation as matchday-shortlist.
 
 Outputs:
-  data/team-shots/team-shots-upcoming.csv
+  data/team-shots/team-shots-upcoming.csv   — per-match model output
+  data/team-shots/team-shots-scanner.csv    — scanner: one row per team+line+side
+                                              joined with latest inbox odds
 
 Usage:
   python scripts/team_shots_upcoming.py
@@ -18,7 +20,11 @@ from __future__ import annotations
 import argparse
 import csv
 import importlib.util
+import json
+import math
+import re
 import sys
+import unicodedata
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -27,10 +33,173 @@ from typing import Any, Dict, List, Optional, Tuple
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
-DEFAULT_OUT = ROOT / "data" / "team-shots" / "team-shots-upcoming.csv"
+DEFAULT_OUT     = ROOT / "data" / "team-shots" / "team-shots-upcoming.csv"
+DEFAULT_CAL     = ROOT / "data" / "team-shots" / "team-shots-calibration-params.json"
+INBOX_DIR       = ROOT / "data" / "team-shots" / "inbox"
+SCANNER_OUT     = ROOT / "data" / "team-shots" / "team-shots-scanner.csv"
 
-DISPLAY_LINES = [9.5, 10.5, 11.5, 12.5, 13.5]
+# Lines exported in the upcoming file — matches the lines books actually quote
+DISPLAY_LINES = [8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5, 16.5, 17.5, 19.5, 20.5]
+
 SUPPORTED_LIVE_LEAGUES = {"epl", "serie-a", "la-liga", "bundesliga"}
+
+SCANNER_FIELDS = [
+    "kickoff_iso", "league", "home_team", "away_team", "team", "venue",
+    "line", "side", "model_prob", "model_fair", "book_odds", "bookmaker",
+    "edge", "captured_at",
+]
+
+
+# ── Calibration helpers ───────────────────────────────────────────────
+
+def _logit(p: float) -> float:
+    p = max(1e-7, min(1.0 - 1e-7, p))
+    return math.log(p / (1.0 - p))
+
+
+def _sigmoid(x: float) -> float:
+    if x >= 0.0:
+        return 1.0 / (1.0 + math.exp(-x))
+    ex = math.exp(x)
+    return ex / (1.0 + ex)
+
+
+def _calibrate(p_raw: float, a: float, b: float) -> float:
+    return _sigmoid(a * _logit(p_raw) + b)
+
+
+def _load_cal(path: Path) -> Dict[str, Tuple[float, float]]:
+    """Load Platt calibration params; returns {} if file absent."""
+    if not path.exists():
+        return {}
+    with open(path, encoding="utf-8") as fh:
+        data = json.load(fh)
+    return {k: (float(v["a"]), float(v["b"])) for k, v in data.get("lines", {}).items()}
+
+
+# ── Team name normalisation ───────────────────────────────────────────
+
+_STOP_TOKENS = frozenset({"fc", "afc", "acf", "sc", "cf", "ac", "rome", "calcio"})
+
+
+def _norm_name(text: str) -> str:
+    """Fold 'ACF Fiorentina' and 'Fiorentina' to the same key."""
+    nfkd = unicodedata.normalize("NFD", (text or "").lower())
+    ascii_only = "".join(ch for ch in nfkd if unicodedata.category(ch) != "Mn")
+    cleaned = re.sub(r"[^\w\s]", " ", ascii_only)
+    tokens = [t for t in cleaned.split() if t not in _STOP_TOKENS]
+    return " ".join(tokens)
+
+
+# ── Inbox odds loader ─────────────────────────────────────────────────
+
+def _load_inbox_odds(inbox_dir: Path) -> Dict[Tuple, dict]:
+    """
+    Read all inbox CSVs; keep the most-recent capture for each
+    (date, norm_home, norm_away, norm_team, line, side, bookmaker).
+    """
+    keyed: Dict[Tuple, dict] = {}
+    if not inbox_dir.exists():
+        return keyed
+    for fpath in sorted(inbox_dir.glob("*.csv")):
+        with open(fpath, encoding="utf-8") as fh:
+            for row in csv.DictReader(fh):
+                key: Tuple = (
+                    (row.get("match_date") or "")[:10],
+                    _norm_name(row.get("home_team") or ""),
+                    _norm_name(row.get("away_team") or ""),
+                    _norm_name(row.get("team") or ""),
+                    str(row.get("line") or ""),
+                    (row.get("side") or "").strip().lower(),
+                    (row.get("bookmaker") or "").strip(),
+                )
+                captured = row.get("captured_at") or ""
+                existing = keyed.get(key)
+                if existing is None or captured >= (existing.get("captured_at") or ""):
+                    keyed[key] = row
+    return keyed
+
+
+def _build_scanner(
+    upcoming_rows: List[Dict[str, Any]],
+    inbox_index: Dict[Tuple, dict],
+) -> List[Dict[str, Any]]:
+    """
+    For every upcoming match row, walk all DISPLAY_LINES × {over, under} and
+    look up the most recent bookmaker price from the inbox index.
+    Returns one scanner row per team × line × side where odds exist.
+    """
+    scanner: List[Dict[str, Any]] = []
+
+    for row in upcoming_rows:
+        kickoff = row.get("kickoff_iso") or ""
+        match_date = kickoff[:10]
+        league = row.get("league") or ""
+        home_raw = row.get("home_team") or ""
+        away_raw = row.get("away_team") or ""
+        norm_home = _norm_name(home_raw)
+        norm_away = _norm_name(away_raw)
+
+        for venue, team_raw in (("home", home_raw), ("away", away_raw)):
+            norm_team = _norm_name(team_raw)
+            prob_key_prefix = f"{venue}_p_over_"
+
+            for line in DISPLAY_LINES:
+                line_str = f"{line:.1f}"
+                model_p_over = row.get(f"{venue}_p_over_{line}")
+                if model_p_over is None or model_p_over == "":
+                    continue
+                model_p_over = float(model_p_over)
+
+                for side in ("over", "under"):
+                    model_prob = model_p_over if side == "over" else 1.0 - model_p_over
+                    if model_prob <= 0:
+                        continue
+                    model_fair = round(1.0 / model_prob, 3)
+
+                    # Look up inbox odds — try all bookmakers for this line+side
+                    best_row: Optional[dict] = None
+                    for bk_key, odds_row in inbox_index.items():
+                        if (
+                            bk_key[0] == match_date
+                            and bk_key[1] == norm_home
+                            and bk_key[2] == norm_away
+                            and bk_key[3] == norm_team
+                            and bk_key[4] == line_str
+                            and bk_key[5] == side
+                        ):
+                            if best_row is None or float(odds_row.get("odds_decimal") or 0) > float(best_row.get("odds_decimal") or 0):
+                                best_row = odds_row
+
+                    if best_row is None:
+                        continue
+
+                    book_odds = float(best_row.get("odds_decimal") or 0)
+                    if book_odds <= 1.0:
+                        continue
+
+                    edge = round(model_prob * book_odds - 1.0, 4)
+
+                    scanner.append({
+                        "kickoff_iso": kickoff,
+                        "league": league,
+                        "home_team": home_raw,
+                        "away_team": away_raw,
+                        "team": team_raw,
+                        "venue": venue,
+                        "line": line,
+                        "side": side,
+                        "model_prob": round(model_prob, 4),
+                        "model_fair": model_fair,
+                        "book_odds": round(book_odds, 3),
+                        "bookmaker": best_row.get("bookmaker") or "",
+                        "edge": edge,
+                        "captured_at": best_row.get("captured_at") or "",
+                    })
+
+    # Sort: positive edge first, then by edge descending
+    scanner.sort(key=lambda r: (-r["edge"], r.get("kickoff_iso") or ""))
+    return scanner
 
 
 def _load_module(name: str, path: Path):
@@ -47,11 +216,22 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Upcoming team shots estimates (Big 5)")
     parser.add_argument("--days-ahead", type=int, default=10)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--scanner", type=Path, default=SCANNER_OUT)
+    parser.add_argument("--no-calibration", action="store_true")
     args = parser.parse_args()
 
     tsm = _load_module("team_shots_model", ROOT / "scripts" / "team-shots-model.py")
     msl = _load_module("matchday_shortlist", ROOT / "scripts" / "matchday-shortlist.py")
     normalize_team = msl.normalize_team
+
+    # Load Platt calibration params (falls back gracefully if file absent)
+    cal: Dict[str, Tuple[float, float]] = {}
+    if not args.no_calibration:
+        cal = _load_cal(DEFAULT_CAL)
+        if cal:
+            print(f"Calibration params loaded (lines: {', '.join(sorted(cal))})")
+        else:
+            print("No calibration params found — using raw Poisson probabilities")
 
     from the_odds_api_client import OddsApiClient, SPORT_KEYS
 
@@ -73,12 +253,12 @@ def main() -> None:
         hs.add_match(
             m.home_shots, m.home_sot, m.away_shots, m.away_sot,
             m.home_corners, m.home_goals, m.away_goals,
-            xg=m.home_xg, conc_xg=m.away_xg,
+            xg=m.home_xg, conc_xg=m.away_xg, is_home=True,
         )
         as_.add_match(
             m.away_shots, m.away_sot, m.home_shots, m.home_sot,
             m.away_corners, m.away_goals, m.home_goals,
-            xg=m.away_xg, conc_xg=m.home_xg,
+            xg=m.away_xg, conc_xg=m.home_xg, is_home=False,
         )
 
     try:
@@ -137,8 +317,8 @@ def main() -> None:
                 })
                 continue
 
-            h_lam, _ = home_res
-            a_lam, _ = away_res
+            h_lam, _, h_lam_venue, h_lam_recent = home_res
+            a_lam, _, a_lam_venue, a_lam_recent = away_res
             row: Dict[str, Any] = {
                 "league": league,
                 "kickoff_iso": ko,
@@ -146,24 +326,46 @@ def main() -> None:
                 "away_team": away_raw,
                 "home_lambda": round(h_lam, 2),
                 "away_lambda": round(a_lam, 2),
+                "home_lambda_venue": round(h_lam_venue, 2),
+                "away_lambda_venue": round(a_lam_venue, 2),
+                "home_lambda_recent": round(h_lam_recent, 2),
+                "away_lambda_recent": round(a_lam_recent, 2),
                 "note": "",
             }
+
             for line in DISPLAY_LINES:
-                p_h = tsm.prob_over(line, h_lam)
-                p_a = tsm.prob_over(line, a_lam)
+                line_key = f"{line:.1f}"
+                # Use venue lambda (home-specific/away-specific attack) — falls
+                # back to base inside predict_lambda when venue data is thin.
+                p_h_raw = tsm.prob_over(line, h_lam_venue)
+                p_a_raw = tsm.prob_over(line, a_lam_venue)
+
+                # Apply Platt calibration if params fitted for this line
+                ab = cal.get(line_key)
+                if ab:
+                    p_h = _calibrate(p_h_raw, ab[0], ab[1])
+                    p_a = _calibrate(p_a_raw, ab[0], ab[1])
+                else:
+                    p_h = p_h_raw
+                    p_a = p_a_raw
+
                 row[f"home_p_over_{line}"] = round(p_h, 4)
-                row[f"home_fair_over_{line}"] = tsm.fair_odds(p_h)
-                row[f"home_fair_under_{line}"] = tsm.fair_odds(1.0 - p_h)
+                row[f"home_fair_over_{line}"] = round(1.0 / p_h if p_h > 0 else 0.0, 3)
+                row[f"home_fair_under_{line}"] = round(1.0 / (1.0 - p_h) if p_h < 1.0 else 0.0, 3)
                 row[f"away_p_over_{line}"] = round(p_a, 4)
-                row[f"away_fair_over_{line}"] = tsm.fair_odds(p_a)
-                row[f"away_fair_under_{line}"] = tsm.fair_odds(1.0 - p_a)
+                row[f"away_fair_over_{line}"] = round(1.0 / p_a if p_a > 0 else 0.0, 3)
+                row[f"away_fair_under_{line}"] = round(1.0 / (1.0 - p_a) if p_a < 1.0 else 0.0, 3)
+
             rows_out.append(row)
 
     rows_out.sort(key=lambda r: (r.get("kickoff_iso") or "", r.get("league") or ""))
 
     fields = [
         "league", "kickoff_iso", "home_team", "away_team",
-        "home_lambda", "away_lambda", "note",
+        "home_lambda", "away_lambda",
+        "home_lambda_venue", "away_lambda_venue",
+        "home_lambda_recent", "away_lambda_recent",
+        "note",
     ]
     for line in DISPLAY_LINES:
         fields.extend([
@@ -176,8 +378,25 @@ def main() -> None:
         w = csv.DictWriter(fh, fieldnames=fields, extrasaction="ignore")
         w.writeheader()
         w.writerows(rows_out)
-
     print(f"Wrote {len(rows_out)} upcoming rows -> {args.output}")
+
+    # ── Scanner output ────────────────────────────────────────────────
+    match_rows = [r for r in rows_out if r.get("home_lambda") != ""]
+    inbox_index = _load_inbox_odds(INBOX_DIR)
+    print(f"Inbox odds loaded: {len(inbox_index)} entries")
+
+    scanner_rows = _build_scanner(match_rows, inbox_index)
+    if scanner_rows:
+        args.scanner.parent.mkdir(parents=True, exist_ok=True)
+        with open(args.scanner, "w", newline="", encoding="utf-8") as fh:
+            w = csv.DictWriter(fh, fieldnames=SCANNER_FIELDS, extrasaction="ignore")
+            w.writeheader()
+            w.writerows(scanner_rows)
+        positive = sum(1 for r in scanner_rows if r["edge"] > 0)
+        print(f"Wrote {len(scanner_rows)} scanner rows ({positive} positive edge) -> {args.scanner}")
+    else:
+        print("No scanner rows — check that inbox odds exist for upcoming fixtures")
+
     credits = client.get_credits_remaining()
     if credits is not None:
         print(f"Odds API credits remaining: {credits}")

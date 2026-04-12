@@ -109,6 +109,7 @@ const KNOWN_PROJECT_FILE_PATHS = {
   "data/team-shots/team-shots-comparison.csv": path.join(process.cwd(), "data/team-shots/team-shots-comparison.csv"),
   "data/team-shots/team-shots-comparison.txt": path.join(process.cwd(), "data/team-shots/team-shots-comparison.txt"),
   "data/team-shots/team-shots-upcoming.csv": path.join(process.cwd(), "data/team-shots/team-shots-upcoming.csv"),
+  "data/team-shots/team-shots-scanner.csv": path.join(process.cwd(), "data/team-shots/team-shots-scanner.csv"),
   "data/team-shots/team-shots-odds-history.csv": path.join(process.cwd(), "data/team-shots/team-shots-odds-history.csv"),
   "data/team-shots/shadow/team-shots-shadow-signals.csv": path.join(process.cwd(), "data/team-shots/shadow/team-shots-shadow-signals.csv"),
   "data/team-shots/shadow/team-shots-shadow-performance.txt": path.join(process.cwd(), "data/team-shots/shadow/team-shots-shadow-performance.txt"),
