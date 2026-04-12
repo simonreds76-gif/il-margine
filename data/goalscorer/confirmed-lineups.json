@@ -292,19 +292,19 @@
       "match_date": "2026-04-12",
       "home_team": "Como",
       "away_team": "Inter",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "3-5-2",
       "home_players": [
         "Jean Butez",
-        "Ivan Smolcic",
-        "Jacobo Ramón",
+        "Ignace Van Der Brempt",
+        "Diego Carlos",
         "Marc-Oliver Kempf",
         "Álex Valle",
+        "Sergi Roberto",
         "Máximo Perrone",
-        "Lucas Da Cunha",
         "Assane Diao",
         "Nico Paz",
         "Martin Baturina",
@@ -320,8 +320,8 @@
         "Hakan Çalhanoglu",
         "Piotr Zielinski",
         "Federico Dimarco",
-        "Marcus Thuram",
-        "Francesco Pio Esposito"
+        "Francesco Pio Esposito",
+        "Marcus Thuram"
       ],
       "home_starters": [
         {
@@ -334,7 +334,7 @@
           "position_id": 11
         },
         {
-          "name": "Ivan Smolcic",
+          "name": "Ignace Van Der Brempt",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -343,7 +343,7 @@
           "position_id": 32
         },
         {
-          "name": "Jacobo Ramón",
+          "name": "Diego Carlos",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -370,7 +370,7 @@
           "position_id": 38
         },
         {
-          "name": "Máximo Perrone",
+          "name": "Sergi Roberto",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -379,7 +379,7 @@
           "position_id": 64
         },
         {
-          "name": "Lucas Da Cunha",
+          "name": "Máximo Perrone",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -507,7 +507,7 @@
           "position_id": 79
         },
         {
-          "name": "Marcus Thuram",
+          "name": "Francesco Pio Esposito",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -516,7 +516,7 @@
           "position_id": 104
         },
         {
-          "name": "Francesco Pio Esposito",
+          "name": "Marcus Thuram",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -525,14 +525,42 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Mauro Vigorito",
+        "Nikola Cavlina",
+        "Noel Törnqvist",
+        "Alberto Moreno",
+        "Cristiano De Paoli",
+        "Edoardo Goldaniga",
+        "Ivan Smolcic",
+        "Jacobo Ramón",
+        "Mërgim Vojvoda",
+        "Lucas Da Cunha",
+        "Maxence Caqueret",
+        "Álvaro Morata",
+        "Jesús Rodríguez",
+        "Nicolas-Gerrit Kühn"
+      ],
+      "away_subs": [
+        "Josep Martínez",
+        "Raffaele Di Gennaro",
+        "Carlos Augusto",
+        "Stefan de Vrij",
+        "Andy Diouf",
+        "Davide Frattesi",
+        "Henrikh Mkhitaryan",
+        "Luis Henrique",
+        "Matteo Darmian",
+        "Petar Sucic",
+        "Ange-Yoan Bonny",
+        "Lautaro Martínez",
+        "Mattia Mosconi"
+      ],
       "home_unavailable": [
         "Jayden Addai"
       ],
       "away_unavailable": [
-        "Yann Aurel Bisseck",
-        "Lautaro Martínez"
+        "Yann Aurel Bisseck"
       ]
     },
     {

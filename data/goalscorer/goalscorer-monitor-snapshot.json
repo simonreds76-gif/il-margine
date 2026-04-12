@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-12T17:49:43Z",
+  "generated_at": "2026-04-12T18:28:07Z",
   "source_status": {
-    "compared_at": "2026-04-12T17:49:41Z",
-    "hot_live_updated_at": "2026-04-12T17:49:43Z",
-    "expected_refresh_updated_at": "2026-04-12T17:49:41Z",
+    "compared_at": "2026-04-12T18:27:56Z",
+    "hot_live_updated_at": "2026-04-12T18:28:06Z",
+    "expected_refresh_updated_at": "2026-04-12T18:27:56Z",
     "settlement_updated_at": "2026-04-11T23:59:41Z",
-    "scheduler_heartbeat_at": "2026-04-12T17:49:43Z",
-    "snapshot_generated_at": "2026-04-12T17:49:43Z",
+    "scheduler_heartbeat_at": "2026-04-12T18:28:06Z",
+    "snapshot_generated_at": "2026-04-12T18:28:07Z",
     "live_status_state": "idle",
     "live_status_message": "Goalscorer live poll finished (3 league(s) ran)."
   },
@@ -18,12 +18,12 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T17:48:54Z",
+      "updated_at": "2026-04-12T18:26:58Z",
       "live_rows": 1,
       "public_now": 0,
       "shadow_now": 1,
-      "clean_fixtures": 3,
-      "degraded_fixtures": 2,
+      "clean_fixtures": 4,
+      "degraded_fixtures": 1,
       "quarantined_fixtures": 0,
       "public_record": {
         "settled": 4,
@@ -49,7 +49,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T17:48:23Z",
+      "updated_at": "2026-04-12T18:26:32Z",
       "live_rows": 8,
       "public_now": 3,
       "shadow_now": 5,
@@ -80,7 +80,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T17:49:22Z",
+      "updated_at": "2026-04-12T18:27:32Z",
       "live_rows": 4,
       "public_now": 1,
       "shadow_now": 3,
@@ -111,7 +111,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T17:48:23Z",
+      "updated_at": "2026-04-12T18:26:31Z",
       "live_rows": 2,
       "public_now": 1,
       "shadow_now": 1,
@@ -142,7 +142,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-12T17:49:43Z",
+      "updated_at": "2026-04-12T18:27:57Z",
       "live_rows": 0,
       "public_now": 0,
       "shadow_now": 0,
@@ -543,13 +543,13 @@
         "kickoff": "",
         "home_team": "Como 1907",
         "away_team": "Inter Milano",
-        "trust_tier": "T2",
-        "lineup_input": "expected_xi",
+        "trust_tier": "T1",
+        "lineup_input": "confirmed_xi",
         "corruption_score": 0,
         "corruption_flags": [],
         "notes": [],
-        "status_label": "Expected XI",
-        "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
+        "status_label": "Lineup Clean",
+        "summary": "This fixture is visible in the monitor, but not in a fully confirmed clean state yet."
       },
       {
         "key": "serie-a|2026-04-12|genoa|sassuolo",
@@ -2096,5 +2096,5 @@
     ]
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "ff0a63b691ba7a55556af63c4a447906ff142ea025760bd5d8c3162b4a753f23"
+  "payload_hash": "cd8b1ee682d935bab0519e9cde788bbe106e0b77634fca81ab8b7f756329bf0b"
 }

@@ -8,22 +8,22 @@
       "match_date": "2026-04-12",
       "home_team": "Athletic Club",
       "away_team": "Villarreal",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-4-2",
       "home_players": [
         "Unai Simón",
+        "Íñigo Lekue",
         "Daniel Vivian",
-        "Yeray Álvarez",
         "Aymeric Laporte",
         "Yuri Berchiche",
         "Íñigo Ruíz de Galarreta",
         "Mikel Jauregizar",
         "Iñaki Williams",
         "Oihan Sancet",
-        "Alex Berenguer",
+        "Nico Williams",
         "Gorka Guruzeta"
       ],
       "away_players": [
@@ -35,9 +35,9 @@
         "Tajon Buchanan",
         "Pape Gueye",
         "Santi Comesaña",
-        "Alfonso Pedraza",
-        "Nicolas Pépé",
-        "Georges Mikautadze"
+        "Alfon González",
+        "Gerard Moreno",
+        "Tani Oluwaseyi"
       ],
       "home_starters": [
         {
@@ -50,7 +50,7 @@
           "position_id": 11
         },
         {
-          "name": "Daniel Vivian",
+          "name": "Íñigo Lekue",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -59,7 +59,7 @@
           "position_id": 32
         },
         {
-          "name": "Yeray Álvarez",
+          "name": "Daniel Vivian",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -122,7 +122,7 @@
           "position_id": 85
         },
         {
-          "name": "Alex Berenguer",
+          "name": "Nico Williams",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -214,7 +214,7 @@
           "position_id": 76
         },
         {
-          "name": "Alfonso Pedraza",
+          "name": "Alfon González",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -223,7 +223,7 @@
           "position_id": 78
         },
         {
-          "name": "Nicolas Pépé",
+          "name": "Gerard Moreno",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -232,7 +232,7 @@
           "position_id": 104
         },
         {
-          "name": "Georges Mikautadze",
+          "name": "Tani Oluwaseyi",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -241,12 +241,36 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Álex Padilla",
+        "Adama Boiro",
+        "Aitor Paredes",
+        "Andoni Gorosabel",
+        "Yeray Álvarez",
+        "Alejandro Rego",
+        "Mikel Vesga",
+        "Unai Gómez",
+        "Alex Berenguer",
+        "Nico Serrano",
+        "Robert Navarro",
+        "Urko Izeta"
+      ],
+      "away_subs": [
+        "Arnau Tenas",
+        "Alex Freeman",
+        "Alfonso Pedraza",
+        "Rafa Marín",
+        "Willy Kambwala",
+        "Alassane Diatta",
+        "Alberto Moleiro",
+        "Dani Parejo",
+        "Ayoze Pérez",
+        "Georges Mikautadze",
+        "Nicolas Pépé"
+      ],
       "home_unavailable": [
         "Maroan Sannadi",
         "Jesús Areso",
-        "Andoni Gorosabel",
         "Beñat Prados"
       ],
       "away_unavailable": [
@@ -500,29 +524,29 @@
       "home_subs": [
         "Ilaix Moriba",
         "Iago Aspas",
+        "Óscar Mingueza",
+        "Borja Iglesias",
+        "Ferrán Jutglà",
         "Iván Villar",
         "Carlos Domínguez",
         "Manu Fernández",
         "Yoel Lago",
         "Franco Cervi",
         "Hugo Sotelo",
-        "Jones El-Abdellaoui",
-        "Óscar Mingueza",
-        "Borja Iglesias",
-        "Ferrán Jutglà"
+        "Jones El-Abdellaoui"
       ],
       "away_subs": [
+        "Haissem Hassan",
+        "David Costas",
+        "Santiago Colombatto",
+        "Rahim Alhassane",
+        "Thiago Borbas",
         "Horatiu Moldovan",
         "David Carmo",
-        "David Costas",
         "Lucas Ahijado",
-        "Rahim Alhassane",
         "Ovie Ejaria",
         "Pablo Agudín",
-        "Santi Cazorla",
-        "Santiago Colombatto",
-        "Haissem Hassan",
-        "Thiago Borbas"
+        "Santi Cazorla"
       ],
       "home_unavailable": [
         "Carl Starfelt",

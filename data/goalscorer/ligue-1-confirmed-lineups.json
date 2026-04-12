@@ -8,9 +8,9 @@
       "match_date": "2026-04-12",
       "home_team": "Lyon",
       "away_team": "Lorient",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "3-4-2-1",
       "home_players": [
@@ -19,24 +19,24 @@
         "Clinton Mata",
         "Moussa Niakhaté",
         "Abner",
-        "Ainsley Maitland-Niles",
         "Tyler Morton",
-        "Endrick",
-        "Khalis Merah",
+        "Rachid Ghezzal",
+        "Ainsley Maitland-Niles",
+        "Noah Nartey",
         "Afonso Moreira",
         "Roman Yaremchuk"
       ],
       "away_players": [
         "Yvon Mvogo",
-        "Igor Silva",
+        "Bamo Meité",
         "Abdoulaye Faye",
-        "Darlin Yongwa",
+        "Nathaniel Adjei",
         "Théo Le Bris",
         "Noah Cadiou",
         "Arthur Avom",
         "Arsène Kouassi",
-        "Pablo Pagis",
         "Jean-Victor Makengo",
+        "Pablo Pagis",
         "Bamba Dieng"
       ],
       "home_starters": [
@@ -86,7 +86,7 @@
           "position_id": 38
         },
         {
-          "name": "Ainsley Maitland-Niles",
+          "name": "Tyler Morton",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -95,7 +95,7 @@
           "position_id": 64
         },
         {
-          "name": "Tyler Morton",
+          "name": "Rachid Ghezzal",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -104,7 +104,7 @@
           "position_id": 66
         },
         {
-          "name": "Endrick",
+          "name": "Ainsley Maitland-Niles",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -113,7 +113,7 @@
           "position_id": 83
         },
         {
-          "name": "Khalis Merah",
+          "name": "Noah Nartey",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -151,7 +151,7 @@
           "position_id": 11
         },
         {
-          "name": "Igor Silva",
+          "name": "Bamo Meité",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -169,7 +169,7 @@
           "position_id": 35
         },
         {
-          "name": "Darlin Yongwa",
+          "name": "Nathaniel Adjei",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -214,7 +214,7 @@
           "position_id": 68
         },
         {
-          "name": "Pablo Pagis",
+          "name": "Jean-Victor Makengo",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -223,7 +223,7 @@
           "position_id": 84
         },
         {
-          "name": "Jean-Victor Makengo",
+          "name": "Pablo Pagis",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -241,8 +241,28 @@
           "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Rémy Descamps",
+        "Hans Hateboer",
+        "Ruben Kluivert",
+        "Corentin Tolisso",
+        "Khalis Merah",
+        "Orel Mangala",
+        "Tanner Tessmann",
+        "Adam Karabec",
+        "Endrick"
+      ],
+      "away_subs": [
+        "Bingourou Kamara",
+        "Darlin Yongwa",
+        "Igor Silva",
+        "Bandiougou Fadiga",
+        "Daniel Semedo",
+        "Martin Bley",
+        "Panos Katseris",
+        "Aiyegun Tosin",
+        "Sambou Soumano"
+      ],
       "home_unavailable": [
         "Nicolás Tagliafico",
         "Noham Kamara",
