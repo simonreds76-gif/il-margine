@@ -89,6 +89,7 @@ PUBLIC_EXTENDED_MIN_EV = 0.12
 SHADOW_TRACK_MIN_EV = 0.05
 SHADOW_MAX_FAIR_ODDS = 20.0
 SHADOW_MIN_EXPECTED_MINUTES = 60.0
+STALE_HISTORY_DAYS = 365
 
 POSITION_SCORES = {
     "GK": 0,
@@ -1493,6 +1494,7 @@ def main() -> None:
 
     player_histories: Dict[str, object] = defaultdict(PlayerHistory)
     team_histories: Dict[str, object] = defaultdict(TeamHistory)
+    player_latest_history_date: Dict[str, object] = {}
 
     def apply_history_batch(batch: List[object]) -> None:
         team_match_summaries: Dict[tuple[str, str, bool], dict] = {}
@@ -1539,6 +1541,9 @@ def main() -> None:
                     "opp_xga_pre": opponent_xga_pre,
                 }
             )
+            latest_seen = player_latest_history_date.get(row.player_id)
+            if latest_seen is None or row.match_date > latest_seen:
+                player_latest_history_date[row.player_id] = row.match_date
 
         for (team_key, _, _), summary in team_match_summaries.items():
             team_histories[team_key].add_match(summary)
@@ -1630,6 +1635,17 @@ def main() -> None:
         position = player_meta.get("position", "")
         player_recent = player_histories[player_id].summary(RECENT_WINDOW)
         player_long = player_histories[player_id].summary(LONG_WINDOW)
+        latest_history_date = player_latest_history_date.get(player_id)
+        fixture_date = datetime.strptime(odds_row["match_date"][:10], "%Y-%m-%d").date()
+        history_gap_days = (
+            (fixture_date - latest_history_date).days
+            if latest_history_date is not None
+            else None
+        )
+        history_stale = history_gap_days is not None and history_gap_days > STALE_HISTORY_DAYS
+        if history_stale:
+            player_recent = None
+            player_long = None
         opponent_summary = team_histories[opponent_key].summary()
         stacked_features = _stacked_signal_features(player_histories[player_id], opponent_summary)
         roster_games = player_meta.get("games", 0.0) or 0.0
@@ -1654,6 +1670,8 @@ def main() -> None:
             "player_long": player_long,
             "roster_avg_minutes": roster_avg_minutes,
             "history_minutes": history_minutes,
+            "history_gap_days": history_gap_days,
+            "history_stale": history_stale,
             "expected_minutes": expected_minutes,
             "stacked_features": stacked_features,
         }
@@ -2047,6 +2065,8 @@ def main() -> None:
                 confidence_reason = public_gate_reason
             if fixture_health["trust_tier"] != TRUST_TIER_CONFIRMED:
                 confidence_reason = f"{confidence_reason},fixture_{fixture_health['trust_tier'].lower()}" if confidence_reason else f"fixture_{fixture_health['trust_tier'].lower()}"
+            if candidate.get("history_stale"):
+                confidence_reason = f"{confidence_reason},stale_history" if confidence_reason else "stale_history"
             signal_eligible = candidate.get("lineup_state", "unknown") not in {"bench", "not_in_squad", "expected_bench", "expected_out"}
             if ev >= shadow_min_ev and signal_eligible:
                 stats["qualified_rows"] += 1
