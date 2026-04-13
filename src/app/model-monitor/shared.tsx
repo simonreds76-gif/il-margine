@@ -479,13 +479,19 @@ export function SectionCard({
 }) {
   const shell =
     "rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] shadow-[0_8px_32px_rgba(0,0,0,0.28)]";
+  const titleNode =
+    typeof title === "string" || typeof title === "number" ? (
+      <h2 className="text-[15px] font-semibold text-slate-100">{title}</h2>
+    ) : (
+      <div className="text-[15px] font-semibold text-slate-100">{title}</div>
+    );
 
   if (collapsible) {
     return (
       <details open={defaultOpen} className={cn("group", shell)}>
         <summary className="flex cursor-pointer select-none list-none items-center justify-between gap-4 rounded-2xl px-5 py-4 transition-colors hover:bg-white/[0.02] marker:hidden group-open:rounded-b-none">
           <div className="min-w-0">
-            <h2 className="text-[15px] font-semibold text-slate-100">{title}</h2>
+            {titleNode}
             {subtitle ? (
               <p className="mt-0.5 truncate text-xs text-slate-500">{subtitle}</p>
             ) : null}
@@ -502,7 +508,7 @@ export function SectionCard({
   return (
     <section className={cn(shell, "p-5")}>
       <div className="mb-4">
-        <h2 className="text-[15px] font-semibold text-slate-100">{title}</h2>
+        {titleNode}
         {subtitle ? <p className="mt-0.5 text-xs text-slate-500">{subtitle}</p> : null}
       </div>
       {children}
