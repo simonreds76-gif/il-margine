@@ -69,6 +69,10 @@ function normalizePinnacleTeamName(value: string | undefined): string {
   return (value ?? "").replace(/\s*\(Corners\)\s*$/i, "").trim();
 }
 
+function isAggregatePinnacleTeam(value: string | undefined): boolean {
+  return /^(Home Teams|Away Teams)\s*\(\d+\s+Games\)$/i.test(normalizePinnacleTeamName(value));
+}
+
 function splitMatchTeams(match: string | undefined): [string, string] {
   const [home = "", away = ""] = (match ?? "").split(" vs ");
   return [home, away];
@@ -273,6 +277,7 @@ export default async function CornersMonitorPage() {
   };
   const _pinnacleByMatch = new Map<string, PinnacleMatchRow>();
   for (const row of pinnacleRows) {
+    if (isAggregatePinnacleTeam(row.home_team) || isAggregatePinnacleTeam(row.away_team)) continue;
     const homeTeam = normalizePinnacleTeamName(row.home_team);
     const awayTeam = normalizePinnacleTeamName(row.away_team);
     const mk = `${row.match_date}|${homeTeam.toLowerCase()}|${awayTeam.toLowerCase()}`;
@@ -365,6 +370,7 @@ export default async function CornersMonitorPage() {
   // shortlist run date which differs from actual game date)
   const pinnacleMatchInfoMap = new Map<string, { match_date: string; kickoff_iso: string }>();
   for (const row of pinnacleRows) {
+    if (isAggregatePinnacleTeam(row.home_team) || isAggregatePinnacleTeam(row.away_team)) continue;
     const home = normalizePinnacleTeamName(row.home_team).toLowerCase();
     const away = normalizePinnacleTeamName(row.away_team).toLowerCase();
     if (!home || !away) continue;
@@ -385,6 +391,7 @@ export default async function CornersMonitorPage() {
   const currentPinnacleOdds = new Map<string, number>();
   const currentPinnacleOddsTs = new Map<string, string>();
   for (const row of pinnacleRows) {
+    if (isAggregatePinnacleTeam(row.home_team) || isAggregatePinnacleTeam(row.away_team)) continue;
     const home = normalizePinnacleTeamName(row.home_team).toLowerCase();
     const away = normalizePinnacleTeamName(row.away_team).toLowerCase();
     const line = (row.line ?? "").trim();
