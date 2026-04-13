@@ -284,7 +284,9 @@ def main() -> None:
                 str(ROOT / "data" / "goalscorer" / "inbox" / "odds-api-atgs-*.csv"),
             ]
             recent_paths = _recent_capture_paths(recent_patterns, newer_than_ts=fetch_started_ts)
-            odds_paths = recent_paths or _expand_paths(args.odds_input)
+            odds_paths = recent_paths
+            if not odds_paths:
+                print("  No fresh Odds-API capture files were created. Skipping archive import for this fetch.")
         else:
             odds_paths = []
 
@@ -295,7 +297,9 @@ def main() -> None:
             [str(ROOT / "data" / "goalscorer" / "inbox" / "pinnacle-atgs-*.csv")],
             newer_than_ts=fetch_started_ts,
         )
-        odds_paths = recent_paths or _expand_paths(args.odds_input)
+        odds_paths = recent_paths
+        if not odds_paths:
+            print("  No fresh Pinnacle capture files were created. Skipping archive import for this fetch.")
 
     configured_lineups_path = str(ROOT / league_config["lineups"])
     lineups_path = args.lineups or (configured_lineups_path if os.path.exists(configured_lineups_path) else "")
