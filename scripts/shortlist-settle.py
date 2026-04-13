@@ -341,25 +341,32 @@ def load_actual_results() -> Dict[str, dict]:
     Key: "{date}|{norm(home)}|{norm(away)}"
     """
     results: Dict[str, dict] = {}
-    historical_dir = resolve_historical_dir()
-    for csv_path in sorted(historical_dir.glob("*.csv")):
-        if "all-historical" in csv_path.name:
-            continue
-        with open(csv_path, "r", encoding="utf-8") as fh:
-            for row in csv.DictReader(fh):
-                d = _parse_date(row.get("Date", "") or row.get("date", ""))
-                if d is None:
-                    continue
-                home = _norm(row.get("HomeTeam") or row.get("home_team") or "")
-                away = _norm(row.get("AwayTeam") or row.get("away_team") or "")
-                hc = (row.get("HC") or "").strip()
-                ac = (row.get("AC") or "").strip()
-                if not hc or not ac:
-                    continue
-                key = f"{d.isoformat()}|{home}|{away}"
-                results[key] = {
-                    "total_corners": int(hc) + int(ac),
-                }
+    source_dirs: List[Path] = []
+    primary_dir = resolve_historical_dir()
+    if primary_dir.exists():
+        source_dirs.append(primary_dir)
+    if LEGACY_HISTORICAL_DIR.exists() and LEGACY_HISTORICAL_DIR not in source_dirs:
+        source_dirs.append(LEGACY_HISTORICAL_DIR)
+
+    for historical_dir in source_dirs:
+        for csv_path in sorted(historical_dir.glob("*.csv")):
+            if "all-historical" in csv_path.name:
+                continue
+            with open(csv_path, "r", encoding="utf-8") as fh:
+                for row in csv.DictReader(fh):
+                    d = _parse_date(row.get("Date", "") or row.get("date", ""))
+                    if d is None:
+                        continue
+                    home = _norm(row.get("HomeTeam") or row.get("home_team") or "")
+                    away = _norm(row.get("AwayTeam") or row.get("away_team") or "")
+                    hc = (row.get("HC") or "").strip()
+                    ac = (row.get("AC") or "").strip()
+                    if not hc or not ac:
+                        continue
+                    key = f"{d.isoformat()}|{home}|{away}"
+                    results[key] = {
+                        "total_corners": int(hc) + int(ac),
+                    }
     return results
 
 
