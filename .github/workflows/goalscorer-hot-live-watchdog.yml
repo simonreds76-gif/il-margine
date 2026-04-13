@@ -1,0 +1,40 @@
+name: Goalscorer Hot Live Watchdog
+
+on:
+  schedule:
+    - cron: "*/15 8-23 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: goalscorer-hot-live-watchdog
+  cancel-in-progress: true
+
+jobs:
+  watchdog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Inspect hosted goalscorer heartbeat
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python scripts/goalscorer-hosted-watchdog.py \
+            --branch golden-with-speed-insights \
+            --workflow-file goalscorer-hot-live.yml \
+            --stale-minutes 35 \
+            --running-grace-minutes 25 \
+            --cooldown-minutes 20

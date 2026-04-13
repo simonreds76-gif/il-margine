@@ -1,8 +1,13 @@
-# One-time task registration for the goalscorer live pipeline.
+# One-time task registration for the goalscorer automation pipeline.
+# GitHub hosted workflows are now the primary live engine.
+# This setup script keeps the local Windows task as an explicit fallback only.
 # Creates:
-#   - a daily live polling task with 10-minute repetition from 08:00 to 00:00
-#     (the script self-throttles by cold / warm / hot kickoff windows)
+#   - optional local live polling task (disabled by default unless requested)
 #   - a daily shadow settlement task at 10:00
+
+param(
+    [switch]$EnableLocalLiveSchedule
+)
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
@@ -48,23 +53,38 @@ if (Test-ScheduledTaskExists "IlMargine-Goalscorer-Health") {
     schtasks /Delete /TN "IlMargine-Goalscorer-Health" /F | Out-Host
 }
 
-schtasks /Create /TN "IlMargine-Goalscorer-Live" /SC DAILY /ST 08:00 /RI 10 /DU 16:00 /RL HIGHEST /TR "$liveCmd" /F | Out-Host
+if ($EnableLocalLiveSchedule) {
+    schtasks /Create /TN "IlMargine-Goalscorer-Live" /SC DAILY /ST 08:00 /RI 10 /DU 16:00 /RL HIGHEST /TR "$liveCmd" /F | Out-Host
+    Set-ScheduledTaskBatteryFriendly "IlMargine-Goalscorer-Live"
+} elseif (Test-ScheduledTaskExists "IlMargine-Goalscorer-Live") {
+    schtasks /Change /TN "IlMargine-Goalscorer-Live" /DISABLE | Out-Host
+}
 # Run the daily settlement as SYSTEM so it can execute unattended during the day.
 schtasks /Create /TN "IlMargine-Goalscorer-Shadow-Settle" /SC DAILY /ST 10:00 /RL HIGHEST /RU SYSTEM /TR "$settleCmd" /F | Out-Host
 
-Set-ScheduledTaskBatteryFriendly "IlMargine-Goalscorer-Live"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Goalscorer-Shadow-Settle"
 
 Write-Host ""
 Write-Host "Goalscorer tasks created/updated."
-Get-ScheduledTask -TaskName "IlMargine-Goalscorer-Live","IlMargine-Goalscorer-Shadow-Settle" |
+Get-ScheduledTask -TaskName "IlMargine-Goalscorer-Shadow-Settle" |
     Get-ScheduledTaskInfo |
     Select-Object TaskName, LastRunTime, NextRunTime, LastTaskResult |
     Format-Table -AutoSize | Out-Host
 
 Write-Host ""
-Write-Host "Goalscorer watchdog intentionally not re-enabled by default."
+if ($EnableLocalLiveSchedule) {
+    Get-ScheduledTask -TaskName "IlMargine-Goalscorer-Live" |
+        Get-ScheduledTaskInfo |
+        Select-Object TaskName, LastRunTime, NextRunTime, LastTaskResult |
+        Format-Table -AutoSize | Out-Host
+    Write-Host ""
+    Write-Host "Local Windows live polling is ENABLED by request."
+} else {
+    Write-Host "GitHub hosted hot-live polling is the primary path."
+    Write-Host "Local Windows live polling is disabled by default and kept as fallback/manual only."
+    Write-Host "Use -EnableLocalLiveSchedule if you explicitly want the local scheduled poll back."
+}
 Write-Host ""
 Write-Host "Optional immediate test:"
-Write-Host "  schtasks /Run /TN IlMargine-Goalscorer-Live"
+Write-Host "  powershell -ExecutionPolicy Bypass -NoProfile -File scripts\\goalscorer-live.ps1"
 Write-Host "  schtasks /Run /TN IlMargine-Goalscorer-Shadow-Settle"
