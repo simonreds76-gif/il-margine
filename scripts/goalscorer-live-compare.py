@@ -1899,6 +1899,7 @@ def main() -> None:
                     raw_share = build_player_raw_share(
                         candidate["player_recent"],
                         team_summary,
+                        candidate["position"],
                         candidate["expected_minutes"],
                     )
                     penalty_lambda = 0.0

@@ -74,12 +74,19 @@ POSITION_PRIORS = {
     "MR": 0.10,
     "DMC": 0.08,
     "DC": 0.04,
+    "D S": 0.04,
     "DL": 0.05,
     "DR": 0.05,
     "DML": 0.06,
     "DMR": 0.06,
+    "WB": 0.06,
     "Sub": 0.08,
     "Unknown": 0.12,
+}
+
+CENTER_BACK_SHARE_CAP_MULTIPLIERS = {
+    "DC": 2.25,
+    "D S": 2.25,
 }
 
 TEAM_ALIASES = {
@@ -692,6 +699,7 @@ def build_player_propensity(
 def build_player_raw_share(
     recent_summary: Optional[dict],
     team_summary: Optional[dict],
+    position: str,
     expected_minutes: float,
 ) -> float:
     if recent_summary is None or team_summary is None:
@@ -703,7 +711,18 @@ def build_player_raw_share(
     if player_total <= 0:
         return 0.0
     raw_share = player_total / team_total
-    return max(0.0, raw_share * (max(expected_minutes, 1.0) / 90.0))
+    raw_share = max(0.0, raw_share * (max(expected_minutes, 1.0) / 90.0))
+
+    position_key = coarse_position(position)
+    share_cap_multiplier = CENTER_BACK_SHARE_CAP_MULTIPLIERS.get(position_key)
+    if share_cap_multiplier is None:
+        return raw_share
+
+    team_npxg = team_summary.get("npxg_per_match", LEAGUE_AVG["team_npxg_per_match"]) or LEAGUE_AVG["team_npxg_per_match"]
+    team_npxg = max(team_npxg, LEAGUE_AVG["team_npxg_per_match"] * 0.75)
+    prior_share = (position_prior(position_key) / team_npxg) * (max(expected_minutes, 1.0) / 90.0)
+    capped_share = prior_share * share_cap_multiplier
+    return min(raw_share, capped_share)
 
 
 def build_penalty_component(
@@ -938,6 +957,7 @@ def run_backtest(rows: List[NormalizedRow]) -> tuple[List[dict], dict]:
                 raw_share = build_player_raw_share(
                     player_recent,
                     team_summary,
+                    row.position,
                     expected_minutes,
                 )
                 penalty_lambda = 0.0
