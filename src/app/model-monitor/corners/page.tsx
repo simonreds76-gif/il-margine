@@ -184,6 +184,28 @@ function statTone(t?: "default" | "green" | "red" | "amber"): string | undefined
 }
 
 const CURRENT_POLICY = "V3";
+const LEAGUE_ORDER = ["epl", "la-liga", "serie-a", "bundesliga", "ligue-1"] as const;
+
+function sortLeagueKeys(keys: string[]): string[] {
+  return [...keys].sort((a, b) => {
+    const ia = LEAGUE_ORDER.indexOf(a as (typeof LEAGUE_ORDER)[number]);
+    const ib = LEAGUE_ORDER.indexOf(b as (typeof LEAGUE_ORDER)[number]);
+    if (ia === -1 && ib === -1) return a.localeCompare(b);
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
+  });
+}
+
+function groupRowsByLeague<T extends { league?: string }>(rows: T[]): Map<string, T[]> {
+  const grouped = new Map<string, T[]>();
+  for (const row of rows) {
+    const league = (row.league ?? "").trim() || "other";
+    if (!grouped.has(league)) grouped.set(league, []);
+    grouped.get(league)!.push(row);
+  }
+  return grouped;
+}
 
 function policyVersion(row: CsvRow): string {
   const raw = (row.policy_version ?? "").trim();
@@ -482,6 +504,10 @@ export default async function CornersMonitorPage() {
       ),
     )
     .slice(0, 12);
+  const recentSettledByLeague = groupRowsByLeague(recentSettled);
+  const recentSettledLeagueKeys = sortLeagueKeys([...recentSettledByLeague.keys()]);
+  const signalsByLeague = groupRowsByLeague(signals);
+  const signalLeagueKeys = sortLeagueKeys([...signalsByLeague.keys()]);
   const versionSummaries = policySummaryRows(settledRows);
 
   // Live P&L by league
@@ -1095,134 +1121,148 @@ export default async function CornersMonitorPage() {
 
               {/* -- Recent Results - desktop table + mobile cards -- */}
               {recentSettled.length > 0 && (
-                <div>
-                  <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                    Recent Results ({liveSettled.length} total)
-                  </div>
-
-                  {/* Mobile cards */}
-                  <div className="space-y-2 lg:hidden">
-                    {recentSettled.map((row, i) => {
-                      const isPush = row.won === "push";
-                      const won = row.won === "yes";
-                      const pnlFlat = pf(row.pnl_units);
-                      const clvVal = maybeFloat(row.clv);
-                      const rowTone = won ? "bg-emerald-950/25" : isPush ? "" : "bg-rose-950/25";
+                <SectionCard
+                  collapsible
+                  defaultOpen={false}
+                  title={`Recent Results - ${liveSettled.length} total`}
+                  subtitle={`Showing the latest ${recentSettled.length} settled bets, grouped by league`}
+                >
+                  <div className="space-y-3">
+                    {recentSettledLeagueKeys.map((leagueKey) => {
+                      const leagueRows = recentSettledByLeague.get(leagueKey) ?? [];
                       return (
-                        <div key={i} className={`rounded-xl border border-slate-800/60 px-3 py-3 ${rowTone}`}>
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="min-w-0">
-                              <MatchLabel
-                                league={row.league}
-                                homeTeam={splitMatchTeams(row.match)[0]}
-                                awayTeam={splitMatchTeams(row.match)[1]}
-                                iconSize={16}
-                                textClassName="truncate text-sm font-medium text-white"
-                              />
-                              <div className="mt-0.5 text-[11px] text-slate-500">
-                                {formatKickoff(row.kick_off) !== "--" ? formatKickoff(row.kick_off) : (row.match_date?.slice(0, 10) ?? "--")} | {row.line} {row.side}
-                              </div>
+                        <SectionCard
+                          key={leagueKey}
+                          collapsible
+                          defaultOpen={false}
+                          title={<LeagueLabel league={leagueKey} label={leagueKey} className="text-[14px] font-semibold text-slate-100" iconSize={16} />}
+                          subtitle={`${leagueRows.length} recent result${leagueRows.length !== 1 ? "s" : ""}`}
+                        >
+                          <div className="space-y-2 lg:hidden">
+                            {leagueRows.map((row, i) => {
+                              const isPush = row.won === "push";
+                              const won = row.won === "yes";
+                              const pnlFlat = pf(row.pnl_units);
+                              const clvVal = maybeFloat(row.clv);
+                              const rowTone = won ? "bg-emerald-950/25" : isPush ? "" : "bg-rose-950/25";
+                              return (
+                                <div key={i} className={`rounded-xl border border-slate-800/60 px-3 py-3 ${rowTone}`}>
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div className="min-w-0">
+                                      <MatchLabel
+                                        league={row.league}
+                                        homeTeam={splitMatchTeams(row.match)[0]}
+                                        awayTeam={splitMatchTeams(row.match)[1]}
+                                        iconSize={16}
+                                        textClassName="truncate text-sm font-medium text-white"
+                                      />
+                                      <div className="mt-0.5 text-[11px] text-slate-500">
+                                        {formatKickoff(row.kick_off) !== "--" ? formatKickoff(row.kick_off) : (row.match_date?.slice(0, 10) ?? "--")} | {row.line} {row.side}
+                                      </div>
+                                    </div>
+                                    <div className="flex shrink-0 flex-col items-end gap-1">
+                                      <StatusPill
+                                        label={won ? "won" : isPush ? "push" : "lost"}
+                                        tone={won ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20" : isPush ? "bg-slate-700/40 text-slate-400 border-slate-600/40" : "bg-rose-500/10 text-rose-300 border-rose-500/20"}
+                                      />
+                                      <span className={`font-mono text-sm font-semibold ${pnlFlat >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                                        {pnlFlat >= 0 ? "+" : ""}{pnlFlat.toFixed(2)}u
+                                      </span>
+                                    </div>
+                                  </div>
+                                  {clvVal !== null && (
+                                    <div className="mt-1.5 text-[11px]">
+                                      <span className="text-slate-600">CLV </span>
+                                      <span className={clvVal > 0 ? "text-emerald-400" : "text-rose-400"}>
+                                        {clvVal >= 0 ? "+" : ""}{(clvVal * 100).toFixed(1)}%
+                                      </span>
+                                      {row.actual_total_corners ? (
+                                        <span className="ml-3 text-slate-600">Actual: <span className="text-slate-400">{row.actual_total_corners}</span></span>
+                                      ) : null}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+
+                          <div className="hidden lg:block">
+                            <div className="grid grid-cols-[minmax(220px,2.2fr)_70px_80px_80px_80px_80px_70px_70px_60px_80px] gap-x-3 border-b border-slate-800 pb-2 text-[10px] uppercase tracking-wider text-slate-500">
+                              <div>Match / KO</div>
+                              <div>Line</div>
+                              <div>Side</div>
+                              <div className="text-right font-mono">Entry</div>
+                              <div className="text-right font-mono">Close</div>
+                              <div className="text-right font-mono">CLV</div>
+                              <div className="text-right font-mono">Actual</div>
+                              <div className="text-right font-mono">Stake</div>
+                              <div className="text-center">W/L</div>
+                              <div className="text-right font-mono">P&L</div>
                             </div>
-                            <div className="flex shrink-0 flex-col items-end gap-1">
-                              <StatusPill
-                                label={won ? "won" : isPush ? "push" : "lost"}
-                                tone={won ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20" : isPush ? "bg-slate-700/40 text-slate-400 border-slate-600/40" : "bg-rose-500/10 text-rose-300 border-rose-500/20"}
-                              />
-                              <span className={`font-mono text-sm font-semibold ${pnlFlat >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
-                                {pnlFlat >= 0 ? "+" : ""}{pnlFlat.toFixed(2)}u
-                              </span>
+                            <div className="divide-y divide-slate-800/40">
+                              {leagueRows.map((row, i) => {
+                                const isPush = row.won === "push";
+                                const won = row.won === "yes";
+                                const pnlFlat = pf(row.pnl_units);
+                                const closingOdds = maybeFloat(row.closing_odds);
+                                const clvVal = maybeFloat(row.clv);
+                                const kickoffStr = formatKickoff(row.kick_off) !== "--"
+                                  ? formatKickoff(row.kick_off)
+                                  : (row.match_date?.slice(0, 10) ?? "--");
+                                const rowTone = won ? "bg-emerald-950/20" : isPush ? "" : "bg-rose-950/20";
+                                return (
+                                  <div
+                                    key={i}
+                                    className={`grid grid-cols-[minmax(220px,2.2fr)_70px_80px_80px_80px_80px_70px_70px_60px_80px] items-center gap-x-3 px-1 py-2 text-xs hover:bg-slate-800/15 ${rowTone}`}
+                                  >
+                                    <div className="min-w-0">
+                                      <MatchLabel
+                                        league={row.league}
+                                        homeTeam={splitMatchTeams(row.match)[0]}
+                                        awayTeam={splitMatchTeams(row.match)[1]}
+                                        iconSize={16}
+                                        textClassName="truncate font-medium text-slate-100"
+                                      />
+                                      <div className="text-[10px] tabular-nums text-slate-600">{kickoffStr}</div>
+                                    </div>
+                                    <div className="font-mono tabular-nums text-slate-200">{row.line}</div>
+                                    <div>
+                                      <StatusPill
+                                        label={row.side ?? ""}
+                                        tone={row.side === "over" ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20" : "bg-sky-500/10 text-sky-300 border-sky-500/20"}
+                                      />
+                                    </div>
+                                    <div className="text-right font-mono tabular-nums text-slate-200">{pf(row.bookie_odds).toFixed(2)}</div>
+                                    <div className="text-right font-mono tabular-nums text-slate-400">
+                                      {closingOdds !== null ? closingOdds.toFixed(2) : <span className="text-slate-700">--</span>}
+                                    </div>
+                                    <div className="text-right font-mono tabular-nums">
+                                      {clvVal !== null ? (
+                                        <span className={clvVal > 0 ? "text-emerald-300" : "text-rose-400"}>
+                                          {clvVal >= 0 ? "+" : ""}{(clvVal * 100).toFixed(1)}%
+                                        </span>
+                                      ) : <span className="text-slate-700">--</span>}
+                                    </div>
+                                    <div className="text-right font-mono tabular-nums text-slate-400">{row.actual_total_corners || "--"}</div>
+                                    <div className="text-right font-mono tabular-nums text-amber-200">{pf(row.stake, 1).toFixed(1)}u</div>
+                                    <div className="text-center">
+                                      <span className={`font-semibold ${won ? "text-emerald-300" : isPush ? "text-slate-400" : "text-rose-300"}`}>
+                                        {won ? "W" : isPush ? "P" : "L"}
+                                      </span>
+                                    </div>
+                                    <div className={`text-right font-mono tabular-nums ${pnlFlat > 0 ? "text-emerald-300" : pnlFlat < 0 ? "text-rose-300" : "text-slate-400"}`}>
+                                      {pnlFlat >= 0 ? "+" : ""}{pnlFlat.toFixed(2)}u
+                                    </div>
+                                  </div>
+                                );
+                              })}
                             </div>
                           </div>
-                          {clvVal !== null && (
-                            <div className="mt-1.5 text-[11px]">
-                              <span className="text-slate-600">CLV </span>
-                              <span className={clvVal > 0 ? "text-emerald-400" : "text-rose-400"}>
-                                {clvVal >= 0 ? "+" : ""}{(clvVal * 100).toFixed(1)}%
-                              </span>
-                              {row.actual_total_corners ? (
-                                <span className="ml-3 text-slate-600">Actual: <span className="text-slate-400">{row.actual_total_corners}</span></span>
-                              ) : null}
-                            </div>
-                          )}
-                        </div>
+                        </SectionCard>
                       );
                     })}
                   </div>
-
-                  {/* Desktop list */}
-                  <div className="hidden lg:block">
-                    <div className="grid grid-cols-[minmax(220px,2.2fr)_70px_80px_80px_80px_80px_70px_70px_60px_80px] gap-x-3 border-b border-slate-800 pb-2 text-[10px] uppercase tracking-wider text-slate-500">
-                      <div>Match / KO</div>
-                      <div>Line</div>
-                      <div>Side</div>
-                      <div className="text-right font-mono">Entry</div>
-                      <div className="text-right font-mono">Close</div>
-                      <div className="text-right font-mono">CLV</div>
-                      <div className="text-right font-mono">Actual</div>
-                      <div className="text-right font-mono">Stake</div>
-                      <div className="text-center">W/L</div>
-                      <div className="text-right font-mono">P&L</div>
-                    </div>
-                    <div className="divide-y divide-slate-800/40">
-                      {recentSettled.map((row, i) => {
-                        const isPush = row.won === "push";
-                        const won = row.won === "yes";
-                        const pnlFlat = pf(row.pnl_units);
-                        const closingOdds = maybeFloat(row.closing_odds);
-                        const clvVal = maybeFloat(row.clv);
-                        const kickoffStr = formatKickoff(row.kick_off) !== "--"
-                          ? formatKickoff(row.kick_off)
-                          : (row.match_date?.slice(0, 10) ?? "--");
-                        const rowTone = won ? "bg-emerald-950/20" : isPush ? "" : "bg-rose-950/20";
-                        return (
-                          <div
-                            key={i}
-                            className={`grid grid-cols-[minmax(220px,2.2fr)_70px_80px_80px_80px_80px_70px_70px_60px_80px] items-center gap-x-3 px-1 py-2 text-xs hover:bg-slate-800/15 ${rowTone}`}
-                          >
-                            <div className="min-w-0">
-                              <MatchLabel
-                                league={row.league}
-                                homeTeam={splitMatchTeams(row.match)[0]}
-                                awayTeam={splitMatchTeams(row.match)[1]}
-                                iconSize={16}
-                                textClassName="truncate font-medium text-slate-100"
-                              />
-                              <div className="text-[10px] tabular-nums text-slate-600">{kickoffStr}</div>
-                            </div>
-                            <div className="font-mono tabular-nums text-slate-200">{row.line}</div>
-                            <div>
-                              <StatusPill
-                                label={row.side ?? ""}
-                                tone={row.side === "over" ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20" : "bg-sky-500/10 text-sky-300 border-sky-500/20"}
-                              />
-                            </div>
-                            <div className="text-right font-mono tabular-nums text-slate-200">{pf(row.bookie_odds).toFixed(2)}</div>
-                            <div className="text-right font-mono tabular-nums text-slate-400">
-                              {closingOdds !== null ? closingOdds.toFixed(2) : <span className="text-slate-700">--</span>}
-                            </div>
-                            <div className="text-right font-mono tabular-nums">
-                              {clvVal !== null ? (
-                                <span className={clvVal > 0 ? "text-emerald-300" : "text-rose-400"}>
-                                  {clvVal >= 0 ? "+" : ""}{(clvVal * 100).toFixed(1)}%
-                                </span>
-                              ) : <span className="text-slate-700">--</span>}
-                            </div>
-                            <div className="text-right font-mono tabular-nums text-slate-400">{row.actual_total_corners || "--"}</div>
-                            <div className="text-right font-mono tabular-nums text-amber-200">{pf(row.stake, 1).toFixed(1)}u</div>
-                            <div className="text-center">
-                              <span className={`font-semibold ${won ? "text-emerald-300" : isPush ? "text-slate-400" : "text-rose-300"}`}>
-                                {won ? "W" : isPush ? "P" : "L"}
-                              </span>
-                            </div>
-                            <div className={`text-right font-mono tabular-nums ${pnlFlat > 0 ? "text-emerald-300" : pnlFlat < 0 ? "text-rose-300" : "text-slate-400"}`}>
-                              {pnlFlat >= 0 ? "+" : ""}{pnlFlat.toFixed(2)}u
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
+                </SectionCard>
               )}
             </div>
           )}
@@ -1230,61 +1270,81 @@ export default async function CornersMonitorPage() {
 
         {/* -- All Model Fixtures -- */}
         {signals.length > 0 && (
-          <SectionCard collapsible defaultOpen={false} title={`All Model Fixtures - ${signals.length} fixtures`}>
+          <SectionCard
+            collapsible
+            defaultOpen
+            title={`All Model Fixtures - ${signals.length} fixtures`}
+            subtitle="Grouped by league so you can open only what you need"
+          >
             <div className="space-y-4">
-              {signals.map((row, i) => (
-                <div key={`${row.home_team}-${row.away_team}-${i}`} className="rounded-2xl border border-slate-800/70 bg-slate-950/30 p-4">
-                  <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
-                    <div>
-                      <MatchLabel
-                        league={row.league}
-                        homeTeam={row.home_team}
-                        awayTeam={row.away_team}
-                        iconSize={18}
-                        textClassName="text-sm font-semibold text-slate-100"
-                      />
-                      <div className="mt-1 text-[11px] text-slate-500">
-                        <LeagueLabel league={row.league} label={row.league} iconSize={14} />{" "}
-                        <span className="ml-2">{formatKickoff(row.kick_off)}</span>
-                      </div>
-                    </div>
-                    <div className="text-right text-[11px] text-slate-500">
-                      policy {policyVersion(row)}
-                    </div>
-                  </div>
+              {signalLeagueKeys.map((leagueKey) => {
+                const leagueRows = signalsByLeague.get(leagueKey) ?? [];
+                return (
+                  <SectionCard
+                    key={leagueKey}
+                    collapsible
+                    defaultOpen={false}
+                    title={<LeagueLabel league={leagueKey} label={leagueKey} className="text-[14px] font-semibold text-slate-100" iconSize={16} />}
+                    subtitle={`${leagueRows.length} fixture${leagueRows.length !== 1 ? "s" : ""}`}
+                  >
+                    <div className="space-y-4">
+                      {leagueRows.map((row, i) => (
+                        <div key={`${row.home_team}-${row.away_team}-${i}`} className="rounded-2xl border border-slate-800/70 bg-slate-950/30 p-4">
+                          <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
+                            <div>
+                              <MatchLabel
+                                league={row.league}
+                                homeTeam={row.home_team}
+                                awayTeam={row.away_team}
+                                iconSize={18}
+                                textClassName="text-sm font-semibold text-slate-100"
+                              />
+                              <div className="mt-1 text-[11px] text-slate-500">
+                                <LeagueLabel league={row.league} label={row.league} iconSize={14} />{" "}
+                                <span className="ml-2">{formatKickoff(row.kick_off)}</span>
+                              </div>
+                            </div>
+                            <div className="text-right text-[11px] text-slate-500">
+                              policy {policyVersion(row)}
+                            </div>
+                          </div>
 
-                  <CornersTrustPanel row={row} />
+                          <CornersTrustPanel row={row} />
 
-                  <div className="mt-3 overflow-x-auto">
-                    <table className="w-full text-left text-xs">
-                      <thead>
-                        <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
-                          <th className="py-2 pr-3">Line</th>
-                          <th className="py-2 pr-3 font-mono">Fair over</th>
-                          <th className="py-2 pr-3 font-mono">Fair under</th>
-                          <th className="py-2 pr-3">Consensus</th>
-                          <th className="py-2 font-mono">Divergence</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {signalLineValues.map((line) => (
-                          <tr key={`${row.home_team}-${row.away_team}-${line}`} className="border-b border-slate-800/40">
-                            <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-300">{line.toFixed(1)}</td>
-                            <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-100">{formatMaybeFixed(row[`fair_over_${line}`])}</td>
-                            <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{formatMaybeFixed(row[`fair_under_${line}`])}</td>
-                            <td className="py-1.5 pr-3">
-                              <StatusPill label={consensusLabel(consensusState(row.consensus))} tone={consensusTone(consensusState(row.consensus))} />
-                            </td>
-                            <td className="py-1.5 font-mono tabular-nums text-slate-400">
-                              {formatSignedPercent((maybeFloat(row.divergence) ?? 0) * 100)}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              ))}
+                          <div className="mt-3 overflow-x-auto">
+                            <table className="w-full text-left text-xs">
+                              <thead>
+                                <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
+                                  <th className="py-2 pr-3">Line</th>
+                                  <th className="py-2 pr-3 font-mono">Fair over</th>
+                                  <th className="py-2 pr-3 font-mono">Fair under</th>
+                                  <th className="py-2 pr-3">Consensus</th>
+                                  <th className="py-2 font-mono">Divergence</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {signalLineValues.map((line) => (
+                                  <tr key={`${row.home_team}-${row.away_team}-${line}`} className="border-b border-slate-800/40">
+                                    <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-300">{line.toFixed(1)}</td>
+                                    <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-100">{formatMaybeFixed(row[`fair_over_${line}`])}</td>
+                                    <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{formatMaybeFixed(row[`fair_under_${line}`])}</td>
+                                    <td className="py-1.5 pr-3">
+                                      <StatusPill label={consensusLabel(consensusState(row.consensus))} tone={consensusTone(consensusState(row.consensus))} />
+                                    </td>
+                                    <td className="py-1.5 font-mono tabular-nums text-slate-400">
+                                      {formatSignedPercent((maybeFloat(row.divergence) ?? 0) * 100)}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </SectionCard>
+                );
+              })}
             </div>
           </SectionCard>
         )}
