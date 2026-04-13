@@ -1,6 +1,10 @@
 # Il Margine - Goalscorer live polling task
 # Purpose: refresh odds, fetch confirmed lineups, rerun live compare, log output.
 
+param(
+    [switch]$ForceAllLeagues
+)
+
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $root
@@ -205,6 +209,7 @@ function Get-SchedulePlan {
 
 $bookmaker = if ([string]::IsNullOrWhiteSpace($env:GOALSCORER_BOOKMAKER)) { "Bet365" } else { $env:GOALSCORER_BOOKMAKER }
 $oddsApiBooks = if ([string]::IsNullOrWhiteSpace($env:GOALSCORER_ODDS_API_BOOKMAKERS)) { "Bet365" } else { $env:GOALSCORER_ODDS_API_BOOKMAKERS }
+$forceRunAll = $ForceAllLeagues -or ($env:GOALSCORER_FORCE_ALL -eq "1")
 $leagues = if ([string]::IsNullOrWhiteSpace($env:GOALSCORER_LEAGUES)) {
     @("serie-a", "epl", "la-liga", "bundesliga", "ligue-1")
 } else {
@@ -242,8 +247,15 @@ try {
     Log "Bookmaker filter: $bookmaker"
     Log "Odds API books:   $oddsApiBooks"
     Log "Leagues:          $($leagues -join ', ')"
+    if ($forceRunAll) {
+        Log "Manual mode:      Force all leagues"
+    }
     Write-Status -State "running" -Message "Goalscorer live poll started"
-    $schedulePlan = Get-SchedulePlan
+    $schedulePlan = if ($forceRunAll) {
+        [pscustomobject]@{ leagues = @() }
+    } else {
+        Get-SchedulePlan
+    }
     $schedulePlanLookup = @{}
     foreach ($entry in $schedulePlan.leagues) {
         $schedulePlanLookup[[string]$entry.league] = $entry
@@ -262,14 +274,14 @@ try {
         $lastFailureAge = Get-IsoAgeMinutes $leagueState.last_failure_at
         $consecutiveFailures = if ($leagueState.consecutive_failures -ne $null) { [int]$leagueState.consecutive_failures } else { 0 }
 
-        if ($tier -eq "off" -or $cadenceMinutes -le 0 -or $activeFixtureCount -le 0) {
+        if (-not $forceRunAll -and ($tier -eq "off" -or $cadenceMinutes -le 0 -or $activeFixtureCount -le 0)) {
             $message = "Skip ${league}: no upcoming fixtures inside schedule window."
             Log $message
             Update-LeagueState -League $league -Tier $tier -Decision "off" -Message $message -NextKickoffUtc $nextKickoffUtc
             continue
         }
 
-        if ($consecutiveFailures -ge $failureThreshold -and $lastFailureAge -ne $null -and $lastFailureAge -lt $failureCooldownMinutes) {
+        if (-not $forceRunAll -and $consecutiveFailures -ge $failureThreshold -and $lastFailureAge -ne $null -and $lastFailureAge -lt $failureCooldownMinutes) {
             $cooldownRemaining = [Math]::Max(1, [int][Math]::Ceiling($failureCooldownMinutes - $lastFailureAge))
             $message = "Skip ${league}: cooldown active after $consecutiveFailures consecutive failures ($cooldownRemaining min remaining)."
             Log $message
@@ -277,7 +289,7 @@ try {
             continue
         }
 
-        if ($lastSuccessAge -ne $null -and $lastSuccessAge -lt $cadenceMinutes) {
+        if (-not $forceRunAll -and $lastSuccessAge -ne $null -and $lastSuccessAge -lt $cadenceMinutes) {
             $waitMinutes = [Math]::Max(1, [int][Math]::Ceiling($cadenceMinutes - $lastSuccessAge))
             $message = "Skip ${league}: $tier tier cadence ${cadenceMinutes}m not due yet ($waitMinutes min remaining)."
             Log $message
@@ -285,13 +297,16 @@ try {
             continue
         }
 
-        Write-Status -State "running" -Message "Running $league ($tier tier, $activeFixtureCount fixture(s), cadence ${cadenceMinutes}m)"
-        Log "---- League: $league [$tier tier | $activeFixtureCount fixture(s) | cadence ${cadenceMinutes}m] ----"
+        $effectiveTier = if ($forceRunAll) { "manual" } else { $tier }
+        $effectiveFixtureCount = if ($forceRunAll) { [Math]::Max($activeFixtureCount, 1) } else { $activeFixtureCount }
+        $effectiveCadence = if ($forceRunAll) { 0 } else { $cadenceMinutes }
+        Write-Status -State "running" -Message "Running $league ($effectiveTier tier, $effectiveFixtureCount fixture(s), cadence ${effectiveCadence}m)"
+        Log "---- League: $league [$effectiveTier tier | $effectiveFixtureCount fixture(s) | cadence ${effectiveCadence}m] ----"
         $requiredLog = $requiredPlayerLogs[$league]
         if (-not [string]::IsNullOrWhiteSpace($requiredLog) -and -not (Test-Path $requiredLog)) {
             $message = "Skip ${league}: current player log missing ($requiredLog)"
             Log $message
-            Update-LeagueState -League $league -Tier $tier -Decision "missing-data" -Message $message -NextKickoffUtc $nextKickoffUtc
+            Update-LeagueState -League $league -Tier $effectiveTier -Decision "missing-data" -Message $message -NextKickoffUtc $nextKickoffUtc
             continue
         }
         & $pythonExe scripts\run-goalscorer-pipeline.py --league $league --live-only --fetch-lineups --fetch-odds-api --odds-api-bookmakers $oddsApiBooks --bookmaker $bookmaker --track-shadow 2>&1 | ForEach-Object { Log $_ }
@@ -308,7 +323,7 @@ try {
         $ranLeagueCount++
         $successfulRunAt = (Get-Date).ToUniversalTime().ToString("o")
         $runDetailTasks = $true
-        if ($tier -eq "hot" -and $lastDetailAge -ne $null -and $lastDetailAge -lt $detailCadenceHotMinutes) {
+        if (-not $forceRunAll -and $tier -eq "hot" -and $lastDetailAge -ne $null -and $lastDetailAge -lt $detailCadenceHotMinutes) {
             $runDetailTasks = $false
         }
         $detailRunAt = $null
@@ -343,8 +358,12 @@ try {
             Log "Skip detail scripts for ${league}: hot tier detail cooldown still active."
         }
 
-        $message = "Ran $league in $tier tier (cadence ${cadenceMinutes}m, fixtures $activeFixtureCount)."
-        Update-LeagueState -League $league -Tier $tier -Decision "ran" -Message $message -NextKickoffUtc $nextKickoffUtc -ConsecutiveFailures 0 -LastFailureAt "" -LastSuccessfulRunAt $successfulRunAt -LastDetailRunAt $detailRunAt
+        $message = if ($forceRunAll) {
+            "Ran $league in manual force mode."
+        } else {
+            "Ran $league in $tier tier (cadence ${cadenceMinutes}m, fixtures $activeFixtureCount)."
+        }
+        Update-LeagueState -League $league -Tier $effectiveTier -Decision "ran" -Message $message -NextKickoffUtc $nextKickoffUtc -ConsecutiveFailures 0 -LastFailureAt "" -LastSuccessfulRunAt $successfulRunAt -LastDetailRunAt $detailRunAt
     }
 
     Save-SchedulerState -Reason "cycle"
