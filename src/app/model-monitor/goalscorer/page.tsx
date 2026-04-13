@@ -74,11 +74,28 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
   const minuteAside = row.minute
     ? `min ${row.minute}${row.event_result ? ` | ${row.event_result}` : row.event_type ? ` | ${row.event_type}` : ""}`
     : undefined;
+  const primaryTakerPitchValue =
+    row.primary_on_pitch_at_penalty?.trim() ||
+    (row.primary_pre_match ? "Unknown" : "-");
   const activeTakerPitchValue =
     row.active_on_pitch_at_penalty?.trim() ||
-    (row.active_taker_pre_match ? "Unresolved" : "-");
+    (row.active_taker_pre_match ? "Unresolved" : row.primary_pre_match ? "Unknown" : "-");
+  const preMatchActiveTakerValue =
+    row.active_taker_pre_match?.trim() ||
+    (row.primary_pre_match ? "Unknown" : "-");
+  const preMatchActiveTakerDetail =
+    row.active_slot_pre_match ||
+    (preMatchActiveTakerValue === "Unknown" ? "lineup unresolved" : undefined);
+  const actualTakerPitchValue =
+    row.actual_taker_on_pitch_at_penalty?.trim() ||
+    (row.actual_taker ? "On pitch" : "-");
   const hasTransferContext =
     Boolean(row.inherited_from_pre_match?.trim()) || Boolean(row.transfer_level_pre_match?.trim());
+  const editorialNote = row.editorial_note
+    ? row.event_result && !row.editorial_note.toLowerCase().includes(row.event_result.toLowerCase())
+      ? `Penalty ${row.event_result}. ${row.editorial_note}`
+      : row.editorial_note
+    : "";
 
   return (
     <article className="rounded-xl border border-slate-800 bg-slate-950/50 p-4">
@@ -137,8 +154,8 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
             <StatCard
               compact
               label="Pre-match active taker"
-              value={row.active_taker_pre_match || "-"}
-              detail={row.active_slot_pre_match || undefined}
+              value={preMatchActiveTakerValue}
+              detail={preMatchActiveTakerDetail}
             />
           </div>
         </div>
@@ -147,12 +164,12 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
         <div className="space-y-2">
           <PhaseLabel label="At penalty" aside={minuteAside} />
           <div className="grid gap-1.5 sm:grid-cols-3">
-            <StatCard compact label="Primary on pitch" value={row.primary_on_pitch_at_penalty || "-"} />
+            <StatCard compact label="Primary on pitch" value={primaryTakerPitchValue} />
             <StatCard compact label="Active taker on pitch"  value={activeTakerPitchValue} />
             <StatCard
               compact
               label="Actual taker"
-              value={row.actual_taker_on_pitch_at_penalty || "-"}
+              value={actualTakerPitchValue}
               tone="text-slate-100"
             />
           </div>
@@ -171,9 +188,9 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
       </div>
 
       {/* -- Footer -- */}
-      {row.editorial_note ? (
+      {editorialNote ? (
         <p className="mt-3 border-t border-slate-800/60 pt-3 text-xs text-slate-400">
-          {row.editorial_note}
+          {editorialNote}
         </p>
       ) : null}
       {row.row_id ? (

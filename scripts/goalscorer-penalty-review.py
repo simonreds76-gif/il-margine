@@ -139,6 +139,7 @@ def _build_editorial_note(
     *,
     actual_taker: str,
     attempts: int,
+    event_result: str = "",
     team: str,
     opponent: str,
     context: dict,
@@ -151,6 +152,9 @@ def _build_editorial_note(
         base += " attempts"
     else:
         base += " attempt"
+    result_text = (event_result or "").strip().lower()
+    if result_text in {"scored", "missed", "mixed"}:
+        base += f" and {result_text}"
     base += f" for {team} vs {opponent}."
 
     context_bits: List[str] = []
