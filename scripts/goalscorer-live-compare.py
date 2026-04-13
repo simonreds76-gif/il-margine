@@ -1058,7 +1058,13 @@ def _team_pen_rate(team_summary: Optional[dict], shrink_func, shrink_matches: fl
     )
 
 
-def _penalty_share_prior(role: str, active_slot: str, lineup_state: str) -> tuple[float, float]:
+def _penalty_share_prior(
+    role: str,
+    active_slot: str,
+    lineup_state: str,
+    *,
+    penalty_transfer: bool = False,
+) -> tuple[float, float]:
     role_key = (role or "").strip().lower()
     active_key = (active_slot or "").strip().lower()
     lineup_key = (lineup_state or "").strip().lower()
@@ -1071,6 +1077,20 @@ def _penalty_share_prior(role: str, active_slot: str, lineup_state: str) -> tupl
     if active_key:
         if role_key != active_key:
             return 0.0, 0.0
+        if penalty_transfer:
+            # A promoted active taker should be priced much closer to a true
+            # first taker than to the player's original slot in the hierarchy.
+            transfer_confirmed = {
+                "secondary": (0.80, 16.0),
+                "tertiary": (0.72, 14.0),
+            }
+            transfer_expected = {
+                "secondary": (0.74, 12.0),
+                "tertiary": (0.66, 10.0),
+            }
+            transfer_map = transfer_expected if lineup_key == "expected_starter" else transfer_confirmed
+            if role_key in transfer_map:
+                return transfer_map[role_key]
         confirmed_active = {
             "primary": 0.80,
             "secondary": 0.60,
@@ -1831,6 +1851,7 @@ def main() -> None:
                     penalty_role,
                     team_penalty_event.get("active_slot", ""),
                     candidate.get("lineup_state", "unknown"),
+                    penalty_transfer=bool(team_penalty_event.get("penalty_transfer")),
                 )
 
                 if candidate.get("lineup_state") == "not_in_squad":

@@ -128,6 +128,18 @@ def _expand_paths(paths: Iterable[str]) -> List[str]:
     return [path for path in expanded if os.path.exists(path)]
 
 
+def _recent_capture_paths(patterns: Iterable[str], *, newer_than_ts: float) -> List[str]:
+    candidates = _expand_paths(patterns)
+    recent: List[str] = []
+    for path in candidates:
+        try:
+            if os.path.getmtime(path) >= newer_than_ts:
+                recent.append(path)
+        except OSError:
+            continue
+    return sorted(recent)
+
+
 def _run(cmd: List[str], allow_failure: bool = False) -> bool:
     print("  >", " ".join(cmd))
     result = subprocess.run(cmd, check=False, cwd=ROOT)
@@ -252,6 +264,7 @@ def main() -> None:
         _run([sys.executable, model_script, "--data", *data_paths])
 
     if args.fetch_odds_api:
+        fetch_started_ts = datetime.now(timezone.utc).timestamp() - 1.0
         odds_fetch_ok = _run(
             [
                 sys.executable,
@@ -265,11 +278,24 @@ def main() -> None:
             ],
             allow_failure=args.live_only,
         )
-        odds_paths = _expand_paths(args.odds_input) if odds_fetch_ok else []
+        if odds_fetch_ok:
+            recent_patterns = [
+                str(ROOT / "data" / "goalscorer" / "inbox" / f"odds-api-{args.league}-atgs-*.csv"),
+                str(ROOT / "data" / "goalscorer" / "inbox" / "odds-api-atgs-*.csv"),
+            ]
+            recent_paths = _recent_capture_paths(recent_patterns, newer_than_ts=fetch_started_ts)
+            odds_paths = recent_paths or _expand_paths(args.odds_input)
+        else:
+            odds_paths = []
 
     if args.fetch_pinnacle:
+        fetch_started_ts = datetime.now(timezone.utc).timestamp() - 1.0
         _run([sys.executable, pinnacle_script, "--out-dir", str(ROOT / "data" / "goalscorer" / "inbox")])
-        odds_paths = _expand_paths(args.odds_input)
+        recent_paths = _recent_capture_paths(
+            [str(ROOT / "data" / "goalscorer" / "inbox" / "pinnacle-atgs-*.csv")],
+            newer_than_ts=fetch_started_ts,
+        )
+        odds_paths = recent_paths or _expand_paths(args.odds_input)
 
     configured_lineups_path = str(ROOT / league_config["lineups"])
     lineups_path = args.lineups or (configured_lineups_path if os.path.exists(configured_lineups_path) else "")
