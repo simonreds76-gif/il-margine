@@ -1438,6 +1438,7 @@ def main() -> None:
     globals()["LEAGUE_AVG"] = model_mod["LEAGUE_AVG"]
     expected_minutes_from_summary = model_mod["expected_minutes_from_summary"]
     build_player_propensity = model_mod["build_player_propensity"]
+    build_player_raw_share = model_mod["build_player_raw_share"]
     build_team_expected_npxg = model_mod["build_team_expected_npxg"]
     build_penalty_component = model_mod["build_penalty_component"]
     league_avg_for = model_mod["league_avg_for"]
@@ -1445,6 +1446,7 @@ def main() -> None:
     prob_at_least_one = model_mod["prob_at_least_one"]
     shrink_func = model_mod["_shrink"]
     TEAM_SHRINK_MATCHES = model_mod["TEAM_SHRINK_MATCHES"]
+    UNALLOCATED_SHARE_FLOOR = model_mod["UNALLOCATED_SHARE_FLOOR"]
     team_key_func = model_mod["_team_key"]
     coarse_position = model_mod["coarse_position"]
     penalty_hierarchy = load_penalty_hierarchy(ROOT / args.penalty_hierarchy, team_key_func=team_key_func)
@@ -1834,6 +1836,7 @@ def main() -> None:
             ) = build_team_expected_npxg(team_summary, opponent_summary, sample["is_home"])
 
             team_propensity_total = 0.0
+            raw_share_total = 0.0
             for candidate in team_candidates:
                 player_display_name = candidate["player_meta"].get("player_name", candidate["odds_row"]["player_name"])
                 hierarchy_entry = penalty_hierarchy.get(candidate["player_team_key"])
@@ -1876,6 +1879,7 @@ def main() -> None:
                     propensity = 0.0
                     base_rate = 0.0
                     method = "model"
+                    raw_share = 0.0
                     penalty_lambda = 0.0
                     penalty_share = 0.0
                     baseline_penalty_share = 0.0
@@ -1890,6 +1894,11 @@ def main() -> None:
                         candidate["player_recent"],
                         candidate["player_long"],
                         candidate["position"],
+                        candidate["expected_minutes"],
+                    )
+                    raw_share = build_player_raw_share(
+                        candidate["player_recent"],
+                        team_summary,
                         candidate["expected_minutes"],
                     )
                     penalty_lambda = 0.0
@@ -1937,6 +1946,7 @@ def main() -> None:
                     "base_rate": base_rate,
                     "method": method,
                     "propensity": propensity,
+                    "raw_share": raw_share,
                     "penalty_lambda": penalty_lambda,
                     "penalty_share": penalty_share,
                     "baseline_penalty_share": baseline_penalty_share if method == "model" else 0.0,
@@ -1959,11 +1969,28 @@ def main() -> None:
                     "opp_factor": opp_factor,
                 }
                 team_propensity_total += propensity
+                raw_share_total += raw_share
 
-            if team_propensity_total <= 0:
+            if raw_share_total > 0:
+                for candidate in team_candidates:
+                    key = (candidate["player_id"], candidate["player_team_key"])
+                    computed_predictions[key]["team_share_seed"] = (
+                        computed_predictions[key]["raw_share"] / raw_share_total
+                    ) * (1.0 - UNALLOCATED_SHARE_FLOOR)
+            elif team_propensity_total > 0:
+                for candidate in team_candidates:
+                    key = (candidate["player_id"], candidate["player_team_key"])
+                    computed_predictions[key]["team_share_seed"] = (
+                        computed_predictions[key]["propensity"] / team_propensity_total
+                    ) * (1.0 - UNALLOCATED_SHARE_FLOOR)
+            else:
                 team_propensity_total = float(len(team_candidates)) or 1.0
                 for candidate in team_candidates:
-                    computed_predictions[(candidate["player_id"], candidate["player_team_key"])]["propensity"] = 1.0
+                    key = (candidate["player_id"], candidate["player_team_key"])
+                    computed_predictions[key]["propensity"] = 1.0
+                    computed_predictions[key]["team_share_seed"] = (1.0 / team_propensity_total) * (
+                        1.0 - UNALLOCATED_SHARE_FLOOR
+                    )
 
             for candidate in team_candidates:
                 key = (candidate["player_id"], candidate["player_team_key"])
@@ -1974,7 +2001,7 @@ def main() -> None:
                     penalty_lambda = 0.0
                     total_lambda = 0.0
                 else:
-                    team_share = prediction["propensity"] / team_propensity_total
+                    team_share = prediction.get("team_share_seed", 0.0)
                     non_pen_lambda = prediction["team_expected_npxg"] * team_share
                     penalty_lambda = prediction["penalty_lambda"]
                     total_lambda = max(0.001, non_pen_lambda + penalty_lambda)
