@@ -69,6 +69,18 @@ type TeamPropsStatus = {
 
 };
 
+const CURRENT_POLICY = "venue-consensus-v1";
+const LEGACY_POLICY = "legacy";
+
+function policyVersion(row: CsvRow): string {
+  const raw = (row.policy_version ?? "").trim();
+  return raw || LEGACY_POLICY;
+}
+
+function policyLabel(version: string): string {
+  return version === CURRENT_POLICY ? "Current policy" : "Legacy";
+}
+
 
 
 function parseCsv(text: string): CsvRow[] {
@@ -851,26 +863,43 @@ export default async function TeamShotsMonitorPage() {
 
   const pendingShadow = shadowSignals.filter((r) => r.result === "pending");
 
-  const shadowPnl = settledShadow.reduce((s, r) => s + pf(r.pnl), 0);
+  const currentSettledShadow = settledShadow.filter((r) => policyVersion(r) === CURRENT_POLICY);
+  const currentPendingShadow = pendingShadow.filter((r) => policyVersion(r) === CURRENT_POLICY);
+  const legacySettledShadow = settledShadow.filter((r) => policyVersion(r) !== CURRENT_POLICY);
+  const legacyPendingShadow = pendingShadow.filter((r) => policyVersion(r) !== CURRENT_POLICY);
 
-  const shadowPnlStaked = settledShadow.reduce((s, r) => s + pf(r.pnl_staked), 0);
+  const activeSettledShadow = currentSettledShadow;
+  const activePendingShadow = currentPendingShadow;
 
-  const shadowStakedTotal = settledShadow.reduce((s, r) => s + pf(r.stake_units || "1"), 0);
+  const shadowPnl = activeSettledShadow.reduce((s, r) => s + pf(r.pnl), 0);
 
-  const shadowWins = settledShadow.filter((r) => r.result === "won").length;
+  const shadowPnlStaked = activeSettledShadow.reduce((s, r) => s + pf(r.pnl_staked), 0);
+
+  const shadowStakedTotal = activeSettledShadow.reduce((s, r) => s + pf(r.stake_units || "1"), 0);
+
+  const shadowWins = activeSettledShadow.filter((r) => r.result === "won").length;
 
   const shadowRoi =
 
-    settledShadow.length > 0 ? (shadowPnl / settledShadow.length) * 100 : 0;
+    activeSettledShadow.length > 0 ? (shadowPnl / activeSettledShadow.length) * 100 : 0;
 
   const shadowRoiStaked =
 
     shadowStakedTotal > 0 ? (shadowPnlStaked / shadowStakedTotal) * 100 : 0;
 
-  const clvSettled = settledShadow.filter((r) => r.clv && r.clv.trim() !== "");
+  const clvSettled = activeSettledShadow.filter((r) => r.clv && r.clv.trim() !== "");
   const avgClv = clvSettled.length > 0
     ? clvSettled.reduce((s, r) => s + pf(r.clv), 0) / clvSettled.length * 100
     : null;
+
+  const legacyPnl = legacySettledShadow.reduce((s, r) => s + pf(r.pnl), 0);
+  const legacyStakedTotal = legacySettledShadow.reduce((s, r) => s + pf(r.stake_units || "1"), 0);
+  const legacyPnlStaked = legacySettledShadow.reduce((s, r) => s + pf(r.pnl_staked), 0);
+  const legacyWins = legacySettledShadow.filter((r) => r.result === "won").length;
+  const legacyRoi =
+    legacySettledShadow.length > 0 ? (legacyPnl / legacySettledShadow.length) * 100 : 0;
+  const legacyRoiStaked =
+    legacyStakedTotal > 0 ? (legacyPnlStaked / legacyStakedTotal) * 100 : 0;
 
 
 
@@ -1280,7 +1309,8 @@ function LiveLineTable({
     lineMoved: boolean;
   };
 
-  const pendingShadowRows: PendingShadowRow[] = pendingShadow
+  const buildPendingShadowRows = (rows: CsvRow[]): PendingShadowRow[] =>
+    rows
     .map((row): PendingShadowRow => {
       const matchDate = (row.date ?? "").slice(0, 10);
       const teamKey = `${matchKey(matchDate, row.home_team, row.away_team)}|${normalizeTeamName(row.team)}`;
@@ -1374,6 +1404,9 @@ function LiveLineTable({
       );
     });
 
+  const pendingShadowRows = buildPendingShadowRows(activePendingShadow);
+  const legacyPendingRows = buildPendingShadowRows(legacyPendingShadow);
+
   const pendingUpcomingCount = pendingShadowRows.filter((row) => row.pendingState === "upcoming").length;
   const pendingAwaitingCount = pendingShadowRows.length - pendingUpcomingCount;
   const pendingRowsByDate = new Map<string, typeof pendingShadowRows>();
@@ -1386,7 +1419,7 @@ function LiveLineTable({
   const defaultOpenPendingDate =
     pendingDateKeys.find((date) => date >= asOfIso) ?? pendingDateKeys[pendingDateKeys.length - 1] ?? null;
 
-  const recentSettledShadow = [...settledShadow]
+  const recentSettledShadow = [...activeSettledShadow]
     .sort((a, b) =>
       (b.settled_at ?? b.date ?? "").localeCompare(a.settled_at ?? a.date ?? ""),
     )
@@ -1457,38 +1490,71 @@ function LiveLineTable({
         {/* -- KPI strip -- */}
         <section className="grid gap-2.5 sm:grid-cols-3 xl:grid-cols-5">
           <StatCard
-            label="Shadow bets"
-            value={String(settledShadow.length + pendingShadow.length)}
-            detail={`${settledShadow.length} settled | ${pendingShadow.length} pending`}
+            label="Current policy"
+            value={String(activeSettledShadow.length + activePendingShadow.length)}
+            detail={`${activeSettledShadow.length} settled | ${activePendingShadow.length} pending`}
           />
           <StatCard
-            label="P&L flat"
+            label="Current P&L flat"
             value={`${shadowPnl >= 0 ? "+" : ""}${shadowPnl.toFixed(2)}u`}
             tone={shadowPnl >= 0 ? "text-emerald-300" : "text-rose-300"}
           />
           <StatCard
-            label="ROI flat"
+            label="Current ROI flat"
             value={`${shadowRoi >= 0 ? "+" : ""}${shadowRoi.toFixed(1)}%`}
             tone={shadowRoi >= 0 ? "text-emerald-300" : "text-rose-300"}
-            detail={`${shadowWins}/${settledShadow.length} wins`}
+            detail={`${shadowWins}/${activeSettledShadow.length} wins`}
           />
           <StatCard
-            label="P&L staked"
+            label="Current P&L staked"
             value={`${shadowPnlStaked >= 0 ? "+" : ""}${shadowPnlStaked.toFixed(2)}u`}
             tone={shadowPnlStaked >= 0 ? "text-emerald-300" : "text-rose-300"}
           />
           <StatCard
-            label="Avg CLV"
+            label="Current Avg CLV"
             value={avgClv !== null ? `${avgClv >= 0 ? "+" : ""}${avgClv.toFixed(1)}%` : "-"}
             tone={avgClv !== null ? (avgClv >= 0 ? "text-emerald-300" : "text-rose-300") : undefined}
           />
         </section>
 
+        {(legacySettledShadow.length > 0 || legacyPendingRows.length > 0) ? (
+          <SectionCard
+            collapsible
+            defaultOpen={false}
+            title="Legacy policy"
+            subtitle={`${legacySettledShadow.length} settled | ${legacyPendingRows.length} pending`}
+          >
+            <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
+              <StatCard
+                label="Legacy P&L flat"
+                value={`${legacyPnl >= 0 ? "+" : ""}${legacyPnl.toFixed(2)}u`}
+                tone={legacyPnl >= 0 ? "text-emerald-300" : "text-rose-300"}
+              />
+              <StatCard
+                label="Legacy ROI flat"
+                value={`${legacyRoi >= 0 ? "+" : ""}${legacyRoi.toFixed(1)}%`}
+                tone={legacyRoi >= 0 ? "text-emerald-300" : "text-rose-300"}
+                detail={`${legacyWins}/${legacySettledShadow.length} wins`}
+              />
+              <StatCard
+                label="Legacy P&L staked"
+                value={`${legacyPnlStaked >= 0 ? "+" : ""}${legacyPnlStaked.toFixed(2)}u`}
+                tone={legacyPnlStaked >= 0 ? "text-emerald-300" : "text-rose-300"}
+              />
+              <StatCard
+                label="Legacy ROI staked"
+                value={`${legacyRoiStaked >= 0 ? "+" : ""}${legacyRoiStaked.toFixed(1)}%`}
+                tone={legacyRoiStaked >= 0 ? "text-emerald-300" : "text-rose-300"}
+              />
+            </div>
+          </SectionCard>
+        ) : null}
+
         {/* Recent settled shadow bets */}
         {recentSettledShadow.length > 0 ? (
           <SectionCard
             collapsible
-            title={`Recent Settled Shadow Bets - ${settledShadow.length} total`}
+            title={`Current policy settled bets - ${activeSettledShadow.length} total`}
             subtitle={`Last ${recentSettledShadow.length} results`}
           >
             {/* Mobile cards */}
@@ -1683,7 +1749,7 @@ function LiveLineTable({
         {pendingShadowRows.length > 0 ? (
           <SectionCard
             collapsible
-            title={`Pending Shadow Bets - ${pendingShadowRows.length} total`}
+            title={`Current policy pending bets - ${pendingShadowRows.length} total`}
             subtitle={`${pendingUpcomingCount} upcoming | ${pendingAwaitingCount} awaiting result`}
           >
             <div className="space-y-2">
@@ -1789,6 +1855,75 @@ function LiveLineTable({
                   </details>
                 );
               })}
+            </div>
+          </SectionCard>
+        ) : null}
+
+        {legacyPendingRows.length > 0 ? (
+          <SectionCard
+            collapsible
+            defaultOpen={false}
+            title={`Legacy pending bets - ${legacyPendingRows.length} total`}
+            subtitle="Tracked separately from the current venue-consensus policy"
+          >
+            <div className="space-y-2">
+              {legacyPendingRows.map((row, idx) => (
+                <div key={idx} className="rounded-xl border border-slate-800/60 bg-slate-950/40 px-3 py-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <TeamLabel
+                        league={row.league}
+                        team={row.team}
+                        iconSize={18}
+                        teamClassName="truncate text-sm font-medium text-white"
+                      />
+                      <div className="mt-1">
+                        <MatchLabel
+                          league={row.league}
+                          homeTeam={row.home_team}
+                          awayTeam={row.away_team}
+                          iconSize={16}
+                          separator="v"
+                          textClassName="text-[11px] text-slate-500"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-1">
+                      <StatusPill label="LEGACY" tone="bg-slate-700/30 text-slate-300 border-slate-600/30" />
+                      <StatusPill
+                        label={row.side === "over" ? "Over" : "Under"}
+                        tone={row.side === "over"
+                          ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                          : "bg-sky-500/10 text-sky-300 border-sky-500/20"}
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-2 grid grid-cols-2 gap-1 sm:grid-cols-5">
+                    <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Line</div>
+                      <div className="mt-0.5 font-mono text-xs text-slate-200">{row.line || "-"}</div>
+                    </div>
+                    <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Entry</div>
+                      <div className="mt-0.5 font-mono text-xs text-slate-200">{row.book_odds || "-"}</div>
+                    </div>
+                    <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Fair</div>
+                      <div className="mt-0.5 font-mono text-xs text-slate-200">{row.model_fair_odds || "-"}</div>
+                    </div>
+                    <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Edge</div>
+                      <div className={`mt-0.5 font-mono text-xs ${row.entryEdgePct !== null && row.entryEdgePct >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                        {row.entryEdgePct !== null ? formatSignedPercent(row.entryEdgePct) : "-"}
+                      </div>
+                    </div>
+                    <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Stake</div>
+                      <div className="mt-0.5 font-mono text-xs text-amber-200">{`${pf(row.stake_units || "1", 1).toFixed(1)}u`}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </SectionCard>
         ) : null}
@@ -1933,7 +2068,7 @@ function LiveLineTable({
 
         {/* -- Diagnostics -- */}
         {shadowPerformanceTxt ? (
-          <SectionCard collapsible defaultOpen={false} title="Shadow Performance" subtitle="team-shots-shadow-performance.txt">
+          <SectionCard collapsible defaultOpen={false} title="Raw shadow performance file" subtitle="Combined tracker output | team-shots-shadow-performance.txt">
             <pre className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/40 p-4 text-[11px] leading-relaxed text-slate-300 whitespace-pre">
               {shadowPerformanceTxt}
             </pre>

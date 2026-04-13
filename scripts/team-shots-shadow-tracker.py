@@ -30,6 +30,8 @@ DEFAULT_SUMMARY = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-p
 MIN_EDGE = 0.05
 MIN_ODDS = 1.50
 MAX_ODDS = 5.00
+CURRENT_POLICY = "venue-consensus-v1"
+LEGACY_POLICY = "legacy"
 
 # Edge % → stake units. Same ladder as corners.
 # 5-8%: 0.5u  |  8-12%: 1u  |  12-16%: 1.5u  |  16%+: 2u
@@ -44,7 +46,7 @@ SIGNAL_FIELDS = [
     "date", "fixture_date", "kickoff_iso", "league", "home_team", "away_team", "team", "venue",
     "bookmaker", "line", "side", "book_odds", "model_prob",
     "model_fair_odds", "edge", "stake_units", "actual_shots", "result",
-    "pnl", "pnl_staked", "settled_at", "closing_odds", "clv", "logged_at",
+    "pnl", "pnl_staked", "settled_at", "closing_odds", "clv", "logged_at", "policy_version",
 ]
 
 
@@ -118,6 +120,9 @@ def repair_existing_signals(existing_signals: List[dict], source_rows: List[dict
 
     for row in existing_signals:
         source = source_by_key.get(_signal_key(row))
+        if not str(row.get("policy_version", "")).strip():
+            row["policy_version"] = CURRENT_POLICY if source else LEGACY_POLICY
+            changed = True
         if not source:
             continue
 
@@ -237,6 +242,7 @@ def track_signals(
             "closing_odds": "",
             "clv": "",
             "logged_at": now,
+            "policy_version": CURRENT_POLICY,
         }
         new_signals.append(signal)
         existing_keys.add(key)
@@ -301,6 +307,17 @@ def write_summary(all_signals: List[dict], path: Path) -> str:
             sw = sum(1 for s in sb if s.get("result") == "won")
             sr = sp / len(sb) * 100
             lines.append(f"    {side:6s}: n={len(sb):4d}  PnL={sp:+6.1f}u  ROI={sr:+5.1f}%  W={sw}")
+
+        lines.append("")
+        lines.append("  By policy:")
+        for policy in [CURRENT_POLICY, LEGACY_POLICY]:
+            pb = [s for s in settled if (s.get("policy_version") or LEGACY_POLICY) == policy]
+            if not pb:
+                continue
+            pp = sum(_pf(s.get("pnl")) for s in pb)
+            pw = sum(1 for s in pb if s.get("result") == "won")
+            pr = pp / len(pb) * 100
+            lines.append(f"    {policy:20s}: n={len(pb):4d}  PnL={pp:+6.1f}u  ROI={pr:+5.1f}%  W={pw}")
 
     lines.append("")
     lines.append(f"  Updated: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}")
