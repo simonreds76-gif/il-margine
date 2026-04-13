@@ -85,12 +85,15 @@ POSITION_PRIORS = {
 }
 
 CENTER_BACK_SHARE_CAP_MULTIPLIERS = {
-    "DC": 2.25,
-    "D S": 2.25,
+    "DC": 1.75,
+    "D S": 1.75,
 }
+# The shared model owns defender share constraints for both live and backtest
+# paths. Stale-history handling stays in goalscorer-live-compare.py only,
+# because the chronological backtest already uses contemporaneous player data.
 CENTER_BACK_SHOTS_PER90_BASELINE = 0.45
 CENTER_BACK_SHOT_BOOST_MIN = 0.85
-CENTER_BACK_SHOT_BOOST_MAX = 1.60
+CENTER_BACK_SHOT_BOOST_MAX = 1.25
 
 TEAM_ALIASES = {
     "ac milan": "milan",

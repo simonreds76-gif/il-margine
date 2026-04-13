@@ -89,7 +89,13 @@ PUBLIC_EXTENDED_MIN_EV = 0.12
 SHADOW_TRACK_MIN_EV = 0.05
 SHADOW_MAX_FAIR_ODDS = 20.0
 SHADOW_MIN_EXPECTED_MINUTES = 60.0
+# Live-only stale handling: current squad context can make old player history
+# misleading even when the player has historical rows. The backtest replays
+# contemporaneous history, so this guard intentionally does not live in the
+# shared model layer.
 STALE_HISTORY_DAYS = 365
+# Allocate a small fallback share per stale starter so confirmed starters do
+# not collapse to 99.0 purely because their usable history is stale.
 STARTER_FALLBACK_SHARE_POOL = 0.02
 
 POSITION_SCORES = {
@@ -1986,6 +1992,7 @@ def main() -> None:
 
             if raw_share_total > 0:
                 fallback_seed_total = 0.0
+                fallback_starter_count = 0
                 for candidate in team_candidates:
                     if candidate.get("lineup_state") not in {"starter", "expected_starter"}:
                         continue
@@ -1993,9 +2000,18 @@ def main() -> None:
                     prediction = computed_predictions[key]
                     if prediction["raw_share"] > 0:
                         continue
-                    fallback_seed_total += prediction.get("share_prior", 0.0)
+                    prior_share = prediction.get("share_prior", 0.0)
+                    if prior_share <= 0:
+                        continue
+                    fallback_seed_total += prior_share
+                    fallback_starter_count += 1
 
-                fallback_pool = STARTER_FALLBACK_SHARE_POOL if fallback_seed_total > 0 else 0.0
+                fallback_pool = 0.0
+                if fallback_seed_total > 0 and fallback_starter_count > 0:
+                    fallback_pool = min(
+                        STARTER_FALLBACK_SHARE_POOL * fallback_starter_count,
+                        1.0 - UNALLOCATED_SHARE_FLOOR,
+                    )
                 raw_pool = max(0.0, (1.0 - UNALLOCATED_SHARE_FLOOR) - fallback_pool)
                 for candidate in team_candidates:
                     key = (candidate["player_id"], candidate["player_team_key"])
