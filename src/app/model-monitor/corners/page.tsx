@@ -23,6 +23,7 @@ import { MODEL_MONITOR_ENABLED } from "../shared";
 
 type CsvRow = Record<string, string>;
 type CurrentValueSignal = { row: CsvRow; displayDate: string; edgeValue: number };
+type ConsensusState = "aligned" | "divergent" | "conflict" | "extreme";
 type TeamPropsStatus = {
   state?: string;
   updated_at?: string;
@@ -182,6 +183,153 @@ function statTone(t?: "default" | "green" | "red" | "amber"): string | undefined
   return map[t];
 }
 
+const CURRENT_POLICY = "V3";
+
+function policyVersion(row: CsvRow): string {
+  const raw = (row.policy_version ?? "").trim();
+  return raw || "V2";
+}
+
+function consensusState(raw: string | undefined): ConsensusState {
+  const value = (raw ?? "").trim().toLowerCase();
+  if (value === "divergent" || value === "conflict" || value === "extreme") return value;
+  return "aligned";
+}
+
+function consensusTone(consensus: ConsensusState): string {
+  if (consensus === "extreme") return "bg-rose-500/15 text-rose-200 border-rose-500/30";
+  if (consensus === "conflict") return "bg-orange-500/15 text-orange-200 border-orange-500/30";
+  if (consensus === "divergent") return "bg-amber-500/15 text-amber-200 border-amber-500/30";
+  return "bg-emerald-500/10 text-emerald-300 border-emerald-500/20";
+}
+
+function consensusLabel(consensus: ConsensusState): string {
+  if (consensus === "extreme") return "EXTREME";
+  if (consensus === "conflict") return "CONFLICT";
+  if (consensus === "divergent") return "DIVERGENT";
+  return "ALIGNED";
+}
+
+function trustBadgeLabel(row: CsvRow): string | null {
+  const consensus = consensusState(row.consensus);
+  const stake = pf(row.stake, 0);
+  const edge = pf(row.edge, 0);
+  if (consensus === "extreme" && stake <= 0) return "SUPPRESSED";
+  if (consensus === "extreme") return "EXTR -stake";
+  if (consensus === "conflict" && stake > 0 && edge < 0.20) return "CONF -stake";
+  if (consensus === "conflict") return "CONF";
+  if (consensus === "divergent") return "DIVG";
+  return null;
+}
+
+function trustBadgeTone(row: CsvRow): string {
+  const consensus = consensusState(row.consensus);
+  return consensusTone(consensus);
+}
+
+function pctDelta(base: number | null, recent: number | null): number | null {
+  if (base === null || recent === null || base <= 0) return null;
+  return (recent - base) / base;
+}
+
+function toneForDelta(delta: number | null): string {
+  if (delta === null) return "text-slate-500";
+  if (delta >= 0.15) return "text-emerald-300";
+  if (delta <= -0.15) return "text-amber-300";
+  return "text-slate-400";
+}
+
+function trendLabel(delta: number | null): string {
+  if (delta === null) return "n/a";
+  if (delta >= 0.15) return `↑ hot ${formatSignedPercent(delta * 100)}`;
+  if (delta <= -0.15) return `↓ cold ${formatSignedPercent(delta * 100)}`;
+  return formatSignedPercent(delta * 100);
+}
+
+function formatSignedPercent(value: number | null): string {
+  if (value === null || Number.isNaN(value)) return "--";
+  return `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
+}
+
+function policySummaryRows(rows: CsvRow[]): Array<{
+  version: string;
+  settled: number;
+  pending: number;
+  pnl: number;
+  roi: number | null;
+  avgOdds: number | null;
+  avgEdge: number | null;
+}> {
+  const byVersion = new Map<string, CsvRow[]>();
+  for (const row of rows) {
+    const version = policyVersion(row);
+    if (!byVersion.has(version)) byVersion.set(version, []);
+    byVersion.get(version)!.push(row);
+  }
+  return [...byVersion.entries()]
+    .map(([version, versionRows]) => {
+      const settled = versionRows.filter((row) => row.settled === "yes");
+      const pending = versionRows.filter((row) => row.settled !== "yes");
+      const pnl = settled.reduce((sum, row) => sum + pf(row.pnl_staked), 0);
+      const staked = settled.reduce((sum, row) => sum + pf(row.stake, 1), 0);
+      return {
+        version,
+        settled: settled.length,
+        pending: pending.length,
+        pnl,
+        roi: settled.length > 0 && staked > 0 ? (pnl / staked) * 100 : null,
+        avgOdds: settled.length > 0 ? settled.reduce((sum, row) => sum + pf(row.bookie_odds), 0) / settled.length : null,
+        avgEdge: settled.length > 0 ? settled.reduce((sum, row) => sum + pf(row.edge), 0) / settled.length * 100 : null,
+      };
+    })
+    .filter((row) => row.settled >= 5 || row.pending > 0)
+    .sort((a, b) => a.version.localeCompare(b.version));
+}
+
+function CornersTrustPanel({ row }: { row: CsvRow }) {
+  const homeLam = maybeFloat(row.lambda_home);
+  const awayLam = maybeFloat(row.lambda_away);
+  const totalLam = homeLam !== null && awayLam !== null ? homeLam + awayLam : null;
+  const homeRecent = maybeFloat(row.lambda_home_recent);
+  const awayRecent = maybeFloat(row.lambda_away_recent);
+  const recentAvailable = (homeRecent ?? 0) > 0 && (awayRecent ?? 0) > 0;
+  const totalRecent = recentAvailable && homeRecent !== null && awayRecent !== null ? homeRecent + awayRecent : null;
+  const divergence = maybeFloat(row.divergence) ?? 0;
+  const consensus = consensusState(row.consensus);
+  const homeDelta = recentAvailable ? pctDelta(homeLam, homeRecent) : null;
+  const awayDelta = recentAvailable ? pctDelta(awayLam, awayRecent) : null;
+
+  return (
+    <div className="rounded-xl border border-slate-800/70 bg-slate-950/40 p-3">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+        <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Lambda Trust Panel</div>
+        <StatusPill label={consensusLabel(consensus)} tone={consensusTone(consensus)} />
+      </div>
+      <div className="grid gap-2 text-xs sm:grid-cols-[110px_repeat(3,minmax(0,1fr))]">
+        <div className="text-slate-500" />
+        <div className="font-mono text-slate-400">H</div>
+        <div className="font-mono text-slate-400">A</div>
+        <div className="font-mono text-slate-400">Total</div>
+        <div className="text-slate-500">Season EMA</div>
+        <div className="font-mono text-emerald-300">{homeLam?.toFixed(2) ?? "--"}</div>
+        <div className="font-mono text-sky-300">{awayLam?.toFixed(2) ?? "--"}</div>
+        <div className="font-mono text-amber-200">{totalLam?.toFixed(2) ?? "--"}</div>
+        <div className="text-slate-500">Recent (6g)</div>
+        <div className="font-mono text-emerald-200">{recentAvailable && homeRecent !== null ? homeRecent.toFixed(2) : "--"}</div>
+        <div className="font-mono text-sky-200">{recentAvailable && awayRecent !== null ? awayRecent.toFixed(2) : "--"}</div>
+        <div className="font-mono text-amber-100">{recentAvailable && totalRecent !== null ? totalRecent.toFixed(2) : "--"}</div>
+      </div>
+      <div className="mt-3 grid gap-2 text-[11px] sm:grid-cols-3">
+        <div className={toneForDelta(homeDelta)}>Recent H trend: {trendLabel(homeDelta)}</div>
+        <div className={toneForDelta(awayDelta)}>Recent A trend: {trendLabel(awayDelta)}</div>
+        <div className={consensus === "aligned" ? "text-emerald-300" : consensus === "divergent" ? "text-amber-300" : consensus === "conflict" ? "text-orange-300" : "text-rose-300"}>
+          Net divergence: {formatSignedPercent(divergence * 100)} ({consensusLabel(consensus)})
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default async function CornersMonitorPage() {
   if (!MODEL_MONITOR_ENABLED) {
     notFound();
@@ -266,9 +414,10 @@ export default async function CornersMonitorPage() {
       dedupedCurrentSignals.set(dedupeKey, currentSignal);
     }
   }
-  const currentValueSignals: CurrentValueSignal[] = [...dedupedCurrentSignals.values()].sort(
+  const currentValueSignalsAll: CurrentValueSignal[] = [...dedupedCurrentSignals.values()].sort(
     (a, b) => b.edgeValue - a.edgeValue,
   );
+  const currentValueSignals = currentValueSignalsAll.filter((entry) => policyVersion(entry.row) === CURRENT_POLICY);
 
   // Build grouped Pinnacle table: latest odds per match and line
   type PinnacleMatchRow = {
@@ -311,6 +460,8 @@ export default async function CornersMonitorPage() {
   const livePending = settledRows
     .filter((r) => r.settled === "pending")
     .sort((a, b) => (a.kick_off ?? a.match_date ?? "").localeCompare(b.kick_off ?? b.match_date ?? ""));
+  const currentPolicyPending = livePending.filter((row) => policyVersion(row) === CURRENT_POLICY);
+  const previousPolicyPending = livePending.filter((row) => policyVersion(row) !== CURRENT_POLICY);
   const livePendingExposure = livePending.reduce((s, r) => s + pf(r.stake, 1), 0);
   const liveWon    = liveSettled.filter((r) => r.won === "yes");
   const liveLost   = liveSettled.filter((r) => r.won === "no");
@@ -331,6 +482,7 @@ export default async function CornersMonitorPage() {
       ),
     )
     .slice(0, 12);
+  const versionSummaries = policySummaryRows(settledRows);
 
   // Live P&L by league
   const leagueNames = ["serie-a", "la-liga", "bundesliga", "epl", "ligue-1"];
@@ -478,8 +630,7 @@ export default async function CornersMonitorPage() {
 
         <HeroCard title="Match Corners Monitor" eyebrow="Corners O/U Model">
           <span className="text-slate-300">
-            Poisson model for total match corners. Rolling EMA per team (attack/defence),
-            home advantage, league baselines.
+            V3 corners policy: pooled 20-game EMA drives the calibrated fair price; pooled 6-game recent EMA is used only as a trust and stake-adjustment layer.
           </span>
           <span className="mx-2 text-slate-700">|</span>
           <span className="text-slate-500">
@@ -569,9 +720,9 @@ export default async function CornersMonitorPage() {
           />
           <StatCard
             label="Today value bets"
-            value={valueBets.length.toString()}
-            detail="from latest shortlist"
-            tone={statTone(valueBets.length > 0 ? "amber" : "default")}
+            value={currentValueSignals.length.toString()}
+            detail="V3 active shortlist"
+            tone={statTone(currentValueSignals.length > 0 ? "amber" : "default")}
           />
           <StatCard label="Signals tracked" value={signals.length.toString()} detail="upcoming fixtures" />
           <StatCard
@@ -598,15 +749,15 @@ export default async function CornersMonitorPage() {
         <p className="rounded-xl border border-slate-800/60 bg-slate-900/30 px-4 py-3 text-xs text-slate-400">
           <strong className="text-slate-200">How to read this page.</strong>{" "}
           <span className="text-slate-300">All model fixtures</span> is the full slate the corners model priced.{" "}
-          <span className="text-slate-300">Bettable value bets</span> is the subset where current odds cleared the
-          edge threshold and staking rules.
+          <span className="text-slate-300">Active signals (V3)</span> is the subset where the calibrated edge cleared the
+          15% threshold and survived the divergence gate. Previous-regime bets are still tracked separately until they settle.
         </p>
 
         {/* -- Current Bettable Signals -- */}
-        {valueBets.length > 0 && (
+        {currentValueSignals.length > 0 && (
           <SectionCard
-            title={`Current Bettable Signals - ${currentValueSignals.length} best bets`}
-            subtitle={`Deduplicated from ${valueBets.length} raw lines | best-value per match and side`}
+            title={`Active signals (V3) - ${currentValueSignals.length} best bets`}
+            subtitle={`Deduplicated from ${valueBets.length} raw lines | best-value per match and side | divergence gate active`}
           >
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
@@ -620,6 +771,7 @@ export default async function CornersMonitorPage() {
                     <th className="py-2 pr-3 font-mono">Book</th>
                     <th className="py-2 pr-3 font-mono">Fair</th>
                     <th className="py-2 pr-3 font-mono">Edge</th>
+                    <th className="py-2 pr-3">Trust</th>
                     <th className="py-2 font-mono">Stake</th>
                   </tr>
                 </thead>
@@ -655,6 +807,13 @@ export default async function CornersMonitorPage() {
                         <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{pf(row.model_fair).toFixed(2)}</td>
                         <td className={`py-1.5 pr-3 font-mono tabular-nums ${edge >= 0.15 ? "text-emerald-300" : edge >= 0.10 ? "text-amber-300" : "text-slate-300"}`}>
                           {(edge * 100).toFixed(1)}%
+                        </td>
+                        <td className="py-1.5 pr-3">
+                          {trustBadgeLabel(row) ? (
+                            <StatusPill label={trustBadgeLabel(row)!} tone={trustBadgeTone(row)} />
+                          ) : (
+                            <span className="text-[11px] text-slate-600">aligned</span>
+                          )}
                         </td>
                         <td className="py-1.5 font-mono tabular-nums text-amber-200">{pf(row.stake).toFixed(1)}u</td>
                       </tr>
@@ -743,17 +902,61 @@ export default async function CornersMonitorPage() {
                       </table>
                     </div>
                   )}
+
+                  {versionSummaries.length > 0 && (
+                    <div className="overflow-x-auto">
+                      <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                        Policy split
+                      </div>
+                      <table className="w-full text-left text-xs">
+                        <thead>
+                          <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
+                            <th className="py-2 pr-4">Version</th>
+                            <th className="py-2 pr-4 text-right font-mono">Settled</th>
+                            <th className="py-2 pr-4 text-right font-mono">Pending</th>
+                            <th className="py-2 pr-4 text-right font-mono">P&L</th>
+                            <th className="py-2 pr-4 text-right font-mono">ROI</th>
+                            <th className="py-2 pr-4 text-right font-mono">Avg odds</th>
+                            <th className="py-2 text-right font-mono">Avg edge</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {versionSummaries.map((row) => (
+                            <tr key={row.version} className="border-b border-slate-800/40">
+                              <td className="py-1.5 pr-4 font-medium text-slate-200">{row.version}</td>
+                              <td className="py-1.5 pr-4 text-right font-mono tabular-nums text-slate-400">{row.settled}</td>
+                              <td className="py-1.5 pr-4 text-right font-mono tabular-nums text-slate-400">{row.pending}</td>
+                              <td className={`py-1.5 pr-4 text-right font-mono tabular-nums ${row.pnl >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                                {row.pnl >= 0 ? "+" : ""}{row.pnl.toFixed(2)}u
+                              </td>
+                              <td className="py-1.5 pr-4 text-right font-mono tabular-nums text-slate-300">
+                                {row.roi === null ? "pending" : `${row.roi >= 0 ? "+" : ""}${row.roi.toFixed(1)}%`}
+                              </td>
+                              <td className="py-1.5 pr-4 text-right font-mono tabular-nums text-slate-400">
+                                {row.avgOdds === null ? "--" : row.avgOdds.toFixed(2)}
+                              </td>
+                              <td className="py-1.5 text-right font-mono tabular-nums text-slate-400">
+                                {row.avgEdge === null ? "--" : `${row.avgEdge >= 0 ? "+" : ""}${row.avgEdge.toFixed(1)}%`}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </>
               )}
 
               {/* -- Open bets -- */}
-              {livePending.length > 0 && (
+              {currentPolicyPending.length > 0 && (
                 <div>
                   <div className="mb-2 flex items-baseline gap-3">
                     <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                      Open bets ({livePending.length})
+                      Active signals (V3) pending ({currentPolicyPending.length})
                     </span>
-                    <span className="text-[10px] text-slate-600">{livePendingExposure.toFixed(1)}u exposure</span>
+                    <span className="text-[10px] text-slate-600">
+                      {currentPolicyPending.reduce((sum, row) => sum + pf(row.stake, 1), 0).toFixed(1)}u exposure
+                    </span>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs">
@@ -766,11 +969,12 @@ export default async function CornersMonitorPage() {
                           <th className="py-2 pr-3 font-mono">Entry</th>
                           <th className="py-2 pr-3 font-mono">Pinnacle</th>
                           <th className="py-2 pr-3 font-mono">Edge</th>
+                          <th className="py-2 pr-3">Trust</th>
                           <th className="py-2 font-mono">Stake</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {livePending.map((row, i) => {
+                        {currentPolicyPending.map((row, i) => {
                           const entryOdds = pf(row.bookie_odds);
                           const { odds: pinOdds, kickedOff } = getPinnacleInfo(row);
                           const kickoffDisplay = formatKickoff(row.kick_off);
@@ -805,6 +1009,13 @@ export default async function CornersMonitorPage() {
                                 ) : <span className="text-slate-600">--</span>}
                               </td>
                               <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{(pf(row.edge) * 100).toFixed(1)}%</td>
+                              <td className="py-1.5 pr-3">
+                                {trustBadgeLabel(row) ? (
+                                  <StatusPill label={trustBadgeLabel(row)!} tone={trustBadgeTone(row)} />
+                                ) : (
+                                  <span className="text-[11px] text-slate-600">aligned</span>
+                                )}
+                              </td>
                               <td className="py-1.5 font-mono tabular-nums text-amber-200">{pf(row.stake, 1).toFixed(1)}u</td>
                             </tr>
                           );
@@ -813,6 +1024,73 @@ export default async function CornersMonitorPage() {
                     </table>
                   </div>
                 </div>
+              )}
+
+              {previousPolicyPending.length > 0 && (
+                <SectionCard
+                  collapsible
+                  defaultOpen={false}
+                  title={`Previous regime pending - ${previousPolicyPending.length} total`}
+                  subtitle="Logged under V2 (no divergence gate) — settling at original stake"
+                >
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead>
+                        <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
+                          <th className="py-2 pr-3">Kickoff</th>
+                          <th className="py-2 pr-3">Match</th>
+                          <th className="py-2 pr-3">Line</th>
+                          <th className="py-2 pr-3">Side</th>
+                          <th className="py-2 pr-3 font-mono">Entry</th>
+                          <th className="py-2 pr-3 font-mono">Pinnacle</th>
+                          <th className="py-2 pr-3 font-mono">Edge</th>
+                          <th className="py-2 font-mono">Stake</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {previousPolicyPending.map((row, i) => {
+                          const entryOdds = pf(row.bookie_odds);
+                          const { odds: pinOdds, kickedOff } = getPinnacleInfo(row);
+                          const kickoffDisplay = formatKickoff(row.kick_off);
+                          const oddsMove = !kickedOff && pinOdds !== null && entryOdds > 0 ? pinOdds - entryOdds : null;
+                          return (
+                            <tr key={`${row.match}-${row.line}-${row.side}-${i}`} className={`border-b border-slate-800/40 hover:bg-slate-800/20 ${kickedOff ? "opacity-60" : ""}`}>
+                              <td className="py-1.5 pr-3 font-mono tabular-nums text-[11px] text-slate-400">{kickoffDisplay}</td>
+                              <td className="py-1.5 pr-3 font-medium">
+                                <MatchLabel
+                                  league={row.league}
+                                  homeTeam={splitMatchTeams(row.match)[0]}
+                                  awayTeam={splitMatchTeams(row.match)[1]}
+                                  iconSize={16}
+                                  textClassName="font-medium text-slate-200"
+                                />
+                              </td>
+                              <td className="py-1.5 pr-3 font-mono tabular-nums">{row.line}</td>
+                              <td className="py-1.5 pr-3">
+                                <StatusPill
+                                  label={row.side ?? ""}
+                                  tone={row.side === "over" ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20" : "bg-sky-500/10 text-sky-300 border-sky-500/20"}
+                                />
+                              </td>
+                              <td className="py-1.5 pr-3 font-mono tabular-nums">{entryOdds.toFixed(2)}</td>
+                              <td className="py-1.5 pr-3 font-mono tabular-nums">
+                                {kickedOff ? (
+                                  <span className="text-[10px] uppercase tracking-wide text-slate-600">KO</span>
+                                ) : pinOdds !== null ? (
+                                  <span className={oddsMove !== null && oddsMove > 0.01 ? "text-emerald-300" : oddsMove !== null && oddsMove < -0.01 ? "text-rose-400" : "text-slate-400"}>
+                                    {pinOdds.toFixed(2)}
+                                  </span>
+                                ) : <span className="text-slate-600">--</span>}
+                              </td>
+                              <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{(pf(row.edge) * 100).toFixed(1)}%</td>
+                              <td className="py-1.5 font-mono tabular-nums text-amber-200">{pf(row.stake, 1).toFixed(1)}u</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </SectionCard>
               )}
 
               {/* -- Recent Results - desktop table + mobile cards -- */}
@@ -953,47 +1231,60 @@ export default async function CornersMonitorPage() {
         {/* -- All Model Fixtures -- */}
         {signals.length > 0 && (
           <SectionCard collapsible defaultOpen={false} title={`All Model Fixtures - ${signals.length} fixtures`}>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
-                    <th className="py-2 pr-3">Match</th>
-                    <th className="py-2 pr-3">League</th>
-                    <th className="py-2 pr-3 font-mono">Lam H</th>
-                    <th className="py-2 pr-3 font-mono">Lam A</th>
-                    <th className="py-2 pr-3 font-mono">Total</th>
-                    {signalLineValues.flatMap((l) => [
-                      <th key={`h-o-${l}`} className="py-2 pr-1 font-mono">O {l.toFixed(1)}</th>,
-                      <th key={`h-u-${l}`} className="py-2 pr-3 font-mono text-slate-500">U {l.toFixed(1)}</th>,
-                    ])}
-                  </tr>
-                </thead>
-                <tbody>
-                  {signals.map((row, i) => (
-                    <tr key={i} className="border-b border-slate-800/40 hover:bg-slate-800/20">
-                      <td className="py-1.5 pr-3 font-medium">
-                        <MatchLabel
-                          league={row.league}
-                          homeTeam={row.home_team}
-                          awayTeam={row.away_team}
-                          iconSize={16}
-                          textClassName="font-medium text-slate-200"
-                        />
-                      </td>
-                      <td className="py-1.5 pr-3 text-slate-400">
-                        <LeagueLabel league={row.league} label={row.league} iconSize={14} />
-                      </td>
-                      <td className="py-1.5 pr-3 font-mono tabular-nums text-emerald-300">{formatMaybeFixed(row.lambda_home)}</td>
-                      <td className="py-1.5 pr-3 font-mono tabular-nums text-sky-300">{formatMaybeFixed(row.lambda_away)}</td>
-                      <td className="py-1.5 pr-3 font-mono tabular-nums text-amber-200">{formatMaybeFixed(row.lambda_total)}</td>
-                      {signalLineValues.flatMap((l) => [
-                        <td key={`${i}-o-${l}`} className="py-1.5 pr-1 font-mono tabular-nums">{formatMaybeFixed(row[`fair_over_${l}`])}</td>,
-                        <td key={`${i}-u-${l}`} className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{formatMaybeFixed(row[`fair_under_${l}`])}</td>,
-                      ])}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="space-y-4">
+              {signals.map((row, i) => (
+                <div key={`${row.home_team}-${row.away_team}-${i}`} className="rounded-2xl border border-slate-800/70 bg-slate-950/30 p-4">
+                  <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
+                    <div>
+                      <MatchLabel
+                        league={row.league}
+                        homeTeam={row.home_team}
+                        awayTeam={row.away_team}
+                        iconSize={18}
+                        textClassName="text-sm font-semibold text-slate-100"
+                      />
+                      <div className="mt-1 text-[11px] text-slate-500">
+                        <LeagueLabel league={row.league} label={row.league} iconSize={14} />{" "}
+                        <span className="ml-2">{formatKickoff(row.kick_off)}</span>
+                      </div>
+                    </div>
+                    <div className="text-right text-[11px] text-slate-500">
+                      policy {policyVersion(row)}
+                    </div>
+                  </div>
+
+                  <CornersTrustPanel row={row} />
+
+                  <div className="mt-3 overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead>
+                        <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
+                          <th className="py-2 pr-3">Line</th>
+                          <th className="py-2 pr-3 font-mono">Fair over</th>
+                          <th className="py-2 pr-3 font-mono">Fair under</th>
+                          <th className="py-2 pr-3">Consensus</th>
+                          <th className="py-2 font-mono">Divergence</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {signalLineValues.map((line) => (
+                          <tr key={`${row.home_team}-${row.away_team}-${line}`} className="border-b border-slate-800/40">
+                            <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-300">{line.toFixed(1)}</td>
+                            <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-100">{formatMaybeFixed(row[`fair_over_${line}`])}</td>
+                            <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{formatMaybeFixed(row[`fair_under_${line}`])}</td>
+                            <td className="py-1.5 pr-3">
+                              <StatusPill label={consensusLabel(consensusState(row.consensus))} tone={consensusTone(consensusState(row.consensus))} />
+                            </td>
+                            <td className="py-1.5 font-mono tabular-nums text-slate-400">
+                              {formatSignedPercent((maybeFloat(row.divergence) ?? 0) * 100)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ))}
             </div>
           </SectionCard>
         )}

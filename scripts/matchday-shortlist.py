@@ -55,9 +55,10 @@ DEFAULT_PREDICTIONS = ROOT / "data" / "corners-ou" / "corners-ou-predictions.csv
 DEFAULT_OUTPUT_DIR = ROOT / "data" / "shortlist"
 CORNERS_HISTORICAL_DIR = ROOT / "data" / "corners-ou" / "historical"
 LEGACY_HISTORICAL_DIR = ROOT / "data" / "team-shots" / "historical"
-DEFAULT_EDGE_THRESHOLD = 0.10
+DEFAULT_EDGE_THRESHOLD = 0.15
 CALIBRATION_PARAMS_PATH = ROOT / "data" / "corners-ou" / "corners-calibration-params.json"
 LIGUE1_MAX_STAKE = 0.5  # DD risk: Ligue 1 backtest max DD ~133u vs ~36u Serie A
+POLICY_VERSION = "V3"
 
 # League stake multipliers - applied to tier stake before Ligue 1 cap.
 # Based on calibrated backtest (synthetic market, edge >= 5%):
@@ -80,12 +81,18 @@ STAKE_TIERS = [
     (0.12, 0.5, "LOW"),
     (0.10, 0.25, "TINY"),  # 10-12% edge: smallest tier, high volume
 ]
+RECENT_WINDOW = 6
+RECENT_MIN = 3
+ALIGNED_MAX_DIVERGENCE = 0.15
+DIVERGENT_MAX_DIVERGENCE = 0.30
+CONFLICT_MAX_DIVERGENCE = 0.45
 
 CORNER_LINES = [8.5, 9.5, 10.5, 11.5]
 VALUE_BET_FIELDS = [
     "file_date", "match", "kick_off", "league", "market", "line", "side",
-    "model_prob", "model_fair", "bookmaker", "bookie_odds",
+    "model_prob", "model_prob_raw", "model_fair", "bookmaker", "bookie_odds",
     "edge", "stake", "stake_label", "lambda_h", "lambda_a",
+    "lambda_h_recent", "lambda_a_recent", "divergence", "consensus", "policy_version",
 ]
 
 
@@ -322,6 +329,18 @@ class TeamCornerStats:
             w_sum += w
         return total / w_sum if w_sum > 0 else None
 
+    def _ema_short(self, history: List[float]) -> Optional[float]:
+        recent = history[-RECENT_WINDOW:]
+        if len(recent) < RECENT_MIN:
+            return None
+        total = 0.0
+        w_sum = 0.0
+        for i, val in enumerate(recent):
+            w = DECAY ** (len(recent) - 1 - i)
+            total += val * w
+            w_sum += w
+        return total / w_sum if w_sum > 0 else None
+
     @property
     def n_matches(self) -> int:
         return len(self.won)
@@ -331,6 +350,12 @@ class TeamCornerStats:
 
     def avg_conceded(self) -> Optional[float]:
         return self._ema(self.conceded)
+
+    def avg_won_recent(self) -> Optional[float]:
+        return self._ema_short(self.won)
+
+    def avg_conceded_recent(self) -> Optional[float]:
+        return self._ema_short(self.conceded)
 
 
 def load_historical_corner_stats() -> Dict[str, TeamCornerStats]:
@@ -371,6 +396,15 @@ def predict_corners_lambda(
 ) -> Optional[float]:
     attack = team_stats.avg_won()
     defence = opp_stats.avg_conceded()
+    return predict_corners_lambda_from_avgs(attack, defence, league_avg, is_home)
+
+
+def predict_corners_lambda_from_avgs(
+    attack: Optional[float],
+    defence: Optional[float],
+    league_avg: float,
+    is_home: bool,
+) -> Optional[float]:
     if attack is None or defence is None:
         return None
     avg = league_avg if league_avg > 0 else DEFAULT_AVG
@@ -389,11 +423,74 @@ def tier_stake(edge: float) -> Tuple[float, str]:
     return 0.0, ""
 
 
+def consensus_for_lambdas(
+    h_lam: float,
+    a_lam: float,
+    h_lam_recent: Optional[float],
+    a_lam_recent: Optional[float],
+) -> Tuple[float, str]:
+    if h_lam_recent is None or a_lam_recent is None:
+        return 0.0, "aligned"
+    primary_total = max(h_lam + a_lam, 0.0001)
+    recent_total = h_lam_recent + a_lam_recent
+    divergence = abs(recent_total - primary_total) / primary_total
+    if divergence <= ALIGNED_MAX_DIVERGENCE:
+        return divergence, "aligned"
+    if divergence <= DIVERGENT_MAX_DIVERGENCE:
+        return divergence, "divergent"
+    if divergence <= CONFLICT_MAX_DIVERGENCE:
+        return divergence, "conflict"
+    return divergence, "extreme"
+
+
+def effective_stake_for_consensus(
+    edge: float,
+    base_stake: float,
+    league: str,
+    consensus: str,
+) -> float:
+    effective_base = base_stake
+    if consensus == "extreme" and base_stake == 1.0:
+        effective_base = 0.0
+    elif consensus in {"conflict", "extreme"} and base_stake >= 1.0:
+        effective_base = max(base_stake - 0.5, 0.25)
+
+    if effective_base <= 0:
+        return 0.0
+
+    league_mult = LEAGUE_STAKE_MULTIPLIERS.get(league, DEFAULT_LEAGUE_MULTIPLIER)
+    stake_u = round(effective_base * league_mult, 2)
+    stake_u = min(stake_u, 2.0)
+    if league == "ligue-1":
+        stake_u = min(stake_u, LIGUE1_MAX_STAKE)
+    return stake_u
+
+
+def shortlist_consensus_tag(row: dict) -> str:
+    consensus = (row.get("consensus") or "").strip().lower()
+    stake = float(row.get("stake") or 0)
+    stake_label = (row.get("stake_label") or "").strip()
+    base_stake = next((units for threshold, units, label in STAKE_TIERS if label == stake_label), stake)
+    if consensus == "divergent":
+        return "[DIVG]"
+    if consensus == "conflict":
+        if stake < base_stake:
+            return f"[CONF -> {stake:.2f}u]"
+        return "[CONF]"
+    if consensus == "extreme":
+        if stake > 0 and stake < base_stake:
+            return f"[EXTR -> {stake:.2f}u]"
+        return "[EXTR]"
+    return ""
+
+
 # Value detection
 
 def find_value_bets(
     home_team: str, away_team: str, league: str,
     h_lam: float, a_lam: float,
+    h_lam_recent: Optional[float],
+    a_lam_recent: Optional[float],
     bookmaker_lines: List[dict],
     min_edge: float = DEFAULT_EDGE_THRESHOLD,
     cal_params: Optional[Dict[str, Tuple[float, float]]] = None,
@@ -412,6 +509,7 @@ def find_value_bets(
     (backtest path risk: max DD ~313u vs ~123u for EPL at same edge thresholds).
     """
     value_bets = []
+    divergence, consensus = consensus_for_lambdas(h_lam, a_lam, h_lam_recent, a_lam_recent)
     # Derive lines to evaluate from whatever the bookmaker actually offers.
     # This covers all lines Pinnacle posts (e.g. 7.5, 8.0, 9.0, 12.5, 15.5...)
     # rather than a hardcoded subset.
@@ -444,57 +542,61 @@ def find_value_bets(
             edge_over = p_over - implied_over
             edge_under = p_under - implied_under
 
-            league_mult = LEAGUE_STAKE_MULTIPLIERS.get(league, DEFAULT_LEAGUE_MULTIPLIER)
-
             if "over" in allowed_sides and edge_over >= min_edge:
-                stake_u, stake_label = tier_stake(edge_over)
-                stake_u = round(stake_u * league_mult, 2)
-                if league == "ligue-1":
-                    stake_u = min(stake_u, LIGUE1_MAX_STAKE)
-                stake_u = min(stake_u, 2.0)  # hard absolute cap: no bet exceeds 2u
-                value_bets.append({
-                    "match": f"{home_team} vs {away_team}",
-                    "kick_off": kick_off,
-                    "league": league,
-                    "market": "corners",
-                    "line": line_val,
-                    "side": "over",
-                    "model_prob": round(p_over, 4),
-                    "model_prob_raw": round(p_over_raw, 4),
-                    "model_fair": fair_decimal(p_over),
-                    "bookmaker": bm,
-                    "bookie_odds": over_odds,
-                    "edge": round(edge_over, 4),
-                    "stake": stake_u,
-                    "stake_label": stake_label,
-                    "lambda_h": round(h_lam, 2),
-                    "lambda_a": round(a_lam, 2),
-                })
+                base_stake, stake_label = tier_stake(edge_over)
+                stake_u = effective_stake_for_consensus(edge_over, base_stake, league, consensus)
+                if stake_u > 0:
+                    value_bets.append({
+                        "match": f"{home_team} vs {away_team}",
+                        "kick_off": kick_off,
+                        "league": league,
+                        "market": "corners",
+                        "line": line_val,
+                        "side": "over",
+                        "model_prob": round(p_over, 4),
+                        "model_prob_raw": round(p_over_raw, 4),
+                        "model_fair": fair_decimal(p_over),
+                        "bookmaker": bm,
+                        "bookie_odds": over_odds,
+                        "edge": round(edge_over, 4),
+                        "stake": stake_u,
+                        "stake_label": stake_label,
+                        "lambda_h": round(h_lam, 2),
+                        "lambda_a": round(a_lam, 2),
+                        "lambda_h_recent": round(h_lam_recent, 2) if h_lam_recent is not None else 0.0,
+                        "lambda_a_recent": round(a_lam_recent, 2) if a_lam_recent is not None else 0.0,
+                        "divergence": round(divergence, 4),
+                        "consensus": consensus,
+                        "policy_version": POLICY_VERSION,
+                    })
 
             if "under" in allowed_sides and edge_under >= min_edge:
-                stake_u, stake_label = tier_stake(edge_under)
-                stake_u = round(stake_u * league_mult, 2)
-                if league == "ligue-1":
-                    stake_u = min(stake_u, LIGUE1_MAX_STAKE)
-                stake_u = min(stake_u, 2.0)  # hard absolute cap: no bet exceeds 2u
-                value_bets.append({
-                    "match": f"{home_team} vs {away_team}",
-                    "kick_off": kick_off,
-                    "league": league,
-                    "market": "corners",
-                    "line": line_val,
-                    "side": "under",
-                    "model_prob": round(p_under, 4),
-                    "model_prob_raw": round(1.0 - p_over_raw, 4),
-                    "model_fair": fair_decimal(p_under),
-                    "bookmaker": bm,
-                    "bookie_odds": under_odds,
-                    "edge": round(edge_under, 4),
-                    "stake": stake_u,
-                    "stake_label": stake_label,
-                    "lambda_h": round(h_lam, 2),
-                    "lambda_a": round(a_lam, 2),
-                })
+                base_stake, stake_label = tier_stake(edge_under)
+                stake_u = effective_stake_for_consensus(edge_under, base_stake, league, consensus)
+                if stake_u > 0:
+                    value_bets.append({
+                        "match": f"{home_team} vs {away_team}",
+                        "kick_off": kick_off,
+                        "league": league,
+                        "market": "corners",
+                        "line": line_val,
+                        "side": "under",
+                        "model_prob": round(p_under, 4),
+                        "model_prob_raw": round(1.0 - p_over_raw, 4),
+                        "model_fair": fair_decimal(p_under),
+                        "bookmaker": bm,
+                        "bookie_odds": under_odds,
+                        "edge": round(edge_under, 4),
+                        "stake": stake_u,
+                        "stake_label": stake_label,
+                        "lambda_h": round(h_lam, 2),
+                        "lambda_a": round(a_lam, 2),
+                        "lambda_h_recent": round(h_lam_recent, 2) if h_lam_recent is not None else 0.0,
+                        "lambda_a_recent": round(a_lam_recent, 2) if a_lam_recent is not None else 0.0,
+                        "divergence": round(divergence, 4),
+                        "consensus": consensus,
+                        "policy_version": POLICY_VERSION,
+                    })
 
     return value_bets
 
@@ -510,6 +612,7 @@ def format_shortlist(
     lines.append("=" * 78)
     lines.append(f"  MATCHDAY SHORTLIST -- {now}")
     lines.append("=" * 78)
+    lines.append(f"  Policy: {POLICY_VERSION} (divergence gate active)")
 
     if credits_remaining is not None:
         lines.append(f"  Odds API credits remaining: {credits_remaining}")
@@ -528,10 +631,12 @@ def format_shortlist(
     total_stake = 0.0
     for b in sorted_bets:
         match_name = b["match"][:30]
+        consensus_tag = shortlist_consensus_tag(b)
         lines.append(
             f"  {match_name:<30s}  {b['line']:>5.1f}  {b['side']:>5s}  "
             f"{b['model_fair']:>6.2f}  {b['bookie_odds']:>6.2f}  "
             f"{b['edge']:>+5.1%}  {b['stake']:>5.1f}u  {b['stake_label']:>6s}"
+            f"{('  ' + consensus_tag) if consensus_tag else ''}"
         )
         total_stake += b["stake"]
 
@@ -552,6 +657,9 @@ def format_shortlist(
     lines.append("  Ref odds = Pinnacle (sharpest market). Bet on bet365/Paddy Power if similar or better.")
     lines.append("  Base tiers: 0.25u (10-12%) | 0.5u (12-15%) | 1u (15-20%) | 1.5u (20-25%) | 2u (25%+)")
     lines.append("  League multipliers: Serie A x1.5 | La Liga x1.25 | Bundesliga x1.0 | EPL x0.75 | Ligue 1 x0.75 (cap 0.5u)")
+    lines.append("  [DIVG] recent form diverges 15-30% from season EMA — flagged")
+    lines.append("  [CONF] recent form diverges 30-45% — stake downgraded when applicable")
+    lines.append("  [EXTR] recent form diverges >45% — suppressed (MEDIUM) or downgraded (HIGH)")
     lines.append("=" * 78)
     return "\n".join(lines)
 
@@ -657,8 +765,30 @@ def main() -> None:
                 print(f"  {home} vs {away}: insufficient matches for EMA, skipping")
                 continue
 
+            h_lam_recent = predict_corners_lambda_from_avgs(
+                h_stats.avg_won_recent(),
+                a_stats.avg_conceded_recent(),
+                league_avg,
+                is_home=True,
+            )
+            a_lam_recent = predict_corners_lambda_from_avgs(
+                a_stats.avg_won_recent(),
+                h_stats.avg_conceded_recent(),
+                league_avg,
+                is_home=False,
+            )
+            divergence, consensus = consensus_for_lambdas(
+                h_lam,
+                a_lam,
+                h_lam_recent,
+                a_lam_recent,
+            )
+
             total_lam = h_lam + a_lam
-            print(f"  {home} vs {away}: lam_H={h_lam:.2f} lam_A={a_lam:.2f} total={total_lam:.2f}")
+            print(
+                f"  {home} vs {away}: lam_H={h_lam:.2f} lam_A={a_lam:.2f} total={total_lam:.2f}"
+                f" | consensus={consensus} div={divergence:.1%}"
+            )
 
             try:
                 event_odds = client.get_event_corner_odds(event_id, sport_key, regions=args.regions)
@@ -670,7 +800,7 @@ def main() -> None:
 
             if bm_lines:
                 value = find_value_bets(
-                    home, away, league, h_lam, a_lam, bm_lines,
+                    home, away, league, h_lam, a_lam, h_lam_recent, a_lam_recent, bm_lines,
                     min_edge=args.min_edge,
                     cal_params=cal_params,
                     allowed_sides=allowed_sides,
@@ -690,6 +820,11 @@ def main() -> None:
                 "lambda_home": round(h_lam, 3),
                 "lambda_away": round(a_lam, 3),
                 "lambda_total": round(total_lam, 3),
+                "lambda_home_recent": round(h_lam_recent, 3) if h_lam_recent is not None else 0.0,
+                "lambda_away_recent": round(a_lam_recent, 3) if a_lam_recent is not None else 0.0,
+                "divergence": round(divergence, 4),
+                "consensus": consensus,
+                "policy_version": POLICY_VERSION,
                 "home_matches": h_stats.n_matches,
                 "away_matches": a_stats.n_matches,
             }

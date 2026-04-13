@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Settle matchday shortlist value-bets against actual corner results.
 
@@ -49,6 +49,7 @@ LEAGUE_CODES = {
     "bundesliga": "D1",
     "ligue-1": "F1",
 }
+DEFAULT_POLICY_VERSION = "V2"
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -273,6 +274,10 @@ def _fixture_date_for_row(row: dict) -> str:
         or ((row.get("match_date") or "").strip()[:10])
         or ((row.get("file_date") or "").strip()[:10])
     )
+
+
+def _policy_version(row: dict) -> str:
+    return (row.get("policy_version") or "").strip() or DEFAULT_POLICY_VERSION
 
 
 def _row_identity(row: dict) -> str:
@@ -550,6 +555,7 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
 
         if match_date is None:
             settled["match_date"] = ""
+            settled["policy_version"] = _policy_version(bet)
             settled["settled"] = "pending"
             settled["actual_total_corners"] = ""
             settled["won"] = ""
@@ -559,6 +565,7 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
             continue
 
         settled["match_date"] = match_date.isoformat()
+        settled["policy_version"] = _policy_version(bet)
 
         # Try exact date, then +/- 1 day (timezone/schedule fuzziness)
         result = None
@@ -756,6 +763,13 @@ def build_report(rows: List[dict]) -> str:
         _section(out, side.capitalize(), [b for b in settled if b.get("side") == side])
     out.append("")
 
+    versions = sorted({_policy_version(b) for b in settled})
+    if versions:
+        out.append("  By policy version")
+        for version in versions:
+            _section(out, version, [b for b in settled if _policy_version(b) == version])
+        out.append("")
+
     out.append("  ── BY EDGE BAND ─────────────────────────────────────────────")
     bands = [("12-15%", 0.12, 0.15), ("15-20%", 0.15, 0.20),
              ("20-25%", 0.20, 0.25), ("25%+",   0.25, 1.0)]
@@ -798,7 +812,8 @@ SETTLED_FIELDS = [
     "line", "side",
     "model_prob", "model_prob_raw", "model_fair", "bookmaker", "bookie_odds",
     "edge", "stake", "stake_label",
-    "lambda_h", "lambda_a",
+    "lambda_h", "lambda_a", "lambda_h_recent", "lambda_a_recent",
+    "divergence", "consensus", "policy_version",
     "settled", "settled_at", "actual_total_corners", "won", "pnl_units", "pnl_staked",
     "closing_odds", "clv",
 ]

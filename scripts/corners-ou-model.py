@@ -44,6 +44,8 @@ DEFAULT_CALIBRATION = ROOT / "data" / "corners-ou" / "corners-ou-calibration.txt
 
 ROLLING_WINDOW = 20
 MIN_MATCHES = 6
+RECENT_WINDOW = 6
+RECENT_MIN = 3
 DECAY = 0.93
 HOME_BOOST = 1.08
 
@@ -118,6 +120,18 @@ class TeamState:
             weight_sum += w
         return total / weight_sum if weight_sum > 0 else None
 
+    def _ema_short(self, history: List[float], window: int = RECENT_WINDOW) -> Optional[float]:
+        recent = history[-window:]
+        if len(recent) < RECENT_MIN:
+            return None
+        total = 0.0
+        weight_sum = 0.0
+        for i, val in enumerate(recent):
+            w = DECAY ** (len(recent) - 1 - i)
+            total += val * w
+            weight_sum += w
+        return total / weight_sum if weight_sum > 0 else None
+
     @property
     def n_matches(self) -> int:
         return len(self.corners_won)
@@ -127,6 +141,12 @@ class TeamState:
 
     def avg_conceded(self) -> Optional[float]:
         return self._ema(self.corners_conceded)
+
+    def avg_won_recent(self) -> Optional[float]:
+        return self._ema_short(self.corners_won)
+
+    def avg_conceded_recent(self) -> Optional[float]:
+        return self._ema_short(self.corners_conceded)
 
 
 # ── Data loading ─────────────────────────────────────────────────────
