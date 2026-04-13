@@ -34,8 +34,7 @@ DEFAULT_DIAG_OUT    = ROOT / "data" / "corners-ou" / "corners-calibration-diagno
 
 # Rows before this date (exclusive) form the fit set; from here onward → validation.
 DEFAULT_FIT_BEFORE = "2022-08-01"
-
-LINES = [8.5, 9.5, 10.5, 11.5]
+DEFAULT_LINES = "7.5,8.5,9.5,10.5,11.5,12.5"
 
 # Platt gradient-ascent hyper-parameters — deliberately conservative to avoid
 # overfitting a 2-parameter model. L2 is anchored toward the identity (a=1, b=0).
@@ -236,12 +235,19 @@ def main() -> None:
         help="Cutoff date (ISO, exclusive) - rows before this date form the fit set "
              f"(default: {DEFAULT_FIT_BEFORE})",
     )
+    parser.add_argument(
+        "--lines",
+        default=DEFAULT_LINES,
+        help=f"Comma-separated lines to fit (default: {DEFAULT_LINES})",
+    )
     args = parser.parse_args()
 
     cutoff = date.fromisoformat(args.fit_before)
+    lines = [float(part.strip()) for part in str(args.lines or "").split(",") if part.strip()]
     fit_rows, val_rows = load_and_split(args.predictions, cutoff)
 
     print(f"Predictions   : {args.predictions}")
+    print(f"Lines         : {', '.join(f'{line:.1f}' for line in lines)}")
     print(f"  Fit  set  (<{cutoff}) : {len(fit_rows)} rows")
     print(f"  Val  set  (>={cutoff}) : {len(val_rows)} rows")
 
@@ -258,12 +264,13 @@ def main() -> None:
         "  CORNERS O/U - PLATT CALIBRATION DIAGNOSTICS",
         "=" * 72,
         f"  Source     : {args.predictions}",
+        f"  Lines      : {', '.join(f'{line:.1f}' for line in lines)}",
         f"  Fit  split : before {cutoff}  (n={len(fit_rows)})",
         f"  Val  split : from   {cutoff}  (n={len(val_rows)})",  # noqa: E501
         "",
     ]
 
-    for line in LINES:
+    for line in lines:
         fit_p, fit_y = _extract_line_data(fit_rows, line)
         if len(fit_p) < 100:
             diag.append(

@@ -55,10 +55,21 @@ DEFAULT_PREDICTIONS = ROOT / "data" / "corners-ou" / "corners-ou-predictions.csv
 DEFAULT_OUTPUT_DIR = ROOT / "data" / "shortlist"
 CORNERS_HISTORICAL_DIR = ROOT / "data" / "corners-ou" / "historical"
 LEGACY_HISTORICAL_DIR = ROOT / "data" / "team-shots" / "historical"
-DEFAULT_EDGE_THRESHOLD = 0.15
 CALIBRATION_PARAMS_PATH = ROOT / "data" / "corners-ou" / "corners-calibration-params.json"
 LIGUE1_MAX_STAKE = 0.5  # DD risk: Ligue 1 backtest max DD ~133u vs ~36u Serie A
-POLICY_VERSION = "V3"
+DEFAULT_POLICY_VERSION = "V3"
+POLICY_SPECS: dict[str, dict[str, object]] = {
+    "V3": {
+        "min_edge": 0.15,
+        "corner_lines": [8.5, 9.5, 10.5, 11.5],
+    },
+    "V3.1": {
+        "min_edge": 0.08,
+        "corner_lines": [8.5, 9.5, 10.5, 11.5],
+    },
+}
+POLICY_VERSION = DEFAULT_POLICY_VERSION
+DEFAULT_EDGE_THRESHOLD = float(POLICY_SPECS[DEFAULT_POLICY_VERSION]["min_edge"])
 
 # League stake multipliers - applied to tier stake before Ligue 1 cap.
 # Based on calibrated backtest (synthetic market, edge >= 5%):
@@ -87,7 +98,7 @@ ALIGNED_MAX_DIVERGENCE = 0.15
 DIVERGENT_MAX_DIVERGENCE = 0.30
 CONFLICT_MAX_DIVERGENCE = 0.45
 
-CORNER_LINES = [8.5, 9.5, 10.5, 11.5]
+CORNER_LINES = list(POLICY_SPECS[DEFAULT_POLICY_VERSION]["corner_lines"])
 VALUE_BET_FIELDS = [
     "file_date", "match", "kick_off", "league", "market", "line", "side",
     "model_prob", "model_prob_raw", "model_fair", "bookmaker", "bookie_odds",
@@ -496,7 +507,9 @@ def find_value_bets(
     cal_params: Optional[Dict[str, Tuple[float, float]]] = None,
     allowed_sides: "frozenset[str]" = frozenset({"over", "under"}),
     allowed_lines: Optional["frozenset[float]"] = None,
+    policy_lines: Optional["frozenset[float]"] = None,
     kick_off: str = "",
+    policy_version: str = POLICY_VERSION,
 ) -> List[dict]:
     """
     Compare model probabilities against real bookmaker lines.
@@ -510,15 +523,13 @@ def find_value_bets(
     """
     value_bets = []
     divergence, consensus = consensus_for_lambdas(h_lam, a_lam, h_lam_recent, a_lam_recent)
-    # Derive lines to evaluate from whatever the bookmaker actually offers.
-    # This covers all lines Pinnacle posts (e.g. 7.5, 8.0, 9.0, 12.5, 15.5...)
-    # rather than a hardcoded subset.
     available_bm_lines = sorted({round(bl["line"], 2) for bl in bookmaker_lines})
-    lines_to_check = (
-        [l for l in available_bm_lines if l in allowed_lines]
-        if allowed_lines is not None
-        else available_bm_lines
-    )
+    if allowed_lines is not None:
+        lines_to_check = [l for l in available_bm_lines if l in allowed_lines]
+    elif policy_lines is not None:
+        lines_to_check = [l for l in available_bm_lines if l in policy_lines]
+    else:
+        lines_to_check = available_bm_lines
 
     for line_val in lines_to_check:
         p_over_raw = match_total_prob_over(line_val, h_lam, a_lam)
@@ -567,7 +578,7 @@ def find_value_bets(
                         "lambda_a_recent": round(a_lam_recent, 2) if a_lam_recent is not None else 0.0,
                         "divergence": round(divergence, 4),
                         "consensus": consensus,
-                        "policy_version": POLICY_VERSION,
+                        "policy_version": policy_version,
                     })
 
             if "under" in allowed_sides and edge_under >= min_edge:
@@ -595,7 +606,7 @@ def find_value_bets(
                         "lambda_a_recent": round(a_lam_recent, 2) if a_lam_recent is not None else 0.0,
                         "divergence": round(divergence, 4),
                         "consensus": consensus,
-                        "policy_version": POLICY_VERSION,
+                        "policy_version": policy_version,
                     })
 
     return value_bets
@@ -606,13 +617,22 @@ def find_value_bets(
 def format_shortlist(
     value_bets: List[dict],
     credits_remaining: Optional[int] = None,
+    *,
+    policy_version: str = POLICY_VERSION,
+    min_edge: float = DEFAULT_EDGE_THRESHOLD,
+    policy_lines: Optional[List[float]] = None,
 ) -> str:
     lines: List[str] = []
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     lines.append("=" * 78)
     lines.append(f"  MATCHDAY SHORTLIST -- {now}")
     lines.append("=" * 78)
-    lines.append(f"  Policy: {POLICY_VERSION} (divergence gate active)")
+    lines.append(f"  Policy: {policy_version} (divergence gate active)")
+    if policy_lines:
+        lines.append(
+            f"  Policy lines: {', '.join(f'{line:.1f}' for line in policy_lines)}"
+            f" | Min edge: {min_edge:.1%}"
+        )
 
     if credits_remaining is not None:
         lines.append(f"  Odds API credits remaining: {credits_remaining}")
@@ -668,12 +688,14 @@ def format_shortlist(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Matchday value shortlist")
+    parser.add_argument("--policy", choices=sorted(POLICY_SPECS), default=DEFAULT_POLICY_VERSION,
+                        help=f"Policy preset to apply (default {DEFAULT_POLICY_VERSION})")
     parser.add_argument("--league", choices=sorted(SPORT_KEYS), default=None,
                         help="Single league to check")
     parser.add_argument("--all-leagues", action="store_true",
                         help="Check all Big 5 leagues")
-    parser.add_argument("--min-edge", type=float, default=DEFAULT_EDGE_THRESHOLD,
-                        help=f"Min edge to qualify (default {DEFAULT_EDGE_THRESHOLD})")
+    parser.add_argument("--min-edge", type=float, default=None,
+                        help="Min edge to qualify (defaults to the selected policy)")
     parser.add_argument("--side", choices=["over", "under", "both"], default="both",
                         help="Only emit over, under, or both sides (default: both)")
     parser.add_argument("--lines", default="",
@@ -687,18 +709,25 @@ def main() -> None:
     args = parser.parse_args()
 
     leagues = list(SPORT_KEYS.keys()) if args.all_leagues else [args.league or "epl"]
+    policy_spec = POLICY_SPECS[args.policy]
+    policy_version = args.policy
+    policy_lines = list(policy_spec["corner_lines"])
+    min_edge = float(policy_spec["min_edge"] if args.min_edge is None else args.min_edge)
 
     allowed_sides: frozenset = (
         frozenset({"over", "under"}) if args.side == "both" else frozenset({args.side})
     )
-    allowed_lines: Optional[frozenset] = None
+    allowed_lines: Optional[frozenset] = frozenset(policy_lines)
     if args.lines:
         try:
             allowed_lines = frozenset(
                 float(l.strip()) for l in args.lines.split(",") if l.strip()
             )
         except ValueError:
-            print(f"  [warn] --lines value '{args.lines}' could not be parsed; using all lines")
+            print(
+                f"  [warn] --lines value '{args.lines}' could not be parsed; "
+                f"using policy lines {', '.join(f'{line:.1f}' for line in policy_lines)}"
+            )
 
     print("Loading historical corner stats...")
     team_stats = load_historical_corner_stats()
@@ -801,11 +830,13 @@ def main() -> None:
             if bm_lines:
                 value = find_value_bets(
                     home, away, league, h_lam, a_lam, h_lam_recent, a_lam_recent, bm_lines,
-                    min_edge=args.min_edge,
+                    min_edge=min_edge,
                     cal_params=cal_params,
                     allowed_sides=allowed_sides,
                     allowed_lines=allowed_lines,
+                    policy_lines=frozenset(policy_lines),
                     kick_off=kick_off,
+                    policy_version=policy_version,
                 )
                 all_value_bets.extend(value)
                 if value:
@@ -824,11 +855,11 @@ def main() -> None:
                 "lambda_away_recent": round(a_lam_recent, 3) if a_lam_recent is not None else 0.0,
                 "divergence": round(divergence, 4),
                 "consensus": consensus,
-                "policy_version": POLICY_VERSION,
+                "policy_version": policy_version,
                 "home_matches": h_stats.n_matches,
                 "away_matches": a_stats.n_matches,
             }
-            for line_val in CORNER_LINES:
+            for line_val in policy_lines:
                 p_over = match_total_prob_over(line_val, h_lam, a_lam)
                 signal[f"p_over_{line_val}"] = round(p_over, 4)
                 signal[f"fair_over_{line_val}"] = fair_decimal(p_over)
@@ -880,7 +911,13 @@ def main() -> None:
             f"{preview}{suffix}"
         )
 
-    shortlist = format_shortlist(all_value_bets, client.get_credits_remaining())
+    shortlist = format_shortlist(
+        all_value_bets,
+        client.get_credits_remaining(),
+        policy_version=policy_version,
+        min_edge=min_edge,
+        policy_lines=policy_lines,
+    )
     print("\n" + shortlist)
 
     output_dir = DEFAULT_OUTPUT_DIR
