@@ -35,6 +35,7 @@ TEAM_ALIASES: Dict[str, str] = {
     "inter milano": "internazionale",
     "fc st pauli": "st pauli",
     "vfb stuttgart": "stuttgart",
+    "hamburger sv": "hamburg",
     "vfl wolfsburg": "wolfsburg",
     "fsv mainz 05": "mainz",
     "mainz 05": "mainz",
@@ -188,4 +189,3 @@ def build_fixture_key(match_date: date | str, home_team: str, away_team: str) ->
 
 def ensure_snapshot_dir() -> None:
     RESULTS_SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)
-
