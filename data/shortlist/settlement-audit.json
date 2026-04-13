@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-04-13T15:18:27Z",
+  "run_at": "2026-04-13T16:00:18Z",
   "model": "corners",
   "total_bets": 22,
-  "settled_this_run": 2,
-  "total_settled": 20,
-  "total_pending": 2,
+  "settled_this_run": 3,
+  "total_settled": 21,
+  "total_pending": 1,
   "pending_breakdown": {
     "future": 1,
     "live": 0,
-    "stale": 1,
+    "stale": 0,
     "old_stale": 0,
     "unknown": 0
   },
@@ -17,8 +17,8 @@
       "football_data_latest": "2026-04-12",
       "lag_days": 1,
       "football_data_count": 261,
-      "fotmob_count": 0,
-      "fotmob_latest": null,
+      "fotmob_count": 8,
+      "fotmob_latest": "2026-04-12",
       "snapshot_date": "2026-04-13",
       "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-13.json"
     },
@@ -59,22 +59,11 @@
       "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-13.json"
     }
   },
-  "stale_rows": [
-    {
-      "match": "VfB Stuttgart vs Hamburger SV",
-      "league": "bundesliga",
-      "line": "10.5",
-      "side": "over",
-      "kickoff": "2026-04-12T15:30:00Z",
-      "hours_elapsed": 23.81
-    }
-  ],
+  "stale_rows": [],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [
-    "1 stale pending row(s) (3-48h elapsed)"
-  ],
+  "warnings": [],
   "errors": [],
   "exit_code_recommendation": 0
 }
