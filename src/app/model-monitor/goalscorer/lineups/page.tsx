@@ -1,15 +1,18 @@
-import { notFound } from "next/navigation";
+﻿import { notFound } from "next/navigation";
 
 import { type GoalscorerFixtureLineup, readGoalscorerMonitorSnapshot } from "@/lib/goalscorer-monitor-snapshot";
 
 import {
   EmptyState,
   HeroCard,
+  LeagueLabel,
+  MatchLabel,
   MODEL_MONITOR_ENABLED,
   MonitorNav,
   SectionCard,
   StatCard,
   StatusPill,
+  TeamLabel,
   formatDateTimeLabel,
   formatOdds,
   formatPct,
@@ -36,7 +39,7 @@ function groupFixturesByLeague(rows: GoalscorerFixtureLineup[]) {
   return [...grouped.entries()];
 }
 
-// ─── Player row ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ Player row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function PlayerRow({
   player,
@@ -50,7 +53,7 @@ function PlayerRow({
           <div className="truncate text-sm font-medium text-white">{player.name}</div>
           <div className="text-[11px] text-slate-500">
             {player.position}
-            {player.expected_minutes ? ` · ${Math.round(player.expected_minutes)} min` : ""}
+            {player.expected_minutes ? ` Â· ${Math.round(player.expected_minutes)} min` : ""}
           </div>
         </div>
         <StatusPill
@@ -73,7 +76,7 @@ function PlayerRow({
   );
 }
 
-// ─── Player section ──────────────────────────────────────────────────────────
+// â”€â”€â”€ Player section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function PlayerSection({
   label,
@@ -95,15 +98,27 @@ function PlayerSection({
   );
 }
 
-// ─── Team column ──────────────────────────────────────────────────────────────
+// â”€â”€â”€ Team column â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-function TeamColumn({ side }: { side: GoalscorerFixtureLineup["home"] }) {
+function TeamColumn({
+  leagueKey,
+  side,
+}: {
+  leagueKey: string;
+  side: GoalscorerFixtureLineup["home"];
+}) {
   return (
     <div className="rounded-xl border border-slate-800/60 bg-slate-950/30 p-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <div>
-          <h3 className="text-sm font-semibold text-white">{side.team}</h3>
-          <p className="mt-0.5 text-xs text-slate-500">{side.lineup_status || "No lineup status"}</p>
+        <div className="min-w-0">
+          <TeamLabel
+            league={leagueKey}
+            team={side.team}
+            iconSize={22}
+            teamClassName="text-sm font-semibold text-white"
+            detail={side.lineup_status || "No lineup status"}
+            detailClassName="mt-0.5 text-xs text-slate-500"
+          />
         </div>
         <div className="text-right text-[11px] text-slate-600">
           <div>{side.total_players} projected</div>
@@ -118,31 +133,40 @@ function TeamColumn({ side }: { side: GoalscorerFixtureLineup["home"] }) {
             <PlayerRow player={side.keeper} />
           </div>
         ) : null}
-        <PlayerSection label="Attack"              rows={side.attackers} />
+        <PlayerSection label="Attack" rows={side.attackers} />
         <PlayerSection label="Wide / attacking mid" rows={side.wide_players} />
-        <PlayerSection label="Midfield"            rows={side.midfielders} />
-        <PlayerSection label="Centre-backs"        rows={side.centre_backs} />
-        <PlayerSection label="Unplaced"            rows={side.unplaced} />
+        <PlayerSection label="Midfield" rows={side.midfielders} />
+        <PlayerSection label="Centre-backs" rows={side.centre_backs} />
+        <PlayerSection label="Unplaced" rows={side.unplaced} />
       </div>
     </div>
   );
 }
 
-// ─── Fixture card ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ Fixture card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function FixtureCard({ fixture }: { fixture: GoalscorerFixtureLineup }) {
   return (
     <article className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.28)]">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
-            {fixture.competition}
-          </p>
-          <h2 className="mt-1 text-base font-semibold text-white">
-            {fixture.home_team} vs {fixture.away_team}
-          </h2>
+          <LeagueLabel
+            league={fixture.league_key}
+            label={fixture.competition}
+            className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600"
+            iconSize={14}
+          />
+          <div className="mt-1">
+            <MatchLabel
+              league={fixture.league_key}
+              homeTeam={fixture.home_team}
+              awayTeam={fixture.away_team}
+              iconSize={20}
+              textClassName="text-base font-semibold text-white"
+            />
+          </div>
           <p className="mt-0.5 text-xs text-slate-500">
-            {formatDateTimeLabel(fixture.kickoff || fixture.match_date)} · {fixture.bookmaker || "Unknown book"}
+            {formatDateTimeLabel(fixture.kickoff || fixture.match_date)} | {fixture.bookmaker || "Unknown book"}
           </p>
         </div>
         <StatusPill
@@ -156,21 +180,21 @@ function FixtureCard({ fixture }: { fixture: GoalscorerFixtureLineup }) {
       </div>
 
       <div className="mt-3 grid gap-1.5 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard compact label="Priced rows"   value={String(fixture.matched_player_prices)} />
-        <StatCard compact label="Home matched"  value={String(fixture.home.matched_players)} />
-        <StatCard compact label="Away matched"  value={String(fixture.away.matched_players)} />
-        <StatCard compact label="Health"        value={fixture.health?.trust_tier || "-"} detail={fixture.health?.summary ?? undefined} />
+        <StatCard compact label="Priced rows" value={String(fixture.matched_player_prices)} />
+        <StatCard compact label="Home matched" value={String(fixture.home.matched_players)} />
+        <StatCard compact label="Away matched" value={String(fixture.away.matched_players)} />
+        <StatCard compact label="Health" value={fixture.health?.trust_tier || "-"} detail={fixture.health?.summary ?? undefined} />
       </div>
 
       <div className="mt-4 grid gap-3 xl:grid-cols-2">
-        <TeamColumn side={fixture.home} />
-        <TeamColumn side={fixture.away} />
+        <TeamColumn leagueKey={fixture.league_key} side={fixture.home} />
+        <TeamColumn leagueKey={fixture.league_key} side={fixture.away} />
       </div>
     </article>
   );
 }
 
-// ─── Page ────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default async function GoalscorerLineupsPage() {
   if (!MODEL_MONITOR_ENABLED) notFound();
@@ -204,14 +228,14 @@ export default async function GoalscorerLineupsPage() {
 
         <MonitorNav current="lineups" />
 
-        {/* ── Hero ── */}
+        {/* â”€â”€ Hero â”€â”€ */}
         <HeroCard title="Goalscorer Lineups" eyebrow="Snapshot-backed fixture view">
           <span className="text-slate-300">Fixture cards rendered from the compact goalscorer monitor snapshot.</span>
-          <span className="mx-2 text-slate-700">·</span>
+          <span className="mx-2 text-slate-700">Â·</span>
           <span className="text-slate-500">Generated {formatDateTimeLabel(snapshot.generated_at)}</span>
         </HeroCard>
 
-        {/* ── KPI strip ── */}
+        {/* â”€â”€ KPI strip â”€â”€ */}
         <section className="grid gap-2.5 sm:grid-cols-3 xl:grid-cols-5">
           <StatCard label="Fixtures"        value={String(fixtures.length)} />
           <StatCard label="With lineups"    value={String(fixturesWithLineups)} />
@@ -220,7 +244,7 @@ export default async function GoalscorerLineupsPage() {
           <StatCard label="Penalty reviews" value={String(snapshot.penalty_watchlist.row_count)} />
         </section>
 
-        {/* ── Fixture groups ── */}
+        {/* â”€â”€ Fixture groups â”€â”€ */}
         {grouped.length === 0 ? (
           <SectionCard title="Fixtures" subtitle="No fixture lineup rows are present in the snapshot.">
             <EmptyState message="No fixture lineup data is available." />
@@ -229,7 +253,7 @@ export default async function GoalscorerLineupsPage() {
           grouped.map(([league, rows]) => (
             <SectionCard
               key={league}
-              title={league}
+              title={<LeagueLabel league={league} label={league} className="text-[15px] font-semibold text-slate-100" iconSize={16} />}
               subtitle={`${rows.length} ${rows.length === 1 ? "fixture" : "fixtures"}`}
             >
               <div className="flex flex-col gap-4">
@@ -245,3 +269,4 @@ export default async function GoalscorerLineupsPage() {
     </div>
   );
 }
+

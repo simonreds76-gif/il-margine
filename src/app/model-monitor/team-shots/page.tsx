@@ -8,11 +8,14 @@ import {
 } from "@/lib/team-shots-live-files";
 import {
   MODEL_MONITOR_ENABLED,
+  LeagueLabel,
+  MatchLabel,
   MonitorNav,
   HeroCard,
   SectionCard,
   StatCard,
   StatusPill,
+  TeamLabel,
   EmptyState,
 } from "../shared";
 
@@ -808,12 +811,14 @@ export default async function TeamShotsMonitorPage() {
   }
 
 function LiveLineTable({
+  leagueKey,
   teamName,
   row,
   side,
   lines,
   calibration,
 }: {
+  leagueKey: string;
   teamName: string;
   row: CsvRow;
   side: "home" | "away";
@@ -891,7 +896,12 @@ function LiveLineTable({
   return (
     <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/40">
       <div className="border-b border-slate-800 px-4 py-3">
-        <div className="text-sm font-medium text-slate-100">{teamName}</div>
+        <TeamLabel
+          league={leagueKey}
+          team={teamName}
+          iconSize={20}
+          teamClassName="text-sm font-medium text-slate-100"
+        />
         <div className="text-xs text-slate-500">lambda {lambda.toFixed(2)}</div>
         <div className="mt-2 grid gap-2 text-[11px] sm:grid-cols-2">
           <div className="rounded-lg border border-slate-800 bg-slate-900/60 px-2 py-1.5 text-slate-300">
@@ -1299,8 +1309,22 @@ function LiveLineTable({
                   <div key={i} className={`rounded-xl border border-slate-800/60 px-3 py-3 ${rowTone}`}>
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <div className="truncate text-sm font-medium text-white">{r.team}</div>
-                        <div className="text-[11px] text-slate-500">{r.home_team} v {r.away_team}</div>
+                        <TeamLabel
+                          league={r.league}
+                          team={r.team}
+                          iconSize={18}
+                          teamClassName="truncate text-sm font-medium text-white"
+                        />
+                        <div className="mt-1">
+                          <MatchLabel
+                            league={r.league}
+                            homeTeam={r.home_team}
+                            awayTeam={r.away_team}
+                            iconSize={16}
+                            separator="v"
+                            textClassName="text-[11px] text-slate-500"
+                          />
+                        </div>
                         <div className="text-[11px] text-slate-600">{(r.date ?? "").slice(0, 10)}</div>
                         <div className="text-[11px] text-slate-500">
                           {r.side === "over" ? "Over" : "Under"} {r.line || "-"}
@@ -1396,8 +1420,22 @@ function LiveLineTable({
                       <tr key={i} className={`border-b border-slate-800/40 ${rowTone}`}>
                         <td className="py-2 pl-4 pr-3 tabular-nums text-slate-400">{(r.date ?? "").slice(0, 10)}</td>
                         <td className="py-2 pr-3">
-                          <div className="font-medium text-slate-200">{r.team}</div>
-                          <div className="text-[11px] text-slate-500">{r.home_team} v {r.away_team}</div>
+                          <TeamLabel
+                            league={r.league}
+                            team={r.team}
+                            iconSize={18}
+                            teamClassName="font-medium text-slate-200"
+                          />
+                          <div className="mt-1">
+                            <MatchLabel
+                              league={r.league}
+                              homeTeam={r.home_team}
+                              awayTeam={r.away_team}
+                              iconSize={16}
+                              separator="v"
+                              textClassName="text-[11px] text-slate-500"
+                            />
+                          </div>
                           {r.settled_at ? (
                             <div className="text-[11px] text-slate-600">Settled {formatDateTime(r.settled_at)}</div>
                           ) : null}
@@ -1471,8 +1509,22 @@ function LiveLineTable({
                           <div key={j} className="rounded-xl border border-slate-800/60 bg-slate-950/40 px-3 py-3">
                             <div className="flex items-start justify-between gap-2">
                               <div className="min-w-0">
-                                <div className="truncate text-sm font-medium text-white">{row.team}</div>
-                                <div className="text-[11px] text-slate-500">{row.home_team} v {row.away_team}</div>
+                                <TeamLabel
+                                  league={row.league}
+                                  team={row.team}
+                                  iconSize={18}
+                                  teamClassName="truncate text-sm font-medium text-white"
+                                />
+                                <div className="mt-1">
+                                  <MatchLabel
+                                    league={row.league}
+                                    homeTeam={row.home_team}
+                                    awayTeam={row.away_team}
+                                    iconSize={16}
+                                    separator="v"
+                                    textClassName="text-[11px] text-slate-500"
+                                  />
+                                </div>
                               </div>
                               <div className="flex flex-col items-end gap-1">
                                 <StatusPill
@@ -1562,7 +1614,7 @@ function LiveLineTable({
               key={leagueKey}
               collapsible
               defaultOpen={shadowCount > 0}
-              title={leagueTitle(leagueKey)}
+              title={<LeagueLabel league={leagueKey} label={leagueTitle(leagueKey)} className="text-[15px] font-semibold text-slate-100" iconSize={16} />}
               subtitle={`${rows.length} fixture${rows.length !== 1 ? "s" : ""}${shadowCount > 0 ? ` | ${shadowCount} shadow signal${shadowCount !== 1 ? "s" : ""}` : ""}`}
             >
               <div className="space-y-4">
@@ -1580,11 +1632,21 @@ function LiveLineTable({
                     <div key={rowIdx} className="rounded-2xl border border-slate-800 bg-slate-900/30 p-4">
                       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                         <div>
-                          <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
-                            {leagueTitle(leagueKey)}
-                          </div>
-                          <div className="mt-0.5 text-sm font-medium text-white">
-                            {row.home_team} v {row.away_team}
+                          <LeagueLabel
+                            league={leagueKey}
+                            label={leagueTitle(leagueKey)}
+                            className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600"
+                            iconSize={14}
+                          />
+                          <div className="mt-0.5">
+                            <MatchLabel
+                              league={leagueKey}
+                              homeTeam={row.home_team}
+                              awayTeam={row.away_team}
+                              iconSize={18}
+                              separator="v"
+                              textClassName="text-sm font-medium text-white"
+                            />
                           </div>
                           <div className="text-[11px] text-slate-500">{formatKickoffUtc(row.kickoff_iso)}</div>
                         </div>
@@ -1597,6 +1659,7 @@ function LiveLineTable({
                       </div>
                       <div className="grid gap-3 sm:grid-cols-2">
                         <LiveLineTable
+                          leagueKey={leagueKey}
                           teamName={row.home_team}
                           row={row}
                           side="home"
@@ -1604,6 +1667,7 @@ function LiveLineTable({
                           calibration={calibrationParams}
                         />
                         <LiveLineTable
+                          leagueKey={leagueKey}
                           teamName={row.away_team}
                           row={row}
                           side="away"

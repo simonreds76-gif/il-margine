@@ -9,6 +9,8 @@ import {
 import {
   MonitorNav,
   HeroCard,
+  LeagueLabel,
+  MatchLabel,
   SectionCard,
   StatCard,
   StatusPill,
@@ -65,6 +67,11 @@ function formatMaybeFixed(val: string | undefined, digits = 2, placeholder = "--
 
 function normalizePinnacleTeamName(value: string | undefined): string {
   return (value ?? "").replace(/\s*\(Corners\)\s*$/i, "").trim();
+}
+
+function splitMatchTeams(match: string | undefined): [string, string] {
+  const [home = "", away = ""] = (match ?? "").split(" vs ");
+  return [home, away];
 }
 
 function formatKickoff(iso: string | undefined): string {
@@ -618,8 +625,18 @@ export default async function CornersMonitorPage() {
                     return (
                       <tr key={i} className="border-b border-slate-800/40 hover:bg-slate-800/20">
                         <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-400">{item.displayDate}</td>
-                        <td className="py-1.5 pr-3 text-slate-400">{row.league}</td>
-                        <td className="py-1.5 pr-3 font-medium">{row.match}</td>
+                        <td className="py-1.5 pr-3 text-slate-400">
+                          <LeagueLabel league={row.league} label={row.league} iconSize={14} />
+                        </td>
+                        <td className="py-1.5 pr-3 font-medium">
+                          <MatchLabel
+                            league={row.league}
+                            homeTeam={splitMatchTeams(row.match)[0]}
+                            awayTeam={splitMatchTeams(row.match)[1]}
+                            iconSize={16}
+                            textClassName="font-medium text-slate-200"
+                          />
+                        </td>
                         <td className="py-1.5 pr-3 font-mono tabular-nums">{row.line}</td>
                         <td className="py-1.5 pr-3">
                           <StatusPill
@@ -702,7 +719,9 @@ export default async function CornersMonitorPage() {
                         <tbody>
                           {liveByLeague.map(({ lg, n, won, pnlVal, roi }) => (
                             <tr key={lg} className="border-b border-slate-800/40">
-                              <td className="py-1.5 pr-4 font-medium">{lg}</td>
+                              <td className="py-1.5 pr-4 font-medium">
+                                <LeagueLabel league={lg} label={lg} iconSize={14} />
+                              </td>
                               <td className="py-1.5 pr-4 text-right font-mono tabular-nums text-slate-400">{n}</td>
                               <td className="py-1.5 pr-4 text-right font-mono tabular-nums text-slate-400">{won}W/{n - won}L</td>
                               <td className={`py-1.5 pr-4 text-right font-mono tabular-nums ${pnlVal >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
@@ -752,7 +771,15 @@ export default async function CornersMonitorPage() {
                           return (
                             <tr key={i} className={`border-b border-slate-800/40 hover:bg-slate-800/20 ${kickedOff ? "opacity-60" : ""}`}>
                               <td className="py-1.5 pr-3 font-mono tabular-nums text-[11px] text-slate-400">{kickoffDisplay}</td>
-                              <td className="py-1.5 pr-3 font-medium">{(row.match ?? "").slice(0, 28)}</td>
+                              <td className="py-1.5 pr-3 font-medium">
+                                <MatchLabel
+                                  league={row.league}
+                                  homeTeam={splitMatchTeams(row.match)[0]}
+                                  awayTeam={splitMatchTeams(row.match)[1]}
+                                  iconSize={16}
+                                  textClassName="font-medium text-slate-200"
+                                />
+                              </td>
                               <td className="py-1.5 pr-3 font-mono tabular-nums">{row.line}</td>
                               <td className="py-1.5 pr-3">
                                 <StatusPill
@@ -800,7 +827,13 @@ export default async function CornersMonitorPage() {
                         <div key={i} className={`rounded-xl border border-slate-800/60 px-3 py-3 ${rowTone}`}>
                           <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0">
-                              <div className="truncate text-sm font-medium text-white">{row.match ?? "-"}</div>
+                              <MatchLabel
+                                league={row.league}
+                                homeTeam={splitMatchTeams(row.match)[0]}
+                                awayTeam={splitMatchTeams(row.match)[1]}
+                                iconSize={16}
+                                textClassName="truncate text-sm font-medium text-white"
+                              />
                               <div className="mt-0.5 text-[11px] text-slate-500">
                                 {formatKickoff(row.kick_off) !== "--" ? formatKickoff(row.kick_off) : (row.match_date?.slice(0, 10) ?? "--")} | {row.line} {row.side}
                               </div>
@@ -862,7 +895,13 @@ export default async function CornersMonitorPage() {
                             className={`grid grid-cols-[minmax(220px,2.2fr)_70px_80px_80px_80px_80px_70px_70px_60px_80px] items-center gap-x-3 px-1 py-2 text-xs hover:bg-slate-800/15 ${rowTone}`}
                           >
                             <div className="min-w-0">
-                              <div className="truncate font-medium text-slate-100">{row.match ?? "-"}</div>
+                              <MatchLabel
+                                league={row.league}
+                                homeTeam={splitMatchTeams(row.match)[0]}
+                                awayTeam={splitMatchTeams(row.match)[1]}
+                                iconSize={16}
+                                textClassName="truncate font-medium text-slate-100"
+                              />
                               <div className="text-[10px] tabular-nums text-slate-600">{kickoffStr}</div>
                             </div>
                             <div className="font-mono tabular-nums text-slate-200">{row.line}</div>
@@ -925,8 +964,18 @@ export default async function CornersMonitorPage() {
                 <tbody>
                   {signals.map((row, i) => (
                     <tr key={i} className="border-b border-slate-800/40 hover:bg-slate-800/20">
-                      <td className="py-1.5 pr-3 font-medium">{row.home_team} vs {row.away_team}</td>
-                      <td className="py-1.5 pr-3 text-slate-400">{row.league}</td>
+                      <td className="py-1.5 pr-3 font-medium">
+                        <MatchLabel
+                          league={row.league}
+                          homeTeam={row.home_team}
+                          awayTeam={row.away_team}
+                          iconSize={16}
+                          textClassName="font-medium text-slate-200"
+                        />
+                      </td>
+                      <td className="py-1.5 pr-3 text-slate-400">
+                        <LeagueLabel league={row.league} label={row.league} iconSize={14} />
+                      </td>
                       <td className="py-1.5 pr-3 font-mono tabular-nums text-emerald-300">{formatMaybeFixed(row.lambda_home)}</td>
                       <td className="py-1.5 pr-3 font-mono tabular-nums text-sky-300">{formatMaybeFixed(row.lambda_away)}</td>
                       <td className="py-1.5 pr-3 font-mono tabular-nums text-amber-200">{formatMaybeFixed(row.lambda_total)}</td>
@@ -962,8 +1011,19 @@ export default async function CornersMonitorPage() {
                   {pinnacleMatches.map((m, i) => (
                     <tr key={i} className="border-b border-slate-800/40 hover:bg-slate-800/20">
                       <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-500">{m.match_date.slice(5)}</td>
-                      <td className="py-1.5 pr-3 text-slate-500">{m.league}</td>
-                      <td className="py-1.5 pr-3 font-medium text-slate-200">{m.home_team} v {m.away_team}</td>
+                      <td className="py-1.5 pr-3 text-slate-500">
+                        <LeagueLabel league={m.league} label={m.league} iconSize={14} />
+                      </td>
+                      <td className="py-1.5 pr-3 font-medium text-slate-200">
+                        <MatchLabel
+                          league={m.league}
+                          homeTeam={m.home_team}
+                          awayTeam={m.away_team}
+                          iconSize={16}
+                          separator="v"
+                          textClassName="font-medium text-slate-200"
+                        />
+                      </td>
                       {pinnacleLineValues.flatMap((l) => {
                         const lineData = m.lines[l.toFixed(1)] ?? { over: 0, under: 0 };
                         return [

@@ -8,12 +8,15 @@ import { PenaltyReviewActions } from "./PenaltyReviewActions";
 import {
   EmptyState,
   HeroCard,
+  LeagueLabel,
+  MatchLabel,
   MODEL_MONITOR_ENABLED,
   MonitorNav,
   PhaseLabel,
   SectionCard,
   StatCard,
   StatusPill,
+  TeamLabel,
   actionTone,
   formatDateLabel,
   formatDateTimeLabel,
@@ -43,6 +46,11 @@ function renderSourceDetail(snapshot: GoalscorerMonitorSnapshot) {
     s.settlement_updated_at ? `Settlement ${formatDateTimeLabel(s.settlement_updated_at)}` : null,
   ].filter(Boolean);
   return parts.length > 0 ? parts.join(" | ") : "Source timestamps unavailable";
+}
+
+function splitFixtureMatch(match?: string | null): [string, string] {
+  const [home = "", away = ""] = (match ?? "").split(" vs ");
+  return [home, away];
 }
 
 // --- Tone helpers ------------------------------------------------------------
@@ -102,17 +110,25 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
       {/* -- Header -- */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
-            {row.league || "League"} | {row.review_source || "Penalty review"}
-          </p>
+          <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
+            <LeagueLabel league={row.league} label={row.league || "League"} iconSize={14} />
+            <span>|</span>
+            <span>{row.review_source || "Penalty review"}</span>
+          </div>
           <h3 className="mt-1 text-base font-semibold text-white">
             {row.actual_taker || "Unknown taker"}
           </h3>
-          <p className="mt-0.5 text-sm text-slate-400">
-            {row.match || `${row.team || "?"} vs ${row.opponent || "?"}`}
-            {" | "}
-            {formatDateLabel(row.date)}
-          </p>
+          <div className="mt-0.5 flex flex-wrap items-center gap-2 text-sm text-slate-400">
+            <MatchLabel
+              league={row.league}
+              homeTeam={row.team || "?"}
+              awayTeam={row.opponent || "?"}
+              iconSize={18}
+              textClassName="text-sm text-slate-400"
+            />
+            <span>|</span>
+            <span>{formatDateLabel(row.date)}</span>
+          </div>
         </div>
         <div className="flex shrink-0 flex-wrap items-center gap-1.5">
           {row.review_priority ? (
@@ -239,10 +255,25 @@ function LiveBetsTable({ rows }: { rows: GoalscorerMonitorSnapshot["live_bets"] 
             >
               <td className="py-2.5 pr-4">
                 <div className="font-medium text-white">{row.player}</div>
-                <div className="text-[11px] text-slate-500">{row.team} | {row.league_label}</div>
+                <div className="mt-1">
+                  <TeamLabel
+                    league={row.league_key}
+                    team={row.team}
+                    detail={row.league_label}
+                    iconSize={18}
+                    teamClassName="text-[11px] text-slate-300"
+                    detailClassName="text-[11px] text-slate-500"
+                  />
+                </div>
               </td>
               <td className="py-2.5 pr-4">
-                <div className="text-slate-300">{row.match}</div>
+                <MatchLabel
+                  league={row.league_key}
+                  homeTeam={row.team}
+                  awayTeam={row.opponent}
+                  iconSize={18}
+                  textClassName="text-slate-300"
+                />
                 <div className="text-[11px] tabular-nums text-slate-500">
                   {formatDateTimeLabel(row.kickoff || row.match_date)}
                 </div>
@@ -291,11 +322,28 @@ function SettlementCard({ row }: { row: SettlementRow }) {
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div className="truncate font-medium text-white">{row.player}</div>
-          <div className="text-[11px] text-slate-500">{row.team} | {row.league_key}</div>
+          <div className="mt-1">
+            <TeamLabel
+              league={row.league_key}
+              team={row.team}
+              detail={row.league_key}
+              iconSize={18}
+              teamClassName="text-[11px] text-slate-300"
+              detailClassName="text-[11px] text-slate-500"
+            />
+          </div>
         </div>
         <StatusPill label={row.bet_outcome || "unknown"} tone={statusTone(row.bet_outcome)} />
       </div>
-      <div className="mt-1 truncate text-xs text-slate-400">{row.match}</div>
+      <div className="mt-1">
+        <MatchLabel
+          league={row.league_key}
+          homeTeam={splitFixtureMatch(row.match)[0]}
+          awayTeam={splitFixtureMatch(row.match)[1]}
+          iconSize={16}
+          textClassName="truncate text-xs text-slate-400"
+        />
+      </div>
       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs tabular-nums">
         <span className="text-slate-500">
           Odds <span className="text-slate-300">{formatOdds(row.best_bookmaker_odds)}</span>
@@ -377,10 +425,23 @@ function RecentSettlementsTable({
               >
                 <td className="py-2.5 pr-4">
                   <div className="font-medium leading-tight text-white">{row.player}</div>
-                  <div className="text-[11px] leading-tight text-slate-500">{row.team}</div>
+                  <div className="mt-1">
+                    <TeamLabel
+                      league={row.league_key}
+                      team={row.team}
+                      iconSize={18}
+                      teamClassName="text-[11px] leading-tight text-slate-300"
+                    />
+                  </div>
                 </td>
                 <td className="py-2.5 pr-4">
-                  <div className="text-slate-300">{row.match}</div>
+                  <MatchLabel
+                    league={row.league_key}
+                    homeTeam={splitFixtureMatch(row.match)[0]}
+                    awayTeam={splitFixtureMatch(row.match)[1]}
+                    iconSize={16}
+                    textClassName="text-slate-300"
+                  />
                   <div className="text-[11px] tabular-nums text-slate-500">
                     KO {formatDateTimeLabel(row.kickoff || row.date)}
                   </div>
@@ -449,14 +510,20 @@ function FixtureDiagnosticsTable({
               className="border-b border-slate-900/50 align-top transition-colors hover:bg-white/[0.02]"
             >
               <td className="py-2.5 pr-4">
-                <div className="font-medium text-slate-200">
-                  {row.home_team} vs {row.away_team}
-                </div>
+                <MatchLabel
+                  league={row.league_key}
+                  homeTeam={row.home_team}
+                  awayTeam={row.away_team}
+                  iconSize={18}
+                  textClassName="font-medium text-slate-200"
+                />
                 <div className="text-[11px] text-slate-500">
                   {formatDateLabel(row.match_date)} | {row.bookmaker || "-"}
                 </div>
               </td>
-              <td className="py-2.5 pr-4 text-slate-400">{row.league_label}</td>
+              <td className="py-2.5 pr-4 text-slate-400">
+                <LeagueLabel league={row.league_key} label={row.league_label} iconSize={14} />
+              </td>
               <td className="py-2.5 pr-4 text-slate-400">{row.lineup_input || "-"}</td>
               <td className="py-2.5 pr-4">
                 <StatusPill label={row.trust_tier || "unknown"} tone={statusTone(row.trust_tier)} />

@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import teamLogoManifest from "../../../data/goalscorer/team-logo-map.json";
 
 export const MODEL_MONITOR_ENABLED =
   process.env.NODE_ENV !== "production" ||
@@ -11,6 +13,213 @@ export const MODEL_MONITOR_ENABLED =
 
 export function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
+}
+
+type TeamLogoRow = {
+  logo_path?: string;
+};
+
+type LogoManifest = {
+  leagues?: Record<
+    string,
+    {
+      teams?: Record<string, TeamLogoRow>;
+    }
+  >;
+};
+
+const LOGO_MANIFEST = teamLogoManifest as LogoManifest;
+
+const LEAGUE_META: Record<string, { label: string; logoPath: string }> = {
+  epl: { label: "Premier League", logoPath: "/league-logos/epl.png" },
+  "premier league": { label: "Premier League", logoPath: "/league-logos/epl.png" },
+  "serie-a": { label: "Serie A", logoPath: "/league-logos/serie-a.png" },
+  "serie a": { label: "Serie A", logoPath: "/league-logos/serie-a.png" },
+  bundesliga: { label: "Bundesliga", logoPath: "/league-logos/bundesliga.png" },
+  "la-liga": { label: "La Liga", logoPath: "/league-logos/la-liga.png" },
+  "la liga": { label: "La Liga", logoPath: "/league-logos/la-liga.png" },
+  "ligue-1": { label: "Ligue 1", logoPath: "/league-logos/ligue-1.png" },
+  "ligue 1": { label: "Ligue 1", logoPath: "/league-logos/ligue-1.png" },
+};
+
+function repairMojibake(value: string): string {
+  if (!value) return value;
+  const normalized = value.normalize("NFC");
+  if (!/[\u00C3\u00C2\u00E2]/.test(normalized)) return normalized;
+  try {
+    const repaired = Buffer.from(normalized, "latin1").toString("utf8").normalize("NFC");
+    const mojibakeCount = (text: string) => (text.match(/[\u00C3\u00C2\u00E2\uFFFD]/g) ?? []).length;
+    return mojibakeCount(repaired) < mojibakeCount(normalized) ? repaired : normalized;
+  } catch {
+    return normalized;
+  }
+}
+
+function cleanText(value?: string | null): string {
+  return repairMojibake(
+    (value ?? "")
+      .trim()
+      .replace(/&#0*39;|&#x27;|&apos;/gi, "'")
+      .replace(/&amp;/gi, "&")
+      .replace(/&quot;/gi, '"')
+      .replace(/&nbsp;/gi, " "),
+  ).replace(/\s+/g, " ");
+}
+
+function normalizeKey(value?: string | null): string {
+  return cleanText(value)
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&/g, " and ")
+    .replace(/[^a-zA-Z0-9]+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+export function resolveLeagueKey(value?: string | null): string | null {
+  const normalized = normalizeKey(value);
+  if (!normalized) return null;
+  if (normalized === "premier league") return "epl";
+  if (normalized === "serie a") return "serie-a";
+  if (normalized === "la liga") return "la-liga";
+  if (normalized === "ligue 1") return "ligue-1";
+  if (normalized in LEAGUE_META) {
+    return normalized === "premier league" ? "epl" : normalized;
+  }
+  return normalized;
+}
+
+function resolveLeagueMeta(value?: string | null) {
+  const key = resolveLeagueKey(value);
+  if (!key) return null;
+  return LEAGUE_META[key] ?? null;
+}
+
+export function findTeamLogoPath(leagueValue: string | null | undefined, teamValue: string | null | undefined): string {
+  const leagueKey = resolveLeagueKey(leagueValue);
+  const team = cleanText(teamValue);
+  if (!leagueKey || !team) return "";
+  const teams = LOGO_MANIFEST.leagues?.[leagueKey]?.teams ?? {};
+  if (teams[team]?.logo_path) return cleanText(teams[team].logo_path);
+  const normalizedTeam = normalizeKey(team);
+  const matched = Object.entries(teams).find(([name]) => normalizeKey(name) === normalizedTeam);
+  return matched?.[1]?.logo_path ? cleanText(matched[1].logo_path) : "";
+}
+
+function TeamLogo({
+  league,
+  team,
+  size = 18,
+  initials,
+}: {
+  league?: string | null;
+  team?: string | null;
+  size?: number;
+  initials?: string;
+}) {
+  const logoPath = findTeamLogoPath(league, team);
+  const fallback =
+    initials ||
+    cleanText(team)
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() ?? "")
+      .join("") ||
+    "?";
+  return (
+    <span
+      className="inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-700/70 bg-slate-900/80 text-[10px] font-semibold uppercase text-slate-300"
+      style={{ width: size, height: size }}
+    >
+      {logoPath ? (
+        <Image src={logoPath} alt={cleanText(team) || "team"} width={size} height={size} className="h-full w-full object-contain" />
+      ) : (
+        fallback.slice(0, 2)
+      )}
+    </span>
+  );
+}
+
+export function LeagueLabel({
+  league,
+  label,
+  className,
+  iconSize = 18,
+}: {
+  league?: string | null;
+  label?: string | null;
+  className?: string;
+  iconSize?: number;
+}) {
+  const meta = resolveLeagueMeta(league || label);
+  const text = cleanText(label) || meta?.label || cleanText(league) || "League";
+  return (
+    <span className={cn("inline-flex items-center gap-2", className)}>
+      {meta ? (
+        <span className="inline-flex shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-700/70 bg-white/95 p-1">
+          <Image src={meta.logoPath} alt={`${text} logo`} width={iconSize} height={iconSize} className="object-contain" />
+        </span>
+      ) : null}
+      <span>{text}</span>
+    </span>
+  );
+}
+
+export function TeamLabel({
+  league,
+  team,
+  detail,
+  className,
+  teamClassName,
+  detailClassName,
+  iconSize = 20,
+}: {
+  league?: string | null;
+  team?: string | null;
+  detail?: string | null;
+  className?: string;
+  teamClassName?: string;
+  detailClassName?: string;
+  iconSize?: number;
+}) {
+  return (
+    <div className={cn("flex items-center gap-2", className)}>
+      <TeamLogo league={league} team={team} size={iconSize} />
+      <div className="min-w-0">
+        <div className={cn("truncate", teamClassName)}>{cleanText(team) || "-"}</div>
+        {detail ? <div className={cn("truncate", detailClassName)}>{detail}</div> : null}
+      </div>
+    </div>
+  );
+}
+
+export function MatchLabel({
+  league,
+  homeTeam,
+  awayTeam,
+  className,
+  textClassName,
+  iconSize = 18,
+  separator = "vs",
+}: {
+  league?: string | null;
+  homeTeam?: string | null;
+  awayTeam?: string | null;
+  className?: string;
+  textClassName?: string;
+  iconSize?: number;
+  separator?: string;
+}) {
+  return (
+    <div className={cn("flex items-center gap-2", className)}>
+      <TeamLogo league={league} team={homeTeam} size={iconSize} />
+      <span className={cn("truncate", textClassName)}>
+        {cleanText(homeTeam) || "?"} {separator} {cleanText(awayTeam) || "?"}
+      </span>
+      <TeamLogo league={league} team={awayTeam} size={iconSize} />
+    </div>
+  );
 }
 
 function parseDate(value?: string | null): Date | null {
@@ -188,7 +397,7 @@ export function HeroCard({
   eyebrow,
   children,
 }: {
-  title: string;
+  title: ReactNode;
   eyebrow: string;
   children: ReactNode;
 }) {
@@ -217,7 +426,7 @@ export function SectionCard({
   defaultOpen = true,
   children,
 }: {
-  title: string;
+  title: ReactNode;
   subtitle?: string;
   collapsible?: boolean;
   defaultOpen?: boolean;

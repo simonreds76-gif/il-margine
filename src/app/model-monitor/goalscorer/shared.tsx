@@ -2,6 +2,9 @@
 // tone helpers, and navigation are defined in the parent shared module.
 export {
   MODEL_MONITOR_ENABLED,
+  LeagueLabel,
+  MatchLabel,
+  TeamLabel,
   formatDateLabel,
   formatDateTimeLabel,
   formatPct,
