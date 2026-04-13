@@ -8,23 +8,23 @@
       "match_date": "2026-04-13",
       "home_team": "Fiorentina",
       "away_team": "Lazio",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-3-3",
       "away_formation": "4-3-3",
       "home_players": [
         "David de Gea",
         "Dodô",
+        "Daniele Rugani",
         "Luca Ranieri",
-        "Marin Pongracic",
         "Robin Gosens",
-        "Cher Ndour",
+        "Giovanni Fabbian",
         "Rolando Mandragora",
-        "Marco Brescianini",
-        "Fabiano Parisi",
+        "Cher Ndour",
+        "Jack Harrison",
         "Roberto Piccoli",
-        "Manor Solomon"
+        "Jacopo Fazzini"
       ],
       "away_players": [
         "Edoardo Motta",
@@ -33,11 +33,11 @@
         "Oliver Provstgaard",
         "Nuno Tavares",
         "Toma Basic",
-        "Danilo Cataldi",
+        "Patric",
         "Kenneth Taylor",
-        "Gustav Isaksen",
+        "Matteo Cancellieri",
         "Boulaye Dia",
-        "Tijjani Noslin"
+        "Mattia Zaccagni"
       ],
       "home_starters": [
         {
@@ -59,7 +59,7 @@
           "position_id": 32
         },
         {
-          "name": "Luca Ranieri",
+          "name": "Daniele Rugani",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -68,7 +68,7 @@
           "position_id": 34
         },
         {
-          "name": "Marin Pongracic",
+          "name": "Luca Ranieri",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -86,7 +86,7 @@
           "position_id": 38
         },
         {
-          "name": "Cher Ndour",
+          "name": "Giovanni Fabbian",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -104,7 +104,7 @@
           "position_id": 75
         },
         {
-          "name": "Marco Brescianini",
+          "name": "Cher Ndour",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -113,7 +113,7 @@
           "position_id": 77
         },
         {
-          "name": "Fabiano Parisi",
+          "name": "Jack Harrison",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -131,7 +131,7 @@
           "position_id": 105
         },
         {
-          "name": "Manor Solomon",
+          "name": "Jacopo Fazzini",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -196,7 +196,7 @@
           "position_id": 73
         },
         {
-          "name": "Danilo Cataldi",
+          "name": "Patric",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -214,7 +214,7 @@
           "position_id": 77
         },
         {
-          "name": "Gustav Isaksen",
+          "name": "Matteo Cancellieri",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -232,7 +232,7 @@
           "position_id": 105
         },
         {
-          "name": "Tijjani Noslin",
+          "name": "Mattia Zaccagni",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -241,9 +241,36 @@
           "position_id": 107
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Luca Lezzerini",
+        "Oliver Christensen",
+        "Eddy Kouadio",
+        "Eman Kospo",
+        "Luís Balbo",
+        "Marin Pongracic",
+        "Pietro Comuzzo",
+        "Lapo Deli",
+        "Salvatore Cianciulli",
+        "Giorgio Puzzoli",
+        "Manor Solomon",
+        "Riccardo Braschi"
+      ],
+      "away_subs": [
+        "Alessio Furlanetto",
+        "Giacomo Giacomone",
+        "Elseid Hysaj",
+        "Luca Pellegrini",
+        "Adrian Przyborek",
+        "Danilo Cataldi",
+        "Fisayo Dele-Bashiru",
+        "Reda Belahyane",
+        "Gustav Isaksen",
+        "Pedro",
+        "Petar Ratkov",
+        "Tijjani Noslin"
+      ],
       "home_unavailable": [
+        "Fabiano Parisi",
         "Niccolò Fortini",
         "Nicolò Fagioli",
         "Albert Gudmundsson",
