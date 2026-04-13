@@ -48,6 +48,56 @@ function renderSourceDetail(snapshot: GoalscorerMonitorSnapshot) {
   return parts.length > 0 ? parts.join(" | ") : "Source timestamps unavailable";
 }
 
+function parseIso(value?: string | null) {
+  if (!value) return null;
+  const ts = Date.parse(value);
+  return Number.isNaN(ts) ? null : ts;
+}
+
+function hostedHeartbeat(snapshot: GoalscorerMonitorSnapshot) {
+  const s = snapshot.source_status;
+  const snapshotTs = parseIso(snapshot.generated_at);
+  const hotLiveTs = parseIso(s.hot_live_updated_at);
+  const schedulerTs = parseIso(s.scheduler_heartbeat_at);
+  const freshestTs = [hotLiveTs, schedulerTs].filter((v): v is number => v !== null).sort((a, b) => b - a)[0] ?? null;
+  const ageMinutes =
+    snapshotTs !== null && freshestTs !== null
+      ? Math.max(0, Math.round((snapshotTs - freshestTs) / 60000))
+      : null;
+
+  const state = (s.live_status_state || "").trim().toLowerCase();
+  const isHealthy = state === "idle" || state === "warning" || state === "skipped";
+  const tone =
+    state === "failed"
+      ? "bg-rose-500/10 text-rose-300 border-rose-500/20"
+      : ageMinutes !== null && ageMinutes > 35
+        ? "bg-amber-500/10 text-amber-300 border-amber-500/20"
+        : isHealthy
+          ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+          : "bg-slate-700/40 text-slate-300 border-slate-600/40";
+
+  const label =
+    state === "failed"
+      ? "Hosted stale"
+      : ageMinutes !== null && ageMinutes > 35
+        ? "Hosted delayed"
+        : "Hosted healthy";
+
+  const detailParts = [
+    s.hot_live_updated_at ? `Hot live ${formatDateTimeLabel(s.hot_live_updated_at)}` : null,
+    s.scheduler_heartbeat_at ? `Heartbeat ${formatDateTimeLabel(s.scheduler_heartbeat_at)}` : null,
+    ageMinutes !== null ? `${ageMinutes}m behind snapshot` : null,
+    s.live_status_state ? `State ${s.live_status_state}` : null,
+  ].filter(Boolean);
+
+  return {
+    label,
+    tone,
+    detail: detailParts.join(" | ") || "Hosted heartbeat unavailable",
+    message: s.live_status_message || "",
+  };
+}
+
 function splitFixtureMatch(match?: string | null): [string, string] {
   const [home = "", away = ""] = (match ?? "").split(" vs ");
   return [home, away];
@@ -572,6 +622,7 @@ export default async function GoalscorerMonitorPage() {
 
   const publicNow = numericSum(snapshot.league_cards.map((c) => c.public_now));
   const shadowNow = numericSum(snapshot.league_cards.map((c) => c.shadow_now));
+  const heartbeat = hostedHeartbeat(snapshot);
 
   const activePenaltyRows: SnapshotPenaltyRow[] = snapshot.penalty_watchlist.rows
     .filter((row) => !penaltyState[row.row_id])
@@ -597,9 +648,18 @@ export default async function GoalscorerMonitorPage() {
 
         {/* -- Hero ----------------------------------------------------------- */}
         <HeroCard title="Goalscorer Monitor" eyebrow="Snapshot-first architecture">
-          <span className="text-slate-300">Generated {formatDateTimeLabel(snapshot.generated_at)}</span>
-          <span className="mx-2 text-slate-700">|</span>
-          <span className="text-slate-500">{renderSourceDetail(snapshot)}</span>
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="text-slate-300">Generated {formatDateTimeLabel(snapshot.generated_at)}</span>
+            <span className="text-slate-700">|</span>
+            <span className="text-slate-500">{renderSourceDetail(snapshot)}</span>
+          </div>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <StatusPill label={heartbeat.label} tone={heartbeat.tone} />
+            <span className="text-xs text-slate-500">{heartbeat.detail}</span>
+          </div>
+          {heartbeat.message ? (
+            <div className="mt-2 text-xs text-slate-400">{heartbeat.message}</div>
+          ) : null}
         </HeroCard>
 
         {/* -- KPI strip ------------------------------------------------------ */}
