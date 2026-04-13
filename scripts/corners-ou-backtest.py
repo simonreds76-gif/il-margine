@@ -36,6 +36,7 @@ DEFAULT_RESULTS_OUT = ROOT / "data" / "corners-ou" / "corners-ou-backtest-result
 DEFAULT_REPORT_OUT = ROOT / "data" / "corners-ou" / "corners-ou-backtest-report.txt"
 DEFAULT_CALIBRATION = ROOT / "data" / "corners-ou" / "corners-calibration-params.json"
 DEFAULT_HOLDOUT_START = "2022-08-01"
+DEFAULT_EDGE_BANDS = "-1,0,0.03,0.05,0.08,0.12,0.15"
 
 
 def _load_module(name: str, path: Path):
@@ -118,12 +119,80 @@ def _iter_bet_sides(
     yield ("under", 1.0 - p_model_raw, 1.0 - p_model, p_market_under, p_model_raw < 1)
 
 
+def _parse_float_list(text: str) -> List[float]:
+    values: List[float] = []
+    for part in str(text or "").split(","):
+        part = part.strip()
+        if not part:
+            continue
+        values.append(float(part))
+    return values
+
+
+def _edge_band_label(edge: float, bands: List[float]) -> str:
+    if not bands:
+        return "all"
+    ordered = sorted(set(bands))
+    for idx in range(len(ordered) - 1):
+        low = ordered[idx]
+        high = ordered[idx + 1]
+        if low <= edge < high:
+            if low < 0:
+                return f"<{high * 100:.0f}%"
+            return f"{low * 100:.0f}-{high * 100:.0f}%"
+    last = ordered[-1]
+    if edge >= last:
+        return f"{last * 100:.0f}%+"
+    return f"<{ordered[0] * 100:.0f}%"
+
+
+def _flat_stake_label(units: float) -> str:
+    return f"FLAT_{units:.2f}u"
+
+
+def _policy_label(no_divergence: bool, max_bets_per_fixture: int, flat_stake: Optional[float]) -> str:
+    parts = [matchday_shortlist.POLICY_VERSION]
+    if no_divergence:
+        parts.append("no_divergence")
+    if max_bets_per_fixture == 0:
+        parts.append("all_bets")
+    elif max_bets_per_fixture > 1:
+        parts.append(f"top_{max_bets_per_fixture}")
+    if flat_stake is not None:
+        parts.append(f"flat_{flat_stake:.2f}u")
+    return "+".join(parts)
+
+
+def _summarize_rows(rows: List[dict]) -> Dict[str, float]:
+    settled = len(rows)
+    wins = sum(1 for row in rows if str(row.get("won", "")).lower() == "true")
+    pnl = sum(_pf(row.get("pnl")) for row in rows)
+    staked = sum(_pf(row.get("stake"), 1.0) for row in rows)
+    roi = (pnl / staked * 100.0) if staked > 0 else 0.0
+    avg_odds = (sum(_pf(row.get("bookie_odds")) for row in rows) / settled) if settled > 0 else 0.0
+    avg_edge = (sum(_pf(row.get("edge")) for row in rows) / settled * 100.0) if settled > 0 else 0.0
+    return {
+        "bets": settled,
+        "wins": wins,
+        "losses": settled - wins,
+        "pnl": pnl,
+        "staked": staked,
+        "roi": roi,
+        "avg_odds": avg_odds,
+        "avg_edge": avg_edge,
+    }
+
+
 def _build_rows(
     matches: List[Any],
     holdout_start: date,
     lines: List[float],
     min_edge: float,
     params: Optional[Dict[str, Tuple[float, float]]],
+    *,
+    no_divergence: bool = False,
+    max_bets_per_fixture: int = 1,
+    flat_stake: Optional[float] = None,
 ) -> Tuple[List[dict], Dict[str, float]]:
     team_states: Dict[str, Any] = defaultdict(corners_model.TeamState)
     league_corner_sums: Dict[str, float] = defaultdict(float)
@@ -191,17 +260,31 @@ def _build_rows(
                             if edge < min_edge:
                                 continue
 
-                            base_stake, stake_label = matchday_shortlist.tier_stake(edge)
-                            if base_stake <= 0:
-                                continue
-                            stake = matchday_shortlist.effective_stake_for_consensus(
-                                edge,
-                                base_stake,
-                                match.league,
-                                consensus,
-                            )
-                            if stake <= 0:
-                                continue
+                            if flat_stake is not None:
+                                stake = float(flat_stake)
+                                stake_label = _flat_stake_label(stake)
+                            else:
+                                base_stake, stake_label = matchday_shortlist.tier_stake(edge)
+                                if base_stake <= 0:
+                                    continue
+                                if no_divergence:
+                                    league_mult = matchday_shortlist.LEAGUE_STAKE_MULTIPLIERS.get(
+                                        match.league,
+                                        matchday_shortlist.DEFAULT_LEAGUE_MULTIPLIER,
+                                    )
+                                    stake = round(base_stake * league_mult, 2)
+                                    stake = min(stake, 2.0)
+                                    if match.league == "ligue-1":
+                                        stake = min(stake, matchday_shortlist.LIGUE1_MAX_STAKE)
+                                else:
+                                    stake = matchday_shortlist.effective_stake_for_consensus(
+                                        edge,
+                                        base_stake,
+                                        match.league,
+                                        consensus,
+                                    )
+                                if stake <= 0:
+                                    continue
 
                             book_odds = corners_poisson.fair_decimal(market_prob)
                             won = actual_total > line if side == "over" else actual_total < line
@@ -229,16 +312,25 @@ def _build_rows(
                                     "lambda_h_recent": round(h_lam_recent, 3) if h_lam_recent is not None else 0.0,
                                     "lambda_a_recent": round(a_lam_recent, 3) if a_lam_recent is not None else 0.0,
                                     "divergence": round(divergence, 4),
-                                    "consensus": consensus,
-                                    "policy_version": matchday_shortlist.POLICY_VERSION,
+                                    "consensus": "aligned" if no_divergence else consensus,
+                                    "policy_version": _policy_label(no_divergence, max_bets_per_fixture, flat_stake),
                                     "actual_total": actual_total,
                                     "won": "true" if won else "false",
                                     "pnl": round(pnl, 4),
                                 }
                             )
                     if match_candidates:
-                        best = max(match_candidates, key=lambda row: (_pf(row["edge"]), _pf(row["stake"])))
-                        rows.append(best)
+                        ranked = sorted(
+                            match_candidates,
+                            key=lambda row: (_pf(row["edge"]), _pf(row["stake"]), _pf(row["model_prob"])),
+                            reverse=True,
+                        )
+                        if max_bets_per_fixture == 0:
+                            rows.extend(ranked)
+                        elif max_bets_per_fixture == 1:
+                            rows.append(ranked[0])
+                        else:
+                            rows.extend(ranked[:max_bets_per_fixture])
 
         h_state.add_match(match.home_corners, match.away_corners)
         a_state.add_match(match.away_corners, match.home_corners)
@@ -283,16 +375,25 @@ def _build_report(
     holdout_start: date,
     min_edge: float,
     counters: Dict[str, float],
+    *,
+    edge_bands: List[float],
+    no_divergence: bool,
+    max_bets_per_fixture: int,
+    flat_stake: Optional[float],
 ) -> str:
+    summary = _summarize_rows(rows)
     lines: List[str] = [
         "=" * 70,
         "  CORNERS O/U V3 BACKTEST REPORT",
         "=" * 70,
         "",
-        f"  Policy              : {matchday_shortlist.POLICY_VERSION}",
+        f"  Policy              : {_policy_label(no_divergence, max_bets_per_fixture, flat_stake)}",
         "  Market              : synthetic B365 1X2 smart-corners baseline",
         f"  Holdout start       : {holdout_start.isoformat()}",
         f"  Min edge            : {min_edge:.1%}",
+        f"  Divergence gate     : {'off' if no_divergence else 'on'}",
+        f"  Max bets / fixture  : {'all' if max_bets_per_fixture == 0 else max_bets_per_fixture}",
+        f"  Flat stake          : {flat_stake:.2f}u" if flat_stake is not None else "  Flat stake          : off",
         f"  Historical matches  : {int(counters.get('matches_total', 0))}",
         f"  Matches w/ market   : {int(counters.get('matches_with_market', 0))}",
         "",
@@ -308,22 +409,15 @@ def _build_report(
         )
         return "\n".join(lines)
 
-    total_bets = len(rows)
-    wins = sum(1 for row in rows if row["won"] == "true")
-    pnl = sum(_pf(row["pnl"]) for row in rows)
-    staked = sum(_pf(row["stake"], 1.0) for row in rows)
-    roi = (pnl / staked * 100.0) if staked > 0 else 0.0
-    avg_odds = sum(_pf(row["bookie_odds"]) for row in rows) / total_bets
-    avg_edge = sum(_pf(row["edge"]) for row in rows) / total_bets * 100.0
     lines.extend(
         [
-            f"  Bets                : {total_bets}",
-            f"  Record              : {wins}W / {total_bets - wins}L",
-            f"  Total staked        : {staked:.1f}u",
-            f"  P&L                 : {pnl:+.2f}u",
-            f"  ROI                 : {roi:+.1f}%",
-            f"  Avg odds            : {avg_odds:.2f}",
-            f"  Avg edge            : {avg_edge:+.1f}%",
+            f"  Bets                : {int(summary['bets'])}",
+            f"  Record              : {int(summary['wins'])}W / {int(summary['losses'])}L",
+            f"  Total staked        : {summary['staked']:.1f}u",
+            f"  P&L                 : {summary['pnl']:+.2f}u",
+            f"  ROI                 : {summary['roi']:+.1f}%",
+            f"  Avg odds            : {summary['avg_odds']:.2f}",
+            f"  Avg edge            : {summary['avg_edge']:+.1f}%",
             "",
             "  By line",
         ]
@@ -354,6 +448,28 @@ def _build_report(
             f"P&L {stats['pnl']:+.2f}u  ROI {stats['roi']:+.1f}%"
         )
 
+    if edge_bands:
+        lines.append("")
+        lines.append("  By edge band")
+        edge_groups: Dict[str, List[dict]] = defaultdict(list)
+        for row in rows:
+            edge_groups[_edge_band_label(_pf(row.get("edge")), edge_bands)].append(row)
+        def _edge_sort_key(label: str) -> Tuple[int, float]:
+            if label.endswith("%+"):
+                return (2, float(label[:-2]))
+            if "-" in label:
+                return (1, float(label.split("-", 1)[0]))
+            if label.startswith("<"):
+                return (0, float(label[1:-1]))
+            return (3, 0.0)
+        for label in sorted(edge_groups, key=_edge_sort_key):
+            stats = _summarize_rows(edge_groups[label])
+            lines.append(
+                f"    {label:9s} {int(stats['bets']):4d} bets  "
+                f"W{int(stats['wins'])}/L{int(stats['losses'])}  "
+                f"P&L {stats['pnl']:+.2f}u  ROI {stats['roi']:+.1f}%"
+            )
+
     lines.extend(
         [
             "",
@@ -363,15 +479,74 @@ def _build_report(
     return "\n".join(lines)
 
 
+def _write_rows(path: Path, rows: List[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=BACKTEST_FIELDS, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def _write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write(text)
+
+
+def _run_single(
+    *,
+    matches: List[Any],
+    holdout_start: date,
+    lines: List[float],
+    min_edge: float,
+    params: Optional[Dict[str, Tuple[float, float]]],
+    results_out: Path,
+    report_out: Path,
+    edge_bands: List[float],
+    no_divergence: bool,
+    max_bets_per_fixture: int,
+    flat_stake: Optional[float],
+) -> Tuple[List[dict], Dict[str, float], str]:
+    rows, counters = _build_rows(
+        matches,
+        holdout_start,
+        lines,
+        min_edge,
+        params,
+        no_divergence=no_divergence,
+        max_bets_per_fixture=max_bets_per_fixture,
+        flat_stake=flat_stake,
+    )
+    _write_rows(results_out, rows)
+    report = _build_report(
+        rows,
+        holdout_start,
+        min_edge,
+        counters,
+        edge_bands=edge_bands,
+        no_divergence=no_divergence,
+        max_bets_per_fixture=max_bets_per_fixture,
+        flat_stake=flat_stake,
+    )
+    _write_text(report_out, report)
+    return rows, counters, report
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Backtest the live corners V3 policy against a synthetic market")
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
     parser.add_argument("--results-out", type=Path, default=DEFAULT_RESULTS_OUT)
     parser.add_argument("--report-out", type=Path, default=DEFAULT_REPORT_OUT)
+    parser.add_argument("--sweep-summary-out", type=Path, default=ROOT / "data" / "corners-ou" / "corners-ou-backtest-sweep.csv")
     parser.add_argument("--calibration", type=Path, default=DEFAULT_CALIBRATION)
     parser.add_argument("--holdout-start", default=DEFAULT_HOLDOUT_START)
     parser.add_argument("--min-edge", type=float, default=matchday_shortlist.DEFAULT_EDGE_THRESHOLD)
+    parser.add_argument("--sweep-min-edges", default="", help="Comma-separated threshold sweep, e.g. 0,0.03,0.05,0.08,0.10,0.12,0.15")
     parser.add_argument("--lines", default="8.5,9.5,10.5,11.5")
+    parser.add_argument("--edge-bands", default=DEFAULT_EDGE_BANDS, help="Comma-separated edge-band lower bounds for report summaries")
+    parser.add_argument("--no-divergence", action="store_true", help="Disable divergence/conflict stake suppression")
+    parser.add_argument("--max-bets-per-fixture", type=int, default=1, help="0 = all qualifying bets, 1 = best only (default), N = top N per fixture")
+    parser.add_argument("--flat-stake", type=float, default=None, help="Use flat stake instead of tier staking / league multipliers")
     args = parser.parse_args()
 
     input_path = corners_model.resolve_historical_input(args.input)
@@ -379,18 +554,79 @@ def main() -> None:
     holdout_start = date.fromisoformat(args.holdout_start)
     params = corners_poisson.load_calibration_params(args.calibration)
     lines = [float(part.strip()) for part in args.lines.split(",") if part.strip()]
+    edge_bands = _parse_float_list(args.edge_bands)
+    sweep_thresholds = _parse_float_list(args.sweep_min_edges)
 
-    rows, counters = _build_rows(matches, holdout_start, lines, args.min_edge, params)
+    if sweep_thresholds:
+        args.sweep_summary_out.parent.mkdir(parents=True, exist_ok=True)
+        with open(args.sweep_summary_out, "w", newline="", encoding="utf-8") as fh:
+            fieldnames = [
+                "min_edge",
+                "bets",
+                "wins",
+                "losses",
+                "staked",
+                "pnl",
+                "roi",
+                "avg_odds",
+                "avg_edge",
+                "policy_version",
+                "results_out",
+                "report_out",
+            ]
+            writer = csv.DictWriter(fh, fieldnames=fieldnames)
+            writer.writeheader()
+            for threshold in sweep_thresholds:
+                suffix = f".edge-{threshold:.2f}".replace("0.", ".")
+                results_out = args.results_out.with_name(f"{args.results_out.stem}{suffix}{args.results_out.suffix}")
+                report_out = args.report_out.with_name(f"{args.report_out.stem}{suffix}{args.report_out.suffix}")
+                rows, _counters, _report = _run_single(
+                    matches=matches,
+                    holdout_start=holdout_start,
+                    lines=lines,
+                    min_edge=threshold,
+                    params=params,
+                    results_out=results_out,
+                    report_out=report_out,
+                    edge_bands=edge_bands,
+                    no_divergence=args.no_divergence,
+                    max_bets_per_fixture=args.max_bets_per_fixture,
+                    flat_stake=args.flat_stake,
+                )
+                summary = _summarize_rows(rows)
+                writer.writerow(
+                    {
+                        "min_edge": round(threshold, 4),
+                        "bets": int(summary["bets"]),
+                        "wins": int(summary["wins"]),
+                        "losses": int(summary["losses"]),
+                        "staked": round(summary["staked"], 4),
+                        "pnl": round(summary["pnl"], 4),
+                        "roi": round(summary["roi"], 4),
+                        "avg_odds": round(summary["avg_odds"], 4),
+                        "avg_edge": round(summary["avg_edge"], 4),
+                        "policy_version": _policy_label(args.no_divergence, args.max_bets_per_fixture, args.flat_stake),
+                        "results_out": str(results_out),
+                        "report_out": str(report_out),
+                    }
+                )
+        print(f"Matches loaded           : {len(matches)}")
+        print(f"Threshold sweep written  : {args.sweep_summary_out}")
+        return
 
-    args.results_out.parent.mkdir(parents=True, exist_ok=True)
-    with open(args.results_out, "w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, fieldnames=BACKTEST_FIELDS, extrasaction="ignore")
-        writer.writeheader()
-        writer.writerows(rows)
-
-    report = _build_report(rows, holdout_start, args.min_edge, counters)
-    with open(args.report_out, "w", encoding="utf-8") as fh:
-        fh.write(report)
+    rows, _counters, _report = _run_single(
+        matches=matches,
+        holdout_start=holdout_start,
+        lines=lines,
+        min_edge=args.min_edge,
+        params=params,
+        results_out=args.results_out,
+        report_out=args.report_out,
+        edge_bands=edge_bands,
+        no_divergence=args.no_divergence,
+        max_bets_per_fixture=args.max_bets_per_fixture,
+        flat_stake=args.flat_stake,
+    )
 
     print(f"Matches loaded           : {len(matches)}")
     print(f"Backtest bets written    : {len(rows)}")
