@@ -88,6 +88,9 @@ CENTER_BACK_SHARE_CAP_MULTIPLIERS = {
     "DC": 2.25,
     "D S": 2.25,
 }
+CENTER_BACK_SHOTS_PER90_BASELINE = 0.45
+CENTER_BACK_SHOT_BOOST_MIN = 0.85
+CENTER_BACK_SHOT_BOOST_MAX = 1.60
 
 TEAM_ALIASES = {
     "ac milan": "milan",
@@ -717,6 +720,19 @@ def build_player_raw_share(
     share_cap_multiplier = CENTER_BACK_SHARE_CAP_MULTIPLIERS.get(position_key)
     if share_cap_multiplier is None:
         return raw_share
+
+    shot_rate = _shrink(
+        float(recent_summary.get("shots_per_90", 0.0) or 0.0),
+        float(recent_summary.get("weighted_minutes", 0.0) or 0.0),
+        CENTER_BACK_SHOTS_PER90_BASELINE,
+        PLAYER_SHRINK_MINUTES,
+    )
+    shot_boost = _clamp(
+        shot_rate / CENTER_BACK_SHOTS_PER90_BASELINE if CENTER_BACK_SHOTS_PER90_BASELINE > 0 else 1.0,
+        CENTER_BACK_SHOT_BOOST_MIN,
+        CENTER_BACK_SHOT_BOOST_MAX,
+    )
+    share_cap_multiplier *= shot_boost
 
     team_npxg = team_summary.get("npxg_per_match", LEAGUE_AVG["team_npxg_per_match"]) or LEAGUE_AVG["team_npxg_per_match"]
     team_npxg = max(team_npxg, LEAGUE_AVG["team_npxg_per_match"] * 0.75)
