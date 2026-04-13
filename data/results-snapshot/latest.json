@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-04-13T15:59:50Z",
+  "fetched_at": "2026-04-13T16:53:46Z",
   "leagues": {
     "bundesliga": {
       "fetch_error": null,
@@ -3040,19 +3040,6 @@
           "source": "football-data",
           "total_corners": 8
         },
-        "2026-04-11|borussia dortmund|bayer leverkusen": {
-          "away_corners": 5,
-          "away_shots": 11,
-          "away_sot": 4,
-          "away_team": "bayer leverkusen",
-          "home_corners": 5,
-          "home_shots": 14,
-          "home_sot": 1,
-          "home_team": "borussia dortmund",
-          "match_id": 4829568,
-          "source": "fotmob",
-          "total_corners": 10
-        },
         "2026-04-11|dortmund|leverkusen": {
           "away_corners": 5,
           "away_shots": 11,
@@ -3113,19 +3100,6 @@
           "source": "football-data",
           "total_corners": 14
         },
-        "2026-04-11|wolfsburg|eintracht frankfurt": {
-          "away_corners": 7,
-          "away_shots": 10,
-          "away_sot": 4,
-          "away_team": "eintracht frankfurt",
-          "home_corners": 7,
-          "home_shots": 22,
-          "home_sot": 7,
-          "home_team": "wolfsburg",
-          "match_id": 4829575,
-          "source": "fotmob",
-          "total_corners": 14
-        },
         "2026-04-12|1 koln|werder bremen": {
           "away_corners": 5,
           "away_shots": 6,
@@ -3165,16 +3139,12 @@
       },
       "football_data_count": 261,
       "football_data_latest": "2026-04-12",
-      "fotmob_count": 8,
-      "fotmob_latest": "2026-04-12",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "lag_days": 1,
       "source": "football-data",
       "source_latest": "2026-04-12",
-      "target_dates": [
-        "2026-04-11",
-        "2026-04-12",
-        "2026-04-13"
-      ]
+      "target_dates": []
     },
     "epl": {
       "fetch_error": null,
