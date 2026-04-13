@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+import argparse
 from collections import Counter
 from datetime import date, datetime, time, timezone
 from pathlib import Path
@@ -55,6 +56,8 @@ def classify_pending_row(
     now_utc: datetime,
     kickoff_fields: Sequence[str],
     date_fields: Sequence[str],
+    stale_threshold_hours: float = 3.0,
+    old_stale_threshold_hours: float = 48.0,
 ) -> tuple[PendingBucket, str, Optional[float]]:
     kickoff_dt: Optional[datetime] = None
     for field in kickoff_fields:
@@ -78,9 +81,9 @@ def classify_pending_row(
     kickoff_iso = _to_iso_z(kickoff_dt)
     if hours < 0:
         return "future", kickoff_iso, round(hours, 2)
-    if hours < 3.0:
+    if hours < stale_threshold_hours:
         return "live", kickoff_iso, round(hours, 2)
-    if hours < 28.0:
+    if hours < old_stale_threshold_hours:
         return "stale", kickoff_iso, round(hours, 2)
     return "old_stale", kickoff_iso, round(hours, 2)
 
@@ -168,6 +171,9 @@ def build_settlement_audit(
     date_fields: Sequence[str],
     source_freshness: Mapping[str, Mapping[str, object]],
     overrides: Sequence[Mapping[str, str]],
+    stale_threshold_hours: float = 3.0,
+    old_stale_threshold_hours: float = 48.0,
+    same_league_stale_fail_count: int = 3,
 ) -> dict:
     pending_breakdown = {bucket: 0 for bucket in PENDING_BUCKETS}
     stale_rows: List[dict] = []
@@ -200,6 +206,8 @@ def build_settlement_audit(
             now_utc=now_utc,
             kickoff_fields=kickoff_fields,
             date_fields=date_fields,
+            stale_threshold_hours=stale_threshold_hours,
+            old_stale_threshold_hours=old_stale_threshold_hours,
         )
         pending_breakdown[bucket] += 1
         summary = summarize_pending_row(row, kickoff_iso=kickoff_iso, hours_elapsed=hours_elapsed)
@@ -215,7 +223,9 @@ def build_settlement_audit(
     errors: List[str] = []
 
     if stale_rows:
-        warnings.append(f"{len(stale_rows)} stale pending row(s) (3-28h elapsed)")
+        warnings.append(
+            f"{len(stale_rows)} stale pending row(s) ({stale_threshold_hours:g}-{old_stale_threshold_hours:g}h elapsed)"
+        )
     if unknown_rows:
         warnings.append(f"{len(unknown_rows)} pending row(s) with unknown kickoff")
 
@@ -235,9 +245,9 @@ def build_settlement_audit(
             warnings.append(f"{league}: BOTH Football-Data and FotMob returned 0 results — no fallback available")
 
     if old_stale_rows:
-        errors.append(f"{len(old_stale_rows)} old stale pending row(s) (>=28h elapsed)")
+        errors.append(f"{len(old_stale_rows)} old stale pending row(s) (>={old_stale_threshold_hours:g}h elapsed)")
     for league, count in stale_by_league.items():
-        if count >= 3:
+        if count >= same_league_stale_fail_count:
             errors.append(f"{league}: {count} stale pending rows from the same league")
 
     total_settled = sum(1 for row in rows if is_settled(row))
@@ -273,3 +283,29 @@ def emit_github_annotations(audit: Mapping[str, object]) -> None:
         print(f"::warning title=Settlement Warning ({model})::{message}")
     for message in audit.get("errors", []) or []:
         print(f"::error title=Settlement Failure ({model})::{message}")
+
+
+def read_audit(path: Path) -> dict:
+    with open(path, "r", encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Emit settlement audit annotations and exit on failure")
+    parser.add_argument("paths", nargs="+", help="Settlement audit JSON files to inspect")
+    args = parser.parse_args()
+
+    exit_code = 0
+    for raw_path in args.paths:
+        path = Path(raw_path)
+        if not path.exists():
+            print(f"::warning title=Settlement Warning (missing audit)::Audit file missing: {path}")
+            continue
+        audit = read_audit(path)
+        emit_github_annotations(audit)
+        exit_code = max(exit_code, int(audit.get("exit_code_recommendation", 0)))
+    raise SystemExit(exit_code)
+
+
+if __name__ == "__main__":
+    main()

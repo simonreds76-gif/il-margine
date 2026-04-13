@@ -11,11 +11,11 @@ from __future__ import annotations
 
 import json
 import re
-import unicodedata
 from datetime import datetime
 from typing import Dict, Iterable, Optional
 
 import requests
+from settlement_utils import normalize_team_name
 
 MATCHES_URL = "https://www.fotmob.com/api/data/matches"
 MATCH_URL = "https://www.fotmob.com/api/data/match"
@@ -38,14 +38,6 @@ LEAGUE_CONFIGS = {
     "bundesliga": {"league_id": 54, "label": "Bundesliga"},
     "ligue-1": {"league_id": 53, "label": "Ligue 1"},
 }
-
-
-def _norm(text: str) -> str:
-    text = (text or "").strip().lower()
-    text = unicodedata.normalize("NFD", text)
-    text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
-    return re.sub(r"[^a-z0-9]+", " ", text).strip()
-
 
 def _safe_int(value: object) -> Optional[int]:
     if value is None:
@@ -181,7 +173,7 @@ def fetch_fotmob_recent_results(league_key: str, target_dates: Iterable[str]) ->
             if not home_team or not away_team or not match_date:
                 continue
 
-            key = f"{match_date}|{_norm(home_team)}|{_norm(away_team)}"
+            key = f"{match_date}|{normalize_team_name(home_team)}|{normalize_team_name(away_team)}"
             results[key] = {
                 "home_shots": shots[0] if shots else 0,
                 "away_shots": shots[1] if shots else 0,

@@ -29,11 +29,33 @@ jobs:
       - name: Install Python deps
         run: pip install requests
 
+      - name: Fetch results snapshot
+        run: python scripts/fetch-results-snapshot.py
+
+      - name: Commit results snapshot before settlement
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -d data/results-snapshot ]; then
+            git add data/results-snapshot/
+          fi
+          if git diff --cached --quiet; then
+            echo "No snapshot changes to commit."
+          else
+            git commit -m "chore: results snapshot $(date -u +%Y-%m-%d)"
+          fi
+
       - name: Settle team-shots shadow signals
         run: python scripts/team-shots-settle.py
 
       - name: Settle corners shortlist
         run: python scripts/shortlist-settle.py
+
+      - name: Audit settlement
+        run: |
+          python scripts/settlement_audit.py \
+            data/team-shots/shadow/settlement-audit.json \
+            data/shortlist/settlement-audit.json
 
       - name: Upload settlement audit artifacts
         if: always()
@@ -75,6 +97,9 @@ jobs:
           fi
           if [ -d data/corners-ou ]; then
             git add data/corners-ou/
+          fi
+          if [ -d data/results-snapshot ]; then
+            git add data/results-snapshot/
           fi
           if git diff --cached --quiet; then
             echo "No settlement changes to commit."

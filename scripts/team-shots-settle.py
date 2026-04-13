@@ -15,36 +15,22 @@ from __future__ import annotations
 
 import argparse
 import csv
-import io
-import re
-import unicodedata
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-import requests
-
-from fotmob_match_stats import fetch_fotmob_recent_results
 from settlement_audit import (
     build_settlement_audit,
-    emit_github_annotations,
     load_settlement_overrides,
     write_audit,
 )
+from settlement_utils import load_results_snapshot, normalize_team_name, normalize_text_basic
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_SIGNALS = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-signals.csv"
 DEFAULT_SUMMARY = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-performance.txt"
-DEFAULT_HISTORICAL = ROOT / "data" / "team-shots" / "historical"
 DEFAULT_AUDIT = ROOT / "data" / "team-shots" / "shadow" / "settlement-audit.json"
 DEFAULT_OVERRIDES = ROOT / "data" / "settlement-overrides.csv"
-
-BASE_URL = "https://www.football-data.co.uk"
-
-LEAGUE_CODES = {
-    "epl": "E0", "serie-a": "I1", "la-liga": "SP1",
-    "bundesliga": "D1", "ligue-1": "F1",
-}
 
 SIGNAL_FIELDS = [
     "date", "fixture_date", "kickoff_iso", "league", "home_team", "away_team", "team", "venue",
@@ -55,70 +41,6 @@ SIGNAL_FIELDS = [
 
 DEFAULT_ODDS_ARCHIVE = ROOT / "data" / "team-shots" / "team-shots-odds-history.csv"
 
-TEAM_ALIASES = {
-    "brighton and hove albion": "brighton",
-    "brighton hove albion": "brighton",
-    "atalanta bc": "atalanta",
-    "bologna fc": "bologna",
-    "us lecce": "lecce",
-    "tsg hoffenheim": "hoffenheim",
-    "fc augsburg": "augsburg",
-    "inter": "internazionale",
-    "inter milan": "internazionale",
-    "inter milano": "internazionale",
-    "fc st pauli": "st pauli",
-    "vfb stuttgart": "stuttgart",
-    "vfl wolfsburg": "wolfsburg",
-    "borussia m gladbach": "borussia monchengladbach",
-    "m gladbach": "borussia monchengladbach",
-    "bayer 04 leverkusen": "bayer leverkusen",
-    "sc freiburg": "freiburg",
-    "1 fc union berlin": "union berlin",
-    "1 fc heidenheim": "heidenheim",
-    "1 fc cologne": "1 koln",
-    "1 fc koln": "1 koln",
-    "fc koln": "1 koln",
-    "wolverhampton wanderers": "wolverhampton",
-    "tottenham hotspur": "tottenham",
-    "liverpool fc": "liverpool",
-    "fulham fc": "fulham",
-    "burnley fc": "burnley",
-    "valencia cf": "valencia",
-    "elche cf": "elche",
-    "deportivo alaves": "alaves",
-    "real sociedad": "sociedad",
-    "real sociedad san sebastian": "sociedad",
-    "atletico madrid": "ath madrid",
-    "athletic club": "ath bilbao",
-    "athletic bilbao": "ath bilbao",
-    "real betis": "betis",
-    "real betis seville": "betis",
-    "ca osasuna": "osasuna",
-    "fc barcelona": "barcelona",
-    "espanyol": "espanol",
-    "espanyol barcelona": "espanol",
-    "rc celta de vigo": "celta",
-    "celta vigo": "celta",
-    "rcd mallorca": "mallorca",
-    "manchester city": "man city",
-    "newcastle united": "newcastle",
-    "newcastle utd": "newcastle",
-    "olympique de marseille": "marseille",
-    "olympique marseille": "marseille",
-    "olympique lyonnais": "lyon",
-    "ogc nice": "nice",
-    "as roma": "roma",
-    "juventus turin": "juventus",
-    "pisa sc": "pisa",
-    "girona fc": "girona",
-    "bayern munchen": "bayern munich",
-}
-
-GENERIC_TEAM_TOKENS = {
-    "fc", "cf", "afc", "sc", "ac", "us", "ud", "rc", "ssc", "calcio", "1907",
-}
-
-
 def _pf(val, default=0.0):
     text = str(val or "").strip()
     try:
@@ -128,19 +50,11 @@ def _pf(val, default=0.0):
 
 
 def _norm(text: str) -> str:
-    text = (text or "").strip().lower()
-    text = unicodedata.normalize("NFD", text)
-    text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
-    return re.sub(r"[^a-z0-9]+", " ", text).strip()
+    return normalize_text_basic(text)
 
 
 def _norm_team(text: str) -> str:
-    base = _norm(text)
-    simplified = " ".join(token for token in base.split() if token not in GENERIC_TEAM_TOKENS).strip()
-    for candidate in (base, simplified):
-        if candidate in TEAM_ALIASES:
-            return TEAM_ALIASES[candidate]
-    return simplified or base
+    return normalize_team_name(text)
 
 
 def _parse_date(val: str) -> Optional[date]:
@@ -250,115 +164,6 @@ def find_closing_odds(
         return None
 
 
-def season_code(start_year: int) -> str:
-    end = (start_year + 1) % 100
-    return f"{start_year % 100:02d}{end:02d}"
-
-
-def current_season_historical_path(historical_dir: Path, league: str) -> Path:
-    now = datetime.now()
-    start_year = now.year if now.month >= 8 else now.year - 1
-    return historical_dir / f"{league}-{start_year}-{start_year + 1}.csv"
-
-
-def fetch_current_season_results(league: str, historical_dir: Optional[Path] = None) -> Dict[str, dict]:
-    """
-    Fetch the current season's CSV and return a lookup keyed by
-    (date, home_team_norm, away_team_norm) -> {HS, AS, HST, AST}.
-    """
-    code = LEAGUE_CODES.get(league)
-    if not code:
-        return {}
-
-    now = datetime.now()
-    start_year = now.year if now.month >= 8 else now.year - 1
-    sc = season_code(start_year)
-    url = f"{BASE_URL}/mmz4281/{sc}/{code}.csv"
-
-    try:
-        resp = requests.get(url, timeout=30)
-        resp.raise_for_status()
-    except requests.RequestException as exc:
-        print(f"  [WARN] Could not fetch {url}: {exc}")
-        return {}
-
-    if historical_dir is not None:
-        historical_dir.mkdir(parents=True, exist_ok=True)
-        current_season_historical_path(historical_dir, league).write_text(resp.text, encoding="utf-8")
-
-    results: Dict[str, dict] = {}
-    reader = csv.DictReader(io.StringIO(resp.text))
-    for row in reader:
-        d = _parse_date(row.get("Date", ""))
-        if d is None:
-            continue
-        home = _norm_team(row.get("HomeTeam", ""))
-        away = _norm_team(row.get("AwayTeam", ""))
-        hs = row.get("HS", "")
-        as_ = row.get("AS", "")
-        if not hs and not as_:
-            continue
-        key = f"{d.isoformat()}|{home}|{away}"
-        results[key] = {
-            "home_shots": int(_pf(hs)),
-            "away_shots": int(_pf(as_)),
-            "home_sot": int(_pf(row.get("HST", "0"))),
-            "away_sot": int(_pf(row.get("AST", "0"))),
-        }
-
-    return results
-
-
-def load_historical_results(historical_dir: Path) -> Dict[str, dict]:
-    """Load from previously downloaded CSVs as fallback."""
-    results: Dict[str, dict] = {}
-    if not historical_dir.exists():
-        return results
-
-    for csv_path in historical_dir.glob("*.csv"):
-        if csv_path.name == "all-historical-matches.csv":
-            continue
-        with open(csv_path, "r", encoding="utf-8") as fh:
-            reader = csv.DictReader(fh)
-            for row in reader:
-                d = _parse_date(row.get("Date", ""))
-                if d is None:
-                    continue
-                home = _norm_team(row.get("HomeTeam", ""))
-                away = _norm_team(row.get("AwayTeam", ""))
-                hs = row.get("HS", "")
-                if not hs:
-                    continue
-                key = f"{d.isoformat()}|{home}|{away}"
-                results[key] = {
-                    "home_shots": int(_pf(row.get("HS", "0"))),
-                    "away_shots": int(_pf(row.get("AS", "0"))),
-                    "home_sot": int(_pf(row.get("HST", "0"))),
-                    "away_sot": int(_pf(row.get("AST", "0"))),
-                }
-    return results
-
-
-def canonicalize_results_lookup(results_lookup: Dict[str, dict]) -> Dict[str, dict]:
-    """
-    Re-key result rows onto the same canonical team aliases the signals use.
-
-    FotMob results come back keyed with plain normalized team names, while our
-    signals and historical CSV loaders resolve aliases like "Bologna FC" ->
-    "bologna" and "US Lecce" -> "lecce". Without a canonical pass the rows
-    exist, but the settler never finds them.
-    """
-    canonical: Dict[str, dict] = {}
-    for key, payload in results_lookup.items():
-        parts = str(key).split("|", 2)
-        if len(parts) != 3:
-            canonical[key] = payload
-            continue
-        match_date, home, away = parts
-        canonical[f"{match_date}|{_norm_team(home)}|{_norm_team(away)}"] = payload
-    return canonical
-
-
 def signal_fields_for_rows(signals: List[dict]) -> List[str]:
     ordered = list(SIGNAL_FIELDS)
     seen = set(ordered)
@@ -465,9 +270,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Settle team-shots shadow signals")
     parser.add_argument("--signals", type=Path, default=DEFAULT_SIGNALS)
     parser.add_argument("--summary", type=Path, default=DEFAULT_SUMMARY)
-    parser.add_argument("--historical-dir", type=Path, default=DEFAULT_HISTORICAL)
     parser.add_argument("--odds-archive", type=Path, default=DEFAULT_ODDS_ARCHIVE)
     parser.add_argument("--audit-out", type=Path, default=DEFAULT_AUDIT)
+    parser.add_argument("--snapshot-date", type=str, default=None,
+                        help="Preferred results snapshot date (YYYY-MM-DD). Defaults to today UTC.")
     args = parser.parse_args()
 
     if not args.signals.exists():
@@ -514,56 +320,13 @@ def main() -> None:
         )
         write_audit(args.audit_out, audit)
         print(f"  Settlement audit written to {args.audit_out}")
-        emit_github_annotations(audit)
-        if int(audit.get("exit_code_recommendation", 0)):
-            raise SystemExit(1)
         return
 
-    leagues_needed = set()
-    target_dates_by_league: Dict[str, set[str]] = {}
-    for s in pending:
-        league = (s.get("league") or "").strip()
-        if league:
-            leagues_needed.add(league)
-            sig_date = resolve_match_date(s, odds_index)
-            if sig_date:
-                base_date = _parse_date(sig_date)
-                if base_date is not None:
-                    for delta in (-1, 0, 1):
-                        target_dates_by_league.setdefault(league, set()).add((base_date + timedelta(days=delta)).isoformat())
-                else:
-                    target_dates_by_league.setdefault(league, set()).add(sig_date)
-    print(f"  Leagues to fetch: {', '.join(sorted(leagues_needed))}")
-
-    all_results: Dict[str, dict] = canonicalize_results_lookup(load_historical_results(args.historical_dir))
-    print(f"  Historical results loaded: {len(all_results)}")
-
-    source_freshness: Dict[str, dict] = {}
-    for league in leagues_needed:
-        fresh = canonicalize_results_lookup(fetch_current_season_results(league, args.historical_dir))
-        latest_available = max((key.split("|", 1)[0] for key in fresh.keys()), default="none")
-        print(f"  [live] {league}: {len(fresh)} matches fetched (latest {latest_available})")
-        all_results.update(fresh)
-        fotmob = canonicalize_results_lookup(fetch_fotmob_recent_results(league, target_dates_by_league.get(league, set())))
-        if fotmob:
-            latest_fotmob = max((key.split("|", 1)[0] for key in fotmob.keys()), default="none")
-            print(f"  [fotmob] {league}: {len(fotmob)} matches fetched (latest {latest_fotmob})")
-            all_results.update(fotmob)
-        else:
-            latest_fotmob = None
-        lag_days = None
-        if latest_available and latest_available != "none":
-            try:
-                lag_days = (datetime.now(timezone.utc).date() - date.fromisoformat(latest_available)).days
-            except ValueError:
-                lag_days = None
-        source_freshness[league] = {
-            "football_data_latest": None if latest_available == "none" else latest_available,
-            "lag_days": lag_days,
-            "football_data_count": len(fresh),
-            "fotmob_count": len(fotmob),
-            "fotmob_latest": latest_fotmob if latest_fotmob != "none" else None,
-        }
+    all_results, source_freshness, snapshot_path, _snapshot_payload = load_results_snapshot(args.snapshot_date)
+    if snapshot_path is None:
+        print("  No results snapshot found; pending rows will remain pending.")
+    else:
+        print(f"  Loaded {len(all_results)} snapshot results from {snapshot_path}")
 
     settled, still_pending = settle_signals(signals, all_results, odds_index)
     print(f"\n  Settled: {settled}, still pending: {still_pending}")
@@ -590,9 +353,6 @@ def main() -> None:
     )
     write_audit(args.audit_out, audit)
     print(f"  Settlement audit written to {args.audit_out}")
-    emit_github_annotations(audit)
-    if int(audit.get("exit_code_recommendation", 0)):
-        raise SystemExit(1)
 
 
 def _write_summary(signals: List[dict], path: Path) -> None:
