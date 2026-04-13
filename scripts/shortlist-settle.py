@@ -33,6 +33,12 @@ import unicodedata
 import requests
 
 from fotmob_match_stats import fetch_fotmob_recent_results
+from settlement_audit import (
+    build_settlement_audit,
+    emit_github_annotations,
+    load_settlement_overrides,
+    write_audit,
+)
 
 ROOT = Path(__file__).resolve().parent.parent
 SHORTLIST_DIR   = ROOT / "data" / "shortlist"
@@ -41,6 +47,8 @@ LEGACY_HISTORICAL_DIR = ROOT / "data" / "team-shots" / "historical"
 SETTLED_PATH    = ROOT / "data" / "shortlist" / "settled-pnl.csv"
 PNL_REPORT_PATH = ROOT / "data" / "shortlist" / "corners-live-pnl.txt"
 PINNACLE_ODDS_PATH = ROOT / "data" / "corners-ou" / "pinnacle-corners-odds.csv"
+AUDIT_PATH = ROOT / "data" / "shortlist" / "settlement-audit.json"
+OVERRIDES_PATH = ROOT / "data" / "settlement-overrides.csv"
 BASE_URL = "https://www.football-data.co.uk"
 LEAGUE_CODES = {
     "epl": "E0",
@@ -427,7 +435,7 @@ def fetch_current_season_results(league: str) -> Dict[str, dict]:
 
 # ── Settle ────────────────────────────────────────────────────────────────────
 
-def settle_all(target_date: Optional[str] = None) -> List[dict]:
+def settle_all(target_date: Optional[str] = None) -> tuple[List[dict], dict]:
     actual = canonicalize_actual_results(load_actual_results())
     print(f"Loaded {len(actual)} historical results with corners")
     odds_index = load_pinnacle_odds_index()
@@ -442,7 +450,7 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
 
     if not bet_files:
         print("No value-bet files found.")
-        return []
+        return [], {"settled_this_run": 0, "source_freshness": {}}
 
     existing_source_rows: List[dict] = []
     if SETTLED_PATH.exists():
@@ -492,17 +500,31 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
             for delta in (-1, 0, 1):
                 target_dates_by_league[league].add((match_date + timedelta(days=delta)).isoformat())
 
+    source_freshness: Dict[str, dict] = {}
     for league in leagues_needed:
         fresh = canonicalize_actual_results(fetch_current_season_results(league))
+        latest_available = max((key.split("|", 1)[0] for key in fresh.keys()), default=None)
         if fresh:
-            latest_available = max((key.split("|", 1)[0] for key in fresh.keys()), default="none")
             print(f"  [live] {league}: {len(fresh)} matches fetched (latest {latest_available})")
             actual.update(fresh)
         fotmob = canonicalize_actual_results(fetch_fotmob_recent_results(league, target_dates_by_league.get(league, set())))
+        latest_fotmob = max((key.split("|", 1)[0] for key in fotmob.keys()), default=None)
         if fotmob:
-            latest_fotmob = max((key.split("|", 1)[0] for key in fotmob.keys()), default="none")
             print(f"  [fotmob] {league}: {len(fotmob)} matches fetched (latest {latest_fotmob})")
             actual.update(fotmob)
+        lag_days = None
+        if latest_available:
+            try:
+                lag_days = (datetime.now(UTC).date() - date.fromisoformat(latest_available)).days
+            except ValueError:
+                lag_days = None
+        source_freshness[league] = {
+            "football_data_latest": latest_available,
+            "lag_days": lag_days,
+            "football_data_count": len(fresh),
+            "fotmob_count": len(fotmob),
+            "fotmob_latest": latest_fotmob,
+        }
 
     current_file_dates_by_partial_identity: Dict[str, set[str]] = defaultdict(set)
     for row in current_source_rows:
@@ -532,6 +554,7 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
     ]
 
     rows: List[dict] = []
+    settled_this_run = 0
     for bet in source_rows:
         file_date_str = (bet.get("file_date") or "").strip() or _fixture_date_for_row(bet)
         match_str = bet.get("match", "")
@@ -626,6 +649,8 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
             settled["won"] = outcome
             settled["pnl_units"] = pnl_units
             settled["pnl_staked"] = pnl_staked
+            if (bet.get("settled") or "").strip() != "yes":
+                settled_this_run += 1
         else:
             settled["settled_at"] = bet.get("settled_at") or ""
             settled["settled"] = "pending"
@@ -650,7 +675,7 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
         # in source_rows, so it takes precedence over the cached settled row).
     rows = list(seen.values())
 
-    return rows
+    return rows, {"settled_this_run": settled_this_run, "source_freshness": source_freshness}
 
 
 # ── P&L report ────────────────────────────────────────────────────────────────
@@ -860,8 +885,25 @@ def main() -> None:
                         help="Settle only files containing this date string")
     args = parser.parse_args()
 
-    rows = settle_all(args.date)
+    rows, meta = settle_all(args.date)
     if not rows:
+        audit = build_settlement_audit(
+            rows=[],
+            model="corners",
+            now_utc=datetime.now(UTC),
+            settled_this_run=int(meta.get("settled_this_run", 0)),
+            is_pending=lambda row: (row.get("settled") or "").strip() == "pending",
+            is_settled=lambda row: (row.get("settled") or "").strip() == "yes",
+            kickoff_fields=("kick_off",),
+            date_fields=("match_date", "file_date"),
+            source_freshness=meta.get("source_freshness", {}),
+            overrides=load_settlement_overrides(OVERRIDES_PATH),
+        )
+        write_audit(AUDIT_PATH, audit)
+        print(f"Settlement audit → {AUDIT_PATH}")
+        emit_github_annotations(audit)
+        if int(audit.get("exit_code_recommendation", 0)):
+            raise SystemExit(1)
         return
 
     write_settled_csv(rows)
@@ -872,6 +914,25 @@ def main() -> None:
     with open(PNL_REPORT_PATH, "w", encoding="utf-8") as fh:
         fh.write(report + "\n")
     print(f"P&L report   → {PNL_REPORT_PATH}")
+
+    now_utc = datetime.now(UTC)
+    audit = build_settlement_audit(
+        rows=rows,
+        model="corners",
+        now_utc=now_utc,
+        settled_this_run=int(meta.get("settled_this_run", 0)),
+        is_pending=lambda row: (row.get("settled") or "").strip() == "pending",
+        is_settled=lambda row: (row.get("settled") or "").strip() == "yes",
+        kickoff_fields=("kick_off",),
+        date_fields=("match_date", "file_date"),
+        source_freshness=meta.get("source_freshness", {}),
+        overrides=load_settlement_overrides(OVERRIDES_PATH),
+    )
+    write_audit(AUDIT_PATH, audit)
+    print(f"Settlement audit → {AUDIT_PATH}")
+    emit_github_annotations(audit)
+    if int(audit.get("exit_code_recommendation", 0)):
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

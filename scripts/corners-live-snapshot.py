@@ -32,6 +32,7 @@ SNAPSHOT_FILES = [
     "data/shortlist/signals-latest.csv",
     "data/shortlist/settled-pnl.csv",
     "data/shortlist/corners-live-pnl.txt",
+    "data/shortlist/settlement-audit.json",
     "data/shortlist/team-props-status.json",
 ]
 

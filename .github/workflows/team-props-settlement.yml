@@ -35,6 +35,16 @@ jobs:
       - name: Settle corners shortlist
         run: python scripts/shortlist-settle.py
 
+      - name: Upload settlement audit artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: settlement-audit-${{ github.run_id }}
+          path: |
+            data/shortlist/settlement-audit.json
+            data/team-shots/shadow/settlement-audit.json
+          retention-days: 30
+
       - name: Generate team-props snapshot artifacts
         run: |
           python scripts/team-shots-live-snapshot.py
