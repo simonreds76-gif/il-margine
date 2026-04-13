@@ -90,6 +90,7 @@ SHADOW_TRACK_MIN_EV = 0.05
 SHADOW_MAX_FAIR_ODDS = 20.0
 SHADOW_MIN_EXPECTED_MINUTES = 60.0
 STALE_HISTORY_DAYS = 365
+STARTER_FALLBACK_SHARE_POOL = 0.02
 
 POSITION_SCORES = {
     "GK": 0,
@@ -1449,6 +1450,7 @@ def main() -> None:
     UNALLOCATED_SHARE_FLOOR = model_mod["UNALLOCATED_SHARE_FLOOR"]
     team_key_func = model_mod["_team_key"]
     coarse_position = model_mod["coarse_position"]
+    position_prior = model_mod["position_prior"]
     penalty_hierarchy = load_penalty_hierarchy(ROOT / args.penalty_hierarchy, team_key_func=team_key_func)
     public_min_ev = max(args.min_ev, args.public_min_ev)
     shadow_min_ev = args.shadow_min_ev
@@ -1880,6 +1882,7 @@ def main() -> None:
                     base_rate = 0.0
                     method = "model"
                     raw_share = 0.0
+                    share_prior = 0.0
                     penalty_lambda = 0.0
                     penalty_share = 0.0
                     baseline_penalty_share = 0.0
@@ -1901,6 +1904,14 @@ def main() -> None:
                         team_summary,
                         candidate["position"],
                         candidate["expected_minutes"],
+                    )
+                    team_npxg_prior = team_summary.get("npxg_per_match", LEAGUE_AVG["team_npxg_per_match"]) if team_summary else LEAGUE_AVG["team_npxg_per_match"]
+                    team_npxg_prior = max(
+                        float(team_npxg_prior or LEAGUE_AVG["team_npxg_per_match"]),
+                        LEAGUE_AVG["team_npxg_per_match"] * 0.75,
+                    )
+                    share_prior = (position_prior(candidate["position"]) / team_npxg_prior) * (
+                        max(candidate["expected_minutes"], 1.0) / 90.0
                     )
                     penalty_lambda = 0.0
                     penalty_share = 0.0
@@ -1948,6 +1959,7 @@ def main() -> None:
                     "method": method,
                     "propensity": propensity,
                     "raw_share": raw_share,
+                    "share_prior": share_prior,
                     "penalty_lambda": penalty_lambda,
                     "penalty_share": penalty_share,
                     "baseline_penalty_share": baseline_penalty_share if method == "model" else 0.0,
@@ -1973,11 +1985,33 @@ def main() -> None:
                 raw_share_total += raw_share
 
             if raw_share_total > 0:
+                fallback_seed_total = 0.0
+                for candidate in team_candidates:
+                    if candidate.get("lineup_state") not in {"starter", "expected_starter"}:
+                        continue
+                    key = (candidate["player_id"], candidate["player_team_key"])
+                    prediction = computed_predictions[key]
+                    if prediction["raw_share"] > 0:
+                        continue
+                    fallback_seed_total += prediction.get("share_prior", 0.0)
+
+                fallback_pool = STARTER_FALLBACK_SHARE_POOL if fallback_seed_total > 0 else 0.0
+                raw_pool = max(0.0, (1.0 - UNALLOCATED_SHARE_FLOOR) - fallback_pool)
                 for candidate in team_candidates:
                     key = (candidate["player_id"], candidate["player_team_key"])
-                    computed_predictions[key]["team_share_seed"] = (
-                        computed_predictions[key]["raw_share"] / raw_share_total
-                    ) * (1.0 - UNALLOCATED_SHARE_FLOOR)
+                    prediction = computed_predictions[key]
+                    if prediction["raw_share"] > 0:
+                        prediction["team_share_seed"] = (prediction["raw_share"] / raw_share_total) * raw_pool
+                    elif (
+                        fallback_seed_total > 0
+                        and candidate.get("lineup_state") in {"starter", "expected_starter"}
+                        and prediction.get("share_prior", 0.0) > 0
+                    ):
+                        prediction["team_share_seed"] = (
+                            prediction["share_prior"] / fallback_seed_total
+                        ) * fallback_pool
+                    else:
+                        prediction["team_share_seed"] = 0.0
             elif team_propensity_total > 0:
                 for candidate in team_candidates:
                     key = (candidate["player_id"], candidate["player_team_key"])
