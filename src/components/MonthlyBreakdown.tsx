@@ -147,6 +147,15 @@ export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBrea
           </tbody>
         </table>
       </div>
+      <div className="border-t border-slate-800/40 px-4 py-3 text-xs text-slate-500">
+        <span className="font-medium text-slate-400">Guide:</span>{" "}
+        <span>
+          <strong className="font-semibold text-slate-300">W-L</strong> = wins-losses,{" "}
+          <strong className="font-semibold text-slate-300">Staked</strong> = total units risked,{" "}
+          <strong className="font-semibold text-slate-300">P/L</strong> = profit or loss in units,{" "}
+          <strong className="font-semibold text-slate-300">ROI</strong> = profit divided by staked.
+        </span>
+      </div>
       {hasMore && !displayAll && (
         <div className="border-t border-slate-800/40 px-4 py-3 text-center">
           <button

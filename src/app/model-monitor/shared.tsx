@@ -42,6 +42,22 @@ const LEAGUE_META: Record<string, { label: string; logoPath: string }> = {
   "ligue 1": { label: "Ligue 1", logoPath: "/league-logos/ligue-1.png" },
 };
 
+const TEAM_NAME_ALIASES: Record<string, string> = {
+  "fc st pauli": "st pauli",
+  "ca osasuna": "osasuna",
+  "athletic bilbao": "athletic club",
+  "rb leipzig": "rasenballsport leipzig",
+  "tsg hoffenheim": "hoffenheim",
+  "brighton and hove albion": "brighton",
+  "brighton hove albion": "brighton",
+  "afc bournemouth": "bournemouth",
+  "1 fc koln": "fc cologne",
+  "1 fc cologne": "fc cologne",
+  "inter milano": "inter milan",
+  "deportivo alaves": "alaves",
+  "real sociedad": "sociedad",
+};
+
 function repairMojibake(value: string): string {
   if (!value) return value;
   const normalized = value.normalize("NFC");
@@ -102,7 +118,11 @@ export function findTeamLogoPath(leagueValue: string | null | undefined, teamVal
   const teams = LOGO_MANIFEST.leagues?.[leagueKey]?.teams ?? {};
   if (teams[team]?.logo_path) return cleanText(teams[team].logo_path);
   const normalizedTeam = normalizeKey(team);
-  const matched = Object.entries(teams).find(([name]) => normalizeKey(name) === normalizedTeam);
+  const canonicalTeam = TEAM_NAME_ALIASES[normalizedTeam] ?? normalizedTeam;
+  const matched = Object.entries(teams).find(([name]) => {
+    const normalizedName = normalizeKey(name);
+    return normalizedName === canonicalTeam || (TEAM_NAME_ALIASES[normalizedName] ?? normalizedName) === canonicalTeam;
+  });
   return matched?.[1]?.logo_path ? cleanText(matched[1].logo_path) : "";
 }
 
