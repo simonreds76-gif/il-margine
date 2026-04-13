@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+﻿import { notFound } from "next/navigation";
 import {
   readTeamShotsLiveFile as readFile,
   readTeamShotsLiveJson as readJson,
@@ -659,6 +659,7 @@ export default async function TeamShotsMonitorPage() {
   );
 
   const backtestRows = backtestCsv ? parseCsv(backtestCsv) : [];
+  const hasBacktestArtifacts = Boolean(backtestCsv?.trim() || backtestReportTxt?.trim());
 
   const predictions = predictionsCsv ? parseCsv(predictionsCsv) : [];
 
@@ -1246,7 +1247,7 @@ function LiveLineTable({
           ) : null}
         </SectionCard>
 
-        {/* ── KPI strip ── */}
+        {/* -- KPI strip -- */}
         <section className="grid gap-2.5 sm:grid-cols-3 xl:grid-cols-5">
           <StatCard
             label="Shadow bets"
@@ -1492,7 +1493,7 @@ function LiveLineTable({
                                   {row.currentOdds !== null ? row.currentOdds.toFixed(2) : "-"}
                                   {deltaOdds !== null ? (
                                     <span className={`ml-1 ${deltaOdds > 0 ? "text-emerald-300" : deltaOdds < 0 ? "text-rose-300" : "text-slate-500"}`}>
-                                      ({deltaOdds > 0 ? "↑" : "↓"}{Math.abs(deltaOdds).toFixed(2)})
+                                      ({deltaOdds > 0 ? "â†‘" : "â†“"}{Math.abs(deltaOdds).toFixed(2)})
                                     </span>
                                   ) : null}
                                 </div>
@@ -1520,14 +1521,14 @@ function LiveLineTable({
           </SectionCard>
         ) : null}
 
-        {/* ── No upcoming warning ── */}
+        {/* -- No upcoming warning -- */}
         {upcomingLeagueKeys.length === 0 && predictions.length === 0 ? (
           <SectionCard title="Upcoming Fixtures">
             <EmptyState message="No upcoming fixture data yet." />
           </SectionCard>
         ) : null}
 
-        {/* ── Upcoming by league (with live line tables) ── */}
+        {/* -- Upcoming by league (with live line tables) -- */}
         {upcomingLeagueKeys.map((leagueKey) => {
           const rows = upcomingByLeague.get(leagueKey) ?? [];
           const shadowCount = shadowCountByLeague.get(leagueKey) ?? 0;
@@ -1593,7 +1594,7 @@ function LiveLineTable({
           );
         })}
 
-        {/* ── Book odds archive ── */}
+        {/* -- Book odds archive -- */}
         {oddsArchive.length > 0 ? (
           <SectionCard
             collapsible
@@ -1645,7 +1646,7 @@ function LiveLineTable({
           </SectionCard>
         ) : null}
 
-        {/* ── Diagnostics ── */}
+        {/* -- Diagnostics -- */}
         {shadowPerformanceTxt ? (
           <SectionCard collapsible defaultOpen={false} title="Shadow Performance" subtitle="team-shots-shadow-performance.txt">
             <pre className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/40 p-4 text-[11px] leading-relaxed text-slate-300 whitespace-pre">
@@ -1675,6 +1676,10 @@ function LiveLineTable({
             <pre className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/40 p-4 text-[11px] leading-relaxed text-slate-300 whitespace-pre">
               {backtestReportTxt}
             </pre>
+          </SectionCard>
+        ) : !hasBacktestArtifacts ? (
+          <SectionCard collapsible defaultOpen={false} title="Backtest Report" subtitle="Artifacts unavailable">
+            <EmptyState message="Backtest report files are missing from the current snapshot source, so no historical report can be shown here." />
           </SectionCard>
         ) : null}
 
@@ -1714,5 +1719,6 @@ function LiveLineTable({
     </div>
   );
 }
+
 
 

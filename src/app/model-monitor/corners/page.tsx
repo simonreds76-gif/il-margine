@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+﻿import { notFound } from "next/navigation";
 import {
   readCornersLiveFile as readFile,
   readCornersLiveJson as readJson,
@@ -213,6 +213,8 @@ export default async function CornersMonitorPage() {
     ]);
 
   const backtestRows = backtestCsv ? parseCsv(backtestCsv) : [];
+  const hasBacktestRows = backtestRows.length > 0;
+  const hasBacktestArtifacts = Boolean(backtestCsv?.trim() || backtestReportTxt?.trim());
   const predictions = predictionsCsv ? parseCsv(predictionsCsv) : [];
   const pinnacleRows = pinnacleCornersCsv ? parseCsv(pinnacleCornersCsv) : [];
   const valueBets = valueBetsCsv ? parseCsv(valueBetsCsv) : [];
@@ -329,7 +331,7 @@ export default async function CornersMonitorPage() {
     return { lg, n: rows.length, won, pnlVal, roi };
   }).filter((x) => x.n > 0);
 
-  // Team name aliases: our model names → Pinnacle names (lowercase)
+  // Team name aliases: our model names â†’ Pinnacle names (lowercase)
   const TEAM_ALIASES: Record<string, string> = {
     "brighton and hove albion": "brighton",
     "atalanta bc": "atalanta",
@@ -351,7 +353,7 @@ export default async function CornersMonitorPage() {
     return TEAM_ALIASES[lower] ?? lower;
   }
 
-  // Build Pinnacle match info map: home|away → { match_date, kickoff_iso }
+  // Build Pinnacle match info map: home|away â†’ { match_date, kickoff_iso }
   // (Pinnacle has the correct game date; our settled-pnl match_date is the
   // shortlist run date which differs from actual game date)
   const pinnacleMatchInfoMap = new Map<string, { match_date: string; kickoff_iso: string }>();
@@ -372,7 +374,7 @@ export default async function CornersMonitorPage() {
 
   // Build current Pinnacle odds map: only pre-kickoff snapshots.
   // Key: home_norm|away_norm|line|side. Keeps last snapshot captured before KO.
-  // (No match_date in key — our settled-pnl match_date is the shortlist run date)
+  // (No match_date in key - our settled-pnl match_date is the shortlist run date)
   const currentPinnacleOdds = new Map<string, number>();
   const currentPinnacleOddsTs = new Map<string, string>();
   for (const row of pinnacleRows) {
@@ -424,7 +426,7 @@ export default async function CornersMonitorPage() {
     (r) => r.won === "True" || r.won === "true",
   ).length;
   const backtestRoi =
-    backtestRows.length > 0 ? (backtestPnl / backtestRows.length) * 100 : 0;
+    backtestRows.length > 0 ? (backtestPnl / backtestRows.length) * 100 : null;
 
   const recentPredictions = predictions.slice(-80).reverse();
   const schedulerHeartbeatAt =
@@ -465,13 +467,13 @@ export default async function CornersMonitorPage() {
             Poisson model for total match corners. Rolling EMA per team (attack/defence),
             home advantage, league baselines.
           </span>
-          <span className="mx-2 text-slate-700">·</span>
+          <span className="mx-2 text-slate-700">|</span>
           <span className="text-slate-500">
             Reference odds from Pinnacle. Place on bet365 / Paddy Power if they offer the same or better price.
           </span>
         </HeroCard>
 
-        {/* ── Pipeline Health ── */}
+        {/* -- Pipeline Health -- */}
         <SectionCard collapsible title="Pipeline Health" subtitle="Data freshness and source status">
           <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-6">
             <StatCard
@@ -495,7 +497,7 @@ export default async function CornersMonitorPage() {
             <StatCard
               label="Pinnacle odds"
               value={formatDateTime(latestPinnacleCaptureAt ?? pinnacleCornersMtime)}
-              detail={`${pinnacleMatches.length} fixtures · ${formatRelativeAgeShort(latestPinnacleCaptureAt ?? pinnacleCornersMtime, renderReferenceMs)}`}
+              detail={`${pinnacleMatches.length} fixtures | ${formatRelativeAgeShort(latestPinnacleCaptureAt ?? pinnacleCornersMtime, renderReferenceMs)}`}
               tone={statTone(pinnacleMatches.length > 0 ? "default" : "amber")}
             />
             <StatCard
@@ -532,15 +534,24 @@ export default async function CornersMonitorPage() {
           </section>
         )}
 
-        {/* ── KPI strip ── */}
+        {/* -- KPI strip -- */}
         <section className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 lg:grid-cols-7">
           <StatCard label="Historical matches" value={predictions.length.toLocaleString()} detail="with predictions" />
-          <StatCard label="Backtest bets" value={backtestRows.length.toLocaleString()} detail={`${backtestWins}W / ${backtestRows.length - backtestWins}L`} />
+          <StatCard
+            label="Backtest bets"
+            value={hasBacktestRows ? backtestRows.length.toLocaleString() : "n/a"}
+            detail={hasBacktestRows ? `${backtestWins}W / ${backtestRows.length - backtestWins}L` : "results file missing"}
+            tone={statTone(hasBacktestRows ? "default" : "amber")}
+          />
           <StatCard
             label="Backtest ROI"
-            value={`${backtestRoi >= 0 ? "+" : ""}${backtestRoi.toFixed(1)}%`}
-            detail={`${backtestPnl >= 0 ? "+" : ""}${backtestPnl.toFixed(1)}u PnL`}
-            tone={statTone(backtestRoi > 0 ? "green" : backtestRoi < -5 ? "red" : "default")}
+            value={backtestRoi === null ? "n/a" : `${backtestRoi >= 0 ? "+" : ""}${backtestRoi.toFixed(1)}%`}
+            detail={
+              backtestRoi === null
+                ? "backtest artifacts unavailable"
+                : `${backtestPnl >= 0 ? "+" : ""}${backtestPnl.toFixed(1)}u PnL`
+            }
+            tone={statTone(backtestRoi === null ? "amber" : backtestRoi > 0 ? "green" : backtestRoi < -5 ? "red" : "default")}
           />
           <StatCard
             label="Today value bets"
@@ -577,11 +588,11 @@ export default async function CornersMonitorPage() {
           edge threshold and staking rules.
         </p>
 
-        {/* ── Current Bettable Signals ── */}
+        {/* -- Current Bettable Signals -- */}
         {valueBets.length > 0 && (
           <SectionCard
-            title={`Current Bettable Signals — ${currentValueSignals.length} best bets`}
-            subtitle={`Deduplicated from ${valueBets.length} raw lines · best-value per match and side`}
+            title={`Current Bettable Signals - ${currentValueSignals.length} best bets`}
+            subtitle={`Deduplicated from ${valueBets.length} raw lines | best-value per match and side`}
           >
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
@@ -631,11 +642,11 @@ export default async function CornersMonitorPage() {
           </SectionCard>
         )}
 
-        {/* ── Bet Tracker ── */}
+        {/* -- Bet Tracker -- */}
         <SectionCard
           collapsible
           defaultOpen={liveSettled.length > 0 || livePending.length > 0}
-          title={`Bet Tracker${livePending.length > 0 ? ` — ${livePending.length} open` : ""}${liveSettled.length > 0 ? `, ${liveSettled.length} settled` : ""}`}
+          title={`Bet Tracker${livePending.length > 0 ? ` - ${livePending.length} open` : ""}${liveSettled.length > 0 ? `, ${liveSettled.length} settled` : ""}`}
         >
           {liveSettled.length === 0 && livePending.length === 0 ? (
             <EmptyState message="No bets tracked yet. Run python scripts/shortlist-settle.py after results are in." />
@@ -671,7 +682,7 @@ export default async function CornersMonitorPage() {
                     <StatCard
                       label="Win rate"
                       value={`${liveWinRate.toFixed(0)}%`}
-                      detail={`${liveWon.length}W/${liveLost.length}L${livePushed.length > 0 ? `/${livePushed.length}P` : ""} · ${livePending.length} open`}
+                      detail={`${liveWon.length}W/${liveLost.length}L${livePushed.length > 0 ? `/${livePushed.length}P` : ""} | ${livePending.length} open`}
                       tone={statTone(liveWinRate > 55 ? "green" : liveWinRate < 45 ? "red" : "default")}
                     />
                   </div>
@@ -709,7 +720,7 @@ export default async function CornersMonitorPage() {
                 </>
               )}
 
-              {/* ── Open bets ── */}
+              {/* -- Open bets -- */}
               {livePending.length > 0 && (
                 <div>
                   <div className="mb-2 flex items-baseline gap-3">
@@ -755,7 +766,7 @@ export default async function CornersMonitorPage() {
                                   <span className="text-[10px] uppercase tracking-wide text-slate-600">KO</span>
                                 ) : pinOdds !== null ? (
                                   <span className={oddsMove !== null && oddsMove > 0.01 ? "text-emerald-300" : oddsMove !== null && oddsMove < -0.01 ? "text-rose-400" : "text-slate-400"}>
-                                    {oddsMove !== null && oddsMove > 0.01 ? "↑" : oddsMove !== null && oddsMove < -0.01 ? "↓" : ""}{pinOdds.toFixed(2)}
+                                    {oddsMove !== null && oddsMove > 0.01 ? "â†‘" : oddsMove !== null && oddsMove < -0.01 ? "â†“" : ""}{pinOdds.toFixed(2)}
                                   </span>
                                 ) : <span className="text-slate-600">--</span>}
                               </td>
@@ -770,7 +781,7 @@ export default async function CornersMonitorPage() {
                 </div>
               )}
 
-              {/* ── Recent Results — desktop table + mobile cards ── */}
+              {/* -- Recent Results - desktop table + mobile cards -- */}
               {recentSettled.length > 0 && (
                 <div>
                   <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
@@ -791,7 +802,7 @@ export default async function CornersMonitorPage() {
                             <div className="min-w-0">
                               <div className="truncate text-sm font-medium text-white">{row.match ?? "-"}</div>
                               <div className="mt-0.5 text-[11px] text-slate-500">
-                                {formatKickoff(row.kick_off) !== "--" ? formatKickoff(row.kick_off) : (row.match_date?.slice(0, 10) ?? "--")} · {row.line} {row.side}
+                                {formatKickoff(row.kick_off) !== "--" ? formatKickoff(row.kick_off) : (row.match_date?.slice(0, 10) ?? "--")} | {row.line} {row.side}
                               </div>
                             </div>
                             <div className="flex shrink-0 flex-col items-end gap-1">
@@ -894,9 +905,9 @@ export default async function CornersMonitorPage() {
           )}
         </SectionCard>
 
-        {/* ── All Model Fixtures ── */}
+        {/* -- All Model Fixtures -- */}
         {signals.length > 0 && (
-          <SectionCard collapsible defaultOpen={false} title={`All Model Fixtures — ${signals.length} fixtures`}>
+          <SectionCard collapsible defaultOpen={false} title={`All Model Fixtures - ${signals.length} fixtures`}>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
@@ -932,9 +943,9 @@ export default async function CornersMonitorPage() {
           </SectionCard>
         )}
 
-        {/* ── Pinnacle Corners Lines ── */}
+        {/* -- Pinnacle Corners Lines -- */}
         {pinnacleMatches.length > 0 && (
-          <SectionCard collapsible defaultOpen={false} title={`Pinnacle Corners Lines — ${pinnacleMatches.length} fixtures`}>
+          <SectionCard collapsible defaultOpen={false} title={`Pinnacle Corners Lines - ${pinnacleMatches.length} fixtures`}>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
@@ -972,7 +983,7 @@ export default async function CornersMonitorPage() {
           </SectionCard>
         )}
 
-        {/* ── Reports & Tools ── */}
+        {/* -- Reports & Tools -- */}
         {livePnlTxt && (
           <SectionCard collapsible defaultOpen={false} title="Full Live P&L Report">
             <pre className="max-h-[500px] overflow-auto whitespace-pre-wrap font-mono text-xs text-slate-300">{livePnlTxt}</pre>
@@ -991,11 +1002,15 @@ export default async function CornersMonitorPage() {
           </SectionCard>
         )}
 
-        {backtestReportTxt && (
+        {backtestReportTxt ? (
           <SectionCard collapsible defaultOpen={false} title="Backtest Report">
             <pre className="max-h-80 overflow-auto whitespace-pre-wrap font-mono text-xs text-slate-300">{backtestReportTxt}</pre>
           </SectionCard>
-        )}
+        ) : !hasBacktestArtifacts ? (
+          <SectionCard collapsible defaultOpen={false} title="Backtest Report" subtitle="Artifacts unavailable">
+            <EmptyState message="Backtest report files are missing from the current snapshot source, so ROI and bet counts are unavailable here." />
+          </SectionCard>
+        ) : null}
 
         <SectionCard collapsible defaultOpen={false} title="How to use">
           <div className="space-y-3 text-sm text-slate-300">
@@ -1022,3 +1037,4 @@ export default async function CornersMonitorPage() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { readPenaltyReviewState } from "@/lib/goalscorer-penalty-review-state";
@@ -42,10 +42,10 @@ function renderSourceDetail(snapshot: GoalscorerMonitorSnapshot) {
     s.expected_refresh_updated_at ? `Expected ${formatDateTimeLabel(s.expected_refresh_updated_at)}` : null,
     s.settlement_updated_at ? `Settlement ${formatDateTimeLabel(s.settlement_updated_at)}` : null,
   ].filter(Boolean);
-  return parts.length > 0 ? parts.join(" · ") : "Source timestamps unavailable";
+  return parts.length > 0 ? parts.join(" | ") : "Source timestamps unavailable";
 }
 
-// ─── Tone helpers ────────────────────────────────────────────────────────────
+// --- Tone helpers ------------------------------------------------------------
 
 function reviewPriorityTone(priority?: string) {
   const n = (priority || "").toLowerCase();
@@ -68,27 +68,27 @@ function settlementRowTint(outcome?: string | null) {
   return "";
 }
 
-// ─── Penalty review card ─────────────────────────────────────────────────────
+// --- Penalty review card -----------------------------------------------------
 
 function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
   const minuteAside = row.minute
-    ? `min ${row.minute}${row.event_result ? ` · ${row.event_result}` : row.event_type ? ` · ${row.event_type}` : ""}`
+    ? `min ${row.minute}${row.event_result ? ` | ${row.event_result}` : row.event_type ? ` | ${row.event_type}` : ""}`
     : undefined;
 
   return (
     <article className="rounded-xl border border-slate-800 bg-slate-950/50 p-4">
-      {/* ── Header ── */}
+      {/* -- Header -- */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
-            {row.league || "League"} · {row.review_source || "Penalty review"}
+            {row.league || "League"} | {row.review_source || "Penalty review"}
           </p>
           <h3 className="mt-1 text-base font-semibold text-white">
             {row.actual_taker || "Unknown taker"}
           </h3>
           <p className="mt-0.5 text-sm text-slate-400">
             {row.match || `${row.team || "?"} vs ${row.opponent || "?"}`}
-            {" · "}
+            {" | "}
             {formatDateLabel(row.date)}
           </p>
         </div>
@@ -109,7 +109,7 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
         </div>
       </div>
 
-      {/* ── Phase groups ── */}
+      {/* -- Phase groups -- */}
       <div className="mt-4 space-y-3">
         {/* Pre-match */}
         <div className="space-y-2">
@@ -151,7 +151,7 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
         </div>
       </div>
 
-      {/* ── Footer ── */}
+      {/* -- Footer -- */}
       {row.editorial_note ? (
         <p className="mt-3 border-t border-slate-800/60 pt-3 text-xs text-slate-400">
           {row.editorial_note}
@@ -169,7 +169,7 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
   );
 }
 
-// ─── Live Bets table ─────────────────────────────────────────────────────────
+// --- Live Bets table ---------------------------------------------------------
 
 function LiveBetsTable({ rows }: { rows: GoalscorerMonitorSnapshot["live_bets"] }) {
   if (rows.length === 0) {
@@ -203,7 +203,7 @@ function LiveBetsTable({ rows }: { rows: GoalscorerMonitorSnapshot["live_bets"] 
             >
               <td className="py-2.5 pr-4">
                 <div className="font-medium text-white">{row.player}</div>
-                <div className="text-[11px] text-slate-500">{row.team} · {row.league_label}</div>
+                <div className="text-[11px] text-slate-500">{row.team} | {row.league_label}</div>
               </td>
               <td className="py-2.5 pr-4">
                 <div className="text-slate-300">{row.match}</div>
@@ -236,13 +236,13 @@ function LiveBetsTable({ rows }: { rows: GoalscorerMonitorSnapshot["live_bets"] 
   );
 }
 
-// ─── Recent Shadow Settlements ────────────────────────────────────────────────
+// --- Recent Shadow Settlements ------------------------------------------------
 //
-// Desktop (lg+): dense table — kickoff lives as sub-text under the fixture
+// Desktop (lg+): dense table - kickoff lives as sub-text under the fixture
 //   cell so we avoid a separate timestamp column. 8 columns total, all fit
 //   within the lg viewport without horizontal scrolling.
 //
-// Mobile/tablet (< lg): stacked cards — each row becomes a small block with
+// Mobile/tablet (< lg): stacked cards - each row becomes a small block with
 //   outcome pill, fixture, financial metrics, and both timestamps on one line.
 
 type SettlementRow = GoalscorerMonitorSnapshot["shadow_summary"]["recent_rows"][number];
@@ -255,7 +255,7 @@ function SettlementCard({ row }: { row: SettlementRow }) {
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div className="truncate font-medium text-white">{row.player}</div>
-          <div className="text-[11px] text-slate-500">{row.team} · {row.league_key}</div>
+          <div className="text-[11px] text-slate-500">{row.team} | {row.league_key}</div>
         </div>
         <StatusPill label={row.bet_outcome || "unknown"} tone={statusTone(row.bet_outcome)} />
       </div>
@@ -295,14 +295,14 @@ function RecentSettlementsTable({
 
   return (
     <>
-      {/* ── Mobile / tablet: card list (hidden at lg) ── */}
+      {/* -- Mobile / tablet: card list (hidden at lg) -- */}
       <div className="space-y-2 lg:hidden">
         {rows.map((row) => (
           <SettlementCard key={row.key} row={row} />
         ))}
       </div>
 
-      {/* ── Desktop: dense table (shown at lg+) ── */}
+      {/* -- Desktop: dense table (shown at lg+) -- */}
       <div className="hidden lg:block">
         <table className="w-full border-collapse text-sm">
           <thead>
@@ -378,7 +378,7 @@ function RecentSettlementsTable({
   );
 }
 
-// ─── Fixture Diagnostics table ────────────────────────────────────────────────
+// --- Fixture Diagnostics table ------------------------------------------------
 
 function FixtureDiagnosticsTable({
   rows,
@@ -417,7 +417,7 @@ function FixtureDiagnosticsTable({
                   {row.home_team} vs {row.away_team}
                 </div>
                 <div className="text-[11px] text-slate-500">
-                  {formatDateLabel(row.match_date)} · {row.bookmaker || "-"}
+                  {formatDateLabel(row.match_date)} | {row.bookmaker || "-"}
                 </div>
               </td>
               <td className="py-2.5 pr-4 text-slate-400">{row.league_label}</td>
@@ -437,7 +437,7 @@ function FixtureDiagnosticsTable({
   );
 }
 
-// ─── Page ────────────────────────────────────────────────────────────────────
+// --- Page --------------------------------------------------------------------
 
 export default async function GoalscorerMonitorPage() {
   if (!MODEL_MONITOR_ENABLED) notFound();
@@ -492,14 +492,14 @@ export default async function GoalscorerMonitorPage() {
 
         <MonitorNav current="goalscorer" />
 
-        {/* ── Hero ─────────────────────────────────────────────────────────── */}
+        {/* -- Hero ----------------------------------------------------------- */}
         <HeroCard title="Goalscorer Monitor" eyebrow="Snapshot-first architecture">
           <span className="text-slate-300">Generated {formatDateTimeLabel(snapshot.generated_at)}</span>
-          <span className="mx-2 text-slate-700">·</span>
+          <span className="mx-2 text-slate-700">|</span>
           <span className="text-slate-500">{renderSourceDetail(snapshot)}</span>
         </HeroCard>
 
-        {/* ── KPI strip ────────────────────────────────────────────────────── */}
+        {/* -- KPI strip ------------------------------------------------------ */}
         <section className="grid gap-2.5 sm:grid-cols-3 xl:grid-cols-6">
           <StatCard label="Live bets"       value={String(snapshot.live_bets.length)} />
           <StatCard label="Public now"      value={String(publicNow)}      detail="Rows surfaced to public" />
@@ -521,10 +521,10 @@ export default async function GoalscorerMonitorPage() {
           />
         </section>
 
-        {/* ── League Scoreboard ─────────────────────────────────────────────── */}
+        {/* -- League Scoreboard ----------------------------------------------- */}
         <SectionCard
           title="League Scoreboard"
-          subtitle={`${snapshot.league_cards.length} leagues · page-ready KPIs from snapshot builder`}
+          subtitle={`${snapshot.league_cards.length} leagues | page-ready KPIs from snapshot builder`}
           collapsible
           defaultOpen
         >
@@ -553,7 +553,7 @@ export default async function GoalscorerMonitorPage() {
                     compact
                     label="Fixture health"
                     value={`${card.clean_fixtures} clean`}
-                    detail={`${card.degraded_fixtures} deg · ${card.quarantined_fixtures} quar`}
+                    detail={`${card.degraded_fixtures} deg | ${card.quarantined_fixtures} quar`}
                   />
                   <StatCard
                     compact
@@ -581,9 +581,9 @@ export default async function GoalscorerMonitorPage() {
           </div>
         </SectionCard>
 
-        {/* ── Live Bets ─────────────────────────────────────────────────────── */}
+        {/* -- Live Bets ------------------------------------------------------- */}
         <SectionCard
-          title={`Live Bets${snapshot.live_bets.length ? ` · ${snapshot.live_bets.length}` : ""}`}
+          title={`Live Bets${snapshot.live_bets.length ? ` | ${snapshot.live_bets.length}` : ""}`}
           subtitle="Public and shadow rows backed by the current snapshot."
           collapsible
           defaultOpen
@@ -591,10 +591,10 @@ export default async function GoalscorerMonitorPage() {
           <LiveBetsTable rows={snapshot.live_bets} />
         </SectionCard>
 
-        {/* ── Penalty Watchlist ─────────────────────────────────────────────── */}
+        {/* -- Penalty Watchlist ----------------------------------------------- */}
         <SectionCard
-          title={`Penalty Watchlist${activePenaltyRows.length ? ` · ${activePenaltyRows.length} active` : ""}`}
-          subtitle="Enriched in the snapshot — includes on-pitch-at-penalty resolution."
+          title={`Penalty Watchlist${activePenaltyRows.length ? ` | ${activePenaltyRows.length} active` : ""}`}
+          subtitle="Enriched in the snapshot - includes on-pitch-at-penalty resolution."
           collapsible
           defaultOpen
         >
@@ -606,7 +606,7 @@ export default async function GoalscorerMonitorPage() {
             )}
           </div>
 
-          {/* Resolved rows — collapsed */}
+          {/* Resolved rows - collapsed */}
           <details className="group mt-4 rounded-xl border border-slate-800/50 bg-slate-950/30">
             <summary className="flex cursor-pointer select-none list-none items-center justify-between gap-3 px-4 py-3 marker:hidden hover:bg-white/[0.02]">
               <span className="text-xs font-medium text-slate-500">
@@ -626,27 +626,27 @@ export default async function GoalscorerMonitorPage() {
           </details>
         </SectionCard>
 
-        {/* ── Recent Shadow Settlements ──────────────────────────────────────── */}
+        {/* -- Recent Shadow Settlements ---------------------------------------- */}
         <SectionCard
-          title={`Recent Shadow Settlements${snapshot.shadow_summary.recent_rows.length ? ` · ${snapshot.shadow_summary.recent_rows.length}` : ""}`}
-          subtitle={`${snapshot.shadow_summary.settled_today.length} today · ${snapshot.shadow_summary.settled_yesterday.length} yesterday`}
+          title={`Recent Shadow Settlements${snapshot.shadow_summary.recent_rows.length ? ` | ${snapshot.shadow_summary.recent_rows.length}` : ""}`}
+          subtitle={`${snapshot.shadow_summary.settled_today.length} today | ${snapshot.shadow_summary.settled_yesterday.length} yesterday`}
           collapsible
           defaultOpen
         >
           <RecentSettlementsTable rows={snapshot.shadow_summary.recent_rows.slice(0, 50)} />
         </SectionCard>
 
-        {/* ── Fixture Diagnostics (collapsed) ───────────────────────────────── */}
+        {/* -- Fixture Diagnostics (collapsed) --------------------------------- */}
         <SectionCard
-          title={`Fixture Diagnostics · ${snapshot.fixture_health.flagged_rows.length} flagged`}
-          subtitle={`${snapshot.fixture_health.clean_count} clean · ${snapshot.fixture_health.degraded_count} degraded · ${snapshot.fixture_health.quarantined_count} quarantined`}
+          title={`Fixture Diagnostics | ${snapshot.fixture_health.flagged_rows.length} flagged`}
+          subtitle={`${snapshot.fixture_health.clean_count} clean | ${snapshot.fixture_health.degraded_count} degraded | ${snapshot.fixture_health.quarantined_count} quarantined`}
           collapsible
           defaultOpen={false}
         >
           <FixtureDiagnosticsTable rows={snapshot.fixture_health.flagged_rows} />
         </SectionCard>
 
-        {/* ── Related Tools (collapsed) ──────────────────────────────────────── */}
+        {/* -- Related Tools (collapsed) ---------------------------------------- */}
         <SectionCard
           title="Related Tools"
           subtitle="Lineups view and raw penalty watchlist API."
@@ -673,3 +673,4 @@ export default async function GoalscorerMonitorPage() {
     </div>
   );
 }
+

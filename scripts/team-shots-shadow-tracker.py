@@ -40,7 +40,7 @@ STAKE_BANDS: list[tuple[float, float]] = [
 ]
 
 SIGNAL_FIELDS = [
-    "date", "league", "home_team", "away_team", "team", "venue",
+    "date", "fixture_date", "kickoff_iso", "league", "home_team", "away_team", "team", "venue",
     "bookmaker", "line", "side", "book_odds", "model_prob",
     "model_fair_odds", "edge", "stake_units", "actual_shots", "result",
     "pnl", "pnl_staked", "settled_at", "closing_odds", "clv", "logged_at",
@@ -57,7 +57,7 @@ def _pf(val, default=0.0):
 
 def _signal_key(row: dict) -> str:
     return "|".join([
-        str(row.get("date", ""))[:10],
+        str(row.get("fixture_date", "") or row.get("date", ""))[:10],
         str(row.get("home_team", "")).strip().lower(),
         str(row.get("away_team", "")).strip().lower(),
         str(row.get("team", "")).strip().lower(),
@@ -149,6 +149,8 @@ def track_signals(
 
         signal = {
             "date": comp.get("date", ""),
+            "fixture_date": (comp.get("date") or "")[:10],
+            "kickoff_iso": comp.get("kickoff_iso", ""),
             "league": comp.get("league", ""),
             "home_team": comp.get("home_team", ""),
             "away_team": comp.get("away_team", ""),

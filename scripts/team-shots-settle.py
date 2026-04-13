@@ -39,7 +39,7 @@ LEAGUE_CODES = {
 }
 
 SIGNAL_FIELDS = [
-    "date", "league", "home_team", "away_team", "team", "venue",
+    "date", "fixture_date", "kickoff_iso", "league", "home_team", "away_team", "team", "venue",
     "bookmaker", "line", "side", "book_odds", "model_prob",
     "model_fair_odds", "edge", "stake_units", "actual_shots", "result",
     "pnl", "pnl_staked", "settled_at", "closing_odds", "clv", "logged_at",
@@ -49,21 +49,58 @@ DEFAULT_ODDS_ARCHIVE = ROOT / "data" / "team-shots" / "team-shots-odds-history.c
 
 TEAM_ALIASES = {
     "brighton and hove albion": "brighton",
+    "brighton hove albion": "brighton",
     "atalanta bc": "atalanta",
+    "bologna fc": "bologna",
+    "us lecce": "lecce",
     "tsg hoffenheim": "hoffenheim",
     "fc augsburg": "augsburg",
+    "inter": "internazionale",
     "inter milan": "internazionale",
+    "inter milano": "internazionale",
     "fc st pauli": "st pauli",
     "vfb stuttgart": "stuttgart",
+    "vfl wolfsburg": "wolfsburg",
     "borussia m gladbach": "borussia monchengladbach",
     "m gladbach": "borussia monchengladbach",
     "bayer 04 leverkusen": "bayer leverkusen",
     "sc freiburg": "freiburg",
     "1 fc union berlin": "union berlin",
+    "1 fc heidenheim": "heidenheim",
+    "1 fc cologne": "1 koln",
+    "1 fc koln": "1 koln",
+    "fc koln": "1 koln",
     "wolverhampton wanderers": "wolverhampton",
+    "tottenham hotspur": "tottenham",
+    "liverpool fc": "liverpool",
+    "fulham fc": "fulham",
+    "burnley fc": "burnley",
+    "valencia cf": "valencia",
+    "elche cf": "elche",
+    "deportivo alaves": "alaves",
+    "real sociedad": "sociedad",
+    "real sociedad san sebastian": "sociedad",
+    "atletico madrid": "ath madrid",
+    "athletic club": "ath bilbao",
+    "athletic bilbao": "ath bilbao",
+    "real betis": "betis",
+    "real betis seville": "betis",
+    "ca osasuna": "osasuna",
+    "fc barcelona": "barcelona",
+    "espanyol": "espanol",
+    "espanyol barcelona": "espanol",
+    "rc celta de vigo": "celta",
+    "celta vigo": "celta",
+    "rcd mallorca": "mallorca",
     "as roma": "roma",
+    "juventus turin": "juventus",
     "pisa sc": "pisa",
     "girona fc": "girona",
+    "bayern munchen": "bayern munich",
+}
+
+GENERIC_TEAM_TOKENS = {
+    "fc", "cf", "afc", "sc", "ac", "us", "ud", "rc", "ssc", "calcio", "1907",
 }
 
 
@@ -83,7 +120,12 @@ def _norm(text: str) -> str:
 
 
 def _norm_team(text: str) -> str:
-    return TEAM_ALIASES.get(_norm(text), _norm(text))
+    base = _norm(text)
+    simplified = " ".join(token for token in base.split() if token not in GENERIC_TEAM_TOKENS).strip()
+    for candidate in (base, simplified):
+        if candidate in TEAM_ALIASES:
+            return TEAM_ALIASES[candidate]
+    return simplified or base
 
 
 def _parse_date(val: str) -> Optional[date]:
@@ -118,10 +160,48 @@ def load_odds_archive(path: Path) -> Dict[str, List[dict]]:
             if not match_date or not home or not team or not side:
                 continue
             key = f"{match_date}|{home}|{away}|{team}|{bm}|{line}|{side}"
+            any_key = f"__any__|{home}|{away}|{team}|{bm}|{line}|{side}"
+            row = dict(row)
             index.setdefault(key, []).append(row)
+            index.setdefault(any_key, []).append(row)
     for rows in index.values():
         rows.sort(key=lambda r: (r.get("captured_at") or ""))
     return index
+
+
+def _signal_odds_keys(sig: dict, match_date: str = "") -> tuple[str, str]:
+    home = _norm_team(sig.get("home_team", ""))
+    away = _norm_team(sig.get("away_team", ""))
+    team = _norm_team(sig.get("team", ""))
+    bm = _norm(sig.get("bookmaker", ""))
+    line = str(sig.get("line", "")).strip()
+    side = (sig.get("side") or "").strip().lower()
+    exact_key = f"{match_date}|{home}|{away}|{team}|{bm}|{line}|{side}" if match_date else ""
+    any_key = f"__any__|{home}|{away}|{team}|{bm}|{line}|{side}"
+    return exact_key, any_key
+
+
+def resolve_match_date(sig: dict, odds_index: Dict[str, List[dict]]) -> str:
+    """Resolve the fixture date, preferring explicit fields over logged-at date."""
+    explicit = ((sig.get("fixture_date") or "").strip()[:10]) or ((sig.get("kickoff_iso") or "").strip()[:10])
+    if explicit:
+        return explicit
+
+    _, any_key = _signal_odds_keys(sig)
+    rows = odds_index.get(any_key, [])
+    candidates = sorted({str(r.get("match_date") or "").strip()[:10] for r in rows if str(r.get("match_date") or "").strip()})
+    if not candidates:
+        return (sig.get("date") or "").strip()[:10]
+    if len(candidates) == 1:
+        return candidates[0]
+
+    logged_date = ((sig.get("logged_at") or "").strip()[:10]) or ((sig.get("date") or "").strip()[:10])
+    futureish = [candidate for candidate in candidates if not logged_date or candidate >= logged_date]
+    if len(futureish) == 1:
+        return futureish[0]
+    if futureish:
+        return min(futureish)
+    return candidates[-1]
 
 
 def find_closing_odds(
@@ -132,16 +212,11 @@ def find_closing_odds(
     Return the latest scraped odds for this signal's match/team/line/book/side
     that were captured on or before the match date (i.e. before kickoff).
     """
-    match_date = (sig.get("date") or "")[:10]
-    home = _norm_team(sig.get("home_team", ""))
-    away = _norm_team(sig.get("away_team", ""))
-    team = _norm_team(sig.get("team", ""))
-    bm = _norm(sig.get("bookmaker", ""))
-    line = str(sig.get("line", "")).strip()
-    side = (sig.get("side") or "").strip().lower()
-
-    key = f"{match_date}|{home}|{away}|{team}|{bm}|{line}|{side}"
-    rows = odds_index.get(key, [])
+    match_date = resolve_match_date(sig, odds_index)
+    exact_key, any_key = _signal_odds_keys(sig, match_date)
+    rows = odds_index.get(exact_key, []) if exact_key else []
+    if not rows:
+        rows = odds_index.get(any_key, [])
 
     # We do not need an exact kickoff scrape for a useful CLV proxy.
     # We do need to avoid accidentally using post-kickoff same-day prices.
@@ -249,6 +324,26 @@ def load_historical_results(historical_dir: Path) -> Dict[str, dict]:
     return results
 
 
+def canonicalize_results_lookup(results_lookup: Dict[str, dict]) -> Dict[str, dict]:
+    """
+    Re-key result rows onto the same canonical team aliases the signals use.
+
+    FotMob results come back keyed with plain normalized team names, while our
+    signals and historical CSV loaders resolve aliases like "Bologna FC" ->
+    "bologna" and "US Lecce" -> "lecce". Without a canonical pass the rows
+    exist, but the settler never finds them.
+    """
+    canonical: Dict[str, dict] = {}
+    for key, payload in results_lookup.items():
+        parts = str(key).split("|", 2)
+        if len(parts) != 3:
+            canonical[key] = payload
+            continue
+        match_date, home, away = parts
+        canonical[f"{match_date}|{_norm_team(home)}|{_norm_team(away)}"] = payload
+    return canonical
+
+
 def settle_signals(
     signals: List[dict],
     results_lookup: Dict[str, dict],
@@ -271,7 +366,7 @@ def settle_signals(
                     sig["clv"] = round(entry / closing - 1, 4) if closing > 0 and entry > 0 else ""
             continue
 
-        sig_date_str = (sig.get("date") or "")[:10]
+        sig_date_str = resolve_match_date(sig, odds_index)
         home_norm = _norm_team(sig.get("home_team", ""))
         away_norm = _norm_team(sig.get("away_team", ""))
 
@@ -322,6 +417,7 @@ def settle_signals(
                 pnl = -1.0
 
         sig["actual_shots"] = actual_shots
+        sig["fixture_date"] = sig_date_str
         sig["result"] = result
         sig["pnl"] = round(pnl, 3)
         stake_units = _pf(sig.get("stake_units", "1")) or 1.0
@@ -384,20 +480,25 @@ def main() -> None:
         league = (s.get("league") or "").strip()
         if league:
             leagues_needed.add(league)
-            sig_date = (s.get("date") or "").strip()[:10]
+            sig_date = resolve_match_date(s, odds_index)
             if sig_date:
-                target_dates_by_league.setdefault(league, set()).add(sig_date)
+                base_date = _parse_date(sig_date)
+                if base_date is not None:
+                    for delta in (-1, 0, 1):
+                        target_dates_by_league.setdefault(league, set()).add((base_date + timedelta(days=delta)).isoformat())
+                else:
+                    target_dates_by_league.setdefault(league, set()).add(sig_date)
     print(f"  Leagues to fetch: {', '.join(sorted(leagues_needed))}")
 
-    all_results: Dict[str, dict] = load_historical_results(args.historical_dir)
+    all_results: Dict[str, dict] = canonicalize_results_lookup(load_historical_results(args.historical_dir))
     print(f"  Historical results loaded: {len(all_results)}")
 
     for league in leagues_needed:
-        fresh = fetch_current_season_results(league, args.historical_dir)
+        fresh = canonicalize_results_lookup(fetch_current_season_results(league, args.historical_dir))
         latest_available = max((key.split("|", 1)[0] for key in fresh.keys()), default="none")
         print(f"  [live] {league}: {len(fresh)} matches fetched (latest {latest_available})")
         all_results.update(fresh)
-        fotmob = fetch_fotmob_recent_results(league, target_dates_by_league.get(league, set()))
+        fotmob = canonicalize_results_lookup(fetch_fotmob_recent_results(league, target_dates_by_league.get(league, set())))
         if fotmob:
             latest_fotmob = max((key.split("|", 1)[0] for key in fotmob.keys()), default="none")
             print(f"  [fotmob] {league}: {len(fotmob)} matches fetched (latest {latest_fotmob})")

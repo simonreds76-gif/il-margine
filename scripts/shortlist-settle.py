@@ -61,21 +61,54 @@ if hasattr(sys.stderr, "reconfigure"):
 _TEAM_ALIASES: Dict[str, str] = {
     # Our model name → Pinnacle name (post-normalization, lowercase, ASCII)
     "brighton and hove albion": "brighton",
+    "brighton hove albion": "brighton",
     "atalanta bc": "atalanta",
+    "bologna fc": "bologna",
+    "us lecce": "lecce",
     "tsg hoffenheim": "hoffenheim",
     "fc augsburg": "augsburg",
+    "inter": "internazionale",
     "inter milan": "internazionale",
     "fc st pauli": "st pauli",
     "vfb stuttgart": "stuttgart",
+    "fsv mainz 05": "mainz",
+    "mainz 05": "mainz",
     "borussia m gladbach": "borussia monchengladbach",
     "m gladbach": "borussia monchengladbach",
     "bayer 04 leverkusen": "bayer leverkusen",
     "sc freiburg": "freiburg",
     "1 fc union berlin": "union berlin",
+    "1 fc cologne": "fc koln",
     "wolverhampton wanderers": "wolverhampton",
+    "tottenham hotspur": "tottenham",
+    "liverpool fc": "liverpool",
+    "fulham fc": "fulham",
+    "burnley fc": "burnley",
+    "valencia cf": "valencia",
+    "elche cf": "elche",
+    "real sociedad": "sociedad",
+    "real sociedad san sebastian": "sociedad",
+    "deportivo alaves": "alaves",
+    "atletico madrid": "ath madrid",
+    "athletic club": "ath bilbao",
+    "athletic bilbao": "ath bilbao",
+    "real betis": "betis",
+    "real betis seville": "betis",
+    "ca osasuna": "osasuna",
+    "fc barcelona": "barcelona",
+    "espanyol": "espanol",
+    "espanyol barcelona": "espanol",
+    "rc celta de vigo": "celta",
+    "celta vigo": "celta",
+    "rcd mallorca": "mallorca",
+    "bayern munchen": "bayern munich",
     "as roma": "roma",
     "pisa sc": "pisa",
     "girona fc": "girona",
+}
+
+_GENERIC_TEAM_TOKENS = {
+    "fc", "cf", "afc", "sc", "ac", "us", "ud", "rc", "ssc", "calcio", "1907",
 }
 
 
@@ -85,8 +118,12 @@ def _norm_team(text: str) -> str:
     text = text.strip().lower()
     text = unicodedata.normalize("NFD", text)
     text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
-    text = re.sub(r"[^a-z0-9]+", " ", text).strip()
-    return _TEAM_ALIASES.get(text, text)
+    base = re.sub(r"[^a-z0-9]+", " ", text).strip()
+    simplified = " ".join(token for token in base.split() if token not in _GENERIC_TEAM_TOKENS).strip()
+    for candidate in (base, simplified):
+        if candidate in _TEAM_ALIASES:
+            return _TEAM_ALIASES[candidate]
+    return simplified or base
 
 
 def load_pinnacle_odds_index() -> Dict[str, List[dict]]:
@@ -196,8 +233,12 @@ def _norm(text: str) -> str:
     text = (text or "").strip().lower()
     text = unicodedata.normalize("NFD", text)
     text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
-    text = re.sub(r"[^a-z0-9]+", " ", text).strip()
-    return _TEAM_ALIASES.get(text, text)
+    base = re.sub(r"[^a-z0-9]+", " ", text).strip()
+    simplified = " ".join(token for token in base.split() if token not in _GENERIC_TEAM_TOKENS).strip()
+    for candidate in (base, simplified):
+        if candidate in _TEAM_ALIASES:
+            return _TEAM_ALIASES[candidate]
+    return simplified or base
 
 
 def _parse_date(val: str) -> Optional[date]:
@@ -309,6 +350,40 @@ def load_actual_results() -> Dict[str, dict]:
     return results
 
 
+def canonicalize_actual_results(results_lookup: Dict[str, dict]) -> Dict[str, dict]:
+    """
+    Re-key result rows onto the same canonical aliases the shortlist uses.
+
+    Football-Data and FotMob both key matches with plain normalized names.
+    Our shortlist rows use alias-aware normalization (e.g. "SC Freiburg" ->
+    "freiburg", "Inter Milan" -> "internazionale"). Without this pass the
+    result exists, but the settlement lookup misses it.
+    """
+    canonical: Dict[str, dict] = {}
+    for key, payload in results_lookup.items():
+        parts = str(key).split("|", 2)
+        if len(parts) != 3:
+            canonical[key] = payload
+            continue
+        match_date, home, away = parts
+        canonical[f"{match_date}|{_norm(home)}|{_norm(away)}"] = payload
+    return canonical
+
+
+def _rerun_fixture_identity(row: dict) -> str:
+    """
+    Identity for replacing stale same-day shortlist rows on rerun.
+
+    If a date file is regenerated for the same fixture, the latest file should
+    supersede older same-day rows even if the line/side changed.
+    """
+    match_norm = (row.get("match") or "").strip().lower()
+    league_norm = (row.get("league") or "").strip().lower()
+    fixture_date = _fixture_date_for_row(row)
+    file_date = (row.get("file_date") or "").strip()[:10]
+    return f"{file_date}|{league_norm}|{fixture_date}|{match_norm}"
+
+
 def fetch_current_season_results(league: str) -> Dict[str, dict]:
     code = LEAGUE_CODES.get(league)
     if not code:
@@ -348,7 +423,7 @@ def fetch_current_season_results(league: str) -> Dict[str, dict]:
 # ── Settle ────────────────────────────────────────────────────────────────────
 
 def settle_all(target_date: Optional[str] = None) -> List[dict]:
-    actual = load_actual_results()
+    actual = canonicalize_actual_results(load_actual_results())
     print(f"Loaded {len(actual)} historical results with corners")
     odds_index = load_pinnacle_odds_index()
     print(f"Loaded {len(odds_index)} Pinnacle odds series")
@@ -364,38 +439,14 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
         print("No value-bet files found.")
         return []
 
-    target_dates_by_league: Dict[str, set[str]] = defaultdict(set)
-    leagues_needed = sorted({
-        (row.get("league") or "").strip()
-        for path in bet_files
-        for row in csv.DictReader(open(path, "r", encoding="utf-8"))
-        if (row.get("league") or "").strip()
-    })
-    for path in bet_files:
-        file_date_str = path.name.replace("value-bets-", "").replace(".csv", "")
-        for row in csv.DictReader(open(path, "r", encoding="utf-8")):
-            league = (row.get("league") or "").strip()
-            if not league:
-                continue
-            match_str = (row.get("match") or "").strip()
-            kick_off_raw = (row.get("kick_off") or "").strip()
-            if not kick_off_raw and match_str:
-                kick_off_raw = find_match_kickoff(match_str, odds_index) or ""
-            match_date = (_parse_date(kick_off_raw) or _parse_date(file_date_str))
-            if match_date is not None:
-                target_dates_by_league[league].add(match_date.isoformat())
-
-    for league in leagues_needed:
-        fresh = fetch_current_season_results(league)
-        if fresh:
-            latest_available = max((key.split("|", 1)[0] for key in fresh.keys()), default="none")
-            print(f"  [live] {league}: {len(fresh)} matches fetched (latest {latest_available})")
-            actual.update(fresh)
-        fotmob = fetch_fotmob_recent_results(league, target_dates_by_league.get(league, set()))
-        if fotmob:
-            latest_fotmob = max((key.split("|", 1)[0] for key in fotmob.keys()), default="none")
-            print(f"  [fotmob] {league}: {len(fotmob)} matches fetched (latest {latest_fotmob})")
-            actual.update(fotmob)
+    existing_source_rows: List[dict] = []
+    if SETTLED_PATH.exists():
+        with open(SETTLED_PATH, "r", encoding="utf-8", newline="") as fh:
+            existing_source_rows = list(csv.DictReader(fh))
+        existing_source_rows = [
+            row for row in existing_source_rows
+            if (row.get("file_date") or "").strip().lower() != "latest"
+        ]
 
     current_source_rows: List[dict] = []
     for path in bet_files:
@@ -409,14 +460,44 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
                     row["kick_off"] = find_match_kickoff((row.get("match") or "").strip(), odds_index) or ""
                 current_source_rows.append(row)
 
-    existing_source_rows: List[dict] = []
-    if SETTLED_PATH.exists():
-        with open(SETTLED_PATH, "r", encoding="utf-8", newline="") as fh:
-            existing_source_rows = list(csv.DictReader(fh))
-        existing_source_rows = [
-            row for row in existing_source_rows
-            if (row.get("file_date") or "").strip().lower() != "latest"
-        ]
+    rows_needing_results = current_source_rows + [
+        row for row in existing_source_rows if (row.get("settled") or "").strip() == "pending"
+    ]
+
+    target_dates_by_league: Dict[str, set[str]] = defaultdict(set)
+    leagues_needed = sorted({
+        (row.get("league") or "").strip()
+        for row in rows_needing_results
+        if (row.get("league") or "").strip()
+    })
+    for row in rows_needing_results:
+        league = (row.get("league") or "").strip()
+        if not league:
+            continue
+        match_str = (row.get("match") or "").strip()
+        file_date_str = (row.get("file_date") or "").strip()[:10]
+        kick_off_raw = (row.get("kick_off") or "").strip()
+        if not kick_off_raw and match_str:
+            kick_off_raw = find_match_kickoff(match_str, odds_index) or ""
+        match_date = _parse_date(kick_off_raw) or _parse_date(file_date_str)
+        if match_date is not None:
+            # FotMob date buckets can drift by a day around ingestion/timezone edges,
+            # so fetch a small window around the target fixture date instead of only
+            # the exact date. The settlement lookup remains strict on the final key.
+            for delta in (-1, 0, 1):
+                target_dates_by_league[league].add((match_date + timedelta(days=delta)).isoformat())
+
+    for league in leagues_needed:
+        fresh = canonicalize_actual_results(fetch_current_season_results(league))
+        if fresh:
+            latest_available = max((key.split("|", 1)[0] for key in fresh.keys()), default="none")
+            print(f"  [live] {league}: {len(fresh)} matches fetched (latest {latest_available})")
+            actual.update(fresh)
+        fotmob = canonicalize_actual_results(fetch_fotmob_recent_results(league, target_dates_by_league.get(league, set())))
+        if fotmob:
+            latest_fotmob = max((key.split("|", 1)[0] for key in fotmob.keys()), default="none")
+            print(f"  [fotmob] {league}: {len(fotmob)} matches fetched (latest {latest_fotmob})")
+            actual.update(fotmob)
 
     current_file_dates_by_partial_identity: Dict[str, set[str]] = defaultdict(set)
     for row in current_source_rows:
@@ -437,8 +518,12 @@ def settle_all(target_date: Optional[str] = None) -> List[dict]:
             row["file_date"] = inferred_file_date
 
     current_keys = {_row_identity(row) for row in current_source_rows}
+    current_rerun_keys = {_rerun_fixture_identity(row) for row in current_source_rows}
     source_rows = current_source_rows + [
-        row for row in existing_source_rows if _row_identity(row) not in current_keys
+        row
+        for row in existing_source_rows
+        if _row_identity(row) not in current_keys
+        and _rerun_fixture_identity(row) not in current_rerun_keys
     ]
 
     rows: List[dict] = []
