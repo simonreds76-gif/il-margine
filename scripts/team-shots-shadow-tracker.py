@@ -23,6 +23,7 @@ from typing import Dict, List, Optional, Set
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_COMPARISON = ROOT / "data" / "team-shots" / "team-shots-comparison.csv"
+DEFAULT_SCANNER = ROOT / "data" / "team-shots" / "team-shots-scanner.csv"
 DEFAULT_SIGNALS = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-signals.csv"
 DEFAULT_SUMMARY = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-performance.txt"
 
@@ -67,6 +68,14 @@ def _signal_key(row: dict) -> str:
     ])
 
 
+def _fixture_date(row: dict) -> str:
+    return str(
+        row.get("fixture_date", "")
+        or row.get("date", "")
+        or row.get("kickoff_iso", "")
+    )[:10]
+
+
 def load_existing_signals(path: Path) -> tuple[list[dict], set[str]]:
     rows: List[dict] = []
     keys: Set[str] = set()
@@ -93,11 +102,65 @@ def stake_for_edge(edge: float) -> float:
     for threshold, units in STAKE_BANDS:
         if edge >= threshold:
             return units
-    return 0.5
+    return 0.0
+
+
+def resolve_effective_stake(row: dict, fallback_edge: float) -> float:
+    raw = str(row.get("effective_stake", "")).strip()
+    if raw:
+        return max(_pf(raw, 0.0), 0.0)
+    return stake_for_edge(fallback_edge)
+
+
+def repair_existing_signals(existing_signals: List[dict], source_rows: List[dict]) -> bool:
+    source_by_key = {_signal_key(row): row for row in source_rows}
+    changed = False
+
+    for row in existing_signals:
+        source = source_by_key.get(_signal_key(row))
+        if not source:
+            continue
+
+        if not str(row.get("kickoff_iso", "")).strip() and str(source.get("kickoff_iso", "")).strip():
+            row["kickoff_iso"] = source.get("kickoff_iso", "")
+            changed = True
+        if not str(row.get("date", "")).strip():
+            row["date"] = source.get("date", "") or _fixture_date(source)
+            changed = True
+        if not str(row.get("fixture_date", "")).strip():
+            row["fixture_date"] = _fixture_date(source)
+            changed = True
+        if not str(row.get("model_fair_odds", "")).strip():
+            fair = source.get("model_fair_odds", "") or source.get("model_fair", "")
+            if str(fair).strip():
+                row["model_fair_odds"] = fair
+                changed = True
+
+    return changed
+
+
+def _signal_quality(row: dict) -> tuple[int, str]:
+    score = 0
+    for field in ("kickoff_iso", "model_fair_odds", "logged_at", "closing_odds", "clv"):
+        if str(row.get(field, "")).strip():
+            score += 1
+    if str(row.get("actual_shots", "")).strip():
+        score += 2
+    return score, str(row.get("logged_at", ""))
+
+
+def dedupe_signals(rows: List[dict]) -> List[dict]:
+    best_by_key: dict[str, dict] = {}
+    for row in rows:
+        key = _signal_key(row)
+        existing = best_by_key.get(key)
+        if existing is None or _signal_quality(row) > _signal_quality(existing):
+            best_by_key[key] = row
+    return list(best_by_key.values())
 
 
 def track_signals(
-    comparisons: List[dict],
+    source_rows: List[dict],
     existing_signals: List[dict],
     existing_keys: Set[str],
     min_edge: float,
@@ -106,7 +169,7 @@ def track_signals(
     new_signals: List[dict] = []
     now = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
-    for comp in comparisons:
+    for comp in source_rows:
         edge = _pf(comp.get("edge"))
         book_odds = _pf(comp.get("book_odds"))
         line = _pf(comp.get("line"))
@@ -126,7 +189,9 @@ def track_signals(
 
         actual = int(_pf(comp.get("actual_shots", 0)))
         side = (comp.get("side") or "").strip().lower()
-        stake_units = stake_for_edge(edge)
+        stake_units = resolve_effective_stake(comp, edge)
+        if stake_units <= 0:
+            continue
 
         settled_at = ""
         if actual > 0:
@@ -148,8 +213,8 @@ def track_signals(
             pnl_staked = ""
 
         signal = {
-            "date": comp.get("date", ""),
-            "fixture_date": (comp.get("date") or "")[:10],
+            "date": comp.get("date", "") or _fixture_date(comp),
+            "fixture_date": _fixture_date(comp),
             "kickoff_iso": comp.get("kickoff_iso", ""),
             "league": comp.get("league", ""),
             "home_team": comp.get("home_team", ""),
@@ -161,7 +226,7 @@ def track_signals(
             "side": side,
             "book_odds": comp.get("book_odds", ""),
             "model_prob": comp.get("model_prob", ""),
-            "model_fair_odds": comp.get("model_fair_odds", ""),
+            "model_fair_odds": comp.get("model_fair_odds", "") or comp.get("model_fair", ""),
             "edge": comp.get("edge", ""),
             "stake_units": stake_units,
             "actual_shots": actual if actual > 0 else "",
@@ -251,6 +316,7 @@ def write_summary(all_signals: List[dict], path: Path) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Team shots shadow signal tracker")
     parser.add_argument("--comparison", type=Path, default=DEFAULT_COMPARISON)
+    parser.add_argument("--scanner", type=Path, default=DEFAULT_SCANNER)
     parser.add_argument("--signals", type=Path, default=DEFAULT_SIGNALS)
     parser.add_argument("--summary", type=Path, default=DEFAULT_SUMMARY)
     parser.add_argument("--min-edge", type=float, default=MIN_EDGE)
@@ -264,16 +330,26 @@ def main() -> None:
     print(f"Loading comparisons from {args.comparison}")
     comparisons = load_comparisons(args.comparison)
     print(f"  Comparisons: {len(comparisons)}")
+    print(f"Loading scanner rows from {args.scanner}")
+    scanner_rows = load_comparisons(args.scanner)
+    print(f"  Scanner rows: {len(scanner_rows)}")
 
     # Never prune pending signals — once logged a signal survives until settled.
     # (Previously this filtered out pending signals not in the current comparison CSV,
     # which deleted signals when a match date passed but FBRef hadn't been scraped yet.)
+    source_rows = scanner_rows if scanner_rows else comparisons
+    source_name = args.scanner if scanner_rows else args.comparison
+    print(f"Using signal source: {source_name}")
+
+    if repair_existing_signals(existing, source_rows):
+        print("  Repaired existing signal metadata from current source rows")
+
     keys = {_signal_key(row) for row in existing}
 
-    new = track_signals(comparisons, existing, keys, args.min_edge, args.bookmaker)
+    new = track_signals(source_rows, existing, keys, args.min_edge, args.bookmaker)
     print(f"  New signals: {len(new)}")
 
-    all_signals = existing + new
+    all_signals = dedupe_signals(existing + new)
     if new or not existing:
         write_signals(all_signals, args.signals)
         print(f"  Signals written to {args.signals}")

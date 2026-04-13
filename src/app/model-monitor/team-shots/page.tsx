@@ -391,7 +391,9 @@ function calibratedOverProbability(
   const key = `${side}_p_over_${line.toFixed(1)}`;
   let raw = pf(row[key], Number.NaN);
   if (Number.isNaN(raw) || raw <= 0 || raw >= 1) {
-    const lam = pf(row[`${side}_lambda`], Number.NaN);
+    const lam =
+      pf(row[`${side}_lambda_venue`], Number.NaN) ||
+      pf(row[`${side}_lambda`], Number.NaN);
     if (Number.isNaN(lam) || lam <= 0) return null;
     raw = poissonProbOver(line, lam);
   }
@@ -492,6 +494,167 @@ function bestSummarySide(
   return entry.metrics.overEdge !== null && entry.metrics.overEdge === Math.max(entry.metrics.overEdge ?? -999, entry.metrics.underEdge ?? -999)
     ? "O"
     : "U";
+}
+
+type ConsensusState = "aligned" | "divergent" | "conflict";
+
+function consensusStateForRow(row: CsvRow, side: "home" | "away"): ConsensusState {
+  const raw = (row[`${side}_consensus`] ?? "").trim().toLowerCase();
+  if (raw === "divergent" || raw === "conflict") return raw;
+
+  const venue = pf(row[`${side}_lambda_venue`], Number.NaN);
+  const recent = pf(row[`${side}_lambda_recent`], Number.NaN);
+  if (Number.isNaN(venue) || !(venue > 0) || Number.isNaN(recent)) return "aligned";
+  const divergence = Math.abs(recent - venue) / venue;
+  if (divergence <= 0.15) return "aligned";
+  if (divergence <= 0.3) return "divergent";
+  return "conflict";
+}
+
+function divergenceForRow(row: CsvRow, side: "home" | "away"): number {
+  const raw = maybeFloat(row[`${side}_divergence`]);
+  if (raw !== null) return raw;
+  const venue = pf(row[`${side}_lambda_venue`], Number.NaN);
+  const recent = pf(row[`${side}_lambda_recent`], Number.NaN);
+  if (Number.isNaN(venue) || !(venue > 0) || Number.isNaN(recent)) return 0;
+  return Math.abs(recent - venue) / venue;
+}
+
+function pctDelta(from: number | null, to: number | null): number | null {
+  if (from === null || to === null || Math.abs(from) < 1e-6) return null;
+  return ((to - from) / from) * 100;
+}
+
+function formatPctDelta(value: number | null): string {
+  if (value === null || Number.isNaN(value)) return "--";
+  return `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
+}
+
+function consensusTone(consensus: ConsensusState): string {
+  if (consensus === "conflict") return "bg-rose-500/10 text-rose-300 border-rose-500/20";
+  if (consensus === "divergent") return "bg-amber-500/10 text-amber-300 border-amber-500/20";
+  return "bg-emerald-500/10 text-emerald-300 border-emerald-500/20";
+}
+
+function signalBadge(
+  edge: number | null,
+  side: "over" | "under",
+  consensus: ConsensusState,
+): { label: string; tone: string } | null {
+  if (edge === null || Number.isNaN(edge) || edge < 5) return null;
+  if (edge >= 12) {
+    if (consensus === "conflict") {
+      return { label: "FLAGGED", tone: "bg-rose-500/10 text-rose-300 border-rose-500/20" };
+    }
+    if (consensus === "divergent") {
+      return { label: "SIGNAL ⚠", tone: "bg-amber-500/10 text-amber-300 border-amber-500/20" };
+    }
+    if (side === "under") {
+      return { label: "UNDER ★", tone: "bg-cyan-500/10 text-cyan-300 border-cyan-500/20" };
+    }
+    return { label: "SIGNAL", tone: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20" };
+  }
+  return { label: "WATCH", tone: "bg-slate-700/30 text-slate-300 border-slate-600/30" };
+}
+
+function effectiveStake(edgeDecimal: number, consensus: ConsensusState): number {
+  let stake = shadowStakeUnits(edgeDecimal);
+  let numericStake = pf(stake.replace("u", ""), 0);
+  if (consensus !== "conflict") return numericStake;
+  if (edgeDecimal < 0.08) return 0;
+  if (numericStake >= 2) return 1.5;
+  if (numericStake >= 1.5) return 1.0;
+  if (numericStake >= 1.0) return 0.5;
+  return 0.5;
+}
+
+function LambdaTrustPanel({
+  leagueKey,
+  row,
+}: {
+  leagueKey: string;
+  row: CsvRow;
+}) {
+  const teamConfigs: Array<{ side: "home" | "away"; team: string }> = [
+    { side: "home", team: row.home_team ?? "" },
+    { side: "away", team: row.away_team ?? "" },
+  ];
+
+  return (
+    <div className="mb-3 rounded-2xl border border-slate-800 bg-slate-950/40 p-4">
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          Lambda Trust Panel
+        </div>
+        <div className="text-[11px] text-slate-500">
+          venue fair drives scanner | recent is confidence only
+        </div>
+      </div>
+      <div className="grid gap-3 lg:grid-cols-2">
+        {teamConfigs.map(({ side, team }) => {
+          const base = maybeFloat(row[`${side}_lambda`]);
+          const venue = maybeFloat(row[`${side}_lambda_venue`]);
+          const recent = maybeFloat(row[`${side}_lambda_recent`]);
+          const consensus = consensusStateForRow(row, side);
+          const divergence = divergenceForRow(row, side);
+          const baseToVenue = pctDelta(base, venue);
+          const venueToRecent = pctDelta(venue, recent);
+          const hotCold =
+            venueToRecent !== null && venueToRecent > 15
+              ? { label: "HOT", tone: "text-emerald-300" }
+              : venueToRecent !== null && venueToRecent < -15
+                ? { label: "COLD", tone: "text-rose-300" }
+                : null;
+
+          return (
+            <div key={`${side}-${team}`} className="rounded-xl border border-slate-800/70 bg-slate-900/50 p-3">
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <TeamLabel
+                  league={leagueKey}
+                  team={team}
+                  iconSize={18}
+                  teamClassName="text-sm font-medium text-slate-100"
+                />
+                <StatusPill label={consensus.toUpperCase()} tone={consensusTone(consensus)} />
+              </div>
+              <div className="grid gap-2 sm:grid-cols-3">
+                <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-3 py-2">
+                  <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">Base</div>
+                  <div className="mt-1 font-mono text-sm text-slate-100">
+                    {base !== null ? base.toFixed(2) : "--"}
+                  </div>
+                </div>
+                <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-3 py-2">
+                  <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">Venue</div>
+                  <div className="mt-1 font-mono text-sm text-slate-100">
+                    {venue !== null ? venue.toFixed(2) : "--"}
+                  </div>
+                  <div className={`mt-1 text-[11px] ${baseToVenue !== null && Math.abs(baseToVenue) > 10 ? "text-amber-300" : "text-slate-500"}`}>
+                    {formatPctDelta(baseToVenue)} vs base
+                  </div>
+                </div>
+                <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-3 py-2">
+                  <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">Recent</div>
+                  <div className="mt-1 font-mono text-sm text-slate-100">
+                    {recent !== null ? recent.toFixed(2) : "--"}
+                  </div>
+                  <div className={`mt-1 text-[11px] ${hotCold ? hotCold.tone : "text-slate-500"}`}>
+                    {formatPctDelta(venueToRecent)} vs venue{hotCold ? ` | ${hotCold.label}` : ""}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
+                <span>divergence {(divergence * 100).toFixed(1)}%</span>
+                {recent !== null && venue !== null && Math.abs(recent - venue) < 0.01 ? (
+                  <span className="text-slate-500">recent fallback / limited signal</span>
+                ) : null}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 
@@ -832,8 +995,12 @@ function LiveLineTable({
       </div>
     );
   }
-  const lambda = pf(row[`${side}_lambda`]);
-  if (!(lambda > 0)) {
+  const lambdaBase = maybeFloat(row[`${side}_lambda`]);
+  const lambdaVenue = maybeFloat(row[`${side}_lambda_venue`]) ?? lambdaBase;
+  const lambdaRecent = maybeFloat(row[`${side}_lambda_recent`]) ?? lambdaVenue;
+  const consensus = consensusStateForRow(row, side);
+  const divergence = divergenceForRow(row, side);
+  if (!(lambdaVenue !== null && lambdaVenue > 0)) {
     return (
       <div className="rounded-2xl border border-slate-800 bg-slate-950/40 p-4 text-sm text-slate-500">
         No model estimate for this team yet.
@@ -902,7 +1069,13 @@ function LiveLineTable({
           iconSize={20}
           teamClassName="text-sm font-medium text-slate-100"
         />
-        <div className="text-xs text-slate-500">lambda {lambda.toFixed(2)}</div>
+        <div className="mt-1 flex flex-wrap items-center gap-2">
+          <div className="text-xs text-slate-500">
+            base {lambdaBase !== null ? lambdaBase.toFixed(2) : "--"} | venue {lambdaVenue.toFixed(2)} | recent {lambdaRecent !== null ? lambdaRecent.toFixed(2) : "--"}
+          </div>
+          <StatusPill label={consensus.toUpperCase()} tone={consensusTone(consensus)} />
+          <div className="text-[11px] text-slate-500">divergence {(divergence * 100).toFixed(1)}%</div>
+        </div>
         <div className="mt-2 grid gap-2 text-[11px] sm:grid-cols-2">
           <div className="rounded-lg border border-slate-800 bg-slate-900/60 px-2 py-1.5 text-slate-300">
             Best live:{" "}
@@ -930,27 +1103,20 @@ function LiveLineTable({
         <thead>
           <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
             <th className="py-2 pl-4 pr-3">Book</th>
-            <th className="py-2 pr-3">Shadow</th>
             <th className="py-2 pr-3 font-mono">Line</th>
             <th className="py-2 pr-3 font-mono">Fair O/U</th>
             <th className="py-2 pr-3 font-mono">Book O/U</th>
             <th className="py-2 pr-4 font-mono">Value O/U</th>
+            <th className="py-2 pr-4">Signal O/U</th>
           </tr>
         </thead>
         <tbody>
           {primaryLines.map(({ line, metrics, overShadow, underShadow }, i) => {
+            const overBadge = signalBadge(metrics.overEdge, "over", consensus);
+            const underBadge = signalBadge(metrics.underEdge, "under", consensus);
             return (
               <tr key={`${line.bookmaker}-${line.lineLabel}-${i}`} className="border-b border-slate-800/40">
                 <td className="py-2 pl-4 pr-3 text-slate-300">{line.bookmaker}</td>
-                <td className="py-2 pr-3">
-                  <span className={`rounded-full px-1.5 py-0.5 text-[10px] uppercase ${
-                    overShadow || underShadow
-                      ? "bg-emerald-500/15 text-emerald-300"
-                      : "bg-slate-700/30 text-slate-500"
-                  }`}>
-                    {overShadow || underShadow ? "yes" : "no"}
-                  </span>
-                </td>
                 <td className="py-2 pr-3 font-mono tabular-nums text-slate-100">{line.lineLabel}</td>
                 <td className="py-2 pr-3 font-mono tabular-nums text-slate-400">
                   {metrics.fairOver.toFixed(2)} / {metrics.fairUnder.toFixed(2)}
@@ -967,6 +1133,25 @@ function LiveLineTable({
                     {formatSignedPercent(metrics.underEdge)}
                   </span>
                 </td>
+                <td className="py-2 pr-4">
+                  <div className="flex flex-wrap items-center gap-1">
+                    {overBadge ? (
+                      <StatusPill label={overBadge.label} tone={overBadge.tone} />
+                    ) : overShadow ? (
+                      <StatusPill label="WATCH" tone="bg-slate-700/30 text-slate-300 border-slate-600/30" />
+                    ) : (
+                      <span className="text-[10px] text-slate-600">-</span>
+                    )}
+                    <span className="text-slate-600">/</span>
+                    {underBadge ? (
+                      <StatusPill label={underBadge.label} tone={underBadge.tone} />
+                    ) : underShadow ? (
+                      <StatusPill label="WATCH" tone="bg-slate-700/30 text-slate-300 border-slate-600/30" />
+                    ) : (
+                      <span className="text-[10px] text-slate-600">-</span>
+                    )}
+                  </div>
+                </td>
               </tr>
             );
           })}
@@ -982,15 +1167,6 @@ function LiveLineTable({
               {extraLines.map(({ line, metrics, overShadow, underShadow }, i) => (
                 <tr key={`extra-${line.bookmaker}-${line.lineLabel}-${i}`} className="border-t border-slate-800/40">
                   <td className="py-2 pl-4 pr-3 text-slate-300">{line.bookmaker}</td>
-                  <td className="py-2 pr-3">
-                    <span className={`rounded-full px-1.5 py-0.5 text-[10px] uppercase ${
-                      overShadow || underShadow
-                        ? "bg-emerald-500/15 text-emerald-300"
-                        : "bg-slate-700/30 text-slate-500"
-                    }`}>
-                      {overShadow || underShadow ? "yes" : "no"}
-                    </span>
-                  </td>
                   <td className="py-2 pr-3 font-mono tabular-nums text-slate-100">{line.lineLabel}</td>
                   <td className="py-2 pr-3 font-mono tabular-nums text-slate-400">
                     {metrics.fairOver.toFixed(2)} / {metrics.fairUnder.toFixed(2)}
@@ -1006,6 +1182,25 @@ function LiveLineTable({
                     <span className={metrics.underEdge !== null && metrics.underEdge >= 0 ? "text-emerald-300" : "text-slate-500"}>
                       {formatSignedPercent(metrics.underEdge)}
                     </span>
+                  </td>
+                  <td className="py-2 pr-4">
+                    <div className="flex flex-wrap items-center gap-1">
+                      {signalBadge(metrics.overEdge, "over", consensus) ? (
+                        <StatusPill label={signalBadge(metrics.overEdge, "over", consensus)!.label} tone={signalBadge(metrics.overEdge, "over", consensus)!.tone} />
+                      ) : overShadow ? (
+                        <StatusPill label="WATCH" tone="bg-slate-700/30 text-slate-300 border-slate-600/30" />
+                      ) : (
+                        <span className="text-[10px] text-slate-600">-</span>
+                      )}
+                      <span className="text-slate-600">/</span>
+                      {signalBadge(metrics.underEdge, "under", consensus) ? (
+                        <StatusPill label={signalBadge(metrics.underEdge, "under", consensus)!.label} tone={signalBadge(metrics.underEdge, "under", consensus)!.tone} />
+                      ) : underShadow ? (
+                        <StatusPill label="WATCH" tone="bg-slate-700/30 text-slate-300 border-slate-600/30" />
+                      ) : (
+                        <span className="text-[10px] text-slate-600">-</span>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -1650,13 +1845,14 @@ function LiveLineTable({
                           </div>
                           <div className="text-[11px] text-slate-500">{formatKickoffUtc(row.kickoff_iso)}</div>
                         </div>
-                        {hasShadow ? (
+                      {hasShadow ? (
                           <StatusPill
                             label="shadow signal"
                             tone="bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
                           />
                         ) : null}
                       </div>
+                      <LambdaTrustPanel leagueKey={leagueKey} row={row} />
                       <div className="grid gap-3 sm:grid-cols-2">
                         <LiveLineTable
                           leagueKey={leagueKey}

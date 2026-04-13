@@ -43,10 +43,18 @@ DISPLAY_LINES = [8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5, 16.5, 17.5, 19.5,
 
 SUPPORTED_LIVE_LEAGUES = {"epl", "serie-a", "la-liga", "bundesliga"}
 
+SHADOW_THRESHOLD = 0.05
+ACTION_THRESHOLD = 0.12
+CONFLICT_SKIP_THRESHOLD = 0.08
+ALIGNED_MAX_DIVERGENCE = 0.15
+DIVERGENT_MAX_DIVERGENCE = 0.30
+
 SCANNER_FIELDS = [
     "kickoff_iso", "league", "home_team", "away_team", "team", "venue",
     "line", "side", "model_prob", "model_fair", "book_odds", "bookmaker",
     "edge", "captured_at",
+    "lambda_venue", "lambda_recent", "divergence", "consensus",
+    "effective_stake", "preferred",
 ]
 
 
@@ -120,6 +128,51 @@ def _load_inbox_odds(inbox_dir: Path) -> Dict[Tuple, dict]:
     return keyed
 
 
+def _stake_for_edge(edge: float) -> float:
+    if edge >= 0.16:
+        return 2.0
+    if edge >= 0.12:
+        return 1.5
+    if edge >= 0.08:
+        return 1.0
+    if edge >= 0.05:
+        return 0.5
+    return 0.0
+
+
+def _downgrade_one_band(stake_units: float) -> float:
+    if stake_units >= 2.0:
+        return 1.5
+    if stake_units >= 1.5:
+        return 1.0
+    if stake_units >= 1.0:
+        return 0.5
+    if stake_units >= 0.5:
+        return 0.5
+    return 0.0
+
+
+def _recent_consensus(lam_venue: float, lam_recent: float, recent_is_genuine: bool) -> Tuple[float, str]:
+    if not recent_is_genuine or lam_venue <= 0:
+        return 0.0, "aligned"
+
+    divergence = abs(lam_recent - lam_venue) / lam_venue
+    if divergence <= ALIGNED_MAX_DIVERGENCE:
+        return divergence, "aligned"
+    if divergence <= DIVERGENT_MAX_DIVERGENCE:
+        return divergence, "divergent"
+    return divergence, "conflict"
+
+
+def _effective_stake(edge: float, consensus: str) -> float:
+    base_stake = _stake_for_edge(edge)
+    if consensus != "conflict":
+        return base_stake
+    if edge < CONFLICT_SKIP_THRESHOLD:
+        return 0.0
+    return _downgrade_one_band(base_stake)
+
+
 def _build_scanner(
     upcoming_rows: List[Dict[str, Any]],
     inbox_index: Dict[Tuple, dict],
@@ -142,7 +195,10 @@ def _build_scanner(
 
         for venue, team_raw in (("home", home_raw), ("away", away_raw)):
             norm_team = _norm_name(team_raw)
-            prob_key_prefix = f"{venue}_p_over_"
+            consensus = str(row.get(f"{venue}_consensus") or "aligned").strip().lower() or "aligned"
+            divergence = float(row.get(f"{venue}_divergence") or 0.0)
+            lambda_venue = float(row.get(f"{venue}_lambda_venue") or row.get(f"{venue}_lambda") or 0.0)
+            lambda_recent = float(row.get(f"{venue}_lambda_recent") or lambda_venue or 0.0)
 
             for line in DISPLAY_LINES:
                 line_str = f"{line:.1f}"
@@ -179,6 +235,8 @@ def _build_scanner(
                         continue
 
                     edge = round(model_prob * book_odds - 1.0, 4)
+                    effective_stake = _effective_stake(edge, consensus)
+                    preferred = side == "under" and edge >= ACTION_THRESHOLD and consensus != "conflict"
 
                     scanner.append({
                         "kickoff_iso": kickoff,
@@ -195,10 +253,23 @@ def _build_scanner(
                         "bookmaker": best_row.get("bookmaker") or "",
                         "edge": edge,
                         "captured_at": best_row.get("captured_at") or "",
+                        "lambda_venue": round(lambda_venue, 2),
+                        "lambda_recent": round(lambda_recent, 2),
+                        "divergence": round(divergence, 4),
+                        "consensus": consensus,
+                        "effective_stake": round(effective_stake, 1),
+                        "preferred": preferred,
                     })
 
-    # Sort: positive edge first, then by edge descending
-    scanner.sort(key=lambda r: (-r["edge"], r.get("kickoff_iso") or ""))
+    # Preferred under signals first; suppressed conflict rows sink to the bottom.
+    scanner.sort(
+        key=lambda r: (
+            1 if float(r.get("effective_stake") or 0.0) <= 0 else 0,
+            0 if bool(r.get("preferred")) else 1,
+            -float(r["edge"]),
+            r.get("kickoff_iso") or "",
+        )
+    )
     return scanner
 
 
@@ -299,6 +370,10 @@ def main() -> None:
                     "away_team": away_raw,
                     "home_lambda": "",
                     "away_lambda": "",
+                    "home_consensus": "",
+                    "away_consensus": "",
+                    "home_divergence": "",
+                    "away_divergence": "",
                     "note": "no_state",
                 })
                 continue
@@ -313,12 +388,28 @@ def main() -> None:
                     "away_team": away_raw,
                     "home_lambda": "",
                     "away_lambda": "",
+                    "home_consensus": "",
+                    "away_consensus": "",
+                    "home_divergence": "",
+                    "away_divergence": "",
                     "note": "insufficient_ema",
                 })
                 continue
 
             h_lam, _, h_lam_venue, h_lam_recent = home_res
             a_lam, _, a_lam_venue, a_lam_recent = away_res
+            home_recent_genuine = len(h_state.home_shots_history) >= tsm.RECENT_MIN
+            away_recent_genuine = len(a_state.away_shots_history) >= tsm.RECENT_MIN
+            home_divergence, home_consensus = _recent_consensus(
+                h_lam_venue,
+                h_lam_recent,
+                home_recent_genuine,
+            )
+            away_divergence, away_consensus = _recent_consensus(
+                a_lam_venue,
+                a_lam_recent,
+                away_recent_genuine,
+            )
             row: Dict[str, Any] = {
                 "league": league,
                 "kickoff_iso": ko,
@@ -330,6 +421,10 @@ def main() -> None:
                 "away_lambda_venue": round(a_lam_venue, 2),
                 "home_lambda_recent": round(h_lam_recent, 2),
                 "away_lambda_recent": round(a_lam_recent, 2),
+                "home_consensus": home_consensus,
+                "away_consensus": away_consensus,
+                "home_divergence": round(home_divergence, 4),
+                "away_divergence": round(away_divergence, 4),
                 "note": "",
             }
 
@@ -365,6 +460,8 @@ def main() -> None:
         "home_lambda", "away_lambda",
         "home_lambda_venue", "away_lambda_venue",
         "home_lambda_recent", "away_lambda_recent",
+        "home_consensus", "away_consensus",
+        "home_divergence", "away_divergence",
         "note",
     ]
     for line in DISPLAY_LINES:
