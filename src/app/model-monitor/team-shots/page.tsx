@@ -1300,6 +1300,9 @@ function LiveLineTable({
                         <div className="truncate text-sm font-medium text-white">{r.team}</div>
                         <div className="text-[11px] text-slate-500">{r.home_team} v {r.away_team}</div>
                         <div className="text-[11px] text-slate-600">{(r.date ?? "").slice(0, 10)}</div>
+                        <div className="text-[11px] text-slate-500">
+                          {r.side === "over" ? "Over" : "Under"} {r.line || "-"}
+                        </div>
                         {r.settled_at ? (
                           <div className="text-[11px] text-slate-500">Settled {formatDateTime(r.settled_at)}</div>
                         ) : null}
@@ -1362,6 +1365,7 @@ function LiveLineTable({
                   <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
                     <th className="py-2.5 pl-4 pr-3">Date</th>
                     <th className="py-2.5 pr-3">Team / Match</th>
+                    <th className="py-2.5 pr-3">Line</th>
                     <th className="py-2.5 pr-3">Side</th>
                     <th className="py-2.5 pr-3">Result</th>
                     <th className="py-2.5 pr-3 font-mono">Entry</th>
@@ -1388,6 +1392,9 @@ function LiveLineTable({
                           {r.settled_at ? (
                             <div className="text-[11px] text-slate-600">Settled {formatDateTime(r.settled_at)}</div>
                           ) : null}
+                        </td>
+                        <td className="py-2 pr-3">
+                          <div className="font-mono tabular-nums text-slate-200">{r.line || "-"}</div>
                         </td>
                         <td className="py-2 pr-3">
                           <StatusPill
@@ -1493,7 +1500,7 @@ function LiveLineTable({
                                   {row.currentOdds !== null ? row.currentOdds.toFixed(2) : "-"}
                                   {deltaOdds !== null ? (
                                     <span className={`ml-1 ${deltaOdds > 0 ? "text-emerald-300" : deltaOdds < 0 ? "text-rose-300" : "text-slate-500"}`}>
-                                      ({deltaOdds > 0 ? "â†‘" : "â†“"}{Math.abs(deltaOdds).toFixed(2)})
+                                      ({deltaOdds > 0 ? "+" : deltaOdds < 0 ? "-" : ""}{Math.abs(deltaOdds).toFixed(2)})
                                     </span>
                                   ) : null}
                                 </div>

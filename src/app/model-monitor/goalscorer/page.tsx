@@ -74,6 +74,11 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
   const minuteAside = row.minute
     ? `min ${row.minute}${row.event_result ? ` | ${row.event_result}` : row.event_type ? ` | ${row.event_type}` : ""}`
     : undefined;
+  const activeTakerPitchValue =
+    row.active_on_pitch_at_penalty?.trim() ||
+    (row.active_taker_pre_match ? "Unresolved" : "-");
+  const hasTransferContext =
+    Boolean(row.inherited_from_pre_match?.trim()) || Boolean(row.transfer_level_pre_match?.trim());
 
   return (
     <article className="rounded-xl border border-slate-800 bg-slate-950/50 p-4">
@@ -131,7 +136,7 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
           <PhaseLabel label="At penalty" aside={minuteAside} />
           <div className="grid gap-1.5 sm:grid-cols-3">
             <StatCard compact label="Primary on pitch" value={row.primary_on_pitch_at_penalty || "-"} />
-            <StatCard compact label="Active on pitch"  value={row.active_on_pitch_at_penalty || "-"} />
+            <StatCard compact label="Active taker on pitch"  value={activeTakerPitchValue} />
             <StatCard
               compact
               label="Actual taker"
@@ -142,13 +147,15 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
         </div>
 
         {/* Transfer */}
-        <div className="space-y-2">
-          <PhaseLabel label="Transfer & assignment" />
-          <div className="grid gap-1.5 sm:grid-cols-2">
-            <StatCard compact label="Inherited from"  value={row.inherited_from_pre_match || "-"} />
-            <StatCard compact label="Transfer level"  value={row.transfer_level_pre_match || "-"} />
+        {hasTransferContext ? (
+          <div className="space-y-2">
+            <PhaseLabel label="Transfer & assignment" />
+            <div className="grid gap-1.5 sm:grid-cols-2">
+              <StatCard compact label="Inherited duty from" value={row.inherited_from_pre_match || "-"} />
+              <StatCard compact label="Transfer confidence" value={row.transfer_level_pre_match || "-"} />
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
 
       {/* -- Footer -- */}
