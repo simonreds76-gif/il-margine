@@ -452,6 +452,7 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
                 "editorial_note": build_editorial_note(
                     actual_taker=player_name,
                     attempts=attempts,
+                    event_result=_summarise_event_result(scored, attempts),
                     team=sample["team"],
                     opponent=sample["opponent"],
                     context=context,
