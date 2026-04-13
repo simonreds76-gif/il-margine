@@ -238,8 +238,20 @@ try {
     }
 
     $currentStep = "corners-shortlist"
+    Write-Status -State "running" -Message "Running corners backtest" -Artifacts (Build-ArtifactsState)
+    Log "Step 1d: Building corners V3 backtest artifacts..."
+    $backtestResult = & python scripts/corners-ou-backtest.py 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Add-WarningMessage "Corners backtest generation failed (exit $LASTEXITCODE); monitor will show backtest artifacts unavailable."
+        $backtestResult | ForEach-Object { Log "  $_" }
+    } else {
+        $backtestLine = ($backtestResult | Select-String "Backtest bets written" | Select-Object -Last 1)
+        if ($backtestLine) { Log "  $backtestLine" }
+    }
+
+    $currentStep = "corners-shortlist"
     Write-Status -State "running" -Message "Generating corners shortlist" -Artifacts (Build-ArtifactsState)
-    Log "Step 1d: Fetching corner odds and generating shortlist..."
+    Log "Step 1e: Fetching corner odds and generating shortlist..."
     $shortlistArgs = @("scripts/matchday-shortlist.py", "--all-leagues", "--min-edge", $MinEdge, "--days-ahead", $DaysAhead, "--regions", $Regions)
     if ($LeaguesOnly) {
         $shortlistArgs = @("scripts/matchday-shortlist.py", "--league", $LeaguesOnly.Split(",")[0], "--min-edge", $MinEdge, "--days-ahead", $DaysAhead, "--regions", $Regions)
@@ -256,7 +268,7 @@ try {
 
     $currentStep = "corners-settle"
     Write-Status -State "running" -Message "Settling corners shortlist" -Artifacts (Build-ArtifactsState)
-    Log "Step 1e: Settling previous corner bets..."
+    Log "Step 1f: Settling previous corner bets..."
     $settleResult = & python scripts/shortlist-settle.py 2>&1
     $settleExitCode = $LASTEXITCODE
     $settleLine = ($settleResult | Select-String "Settled:" | Select-Object -Last 1)

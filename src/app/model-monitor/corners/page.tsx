@@ -614,11 +614,12 @@ export default async function CornersMonitorPage() {
     : null;
 
   const backtestPnl = backtestRows.reduce((s, r) => s + pf(r.pnl), 0);
+  const backtestStaked = backtestRows.reduce((s, r) => s + pf(r.stake, 1), 0);
   const backtestWins = backtestRows.filter(
     (r) => r.won === "True" || r.won === "true",
   ).length;
   const backtestRoi =
-    backtestRows.length > 0 ? (backtestPnl / backtestRows.length) * 100 : null;
+    backtestStaked > 0 ? (backtestPnl / backtestStaked) * 100 : null;
 
   const recentPredictions = predictions.slice(-80).reverse();
   const schedulerHeartbeatAt =
@@ -740,7 +741,7 @@ export default async function CornersMonitorPage() {
             detail={
               backtestRoi === null
                 ? "backtest artifacts unavailable"
-                : `${backtestPnl >= 0 ? "+" : ""}${backtestPnl.toFixed(1)}u PnL`
+                : `${backtestPnl >= 0 ? "+" : ""}${backtestPnl.toFixed(1)}u PnL on ${backtestStaked.toFixed(1)}u staked`
             }
             tone={statTone(backtestRoi === null ? "amber" : backtestRoi > 0 ? "green" : backtestRoi < -5 ? "red" : "default")}
           />
