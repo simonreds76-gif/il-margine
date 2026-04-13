@@ -8,22 +8,22 @@
       "match_date": "2026-04-13",
       "home_team": "Levante",
       "away_team": "Getafe",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "5-3-2",
       "home_players": [
         "Mathew Ryan",
         "Jeremy Toljan",
         "Adrián De La Fuente",
-        "Alan Matturro",
+        "Matías Moreno",
         "Manuel Sánchez",
-        "Jon Olasagasti",
-        "Oriol Rey",
-        "Víctor García",
+        "Ugo Raghouber",
         "Pablo Martínez",
         "Kareem Tunde",
+        "Jon Olasagasti",
+        "Iván Romero",
         "Carlos Espí"
       ],
       "away_players": [
@@ -33,9 +33,9 @@
         "Zaid Abner Romero",
         "Kiko",
         "Juan Iglesias",
+        "Adrián Liso",
         "Luis Milla",
         "Djené",
-        "Adrián Liso",
         "Martín Satriano",
         "Luis Vázquez"
       ],
@@ -68,7 +68,7 @@
           "position_id": 34
         },
         {
-          "name": "Alan Matturro",
+          "name": "Matías Moreno",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -86,7 +86,7 @@
           "position_id": 38
         },
         {
-          "name": "Jon Olasagasti",
+          "name": "Ugo Raghouber",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -95,7 +95,7 @@
           "position_id": 64
         },
         {
-          "name": "Oriol Rey",
+          "name": "Pablo Martínez",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -104,7 +104,7 @@
           "position_id": 66
         },
         {
-          "name": "Víctor García",
+          "name": "Kareem Tunde",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -113,7 +113,7 @@
           "position_id": 83
         },
         {
-          "name": "Pablo Martínez",
+          "name": "Jon Olasagasti",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -122,7 +122,7 @@
           "position_id": 85
         },
         {
-          "name": "Kareem Tunde",
+          "name": "Iván Romero",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -196,7 +196,7 @@
           "position_id": 59
         },
         {
-          "name": "Luis Milla",
+          "name": "Adrián Liso",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -205,7 +205,7 @@
           "position_id": 73
         },
         {
-          "name": "Djené",
+          "name": "Luis Milla",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -214,7 +214,7 @@
           "position_id": 75
         },
         {
-          "name": "Adrián Liso",
+          "name": "Djené",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -241,8 +241,32 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Pablo Campos",
+        "Alan Matturro",
+        "Diego Pampín",
+        "Nacho Pérez",
+        "Carlos Álvarez",
+        "Iker Losada",
+        "Kervin Arriaga",
+        "Oriol Rey",
+        "Etta Eyong",
+        "Paco Cortés",
+        "Tay Abed",
+        "Víctor García"
+      ],
+      "away_subs": [
+        "Jirí Letácek",
+        "Allan Nyom",
+        "Diego Rico",
+        "Sebastián Boselli",
+        "Adrián Riquelme",
+        "Javi Muñoz",
+        "Mario Martín",
+        "Abu Kamara",
+        "Alex Sancris",
+        "Veljko Birmancevic"
+      ],
       "home_unavailable": [
         "Luís Castro",
         "Unai Elgezabal",

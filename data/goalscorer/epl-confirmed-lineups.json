@@ -8,20 +8,20 @@
       "match_date": "2026-04-13",
       "home_team": "Manchester United",
       "away_team": "Leeds United",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "3-5-1-1",
+      "away_formation": "3-4-2-1",
       "home_players": [
         "Senne Lammens",
-        "Diogo Dalot",
+        "Noussair Mazraoui",
         "Leny Yoro",
-        "Ayden Heaven",
+        "Lisandro Martínez",
         "Luke Shaw",
         "Casemiro",
-        "Kobbie Mainoo",
-        "Bryan Mbeumo",
+        "Manuel Ugarte",
+        "Amad",
         "Bruno Fernandes",
         "Matheus Cunha",
         "Benjamin Sesko"
@@ -32,11 +32,11 @@
         "Jaka Bijol",
         "Pascal Struijk",
         "Jayden Bogle",
-        "Ao Tanaka",
         "Ethan Ampadu",
-        "Ilia Gruev",
+        "Ao Tanaka",
         "Gabriel Gudmundsson",
         "Brenden Aaronson",
+        "Noah Okafor",
         "Dominic Calvert-Lewin"
       ],
       "home_starters": [
@@ -50,7 +50,7 @@
           "position_id": 11
         },
         {
-          "name": "Diogo Dalot",
+          "name": "Noussair Mazraoui",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -68,7 +68,7 @@
           "position_id": 34
         },
         {
-          "name": "Ayden Heaven",
+          "name": "Lisandro Martínez",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -95,7 +95,7 @@
           "position_id": 64
         },
         {
-          "name": "Kobbie Mainoo",
+          "name": "Manuel Ugarte",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -104,7 +104,7 @@
           "position_id": 66
         },
         {
-          "name": "Bryan Mbeumo",
+          "name": "Amad",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -147,7 +147,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-5-1-1",
+          "formation": "3-4-2-1",
           "position_id": 11
         },
         {
@@ -156,7 +156,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "3-4-2-1",
           "position_id": 33
         },
         {
@@ -165,7 +165,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "3-4-2-1",
           "position_id": 35
         },
         {
@@ -174,62 +174,62 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "3-4-2-1",
           "position_id": 37
         },
         {
           "name": "Jayden Bogle",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 71
-        },
-        {
-          "name": "Ao Tanaka",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 73
+          "formation": "3-4-2-1",
+          "position_id": 62
         },
         {
           "name": "Ethan Ampadu",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 75
+          "formation": "3-4-2-1",
+          "position_id": 64
         },
         {
-          "name": "Ilia Gruev",
+          "name": "Ao Tanaka",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 77
+          "formation": "3-4-2-1",
+          "position_id": 66
         },
         {
           "name": "Gabriel Gudmundsson",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 79
+          "formation": "3-4-2-1",
+          "position_id": 68
         },
         {
           "name": "Brenden Aaronson",
           "line_index": 2,
-          "line_size": 1,
+          "line_size": 2,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-5-1-1",
-          "position_id": 95
+          "formation": "3-4-2-1",
+          "position_id": 84
+        },
+        {
+          "name": "Noah Okafor",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86
         },
         {
           "name": "Dominic Calvert-Lewin",
@@ -237,20 +237,38 @@
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-5-1-1",
-          "position_id": 115
+          "formation": "3-4-2-1",
+          "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Altay Bayindir",
+        "Ayden Heaven",
+        "Tyrell Malacia",
+        "Diogo Dalot",
+        "Mason Mount",
+        "Tyler Fletcher",
+        "Bryan Mbeumo",
+        "Joshua Zirkzee",
+        "Shea Lacey"
+      ],
+      "away_subs": [
+        "Lucas Perri",
+        "Sam Byram",
+        "Sebastiaan Bornauw",
+        "Facundo Buonanotte",
+        "Ilia Gruev",
+        "Sean Longstaff",
+        "Joël Piroe",
+        "Lukas Nmecha",
+        "Wilfried Gnonto"
+      ],
       "home_unavailable": [
-        "Lisandro Martínez",
         "Harry Maguire",
         "Matthijs de Ligt",
         "Patrick Dorgu"
       ],
       "away_unavailable": [
-        "Noah Okafor",
         "Joe Rodon",
         "Anton Stach",
         "Daniel James"
