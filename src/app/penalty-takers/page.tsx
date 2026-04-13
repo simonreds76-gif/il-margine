@@ -341,16 +341,7 @@ export default async function PenaltyTakersPage() {
     });
   const latestUpdate = sortedByUpdate[0]?.lastUpdated ?? "";
   const lastUpdatedLabel = formatDateLabel(latestUpdate);
-  const freshestPerLeague = leagues
-    .map((league) => sortedByUpdate.find((team) => team.leagueKey === league.key))
-    .filter((team): team is (typeof sortedByUpdate)[number] => Boolean(team));
-  const recentChangeCandidates = [
-    ...freshestPerLeague,
-    ...sortedByUpdate.filter(
-      (team) => !freshestPerLeague.some((picked) => picked.leagueKey === team.leagueKey && picked.slug === team.slug),
-    ),
-  ];
-  const recentChanges: RecentChange[] = recentChangeCandidates.slice(0, 5).map((team) => ({
+  const recentChanges: RecentChange[] = sortedByUpdate.slice(0, 5).map((team) => ({
     team: team.team,
     slug: team.slug,
     leagueKey: team.leagueKey,
