@@ -9,6 +9,7 @@ from typing import Any, Dict, Iterable, Optional, Tuple
 
 ROOT = Path(__file__).resolve().parent.parent
 RESULTS_SNAPSHOT_DIR = ROOT / "data" / "results-snapshot"
+SNAPSHOT_LOOKBACK_DAYS = 7
 
 LEAGUE_CODES = {
     "epl": "E0",
@@ -123,10 +124,13 @@ def snapshot_path_for(day: date) -> Path:
 
 def resolve_snapshot_path(preferred_date: Optional[str] = None) -> Optional[Path]:
     target = parse_isoish_date(preferred_date or "") or datetime.now(UTC).date()
-    candidates = [snapshot_path_for(target), snapshot_path_for(target - timedelta(days=1))]
-    for path in candidates:
+    for offset in range(SNAPSHOT_LOOKBACK_DAYS):
+        path = snapshot_path_for(target - timedelta(days=offset))
         if path.exists():
             return path
+    latest_path = RESULTS_SNAPSHOT_DIR / "latest.json"
+    if latest_path.exists():
+        return latest_path
     return None
 
 

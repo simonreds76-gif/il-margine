@@ -32,7 +32,10 @@ jobs:
         run: pip install requests
 
       - name: Fetch results snapshot
-        run: python scripts/fetch-results-snapshot.py
+        run: |
+          python scripts/fetch-results-snapshot.py \
+            --pending-path data/shortlist/settled-pnl.csv \
+            --pending-path data/team-shots/shadow/team-shots-shadow-signals.csv
 
       - name: Commit results snapshot before settlement
         run: |
@@ -51,9 +54,11 @@ jobs:
         run: python scripts/team-shots-settle.py
 
       - name: Settle corners shortlist
+        if: always()
         run: python scripts/shortlist-settle.py
 
       - name: Audit settlement
+        if: always()
         run: |
           python scripts/settlement_audit.py \
             data/team-shots/shadow/settlement-audit.json \

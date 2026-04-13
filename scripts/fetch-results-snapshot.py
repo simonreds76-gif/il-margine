@@ -6,6 +6,7 @@ import csv
 import io
 import json
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Dict
 
 import requests
@@ -25,6 +26,7 @@ from settlement_utils import (
 BASE_URL = "https://www.football-data.co.uk"
 SHORTLIST_SETTLED = ROOT / "data" / "shortlist" / "settled-pnl.csv"
 TEAM_SHOTS_SIGNALS = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-signals.csv"
+DEFAULT_PENDING_PATHS = [SHORTLIST_SETTLED, TEAM_SHOTS_SIGNALS]
 
 
 def fetch_football_data_results(league: str) -> tuple[Dict[str, dict], dict]:
@@ -92,24 +94,36 @@ def fetch_football_data_results(league: str) -> tuple[Dict[str, dict], dict]:
     }
 
 
-def load_pending_rows() -> list[dict]:
+def load_pending_rows(paths: list[str]) -> list[dict]:
     rows: list[dict] = []
-    if SHORTLIST_SETTLED.exists():
-        with open(SHORTLIST_SETTLED, "r", encoding="utf-8", newline="") as fh:
-            rows.extend([dict(r) for r in csv.DictReader(fh) if (r.get("settled") or "").strip() == "pending"])
-    if TEAM_SHOTS_SIGNALS.exists():
-        with open(TEAM_SHOTS_SIGNALS, "r", encoding="utf-8", newline="") as fh:
-            rows.extend([dict(r) for r in csv.DictReader(fh) if (r.get("result") or "").strip() == "pending"])
+    for raw_path in paths:
+        path = Path(raw_path)
+        if not path.is_absolute():
+            path = ROOT / path
+        if not path.exists():
+            continue
+        with open(path, "r", encoding="utf-8", newline="") as fh:
+            for row in csv.DictReader(fh):
+                if (row.get("settled") or "").strip() == "pending" or (row.get("result") or "").strip() == "pending":
+                    rows.append(dict(row))
     return rows
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Fetch a committed football results snapshot for settlement")
     parser.add_argument("--date", type=str, default=None, help="Snapshot date in YYYY-MM-DD (defaults to today UTC)")
+    parser.add_argument(
+        "--pending-path",
+        dest="pending_paths",
+        action="append",
+        default=None,
+        help="Relative or absolute CSV path to scan for pending rows. Repeat to add more paths.",
+    )
     args = parser.parse_args()
 
     snapshot_day = parse_isoish_date(args.date or "") or datetime.now(UTC).date()
-    pending_rows = load_pending_rows()
+    pending_paths = args.pending_paths or [str(path.relative_to(ROOT)) for path in DEFAULT_PENDING_PATHS]
+    pending_rows = load_pending_rows(pending_paths)
     target_dates_by_league = collect_target_dates(
         pending_rows,
         kickoff_fields=("kick_off", "kickoff_iso"),
@@ -165,6 +179,10 @@ def main() -> None:
             "fetch_error": freshness.get("error"),
             "fixtures": merged,
         }
+
+    total_fixtures = sum(len((league_data.get("fixtures") or {})) for league_data in payload["leagues"].values())
+    if total_fixtures == 0:
+        raise SystemExit("No fixtures were fetched for the results snapshot; refusing to write an empty snapshot.")
 
     ensure_snapshot_dir()
     out_path = snapshot_path_for(snapshot_day)
