@@ -826,10 +826,8 @@ function LiveLineTable({
       </div>
     );
   }
-  const lambdaBase = pf(row[`${side}_lambda`], Number.NaN);
-  const lambdaVenue = pf(row[`${side}_lambda_venue`], Number.NaN);
-  const lambdaRecent = pf(row[`${side}_lambda_recent`], Number.NaN);
-  if (!(lambdaBase > 0)) {
+  const lambda = pf(row[`${side}_lambda`]);
+  if (!(lambda > 0)) {
     return (
       <div className="rounded-2xl border border-slate-800 bg-slate-950/40 p-4 text-sm text-slate-500">
         No model estimate for this team yet.
@@ -893,23 +891,7 @@ function LiveLineTable({
     <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/40">
       <div className="border-b border-slate-800 px-4 py-3">
         <div className="text-sm font-medium text-slate-100">{teamName}</div>
-        <div className="mt-2 grid gap-2 text-[11px] sm:grid-cols-3">
-          <div className="rounded-lg border border-slate-800 bg-slate-900/60 px-2 py-1.5 text-slate-300">
-            Base lambda: <span className="font-mono text-slate-100">{lambdaBase.toFixed(2)}</span>
-          </div>
-          <div className="rounded-lg border border-slate-800 bg-slate-900/60 px-2 py-1.5 text-slate-300">
-            Venue lambda:{" "}
-            <span className="font-mono text-slate-100">
-              {Number.isFinite(lambdaVenue) ? lambdaVenue.toFixed(2) : "-"}
-            </span>
-          </div>
-          <div className="rounded-lg border border-slate-800 bg-slate-900/60 px-2 py-1.5 text-slate-300">
-            Recent lambda:{" "}
-            <span className="font-mono text-slate-100">
-              {Number.isFinite(lambdaRecent) ? lambdaRecent.toFixed(2) : "-"}
-            </span>
-          </div>
-        </div>
+        <div className="text-xs text-slate-500">lambda {lambda.toFixed(2)}</div>
         <div className="mt-2 grid gap-2 text-[11px] sm:grid-cols-2">
           <div className="rounded-lg border border-slate-800 bg-slate-900/60 px-2 py-1.5 text-slate-300">
             Best live:{" "}
@@ -1510,7 +1492,7 @@ function LiveLineTable({
                                   {row.currentOdds !== null ? row.currentOdds.toFixed(2) : "-"}
                                   {deltaOdds !== null ? (
                                     <span className={`ml-1 ${deltaOdds > 0 ? "text-emerald-300" : deltaOdds < 0 ? "text-rose-300" : "text-slate-500"}`}>
-                                      ({deltaOdds > 0 ? "+" : "-"}{Math.abs(deltaOdds).toFixed(2)})
+                                      ({deltaOdds > 0 ? "↑" : "↓"}{Math.abs(deltaOdds).toFixed(2)})
                                     </span>
                                   ) : null}
                                 </div>

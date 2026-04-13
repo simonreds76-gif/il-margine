@@ -10,6 +10,7 @@ import {
   HeroCard,
   MODEL_MONITOR_ENABLED,
   MonitorNav,
+  PhaseLabel,
   SectionCard,
   StatCard,
   StatusPill,
@@ -31,52 +32,76 @@ type SnapshotPenaltyRow = GoalscorerMonitorSnapshot["penalty_watchlist"]["rows"]
 };
 
 function numericSum(values: Array<number | null | undefined>): number {
-  return values.reduce<number>((total, value) => total + (value ?? 0), 0);
+  return values.reduce<number>((total, v) => total + (v ?? 0), 0);
 }
 
 function renderSourceDetail(snapshot: GoalscorerMonitorSnapshot) {
-  const source = snapshot.source_status;
+  const s = snapshot.source_status;
   const parts = [
-    source.hot_live_updated_at ? `Hot live ${formatDateTimeLabel(source.hot_live_updated_at)}` : null,
-    source.expected_refresh_updated_at ? `Expected refresh ${formatDateTimeLabel(source.expected_refresh_updated_at)}` : null,
-    source.settlement_updated_at ? `Settlement ${formatDateTimeLabel(source.settlement_updated_at)}` : null,
+    s.hot_live_updated_at ? `Hot live ${formatDateTimeLabel(s.hot_live_updated_at)}` : null,
+    s.expected_refresh_updated_at ? `Expected ${formatDateTimeLabel(s.expected_refresh_updated_at)}` : null,
+    s.settlement_updated_at ? `Settlement ${formatDateTimeLabel(s.settlement_updated_at)}` : null,
   ].filter(Boolean);
   return parts.length > 0 ? parts.join(" · ") : "Source timestamps unavailable";
 }
 
-function reviewTone(priority?: string) {
-  const normalized = (priority || "").toLowerCase();
-  if (normalized === "high") return "bg-rose-500/12 text-rose-200 border-rose-500/25";
-  if (normalized === "medium") return "bg-amber-500/12 text-amber-200 border-amber-500/25";
-  return "bg-slate-900/70 text-slate-300 border-slate-700/80";
+// ─── Tone helpers ────────────────────────────────────────────────────────────
+
+function reviewPriorityTone(priority?: string) {
+  const n = (priority || "").toLowerCase();
+  if (n === "high")   return "bg-rose-500/10 text-rose-300 border-rose-500/20";
+  if (n === "medium") return "bg-amber-500/10 text-amber-300 border-amber-500/20";
+  return "bg-slate-700/40 text-slate-400 border-slate-600/40";
 }
 
 function resolutionTone(status?: "dismissed" | "done") {
-  if (status === "done") return "bg-emerald-500/12 text-emerald-200 border-emerald-500/25";
-  if (status === "dismissed") return "bg-slate-900/70 text-slate-300 border-slate-700/80";
-  return "bg-cyan-500/12 text-cyan-200 border-cyan-500/25";
+  if (status === "done")      return "bg-emerald-500/10 text-emerald-300 border-emerald-500/20";
+  if (status === "dismissed") return "bg-slate-700/40 text-slate-400 border-slate-600/40";
+  return "bg-cyan-500/10 text-cyan-300 border-cyan-500/20";
 }
 
-function ValueText({ value, formatter, digits, className }: { value?: number | null; formatter: (value?: number | null, digits?: number) => string; digits?: number; className?: string }) {
-  return <span className={className}>{formatter(value, digits)}</span>;
+/** Subtle row tint for the settlements table to surface won/lost at a glance. */
+function settlementRowTint(outcome?: string | null) {
+  const n = (outcome || "").toLowerCase();
+  if (n.includes("won"))  return "bg-emerald-950/25";
+  if (n.includes("lost")) return "bg-rose-950/25";
+  return "";
 }
+
+// ─── Penalty review card ─────────────────────────────────────────────────────
 
 function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
+  const minuteAside = row.minute
+    ? `min ${row.minute}${row.event_result ? ` · ${row.event_result}` : row.event_type ? ` · ${row.event_type}` : ""}`
+    : undefined;
+
   return (
-    <article className="rounded-2xl border border-slate-800 bg-slate-950/35 p-5">
+    <article className="rounded-xl border border-slate-800 bg-slate-950/50 p-4">
+      {/* ── Header ── */}
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+        <div className="min-w-0">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
             {row.league || "League"} · {row.review_source || "Penalty review"}
-          </div>
-          <h3 className="mt-2 text-xl font-semibold text-white">{row.actual_taker || "Unknown taker"}</h3>
-          <p className="mt-1 text-sm text-slate-300">
-            {row.match || `${row.team || "Unknown team"} vs ${row.opponent || "Unknown opponent"}`} · {formatDateLabel(row.date)}
+          </p>
+          <h3 className="mt-1 text-base font-semibold text-white">
+            {row.actual_taker || "Unknown taker"}
+          </h3>
+          <p className="mt-0.5 text-sm text-slate-400">
+            {row.match || `${row.team || "?"} vs ${row.opponent || "?"}`}
+            {" · "}
+            {formatDateLabel(row.date)}
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {row.review_priority ? <StatusPill label={row.review_priority} tone={reviewTone(row.review_priority)} /> : null}
-          {row.review_type ? <StatusPill label={row.review_type.replaceAll("_", " ")} tone="bg-cyan-500/12 text-cyan-200 border-cyan-500/25" /> : null}
+        <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+          {row.review_priority ? (
+            <StatusPill label={row.review_priority} tone={reviewPriorityTone(row.review_priority)} />
+          ) : null}
+          {row.review_type ? (
+            <StatusPill
+              label={row.review_type.replaceAll("_", " ")}
+              tone="bg-cyan-500/10 text-cyan-300 border-cyan-500/20"
+            />
+          ) : null}
           <StatusPill
             label={row.resolutionStatus ? row.resolutionStatus.replaceAll("_", " ") : "active"}
             tone={resolutionTone(row.resolutionStatus)}
@@ -84,23 +109,67 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
         </div>
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Pre-match primary" value={row.primary_pre_match || "-"} />
-        <StatCard label="Pre-match backup" value={row.secondary_pre_match || "-"} />
-        <StatCard label="Active pre-match" value={row.active_taker_pre_match || "-"} detail={row.active_slot_pre_match || undefined} />
-        <StatCard label="Penalty minute" value={row.minute || "-"} detail={row.event_result || row.event_type || undefined} />
-        <StatCard label="Primary at penalty" value={row.primary_on_pitch_at_penalty || "-"} />
-        <StatCard label="Active at penalty" value={row.active_on_pitch_at_penalty || "-"} />
-        <StatCard label="Actual taker at penalty" value={row.actual_taker_on_pitch_at_penalty || "-"} />
-        <StatCard label="Transfer path" value={row.inherited_from_pre_match || "-"} detail={row.transfer_level_pre_match || undefined} />
+      {/* ── Phase groups ── */}
+      <div className="mt-4 space-y-3">
+        {/* Pre-match */}
+        <div className="space-y-2">
+          <PhaseLabel label="Pre-match" />
+          <div className="grid gap-1.5 sm:grid-cols-3">
+            <StatCard compact label="Primary" value={row.primary_pre_match || "-"} />
+            <StatCard compact label="Backup" value={row.secondary_pre_match || "-"} />
+            <StatCard
+              compact
+              label="Active slot"
+              value={row.active_taker_pre_match || "-"}
+              detail={row.active_slot_pre_match || undefined}
+            />
+          </div>
+        </div>
+
+        {/* At penalty */}
+        <div className="space-y-2">
+          <PhaseLabel label="At penalty" aside={minuteAside} />
+          <div className="grid gap-1.5 sm:grid-cols-3">
+            <StatCard compact label="Primary on pitch" value={row.primary_on_pitch_at_penalty || "-"} />
+            <StatCard compact label="Active on pitch"  value={row.active_on_pitch_at_penalty || "-"} />
+            <StatCard
+              compact
+              label="Actual taker"
+              value={row.actual_taker_on_pitch_at_penalty || "-"}
+              tone="text-slate-100"
+            />
+          </div>
+        </div>
+
+        {/* Transfer */}
+        <div className="space-y-2">
+          <PhaseLabel label="Transfer & assignment" />
+          <div className="grid gap-1.5 sm:grid-cols-2">
+            <StatCard compact label="Inherited from"  value={row.inherited_from_pre_match || "-"} />
+            <StatCard compact label="Transfer level"  value={row.transfer_level_pre_match || "-"} />
+          </div>
+        </div>
       </div>
 
-      {row.editorial_note ? <p className="mt-4 text-sm text-slate-400">{row.editorial_note}</p> : null}
-      {row.row_id ? <PenaltyReviewActions rowId={row.row_id} resolvedStatus={row.resolutionStatus} /> : null}
-      {row.resolutionUpdatedAt ? <p className="mt-3 text-xs text-slate-500">Last updated {formatDateTimeLabel(row.resolutionUpdatedAt)}</p> : null}
+      {/* ── Footer ── */}
+      {row.editorial_note ? (
+        <p className="mt-3 border-t border-slate-800/60 pt-3 text-xs text-slate-400">
+          {row.editorial_note}
+        </p>
+      ) : null}
+      {row.row_id ? (
+        <PenaltyReviewActions rowId={row.row_id} resolvedStatus={row.resolutionStatus} />
+      ) : null}
+      {row.resolutionUpdatedAt ? (
+        <p className="mt-2 text-[11px] text-slate-600">
+          Updated {formatDateTimeLabel(row.resolutionUpdatedAt)}
+        </p>
+      ) : null}
     </article>
   );
 }
+
+// ─── Live Bets table ─────────────────────────────────────────────────────────
 
 function LiveBetsTable({ rows }: { rows: GoalscorerMonitorSnapshot["live_bets"] }) {
   if (rows.length === 0) {
@@ -109,42 +178,55 @@ function LiveBetsTable({ rows }: { rows: GoalscorerMonitorSnapshot["live_bets"] 
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[900px] text-left text-sm">
-        <thead className="text-[11px] uppercase tracking-[0.18em] text-slate-500">
-          <tr className="border-b border-slate-800">
-            <th className="pb-3 pr-3 font-semibold">Player</th>
-            <th className="pb-3 pr-3 font-semibold">Fixture</th>
-            <th className="pb-3 pr-3 font-semibold">Lineup</th>
-            <th className="pb-3 pr-3 font-semibold">Book</th>
-            <th className="pb-3 pr-3 font-semibold">Odds</th>
-            <th className="pb-3 pr-3 font-semibold">Fair</th>
-            <th className="pb-3 pr-3 font-semibold">Edge</th>
-            <th className="pb-3 pr-3 font-semibold">Stake</th>
-            <th className="pb-3 font-semibold">Track</th>
+      <table className="w-full min-w-[820px] border-collapse text-sm">
+        <thead>
+          <tr className="border-b border-slate-800/80">
+            {(["Player", "Fixture", "Lineup", "Book"] as const).map((h) => (
+              <th key={h} className="pb-2.5 pr-4 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+                {h}
+              </th>
+            ))}
+            {(["Odds", "Fair", "Edge"] as const).map((h) => (
+              <th key={h} className="pb-2.5 pr-4 text-right text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+                {h}
+              </th>
+            ))}
+            <th className="pb-2.5 pr-4 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">Stake</th>
+            <th className="pb-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">Track</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.key} className="border-b border-slate-900/80 align-top text-slate-200">
-              <td className="py-3 pr-3">
-                <div className="font-semibold text-white">{row.player}</div>
-                <div className="text-xs text-slate-500">{row.team} · {row.league_label}</div>
+            <tr
+              key={row.key}
+              className="border-b border-slate-900/50 align-middle transition-colors hover:bg-white/[0.02]"
+            >
+              <td className="py-2.5 pr-4">
+                <div className="font-medium text-white">{row.player}</div>
+                <div className="text-[11px] text-slate-500">{row.team} · {row.league_label}</div>
               </td>
-              <td className="py-3 pr-3">
-                <div>{row.match}</div>
-                <div className="text-xs text-slate-500">{formatDateTimeLabel(row.kickoff || row.match_date)}</div>
+              <td className="py-2.5 pr-4">
+                <div className="text-slate-300">{row.match}</div>
+                <div className="text-[11px] tabular-nums text-slate-500">
+                  {formatDateTimeLabel(row.kickoff || row.match_date)}
+                </div>
               </td>
-              <td className="py-3 pr-3">
-                <div className="font-medium">{row.lineup_short || "-"}</div>
-                <div className="text-xs text-slate-500">{row.lineup_label}</div>
+              <td className="py-2.5 pr-4">
+                <div className="text-slate-300">{row.lineup_short || "-"}</div>
+                <div className="text-[11px] text-slate-500">{row.lineup_label}</div>
               </td>
-              <td className="py-3 pr-3">{row.bookmaker || "-"}</td>
-              <td className="py-3 pr-3">{formatOdds(row.odds)}</td>
-              <td className="py-3 pr-3">{formatOdds(row.fair, 2)}</td>
-              <td className={"py-3 pr-3 font-semibold " + toneClass(row.edge_pct)}>{formatPct(row.edge_pct)}</td>
-              <td className="py-3 pr-3">{row.stake_label || "-"}</td>
-              <td className="py-3">
-                <StatusPill label={row.status === "PUBLIC" ? "public" : row.action_label || "shadow"} tone={actionTone(row.action)} />
+              <td className="py-2.5 pr-4 text-slate-400">{row.bookmaker || "-"}</td>
+              <td className="py-2.5 pr-4 text-right tabular-nums text-slate-200">{formatOdds(row.odds)}</td>
+              <td className="py-2.5 pr-4 text-right tabular-nums text-slate-500">{formatOdds(row.fair, 2)}</td>
+              <td className={`py-2.5 pr-4 text-right tabular-nums font-semibold ${toneClass(row.edge_pct)}`}>
+                {formatPct(row.edge_pct)}
+              </td>
+              <td className="py-2.5 pr-4 text-slate-400">{row.stake_label || "-"}</td>
+              <td className="py-2.5">
+                <StatusPill
+                  label={row.status === "PUBLIC" ? "public" : row.action_label || "shadow"}
+                  tone={actionTone(row.action)}
+                />
               </td>
             </tr>
           ))}
@@ -154,43 +236,199 @@ function LiveBetsTable({ rows }: { rows: GoalscorerMonitorSnapshot["live_bets"] 
   );
 }
 
-function RecentSettlementsTable({ rows }: { rows: GoalscorerMonitorSnapshot["shadow_summary"]["recent_rows"] }) {
+// ─── Recent Shadow Settlements ────────────────────────────────────────────────
+//
+// Desktop (lg+): dense table — kickoff lives as sub-text under the fixture
+//   cell so we avoid a separate timestamp column. 8 columns total, all fit
+//   within the lg viewport without horizontal scrolling.
+//
+// Mobile/tablet (< lg): stacked cards — each row becomes a small block with
+//   outcome pill, fixture, financial metrics, and both timestamps on one line.
+
+type SettlementRow = GoalscorerMonitorSnapshot["shadow_summary"]["recent_rows"][number];
+
+function SettlementCard({ row }: { row: SettlementRow }) {
+  return (
+    <div
+      className={`rounded-xl border border-slate-800/60 p-3 ${settlementRowTint(row.bet_outcome)}`}
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <div className="truncate font-medium text-white">{row.player}</div>
+          <div className="text-[11px] text-slate-500">{row.team} · {row.league_key}</div>
+        </div>
+        <StatusPill label={row.bet_outcome || "unknown"} tone={statusTone(row.bet_outcome)} />
+      </div>
+      <div className="mt-1 truncate text-xs text-slate-400">{row.match}</div>
+      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs tabular-nums">
+        <span className="text-slate-500">
+          Odds <span className="text-slate-300">{formatOdds(row.best_bookmaker_odds)}</span>
+        </span>
+        <span className="text-slate-500">
+          Fair <span className="text-slate-300">{formatOdds(row.model_fair_odds)}</span>
+        </span>
+        <span className="text-slate-500">
+          Edge{" "}
+          <span className={`font-semibold ${toneClass(row.ev_pct)}`}>{formatPct(row.ev_pct)}</span>
+        </span>
+        <span className="text-slate-500">
+          P&amp;L{" "}
+          <span className={`font-semibold ${toneClass(row.pnl_units)}`}>{formatUnits(row.pnl_units)}</span>
+        </span>
+      </div>
+      <div className="mt-2 flex items-center justify-between gap-2 text-[11px] tabular-nums text-slate-600">
+        <span>KO {formatDateTimeLabel(row.kickoff || row.date)}</span>
+        <span>Settled {formatDateTimeLabel(row.settled_at)}</span>
+      </div>
+    </div>
+  );
+}
+
+function RecentSettlementsTable({
+  rows,
+}: {
+  rows: GoalscorerMonitorSnapshot["shadow_summary"]["recent_rows"];
+}) {
   if (rows.length === 0) {
     return <EmptyState message="No settled shadow rows are available in the snapshot yet." />;
   }
+
+  return (
+    <>
+      {/* ── Mobile / tablet: card list (hidden at lg) ── */}
+      <div className="space-y-2 lg:hidden">
+        {rows.map((row) => (
+          <SettlementCard key={row.key} row={row} />
+        ))}
+      </div>
+
+      {/* ── Desktop: dense table (shown at lg+) ── */}
+      <div className="hidden lg:block">
+        <table className="w-full border-collapse text-sm">
+          <thead>
+            <tr className="border-b border-slate-800/80">
+              <th className="w-[148px] pb-2.5 pr-4 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+                Player
+              </th>
+              <th className="pb-2.5 pr-4 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+                Fixture
+              </th>
+              <th className="w-[86px] pb-2.5 pr-4 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+                Outcome
+              </th>
+              <th className="w-[52px] pb-2.5 pr-4 text-right text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+                Odds
+              </th>
+              <th className="w-[52px] pb-2.5 pr-4 text-right text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+                Fair
+              </th>
+              <th className="w-[62px] pb-2.5 pr-4 text-right text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+                Edge
+              </th>
+              <th className="w-[62px] pb-2.5 pr-4 text-right text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+                P&amp;L
+              </th>
+              <th className="w-[108px] pb-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">
+                Settled
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr
+                key={row.key}
+                className={`border-b border-slate-900/50 align-middle transition-colors hover:bg-white/[0.025] ${settlementRowTint(row.bet_outcome)}`}
+              >
+                <td className="py-2.5 pr-4">
+                  <div className="font-medium leading-tight text-white">{row.player}</div>
+                  <div className="text-[11px] leading-tight text-slate-500">{row.team}</div>
+                </td>
+                <td className="py-2.5 pr-4">
+                  <div className="text-slate-300">{row.match}</div>
+                  <div className="text-[11px] tabular-nums text-slate-500">
+                    KO {formatDateTimeLabel(row.kickoff || row.date)}
+                  </div>
+                </td>
+                <td className="py-2.5 pr-4">
+                  <StatusPill label={row.bet_outcome || "unknown"} tone={statusTone(row.bet_outcome)} />
+                </td>
+                <td className="py-2.5 pr-4 text-right tabular-nums text-slate-300">
+                  {formatOdds(row.best_bookmaker_odds)}
+                </td>
+                <td className="py-2.5 pr-4 text-right tabular-nums text-slate-500">
+                  {formatOdds(row.model_fair_odds)}
+                </td>
+                <td className={`py-2.5 pr-4 text-right tabular-nums font-semibold ${toneClass(row.ev_pct)}`}>
+                  {formatPct(row.ev_pct)}
+                </td>
+                <td className={`py-2.5 pr-4 text-right tabular-nums font-semibold ${toneClass(row.pnl_units)}`}>
+                  {formatUnits(row.pnl_units)}
+                </td>
+                <td className="py-2.5">
+                  <span className="whitespace-nowrap text-xs tabular-nums text-slate-400">
+                    {formatDateTimeLabel(row.settled_at)}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+// ─── Fixture Diagnostics table ────────────────────────────────────────────────
+
+function FixtureDiagnosticsTable({
+  rows,
+}: {
+  rows: GoalscorerMonitorSnapshot["fixture_health"]["flagged_rows"];
+}) {
+  if (rows.length === 0) {
+    return (
+      <EmptyState message="No degraded or quarantined fixtures are flagged in the current snapshot." />
+    );
+  }
+
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[860px] text-left text-sm">
-        <thead className="text-[11px] uppercase tracking-[0.18em] text-slate-500">
-          <tr className="border-b border-slate-800">
-            <th className="pb-3 pr-3 font-semibold">Player</th>
-            <th className="pb-3 pr-3 font-semibold">Fixture</th>
-            <th className="pb-3 pr-3 font-semibold">Kickoff</th>
-            <th className="pb-3 pr-3 font-semibold">Compared</th>
-            <th className="pb-3 pr-3 font-semibold">Outcome</th>
-            <th className="pb-3 pr-3 font-semibold">Odds</th>
-            <th className="pb-3 pr-3 font-semibold">Fair</th>
-            <th className="pb-3 pr-3 font-semibold">Edge</th>
-            <th className="pb-3 font-semibold">Settled</th>
+      <table className="w-full min-w-[740px] border-collapse text-sm">
+        <thead>
+          <tr className="border-b border-slate-800/80">
+            {["Fixture", "League", "Lineup input", "Trust", "Flags", "Summary"].map((h) => (
+              <th
+                key={h}
+                className="pb-2.5 pr-4 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600 last:pr-0"
+              >
+                {h}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.key} className="border-b border-slate-900/80 align-top text-slate-200">
-              <td className="py-3 pr-3">
-                <div className="font-semibold text-white">{row.player}</div>
-                <div className="text-xs text-slate-500">{row.team} · {row.league_key}</div>
+            <tr
+              key={row.key}
+              className="border-b border-slate-900/50 align-top transition-colors hover:bg-white/[0.02]"
+            >
+              <td className="py-2.5 pr-4">
+                <div className="font-medium text-slate-200">
+                  {row.home_team} vs {row.away_team}
+                </div>
+                <div className="text-[11px] text-slate-500">
+                  {formatDateLabel(row.match_date)} · {row.bookmaker || "-"}
+                </div>
               </td>
-              <td className="py-3 pr-3">{row.match}</td>
-              <td className="py-3 pr-3">{formatDateTimeLabel(row.kickoff || row.date)}</td>
-              <td className="py-3 pr-3">{formatDateTimeLabel(row.compared_at)}</td>
-              <td className="py-3 pr-3">
-                <StatusPill label={row.bet_outcome || "unknown"} tone={statusTone(row.bet_outcome)} />
+              <td className="py-2.5 pr-4 text-slate-400">{row.league_label}</td>
+              <td className="py-2.5 pr-4 text-slate-400">{row.lineup_input || "-"}</td>
+              <td className="py-2.5 pr-4">
+                <StatusPill label={row.trust_tier || "unknown"} tone={statusTone(row.trust_tier)} />
               </td>
-              <td className="py-3 pr-3">{formatOdds(row.best_bookmaker_odds)}</td>
-              <td className="py-3 pr-3">{formatOdds(row.model_fair_odds)}</td>
-              <td className={"py-3 pr-3 font-semibold " + toneClass(row.ev_pct)}>{formatPct(row.ev_pct)}</td>
-              <td className="py-3">{formatDateTimeLabel(row.settled_at)}</td>
+              <td className="py-2.5 pr-4 text-xs text-slate-500">
+                {row.corruption_flags?.length ? row.corruption_flags.join(", ") : "-"}
+              </td>
+              <td className="py-2.5 text-xs text-slate-400">{row.summary}</td>
             </tr>
           ))}
         </tbody>
@@ -198,6 +436,8 @@ function RecentSettlementsTable({ rows }: { rows: GoalscorerMonitorSnapshot["sha
     </div>
   );
 }
+
+// ─── Page ────────────────────────────────────────────────────────────────────
 
 export default async function GoalscorerMonitorPage() {
   if (!MODEL_MONITOR_ENABLED) notFound();
@@ -209,22 +449,35 @@ export default async function GoalscorerMonitorPage() {
 
   if (!snapshot) {
     return (
-      <div className="min-h-screen bg-[#0a0f19] px-6 py-8 text-slate-200">
-        <div className="mx-auto max-w-7xl">
+      <div className="min-h-screen bg-[#0a0f19] px-4 py-10 text-slate-200 sm:px-6">
+        <div className="mx-auto max-w-7xl space-y-6">
           <MonitorNav current="goalscorer" />
           <HeroCard title="Goalscorer Monitor" eyebrow="Snapshot-first monitor">
-            The goalscorer monitor snapshot is not available yet. Once the hosted goalscorer workflows publish
-            <code className="mx-1 rounded bg-slate-950/60 px-1.5 py-0.5 text-xs">goalscorer-monitor-snapshot.json</code>
-            the page will render from that single payload.
+            <span className="text-slate-400">
+              The goalscorer monitor snapshot is not available yet. Once the hosted goalscorer
+              workflows publish{" "}
+              <code className="rounded bg-slate-950/60 px-1.5 py-0.5 text-[11px]">
+                goalscorer-monitor-snapshot.json
+              </code>{" "}
+              the page will render from that single payload.
+            </span>
           </HeroCard>
         </div>
       </div>
     );
   }
 
-  const publicNow = numericSum(snapshot.league_cards.map((card) => card.public_now));
-  const shadowNow = numericSum(snapshot.league_cards.map((card) => card.shadow_now));
-  const activePenaltyRows: SnapshotPenaltyRow[] = snapshot.penalty_watchlist.rows.filter((row) => !penaltyState[row.row_id]).map((row) => row);
+  const publicNow = numericSum(snapshot.league_cards.map((c) => c.public_now));
+  const shadowNow = numericSum(snapshot.league_cards.map((c) => c.shadow_now));
+
+  const activePenaltyRows: SnapshotPenaltyRow[] = snapshot.penalty_watchlist.rows
+    .filter((row) => !penaltyState[row.row_id])
+    .map((row) => ({
+      ...row,
+      resolutionStatus: penaltyState[row.row_id]?.status,
+      resolutionUpdatedAt: penaltyState[row.row_id]?.updated_at,
+    }));
+
   const resolvedPenaltyRows: SnapshotPenaltyRow[] = snapshot.penalty_watchlist.rows
     .filter((row) => penaltyState[row.row_id])
     .map((row) => ({
@@ -233,115 +486,139 @@ export default async function GoalscorerMonitorPage() {
       resolutionUpdatedAt: penaltyState[row.row_id]?.updated_at,
     }));
 
-  const activePenaltyRowsWithState: SnapshotPenaltyRow[] = activePenaltyRows.map((row) => ({
-    ...row,
-    resolutionStatus: penaltyState[row.row_id]?.status,
-    resolutionUpdatedAt: penaltyState[row.row_id]?.updated_at,
-  }));
-
   return (
-    <div className="min-h-screen bg-[#0a0f19] px-6 py-8 text-slate-200">
-      <div className="mx-auto flex max-w-7xl flex-col gap-8">
+    <div className="min-h-screen bg-[#0a0f19] px-4 py-10 text-slate-200 sm:px-6">
+      <div className="mx-auto flex max-w-7xl flex-col gap-4">
+
         <MonitorNav current="goalscorer" />
 
+        {/* ── Hero ─────────────────────────────────────────────────────────── */}
         <HeroCard title="Goalscorer Monitor" eyebrow="Snapshot-first architecture">
-          <p>This page now renders from a single monitor snapshot instead of rebuilding joins at request time.</p>
-          <p className="mt-2 text-slate-400">Generated {formatDateTimeLabel(snapshot.generated_at)} · {renderSourceDetail(snapshot)}</p>
+          <span className="text-slate-300">Generated {formatDateTimeLabel(snapshot.generated_at)}</span>
+          <span className="mx-2 text-slate-700">·</span>
+          <span className="text-slate-500">{renderSourceDetail(snapshot)}</span>
         </HeroCard>
 
-        <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
-          <StatCard label="Live bets" value={String(snapshot.live_bets.length)} />
-          <StatCard label="Public now" value={String(publicNow)} detail="Rows surfaced to the public card" />
-          <StatCard label="Shadow now" value={String(shadowNow)} detail="Shadow-track rows still open" />
-          <StatCard label="Penalty reviews" value={String(activePenaltyRowsWithState.length)} detail={`${resolvedPenaltyRows.length} already resolved`} />
-          <StatCard label="Flagged fixtures" value={String(snapshot.fixture_health.flagged_rows.length)} detail={`${snapshot.fixture_health.rows.length} fixtures in snapshot`} />
-          <StatCard label="Avg EV" value={formatPct(snapshot.diagnostics.avg_ev_pct)} tone={toneClass(snapshot.diagnostics.avg_ev_pct)} />
+        {/* ── KPI strip ────────────────────────────────────────────────────── */}
+        <section className="grid gap-2.5 sm:grid-cols-3 xl:grid-cols-6">
+          <StatCard label="Live bets"       value={String(snapshot.live_bets.length)} />
+          <StatCard label="Public now"      value={String(publicNow)}      detail="Rows surfaced to public" />
+          <StatCard label="Shadow now"      value={String(shadowNow)}      detail="Shadow rows still open" />
+          <StatCard
+            label="Penalty reviews"
+            value={String(activePenaltyRows.length)}
+            detail={resolvedPenaltyRows.length ? `${resolvedPenaltyRows.length} resolved` : undefined}
+          />
+          <StatCard
+            label="Flagged fixtures"
+            value={String(snapshot.fixture_health.flagged_rows.length)}
+            detail={`${snapshot.fixture_health.rows.length} in snapshot`}
+          />
+          <StatCard
+            label="Avg EV"
+            value={formatPct(snapshot.diagnostics.avg_ev_pct)}
+            tone={toneClass(snapshot.diagnostics.avg_ev_pct)}
+          />
         </section>
 
-        <SectionCard title="League Scoreboard" subtitle="Page-ready league KPIs from the snapshot builder.">
-          <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+        {/* ── League Scoreboard ─────────────────────────────────────────────── */}
+        <SectionCard
+          title="League Scoreboard"
+          subtitle={`${snapshot.league_cards.length} leagues · page-ready KPIs from snapshot builder`}
+          collapsible
+          defaultOpen
+        >
+          <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
             {snapshot.league_cards.map((card) => (
-              <article key={card.key} className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
+              <article
+                key={card.key}
+                className="rounded-xl border border-slate-800/60 bg-slate-950/50 p-4"
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-lg font-semibold text-white">{card.label}</h3>
-                    <p className="mt-1 text-sm text-slate-400">Updated {formatDateTimeLabel(card.updated_at)}</p>
+                    <h3 className="text-sm font-semibold text-white">{card.label}</h3>
+                    <p className="mt-0.5 text-[11px] text-slate-600">
+                      Updated {formatDateTimeLabel(card.updated_at)}
+                    </p>
                   </div>
                   <StatusPill label={card.status_label} tone={statusTone(card.status_key)} />
                 </div>
-                {card.status_detail ? <p className="mt-3 text-sm text-slate-400">{card.status_detail}</p> : null}
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <StatCard label="Live rows" value={String(card.live_rows)} />
-                  <StatCard label="Public / shadow" value={`${card.public_now} / ${card.shadow_now}`} />
-                  <StatCard label="Fixture health" value={`${card.clean_fixtures} clean`} detail={`${card.degraded_fixtures} degraded · ${card.quarantined_fixtures} quarantined`} />
-                  <StatCard label="Shadow open" value={String(card.shadow_record.open)} detail={`${card.shadow_record.settled} settled`} />
-                  <StatCard label="Shadow ROI" value={formatPct(card.shadow_record.roi)} tone={toneClass(card.shadow_record.roi)} detail={formatUnits(card.shadow_record.pnl_units, 3)} />
-                  <StatCard label="Public ROI" value={formatPct(card.public_record.roi)} tone={toneClass(card.public_record.roi)} detail={formatUnits(card.public_record.pnl_units, 3)} />
+                {card.status_detail ? (
+                  <p className="mt-2 text-xs text-slate-500">{card.status_detail}</p>
+                ) : null}
+                <div className="mt-3 grid gap-1.5 sm:grid-cols-2">
+                  <StatCard compact label="Live rows"       value={String(card.live_rows)} />
+                  <StatCard compact label="Public / shadow" value={`${card.public_now} / ${card.shadow_now}`} />
+                  <StatCard
+                    compact
+                    label="Fixture health"
+                    value={`${card.clean_fixtures} clean`}
+                    detail={`${card.degraded_fixtures} deg · ${card.quarantined_fixtures} quar`}
+                  />
+                  <StatCard
+                    compact
+                    label="Shadow open"
+                    value={String(card.shadow_record.open)}
+                    detail={`${card.shadow_record.settled} settled`}
+                  />
+                  <StatCard
+                    compact
+                    label="Shadow ROI"
+                    value={formatPct(card.shadow_record.roi)}
+                    tone={toneClass(card.shadow_record.roi)}
+                    detail={formatUnits(card.shadow_record.pnl_units, 3)}
+                  />
+                  <StatCard
+                    compact
+                    label="Public ROI"
+                    value={formatPct(card.public_record.roi)}
+                    tone={toneClass(card.public_record.roi)}
+                    detail={formatUnits(card.public_record.pnl_units, 3)}
+                  />
                 </div>
               </article>
             ))}
           </div>
         </SectionCard>
 
-        <SectionCard title={`Live Bets (${snapshot.live_bets.length})`} subtitle="Only snapshot-backed public and shadow rows are rendered here.">
+        {/* ── Live Bets ─────────────────────────────────────────────────────── */}
+        <SectionCard
+          title={`Live Bets${snapshot.live_bets.length ? ` · ${snapshot.live_bets.length}` : ""}`}
+          subtitle="Public and shadow rows backed by the current snapshot."
+          collapsible
+          defaultOpen
+        >
           <LiveBetsTable rows={snapshot.live_bets} />
         </SectionCard>
 
+        {/* ── Penalty Watchlist ─────────────────────────────────────────────── */}
         <SectionCard
-          title={`Fixture Diagnostics (${snapshot.fixture_health.flagged_rows.length})`}
-          subtitle={`${snapshot.fixture_health.clean_count} clean · ${snapshot.fixture_health.degraded_count} degraded · ${snapshot.fixture_health.quarantined_count} quarantined`}
+          title={`Penalty Watchlist${activePenaltyRows.length ? ` · ${activePenaltyRows.length} active` : ""}`}
+          subtitle="Enriched in the snapshot — includes on-pitch-at-penalty resolution."
+          collapsible
+          defaultOpen
         >
-          {snapshot.fixture_health.flagged_rows.length === 0 ? (
-            <EmptyState message="No degraded or quarantined fixtures are flagged in the current snapshot." />
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[920px] text-left text-sm">
-                <thead className="text-[11px] uppercase tracking-[0.18em] text-slate-500">
-                  <tr className="border-b border-slate-800">
-                    <th className="pb-3 pr-3 font-semibold">Fixture</th>
-                    <th className="pb-3 pr-3 font-semibold">League</th>
-                    <th className="pb-3 pr-3 font-semibold">Lineup input</th>
-                    <th className="pb-3 pr-3 font-semibold">Trust</th>
-                    <th className="pb-3 pr-3 font-semibold">Flags</th>
-                    <th className="pb-3 font-semibold">Summary</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {snapshot.fixture_health.flagged_rows.map((row) => (
-                    <tr key={row.key} className="border-b border-slate-900/80 align-top text-slate-200">
-                      <td className="py-3 pr-3">
-                        <div className="font-semibold text-white">{row.home_team} vs {row.away_team}</div>
-                        <div className="text-xs text-slate-500">{formatDateLabel(row.match_date)} · {row.bookmaker || "-"}</div>
-                      </td>
-                      <td className="py-3 pr-3">{row.league_label}</td>
-                      <td className="py-3 pr-3">{row.lineup_input || "-"}</td>
-                      <td className="py-3 pr-3"><StatusPill label={row.trust_tier || "unknown"} tone={statusTone(row.trust_tier)} /></td>
-                      <td className="py-3 pr-3 text-xs text-slate-400">{row.corruption_flags?.length ? row.corruption_flags.join(", ") : "-"}</td>
-                      <td className="py-3 text-sm text-slate-400">{row.summary}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </SectionCard>
-
-        <SectionCard
-          title={`Penalty Watchlist (${activePenaltyRowsWithState.length})`}
-          subtitle="Penalty review rows are already enriched in the snapshot, including on-pitch-at-penalty answers."
-        >
-          <div className="flex flex-col gap-4">
-            {activePenaltyRowsWithState.length === 0 ? (
-              <EmptyState message="No active penalty review rows remain in the current snapshot." />
+          <div className="space-y-3">
+            {activePenaltyRows.length === 0 ? (
+              <EmptyState message="No active penalty review rows in the current snapshot." />
             ) : (
-              activePenaltyRowsWithState.map((row) => <PenaltyReviewCard key={row.row_id} row={row} />)
+              activePenaltyRows.map((row) => <PenaltyReviewCard key={row.row_id} row={row} />)
             )}
           </div>
-          <details className="mt-6 rounded-xl border border-slate-800 bg-slate-950/25 px-4 py-3">
-            <summary className="cursor-pointer text-sm font-semibold text-slate-300">Resolved rows ({resolvedPenaltyRows.length})</summary>
-            <div className="mt-4 flex flex-col gap-4">
+
+          {/* Resolved rows — collapsed */}
+          <details className="group mt-4 rounded-xl border border-slate-800/50 bg-slate-950/30">
+            <summary className="flex cursor-pointer select-none list-none items-center justify-between gap-3 px-4 py-3 marker:hidden hover:bg-white/[0.02]">
+              <span className="text-xs font-medium text-slate-500">
+                Resolved rows ({resolvedPenaltyRows.length})
+              </span>
+              <span className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-700 transition-transform duration-200 group-open:rotate-180">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polyline points="6 9 12 15 18 9" /></svg>
+              </span>
+            </summary>
+            <div className="space-y-3 border-t border-slate-800/50 px-4 pb-4 pt-3">
               {resolvedPenaltyRows.length === 0 ? (
-                <EmptyState message="No penalty review rows have been resolved yet." />
+                <EmptyState message="No penalty rows have been resolved yet." />
               ) : (
                 resolvedPenaltyRows.map((row) => <PenaltyReviewCard key={row.row_id} row={row} />)
               )}
@@ -349,25 +626,50 @@ export default async function GoalscorerMonitorPage() {
           </details>
         </SectionCard>
 
+        {/* ── Recent Shadow Settlements ──────────────────────────────────────── */}
         <SectionCard
-          title={`Recent Shadow Settlements (${snapshot.shadow_summary.recent_rows.length})`}
-          subtitle={`${snapshot.shadow_summary.settled_today.length} settled today · ${snapshot.shadow_summary.settled_yesterday.length} settled yesterday`}
+          title={`Recent Shadow Settlements${snapshot.shadow_summary.recent_rows.length ? ` · ${snapshot.shadow_summary.recent_rows.length}` : ""}`}
+          subtitle={`${snapshot.shadow_summary.settled_today.length} today · ${snapshot.shadow_summary.settled_yesterday.length} yesterday`}
+          collapsible
+          defaultOpen
         >
-          <RecentSettlementsTable rows={snapshot.shadow_summary.recent_rows.slice(0, 25)} />
+          <RecentSettlementsTable rows={snapshot.shadow_summary.recent_rows.slice(0, 50)} />
         </SectionCard>
 
-        <SectionCard title="Related Tools" subtitle="The snapshot also feeds the dedicated lineups page and penalty API.">
+        {/* ── Fixture Diagnostics (collapsed) ───────────────────────────────── */}
+        <SectionCard
+          title={`Fixture Diagnostics · ${snapshot.fixture_health.flagged_rows.length} flagged`}
+          subtitle={`${snapshot.fixture_health.clean_count} clean · ${snapshot.fixture_health.degraded_count} degraded · ${snapshot.fixture_health.quarantined_count} quarantined`}
+          collapsible
+          defaultOpen={false}
+        >
+          <FixtureDiagnosticsTable rows={snapshot.fixture_health.flagged_rows} />
+        </SectionCard>
+
+        {/* ── Related Tools (collapsed) ──────────────────────────────────────── */}
+        <SectionCard
+          title="Related Tools"
+          subtitle="Lineups view and raw penalty watchlist API."
+          collapsible
+          defaultOpen={false}
+        >
           <div className="flex flex-wrap gap-3">
-            <Link href="/model-monitor/goalscorer/lineups" className="inline-flex items-center rounded-full border border-cyan-500/25 bg-cyan-500/10 px-3 py-1.5 text-sm text-cyan-100 transition-colors hover:border-cyan-400/40">
+            <Link
+              href="/model-monitor/goalscorer/lineups"
+              className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/8 px-3 py-1.5 text-sm text-cyan-300 transition-colors hover:border-cyan-400/30 hover:bg-cyan-500/12"
+            >
               Open lineups view
             </Link>
-            <Link href="/api/model-monitor/goalscorer/penalty-watchlist" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-slate-500/80 hover:text-slate-100">
+            <Link
+              href="/api/model-monitor/goalscorer/penalty-watchlist"
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-700/60 bg-slate-900/60 px-3 py-1.5 text-sm text-slate-400 transition-colors hover:border-slate-600 hover:text-slate-200"
+            >
               Penalty watchlist API
             </Link>
           </div>
         </SectionCard>
+
       </div>
     </div>
   );
 }
-

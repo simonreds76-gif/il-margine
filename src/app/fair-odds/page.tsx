@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { formatStake } from "@/lib/format";
 
-/* â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Types */
 
 interface FairOddsMatch {
   id: number;
@@ -58,25 +58,19 @@ interface FairOddsMatch {
   policy_match?: boolean;
   shadow_match?: boolean;
   blocked_reason?: string;
-  clay_2026_match?: boolean;
-  clay_2026_selected_prob?: number;
-  clay_2026_value_p1?: number;
-  clay_2026_value_p2?: number;
-  clay_2026_raw_value_same_side?: number;
-  clay_2026_raw_odds1?: number;
-  clay_2026_raw_odds2?: number;
-  clay_2026_calibrated_odds1?: number;
-  clay_2026_calibrated_odds2?: number;
-  clay_speed_tier?: "fast" | "normal";
   tournament_speed_signal?: number;
   fast_clay_flag?: boolean;
   fast_clay_selected_side?: "P1" | "P2";
   fast_clay_archetype?: "both" | "serve_led" | "return_led" | "contrarian";
   fast_clay_return_led_flag?: boolean;
+  row_signals?: SignalSummary[];
 }
 
 interface SignalSummary {
   id: number;
+  kind?: "clay_guarded" | "clay_2026" | "spread_shadow" | "volume_200" | "volume_200_upgrade" | "volume_275";
+  player1_id?: number;
+  player2_id?: number;
   player1_name: string;
   player2_name: string;
   side: string;
@@ -101,6 +95,10 @@ interface SignalSummary {
   clay_2026_raw_odds2?: number;
   clay_2026_calibrated_odds1?: number;
   clay_2026_calibrated_odds2?: number;
+  clay_2026_selected_prob?: number;
+  clay_guarded_selected_elo_prob?: number;
+  clay_guarded_selected_market_prob?: number;
+  clay_guarded_selected_elo_gap_vs_market?: number;
   handicap_point_prob_source?: "stored_p_a_p_b" | "fallback_divergent_gap" | "fallback_missing";
 }
 
@@ -133,28 +131,37 @@ interface PinnacleOnlyMatch {
 
 interface ApiResponse {
   matches: FairOddsMatch[];
+  matches_with_row_signals?: number;
   pinnacle_count: number;
   pinnacle_matched_count: number;
   pinnacle_only?: PinnacleOnlyMatch[];
   pinnacle_hint?: string;
   spread_hint?: string;
   policy?: StrictPolicyMeta;
-  shadow_profile?: "off" | "volume_275" | "volume_200" | string;
+  shadow_profile?: "off" | "volume_275" | "volume_200" | "volume_200_upgrade" | string;
   signals_strict?: SignalSummary[];
   signals_volume_profile?: SignalSummary[];
   signals_volume_overlap?: SignalSummary[];
   signals_volume_additional?: SignalSummary[];
   signals_volume?: SignalSummary[];
+  signals_volume_200_live?: SignalSummary[];
+  signals_volume_200_upgrade_live?: SignalSummary[];
+  signals_clay_guarded?: SignalSummary[];
   signals_clay_2026?: SignalSummary[];
   signals_spread_shadow?: SignalSummary[];
+  signal_attachment?: {
+    clay_guarded?: { loaded: number; attached: number; unmatched: number };
+    clay_2026?: { loaded: number; attached: number; unmatched: number };
+    spread_shadow?: { loaded: number; attached: number; unmatched: number };
+  };
   error?: string;
 }
 
 const SHOW_OU_COLUMNS = false;
-const TABLE_COL_COUNT = SHOW_OU_COLUMNS ? 18 : 11; // 10 core + 1 Stats (consolidated)
-const TABLE_MIN_WIDTH = SHOW_OU_COLUMNS ? 1550 : 1100;
+const TABLE_BASE_COL_COUNT = SHOW_OU_COLUMNS ? 11 : 9;
+const TABLE_MIN_WIDTH = SHOW_OU_COLUMNS ? 1460 : 980;
 
-/* â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Helpers */
 
 interface OULine {
   line: number;
@@ -194,22 +201,16 @@ function parseOULines(match: FairOddsMatch): OULine[] {
 
 function shadowProfileLabel(profile?: string): string {
   if (profile === "volume_200") return "Volume 200";
+  if (profile === "volume_200_upgrade") return "Volume 200 Upgrade";
   if (profile === "volume_275") return "Volume 275";
   return "Volume";
 }
 
 function shadowProfileBadge(profile?: string): string {
   if (profile === "volume_200") return "VOL200";
+  if (profile === "volume_200_upgrade") return "VOL200+";
   if (profile === "volume_275") return "VOL275";
   return "VOL";
-}
-
-function fastClayArchetypeLabel(archetype?: string): string {
-  if (archetype === "both") return "Both-edge";
-  if (archetype === "serve_led") return "Serve-led";
-  if (archetype === "return_led") return "Return-led";
-  if (archetype === "contrarian") return "Contrarian";
-  return "Unclassified";
 }
 
 function valueColor(v: number | undefined): string {
@@ -247,24 +248,133 @@ function bestValueBadge(m: FairOddsMatch): { side: string; value: number } | nul
   return v1 >= v2 ? { side: "P1", value: v1 } : { side: "P2", value: v2 };
 }
 
-function clay2026RawBest(m: FairOddsMatch): { side: "P1" | "P2"; value: number; odds?: number } | null {
-  const v1 = m.value_p1;
-  const v2 = m.value_p2;
-  if (v1 == null && v2 == null) return null;
-  if (v2 == null || (v1 != null && v1 >= (v2 ?? Number.NEGATIVE_INFINITY))) {
-    return { side: "P1", value: v1 ?? 0, odds: m.odds1 };
-  }
-  return { side: "P2", value: v2 ?? 0, odds: m.odds2 };
+type SignalFeedCategory =
+  | "strict"
+  | "shadow"
+  | "volume_200"
+  | "volume_200_upgrade"
+  | "volume_275"
+  | "clay_guarded"
+  | "clay_2026"
+  | "spread_shadow";
+
+interface SignalFeedItem {
+  key: string;
+  category: SignalFeedCategory;
+  signal: SignalSummary;
 }
 
-function clay2026CalBest(m: FairOddsMatch): { side: "P1" | "P2"; value: number; odds?: number } | null {
-  const v1 = m.clay_2026_value_p1;
-  const v2 = m.clay_2026_value_p2;
-  if (v1 == null && v2 == null) return null;
-  if (v2 == null || (v1 != null && v1 >= (v2 ?? Number.NEGATIVE_INFINITY))) {
-    return { side: "P1", value: v1 ?? 0, odds: m.clay_2026_calibrated_odds1 };
+function signalFeedMeta(category: SignalFeedCategory, shadowProfile?: string): {
+  label: string;
+  badgeClass: string;
+  accentClass: string;
+} {
+  if (category === "strict") {
+    return {
+      label: "STRICT",
+      badgeClass: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
+      accentClass: "text-emerald-300",
+    };
   }
-  return { side: "P2", value: v2 ?? 0, odds: m.clay_2026_calibrated_odds2 };
+  if (category === "shadow") {
+    return {
+      label: shadowProfileBadge(shadowProfile),
+      badgeClass: "border-amber-500/30 bg-amber-500/10 text-amber-300",
+      accentClass: "text-amber-300",
+    };
+  }
+  if (category === "volume_200") {
+    return {
+      label: "VOL200",
+      badgeClass: "border-amber-500/30 bg-amber-500/10 text-amber-300",
+      accentClass: "text-amber-300",
+    };
+  }
+  if (category === "volume_200_upgrade") {
+    return {
+      label: "VOL200+",
+      badgeClass: "border-yellow-400/35 bg-yellow-400/10 text-yellow-200",
+      accentClass: "text-yellow-200",
+    };
+  }
+  if (category === "volume_275") {
+    return {
+      label: "VOL275",
+      badgeClass: "border-amber-500/30 bg-amber-500/10 text-amber-300",
+      accentClass: "text-amber-300",
+    };
+  }
+  if (category === "clay_guarded") {
+    return {
+      label: "CLAY GUARD",
+      badgeClass: "border-lime-500/30 bg-lime-500/10 text-lime-200",
+      accentClass: "text-lime-200",
+    };
+  }
+  if (category === "clay_2026") {
+    return {
+      label: "CLAY 2026",
+      badgeClass: "border-orange-500/30 bg-orange-500/10 text-orange-200",
+      accentClass: "text-orange-200",
+    };
+  }
+  return {
+    label: "SPREAD",
+    badgeClass: "border-cyan-500/25 bg-cyan-500/10 text-cyan-300",
+    accentClass: "text-cyan-300",
+  };
+}
+
+function primarySignalBadgeMeta(
+  match: FairOddsMatch,
+  rowSignals: SignalSummary[],
+  shadowProfile?: string,
+): { label: string; className: string; title?: string } | null {
+  const clayGuardedSignal = rowSignals.find((signal) => signal.kind === "clay_guarded");
+  const claySignal = rowSignals.find((signal) => signal.kind === "clay_2026");
+  const spreadSignal = rowSignals.find((signal) => signal.kind === "spread_shadow");
+
+  if (match.policy_match) {
+    return {
+      label: "STRICT",
+      className: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
+      title: "Strict policy match",
+    };
+  }
+
+  if (clayGuardedSignal) {
+    return {
+      label: "CLAY GUARD",
+      className: "border-lime-500/30 bg-lime-500/10 text-lime-200",
+      title: `Clay guarded ATP250 dog${clayGuardedSignal.league ? ` | ${clayGuardedSignal.league}` : ""}`,
+    };
+  }
+
+  if (claySignal) {
+    return {
+      label: "CLAY 2026",
+      className: "border-orange-500/30 bg-orange-500/10 text-orange-200",
+      title: `Clay 2026 calibrated ML${claySignal.league ? ` | ${claySignal.league}` : ""}`,
+    };
+  }
+
+  if (spreadSignal) {
+    return {
+      label: "SPREAD",
+      className: "border-cyan-500/25 bg-cyan-500/10 text-cyan-300",
+      title: "Spread shadow signal attached",
+    };
+  }
+
+  if (match.shadow_match) {
+    return {
+      label: shadowProfileBadge(shadowProfile),
+      className: "border-amber-500/30 bg-amber-500/10 text-amber-300",
+      title: `${shadowProfileLabel(shadowProfile)} shadow signal`,
+    };
+  }
+
+  return null;
 }
 
 function clay2026SignalMeta(s: SignalSummary): {
@@ -297,63 +407,201 @@ function clay2026SignalMeta(s: SignalSummary): {
     rawSameSide: s.clay_2026_raw_value_same_side,
     adjustedValue: s.value_pct,
     adjustedProb:
-      selectedSide === "P1"
+      s.clay_2026_selected_prob ??
+      (selectedSide === "P1"
         ? s.clay_2026_calibrated_odds1 != null && s.clay_2026_calibrated_odds1 > 0
           ? 1 / s.clay_2026_calibrated_odds1
           : undefined
         : s.clay_2026_calibrated_odds2 != null && s.clay_2026_calibrated_odds2 > 0
           ? 1 / s.clay_2026_calibrated_odds2
-          : undefined,
+          : undefined),
     flipped: rawBestGuessSide !== selectedSide,
   };
 }
 
-function clay2026RowMeta(m: FairOddsMatch): {
-  rawBestSide: "P1" | "P2";
-  selectedSide: "P1" | "P2";
-  marketOdds?: number;
-  rawSameSideOdds?: number;
-  adjustedOdds?: number;
-  rawSameSide?: number;
-  adjustedValue: number;
-  adjustedProb?: number;
-  flipped: boolean;
-} | null {
-  const raw = clay2026RawBest(m);
-  const cal = clay2026CalBest(m);
-  if (!raw || !cal) return null;
-  return {
-    rawBestSide: raw.side,
-    selectedSide: cal.side,
-    marketOdds: cal.side === "P1" ? m.pinnacle_odds1 : m.pinnacle_odds2,
-    rawSameSideOdds: cal.side === "P1" ? m.odds1 : m.odds2,
-    adjustedOdds: cal.odds,
-    rawSameSide: m.clay_2026_raw_value_same_side,
-    adjustedValue: cal.value,
-    adjustedProb: m.clay_2026_selected_prob,
-    flipped: raw.side !== cal.side,
-  };
+function categoryForShadowProfile(profile?: string): SignalFeedCategory {
+  if (profile === "volume_200") return "volume_200";
+  if (profile === "volume_200_upgrade") return "volume_200_upgrade";
+  if (profile === "volume_275") return "volume_275";
+  return "shadow";
+}
+
+function rowSignalKindOrder(kind?: SignalSummary["kind"]): number {
+  if (kind === "clay_guarded") return 0;
+  if (kind === "clay_2026") return 1;
+  if (kind === "spread_shadow") return 2;
+  return 3;
+}
+
+function rowSignalSort(signals: SignalSummary[]): SignalSummary[] {
+  return [...signals].sort((a, b) => {
+    if ((a.kind ?? "") !== (b.kind ?? "")) return rowSignalKindOrder(a.kind) - rowSignalKindOrder(b.kind);
+    if ((a.bet_type ?? "") !== (b.bet_type ?? "")) return a.bet_type === "match" ? -1 : 1;
+    return (a.side ?? "").localeCompare(b.side ?? "");
+  });
+}
+
+function signalSideBadgeText(signal: SignalSummary): string {
+  if (signal.kind === "spread_shadow" && signal.bet_type === "spread") {
+    const signedLine =
+      signal.side === "P1+"
+        ? signal.spread_line
+        : signal.spread_line != null
+          ? -signal.spread_line
+          : undefined;
+    return signedLine != null ? `${signal.side.startsWith("P1") ? "P1" : "P2"} ${fmtSignedLine(signedLine)}` : signal.side;
+  }
+  return signal.side;
+}
+
+function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
+  if (!signals.length) return null;
+
+  return (
+    <div className="grid gap-3 lg:grid-cols-2">
+      {signals.map((signal) => {
+        const clayMeta = signal.kind === "clay_2026" ? clay2026SignalMeta(signal) : null;
+        const clayGuardGap = signal.kind === "clay_guarded" ? signal.clay_guarded_selected_elo_gap_vs_market : undefined;
+        const handicapShape =
+          signal.kind === "spread_shadow" ? handicapShapeMeta(signal.handicap_point_prob_source) : null;
+        const challengerLabel = signal.league === "Challenger" ? "CH" : null;
+        const stakeUnits = signal.stake_units != null ? formatStake(signal.stake_units) : "1.0";
+        const stakeGbp = signal.stake_gbp != null ? Math.round(signal.stake_gbp) : 100;
+
+        return (
+          <div
+            key={`${signal.kind ?? signal.bet_type}-${signal.id}`}
+            className={`w-full min-w-0 rounded-xl border px-3 py-3 ${
+              signal.kind === "clay_guarded"
+                ? "border-lime-500/25 bg-lime-500/8"
+                : signal.kind === "clay_2026"
+                  ? "border-orange-500/25 bg-orange-500/8"
+                  : "border-cyan-500/20 bg-cyan-500/8"
+            }`}
+          >
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span
+                    className={`rounded border px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${
+                      signal.kind === "clay_2026"
+                        ? "border-orange-500/30 bg-orange-500/10 text-orange-200"
+                        : "border-cyan-500/25 bg-cyan-500/10 text-cyan-300"
+                    }`}
+                  >
+                    {signal.kind === "clay_2026" ? "Clay 2026 ML" : "Spread Shadow"}
+                  </span>
+                  <span className="rounded border border-slate-700/70 bg-slate-950/70 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-200">
+                    {signalSideBadgeText(signal)}
+                  </span>
+                  {challengerLabel ? (
+                    <span className="rounded border border-slate-700/70 bg-slate-950/70 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-slate-300">
+                      {challengerLabel}
+                    </span>
+                  ) : null}
+                  {signal.kind === "clay_2026" && signal.league === "Challenger" ? (
+                    <span
+                      className="rounded border border-amber-500/25 bg-amber-500/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-amber-200"
+                      title="Challenger is observational only in Clay 2026. ATP is the validated cohort."
+                    >
+                      UNVALIDATED CH
+                    </span>
+                  ) : null}
+                  {signal.clay_speed_tier === "fast" ? (
+                    <span
+                      className="rounded border border-cyan-500/25 bg-cyan-500/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-cyan-300"
+                      title={
+                        signal.tournament_speed_signal != null
+                          ? `Fast clay (${signal.tournament_speed_signal > 0 ? "+" : ""}${signal.tournament_speed_signal.toFixed(3)})`
+                          : "Fast clay"
+                      }
+                    >
+                      FAST CLAY
+                    </span>
+                  ) : null}
+                  {clayMeta?.flipped ? (
+                    <span className="rounded border border-orange-500/25 bg-orange-500/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-orange-200">
+                      CAL FLIP
+                    </span>
+                  ) : null}
+                  {handicapShape ? (
+                    <span
+                      className={`rounded border px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] ${handicapShape.cls}`}
+                      title={handicapShape.title}
+                    >
+                      {handicapShape.label}
+                    </span>
+                  ) : null}
+                </div>
+                <div className="mt-2 text-[13px] font-semibold text-slate-100">
+                  {(signal.side.startsWith("P1") ? signal.player1_name : signal.player2_name)}{" "}
+                  {signal.bet_type === "spread" && signal.spread_line != null
+                    ? `${fmtSignedLine(signal.side === "P1+" ? signal.spread_line : -signal.spread_line)} HC`
+                    : "ML"}{" "}
+                  @ {fmtOdds(signal.pinnacle_odds)}
+                </div>
+              </div>
+              <div className="shrink-0 rounded-lg border border-slate-800/60 bg-slate-950/40 px-3 py-2 text-left lg:min-w-[132px] lg:text-right">
+                <div className={`font-mono text-[16px] font-semibold tabular-nums ${valueColor(signal.value_pct)}`}>
+                  {fmtPct(signal.value_pct)}
+                </div>
+                <div className="mt-1 text-[11px] text-slate-500">
+                  {stakeUnits}u / GBP{stakeGbp}
+                </div>
+              </div>
+            </div>
+
+            {clayMeta ? (
+              <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                <div className="rounded-md bg-slate-950/35 px-2 py-1.5">
+                  <div className="text-[10px] uppercase tracking-wide text-slate-500">Market</div>
+                  <div className="font-mono text-[12px] text-slate-100">
+                    {claySideLabel(clayMeta.selectedSide, signal.player1_name, signal.player2_name)} @ {fmtOdds(clayMeta.marketOdds)}
+                  </div>
+                </div>
+                <div className="rounded-md bg-slate-950/35 px-2 py-1.5">
+                  <div className="text-[10px] uppercase tracking-wide text-slate-500">Raw Fair</div>
+                  <div className="font-mono text-[12px] text-slate-100">
+                    {claySideLabel(clayMeta.selectedSide, signal.player1_name, signal.player2_name)} @ {fmtOdds(clayMeta.rawSameSideOdds)}
+                  </div>
+                  <div className={`mt-0.5 text-[11px] ${valueColor(clayMeta.rawSameSide)}`}>{fmtPct(clayMeta.rawSameSide)}</div>
+                </div>
+                <div className="rounded-md bg-slate-950/35 px-2 py-1.5">
+                  <div className="text-[10px] uppercase tracking-wide text-slate-500">Adjusted Fair</div>
+                  <div className="font-mono text-[12px] text-orange-100">
+                    {claySideLabel(clayMeta.selectedSide, signal.player1_name, signal.player2_name)} @ {fmtOdds(clayMeta.adjustedOdds)}
+                  </div>
+                  <div className={`mt-0.5 text-[11px] ${valueColor(clayMeta.adjustedValue)}`}>
+                    {fmtPct(clayMeta.adjustedValue)} | {fmtProb(clayMeta.adjustedProb)}
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 function fmtOdds(v: number | undefined): string {
-  if (v == null || v <= 0) return "—";
+  if (v == null || v <= 0) return "--";
   return v.toFixed(2);
 }
 
 function fmtPct(v: number | undefined): string {
-  if (v == null) return "—";
+  if (v == null) return "--";
   return `${v > 0 ? "+" : ""}${v.toFixed(1)}%`;
 }
 
-function fmtProb(v: number | undefined): string {
-  if (v == null || v <= 0) return "—";
-  return `${(v * 100).toFixed(0)}%`;
+function fmtSignedPct(v: number | undefined): string {
+  if (v == null || Number.isNaN(v)) return "--";
+  return `${v >= 0 ? "+" : ""}${v.toFixed(1)}pp`;
 }
 
-function leagueBadgeLabel(league?: "ATP" | "Challenger"): string | null {
-  if (league === "Challenger") return "CH";
-  if (league === "ATP") return "ATP";
-  return null;
+function fmtProb(v: number | undefined): string {
+  if (v == null || v <= 0) return "--";
+  return `${(v * 100).toFixed(0)}%`;
 }
 
 function claySideLabel(side: "P1" | "P2", player1: string, player2: string): string {
@@ -361,18 +609,18 @@ function claySideLabel(side: "P1" | "P2", player1: string, player2: string): str
 }
 
 function fmtSignedLine(v: number | undefined): string {
-  if (v == null || Number.isNaN(v)) return "—";
+  if (v == null || Number.isNaN(v)) return "--";
   const abs = Math.abs(v);
   const body = Number.isInteger(abs) ? String(abs) : abs.toFixed(1);
-  return `${v >= 0 ? "+" : "−"}${body}`;
+  return `${v >= 0 ? "+" : "-"}${body}`;
 }
 
 function formatSignalBet(s: SignalSummary): { matchLabel: string; betLine: string } {
   const player = s.side.startsWith("P1") ? s.player1_name : s.player2_name;
-  const odds = s.pinnacle_odds != null ? s.pinnacle_odds.toFixed(2) : "—";
+  const odds = s.pinnacle_odds != null ? s.pinnacle_odds.toFixed(2) : "--";
   const units = s.stake_units != null ? s.stake_units : 1;
   const gbp = s.stake_gbp != null ? Math.round(s.stake_gbp) : 100;
-  const stakePart = `× ${formatStake(units)}u (or £${gbp})`;
+  const stakePart = `x ${formatStake(units)}u (or GBP${gbp})`;
 
   if (s.bet_type === "spread" && s.spread_line != null) {
     const line = s.side === "P1+" ? s.spread_line : -s.spread_line;
@@ -381,129 +629,91 @@ function formatSignalBet(s: SignalSummary): { matchLabel: string; betLine: strin
       betLine: `${player} ${fmtSignedLine(line)}HC ${odds} ${stakePart}`,
     };
   }
+
   return {
     matchLabel: `${s.player1_name} vs ${s.player2_name}`,
     betLine: `${player} ML ${odds} ${stakePart}`,
   };
 }
 
-function signalTypeCounts(signals?: SignalSummary[]): { total: number; ml: number; spread: number } {
-  const total = signals?.length ?? 0;
-  const spread = (signals ?? []).filter((s) => (s.bet_type ?? "match") === "spread").length;
-  return { total, spread, ml: total - spread };
+function sortSignalFeedItems(items: SignalFeedItem[]): SignalFeedItem[] {
+  return [...items].sort(
+    (a, b) => (b.signal.value_pct ?? Number.NEGATIVE_INFINITY) - (a.signal.value_pct ?? Number.NEGATIVE_INFINITY),
+  );
 }
 
-function SignalList({
-  signals,
-  accentClass,
+function SignalFeedList({
+  items,
   emptyLabel,
-  showReasonTag = false,
+  shadowProfile,
 }: {
-  signals?: SignalSummary[];
-  accentClass: string;
+  items: SignalFeedItem[];
   emptyLabel: string;
-  showReasonTag?: boolean;
+  shadowProfile?: string;
 }) {
-  if (!signals?.length) {
-    return <p className="text-xs text-slate-500 italic">{emptyLabel}</p>;
+  if (!items.length) {
+    return <p className="text-[13px] text-slate-500 italic">{emptyLabel}</p>;
   }
 
   return (
-    <ul className="space-y-1.5">
-      {signals.map((s) => {
-        const { matchLabel, betLine } = formatSignalBet(s);
-        const handicapShape = s.bet_type === "spread" ? handicapShapeMeta(s.handicap_point_prob_source) : null;
-        const clayMeta = s.shadow_reason === "new_after_calibration_favorite_55_65" ? clay2026SignalMeta(s) : null;
-        const leagueLabel = leagueBadgeLabel(s.league);
+    <ul className="space-y-2">
+      {items.map(({ key, category, signal }) => {
+        const meta = signalFeedMeta(category, shadowProfile);
+        const clayMeta = signal.kind === "clay_2026" ? clay2026SignalMeta(signal) : null;
+        const clayGuardGap =
+          signal.kind === "clay_guarded" ? signal.clay_guarded_selected_elo_gap_vs_market : undefined;
+        const { matchLabel, betLine } = formatSignalBet(signal);
         return (
-          <li key={s.id} className="text-sm py-2 px-3 rounded-lg bg-slate-800/60 border border-slate-700/40">
-            <div className="flex items-center justify-between gap-2 mb-0.5">
-              <div className="text-slate-400 text-[11px] font-medium truncate">{matchLabel}</div>
-              <div className="flex items-center gap-1.5 shrink-0">
-                {leagueLabel ? (
-                  <span className="rounded border border-slate-700/70 bg-slate-900/70 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-slate-300">
-                    {leagueLabel}
+          <li key={key} className="rounded-xl border border-slate-700/50 bg-slate-900/55 px-3 py-3">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className={`rounded border px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${meta.badgeClass}`}>
+                    {meta.label}
                   </span>
+                  {signal.league === "Challenger" ? (
+                    <span className="rounded border border-slate-700/70 bg-slate-950/70 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-slate-300">
+                      CH
+                    </span>
+                  ) : null}
+                  {signal.kind === "clay_2026" && signal.league === "Challenger" ? (
+                    <span className="rounded border border-amber-500/25 bg-amber-500/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-amber-200">
+                      UNVALIDATED CH
+                    </span>
+                  ) : null}
+                  {signal.kind === "clay_2026" && signal.clay_speed_tier === "fast" ? (
+                    <span className="rounded border border-cyan-500/25 bg-cyan-500/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-cyan-300">
+                      FAST CLAY
+                    </span>
+                  ) : null}
+                  {signal.kind === "spread_shadow" && signal.shadow_reason ? (
+                    <span className="rounded border border-cyan-500/25 bg-cyan-500/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-cyan-300">
+                      {signalReasonLabel(signal.shadow_reason)}
+                    </span>
+                  ) : null}
+                  {signal.kind === "clay_guarded" && signal.shadow_reason ? (
+                    <span className="rounded border border-lime-500/25 bg-lime-500/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-lime-200">
+                      {signalReasonLabel(signal.shadow_reason)}
+                    </span>
+                  ) : null}
+                </div>
+                <div className="mt-1 text-[11px] font-medium text-slate-500 truncate">{matchLabel}</div>
+                <div className={`mt-1 font-mono text-[13px] font-semibold tabular-nums ${meta.accentClass}`}>{betLine}</div>
+                {clayMeta ? (
+                  <div className="mt-1 text-[11px] text-slate-500">
+                    Adjusted fair {fmtOdds(clayMeta.adjustedOdds)} | {fmtProb(clayMeta.adjustedProb)}
+                  </div>
                 ) : null}
-                {clayMeta && s.league === "Challenger" ? (
-                  <span
-                    className="rounded border border-amber-500/25 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-200"
-                    title="Challenger is observational only in Clay 2026. ATP is the validated cohort."
-                  >
-                    UNVALIDATED CH
-                  </span>
+                {signal.kind === "clay_guarded" && clayGuardGap != null ? (
+                  <div className="mt-1 text-[11px] text-slate-500">
+                    Elo vs market {fmtSignedPct(clayGuardGap * 100)}
+                  </div>
                 ) : null}
-                {s.surface === "Clay" && s.clay_speed_tier ? (
-                  <span
-                    className={`rounded border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide ${
-                      s.clay_speed_tier === "fast"
-                        ? "border-cyan-500/25 bg-cyan-500/10 text-cyan-300"
-                        : "border-orange-500/25 bg-orange-500/10 text-orange-200"
-                    }`}
-                    title={
-                      s.tournament_speed_signal != null
-                        ? `Clay speed tier: ${s.clay_speed_tier} (${s.tournament_speed_signal > 0 ? "+" : ""}${s.tournament_speed_signal.toFixed(3)})`
-                        : `Clay speed tier: ${s.clay_speed_tier}`
-                    }
-                  >
-                    {s.clay_speed_tier}
-                  </span>
-                ) : null}
-                {showReasonTag && s.shadow_reason ? (
-                  <span className="rounded border border-cyan-500/25 bg-cyan-500/10 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-cyan-300">
-                    {signalReasonLabel(s.shadow_reason)}
-                  </span>
-                ) : null}
-                {clayMeta?.flipped ? (
-                  <span className="rounded border border-orange-500/25 bg-orange-500/10 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-orange-200">
-                    CAL FLIP
-                  </span>
-                ) : null}
-                {handicapShape ? (
-                  <span
-                    className={`rounded border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide ${handicapShape.cls}`}
-                    title={handicapShape.title}
-                  >
-                    {handicapShape.label}
-                  </span>
-                ) : null}
+              </div>
+              <div className={`shrink-0 font-mono text-[16px] font-semibold tabular-nums ${valueColor(signal.value_pct)}`}>
+                {fmtPct(signal.value_pct)}
               </div>
             </div>
-            <div className={`font-mono font-semibold tabular-nums text-[13px] ${accentClass}`}>{betLine}</div>
-            {clayMeta ? (
-              <div className="mt-2 rounded-lg border border-orange-500/20 bg-orange-500/5 px-2.5 py-2">
-                <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-orange-200/90">
-                  <span>Adjusted View</span>
-                  <span className="text-orange-200/60">
-                    {clayMeta.flipped ? `${clayMeta.rawBestSide} -> ${clayMeta.selectedSide}` : `${clayMeta.selectedSide} held`}
-                  </span>
-                </div>
-                <div className="mt-1 grid gap-2 sm:grid-cols-3">
-                  <div className="rounded-md bg-slate-950/35 px-2 py-1.5">
-                    <div className="text-[10px] uppercase tracking-wide text-slate-500">Market</div>
-                    <div className="font-mono text-[12px] text-slate-100">
-                      {claySideLabel(clayMeta.selectedSide, s.player1_name, s.player2_name)} @ {fmtOdds(clayMeta.marketOdds)}
-                    </div>
-                  </div>
-                  <div className="rounded-md bg-slate-950/35 px-2 py-1.5">
-                    <div className="text-[10px] uppercase tracking-wide text-slate-500">Raw Fair</div>
-                    <div className="font-mono text-[12px] text-slate-100">
-                      {claySideLabel(clayMeta.selectedSide, s.player1_name, s.player2_name)} @ {fmtOdds(clayMeta.rawSameSideOdds)}
-                    </div>
-                    <div className={`mt-0.5 text-[11px] ${valueColor(clayMeta.rawSameSide)}`}>{fmtPct(clayMeta.rawSameSide)}</div>
-                  </div>
-                  <div className="rounded-md bg-slate-950/35 px-2 py-1.5">
-                    <div className="text-[10px] uppercase tracking-wide text-slate-500">Adjusted Fair</div>
-                    <div className="font-mono text-[12px] text-orange-100">
-                      {claySideLabel(clayMeta.selectedSide, s.player1_name, s.player2_name)} @ {fmtOdds(clayMeta.adjustedOdds)}
-                    </div>
-                    <div className={`mt-0.5 text-[11px] ${valueColor(clayMeta.adjustedValue)}`}>
-                      {fmtPct(clayMeta.adjustedValue)} · {fmtProb(clayMeta.adjustedProb)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : null}
           </li>
         );
       })}
@@ -511,10 +721,12 @@ function SignalList({
   );
 }
 
+
 function signalReasonLabel(reason?: string): string {
   if (reason === "clay_non_policy") return "Clay + non-policy";
   if (reason === "clay") return "Clay";
   if (reason === "non_policy") return "Non-policy";
+  if (reason === "allow_tier_dog_elo_ge_market_15") return "Allow + Elo>=Mkt";
   if (reason === "new_after_calibration_favorite_55_65") return "Clay 2026";
   return "Spread shadow";
 }
@@ -568,7 +780,7 @@ function confidenceMeta(conf?: string): { label: string; cls: string } {
   return { label: "N/A", cls: "bg-slate-700/40 text-slate-400 border-slate-600/30" };
 }
 
-/* â”€â”€â”€ Page Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Page Component */
 
 export default function FairOddsPage() {
   const [data, setData] = useState<ApiResponse | null>(null);
@@ -611,6 +823,129 @@ export default function FairOddsPage() {
 
   const now = new Date();
   const todayUTC = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-${String(now.getUTCDate()).padStart(2, "0")}`;
+  const shadowOnlySignals = data?.signals_volume_additional ?? data?.signals_volume ?? [];
+  const strictFeedItems = sortSignalFeedItems(
+    (data?.signals_strict ?? []).map((signal) => ({
+      key: `strict-${signal.id}`,
+      category: "strict" as const,
+      signal,
+    })),
+  );
+  const activeShadowCategory = categoryForShadowProfile(data?.shadow_profile);
+  const shadowFeedItems = sortSignalFeedItems(
+    shadowOnlySignals.map((signal) => ({
+      key: `shadow-${signal.id}`,
+      category: activeShadowCategory,
+      signal,
+    })),
+  );
+  const volume200CompareFeedItems = sortSignalFeedItems(
+    (data?.signals_volume_200_live ?? []).map((signal) => ({
+      key: `volume200-${signal.id}`,
+      category: "volume_200" as const,
+      signal,
+    })),
+  );
+  const volume200UpgradeFeedItems = sortSignalFeedItems(
+    (data?.signals_volume_200_upgrade_live ?? []).map((signal) => ({
+      key: `volume200u-${signal.id}`,
+      category: "volume_200_upgrade" as const,
+      signal,
+    })),
+  );
+  const clayGuardedFeedItems = sortSignalFeedItems(
+    (data?.signals_clay_guarded ?? []).map((signal) => ({
+      key: `clay-guarded-${signal.id}`,
+      category: "clay_guarded" as const,
+      signal,
+    })),
+  );
+  const clayFeedItems = sortSignalFeedItems(
+    (data?.signals_clay_2026 ?? []).map((signal) => ({
+      key: `clay-${signal.id}`,
+      category: "clay_2026" as const,
+      signal,
+    })),
+  );
+  const spreadFeedItems = sortSignalFeedItems(
+    (data?.signals_spread_shadow ?? []).map((signal) => ({
+      key: `spread-${signal.id}`,
+      category: "spread_shadow" as const,
+      signal,
+    })),
+  );
+  const signalSections = [
+    {
+      key: "strict",
+      category: "strict" as const,
+      title: "Strict",
+      subtitle: "Main strict policy",
+      items: strictFeedItems,
+      emptyLabel: "No strict signals today",
+    },
+    {
+      key: "shadow",
+      category: activeShadowCategory,
+      title: shadowProfileLabel(data?.shadow_profile),
+      subtitle: "Shadow-only ML additions",
+      items: shadowFeedItems,
+      emptyLabel: `No ${shadowProfileLabel(data?.shadow_profile).toLowerCase()} shadow-only signals today`,
+    },
+    ...(data?.shadow_profile !== "volume_200" && volume200CompareFeedItems.length
+      ? [
+          {
+            key: "volume200-compare",
+            category: "volume_200" as const,
+            title: "Volume 200",
+            subtitle:
+              data?.shadow_profile === "volume_200"
+                ? "Active volume lane"
+                : "Parallel baseline lane",
+            items: volume200CompareFeedItems,
+            emptyLabel: "No Volume 200 signals today",
+          },
+        ]
+      : []),
+    ...(data?.shadow_profile !== "volume_200_upgrade" && volume200UpgradeFeedItems.length
+      ? [
+          {
+            key: "volume200u-compare",
+            category: "volume_200_upgrade" as const,
+            title: "Volume 200 Upgrade",
+            subtitle:
+              data?.shadow_profile === "volume_200_upgrade"
+                ? "Active upgraded volume lane"
+                : "Parallel candidate lane",
+            items: volume200UpgradeFeedItems,
+            emptyLabel: "No Volume 200 Upgrade signals today",
+          },
+        ]
+      : []),
+    {
+      key: "clay-guarded",
+      category: "clay_guarded" as const,
+      title: "Clay Guard",
+      subtitle: "Allow-tier ATP250 dogs with Elo >= market",
+      items: clayGuardedFeedItems,
+      emptyLabel: "No Clay Guard signals today",
+    },
+    {
+      key: "clay",
+      category: "clay_2026" as const,
+      title: "Clay 2026",
+      subtitle: "Calibrated clay ML lane",
+      items: clayFeedItems,
+      emptyLabel: "No Clay 2026 signals today",
+    },
+    {
+      key: "spread",
+      category: "spread_shadow" as const,
+      title: "Spread Shadow",
+      subtitle: "Handicap shadow lane",
+      items: spreadFeedItems,
+      emptyLabel: "No spread shadow signals today",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_20%_0%,#1a2235_0%,#0f1117_45%,#0c0e14_100%)] text-slate-100">
@@ -653,132 +988,112 @@ export default function FairOddsPage() {
           </div>
         </div>
 
-        {/* Pinnacle status bar */}
         {data && (
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 mb-4 px-1">
-            <span>
-              Pinnacle snapshot (today UTC):{" "}
-              <span className="text-slate-300">{data.pinnacle_count} matches loaded</span>
-              {data.pinnacle_count > 0 && (
-                <>, <span className="text-slate-300">{data.pinnacle_matched_count} matched</span></>
+          <div className="mb-4 rounded-xl border border-slate-700/60 bg-slate-900/35 px-3 py-2.5 text-[11px] text-slate-400">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <span>Pinnacle <span className="text-slate-200">{data.pinnacle_count}</span> loaded</span>
+              <span><span className="text-slate-200">{data.pinnacle_matched_count}</span> matched</span>
+              {data.signal_attachment && (
+                <>
+                  <span className={data.signal_attachment.clay_guarded?.unmatched ? "text-amber-300" : ""}>
+                    Clay Guard <span className="text-slate-200">{data.signal_attachment.clay_guarded?.attached ?? 0}/{data.signal_attachment.clay_guarded?.loaded ?? 0}</span>
+                  </span>
+                  <span className={data.signal_attachment.clay_2026?.unmatched ? "text-amber-300" : ""}>
+                    Clay 2026 <span className="text-slate-200">{data.signal_attachment.clay_2026?.attached ?? 0}/{data.signal_attachment.clay_2026?.loaded ?? 0}</span>
+                  </span>
+                  <span className={data.signal_attachment.spread_shadow?.unmatched ? "text-amber-300" : ""}>
+                    Spread <span className="text-slate-200">{data.signal_attachment.spread_shadow?.attached ?? 0}/{data.signal_attachment.spread_shadow?.loaded ?? 0}</span>
+                  </span>
+                </>
               )}
-            </span>
-            {data.pinnacle_hint && (
-              <span className="text-amber-400/80">{data.pinnacle_hint}</span>
-            )}
-            {data.spread_hint && (
-              <span className="text-amber-400/80">{data.spread_hint}</span>
-            )}
-            <span className="text-slate-600">
-              Value % = (Pinnacle / Our odds) - 1; positive = value at Pinnacle.
-            </span>
-            <span className="text-slate-600">
-              Spread: line is signed from P1 side (e.g. P1 −1.0 / P2 +1.0). Odds = Pinnacle; edge % = model vs market (positive = value).
-            </span>
-            {data.policy?.mode === "strict" && (
-              <span className="text-emerald-300/90">
-                Strict policy ON ({data.policy.production_mode ?? "base"}): {data.policy.allowed_segments.join(", ")}; value &gt;= {data.policy.min_value_pct.toFixed(1)}%; confidence {data.policy.allowed_confidence.join("/")}. Signals: {data.policy.signaled_matches}/{data.policy.eligible_matches} eligible matches.
-                {data.policy.production_mode === "overlay" && data.policy.overlay && (
-                  <>
-                    {" "}
-                    Overlay pass: {data.policy.overlay.passed_matches}/{data.policy.overlay.considered_matches} (skip missing={data.policy.overlay.skipped_missing}, n={data.policy.overlay.skipped_min_n}, roi={data.policy.overlay.skipped_min_roi}).
-                  </>
-                )}
-              </span>
-            )}
+              {data.matches_with_row_signals != null && (
+                <span>Across <span className="text-slate-200">{data.matches_with_row_signals}</span> matches with signals</span>
+              )}
+              <div className="ml-auto">
+                <details className="group">
+                  <summary className="cursor-pointer list-none rounded border border-slate-700/70 bg-slate-950/60 px-2 py-1 text-[11px] text-slate-300 transition-colors hover:border-slate-600 hover:text-slate-100">
+                    Policy & diagnostics
+                  </summary>
+                  <div className="mt-2 max-w-3xl rounded-lg border border-slate-700/60 bg-slate-950/80 p-3 text-[11px] leading-5 text-slate-400 shadow-xl">
+                    {data.policy?.mode === "strict" ? (
+                      <p>
+                        Strict policy on ({data.policy.production_mode ?? "base"}): {data.policy.allowed_segments.join(", ")} | value &gt;= {data.policy.min_value_pct.toFixed(1)}% | confidence {data.policy.allowed_confidence.join("/")} | signals {data.policy.signaled_matches}/{data.policy.eligible_matches}.
+                        {data.policy.production_mode === "overlay" && data.policy.overlay ? ` Overlay ${data.policy.overlay.passed_matches}/${data.policy.overlay.considered_matches} (skip missing=${data.policy.overlay.skipped_missing}, n=${data.policy.overlay.skipped_min_n}, roi=${data.policy.overlay.skipped_min_roi}).` : ""}
+                      </p>
+                    ) : null}
+                    {data.pinnacle_hint ? <p className="mt-2 text-amber-300/80">{data.pinnacle_hint}</p> : null}
+                    {data.spread_hint ? <p className="mt-2 text-amber-300/80">{data.spread_hint}</p> : null}
+                  </div>
+                </details>
+              </div>
+            </div>
           </div>
         )}
 
-        {/* Signal summary: Strict + Volume_275 */}
         {!loading && !error && data && matches.length > 0 && (
-          <div className="mb-6 rounded-xl border border-slate-700/60 bg-slate-900/40 p-4">
-            <h2 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-3">Today&apos;s recommended bets</h2>
-            <p className="mb-3 text-[11px] text-slate-500">
-              Active shadow profile: <span className="font-semibold text-amber-300">{shadowProfileLabel(data.shadow_profile)}</span>.
-              {" "}Signals are mixed below but still counted separately as ML vs spread in tracking and weekly reports, with Clay 2026 tracked as its own calibrated lane.
-            </p>
-            <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
+          <div className="mb-6 rounded-2xl border border-slate-700/60 bg-slate-900/40 p-4 shadow-[0_10px_40px_rgba(0,0,0,0.25)]">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <h3 className="text-xs font-semibold text-emerald-400/90 uppercase tracking-wider mb-2 flex items-center gap-2">
-                  <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
-                  Strict policy
-                </h3>
-                <p className="mb-2 text-[11px] text-slate-500">
-                  ML {signalTypeCounts(data.signals_strict).ml} | Spread {signalTypeCounts(data.signals_strict).spread}
+                <h2 className="text-base font-semibold tracking-tight text-slate-100">Signals</h2>
+                <p className="mt-1 text-[13px] text-slate-500">
+                  Click a policy to expand its signals. Each section stays sorted by highest value first.
                 </p>
-                <SignalList signals={data.signals_strict} accentClass="text-emerald-300" emptyLabel="No strict signals today" />
-              </div>
-              <div>
-                <h3 className="text-xs font-semibold text-amber-400/90 uppercase tracking-wider mb-2 flex items-center gap-2">
-                  <span className="inline-block w-2 h-2 rounded-full bg-amber-500" />
-                  {shadowProfileLabel(data.shadow_profile)} profile
-                </h3>
-                <p className="mb-2 text-[11px] text-slate-500">
-                  Full profile: ML {signalTypeCounts(data.signals_volume_profile).ml} | Spread {signalTypeCounts(data.signals_volume_profile).spread}
-                </p>
-                <div className="space-y-3">
-                  <div className="rounded-lg border border-slate-700/40 bg-slate-900/35 p-3">
-                    <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                      Overlap with strict
-                    </div>
-                    <p className="mb-2 text-[11px] text-slate-500">
-                      These are in the {shadowProfileLabel(data.shadow_profile)} profile but already captured by strict, which is why the old shadow box made Hard + Masters look dead.
-                    </p>
-                    <SignalList
-                      signals={data.signals_volume_overlap}
-                      accentClass="text-amber-300"
-                      emptyLabel={`No ${shadowProfileLabel(data.shadow_profile).toLowerCase()} overlap today`}
-                    />
-                  </div>
-                  <div className="rounded-lg border border-slate-700/40 bg-slate-900/35 p-3">
-                    <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                      Additional shadow-only
-                    </div>
-                    <p className="mb-2 text-[11px] text-slate-500">
-                      This is the true remainder after strict absorbs the overlapping matches.
-                    </p>
-                    <SignalList
-                      signals={data.signals_volume_additional ?? data.signals_volume}
-                      accentClass="text-amber-300"
-                      emptyLabel={`No additional ${shadowProfileLabel(data.shadow_profile).toLowerCase()} signals today`}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div>
-                <h3 className="text-xs font-semibold text-cyan-400/90 uppercase tracking-wider mb-2 flex items-center gap-2">
-                  <span className="inline-block w-2 h-2 rounded-full bg-cyan-400" />
-                  Spread shadow
-                </h3>
-                <p className="mb-2 text-[11px] text-slate-500">
-                  Clay and non-policy handicap bets, 20%+ edge. Spread {signalTypeCounts(data.signals_spread_shadow).spread}
-                </p>
-                <SignalList
-                  signals={data.signals_spread_shadow}
-                  accentClass="text-cyan-300"
-                  emptyLabel="No spread shadow signals today"
-                  showReasonTag
-                />
-              </div>
-              <div>
-                <h3 className="text-xs font-semibold text-orange-300/90 uppercase tracking-wider mb-2 flex items-center gap-2">
-                  <span className="inline-block w-2 h-2 rounded-full bg-orange-400" />
-                  Clay 2026
-                </h3>
-                <p className="mb-2 text-[11px] text-slate-500">
-                  New-after-calibration clay favorites, 55-65% calibrated win probability. ATP is the validated cohort; Challenger stays observational only. ML {signalTypeCounts(data.signals_clay_2026).ml}
-                </p>
-                <SignalList
-                  signals={data.signals_clay_2026}
-                  accentClass="text-orange-200"
-                  emptyLabel="No Clay 2026 signals today"
-                  showReasonTag
-                />
               </div>
             </div>
-            <p className="mt-3 text-[11px] text-slate-500">
-              Stake: value-tiered for match (5–10%→0.5u, 10–15%→1u, 15–20%→1.5u, 20%+→2u); spread 1u flat. 1u = £100.
-            </p>
+
+            <div className="mt-4 space-y-3">
+              {signalSections.map((section) => {
+                const meta = signalFeedMeta(section.category, data.shadow_profile);
+                const topSignal = section.items[0]?.signal;
+                return (
+                  <details
+                    key={section.key}
+                    className="group rounded-xl border border-slate-700/50 bg-slate-950/35"
+                  >
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-3">
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className={`rounded border px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${meta.badgeClass}`}>
+                            {meta.label}
+                          </span>
+                          <span className="text-[14px] font-medium text-slate-100">{section.title}</span>
+                          <span className="text-[12px] text-slate-500">{section.subtitle}</span>
+                        </div>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-3 text-[11px]">
+                        <span className="text-slate-400">
+                          <span className="text-slate-200">{section.items.length}</span> signals
+                        </span>
+                        {topSignal ? (
+                          <span className={`font-mono ${valueColor(topSignal.value_pct)}`}>
+                            Top {fmtPct(topSignal.value_pct)}
+                          </span>
+                        ) : null}
+                        <span className="text-slate-500 transition-transform group-open:rotate-180">v</span>
+                      </div>
+                    </summary>
+                    <div className="border-t border-slate-800/70 px-3 pb-3 pt-3">
+                      <SignalFeedList
+                        items={section.items}
+                        emptyLabel={section.emptyLabel}
+                        shadowProfile={data.shadow_profile}
+                      />
+                    </div>
+                  </details>
+                );
+              })}
+            </div>
+
+            {data.signal_attachment && (
+              <div className="mt-4 border-t border-slate-800/70 pt-3 text-[11px] text-slate-500">
+                Clay Guard {data.signal_attachment.clay_guarded?.attached ?? 0}/{data.signal_attachment.clay_guarded?.loaded ?? 0}
+                {" | "}
+                Clay 2026 {data.signal_attachment.clay_2026?.attached ?? 0}/{data.signal_attachment.clay_2026?.loaded ?? 0}
+                {" | "}
+                Spread {data.signal_attachment.spread_shadow?.attached ?? 0}/{data.signal_attachment.spread_shadow?.loaded ?? 0}
+                {data.matches_with_row_signals != null ? ` | ${data.matches_with_row_signals} matches with signals` : ""}
+              </div>
+            )}
           </div>
         )}
 
@@ -826,17 +1141,16 @@ export default function FairOddsPage() {
               <colgroup>
                 <col style={{ width: 320 }} />
                 <col style={{ width: 58 }} />
-                <col style={{ width: 68 }} />
-                <col style={{ width: 68 }} />
-                <col style={{ width: 68 }} />
-                <col style={{ width: 68 }} />
-                <col style={{ width: 72 }} />
-                <col style={{ width: 72 }} />
+              <col style={{ width: 68 }} />
+              <col style={{ width: 68 }} />
+              <col style={{ width: 68 }} />
+              <col style={{ width: 68 }} />
+                <col style={{ width: 90 }} />
                 <col style={{ width: 56 }} />
                 <col style={{ width: 150 }} />
                 {SHOW_OU_COLUMNS && <col style={{ width: 220 }} />}
                 {SHOW_OU_COLUMNS && <col style={{ width: 220 }} />}
-                <col style={{ width: 130 }} />
+                {showStats && <col style={{ width: 130 }} />}
               </colgroup>
               <thead>
                 <tr className="border-b-2 border-slate-700/70 bg-[#0d0f14]/90 text-slate-300 text-[11px] uppercase tracking-wider">
@@ -844,15 +1158,17 @@ export default function FairOddsPage() {
                   <th className="text-center px-2 py-3 font-semibold">Surf</th>
                   <th className="text-center px-2 py-3 font-semibold text-slate-300" colSpan={2}>Fair Odds</th>
                   <th className="text-center px-2 py-3 font-semibold text-slate-300" colSpan={2}>Pinnacle</th>
-                  <th className="text-center px-2 py-3 font-semibold text-emerald-500/70" colSpan={2}>Value %</th>
+                  <th className="text-center px-2 py-3 font-semibold text-emerald-500/70" title="Value % = (Pinnacle / Our odds) - 1; positive = value at Pinnacle">Best Value</th>
                   <th className="text-center px-2 py-3 font-semibold">E[G]</th>
                   <th className="text-center px-2 py-3 font-semibold text-slate-400">Spread</th>
                   {SHOW_OU_COLUMNS && <th className="text-left px-2 py-3 font-semibold">O/U Fair</th>}
                   {SHOW_OU_COLUMNS && <th className="text-left px-2 py-3 font-semibold">O/U Pin</th>}
-                  <th className={`text-center px-2 py-3 font-medium text-[10px] ${!showStats ? "invisible" : ""}`} title="S% R% T (serve, return, total)">
-                    <span className="block">Stats</span>
-                    <span className="block text-[9px] text-slate-500 font-normal">S / R / T</span>
-                  </th>
+                  {showStats && (
+                    <th className="text-center px-2 py-3 font-medium text-[10px]" title="S% R% T (serve, return, total)">
+                      <span className="block">Stats</span>
+                      <span className="block text-[10px] text-slate-500 font-normal">S / R / T</span>
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -862,7 +1178,7 @@ export default function FairOddsPage() {
                     tournament={tournament}
                     matches={tMatches}
                     showStats={showStats}
-                    colSpan={TABLE_COL_COUNT}
+                    colSpan={TABLE_BASE_COL_COUNT + (showStats ? 1 : 0)}
                     shadowProfile={data?.shadow_profile}
                   />
                 ))}
@@ -892,14 +1208,14 @@ export default function FairOddsPage() {
                 <tbody>
                   {data.pinnacle_only.map((m, i) => (
                     <tr key={i} className="border-b border-slate-800/50 text-slate-400">
-                      <td className="py-2 px-2">{(m.player1_name || "—")} vs {(m.player2_name || "—")}</td>
+                      <td className="py-2 px-2">{(m.player1_name || "--")} vs {(m.player2_name || "--")}</td>
                       <td className="py-2 px-2 text-center font-mono tabular-nums">
-                        {m.odds1 > 0 && m.odds2 > 0 ? `${m.odds1.toFixed(2)} / ${m.odds2.toFixed(2)}` : "—"}
+                        {m.odds1 > 0 && m.odds2 > 0 ? `${m.odds1.toFixed(2)} / ${m.odds2.toFixed(2)}` : "--"}
                       </td>
                       <td className="py-2 px-2 text-center font-mono tabular-nums">
                         {m.ou_line != null && m.ou_over != null && m.ou_under != null
                           ? `${m.ou_line} (${m.ou_over.toFixed(2)} / ${m.ou_under.toFixed(2)})`
-                          : "—"}
+                          : "--"}
                       </td>
                     </tr>
                   ))}
@@ -911,7 +1227,7 @@ export default function FairOddsPage() {
 
         {/* Footer */}
         <footer className="mt-12 pt-6 border-t border-slate-800/50 text-xs text-slate-600 text-center">
-          Il Margine &middot; Fair odds generated by Barnett-Clarke + K-M recursion model with serve volatility calibration (σ=0.035).
+          Il Margine &middot; Fair odds generated by Barnett-Clarke + K-M recursion model with serve volatility calibration (sigma=0.035).
           <br />
           Pinnacle odds scraped for comparison only. Not financial advice.
         </footer>
@@ -920,7 +1236,7 @@ export default function FairOddsPage() {
   );
 }
 
-/* â”€â”€â”€ Tournament Group â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Tournament Group */
 
 function TournamentGroup({
   tournament,
@@ -946,255 +1262,171 @@ function TournamentGroup({
         </td>
       </tr>
       {matches.map((m) => (
-        <MatchRow key={m.id} match={m} showStats={showStats} shadowProfile={shadowProfile} />
+        <MatchRow key={m.id} match={m} showStats={showStats} shadowProfile={shadowProfile} colSpan={colSpan} />
       ))}
     </>
   );
 }
 
-/* â”€â”€â”€ Match Row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Match Row */
 
 function MatchRow({
   match,
   showStats,
   shadowProfile,
+  colSpan,
 }: {
   match: FairOddsMatch;
   showStats: boolean;
   shadowProfile?: string;
+  colSpan: number;
 }) {
   const m = match;
   const ouLines = SHOW_OU_COLUMNS ? parseOULines(m) : [];
   const hasPinnacle = m.pinnacle_odds1 != null && m.pinnacle_odds1 > 0;
   const handicapShape = handicapShapeMeta(m.handicap_point_prob_source);
-  const clayMeta = m.clay_2026_match ? clay2026RowMeta(m) : null;
+  const rowSignals = rowSignalSort(m.row_signals ?? []);
+  const bestValue = bestValueBadge(m);
+  const primaryBadge = primarySignalBadgeMeta(m, rowSignals, shadowProfile);
+  const blockedDetail =
+    m.blocked_reason && !m.policy_match && !m.shadow_match && bestValue && bestValue.value > 0
+      ? m.blocked_reason
+      : null;
+  const hasDetailRow = rowSignals.length > 0 || !!blockedDetail;
 
   return (
-    <tr className={`border-b border-slate-800/40 hover:bg-slate-800/35 even:bg-slate-900/25 transition-colors ${
-      m.confidence === 'none' ? 'opacity-40' : ''
-    }`}>
-      {/* Match (sticky) */}
-      <td className="px-3 py-3 sticky left-0 bg-[#111520]/95 z-10 border-r border-slate-800/50 overflow-hidden">
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <span className="block text-slate-100 text-[13px] font-medium leading-snug break-words">
-            {m.player1_name || "TBD"}
-            <span className="text-slate-600 mx-1.5 font-normal text-xs">vs</span>
-            {m.player2_name || "TBD"}
-          </span>
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[10px] text-slate-400 font-mono tabular-nums">{fmtProb(m.p1_win_prob)} - {fmtProb(m.p2_win_prob)}</span>
+    <>
+      <tr className={`${hasDetailRow ? "border-b-0" : "border-b"} border-slate-800/40 hover:bg-slate-800/35 even:bg-slate-900/25 transition-colors ${
+        m.confidence === "none" ? "opacity-40" : ""
+      }`}>
+        <td className="px-3 py-3 sticky left-0 bg-[#111520]/95 z-10 border-r border-slate-800/50">
+          <div className="flex flex-col gap-1 min-w-0">
             <span
-              className={`inline-flex items-center rounded border px-1.5 py-0.5 text-[9px] font-semibold tracking-wide ${confidenceMeta(m.confidence).cls}`}
-              title={`Confidence: ${m.confidence ?? "n/a"}`}
+              className="block truncate text-[13px] font-medium leading-snug text-slate-100"
+              title={`${m.player1_name || "TBD"} vs ${m.player2_name || "TBD"} | ${fmtProb(m.p1_win_prob)} / ${fmtProb(m.p2_win_prob)}`}
             >
-              {confidenceMeta(m.confidence).label}
+              {m.player1_name || "TBD"}
+              <span className="mx-1.5 text-xs font-normal text-slate-600">vs</span>
+              {m.player2_name || "TBD"}
             </span>
-            {bestValueBadge(m) && (
+            <div className="flex flex-wrap items-center gap-2">
               <span
-                className={`inline-flex items-center rounded px-1.5 py-0.5 text-[9px] font-semibold tabular-nums ${valueColor(bestValueBadge(m)!.value)} ${valueBg(bestValueBadge(m)!.value)}`}
-                title="Value % = (Pinnacle / Our odds) - 1"
+                className={`inline-flex items-center rounded border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide ${confidenceMeta(m.confidence).cls}`}
+                title={`Confidence: ${m.confidence ?? "n/a"}`}
               >
-                {bestValueBadge(m)!.side} {fmtPct(bestValueBadge(m)!.value)}
+                {confidenceMeta(m.confidence).label}
               </span>
-            )}
-            {m.policy_match && (
-              <span className="inline-flex items-center rounded border border-emerald-500/30 bg-emerald-500/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-emerald-300">
-                STRICT
-              </span>
-            )}
-            {m.shadow_match && !m.policy_match && (
-              <span className="inline-flex items-center rounded border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-amber-300">
-                {shadowProfileBadge(shadowProfile)}
-              </span>
-            )}
-            {m.clay_2026_match && (
-              <span
-                className="inline-flex items-center rounded border border-orange-500/30 bg-orange-500/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-orange-200"
-                title={`Clay 2026 calibrated shadow${m.league ? ` | ${m.league}` : ""}${m.clay_2026_selected_prob != null ? ` | calibrated prob ${(m.clay_2026_selected_prob * 100).toFixed(1)}%` : ""}${m.clay_speed_tier ? ` | ${m.clay_speed_tier} clay` : ""}${m.tournament_speed_signal != null ? ` | signal ${m.tournament_speed_signal > 0 ? "+" : ""}${m.tournament_speed_signal.toFixed(3)}` : ""}`}
-              >
-                CLAY 2026
-              </span>
-            )}
-            {m.clay_2026_match && leagueBadgeLabel(m.league) ? (
-              <span
-                className="inline-flex items-center rounded border border-orange-500/20 bg-orange-500/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-orange-100"
-                title={`Clay 2026 level: ${m.league}`}
-              >
-                {leagueBadgeLabel(m.league)}
-              </span>
-            ) : null}
-            {m.clay_2026_match && m.league === "Challenger" ? (
-              <span
-                className="inline-flex items-center rounded border border-amber-500/25 bg-amber-500/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-amber-200"
-                title="Challenger is observational only in Clay 2026. ATP is the validated cohort."
-              >
-                UNVALIDATED CH
-              </span>
-            ) : null}
-            {clayMeta?.flipped && (
-              <span
-                className="inline-flex items-center rounded border border-orange-500/25 bg-orange-500/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-orange-200"
-                title="Clay calibration changed the selected side versus the raw board"
-              >
-                CAL FLIP
-              </span>
-            )}
-            {m.clay_2026_match && m.clay_speed_tier === "normal" && (
-              <span
-                className="inline-flex items-center rounded border border-orange-500/25 bg-orange-500/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-orange-200"
-                title={`Normal-clay calibrated lane${m.tournament_speed_signal != null ? ` | signal ${m.tournament_speed_signal > 0 ? "+" : ""}${m.tournament_speed_signal.toFixed(3)}` : ""}`}
-              >
-                NORMAL CLAY
-              </span>
-            )}
-            {m.fast_clay_flag && (
-              <span
-                className="inline-flex items-center rounded border border-cyan-500/30 bg-cyan-500/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-cyan-300"
-                title={`Fast-clay venue${m.tournament_speed_signal != null ? ` · signal ${m.tournament_speed_signal > 0 ? "+" : ""}${m.tournament_speed_signal.toFixed(3)}` : ""}${m.fast_clay_archetype ? ` · ${m.fast_clay_selected_side ?? "Selected"} ${fastClayArchetypeLabel(m.fast_clay_archetype)}` : ""}`}
-              >
-                FAST CLAY
-              </span>
-            )}
-            {m.fast_clay_return_led_flag && (
-              <span
-                className="inline-flex items-center rounded border border-rose-500/30 bg-rose-500/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-rose-200"
-                title="Shadow research flag: selected side is return-led in a fast-clay venue"
-              >
-                RET-LED
-              </span>
-            )}
-          </div>
-          {clayMeta ? (
-            <div className="mt-1 rounded-lg border border-orange-500/20 bg-orange-500/5 px-2.5 py-2">
-              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-orange-200/90">
-                <span>Adjusted View</span>
-                <span className="text-orange-200/60">
-                  {clayMeta.flipped ? `${clayMeta.rawBestSide} -> ${clayMeta.selectedSide}` : `${clayMeta.selectedSide} held`}
-                </span>
-              </div>
-              <div className="mt-1 grid grid-cols-3 gap-2">
-                <div className="rounded-md bg-slate-950/35 px-2 py-1.5">
-                  <div className="text-[10px] uppercase tracking-wide text-slate-500">Market</div>
-                  <div className="font-mono text-[12px] text-slate-100">
-                    {claySideLabel(clayMeta.selectedSide, m.player1_name, m.player2_name)} @ {fmtOdds(clayMeta.marketOdds)}
-                  </div>
-                </div>
-                <div className="rounded-md bg-slate-950/35 px-2 py-1.5">
-                  <div className="text-[10px] uppercase tracking-wide text-slate-500">Raw Fair</div>
-                  <div className="font-mono text-[12px] text-slate-100">
-                    {claySideLabel(clayMeta.selectedSide, m.player1_name, m.player2_name)} @ {fmtOdds(clayMeta.rawSameSideOdds)}
-                  </div>
-                  <div className={`mt-0.5 text-[11px] ${valueColor(clayMeta.rawSameSide)}`}>{fmtPct(clayMeta.rawSameSide)}</div>
-                </div>
-                <div className="rounded-md bg-slate-950/35 px-2 py-1.5">
-                  <div className="text-[10px] uppercase tracking-wide text-slate-500">Adjusted Fair</div>
-                  <div className="font-mono text-[12px] text-orange-100">
-                    {claySideLabel(clayMeta.selectedSide, m.player1_name, m.player2_name)} @ {fmtOdds(clayMeta.adjustedOdds)}
-                  </div>
-                  <div className={`mt-0.5 text-[11px] ${valueColor(clayMeta.adjustedValue)}`}>
-                    {fmtPct(clayMeta.adjustedValue)} · {fmtProb(clayMeta.adjustedProb)}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : null}
-          {m.blocked_reason && !m.policy_match && !m.shadow_match && (
-            <div className="text-[10px] text-amber-300/75 leading-snug">
-              {m.blocked_reason}
-            </div>
-          )}
-        </div>
-      </td>
-
-      {/* Surface */}
-      <td className="text-center px-2 py-2.5">
-        <SurfaceBadge surface={m.surface} />
-      </td>
-
-      {/* Fair Odds */}
-      <td className="text-center px-2 py-3 font-mono tabular-nums text-[13px] font-semibold text-slate-100">{fmtOdds(m.odds1)}</td>
-      <td className="text-center px-2 py-3 font-mono tabular-nums text-[13px] font-semibold text-slate-100">{fmtOdds(m.odds2)}</td>
-
-      {/* Pinnacle Odds */}
-      <td className="text-center px-2 py-3 font-mono tabular-nums text-[13px] text-slate-300">
-        {hasPinnacle ? fmtOdds(m.pinnacle_odds1) : <span className="text-slate-600">—</span>}
-      </td>
-      <td className="text-center px-2 py-3 font-mono tabular-nums text-[13px] text-slate-300">
-        {hasPinnacle ? fmtOdds(m.pinnacle_odds2) : <span className="text-slate-600">—</span>}
-      </td>
-
-      {/* Value % */}
-      <td className="text-center px-2.5 py-3 font-mono tabular-nums text-[13px]">
-        <span className={`inline-flex rounded-md px-1.5 py-0.5 ${valueColor(m.value_p1)} ${valueBg(m.value_p1)}`}>
-          {m.value_p1 != null ? fmtPct(m.value_p1) : "—"}
-        </span>
-      </td>
-      <td className="text-center px-2.5 py-3 font-mono tabular-nums text-[13px]">
-        <span className={`inline-flex rounded-md px-1.5 py-0.5 ${valueColor(m.value_p2)} ${valueBg(m.value_p2)}`}>
-          {m.value_p2 != null ? fmtPct(m.value_p2) : "—"}
-        </span>
-      </td>
-
-      {/* E[G] and O/U */}
-      <td className="text-center px-2 py-2.5 font-mono tabular-nums text-sm text-slate-300 overflow-hidden">
-        {m.expected_total_games != null ? m.expected_total_games.toFixed(1) : "—"}
-      </td>
-
-      {/* Spread (handicap): line, Pinnacle odds, model edge */}
-      <td className="px-2 py-2.5 min-w-[140px]">
-        {m.spread_line != null ? (
-          <div className="text-[11px] font-mono tabular-nums space-y-1">
-            <div className="flex items-center justify-between gap-2">
-              <div className="text-slate-500 font-medium">{fmtSignedLine(m.spread_line)}</div>
-              {handicapShape ? (
+              {primaryBadge ? (
                 <span
-                  className={`rounded border px-1.5 py-0.5 text-[9px] font-semibold tracking-wide ${handicapShape.cls}`}
-                  title={`${handicapShape.title}${m.handicap_point_prob_gap != null ? ` · gap ${m.handicap_point_prob_gap > 0 ? "+" : ""}${m.handicap_point_prob_gap.toFixed(3)}` : ""}`}
+                  className={`inline-flex items-center rounded border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide ${primaryBadge.className}`}
+                  title={primaryBadge.title}
                 >
-                  {handicapShape.label}
+                  {primaryBadge.label}
                 </span>
               ) : null}
             </div>
-            <div className="grid grid-cols-[1fr_auto_auto] gap-x-2 gap-y-0.5 items-center">
-              <span className="text-slate-400 truncate">P1 {fmtSignedLine(m.spread_line)}</span>
-              <span className="text-slate-300">{m.spread_odds1 != null ? m.spread_odds1.toFixed(2) : "—"}</span>
-              <span className={`min-w-[3rem] text-right ${valueColor(m.handicap_edge_p1)}`}>
-                {m.handicap_edge_p1 != null ? `${m.handicap_edge_p1 > 0 ? "+" : ""}${m.handicap_edge_p1.toFixed(1)}%` : "—"}
-              </span>
-              <span className="text-slate-400 truncate">P2 {fmtSignedLine(-m.spread_line)}</span>
-              <span className="text-slate-300">{m.spread_odds2 != null ? m.spread_odds2.toFixed(2) : "—"}</span>
-              <span className={`min-w-[3rem] text-right ${valueColor(m.handicap_edge_p2)}`}>
-                {m.handicap_edge_p2 != null ? `${m.handicap_edge_p2 > 0 ? "+" : ""}${m.handicap_edge_p2.toFixed(1)}%` : "—"}
-              </span>
-            </div>
           </div>
-        ) : (
-          <span className="text-slate-600 text-xs">—</span>
-        )}
-      </td>
-      {SHOW_OU_COLUMNS && (
-        <td className="px-2 py-2.5 align-top">
-          <OverUnderFairCell lines={ouLines} />
         </td>
-      )}
-      {SHOW_OU_COLUMNS && (
-        <td className="px-2 py-2.5 align-top">
-          <OverUnderPinCell match={m} lines={ouLines} />
-        </td>
-      )}
 
-      {/* Stats: single consolidated cell when showStats */}
-      <td className={`px-2 py-2.5 font-mono text-[11px] tabular-nums ${showStats ? "text-slate-200" : "text-slate-500 invisible"}`}>
-        {showStats && (
-          <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5">
-            <span className="text-slate-500 text-[10px]">P1</span>
-            <span>{m.p1_serve != null ? m.p1_serve.toFixed(1) : "—"} / {m.p1_return != null ? m.p1_return.toFixed(1) : "—"} / {m.p1_total != null ? m.p1_total.toFixed(1) : "—"}</span>
-            <span className="text-slate-500 text-[10px]">P2</span>
-            <span>{m.p2_serve != null ? m.p2_serve.toFixed(1) : "—"} / {m.p2_return != null ? m.p2_return.toFixed(1) : "—"} / {m.p2_total != null ? m.p2_total.toFixed(1) : "—"}</span>
-          </div>
+        <td className="text-center px-2 py-2.5">
+          <SurfaceBadge surface={m.surface} />
+        </td>
+
+        <td className="text-center px-2 py-3 font-mono tabular-nums text-[13px] font-semibold text-slate-100">{fmtOdds(m.odds1)}</td>
+        <td className="text-center px-2 py-3 font-mono tabular-nums text-[13px] font-semibold text-slate-100">{fmtOdds(m.odds2)}</td>
+
+        <td className="text-center px-2 py-3 font-mono tabular-nums text-[13px] text-slate-300">
+          {hasPinnacle ? fmtOdds(m.pinnacle_odds1) : <span className="text-slate-600">--</span>}
+        </td>
+        <td className="text-center px-2 py-3 font-mono tabular-nums text-[13px] text-slate-300">
+          {hasPinnacle ? fmtOdds(m.pinnacle_odds2) : <span className="text-slate-600">--</span>}
+        </td>
+
+        <td className="text-center px-2.5 py-3 font-mono tabular-nums text-[13px]">
+          <span
+            className={`inline-flex rounded-md px-1.5 py-0.5 ${bestValue ? `${valueColor(bestValue.value)} ${valueBg(bestValue.value)}` : "text-slate-500"}`}
+            title="Best-side value % = (Pinnacle / Our odds) - 1"
+          >
+            {bestValue ? `${bestValue.side} ${fmtPct(bestValue.value)}` : "--"}
+          </span>
+        </td>
+
+        <td className="text-center px-2 py-2.5 font-mono tabular-nums text-sm text-slate-300 overflow-hidden">
+          {m.expected_total_games != null ? m.expected_total_games.toFixed(1) : "--"}
+        </td>
+
+        <td className="px-2 py-2.5 min-w-[140px]">
+          {m.spread_line != null ? (
+            <div className="text-[11px] font-mono tabular-nums space-y-1">
+              <div className="flex items-center justify-between gap-2">
+                <div className="text-slate-500 font-medium">{fmtSignedLine(m.spread_line)}</div>
+                {handicapShape ? (
+                  <span
+                    className={`rounded border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide ${handicapShape.cls}`}
+                    title={`${handicapShape.title}${m.handicap_point_prob_gap != null ? ` | gap ${m.handicap_point_prob_gap > 0 ? "+" : ""}${m.handicap_point_prob_gap.toFixed(3)}` : ""}`}
+                  >
+                    {handicapShape.label}
+                  </span>
+                ) : null}
+              </div>
+              <div className="grid grid-cols-[1fr_auto_auto] gap-x-2 gap-y-0.5 items-center">
+                <span className="text-slate-400 truncate">P1 {fmtSignedLine(m.spread_line)}</span>
+                <span className="text-slate-300">{m.spread_odds1 != null ? m.spread_odds1.toFixed(2) : "--"}</span>
+                <span className={`min-w-[3rem] text-right ${valueColor(m.handicap_edge_p1)}`}>
+                  {m.handicap_edge_p1 != null ? `${m.handicap_edge_p1 > 0 ? "+" : ""}${m.handicap_edge_p1.toFixed(1)}%` : "--"}
+                </span>
+                <span className="text-slate-400 truncate">P2 {fmtSignedLine(-m.spread_line)}</span>
+                <span className="text-slate-300">{m.spread_odds2 != null ? m.spread_odds2.toFixed(2) : "--"}</span>
+                <span className={`min-w-[3rem] text-right ${valueColor(m.handicap_edge_p2)}`}>
+                  {m.handicap_edge_p2 != null ? `${m.handicap_edge_p2 > 0 ? "+" : ""}${m.handicap_edge_p2.toFixed(1)}%` : "--"}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <span className="text-slate-600 text-xs">--</span>
+          )}
+        </td>
+        {SHOW_OU_COLUMNS && (
+          <td className="px-2 py-2.5 align-top">
+            <OverUnderFairCell lines={ouLines} />
+          </td>
         )}
-      </td>
-    </tr>
+        {SHOW_OU_COLUMNS && (
+          <td className="px-2 py-2.5 align-top">
+            <OverUnderPinCell match={m} lines={ouLines} />
+          </td>
+        )}
+        {showStats && (
+          <td className="px-2 py-2.5 font-mono text-[11px] tabular-nums text-slate-200">
+            <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5">
+              <span className="text-slate-500 text-[10px]">P1</span>
+              <span>{m.p1_serve != null ? m.p1_serve.toFixed(1) : "--"} / {m.p1_return != null ? m.p1_return.toFixed(1) : "--"} / {m.p1_total != null ? m.p1_total.toFixed(1) : "--"}</span>
+              <span className="text-slate-500 text-[10px]">P2</span>
+              <span>{m.p2_serve != null ? m.p2_serve.toFixed(1) : "--"} / {m.p2_return != null ? m.p2_return.toFixed(1) : "--"} / {m.p2_total != null ? m.p2_total.toFixed(1) : "--"}</span>
+            </div>
+          </td>
+        )}
+      </tr>
+      {rowSignals.length > 0 && (
+        <tr className="border-b border-slate-800/40 bg-slate-950/35">
+          <td colSpan={colSpan} className="px-3 py-3">
+            {blockedDetail ? (
+              <div className="mb-2 text-[11px] text-amber-300/75">
+                {blockedDetail}
+              </div>
+            ) : null}
+            <MatchSignalsStrip signals={rowSignals} />
+          </td>
+        </tr>
+      )}
+      {!rowSignals.length && blockedDetail && (
+        <tr className="border-b border-slate-800/40 bg-slate-950/20">
+          <td colSpan={colSpan} className="px-3 py-2 text-[11px] text-amber-300/75">
+            {blockedDetail}
+          </td>
+        </tr>
+      )}
+    </>
   );
 }
 
@@ -1202,7 +1434,7 @@ const OU_ROW_CLASS =
   "grid grid-cols-[44px_86px_86px] items-center gap-x-2 text-[12px] leading-5 font-mono tabular-nums";
 
 function OverUnderFairCell({ lines }: { lines: OULine[] }) {
-  if (lines.length === 0) return <span className="text-slate-500 text-xs">—</span>;
+  if (lines.length === 0) return <span className="text-slate-500 text-xs">--</span>;
 
   return (
     <div className="space-y-1">
@@ -1229,7 +1461,7 @@ function OverUnderPinCell({ match, lines }: { match: FairOddsMatch; lines: OULin
   const pinUnder = match.pinnacle_ou_under;
   const hasPin = pinLine != null && pinOver != null && pinUnder != null;
 
-  if (lines.length === 0) return <span className="text-slate-500 text-xs">—</span>;
+  if (lines.length === 0) return <span className="text-slate-500 text-xs">--</span>;
 
   const isSameLine = (line: number) => hasPin && Math.abs(line - (pinLine as number)) < 1e-6;
 

@@ -887,6 +887,12 @@ export default async function ModelMonitorPage() {
           <Link href="/model-monitor/goalscorer" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300">
             Goalscorer Preview
           </Link>
+          <Link href="/model-monitor/team-shots" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300">
+            Team Shots
+          </Link>
+          <Link href="/model-monitor/corners" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300">
+            Corners / O-U
+          </Link>
           <Link href="/model-monitor/reddit-intel" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300">
             Reddit Intel
           </Link>
@@ -927,6 +933,55 @@ export default async function ModelMonitorPage() {
             Reports not found for: <span className="font-semibold">{missingReports.join(", ")}</span>. Run the daily/weekly pipeline locally or deploy fresh report files.
           </section>
         ) : null}
+
+        <section className="mb-8">
+          <div className="mb-3">
+            <h2 className="text-xl font-semibold text-slate-100">Monitor Pages</h2>
+            <p className="mt-1 text-sm text-slate-400">Direct entry points for the live model monitors and diagnostics pages.</p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <Link
+              href="/model-monitor/goalscorer"
+              className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-emerald-500/30"
+            >
+              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">Goalscorer</div>
+              <div className="text-lg font-semibold text-white">Goalscorer Monitor</div>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                Snapshot-backed live bets, fixture health, penalty watchlist, and lineup diagnostics.
+              </p>
+            </Link>
+            <Link
+              href="/model-monitor/goalscorer/lineups"
+              className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-cyan-500/30"
+            >
+              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">Lineups</div>
+              <div className="text-lg font-semibold text-white">Goalscorer Lineups</div>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                Fixture-by-fixture lineup states, taker context, and squad availability for goalscorer markets.
+              </p>
+            </Link>
+            <Link
+              href="/model-monitor/team-shots"
+              className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-amber-500/30"
+            >
+              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-amber-300">Team Shots</div>
+              <div className="text-lg font-semibold text-white">Team Shots Monitor</div>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                Base, venue, and recent lambdas with shadow bets, settled ledger, and comparison diagnostics.
+              </p>
+            </Link>
+            <Link
+              href="/model-monitor/corners"
+              className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-fuchsia-500/30"
+            >
+              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-fuchsia-300">Corners / O-U</div>
+              <div className="text-lg font-semibold text-white">Corners Monitor</div>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                Match corners model, settled history, Pinnacle line checks, and shortlist health in one place.
+              </p>
+            </Link>
+          </div>
+        </section>
 
         <div className="mb-3 flex items-center justify-between gap-4">
           <div>
