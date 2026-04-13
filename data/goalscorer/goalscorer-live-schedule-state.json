@@ -1,36 +1,36 @@
 {
-  "updated_at": "2026-04-12T23:57:48Z",
+  "updated_at": "2026-04-13T09:28:55Z",
   "reason": "cycle",
   "leagues": {
     "serie-a": {
-      "last_successful_run_at": "2026-04-12T18:26:58Z",
-      "last_detail_run_at": "2026-04-12T18:26:58Z",
+      "last_successful_run_at": "2026-04-13T09:27:44Z",
+      "last_detail_run_at": "2026-04-13T09:27:44Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip serie-a: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "cold",
+      "last_decision": "ran",
+      "last_message": "Ran serie-a in cold tier (cadence 120m, fixtures 1).",
+      "next_kickoff_utc": "2026-04-13T18:45:00Z"
     },
     "epl": {
-      "last_successful_run_at": "2026-04-12T15:10:13Z",
-      "last_detail_run_at": "2026-04-12T14:36:37Z",
+      "last_successful_run_at": "2026-04-13T09:28:13Z",
+      "last_detail_run_at": "2026-04-13T09:28:13Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip epl: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "cold",
+      "last_decision": "ran",
+      "last_message": "Ran epl in cold tier (cadence 120m, fixtures 1).",
+      "next_kickoff_utc": "2026-04-13T19:00:00Z"
     },
     "la-liga": {
-      "last_successful_run_at": "2026-04-12T18:27:32Z",
-      "last_detail_run_at": "2026-04-12T18:27:32Z",
+      "last_successful_run_at": "2026-04-13T09:28:40Z",
+      "last_detail_run_at": "2026-04-13T09:28:40Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip la-liga: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "cold",
+      "last_decision": "ran",
+      "last_message": "Ran la-liga in cold tier (cadence 120m, fixtures 1).",
+      "next_kickoff_utc": "2026-04-13T19:00:00Z"
     },
     "bundesliga": {
       "last_successful_run_at": "2026-04-12T17:04:47Z",
