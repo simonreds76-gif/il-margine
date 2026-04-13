@@ -25,11 +25,19 @@ from typing import Dict, List, Optional, Tuple
 import requests
 
 from fotmob_match_stats import fetch_fotmob_recent_results
+from settlement_audit import (
+    build_settlement_audit,
+    emit_github_annotations,
+    load_settlement_overrides,
+    write_audit,
+)
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_SIGNALS = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-signals.csv"
 DEFAULT_SUMMARY = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-performance.txt"
 DEFAULT_HISTORICAL = ROOT / "data" / "team-shots" / "historical"
+DEFAULT_AUDIT = ROOT / "data" / "team-shots" / "shadow" / "settlement-audit.json"
+DEFAULT_OVERRIDES = ROOT / "data" / "settlement-overrides.csv"
 
 BASE_URL = "https://www.football-data.co.uk"
 
@@ -42,7 +50,7 @@ SIGNAL_FIELDS = [
     "date", "fixture_date", "kickoff_iso", "league", "home_team", "away_team", "team", "venue",
     "bookmaker", "line", "side", "book_odds", "model_prob",
     "model_fair_odds", "edge", "stake_units", "actual_shots", "result",
-    "pnl", "pnl_staked", "settled_at", "closing_odds", "clv", "logged_at",
+    "pnl", "pnl_staked", "settled_at", "closing_odds", "clv", "logged_at", "policy_version",
 ]
 
 DEFAULT_ODDS_ARCHIVE = ROOT / "data" / "team-shots" / "team-shots-odds-history.csv"
@@ -344,6 +352,17 @@ def canonicalize_results_lookup(results_lookup: Dict[str, dict]) -> Dict[str, di
     return canonical
 
 
+def signal_fields_for_rows(signals: List[dict]) -> List[str]:
+    ordered = list(SIGNAL_FIELDS)
+    seen = set(ordered)
+    for row in signals:
+        for key in row.keys():
+            if key not in seen:
+                ordered.append(key)
+                seen.add(key)
+    return ordered
+
+
 def settle_signals(
     signals: List[dict],
     results_lookup: Dict[str, dict],
@@ -441,6 +460,7 @@ def main() -> None:
     parser.add_argument("--summary", type=Path, default=DEFAULT_SUMMARY)
     parser.add_argument("--historical-dir", type=Path, default=DEFAULT_HISTORICAL)
     parser.add_argument("--odds-archive", type=Path, default=DEFAULT_ODDS_ARCHIVE)
+    parser.add_argument("--audit-out", type=Path, default=DEFAULT_AUDIT)
     args = parser.parse_args()
 
     if not args.signals.exists():
@@ -466,12 +486,30 @@ def main() -> None:
         print("  No pending signals to settle — running CLV backfill only.")
         settle_signals(signals, {}, odds_index)
         if missing_clv:
+            fieldnames = signal_fields_for_rows(signals)
             with open(args.signals, "w", newline="", encoding="utf-8") as fh:
-                writer = csv.DictWriter(fh, fieldnames=SIGNAL_FIELDS, extrasaction="ignore")
+                writer = csv.DictWriter(fh, fieldnames=fieldnames, extrasaction="ignore")
                 writer.writeheader()
                 writer.writerows(signals)
             print(f"  CLV backfill written to {args.signals}")
         _write_summary(signals, args.summary)
+        audit = build_settlement_audit(
+            rows=signals,
+            model="team-shots",
+            now_utc=datetime.now(timezone.utc),
+            settled_this_run=0,
+            is_pending=lambda row: (row.get("result") or "").strip() == "pending",
+            is_settled=lambda row: (row.get("result") or "").strip() in ("won", "lost", "push"),
+            kickoff_fields=("kickoff_iso",),
+            date_fields=("fixture_date", "date"),
+            source_freshness={},
+            overrides=load_settlement_overrides(DEFAULT_OVERRIDES),
+        )
+        write_audit(args.audit_out, audit)
+        print(f"  Settlement audit written to {args.audit_out}")
+        emit_github_annotations(audit)
+        if int(audit.get("exit_code_recommendation", 0)):
+            raise SystemExit(1)
         return
 
     leagues_needed = set()
@@ -493,6 +531,7 @@ def main() -> None:
     all_results: Dict[str, dict] = canonicalize_results_lookup(load_historical_results(args.historical_dir))
     print(f"  Historical results loaded: {len(all_results)}")
 
+    source_freshness: Dict[str, dict] = {}
     for league in leagues_needed:
         fresh = canonicalize_results_lookup(fetch_current_season_results(league, args.historical_dir))
         latest_available = max((key.split("|", 1)[0] for key in fresh.keys()), default="none")
@@ -503,17 +542,50 @@ def main() -> None:
             latest_fotmob = max((key.split("|", 1)[0] for key in fotmob.keys()), default="none")
             print(f"  [fotmob] {league}: {len(fotmob)} matches fetched (latest {latest_fotmob})")
             all_results.update(fotmob)
+        else:
+            latest_fotmob = None
+        lag_days = None
+        if latest_available and latest_available != "none":
+            try:
+                lag_days = (datetime.now(timezone.utc).date() - date.fromisoformat(latest_available)).days
+            except ValueError:
+                lag_days = None
+        source_freshness[league] = {
+            "football_data_latest": None if latest_available == "none" else latest_available,
+            "lag_days": lag_days,
+            "football_data_count": len(fresh),
+            "fotmob_count": len(fotmob),
+            "fotmob_latest": latest_fotmob if latest_fotmob != "none" else None,
+        }
 
     settled, still_pending = settle_signals(signals, all_results, odds_index)
     print(f"\n  Settled: {settled}, still pending: {still_pending}")
 
+    fieldnames = signal_fields_for_rows(signals)
     with open(args.signals, "w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, fieldnames=SIGNAL_FIELDS, extrasaction="ignore")
+        writer = csv.DictWriter(fh, fieldnames=fieldnames, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(signals)
     print(f"  Updated {args.signals}")
 
     _write_summary(signals, args.summary)
+    audit = build_settlement_audit(
+        rows=signals,
+        model="team-shots",
+        now_utc=datetime.now(timezone.utc),
+        settled_this_run=settled,
+        is_pending=lambda row: (row.get("result") or "").strip() == "pending",
+        is_settled=lambda row: (row.get("result") or "").strip() in ("won", "lost", "push"),
+        kickoff_fields=("kickoff_iso",),
+        date_fields=("fixture_date", "date"),
+        source_freshness=source_freshness,
+        overrides=load_settlement_overrides(DEFAULT_OVERRIDES),
+    )
+    write_audit(args.audit_out, audit)
+    print(f"  Settlement audit written to {args.audit_out}")
+    emit_github_annotations(audit)
+    if int(audit.get("exit_code_recommendation", 0)):
+        raise SystemExit(1)
 
 
 def _write_summary(signals: List[dict], path: Path) -> None:

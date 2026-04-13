@@ -36,6 +36,7 @@ SNAPSHOT_FILES = [
     "data/team-shots/team-shots-scanner.csv",
     "data/team-shots/shadow/team-shots-shadow-signals.csv",
     "data/team-shots/shadow/team-shots-shadow-performance.txt",
+    "data/team-shots/shadow/settlement-audit.json",
     "data/shortlist/team-props-status.json",
 ]
 

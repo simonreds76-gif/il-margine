@@ -89,6 +89,14 @@ PUBLIC_EXTENDED_MIN_EV = 0.12
 SHADOW_TRACK_MIN_EV = 0.05
 SHADOW_MAX_FAIR_ODDS = 20.0
 SHADOW_MIN_EXPECTED_MINUTES = 60.0
+# Live-only stale handling: current squad context can make old player history
+# misleading even when the player has historical rows. The backtest replays
+# contemporaneous history, so this guard intentionally does not live in the
+# shared model layer.
+STALE_HISTORY_DAYS = 365
+# Allocate a small fallback share per stale starter so confirmed starters do
+# not collapse to 99.0 purely because their usable history is stale.
+STARTER_FALLBACK_SHARE_POOL = 0.02
 
 POSITION_SCORES = {
     "GK": 0,
@@ -1058,7 +1066,13 @@ def _team_pen_rate(team_summary: Optional[dict], shrink_func, shrink_matches: fl
     )
 
 
-def _penalty_share_prior(role: str, active_slot: str, lineup_state: str) -> tuple[float, float]:
+def _penalty_share_prior(
+    role: str,
+    active_slot: str,
+    lineup_state: str,
+    *,
+    penalty_transfer: bool = False,
+) -> tuple[float, float]:
     role_key = (role or "").strip().lower()
     active_key = (active_slot or "").strip().lower()
     lineup_key = (lineup_state or "").strip().lower()
@@ -1071,6 +1085,20 @@ def _penalty_share_prior(role: str, active_slot: str, lineup_state: str) -> tupl
     if active_key:
         if role_key != active_key:
             return 0.0, 0.0
+        if penalty_transfer:
+            # A promoted active taker should be priced much closer to a true
+            # first taker than to the player's original slot in the hierarchy.
+            transfer_confirmed = {
+                "secondary": (0.80, 16.0),
+                "tertiary": (0.72, 14.0),
+            }
+            transfer_expected = {
+                "secondary": (0.74, 12.0),
+                "tertiary": (0.66, 10.0),
+            }
+            transfer_map = transfer_expected if lineup_key == "expected_starter" else transfer_confirmed
+            if role_key in transfer_map:
+                return transfer_map[role_key]
         confirmed_active = {
             "primary": 0.80,
             "secondary": 0.60,
@@ -1417,6 +1445,7 @@ def main() -> None:
     globals()["LEAGUE_AVG"] = model_mod["LEAGUE_AVG"]
     expected_minutes_from_summary = model_mod["expected_minutes_from_summary"]
     build_player_propensity = model_mod["build_player_propensity"]
+    build_player_raw_share = model_mod["build_player_raw_share"]
     build_team_expected_npxg = model_mod["build_team_expected_npxg"]
     build_penalty_component = model_mod["build_penalty_component"]
     league_avg_for = model_mod["league_avg_for"]
@@ -1424,8 +1453,10 @@ def main() -> None:
     prob_at_least_one = model_mod["prob_at_least_one"]
     shrink_func = model_mod["_shrink"]
     TEAM_SHRINK_MATCHES = model_mod["TEAM_SHRINK_MATCHES"]
+    UNALLOCATED_SHARE_FLOOR = model_mod["UNALLOCATED_SHARE_FLOOR"]
     team_key_func = model_mod["_team_key"]
     coarse_position = model_mod["coarse_position"]
+    position_prior = model_mod["position_prior"]
     penalty_hierarchy = load_penalty_hierarchy(ROOT / args.penalty_hierarchy, team_key_func=team_key_func)
     public_min_ev = max(args.min_ev, args.public_min_ev)
     shadow_min_ev = args.shadow_min_ev
@@ -1473,6 +1504,7 @@ def main() -> None:
 
     player_histories: Dict[str, object] = defaultdict(PlayerHistory)
     team_histories: Dict[str, object] = defaultdict(TeamHistory)
+    player_latest_history_date: Dict[str, object] = {}
 
     def apply_history_batch(batch: List[object]) -> None:
         team_match_summaries: Dict[tuple[str, str, bool], dict] = {}
@@ -1519,6 +1551,9 @@ def main() -> None:
                     "opp_xga_pre": opponent_xga_pre,
                 }
             )
+            latest_seen = player_latest_history_date.get(row.player_id)
+            if latest_seen is None or row.match_date > latest_seen:
+                player_latest_history_date[row.player_id] = row.match_date
 
         for (team_key, _, _), summary in team_match_summaries.items():
             team_histories[team_key].add_match(summary)
@@ -1610,6 +1645,17 @@ def main() -> None:
         position = player_meta.get("position", "")
         player_recent = player_histories[player_id].summary(RECENT_WINDOW)
         player_long = player_histories[player_id].summary(LONG_WINDOW)
+        latest_history_date = player_latest_history_date.get(player_id)
+        fixture_date = datetime.strptime(odds_row["match_date"][:10], "%Y-%m-%d").date()
+        history_gap_days = (
+            (fixture_date - latest_history_date).days
+            if latest_history_date is not None
+            else None
+        )
+        history_stale = history_gap_days is not None and history_gap_days > STALE_HISTORY_DAYS
+        if history_stale:
+            player_recent = None
+            player_long = None
         opponent_summary = team_histories[opponent_key].summary()
         stacked_features = _stacked_signal_features(player_histories[player_id], opponent_summary)
         roster_games = player_meta.get("games", 0.0) or 0.0
@@ -1634,6 +1680,8 @@ def main() -> None:
             "player_long": player_long,
             "roster_avg_minutes": roster_avg_minutes,
             "history_minutes": history_minutes,
+            "history_gap_days": history_gap_days,
+            "history_stale": history_stale,
             "expected_minutes": expected_minutes,
             "stacked_features": stacked_features,
         }
@@ -1796,6 +1844,7 @@ def main() -> None:
             ) = build_team_expected_npxg(team_summary, opponent_summary, sample["is_home"])
 
             team_propensity_total = 0.0
+            raw_share_total = 0.0
             for candidate in team_candidates:
                 player_display_name = candidate["player_meta"].get("player_name", candidate["odds_row"]["player_name"])
                 hierarchy_entry = penalty_hierarchy.get(candidate["player_team_key"])
@@ -1831,12 +1880,15 @@ def main() -> None:
                     penalty_role,
                     team_penalty_event.get("active_slot", ""),
                     candidate.get("lineup_state", "unknown"),
+                    penalty_transfer=bool(team_penalty_event.get("penalty_transfer")),
                 )
 
                 if candidate.get("lineup_state") == "not_in_squad":
                     propensity = 0.0
                     base_rate = 0.0
                     method = "model"
+                    raw_share = 0.0
+                    share_prior = 0.0
                     penalty_lambda = 0.0
                     penalty_share = 0.0
                     baseline_penalty_share = 0.0
@@ -1852,6 +1904,20 @@ def main() -> None:
                         candidate["player_long"],
                         candidate["position"],
                         candidate["expected_minutes"],
+                    )
+                    raw_share = build_player_raw_share(
+                        candidate["player_recent"],
+                        team_summary,
+                        candidate["position"],
+                        candidate["expected_minutes"],
+                    )
+                    team_npxg_prior = team_summary.get("npxg_per_match", LEAGUE_AVG["team_npxg_per_match"]) if team_summary else LEAGUE_AVG["team_npxg_per_match"]
+                    team_npxg_prior = max(
+                        float(team_npxg_prior or LEAGUE_AVG["team_npxg_per_match"]),
+                        LEAGUE_AVG["team_npxg_per_match"] * 0.75,
+                    )
+                    share_prior = (position_prior(candidate["position"]) / team_npxg_prior) * (
+                        max(candidate["expected_minutes"], 1.0) / 90.0
                     )
                     penalty_lambda = 0.0
                     penalty_share = 0.0
@@ -1898,6 +1964,8 @@ def main() -> None:
                     "base_rate": base_rate,
                     "method": method,
                     "propensity": propensity,
+                    "raw_share": raw_share,
+                    "share_prior": share_prior,
                     "penalty_lambda": penalty_lambda,
                     "penalty_share": penalty_share,
                     "baseline_penalty_share": baseline_penalty_share if method == "model" else 0.0,
@@ -1920,11 +1988,60 @@ def main() -> None:
                     "opp_factor": opp_factor,
                 }
                 team_propensity_total += propensity
+                raw_share_total += raw_share
 
-            if team_propensity_total <= 0:
+            if raw_share_total > 0:
+                fallback_seed_total = 0.0
+                fallback_starter_count = 0
+                for candidate in team_candidates:
+                    if candidate.get("lineup_state") not in {"starter", "expected_starter"}:
+                        continue
+                    key = (candidate["player_id"], candidate["player_team_key"])
+                    prediction = computed_predictions[key]
+                    if prediction["raw_share"] > 0:
+                        continue
+                    prior_share = prediction.get("share_prior", 0.0)
+                    if prior_share <= 0:
+                        continue
+                    fallback_seed_total += prior_share
+                    fallback_starter_count += 1
+
+                fallback_pool = 0.0
+                if fallback_seed_total > 0 and fallback_starter_count > 0:
+                    fallback_pool = min(
+                        STARTER_FALLBACK_SHARE_POOL * fallback_starter_count,
+                        1.0 - UNALLOCATED_SHARE_FLOOR,
+                    )
+                raw_pool = max(0.0, (1.0 - UNALLOCATED_SHARE_FLOOR) - fallback_pool)
+                for candidate in team_candidates:
+                    key = (candidate["player_id"], candidate["player_team_key"])
+                    prediction = computed_predictions[key]
+                    if prediction["raw_share"] > 0:
+                        prediction["team_share_seed"] = (prediction["raw_share"] / raw_share_total) * raw_pool
+                    elif (
+                        fallback_seed_total > 0
+                        and candidate.get("lineup_state") in {"starter", "expected_starter"}
+                        and prediction.get("share_prior", 0.0) > 0
+                    ):
+                        prediction["team_share_seed"] = (
+                            prediction["share_prior"] / fallback_seed_total
+                        ) * fallback_pool
+                    else:
+                        prediction["team_share_seed"] = 0.0
+            elif team_propensity_total > 0:
+                for candidate in team_candidates:
+                    key = (candidate["player_id"], candidate["player_team_key"])
+                    computed_predictions[key]["team_share_seed"] = (
+                        computed_predictions[key]["propensity"] / team_propensity_total
+                    ) * (1.0 - UNALLOCATED_SHARE_FLOOR)
+            else:
                 team_propensity_total = float(len(team_candidates)) or 1.0
                 for candidate in team_candidates:
-                    computed_predictions[(candidate["player_id"], candidate["player_team_key"])]["propensity"] = 1.0
+                    key = (candidate["player_id"], candidate["player_team_key"])
+                    computed_predictions[key]["propensity"] = 1.0
+                    computed_predictions[key]["team_share_seed"] = (1.0 / team_propensity_total) * (
+                        1.0 - UNALLOCATED_SHARE_FLOOR
+                    )
 
             for candidate in team_candidates:
                 key = (candidate["player_id"], candidate["player_team_key"])
@@ -1935,7 +2052,7 @@ def main() -> None:
                     penalty_lambda = 0.0
                     total_lambda = 0.0
                 else:
-                    team_share = prediction["propensity"] / team_propensity_total
+                    team_share = prediction.get("team_share_seed", 0.0)
                     non_pen_lambda = prediction["team_expected_npxg"] * team_share
                     penalty_lambda = prediction["penalty_lambda"]
                     total_lambda = max(0.001, non_pen_lambda + penalty_lambda)
@@ -2026,6 +2143,8 @@ def main() -> None:
                 confidence_reason = public_gate_reason
             if fixture_health["trust_tier"] != TRUST_TIER_CONFIRMED:
                 confidence_reason = f"{confidence_reason},fixture_{fixture_health['trust_tier'].lower()}" if confidence_reason else f"fixture_{fixture_health['trust_tier'].lower()}"
+            if candidate.get("history_stale"):
+                confidence_reason = f"{confidence_reason},stale_history" if confidence_reason else "stale_history"
             signal_eligible = candidate.get("lineup_state", "unknown") not in {"bench", "not_in_squad", "expected_bench", "expected_out"}
             if ev >= shadow_min_ev and signal_eligible:
                 stats["qualified_rows"] += 1
