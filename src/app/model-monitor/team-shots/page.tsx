@@ -1060,6 +1060,7 @@ function LiveLineTable({
     line: string;
     side: string;
     book_odds: string;
+    stake_units: string;
     logged_at: string;
     model_fair_odds: string;
     edge: string;
@@ -1143,6 +1144,7 @@ function LiveLineTable({
         line: row.line ?? "",
         side: row.side ?? "",
         book_odds: row.book_odds ?? "",
+        stake_units: row.stake_units ?? "",
         logged_at: row.logged_at ?? "",
         model_fair_odds: row.model_fair_odds ?? "",
         edge: row.edge ?? "",
@@ -1324,7 +1326,7 @@ function LiveLineTable({
                         />
                       </div>
                     </div>
-                    <div className="mt-2 grid grid-cols-4 gap-1">
+                    <div className="mt-2 grid grid-cols-2 gap-1 sm:grid-cols-5">
                       <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
                         <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Entry</div>
                         <div className="mt-0.5 font-mono text-xs text-slate-200">{r.book_odds || "-"}</div>
@@ -1343,6 +1345,12 @@ function LiveLineTable({
                         <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">P&L</div>
                         <div className={`mt-0.5 font-mono text-xs ${pnlVal >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
                           {`${pnlVal >= 0 ? "+" : ""}${pnlVal.toFixed(2)}u`}
+                        </div>
+                      </div>
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Stake</div>
+                        <div className="mt-0.5 font-mono text-xs text-amber-200">
+                          {`${pf(r.stake_units || "1", 1).toFixed(1)}u`}
                         </div>
                       </div>
                     </div>
@@ -1371,6 +1379,7 @@ function LiveLineTable({
                     <th className="py-2.5 pr-3 font-mono">Entry</th>
                     <th className="py-2.5 pr-3 font-mono">Fair</th>
                     <th className="py-2.5 pr-3 font-mono">Edge</th>
+                    <th className="py-2.5 pr-3 font-mono">Stake</th>
                     <th className="py-2.5 pr-3 font-mono">P&L</th>
                     <th className="py-2.5 pr-4 font-mono">CLV</th>
                   </tr>
@@ -1418,6 +1427,9 @@ function LiveLineTable({
                         <td className="py-2 pr-3 font-mono tabular-nums text-slate-400">{r.model_fair_odds || "-"}</td>
                         <td className={`py-2 pr-3 font-mono tabular-nums ${!Number.isNaN(edgeRaw) && edgeRaw >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
                           {!Number.isNaN(edgeRaw) ? formatSignedPercent(edgeRaw * 100) : "-"}
+                        </td>
+                        <td className="py-2 pr-3 font-mono tabular-nums text-amber-200">
+                          {`${pf(r.stake_units || "1", 1).toFixed(1)}u`}
                         </td>
                         <td className={`py-2 pr-3 font-mono tabular-nums ${pnlVal >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
                           {`${pnlVal >= 0 ? "+" : ""}${pnlVal.toFixed(2)}u`}
@@ -1477,7 +1489,7 @@ function LiveLineTable({
                                 />
                               </div>
                             </div>
-                            <div className="mt-2 grid grid-cols-2 gap-1 sm:grid-cols-5">
+                            <div className="mt-2 grid grid-cols-2 gap-1 sm:grid-cols-6">
                               <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
                                 <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Book</div>
                                 <div className="mt-0.5 text-xs text-slate-300">
@@ -1509,6 +1521,12 @@ function LiveLineTable({
                                 <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Now edge</div>
                                 <div className={`mt-0.5 font-mono text-xs ${curEdge !== null && curEdge >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
                                   {curEdge !== null ? formatSignedPercent(curEdge) : "-"}
+                                </div>
+                              </div>
+                              <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                                <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Stake</div>
+                                <div className="mt-0.5 font-mono text-xs text-amber-200">
+                                  {`${pf(row.stake_units || "1", 1).toFixed(1)}u`}
                                 </div>
                               </div>
                             </div>

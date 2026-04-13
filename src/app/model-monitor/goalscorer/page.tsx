@@ -101,6 +101,18 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
           {row.review_priority ? (
             <StatusPill label={row.review_priority} tone={reviewPriorityTone(row.review_priority)} />
           ) : null}
+          {row.event_result ? (
+            <StatusPill
+              label={row.event_result}
+              tone={
+                row.event_result.toLowerCase().includes("scor")
+                  ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                  : row.event_result.toLowerCase().includes("miss") || row.event_result.toLowerCase().includes("save")
+                    ? "bg-rose-500/10 text-rose-300 border-rose-500/20"
+                    : "bg-slate-700/40 text-slate-400 border-slate-600/40"
+              }
+            />
+          ) : null}
           {row.review_type ? (
             <StatusPill
               label={row.review_type.replaceAll("_", " ")}
@@ -124,7 +136,7 @@ function PenaltyReviewCard({ row }: { row: SnapshotPenaltyRow }) {
             <StatCard compact label="Backup" value={row.secondary_pre_match || "-"} />
             <StatCard
               compact
-              label="Active slot"
+              label="Pre-match active taker"
               value={row.active_taker_pre_match || "-"}
               detail={row.active_slot_pre_match || undefined}
             />
