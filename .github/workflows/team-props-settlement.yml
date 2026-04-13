@@ -61,7 +61,7 @@ jobs:
 
       - name: Upload settlement audit artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: settlement-audit-${{ github.run_id }}
           path: |
@@ -84,7 +84,7 @@ jobs:
             python scripts/team-shots-live-snapshot.py --supabase
             python scripts/corners-live-snapshot.py --supabase
           else
-            echo "::notice::SUPABASE_SERVICE_ROLE_KEY not configured; team-props hosted snapshot upload skipped."
+            echo "SUPABASE_SERVICE_ROLE_KEY not configured; team-props hosted snapshot upload skipped."
           fi
 
       - name: Commit and push if new data
