@@ -2622,11 +2622,13 @@ async function run(): Promise<Response> {
       })
     );
   const matchSignalsVolumeAdditional = [...matchSignalsVolume];
+  const shadowProfileAllowsSpreadSignals = !MATCH_ONLY_SHADOW_PROFILES.has(SHADOW_POLICY_MODE);
   const spreadSignalsVolumeProfile: Array<ReturnType<typeof toSpreadSignal>> = [];
   const spreadSignalsVolumeOverlap: Array<ReturnType<typeof toSpreadSignal>> = [];
   const spreadSignalsVolume: Array<ReturnType<typeof toSpreadSignal>> = [];
   for (const m of matches) {
     const spreadProfileOk =
+      shadowProfileAllowsSpreadSignals &&
       m.shadow_profile_match &&
       !m.recent_injured_any &&
       m.spread_line != null &&
@@ -2671,6 +2673,7 @@ async function run(): Promise<Response> {
     }
 
     const spreadOk =
+      shadowProfileAllowsSpreadSignals &&
       (m.shadow_match || m.shadow_spread_eligible) &&
       !m.recent_injured_any &&
       m.spread_line != null &&
