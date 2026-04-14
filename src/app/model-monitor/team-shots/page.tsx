@@ -747,6 +747,24 @@ function sourceTone(source: "hosted" | "local" | "missing"): "default" | "green"
   return "default";
 }
 
+function parseIsoMillis(iso?: string | null): number | null {
+  if (!iso) return null;
+  const millis = Date.parse(iso);
+  return Number.isFinite(millis) ? millis : null;
+}
+
+function scrapeTone(
+  status: TeamShotsScrapeStatus | null,
+  ageMinutes: number | null,
+): "default" | "green" | "red" | "amber" {
+  if (!status) return "red";
+  if (status.success === false) return "red";
+  if (ageMinutes === null) return "default";
+  if (ageMinutes <= 120) return "green";
+  if (ageMinutes <= 360) return "amber";
+  return "red";
+}
+
 
 
 // Tone helper: converts "green"/"red"/"amber" to CSS class strings for StatCard.
@@ -804,6 +822,8 @@ export default async function TeamShotsMonitorPage() {
 
     comparisonSource,
 
+    scrapeStatus,
+
   ] = await Promise.all([
 
     readFile("data/team-shots/team-shots-calibration.txt"),
@@ -838,6 +858,8 @@ export default async function TeamShotsMonitorPage() {
     readTeamShotsLiveSnapshotGeneratedAt(),
 
     inspectTeamShotsLiveSource("data/team-shots/team-shots-comparison.csv"),
+
+    readJson<TeamShotsScrapeStatus>("data/team-shots/team-shots-scrape-last-run.json"),
 
   ]);
 
@@ -1276,6 +1298,35 @@ function LiveLineTable({
         ? "amber"
 
         : "green";
+
+  const freshnessAnchorAt =
+    snapshotGeneratedAt ??
+    schedulerHeartbeatAt ??
+    comparisonMtime ??
+    upcomingMtime ??
+    predictionsMtime ??
+    null;
+  const freshnessAnchorMillis = parseIsoMillis(freshnessAnchorAt);
+  const scrapeRunAt = scrapeStatus?.run_at ?? null;
+  const scrapeRunMillis = parseIsoMillis(scrapeRunAt);
+  const scrapeAgeMinutes =
+    scrapeRunMillis === null || freshnessAnchorMillis === null
+      ? null
+      : Math.max(0, Math.round((freshnessAnchorMillis - scrapeRunMillis) / 60000));
+  const scrapeAgeLabel = scrapeRunAt ? formatRelativeAgeShort(scrapeRunAt) : "-";
+  const scrapeErrors = scrapeStatus?.provider_errors?.length ?? 0;
+  const scrapeDetailParts: string[] = [];
+  if (typeof scrapeStatus?.rows_scraped === "number") {
+    scrapeDetailParts.push(`${scrapeStatus.rows_scraped} rows`);
+  }
+  if (typeof scrapeStatus?.events_found === "number") {
+    scrapeDetailParts.push(`${scrapeStatus.events_found} events`);
+  }
+  if (scrapeErrors > 0) {
+    scrapeDetailParts.push(`${scrapeErrors} errors`);
+  }
+  const scrapeDetail = scrapeDetailParts.length > 0 ? scrapeDetailParts.join(" | ") : undefined;
+  const scrapeToneValue = scrapeTone(scrapeStatus ?? null, scrapeAgeMinutes);
 
   // Use a stable snapshot-based day boundary so server/client render the same split.
   const asOfIso = (
