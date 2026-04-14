@@ -23,6 +23,11 @@ $volumeMode = "$env:STRICT_POLICY_VOLUME_MODE".ToLower()
 if ([string]::IsNullOrWhiteSpace($volumeMode)) { $volumeMode = "off" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_SHADOW_ENABLED)) { $env:STRICT_SPREAD_V1_SHADOW_ENABLED = "1" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_CALIBRATED_ENABLED)) { $env:STRICT_CLAY_CALIBRATED_ENABLED = "0" }
+$spreadFitFiles = @(
+    "data/backtest/backtest-results-2025.csv",
+    "data/backtest/backtest-results-2026.csv"
+)
+$spreadRefreshTimeoutSeconds = 240
 
 function Test-EnvFlag([string]$value) {
     if ([string]::IsNullOrWhiteSpace($value)) { return $false }
@@ -46,6 +51,42 @@ function Log($msg) {
     $line = "$(Get-Date -Format 'HH:mm:ss') $msg"
     Write-Host $line
     Add-Content -Path $logFile -Value $line
+}
+
+function Invoke-LoggedProcess {
+    param(
+        [Parameter(Mandatory = $true)][string]$FilePath,
+        [Parameter(Mandatory = $true)][string[]]$ArgumentList,
+        [Parameter(Mandatory = $true)][string]$Label,
+        [int]$TimeoutSeconds = 0
+    )
+
+    $stdoutPath = Join-Path $env:TEMP ("ilmargine-" + [guid]::NewGuid().ToString() + ".out.log")
+    $stderrPath = Join-Path $env:TEMP ("ilmargine-" + [guid]::NewGuid().ToString() + ".err.log")
+    try {
+        $proc = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -NoNewWindow -PassThru -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+        if ($TimeoutSeconds -gt 0) {
+            try {
+                Wait-Process -Id $proc.Id -Timeout $TimeoutSeconds -ErrorAction Stop
+            } catch {
+                Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+                Log "WARNING: $Label timed out after ${TimeoutSeconds}s and was stopped."
+                return 124
+            }
+        } else {
+            Wait-Process -Id $proc.Id
+        }
+
+        if (Test-Path $stdoutPath) {
+            Get-Content $stdoutPath | ForEach-Object { Log $_ }
+        }
+        if (Test-Path $stderrPath) {
+            Get-Content $stderrPath | ForEach-Object { Log $_ }
+        }
+        return $proc.ExitCode
+    } finally {
+        Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
+    }
 }
 
 $lockHandle = Enter-TaskLock -LockName "tennis-automation" -RootPath $root -WaitSeconds 1800 -PollSeconds 10
@@ -99,16 +140,6 @@ Log "=== Step 5/10: Refresh CPI surface-speed table ==="
 & python scripts\scrape-tennisabstract-surface-speed.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: CPI surface-speed refresh failed (exit $LASTEXITCODE), continuing..."
-}
-
-Log "=== Step 5b/10: Refresh spread_v1 calibration + correction model ==="
-& python scripts\handicap-calibration.py --line-source auto 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: handicap calibration refresh failed (exit $LASTEXITCODE), continuing..."
-}
-& python scripts\fit-spread-v1-model.py 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: spread_v1 correction fit failed (exit $LASTEXITCODE), continuing..."
 }
 
 # Step 6: Pinnacle odds + fair odds
@@ -178,6 +209,18 @@ Log "=== Step 9/10: Nightly tennis settlement/performance ==="
 & powershell -ExecutionPolicy Bypass -NoProfile -File scripts\oncourt-settle-nightly.ps1 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: nightly tennis settlement failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Post-step: Refresh spread_v1 calibration + correction model (non-blocking) ==="
+$handicapArgs = @("scripts\handicap-calibration.py", "--line-source", "auto", "--files") + $spreadFitFiles
+$handicapExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList $handicapArgs -Label "handicap calibration refresh" -TimeoutSeconds $spreadRefreshTimeoutSeconds
+if ($handicapExit -ne 0) {
+    Log "WARNING: handicap calibration refresh failed (exit $handicapExit), continuing..."
+}
+$spreadFitArgs = @("scripts\fit-spread-v1-model.py", "--files") + $spreadFitFiles
+$spreadFitExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList $spreadFitArgs -Label "spread_v1 correction fit" -TimeoutSeconds $spreadRefreshTimeoutSeconds
+if ($spreadFitExit -ne 0) {
+    Log "WARNING: spread_v1 correction fit failed (exit $spreadFitExit), continuing..."
 }
 
 Log "============================================"
