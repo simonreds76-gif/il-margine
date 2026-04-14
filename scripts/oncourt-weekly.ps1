@@ -15,6 +15,11 @@ $logFile = Join-Path $dataDir "oncourt-weekly.log"
 if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_VOLUME_MODE)) { $env:STRICT_POLICY_VOLUME_MODE = "volume_200" }
 $volumeMode = "$env:STRICT_POLICY_VOLUME_MODE".ToLower()
 if ([string]::IsNullOrWhiteSpace($volumeMode)) { $volumeMode = "off" }
+$spreadFitFiles = @(
+    "data/backtest/backtest-results-2025.csv",
+    "data/backtest/backtest-results-2026.csv"
+)
+$spreadRefreshTimeoutSeconds = 240
 
 function Get-VolumeShadowConfig([string]$mode) {
     switch ($mode) {
@@ -30,6 +35,42 @@ function Log($msg) {
     $line = "$(Get-Date -Format 'HH:mm:ss') $msg"
     Write-Host $line
     Add-Content -Path $logFile -Value $line
+}
+
+function Invoke-LoggedProcess {
+    param(
+        [Parameter(Mandatory = $true)][string]$FilePath,
+        [Parameter(Mandatory = $true)][string[]]$ArgumentList,
+        [Parameter(Mandatory = $true)][string]$Label,
+        [int]$TimeoutSeconds = 0
+    )
+
+    $stdoutPath = Join-Path $env:TEMP ("ilmargine-" + [guid]::NewGuid().ToString() + ".out.log")
+    $stderrPath = Join-Path $env:TEMP ("ilmargine-" + [guid]::NewGuid().ToString() + ".err.log")
+    try {
+        $proc = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -NoNewWindow -PassThru -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+        if ($TimeoutSeconds -gt 0) {
+            try {
+                Wait-Process -Id $proc.Id -Timeout $TimeoutSeconds -ErrorAction Stop
+            } catch {
+                Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+                Log "WARNING: $Label timed out after ${TimeoutSeconds}s and was stopped."
+                return 124
+            }
+        } else {
+            Wait-Process -Id $proc.Id
+        }
+
+        if (Test-Path $stdoutPath) {
+            Get-Content $stdoutPath | ForEach-Object { Log $_ }
+        }
+        if (Test-Path $stderrPath) {
+            Get-Content $stderrPath | ForEach-Object { Log $_ }
+        }
+        return $proc.ExitCode
+    } finally {
+        Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
+    }
 }
 
 $lockHandle = Enter-TaskLock -LockName "tennis-automation" -RootPath $root -WaitSeconds 1800 -PollSeconds 10
@@ -135,13 +176,15 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Log "=== Post-step: Refresh spread_v1 calibration + correction model ==="
-& python scripts\handicap-calibration.py --line-source auto 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: handicap calibration refresh failed (exit $LASTEXITCODE), continuing..."
+$handicapArgs = @("scripts\handicap-calibration.py", "--line-source", "auto", "--files") + $spreadFitFiles
+$handicapExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList $handicapArgs -Label "handicap calibration refresh" -TimeoutSeconds $spreadRefreshTimeoutSeconds
+if ($handicapExit -ne 0) {
+    Log "WARNING: handicap calibration refresh failed (exit $handicapExit), continuing..."
 }
-& python scripts\fit-spread-v1-model.py 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: spread_v1 correction fit failed (exit $LASTEXITCODE), continuing..."
+$spreadFitArgs = @("scripts\fit-spread-v1-model.py", "--files") + $spreadFitFiles
+$spreadFitExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList $spreadFitArgs -Label "spread_v1 correction fit" -TimeoutSeconds $spreadRefreshTimeoutSeconds
+if ($spreadFitExit -ne 0) {
+    Log "WARNING: spread_v1 correction fit failed (exit $spreadFitExit), continuing..."
 }
 
 # Weekly CLV audits (captured history first, tennis-data fallback)
