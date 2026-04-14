@@ -75,12 +75,16 @@ const TEAM_NAME_ALIASES: Record<string, string> = {
   "hellas verona": "verona",
   "lazio rome": "lazio",
   "parma calcio 1913": "parma",
+  "parma calcio": "parma calcio 1913",
   parma: "parma calcio 1913",
   internazionale: "inter",
   "inter milano": "inter",
   "inter milan": "inter",
   "deportivo alaves": "alaves",
   "real sociedad": "sociedad",
+  "real sociedad san sebastian": "sociedad",
+  "juventus turin": "juventus",
+  "espanyol barcelona": "espanyol",
 };
 
 function repairMojibake(value: string): string {
@@ -117,6 +121,22 @@ function normalizeKey(value?: string | null): string {
     .toLowerCase();
 }
 
+function simplifyClubKey(value: string): string {
+  return value
+    .replace(/\b(?:ac|afc|as|bc|ca|cf|cfc|fc|rc|rcd|sc|ssc|us)\b/g, " ")
+    .replace(/\bcalcio\b/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function canonicalizeTeamKey(value?: string | null): string {
+  const normalized = normalizeKey(value);
+  if (!normalized) return "";
+  const aliased = TEAM_NAME_ALIASES[normalized] ?? normalized;
+  const simplified = simplifyClubKey(aliased);
+  return TEAM_NAME_ALIASES[simplified] ?? simplified;
+}
+
 export function resolveLeagueKey(value?: string | null): string | null {
   const normalized = normalizeKey(value);
   if (!normalized) return null;
@@ -142,11 +162,9 @@ export function findTeamLogoPath(leagueValue: string | null | undefined, teamVal
   if (!leagueKey || !team) return "";
   const teams = LOGO_MANIFEST.leagues?.[leagueKey]?.teams ?? {};
   if (teams[team]?.logo_path) return cleanText(teams[team].logo_path);
-  const normalizedTeam = normalizeKey(team);
-  const canonicalTeam = TEAM_NAME_ALIASES[normalizedTeam] ?? normalizedTeam;
+  const canonicalTeam = canonicalizeTeamKey(team);
   const matched = Object.entries(teams).find(([name]) => {
-    const normalizedName = normalizeKey(name);
-    return normalizedName === canonicalTeam || (TEAM_NAME_ALIASES[normalizedName] ?? normalizedName) === canonicalTeam;
+    return canonicalizeTeamKey(name) === canonicalTeam;
   });
   return matched?.[1]?.logo_path ? cleanText(matched[1].logo_path) : "";
 }
