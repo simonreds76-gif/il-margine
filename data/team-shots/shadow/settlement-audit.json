@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-04-14T00:09:25Z",
+  "run_at": "2026-04-14T18:06:14Z",
   "model": "team-shots",
   "total_bets": 57,
   "settled_this_run": 0,
@@ -7,8 +7,8 @@
   "total_pending": 2,
   "pending_breakdown": {
     "future": 0,
-    "live": 1,
-    "stale": 1,
+    "live": 0,
+    "stale": 2,
     "old_stale": 0,
     "unknown": 0
   },
@@ -61,19 +61,27 @@
   },
   "stale_rows": [
     {
+      "match": "Manchester United vs Leeds United",
+      "league": "epl",
+      "line": "15.5",
+      "side": "under",
+      "kickoff": "2026-04-13T23:59:59Z",
+      "hours_elapsed": 18.1
+    },
+    {
       "match": "Fiorentina vs Lazio",
       "league": "serie-a",
       "line": "13.5",
       "side": "over",
       "kickoff": "2026-04-13T18:45:00Z",
-      "hours_elapsed": 5.41
+      "hours_elapsed": 23.35
     }
   ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
   "warnings": [
-    "1 stale pending row(s) (3-48h elapsed)"
+    "2 stale pending row(s) (3-48h elapsed)"
   ],
   "errors": [],
   "exit_code_recommendation": 0
