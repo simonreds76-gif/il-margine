@@ -23,8 +23,10 @@ from __future__ import annotations
 import argparse
 import csv
 import html
+import json
 import os
 import re
+import time
 import unicodedata
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -34,6 +36,7 @@ import requests
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUT_DIR = ROOT / "data" / "team-shots" / "inbox"
+RUN_STATUS_PATH = ROOT / "data" / "team-shots" / "team-shots-scrape-last-run.json"
 BASE_URL_ODDS_API = "https://api.odds-api.io/v3"
 BASE_URL_BETSAPI = "https://api.b365api.com"
 
@@ -90,6 +93,9 @@ OUTPUT_FIELDS = [
     "home_team", "away_team", "team", "market",
     "line", "side", "odds_decimal", "source", "notes",
 ]
+
+RETRY_ATTEMPTS = 3
+RETRY_BACKOFF_SECONDS = 2.0
 
 
 def load_env() -> None:
@@ -224,12 +230,26 @@ def _looks_like_league(league: dict, config: dict) -> bool:
     return slug == target_slug or name in name_variants
 
 
+def _run_url_from_env() -> Optional[str]:
+    server = os.environ.get("GITHUB_SERVER_URL")
+    repo = os.environ.get("GITHUB_REPOSITORY")
+    run_id = os.environ.get("GITHUB_RUN_ID")
+    if server and repo and run_id:
+        return f"{server}/{repo}/actions/runs/{run_id}"
+    return None
+
+
+def _write_run_status(payload: dict) -> None:
+    RUN_STATUS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    RUN_STATUS_PATH.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+
+
 def scrape_odds_api(
     api_key: str,
     league_key: str,
     bookmakers_str: str,
     days_ahead: int = 3,
-) -> List[dict]:
+) -> tuple[list[dict], int, list[str]]:
     config = LEAGUE_CONFIGS[league_key]
     now = datetime.now(timezone.utc)
     from_iso = now.replace(microsecond=0).isoformat().replace("+00:00", "Z")
@@ -242,17 +262,32 @@ def scrape_odds_api(
         "to": to_iso,
     }
 
+    provider_errors: List[str] = []
     print(f"  [odds-api.io] Discovering events for {config['label']}...")
     try:
-        resp = requests.get(f"{BASE_URL_ODDS_API}/events", params=params, timeout=30)
-        resp.raise_for_status()
-        events = resp.json()
+        resp = None
+        for attempt in range(RETRY_ATTEMPTS):
+            resp = requests.get(f"{BASE_URL_ODDS_API}/events", params=params, timeout=30)
+            try:
+                resp.raise_for_status()
+                events = resp.json()
+                break
+            except requests.HTTPError as exc:
+                status_code = getattr(exc.response, "status_code", None)
+                if status_code is None or status_code // 100 != 5:
+                    raise
+                if attempt < RETRY_ATTEMPTS - 1:
+                    time.sleep(RETRY_BACKOFF_SECONDS * (attempt + 1))
+                events = None
+        if events is None:
+            raise requests.HTTPError("odds-api.io /events failed after retries", response=resp)
     except requests.HTTPError as exc:
         status_code = getattr(exc.response, "status_code", None)
-        if status_code != 500:
+        if status_code is None or status_code // 100 != 5:
             raise
 
-        # odds-api.io intermittently 500s when `status=pending` is supplied.
+        provider_errors.append(f"odds-api.io /events 5xx ({status_code}) -> fallback without status filter")
+        # odds-api.io intermittently 5xx when `status=pending` is supplied.
         # Retry the broader query and keep the existing date window / league
         # filtering client-side so the daily pipeline remains usable.
         fallback_params = {
@@ -261,7 +296,7 @@ def scrape_odds_api(
             "from": from_iso,
             "to": to_iso,
         }
-        print("  [odds-api.io] /events with status=pending returned 500; retrying without status filter.")
+        print("  [odds-api.io] /events with status=pending returned 5xx; retrying without status filter.")
         fallback_resp = requests.get(f"{BASE_URL_ODDS_API}/events", params=fallback_params, timeout=30)
         fallback_resp.raise_for_status()
         events = fallback_resp.json()
@@ -272,13 +307,14 @@ def scrape_odds_api(
     matched = [e for e in events if _looks_like_league(e.get("league") or {}, config)]
     print(f"  [odds-api.io] {len(matched)} events found")
     if not matched:
-        return []
+        return [], 0, provider_errors
 
     rows: List[dict] = []
     captured = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
     event_ids = [str(e["id"]) for e in matched]
-    payload = _fetch_odds_api_payload(api_key, event_ids, bookmakers_str)
+    payload, payload_errors = _fetch_odds_api_payload(api_key, event_ids, bookmakers_str)
+    provider_errors.extend(payload_errors)
     rows = _extract_odds_api_rows(payload, config, captured)
 
     if not rows:
@@ -287,7 +323,8 @@ def scrape_odds_api(
         if fallback_books:
             retry_books = ",".join(requested + fallback_books)
             print(f"  [odds-api.io] No team shots found for {config['label']} with {bookmakers_str}; retrying {retry_books}.")
-            retry_payload = _fetch_odds_api_payload(api_key, event_ids, retry_books)
+            retry_payload, retry_errors = _fetch_odds_api_payload(api_key, event_ids, retry_books)
+            provider_errors.extend(retry_errors)
             rows = _extract_odds_api_rows(retry_payload, config, captured)
             if rows:
                 payload = retry_payload
@@ -306,17 +343,19 @@ def scrape_odds_api(
                 shots_flag = " <-- possible?" if "shot" in mn.lower() else ""
                 print(f"    - {mn}{shots_flag}")
 
-    return rows
+    return rows, len(matched), provider_errors
 
 
-def _fetch_odds_api_payload(api_key: str, event_ids: List[str], bookmakers_str: str) -> List[dict]:
+def _fetch_odds_api_payload(api_key: str, event_ids: List[str], bookmakers_str: str) -> tuple[list[dict], list[str]]:
     payload: List[dict] = []
+    errors: List[str] = []
     for i in range(0, len(event_ids), 10):
         chunk = event_ids[i : i + 10]
-        chunk_payload = _fetch_odds_api_multi_chunk(api_key, chunk, bookmakers_str)
+        chunk_payload, chunk_errors = _fetch_odds_api_multi_chunk(api_key, chunk, bookmakers_str)
+        errors.extend(chunk_errors)
         if isinstance(chunk_payload, list):
             payload.extend(chunk_payload)
-    return payload
+    return payload, errors
 
 
 def _extract_odds_api_rows(payload: List[dict], config: dict, captured: str) -> List[dict]:
@@ -376,21 +415,33 @@ def _merge_event_payloads(payloads: List[dict]) -> List[dict]:
     return list(merged.values())
 
 
-def _fetch_odds_api_multi_chunk(api_key: str, event_ids: List[str], bookmakers_str: str) -> List[dict]:
+def _fetch_odds_api_multi_chunk(api_key: str, event_ids: List[str], bookmakers_str: str) -> tuple[list[dict], list[str]]:
     params = {"apiKey": api_key, "eventIds": ",".join(event_ids), "bookmakers": bookmakers_str}
-    response = requests.get(f"{BASE_URL_ODDS_API}/odds/multi", params=params, timeout=30)
-    try:
-        response.raise_for_status()
-        payload = response.json()
-        return payload if isinstance(payload, list) else []
-    except requests.HTTPError:
-        bookmakers = [book.strip() for book in bookmakers_str.split(",") if book.strip()]
-        if response.status_code != 403 or len(bookmakers) <= 1:
-            raise
+    response = None
+    for attempt in range(RETRY_ATTEMPTS):
+        response = requests.get(f"{BASE_URL_ODDS_API}/odds/multi", params=params, timeout=30)
+        if response.status_code < 500:
+            break
+        if attempt < RETRY_ATTEMPTS - 1:
+            time.sleep(RETRY_BACKOFF_SECONDS * (attempt + 1))
 
-        print(f"  [odds-api.io] Multi-book request blocked for {bookmakers_str}; retrying per bookmaker.")
-        fallback_payloads: List[dict] = []
-        for bookmaker in bookmakers:
+    if response is None:
+        return [], [f"odds-api.io /odds/multi failed for {bookmakers_str}"]
+
+    if response.ok:
+        payload = response.json()
+        return (payload if isinstance(payload, list) else []), []
+
+    status_code = response.status_code
+    bookmakers = [book.strip() for book in bookmakers_str.split(",") if book.strip()]
+    if (status_code != 403 and status_code // 100 != 5) or len(bookmakers) <= 1:
+        response.raise_for_status()
+
+    print(f"  [odds-api.io] Multi-book request failed ({status_code}) for {bookmakers_str}; retrying per bookmaker.")
+    errors = [f"odds-api.io /odds/multi {status_code} -> per-bookmaker fallback"]
+    fallback_payloads: List[dict] = []
+    for bookmaker in bookmakers:
+        for attempt in range(RETRY_ATTEMPTS):
             try:
                 single_resp = requests.get(
                     f"{BASE_URL_ODDS_API}/odds/multi",
@@ -401,22 +452,31 @@ def _fetch_odds_api_multi_chunk(api_key: str, event_ids: List[str], bookmakers_s
                 single_payload = single_resp.json()
                 if isinstance(single_payload, list):
                     fallback_payloads.extend(single_payload)
+                break
             except requests.HTTPError as exc:
-                print(f"  [odds-api.io] Skipping blocked bookmaker {bookmaker}: {exc}")
+                status = getattr(exc.response, "status_code", None)
+                if status is None or status // 100 != 5:
+                    print(f"  [odds-api.io] Skipping blocked bookmaker {bookmaker}: {exc}")
+                    break
+                if attempt < RETRY_ATTEMPTS - 1:
+                    time.sleep(RETRY_BACKOFF_SECONDS * (attempt + 1))
+                else:
+                    print(f"  [odds-api.io] Error fetching bookmaker {bookmaker}: {exc}")
             except requests.RequestException as exc:
                 print(f"  [odds-api.io] Error fetching bookmaker {bookmaker}: {exc}")
+                break
 
-        if fallback_payloads:
-            return _merge_event_payloads(fallback_payloads)
-        print(f"  [odds-api.io] No accessible bookmaker payloads for requested chunk: {', '.join(bookmakers)}")
-        return []
+    if fallback_payloads:
+        return _merge_event_payloads(fallback_payloads), errors
+    print(f"  [odds-api.io] No accessible bookmaker payloads for requested chunk: {', '.join(bookmakers)}")
+    return [], errors
 
 
 def scrape_betsapi(
     api_key: str,
     league_key: str,
     days_ahead: int = 3,
-) -> List[dict]:
+) -> tuple[list[dict], int]:
     config = LEAGUE_CONFIGS[league_key]
     print(f"  [betsapi] Discovering bet365 events for {config['label']}...")
 
@@ -486,7 +546,7 @@ def scrape_betsapi(
                     "notes": f"market={market_name};FI={fi}",
                 })
 
-    return rows
+    return rows, len(events)
 
 
 def write_rows(rows: List[dict], out_dir: Path, league_key: str, dry_run: bool = False) -> Optional[str]:
@@ -550,51 +610,78 @@ def main() -> None:
     print("  IL MARGINE - Team Total Shots Odds Scraper")
     print("=" * 64)
 
+    run_status = {
+        "run_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "leagues": leagues,
+        "events_found": 0,
+        "rows_scraped": 0,
+        "provider_errors": [],
+        "sources_used": [],
+        "run_url": _run_url_from_env(),
+        "success": False,
+    }
+
     total_written = 0
-    for league in leagues:
-        config = LEAGUE_CONFIGS[league]
-        print(f"\n  League: {config['label']}")
+    try:
+        for league in leagues:
+            config = LEAGUE_CONFIGS[league]
+            print(f"\n  League: {config['label']}")
 
-        rows: List[dict] = []
+            rows: List[dict] = []
 
-        if args.source in ("auto", "odds-api") and odds_api_key:
-            print("  Source: Odds-API.io")
-            rows = scrape_odds_api(odds_api_key, league, args.bookmakers, args.days_ahead)
-            if rows:
-                print(f"  Team shots rows from odds-api.io: {len(rows)}")
+            if args.source in ("auto", "odds-api") and odds_api_key:
+                print("  Source: Odds-API.io")
+                rows, events_found, provider_errors = scrape_odds_api(
+                    odds_api_key, league, args.bookmakers, args.days_ahead
+                )
+                run_status["events_found"] += events_found
+                run_status["provider_errors"].extend(provider_errors)
+                run_status["sources_used"].append("odds-api")
+                if rows:
+                    print(f"  Team shots rows from odds-api.io: {len(rows)}")
 
-        if not rows and args.source in ("auto", "betsapi") and betsapi_key:
-            print("  Source: BetsAPI (bet365)")
-            rows = scrape_betsapi(betsapi_key, league, args.days_ahead)
-            if rows:
-                print(f"  Team shots rows from betsapi: {len(rows)}")
+            if not rows and args.source in ("auto", "betsapi") and betsapi_key:
+                print("  Source: BetsAPI (bet365)")
+                rows, events_found = scrape_betsapi(betsapi_key, league, args.days_ahead)
+                run_status["events_found"] += events_found
+                run_status["sources_used"].append("betsapi")
+                if rows:
+                    print(f"  Team shots rows from betsapi: {len(rows)}")
 
-        if not rows:
-            missing = []
-            if not odds_api_key:
-                missing.append("ODDS_API_KEY")
-            if not betsapi_key:
-                missing.append("BETS_API_KEY")
-            if missing:
-                print(f"  No API key found. Set one of: {', '.join(missing)} in .env.local")
+            run_status["rows_scraped"] += len(rows)
+
+            if not rows:
+                missing = []
+                if not odds_api_key:
+                    missing.append("ODDS_API_KEY")
+                if not betsapi_key:
+                    missing.append("BETS_API_KEY")
+                if missing:
+                    print(f"  No API key found. Set one of: {', '.join(missing)} in .env.local")
+                else:
+                    print("  No team shots markets in feed for this league.")
+                continue
+
+            if args.dry_run:
+                print(f"  Dry run: {len(rows)} rows would be written")
+                if rows:
+                    s = rows[0]
+                    print(f"  Sample: {s['home_team']} vs {s['away_team']} | "
+                          f"{s['team']} {s['side']} {s['line']} @ {s['odds_decimal']}")
             else:
-                print("  No team shots markets in feed for this league.")
-            continue
+                path = write_rows(rows, args.out_dir, league)
+                print(f"  Saved: {path}")
+                total_written += len(rows)
 
-        if args.dry_run:
-            print(f"  Dry run: {len(rows)} rows would be written")
-            if rows:
-                s = rows[0]
-                print(f"  Sample: {s['home_team']} vs {s['away_team']} | "
-                      f"{s['team']} {s['side']} {s['line']} @ {s['odds_decimal']}")
-        else:
-            path = write_rows(rows, args.out_dir, league)
-            print(f"  Saved: {path}")
-            total_written += len(rows)
-
-    if not args.dry_run and args.all_leagues:
-        print(f"\n  Total team shots rows written: {total_written}")
-    print("\n  Done.\n")
+        if not args.dry_run and args.all_leagues:
+            print(f"\n  Total team shots rows written: {total_written}")
+        print("\n  Done.\n")
+        run_status["success"] = True
+    except Exception as exc:
+        run_status["error"] = str(exc)
+        raise
+    finally:
+        _write_run_status(run_status)
 
 
 if __name__ == "__main__":
