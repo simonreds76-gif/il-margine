@@ -147,6 +147,18 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: ATP ML research CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Post-step: Spread v1 shadow CLV audit ==="
+& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-spreadv1-archive.csv --bet-type spread --detail-csv data\backtest\strict-clv-audit-spreadv1-2026.csv --summary-txt data\backtest\strict-clv-audit-spreadv1-2026.txt 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: spread v1 shadow CLV audit failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Post-step: Spread v1 shadow report ==="
+& python scripts\spread-v1-report.py 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: spread v1 shadow report failed (exit $LASTEXITCODE), continuing..."
+}
+
 Log "============================================"
 Log "  Weekly Full Load finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Log "============================================"

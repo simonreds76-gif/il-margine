@@ -15,7 +15,7 @@ $logFile = Join-Path $dataDir "oncourt-am-refresh.log"
 if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_VOLUME_MODE)) { $env:STRICT_POLICY_VOLUME_MODE = "volume_200" }
 $volumeMode = "$env:STRICT_POLICY_VOLUME_MODE".ToLower()
 if ([string]::IsNullOrWhiteSpace($volumeMode)) { $volumeMode = "off" }
-if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_SHADOW_ENABLED)) { $env:STRICT_SPREAD_SHADOW_ENABLED = "0" }
+if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_SHADOW_ENABLED)) { $env:STRICT_SPREAD_V1_SHADOW_ENABLED = "1" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_CALIBRATED_ENABLED)) { $env:STRICT_CLAY_CALIBRATED_ENABLED = "0" }
 
 function Test-EnvFlag([string]$value) {
@@ -23,7 +23,7 @@ function Test-EnvFlag([string]$value) {
     return @("1", "true", "yes", "on") -contains $value.Trim().ToLower()
 }
 
-$spreadShadowEnabled = Test-EnvFlag $env:STRICT_SPREAD_SHADOW_ENABLED
+$spreadV1ShadowEnabled = Test-EnvFlag $env:STRICT_SPREAD_V1_SHADOW_ENABLED
 $clayCalibratedEnabled = Test-EnvFlag $env:STRICT_CLAY_CALIBRATED_ENABLED
 
 function Get-VolumeShadowConfig([string]$mode) {
@@ -110,13 +110,13 @@ try {
     }
 
     Log "=== Step 7/8: Research shadow lanes ==="
-    if ($spreadShadowEnabled) {
-        & python scripts\strict-policy-report.py --append --signal-profile spread_shadow --output "data\backtest\strict-signals-spreadshadow-live.csv" 2>&1 | ForEach-Object { Log $_ }
+    if ($spreadV1ShadowEnabled) {
+        & python scripts\strict-policy-report.py --append --signal-profile spread_v1_shadow --output "data\backtest\strict-signals-spreadv1-live.csv" 2>&1 | ForEach-Object { Log $_ }
         if ($LASTEXITCODE -ne 0) {
-            Log "WARNING: spread_shadow append failed (exit $LASTEXITCODE), continuing..."
+            Log "WARNING: spread_v1_shadow append failed (exit $LASTEXITCODE), continuing..."
         }
     } else {
-        Log "Spread shadow skipped by default (STRICT_SPREAD_SHADOW_ENABLED=0)."
+        Log "Spread v1 shadow skipped (STRICT_SPREAD_V1_SHADOW_ENABLED=0)."
     }
     if ($clayCalibratedEnabled) {
         & python scripts\strict-policy-report.py --append --signal-profile clay_calibrated --output "data\backtest\strict-signals-claycal-live.csv" --internal-output "data\backtest\strict-signals-claycal-internal-live.csv" 2>&1 | ForEach-Object { Log $_ }

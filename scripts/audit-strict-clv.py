@@ -8,9 +8,10 @@ Purpose:
 
 Default scope:
 - data/backtest/strict-signals.csv
-- ML bets only (spread rows are reported and skipped)
+- match bets only by default (`--bet-type spread` audits spread rows directly)
 - settled rows only
-- closing odds from data/backtest/atp-2026.xlsx
+- match closes from data/backtest/atp-2026.xlsx
+- spread closes from captured Pinnacle history only
 
 Outputs:
 - data/backtest/strict-clv-audit-2026.csv
@@ -83,11 +84,15 @@ class HistoryRow:
     player2_name: str
     odds1: float
     odds2: float
+    spread_line: float | None
+    spread_odds1: float | None
+    spread_odds2: float | None
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Audit live strict scrape odds vs tennis-data Pinnacle closing odds.")
     parser.add_argument("--signals", default=str(DEFAULT_SIGNALS), help="Strict signal CSV to audit.")
+    parser.add_argument("--bet-type", choices=["match", "spread"], default="match", help="Audit match or spread bets.")
     parser.add_argument("--xlsx", default=str(DEFAULT_XLSX), help="Tennis-data ATP XLSX with closing Pinnacle odds.")
     parser.add_argument("--detail-csv", default=str(DEFAULT_DETAIL_CSV), help="Detailed audit CSV output.")
     parser.add_argument("--summary-txt", default=str(DEFAULT_SUMMARY_TXT), help="Summary text output.")
@@ -351,7 +356,7 @@ def fetch_supabase_history_rows(start_date: date, end_date: date) -> tuple[list[
     limit = 1000
     while True:
         query = [
-            ("select", "capture_date,captured_at,capture_mode,league,player1_name,player2_name,odds1,odds2"),
+            ("select", "capture_date,captured_at,capture_mode,league,player1_name,player2_name,odds1,odds2,spread_line,spread_odds1,spread_odds2"),
             ("bookmaker", "eq.Pinnacle"),
             ("capture_date", f"gte.{start_date.isoformat()}"),
             ("capture_date", f"lte.{end_date.isoformat()}"),
@@ -387,6 +392,9 @@ def fetch_supabase_history_rows(start_date: date, end_date: date) -> tuple[list[
                     player2_name=str(row.get("player2_name") or ""),
                     odds1=float(row.get("odds1") or 0),
                     odds2=float(row.get("odds2") or 0),
+                    spread_line=parse_float(row.get("spread_line")),
+                    spread_odds1=parse_float(row.get("spread_odds1")),
+                    spread_odds2=parse_float(row.get("spread_odds2")),
                 )
             )
         if len(batch) < limit:
@@ -436,6 +444,9 @@ def load_local_history_rows(history_dir: Path, start_date: date, end_date: date)
                             player2_name=str(raw.get("player2_name") or ""),
                             odds1=odds1,
                             odds2=odds2,
+                            spread_line=parse_float(raw.get("spread_line")),
+                            spread_odds1=parse_float(raw.get("spread_odds1")),
+                            spread_odds2=parse_float(raw.get("spread_odds2")),
                         )
                     )
         except OSError:
@@ -451,7 +462,7 @@ def load_local_history_rows(history_dir: Path, start_date: date, end_date: date)
 
 
 def merge_history_rows(primary: list[HistoryRow], secondary: list[HistoryRow]) -> list[HistoryRow]:
-    by_key: dict[tuple[str, str, str, str, float, float, str], HistoryRow] = {}
+    by_key: dict[tuple[str, str, str, str, float, float, str, float | None, float | None, float | None], HistoryRow] = {}
     source_priority = {"supabase": 2, "local_csv": 1}
     for row in [*primary, *secondary]:
         key = (
@@ -462,6 +473,9 @@ def merge_history_rows(primary: list[HistoryRow], secondary: list[HistoryRow]) -
             row.odds1,
             row.odds2,
             row.league,
+            row.spread_line,
+            row.spread_odds1,
+            row.spread_odds2,
         )
         prev = by_key.get(key)
         if prev is None or source_priority.get(row.source, 0) > source_priority.get(prev.source, 0):
@@ -504,6 +518,12 @@ def value_bucket(value_pct: float) -> str:
     if value_pct < 20:
         return "15-20%"
     return "20%+"
+
+
+def spread_line_bucket(line: float | None) -> str:
+    if line is None:
+        return "n/a"
+    return f"{abs(float(line)):.1f}"
 
 
 def build_closing_index(matches: list[ClosingMatch]) -> dict[frozenset[int], list[ClosingMatch]]:
@@ -646,6 +666,7 @@ def write_detail_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         "match_date",
         "lag_days",
         "lag_bucket",
+        "bet_type",
         "player1",
         "player2",
         "player1_id",
@@ -654,6 +675,8 @@ def write_detail_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         "series",
         "confidence",
         "side",
+        "spread_line",
+        "line_bucket",
         "value_pct",
         "scrape_odds",
         "closing_odds",
@@ -689,12 +712,74 @@ def main() -> None:
     detail_csv_path = Path(args.detail_csv) if Path(args.detail_csv).is_absolute() else (ROOT / args.detail_csv)
     summary_txt_path = Path(args.summary_txt) if Path(args.summary_txt).is_absolute() else (ROOT / args.summary_txt)
     history_dir = Path(args.local_history_dir) if Path(args.local_history_dir).is_absolute() else (ROOT / args.local_history_dir)
+    audited_label = "ML" if args.bet_type == "match" else "spread"
+    skipped_label = "spread" if args.bet_type == "match" else "ML"
+
+    if not signals_path.exists():
+        summary_text = "\n".join(
+            [
+                "Strict CLV Audit vs Captured/Closing Pinnacle Odds",
+                f"Generated UTC: {date.today().isoformat()}",
+                f"Signals file: {signals_path}",
+                f"Audit bet type: {args.bet_type}",
+                f"Closing odds file: {xlsx_path if args.bet_type == 'match' else 'history-only'}",
+                "",
+                "Input coverage",
+                "  Raw strict rows: 0",
+                "  Deduped strict rows: 0",
+                "  Settled strict rows: 0",
+                f"  Settled {audited_label} rows audited: 0",
+                f"  Settled {skipped_label} rows skipped: 0",
+                f"  Unique settled {audited_label} match+side keys: 0",
+                "  Signal date range: n/a -> n/a",
+                "  Settled match-date range: n/a -> n/a",
+                "",
+                f"No {audited_label} signal file available yet; wrote zero-state audit artifacts.",
+            ]
+        )
+        print(summary_text)
+        if not args.dry_run:
+            write_detail_csv(detail_csv_path, [])
+            summary_txt_path.parent.mkdir(parents=True, exist_ok=True)
+            summary_txt_path.write_text(summary_text + "\n", encoding="utf-8")
+        return
 
     raw_rows = load_csv_rows(signals_path)
+    if not raw_rows:
+        summary_text = "\n".join(
+            [
+                "Strict CLV Audit vs Captured/Closing Pinnacle Odds",
+                f"Generated UTC: {date.today().isoformat()}",
+                f"Signals file: {signals_path}",
+                f"Audit bet type: {args.bet_type}",
+                f"Closing odds file: {xlsx_path if args.bet_type == 'match' else 'history-only'}",
+                "",
+                "Input coverage",
+                "  Raw strict rows: 0",
+                "  Deduped strict rows: 0",
+                "  Settled strict rows: 0",
+                f"  Settled {audited_label} rows audited: 0",
+                f"  Settled {skipped_label} rows skipped: 0",
+                f"  Unique settled {audited_label} match+side keys: 0",
+                "  Signal date range: n/a -> n/a",
+                "  Settled match-date range: n/a -> n/a",
+                "",
+                f"No settled {audited_label} rows to audit yet; wrote zero-state audit artifacts.",
+            ]
+        )
+        print(summary_text)
+        if not args.dry_run:
+            write_detail_csv(detail_csv_path, [])
+            summary_txt_path.parent.mkdir(parents=True, exist_ok=True)
+            summary_txt_path.write_text(summary_text + "\n", encoding="utf-8")
+        return
+
     rows = dedupe_rows(raw_rows)
     all_settled = [r for r in rows if is_settled(r)]
     ml_rows = [r for r in all_settled if norm(r.get("bet_type") or "match") != "spread" and norm(r.get("side")) in {"p1", "p2"}]
-    spread_rows = [r for r in all_settled if r not in ml_rows]
+    spread_rows = [r for r in all_settled if norm(r.get("bet_type")) == "spread" and norm(r.get("side")) in {"p1+", "p2-"}]
+    target_rows = ml_rows if args.bet_type == "match" else spread_rows
+    skipped_rows = spread_rows if args.bet_type == "match" else ml_rows
 
     signal_dates = sorted(parse_iso_date(r.get("date")) for r in all_settled if parse_iso_date(r.get("date")))
     match_dates = sorted(parse_iso_date(r.get("match_date")) for r in all_settled if parse_iso_date(r.get("match_date")))
@@ -706,15 +791,25 @@ def main() -> None:
         history_rows, history_meta = load_history_rows(history_dir, signal_dates[0], match_dates[-1])
         history_lookup = build_history_lookup(history_rows) if history_rows else {}
 
-    closing_matches, meta = load_closing_matches(xlsx_path)
-    index = build_closing_index(closing_matches)
+    closing_matches: list[ClosingMatch] = []
+    meta: dict[str, Any] = {
+        "xlsx_matches_loaded": 0,
+        "xlsx_skip": {},
+        "name_map_report": {},
+        "closing_matches_mapped": 0,
+        "closing_matches_skipped": {},
+    }
+    index: dict[frozenset[int], list[ClosingMatch]] = {}
+    if args.bet_type == "match":
+        closing_matches, meta = load_closing_matches(xlsx_path)
+        index = build_closing_index(closing_matches)
 
     match_method_counts = Counter()
     unmatched_reasons = Counter()
     source_counts = Counter()
     detailed_rows: list[dict[str, Any]] = []
 
-    for row in ml_rows:
+    for row in target_rows:
         p1 = parse_int(row.get("player1_id"))
         p2 = parse_int(row.get("player2_id"))
         if p1 is None or p2 is None:
@@ -733,45 +828,81 @@ def main() -> None:
         closing_source = ""
         history_capture_mode = ""
         history_captured_at = ""
+        signal_side = norm(row.get("side"))
+        signal_line = parse_float(row.get("spread_line"))
 
-        hist_row, hist_reversed, hist_method = match_signal_to_history(row, history_lookup) if history_lookup else (None, False, "history_unavailable")
-        if hist_row is not None:
+        hist_row, hist_reversed, hist_method = (
+            match_signal_to_history(row, history_lookup) if history_lookup else (None, False, "history_unavailable")
+        )
+        if args.bet_type == "spread":
+            if signal_line is None:
+                unmatched_reasons["missing_spread_line"] += 1
+                continue
+            if hist_row is None:
+                unmatched_reasons[hist_method] += 1
+                continue
+            if (
+                hist_row.spread_line is None
+                or hist_row.spread_odds1 is None
+                or hist_row.spread_odds2 is None
+                or hist_row.spread_odds1 <= 1
+                or hist_row.spread_odds2 <= 1
+            ):
+                unmatched_reasons["history_missing_spread"] += 1
+                continue
             method = hist_method
             match_method_counts[method] += 1
             source_counts[hist_row.source] += 1
             closing_source = "bookmaker_odds_history" if hist_row.source == "supabase" else "local_pinnacle_history"
             history_capture_mode = hist_row.capture_mode
             history_captured_at = hist_row.captured_at
-            tournament = ""
-            location = ""
-            close_p1 = hist_row.odds2 if hist_reversed else hist_row.odds1
-            close_p2 = hist_row.odds1 if hist_reversed else hist_row.odds2
-            side = norm(row.get("side"))
-            closing_odds = close_p1 if side == "p1" else close_p2
-        else:
-            matched, method = match_signal_to_close(row, index)
-            if matched is None:
-                unmatched_reasons[hist_method if hist_method not in {"history_not_found", "history_unavailable"} else method] += 1
+            close_line = -hist_row.spread_line if hist_reversed else hist_row.spread_line
+            close_p1 = hist_row.spread_odds2 if hist_reversed else hist_row.spread_odds1
+            close_p2 = hist_row.spread_odds1 if hist_reversed else hist_row.spread_odds2
+            if close_line is None or abs(close_line - signal_line) > 0.051:
+                unmatched_reasons["spread_line_mismatch"] += 1
                 continue
-            match_method_counts[method] += 1
-            source_counts["tennis_data"] += 1
-            closing_source = "tennis_data"
-            tournament = matched.tournament
-            location = matched.location
-            if matched.player1_id == p1 and matched.player2_id == p2:
-                close_p1 = matched.close_odds1
-                close_p2 = matched.close_odds2
-            elif matched.player1_id == p2 and matched.player2_id == p1:
-                close_p1 = matched.close_odds2
-                close_p2 = matched.close_odds1
+            if signal_side == "p1+":
+                closing_odds = close_p1
+            elif signal_side == "p2-":
+                closing_odds = close_p2
             else:
-                unmatched_reasons["orientation_mismatch"] += 1
+                unmatched_reasons["bad_spread_side"] += 1
                 continue
-            side = norm(row.get("side"))
-            closing_odds = close_p1 if side == "p1" else close_p2
+            scrape_odds = parse_float(row.get("spread_odds"))
+        else:
+            if hist_row is not None:
+                method = hist_method
+                match_method_counts[method] += 1
+                source_counts[hist_row.source] += 1
+                closing_source = "bookmaker_odds_history" if hist_row.source == "supabase" else "local_pinnacle_history"
+                history_capture_mode = hist_row.capture_mode
+                history_captured_at = hist_row.captured_at
+                close_p1 = hist_row.odds2 if hist_reversed else hist_row.odds1
+                close_p2 = hist_row.odds1 if hist_reversed else hist_row.odds2
+                closing_odds = close_p1 if signal_side == "p1" else close_p2
+            else:
+                matched, method = match_signal_to_close(row, index)
+                if matched is None:
+                    unmatched_reasons[hist_method if hist_method not in {"history_not_found", "history_unavailable"} else method] += 1
+                    continue
+                match_method_counts[method] += 1
+                source_counts["tennis_data"] += 1
+                closing_source = "tennis_data"
+                tournament = matched.tournament
+                location = matched.location
+                if matched.player1_id == p1 and matched.player2_id == p2:
+                    close_p1 = matched.close_odds1
+                    close_p2 = matched.close_odds2
+                elif matched.player1_id == p2 and matched.player2_id == p1:
+                    close_p1 = matched.close_odds2
+                    close_p2 = matched.close_odds1
+                else:
+                    unmatched_reasons["orientation_mismatch"] += 1
+                    continue
+                closing_odds = close_p1 if signal_side == "p1" else close_p2
+            scrape_odds = parse_float(row.get("pin_odds1") if signal_side == "p1" else row.get("pin_odds2"))
 
-        side = norm(row.get("side"))
-        scrape_odds = parse_float(row.get("pin_odds1") if side == "p1" else row.get("pin_odds2"))
         if scrape_odds is None or scrape_odds <= 1 or closing_odds <= 1:
             unmatched_reasons["bad_odds"] += 1
             continue
@@ -789,6 +920,7 @@ def main() -> None:
                 "match_date": match_dt.isoformat(),
                 "lag_days": lag_days,
                 "lag_bucket": lag_bucket(lag_days),
+                "bet_type": args.bet_type,
                 "player1": row.get("player1") or "",
                 "player2": row.get("player2") or "",
                 "player1_id": p1,
@@ -797,6 +929,8 @@ def main() -> None:
                 "series": row.get("series") or "",
                 "confidence": row.get("confidence") or "",
                 "side": row.get("side") or "",
+                "spread_line": signal_line,
+                "line_bucket": spread_line_bucket(signal_line),
                 "value_pct": parse_float(row.get("value_pct")),
                 "scrape_odds": scrape_odds,
                 "closing_odds": closing_odds,
@@ -819,15 +953,27 @@ def main() -> None:
             }
         )
 
-    unique_match_keys = {
-        (row.get("match_date") or "", row.get("player1_id") or "", row.get("player2_id") or "", row.get("side") or "")
-        for row in ml_rows
-    }
+    if args.bet_type == "match":
+        unique_match_keys = {
+            (row.get("match_date") or "", row.get("player1_id") or "", row.get("player2_id") or "", row.get("side") or "")
+            for row in target_rows
+        }
+    else:
+        unique_match_keys = {
+            (
+                row.get("match_date") or "",
+                row.get("player1_id") or "",
+                row.get("player2_id") or "",
+                row.get("side") or "",
+                row.get("spread_line") or "",
+            )
+            for row in target_rows
+        }
     clv_values = [float(r["clv_implied_delta_pct"]) for r in detailed_rows]
     positive_clv = sum(1 for v in clv_values if v > 0)
     closing_dates = sorted(date.fromisoformat(m.date_iso) for m in closing_matches)
     coverage_warning = None
-    if match_dates and closing_dates and max(closing_dates) < min(match_dates):
+    if args.bet_type == "match" and match_dates and closing_dates and max(closing_dates) < min(match_dates):
         coverage_warning = (
             f"Closing file is stale for this live sample: latest closing date {max(closing_dates).isoformat()} "
             f"but earliest settled match date is {min(match_dates).isoformat()}."
@@ -839,20 +985,20 @@ def main() -> None:
     if history_meta.get("local_error"):
         history_note_parts.append(f"local: {history_meta['local_error']}")
     history_note = "; ".join(history_note_parts)
-
     summary_lines = [
         "Strict CLV Audit vs Captured/Closing Pinnacle Odds",
         f"Generated UTC: {date.today().isoformat()}",
         f"Signals file: {signals_path}",
-        f"Closing odds file: {xlsx_path}",
+        f"Audit bet type: {args.bet_type}",
+        f"Closing odds file: {xlsx_path if args.bet_type == 'match' else 'history-only'}",
         "",
         "Input coverage",
         f"  Raw strict rows: {len(raw_rows)}",
         f"  Deduped strict rows: {len(rows)}",
         f"  Settled strict rows: {len(all_settled)}",
-        f"  Settled ML rows audited: {len(ml_rows)}",
-        f"  Settled spread rows skipped: {len(spread_rows)}",
-        f"  Unique settled ML match+side keys: {len(unique_match_keys)}",
+        f"  Settled {audited_label} rows audited: {len(target_rows)}",
+        f"  Settled {skipped_label} rows skipped: {len(skipped_rows)}",
+        f"  Unique settled {audited_label} match+side keys: {len(unique_match_keys)}",
         f"  Signal date range: {signal_dates[0].isoformat() if signal_dates else 'n/a'} -> {signal_dates[-1].isoformat() if signal_dates else 'n/a'}",
         f"  Settled match-date range: {match_dates[0].isoformat() if match_dates else 'n/a'} -> {match_dates[-1].isoformat() if match_dates else 'n/a'}",
         "",
@@ -873,7 +1019,7 @@ def main() -> None:
         f"  Closing match skips: {meta['closing_matches_skipped']}",
         "",
         "Audit matching",
-        f"  Matched ML rows: {len(detailed_rows)} / {len(ml_rows)}",
+        f"  Matched {audited_label} rows: {len(detailed_rows)} / {len(target_rows)}",
         f"  Closing sources: {dict(source_counts)}",
         f"  Match methods: {dict(match_method_counts)}",
         f"  Unmatched reasons: {dict(unmatched_reasons)}",
@@ -900,6 +1046,15 @@ def main() -> None:
                     "value_bucket",
                 ),
                 "",
+                "By surface",
+                *summarize_bucket(detailed_rows, "surface"),
+                "",
+                "By side",
+                *summarize_bucket(detailed_rows, "side"),
+                "",
+                "By line bucket",
+                *summarize_bucket(detailed_rows, "line_bucket"),
+                "",
                 "By outcome",
                 *summarize_bucket(detailed_rows, "bet_outcome"),
             ]
@@ -909,18 +1064,22 @@ def main() -> None:
         worst_rows = sorted(detailed_rows, key=lambda r: float(r["clv_implied_delta_pct"]))[:5]
         summary_lines.extend(["", "Best CLV rows"])
         for row in best_rows:
+            line_text = f"line={row['spread_line']} " if row.get("spread_line") is not None else ""
             summary_lines.append(
                 f"  {row['signal_date']} {row['player1']} vs {row['player2']} {row['side']} "
+                f"{line_text}"
                 f"scrape={row['scrape_odds']:.3f} close={row['closing_odds']:.3f} clv={pct(float(row['clv_implied_delta_pct']))}"
             )
         summary_lines.extend(["", "Worst CLV rows"])
         for row in worst_rows:
+            line_text = f"line={row['spread_line']} " if row.get("spread_line") is not None else ""
             summary_lines.append(
                 f"  {row['signal_date']} {row['player1']} vs {row['player2']} {row['side']} "
+                f"{line_text}"
                 f"scrape={row['scrape_odds']:.3f} close={row['closing_odds']:.3f} clv={pct(float(row['clv_implied_delta_pct']))}"
             )
     else:
-        summary_lines.extend(["", "No matched ML rows to summarize."])
+        summary_lines.extend(["", f"No matched {audited_label} rows to summarize."])
 
     summary_text = "\n".join(summary_lines)
     print(summary_text)

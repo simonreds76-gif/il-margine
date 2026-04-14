@@ -729,10 +729,46 @@ def main() -> None:
     ap.add_argument("--shift-step", type=float, default=0.1)
     ap.add_argument("--snapshot-date-window", type=int, default=1)
     ap.add_argument("--snapshot-bookmaker", default="Pinnacle")
-    ap.add_argument("--snapshot-leagues", default="ATP,ATP Qualifying,ATP Challenger")
+    ap.add_argument("--snapshot-leagues", default="ATP")
     ap.add_argument("--snapshot-page-size", type=int, default=1000)
-    ap.add_argument("--out", default="data/backtest/handicap-calibration-params.json")
+    ap.add_argument("--out", default="data/backtest/spread-v1-calibration-params.json")
     args = ap.parse_args()
+
+    def write_invalid_payload(reason: str) -> None:
+        fit_timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        payload = {
+            "schema_version": 1,
+            "generated_at_utc": fit_timestamp,
+            "fit_timestamp": fit_timestamp,
+            "line_source_requested": args.line_source,
+            "line_source_used": line_source_used,
+            "files": list(args.files),
+            "lines": lines if line_source_used == "synthetic" else None,
+            "sample_count": 0,
+            "train_sample_size": 0,
+            "test_sample_size": 0,
+            "years": sorted({m.year for m in match_rows}),
+            "holdout_year": None,
+            "skipped_rows": skipped_rows,
+            "source_details": source_details,
+            "best": None,
+            "surface_eval": {},
+            "calibration_valid": False,
+            "calibration_reason": reason,
+            "usable_scope": {
+                "leagues": ["ATP"],
+                "best_of": "bo3",
+                "surfaces": ["Hard", "Clay"],
+            },
+            "usage": {},
+        }
+        out_path = args.out
+        out_dir = os.path.dirname(out_path)
+        if out_dir:
+            os.makedirs(out_dir, exist_ok=True)
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(payload, f, indent=2)
+        print(f"Wrote invalid calibration status to {out_path}")
 
     load_env()
     match_rows, skipped_rows = load_match_rows(args.files)
@@ -749,13 +785,22 @@ def main() -> None:
         min_date = min(m.date_iso for m in match_rows)
         max_date = max(m.date_iso for m in match_rows)
         leagues = {_league_norm(x) for x in args.snapshot_leagues.split(",") if x.strip()}
-        snapshot_rows = fetch_snapshot_spreads(
-            start_date=min_date,
-            end_date=max_date,
-            leagues=leagues,
-            bookmaker=args.snapshot_bookmaker,
-            page_size=args.snapshot_page_size,
-        )
+        try:
+            snapshot_rows = fetch_snapshot_spreads(
+                start_date=min_date,
+                end_date=max_date,
+                leagues=leagues,
+                bookmaker=args.snapshot_bookmaker,
+                page_size=args.snapshot_page_size,
+            )
+        except Exception as exc:
+            source_details["snapshot_error"] = str(exc)
+            if args.line_source == "snapshot":
+                print("Snapshot spread fetch failed.")
+                print(f"Error: {exc}")
+                write_invalid_payload("snapshot-fetch-failed")
+                return
+            snapshot_rows = []
         snap_samples, snap_stats = build_samples_from_snapshot(match_rows, snapshot_rows, args.snapshot_date_window)
         source_details["snapshot"] = snap_stats
         if snap_samples:
@@ -772,10 +817,11 @@ def main() -> None:
         line_source_used = "synthetic"
 
     if not samples:
+        write_invalid_payload("no-real-market-snapshot-samples")
         print("No calibration samples produced.")
         if source_details.get("snapshot"):
             print("Snapshot join stats:", source_details["snapshot"])
-        print("Hint: try --line-source auto or --line-source synthetic if snapshot coverage is low.")
+        print("Hint: snapshot-only spread_v1 remains off until real matched spread captures exist.")
         return
 
     fit = fit_calibration(samples, args.shift_min, args.shift_max, args.shift_step)
@@ -783,19 +829,31 @@ def main() -> None:
     years = fit["years"]
     holdout_year = fit["holdout_year"]
 
+    fit_timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     payload = {
-        "generated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "schema_version": 1,
+        "generated_at_utc": fit_timestamp,
+        "fit_timestamp": fit_timestamp,
         "line_source_requested": args.line_source,
         "line_source_used": line_source_used,
         "files": list(args.files),
         "lines": lines if line_source_used == "synthetic" else None,
         "sample_count": len(samples),
+        "train_sample_size": int(best["train_cal"]["n"]),
+        "test_sample_size": int(best["test_cal"]["n"]) if best.get("test_cal") else 0,
+        "calibration_valid": True,
+        "calibration_reason": "ok",
         "years": years,
         "holdout_year": holdout_year,
         "skipped_rows": skipped_rows,
         "source_details": source_details,
         "best": best,
         "surface_eval": fit["surface_eval"],
+        "usable_scope": {
+            "leagues": ["ATP"],
+            "best_of": "bo3",
+            "surfaces": ["Hard", "Clay"],
+        },
         "usage": {
             "HANDICAP_LINE_SHIFT": best["line_shift"],
             "HANDICAP_PLATT_A": best["platt_a"],

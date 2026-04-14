@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-04-14T20:35:42Z",
+  "fit_timestamp": "2026-04-14T20:35:42Z",
+  "line_source_requested": "snapshot",
+  "line_source_used": "snapshot",
+  "files": [
+    "data/backtest/backtest-results-2022.csv",
+    "data/backtest/backtest-results-2023.csv",
+    "data/backtest/backtest-results-2024.csv",
+    "data/backtest/backtest-results-2025.csv"
+  ],
+  "lines": null,
+  "sample_count": 0,
+  "train_sample_size": 0,
+  "test_sample_size": 0,
+  "years": [
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "holdout_year": null,
+  "skipped_rows": {
+    "file_missing": 0,
+    "no_prob": 0,
+    "no_score": 1,
+    "no_winner": 0,
+    "bad_date": 0,
+    "bad_margin": 710,
+    "no_names": 0
+  },
+  "source_details": {
+    "snapshot_error": "HTTPSConnectionPool(host='nuqcgzbagxtbxlqrhtvc.supabase.co', port=443): Max retries exceeded with url: /rest/v1/bookmaker_odds_snapshot?select=capture_date%2Ccaptured_at%2Cleague%2Cplayer1_name%2Cplayer2_name%2Cspread_line%2Cspread_odds1%2Cspread_odds2&bookmaker=eq.Pinnacle&spread_line=not.is.null&capture_date=gte.2022-01-03&capture_date=lte.2025-11-16&order=capture_date.asc%2Ccaptured_at.desc&offset=0&limit=1000 (Caused by NewConnectionError(\"HTTPSConnection(host='nuqcgzbagxtbxlqrhtvc.supabase.co', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))"
+  },
+  "best": null,
+  "surface_eval": {},
+  "calibration_valid": false,
+  "calibration_reason": "snapshot-fetch-failed",
+  "usable_scope": {
+    "leagues": [
+      "ATP"
+    ],
+    "best_of": "bo3",
+    "surfaces": [
+      "Hard",
+      "Clay"
+    ]
+  },
+  "usage": {}
+}

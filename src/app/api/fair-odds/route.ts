@@ -204,6 +204,7 @@ const FAST_CLAY_SPEED_THRESHOLD = 0.1;
 const CLAY_2026_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-claycal-live.csv");
 const SPREAD_SHADOW_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-spreadshadow-live.csv");
 const FAIR_ODDS_CLAY_2026_ENABLED = parseBoolEnv("FAIR_ODDS_CLAY_2026_ENABLED", false);
+const FAIR_ODDS_TENNIS_SPREADS_ENABLED = parseBoolEnv("FAIR_ODDS_TENNIS_SPREADS_ENABLED", false);
 const FAIR_ODDS_SPREAD_SHADOW_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_SHADOW_ENABLED", false);
 type MatchSide = "P1" | "P2";
 type FastClayArchetype = "both" | "serve_led" | "return_led" | "contrarian";
@@ -2342,7 +2343,8 @@ async function run(): Promise<Response> {
   const spreadShadowSignalsCsv = FAIR_ODDS_SPREAD_SHADOW_ENABLED
     ? loadActiveShadowSignals(SPREAD_SHADOW_SIGNAL_CSV, "spread_shadow", today)
     : [];
-  const effectiveClay2026SignalsCsv = suppressConflictingClaySignals(clay2026SignalsCsv, spreadShadowSignalsCsv);
+  const effectiveSpreadShadowSignalsCsv = FAIR_ODDS_TENNIS_SPREADS_ENABLED ? spreadShadowSignalsCsv : [];
+  const effectiveClay2026SignalsCsv = suppressConflictingClaySignals(clay2026SignalsCsv, effectiveSpreadShadowSignalsCsv);
   const rowSignalsByMatch = new Map<string, ShadowSignalSummary[]>();
   const addSignalToRowKey = (key: string, signal: ShadowSignalSummary) => {
     const existing = rowSignalsByMatch.get(key);
@@ -2359,7 +2361,7 @@ async function run(): Promise<Response> {
     }
     return Array.from(new Set(keys));
   };
-  for (const signal of [...effectiveClay2026SignalsCsv, ...spreadShadowSignalsCsv]) {
+  for (const signal of [...effectiveClay2026SignalsCsv, ...effectiveSpreadShadowSignalsCsv]) {
     for (const key of signalLookupKeys(signal)) addSignalToRowKey(key, signal);
   }
   for (const signals of rowSignalsByMatch.values()) {
@@ -2421,14 +2423,14 @@ async function run(): Promise<Response> {
       unmatched: Math.max(0, effectiveClay2026SignalsCsv.length - attachedByKind.clay_2026.size),
     },
     spread_shadow: {
-      loaded: spreadShadowSignalsCsv.length,
+      loaded: effectiveSpreadShadowSignalsCsv.length,
       attached: attachedByKind.spread_shadow.size,
-      unmatched: Math.max(0, spreadShadowSignalsCsv.length - attachedByKind.spread_shadow.size),
+      unmatched: Math.max(0, effectiveSpreadShadowSignalsCsv.length - attachedByKind.spread_shadow.size),
     },
   };
   const unmatchedSignals = {
     clay_2026: effectiveClay2026SignalsCsv.filter((signal) => !attachedByKind.clay_2026.has(signal.id)),
-    spread_shadow: spreadShadowSignalsCsv.filter((signal) => !attachedByKind.spread_shadow.has(signal.id)),
+    spread_shadow: effectiveSpreadShadowSignalsCsv.filter((signal) => !attachedByKind.spread_shadow.has(signal.id)),
   };
   if (unmatchedSignals.clay_2026.length) {
     console.warn(
@@ -2564,35 +2566,37 @@ async function run(): Promise<Response> {
   }
 
   const spreadSignalsStrict: Array<ReturnType<typeof toSpreadSignal>> = [];
-  for (const m of matches) {
-    const spreadOk =
-      (m.policy_match || m.spread_eligible) &&
-      !m.recent_injured_any &&
-      m.spread_line != null &&
-      m.spread_odds1 != null &&
-      m.spread_odds2 != null &&
-      m.handicap_edge_p1 != null &&
-      m.handicap_edge_p2 != null;
-    if (!spreadOk) continue;
-    const sl = m.spread_line;
-    const so1 = m.spread_odds1;
-    const so2 = m.spread_odds2;
-    const he1 = m.handicap_edge_p1;
-    const he2 = m.handicap_edge_p2;
-    if (sl == null || so1 == null || so2 == null || he1 == null || he2 == null) continue;
-    if (he1 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsStrict.push(
-        toSpreadSignal(m, "P1+", he1, so1, sl, {
-          handicap_point_prob_source: m.handicap_point_prob_source,
-        })
-      );
-    }
-    if (he2 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsStrict.push(
-        toSpreadSignal(m, "P2-", he2, so2, sl, {
-          handicap_point_prob_source: m.handicap_point_prob_source,
-        })
-      );
+  if (FAIR_ODDS_TENNIS_SPREADS_ENABLED) {
+    for (const m of matches) {
+      const spreadOk =
+        (m.policy_match || m.spread_eligible) &&
+        !m.recent_injured_any &&
+        m.spread_line != null &&
+        m.spread_odds1 != null &&
+        m.spread_odds2 != null &&
+        m.handicap_edge_p1 != null &&
+        m.handicap_edge_p2 != null;
+      if (!spreadOk) continue;
+      const sl = m.spread_line;
+      const so1 = m.spread_odds1;
+      const so2 = m.spread_odds2;
+      const he1 = m.handicap_edge_p1;
+      const he2 = m.handicap_edge_p2;
+      if (sl == null || so1 == null || so2 == null || he1 == null || he2 == null) continue;
+      if (he1 >= HANDICAP_MIN_EDGE_PCT) {
+        spreadSignalsStrict.push(
+          toSpreadSignal(m, "P1+", he1, so1, sl, {
+            handicap_point_prob_source: m.handicap_point_prob_source,
+          })
+        );
+      }
+      if (he2 >= HANDICAP_MIN_EDGE_PCT) {
+        spreadSignalsStrict.push(
+          toSpreadSignal(m, "P2-", he2, so2, sl, {
+            handicap_point_prob_source: m.handicap_point_prob_source,
+          })
+        );
+      }
     }
   }
 
@@ -2626,81 +2630,85 @@ async function run(): Promise<Response> {
   const spreadSignalsVolumeProfile: Array<ReturnType<typeof toSpreadSignal>> = [];
   const spreadSignalsVolumeOverlap: Array<ReturnType<typeof toSpreadSignal>> = [];
   const spreadSignalsVolume: Array<ReturnType<typeof toSpreadSignal>> = [];
-  for (const m of matches) {
-    const spreadProfileOk =
-      shadowProfileAllowsSpreadSignals &&
-      m.shadow_profile_match &&
-      !m.recent_injured_any &&
-      m.spread_line != null &&
-      m.spread_odds1 != null &&
-      m.spread_odds2 != null &&
-      m.handicap_edge_p1 != null &&
-      m.handicap_edge_p2 != null;
-    if (spreadProfileOk) {
+  if (FAIR_ODDS_TENNIS_SPREADS_ENABLED) {
+    for (const m of matches) {
+      const spreadProfileOk =
+        shadowProfileAllowsSpreadSignals &&
+        m.shadow_profile_match &&
+        !m.recent_injured_any &&
+        m.spread_line != null &&
+        m.spread_odds1 != null &&
+        m.spread_odds2 != null &&
+        m.handicap_edge_p1 != null &&
+        m.handicap_edge_p2 != null;
+      if (spreadProfileOk) {
+        const sl = m.spread_line;
+        const so1 = m.spread_odds1;
+        const so2 = m.spread_odds2;
+        const he1 = m.handicap_edge_p1;
+        const he2 = m.handicap_edge_p2;
+        if (sl != null && so1 != null && so2 != null && he1 != null && he2 != null) {
+          if (he1 >= HANDICAP_MIN_EDGE_PCT) {
+            spreadSignalsVolumeProfile.push(
+              toSpreadSignal(m, "P1+", he1, so1, sl, {
+                handicap_point_prob_source: m.handicap_point_prob_source,
+              })
+            );
+            if (m.shadow_overlap_match) {
+              spreadSignalsVolumeOverlap.push(
+                toSpreadSignal(m, "P1+", he1, so1, sl, {
+                  handicap_point_prob_source: m.handicap_point_prob_source,
+                })
+              );
+            }
+          }
+          if (he2 >= HANDICAP_MIN_EDGE_PCT) {
+            spreadSignalsVolumeProfile.push(
+              toSpreadSignal(m, "P2-", he2, so2, sl, {
+                handicap_point_prob_source: m.handicap_point_prob_source,
+              })
+            );
+            if (m.shadow_overlap_match) {
+              spreadSignalsVolumeOverlap.push(
+                toSpreadSignal(m, "P2-", he2, so2, sl, {
+                  handicap_point_prob_source: m.handicap_point_prob_source,
+                })
+              );
+            }
+          }
+        }
+      }
+
+      const spreadOk =
+        shadowProfileAllowsSpreadSignals &&
+        (m.shadow_match || m.shadow_spread_eligible) &&
+        !m.recent_injured_any &&
+        m.spread_line != null &&
+        m.spread_odds1 != null &&
+        m.spread_odds2 != null &&
+        m.handicap_edge_p1 != null &&
+        m.handicap_edge_p2 != null;
+      if (!spreadOk) continue;
       const sl = m.spread_line;
       const so1 = m.spread_odds1;
       const so2 = m.spread_odds2;
       const he1 = m.handicap_edge_p1;
       const he2 = m.handicap_edge_p2;
-      if (sl != null && so1 != null && so2 != null && he1 != null && he2 != null) {
-        if (he1 >= HANDICAP_MIN_EDGE_PCT) {
-          spreadSignalsVolumeProfile.push(
-            toSpreadSignal(m, "P1+", he1, so1, sl, {
-              handicap_point_prob_source: m.handicap_point_prob_source,
-            })
-          );
-          if (m.shadow_overlap_match)
-            spreadSignalsVolumeOverlap.push(
-              toSpreadSignal(m, "P1+", he1, so1, sl, {
-                handicap_point_prob_source: m.handicap_point_prob_source,
-              })
-            );
-        }
-        if (he2 >= HANDICAP_MIN_EDGE_PCT) {
-          spreadSignalsVolumeProfile.push(
-            toSpreadSignal(m, "P2-", he2, so2, sl, {
-              handicap_point_prob_source: m.handicap_point_prob_source,
-            })
-          );
-          if (m.shadow_overlap_match)
-            spreadSignalsVolumeOverlap.push(
-              toSpreadSignal(m, "P2-", he2, so2, sl, {
-                handicap_point_prob_source: m.handicap_point_prob_source,
-              })
-            );
-        }
+      if (sl == null || so1 == null || so2 == null || he1 == null || he2 == null) continue;
+      if (he1 >= HANDICAP_MIN_EDGE_PCT) {
+        spreadSignalsVolume.push(
+          toSpreadSignal(m, "P1+", he1, so1, sl, {
+            handicap_point_prob_source: m.handicap_point_prob_source,
+          })
+        );
       }
-    }
-
-    const spreadOk =
-      shadowProfileAllowsSpreadSignals &&
-      (m.shadow_match || m.shadow_spread_eligible) &&
-      !m.recent_injured_any &&
-      m.spread_line != null &&
-      m.spread_odds1 != null &&
-      m.spread_odds2 != null &&
-      m.handicap_edge_p1 != null &&
-      m.handicap_edge_p2 != null;
-    if (!spreadOk) continue;
-    const sl = m.spread_line;
-    const so1 = m.spread_odds1;
-    const so2 = m.spread_odds2;
-    const he1 = m.handicap_edge_p1;
-    const he2 = m.handicap_edge_p2;
-    if (sl == null || so1 == null || so2 == null || he1 == null || he2 == null) continue;
-    if (he1 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsVolume.push(
-        toSpreadSignal(m, "P1+", he1, so1, sl, {
-          handicap_point_prob_source: m.handicap_point_prob_source,
-        })
-      );
-    }
-    if (he2 >= HANDICAP_MIN_EDGE_PCT) {
-      spreadSignalsVolume.push(
-        toSpreadSignal(m, "P2-", he2, so2, sl, {
-          handicap_point_prob_source: m.handicap_point_prob_source,
-        })
-      );
+      if (he2 >= HANDICAP_MIN_EDGE_PCT) {
+        spreadSignalsVolume.push(
+          toSpreadSignal(m, "P2-", he2, so2, sl, {
+            handicap_point_prob_source: m.handicap_point_prob_source,
+          })
+        );
+      }
     }
   }
   const signals_volume = [...matchSignalsVolume, ...spreadSignalsVolume];
@@ -2708,7 +2716,7 @@ async function run(): Promise<Response> {
   const signals_volume_overlap = [...matchSignalsVolumeOverlap, ...spreadSignalsVolumeOverlap];
   const signals_volume_additional = [...matchSignalsVolumeAdditional, ...spreadSignalsVolume];
   const signals_clay_2026 = effectiveClay2026SignalsCsv;
-  const spreadSignalsSpreadShadow = spreadShadowSignalsCsv;
+  const spreadSignalsSpreadShadow = effectiveSpreadShadowSignalsCsv;
 
   const matchesWithSpread = matches.filter(
     (m) =>
@@ -2725,7 +2733,9 @@ async function run(): Promise<Response> {
     (m) => (m.handicap_edge_p1 ?? 0) >= HANDICAP_MIN_EDGE_PCT || (m.handicap_edge_p2 ?? 0) >= HANDICAP_MIN_EDGE_PCT
   );
   const spreadHint =
-    matchesWithSpread.length === 0
+    !FAIR_ODDS_TENNIS_SPREADS_ENABLED
+      ? "Spread signals are quarantined while spread_v1_shadow stays in research."
+      : matchesWithSpread.length === 0
       ? "Spread data missing. Run: python scripts/compute-handicap-values.py (or full pipeline: python scripts/run-daily-odds.py)"
       : spreadSignalsStrict.length === 0
         ? `Spread: ${matchesWithSpread.length} matches have data, ${spreadStrictEligible.length} pass strict policy, ${spreadWithEdge20.length} have edge >=20%.`

@@ -304,7 +304,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument(
         "--calibration-file",
         default=None,
-        help="Path to handicap calibration JSON. Defaults to env HANDICAP_CALIBRATION_FILE or data/backtest/handicap-calibration-params.json.",
+        help="Path to handicap calibration JSON. Defaults to env HANDICAP_CALIBRATION_FILE or data/backtest/spread-v1-calibration-params.json.",
     )
     ap.add_argument(
         "--disable-calibration",
@@ -345,10 +345,8 @@ def load_handicap_calibration(args: argparse.Namespace) -> HandicapCalibration:
     mode = (os.environ.get("HANDICAP_CALIBRATION_MODE") or "auto").strip().lower()
     if mode in {"off", "false", "0", "none"}:
         return HandicapCalibration(False, 0.0, 0.0, 1.0, "disabled-by-env")
-    if mode == "auto":
-        return HandicapCalibration(False, 0.0, 0.0, 1.0, "auto-disabled:legacy-calibration-mismatch")
 
-    default_path = os.path.join(_root_dir(), "data", "backtest", "handicap-calibration-params.json")
+    default_path = os.path.join(_root_dir(), "data", "backtest", "spread-v1-calibration-params.json")
     cal_path = (
         args.calibration_file
         or os.environ.get("HANDICAP_CALIBRATION_FILE")
@@ -367,6 +365,25 @@ def load_handicap_calibration(args: argparse.Namespace) -> HandicapCalibration:
         if mode in {"force", "on", "required"}:
             raise ValueError(f"Calibration file missing required params: {cal_path}")
         return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid:{cal_path}")
+
+    if mode == "auto":
+        calibration_valid = payload.get("calibration_valid")
+        if calibration_valid is False:
+            reason = str(payload.get("calibration_reason") or "invalid-calibration")
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, reason)
+        line_source = str(payload.get("line_source_used") or "").strip().lower()
+        usable_scope = payload.get("usable_scope") if isinstance(payload.get("usable_scope"), dict) else {}
+        surfaces = {str(item).strip() for item in usable_scope.get("surfaces") or [] if str(item).strip()}
+        leagues = {str(item).strip() for item in usable_scope.get("leagues") or [] if str(item).strip()}
+        best_of = str(usable_scope.get("best_of") or "").strip().lower()
+        if line_source != "snapshot":
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid-line-source:{line_source or 'missing'}")
+        if best_of != "bo3":
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid-best-of:{best_of or 'missing'}")
+        if "ATP" not in leagues:
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, "invalid-leagues")
+        if not {"Hard", "Clay"}.issubset(surfaces):
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, "invalid-surfaces")
 
     line_shift, platt_a, platt_b = parsed
     return HandicapCalibration(True, line_shift, platt_a, platt_b, cal_path)
