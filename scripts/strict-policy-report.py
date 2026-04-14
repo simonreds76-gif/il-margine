@@ -286,6 +286,10 @@ def _load_spread_v1_calibration_status(path: Path) -> dict[str, Any]:
         "line_source_used": "",
         "fit_timestamp": "",
         "usable_scope": {},
+        "base_calibration_valid": False,
+        "base_calibration_reason": "missing",
+        "correction_valid": False,
+        "correction_reason": "missing",
     }
     if not path.exists():
         return status
@@ -296,26 +300,10 @@ def _load_spread_v1_calibration_status(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         status["reason"] = "invalid-payload"
         return status
-    if payload.get("calibration_valid") is False:
-        status["reason"] = str(payload.get("calibration_reason") or "invalid-calibration")
-        status["line_source_used"] = str(payload.get("line_source_used") or "").strip().lower()
-        status["fit_timestamp"] = str(
-            payload.get("fit_timestamp")
-            or payload.get("generated_at_utc")
-            or payload.get("generated_at")
-            or ""
-        ).strip()
-        usable_scope = payload.get("usable_scope")
-        if isinstance(usable_scope, dict):
-            status["usable_scope"] = usable_scope
-        status["train_sample_size"] = payload.get("train_sample_size")
-        status["test_sample_size"] = payload.get("test_sample_size")
-        status["surface_eval"] = payload.get("surface_eval")
-        return status
-
     line_source = str(payload.get("line_source_used") or "").strip().lower()
     fit_timestamp = str(
-        payload.get("fit_timestamp")
+        payload.get("correction_fit_timestamp")
+        or payload.get("fit_timestamp")
         or payload.get("generated_at")
         or payload.get("fitted_at")
         or payload.get("created_at")
@@ -338,6 +326,12 @@ def _load_spread_v1_calibration_status(path: Path) -> dict[str, Any]:
     status["train_sample_size"] = payload.get("train_sample_size")
     status["test_sample_size"] = payload.get("test_sample_size")
     status["surface_eval"] = payload.get("surface_eval")
+    status["base_calibration_valid"] = payload.get("calibration_valid") is not False
+    status["base_calibration_reason"] = str(
+        payload.get("calibration_reason") or ("ok" if status["base_calibration_valid"] else "invalid-calibration")
+    )
+    status["correction_valid"] = bool(payload.get("correction_valid"))
+    status["correction_reason"] = str(payload.get("correction_reason") or "missing")
 
     if line_source != "snapshot":
         status["reason"] = f"invalid-line-source:{line_source or 'missing'}"
@@ -351,9 +345,12 @@ def _load_spread_v1_calibration_status(path: Path) -> dict[str, Any]:
     if not SPREAD_V1_ALLOWED_SURFACES.issubset(surfaces):
         status["reason"] = "invalid-surfaces"
         return status
+    if not status["correction_valid"]:
+        status["reason"] = f"correction:{status['correction_reason']}"
+        return status
 
     status["valid"] = True
-    status["reason"] = "ok"
+    status["reason"] = "ok" if status["base_calibration_valid"] else "ok-correction-only"
     return status
 
 

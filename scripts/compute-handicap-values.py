@@ -30,6 +30,7 @@ import json
 import math
 import os
 import sys
+from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime, timezone, timedelta
 from statistics import mean, median
@@ -39,6 +40,7 @@ _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _SCRIPT_DIR)
 sys.path.insert(0, os.path.dirname(_SCRIPT_DIR))
 from handicap_probs import prob_p1_covers_plus
+from spread_v1_model import apply_correction
 from src.lib.tennis_prob import prob_match_best_of_3
 
 
@@ -60,6 +62,7 @@ class HandicapCalibration:
     platt_a: float
     platt_b: float
     source: str
+    payload: dict | None = None
 
 
 def _chunked(values: list[int], size: int):
@@ -340,11 +343,11 @@ def _parse_calibration_payload(payload: dict) -> tuple[float, float, float] | No
 
 def load_handicap_calibration(args: argparse.Namespace) -> HandicapCalibration:
     if args.disable_calibration:
-        return HandicapCalibration(False, 0.0, 0.0, 1.0, "disabled-by-flag")
+        return HandicapCalibration(False, 0.0, 0.0, 1.0, "disabled-by-flag", None)
 
     mode = (os.environ.get("HANDICAP_CALIBRATION_MODE") or "auto").strip().lower()
     if mode in {"off", "false", "0", "none"}:
-        return HandicapCalibration(False, 0.0, 0.0, 1.0, "disabled-by-env")
+        return HandicapCalibration(False, 0.0, 0.0, 1.0, "disabled-by-env", None)
 
     default_path = os.path.join(_root_dir(), "data", "backtest", "spread-v1-calibration-params.json")
     cal_path = (
@@ -356,7 +359,7 @@ def load_handicap_calibration(args: argparse.Namespace) -> HandicapCalibration:
     if not os.path.exists(cal_path):
         if mode in {"force", "on", "required"}:
             raise FileNotFoundError(f"Calibration file not found: {cal_path}")
-        return HandicapCalibration(False, 0.0, 0.0, 1.0, f"missing:{cal_path}")
+        return HandicapCalibration(False, 0.0, 0.0, 1.0, f"missing:{cal_path}", None)
 
     with open(cal_path, "r", encoding="utf-8") as f:
         payload = json.load(f)
@@ -364,29 +367,29 @@ def load_handicap_calibration(args: argparse.Namespace) -> HandicapCalibration:
     if parsed is None:
         if mode in {"force", "on", "required"}:
             raise ValueError(f"Calibration file missing required params: {cal_path}")
-        return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid:{cal_path}")
+        return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid:{cal_path}", payload if isinstance(payload, dict) else None)
 
     if mode == "auto":
         calibration_valid = payload.get("calibration_valid")
         if calibration_valid is False:
             reason = str(payload.get("calibration_reason") or "invalid-calibration")
-            return HandicapCalibration(False, 0.0, 0.0, 1.0, reason)
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, reason, payload if isinstance(payload, dict) else None)
         line_source = str(payload.get("line_source_used") or "").strip().lower()
         usable_scope = payload.get("usable_scope") if isinstance(payload.get("usable_scope"), dict) else {}
         surfaces = {str(item).strip() for item in usable_scope.get("surfaces") or [] if str(item).strip()}
         leagues = {str(item).strip() for item in usable_scope.get("leagues") or [] if str(item).strip()}
         best_of = str(usable_scope.get("best_of") or "").strip().lower()
         if line_source != "snapshot":
-            return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid-line-source:{line_source or 'missing'}")
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid-line-source:{line_source or 'missing'}", payload if isinstance(payload, dict) else None)
         if best_of != "bo3":
-            return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid-best-of:{best_of or 'missing'}")
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid-best-of:{best_of or 'missing'}", payload if isinstance(payload, dict) else None)
         if "ATP" not in leagues:
-            return HandicapCalibration(False, 0.0, 0.0, 1.0, "invalid-leagues")
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, "invalid-leagues", payload if isinstance(payload, dict) else None)
         if not {"Hard", "Clay"}.issubset(surfaces):
-            return HandicapCalibration(False, 0.0, 0.0, 1.0, "invalid-surfaces")
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, "invalid-surfaces", payload if isinstance(payload, dict) else None)
 
     line_shift, platt_a, platt_b = parsed
-    return HandicapCalibration(True, line_shift, platt_a, platt_b, cal_path)
+    return HandicapCalibration(True, line_shift, platt_a, platt_b, cal_path, payload if isinstance(payload, dict) else None)
 
 
 def summarize_edges(label: str, edges: list[float]) -> None:
@@ -456,7 +459,12 @@ def main():
             f"source={calibration.source}"
         )
     else:
-        print(f"Handicap calibration: OFF ({calibration.source})")
+        correction_valid = bool((calibration.payload or {}).get("correction_valid"))
+        correction_reason = str((calibration.payload or {}).get("correction_reason") or "missing")
+        if correction_valid:
+            print(f"Handicap calibration: OFF ({calibration.source}) | spread_v1 correction-only mode active ({correction_reason})")
+        else:
+            print(f"Handicap calibration: OFF ({calibration.source})")
 
     # 1) Load daily_fair_odds with final blended win probability + surface context
     r = requests.get(
@@ -641,13 +649,15 @@ def main():
     used_stored_point_probs = 0
     fallback_solved_point_probs = 0
     fallback_divergent_point_probs = 0
+    correction_reason_counts: Counter[str] = Counter()
+    correction_applied = 0
     for m in matched:
         fo, pin, pin_reversed_for_fair = m["fair"], m["pinnacle"], m["pin_reversed_for_fair"]
         p1_win_prob = float(fo.get("p1_win_prob") or 0.0)
         surface = (fo.get("surface") or "").strip() or "N/A"
         tid = fo.get("tour_id")
+        meta = tour_meta.get(int(tid)) if tid is not None and int(tid) in tour_meta else None
         if surface == "N/A" and tid is not None:
-            meta = tour_meta.get(int(tid))
             court_name = courts.get(int(meta["court_id"])) if meta and meta.get("court_id") is not None else ""
             surface = _court_to_surface(court_name)
         avg_spw_surface = league_avg_by_surface.get(surface, SURFACE_LEAGUE_AVG.get(surface, SURFACE_LEAGUE_AVG["N/A"]))
@@ -699,7 +709,28 @@ def main():
         #   -x => P1 -x
         model_p1_raw = prob_p1_covers_plus(p_a, p_b, line)
         model_p1_shifted = prob_p1_covers_plus(p_a, p_b, line + calibration.line_shift)
-        model_p1 = _calibrate_prob(model_p1_shifted, calibration)
+        model_p1_base = _calibrate_prob(model_p1_shifted, calibration)
+        tour_name_upper = str(meta.get("name") or "").upper() if isinstance(meta, dict) else ""
+        is_grand_slam = bool(
+            (isinstance(meta, dict) and int(meta.get("rank") or 0) == 1)
+            or any(token in tour_name_upper for token in ["AUSTRALIAN OPEN", "ROLAND GARROS", "WIMBLEDON", "US OPEN", "GRAND SLAM"])
+        )
+        best_of = "bo5" if is_grand_slam else "bo3"
+        model_p1, correction_reason = apply_correction(
+            calibration.payload,
+            base_prob=model_p1_base,
+            surface=surface,
+            line=line,
+            p1_match_prob=p1_win_prob,
+            odds1=spread_odds1,
+            odds2=spread_odds2,
+            league=str(pin.get("league") or "").strip() or None,
+            best_of=best_of,
+        )
+        if correction_reason == "ok":
+            correction_applied += 1
+        else:
+            correction_reason_counts[correction_reason] += 1
         model_p2 = _clamp(1.0 - model_p1, 1e-6, 1.0 - 1e-6)
 
         implied1 = 1.0 / spread_odds1
@@ -759,6 +790,16 @@ def main():
     summarize_edges("cal", edge_cal_p1)
     print("Edge diagnostics (P2 -line, calibrated):")
     summarize_edges("cal", edge_cal_p2)
+    if calibration.payload is not None:
+        print(
+            "Spread v1 correction layer: "
+            f"applied={correction_applied} "
+            + (
+                "fallbacks=" + ", ".join(f"{reason}:{count}" for reason, count in correction_reason_counts.most_common())
+                if correction_reason_counts
+                else "fallbacks=none"
+            )
+        )
     print("Done.")
 
 

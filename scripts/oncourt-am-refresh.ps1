@@ -71,6 +71,16 @@ try {
         exit 1
     }
 
+    Log "=== Step 2b/8: Refresh spread_v1 calibration + correction model ==="
+    & python scripts\handicap-calibration.py --line-source auto 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "WARNING: handicap calibration refresh failed (exit $LASTEXITCODE), continuing..."
+    }
+    & python scripts\fit-spread-v1-model.py 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "WARNING: spread_v1 correction fit failed (exit $LASTEXITCODE), continuing..."
+    }
+
     Log "=== Step 3/8: Pinnacle odds + fair odds ==="
     $step3Output = & python scripts\run-daily-odds.py --skip-strict-report 2>&1
     $step3Exit = $LASTEXITCODE

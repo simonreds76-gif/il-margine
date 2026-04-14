@@ -1,0 +1,19 @@
+Spread v1 Model Fit
+Generated UTC: 2026-04-14T22:13:29Z
+Calibration file: data\backtest\spread-v1-calibration-params.json
+Dataset file: data\backtest\spread-v1-training-dataset.csv
+Base calibration enabled: True (ok)
+
+Dataset source: audit_local (data\backtest\handicap-input-audit.csv)
+Dataset rows: 172
+Dataset stats: {'audit_rows': 339, 'games_lookup': 283, 'matched': 172, 'unmatched': 161, 'source': 'handicap-input-audit'}
+
+Split strategy: date-ordered-60/20/20
+Train/valid/test rows: 119/29/24
+Selected ridge: 3.0
+Coefficient norm: 0.73723
+Validation log loss: base 0.76154 -> corrected 0.75197
+Validation bias: base +0.06218 -> corrected +0.12784
+Test log loss: base 0.72680 -> corrected 0.69603
+Test brier: base 0.26476 -> corrected 0.25131
+Model status: ok

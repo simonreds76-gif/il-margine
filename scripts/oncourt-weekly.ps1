@@ -134,6 +134,16 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: Pinnacle history append failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Post-step: Refresh spread_v1 calibration + correction model ==="
+& python scripts\handicap-calibration.py --line-source auto 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: handicap calibration refresh failed (exit $LASTEXITCODE), continuing..."
+}
+& python scripts\fit-spread-v1-model.py 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: spread_v1 correction fit failed (exit $LASTEXITCODE), continuing..."
+}
+
 # Weekly CLV audits (captured history first, tennis-data fallback)
 Log "=== Post-step: Strict CLV audit ==="
 & python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-archive.csv 2>&1 | ForEach-Object { Log $_ }
