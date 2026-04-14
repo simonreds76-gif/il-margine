@@ -1,25 +1,29 @@
 Spread v1 Shadow Report
-Generated UTC: 2026-04-14T20:36:12Z
+Generated UTC: 2026-04-14T22:14:48Z
 Signals file: data\backtest\strict-signals-spreadv1-archive.csv
 CLV detail file: data\backtest\strict-clv-audit-spreadv1-2026.csv
 Calibration file: data\backtest\spread-v1-calibration-params.json
 
 Overall
-  Tracked rows: 0
+  Tracked rows: 2
   Settled rows: 0
-  Open rows: 0
+  Open rows: 2
   CLV rows: 0
-  Last spread capture at: n/a
+  Last spread capture at: 22:14:37
 
 Calibration
-  Valid: False
-  Reason: snapshot-fetch-failed
+  Valid: True
+  Reason: ok-correction-only
   Line source: snapshot
-  Fit timestamp: 2026-04-14T20:35:42Z
+  Fit timestamp: 2026-04-14T22:13:29Z
   Usable scope: {'leagues': ['ATP'], 'best_of': 'bo3', 'surfaces': ['Hard', 'Clay']}
+  Base calibration valid: False
+  Base calibration reason: snapshot-fetch-failed
+  Correction valid: True
+  Correction reason: ok
 
 Hard
-  Promotion status: off
+  Promotion status: shadow
   Settled total: 0
   Recommended threshold: n/a
   thr=5.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
@@ -30,7 +34,7 @@ Hard
   thr=20.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
 
 Clay
-  Promotion status: off
+  Promotion status: shadow
   Settled total: 0
   Recommended threshold: n/a
   thr=5.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False

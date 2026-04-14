@@ -1,37 +1,31 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-04-14T20:35:42Z",
-  "fit_timestamp": "2026-04-14T20:35:42Z",
+  "generated_at_utc": "2026-04-14T22:02:53Z",
+  "fit_timestamp": "2026-04-14T22:02:53Z",
   "line_source_requested": "snapshot",
   "line_source_used": "snapshot",
   "files": [
-    "data/backtest/backtest-results-2022.csv",
-    "data/backtest/backtest-results-2023.csv",
-    "data/backtest/backtest-results-2024.csv",
-    "data/backtest/backtest-results-2025.csv"
+    "data/backtest/backtest-results-2026.csv"
   ],
   "lines": null,
   "sample_count": 0,
   "train_sample_size": 0,
   "test_sample_size": 0,
   "years": [
-    2022,
-    2023,
-    2024,
-    2025
+    2026
   ],
   "holdout_year": null,
   "skipped_rows": {
     "file_missing": 0,
     "no_prob": 0,
-    "no_score": 1,
+    "no_score": 0,
     "no_winner": 0,
     "bad_date": 0,
-    "bad_margin": 710,
+    "bad_margin": 5,
     "no_names": 0
   },
   "source_details": {
-    "snapshot_error": "HTTPSConnectionPool(host='nuqcgzbagxtbxlqrhtvc.supabase.co', port=443): Max retries exceeded with url: /rest/v1/bookmaker_odds_snapshot?select=capture_date%2Ccaptured_at%2Cleague%2Cplayer1_name%2Cplayer2_name%2Cspread_line%2Cspread_odds1%2Cspread_odds2&bookmaker=eq.Pinnacle&spread_line=not.is.null&capture_date=gte.2022-01-03&capture_date=lte.2025-11-16&order=capture_date.asc%2Ccaptured_at.desc&offset=0&limit=1000 (Caused by NewConnectionError(\"HTTPSConnection(host='nuqcgzbagxtbxlqrhtvc.supabase.co', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))"
+    "snapshot_error": "HTTPSConnectionPool(host='nuqcgzbagxtbxlqrhtvc.supabase.co', port=443): Max retries exceeded with url: /rest/v1/bookmaker_odds_snapshot?select=capture_date%2Ccaptured_at%2Cleague%2Cplayer1_name%2Cplayer2_name%2Cspread_line%2Cspread_odds1%2Cspread_odds2&bookmaker=eq.Pinnacle&spread_line=not.is.null&capture_date=gte.2026-01-04&capture_date=lte.2026-01-13&order=capture_date.asc%2Ccaptured_at.desc&offset=0&limit=1000 (Caused by NewConnectionError(\"HTTPSConnection(host='nuqcgzbagxtbxlqrhtvc.supabase.co', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions\"))"
   },
   "best": null,
   "surface_eval": {},
@@ -47,5 +41,123 @@
       "Clay"
     ]
   },
-  "usage": {}
+  "usage": {},
+  "correction_valid": true,
+  "correction_reason": "ok",
+  "correction_model": {
+    "valid": true,
+    "reason": "ok",
+    "model_type": "spread_v1_additive_logit_offset_v1",
+    "fit_timestamp": "2026-04-14T22:13:29Z",
+    "dataset_file": "data\\backtest\\spread-v1-training-dataset.csv",
+    "dataset_rows": 172,
+    "dataset_stats": {
+      "audit_rows": 339,
+      "games_lookup": 283,
+      "matched": 172,
+      "unmatched": 161,
+      "source": "handicap-input-audit"
+    },
+    "baseline_source": "calibrated",
+    "devig_method": "normalized_inverse_odds",
+    "split_strategy": "date-ordered-60/20/20",
+    "train_sample_size": 119,
+    "validation_sample_size": 29,
+    "test_sample_size": 24,
+    "feature_names": [
+      "surface_clay",
+      "line_abs_centered",
+      "line_bucket_3_5",
+      "line_bucket_4_5",
+      "line_bucket_5_5_plus",
+      "p1_match_prob_centered",
+      "market_logit_delta",
+      "overround"
+    ],
+    "intercept": 0.39517683,
+    "coefficients": {
+      "surface_clay": -0.13399789,
+      "line_abs_centered": 0.10504492,
+      "line_bucket_3_5": 0.19244966,
+      "line_bucket_4_5": -0.02540301,
+      "line_bucket_5_5_plus": 0.09214254,
+      "p1_match_prob_centered": -0.13694631,
+      "market_logit_delta": 0.67016724,
+      "overround": 0.02147355
+    },
+    "coefficient_norm": 0.73722577,
+    "ridge": 3.0,
+    "max_abs_logit_adjustment": 1.25,
+    "usable_scope": {
+      "leagues": [
+        "ATP"
+      ],
+      "best_of": "bo3",
+      "surfaces": [
+        "Clay",
+        "Hard"
+      ]
+    },
+    "metrics": {
+      "train_base": {
+        "n": 119,
+        "hit_rate": 0.5210084033613446,
+        "mean_pred": 0.4731841512605042,
+        "bias": -0.04782425210084035,
+        "brier": 0.2672640439727059,
+        "log_loss": 0.7326998238700246
+      },
+      "validation_base": {
+        "n": 29,
+        "hit_rate": 0.41379310344827586,
+        "mean_pred": 0.4759711379310344,
+        "bias": 0.06217803448275855,
+        "brier": 0.28311519344086206,
+        "log_loss": 0.7615353336072347
+      },
+      "test_base": {
+        "n": 24,
+        "hit_rate": 0.4166666666666667,
+        "mean_pred": 0.45606250000000004,
+        "bias": 0.03939583333333335,
+        "brier": 0.2647585060743333,
+        "log_loss": 0.7267999258160421
+      },
+      "train_corrected": {
+        "n": 119,
+        "hit_rate": 0.5210084033613446,
+        "mean_pred": 0.5210084033613446,
+        "bias": 0.0,
+        "brier": 0.2469607551067437,
+        "log_loss": 0.6871589218891263
+      },
+      "validation_corrected": {
+        "n": 29,
+        "hit_rate": 0.41379310344827586,
+        "mean_pred": 0.5416376410296123,
+        "bias": 0.12784453758133646,
+        "brier": 0.278136456271909,
+        "log_loss": 0.7519683226375513
+      },
+      "test_corrected": {
+        "n": 24,
+        "hit_rate": 0.4166666666666667,
+        "mean_pred": 0.5053930691950056,
+        "bias": 0.08872640252833891,
+        "brier": 0.2513147050953513,
+        "log_loss": 0.696025106676255
+      }
+    },
+    "surface_eval_test": {
+      "Clay": {
+        "n": 24,
+        "hit_rate": 0.4166666666666667,
+        "mean_pred": 0.5053930691950056,
+        "bias": 0.08872640252833891,
+        "brier": 0.2513147050953513,
+        "log_loss": 0.696025106676255
+      }
+    }
+  },
+  "correction_fit_timestamp": "2026-04-14T22:13:29Z"
 }

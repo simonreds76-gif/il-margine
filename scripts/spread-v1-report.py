@@ -187,17 +187,16 @@ def evaluate_threshold(
 
 def calibration_status(payload: dict[str, Any] | None) -> dict[str, Any]:
     if not payload:
-        return {"valid": False, "reason": "missing", "line_source_used": "", "fit_timestamp": "", "usable_scope": {}}
-    if payload.get("calibration_valid") is False:
         return {
             "valid": False,
-            "reason": str(payload.get("calibration_reason") or "invalid"),
-            "line_source_used": str(payload.get("line_source_used") or "").strip().lower(),
-            "fit_timestamp": payload.get("fit_timestamp") or payload.get("generated_at_utc") or payload.get("generated_at") or "",
-            "usable_scope": payload.get("usable_scope") if isinstance(payload.get("usable_scope"), dict) else {},
-            "train_sample_size": payload.get("train_sample_size"),
-            "test_sample_size": payload.get("test_sample_size"),
-            "surface_eval": payload.get("surface_eval"),
+            "reason": "missing",
+            "line_source_used": "",
+            "fit_timestamp": "",
+            "usable_scope": {},
+            "base_calibration_valid": False,
+            "base_calibration_reason": "missing",
+            "correction_valid": False,
+            "correction_reason": "missing",
         }
     line_source = str(payload.get("line_source_used") or "").strip().lower()
     usable_scope = payload.get("usable_scope") if isinstance(payload.get("usable_scope"), dict) else {}
@@ -205,15 +204,30 @@ def calibration_status(payload: dict[str, Any] | None) -> dict[str, Any]:
     leagues = {str(item).strip() for item in usable_scope.get("leagues") or [] if str(item).strip()}
     best_of = str(usable_scope.get("best_of") or "").strip().lower()
     valid = line_source == "snapshot" and best_of == "bo3" and "ATP" in leagues and {"Hard", "Clay"}.issubset(surfaces)
+    correction_valid = bool(payload.get("correction_valid"))
+    correction_reason = str(payload.get("correction_reason") or "missing")
+    base_calibration_valid = payload.get("calibration_valid") is not False
+    if valid and not correction_valid:
+        valid = False
+        reason = f"correction:{correction_reason}"
+    else:
+        reason = "ok" if (valid and base_calibration_valid) else ("ok-correction-only" if valid else "invalid-scope-or-source")
     return {
         "valid": valid,
-        "reason": "ok" if valid else "invalid-scope-or-source",
+        "reason": reason,
         "line_source_used": line_source,
-        "fit_timestamp": payload.get("fit_timestamp") or payload.get("generated_at_utc") or payload.get("generated_at") or "",
+        "fit_timestamp": payload.get("correction_fit_timestamp") or payload.get("fit_timestamp") or payload.get("generated_at_utc") or payload.get("generated_at") or "",
         "usable_scope": usable_scope,
         "train_sample_size": payload.get("train_sample_size"),
         "test_sample_size": payload.get("test_sample_size"),
         "surface_eval": payload.get("surface_eval"),
+        "base_calibration_valid": base_calibration_valid,
+        "base_calibration_reason": str(
+            payload.get("calibration_reason") or ("ok" if payload.get("calibration_valid") is not False else "invalid")
+        ),
+        "correction_valid": correction_valid,
+        "correction_reason": correction_reason,
+        "correction_model": payload.get("correction_model") if isinstance(payload.get("correction_model"), dict) else {},
     }
 
 
@@ -312,6 +326,10 @@ def main() -> None:
         f"  Line source: {calibration['line_source_used'] or 'n/a'}",
         f"  Fit timestamp: {calibration['fit_timestamp'] or 'n/a'}",
         f"  Usable scope: {calibration['usable_scope'] or {}}",
+        f"  Base calibration valid: {calibration.get('base_calibration_valid', False)}",
+        f"  Base calibration reason: {calibration.get('base_calibration_reason', 'n/a')}",
+        f"  Correction valid: {calibration.get('correction_valid', False)}",
+        f"  Correction reason: {calibration.get('correction_reason', 'n/a')}",
     ]
 
     for surface in SURFACES:

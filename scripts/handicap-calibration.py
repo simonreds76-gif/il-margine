@@ -24,6 +24,7 @@ import re
 import unicodedata
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
+from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
@@ -248,6 +249,33 @@ def _league_priority(league: str) -> int:
     return 9
 
 
+def _capture_date_from_filename(path: str) -> Optional[str]:
+    name = os.path.basename(path)
+    m = re.search(r"pinnacle-odds-(\d{4}-\d{2}-\d{2})\.csv$", name)
+    if m:
+        return m.group(1)
+    m = re.search(r"pinnacle-history-(\d{8})-(\d{6})\.csv$", name)
+    if m:
+        date_part = m.group(1)
+        return f"{date_part[0:4]}-{date_part[4:6]}-{date_part[6:8]}"
+    return None
+
+
+def _captured_at_from_filename(path: str, capture_date: Optional[str]) -> str:
+    name = os.path.basename(path)
+    m = re.search(r"pinnacle-history-(\d{8})-(\d{6})\.csv$", name)
+    if m:
+        date_part = m.group(1)
+        time_part = m.group(2)
+        return (
+            f"{date_part[0:4]}-{date_part[4:6]}-{date_part[6:8]}T"
+            f"{time_part[0:2]}:{time_part[2:4]}:{time_part[4:6]}Z"
+        )
+    if capture_date:
+        return f"{capture_date}T23:59:59Z"
+    return ""
+
+
 def _pick_col(fieldnames: Sequence[str], candidates: Sequence[str]) -> Optional[str]:
     keys = set(fieldnames)
     for c in candidates:
@@ -393,6 +421,67 @@ def load_match_rows(files: Sequence[str]) -> Tuple[List[MatchRow], Dict[str, int
     return rows, skipped
 
 
+def load_snapshot_spreads_local(
+    start_date: str,
+    end_date: str,
+    leagues: set[str],
+) -> List[SnapshotSpread]:
+    files = sorted(
+        [
+            *[str(p) for p in (Path(_root_dir()) / "data" / "pinnacle-history").glob("*.csv")],
+            *[str(p) for p in (Path(_root_dir()) / "data").glob("pinnacle-odds-*.csv")],
+        ]
+    )
+    out: List[SnapshotSpread] = []
+    for path in files:
+        if not os.path.exists(path):
+            continue
+        with open(path, "r", encoding="utf-8-sig", newline="") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                capture_date = _parse_date_iso(row.get("capture_date")) or _capture_date_from_filename(path)
+                if not capture_date or capture_date < start_date or capture_date > end_date:
+                    continue
+                league = str(row.get("league") or "").strip()
+                if leagues and _league_norm(league) not in leagues:
+                    continue
+                line = _parse_float(row.get("spread_line"))
+                odds1 = _parse_float(row.get("spread_odds1"))
+                odds2 = _parse_float(row.get("spread_odds2"))
+                if line is None or odds1 is None or odds2 is None:
+                    continue
+                line = abs(float(line))
+                if line <= 0 or odds1 <= 1.0 or odds2 <= 1.0:
+                    continue
+                p1 = str(row.get("player1_name") or "").strip()
+                p2 = str(row.get("player2_name") or "").strip()
+                if not p1 or not p2:
+                    continue
+                n1 = _normalize_name(p1)
+                n2 = _normalize_name(p2)
+                if not n1 or not n2:
+                    continue
+                captured_at = str(row.get("captured_at") or "").strip() or _captured_at_from_filename(path, capture_date)
+                out.append(
+                    SnapshotSpread(
+                        capture_date=capture_date,
+                        captured_at=captured_at,
+                        captured_ts=_parse_timestamp(captured_at),
+                        league=league,
+                        player1_name=p1,
+                        player2_name=p2,
+                        n1=n1,
+                        n2=n2,
+                        s1=_surname_key(n1),
+                        s2=_surname_key(n2),
+                            line=line,
+                        odds1=float(odds1),
+                        odds2=float(odds2),
+                    )
+                )
+    return out
+
+
 def fetch_snapshot_spreads(
     start_date: str,
     end_date: str,
@@ -400,9 +489,16 @@ def fetch_snapshot_spreads(
     bookmaker: str,
     page_size: int = 1000,
 ) -> List[SnapshotSpread]:
+    local_rows = load_snapshot_spreads_local(start_date, end_date, leagues)
+    if local_rows:
+        return local_rows
+
     url = (os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or "").rstrip("/")
     key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
     if not url or not key:
+        local_rows = load_snapshot_spreads_local(start_date, end_date, leagues)
+        if local_rows:
+            return local_rows
         raise RuntimeError("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in env/.env.local")
 
     headers = {"apikey": key, "Authorization": f"Bearer {key}"}
@@ -411,26 +507,32 @@ def fetch_snapshot_spreads(
 
     offset = 0
     raw_rows: List[dict] = []
-    while True:
-        params = [
-            ("select", select_cols),
-            ("bookmaker", f"eq.{bookmaker}"),
-            ("spread_line", "not.is.null"),
-            ("capture_date", f"gte.{start_date}"),
-            ("capture_date", f"lte.{end_date}"),
-            ("order", "capture_date.asc,captured_at.desc"),
-            ("offset", str(offset)),
-            ("limit", str(page_size)),
-        ]
-        resp = requests.get(endpoint, headers=headers, params=params, timeout=60)
-        resp.raise_for_status()
-        batch = resp.json()
-        if not batch:
-            break
-        raw_rows.extend(batch)
-        if len(batch) < page_size:
-            break
-        offset += page_size
+    try:
+        while True:
+            params = [
+                ("select", select_cols),
+                ("bookmaker", f"eq.{bookmaker}"),
+                ("spread_line", "not.is.null"),
+                ("capture_date", f"gte.{start_date}"),
+                ("capture_date", f"lte.{end_date}"),
+                ("order", "capture_date.asc,captured_at.desc"),
+                ("offset", str(offset)),
+                ("limit", str(page_size)),
+            ]
+            resp = requests.get(endpoint, headers=headers, params=params, timeout=60)
+            resp.raise_for_status()
+            batch = resp.json()
+            if not batch:
+                break
+            raw_rows.extend(batch)
+            if len(batch) < page_size:
+                break
+            offset += page_size
+    except Exception:
+        local_rows = load_snapshot_spreads_local(start_date, end_date, leagues)
+        if local_rows:
+            return local_rows
+        raise
 
     out: List[SnapshotSpread] = []
     for row in raw_rows:
@@ -720,6 +822,7 @@ def main() -> None:
             "data/backtest/backtest-results-2023.csv",
             "data/backtest/backtest-results-2024.csv",
             "data/backtest/backtest-results-2025.csv",
+            "data/backtest/backtest-results-2026.csv",
         ],
     )
     ap.add_argument("--line-source", choices=["snapshot", "synthetic", "auto"], default="snapshot")
@@ -761,6 +864,13 @@ def main() -> None:
                 "surfaces": ["Hard", "Clay"],
             },
             "usage": {},
+            "correction_valid": False,
+            "correction_reason": "base-calibration-invalid",
+            "correction_model": {
+                "valid": False,
+                "reason": "base-calibration-invalid",
+                "model_type": "spread_v1_additive_logit_offset_v1",
+            },
         }
         out_path = args.out
         out_dir = os.path.dirname(out_path)
@@ -858,6 +968,13 @@ def main() -> None:
             "HANDICAP_LINE_SHIFT": best["line_shift"],
             "HANDICAP_PLATT_A": best["platt_a"],
             "HANDICAP_PLATT_B": best["platt_b"],
+        },
+        "correction_valid": False,
+        "correction_reason": "base-calibration-updated-needs-refit",
+        "correction_model": {
+            "valid": False,
+            "reason": "base-calibration-updated-needs-refit",
+            "model_type": "spread_v1_additive_logit_offset_v1",
         },
     }
 

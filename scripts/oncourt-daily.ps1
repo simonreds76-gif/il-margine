@@ -101,6 +101,16 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: CPI surface-speed refresh failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Step 5b/10: Refresh spread_v1 calibration + correction model ==="
+& python scripts\handicap-calibration.py --line-source auto 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: handicap calibration refresh failed (exit $LASTEXITCODE), continuing..."
+}
+& python scripts\fit-spread-v1-model.py 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: spread_v1 correction fit failed (exit $LASTEXITCODE), continuing..."
+}
+
 # Step 6: Pinnacle odds + fair odds
 Log "=== Step 6/10: Pinnacle odds + fair odds ==="
 $step6Output = & python scripts\run-daily-odds.py --skip-strict-report 2>&1
