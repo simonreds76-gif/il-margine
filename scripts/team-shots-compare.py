@@ -436,13 +436,12 @@ def main() -> None:
     results = compare(pred_index, odds_rows, args.min_edge, cal_params=cal_params)
     print(f"  {len(results)} comparisons with edge >= {args.min_edge}")
 
-    if results:
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        with open(args.output, "w", newline="", encoding="utf-8") as fh:
-            writer = csv.DictWriter(fh, fieldnames=COMPARE_FIELDS, extrasaction="ignore")
-            writer.writeheader()
-            writer.writerows(results)
-        print(f"  Written to {args.output}")
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    with open(args.output, "w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=COMPARE_FIELDS, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(results)
+    print(f"  Written to {args.output}")
 
     summary = build_summary(results)
     print(summary)

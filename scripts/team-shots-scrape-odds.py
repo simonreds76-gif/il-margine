@@ -232,18 +232,40 @@ def scrape_odds_api(
 ) -> List[dict]:
     config = LEAGUE_CONFIGS[league_key]
     now = datetime.now(timezone.utc)
+    from_iso = now.replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    to_iso = (now + timedelta(days=days_ahead)).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     params = {
         "apiKey": api_key,
         "sport": "football",
         "status": "pending",
-        "from": now.replace(microsecond=0).isoformat().replace("+00:00", "Z"),
-        "to": (now + timedelta(days=days_ahead)).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "from": from_iso,
+        "to": to_iso,
     }
 
     print(f"  [odds-api.io] Discovering events for {config['label']}...")
-    resp = requests.get(f"{BASE_URL_ODDS_API}/events", params=params, timeout=30)
-    resp.raise_for_status()
-    events = resp.json()
+    try:
+        resp = requests.get(f"{BASE_URL_ODDS_API}/events", params=params, timeout=30)
+        resp.raise_for_status()
+        events = resp.json()
+    except requests.HTTPError as exc:
+        status_code = getattr(exc.response, "status_code", None)
+        if status_code != 500:
+            raise
+
+        # odds-api.io intermittently 500s when `status=pending` is supplied.
+        # Retry the broader query and keep the existing date window / league
+        # filtering client-side so the daily pipeline remains usable.
+        fallback_params = {
+            "apiKey": api_key,
+            "sport": "football",
+            "from": from_iso,
+            "to": to_iso,
+        }
+        print("  [odds-api.io] /events with status=pending returned 500; retrying without status filter.")
+        fallback_resp = requests.get(f"{BASE_URL_ODDS_API}/events", params=fallback_params, timeout=30)
+        fallback_resp.raise_for_status()
+        events = fallback_resp.json()
+
     if not isinstance(events, list):
         events = []
 
@@ -386,7 +408,8 @@ def _fetch_odds_api_multi_chunk(api_key: str, event_ids: List[str], bookmakers_s
 
         if fallback_payloads:
             return _merge_event_payloads(fallback_payloads)
-        raise
+        print(f"  [odds-api.io] No accessible bookmaker payloads for requested chunk: {', '.join(bookmakers)}")
+        return []
 
 
 def scrape_betsapi(
