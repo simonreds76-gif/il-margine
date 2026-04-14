@@ -82,8 +82,8 @@ export interface FairOddsRow {
   shadow_overlap_match?: boolean;
   shadow_match?: boolean;
   shadow_spread_eligible?: boolean;
-  spread_shadow_eligible?: boolean;
-  spread_shadow_reason?: string;
+  spread_v1_eligible?: boolean;
+  spread_v1_reason?: string;
   blocked_reason?: string;
   recent_injured_p1?: boolean;
   recent_injured_p2?: boolean;
@@ -202,13 +202,13 @@ const TOURNAMENT_SPEED_SHIFT_FULL_MATCHES = 90;
 const TOURNAMENT_SPEED_SHIFT_SIGNAL_SCALE = 2.0;
 const FAST_CLAY_SPEED_THRESHOLD = 0.1;
 const CLAY_2026_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-claycal-live.csv");
-const SPREAD_SHADOW_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-spreadshadow-live.csv");
+const SPREAD_V1_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-spreadv1-live.csv");
 const FAIR_ODDS_CLAY_2026_ENABLED = parseBoolEnv("FAIR_ODDS_CLAY_2026_ENABLED", false);
 const FAIR_ODDS_TENNIS_SPREADS_ENABLED = parseBoolEnv("FAIR_ODDS_TENNIS_SPREADS_ENABLED", false);
-const FAIR_ODDS_SPREAD_SHADOW_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_SHADOW_ENABLED", false);
+const FAIR_ODDS_SPREAD_V1_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_V1_ENABLED", true);
 type MatchSide = "P1" | "P2";
 type FastClayArchetype = "both" | "serve_led" | "return_led" | "contrarian";
-type ShadowSignalKind = "clay_2026" | "spread_shadow";
+type ShadowSignalKind = "clay_2026" | "spread_v1";
 
 interface ShadowSignalSummary {
   id: number;
@@ -272,7 +272,7 @@ function signalNameKey(player1Name: string, player2Name: string): string {
 }
 
 function spreadConflictDirection(signal: ShadowSignalSummary): MatchSide | null {
-  if (signal.kind !== "spread_shadow" || signal.bet_type !== "spread" || signal.spread_line == null) return null;
+  if (signal.kind !== "spread_v1" || signal.bet_type !== "spread" || signal.spread_line == null) return null;
   if (Math.abs(signal.spread_line) > 1.0) return null;
   if (signal.side === "P1+") return "P1";
   if (signal.side === "P2-") return "P2";
@@ -1065,7 +1065,7 @@ function loadActiveShadowSignals(csvPath: string, kind: ShadowSignalKind, active
     // for the same match on the same day; the fair-odds page should show the latest
     // current lane, not both stale and current sides together.
     const signalKey =
-      kind === "spread_shadow"
+      kind === "spread_v1"
         ? `${kind}|${signalIdentity}|${betType}|${spreadLine ?? ""}`
         : `${kind}|${signalIdentity}|${betType}`;
 
@@ -2220,12 +2220,12 @@ async function run(): Promise<Response> {
       !policyBaseAllows &&
       !shortFavoriteExcluded &&
       !injuryExcluded;
-    const spreadShadowReason = FAIR_ODDS_SPREAD_SHADOW_ENABLED
-      ? spreadShadowReasonFor(r.surface ?? "", seriesBucket, confidence ?? "", tournamentName)
-      : null;
-    const spreadShadowEligible =
-      FAIR_ODDS_SPREAD_SHADOW_ENABLED &&
-      spreadShadowReason != null &&
+    const spreadV1Reason = FAIR_ODDS_SPREAD_V1_ENABLED ? "strict_first_atp_bo3_hard_clay" : null;
+    const spreadV1Eligible =
+      FAIR_ODDS_SPREAD_V1_ENABLED &&
+      league === "ATP" &&
+      seriesBucket !== "Grand Slam" &&
+      (r.surface === "Hard" || r.surface === "Clay") &&
       !shortFavoriteExcluded &&
       !injuryExcluded;
     const hasPositiveRawValue = (rawValueP1 ?? Number.NEGATIVE_INFINITY) > 0 || (rawValueP2 ?? Number.NEGATIVE_INFINITY) > 0;
@@ -2318,8 +2318,8 @@ async function run(): Promise<Response> {
       shadow_overlap_match: shadowOverlapMatch,
       shadow_match: shadowMatch,
       shadow_spread_eligible: shadowSpreadEligible,
-      spread_shadow_eligible: spreadShadowEligible,
-      spread_shadow_reason: spreadShadowReason ?? undefined,
+      spread_v1_eligible: spreadV1Eligible,
+      spread_v1_reason: spreadV1Reason ?? undefined,
       blocked_reason: blockedReason,
       recent_injured_p1: p1Injury.matched,
       recent_injured_p2: p2Injury.matched,
@@ -2340,11 +2340,11 @@ async function run(): Promise<Response> {
   const clay2026SignalsCsv = FAIR_ODDS_CLAY_2026_ENABLED
     ? loadActiveShadowSignals(CLAY_2026_SIGNAL_CSV, "clay_2026", today)
     : [];
-  const spreadShadowSignalsCsv = FAIR_ODDS_SPREAD_SHADOW_ENABLED
-    ? loadActiveShadowSignals(SPREAD_SHADOW_SIGNAL_CSV, "spread_shadow", today)
+  const spreadV1SignalsCsv = FAIR_ODDS_SPREAD_V1_ENABLED
+    ? loadActiveShadowSignals(SPREAD_V1_SIGNAL_CSV, "spread_v1", today)
     : [];
-  const effectiveSpreadShadowSignalsCsv = FAIR_ODDS_TENNIS_SPREADS_ENABLED ? spreadShadowSignalsCsv : [];
-  const effectiveClay2026SignalsCsv = suppressConflictingClaySignals(clay2026SignalsCsv, effectiveSpreadShadowSignalsCsv);
+  const effectiveSpreadV1SignalsCsv = spreadV1SignalsCsv;
+  const effectiveClay2026SignalsCsv = suppressConflictingClaySignals(clay2026SignalsCsv, effectiveSpreadV1SignalsCsv);
   const rowSignalsByMatch = new Map<string, ShadowSignalSummary[]>();
   const addSignalToRowKey = (key: string, signal: ShadowSignalSummary) => {
     const existing = rowSignalsByMatch.get(key);
@@ -2361,7 +2361,7 @@ async function run(): Promise<Response> {
     }
     return Array.from(new Set(keys));
   };
-  for (const signal of [...effectiveClay2026SignalsCsv, ...effectiveSpreadShadowSignalsCsv]) {
+  for (const signal of [...effectiveClay2026SignalsCsv, ...effectiveSpreadV1SignalsCsv]) {
     for (const key of signalLookupKeys(signal)) addSignalToRowKey(key, signal);
   }
   for (const signals of rowSignalsByMatch.values()) {
@@ -2385,7 +2385,7 @@ async function run(): Promise<Response> {
     });
 
     let claySignal = rowSignals.find((signal) => signal.kind === "clay_2026" && signal.bet_type === "match");
-    let spreadSignal = rowSignals.find((signal) => signal.kind === "spread_shadow" && signal.bet_type === "spread");
+    let spreadSignal = rowSignals.find((signal) => signal.kind === "spread_v1" && signal.bet_type === "spread");
     const spreadDirection = spreadSignal ? spreadConflictDirection(spreadSignal) : null;
     const clayDirection = claySignal?.side === "P2" ? "P2" : claySignal?.side === "P1" ? "P1" : null;
 
@@ -2393,22 +2393,22 @@ async function run(): Promise<Response> {
       const claySignalId = claySignal.id;
       rowSignals = rowSignals.filter((signal) => !(signal.kind === "clay_2026" && signal.id === claySignalId));
       claySignal = undefined;
-      spreadSignal = rowSignals.find((signal) => signal.kind === "spread_shadow" && signal.bet_type === "spread");
+      spreadSignal = rowSignals.find((signal) => signal.kind === "spread_v1" && signal.bet_type === "spread");
     }
 
     return {
       ...m,
       league: claySignal?.league ?? spreadSignal?.league ?? m.league,
       tournament_speed_signal: m.tournament_speed_signal,
-      spread_shadow_eligible: rowSignals.some((signal) => signal.kind === "spread_shadow" && signal.bet_type === "spread"),
-      spread_shadow_reason: spreadSignal?.shadow_reason ?? m.spread_shadow_reason,
+      spread_v1_eligible: rowSignals.some((signal) => signal.kind === "spread_v1" && signal.bet_type === "spread"),
+      spread_v1_reason: spreadSignal?.shadow_reason ?? m.spread_v1_reason,
       row_signals: rowSignals,
     };
   });
 
   const attachedByKind: Record<ShadowSignalKind, Set<number>> = {
     clay_2026: new Set<number>(),
-    spread_shadow: new Set<number>(),
+    spread_v1: new Set<number>(),
   };
   let matchesWithRowSignals = 0;
   for (const match of matches) {
@@ -2422,15 +2422,15 @@ async function run(): Promise<Response> {
       attached: attachedByKind.clay_2026.size,
       unmatched: Math.max(0, effectiveClay2026SignalsCsv.length - attachedByKind.clay_2026.size),
     },
-    spread_shadow: {
-      loaded: effectiveSpreadShadowSignalsCsv.length,
-      attached: attachedByKind.spread_shadow.size,
-      unmatched: Math.max(0, effectiveSpreadShadowSignalsCsv.length - attachedByKind.spread_shadow.size),
+    spread_v1: {
+      loaded: effectiveSpreadV1SignalsCsv.length,
+      attached: attachedByKind.spread_v1.size,
+      unmatched: Math.max(0, effectiveSpreadV1SignalsCsv.length - attachedByKind.spread_v1.size),
     },
   };
   const unmatchedSignals = {
     clay_2026: effectiveClay2026SignalsCsv.filter((signal) => !attachedByKind.clay_2026.has(signal.id)),
-    spread_shadow: effectiveSpreadShadowSignalsCsv.filter((signal) => !attachedByKind.spread_shadow.has(signal.id)),
+    spread_v1: effectiveSpreadV1SignalsCsv.filter((signal) => !attachedByKind.spread_v1.has(signal.id)),
   };
   if (unmatchedSignals.clay_2026.length) {
     console.warn(
@@ -2441,10 +2441,10 @@ async function run(): Promise<Response> {
   if (!FAIR_ODDS_CLAY_2026_ENABLED) {
     console.warn("[fair-odds] Clay 2026 lane disabled on live fair-odds route.");
   }
-  if (unmatchedSignals.spread_shadow.length) {
+  if (unmatchedSignals.spread_v1.length) {
     console.warn(
-      "[fair-odds] Unmatched spread-shadow signals:",
-      unmatchedSignals.spread_shadow.map(
+      "[fair-odds] Unmatched spread_v1 signals:",
+      unmatchedSignals.spread_v1.map(
         (signal) =>
           `${signal.id}: ${signal.player1_name} vs ${signal.player2_name} | ${signal.side}${signal.spread_line != null ? ` ${signal.spread_line}` : ""}`
       )
@@ -2716,7 +2716,7 @@ async function run(): Promise<Response> {
   const signals_volume_overlap = [...matchSignalsVolumeOverlap, ...spreadSignalsVolumeOverlap];
   const signals_volume_additional = [...matchSignalsVolumeAdditional, ...spreadSignalsVolume];
   const signals_clay_2026 = effectiveClay2026SignalsCsv;
-  const spreadSignalsSpreadShadow = effectiveSpreadShadowSignalsCsv;
+  const spreadSignalsSpreadV1 = effectiveSpreadV1SignalsCsv;
 
   const matchesWithSpread = matches.filter(
     (m) =>
@@ -2733,12 +2733,12 @@ async function run(): Promise<Response> {
     (m) => (m.handicap_edge_p1 ?? 0) >= HANDICAP_MIN_EDGE_PCT || (m.handicap_edge_p2 ?? 0) >= HANDICAP_MIN_EDGE_PCT
   );
   const spreadHint =
-    !FAIR_ODDS_TENNIS_SPREADS_ENABLED
-      ? "Spread signals are quarantined while spread_v1_shadow stays in research."
+    !FAIR_ODDS_SPREAD_V1_ENABLED
+      ? "Spread v1 is disabled on the fair-odds route."
       : matchesWithSpread.length === 0
       ? "Spread data missing. Run: python scripts/compute-handicap-values.py (or full pipeline: python scripts/run-daily-odds.py)"
-      : spreadSignalsStrict.length === 0
-        ? `Spread: ${matchesWithSpread.length} matches have data, ${spreadStrictEligible.length} pass strict policy, ${spreadWithEdge20.length} have edge >=20%.`
+      : spreadSignalsSpreadV1.length === 0
+        ? `Spread v1: ${matchesWithSpread.length} matches have data, ${spreadStrictEligible.length} pass strict policy, ${spreadWithEdge20.length} have legacy edge >=20%, but no spread_v1 shadow picks qualified.`
         : undefined;
 
   const pinnacle_only = pinnacleOnly.map((p) => ({
@@ -2765,7 +2765,7 @@ async function run(): Promise<Response> {
     signals_volume_additional,
     signals_volume,
     signals_clay_2026,
-    signals_spread_shadow: spreadSignalsSpreadShadow,
+    signals_spread_v1: spreadSignalsSpreadV1,
     signal_attachment,
     ...(pinnacleHint ? { pinnacle_hint: pinnacleHint } : {}),
     ...(spreadHint ? { spread_hint: spreadHint } : {}),

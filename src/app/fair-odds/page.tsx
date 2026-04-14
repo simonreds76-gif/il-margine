@@ -68,7 +68,7 @@ interface FairOddsMatch {
 
 interface SignalSummary {
   id: number;
-  kind?: "clay_guarded" | "clay_2026" | "spread_shadow" | "volume_200" | "volume_200_upgrade" | "volume_275";
+  kind?: "clay_guarded" | "clay_2026" | "spread_v1" | "volume_200" | "volume_200_upgrade" | "volume_275";
   player1_id?: number;
   player2_id?: number;
   player1_name: string;
@@ -148,11 +148,11 @@ interface ApiResponse {
   signals_volume_200_upgrade_live?: SignalSummary[];
   signals_clay_guarded?: SignalSummary[];
   signals_clay_2026?: SignalSummary[];
-  signals_spread_shadow?: SignalSummary[];
+  signals_spread_v1?: SignalSummary[];
   signal_attachment?: {
     clay_guarded?: { loaded: number; attached: number; unmatched: number };
     clay_2026?: { loaded: number; attached: number; unmatched: number };
-    spread_shadow?: { loaded: number; attached: number; unmatched: number };
+    spread_v1?: { loaded: number; attached: number; unmatched: number };
   };
   error?: string;
 }
@@ -256,7 +256,7 @@ type SignalFeedCategory =
   | "volume_275"
   | "clay_guarded"
   | "clay_2026"
-  | "spread_shadow";
+  | "spread_v1";
 
 interface SignalFeedItem {
   key: string;
@@ -319,7 +319,7 @@ function signalFeedMeta(category: SignalFeedCategory, shadowProfile?: string): {
     };
   }
   return {
-    label: "SPREAD",
+    label: "SPREAD V1",
     badgeClass: "border-cyan-500/25 bg-cyan-500/10 text-cyan-300",
     accentClass: "text-cyan-300",
   };
@@ -332,7 +332,7 @@ function primarySignalBadgeMeta(
 ): { label: string; className: string; title?: string } | null {
   const clayGuardedSignal = rowSignals.find((signal) => signal.kind === "clay_guarded");
   const claySignal = rowSignals.find((signal) => signal.kind === "clay_2026");
-  const spreadSignal = rowSignals.find((signal) => signal.kind === "spread_shadow");
+  const spreadSignal = rowSignals.find((signal) => signal.kind === "spread_v1");
 
   if (match.policy_match) {
     return {
@@ -360,9 +360,9 @@ function primarySignalBadgeMeta(
 
   if (spreadSignal) {
     return {
-      label: "SPREAD",
+      label: "SPREAD V1",
       className: "border-cyan-500/25 bg-cyan-500/10 text-cyan-300",
-      title: "Spread shadow signal attached",
+      title: "Spread v1 signal attached",
     };
   }
 
@@ -429,7 +429,7 @@ function categoryForShadowProfile(profile?: string): SignalFeedCategory {
 function rowSignalKindOrder(kind?: SignalSummary["kind"]): number {
   if (kind === "clay_guarded") return 0;
   if (kind === "clay_2026") return 1;
-  if (kind === "spread_shadow") return 2;
+  if (kind === "spread_v1") return 2;
   return 3;
 }
 
@@ -442,7 +442,7 @@ function rowSignalSort(signals: SignalSummary[]): SignalSummary[] {
 }
 
 function signalSideBadgeText(signal: SignalSummary): string {
-  if (signal.kind === "spread_shadow" && signal.bet_type === "spread") {
+  if (signal.kind === "spread_v1" && signal.bet_type === "spread") {
     const signedLine =
       signal.side === "P1+"
         ? signal.spread_line
@@ -463,7 +463,7 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
         const clayMeta = signal.kind === "clay_2026" ? clay2026SignalMeta(signal) : null;
         const clayGuardGap = signal.kind === "clay_guarded" ? signal.clay_guarded_selected_elo_gap_vs_market : undefined;
         const handicapShape =
-          signal.kind === "spread_shadow" ? handicapShapeMeta(signal.handicap_point_prob_source) : null;
+          signal.kind === "spread_v1" ? handicapShapeMeta(signal.handicap_point_prob_source) : null;
         const challengerLabel = signal.league === "Challenger" ? "CH" : null;
         const stakeUnits = signal.stake_units != null ? formatStake(signal.stake_units) : "1.0";
         const stakeGbp = signal.stake_gbp != null ? Math.round(signal.stake_gbp) : 100;
@@ -489,7 +489,7 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
                         : "border-cyan-500/25 bg-cyan-500/10 text-cyan-300"
                     }`}
                   >
-                    {signal.kind === "clay_2026" ? "Clay 2026 ML" : "Spread Shadow"}
+                    {signal.kind === "clay_2026" ? "Clay 2026 ML" : "Spread v1"}
                   </span>
                   <span className="rounded border border-slate-700/70 bg-slate-950/70 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-200">
                     {signalSideBadgeText(signal)}
@@ -686,7 +686,7 @@ function SignalFeedList({
                       FAST CLAY
                     </span>
                   ) : null}
-                  {signal.kind === "spread_shadow" && signal.shadow_reason ? (
+                  {signal.kind === "spread_v1" && signal.shadow_reason ? (
                     <span className="rounded border border-cyan-500/25 bg-cyan-500/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-cyan-300">
                       {signalReasonLabel(signal.shadow_reason)}
                     </span>
@@ -728,7 +728,8 @@ function signalReasonLabel(reason?: string): string {
   if (reason === "non_policy") return "Non-policy";
   if (reason === "allow_tier_dog_elo_ge_market_15") return "Allow + Elo>=Mkt";
   if (reason === "new_after_calibration_favorite_55_65") return "Clay 2026";
-  return "Spread shadow";
+  if (reason === "strict_first_atp_bo3_hard_clay") return "Strict-first ATP";
+  return "Spread v1";
 }
 
 function handicapShapeMeta(source?: SignalSummary["handicap_point_prob_source"] | FairOddsMatch["handicap_point_prob_source"]) {
@@ -868,9 +869,9 @@ export default function FairOddsPage() {
     })),
   );
   const spreadFeedItems = sortSignalFeedItems(
-    (data?.signals_spread_shadow ?? []).map((signal) => ({
+    (data?.signals_spread_v1 ?? []).map((signal) => ({
       key: `spread-${signal.id}`,
-      category: "spread_shadow" as const,
+      category: "spread_v1" as const,
       signal,
     })),
   );
@@ -939,11 +940,11 @@ export default function FairOddsPage() {
     },
     {
       key: "spread",
-      category: "spread_shadow" as const,
-      title: "Spread Shadow",
-      subtitle: "Handicap shadow lane",
+      category: "spread_v1" as const,
+      title: "Spread v1",
+      subtitle: "Strict-first ATP bo3 hard/clay research spreads",
       items: spreadFeedItems,
-      emptyLabel: "No spread shadow signals today",
+      emptyLabel: "No spread v1 signals today",
     },
   ];
 
@@ -1001,8 +1002,8 @@ export default function FairOddsPage() {
                   <span className={data.signal_attachment.clay_2026?.unmatched ? "text-amber-300" : ""}>
                     Clay 2026 <span className="text-slate-200">{data.signal_attachment.clay_2026?.attached ?? 0}/{data.signal_attachment.clay_2026?.loaded ?? 0}</span>
                   </span>
-                  <span className={data.signal_attachment.spread_shadow?.unmatched ? "text-amber-300" : ""}>
-                    Spread <span className="text-slate-200">{data.signal_attachment.spread_shadow?.attached ?? 0}/{data.signal_attachment.spread_shadow?.loaded ?? 0}</span>
+                  <span className={data.signal_attachment.spread_v1?.unmatched ? "text-amber-300" : ""}>
+                    Spread v1 <span className="text-slate-200">{data.signal_attachment.spread_v1?.attached ?? 0}/{data.signal_attachment.spread_v1?.loaded ?? 0}</span>
                   </span>
                 </>
               )}
@@ -1090,7 +1091,7 @@ export default function FairOddsPage() {
                 {" | "}
                 Clay 2026 {data.signal_attachment.clay_2026?.attached ?? 0}/{data.signal_attachment.clay_2026?.loaded ?? 0}
                 {" | "}
-                Spread {data.signal_attachment.spread_shadow?.attached ?? 0}/{data.signal_attachment.spread_shadow?.loaded ?? 0}
+                Spread v1 {data.signal_attachment.spread_v1?.attached ?? 0}/{data.signal_attachment.spread_v1?.loaded ?? 0}
                 {data.matches_with_row_signals != null ? ` | ${data.matches_with_row_signals} matches with signals` : ""}
               </div>
             )}
@@ -1503,3 +1504,4 @@ function OverUnderPinCell({ match, lines }: { match: FairOddsMatch; lines: OULin
     </div>
   );
 }
+
