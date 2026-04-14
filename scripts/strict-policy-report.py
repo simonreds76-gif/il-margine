@@ -97,14 +97,17 @@ VOLUME_275_RULES: list[dict[str, Any]] = [
     {"surface": "Hard", "series": "ATP250", "confidence": {"high", "medium"}, "min_value_pct": 20.0},
 ]
 
-# Active trimmed shadow profile: drop the weak Clay Masters slice.
+# Active shadow candidate: ATP main-tour ML expansion only.
 VOLUME_200_RULES: list[dict[str, Any]] = [
     {"surface": "Hard", "series": "Masters 1000", "confidence": {"high"}, "min_value_pct": 15.0},
     {"surface": "Hard", "series": "Masters 1000", "confidence": {"medium"}, "min_value_pct": 30.0},
     {"surface": "Hard", "series": "Grand Slam", "confidence": {"high", "medium"}, "min_value_pct": 5.0},
+    {"surface": "Hard", "series": "ATP500", "confidence": {"high", "medium"}, "min_value_pct": 10.0},
+    {"surface": "Clay", "series": "ATP500", "confidence": {"high", "medium"}, "min_value_pct": 10.0},
     {"surface": "Grass", "series": "ATP500", "confidence": {"high", "medium"}, "min_value_pct": 10.0},
-    {"surface": "Hard", "series": "ATP250", "confidence": {"high", "medium"}, "min_value_pct": 20.0},
 ]
+
+MATCH_ONLY_SIGNAL_PROFILES = {"volume_200"}
 
 SHADOW_PROFILE_RULES: dict[str, list[dict[str, Any]]] = {
     "volume_275": VOLUME_275_RULES,
@@ -113,9 +116,17 @@ SHADOW_PROFILE_RULES: dict[str, list[dict[str, Any]]] = {
 
 SHADOW_PROFILE_LABELS: dict[str, str] = {
     "volume_275": "Volume 275 (legacy shadow; includes Clay Masters)",
-    "volume_200": "Volume 200 (trimmed shadow; no Clay Masters, Houston clay exception)",
+    "volume_200": "ATP-only ML research lane (main-tour only, no ATP250 shadow expansion, no spreads)",
     "spread_shadow": "Spread shadow (20%+ handicap edges; Clay + non-policy tournaments)",
     "clay_calibrated": "Clay calibrated shadow (new-after-calibration favorite 55-65%)",
+}
+SHADOW_PROFILE_ALLOWED_LEAGUES: dict[str, set[str]] = {
+    # Shadow lanes have not held up in Challenger samples; keep production-facing
+    # shadow research on main-tour ATP only unless we explicitly revisit it.
+    "volume_275": {"ATP"},
+    "volume_200": {"ATP"},
+    "spread_shadow": {"ATP"},
+    "clay_calibrated": {"ATP"},
 }
 HOUSTON_SHADOW_MIN_VALUE_PCT = 20.0
 HOUSTON_SHADOW_CONFIDENCE = {"high", "medium"}
@@ -175,7 +186,9 @@ def series_bucket_from_tour(tour_name: str | None, tour_rank: int | None) -> str
         return "Masters 1000"
     if "ATP 500" in u or "500" in u:
         return "ATP500"
-    if "ATP 250" in u or "250" in u or "CHALLENGER" in u:
+    if "CHALLENGER" in u:
+        return "Challenger"
+    if "ATP 250" in u or "250" in u:
         return "ATP250"
     if tour_rank == 1:
         return "Grand Slam"
@@ -533,6 +546,13 @@ def spread_shadow_reason_for(surface: str, series_bucket: str, confidence: str, 
     if not in_strict_match_segment:
         return "non_policy"
     return None
+
+
+def shadow_profile_league_allowed(profile_name: str, league: str) -> bool:
+    allowed = SHADOW_PROFILE_ALLOWED_LEAGUES.get(profile_name)
+    if not allowed:
+        return True
+    return league in allowed
 
 
 def compute_stake_units(
@@ -1090,6 +1110,12 @@ def main() -> int:
         if not pin or (pin["odds1"] or 0) <= 0 or (pin["odds2"] or 0) <= 0:
             continue
         league = league_bucket_from_tour(tournament_name, pin.get("league"))
+        if args.signal_profile != "strict" and not shadow_profile_league_allowed(args.signal_profile, league):
+            volume_min_value = None
+            spread_shadow_eligible = False
+            clay_calibrated_enabled = False
+            if strict_min_value is None:
+                continue
 
         # ML only: skip when Pinnacle favourite odds < 1.25. Keep spreads eligible.
         pin_fav_odds = min(float(pin["odds1"] or 0), float(pin["odds2"] or 0))
@@ -1175,7 +1201,11 @@ def main() -> int:
             and not clay_calibration_favorite_flip
         )
         strict_spread_eligible = strict_min_value is not None
-        volume_spread_eligible = volume_min_value is not None and not strict_spread_eligible
+        volume_spread_eligible = (
+            volume_min_value is not None
+            and not strict_spread_eligible
+            and args.signal_profile not in MATCH_ONLY_SIGNAL_PROFILES
+        )
         # spread_shadow lane targets clay/non-policy HC edges; those segments often have no
         # strict_min_value (non-policy). The API still shows them — do not drop the row here
         # or handicap rows never reach candidates (0/0 append forever).

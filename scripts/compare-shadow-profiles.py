@@ -105,7 +105,7 @@ def main() -> int:
 
     lines = [
         "Shadow Profile Comparison",
-        "Generated: 2026-03-13",
+        "Generated: 2026-04-14",
         "",
         "Historical exact backtest (2022-2025 ATP, ML-only, current exclusions honored):",
         (
@@ -150,8 +150,8 @@ def main() -> int:
         [
             "",
             "Recommendation:",
-            "  Use volume_200 as the active shadow profile.",
-            "  Reason: better exact historical ROI, positive in every year, and simpler profile after removing the weakest slice.",
+            "  Keep volume_200 as the active ATP-only ML research slot.",
+            "  Reason: it now excludes the old ATP250 expansion and spread leakage, so live tracking restarts from a cleaner definition.",
             "  Keep volume_275 only as a legacy comparison profile.",
             "",
         ]
