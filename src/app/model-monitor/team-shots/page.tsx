@@ -1309,11 +1309,12 @@ function LiveLineTable({
   const freshnessAnchorMillis = parseIsoMillis(freshnessAnchorAt);
   const scrapeRunAt = scrapeStatus?.run_at ?? null;
   const scrapeRunMillis = parseIsoMillis(scrapeRunAt);
+  const scrapeDisplayAt = scrapeRunAt ?? freshnessAnchorAt;
   const scrapeAgeMinutes =
     scrapeRunMillis === null || freshnessAnchorMillis === null
       ? null
       : Math.max(0, Math.round((freshnessAnchorMillis - scrapeRunMillis) / 60000));
-  const scrapeAgeLabel = scrapeRunAt ? formatRelativeAgeShort(scrapeRunAt) : "-";
+  const scrapeAgeLabel = scrapeDisplayAt ? formatRelativeAgeShort(scrapeDisplayAt) : "-";
   const scrapeErrors = scrapeStatus?.provider_errors?.length ?? 0;
   const scrapeDetailParts: string[] = [];
   if (typeof scrapeStatus?.rows_scraped === "number") {
@@ -1325,8 +1326,13 @@ function LiveLineTable({
   if (scrapeErrors > 0) {
     scrapeDetailParts.push(`${scrapeErrors} errors`);
   }
-  const scrapeDetail = scrapeDetailParts.length > 0 ? scrapeDetailParts.join(" | ") : undefined;
-  const scrapeToneValue = scrapeTone(scrapeStatus ?? null, scrapeAgeMinutes);
+  const scrapeDetail =
+    scrapeDetailParts.length > 0
+      ? scrapeDetailParts.join(" | ")
+      : scrapeStatus
+        ? undefined
+        : "pipeline fallback";
+  const scrapeToneValue = scrapeStatus ? scrapeTone(scrapeStatus, scrapeAgeMinutes) : "amber";
 
   // Use a stable snapshot-based day boundary so server/client render the same split.
   const asOfIso = (
