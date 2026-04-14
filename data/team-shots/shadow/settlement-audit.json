@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-04-13T16:53:57Z",
+  "run_at": "2026-04-14T00:09:25Z",
   "model": "team-shots",
   "total_bets": 57,
   "settled_this_run": 0,
   "total_settled": 55,
   "total_pending": 2,
   "pending_breakdown": {
-    "future": 2,
-    "live": 0,
-    "stale": 0,
+    "future": 0,
+    "live": 1,
+    "stale": 1,
     "old_stale": 0,
     "unknown": 0
   },
@@ -59,11 +59,22 @@
       "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-13.json"
     }
   },
-  "stale_rows": [],
+  "stale_rows": [
+    {
+      "match": "Fiorentina vs Lazio",
+      "league": "serie-a",
+      "line": "13.5",
+      "side": "over",
+      "kickoff": "2026-04-13T18:45:00Z",
+      "hours_elapsed": 5.41
+    }
+  ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [],
+  "warnings": [
+    "1 stale pending row(s) (3-48h elapsed)"
+  ],
   "errors": [],
   "exit_code_recommendation": 0
 }
