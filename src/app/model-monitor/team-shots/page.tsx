@@ -1,4 +1,4 @@
-﻿import { notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import {
   readTeamShotsLiveFile as readFile,
   readTeamShotsLiveJson as readJson,
@@ -67,6 +67,18 @@ type TeamPropsStatus = {
 
   last_exit_code?: number;
 
+};
+
+type TeamShotsScrapeStatus = {
+  run_at?: string;
+  leagues?: string[];
+  events_found?: number;
+  rows_scraped?: number;
+  provider_errors?: string[];
+  sources_used?: string[];
+  run_url?: string;
+  success?: boolean;
+  error?: string;
 };
 
 const CURRENT_POLICY = "venue-consensus-v1";
@@ -559,10 +571,10 @@ function signalBadge(
       return { label: "FLAGGED", tone: "bg-rose-500/10 text-rose-300 border-rose-500/20" };
     }
     if (consensus === "divergent") {
-      return { label: "SIGNAL ⚠", tone: "bg-amber-500/10 text-amber-300 border-amber-500/20" };
+      return { label: "SIGNAL ?", tone: "bg-amber-500/10 text-amber-300 border-amber-500/20" };
     }
     if (side === "under") {
-      return { label: "UNDER ★", tone: "bg-cyan-500/10 text-cyan-300 border-cyan-500/20" };
+      return { label: "UNDER ?", tone: "bg-cyan-500/10 text-cyan-300 border-cyan-500/20" };
     }
     return { label: "SIGNAL", tone: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20" };
   }
@@ -1461,10 +1473,21 @@ function LiveLineTable({
             <StatCard label="Predictions" value={predictionsMtime ? formatRelativeAgeShort(predictionsMtime) : "-"} />
             <StatCard label="Comparison"  value={comparisonMtime  ? formatRelativeAgeShort(comparisonMtime)  : "-"} />
             <StatCard label="Upcoming"    value={upcomingMtime    ? formatRelativeAgeShort(upcomingMtime)    : "-"} />
+            <StatCard
+              label="Last scrape"
+              value={scrapeAgeLabel}
+              tone={statTone(scrapeToneValue)}
+              detail={scrapeDetail}
+            />
           </div>
           {pipelineStatus?.message ? (
             <p className="mt-3 rounded-lg border border-slate-700/50 bg-slate-900/50 px-3 py-2 text-xs text-slate-400">
               {pipelineStatus.message}
+            </p>
+          ) : null}
+          {scrapeStatus?.success === false ? (
+            <p className="mt-3 rounded-lg border border-rose-500/20 bg-rose-500/8 px-3 py-2 text-xs text-rose-300">
+              Team shots scrape failed{scrapeStatus.error ? `: ${scrapeStatus.error}` : "."}
             </p>
           ) : null}
           {(pipelineStatus?.warnings?.length ?? 0) > 0 ? (
@@ -1484,6 +1507,11 @@ function LiveLineTable({
                 </p>
               ))}
             </div>
+          ) : null}
+          {scrapeStatus?.run_url ? (
+            <p className="mt-3 text-xs text-slate-500">
+              Run: <a className="text-sky-300 hover:text-sky-200" href={scrapeStatus.run_url} target="_blank" rel="noreferrer">open logs</a>
+            </p>
           ) : null}
         </SectionCard>
 

@@ -1,4 +1,4 @@
-﻿import path from "node:path";
+import path from "node:path";
 
 const KNOWN_PROJECT_FILE_PATHS = {
   "data/backtest/clay-prob-calibration.json": path.join(process.cwd(), "data/backtest/clay-prob-calibration.json"),
@@ -111,6 +111,7 @@ const KNOWN_PROJECT_FILE_PATHS = {
   "data/team-shots/team-shots-upcoming.csv": path.join(process.cwd(), "data/team-shots/team-shots-upcoming.csv"),
   "data/team-shots/team-shots-scanner.csv": path.join(process.cwd(), "data/team-shots/team-shots-scanner.csv"),
   "data/team-shots/team-shots-odds-history.csv": path.join(process.cwd(), "data/team-shots/team-shots-odds-history.csv"),
+  "data/team-shots/team-shots-scrape-last-run.json": path.join(process.cwd(), "data/team-shots/team-shots-scrape-last-run.json"),
   "data/team-shots/shadow/team-shots-shadow-signals.csv": path.join(process.cwd(), "data/team-shots/shadow/team-shots-shadow-signals.csv"),
   "data/team-shots/shadow/team-shots-shadow-performance.txt": path.join(process.cwd(), "data/team-shots/shadow/team-shots-shadow-performance.txt"),
   "data/injured-players-tennisexplorer.csv": path.join(process.cwd(), "data/injured-players-tennisexplorer.csv"),
