@@ -226,3 +226,31 @@
 [18:46:30]   Team shots:        http://localhost:3000/model-monitor/team-shots
 [18:46:30]   Files:             data/shortlist/ + data/team-shots/
 [18:46:30] ==========================================
+[17:58:02] ==========================================
+[17:58:02]   TEAM PROPS PIPELINE -- 2026-04-14 17:58:02
+[17:58:02]   (Corners + Team Total Shots)
+[17:58:02] ==========================================
+[17:58:02] 
+[17:58:02] --- CORNERS ---
+[17:58:02] Step 1a: Refreshing corners current-season history...
+[17:58:10]   Corners historical refresh complete
+[17:58:10] Step 1b: Running corners model...
+[17:58:15]     20603 predictions generated
+[17:58:15] Step 1c: Fitting Platt calibration...
+[17:58:29]   Params written   -> /home/runner/work/il-margine/il-margine/data/corners-ou/corners-calibration-params.json
+[17:58:29] Step 1d: Building corners V3 backtest artifacts...
+[17:58:32]   Backtest bets written    : 172
+[17:58:32] Step 1e: Fetching corner odds and generating shortlist...
+[17:58:52]     Total bets: 1  |  Total stake: 0.4u
+[17:58:52]     Odds API credits remaining: 18453
+[17:58:52] Step 1f: Settling previous corner bets...
+[17:58:52]     Settled: 21  W8/L11/P2  (42% ex-push)
+[17:58:52] 
+[17:58:52] --- TEAM TOTAL SHOTS ---
+[17:58:52] Skipped (SkipTeamShots switch enabled)
+[17:58:52] 
+[17:58:52] Pipeline complete. Check:
+[17:58:52]   Corners shortlist: http://localhost:3000/model-monitor/corners
+[17:58:52]   Team shots:        http://localhost:3000/model-monitor/team-shots
+[17:58:52]   Files:             data/shortlist/ + data/team-shots/
+[17:58:52] ==========================================

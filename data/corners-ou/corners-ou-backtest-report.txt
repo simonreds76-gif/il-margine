@@ -2,37 +2,60 @@
   CORNERS O/U V3 BACKTEST REPORT
 ======================================================================
 
+  Preset              : official_v3
   Policy              : V3
   Market              : synthetic B365 1X2 smart-corners baseline
   Holdout start       : 2022-08-01
   Min edge            : 15.0%
-  Historical matches  : 21257
-  Matches w/ market   : 6661
+  Divergence gate     : on
+  Max bets / fixture  : 1
+  Flat stake          : off
+  Historical matches  : 21303
+  Matches w/ market   : 6707
 
-  Bets                : 169
-  Record              : 81W / 88L
-  Total staked        : 190.6u
-  P&L                 : +70.09u
-  ROI                 : +36.8%
+  Bets                : 172
+  Record              : 83W / 89L
+  Total staked        : 194.6u
+  P&L                 : +75.08u
+  ROI                 : +38.6%
   Avg odds            : 2.90
   Avg edge            : +17.4%
 
   By line
     10.5:   36 bets  W18/L18  P&L +8.75u  ROI +26.0%
     11.5:    2 bets  W2/L0  P&L +2.99u  ROI +199.6%
-     8.5:  118 bets  W56/L62  P&L +58.20u  ROI +40.3%
+     8.5:  121 bets  W58/L63  P&L +63.18u  ROI +42.6%
      9.5:   13 bets  W5/L8  P&L +0.15u  ROI +1.3%
 
   By league
-    bundesliga     17 bets  W8/L9  P&L +7.04u  ROI +41.4%
+    bundesliga     18 bets  W8/L10  P&L +6.04u  ROI +33.6%
     epl            36 bets  W18/L18  P&L +8.47u  ROI +28.6%
     la-liga        26 bets  W7/L19  P&L -9.92u  ROI -29.4%
     ligue-1        29 bets  W13/L16  P&L +5.00u  ROI +35.1%
-    serie-a        61 bets  W35/L26  P&L +59.49u  ROI +62.0%
+    serie-a        63 bets  W37/L26  P&L +65.48u  ROI +66.1%
 
   By consensus
-    aligned    124 bets  W56/L68  P&L +38.75u  ROI +27.0%
+    aligned    126 bets  W58/L68  P&L +44.74u  ROI +30.6%
     conflict     6 bets  W4/L2  P&L +3.63u  ROI +111.5%
-    divergent   39 bets  W21/L18  P&L +27.70u  ROI +63.0%
+    divergent   40 bets  W21/L19  P&L +26.70u  ROI +59.3%
+
+  By season
+    2022-2023   42 bets  W14/L28  P&L -0.66u  ROI -1.6%
+    2023-2024   40 bets  W24/L16  P&L +23.15u  ROI +52.6%
+    2024-2025   45 bets  W21/L24  P&L +15.68u  ROI +32.1%
+    2025-2026   45 bets  W24/L21  P&L +36.91u  ROI +60.3%
+
+  By edge band
+    15%+       172 bets  W83/L89  P&L +75.08u  ROI +38.6%
+
+  By season / edge band
+    2022-2023   42 bets  W14/L28  P&L -0.66u  ROI -1.6%
+      15%+        42 bets  W14/L28  P&L -0.66u  ROI -1.6%
+    2023-2024   40 bets  W24/L16  P&L +23.15u  ROI +52.6%
+      15%+        40 bets  W24/L16  P&L +23.15u  ROI +52.6%
+    2024-2025   45 bets  W21/L24  P&L +15.68u  ROI +32.1%
+      15%+        45 bets  W21/L24  P&L +15.68u  ROI +32.1%
+    2025-2026   45 bets  W24/L21  P&L +36.91u  ROI +60.3%
+      15%+        45 bets  W24/L21  P&L +36.91u  ROI +60.3%
 
 ======================================================================
