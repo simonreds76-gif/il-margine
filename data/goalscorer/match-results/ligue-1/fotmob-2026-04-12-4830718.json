@@ -67,8 +67,8 @@
       "started": true,
       "squad_status": "starter",
       "minutes_played": 90,
-      "goals": 0,
-      "own_goals": 0,
+      "goals": 1,
+      "own_goals": 1,
       "subbed_on": false,
       "subbed_off": false,
       "sub_in_minute": 0,
@@ -382,7 +382,7 @@
       "started": true,
       "squad_status": "starter",
       "minutes_played": 82,
-      "goals": 1,
+      "goals": 0,
       "own_goals": 0,
       "subbed_on": false,
       "subbed_off": true,
@@ -708,9 +708,9 @@
   "goal_events": [
     {
       "minute": 23,
-      "scorer": "Thomas Meunier",
-      "fotmob_id": 277771,
-      "team": "Lille",
+      "scorer": "Rasmus Nicolaisen",
+      "fotmob_id": 656491,
+      "team": "Toulouse",
       "is_own_goal": false
     },
     {
@@ -735,5 +735,5 @@
       "is_own_goal": false
     }
   ],
-  "fetched_at": "2026-04-13T00:02:39Z"
+  "fetched_at": "2026-04-14T00:07:55Z"
 }
