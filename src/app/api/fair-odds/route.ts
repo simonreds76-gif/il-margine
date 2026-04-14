@@ -642,9 +642,24 @@ const VOLUME_275_RULES: Array<{
   { surface: "Hard", series: "ATP250", confidence: new Set(["high", "medium"]), min_value_pct: 20 },
 ];
 
-const VOLUME_200_RULES = VOLUME_275_RULES.filter(
-  (rule) => !(rule.surface === "Clay" && rule.series === "Masters 1000")
-);
+const VOLUME_200_RULES: Array<{
+  surface: string;
+  series: string;
+  confidence: Set<string>;
+  min_value_pct: number;
+}> = [
+  { surface: "Hard", series: "Masters 1000", confidence: new Set(["high"]), min_value_pct: 15 },
+  { surface: "Hard", series: "Masters 1000", confidence: new Set(["medium"]), min_value_pct: 30 },
+  { surface: "Hard", series: "Grand Slam", confidence: new Set(["high", "medium"]), min_value_pct: 5 },
+  { surface: "Hard", series: "ATP500", confidence: new Set(["high", "medium"]), min_value_pct: 10 },
+  { surface: "Clay", series: "ATP500", confidence: new Set(["high", "medium"]), min_value_pct: 10 },
+  { surface: "Grass", series: "ATP500", confidence: new Set(["high", "medium"]), min_value_pct: 10 },
+];
+const MATCH_ONLY_SHADOW_PROFILES = new Set<ShadowProfile>(["volume_200"]);
+const SHADOW_PROFILE_ALLOWED_LEAGUES: Partial<Record<ShadowProfile, Set<"ATP" | "Challenger">>> = {
+  volume_275: new Set(["ATP"]),
+  volume_200: new Set(["ATP"]),
+};
 const HOUSTON_SHADOW_MIN_VALUE_PCT = 20;
 const HOUSTON_SHADOW_CONFIDENCE = new Set(["high", "medium"]);
 const VALIDATED_FAST_CLAY_TOUR_KEYS = new Set(["houston", "madrid"]);
@@ -698,6 +713,12 @@ function shadowProfileLabel(profile: ShadowProfile): string {
   if (profile === "volume_200") return "volume_200";
   if (profile === "volume_275") return "volume_275";
   return "shadow";
+}
+
+function shadowProfileLeagueAllowed(profile: ShadowProfile, league?: "ATP" | "Challenger"): boolean {
+  const allowed = SHADOW_PROFILE_ALLOWED_LEAGUES[profile];
+  if (!allowed || !league) return true;
+  return allowed.has(league);
 }
 
 function spreadShadowReasonFor(
@@ -2152,9 +2173,12 @@ async function run(): Promise<Response> {
     if (policyMatch) strictPolicySignaledCount += 1;
 
     // Active shadow profile: same exclusions as strict, different segment/value rules (no overlay)
+    const shadowLeagueAllowed = shadowProfileLeagueAllowed(SHADOW_POLICY_MODE, league);
     const volumeMinVal =
       SHADOW_POLICY_MODE === "off"
         ? null
+        : !shadowLeagueAllowed
+          ? null
         : shadowMinValueFor(r.surface ?? "", seriesBucket, confidence ?? "", tournamentName);
     const volumeExcluded =
       shortFavoriteExcluded || mispriceExcluded || injuryExcluded;
@@ -2191,6 +2215,7 @@ async function run(): Promise<Response> {
     const fastClayReturnLedFlag = fastClayFlag && fastClayArchetype === "return_led";
     const shadowSpreadEligible =
       volumeMinVal != null &&
+      !MATCH_ONLY_SHADOW_PROFILES.has(SHADOW_POLICY_MODE) &&
       !policyBaseAllows &&
       !shortFavoriteExcluded &&
       !injuryExcluded;
