@@ -204,6 +204,7 @@ const FAST_CLAY_SPEED_THRESHOLD = 0.1;
 const CLAY_2026_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-claycal-live.csv");
 const SPREAD_SHADOW_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-spreadshadow-live.csv");
 const FAIR_ODDS_CLAY_2026_ENABLED = parseBoolEnv("FAIR_ODDS_CLAY_2026_ENABLED", false);
+const FAIR_ODDS_SPREAD_SHADOW_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_SHADOW_ENABLED", false);
 type MatchSide = "P1" | "P2";
 type FastClayArchetype = "both" | "serve_led" | "return_led" | "contrarian";
 type ShadowSignalKind = "clay_2026" | "spread_shadow";
@@ -2193,8 +2194,14 @@ async function run(): Promise<Response> {
       !policyBaseAllows &&
       !shortFavoriteExcluded &&
       !injuryExcluded;
-    const spreadShadowReason = spreadShadowReasonFor(r.surface ?? "", seriesBucket, confidence ?? "", tournamentName);
-    const spreadShadowEligible = spreadShadowReason != null && !shortFavoriteExcluded && !injuryExcluded;
+    const spreadShadowReason = FAIR_ODDS_SPREAD_SHADOW_ENABLED
+      ? spreadShadowReasonFor(r.surface ?? "", seriesBucket, confidence ?? "", tournamentName)
+      : null;
+    const spreadShadowEligible =
+      FAIR_ODDS_SPREAD_SHADOW_ENABLED &&
+      spreadShadowReason != null &&
+      !shortFavoriteExcluded &&
+      !injuryExcluded;
     const hasPositiveRawValue = (rawValueP1 ?? Number.NEGATIVE_INFINITY) > 0 || (rawValueP2 ?? Number.NEGATIVE_INFINITY) > 0;
     const displayGuardReason = mlDisplayGuardReason({
       confidence,
@@ -2307,7 +2314,9 @@ async function run(): Promise<Response> {
   const clay2026SignalsCsv = FAIR_ODDS_CLAY_2026_ENABLED
     ? loadActiveShadowSignals(CLAY_2026_SIGNAL_CSV, "clay_2026", today)
     : [];
-  const spreadShadowSignalsCsv = loadActiveShadowSignals(SPREAD_SHADOW_SIGNAL_CSV, "spread_shadow", today);
+  const spreadShadowSignalsCsv = FAIR_ODDS_SPREAD_SHADOW_ENABLED
+    ? loadActiveShadowSignals(SPREAD_SHADOW_SIGNAL_CSV, "spread_shadow", today)
+    : [];
   const effectiveClay2026SignalsCsv = suppressConflictingClaySignals(clay2026SignalsCsv, spreadShadowSignalsCsv);
   const rowSignalsByMatch = new Map<string, ShadowSignalSummary[]>();
   const addSignalToRowKey = (key: string, signal: ShadowSignalSummary) => {
