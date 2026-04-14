@@ -18,7 +18,7 @@ if ([string]::IsNullOrWhiteSpace($volumeMode)) { $volumeMode = "off" }
 
 function Get-VolumeShadowConfig([string]$mode) {
     switch ($mode) {
-        "volume_200" { return @{ Tag = "volume200"; Label = "Volume 200"; Profile = "volume_200" } }
+        "volume_200" { return @{ Tag = "volume200"; Label = "ATP ML Research"; Profile = "volume_200" } }
         "volume_275" { return @{ Tag = "volume275"; Label = "Volume 275"; Profile = "volume_275" } }
         default { return $null }
     }
@@ -141,10 +141,10 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
-Log "=== Post-step: Volume 200 CLV audit ==="
+Log "=== Post-step: ATP ML Research CLV audit ==="
 & python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-volume200-archive.csv --detail-csv data\backtest\strict-clv-audit-volume200-2026.csv --summary-txt data\backtest\strict-clv-audit-volume200-2026.txt 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: volume_200 CLV audit failed (exit $LASTEXITCODE), continuing..."
+    Log "WARNING: ATP ML research CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "============================================"

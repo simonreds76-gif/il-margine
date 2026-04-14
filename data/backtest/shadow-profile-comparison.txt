@@ -1,18 +1,18 @@
 Shadow Profile Comparison
-Generated: 2026-03-13
+Generated: 2026-04-14
 
 Historical exact backtest (2022-2025 ATP, ML-only, current exclusions honored):
-  volume_200: bets=802 avg/year=200.5 tierROI=+13.78% flatROI=+13.42% tierP/L=+187.83u on 1363.00u
+  volume_200: bets=684 avg/year=171.0 tierROI=+14.66% flatROI=+13.48% tierP/L=+157.01u on 1071.00u
   volume_275: bets=873 avg/year=218.2 tierROI=+12.56% flatROI=+12.40% tierP/L=+189.07u on 1505.00u
-  delta (200 - 275): bets=-71 tierROI=+1.22pp flatROI=+1.02pp
+  delta (200 - 275): bets=-189 tierROI=+2.10pp flatROI=+1.08pp
 
 Current live shadow tracking:
-  volume_200 CSV: signals=4 (ML=2, spread=2) settled=0 graded=0
-  volume_275 CSV: signals=4 (ML=2, spread=2) settled=0 graded=0
-  volume_200 weekly summary: source=strict-signals-volume200.csv all_time_signals=4 settled=0 roi=n/a%
+  volume_200 CSV: signals=0 (ML=0, spread=0) settled=0 graded=0
+  volume_275 CSV: signals=0 (ML=0, spread=0) settled=0 graded=0
+  volume_200 weekly summary: source=strict-signals-volume200-archive.csv all_time_signals=0 settled=0 roi=n/a%
   volume_275 weekly summary: source=strict-signals-volume275.csv all_time_signals=4 settled=0 roi=n/a%
 
 Recommendation:
-  Use volume_200 as the active shadow profile.
-  Reason: better exact historical ROI, positive in every year, and simpler profile after removing the weakest slice.
+  Keep volume_200 as the active ATP-only ML research slot.
+  Reason: it now excludes the old ATP250 expansion and spread leakage, so live tracking restarts from a cleaner definition.
   Keep volume_275 only as a legacy comparison profile.

@@ -15,10 +15,20 @@ $logFile = Join-Path $dataDir "oncourt-am-refresh.log"
 if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_VOLUME_MODE)) { $env:STRICT_POLICY_VOLUME_MODE = "volume_200" }
 $volumeMode = "$env:STRICT_POLICY_VOLUME_MODE".ToLower()
 if ([string]::IsNullOrWhiteSpace($volumeMode)) { $volumeMode = "off" }
+if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_SHADOW_ENABLED)) { $env:STRICT_SPREAD_SHADOW_ENABLED = "0" }
+if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_CALIBRATED_ENABLED)) { $env:STRICT_CLAY_CALIBRATED_ENABLED = "0" }
+
+function Test-EnvFlag([string]$value) {
+    if ([string]::IsNullOrWhiteSpace($value)) { return $false }
+    return @("1", "true", "yes", "on") -contains $value.Trim().ToLower()
+}
+
+$spreadShadowEnabled = Test-EnvFlag $env:STRICT_SPREAD_SHADOW_ENABLED
+$clayCalibratedEnabled = Test-EnvFlag $env:STRICT_CLAY_CALIBRATED_ENABLED
 
 function Get-VolumeShadowConfig([string]$mode) {
     switch ($mode) {
-        "volume_200" { return @{ Tag = "volume200"; Label = "Volume 200"; Profile = "volume_200" } }
+        "volume_200" { return @{ Tag = "volume200"; Label = "ATP ML Research"; Profile = "volume_200" } }
         "volume_275" { return @{ Tag = "volume275"; Label = "Volume 275"; Profile = "volume_275" } }
         default { return $null }
     }
@@ -99,14 +109,22 @@ try {
         Log "=== Step 6/8: Volume shadow skipped (STRICT_POLICY_VOLUME_MODE=$volumeMode) ==="
     }
 
-    Log "=== Step 7/8: Spread shadow + Clay 2026 shadow ==="
-    & python scripts\strict-policy-report.py --append --signal-profile spread_shadow --output "data\backtest\strict-signals-spreadshadow-live.csv" 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        Log "WARNING: spread_shadow append failed (exit $LASTEXITCODE), continuing..."
+    Log "=== Step 7/8: Research shadow lanes ==="
+    if ($spreadShadowEnabled) {
+        & python scripts\strict-policy-report.py --append --signal-profile spread_shadow --output "data\backtest\strict-signals-spreadshadow-live.csv" 2>&1 | ForEach-Object { Log $_ }
+        if ($LASTEXITCODE -ne 0) {
+            Log "WARNING: spread_shadow append failed (exit $LASTEXITCODE), continuing..."
+        }
+    } else {
+        Log "Spread shadow skipped by default (STRICT_SPREAD_SHADOW_ENABLED=0)."
     }
-    & python scripts\strict-policy-report.py --append --signal-profile clay_calibrated --output "data\backtest\strict-signals-claycal-live.csv" --internal-output "data\backtest\strict-signals-claycal-internal-live.csv" 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        Log "WARNING: clay_calibrated append failed (exit $LASTEXITCODE), continuing..."
+    if ($clayCalibratedEnabled) {
+        & python scripts\strict-policy-report.py --append --signal-profile clay_calibrated --output "data\backtest\strict-signals-claycal-live.csv" --internal-output "data\backtest\strict-signals-claycal-internal-live.csv" 2>&1 | ForEach-Object { Log $_ }
+        if ($LASTEXITCODE -ne 0) {
+            Log "WARNING: clay_calibrated append failed (exit $LASTEXITCODE), continuing..."
+        }
+    } else {
+        Log "Clay calibrated lane skipped by default (STRICT_CLAY_CALIBRATED_ENABLED=0)."
     }
 
     Log "=== Step 8/8: Nightly-style tennis settlement/performance ==="

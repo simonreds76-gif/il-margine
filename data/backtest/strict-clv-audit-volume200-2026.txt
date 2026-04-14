@@ -1,71 +1,38 @@
 Strict CLV Audit vs Captured/Closing Pinnacle Odds
-Generated UTC: 2026-03-20
-Signals file: C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-volume200.csv
+Generated UTC: 2026-04-14
+Signals file: C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-volume200-archive.csv
 Closing odds file: C:\Users\44746\Downloads\il-margine\data\backtest\atp-2026.xlsx
 
 Input coverage
-  Raw strict rows: 23
-  Deduped strict rows: 23
-  Settled strict rows: 21
-  Settled ML rows audited: 11
-  Settled spread rows skipped: 10
-  Unique settled ML match+side keys: 11
-  Signal date range: 2026-03-13 -> 2026-03-18
-  Settled match-date range: 2026-03-13 -> 2026-03-19
+  Raw strict rows: 0
+  Deduped strict rows: 0
+  Settled strict rows: 0
+  Settled ML rows audited: 0
+  Settled spread rows skipped: 0
+  Unique settled ML match+side keys: 0
+  Signal date range: n/a -> n/a
+  Settled match-date range: n/a -> n/a
 
 Captured-history coverage
-  Enabled: True
-  History rows loaded: 292
+  Enabled: False
+  History rows loaded: 0
   Supabase rows loaded: 0
-  Local rows loaded: 292
-  Local files scanned: 12
-  History note: window 2026-03-13 -> 2026-03-19; supabase: HTTPSConnectionPool(host='nuqcgzbagxtbxlqrhtvc.supabase.co', port=443): Max retries exceeded with url: /rest/v1/bookmaker_odds_history?select=capture_date%2Ccaptured_at%2Ccapture_mode%2Cleague%2Cplayer1_name%2Cplayer2_name%2Codds1%2Codds2&bookmaker=eq.Pinnacle&capture_date=gte.2026-03-13&capture_date=lte.2026-03-19&order=captured_at.desc&limit=1000&offset=0 (Caused by NewConnectionError("HTTPSConnection(host='nuqcgzbagxtbxlqrhtvc.supabase.co', port=443): Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions"))
+  Local rows loaded: 0
+  Local files scanned: 0
+  History note: window n/a -> n/a
 
 Closing-file mapping
   XLSX matches loaded: 69
   Closing matches mapped to OnCourt IDs: 68
   Closing date range: 2026-01-04 -> 2026-01-13
   XLSX skips: {'missing_pinnacle_odds': 447, 'non_completed': 17}
-  Name-map report: {'source_names': 74, 'mapped_names': 73, 'unmapped_names': 1, 'oncourt_index_players': 41824, 'method_counts': {'initial_last_short': 59, 'short_popularity': 9, 'last_only_short': 4, 'short_fuzzy': 1}, 'unmapped_examples': ['Munar J.']}
+  Name-map report: {'source_names': 74, 'mapped_names': 73, 'unmapped_names': 1, 'oncourt_index_players': 41918, 'method_counts': {'initial_last_short': 59, 'short_popularity': 9, 'last_only_short': 4, 'short_fuzzy': 1}, 'unmapped_examples': ['Munar J.']}
   Closing match skips: {'unmapped_winner': 1}
 
 Audit matching
-  Matched ML rows: 10 / 11
-  Closing sources: {'local_csv': 10}
-  Match methods: {'history': 10}
-  Unmatched reasons: {'pair_not_found': 1}
+  Matched ML rows: 0 / 0
+  Closing sources: {}
+  Match methods: {}
+  Unmatched reasons: {}
 
-Coverage warning
-  Closing file is stale for this live sample: latest closing date 2026-01-13 but earliest settled match date is 2026-03-13.
-
-CLV summary
-  Avg CLV implied delta: +0.480%
-  Median CLV implied delta: -0.107%
-  Positive CLV share: 4/10 (40.00%)
-  Avg odds move pct: -0.647%
-
-By lag bucket
-      plus_1_day n=  8 avg_clv=+0.223% median=-0.340% pos=3/8
-        same_day n=  2 avg_clv=+1.508% median=+1.508% pos=1/2
-
-By value bucket
-          15-20% n=  2 avg_clv=+0.750% median=+0.750% pos=1/2
-            20%+ n=  8 avg_clv=+0.413% median=-0.107% pos=3/8
-
-By outcome
-            LOSS n=  6 avg_clv=+0.247% median=-0.442% pos=2/6
-             WIN n=  4 avg_clv=+0.830% median=+0.508% pos=2/4
-
-Best CLV rows
-  2026-03-13 Mattia Bellucci vs Raphael Collignon P2 scrape=1.813 close=1.719 clv=+3.016%
-  2026-03-18 Zhizhen Zhang vs Adrian Mannarino P2 scrape=1.980 close=1.877 clv=+2.771%
-  2026-03-18 Stefanos Tsitsipas vs Arthur Fery P2 scrape=3.290 close=3.090 clv=+1.967%
-  2026-03-18 Raphael Collignon vs Grigor Dimitrov P1 scrape=2.240 close=2.180 clv=+1.229%
-  2026-03-14 Borna Gojo vs Pavel Kotov P1 scrape=1.752 close=1.752 clv=+0.000%
-
-Worst CLV rows
-  2026-03-18 Fabian Marozsan vs Joao Fonseca P1 scrape=3.060 close=3.190 clv=-1.332%
-  2026-03-18 James Duckworth vs Roberto Bautista Agut P1 scrape=2.300 close=2.370 clv=-1.284%
-  2026-03-18 Alexandre Muller vs Matteo Berrettini P1 scrape=4.300 close=4.470 clv=-0.884%
-  2026-03-18 Martin Damm vs Jacob Fearnley P1 scrape=2.060 close=2.080 clv=-0.467%
-  2026-03-18 Ethan Quinn vs Hubert Hurkacz P1 scrape=2.160 close=2.170 clv=-0.213%
+No matched ML rows to summarize.

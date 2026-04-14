@@ -709,12 +709,12 @@ export default async function ModelMonitorPage() {
         : `Strict live control is positive at ${formatPct(strictAllRoi)} as of ${strictAsOf ?? "n/a"}.`;
   const shadowDiagnosis =
     volumeSignalsLive.length === 0
-      ? "Volume 200 shadow file is empty right now."
+      ? "ATP ML research file is empty right now."
       : volumeQueue.length === 0 && volumeNoMatchRows.length > 0
-      ? `Volume 200 has ${volumeNoMatchRows.length} unresolved settlement rows marked no_match, but no true live queue at the moment.`
+      ? `ATP ML research has ${volumeNoMatchRows.length} unresolved settlement rows marked no_match, but no true live queue at the moment.`
       : perfValue(volumeBase.combinedAll, "settled", parseIntMaybe) === 0
-      ? "Volume 200 shadow has no settled sample yet."
-      : `Volume 200 shadow has settled enough to start comparing against strict on live results.`;
+      ? "ATP ML research has no settled sample yet."
+      : `ATP ML research has settled enough to start comparing against strict on live results.`;
   const spreadShadowDiagnosis =
     !spreadShadowSignalsLiveCsv
       ? "Spread shadow has no live CSV on disk right now, which usually means no qualifying clay/non-policy handicap row has been written yet."
@@ -1188,7 +1188,7 @@ export default async function ModelMonitorPage() {
             </div>
           </MonitorCard>
 
-          <MonitorCard title="Clay 2026" subtitle={`ATP validated lane, Challenger observational${clay2026AsOf ? ` | as of ${clay2026AsOf}` : ""}`}>
+          <MonitorCard title="Clay 2026" subtitle={`ATP-only research lane, Challenger legacy sample${clay2026AsOf ? ` | as of ${clay2026AsOf}` : ""}`}>
             <div className="grid gap-3">
               <Stat label="Clean ROI" value={formatPct(clay2026AllRoi)} tone={metricTone(clay2026AllRoi)} />
               <Stat label="Signals" value={`${clay2026TrackedCount}`} />
@@ -1216,7 +1216,7 @@ export default async function ModelMonitorPage() {
             </div>
           </MonitorCard>
 
-          <MonitorCard title="Vol200 CLV" subtitle="Volume 200 ML rows only. Same audit path, separate shadow read.">
+          <MonitorCard title="ATP ML CLV" subtitle="ATP-only ML research rows. Same audit path, separate shadow read.">
             <div className="grid gap-3">
               <Stat label="Matched ML" value={`${matchedMlVolume}/${auditedMlVolume || 0}`} tone={matchedMlVolume > 0 ? "text-emerald-300" : "text-amber-300"} />
               <Stat label="Avg CLV" value={formatPct(clvVolume.avgClvPct, 3)} tone={metricTone(clvVolume.avgClvPct)} />
@@ -1277,8 +1277,8 @@ export default async function ModelMonitorPage() {
 
               <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4">
                 <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-base font-semibold text-white">Volume 200 Shadow</h3>
-                  <span className="rounded-full bg-amber-500/15 px-2 py-1 text-xs font-semibold text-amber-300">shadow</span>
+                  <h3 className="text-base font-semibold text-white">ATP ML Research</h3>
+                  <span className="rounded-full bg-amber-500/15 px-2 py-1 text-xs font-semibold text-amber-300">active candidate</span>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Stat label="Clean ROI" value={formatPct(volumeAllRoi)} tone={metricTone(volumeAllRoi)} compact />
@@ -1301,7 +1301,7 @@ export default async function ModelMonitorPage() {
                   />
                 </div>
                 <div className="mt-3 rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-xs text-slate-400">
-                  Open queue: ML {volumeQueueMlCount} | Spread {volumeQueueSpreadCount}. Settled so far: ML {volumeSettledMlCount} | Spread {volumeSettledSpreadCount}. No-match settlement rows: {volumeNoMatchCount}.
+                  Open queue: ML {volumeQueueMlCount} | Spread {volumeQueueSpreadCount}. Settled so far: ML {volumeSettledMlCount} | Spread {volumeSettledSpreadCount}. No-match settlement rows: {volumeNoMatchCount}. This slot now tracks ATP-only ML expansion and should trend toward zero spread rows after the profile change.
                 </div>
               </div>
 
@@ -1391,18 +1391,18 @@ export default async function ModelMonitorPage() {
                   <li>{spreadShadowDiagnosis}</li>
                   <li>{clay2026Diagnosis}</li>
                   <li>
-                    Historical exact profiles still favor <span className="font-semibold text-amber-300">volume_200</span>, but live promotion is not justified until shadow settles and CLV coverage overlaps the sample.
+                    The active shadow slot is now <span className="font-semibold text-amber-300">ATP-only ML research</span>. Live tracking has been reset onto the narrower definition, so historical profile stats below are rule backtests while live ROI restarts from zero.
                   </li>
                 </ul>
               </div>
 
               <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
-                <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Volume 200 Live Queue</div>
+                <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">ATP ML Research Queue</div>
                 {volumeQueue.length === 0 ? (
                   <p className="text-sm leading-6 text-slate-400">
                     {volumeNoMatchRows.length > 0
-                      ? `No true open volume_200 bets right now. ${volumeNoMatchRows.length} rows are parked as no_match settlement mismatches instead.`
-                      : "No open volume_200 rows right now. When the shadow lane logs live candidates, they will appear here with ML vs spread clearly split."}
+                      ? `No true open ATP ML research bets right now. ${volumeNoMatchRows.length} rows are parked as no_match settlement mismatches instead.`
+                      : "No open ATP ML research rows right now. When the active ATP-only ML candidate logs live bets, they will appear here."}
                   </p>
                 ) : (
                   <div className="space-y-3">
@@ -1673,9 +1673,9 @@ export default async function ModelMonitorPage() {
             <div className="space-y-4 text-sm leading-6 text-slate-300">
               <ul className="space-y-2">
                 <li>
-                  Active shadow candidate: <span className="font-semibold text-amber-300">volume_200</span>
+                  Active shadow candidate: <span className="font-semibold text-amber-300">ATP-only ML research</span>
                   {shadowProfile?.tierRoiPct != null && shadowProfile?.avgPerYear != null
-                    ? ` (${formatPct(shadowProfile.tierRoiPct)} tier ROI, ${shadowProfile.avgPerYear.toFixed(1)} bets/year historical).`
+                    ? ` (${formatPct(shadowProfile.tierRoiPct)} tier ROI, ${shadowProfile.avgPerYear.toFixed(1)} bets/year on the current ATP-only ML rule backtest).`
                     : "."}
                 </li>
                 <li>
@@ -1685,7 +1685,7 @@ export default async function ModelMonitorPage() {
                     : "."}
                 </li>
                 <li>
-                  Live volume_200 tracking: {volumeTrackedCount} rows, {volumeSettledCount} settled, {volumeOpenCount} currently open, {volumeNoMatchCount} parked as no_match, {formatPct(volumeAllRoi)} clean ROI.
+                  Live ATP ML research tracking: {volumeTrackedCount} rows, {volumeSettledCount} settled, {volumeOpenCount} currently open, {volumeNoMatchCount} parked as no_match, {formatPct(volumeAllRoi)} clean ROI.
                 </li>
                 <li>
                   Spread shadow tracking: {spreadShadowTrackedCount} signals, {spreadShadowSettledCount} settled, {formatPct(spreadShadowAllRoi)} ROI.

@@ -1,5 +1,5 @@
 Policy Profile Backtest
-Generated: 2026-03-13
+Generated: 2026-04-14
 Rows loaded: 9,889
 Policy exclusions honored from backtest CSV (misprice + <1.25 favorite filters + ATP500 hard short-fav).
 Match staking: value_tiered (5-10=0.5u, 10-15=1u, 15-20=1.5u, 20+=2u).
@@ -43,21 +43,22 @@ Historical report is ML-only; spread backtest is not integrated here.
     2024->2025: train tierROI=+24.87% (215 bets) | test tierROI=+13.78% (230 bets)
 
 [volume_200]
-  Bets=802  Avg/Year=200.5  W-L=350-452  WR=43.64%  AvgValue=27.12%
-  Flat stake:    P/L=+107.66u  ROI=+13.42%
-  Value-tiered:  Staked=1363.00u  P/L=+187.83u  ROI=+13.78%
+  Bets=684  Avg/Year=171.0  W-L=301-383  WR=44.01%  AvgValue=23.57%
+  Flat stake:    P/L=+92.22u  ROI=+13.48%
+  Value-tiered:  Staked=1071.00u  P/L=+157.01u  ROI=+14.66%
   By year:
-    2022: bets=188  flatROI=+7.13%  tierROI=+9.19%  P/L=+29.76u on 324.00u
-    2023: bets=207  flatROI=+5.23%  tierROI=+5.90%  P/L=+20.74u on 351.50u
-    2024: bets=200  flatROI=+26.46%  tierROI=+25.78%  P/L=+86.11u on 334.00u
-    2025: bets=207  flatROI=+14.75%  tierROI=+14.49%  P/L=+51.22u on 353.50u
+    2022: bets=152  flatROI=+2.95%  tierROI=+4.73%  P/L=+11.25u on 238.00u
+    2023: bets=165  flatROI=+9.85%  tierROI=+11.98%  P/L=+31.03u on 259.00u
+    2024: bets=166  flatROI=+26.69%  tierROI=+28.56%  P/L=+71.41u on 250.00u
+    2025: bets=201  flatROI=+13.52%  tierROI=+13.37%  P/L=+43.32u on 324.00u
   By segment:
+    Clay|ATP500|high+medium: bets=65  flatROI=+2.95%  tierROI=+1.83%  P/L=+1.91u on 104.00u
     Grass|ATP500|high+medium: bets=50  flatROI=+15.68%  tierROI=+25.19%  P/L=+20.40u on 81.00u
-    Hard|ATP250|high+medium: bets=249  flatROI=+9.98%  tierROI=+9.98%  P/L=+49.68u on 498.00u
+    Hard|ATP500|high+medium: bets=66  flatROI=+11.33%  tierROI=+16.63%  P/L=+16.96u on 102.00u
     Hard|Grand Slam|high+medium: bets=229  flatROI=+12.51%  tierROI=+9.97%  P/L=+26.87u on 269.50u
     Hard|Masters 1000|high: bets=257  flatROI=+16.82%  tierROI=+17.63%  P/L=+84.70u on 480.50u
     Hard|Masters 1000|medium: bets=17  flatROI=+18.18%  tierROI=+18.18%  P/L=+6.18u on 34.00u
   Consecutive-year view:
-    2022->2023: train tierROI=+9.19% (188 bets) | test tierROI=+5.90% (207 bets)
-    2023->2024: train tierROI=+5.90% (207 bets) | test tierROI=+25.78% (200 bets)
-    2024->2025: train tierROI=+25.78% (200 bets) | test tierROI=+14.49% (207 bets)
+    2022->2023: train tierROI=+4.73% (152 bets) | test tierROI=+11.98% (165 bets)
+    2023->2024: train tierROI=+11.98% (165 bets) | test tierROI=+28.56% (166 bets)
+    2024->2025: train tierROI=+28.56% (166 bets) | test tierROI=+13.37% (201 bets)

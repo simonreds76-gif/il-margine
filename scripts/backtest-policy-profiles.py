@@ -19,6 +19,7 @@ import argparse
 import csv
 from collections import defaultdict
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 from typing import Callable
 
@@ -54,7 +55,12 @@ VOLUME_275_RULES = [
 ]
 
 VOLUME_200_RULES = [
-    rule for rule in VOLUME_275_RULES if not (rule.surface == "Clay" and rule.series == "Masters 1000")
+    ProfileRule("Hard", "Masters 1000", frozenset({"high"}), 15.0, "Hard|Masters 1000|high"),
+    ProfileRule("Hard", "Masters 1000", frozenset({"medium"}), 30.0, "Hard|Masters 1000|medium"),
+    ProfileRule("Hard", "Grand Slam", frozenset({"high", "medium"}), 5.0, "Hard|Grand Slam|high+medium"),
+    ProfileRule("Hard", "ATP500", frozenset({"high", "medium"}), 10.0, "Hard|ATP500|high+medium"),
+    ProfileRule("Clay", "ATP500", frozenset({"high", "medium"}), 10.0, "Clay|ATP500|high+medium"),
+    ProfileRule("Grass", "ATP500", frozenset({"high", "medium"}), 10.0, "Grass|ATP500|high+medium"),
 ]
 
 PROFILE_RULES: dict[str, list[ProfileRule]] = {
@@ -268,7 +274,7 @@ def main() -> int:
     rows = _load_rows(paths)
     lines = [
         "Policy Profile Backtest",
-        "Generated: 2026-03-13",
+        f"Generated: {date.today().isoformat()}",
         f"Rows loaded: {len(rows):,}",
         "Policy exclusions honored from backtest CSV (misprice + <1.25 favorite filters + ATP500 hard short-fav).",
         "Match staking: value_tiered (5-10=0.5u, 10-15=1u, 15-20=1.5u, 20+=2u).",

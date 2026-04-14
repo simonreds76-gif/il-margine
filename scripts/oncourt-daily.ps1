@@ -24,7 +24,7 @@ if ([string]::IsNullOrWhiteSpace($volumeMode)) { $volumeMode = "off" }
 
 function Get-VolumeShadowConfig([string]$mode) {
     switch ($mode) {
-        "volume_200" { return @{ Tag = "volume200"; Label = "Volume 200"; Profile = "volume_200" } }
+        "volume_200" { return @{ Tag = "volume200"; Label = "ATP ML Research"; Profile = "volume_200" } }
         "volume_275" { return @{ Tag = "volume275"; Label = "Volume 275"; Profile = "volume_275" } }
         default { return $null }
     }
