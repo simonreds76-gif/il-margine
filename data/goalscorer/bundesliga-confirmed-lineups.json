@@ -1,3 +1,261 @@
 {
-  "fixtures": []
+  "fixtures": [
+    {
+      "fotmob_match_id": 4829582,
+      "fotmob_page_url": "/matches/st-pauli-vs-1-fc-koln/2crri1#4829582",
+      "home_fotmob_team_id": 8152,
+      "away_fotmob_team_id": 8722,
+      "match_date": "2026-04-17",
+      "home_team": "St. Pauli",
+      "away_team": "1. FC Köln",
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-4-2-1",
+      "away_formation": "4-4-2",
+      "home_players": [
+        "Nikola Vasilj",
+        "Tomoya Ando",
+        "Hauke Wahl",
+        "Karol Mets",
+        "Arkadiusz Pyrka",
+        "Mathias Rasmussen",
+        "Connor Metcalfe",
+        "Lars Ritzka",
+        "Danel Sinani",
+        "Mathias Pereira Lage",
+        "Andréas Hountondji"
+      ],
+      "away_players": [
+        "Marvin Schwäbe",
+        "Sebastian Sebulonsen",
+        "Jahmai Simpson-Pusey",
+        "Cenk Özkacar",
+        "Kristoffer Lund Hansen",
+        "Jan Thielmann",
+        "Ísak Bergmann Jóhannesson",
+        "Eric Martel",
+        "Jakub Kaminski",
+        "Ragnar Ache",
+        "Saïd El Mala"
+      ],
+      "home_starters": [
+        {
+          "name": "Nikola Vasilj",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-2-1",
+          "position_id": 11
+        },
+        {
+          "name": "Tomoya Ando",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 33
+        },
+        {
+          "name": "Hauke Wahl",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 35
+        },
+        {
+          "name": "Karol Mets",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 37
+        },
+        {
+          "name": "Arkadiusz Pyrka",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 62
+        },
+        {
+          "name": "Mathias Rasmussen",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 64
+        },
+        {
+          "name": "Connor Metcalfe",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66
+        },
+        {
+          "name": "Lars Ritzka",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 68
+        },
+        {
+          "name": "Danel Sinani",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84
+        },
+        {
+          "name": "Mathias Pereira Lage",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86
+        },
+        {
+          "name": "Andréas Hountondji",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-2-1",
+          "position_id": 105
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Marvin Schwäbe",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-4-2",
+          "position_id": 11
+        },
+        {
+          "name": "Sebastian Sebulonsen",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 32
+        },
+        {
+          "name": "Jahmai Simpson-Pusey",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 34
+        },
+        {
+          "name": "Cenk Özkacar",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 36
+        },
+        {
+          "name": "Kristoffer Lund Hansen",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 38
+        },
+        {
+          "name": "Jan Thielmann",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 72
+        },
+        {
+          "name": "Ísak Bergmann Jóhannesson",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 74
+        },
+        {
+          "name": "Eric Martel",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 76
+        },
+        {
+          "name": "Jakub Kaminski",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 78
+        },
+        {
+          "name": "Ragnar Ache",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-4-2",
+          "position_id": 104
+        },
+        {
+          "name": "Saïd El Mala",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-4-2",
+          "position_id": 106
+        }
+      ],
+      "home_subs": [],
+      "away_subs": [],
+      "home_unavailable": [
+        "Joel Chima Fujita",
+        "Manolis Saliakas",
+        "James Sands",
+        "Simon Spari",
+        "Eric Smith",
+        "Ricky-Jade Jones"
+      ],
+      "away_unavailable": [
+        "Joël Schmied",
+        "Luca Kilian",
+        "Timo Hübers"
+      ]
+    }
+  ]
 }
