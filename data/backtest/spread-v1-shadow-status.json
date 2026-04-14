@@ -1,0 +1,246 @@
+{
+  "generated_at": "2026-04-14T20:36:12Z",
+  "signals_file": "data\\backtest\\strict-signals-spreadv1-archive.csv",
+  "clv_detail_file": "data\\backtest\\strict-clv-audit-spreadv1-2026.csv",
+  "calibration_file": "data\\backtest\\spread-v1-calibration-params.json",
+  "legacy_profile": "spread_shadow",
+  "active_profile": "spread_v1_shadow",
+  "tracked": 0,
+  "settled": 0,
+  "open": 0,
+  "clv_rows": 0,
+  "last_spread_capture_at": "",
+  "calibration": {
+    "valid": false,
+    "reason": "snapshot-fetch-failed",
+    "line_source_used": "snapshot",
+    "fit_timestamp": "2026-04-14T20:35:42Z",
+    "usable_scope": {
+      "leagues": [
+        "ATP"
+      ],
+      "best_of": "bo3",
+      "surfaces": [
+        "Hard",
+        "Clay"
+      ]
+    },
+    "train_sample_size": 0,
+    "test_sample_size": 0,
+    "surface_eval": {}
+  },
+  "surfaces": {
+    "hard": {
+      "settled_total": 0,
+      "recommended_threshold_pct": null,
+      "promotion_status": "off",
+      "threshold_results": [
+        {
+          "threshold_pct": 5.0,
+          "settled": 0,
+          "staked_units": 0.0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "clv_matched": 0,
+          "avg_clv_pct": null,
+          "median_clv_pct": null,
+          "positive_clv_share_pct": null,
+          "line_bucket_dominance_share": null,
+          "line_bucket_pnl": {},
+          "live_ready": false
+        },
+        {
+          "threshold_pct": 8.0,
+          "settled": 0,
+          "staked_units": 0.0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "clv_matched": 0,
+          "avg_clv_pct": null,
+          "median_clv_pct": null,
+          "positive_clv_share_pct": null,
+          "line_bucket_dominance_share": null,
+          "line_bucket_pnl": {},
+          "live_ready": false
+        },
+        {
+          "threshold_pct": 10.0,
+          "settled": 0,
+          "staked_units": 0.0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "clv_matched": 0,
+          "avg_clv_pct": null,
+          "median_clv_pct": null,
+          "positive_clv_share_pct": null,
+          "line_bucket_dominance_share": null,
+          "line_bucket_pnl": {},
+          "live_ready": false
+        },
+        {
+          "threshold_pct": 12.0,
+          "settled": 0,
+          "staked_units": 0.0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "clv_matched": 0,
+          "avg_clv_pct": null,
+          "median_clv_pct": null,
+          "positive_clv_share_pct": null,
+          "line_bucket_dominance_share": null,
+          "line_bucket_pnl": {},
+          "live_ready": false
+        },
+        {
+          "threshold_pct": 15.0,
+          "settled": 0,
+          "staked_units": 0.0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "clv_matched": 0,
+          "avg_clv_pct": null,
+          "median_clv_pct": null,
+          "positive_clv_share_pct": null,
+          "line_bucket_dominance_share": null,
+          "line_bucket_pnl": {},
+          "live_ready": false
+        },
+        {
+          "threshold_pct": 20.0,
+          "settled": 0,
+          "staked_units": 0.0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "clv_matched": 0,
+          "avg_clv_pct": null,
+          "median_clv_pct": null,
+          "positive_clv_share_pct": null,
+          "line_bucket_dominance_share": null,
+          "line_bucket_pnl": {},
+          "live_ready": false
+        }
+      ],
+      "current_threshold_pct": 5.0,
+      "current": {
+        "threshold_pct": 5.0,
+        "settled": 0,
+        "staked_units": 0.0,
+        "pnl_units": 0.0,
+        "roi_pct": null,
+        "clv_matched": 0,
+        "avg_clv_pct": null,
+        "median_clv_pct": null,
+        "positive_clv_share_pct": null,
+        "line_bucket_dominance_share": null,
+        "line_bucket_pnl": {},
+        "live_ready": false
+      }
+    },
+    "clay": {
+      "settled_total": 0,
+      "recommended_threshold_pct": null,
+      "promotion_status": "off",
+      "threshold_results": [
+        {
+          "threshold_pct": 5.0,
+          "settled": 0,
+          "staked_units": 0.0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "clv_matched": 0,
+          "avg_clv_pct": null,
+          "median_clv_pct": null,
+          "positive_clv_share_pct": null,
+          "line_bucket_dominance_share": null,
+          "line_bucket_pnl": {},
+          "live_ready": false
+        },
+        {
+          "threshold_pct": 8.0,
+          "settled": 0,
+          "staked_units": 0.0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "clv_matched": 0,
+          "avg_clv_pct": null,
+          "median_clv_pct": null,
+          "positive_clv_share_pct": null,
+          "line_bucket_dominance_share": null,
+          "line_bucket_pnl": {},
+          "live_ready": false
+        },
+        {
+          "threshold_pct": 10.0,
+          "settled": 0,
+          "staked_units": 0.0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "clv_matched": 0,
+          "avg_clv_pct": null,
+          "median_clv_pct": null,
+          "positive_clv_share_pct": null,
+          "line_bucket_dominance_share": null,
+          "line_bucket_pnl": {},
+          "live_ready": false
+        },
+        {
+          "threshold_pct": 12.0,
+          "settled": 0,
+          "staked_units": 0.0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "clv_matched": 0,
+          "avg_clv_pct": null,
+          "median_clv_pct": null,
+          "positive_clv_share_pct": null,
+          "line_bucket_dominance_share": null,
+          "line_bucket_pnl": {},
+          "live_ready": false
+        },
+        {
+          "threshold_pct": 15.0,
+          "settled": 0,
+          "staked_units": 0.0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "clv_matched": 0,
+          "avg_clv_pct": null,
+          "median_clv_pct": null,
+          "positive_clv_share_pct": null,
+          "line_bucket_dominance_share": null,
+          "line_bucket_pnl": {},
+          "live_ready": false
+        },
+        {
+          "threshold_pct": 20.0,
+          "settled": 0,
+          "staked_units": 0.0,
+          "pnl_units": 0.0,
+          "roi_pct": null,
+          "clv_matched": 0,
+          "avg_clv_pct": null,
+          "median_clv_pct": null,
+          "positive_clv_share_pct": null,
+          "line_bucket_dominance_share": null,
+          "line_bucket_pnl": {},
+          "live_ready": false
+        }
+      ],
+      "current_threshold_pct": 5.0,
+      "current": {
+        "threshold_pct": 5.0,
+        "settled": 0,
+        "staked_units": 0.0,
+        "pnl_units": 0.0,
+        "roi_pct": null,
+        "clv_matched": 0,
+        "avg_clv_pct": null,
+        "median_clv_pct": null,
+        "positive_clv_share_pct": null,
+        "line_bucket_dominance_share": null,
+        "line_bucket_pnl": {},
+        "live_ready": false
+      }
+    }
+  }
+}

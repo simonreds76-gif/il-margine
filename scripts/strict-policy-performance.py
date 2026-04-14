@@ -442,6 +442,34 @@ def main() -> int:
 
     if not signals_path.exists():
         print(f"Signals file missing: {signals_path}")
+        if args.dry_run:
+            return 0
+        as_of_stub = date.today()
+        source_name = f"{signals_path.name}+{compare_path.name}" if compare_path and compare_path.exists() else signals_path.name
+        z = summarize_mode([], "base")
+        z_ml = _summarize_mode_subset([], "base", BET_TYPE_ML)
+        z_hc = _summarize_mode_subset([], "base", BET_TYPE_HANDICAP)
+        stub_rows = [
+            as_summary_row(generated_utc, as_of_stub, "window", window_days, z, source_name, "", "overall"),
+            as_summary_row(generated_utc, as_of_stub, "all_time", window_days, z, source_name, "", "overall"),
+            as_summary_row(generated_utc, as_of_stub, "all_time", window_days, z, source_name, "", "clean"),
+            as_summary_row(generated_utc, as_of_stub, "window", window_days, z, source_name, "", "clean"),
+            as_summary_row(generated_utc, as_of_stub, "all_time", window_days, z_ml, source_name, BET_TYPE_ML, "overall"),
+            as_summary_row(generated_utc, as_of_stub, "all_time", window_days, z_ml, source_name, BET_TYPE_ML, "clean"),
+            as_summary_row(generated_utc, as_of_stub, "all_time", window_days, z_hc, source_name, BET_TYPE_HANDICAP, "overall"),
+            as_summary_row(generated_utc, as_of_stub, "all_time", window_days, z_hc, source_name, BET_TYPE_HANDICAP, "clean"),
+        ]
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(
+            "Strict Policy Settled Performance\n"
+            f"Generated UTC: {generated_utc}\n"
+            f"As-of date: {as_of_stub.isoformat()}\n"
+            f"No signal file at {signals_path.name}; stub summary (all zeros).\n",
+            encoding="utf-8",
+        )
+        append_summary(summary_path, stub_rows)
+        print(f"Wrote empty stub: {report_path}")
+        print(f"Appended summary CSV: {summary_path}")
         return 0
 
     signal_rows = dedupe_rows(load_csv_rows(signals_path))

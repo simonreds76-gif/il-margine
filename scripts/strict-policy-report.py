@@ -56,14 +56,18 @@ DEFAULT_OUTPUT = STRICT_SIGNAL_PATHS.live
 DEFAULT_INTERNAL_OUTPUT = STRICT_INTERNAL_SIGNAL_PATHS.live
 DEFAULT_COMPARE_OUTPUT = DATA_DIR / "strict-signals-overlay-compare.csv"
 DEFAULT_CLAY_CALIBRATION_FILE = DATA_DIR / "clay-prob-calibration.json"
+DEFAULT_SPREAD_V1_CALIBRATION_FILE = DATA_DIR / "spread-v1-calibration-params.json"
 
 STRICT_MIN_VALUE_PCT = 10.0  # Public-facing high-conviction signals
 INTERNAL_TRACK_MIN_VALUE_PCT = 5.0  # Internal tracking for 200-bet confirmation
 HANDICAP_MIN_EDGE_PCT = 20.0  # Handicap signal: model edge vs Pinnacle spread
 SPREAD_SHADOW_MIN_EDGE_PCT = 20.0  # Separate shadow lane for handicaps outside current strict match policy
+SPREAD_V1_MIN_EDGE_PCT = float(os.environ.get("SPREAD_V1_MIN_EDGE_PCT", "5.0"))
 ALLOWED_SEGMENT = "Hard|Masters 1000"
 ALLOWED_CONFIDENCE = {"high"}
 SPREAD_SHADOW_CONFIDENCE = {"high", "medium"}
+SPREAD_V1_ALLOWED_SURFACES = {"Hard", "Clay"}
+SPREAD_V1_EXCLUDED_SERIES = {"Grand Slam"}
 EXCLUDE_ATP500_HARD_SHORT_FAVORITES = True
 EXCLUDE_SHORT_FAV_MAX_ODDS = 1.8
 EXCLUDE_SHORT_FAV_CONFIDENCE = {"high"}
@@ -108,6 +112,7 @@ VOLUME_200_RULES: list[dict[str, Any]] = [
 ]
 
 MATCH_ONLY_SIGNAL_PROFILES = {"volume_200"}
+SPREAD_ONLY_SIGNAL_PROFILES = {"spread_v1_shadow"}
 
 SHADOW_PROFILE_RULES: dict[str, list[dict[str, Any]]] = {
     "volume_275": VOLUME_275_RULES,
@@ -118,6 +123,7 @@ SHADOW_PROFILE_LABELS: dict[str, str] = {
     "volume_275": "Volume 275 (legacy shadow; includes Clay Masters)",
     "volume_200": "ATP-only ML research lane (main-tour only, no ATP250 shadow expansion, no spreads)",
     "spread_shadow": "Spread shadow (20%+ handicap edges; Clay + non-policy tournaments)",
+    "spread_v1_shadow": "Spread v1 shadow (strict-first ATP bo3 hard/clay research lane; real-market calibration required)",
     "clay_calibrated": "Clay calibrated shadow (new-after-calibration favorite 55-65%)",
 }
 SHADOW_PROFILE_ALLOWED_LEAGUES: dict[str, set[str]] = {
@@ -126,6 +132,7 @@ SHADOW_PROFILE_ALLOWED_LEAGUES: dict[str, set[str]] = {
     "volume_275": {"ATP"},
     "volume_200": {"ATP"},
     "spread_shadow": {"ATP"},
+    "spread_v1_shadow": {"ATP"},
     "clay_calibrated": {"ATP"},
 }
 HOUSTON_SHADOW_MIN_VALUE_PCT = 20.0
@@ -268,6 +275,86 @@ def _load_piecewise_prob_map(path: Path) -> list[tuple[float, float]]:
         last_x = x
         last_y = y
     return points
+
+
+def _load_spread_v1_calibration_status(path: Path) -> dict[str, Any]:
+    status: dict[str, Any] = {
+        "path": str(path),
+        "exists": path.exists(),
+        "valid": False,
+        "reason": "missing" if not path.exists() else "unreadable",
+        "line_source_used": "",
+        "fit_timestamp": "",
+        "usable_scope": {},
+    }
+    if not path.exists():
+        return status
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return status
+    if not isinstance(payload, dict):
+        status["reason"] = "invalid-payload"
+        return status
+    if payload.get("calibration_valid") is False:
+        status["reason"] = str(payload.get("calibration_reason") or "invalid-calibration")
+        status["line_source_used"] = str(payload.get("line_source_used") or "").strip().lower()
+        status["fit_timestamp"] = str(
+            payload.get("fit_timestamp")
+            or payload.get("generated_at_utc")
+            or payload.get("generated_at")
+            or ""
+        ).strip()
+        usable_scope = payload.get("usable_scope")
+        if isinstance(usable_scope, dict):
+            status["usable_scope"] = usable_scope
+        status["train_sample_size"] = payload.get("train_sample_size")
+        status["test_sample_size"] = payload.get("test_sample_size")
+        status["surface_eval"] = payload.get("surface_eval")
+        return status
+
+    line_source = str(payload.get("line_source_used") or "").strip().lower()
+    fit_timestamp = str(
+        payload.get("fit_timestamp")
+        or payload.get("generated_at")
+        or payload.get("fitted_at")
+        or payload.get("created_at")
+        or ""
+    ).strip()
+    usable_scope = payload.get("usable_scope")
+    if not isinstance(usable_scope, dict):
+        status["reason"] = "missing-usable-scope"
+        status["line_source_used"] = line_source
+        status["fit_timestamp"] = fit_timestamp
+        return status
+
+    leagues = {str(item).strip() for item in usable_scope.get("leagues") or [] if str(item).strip()}
+    surfaces = {str(item).strip() for item in usable_scope.get("surfaces") or [] if str(item).strip()}
+    best_of = str(usable_scope.get("best_of") or "").strip().lower()
+
+    status["line_source_used"] = line_source
+    status["fit_timestamp"] = fit_timestamp
+    status["usable_scope"] = usable_scope
+    status["train_sample_size"] = payload.get("train_sample_size")
+    status["test_sample_size"] = payload.get("test_sample_size")
+    status["surface_eval"] = payload.get("surface_eval")
+
+    if line_source != "snapshot":
+        status["reason"] = f"invalid-line-source:{line_source or 'missing'}"
+        return status
+    if best_of != "bo3":
+        status["reason"] = f"invalid-best-of:{best_of or 'missing'}"
+        return status
+    if not {"ATP"}.issubset(leagues):
+        status["reason"] = "invalid-leagues"
+        return status
+    if not SPREAD_V1_ALLOWED_SURFACES.issubset(surfaces):
+        status["reason"] = "invalid-surfaces"
+        return status
+
+    status["valid"] = True
+    status["reason"] = "ok"
+    return status
 
 
 def _interp_piecewise(points: list[tuple[float, float]], x: float) -> float:
@@ -545,6 +632,16 @@ def spread_shadow_reason_for(surface: str, series_bucket: str, confidence: str, 
         return "clay"
     if not in_strict_match_segment:
         return "non_policy"
+    return None
+
+
+def spread_v1_scope_reason(surface: str, series_bucket: str, league: str) -> str | None:
+    if league != "ATP":
+        return "league"
+    if surface not in SPREAD_V1_ALLOWED_SURFACES:
+        return "surface"
+    if series_bucket in SPREAD_V1_EXCLUDED_SERIES:
+        return "best_of_five"
     return None
 
 
@@ -883,7 +980,7 @@ def main() -> int:
     parser.add_argument("--append", action="store_true", help="Write live snapshot CSVs and append archive CSVs")
     parser.add_argument(
         "--signal-profile",
-        choices=("strict", "volume_275", "volume_200", "spread_shadow", "clay_calibrated"),
+        choices=("strict", "volume_275", "volume_200", "spread_shadow", "spread_v1_shadow", "clay_calibrated"),
         default=(os.environ.get("STRICT_SIGNAL_PROFILE", "strict") or "strict").strip().lower(),
         help="Signal profile to evaluate/write (strict live policy or one of the shadow volume profiles).",
     )
@@ -926,13 +1023,18 @@ def main() -> int:
         default=str(DEFAULT_CLAY_CALIBRATION_FILE),
         help="Clay-only favorite-probability remap JSON for the calibrated shadow lane.",
     )
+    parser.add_argument(
+        "--spread-v1-calibration-file",
+        default=str(DEFAULT_SPREAD_V1_CALIBRATION_FILE),
+        help="Versioned real-market spread calibration JSON for spread_v1_shadow.",
+    )
     args = parser.parse_args()
 
     profile_public_paths, profile_internal_paths = SIGNAL_PROFILE_PATHS[args.signal_profile]
     if not args.output:
         args.output = str(profile_public_paths.live)
     if not args.internal_output:
-        if args.signal_profile == "spread_shadow":
+        if args.signal_profile in {"spread_shadow", "spread_v1_shadow"}:
             args.internal_output = ""
         else:
             args.internal_output = str((profile_internal_paths or STRICT_INTERNAL_SIGNAL_PATHS).live)
@@ -946,6 +1048,37 @@ def main() -> int:
     if args.signal_profile == "clay_calibrated" and not clay_prob_map:
         print(f"Clay calibrated profile requested but no valid remap points loaded from {args.clay_calibration_file}", file=sys.stderr)
         return 1
+    spread_v1_calibration_status = _load_spread_v1_calibration_status(Path(args.spread_v1_calibration_file))
+    if args.signal_profile == "spread_v1_shadow" and not spread_v1_calibration_status.get("valid", False):
+        print(
+            "Spread v1 shadow disabled: "
+            f"calibration invalid ({spread_v1_calibration_status.get('reason', 'unknown')}) "
+            f"path={args.spread_v1_calibration_file}"
+        )
+        if args.append:
+            live_dedup_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
+            lane_key_fields = ["date", "player1", "player2", "bet_type", "spread_line", "policy_mode", "signal_profile"]
+            archive_key_fields = ["date", "time_utc", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
+            out_paths = derive_signal_csv_paths(Path(args.output))
+            live_count = write_live_snapshot(
+                out_paths.live,
+                [],
+                dedup_key_fields=live_dedup_fields,
+                lane_key_fields=lane_key_fields,
+            )
+            archive_added = append_rows_dedup(
+                out_paths.archive,
+                [],
+                key_fields=archive_key_fields,
+            )
+            mirror_live_snapshot(out_paths)
+            print(
+                f"Wrote {live_count}/0 public live rows to {out_paths.live} "
+                f"and appended {archive_added} archive rows to {out_paths.archive}."
+            )
+            write_signals_current_artifact()
+            print(f"Updated signals artifact at {SIGNALS_CURRENT_JSON}.")
+        return 0
 
     url = (os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or "").rstrip("/")
     key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
@@ -1069,7 +1202,7 @@ def main() -> int:
         strict_min_value = strict_min_value_for(surface, series_bucket, confidence)
         volume_min_value = (
             shadow_profile_min_value_for(args.signal_profile, surface, series_bucket, confidence, tournament_name)
-            if args.signal_profile not in {"strict", "spread_shadow"}
+            if args.signal_profile not in {"strict", "spread_shadow", "spread_v1_shadow"}
             else None
         )
         if args.signal_profile == "clay_calibrated":
@@ -1078,7 +1211,14 @@ def main() -> int:
         spread_shadow_reason = spread_shadow_reason_for(surface, series_bucket, confidence, tournament_name)
         spread_shadow_eligible = args.signal_profile == "spread_shadow" and spread_shadow_reason is not None
         clay_calibrated_enabled = args.signal_profile == "clay_calibrated" and surface == "Clay"
-        if strict_min_value is None and volume_min_value is None and not spread_shadow_eligible and not clay_calibrated_enabled:
+        spread_v1_requested = args.signal_profile == "spread_v1_shadow"
+        if (
+            strict_min_value is None
+            and volume_min_value is None
+            and not spread_shadow_eligible
+            and not clay_calibrated_enabled
+            and not spread_v1_requested
+        ):
             continue
 
         our_odds1 = r.get("odds1")
@@ -1116,6 +1256,12 @@ def main() -> int:
             clay_calibrated_enabled = False
             if strict_min_value is None:
                 continue
+        spread_v1_scope = spread_v1_scope_reason(surface, series_bucket, league) if spread_v1_requested else None
+        spread_v1_eligible = (
+            spread_v1_requested
+            and spread_v1_scope is None
+            and spread_v1_calibration_status.get("valid") is True
+        )
 
         # ML only: skip when Pinnacle favourite odds < 1.25. Keep spreads eligible.
         pin_fav_odds = min(float(pin["odds1"] or 0), float(pin["odds2"] or 0))
@@ -1205,17 +1351,24 @@ def main() -> int:
             volume_min_value is not None
             and not strict_spread_eligible
             and args.signal_profile not in MATCH_ONLY_SIGNAL_PROFILES
+            and args.signal_profile not in SPREAD_ONLY_SIGNAL_PROFILES
         )
         # spread_shadow lane targets clay/non-policy HC edges; those segments often have no
         # strict_min_value (non-policy). The API still shows them — do not drop the row here
         # or handicap rows never reach candidates (0/0 append forever).
         if not strict_match and not volume_match:
-            if not strict_spread_eligible and not volume_spread_eligible and not spread_shadow_eligible and not clay_calibrated_match:
+            if (
+                not strict_spread_eligible
+                and not volume_spread_eligible
+                and not spread_shadow_eligible
+                and not spread_v1_eligible
+                and not clay_calibrated_match
+            ):
                 continue
         bet_side = "fav" if side == fav_side else "dog"
         tname = tournament_name
         tkey = tour_key(tname)
-        if args.signal_profile != "spread_shadow" and (strict_match or volume_match):
+        if args.signal_profile not in {"spread_shadow", "spread_v1_shadow"} and (strict_match or volume_match):
             stake_units, stake_gbp, stake_model = compute_stake_units(
                 our_odds1=our_odds1,
                 our_odds2=our_odds2,
@@ -1263,6 +1416,7 @@ def main() -> int:
                     "_strict_match": strict_match,
                     "_volume_match": volume_match,
                     "_spread_shadow_match": False,
+                    "_spread_v1_match": False,
                     "shadow_reason": "",
                 }
             )
@@ -1329,6 +1483,7 @@ def main() -> int:
                     "_strict_match": False,
                     "_volume_match": False,
                     "_spread_shadow_match": False,
+                    "_spread_v1_match": False,
                     "_clay_calibrated_match": True,
                     "shadow_reason": "new_after_calibration_favorite_55_65",
                 }
@@ -1336,7 +1491,7 @@ def main() -> int:
 
         # Handicap signals: when handicap_edge >= 20% on P1+ or P2-
         # Keep them flat 1u and profile-gated the same way as match signals.
-        profile_spread_eligible = strict_spread_eligible or volume_spread_eligible or spread_shadow_eligible
+        profile_spread_eligible = strict_spread_eligible or volume_spread_eligible or spread_shadow_eligible or spread_v1_eligible
         if profile_spread_eligible and (
             spread_line is not None
             and spread_o1 is not None
@@ -1345,7 +1500,51 @@ def main() -> int:
             and he_p2 is not None
             and not inj_any
         ):
-            if he1 >= (SPREAD_SHADOW_MIN_EDGE_PCT if args.signal_profile == "spread_shadow" else HANDICAP_MIN_EDGE_PCT):
+            edge_threshold = (
+                SPREAD_SHADOW_MIN_EDGE_PCT
+                if args.signal_profile == "spread_shadow"
+                else SPREAD_V1_MIN_EDGE_PCT
+                if args.signal_profile == "spread_v1_shadow"
+                else HANDICAP_MIN_EDGE_PCT
+            )
+            spread_v1_p1_allowed = (
+                args.signal_profile != "spread_v1_shadow"
+                or (
+                    not model_ml_excluded
+                    and not pin_ml_excluded
+                    and not is_excluded_heavy_favorite_dog(
+                        surface,
+                        series_bucket,
+                        model_favorite_prob,
+                        "P1",
+                        model_favorite_side,
+                    )
+                )
+            )
+            spread_v1_p2_allowed = (
+                args.signal_profile != "spread_v1_shadow"
+                or (
+                    not model_ml_excluded
+                    and not pin_ml_excluded
+                    and not is_excluded_heavy_favorite_dog(
+                        surface,
+                        series_bucket,
+                        model_favorite_prob,
+                        "P2",
+                        model_favorite_side,
+                    )
+                )
+            )
+            shadow_reason_value = (
+                spread_shadow_reason
+                if args.signal_profile == "spread_shadow"
+                else "strict_first_atp_bo3_hard_clay"
+                if args.signal_profile == "spread_v1_shadow"
+                else ""
+            )
+            calibration_reason = spread_v1_calibration_status.get("reason", "")
+            calibration_source = spread_v1_calibration_status.get("line_source_used", "")
+            if he1 >= edge_threshold and spread_v1_p1_allowed:
                 stake_units_h1, stake_gbp_h1, stake_model_h1 = compute_stake_units(
                     our_odds1=our_odds1,
                     our_odds2=our_odds2,
@@ -1393,10 +1592,14 @@ def main() -> int:
                         "_strict_match": strict_spread_eligible,
                         "_volume_match": volume_spread_eligible,
                         "_spread_shadow_match": spread_shadow_eligible,
-                        "shadow_reason": spread_shadow_reason or "",
+                        "_spread_v1_match": spread_v1_eligible,
+                        "shadow_reason": shadow_reason_value or "",
+                        "spread_calibration_reason": calibration_reason,
+                        "spread_calibration_source": calibration_source,
+                        "spread_surface_scope": surface if surface in SPREAD_V1_ALLOWED_SURFACES else "",
                     }
                 )
-            if he2 >= (SPREAD_SHADOW_MIN_EDGE_PCT if args.signal_profile == "spread_shadow" else HANDICAP_MIN_EDGE_PCT):
+            if he2 >= edge_threshold and spread_v1_p2_allowed:
                 stake_units_h2, stake_gbp_h2, stake_model_h2 = compute_stake_units(
                     our_odds1=our_odds1,
                     our_odds2=our_odds2,
@@ -1444,7 +1647,11 @@ def main() -> int:
                         "_strict_match": strict_spread_eligible,
                         "_volume_match": volume_spread_eligible,
                         "_spread_shadow_match": spread_shadow_eligible,
-                        "shadow_reason": spread_shadow_reason or "",
+                        "_spread_v1_match": spread_v1_eligible,
+                        "shadow_reason": shadow_reason_value or "",
+                        "spread_calibration_reason": calibration_reason,
+                        "spread_calibration_source": calibration_source,
+                        "spread_surface_scope": surface if surface in SPREAD_V1_ALLOWED_SURFACES else "",
                     }
                 )
 
@@ -1461,6 +1668,8 @@ def main() -> int:
         profile_key = "_strict_match"
     elif args.signal_profile == "spread_shadow":
         profile_key = "_spread_shadow_match"
+    elif args.signal_profile == "spread_v1_shadow":
+        profile_key = "_spread_v1_match"
     elif args.signal_profile == "clay_calibrated":
         profile_key = "_clay_calibrated_match"
     else:
@@ -1523,6 +1732,12 @@ def main() -> int:
             s["signal_profile"] = "spread_shadow"
         public_signals = signals
         internal_signals = []
+    elif args.signal_profile == "spread_v1_shadow":
+        for s in signals:
+            s["threshold_tier"] = "profile"
+            s["signal_profile"] = "spread_v1_shadow"
+        public_signals = signals
+        internal_signals = []
     else:
         for s in signals:
             s["threshold_tier"] = "profile"
@@ -1543,6 +1758,14 @@ def main() -> int:
         )
     else:
         print(f"Profile: {args.signal_profile}  |  {SHADOW_PROFILE_LABELS.get(args.signal_profile, args.signal_profile)}")
+        if args.signal_profile == "spread_v1_shadow":
+            print(
+                "Spread v1 calibration: "
+                f"{'ready' if spread_v1_calibration_status.get('valid') else 'off'}  |  "
+                f"reason={spread_v1_calibration_status.get('reason', '')}  |  "
+                f"line_source={spread_v1_calibration_status.get('line_source_used', '') or 'n/a'}  |  "
+                f"path={args.spread_v1_calibration_file}"
+            )
     print(
         "Stake sizing: "
         f"match 1u flat; spread 2u flat; unit_gbp={STRICT_UNIT_GBP:.2f}"
@@ -1608,6 +1831,7 @@ def main() -> int:
             r.pop("_strict_match", None)
             r.pop("_volume_match", None)
             r.pop("_spread_shadow_match", None)
+            r.pop("_spread_v1_match", None)
             r.pop("_clay_calibrated_match", None)
 
     if args.append:

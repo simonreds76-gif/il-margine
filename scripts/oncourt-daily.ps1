@@ -21,6 +21,16 @@ $syncLabel = ($syncArgs -join " ")
 if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_VOLUME_MODE)) { $env:STRICT_POLICY_VOLUME_MODE = "volume_200" }
 $volumeMode = "$env:STRICT_POLICY_VOLUME_MODE".ToLower()
 if ([string]::IsNullOrWhiteSpace($volumeMode)) { $volumeMode = "off" }
+if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_SHADOW_ENABLED)) { $env:STRICT_SPREAD_V1_SHADOW_ENABLED = "1" }
+if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_CALIBRATED_ENABLED)) { $env:STRICT_CLAY_CALIBRATED_ENABLED = "0" }
+
+function Test-EnvFlag([string]$value) {
+    if ([string]::IsNullOrWhiteSpace($value)) { return $false }
+    return @("1", "true", "yes", "on") -contains $value.Trim().ToLower()
+}
+
+$spreadV1ShadowEnabled = Test-EnvFlag $env:STRICT_SPREAD_V1_SHADOW_ENABLED
+$clayCalibratedEnabled = Test-EnvFlag $env:STRICT_CLAY_CALIBRATED_ENABLED
 
 function Get-VolumeShadowConfig([string]$mode) {
     switch ($mode) {
@@ -133,16 +143,24 @@ if ($null -ne $volumeCfg) {
     Log "=== Step 8/10: Volume shadow skipped (STRICT_POLICY_VOLUME_MODE=$volumeMode) ==="
 }
 
-Log "=== Step 8b/10: Spread shadow (20%+ handicap edges; Clay + non-policy tournaments) ==="
-& python scripts\strict-policy-report.py --append --signal-profile spread_shadow --output "data\backtest\strict-signals-spreadshadow-live.csv" 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: spread_shadow append failed (exit $LASTEXITCODE), continuing..."
+if ($spreadV1ShadowEnabled) {
+    Log "=== Step 8b/10: Spread v1 shadow (strict-first ATP bo3 hard/clay) ==="
+    & python scripts\strict-policy-report.py --append --signal-profile spread_v1_shadow --output "data\backtest\strict-signals-spreadv1-live.csv" 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "WARNING: spread_v1_shadow append failed (exit $LASTEXITCODE), continuing..."
+    }
+} else {
+    Log "=== Step 8b/10: Spread v1 shadow skipped (STRICT_SPREAD_V1_SHADOW_ENABLED=0) ==="
 }
 
-Log "=== Step 8c/10: Clay 2026 shadow (new-after-calibration favorites 55-65%) ==="
-& python scripts\strict-policy-report.py --append --signal-profile clay_calibrated --output "data\backtest\strict-signals-claycal-live.csv" --internal-output "data\backtest\strict-signals-claycal-internal-live.csv" 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: clay_calibrated append failed (exit $LASTEXITCODE), continuing..."
+if ($clayCalibratedEnabled) {
+    Log "=== Step 8c/10: Clay 2026 shadow (new-after-calibration favorites 55-65%) ==="
+    & python scripts\strict-policy-report.py --append --signal-profile clay_calibrated --output "data\backtest\strict-signals-claycal-live.csv" --internal-output "data\backtest\strict-signals-claycal-internal-live.csv" 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "WARNING: clay_calibrated append failed (exit $LASTEXITCODE), continuing..."
+    }
+} else {
+    Log "=== Step 8c/10: Clay 2026 shadow skipped (STRICT_CLAY_CALIBRATED_ENABLED=0) ==="
 }
 
 # Step 9: Settle/report immediately after nightly append so results are ready by the next morning.

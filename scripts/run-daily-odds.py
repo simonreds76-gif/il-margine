@@ -146,19 +146,19 @@ def main() -> int:
             str(ROOT / "scripts" / "strict-policy-report.py"),
             "--append",
             "--signal-profile",
-            "spread_shadow",
+            "spread_v1_shadow",
         ]
         if args.strict_report_date:
             spread_cmd.extend(["--date", args.strict_report_date])
         run_cmd(
             spread_cmd,
-            label="6/6 Spread Shadow append",
+            label="6/6 Spread v1 Shadow append",
             fatal=False,
         )
     else:
         print("\n=== 4/6 Strict report skipped (--skip-strict-report) ===")
         print("=== 5/6 Clay 2026 shadow skipped (--skip-strict-report) ===")
-        print("=== 6/6 Spread Shadow skipped (--skip-strict-report) ===")
+        print("=== 6/6 Spread v1 Shadow skipped (--skip-strict-report) ===")
 
     print("\nDone. Pinnacle snapshot + daily_fair_odds updated.")
     if not args.skip_strict_report:

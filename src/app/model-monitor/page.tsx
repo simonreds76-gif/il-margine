@@ -32,6 +32,48 @@ type ClvSummary = {
   warning?: string;
 };
 
+type SpreadThresholdStatus = {
+  threshold_pct?: number;
+  settled?: number;
+  staked_units?: number;
+  pnl_units?: number;
+  roi_pct?: number;
+  clv_matched?: number;
+  avg_clv_pct?: number;
+  median_clv_pct?: number;
+  positive_clv_share_pct?: number;
+  line_bucket_dominance_share?: number;
+  live_ready?: boolean;
+};
+
+type SpreadSurfaceStatus = {
+  settled_total?: number;
+  recommended_threshold_pct?: number | null;
+  promotion_status?: string;
+  threshold_results?: SpreadThresholdStatus[];
+  current_threshold_pct?: number | null;
+  current?: SpreadThresholdStatus;
+};
+
+type SpreadV1Status = {
+  generated_at?: string;
+  tracked?: number;
+  settled?: number;
+  open?: number;
+  clv_rows?: number;
+  last_spread_capture_at?: string;
+  calibration?: {
+    valid?: boolean;
+    reason?: string;
+    line_source_used?: string;
+    fit_timestamp?: string;
+  };
+  surfaces?: {
+    hard?: SpreadSurfaceStatus;
+    clay?: SpreadSurfaceStatus;
+  };
+};
+
 type ProfileSummary = {
   name: string;
   bets?: number;
@@ -177,6 +219,15 @@ async function readLocalMtime(relPath: string): Promise<string | null> {
   }
 }
 
+function parseJsonMaybe<T>(text: string | null): T | undefined {
+  if (!text) return undefined;
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    return undefined;
+  }
+}
+
 function lastMatching(rows: CsvRow[], predicate: (row: CsvRow) => boolean): CsvRow | undefined {
   for (let i = rows.length - 1; i >= 0; i -= 1) {
     if (predicate(rows[i])) return rows[i];
@@ -257,11 +308,20 @@ function metricTone(value?: number): string {
 function parseClvAudit(text: string | null): ClvSummary {
   if (!text) return {};
   const warningBlock = text.match(/Coverage warning\s+([\s\S]+?)(?:\n\n|$)/);
+  const settledAudited =
+    parseIntMaybe(text.match(/Settled ML rows audited:\s+(\d+)/)?.[1]) ??
+    parseIntMaybe(text.match(/Settled spread rows audited:\s+(\d+)/)?.[1]);
+  const matchedCount =
+    parseIntMaybe(text.match(/Matched ML rows:\s+(\d+)\s+\/\s+\d+/)?.[1]) ??
+    parseIntMaybe(text.match(/Matched spread rows:\s+(\d+)\s+\/\s+\d+/)?.[1]);
+  const matchedTotal =
+    parseIntMaybe(text.match(/Matched ML rows:\s+\d+\s+\/\s+(\d+)/)?.[1]) ??
+    parseIntMaybe(text.match(/Matched spread rows:\s+\d+\s+\/\s+(\d+)/)?.[1]);
   return {
     rawRows: parseIntMaybe(text.match(/Raw strict rows:\s+(\d+)/)?.[1]),
-    settledMlAudited: parseIntMaybe(text.match(/Settled ML rows audited:\s+(\d+)/)?.[1]),
-    matchedMl: parseIntMaybe(text.match(/Matched ML rows:\s+(\d+)\s+\/\s+\d+/)?.[1]),
-    matchedMlTotal: parseIntMaybe(text.match(/Matched ML rows:\s+\d+\s+\/\s+(\d+)/)?.[1]),
+    settledMlAudited: settledAudited,
+    matchedMl: matchedCount,
+    matchedMlTotal: matchedTotal,
     historyRows: parseIntMaybe(text.match(/History rows loaded:\s+(\d+)/)?.[1]),
     avgClvPct: parseFloatMaybe(text.match(/Avg CLV implied delta:\s+([+-]?[\d.]+)%/)?.[1]),
     medianClvPct: parseFloatMaybe(text.match(/Median CLV implied delta:\s+([+-]?[\d.]+)%/)?.[1]),
@@ -569,72 +629,93 @@ export default async function ModelMonitorPage() {
   const [
     strictPerfCsv,
     volumePerfCsv,
+    spreadV1PerfCsv,
     spreadShadowPerfCsv,
     clay2026PerfCsv,
     strictSignalsArchiveCsv,
     strictSignalsLiveCsv,
     clvAuditTxt,
     clvAuditVolumeTxt,
+    clvAuditSpreadV1Txt,
     profileTxt,
     shadowComparisonTxt,
     volumeSignalsArchiveCsv,
     volumeSignalsLiveCsv,
+    spreadV1SignalsArchiveCsv,
+    spreadV1SignalsLiveCsv,
     spreadShadowSignalsArchiveCsv,
     spreadShadowSignalsLiveCsv,
     clay2026SignalsArchiveCsv,
     clay2026SignalsLiveCsv,
+    spreadV1StatusJson,
     strictPerfMtime,
     volumePerfMtime,
+    spreadV1PerfMtime,
     spreadShadowPerfMtime,
     clay2026PerfMtime,
     clvAuditMtime,
     clvAuditVolumeMtime,
+    clvAuditSpreadV1Mtime,
     profileMtime,
     strictSignalsLiveMtime,
     volumeSignalsMtime,
+    spreadV1SignalsMtime,
     spreadShadowSignalsMtime,
     clay2026SignalsMtime,
+    spreadV1StatusMtime,
   ] = await Promise.all([
     readLocalFile("data/backtest/strict-policy-performance-weekly.csv"),
     readLocalFile("data/backtest/strict-policy-performance-volume200-weekly.csv"),
+    readLocalFile("data/backtest/strict-policy-performance-spreadv1-weekly.csv"),
     readLocalFile("data/backtest/strict-policy-performance-spreadshadow-weekly.csv"),
     readLocalFile("data/backtest/strict-policy-performance-clay2026-weekly.csv"),
     readLocalFile("data/backtest/strict-signals-archive.csv"),
     readLocalFile("data/backtest/strict-signals-live.csv"),
     readLocalFile("data/backtest/strict-clv-audit-2026.txt"),
     readLocalFile("data/backtest/strict-clv-audit-volume200-2026.txt"),
+    readLocalFile("data/backtest/strict-clv-audit-spreadv1-2026.txt"),
     readLocalFile("data/backtest/policy-profile-backtest-2022-2025.txt"),
     readLocalFile("data/backtest/shadow-profile-comparison.txt"),
     readLocalFile("data/backtest/strict-signals-volume200-archive.csv"),
     readLocalFile("data/backtest/strict-signals-volume200-live.csv"),
+    readLocalFile("data/backtest/strict-signals-spreadv1-archive.csv"),
+    readLocalFile("data/backtest/strict-signals-spreadv1-live.csv"),
     readLocalFile("data/backtest/strict-signals-spreadshadow-archive.csv"),
     readLocalFile("data/backtest/strict-signals-spreadshadow-live.csv"),
     readLocalFile("data/backtest/strict-signals-claycal-archive.csv"),
     readLocalFile("data/backtest/strict-signals-claycal-live.csv"),
+    readLocalFile("data/backtest/spread-v1-shadow-status.json"),
     readLocalMtime("data/backtest/strict-policy-performance-weekly.csv"),
     readLocalMtime("data/backtest/strict-policy-performance-volume200-weekly.csv"),
+    readLocalMtime("data/backtest/strict-policy-performance-spreadv1-weekly.csv"),
     readLocalMtime("data/backtest/strict-policy-performance-spreadshadow-weekly.csv"),
     readLocalMtime("data/backtest/strict-policy-performance-clay2026-weekly.csv"),
     readLocalMtime("data/backtest/strict-clv-audit-2026.txt"),
     readLocalMtime("data/backtest/strict-clv-audit-volume200-2026.txt"),
+    readLocalMtime("data/backtest/strict-clv-audit-spreadv1-2026.txt"),
     readLocalMtime("data/backtest/policy-profile-backtest-2022-2025.txt"),
     readLocalMtime("data/backtest/strict-signals-live.csv"),
     readLocalMtime("data/backtest/strict-signals-volume200-live.csv"),
+    readLocalMtime("data/backtest/strict-signals-spreadv1-live.csv"),
     readLocalMtime("data/backtest/strict-signals-spreadshadow-live.csv"),
     readLocalMtime("data/backtest/strict-signals-claycal-live.csv"),
+    readLocalMtime("data/backtest/spread-v1-shadow-status.json"),
   ]);
 
   const strictRows = strictPerfCsv ? parseCsv(strictPerfCsv) : [];
   const volumeRows = volumePerfCsv ? parseCsv(volumePerfCsv) : [];
+  const spreadV1Rows = spreadV1PerfCsv ? parseCsv(spreadV1PerfCsv) : [];
   const spreadShadowRows = spreadShadowPerfCsv ? parseCsv(spreadShadowPerfCsv) : [];
   const clay2026Rows = clay2026PerfCsv ? parseCsv(clay2026PerfCsv) : [];
   const strictBase = parsePerf(strictRows, "base");
   const strictOverlay = parsePerf(strictRows, "overlay");
   const volumeBase = parsePerf(volumeRows, "base");
+  const spreadV1Base = parsePerf(spreadV1Rows, "base");
   const spreadShadowBase = parsePerf(spreadShadowRows, "base");
   const clay2026Base = parsePerf(clay2026Rows, "base");
   const clv = parseClvAudit(clvAuditTxt);
   const clvVolume = parseClvAudit(clvAuditVolumeTxt);
+  const clvSpreadV1 = parseClvAudit(clvAuditSpreadV1Txt);
   const profiles = parsePolicyProfiles(profileTxt);
   const profileMap = new Map(profiles.map((profile) => [profile.name, profile]));
   const strictSignalsArchive = parseSignalRows(strictSignalsArchiveCsv);
@@ -648,6 +729,12 @@ export default async function ModelMonitorPage() {
   const volumeQueue = getActiveQueueRows(volumeSignalsLive);
   const volumeNoMatchRows = getNoMatchRows(volumeSignalsArchive);
   const volumeSettledRows = getSettledSignalRows(volumeSignalsArchive);
+  const spreadV1SignalsArchive = parseSignalRows(spreadV1SignalsArchiveCsv);
+  const spreadV1SignalsLive = parseSignalRows(spreadV1SignalsLiveCsv);
+  const spreadV1SignalsClean = filterCleanSignalRows(spreadV1SignalsArchive);
+  const spreadV1Queue = getActiveQueueRows(spreadV1SignalsLive);
+  const spreadV1NoMatchRows = getNoMatchRows(spreadV1SignalsArchive);
+  const spreadV1SettledRows = getSettledSignalRows(spreadV1SignalsArchive);
   const spreadShadowSignalsArchive = parseSignalRows(spreadShadowSignalsArchiveCsv);
   const spreadShadowSignalsLive = parseSignalRows(spreadShadowSignalsLiveCsv);
   const spreadShadowSignalsClean = filterCleanSignalRows(spreadShadowSignalsArchive);
@@ -671,13 +758,17 @@ export default async function ModelMonitorPage() {
   const volumeSpreadRecordedCohort = summarizeSignalCohort(volumeSignalsClean, undefined, "recorded", "spread");
   const volumeMlFlatCohort = summarizeSignalCohort(volumeSignalsClean, undefined, "flat", "match");
   const volumeSpreadFlatCohort = summarizeSignalCohort(volumeSignalsClean, undefined, "flat", "spread");
+  const spreadV1SpreadRecordedCohort = summarizeSignalCohort(spreadV1SignalsClean, undefined, "recorded", "spread");
+  const spreadV1SpreadFlatCohort = summarizeSignalCohort(spreadV1SignalsClean, undefined, "flat", "spread");
   const spreadShadowSpreadRecordedCohort = summarizeSignalCohort(spreadShadowSignalsClean, undefined, "recorded", "spread");
   const spreadShadowSpreadFlatCohort = summarizeSignalCohort(spreadShadowSignalsClean, undefined, "flat", "spread");
   const clay2026MlRecordedCohort = summarizeSignalCohort(clay2026SignalsClean, undefined, "recorded", "match");
   const clay2026MlFlatCohort = summarizeSignalCohort(clay2026SignalsClean, undefined, "flat", "match");
+  const spreadV1Status = parseJsonMaybe<SpreadV1Status>(spreadV1StatusJson);
 
   const strictAllRoi = perfValue(strictBase.combinedAll, "roi_pct", parseFloatMaybe);
   const volumeAllRoi = perfValue(volumeBase.combinedAll, "roi_pct", parseFloatMaybe);
+  const spreadV1AllRoi = perfValue(spreadV1Base.combinedAll, "roi_pct", parseFloatMaybe);
   const spreadShadowAllRoi = perfValue(spreadShadowBase.combinedAll, "roi_pct", parseFloatMaybe);
   const clay2026AllRoi = perfValue(clay2026Base.combinedAll, "roi_pct", parseFloatMaybe);
   const strictWindowRoi = perfValue(strictBase.combinedWindow, "roi_pct", parseFloatMaybe);
@@ -686,8 +777,11 @@ export default async function ModelMonitorPage() {
   const auditedMl = clv.matchedMlTotal ?? clv.settledMlAudited ?? 0;
   const matchedMlVolume = clvVolume.matchedMl ?? 0;
   const auditedMlVolume = clvVolume.matchedMlTotal ?? clvVolume.settledMlAudited ?? 0;
+  const matchedSpreadV1 = clvSpreadV1.matchedMl ?? 0;
+  const auditedSpreadV1 = clvSpreadV1.matchedMlTotal ?? clvSpreadV1.settledMlAudited ?? 0;
   const strictAsOf = strictBase.combinedAll?.as_of_date;
   const volumeAsOf = volumeBase.combinedAll?.as_of_date;
+  const spreadV1AsOf = spreadV1Base.combinedAll?.as_of_date;
   const spreadShadowAsOf = spreadShadowBase.combinedAll?.as_of_date;
   const clay2026AsOf = clay2026Base.combinedAll?.as_of_date;
   const shadowProfile = profileMap.get("volume_200");
@@ -695,10 +789,12 @@ export default async function ModelMonitorPage() {
   const missingReports = [
     !strictPerfCsv ? "strict weekly performance" : null,
     !volumePerfCsv ? "volume_200 weekly performance" : null,
+    !spreadV1PerfCsv ? "spread_v1 weekly performance" : null,
     !spreadShadowPerfCsv ? "spread shadow weekly performance" : null,
     !clay2026PerfCsv ? "Clay 2026 weekly performance" : null,
     !clvAuditTxt ? "strict CLV audit" : null,
     !clvAuditVolumeTxt ? "volume_200 CLV audit" : null,
+    !clvAuditSpreadV1Txt ? "spread_v1 CLV audit" : null,
     !profileTxt ? "policy profile backtest" : null,
   ].filter(Boolean) as string[];
   const strictDiagnosis =
@@ -725,6 +821,16 @@ export default async function ModelMonitorPage() {
       : perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) === 0
         ? `Spread shadow has ${spreadShadowSignalsArchive.length} tracked rows, but no settled sample yet.`
         : `Spread shadow is tracking ${perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? 0} rows with ${perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) ?? 0} settled so far.`;
+  const spreadV1Diagnosis =
+    !spreadV1SignalsLiveCsv
+      ? "Spread v1 shadow has no live CSV on disk yet."
+      : spreadV1Queue.length === 0 && spreadV1NoMatchRows.length > 0
+        ? `Spread v1 shadow has ${spreadV1NoMatchRows.length} unresolved no_match rows, but no true live queue right now.`
+        : spreadV1SignalsLive.length === 0
+          ? "Spread v1 shadow is wired in, but it has not logged a qualifying strict-first ATP bo3 hard/clay spread row yet."
+          : spreadV1SettledRows.length === 0
+            ? `Spread v1 shadow has ${spreadV1SignalsArchive.length} tracked rows, but no settled spread sample yet.`
+            : `Spread v1 shadow has ${spreadV1SettledRows.length} settled spreads with CLV coverage ${matchedSpreadV1}/${auditedSpreadV1 || 0}.`;
   const clay2026Diagnosis =
     !clay2026SignalsLiveCsv
       ? "Clay 2026 has no live CSV on disk right now, which usually means the calibrated lane has not written a qualifying row yet."
@@ -749,6 +855,8 @@ export default async function ModelMonitorPage() {
   const volumeSettledCount =
     perfValue(volumeBase.combinedAll, "settled", parseIntMaybe) ??
     volumeSignalsArchive.filter((row) => (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
+  const spreadV1TrackedCount = perfValue(spreadV1Base.combinedAll, "signals", parseIntMaybe) ?? spreadV1SignalsArchive.length;
+  const spreadV1SettledCount = perfValue(spreadV1Base.combinedAll, "settled", parseIntMaybe) ?? spreadV1SettledRows.length;
   const spreadShadowTrackedCount = perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? spreadShadowSignalsArchive.length;
   const spreadShadowSettledCount = perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) ?? 0;
   const clay2026TrackedCount = perfValue(clay2026Base.combinedAll, "signals", parseIntMaybe) ?? clay2026SignalsArchive.length;
@@ -757,6 +865,7 @@ export default async function ModelMonitorPage() {
   const strictSpreadOpenCount = strictQueue.filter((row) => row.betType === "spread").length;
   const volumeMlOpenCount = volumeQueueMlCount;
   const volumeSpreadOpenCount = volumeQueueSpreadCount;
+  const spreadV1OpenCount = perfValue(spreadV1Base.combinedAll, "unsettled", parseIntMaybe) ?? spreadV1Queue.length;
   const spreadShadowOpenCount = spreadShadowQueue.length;
   const clay2026OpenCount = clay2026Queue.length;
   const resultsAsOfDate =
@@ -766,6 +875,7 @@ export default async function ModelMonitorPage() {
   const latestSettledRows = [
     ...strictSettledRows.map((row) => ({ source: "Strict", lane: row.betType === "spread" ? "Strict Spread" : "Strict ML", accent: "rose" as const, row })),
     ...volumeSettledRows.map((row) => ({ source: "Volume 200", lane: row.betType === "spread" ? "Volume 200 Spread" : "Volume 200 ML", accent: "amber" as const, row })),
+    ...spreadV1SettledRows.map((row) => ({ source: "Spread v1", lane: "Spread v1 HC", accent: "sky" as const, row })),
     ...spreadShadowSettledRows.map((row) => ({ source: "Spread Shadow", lane: "Spread Shadow HC", accent: "cyan" as const, row })),
     ...clay2026SettledRows.map((row) => ({ source: "Clay 2026", lane: "Clay 2026 ML", accent: "orange" as const, row })),
   ].sort((left, right) => {
@@ -839,6 +949,22 @@ export default async function ModelMonitorPage() {
       unitStakePounds: volumeSpreadRecordedCohort.pnlUnits * 100,
       winRate: perfValue(volumeBase.handicapAll, "win_rate_pct", parseFloatMaybe),
       clvLabel: "n/a",
+    },
+    {
+      policy: "Spread v1",
+      lane: "HC",
+      marketType: "Handicap",
+      settled: spreadV1SettledCount,
+      signals: spreadV1TrackedCount,
+      open: spreadV1OpenCount,
+      wlv: perfWlv(spreadV1Base.handicapAll ?? spreadV1Base.combinedAll),
+      roi: perfValue(spreadV1Base.handicapAll ?? spreadV1Base.combinedAll, "roi_pct", parseFloatMaybe),
+      flatStakePounds: spreadV1SpreadFlatCohort.pnlUnits * 100,
+      flatTotalStakedPounds: spreadV1SpreadFlatCohort.stakedUnits * 100,
+      unitTotalStakedPounds: spreadV1SpreadRecordedCohort.stakedUnits * 100,
+      unitStakePounds: spreadV1SpreadRecordedCohort.pnlUnits * 100,
+      winRate: perfValue(spreadV1Base.handicapAll ?? spreadV1Base.combinedAll, "win_rate_pct", parseFloatMaybe),
+      clv: clvSpreadV1.avgClvPct,
     },
     {
       policy: "Spread Shadow",
@@ -915,15 +1041,19 @@ export default async function ModelMonitorPage() {
             <div className="grid gap-2 sm:grid-cols-2">
               <FileStamp label="Strict perf" value={strictPerfMtime} />
               <FileStamp label="Shadow perf" value={volumePerfMtime} />
+              <FileStamp label="Spread v1 perf" value={spreadV1PerfMtime} />
               <FileStamp label="Spread shadow perf" value={spreadShadowPerfMtime} />
               <FileStamp label="Clay 2026 perf" value={clay2026PerfMtime} />
               <FileStamp label="Strict CLV" value={clvAuditMtime} />
               <FileStamp label="Vol200 CLV" value={clvAuditVolumeMtime} />
+              <FileStamp label="Spread v1 CLV" value={clvAuditSpreadV1Mtime} />
               <FileStamp label="Profile backtest" value={profileMtime} />
               <FileStamp label="Strict signals" value={strictSignalsLiveMtime} />
               <FileStamp label="Vol200 signals" value={volumeSignalsMtime} />
+              <FileStamp label="Spread v1 signals" value={spreadV1SignalsMtime} />
               <FileStamp label="Spread shadow signals" value={spreadShadowSignalsMtime} />
               <FileStamp label="Clay 2026 signals" value={clay2026SignalsMtime} />
+              <FileStamp label="Spread v1 status" value={spreadV1StatusMtime} />
             </div>
           </div>
         </section>
@@ -1031,7 +1161,7 @@ export default async function ModelMonitorPage() {
               </table>
             </div>
             <p className="mt-3 text-xs leading-6 text-slate-500">
-              Default board uses one money column only: <span className="font-semibold text-slate-300">Recorded P/L (GBP100/u)</span>. That is the actual settled P/L from stored unit sizes with 1u = GBP100. CLV is only audited on the ML lanes with dedicated history coverage right now. Spread Shadow and Clay 2026 show <span className="font-semibold text-slate-400">n/a</span> until that audit exists.
+              Default board uses one money column only: <span className="font-semibold text-slate-300">Recorded P/L (GBP100/u)</span>. That is the actual settled P/L from stored unit sizes with 1u = GBP100. CLV is audited on strict ML, ATP ML research, and spread_v1 shadow. Legacy Spread Shadow and Clay 2026 remain reference lanes.
             </p>
             <div className="mt-4 grid gap-3 lg:grid-cols-3">
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
@@ -1179,12 +1309,14 @@ export default async function ModelMonitorPage() {
             </div>
           </MonitorCard>
 
-          <MonitorCard title="Spread Shadow" subtitle={`Clean sample first, clay + non-policy handicap lane${spreadShadowAsOf ? ` | as of ${spreadShadowAsOf}` : ""}`}>
+          <MonitorCard title="Spread v1 Shadow" subtitle={`Strict-first ATP bo3 hard/clay spread research${spreadV1AsOf ? ` | as of ${spreadV1AsOf}` : ""}`}>
             <div className="grid gap-3">
-              <Stat label="Clean ROI" value={formatPct(spreadShadowAllRoi)} tone={metricTone(spreadShadowAllRoi)} />
-              <Stat label="Signals" value={`${spreadShadowTrackedCount}`} />
-              <Stat label="Settled" value={`${spreadShadowSettledCount}`} />
-              <Stat label="Unsettled" value={`${perfValue(spreadShadowBase.combinedAll, "unsettled", parseIntMaybe) ?? spreadShadowQueue.length}`} />
+              <Stat label="Clean ROI" value={formatPct(spreadV1AllRoi)} tone={metricTone(spreadV1AllRoi)} />
+              <Stat label="Signals" value={`${spreadV1TrackedCount}`} />
+              <Stat label="Settled" value={`${spreadV1SettledCount}`} />
+              <Stat label="Unsettled" value={`${spreadV1OpenCount}`} />
+              <Stat label="Hard Status" value={spreadV1Status?.surfaces?.hard?.promotion_status ?? "off"} tone="text-sky-300" />
+              <Stat label="Clay Status" value={spreadV1Status?.surfaces?.clay?.promotion_status ?? "off"} tone="text-sky-300" />
             </div>
           </MonitorCard>
 
@@ -1305,25 +1437,29 @@ export default async function ModelMonitorPage() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-4">
+              <div className="rounded-2xl border border-sky-500/20 bg-sky-500/5 p-4">
                 <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-base font-semibold text-white">Spread Shadow</h3>
-                  <span className="rounded-full bg-cyan-500/15 px-2 py-1 text-xs font-semibold text-cyan-300">clay / non-policy</span>
+                  <h3 className="text-base font-semibold text-white">Spread v1 Shadow</h3>
+                  <span className="rounded-full bg-sky-500/15 px-2 py-1 text-xs font-semibold text-sky-300">active spread research</span>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <Stat label="Clean ROI" value={formatPct(spreadShadowAllRoi)} tone={metricTone(spreadShadowAllRoi)} compact />
-                  <Stat label="Signals" value={`${spreadShadowTrackedCount}`} compact />
-                  <Stat label="Settled" value={`${spreadShadowSettledCount}`} compact />
-                  <Stat label="Unsettled" value={`${perfValue(spreadShadowBase.combinedAll, "unsettled", parseIntMaybe) ?? spreadShadowQueue.length}`} compact />
-                  <Stat label="Avg Value" value={formatPct(perfValue(spreadShadowBase.combinedAll, "avg_value_pct", parseFloatMaybe))} tone="text-cyan-200" compact />
+                  <Stat label="Clean ROI" value={formatPct(spreadV1AllRoi)} tone={metricTone(spreadV1AllRoi)} compact />
+                  <Stat label="Signals" value={`${spreadV1TrackedCount}`} compact />
+                  <Stat label="Settled" value={`${spreadV1SettledCount}`} compact />
+                  <Stat label="Unsettled" value={`${spreadV1OpenCount}`} compact />
+                  <Stat label="Avg Value" value={formatPct(perfValue(spreadV1Base.combinedAll, "avg_value_pct", parseFloatMaybe))} tone="text-sky-200" compact />
+                  <Stat label="Avg CLV" value={formatPct(clvSpreadV1.avgClvPct, 3)} tone={metricTone(clvSpreadV1.avgClvPct)} compact />
                 </div>
-                <div className="mt-3">
+                <div className="mt-3 space-y-3">
                   <SplitBucket
                     title="Spread"
-                    roi={formatPct(perfValue(spreadShadowBase.handicapAll, "roi_pct", parseFloatMaybe))}
-                    roiTone={metricTone(perfValue(spreadShadowBase.handicapAll, "roi_pct", parseFloatMaybe))}
-                    wlv={perfWlv(spreadShadowBase.handicapAll)}
+                    roi={formatPct(perfValue(spreadV1Base.handicapAll, "roi_pct", parseFloatMaybe))}
+                    roiTone={metricTone(perfValue(spreadV1Base.handicapAll, "roi_pct", parseFloatMaybe))}
+                    wlv={perfWlv(spreadV1Base.handicapAll)}
                   />
+                  <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-xs text-slate-400">
+                    Calibration: {spreadV1Status?.calibration?.valid ? "ready" : "off"} | source {spreadV1Status?.calibration?.line_source_used || "n/a"} | hard {spreadV1Status?.surfaces?.hard?.promotion_status ?? "off"} | clay {spreadV1Status?.surfaces?.clay?.promotion_status ?? "off"} | capture {spreadV1Status?.last_spread_capture_at || "n/a"}
+                  </div>
                 </div>
               </div>
 
@@ -1388,10 +1524,11 @@ export default async function ModelMonitorPage() {
                 <ul className="space-y-2 text-sm leading-6 text-slate-300">
                   <li>{strictDiagnosis}</li>
                   <li>{shadowDiagnosis}</li>
+                  <li>{spreadV1Diagnosis}</li>
                   <li>{spreadShadowDiagnosis}</li>
                   <li>{clay2026Diagnosis}</li>
                   <li>
-                    The active shadow slot is now <span className="font-semibold text-amber-300">ATP-only ML research</span>. Live tracking has been reset onto the narrower definition, so historical profile stats below are rule backtests while live ROI restarts from zero.
+                    The active shadow slots are now <span className="font-semibold text-amber-300">ATP-only ML research</span> and <span className="font-semibold text-sky-300">spread_v1_shadow</span>. Legacy spread_shadow stays archived for reference only.
                   </li>
                 </ul>
               </div>
@@ -1463,16 +1600,16 @@ export default async function ModelMonitorPage() {
               </div>
 
               <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
-                <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Spread Shadow Queue</div>
-                {spreadShadowQueue.length === 0 ? (
+                <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Spread v1 Queue</div>
+                {spreadV1Queue.length === 0 ? (
                   <p className="text-sm leading-6 text-slate-400">
-                    {spreadShadowSignalsLiveCsv
-                      ? "No open spread-shadow bets right now. When a 20%+ clay or non-policy handicap signal qualifies, it will appear here."
-                      : "No spread-shadow CSV on disk right now. That usually means the lane has not written a qualifying row yet."}
+                    {spreadV1SignalsLiveCsv
+                      ? "No open spread_v1_shadow bets right now. When a strict-first ATP bo3 hard/clay handicap qualifies, it will appear here."
+                      : "No spread_v1 shadow CSV on disk right now. That usually means the lane has not written a qualifying row yet."}
                   </p>
                 ) : (
                   <div className="space-y-3">
-                    {spreadShadowQueue.slice(0, 6).map((row) => (
+                    {spreadV1Queue.slice(0, 6).map((row) => (
                       <div key={`${row.date}-${row.player1}-${row.player2}-${row.side}-${row.spreadLine}`} className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3">
                         <div className="flex items-start justify-between gap-3">
                           <div>
@@ -1484,7 +1621,7 @@ export default async function ModelMonitorPage() {
                             </div>
                           </div>
                           <div className="text-right">
-                            <div className="text-sm font-semibold text-cyan-300">{row.side} {formatSignedLine(row.spreadLine)}</div>
+                            <div className="text-sm font-semibold text-sky-300">{row.side} {formatSignedLine(row.spreadLine)}</div>
                             <div className="mt-1 text-xs text-slate-500">@ {row.spreadOdds?.toFixed(3) ?? "n/a"}</div>
                           </div>
                         </div>
@@ -1495,6 +1632,9 @@ export default async function ModelMonitorPage() {
                     ))}
                   </div>
                 )}
+                <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-xs text-slate-400">
+                  Hard: {spreadV1Status?.surfaces?.hard?.promotion_status ?? "off"} | Clay: {spreadV1Status?.surfaces?.clay?.promotion_status ?? "off"} | Hard thr {spreadV1Status?.surfaces?.hard?.recommended_threshold_pct ?? "n/a"} | Clay thr {spreadV1Status?.surfaces?.clay?.recommended_threshold_pct ?? "n/a"}
+                </div>
               </div>
 
               <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
@@ -1628,6 +1768,47 @@ export default async function ModelMonitorPage() {
               </div>
               <div className="mt-4 rounded-2xl border border-amber-500/20 bg-amber-500/8 p-4 text-sm leading-6 text-amber-100">
                 {clvVolume.warning ?? "No CLV coverage warning present."}
+              </div>
+            </div>
+          </MonitorCard>
+
+          <MonitorCard title="Spread v1 CLV Coverage" subtitle="Captured Pinnacle spread history only. No synthetic close fallback.">
+            <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Stat label="Spread Rows" value={`${clvSpreadV1.rawRows ?? 0}`} compact />
+                <Stat label="Settled Spread Audited" value={`${clvSpreadV1.settledMlAudited ?? 0}`} compact />
+                <Stat label="Matched Spread" value={`${matchedSpreadV1}/${auditedSpreadV1 || 0}`} tone={matchedSpreadV1 > 0 ? "text-emerald-300" : "text-amber-300"} compact />
+                <Stat label="History Captures" value={`${clvSpreadV1.historyRows ?? 0}`} compact />
+                <Stat label="Avg CLV" value={formatPct(clvSpreadV1.avgClvPct, 3)} tone={metricTone(clvSpreadV1.avgClvPct)} compact />
+                <Stat label="Median CLV" value={formatPct(clvSpreadV1.medianClvPct, 3)} tone={metricTone(clvSpreadV1.medianClvPct)} compact />
+                <Stat
+                  label="Positive Share"
+                  value={
+                    clvSpreadV1.positiveClvCount != null && clvSpreadV1.positiveClvTotal != null
+                      ? `${clvSpreadV1.positiveClvCount}/${clvSpreadV1.positiveClvTotal} (${formatPct(clvSpreadV1.positiveClvSharePct, 2)})`
+                      : "n/a"
+                  }
+                  tone={metricTone((clvSpreadV1.positiveClvSharePct ?? 0) - 50)}
+                  compact
+                />
+                <Stat label="Avg Odds Move" value={formatPct(clvSpreadV1.avgOddsMovePct, 3)} tone={metricTone(clvSpreadV1.avgOddsMovePct)} compact />
+              </div>
+              <div className="mt-4 grid gap-3 md:grid-cols-3">
+                <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3 text-sm text-slate-300">
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Signals</div>
+                  <div className="mt-1">{clvSpreadV1.signalDateRange ?? "n/a"}</div>
+                </div>
+                <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3 text-sm text-slate-300">
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Settled Matches</div>
+                  <div className="mt-1">{clvSpreadV1.matchDateRange ?? "n/a"}</div>
+                </div>
+                <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3 text-sm text-slate-300">
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Capture / Close Range</div>
+                  <div className="mt-1">{clvSpreadV1.closingDateRange ?? spreadV1Status?.last_spread_capture_at ?? "n/a"}</div>
+                </div>
+              </div>
+              <div className="mt-4 rounded-2xl border border-sky-500/20 bg-sky-500/8 p-4 text-sm leading-6 text-sky-100">
+                {clvSpreadV1.warning ?? "Spread v1 CLV uses captured Pinnacle spread history and exact line matching in signal orientation."}
               </div>
             </div>
           </MonitorCard>

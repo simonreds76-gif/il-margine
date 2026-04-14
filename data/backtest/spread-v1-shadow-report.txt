@@ -1,0 +1,41 @@
+Spread v1 Shadow Report
+Generated UTC: 2026-04-14T20:36:12Z
+Signals file: data\backtest\strict-signals-spreadv1-archive.csv
+CLV detail file: data\backtest\strict-clv-audit-spreadv1-2026.csv
+Calibration file: data\backtest\spread-v1-calibration-params.json
+
+Overall
+  Tracked rows: 0
+  Settled rows: 0
+  Open rows: 0
+  CLV rows: 0
+  Last spread capture at: n/a
+
+Calibration
+  Valid: False
+  Reason: snapshot-fetch-failed
+  Line source: snapshot
+  Fit timestamp: 2026-04-14T20:35:42Z
+  Usable scope: {'leagues': ['ATP'], 'best_of': 'bo3', 'surfaces': ['Hard', 'Clay']}
+
+Hard
+  Promotion status: off
+  Settled total: 0
+  Recommended threshold: n/a
+  thr=5.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=8.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=10.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=12.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=15.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=20.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+
+Clay
+  Promotion status: off
+  Settled total: 0
+  Recommended threshold: n/a
+  thr=5.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=8.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=10.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=12.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=15.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=20.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False

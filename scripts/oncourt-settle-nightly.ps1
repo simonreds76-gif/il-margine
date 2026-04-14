@@ -63,41 +63,53 @@ if ($null -ne $volumeCfg) {
     Log "=== Step 4/10: Volume settlement skipped (STRICT_POLICY_VOLUME_MODE=$volumeMode) ==="
 }
 
-Log "=== Step 5/10: Settle spread shadow CSV ==="
+Log "=== Step 5/12: Settle spread v1 shadow CSV ==="
+& python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-spreadv1-archive.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: strict-signals-spreadv1 settlement failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Step 6/12: Settle legacy spread shadow CSV ==="
 & python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-spreadshadow-archive.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-signals-spreadshadow settlement failed (exit $LASTEXITCODE), continuing..."
 }
 
-Log "=== Step 6/10: Settle Clay 2026 shadow CSV ==="
+Log "=== Step 7/12: Settle Clay 2026 shadow CSV ==="
 & python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-claycal-archive.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-signals-claycal settlement failed (exit $LASTEXITCODE), continuing..."
 }
 
-Log "=== Step 7/10: Strict policy settled performance ==="
+Log "=== Step 8/12: Strict policy settled performance ==="
 & python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-archive.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-policy-performance failed (exit $LASTEXITCODE), continuing..."
 }
 
 if ($null -ne $volumeCfg) {
-    Log "=== Step 8/10: $($volumeCfg.Label) settled performance ==="
+    Log "=== Step 9/12: $($volumeCfg.Label) settled performance ==="
     & python scripts\strict-policy-performance.py --days 7 --signals "data\backtest\strict-signals-$($volumeCfg.Tag)-archive.csv" --compare "data\backtest\strict-signals-$($volumeCfg.Tag)-compare.csv" --report-txt "data\backtest\strict-policy-performance-$($volumeCfg.Tag)-weekly.txt" --summary-csv "data\backtest\strict-policy-performance-$($volumeCfg.Tag)-weekly.csv" 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "WARNING: strict-policy-performance $($volumeCfg.Profile) failed (exit $LASTEXITCODE), continuing..."
     }
 } else {
-    Log "=== Step 8/10: Volume performance skipped (STRICT_POLICY_VOLUME_MODE=$volumeMode) ==="
+    Log "=== Step 9/12: Volume performance skipped (STRICT_POLICY_VOLUME_MODE=$volumeMode) ==="
 }
 
-Log "=== Step 9/10: Spread shadow settled performance ==="
+Log "=== Step 10/12: Spread v1 shadow settled performance ==="
+& python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-spreadv1-archive.csv --compare data\backtest\strict-signals-spreadv1-compare.csv --report-txt data\backtest\strict-policy-performance-spreadv1-weekly.txt --summary-csv data\backtest\strict-policy-performance-spreadv1-weekly.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: strict-policy-performance spread_v1_shadow failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Step 11/12: Legacy spread shadow settled performance ==="
 & python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-spreadshadow-archive.csv --compare data\backtest\strict-signals-spreadshadow-compare.csv --report-txt data\backtest\strict-policy-performance-spreadshadow-weekly.txt --summary-csv data\backtest\strict-policy-performance-spreadshadow-weekly.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-policy-performance spread_shadow failed (exit $LASTEXITCODE), continuing..."
 }
 
-Log "=== Step 10/10: Clay 2026 settled performance ==="
+Log "=== Step 12/12: Clay 2026 settled performance ==="
 & python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-claycal-archive.csv --compare data\backtest\strict-signals-claycal-compare.csv --report-txt data\backtest\strict-policy-performance-clay2026-weekly.txt --summary-csv data\backtest\strict-policy-performance-clay2026-weekly.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-policy-performance clay_calibrated failed (exit $LASTEXITCODE), continuing..."
