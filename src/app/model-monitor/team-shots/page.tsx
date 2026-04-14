@@ -1287,18 +1287,6 @@ function LiveLineTable({
     pipelineStatus?.updated_at ??
     null;
 
-  const pipelineTone =
-
-    pipelineStatus?.state === "failed"
-
-      ? "red"
-
-      : pipelineStatus?.warnings?.length
-
-        ? "amber"
-
-        : "green";
-
   const freshnessAnchorAt =
     snapshotGeneratedAt ??
     schedulerHeartbeatAt ??
@@ -1333,6 +1321,49 @@ function LiveLineTable({
         ? undefined
         : "pipeline fallback";
   const scrapeToneValue = scrapeStatus ? scrapeTone(scrapeStatus, scrapeAgeMinutes) : "amber";
+  const pipelineStatusAt =
+    pipelineStatus?.last_successful_finished_at ??
+    pipelineStatus?.updated_at ??
+    null;
+  const pipelineStatusMillis = parseIsoMillis(pipelineStatusAt);
+  const hostedPipelineAt =
+    snapshotGeneratedAt ??
+    scrapeRunAt ??
+    comparisonMtime ??
+    upcomingMtime ??
+    predictionsMtime ??
+    null;
+  const hostedPipelineMillis = parseIsoMillis(hostedPipelineAt);
+  const pipelineStatusIsStale =
+    pipelineStatusMillis !== null &&
+    hostedPipelineMillis !== null &&
+    pipelineStatusMillis + 5 * 60 * 1000 < hostedPipelineMillis;
+  const pipelineStateValue =
+    pipelineStatusIsStale
+      ? scrapeStatus?.success === false
+        ? "failed"
+        : hostedPipelineAt
+          ? "idle"
+          : (pipelineStatus?.state ?? "unknown")
+      : (pipelineStatus?.state ?? (scrapeStatus?.success === false ? "failed" : hostedPipelineAt ? "idle" : "unknown"));
+  const pipelineTone =
+    pipelineStateValue === "failed"
+      ? "red"
+      : pipelineStatusIsStale
+        ? scrapeErrors > 0
+          ? "amber"
+          : "green"
+        : pipelineStatus?.warnings?.length
+          ? "amber"
+          : "green";
+  const pipelineStateDetail = pipelineStatusIsStale
+    ? scrapeStatus
+      ? "hosted team-shots status"
+      : "hosted snapshot fallback"
+    : (pipelineStatus?.current_step || undefined);
+  const pipelineMessage = pipelineStatusIsStale
+    ? `Using hosted team-shots status from ${formatDateTime(hostedPipelineAt)} because team-props status is older.`
+    : (pipelineStatus?.message ?? null);
 
   // Use a stable snapshot-based day boundary so server/client render the same split.
   const asOfIso = (
@@ -1510,12 +1541,13 @@ function LiveLineTable({
         </HeroCard>
 
         {/* Pipeline health */}
-        <SectionCard collapsible title="Pipeline Health" subtitle={pipelineStatus?.state ?? "unknown"}>
+        <SectionCard collapsible title="Pipeline Health" subtitle={pipelineStateValue}>
           <div className="grid gap-2 sm:grid-cols-3 xl:grid-cols-6">
             <StatCard
               label="Pipeline state"
-              value={pipelineStatus?.state ?? "-"}
+              value={pipelineStateValue}
               tone={statTone(pipelineTone)}
+              detail={pipelineStateDetail}
             />
             <StatCard
               label="Last heartbeat"
@@ -1537,9 +1569,9 @@ function LiveLineTable({
               detail={scrapeDetail}
             />
           </div>
-          {pipelineStatus?.message ? (
+          {pipelineMessage ? (
             <p className="mt-3 rounded-lg border border-slate-700/50 bg-slate-900/50 px-3 py-2 text-xs text-slate-400">
-              {pipelineStatus.message}
+              {pipelineMessage}
             </p>
           ) : null}
           {scrapeStatus?.success === false ? (
@@ -1547,7 +1579,7 @@ function LiveLineTable({
               Team shots scrape failed{scrapeStatus.error ? `: ${scrapeStatus.error}` : "."}
             </p>
           ) : null}
-          {(pipelineStatus?.warnings?.length ?? 0) > 0 ? (
+          {!pipelineStatusIsStale && (pipelineStatus?.warnings?.length ?? 0) > 0 ? (
             <div className="mt-3 space-y-1">
               {pipelineStatus!.warnings!.map((w, i) => (
                 <p key={i} className="rounded-lg border border-amber-500/20 bg-amber-500/8 px-3 py-2 text-xs text-amber-300">
