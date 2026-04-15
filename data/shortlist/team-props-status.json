@@ -1,57 +1,76 @@
-{
-  "pipeline": "team-props",
-  "state": "idle",
-  "updated_at": "2026-04-15T09:44:27.9762074Z",
-  "last_started_at": "2026-04-15T09:43:27.0561148Z",
-  "last_finished_at": "2026-04-15T09:44:27.9762074Z",
-  "last_successful_finished_at": "2026-04-15T09:44:27.9759056Z",
-  "current_step": "",
-  "message": "Team props pipeline finished successfully.",
-  "warnings": [],
-  "critical_failures": [],
-  "last_exit_code": 0,
-  "inputs": {
-    "leagues_only": "",
-    "days_ahead": 7,
-    "min_edge": 0.1,
-    "shots_min_edge": 0.05,
-    "regions": "eu"
-  },
-  "artifacts": {
-    "shortlist_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest.txt",
-      "exists": true,
-      "updated_at": "2026-04-15T09:44:27.8298060Z"
-    },
-    "team_shots_predictions": {
-      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-predictions.csv",
-      "exists": true,
-      "updated_at": "2026-04-15T09:43:12.6142720Z"
-    },
-    "team_shots_comparison": {
-      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-comparison.csv",
-      "exists": true,
-      "updated_at": "2026-04-15T09:43:12.6114763Z"
-    },
-    "value_bets_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest.csv",
-      "exists": true,
-      "updated_at": "2026-04-15T09:44:27.8298832Z"
-    },
-    "signals_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest.csv",
-      "exists": true,
-      "updated_at": "2026-04-15T09:44:27.8303182Z"
-    },
-    "pipeline_log": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/pipeline-log.txt",
-      "exists": true,
-      "updated_at": "2026-04-15T09:44:27.9500089Z"
-    },
-    "team_shots_upcoming": {
-      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-upcoming.csv",
-      "exists": true,
-      "updated_at": "2026-04-15T09:43:12.6142720Z"
-    }
-  }
+﻿{
+    "pipeline":  "team-props",
+    "state":  "idle",
+    "updated_at":  "2026-04-15T09:01:13.5559318Z",
+    "last_started_at":  "2026-04-15T09:00:02.5905930Z",
+    "last_finished_at":  "2026-04-15T09:01:13.5559318Z",
+    "last_successful_finished_at":  "2026-04-15T09:01:13.5559318Z",
+    "current_step":  "",
+    "message":  "Team props pipeline finished successfully.",
+    "warnings":  [
+
+                 ],
+    "critical_failures":  [
+
+                          ],
+    "last_exit_code":  0,
+    "inputs":  {
+                   "leagues_only":  "",
+                   "days_ahead":  2,
+                   "min_edge":  0.15,
+                   "shots_min_edge":  0.05,
+                   "regions":  "eu"
+               },
+    "artifacts":  {
+                      "team_shots_predictions":  {
+                                                     "path":  "C:\\Users\\44746\\Downloads\\il-margine\\data\\team-shots\\team-shots-predictions.csv",
+                                                     "exists":  true,
+                                                     "updated_at":  "2026-04-15T09:00:56.6389613Z"
+                                                 },
+                      "shadow_shortlist_latest":  {
+                                                      "path":  "C:\\Users\\44746\\Downloads\\il-margine\\data\\shortlist\\shortlist-latest-v31.txt",
+                                                      "exists":  true,
+                                                      "updated_at":  "2026-04-15T09:00:52.8626072Z"
+                                                  },
+                      "pipeline_log":  {
+                                           "path":  "C:\\Users\\44746\\Downloads\\il-margine\\data\\shortlist\\pipeline-log.txt",
+                                           "exists":  true,
+                                           "updated_at":  "2026-04-15T09:01:13.5241511Z"
+                                       },
+                      "team_shots_upcoming":  {
+                                                  "path":  "C:\\Users\\44746\\Downloads\\il-margine\\data\\team-shots\\team-shots-upcoming.csv",
+                                                  "exists":  true,
+                                                  "updated_at":  "2026-04-15T09:00:57.0801204Z"
+                                              },
+                      "value_bets_latest":  {
+                                                "path":  "C:\\Users\\44746\\Downloads\\il-margine\\data\\shortlist\\value-bets-latest.csv",
+                                                "exists":  true,
+                                                "updated_at":  "2026-04-15T09:00:52.1881900Z"
+                                            },
+                      "shortlist_latest":  {
+                                               "path":  "C:\\Users\\44746\\Downloads\\il-margine\\data\\shortlist\\shortlist-latest.txt",
+                                               "exists":  true,
+                                               "updated_at":  "2026-04-15T09:00:52.1861947Z"
+                                           },
+                      "signals_latest":  {
+                                             "path":  "C:\\Users\\44746\\Downloads\\il-margine\\data\\shortlist\\signals-latest.csv",
+                                             "exists":  true,
+                                             "updated_at":  "2026-04-14T17:01:15.4628647Z"
+                                         },
+                      "shadow_value_bets_latest":  {
+                                                       "path":  "C:\\Users\\44746\\Downloads\\il-margine\\data\\shortlist\\value-bets-latest-v31.csv",
+                                                       "exists":  true,
+                                                       "updated_at":  "2026-04-15T09:00:52.8666033Z"
+                                                   },
+                      "team_shots_comparison":  {
+                                                    "path":  "C:\\Users\\44746\\Downloads\\il-margine\\data\\team-shots\\team-shots-comparison.csv",
+                                                    "exists":  true,
+                                                    "updated_at":  "2026-04-15T09:01:13.0562672Z"
+                                                },
+                      "shadow_signals_latest":  {
+                                                    "path":  "C:\\Users\\44746\\Downloads\\il-margine\\data\\shortlist\\signals-latest-v31.csv",
+                                                    "exists":  true,
+                                                    "updated_at":  "2026-04-14T17:01:16.6517019Z"
+                                                }
+                  }
 }
