@@ -42,7 +42,26 @@ const GITHUB_RAW_BASE =
   process.env.MONITOR_GITHUB_RAW_BASE ||
   "https://raw.githubusercontent.com/simonreds76-gif/il-margine/golden-with-speed-insights";
 
-const loadHostedSnapshot = cache(async (): Promise<SnapshotPayload | null> => {
+function snapshotFreshness(payload: SnapshotPayload | null): number {
+  const stamp = payload?.generated_at ? Date.parse(payload.generated_at) : Number.NaN;
+  return Number.isFinite(stamp) ? stamp : Number.NEGATIVE_INFINITY;
+}
+
+function chooseFreshestSnapshot(candidates: Array<SnapshotPayload | null>): SnapshotPayload | null {
+  let best: SnapshotPayload | null = null;
+  let bestFreshness = Number.NEGATIVE_INFINITY;
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    const freshness = snapshotFreshness(candidate);
+    if (!best || freshness >= bestFreshness) {
+      best = candidate;
+      bestFreshness = freshness;
+    }
+  }
+  return best;
+}
+
+async function readSupabaseSnapshot(): Promise<SnapshotPayload | null> {
   try {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
@@ -55,9 +74,12 @@ const loadHostedSnapshot = cache(async (): Promise<SnapshotPayload | null> => {
       return data.payload as SnapshotPayload;
     }
   } catch {
-    // Fall through to GitHub snapshot fallback.
+    // Fall through.
   }
+  return null;
+}
 
+async function readGithubSnapshot(): Promise<SnapshotPayload | null> {
   try {
     const response = await fetch(`${GITHUB_RAW_BASE}/${LOCAL_SNAPSHOT_FILE}`, {
       cache: "no-store",
@@ -69,6 +91,14 @@ const loadHostedSnapshot = cache(async (): Promise<SnapshotPayload | null> => {
   } catch {
     return null;
   }
+}
+
+const loadHostedSnapshot = cache(async (): Promise<SnapshotPayload | null> => {
+  const [supabaseSnapshot, githubSnapshot] = await Promise.all([
+    readSupabaseSnapshot(),
+    readGithubSnapshot(),
+  ]);
+  return chooseFreshestSnapshot([supabaseSnapshot, githubSnapshot]);
 });
 
 function getSnapshotFileEntry(payload: SnapshotPayload | null, relativePath: string): { content?: string; mtime?: string } | null {

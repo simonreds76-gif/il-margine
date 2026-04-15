@@ -40,6 +40,25 @@ let gitFetchPromise: Promise<void> | null = null;
 let lastGitFetchAttemptAt = 0;
 const rawFileCache = new Map<string, { expiresAt: number; value: HostedRawFile | null }>();
 
+function snapshotFreshness(payload: SnapshotPayload | null): number {
+  const stamp = payload?.generated_at ? Date.parse(payload.generated_at) : Number.NaN;
+  return Number.isFinite(stamp) ? stamp : Number.NEGATIVE_INFINITY;
+}
+
+function chooseFreshestSnapshot(candidates: Array<SnapshotPayload | null>): SnapshotPayload | null {
+  let best: SnapshotPayload | null = null;
+  let bestFreshness = Number.NEGATIVE_INFINITY;
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    const freshness = snapshotFreshness(candidate);
+    if (!best || freshness >= bestFreshness) {
+      best = candidate;
+      bestFreshness = freshness;
+    }
+  }
+  return best;
+}
+
 function parseCsvLine(line: string): string[] {
   const result: string[] = [];
   let current = "";
@@ -137,6 +156,7 @@ async function loadHostedSnapshot(): Promise<SnapshotPayload | null> {
   let payload: SnapshotPayload | null = null;
 
   if (process.env.NODE_ENV === "development") {
+    let gitSnapshot: SnapshotPayload | null = null;
     try {
       maybeRefreshGitRemoteInBackground();
       const { stdout } = await execFileAsync("git", ["show", `${GIT_REMOTE_REF}:${LOCAL_SNAPSHOT_FILE}`], {
@@ -144,41 +164,18 @@ async function loadHostedSnapshot(): Promise<SnapshotPayload | null> {
         maxBuffer: 64 * 1024 * 1024,
       });
       const data = JSON.parse(stdout) as SnapshotPayload;
-      if (data && typeof data === "object") payload = data;
+      if (data && typeof data === "object") gitSnapshot = data;
     } catch {
-      payload = null;
+      gitSnapshot = null;
     }
-  }
-
-  if (!payload) {
-    try {
-      const supabase = getSupabaseAdmin();
-      const { data, error } = await supabase
-        .from(SNAPSHOT_TABLE)
-        .select("payload")
-        .eq("snapshot_key", SNAPSHOT_KEY)
-        .maybeSingle();
-
-      if (!error && data?.payload && typeof data.payload === "object") {
-        payload = data.payload as SnapshotPayload;
-      }
-    } catch {
-      // Fall through to other hosted snapshot sources.
-    }
-  }
-
-  if (!payload && process.env.NODE_ENV !== "development") {
-    try {
-      const response = await fetch(`${GITHUB_RAW_BASE}/${LOCAL_SNAPSHOT_FILE}`, {
-        cache: "no-store",
-      });
-      if (response.ok) {
-        const data = (await response.json()) as SnapshotPayload;
-        if (data && typeof data === "object") payload = data;
-      }
-    } catch {
-      // Fall through to git fallback.
-    }
+    const supabaseSnapshot = await readSupabaseSnapshot();
+    payload = chooseFreshestSnapshot([gitSnapshot, supabaseSnapshot]);
+  } else {
+    const [supabaseSnapshot, githubSnapshot] = await Promise.all([
+      readSupabaseSnapshot(),
+      readGithubSnapshot(),
+    ]);
+    payload = chooseFreshestSnapshot([supabaseSnapshot, githubSnapshot]);
   }
 
   snapshotCache = {
@@ -186,6 +183,38 @@ async function loadHostedSnapshot(): Promise<SnapshotPayload | null> {
     payload,
   };
   return payload;
+}
+
+async function readSupabaseSnapshot(): Promise<SnapshotPayload | null> {
+  try {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase
+      .from(SNAPSHOT_TABLE)
+      .select("payload")
+      .eq("snapshot_key", SNAPSHOT_KEY)
+      .maybeSingle();
+
+    if (!error && data?.payload && typeof data.payload === "object") {
+      return data.payload as SnapshotPayload;
+    }
+  } catch {
+    // Fall through to other hosted snapshot sources.
+  }
+  return null;
+}
+
+async function readGithubSnapshot(): Promise<SnapshotPayload | null> {
+  try {
+    const response = await fetch(`${GITHUB_RAW_BASE}/${LOCAL_SNAPSHOT_FILE}`, {
+      cache: "no-store",
+    });
+    if (!response.ok) return null;
+    const data = (await response.json()) as SnapshotPayload;
+    if (data && typeof data === "object") return data;
+  } catch {
+    // Fall through.
+  }
+  return null;
 }
 
 async function loadHostedRawFile(relativePath: string): Promise<HostedRawFile | null> {

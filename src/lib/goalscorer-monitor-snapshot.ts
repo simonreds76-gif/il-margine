@@ -495,9 +495,12 @@ export async function readGoalscorerMonitorSnapshot(): Promise<GoalscorerMonitor
     ]);
     payload = chooseFreshestSnapshot([gitSnapshot, supabaseSnapshot, localSnapshot]);
   } else {
-    payload = await readSupabaseSnapshot();
-    if (!payload) payload = await readGithubSnapshot();
-    if (!payload) payload = await readLocalSnapshot();
+    const [supabaseSnapshot, githubSnapshot, localSnapshot] = await Promise.all([
+      readSupabaseSnapshot(),
+      readGithubSnapshot(),
+      readLocalSnapshot(),
+    ]);
+    payload = chooseFreshestSnapshot([supabaseSnapshot, githubSnapshot, localSnapshot]);
   }
 
   payload = normalizeSnapshot(payload);
