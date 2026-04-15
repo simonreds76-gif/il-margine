@@ -247,13 +247,13 @@ export function TeamLabel({
   iconSize?: number;
 }) {
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <span className={cn("inline-flex items-center gap-2", className)}>
       <TeamLogo league={league} team={team} size={iconSize} />
-      <div className="min-w-0">
-        <div className={cn("truncate", teamClassName)}>{cleanText(team) || "-"}</div>
-        {detail ? <div className={cn("truncate", detailClassName)}>{detail}</div> : null}
-      </div>
-    </div>
+      <span className="min-w-0">
+        <span className={cn("block truncate", teamClassName)}>{cleanText(team) || "-"}</span>
+        {detail ? <span className={cn("block truncate", detailClassName)}>{detail}</span> : null}
+      </span>
+    </span>
   );
 }
 
@@ -275,13 +275,13 @@ export function MatchLabel({
   separator?: string;
 }) {
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <span className={cn("inline-flex items-center gap-2", className)}>
       <TeamLogo league={league} team={homeTeam} size={iconSize} />
       <span className={cn("truncate", textClassName)}>
         {cleanText(homeTeam) || "?"} {separator} {cleanText(awayTeam) || "?"}
       </span>
       <TeamLogo league={league} team={awayTeam} size={iconSize} />
-    </div>
+    </span>
   );
 }
 
