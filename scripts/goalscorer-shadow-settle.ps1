@@ -97,6 +97,12 @@ $requiredPlayerLogs = @{
     "ligue-1" = "data\goalscorer\ligue-1-player-match-logs-2025-2026.csv"
 }
 
+$understatMaxAgeHours = if ([string]::IsNullOrWhiteSpace($env:GOALSCORER_UNDERSTAT_MAX_AGE_HOURS)) {
+    18
+} else {
+    [double]$env:GOALSCORER_UNDERSTAT_MAX_AGE_HOURS
+}
+
 function Log($msg) {
     $line = "$(Get-Date -Format 'HH:mm:ss') $msg"
     Write-Host $line
@@ -136,6 +142,38 @@ function Resolve-PythonExe {
     throw "Python executable not found for goalscorer shadow settlement."
 }
 
+function Get-UnderstatRefreshLeagues {
+    param(
+        [string[]]$LeagueNames,
+        [hashtable]$RequiredLogs,
+        [double]$MaxAgeHours
+    )
+
+    $refreshLeagues = New-Object System.Collections.Generic.List[string]
+    $now = Get-Date
+    foreach ($league in $LeagueNames) {
+        $requiredLog = $RequiredLogs[$league]
+        if ([string]::IsNullOrWhiteSpace($requiredLog)) {
+            $refreshLeagues.Add($league) | Out-Null
+            continue
+        }
+
+        if (-not (Test-Path $requiredLog)) {
+            Log "Understat refresh required: missing current player log for $league ($requiredLog)"
+            $refreshLeagues.Add($league) | Out-Null
+            continue
+        }
+
+        $ageHours = ($now - (Get-Item $requiredLog).LastWriteTime).TotalHours
+        if ($ageHours -ge $MaxAgeHours) {
+            Log ("Understat refresh required: {0} player log is {1:N1}h old (threshold {2:N1}h)" -f $league, $ageHours, $MaxAgeHours)
+            $refreshLeagues.Add($league) | Out-Null
+        }
+    }
+
+    return @($refreshLeagues)
+}
+
 $today = Get-Date
 $startYear = if ($today.Month -ge 7) { $today.Year } else { $today.Year - 1 }
 $seasonLabel = "{0}-{1}" -f $startYear, ($startYear + 1)
@@ -161,9 +199,15 @@ try {
         Log "WARNING: FotMob match detail fetch failed (exit $LASTEXITCODE) - continuing with existing local detail."
     }
 
-    & $pythonExe scripts\understat-scrape-serie-a.py --league $leagues --season $seasonLabel --resume 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        Log "WARNING: Understat refresh failed (exit $LASTEXITCODE) - continuing with existing player logs."
+    $understatRefreshLeagues = Get-UnderstatRefreshLeagues -LeagueNames $leagues -RequiredLogs $requiredPlayerLogs -MaxAgeHours $understatMaxAgeHours
+    if ($understatRefreshLeagues.Count -gt 0) {
+        Log ("Refreshing Understat only for stale leagues: {0}" -f ($understatRefreshLeagues -join ", "))
+        & $pythonExe scripts\understat-scrape-serie-a.py --league $understatRefreshLeagues --season $seasonLabel --resume 2>&1 | ForEach-Object { Log $_ }
+        if ($LASTEXITCODE -ne 0) {
+            Log "WARNING: Understat refresh failed (exit $LASTEXITCODE) - continuing with existing player logs."
+        }
+    } else {
+        Log ("Skip Understat refresh: current-season player logs are fresh (< {0:N1}h)." -f $understatMaxAgeHours)
     }
 
     foreach ($league in $leagues) {
