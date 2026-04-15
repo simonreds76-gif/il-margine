@@ -1,25 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-15T00:07:53Z",
+  "generated_at": "2026-04-15T22:26:42Z",
   "league": "bundesliga",
-  "row_count": 3,
+  "row_count": 4,
   "rows": [
-    {
-      "team": "1. FC KÃ¶ln",
-      "team_key": "1 fc ka ln",
-      "player_name": "SaÃ¯d El Mala",
-      "player_key": "sa d el mala",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-12"
-    },
     {
       "team": "Augsburg",
       "team_key": "augsburg",
@@ -36,6 +20,38 @@
       ],
       "event_count": 2,
       "last_event_date": "2026-04-10"
+    },
+    {
+      "team": "1. FC Köln",
+      "team_key": "fc cologne",
+      "player_name": "Saïd El Mala",
+      "player_key": "sa d el mala",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-12"
+    },
+    {
+      "team": "VfB Stuttgart",
+      "team_key": "vfb stuttgart",
+      "player_name": "Deniz Undav",
+      "player_key": "deniz undav",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-12"
     },
     {
       "team": "Werder Bremen",
