@@ -1612,18 +1612,18 @@ function LiveLineTable({
             detail={`${activeSettledShadow.length} settled | ${activePendingShadow.length} pending`}
           />
           <StatCard
-            label="Current P&L flat"
+            label="Flat P/L (1u)"
             value={`${shadowPnl >= 0 ? "+" : ""}${shadowPnl.toFixed(2)}u`}
             tone={shadowPnl >= 0 ? "text-emerald-300" : "text-rose-300"}
           />
           <StatCard
-            label="Current ROI flat"
+            label="Flat ROI (1u)"
             value={`${shadowRoi >= 0 ? "+" : ""}${shadowRoi.toFixed(1)}%`}
             tone={shadowRoi >= 0 ? "text-emerald-300" : "text-rose-300"}
             detail={`${shadowWins}/${activeSettledShadow.length} wins`}
           />
           <StatCard
-            label="Current P&L staked"
+            label="Staked P/L"
             value={`${shadowPnlStaked >= 0 ? "+" : ""}${shadowPnlStaked.toFixed(2)}u`}
             tone={shadowPnlStaked >= 0 ? "text-emerald-300" : "text-rose-300"}
           />
@@ -1643,18 +1643,18 @@ function LiveLineTable({
           >
             <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
               <StatCard
-                label="Legacy P&L flat"
+                label="Legacy Flat P/L (1u)"
                 value={`${legacyPnl >= 0 ? "+" : ""}${legacyPnl.toFixed(2)}u`}
                 tone={legacyPnl >= 0 ? "text-emerald-300" : "text-rose-300"}
               />
               <StatCard
-                label="Legacy ROI flat"
+                label="Legacy Flat ROI (1u)"
                 value={`${legacyRoi >= 0 ? "+" : ""}${legacyRoi.toFixed(1)}%`}
                 tone={legacyRoi >= 0 ? "text-emerald-300" : "text-rose-300"}
                 detail={`${legacyWins}/${legacySettledShadow.length} wins`}
               />
               <StatCard
-                label="Legacy P&L staked"
+                label="Legacy Staked P/L"
                 value={`${legacyPnlStaked >= 0 ? "+" : ""}${legacyPnlStaked.toFixed(2)}u`}
                 tone={legacyPnlStaked >= 0 ? "text-emerald-300" : "text-rose-300"}
               />
