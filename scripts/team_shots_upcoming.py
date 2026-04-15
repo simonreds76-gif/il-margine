@@ -58,6 +58,11 @@ SCANNER_FIELDS = [
 ]
 
 
+def inclusive_days_cutoff(days_ahead: int) -> datetime:
+    target_day = datetime.now(timezone.utc).date() + timedelta(days=max(days_ahead, 0))
+    return datetime.combine(target_day, datetime.max.time(), tzinfo=timezone.utc)
+
+
 # ── Calibration helpers ───────────────────────────────────────────────
 
 def _logit(p: float) -> float:
@@ -338,7 +343,7 @@ def main() -> None:
         print(f"ERROR: {e}")
         return
 
-    cutoff = datetime.now(timezone.utc) + timedelta(days=args.days_ahead)
+    cutoff = inclusive_days_cutoff(args.days_ahead)
     rows_out: List[Dict[str, Any]] = []
 
     for league, sport_key in SPORT_KEYS.items():
@@ -483,16 +488,18 @@ def main() -> None:
     print(f"Inbox odds loaded: {len(inbox_index)} entries")
 
     scanner_rows = _build_scanner(match_rows, inbox_index)
-    if scanner_rows:
-        args.scanner.parent.mkdir(parents=True, exist_ok=True)
-        with open(args.scanner, "w", newline="", encoding="utf-8") as fh:
-            w = csv.DictWriter(fh, fieldnames=SCANNER_FIELDS, extrasaction="ignore")
-            w.writeheader()
+    args.scanner.parent.mkdir(parents=True, exist_ok=True)
+    with open(args.scanner, "w", newline="", encoding="utf-8") as fh:
+        w = csv.DictWriter(fh, fieldnames=SCANNER_FIELDS, extrasaction="ignore")
+        w.writeheader()
+        if scanner_rows:
             w.writerows(scanner_rows)
+
+    if scanner_rows:
         positive = sum(1 for r in scanner_rows if r["edge"] > 0)
         print(f"Wrote {len(scanner_rows)} scanner rows ({positive} positive edge) -> {args.scanner}")
     else:
-        print("No scanner rows — check that inbox odds exist for upcoming fixtures")
+        print(f"Wrote 0 scanner rows -> {args.scanner}")
 
     credits = client.get_credits_remaining()
     if credits is not None:

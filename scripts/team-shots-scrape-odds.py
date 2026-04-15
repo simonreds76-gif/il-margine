@@ -98,6 +98,12 @@ RETRY_ATTEMPTS = 3
 RETRY_BACKOFF_SECONDS = 2.0
 
 
+def inclusive_days_to_iso(days_ahead: int) -> str:
+    target_day = datetime.now(timezone.utc).date() + timedelta(days=max(days_ahead, 0))
+    horizon = datetime.combine(target_day, datetime.max.time(), tzinfo=timezone.utc)
+    return horizon.replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
 def load_env() -> None:
     for name in (".env.local", "env.local"):
         path = ROOT / name

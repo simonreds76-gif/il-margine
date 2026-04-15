@@ -107,6 +107,11 @@ VALUE_BET_FIELDS = [
 ]
 
 
+def inclusive_days_cutoff(days_ahead: int) -> datetime:
+    target_day = datetime.now(timezone.utc).date() + timedelta(days=max(days_ahead, 0))
+    return datetime.combine(target_day, datetime.max.time(), tzinfo=timezone.utc)
+
+
 # (poisson_pmf, match_total_prob_over, fair_decimal, calibrate_prob,
 #  load_calibration_params imported from corners_poisson)
 
@@ -761,7 +766,7 @@ def main() -> None:
 
         events = client.get_upcoming_events(sport_key)
 
-        cutoff = datetime.now(timezone.utc) + timedelta(days=args.days_ahead)
+        cutoff = inclusive_days_cutoff(args.days_ahead)
         nearby = []
         for ev in events:
             ko = ev.get("commence_time", "")
@@ -940,14 +945,32 @@ def main() -> None:
     else:
         print(f"Value bets CSV saved empty to {bets_path}")
 
+    signals_path = output_dir / f"signals-{today}.csv"
     if all_signals:
-        signals_path = output_dir / f"signals-{today}.csv"
         fields = list(all_signals[0].keys())
-        with open(signals_path, "w", newline="", encoding="utf-8") as fh:
-            writer = csv.DictWriter(fh, fieldnames=fields)
-            writer.writeheader()
+    else:
+        fields = [
+            "date", "kick_off", "league", "home_team", "away_team",
+            "lambda_home", "lambda_away", "lambda_total",
+            "lambda_home_recent", "lambda_away_recent",
+            "divergence", "consensus", "policy_version",
+            "home_matches", "away_matches",
+        ]
+        for line_val in CORNER_LINES:
+            fields.extend([
+                f"p_over_{line_val}",
+                f"fair_over_{line_val}",
+                f"fair_under_{line_val}",
+            ])
+    with open(signals_path, "w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=fields)
+        writer.writeheader()
+        if all_signals:
             writer.writerows(all_signals)
+    if all_signals:
         print(f"Signals CSV saved to {signals_path}")
+    else:
+        print(f"Signals CSV saved empty to {signals_path}")
 
 
 def _dry_run_shortlist(leagues: List[str], team_stats: Dict[str, TeamCornerStats]) -> None:

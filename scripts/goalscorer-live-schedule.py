@@ -40,7 +40,7 @@ class FixtureWindow:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build a lightweight goalscorer cadence plan from FotMob fixtures.")
     parser.add_argument("--leagues", default=",".join(LEAGUE_CONFIGS.keys()), help="Comma-separated league keys")
-    parser.add_argument("--lookahead-hours", type=int, default=12, help="Only consider fixtures within this window")
+    parser.add_argument("--lookahead-hours", type=int, default=72, help="Only consider fixtures within this window")
     parser.add_argument("--cold-minutes", type=int, default=180, help="Cold tier starts above this many minutes")
     parser.add_argument(
         "--warm-minutes",
@@ -55,9 +55,11 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _fotmob_dates(now_utc: datetime) -> List[str]:
+def _fotmob_dates(now_utc: datetime, lookahead_hours: int) -> List[str]:
     today = now_utc.astimezone(timezone.utc).date()
-    return [(today + timedelta(days=offset)).strftime("%Y%m%d") for offset in range(2)]
+    horizon = now_utc + timedelta(hours=max(lookahead_hours, 1))
+    days = max((horizon.date() - today).days, 0) + 1
+    return [(today + timedelta(days=offset)).strftime("%Y%m%d") for offset in range(days)]
 
 
 def _parse_kickoff(match: dict) -> datetime | None:
@@ -117,7 +119,7 @@ def main() -> int:
     lookahead_limit = now_utc + timedelta(hours=max(args.lookahead_hours, 1))
 
     fixtures_by_league: Dict[str, List[FixtureWindow]] = {league: [] for league in requested_leagues if league in LEAGUE_CONFIGS}
-    for date_str in _fotmob_dates(now_utc):
+    for date_str in _fotmob_dates(now_utc, args.lookahead_hours):
         payload = fetch_daily_payload(date_str)
         for league in payload.get("leagues", []):
             league_id = league.get("id")
