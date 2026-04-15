@@ -1637,7 +1637,7 @@ function LiveLineTable({
         {(legacySettledShadow.length > 0 || legacyPendingRows.length > 0) ? (
           <SectionCard
             collapsible
-            defaultOpen={false}
+            defaultOpen
             title="Legacy policy"
             subtitle={`${legacySettledShadow.length} settled | ${legacyPendingRows.length} pending`}
           >
