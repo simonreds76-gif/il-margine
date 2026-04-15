@@ -6,7 +6,7 @@
 #   - a daily shadow settlement task at 10:00
 
 param(
-    [switch]$EnableLocalLiveSchedule
+    [switch]$DisableLocalLiveSchedule
 )
 
 $ErrorActionPreference = "Stop"
@@ -53,7 +53,7 @@ if (Test-ScheduledTaskExists "IlMargine-Goalscorer-Health") {
     schtasks /Delete /TN "IlMargine-Goalscorer-Health" /F | Out-Host
 }
 
-if ($EnableLocalLiveSchedule) {
+if (-not $DisableLocalLiveSchedule) {
     schtasks /Create /TN "IlMargine-Goalscorer-Live" /SC DAILY /ST 08:00 /RI 10 /DU 16:00 /RL HIGHEST /TR "$liveCmd" /F | Out-Host
     Set-ScheduledTaskBatteryFriendly "IlMargine-Goalscorer-Live"
 } elseif (Test-ScheduledTaskExists "IlMargine-Goalscorer-Live") {
@@ -72,17 +72,17 @@ Get-ScheduledTask -TaskName "IlMargine-Goalscorer-Shadow-Settle" |
     Format-Table -AutoSize | Out-Host
 
 Write-Host ""
-if ($EnableLocalLiveSchedule) {
+if (-not $DisableLocalLiveSchedule) {
     Get-ScheduledTask -TaskName "IlMargine-Goalscorer-Live" |
         Get-ScheduledTaskInfo |
         Select-Object TaskName, LastRunTime, NextRunTime, LastTaskResult |
         Format-Table -AutoSize | Out-Host
     Write-Host ""
-    Write-Host "Local Windows live polling is ENABLED by request."
+    Write-Host "Local Windows live polling is ENABLED."
 } else {
-    Write-Host "GitHub hosted hot-live polling is the primary path."
-    Write-Host "Local Windows live polling is disabled by default and kept as fallback/manual only."
-    Write-Host "Use -EnableLocalLiveSchedule if you explicitly want the local scheduled poll back."
+    Write-Host "GitHub hosted hot-live polling remains available."
+    Write-Host "Local Windows live polling is DISABLED by request."
+    Write-Host "Omit -DisableLocalLiveSchedule if you want the local scheduled poll enabled."
 }
 Write-Host ""
 Write-Host "Optional immediate test:"

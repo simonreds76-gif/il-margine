@@ -158,14 +158,12 @@ try {
     Log "---- Fetching recent FotMob match detail ----"
     & $pythonExe scripts\fotmob-fetch-match-detail.py --league $leagues --days-back 3 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
-        Log "ERROR: FotMob match detail fetch failed (exit $LASTEXITCODE)"
-        exit 1
+        Log "WARNING: FotMob match detail fetch failed (exit $LASTEXITCODE) - continuing with existing local detail."
     }
 
     & $pythonExe scripts\understat-scrape-serie-a.py --league $leagues --season $seasonLabel --resume 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
-        Log "ERROR: Understat refresh failed (exit $LASTEXITCODE)"
-        exit 1
+        Log "WARNING: Understat refresh failed (exit $LASTEXITCODE) - continuing with existing player logs."
     }
 
     foreach ($league in $leagues) {
@@ -219,8 +217,7 @@ try {
     Log "---- Uploading hosted live snapshot ----"
     & $pythonExe scripts\goalscorer-live-snapshot.py --supabase 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
-        Log "ERROR: goalscorer live snapshot upload failed after settlement (exit $LASTEXITCODE)"
-        exit 1
+        Log "WARNING: goalscorer live snapshot upload failed after settlement (exit $LASTEXITCODE) - local settlement outputs were still written."
     }
 
     Log "============================================"
