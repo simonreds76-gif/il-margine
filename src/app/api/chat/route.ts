@@ -18,8 +18,24 @@ export const maxDuration = 30;
 // Primary model. Override via GROQ_MODEL. Backup used on parse errors.
 // Maverick was decommissioned on Groq; keep a supported default here so Roger
 // does not fail if the env override is missing.
-const CHAT_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
+const DEFAULT_CHAT_MODEL = "openai/gpt-oss-120b";
+const CHAT_MODEL = process.env.GROQ_MODEL || DEFAULT_CHAT_MODEL;
 const BACKUP_MODEL = "llama-3.3-70b-versatile";
+const DEPRECATED_GROQ_MODEL_PATTERNS = [
+  /^moonshotai\/kimi-k2/i,
+  /^moonshotai\/kimi-k2-0905/i,
+  /^moonshotai\/kimi-k2-instruct/i,
+  /^kimi-k2/i,
+];
+
+function normalizeGroqModelId(modelId: string): string {
+  const normalized = modelId.trim();
+  if (DEPRECATED_GROQ_MODEL_PATTERNS.some((pattern) => pattern.test(normalized))) {
+    console.warn("[chat] Deprecated Groq model requested, remapping to supported default:", normalized);
+    return DEFAULT_CHAT_MODEL;
+  }
+  return normalized;
+}
 
 function asNum(v: unknown, fallback = 0): number {
   if (v == null || v === "") return fallback;
@@ -1578,7 +1594,7 @@ export async function POST(req: Request) {
   const intentHints = lastUserText ? buildIntentHints(lastUserText) : "";
   const systemPrompt = buildSystemPrompt(ragContext, intentHints);
 
-  let modelId = modelOverride ?? CHAT_MODEL;
+  let modelId = normalizeGroqModelId(modelOverride ?? CHAT_MODEL);
   let lastErr: unknown = null;
 
   for (let attempt = 0; attempt < 2; attempt++) {
