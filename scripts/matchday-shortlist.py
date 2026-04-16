@@ -10,8 +10,8 @@ This is the daily workflow script. Run it on the morning of a matchday:
   python scripts/matchday-shortlist.py --side under --lines 8.5,9.5
 
 It will:
-  1. Load the corners model predictions for upcoming fixtures
-  2. Fetch real-time corner O/U odds from The Odds API
+  1. Load the corners model inputs for upcoming fixtures
+  2. Load live corner O/U odds from the configured price source
   3. Compare model fair odds vs bookmaker prices
   4. Highlight value bets with edge >= threshold
     5. Apply tiered staking (0.25-2u by edge band; Ligue 1 capped at 0.5u)
@@ -39,7 +39,7 @@ ROOT = Path(__file__).resolve().parent.parent
 import sys
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from the_odds_api_client import OddsApiClient, SPORT_KEYS, CORNER_MARKET
+from the_odds_api_client import OddsApiClient, SPORT_KEYS
 from corners_poisson import (  # noqa: E402
     calibrate_prob,
     fair_decimal,
@@ -55,9 +55,22 @@ DEFAULT_PREDICTIONS = ROOT / "data" / "corners-ou" / "corners-ou-predictions.csv
 DEFAULT_OUTPUT_DIR = ROOT / "data" / "shortlist"
 CORNERS_HISTORICAL_DIR = ROOT / "data" / "corners-ou" / "historical"
 LEGACY_HISTORICAL_DIR = ROOT / "data" / "team-shots" / "historical"
-DEFAULT_EDGE_THRESHOLD = 0.10
 CALIBRATION_PARAMS_PATH = ROOT / "data" / "corners-ou" / "corners-calibration-params.json"
+DEFAULT_PINNACLE_CORNERS_PATH = ROOT / "data" / "corners-ou" / "pinnacle-corners-odds.csv"
 LIGUE1_MAX_STAKE = 0.5  # DD risk: Ligue 1 backtest max DD ~133u vs ~36u Serie A
+DEFAULT_POLICY_VERSION = "V3"
+POLICY_SPECS: dict[str, dict[str, object]] = {
+    "V3": {
+        "min_edge": 0.15,
+        "corner_lines": [8.5, 9.5, 10.5, 11.5],
+    },
+    "V3.1": {
+        "min_edge": 0.08,
+        "corner_lines": [8.5, 9.5, 10.5, 11.5],
+    },
+}
+POLICY_VERSION = DEFAULT_POLICY_VERSION
+DEFAULT_EDGE_THRESHOLD = float(POLICY_SPECS[DEFAULT_POLICY_VERSION]["min_edge"])
 
 # League stake multipliers - applied to tier stake before Ligue 1 cap.
 # Based on calibrated backtest (synthetic market, edge >= 5%):
@@ -80,13 +93,34 @@ STAKE_TIERS = [
     (0.12, 0.5, "LOW"),
     (0.10, 0.25, "TINY"),  # 10-12% edge: smallest tier, high volume
 ]
+RECENT_WINDOW = 6
+RECENT_MIN = 3
+ALIGNED_MAX_DIVERGENCE = 0.15
+DIVERGENT_MAX_DIVERGENCE = 0.30
+CONFLICT_MAX_DIVERGENCE = 0.45
 
-CORNER_LINES = [8.5, 9.5, 10.5, 11.5]
+CORNER_LINES = list(POLICY_SPECS[DEFAULT_POLICY_VERSION]["corner_lines"])
 VALUE_BET_FIELDS = [
     "file_date", "match", "kick_off", "league", "market", "line", "side",
-    "model_prob", "model_fair", "bookmaker", "bookie_odds",
+    "model_prob", "model_prob_raw", "model_fair", "bookmaker", "bookie_odds",
     "edge", "stake", "stake_label", "lambda_h", "lambda_a",
+    "lambda_h_recent", "lambda_a_recent", "divergence", "consensus", "policy_version",
 ]
+
+
+def inclusive_days_cutoff(days_ahead: int) -> datetime:
+    target_day = datetime.now(timezone.utc).date() + timedelta(days=max(days_ahead, 0))
+    return datetime.combine(target_day, datetime.max.time(), tzinfo=timezone.utc)
+
+
+def parse_iso_datetime(text: str) -> Optional[datetime]:
+    raw = (text or "").strip()
+    if not raw:
+        return None
+    try:
+        return datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except ValueError:
+        return None
 
 
 # (poisson_pmf, match_total_prob_over, fair_decimal, calibrate_prob,
@@ -134,6 +168,7 @@ TEAM_ALIASES = {
     "milan": "milan",
     "inter": "inter",
     "inter milan": "inter",
+    "inter milano": "inter",
     "internazionale": "inter",
     "as roma": "roma",
     "roma": "roma",
@@ -189,10 +224,17 @@ TEAM_ALIASES = {
     "ein frankfurt": "ein frankfurt",
     "vfl wolfsburg": "wolfsburg",
     "wolfsburg": "wolfsburg",
+    "sassuolo calcio": "sassuolo",
+    "sassuolo": "sassuolo",
+    "como 1907": "como",
+    "como": "como",
+    "cagliari calcio": "cagliari",
+    "cagliari": "cagliari",
     # Bundesliga additional
     "1 fc heidenheim": "heidenheim",
     "heidenheim": "heidenheim",
     "1 fc koln": "fc koln",
+    "1 fc cologne": "fc koln",
     "fc koln": "fc koln",
     "borussia monchengladbach": "m gladbach",
     "m gladbach": "m gladbach",
@@ -251,6 +293,100 @@ def resolve_corners_historical_path() -> Path:
 def fixture_lock_key(league: str, match: str, kick_off: str = "", fallback_date: str = "") -> str:
     fixture_date = ((kick_off or "").strip()[:10]) or ((fallback_date or "").strip()[:10])
     return f"{(league or '').strip().lower()}|{fixture_date}|{(match or '').strip().lower()}"
+
+
+def pinnacle_fixture_key(league: str, fixture_date: str, home_team: str, away_team: str) -> str:
+    return "|".join([
+        (league or "").strip().lower(),
+        (fixture_date or "").strip()[:10],
+        normalize_team(home_team),
+        normalize_team(away_team),
+    ])
+
+
+def load_pinnacle_corner_index(
+    path: Path,
+    *,
+    leagues: Optional[set[str]] = None,
+    cutoff: Optional[datetime] = None,
+) -> tuple[dict[str, dict], dict[str, List[dict]]]:
+    fixtures: dict[str, dict] = {}
+    grouped: dict[tuple[str, float, str], dict] = {}
+    latest_by_line: dict[tuple[str, float], dict] = {}
+    line_index: dict[str, List[dict]] = defaultdict(list)
+
+    if not path.exists():
+        return fixtures, line_index
+
+    with open(path, "r", encoding="utf-8-sig", newline="") as fh:
+        for row in csv.DictReader(fh):
+            league = (row.get("league") or "").strip().lower()
+            if not league:
+                continue
+            if leagues and league not in leagues:
+                continue
+
+            home_team = row.get("home_team", "") or ""
+            away_team = row.get("away_team", "") or ""
+            fixture_date = (row.get("match_date") or row.get("kickoff_iso") or "")[:10]
+            kickoff_iso = row.get("kickoff_iso", "") or ""
+            kickoff_dt = parse_iso_datetime(kickoff_iso)
+            if cutoff is not None and kickoff_dt is not None and kickoff_dt > cutoff:
+                continue
+
+            fixture_key = pinnacle_fixture_key(league, fixture_date, home_team, away_team)
+            fixture = fixtures.get(fixture_key)
+            if fixture is None or str(kickoff_iso) > str(fixture.get("kick_off", "")):
+                fixtures[fixture_key] = {
+                    "home_team": home_team,
+                    "away_team": away_team,
+                    "kick_off": kickoff_iso,
+                    "match_date": fixture_date,
+                    "league": league,
+                    "_fixture_key": fixture_key,
+                }
+
+            try:
+                line = round(float(row.get("line") or ""), 2)
+                odds_decimal = float(row.get("odds_decimal") or "")
+            except ValueError:
+                continue
+            if odds_decimal <= 1.0:
+                continue
+
+            side = (row.get("side") or "").strip().lower()
+            if side not in {"over", "under"}:
+                continue
+            captured_at = row.get("captured_at", "") or ""
+            bucket_key = (fixture_key, line, captured_at)
+            bucket = grouped.setdefault(bucket_key, {
+                "fixture_key": fixture_key,
+                "line": line,
+                "captured_at": captured_at,
+                "bookmaker": "Pinnacle",
+            })
+            bucket[f"{side}_odds"] = odds_decimal
+
+    for bucket in grouped.values():
+        if "over_odds" not in bucket or "under_odds" not in bucket:
+            continue
+        dedupe_key = (bucket["fixture_key"], bucket["line"])
+        existing = latest_by_line.get(dedupe_key)
+        if existing is None or str(bucket["captured_at"]) > str(existing["captured_at"]):
+            latest_by_line[dedupe_key] = bucket
+
+    for bucket in latest_by_line.values():
+        line_index[bucket["fixture_key"]].append({
+            "bookmaker": bucket["bookmaker"],
+            "line": bucket["line"],
+            "over_odds": bucket["over_odds"],
+            "under_odds": bucket["under_odds"],
+        })
+
+    for key, rows in line_index.items():
+        line_index[key] = sorted(rows, key=lambda row: row["line"])
+
+    return fixtures, line_index
 
 
 def load_existing_logged_fixture_keys(today: str) -> set[str]:
@@ -322,6 +458,18 @@ class TeamCornerStats:
             w_sum += w
         return total / w_sum if w_sum > 0 else None
 
+    def _ema_short(self, history: List[float]) -> Optional[float]:
+        recent = history[-RECENT_WINDOW:]
+        if len(recent) < RECENT_MIN:
+            return None
+        total = 0.0
+        w_sum = 0.0
+        for i, val in enumerate(recent):
+            w = DECAY ** (len(recent) - 1 - i)
+            total += val * w
+            w_sum += w
+        return total / w_sum if w_sum > 0 else None
+
     @property
     def n_matches(self) -> int:
         return len(self.won)
@@ -331,6 +479,12 @@ class TeamCornerStats:
 
     def avg_conceded(self) -> Optional[float]:
         return self._ema(self.conceded)
+
+    def avg_won_recent(self) -> Optional[float]:
+        return self._ema_short(self.won)
+
+    def avg_conceded_recent(self) -> Optional[float]:
+        return self._ema_short(self.conceded)
 
 
 def load_historical_corner_stats() -> Dict[str, TeamCornerStats]:
@@ -371,6 +525,15 @@ def predict_corners_lambda(
 ) -> Optional[float]:
     attack = team_stats.avg_won()
     defence = opp_stats.avg_conceded()
+    return predict_corners_lambda_from_avgs(attack, defence, league_avg, is_home)
+
+
+def predict_corners_lambda_from_avgs(
+    attack: Optional[float],
+    defence: Optional[float],
+    league_avg: float,
+    is_home: bool,
+) -> Optional[float]:
     if attack is None or defence is None:
         return None
     avg = league_avg if league_avg > 0 else DEFAULT_AVG
@@ -389,17 +552,82 @@ def tier_stake(edge: float) -> Tuple[float, str]:
     return 0.0, ""
 
 
+def consensus_for_lambdas(
+    h_lam: float,
+    a_lam: float,
+    h_lam_recent: Optional[float],
+    a_lam_recent: Optional[float],
+) -> Tuple[float, str]:
+    if h_lam_recent is None or a_lam_recent is None:
+        return 0.0, "aligned"
+    primary_total = max(h_lam + a_lam, 0.0001)
+    recent_total = h_lam_recent + a_lam_recent
+    divergence = abs(recent_total - primary_total) / primary_total
+    if divergence <= ALIGNED_MAX_DIVERGENCE:
+        return divergence, "aligned"
+    if divergence <= DIVERGENT_MAX_DIVERGENCE:
+        return divergence, "divergent"
+    if divergence <= CONFLICT_MAX_DIVERGENCE:
+        return divergence, "conflict"
+    return divergence, "extreme"
+
+
+def effective_stake_for_consensus(
+    edge: float,
+    base_stake: float,
+    league: str,
+    consensus: str,
+) -> float:
+    effective_base = base_stake
+    if consensus == "extreme" and base_stake == 1.0:
+        effective_base = 0.0
+    elif consensus in {"conflict", "extreme"} and base_stake >= 1.0:
+        effective_base = max(base_stake - 0.5, 0.25)
+
+    if effective_base <= 0:
+        return 0.0
+
+    league_mult = LEAGUE_STAKE_MULTIPLIERS.get(league, DEFAULT_LEAGUE_MULTIPLIER)
+    stake_u = round(effective_base * league_mult, 2)
+    stake_u = min(stake_u, 2.0)
+    if league == "ligue-1":
+        stake_u = min(stake_u, LIGUE1_MAX_STAKE)
+    return stake_u
+
+
+def shortlist_consensus_tag(row: dict) -> str:
+    consensus = (row.get("consensus") or "").strip().lower()
+    stake = float(row.get("stake") or 0)
+    stake_label = (row.get("stake_label") or "").strip()
+    base_stake = next((units for threshold, units, label in STAKE_TIERS if label == stake_label), stake)
+    if consensus == "divergent":
+        return "[DIVG]"
+    if consensus == "conflict":
+        if stake < base_stake:
+            return f"[CONF -> {stake:.2f}u]"
+        return "[CONF]"
+    if consensus == "extreme":
+        if stake > 0 and stake < base_stake:
+            return f"[EXTR -> {stake:.2f}u]"
+        return "[EXTR]"
+    return ""
+
+
 # Value detection
 
 def find_value_bets(
     home_team: str, away_team: str, league: str,
     h_lam: float, a_lam: float,
+    h_lam_recent: Optional[float],
+    a_lam_recent: Optional[float],
     bookmaker_lines: List[dict],
     min_edge: float = DEFAULT_EDGE_THRESHOLD,
     cal_params: Optional[Dict[str, Tuple[float, float]]] = None,
     allowed_sides: "frozenset[str]" = frozenset({"over", "under"}),
     allowed_lines: Optional["frozenset[float]"] = None,
+    policy_lines: Optional["frozenset[float]"] = None,
     kick_off: str = "",
+    policy_version: str = POLICY_VERSION,
 ) -> List[dict]:
     """
     Compare model probabilities against real bookmaker lines.
@@ -412,15 +640,14 @@ def find_value_bets(
     (backtest path risk: max DD ~313u vs ~123u for EPL at same edge thresholds).
     """
     value_bets = []
-    # Derive lines to evaluate from whatever the bookmaker actually offers.
-    # This covers all lines Pinnacle posts (e.g. 7.5, 8.0, 9.0, 12.5, 15.5...)
-    # rather than a hardcoded subset.
+    divergence, consensus = consensus_for_lambdas(h_lam, a_lam, h_lam_recent, a_lam_recent)
     available_bm_lines = sorted({round(bl["line"], 2) for bl in bookmaker_lines})
-    lines_to_check = (
-        [l for l in available_bm_lines if l in allowed_lines]
-        if allowed_lines is not None
-        else available_bm_lines
-    )
+    if allowed_lines is not None:
+        lines_to_check = [l for l in available_bm_lines if l in allowed_lines]
+    elif policy_lines is not None:
+        lines_to_check = [l for l in available_bm_lines if l in policy_lines]
+    else:
+        lines_to_check = available_bm_lines
 
     for line_val in lines_to_check:
         p_over_raw = match_total_prob_over(line_val, h_lam, a_lam)
@@ -444,57 +671,61 @@ def find_value_bets(
             edge_over = p_over - implied_over
             edge_under = p_under - implied_under
 
-            league_mult = LEAGUE_STAKE_MULTIPLIERS.get(league, DEFAULT_LEAGUE_MULTIPLIER)
-
             if "over" in allowed_sides and edge_over >= min_edge:
-                stake_u, stake_label = tier_stake(edge_over)
-                stake_u = round(stake_u * league_mult, 2)
-                if league == "ligue-1":
-                    stake_u = min(stake_u, LIGUE1_MAX_STAKE)
-                stake_u = min(stake_u, 2.0)  # hard absolute cap: no bet exceeds 2u
-                value_bets.append({
-                    "match": f"{home_team} vs {away_team}",
-                    "kick_off": kick_off,
-                    "league": league,
-                    "market": "corners",
-                    "line": line_val,
-                    "side": "over",
-                    "model_prob": round(p_over, 4),
-                    "model_prob_raw": round(p_over_raw, 4),
-                    "model_fair": fair_decimal(p_over),
-                    "bookmaker": bm,
-                    "bookie_odds": over_odds,
-                    "edge": round(edge_over, 4),
-                    "stake": stake_u,
-                    "stake_label": stake_label,
-                    "lambda_h": round(h_lam, 2),
-                    "lambda_a": round(a_lam, 2),
-                })
+                base_stake, stake_label = tier_stake(edge_over)
+                stake_u = effective_stake_for_consensus(edge_over, base_stake, league, consensus)
+                if stake_u > 0:
+                    value_bets.append({
+                        "match": f"{home_team} vs {away_team}",
+                        "kick_off": kick_off,
+                        "league": league,
+                        "market": "corners",
+                        "line": line_val,
+                        "side": "over",
+                        "model_prob": round(p_over, 4),
+                        "model_prob_raw": round(p_over_raw, 4),
+                        "model_fair": fair_decimal(p_over),
+                        "bookmaker": bm,
+                        "bookie_odds": over_odds,
+                        "edge": round(edge_over, 4),
+                        "stake": stake_u,
+                        "stake_label": stake_label,
+                        "lambda_h": round(h_lam, 2),
+                        "lambda_a": round(a_lam, 2),
+                        "lambda_h_recent": round(h_lam_recent, 2) if h_lam_recent is not None else 0.0,
+                        "lambda_a_recent": round(a_lam_recent, 2) if a_lam_recent is not None else 0.0,
+                        "divergence": round(divergence, 4),
+                        "consensus": consensus,
+                        "policy_version": policy_version,
+                    })
 
             if "under" in allowed_sides and edge_under >= min_edge:
-                stake_u, stake_label = tier_stake(edge_under)
-                stake_u = round(stake_u * league_mult, 2)
-                if league == "ligue-1":
-                    stake_u = min(stake_u, LIGUE1_MAX_STAKE)
-                stake_u = min(stake_u, 2.0)  # hard absolute cap: no bet exceeds 2u
-                value_bets.append({
-                    "match": f"{home_team} vs {away_team}",
-                    "kick_off": kick_off,
-                    "league": league,
-                    "market": "corners",
-                    "line": line_val,
-                    "side": "under",
-                    "model_prob": round(p_under, 4),
-                    "model_prob_raw": round(1.0 - p_over_raw, 4),
-                    "model_fair": fair_decimal(p_under),
-                    "bookmaker": bm,
-                    "bookie_odds": under_odds,
-                    "edge": round(edge_under, 4),
-                    "stake": stake_u,
-                    "stake_label": stake_label,
-                    "lambda_h": round(h_lam, 2),
-                    "lambda_a": round(a_lam, 2),
-                })
+                base_stake, stake_label = tier_stake(edge_under)
+                stake_u = effective_stake_for_consensus(edge_under, base_stake, league, consensus)
+                if stake_u > 0:
+                    value_bets.append({
+                        "match": f"{home_team} vs {away_team}",
+                        "kick_off": kick_off,
+                        "league": league,
+                        "market": "corners",
+                        "line": line_val,
+                        "side": "under",
+                        "model_prob": round(p_under, 4),
+                        "model_prob_raw": round(1.0 - p_over_raw, 4),
+                        "model_fair": fair_decimal(p_under),
+                        "bookmaker": bm,
+                        "bookie_odds": under_odds,
+                        "edge": round(edge_under, 4),
+                        "stake": stake_u,
+                        "stake_label": stake_label,
+                        "lambda_h": round(h_lam, 2),
+                        "lambda_a": round(a_lam, 2),
+                        "lambda_h_recent": round(h_lam_recent, 2) if h_lam_recent is not None else 0.0,
+                        "lambda_a_recent": round(a_lam_recent, 2) if a_lam_recent is not None else 0.0,
+                        "divergence": round(divergence, 4),
+                        "consensus": consensus,
+                        "policy_version": policy_version,
+                    })
 
     return value_bets
 
@@ -504,12 +735,25 @@ def find_value_bets(
 def format_shortlist(
     value_bets: List[dict],
     credits_remaining: Optional[int] = None,
+    *,
+    policy_version: str = POLICY_VERSION,
+    min_edge: float = DEFAULT_EDGE_THRESHOLD,
+    policy_lines: Optional[List[float]] = None,
+    odds_source_label: str = "",
 ) -> str:
     lines: List[str] = []
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     lines.append("=" * 78)
     lines.append(f"  MATCHDAY SHORTLIST -- {now}")
     lines.append("=" * 78)
+    lines.append(f"  Policy: {policy_version} (divergence gate active)")
+    if policy_lines:
+        lines.append(
+            f"  Policy lines: {', '.join(f'{line:.1f}' for line in policy_lines)}"
+            f" | Min edge: {min_edge:.1%}"
+        )
+    if odds_source_label:
+        lines.append(f"  Odds source: {odds_source_label}")
 
     if credits_remaining is not None:
         lines.append(f"  Odds API credits remaining: {credits_remaining}")
@@ -528,10 +772,12 @@ def format_shortlist(
     total_stake = 0.0
     for b in sorted_bets:
         match_name = b["match"][:30]
+        consensus_tag = shortlist_consensus_tag(b)
         lines.append(
             f"  {match_name:<30s}  {b['line']:>5.1f}  {b['side']:>5s}  "
             f"{b['model_fair']:>6.2f}  {b['bookie_odds']:>6.2f}  "
             f"{b['edge']:>+5.1%}  {b['stake']:>5.1f}u  {b['stake_label']:>6s}"
+            f"{('  ' + consensus_tag) if consensus_tag else ''}"
         )
         total_stake += b["stake"]
 
@@ -552,6 +798,9 @@ def format_shortlist(
     lines.append("  Ref odds = Pinnacle (sharpest market). Bet on bet365/Paddy Power if similar or better.")
     lines.append("  Base tiers: 0.25u (10-12%) | 0.5u (12-15%) | 1u (15-20%) | 1.5u (20-25%) | 2u (25%+)")
     lines.append("  League multipliers: Serie A x1.5 | La Liga x1.25 | Bundesliga x1.0 | EPL x0.75 | Ligue 1 x0.75 (cap 0.5u)")
+    lines.append("  [DIVG] recent form diverges 15-30% from season EMA — flagged")
+    lines.append("  [CONF] recent form diverges 30-45% — stake downgraded when applicable")
+    lines.append("  [EXTR] recent form diverges >45% — suppressed (MEDIUM) or downgraded (HIGH)")
     lines.append("=" * 78)
     return "\n".join(lines)
 
@@ -560,12 +809,14 @@ def format_shortlist(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Matchday value shortlist")
+    parser.add_argument("--policy", choices=sorted(POLICY_SPECS), default=DEFAULT_POLICY_VERSION,
+                        help=f"Policy preset to apply (default {DEFAULT_POLICY_VERSION})")
     parser.add_argument("--league", choices=sorted(SPORT_KEYS), default=None,
                         help="Single league to check")
     parser.add_argument("--all-leagues", action="store_true",
                         help="Check all Big 5 leagues")
-    parser.add_argument("--min-edge", type=float, default=DEFAULT_EDGE_THRESHOLD,
-                        help=f"Min edge to qualify (default {DEFAULT_EDGE_THRESHOLD})")
+    parser.add_argument("--min-edge", type=float, default=None,
+                        help="Min edge to qualify (defaults to the selected policy)")
     parser.add_argument("--side", choices=["over", "under", "both"], default="both",
                         help="Only emit over, under, or both sides (default: both)")
     parser.add_argument("--lines", default="",
@@ -573,24 +824,37 @@ def main() -> None:
     parser.add_argument("--dry-run", action="store_true",
                         help="Skip API calls, use model only")
     parser.add_argument("--regions", default="eu",
-                        help="Bookmaker regions (default eu for Pinnacle; use uk,eu for more bookies but 2x credits)")
+                        help="The Odds API regions (only used with --odds-source theodds/auto fallback)")
     parser.add_argument("--days-ahead", type=int, default=7,
                         help="Only fetch odds for matches within N days (saves credits)")
+    parser.add_argument("--odds-source", choices=["pinnacle", "theodds", "auto"], default="pinnacle",
+                        help="Corners price source: Pinnacle snapshot, The Odds API, or auto fallback (default pinnacle)")
+    parser.add_argument("--pinnacle-csv", default=str(DEFAULT_PINNACLE_CORNERS_PATH),
+                        help="Path to the Pinnacle corners snapshot CSV")
+    parser.add_argument("--artifact-suffix", default="",
+                        help="Optional suffix appended to shortlist/value-bets/signals output filenames")
     args = parser.parse_args()
 
     leagues = list(SPORT_KEYS.keys()) if args.all_leagues else [args.league or "epl"]
+    policy_spec = POLICY_SPECS[args.policy]
+    policy_version = args.policy
+    policy_lines = list(policy_spec["corner_lines"])
+    min_edge = float(policy_spec["min_edge"] if args.min_edge is None else args.min_edge)
 
     allowed_sides: frozenset = (
         frozenset({"over", "under"}) if args.side == "both" else frozenset({args.side})
     )
-    allowed_lines: Optional[frozenset] = None
+    allowed_lines: Optional[frozenset] = frozenset(policy_lines)
     if args.lines:
         try:
             allowed_lines = frozenset(
                 float(l.strip()) for l in args.lines.split(",") if l.strip()
             )
         except ValueError:
-            print(f"  [warn] --lines value '{args.lines}' could not be parsed; using all lines")
+            print(
+                f"  [warn] --lines value '{args.lines}' could not be parsed; "
+                f"using policy lines {', '.join(f'{line:.1f}' for line in policy_lines)}"
+            )
 
     print("Loading historical corner stats...")
     team_stats = load_historical_corner_stats()
@@ -605,42 +869,98 @@ def main() -> None:
         _dry_run_shortlist(leagues, team_stats)
         return
 
-    print("\nConnecting to The Odds API...")
-    try:
-        client = OddsApiClient()
-    except RuntimeError as e:
-        print(f"  ERROR: {e}")
-        print("\n  To set up: sign up free at https://the-odds-api.com")
-        print("  Then add to .env.local:  THE_ODDS_API_KEY=your_key_here")
-        return
+    cutoff = inclusive_days_cutoff(args.days_ahead)
+    pinnacle_path = Path(args.pinnacle_csv)
+    pinnacle_fixtures: dict[str, dict] = {}
+    pinnacle_lines: dict[str, List[dict]] = {}
+    client: Optional[OddsApiClient] = None
+    odds_source_label = ""
+
+    if args.odds_source in {"pinnacle", "auto"}:
+        print("\nLoading Pinnacle corners snapshot...")
+        pinnacle_fixtures, pinnacle_lines = load_pinnacle_corner_index(
+            pinnacle_path,
+            leagues=set(leagues),
+            cutoff=cutoff,
+        )
+        line_count = sum(len(rows) for rows in pinnacle_lines.values())
+        print(f"  {len(pinnacle_fixtures)} fixtures / {line_count} lines loaded from {pinnacle_path}")
+        odds_source_label = "Pinnacle guest snapshot"
+        if args.odds_source == "pinnacle" and not pinnacle_fixtures:
+            print("  ERROR: no Pinnacle corner fixtures found in the configured snapshot.")
+            print("  Refresh with: python scripts/pinnacle-scrape-corners.py")
+            return
+
+    pinnacle_leagues_available = {fixture["league"] for fixture in pinnacle_fixtures.values()}
+    need_theodds = args.odds_source == "theodds" or (
+        args.odds_source == "auto" and (not pinnacle_fixtures or pinnacle_leagues_available != set(leagues))
+    )
+    if need_theodds:
+        print("\nConnecting to The Odds API...")
+        try:
+            client = OddsApiClient()
+            odds_source_label = (
+                "Pinnacle guest snapshot + The Odds API fallback"
+                if args.odds_source == "auto" and pinnacle_fixtures
+                else "The Odds API"
+            )
+        except RuntimeError as e:
+            print(f"  ERROR: {e}")
+            print("\n  To set up: sign up free at https://the-odds-api.com")
+            print("  Then add to .env.local:  THE_ODDS_API_KEY=your_key_here")
+            return
 
     all_value_bets: List[dict] = []
     all_signals: List[dict] = []
 
     for league in leagues:
-        sport_key = SPORT_KEYS[league]
         league_avg = LEAGUE_AVG_CORNERS.get(league, DEFAULT_AVG)
         print(f"\n--- {league.upper()} ---")
 
-        events = client.get_upcoming_events(sport_key)
+        using_pinnacle = args.odds_source == "pinnacle" or (args.odds_source == "auto" and league in pinnacle_leagues_available)
+        nearby: List[dict] = []
 
-        cutoff = datetime.now(timezone.utc) + timedelta(days=args.days_ahead)
-        nearby = []
-        for ev in events:
-            ko = ev.get("commence_time", "")
-            try:
-                ko_dt = datetime.fromisoformat(ko.replace("Z", "+00:00"))
-                if ko_dt <= cutoff:
+        if using_pinnacle:
+            nearby = sorted(
+                [
+                    fixture
+                    for fixture in pinnacle_fixtures.values()
+                    if fixture.get("league") == league
+                ],
+                key=lambda fixture: (fixture.get("kick_off") or "", fixture.get("home_team") or "", fixture.get("away_team") or ""),
+            )
+            print(f"  {len(nearby)} Pinnacle fixtures within {args.days_ahead} days")
+        else:
+            if client is None:
+                print("  No odds source available for this league, skipping")
+                continue
+            sport_key = SPORT_KEYS[league]
+            events = client.get_upcoming_events(sport_key)
+            for ev in events:
+                ko = ev.get("commence_time", "")
+                ko_dt = parse_iso_datetime(ko)
+                if ko_dt is None or ko_dt <= cutoff:
                     nearby.append(ev)
-            except (ValueError, TypeError):
-                nearby.append(ev)
-        print(f"  {len(events)} upcoming, {len(nearby)} within {args.days_ahead} days")
+            print(f"  {len(events)} upcoming, {len(nearby)} within {args.days_ahead} days")
 
         for event in nearby:
-            home = event.get("home_team", "")
-            away = event.get("away_team", "")
-            event_id = event.get("id", "")
-            kick_off = event.get("commence_time", "")
+            if using_pinnacle:
+                home = event.get("home_team", "")
+                away = event.get("away_team", "")
+                kick_off = event.get("kick_off", "")
+                fixture_key = event.get("_fixture_key", "")
+                bm_lines = list(pinnacle_lines.get(fixture_key, []))
+            else:
+                home = event.get("home_team", "")
+                away = event.get("away_team", "")
+                event_id = event.get("id", "")
+                kick_off = event.get("commence_time", "")
+                try:
+                    event_odds = client.get_event_corner_odds(event_id, sport_key, regions=args.regions)
+                    bm_lines = OddsApiClient.extract_corner_lines(event_odds)
+                except Exception as e:
+                    print(f"    No corner odds available: {e}")
+                    bm_lines = []
 
             h_key = f"{league}:{normalize_team(home)}"
             a_key = f"{league}:{normalize_team(away)}"
@@ -657,25 +977,45 @@ def main() -> None:
                 print(f"  {home} vs {away}: insufficient matches for EMA, skipping")
                 continue
 
-            total_lam = h_lam + a_lam
-            print(f"  {home} vs {away}: lam_H={h_lam:.2f} lam_A={a_lam:.2f} total={total_lam:.2f}")
+            h_lam_recent = predict_corners_lambda_from_avgs(
+                h_stats.avg_won_recent(),
+                a_stats.avg_conceded_recent(),
+                league_avg,
+                is_home=True,
+            )
+            a_lam_recent = predict_corners_lambda_from_avgs(
+                a_stats.avg_won_recent(),
+                h_stats.avg_conceded_recent(),
+                league_avg,
+                is_home=False,
+            )
+            divergence, consensus = consensus_for_lambdas(
+                h_lam,
+                a_lam,
+                h_lam_recent,
+                a_lam_recent,
+            )
 
-            try:
-                event_odds = client.get_event_corner_odds(event_id, sport_key, regions=args.regions)
-                bm_lines = OddsApiClient.extract_corner_lines(event_odds)
+            total_lam = h_lam + a_lam
+            print(
+                f"  {home} vs {away}: lam_H={h_lam:.2f} lam_A={a_lam:.2f} total={total_lam:.2f}"
+                f" | consensus={consensus} div={divergence:.1%}"
+            )
+            if bm_lines:
                 print(f"    {len(bm_lines)} corner lines from {len(set(l['bookmaker'] for l in bm_lines))} bookmakers")
-            except Exception as e:
-                print(f"    No corner odds available: {e}")
-                bm_lines = []
+            else:
+                print("    No corner odds available")
 
             if bm_lines:
                 value = find_value_bets(
-                    home, away, league, h_lam, a_lam, bm_lines,
-                    min_edge=args.min_edge,
+                    home, away, league, h_lam, a_lam, h_lam_recent, a_lam_recent, bm_lines,
+                    min_edge=min_edge,
                     cal_params=cal_params,
                     allowed_sides=allowed_sides,
                     allowed_lines=allowed_lines,
+                    policy_lines=frozenset(policy_lines),
                     kick_off=kick_off,
+                    policy_version=policy_version,
                 )
                 all_value_bets.extend(value)
                 if value:
@@ -690,10 +1030,15 @@ def main() -> None:
                 "lambda_home": round(h_lam, 3),
                 "lambda_away": round(a_lam, 3),
                 "lambda_total": round(total_lam, 3),
+                "lambda_home_recent": round(h_lam_recent, 3) if h_lam_recent is not None else 0.0,
+                "lambda_away_recent": round(a_lam_recent, 3) if a_lam_recent is not None else 0.0,
+                "divergence": round(divergence, 4),
+                "consensus": consensus,
+                "policy_version": policy_version,
                 "home_matches": h_stats.n_matches,
                 "away_matches": a_stats.n_matches,
             }
-            for line_val in CORNER_LINES:
+            for line_val in policy_lines:
                 p_over = match_total_prob_over(line_val, h_lam, a_lam)
                 signal[f"p_over_{line_val}"] = round(p_over, 4)
                 signal[f"fair_over_{line_val}"] = fair_decimal(p_over)
@@ -745,18 +1090,27 @@ def main() -> None:
             f"{preview}{suffix}"
         )
 
-    shortlist = format_shortlist(all_value_bets, client.get_credits_remaining())
+    shortlist = format_shortlist(
+        all_value_bets,
+        client.get_credits_remaining() if client is not None else None,
+        policy_version=policy_version,
+        min_edge=min_edge,
+        policy_lines=policy_lines,
+        odds_source_label=odds_source_label,
+    )
     print("\n" + shortlist)
 
     output_dir = DEFAULT_OUTPUT_DIR
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    shortlist_path = output_dir / f"shortlist-{today}.txt"
+    artifact_suffix = f"-{args.artifact_suffix.strip()}" if args.artifact_suffix.strip() else ""
+
+    shortlist_path = output_dir / f"shortlist-{today}{artifact_suffix}.txt"
     with open(shortlist_path, "w", encoding="utf-8") as fh:
         fh.write(shortlist)
     print(f"Shortlist saved to {shortlist_path}")
 
-    bets_path = output_dir / f"value-bets-{today}.csv"
+    bets_path = output_dir / f"value-bets-{today}{artifact_suffix}.csv"
     bet_fields = list(all_value_bets[0].keys()) if all_value_bets else VALUE_BET_FIELDS
     with open(bets_path, "w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=bet_fields)
@@ -768,14 +1122,32 @@ def main() -> None:
     else:
         print(f"Value bets CSV saved empty to {bets_path}")
 
+    signals_path = output_dir / f"signals-{today}{artifact_suffix}.csv"
     if all_signals:
-        signals_path = output_dir / f"signals-{today}.csv"
         fields = list(all_signals[0].keys())
-        with open(signals_path, "w", newline="", encoding="utf-8") as fh:
-            writer = csv.DictWriter(fh, fieldnames=fields)
-            writer.writeheader()
+    else:
+        fields = [
+            "date", "kick_off", "league", "home_team", "away_team",
+            "lambda_home", "lambda_away", "lambda_total",
+            "lambda_home_recent", "lambda_away_recent",
+            "divergence", "consensus", "policy_version",
+            "home_matches", "away_matches",
+        ]
+        for line_val in CORNER_LINES:
+            fields.extend([
+                f"p_over_{line_val}",
+                f"fair_over_{line_val}",
+                f"fair_under_{line_val}",
+            ])
+    with open(signals_path, "w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=fields)
+        writer.writeheader()
+        if all_signals:
             writer.writerows(all_signals)
+    if all_signals:
         print(f"Signals CSV saved to {signals_path}")
+    else:
+        print(f"Signals CSV saved empty to {signals_path}")
 
 
 def _dry_run_shortlist(leagues: List[str], team_stats: Dict[str, TeamCornerStats]) -> None:

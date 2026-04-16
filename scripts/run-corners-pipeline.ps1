@@ -9,8 +9,8 @@
     3. Archive odds + compare model vs book + shadow track + settle
     4. Log everything with timestamps and emit a pipeline status JSON
 
-    The Odds API (the-odds-api.com) does not offer team total shots; those
-    lines come from Odds-API.io or BetsAPI when keys are set in .env.local.
+    Team shots lines come from Odds-API.io or BetsAPI when keys are set in
+    .env.local. Corners now use the local Pinnacle guest snapshot.
 
 .EXAMPLE
     .\scripts\run-corners-pipeline.ps1
@@ -20,7 +20,7 @@
 param(
     [string]$LeaguesOnly = "",
     [int]$DaysAhead = 7,
-    [double]$MinEdge = 0.10,
+    [double]$MinEdge = 0.15,
     [string]$Regions = "eu",
     [double]$ShotsMinEdge = 0.05,
     [switch]$SkipTeamShots
@@ -39,6 +39,9 @@ $statusFile = Join-Path $logDir "team-props-status.json"
 $latestShortlistPath = Join-Path $logDir "shortlist-latest.txt"
 $latestValueBetsPath = Join-Path $logDir "value-bets-latest.csv"
 $latestSignalsPath = Join-Path $logDir "signals-latest.csv"
+$latestShadowShortlistPath = Join-Path $logDir "shortlist-latest-v31.txt"
+$latestShadowValueBetsPath = Join-Path $logDir "value-bets-latest-v31.csv"
+$latestShadowSignalsPath = Join-Path $logDir "signals-latest-v31.csv"
 $warnings = New-Object System.Collections.Generic.List[string]
 $criticalFailures = New-Object System.Collections.Generic.List[string]
 $currentStep = ""
@@ -105,6 +108,9 @@ function Build-ArtifactsState {
         @{ Name = "shortlist_latest"; Path = $latestShortlistPath },
         @{ Name = "value_bets_latest"; Path = $latestValueBetsPath },
         @{ Name = "signals_latest"; Path = $latestSignalsPath },
+        @{ Name = "shadow_shortlist_latest"; Path = $latestShadowShortlistPath },
+        @{ Name = "shadow_value_bets_latest"; Path = $latestShadowValueBetsPath },
+        @{ Name = "shadow_signals_latest"; Path = $latestShadowSignalsPath },
         @{ Name = "pipeline_log"; Path = $logFile },
         @{ Name = "team_shots_predictions"; Path = (Join-Path $root "data\team-shots\team-shots-predictions.csv") },
         @{ Name = "team_shots_comparison"; Path = (Join-Path $root "data\team-shots\team-shots-comparison.csv") },
@@ -238,25 +244,59 @@ try {
     }
 
     $currentStep = "corners-shortlist"
-    Write-Status -State "running" -Message "Generating corners shortlist" -Artifacts (Build-ArtifactsState)
-    Log "Step 1d: Fetching corner odds and generating shortlist..."
-    $shortlistArgs = @("scripts/matchday-shortlist.py", "--all-leagues", "--min-edge", $MinEdge, "--days-ahead", $DaysAhead, "--regions", $Regions)
+    Write-Status -State "running" -Message "Refreshing Pinnacle corners snapshot" -Artifacts (Build-ArtifactsState)
+    Log "Step 1d: Refreshing Pinnacle corners snapshot..."
+    $pinnacleSnapshotPath = Join-Path $cornersDir "pinnacle-corners-odds.csv"
+    $hadPinnacleSnapshot = Test-Path $pinnacleSnapshotPath
+    $pinnacleArgs = @("scripts/pinnacle-scrape-corners.py")
     if ($LeaguesOnly) {
-        $shortlistArgs = @("scripts/matchday-shortlist.py", "--league", $LeaguesOnly.Split(",")[0], "--min-edge", $MinEdge, "--days-ahead", $DaysAhead, "--regions", $Regions)
+        $pinnacleArgs += @("--leagues", $LeaguesOnly)
+    }
+    $pinnacleResult = & python @pinnacleArgs 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        if (-not $hadPinnacleSnapshot) {
+            Add-CriticalFailure "Pinnacle corners snapshot refresh returned exit code $LASTEXITCODE with no existing snapshot available."
+        } else {
+            Add-WarningMessage "Pinnacle corners snapshot refresh returned exit code $LASTEXITCODE; using existing snapshot."
+        }
+        $pinnacleResult | ForEach-Object { Log "  $_" }
+    } else {
+        $pinnacleLine = ($pinnacleResult | Select-String "New rows:" | Select-Object -Last 1)
+        if ($pinnacleLine) { Log "  $pinnacleLine" }
+    }
+
+    $currentStep = "corners-shortlist"
+    Write-Status -State "running" -Message "Generating corners shortlist" -Artifacts (Build-ArtifactsState)
+    Log "Step 1e: Generating official V3 shortlist from Pinnacle corners snapshot..."
+    $shortlistArgs = @("scripts/matchday-shortlist.py", "--policy", "V3", "--odds-source", "pinnacle", "--all-leagues", "--min-edge", $MinEdge, "--days-ahead", $DaysAhead, "--regions", $Regions, "--pinnacle-csv", $pinnacleSnapshotPath)
+    if ($LeaguesOnly) {
+        $shortlistArgs = @("scripts/matchday-shortlist.py", "--policy", "V3", "--odds-source", "pinnacle", "--league", $LeaguesOnly.Split(",")[0], "--min-edge", $MinEdge, "--days-ahead", $DaysAhead, "--regions", $Regions, "--pinnacle-csv", $pinnacleSnapshotPath)
     }
     $shortlistResult = & python @shortlistArgs 2>&1
     $betsLine = ($shortlistResult | Select-String "Total bets:" | Select-Object -Last 1)
-    $creditsLine = ($shortlistResult | Select-String "credits remaining" | Select-Object -Last 1)
     if ($betsLine) { Log "  $betsLine" }
-    if ($creditsLine) { Log "  $creditsLine" }
     if ($LASTEXITCODE -ne 0) {
         Add-CriticalFailure "Corners shortlist returned exit code $LASTEXITCODE"
         $shortlistResult | ForEach-Object { Log "  $_" }
     }
 
+    Write-Status -State "running" -Message "Generating corners V3.1 shadow shortlist" -Artifacts (Build-ArtifactsState)
+    Log "Step 1f: Generating V3.1 shadow shortlist from Pinnacle corners snapshot..."
+    $shadowShortlistArgs = @("scripts/matchday-shortlist.py", "--policy", "V3.1", "--artifact-suffix", "v31", "--odds-source", "pinnacle", "--all-leagues", "--days-ahead", $DaysAhead, "--regions", $Regions, "--pinnacle-csv", $pinnacleSnapshotPath)
+    if ($LeaguesOnly) {
+        $shadowShortlistArgs = @("scripts/matchday-shortlist.py", "--policy", "V3.1", "--artifact-suffix", "v31", "--odds-source", "pinnacle", "--league", $LeaguesOnly.Split(",")[0], "--days-ahead", $DaysAhead, "--regions", $Regions, "--pinnacle-csv", $pinnacleSnapshotPath)
+    }
+    $shadowShortlistResult = & python @shadowShortlistArgs 2>&1
+    $shadowBetsLine = ($shadowShortlistResult | Select-String "Total bets:" | Select-Object -Last 1)
+    if ($shadowBetsLine) { Log "  $shadowBetsLine" }
+    if ($LASTEXITCODE -ne 0) {
+        Add-CriticalFailure "Corners V3.1 shadow shortlist returned exit code $LASTEXITCODE"
+        $shadowShortlistResult | ForEach-Object { Log "  $_" }
+    }
+
     $currentStep = "corners-settle"
     Write-Status -State "running" -Message "Settling corners shortlist" -Artifacts (Build-ArtifactsState)
-    Log "Step 1e: Settling previous corner bets..."
+    Log "Step 1g: Settling previous corner bets..."
     $settleResult = & python scripts/shortlist-settle.py 2>&1
     $settleExitCode = $LASTEXITCODE
     $settleLine = ($settleResult | Select-String "Settled:" | Select-Object -Last 1)
@@ -351,25 +391,9 @@ try {
             Add-WarningMessage "Team shots calibration threw an exception: $_"
         }
 
-        $currentStep = "team-shots-upcoming"
-        Write-Status -State "running" -Message "Writing upcoming team shots fixtures" -Artifacts (Build-ArtifactsState)
-        Log "Step 2d: Writing upcoming fixture Lambda (The Odds API + model)..."
-        try {
-            $upcomingResult = & python scripts/team_shots_upcoming.py --days-ahead $DaysAhead 2>&1
-            if ($LASTEXITCODE -ne 0) {
-                Add-WarningMessage "Team shots upcoming returned exit code $LASTEXITCODE."
-                $upcomingResult | ForEach-Object { Log "  $_" }
-            } else {
-                $upcomingLine = ($upcomingResult | Select-String "Wrote \d+ upcoming rows" | Select-Object -Last 1)
-                if ($upcomingLine) { Log "  $upcomingLine" } else { $upcomingResult | ForEach-Object { Log "  $_" } }
-            }
-        } catch {
-            Add-WarningMessage "Team shots upcoming threw an exception: $_"
-        }
-
         $currentStep = "team-shots-scrape"
         Write-Status -State "running" -Message "Scraping team shots odds" -Artifacts (Build-ArtifactsState)
-        Log "Step 2e: Scraping team total shots odds (Odds-API.io / BetsAPI)..."
+        Log "Step 2d: Scraping team total shots odds (Odds-API.io / BetsAPI)..."
         $shotsArgs = @("scripts/team-shots-scrape-odds.py", "--all-leagues", "--days-ahead", $DaysAhead)
         try {
             $scrapeResult = & python @shotsArgs 2>&1
@@ -386,7 +410,7 @@ try {
 
         $currentStep = "team-shots-archive"
         Write-Status -State "running" -Message "Archiving team shots odds" -Artifacts (Build-ArtifactsState)
-        Log "Step 2f: Archiving odds..."
+        Log "Step 2e: Archiving odds..."
         try {
             & python scripts/team-shots-odds-archive.py 2>&1 | ForEach-Object { Log "  $_" }
             if ($LASTEXITCODE -ne 0) {
@@ -394,6 +418,22 @@ try {
             }
         } catch {
             Add-WarningMessage "Odds archive failed: $_"
+        }
+
+        $currentStep = "team-shots-upcoming"
+        Write-Status -State "running" -Message "Writing upcoming team shots fixtures" -Artifacts (Build-ArtifactsState)
+        Log "Step 2f: Writing upcoming fixture Lambda (inbox odds + model)..."
+        try {
+            $upcomingResult = & python scripts/team_shots_upcoming.py --days-ahead $DaysAhead 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                Add-WarningMessage "Team shots upcoming returned exit code $LASTEXITCODE."
+                $upcomingResult | ForEach-Object { Log "  $_" }
+            } else {
+                $upcomingLine = ($upcomingResult | Select-String "Wrote \d+ upcoming rows" | Select-Object -Last 1)
+                if ($upcomingLine) { Log "  $upcomingLine" } else { $upcomingResult | ForEach-Object { Log "  $_" } }
+            }
+        } catch {
+            Add-WarningMessage "Team shots upcoming threw an exception: $_"
         }
 
         $currentStep = "team-shots-compare"
@@ -437,11 +477,30 @@ try {
         Log "Skipped (SkipTeamShots switch enabled)"
     }
 
-    $currentStep = "artifacts"
-    Sync-LatestArtifact -glob (Join-Path $logDir "shortlist-*.txt") -targetPath $latestShortlistPath | Out-Null
-    Sync-LatestArtifact -glob (Join-Path $logDir "value-bets-*.csv") -targetPath $latestValueBetsPath | Out-Null
-    Sync-LatestArtifact -glob (Join-Path $logDir "signals-*.csv") -targetPath $latestSignalsPath | Out-Null
+    $currentStep = "artifact-sync"
+    Write-Status -State "running" -Message "Refreshing latest team props artifacts" -Artifacts (Build-ArtifactsState)
+    Log ""
+    Log "Syncing latest corners artifacts..."
 
+    $latestMappings = @(
+        @{ Pattern = (Join-Path $logDir "shortlist-????-??-??.txt"); Target = $latestShortlistPath; Label = "V3 shortlist" },
+        @{ Pattern = (Join-Path $logDir "value-bets-????-??-??.csv"); Target = $latestValueBetsPath; Label = "V3 value bets" },
+        @{ Pattern = (Join-Path $logDir "signals-????-??-??.csv"); Target = $latestSignalsPath; Label = "V3 signals" },
+        @{ Pattern = (Join-Path $logDir "shortlist-????-??-??-v31.txt"); Target = $latestShadowShortlistPath; Label = "V3.1 shortlist" },
+        @{ Pattern = (Join-Path $logDir "value-bets-????-??-??-v31.csv"); Target = $latestShadowValueBetsPath; Label = "V3.1 value bets" },
+        @{ Pattern = (Join-Path $logDir "signals-????-??-??-v31.csv"); Target = $latestShadowSignalsPath; Label = "V3.1 signals" }
+    )
+
+    foreach ($mapping in $latestMappings) {
+        $latestArtifact = Sync-LatestArtifact $mapping.Pattern $mapping.Target
+        if ($null -ne $latestArtifact) {
+            Log "  Synced $($mapping.Label): $($latestArtifact.Name) -> $([System.IO.Path]::GetFileName($mapping.Target))"
+        } else {
+            Add-WarningMessage "No artifact found for $($mapping.Label) using pattern $($mapping.Pattern)"
+        }
+    }
+
+    $currentStep = "artifacts"
     $artifacts = Build-ArtifactsState
 
     Log ""
