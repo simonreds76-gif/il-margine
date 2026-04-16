@@ -29,6 +29,7 @@ param(
 $ErrorActionPreference = "Continue"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $root
+. (Join-Path $root "scripts\_lib\run_status.ps1")
 
 $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 $runStartedAtUtc = (Get-Date).ToUniversalTime().ToString("o")
@@ -167,6 +168,12 @@ $previousStatus = Read-JsonFile $statusFile
 if ($previousStatus -and $previousStatus.last_successful_finished_at) {
     $lastSuccessfulFinishedAt = [string]$previousStatus.last_successful_finished_at
 }
+
+$runStatus = Start-RunStatus -Pipeline "team-props" -Trigger "schedule"
+$runStatusFinal = "failed"
+$runStatusErrorRecord = $null
+$runStatusErrorType = $null
+$runStatusErrorMessage = $null
 
 Write-Status -State "running" -Message "Team props pipeline started"
 
@@ -530,6 +537,9 @@ try {
     }
 
     if ($criticalFailures.Count -gt 0) {
+        $runStatusFinal = "failed"
+        $runStatusErrorType = "CriticalFailure"
+        $runStatusErrorMessage = [string]::Join("; ", @($criticalFailures))
         Write-Status -State "failed" -Message "Team props pipeline finished with critical failures." -ExitCode 1 -Artifacts $artifacts
         exit 1
     }
@@ -548,9 +558,18 @@ try {
         Get-Content $latestShortlist.FullName
     }
 
+    $runStatusFinal = "ok"
+    $runStatusErrorType = $null
+    $runStatusErrorMessage = $null
     exit 0
 } catch {
+    $runStatusFinal = "failed"
+    $runStatusErrorRecord = $_
+    $runStatusErrorType = $null
+    $runStatusErrorMessage = $null
     Add-CriticalFailure "Fatal team props pipeline exception: $($_.Exception.Message)"
     Write-Status -State "failed" -Message $_.Exception.Message -ExitCode 1 -Artifacts (Build-ArtifactsState)
     exit 1
+} finally {
+    Complete-RunStatus -Run $runStatus -Status $runStatusFinal -ErrorRecord $runStatusErrorRecord -ErrorType $runStatusErrorType -ErrorMessage $runStatusErrorMessage
 }
