@@ -13,6 +13,7 @@ One snapshot per (match, line, side) per calendar day is stored.
 
 Usage:
   python scripts/pinnacle-scrape-corners.py
+  python scripts/pinnacle-scrape-corners.py --leagues epl,serie-a
   python scripts/pinnacle-scrape-corners.py --dry-run
   python scripts/pinnacle-scrape-corners.py --verbose
 """
@@ -184,6 +185,7 @@ def _load_existing_keys(path: Path) -> set:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Scrape Pinnacle corners O/U odds (Big 5)")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--leagues", default="", help="Comma-separated leagues to scrape (default all Big 5)")
     parser.add_argument("--dry-run", action="store_true", help="Fetch but do not write")
     parser.add_argument("--verbose", "-v", action="store_true")
     args = parser.parse_args()
@@ -199,8 +201,18 @@ def main() -> None:
     print(f"  Existing snapshots: {len(existing_keys)}")
     print(f"  Capture time:       {captured_at}\n")
 
+    requested_leagues = [league.strip() for league in args.leagues.split(",") if league.strip()]
+    leagues_to_scrape = LEAGUES
+    if requested_leagues:
+        leagues_to_scrape = {league: LEAGUES[league] for league in requested_leagues if league in LEAGUES}
+        unknown = [league for league in requested_leagues if league not in LEAGUES]
+        if unknown:
+            print(f"  [warn] unknown leagues skipped: {', '.join(unknown)}")
+        if not leagues_to_scrape:
+            raise SystemExit("No valid leagues requested.")
+
     all_new: List[Dict] = []
-    for league_key, league_id in LEAGUES.items():
+    for league_key, league_id in leagues_to_scrape.items():
         rows = _scrape_league(league_key, league_id, captured_at, args.verbose)
         for row in rows:
             k = (

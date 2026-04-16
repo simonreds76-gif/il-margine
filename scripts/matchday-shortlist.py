@@ -10,8 +10,8 @@ This is the daily workflow script. Run it on the morning of a matchday:
   python scripts/matchday-shortlist.py --side under --lines 8.5,9.5
 
 It will:
-  1. Load the corners model predictions for upcoming fixtures
-  2. Fetch real-time corner O/U odds from The Odds API
+  1. Load the corners model inputs for upcoming fixtures
+  2. Load live corner O/U odds from the configured price source
   3. Compare model fair odds vs bookmaker prices
   4. Highlight value bets with edge >= threshold
     5. Apply tiered staking (0.25-2u by edge band; Ligue 1 capped at 0.5u)
@@ -39,7 +39,7 @@ ROOT = Path(__file__).resolve().parent.parent
 import sys
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from the_odds_api_client import OddsApiClient, SPORT_KEYS, CORNER_MARKET
+from the_odds_api_client import OddsApiClient, SPORT_KEYS
 from corners_poisson import (  # noqa: E402
     calibrate_prob,
     fair_decimal,
@@ -56,6 +56,7 @@ DEFAULT_OUTPUT_DIR = ROOT / "data" / "shortlist"
 CORNERS_HISTORICAL_DIR = ROOT / "data" / "corners-ou" / "historical"
 LEGACY_HISTORICAL_DIR = ROOT / "data" / "team-shots" / "historical"
 CALIBRATION_PARAMS_PATH = ROOT / "data" / "corners-ou" / "corners-calibration-params.json"
+DEFAULT_PINNACLE_CORNERS_PATH = ROOT / "data" / "corners-ou" / "pinnacle-corners-odds.csv"
 LIGUE1_MAX_STAKE = 0.5  # DD risk: Ligue 1 backtest max DD ~133u vs ~36u Serie A
 DEFAULT_POLICY_VERSION = "V3"
 POLICY_SPECS: dict[str, dict[str, object]] = {
@@ -112,6 +113,16 @@ def inclusive_days_cutoff(days_ahead: int) -> datetime:
     return datetime.combine(target_day, datetime.max.time(), tzinfo=timezone.utc)
 
 
+def parse_iso_datetime(text: str) -> Optional[datetime]:
+    raw = (text or "").strip()
+    if not raw:
+        return None
+    try:
+        return datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
 # (poisson_pmf, match_total_prob_over, fair_decimal, calibrate_prob,
 #  load_calibration_params imported from corners_poisson)
 
@@ -157,6 +168,7 @@ TEAM_ALIASES = {
     "milan": "milan",
     "inter": "inter",
     "inter milan": "inter",
+    "inter milano": "inter",
     "internazionale": "inter",
     "as roma": "roma",
     "roma": "roma",
@@ -212,10 +224,17 @@ TEAM_ALIASES = {
     "ein frankfurt": "ein frankfurt",
     "vfl wolfsburg": "wolfsburg",
     "wolfsburg": "wolfsburg",
+    "sassuolo calcio": "sassuolo",
+    "sassuolo": "sassuolo",
+    "como 1907": "como",
+    "como": "como",
+    "cagliari calcio": "cagliari",
+    "cagliari": "cagliari",
     # Bundesliga additional
     "1 fc heidenheim": "heidenheim",
     "heidenheim": "heidenheim",
     "1 fc koln": "fc koln",
+    "1 fc cologne": "fc koln",
     "fc koln": "fc koln",
     "borussia monchengladbach": "m gladbach",
     "m gladbach": "m gladbach",
@@ -274,6 +293,100 @@ def resolve_corners_historical_path() -> Path:
 def fixture_lock_key(league: str, match: str, kick_off: str = "", fallback_date: str = "") -> str:
     fixture_date = ((kick_off or "").strip()[:10]) or ((fallback_date or "").strip()[:10])
     return f"{(league or '').strip().lower()}|{fixture_date}|{(match or '').strip().lower()}"
+
+
+def pinnacle_fixture_key(league: str, fixture_date: str, home_team: str, away_team: str) -> str:
+    return "|".join([
+        (league or "").strip().lower(),
+        (fixture_date or "").strip()[:10],
+        normalize_team(home_team),
+        normalize_team(away_team),
+    ])
+
+
+def load_pinnacle_corner_index(
+    path: Path,
+    *,
+    leagues: Optional[set[str]] = None,
+    cutoff: Optional[datetime] = None,
+) -> tuple[dict[str, dict], dict[str, List[dict]]]:
+    fixtures: dict[str, dict] = {}
+    grouped: dict[tuple[str, float, str], dict] = {}
+    latest_by_line: dict[tuple[str, float], dict] = {}
+    line_index: dict[str, List[dict]] = defaultdict(list)
+
+    if not path.exists():
+        return fixtures, line_index
+
+    with open(path, "r", encoding="utf-8-sig", newline="") as fh:
+        for row in csv.DictReader(fh):
+            league = (row.get("league") or "").strip().lower()
+            if not league:
+                continue
+            if leagues and league not in leagues:
+                continue
+
+            home_team = row.get("home_team", "") or ""
+            away_team = row.get("away_team", "") or ""
+            fixture_date = (row.get("match_date") or row.get("kickoff_iso") or "")[:10]
+            kickoff_iso = row.get("kickoff_iso", "") or ""
+            kickoff_dt = parse_iso_datetime(kickoff_iso)
+            if cutoff is not None and kickoff_dt is not None and kickoff_dt > cutoff:
+                continue
+
+            fixture_key = pinnacle_fixture_key(league, fixture_date, home_team, away_team)
+            fixture = fixtures.get(fixture_key)
+            if fixture is None or str(kickoff_iso) > str(fixture.get("kick_off", "")):
+                fixtures[fixture_key] = {
+                    "home_team": home_team,
+                    "away_team": away_team,
+                    "kick_off": kickoff_iso,
+                    "match_date": fixture_date,
+                    "league": league,
+                    "_fixture_key": fixture_key,
+                }
+
+            try:
+                line = round(float(row.get("line") or ""), 2)
+                odds_decimal = float(row.get("odds_decimal") or "")
+            except ValueError:
+                continue
+            if odds_decimal <= 1.0:
+                continue
+
+            side = (row.get("side") or "").strip().lower()
+            if side not in {"over", "under"}:
+                continue
+            captured_at = row.get("captured_at", "") or ""
+            bucket_key = (fixture_key, line, captured_at)
+            bucket = grouped.setdefault(bucket_key, {
+                "fixture_key": fixture_key,
+                "line": line,
+                "captured_at": captured_at,
+                "bookmaker": "Pinnacle",
+            })
+            bucket[f"{side}_odds"] = odds_decimal
+
+    for bucket in grouped.values():
+        if "over_odds" not in bucket or "under_odds" not in bucket:
+            continue
+        dedupe_key = (bucket["fixture_key"], bucket["line"])
+        existing = latest_by_line.get(dedupe_key)
+        if existing is None or str(bucket["captured_at"]) > str(existing["captured_at"]):
+            latest_by_line[dedupe_key] = bucket
+
+    for bucket in latest_by_line.values():
+        line_index[bucket["fixture_key"]].append({
+            "bookmaker": bucket["bookmaker"],
+            "line": bucket["line"],
+            "over_odds": bucket["over_odds"],
+            "under_odds": bucket["under_odds"],
+        })
+
+    for key, rows in line_index.items():
+        line_index[key] = sorted(rows, key=lambda row: row["line"])
+
+    return fixtures, line_index
 
 
 def load_existing_logged_fixture_keys(today: str) -> set[str]:
@@ -626,6 +739,7 @@ def format_shortlist(
     policy_version: str = POLICY_VERSION,
     min_edge: float = DEFAULT_EDGE_THRESHOLD,
     policy_lines: Optional[List[float]] = None,
+    odds_source_label: str = "",
 ) -> str:
     lines: List[str] = []
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -638,6 +752,8 @@ def format_shortlist(
             f"  Policy lines: {', '.join(f'{line:.1f}' for line in policy_lines)}"
             f" | Min edge: {min_edge:.1%}"
         )
+    if odds_source_label:
+        lines.append(f"  Odds source: {odds_source_label}")
 
     if credits_remaining is not None:
         lines.append(f"  Odds API credits remaining: {credits_remaining}")
@@ -708,9 +824,15 @@ def main() -> None:
     parser.add_argument("--dry-run", action="store_true",
                         help="Skip API calls, use model only")
     parser.add_argument("--regions", default="eu",
-                        help="Bookmaker regions (default eu for Pinnacle; use uk,eu for more bookies but 2x credits)")
+                        help="The Odds API regions (only used with --odds-source theodds/auto fallback)")
     parser.add_argument("--days-ahead", type=int, default=7,
                         help="Only fetch odds for matches within N days (saves credits)")
+    parser.add_argument("--odds-source", choices=["pinnacle", "theodds", "auto"], default="pinnacle",
+                        help="Corners price source: Pinnacle snapshot, The Odds API, or auto fallback (default pinnacle)")
+    parser.add_argument("--pinnacle-csv", default=str(DEFAULT_PINNACLE_CORNERS_PATH),
+                        help="Path to the Pinnacle corners snapshot CSV")
+    parser.add_argument("--artifact-suffix", default="",
+                        help="Optional suffix appended to shortlist/value-bets/signals output filenames")
     args = parser.parse_args()
 
     leagues = list(SPORT_KEYS.keys()) if args.all_leagues else [args.league or "epl"]
@@ -747,42 +869,98 @@ def main() -> None:
         _dry_run_shortlist(leagues, team_stats)
         return
 
-    print("\nConnecting to The Odds API...")
-    try:
-        client = OddsApiClient()
-    except RuntimeError as e:
-        print(f"  ERROR: {e}")
-        print("\n  To set up: sign up free at https://the-odds-api.com")
-        print("  Then add to .env.local:  THE_ODDS_API_KEY=your_key_here")
-        return
+    cutoff = inclusive_days_cutoff(args.days_ahead)
+    pinnacle_path = Path(args.pinnacle_csv)
+    pinnacle_fixtures: dict[str, dict] = {}
+    pinnacle_lines: dict[str, List[dict]] = {}
+    client: Optional[OddsApiClient] = None
+    odds_source_label = ""
+
+    if args.odds_source in {"pinnacle", "auto"}:
+        print("\nLoading Pinnacle corners snapshot...")
+        pinnacle_fixtures, pinnacle_lines = load_pinnacle_corner_index(
+            pinnacle_path,
+            leagues=set(leagues),
+            cutoff=cutoff,
+        )
+        line_count = sum(len(rows) for rows in pinnacle_lines.values())
+        print(f"  {len(pinnacle_fixtures)} fixtures / {line_count} lines loaded from {pinnacle_path}")
+        odds_source_label = "Pinnacle guest snapshot"
+        if args.odds_source == "pinnacle" and not pinnacle_fixtures:
+            print("  ERROR: no Pinnacle corner fixtures found in the configured snapshot.")
+            print("  Refresh with: python scripts/pinnacle-scrape-corners.py")
+            return
+
+    pinnacle_leagues_available = {fixture["league"] for fixture in pinnacle_fixtures.values()}
+    need_theodds = args.odds_source == "theodds" or (
+        args.odds_source == "auto" and (not pinnacle_fixtures or pinnacle_leagues_available != set(leagues))
+    )
+    if need_theodds:
+        print("\nConnecting to The Odds API...")
+        try:
+            client = OddsApiClient()
+            odds_source_label = (
+                "Pinnacle guest snapshot + The Odds API fallback"
+                if args.odds_source == "auto" and pinnacle_fixtures
+                else "The Odds API"
+            )
+        except RuntimeError as e:
+            print(f"  ERROR: {e}")
+            print("\n  To set up: sign up free at https://the-odds-api.com")
+            print("  Then add to .env.local:  THE_ODDS_API_KEY=your_key_here")
+            return
 
     all_value_bets: List[dict] = []
     all_signals: List[dict] = []
 
     for league in leagues:
-        sport_key = SPORT_KEYS[league]
         league_avg = LEAGUE_AVG_CORNERS.get(league, DEFAULT_AVG)
         print(f"\n--- {league.upper()} ---")
 
-        events = client.get_upcoming_events(sport_key)
+        using_pinnacle = args.odds_source == "pinnacle" or (args.odds_source == "auto" and league in pinnacle_leagues_available)
+        nearby: List[dict] = []
 
-        cutoff = inclusive_days_cutoff(args.days_ahead)
-        nearby = []
-        for ev in events:
-            ko = ev.get("commence_time", "")
-            try:
-                ko_dt = datetime.fromisoformat(ko.replace("Z", "+00:00"))
-                if ko_dt <= cutoff:
+        if using_pinnacle:
+            nearby = sorted(
+                [
+                    fixture
+                    for fixture in pinnacle_fixtures.values()
+                    if fixture.get("league") == league
+                ],
+                key=lambda fixture: (fixture.get("kick_off") or "", fixture.get("home_team") or "", fixture.get("away_team") or ""),
+            )
+            print(f"  {len(nearby)} Pinnacle fixtures within {args.days_ahead} days")
+        else:
+            if client is None:
+                print("  No odds source available for this league, skipping")
+                continue
+            sport_key = SPORT_KEYS[league]
+            events = client.get_upcoming_events(sport_key)
+            for ev in events:
+                ko = ev.get("commence_time", "")
+                ko_dt = parse_iso_datetime(ko)
+                if ko_dt is None or ko_dt <= cutoff:
                     nearby.append(ev)
-            except (ValueError, TypeError):
-                nearby.append(ev)
-        print(f"  {len(events)} upcoming, {len(nearby)} within {args.days_ahead} days")
+            print(f"  {len(events)} upcoming, {len(nearby)} within {args.days_ahead} days")
 
         for event in nearby:
-            home = event.get("home_team", "")
-            away = event.get("away_team", "")
-            event_id = event.get("id", "")
-            kick_off = event.get("commence_time", "")
+            if using_pinnacle:
+                home = event.get("home_team", "")
+                away = event.get("away_team", "")
+                kick_off = event.get("kick_off", "")
+                fixture_key = event.get("_fixture_key", "")
+                bm_lines = list(pinnacle_lines.get(fixture_key, []))
+            else:
+                home = event.get("home_team", "")
+                away = event.get("away_team", "")
+                event_id = event.get("id", "")
+                kick_off = event.get("commence_time", "")
+                try:
+                    event_odds = client.get_event_corner_odds(event_id, sport_key, regions=args.regions)
+                    bm_lines = OddsApiClient.extract_corner_lines(event_odds)
+                except Exception as e:
+                    print(f"    No corner odds available: {e}")
+                    bm_lines = []
 
             h_key = f"{league}:{normalize_team(home)}"
             a_key = f"{league}:{normalize_team(away)}"
@@ -823,14 +1001,10 @@ def main() -> None:
                 f"  {home} vs {away}: lam_H={h_lam:.2f} lam_A={a_lam:.2f} total={total_lam:.2f}"
                 f" | consensus={consensus} div={divergence:.1%}"
             )
-
-            try:
-                event_odds = client.get_event_corner_odds(event_id, sport_key, regions=args.regions)
-                bm_lines = OddsApiClient.extract_corner_lines(event_odds)
+            if bm_lines:
                 print(f"    {len(bm_lines)} corner lines from {len(set(l['bookmaker'] for l in bm_lines))} bookmakers")
-            except Exception as e:
-                print(f"    No corner odds available: {e}")
-                bm_lines = []
+            else:
+                print("    No corner odds available")
 
             if bm_lines:
                 value = find_value_bets(
@@ -918,22 +1092,25 @@ def main() -> None:
 
     shortlist = format_shortlist(
         all_value_bets,
-        client.get_credits_remaining(),
+        client.get_credits_remaining() if client is not None else None,
         policy_version=policy_version,
         min_edge=min_edge,
         policy_lines=policy_lines,
+        odds_source_label=odds_source_label,
     )
     print("\n" + shortlist)
 
     output_dir = DEFAULT_OUTPUT_DIR
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    shortlist_path = output_dir / f"shortlist-{today}.txt"
+    artifact_suffix = f"-{args.artifact_suffix.strip()}" if args.artifact_suffix.strip() else ""
+
+    shortlist_path = output_dir / f"shortlist-{today}{artifact_suffix}.txt"
     with open(shortlist_path, "w", encoding="utf-8") as fh:
         fh.write(shortlist)
     print(f"Shortlist saved to {shortlist_path}")
 
-    bets_path = output_dir / f"value-bets-{today}.csv"
+    bets_path = output_dir / f"value-bets-{today}{artifact_suffix}.csv"
     bet_fields = list(all_value_bets[0].keys()) if all_value_bets else VALUE_BET_FIELDS
     with open(bets_path, "w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=bet_fields)
@@ -945,7 +1122,7 @@ def main() -> None:
     else:
         print(f"Value bets CSV saved empty to {bets_path}")
 
-    signals_path = output_dir / f"signals-{today}.csv"
+    signals_path = output_dir / f"signals-{today}{artifact_suffix}.csv"
     if all_signals:
         fields = list(all_signals[0].keys())
     else:
