@@ -316,6 +316,31 @@ def load_fbref_matches(path: Path) -> List[MatchRow]:
     return rows
 
 
+def _match_identity(row: MatchRow) -> tuple[str, str, str, str]:
+    return (
+        row.match_date.isoformat(),
+        row.league,
+        row.home_team.strip().lower(),
+        row.away_team.strip().lower(),
+    )
+
+
+def merge_match_sources(
+    primary_matches: List[MatchRow],
+    fallback_matches: List[MatchRow],
+) -> List[MatchRow]:
+    """
+    Prefer the richer primary source where available, but retain fallback rows
+    for leagues or fixtures the primary source does not cover.
+    """
+    merged: Dict[tuple[str, str, str, str], MatchRow] = {
+        _match_identity(row): row for row in fallback_matches
+    }
+    for row in primary_matches:
+        merged[_match_identity(row)] = row
+    return sorted(merged.values(), key=lambda m: m.match_date)
+
+
 def compute_league_avg(matches: List[MatchRow]) -> Dict[str, Dict[str, float]]:
     """Compute actual league averages from the data."""
     league_shots: Dict[str, List[float]] = defaultdict(list)
@@ -659,15 +684,29 @@ def main() -> None:
     args = parser.parse_args()
 
     fbref_path = args.fbref or DEFAULT_FBREF
+    fallback_matches: List[MatchRow] = []
+    primary_matches: List[MatchRow] = []
+
+    if args.input.exists():
+        print(f"Loading fallback historical matches from {args.input}")
+        fallback_matches = load_matches(args.input)
+        print(f"  {len(fallback_matches)} fallback matches loaded")
+
     if fbref_path.exists():
         print(f"Loading xG-enriched matches from {fbref_path}")
-        matches = load_fbref_matches(fbref_path)
-        xg_count = sum(1 for m in matches if m.home_xg > 0)
-        print(f"  {len(matches)} matches loaded ({xg_count} with xG)")
+        primary_matches = load_fbref_matches(fbref_path)
+        xg_count = sum(1 for m in primary_matches if m.home_xg > 0)
+        print(f"  {len(primary_matches)} xG-enriched matches loaded ({xg_count} with xG)")
+
+    if primary_matches and fallback_matches:
+        matches = merge_match_sources(primary_matches, fallback_matches)
+        print(f"  {len(matches)} merged matches after fallback fill")
+    elif primary_matches:
+        matches = primary_matches
+        print("  Using xG-enriched source only")
     else:
-        print(f"Loading matches from {args.input}")
-        matches = load_matches(args.input)
-        print(f"  {len(matches)} matches loaded (no xG)")
+        matches = fallback_matches
+        print("  Using fallback source only (no xG)")
 
     holdout = None
     if args.holdout_start:

@@ -560,9 +560,6 @@ export default async function CornersMonitorPage() {
     }
   }
 
-  // Render time for kickoff comparison (server-side, force-dynamic)
-  const renderNowMs = Date.now();
-
   // Build current Pinnacle odds map: only pre-kickoff snapshots.
   // Key: home_norm|away_norm|line|side. Keeps last snapshot captured before KO.
   // (No match_date in key - our settled-pnl match_date is the shortlist run date)
@@ -599,7 +596,7 @@ export default async function CornersMonitorPage() {
     const matchInfo = pinnacleMatchInfoMap.get(teamKey);
     const kickoffIso = matchInfo?.kickoff_iso ?? null;
     const matchDate = matchInfo?.match_date ?? null;
-    const kickedOff = kickoffIso ? renderNowMs >= Date.parse(kickoffIso) : false;
+    const kickedOff = kickoffIso ? renderReferenceMs >= Date.parse(kickoffIso) : false;
     const line = (row.line ?? "").trim();
     const side = (row.side ?? "").trim().toLowerCase();
     const oddsKey = `${home}|${away}|${line}|${side}`;
@@ -640,8 +637,10 @@ export default async function CornersMonitorPage() {
     pipelineStatus?.last_successful_finished_at,
     pipelineStatus?.updated_at,
   ]);
-  const renderReferenceMs = renderReferenceAt ? Date.parse(renderReferenceAt) : Number.NaN;
-  const todayIso = renderReferenceAt ? isoDateInTimezone("Europe/London", new Date(renderReferenceAt)) : isoDateInTimezone("Europe/London");
+  const renderReferenceMs = renderReferenceAt ? Date.parse(renderReferenceAt) : 0;
+  const todayIso = renderReferenceAt
+    ? isoDateInTimezone("Europe/London", new Date(renderReferenceAt))
+    : "1970-01-01";
   const pipelineTone =
     pipelineStatus?.state === "failed"
       ? "red"

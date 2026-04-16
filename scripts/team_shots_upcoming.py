@@ -6,8 +6,8 @@ Uses the same rolling EMA + Poisson logic as team-shots-model.py, with team
 names aligned to historical data via the same normalisation as matchday-shortlist.
 
 Outputs:
-  data/team-shots/team-shots-upcoming.csv   — per-match model output
-  data/team-shots/team-shots-scanner.csv    — scanner: one row per team+line+side
+  data/team-shots/team-shots-upcoming.csv   â€” per-match model output
+  data/team-shots/team-shots-scanner.csv    â€” scanner: one row per team+line+side
                                               joined with latest inbox odds
 
 Usage:
@@ -38,10 +38,17 @@ DEFAULT_CAL     = ROOT / "data" / "team-shots" / "team-shots-calibration-params.
 INBOX_DIR       = ROOT / "data" / "team-shots" / "inbox"
 SCANNER_OUT     = ROOT / "data" / "team-shots" / "team-shots-scanner.csv"
 
-# Lines exported in the upcoming file — matches the lines books actually quote
+# Lines exported in the upcoming file â€” matches the lines books actually quote
 DISPLAY_LINES = [8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5, 16.5, 17.5, 19.5, 20.5]
 
 SUPPORTED_LIVE_LEAGUES = {"epl", "serie-a", "la-liga", "bundesliga"}
+INBOX_COMPETITION_TO_LEAGUE = {
+    "premier league": "epl",
+    "serie a": "serie-a",
+    "la liga": "la-liga",
+    "bundesliga": "bundesliga",
+    "ligue 1": "ligue-1",
+}
 
 SHADOW_THRESHOLD = 0.05
 ACTION_THRESHOLD = 0.12
@@ -63,7 +70,7 @@ def inclusive_days_cutoff(days_ahead: int) -> datetime:
     return datetime.combine(target_day, datetime.max.time(), tzinfo=timezone.utc)
 
 
-# ── Calibration helpers ───────────────────────────────────────────────
+# â”€â”€ Calibration helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 def _logit(p: float) -> float:
     p = max(1e-7, min(1.0 - 1e-7, p))
@@ -90,7 +97,7 @@ def _load_cal(path: Path) -> Dict[str, Tuple[float, float]]:
     return {k: (float(v["a"]), float(v["b"])) for k, v in data.get("lines", {}).items()}
 
 
-# ── Team name normalisation ───────────────────────────────────────────
+# â”€â”€ Team name normalisation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 _STOP_TOKENS = frozenset({"fc", "afc", "acf", "sc", "cf", "ac", "rome", "calcio"})
 
@@ -104,7 +111,7 @@ def _norm_name(text: str) -> str:
     return " ".join(tokens)
 
 
-# ── Inbox odds loader ─────────────────────────────────────────────────
+# â”€â”€ Inbox odds loader â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 def _load_inbox_odds(inbox_dir: Path) -> Dict[Tuple, dict]:
     """
@@ -183,9 +190,9 @@ def _build_scanner(
     inbox_index: Dict[Tuple, dict],
 ) -> List[Dict[str, Any]]:
     """
-    For every upcoming match row, walk all DISPLAY_LINES × {over, under} and
+    For every upcoming match row, walk all DISPLAY_LINES Ã— {over, under} and
     look up the most recent bookmaker price from the inbox index.
-    Returns one scanner row per team × line × side where odds exist.
+    Returns one scanner row per team Ã— line Ã— side where odds exist.
     """
     scanner: List[Dict[str, Any]] = []
 
@@ -218,7 +225,7 @@ def _build_scanner(
                         continue
                     model_fair = round(1.0 / model_prob, 3)
 
-                    # Look up inbox odds — try all bookmakers for this line+side
+                    # Look up inbox odds â€” try all bookmakers for this line+side
                     best_row: Optional[dict] = None
                     for bk_key, odds_row in inbox_index.items():
                         if (
@@ -278,6 +285,56 @@ def _build_scanner(
     return scanner
 
 
+def _league_key_from_competition(competition: str) -> Optional[str]:
+    comp_norm = _norm_name(competition)
+    if not comp_norm:
+        return None
+    return INBOX_COMPETITION_TO_LEAGUE.get(comp_norm)
+
+
+def _load_upcoming_events_from_inbox(
+    inbox_index: Dict[Tuple, dict],
+    cutoff: datetime,
+) -> List[Dict[str, str]]:
+    now = datetime.now(timezone.utc)
+    events: Dict[Tuple[str, str, str, str], Dict[str, str]] = {}
+
+    for odds_row in inbox_index.values():
+        league = _league_key_from_competition(str(odds_row.get("competition") or ""))
+        if league not in SUPPORTED_LIVE_LEAGUES:
+            continue
+
+        kickoff_iso = str(odds_row.get("kickoff_at") or "").strip()
+        if not kickoff_iso:
+            continue
+        try:
+            kickoff_dt = datetime.fromisoformat(kickoff_iso.replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if kickoff_dt > cutoff:
+            continue
+        if kickoff_dt < now - timedelta(hours=6):
+            continue
+
+        home_team = str(odds_row.get("home_team") or "").strip()
+        away_team = str(odds_row.get("away_team") or "").strip()
+        if not home_team or not away_team:
+            continue
+
+        event_key = (league, kickoff_iso, home_team, away_team)
+        events[event_key] = {
+            "league": league,
+            "commence_time": kickoff_iso,
+            "home_team": home_team,
+            "away_team": away_team,
+        }
+
+    return sorted(
+        events.values(),
+        key=lambda row: (row.get("commence_time") or "", row.get("league") or ""),
+    )
+
+
 def _load_module(name: str, path: Path):
     spec = importlib.util.spec_from_file_location(name, path)
     if spec is None or spec.loader is None:
@@ -300,22 +357,31 @@ def main() -> None:
     msl = _load_module("matchday_shortlist", ROOT / "scripts" / "matchday-shortlist.py")
     normalize_team = msl.normalize_team
 
-    # Load Platt calibration params (falls back gracefully if file absent)
     cal: Dict[str, Tuple[float, float]] = {}
     if not args.no_calibration:
         cal = _load_cal(DEFAULT_CAL)
         if cal:
             print(f"Calibration params loaded (lines: {', '.join(sorted(cal))})")
         else:
-            print("No calibration params found — using raw Poisson probabilities")
-
-    from the_odds_api_client import OddsApiClient, SPORT_KEYS
+            print("No calibration params found - using raw Poisson probabilities")
 
     fbref_path = tsm.DEFAULT_FBREF
+    fallback_matches: List[Any] = []
+    primary_matches: List[Any] = []
+    if tsm.DEFAULT_INPUT.exists():
+        fallback_matches = tsm.load_matches(tsm.DEFAULT_INPUT)
     if fbref_path.exists():
-        matches = tsm.load_fbref_matches(fbref_path)
+        primary_matches = tsm.load_fbref_matches(fbref_path)
+    if primary_matches and fallback_matches:
+        matches = tsm.merge_match_sources(primary_matches, fallback_matches)
+        print(
+            f"Merged match history: {len(primary_matches)} xG rows + "
+            f"{len(fallback_matches)} fallback rows -> {len(matches)} unique matches"
+        )
+    elif primary_matches:
+        matches = primary_matches
     else:
-        matches = tsm.load_matches(tsm.DEFAULT_INPUT)
+        matches = fallback_matches
 
     team_states: Dict[str, tsm.TeamState] = defaultdict(tsm.TeamState)
     league_avgs = tsm.compute_league_avg(matches)
@@ -337,126 +403,111 @@ def main() -> None:
             xg=m.away_xg, conc_xg=m.home_xg, is_home=False,
         )
 
-    try:
-        client = OddsApiClient()
-    except RuntimeError as e:
-        print(f"ERROR: {e}")
-        return
-
     cutoff = inclusive_days_cutoff(args.days_ahead)
+    inbox_index = _load_inbox_odds(INBOX_DIR)
+    print(f"Inbox odds loaded: {len(inbox_index)} entries")
+    events = _load_upcoming_events_from_inbox(inbox_index, cutoff)
+    print(f"Upcoming fixtures inferred from inbox odds: {len(events)}")
+
     rows_out: List[Dict[str, Any]] = []
+    for ev in events:
+        league = str(ev.get("league") or "")
+        ko = str(ev.get("commence_time") or "")
+        home_raw = str(ev.get("home_team") or "")
+        away_raw = str(ev.get("away_team") or "")
+        hk = f"{league}:{normalize_team(home_raw)}"
+        ak = f"{league}:{normalize_team(away_raw)}"
+        h_state = team_states.get(hk)
+        a_state = team_states.get(ak)
+        league_avg = league_avgs.get(league, tsm.DEFAULT_BASELINE)
 
-    for league, sport_key in SPORT_KEYS.items():
-        if league not in SUPPORTED_LIVE_LEAGUES:
-            continue
-        events = client.get_upcoming_events(sport_key)
-        for ev in events:
-            ko = ev.get("commence_time", "")
-            try:
-                ko_dt = datetime.fromisoformat(ko.replace("Z", "+00:00"))
-                if ko_dt > cutoff:
-                    continue
-            except (ValueError, TypeError):
-                pass
-
-            home_raw = ev.get("home_team", "")
-            away_raw = ev.get("away_team", "")
-            hk = f"{league}:{normalize_team(home_raw)}"
-            ak = f"{league}:{normalize_team(away_raw)}"
-            h_state = team_states.get(hk)
-            a_state = team_states.get(ak)
-            league_avg = league_avgs.get(league, tsm.DEFAULT_BASELINE)
-
-            if not h_state or not a_state:
-                rows_out.append({
-                    "league": league,
-                    "kickoff_iso": ko,
-                    "home_team": home_raw,
-                    "away_team": away_raw,
-                    "home_lambda": "",
-                    "away_lambda": "",
-                    "home_consensus": "",
-                    "away_consensus": "",
-                    "home_divergence": "",
-                    "away_divergence": "",
-                    "note": "no_state",
-                })
-                continue
-
-            home_res = tsm.predict_lambda(h_state, a_state, league_avg, is_home=True)
-            away_res = tsm.predict_lambda(a_state, h_state, league_avg, is_home=False)
-            if home_res is None or away_res is None:
-                rows_out.append({
-                    "league": league,
-                    "kickoff_iso": ko,
-                    "home_team": home_raw,
-                    "away_team": away_raw,
-                    "home_lambda": "",
-                    "away_lambda": "",
-                    "home_consensus": "",
-                    "away_consensus": "",
-                    "home_divergence": "",
-                    "away_divergence": "",
-                    "note": "insufficient_ema",
-                })
-                continue
-
-            h_lam, _, h_lam_venue, h_lam_recent = home_res
-            a_lam, _, a_lam_venue, a_lam_recent = away_res
-            home_recent_genuine = len(h_state.home_shots_history) >= tsm.RECENT_MIN
-            away_recent_genuine = len(a_state.away_shots_history) >= tsm.RECENT_MIN
-            home_divergence, home_consensus = _recent_consensus(
-                h_lam_venue,
-                h_lam_recent,
-                home_recent_genuine,
-            )
-            away_divergence, away_consensus = _recent_consensus(
-                a_lam_venue,
-                a_lam_recent,
-                away_recent_genuine,
-            )
-            row: Dict[str, Any] = {
+        if not h_state or not a_state:
+            rows_out.append({
                 "league": league,
                 "kickoff_iso": ko,
                 "home_team": home_raw,
                 "away_team": away_raw,
-                "home_lambda": round(h_lam, 2),
-                "away_lambda": round(a_lam, 2),
-                "home_lambda_venue": round(h_lam_venue, 2),
-                "away_lambda_venue": round(a_lam_venue, 2),
-                "home_lambda_recent": round(h_lam_recent, 2),
-                "away_lambda_recent": round(a_lam_recent, 2),
-                "home_consensus": home_consensus,
-                "away_consensus": away_consensus,
-                "home_divergence": round(home_divergence, 4),
-                "away_divergence": round(away_divergence, 4),
-                "note": "",
-            }
+                "home_lambda": "",
+                "away_lambda": "",
+                "home_consensus": "",
+                "away_consensus": "",
+                "home_divergence": "",
+                "away_divergence": "",
+                "note": "no_state",
+            })
+            continue
 
-            for line in DISPLAY_LINES:
-                line_key = f"{line:.1f}"
-                # Use venue lambda (home-specific/away-specific attack) — falls
-                # back to base inside predict_lambda when venue data is thin.
-                p_h_raw = tsm.prob_over(line, h_lam_venue)
-                p_a_raw = tsm.prob_over(line, a_lam_venue)
+        home_res = tsm.predict_lambda(h_state, a_state, league_avg, is_home=True)
+        away_res = tsm.predict_lambda(a_state, h_state, league_avg, is_home=False)
+        if home_res is None or away_res is None:
+            rows_out.append({
+                "league": league,
+                "kickoff_iso": ko,
+                "home_team": home_raw,
+                "away_team": away_raw,
+                "home_lambda": "",
+                "away_lambda": "",
+                "home_consensus": "",
+                "away_consensus": "",
+                "home_divergence": "",
+                "away_divergence": "",
+                "note": "insufficient_ema",
+            })
+            continue
 
-                # Apply Platt calibration if params fitted for this line
-                ab = cal.get(line_key)
-                if ab:
-                    p_h = _calibrate(p_h_raw, ab[0], ab[1])
-                    p_a = _calibrate(p_a_raw, ab[0], ab[1])
-                else:
-                    p_h = p_h_raw
-                    p_a = p_a_raw
+        h_lam, _, h_lam_venue, h_lam_recent = home_res
+        a_lam, _, a_lam_venue, a_lam_recent = away_res
+        home_recent_genuine = len(h_state.home_shots_history) >= tsm.RECENT_MIN
+        away_recent_genuine = len(a_state.away_shots_history) >= tsm.RECENT_MIN
+        home_divergence, home_consensus = _recent_consensus(
+            h_lam_venue,
+            h_lam_recent,
+            home_recent_genuine,
+        )
+        away_divergence, away_consensus = _recent_consensus(
+            a_lam_venue,
+            a_lam_recent,
+            away_recent_genuine,
+        )
+        row: Dict[str, Any] = {
+            "league": league,
+            "kickoff_iso": ko,
+            "home_team": home_raw,
+            "away_team": away_raw,
+            "home_lambda": round(h_lam, 2),
+            "away_lambda": round(a_lam, 2),
+            "home_lambda_venue": round(h_lam_venue, 2),
+            "away_lambda_venue": round(a_lam_venue, 2),
+            "home_lambda_recent": round(h_lam_recent, 2),
+            "away_lambda_recent": round(a_lam_recent, 2),
+            "home_consensus": home_consensus,
+            "away_consensus": away_consensus,
+            "home_divergence": round(home_divergence, 4),
+            "away_divergence": round(away_divergence, 4),
+            "note": "",
+        }
 
-                row[f"home_p_over_{line}"] = round(p_h, 4)
-                row[f"home_fair_over_{line}"] = round(1.0 / p_h if p_h > 0 else 0.0, 3)
-                row[f"home_fair_under_{line}"] = round(1.0 / (1.0 - p_h) if p_h < 1.0 else 0.0, 3)
-                row[f"away_p_over_{line}"] = round(p_a, 4)
-                row[f"away_fair_over_{line}"] = round(1.0 / p_a if p_a > 0 else 0.0, 3)
-                row[f"away_fair_under_{line}"] = round(1.0 / (1.0 - p_a) if p_a < 1.0 else 0.0, 3)
+        for line in DISPLAY_LINES:
+            line_key = f"{line:.1f}"
+            p_h_raw = tsm.prob_over(line, h_lam_venue)
+            p_a_raw = tsm.prob_over(line, a_lam_venue)
 
-            rows_out.append(row)
+            ab = cal.get(line_key)
+            if ab:
+                p_h = _calibrate(p_h_raw, ab[0], ab[1])
+                p_a = _calibrate(p_a_raw, ab[0], ab[1])
+            else:
+                p_h = p_h_raw
+                p_a = p_a_raw
+
+            row[f"home_p_over_{line}"] = round(p_h, 4)
+            row[f"home_fair_over_{line}"] = round(1.0 / p_h if p_h > 0 else 0.0, 3)
+            row[f"home_fair_under_{line}"] = round(1.0 / (1.0 - p_h) if p_h < 1.0 else 0.0, 3)
+            row[f"away_p_over_{line}"] = round(p_a, 4)
+            row[f"away_fair_over_{line}"] = round(1.0 / p_a if p_a > 0 else 0.0, 3)
+            row[f"away_fair_under_{line}"] = round(1.0 / (1.0 - p_a) if p_a < 1.0 else 0.0, 3)
+
+        rows_out.append(row)
 
     rows_out.sort(key=lambda r: (r.get("kickoff_iso") or "", r.get("league") or ""))
 
@@ -477,33 +528,25 @@ def main() -> None:
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with open(args.output, "w", newline="", encoding="utf-8") as fh:
-        w = csv.DictWriter(fh, fieldnames=fields, extrasaction="ignore")
-        w.writeheader()
-        w.writerows(rows_out)
+        writer = csv.DictWriter(fh, fieldnames=fields, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(rows_out)
     print(f"Wrote {len(rows_out)} upcoming rows -> {args.output}")
 
-    # ── Scanner output ────────────────────────────────────────────────
     match_rows = [r for r in rows_out if r.get("home_lambda") != ""]
-    inbox_index = _load_inbox_odds(INBOX_DIR)
-    print(f"Inbox odds loaded: {len(inbox_index)} entries")
-
     scanner_rows = _build_scanner(match_rows, inbox_index)
     args.scanner.parent.mkdir(parents=True, exist_ok=True)
     with open(args.scanner, "w", newline="", encoding="utf-8") as fh:
-        w = csv.DictWriter(fh, fieldnames=SCANNER_FIELDS, extrasaction="ignore")
-        w.writeheader()
+        writer = csv.DictWriter(fh, fieldnames=SCANNER_FIELDS, extrasaction="ignore")
+        writer.writeheader()
         if scanner_rows:
-            w.writerows(scanner_rows)
+            writer.writerows(scanner_rows)
 
     if scanner_rows:
         positive = sum(1 for r in scanner_rows if r["edge"] > 0)
         print(f"Wrote {len(scanner_rows)} scanner rows ({positive} positive edge) -> {args.scanner}")
     else:
         print(f"Wrote 0 scanner rows -> {args.scanner}")
-
-    credits = client.get_credits_remaining()
-    if credits is not None:
-        print(f"Odds API credits remaining: {credits}")
 
 
 if __name__ == "__main__":

@@ -37,7 +37,8 @@ export type TeamShotsLiveSourceStatus = {
 const SNAPSHOT_TABLE = "goalscorer_live_snapshot";
 const SNAPSHOT_KEY = process.env.TEAM_SHOTS_LIVE_SNAPSHOT_KEY || "team_shots_state";
 const LOCAL_SNAPSHOT_FILE = "data/team-shots/team-shots-live-snapshot.json";
-const PREFER_LOCAL = process.env.MONITOR_PREFER_LOCAL === "1";
+const PREFER_LOCAL =
+  process.env.MONITOR_PREFER_LOCAL === "1" || process.env.NODE_ENV !== "production";
 const GITHUB_RAW_BASE =
   process.env.MONITOR_GITHUB_RAW_BASE ||
   "https://raw.githubusercontent.com/simonreds76-gif/il-margine/golden-with-speed-insights";

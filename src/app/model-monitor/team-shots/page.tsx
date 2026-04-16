@@ -699,7 +699,7 @@ function formatDateTime(value?: string | null): string {
 
 
 
-function formatRelativeAgeShort(value?: string | null): string {
+function formatRelativeAgeShort(value?: string | null, referenceNowMs?: number): string {
 
   if (!value) return "n/a";
 
@@ -707,7 +707,12 @@ function formatRelativeAgeShort(value?: string | null): string {
 
   if (Number.isNaN(stamp)) return "n/a";
 
-  const diffMs = Date.now() - stamp;
+  const anchorMs =
+    typeof referenceNowMs === "number" && Number.isFinite(referenceNowMs)
+      ? referenceNowMs
+      : stamp;
+
+  const diffMs = anchorMs - stamp;
 
   if (diffMs < 0) return "just now";
 
@@ -1302,7 +1307,14 @@ function LiveLineTable({
     scrapeRunMillis === null || freshnessAnchorMillis === null
       ? null
       : Math.max(0, Math.round((freshnessAnchorMillis - scrapeRunMillis) / 60000));
-  const scrapeAgeLabel = scrapeDisplayAt ? formatRelativeAgeShort(scrapeDisplayAt) : "-";
+  const renderReferenceMillis =
+    freshnessAnchorMillis ??
+    scrapeRunMillis ??
+    parseIsoMillis(pipelineStatus?.updated_at ?? null) ??
+    0;
+  const scrapeAgeLabel = scrapeDisplayAt
+    ? formatRelativeAgeShort(scrapeDisplayAt, renderReferenceMillis)
+    : "-";
   const scrapeErrors = scrapeStatus?.provider_errors?.length ?? 0;
   const scrapeDetailParts: string[] = [];
   if (typeof scrapeStatus?.rows_scraped === "number") {
@@ -1371,7 +1383,9 @@ function LiveLineTable({
     comparisonMtime ??
     upcomingMtime ??
     predictionsMtime ??
-    new Date().toISOString()
+    pipelineStatus?.updated_at ??
+    scrapeRunAt ??
+    "1970-01-01T00:00:00Z"
   ).slice(0, 10);
 
   // Shadow signal count per league -- counts upcoming signals only (fixture card auto-open logic).
@@ -1551,7 +1565,7 @@ function LiveLineTable({
             />
             <StatCard
               label="Last heartbeat"
-              value={schedulerHeartbeatAt ? formatRelativeAgeShort(schedulerHeartbeatAt) : "-"}
+              value={schedulerHeartbeatAt ? formatRelativeAgeShort(schedulerHeartbeatAt, renderReferenceMillis) : "-"}
             />
             <StatCard
               label="Data source"
@@ -1559,9 +1573,9 @@ function LiveLineTable({
               tone={statTone(sourceTone(comparisonSource?.source ?? "missing"))}
               detail={comparisonSource ? formatSourceReason(comparisonSource.reason) : undefined}
             />
-            <StatCard label="Predictions" value={predictionsMtime ? formatRelativeAgeShort(predictionsMtime) : "-"} />
-            <StatCard label="Comparison"  value={comparisonMtime  ? formatRelativeAgeShort(comparisonMtime)  : "-"} />
-            <StatCard label="Upcoming"    value={upcomingMtime    ? formatRelativeAgeShort(upcomingMtime)    : "-"} />
+            <StatCard label="Predictions" value={predictionsMtime ? formatRelativeAgeShort(predictionsMtime, renderReferenceMillis) : "-"} />
+            <StatCard label="Comparison"  value={comparisonMtime  ? formatRelativeAgeShort(comparisonMtime, renderReferenceMillis)  : "-"} />
+            <StatCard label="Upcoming"    value={upcomingMtime    ? formatRelativeAgeShort(upcomingMtime, renderReferenceMillis)    : "-"} />
             <StatCard
               label="Last scrape"
               value={scrapeAgeLabel}
@@ -2173,7 +2187,7 @@ function LiveLineTable({
                       </td>
                       <td className="py-1.5 pr-3 font-mono tabular-nums text-slate-200">{r.odds_decimal || "-"}</td>
                       <td className="py-1.5 pr-4 text-slate-400">
-                        {r.captured_at ? formatRelativeAgeShort(r.captured_at) : "-"}
+                        {r.captured_at ? formatRelativeAgeShort(r.captured_at, renderReferenceMillis) : "-"}
                       </td>
                     </tr>
                   ))}

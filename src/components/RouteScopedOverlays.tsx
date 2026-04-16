@@ -1,10 +1,8 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-
-const ChatWidget = dynamic(() => import("@/components/ChatWidget"), { ssr: false });
-const RogerTeaser = dynamic(() => import("@/components/RogerTeaser"), { ssr: false });
+import ChatWidget from "@/components/ChatWidget";
+import RogerTeaser from "@/components/RogerTeaser";
 
 function shouldHideOverlays(pathname: string | null): boolean {
   return pathname?.startsWith("/penalty-takers/world-cup-2026") ?? false;

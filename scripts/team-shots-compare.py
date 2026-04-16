@@ -34,6 +34,12 @@ COMPARE_FIELDS = [
     "bookmaker", "line", "side", "book_odds",
     "model_prob", "model_prob_raw", "model_fair_odds",
     "edge", "ev", "actual_shots", "won", "pnl",
+    "kickoff_iso", "note",
+    "home_lambda", "away_lambda",
+    "home_lambda_venue", "away_lambda_venue",
+    "home_lambda_recent", "away_lambda_recent",
+    "home_consensus", "away_consensus",
+    "home_divergence", "away_divergence",
 ]
 
 
@@ -195,6 +201,7 @@ def load_upcoming(path: Path) -> Dict[str, dict]:
                 lam_venue = row.get(f"{side}_lambda_venue", "") or lam
                 lam_recent = row.get(f"{side}_lambda_recent", "")
                 pred_row = {
+                    **row,
                     "date": match_date,
                     "league": league,
                     "team": team,
@@ -362,6 +369,18 @@ def compare(
             "actual_shots": actual_shots,
             "won": won,
             "pnl": round(pnl, 3) if pnl != "" else "",
+            "kickoff_iso": pred.get("kickoff_iso", ""),
+            "note": pred.get("note", ""),
+            "home_lambda": pred.get("home_lambda", ""),
+            "away_lambda": pred.get("away_lambda", ""),
+            "home_lambda_venue": pred.get("home_lambda_venue", ""),
+            "away_lambda_venue": pred.get("away_lambda_venue", ""),
+            "home_lambda_recent": pred.get("home_lambda_recent", ""),
+            "away_lambda_recent": pred.get("away_lambda_recent", ""),
+            "home_consensus": pred.get("home_consensus", ""),
+            "away_consensus": pred.get("away_consensus", ""),
+            "home_divergence": pred.get("home_divergence", ""),
+            "away_divergence": pred.get("away_divergence", ""),
         })
 
     return results
