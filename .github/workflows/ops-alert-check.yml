@@ -1,0 +1,46 @@
+name: Ops Alert Check
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ops-alert-check
+  cancel-in-progress: true
+
+jobs:
+  alert-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Create .env.local
+        run: |
+          : > .env.local
+          if [ -n "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
+            echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.local
+          else
+            echo "NEXT_PUBLIC_SUPABASE_URL=https://nuqcgzbagxtbxlqrhtvc.supabase.co" >> .env.local
+          fi
+          if [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
+          fi
+          if [ -n "${{ secrets.OPS_ALERT_WEBHOOK_URL }}" ]; then
+            echo "OPS_ALERT_WEBHOOK_URL=${{ secrets.OPS_ALERT_WEBHOOK_URL }}" >> .env.local
+          fi
+          echo "OPS_ALERT_IGNORE_SILENT_PIPELINES=oncourt-daily,oncourt-am-refresh,oncourt-weekly" >> .env.local
+
+      - name: Check run_status alert views
+        run: python scripts/ops-alert-check.py
