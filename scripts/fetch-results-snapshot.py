@@ -5,12 +5,14 @@ import argparse
 import csv
 import io
 import json
-from datetime import UTC, datetime
+import os
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 import requests
 
+from api_football_match_stats import fetch_api_football_results
 from fotmob_match_stats import fetch_fotmob_recent_results
 from settlement_utils import (
     LEAGUE_CODES,
@@ -27,6 +29,19 @@ BASE_URL = "https://www.football-data.co.uk"
 SHORTLIST_SETTLED = ROOT / "data" / "shortlist" / "settled-pnl.csv"
 TEAM_SHOTS_SIGNALS = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-signals.csv"
 DEFAULT_PENDING_PATHS = [SHORTLIST_SETTLED, TEAM_SHOTS_SIGNALS]
+DEFAULT_API_FOOTBALL_MAX_REQUESTS = 10
+
+
+def load_env() -> None:
+    for name in (".env.local", "env.local"):
+        path = ROOT / name
+        if not path.exists():
+            continue
+        for raw_line in path.read_text(encoding="utf-8").splitlines():
+            raw_line = raw_line.strip()
+            if raw_line and not raw_line.startswith("#") and "=" in raw_line:
+                key, value = raw_line.split("=", 1)
+                os.environ[key.strip()] = value.strip().strip('"').strip("'")
 
 
 def fetch_football_data_results(league: str) -> tuple[Dict[str, dict], dict]:
@@ -109,6 +124,66 @@ def load_pending_rows(paths: list[str]) -> list[dict]:
     return rows
 
 
+def _split_match(row: dict) -> tuple[str, str]:
+    home = str(row.get("home_team", "") or "").strip()
+    away = str(row.get("away_team", "") or "").strip()
+    if home and away:
+        return home, away
+    match = str(row.get("match", "") or "").strip()
+    if " vs " in match:
+        parts = match.split(" vs ", 1)
+        return parts[0].strip(), parts[1].strip()
+    return "", ""
+
+
+def collect_target_fixtures(rows: List[dict]) -> Dict[str, List[dict]]:
+    fixtures_by_league: Dict[str, List[dict]] = {}
+    seen: set[str] = set()
+    for row in rows:
+        league = str(row.get("league", "") or "").strip()
+        if not league:
+            continue
+        raw_date = ""
+        for field in ("kick_off", "kickoff_iso", "match_date", "fixture_date", "date", "file_date"):
+            raw_date = str(row.get(field, "") or "").strip()
+            if raw_date:
+                break
+        match_date = parse_isoish_date(raw_date)
+        if match_date is None:
+            continue
+        home_team, away_team = _split_match(row)
+        if not home_team or not away_team:
+            continue
+        key = f"{league}|{match_date.isoformat()}|{normalize_team_name(home_team)}|{normalize_team_name(away_team)}"
+        if key in seen:
+            continue
+        seen.add(key)
+        fixtures_by_league.setdefault(league, []).append(
+            {
+                "date": match_date.isoformat(),
+                "home_team": home_team,
+                "away_team": away_team,
+            }
+        )
+    return fixtures_by_league
+
+
+def fixture_present(results: Dict[str, dict], fixture: dict) -> bool:
+    try:
+        match_date = datetime.fromisoformat(str(fixture["date"])).date()
+    except ValueError:
+        return False
+    for delta in (-1, 0, 1):
+        key = build_fixture_key(
+            match_date + timedelta(days=delta),
+            fixture["home_team"],
+            fixture["away_team"],
+        )
+        if key in results:
+            return True
+    return False
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Fetch a committed football results snapshot for settlement")
     parser.add_argument("--date", type=str, default=None, help="Snapshot date in YYYY-MM-DD (defaults to today UTC)")
@@ -119,8 +194,15 @@ def main() -> None:
         default=None,
         help="Relative or absolute CSV path to scan for pending rows. Repeat to add more paths.",
     )
+    parser.add_argument(
+        "--api-football-max-requests",
+        type=int,
+        default=DEFAULT_API_FOOTBALL_MAX_REQUESTS,
+        help="Hard cap on API-Football fallback requests per run (default: 10).",
+    )
     args = parser.parse_args()
 
+    load_env()
     snapshot_day = parse_isoish_date(args.date or "") or datetime.now(UTC).date()
     pending_paths = args.pending_paths or [str(path.relative_to(ROOT)) for path in DEFAULT_PENDING_PATHS]
     pending_rows = load_pending_rows(pending_paths)
@@ -129,12 +211,14 @@ def main() -> None:
         kickoff_fields=("kick_off", "kickoff_iso"),
         date_fields=("match_date", "fixture_date", "date", "file_date"),
     )
+    target_fixtures_by_league = collect_target_fixtures(pending_rows)
 
     payload: dict = {
         "snapshot_date": snapshot_day.isoformat(),
         "fetched_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "leagues": {},
     }
+    api_football_requests_remaining = max(0, args.api_football_max_requests)
 
     for league in sorted(LEAGUE_CODES.keys()):
         fixtures, freshness = fetch_football_data_results(league)
@@ -166,6 +250,32 @@ def main() -> None:
         for key, row in normalized_fotmob.items():
             merged.setdefault(key, row)
 
+        unresolved_fixtures = [
+            fixture
+            for fixture in target_fixtures_by_league.get(league, [])
+            if not fixture_present(merged, fixture)
+        ]
+        api_football_results: Dict[str, dict] = {}
+        api_football_meta = {
+            "error": None,
+            "requests_used": 0,
+            "api_football_latest": None,
+            "api_football_count": 0,
+            "max_requests": args.api_football_max_requests,
+        }
+        if unresolved_fixtures and api_football_requests_remaining > 0:
+            api_football_results, api_football_meta = fetch_api_football_results(
+                league,
+                unresolved_fixtures,
+                max_requests=api_football_requests_remaining,
+            )
+            api_football_requests_remaining = max(
+                0,
+                api_football_requests_remaining - int(api_football_meta.get("requests_used", 0) or 0),
+            )
+            for key, row in api_football_results.items():
+                merged.setdefault(key, row)
+
         latest_fotmob = max((key.split("|", 1)[0] for key in normalized_fotmob.keys()), default=None)
         payload["leagues"][league] = {
             "source": "football-data",
@@ -175,7 +285,15 @@ def main() -> None:
             "football_data_count": freshness.get("football_data_count", 0),
             "fotmob_count": len(normalized_fotmob),
             "fotmob_latest": latest_fotmob,
+            "api_football_count": api_football_meta.get("api_football_count", 0),
+            "api_football_latest": api_football_meta.get("api_football_latest"),
+            "api_football_requests_used": api_football_meta.get("requests_used", 0),
+            "api_football_requests_remaining_after_league": api_football_requests_remaining,
+            "api_football_error": api_football_meta.get("error"),
+            "api_football_max_requests": api_football_meta.get("max_requests", args.api_football_max_requests),
             "target_dates": sorted(target_dates),
+            "target_fixture_count": len(target_fixtures_by_league.get(league, [])),
+            "unresolved_fixture_count": len(unresolved_fixtures),
             "fetch_error": freshness.get("error"),
             "fixtures": merged,
         }

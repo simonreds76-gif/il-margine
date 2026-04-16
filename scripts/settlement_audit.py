@@ -241,8 +241,12 @@ def build_settlement_audit(
             )
         football_data_count = int(stats.get("football_data_count") or 0)
         fotmob_count = int(stats.get("fotmob_count") or 0)
-        if football_data_count == 0 and fotmob_count == 0:
-            warnings.append(f"{league}: BOTH Football-Data and FotMob returned 0 results — no fallback available")
+        api_football_count = int(stats.get("api_football_count") or 0)
+        api_football_error = str(stats.get("api_football_error", "") or "").strip()
+        if football_data_count == 0 and fotmob_count == 0 and api_football_count == 0:
+            warnings.append(f"{league}: Football-Data, FotMob, and API-Football all returned 0 results")
+        elif api_football_error:
+            warnings.append(f"{league}: API-Football fallback issue - {api_football_error}")
 
     if old_stale_rows:
         errors.append(f"{len(old_stale_rows)} old stale pending row(s) (>={old_stale_threshold_hours:g}h elapsed)")

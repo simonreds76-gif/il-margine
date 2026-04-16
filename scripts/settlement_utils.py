@@ -151,6 +151,15 @@ def load_results_snapshot(preferred_date: Optional[str] = None) -> Tuple[Dict[st
             "football_data_count": league_data.get("football_data_count", 0),
             "fotmob_count": league_data.get("fotmob_count", 0),
             "fotmob_latest": league_data.get("fotmob_latest"),
+            "api_football_count": league_data.get("api_football_count", 0),
+            "api_football_latest": league_data.get("api_football_latest"),
+            "api_football_requests_used": league_data.get("api_football_requests_used", 0),
+            "api_football_requests_remaining_after_league": league_data.get(
+                "api_football_requests_remaining_after_league",
+                0,
+            ),
+            "api_football_error": league_data.get("api_football_error"),
+            "api_football_max_requests": league_data.get("api_football_max_requests", 0),
             "snapshot_date": payload.get("snapshot_date"),
             "snapshot_path": str(path),
         }
