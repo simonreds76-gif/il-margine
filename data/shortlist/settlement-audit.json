@@ -1,69 +1,80 @@
 {
-  "run_at": "2026-04-15T09:00:53Z",
+  "run_at": "2026-04-16T00:09:40Z",
   "model": "corners",
-  "total_bets": 22,
+  "total_bets": 23,
   "settled_this_run": 2,
-  "total_settled": 22,
-  "total_pending": 0,
+  "total_settled": 21,
+  "total_pending": 2,
   "pending_breakdown": {
-    "future": 0,
+    "future": 1,
     "live": 0,
     "stale": 0,
-    "old_stale": 0,
+    "old_stale": 1,
     "unknown": 0
   },
   "source_freshness": {
     "bundesliga": {
       "football_data_latest": "2026-04-12",
-      "lag_days": 2,
+      "lag_days": 1,
       "football_data_count": 261,
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "snapshot_date": "2026-04-14",
-      "snapshot_path": "C:\\Users\\44746\\Downloads\\il-margine\\data\\results-snapshot\\2026-04-14.json"
+      "snapshot_date": "2026-04-13",
+      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-13.json"
     },
     "epl": {
-      "football_data_latest": "2026-04-13",
+      "football_data_latest": "2026-04-12",
       "lag_days": 1,
-      "football_data_count": 319,
-      "fotmob_count": 5,
-      "fotmob_latest": "2026-04-13",
-      "snapshot_date": "2026-04-14",
-      "snapshot_path": "C:\\Users\\44746\\Downloads\\il-margine\\data\\results-snapshot\\2026-04-14.json"
+      "football_data_count": 318,
+      "fotmob_count": 4,
+      "fotmob_latest": "2026-04-12",
+      "snapshot_date": "2026-04-13",
+      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-13.json"
     },
     "la-liga": {
-      "football_data_latest": "2026-04-13",
+      "football_data_latest": "2026-04-12",
       "lag_days": 1,
-      "football_data_count": 310,
-      "fotmob_count": 5,
-      "fotmob_latest": "2026-04-13",
-      "snapshot_date": "2026-04-14",
-      "snapshot_path": "C:\\Users\\44746\\Downloads\\il-margine\\data\\results-snapshot\\2026-04-14.json"
+      "football_data_count": 309,
+      "fotmob_count": 4,
+      "fotmob_latest": "2026-04-12",
+      "snapshot_date": "2026-04-13",
+      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-13.json"
     },
     "ligue-1": {
       "football_data_latest": "2026-04-12",
-      "lag_days": 2,
+      "lag_days": 1,
       "football_data_count": 258,
       "fotmob_count": 0,
       "fotmob_latest": null,
-      "snapshot_date": "2026-04-14",
-      "snapshot_path": "C:\\Users\\44746\\Downloads\\il-margine\\data\\results-snapshot\\2026-04-14.json"
+      "snapshot_date": "2026-04-13",
+      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-13.json"
     },
     "serie-a": {
-      "football_data_latest": "2026-04-13",
+      "football_data_latest": "2026-04-12",
       "lag_days": 1,
-      "football_data_count": 320,
-      "fotmob_count": 5,
-      "fotmob_latest": "2026-04-13",
-      "snapshot_date": "2026-04-14",
-      "snapshot_path": "C:\\Users\\44746\\Downloads\\il-margine\\data\\results-snapshot\\2026-04-14.json"
+      "football_data_count": 319,
+      "fotmob_count": 4,
+      "fotmob_latest": "2026-04-12",
+      "snapshot_date": "2026-04-13",
+      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-13.json"
     }
   },
   "stale_rows": [],
-  "old_stale_rows": [],
+  "old_stale_rows": [
+    {
+      "match": "Levante vs Getafe",
+      "league": "la-liga",
+      "line": "9.5",
+      "side": "over",
+      "kickoff": "2026-04-13T19:00:00Z",
+      "hours_elapsed": 53.16
+    }
+  ],
   "unknown_rows": [],
   "overridden_rows": [],
   "warnings": [],
-  "errors": [],
-  "exit_code_recommendation": 0
+  "errors": [
+    "1 old stale pending row(s) (>=48h elapsed)"
+  ],
+  "exit_code_recommendation": 1
 }
