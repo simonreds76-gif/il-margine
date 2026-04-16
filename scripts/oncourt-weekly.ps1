@@ -5,6 +5,7 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $root
 . (Join-Path $root "scripts\task-lock.ps1")
+. (Join-Path $root "scripts\_lib\run_status.ps1")
 
 $dataDir = Join-Path $root "data"
 New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
@@ -19,6 +20,7 @@ $spreadFitFiles = @(
     "data/backtest/backtest-results-2025.csv",
     "data/backtest/backtest-results-2026.csv"
 )
+$externalFetchTimeoutSeconds = 300
 $spreadRefreshTimeoutSeconds = 240
 
 function Get-VolumeShadowConfig([string]$mode) {
@@ -73,11 +75,23 @@ function Invoke-LoggedProcess {
     }
 }
 
+function Set-RunStatusFailure([string]$Type, [string]$Message) {
+    $script:runStatusFinal = "failed"
+    $script:runStatusErrorType = $Type
+    $script:runStatusErrorMessage = $Message
+}
+
 $lockHandle = Enter-TaskLock -LockName "tennis-automation" -RootPath $root -WaitSeconds 1800 -PollSeconds 10
 if ($null -eq $lockHandle) {
     Log "Another tennis automation run stayed active for 30 minutes; exiting."
     exit 0
 }
+
+$runStatus = Start-RunStatus -Pipeline "oncourt-weekly" -Trigger "schedule"
+$runStatusFinal = "failed"
+$runStatusErrorRecord = $null
+$runStatusErrorType = $null
+$runStatusErrorMessage = $null
 
 try {
 
@@ -102,6 +116,7 @@ Log "=== Step 2/13: Supabase FULL sync ==="
 & python scripts\oncourt-load-supabase.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "ERROR: Supabase full sync failed (exit $LASTEXITCODE)"
+    Set-RunStatusFailure "SupabaseSyncFailed" "Supabase full sync failed (exit $LASTEXITCODE)"
     exit 1
 }
 
@@ -156,9 +171,9 @@ if ($LASTEXITCODE -ne 0) {
 
 # Step 10: Weekly strict-signals analysis
 Log "=== Step 10/12: Refresh Tennis-Data ATP season file ==="
-& python scripts\fetch-tennis-data-atp.py --year 2026 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: tennis-data ATP refresh failed (exit $LASTEXITCODE), continuing..."
+$tennisDataExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\fetch-tennis-data-atp.py", "--year", "2026") -Label "tennis-data ATP refresh" -TimeoutSeconds $externalFetchTimeoutSeconds
+if ($tennisDataExit -ne 0) {
+    Log "WARNING: tennis-data ATP refresh failed (exit $tennisDataExit), continuing..."
 }
 
 # Step 11: Weekly strict-signals analysis
@@ -215,8 +230,17 @@ if ($LASTEXITCODE -ne 0) {
 Log "============================================"
 Log "  Weekly Full Load finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 Log "============================================"
+    $runStatusFinal = "ok"
+    $runStatusErrorType = $null
+    $runStatusErrorMessage = $null
+}
+catch {
+    $runStatusErrorRecord = $_
+    Set-RunStatusFailure "UnhandledException" $_.Exception.Message
+    throw
 }
 finally {
+    Complete-RunStatus -Run $runStatus -Status $runStatusFinal -ErrorRecord $runStatusErrorRecord -ErrorType $runStatusErrorType -ErrorMessage $runStatusErrorMessage
     Exit-TaskLock $lockHandle
 }
 

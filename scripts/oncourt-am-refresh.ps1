@@ -5,6 +5,7 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $root
 . (Join-Path $root "scripts\task-lock.ps1")
+. (Join-Path $root "scripts\_lib\run_status.ps1")
 
 $dataDir = Join-Path $root "data"
 New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
@@ -41,11 +42,23 @@ function Log($msg) {
     Add-Content -Path $logFile -Value $line
 }
 
+function Set-RunStatusFailure([string]$Type, [string]$Message) {
+    $script:runStatusFinal = "failed"
+    $script:runStatusErrorType = $Type
+    $script:runStatusErrorMessage = $Message
+}
+
 $lockHandle = Enter-TaskLock -LockName "tennis-automation" -RootPath $root -WaitSeconds 900 -PollSeconds 10
 if ($null -eq $lockHandle) {
     Log "Another tennis automation run stayed active for 15 minutes; exiting."
     exit 0
 }
+
+$runStatus = Start-RunStatus -Pipeline "oncourt-am-refresh" -Trigger "schedule"
+$runStatusFinal = "failed"
+$runStatusErrorRecord = $null
+$runStatusErrorType = $null
+$runStatusErrorMessage = $null
 
 try {
     Log "============================================"
@@ -67,6 +80,7 @@ try {
     & python scripts\oncourt-load-supabase.py --quick --skip-players 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "ERROR: Supabase sync failed (exit $LASTEXITCODE)"
+        Set-RunStatusFailure "SupabaseSyncFailed" "Supabase sync failed (exit $LASTEXITCODE)"
         exit 1
     }
 
@@ -77,11 +91,13 @@ try {
     $step3Lines | ForEach-Object { Log $_ }
     if ($step3Exit -ne 0) {
         Log "ERROR: Pinnacle/fair-odds failed (exit $step3Exit)"
+        Set-RunStatusFailure "DailyOddsFailed" "Pinnacle/fair-odds failed (exit $step3Exit)"
         exit 1
     }
     $step3Synced = $step3Lines | Select-String -SimpleMatch "Synced daily_fair_odds:"
     if (-not $step3Synced) {
         Log "ERROR: Pinnacle/fair-odds completed without confirming daily_fair_odds sync"
+        Set-RunStatusFailure "DailyOddsSyncMissing" "Pinnacle/fair-odds completed without confirming daily_fair_odds sync"
         exit 1
     }
 
@@ -95,6 +111,7 @@ try {
     & python scripts\strict-policy-report.py --append --compare-overlay 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "ERROR: strict-policy-report failed (exit $LASTEXITCODE)"
+        Set-RunStatusFailure "StrictPolicyReportFailed" "strict-policy-report failed (exit $LASTEXITCODE)"
         exit 1
     }
 
@@ -137,7 +154,16 @@ try {
     Log "============================================"
     Log "  AM Tennis Refresh finished at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
     Log "============================================"
+    $runStatusFinal = "ok"
+    $runStatusErrorType = $null
+    $runStatusErrorMessage = $null
+}
+catch {
+    $runStatusErrorRecord = $_
+    Set-RunStatusFailure "UnhandledException" $_.Exception.Message
+    throw
 }
 finally {
+    Complete-RunStatus -Run $runStatus -Status $runStatusFinal -ErrorRecord $runStatusErrorRecord -ErrorType $runStatusErrorType -ErrorMessage $runStatusErrorMessage
     Exit-TaskLock $lockHandle
 }
