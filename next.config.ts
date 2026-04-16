@@ -1,8 +1,12 @@
 import type { NextConfig } from "next";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
   turbopack: {
-    root: process.cwd(),
+    root: projectRoot,
   },
   // Keep unrelated tennis-model datasets out of the football monitor functions.
   // The goalscorer monitor now reads a compact snapshot payload instead of raw league trees.
