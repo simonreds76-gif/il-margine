@@ -3,6 +3,7 @@ name: Team Props Settlement
 on:
   schedule:
     - cron: "30 23 * * *" # Nightly settlement after most match windows
+    - cron: "45 08 * * *" # Morning rerun to catch late-posted results without relying on local tasks
   workflow_dispatch:
 
 permissions:
@@ -15,6 +16,8 @@ concurrency:
 jobs:
   settle:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
     steps:
       - uses: actions/checkout@v5
         with:
@@ -29,11 +32,48 @@ jobs:
       - name: Install Python deps
         run: pip install requests
 
+      - name: Fetch results snapshot
+        run: |
+          python scripts/fetch-results-snapshot.py \
+            --pending-path data/shortlist/settled-pnl.csv \
+            --pending-path data/team-shots/shadow/team-shots-shadow-signals.csv
+
+      - name: Commit results snapshot before settlement
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -d data/results-snapshot ]; then
+            git add data/results-snapshot/
+          fi
+          if git diff --cached --quiet; then
+            echo "No snapshot changes to commit."
+          else
+            git commit -m "chore: results snapshot $(date -u +%Y-%m-%d)"
+          fi
+
       - name: Settle team-shots shadow signals
         run: python scripts/team-shots-settle.py
 
       - name: Settle corners shortlist
+        if: always()
         run: python scripts/shortlist-settle.py
+
+      - name: Audit settlement
+        if: always()
+        run: |
+          python scripts/settlement_audit.py \
+            data/team-shots/shadow/settlement-audit.json \
+            data/shortlist/settlement-audit.json
+
+      - name: Upload settlement audit artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: settlement-audit-${{ github.run_id }}
+          path: |
+            data/shortlist/settlement-audit.json
+            data/team-shots/shadow/settlement-audit.json
+          retention-days: 30
 
       - name: Generate team-props snapshot artifacts
         run: |
@@ -50,7 +90,7 @@ jobs:
             python scripts/team-shots-live-snapshot.py --supabase
             python scripts/corners-live-snapshot.py --supabase
           else
-            echo "::warning::SUPABASE_SERVICE_ROLE_KEY not configured; team-props hosted snapshot upload skipped."
+            echo "SUPABASE_SERVICE_ROLE_KEY not configured; team-props hosted snapshot upload skipped."
           fi
 
       - name: Commit and push if new data
@@ -65,6 +105,9 @@ jobs:
           fi
           if [ -d data/corners-ou ]; then
             git add data/corners-ou/
+          fi
+          if [ -d data/results-snapshot ]; then
+            git add data/results-snapshot/
           fi
           if git diff --cached --quiet; then
             echo "No settlement changes to commit."
