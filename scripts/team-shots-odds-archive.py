@@ -101,7 +101,12 @@ def main() -> None:
         print("No changes.")
         return
 
-    existing_rows.sort(key=lambda r: (r.get("match_date", ""), r.get("captured_at", "")))
+    existing_rows.sort(
+        key=lambda row: (
+            (row.get("match_date") or "").strip(),
+            (row.get("captured_at") or "").strip(),
+        )
+    )
     args.archive.parent.mkdir(parents=True, exist_ok=True)
     with open(args.archive, "w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=ARCHIVE_FIELDS, extrasaction="ignore")

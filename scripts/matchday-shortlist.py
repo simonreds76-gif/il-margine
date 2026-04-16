@@ -113,6 +113,17 @@ def inclusive_days_cutoff(days_ahead: int) -> datetime:
     return datetime.combine(target_day, datetime.max.time(), tzinfo=timezone.utc)
 
 
+def within_fixture_window(kickoff_dt: Optional[datetime], cutoff: Optional[datetime]) -> bool:
+    if kickoff_dt is None:
+        return False
+    now_utc = datetime.now(timezone.utc)
+    if kickoff_dt < now_utc:
+        return False
+    if cutoff is not None and kickoff_dt > cutoff:
+        return False
+    return True
+
+
 def parse_iso_datetime(text: str) -> Optional[datetime]:
     raw = (text or "").strip()
     if not raw:
@@ -368,7 +379,7 @@ def load_pinnacle_corner_index(
             fixture_date = (row.get("match_date") or row.get("kickoff_iso") or "")[:10]
             kickoff_iso = row.get("kickoff_iso", "") or ""
             kickoff_dt = parse_iso_datetime(kickoff_iso)
-            if cutoff is not None and kickoff_dt is not None and kickoff_dt > cutoff:
+            if not within_fixture_window(kickoff_dt, cutoff):
                 continue
 
             fixture_key = pinnacle_fixture_key(league, fixture_date, home_team, away_team)
@@ -976,7 +987,7 @@ def main() -> None:
             for ev in events:
                 ko = ev.get("commence_time", "")
                 ko_dt = parse_iso_datetime(ko)
-                if ko_dt is None or ko_dt <= cutoff:
+                if within_fixture_window(ko_dt, cutoff):
                     nearby.append(ev)
             print(f"  {len(events)} upcoming, {len(nearby)} within {args.days_ahead} days")
 

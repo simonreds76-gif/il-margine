@@ -158,7 +158,9 @@ function Write-Status {
         artifacts = $Artifacts
     }
 
-    ($payload | ConvertTo-Json -Depth 6) | Set-Content -Path $statusFile -Encoding UTF8
+    $jsonText = $payload | ConvertTo-Json -Depth 6
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText($statusFile, $jsonText, $utf8NoBom)
 }
 
 $previousStatus = Read-JsonFile $statusFile

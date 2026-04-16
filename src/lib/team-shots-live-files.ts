@@ -43,6 +43,10 @@ const GITHUB_RAW_BASE =
   process.env.MONITOR_GITHUB_RAW_BASE ||
   "https://raw.githubusercontent.com/simonreds76-gif/il-margine/golden-with-speed-insights";
 
+function stripUtf8Bom(text: string): string {
+  return text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
+}
+
 function snapshotFreshness(payload: SnapshotPayload | null): number {
   const stamp = payload?.generated_at ? Date.parse(payload.generated_at) : Number.NaN;
   return Number.isFinite(stamp) ? stamp : Number.NEGATIVE_INFINITY;
@@ -193,7 +197,7 @@ export async function readTeamShotsLiveJson<T>(relativePath: string): Promise<T 
   const text = await readTeamShotsLiveFile(relativePath);
   if (!text) return null;
   try {
-    return JSON.parse(text) as T;
+    return JSON.parse(stripUtf8Bom(text)) as T;
   } catch {
     return null;
   }
