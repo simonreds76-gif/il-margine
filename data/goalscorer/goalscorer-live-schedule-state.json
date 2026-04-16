@@ -1,25 +1,25 @@
 {
-  "updated_at": "2026-04-16T18:49:17Z",
+  "updated_at": "2026-04-16T19:53:30Z",
   "reason": "cycle",
   "leagues": {
     "serie-a": {
-      "last_successful_run_at": "2026-04-16T17:45:17Z",
-      "last_detail_run_at": "2026-04-16T17:45:17Z",
+      "last_successful_run_at": "2026-04-16T19:51:22Z",
+      "last_detail_run_at": "2026-04-16T19:51:22Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "cold",
-      "last_decision": "waiting",
-      "last_message": "Skip serie-a: cadence 120m not due yet.",
+      "last_decision": "ran",
+      "last_message": "Ran serie-a in cold tier (cadence 120m, fixtures 9).",
       "next_kickoff_utc": "2026-04-17T16:30:00Z"
     },
     "epl": {
-      "last_successful_run_at": "2026-04-16T17:46:01Z",
-      "last_detail_run_at": "2026-04-16T17:46:01Z",
+      "last_successful_run_at": "2026-04-16T19:52:08Z",
+      "last_detail_run_at": "2026-04-16T19:52:08Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "cold",
-      "last_decision": "waiting",
-      "last_message": "Skip epl: cadence 120m not due yet.",
+      "last_decision": "ran",
+      "last_message": "Ran epl in cold tier (cadence 120m, fixtures 9).",
       "next_kickoff_utc": "2026-04-18T11:30:00Z"
     },
     "la-liga": {
@@ -33,23 +33,23 @@
       "next_kickoff_utc": ""
     },
     "bundesliga": {
-      "last_successful_run_at": "2026-04-16T17:46:44Z",
-      "last_detail_run_at": "2026-04-16T17:46:44Z",
+      "last_successful_run_at": "2026-04-16T19:52:44Z",
+      "last_detail_run_at": "2026-04-16T19:52:44Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "cold",
-      "last_decision": "waiting",
-      "last_message": "Skip bundesliga: cadence 120m not due yet.",
+      "last_decision": "ran",
+      "last_message": "Ran bundesliga in cold tier (cadence 120m, fixtures 9).",
       "next_kickoff_utc": "2026-04-17T18:30:00Z"
     },
     "ligue-1": {
-      "last_successful_run_at": "2026-04-16T17:47:23Z",
-      "last_detail_run_at": "2026-04-16T17:47:23Z",
+      "last_successful_run_at": "2026-04-16T19:53:17Z",
+      "last_detail_run_at": "2026-04-16T19:53:17Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "cold",
-      "last_decision": "waiting",
-      "last_message": "Skip ligue-1: cadence 120m not due yet.",
+      "last_decision": "ran",
+      "last_message": "Ran ligue-1 in cold tier (cadence 120m, fixtures 9).",
       "next_kickoff_utc": "2026-04-17T18:45:00Z"
     }
   }
