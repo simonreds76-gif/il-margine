@@ -31,7 +31,7 @@ from settlement_audit import (
     load_settlement_overrides,
     write_audit,
 )
-from settlement_utils import load_results_snapshot, normalize_team_name
+from settlement_utils import load_manual_settlement_results, load_results_snapshot, normalize_team_name
 
 ROOT = Path(__file__).resolve().parent.parent
 SHORTLIST_DIR   = ROOT / "data" / "shortlist"
@@ -250,6 +250,10 @@ def settle_all(target_date: Optional[str] = None, snapshot_date: Optional[str] =
         print("No results snapshot found; corners settlement will keep rows pending.")
     else:
         print(f"Loaded {len(actual)} snapshot results from {snapshot_path}")
+    manual_results = load_manual_settlement_results(OVERRIDES_PATH)
+    if manual_results:
+        actual = {**actual, **manual_results}
+        print(f"Loaded {len(manual_results)} manual settlement override result(s)")
     odds_index = load_pinnacle_odds_index()
     print(f"Loaded {len(odds_index)} Pinnacle odds series")
 
@@ -379,7 +383,7 @@ def settle_all(target_date: Optional[str] = None, snapshot_date: Optional[str] =
             settled["closing_odds"] = ""
             settled["clv"] = ""
 
-        if result:
+        if result and result.get("total_corners") is not None:
             total_corners = result["total_corners"]
             # Push/void detection: integer lines (8.0, 9.0, 10.0) push when the result
             # lands exactly on the line. Half-point lines (8.5, 9.5) never push.

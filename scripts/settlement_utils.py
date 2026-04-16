@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import json
 import re
 import unicodedata
@@ -193,3 +194,83 @@ def build_fixture_key(match_date: date | str, home_team: str, away_team: str) ->
 
 def ensure_snapshot_dir() -> None:
     RESULTS_SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _parse_optional_int(raw: object) -> Optional[int]:
+    text = str(raw or "").strip()
+    if not text:
+        return None
+    try:
+        return int(float(text))
+    except (TypeError, ValueError):
+        return None
+
+
+def _split_override_match(row: Mapping[str, object]) -> tuple[str, str]:
+    home = str(row.get("home_team", "") or "").strip()
+    away = str(row.get("away_team", "") or "").strip()
+    if home and away:
+        return home, away
+
+    match = str(row.get("match", "") or "").strip()
+    if not match:
+        return "", ""
+
+    parts = re.split(r"\s+vs\.?\s+|\s+v\s+", match, maxsplit=1, flags=re.IGNORECASE)
+    if len(parts) == 2:
+        return parts[0].strip(), parts[1].strip()
+    return "", ""
+
+
+def load_manual_settlement_results(path: Path) -> Dict[str, dict]:
+    """
+    Load optional manual settlement rows that can supplement a stale results snapshot.
+
+    Supported columns are intentionally loose so the CSV can stay human-editable.
+    Existing columns (`league,match,kickoff_iso,reason`) remain valid; when stat
+    columns are also present, those rows become usable as manual result entries.
+    """
+    if not path.exists():
+        return {}
+
+    results: Dict[str, dict] = {}
+    with open(path, "r", encoding="utf-8", newline="") as fh:
+        for row in csv.DictReader(fh):
+            match_date = parse_isoish_date(str(row.get("kickoff_iso", "") or ""))
+            if match_date is None:
+                match_date = parse_isoish_date(str(row.get("fixture_date", "") or ""))
+            if match_date is None:
+                continue
+
+            home_team, away_team = _split_override_match(row)
+            if not home_team or not away_team:
+                continue
+
+            home_shots = _parse_optional_int(row.get("home_shots"))
+            away_shots = _parse_optional_int(row.get("away_shots"))
+            home_corners = _parse_optional_int(row.get("home_corners"))
+            away_corners = _parse_optional_int(row.get("away_corners"))
+
+            # Keep reason-only overrides valid for the audit path, but do not
+            # manufacture fake results from them.
+            if home_shots is None and away_shots is None and home_corners is None and away_corners is None:
+                continue
+
+            entry = {
+                "home_team": normalize_team_name(home_team),
+                "away_team": normalize_team_name(away_team),
+                "source": "manual-override",
+                "reason": str(row.get("reason", "") or "").strip(),
+            }
+            if home_shots is not None and away_shots is not None:
+                entry["home_shots"] = home_shots
+                entry["away_shots"] = away_shots
+            if home_corners is not None and away_corners is not None:
+                entry["home_corners"] = home_corners
+                entry["away_corners"] = away_corners
+                entry["total_corners"] = home_corners + away_corners
+
+            key = build_fixture_key(match_date, home_team, away_team)
+            results[key] = entry
+
+    return results

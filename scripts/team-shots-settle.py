@@ -24,7 +24,12 @@ from settlement_audit import (
     load_settlement_overrides,
     write_audit,
 )
-from settlement_utils import load_results_snapshot, normalize_team_name, normalize_text_basic
+from settlement_utils import (
+    load_manual_settlement_results,
+    load_results_snapshot,
+    normalize_team_name,
+    normalize_text_basic,
+)
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_SIGNALS = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-signals.csv"
@@ -220,6 +225,10 @@ def settle_signals(
             still_pending += 1
             continue
 
+        if match_data.get("home_shots") is None or match_data.get("away_shots") is None:
+            still_pending += 1
+            continue
+
         team_norm = _norm_team(sig.get("team", ""))
         if team_norm == home_norm:
             actual_shots = match_data["home_shots"]
@@ -327,6 +336,10 @@ def main() -> None:
         print("  No results snapshot found; pending rows will remain pending.")
     else:
         print(f"  Loaded {len(all_results)} snapshot results from {snapshot_path}")
+    manual_results = load_manual_settlement_results(DEFAULT_OVERRIDES)
+    if manual_results:
+        all_results = {**all_results, **manual_results}
+        print(f"  Loaded {len(manual_results)} manual settlement override result(s)")
 
     settled, still_pending = settle_signals(signals, all_results, odds_index)
     print(f"\n  Settled: {settled}, still pending: {still_pending}")
