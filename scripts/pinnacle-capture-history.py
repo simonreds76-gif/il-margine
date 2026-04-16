@@ -27,6 +27,13 @@ from typing import Any
 
 import requests
 
+# run_status helper bootstrap. The scheduler invokes this file directly,
+# so we make the repo root importable before importing scripts._lib.
+_RS_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _RS_REPO_ROOT not in sys.path:
+    sys.path.insert(0, _RS_REPO_ROOT)
+
+from scripts._lib.run_status import run_status
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "pinnacle-history"
@@ -171,4 +178,7 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    load_env()
+    with run_status("pinnacle-capture-history", trigger_kind="schedule") as rs:
+        exit_code = main()
+    raise SystemExit(exit_code)

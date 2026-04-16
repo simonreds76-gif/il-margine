@@ -6,11 +6,18 @@ import csv
 import io
 import json
 import os
+import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Dict, List
 
 import requests
+
+_RS_REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(_RS_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_RS_REPO_ROOT))
+
+from scripts._lib.run_status import run_status
 
 from api_football_match_stats import fetch_api_football_results
 from fotmob_match_stats import fetch_fotmob_recent_results
@@ -184,7 +191,7 @@ def fixture_present(results: Dict[str, dict], fixture: dict) -> bool:
     return False
 
 
-def main() -> None:
+def main() -> int:
     parser = argparse.ArgumentParser(description="Fetch a committed football results snapshot for settlement")
     parser.add_argument("--date", type=str, default=None, help="Snapshot date in YYYY-MM-DD (defaults to today UTC)")
     parser.add_argument(
@@ -312,7 +319,10 @@ def main() -> None:
         json.dump(payload, fh, indent=2, sort_keys=True)
         fh.write("\n")
     print(f"Results snapshot -> {out_path}")
+    return total_fixtures
 
 
 if __name__ == "__main__":
-    main()
+    load_env()
+    with run_status("fetch-results-snapshot", trigger_kind="schedule") as rs:
+        rs.rows_out = main()

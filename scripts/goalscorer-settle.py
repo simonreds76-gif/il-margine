@@ -12,13 +12,20 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import runpy
+import sys
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts._lib.run_status import run_status
+
 DEFAULT_RESULTS_DIR = ROOT / "data" / "goalscorer" / "match-results"
 DEFAULT_ALIAS_PATH = ROOT / "data" / "goalscorer" / "fotmob-player-aliases.json"
 
@@ -44,6 +51,18 @@ LEAGUE_CONFIGS = {
         "summary": ROOT / "data" / "goalscorer" / "ligue-1-shadow-performance.txt",
     },
 }
+
+
+def load_env() -> None:
+    for name in (".env.local", "env.local"):
+        path = ROOT / name
+        if not path.exists():
+            continue
+        for raw_line in path.read_text(encoding="utf-8").splitlines():
+            raw_line = raw_line.strip()
+            if raw_line and not raw_line.startswith("#") and "=" in raw_line:
+                key, value = raw_line.split("=", 1)
+                os.environ[key.strip()] = value.strip().strip('"').strip("'")
 
 
 def _parse_date(value: str) -> Optional[date]:
@@ -252,7 +271,7 @@ def write_summary(summary_path: Path, signals_path: Path) -> None:
     tracker_mod["write_summary"](summary_path, signals_path)
 
 
-def main() -> None:
+def main() -> int:
     parser = argparse.ArgumentParser(description="Settle goalscorer shadow rows from FotMob match detail")
     parser.add_argument("--league", choices=sorted(LEAGUE_CONFIGS), required=True, help="League key")
     parser.add_argument("--signals", default="", help="Shadow signals CSV path")
@@ -293,7 +312,7 @@ def main() -> None:
         write_summary(summary_path, signals_path)
         print("  No rows found. Wrote empty files.")
         print("\n  Done.\n")
-        return
+        return 0
 
     match_results = _load_match_results(results_dir, args.league, team_key_func)
     now_utc = datetime.now(timezone.utc)
@@ -347,7 +366,10 @@ def main() -> None:
     print(f"  Saved:                {signals_path}")
     print(f"  Saved:                {summary_path}")
     print("\n  Done.\n")
+    return settled_now
 
 
 if __name__ == "__main__":
-    main()
+    load_env()
+    with run_status("goalscorer-settle", trigger_kind="schedule") as rs:
+        rs.rows_out = main()
