@@ -37,8 +37,8 @@ export type TeamShotsLiveSourceStatus = {
 const SNAPSHOT_TABLE = "goalscorer_live_snapshot";
 const SNAPSHOT_KEY = process.env.TEAM_SHOTS_LIVE_SNAPSHOT_KEY || "team_shots_state";
 const LOCAL_SNAPSHOT_FILE = "data/team-shots/team-shots-live-snapshot.json";
-const PREFER_LOCAL =
-  process.env.MONITOR_PREFER_LOCAL === "1" || process.env.NODE_ENV !== "production";
+const PREFER_LOCAL = process.env.MONITOR_PREFER_LOCAL === "1";
+const INCLUDE_HOSTED_METADATA_IN_LOCAL_DEV = process.env.MONITOR_COMPARE_HOSTED === "1";
 const GITHUB_RAW_BASE =
   process.env.MONITOR_GITHUB_RAW_BASE ||
   "https://raw.githubusercontent.com/simonreds76-gif/il-margine/golden-with-speed-insights";
@@ -237,17 +237,20 @@ export async function readTeamShotsLiveMtime(relativePath: string): Promise<stri
 }
 
 export async function readTeamShotsLiveSnapshotGeneratedAt(): Promise<string | null> {
+  const localGeneratedAt = await readLocalSnapshotGeneratedAt();
+  if (PREFER_LOCAL && !INCLUDE_HOSTED_METADATA_IN_LOCAL_DEV && localGeneratedAt) {
+    return localGeneratedAt;
+  }
+
   const payload = await loadHostedSnapshot();
   const hostedGeneratedAt = typeof payload?.generated_at === "string" ? payload.generated_at : null;
-  const localGeneratedAt = await readLocalSnapshotGeneratedAt();
+  if (PREFER_LOCAL && !INCLUDE_HOSTED_METADATA_IN_LOCAL_DEV) {
+    return localGeneratedAt ?? hostedGeneratedAt;
+  }
   return newerTimestamp(hostedGeneratedAt, localGeneratedAt);
 }
 
 export async function inspectTeamShotsLiveSource(relativePath: string): Promise<TeamShotsLiveSourceStatus> {
-  const payload = await loadHostedSnapshot();
-  const hostedGeneratedAt = typeof payload?.generated_at === "string" ? payload.generated_at : null;
-  const hostedEntry = getSnapshotFileEntry(payload, relativePath);
-  const hostedFileMtime = hostedEntry?.mtime ?? hostedGeneratedAt ?? null;
   const localSnapshotGeneratedAt = await readLocalSnapshotGeneratedAt();
 
   let localFileMtime: string | null = null;
@@ -260,6 +263,36 @@ export async function inspectTeamShotsLiveSource(relativePath: string): Promise<
   } catch {
     localFileMtime = null;
   }
+
+  if (PREFER_LOCAL && !INCLUDE_HOSTED_METADATA_IN_LOCAL_DEV) {
+    if (localFileMtime || localSnapshotGeneratedAt) {
+      return {
+        source: "local",
+        reason: "local_only",
+        hostedSnapshotAvailable: false,
+        localSnapshotAvailable: Boolean(localSnapshotGeneratedAt),
+        hostedGeneratedAt: null,
+        localSnapshotGeneratedAt,
+        hostedFileMtime: null,
+        localFileMtime,
+      };
+    }
+    return {
+      source: "missing",
+      reason: "no_data",
+      hostedSnapshotAvailable: false,
+      localSnapshotAvailable: false,
+      hostedGeneratedAt: null,
+      localSnapshotGeneratedAt: null,
+      hostedFileMtime: null,
+      localFileMtime: null,
+    };
+  }
+
+  const payload = await loadHostedSnapshot();
+  const hostedGeneratedAt = typeof payload?.generated_at === "string" ? payload.generated_at : null;
+  const hostedEntry = getSnapshotFileEntry(payload, relativePath);
+  const hostedFileMtime = hostedEntry?.mtime ?? hostedGeneratedAt ?? null;
 
   if (shouldPreferHosted(hostedFileMtime, localFileMtime)) {
     return {
