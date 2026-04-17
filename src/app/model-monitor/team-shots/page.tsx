@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import {
   readTeamShotsLiveFile as readFile,
@@ -81,6 +82,11 @@ type TeamShotsScrapeStatus = {
   error?: string;
 };
 
+type PredictionsSummary = {
+  prediction_count?: number;
+  recent_predictions?: CsvRow[];
+};
+
 const CURRENT_POLICY = "venue-consensus-v1";
 const LEGACY_POLICY = "legacy";
 
@@ -123,6 +129,8 @@ function parseCsv(text: string): CsvRow[] {
 
 
 
+const parseCsvCached = cache((text: string) => parseCsv(text));
+
 function pf(val: string | undefined, fallback = 0): number {
 
   const n = parseFloat(val ?? "");
@@ -134,6 +142,25 @@ function pf(val: string | undefined, fallback = 0): number {
 function maybeFloat(val: string | undefined): number | null {
   const n = parseFloat(val ?? "");
   return Number.isFinite(n) ? n : null;
+}
+
+function fairOddsFromProbability(probability: number | null): number | null {
+  if (probability === null || !Number.isFinite(probability) || probability <= 0) return null;
+  return 1 / probability;
+}
+
+function evEdgePct(probability: number | null, odds: number | null): number | null {
+  if (
+    probability === null ||
+    !Number.isFinite(probability) ||
+    probability <= 0 ||
+    odds === null ||
+    !Number.isFinite(odds) ||
+    odds <= 0
+  ) {
+    return null;
+  }
+  return (probability * odds - 1) * 100;
 }
 
 function formatMaybeFixed(val: string | undefined, digits = 2, placeholder = "--"): string {
@@ -452,6 +479,42 @@ function qualifiesForShadow(
 ): boolean {
   if (sideEdge === null || sideOdds === undefined) return false;
   return sideEdge >= 5 && sideOdds >= 1.5 && sideOdds <= 5.0;
+}
+
+function shadowFixtureKey(row: CsvRow): string {
+  return [
+    (row.date ?? "").slice(0, 10),
+    (row.league ?? "").trim().toLowerCase(),
+    (row.home_team ?? "").trim().toLowerCase(),
+    (row.away_team ?? "").trim().toLowerCase(),
+  ].join("|");
+}
+
+function dedupeBestShadowFixtureRows(rows: CsvRow[]): CsvRow[] {
+  const bestByFixture = new Map<string, CsvRow>();
+
+  for (const row of rows) {
+    const key = shadowFixtureKey(row);
+    const existing = bestByFixture.get(key);
+    const edge = pf(row.edge, Number.NaN);
+    const odds = pf(row.book_odds, Number.NaN);
+
+    if (!existing) {
+      bestByFixture.set(key, row);
+      continue;
+    }
+
+    const existingEdge = pf(existing.edge, Number.NaN);
+    const existingOdds = pf(existing.book_odds, Number.NaN);
+    if (
+      edge > existingEdge ||
+      (edge === existingEdge && odds > existingOdds)
+    ) {
+      bestByFixture.set(key, row);
+    }
+  }
+
+  return rows.filter((row) => bestByFixture.get(shadowFixtureKey(row)) === row);
 }
 
 function shadowStakeUnits(edgeDecimal: number): string {
@@ -805,7 +868,7 @@ export default async function TeamShotsMonitorPage() {
 
     shadowPerformanceTxt,
 
-    predictionsCsv,
+    predictionsSummary,
 
     comparisonCsv,
 
@@ -842,7 +905,7 @@ export default async function TeamShotsMonitorPage() {
 
     readFile("data/team-shots/shadow/team-shots-shadow-performance.txt"),
 
-    readFile("data/team-shots/team-shots-predictions.csv"),
+    readJson<PredictionsSummary>("data/team-shots/team-shots-monitor-summary.json"),
 
     readFile("data/team-shots/team-shots-comparison.csv"),
 
@@ -870,17 +933,23 @@ export default async function TeamShotsMonitorPage() {
 
 
 
-  const shadowSignals = shadowSignalsCsv ? parseCsv(shadowSignalsCsv) : [];
-  const comparisonRows = (comparisonCsv ? parseCsv(comparisonCsv) : []).filter(
+  const shadowSignals = shadowSignalsCsv ? parseCsvCached(shadowSignalsCsv) : [];
+  const comparisonRows = (comparisonCsv ? parseCsvCached(comparisonCsv) : []).filter(
     (row) => (row.league ?? "").trim() !== "ligue-1",
   );
 
-  const backtestRows = backtestCsv ? parseCsv(backtestCsv) : [];
+  const backtestRows = backtestCsv ? parseCsvCached(backtestCsv) : [];
   const hasBacktestArtifacts = Boolean(backtestCsv?.trim() || backtestReportTxt?.trim());
 
-  const predictions = predictionsCsv ? parseCsv(predictionsCsv) : [];
+  const predictionsCsv =
+    predictionsSummary ? null : await readFile("data/team-shots/team-shots-predictions.csv");
+  const predictions = predictionsCsv ? parseCsvCached(predictionsCsv) : [];
+  const predictionCount =
+    typeof predictionsSummary?.prediction_count === "number"
+      ? predictionsSummary.prediction_count
+      : predictions.length;
 
-  const oddsArchiveRaw = oddsArchiveCsv ? parseCsv(oddsArchiveCsv) : [];
+  const oddsArchiveRaw = oddsArchiveCsv ? parseCsvCached(oddsArchiveCsv) : [];
 
   const oddsArchive = oddsArchiveRaw.filter(
 
@@ -956,9 +1025,11 @@ export default async function TeamShotsMonitorPage() {
 
 
 
-  const recentPredictions = predictions.slice(-100).reverse();
+  const recentPredictions = Array.isArray(predictionsSummary?.recent_predictions)
+    ? predictionsSummary.recent_predictions
+    : predictions.slice(-100).reverse();
 
-  const currentShadowLive = [...comparisonRows]
+  const currentShadowLive = dedupeBestShadowFixtureRows([...comparisonRows]
     .filter((row) => {
       const edge = pf(row.edge, Number.NaN);
       const odds = pf(row.book_odds, Number.NaN);
@@ -974,11 +1045,11 @@ export default async function TeamShotsMonitorPage() {
       const dateCmp = (a.date ?? "").localeCompare(b.date ?? "");
       if (dateCmp !== 0) return dateCmp;
       return pf(b.edge) - pf(a.edge);
-    });
+    }));
 
 
 
-  const upcomingRows = (upcomingCsv ? parseCsv(upcomingCsv) : []).filter(
+  const upcomingRows = (upcomingCsv ? parseCsvCached(upcomingCsv) : []).filter(
     (row) => (row.league ?? "").trim() !== "ligue-1",
   );
   const upcomingModelByMatchTeam = new Map<string, { row: CsvRow; side: "home" | "away" }>();
@@ -1415,11 +1486,14 @@ function LiveLineTable({
     entryEdgePct: number | null;
     currentFairOdds: number | null;
     currentEdgePct: number | null;
+    repricedFairOdds: number | null;
+    repricedEdgePct: number | null;
     pendingState: "upcoming" | "awaiting result";
     currentOdds: number | null;
     delta: number | null;
     currentLine: string | null;
     currentBookmaker: string | null;
+    exactLineAvailable: boolean;
     lineMoved: boolean;
   };
 
@@ -1430,40 +1504,68 @@ function LiveLineTable({
       const teamKey = `${matchKey(matchDate, row.home_team, row.away_team)}|${normalizeTeamName(row.team)}`;
       const currentTeamLines = liveOddsByMatchTeam.get(teamKey);
       const lineKey = `${(row.bookmaker ?? "").trim()}|${(row.line ?? "").trim()}`;
-      const currentLine = currentTeamLines?.get(lineKey);
+      const exactLine = currentTeamLines?.get(lineKey) ?? null;
       const sameBookLines = [...(currentTeamLines?.values() ?? [])].filter(
         (line) => line.bookmaker === (row.bookmaker ?? "").trim(),
       );
-      const fallbackLine =
-        currentLine ??
+      const activeLine =
+        exactLine ??
         sameBookLines
           .slice()
           .sort((a, b) => Math.abs(a.line - pf(row.line, 0)) - Math.abs(b.line - pf(row.line, 0)))[0];
       const currentOdds =
-        fallbackLine
-          ? (row.side === "over" ? fallbackLine.overOdds : fallbackLine.underOdds) ?? null
+        activeLine
+          ? (row.side === "over" ? activeLine.overOdds : activeLine.underOdds) ?? null
           : null;
       const loggedOdds = pf(row.book_odds, Number.NaN);
+      const loggedModelProb = maybeFloat(row.model_prob);
       const delta =
-        currentOdds !== null && !Number.isNaN(loggedOdds) ? currentOdds - loggedOdds : null;
+        exactLine && currentOdds !== null && !Number.isNaN(loggedOdds) ? currentOdds - loggedOdds : null;
       const currentModel = upcomingModelByMatchTeam.get(teamKey);
       const currentMetrics =
-        fallbackLine && currentModel
-          ? computeLineMetrics(currentModel.row, currentModel.side, fallbackLine, calibrationParams)
+        activeLine && currentModel
+          ? computeLineMetrics(currentModel.row, currentModel.side, activeLine, calibrationParams)
           : null;
-      let currentFairOdds =
+      const activeComparison = activeLine
+        ? comparisonRowBySignal.get(
+            comparisonSignalKey(
+              row.date,
+              row.home_team,
+              row.away_team,
+              row.team,
+              row.bookmaker,
+              activeLine.lineLabel,
+              row.side,
+            ),
+          )
+        : null;
+      let currentFairOdds: number | null = null;
+      let currentEdgePct: number | null = null;
+      let repricedFairOdds =
         currentMetrics
           ? row.side === "over"
             ? currentMetrics.fairOver
             : currentMetrics.fairUnder
           : null;
-      let currentEdgePct =
+      let repricedEdgePct =
         currentMetrics
           ? row.side === "over"
             ? currentMetrics.overEdge
             : currentMetrics.underEdge
           : null;
-      if (currentFairOdds === null || currentEdgePct === null) {
+      if (activeComparison) {
+        const fair = pf(activeComparison.model_fair_odds, Number.NaN);
+        const edge = pf(activeComparison.edge, Number.NaN);
+        currentFairOdds = Number.isNaN(fair) ? null : fair;
+        currentEdgePct = Number.isNaN(edge) ? null : edge * 100;
+      } else if (repricedFairOdds !== null || repricedEdgePct !== null) {
+        currentFairOdds = repricedFairOdds;
+        currentEdgePct = repricedEdgePct;
+      } else if (exactLine) {
+        currentFairOdds = fairOddsFromProbability(loggedModelProb);
+        currentEdgePct = evEdgePct(loggedModelProb, currentOdds);
+      }
+      if (repricedFairOdds === null || repricedEdgePct === null) {
         const currentComparison = comparisonRowBySignal.get(
           comparisonSignalKey(
             row.date,
@@ -1478,11 +1580,14 @@ function LiveLineTable({
         if (currentComparison) {
           const fair = pf(currentComparison.model_fair_odds, Number.NaN);
           const edge = pf(currentComparison.edge, Number.NaN);
-          currentFairOdds = Number.isNaN(fair) ? null : fair;
-          currentEdgePct = Number.isNaN(edge) ? null : edge * 100;
+          repricedFairOdds = Number.isNaN(fair) ? null : fair;
+          repricedEdgePct = Number.isNaN(edge) ? null : edge * 100;
         }
       }
-      const storedEdge = pf(row.edge, Number.NaN);
+      const storedEdge = maybeFloat(row.edge);
+      const entryEdgePct =
+        evEdgePct(loggedModelProb, Number.isNaN(loggedOdds) ? null : loggedOdds) ??
+        (storedEdge !== null ? storedEdge * 100 : null);
       return {
         date: row.date ?? "",
         league: row.league ?? "",
@@ -1497,15 +1602,18 @@ function LiveLineTable({
         logged_at: row.logged_at ?? "",
         model_fair_odds: row.model_fair_odds ?? "",
         edge: row.edge ?? "",
-        entryEdgePct: Number.isNaN(storedEdge) ? null : storedEdge * 100,
+        entryEdgePct,
         currentFairOdds,
         currentEdgePct,
+        repricedFairOdds,
+        repricedEdgePct,
         pendingState: matchDate > asOfIso ? "upcoming" : "awaiting result",
         currentOdds,
         delta,
-        currentLine: fallbackLine ? fallbackLine.lineLabel : null,
-        currentBookmaker: fallbackLine ? fallbackLine.bookmaker : null,
-        lineMoved: Boolean(fallbackLine && currentLine !== fallbackLine),
+        currentLine: activeLine ? activeLine.lineLabel : null,
+        currentBookmaker: activeLine ? activeLine.bookmaker : null,
+        exactLineAvailable: Boolean(exactLine),
+        lineMoved: Boolean(activeLine && !exactLine),
       };
     })
     .sort((a, b) => {
@@ -1896,6 +2004,7 @@ function LiveLineTable({
                       {rows.map((row, j) => {
                         const edgePct = row.entryEdgePct;
                         const curEdge = row.currentEdgePct;
+                        const repricedEdge = row.repricedEdgePct;
                         const deltaOdds = row.delta;
                         return (
                           <div key={j} className="rounded-xl border border-slate-800/60 bg-slate-950/40 px-3 py-3">
@@ -1933,7 +2042,7 @@ function LiveLineTable({
                                 />
                               </div>
                             </div>
-                            <div className="mt-2 grid grid-cols-2 gap-1 sm:grid-cols-6">
+                            <div className="mt-2 grid grid-cols-2 gap-1 sm:grid-cols-4 xl:grid-cols-8">
                               <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
                                 <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Book</div>
                                 <div className="mt-0.5 text-xs text-slate-300">
@@ -1951,10 +2060,21 @@ function LiveLineTable({
                                 </div>
                               </div>
                               <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                                <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Now market</div>
+                                <div className="mt-0.5 text-xs text-slate-300">
+                                  {row.currentLine && row.currentBookmaker
+                                    ? `${row.currentBookmaker} ${row.currentLine} ${row.side === "over" ? "O" : "U"}`
+                                    : "-"}
+                                </div>
+                                <div className={`mt-1 text-[10px] ${row.lineMoved ? "text-amber-400" : "text-slate-500"}`}>
+                                  {row.lineMoved ? "moved line" : row.exactLineAvailable ? "tracked line" : "not quoted"}
+                                </div>
+                              </div>
+                              <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
                                 <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Now odds</div>
                                 <div className="mt-0.5 font-mono text-xs text-slate-200">
                                   {row.currentOdds !== null ? row.currentOdds.toFixed(2) : "-"}
-                                  {deltaOdds !== null ? (
+                                  {row.exactLineAvailable && deltaOdds !== null ? (
                                     <span className={`ml-1 ${deltaOdds > 0 ? "text-emerald-300" : deltaOdds < 0 ? "text-rose-300" : "text-slate-500"}`}>
                                       ({deltaOdds > 0 ? "+" : deltaOdds < 0 ? "-" : ""}{Math.abs(deltaOdds).toFixed(2)})
                                     </span>
@@ -1962,10 +2082,26 @@ function LiveLineTable({
                                 </div>
                               </div>
                               <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                                <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Now fair</div>
+                                <div className="mt-0.5 font-mono text-xs text-slate-200">
+                                  {row.currentFairOdds !== null ? row.currentFairOdds.toFixed(2) : "-"}
+                                </div>
+                                {repricedEdge !== null ? (
+                                  <div className={`mt-1 text-[10px] ${row.lineMoved ? "text-amber-400" : "text-slate-500"}`}>
+                                    {row.lineMoved ? "repriced latest line" : "live model"}
+                                  </div>
+                                ) : null}
+                              </div>
+                              <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
                                 <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Now edge</div>
                                 <div className={`mt-0.5 font-mono text-xs ${curEdge !== null && curEdge >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
                                   {curEdge !== null ? formatSignedPercent(curEdge) : "-"}
                                 </div>
+                                {row.lineMoved && repricedEdge !== null ? (
+                                  <div className="mt-1 text-[10px] text-amber-400">
+                                    latest line {formatSignedPercent(repricedEdge)}
+                                  </div>
+                                ) : null}
                               </div>
                               <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
                                 <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Stake</div>
@@ -1976,7 +2112,11 @@ function LiveLineTable({
                             </div>
                             {row.lineMoved ? (
                               <p className="mt-1.5 text-[11px] text-amber-400">
-                                Line moved - now {row.currentBookmaker} {row.currentLine}
+                                Tracked line {row.line} {row.side === "over" ? "O" : "U"} disappeared. Latest quoted market: {row.currentBookmaker} {row.currentLine} {row.side === "over" ? "O" : "U"}{row.currentOdds !== null ? ` @ ${row.currentOdds.toFixed(2)}` : ""}
+                              </p>
+                            ) : (!row.exactLineAvailable && !row.currentLine) ? (
+                              <p className="mt-1.5 text-[11px] text-rose-400">
+                                Tracked line {row.line} {row.side === "over" ? "O" : "U"} is no longer quoted and no nearby same-book line is currently available.
                               </p>
                             ) : null}
                           </div>
@@ -2060,7 +2200,7 @@ function LiveLineTable({
         ) : null}
 
         {/* -- No upcoming warning -- */}
-        {upcomingLeagueKeys.length === 0 && predictions.length === 0 ? (
+        {upcomingLeagueKeys.length === 0 && predictionCount === 0 ? (
           <SectionCard title="Upcoming Fixtures">
             <EmptyState message="No upcoming fixture data yet." />
           </SectionCard>
@@ -2270,6 +2410,11 @@ function LiveLineTable({
     </div>
   );
 }
+
+
+
+
+
 
 
 
