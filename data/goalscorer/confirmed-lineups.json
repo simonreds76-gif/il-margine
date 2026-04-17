@@ -23,8 +23,8 @@
         "Hakan Çalhanoglu",
         "Henrikh Mkhitaryan",
         "Federico Dimarco",
-        "Francesco Pio Esposito",
-        "Marcus Thuram"
+        "Marcus Thuram",
+        "Francesco Pio Esposito"
       ],
       "away_players": [
         "Elia Caprile",
@@ -122,7 +122,7 @@
           "position_id": 79
         },
         {
-          "name": "Francesco Pio Esposito",
+          "name": "Marcus Thuram",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -131,7 +131,7 @@
           "position_id": 104
         },
         {
-          "name": "Marcus Thuram",
+          "name": "Francesco Pio Esposito",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -241,8 +241,34 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Raffaele Di Gennaro",
+        "Yann Sommer",
+        "Christos Alexiou",
+        "Francesco Acerbi",
+        "Andy Diouf",
+        "Davide Frattesi",
+        "Luis Henrique",
+        "Matteo Darmian",
+        "Piotr Zielinski",
+        "Ange-Yoan Bonny",
+        "Mattia Mosconi"
+      ],
+      "away_subs": [
+        "Alen Sherri",
+        "Giuseppe Ciocci",
+        "Alberto Dossena",
+        "Gabriele Zappa",
+        "Othniël Raterink",
+        "Agustín Albarracín",
+        "Alessandro Deiola",
+        "Joseph Liteta",
+        "Michael Folorunsho",
+        "Andrea Belotti",
+        "Paul Mendy",
+        "Semih Kiliçsoy",
+        "Yael Trepy"
+      ],
       "home_unavailable": [
         "Alessandro Bastoni",
         "Yann Aurel Bisseck",
@@ -2327,6 +2353,264 @@
         "Morten Frendrup",
         "Ruslan Malinovsky",
         "Maxwel Cornet"
+      ]
+    },
+    {
+      "fotmob_match_id": 4803360,
+      "fotmob_page_url": "/matches/fiorentina-vs-lecce/2t1qro#4803360",
+      "home_fotmob_team_id": 9888,
+      "away_fotmob_team_id": 8535,
+      "match_date": "2026-04-20",
+      "home_team": "Lecce",
+      "away_team": "Fiorentina",
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "4-2-3-1",
+      "away_formation": "4-3-3",
+      "home_players": [
+        "Wladimiro Falcone",
+        "Danilo Veiga",
+        "Tiago Gabriel",
+        "Jamil Siebert",
+        "Corrie Ndaba",
+        "Ylber Ramadani",
+        "Oumar Ngom",
+        "Santiago Pierotti",
+        "Lassana Coulibaly",
+        "Lameck Banda",
+        "Nikola Stulic"
+      ],
+      "away_players": [
+        "David de Gea",
+        "Dodô",
+        "Daniele Rugani",
+        "Luca Ranieri",
+        "Robin Gosens",
+        "Giovanni Fabbian",
+        "Rolando Mandragora",
+        "Cher Ndour",
+        "Jack Harrison",
+        "Roberto Piccoli",
+        "Jacopo Fazzini"
+      ],
+      "home_starters": [
+        {
+          "name": "Wladimiro Falcone",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11
+        },
+        {
+          "name": "Danilo Veiga",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32
+        },
+        {
+          "name": "Tiago Gabriel",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34
+        },
+        {
+          "name": "Jamil Siebert",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36
+        },
+        {
+          "name": "Corrie Ndaba",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38
+        },
+        {
+          "name": "Ylber Ramadani",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
+        },
+        {
+          "name": "Oumar Ngom",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
+        },
+        {
+          "name": "Santiago Pierotti",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83
+        },
+        {
+          "name": "Lassana Coulibaly",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
+        },
+        {
+          "name": "Lameck Banda",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87
+        },
+        {
+          "name": "Nikola Stulic",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "David de Gea",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-3-3",
+          "position_id": 11
+        },
+        {
+          "name": "Dodô",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 32
+        },
+        {
+          "name": "Daniele Rugani",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 34
+        },
+        {
+          "name": "Luca Ranieri",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 36
+        },
+        {
+          "name": "Robin Gosens",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 38
+        },
+        {
+          "name": "Giovanni Fabbian",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 73
+        },
+        {
+          "name": "Rolando Mandragora",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 75
+        },
+        {
+          "name": "Cher Ndour",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 77
+        },
+        {
+          "name": "Jack Harrison",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 103
+        },
+        {
+          "name": "Roberto Piccoli",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 105
+        },
+        {
+          "name": "Jacopo Fazzini",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 107
+        }
+      ],
+      "home_subs": [],
+      "away_subs": [],
+      "home_unavailable": [
+        "Sadik Fofana",
+        "Kialonda Gaspar",
+        "Medon Berisha",
+        "Francesco Camarda",
+        "Riccardo Sottil"
+      ],
+      "away_unavailable": [
+        "Nicolò Fagioli",
+        "Moise Kean",
+        "Fabiano Parisi",
+        "Niccolò Fortini",
+        "Tariq Lamptey"
       ]
     }
   ]

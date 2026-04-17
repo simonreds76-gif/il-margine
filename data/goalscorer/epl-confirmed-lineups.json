@@ -244,8 +244,8 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
+        "Kaye Furo",
         "Jordan Henderson",
-        "Aaron Hickey",
         "Rico Henry",
         "Vitaly Janelt",
         "Fábio Carvalho",
@@ -1280,6 +1280,7 @@
       "away_unavailable": [
         "Adam Webster",
         "Lewis Dunk",
+        "James Milner",
         "Stefanos Tzimas"
       ]
     },
@@ -1532,7 +1533,6 @@
       ],
       "away_unavailable": [
         "Simon Moore",
-        "Daniel Ballard",
         "Bertrand Traoré",
         "Jocelin Ta Bi",
         "Nilson Angulo",
@@ -2299,7 +2299,9 @@
       "home_unavailable": [
         "John Victor",
         "Nicolò Savona",
-        "Willy Boly"
+        "Willy Boly",
+        "Callum Hudson-Odoi",
+        "Chris Wood"
       ],
       "away_unavailable": [
         "Axel Tuanzebe",
@@ -2308,6 +2310,259 @@
         "Hannibal Mejbri",
         "Josh Cullen",
         "Zeki Amdouni"
+      ]
+    },
+    {
+      "fotmob_match_id": 4813698,
+      "fotmob_page_url": "/matches/west-ham-united-vs-crystal-palace/2toa9m#4813698",
+      "home_fotmob_team_id": 9826,
+      "away_fotmob_team_id": 8654,
+      "match_date": "2026-04-20",
+      "home_team": "Crystal Palace",
+      "away_team": "West Ham United",
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-4-3",
+      "away_formation": "4-4-1-1",
+      "home_players": [
+        "Dean Henderson",
+        "Chris Richards",
+        "Maxence Lacroix",
+        "Jaydee Canvot",
+        "Daniel Muñoz",
+        "Jefferson Lerma",
+        "Will Hughes",
+        "Tyrick Mitchell",
+        "Brennan Johnson",
+        "Jørgen Strand Larsen",
+        "Yéremi Pino"
+      ],
+      "away_players": [
+        "Mads Hermansen",
+        "Kyle Walker-Peters",
+        "Konstantinos Mavropanos",
+        "Axel Disasi",
+        "Malick Diouf",
+        "Jarrod Bowen",
+        "Mateus Fernandes",
+        "Tomás Soucek",
+        "Crysencio Summerville",
+        "Pablo",
+        "Valentín Castellanos"
+      ],
+      "home_starters": [
+        {
+          "name": "Dean Henderson",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-3",
+          "position_id": 11
+        },
+        {
+          "name": "Chris Richards",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 33
+        },
+        {
+          "name": "Maxence Lacroix",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 35
+        },
+        {
+          "name": "Jaydee Canvot",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 37
+        },
+        {
+          "name": "Daniel Muñoz",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 72
+        },
+        {
+          "name": "Jefferson Lerma",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 74
+        },
+        {
+          "name": "Will Hughes",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 76
+        },
+        {
+          "name": "Tyrick Mitchell",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 78
+        },
+        {
+          "name": "Brennan Johnson",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 103
+        },
+        {
+          "name": "Jørgen Strand Larsen",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 105
+        },
+        {
+          "name": "Yéremi Pino",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 107
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Mads Hermansen",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-4-1-1",
+          "position_id": 11
+        },
+        {
+          "name": "Kyle Walker-Peters",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-1-1",
+          "position_id": 32
+        },
+        {
+          "name": "Konstantinos Mavropanos",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-1-1",
+          "position_id": 34
+        },
+        {
+          "name": "Axel Disasi",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-1-1",
+          "position_id": 36
+        },
+        {
+          "name": "Malick Diouf",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-1-1",
+          "position_id": 38
+        },
+        {
+          "name": "Jarrod Bowen",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-1-1",
+          "position_id": 72
+        },
+        {
+          "name": "Mateus Fernandes",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-1-1",
+          "position_id": 74
+        },
+        {
+          "name": "Tomás Soucek",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-1-1",
+          "position_id": 76
+        },
+        {
+          "name": "Crysencio Summerville",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-1-1",
+          "position_id": 78
+        },
+        {
+          "name": "Pablo",
+          "line_index": 2,
+          "line_size": 1,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-4-1-1",
+          "position_id": 95
+        },
+        {
+          "name": "Valentín Castellanos",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-4-1-1",
+          "position_id": 115
+        }
+      ],
+      "home_subs": [],
+      "away_subs": [],
+      "home_unavailable": [
+        "Adam Wharton",
+        "Cheick Oumar Doucouré",
+        "Edward Nketiah",
+        "Evann Guessand"
+      ],
+      "away_unavailable": [
+        "Lukasz Fabianski"
       ]
     }
   ]

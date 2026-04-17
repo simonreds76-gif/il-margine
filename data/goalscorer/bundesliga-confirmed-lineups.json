@@ -8,11 +8,11 @@
       "match_date": "2026-04-17",
       "home_team": "St. Pauli",
       "away_team": "1. FC Köln",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
-      "away_formation": "4-4-2",
+      "away_formation": "3-4-1-2",
       "home_players": [
         "Nikola Vasilj",
         "Tomoya Ando",
@@ -31,10 +31,10 @@
         "Sebastian Sebulonsen",
         "Jahmai Simpson-Pusey",
         "Cenk Özkacar",
-        "Alessio Castro-Montes",
-        "Linton Maina",
+        "Jan Thielmann",
         "Ísak Bergmann Jóhannesson",
         "Eric Martel",
+        "Alessio Castro-Montes",
         "Jakub Kaminski",
         "Ragnar Ache",
         "Saïd El Mala"
@@ -147,53 +147,44 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-4-2",
+          "formation": "3-4-1-2",
           "position_id": 11
         },
         {
           "name": "Sebastian Sebulonsen",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 32
+          "formation": "3-4-1-2",
+          "position_id": 33
         },
         {
           "name": "Jahmai Simpson-Pusey",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 34
+          "formation": "3-4-1-2",
+          "position_id": 35
         },
         {
           "name": "Cenk Özkacar",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 36
+          "formation": "3-4-1-2",
+          "position_id": 37
         },
         {
-          "name": "Alessio Castro-Montes",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 38
-        },
-        {
-          "name": "Linton Maina",
+          "name": "Jan Thielmann",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 72
+          "formation": "3-4-1-2",
+          "position_id": 62
         },
         {
           "name": "Ísak Bergmann Jóhannesson",
@@ -201,8 +192,8 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 74
+          "formation": "3-4-1-2",
+          "position_id": 64
         },
         {
           "name": "Eric Martel",
@@ -210,39 +201,68 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 76
+          "formation": "3-4-1-2",
+          "position_id": 66
         },
         {
-          "name": "Jakub Kaminski",
+          "name": "Alessio Castro-Montes",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 78
+          "formation": "3-4-1-2",
+          "position_id": 68
+        },
+        {
+          "name": "Jakub Kaminski",
+          "line_index": 2,
+          "line_size": 1,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-1-2",
+          "position_id": 85
         },
         {
           "name": "Ragnar Ache",
-          "line_index": 2,
+          "line_index": 3,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
+          "formation": "3-4-1-2",
           "position_id": 104
         },
         {
           "name": "Saïd El Mala",
-          "line_index": 2,
+          "line_index": 3,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
+          "formation": "3-4-1-2",
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Ben Alexander Voll",
+        "Adam Dzwigala",
+        "David Nemeth",
+        "Connor Metcalfe",
+        "Louis Oppie",
+        "Manolis Saliakas",
+        "Abdoulie Ceesay",
+        "Martijn Kaars",
+        "Taichi Hara"
+      ],
+      "away_subs": [
+        "Ron-Robert Zieler",
+        "Joël Schmied",
+        "Rav van den Berg",
+        "Felipe Chávez",
+        "Gian-Luca Waldschmidt",
+        "Kristoffer Lund Hansen",
+        "Linton Maina",
+        "Tom Krauß",
+        "Marius Bülter"
+      ],
       "home_unavailable": [
         "Joel Chima Fujita",
         "Simon Spari",
@@ -761,7 +781,6 @@
         "Kosta Nedeljkovic",
         "Ayodele Thomas",
         "Leopold Zingerle",
-        "Castello Lukeba",
         "Ezechiel Banzuzi",
         "Viggo Gebel",
         "Xaver Schlager",
