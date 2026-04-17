@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-17T19:43:15Z",
+  "generated_at": "2026-04-17T22:00:33Z",
   "league": "bundesliga",
-  "row_count": 4,
+  "row_count": 5,
   "rows": [
     {
       "team": "Augsburg",
@@ -23,12 +23,28 @@
     {
       "team": "1. FC Köln",
       "team_key": "fc cologne",
+      "player_name": "Gian-Luca Waldschmidt",
+      "player_key": "gian luca waldschmidt",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-17"
+    },
+    {
+      "team": "1. FC Köln",
+      "team_key": "fc cologne",
       "player_name": "Saïd El Mala",
       "player_key": "sa d el mala",
       "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
         "fotmob_live"
