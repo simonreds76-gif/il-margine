@@ -3,38 +3,38 @@
 ======================================================================
   Total predictions: 2360
 
-  Mean predicted lambda: 12.55
+  Mean predicted lambda: 12.56
   Mean actual shots:     12.56
 
   MAE:  3.72
   RMSE: 4.73
 
-  Line   8.5: predicted=0.784  actual=0.769  diff=+0.016  (n=2360)
-  Line   9.5: predicted=0.708  actual=0.695  diff=+0.013  (n=2360)
-  Line  10.5: predicted=0.625  actual=0.616  diff=+0.009  (n=2360)
-  Line  11.5: predicted=0.540  actual=0.538  diff=+0.003  (n=2360)
+  Line   8.5: predicted=0.785  actual=0.769  diff=+0.017  (n=2360)
+  Line   9.5: predicted=0.708  actual=0.695  diff=+0.014  (n=2360)
+  Line  10.5: predicted=0.626  actual=0.616  diff=+0.010  (n=2360)
+  Line  11.5: predicted=0.541  actual=0.538  diff=+0.003  (n=2360)
   Line  12.5: predicted=0.458  actual=0.469  diff=-0.011  (n=2360)
-  Line  13.5: predicted=0.380  actual=0.398  diff=-0.017  (n=2360)
+  Line  13.5: predicted=0.381  actual=0.398  diff=-0.017  (n=2360)
   Line  14.5: predicted=0.311  actual=0.322  diff=-0.011  (n=2360)
-  Line  15.5: predicted=0.249  actual=0.255  diff=-0.006  (n=2360)
+  Line  15.5: predicted=0.250  actual=0.255  diff=-0.005  (n=2360)
   Line  16.5: predicted=0.197  actual=0.208  diff=-0.011  (n=2360)
-  Line  17.5: predicted=0.154  actual=0.165  diff=-0.012  (n=2360)
+  Line  17.5: predicted=0.154  actual=0.165  diff=-0.011  (n=2360)
   Line  19.5: predicted=0.090  actual=0.101  diff=-0.011  (n=2360)
   Line  20.5: predicted=0.068  actual=0.075  diff=-0.007  (n=2360)
 
   Calibration by probability bins (over 10.5):
-    [0.00, 0.20): n=  188  predicted=0.121  actual=0.324  diff=-0.204
-    [0.20, 0.35): n=  264  predicted=0.279  actual=0.420  diff=-0.141
-    [0.35, 0.50): n=  330  predicted=0.429  actual=0.485  diff=-0.055
-    [0.50, 0.65): n=  347  predicted=0.576  actual=0.536  diff=+0.040
-    [0.65, 0.80): n=  444  predicted=0.723  actual=0.673  diff=+0.050
-    [0.80, 1.00): n=  786  predicted=0.909  actual=0.808  diff=+0.101
+    [0.00, 0.20): n=  183  predicted=0.120  actual=0.317  diff=-0.197
+    [0.20, 0.35): n=  262  predicted=0.279  actual=0.420  diff=-0.141
+    [0.35, 0.50): n=  334  predicted=0.430  actual=0.494  diff=-0.064
+    [0.50, 0.65): n=  351  predicted=0.577  actual=0.524  diff=+0.052
+    [0.65, 0.80): n=  449  predicted=0.724  actual=0.675  diff=+0.049
+    [0.80, 1.00): n=  780  predicted=0.910  actual=0.810  diff=+0.100
 
   Per-league breakdown:
     bundesliga     : n=  414  pred=13.11  actual=13.05  MAE=3.84
     epl            : n=  518  pred=12.44  actual=12.60  MAE=3.60
     la-liga        : n=  500  pred=12.62  actual=12.65  MAE=3.70
-    ligue-1        : n=  408  pred=12.14  actual=12.19  MAE=3.73
+    ligue-1        : n=  408  pred=12.20  actual=12.19  MAE=3.75
     serie-a        : n=  520  pred=12.50  actual=12.35  MAE=3.76
 
 ======================================================================
