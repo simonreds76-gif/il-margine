@@ -84,8 +84,11 @@ LEAGUE_CONFIGS = {
 LIVE_LEAGUES = ["epl", "serie-a", "la-liga", "bundesliga"]
 
 # Account selection can be changed from the odds-api.io dashboard/API.
-DEFAULT_BOOKMAKERS = "Bet365,Unibet,William Hill,Skybet"
-BOOKMAKER_RETRY_FALLBACK = ["Bet365", "Unibet", "William Hill", "Skybet"]
+# Live account check on 2026-04-18 showed only Bet365 returning 200 for the
+# team-shots football markets we query. The others force /odds/multi into a
+# 403 fallback path without adding coverage.
+DEFAULT_BOOKMAKERS = "Bet365"
+BOOKMAKER_RETRY_FALLBACK = ["Bet365"]
 
 OUTPUT_FIELDS = [
     "captured_at", "match_date", "event_id", "kickoff_at",
