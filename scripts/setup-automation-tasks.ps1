@@ -54,63 +54,57 @@ function Set-ScheduledTaskBridgeHardening(
     [string]$restartInterval = "PT5M",
     [int]$restartCount = 2
 ) {
-    $xmlText = schtasks /Query /TN $taskName /XML
-    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($xmlText)) {
+    $xml = schtasks /Query /TN $taskName /XML
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($xml)) {
         throw "Unable to read scheduled task XML for $taskName"
     }
 
-    [xml]$taskXml = $xmlText
-    $nsUri = "http://schemas.microsoft.com/windows/2004/02/mit/task"
-    $ns = New-Object System.Xml.XmlNamespaceManager($taskXml.NameTable)
-    $ns.AddNamespace("t", $nsUri)
-
-    function Set-OrCreateChildText(
-        [System.Xml.XmlNode]$parent,
-        [string]$name,
-        [string]$value
-    ) {
-        $node = $parent.SelectSingleNode("t:$name", $ns)
-        if ($null -eq $node) {
-            $node = $taskXml.CreateElement($name, $nsUri)
-            [void]$parent.AppendChild($node)
-        }
-        $node.InnerText = $value
-        return $node
+    $patchedXml = $xml
+    if ($patchedXml -match '<RunLevel>.*?</RunLevel>') {
+        $patchedXml = [regex]::Replace($patchedXml, '<RunLevel>.*?</RunLevel>', '<RunLevel>HighestAvailable</RunLevel>')
+    } elseif ($patchedXml -match '</LogonType>') {
+        $patchedXml = $patchedXml -replace '</LogonType>', "</LogonType>`r`n      <RunLevel>HighestAvailable</RunLevel>"
+    } else {
+        throw "Scheduled task XML for $taskName is missing <LogonType>"
     }
 
-    $settings = $taskXml.SelectSingleNode("/t:Task/t:Settings", $ns)
-    if ($null -eq $settings) {
-        throw "Scheduled task XML for $taskName is missing <Settings>"
+    if ($patchedXml -match '<WakeToRun>.*?</WakeToRun>') {
+        $patchedXml = [regex]::Replace($patchedXml, '<WakeToRun>.*?</WakeToRun>', '<WakeToRun>true</WakeToRun>')
+    } else {
+        $patchedXml = $patchedXml -replace '</Settings>', "    <WakeToRun>true</WakeToRun>`r`n  </Settings>"
     }
 
-    $principal = $taskXml.SelectSingleNode("/t:Task/t:Principals/t:Principal", $ns)
-    if ($null -eq $principal) {
-        throw "Scheduled task XML for $taskName is missing <Principal>"
+    if ($patchedXml -match '<StartWhenAvailable>.*?</StartWhenAvailable>') {
+        $patchedXml = [regex]::Replace($patchedXml, '<StartWhenAvailable>.*?</StartWhenAvailable>', '<StartWhenAvailable>true</StartWhenAvailable>')
+    } else {
+        $patchedXml = $patchedXml -replace '</Settings>', "    <StartWhenAvailable>true</StartWhenAvailable>`r`n  </Settings>"
     }
 
-    Set-OrCreateChildText $settings "WakeToRun" "true" | Out-Null
-    Set-OrCreateChildText $settings "StartWhenAvailable" "true" | Out-Null
-    Set-OrCreateChildText $settings "ExecutionTimeLimit" $executionTimeLimit | Out-Null
-    Set-OrCreateChildText $principal "RunLevel" "HighestAvailable" | Out-Null
-
-    $restartOnFailure = $settings.SelectSingleNode("t:RestartOnFailure", $ns)
-    if ($null -eq $restartOnFailure) {
-        $restartOnFailure = $taskXml.CreateElement("RestartOnFailure", $nsUri)
-        [void]$settings.AppendChild($restartOnFailure)
+    if ($patchedXml -match '<ExecutionTimeLimit>.*?</ExecutionTimeLimit>') {
+        $patchedXml = [regex]::Replace($patchedXml, '<ExecutionTimeLimit>.*?</ExecutionTimeLimit>', "<ExecutionTimeLimit>$executionTimeLimit</ExecutionTimeLimit>")
+    } else {
+        $patchedXml = $patchedXml -replace '</Settings>', "    <ExecutionTimeLimit>$executionTimeLimit</ExecutionTimeLimit>`r`n  </Settings>"
     }
-    Set-OrCreateChildText $restartOnFailure "Interval" $restartInterval | Out-Null
-    Set-OrCreateChildText $restartOnFailure "Count" $restartCount.ToString() | Out-Null
+
+    $restartBlock = @"
+    <RestartOnFailure>
+      <Interval>$restartInterval</Interval>
+      <Count>$restartCount</Count>
+    </RestartOnFailure>
+"@
+    if ($patchedXml -match '<RestartOnFailure>.*?</RestartOnFailure>') {
+        $patchedXml = [regex]::Replace($patchedXml, '<RestartOnFailure>.*?</RestartOnFailure>', $restartBlock, [System.Text.RegularExpressions.RegexOptions]::Singleline)
+    } else {
+        $patchedXml = $patchedXml -replace '</Settings>', "$restartBlock`r`n  </Settings>"
+    }
 
     $tmpPath = Join-Path ([System.IO.Path]::GetTempPath()) "$taskName.bridge.xml"
-    $settingsWriter = New-Object System.Xml.XmlWriterSettings
-    $settingsWriter.Encoding = [System.Text.UnicodeEncoding]::new($false, $false)
-    $settingsWriter.Indent = $true
-    $xmlWriter = [System.Xml.XmlWriter]::Create($tmpPath, $settingsWriter)
-    $taskXml.Save($xmlWriter)
-    $xmlWriter.Dispose()
-
-    schtasks /Create /TN $taskName /XML $tmpPath /F | Out-Null
-    Remove-Item -LiteralPath $tmpPath -Force -ErrorAction SilentlyContinue
+    try {
+        Set-Content -Path $tmpPath -Value $patchedXml -Encoding Unicode
+        schtasks /Create /TN $taskName /XML $tmpPath /F | Out-Null
+    } finally {
+        Remove-Item -LiteralPath $tmpPath -Force -ErrorAction SilentlyContinue
+    }
 }
 
 Remove-ScheduledTaskIfExists "OnCourt Daily Sync"
