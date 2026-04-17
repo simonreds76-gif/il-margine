@@ -1,12 +1,12 @@
-name: Team Shots Refresh
+﻿name: Team Shots Refresh
 
 on:
   schedule:
-    - cron: "0 17 * * 2" # Tuesday 17:00 UTC = 18:00 BST
-    - cron: "0 8 * * 3"  # Wednesday 08:00 UTC = 09:00 BST
-    - cron: "0 17 * * 5" # Friday 17:00 UTC = 18:00 BST
-    - cron: "0 8 * * 6"  # Saturday 08:00 UTC = 09:00 BST
-    - cron: "0 8 * * 0"  # Sunday 08:00 UTC = 09:00 BST
+    - cron: "12 17 * * 2" # Tuesday 17:12 UTC = 18:12 BST
+    - cron: "12 8 * * 3"  # Wednesday 08:12 UTC = 09:12 BST
+    - cron: "12 17 * * 5" # Friday 17:12 UTC = 18:12 BST
+    - cron: "12 8 * * 6"  # Saturday 08:12 UTC = 09:12 BST
+    - cron: "12 8 * * 0"  # Sunday 08:12 UTC = 09:12 BST
   workflow_dispatch:
 
 permissions:
@@ -95,3 +95,4 @@ jobs:
           git fetch origin golden-with-speed-insights
           git rebase origin/golden-with-speed-insights
           git push origin HEAD:golden-with-speed-insights
+
