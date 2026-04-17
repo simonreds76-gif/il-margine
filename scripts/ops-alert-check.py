@@ -8,12 +8,20 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+from datetime import datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 
 ROOT = Path(__file__).resolve().parents[1]
 ENV_FILES = [ROOT / ".env.local", ROOT / "env.local"]
+LONDON_TZ = ZoneInfo("Europe/London")
+PINNACLE_PIPELINE = "pinnacle-capture-history"
+PINNACLE_SLOT_START = time(hour=8, minute=0)
+PINNACLE_SLOT_END = time(hour=23, minute=30)
+PINNACLE_SLOT_INTERVAL = timedelta(minutes=30)
+PINNACLE_GRACE = timedelta(minutes=75)
 
 
 def load_env_files() -> None:
@@ -38,7 +46,11 @@ def get_required_env(name: str) -> str:
     return value
 
 
-def fetch_rows(
+def get_database_url() -> str:
+    return (os.environ.get("DATABASE_URL") or os.environ.get("SUPABASE_DB_URL") or "").strip()
+
+
+def fetch_rows_via_rest(
     *,
     base_url: str,
     service_role_key: str,
@@ -70,6 +82,32 @@ def fetch_rows(
     return data
 
 
+def fetch_rows_via_db(*, database_url: str, sql: str) -> list[dict[str, Any]]:
+    try:
+        import psycopg2
+    except ImportError as exc:
+        raise RuntimeError("psycopg2-binary is required for DATABASE_URL-backed alert checks") from exc
+
+    try:
+        conn = psycopg2.connect(database_url, connect_timeout=10)
+    except Exception as exc:
+        raise RuntimeError(f"database connect failed: {exc}") from exc
+
+    try:
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute(sql)
+                columns = [desc[0] for desc in cur.description or []]
+                return [dict(zip(columns, row)) for row in cur.fetchall()]
+    except Exception as exc:
+        raise RuntimeError(f"database query failed: {exc}") from exc
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
+
 def parse_pipeline_list(values: list[str], env_name: str) -> set[str]:
     parsed = {value.strip() for value in values if value.strip()}
     env_value = os.environ.get(env_name, "")
@@ -90,6 +128,69 @@ def format_seconds(value: Any) -> str:
     if numeric < 86400:
         return f"{numeric / 3600:.1f}h"
     return f"{numeric / 86400:.1f}d"
+
+
+def parse_timestamp(value: Any) -> datetime | None:
+    if not value:
+        return None
+    if isinstance(value, datetime):
+        return value if value.tzinfo else value.replace(tzinfo=timezone.utc)
+    text = str(value).strip()
+    if not text:
+        return None
+    if text.endswith("Z"):
+        text = text[:-1] + "+00:00"
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+
+
+def iter_pinnacle_slots(local_day) -> list[datetime]:
+    slots: list[datetime] = []
+    current = datetime.combine(local_day, PINNACLE_SLOT_START, tzinfo=LONDON_TZ)
+    end = datetime.combine(local_day, PINNACLE_SLOT_END, tzinfo=LONDON_TZ)
+    while current <= end:
+        slots.append(current)
+        current += PINNACLE_SLOT_INTERVAL
+    return slots
+
+
+def latest_due_pinnacle_slot(now_utc: datetime) -> datetime | None:
+    cutoff_local = now_utc.astimezone(LONDON_TZ) - PINNACLE_GRACE
+    candidate_days = [cutoff_local.date(), cutoff_local.date() - timedelta(days=1)]
+    due_slots = [
+        slot
+        for day in candidate_days
+        for slot in iter_pinnacle_slots(day)
+        if slot <= cutoff_local
+    ]
+    if not due_slots:
+        return None
+    return max(due_slots)
+
+
+def filter_schedule_aware_silent_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    now_utc = datetime.now(timezone.utc)
+    latest_pinnacle_slot = latest_due_pinnacle_slot(now_utc)
+    filtered: list[dict[str, Any]] = []
+
+    for row in rows:
+        pipeline = str(row.get("pipeline") or "").strip()
+        if pipeline != PINNACLE_PIPELINE:
+            filtered.append(row)
+            continue
+
+        if latest_pinnacle_slot is None:
+            continue
+
+        last_started_at = parse_timestamp(row.get("last_started_at"))
+        if last_started_at and last_started_at.astimezone(LONDON_TZ) >= latest_pinnacle_slot:
+            continue
+        filtered.append(row)
+
+    return filtered
 
 
 def build_run_url() -> str | None:
@@ -170,41 +271,82 @@ def main(argv: list[str] | None = None) -> int:
     load_env_files()
     args = build_parser().parse_args(argv)
 
-    try:
-        base_url = get_required_env("NEXT_PUBLIC_SUPABASE_URL")
-        service_role_key = get_required_env("SUPABASE_SERVICE_ROLE_KEY")
-    except RuntimeError as exc:
-        print(f"Config error: {exc}", file=sys.stderr)
-        return 2
+    database_url = get_database_url()
+    base_url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL", "").strip()
+    service_role_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
+
+    if not database_url and not (base_url and service_role_key):
+        print("OPS_ALERT_SKIP missing DATABASE_URL/SUPABASE_DB_URL and SUPABASE_SERVICE_ROLE_KEY")
+        return 0
 
     ignore_silent = parse_pipeline_list(args.ignore_silent_pipeline, "OPS_ALERT_IGNORE_SILENT_PIPELINES")
     ignore_stuck = parse_pipeline_list(args.ignore_stuck_pipeline, "OPS_ALERT_IGNORE_STUCK_PIPELINES")
 
-    try:
-        stuck_rows = fetch_rows(
-            base_url=base_url,
-            service_role_key=service_role_key,
-            view_name="v_stuck_runs",
-            query={
-                "select": "pipeline,host,trigger_kind,run_id,started_at,age_seconds",
-                "order": "started_at.asc",
-            },
-        )
-        silent_rows = fetch_rows(
-            base_url=base_url,
-            service_role_key=service_role_key,
-            view_name="v_silent_pipelines",
-            query={
-                "select": "pipeline,expected_interval,grace_interval,last_started_at,last_finished_at,seconds_since_last_start",
-                "order": "pipeline.asc",
-            },
-        )
-    except RuntimeError as exc:
-        print(str(exc), file=sys.stderr)
-        return 2
+    stuck_rows: list[dict[str, Any]] | None = None
+    silent_rows: list[dict[str, Any]] | None = None
+    db_error: RuntimeError | None = None
+
+    if database_url:
+        try:
+            stuck_rows = fetch_rows_via_db(
+                database_url=database_url,
+                sql="""
+                select pipeline, host, trigger_kind, run_id::text as run_id, started_at, age_seconds
+                from v_stuck_runs
+                order by started_at asc
+                """,
+            )
+            silent_rows = fetch_rows_via_db(
+                database_url=database_url,
+                sql="""
+                select
+                    pipeline,
+                    expected_interval::text as expected_interval,
+                    grace_interval::text as grace_interval,
+                    last_started_at,
+                    last_finished_at,
+                    seconds_since_last_start
+                from v_silent_pipelines
+                order by pipeline asc
+                """,
+            )
+        except RuntimeError as exc:
+            db_error = exc
+
+    if stuck_rows is None or silent_rows is None:
+        if base_url and service_role_key:
+            try:
+                stuck_rows = fetch_rows_via_rest(
+                    base_url=base_url,
+                    service_role_key=service_role_key,
+                    view_name="v_stuck_runs",
+                    query={
+                        "select": "pipeline,host,trigger_kind,run_id,started_at,age_seconds",
+                        "order": "started_at.asc",
+                    },
+                )
+                silent_rows = fetch_rows_via_rest(
+                    base_url=base_url,
+                    service_role_key=service_role_key,
+                    view_name="v_silent_pipelines",
+                    query={
+                        "select": "pipeline,expected_interval,grace_interval,last_started_at,last_finished_at,seconds_since_last_start",
+                        "order": "pipeline.asc",
+                    },
+                )
+            except RuntimeError as exc:
+                if db_error:
+                    print(f"{db_error}; rest fallback failed: {exc}", file=sys.stderr)
+                else:
+                    print(str(exc), file=sys.stderr)
+                return 2
+        else:
+            print(str(db_error), file=sys.stderr)
+            return 2
 
     stuck = [row for row in stuck_rows if row.get("pipeline") not in ignore_stuck]
     silent = [row for row in silent_rows if row.get("pipeline") not in ignore_silent]
+    silent = filter_schedule_aware_silent_rows(silent)
 
     if not stuck and not silent:
         print("OPS_ALERT_OK stuck=0 silent=0")
