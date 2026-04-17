@@ -274,6 +274,17 @@ function leagueTitle(id: string): string {
 
 }
 
+function competitionToLeagueId(value: string | undefined): string | null {
+  const raw = (value ?? "").trim().toLowerCase();
+  if (!raw) return null;
+  if (raw === "premier league" || raw === "epl") return "epl";
+  if (raw === "serie a" || raw === "serie-a") return "serie-a";
+  if (raw === "bundesliga") return "bundesliga";
+  if (raw === "la liga" || raw === "laliga" || raw === "la-liga") return "la-liga";
+  if (raw === "ligue 1" || raw === "ligue-1") return "ligue-1";
+  return null;
+}
+
 
 
 function formatKickoffUtc(iso: string | undefined): string {
@@ -1448,6 +1459,67 @@ function LiveLineTable({
     ? `Using hosted team-shots status from ${formatDateTime(hostedPipelineAt)} because team-props status is older.`
     : (pipelineStatus?.message ?? null);
 
+  const coverageReferenceMillis = renderReferenceMillis || Date.now();
+  const coverageWindowEndMillis = coverageReferenceMillis + 48 * 60 * 60 * 1000;
+  const upcomingCoverageByLeague = new Map<string, Map<string, string>>();
+  for (const row of upcomingRows) {
+    const leagueKey = (row.league ?? "").trim();
+    const kickoffIso = row.kickoff_iso ?? "";
+    const kickoffMillis = parseIsoMillis(kickoffIso);
+    if (!leagueKey || kickoffMillis === null) continue;
+    if (kickoffMillis < coverageReferenceMillis || kickoffMillis > coverageWindowEndMillis) continue;
+    if (!upcomingCoverageByLeague.has(leagueKey)) {
+      upcomingCoverageByLeague.set(leagueKey, new Map<string, string>());
+    }
+    const key = matchKey(kickoffIso.slice(0, 10), row.home_team, row.away_team);
+    upcomingCoverageByLeague.get(leagueKey)!.set(
+      key,
+      `${row.home_team ?? "?"} v ${row.away_team ?? "?"}`,
+    );
+  }
+  const latestCaptureAtByLeague = new Map<string, number>();
+  const latestCaptureIsoByLeague = new Map<string, string>();
+  const latestCapturedMatchesByLeague = new Map<string, Map<string, string>>();
+  for (const row of oddsArchive) {
+    const leagueKey =
+      competitionToLeagueId(row.competition) ??
+      competitionToLeagueId(row.league) ??
+      ((row.league ?? "").trim() || null);
+    const capturedAt = row.captured_at ?? "";
+    const capturedMillis = parseIsoMillis(capturedAt);
+    const matchDate = (row.match_date ?? row.kickoff_at ?? "").slice(0, 10);
+    if (!leagueKey || capturedMillis === null || !matchDate) continue;
+    const existingMillis = latestCaptureAtByLeague.get(leagueKey) ?? Number.NEGATIVE_INFINITY;
+    if (capturedMillis > existingMillis) {
+      latestCaptureAtByLeague.set(leagueKey, capturedMillis);
+      latestCaptureIsoByLeague.set(leagueKey, capturedAt);
+      latestCapturedMatchesByLeague.set(leagueKey, new Map<string, string>());
+    }
+    if ((latestCaptureAtByLeague.get(leagueKey) ?? Number.NEGATIVE_INFINITY) !== capturedMillis) continue;
+    const key = matchKey(matchDate, row.home_team, row.away_team);
+    latestCapturedMatchesByLeague.get(leagueKey)!.set(
+      key,
+      `${row.home_team ?? "?"} v ${row.away_team ?? "?"}`,
+    );
+  }
+  const coverageIssues = [...upcomingCoverageByLeague.entries()]
+    .map(([leagueKey, expectedMatches]) => {
+      const capturedMatches = latestCapturedMatchesByLeague.get(leagueKey) ?? new Map<string, string>();
+      const missingMatches = [...expectedMatches.entries()]
+        .filter(([key]) => !capturedMatches.has(key))
+        .map(([, label]) => label);
+      return {
+        leagueKey,
+        expectedCount: expectedMatches.size,
+        capturedCount: capturedMatches.size,
+        missingMatches,
+        capturedAt: latestCaptureIsoByLeague.get(leagueKey) ?? null,
+      };
+    })
+    .filter((issue) => issue.expectedCount > 0 && issue.capturedCount < issue.expectedCount)
+    .sort((a, b) => a.leagueKey.localeCompare(b.leagueKey));
+  const hasPartialScrape = Boolean(scrapeStatus?.success) && scrapeErrors > 0;
+
   // Use a stable snapshot-based day boundary so server/client render the same split.
   const asOfIso = (
     snapshotGeneratedAt ??
@@ -1700,6 +1772,23 @@ function LiveLineTable({
             <p className="mt-3 rounded-lg border border-rose-500/20 bg-rose-500/8 px-3 py-2 text-xs text-rose-300">
               Team shots scrape failed{scrapeStatus.error ? `: ${scrapeStatus.error}` : "."}
             </p>
+          ) : null}
+          {hasPartialScrape ? (
+            <p className="mt-3 rounded-lg border border-amber-500/20 bg-amber-500/8 px-3 py-2 text-xs text-amber-300">
+              Latest scrape was partial. Primary feed degraded and bookmaker fallback was used
+              {scrapeErrors > 0 ? ` (${scrapeErrors} provider issue${scrapeErrors === 1 ? "" : "s"})` : ""}.
+            </p>
+          ) : null}
+          {coverageIssues.length > 0 ? (
+            <div className="mt-3 space-y-1">
+              {coverageIssues.map((issue) => (
+                <p key={issue.leagueKey} className="rounded-lg border border-amber-500/20 bg-amber-500/8 px-3 py-2 text-xs text-amber-300">
+                  Latest {leagueTitle(issue.leagueKey)} capture covers {issue.capturedCount} of {issue.expectedCount} upcoming matches in the next 48h.
+                  {issue.missingMatches.length > 0 ? ` Missing: ${issue.missingMatches.slice(0, 3).join(" | ")}${issue.missingMatches.length > 3 ? ` (+${issue.missingMatches.length - 3} more)` : ""}.` : ""}
+                  {issue.capturedAt ? ` Capture: ${formatDateTime(issue.capturedAt)}.` : ""}
+                </p>
+              ))}
+            </div>
           ) : null}
           {!pipelineStatusIsStale && (pipelineStatus?.warnings?.length ?? 0) > 0 ? (
             <div className="mt-3 space-y-1">
@@ -2003,8 +2092,7 @@ function LiveLineTable({
                     <div className="mt-1 space-y-1.5">
                       {rows.map((row, j) => {
                         const edgePct = row.entryEdgePct;
-                        const curEdge = row.currentEdgePct;
-                        const repricedEdge = row.repricedEdgePct;
+                        const curEdge = row.exactLineAvailable ? row.currentEdgePct : null;
                         const deltaOdds = row.delta;
                         return (
                           <div key={j} className="rounded-xl border border-slate-800/60 bg-slate-950/40 px-3 py-3">
@@ -2086,9 +2174,9 @@ function LiveLineTable({
                                 <div className="mt-0.5 font-mono text-xs text-slate-200">
                                   {row.currentFairOdds !== null ? row.currentFairOdds.toFixed(2) : "-"}
                                 </div>
-                                {repricedEdge !== null ? (
+                                {row.currentFairOdds !== null ? (
                                   <div className={`mt-1 text-[10px] ${row.lineMoved ? "text-amber-400" : "text-slate-500"}`}>
-                                    {row.lineMoved ? "repriced latest line" : "live model"}
+                                    {row.lineMoved ? "adjacent line fair" : "tracked line fair"}
                                   </div>
                                 ) : null}
                               </div>
@@ -2097,9 +2185,9 @@ function LiveLineTable({
                                 <div className={`mt-0.5 font-mono text-xs ${curEdge !== null && curEdge >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
                                   {curEdge !== null ? formatSignedPercent(curEdge) : "-"}
                                 </div>
-                                {row.lineMoved && repricedEdge !== null ? (
+                                {row.lineMoved ? (
                                   <div className="mt-1 text-[10px] text-amber-400">
-                                    latest line {formatSignedPercent(repricedEdge)}
+                                    suppressed for moved line
                                   </div>
                                 ) : null}
                               </div>
