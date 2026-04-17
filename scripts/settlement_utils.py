@@ -75,6 +75,8 @@ TEAM_ALIASES: Dict[str, str] = {
     "rc celta de vigo": "celta",
     "celta vigo": "celta",
     "rcd mallorca": "mallorca",
+    "rayo vallecano": "vallecano",
+    "rayo vallecano de madrid": "vallecano",
     "bayern munchen": "bayern munich",
     "olympique de marseille": "marseille",
     "olympique marseille": "marseille",
@@ -123,49 +125,65 @@ def snapshot_path_for(day: date) -> Path:
     return RESULTS_SNAPSHOT_DIR / f"{day.isoformat()}.json"
 
 
-def resolve_snapshot_path(preferred_date: Optional[str] = None) -> Optional[Path]:
+def resolve_snapshot_paths(preferred_date: Optional[str] = None) -> list[Path]:
     target = parse_isoish_date(preferred_date or "") or datetime.now(UTC).date()
+    candidates: list[Path] = []
     for offset in range(SNAPSHOT_LOOKBACK_DAYS):
         path = snapshot_path_for(target - timedelta(days=offset))
         if path.exists():
-            return path
+            candidates.append(path)
+    if candidates:
+        return candidates
     latest_path = RESULTS_SNAPSHOT_DIR / "latest.json"
     if latest_path.exists():
-        return latest_path
-    return None
+        return [latest_path]
+    return []
 
 
 def load_results_snapshot(preferred_date: Optional[str] = None) -> Tuple[Dict[str, dict], Dict[str, dict], Optional[Path], dict]:
-    path = resolve_snapshot_path(preferred_date)
-    if path is None:
+    paths = resolve_snapshot_paths(preferred_date)
+    if not paths:
         return {}, {}, None, {}
-    with open(path, "r", encoding="utf-8") as fh:
-        payload = json.load(fh)
 
+    primary_path = paths[0]
     results: Dict[str, dict] = {}
     source_freshness: Dict[str, dict] = {}
-    for league, league_data in (payload.get("leagues") or {}).items():
-        source_freshness[league] = {
-            "football_data_latest": league_data.get("football_data_latest"),
-            "lag_days": league_data.get("lag_days"),
-            "football_data_count": league_data.get("football_data_count", 0),
-            "fotmob_count": league_data.get("fotmob_count", 0),
-            "fotmob_latest": league_data.get("fotmob_latest"),
-            "api_football_count": league_data.get("api_football_count", 0),
-            "api_football_latest": league_data.get("api_football_latest"),
-            "api_football_requests_used": league_data.get("api_football_requests_used", 0),
-            "api_football_requests_remaining_after_league": league_data.get(
-                "api_football_requests_remaining_after_league",
-                0,
-            ),
-            "api_football_error": league_data.get("api_football_error"),
-            "api_football_max_requests": league_data.get("api_football_max_requests", 0),
-            "snapshot_date": payload.get("snapshot_date"),
-            "snapshot_path": str(path),
-        }
-        for key, fixture in (league_data.get("fixtures") or {}).items():
-            results[key] = fixture
-    return results, source_freshness, path, payload
+    merged_payload: dict[str, Any] = {
+        "snapshot_date": None,
+        "snapshot_paths": [str(path) for path in paths],
+    }
+
+    # Newest snapshot wins on duplicate keys; older snapshots only fill holes.
+    for index, path in enumerate(paths):
+        with open(path, "r", encoding="utf-8") as fh:
+            payload = json.load(fh)
+        if index == 0:
+            merged_payload["snapshot_date"] = payload.get("snapshot_date")
+            merged_payload["fetched_at"] = payload.get("fetched_at")
+        for league, league_data in (payload.get("leagues") or {}).items():
+            if league not in source_freshness:
+                source_freshness[league] = {
+                    "football_data_latest": league_data.get("football_data_latest"),
+                    "lag_days": league_data.get("lag_days"),
+                    "football_data_count": league_data.get("football_data_count", 0),
+                    "fotmob_count": league_data.get("fotmob_count", 0),
+                    "fotmob_latest": league_data.get("fotmob_latest"),
+                    "api_football_count": league_data.get("api_football_count", 0),
+                    "api_football_latest": league_data.get("api_football_latest"),
+                    "api_football_requests_used": league_data.get("api_football_requests_used", 0),
+                    "api_football_requests_remaining_after_league": league_data.get(
+                        "api_football_requests_remaining_after_league",
+                        0,
+                    ),
+                    "api_football_error": league_data.get("api_football_error"),
+                    "api_football_max_requests": league_data.get("api_football_max_requests", 0),
+                    "snapshot_date": payload.get("snapshot_date"),
+                    "snapshot_path": str(path),
+                }
+            for key, fixture in (league_data.get("fixtures") or {}).items():
+                if key not in results:
+                    results[key] = fixture
+    return results, source_freshness, primary_path, merged_payload
 
 
 def collect_target_dates(rows: Iterable[dict], kickoff_fields: Iterable[str], date_fields: Iterable[str]) -> Dict[str, set[str]]:
