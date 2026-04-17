@@ -1,12 +1,12 @@
-name: Team Shots Weekly Scrape
+﻿name: Team Shots Weekly Scrape
 
 on:
   schedule:
-    - cron: "0 10 * * 4" # Thursday 10am UTC = 11am BST
-    - cron: "0 10 * * 5" # Friday 10am UTC = 11am BST
-    - cron: "0 15 * * 5" # Friday 3pm UTC = 4pm BST
-    - cron: "0 13 * * 6" # Saturday 1pm UTC = 2pm BST
-    - cron: "0 13 * * 0" # Sunday 1pm UTC = 2pm BST
+    - cron: "7 10 * * 4" # Thursday 10:07 UTC = 11:07 BST
+    - cron: "7 10 * * 5" # Friday 10:07 UTC = 11:07 BST
+    - cron: "7 15 * * 5" # Friday 3:07pm UTC = 4:07pm BST
+    - cron: "7 13 * * 6" # Saturday 1:07pm UTC = 2:07pm BST
+    - cron: "7 13 * * 0" # Sunday 1:07pm UTC = 2:07pm BST
   workflow_dispatch:
 
 permissions:
@@ -75,3 +75,4 @@ jobs:
           git fetch origin golden-with-speed-insights
           git rebase origin/golden-with-speed-insights
           git push origin HEAD:golden-with-speed-insights
+
