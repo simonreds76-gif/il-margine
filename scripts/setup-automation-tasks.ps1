@@ -48,6 +48,71 @@ function Set-ScheduledTaskBatteryFriendly([string]$taskName) {
     Remove-Item -LiteralPath $tmpPath -Force -ErrorAction SilentlyContinue
 }
 
+function Set-ScheduledTaskBridgeHardening(
+    [string]$taskName,
+    [string]$executionTimeLimit = "PT10M",
+    [string]$restartInterval = "PT5M",
+    [int]$restartCount = 2
+) {
+    $xmlText = schtasks /Query /TN $taskName /XML
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($xmlText)) {
+        throw "Unable to read scheduled task XML for $taskName"
+    }
+
+    [xml]$taskXml = $xmlText
+    $nsUri = "http://schemas.microsoft.com/windows/2004/02/mit/task"
+    $ns = New-Object System.Xml.XmlNamespaceManager($taskXml.NameTable)
+    $ns.AddNamespace("t", $nsUri)
+
+    function Set-OrCreateChildText(
+        [System.Xml.XmlNode]$parent,
+        [string]$name,
+        [string]$value
+    ) {
+        $node = $parent.SelectSingleNode("t:$name", $ns)
+        if ($null -eq $node) {
+            $node = $taskXml.CreateElement($name, $nsUri)
+            [void]$parent.AppendChild($node)
+        }
+        $node.InnerText = $value
+        return $node
+    }
+
+    $settings = $taskXml.SelectSingleNode("/t:Task/t:Settings", $ns)
+    if ($null -eq $settings) {
+        throw "Scheduled task XML for $taskName is missing <Settings>"
+    }
+
+    $principal = $taskXml.SelectSingleNode("/t:Task/t:Principals/t:Principal", $ns)
+    if ($null -eq $principal) {
+        throw "Scheduled task XML for $taskName is missing <Principal>"
+    }
+
+    Set-OrCreateChildText $settings "WakeToRun" "true" | Out-Null
+    Set-OrCreateChildText $settings "StartWhenAvailable" "true" | Out-Null
+    Set-OrCreateChildText $settings "ExecutionTimeLimit" $executionTimeLimit | Out-Null
+    Set-OrCreateChildText $principal "RunLevel" "HighestAvailable" | Out-Null
+
+    $restartOnFailure = $settings.SelectSingleNode("t:RestartOnFailure", $ns)
+    if ($null -eq $restartOnFailure) {
+        $restartOnFailure = $taskXml.CreateElement("RestartOnFailure", $nsUri)
+        [void]$settings.AppendChild($restartOnFailure)
+    }
+    Set-OrCreateChildText $restartOnFailure "Interval" $restartInterval | Out-Null
+    Set-OrCreateChildText $restartOnFailure "Count" $restartCount.ToString() | Out-Null
+
+    $tmpPath = Join-Path ([System.IO.Path]::GetTempPath()) "$taskName.bridge.xml"
+    $settingsWriter = New-Object System.Xml.XmlWriterSettings
+    $settingsWriter.Encoding = [System.Text.UnicodeEncoding]::new($false, $false)
+    $settingsWriter.Indent = $true
+    $xmlWriter = [System.Xml.XmlWriter]::Create($tmpPath, $settingsWriter)
+    $taskXml.Save($xmlWriter)
+    $xmlWriter.Dispose()
+
+    schtasks /Create /TN $taskName /XML $tmpPath /F | Out-Null
+    Remove-Item -LiteralPath $tmpPath -Force -ErrorAction SilentlyContinue
+}
+
 Remove-ScheduledTaskIfExists "OnCourt Daily Sync"
 Remove-ScheduledTaskIfExists "OnCourt Weekly"
 Remove-ScheduledTaskIfExists "IlMargine-PinnacleCloseCapture"
@@ -61,6 +126,7 @@ Set-ScheduledTaskBatteryFriendly "IlMargine-Daily"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Daily-AM"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Weekly"
 Set-ScheduledTaskBatteryFriendly "IlMargine-Tennis-Close-Capture"
+Set-ScheduledTaskBridgeHardening "IlMargine-Tennis-Close-Capture"
 
 if (Test-ScheduledTaskExists "IlMargine-Tennis-Shadow-Settle") {
     schtasks /Delete /TN "IlMargine-Tennis-Shadow-Settle" /F | Out-Host
