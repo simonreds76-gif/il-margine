@@ -39,9 +39,31 @@ const SNAPSHOT_KEY = process.env.TEAM_SHOTS_LIVE_SNAPSHOT_KEY || "team_shots_sta
 const LOCAL_SNAPSHOT_FILE = "data/team-shots/team-shots-live-snapshot.json";
 const PREFER_LOCAL = process.env.MONITOR_PREFER_LOCAL === "1";
 const INCLUDE_HOSTED_METADATA_IN_LOCAL_DEV = process.env.MONITOR_COMPARE_HOSTED === "1";
+const TEAM_SHOTS_SHADOW_FILES = [
+  "data/team-shots/shadow/team-shots-shadow-signals.csv",
+  "data/team-shots/shadow/team-shots-shadow-performance.txt",
+] as const;
+const TEAM_SHOTS_MARKET_FILES = [
+  "data/team-shots/team-shots-comparison.csv",
+  "data/team-shots/team-shots-comparison.txt",
+  "data/team-shots/team-shots-odds-history.csv",
+  "data/team-shots/team-shots-upcoming.csv",
+  "data/team-shots/team-shots-monitor-summary.json",
+  "data/team-shots/team-shots-scrape-last-run.json",
+] as const;
 const GITHUB_RAW_BASE =
   process.env.MONITOR_GITHUB_RAW_BASE ||
   "https://raw.githubusercontent.com/simonreds76-gif/il-margine/golden-with-speed-insights";
+
+type TeamShotsBundleDecision = {
+  source: "hosted" | "local" | "missing";
+  reason: TeamShotsLiveSourceStatus["reason"];
+  payload: SnapshotPayload | null;
+  hostedGeneratedAt: string | null;
+  localSnapshotGeneratedAt: string | null;
+  hostedBundleFreshness: string | null;
+  localBundleFreshness: string | null;
+};
 
 function stripUtf8Bom(text: string): string {
   return text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
@@ -148,47 +170,146 @@ async function readLocalSnapshotGeneratedAt(): Promise<string | null> {
   }
 }
 
+async function readLocalFile(relativePath: string): Promise<string | null> {
+  try {
+    const fullPath = tryGetKnownProjectFilePath(relativePath);
+    if (!fullPath) return null;
+    return await fs.readFile(fullPath, "utf8");
+  } catch {
+    return null;
+  }
+}
+
+async function readLocalFileMtime(relativePath: string): Promise<string | null> {
+  try {
+    const fullPath = tryGetKnownProjectFilePath(relativePath);
+    if (!fullPath) return null;
+    const stat = await fs.stat(fullPath);
+    return stat.mtime.toISOString();
+  } catch {
+    return null;
+  }
+}
+
+function latestHostedBundleFreshness(payload: SnapshotPayload | null, bundleFiles: readonly string[]): string | null {
+  let freshest = typeof payload?.generated_at === "string" ? payload.generated_at : null;
+  for (const path of bundleFiles) {
+    const entry = getSnapshotFileEntry(payload, path);
+    freshest = newerTimestamp(freshest, entry?.mtime ?? null);
+  }
+  return freshest;
+}
+
+async function latestLocalBundleFreshnessFor(bundleFiles: readonly string[]): Promise<string | null> {
+  let freshest: string | null = null;
+  for (const path of bundleFiles) {
+    freshest = newerTimestamp(freshest, await readLocalFileMtime(path));
+  }
+  return freshest;
+}
+
+const resolveTeamShotsBundleDecision = cache(async (bundleKey: string): Promise<TeamShotsBundleDecision> => {
+  const bundleFiles = bundleKey === "shadow" ? TEAM_SHOTS_SHADOW_FILES : TEAM_SHOTS_MARKET_FILES;
+  const [payload, localSnapshotGeneratedAt, localBundleFreshness] = await Promise.all([
+    loadHostedSnapshot(),
+    readLocalSnapshotGeneratedAt(),
+    latestLocalBundleFreshnessFor(bundleFiles),
+  ]);
+
+  const hostedGeneratedAt = typeof payload?.generated_at === "string" ? payload.generated_at : null;
+  const hostedBundleFreshness = latestHostedBundleFreshness(payload, bundleFiles);
+
+  if (PREFER_LOCAL && !INCLUDE_HOSTED_METADATA_IN_LOCAL_DEV) {
+    if (localBundleFreshness || localSnapshotGeneratedAt) {
+      return {
+        source: "local",
+        reason: "local_only",
+        payload,
+        hostedGeneratedAt,
+        localSnapshotGeneratedAt,
+        hostedBundleFreshness,
+        localBundleFreshness,
+      };
+    }
+    if (hostedBundleFreshness) {
+      return {
+        source: "hosted",
+        reason: "hosted_only",
+        payload,
+        hostedGeneratedAt,
+        localSnapshotGeneratedAt,
+        hostedBundleFreshness,
+        localBundleFreshness,
+      };
+    }
+    return {
+      source: "missing",
+      reason: "no_data",
+      payload,
+      hostedGeneratedAt,
+      localSnapshotGeneratedAt,
+      hostedBundleFreshness,
+      localBundleFreshness,
+    };
+  }
+
+  if (shouldPreferHosted(hostedBundleFreshness, localBundleFreshness)) {
+    return {
+      source: "hosted",
+      reason: localBundleFreshness ? "hosted_newer" : "hosted_only",
+      payload,
+      hostedGeneratedAt,
+      localSnapshotGeneratedAt,
+      hostedBundleFreshness,
+      localBundleFreshness,
+    };
+  }
+
+  if (localBundleFreshness) {
+    return {
+      source: "local",
+      reason: hostedBundleFreshness ? "local_newer" : "local_only",
+      payload,
+      hostedGeneratedAt,
+      localSnapshotGeneratedAt,
+      hostedBundleFreshness,
+      localBundleFreshness,
+    };
+  }
+
+  return {
+    source: "missing",
+    reason: "no_data",
+    payload,
+    hostedGeneratedAt,
+    localSnapshotGeneratedAt,
+    hostedBundleFreshness,
+    localBundleFreshness,
+  };
+});
+
 export async function readTeamShotsLiveFile(relativePath: string): Promise<string | null> {
-  const readLocal = async (): Promise<string | null> => {
-    try {
-      const fullPath = tryGetKnownProjectFilePath(relativePath);
-      if (!fullPath) return null;
-      return await fs.readFile(fullPath, "utf8");
-    } catch {
-      return null;
-    }
-  };
+  const bundleKey = relativePath.startsWith("data/team-shots/shadow/") ? "shadow" : "market";
+  const decision = await resolveTeamShotsBundleDecision(bundleKey);
+  const hosted = getSnapshotFileEntry(decision.payload, relativePath)?.content;
 
-  const readLocalMtime = async (): Promise<string | null> => {
-    try {
-      const fullPath = tryGetKnownProjectFilePath(relativePath);
-      if (!fullPath) return null;
-      const stat = await fs.stat(fullPath);
-      return stat.mtime.toISOString();
-    } catch {
-      return null;
-    }
-  };
-
-  if (!PREFER_LOCAL) {
-    const payload = await loadHostedSnapshot();
-    const hostedEntry = getSnapshotFileEntry(payload, relativePath);
-    const localMtime = await readLocalMtime();
-    if (typeof hostedEntry?.content === "string" && shouldPreferHosted(hostedEntry.mtime ?? payload?.generated_at ?? null, localMtime)) {
-      return hostedEntry.content;
-    }
+  if (decision.source === "local") {
+    const local = await readLocalFile(relativePath);
+    if (typeof local === "string") return local;
+    if (typeof hosted === "string") return hosted;
+    return null;
   }
 
-  const local = await readLocal();
+  if (decision.source === "hosted") {
+    if (typeof hosted === "string") return hosted;
+    const local = await readLocalFile(relativePath);
+    if (typeof local === "string") return local;
+    return null;
+  }
+
+  const local = await readLocalFile(relativePath);
   if (typeof local === "string") return local;
-
-  if (PREFER_LOCAL) {
-    const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.content;
-    if (typeof hosted === "string") return hosted;
-  } else {
-    const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.content;
-    if (typeof hosted === "string") return hosted;
-  }
+  if (typeof hosted === "string") return hosted;
 
   return null;
 }
@@ -204,129 +325,49 @@ export async function readTeamShotsLiveJson<T>(relativePath: string): Promise<T 
 }
 
 export async function readTeamShotsLiveMtime(relativePath: string): Promise<string | null> {
-  const readLocalMtime = async (): Promise<string | null> => {
-    try {
-      const fullPath = tryGetKnownProjectFilePath(relativePath);
-      if (!fullPath) return null;
-      const stat = await fs.stat(fullPath);
-      return stat.mtime.toISOString();
-    } catch {
-      return null;
-    }
-  };
+  const bundleKey = relativePath.startsWith("data/team-shots/shadow/") ? "shadow" : "market";
+  const decision = await resolveTeamShotsBundleDecision(bundleKey);
+  const localMtime = await readLocalFileMtime(relativePath);
+  const hostedMtime =
+    getSnapshotFileEntry(decision.payload, relativePath)?.mtime ?? decision.hostedGeneratedAt;
 
-  if (!PREFER_LOCAL) {
-    const payload = await loadHostedSnapshot();
-    const hosted = getSnapshotFileEntry(payload, relativePath)?.mtime ?? payload?.generated_at ?? null;
-    const localMtime = await readLocalMtime();
-    if (shouldPreferHosted(hosted, localMtime)) return hosted;
-    if (typeof localMtime === "string") return localMtime;
-    if (typeof hosted === "string") return hosted;
-    return null;
-  }
-
-  const localMtime = await readLocalMtime();
-  if (typeof localMtime === "string") return localMtime;
-
-  if (PREFER_LOCAL) {
-    const hosted = getSnapshotFileEntry(await loadHostedSnapshot(), relativePath)?.mtime;
-    if (typeof hosted === "string") return hosted;
-  }
-
-  return null;
+  if (decision.source === "local") return localMtime ?? hostedMtime ?? null;
+  if (decision.source === "hosted") return hostedMtime ?? localMtime ?? null;
+  return localMtime ?? hostedMtime ?? null;
 }
 
 export async function readTeamShotsLiveSnapshotGeneratedAt(): Promise<string | null> {
-  const localGeneratedAt = await readLocalSnapshotGeneratedAt();
-  if (PREFER_LOCAL && !INCLUDE_HOSTED_METADATA_IN_LOCAL_DEV && localGeneratedAt) {
-    return localGeneratedAt;
-  }
-
-  const payload = await loadHostedSnapshot();
-  const hostedGeneratedAt = typeof payload?.generated_at === "string" ? payload.generated_at : null;
-  if (PREFER_LOCAL && !INCLUDE_HOSTED_METADATA_IN_LOCAL_DEV) {
-    return localGeneratedAt ?? hostedGeneratedAt;
-  }
-  return newerTimestamp(hostedGeneratedAt, localGeneratedAt);
+  const [marketDecision, shadowDecision] = await Promise.all([
+    resolveTeamShotsBundleDecision("market"),
+    resolveTeamShotsBundleDecision("shadow"),
+  ]);
+  return newerTimestamp(
+    newerTimestamp(
+      marketDecision.source === "hosted"
+        ? marketDecision.hostedBundleFreshness ?? marketDecision.hostedGeneratedAt
+        : marketDecision.localBundleFreshness ?? marketDecision.localSnapshotGeneratedAt,
+      shadowDecision.source === "hosted"
+        ? shadowDecision.hostedBundleFreshness ?? shadowDecision.hostedGeneratedAt
+        : shadowDecision.localBundleFreshness ?? shadowDecision.localSnapshotGeneratedAt,
+    ),
+    newerTimestamp(marketDecision.localSnapshotGeneratedAt, shadowDecision.localSnapshotGeneratedAt),
+  );
 }
 
 export async function inspectTeamShotsLiveSource(relativePath: string): Promise<TeamShotsLiveSourceStatus> {
-  const localSnapshotGeneratedAt = await readLocalSnapshotGeneratedAt();
-
-  let localFileMtime: string | null = null;
-  try {
-    const fullPath = tryGetKnownProjectFilePath(relativePath);
-    if (fullPath) {
-      const stat = await fs.stat(fullPath);
-      localFileMtime = stat.mtime.toISOString();
-    }
-  } catch {
-    localFileMtime = null;
-  }
-
-  if (PREFER_LOCAL && !INCLUDE_HOSTED_METADATA_IN_LOCAL_DEV) {
-    if (localFileMtime || localSnapshotGeneratedAt) {
-      return {
-        source: "local",
-        reason: "local_only",
-        hostedSnapshotAvailable: false,
-        localSnapshotAvailable: Boolean(localSnapshotGeneratedAt),
-        hostedGeneratedAt: null,
-        localSnapshotGeneratedAt,
-        hostedFileMtime: null,
-        localFileMtime,
-      };
-    }
-    return {
-      source: "missing",
-      reason: "no_data",
-      hostedSnapshotAvailable: false,
-      localSnapshotAvailable: false,
-      hostedGeneratedAt: null,
-      localSnapshotGeneratedAt: null,
-      hostedFileMtime: null,
-      localFileMtime: null,
-    };
-  }
-
-  const payload = await loadHostedSnapshot();
-  const hostedGeneratedAt = typeof payload?.generated_at === "string" ? payload.generated_at : null;
-  const hostedEntry = getSnapshotFileEntry(payload, relativePath);
-  const hostedFileMtime = hostedEntry?.mtime ?? hostedGeneratedAt ?? null;
-
-  if (shouldPreferHosted(hostedFileMtime, localFileMtime)) {
-    return {
-      source: "hosted",
-      reason: localFileMtime ? "hosted_newer" : "hosted_only",
-      hostedSnapshotAvailable: Boolean(payload),
-      localSnapshotAvailable: Boolean(localSnapshotGeneratedAt),
-      hostedGeneratedAt,
-      localSnapshotGeneratedAt,
-      hostedFileMtime,
-      localFileMtime,
-    };
-  }
-
-  if (localFileMtime) {
-    return {
-      source: "local",
-      reason: hostedFileMtime ? "local_newer" : "local_only",
-      hostedSnapshotAvailable: Boolean(payload),
-      localSnapshotAvailable: Boolean(localSnapshotGeneratedAt),
-      hostedGeneratedAt,
-      localSnapshotGeneratedAt,
-      hostedFileMtime,
-      localFileMtime,
-    };
-  }
+  const bundleKey = relativePath.startsWith("data/team-shots/shadow/") ? "shadow" : "market";
+  const decision = await resolveTeamShotsBundleDecision(bundleKey);
+  const localFileMtime = await readLocalFileMtime(relativePath);
+  const hostedFileMtime =
+    getSnapshotFileEntry(decision.payload, relativePath)?.mtime ?? decision.hostedGeneratedAt;
 
   return {
-    source: "missing",
-    reason: "no_data",
-    hostedSnapshotAvailable: Boolean(payload),
-    localSnapshotAvailable: Boolean(localSnapshotGeneratedAt),
-    hostedGeneratedAt,
-    localSnapshotGeneratedAt,
+    source: decision.source,
+    reason: decision.reason,
+    hostedSnapshotAvailable: Boolean(decision.payload),
+    localSnapshotAvailable: Boolean(decision.localSnapshotGeneratedAt ?? decision.localBundleFreshness),
+    hostedGeneratedAt: decision.hostedGeneratedAt,
+    localSnapshotGeneratedAt: decision.localSnapshotGeneratedAt ?? decision.localBundleFreshness,
     hostedFileMtime,
     localFileMtime,
   };
