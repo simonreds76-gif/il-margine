@@ -8,9 +8,9 @@
       "match_date": "2026-04-18",
       "home_team": "Brentford",
       "away_team": "Fulham",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -33,11 +33,11 @@
         "Calvin Bassey",
         "Ryan Sessegnon",
         "Sasa Lukic",
-        "Sander Berge",
+        "Tom Cairney",
         "Harry Wilson",
-        "Joshua King",
+        "Emile Smith Rowe",
         "Alex Iwobi",
-        "Raul Jiménez"
+        "Rodrigo Muniz"
       ],
       "home_starters": [
         {
@@ -196,7 +196,7 @@
           "position_id": 64
         },
         {
-          "name": "Sander Berge",
+          "name": "Tom Cairney",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -214,7 +214,7 @@
           "position_id": 83
         },
         {
-          "name": "Joshua King",
+          "name": "Emile Smith Rowe",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -232,7 +232,7 @@
           "position_id": 87
         },
         {
-          "name": "Raul Jiménez",
+          "name": "Rodrigo Muniz",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -241,8 +241,28 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Hákon Rafn Valdimarsson",
+        "Aaron Hickey",
+        "Ethan Pinnock",
+        "Joshua Stephenson",
+        "Kristoffer Ajer",
+        "Luka Bentt",
+        "Ollie Shield",
+        "Reiss Nelson",
+        "Romelle Donovan"
+      ],
+      "away_subs": [
+        "Benjamin Lecomte",
+        "Antonee Robinson",
+        "Issa Diop",
+        "Harrison Reed",
+        "Joshua King",
+        "Sander Berge",
+        "Oscar Bobb",
+        "Raul Jiménez",
+        "Samuel Chukwueze"
+      ],
       "home_unavailable": [
         "Kaye Furo",
         "Jordan Henderson",
@@ -289,11 +309,11 @@
         "Luke Shaw",
         "Diogo Dalot",
         "Casemiro",
-        "Manuel Ugarte",
+        "Kobbie Mainoo",
         "Amad",
         "Bruno Fernandes",
         "Matheus Cunha",
-        "Benjamin Sesko"
+        "Bryan Mbeumo"
       ],
       "home_starters": [
         {
@@ -452,7 +472,7 @@
           "position_id": 64
         },
         {
-          "name": "Manuel Ugarte",
+          "name": "Kobbie Mainoo",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -488,7 +508,7 @@
           "position_id": 87
         },
         {
-          "name": "Benjamin Sesko",
+          "name": "Bryan Mbeumo",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -508,7 +528,6 @@
         "Jamie Gittens"
       ],
       "away_unavailable": [
-        "Kobbie Mainoo",
         "Harry Maguire",
         "Leny Yoro",
         "Lisandro Martínez",
@@ -528,7 +547,7 @@
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
       "home_formation": "3-4-2-1",
-      "away_formation": "3-4-2-1",
+      "away_formation": "3-4-1-2",
       "home_players": [
         "Karl Darlow",
         "James Justin",
@@ -544,15 +563,15 @@
       ],
       "away_players": [
         "José Sá",
-        "Toti Gomes",
         "Santiago Bueno",
         "Ladislav Krejcí",
+        "Toti Gomes",
         "Jackson Tchatchoua",
         "André",
         "João Gomes",
         "Hugo Bueno",
         "Jean-Ricner Bellegarde",
-        "Mateus Mané",
+        "Tolu Arokodare",
         "Adam Armstrong"
       ],
       "home_starters": [
@@ -663,17 +682,8 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-2-1",
+          "formation": "3-4-1-2",
           "position_id": 11
-        },
-        {
-          "name": "Toti Gomes",
-          "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 33
         },
         {
           "name": "Santiago Bueno",
@@ -681,8 +691,8 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 35
+          "formation": "3-4-1-2",
+          "position_id": 33
         },
         {
           "name": "Ladislav Krejcí",
@@ -690,7 +700,16 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-4-1-2",
+          "position_id": 35
+        },
+        {
+          "name": "Toti Gomes",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-1-2",
           "position_id": 37
         },
         {
@@ -699,7 +718,7 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
+          "formation": "3-4-1-2",
           "position_id": 62
         },
         {
@@ -708,7 +727,7 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
+          "formation": "3-4-1-2",
           "position_id": 64
         },
         {
@@ -717,7 +736,7 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
+          "formation": "3-4-1-2",
           "position_id": 66
         },
         {
@@ -726,35 +745,35 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
+          "formation": "3-4-1-2",
           "position_id": 68
         },
         {
           "name": "Jean-Ricner Bellegarde",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 1,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84
+          "formation": "3-4-1-2",
+          "position_id": 85
         },
         {
-          "name": "Mateus Mané",
-          "line_index": 2,
+          "name": "Tolu Arokodare",
+          "line_index": 3,
           "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 86
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-1-2",
+          "position_id": 104
         },
         {
           "name": "Adam Armstrong",
           "line_index": 3,
-          "line_size": 1,
+          "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-2-1",
-          "position_id": 105
+          "formation": "3-4-1-2",
+          "position_id": 106
         }
       ],
       "home_subs": [],
@@ -787,12 +806,12 @@
         "Aaron Ramsdale",
         "Valentino Livramento",
         "Malick Thiaw",
-        "Sven Botman",
+        "Daniel Burn",
         "Lewis Hall",
         "Lewis Miley",
         "Sandro Tonali",
         "Jacob Ramsey",
-        "Jacob Murphy",
+        "Harvey Barnes",
         "William Osula",
         "Anthony Gordon"
       ],
@@ -838,7 +857,7 @@
           "position_id": 34
         },
         {
-          "name": "Sven Botman",
+          "name": "Daniel Burn",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -883,7 +902,7 @@
           "position_id": 77
         },
         {
-          "name": "Jacob Murphy",
+          "name": "Harvey Barnes",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -1299,11 +1318,11 @@
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
-        "Marco Bizot",
+        "Emiliano Martínez",
         "Matty Cash",
-        "Victor Nilsson Lindelöf",
+        "Ezri Konsa",
         "Pau Torres",
-        "Lucas Digne",
+        "Ian Maatsen",
         "Amadou Onana",
         "Youri Tielemans",
         "John McGinn",
@@ -1326,7 +1345,7 @@
       ],
       "home_starters": [
         {
-          "name": "Marco Bizot",
+          "name": "Emiliano Martínez",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
@@ -1344,7 +1363,7 @@
           "position_id": 32
         },
         {
-          "name": "Victor Nilsson Lindelöf",
+          "name": "Ezri Konsa",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1362,7 +1381,7 @@
           "position_id": 36
         },
         {
-          "name": "Lucas Digne",
+          "name": "Ian Maatsen",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1529,8 +1548,8 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Boubacar Kamara",
-        "Alysson Edward"
+        "Alysson Edward",
+        "Boubacar Kamara"
       ],
       "away_unavailable": [
         "Simon Moore",
@@ -1572,12 +1591,12 @@
         "Jeremie Frimpong",
         "Ibrahima Konaté",
         "Virgil van Dijk",
-        "Andrew Robertson",
-        "Curtis Jones",
+        "Milos Kerkez",
+        "Ryan Gravenberch",
         "Dominik Szoboszlai",
         "Mohamed Salah",
+        "Alexis Mac Allister",
         "Florian Wirtz",
-        "Rio Ngumoha",
         "Cody Gakpo"
       ],
       "home_starters": [
@@ -1719,7 +1738,7 @@
           "position_id": 36
         },
         {
-          "name": "Andrew Robertson",
+          "name": "Milos Kerkez",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1728,7 +1747,7 @@
           "position_id": 38
         },
         {
-          "name": "Curtis Jones",
+          "name": "Ryan Gravenberch",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1755,7 +1774,7 @@
           "position_id": 83
         },
         {
-          "name": "Florian Wirtz",
+          "name": "Alexis Mac Allister",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1764,7 +1783,7 @@
           "position_id": 85
         },
         {
-          "name": "Rio Ngumoha",
+          "name": "Florian Wirtz",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1816,9 +1835,9 @@
         "Matheus Nunes",
         "Abdukodir Khusanov",
         "Marc Guéhi",
-        "Nathan Aké",
+        "Nico O'Reilly",
         "Rodri",
-        "Tijjani Reijnders",
+        "Bernardo Silva",
         "Antoine Semenyo",
         "Rayan Cherki",
         "Jérémy Doku",
@@ -1826,16 +1845,16 @@
       ],
       "away_players": [
         "David Raya",
-        "Ben White",
+        "Cristhian Mosquera",
         "William Saliba",
         "Gabriel",
-        "Myles Lewis-Skelly",
+        "Piero Hincapié",
         "Martín Zubimendi",
         "Declan Rice",
-        "Max Dowman",
-        "Kai Havertz",
-        "Gabriel Martinelli",
-        "Viktor Gyökeres"
+        "Noni Madueke",
+        "Eberechi Eze",
+        "Leandro Trossard",
+        "Kai Havertz"
       ],
       "home_starters": [
         {
@@ -1875,7 +1894,7 @@
           "position_id": 36
         },
         {
-          "name": "Nathan Aké",
+          "name": "Nico O'Reilly",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1893,7 +1912,7 @@
           "position_id": 64
         },
         {
-          "name": "Tijjani Reijnders",
+          "name": "Bernardo Silva",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1949,7 +1968,7 @@
           "position_id": 11
         },
         {
-          "name": "Ben White",
+          "name": "Cristhian Mosquera",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1976,7 +1995,7 @@
           "position_id": 36
         },
         {
-          "name": "Myles Lewis-Skelly",
+          "name": "Piero Hincapié",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -2003,7 +2022,7 @@
           "position_id": 66
         },
         {
-          "name": "Max Dowman",
+          "name": "Noni Madueke",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -2012,7 +2031,7 @@
           "position_id": 83
         },
         {
-          "name": "Kai Havertz",
+          "name": "Eberechi Eze",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -2021,7 +2040,7 @@
           "position_id": 85
         },
         {
-          "name": "Gabriel Martinelli",
+          "name": "Leandro Trossard",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -2030,7 +2049,7 @@
           "position_id": 87
         },
         {
-          "name": "Viktor Gyökeres",
+          "name": "Kai Havertz",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -2044,15 +2063,13 @@
       "home_unavailable": [
         "John Stones",
         "Josko Gvardiol",
-        "Nico O'Reilly",
         "Rúben Dias"
       ],
       "away_unavailable": [
-        "Jurriën Timber",
         "Martin Ødegaard",
+        "Jurriën Timber",
         "Mikel Merino",
-        "Bukayo Saka",
-        "Noni Madueke"
+        "Bukayo Saka"
       ]
     },
     {
@@ -2071,24 +2088,24 @@
       "home_players": [
         "Matz Sels",
         "Ola Aina",
-        "Murillo",
         "Nikola Milenkovic",
+        "Murillo",
         "Neco Williams",
         "Ibrahim Sangaré",
-        "Elliot Anderson",
+        "Nicolás Dominguez",
         "Omari Hutchinson",
         "Morgan Gibbs-White",
         "Dan Ndoye",
-        "Igor Jesus"
+        "Chris Wood"
       ],
       "away_players": [
         "Martin Dúbravka",
+        "Kyle Walker",
         "Bashir Humphreys",
-        "Hjalmar Ekdal",
         "Maxime Estève",
         "Quilindschy Hartman",
         "James Ward-Prowse",
-        "Florentino",
+        "Josh Laurent",
         "Marcus Edwards",
         "Lesley Ugochukwu",
         "Jaidon Anthony",
@@ -2114,7 +2131,7 @@
           "position_id": 32
         },
         {
-          "name": "Murillo",
+          "name": "Nikola Milenkovic",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -2123,7 +2140,7 @@
           "position_id": 34
         },
         {
-          "name": "Nikola Milenkovic",
+          "name": "Murillo",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -2150,7 +2167,7 @@
           "position_id": 64
         },
         {
-          "name": "Elliot Anderson",
+          "name": "Nicolás Dominguez",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -2186,7 +2203,7 @@
           "position_id": 87
         },
         {
-          "name": "Igor Jesus",
+          "name": "Chris Wood",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -2206,7 +2223,7 @@
           "position_id": 11
         },
         {
-          "name": "Bashir Humphreys",
+          "name": "Kyle Walker",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -2215,7 +2232,7 @@
           "position_id": 32
         },
         {
-          "name": "Hjalmar Ekdal",
+          "name": "Bashir Humphreys",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -2251,7 +2268,7 @@
           "position_id": 64
         },
         {
-          "name": "Florentino",
+          "name": "Josh Laurent",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -2302,16 +2319,15 @@
         "John Victor",
         "Nicolò Savona",
         "Willy Boly",
-        "Callum Hudson-Odoi",
-        "Chris Wood"
+        "Callum Hudson-Odoi"
       ],
       "away_unavailable": [
+        "Hannibal Mejbri",
         "Axel Tuanzebe",
+        "Zeki Amdouni",
         "Connor Roberts",
         "Jordan Beyer",
-        "Hannibal Mejbri",
-        "Josh Cullen",
-        "Zeki Amdouni"
+        "Josh Cullen"
       ]
     },
     {
