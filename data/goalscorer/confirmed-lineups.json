@@ -290,9 +290,9 @@
       "match_date": "2026-04-18",
       "home_team": "Roma",
       "away_team": "Atalanta",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "3-4-2-1",
       "home_players": [
@@ -313,13 +313,13 @@
         "Giorgio Scalvini",
         "Berat Djimsiti",
         "Sead Kolasinac",
-        "Davide Zappacosta",
+        "Raoul Bellanova",
         "Marten de Roon",
         "Éderson",
-        "Lorenzo Bernasconi",
+        "Davide Zappacosta",
         "Charles De Ketelaere",
         "Giacomo Raspadori",
-        "Gianluca Scamacca"
+        "Nikola Krstovic"
       ],
       "home_starters": [
         {
@@ -460,7 +460,7 @@
           "position_id": 37
         },
         {
-          "name": "Davide Zappacosta",
+          "name": "Raoul Bellanova",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -487,7 +487,7 @@
           "position_id": 66
         },
         {
-          "name": "Lorenzo Bernasconi",
+          "name": "Davide Zappacosta",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -514,7 +514,7 @@
           "position_id": 86
         },
         {
-          "name": "Gianluca Scamacca",
+          "name": "Nikola Krstovic",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -523,10 +523,31 @@
           "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Giorgio De Marzi",
+        "Pierluigi Gollini",
+        "Daniele Ghilardi",
+        "Jan Ziólkowski",
+        "Konstantinos Tsimikas",
+        "Angeliño",
         "Niccolò Pisilli",
+        "Bryan Zaragoza",
+        "Lorenzo Venturino",
+        "Robinio Vaz"
+      ],
+      "away_subs": [
+        "Marco Sportiello",
+        "Honest Ahanor",
+        "Odilon Kossounou",
+        "Kamaldeen Sulemana",
+        "Lazar Samardzic",
+        "Mario Pasalic",
+        "Nicola Zalewski",
+        "Yunus Musah",
+        "Gianluca Scamacca",
+        "Mitchel Bakker"
+      ],
+      "home_unavailable": [
         "Lorenzo Pellegrini",
         "Kouadio Koné",
         "Wesley",
@@ -535,7 +556,6 @@
         "Paulo Dybala"
       ],
       "away_unavailable": [
-        "Kamaldeen Sulemana",
         "Isak Hien"
       ]
     },

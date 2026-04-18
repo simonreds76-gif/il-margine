@@ -284,9 +284,9 @@
       "match_date": "2026-04-18",
       "home_team": "Chelsea",
       "away_team": "Manchester United",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -295,25 +295,25 @@
         "Wesley Fofana",
         "Jorrel Hato",
         "Marc Cucurella",
-        "Andrey Santos",
-        "Moisés Caicedo",
-        "Cole Palmer",
         "Enzo Fernández",
+        "Moisés Caicedo",
+        "Estêvão",
+        "Cole Palmer",
         "Pedro Neto",
-        "João Pedro"
+        "Liam Delap"
       ],
       "away_players": [
         "Senne Lammens",
+        "Diogo Dalot",
         "Noussair Mazraoui",
         "Ayden Heaven",
         "Luke Shaw",
-        "Diogo Dalot",
         "Casemiro",
         "Kobbie Mainoo",
-        "Amad",
+        "Bryan Mbeumo",
         "Bruno Fernandes",
         "Matheus Cunha",
-        "Bryan Mbeumo"
+        "Benjamin Sesko"
       ],
       "home_starters": [
         {
@@ -362,7 +362,7 @@
           "position_id": 38
         },
         {
-          "name": "Andrey Santos",
+          "name": "Enzo Fernández",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -380,7 +380,7 @@
           "position_id": 66
         },
         {
-          "name": "Cole Palmer",
+          "name": "Estêvão",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -389,7 +389,7 @@
           "position_id": 83
         },
         {
-          "name": "Enzo Fernández",
+          "name": "Cole Palmer",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -407,7 +407,7 @@
           "position_id": 87
         },
         {
-          "name": "João Pedro",
+          "name": "Liam Delap",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -427,7 +427,7 @@
           "position_id": 11
         },
         {
-          "name": "Noussair Mazraoui",
+          "name": "Diogo Dalot",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -436,7 +436,7 @@
           "position_id": 32
         },
         {
-          "name": "Ayden Heaven",
+          "name": "Noussair Mazraoui",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -445,7 +445,7 @@
           "position_id": 34
         },
         {
-          "name": "Luke Shaw",
+          "name": "Ayden Heaven",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -454,7 +454,7 @@
           "position_id": 36
         },
         {
-          "name": "Diogo Dalot",
+          "name": "Luke Shaw",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -481,7 +481,7 @@
           "position_id": 66
         },
         {
-          "name": "Amad",
+          "name": "Bryan Mbeumo",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -508,7 +508,7 @@
           "position_id": 87
         },
         {
-          "name": "Bryan Mbeumo",
+          "name": "Benjamin Sesko",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -517,14 +517,33 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Teddy Sharman-Lowe",
+        "Josh Acheampong",
+        "Tosin Adarabioyo",
+        "Trevoh Chalobah",
+        "Andrey Santos",
+        "Dário Essugo",
+        "Roméo Lavia",
+        "Alejandro Garnacho",
+        "Marc Guiu"
+      ],
+      "away_subs": [
+        "Altay Bayindir",
+        "Tyrell Malacia",
+        "Amad",
+        "Jim Thwaites",
+        "Manuel Ugarte",
+        "Mason Mount",
+        "Tyler Fletcher",
+        "Joshua Zirkzee",
+        "Shea Lacey"
+      ],
       "home_unavailable": [
         "Mykhaylo Mudryk",
         "Filip Jörgensen",
         "Levi Colwill",
         "Reece James",
-        "Trevoh Chalobah",
         "Jamie Gittens"
       ],
       "away_unavailable": [
@@ -1327,24 +1346,24 @@
       "home_subs": [
         "Archie Gray",
         "Mathys Tel",
-        "Brandon Austin",
-        "Djed Spence",
-        "Radu Dragusin",
-        "James Maddison",
         "João Palhinha",
         "Lucas Bergvall",
+        "Djed Spence",
+        "Brandon Austin",
+        "Radu Dragusin",
+        "James Maddison",
         "Richarlison"
       ],
       "away_subs": [
         "Kaoru Mitoma",
+        "Maxim De Cuyper",
+        "Matthew O'Riley",
+        "Georginio Rutter",
+        "Charalampos Kostoulas",
         "Jason Steele",
         "Igor Julio",
         "Joël Veltman",
-        "Maxim De Cuyper",
-        "Carlos Baleba",
-        "Matthew O'Riley",
-        "Charalampos Kostoulas",
-        "Georginio Rutter"
+        "Carlos Baleba"
       ],
       "home_unavailable": [
         "Guglielmo Vicario",
