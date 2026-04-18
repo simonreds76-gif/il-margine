@@ -27,19 +27,19 @@ DEFAULT_SCANNER = ROOT / "data" / "team-shots" / "team-shots-scanner.csv"
 DEFAULT_SIGNALS = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-signals.csv"
 DEFAULT_SUMMARY = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-performance.txt"
 
-MIN_EDGE = 0.05
+MIN_EDGE = 0.12
 MIN_ODDS = 1.50
 MAX_ODDS = 5.00
-CURRENT_POLICY = "venue-consensus-v1"
+CURRENT_POLICY = "venue-consensus-v2"
 LEGACY_POLICY = "legacy"
 
 # Edge % → stake units. Same ladder as corners.
 # 5-8%: 0.5u  |  8-12%: 1u  |  12-16%: 1.5u  |  16%+: 2u
 STAKE_BANDS: list[tuple[float, float]] = [
-    (0.16, 2.0),
-    (0.12, 1.5),
-    (0.08, 1.0),
-    (0.05, 0.5),
+    (0.25, 2.0),
+    (0.20, 1.5),
+    (0.16, 1.0),
+    (0.12, 0.5),
 ]
 
 SIGNAL_FIELDS = [
@@ -58,7 +58,7 @@ def _pf(val, default=0.0):
         return default
 
 
-def _signal_key(row: dict) -> str:
+def _signal_identity_key(row: dict) -> str:
     return "|".join([
         str(row.get("fixture_date", "") or row.get("date", ""))[:10],
         str(row.get("home_team", "")).strip().lower(),
@@ -70,12 +70,34 @@ def _signal_key(row: dict) -> str:
     ])
 
 
+def _signal_key(row: dict, policy_version: Optional[str] = None) -> str:
+    policy = (
+        policy_version
+        if policy_version is not None
+        else str(row.get("policy_version", "") or LEGACY_POLICY).strip() or LEGACY_POLICY
+    )
+    return f"{policy}|{_signal_identity_key(row)}"
+
+
 def _fixture_date(row: dict) -> str:
     return str(
         row.get("fixture_date", "")
         or row.get("date", "")
         or row.get("kickoff_iso", "")
     )[:10]
+
+
+def _fixture_key(row: dict) -> str:
+    return "|".join([
+        _fixture_date(row),
+        str(row.get("league", "")).strip().lower(),
+        str(row.get("home_team", "")).strip().lower(),
+        str(row.get("away_team", "")).strip().lower(),
+    ])
+
+
+def _is_pending(row: dict) -> bool:
+    return str(row.get("result", "")).strip().lower() in ("", "pending")
 
 
 def load_existing_signals(path: Path) -> tuple[list[dict], set[str]]:
@@ -115,11 +137,11 @@ def resolve_effective_stake(row: dict, fallback_edge: float) -> float:
 
 
 def repair_existing_signals(existing_signals: List[dict], source_rows: List[dict]) -> bool:
-    source_by_key = {_signal_key(row): row for row in source_rows}
+    source_by_key = {_signal_identity_key(row): row for row in source_rows}
     changed = False
 
     for row in existing_signals:
-        source = source_by_key.get(_signal_key(row))
+        source = source_by_key.get(_signal_identity_key(row))
         if not str(row.get("policy_version", "")).strip():
             row["policy_version"] = CURRENT_POLICY if source else LEGACY_POLICY
             changed = True
@@ -164,6 +186,39 @@ def dedupe_signals(rows: List[dict]) -> List[dict]:
     return list(best_by_key.values())
 
 
+def _fixture_signal_rank(row: dict) -> tuple[float, float, float, str]:
+    return (
+        _pf(row.get("edge")),
+        _pf(row.get("stake_units") or row.get("effective_stake")),
+        _pf(row.get("book_odds")),
+        str(row.get("logged_at") or row.get("captured_at") or ""),
+    )
+
+
+def dedupe_fixture_signals(rows: List[dict]) -> tuple[List[dict], int]:
+    best_by_fixture: dict[str, dict] = {}
+
+    for row in rows:
+        policy = str(row.get("policy_version", "") or LEGACY_POLICY).strip() or LEGACY_POLICY
+        key = f"{policy}|{_fixture_key(row)}"
+        existing = best_by_fixture.get(key)
+        if existing is None or _fixture_signal_rank(row) > _fixture_signal_rank(existing):
+            best_by_fixture[key] = row
+
+    keep_ids = {id(row) for row in best_by_fixture.values()}
+    deduped_rows: List[dict] = []
+    removed = 0
+
+    for row in rows:
+        if id(row) in keep_ids:
+            deduped_rows.append(row)
+            keep_ids.remove(id(row))
+        else:
+            removed += 1
+
+    return deduped_rows, removed
+
+
 def track_signals(
     source_rows: List[dict],
     existing_signals: List[dict],
@@ -188,7 +243,7 @@ def track_signals(
             if bm != bookmaker_filter.lower():
                 continue
 
-        key = _signal_key(comp)
+        key = _signal_key(comp, CURRENT_POLICY)
         if key in existing_keys:
             continue
 
@@ -358,7 +413,8 @@ def main() -> None:
     source_name = args.scanner if scanner_rows else args.comparison
     print(f"Using signal source: {source_name}")
 
-    if repair_existing_signals(existing, source_rows):
+    repaired_existing = repair_existing_signals(existing, source_rows)
+    if repaired_existing:
         print("  Repaired existing signal metadata from current source rows")
 
     keys = {_signal_key(row) for row in existing}
@@ -366,8 +422,16 @@ def main() -> None:
     new = track_signals(source_rows, existing, keys, args.min_edge, args.bookmaker)
     print(f"  New signals: {len(new)}")
 
-    all_signals = dedupe_signals(existing + new)
-    if new or not existing:
+    combined_signals = dedupe_signals(existing + new)
+    exact_removed = len(existing) + len(new) - len(combined_signals)
+    if exact_removed:
+        print(f"  Exact duplicate rows removed: {exact_removed}")
+
+    all_signals, fixture_removed = dedupe_fixture_signals(combined_signals)
+    if fixture_removed:
+        print(f"  Same-fixture rows removed: {fixture_removed}")
+
+    if new or not existing or repaired_existing or exact_removed or fixture_removed:
         write_signals(all_signals, args.signals)
         print(f"  Signals written to {args.signals}")
 

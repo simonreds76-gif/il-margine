@@ -87,8 +87,11 @@ type PredictionsSummary = {
   recent_predictions?: CsvRow[];
 };
 
-const CURRENT_POLICY = "venue-consensus-v1";
+const CURRENT_POLICY = "venue-consensus-v2";
+const PREVIOUS_POLICY = "venue-consensus-v1";
 const LEGACY_POLICY = "legacy";
+const CURRENT_POLICY_MIN_EDGE_PCT = 12;
+const CURRENT_POLICY_MIN_EDGE = CURRENT_POLICY_MIN_EDGE_PCT / 100;
 
 function policyVersion(row: CsvRow): string {
   const raw = (row.policy_version ?? "").trim();
@@ -96,7 +99,9 @@ function policyVersion(row: CsvRow): string {
 }
 
 function policyLabel(version: string): string {
-  return version === CURRENT_POLICY ? "Current policy" : "Legacy";
+  if (version === CURRENT_POLICY) return "Current policy (v2)";
+  if (version === PREVIOUS_POLICY) return "V1 - running off";
+  return "Legacy archive";
 }
 
 
@@ -489,7 +494,7 @@ function qualifiesForShadow(
   sideOdds?: number,
 ): boolean {
   if (sideEdge === null || sideOdds === undefined) return false;
-  return sideEdge >= 5 && sideOdds >= 1.5 && sideOdds <= 5.0;
+  return sideEdge >= CURRENT_POLICY_MIN_EDGE_PCT && sideOdds >= 1.5 && sideOdds <= 5.0;
 }
 
 function shadowFixtureKey(row: CsvRow): string {
@@ -529,9 +534,9 @@ function dedupeBestShadowFixtureRows(rows: CsvRow[]): CsvRow[] {
 }
 
 function shadowStakeUnits(edgeDecimal: number): string {
-  if (edgeDecimal >= 0.16) return "2.0u";
-  if (edgeDecimal >= 0.12) return "1.5u";
-  if (edgeDecimal >= 0.08) return "1.0u";
+  if (edgeDecimal >= 0.25) return "2.0u";
+  if (edgeDecimal >= 0.20) return "1.5u";
+  if (edgeDecimal >= 0.16) return "1.0u";
   return "0.5u";
 }
 
@@ -656,8 +661,8 @@ function signalBadge(
 }
 
 function effectiveStake(edgeDecimal: number, consensus: ConsensusState): number {
-  let stake = shadowStakeUnits(edgeDecimal);
-  let numericStake = pf(stake.replace("u", ""), 0);
+  const stake = shadowStakeUnits(edgeDecimal);
+  const numericStake = pf(stake.replace("u", ""), 0);
   if (consensus !== "conflict") return numericStake;
   if (edgeDecimal < 0.08) return 0;
   if (numericStake >= 2) return 1.5;
@@ -984,8 +989,20 @@ export default async function TeamShotsMonitorPage() {
 
   const currentSettledShadow = settledShadow.filter((r) => policyVersion(r) === CURRENT_POLICY);
   const currentPendingShadow = pendingShadow.filter((r) => policyVersion(r) === CURRENT_POLICY);
-  const legacySettledShadow = settledShadow.filter((r) => policyVersion(r) !== CURRENT_POLICY);
-  const legacyPendingShadow = pendingShadow.filter((r) => policyVersion(r) !== CURRENT_POLICY);
+  const previousSettledShadow = settledShadow.filter((r) => policyVersion(r) === PREVIOUS_POLICY);
+  const previousPendingShadow = pendingShadow.filter((r) => policyVersion(r) === PREVIOUS_POLICY);
+  const legacyArchiveSettledShadow = settledShadow.filter(
+    (r) => {
+      const version = policyVersion(r);
+      return version !== CURRENT_POLICY && version !== PREVIOUS_POLICY;
+    },
+  );
+  const legacyArchivePendingShadow = pendingShadow.filter(
+    (r) => {
+      const version = policyVersion(r);
+      return version !== CURRENT_POLICY && version !== PREVIOUS_POLICY;
+    },
+  );
 
   const activeSettledShadow = currentSettledShadow;
   const activePendingShadow = currentPendingShadow;
@@ -1011,14 +1028,23 @@ export default async function TeamShotsMonitorPage() {
     ? clvSettled.reduce((s, r) => s + pf(r.clv), 0) / clvSettled.length * 100
     : null;
 
-  const legacyPnl = legacySettledShadow.reduce((s, r) => s + pf(r.pnl), 0);
-  const legacyStakedTotal = legacySettledShadow.reduce((s, r) => s + pf(r.stake_units || "1"), 0);
-  const legacyPnlStaked = legacySettledShadow.reduce((s, r) => s + pf(r.pnl_staked), 0);
-  const legacyWins = legacySettledShadow.filter((r) => r.result === "won").length;
-  const legacyRoi =
-    legacySettledShadow.length > 0 ? (legacyPnl / legacySettledShadow.length) * 100 : 0;
-  const legacyRoiStaked =
-    legacyStakedTotal > 0 ? (legacyPnlStaked / legacyStakedTotal) * 100 : 0;
+  const previousPnl = previousSettledShadow.reduce((s, r) => s + pf(r.pnl), 0);
+  const previousStakedTotal = previousSettledShadow.reduce((s, r) => s + pf(r.stake_units || "1"), 0);
+  const previousPnlStaked = previousSettledShadow.reduce((s, r) => s + pf(r.pnl_staked), 0);
+  const previousWins = previousSettledShadow.filter((r) => r.result === "won").length;
+  const previousRoi =
+    previousSettledShadow.length > 0 ? (previousPnl / previousSettledShadow.length) * 100 : 0;
+  const previousRoiStaked =
+    previousStakedTotal > 0 ? (previousPnlStaked / previousStakedTotal) * 100 : 0;
+
+  const legacyArchivePnl = legacyArchiveSettledShadow.reduce((s, r) => s + pf(r.pnl), 0);
+  const legacyArchiveStakedTotal = legacyArchiveSettledShadow.reduce((s, r) => s + pf(r.stake_units || "1"), 0);
+  const legacyArchivePnlStaked = legacyArchiveSettledShadow.reduce((s, r) => s + pf(r.pnl_staked), 0);
+  const legacyArchiveWins = legacyArchiveSettledShadow.filter((r) => r.result === "won").length;
+  const legacyArchiveRoi =
+    legacyArchiveSettledShadow.length > 0 ? (legacyArchivePnl / legacyArchiveSettledShadow.length) * 100 : 0;
+  const legacyArchiveRoiStaked =
+    legacyArchiveStakedTotal > 0 ? (legacyArchivePnlStaked / legacyArchiveStakedTotal) * 100 : 0;
 
 
 
@@ -1046,7 +1072,7 @@ export default async function TeamShotsMonitorPage() {
       const odds = pf(row.book_odds, Number.NaN);
       return (
         !Number.isNaN(edge) &&
-        edge >= 0.05 &&
+        edge >= CURRENT_POLICY_MIN_EDGE &&
         !Number.isNaN(odds) &&
         odds >= 1.5 &&
         odds <= 5.0
@@ -1459,7 +1485,7 @@ function LiveLineTable({
     ? `Using hosted team-shots status from ${formatDateTime(hostedPipelineAt)} because team-props status is older.`
     : (pipelineStatus?.message ?? null);
 
-  const coverageReferenceMillis = renderReferenceMillis || Date.now();
+  const coverageReferenceMillis = renderReferenceMillis;
   const coverageWindowEndMillis = coverageReferenceMillis + 48 * 60 * 60 * 1000;
   const upcomingCoverageByLeague = new Map<string, Map<string, string>>();
   for (const row of upcomingRows) {
@@ -1699,7 +1725,8 @@ function LiveLineTable({
     });
 
   const pendingShadowRows = buildPendingShadowRows(activePendingShadow);
-  const legacyPendingRows = buildPendingShadowRows(legacyPendingShadow);
+  const previousPendingRows = buildPendingShadowRows(previousPendingShadow);
+  const legacyArchivePendingRows = buildPendingShadowRows(legacyArchivePendingShadow);
 
   const pendingUpcomingCount = pendingShadowRows.filter((row) => row.pendingState === "upcoming").length;
   const pendingAwaitingCount = pendingShadowRows.length - pendingUpcomingCount;
@@ -1818,7 +1845,7 @@ function LiveLineTable({
         {/* -- KPI strip -- */}
         <section className="grid gap-2.5 sm:grid-cols-3 xl:grid-cols-5">
           <StatCard
-            label="Current policy"
+            label="Current policy (v2)"
             value={String(activeSettledShadow.length + activePendingShadow.length)}
             detail={`${activeSettledShadow.length} settled | ${activePendingShadow.length} pending`}
           />
@@ -1845,34 +1872,67 @@ function LiveLineTable({
           />
         </section>
 
-        {(legacySettledShadow.length > 0 || legacyPendingRows.length > 0) ? (
+        {(previousSettledShadow.length > 0 || previousPendingRows.length > 0) ? (
           <SectionCard
             collapsible
             defaultOpen
-            title="Legacy policy"
-            subtitle={`${legacySettledShadow.length} settled | ${legacyPendingRows.length} pending`}
+            title="V1 - running off (no new signals)"
+            subtitle={`${previousSettledShadow.length} settled | ${previousPendingRows.length} pending`}
+          >
+            <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
+              <StatCard
+                label="V1 Flat P/L (1u)"
+                value={`${previousPnl >= 0 ? "+" : ""}${previousPnl.toFixed(2)}u`}
+                tone={previousPnl >= 0 ? "text-emerald-300" : "text-rose-300"}
+              />
+              <StatCard
+                label="V1 Flat ROI (1u)"
+                value={`${previousRoi >= 0 ? "+" : ""}${previousRoi.toFixed(1)}%`}
+                tone={previousRoi >= 0 ? "text-emerald-300" : "text-rose-300"}
+                detail={`${previousWins}/${previousSettledShadow.length} wins`}
+              />
+              <StatCard
+                label="V1 Staked P/L"
+                value={`${previousPnlStaked >= 0 ? "+" : ""}${previousPnlStaked.toFixed(2)}u`}
+                tone={previousPnlStaked >= 0 ? "text-emerald-300" : "text-rose-300"}
+              />
+              <StatCard
+                label="V1 ROI staked"
+                value={`${previousRoiStaked >= 0 ? "+" : ""}${previousRoiStaked.toFixed(1)}%`}
+                tone={previousRoiStaked >= 0 ? "text-emerald-300" : "text-rose-300"}
+              />
+            </div>
+          </SectionCard>
+        ) : null}
+
+        {(legacyArchiveSettledShadow.length > 0 || legacyArchivePendingRows.length > 0) ? (
+          <SectionCard
+            collapsible
+            defaultOpen={false}
+            title="Legacy archive"
+            subtitle={`${legacyArchiveSettledShadow.length} settled | ${legacyArchivePendingRows.length} pending`}
           >
             <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
               <StatCard
                 label="Legacy Flat P/L (1u)"
-                value={`${legacyPnl >= 0 ? "+" : ""}${legacyPnl.toFixed(2)}u`}
-                tone={legacyPnl >= 0 ? "text-emerald-300" : "text-rose-300"}
+                value={`${legacyArchivePnl >= 0 ? "+" : ""}${legacyArchivePnl.toFixed(2)}u`}
+                tone={legacyArchivePnl >= 0 ? "text-emerald-300" : "text-rose-300"}
               />
               <StatCard
                 label="Legacy Flat ROI (1u)"
-                value={`${legacyRoi >= 0 ? "+" : ""}${legacyRoi.toFixed(1)}%`}
-                tone={legacyRoi >= 0 ? "text-emerald-300" : "text-rose-300"}
-                detail={`${legacyWins}/${legacySettledShadow.length} wins`}
+                value={`${legacyArchiveRoi >= 0 ? "+" : ""}${legacyArchiveRoi.toFixed(1)}%`}
+                tone={legacyArchiveRoi >= 0 ? "text-emerald-300" : "text-rose-300"}
+                detail={`${legacyArchiveWins}/${legacyArchiveSettledShadow.length} wins`}
               />
               <StatCard
                 label="Legacy Staked P/L"
-                value={`${legacyPnlStaked >= 0 ? "+" : ""}${legacyPnlStaked.toFixed(2)}u`}
-                tone={legacyPnlStaked >= 0 ? "text-emerald-300" : "text-rose-300"}
+                value={`${legacyArchivePnlStaked >= 0 ? "+" : ""}${legacyArchivePnlStaked.toFixed(2)}u`}
+                tone={legacyArchivePnlStaked >= 0 ? "text-emerald-300" : "text-rose-300"}
               />
               <StatCard
                 label="Legacy ROI staked"
-                value={`${legacyRoiStaked >= 0 ? "+" : ""}${legacyRoiStaked.toFixed(1)}%`}
-                tone={legacyRoiStaked >= 0 ? "text-emerald-300" : "text-rose-300"}
+                value={`${legacyArchiveRoiStaked >= 0 ? "+" : ""}${legacyArchiveRoiStaked.toFixed(1)}%`}
+                tone={legacyArchiveRoiStaked >= 0 ? "text-emerald-300" : "text-rose-300"}
               />
             </div>
           </SectionCard>
@@ -1882,7 +1942,7 @@ function LiveLineTable({
         {recentSettledShadow.length > 0 ? (
           <SectionCard
             collapsible
-            title={`Current policy settled bets - ${activeSettledShadow.length} total`}
+            title={`Current policy (v2) settled bets - ${activeSettledShadow.length} total`}
             subtitle={`Last ${recentSettledShadow.length} results`}
           >
             {/* Mobile cards */}
@@ -2077,7 +2137,7 @@ function LiveLineTable({
         {pendingShadowRows.length > 0 ? (
           <SectionCard
             collapsible
-            title={`Current policy pending bets - ${pendingShadowRows.length} total`}
+            title={`Current policy (v2) pending bets - ${pendingShadowRows.length} total`}
             subtitle={`${pendingUpcomingCount} upcoming | ${pendingAwaitingCount} awaiting result`}
           >
             <div className="space-y-2">
@@ -2218,15 +2278,15 @@ function LiveLineTable({
           </SectionCard>
         ) : null}
 
-        {legacyPendingRows.length > 0 ? (
+        {previousPendingRows.length > 0 ? (
           <SectionCard
             collapsible
             defaultOpen={false}
-            title={`Legacy pending bets - ${legacyPendingRows.length} total`}
-            subtitle="Tracked separately from the current venue-consensus policy"
+            title={`V1 - running off pending bets - ${previousPendingRows.length} total`}
+            subtitle="Closed cohort kept intact while the stricter v2 lane builds its own book"
           >
             <div className="space-y-2">
-              {legacyPendingRows.map((row, idx) => (
+              {previousPendingRows.map((row, idx) => (
                 <div key={idx} className="rounded-xl border border-slate-800/60 bg-slate-950/40 px-3 py-3">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
@@ -2279,6 +2339,56 @@ function LiveLineTable({
                     <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
                       <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Stake</div>
                       <div className="mt-0.5 font-mono text-xs text-amber-200">{`${pf(row.stake_units || "1", 1).toFixed(1)}u`}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </SectionCard>
+        ) : null}
+
+        {legacyArchivePendingRows.length > 0 ? (
+          <SectionCard
+            collapsible
+            defaultOpen={false}
+            title={`Legacy archive pending bets - ${legacyArchivePendingRows.length} total`}
+            subtitle="Older pre-policy-version rows kept for audit trail only"
+          >
+            <div className="space-y-2">
+              {legacyArchivePendingRows.map((row, idx) => (
+                <div key={idx} className="rounded-xl border border-slate-800/60 bg-slate-950/40 px-3 py-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <TeamLabel
+                        league={row.league}
+                        team={row.team}
+                        iconSize={18}
+                        teamClassName="truncate text-sm font-medium text-white"
+                      />
+                      <div className="mt-1">
+                        <MatchLabel
+                          league={row.league}
+                          homeTeam={row.home_team}
+                          awayTeam={row.away_team}
+                          iconSize={16}
+                          separator="v"
+                          textClassName="text-[11px] text-slate-500"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-1">
+                      <StatusPill
+                        label={row.side === "over" ? "Over" : "Under"}
+                        tone={row.side === "over"
+                          ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                          : "bg-sky-500/10 text-sky-300 border-sky-500/20"}
+                      />
+                      <StatusPill
+                        label={row.pendingState}
+                        tone={row.pendingState === "upcoming"
+                          ? "bg-amber-500/10 text-amber-300 border-amber-500/20"
+                          : "bg-cyan-500/10 text-cyan-300 border-cyan-500/20"}
+                      />
                     </div>
                   </div>
                 </div>
