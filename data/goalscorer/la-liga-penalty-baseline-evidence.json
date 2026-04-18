@@ -1,9 +1,41 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-18T00:04:07Z",
+  "generated_at": "2026-04-18T17:05:41Z",
   "league": "la-liga",
-  "row_count": 2,
+  "row_count": 3,
   "rows": [
+    {
+      "team": "Levante",
+      "team_key": "levante",
+      "player_name": "Adrián De La Fuente",
+      "player_key": "adri n de la fuente",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-13"
+    },
+    {
+      "team": "Levante",
+      "team_key": "levante",
+      "player_name": "Iván Romero",
+      "player_key": "iv n romero",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-13"
+    },
     {
       "team": "Osasuna",
       "team_key": "osasuna",
@@ -19,22 +51,6 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-04-12"
-    },
-    {
-      "team": "Sevilla",
-      "team_key": "sevilla",
-      "player_name": "Akor Adams",
-      "player_key": "akor adams",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-11"
     }
   ]
 }
