@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-18T21:03:28Z",
+  "generated_at": "2026-04-18T23:31:46Z",
   "league": "bundesliga",
-  "row_count": 7,
+  "row_count": 4,
   "rows": [
     {
       "team": "Augsburg",
@@ -42,31 +42,15 @@
       "player_name": "Gian-Luca Waldschmidt",
       "player_key": "gian luca waldschmidt",
       "observed_player_penalties": 1,
-      "observed_team_penalties": 2,
-      "observed_share": 0.5,
-      "observed_sample": 2.0,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
         "fotmob_live"
       ],
       "event_count": 1,
       "last_event_date": "2026-04-17"
-    },
-    {
-      "team": "1. FC Köln",
-      "team_key": "fc cologne",
-      "player_name": "Saïd El Mala",
-      "player_key": "sa d el mala",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 2,
-      "observed_share": 0.5,
-      "observed_sample": 2.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-12"
     },
     {
       "team": "Hoffenheim",
@@ -83,38 +67,6 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-04-18"
-    },
-    {
-      "team": "VfB Stuttgart",
-      "team_key": "vfb stuttgart",
-      "player_name": "Deniz Undav",
-      "player_key": "deniz undav",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-12"
-    },
-    {
-      "team": "Werder Bremen",
-      "team_key": "werder bremen",
-      "player_name": "Romano Schmid",
-      "player_key": "romano schmid",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-12"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-18T21:02:01Z",
+  "generated_at": "2026-04-18T23:30:30Z",
   "league": "serie-a",
   "row_count": 1,
   "rows": [
@@ -22,16 +22,16 @@
       "primary_pre_match": "Mattia Zaccagni",
       "secondary_pre_match": "Danilo Cataldi",
       "tertiary_pre_match": "Pedro",
-      "primary_lineup_status": "confirmed_starter",
-      "secondary_lineup_status": "confirmed_starter",
-      "tertiary_lineup_status": "confirmed_bench",
-      "active_taker_pre_match": "Mattia Zaccagni",
-      "active_slot_pre_match": "primary",
+      "primary_lineup_status": "unknown",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Mattia Zaccagni took 1 penalty attempt and missed for Lazio vs Napoli. Primary pre-match: Mattia Zaccagni (confirmed_starter). Secondary pre-match: Danilo Cataldi (confirmed_starter). Pre-match active slot was primary -> Mattia Zaccagni. No hierarchy change implied from this event.",
-      "context_generated_at": "2026-04-18T21:01:37Z",
+      "review_type": "needs_manual_review",
+      "review_priority": "medium",
+      "editorial_note": "Mattia Zaccagni took 1 penalty attempt and missed for Lazio vs Napoli. Primary pre-match: Mattia Zaccagni (unknown). Secondary pre-match: Danilo Cataldi (unknown). Needs manual editorial review.",
+      "context_generated_at": "2026-04-18T23:30:13Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     }
   ]
