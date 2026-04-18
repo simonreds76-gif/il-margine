@@ -219,6 +219,44 @@ const resolveTeamShotsBundleDecision = cache(async (bundleKey: string): Promise<
   const hostedGeneratedAt = typeof payload?.generated_at === "string" ? payload.generated_at : null;
   const hostedBundleFreshness = latestHostedBundleFreshness(payload, bundleFiles);
 
+  // For market-facing team-shots files, default to the hosted snapshot unless
+  // the user explicitly opts into local-only debugging. Local mtimes can be
+  // newer because of follow-up status writes while still missing the last
+  // scheduled hosted scrape bundle that the monitor should reflect.
+  if (bundleKey === "market" && !PREFER_LOCAL) {
+    if (hostedBundleFreshness) {
+      return {
+        source: "hosted",
+        reason: localBundleFreshness ? "hosted_newer" : "hosted_only",
+        payload,
+        hostedGeneratedAt,
+        localSnapshotGeneratedAt,
+        hostedBundleFreshness,
+        localBundleFreshness,
+      };
+    }
+    if (localBundleFreshness) {
+      return {
+        source: "local",
+        reason: "local_only",
+        payload,
+        hostedGeneratedAt,
+        localSnapshotGeneratedAt,
+        hostedBundleFreshness,
+        localBundleFreshness,
+      };
+    }
+    return {
+      source: "missing",
+      reason: "no_data",
+      payload,
+      hostedGeneratedAt,
+      localSnapshotGeneratedAt,
+      hostedBundleFreshness,
+      localBundleFreshness,
+    };
+  }
+
   if (PREFER_LOCAL && !INCLUDE_HOSTED_METADATA_IN_LOCAL_DEV) {
     if (localBundleFreshness || localSnapshotGeneratedAt) {
       return {
