@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-18T14:25:55Z",
+  "generated_at": "2026-04-18T15:53:03Z",
   "league": "bundesliga",
-  "row_count": 5,
+  "row_count": 6,
   "rows": [
     {
       "date": "2026-04-18",
@@ -13,10 +13,10 @@
       "opponent": "Borussia Dortmund",
       "actual_taker": "Andrej Kramaric",
       "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
+      "penalties_attempted": 2,
+      "penalties_scored": 2,
       "distinct_takers_in_match": 1,
-      "minute": "42",
+      "minute": "42, 90",
       "event_type": "Goal",
       "event_result": "scored",
       "primary_pre_match": "Andrej Kramaric",
@@ -30,8 +30,38 @@
       "team_lineup_status": "unknown",
       "review_type": "primary_held",
       "review_priority": "low",
-      "editorial_note": "Andrej Kramaric took 1 penalty attempt and scored for Hoffenheim vs Borussia Dortmund. Primary pre-match: Andrej Kramaric (confirmed_starter). Secondary pre-match: Muhammed Damar (confirmed_bench). Pre-match active slot was primary -> Andrej Kramaric. No hierarchy change implied from this event.",
-      "context_generated_at": "2026-04-18T14:25:37Z",
+      "editorial_note": "Andrej Kramaric took 2 penalty attempts and scored for Hoffenheim vs Borussia Dortmund. Primary pre-match: Andrej Kramaric (confirmed_starter). Secondary pre-match: Muhammed Damar (confirmed_bench). Pre-match active slot was primary -> Andrej Kramaric. No hierarchy change implied from this event.",
+      "context_generated_at": "2026-04-18T15:52:43Z",
+      "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
+    },
+    {
+      "date": "2026-04-18",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "match": "Bayer Leverkusen vs Augsburg",
+      "team": "Augsburg",
+      "opponent": "Bayer Leverkusen",
+      "actual_taker": "Fabian Rieder",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "90",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Alexis Claude-Maurice",
+      "secondary_pre_match": "Michael Gregoritsch",
+      "tertiary_pre_match": "Samuel Essende",
+      "primary_lineup_status": "confirmed_starter",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "Alexis Claude-Maurice",
+      "active_slot_pre_match": "primary",
+      "team_lineup_status": "unknown",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Fabian Rieder took 1 penalty attempt and scored for Augsburg vs Bayer Leverkusen. Primary pre-match: Alexis Claude-Maurice (confirmed_starter). Secondary pre-match: Michael Gregoritsch (unknown). Pre-match active slot was primary -> Alexis Claude-Maurice. Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-04-18T15:52:43Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -61,7 +91,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Gian-Luca Waldschmidt took 1 penalty attempt and scored for 1. FC Köln vs St. Pauli. Primary pre-match: Gian-Luca Waldschmidt (unknown). Secondary pre-match: Saïd El Mala (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-18T14:25:37Z",
+      "context_generated_at": "2026-04-18T15:52:43Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -91,7 +121,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Romano Schmid took 1 penalty attempt and scored for Werder Bremen vs 1. FC Köln. Primary pre-match: Romano Schmid (unknown). Secondary pre-match: Marvin Ducksch (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-18T14:25:37Z",
+      "context_generated_at": "2026-04-18T15:52:43Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -121,7 +151,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Deniz Undav took 1 penalty attempt and missed for VfB Stuttgart vs Hamburger SV. Primary pre-match: Maximilian MittelstÃ¤dt (unknown). Secondary pre-match: Ermedin Demirovic (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-04-18T14:25:37Z",
+      "context_generated_at": "2026-04-18T15:52:43Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -151,7 +181,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Saïd El Mala took 1 penalty attempt and scored for 1. FC Köln vs Werder Bremen. Primary pre-match: Gian-Luca Waldschmidt (unknown). Secondary pre-match: Saïd El Mala (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-04-18T14:25:37Z",
+      "context_generated_at": "2026-04-18T15:52:43Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     }
   ]

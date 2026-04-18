@@ -8,9 +8,9 @@
       "match_date": "2026-04-18",
       "home_team": "Napoli",
       "away_team": "Lazio",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "4-3-3",
       "home_players": [
@@ -20,23 +20,23 @@
         "Mathías Olivera",
         "Matteo Politano",
         "Stanislav Lobotka",
-        "Scott McTominay",
+        "Frank Anguissa",
         "Leonardo Spinazzola",
         "Kevin De Bruyne",
-        "Alisson Santos",
+        "Scott McTominay",
         "Rasmus Højlund"
       ],
       "away_players": [
         "Edoardo Motta",
         "Manuel Lazzari",
+        "Mario Gila",
         "Alessio Romagnoli",
-        "Oliver Provstgaard",
         "Nuno Tavares",
         "Toma Basic",
-        "Patric",
+        "Danilo Cataldi",
         "Kenneth Taylor",
         "Matteo Cancellieri",
-        "Boulaye Dia",
+        "Tijjani Noslin",
         "Mattia Zaccagni"
       ],
       "home_starters": [
@@ -95,7 +95,7 @@
           "position_id": 64
         },
         {
-          "name": "Scott McTominay",
+          "name": "Frank Anguissa",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -122,7 +122,7 @@
           "position_id": 84
         },
         {
-          "name": "Alisson Santos",
+          "name": "Scott McTominay",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -160,7 +160,7 @@
           "position_id": 32
         },
         {
-          "name": "Alessio Romagnoli",
+          "name": "Mario Gila",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -169,7 +169,7 @@
           "position_id": 34
         },
         {
-          "name": "Oliver Provstgaard",
+          "name": "Alessio Romagnoli",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -196,7 +196,7 @@
           "position_id": 73
         },
         {
-          "name": "Patric",
+          "name": "Danilo Cataldi",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -223,7 +223,7 @@
           "position_id": 103
         },
         {
-          "name": "Boulaye Dia",
+          "name": "Tijjani Noslin",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -241,11 +241,36 @@
           "position_id": 107
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Alex Meret",
+        "Nikita Contini",
+        "Amir Rrahmani",
+        "Juan Jesus",
+        "Alisson Santos",
+        "Billy Gilmour",
+        "Eljif Elmas",
+        "Miguel Gutiérrez",
+        "Pasquale Mazzocchi",
+        "Giovane Nascimento"
+      ],
+      "away_subs": [
+        "Giacomo Giacomone",
+        "Nicolo Pannozzo",
+        "Elseid Hysaj",
+        "Luca Pellegrini",
+        "Oliver Provstgaard",
+        "Adrian Przyborek",
+        "Fisayo Dele-Bashiru",
+        "Patric",
+        "Reda Belahyane",
+        "Boulaye Dia",
+        "Daniel Maldini",
+        "Gustav Isaksen",
+        "Pedro",
+        "Petar Ratkov"
+      ],
       "home_unavailable": [
         "Romelu Lukaku",
-        "Amir Rrahmani",
         "Giovanni Di Lorenzo",
         "Antonio Vergara",
         "David Neres"
@@ -254,9 +279,7 @@
         "Alessio Furlanetto",
         "Ivan Provedel",
         "Adam Marusic",
-        "Mario Gila",
-        "Nicolò Rovella",
-        "Daniel Maldini"
+        "Nicolò Rovella"
       ]
     },
     {

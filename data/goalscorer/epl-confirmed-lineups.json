@@ -777,25 +777,25 @@
         }
       ],
       "home_subs": [
+        "Wilfried Gnonto",
+        "Ilia Gruev",
         "Lucas Perri",
         "Joe Rodon",
         "Sebastiaan Bornauw",
         "Facundo Buonanotte",
-        "Ilia Gruev",
         "Sean Longstaff",
         "Joël Piroe",
-        "Lukas Nmecha",
-        "Wilfried Gnonto"
+        "Lukas Nmecha"
       ],
       "away_subs": [
         "Mateus Mané",
+        "Pedro Lima",
+        "Rodrigo Gomes",
+        "Hee-Chan Hwang",
         "Alfie Brooks",
         "David Møller Wolfe",
-        "Pedro Lima",
         "Saheed Olagunju",
-        "Rodrigo Gomes",
         "Tom Edozie",
-        "Hee-Chan Hwang",
         "Tolu Arokodare"
       ],
       "home_unavailable": [
@@ -1051,25 +1051,25 @@
       ],
       "home_subs": [
         "Kieran Trippier",
+        "Bruno Guimarães",
+        "Jacob Murphy",
+        "Daniel Burn",
+        "Nick Woltemade",
         "Nick Pope",
         "Alex Murphy",
-        "Daniel Burn",
-        "Bruno Guimarães",
         "Joseph Willock",
-        "Jacob Murphy",
-        "Nick Woltemade",
         "Yoane Wissa"
       ],
       "away_subs": [
+        "Tyler Adams",
+        "David Brooks",
+        "Ben Gannon Doak",
+        "Alex Tóth",
+        "Enes Ünal",
         "Christos Mandas",
         "Adam Smith",
         "Bafodé Diakité",
-        "Alex Tóth",
-        "Tyler Adams",
-        "Amine Adli",
-        "Ben Gannon Doak",
-        "David Brooks",
-        "Enes Ünal"
+        "Amine Adli"
       ],
       "home_unavailable": [
         "Emil Krafth",
@@ -1091,10 +1091,10 @@
       "match_date": "2026-04-18",
       "home_team": "Tottenham Hotspur",
       "away_team": "Brighton & Hove Albion",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "4-2-3-1",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "4-3-3",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Antonín Kinsky",
@@ -1102,12 +1102,12 @@
         "Kevin Danso",
         "Micky van de Ven",
         "Destiny Udogie",
-        "Archie Gray",
+        "Yves Bissouma",
         "Conor Gallagher",
+        "Rodrigo Bentancur",
         "Randal Kolo Muani",
-        "Xavi Simons",
-        "Mathys Tel",
-        "Dominic Solanke"
+        "Dominic Solanke",
+        "Xavi Simons"
       ],
       "away_players": [
         "Bart Verbruggen",
@@ -1129,7 +1129,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 11
         },
         {
@@ -1138,7 +1138,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 32
         },
         {
@@ -1147,7 +1147,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 34
         },
         {
@@ -1156,7 +1156,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 36
         },
         {
@@ -1165,62 +1165,62 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 38
         },
         {
-          "name": "Archie Gray",
+          "name": "Yves Bissouma",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 73
         },
         {
           "name": "Conor Gallagher",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 75
+        },
+        {
+          "name": "Rodrigo Bentancur",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 77
         },
         {
           "name": "Randal Kolo Muani",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 103
+        },
+        {
+          "name": "Dominic Solanke",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 105
         },
         {
           "name": "Xavi Simons",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85
-        },
-        {
-          "name": "Mathys Tel",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87
-        },
-        {
-          "name": "Dominic Solanke",
-          "line_index": 3,
-          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-2-3-1",
-          "position_id": 115
+          "formation": "4-3-3",
+          "position_id": 107
         }
       ],
       "away_starters": [
@@ -1324,14 +1324,33 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Brandon Austin",
+        "Djed Spence",
+        "Radu Dragusin",
+        "Archie Gray",
+        "James Maddison",
+        "João Palhinha",
+        "Lucas Bergvall",
+        "Mathys Tel",
+        "Richarlison"
+      ],
+      "away_subs": [
+        "Jason Steele",
+        "Igor Julio",
+        "Joël Veltman",
+        "Maxim De Cuyper",
+        "Carlos Baleba",
+        "Matthew O'Riley",
+        "Charalampos Kostoulas",
+        "Georginio Rutter",
+        "Kaoru Mitoma"
+      ],
       "home_unavailable": [
         "Guglielmo Vicario",
         "Ben Davies",
         "Cristian Romero",
         "Dejan Kulusevski",
-        "James Maddison",
         "Mohammed Kudus",
         "Wilson Odobert"
       ],

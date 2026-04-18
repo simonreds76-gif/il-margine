@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-18T14:25:55Z",
+  "generated_at": "2026-04-18T15:53:03Z",
   "league": "bundesliga",
-  "row_count": 6,
+  "row_count": 7,
   "rows": [
     {
       "team": "Augsburg",
@@ -10,15 +10,31 @@
       "player_name": "Alexis Claude Maurice",
       "player_key": "alexis claude maurice",
       "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
         "settled_logs"
       ],
       "event_count": 1,
       "last_event_date": "2026-04-10"
+    },
+    {
+      "team": "Augsburg",
+      "team_key": "augsburg",
+      "player_name": "Fabian Rieder",
+      "player_key": "fabian rieder",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-18"
     },
     {
       "team": "1. FC Köln",
@@ -57,10 +73,10 @@
       "team_key": "hoffenheim",
       "player_name": "Andrej Kramaric",
       "player_key": "andrej kramaric",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
         "fotmob_live"
