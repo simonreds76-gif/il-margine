@@ -1036,20 +1036,20 @@
       "home_status": "FotMob Expected XI",
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
-      "home_formation": "3-1-4-2",
+      "home_formation": "3-4-2-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Lukás Hrádecky",
         "Thilo Kehrer",
         "Denis Zakaria",
         "Wout Faes",
-        "Aladji Bamba",
         "Jordan Teze",
         "Mamadou Coulibaly",
-        "Paul Pogba",
+        "Aladji Bamba",
         "Simon Adingra",
-        "Folarin Balogun",
-        "Ansu Fati"
+        "Maghnes Akliouche",
+        "Ansu Fati",
+        "Folarin Balogun"
       ],
       "away_players": [
         "Donovan Léon",
@@ -1071,7 +1071,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-1-4-2",
+          "formation": "3-4-2-1",
           "position_id": 11
         },
         {
@@ -1080,7 +1080,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-1-4-2",
+          "formation": "3-4-2-1",
           "position_id": 33
         },
         {
@@ -1089,7 +1089,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-1-4-2",
+          "formation": "3-4-2-1",
           "position_id": 35
         },
         {
@@ -1098,71 +1098,71 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-1-4-2",
+          "formation": "3-4-2-1",
           "position_id": 37
+        },
+        {
+          "name": "Jordan Teze",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 62
+        },
+        {
+          "name": "Mamadou Coulibaly",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 64
         },
         {
           "name": "Aladji Bamba",
           "line_index": 1,
-          "line_size": 1,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "3-1-4-2",
-          "position_id": 65
-        },
-        {
-          "name": "Jordan Teze",
-          "line_index": 2,
           "line_size": 4,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-1-4-2",
-          "position_id": 82
-        },
-        {
-          "name": "Mamadou Coulibaly",
-          "line_index": 2,
-          "line_size": 4,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-1-4-2",
-          "position_id": 84
-        },
-        {
-          "name": "Paul Pogba",
-          "line_index": 2,
-          "line_size": 4,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-1-4-2",
-          "position_id": 86
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66
         },
         {
           "name": "Simon Adingra",
-          "line_index": 2,
+          "line_index": 1,
           "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 68
+        },
+        {
+          "name": "Maghnes Akliouche",
+          "line_index": 2,
+          "line_size": 2,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-1-4-2",
-          "position_id": 88
+          "formation": "3-4-2-1",
+          "position_id": 84
+        },
+        {
+          "name": "Ansu Fati",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86
         },
         {
           "name": "Folarin Balogun",
           "line_index": 3,
-          "line_size": 2,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-1-4-2",
-          "position_id": 104
-        },
-        {
-          "name": "Ansu Fati",
-          "line_index": 3,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-1-4-2",
-          "position_id": 106
+          "formation": "3-4-2-1",
+          "position_id": 105
         }
       ],
       "away_starters": [
@@ -1553,32 +1553,32 @@
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
       "home_formation": "4-3-3",
-      "away_formation": "4-1-4-1",
+      "away_formation": "4-2-3-1",
       "home_players": [
         "Matvey Safonov",
         "Achraf Hakimi",
-        "Ilya Zabarnyi",
+        "Marquinhos",
         "Willian Pacho",
         "Lucas Hernández",
         "Warren Zaïre-Emery",
-        "Lucas Beraldo",
-        "Ibrahim Mbaye",
-        "Kang-In Lee",
+        "Vitinha",
+        "João Neves",
+        "Bradley Barcola",
         "Ousmane Dembélé",
         "Khvicha Kvaratskhelia"
       ],
       "away_players": [
         "Dominik Greif",
-        "Steeve Kango",
+        "Ruben Kluivert",
         "Clinton Mata",
         "Moussa Niakhaté",
         "Abner",
         "Tyler Morton",
-        "Rachid Ghezzal",
+        "Orel Mangala",
         "Ainsley Maitland-Niles",
         "Noah Nartey",
         "Afonso Moreira",
-        "Roman Yaremchuk"
+        "Endrick"
       ],
       "home_starters": [
         {
@@ -1600,7 +1600,7 @@
           "position_id": 32
         },
         {
-          "name": "Ilya Zabarnyi",
+          "name": "Marquinhos",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1636,7 +1636,7 @@
           "position_id": 73
         },
         {
-          "name": "Lucas Beraldo",
+          "name": "Vitinha",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -1645,7 +1645,7 @@
           "position_id": 75
         },
         {
-          "name": "Ibrahim Mbaye",
+          "name": "João Neves",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -1654,7 +1654,7 @@
           "position_id": 77
         },
         {
-          "name": "Kang-In Lee",
+          "name": "Bradley Barcola",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -1688,16 +1688,16 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 11
         },
         {
-          "name": "Steeve Kango",
+          "name": "Ruben Kluivert",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 32
         },
         {
@@ -1706,7 +1706,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 34
         },
         {
@@ -1715,7 +1715,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 36
         },
         {
@@ -1724,61 +1724,61 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 38
         },
         {
           "name": "Tyler Morton",
           "line_index": 1,
-          "line_size": 1,
+          "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
-          "formation": "4-1-4-1",
-          "position_id": 65
+          "formation": "4-2-3-1",
+          "position_id": 64
         },
         {
-          "name": "Rachid Ghezzal",
-          "line_index": 2,
-          "line_size": 4,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 82
+          "name": "Orel Mangala",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
         },
         {
           "name": "Ainsley Maitland-Niles",
           "line_index": 2,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 84
+          "formation": "4-2-3-1",
+          "position_id": 83
         },
         {
           "name": "Noah Nartey",
           "line_index": 2,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 86
+          "formation": "4-2-3-1",
+          "position_id": 85
         },
         {
           "name": "Afonso Moreira",
           "line_index": 2,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 88
+          "formation": "4-2-3-1",
+          "position_id": 87
         },
         {
-          "name": "Roman Yaremchuk",
+          "name": "Endrick",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 115
         }
       ],
