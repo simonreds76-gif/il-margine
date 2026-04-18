@@ -1,26 +1,26 @@
 {
-  "updated_at": "2026-04-18T11:08:15Z",
+  "updated_at": "2026-04-18T11:49:18Z",
   "reason": "cycle",
   "leagues": {
     "serie-a": {
-      "last_successful_run_at": "2026-04-18T11:05:37Z",
+      "last_successful_run_at": "2026-04-18T11:47:29Z",
       "last_detail_run_at": "2026-04-18T11:05:37Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "warm",
-      "last_decision": "waiting",
-      "last_message": "Skip serie-a: cadence 30m not due yet.",
+      "last_tier": "hot",
+      "last_decision": "ran",
+      "last_message": "Ran serie-a in hot tier (cadence 10m, fixtures 8).",
       "next_kickoff_utc": "2026-04-18T13:00:00Z"
     },
     "epl": {
-      "last_successful_run_at": "2026-04-18T11:06:26Z",
-      "last_detail_run_at": "2026-04-18T11:06:26Z",
+      "last_successful_run_at": "2026-04-18T11:48:14Z",
+      "last_detail_run_at": "2026-04-18T11:48:14Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "hot",
-      "last_decision": "waiting",
-      "last_message": "Skip epl: cadence 10m not due yet.",
-      "next_kickoff_utc": "2026-04-18T11:30:00Z"
+      "last_tier": "warm",
+      "last_decision": "ran",
+      "last_message": "Ran epl in warm tier (cadence 30m, fixtures 9).",
+      "next_kickoff_utc": "2026-04-18T14:00:00Z"
     },
     "la-liga": {
       "last_successful_run_at": "2026-04-13T18:51:51Z",
@@ -33,13 +33,13 @@
       "next_kickoff_utc": ""
     },
     "bundesliga": {
-      "last_successful_run_at": "2026-04-18T11:07:04Z",
-      "last_detail_run_at": "2026-04-18T11:07:04Z",
+      "last_successful_run_at": "2026-04-18T11:49:06Z",
+      "last_detail_run_at": "2026-04-18T11:49:06Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "warm",
-      "last_decision": "waiting",
-      "last_message": "Skip bundesliga: cadence 30m not due yet.",
+      "last_decision": "ran",
+      "last_message": "Ran bundesliga in warm tier (cadence 30m, fixtures 8).",
       "next_kickoff_utc": "2026-04-18T13:30:00Z"
     },
     "ligue-1": {
