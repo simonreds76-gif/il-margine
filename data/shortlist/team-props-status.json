@@ -1,10 +1,10 @@
 {
   "pipeline": "team-props",
   "state": "idle",
-  "updated_at": "2026-04-17T17:43:38.1089410Z",
-  "last_started_at": "2026-04-17T17:42:38.9642665Z",
-  "last_finished_at": "2026-04-17T17:43:38.1089410Z",
-  "last_successful_finished_at": "2026-04-17T17:43:38.1088137Z",
+  "updated_at": "2026-04-18T08:53:18.4886131Z",
+  "last_started_at": "2026-04-18T08:52:16.3390242Z",
+  "last_finished_at": "2026-04-18T08:53:18.4886131Z",
+  "last_successful_finished_at": "2026-04-18T08:53:18.4884931Z",
   "current_step": "",
   "message": "Team props pipeline finished successfully.",
   "warnings": [],
@@ -21,52 +21,52 @@
     "signals_latest": {
       "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest.csv",
       "exists": true,
-      "updated_at": "2026-04-17T17:43:37.3701181Z"
-    },
-    "pipeline_log": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/pipeline-log.txt",
-      "exists": true,
-      "updated_at": "2026-04-17T17:43:38.1031249Z"
-    },
-    "team_shots_predictions": {
-      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-predictions.csv",
-      "exists": true,
-      "updated_at": "2026-04-17T17:42:27.3154222Z"
-    },
-    "shadow_value_bets_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest-v31.csv",
-      "exists": true,
-      "updated_at": "2026-04-17T17:43:37.8742500Z"
-    },
-    "team_shots_comparison": {
-      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-comparison.csv",
-      "exists": true,
-      "updated_at": "2026-04-17T17:42:27.3084190Z"
+      "updated_at": "2026-04-18T08:53:17.7396840Z"
     },
     "shadow_shortlist_latest": {
       "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest-v31.txt",
       "exists": true,
-      "updated_at": "2026-04-17T17:43:37.8731228Z"
+      "updated_at": "2026-04-18T08:53:18.2457849Z"
     },
     "shortlist_latest": {
       "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest.txt",
       "exists": true,
-      "updated_at": "2026-04-17T17:43:37.3698666Z"
+      "updated_at": "2026-04-18T08:53:17.7391056Z"
     },
-    "team_shots_upcoming": {
-      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-upcoming.csv",
+    "team_shots_predictions": {
+      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-predictions.csv",
       "exists": true,
-      "updated_at": "2026-04-17T17:42:27.3154222Z"
+      "updated_at": "2026-04-18T08:52:10.5586585Z"
     },
-    "value_bets_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest.csv",
+    "shadow_value_bets_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest-v31.csv",
       "exists": true,
-      "updated_at": "2026-04-17T17:43:37.3699713Z"
+      "updated_at": "2026-04-18T08:53:18.2458791Z"
+    },
+    "pipeline_log": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/pipeline-log.txt",
+      "exists": true,
+      "updated_at": "2026-04-18T08:53:18.4837841Z"
     },
     "shadow_signals_latest": {
       "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest-v31.csv",
       "exists": true,
-      "updated_at": "2026-04-17T17:43:37.8747527Z"
+      "updated_at": "2026-04-18T08:53:18.2463808Z"
+    },
+    "team_shots_upcoming": {
+      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-upcoming.csv",
+      "exists": true,
+      "updated_at": "2026-04-18T08:52:10.5596585Z"
+    },
+    "team_shots_comparison": {
+      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-comparison.csv",
+      "exists": true,
+      "updated_at": "2026-04-18T08:52:10.5518824Z"
+    },
+    "value_bets_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest.csv",
+      "exists": true,
+      "updated_at": "2026-04-18T08:53:17.7391915Z"
     }
   }
 }
