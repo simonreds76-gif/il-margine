@@ -524,9 +524,9 @@
       "match_date": "2026-04-18",
       "home_team": "Udinese",
       "away_team": "Parma",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "3-5-2",
       "home_players": [
@@ -544,16 +544,16 @@
       ],
       "away_players": [
         "Zion Suzuki",
-        "Enrico Del Prato",
         "Alessandro Circati",
+        "Mariano Troilo",
         "Lautaro Valenti",
-        "Sascha Britschgi",
+        "Enrico Del Prato",
         "Adrián Bernabé",
-        "Hans Nicolussi Caviglia",
         "Mandela Keita",
+        "Hans Nicolussi Caviglia",
         "Emanuele Valeri",
-        "Gabriel Strefezza",
-        "Mateo Pellegrino"
+        "Mateo Pellegrino",
+        "Gabriel Strefezza"
       ],
       "home_starters": [
         {
@@ -667,7 +667,7 @@
           "position_id": 11
         },
         {
-          "name": "Enrico Del Prato",
+          "name": "Alessandro Circati",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -676,7 +676,7 @@
           "position_id": 33
         },
         {
-          "name": "Alessandro Circati",
+          "name": "Mariano Troilo",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -694,7 +694,7 @@
           "position_id": 37
         },
         {
-          "name": "Sascha Britschgi",
+          "name": "Enrico Del Prato",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -712,7 +712,7 @@
           "position_id": 73
         },
         {
-          "name": "Hans Nicolussi Caviglia",
+          "name": "Mandela Keita",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -721,7 +721,7 @@
           "position_id": 75
         },
         {
-          "name": "Mandela Keita",
+          "name": "Hans Nicolussi Caviglia",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -739,7 +739,7 @@
           "position_id": 79
         },
         {
-          "name": "Gabriel Strefezza",
+          "name": "Mateo Pellegrino",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -748,7 +748,7 @@
           "position_id": 104
         },
         {
-          "name": "Mateo Pellegrino",
+          "name": "Gabriel Strefezza",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -757,8 +757,32 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Daniele Padelli",
+        "Razvan Sava",
+        "Branimir Mlacic",
+        "Abdoulaye Camara",
+        "Juan Arizala",
+        "Lennon Miller",
+        "Oier Zarraga",
+        "Adam Buksa",
+        "Idrissa Gueye",
+        "Vakoun Issouf Bayo"
+      ],
+      "away_subs": [
+        "Edoardo Corvi",
+        "Filippo Rinaldi",
+        "Abdoulaye Ndiaye",
+        "Christian Ordóñez",
+        "Franco Carboni",
+        "Nahuel Estévez",
+        "Oliver Sørensen",
+        "Pontus Almqvist",
+        "Sascha Britschgi",
+        "Gaetano Oristanio",
+        "Jacob Ondrejka",
+        "Nesta Elphege"
+      ],
       "home_unavailable": [
         "Nicolò Bertola",
         "Alessandro Zanoli",
