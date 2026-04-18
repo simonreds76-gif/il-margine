@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-18T13:41:45Z",
+  "generated_at": "2026-04-18T14:25:55Z",
   "league": "bundesliga",
-  "row_count": 5,
+  "row_count": 6,
   "rows": [
     {
       "team": "Augsburg",
@@ -51,6 +51,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-04-12"
+    },
+    {
+      "team": "Hoffenheim",
+      "team_key": "hoffenheim",
+      "player_name": "Andrej Kramaric",
+      "player_key": "andrej kramaric",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-18"
     },
     {
       "team": "VfB Stuttgart",
