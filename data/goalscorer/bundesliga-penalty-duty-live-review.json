@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-17T22:00:33Z",
+  "generated_at": "2026-04-18T00:02:14Z",
   "league": "bundesliga",
   "row_count": 4,
   "rows": [
@@ -22,16 +22,16 @@
       "primary_pre_match": "Gian-Luca Waldschmidt",
       "secondary_pre_match": "Saïd El Mala",
       "tertiary_pre_match": "Isak Johannesson",
-      "primary_lineup_status": "confirmed_bench",
-      "secondary_lineup_status": "confirmed_starter",
-      "tertiary_lineup_status": "confirmed_starter",
-      "active_taker_pre_match": "Saïd El Mala",
-      "active_slot_pre_match": "secondary",
+      "primary_lineup_status": "unknown",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
-      "review_type": "primary_reclaimed_from_bench",
-      "review_priority": "low",
-      "editorial_note": "Gian-Luca Waldschmidt took 1 penalty attempt and scored for 1. FC Köln vs St. Pauli. Primary pre-match: Gian-Luca Waldschmidt (confirmed_bench). Secondary pre-match: Saïd El Mala (confirmed_starter). Pre-match active slot was secondary -> Saïd El Mala. Low-priority note: the benched primary later reclaimed the duty after coming on, so the hierarchy likely still stands.",
-      "context_generated_at": "2026-04-17T22:00:07Z",
+      "review_type": "needs_manual_review",
+      "review_priority": "medium",
+      "editorial_note": "Gian-Luca Waldschmidt took 1 penalty attempt and scored for 1. FC Köln vs St. Pauli. Primary pre-match: Gian-Luca Waldschmidt (unknown). Secondary pre-match: Saïd El Mala (unknown). Needs manual editorial review.",
+      "context_generated_at": "2026-04-18T00:02:00Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -61,7 +61,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Romano Schmid took 1 penalty attempt and scored for Werder Bremen vs 1. FC Köln. Primary pre-match: Romano Schmid (unknown). Secondary pre-match: Marvin Ducksch (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-17T22:00:07Z",
+      "context_generated_at": "2026-04-18T00:02:00Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -91,7 +91,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Deniz Undav took 1 penalty attempt and missed for VfB Stuttgart vs Hamburger SV. Primary pre-match: Maximilian MittelstÃ¤dt (unknown). Secondary pre-match: Ermedin Demirovic (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-04-17T22:00:07Z",
+      "context_generated_at": "2026-04-18T00:02:00Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -121,7 +121,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Saïd El Mala took 1 penalty attempt and scored for 1. FC Köln vs Werder Bremen. Primary pre-match: Gian-Luca Waldschmidt (unknown). Secondary pre-match: Saïd El Mala (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-04-17T22:00:07Z",
+      "context_generated_at": "2026-04-18T00:02:00Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     }
   ]
