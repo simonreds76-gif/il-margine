@@ -1,19 +1,15 @@
 {
-  "events_found": 27,
+  "events_found": 18,
   "leagues": [
     "epl",
     "serie-a",
     "la-liga",
     "bundesliga"
   ],
-  "provider_errors": [
-    "odds-api.io /odds/multi 403 -> per-bookmaker fallback",
-    "odds-api.io /odds/multi 403 -> per-bookmaker fallback",
-    "odds-api.io /odds/multi 403 -> per-bookmaker fallback"
-  ],
-  "rows_scraped": 108,
-  "run_at": "2026-04-17T16:06:29Z",
-  "run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/24574716792",
+  "provider_errors": [],
+  "rows_scraped": 72,
+  "run_at": "2026-04-18T14:03:00Z",
+  "run_url": "https://github.com/simonreds76-gif/il-margine/actions/runs/24606304751",
   "sources_used": [
     "odds-api",
     "odds-api",
