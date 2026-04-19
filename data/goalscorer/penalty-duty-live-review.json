@@ -1,9 +1,39 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-19T17:06:46Z",
+  "generated_at": "2026-04-19T18:28:34Z",
   "league": "serie-a",
-  "row_count": 1,
+  "row_count": 2,
   "rows": [
+    {
+      "date": "2026-04-19",
+      "league": "serie-a",
+      "review_source": "fotmob_live",
+      "match": "Pisa vs Genoa",
+      "team": "Genoa",
+      "opponent": "Pisa",
+      "actual_taker": "Lorenzo Colombo",
+      "actual_role_pre_match": "tertiary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "55",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Ruslan Malinovskiy",
+      "secondary_pre_match": "Junior Messias",
+      "tertiary_pre_match": "Lorenzo Colombo",
+      "primary_lineup_status": "not_in_squad",
+      "secondary_lineup_status": "confirmed_bench",
+      "tertiary_lineup_status": "confirmed_starter",
+      "active_taker_pre_match": "Lorenzo Colombo",
+      "active_slot_pre_match": "tertiary",
+      "team_lineup_status": "unknown",
+      "review_type": "expected_backup_shift",
+      "review_priority": "medium",
+      "editorial_note": "Lorenzo Colombo took 1 penalty attempt and scored for Genoa vs Pisa. Primary pre-match: Ruslan Malinovskiy (not_in_squad). Secondary pre-match: Junior Messias (confirmed_bench). Pre-match active slot was tertiary -> Lorenzo Colombo. Looks like the expected backup took over because the primary was unavailable or inactive.",
+      "context_generated_at": "2026-04-19T18:28:16Z",
+      "context_source_path": "data/goalscorer/penalty-duty-context.json"
+    },
     {
       "date": "2026-04-18",
       "league": "serie-a",
@@ -31,7 +61,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Mattia Zaccagni took 1 penalty attempt and missed for Lazio vs Napoli. Primary pre-match: Mattia Zaccagni (unknown). Secondary pre-match: Danilo Cataldi (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-19T17:06:31Z",
+      "context_generated_at": "2026-04-19T18:28:16Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     }
   ]

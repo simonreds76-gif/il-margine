@@ -1,9 +1,25 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-19T17:06:46Z",
+  "generated_at": "2026-04-19T18:28:34Z",
   "league": "serie-a",
-  "row_count": 1,
+  "row_count": 2,
   "rows": [
+    {
+      "team": "Genoa",
+      "team_key": "genoa",
+      "player_name": "Lorenzo Colombo",
+      "player_key": "lorenzo colombo",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-19"
+    },
     {
       "team": "Lazio",
       "team_key": "lazio",

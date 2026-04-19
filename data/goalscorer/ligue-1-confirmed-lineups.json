@@ -840,23 +840,23 @@
       "match_date": "2026-04-19",
       "home_team": "Paris Saint-Germain",
       "away_team": "Lyon",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-3-3",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Matvey Safonov",
         "Achraf Hakimi",
-        "Marquinhos",
+        "Ilya Zabarnyi",
         "Willian Pacho",
         "Lucas Hernández",
-        "Warren Zaïre-Emery",
         "Vitinha",
-        "João Neves",
+        "Lucas Beraldo",
+        "Senny Mayulu",
         "Bradley Barcola",
-        "Ousmane Dembélé",
-        "Khvicha Kvaratskhelia"
+        "Gonçalo Ramos",
+        "Désiré Doué"
       ],
       "away_players": [
         "Dominik Greif",
@@ -891,7 +891,7 @@
           "position_id": 32
         },
         {
-          "name": "Marquinhos",
+          "name": "Ilya Zabarnyi",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -918,7 +918,7 @@
           "position_id": 38
         },
         {
-          "name": "Warren Zaïre-Emery",
+          "name": "Vitinha",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -927,7 +927,7 @@
           "position_id": 73
         },
         {
-          "name": "Vitinha",
+          "name": "Lucas Beraldo",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -936,7 +936,7 @@
           "position_id": 75
         },
         {
-          "name": "João Neves",
+          "name": "Senny Mayulu",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -954,7 +954,7 @@
           "position_id": 103
         },
         {
-          "name": "Ousmane Dembélé",
+          "name": "Gonçalo Ramos",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -963,7 +963,7 @@
           "position_id": 105
         },
         {
-          "name": "Khvicha Kvaratskhelia",
+          "name": "Désiré Doué",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -1073,8 +1073,28 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Lucas Chevalier",
+        "Marquinhos",
+        "Dro Fernández",
+        "Fabián Ruiz",
+        "João Neves",
+        "Kang-In Lee",
+        "Warren Zaïre-Emery",
+        "Khvicha Kvaratskhelia",
+        "Ousmane Dembélé"
+      ],
+      "away_subs": [
+        "Rémy Descamps",
+        "Hans Hateboer",
+        "Noham Kamara",
+        "Steeve Kango",
+        "Noah Nartey",
+        "Tanner Tessmann",
+        "Adam Karabec",
+        "Rachid Ghezzal",
+        "Roman Yaremchuk"
+      ],
       "home_unavailable": [
         "Nuno Mendes",
         "Quentin Ndjantou"
