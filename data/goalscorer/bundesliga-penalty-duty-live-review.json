@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-19T11:49:22Z",
+  "generated_at": "2026-04-19T13:37:27Z",
   "league": "bundesliga",
-  "row_count": 3,
+  "row_count": 2,
   "rows": [
     {
       "date": "2026-04-18",
@@ -31,37 +31,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Andrej Kramaric took 2 penalty attempts and scored for Hoffenheim vs Borussia Dortmund. Primary pre-match: Andrej Kramaric (unknown). Secondary pre-match: Muhammed Damar (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-19T11:48:59Z",
-      "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
-    },
-    {
-      "date": "2026-04-18",
-      "league": "bundesliga",
-      "review_source": "fotmob_live",
-      "match": "Bayer Leverkusen vs Augsburg",
-      "team": "Augsburg",
-      "opponent": "Bayer Leverkusen",
-      "actual_taker": "Fabian Rieder",
-      "actual_role_pre_match": "none",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "90",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Alexis Claude-Maurice",
-      "secondary_pre_match": "Michael Gregoritsch",
-      "tertiary_pre_match": "Samuel Essende",
-      "primary_lineup_status": "unknown",
-      "secondary_lineup_status": "unknown",
-      "tertiary_lineup_status": "unknown",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "unranked_taker",
-      "review_priority": "high",
-      "editorial_note": "Fabian Rieder took 1 penalty attempt and scored for Augsburg vs Bayer Leverkusen. Primary pre-match: Alexis Claude-Maurice (unknown). Secondary pre-match: Michael Gregoritsch (unknown). Strong review flag: the taker was not in the tracked top three.",
-      "context_generated_at": "2026-04-19T11:48:59Z",
+      "context_generated_at": "2026-04-19T13:37:07Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -91,7 +61,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Gian-Luca Waldschmidt took 1 penalty attempt and scored for 1. FC Köln vs St. Pauli. Primary pre-match: Gian-Luca Waldschmidt (unknown). Secondary pre-match: Saïd El Mala (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-19T11:48:59Z",
+      "context_generated_at": "2026-04-19T13:37:07Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     }
   ]
