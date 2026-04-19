@@ -49,6 +49,11 @@ jobs:
           if [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
             echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
           fi
+          if [ -n "${{ secrets.DATABASE_URL }}" ]; then
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env.local
+          elif [ -n "${{ secrets.SUPABASE_DB_URL }}" ]; then
+            echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL }}" >> .env.local
+          fi
 
       - name: Run hosted hot live poll
         run: python scripts/goalscorer-live-hosted.py

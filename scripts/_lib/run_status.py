@@ -37,6 +37,9 @@ import json
 import logging
 import os
 import traceback
+import urllib.error
+import urllib.parse
+import urllib.request
 import uuid
 from datetime import datetime, timezone
 from typing import Any, Iterator, Optional
@@ -49,6 +52,15 @@ _HOST_ENV = "RUN_STATUS_HOST"
 
 def _dsn() -> Optional[str]:
     return os.environ.get("DATABASE_URL") or os.environ.get("SUPABASE_DB_URL")
+
+
+def _supabase_rest_base() -> Optional[str]:
+    base = (os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or os.environ.get("SUPABASE_URL") or "").strip()
+    return base.rstrip("/") if base else None
+
+
+def _supabase_service_key() -> Optional[str]:
+    return (os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_KEY") or "").strip() or None
 
 
 def _host() -> str:
@@ -65,9 +77,6 @@ def _host() -> str:
 def _connect():
     dsn = _dsn()
     if not dsn:
-        log.warning(
-            "run_status disabled: neither DATABASE_URL nor SUPABASE_DB_URL is set"
-        )
         return None
     try:
         import psycopg2
@@ -80,6 +89,41 @@ def _connect():
 
 def _json(d: dict) -> str:
     return json.dumps(d, default=str)
+
+
+def _rest_request(
+    *,
+    method: str,
+    path: str,
+    payload: Optional[dict[str, Any]] = None,
+    query: Optional[dict[str, str]] = None,
+) -> bool:
+    base = _supabase_rest_base()
+    key = _supabase_service_key()
+    if not base or not key:
+        return False
+
+    query_string = f"?{urllib.parse.urlencode(query)}" if query else ""
+    url = f"{base}/rest/v1/{path}{query_string}"
+    headers = {
+        "apikey": key,
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal",
+    }
+    data = None if payload is None else json.dumps(payload, default=str).encode("utf-8")
+    request = urllib.request.Request(url, data=data, headers=headers, method=method)
+    try:
+        with urllib.request.urlopen(request, timeout=_CONNECT_TIMEOUT_SECONDS) as response:
+            response.read()
+        return True
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        log.warning("run_status rest %s failed: HTTP %s: %s", method.lower(), exc.code, body)
+        return False
+    except Exception as exc:
+        log.warning("run_status rest %s failed: %s", method.lower(), exc)
+        return False
 
 
 class RunHandle:
@@ -125,6 +169,23 @@ def _insert_running(
 ) -> None:
     conn = _connect()
     if conn is None:
+        if _rest_request(
+            method="POST",
+            path="run_status",
+            payload={
+                "run_id": str(run_id),
+                "pipeline": pipeline,
+                "host": _host(),
+                "trigger_kind": trigger_kind,
+                "started_at": started.isoformat(),
+                "status": "running",
+                "details": details,
+            },
+        ):
+            return
+        log.warning(
+            "run_status insert skipped: neither DATABASE_URL/SUPABASE_DB_URL nor REST credentials are usable"
+        )
         return
     try:
         with conn:
@@ -167,6 +228,24 @@ def _finalize(
 
     conn = _connect()
     if conn is None:
+        if _rest_request(
+            method="PATCH",
+            path="run_status",
+            query={"run_id": f"eq.{run_id}"},
+            payload={
+                "finished_at": finished.isoformat(),
+                "status": status,
+                "rows_in": handle.rows_in,
+                "rows_out": handle.rows_out,
+                "error_type": error_type,
+                "error_message": error_message,
+                "details": handle.details,
+            },
+        ):
+            return
+        log.warning(
+            "run_status finalize skipped: neither DATABASE_URL/SUPABASE_DB_URL nor REST credentials are usable"
+        )
         return
     try:
         with conn:
@@ -234,10 +313,27 @@ def cli_update_finished(
         log.warning("run_status cli: invalid status %r", status)
         return
 
+    details_update: dict = {}
     conn = _connect()
     if conn is None:
+        if _rest_request(
+            method="PATCH",
+            path="run_status",
+            query={"run_id": f"eq.{uid}"},
+            payload={
+                "finished_at": datetime.now(timezone.utc).isoformat(),
+                "status": status,
+                "rows_out": rows_out,
+                "error_type": error_type,
+                "error_message": (error_message[:2000] if error_message else None),
+                "details": details_update,
+            },
+        ):
+            return
+        log.warning(
+            "run_status cli finalize skipped: neither DATABASE_URL/SUPABASE_DB_URL nor REST credentials are usable"
+        )
         return
-    details_update: dict = {}
     try:
         with conn:
             with conn.cursor() as cur:
