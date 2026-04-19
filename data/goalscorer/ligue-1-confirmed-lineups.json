@@ -242,13 +242,13 @@
         }
       ],
       "home_subs": [
+        "Giorgi Kvilitaia",
         "Jonathan Fischer",
         "Moustapha Diop",
         "Alpha Touré",
         "Benjamin Stambouli",
         "Jahyann Pandore",
         "Bouna Sarr",
-        "Giorgi Kvilitaia",
         "Lucas Michal"
       ],
       "away_subs": [
@@ -519,8 +519,8 @@
       ],
       "home_subs": [
         "Simon Adingra",
-        "Aleksandr Golovin",
         "Mamadou Coulibaly",
+        "Aleksandr Golovin",
         "Mika Biereth",
         "Philipp Köhn",
         "Eric Dier",
@@ -577,8 +577,8 @@
         "Dehmaine Tabibou",
         "Ibrahima Sissoko",
         "Johann Lepenant",
-        "Mostafa Mohamed",
-        "Ignatius Ganago"
+        "Ignatius Ganago",
+        "Mostafa Mohamed"
       ],
       "away_players": [
         "Grégoire Coudert",
@@ -676,7 +676,7 @@
           "position_id": 86
         },
         {
-          "name": "Mostafa Mohamed",
+          "name": "Ignatius Ganago",
           "line_index": 2,
           "line_size": 4,
           "role_score": 4,
@@ -685,7 +685,7 @@
           "position_id": 88
         },
         {
-          "name": "Ignatius Ganago",
+          "name": "Mostafa Mohamed",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -1100,18 +1100,18 @@
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "4-2-2-2",
+      "away_formation": "4-4-2",
       "home_players": [
         "Mike Penders",
+        "Amadou Cissé",
         "Junior Mwanga",
         "Lucas Høgsberg",
-        "Amadou Cissé",
         "Rafael Luís",
-        "Idrissa Sabaly",
         "Maxi Oyedele",
+        "Idrissa Sabaly",
+        "Gessime Yassine",
         "Samuel Amo-Ameyaw",
         "Sebastian Nanasi",
-        "Gessime Yassine",
         "David Datro Fofana"
       ],
       "away_players": [
@@ -1120,12 +1120,12 @@
         "Abdelhamid Aït Boudlal",
         "Lilian Brassier",
         "Quentin Merlin",
+        "Ludovic Blas",
         "Sebastian Szymanski",
         "Mahdi Camara",
-        "Ludovic Blas",
         "Mousa Tamari",
-        "Breel Embolo",
-        "Estéban Lepaul"
+        "Estéban Lepaul",
+        "Breel Embolo"
       ],
       "home_starters": [
         {
@@ -1138,7 +1138,7 @@
           "position_id": 11
         },
         {
-          "name": "Junior Mwanga",
+          "name": "Amadou Cissé",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1147,7 +1147,7 @@
           "position_id": 32
         },
         {
-          "name": "Lucas Høgsberg",
+          "name": "Junior Mwanga",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1156,7 +1156,7 @@
           "position_id": 34
         },
         {
-          "name": "Amadou Cissé",
+          "name": "Lucas Høgsberg",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1174,7 +1174,7 @@
           "position_id": 38
         },
         {
-          "name": "Idrissa Sabaly",
+          "name": "Maxi Oyedele",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1183,7 +1183,7 @@
           "position_id": 64
         },
         {
-          "name": "Maxi Oyedele",
+          "name": "Idrissa Sabaly",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1192,7 +1192,7 @@
           "position_id": 66
         },
         {
-          "name": "Samuel Amo-Ameyaw",
+          "name": "Gessime Yassine",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1201,7 +1201,7 @@
           "position_id": 83
         },
         {
-          "name": "Sebastian Nanasi",
+          "name": "Samuel Amo-Ameyaw",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1210,7 +1210,7 @@
           "position_id": 85
         },
         {
-          "name": "Gessime Yassine",
+          "name": "Sebastian Nanasi",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1235,7 +1235,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-2-2-2",
+          "formation": "4-4-2",
           "position_id": 11
         },
         {
@@ -1244,7 +1244,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-2-2",
+          "formation": "4-4-2",
           "position_id": 32
         },
         {
@@ -1253,7 +1253,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-2-2",
+          "formation": "4-4-2",
           "position_id": 34
         },
         {
@@ -1262,7 +1262,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-2-2",
+          "formation": "4-4-2",
           "position_id": 36
         },
         {
@@ -1271,61 +1271,61 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-2-2",
+          "formation": "4-4-2",
           "position_id": 38
+        },
+        {
+          "name": "Ludovic Blas",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 72
         },
         {
           "name": "Sebastian Szymanski",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-2-2",
-          "position_id": 64
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 74
         },
         {
           "name": "Mahdi Camara",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-2-2",
-          "position_id": 66
-        },
-        {
-          "name": "Ludovic Blas",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-2-2",
-          "position_id": 82
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 76
         },
         {
           "name": "Mousa Tamari",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-2-2",
-          "position_id": 88
-        },
-        {
-          "name": "Breel Embolo",
-          "line_index": 3,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-2-2-2",
-          "position_id": 104
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 78
         },
         {
           "name": "Estéban Lepaul",
-          "line_index": 3,
+          "line_index": 2,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-2-2-2",
+          "formation": "4-4-2",
+          "position_id": 104
+        },
+        {
+          "name": "Breel Embolo",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-4-2",
           "position_id": 106
         }
       ],
