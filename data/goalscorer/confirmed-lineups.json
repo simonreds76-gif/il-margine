@@ -242,32 +242,32 @@
         }
       ],
       "home_subs": [
+        "David Okereke",
+        "Alessio Zerbin",
+        "Martín Payero",
+        "Tommaso Barbieri",
+        "Milan Djuric",
         "Simone Lottici Tessadri",
         "Lapo Nava",
         "Marco Silvestri",
         "Federico Ceccherini",
         "Francesco Folino",
         "Matteo Bianchetti",
-        "Mikayil Faye",
-        "Alessio Zerbin",
-        "Martín Payero",
-        "Tommaso Barbieri",
-        "David Okereke",
-        "Milan Djuric"
+        "Mikayil Faye"
       ],
       "away_subs": [
+        "Luca Marianucci",
+        "Alieu Njie",
+        "Cristiano Biraghi",
+        "Tino Anjorin",
+        "Sandro Kulenovic",
         "Franco Israel",
         "Lapo Siviero",
         "Adrien Tamèze",
-        "Cristiano Biraghi",
-        "Luca Marianucci",
-        "Alieu Njie",
         "Emirhan Ilkhan",
         "Ivan Ilic",
         "Matteo Prati",
-        "Tino Anjorin",
-        "Valentino Lazaro",
-        "Sandro Kulenovic"
+        "Valentino Lazaro"
       ],
       "home_unavailable": [
         "Morten Thorsby",
@@ -291,30 +291,30 @@
       "match_date": "2026-04-19",
       "home_team": "Hellas Verona",
       "away_team": "Milan",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "3-5-2",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "3-4-2-1",
       "away_formation": "3-5-2",
       "home_players": [
         "Lorenzo Montipò",
         "Victor Nelsson",
         "Andrias Edmundsson",
-        "Martin Frese",
+        "Nicolás Valentini",
         "Daniel Oyegoke",
         "Jean-Daniel Akpa Akpro",
         "Roberto Gagliardini",
-        "Antoine Bernede",
+        "Domagoj Bradaric",
         "Rafik Belghali",
-        "Gift Orban",
-        "Kieron Bowie"
+        "Antoine Bernede",
+        "Gift Orban"
       ],
       "away_players": [
         "Mike Maignan",
         "Fikayo Tomori",
         "Matteo Gabbia",
         "Strahinja Pavlovic",
-        "Alexis Saelemaekers",
+        "Zachary Athekame",
         "Youssouf Fofana",
         "Luka Modric",
         "Adrien Rabiot",
@@ -329,7 +329,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-5-2",
+          "formation": "3-4-2-1",
           "position_id": 11
         },
         {
@@ -338,7 +338,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
+          "formation": "3-4-2-1",
           "position_id": 33
         },
         {
@@ -347,80 +347,80 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
+          "formation": "3-4-2-1",
           "position_id": 35
         },
         {
-          "name": "Martin Frese",
+          "name": "Nicolás Valentini",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
+          "formation": "3-4-2-1",
           "position_id": 37
         },
         {
           "name": "Daniel Oyegoke",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 71
+          "formation": "3-4-2-1",
+          "position_id": 62
         },
         {
           "name": "Jean-Daniel Akpa Akpro",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 73
+          "formation": "3-4-2-1",
+          "position_id": 64
         },
         {
           "name": "Roberto Gagliardini",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 75
+          "formation": "3-4-2-1",
+          "position_id": 66
         },
         {
-          "name": "Antoine Bernede",
+          "name": "Domagoj Bradaric",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 77
+          "formation": "3-4-2-1",
+          "position_id": 68
         },
         {
           "name": "Rafik Belghali",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 79
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84
+        },
+        {
+          "name": "Antoine Bernede",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86
         },
         {
           "name": "Gift Orban",
-          "line_index": 2,
-          "line_size": 2,
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-5-2",
-          "position_id": 104
-        },
-        {
-          "name": "Kieron Bowie",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-5-2",
-          "position_id": 106
+          "formation": "3-4-2-1",
+          "position_id": 105
         }
       ],
       "away_starters": [
@@ -461,7 +461,7 @@
           "position_id": 37
         },
         {
-          "name": "Alexis Saelemaekers",
+          "name": "Zachary Athekame",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -524,8 +524,33 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Giacomo Toniolo",
+        "Armel Bella-Kotchap",
+        "Tobias Slotsager",
+        "Abdou Harroui",
+        "Fallou Cham",
+        "Martin Frese",
+        "Moatasem Al Musrati",
+        "Pol Lirola",
+        "Sandi Lovric",
+        "Isaac Aguiar",
+        "Junior Ajayi"
+      ],
+      "away_subs": [
+        "Matteo Pittarella",
+        "Pietro Terracciano",
+        "David Odogu",
+        "Koni De Winter",
+        "Alexis Saelemaekers",
+        "Ardon Jashari",
+        "Pervis Estupinán",
+        "Ruben Loftus-Cheek",
+        "Samuele Ricci",
+        "Christopher Nkunku",
+        "Niclas Füllkrug",
+        "Santiago Giménez"
+      ],
       "home_unavailable": [
         "Suat Serdar"
       ],

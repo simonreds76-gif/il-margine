@@ -264,20 +264,20 @@
       "match_date": "2026-04-19",
       "home_team": "Monaco",
       "away_team": "Auxerre",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Lukás Hrádecky",
         "Thilo Kehrer",
-        "Denis Zakaria",
+        "Christian Mawissa",
         "Wout Faes",
         "Jordan Teze",
-        "Mamadou Coulibaly",
+        "Denis Zakaria",
         "Aladji Bamba",
-        "Simon Adingra",
+        "Krépin Diatta",
         "Maghnes Akliouche",
         "Ansu Fati",
         "Folarin Balogun"
@@ -315,7 +315,7 @@
           "position_id": 33
         },
         {
-          "name": "Denis Zakaria",
+          "name": "Christian Mawissa",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -342,7 +342,7 @@
           "position_id": 62
         },
         {
-          "name": "Mamadou Coulibaly",
+          "name": "Denis Zakaria",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -360,7 +360,7 @@
           "position_id": 66
         },
         {
-          "name": "Simon Adingra",
+          "name": "Krépin Diatta",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -497,8 +497,28 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Philipp Köhn",
+        "Eric Dier",
+        "Aleksandr Golovin",
+        "Ilane Touré",
+        "Mamadou Coulibaly",
+        "Pape Cabral",
+        "Paul Pogba",
+        "Mika Biereth",
+        "Simon Adingra"
+      ],
+      "away_subs": [
+        "Théo De Percin",
+        "Tom Negrel",
+        "Francisco Sierralta",
+        "Lamine Sy",
+        "Assane Dioussé",
+        "Naouirou Ahamada",
+        "Josué Casimir",
+        "Mamoudou Cissokho",
+        "Sékou Mara"
+      ],
       "home_unavailable": [
         "Stanis Idumbo",
         "Caio Henrique",
