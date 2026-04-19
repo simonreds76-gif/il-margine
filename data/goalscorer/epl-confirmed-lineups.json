@@ -17,12 +17,12 @@
         "Emiliano Martínez",
         "Matty Cash",
         "Ezri Konsa",
-        "Pau Torres",
+        "Tyrone Mings",
         "Ian Maatsen",
         "Amadou Onana",
-        "Youri Tielemans",
-        "John McGinn",
         "Ross Barkley",
+        "John McGinn",
+        "Youri Tielemans",
         "Morgan Rogers",
         "Ollie Watkins"
       ],
@@ -68,7 +68,7 @@
           "position_id": 34
         },
         {
-          "name": "Pau Torres",
+          "name": "Tyrone Mings",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -95,7 +95,7 @@
           "position_id": 64
         },
         {
-          "name": "Youri Tielemans",
+          "name": "Ross Barkley",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -113,7 +113,7 @@
           "position_id": 83
         },
         {
-          "name": "Ross Barkley",
+          "name": "Youri Tielemans",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -241,15 +241,34 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Marco Bizot",
+        "Lamare Bogarde",
+        "Lucas Digne",
+        "Victor Nilsson Lindelöf",
+        "Douglas Luiz",
+        "Emiliano Buendía",
+        "Jadon Sancho",
+        "Leon Bailey",
+        "Tammy Abraham"
+      ],
+      "away_subs": [
+        "Melker Ellborg",
+        "Daniel Ballard",
+        "Dennis Cirkin",
+        "Lutsharel Geertruida",
+        "Trai Hume",
+        "Harrison Jones",
+        "Chemsdine Talbi",
+        "Eliezer Mayenda",
+        "Wilson Isidor"
+      ],
       "home_unavailable": [
         "Alysson Edward",
         "Boubacar Kamara"
       ],
       "away_unavailable": [
         "Simon Moore",
-        "Daniel Ballard",
         "Bertrand Traoré",
         "Jocelin Ta Bi",
         "Nilson Angulo",
@@ -264,9 +283,9 @@
       "match_date": "2026-04-19",
       "home_team": "Everton",
       "away_team": "Liverpool",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -284,16 +303,16 @@
       ],
       "away_players": [
         "Giorgi Mamardashvili",
-        "Jeremie Frimpong",
+        "Dominik Szoboszlai",
         "Ibrahima Konaté",
         "Virgil van Dijk",
-        "Milos Kerkez",
+        "Andrew Robertson",
         "Ryan Gravenberch",
-        "Dominik Szoboszlai",
+        "Curtis Jones",
         "Mohamed Salah",
-        "Alexis Mac Allister",
         "Florian Wirtz",
-        "Cody Gakpo"
+        "Cody Gakpo",
+        "Alexander Isak"
       ],
       "home_starters": [
         {
@@ -407,7 +426,7 @@
           "position_id": 11
         },
         {
-          "name": "Jeremie Frimpong",
+          "name": "Dominik Szoboszlai",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -434,7 +453,7 @@
           "position_id": 36
         },
         {
-          "name": "Milos Kerkez",
+          "name": "Andrew Robertson",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -452,7 +471,7 @@
           "position_id": 64
         },
         {
-          "name": "Dominik Szoboszlai",
+          "name": "Curtis Jones",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -470,7 +489,7 @@
           "position_id": 83
         },
         {
-          "name": "Alexis Mac Allister",
+          "name": "Florian Wirtz",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -479,7 +498,7 @@
           "position_id": 85
         },
         {
-          "name": "Florian Wirtz",
+          "name": "Cody Gakpo",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -488,7 +507,7 @@
           "position_id": 87
         },
         {
-          "name": "Cody Gakpo",
+          "name": "Alexander Isak",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -497,10 +516,28 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Mark Travers",
+        "Michael Keane",
+        "Nathan Patterson",
         "Charly Alcaraz",
+        "Merlin Röhl",
+        "Tim Iroegbunam",
+        "Thierno Barry",
+        "Tyler Dibling",
+        "Tyrique George"
+      ],
+      "away_subs": [
+        "Ármin Pécsi",
+        "Freddie Woodman",
+        "Jeremie Frimpong",
+        "Milos Kerkez",
+        "Alexis Mac Allister",
+        "Trey Nyoni",
+        "Federico Chiesa",
+        "Rio Ngumoha"
+      ],
+      "home_unavailable": [
         "Jack Grealish"
       ],
       "away_unavailable": [
@@ -777,9 +814,9 @@
       "match_date": "2026-04-19",
       "home_team": "Nottingham Forest",
       "away_team": "Burnley",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -789,20 +826,20 @@
         "Murillo",
         "Neco Williams",
         "Ibrahim Sangaré",
-        "Nicolás Dominguez",
+        "Elliot Anderson",
         "Omari Hutchinson",
         "Morgan Gibbs-White",
-        "Dan Ndoye",
+        "Dilane Bakwa",
         "Chris Wood"
       ],
       "away_players": [
         "Martin Dúbravka",
         "Kyle Walker",
-        "Bashir Humphreys",
+        "Hjalmar Ekdal",
         "Maxime Estève",
         "Quilindschy Hartman",
         "James Ward-Prowse",
-        "Josh Laurent",
+        "Florentino",
         "Marcus Edwards",
         "Lesley Ugochukwu",
         "Jaidon Anthony",
@@ -864,7 +901,7 @@
           "position_id": 64
         },
         {
-          "name": "Nicolás Dominguez",
+          "name": "Elliot Anderson",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -891,7 +928,7 @@
           "position_id": 85
         },
         {
-          "name": "Dan Ndoye",
+          "name": "Dilane Bakwa",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -929,7 +966,7 @@
           "position_id": 32
         },
         {
-          "name": "Bashir Humphreys",
+          "name": "Hjalmar Ekdal",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -965,7 +1002,7 @@
           "position_id": 64
         },
         {
-          "name": "Josh Laurent",
+          "name": "Florentino",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1010,8 +1047,28 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Stefan Ortega",
+        "Jair Cunha",
+        "Luca Netz",
+        "Morato",
+        "James McAtee",
+        "Nicolás Dominguez",
+        "Ryan Yates",
+        "Igor Jesus",
+        "Taiwo Awoniyi"
+      ],
+      "away_subs": [
+        "Max Weiss",
+        "Bashir Humphreys",
+        "Joe Worrall",
+        "Josh Laurent",
+        "Mike Trésor",
+        "Armando Broja",
+        "Jacob Bruun Larsen",
+        "Loum Tchaouna",
+        "Lyle Foster"
+      ],
       "home_unavailable": [
         "John Victor",
         "Nicolò Savona",
