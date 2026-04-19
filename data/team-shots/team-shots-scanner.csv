@@ -1,99 +1,51 @@
 kickoff_iso,league,home_team,away_team,team,venue,line,side,model_prob,model_fair,book_odds,bookmaker,edge,captured_at,lambda_venue,lambda_recent,divergence,consensus,effective_stake,preferred
-2026-04-19T15:30:00Z,epl,Manchester City,Arsenal FC,Manchester City,home,14.5,under,0.7365,1.358,1.833,Bet365,0.35,2026-04-17T16:06:30Z,10.86,10.68,0.0171,aligned,2.0,True
-2026-04-19T15:30:00Z,bundesliga,Bayern Munich,VfB Stuttgart,Bayern Munich,home,20.5,under,0.7048,1.419,1.8,Bet365,0.2686,2026-04-17T16:06:40Z,20.76,19.68,0.0523,aligned,2.0,True
-2026-04-19T13:00:00Z,serie-a,Hellas Verona,AC Milan,AC Milan,away,14.5,under,0.6897,1.45,1.833,Bet365,0.2642,2026-04-17T16:06:36Z,11.82,11.66,0.0134,aligned,2.0,True
-2026-04-19T18:45:00Z,serie-a,Juventus Turin,Bologna FC,Juventus Turin,home,16.5,under,0.63,1.587,2.0,Bet365,0.26,2026-04-17T16:06:36Z,16.25,15.15,0.0676,aligned,2.0,True
+2026-04-19T15:30:00Z,epl,Manchester City,Arsenal FC,Manchester City,home,14.5,under,0.7365,1.358,1.833,Bet365,0.35,2026-04-18T14:03:02Z,10.86,10.68,0.0171,aligned,2.0,True
+2026-04-19T15:30:00Z,bundesliga,Bayern Munich,VfB Stuttgart,Bayern Munich,home,20.5,under,0.7048,1.419,1.8,Bet365,0.2686,2026-04-18T14:03:13Z,20.76,19.68,0.0523,aligned,2.0,True
+2026-04-19T13:00:00Z,serie-a,Hellas Verona,AC Milan,AC Milan,away,14.5,under,0.6897,1.45,1.833,Bet365,0.2642,2026-04-18T14:03:09Z,11.82,11.66,0.0134,aligned,2.0,True
 2026-04-19T18:45:00Z,serie-a,Juventus Turin,Bologna FC,Juventus Turin,home,17.5,under,0.707,1.414,1.727,Bet365,0.221,2026-04-17T10:51:07Z,16.25,15.15,0.0676,aligned,2.0,True
-2026-04-19T18:45:00Z,serie-a,Juventus Turin,Bologna FC,Bologna FC,away,8.5,over,0.6779,1.475,1.833,Bet365,0.2426,2026-04-17T16:06:36Z,9.84,11.53,0.1718,divergent,2.0,False
-2026-04-19T13:30:00Z,bundesliga,SC Freiburg,1. FC Heidenheim,1. FC Heidenheim,away,9.5,over,0.679,1.473,1.8,Bet365,0.2222,2026-04-17T16:06:40Z,11.92,12.54,0.0518,aligned,2.0,False
-2026-04-18T13:30:00Z,bundesliga,Werder Bremen,Hamburger SV,Werder Bremen,home,14.5,over,0.595,1.681,2.0,Bet365,0.19,2026-04-17T16:06:40Z,18.25,19.65,0.0767,aligned,2.0,False
-2026-04-19T15:30:00Z,epl,Manchester City,Arsenal FC,Arsenal FC,away,9.5,over,0.6334,1.579,1.833,Bet365,0.161,2026-04-17T16:06:30Z,10.95,9.96,0.0906,aligned,2.0,False
-2026-04-18T14:00:00Z,epl,Leeds United,Wolverhampton Wanderers,Wolverhampton Wanderers,away,8.5,over,0.6707,1.491,1.727,Bet365,0.1583,2026-04-17T16:06:30Z,9.68,12.27,0.2683,divergent,1.5,False
-2026-04-19T10:30:00Z,serie-a,US Cremonese,Torino FC,Torino FC,away,12.5,over,0.6336,1.578,1.8,Bet365,0.1405,2026-04-17T16:06:36Z,15.33,14.65,0.0443,aligned,1.5,False
-2026-04-18T18:45:00Z,serie-a,AS Roma,Atalanta BC,Atalanta BC,away,10.5,over,0.5927,1.687,1.909,Bet365,0.1315,2026-04-17T16:06:36Z,11.76,10.95,0.0687,aligned,1.5,False
-2026-04-18T13:30:00Z,bundesliga,TSG Hoffenheim,Borussia Dortmund,Borussia Dortmund,away,13.5,under,0.602,1.661,1.833,Bet365,0.1035,2026-04-17T10:51:10Z,11.95,12.57,0.0519,aligned,1.0,False
-2026-04-18T14:00:00Z,epl,Newcastle United,AFC Bournemouth,AFC Bournemouth,away,12.5,over,0.6115,1.635,1.8,Bet365,0.1007,2026-04-17T16:06:30Z,14.84,12.73,0.1425,aligned,1.0,False
-2026-04-18T13:00:00Z,serie-a,Udinese Calcio,Parma Calcio,Parma Calcio,away,9.5,over,0.6311,1.585,1.727,Bet365,0.0899,2026-04-17T16:06:36Z,10.9,9.61,0.1187,aligned,1.0,False
-2026-04-19T16:00:00Z,serie-a,Pisa SC,Genoa CFC,Pisa SC,home,11.5,under,0.544,1.838,2.0,Bet365,0.088,2026-04-17T16:06:36Z,10.56,10.44,0.012,aligned,1.0,False
-2026-04-18T13:30:00Z,bundesliga,TSG Hoffenheim,Borussia Dortmund,TSG Hoffenheim,home,12.5,over,0.541,1.848,2.0,Bet365,0.082,2026-04-17T16:06:40Z,13.36,15.32,0.1471,aligned,1.0,False
-2026-04-19T10:30:00Z,serie-a,US Cremonese,Torino FC,US Cremonese,home,12.5,under,0.5898,1.695,1.833,Bet365,0.0811,2026-04-17T16:06:36Z,10.88,12.69,0.1656,divergent,1.0,False
-2026-04-18T16:00:00Z,serie-a,SSC Napoli,Lazio Rome,SSC Napoli,home,13.5,under,0.5375,1.86,2.0,Bet365,0.075,2026-04-17T16:06:36Z,13.2,13.35,0.0114,aligned,0.5,False
-2026-04-18T16:30:00Z,epl,Tottenham Hotspur,Brighton & Hove Albion,Tottenham Hotspur,home,12.5,under,0.5614,1.781,1.909,Bet365,0.0717,2026-04-17T16:06:30Z,11.39,13.12,0.1521,divergent,0.5,False
-2026-04-19T16:00:00Z,serie-a,Pisa SC,Genoa CFC,Genoa CFC,away,12.5,over,0.5353,1.868,2.0,Bet365,0.0706,2026-04-17T16:06:36Z,13.24,13.82,0.0438,aligned,0.5,False
-2026-04-18T14:00:00Z,epl,Newcastle United,AFC Bournemouth,Newcastle United,home,15.5,under,0.584,1.712,1.833,Bet365,0.0705,2026-04-17T16:06:30Z,15.9,16.91,0.0635,aligned,0.5,False
-2026-04-18T16:30:00Z,epl,Tottenham Hotspur,Brighton & Hove Albion,Brighton & Hove Albion,away,12.5,over,0.5324,1.878,2.0,Bet365,0.0648,2026-04-17T16:06:30Z,13.18,12.09,0.0826,aligned,0.5,False
-2026-04-19T15:30:00Z,bundesliga,Bayern Munich,VfB Stuttgart,VfB Stuttgart,away,10.5,over,0.586,1.706,1.8,Bet365,0.0548,2026-04-17T16:06:40Z,11.62,9.69,0.1656,divergent,0.5,False
-2026-04-18T14:00:00Z,epl,Leeds United,Wolverhampton Wanderers,Leeds United,home,15.5,under,0.5273,1.896,2.0,Bet365,0.0546,2026-04-17T10:51:05Z,17.2,15.61,0.0925,aligned,0.5,False
-2026-04-18T13:30:00Z,bundesliga,Bayer Leverkusen,FC Augsburg,FC Augsburg,away,10.5,over,0.6056,1.651,1.727,Bet365,0.0459,2026-04-17T16:06:40Z,12.05,12.97,0.0761,aligned,0.0,False
-2026-04-18T16:00:00Z,serie-a,SSC Napoli,Lazio Rome,Lazio Rome,away,9.5,under,0.5693,1.757,1.833,Bet365,0.0435,2026-04-17T16:06:36Z,7.48,7.46,0.0024,aligned,0.0,False
-2026-04-19T13:00:00Z,epl,Aston Villa,Sunderland AFC,Aston Villa,home,15.5,under,0.5429,1.842,1.909,Bet365,0.0364,2026-04-17T16:06:30Z,16.84,21.03,0.2486,divergent,0.0,False
-2026-04-18T19:00:00Z,epl,Chelsea FC,Manchester United,Chelsea FC,home,14.5,under,0.5751,1.739,1.8,Bet365,0.0352,2026-04-17T16:06:30Z,14.29,13.22,0.0747,aligned,0.0,False
-2026-04-19T13:00:00Z,epl,Aston Villa,Sunderland AFC,Sunderland AFC,away,9.5,over,0.5417,1.846,1.909,Bet365,0.0341,2026-04-17T16:06:30Z,9.22,8.98,0.0265,aligned,0.0,False
-2026-04-18T13:30:00Z,bundesliga,Werder Bremen,Hamburger SV,Hamburger SV,away,10.5,under,0.5146,1.943,2.0,Bet365,0.0292,2026-04-17T16:06:40Z,9.6,8.37,0.1281,aligned,0.0,False
-2026-04-18T11:30:00Z,epl,Brentford FC,Fulham FC,Brentford FC,home,11.5,over,0.5956,1.679,1.727,Bet365,0.0286,2026-04-17T16:06:30Z,13.32,13.49,0.0126,aligned,0.0,False
-2026-04-18T16:30:00Z,bundesliga,Eintracht Frankfurt,RB Leipzig,RB Leipzig,away,14.5,under,0.5938,1.684,1.727,Bet365,0.0255,2026-04-17T16:06:40Z,13.87,11.26,0.1883,divergent,0.0,False
-2026-04-19T13:30:00Z,bundesliga,SC Freiburg,1. FC Heidenheim,SC Freiburg,home,15.5,under,0.5894,1.697,1.727,Bet365,0.0179,2026-04-17T16:06:40Z,15.78,15.39,0.0248,aligned,0.0,False
-2026-04-18T14:00:00Z,epl,Leeds United,Wolverhampton Wanderers,Leeds United,home,16.5,under,0.5882,1.7,1.727,Bet365,0.0158,2026-04-17T16:06:30Z,17.2,15.61,0.0925,aligned,0.0,False
-2026-04-19T13:00:00Z,serie-a,Hellas Verona,AC Milan,Hellas Verona,home,9.5,over,0.5529,1.809,1.833,Bet365,0.0135,2026-04-17T16:06:36Z,9.41,9.77,0.0373,aligned,0.0,False
-2026-04-18T13:30:00Z,bundesliga,Bayer Leverkusen,FC Augsburg,Bayer Leverkusen,home,15.5,over,0.5473,1.827,1.833,Bet365,0.0032,2026-04-17T16:06:40Z,18.93,18.27,0.0347,aligned,0.0,False
-2026-04-18T19:00:00Z,epl,Chelsea FC,Manchester United,Manchester United,away,13.5,over,0.5,2.0,2.0,Bet365,0.0,2026-04-17T16:06:30Z,13.97,13.52,0.0317,aligned,0.0,False
-2026-04-19T13:00:00Z,epl,Everton FC,Liverpool FC,Everton FC,home,10.5,over,0.5743,1.741,1.727,Bet365,-0.0082,2026-04-17T16:06:30Z,11.37,11.9,0.0469,aligned,0.0,False
-2026-04-19T13:00:00Z,epl,Nottingham Forest,Burnley FC,Nottingham Forest,home,16.5,under,0.4932,2.028,2.0,Bet365,-0.0136,2026-04-17T16:06:30Z,19.37,21.38,0.1035,aligned,0.0,False
-2026-04-18T16:30:00Z,bundesliga,Eintracht Frankfurt,RB Leipzig,Eintracht Frankfurt,home,11.5,over,0.492,2.033,2.0,Bet365,-0.016,2026-04-17T16:06:40Z,11.23,11.6,0.0331,aligned,0.0,False
-2026-04-18T13:30:00Z,bundesliga,TSG Hoffenheim,Borussia Dortmund,Borussia Dortmund,away,12.5,under,0.5313,1.882,1.833,Bet365,-0.0261,2026-04-17T16:06:40Z,11.95,12.57,0.0519,aligned,0.0,False
-2026-04-19T13:00:00Z,epl,Everton FC,Liverpool FC,Liverpool FC,away,13.5,over,0.5543,1.804,1.727,Bet365,-0.0427,2026-04-17T16:06:30Z,15.12,16.16,0.0691,aligned,0.0,False
-2026-04-18T18:45:00Z,serie-a,AS Roma,Atalanta BC,AS Roma,home,13.5,over,0.5204,1.922,1.833,Bet365,-0.0461,2026-04-17T16:06:36Z,14.39,13.63,0.0527,aligned,0.0,False
-2026-04-19T13:00:00Z,epl,Nottingham Forest,Burnley FC,Burnley FC,away,9.5,over,0.4747,2.107,2.0,Bet365,-0.0506,2026-04-17T16:06:30Z,8.12,7.54,0.0716,aligned,0.0,False
-2026-04-18T13:30:00Z,bundesliga,Union Berlin,VFL Wolfsburg,Union Berlin,home,13.5,over,0.5141,1.945,1.833,Bet365,-0.0577,2026-04-17T16:06:40Z,14.26,14.48,0.0155,aligned,0.0,False
-2026-04-18T13:30:00Z,bundesliga,Union Berlin,VFL Wolfsburg,VFL Wolfsburg,away,10.5,over,0.5141,1.945,1.833,Bet365,-0.0577,2026-04-17T16:06:40Z,10.14,9.47,0.0662,aligned,0.0,False
-2026-04-18T11:30:00Z,epl,Brentford FC,Fulham FC,Fulham FC,away,11.5,under,0.4689,2.133,2.0,Bet365,-0.0622,2026-04-17T16:06:30Z,11.99,12.64,0.0548,aligned,0.0,False
-2026-04-18T13:00:00Z,serie-a,Udinese Calcio,Parma Calcio,Udinese Calcio,home,13.5,under,0.5167,1.935,1.8,Bet365,-0.0699,2026-04-17T16:06:36Z,13.62,10.8,0.2072,divergent,0.0,False
-2026-04-18T13:00:00Z,serie-a,Udinese Calcio,Parma Calcio,Udinese Calcio,home,13.5,over,0.4833,2.069,1.909,Bet365,-0.0774,2026-04-17T16:06:36Z,13.62,10.8,0.2072,divergent,0.0,False
-2026-04-18T11:30:00Z,epl,Brentford FC,Fulham FC,Fulham FC,away,11.5,over,0.5311,1.883,1.727,Bet365,-0.0828,2026-04-17T16:06:30Z,11.99,12.64,0.0548,aligned,0.0,False
-2026-04-19T13:00:00Z,epl,Nottingham Forest,Burnley FC,Burnley FC,away,9.5,under,0.5253,1.904,1.727,Bet365,-0.0928,2026-04-17T16:06:30Z,8.12,7.54,0.0716,aligned,0.0,False
-2026-04-19T13:00:00Z,epl,Everton FC,Liverpool FC,Liverpool FC,away,13.5,under,0.4457,2.244,2.0,Bet365,-0.1086,2026-04-17T16:06:30Z,15.12,16.16,0.0691,aligned,0.0,False
-2026-04-18T13:30:00Z,bundesliga,Union Berlin,VFL Wolfsburg,Union Berlin,home,13.5,under,0.4859,2.058,1.833,Bet365,-0.1093,2026-04-17T16:06:40Z,14.26,14.48,0.0155,aligned,0.0,False
-2026-04-18T13:30:00Z,bundesliga,Union Berlin,VFL Wolfsburg,VFL Wolfsburg,away,10.5,under,0.4859,2.058,1.833,Bet365,-0.1093,2026-04-17T16:06:40Z,10.14,9.47,0.0662,aligned,0.0,False
-2026-04-18T18:45:00Z,serie-a,AS Roma,Atalanta BC,AS Roma,home,13.5,under,0.4796,2.085,1.833,Bet365,-0.1209,2026-04-17T16:06:36Z,14.39,13.63,0.0527,aligned,0.0,False
-2026-04-18T16:30:00Z,bundesliga,Eintracht Frankfurt,RB Leipzig,Eintracht Frankfurt,home,11.5,under,0.508,1.969,1.727,Bet365,-0.1227,2026-04-17T16:06:40Z,11.23,11.6,0.0331,aligned,0.0,False
-2026-04-19T13:00:00Z,epl,Nottingham Forest,Burnley FC,Nottingham Forest,home,16.5,over,0.5068,1.973,1.727,Bet365,-0.1248,2026-04-17T16:06:30Z,19.37,21.38,0.1035,aligned,0.0,False
-2026-04-18T19:00:00Z,epl,Chelsea FC,Manchester United,Manchester United,away,13.5,under,0.5,2.0,1.727,Bet365,-0.1365,2026-04-17T16:06:30Z,13.97,13.52,0.0317,aligned,0.0,False
-2026-04-18T13:30:00Z,bundesliga,TSG Hoffenheim,Borussia Dortmund,Borussia Dortmund,away,12.5,over,0.4687,2.134,1.833,Bet365,-0.1409,2026-04-17T16:06:40Z,11.95,12.57,0.0519,aligned,0.0,False
-2026-04-19T13:00:00Z,epl,Everton FC,Liverpool FC,Everton FC,home,10.5,under,0.4257,2.349,2.0,Bet365,-0.1486,2026-04-17T16:06:30Z,11.37,11.9,0.0469,aligned,0.0,False
-2026-04-18T13:30:00Z,bundesliga,Werder Bremen,Hamburger SV,Hamburger SV,away,10.5,over,0.4854,2.06,1.727,Bet365,-0.1617,2026-04-17T16:06:40Z,9.6,8.37,0.1281,aligned,0.0,False
-2026-04-18T13:30:00Z,bundesliga,Bayer Leverkusen,FC Augsburg,Bayer Leverkusen,home,15.5,under,0.4527,2.209,1.833,Bet365,-0.1702,2026-04-17T16:06:40Z,18.93,18.27,0.0347,aligned,0.0,False
-2026-04-19T13:00:00Z,epl,Aston Villa,Sunderland AFC,Sunderland AFC,away,9.5,under,0.4583,2.182,1.8,Bet365,-0.1751,2026-04-17T16:06:30Z,9.22,8.98,0.0265,aligned,0.0,False
-2026-04-18T14:00:00Z,epl,Leeds United,Wolverhampton Wanderers,Leeds United,home,16.5,over,0.4118,2.428,2.0,Bet365,-0.1764,2026-04-17T16:06:30Z,17.2,15.61,0.0925,aligned,0.0,False
-2026-04-19T13:00:00Z,epl,Aston Villa,Sunderland AFC,Aston Villa,home,15.5,over,0.4571,2.188,1.8,Bet365,-0.1772,2026-04-17T16:06:30Z,16.84,21.03,0.2486,divergent,0.0,False
-2026-04-19T13:30:00Z,bundesliga,SC Freiburg,1. FC Heidenheim,SC Freiburg,home,15.5,over,0.4106,2.435,2.0,Bet365,-0.1788,2026-04-17T16:06:40Z,15.78,15.39,0.0248,aligned,0.0,False
-2026-04-19T13:00:00Z,serie-a,Hellas Verona,AC Milan,Hellas Verona,home,9.5,under,0.4471,2.237,1.833,Bet365,-0.1805,2026-04-17T16:06:36Z,9.41,9.77,0.0373,aligned,0.0,False
-2026-04-18T14:00:00Z,epl,Leeds United,Wolverhampton Wanderers,Leeds United,home,15.5,over,0.4727,2.116,1.727,Bet365,-0.1836,2026-04-17T10:51:05Z,17.2,15.61,0.0925,aligned,0.0,False
-2026-04-18T16:30:00Z,bundesliga,Eintracht Frankfurt,RB Leipzig,RB Leipzig,away,14.5,over,0.4062,2.462,2.0,Bet365,-0.1876,2026-04-17T16:06:40Z,13.87,11.26,0.1883,divergent,0.0,False
-2026-04-18T19:00:00Z,epl,Chelsea FC,Manchester United,Chelsea FC,home,14.5,over,0.4249,2.353,1.909,Bet365,-0.1889,2026-04-17T16:06:30Z,14.29,13.22,0.0747,aligned,0.0,False
-2026-04-18T11:30:00Z,epl,Brentford FC,Fulham FC,Brentford FC,home,11.5,under,0.4044,2.473,2.0,Bet365,-0.1912,2026-04-17T16:06:30Z,13.32,13.49,0.0126,aligned,0.0,False
-2026-04-18T16:30:00Z,epl,Tottenham Hotspur,Brighton & Hove Albion,Brighton & Hove Albion,away,12.5,under,0.4676,2.139,1.727,Bet365,-0.1925,2026-04-17T16:06:30Z,13.18,12.09,0.0826,aligned,0.0,False
-2026-04-19T16:00:00Z,serie-a,Pisa SC,Genoa CFC,Genoa CFC,away,12.5,under,0.4647,2.152,1.727,Bet365,-0.1975,2026-04-17T16:06:36Z,13.24,13.82,0.0438,aligned,0.0,False
-2026-04-18T16:00:00Z,serie-a,SSC Napoli,Lazio Rome,SSC Napoli,home,13.5,over,0.4625,2.162,1.727,Bet365,-0.2013,2026-04-17T16:06:36Z,13.2,13.35,0.0114,aligned,0.0,False
-2026-04-18T13:30:00Z,bundesliga,TSG Hoffenheim,Borussia Dortmund,TSG Hoffenheim,home,12.5,under,0.459,2.179,1.727,Bet365,-0.2073,2026-04-17T16:06:40Z,13.36,15.32,0.1471,aligned,0.0,False
-2026-04-19T15:30:00Z,bundesliga,Bayern Munich,VfB Stuttgart,VfB Stuttgart,away,10.5,under,0.414,2.415,1.909,Bet365,-0.2097,2026-04-17T16:06:40Z,11.62,9.69,0.1656,divergent,0.0,False
-2026-04-18T16:00:00Z,serie-a,SSC Napoli,Lazio Rome,Lazio Rome,away,9.5,over,0.4307,2.322,1.833,Bet365,-0.2105,2026-04-17T16:06:36Z,7.48,7.46,0.0024,aligned,0.0,False
-2026-04-18T16:30:00Z,epl,Tottenham Hotspur,Brighton & Hove Albion,Tottenham Hotspur,home,12.5,over,0.4386,2.28,1.8,Bet365,-0.2105,2026-04-17T16:06:30Z,11.39,13.12,0.1521,divergent,0.0,False
-2026-04-18T13:30:00Z,bundesliga,Bayer Leverkusen,FC Augsburg,FC Augsburg,away,10.5,under,0.3944,2.535,2.0,Bet365,-0.2112,2026-04-17T16:06:40Z,12.05,12.97,0.0761,aligned,0.0,False
-2026-04-19T16:00:00Z,serie-a,Pisa SC,Genoa CFC,Pisa SC,home,11.5,over,0.456,2.193,1.727,Bet365,-0.2125,2026-04-17T16:06:36Z,10.56,10.44,0.012,aligned,0.0,False
-2026-04-18T14:00:00Z,epl,Newcastle United,AFC Bournemouth,Newcastle United,home,15.5,over,0.416,2.404,1.833,Bet365,-0.2375,2026-04-17T16:06:30Z,15.9,16.91,0.0635,aligned,0.0,False
-2026-04-19T10:30:00Z,serie-a,US Cremonese,Torino FC,US Cremonese,home,12.5,over,0.4102,2.438,1.833,Bet365,-0.2481,2026-04-17T16:06:36Z,10.88,12.69,0.1656,divergent,0.0,False
-2026-04-18T14:00:00Z,epl,Newcastle United,AFC Bournemouth,AFC Bournemouth,away,12.5,under,0.3885,2.574,1.909,Bet365,-0.2584,2026-04-17T16:06:30Z,14.84,12.73,0.1425,aligned,0.0,False
-2026-04-18T13:00:00Z,serie-a,Udinese Calcio,Parma Calcio,Parma Calcio,away,9.5,under,0.3689,2.711,2.0,Bet365,-0.2622,2026-04-17T16:06:36Z,10.9,9.61,0.1187,aligned,0.0,False
-2026-04-18T18:45:00Z,serie-a,AS Roma,Atalanta BC,Atalanta BC,away,10.5,under,0.4073,2.455,1.8,Bet365,-0.2669,2026-04-17T16:06:36Z,11.76,10.95,0.0687,aligned,0.0,False
-2026-04-18T13:30:00Z,bundesliga,TSG Hoffenheim,Borussia Dortmund,Borussia Dortmund,away,13.5,over,0.398,2.513,1.833,Bet365,-0.2705,2026-04-17T10:51:10Z,11.95,12.57,0.0519,aligned,0.0,False
-2026-04-19T10:30:00Z,serie-a,US Cremonese,Torino FC,Torino FC,away,12.5,under,0.3664,2.729,1.909,Bet365,-0.3005,2026-04-17T16:06:36Z,15.33,14.65,0.0443,aligned,0.0,False
-2026-04-18T13:30:00Z,bundesliga,Werder Bremen,Hamburger SV,Werder Bremen,home,14.5,under,0.405,2.469,1.727,Bet365,-0.3006,2026-04-17T16:06:40Z,18.25,19.65,0.0767,aligned,0.0,False
-2026-04-19T15:30:00Z,epl,Manchester City,Arsenal FC,Arsenal FC,away,9.5,under,0.3666,2.728,1.833,Bet365,-0.328,2026-04-17T16:06:30Z,10.95,9.96,0.0906,aligned,0.0,False
-2026-04-18T14:00:00Z,epl,Leeds United,Wolverhampton Wanderers,Wolverhampton Wanderers,away,8.5,under,0.3293,3.037,2.0,Bet365,-0.3414,2026-04-17T16:06:30Z,9.68,12.27,0.2683,divergent,0.0,False
-2026-04-19T18:45:00Z,serie-a,Juventus Turin,Bologna FC,Juventus Turin,home,16.5,over,0.37,2.703,1.727,Bet365,-0.361,2026-04-17T16:06:36Z,16.25,15.15,0.0676,aligned,0.0,False
-2026-04-19T13:30:00Z,bundesliga,SC Freiburg,1. FC Heidenheim,1. FC Heidenheim,away,9.5,under,0.321,3.115,1.909,Bet365,-0.3872,2026-04-17T16:06:40Z,11.92,12.54,0.0518,aligned,0.0,False
-2026-04-19T18:45:00Z,serie-a,Juventus Turin,Bologna FC,Bologna FC,away,8.5,under,0.3221,3.105,1.833,Bet365,-0.4096,2026-04-17T16:06:36Z,9.84,11.53,0.1718,divergent,0.0,False
+2026-04-20T19:00:00Z,epl,Crystal Palace,West Ham United,West Ham United,away,12.5,under,0.6609,1.513,1.8,Bet365,0.1896,2026-04-18T14:03:02Z,9.68,9.43,0.0258,aligned,2.0,True
+2026-04-19T18:45:00Z,serie-a,Juventus Turin,Bologna FC,Bologna FC,away,8.5,over,0.6779,1.475,1.833,Bet365,0.2426,2026-04-18T14:03:09Z,9.84,11.53,0.1718,divergent,2.0,False
+2026-04-19T13:30:00Z,bundesliga,SC Freiburg,1. FC Heidenheim,1. FC Heidenheim,away,9.5,over,0.679,1.473,1.8,Bet365,0.2222,2026-04-18T14:03:13Z,11.92,12.54,0.0518,aligned,2.0,False
+2026-04-19T15:30:00Z,epl,Manchester City,Arsenal FC,Arsenal FC,away,9.5,over,0.6334,1.579,1.833,Bet365,0.161,2026-04-18T14:03:02Z,10.95,9.96,0.0906,aligned,2.0,False
+2026-04-19T10:30:00Z,serie-a,US Cremonese,Torino FC,Torino FC,away,12.5,over,0.6336,1.578,1.8,Bet365,0.1405,2026-04-18T14:03:09Z,15.33,14.65,0.0443,aligned,1.5,False
+2026-04-19T16:00:00Z,serie-a,Pisa SC,Genoa CFC,Pisa SC,home,11.5,under,0.544,1.838,2.0,Bet365,0.088,2026-04-18T14:03:09Z,10.56,10.44,0.012,aligned,1.0,False
+2026-04-19T18:45:00Z,serie-a,Juventus Turin,Bologna FC,Juventus Turin,home,16.5,under,0.63,1.587,1.727,Bet365,0.088,2026-04-18T14:03:09Z,16.25,15.15,0.0676,aligned,1.0,False
+2026-04-20T18:45:00Z,serie-a,US Lecce,ACF Fiorentina,US Lecce,home,11.5,under,0.543,1.842,2.0,Bet365,0.086,2026-04-18T14:03:09Z,10.58,11.22,0.06,aligned,1.0,False
+2026-04-19T10:30:00Z,serie-a,US Cremonese,Torino FC,US Cremonese,home,12.5,under,0.5898,1.695,1.833,Bet365,0.0811,2026-04-18T14:03:09Z,10.88,12.69,0.1656,divergent,1.0,False
+2026-04-19T16:00:00Z,serie-a,Pisa SC,Genoa CFC,Genoa CFC,away,12.5,over,0.5353,1.868,2.0,Bet365,0.0706,2026-04-18T14:03:09Z,13.24,13.82,0.0438,aligned,0.5,False
+2026-04-19T15:30:00Z,bundesliga,Bayern Munich,VfB Stuttgart,VfB Stuttgart,away,10.5,over,0.586,1.706,1.8,Bet365,0.0548,2026-04-18T14:03:13Z,11.62,9.69,0.1656,divergent,0.5,False
+2026-04-19T13:00:00Z,epl,Aston Villa,Sunderland AFC,Aston Villa,home,15.5,under,0.5429,1.842,1.909,Bet365,0.0364,2026-04-18T14:03:02Z,16.84,21.03,0.2486,divergent,0.0,False
+2026-04-19T13:00:00Z,epl,Aston Villa,Sunderland AFC,Sunderland AFC,away,9.5,over,0.5417,1.846,1.909,Bet365,0.0341,2026-04-18T14:03:02Z,9.22,8.98,0.0265,aligned,0.0,False
+2026-04-19T13:30:00Z,bundesliga,SC Freiburg,1. FC Heidenheim,SC Freiburg,home,15.5,under,0.5894,1.697,1.727,Bet365,0.0179,2026-04-18T14:03:13Z,15.78,15.39,0.0248,aligned,0.0,False
+2026-04-20T19:00:00Z,epl,Crystal Palace,West Ham United,Crystal Palace,home,14.5,over,0.5078,1.969,2.0,Bet365,0.0156,2026-04-18T14:03:02Z,16.18,16.86,0.042,aligned,0.0,False
+2026-04-19T13:00:00Z,serie-a,Hellas Verona,AC Milan,Hellas Verona,home,9.5,over,0.5529,1.809,1.833,Bet365,0.0135,2026-04-18T14:03:09Z,9.41,9.77,0.0373,aligned,0.0,False
+2026-04-19T13:00:00Z,epl,Everton FC,Liverpool FC,Everton FC,home,10.5,over,0.5743,1.741,1.727,Bet365,-0.0082,2026-04-18T14:03:02Z,11.37,11.9,0.0469,aligned,0.0,False
+2026-04-19T13:00:00Z,epl,Nottingham Forest,Burnley FC,Nottingham Forest,home,16.5,under,0.4932,2.028,2.0,Bet365,-0.0136,2026-04-18T14:03:02Z,19.37,21.38,0.1035,aligned,0.0,False
+2026-04-20T18:45:00Z,serie-a,US Lecce,ACF Fiorentina,ACF Fiorentina,away,12.5,under,0.4903,2.04,2.0,Bet365,-0.0194,2026-04-18T14:03:09Z,12.73,10.89,0.1446,aligned,0.0,False
+2026-04-19T13:00:00Z,epl,Everton FC,Liverpool FC,Liverpool FC,away,13.5,over,0.5543,1.804,1.727,Bet365,-0.0427,2026-04-18T14:03:02Z,15.12,16.16,0.0691,aligned,0.0,False
+2026-04-19T13:00:00Z,epl,Nottingham Forest,Burnley FC,Burnley FC,away,9.5,over,0.4747,2.107,2.0,Bet365,-0.0506,2026-04-18T14:03:02Z,8.12,7.54,0.0716,aligned,0.0,False
+2026-04-19T13:00:00Z,epl,Nottingham Forest,Burnley FC,Burnley FC,away,9.5,under,0.5253,1.904,1.727,Bet365,-0.0928,2026-04-18T14:03:02Z,8.12,7.54,0.0716,aligned,0.0,False
+2026-04-19T13:00:00Z,epl,Everton FC,Liverpool FC,Liverpool FC,away,13.5,under,0.4457,2.244,2.0,Bet365,-0.1086,2026-04-18T14:03:02Z,15.12,16.16,0.0691,aligned,0.0,False
+2026-04-20T18:45:00Z,serie-a,US Lecce,ACF Fiorentina,ACF Fiorentina,away,12.5,over,0.5097,1.962,1.727,Bet365,-0.1197,2026-04-18T14:03:09Z,12.73,10.89,0.1446,aligned,0.0,False
+2026-04-19T13:00:00Z,epl,Nottingham Forest,Burnley FC,Nottingham Forest,home,16.5,over,0.5068,1.973,1.727,Bet365,-0.1248,2026-04-18T14:03:02Z,19.37,21.38,0.1035,aligned,0.0,False
+2026-04-19T13:00:00Z,epl,Everton FC,Liverpool FC,Everton FC,home,10.5,under,0.4257,2.349,2.0,Bet365,-0.1486,2026-04-18T14:03:02Z,11.37,11.9,0.0469,aligned,0.0,False
+2026-04-20T19:00:00Z,epl,Crystal Palace,West Ham United,Crystal Palace,home,14.5,under,0.4922,2.032,1.727,Bet365,-0.15,2026-04-18T14:03:02Z,16.18,16.86,0.042,aligned,0.0,False
+2026-04-19T13:00:00Z,epl,Aston Villa,Sunderland AFC,Sunderland AFC,away,9.5,under,0.4583,2.182,1.8,Bet365,-0.1751,2026-04-18T14:03:02Z,9.22,8.98,0.0265,aligned,0.0,False
+2026-04-19T13:00:00Z,epl,Aston Villa,Sunderland AFC,Aston Villa,home,15.5,over,0.4571,2.188,1.8,Bet365,-0.1772,2026-04-18T14:03:02Z,16.84,21.03,0.2486,divergent,0.0,False
+2026-04-19T13:30:00Z,bundesliga,SC Freiburg,1. FC Heidenheim,SC Freiburg,home,15.5,over,0.4106,2.435,2.0,Bet365,-0.1788,2026-04-18T14:03:13Z,15.78,15.39,0.0248,aligned,0.0,False
+2026-04-19T13:00:00Z,serie-a,Hellas Verona,AC Milan,Hellas Verona,home,9.5,under,0.4471,2.237,1.833,Bet365,-0.1805,2026-04-18T14:03:09Z,9.41,9.77,0.0373,aligned,0.0,False
+2026-04-19T16:00:00Z,serie-a,Pisa SC,Genoa CFC,Genoa CFC,away,12.5,under,0.4647,2.152,1.727,Bet365,-0.1975,2026-04-18T14:03:09Z,13.24,13.82,0.0438,aligned,0.0,False
+2026-04-19T15:30:00Z,bundesliga,Bayern Munich,VfB Stuttgart,VfB Stuttgart,away,10.5,under,0.414,2.415,1.909,Bet365,-0.2097,2026-04-18T14:03:13Z,11.62,9.69,0.1656,divergent,0.0,False
+2026-04-20T18:45:00Z,serie-a,US Lecce,ACF Fiorentina,US Lecce,home,11.5,over,0.457,2.188,1.727,Bet365,-0.2108,2026-04-18T14:03:09Z,10.58,11.22,0.06,aligned,0.0,False
+2026-04-19T16:00:00Z,serie-a,Pisa SC,Genoa CFC,Pisa SC,home,11.5,over,0.456,2.193,1.727,Bet365,-0.2125,2026-04-18T14:03:09Z,10.56,10.44,0.012,aligned,0.0,False
+2026-04-19T10:30:00Z,serie-a,US Cremonese,Torino FC,US Cremonese,home,12.5,over,0.4102,2.438,1.833,Bet365,-0.2481,2026-04-18T14:03:09Z,10.88,12.69,0.1656,divergent,0.0,False
+2026-04-19T18:45:00Z,serie-a,Juventus Turin,Bologna FC,Juventus Turin,home,16.5,over,0.37,2.703,2.0,Bet365,-0.26,2026-04-18T14:03:09Z,16.25,15.15,0.0676,aligned,0.0,False
+2026-04-19T10:30:00Z,serie-a,US Cremonese,Torino FC,Torino FC,away,12.5,under,0.3664,2.729,1.909,Bet365,-0.3005,2026-04-18T14:03:09Z,15.33,14.65,0.0443,aligned,0.0,False
+2026-04-19T15:30:00Z,epl,Manchester City,Arsenal FC,Arsenal FC,away,9.5,under,0.3666,2.728,1.833,Bet365,-0.328,2026-04-18T14:03:02Z,10.95,9.96,0.0906,aligned,0.0,False
+2026-04-20T19:00:00Z,epl,Crystal Palace,West Ham United,West Ham United,away,12.5,over,0.3391,2.949,1.909,Bet365,-0.3527,2026-04-18T14:03:02Z,9.68,9.43,0.0258,aligned,0.0,False
+2026-04-19T13:30:00Z,bundesliga,SC Freiburg,1. FC Heidenheim,1. FC Heidenheim,away,9.5,under,0.321,3.115,1.909,Bet365,-0.3872,2026-04-18T14:03:13Z,11.92,12.54,0.0518,aligned,0.0,False
+2026-04-19T18:45:00Z,serie-a,Juventus Turin,Bologna FC,Bologna FC,away,8.5,under,0.3221,3.105,1.833,Bet365,-0.4096,2026-04-18T14:03:09Z,9.84,11.53,0.1718,divergent,0.0,False
 2026-04-19T18:45:00Z,serie-a,Juventus Turin,Bologna FC,Juventus Turin,home,17.5,over,0.293,3.413,2.0,Bet365,-0.414,2026-04-17T10:51:07Z,16.25,15.15,0.0676,aligned,0.0,False
-2026-04-19T13:00:00Z,serie-a,Hellas Verona,AC Milan,AC Milan,away,14.5,over,0.3103,3.223,1.833,Bet365,-0.4312,2026-04-17T16:06:36Z,11.82,11.66,0.0134,aligned,0.0,False
-2026-04-19T15:30:00Z,bundesliga,Bayern Munich,VfB Stuttgart,Bayern Munich,home,20.5,over,0.2952,3.388,1.909,Bet365,-0.4365,2026-04-17T16:06:40Z,20.76,19.68,0.0523,aligned,0.0,False
-2026-04-19T15:30:00Z,epl,Manchester City,Arsenal FC,Manchester City,home,14.5,over,0.2635,3.795,1.833,Bet365,-0.517,2026-04-17T16:06:30Z,10.86,10.68,0.0171,aligned,0.0,False
+2026-04-19T13:00:00Z,serie-a,Hellas Verona,AC Milan,AC Milan,away,14.5,over,0.3103,3.223,1.833,Bet365,-0.4312,2026-04-18T14:03:09Z,11.82,11.66,0.0134,aligned,0.0,False
+2026-04-19T15:30:00Z,bundesliga,Bayern Munich,VfB Stuttgart,Bayern Munich,home,20.5,over,0.2952,3.388,1.909,Bet365,-0.4365,2026-04-18T14:03:13Z,20.76,19.68,0.0523,aligned,0.0,False
+2026-04-19T15:30:00Z,epl,Manchester City,Arsenal FC,Manchester City,home,14.5,over,0.2635,3.795,1.833,Bet365,-0.517,2026-04-18T14:03:02Z,10.86,10.68,0.0171,aligned,0.0,False
