@@ -8,40 +8,40 @@
       "match_date": "2026-04-19",
       "home_team": "Bayern München",
       "away_team": "VfB Stuttgart",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
-        "Manuel Neuer",
+        "Jonas Urbig",
         "Josip Stanisic",
-        "Dayot Upamecano",
-        "Jonathan Tah",
+        "Min-Jae Kim",
+        "Hiroki Ito",
         "Alphonso Davies",
         "Joshua Kimmich",
         "Leon Goretzka",
-        "Michael Olise",
         "Jamal Musiala",
+        "Raphaël Guerreiro",
         "Luis Díaz",
-        "Harry Kane"
+        "Nicolas Jackson"
       ],
       "away_players": [
         "Alexander Nübel",
-        "Lorenz Assignon",
-        "Ramon Hendriks",
+        "Josha Vagnoman",
+        "Finn Jeltsch",
         "Jeff Chabot",
-        "Maximilian Mittelstädt",
-        "Chema Andres",
+        "Ramon Hendriks",
+        "Atakan Karazor",
         "Angelo Stiller",
         "Jamie Leweling",
-        "Tiago Tomás",
+        "Bilal El Khannouss",
         "Chris Führich",
-        "Ermedin Demirovic"
+        "Tiago Tomás"
       ],
       "home_starters": [
         {
-          "name": "Manuel Neuer",
+          "name": "Jonas Urbig",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
@@ -59,7 +59,7 @@
           "position_id": 32
         },
         {
-          "name": "Dayot Upamecano",
+          "name": "Min-Jae Kim",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -68,7 +68,7 @@
           "position_id": 34
         },
         {
-          "name": "Jonathan Tah",
+          "name": "Hiroki Ito",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -104,7 +104,7 @@
           "position_id": 66
         },
         {
-          "name": "Michael Olise",
+          "name": "Jamal Musiala",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -113,7 +113,7 @@
           "position_id": 83
         },
         {
-          "name": "Jamal Musiala",
+          "name": "Raphaël Guerreiro",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -131,7 +131,7 @@
           "position_id": 87
         },
         {
-          "name": "Harry Kane",
+          "name": "Nicolas Jackson",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -151,7 +151,7 @@
           "position_id": 11
         },
         {
-          "name": "Lorenz Assignon",
+          "name": "Josha Vagnoman",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -160,7 +160,7 @@
           "position_id": 32
         },
         {
-          "name": "Ramon Hendriks",
+          "name": "Finn Jeltsch",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -178,7 +178,7 @@
           "position_id": 36
         },
         {
-          "name": "Maximilian Mittelstädt",
+          "name": "Ramon Hendriks",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -187,7 +187,7 @@
           "position_id": 38
         },
         {
-          "name": "Chema Andres",
+          "name": "Atakan Karazor",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -214,7 +214,7 @@
           "position_id": 83
         },
         {
-          "name": "Tiago Tomás",
+          "name": "Bilal El Khannouss",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -232,7 +232,7 @@
           "position_id": 87
         },
         {
-          "name": "Ermedin Demirovic",
+          "name": "Tiago Tomás",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -241,8 +241,28 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Manuel Neuer",
+        "Bara Ndiaye",
+        "Dayot Upamecano",
+        "Deniz Ofli",
+        "Jonathan Tah",
+        "Konrad Laimer",
+        "Aleksandar Pavlovic",
+        "Harry Kane",
+        "Michael Olise"
+      ],
+      "away_subs": [
+        "Fabian Bredlow",
+        "Dan-Axel Zagadou",
+        "Lorenz Assignon",
+        "Luca Jaquez",
+        "Maximilian Mittelstädt",
+        "Chema Andres",
+        "Nikolas Nartey",
+        "Badredine Bouanani",
+        "Ermedin Demirovic"
+      ],
       "home_unavailable": [
         "Serge Gnabry",
         "Sven Ulreich",
@@ -757,25 +777,25 @@
         }
       ],
       "home_subs": [
+        "Nicolas Höfler",
+        "Yuito Suzuki",
+        "Jan-Niklas Beste",
         "Florian Müller",
         "Jordy Makengo",
         "Philipp Lienhart",
         "Philipp Treu",
         "Cyriaque Irié",
-        "Nicolas Höfler",
-        "Yuito Suzuki",
-        "Jan-Niklas Beste",
         "Maximilian Philipp"
       ],
       "away_subs": [
+        "Budu Zivzivadze",
+        "Christian Conteh",
         "Frank Feller",
         "Leonidas Stergiou",
         "Omar Traoré",
         "Tim Siersleben",
         "Adrian Beck",
-        "Christian Conteh",
         "Luca Kerber",
-        "Budu Zivzivadze",
         "Stefan Schimmer"
       ],
       "home_unavailable": [
