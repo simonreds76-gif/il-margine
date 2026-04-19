@@ -1,25 +1,25 @@
 {
-  "updated_at": "2026-04-19T09:33:34Z",
+  "updated_at": "2026-04-19T10:24:06Z",
   "reason": "cycle",
   "leagues": {
     "serie-a": {
-      "last_successful_run_at": "2026-04-19T09:30:15Z",
-      "last_detail_run_at": "2026-04-19T08:45:43Z",
+      "last_successful_run_at": "2026-04-19T10:22:27Z",
+      "last_detail_run_at": "2026-04-19T10:22:27Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "hot",
-      "last_decision": "waiting",
-      "last_message": "Skip serie-a: cadence 10m not due yet.",
+      "last_decision": "ran",
+      "last_message": "Ran serie-a in hot tier (cadence 10m, fixtures 5).",
       "next_kickoff_utc": "2026-04-19T10:30:00Z"
     },
     "epl": {
-      "last_successful_run_at": "2026-04-19T08:46:24Z",
-      "last_detail_run_at": "2026-04-19T08:46:24Z",
+      "last_successful_run_at": "2026-04-19T10:23:19Z",
+      "last_detail_run_at": "2026-04-19T10:23:19Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "cold",
-      "last_decision": "waiting",
-      "last_message": "Skip epl: cadence 120m not due yet.",
+      "last_tier": "warm",
+      "last_decision": "ran",
+      "last_message": "Ran epl in warm tier (cadence 30m, fixtures 6).",
       "next_kickoff_utc": "2026-04-19T13:00:00Z"
     },
     "la-liga": {
@@ -43,13 +43,13 @@
       "next_kickoff_utc": "2026-04-19T13:30:00Z"
     },
     "ligue-1": {
-      "last_successful_run_at": "2026-04-19T08:48:00Z",
-      "last_detail_run_at": "2026-04-19T08:48:00Z",
+      "last_successful_run_at": "2026-04-19T10:23:58Z",
+      "last_detail_run_at": "2026-04-19T10:23:58Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "cold",
-      "last_decision": "waiting",
-      "last_message": "Skip ligue-1: cadence 120m not due yet.",
+      "last_tier": "warm",
+      "last_decision": "ran",
+      "last_message": "Ran ligue-1 in warm tier (cadence 30m, fixtures 5).",
       "next_kickoff_utc": "2026-04-19T13:00:00Z"
     }
   }

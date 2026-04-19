@@ -8,23 +8,23 @@
       "match_date": "2026-04-19",
       "home_team": "Cremonese",
       "away_team": "Torino",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "4-4-2",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "3-5-2",
       "away_formation": "3-4-1-2",
       "home_players": [
         "Emil Audero",
         "Filippo Terracciano",
         "Federico Baschirotto",
         "Sebastiano Luperto",
-        "Giuseppe Pezzella",
         "Romano Floriani Mussolini",
-        "Alberto Grassi",
         "Warren Bondo",
         "Jari Vandeputte",
+        "Alberto Grassi",
+        "Giuseppe Pezzella",
         "Federico Bonazzoli",
-        "David Okereke"
+        "Antonio Sanabria"
       ],
       "away_players": [
         "Alberto Paleari",
@@ -46,80 +46,80 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-4-2",
+          "formation": "3-5-2",
           "position_id": 11
         },
         {
           "name": "Filippo Terracciano",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 32
+          "formation": "3-5-2",
+          "position_id": 33
         },
         {
           "name": "Federico Baschirotto",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 34
+          "formation": "3-5-2",
+          "position_id": 35
         },
         {
           "name": "Sebastiano Luperto",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 36
-        },
-        {
-          "name": "Giuseppe Pezzella",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 38
+          "formation": "3-5-2",
+          "position_id": 37
         },
         {
           "name": "Romano Floriani Mussolini",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 72
-        },
-        {
-          "name": "Alberto Grassi",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 74
+          "formation": "3-5-2",
+          "position_id": 71
         },
         {
           "name": "Warren Bondo",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 76
+          "formation": "3-5-2",
+          "position_id": 73
         },
         {
           "name": "Jari Vandeputte",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 78
+          "formation": "3-5-2",
+          "position_id": 75
+        },
+        {
+          "name": "Alberto Grassi",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 77
+        },
+        {
+          "name": "Giuseppe Pezzella",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79
         },
         {
           "name": "Federico Bonazzoli",
@@ -127,16 +127,16 @@
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
+          "formation": "3-5-2",
           "position_id": 104
         },
         {
-          "name": "David Okereke",
+          "name": "Antonio Sanabria",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
+          "formation": "3-5-2",
           "position_id": 106
         }
       ],
@@ -241,8 +241,34 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Simone Lottici Tessadri",
+        "Lapo Nava",
+        "Marco Silvestri",
+        "Federico Ceccherini",
+        "Francesco Folino",
+        "Matteo Bianchetti",
+        "Mikayil Faye",
+        "Alessio Zerbin",
+        "Martín Payero",
+        "Tommaso Barbieri",
+        "David Okereke",
+        "Milan Djuric"
+      ],
+      "away_subs": [
+        "Franco Israel",
+        "Lapo Siviero",
+        "Adrien Tamèze",
+        "Cristiano Biraghi",
+        "Luca Marianucci",
+        "Alieu Njie",
+        "Emirhan Ilkhan",
+        "Ivan Ilic",
+        "Matteo Prati",
+        "Tino Anjorin",
+        "Valentino Lazaro",
+        "Sandro Kulenovic"
+      ],
       "home_unavailable": [
         "Morten Thorsby",
         "Michele Collocolo",
@@ -1036,26 +1062,26 @@
         "Danilo Veiga",
         "Tiago Gabriel",
         "Jamil Siebert",
-        "Corrie Ndaba",
+        "Antonino Gallo",
         "Ylber Ramadani",
-        "Oumar Ngom",
-        "Santiago Pierotti",
         "Lassana Coulibaly",
+        "Santiago Pierotti",
+        "Omri Gandelman",
         "Lameck Banda",
         "Nikola Stulic"
       ],
       "away_players": [
         "David de Gea",
         "Dodô",
-        "Daniele Rugani",
+        "Marin Pongracic",
         "Luca Ranieri",
         "Robin Gosens",
-        "Giovanni Fabbian",
+        "Nicolò Fagioli",
         "Rolando Mandragora",
         "Cher Ndour",
-        "Jack Harrison",
+        "Manor Solomon",
         "Roberto Piccoli",
-        "Jacopo Fazzini"
+        "Albert Gudmundsson"
       ],
       "home_starters": [
         {
@@ -1095,7 +1121,7 @@
           "position_id": 36
         },
         {
-          "name": "Corrie Ndaba",
+          "name": "Antonino Gallo",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1113,7 +1139,7 @@
           "position_id": 64
         },
         {
-          "name": "Oumar Ngom",
+          "name": "Lassana Coulibaly",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1131,7 +1157,7 @@
           "position_id": 83
         },
         {
-          "name": "Lassana Coulibaly",
+          "name": "Omri Gandelman",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1178,7 +1204,7 @@
           "position_id": 32
         },
         {
-          "name": "Daniele Rugani",
+          "name": "Marin Pongracic",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1205,7 +1231,7 @@
           "position_id": 38
         },
         {
-          "name": "Giovanni Fabbian",
+          "name": "Nicolò Fagioli",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -1232,7 +1258,7 @@
           "position_id": 77
         },
         {
-          "name": "Jack Harrison",
+          "name": "Manor Solomon",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -1250,7 +1276,7 @@
           "position_id": 105
         },
         {
-          "name": "Jacopo Fazzini",
+          "name": "Albert Gudmundsson",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
