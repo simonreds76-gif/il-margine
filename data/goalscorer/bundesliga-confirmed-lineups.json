@@ -246,9 +246,9 @@
         "Michael Olise",
         "Konrad Laimer",
         "Bara Ndiaye",
+        "Deniz Ofli",
         "Manuel Neuer",
         "Dayot Upamecano",
-        "Deniz Ofli",
         "Jonathan Tah",
         "Aleksandar Pavlovic"
       ],
@@ -257,11 +257,11 @@
         "Maximilian Mittelstädt",
         "Chema Andres",
         "Ermedin Demirovic",
+        "Badredine Bouanani",
         "Fabian Bredlow",
         "Dan-Axel Zagadou",
         "Lorenz Assignon",
-        "Nikolas Nartey",
-        "Badredine Bouanani"
+        "Nikolas Nartey"
       ],
       "home_unavailable": [
         "Serge Gnabry",
@@ -286,21 +286,21 @@
       "match_date": "2026-04-19",
       "home_team": "Borussia Mönchengladbach",
       "away_team": "Mainz 05",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "4-2-3-1",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "3-4-2-1",
       "away_formation": "3-1-4-2",
       "home_players": [
         "Moritz Nicolas",
-        "Joseph Scally",
-        "Nico Elvedi",
-        "Fabio Chiarodia",
-        "Lukas Ullrich",
         "Philipp Sander",
-        "Yannik Engelhardt",
-        "Franck Honorat",
+        "Nico Elvedi",
+        "Kevin Diks",
+        "Joseph Scally",
         "Rocco Reitz",
+        "Yannik Engelhardt",
+        "Jens Castrop",
+        "Hugo Bolin",
         "Kevin Stöger",
         "Haris Tabakovic"
       ],
@@ -310,10 +310,10 @@
         "Stefan Posch",
         "Dominik Kohr",
         "Kaishu Sano",
-        "Nikolas Veratschnig",
-        "Sota Kawasaki",
+        "Anthony Caci",
+        "Nadiem Amiri",
         "Paul Nebel",
-        "Phillipp Mwene",
+        "Nikolas Veratschnig",
         "Phillip Tietz",
         "Sheraldo Becker"
       ],
@@ -324,89 +324,89 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-2-3-1",
+          "formation": "3-4-2-1",
           "position_id": 11
         },
         {
-          "name": "Joseph Scally",
+          "name": "Philipp Sander",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 32
+          "formation": "3-4-2-1",
+          "position_id": 33
         },
         {
           "name": "Nico Elvedi",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 34
+          "formation": "3-4-2-1",
+          "position_id": 35
         },
         {
-          "name": "Fabio Chiarodia",
+          "name": "Kevin Diks",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 36
+          "formation": "3-4-2-1",
+          "position_id": 37
         },
         {
-          "name": "Lukas Ullrich",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 38
-        },
-        {
-          "name": "Philipp Sander",
+          "name": "Joseph Scally",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 62
+        },
+        {
+          "name": "Rocco Reitz",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
           "position_id": 64
         },
         {
           "name": "Yannik Engelhardt",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
           "position_id": 66
         },
         {
-          "name": "Franck Honorat",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83
+          "name": "Jens Castrop",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 68
         },
         {
-          "name": "Rocco Reitz",
+          "name": "Hugo Bolin",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 2,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85
+          "formation": "3-4-2-1",
+          "position_id": 84
         },
         {
           "name": "Kevin Stöger",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 2,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87
+          "formation": "3-4-2-1",
+          "position_id": 86
         },
         {
           "name": "Haris Tabakovic",
@@ -414,8 +414,8 @@
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-2-3-1",
-          "position_id": 115
+          "formation": "3-4-2-1",
+          "position_id": 105
         }
       ],
       "away_starters": [
@@ -465,7 +465,7 @@
           "position_id": 65
         },
         {
-          "name": "Nikolas Veratschnig",
+          "name": "Anthony Caci",
           "line_index": 2,
           "line_size": 4,
           "role_score": 4,
@@ -474,7 +474,7 @@
           "position_id": 82
         },
         {
-          "name": "Sota Kawasaki",
+          "name": "Nadiem Amiri",
           "line_index": 2,
           "line_size": 4,
           "role_score": 4,
@@ -492,7 +492,7 @@
           "position_id": 86
         },
         {
-          "name": "Phillipp Mwene",
+          "name": "Nikolas Veratschnig",
           "line_index": 2,
           "line_size": 4,
           "role_score": 4,
@@ -519,12 +519,31 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Jan Olschowsky",
+        "Fabio Chiarodia",
+        "Kota Takai",
+        "Lukas Ullrich",
+        "Giovanni Reyna",
+        "Wael Mohya",
+        "Franck Honorat",
+        "Robin Hack",
+        "Shuto Machino"
+      ],
+      "away_subs": [
+        "Lasse Rieß",
+        "Andreas Hanche-Olsen",
+        "Kacper Potulski",
+        "Phillipp Mwene",
+        "Silvan Widmer",
+        "Sota Kawasaki",
+        "Armindo Sieb",
+        "Nelson Weiper",
+        "William Bøving"
+      ],
       "home_unavailable": [
         "Jan Urbich",
         "Nathan N'Goumou",
-        "Robin Hack",
         "Tim Kleindienst"
       ],
       "away_unavailable": [
