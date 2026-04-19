@@ -844,32 +844,32 @@
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
       "home_formation": "4-3-3",
-      "away_formation": "5-3-2",
+      "away_formation": "4-3-1-2",
       "home_players": [
         "Matvey Safonov",
         "Achraf Hakimi",
         "Ilya Zabarnyi",
         "Willian Pacho",
         "Lucas Hernández",
-        "Vitinha",
-        "Lucas Beraldo",
         "Senny Mayulu",
-        "Bradley Barcola",
+        "Lucas Beraldo",
+        "Vitinha",
+        "Désiré Doué",
         "Gonçalo Ramos",
-        "Désiré Doué"
+        "Bradley Barcola"
       ],
       "away_players": [
         "Dominik Greif",
+        "Ainsley Maitland-Niles",
         "Clinton Mata",
         "Moussa Niakhaté",
         "Ruben Kluivert",
-        "Ainsley Maitland-Niles",
-        "Abner",
-        "Khalis Merah",
         "Tyler Morton",
         "Orel Mangala",
-        "Afonso Moreira",
-        "Endrick"
+        "Abner",
+        "Khalis Merah",
+        "Endrick",
+        "Afonso Moreira"
       ],
       "home_starters": [
         {
@@ -918,7 +918,7 @@
           "position_id": 38
         },
         {
-          "name": "Vitinha",
+          "name": "Senny Mayulu",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -936,7 +936,7 @@
           "position_id": 75
         },
         {
-          "name": "Senny Mayulu",
+          "name": "Vitinha",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -945,7 +945,7 @@
           "position_id": 77
         },
         {
-          "name": "Bradley Barcola",
+          "name": "Désiré Doué",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -963,7 +963,7 @@
           "position_id": 105
         },
         {
-          "name": "Désiré Doué",
+          "name": "Bradley Barcola",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -979,62 +979,44 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "5-3-2",
+          "formation": "4-3-1-2",
           "position_id": 11
-        },
-        {
-          "name": "Clinton Mata",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 33
-        },
-        {
-          "name": "Moussa Niakhaté",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 35
-        },
-        {
-          "name": "Ruben Kluivert",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 37
         },
         {
           "name": "Ainsley Maitland-Niles",
           "line_index": 0,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 51
+          "formation": "4-3-1-2",
+          "position_id": 32
         },
         {
-          "name": "Abner",
+          "name": "Clinton Mata",
           "line_index": 0,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 59
+          "formation": "4-3-1-2",
+          "position_id": 34
         },
         {
-          "name": "Khalis Merah",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "5-3-2",
-          "position_id": 73
+          "name": "Moussa Niakhaté",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-1-2",
+          "position_id": 36
+        },
+        {
+          "name": "Ruben Kluivert",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-1-2",
+          "position_id": 38
         },
         {
           "name": "Tyler Morton",
@@ -1042,8 +1024,8 @@
           "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "5-3-2",
-          "position_id": 75
+          "formation": "4-3-1-2",
+          "position_id": 63
         },
         {
           "name": "Orel Mangala",
@@ -1051,47 +1033,65 @@
           "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "5-3-2",
-          "position_id": 77
+          "formation": "4-3-1-2",
+          "position_id": 65
         },
         {
-          "name": "Afonso Moreira",
+          "name": "Abner",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-1-2",
+          "position_id": 67
+        },
+        {
+          "name": "Khalis Merah",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "5-3-2",
-          "position_id": 104
+          "line_size": 1,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-3-1-2",
+          "position_id": 85
         },
         {
           "name": "Endrick",
-          "line_index": 2,
+          "line_index": 3,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "5-3-2",
+          "formation": "4-3-1-2",
+          "position_id": 104
+        },
+        {
+          "name": "Afonso Moreira",
+          "line_index": 3,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-1-2",
           "position_id": 106
         }
       ],
       "home_subs": [
+        "Warren Zaïre-Emery",
+        "Kang-In Lee",
+        "Khvicha Kvaratskhelia",
+        "Ousmane Dembélé",
+        "Fabián Ruiz",
         "Lucas Chevalier",
         "Marquinhos",
         "Dro Fernández",
-        "Fabián Ruiz",
-        "João Neves",
-        "Kang-In Lee",
-        "Warren Zaïre-Emery",
-        "Khvicha Kvaratskhelia",
-        "Ousmane Dembélé"
+        "João Neves"
       ],
       "away_subs": [
-        "Rémy Descamps",
         "Hans Hateboer",
-        "Noham Kamara",
-        "Steeve Kango",
-        "Noah Nartey",
         "Tanner Tessmann",
         "Adam Karabec",
+        "Noham Kamara",
+        "Rémy Descamps",
+        "Steeve Kango",
+        "Noah Nartey",
         "Rachid Ghezzal",
         "Roman Yaremchuk"
       ],

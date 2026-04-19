@@ -569,8 +569,8 @@
       "home_status": "Confirmed Lineup",
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
-      "home_formation": "3-4-2-1",
-      "away_formation": "4-2-3-1",
+      "home_formation": "3-4-3",
+      "away_formation": "4-3-3",
       "home_players": [
         "Michele Di Gregorio",
         "Pierre Kalulu",
@@ -581,8 +581,8 @@
         "Weston McKennie",
         "Andrea Cambiaso",
         "Francisco Conceição",
-        "Jérémie Boga",
-        "Jonathan David"
+        "Jonathan David",
+        "Jérémie Boga"
       ],
       "away_players": [
         "Federico Ravaglia",
@@ -590,12 +590,12 @@
         "Eivind Helland",
         "Jhon Lucumí",
         "Juan Miranda",
+        "Simon Sohm",
         "Remo Freuler",
         "Tommaso Pobega",
         "Riccardo Orsolini",
-        "Simon Sohm",
-        "Nicolò Cambiaghi",
-        "Santiago Castro"
+        "Santiago Castro",
+        "Nicolò Cambiaghi"
       ],
       "home_starters": [
         {
@@ -604,7 +604,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-2-1",
+          "formation": "3-4-3",
           "position_id": 11
         },
         {
@@ -613,7 +613,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-4-3",
           "position_id": 33
         },
         {
@@ -622,7 +622,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-4-3",
           "position_id": 35
         },
         {
@@ -631,7 +631,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-4-3",
           "position_id": 37
         },
         {
@@ -640,8 +640,8 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 62
+          "formation": "3-4-3",
+          "position_id": 72
         },
         {
           "name": "Manuel Locatelli",
@@ -649,8 +649,8 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 64
+          "formation": "3-4-3",
+          "position_id": 74
         },
         {
           "name": "Weston McKennie",
@@ -658,8 +658,8 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 66
+          "formation": "3-4-3",
+          "position_id": 76
         },
         {
           "name": "Andrea Cambiaso",
@@ -667,35 +667,35 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 68
+          "formation": "3-4-3",
+          "position_id": 78
         },
         {
           "name": "Francisco Conceição",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 103
+        },
+        {
+          "name": "Jonathan David",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 105
         },
         {
           "name": "Jérémie Boga",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 86
-        },
-        {
-          "name": "Jonathan David",
-          "line_index": 3,
-          "line_size": 1,
+          "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-2-1",
-          "position_id": 105
+          "formation": "3-4-3",
+          "position_id": 107
         }
       ],
       "away_starters": [
@@ -705,7 +705,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 11
         },
         {
@@ -714,7 +714,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 32
         },
         {
@@ -723,7 +723,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 34
         },
         {
@@ -732,7 +732,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 36
         },
         {
@@ -741,90 +741,90 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 38
+        },
+        {
+          "name": "Simon Sohm",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 73
         },
         {
           "name": "Remo Freuler",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 75
         },
         {
           "name": "Tommaso Pobega",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 77
         },
         {
           "name": "Riccardo Orsolini",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 103
         },
         {
-          "name": "Simon Sohm",
+          "name": "Santiago Castro",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 105
         },
         {
           "name": "Nicolò Cambiaghi",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87
-        },
-        {
-          "name": "Santiago Castro",
-          "line_index": 3,
-          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-2-3-1",
-          "position_id": 115
+          "formation": "4-3-3",
+          "position_id": 107
         }
       ],
       "home_subs": [
+        "Khéphren Thuram-Ulien",
+        "Kenan Yildiz",
+        "Edon Zhegrova",
+        "Federico Gatti",
+        "Loïs Openda",
         "Carlo Pinsoglio",
         "Simone Scaglia",
-        "Federico Gatti",
-        "Edon Zhegrova",
         "Fabio Miretti",
         "Filip Kostic",
-        "Kenan Yildiz",
-        "Khéphren Thuram-Ulien",
-        "Teun Koopmeiners",
-        "Loïs Openda"
+        "Teun Koopmeiners"
       ],
       "away_subs": [
+        "Nikola Moro",
+        "Lewis Ferguson",
+        "Jonathan Rowe",
+        "Torbjørn Heggem",
+        "Federico Bernardeschi",
         "Massimo Pessina",
         "Matteo Franceschelli",
         "Charalambos Lykogiannis",
         "João Mário",
         "Lorenzo De Silvestri",
         "Martin Vitík",
-        "Torbjørn Heggem",
         "Jens Odgaard",
-        "Lewis Ferguson",
-        "Nikola Moro",
-        "Federico Bernardeschi",
-        "Francesco Castaldo",
-        "Jonathan Rowe"
+        "Francesco Castaldo"
       ],
       "home_unavailable": [
         "Mattia Perin",
