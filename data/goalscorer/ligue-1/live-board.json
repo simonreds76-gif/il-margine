@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-19T16:30:35Z",
+  "generated_at": "2026-04-19T17:08:19Z",
   "league": "ligue-1",
-  "row_count": 363,
+  "row_count": 383,
   "stats": {
     "historical_rows": 23583,
-    "odds_rows": 919,
-    "matched_rows": 363,
-    "missing_player_history": 240,
-    "missing_team_mapping": 316,
+    "odds_rows": 971,
+    "matched_rows": 383,
+    "missing_player_history": 250,
+    "missing_team_mapping": 338,
     "fallback_rows": 45,
     "qualified_rows": 6,
     "roster_resolved_rows": 38,
     "high_confidence_rows": 0,
-    "medium_confidence_rows": 282,
-    "low_confidence_rows": 81,
+    "medium_confidence_rows": 301,
+    "low_confidence_rows": 82,
     "public_high_signals": 0,
     "public_caveat_signals": 5,
     "shadow_track_rows": 0,
@@ -23,7 +23,7 @@
     "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_lineups": 0,
     "fixtures_clean": 0,
-    "fixtures_degraded": 16,
+    "fixtures_degraded": 17,
     "fixtures_quarantined": 0,
     "confirmed_starter_rows": 0,
     "confirmed_bench_rows": 0,
@@ -31,7 +31,7 @@
     "expected_bench_rows": 0,
     "expected_out_rows": 0,
     "not_in_squad_rows": 0,
-    "avg_ev": -0.7404220468319557
+    "avg_ev": -0.7400067937336813
   },
   "fixtures": [
     {
@@ -289,11 +289,27 @@
       ],
       "home_player_checks": [],
       "away_player_checks": []
+    },
+    {
+      "match_date": "2026-04-22",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "league": "ligue-1",
+      "competition": "France - Ligue 1",
+      "bookmaker": "Bet365",
+      "lineup_input": "none",
+      "trust_tier": "T2",
+      "corruption_score": 1.0,
+      "corruption_flags": [
+        "no_lineup_payload"
+      ],
+      "home_player_checks": [],
+      "away_player_checks": []
     }
   ],
   "rows": [
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -387,7 +403,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -481,7 +497,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -575,7 +591,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -669,7 +685,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -763,7 +779,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -857,7 +873,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -951,7 +967,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -1045,7 +1061,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -1139,7 +1155,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -1233,7 +1249,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -1327,7 +1343,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -1421,7 +1437,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -1515,7 +1531,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -1609,7 +1625,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -1703,7 +1719,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -1797,7 +1813,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -1891,7 +1907,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -1985,7 +2001,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -2079,7 +2095,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -2173,7 +2189,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -2267,7 +2283,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -2361,7 +2377,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -2455,7 +2471,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -2549,7 +2565,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -2643,7 +2659,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -2737,7 +2753,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -2831,7 +2847,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -2925,7 +2941,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -3019,7 +3035,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-10T16:31:43Z",
       "match_date": "2026-04-10",
       "kickoff": "",
@@ -3113,7 +3129,7 @@
       "notes": "event_id=61526508;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -3207,7 +3223,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -3301,7 +3317,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -3395,7 +3411,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -3489,7 +3505,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -3583,7 +3599,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -3677,7 +3693,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -3771,7 +3787,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -3865,7 +3881,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -3959,7 +3975,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -4053,7 +4069,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -4147,7 +4163,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -4241,7 +4257,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -4335,7 +4351,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -4429,7 +4445,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -4523,7 +4539,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -4617,7 +4633,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -4711,7 +4727,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -4805,7 +4821,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -4899,7 +4915,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -4993,7 +5009,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -5087,7 +5103,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -5181,7 +5197,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -5275,7 +5291,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -5369,7 +5385,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -5463,7 +5479,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -5557,7 +5573,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -5651,7 +5667,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -5745,7 +5761,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -5839,7 +5855,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -5933,7 +5949,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -6027,7 +6043,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -6121,7 +6137,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -6215,7 +6231,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -6309,7 +6325,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -6403,7 +6419,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -6497,7 +6513,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -6591,7 +6607,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -6685,7 +6701,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -6779,7 +6795,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -6873,7 +6889,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -6967,7 +6983,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -7061,7 +7077,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -7155,7 +7171,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T18:46:40Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -7249,7 +7265,7 @@
       "notes": "event_id=61526498;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -7343,7 +7359,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -7437,7 +7453,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -7531,7 +7547,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-11T16:32:16Z",
       "match_date": "2026-04-11",
       "kickoff": "",
@@ -7625,7 +7641,7 @@
       "notes": "event_id=61526512;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -7719,7 +7735,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -7813,7 +7829,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -7907,7 +7923,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -8001,7 +8017,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -8095,7 +8111,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -8189,7 +8205,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -8283,7 +8299,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -8377,7 +8393,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -8471,7 +8487,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -8565,7 +8581,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -8659,7 +8675,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -8753,7 +8769,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -8847,7 +8863,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -8941,7 +8957,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -9035,7 +9051,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -9129,7 +9145,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -9223,7 +9239,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -9317,7 +9333,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -9411,7 +9427,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -9505,7 +9521,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -9599,7 +9615,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -9693,7 +9709,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -9787,7 +9803,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -9881,7 +9897,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -9975,7 +9991,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -10069,7 +10085,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -10163,7 +10179,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -10257,7 +10273,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -10351,7 +10367,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -10445,7 +10461,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -10539,7 +10555,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -10633,7 +10649,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -10727,7 +10743,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -10821,7 +10837,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -10915,7 +10931,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -11009,7 +11025,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -11103,7 +11119,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -11197,7 +11213,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -11291,7 +11307,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -11385,7 +11401,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -11479,7 +11495,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -11573,7 +11589,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -11667,7 +11683,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -11761,7 +11777,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -11855,7 +11871,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -11949,7 +11965,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -12043,7 +12059,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -12137,7 +12153,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -12231,7 +12247,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -12325,7 +12341,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -12419,7 +12435,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -12513,7 +12529,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -12607,7 +12623,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -12701,7 +12717,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -12795,7 +12811,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -12889,7 +12905,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -12983,7 +12999,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -13077,7 +13093,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -13171,7 +13187,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -13265,7 +13281,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -13359,7 +13375,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -13453,7 +13469,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -13547,7 +13563,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -13641,7 +13657,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -13735,7 +13751,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -13829,7 +13845,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -13923,7 +13939,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T18:27:43Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -14017,7 +14033,7 @@
       "notes": "event_id=61526496;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -14111,7 +14127,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -14205,7 +14221,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -14299,7 +14315,7 @@
       "notes": "event_id=61526510;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-12T14:37:46Z",
       "match_date": "2026-04-12",
       "kickoff": "",
@@ -14393,7 +14409,7 @@
       "notes": "event_id=61526500;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -14487,7 +14503,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -14581,7 +14597,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -14675,7 +14691,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -14769,7 +14785,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -14863,7 +14879,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -14957,7 +14973,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -15051,7 +15067,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -15145,7 +15161,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -15239,7 +15255,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -15333,7 +15349,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -15427,7 +15443,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -15521,7 +15537,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -15615,7 +15631,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -15709,7 +15725,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -15803,7 +15819,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -15897,7 +15913,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -15991,7 +16007,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -16085,7 +16101,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -16179,7 +16195,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -16273,7 +16289,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -16367,7 +16383,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -16461,7 +16477,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -16555,7 +16571,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -16649,7 +16665,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -16743,7 +16759,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -16837,7 +16853,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -16931,7 +16947,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -17025,7 +17041,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -17119,7 +17135,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -17213,7 +17229,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -17307,7 +17323,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -17401,7 +17417,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -17495,7 +17511,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -17589,7 +17605,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -17683,7 +17699,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -17777,7 +17793,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -17871,7 +17887,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -17965,7 +17981,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -18059,7 +18075,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -18153,7 +18169,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -18247,7 +18263,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -18341,7 +18357,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -18435,7 +18451,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -18529,7 +18545,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -18623,7 +18639,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-17T16:43:53Z",
       "match_date": "2026-04-17",
       "kickoff": "",
@@ -18717,7 +18733,7 @@
       "notes": "event_id=61526522;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -18811,7 +18827,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -18905,7 +18921,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -18999,7 +19015,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -19093,7 +19109,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -19187,7 +19203,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -19281,7 +19297,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -19375,7 +19391,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -19469,7 +19485,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -19563,7 +19579,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -19657,7 +19673,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -19751,7 +19767,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -19845,7 +19861,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -19939,7 +19955,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -20033,7 +20049,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -20127,7 +20143,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -20221,7 +20237,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -20315,7 +20331,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -20409,7 +20425,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -20503,7 +20519,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -20597,7 +20613,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -20691,7 +20707,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -20785,7 +20801,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -20879,7 +20895,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -20973,7 +20989,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -21067,7 +21083,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -21161,7 +21177,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -21255,7 +21271,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -21349,7 +21365,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -21443,7 +21459,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -21537,7 +21553,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -21631,7 +21647,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -21725,7 +21741,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -21819,7 +21835,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -21913,7 +21929,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -22007,7 +22023,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -22101,7 +22117,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -22195,7 +22211,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -22289,7 +22305,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -22383,7 +22399,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -22477,7 +22493,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -22571,7 +22587,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -22665,7 +22681,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -22759,7 +22775,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -22853,7 +22869,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -22947,7 +22963,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -23041,7 +23057,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -23135,7 +23151,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -23229,7 +23245,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -23323,7 +23339,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -23417,7 +23433,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -23511,7 +23527,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -23605,7 +23621,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -23699,7 +23715,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -23793,7 +23809,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -23887,7 +23903,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -23981,7 +23997,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -24075,7 +24091,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -24169,7 +24185,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -24263,7 +24279,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -24357,7 +24373,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -24451,7 +24467,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -24545,7 +24561,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -24639,7 +24655,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -24733,7 +24749,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -24827,7 +24843,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -24921,7 +24937,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -25015,7 +25031,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -25109,7 +25125,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T14:25:56Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -25203,7 +25219,7 @@
       "notes": "event_id=61526516;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T16:25:00Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -25297,7 +25313,7 @@
       "notes": "event_id=61526524;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-18T18:55:19Z",
       "match_date": "2026-04-18",
       "kickoff": "",
@@ -25391,7 +25407,7 @@
       "notes": "event_id=61526530;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -25485,7 +25501,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -25579,7 +25595,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -25673,7 +25689,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -25767,7 +25783,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -25861,7 +25877,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -25955,7 +25971,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -26049,7 +26065,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -26143,8 +26159,8 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -26237,8 +26253,8 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -26331,8 +26347,8 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -26425,7 +26441,7 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -26519,7 +26535,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -26613,8 +26629,8 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -26707,7 +26723,7 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -26801,7 +26817,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -26895,8 +26911,8 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -26989,7 +27005,7 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -27083,8 +27099,8 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -27177,7 +27193,7 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -27271,7 +27287,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -27365,7 +27381,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -27459,7 +27475,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -27553,7 +27569,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -27647,8 +27663,8 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -27741,7 +27757,7 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -27835,7 +27851,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -27929,8 +27945,8 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -28023,8 +28039,8 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -28117,8 +28133,8 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -28211,7 +28227,7 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -28305,7 +28321,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -28399,7 +28415,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -28493,7 +28509,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -28587,7 +28603,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -28681,7 +28697,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -28775,8 +28791,8 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -28869,7 +28885,7 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -28963,7 +28979,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -29057,7 +29073,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -29151,7 +29167,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -29245,7 +29261,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -29339,8 +29355,8 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -29433,8 +29449,8 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -29527,7 +29543,7 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -29621,8 +29637,8 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -29715,7 +29731,7 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -29809,7 +29825,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -29903,8 +29919,8 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -29997,7 +30013,7 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -30091,7 +30107,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -30185,8 +30201,8 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -30279,7 +30295,7 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -30373,7 +30389,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -30467,7 +30483,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -30561,8 +30577,8 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -30655,7 +30671,7 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -30749,7 +30765,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -30843,7 +30859,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -30937,7 +30953,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -31031,8 +31047,8 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -31125,8 +31141,8 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -31219,7 +31235,7 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -31313,7 +31329,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -31407,7 +31423,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -31501,7 +31517,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -31595,7 +31611,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -31689,8 +31705,8 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
-      "captured_at": "2026-04-19T16:30:16Z",
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
       "match_date": "2026-04-19",
       "kickoff": "",
       "bookmaker": "Bet365",
@@ -31783,7 +31799,7 @@
       "notes": "event_id=61526532;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -31877,7 +31893,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -31971,7 +31987,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -32065,7 +32081,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -32159,7 +32175,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -32253,7 +32269,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -32347,7 +32363,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -32441,7 +32457,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -32535,7 +32551,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -32629,7 +32645,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -32723,7 +32739,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -32817,7 +32833,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -32911,7 +32927,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -33005,7 +33021,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -33099,7 +33115,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -33193,7 +33209,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -33287,7 +33303,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -33381,7 +33397,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -33475,7 +33491,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -33569,7 +33585,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -33663,7 +33679,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -33757,7 +33773,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -33851,7 +33867,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -33945,7 +33961,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T12:28:15Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -34039,7 +34055,7 @@
       "notes": "event_id=61526526;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T15:05:45Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -34133,7 +34149,7 @@
       "notes": "event_id=61526528;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -34227,7 +34243,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -34321,7 +34337,7 @@
       "notes": "event_id=61526520;market=Anytime Goalscorer"
     },
     {
-      "compared_at": "2026-04-19T16:30:35Z",
+      "compared_at": "2026-04-19T17:08:19Z",
       "captured_at": "2026-04-19T14:24:43Z",
       "match_date": "2026-04-19",
       "kickoff": "",
@@ -34413,6 +34429,1886 @@
       "team_lineup_status": "",
       "source": "odds_api_io",
       "notes": "event_id=61526520;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "10786",
+      "player_name": "Warren Zaire Emery",
+      "canonical_player_name": "Warren Zaire Emery",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "MC",
+      "position_group": "MC",
+      "odds_decimal": 5.0,
+      "implied_prob": 0.2,
+      "model_p_atgs": 0.107666,
+      "model_fair_odds_atgs": 9.288,
+      "model_lambda": 0.1139,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0513,
+      "non_pen_lambda": 0.1139,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 3.23,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 20.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 88.0,
+      "usual_position": "MC",
+      "usual_position_score": 3,
+      "usual_position_share_10": 0.6,
+      "usual_position_matches_10": 10,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 88.0,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 1.2906,
+      "recent_np_goals_8": 1.0,
+      "recent_npxg_per90_8": 0.1664,
+      "finishing_luck_8": -0.2906,
+      "last_fixture_avg_xga_3": 1.3873,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.9371,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.461669,
+      "edge_pct": -46.167,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 6238.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "10016",
+      "player_name": "Bradley Barcola",
+      "canonical_player_name": "Bradley Barcola",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "FW",
+      "position_group": "FW",
+      "odds_decimal": 2.05,
+      "implied_prob": 0.487805,
+      "model_p_atgs": 0.259606,
+      "model_fair_odds_atgs": 3.852,
+      "model_lambda": 0.3006,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.1353,
+      "non_pen_lambda": 0.3006,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 3.0,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 12.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 60.0,
+      "usual_position": "FWL",
+      "usual_position_score": 5,
+      "usual_position_share_10": 0.6667,
+      "usual_position_matches_10": 6,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 60.0,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 4.5421,
+      "recent_np_goals_8": 5.0,
+      "recent_npxg_per90_8": 0.7742,
+      "finishing_luck_8": 0.4579,
+      "last_fixture_avg_xga_3": 1.6119,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.8065,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.467808,
+      "edge_pct": -46.781,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 3563.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "10431",
+      "player_name": "Desire Doue",
+      "canonical_player_name": "Desire Doue",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "MC",
+      "position_group": "MC",
+      "odds_decimal": 1.952,
+      "implied_prob": 0.512295,
+      "model_p_atgs": 0.258353,
+      "model_fair_odds_atgs": 3.8707,
+      "model_lambda": 0.2989,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.1245,
+      "non_pen_lambda": 0.2767,
+      "penalty_lambda": 0.0222,
+      "penalty_dependency_share": 0.0742,
+      "penalty_dependent": 0,
+      "penalty_share": 0.2514,
+      "baseline_penalty_share": 0.2514,
+      "baseline_penalty_sample": 4.42,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 1.0,
+      "career_team_penalties": 23.0,
+      "career_penalty_share": 0.0435,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0056,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 58.7,
+      "usual_position": "FWR",
+      "usual_position_score": 5,
+      "usual_position_share_10": 0.8571,
+      "usual_position_matches_10": 7,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 58.7,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 4.4718,
+      "recent_np_goals_8": 2.0,
+      "recent_npxg_per90_8": 0.8455,
+      "finishing_luck_8": -2.4718,
+      "last_fixture_avg_xga_3": 1.3873,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.9371,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.495695,
+      "edge_pct": -49.569,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 4359.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "12734",
+      "player_name": "Joao Neves",
+      "canonical_player_name": "Joao Neves",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "Sub",
+      "position_group": "Sub",
+      "odds_decimal": 4.0,
+      "implied_prob": 0.25,
+      "model_p_atgs": 0.123039,
+      "model_fair_odds_atgs": 8.1275,
+      "model_lambda": 0.1313,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0591,
+      "non_pen_lambda": 0.1313,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 2.14,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 8.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 67.6,
+      "usual_position": "MC",
+      "usual_position_score": 3,
+      "usual_position_share_10": 1.0,
+      "usual_position_matches_10": 8,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 67.6,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 1.3608,
+      "recent_np_goals_8": 0.0,
+      "recent_npxg_per90_8": 0.2156,
+      "finishing_luck_8": -1.3608,
+      "last_fixture_avg_xga_3": 1.5098,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.8611,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.507844,
+      "edge_pct": -50.784,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 2909.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "9961",
+      "player_name": "Nuno Mendes",
+      "canonical_player_name": "Nuno Mendes",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "Sub",
+      "position_group": "Sub",
+      "odds_decimal": 3.4,
+      "implied_prob": 0.294118,
+      "model_p_atgs": 0.142505,
+      "model_fair_odds_atgs": 7.0173,
+      "model_lambda": 0.1537,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0585,
+      "non_pen_lambda": 0.1299,
+      "penalty_lambda": 0.0238,
+      "penalty_dependency_share": 0.155,
+      "penalty_dependent": 0,
+      "penalty_share": 0.2344,
+      "baseline_penalty_share": 0.3612,
+      "baseline_penalty_sample": 4.13,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 1.0,
+      "career_team_penalties": 11.0,
+      "career_penalty_share": 0.0909,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 1,
+      "penalty_role": "tertiary",
+      "penalty_share_prior": 0.06,
+      "penalty_share_prior_weight": 3.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 67.6,
+      "usual_position": "DL",
+      "usual_position_score": 1,
+      "usual_position_share_10": 0.875,
+      "usual_position_matches_10": 8,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 67.6,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 1.5737,
+      "recent_np_goals_8": 1.0,
+      "recent_npxg_per90_8": 0.2455,
+      "finishing_luck_8": -0.5737,
+      "last_fixture_avg_xga_3": 1.3873,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.9371,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.515483,
+      "edge_pct": -51.548,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 3176.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "5197",
+      "player_name": "Achraf Hakimi",
+      "canonical_player_name": "Achraf Hakimi",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "DR",
+      "position_group": "DR",
+      "odds_decimal": 3.4,
+      "implied_prob": 0.294118,
+      "model_p_atgs": 0.127969,
+      "model_fair_odds_atgs": 7.8144,
+      "model_lambda": 0.1369,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0616,
+      "non_pen_lambda": 0.1369,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 3.27,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 16.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 81.3,
+      "usual_position": "DR",
+      "usual_position_score": 1,
+      "usual_position_share_10": 1.0,
+      "usual_position_matches_10": 8,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 81.3,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 1.6902,
+      "recent_np_goals_8": 2.0,
+      "recent_npxg_per90_8": 0.2142,
+      "finishing_luck_8": 0.3098,
+      "last_fixture_avg_xga_3": 1.3459,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.9659,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.564906,
+      "edge_pct": -56.491,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 5191.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "7453",
+      "player_name": "Khvicha Kvaratskhelia",
+      "canonical_player_name": "Khvicha Kvaratskhelia",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "FWL",
+      "position_group": "FWL",
+      "odds_decimal": 1.8,
+      "implied_prob": 0.555556,
+      "model_p_atgs": 0.170039,
+      "model_fair_odds_atgs": 5.881,
+      "model_lambda": 0.1864,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0839,
+      "non_pen_lambda": 0.1864,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 3.08,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 7.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 59.3,
+      "usual_position": "FWL",
+      "usual_position_score": 5,
+      "usual_position_share_10": 0.7143,
+      "usual_position_matches_10": 7,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 59.3,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 2.5246,
+      "recent_np_goals_8": 1.0,
+      "recent_npxg_per90_8": 0.4675,
+      "finishing_luck_8": -1.5246,
+      "last_fixture_avg_xga_3": 1.3873,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.9371,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.69393,
+      "edge_pct": -69.393,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 2154.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "3226",
+      "player_name": "Ousmane Dembele",
+      "canonical_player_name": "Ousmane Dembele",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "FW",
+      "position_group": "FW",
+      "odds_decimal": 1.666,
+      "implied_prob": 0.60024,
+      "model_p_atgs": 0.170723,
+      "model_fair_odds_atgs": 5.8575,
+      "model_lambda": 0.1872,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0679,
+      "non_pen_lambda": 0.1509,
+      "penalty_lambda": 0.0363,
+      "penalty_dependency_share": 0.1938,
+      "penalty_dependent": 0,
+      "penalty_share": 0.4772,
+      "baseline_penalty_share": 0.5327,
+      "baseline_penalty_sample": 3.09,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 4.0,
+      "career_team_penalties": 18.0,
+      "career_penalty_share": 0.2222,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 1,
+      "penalty_role": "primary",
+      "penalty_share_prior": 0.42,
+      "penalty_share_prior_weight": 3.0,
+      "penalty_hierarchy_boost_xg": 0.009,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 50.6,
+      "usual_position": "FW",
+      "usual_position_score": 5,
+      "usual_position_share_10": 1.0,
+      "usual_position_matches_10": 5,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 50.6,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 3.0503,
+      "recent_np_goals_8": 7.0,
+      "recent_npxg_per90_8": 0.6521,
+      "finishing_luck_8": 3.9497,
+      "last_fixture_avg_xga_3": 1.3873,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.9371,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.715576,
+      "edge_pct": -71.558,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 4099.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "2447",
+      "player_name": "Fabian Ruiz",
+      "canonical_player_name": "Fabian Ruiz",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "MC",
+      "position_group": "MC",
+      "odds_decimal": 3.4,
+      "implied_prob": 0.294118,
+      "model_p_atgs": 0.079216,
+      "model_fair_odds_atgs": 12.6236,
+      "model_lambda": 0.0825,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0371,
+      "non_pen_lambda": 0.0825,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 2.71,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 15.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 61.3,
+      "usual_position": "MC",
+      "usual_position_score": 3,
+      "usual_position_share_10": 1.0,
+      "usual_position_matches_10": 6,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 61.3,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 0.6814,
+      "recent_np_goals_8": 0.0,
+      "recent_npxg_per90_8": 0.1351,
+      "finishing_luck_8": -0.6814,
+      "last_fixture_avg_xga_3": 1.7071,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.7615,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.730664,
+      "edge_pct": -73.066,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 3905.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "12345",
+      "player_name": "Senny Mayulu",
+      "canonical_player_name": "Senny Mayulu",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "MC",
+      "position_group": "MC",
+      "odds_decimal": 2.05,
+      "implied_prob": 0.487805,
+      "model_p_atgs": 0.123516,
+      "model_fair_odds_atgs": 8.0961,
+      "model_lambda": 0.1318,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0593,
+      "non_pen_lambda": 0.1318,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 2.26,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 6.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 67.6,
+      "usual_position": "MC",
+      "usual_position_score": 3,
+      "usual_position_share_10": 0.6667,
+      "usual_position_matches_10": 9,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 67.6,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 1.3666,
+      "recent_np_goals_8": 2.0,
+      "recent_npxg_per90_8": 0.2361,
+      "finishing_luck_8": 0.6334,
+      "last_fixture_avg_xga_3": 1.4601,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.8903,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.746792,
+      "edge_pct": -74.679,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 2344.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "3297",
+      "player_name": "Marquinhos",
+      "canonical_player_name": "Marquinhos",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "DC",
+      "position_group": "DC",
+      "odds_decimal": 5.5,
+      "implied_prob": 0.181818,
+      "model_p_atgs": 0.032097,
+      "model_fair_odds_atgs": 31.1558,
+      "model_lambda": 0.0326,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0147,
+      "non_pen_lambda": 0.0326,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 1.81,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 11.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 73.5,
+      "usual_position": "DC",
+      "usual_position_score": 1,
+      "usual_position_share_10": 0.8571,
+      "usual_position_matches_10": 7,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 73.5,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 0.0274,
+      "recent_np_goals_8": 0.0,
+      "recent_npxg_per90_8": 0.0043,
+      "finishing_luck_8": -0.0274,
+      "last_fixture_avg_xga_3": 1.343,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.968,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.823468,
+      "edge_pct": -82.347,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 4037.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "11910",
+      "player_name": "Willian Pacho",
+      "canonical_player_name": "Willian Pacho",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "DC",
+      "position_group": "DC",
+      "odds_decimal": 6.0,
+      "implied_prob": 0.166667,
+      "model_p_atgs": 0.026029,
+      "model_fair_odds_atgs": 38.4181,
+      "model_lambda": 0.0264,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0119,
+      "non_pen_lambda": 0.0264,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 3.89,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 12.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 86.8,
+      "usual_position": "DC",
+      "usual_position_score": 1,
+      "usual_position_share_10": 1.0,
+      "usual_position_matches_10": 10,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 86.8,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 0.2362,
+      "recent_np_goals_8": 0.0,
+      "recent_npxg_per90_8": 0.0295,
+      "finishing_luck_8": -0.2362,
+      "last_fixture_avg_xga_3": 1.3873,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.9371,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.843824,
+      "edge_pct": -84.382,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 3767.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "7313",
+      "player_name": "Kang-In Lee",
+      "canonical_player_name": "Kang-In Lee",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "FWR",
+      "position_group": "FWR",
+      "odds_decimal": 2.5,
+      "implied_prob": 0.4,
+      "model_p_atgs": 0.062058,
+      "model_fair_odds_atgs": 16.1138,
+      "model_lambda": 0.0641,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0288,
+      "non_pen_lambda": 0.0641,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 2.93,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 15.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 54.8,
+      "usual_position": "FWR",
+      "usual_position_score": 5,
+      "usual_position_share_10": 0.5,
+      "usual_position_matches_10": 6,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 54.8,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 0.7382,
+      "recent_np_goals_8": 1.0,
+      "recent_npxg_per90_8": 0.1882,
+      "finishing_luck_8": 0.2618,
+      "last_fixture_avg_xga_3": 1.3873,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.9371,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.844854,
+      "edge_pct": -84.485,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 4379.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "11486",
+      "player_name": "Illia Zabarnyi",
+      "canonical_player_name": "Illia Zabarnyi",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "DC",
+      "position_group": "DC",
+      "odds_decimal": 8.5,
+      "implied_prob": 0.117647,
+      "model_p_atgs": 0.017235,
+      "model_fair_odds_atgs": 58.0227,
+      "model_lambda": 0.0174,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0078,
+      "non_pen_lambda": 0.0174,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 2.75,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 5.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 86.1,
+      "usual_position": "DC",
+      "usual_position_score": 1,
+      "usual_position_share_10": 1.0,
+      "usual_position_matches_10": 9,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 86.1,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 0.2186,
+      "recent_np_goals_8": 0.0,
+      "recent_npxg_per90_8": 0.0292,
+      "finishing_luck_8": -0.2186,
+      "last_fixture_avg_xga_3": 1.3873,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.9371,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.853506,
+      "edge_pct": -85.351,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 1847.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "12733",
+      "player_name": "Ibrahim Mbaye",
+      "canonical_player_name": "Ibrahim Mbaye",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "Sub",
+      "position_group": "Sub",
+      "odds_decimal": 2.05,
+      "implied_prob": 0.487805,
+      "model_p_atgs": 0.067976,
+      "model_fair_odds_atgs": 14.7111,
+      "model_lambda": 0.0704,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0317,
+      "non_pen_lambda": 0.0704,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 4.29,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 9.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 43.7,
+      "usual_position": "FWL",
+      "usual_position_score": 5,
+      "usual_position_share_10": 0.5,
+      "usual_position_matches_10": 4,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 43.7,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 1.2109,
+      "recent_np_goals_8": 1.0,
+      "recent_npxg_per90_8": 0.3758,
+      "finishing_luck_8": -0.2109,
+      "last_fixture_avg_xga_3": 1.7462,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.7445,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.86065,
+      "edge_pct": -86.065,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 1153.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "11767",
+      "player_name": "Goncalo Ramos",
+      "canonical_player_name": "Goncalo Ramos",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "Sub",
+      "position_group": "Sub",
+      "odds_decimal": 1.666,
+      "implied_prob": 0.60024,
+      "model_p_atgs": 0.074731,
+      "model_fair_odds_atgs": 13.3814,
+      "model_lambda": 0.0777,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0331,
+      "non_pen_lambda": 0.0735,
+      "penalty_lambda": 0.0042,
+      "penalty_dependency_share": 0.0537,
+      "penalty_dependent": 0,
+      "penalty_share": 0.1041,
+      "baseline_penalty_share": 0.1041,
+      "baseline_penalty_sample": 2.59,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 5.0,
+      "career_team_penalties": 19.0,
+      "career_penalty_share": 0.2632,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0015,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 26.6,
+      "usual_position": "FW",
+      "usual_position_score": 5,
+      "usual_position_share_10": 1.0,
+      "usual_position_matches_10": 3,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 26.6,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 2.0627,
+      "recent_np_goals_8": 2.0,
+      "recent_npxg_per90_8": 0.8634,
+      "finishing_luck_8": -0.0627,
+      "last_fixture_avg_xga_3": 1.3873,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.9371,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.875499,
+      "edge_pct": -87.55,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 3483.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "12346",
+      "player_name": "Lucas Beraldo",
+      "canonical_player_name": "Lucas Beraldo",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "MC",
+      "position_group": "MC",
+      "odds_decimal": 7.5,
+      "implied_prob": 0.133333,
+      "model_p_atgs": 0.015993,
+      "model_fair_odds_atgs": 62.5288,
+      "model_lambda": 0.0161,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0073,
+      "non_pen_lambda": 0.0161,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 4.35,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 14.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 70.1,
+      "usual_position": "DC",
+      "usual_position_score": 1,
+      "usual_position_share_10": 0.875,
+      "usual_position_matches_10": 8,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 70.1,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 0.0476,
+      "recent_np_goals_8": 0.0,
+      "recent_npxg_per90_8": 0.0083,
+      "finishing_luck_8": -0.0476,
+      "last_fixture_avg_xga_3": 1.5689,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.8286,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.880055,
+      "edge_pct": -88.005,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 3978.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "8777",
+      "player_name": "Vitinha",
+      "canonical_player_name": "Vitinha",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "Sub",
+      "position_group": "Sub",
+      "odds_decimal": 3.4,
+      "implied_prob": 0.294118,
+      "model_p_atgs": 0.025443,
+      "model_fair_odds_atgs": 39.3029,
+      "model_lambda": 0.0258,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0076,
+      "non_pen_lambda": 0.0168,
+      "penalty_lambda": 0.0089,
+      "penalty_dependency_share": 0.3472,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0772,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 2.83,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 2.0,
+      "career_team_penalties": 20.0,
+      "career_penalty_share": 0.1,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 1,
+      "penalty_role": "secondary",
+      "penalty_share_prior": 0.15,
+      "penalty_share_prior_weight": 3.0,
+      "penalty_hierarchy_boost_xg": 0.0089,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 77.1,
+      "usual_position": "MC",
+      "usual_position_score": 3,
+      "usual_position_share_10": 1.0,
+      "usual_position_matches_10": 8,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 77.1,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 0.1213,
+      "recent_np_goals_8": 0.0,
+      "recent_npxg_per90_8": 0.0187,
+      "finishing_luck_8": -0.1213,
+      "last_fixture_avg_xga_3": 1.3873,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.9371,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.913492,
+      "edge_pct": -91.349,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 6120.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "13749",
+      "player_name": "Dro Fernandez",
+      "canonical_player_name": "Dro Fernandez",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "Sub",
+      "position_group": "Sub",
+      "odds_decimal": 2.75,
+      "implied_prob": 0.363636,
+      "model_p_atgs": 0.030276,
+      "model_fair_odds_atgs": 33.0294,
+      "model_lambda": 0.0307,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0138,
+      "non_pen_lambda": 0.0307,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 1.88,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 2.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 39.9,
+      "usual_position": "MC",
+      "usual_position_score": 3,
+      "usual_position_share_10": 1.0,
+      "usual_position_matches_10": 3,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 39.9,
+      "recent_matches_8": 6,
+      "recent_npxg_8": 0.8377,
+      "recent_np_goals_8": 1.0,
+      "recent_npxg_per90_8": 0.3194,
+      "finishing_luck_8": 0.1623,
+      "last_fixture_avg_xga_3": 1.5646,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.8309,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.916741,
+      "edge_pct": -91.674,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 236.0,
+      "signal_confidence": "low",
+      "legacy_public_action": "suppress",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_lt_500,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
+    },
+    {
+      "compared_at": "2026-04-19T17:08:19Z",
+      "captured_at": "2026-04-19T17:08:01Z",
+      "match_date": "2026-04-22",
+      "kickoff": "",
+      "bookmaker": "Bet365",
+      "competition": "France - Ligue 1",
+      "home_team": "Paris Saint-Germain",
+      "away_team": "FC Nantes",
+      "is_home": 1,
+      "player_id": "2276",
+      "player_name": "Lucas Hernandez",
+      "canonical_player_name": "Lucas Hernandez",
+      "player_team": "Paris Saint Germain",
+      "opponent": "FC Nantes",
+      "position": "DL",
+      "position_group": "DL",
+      "odds_decimal": 6.0,
+      "implied_prob": 0.166667,
+      "model_p_atgs": 0.010509,
+      "model_fair_odds_atgs": 95.1521,
+      "model_lambda": 0.0106,
+      "team_expected_npxg": 2.2218,
+      "team_share": 0.0048,
+      "non_pen_lambda": 0.0106,
+      "penalty_lambda": 0.0,
+      "penalty_dependency_share": 0.0,
+      "penalty_dependent": 0,
+      "penalty_share": 0.0,
+      "baseline_penalty_share": 0.0,
+      "baseline_penalty_sample": 3.05,
+      "baseline_penalty_source": "recent_long",
+      "career_player_penalties": 0.0,
+      "career_team_penalties": 16.0,
+      "career_penalty_share": 0.0,
+      "penalty_evidence_share": 0.0,
+      "penalty_evidence_sample": 0.0,
+      "penalty_evidence_source": "",
+      "penalty_evidence_note": "",
+      "is_penalty_taker": 0,
+      "penalty_role": "none",
+      "penalty_share_prior": 0.0,
+      "penalty_share_prior_weight": 0.0,
+      "penalty_hierarchy_boost_xg": 0.0,
+      "penalty_transfer": 0,
+      "penalty_transfer_from": "",
+      "penalty_transfer_level": "",
+      "lineup_state": "unknown",
+      "lineup_status": "unknown",
+      "lineup_source": "none",
+      "lineup_input": "none",
+      "lineup_match_name": "",
+      "trust_tier": "T2",
+      "fixture_corruption_score": 1.0,
+      "fixture_corruption_flags": "no_lineup_payload",
+      "minutes_estimate": 68.9,
+      "usual_position": "DL",
+      "usual_position_score": 1,
+      "usual_position_share_10": 1.0,
+      "usual_position_matches_10": 7,
+      "today_position_group": "",
+      "today_position_score": "",
+      "today_formation": "",
+      "position_change_score": "",
+      "position_upgrade": 0,
+      "expected_minutes": 68.9,
+      "recent_matches_8": 8,
+      "recent_npxg_8": 0.1269,
+      "recent_np_goals_8": 0.0,
+      "recent_npxg_per90_8": 0.0241,
+      "finishing_luck_8": -0.1269,
+      "last_fixture_avg_xga_3": 1.4802,
+      "next_opponent_xga": 1.3,
+      "fixture_swing_3": 0.8782,
+      "attack_factor": 1.7002,
+      "opp_factor": 1.0,
+      "ev": -0.936943,
+      "edge_pct": -93.694,
+      "method": "model",
+      "resolver_source": "history",
+      "historical_minutes": 4146.0,
+      "signal_confidence": "medium",
+      "legacy_public_action": "monitor",
+      "public_action": "no_action",
+      "public_policy_reason": "",
+      "recommended_stake_units": 0.0,
+      "recommended_stake_band": "",
+      "recommended_stake_label": "",
+      "shadow_action": "no_action",
+      "confidence_reason": "history_resolver,no_xi_yet,fixture_t2",
+      "team_lineup_status": "",
+      "source": "odds_api_io",
+      "notes": "event_id=61526440;market=Anytime Goalscorer"
     }
   ]
 }
