@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-18T21:48:30Z",
+  "generated_at": "2026-04-19T00:03:09Z",
   "league": "la-liga",
-  "row_count": 3,
+  "row_count": 2,
   "rows": [
     {
       "date": "2026-04-13",
@@ -63,36 +63,6 @@
       "editorial_note": "Adrián De La Fuente took 1 penalty attempt and missed for Levante vs Getafe. Strong review flag: penalty duty was split across multiple takers in the same match.",
       "context_generated_at": "",
       "context_source_path": ""
-    },
-    {
-      "date": "2026-04-12",
-      "league": "la-liga",
-      "review_source": "fotmob_live",
-      "match": "Osasuna vs Real Betis",
-      "team": "Osasuna",
-      "opponent": "Real Betis",
-      "actual_taker": "Ante Budimir",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "40",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Ante Budimir",
-      "secondary_pre_match": "Aimar Oroz",
-      "tertiary_pre_match": "Ruben Garcia",
-      "primary_lineup_status": "unknown",
-      "secondary_lineup_status": "unknown",
-      "tertiary_lineup_status": "unknown",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "needs_manual_review",
-      "review_priority": "medium",
-      "editorial_note": "Ante Budimir took 1 penalty attempt and scored for Osasuna vs Real Betis. Primary pre-match: Ante Budimir (unknown). Secondary pre-match: Aimar Oroz (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-18T21:48:14Z",
-      "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
     }
   ]
 }
