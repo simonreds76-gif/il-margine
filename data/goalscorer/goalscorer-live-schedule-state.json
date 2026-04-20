@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-20T22:58:37Z",
+  "updated_at": "2026-04-20T23:42:47Z",
   "reason": "cycle",
   "leagues": {
     "serie-a": {
@@ -13,13 +13,13 @@
       "next_kickoff_utc": ""
     },
     "epl": {
-      "last_successful_run_at": "2026-04-20T21:07:51Z",
-      "last_detail_run_at": "2026-04-20T21:07:51Z",
+      "last_successful_run_at": "2026-04-20T23:42:30Z",
+      "last_detail_run_at": "2026-04-20T23:42:30Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "cold",
-      "last_decision": "waiting",
-      "last_message": "Skip epl: cadence 120m not due yet.",
+      "last_decision": "ran",
+      "last_message": "Ran epl in cold tier (cadence 120m, fixtures 3).",
       "next_kickoff_utc": "2026-04-21T19:00:00Z"
     },
     "la-liga": {
