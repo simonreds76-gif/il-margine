@@ -8,23 +8,23 @@
       "match_date": "2026-04-20",
       "home_team": "Crystal Palace",
       "away_team": "West Ham United",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "3-4-3",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "3-4-2-1",
       "away_formation": "4-4-1-1",
       "home_players": [
         "Dean Henderson",
-        "Jaydee Canvot",
         "Chris Richards",
-        "Chadi Riad",
+        "Maxence Lacroix",
+        "Jaydee Canvot",
         "Daniel Muñoz",
         "Jefferson Lerma",
         "Will Hughes",
-        "Borna Sosa",
-        "Ismaïla Sarr",
-        "Jørgen Strand Larsen",
-        "Brennan Johnson"
+        "Tyrick Mitchell",
+        "Brennan Johnson",
+        "Yéremi Pino",
+        "Jørgen Strand Larsen"
       ],
       "away_players": [
         "Mads Hermansen",
@@ -46,17 +46,8 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-3",
+          "formation": "3-4-2-1",
           "position_id": 11
-        },
-        {
-          "name": "Jaydee Canvot",
-          "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-4-3",
-          "position_id": 33
         },
         {
           "name": "Chris Richards",
@@ -64,16 +55,25 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-3",
-          "position_id": 35
+          "formation": "3-4-2-1",
+          "position_id": 33
         },
         {
-          "name": "Chadi Riad",
+          "name": "Maxence Lacroix",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-3",
+          "formation": "3-4-2-1",
+          "position_id": 35
+        },
+        {
+          "name": "Jaydee Canvot",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
           "position_id": 37
         },
         {
@@ -82,8 +82,8 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 72
+          "formation": "3-4-2-1",
+          "position_id": 62
         },
         {
           "name": "Jefferson Lerma",
@@ -91,8 +91,8 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 74
+          "formation": "3-4-2-1",
+          "position_id": 64
         },
         {
           "name": "Will Hughes",
@@ -100,44 +100,44 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 76
+          "formation": "3-4-2-1",
+          "position_id": 66
         },
         {
-          "name": "Borna Sosa",
+          "name": "Tyrick Mitchell",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 78
-        },
-        {
-          "name": "Ismaïla Sarr",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-4-3",
-          "position_id": 103
-        },
-        {
-          "name": "Jørgen Strand Larsen",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-4-3",
-          "position_id": 105
+          "formation": "3-4-2-1",
+          "position_id": 68
         },
         {
           "name": "Brennan Johnson",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84
+        },
+        {
+          "name": "Yéremi Pino",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86
+        },
+        {
+          "name": "Jørgen Strand Larsen",
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-3",
-          "position_id": 107
+          "formation": "3-4-2-1",
+          "position_id": 105
         }
       ],
       "away_starters": [
@@ -241,11 +241,30 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Walter Benítez",
+        "Chadi Riad",
+        "Borna Sosa",
+        "Daichi Kamada",
+        "Ismaïla Sarr",
+        "Justin Devenny",
+        "Nathaniel Clyne",
+        "Rio Cardines",
+        "Jean-Philippe Mateta"
+      ],
+      "away_subs": [
+        "Alphonse Areola",
+        "Aaron Wan-Bissaka",
+        "Jean-Clair Todibo",
+        "Oliver Scarles",
+        "Freddie Potts",
+        "Mohamadou Kanté",
+        "Soungoutou Magassa",
+        "Adama Traoré",
+        "Callum Wilson"
+      ],
       "home_unavailable": [
         "Adam Wharton",
-        "Maxence Lacroix",
         "Cheick Oumar Doucouré",
         "Edward Nketiah",
         "Evann Guessand"
