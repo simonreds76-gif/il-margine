@@ -39,13 +39,6 @@ def load_env_files() -> None:
                 os.environ[key] = value
 
 
-def get_required_env(name: str) -> str:
-    value = os.environ.get(name)
-    if not value:
-        raise RuntimeError(f"{name} is required")
-    return value
-
-
 def get_database_url() -> str:
     return (os.environ.get("DATABASE_URL") or os.environ.get("SUPABASE_DB_URL") or "").strip()
 
@@ -235,7 +228,7 @@ def render_message(
     return "\n".join(lines)
 
 
-def post_webhook(webhook_url: str, message: str) -> None:
+def post_webhook(webhook_url: str, message: str) -> bool:
     payload = json.dumps({"text": message, "content": message}).encode("utf-8")
     request = urllib.request.Request(
         webhook_url,
@@ -246,8 +239,33 @@ def post_webhook(webhook_url: str, message: str) -> None:
     try:
         with urllib.request.urlopen(request, timeout=20) as response:
             response.read()
+        return True
     except Exception as exc:
         print(f"Warning: webhook post failed: {exc}", file=sys.stderr)
+        return False
+
+
+def post_telegram(bot_token: str, chat_id: str, message: str) -> bool:
+    payload = json.dumps(
+        {
+            "chat_id": chat_id,
+            "text": message,
+            "disable_web_page_preview": True,
+        }
+    ).encode("utf-8")
+    request = urllib.request.Request(
+        f"https://api.telegram.org/bot{bot_token}/sendMessage",
+        data=payload,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=20) as response:
+            response.read()
+        return True
+    except Exception as exc:
+        print(f"Warning: telegram post failed: {exc}", file=sys.stderr)
+        return False
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -274,17 +292,30 @@ def main(argv: list[str] | None = None) -> int:
     database_url = get_database_url()
     base_url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL", "").strip()
     service_role_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
+    has_db = bool(database_url)
+    has_rest = bool(base_url and service_role_key)
 
-    if not database_url and not (base_url and service_role_key):
-        print("OPS_ALERT_SKIP missing DATABASE_URL/SUPABASE_DB_URL and SUPABASE_SERVICE_ROLE_KEY")
-        return 0
+    if not has_db and not has_rest:
+        print(
+            "OPS_ALERT_ERROR missing DATABASE_URL/SUPABASE_DB_URL and NEXT_PUBLIC_SUPABASE_URL+SUPABASE_SERVICE_ROLE_KEY",
+            file=sys.stderr,
+        )
+        return 2
 
     ignore_silent = parse_pipeline_list(args.ignore_silent_pipeline, "OPS_ALERT_IGNORE_SILENT_PIPELINES")
     ignore_stuck = parse_pipeline_list(args.ignore_stuck_pipeline, "OPS_ALERT_IGNORE_STUCK_PIPELINES")
+    print(
+        "OPS_ALERT_CONFIG "
+        f"db={'yes' if has_db else 'no'} "
+        f"rest={'yes' if has_rest else 'no'} "
+        f"ignore_silent={','.join(sorted(ignore_silent)) or '-'} "
+        f"ignore_stuck={','.join(sorted(ignore_stuck)) or '-'}"
+    )
 
     stuck_rows: list[dict[str, Any]] | None = None
     silent_rows: list[dict[str, Any]] | None = None
     db_error: RuntimeError | None = None
+    backend_used = "unknown"
 
     if database_url:
         try:
@@ -310,6 +341,7 @@ def main(argv: list[str] | None = None) -> int:
                 order by pipeline asc
                 """,
             )
+            backend_used = "database"
         except RuntimeError as exc:
             db_error = exc
 
@@ -334,6 +366,7 @@ def main(argv: list[str] | None = None) -> int:
                         "order": "pipeline.asc",
                     },
                 )
+                backend_used = "rest"
             except RuntimeError as exc:
                 if db_error:
                     print(f"{db_error}; rest fallback failed: {exc}", file=sys.stderr)
@@ -343,6 +376,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             print(str(db_error), file=sys.stderr)
             return 2
+    print(f"OPS_ALERT_BACKEND {backend_used}")
 
     stuck = [row for row in stuck_rows if row.get("pipeline") not in ignore_stuck]
     silent = [row for row in silent_rows if row.get("pipeline") not in ignore_silent]
@@ -355,9 +389,24 @@ def main(argv: list[str] | None = None) -> int:
     message = render_message(stuck=stuck, silent=silent)
     print(message)
 
+    bot_token = os.environ.get("OPS_ALERT_TELEGRAM_BOT_TOKEN", "").strip()
+    chat_id = os.environ.get("OPS_ALERT_TELEGRAM_CHAT_ID", "").strip()
+    if bot_token and chat_id:
+        if post_telegram(bot_token, chat_id, message):
+            print("OPS_ALERT_TELEGRAM sent")
+        else:
+            print("OPS_ALERT_TELEGRAM failed", file=sys.stderr)
+    else:
+        print("OPS_ALERT_TELEGRAM skipped missing creds")
+
     webhook_url = os.environ.get("OPS_ALERT_WEBHOOK_URL", "").strip()
     if webhook_url:
-        post_webhook(webhook_url, message)
+        if post_webhook(webhook_url, message):
+            print("OPS_ALERT_WEBHOOK sent")
+        else:
+            print("OPS_ALERT_WEBHOOK failed", file=sys.stderr)
+    else:
+        print("OPS_ALERT_WEBHOOK skipped missing creds")
 
     return 1
 

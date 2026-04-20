@@ -48,7 +48,20 @@ jobs:
           if [ -n "${{ secrets.OPS_ALERT_WEBHOOK_URL }}" ]; then
             echo "OPS_ALERT_WEBHOOK_URL=${{ secrets.OPS_ALERT_WEBHOOK_URL }}" >> .env.local
           fi
+          if [ -n "${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}" ]; then
+            echo "OPS_ALERT_TELEGRAM_BOT_TOKEN=${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}" >> .env.local
+          fi
+          if [ -n "${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}" ]; then
+            echo "OPS_ALERT_TELEGRAM_CHAT_ID=${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}" >> .env.local
+          fi
           echo "OPS_ALERT_IGNORE_SILENT_PIPELINES=oncourt-daily,oncourt-am-refresh,oncourt-weekly" >> .env.local
+
+      - name: Log alert credential presence
+        run: |
+          echo "DATABASE_URL present: ${{ secrets.DATABASE_URL != '' || secrets.SUPABASE_DB_URL != '' }}"
+          echo "REST creds present: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' && secrets.SUPABASE_SERVICE_ROLE_KEY != '' }}"
+          echo "Telegram creds present: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN != '' && secrets.OPS_ALERT_TELEGRAM_CHAT_ID != '' }}"
+          echo "Webhook present: ${{ secrets.OPS_ALERT_WEBHOOK_URL != '' }}"
 
       - name: Check run_status alert views
         run: python scripts/ops-alert-check.py
