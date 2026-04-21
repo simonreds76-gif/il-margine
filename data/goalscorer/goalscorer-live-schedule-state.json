@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-21T10:47:18Z",
+  "updated_at": "2026-04-21T11:49:14Z",
   "reason": "cycle",
   "leagues": {
     "serie-a": {
@@ -13,23 +13,23 @@
       "next_kickoff_utc": ""
     },
     "epl": {
-      "last_successful_run_at": "2026-04-21T09:17:36Z",
-      "last_detail_run_at": "2026-04-21T09:17:36Z",
+      "last_successful_run_at": "2026-04-21T11:47:42Z",
+      "last_detail_run_at": "2026-04-21T11:47:42Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "cold",
-      "last_decision": "waiting",
-      "last_message": "Skip epl: cadence 120m not due yet.",
+      "last_decision": "ran",
+      "last_message": "Ran epl in cold tier (cadence 120m, fixtures 3).",
       "next_kickoff_utc": "2026-04-21T19:00:00Z"
     },
     "la-liga": {
-      "last_successful_run_at": "2026-04-21T09:18:30Z",
-      "last_detail_run_at": "2026-04-21T09:18:30Z",
+      "last_successful_run_at": "2026-04-21T11:48:34Z",
+      "last_detail_run_at": "2026-04-21T11:48:34Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "cold",
-      "last_decision": "waiting",
-      "last_message": "Skip la-liga: cadence 120m not due yet.",
+      "last_decision": "ran",
+      "last_message": "Ran la-liga in cold tier (cadence 120m, fixtures 10).",
       "next_kickoff_utc": "2026-04-21T17:00:00Z"
     },
     "bundesliga": {
@@ -43,13 +43,13 @@
       "next_kickoff_utc": ""
     },
     "ligue-1": {
-      "last_successful_run_at": "2026-04-21T09:18:51Z",
-      "last_detail_run_at": "2026-04-21T09:18:51Z",
+      "last_successful_run_at": "2026-04-21T11:48:56Z",
+      "last_detail_run_at": "2026-04-21T11:48:56Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "cold",
-      "last_decision": "waiting",
-      "last_message": "Skip ligue-1: cadence 120m not due yet.",
+      "last_decision": "ran",
+      "last_message": "Ran ligue-1 in cold tier (cadence 120m, fixtures 1).",
       "next_kickoff_utc": "2026-04-22T17:00:00Z"
     }
   }
