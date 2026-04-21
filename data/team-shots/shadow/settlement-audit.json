@@ -1,8 +1,8 @@
 {
-  "run_at": "2026-04-21T00:17:46Z",
+  "run_at": "2026-04-21T09:58:55Z",
   "model": "team-shots",
   "total_bets": 69,
-  "settled_this_run": 8,
+  "settled_this_run": 0,
   "total_settled": 67,
   "total_pending": 2,
   "pending_breakdown": {
@@ -17,35 +17,31 @@
       "football_data_latest": "2026-04-19",
       "lag_days": 2,
       "football_data_count": 270,
-      "fotmob_count": 8,
-      "fotmob_latest": "2026-04-19",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 0,
       "api_football_requests_remaining_after_league": 10,
       "api_football_error": null,
       "api_football_max_requests": 10,
-      "target_fixture_count": 1,
-      "unresolved_fixture_count": 0,
       "snapshot_date": "2026-04-21",
-      "snapshot_path": "C:\\Users\\44746\\Downloads\\il-margine\\data\\results-snapshot\\2026-04-21.json"
+      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-21.json"
     },
     "epl": {
       "football_data_latest": "2026-04-19",
       "lag_days": 2,
       "football_data_count": 328,
-      "fotmob_count": 15,
-      "fotmob_latest": "2026-04-20",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 0,
       "api_football_requests_remaining_after_league": 10,
       "api_football_error": null,
       "api_football_max_requests": 10,
-      "target_fixture_count": 3,
-      "unresolved_fixture_count": 0,
       "snapshot_date": "2026-04-21",
-      "snapshot_path": "C:\\Users\\44746\\Downloads\\il-margine\\data\\results-snapshot\\2026-04-21.json"
+      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-21.json"
     },
     "la-liga": {
       "football_data_latest": "2026-04-13",
@@ -59,10 +55,8 @@
       "api_football_requests_remaining_after_league": 10,
       "api_football_error": null,
       "api_football_max_requests": 10,
-      "target_fixture_count": 0,
-      "unresolved_fixture_count": 0,
       "snapshot_date": "2026-04-21",
-      "snapshot_path": "C:\\Users\\44746\\Downloads\\il-margine\\data\\results-snapshot\\2026-04-21.json"
+      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-21.json"
     },
     "ligue-1": {
       "football_data_latest": "2026-04-19",
@@ -76,10 +70,8 @@
       "api_football_requests_remaining_after_league": 10,
       "api_football_error": null,
       "api_football_max_requests": 10,
-      "target_fixture_count": 0,
-      "unresolved_fixture_count": 0,
       "snapshot_date": "2026-04-21",
-      "snapshot_path": "C:\\Users\\44746\\Downloads\\il-margine\\data\\results-snapshot\\2026-04-21.json"
+      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-21.json"
     },
     "serie-a": {
       "football_data_latest": "2026-04-19",
@@ -93,10 +85,8 @@
       "api_football_requests_remaining_after_league": 10,
       "api_football_error": "missing API_FOOTBALL_KEY",
       "api_football_max_requests": 10,
-      "target_fixture_count": 3,
-      "unresolved_fixture_count": 2,
       "snapshot_date": "2026-04-21",
-      "snapshot_path": "C:\\Users\\44746\\Downloads\\il-margine\\data\\results-snapshot\\2026-04-21.json"
+      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-21.json"
     }
   },
   "stale_rows": [
@@ -106,7 +96,7 @@
       "line": "12.5",
       "side": "under",
       "kickoff": "2026-04-20T18:45:00Z",
-      "hours_elapsed": 5.55
+      "hours_elapsed": 15.23
     },
     {
       "match": "Pisa SC vs Genoa CFC",
@@ -114,15 +104,14 @@
       "line": "12.5",
       "side": "under",
       "kickoff": "2026-04-19T16:00:00Z",
-      "hours_elapsed": 32.3
+      "hours_elapsed": 41.98
     }
   ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
   "warnings": [
-    "2 stale pending row(s) across 2 fixture(s) (3-48h elapsed)",
-    "serie-a: API-Football fallback issue - missing API_FOOTBALL_KEY (2/3 target fixtures unresolved)"
+    "2 stale pending row(s) across 2 fixture(s) (3-48h elapsed)"
   ],
   "errors": [],
   "exit_code_recommendation": 0
