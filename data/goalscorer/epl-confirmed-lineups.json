@@ -12,7 +12,7 @@
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "3-4-1-2",
+      "away_formation": "4-4-1-1",
       "home_players": [
         "Bart Verbruggen",
         "Mats Wieffer",
@@ -28,15 +28,15 @@
       ],
       "away_players": [
         "Robert Sánchez",
+        "Malo Gusto",
         "Wesley Fofana",
         "Trevoh Chalobah",
         "Jorrel Hato",
-        "Malo Gusto",
-        "Moisés Caicedo",
+        "Pedro Neto",
         "Roméo Lavia",
+        "Moisés Caicedo",
         "Marc Cucurella",
         "Enzo Fernández",
-        "Pedro Neto",
         "Liam Delap"
       ],
       "home_starters": [
@@ -147,53 +147,53 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-1-2",
+          "formation": "4-4-1-1",
           "position_id": 11
+        },
+        {
+          "name": "Malo Gusto",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-1-1",
+          "position_id": 32
         },
         {
           "name": "Wesley Fofana",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-1-2",
-          "position_id": 33
+          "formation": "4-4-1-1",
+          "position_id": 34
         },
         {
           "name": "Trevoh Chalobah",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-1-2",
-          "position_id": 35
+          "formation": "4-4-1-1",
+          "position_id": 36
         },
         {
           "name": "Jorrel Hato",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-1-2",
-          "position_id": 37
+          "formation": "4-4-1-1",
+          "position_id": 38
         },
         {
-          "name": "Malo Gusto",
+          "name": "Pedro Neto",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-1-2",
-          "position_id": 62
-        },
-        {
-          "name": "Moisés Caicedo",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-1-2",
-          "position_id": 64
+          "formation": "4-4-1-1",
+          "position_id": 72
         },
         {
           "name": "Roméo Lavia",
@@ -201,8 +201,17 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-1-2",
-          "position_id": 66
+          "formation": "4-4-1-1",
+          "position_id": 74
+        },
+        {
+          "name": "Moisés Caicedo",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-1-1",
+          "position_id": 76
         },
         {
           "name": "Marc Cucurella",
@@ -210,8 +219,8 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-1-2",
-          "position_id": 68
+          "formation": "4-4-1-1",
+          "position_id": 78
         },
         {
           "name": "Enzo Fernández",
@@ -219,49 +228,40 @@
           "line_size": 1,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-4-1-2",
-          "position_id": 85
-        },
-        {
-          "name": "Pedro Neto",
-          "line_index": 3,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-4-1-2",
-          "position_id": 104
+          "formation": "4-4-1-1",
+          "position_id": 95
         },
         {
           "name": "Liam Delap",
           "line_index": 3,
-          "line_size": 2,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-1-2",
-          "position_id": 106
+          "formation": "4-4-1-1",
+          "position_id": 115
         }
       ],
       "home_subs": [
+        "Joël Veltman",
+        "Maxim De Cuyper",
+        "Yasin Ayari",
+        "Danny Welbeck",
+        "Matthew O'Riley",
         "Jason Steele",
         "Igor Julio",
-        "Joël Veltman",
         "Lewis Dunk",
-        "Maxim De Cuyper",
-        "Matthew O'Riley",
-        "Yasin Ayari",
-        "Charalampos Kostoulas",
-        "Danny Welbeck"
+        "Charalampos Kostoulas"
       ],
       "away_subs": [
-        "Teddy Sharman-Lowe",
+        "Alejandro Garnacho",
+        "Marc Guiu",
+        "Dário Essugo",
         "Josh Acheampong",
+        "Teddy Sharman-Lowe",
         "Mamadou Sarr",
         "Tosin Adarabioyo",
         "Andrey Santos",
-        "Dário Essugo",
-        "Alejandro Garnacho",
-        "Jesse Derry",
-        "Marc Guiu"
+        "Jesse Derry"
       ],
       "home_unavailable": [
         "Solly March",
