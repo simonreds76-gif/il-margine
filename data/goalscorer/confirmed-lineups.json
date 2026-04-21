@@ -1,3 +1,260 @@
 {
-  "fixtures": []
+  "fixtures": [
+    {
+      "fotmob_match_id": 4803374,
+      "fotmob_page_url": "/matches/cremonese-vs-napoli/2l0qxt#4803374",
+      "home_fotmob_team_id": 9875,
+      "away_fotmob_team_id": 7801,
+      "match_date": "2026-04-24",
+      "home_team": "Napoli",
+      "away_team": "Cremonese",
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-4-2-1",
+      "away_formation": "4-4-2",
+      "home_players": [
+        "Vanja Milinkovic-Savic",
+        "Sam Beukema",
+        "Alessandro Buongiorno",
+        "Mathías Olivera",
+        "Matteo Politano",
+        "Frank Anguissa",
+        "Stanislav Lobotka",
+        "Leonardo Spinazzola",
+        "Kevin De Bruyne",
+        "Scott McTominay",
+        "Rasmus Højlund"
+      ],
+      "away_players": [
+        "Emil Audero",
+        "Filippo Terracciano",
+        "Federico Baschirotto",
+        "Sebastiano Luperto",
+        "Giuseppe Pezzella",
+        "Romano Floriani Mussolini",
+        "Warren Bondo",
+        "Alberto Grassi",
+        "Jari Vandeputte",
+        "Federico Bonazzoli",
+        "Antonio Sanabria"
+      ],
+      "home_starters": [
+        {
+          "name": "Vanja Milinkovic-Savic",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-2-1",
+          "position_id": 11
+        },
+        {
+          "name": "Sam Beukema",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 33
+        },
+        {
+          "name": "Alessandro Buongiorno",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 35
+        },
+        {
+          "name": "Mathías Olivera",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-2-1",
+          "position_id": 37
+        },
+        {
+          "name": "Matteo Politano",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 62
+        },
+        {
+          "name": "Frank Anguissa",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 64
+        },
+        {
+          "name": "Stanislav Lobotka",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66
+        },
+        {
+          "name": "Leonardo Spinazzola",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 68
+        },
+        {
+          "name": "Kevin De Bruyne",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 84
+        },
+        {
+          "name": "Scott McTominay",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86
+        },
+        {
+          "name": "Rasmus Højlund",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-2-1",
+          "position_id": 105
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Emil Audero",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-4-2",
+          "position_id": 11
+        },
+        {
+          "name": "Filippo Terracciano",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 32
+        },
+        {
+          "name": "Federico Baschirotto",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 34
+        },
+        {
+          "name": "Sebastiano Luperto",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 36
+        },
+        {
+          "name": "Giuseppe Pezzella",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 38
+        },
+        {
+          "name": "Romano Floriani Mussolini",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 72
+        },
+        {
+          "name": "Warren Bondo",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 74
+        },
+        {
+          "name": "Alberto Grassi",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 76
+        },
+        {
+          "name": "Jari Vandeputte",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 78
+        },
+        {
+          "name": "Federico Bonazzoli",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-4-2",
+          "position_id": 104
+        },
+        {
+          "name": "Antonio Sanabria",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-4-2",
+          "position_id": 106
+        }
+      ],
+      "home_subs": [],
+      "away_subs": [],
+      "home_unavailable": [
+        "Romelu Lukaku",
+        "Giovanni Di Lorenzo",
+        "Antonio Vergara",
+        "David Neres"
+      ],
+      "away_unavailable": [
+        "Morten Thorsby",
+        "Michele Collocolo",
+        "Faris Moumbagna",
+        "Jamie Vardy"
+      ]
+    }
+  ]
 }
