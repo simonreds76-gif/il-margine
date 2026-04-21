@@ -32,6 +32,9 @@ jobs:
       - name: Install Python deps
         run: pip install requests
 
+      - name: Generate team-props run id
+        run: echo "TEAM_PROPS_RUN_ID=$(python -c 'import uuid; print(uuid.uuid4())')" >> "$GITHUB_ENV"
+
       - name: Create .env.local
         run: |
           : > .env.local
@@ -40,6 +43,32 @@ jobs:
           else
             echo "::warning::API_FOOTBALL_KEY not configured; results snapshot fallback coverage is reduced when Football-Data is stale and FotMob misses fixtures."
           fi
+          if [ -n "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
+            echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.local
+          else
+            echo "NEXT_PUBLIC_SUPABASE_URL=https://nuqcgzbagxtbxlqrhtvc.supabase.co" >> .env.local
+          fi
+          if [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
+          fi
+          if [ -n "${{ secrets.DATABASE_URL }}" ]; then
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env.local
+          elif [ -n "${{ secrets.SUPABASE_DB_URL }}" ]; then
+            echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL }}" >> .env.local
+          fi
+
+      - name: Start team-props run_status heartbeat
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://nuqcgzbagxtbxlqrhtvc.supabase.co}"
+          python scripts/_lib/run_status_cli.py start \
+            --run-id "$TEAM_PROPS_RUN_ID" \
+            --pipeline team-props \
+            --trigger-kind schedule
 
       - name: Fetch results snapshot
         run: |
@@ -137,3 +166,23 @@ jobs:
         run: |
           echo "Settlement audit reported errors earlier in the run."
           exit 1
+
+      - name: Finalize team-props run_status heartbeat
+        if: always()
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://nuqcgzbagxtbxlqrhtvc.supabase.co}"
+          status="ok"
+          if [ "${{ job.status }}" != "success" ]; then
+            status="failed"
+          fi
+          if [ "${{ steps.audit.outcome }}" = "failure" ]; then
+            status="failed"
+          fi
+          python scripts/_lib/run_status_cli.py complete \
+            --run-id "$TEAM_PROPS_RUN_ID" \
+            --status "$status"
