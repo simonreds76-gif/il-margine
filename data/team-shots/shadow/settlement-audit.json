@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-04-21T13:43:01Z",
+  "run_at": "2026-04-21T18:12:30Z",
   "model": "team-shots",
   "total_bets": 79,
   "settled_this_run": 0,
@@ -8,8 +8,8 @@
   "pending_breakdown": {
     "future": 0,
     "live": 0,
-    "stale": 2,
-    "old_stale": 0,
+    "stale": 1,
+    "old_stale": 1,
     "unknown": 0
   },
   "source_freshness": {
@@ -96,23 +96,26 @@
       "line": "12.5",
       "side": "under",
       "kickoff": "2026-04-20T18:45:00Z",
-      "hours_elapsed": 18.97
-    },
+      "hours_elapsed": 23.46
+    }
+  ],
+  "old_stale_rows": [
     {
       "match": "Pisa SC vs Genoa CFC",
       "league": "serie-a",
       "line": "12.5",
       "side": "under",
       "kickoff": "2026-04-19T16:00:00Z",
-      "hours_elapsed": 45.72
+      "hours_elapsed": 50.21
     }
   ],
-  "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
   "warnings": [
-    "2 stale pending row(s) across 2 fixture(s) (3-48h elapsed)"
+    "1 stale pending row(s) across 1 fixture(s) (3-48h elapsed)"
   ],
-  "errors": [],
-  "exit_code_recommendation": 0
+  "errors": [
+    "1 old stale pending row(s) (>=48h elapsed)"
+  ],
+  "exit_code_recommendation": 1
 }
