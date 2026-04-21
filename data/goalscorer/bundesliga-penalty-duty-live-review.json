@@ -1,9 +1,39 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-19T17:08:00Z",
+  "generated_at": "2026-04-21T18:48:53Z",
   "league": "bundesliga",
-  "row_count": 3,
+  "row_count": 4,
   "rows": [
+    {
+      "date": "2026-04-19",
+      "league": "bundesliga",
+      "review_source": "fotmob_live",
+      "match": "Borussia Mönchengladbach vs Mainz 05",
+      "team": "Mainz 05",
+      "opponent": "Borussia Mönchengladbach",
+      "actual_taker": "Nadiem Amiri",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "90",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "",
+      "secondary_pre_match": "",
+      "tertiary_pre_match": "",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "needs_manual_review",
+      "review_priority": "medium",
+      "editorial_note": "Nadiem Amiri took 1 penalty attempt and scored for Mainz 05 vs Borussia Mönchengladbach. Needs manual editorial review.",
+      "context_generated_at": "",
+      "context_source_path": ""
+    },
     {
       "date": "2026-04-18",
       "league": "bundesliga",
@@ -31,7 +61,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Andrej Kramaric took 2 penalty attempts and scored for Hoffenheim vs Borussia Dortmund. Primary pre-match: Andrej Kramaric (unknown). Secondary pre-match: Muhammed Damar (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-19T17:07:42Z",
+      "context_generated_at": "2026-04-21T18:48:32Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -61,7 +91,7 @@
       "review_type": "unranked_taker",
       "review_priority": "high",
       "editorial_note": "Fabian Rieder took 1 penalty attempt and scored for Augsburg vs Bayer Leverkusen. Primary pre-match: Alexis Claude-Maurice (unknown). Secondary pre-match: Michael Gregoritsch (unknown). Strong review flag: the taker was not in the tracked top three.",
-      "context_generated_at": "2026-04-19T17:07:42Z",
+      "context_generated_at": "2026-04-21T18:48:32Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -91,7 +121,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Gian-Luca Waldschmidt took 1 penalty attempt and scored for 1. FC Köln vs St. Pauli. Primary pre-match: Gian-Luca Waldschmidt (unknown). Secondary pre-match: Saïd El Mala (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-19T17:07:42Z",
+      "context_generated_at": "2026-04-21T18:48:32Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     }
   ]
