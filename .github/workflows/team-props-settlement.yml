@@ -32,6 +32,15 @@ jobs:
       - name: Install Python deps
         run: pip install requests
 
+      - name: Create .env.local
+        run: |
+          : > .env.local
+          if [ -n "${{ secrets.API_FOOTBALL_KEY }}" ]; then
+            echo "API_FOOTBALL_KEY=${{ secrets.API_FOOTBALL_KEY }}" >> .env.local
+          else
+            echo "::warning::API_FOOTBALL_KEY not configured; results snapshot fallback coverage is reduced when Football-Data is stale and FotMob misses fixtures."
+          fi
+
       - name: Fetch results snapshot
         run: |
           python scripts/fetch-results-snapshot.py \
@@ -59,7 +68,9 @@ jobs:
         run: python scripts/shortlist-settle.py
 
       - name: Audit settlement
+        id: audit
         if: always()
+        continue-on-error: true
         run: |
           python scripts/settlement_audit.py \
             data/team-shots/shadow/settlement-audit.json \
@@ -76,11 +87,13 @@ jobs:
           retention-days: 30
 
       - name: Generate team-props snapshot artifacts
+        if: always()
         run: |
           python scripts/team-shots-live-snapshot.py
           python scripts/corners-live-snapshot.py
 
       - name: Upload team-props hosted snapshots
+        if: always()
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -94,6 +107,7 @@ jobs:
           fi
 
       - name: Commit and push if new data
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -117,3 +131,9 @@ jobs:
           git fetch origin golden-with-speed-insights
           git rebase origin/golden-with-speed-insights
           git push origin HEAD:golden-with-speed-insights
+
+      - name: Fail workflow if settlement audit reported errors
+        if: always() && steps.audit.outcome == 'failure'
+        run: |
+          echo "Settlement audit reported errors earlier in the run."
+          exit 1

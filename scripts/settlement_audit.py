@@ -3,7 +3,7 @@ from __future__ import annotations
 import csv
 import json
 import argparse
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import date, datetime, time, timezone
 from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Mapping, MutableMapping, Optional, Sequence, Tuple
@@ -181,6 +181,7 @@ def build_settlement_audit(
     unknown_rows: List[dict] = []
     overridden_rows: List[dict] = []
     stale_by_league: Counter[str] = Counter()
+    stale_fixture_keys_by_league: dict[str, set[tuple[str, str]]] = defaultdict(set)
 
     for row in rows:
         if not is_pending(row):
@@ -214,6 +215,9 @@ def build_settlement_audit(
         if bucket == "stale":
             stale_rows.append(summary)
             stale_by_league[summary["league"] or "?"] += 1
+            stale_fixture_keys_by_league[summary["league"] or "?"].add(
+                (summary["kickoff"] or "", summary["match"].casefold())
+            )
         elif bucket == "old_stale":
             old_stale_rows.append(summary)
         elif bucket == "unknown":
@@ -223,21 +227,27 @@ def build_settlement_audit(
     errors: List[str] = []
 
     if stale_rows:
+        unique_stale_fixture_count = sum(len(keys) for keys in stale_fixture_keys_by_league.values())
         warnings.append(
-            f"{len(stale_rows)} stale pending row(s) ({stale_threshold_hours:g}-{old_stale_threshold_hours:g}h elapsed)"
+            f"{len(stale_rows)} stale pending row(s) across {unique_stale_fixture_count} fixture(s) ({stale_threshold_hours:g}-{old_stale_threshold_hours:g}h elapsed)"
         )
     if unknown_rows:
         warnings.append(f"{len(unknown_rows)} pending row(s) with unknown kickoff")
 
     for league, stats in source_freshness.items():
+        target_fixture_count = int(stats.get("target_fixture_count") or 0)
+        unresolved_fixture_count = int(stats.get("unresolved_fixture_count") or 0)
+        if target_fixture_count <= 0:
+            continue
+
         lag_days = stats.get("lag_days")
         try:
             lag_days_val = int(lag_days) if lag_days is not None else None
         except (TypeError, ValueError):
             lag_days_val = None
-        if lag_days_val is not None and lag_days_val > 3:
+        if lag_days_val is not None and lag_days_val > 3 and unresolved_fixture_count > 0:
             warnings.append(
-                f"{league}: Football-Data latest date is {stats.get('football_data_latest') or 'unknown'} ({lag_days_val}d old)"
+                f"{league}: Football-Data latest date is {stats.get('football_data_latest') or 'unknown'} ({lag_days_val}d old, {unresolved_fixture_count}/{target_fixture_count} target fixtures unresolved)"
             )
         football_data_count = int(stats.get("football_data_count") or 0)
         fotmob_count = int(stats.get("fotmob_count") or 0)
@@ -245,14 +255,25 @@ def build_settlement_audit(
         api_football_error = str(stats.get("api_football_error", "") or "").strip()
         if football_data_count == 0 and fotmob_count == 0 and api_football_count == 0:
             warnings.append(f"{league}: Football-Data, FotMob, and API-Football all returned 0 results")
-        elif api_football_error:
-            warnings.append(f"{league}: API-Football fallback issue - {api_football_error}")
+        elif api_football_error and unresolved_fixture_count > 0:
+            if api_football_error == "missing API_FOOTBALL_KEY" and lag_days_val is not None and lag_days_val > 3:
+                errors.append(
+                    f"{league}: API_FOOTBALL_KEY missing while Football-Data is {lag_days_val}d old and {unresolved_fixture_count}/{target_fixture_count} target fixtures remain unresolved"
+                )
+            else:
+                warnings.append(
+                    f"{league}: API-Football fallback issue - {api_football_error} ({unresolved_fixture_count}/{target_fixture_count} target fixtures unresolved)"
+                )
 
     if old_stale_rows:
         errors.append(f"{len(old_stale_rows)} old stale pending row(s) (>={old_stale_threshold_hours:g}h elapsed)")
-    for league, count in stale_by_league.items():
-        if count >= same_league_stale_fail_count:
-            errors.append(f"{league}: {count} stale pending rows from the same league")
+    for league, fixture_keys in stale_fixture_keys_by_league.items():
+        unique_fixture_count = len(fixture_keys)
+        if unique_fixture_count >= same_league_stale_fail_count:
+            row_count = stale_by_league[league]
+            errors.append(
+                f"{league}: {unique_fixture_count} stale fixture(s) across {row_count} pending row(s)"
+            )
 
     total_settled = sum(1 for row in rows if is_settled(row))
     total_pending = sum(1 for row in rows if is_pending(row))
