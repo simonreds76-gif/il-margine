@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-04-21T00:16:44Z",
+  "fetched_at": "2026-04-21T09:58:29Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
@@ -3154,19 +3154,6 @@
           "source": "football-data",
           "total_corners": 13
         },
-        "2026-04-18|bayer leverkusen|augsburg": {
-          "away_corners": 4,
-          "away_shots": 11,
-          "away_sot": 5,
-          "away_team": "augsburg",
-          "home_corners": 11,
-          "home_shots": 36,
-          "home_sot": 10,
-          "home_team": "bayer leverkusen",
-          "match_id": 4829576,
-          "source": "fotmob",
-          "total_corners": 15
-        },
         "2026-04-18|ein frankfurt|rb leipzig": {
           "away_corners": 6,
           "away_shots": 19,
@@ -3178,32 +3165,6 @@
           "home_team": "ein frankfurt",
           "source": "football-data",
           "total_corners": 10
-        },
-        "2026-04-18|eintracht frankfurt|rb leipzig": {
-          "away_corners": 6,
-          "away_shots": 19,
-          "away_sot": 8,
-          "away_team": "rb leipzig",
-          "home_corners": 4,
-          "home_shots": 16,
-          "home_sot": 5,
-          "home_team": "eintracht frankfurt",
-          "match_id": 4829579,
-          "source": "fotmob",
-          "total_corners": 10
-        },
-        "2026-04-18|hoffenheim|borussia dortmund": {
-          "away_corners": 3,
-          "away_shots": 8,
-          "away_sot": 3,
-          "away_team": "borussia dortmund",
-          "home_corners": 4,
-          "home_shots": 13,
-          "home_sot": 4,
-          "home_team": "hoffenheim",
-          "match_id": 4829581,
-          "source": "fotmob",
-          "total_corners": 7
         },
         "2026-04-18|hoffenheim|dortmund": {
           "away_corners": 3,
@@ -3292,17 +3253,13 @@
       },
       "football_data_count": 270,
       "football_data_latest": "2026-04-19",
-      "fotmob_count": 8,
-      "fotmob_latest": "2026-04-19",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "lag_days": 2,
       "source": "football-data",
       "source_latest": "2026-04-19",
-      "target_dates": [
-        "2026-04-18",
-        "2026-04-19",
-        "2026-04-20"
-      ],
-      "target_fixture_count": 1,
+      "target_dates": [],
+      "target_fixture_count": 0,
       "unresolved_fixture_count": 0
     },
     "epl": {
@@ -7118,19 +7075,6 @@
           "source": "football-data",
           "total_corners": 10
         },
-        "2026-04-12|nottingham forest|aston villa": {
-          "away_corners": 3,
-          "away_shots": 12,
-          "away_sot": 5,
-          "away_team": "aston villa",
-          "home_corners": 7,
-          "home_shots": 15,
-          "home_sot": 4,
-          "home_team": "nottingham forest",
-          "match_id": 4813692,
-          "source": "fotmob",
-          "total_corners": 10
-        },
         "2026-04-12|sunderland|tottenham": {
           "away_corners": 6,
           "away_shots": 11,
@@ -7153,19 +7097,6 @@
           "home_sot": 9,
           "home_team": "man united",
           "source": "football-data",
-          "total_corners": 15
-        },
-        "2026-04-13|manchester united|leeds united": {
-          "away_corners": 4,
-          "away_shots": 15,
-          "away_sot": 6,
-          "away_team": "leeds united",
-          "home_corners": 11,
-          "home_shots": 20,
-          "home_sot": 9,
-          "home_team": "manchester united",
-          "match_id": 4813691,
-          "source": "fotmob",
           "total_corners": 15
         },
         "2026-04-18|brentford|fulham": {
@@ -7191,32 +7122,6 @@
           "home_team": "chelsea",
           "source": "football-data",
           "total_corners": 8
-        },
-        "2026-04-18|chelsea|manchester united": {
-          "away_corners": 1,
-          "away_shots": 4,
-          "away_sot": 1,
-          "away_team": "manchester united",
-          "home_corners": 7,
-          "home_shots": 21,
-          "home_sot": 3,
-          "home_team": "chelsea",
-          "match_id": 4813697,
-          "source": "fotmob",
-          "total_corners": 8
-        },
-        "2026-04-18|leeds united|wolverhampton": {
-          "away_corners": 6,
-          "away_shots": 7,
-          "away_sot": 2,
-          "away_team": "wolverhampton",
-          "home_corners": 5,
-          "home_shots": 17,
-          "home_sot": 6,
-          "home_team": "leeds united",
-          "match_id": 4813700,
-          "source": "fotmob",
-          "total_corners": 11
         },
         "2026-04-18|leeds|wolves": {
           "away_corners": 6,
@@ -7301,51 +7206,17 @@
           "home_team": "nott m forest",
           "source": "football-data",
           "total_corners": 8
-        },
-        "2026-04-19|nottingham forest|burnley": {
-          "away_corners": 4,
-          "away_shots": 4,
-          "away_sot": 3,
-          "away_team": "burnley",
-          "home_corners": 4,
-          "home_shots": 10,
-          "home_sot": 4,
-          "home_team": "nottingham forest",
-          "match_id": 4813703,
-          "source": "fotmob",
-          "total_corners": 8
-        },
-        "2026-04-20|crystal palace|west ham united": {
-          "away_corners": 6,
-          "away_shots": 9,
-          "away_sot": 4,
-          "away_team": "west ham united",
-          "home_corners": 4,
-          "home_shots": 9,
-          "home_sot": 1,
-          "home_team": "crystal palace",
-          "match_id": 4813698,
-          "source": "fotmob",
-          "total_corners": 10
         }
       },
       "football_data_count": 328,
       "football_data_latest": "2026-04-19",
-      "fotmob_count": 15,
-      "fotmob_latest": "2026-04-20",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "lag_days": 2,
       "source": "football-data",
       "source_latest": "2026-04-19",
-      "target_dates": [
-        "2026-04-12",
-        "2026-04-13",
-        "2026-04-14",
-        "2026-04-18",
-        "2026-04-19",
-        "2026-04-20",
-        "2026-04-21"
-      ],
-      "target_fixture_count": 3,
+      "target_dates": [],
+      "target_fixture_count": 0,
       "unresolved_fixture_count": 0
     },
     "la-liga": {
@@ -18311,7 +18182,7 @@
         "2026-04-20",
         "2026-04-21"
       ],
-      "target_fixture_count": 3,
+      "target_fixture_count": 2,
       "unresolved_fixture_count": 2
     }
   },
