@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-21T21:34:04Z",
+  "generated_at": "2026-04-21T23:51:09Z",
   "league": "la-liga",
   "row_count": 2,
   "rows": [
@@ -22,16 +22,16 @@
       "primary_pre_match": "Ante Budimir",
       "secondary_pre_match": "Aimar Oroz",
       "tertiary_pre_match": "Ruben Garcia",
-      "primary_lineup_status": "confirmed_starter",
-      "secondary_lineup_status": "confirmed_starter",
-      "tertiary_lineup_status": "confirmed_starter",
-      "active_taker_pre_match": "Ante Budimir",
-      "active_slot_pre_match": "primary",
+      "primary_lineup_status": "unknown",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Ante Budimir took 1 penalty attempt and missed for Osasuna vs Athletic Club. Primary pre-match: Ante Budimir (confirmed_starter). Secondary pre-match: Aimar Oroz (confirmed_starter). Pre-match active slot was primary -> Ante Budimir. No hierarchy change implied from this event.",
-      "context_generated_at": "2026-04-21T21:33:54Z",
+      "review_type": "needs_manual_review",
+      "review_priority": "medium",
+      "editorial_note": "Ante Budimir took 1 penalty attempt and missed for Osasuna vs Athletic Club. Primary pre-match: Ante Budimir (unknown). Secondary pre-match: Aimar Oroz (unknown). Needs manual editorial review.",
+      "context_generated_at": "2026-04-21T23:50:53Z",
       "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
     },
     {
