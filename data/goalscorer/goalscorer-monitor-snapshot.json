@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-22T18:51:23Z",
+  "generated_at": "2026-04-22T19:17:04Z",
   "source_status": {
-    "compared_at": "2026-04-22T18:51:02Z",
+    "compared_at": "2026-04-22T19:16:59Z",
     "hot_live_updated_at": "2026-04-22T18:51:22Z",
-    "expected_refresh_updated_at": "2026-04-22T18:51:02Z",
+    "expected_refresh_updated_at": "2026-04-22T19:16:59Z",
     "settlement_updated_at": "2026-04-22T18:51:22Z",
     "scheduler_heartbeat_at": "2026-04-22T18:51:22Z",
-    "snapshot_generated_at": "2026-04-22T18:51:23Z",
+    "snapshot_generated_at": "2026-04-22T19:17:04Z",
     "live_status_state": "idle",
     "live_status_message": "Goalscorer live poll finished (5 league(s) ran)."
   },
@@ -18,10 +18,10 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-22T18:47:43Z",
+      "updated_at": "2026-04-22T19:14:31Z",
       "live_rows": 188,
       "public_now": 0,
-      "shadow_now": 3,
+      "shadow_now": 5,
       "clean_fixtures": 0,
       "degraded_fixtures": 4,
       "quarantined_fixtures": 0,
@@ -33,9 +33,9 @@
         "pnl_units": -7.0
       },
       "shadow_record": {
-        "signals": 44,
+        "signals": 46,
         "settled": 41,
-        "open": 3,
+        "open": 5,
         "wins": 4,
         "losses": 37,
         "voids": 0,
@@ -49,7 +49,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-22T18:48:35Z",
+      "updated_at": "2026-04-22T19:15:11Z",
       "live_rows": 303,
       "public_now": 3,
       "shadow_now": 11,
@@ -80,12 +80,12 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-22T18:49:34Z",
-      "live_rows": 330,
+      "updated_at": "2026-04-22T19:16:02Z",
+      "live_rows": 384,
       "public_now": 0,
       "shadow_now": 7,
       "clean_fixtures": 1,
-      "degraded_fixtures": 9,
+      "degraded_fixtures": 10,
       "quarantined_fixtures": 0,
       "public_record": {
         "settled": 5,
@@ -111,7 +111,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-22T18:50:14Z",
+      "updated_at": "2026-04-22T19:16:38Z",
       "live_rows": 303,
       "public_now": 0,
       "shadow_now": 9,
@@ -142,7 +142,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-22T18:51:06Z",
+      "updated_at": "2026-04-22T19:17:03Z",
       "live_rows": 131,
       "public_now": 0,
       "shadow_now": 1,
@@ -722,6 +722,29 @@
       "stake_label": "-"
     },
     {
+      "key": "Lassana Coulibaly-2026-04-25-Bet365-shadow_track",
+      "status": "SHADOW",
+      "action": "shadow_track",
+      "action_label": "shadow",
+      "league_key": "serie-a",
+      "league_label": "SA",
+      "competition": "Italy - Serie A",
+      "player": "Lassana Coulibaly",
+      "team": "Lecce",
+      "opponent": "Hellas Verona",
+      "match": "Lecce vs Hellas Verona",
+      "match_date": "2026-04-25",
+      "kickoff": "2026-04-25",
+      "bookmaker": "Bet365",
+      "lineup_short": "~",
+      "lineup_label": "FotMob Expected XI",
+      "lineup_status": "expected_starter",
+      "odds": 12.0,
+      "fair": 9.1614,
+      "edge_pct": 30.9844,
+      "stake_label": "-"
+    },
+    {
       "key": "Nicolas Capaldo-2026-04-25-Bet365-shadow_track",
       "status": "SHADOW",
       "action": "shadow_track",
@@ -811,6 +834,29 @@
       "odds": 11.0,
       "fair": 8.9657,
       "edge_pct": 22.6903,
+      "stake_label": "-"
+    },
+    {
+      "key": "Rafik Belghali-2026-04-25-Bet365-shadow_track",
+      "status": "SHADOW",
+      "action": "shadow_track",
+      "action_label": "shadow",
+      "league_key": "serie-a",
+      "league_label": "SA",
+      "competition": "Italy - Serie A",
+      "player": "Rafik Belghali",
+      "team": "Verona",
+      "opponent": "US Lecce",
+      "match": "Verona vs US Lecce",
+      "match_date": "2026-04-25",
+      "kickoff": "2026-04-25",
+      "bookmaker": "Bet365",
+      "lineup_short": "~",
+      "lineup_label": "FotMob Expected XI",
+      "lineup_status": "expected_starter",
+      "odds": 8.5,
+      "fair": 7.0593,
+      "edge_pct": 20.408,
       "stake_label": "-"
     },
     {
@@ -979,14 +1025,12 @@
         "away_team": "US Lecce",
         "competition": "Italy - Serie A",
         "bookmaker": "Bet365",
-        "lineup_input": "none",
+        "lineup_input": "expected_xi",
         "trust_tier": "T2",
-        "corruption_score": 1.0,
-        "corruption_flags": [
-          "no_lineup_payload"
-        ],
-        "status_label": "Awaiting Lineup",
-        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+        "corruption_score": 0.0,
+        "corruption_flags": [],
+        "status_label": "Expected XI",
+        "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
       },
       {
         "key": "serie-a|2026-04-25|parma|pisa",
@@ -1325,6 +1369,24 @@
         "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
       },
       {
+        "key": "la-liga|2026-04-25|atletico madrid|athletic bilbao",
+        "league_key": "la-liga",
+        "league_label": "La Liga",
+        "match_date": "2026-04-25",
+        "home_team": "Atletico Madrid",
+        "away_team": "Athletic Bilbao",
+        "competition": "Spain - LaLiga",
+        "bookmaker": "Bet365",
+        "lineup_input": "none",
+        "trust_tier": "T2",
+        "corruption_score": 1.0,
+        "corruption_flags": [
+          "no_lineup_payload"
+        ],
+        "status_label": "Awaiting Lineup",
+        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+      },
+      {
         "key": "bundesliga|2026-04-24|rb leipzig|union berlin",
         "league_key": "bundesliga",
         "league_label": "Bundesliga",
@@ -1508,10 +1570,10 @@
       }
     ],
     "clean_count": 3,
-    "degraded_count": 30,
+    "degraded_count": 31,
     "quarantined_count": 0,
     "hidden_pending_count": 12,
-    "hidden_expected_count": 18,
+    "hidden_expected_count": 19,
     "flagged_rows": []
   },
   "fixture_lineups": [
@@ -1963,40 +2025,355 @@
         "away_team": "US Lecce",
         "competition": "Italy - Serie A",
         "bookmaker": "Bet365",
-        "lineup_input": "none",
+        "lineup_input": "expected_xi",
         "trust_tier": "T2",
-        "corruption_score": 1.0,
-        "corruption_flags": [
-          "no_lineup_payload"
-        ],
-        "status_label": "Awaiting Lineup",
-        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+        "corruption_score": 0.0,
+        "corruption_flags": [],
+        "status_label": "Expected XI",
+        "summary": "Expected XI only. Useful for monitoring and shadow context, but not confirmed-lineup decisions yet."
       },
       "home": {
         "team": "Hellas Verona",
-        "lineup_status": "",
-        "total_players": 0,
-        "matched_players": 0,
-        "keeper": null,
-        "attackers": [],
-        "midfielders": [],
-        "wide_players": [],
-        "centre_backs": [],
+        "lineup_status": "FotMob Expected XI",
+        "total_players": 11,
+        "matched_players": 10,
+        "keeper": {
+          "key": "Lorenzo Montipò-GK-11",
+          "name": "Lorenzo Montipò",
+          "position": "GK",
+          "note": "No price matched",
+          "has_price": false,
+          "odds": null,
+          "fair": null,
+          "ev_pct": null,
+          "expected_minutes": null,
+          "action": "monitor",
+          "action_label": "monitor",
+          "penalty_meta": null
+        },
+        "attackers": [
+          {
+            "key": "Gift Orban-FW-105",
+            "name": "Gift Orban",
+            "position": "ST",
+            "note": null,
+            "has_price": true,
+            "odds": 3.4,
+            "fair": 3.7432,
+            "ev_pct": -9.1694,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": {
+              "compact": "Primary pen | 68% share | lambda 0.050",
+              "detail": "pen duty Primary | share 67.6% | base 42.1% | prior 74.0% | w 6.0 | src recent+long | sample 1.5 | career 2/3 | lambda_pen 0.050 | lambda_open 0.261"
+            }
+          }
+        ],
+        "midfielders": [
+          {
+            "key": "Jean-Daniel Akpa Akpro-MID-64",
+            "name": "Jean-Daniel Akpa Akpro",
+            "position": "DM",
+            "note": null,
+            "has_price": true,
+            "odds": 12.0,
+            "fair": 16.271,
+            "ev_pct": -26.249299999999998,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Roberto Gagliardini-MID-66",
+            "name": "Roberto Gagliardini",
+            "position": "DM",
+            "note": null,
+            "has_price": true,
+            "odds": 8.0,
+            "fair": 19.5737,
+            "ev_pct": -59.128899999999994,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Rafik Belghali-AM-84",
+            "name": "Rafik Belghali",
+            "position": "AM",
+            "note": null,
+            "has_price": true,
+            "odds": 8.5,
+            "fair": 7.0593,
+            "ev_pct": 20.408,
+            "expected_minutes": 78.0,
+            "action": "shadow_track",
+            "action_label": "shadow",
+            "penalty_meta": null
+          },
+          {
+            "key": "Antoine Bernede-AM-86",
+            "name": "Antoine Bernede",
+            "position": "AM",
+            "note": null,
+            "has_price": true,
+            "odds": 9.5,
+            "fair": 23.5363,
+            "ev_pct": -59.636900000000004,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          }
+        ],
+        "wide_players": [
+          {
+            "key": "Pol Lirola-MID-62",
+            "name": "Pol Lirola",
+            "position": "RM/WB",
+            "note": null,
+            "has_price": true,
+            "odds": 9.5,
+            "fair": 34.3705,
+            "ev_pct": -72.36,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Domagoj Bradaric-MID-68",
+            "name": "Domagoj Bradaric",
+            "position": "LM/WB",
+            "note": null,
+            "has_price": true,
+            "odds": 13.0,
+            "fair": 97.5832,
+            "ev_pct": -86.678,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          }
+        ],
+        "centre_backs": [
+          {
+            "key": "Victor Nelsson-DEF-33",
+            "name": "Victor Nelsson",
+            "position": "RCB",
+            "note": null,
+            "has_price": true,
+            "odds": 15.0,
+            "fair": 62.373,
+            "ev_pct": -75.95110000000001,
+            "expected_minutes": 86.5,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Andrias Edmundsson-DEF-35",
+            "name": "Andrias Edmundsson",
+            "position": "CB",
+            "note": null,
+            "has_price": true,
+            "odds": 15.0,
+            "fair": 59.2357,
+            "ev_pct": -74.6774,
+            "expected_minutes": 90.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Nicolás Valentini-DEF-37",
+            "name": "Nicolás Valentini",
+            "position": "LCB",
+            "note": null,
+            "has_price": true,
+            "odds": 19.0,
+            "fair": 49.4801,
+            "ev_pct": -61.600699999999996,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          }
+        ],
         "unplaced": []
       },
       "away": {
         "team": "US Lecce",
-        "lineup_status": "",
-        "total_players": 0,
-        "matched_players": 0,
-        "keeper": null,
-        "attackers": [],
-        "midfielders": [],
-        "wide_players": [],
-        "centre_backs": [],
+        "lineup_status": "FotMob Expected XI",
+        "total_players": 11,
+        "matched_players": 9,
+        "keeper": {
+          "key": "Wladimiro Falcone-GK-11",
+          "name": "Wladimiro Falcone",
+          "position": "GK",
+          "note": "No price matched",
+          "has_price": false,
+          "odds": null,
+          "fair": null,
+          "ev_pct": null,
+          "expected_minutes": null,
+          "action": "monitor",
+          "action_label": "monitor",
+          "penalty_meta": null
+        },
+        "attackers": [
+          {
+            "key": "Walid Cheddira-FW-115",
+            "name": "Walid Cheddira",
+            "position": "ST",
+            "note": null,
+            "has_price": true,
+            "odds": 4.0,
+            "fair": 55.1442,
+            "ev_pct": -92.7463,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          }
+        ],
+        "midfielders": [
+          {
+            "key": "Ylber Ramadani-DMC-64",
+            "name": "Ylber Ramadani",
+            "position": "DM",
+            "note": null,
+            "has_price": true,
+            "odds": 9.5,
+            "fair": 21.0036,
+            "ev_pct": -54.7696,
+            "expected_minutes": 85.9,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Oumar Ngom-DMC-66",
+            "name": "Oumar Ngom",
+            "position": "DM",
+            "note": null,
+            "has_price": true,
+            "odds": 9.5,
+            "fair": 50.5538,
+            "ev_pct": -81.2081,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Santiago Pierotti-AM-83",
+            "name": "Santiago Pierotti",
+            "position": "RW/AM",
+            "note": null,
+            "has_price": true,
+            "odds": 4.0,
+            "fair": 5.9631,
+            "ev_pct": -32.920500000000004,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Lassana Coulibaly-AM-85",
+            "name": "Lassana Coulibaly",
+            "position": "AM",
+            "note": null,
+            "has_price": true,
+            "odds": 12.0,
+            "fair": 9.1614,
+            "ev_pct": 30.9844,
+            "expected_minutes": 78.0,
+            "action": "shadow_track",
+            "action_label": "shadow",
+            "penalty_meta": null
+          },
+          {
+            "key": "Konan N’Dri-AM-87",
+            "name": "Konan N’Dri",
+            "position": "LW/AM",
+            "note": "No price matched",
+            "has_price": false,
+            "odds": null,
+            "fair": null,
+            "ev_pct": null,
+            "expected_minutes": null,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          }
+        ],
+        "wide_players": [
+          {
+            "key": "Danilo Veiga-DEF-32",
+            "name": "Danilo Veiga",
+            "position": "RB",
+            "note": null,
+            "has_price": true,
+            "odds": 15.0,
+            "fair": 82.6093,
+            "ev_pct": -81.84219999999999,
+            "expected_minutes": 86.7,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Antonino Gallo-DEF-38",
+            "name": "Antonino Gallo",
+            "position": "LB",
+            "note": null,
+            "has_price": true,
+            "odds": 19.0,
+            "fair": 99.0,
+            "ev_pct": -84.3758,
+            "expected_minutes": 82.8,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          }
+        ],
+        "centre_backs": [
+          {
+            "key": "Jamil Siebert-DEF-34",
+            "name": "Jamil Siebert",
+            "position": "RCB",
+            "note": null,
+            "has_price": true,
+            "odds": 15.0,
+            "fair": 20.5672,
+            "ev_pct": -27.0685,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          },
+          {
+            "key": "Corrie Ndaba-DEF-36",
+            "name": "Corrie Ndaba",
+            "position": "LCB",
+            "note": null,
+            "has_price": true,
+            "odds": 12.0,
+            "fair": 86.7649,
+            "ev_pct": -86.1695,
+            "expected_minutes": 78.0,
+            "action": "monitor",
+            "action_label": "monitor",
+            "penalty_meta": null
+          }
+        ],
         "unplaced": []
       },
-      "has_any_lineup": false
+      "has_any_lineup": true
     },
     {
       "key": "2026-04-25|Bet365|Parma Calcio|Pisa SC",
@@ -6392,6 +6769,61 @@
       "has_any_lineup": true
     },
     {
+      "key": "2026-04-25|Bet365|Atletico Madrid|Athletic Bilbao",
+      "league_key": "la-liga",
+      "league_label": "La Liga",
+      "competition": "Spain - LaLiga",
+      "match_date": "2026-04-25",
+      "kickoff": "2026-04-25",
+      "bookmaker": "Bet365",
+      "home_team": "Atletico Madrid",
+      "away_team": "Athletic Bilbao",
+      "matched_player_prices": 54,
+      "health": {
+        "key": "la-liga|2026-04-25|atletico madrid|athletic bilbao",
+        "league_key": "la-liga",
+        "league_label": "La Liga",
+        "match_date": "2026-04-25",
+        "home_team": "Atletico Madrid",
+        "away_team": "Athletic Bilbao",
+        "competition": "Spain - LaLiga",
+        "bookmaker": "Bet365",
+        "lineup_input": "none",
+        "trust_tier": "T2",
+        "corruption_score": 1.0,
+        "corruption_flags": [
+          "no_lineup_payload"
+        ],
+        "status_label": "Awaiting Lineup",
+        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+      },
+      "home": {
+        "team": "Atletico Madrid",
+        "lineup_status": "",
+        "total_players": 0,
+        "matched_players": 0,
+        "keeper": null,
+        "attackers": [],
+        "midfielders": [],
+        "wide_players": [],
+        "centre_backs": [],
+        "unplaced": []
+      },
+      "away": {
+        "team": "Athletic Bilbao",
+        "lineup_status": "",
+        "total_players": 0,
+        "matched_players": 0,
+        "keeper": null,
+        "attackers": [],
+        "midfielders": [],
+        "wide_players": [],
+        "centre_backs": [],
+        "unplaced": []
+      },
+      "has_any_lineup": false
+    },
+    {
       "key": "2026-04-25|Bet365|Deportivo Alaves|RCD Mallorca",
       "league_key": "la-liga",
       "league_label": "La Liga",
@@ -9620,9 +10052,9 @@
       {
         "key": "serie-a",
         "label": "Serie A",
-        "signals": 44,
+        "signals": 46,
         "settled": 41,
-        "open": 3,
+        "open": 5,
         "wins": 4,
         "losses": 37,
         "voids": 0,
@@ -10914,21 +11346,21 @@
     ]
   },
   "diagnostics": {
-    "matched_rows": 1255,
+    "matched_rows": 1309,
     "suppressed_rows": 0,
     "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_xis": 0,
-    "history_mapped_rows": 1113,
-    "roster_mapped_rows": 142,
-    "fallback_rows": 506,
-    "low_confidence_rows": 373,
+    "history_mapped_rows": 1159,
+    "roster_mapped_rows": 150,
+    "fallback_rows": 516,
+    "low_confidence_rows": 394,
     "missing_player_history_rows": 1026,
     "starter_rows": 60,
-    "expected_starter_rows": 354,
-    "avg_ev_pct": -69.46827370517939,
+    "expected_starter_rows": 374,
+    "avg_ev_pct": -69.57796699770824,
     "source_feed_gap_leagues": [],
-    "raw_monitor_summary": "=== Serie A | Updated 22/04/2026, 19:47 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-22T18:47:35Z\n\nHistorical Rows          29,181\nOdds Rows                1,249\nMatched Rows             1,097\nMissing Player History   150\nMissing Team Mapping     2\nFallback Rows            105\nQualified Rows           34\nRoster Resolved Rows     129\nHigh Confidence Rows     0\nMedium Confidence Rows   871\nLow Confidence Rows      226\nPublic High Signals      0\nPublic Caveat Signals    30\nShadow Track Rows        3\nPenalty Transfer Rows    1\nPosition Upgrade Rows    0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 2\nFixtures Clean           0\nFixtures Degraded        24\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    39\nExpected Bench Rows      0\nExpected Out Rows        11\nNot In Squad Rows        0\n\nAverage EV               -0.6987\n\n\n=== Premier League | Updated 22/04/2026, 19:48 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-22T18:48:28Z\n\nHistorical Rows          28,833\nOdds Rows                1,355\nMatched Rows             1,117\nMissing Player History   181\nMissing Team Mapping     57\nFallback Rows            116\nQualified Rows           57\nRoster Resolved Rows     102\nHigh Confidence Rows     37\nMedium Confidence Rows   854\nLow Confidence Rows      226\nPublic High Signals      3\nPublic Caveat Signals    44\nShadow Track Rows        14\nPenalty Transfer Rows    1\nPosition Upgrade Rows    2\nFixtures With Confirmed Lineups 2\nFixtures With Expected Lineups 5\nFixtures Clean           2\nFixtures Degraded        27\nFixtures Quarantined     0\nConfirmed Starter Rows   40\nConfirmed Bench Rows     30\nExpected Starter Rows    99\nExpected Bench Rows      0\nExpected Out Rows        12\nNot In Squad Rows        4\n\nAverage EV               -0.6358\n\n\n=== La Liga | Updated 22/04/2026, 19:49 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-22T18:49:26Z\n\nHistorical Rows          29,908\nOdds Rows                1,367\nMatched Rows             835\nMissing Player History   284\nMissing Team Mapping     248\nFallback Rows            120\nQualified Rows           22\nRoster Resolved Rows     113\nHigh Confidence Rows     13\nMedium Confidence Rows   593\nLow Confidence Rows      229\nPublic High Signals      0\nPublic Caveat Signals    17\nShadow Track Rows        7\nPenalty Transfer Rows    2\nPosition Upgrade Rows    0\nFixtures With Confirmed Lineups 1\nFixtures With Expected Lineups 3\nFixtures Clean           1\nFixtures Degraded        23\nFixtures Quarantined     0\nConfirmed Starter Rows   20\nConfirmed Bench Rows     18\nExpected Starter Rows    58\nExpected Bench Rows      0\nExpected Out Rows        17\nNot In Squad Rows        7\n\nAverage EV               -0.7179\n\n\n=== Bundesliga | Updated 22/04/2026, 19:50 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-22T18:50:07Z\n\nHistorical Rows          24,035\nOdds Rows                1,283\nMatched Rows             1,081\nMissing Player History   137\nMissing Team Mapping     65\nFallback Rows            107\nQualified Rows           31\nRoster Resolved Rows     103\nHigh Confidence Rows     0\nMedium Confidence Rows   844\nLow Confidence Rows      237\nPublic High Signals      0\nPublic Caveat Signals    31\nShadow Track Rows        9\nPenalty Transfer Rows    3\nPosition Upgrade Rows    1\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 6\nFixtures Clean           0\nFixtures Degraded        25\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    118\nExpected Bench Rows      0\nExpected Out Rows        39\nNot In Squad Rows        0\n\nAverage EV               -0.6876\n\n\n=== Ligue 1 | Updated 22/04/2026, 19:51 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-22T18:50:59Z\n\nHistorical Rows          23,583\nOdds Rows                1,128\nMatched Rows             494\nMissing Player History   274\nMissing Team Mapping     360\nFallback Rows            58\nQualified Rows           10\nRoster Resolved Rows     49\nHigh Confidence Rows     0\nMedium Confidence Rows   379\nLow Confidence Rows      115\nPublic High Signals      0\nPublic Caveat Signals    7\nShadow Track Rows        1\nPenalty Transfer Rows    1\nPosition Upgrade Rows    1\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 2\nFixtures Clean           0\nFixtures Degraded        20\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    40\nExpected Bench Rows      0\nExpected Out Rows        11\nNot In Squad Rows        0\n\nAverage EV               -0.7332\n"
+    "raw_monitor_summary": "=== Serie A | Updated 22/04/2026, 20:14 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-22T19:14:23Z\n\nHistorical Rows          29,181\nOdds Rows                1,249\nMatched Rows             1,097\nMissing Player History   150\nMissing Team Mapping     2\nFallback Rows            105\nQualified Rows           34\nRoster Resolved Rows     129\nHigh Confidence Rows     0\nMedium Confidence Rows   865\nLow Confidence Rows      232\nPublic High Signals      0\nPublic Caveat Signals    30\nShadow Track Rows        5\nPenalty Transfer Rows    1\nPosition Upgrade Rows    1\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 3\nFixtures Clean           0\nFixtures Degraded        24\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    59\nExpected Bench Rows      0\nExpected Out Rows        18\nNot In Squad Rows        0\n\nAverage EV               -0.6995\n\n\n=== Premier League | Updated 22/04/2026, 20:15 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-22T19:15:03Z\n\nHistorical Rows          28,833\nOdds Rows                1,355\nMatched Rows             1,117\nMissing Player History   181\nMissing Team Mapping     57\nFallback Rows            116\nQualified Rows           57\nRoster Resolved Rows     102\nHigh Confidence Rows     37\nMedium Confidence Rows   854\nLow Confidence Rows      226\nPublic High Signals      3\nPublic Caveat Signals    44\nShadow Track Rows        14\nPenalty Transfer Rows    1\nPosition Upgrade Rows    2\nFixtures With Confirmed Lineups 2\nFixtures With Expected Lineups 5\nFixtures Clean           2\nFixtures Degraded        27\nFixtures Quarantined     0\nConfirmed Starter Rows   40\nConfirmed Bench Rows     30\nExpected Starter Rows    99\nExpected Bench Rows      0\nExpected Out Rows        12\nNot In Squad Rows        4\n\nAverage EV               -0.6358\n\n\n=== La Liga | Updated 22/04/2026, 20:15 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-22T19:15:53Z\n\nHistorical Rows          29,908\nOdds Rows                1,421\nMatched Rows             889\nMissing Player History   284\nMissing Team Mapping     248\nFallback Rows            130\nQualified Rows           24\nRoster Resolved Rows     121\nHigh Confidence Rows     13\nMedium Confidence Rows   632\nLow Confidence Rows      244\nPublic High Signals      0\nPublic Caveat Signals    19\nShadow Track Rows        7\nPenalty Transfer Rows    2\nPosition Upgrade Rows    0\nFixtures With Confirmed Lineups 1\nFixtures With Expected Lineups 3\nFixtures Clean           1\nFixtures Degraded        24\nFixtures Quarantined     0\nConfirmed Starter Rows   20\nConfirmed Bench Rows     18\nExpected Starter Rows    58\nExpected Bench Rows      0\nExpected Out Rows        17\nNot In Squad Rows        7\n\nAverage EV               -0.7172\n\n\n=== Bundesliga | Updated 22/04/2026, 20:16 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-22T19:16:30Z\n\nHistorical Rows          24,035\nOdds Rows                1,283\nMatched Rows             1,081\nMissing Player History   137\nMissing Team Mapping     65\nFallback Rows            107\nQualified Rows           31\nRoster Resolved Rows     103\nHigh Confidence Rows     0\nMedium Confidence Rows   844\nLow Confidence Rows      237\nPublic High Signals      0\nPublic Caveat Signals    31\nShadow Track Rows        9\nPenalty Transfer Rows    3\nPosition Upgrade Rows    1\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 6\nFixtures Clean           0\nFixtures Degraded        25\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    118\nExpected Bench Rows      0\nExpected Out Rows        39\nNot In Squad Rows        0\n\nAverage EV               -0.6876\n\n\n=== Ligue 1 | Updated 22/04/2026, 20:16 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-22T19:16:55Z\n\nHistorical Rows          23,583\nOdds Rows                1,128\nMatched Rows             494\nMissing Player History   274\nMissing Team Mapping     360\nFallback Rows            58\nQualified Rows           10\nRoster Resolved Rows     49\nHigh Confidence Rows     0\nMedium Confidence Rows   379\nLow Confidence Rows      115\nPublic High Signals      0\nPublic Caveat Signals    7\nShadow Track Rows        1\nPenalty Transfer Rows    1\nPosition Upgrade Rows    1\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 2\nFixtures Clean           0\nFixtures Degraded        20\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    40\nExpected Bench Rows      0\nExpected Out Rows        11\nNot In Squad Rows        0\n\nAverage EV               -0.7330\n"
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "7249a1bdafbd73b9848d25d7b2dab4b9d716e68c93e12527784f148fb5dbb37f"
+  "payload_hash": "4c5e919b1297f357303384c197a21ba06ec84e78afcb6e4074a36a8e41fc0138"
 }
