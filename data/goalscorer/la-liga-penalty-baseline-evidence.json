@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-22T17:44:58Z",
+  "generated_at": "2026-04-22T18:49:41Z",
   "league": "la-liga",
-  "row_count": 3,
+  "row_count": 4,
   "rows": [
     {
       "team": "Elche",
@@ -51,6 +51,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-04-21"
+    },
+    {
+      "team": "Real Sociedad",
+      "team_key": "real sociedad",
+      "player_name": "Brais Méndez",
+      "player_key": "brais m ndez",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-22"
     }
   ]
 }
