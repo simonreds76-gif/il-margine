@@ -1,0 +1,64 @@
+name: Pinnacle Capture History
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+    inputs:
+      capture_mode:
+        description: "History capture tag"
+        required: false
+        default: "close"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pinnacle-capture-history
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install Python deps
+        run: pip install requests
+
+      - name: Create .env.local
+        run: |
+          : > .env.local
+          if [ -n "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
+            echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.local
+          else
+            echo "NEXT_PUBLIC_SUPABASE_URL=https://nuqcgzbagxtbxlqrhtvc.supabase.co" >> .env.local
+          fi
+          if [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
+          fi
+          if [ -n "${{ secrets.DATABASE_URL }}" ]; then
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env.local
+          elif [ -n "${{ secrets.SUPABASE_DB_URL }}" ]; then
+            echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL }}" >> .env.local
+          fi
+
+      - name: Log capture credential presence
+        run: |
+          echo "DATABASE_URL present: ${{ secrets.DATABASE_URL != '' || secrets.SUPABASE_DB_URL != '' }}"
+          echo "REST creds present: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' && secrets.SUPABASE_SERVICE_ROLE_KEY != '' }}"
+
+      - name: Capture Pinnacle history
+        env:
+          RUN_STATUS_HOST: github-actions
+          CAPTURE_MODE: ${{ github.event.inputs.capture_mode || 'close' }}
+        run: python scripts/pinnacle-capture-history.py --capture-mode "${CAPTURE_MODE}"
