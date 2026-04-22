@@ -20,10 +20,10 @@
         "Marcos Senesi",
         "Adrien Truffert",
         "Alex Scott",
-        "Ryan Christie",
-        "Rayan",
-        "Junior Kroupi",
+        "Tyler Adams",
+        "David Brooks",
         "Marcus Tavernier",
+        "Rayan",
         "Evanilson"
       ],
       "away_players": [
@@ -95,7 +95,7 @@
           "position_id": 64
         },
         {
-          "name": "Ryan Christie",
+          "name": "Tyler Adams",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -104,7 +104,7 @@
           "position_id": 66
         },
         {
-          "name": "Rayan",
+          "name": "David Brooks",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -113,7 +113,7 @@
           "position_id": 83
         },
         {
-          "name": "Junior Kroupi",
+          "name": "Marcus Tavernier",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -122,7 +122,7 @@
           "position_id": 85
         },
         {
-          "name": "Marcus Tavernier",
+          "name": "Rayan",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -244,8 +244,8 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Matai Akinmboni",
         "Julio Soler",
+        "Matai Akinmboni",
         "Justin Kluivert",
         "Lewis Cook"
       ],
@@ -265,20 +265,20 @@
       "home_status": "FotMob Expected XI",
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
-      "home_formation": "4-2-3-1",
+      "home_formation": "3-4-3",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Martin Dúbravka",
-        "Kyle Walker",
-        "Bashir Humphreys",
-        "Maxime Estève",
-        "Quilindschy Hartman",
-        "James Ward-Prowse",
         "Josh Laurent",
-        "Marcus Edwards",
-        "Lesley Ugochukwu",
-        "Jaidon Anthony",
-        "Zian Flemming"
+        "Hjalmar Ekdal",
+        "Maxime Estève",
+        "Kyle Walker",
+        "James Ward-Prowse",
+        "Florentino",
+        "Quilindschy Hartman",
+        "Lyle Foster",
+        "Zian Flemming",
+        "Jaidon Anthony"
       ],
       "away_players": [
         "Gianluigi Donnarumma",
@@ -300,98 +300,98 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-2-3-1",
+          "formation": "3-4-3",
           "position_id": 11
         },
         {
-          "name": "Kyle Walker",
+          "name": "Josh Laurent",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 32
+          "formation": "3-4-3",
+          "position_id": 33
         },
         {
-          "name": "Bashir Humphreys",
+          "name": "Hjalmar Ekdal",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 34
+          "formation": "3-4-3",
+          "position_id": 35
         },
         {
           "name": "Maxime Estève",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 36
+          "formation": "3-4-3",
+          "position_id": 37
         },
         {
-          "name": "Quilindschy Hartman",
-          "line_index": 0,
+          "name": "Kyle Walker",
+          "line_index": 1,
           "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 38
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 72
         },
         {
           "name": "James Ward-Prowse",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 74
         },
         {
-          "name": "Josh Laurent",
+          "name": "Florentino",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 76
         },
         {
-          "name": "Marcus Edwards",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83
+          "name": "Quilindschy Hartman",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 78
         },
         {
-          "name": "Lesley Ugochukwu",
+          "name": "Lyle Foster",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 103
+        },
+        {
+          "name": "Zian Flemming",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 105
         },
         {
           "name": "Jaidon Anthony",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87
-        },
-        {
-          "name": "Zian Flemming",
-          "line_index": 3,
-          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-2-3-1",
-          "position_id": 115
+          "formation": "3-4-3",
+          "position_id": 107
         }
       ],
       "away_starters": [
