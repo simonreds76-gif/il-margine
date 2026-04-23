@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-23T18:05:44Z",
+  "generated_at": "2026-04-23T20:37:51Z",
   "league": "la-liga",
-  "row_count": 5,
+  "row_count": 7,
   "rows": [
     {
       "team": "Barcelona",
@@ -35,6 +35,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-04-22"
+    },
+    {
+      "team": "Espanyol",
+      "team_key": "espanyol",
+      "player_name": "Kike García",
+      "player_key": "kike garc a",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-23"
     },
     {
       "team": "Girona",
@@ -83,6 +99,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-04-22"
+    },
+    {
+      "team": "Villarreal",
+      "team_key": "villarreal",
+      "player_name": "Nicolas Pépé",
+      "player_key": "nicolas p p",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-23"
     }
   ]
 }
