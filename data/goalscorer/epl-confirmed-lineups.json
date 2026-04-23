@@ -11,32 +11,32 @@
       "home_status": "FotMob Expected XI",
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
-      "home_formation": "4-2-3-1",
+      "home_formation": "4-3-3",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Robin Roefs",
         "Nordi Mukiele",
-        "Luke O'Nien",
-        "Dennis Cirkin",
+        "Daniel Ballard",
+        "Omar Alderete",
         "Reinildo",
+        "Habib Diarra",
         "Granit Xhaka",
         "Noah Sadiki",
         "Chris Rigg",
-        "Habib Diarra",
-        "Enzo Le Fée",
-        "Brian Brobbey"
+        "Brian Brobbey",
+        "Enzo Le Fée"
       ],
       "away_players": [
         "Matz Sels",
         "Ola Aina",
         "Nikola Milenkovic",
-        "Morato",
+        "Jair Cunha",
         "Neco Williams",
         "Ibrahim Sangaré",
         "Elliot Anderson",
-        "Dilane Bakwa",
-        "Morgan Gibbs-White",
         "Omari Hutchinson",
+        "Igor Jesus",
+        "Morgan Gibbs-White",
         "Chris Wood"
       ],
       "home_starters": [
@@ -46,7 +46,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 11
         },
         {
@@ -55,25 +55,25 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 32
         },
         {
-          "name": "Luke O'Nien",
+          "name": "Daniel Ballard",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 34
         },
         {
-          "name": "Dennis Cirkin",
+          "name": "Omar Alderete",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 36
         },
         {
@@ -82,62 +82,62 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 38
+        },
+        {
+          "name": "Habib Diarra",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 73
         },
         {
           "name": "Granit Xhaka",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 75
         },
         {
           "name": "Noah Sadiki",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 77
         },
         {
           "name": "Chris Rigg",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 103
         },
         {
-          "name": "Habib Diarra",
+          "name": "Brian Brobbey",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 105
         },
         {
           "name": "Enzo Le Fée",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87
-        },
-        {
-          "name": "Brian Brobbey",
-          "line_index": 3,
-          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-2-3-1",
-          "position_id": 115
+          "formation": "4-3-3",
+          "position_id": 107
         }
       ],
       "away_starters": [
@@ -169,7 +169,7 @@
           "position_id": 34
         },
         {
-          "name": "Morato",
+          "name": "Jair Cunha",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -205,7 +205,7 @@
           "position_id": 66
         },
         {
-          "name": "Dilane Bakwa",
+          "name": "Omari Hutchinson",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -214,7 +214,7 @@
           "position_id": 83
         },
         {
-          "name": "Morgan Gibbs-White",
+          "name": "Igor Jesus",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -223,7 +223,7 @@
           "position_id": 85
         },
         {
-          "name": "Omari Hutchinson",
+          "name": "Morgan Gibbs-White",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -244,11 +244,10 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Simon Moore",
-        "Omar Alderete",
+        "Nilson Angulo",
         "Bertrand Traoré",
         "Jocelin Ta Bi",
-        "Nilson Angulo",
+        "Simon Moore",
         "Romaine Mundle"
       ],
       "away_unavailable": [
@@ -256,7 +255,8 @@
         "Murillo",
         "Nicolò Savona",
         "Willy Boly",
-        "Callum Hudson-Odoi"
+        "Callum Hudson-Odoi",
+        "Dan Ndoye"
       ]
     },
     {
