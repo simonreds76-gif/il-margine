@@ -21,7 +21,12 @@ PINNACLE_PIPELINE = "pinnacle-capture-history"
 PINNACLE_SLOT_START = time(hour=8, minute=0)
 PINNACLE_SLOT_END = time(hour=23, minute=30)
 PINNACLE_SLOT_INTERVAL = timedelta(minutes=30)
-PINNACLE_GRACE = timedelta(minutes=75)
+# GitHub scheduled workflows are best-effort and can be delayed/skipped,
+# especially near busy cron boundaries. Alert on real drift, not cron jitter.
+PINNACLE_GRACE = timedelta(minutes=int(os.environ.get("OPS_ALERT_PINNACLE_GRACE_MINUTES", "180")))
+PINNACLE_SLOT_TOLERANCE = timedelta(
+    minutes=int(os.environ.get("OPS_ALERT_PINNACLE_SLOT_TOLERANCE_MINUTES", "5"))
+)
 
 
 def load_env_files() -> None:
@@ -179,7 +184,9 @@ def filter_schedule_aware_silent_rows(rows: list[dict[str, Any]]) -> list[dict[s
             continue
 
         last_started_at = parse_timestamp(row.get("last_started_at"))
-        if last_started_at and last_started_at.astimezone(LONDON_TZ) >= latest_pinnacle_slot:
+        if last_started_at and last_started_at.astimezone(LONDON_TZ) >= (
+            latest_pinnacle_slot - PINNACLE_SLOT_TOLERANCE
+        ):
             continue
         filtered.append(row)
 
