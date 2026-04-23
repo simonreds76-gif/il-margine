@@ -33,6 +33,8 @@ from typing import Any, Dict, List, Optional, Tuple
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from settlement_utils import normalize_team_name
+
 DEFAULT_OUT     = ROOT / "data" / "team-shots" / "team-shots-upcoming.csv"
 DEFAULT_CAL     = ROOT / "data" / "team-shots" / "team-shots-calibration-params.json"
 INBOX_DIR       = ROOT / "data" / "team-shots" / "inbox"
@@ -50,9 +52,9 @@ INBOX_COMPETITION_TO_LEAGUE = {
     "ligue 1": "ligue-1",
 }
 
-SHADOW_THRESHOLD = 0.05
+SHADOW_THRESHOLD = 0.12
 ACTION_THRESHOLD = 0.12
-CONFLICT_SKIP_THRESHOLD = 0.08
+CONFLICT_SKIP_THRESHOLD = 0.12
 ALIGNED_MAX_DIVERGENCE = 0.15
 DIVERGENT_MAX_DIVERGENCE = 0.30
 
@@ -99,16 +101,11 @@ def _load_cal(path: Path) -> Dict[str, Tuple[float, float]]:
 
 # â”€â”€ Team name normalisation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-_STOP_TOKENS = frozenset({"fc", "afc", "acf", "sc", "cf", "ac", "rome", "calcio"})
-
-
-def _norm_name(text: str) -> str:
-    """Fold 'ACF Fiorentina' and 'Fiorentina' to the same key."""
+def _norm_competition(text: str) -> str:
     nfkd = unicodedata.normalize("NFD", (text or "").lower())
     ascii_only = "".join(ch for ch in nfkd if unicodedata.category(ch) != "Mn")
     cleaned = re.sub(r"[^\w\s]", " ", ascii_only)
-    tokens = [t for t in cleaned.split() if t not in _STOP_TOKENS]
-    return " ".join(tokens)
+    return " ".join(cleaned.split())
 
 
 # â”€â”€ Inbox odds loader â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -126,9 +123,9 @@ def _load_inbox_odds(inbox_dir: Path) -> Dict[Tuple, dict]:
             for row in csv.DictReader(fh):
                 key: Tuple = (
                     (row.get("match_date") or "")[:10],
-                    _norm_name(row.get("home_team") or ""),
-                    _norm_name(row.get("away_team") or ""),
-                    _norm_name(row.get("team") or ""),
+                    normalize_team_name(row.get("home_team") or ""),
+                    normalize_team_name(row.get("away_team") or ""),
+                    normalize_team_name(row.get("team") or ""),
                     str(row.get("line") or ""),
                     (row.get("side") or "").strip().lower(),
                     (row.get("bookmaker") or "").strip(),
@@ -141,13 +138,13 @@ def _load_inbox_odds(inbox_dir: Path) -> Dict[Tuple, dict]:
 
 
 def _stake_for_edge(edge: float) -> float:
-    if edge >= 0.16:
+    if edge >= 0.25:
         return 2.0
-    if edge >= 0.12:
+    if edge >= 0.20:
         return 1.5
-    if edge >= 0.08:
+    if edge >= 0.16:
         return 1.0
-    if edge >= 0.05:
+    if edge >= 0.12:
         return 0.5
     return 0.0
 
@@ -176,10 +173,22 @@ def _recent_consensus(lam_venue: float, lam_recent: float, recent_is_genuine: bo
     return divergence, "conflict"
 
 
-def _effective_stake(edge: float, consensus: str) -> float:
+def _effective_stake(
+    edge: float,
+    consensus: str,
+    side: str,
+    lambda_venue: float,
+    lambda_recent: float,
+) -> float:
     base_stake = _stake_for_edge(edge)
-    if consensus != "conflict":
+    if base_stake <= 0:
+        return 0.0
+    if side == "under" and lambda_recent > 0 and lambda_venue > lambda_recent * 1.10:
+        return 0.0
+    if consensus == "aligned":
         return base_stake
+    if consensus == "divergent":
+        return _downgrade_one_band(base_stake)
     if edge < CONFLICT_SKIP_THRESHOLD:
         return 0.0
     return _downgrade_one_band(base_stake)
@@ -202,11 +211,11 @@ def _build_scanner(
         league = row.get("league") or ""
         home_raw = row.get("home_team") or ""
         away_raw = row.get("away_team") or ""
-        norm_home = _norm_name(home_raw)
-        norm_away = _norm_name(away_raw)
+        norm_home = normalize_team_name(home_raw)
+        norm_away = normalize_team_name(away_raw)
 
         for venue, team_raw in (("home", home_raw), ("away", away_raw)):
-            norm_team = _norm_name(team_raw)
+            norm_team = normalize_team_name(team_raw)
             consensus = str(row.get(f"{venue}_consensus") or "aligned").strip().lower() or "aligned"
             divergence = float(row.get(f"{venue}_divergence") or 0.0)
             lambda_venue = float(row.get(f"{venue}_lambda_venue") or row.get(f"{venue}_lambda") or 0.0)
@@ -247,8 +256,19 @@ def _build_scanner(
                         continue
 
                     edge = round(model_prob * book_odds - 1.0, 4)
-                    effective_stake = _effective_stake(edge, consensus)
-                    preferred = side == "under" and edge >= ACTION_THRESHOLD and consensus != "conflict"
+                    effective_stake = _effective_stake(
+                        edge,
+                        consensus,
+                        side,
+                        lambda_venue,
+                        lambda_recent,
+                    )
+                    preferred = (
+                        side == "under"
+                        and edge >= ACTION_THRESHOLD
+                        and effective_stake > 0
+                        and consensus == "aligned"
+                    )
 
                     scanner.append({
                         "kickoff_iso": kickoff,
@@ -286,7 +306,7 @@ def _build_scanner(
 
 
 def _league_key_from_competition(competition: str) -> Optional[str]:
-    comp_norm = _norm_name(competition)
+    comp_norm = _norm_competition(competition)
     if not comp_norm:
         return None
     return INBOX_COMPETITION_TO_LEAGUE.get(comp_norm)
@@ -354,8 +374,6 @@ def main() -> None:
     args = parser.parse_args()
 
     tsm = _load_module("team_shots_model", ROOT / "scripts" / "team-shots-model.py")
-    msl = _load_module("matchday_shortlist", ROOT / "scripts" / "matchday-shortlist.py")
-    normalize_team = msl.normalize_team
 
     cal: Dict[str, Tuple[float, float]] = {}
     if not args.no_calibration:
@@ -388,8 +406,8 @@ def main() -> None:
 
     for m in matches:
         league_avg = league_avgs.get(m.league, tsm.DEFAULT_BASELINE)
-        hk = f"{m.league}:{normalize_team(m.home_team)}"
-        ak = f"{m.league}:{normalize_team(m.away_team)}"
+        hk = f"{m.league}:{normalize_team_name(m.home_team)}"
+        ak = f"{m.league}:{normalize_team_name(m.away_team)}"
         hs = team_states[hk]
         as_ = team_states[ak]
         hs.add_match(
@@ -415,8 +433,8 @@ def main() -> None:
         ko = str(ev.get("commence_time") or "")
         home_raw = str(ev.get("home_team") or "")
         away_raw = str(ev.get("away_team") or "")
-        hk = f"{league}:{normalize_team(home_raw)}"
-        ak = f"{league}:{normalize_team(away_raw)}"
+        hk = f"{league}:{normalize_team_name(home_raw)}"
+        ak = f"{league}:{normalize_team_name(away_raw)}"
         h_state = team_states.get(hk)
         a_state = team_states.get(ak)
         league_avg = league_avgs.get(league, tsm.DEFAULT_BASELINE)

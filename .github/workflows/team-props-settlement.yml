@@ -84,10 +84,25 @@ jobs:
             git add data/results-snapshot/
           fi
           if git diff --cached --quiet; then
+            echo "SNAPSHOT_COMMITTED=0" >> "$GITHUB_ENV"
             echo "No snapshot changes to commit."
           else
             git commit -m "chore: results snapshot $(date -u +%Y-%m-%d)"
+            echo "SNAPSHOT_COMMITTED=1" >> "$GITHUB_ENV"
           fi
+
+      - name: Push results snapshot immediately
+        if: env.SNAPSHOT_COMMITTED == '1'
+        run: |
+          git fetch origin golden-with-speed-insights
+          git rebase origin/golden-with-speed-insights
+          git push origin HEAD:golden-with-speed-insights
+
+      - name: Refresh local branch after snapshot push
+        if: env.SNAPSHOT_COMMITTED == '1'
+        run: |
+          git fetch origin golden-with-speed-insights
+          git reset --hard origin/golden-with-speed-insights
 
       - name: Settle team-shots shadow signals
         run: python scripts/team-shots-settle.py

@@ -21,6 +21,8 @@ import unicodedata
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+from settlement_utils import normalize_team_name
+
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_ODDS = ROOT / "data" / "team-shots" / "team-shots-odds-history.csv"
 DEFAULT_PREDICTIONS = ROOT / "data" / "team-shots" / "team-shots-predictions.csv"
@@ -51,62 +53,6 @@ def _pf(val, default=0.0):
         return default
 
 
-TEAM_ALIASES = {
-    "liverpool": "liverpool",
-    "liverpool fc": "liverpool",
-    "fulham": "fulham",
-    "fulham fc": "fulham",
-    "nottingham forest": "nottingham forest",
-    "aston villa": "aston villa",
-    "aston villa fc": "aston villa",
-    "manchester united": "manchester united",
-    "manchester united fc": "manchester united",
-    "man utd": "manchester united",
-    "leeds united": "leeds united",
-    "leeds united fc": "leeds united",
-    "fc barcelona": "barcelona",
-    "barcelona": "barcelona",
-    "espanyol": "espanyol",
-    "espanyol barcelona": "espanyol",
-    "real sociedad": "sociedad",
-    "real sociedad san sebastian": "sociedad",
-    "deportivo alaves": "alaves",
-    "deportivo alaves sad": "alaves",
-    "alaves": "alaves",
-    "alav s": "alaves",
-    "ca osasuna": "osasuna",
-    "osasuna": "osasuna",
-    "real betis": "real betis",
-    "real betis seville": "real betis",
-    "real betis balompie": "real betis",
-    "rc celta de vigo": "celta vigo",
-    "celta de vigo": "celta vigo",
-    "celta vigo": "celta vigo",
-    "real oviedo": "oviedo",
-    "oviedo": "oviedo",
-    "athletic club bilbao": "athletic club",
-    "athletic club": "athletic club",
-    "athletic bilbao": "athletic club",
-    "villarreal cf": "villarreal",
-    "villarreal": "villarreal",
-    "sevilla fc": "sevilla",
-    "atletico madrid": "atletico madrid",
-    "atletico de madrid": "atletico madrid",
-    "elche cf": "elche",
-    "valencia cf": "valencia",
-    "sunderland afc": "sunderland",
-    "tottenham hotspur": "tottenham",
-    "wolverhampton wanderers": "wolves",
-    "west ham united": "west ham",
-    "newcastle united": "newcastle",
-    "1 fc heidenheim": "heidenheim",
-    "1 fc koln": "fc koln",
-    "1 fc cologne": "fc koln",
-    "fc st pauli": "st pauli",
-    "brighton and hove albion": "brighton",
-}
-
-
 def _norm(text: str) -> str:
     text = unicodedata.normalize("NFD", (text or "").strip().lower())
     text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
@@ -120,8 +66,7 @@ def _norm(text: str) -> str:
 
 
 def _norm_team(text: str) -> str:
-    normalized = _norm(text or "")
-    return TEAM_ALIASES.get(normalized, normalized)
+    return normalize_team_name(text or "")
 
 
 def _logit(p: float) -> float:
@@ -215,6 +160,7 @@ def load_upcoming(path: Path) -> Dict[str, dict]:
                     "xg_lambda": "",
                     "actual_shots": "",
                     "actual_sot": "",
+                    "_prob_source": "upcoming_calibrated",
                 }
                 # Must match columns in team-shots-upcoming.csv (books often quote 12.5/13.5).
                 for line in (8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5, 16.5, 17.5, 19.5, 20.5):
@@ -303,6 +249,7 @@ def compare(
         line_key = f"{line:.1f}"
         p_over_key = f"p_over_{line_key}"
         p_over_raw_str = str(pred.get(p_over_key, "")).strip()
+        prob_source = str(pred.get("_prob_source", "")).strip()
         if p_over_raw_str:
             model_p_over_raw = _pf(pred.get(p_over_key))
         else:
@@ -312,9 +259,10 @@ def compare(
             model_p_over_raw = prob_over(line, lam)
         model_p_under_raw = 1.0 - model_p_over_raw
 
-        # Apply Platt calibration if params available for this line
+        # Upcoming rows already store calibrated per-line probabilities; do not
+        # apply Platt again on top of those values.
         ab = cal_params.get(line_key) if cal_params else None
-        if ab:
+        if ab and prob_source != "upcoming_calibrated":
             model_p_over = calibrate_prob(model_p_over_raw, ab[0], ab[1])
             model_p_under = 1.0 - model_p_over
         else:
