@@ -34,6 +34,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from settlement_utils import normalize_team_name
+from team_shots_probability import fair_odds, prob_over as surface_prob_over
 
 DEFAULT_OUT     = ROOT / "data" / "team-shots" / "team-shots-upcoming.csv"
 DEFAULT_CAL     = ROOT / "data" / "team-shots" / "team-shots-calibration-params.json"
@@ -370,6 +371,14 @@ def main() -> None:
     parser.add_argument("--days-ahead", type=int, default=10)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--scanner", type=Path, default=SCANNER_OUT)
+    parser.add_argument("--calibration", type=Path, default=DEFAULT_CAL)
+    parser.add_argument(
+        "--prob-surface",
+        choices=("venue_poisson", "lambda_shots_nb"),
+        default="venue_poisson",
+        help="Probability surface for upcoming O/U prices. Default keeps current production.",
+    )
+    parser.add_argument("--nb-alpha", type=float, default=0.25)
     parser.add_argument("--no-calibration", action="store_true")
     args = parser.parse_args()
 
@@ -377,9 +386,9 @@ def main() -> None:
 
     cal: Dict[str, Tuple[float, float]] = {}
     if not args.no_calibration:
-        cal = _load_cal(DEFAULT_CAL)
+        cal = _load_cal(args.calibration)
         if cal:
-            print(f"Calibration params loaded (lines: {', '.join(sorted(cal))})")
+            print(f"Calibration params loaded from {args.calibration} (lines: {', '.join(sorted(cal))})")
         else:
             print("No calibration params found - using raw Poisson probabilities")
 
@@ -507,8 +516,12 @@ def main() -> None:
 
         for line in DISPLAY_LINES:
             line_key = f"{line:.1f}"
-            p_h_raw = tsm.prob_over(line, h_lam_venue)
-            p_a_raw = tsm.prob_over(line, a_lam_venue)
+            if args.prob_surface == "lambda_shots_nb":
+                p_h_raw = surface_prob_over(line, h_lam, distribution="negative_binomial", alpha=args.nb_alpha)
+                p_a_raw = surface_prob_over(line, a_lam, distribution="negative_binomial", alpha=args.nb_alpha)
+            else:
+                p_h_raw = tsm.prob_over(line, h_lam_venue)
+                p_a_raw = tsm.prob_over(line, a_lam_venue)
 
             ab = cal.get(line_key)
             if ab:
@@ -519,11 +532,11 @@ def main() -> None:
                 p_a = p_a_raw
 
             row[f"home_p_over_{line}"] = round(p_h, 4)
-            row[f"home_fair_over_{line}"] = round(1.0 / p_h if p_h > 0 else 0.0, 3)
-            row[f"home_fair_under_{line}"] = round(1.0 / (1.0 - p_h) if p_h < 1.0 else 0.0, 3)
+            row[f"home_fair_over_{line}"] = fair_odds(p_h)
+            row[f"home_fair_under_{line}"] = fair_odds(1.0 - p_h)
             row[f"away_p_over_{line}"] = round(p_a, 4)
-            row[f"away_fair_over_{line}"] = round(1.0 / p_a if p_a > 0 else 0.0, 3)
-            row[f"away_fair_under_{line}"] = round(1.0 / (1.0 - p_a) if p_a < 1.0 else 0.0, 3)
+            row[f"away_fair_over_{line}"] = fair_odds(p_a)
+            row[f"away_fair_under_{line}"] = fair_odds(1.0 - p_a)
 
         rows_out.append(row)
 

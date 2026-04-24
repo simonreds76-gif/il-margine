@@ -412,6 +412,38 @@ try {
             Add-WarningMessage "Team shots calibration threw an exception: $_"
         }
 
+        $currentStep = "team-shots-v2-nb-model"
+        Write-Status -State "running" -Message "Running team shots v2 NB dry-run model" -Artifacts (Build-ArtifactsState)
+        Log "Step 2c2: Running team shots v2 NB dry-run model..."
+        try {
+            $v2ModelResult = & python scripts/team-shots-model.py --prob-surface lambda_shots_nb --nb-alpha 0.25 --output data/team-shots/team-shots-predictions.v2-nb.csv --calibration data/team-shots/team-shots-calibration.v2-nb.txt 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                Add-WarningMessage "Team shots v2 NB model returned exit code $LASTEXITCODE."
+                $v2ModelResult | ForEach-Object { Log "  $_" }
+            } else {
+                $v2Line = ($v2ModelResult | Select-String "predictions generated" | Select-Object -Last 1)
+                if ($v2Line) { Log "  $v2Line" } else { Log "  V2 NB model complete" }
+            }
+        } catch {
+            Add-WarningMessage "Team shots v2 NB model threw an exception: $_"
+        }
+
+        $currentStep = "team-shots-v2-calibration"
+        Write-Status -State "running" -Message "Fitting team shots v2 calibration diagnostics" -Artifacts (Build-ArtifactsState)
+        Log "Step 2c3: Fitting team shots v2 calibration diagnostics..."
+        try {
+            $v2CalibResult = & python scripts/team-shots-fit-calibration.py --predictions data/team-shots/team-shots-predictions.v2-nb.csv --params-out data/team-shots/team-shots-calibration-params.v2-nb.json --diag-out data/team-shots/team-shots-calibration-diagnostics.v2-nb.txt 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                Add-WarningMessage "Team shots v2 calibration returned exit code $LASTEXITCODE."
+                $v2CalibResult | ForEach-Object { Log "  $_" }
+            } else {
+                $v2CalibLine = ($v2CalibResult | Select-String "Params written" | Select-Object -Last 1)
+                if ($v2CalibLine) { Log "  $v2CalibLine" } else { Log "  V2 calibration diagnostics complete" }
+            }
+        } catch {
+            Add-WarningMessage "Team shots v2 calibration threw an exception: $_"
+        }
+
         $currentStep = "team-shots-scrape"
         Write-Status -State "running" -Message "Scraping team shots odds" -Artifacts (Build-ArtifactsState)
         Log "Step 2d: Scraping team total shots odds (Odds-API.io / BetsAPI)..."
@@ -457,6 +489,22 @@ try {
             Add-WarningMessage "Team shots upcoming threw an exception: $_"
         }
 
+        $currentStep = "team-shots-v2-upcoming"
+        Write-Status -State "running" -Message "Writing team shots v2 NB dry-run fixtures" -Artifacts (Build-ArtifactsState)
+        Log "Step 2f2: Writing v2 NB raw dry-run fixture Lambda..."
+        try {
+            $v2UpcomingResult = & python scripts/team_shots_upcoming.py --days-ahead $DaysAhead --prob-surface lambda_shots_nb --nb-alpha 0.25 --no-calibration --output data/team-shots/team-shots-upcoming.v2-nb-raw.csv --scanner data/team-shots/team-shots-scanner.v2-nb-raw.csv 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                Add-WarningMessage "Team shots v2 upcoming returned exit code $LASTEXITCODE."
+                $v2UpcomingResult | ForEach-Object { Log "  $_" }
+            } else {
+                $v2UpcomingLine = ($v2UpcomingResult | Select-String "Wrote \d+ upcoming rows" | Select-Object -Last 1)
+                if ($v2UpcomingLine) { Log "  $v2UpcomingLine" } else { $v2UpcomingResult | ForEach-Object { Log "  $_" } }
+            }
+        } catch {
+            Add-WarningMessage "Team shots v2 upcoming threw an exception: $_"
+        }
+
         $currentStep = "team-shots-compare"
         Write-Status -State "running" -Message "Comparing team shots model vs bookmaker" -Artifacts (Build-ArtifactsState)
         Log "Step 2g: Comparing model vs bookmaker..."
@@ -467,6 +515,18 @@ try {
             }
         } catch {
             Add-WarningMessage "Comparison failed: $_"
+        }
+
+        $currentStep = "team-shots-v2-compare"
+        Write-Status -State "running" -Message "Comparing team shots v2 NB dry-run vs bookmaker" -Artifacts (Build-ArtifactsState)
+        Log "Step 2g2: Comparing v2 NB raw dry-run vs bookmaker..."
+        try {
+            & python scripts/team-shots-compare.py --predictions data/team-shots/team-shots-predictions.v2-nb.csv --upcoming data/team-shots/team-shots-upcoming.v2-nb-raw.csv --no-calibration --output data/team-shots/team-shots-comparison.v2-nb-raw.csv --summary data/team-shots/team-shots-comparison.v2-nb-raw.txt 2>&1 | ForEach-Object { Log "  $_" }
+            if ($LASTEXITCODE -ne 0) {
+                Add-WarningMessage "Team shots v2 comparison returned exit code $LASTEXITCODE."
+            }
+        } catch {
+            Add-WarningMessage "V2 comparison failed: $_"
         }
 
         $currentStep = "team-shots-shadow"
@@ -481,6 +541,18 @@ try {
             Add-WarningMessage "Shadow tracking failed: $_"
         }
 
+        $currentStep = "team-shots-v2-shadow"
+        Write-Status -State "running" -Message "Tracking team shots v2 NB dry-run signals" -Artifacts (Build-ArtifactsState)
+        Log "Step 2h2: Tracking v2 NB raw dry-run shadow signals..."
+        try {
+            & python scripts/team-shots-shadow-tracker.py --comparison data/team-shots/team-shots-comparison.v2-nb-raw.csv --scanner data/team-shots/team-shots-scanner.v2-nb-raw.csv --signals data/team-shots/shadow/team-shots-shadow-signals.v2-nb-raw-live-dry-run.csv --summary data/team-shots/shadow/team-shots-shadow-performance.v2-nb-raw-live-dry-run.txt --policy-version lambda-shots-nb-v2-raw --min-edge 0.12 2>&1 | ForEach-Object { Log "  $_" }
+            if ($LASTEXITCODE -ne 0) {
+                Add-WarningMessage "Team shots v2 shadow tracking returned exit code $LASTEXITCODE."
+            }
+        } catch {
+            Add-WarningMessage "V2 shadow tracking failed: $_"
+        }
+
         $currentStep = "team-shots-settle"
         Write-Status -State "running" -Message "Settling pending team shots signals" -Artifacts (Build-ArtifactsState)
         Log "Step 2i: Settling pending shot signals..."
@@ -488,6 +560,12 @@ try {
             & python scripts/team-shots-settle.py 2>&1 | ForEach-Object { Log "  $_" }
             if ($LASTEXITCODE -ne 0) {
                 Add-WarningMessage "Team shots settlement returned exit code $LASTEXITCODE."
+            }
+            if (Test-Path "data/team-shots/shadow/team-shots-shadow-signals.v2-nb-raw-live-dry-run.csv") {
+                & python scripts/team-shots-settle.py --signals data/team-shots/shadow/team-shots-shadow-signals.v2-nb-raw-live-dry-run.csv --summary data/team-shots/shadow/team-shots-shadow-performance.v2-nb-raw-live-dry-run.txt --audit-out data/team-shots/shadow/settlement-audit.v2-nb-raw.json 2>&1 | ForEach-Object { Log "  $_" }
+                if ($LASTEXITCODE -ne 0) {
+                    Add-WarningMessage "Team shots v2 settlement returned exit code $LASTEXITCODE."
+                }
             }
         } catch {
             Add-WarningMessage "Shot settlement failed: $_"

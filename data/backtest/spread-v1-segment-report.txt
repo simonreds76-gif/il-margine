@@ -1,0 +1,44 @@
+Tennis spread V1 segment report
+Generated: 2026-04-24T10:29:49+00:00
+Input: data\backtest\strict-signals-spreadv1-archive.csv
+
+Overall settled spread V1: 54 bets, 26W/28L/0P, PnL -6.94u, staked 108.0u, ROI -6.4%
+
+Largest segments
+- calibration_reason=ok-correction-only: 54 bets, 26W/28L/0P, PnL -6.94u, staked 108.0u, ROI -6.4% (avg edge 11.6%, avg odds 1.940)
+- guard_combo=model=unknown|market=unknown|dog=unknown: 54 bets, 26W/28L/0P, PnL -6.94u, staked 108.0u, ROI -6.4% (avg edge 11.6%, avg odds 1.940)
+- surface=Clay: 54 bets, 26W/28L/0P, PnL -6.94u, staked 108.0u, ROI -6.4% (avg edge 11.6%, avg odds 1.940)
+- series=Masters 1000: 40 bets, 18W/22L/0P, PnL -10.02u, staked 80.0u, ROI -12.5% (avg edge 9.2%, avg odds 1.941)
+- edge_bucket=00-10: 35 bets, 17W/18L/0P, PnL -3.87u, staked 70.0u, ROI -5.5% (avg edge 7.2%, avg odds 1.942)
+- orientation=dog_handicap: 33 bets, 15W/18L/0P, PnL -7.50u, staked 66.0u, ROI -11.4% (avg edge 12.5%, avg odds 1.942)
+- surface_x_orientation=Clay | dog_handicap: 33 bets, 15W/18L/0P, PnL -7.50u, staked 66.0u, ROI -11.4% (avg edge 12.5%, avg odds 1.942)
+- line_abs_bucket=02-3.5: 32 bets, 17W/15L/0P, PnL +2.30u, staked 64.0u, ROI +3.6% (avg edge 12.0%, avg odds 1.949)
+- odds_bucket=1.85-1.95: 29 bets, 15W/14L/0P, PnL -0.65u, staked 58.0u, ROI -1.1% (avg edge 11.0%, avg odds 1.913)
+- confidence=medium: 28 bets, 11W/17L/0P, PnL -13.37u, staked 56.0u, ROI -23.9% (avg edge 12.3%, avg odds 1.931)
+- series_x_orientation=Masters 1000 | dog_handicap: 27 bets, 13W/14L/0P, PnL -3.07u, staked 54.0u, ROI -5.7% (avg edge 10.0%, avg odds 1.945)
+- confidence=high: 26 bets, 15W/11L/0P, PnL +6.44u, staked 52.0u, ROI +12.4% (avg edge 10.9%, avg odds 1.950)
+- orientation_x_line=dog_handicap | 02-3.5: 24 bets, 11W/13L/0P, PnL -5.25u, staked 48.0u, ROI -10.9% (avg edge 12.8%, avg odds 1.942)
+- odds_bucket=1.95+: 23 bets, 11W/12L/0P, PnL -2.29u, staked 46.0u, ROI -5.0% (avg edge 11.9%, avg odds 1.984)
+
+Risk flags (n >= 8, ROI <= -10%)
+- Block/watch edge_bucket=20+: 8 bets, 2W/6L/0P, PnL -8.02u, staked 16.0u, ROI -50.1%
+- Block/watch orientation=scratch: 9 bets, 3W/6L/0P, PnL -6.63u, staked 18.0u, ROI -36.8%
+- Block/watch orientation_x_line=scratch | 00-1.5: 9 bets, 3W/6L/0P, PnL -6.63u, staked 18.0u, ROI -36.8%
+- Block/watch surface_x_orientation=Clay | scratch: 9 bets, 3W/6L/0P, PnL -6.63u, staked 18.0u, ROI -36.8%
+- Block/watch line_abs_bucket=00-1.5: 16 bets, 7W/9L/0P, PnL -5.32u, staked 32.0u, ROI -16.6%
+- Block/watch series=Masters 1000: 40 bets, 18W/22L/0P, PnL -10.02u, staked 80.0u, ROI -12.5%
+- Block/watch orientation=dog_handicap: 33 bets, 15W/18L/0P, PnL -7.50u, staked 66.0u, ROI -11.4%
+- Block/watch surface_x_orientation=Clay | dog_handicap: 33 bets, 15W/18L/0P, PnL -7.50u, staked 66.0u, ROI -11.4%
+- Block/watch orientation_x_line=dog_handicap | 02-3.5: 24 bets, 11W/13L/0P, PnL -5.25u, staked 48.0u, ROI -10.9%
+
+Positive watchlist (n >= 8, ROI >= +5%)
+- Keep/promote edge_bucket=10-15: 9 bets, 7W/2L/0P, PnL +8.95u, staked 18.0u, ROI +49.7%
+- Keep/promote orientation_x_line=favorite_handicap | 02-3.5: 8 bets, 6W/2L/0P, PnL +7.55u, staked 16.0u, ROI +47.2%
+- Keep/promote orientation=favorite_handicap: 12 bets, 8W/4L/0P, PnL +7.18u, staked 24.0u, ROI +29.9%
+- Keep/promote surface_x_orientation=Clay | favorite_handicap: 12 bets, 8W/4L/0P, PnL +7.18u, staked 24.0u, ROI +29.9%
+- Keep/promote series=ATP500: 14 bets, 8W/6L/0P, PnL +3.08u, staked 28.0u, ROI +11.0%
+
+Interpretation
+- Treat this as a live-sample policy report, not a permanent truth; sample is still small.
+- A segment should not be promoted just because one tiny bucket is green.
+- A segment with 8+ bets and clearly negative ROI is enough to tighten gates now, then re-test weekly.

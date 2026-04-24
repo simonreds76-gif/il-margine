@@ -388,6 +388,8 @@ def write_summary(all_signals: List[dict], path: Path) -> str:
 
 
 def main() -> None:
+    global CURRENT_POLICY
+
     parser = argparse.ArgumentParser(description="Team shots shadow signal tracker")
     parser.add_argument("--comparison", type=Path, default=DEFAULT_COMPARISON)
     parser.add_argument("--scanner", type=Path, default=DEFAULT_SCANNER)
@@ -395,7 +397,9 @@ def main() -> None:
     parser.add_argument("--summary", type=Path, default=DEFAULT_SUMMARY)
     parser.add_argument("--min-edge", type=float, default=MIN_EDGE)
     parser.add_argument("--bookmaker", default="")
+    parser.add_argument("--policy-version", default=CURRENT_POLICY)
     args = parser.parse_args()
+    CURRENT_POLICY = args.policy_version
 
     print("Loading existing shadow signals...")
     existing, keys = load_existing_signals(args.signals)

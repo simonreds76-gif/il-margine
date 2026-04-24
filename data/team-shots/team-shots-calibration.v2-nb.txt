@@ -1,0 +1,40 @@
+======================================================================
+  TEAM SHOTS MODEL -- CALIBRATION REPORT
+======================================================================
+  Total predictions: 2380
+
+  Mean predicted lambda: 12.52
+  Mean actual shots:     12.57
+
+  MAE:  3.73
+  RMSE: 4.75
+
+  Line   8.5: predicted=0.641  actual=0.769  diff=-0.128  (n=2380)
+  Line   9.5: predicted=0.581  actual=0.695  diff=-0.114  (n=2380)
+  Line  10.5: predicted=0.523  actual=0.616  diff=-0.094  (n=2380)
+  Line  11.5: predicted=0.468  actual=0.538  diff=-0.070  (n=2380)
+  Line  12.5: predicted=0.416  actual=0.469  diff=-0.053  (n=2380)
+  Line  13.5: predicted=0.369  actual=0.398  diff=-0.030  (n=2380)
+  Line  14.5: predicted=0.325  actual=0.322  diff=+0.003  (n=2380)
+  Line  15.5: predicted=0.286  actual=0.255  diff=+0.031  (n=2380)
+  Line  16.5: predicted=0.251  actual=0.208  diff=+0.043  (n=2380)
+  Line  17.5: predicted=0.219  actual=0.165  diff=+0.054  (n=2380)
+  Line  19.5: predicted=0.167  actual=0.101  diff=+0.065  (n=2380)
+  Line  20.5: predicted=0.145  actual=0.075  diff=+0.070  (n=2380)
+
+  Calibration by probability bins (over 10.5):
+    [0.00, 0.20): n=   53  predicted=0.148  actual=0.321  diff=-0.172
+    [0.20, 0.35): n=  295  predicted=0.292  actual=0.342  diff=-0.050
+    [0.35, 0.50): n=  679  predicted=0.430  actual=0.517  diff=-0.087
+    [0.50, 0.65): n=  809  predicted=0.574  actual=0.670  diff=-0.096
+    [0.65, 0.80): n=  474  predicted=0.708  actual=0.823  diff=-0.115
+    [0.80, 1.00): n=   70  predicted=0.836  actual=0.943  diff=-0.107
+
+  Per-league breakdown:
+    bundesliga     : n=  414  pred=13.05  actual=13.05  MAE=3.82
+    epl            : n=  518  pred=12.41  actual=12.60  MAE=3.59
+    la-liga        : n=  500  pred=12.58  actual=12.65  MAE=3.70
+    ligue-1        : n=  428  pred=12.13  actual=12.27  MAE=3.78
+    serie-a        : n=  520  pred=12.45  actual=12.35  MAE=3.79
+
+======================================================================

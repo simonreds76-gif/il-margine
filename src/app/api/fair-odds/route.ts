@@ -17,13 +17,19 @@ const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 /** Pinnacle snapshot: only ATP + Challenger singles; cap must exceed busy days (many events) or rows past the limit never load (e.g. Naples Challenger). */
 const PINNACLE_SNAPSHOT_SELECT =
+  "player1_name, player2_name, odds1, odds2, ou_line, ou_over, ou_under, league, captured_at, match_date, kickoff_iso";
+const PINNACLE_SNAPSHOT_SELECT_LEGACY =
   "player1_name, player2_name, odds1, odds2, ou_line, ou_over, ou_under, league, captured_at";
 const PINNACLE_SNAPSHOT_ROW_CAP = 12000;
+const LOCAL_PINNACLE_ODDS_DIR = path.join(process.cwd(), "data");
 const LOCAL_PINNACLE_HISTORY_DIR = path.join(process.cwd(), "data", "pinnacle-history");
+const LOCAL_ONCOURT_TODAY_CSV = path.join(process.cwd(), "data", "oncourt", "today_atp.csv");
 
 export interface FairOddsRow {
   id: number;
   tournament: string;
+  match_date?: string;
+  kickoff_iso?: string;
   surface: string;
   league?: "ATP" | "Challenger";
   player1_id: number;
@@ -84,6 +90,10 @@ export interface FairOddsRow {
   shadow_spread_eligible?: boolean;
   spread_v1_eligible?: boolean;
   spread_v1_reason?: string;
+  ml_short_fav_model_guard?: boolean;
+  ml_short_fav_market_guard?: boolean;
+  short_fav_dog_spread_guard_p1?: boolean;
+  short_fav_dog_spread_guard_p2?: boolean;
   blocked_reason?: string;
   recent_injured_p1?: boolean;
   recent_injured_p2?: boolean;
@@ -151,7 +161,8 @@ const STRICT_POLICY_ALLOWED_CONFIDENCE = new Set<string>(["high"]);
 const STRICT_POLICY_EXCLUDE_ATP500_HARD_SHORT_FAVORITES = true;
 const STRICT_POLICY_SHORT_FAVORITE_MAX_ODDS = 1.8;
 const STRICT_POLICY_SHORT_FAVORITE_CONFIDENCE = new Set<string>(["high"]);
-// Skip matches where model favourite odds < 1.25. Model cannot price extreme mismatches - both sides unreliable.
+// ML-only: skip displayed/signalled moneyline value when the favourite is this short.
+// Handicap/spread value is judged by the spread model and calibration separately.
 const STRICT_POLICY_MISPRICE_FAV_ODDS_MIN = 1.25;
 // Proxy for the bad strict tail we found in backtesting: heavy-favourite Masters hard
 // matches where dog ML strict signals underperform. We keep this narrow and leave the
@@ -193,7 +204,10 @@ const SURFACE_LEAGUE_AVG: Record<string, number> = {
 };
 const MIN_TOUR_MATCHES_FOR_SHIFT = 30;
 const MIN_VENUE_SPW_MATCHES = 50;
-const POINT_PROB_MATCH_PROB_GAP_MAX = 0.12;
+// Keep the UI classification aligned with handicap recomputation. Once the
+// stored point-based shape drifts too far from the blended ML model, treat it
+// as a divergent fallback case rather than a trusted stored shape.
+const POINT_PROB_MATCH_PROB_GAP_MAX = 0.08;
 const SPEED_RATIO_CLAMP: [number, number] = [0.92, 1.08];
 const TOURNAMENT_SPEED_VENUE_COMPONENT_WEIGHT = 0.75;
 const TOURNAMENT_SPEED_SHIFT_COMPONENT_WEIGHT = 0.25;
@@ -511,7 +525,7 @@ function buildStrictPolicyPayload(
   const exclusionRules: string[] = [];
   if (STRICT_POLICY_EXCLUDE_ATP500_HARD_SHORT_FAVORITES) {
     exclusionRules.push(
-      `Exclude ATP500 Hard short favorites: confidence in [${Array.from(
+      `Exclude ATP500 Hard short-favourite MLs: confidence in [${Array.from(
         STRICT_POLICY_SHORT_FAVORITE_CONFIDENCE
       ).join(", ")}], model favorite odds < ${STRICT_POLICY_SHORT_FAVORITE_MAX_ODDS.toFixed(2)}`
     );
@@ -606,6 +620,20 @@ function strictPolicyExcludedByHeavyFavoriteDog(
   if (!(surface === "Hard" && seriesBucket === "Masters 1000")) return false;
   if (side === favoriteSide) return false;
   return favoriteProb >= STRICT_POLICY_HEAVY_FAV_DOG_GUARD_MIN_FAV_PROB;
+}
+
+function shortFavoriteDogSpreadGuarded(
+  side: "P1+" | "P2-",
+  spreadLine: number | null | undefined,
+  modelShortFavoriteExcluded: boolean,
+  marketShortFavoriteExcluded: boolean
+): boolean {
+  if (!modelShortFavoriteExcluded && !marketShortFavoriteExcluded) return false;
+  if (spreadLine == null) return false;
+  // P1+ displays the stored line; P2- displays the opposite line. In extreme
+  // ML-favourite matches, plus-games dog edges are usually favourite compression.
+  if (side === "P1+") return spreadLine > 0;
+  return spreadLine < 0;
 }
 
 function strictPolicyConflictWithFavoriteSpread(
@@ -759,7 +787,7 @@ function firstBlockedReason(params: {
   if (params.recentInjuredAny) return "Blocked: recent injury flag";
   if (params.pinnacleShortFavoriteExcluded) return "Blocked: Pinnacle fav <1.25";
   if (params.modelShortFavoriteExcluded) return "Blocked: model fav <1.25";
-  if (params.atp500HardShortFavoriteExcluded) return "Blocked: ATP500 Hard short favorite filter";
+  if (params.atp500HardShortFavoriteExcluded) return "Blocked: ATP500 Hard short-favourite ML filter";
   if (params.heavyFavoriteDogExcluded) return "Blocked: Masters hard heavy-favorite dog ML guard";
   if (params.favoriteSpreadConflictExcluded) return "Blocked: same-match favourite handicap conflict";
   if (params.oppositeSideHandicapConflictExcluded) return "Blocked: same-match mixed-side ML/handicap conflict";
@@ -909,15 +937,21 @@ interface PinnacleSourceRow {
   ou_over?: number;
   ou_under?: number;
   league?: "ATP" | "Challenger";
+  tournament?: string;
   captured_at?: string;
+  match_date?: string;
+  kickoff_iso?: string;
 }
 
 function normalizePinnaclePairKey(player1Name: string, player2Name: string, league?: "ATP" | "Challenger"): string {
   return `${league ?? ""}|${normaliseSignalName(player1Name)}|${normaliseSignalName(player2Name)}`;
 }
 
-function sortByCapturedAtDesc<T extends { captured_at?: string }>(rows: T[]): T[] {
+function sortByCapturedAtDesc<T extends { captured_at?: string; match_date?: string; kickoff_iso?: string }>(rows: T[]): T[] {
   return [...rows].sort((a, b) => {
+    const aHasSchedule = a.match_date || a.kickoff_iso ? 1 : 0;
+    const bHasSchedule = b.match_date || b.kickoff_iso ? 1 : 0;
+    if (aHasSchedule !== bHasSchedule) return bHasSchedule - aHasSchedule;
     const aTime = a.captured_at ? Date.parse(a.captured_at) : 0;
     const bTime = b.captured_at ? Date.parse(b.captured_at) : 0;
     return bTime - aTime;
@@ -996,7 +1030,10 @@ function loadRecentLocalPinnacleHistory(activeDates: string[]): PinnacleSourceRo
         ou_over: parseCsvNumber(get(cols, "ou_over")),
         ou_under: parseCsvNumber(get(cols, "ou_under")),
         league,
+        tournament: get(cols, "league_name").trim() || undefined,
         captured_at: get(cols, "captured_at").trim() || undefined,
+        match_date: get(cols, "match_date").trim() || undefined,
+        kickoff_iso: get(cols, "kickoff_iso").trim() || undefined,
       };
       const key = normalizePinnaclePairKey(row.player1_name, row.player2_name, row.league);
       if (!key || latestByPair.has(key)) continue;
@@ -1005,6 +1042,131 @@ function loadRecentLocalPinnacleHistory(activeDates: string[]): PinnacleSourceRo
   }
 
   return Array.from(latestByPair.values());
+}
+
+function loadRecentLocalPinnacleOdds(activeDates: string[]): PinnacleSourceRow[] {
+  if (!fs.existsSync(LOCAL_PINNACLE_ODDS_DIR)) return [];
+  const dateKeys = new Set(activeDates);
+  const latestByPair = new Map<string, PinnacleSourceRow>();
+
+  let fileNames: string[] = [];
+  try {
+    fileNames = fs
+      .readdirSync(LOCAL_PINNACLE_ODDS_DIR)
+      .filter((name) => name.startsWith("pinnacle-odds-") && name.endsWith(".csv"))
+      .filter((name) => {
+        const dateKey = name.slice("pinnacle-odds-".length, "pinnacle-odds-".length + 10);
+        return dateKeys.has(dateKey);
+      })
+      .sort()
+      .reverse();
+  } catch (error) {
+    console.warn("[fair-odds] Could not read local Pinnacle odds directory", error);
+    return [];
+  }
+
+  for (const fileName of fileNames) {
+    const filePath = path.join(LOCAL_PINNACLE_ODDS_DIR, fileName);
+    let text = "";
+    let capturedAt = "";
+    try {
+      text = fs.readFileSync(filePath, "utf8");
+      capturedAt = fs.statSync(filePath).mtime.toISOString();
+    } catch (error) {
+      console.warn(`[fair-odds] Could not read local Pinnacle odds file: ${filePath}`, error);
+      continue;
+    }
+    const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+    if (lines.length < 2) continue;
+    const header = parseCsvLine(lines[0]);
+    const index = new Map<string, number>();
+    header.forEach((h, i) => index.set(h, i));
+    const required = ["league", "player1_name", "player2_name", "odds1", "odds2"];
+    if (required.some((name) => !index.has(name))) continue;
+    const get = (cols: string[], name: string) => cols[index.get(name) ?? -1] ?? "";
+
+    for (let i = 1; i < lines.length; i += 1) {
+      const cols = parseCsvLine(lines[i]);
+      const league = parseCsvLeague(get(cols, "league"));
+      if (!league) continue;
+      const player1Name = get(cols, "player1_name").trim();
+      const player2Name = get(cols, "player2_name").trim();
+      if (!player1Name || !player2Name) continue;
+      const odds1 = parseCsvNumber(get(cols, "odds1"));
+      const odds2 = parseCsvNumber(get(cols, "odds2"));
+      if (odds1 == null || odds2 == null) continue;
+
+      const row: PinnacleSourceRow = {
+        player1_name: player1Name,
+        player2_name: player2Name,
+        odds1,
+        odds2,
+        ou_line: parseCsvNumber(get(cols, "ou_line")),
+        ou_over: parseCsvNumber(get(cols, "ou_over")),
+        ou_under: parseCsvNumber(get(cols, "ou_under")),
+        league,
+        tournament: get(cols, "league_name").trim() || undefined,
+        captured_at: capturedAt || undefined,
+        match_date: get(cols, "match_date").trim() || undefined,
+        kickoff_iso: get(cols, "kickoff_iso").trim() || undefined,
+      };
+      const key = normalizePinnaclePairKey(row.player1_name, row.player2_name, row.league);
+      if (!key || latestByPair.has(key)) continue;
+      latestByPair.set(key, row);
+    }
+  }
+
+  return Array.from(latestByPair.values());
+}
+
+function loadLocalOncourtTodayRows(): Array<{
+  tour_id: number;
+  player1_id: number;
+  player2_id: number;
+  round_id?: number;
+  draw?: number;
+}> {
+  if (!fs.existsSync(LOCAL_ONCOURT_TODAY_CSV)) return [];
+
+  let text = "";
+  try {
+    text = fs.readFileSync(LOCAL_ONCOURT_TODAY_CSV, "utf8");
+  } catch (error) {
+    console.warn("[fair-odds] Could not read local today_atp.csv", error);
+    return [];
+  }
+
+  const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+  if (lines.length < 2) return [];
+  const header = parseCsvLine(lines[0]);
+  const index = new Map<string, number>();
+  header.forEach((h, i) => index.set(h, i));
+  const required = ["tour_id", "player1_id", "player2_id"];
+  if (required.some((name) => !index.has(name))) return [];
+  const get = (cols: string[], name: string) => cols[index.get(name) ?? -1] ?? "";
+
+  const rows: Array<{
+    tour_id: number;
+    player1_id: number;
+    player2_id: number;
+    round_id?: number;
+    draw?: number;
+  }> = [];
+  for (let i = 1; i < lines.length; i += 1) {
+    const cols = parseCsvLine(lines[i]);
+    const tourId = parseCsvNumber(get(cols, "tour_id"));
+    const player1Id = parseCsvNumber(get(cols, "player1_id"));
+    const player2Id = parseCsvNumber(get(cols, "player2_id"));
+    if (tourId == null || player1Id == null || player2Id == null) continue;
+    rows.push({
+      tour_id: tourId,
+      player1_id: player1Id,
+      player2_id: player2Id,
+      round_id: parseCsvNumber(get(cols, "round_id")),
+      draw: parseCsvNumber(get(cols, "draw")),
+    });
+  }
+  return rows;
 }
 
 function loadActiveShadowSignals(csvPath: string, kind: ShadowSignalKind, activeDate?: string): ShadowSignalSummary[] {
@@ -1446,7 +1608,11 @@ async function run(): Promise<Response> {
   if (oncourtTodayErr) {
     console.warn("[fair-odds] Could not load oncourt_today for Pinnacle-only current-gap filtering", oncourtTodayErr.message);
   }
-  const currentOncourtRows = oncourtTodayRows ?? [];
+  const localOncourtTodayRows = loadLocalOncourtTodayRows();
+  const currentOncourtRows = localOncourtTodayRows.length > 0 ? localOncourtTodayRows : oncourtTodayRows ?? [];
+  if (localOncourtTodayRows.length > 0) {
+    console.log(`[fair-odds] Local today_atp.csv supplement: ${localOncourtTodayRows.length} rows.`);
+  }
 
   const playerIds = new Set<number>();
   const tourIds = new Set<number>();
@@ -1635,43 +1801,72 @@ async function run(): Promise<Response> {
     return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
   })();
 
-  const [todaySnapshotRes, yesterdaySnapshotRes] = await Promise.all([
-    snapshotClient
+  async function fetchSnapshotForDate(captureDate: string, selectClause: string) {
+    return snapshotClient
       .from("bookmaker_odds_snapshot")
-      .select(PINNACLE_SNAPSHOT_SELECT)
+      .select(selectClause)
       .eq("bookmaker", "Pinnacle")
-      .eq("capture_date", today)
+      .eq("capture_date", captureDate)
       .or("league.eq.ATP,league.eq.Challenger")
       .order("captured_at", { ascending: false })
-      .limit(PINNACLE_SNAPSHOT_ROW_CAP),
-    snapshotClient
-      .from("bookmaker_odds_snapshot")
-      .select(PINNACLE_SNAPSHOT_SELECT)
-      .eq("bookmaker", "Pinnacle")
-      .eq("capture_date", yesterday)
-      .or("league.eq.ATP,league.eq.Challenger")
-      .order("captured_at", { ascending: false })
-      .limit(PINNACLE_SNAPSHOT_ROW_CAP),
-  ]);
+      .limit(PINNACLE_SNAPSHOT_ROW_CAP);
+  }
 
-  const snapshotRows: PinnacleSourceRow[] = [...(todaySnapshotRes.data ?? []), ...(yesterdaySnapshotRes.data ?? [])]
-    .filter((row: { league?: string }) => row.league === "ATP" || row.league === "Challenger")
+  let snapshotData: Array<Record<string, unknown>> = [];
+  try {
+    let [todaySnapshotRes, yesterdaySnapshotRes] = await Promise.all([
+      fetchSnapshotForDate(today, PINNACLE_SNAPSHOT_SELECT),
+      fetchSnapshotForDate(yesterday, PINNACLE_SNAPSHOT_SELECT),
+    ]);
+    const snapshotSchemaMissing =
+      [todaySnapshotRes.error?.message ?? "", yesterdaySnapshotRes.error?.message ?? ""].some(
+        (message) => message.includes("match_date") || message.includes("kickoff_iso")
+      );
+    if (snapshotSchemaMissing) {
+      console.warn(
+        "[fair-odds] bookmaker_odds_snapshot is missing match_date/kickoff_iso; falling back to legacy Pinnacle snapshot schema."
+      );
+      [todaySnapshotRes, yesterdaySnapshotRes] = await Promise.all([
+        fetchSnapshotForDate(today, PINNACLE_SNAPSHOT_SELECT_LEGACY),
+        fetchSnapshotForDate(yesterday, PINNACLE_SNAPSHOT_SELECT_LEGACY),
+      ]);
+    }
+
+    snapshotData = [
+      ...(((todaySnapshotRes.data ?? []) as unknown) as Array<Record<string, unknown>>),
+      ...(((yesterdaySnapshotRes.data ?? []) as unknown) as Array<Record<string, unknown>>),
+    ];
+  } catch (error) {
+    console.warn("[fair-odds] Pinnacle snapshot fetch failed; continuing without Pinnacle rows", error);
+  }
+
+  const snapshotRows: PinnacleSourceRow[] = snapshotData
+    .filter((row) => row.league === "ATP" || row.league === "Challenger")
     .map((row): PinnacleSourceRow => ({
-      player1_name: (row.player1_name ?? "").trim(),
-      player2_name: (row.player2_name ?? "").trim(),
+      player1_name: String(row.player1_name ?? "").trim(),
+      player2_name: String(row.player2_name ?? "").trim(),
       odds1: Number(row.odds1 ?? 0),
       odds2: Number(row.odds2 ?? 0),
       ou_line: row.ou_line != null ? Number(row.ou_line) : undefined,
       ou_over: row.ou_over != null ? Number(row.ou_over) : undefined,
       ou_under: row.ou_under != null ? Number(row.ou_under) : undefined,
       league: row.league === "Challenger" ? "Challenger" : "ATP",
+      tournament: typeof row.league_name === "string" ? row.league_name : undefined,
       captured_at: typeof row.captured_at === "string" ? row.captured_at : undefined,
+      match_date: typeof row.match_date === "string" ? row.match_date.slice(0, 10) : undefined,
+      kickoff_iso: typeof row.kickoff_iso === "string" ? row.kickoff_iso : undefined,
     }))
     .filter((row) => row.player1_name && row.player2_name && row.odds1 > 0 && row.odds2 > 0);
 
+  const localDailyRows = loadRecentLocalPinnacleOdds([today, yesterday]);
   const localHistoryRows = loadRecentLocalPinnacleHistory([today, yesterday]);
-  pinnacleRows = dedupeLatestPinnacleRows([...snapshotRows, ...localHistoryRows]);
+  pinnacleRows = dedupeLatestPinnacleRows([...localDailyRows, ...snapshotRows, ...localHistoryRows]);
 
+  if (localDailyRows.length > 0) {
+    console.log(
+      `[fair-odds] Local Pinnacle daily CSV supplement: ${localDailyRows.length} rows across ${today} / ${yesterday}.`
+    );
+  }
   if (localHistoryRows.length > 0) {
     console.log(
       `[fair-odds] Local Pinnacle history supplement: ${localHistoryRows.length} recent rows across ${today} / ${yesterday}.`
@@ -1766,6 +1961,8 @@ async function run(): Promise<Response> {
         pinnacle_ou_over?: number;
         pinnacle_ou_under?: number;
         pinnacle_league?: "ATP" | "Challenger";
+        match_date?: string;
+        kickoff_iso?: string;
       }
     >;
     pinnacleOnly: PinnacleRow[];
@@ -1780,6 +1977,8 @@ async function run(): Promise<Response> {
         pinnacle_ou_over?: number;
         pinnacle_ou_under?: number;
         pinnacle_league?: "ATP" | "Challenger";
+        match_date?: string;
+        kickoff_iso?: string;
       }
     >();
     const matchedPinRows = new Set<PinnacleRow>();
@@ -1858,6 +2057,8 @@ async function run(): Promise<Response> {
           pinnacle_ou_over: pin.ou_over,
           pinnacle_ou_under: pin.ou_under,
           pinnacle_league: pin.league,
+          match_date: pin.match_date,
+          kickoff_iso: pin.kickoff_iso,
         });
       } else {
         matched.set(fo.id, {
@@ -1868,6 +2069,8 @@ async function run(): Promise<Response> {
           pinnacle_ou_over: pin.ou_over,
           pinnacle_ou_under: pin.ou_under,
           pinnacle_league: pin.league,
+          match_date: pin.match_date,
+          kickoff_iso: pin.kickoff_iso,
         });
       }
     }
@@ -1886,7 +2089,14 @@ async function run(): Promise<Response> {
       addCurrentOpponent(fo.player1_name ?? "", fo.player2_name ?? "");
       addCurrentOpponent(fo.player2_name ?? "", fo.player1_name ?? "");
     }
+    const isInCurrentOncourtSchedule = (row: PinnacleRow) => {
+      if (currentOncourtPairKeys.size === 0) return true;
+      const directKey = normalizePinnaclePairKey(row.player1_name ?? "", row.player2_name ?? "", row.league);
+      const reverseKey = normalizePinnaclePairKey(row.player2_name ?? "", row.player1_name ?? "", row.league);
+      return currentOncourtPairKeys.has(directKey) || currentOncourtPairKeys.has(reverseKey);
+    };
     const isStaleAlternativePairing = (row: PinnacleRow) => {
+      if (isInCurrentOncourtSchedule(row)) return false;
       const p1Key = normaliseFullName(row.player1_name ?? "");
       const p2Key = normaliseFullName(row.player2_name ?? "");
       if (!p1Key || !p2Key) return false;
@@ -1895,12 +2105,6 @@ async function run(): Promise<Response> {
       const p2Opponents = currentOpponentsByPlayer.get(p2Key);
       if (p2Opponents && !p2Opponents.has(p1Key)) return true;
       return false;
-    };
-    const isInCurrentOncourtSchedule = (row: PinnacleRow) => {
-      if (currentOncourtPairKeys.size === 0) return true;
-      const directKey = normalizePinnaclePairKey(row.player1_name ?? "", row.player2_name ?? "", row.league);
-      const reverseKey = normalizePinnaclePairKey(row.player2_name ?? "", row.player1_name ?? "", row.league);
-      return currentOncourtPairKeys.has(directKey) || currentOncourtPairKeys.has(reverseKey);
     };
     const rawPinnacleOnly = singlesPin.filter((p) => !matchedPinRows.has(p));
     const staleAlternativePairings = rawPinnacleOnly.filter(isStaleAlternativePairing);
@@ -2218,7 +2422,6 @@ async function run(): Promise<Response> {
       volumeMinVal != null &&
       !MATCH_ONLY_SHADOW_PROFILES.has(SHADOW_POLICY_MODE) &&
       !policyBaseAllows &&
-      !shortFavoriteExcluded &&
       !injuryExcluded;
     const spreadV1Reason = FAIR_ODDS_SPREAD_V1_ENABLED ? "strict_first_atp_bo3_hard_clay" : null;
     const spreadV1Eligible =
@@ -2226,8 +2429,19 @@ async function run(): Promise<Response> {
       league === "ATP" &&
       seriesBucket !== "Grand Slam" &&
       (r.surface === "Hard" || r.surface === "Clay") &&
-      !shortFavoriteExcluded &&
       !injuryExcluded;
+    const shortFavDogSpreadGuardP1 = shortFavoriteDogSpreadGuarded(
+      "P1+",
+      spreadLine,
+      modelFavOddsMispriceExcluded,
+      pinFavOddsMispriceExcluded
+    );
+    const shortFavDogSpreadGuardP2 = shortFavoriteDogSpreadGuarded(
+      "P2-",
+      spreadLine,
+      modelFavOddsMispriceExcluded,
+      pinFavOddsMispriceExcluded
+    );
     const hasPositiveRawValue = (rawValueP1 ?? Number.NEGATIVE_INFINITY) > 0 || (rawValueP2 ?? Number.NEGATIVE_INFINITY) > 0;
     const displayGuardReason = mlDisplayGuardReason({
       confidence,
@@ -2260,6 +2474,8 @@ async function run(): Promise<Response> {
     return {
       id: r.id,
       tournament: tournamentName,
+      match_date: pinnacle?.match_date,
+      kickoff_iso: pinnacle?.kickoff_iso,
       surface: r.surface ?? "",
       league,
       player1_id: r.player1_id ?? 0,
@@ -2313,13 +2529,18 @@ async function run(): Promise<Response> {
       confidence,
       series_bucket: seriesBucket,
       policy_match: policyMatch,
-      spread_eligible: policyBaseAllows && !shortFavoriteExcluded && !recentInjuredAny,
+      // ML-only short-favourite guards should not hide handicap candidates.
+      spread_eligible: policyBaseAllows && !recentInjuredAny,
       shadow_profile_match: shadowProfileMatch,
       shadow_overlap_match: shadowOverlapMatch,
       shadow_match: shadowMatch,
       shadow_spread_eligible: shadowSpreadEligible,
       spread_v1_eligible: spreadV1Eligible,
       spread_v1_reason: spreadV1Reason ?? undefined,
+      ml_short_fav_model_guard: modelFavOddsMispriceExcluded,
+      ml_short_fav_market_guard: pinFavOddsMispriceExcluded,
+      short_fav_dog_spread_guard_p1: shortFavDogSpreadGuardP1,
+      short_fav_dog_spread_guard_p2: shortFavDogSpreadGuardP2,
       blocked_reason: blockedReason,
       recent_injured_p1: p1Injury.matched,
       recent_injured_p2: p2Injury.matched,
@@ -2583,14 +2804,14 @@ async function run(): Promise<Response> {
       const he1 = m.handicap_edge_p1;
       const he2 = m.handicap_edge_p2;
       if (sl == null || so1 == null || so2 == null || he1 == null || he2 == null) continue;
-      if (he1 >= HANDICAP_MIN_EDGE_PCT) {
+      if (he1 >= HANDICAP_MIN_EDGE_PCT && !m.short_fav_dog_spread_guard_p1) {
         spreadSignalsStrict.push(
           toSpreadSignal(m, "P1+", he1, so1, sl, {
             handicap_point_prob_source: m.handicap_point_prob_source,
           })
         );
       }
-      if (he2 >= HANDICAP_MIN_EDGE_PCT) {
+      if (he2 >= HANDICAP_MIN_EDGE_PCT && !m.short_fav_dog_spread_guard_p2) {
         spreadSignalsStrict.push(
           toSpreadSignal(m, "P2-", he2, so2, sl, {
             handicap_point_prob_source: m.handicap_point_prob_source,
@@ -2648,7 +2869,7 @@ async function run(): Promise<Response> {
         const he1 = m.handicap_edge_p1;
         const he2 = m.handicap_edge_p2;
         if (sl != null && so1 != null && so2 != null && he1 != null && he2 != null) {
-          if (he1 >= HANDICAP_MIN_EDGE_PCT) {
+          if (he1 >= HANDICAP_MIN_EDGE_PCT && !m.short_fav_dog_spread_guard_p1) {
             spreadSignalsVolumeProfile.push(
               toSpreadSignal(m, "P1+", he1, so1, sl, {
                 handicap_point_prob_source: m.handicap_point_prob_source,
@@ -2662,7 +2883,7 @@ async function run(): Promise<Response> {
               );
             }
           }
-          if (he2 >= HANDICAP_MIN_EDGE_PCT) {
+          if (he2 >= HANDICAP_MIN_EDGE_PCT && !m.short_fav_dog_spread_guard_p2) {
             spreadSignalsVolumeProfile.push(
               toSpreadSignal(m, "P2-", he2, so2, sl, {
                 handicap_point_prob_source: m.handicap_point_prob_source,
@@ -2695,14 +2916,14 @@ async function run(): Promise<Response> {
       const he1 = m.handicap_edge_p1;
       const he2 = m.handicap_edge_p2;
       if (sl == null || so1 == null || so2 == null || he1 == null || he2 == null) continue;
-      if (he1 >= HANDICAP_MIN_EDGE_PCT) {
+      if (he1 >= HANDICAP_MIN_EDGE_PCT && !m.short_fav_dog_spread_guard_p1) {
         spreadSignalsVolume.push(
           toSpreadSignal(m, "P1+", he1, so1, sl, {
             handicap_point_prob_source: m.handicap_point_prob_source,
           })
         );
       }
-      if (he2 >= HANDICAP_MIN_EDGE_PCT) {
+      if (he2 >= HANDICAP_MIN_EDGE_PCT && !m.short_fav_dog_spread_guard_p2) {
         spreadSignalsVolume.push(
           toSpreadSignal(m, "P2-", he2, so2, sl, {
             handicap_point_prob_source: m.handicap_point_prob_source,
@@ -2730,7 +2951,9 @@ async function run(): Promise<Response> {
     (m) => (m.policy_match || m.spread_eligible) && !m.recent_injured_any
   );
   const spreadWithEdge20 = spreadStrictEligible.filter(
-    (m) => (m.handicap_edge_p1 ?? 0) >= HANDICAP_MIN_EDGE_PCT || (m.handicap_edge_p2 ?? 0) >= HANDICAP_MIN_EDGE_PCT
+    (m) =>
+      ((m.handicap_edge_p1 ?? 0) >= HANDICAP_MIN_EDGE_PCT && !m.short_fav_dog_spread_guard_p1) ||
+      ((m.handicap_edge_p2 ?? 0) >= HANDICAP_MIN_EDGE_PCT && !m.short_fav_dog_spread_guard_p2)
   );
   const spreadHint =
     !FAIR_ODDS_SPREAD_V1_ENABLED
@@ -2741,7 +2964,8 @@ async function run(): Promise<Response> {
         ? `Spread v1: ${matchesWithSpread.length} matches have data, ${spreadStrictEligible.length} pass strict policy, ${spreadWithEdge20.length} have legacy edge >=20%, but no spread_v1 shadow picks qualified.`
         : undefined;
 
-  const pinnacle_only = pinnacleOnly.map((p) => ({
+  const preliminaryPinnacleOnly = pinnacleOnly.map((p) => ({
+    tournament: p.tournament,
     player1_name: p.player1_name,
     player2_name: p.player2_name,
     odds1: p.odds1,
@@ -2749,10 +2973,83 @@ async function run(): Promise<Response> {
     ou_line: p.ou_line,
     ou_over: p.ou_over,
     ou_under: p.ou_under,
+    match_date: p.match_date,
+    kickoff_iso: p.kickoff_iso,
   }));
 
+  const scheduleBearingOpponentLookup = new Map<string, Set<string>>();
+  const addScheduleBearingPair = (tournamentName: string | undefined, playerName: string, opponentName: string) => {
+    const playerKey = normaliseFullName(playerName ?? "");
+    const opponentKey = normaliseFullName(opponentName ?? "");
+    if (!playerKey || !opponentKey) return;
+    for (const tKey of tourKeyCandidates(tournamentName)) {
+      const mapKey = `${tKey}|${playerKey}`;
+      const existing = scheduleBearingOpponentLookup.get(mapKey) ?? new Set<string>();
+      existing.add(opponentKey);
+      scheduleBearingOpponentLookup.set(mapKey, existing);
+    }
+  };
+
+  for (const row of matches) {
+    if (!row.match_date && !row.kickoff_iso) continue;
+    addScheduleBearingPair(row.tournament, row.player1_name, row.player2_name);
+    addScheduleBearingPair(row.tournament, row.player2_name, row.player1_name);
+  }
+  for (const row of preliminaryPinnacleOnly) {
+    if (!row.match_date && !row.kickoff_iso) continue;
+    addScheduleBearingPair(row.tournament, row.player1_name, row.player2_name);
+    addScheduleBearingPair(row.tournament, row.player2_name, row.player1_name);
+  }
+
+  const isSupersededByScheduleBearingPair = (
+    tournamentName: string | undefined,
+    player1Name: string,
+    player2Name: string
+  ): boolean => {
+    const player1Key = normaliseFullName(player1Name ?? "");
+    const player2Key = normaliseFullName(player2Name ?? "");
+    if (!player1Key || !player2Key) return false;
+    for (const tKey of tourKeyCandidates(tournamentName)) {
+      const p1Opponents = scheduleBearingOpponentLookup.get(`${tKey}|${player1Key}`);
+      if (p1Opponents && p1Opponents.size > 0 && !p1Opponents.has(player2Key)) return true;
+      const p2Opponents = scheduleBearingOpponentLookup.get(`${tKey}|${player2Key}`);
+      if (p2Opponents && p2Opponents.size > 0 && !p2Opponents.has(player1Key)) return true;
+    }
+    return false;
+  };
+
+  const suppressedMatchRows = matches.filter(
+    (row) =>
+      !row.match_date &&
+      !row.kickoff_iso &&
+      row.pinnacle_odds1 == null &&
+      row.pinnacle_odds2 == null &&
+      isSupersededByScheduleBearingPair(row.tournament, row.player1_name, row.player2_name)
+  );
+  const responseMatches = matches.filter((row) => !suppressedMatchRows.includes(row));
+  if (suppressedMatchRows.length > 0) {
+    console.log(
+      `[fair-odds] Suppressed superseded fair-odds rows:`,
+      suppressedMatchRows.map((row) => `${row.tournament}: ${row.player1_name} vs ${row.player2_name}`)
+    );
+  }
+
+  const suppressedPinnacleOnly = preliminaryPinnacleOnly.filter(
+    (row) =>
+      !row.match_date &&
+      !row.kickoff_iso &&
+      isSupersededByScheduleBearingPair(row.tournament, row.player1_name, row.player2_name)
+  );
+  const pinnacle_only = preliminaryPinnacleOnly.filter((row) => !suppressedPinnacleOnly.includes(row));
+  if (suppressedPinnacleOnly.length > 0) {
+    console.log(
+      `[fair-odds] Suppressed superseded Pinnacle-only rows:`,
+      suppressedPinnacleOnly.map((row) => `${row.tournament}: ${row.player1_name} vs ${row.player2_name}`)
+    );
+  }
+
   return NextResponse.json({
-    matches,
+    matches: responseMatches,
     matches_with_row_signals: matchesWithRowSignals,
     pinnacle_count: pinnacleRows.length,
     pinnacle_matched_count: pinnacleMap.size,

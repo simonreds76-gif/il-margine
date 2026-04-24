@@ -1,0 +1,111 @@
+Team shots v2 NB dry-run report
+Generated: 2026-04-24T10:43:37+00:00
+
+Candidate surfaces tested
+- Production/current: venue-consensus-v2 Poisson + calibration, current shadow ledger.
+- V2 calibrated: lambda_shots + negative-binomial alpha=0.25 + fresh Platt calibration.
+- V2 raw: lambda_shots + negative-binomial alpha=0.25, no Platt calibration for bet selection.
+
+Decision
+- Do not promote calibrated v2: calibration improves probability reliability but hurts betting selection on the current odds sample.
+- Keep v2 raw as the dry-run candidate: it improves the shadow-style ledger at the current 12% signal threshold.
+- Do not replace production yet from a 25-settled-bet sample. Run this as a parallel research lane until at least 50 settled dry-run picks, then promote only if ROI remains positive and no league collapses.
+
+Current production snapshot
+============================================================
+  TEAM SHOTS SHADOW -- PERFORMANCE SUMMARY
+============================================================
+  Total signals:  86
+  Settled:        79
+  Pending:        7
+  PnL (flat 1u):  -2.6u   ROI: -3.3%
+  PnL (staked):   -3.3u   ROI: -4.5%  (73.5u staked)
+  Record:         41W / 38L / 0P
+  Avg odds:       1.857
+  Avg edge:       0.212
+
+  By league:
+    bundesliga     : n=  22  PnL=  +3.9u  ROI=+17.6%  staked=+3.9u  W=14
+    epl            : n=  22  PnL=  -7.2u  ROI=-32.8%  staked=-8.9u  W=8
+    la-liga        : n=  14  PnL=  +2.3u  ROI=+16.3%  staked=+3.1u  W=9
+    serie-a        : n=  21  PnL=  -1.6u  ROI= -7.4%  staked=-1.4u  W=10
+
+  By side:
+    over  : n=  31  PnL=  +0.3u  ROI= +1.1%  W=17
+    under : n=  48  PnL=  -3.0u  ROI= -6.2%  W=24
+
+  By policy:
+    venue-consensus-v2  : n=  21  PnL=  -2.2u  ROI=-10.4%  W=10
+    legacy              : n=  32  PnL=  -2.5u  ROI= -7.9%  W=16
+
+  Updated: 2026-04-23 23:44 UTC
+============================================================
+
+V2 raw dry-run, historical comparison source
+============================================================
+  TEAM SHOTS SHADOW -- PERFORMANCE SUMMARY
+============================================================
+  Total signals:  37
+  Settled:        25
+  Pending:        12
+  PnL (flat 1u):  +2.7u   ROI: +10.8%
+  PnL (staked):   +2.6u   ROI: +8.6%  (30.0u staked)
+  Record:         15W / 10L / 0P
+  Avg odds:       1.846
+  Avg edge:       0.210
+
+  By league:
+    bundesliga     : n=   5  PnL=  -1.3u  ROI=-25.8%  staked=-3.2u  W=2
+    epl            : n=   5  PnL=  +0.6u  ROI=+11.5%  staked=+0.2u  W=3
+    la-liga        : n=   8  PnL=  +2.9u  ROI=+35.8%  staked=+1.8u  W=6
+    serie-a        : n=   7  PnL=  +0.6u  ROI= +8.0%  staked=+3.7u  W=4
+
+  By side:
+    over  : n=   4  PnL=  +1.4u  ROI=+34.8%  W=3
+    under : n=  21  PnL=  +1.3u  ROI= +6.3%  W=12
+
+  By policy:
+    lambda-shots-nb-v2-raw: n=  25  PnL=  +2.7u  ROI=+10.8%  W=15
+
+  Updated: 2026-04-24 10:42 UTC
+============================================================
+
+V2 calibrated dry-run, historical comparison source
+============================================================
+  TEAM SHOTS SHADOW -- PERFORMANCE SUMMARY
+============================================================
+  Total signals:  32
+  Settled:        20
+  Pending:        12
+  PnL (flat 1u):  -1.4u   ROI: -6.8%
+  PnL (staked):   -1.4u   ROI: -5.6%  (24.5u staked)
+  Record:         10W / 10L / 0P
+  Avg odds:       1.858
+  Avg edge:       0.222
+
+  By league:
+    bundesliga     : n=   6  PnL=  -2.2u  ROI=-36.4%  staked=-3.6u  W=2
+    epl            : n=   2  PnL=  -0.2u  ROI=-10.0%  staked=+0.3u  W=1
+    la-liga        : n=   7  PnL=  +2.2u  ROI=+31.6%  staked=+2.7u  W=5
+    serie-a        : n=   5  PnL=  -1.2u  ROI=-23.6%  staked=-0.7u  W=2
+
+  By side:
+    over  : n=  10  PnL=  +1.0u  ROI=+10.1%  W=6
+    under : n=  10  PnL=  -2.4u  ROI=-23.6%  W=4
+
+  By policy:
+    lambda-shots-nb-v2  : n=  20  PnL=  -1.4u  ROI= -6.8%  W=10
+
+  Updated: 2026-04-24 10:42 UTC
+============================================================
+
+V2 raw live dry-run, current scanner source
+============================================================
+  TEAM SHOTS SHADOW -- PERFORMANCE SUMMARY
+============================================================
+  Total signals:  16
+  Settled:        0
+  Pending:        16
+
+  Updated: 2026-04-24 10:42 UTC
+============================================================

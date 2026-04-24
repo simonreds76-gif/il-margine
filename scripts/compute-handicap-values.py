@@ -47,7 +47,11 @@ from src.lib.tennis_prob import prob_match_best_of_3
 POINT_CLAMP = (0.42, 0.80)
 SURFACE_LEAGUE_AVG = {"Hard": 0.64, "Clay": 0.62, "Grass": 0.67, "I.hard": 0.64, "N/A": 0.64}
 MIN_VENUE_SPW_MATCHES = 50
-POINT_PROB_MATCH_PROB_GAP_MAX = 0.12
+# The stored point-probability pair should only drive handicaps when it still
+# implies roughly the same match winner view as the final blended match model.
+# 12 percentage points was letting obviously contradictory ML/handicap rows
+# survive; tighten this so we fall back to the reverse-solved shape sooner.
+POINT_PROB_MATCH_PROB_GAP_MAX = 0.08
 
 
 def _root_dir() -> str:

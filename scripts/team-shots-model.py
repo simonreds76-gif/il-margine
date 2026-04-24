@@ -30,6 +30,9 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from settlement_utils import normalize_team_name
+from team_shots_probability import fair_odds, prob_over as surface_prob_over
+
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_INPUT = ROOT / "data" / "team-shots" / "historical" / "all-historical-matches.csv"
 DEFAULT_FBREF = ROOT / "data" / "team-shots" / "fbref" / "all-fbref-matches.csv"
@@ -86,6 +89,10 @@ def _parse_date(val: str) -> Optional[date]:
     return None
 
 
+def canonical_team_name(value: str) -> str:
+    return normalize_team_name(value or "")
+
+
 def poisson_pmf(k: int, lam: float) -> float:
     if lam <= 0:
         return 1.0 if k == 0 else 0.0
@@ -98,16 +105,7 @@ def poisson_cdf(k: int, lam: float) -> float:
 
 def prob_over(line: float, lam: float) -> float:
     """P(shots > line). For line=10.5, this is P(shots >= 11)."""
-    k = int(line)
-    return 1.0 - poisson_cdf(k, lam)
-
-
-def fair_odds(prob: float) -> float:
-    if prob <= 0:
-        return 999.0
-    if prob >= 1:
-        return 1.001
-    return round(1.0 / prob, 3)
+    return surface_prob_over(line, lam)
 
 
 @dataclass
@@ -320,8 +318,8 @@ def _match_identity(row: MatchRow) -> tuple[str, str, str, str]:
     return (
         row.match_date.isoformat(),
         row.league,
-        row.home_team.strip().lower(),
-        row.away_team.strip().lower(),
+        canonical_team_name(row.home_team),
+        canonical_team_name(row.away_team),
     )
 
 
@@ -458,6 +456,8 @@ def run_model(
     matches: List[MatchRow],
     *,
     holdout_start: Optional[date] = None,
+    prob_surface: str = "venue_poisson",
+    nb_alpha: float = 0.0,
 ) -> Tuple[List[dict], Dict[str, Dict[str, float]]]:
     team_states: Dict[str, TeamState] = defaultdict(TeamState)
     predictions: List[dict] = []
@@ -483,8 +483,8 @@ def run_model(
 
     for m in matches:
         league_avg = _causal_league_avg(m.league)
-        home_key = f"{m.league}:{m.home_team}"
-        away_key = f"{m.league}:{m.away_team}"
+        home_key = f"{m.league}:{canonical_team_name(m.home_team)}"
+        away_key = f"{m.league}:{canonical_team_name(m.away_team)}"
         home_state = team_states[home_key]
         away_state = team_states[away_key]
 
@@ -498,7 +498,9 @@ def run_model(
                                          home_lambda, m.home_shots, m.home_sot,
                                          xg_lambda=home_xg_lam,
                                          lam_venue=home_lam_venue,
-                                         lam_recent=home_lam_recent)
+                                         lam_recent=home_lam_recent,
+                                         prob_surface=prob_surface,
+                                         nb_alpha=nb_alpha)
                 predictions.append(pred)
 
             if away_result is not None:
@@ -507,7 +509,9 @@ def run_model(
                                          away_lambda, m.away_shots, m.away_sot,
                                          xg_lambda=away_xg_lam,
                                          lam_venue=away_lam_venue,
-                                         lam_recent=away_lam_recent)
+                                         lam_recent=away_lam_recent,
+                                         prob_surface=prob_surface,
+                                         nb_alpha=nb_alpha)
                 predictions.append(pred)
 
         # Update causal accumulators after observing this match
@@ -549,6 +553,7 @@ def _build_prediction(
     m: MatchRow, team: str, opponent: str, venue: str,
     lam: float, actual_shots: int, actual_sot: int,
     xg_lambda: float = 0.0, lam_venue: float = 0.0, lam_recent: float = 0.0,
+    prob_surface: str = "venue_poisson", nb_alpha: float = 0.0,
 ) -> dict:
     is_home = (venue == "home")
     pred: dict = {
@@ -564,6 +569,8 @@ def _build_prediction(
         "xg_lambda": round(xg_lambda, 2),
         "lambda_venue": round(lam_venue, 2),
         "lambda_recent": round(lam_recent, 2),
+        "prob_surface": prob_surface,
+        "prob_alpha": round(nb_alpha, 4) if prob_surface == "lambda_shots_nb" else "",
         "actual_shots": actual_shots,
         "actual_sot": actual_sot,
         "b365h": m.b365h if m.b365h > 0 else "",
@@ -571,12 +578,19 @@ def _build_prediction(
         "b365a": m.b365a if m.b365a > 0 else "",
     }
 
-    # Runtime scanner/upcoming uses lam_venue, so historical probabilities need
-    # to be generated from the same surface for calibration to remain valid.
-    probability_lam = lam_venue if lam_venue > 0 else lam
+    if prob_surface == "lambda_shots_nb":
+        probability_lam = lam
+        distribution = "negative_binomial"
+        alpha = nb_alpha
+    else:
+        # Runtime scanner/upcoming uses lam_venue, so historical probabilities
+        # need to be generated from the same surface for calibration to remain valid.
+        probability_lam = lam_venue if lam_venue > 0 else lam
+        distribution = "poisson"
+        alpha = 0.0
 
     for line in STANDARD_LINES:
-        p_over = prob_over(line, probability_lam)
+        p_over = surface_prob_over(line, probability_lam, distribution=distribution, alpha=alpha)
         p_under = 1.0 - p_over
         pred[f"p_over_{line}"] = round(p_over, 4)
         pred[f"fair_over_{line}"] = fair_odds(p_over)
@@ -663,6 +677,7 @@ OUTPUT_FIELDS = [
     "date", "league", "season", "team", "opponent", "venue",
     "home_team", "away_team", "lambda_shots", "xg_lambda",
     "lambda_venue", "lambda_recent",
+    "prob_surface", "prob_alpha",
     "actual_shots", "actual_sot",
     "b365h", "b365d", "b365a",
 ] + [
@@ -681,6 +696,18 @@ def main() -> None:
     parser.add_argument("--calibration", type=Path, default=DEFAULT_CALIBRATION)
     parser.add_argument("--holdout-start", type=str, default=None,
                         help="Only output predictions from this date (YYYY-MM-DD)")
+    parser.add_argument(
+        "--prob-surface",
+        choices=("venue_poisson", "lambda_shots_nb"),
+        default="venue_poisson",
+        help="Probability surface for O/U prices. Default keeps current production.",
+    )
+    parser.add_argument(
+        "--nb-alpha",
+        type=float,
+        default=0.25,
+        help="Negative-binomial dispersion alpha when --prob-surface=lambda_shots_nb.",
+    )
     args = parser.parse_args()
 
     fbref_path = args.fbref or DEFAULT_FBREF
@@ -713,7 +740,12 @@ def main() -> None:
         holdout = date.fromisoformat(args.holdout_start)
         print(f"  Holdout start: {holdout}")
 
-    predictions, league_avgs = run_model(matches, holdout_start=holdout)
+    predictions, league_avgs = run_model(
+        matches,
+        holdout_start=holdout,
+        prob_surface=args.prob_surface,
+        nb_alpha=args.nb_alpha if args.prob_surface == "lambda_shots_nb" else 0.0,
+    )
     print(f"  {len(predictions)} predictions generated")
 
     print(f"\nLeague averages (shots per team per match):")

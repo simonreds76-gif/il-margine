@@ -567,6 +567,32 @@ def is_excluded_heavy_favorite_dog(
     return float(favorite_prob or 0.0) >= HEAVY_FAV_DOG_GUARD_MIN_FAV_PROB
 
 
+def is_short_favorite_dog_spread_guarded(side: str, spread_line: float | None, model_ml_excluded: bool, pin_ml_excluded: bool) -> bool:
+    if not model_ml_excluded and not pin_ml_excluded:
+        return False
+    if spread_line is None:
+        return False
+    # P1+ uses the stored line as displayed; P2- is the opposite side. When
+    # ML is extremely short, dog-side plus-games edges are usually the same
+    # favourite-compression bug that creates bad dog ML value.
+    if side == "P1+":
+        return spread_line > 0
+    if side == "P2-":
+        return spread_line < 0
+    return False
+
+
+def is_spread_v1_segment_guarded(side: str, spread_line: float | None) -> bool:
+    if spread_line is None:
+        return False
+    display_line = spread_line if side == "P1+" else -spread_line if side == "P2-" else spread_line
+    # Live segment audit 2026-04-24: favorite-side handicaps are carrying the
+    # spread-v1 record, while dog/scratch and sub-2-game lines are leaking.
+    if display_line >= 0:
+        return True
+    return abs(display_line) < 2.0
+
+
 def has_favorite_spread_conflict(
     favorite_side: str,
     spread_line: float | None,
@@ -810,6 +836,12 @@ def append_rows_dedup(path: Path, rows: list[dict[str, Any]], key_fields: list[s
             for r in rd:
                 row = dict(r)
                 key = tuple(_append_key_value(k, row.get(k)) for k in key_fields)
+                existing = existing_by_key.get(key)
+                if existing is not None:
+                    for k, v in row.items():
+                        if (existing.get(k, "") == "") and v not in ("", None):
+                            existing[k] = v
+                    continue
                 existing_by_key[key] = row
 
     out_rows = list(existing_by_key.values())
@@ -817,6 +849,9 @@ def append_rows_dedup(path: Path, rows: list[dict[str, Any]], key_fields: list[s
     for r in rows:
         key = tuple(_append_key_value(k, r.get(k)) for k in key_fields)
         normalized = {k: ("" if v is None else str(v)) for k, v in r.items()}
+        normalized.setdefault("settlement_status", "pending")
+        if normalized.get("settlement_status") == "":
+            normalized["settlement_status"] = "pending"
         if key in existing_by_key:
             existing = existing_by_key[key]
             for k, v in normalized.items():
@@ -866,7 +901,11 @@ def write_live_snapshot(
     incoming_rows_by_lane: dict[tuple[str, ...], dict[str, str]] = {}
     for row in rows:
         lane_key = tuple(_append_key_value(k, row.get(k)) for k in lane_key_fields)
-        incoming_rows_by_lane[lane_key] = {k: ("" if v is None else str(v)) for k, v in row.items()}
+        normalized = {k: ("" if v is None else str(v)) for k, v in row.items()}
+        normalized.setdefault("settlement_status", "pending")
+        if normalized.get("settlement_status") == "":
+            normalized["settlement_status"] = "pending"
+        incoming_rows_by_lane[lane_key] = normalized
 
     ordered_rows: list[dict[str, str]] = []
     seen_keys: dict[tuple[str, ...], int] = {}
@@ -1055,7 +1094,7 @@ def main() -> int:
         if args.append:
             live_dedup_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
             lane_key_fields = ["date", "player1", "player2", "bet_type", "spread_line", "policy_mode", "signal_profile"]
-            archive_key_fields = ["date", "time_utc", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
+            archive_key_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
             out_paths = derive_signal_csv_paths(Path(args.output))
             live_count = write_live_snapshot(
                 out_paths.live,
@@ -1232,8 +1271,13 @@ def main() -> int:
         # Keep spreads eligible; this filter is for dog-moneyline distortions.
         model_fav_odds = min(our_odds1, our_odds2)
         model_ml_excluded = model_fav_odds < MISPRICE_MODEL_FAV_ODDS_MIN
-        if is_excluded_short_favorite(surface, series_bucket, confidence, our_odds1, our_odds2):
-            continue
+        atp500_short_favorite_ml_excluded = is_excluded_short_favorite(
+            surface,
+            series_bucket,
+            confidence,
+            our_odds1,
+            our_odds2,
+        )
 
         p1_name = players.get(r.get("player1_id") or 0) or ""
         p2_name = players.get(r.get("player2_id") or 0) or ""
@@ -1313,6 +1357,7 @@ def main() -> int:
             strict_min_value is not None
             and not model_ml_excluded
             and not pin_ml_excluded
+            and not atp500_short_favorite_ml_excluded
             and has_internal_ml_value
             and value_pct is not None
             and value_pct >= strict_min_value
@@ -1324,6 +1369,7 @@ def main() -> int:
             and not strict_match
             and not model_ml_excluded
             and not pin_ml_excluded
+            and not atp500_short_favorite_ml_excluded
             and has_internal_ml_value
             and value_pct is not None
             and value_pct >= volume_min_value
@@ -1332,6 +1378,7 @@ def main() -> int:
             clay_calibrated_enabled
             and not model_ml_excluded
             and not pin_ml_excluded
+            and not atp500_short_favorite_ml_excluded
             and calibrated_value_pct is not None
             and calibrated_value_pct >= CLAY_CALIBRATED_MIN_VALUE_PCT
             and (raw_value_same_side is None or raw_value_same_side < CLAY_CALIBRATED_MIN_VALUE_PCT)
@@ -1504,11 +1551,26 @@ def main() -> int:
                 if args.signal_profile == "spread_v1_shadow"
                 else HANDICAP_MIN_EDGE_PCT
             )
+            short_fav_dog_spread_p1_guarded = is_short_favorite_dog_spread_guarded(
+                "P1+",
+                sl,
+                model_ml_excluded,
+                pin_ml_excluded,
+            )
+            short_fav_dog_spread_p2_guarded = is_short_favorite_dog_spread_guarded(
+                "P2-",
+                sl,
+                model_ml_excluded,
+                pin_ml_excluded,
+            )
+            spread_v1_segment_p1_guarded = is_spread_v1_segment_guarded("P1+", sl)
+            spread_v1_segment_p2_guarded = is_spread_v1_segment_guarded("P2-", sl)
             spread_v1_p1_allowed = (
                 args.signal_profile != "spread_v1_shadow"
                 or (
-                    not model_ml_excluded
-                    and not pin_ml_excluded
+                    not spread_v1_segment_p1_guarded
+                    and
+                    not short_fav_dog_spread_p1_guarded
                     and not is_excluded_heavy_favorite_dog(
                         surface,
                         series_bucket,
@@ -1521,8 +1583,9 @@ def main() -> int:
             spread_v1_p2_allowed = (
                 args.signal_profile != "spread_v1_shadow"
                 or (
-                    not model_ml_excluded
-                    and not pin_ml_excluded
+                    not spread_v1_segment_p2_guarded
+                    and
+                    not short_fav_dog_spread_p2_guarded
                     and not is_excluded_heavy_favorite_dog(
                         surface,
                         series_bucket,
@@ -1594,6 +1657,10 @@ def main() -> int:
                         "spread_calibration_reason": calibration_reason,
                         "spread_calibration_source": calibration_source,
                         "spread_surface_scope": surface if surface in SPREAD_V1_ALLOWED_SURFACES else "",
+                        "ml_short_fav_model_guard": model_ml_excluded,
+                        "ml_short_fav_market_guard": pin_ml_excluded,
+                        "atp500_short_fav_ml_guard": atp500_short_favorite_ml_excluded,
+                        "short_fav_dog_spread_guard": short_fav_dog_spread_p1_guarded,
                     }
                 )
             if he2 >= edge_threshold and spread_v1_p2_allowed:
@@ -1649,6 +1716,10 @@ def main() -> int:
                         "spread_calibration_reason": calibration_reason,
                         "spread_calibration_source": calibration_source,
                         "spread_surface_scope": surface if surface in SPREAD_V1_ALLOWED_SURFACES else "",
+                        "ml_short_fav_model_guard": model_ml_excluded,
+                        "ml_short_fav_market_guard": pin_ml_excluded,
+                        "atp500_short_fav_ml_guard": atp500_short_favorite_ml_excluded,
+                        "short_fav_dog_spread_guard": short_fav_dog_spread_p2_guarded,
                     }
                 )
 
@@ -1769,8 +1840,8 @@ def main() -> int:
     )
     if EXCLUDE_ATP500_HARD_SHORT_FAVORITES:
         print(
-            "Exclusion: ATP500 Hard short favorites skipped "
-            f"(confidence {', '.join(sorted(EXCLUDE_SHORT_FAV_CONFIDENCE))}, favorite odds < {EXCLUDE_SHORT_FAV_MAX_ODDS:.2f})"
+            "Exclusion: ATP500 Hard short-favourite MLs skipped "
+            f"(confidence {', '.join(sorted(EXCLUDE_SHORT_FAV_CONFIDENCE))}, favorite odds < {EXCLUDE_SHORT_FAV_MAX_ODDS:.2f}); spreads remain eligible"
         )
     print(f"Production mode: {args.policy_mode}  |  signal_profile={args.signal_profile}")
     if args.signal_profile == "strict":
@@ -1834,7 +1905,7 @@ def main() -> int:
     if args.append:
         live_dedup_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
         lane_key_fields = ["date", "player1", "player2", "bet_type", "spread_line", "policy_mode", "signal_profile"]
-        archive_key_fields = ["date", "time_utc", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
+        archive_key_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
         out_paths = derive_signal_csv_paths(Path(args.output))
         live_count = write_live_snapshot(
             out_paths.live,

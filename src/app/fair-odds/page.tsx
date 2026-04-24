@@ -9,6 +9,8 @@ import { formatStake } from "@/lib/format";
 interface FairOddsMatch {
   id: number;
   tournament: string;
+  match_date?: string;
+  kickoff_iso?: string;
   surface: string;
   league?: "ATP" | "Challenger";
   player1_id: number;
@@ -120,6 +122,7 @@ interface StrictPolicyMeta {
 }
 
 interface PinnacleOnlyMatch {
+  tournament?: string;
   player1_name: string;
   player2_name: string;
   odds1: number;
@@ -127,6 +130,8 @@ interface PinnacleOnlyMatch {
   ou_line?: number;
   ou_over?: number;
   ou_under?: number;
+  match_date?: string;
+  kickoff_iso?: string;
 }
 
 interface ApiResponse {
@@ -615,6 +620,72 @@ function fmtSignedLine(v: number | undefined): string {
   return `${v >= 0 ? "+" : "-"}${body}`;
 }
 
+function matchDateKey(match: Pick<FairOddsMatch, "kickoff_iso" | "match_date">): string {
+  const kickoffKey = (match.kickoff_iso || "").slice(0, 10);
+  if (kickoffKey) return kickoffKey;
+  const matchKey = (match.match_date || "").slice(0, 10);
+  if (matchKey) return matchKey;
+  return "undated";
+}
+
+function parseDateKeyUtc(value: string): number {
+  if (!value || value === "undated") return Number.MAX_SAFE_INTEGER;
+  const parsed = Date.parse(`${value}T00:00:00Z`);
+  return Number.isFinite(parsed) ? parsed : Number.MAX_SAFE_INTEGER;
+}
+
+function formatDateSectionLabel(dateKey: string, todayUtc: string): string {
+  if (dateKey === "undated") return "Schedule Pending";
+  if (dateKey === todayUtc) return "Today";
+  const tomorrow = new Date(Date.parse(`${todayUtc}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10);
+  if (dateKey === tomorrow) return "Tomorrow";
+  const parsed = Date.parse(`${dateKey}T00:00:00Z`);
+  if (!Number.isFinite(parsed)) return dateKey;
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    timeZone: "UTC",
+  }).format(new Date(parsed));
+}
+
+function formatDateSectionSubLabel(dateKey: string): string {
+  if (dateKey === "undated") return "No kickoff in Pinnacle yet";
+  return `${dateKey} UTC`;
+}
+
+function kickoffSortValue(match: Pick<FairOddsMatch, "kickoff_iso" | "match_date">): number {
+  const kickoffMs = Date.parse(match.kickoff_iso || "");
+  if (Number.isFinite(kickoffMs)) return kickoffMs;
+  return parseDateKeyUtc(matchDateKey(match));
+}
+
+function leagueSortRank(league?: FairOddsMatch["league"]): number {
+  if (league === "ATP") return 0;
+  if (league === "Challenger") return 1;
+  return 2;
+}
+
+function tournamentLeagueSortRank(matches: FairOddsMatch[]): number {
+  return matches.reduce((best, match) => Math.min(best, leagueSortRank(match.league)), 2);
+}
+
+function formatKickoffLabel(kickoffIso?: string, matchDate?: string): string | null {
+  if (kickoffIso) {
+    const parsed = Date.parse(kickoffIso);
+    if (Number.isFinite(parsed)) {
+      return `${new Intl.DateTimeFormat("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+        timeZone: "UTC",
+      }).format(new Date(parsed))} UTC`;
+    }
+  }
+  if (matchDate) return `${matchDate.slice(0, 10)} UTC`;
+  return null;
+}
+
 function formatSignalBet(s: SignalSummary): { matchLabel: string; betLine: string } {
   const player = s.side.startsWith("P1") ? s.player1_name : s.player2_name;
   const odds = s.pinnacle_odds != null ? s.pinnacle_odds.toFixed(2) : "--";
@@ -814,16 +885,46 @@ export default function FairOddsPage() {
 
   const matches = data?.matches ?? [];
 
-  // Group by tournament
-  const grouped = new Map<string, FairOddsMatch[]>();
-  for (const m of matches) {
-    const key = m.tournament || "Unknown";
-    if (!grouped.has(key)) grouped.set(key, []);
-    grouped.get(key)!.push(m);
-  }
-
   const now = new Date();
   const todayUTC = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-${String(now.getUTCDate()).padStart(2, "0")}`;
+  const groupedByDate = Array.from(
+    matches.reduce((dateMap, match) => {
+      const dateKey = matchDateKey(match);
+      const tournamentKey = match.tournament || "Unknown";
+      const tournamentMap = dateMap.get(dateKey) ?? new Map<string, FairOddsMatch[]>();
+      const tournamentRows = tournamentMap.get(tournamentKey) ?? [];
+      tournamentRows.push(match);
+      tournamentMap.set(tournamentKey, tournamentRows);
+      dateMap.set(dateKey, tournamentMap);
+      return dateMap;
+    }, new Map<string, Map<string, FairOddsMatch[]>>()).entries()
+  )
+    .sort(([left], [right]) => parseDateKeyUtc(left) - parseDateKeyUtc(right))
+    .map(([dateKey, tournamentMap]) => ({
+      dateKey,
+      label: formatDateSectionLabel(dateKey, todayUTC),
+      subLabel: formatDateSectionSubLabel(dateKey),
+      tournaments: Array.from(tournamentMap.entries())
+        .map(([tournament, rows]) => ({
+          tournament,
+          matches: [...rows].sort((a, b) => {
+            const leagueDelta = leagueSortRank(a.league) - leagueSortRank(b.league);
+            if (leagueDelta !== 0) return leagueDelta;
+            const kickoffDelta = kickoffSortValue(a) - kickoffSortValue(b);
+            if (kickoffDelta !== 0) return kickoffDelta;
+            return `${a.player1_name}|${a.player2_name}`.localeCompare(`${b.player1_name}|${b.player2_name}`);
+          }),
+        }))
+        .sort((a, b) => {
+          const leagueDelta = tournamentLeagueSortRank(a.matches) - tournamentLeagueSortRank(b.matches);
+          if (leagueDelta !== 0) return leagueDelta;
+          const kickoffDelta =
+            kickoffSortValue(a.matches[0] ?? { match_date: undefined, kickoff_iso: undefined }) -
+            kickoffSortValue(b.matches[0] ?? { match_date: undefined, kickoff_iso: undefined });
+          if (kickoffDelta !== 0) return kickoffDelta;
+          return a.tournament.localeCompare(b.tournament);
+        }),
+    }));
   const shadowOnlySignals = data?.signals_volume_additional ?? data?.signals_volume ?? [];
   const strictFeedItems = sortSignalFeedItems(
     (data?.signals_strict ?? []).map((signal) => ({
@@ -1173,11 +1274,13 @@ export default function FairOddsPage() {
                 </tr>
               </thead>
               <tbody>
-                {[...grouped.entries()].map(([tournament, tMatches]) => (
-                  <TournamentGroup
-                    key={tournament}
-                    tournament={tournament}
-                    matches={tMatches}
+                {groupedByDate.map((group) => (
+                  <DateSection
+                    key={group.dateKey}
+                    dateKey={group.dateKey}
+                    label={group.label}
+                    subLabel={group.subLabel}
+                    tournaments={group.tournaments}
                     showStats={showStats}
                     colSpan={TABLE_BASE_COL_COUNT + (showStats ? 1 : 0)}
                     shadowProfile={data?.shadow_profile}
@@ -1201,6 +1304,8 @@ export default function FairOddsPage() {
               <table className="w-full text-sm min-w-[400px]">
                 <thead>
                   <tr className="border-b border-slate-700/80 text-slate-500 text-[11px] uppercase">
+                    <th className="text-left py-2 px-2">When</th>
+                    <th className="text-left py-2 px-2">Tournament</th>
                     <th className="text-left py-2 px-2">Match</th>
                     <th className="text-center py-2 px-2">Pinnacle Odds</th>
                     <th className="text-center py-2 px-2">O/U</th>
@@ -1209,6 +1314,12 @@ export default function FairOddsPage() {
                 <tbody>
                   {data.pinnacle_only.map((m, i) => (
                     <tr key={i} className="border-b border-slate-800/50 text-slate-400">
+                      <td className="py-2 px-2 text-[11px] text-slate-500">
+                        {formatKickoffLabel(m.kickoff_iso, m.match_date) ?? "--"}
+                      </td>
+                      <td className="py-2 px-2 text-[11px] text-slate-500">
+                        {m.tournament || "--"}
+                      </td>
                       <td className="py-2 px-2">{(m.player1_name || "--")} vs {(m.player2_name || "--")}</td>
                       <td className="py-2 px-2 text-center font-mono tabular-nums">
                         {m.odds1 > 0 && m.odds2 > 0 ? `${m.odds1.toFixed(2)} / ${m.odds2.toFixed(2)}` : "--"}
@@ -1238,6 +1349,50 @@ export default function FairOddsPage() {
 }
 
 /* Tournament Group */
+
+function DateSection({
+  dateKey,
+  label,
+  subLabel,
+  tournaments,
+  showStats,
+  colSpan,
+  shadowProfile,
+}: {
+  dateKey: string;
+  label: string;
+  subLabel: string;
+  tournaments: Array<{ tournament: string; matches: FairOddsMatch[] }>;
+  showStats: boolean;
+  colSpan: number;
+  shadowProfile?: string;
+}) {
+  return (
+    <>
+      <tr className="bg-[#090b11]">
+        <td
+          colSpan={colSpan}
+          className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-200 border-y border-cyan-500/20 bg-[linear-gradient(90deg,rgba(34,211,238,0.12),rgba(34,211,238,0.03),transparent)]"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <span>{label}</span>
+            <span className="text-[10px] font-medium tracking-[0.16em] text-cyan-300/60">{subLabel}</span>
+          </div>
+        </td>
+      </tr>
+      {tournaments.map(({ tournament, matches }) => (
+        <TournamentGroup
+          key={`${dateKey}-${tournament}`}
+          tournament={tournament}
+          matches={matches}
+          showStats={showStats}
+          colSpan={colSpan}
+          shadowProfile={shadowProfile}
+        />
+      ))}
+    </>
+  );
+}
 
 function TournamentGroup({
   tournament,
@@ -1294,6 +1449,7 @@ function MatchRow({
       ? m.blocked_reason
       : null;
   const hasDetailRow = rowSignals.length > 0 || !!blockedDetail;
+  const kickoffLabel = formatKickoffLabel(m.kickoff_iso, m.match_date);
 
   return (
     <>
@@ -1323,6 +1479,11 @@ function MatchRow({
                   title={primaryBadge.title}
                 >
                   {primaryBadge.label}
+                </span>
+              ) : null}
+              {kickoffLabel ? (
+                <span className="text-[10px] uppercase tracking-[0.14em] text-slate-500">
+                  {kickoffLabel}
                 </span>
               ) : null}
             </div>

@@ -1,0 +1,57 @@
+Team-shots dispersion lab
+Generated: 2026-04-24T10:27:18+00:00
+Markets input: data\team-shots\team-shots-comparison.csv
+Predictions input: data\team-shots\team-shots-predictions.csv
+Priced market rows: 117
+Matched settled rows with prediction lambdas: 72
+
+Method
+- Reprices settled team-shot O/U market rows using Poisson and negative-binomial variants.
+- Dedupes to one best-edge line per team per fixture for each variant/threshold.
+- This tests model probability shape and league gates; it does not change production yet.
+
+Best overall variants (minimum 15 deduped bets)
+- lambda_shots alpha=0.25 edge>=15%: 15 bets, 9W/6L/0P, PnL +2.01u, ROI +13.4%, avg edge 23.8%
+- lambda_shots alpha=0.15 edge>=10%: 20 bets, 12W/8L/0P, PnL +2.30u, ROI +11.5%, avg edge 23.2%
+- lambda_shots alpha=0.25 edge>=5%: 25 bets, 15W/10L/0P, PnL +2.86u, ROI +11.4%, avg edge 18.1%
+- lambda_shots alpha=0.10 edge>=10%: 22 bets, 13W/9L/0P, PnL +2.13u, ROI +9.7%, avg edge 24.0%
+- lambda_shots alpha=0.10 edge>=15%: 17 bets, 10W/7L/0P, PnL +1.47u, ROI +8.6%, avg edge 27.3%
+- lambda_shots alpha=0.15 edge>=15%: 17 bets, 10W/7L/0P, PnL +1.47u, ROI +8.6%, avg edge 25.0%
+- lambda_shots alpha=0.25 edge>=10%: 19 bets, 11W/8L/0P, PnL +1.57u, ROI +8.3%, avg edge 21.7%
+- lambda_shots alpha=0.06 edge>=15%: 19 bets, 11W/8L/0P, PnL +1.30u, ROI +6.8%, avg edge 29.0%
+- lambda_shots alpha=0.15 edge>=5%: 26 bets, 15W/11L/0P, PnL +1.77u, ROI +6.8%, avg edge 19.4%
+- lambda_shots alpha=0.00 edge>=15%: 25 bets, 14W/11L/0P, PnL +0.84u, ROI +3.4%, avg edge 33.6%
+- lambda_shots alpha=0.06 edge>=10%: 27 bets, 15W/12L/0P, PnL +0.84u, ROI +3.1%, avg edge 24.1%
+- lambda_shots alpha=0.03 edge>=20%: 16 bets, 9W/7L/0P, PnL +0.48u, ROI +3.0%, avg edge 34.9%
+
+Current best candidate
+- lambda_shots alpha=0.25 edge>=5%: 25 bets, 15W/10L/0P, PnL +2.86u, ROI +11.4%, avg edge 18.1%
+
+League block/watch candidates (minimum 8 bets)
+- Block/watch epl under blend_60venue_40recent alpha=0.00 edge>=0%: 8 bets, 2W/6L/0P, PnL -4.36u, ROI -54.5%, avg edge 22.4%
+- Block/watch epl under blend_60venue_40recent alpha=0.03 edge>=0%: 8 bets, 2W/6L/0P, PnL -4.36u, ROI -54.5%, avg edge 18.9%
+- Block/watch epl under blend_60venue_40recent alpha=0.06 edge>=0%: 8 bets, 2W/6L/0P, PnL -4.36u, ROI -54.5%, avg edge 16.5%
+- Block/watch epl under blend_60venue_40recent alpha=0.10 edge>=0%: 8 bets, 2W/6L/0P, PnL -4.36u, ROI -54.5%, avg edge 14.4%
+- Block/watch epl under blend_60venue_40recent alpha=0.15 edge>=0%: 8 bets, 2W/6L/0P, PnL -4.36u, ROI -54.5%, avg edge 12.5%
+- Block/watch epl under blend_70venue_30recent alpha=0.00 edge>=0%: 8 bets, 2W/6L/0P, PnL -4.36u, ROI -54.5%, avg edge 22.4%
+- Block/watch epl under blend_70venue_30recent alpha=0.03 edge>=0%: 8 bets, 2W/6L/0P, PnL -4.36u, ROI -54.5%, avg edge 18.8%
+- Block/watch epl under blend_70venue_30recent alpha=0.06 edge>=0%: 8 bets, 2W/6L/0P, PnL -4.36u, ROI -54.5%, avg edge 16.4%
+- Block/watch epl under blend_70venue_30recent alpha=0.10 edge>=0%: 8 bets, 2W/6L/0P, PnL -4.36u, ROI -54.5%, avg edge 14.3%
+- Block/watch epl under blend_70venue_30recent alpha=0.15 edge>=0%: 8 bets, 2W/6L/0P, PnL -4.36u, ROI -54.5%, avg edge 12.4%
+
+League positive watch candidates (minimum 8 bets)
+- Keep/promote la-liga under lambda_shots alpha=0.10 edge>=10%: 9 bets, 7W/2L/0P, PnL +3.76u, ROI +41.7%, avg edge 25.6%
+- Keep/promote la-liga under lambda_shots alpha=0.15 edge>=10%: 8 bets, 6W/2L/0P, PnL +2.92u, ROI +36.5%, avg edge 24.1%
+- Keep/promote la-liga under lambda_shots alpha=0.06 edge>=10%: 10 bets, 7W/3L/0P, PnL +2.76u, ROI +27.6%, avg edge 27.4%
+- Keep/promote la-liga under lambda_shots alpha=0.15 edge>=5%: 10 bets, 7W/3L/0P, PnL +2.76u, ROI +27.6%, avg edge 21.0%
+- Keep/promote la-liga under lambda_shots alpha=0.25 edge>=5%: 10 bets, 7W/3L/0P, PnL +2.76u, ROI +27.6%, avg edge 17.7%
+- Keep/promote la-liga under lambda_shots alpha=0.06 edge>=0%: 12 bets, 8W/4L/0P, PnL +2.59u, ROI +21.6%, avg edge 23.5%
+- Keep/promote la-liga under lambda_shots alpha=0.10 edge>=0%: 12 bets, 8W/4L/0P, PnL +2.59u, ROI +21.6%, avg edge 20.5%
+- Keep/promote la-liga under lambda_shots alpha=0.15 edge>=0%: 12 bets, 8W/4L/0P, PnL +2.59u, ROI +21.6%, avg edge 17.8%
+- Keep/promote la-liga under lambda_shots alpha=0.25 edge>=0%: 12 bets, 8W/4L/0P, PnL +2.59u, ROI +21.6%, avg edge 15.0%
+- Keep/promote la-liga under lambda_shots alpha=0.00 edge>=10%: 9 bets, 6W/3L/0P, PnL +1.76u, ROI +19.5%, avg edge 40.0%
+
+Interpretation
+- Negative-binomial alpha > 0 adds over-dispersion; it usually softens extreme Poisson confidence.
+- If NB variants outperform current Poisson on stable samples, production should use NB probabilities before calibration.
+- League gates should be applied only when the same league stays bad under the best overall variant and the live shadow record agrees.
