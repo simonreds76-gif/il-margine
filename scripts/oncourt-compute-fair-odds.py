@@ -3249,6 +3249,11 @@ def main():
                 if (mc1 is not None and int(mc1 or 0) < 10) or (mc2 is not None and int(mc2 or 0) < 10):
                     print(f"    ^ Low match_count -> hold/return may be noisy. Re-run oncourt-compute-player-stats after fresh extract, or add prior when sample small.")
 
+        # Store the same point-probability shape used to price totals/spreads.
+        # The raw matchup p_a/p_b still feeds p_serve_return as one ML blend
+        # component, but the published ML fair can move after Elo/rank/form/
+        # calibration overlays. Persisting the raw pair made the handicap layer
+        # reject many rows as "divergent" from the final fair.
         out.append({
             "tour_id": tour_id,
             "player1_id": p1,
@@ -3258,8 +3263,8 @@ def main():
             "draw": draw,
             "p1_win_prob": round(p1_win, 4),
             "p2_win_prob": round(p2_win, 4),
-            "p_a": round(p_a, 4),
-            "p_b": round(p_b, 4),
+            "p_a": round(p_a_eg, 4),
+            "p_b": round(p_b_eg, 4),
             "p_serve_return": round(p_serve_return, 4),
             "p_elo": round(p_elo, 4),
             "odds1": round(odds1, 2),
