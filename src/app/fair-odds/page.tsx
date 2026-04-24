@@ -813,16 +813,16 @@ function handicapShapeMeta(source?: SignalSummary["handicap_point_prob_source"] 
   }
   if (source === "fallback_divergent_gap") {
     return {
-      label: "HC-FALLBACK",
+      label: "HC-HIDDEN",
       cls: "border-rose-500/25 bg-rose-500/10 text-rose-200",
-      title: "Handicap fell back to reverse-solved point probabilities because stored shape diverged from final match probability",
+      title: "Handicap edge hidden because stored point probabilities diverge from the final match probability",
     };
   }
   if (source === "fallback_missing") {
     return {
-      label: "HC-FALLBACK",
+      label: "HC-HIDDEN",
       cls: "border-rose-500/25 bg-rose-500/10 text-rose-200",
-      title: "Handicap fell back to reverse-solved point probabilities because stored point probabilities were missing",
+      title: "Handicap edge hidden because stored point probabilities are missing",
     };
   }
   return null;
@@ -1441,11 +1441,15 @@ function MatchRow({
   const ouLines = SHOW_OU_COLUMNS ? parseOULines(m) : [];
   const hasPinnacle = m.pinnacle_odds1 != null && m.pinnacle_odds1 > 0;
   const handicapShape = handicapShapeMeta(m.handicap_point_prob_source);
+  const handicapEdgeHidden =
+    m.spread_line != null &&
+    m.handicap_point_prob_source != null &&
+    m.handicap_point_prob_source !== "stored_p_a_p_b";
   const rowSignals = rowSignalSort(m.row_signals ?? []);
   const bestValue = bestValueBadge(m);
   const primaryBadge = primarySignalBadgeMeta(m, rowSignals, shadowProfile);
   const blockedDetail =
-    m.blocked_reason && !m.policy_match && !m.shadow_match && bestValue && bestValue.value > 0
+    m.blocked_reason && !m.policy_match && !m.shadow_match
       ? m.blocked_reason
       : null;
   const hasDetailRow = rowSignals.length > 0 || !!blockedDetail;
@@ -1507,9 +1511,9 @@ function MatchRow({
         <td className="text-center px-2.5 py-3 font-mono tabular-nums text-[13px]">
           <span
             className={`inline-flex rounded-md px-1.5 py-0.5 ${bestValue ? `${valueColor(bestValue.value)} ${valueBg(bestValue.value)}` : "text-slate-500"}`}
-            title="Best-side value % = (Pinnacle / Our odds) - 1"
+            title={bestValue ? "Best-side value % = (Pinnacle / Our odds) - 1" : blockedDetail ?? "No display-safe value"}
           >
-            {bestValue ? `${bestValue.side} ${fmtPct(bestValue.value)}` : "--"}
+            {bestValue ? `${bestValue.side} ${fmtPct(bestValue.value)}` : blockedDetail ? <span className="text-amber-300/80">guarded</span> : "--"}
           </span>
         </td>
 
@@ -1543,6 +1547,11 @@ function MatchRow({
                   {m.handicap_edge_p2 != null ? `${m.handicap_edge_p2 > 0 ? "+" : ""}${m.handicap_edge_p2.toFixed(1)}%` : "--"}
                 </span>
               </div>
+              {handicapEdgeHidden ? (
+                <div className="pt-0.5 text-[10px] font-sans text-rose-300/70">
+                  edge hidden: model shape drift
+                </div>
+              ) : null}
             </div>
           ) : (
             <span className="text-slate-600 text-xs">--</span>

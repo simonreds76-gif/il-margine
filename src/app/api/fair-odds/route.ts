@@ -2116,8 +2116,11 @@ async function run(): Promise<Response> {
       r.handicap_edge_p1 != null &&
       r.handicap_edge_p2 != null;
     const spreadLine = hasCurrentSpreadData ? Number(r.spread_line) : undefined;
-    const handicapEdgeP1 = hasCurrentSpreadData ? Number(r.handicap_edge_p1) : undefined;
-    const handicapEdgeP2 = hasCurrentSpreadData ? Number(r.handicap_edge_p2) : undefined;
+    const spreadOdds1 = hasCurrentSpreadData ? Number(r.spread_odds1) : undefined;
+    const spreadOdds2 = hasCurrentSpreadData ? Number(r.spread_odds2) : undefined;
+    const hasTrustedSpreadShape = hasCurrentSpreadData && handicapPointProbSource === "stored_p_a_p_b";
+    const handicapEdgeP1 = hasTrustedSpreadShape ? Number(r.handicap_edge_p1) : undefined;
+    const handicapEdgeP2 = hasTrustedSpreadShape ? Number(r.handicap_edge_p2) : undefined;
     const p1Injury = isRecentInjuredPlayer(p1Name, injuryIndex);
     const p2Injury = isRecentInjuredPlayer(p2Name, injuryIndex);
     const recentInjuredAny = p1Injury.matched || p2Injury.matched;
@@ -2270,9 +2273,8 @@ async function run(): Promise<Response> {
     const valueP1 = STRICT_POLICY_MODE ? strictPublicValueP1 : confidence === "none" ? undefined : rawValueP1;
     const valueP2 = STRICT_POLICY_MODE ? strictPublicValueP2 : confidence === "none" ? undefined : rawValueP2;
     const policyMatch = STRICT_POLICY_MODE ? valueP1 != null || valueP2 != null : false;
-    // Always surface the raw ML value in the fair-odds table when both our fair
-    // odds and Pinnacle odds are present. Policy / signal routing still applies
-    // separately; this only affects what the user can inspect on the board.
+    // Surface only display-safe ML value. Blocked raw values remain excluded from
+    // signal routing and should not look actionable in the fair-odds table.
     const suppressDisplayValueP1 =
       confidence === "none" ||
       mispriceExcluded ||
@@ -2286,11 +2288,11 @@ async function run(): Promise<Response> {
       strictFavoriteSpreadConflictP2 ||
       strictOppositeHandicapConflictP2;
     const displayValueP1 =
-      pinnacle && ourOdds1 > 1 && pinnacle.pinnacle_odds1 > 1
+      !suppressDisplayValueP1 && pinnacle && ourOdds1 > 1 && pinnacle.pinnacle_odds1 > 1
         ? rawValueP1
         : undefined;
     const displayValueP2 =
-      pinnacle && ourOdds2 > 1 && pinnacle.pinnacle_odds2 > 1
+      !suppressDisplayValueP2 && pinnacle && ourOdds2 > 1 && pinnacle.pinnacle_odds2 > 1
         ? rawValueP2
         : undefined;
     if (policyMatch) strictPolicySignaledCount += 1;
@@ -2429,8 +2431,8 @@ async function run(): Promise<Response> {
       pinnacle_ou_over: pinnacle?.pinnacle_ou_over,
       pinnacle_ou_under: pinnacle?.pinnacle_ou_under,
       spread_line: spreadLine,
-      spread_odds1: hasCurrentSpreadData ? Number(r.spread_odds1) : undefined,
-      spread_odds2: hasCurrentSpreadData ? Number(r.spread_odds2) : undefined,
+      spread_odds1: spreadOdds1,
+      spread_odds2: spreadOdds2,
       handicap_edge_p1: handicapEdgeP1,
       handicap_edge_p2: handicapEdgeP2,
       handicap_point_prob_source: handicapPointProbSource,
