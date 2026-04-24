@@ -91,6 +91,8 @@ export interface FairOddsRow {
   spread_v1_reason?: string;
   ml_short_fav_model_guard?: boolean;
   ml_short_fav_market_guard?: boolean;
+  ml_model_market_gap_guard?: boolean;
+  ml_model_market_fav_gap?: number;
   short_fav_dog_spread_guard_p1?: boolean;
   short_fav_dog_spread_guard_p2?: boolean;
   blocked_reason?: string;
@@ -207,6 +209,7 @@ const MIN_VENUE_SPW_MATCHES = 50;
 // stored point-based shape drifts too far from the blended ML model, treat it
 // as a divergent fallback case rather than a trusted stored shape.
 const POINT_PROB_MATCH_PROB_GAP_MAX = 0.08;
+const MODEL_MARKET_FAV_PROB_GAP_MAX = 0.10;
 const SPEED_RATIO_CLAMP: [number, number] = [0.92, 1.08];
 const TOURNAMENT_SPEED_VENUE_COMPONENT_WEIGHT = 0.75;
 const TOURNAMENT_SPEED_SHIFT_COMPONENT_WEIGHT = 0.25;
@@ -774,6 +777,7 @@ function firstBlockedReason(params: {
   recentInjuredAny: boolean;
   pinnacleShortFavoriteExcluded: boolean;
   modelShortFavoriteExcluded: boolean;
+  modelMarketGapExcluded: boolean;
   atp500HardShortFavoriteExcluded: boolean;
   heavyFavoriteDogExcluded: boolean;
   favoriteSpreadConflictExcluded: boolean;
@@ -786,6 +790,7 @@ function firstBlockedReason(params: {
   if (params.recentInjuredAny) return "Blocked: recent injury flag";
   if (params.pinnacleShortFavoriteExcluded) return "Blocked: Pinnacle fav <1.25";
   if (params.modelShortFavoriteExcluded) return "Blocked: model fav <1.25";
+  if (params.modelMarketGapExcluded) return "Blocked: model/market favourite gap >10pp";
   if (params.atp500HardShortFavoriteExcluded) return "Blocked: ATP500 Hard short-favourite ML filter";
   if (params.heavyFavoriteDogExcluded) return "Blocked: Masters hard heavy-favorite dog ML guard";
   if (params.favoriteSpreadConflictExcluded) return "Blocked: same-match favourite handicap conflict";
@@ -806,6 +811,7 @@ function mlDisplayGuardReason(params: {
   suppressDisplayValueP2: boolean;
   pinnacleShortFavoriteExcluded: boolean;
   modelShortFavoriteExcluded: boolean;
+  modelMarketGapExcluded: boolean;
   heavyFavoriteDogExcluded: boolean;
   favoriteSpreadConflictExcluded: boolean;
   oppositeSideHandicapConflictExcluded: boolean;
@@ -815,6 +821,9 @@ function mlDisplayGuardReason(params: {
   if (!positiveSuppressedP1 && !positiveSuppressedP2) return undefined;
   if (params.pinnacleShortFavoriteExcluded || params.modelShortFavoriteExcluded) {
     return "ML value hidden: favourite <1.25";
+  }
+  if (params.modelMarketGapExcluded) {
+    return "ML value hidden: model/market favourite gap >10pp";
   }
   if (params.heavyFavoriteDogExcluded) {
     return "ML value hidden: heavy-favourite dog guard";
@@ -2108,6 +2117,12 @@ async function run(): Promise<Response> {
           : "fallback_divergent_gap";
     const modelFavoriteProb = Math.max(p1WinProb, p2WinProb);
     const modelFavoriteSide: "P1" | "P2" = p1WinProb >= p2WinProb ? "P1" : "P2";
+    const pinP1NoVig =
+      pinnacle != null && pinnacle.pinnacle_odds1 > 1 && pinnacle.pinnacle_odds2 > 1
+        ? (1 / pinnacle.pinnacle_odds1) / ((1 / pinnacle.pinnacle_odds1) + (1 / pinnacle.pinnacle_odds2))
+        : undefined;
+    const modelMarketFavoriteGap =
+      pinP1NoVig != null ? Math.abs(modelFavoriteProb - Math.max(pinP1NoVig, 1 - pinP1NoVig)) : undefined;
     const hasCurrentSpreadData =
       pinnacle != null &&
       r.spread_line != null &&
@@ -2119,8 +2134,8 @@ async function run(): Promise<Response> {
     const spreadOdds1 = hasCurrentSpreadData ? Number(r.spread_odds1) : undefined;
     const spreadOdds2 = hasCurrentSpreadData ? Number(r.spread_odds2) : undefined;
     const hasTrustedSpreadShape = hasCurrentSpreadData && handicapPointProbSource === "stored_p_a_p_b";
-    const handicapEdgeP1 = hasTrustedSpreadShape ? Number(r.handicap_edge_p1) : undefined;
-    const handicapEdgeP2 = hasTrustedSpreadShape ? Number(r.handicap_edge_p2) : undefined;
+    const rawHandicapEdgeP1 = hasTrustedSpreadShape ? Number(r.handicap_edge_p1) : undefined;
+    const rawHandicapEdgeP2 = hasTrustedSpreadShape ? Number(r.handicap_edge_p2) : undefined;
     const p1Injury = isRecentInjuredPlayer(p1Name, injuryIndex);
     const p2Injury = isRecentInjuredPlayer(p2Name, injuryIndex);
     const recentInjuredAny = p1Injury.matched || p2Injury.matched;
@@ -2149,8 +2164,14 @@ async function run(): Promise<Response> {
       STRICT_POLICY_MODE &&
       pinnacle != null &&
       Math.min(pinnacle.pinnacle_odds1 ?? 0, pinnacle.pinnacle_odds2 ?? 0) < STRICT_POLICY_MISPRICE_FAV_ODDS_MIN;
+    const modelMarketGapExcluded =
+      STRICT_POLICY_MODE &&
+      modelMarketFavoriteGap != null &&
+      modelMarketFavoriteGap > MODEL_MARKET_FAV_PROB_GAP_MAX;
     const injuryExcluded = STRICT_POLICY_MODE && STRICT_INJURY_OVERLAY_ENABLED && recentInjuredAny;
-    const mispriceExcluded = modelFavOddsMispriceExcluded || pinFavOddsMispriceExcluded;
+    const mispriceExcluded = modelFavOddsMispriceExcluded || pinFavOddsMispriceExcluded || modelMarketGapExcluded;
+    const handicapEdgeP1 = !modelMarketGapExcluded ? rawHandicapEdgeP1 : undefined;
+    const handicapEdgeP2 = !modelMarketGapExcluded ? rawHandicapEdgeP2 : undefined;
     if (
       policyBaseAllows &&
       (shortFavoriteExcluded || mispriceExcluded || injuryExcluded)
@@ -2371,6 +2392,7 @@ async function run(): Promise<Response> {
       suppressDisplayValueP2,
       pinnacleShortFavoriteExcluded: pinFavOddsMispriceExcluded,
       modelShortFavoriteExcluded: modelFavOddsMispriceExcluded,
+      modelMarketGapExcluded,
       heavyFavoriteDogExcluded: strictHeavyFavoriteDogExcludedP1 || strictHeavyFavoriteDogExcludedP2,
       favoriteSpreadConflictExcluded: strictFavoriteSpreadConflictP1 || strictFavoriteSpreadConflictP2,
       oppositeSideHandicapConflictExcluded:
@@ -2381,6 +2403,7 @@ async function run(): Promise<Response> {
       recentInjuredAny,
       pinnacleShortFavoriteExcluded: pinFavOddsMispriceExcluded,
       modelShortFavoriteExcluded: modelFavOddsMispriceExcluded,
+      modelMarketGapExcluded,
       atp500HardShortFavoriteExcluded: shortFavoriteExcluded,
       heavyFavoriteDogExcluded: strictHeavyFavoriteDogExcludedP1 || strictHeavyFavoriteDogExcludedP2,
       favoriteSpreadConflictExcluded: strictFavoriteSpreadConflictP1 || strictFavoriteSpreadConflictP2,
@@ -2459,6 +2482,9 @@ async function run(): Promise<Response> {
       spread_v1_reason: spreadV1Reason ?? undefined,
       ml_short_fav_model_guard: modelFavOddsMispriceExcluded,
       ml_short_fav_market_guard: pinFavOddsMispriceExcluded,
+      ml_model_market_gap_guard: modelMarketGapExcluded,
+      ml_model_market_fav_gap:
+        modelMarketFavoriteGap != null ? Math.round(modelMarketFavoriteGap * 10000) / 10000 : undefined,
       short_fav_dog_spread_guard_p1: shortFavDogSpreadGuardP1,
       short_fav_dog_spread_guard_p2: shortFavDogSpreadGuardP2,
       blocked_reason: blockedReason,

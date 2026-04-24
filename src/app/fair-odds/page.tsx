@@ -59,6 +59,10 @@ interface FairOddsMatch {
   series_bucket?: string;
   policy_match?: boolean;
   shadow_match?: boolean;
+  ml_short_fav_model_guard?: boolean;
+  ml_short_fav_market_guard?: boolean;
+  ml_model_market_gap_guard?: boolean;
+  ml_model_market_fav_gap?: number;
   blocked_reason?: string;
   tournament_speed_signal?: number;
   fast_clay_flag?: boolean;
@@ -1443,8 +1447,17 @@ function MatchRow({
   const handicapShape = handicapShapeMeta(m.handicap_point_prob_source);
   const handicapEdgeHidden =
     m.spread_line != null &&
-    m.handicap_point_prob_source != null &&
-    m.handicap_point_prob_source !== "stored_p_a_p_b";
+    (
+      m.ml_model_market_gap_guard ||
+      (
+        m.handicap_point_prob_source != null &&
+        m.handicap_point_prob_source !== "stored_p_a_p_b"
+      )
+    );
+  const handicapHiddenReason =
+    m.ml_model_market_gap_guard
+      ? "edge hidden: ML/market mismatch"
+      : "edge hidden: model shape drift";
   const rowSignals = rowSignalSort(m.row_signals ?? []);
   const bestValue = bestValueBadge(m);
   const primaryBadge = primarySignalBadgeMeta(m, rowSignals, shadowProfile);
@@ -1549,7 +1562,7 @@ function MatchRow({
               </div>
               {handicapEdgeHidden ? (
                 <div className="pt-0.5 text-[10px] font-sans text-rose-300/70">
-                  edge hidden: model shape drift
+                  {handicapHiddenReason}
                 </div>
               ) : null}
             </div>

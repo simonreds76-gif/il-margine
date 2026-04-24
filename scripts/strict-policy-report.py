@@ -39,6 +39,10 @@ from bisect import bisect_left
 
 import requests
 
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
+
 from injury_overlay import env_bool, load_recent_injury_index
 from signal_storage import (
     SIGNAL_PROFILE_PATHS,
@@ -48,6 +52,7 @@ from signal_storage import (
     SignalCsvPaths,
     derive_signal_csv_paths,
 )
+from src.lib.tennis_prob import prob_match_best_of_3
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -76,7 +81,9 @@ EXCLUDE_SHORT_FAV_CONFIDENCE = {"high"}
 # Phantom underdog edges (model 1.15 vs Pin 1.02) cause guaranteed losses.
 # Skip matches where model favourite odds < 1.25.
 # The model cannot price extreme mismatches — both sides are unreliable.
+MISPRICE_MODEL_MARKET_FAV_GAP_MAX = 0.10
 MISPRICE_MODEL_FAV_ODDS_MIN = 1.25
+POINT_PROB_MATCH_PROB_GAP_MAX = 0.08
 HEAVY_FAV_DOG_GUARD_MIN_FAV_PROB = 0.74
 
 DEFAULT_OVERLAY_POLICY_FILE = DATA_DIR / "tournament-segment-roi.csv"
@@ -250,6 +257,16 @@ def tour_key_candidates(name: str | None) -> list[str]:
 
 def _safe_prob(p: float) -> float:
     return max(1e-6, min(1.0 - 1e-6, float(p)))
+
+
+def _parse_point_prob(value: Any) -> float | None:
+    try:
+        p = float(value)
+    except (TypeError, ValueError):
+        return None
+    if not (0.0 < p < 1.0):
+        return None
+    return p
 
 
 def _load_piecewise_prob_map(path: Path) -> list[tuple[float, float]]:
@@ -1152,7 +1169,7 @@ def main() -> int:
         f"{base}/daily_fair_odds",
         headers=headers,
         params={
-            "select": "id,tour_id,player1_id,player2_id,surface,p1_win_prob,p2_win_prob,odds1,odds2,confidence,spread_line,spread_odds1,spread_odds2,handicap_edge_p1,handicap_edge_p2",
+            "select": "id,tour_id,player1_id,player2_id,surface,p1_win_prob,p2_win_prob,odds1,odds2,p_a,p_b,confidence,spread_line,spread_odds1,spread_odds2,handicap_edge_p1,handicap_edge_p2",
             "limit": 2000,
         },
         timeout=30,
@@ -1307,6 +1324,21 @@ def main() -> int:
         # ML only: skip when Pinnacle favourite odds < 1.25. Keep spreads eligible.
         pin_fav_odds = min(float(pin["odds1"] or 0), float(pin["odds2"] or 0))
         pin_ml_excluded = pin_fav_odds > 0 and pin_fav_odds < MISPRICE_MODEL_FAV_ODDS_MIN
+        pin_inv1 = 1.0 / float(pin["odds1"] or 1.0)
+        pin_inv2 = 1.0 / float(pin["odds2"] or 1.0)
+        pin_total_inv = pin_inv1 + pin_inv2
+        pin_p1_no_vig = pin_inv1 / pin_total_inv if pin_total_inv > 0 else 0.5
+        model_market_fav_gap = abs(model_favorite_prob - max(pin_p1_no_vig, 1.0 - pin_p1_no_vig))
+        model_market_gap_excluded = model_market_fav_gap > MISPRICE_MODEL_MARKET_FAV_GAP_MAX
+
+        stored_pa = _parse_point_prob(r.get("p_a"))
+        stored_pb = _parse_point_prob(r.get("p_b"))
+        stored_match_prob = prob_match_best_of_3(stored_pa, stored_pb) if stored_pa is not None and stored_pb is not None else None
+        handicap_point_prob_gap = stored_match_prob - p1_win_prob if stored_match_prob is not None else None
+        handicap_shape_trusted = (
+            handicap_point_prob_gap is not None
+            and abs(handicap_point_prob_gap) <= POINT_PROB_MATCH_PROB_GAP_MAX
+        )
 
         value_p1 = (pin["odds1"] / our_odds1 - 1) * 100 if our_odds1 > 1 else None
         value_p2 = (pin["odds2"] / our_odds2 - 1) * 100 if our_odds2 > 1 else None
@@ -1357,6 +1389,7 @@ def main() -> int:
             strict_min_value is not None
             and not model_ml_excluded
             and not pin_ml_excluded
+            and not model_market_gap_excluded
             and not atp500_short_favorite_ml_excluded
             and has_internal_ml_value
             and value_pct is not None
@@ -1369,6 +1402,7 @@ def main() -> int:
             and not strict_match
             and not model_ml_excluded
             and not pin_ml_excluded
+            and not model_market_gap_excluded
             and not atp500_short_favorite_ml_excluded
             and has_internal_ml_value
             and value_pct is not None
@@ -1378,6 +1412,7 @@ def main() -> int:
             clay_calibrated_enabled
             and not model_ml_excluded
             and not pin_ml_excluded
+            and not model_market_gap_excluded
             and not atp500_short_favorite_ml_excluded
             and calibrated_value_pct is not None
             and calibrated_value_pct >= CLAY_CALIBRATED_MIN_VALUE_PCT
@@ -1542,6 +1577,8 @@ def main() -> int:
             and spread_o2 is not None
             and he_p1 is not None
             and he_p2 is not None
+            and handicap_shape_trusted
+            and not model_market_gap_excluded
             and not inj_any
         ):
             edge_threshold = (
