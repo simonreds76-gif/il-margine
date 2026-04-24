@@ -1,20 +1,27 @@
 ==============================================================================
-  MATCHDAY SHORTLIST -- 2026-04-24 17:45 UTC
+  MATCHDAY SHORTLIST -- 2026-04-24 17:02 UTC
 ==============================================================================
-  Policy: V3.1 (divergence gate active)
+  Lane: Research lane - looser internal review lane (8% EV threshold)
+  Divergence gate: active
   Policy lines: 8.5, 9.5, 10.5, 11.5 | Min edge: 8.0%
   Odds source: Pinnacle guest snapshot
 
-  Match                             Line   Side    Fair     Ref    Edge   Stake    Tier
+  Match                             Line   Side    Fair     Ref   Value   Stake    Tier
   ------------------------------  ------  -----  ------  ------  ------  ------  ------
-  Torino vs Internazionale          8.5   over    1.45    1.74  +11.3%    0.4u    TINY
+  Atletico Madrid vs Athletic Bi    9.5  under    1.79    2.05  +14.5%    0.6u     LOW  [DIVG]
+  Angers vs Paris Saint-Germain     9.5   over    1.82    2.01  +10.4%    0.2u    TINY
+  Sunderland vs Nottingham Fores    9.5   over    1.79    1.97  +10.2%    0.2u    TINY
 
-  Total bets: 1  |  Total stake: 0.4u
+  Total bets: 3  |  Total stake: 1.0u
+
+    epl: 1 bets, avg edge +10.2%
+    la-liga: 1 bets, avg edge +14.5%
+    ligue-1: 1 bets, avg edge +10.4%
 
   Ref odds = Pinnacle (sharpest market). Bet on bet365/Paddy Power if similar or better.
   Base tiers: 0.25u (10-12%) | 0.5u (12-15%) | 1u (15-20%) | 1.5u (20-25%) | 2u (25%+)
   League multipliers: Serie A x1.5 | La Liga x1.25 | Bundesliga x1.0 | EPL x0.75 | Ligue 1 x0.75 (cap 0.5u)
-  [DIVG] recent form diverges 15-30% from season EMA — flagged
-  [CONF] recent form diverges 30-45% — stake downgraded when applicable
-  [EXTR] recent form diverges >45% — suppressed (MEDIUM) or downgraded (HIGH)
+  [DIVG] recent form diverges 15-30% from season EMA - flagged
+  [CONF] recent form diverges 30-45% - stake downgraded when applicable
+  [EXTR] recent form diverges >45% - suppressed (MEDIUM) or downgraded (HIGH)
 ==============================================================================
