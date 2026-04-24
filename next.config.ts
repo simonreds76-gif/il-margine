@@ -11,6 +11,20 @@ const nextConfig: NextConfig = {
   // Keep unrelated tennis-model datasets out of the football monitor functions.
   // The goalscorer monitor now reads a compact snapshot payload instead of raw league trees.
   outputFileTracingExcludes: {
+    "/api/fair-odds": [
+      "./data/goalscorer/**",
+      "./data/corners-ou/**",
+      "./data/team-shots/**",
+      "./data/shortlist/**",
+      "./data/exports/**",
+      "./data/results-snapshot/**",
+      "./data/sackmann/**",
+      "./data/oncourt/games_atp.csv",
+      "./data/oncourt/stat_atp.csv",
+      "./data/oncourt/categories_atp.csv",
+      "./data/oncourt/players_atp.csv",
+      "./data/oncourt/tours_atp.csv",
+    ],
     "/model-monitor/goalscorer": [
       "./data/oncourt/**",
       "./tml-data/**",

@@ -21,7 +21,6 @@ const PINNACLE_SNAPSHOT_SELECT =
 const PINNACLE_SNAPSHOT_SELECT_LEGACY =
   "player1_name, player2_name, odds1, odds2, ou_line, ou_over, ou_under, league, captured_at";
 const PINNACLE_SNAPSHOT_ROW_CAP = 12000;
-const LOCAL_PINNACLE_ODDS_DIR = path.join(process.cwd(), "data");
 const LOCAL_PINNACLE_HISTORY_DIR = path.join(process.cwd(), "data", "pinnacle-history");
 const LOCAL_ONCOURT_TODAY_CSV = path.join(process.cwd(), "data", "oncourt", "today_atp.csv");
 
@@ -1044,81 +1043,6 @@ function loadRecentLocalPinnacleHistory(activeDates: string[]): PinnacleSourceRo
   return Array.from(latestByPair.values());
 }
 
-function loadRecentLocalPinnacleOdds(activeDates: string[]): PinnacleSourceRow[] {
-  if (!fs.existsSync(LOCAL_PINNACLE_ODDS_DIR)) return [];
-  const dateKeys = new Set(activeDates);
-  const latestByPair = new Map<string, PinnacleSourceRow>();
-
-  let fileNames: string[] = [];
-  try {
-    fileNames = fs
-      .readdirSync(LOCAL_PINNACLE_ODDS_DIR)
-      .filter((name) => name.startsWith("pinnacle-odds-") && name.endsWith(".csv"))
-      .filter((name) => {
-        const dateKey = name.slice("pinnacle-odds-".length, "pinnacle-odds-".length + 10);
-        return dateKeys.has(dateKey);
-      })
-      .sort()
-      .reverse();
-  } catch (error) {
-    console.warn("[fair-odds] Could not read local Pinnacle odds directory", error);
-    return [];
-  }
-
-  for (const fileName of fileNames) {
-    const filePath = path.join(LOCAL_PINNACLE_ODDS_DIR, fileName);
-    let text = "";
-    let capturedAt = "";
-    try {
-      text = fs.readFileSync(filePath, "utf8");
-      capturedAt = fs.statSync(filePath).mtime.toISOString();
-    } catch (error) {
-      console.warn(`[fair-odds] Could not read local Pinnacle odds file: ${filePath}`, error);
-      continue;
-    }
-    const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
-    if (lines.length < 2) continue;
-    const header = parseCsvLine(lines[0]);
-    const index = new Map<string, number>();
-    header.forEach((h, i) => index.set(h, i));
-    const required = ["league", "player1_name", "player2_name", "odds1", "odds2"];
-    if (required.some((name) => !index.has(name))) continue;
-    const get = (cols: string[], name: string) => cols[index.get(name) ?? -1] ?? "";
-
-    for (let i = 1; i < lines.length; i += 1) {
-      const cols = parseCsvLine(lines[i]);
-      const league = parseCsvLeague(get(cols, "league"));
-      if (!league) continue;
-      const player1Name = get(cols, "player1_name").trim();
-      const player2Name = get(cols, "player2_name").trim();
-      if (!player1Name || !player2Name) continue;
-      const odds1 = parseCsvNumber(get(cols, "odds1"));
-      const odds2 = parseCsvNumber(get(cols, "odds2"));
-      if (odds1 == null || odds2 == null) continue;
-
-      const row: PinnacleSourceRow = {
-        player1_name: player1Name,
-        player2_name: player2Name,
-        odds1,
-        odds2,
-        ou_line: parseCsvNumber(get(cols, "ou_line")),
-        ou_over: parseCsvNumber(get(cols, "ou_over")),
-        ou_under: parseCsvNumber(get(cols, "ou_under")),
-        league,
-        tournament: get(cols, "league_name").trim() || undefined,
-        captured_at: capturedAt || undefined,
-        match_date: get(cols, "match_date").trim() || undefined,
-        kickoff_iso: get(cols, "kickoff_iso").trim() || undefined,
-      };
-      const key = normalizePinnaclePairKey(row.player1_name, row.player2_name, row.league);
-      if (!key || latestByPair.has(key)) continue;
-      latestByPair.set(key, row);
-    }
-  }
-
-  return Array.from(latestByPair.values());
-}
-
 function loadLocalOncourtTodayRows(): Array<{
   tour_id: number;
   player1_id: number;
@@ -1858,15 +1782,9 @@ async function run(): Promise<Response> {
     }))
     .filter((row) => row.player1_name && row.player2_name && row.odds1 > 0 && row.odds2 > 0);
 
-  const localDailyRows = loadRecentLocalPinnacleOdds([today, yesterday]);
   const localHistoryRows = loadRecentLocalPinnacleHistory([today, yesterday]);
-  pinnacleRows = dedupeLatestPinnacleRows([...localDailyRows, ...snapshotRows, ...localHistoryRows]);
+  pinnacleRows = dedupeLatestPinnacleRows([...snapshotRows, ...localHistoryRows]);
 
-  if (localDailyRows.length > 0) {
-    console.log(
-      `[fair-odds] Local Pinnacle daily CSV supplement: ${localDailyRows.length} rows across ${today} / ${yesterday}.`
-    );
-  }
   if (localHistoryRows.length > 0) {
     console.log(
       `[fair-odds] Local Pinnacle history supplement: ${localHistoryRows.length} recent rows across ${today} / ${yesterday}.`
