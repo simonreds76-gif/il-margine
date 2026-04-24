@@ -6,12 +6,13 @@
     "dev": "next dev --webpack",
     "dev:turbo": "next dev",
     "daily-odds": "python scripts/run-daily-odds.py",
-    "build": "next build",
+    "build": "next build && node scripts/check-vercel-trace.mjs",
     "start": "next start",
     "lint": "eslint",
     "create-logos": "node scripts/create-placeholder-logos.js",
     "download-logos": "node scripts/download-real-logos.js",
-    "check-last7": "node scripts/check-last7.js"
+    "check-last7": "node scripts/check-last7.js",
+    "check:vercel-trace": "node scripts/check-vercel-trace.mjs"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.43",
