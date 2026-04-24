@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 Settle matchday shortlist value-bets against actual corner results.
 
@@ -31,7 +31,13 @@ from settlement_audit import (
     load_settlement_overrides,
     write_audit,
 )
-from settlement_utils import load_manual_settlement_results, load_results_snapshot, normalize_team_name
+from settlement_utils import (
+    build_fixture_key,
+    load_manual_settlement_results,
+    load_results_snapshot,
+    normalize_team_name,
+    parse_isoish_date,
+)
 
 ROOT = Path(__file__).resolve().parent.parent
 SHORTLIST_DIR   = ROOT / "data" / "shortlist"
@@ -40,12 +46,22 @@ PNL_REPORT_PATH = ROOT / "data" / "shortlist" / "corners-live-pnl.txt"
 PINNACLE_ODDS_PATH = ROOT / "data" / "corners-ou" / "pinnacle-corners-odds.csv"
 AUDIT_PATH = ROOT / "data" / "shortlist" / "settlement-audit.json"
 OVERRIDES_PATH = ROOT / "data" / "settlement-overrides.csv"
+HISTORICAL_RESULTS_DIR = ROOT / "data" / "corners-ou" / "historical"
 DEFAULT_POLICY_VERSION = "V2"
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+
+def policy_display_name(policy_version: str) -> str:
+    version = (policy_version or "").strip()
+    return {
+        "V3": "Official live lane",
+        "V3.1": "Research lane",
+        "V2": "Archive",
+    }.get(version, version or "Unknown lane")
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -187,6 +203,76 @@ def _pf(val: object, default: float = 0.0) -> float:
         return default
 
 
+def _parse_optional_int(raw: object) -> Optional[int]:
+    text = str(raw or "").strip()
+    if not text:
+        return None
+    try:
+        return int(float(text))
+    except (TypeError, ValueError):
+        return None
+
+
+def load_historical_corner_results() -> Dict[str, dict]:
+    """
+    Load actual corner results from the historical corner CSVs.
+
+    Results snapshots can miss recently settled fixtures when an upstream API is
+    incomplete. The historical Football-Data files are already refreshed by the
+    corners pipeline and include HC/AC, so they are the safest local fallback.
+    """
+    results: Dict[str, dict] = {}
+    if not HISTORICAL_RESULTS_DIR.exists():
+        return results
+
+    for path in sorted(HISTORICAL_RESULTS_DIR.glob("*.csv")):
+        if path.name == "all-historical-matches.csv":
+            continue
+        with open(path, "r", encoding="utf-8-sig", newline="") as fh:
+            for row in csv.DictReader(fh):
+                match_date = parse_isoish_date(row.get("Date") or row.get("date") or "")
+                home_team = (row.get("HomeTeam") or row.get("home_team") or "").strip()
+                away_team = (row.get("AwayTeam") or row.get("away_team") or "").strip()
+                home_corners = _parse_optional_int(row.get("HC") or row.get("actual_home_corners"))
+                away_corners = _parse_optional_int(row.get("AC") or row.get("actual_away_corners"))
+                if match_date is None or not home_team or not away_team:
+                    continue
+                if home_corners is None or away_corners is None:
+                    continue
+                key = build_fixture_key(match_date, home_team, away_team)
+                results[key] = {
+                    "home_team": normalize_team_name(home_team),
+                    "away_team": normalize_team_name(away_team),
+                    "home_corners": home_corners,
+                    "away_corners": away_corners,
+                    "total_corners": home_corners + away_corners,
+                    "source": f"historical-corners:{path.name}",
+                }
+    return results
+
+
+def merge_manual_results_for_corners(actual: Dict[str, dict], manual_results: Dict[str, dict]) -> Dict[str, dict]:
+    """
+    Merge manual overrides without letting shots-only rows hide corner results.
+
+    Team-shots and corners share the same override CSV. A row can legitimately
+    contain only shot totals, but corners settlement must keep any existing
+    HC/AC/total_corners from snapshots or historical results.
+    """
+    merged = dict(actual)
+    for key, manual in manual_results.items():
+        existing = merged.get(key)
+        if existing and existing.get("total_corners") is not None and manual.get("total_corners") is None:
+            combined = {**manual, **existing}
+            for stat_key in ("home_shots", "away_shots"):
+                if stat_key in manual:
+                    combined[stat_key] = manual[stat_key]
+            merged[key] = combined
+        else:
+            merged[key] = {**(existing or {}), **manual}
+    return merged
+
+
 def _fixture_date_for_row(row: dict) -> str:
     return (
         ((row.get("kick_off") or "").strip()[:10])
@@ -242,6 +328,41 @@ def _rerun_fixture_identity(row: dict) -> str:
     fixture_date = _fixture_date_for_row(row)
     file_date = (row.get("file_date") or "").strip()[:10]
     return f"{file_date}|{league_norm}|{fixture_date}|{match_norm}"
+
+
+def _split_match(match: str) -> tuple[str, str] | tuple[None, None]:
+    parts = [part.strip() for part in (match or "").split(" vs ", 1)]
+    if len(parts) != 2:
+        return None, None
+    return parts[0], parts[1]
+
+
+def _canonical_match_identity(match: str) -> str:
+    home, away = _split_match(match)
+    if home is None or away is None:
+        return _norm(match or "")
+    return f"{_norm_team(home)} vs {_norm_team(away)}"
+
+
+def _canonical_bet_identity(row: dict) -> str:
+    league_norm = (row.get("league") or "").strip().lower()
+    fixture_date = _fixture_date_for_row(row)
+    match_norm = _canonical_match_identity(row.get("match", ""))
+    market_norm = (row.get("market") or "").strip().lower()
+    line_norm = str(row.get("line") or "").strip()
+    side_norm = (row.get("side") or "").strip().lower()
+    bookmaker_norm = (row.get("bookmaker") or "").strip().lower()
+    return (
+        f"{league_norm}|{fixture_date}|{match_norm}|{market_norm}|"
+        f"{line_norm}|{side_norm}|{bookmaker_norm}"
+    )
+
+
+def _row_preference(row: dict) -> tuple[str, int, int]:
+    file_date = ((row.get("file_date") or "").strip()[:10]) or "9999-99-99"
+    settled_rank = 0 if (row.get("settled") or "").strip() == "yes" else 1
+    kickoff_rank = 0 if (row.get("kick_off") or "").strip() else 1
+    return (file_date, settled_rank, kickoff_rank)
 # ── Settle ────────────────────────────────────────────────────────────────────
 
 def settle_all(target_date: Optional[str] = None, snapshot_date: Optional[str] = None) -> tuple[List[dict], dict]:
@@ -250,9 +371,13 @@ def settle_all(target_date: Optional[str] = None, snapshot_date: Optional[str] =
         print("No results snapshot found; corners settlement will keep rows pending.")
     else:
         print(f"Loaded {len(actual)} snapshot results from {snapshot_path}")
+    historical_results = load_historical_corner_results()
+    if historical_results:
+        actual = {**historical_results, **actual}
+        print(f"Loaded {len(historical_results)} historical corner result fallback(s)")
     manual_results = load_manual_settlement_results(OVERRIDES_PATH)
     if manual_results:
-        actual = {**actual, **manual_results}
+        actual = merge_manual_results_for_corners(actual, manual_results)
         print(f"Loaded {len(manual_results)} manual settlement override result(s)")
     odds_index = load_pinnacle_odds_index()
     print(f"Loaded {len(odds_index)} Pinnacle odds series")
@@ -424,10 +549,8 @@ def settle_all(target_date: Optional[str] = None, snapshot_date: Optional[str] =
 
         rows.append(settled)
 
-    # Deduplicate only on the full bet identity
-    # (file_date|league|fixture_date|match|line|side|bookmaker).
-    # Multiple bets on the same fixture (different lines, different sides, or generated on
-    # different days) are ALL preserved. No fixture-level collapse.
+    # First dedupe exact duplicated rows that can appear when we merge current
+    # shortlist files with the cached settled CSV.
     seen: dict[str, dict] = {}
     for r in rows:
         key = _row_identity(r)
@@ -437,6 +560,38 @@ def settle_all(target_date: Optional[str] = None, snapshot_date: Optional[str] =
         # settled CSV), the one already in `seen` wins (current shortlist file was added first
         # in source_rows, so it takes precedence over the cached settled row).
     rows = list(seen.values())
+
+    # Then collapse ghost duplicates caused by team-name aliases / regime reruns
+    # that logged the exact same bet under a different match string or file_date.
+    # We keep the earliest logged instance so the tracker preserves the original
+    # position rather than showing a duplicate under a later regime.
+    canonical_seen: dict[str, dict] = {}
+    canonical_dropped = 0
+    for row in sorted(rows, key=_row_preference):
+        key = _canonical_bet_identity(row)
+        existing = canonical_seen.get(key)
+        if existing is None:
+            canonical_seen[key] = row
+            continue
+        canonical_dropped += 1
+        for field in (
+            "kick_off",
+            "match_date",
+            "closing_odds",
+            "clv",
+            "settled_at",
+            "actual_total_corners",
+            "won",
+            "pnl_units",
+            "pnl_staked",
+        ):
+            existing_value = str(existing.get(field) or "").strip()
+            row_value = str(row.get(field) or "").strip()
+            if not existing_value and row_value:
+                existing[field] = row[field]
+    rows = list(canonical_seen.values())
+    if canonical_dropped:
+        print(f"Dropped {canonical_dropped} canonical duplicate corner bet row(s)")
 
     return rows, {"settled_this_run": settled_this_run, "source_freshness": source_freshness}
 
@@ -471,7 +626,7 @@ def build_report(rows: List[dict]) -> str:
     now = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
     out: List[str] = [
         "=" * 70,
-        "  CORNERS O/U — LIVE P&L TRACKER",
+        "  CORNERS O/U - LIVE P&L TRACKER",
         f"  Updated: {now}",
         "=" * 70,
         "",
@@ -515,7 +670,7 @@ def build_report(rows: List[dict]) -> str:
     roi = total_pnl / total_staked * 100 if total_staked else 0.0
     n_decisive = len(won_all) + len(lost_all)  # exclude pushes from win-rate denominator
 
-    out.append("  ── OVERALL ──────────────────────────────────────────────────")
+    out.append("  -- OVERALL --------------------------------------------------")
     push_str = f"/P{len(pushed_all)}" if pushed_all else ""
     out.append(f"  Settled: {len(settled)}  W{len(won_all)}/L{len(lost_all)}{push_str}  "
                f"({len(won_all)/n_decisive*100:.0f}% ex-push)" if n_decisive else
@@ -532,13 +687,13 @@ def build_report(rows: List[dict]) -> str:
         out.append(f"  Avg CLV      : {avg_clv:+.1f}%  (n={len(clv_vals)}, vs Pinnacle close)")
     out.append("")
 
-    out.append("  ── BY LEAGUE ────────────────────────────────────────────────")
+    out.append("  -- BY LEAGUE ------------------------------------------------")
     leagues = sorted(set(b.get("league", "?") for b in settled))
     for lg in leagues:
         _section(out, lg, [b for b in settled if b.get("league") == lg])
     out.append("")
 
-    out.append("  ── BY LINE ──────────────────────────────────────────────────")
+    out.append("  -- BY LINE --------------------------------------------------")
     all_lines = sorted(set(str(b.get("line", "")) for b in settled), key=lambda x: float(x) if x else 0)
     for line in all_lines:
         subset = [b for b in settled if str(b.get("line", "")) == line]
@@ -546,19 +701,23 @@ def build_report(rows: List[dict]) -> str:
             _section(out, f"Line {line}", subset)
     out.append("")
 
-    out.append("  ── BY SIDE ──────────────────────────────────────────────────")
+    out.append("  -- BY SIDE --------------------------------------------------")
     for side in ["over", "under"]:
         _section(out, side.capitalize(), [b for b in settled if b.get("side") == side])
     out.append("")
 
-    versions = sorted({_policy_version(b) for b in settled})
+    versions = [version for version in sorted({_policy_version(b) for b in settled}) if version in {"V3", "V3.1"}]
     if versions:
-        out.append("  By policy version")
+        out.append("  By lane")
         for version in versions:
-            _section(out, version, [b for b in settled if _policy_version(b) == version])
+            _section(
+                out,
+                policy_display_name(version),
+                [b for b in settled if _policy_version(b) == version],
+            )
         out.append("")
 
-    out.append("  ── BY EDGE BAND ─────────────────────────────────────────────")
+    out.append("  -- BY EDGE BAND ---------------------------------------------")
     bands = [("12-15%", 0.12, 0.15), ("15-20%", 0.15, 0.20),
              ("20-25%", 0.20, 0.25), ("25%+",   0.25, 1.0)]
     for label, lo, hi in bands:
@@ -569,7 +728,7 @@ def build_report(rows: List[dict]) -> str:
 
     # Recent bets table (last 15 settled)
     recent = settled_sorted[-15:][::-1]
-    out.append("  ── RECENT RESULTS (latest first) ────────────────────────────")
+    out.append("  -- RECENT RESULTS (latest first) ----------------------------")
     out.append(f"  {'Date':<11}  {'Match':<28}  {'Line':>5}  {'Side':>5}  "
                f"{'Edge':>6}  {'Odds':>5}  {'W/L':>3}  {'P&L':>6}")
     out.append(f"  {'-'*11}  {'-'*28}  {'-'*5}  {'-'*5}  "

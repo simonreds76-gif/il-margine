@@ -9,9 +9,11 @@ depending on the local machine's file state.
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import os
+from collections import deque
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict
@@ -19,17 +21,25 @@ from typing import Dict
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUTPUT = ROOT / "data" / "corners-ou" / "corners-live-snapshot.json"
+SUMMARY_OUTPUT = ROOT / "data" / "corners-ou" / "corners-monitor-summary.json"
 DEFAULT_SNAPSHOT_KEY = "corners_state"
 SNAPSHOT_TABLE = "goalscorer_live_snapshot"
+PREDICTIONS_FILE = ROOT / "data" / "corners-ou" / "corners-ou-predictions.csv"
+RECENT_PREDICTION_LIMIT = 80
 SNAPSHOT_FILES = [
     "data/corners-ou/corners-ou-calibration.txt",
+    "data/corners-ou/corners-calibration-params.json",
     "data/corners-ou/corners-ou-backtest-report.txt",
     "data/corners-ou/corners-ou-backtest-results.csv",
     "data/corners-ou/corners-ou-predictions.csv",
+    "data/corners-ou/corners-monitor-summary.json",
     "data/corners-ou/pinnacle-corners-odds.csv",
     "data/shortlist/shortlist-latest.txt",
+    "data/shortlist/shortlist-latest-v31.txt",
     "data/shortlist/value-bets-latest.csv",
+    "data/shortlist/value-bets-latest-v31.csv",
     "data/shortlist/signals-latest.csv",
+    "data/shortlist/signals-latest-v31.csv",
     "data/shortlist/settled-pnl.csv",
     "data/shortlist/corners-live-pnl.txt",
     "data/shortlist/settlement-audit.json",
@@ -92,6 +102,36 @@ def write_snapshot(path: Path, payload: Dict[str, object]) -> None:
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+def build_predictions_summary() -> Dict[str, object]:
+    generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    source_file = str(PREDICTIONS_FILE.relative_to(ROOT)).replace("\\", "/")
+    if not PREDICTIONS_FILE.exists():
+        return {
+            "generated_at": generated_at,
+            "prediction_count": 0,
+            "recent_predictions": [],
+            "source_file": source_file,
+            "source_mtime": None,
+        }
+
+    recent_rows: deque[dict[str, str]] = deque(maxlen=RECENT_PREDICTION_LIMIT)
+    prediction_count = 0
+    with PREDICTIONS_FILE.open("r", encoding="utf-8", errors="replace", newline="") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            prediction_count += 1
+            recent_rows.append({key: (value or "") for key, value in row.items()})
+
+    stat = PREDICTIONS_FILE.stat()
+    return {
+        "generated_at": generated_at,
+        "prediction_count": prediction_count,
+        "recent_predictions": list(reversed(recent_rows)),
+        "source_file": source_file,
+        "source_mtime": datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+    }
+
+
 def read_existing_snapshot(path: Path) -> Dict[str, object] | None:
     if not path.exists():
         return None
@@ -140,6 +180,7 @@ def main() -> None:
 
     output_path = Path(args.output)
     previous_payload = read_existing_snapshot(output_path)
+    write_snapshot(SUMMARY_OUTPUT, build_predictions_summary())
     payload = build_snapshot(args.snapshot_key)
     write_snapshot(output_path, payload)
 
@@ -147,6 +188,7 @@ def main() -> None:
     print(f"  Files stored: {payload['file_count']}")
     print(f"  Missing files: {len(payload['missing_files'])}")
     print(f"  Saved: {output_path}")
+    print(f"  Summary: {SUMMARY_OUTPUT}")
     unchanged = bool(previous_payload) and previous_payload.get("payload_hash") == payload.get("payload_hash")
     if unchanged:
         print("  Snapshot payload unchanged")
