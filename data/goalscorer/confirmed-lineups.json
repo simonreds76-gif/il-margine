@@ -8,19 +8,19 @@
       "match_date": "2026-04-24",
       "home_team": "Napoli",
       "away_team": "Cremonese",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "4-4-2",
       "home_players": [
         "Vanja Milinkovic-Savic",
-        "Mathías Olivera",
-        "Amir Rrahmani",
         "Alessandro Buongiorno",
+        "Amir Rrahmani",
+        "Mathías Olivera",
         "Matteo Politano",
-        "Stanislav Lobotka",
         "Scott McTominay",
+        "Stanislav Lobotka",
         "Miguel Gutiérrez",
         "Kevin De Bruyne",
         "Alisson Santos",
@@ -34,10 +34,10 @@
         "Giuseppe Pezzella",
         "Romano Floriani Mussolini",
         "Youssef Maleh",
-        "Alberto Grassi",
-        "Jari Vandeputte",
+        "Warren Bondo",
+        "Martín Payero",
         "Federico Bonazzoli",
-        "Antonio Sanabria"
+        "David Okereke"
       ],
       "home_starters": [
         {
@@ -50,7 +50,7 @@
           "position_id": 11
         },
         {
-          "name": "Mathías Olivera",
+          "name": "Alessandro Buongiorno",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -68,7 +68,7 @@
           "position_id": 35
         },
         {
-          "name": "Alessandro Buongiorno",
+          "name": "Mathías Olivera",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -86,7 +86,7 @@
           "position_id": 62
         },
         {
-          "name": "Stanislav Lobotka",
+          "name": "Scott McTominay",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -95,7 +95,7 @@
           "position_id": 64
         },
         {
-          "name": "Scott McTominay",
+          "name": "Stanislav Lobotka",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -205,7 +205,7 @@
           "position_id": 74
         },
         {
-          "name": "Alberto Grassi",
+          "name": "Warren Bondo",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -214,7 +214,7 @@
           "position_id": 76
         },
         {
-          "name": "Jari Vandeputte",
+          "name": "Martín Payero",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -232,7 +232,7 @@
           "position_id": 104
         },
         {
-          "name": "Antonio Sanabria",
+          "name": "David Okereke",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -241,8 +241,34 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Alex Meret",
+        "Nikita Contini",
+        "Juan Jesus",
+        "Sam Beukema",
+        "Frank Anguissa",
+        "Billy Gilmour",
+        "Eljif Elmas",
+        "Leonardo Spinazzola",
+        "Pasquale Mazzocchi",
+        "Giovane Nascimento"
+      ],
+      "away_subs": [
+        "Lapo Nava",
+        "Marco Silvestri",
+        "Federico Ceccherini",
+        "Francesco Folino",
+        "Matteo Bianchetti",
+        "Mikayil Faye",
+        "Alberto Grassi",
+        "Alessio Zerbin",
+        "Jari Vandeputte",
+        "Michele Collocolo",
+        "Morten Thorsby",
+        "Tommaso Barbieri",
+        "Antonio Sanabria",
+        "Milan Djuric"
+      ],
       "home_unavailable": [
         "Romelu Lukaku",
         "David Neres"
