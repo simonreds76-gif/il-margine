@@ -521,7 +521,7 @@ def main():
             cutoff = (datetime.now() - timedelta(days=RECENT_DAYS)).strftime("%Y-%m-%d")
             before = len(rows)
             rows = [r for r in rows if (r.get("date") or tour_date.get(r.get("tour_id", ""), "")) >= cutoff]
-            print(f"  oncourt_games: filtered {before:,} → {len(rows):,} (since {cutoff})")
+            print(f"  oncourt_games: filtered {before:,} -> {len(rows):,} (since {cutoff})")
         _upload_batched(
             "oncourt_games",
             rows,
@@ -545,7 +545,7 @@ def main():
             cutoff = (datetime.now() - timedelta(days=RECENT_DAYS)).strftime("%Y-%m-%d")
             before = len(rows)
             rows = [r for r in rows if tour_date.get(r.get("tour_id", ""), "") >= cutoff]
-            print(f"  oncourt_stat: filtered {before:,} → {len(rows):,} (since {cutoff})")
+            print(f"  oncourt_stat: filtered {before:,} -> {len(rows):,} (since {cutoff})")
         _upload_batched(
             "oncourt_stat",
             rows,

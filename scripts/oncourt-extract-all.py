@@ -17,11 +17,12 @@ def main():
         print(f"32-bit Python not found at {PY}")
         sys.exit(1)
 
-    for name in ["oncourt-extract-games", "oncourt-extract-stats", "oncourt-extract-rest"]:
+    # Rest first: games need the latest tours_atp.csv to backfill tour dates.
+    for name in ["oncourt-extract-rest", "oncourt-extract-games", "oncourt-extract-stats"]:
         script = SCRIPTS / f"{name}.py"
         if not script.exists():
             print(f"Missing {script}")
-            continue
+            return 1
         print(f"\n--- {name} ---")
         subprocess.run([PY, str(script)], check=True)
 

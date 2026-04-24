@@ -253,6 +253,7 @@ def main():
     # Game key → (date, surface) for window filtering
     game_key_to_info = {}
     game_key_to_info_long = {}
+    game_key_to_any_info = {}
     for r in games:
         w = _int(r, "winner_id")
         l = _int(r, "loser_id")
@@ -265,6 +266,7 @@ def main():
             continue
         surface = tour_id_to_surface.get(t, "N/A")
         weight = tour_id_to_weight.get(t, 0.80)
+        game_key_to_any_info[(w, l, t, rd)] = (dt, surface, weight)
         if dt >= cutoff:
             game_key_to_info[(w, l, t, rd)] = (dt, surface, weight)
         if dt >= cutoff_long:
@@ -276,6 +278,35 @@ def main():
     print("Loading stat...")
     stat_rows = load_csv(stat_path)
     print(f"  Stat rows: {len(stat_rows):,}")
+
+    max_stat_date = None
+    joined_stat_rows = 0
+    for r in stat_rows:
+        key = (_int(r, "winner_id"), _int(r, "loser_id"), _int(r, "tour_id"), _int(r, "round_id"))
+        info = game_key_to_any_info.get(key)
+        if not info:
+            continue
+        joined_stat_rows += 1
+        dt = info[0]
+        if max_stat_date is None or dt > max_stat_date:
+            max_stat_date = dt
+
+    if max_stat_date is None:
+        print("ERROR: No stat rows could be joined to games_atp.csv. Refusing to compute stale player stats.")
+        sys.exit(1)
+
+    max_age_days = int(os.environ.get("ONCOURT_STATS_MAX_STALENESS_DAYS", "14") or "14")
+    stat_age_days = (datetime.now().date() - max_stat_date).days
+    print(
+        f"  Stat latest joined match date: {max_stat_date} "
+        f"(age {stat_age_days}d, joined rows {joined_stat_rows:,}, max allowed {max_age_days}d)"
+    )
+    if stat_age_days > max_age_days and os.environ.get("ONCOURT_ALLOW_STALE_STATS", "").strip() != "1":
+        print(
+            "ERROR: stat_atp.csv is stale. Run scripts/oncourt-extract-stats.py "
+            "before computing player stats, or set ONCOURT_ALLOW_STALE_STATS=1 for an explicit emergency override."
+        )
+        sys.exit(1)
 
     # Detect which columns are available (with OnCourt alias support)
     sample_row = stat_rows[0] if stat_rows else {}

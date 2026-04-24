@@ -16,7 +16,7 @@ $logFile = Join-Path $dataDir "oncourt-daily.log"
 # Choose sync args once here:
 #   @("--quick")                  = fast daily including players/rankings
 #   @("--recent")                 = last 365 days games/stat
-$syncArgs = @("--quick")
+$syncArgs = @("--recent")
 $syncLabel = ($syncArgs -join " ")
 # Enable trimmed shadow profile by default for scheduled runs (override with env if needed)
 if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_VOLUME_MODE)) { $env:STRICT_POLICY_VOLUME_MODE = "volume_200" }
@@ -120,10 +120,12 @@ $py32 = "C:\Python312-32\python.exe"
 if (Test-Path $py32) {
     & $py32 scripts\oncourt-extract-all.py 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
-        Log "WARNING: OnCourt extract had errors (exit $LASTEXITCODE), continuing..."
+        Log "ERROR: OnCourt extract failed (exit $LASTEXITCODE)"
+        exit 1
     }
 } else {
-    Log "WARNING: 32-bit Python not found at $py32, skipping extract"
+    Log "ERROR: 32-bit Python not found at $py32"
+    exit 1
 }
 
 # Step 2: Sync to Supabase
@@ -139,7 +141,8 @@ if ($LASTEXITCODE -ne 0) {
 Log "=== Step 3/10: Compute player stats (extended) ==="
 & python scripts\oncourt-compute-player-stats-extended.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: Player stats failed (exit $LASTEXITCODE), continuing..."
+    Log "ERROR: Player stats failed (exit $LASTEXITCODE)"
+    exit 1
 }
 
 # Step 4: Refresh TennisExplorer injured/returning CSV

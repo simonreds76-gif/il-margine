@@ -105,10 +105,12 @@ $py32 = "C:\Python312-32\python.exe"
 if (Test-Path $py32) {
     & $py32 scripts\oncourt-extract-all.py 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
-        Log "WARNING: OnCourt extract had errors (exit $LASTEXITCODE), continuing..."
+        Log "ERROR: OnCourt extract failed (exit $LASTEXITCODE)"
+        exit 1
     }
 } else {
-    Log "WARNING: 32-bit Python not found at $py32, skipping extract"
+    Log "ERROR: 32-bit Python not found at $py32"
+    exit 1
 }
 
 # Step 2: FULL sync to Supabase
@@ -124,7 +126,8 @@ if ($LASTEXITCODE -ne 0) {
 Log "=== Step 3/12: Compute extended player stats ==="
 & python scripts\oncourt-compute-player-stats-extended.py 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: Extended player stats failed (exit $LASTEXITCODE), continuing..."
+    Log "ERROR: Extended player stats failed (exit $LASTEXITCODE)"
+    exit 1
 }
 
 # Step 4: Refresh Sackmann ATP source files

@@ -1,0 +1,54 @@
+ML Blend Calibration Audit
+==========================
+Rows are oriented as player1=actual winner; metrics are probability assigned to the winner.
+Rows: 9,889 | train 2022-2024: 7,573 | validation 2025: 2,316
+
+Stored our_prob_raw
+  train logloss/brier: (0.6362506411622147, 0.21906132143713097)
+  2025  logloss/brier: (0.6300238091634752, 0.21827707800166019)
+  2025 edge>=10 gap<=10 all:  {'n': 620, 'winner_bets': 201, 'loser_bets': 419, 'pnl': -52.35, 'roi': -0.0844}
+  2025 edge>=10 gap<=10 clay: {'n': 196, 'winner_bets': 62, 'loser_bets': 134, 'pnl': -3.77, 'roi': -0.0192}
+  best symmetric temperatures by train logloss:
+    train_ll=0.6248 test_ll=0.6214 slope=0.65 all10={'n': 797, 'winner_bets': 266, 'loser_bets': 531, 'pnl': -5.95, 'roi': -0.0075} clay10={'n': 241, 'winner_bets': 76, 'loser_bets': 165, 'pnl': -1.89, 'roi': -0.0078}
+    train_ll=0.6249 test_ll=0.6211 slope=0.70 all10={'n': 791, 'winner_bets': 259, 'loser_bets': 532, 'pnl': -11.7, 'roi': -0.0148} clay10={'n': 242, 'winner_bets': 71, 'loser_bets': 171, 'pnl': -17.71, 'roi': -0.0732}
+    train_ll=0.6254 test_ll=0.6224 slope=0.60 all10={'n': 771, 'winner_bets': 258, 'loser_bets': 513, 'pnl': -26.83, 'roi': -0.0348} clay10={'n': 239, 'winner_bets': 73, 'loser_bets': 166, 'pnl': -27.21, 'roi': -0.1138}
+    train_ll=0.6255 test_ll=0.6213 slope=0.75 all10={'n': 771, 'winner_bets': 256, 'loser_bets': 515, 'pnl': 0.36, 'roi': 0.0005} clay10={'n': 233, 'winner_bets': 70, 'loser_bets': 163, 'pnl': -18.45, 'roi': -0.0792}
+    train_ll=0.6266 test_ll=0.6240 slope=0.55 all10={'n': 734, 'winner_bets': 244, 'loser_bets': 490, 'pnl': -66.7, 'roi': -0.0909} clay10={'n': 232, 'winner_bets': 72, 'loser_bets': 160, 'pnl': -32.47, 'roi': -0.14}
+
+Stored our_prob
+  train logloss/brier: (0.6235847282147473, 0.21678498760234807)
+  2025  logloss/brier: (0.621992157603311, 0.2164575564209931)
+  2025 edge>=10 gap<=10 all:  {'n': 732, 'winner_bets': 251, 'loser_bets': 481, 'pnl': 4.18, 'roi': 0.0057}
+  2025 edge>=10 gap<=10 clay: {'n': 238, 'winner_bets': 77, 'loser_bets': 161, 'pnl': 14.11, 'roi': 0.0593}
+  best symmetric temperatures by train logloss:
+    train_ll=0.6209 test_ll=0.6200 slope=0.80 all10={'n': 781, 'winner_bets': 256, 'loser_bets': 525, 'pnl': -18.34, 'roi': -0.0235} clay10={'n': 247, 'winner_bets': 74, 'loser_bets': 173, 'pnl': -16.0, 'roi': -0.0648}
+    train_ll=0.6210 test_ll=0.6199 slope=0.85 all10={'n': 757, 'winner_bets': 244, 'loser_bets': 513, 'pnl': -36.22, 'roi': -0.0478} clay10={'n': 237, 'winner_bets': 69, 'loser_bets': 168, 'pnl': -19.84, 'roi': -0.0837}
+    train_ll=0.6213 test_ll=0.6206 slope=0.75 all10={'n': 777, 'winner_bets': 257, 'loser_bets': 520, 'pnl': -17.21, 'roi': -0.0221} clay10={'n': 236, 'winner_bets': 72, 'loser_bets': 164, 'pnl': -11.39, 'roi': -0.0483}
+    train_ll=0.6215 test_ll=0.6202 slope=0.90 all10={'n': 759, 'winner_bets': 249, 'loser_bets': 510, 'pnl': -23.21, 'roi': -0.0306} clay10={'n': 243, 'winner_bets': 72, 'loser_bets': 171, 'pnl': -3.69, 'roi': -0.0152}
+    train_ll=0.6221 test_ll=0.6215 slope=0.70 all10={'n': 772, 'winner_bets': 253, 'loser_bets': 519, 'pnl': -50.22, 'roi': -0.0651} clay10={'n': 227, 'winner_bets': 68, 'loser_bets': 159, 'pnl': -22.69, 'roi': -0.1}
+
+Grid Candidates
+---------------
+Best by train logloss:
+  train_ll=0.6246 test_ll=0.6252 test_brier=0.2179 params=(0.1, 0.45, 0.45, 0.2, 0.75) all10={'n': 748, 'winner_bets': 243, 'loser_bets': 505, 'pnl': -28.15, 'roi': -0.0376} clay10={'n': 231, 'winner_bets': 72, 'loser_bets': 159, 'pnl': -25.79, 'roi': -0.1116}
+  train_ll=0.6246 test_ll=0.6252 test_brier=0.2179 params=(0.1, 0.45, 0.45, 0.25, 0.75) all10={'n': 744, 'winner_bets': 238, 'loser_bets': 506, 'pnl': -34.29, 'roi': -0.0461} clay10={'n': 228, 'winner_bets': 69, 'loser_bets': 159, 'pnl': -26.62, 'roi': -0.1168}
+  train_ll=0.6247 test_ll=0.6253 test_brier=0.2180 params=(0.1, 0.45, 0.45, 0.3, 0.75) all10={'n': 749, 'winner_bets': 237, 'loser_bets': 512, 'pnl': -38.18, 'roi': -0.051} clay10={'n': 228, 'winner_bets': 71, 'loser_bets': 157, 'pnl': -19.36, 'roi': -0.0849}
+  train_ll=0.6247 test_ll=0.6252 test_brier=0.2179 params=(0.1, 0.45, 0.45, 0.15, 0.75) all10={'n': 747, 'winner_bets': 246, 'loser_bets': 501, 'pnl': -20.41, 'roi': -0.0273} clay10={'n': 227, 'winner_bets': 72, 'loser_bets': 155, 'pnl': -21.79, 'roi': -0.096}
+  train_ll=0.6249 test_ll=0.6255 test_brier=0.2180 params=(0.1, 0.45, 0.45, 0.15, 0.85) all10={'n': 751, 'winner_bets': 240, 'loser_bets': 511, 'pnl': -47.53, 'roi': -0.0633} clay10={'n': 233, 'winner_bets': 78, 'loser_bets': 155, 'pnl': -2.85, 'roi': -0.0122}
+  train_ll=0.6249 test_ll=0.6256 test_brier=0.2180 params=(0.1, 0.45, 0.45, 0.2, 0.85) all10={'n': 753, 'winner_bets': 237, 'loser_bets': 516, 'pnl': -50.07, 'roi': -0.0665} clay10={'n': 231, 'winner_bets': 76, 'loser_bets': 155, 'pnl': -5.41, 'roi': -0.0234}
+  train_ll=0.6251 test_ll=0.6257 test_brier=0.2181 params=(0.1, 0.45, 0.45, 0.25, 0.85) all10={'n': 748, 'winner_bets': 236, 'loser_bets': 512, 'pnl': -49.67, 'roi': -0.0664} clay10={'n': 229, 'winner_bets': 74, 'loser_bets': 155, 'pnl': -9.68, 'roi': -0.0423}
+  train_ll=0.6252 test_ll=0.6259 test_brier=0.2182 params=(0.1, 0.45, 0.45, 0.3, 0.85) all10={'n': 732, 'winner_bets': 231, 'loser_bets': 501, 'pnl': -42.25, 'roi': -0.0577} clay10={'n': 229, 'winner_bets': 74, 'loser_bets': 155, 'pnl': -9.68, 'roi': -0.0423}
+  train_ll=0.6255 test_ll=0.6256 test_brier=0.2181 params=(0.15, 0.45, 0.39999999999999997, 0.15, 0.85) all10={'n': 731, 'winner_bets': 232, 'loser_bets': 499, 'pnl': -37.31, 'roi': -0.051} clay10={'n': 223, 'winner_bets': 68, 'loser_bets': 155, 'pnl': -25.21, 'roi': -0.113}
+  train_ll=0.6256 test_ll=0.6255 test_brier=0.2181 params=(0.05, 0.5, 0.44999999999999996, 0.25, 0.75) all10={'n': 736, 'winner_bets': 241, 'loser_bets': 495, 'pnl': -19.12, 'roi': -0.026} clay10={'n': 227, 'winner_bets': 70, 'loser_bets': 157, 'pnl': -31.79, 'roi': -0.14}
+
+Best 2025 clay ROI candidates with n>=40 (diagnostic, not production selection):
+  train_ll=0.6430 test_ll=0.6371 params=(0.05, 0.7, 0.25, 0.2, 0.95) all10={'n': 718, 'winner_bets': 246, 'loser_bets': 472, 'pnl': 20.22, 'roi': 0.0282} clay10={'n': 228, 'winner_bets': 81, 'loser_bets': 147, 'pnl': 26.9, 'roi': 0.118}
+  train_ll=0.6480 test_ll=0.6413 params=(0.05, 0.7, 0.25, 0.15, 1.05) all10={'n': 673, 'winner_bets': 235, 'loser_bets': 438, 'pnl': 36.64, 'roi': 0.0544} clay10={'n': 202, 'winner_bets': 74, 'loser_bets': 128, 'pnl': 23.83, 'roi': 0.118}
+  train_ll=0.6483 test_ll=0.6409 params=(0.05, 0.75, 0.19999999999999996, 0.2, 0.95) all10={'n': 722, 'winner_bets': 243, 'loser_bets': 479, 'pnl': -7.03, 'roi': -0.0097} clay10={'n': 231, 'winner_bets': 81, 'loser_bets': 150, 'pnl': 27.12, 'roi': 0.1174}
+  train_ll=0.6538 test_ll=0.6455 params=(0.05, 0.75, 0.19999999999999996, 0.15, 1.05) all10={'n': 690, 'winner_bets': 246, 'loser_bets': 444, 'pnl': 20.56, 'roi': 0.0298} clay10={'n': 227, 'winner_bets': 86, 'loser_bets': 141, 'pnl': 25.92, 'roi': 0.1142}
+  train_ll=0.6583 test_ll=0.6495 params=(0.15, 0.7, 0.15000000000000002, 0.15, 1.15) all10={'n': 674, 'winner_bets': 229, 'loser_bets': 445, 'pnl': -6.75, 'roi': -0.01} clay10={'n': 213, 'winner_bets': 79, 'loser_bets': 134, 'pnl': 23.75, 'roi': 0.1115}
+  train_ll=0.6482 test_ll=0.6407 params=(0.05, 0.75, 0.19999999999999996, 0.15, 0.95) all10={'n': 725, 'winner_bets': 245, 'loser_bets': 480, 'pnl': -6.12, 'roi': -0.0084} clay10={'n': 231, 'winner_bets': 81, 'loser_bets': 150, 'pnl': 25.66, 'roi': 0.1111}
+  train_ll=0.6593 test_ll=0.6507 params=(0.15, 0.7, 0.15000000000000002, 0.2, 1.15) all10={'n': 672, 'winner_bets': 233, 'loser_bets': 439, 'pnl': 6.81, 'roi': 0.0101} clay10={'n': 212, 'winner_bets': 78, 'loser_bets': 134, 'pnl': 22.68, 'roi': 0.107}
+  train_ll=0.6453 test_ll=0.6390 params=(0.1, 0.7, 0.20000000000000007, 0.2, 0.95) all10={'n': 719, 'winner_bets': 248, 'loser_bets': 471, 'pnl': 17.24, 'roi': 0.024} clay10={'n': 225, 'winner_bets': 78, 'loser_bets': 147, 'pnl': 23.58, 'roi': 0.1048}
+  train_ll=0.6429 test_ll=0.6369 params=(0.05, 0.7, 0.25, 0.15, 0.95) all10={'n': 723, 'winner_bets': 245, 'loser_bets': 478, 'pnl': 10.6, 'roi': 0.0147} clay10={'n': 228, 'winner_bets': 79, 'loser_bets': 149, 'pnl': 23.9, 'roi': 0.1048}
+  train_ll=0.6482 test_ll=0.6416 params=(0.05, 0.7, 0.25, 0.2, 1.05) all10={'n': 681, 'winner_bets': 237, 'loser_bets': 444, 'pnl': 28.88, 'roi': 0.0424} clay10={'n': 200, 'winner_bets': 72, 'loser_bets': 128, 'pnl': 20.4, 'roi': 0.102}
