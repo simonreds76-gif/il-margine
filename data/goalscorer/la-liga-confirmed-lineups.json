@@ -12,7 +12,7 @@
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
       "home_formation": "4-2-3-1",
-      "away_formation": "4-4-2",
+      "away_formation": "4-3-1-2",
       "home_players": [
         "Álvaro Vallés",
         "Héctor Bellerín",
@@ -33,8 +33,8 @@
         "Dean Huijsen",
         "Ferland Mendy",
         "Federico Valverde",
+        "Thiago Pitarch",
         "Jude Bellingham",
-        "Eduardo Camavinga",
         "Brahim Díaz",
         "Kylian Mbappé",
         "Vinícius Júnior"
@@ -147,7 +147,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-4-2",
+          "formation": "4-3-1-2",
           "position_id": 11
         },
         {
@@ -156,7 +156,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-3-1-2",
           "position_id": 32
         },
         {
@@ -165,7 +165,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-3-1-2",
           "position_id": 34
         },
         {
@@ -174,7 +174,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-3-1-2",
           "position_id": 36
         },
         {
@@ -183,75 +183,88 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-3-1-2",
           "position_id": 38
         },
         {
           "name": "Federico Valverde",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 72
+          "formation": "4-3-1-2",
+          "position_id": 63
+        },
+        {
+          "name": "Thiago Pitarch",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-1-2",
+          "position_id": 65
         },
         {
           "name": "Jude Bellingham",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 74
-        },
-        {
-          "name": "Eduardo Camavinga",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 76
+          "formation": "4-3-1-2",
+          "position_id": 67
         },
         {
           "name": "Brahim Díaz",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 78
+          "line_index": 2,
+          "line_size": 1,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-3-1-2",
+          "position_id": 85
         },
         {
           "name": "Kylian Mbappé",
-          "line_index": 2,
+          "line_index": 3,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
+          "formation": "4-3-1-2",
           "position_id": 104
         },
         {
           "name": "Vinícius Júnior",
-          "line_index": 2,
+          "line_index": 3,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
+          "formation": "4-3-1-2",
           "position_id": 106
         }
       ],
       "home_subs": [],
-      "away_subs": [],
+      "away_subs": [
+        "Javier Navarro",
+        "Alvaro Carreras",
+        "Daniel Carvajal",
+        "David Alaba",
+        "Diego Aguado",
+        "Fran García",
+        "Raúl Asencio",
+        "Eduardo Camavinga",
+        "Jorge Cestero",
+        "Manuel Ángel",
+        "Franco Mastantuono",
+        "Gonzalo García"
+      ],
       "home_unavailable": [
         "Ángel Ortiz",
         "Diego Llorente",
         "Junior Firpo"
       ],
       "away_unavailable": [
-        "Arda Güler",
         "Thibaut Courtois",
         "Éder Militao",
+        "Arda Güler",
         "Aurélien Tchouaméni",
         "Rodrygo"
       ]
@@ -1779,10 +1792,10 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Alex Forés",
-        "Luka Ilic",
+        "Jaime Vázquez",
         "Leander Dendoncker",
-        "Jaime Vázquez"
+        "Alex Forés",
+        "Luka Ilic"
       ],
       "away_unavailable": [
         "Adam Boayar"
@@ -2032,10 +2045,10 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Logan Costa",
-        "Pau Cabanes",
         "Juan Foyth",
-        "Santiago Mouriño"
+        "Logan Costa",
+        "Santiago Mouriño",
+        "Pau Cabanes"
       ],
       "away_unavailable": [
         "Carlos Domínguez",

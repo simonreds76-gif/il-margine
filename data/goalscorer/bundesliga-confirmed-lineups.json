@@ -8,19 +8,19 @@
       "match_date": "2026-04-24",
       "home_team": "RB Leipzig",
       "away_team": "Union Berlin",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-3-3",
       "away_formation": "3-4-2-1",
       "home_players": [
         "Maarten Vandevoordt",
         "Ridle Baku",
-        "Lukas Klostermann",
         "Willi Orbán",
+        "El Chadaille Bitshiabu",
         "Max Finkgräfe",
         "Assan Ouédraogo",
-        "Nicolas Seiwald",
+        "Xaver Schlager",
         "Christoph Baumgartner",
         "Yan Diomande",
         "Rômulo",
@@ -32,11 +32,11 @@
         "Leopold Querfeld",
         "Diogo Leite",
         "Christopher Trimmel",
-        "Aljoscha Kemlein",
         "Rani Khedira",
+        "Janik Haberer",
         "Tom Rothe",
         "Oliver Burke",
-        "Ilyas Ansah",
+        "András Schäfer",
         "Andrej Ilic"
       ],
       "home_starters": [
@@ -59,7 +59,7 @@
           "position_id": 32
         },
         {
-          "name": "Lukas Klostermann",
+          "name": "Willi Orbán",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -68,7 +68,7 @@
           "position_id": 34
         },
         {
-          "name": "Willi Orbán",
+          "name": "El Chadaille Bitshiabu",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -95,7 +95,7 @@
           "position_id": 73
         },
         {
-          "name": "Nicolas Seiwald",
+          "name": "Xaver Schlager",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -187,7 +187,7 @@
           "position_id": 62
         },
         {
-          "name": "Aljoscha Kemlein",
+          "name": "Rani Khedira",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -196,7 +196,7 @@
           "position_id": 64
         },
         {
-          "name": "Rani Khedira",
+          "name": "Janik Haberer",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -223,7 +223,7 @@
           "position_id": 84
         },
         {
-          "name": "Ilyas Ansah",
+          "name": "András Schäfer",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -241,10 +241,29 @@
           "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Péter Gulácsi",
+        "Benjamin Henrichs",
         "Kosta Nedeljkovic",
+        "Lukas Klostermann",
+        "Andrija Maksimovic",
+        "Brajan Gruda",
+        "Conrad Harder",
+        "Johan Bakayoko",
+        "Tidiam Gomis"
+      ],
+      "away_subs": [
+        "Carl Klaus",
+        "Stanley N'Soki",
+        "Alex Král",
+        "Aljoscha Kemlein",
+        "Derrick Köhn",
+        "Josip Juranovic",
+        "Ilyas Ansah",
+        "Livan Burcu",
+        "Tim Skarke"
+      ],
+      "home_unavailable": [
         "Ayodele Thomas",
         "Leopold Zingerle",
         "Castello Lukeba",
