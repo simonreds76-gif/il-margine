@@ -1,38 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-24T21:04:00Z",
+  "generated_at": "2026-04-24T23:25:31Z",
   "league": "epl",
-  "row_count": 1,
-  "rows": [
-    {
-      "date": "2026-04-18",
-      "league": "epl",
-      "review_source": "fotmob_live",
-      "match": "Leeds United vs Wolverhampton Wanderers",
-      "team": "Leeds United",
-      "opponent": "Wolverhampton Wanderers",
-      "actual_taker": "Dominic Calvert-Lewin",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "90",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Dominic Calvert-Lewin",
-      "secondary_pre_match": "Lukas Nmecha",
-      "tertiary_pre_match": "Joel Piroe",
-      "primary_lineup_status": "unknown",
-      "secondary_lineup_status": "unknown",
-      "tertiary_lineup_status": "unknown",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "needs_manual_review",
-      "review_priority": "medium",
-      "editorial_note": "Dominic Calvert-Lewin took 1 penalty attempt and scored for Leeds United vs Wolverhampton Wanderers. Primary pre-match: Dominic Calvert-Lewin (unknown). Secondary pre-match: Lukas Nmecha (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-24T21:03:33Z",
-      "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
-    }
-  ]
+  "row_count": 0,
+  "rows": []
 }
