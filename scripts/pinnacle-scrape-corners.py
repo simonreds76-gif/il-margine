@@ -84,6 +84,16 @@ def _american_to_decimal(american: float) -> float:
     return round(100 / abs(american) + 1, 4)
 
 
+def _parse_iso_datetime(text: str) -> datetime | None:
+    raw = (text or "").strip()
+    if not raw:
+        return None
+    try:
+        return datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
 def _scrape_league(
     league_key: str,
     league_id: int,
@@ -112,6 +122,12 @@ def _scrape_league(
         kickoff_iso = match.get("startTime", "")
         match_date = kickoff_iso[:10] if kickoff_iso else ""
         matchup_id = match.get("id")
+        kickoff_dt = _parse_iso_datetime(kickoff_iso)
+        captured_dt = _parse_iso_datetime(captured_at)
+        if kickoff_dt is not None and captured_dt is not None and captured_dt >= kickoff_dt:
+            if verbose:
+                print(f"    [{home} v {away}] skip already started ({kickoff_iso})")
+            continue
 
         try:
             markets = _get(f"matchups/{matchup_id}/markets/related/straight")

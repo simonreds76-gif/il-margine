@@ -324,6 +324,10 @@ def normalize_team(name: str) -> str:
     return TEAM_ALIASES.get(normed, normed)
 
 
+def clean_market_team_name(name: str) -> str:
+    return re.sub(r"\s*\(corners\)\s*$", "", (name or "").strip(), flags=re.IGNORECASE)
+
+
 # Corners model: compute lambdas for a fixture
 
 
@@ -374,12 +378,18 @@ def load_pinnacle_corner_index(
             if leagues and league not in leagues:
                 continue
 
-            home_team = row.get("home_team", "") or ""
-            away_team = row.get("away_team", "") or ""
+            home_team = clean_market_team_name(row.get("home_team", "") or "")
+            away_team = clean_market_team_name(row.get("away_team", "") or "")
             fixture_date = (row.get("match_date") or row.get("kickoff_iso") or "")[:10]
             kickoff_iso = row.get("kickoff_iso", "") or ""
             kickoff_dt = parse_iso_datetime(kickoff_iso)
             if not within_fixture_window(kickoff_dt, cutoff):
+                continue
+            captured_at = row.get("captured_at", "") or ""
+            captured_dt = parse_iso_datetime(captured_at)
+            if captured_dt is not None and captured_dt >= kickoff_dt:
+                # Pinnacle can leave related markets open after kickoff. Those are
+                # not valid pre-match reference prices for live picks or replays.
                 continue
 
             fixture_key = pinnacle_fixture_key(league, fixture_date, home_team, away_team)
@@ -405,7 +415,6 @@ def load_pinnacle_corner_index(
             side = (row.get("side") or "").strip().lower()
             if side not in {"over", "under"}:
                 continue
-            captured_at = row.get("captured_at", "") or ""
             bucket_key = (fixture_key, line, captured_at)
             bucket = grouped.setdefault(bucket_key, {
                 "fixture_key": fixture_key,
