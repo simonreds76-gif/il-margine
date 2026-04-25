@@ -519,10 +519,10 @@
       "match_date": "2026-04-25",
       "home_team": "FC Heidenheim",
       "away_team": "St. Pauli",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "4-4-2",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "4-3-1-2",
       "away_formation": "3-4-2-1",
       "home_players": [
         "Diant Ramaj",
@@ -530,12 +530,12 @@
         "Patrick Mainka",
         "Jonas Föhrenbach",
         "Hennes Behrens",
-        "Arijon Ibrahimovic",
         "Jan Schöppner",
         "Niklas Dorsch",
-        "Mathias Honsak",
-        "Budu Zivzivadze",
-        "Marvin Pieringer"
+        "Adrian Beck",
+        "Eren Dinkçi",
+        "Marvin Pieringer",
+        "Budu Zivzivadze"
       ],
       "away_players": [
         "Nikola Vasilj",
@@ -543,8 +543,8 @@
         "Hauke Wahl",
         "Karol Mets",
         "Manolis Saliakas",
-        "Mathias Rasmussen",
         "Jackson Irvine",
+        "Mathias Rasmussen",
         "Arkadiusz Pyrka",
         "Danel Sinani",
         "Joel Chima Fujita",
@@ -557,7 +557,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-4-2",
+          "formation": "4-3-1-2",
           "position_id": 11
         },
         {
@@ -566,7 +566,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-3-1-2",
           "position_id": 32
         },
         {
@@ -575,7 +575,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-3-1-2",
           "position_id": 34
         },
         {
@@ -584,7 +584,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-3-1-2",
           "position_id": 36
         },
         {
@@ -593,61 +593,61 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-3-1-2",
           "position_id": 38
-        },
-        {
-          "name": "Arijon Ibrahimovic",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 72
         },
         {
           "name": "Jan Schöppner",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 74
+          "formation": "4-3-1-2",
+          "position_id": 63
         },
         {
           "name": "Niklas Dorsch",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 76
+          "formation": "4-3-1-2",
+          "position_id": 65
         },
         {
-          "name": "Mathias Honsak",
+          "name": "Adrian Beck",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 78
+          "formation": "4-3-1-2",
+          "position_id": 67
         },
         {
-          "name": "Budu Zivzivadze",
+          "name": "Eren Dinkçi",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 104
+          "line_size": 1,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-3-1-2",
+          "position_id": 85
         },
         {
           "name": "Marvin Pieringer",
-          "line_index": 2,
+          "line_index": 3,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
+          "formation": "4-3-1-2",
+          "position_id": 104
+        },
+        {
+          "name": "Budu Zivzivadze",
+          "line_index": 3,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-1-2",
           "position_id": 106
         }
       ],
@@ -698,7 +698,7 @@
           "position_id": 62
         },
         {
-          "name": "Mathias Rasmussen",
+          "name": "Jackson Irvine",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -707,7 +707,7 @@
           "position_id": 64
         },
         {
-          "name": "Jackson Irvine",
+          "name": "Mathias Rasmussen",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -752,8 +752,28 @@
           "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Frank Feller",
+        "Leonidas Stergiou",
+        "Omar Traoré",
+        "Tim Siersleben",
+        "Arijon Ibrahimovic",
+        "Christian Conteh",
+        "Julian Niehues",
+        "Luca Kerber",
+        "Stefan Schimmer"
+      ],
+      "away_subs": [
+        "Ben Alexander Voll",
+        "Adam Dzwigala",
+        "Eric Smith",
+        "Connor Metcalfe",
+        "Lars Ritzka",
+        "Louis Oppie",
+        "Abdoulie Ceesay",
+        "Martijn Kaars",
+        "Taichi Hara"
+      ],
       "home_unavailable": [
         "Mikkel Kaufmann",
         "Nick Rothweiler",
@@ -762,7 +782,6 @@
       ],
       "away_unavailable": [
         "Simon Spari",
-        "Eric Smith",
         "James Sands",
         "Mathias Pereira Lage",
         "Ricky-Jade Jones"

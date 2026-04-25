@@ -263,23 +263,23 @@
       "match_date": "2026-04-25",
       "home_team": "Lyon",
       "away_team": "Auxerre",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "4-3-1-2",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Dominik Greif",
         "Ainsley Maitland-Niles",
         "Clinton Mata",
         "Moussa Niakhaté",
-        "Nicolás Tagliafico",
-        "Tyler Morton",
+        "Abner",
         "Orel Mangala",
-        "Tanner Tessmann",
-        "Noah Nartey",
+        "Tyler Morton",
         "Endrick",
-        "Afonso Moreira"
+        "Khalis Merah",
+        "Afonso Moreira",
+        "Roman Yaremchuk"
       ],
       "away_players": [
         "Théo De Percin",
@@ -301,7 +301,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-3-1-2",
+          "formation": "4-2-3-1",
           "position_id": 11
         },
         {
@@ -310,7 +310,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-1-2",
+          "formation": "4-2-3-1",
           "position_id": 32
         },
         {
@@ -319,7 +319,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-1-2",
+          "formation": "4-2-3-1",
           "position_id": 34
         },
         {
@@ -328,71 +328,71 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-1-2",
+          "formation": "4-2-3-1",
           "position_id": 36
         },
         {
-          "name": "Nicolás Tagliafico",
+          "name": "Abner",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-1-2",
+          "formation": "4-2-3-1",
           "position_id": 38
-        },
-        {
-          "name": "Tyler Morton",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-1-2",
-          "position_id": 63
         },
         {
           "name": "Orel Mangala",
           "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-1-2",
-          "position_id": 65
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
         },
         {
-          "name": "Tanner Tessmann",
+          "name": "Tyler Morton",
           "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-1-2",
-          "position_id": 67
-        },
-        {
-          "name": "Noah Nartey",
-          "line_index": 2,
-          "line_size": 1,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-3-1-2",
-          "position_id": 85
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
         },
         {
           "name": "Endrick",
-          "line_index": 3,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-1-2",
-          "position_id": 104
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83
+        },
+        {
+          "name": "Khalis Merah",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
         },
         {
           "name": "Afonso Moreira",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87
+        },
+        {
+          "name": "Roman Yaremchuk",
           "line_index": 3,
-          "line_size": 2,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-3-1-2",
-          "position_id": 106
+          "formation": "4-2-3-1",
+          "position_id": 115
         }
       ],
       "away_starters": [
@@ -496,8 +496,28 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Rémy Descamps",
+        "Hans Hateboer",
+        "Nicolás Tagliafico",
+        "Ruben Kluivert",
+        "Corentin Tolisso",
+        "Noah Nartey",
+        "Tanner Tessmann",
+        "Pavel Sulc",
+        "Rachid Ghezzal"
+      ],
+      "away_subs": [
+        "Tom Negrel",
+        "Clément Akpa",
+        "Francisco Sierralta",
+        "Lamine Sy",
+        "Assane Dioussé",
+        "Josué Casimir",
+        "Lasso Coulibaly",
+        "Naouirou Ahamada",
+        "Sékou Mara"
+      ],
       "home_unavailable": [
         "Ernest Nuamah",
         "Malick Fofana",
