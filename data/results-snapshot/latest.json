@@ -1,13 +1,13 @@
 {
-  "fetched_at": "2026-04-25T00:07:47Z",
+  "fetched_at": "2026-04-25T09:36:31Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
-      "api_football_error": "missing API_FOOTBALL_KEY",
+      "api_football_error": null,
       "api_football_latest": null,
       "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 10,
-      "api_football_requests_used": 0,
+      "api_football_requests_remaining_after_league": 8,
+      "api_football_requests_used": 2,
       "fetch_error": null,
       "fixtures": {
         "2025-08-22|bayern munich|rb leipzig": {
@@ -3282,11 +3282,11 @@
     },
     "epl": {
       "api_football_count": 0,
-      "api_football_error": "missing API_FOOTBALL_KEY",
+      "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 10,
-      "api_football_requests_used": 0,
+      "api_football_max_requests": 8,
+      "api_football_requests_remaining_after_league": 7,
+      "api_football_requests_used": 1,
       "fetch_error": null,
       "fixtures": {
         "2025-08-15|liverpool|bournemouth": {
@@ -7295,21 +7295,20 @@
       "source": "football-data",
       "source_latest": "2026-04-22",
       "target_dates": [
-        "2026-04-23",
         "2026-04-24",
         "2026-04-25",
         "2026-04-26"
       ],
-      "target_fixture_count": 2,
+      "target_fixture_count": 1,
       "unresolved_fixture_count": 1
     },
     "la-liga": {
       "api_football_count": 0,
-      "api_football_error": "missing API_FOOTBALL_KEY",
+      "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 10,
-      "api_football_requests_used": 0,
+      "api_football_max_requests": 7,
+      "api_football_requests_remaining_after_league": 6,
+      "api_football_requests_used": 1,
       "fetch_error": null,
       "fixtures": {
         "2025-08-15|girona|vallecano": {
@@ -11183,11 +11182,11 @@
     },
     "ligue-1": {
       "api_football_count": 0,
-      "api_football_error": "missing API_FOOTBALL_KEY",
+      "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 10,
-      "api_football_requests_used": 0,
+      "api_football_max_requests": 6,
+      "api_football_requests_remaining_after_league": 5,
+      "api_football_requests_used": 1,
       "fetch_error": null,
       "fixtures": {
         "2025-08-15|rennes|marseille": {
@@ -14437,11 +14436,11 @@
     },
     "serie-a": {
       "api_football_count": 0,
-      "api_football_error": "missing API_FOOTBALL_KEY",
+      "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 10,
-      "api_football_requests_used": 0,
+      "api_football_max_requests": 5,
+      "api_football_requests_remaining_after_league": 4,
+      "api_football_requests_used": 1,
       "fetch_error": null,
       "fixtures": {
         "2025-08-23|genoa|lecce": {
@@ -18403,36 +18402,21 @@
           "home_team": "lecce",
           "source": "football-data",
           "total_corners": 7
-        },
-        "2026-04-24|napoli|cremonese": {
-          "away_corners": 5,
-          "away_shots": 7,
-          "away_sot": 4,
-          "away_team": "cremonese",
-          "home_corners": 7,
-          "home_shots": 25,
-          "home_sot": 9,
-          "home_team": "napoli",
-          "match_id": 4803374,
-          "source": "fotmob",
-          "total_corners": 12
         }
       },
       "football_data_count": 330,
       "football_data_latest": "2026-04-20",
-      "fotmob_count": 1,
-      "fotmob_latest": "2026-04-24",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "lag_days": 5,
       "source": "football-data",
       "source_latest": "2026-04-20",
       "target_dates": [
-        "2026-04-23",
-        "2026-04-24",
         "2026-04-25",
         "2026-04-26",
         "2026-04-27"
       ],
-      "target_fixture_count": 2,
+      "target_fixture_count": 1,
       "unresolved_fixture_count": 1
     }
   },
