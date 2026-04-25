@@ -47,6 +47,48 @@ type CornersCalibrationParams = {
   lines?: Record<string, { a?: number; b?: number }>;
 };
 
+type ResearchLane = {
+  market?: string;
+  model?: string;
+  state?: string;
+  allowed_leagues?: string[];
+  canonical_only_allowed?: boolean;
+  clv_monitor?: string;
+  last_segment_gate_run?: string;
+  next_action?: string;
+  notes?: string;
+};
+
+type ResearchLaneState = {
+  generated_at?: string;
+  lanes?: ResearchLane[];
+};
+
+type CornersAllowedConfig = {
+  allowed_leagues?: string[];
+  blocked_leagues?: string[];
+  canonical_only_allowed?: boolean;
+  generated_at?: string;
+  model?: string;
+};
+
+type CornersTotalDiagnostic = {
+  generated_at?: string;
+  by_league?: Record<
+    string,
+    {
+      n?: number;
+      current_mae?: number;
+      canonical_mae?: number;
+      mae_delta?: number;
+      canonical_bias?: number;
+      current_bias?: number;
+      canonical_worse_share?: number;
+    }
+  >;
+  conclusion?: string[];
+};
+
 function parseCsv(text: string): CsvRow[] {
   const lines = text.split("\n").filter((l) => l.trim());
   if (lines.length < 2) return [];
@@ -344,6 +386,32 @@ function statTone(t?: "default" | "green" | "red" | "amber"): string | undefined
   return map[t];
 }
 
+function formatLeagueList(leagues?: string[] | null): string {
+  const items = (leagues ?? []).filter(Boolean);
+  if (items.length === 0) return "-";
+  return items.map((league) => leagueTitle(league)).join(", ");
+}
+
+function parseClvMonitorSummary(report?: string | null): {
+  picks: string;
+  settled: string;
+  avgClv: string;
+} {
+  const text = report ?? "";
+  const pickMatch = text.match(/- Picks:\s*([0-9]+)/i);
+  const settledMatch = text.match(/- Settled:\s*([0-9]+)/i);
+  const avgMatch = text.match(/- Average published-to-close CLV:\s*([^\n]+)/i);
+  return {
+    picks: pickMatch?.[1] ?? "-",
+    settled: settledMatch?.[1] ?? "-",
+    avgClv: avgMatch?.[1]?.trim() ?? "-",
+  };
+}
+
+function findResearchLane(state: ResearchLaneState | null, market: string, model: string): ResearchLane | null {
+  return state?.lanes?.find((lane) => lane.market === market && lane.model === model) ?? null;
+}
+
 const CURRENT_POLICY = "V3";
 const RESEARCH_POLICY = "V3.1";
 const VISIBLE_POLICY_ORDER = ["V3", "V3.1"] as const;
@@ -613,6 +681,10 @@ export default async function CornersMonitorPage() {
     settledCsv,
     livePnlTxt,
     pipelineStatus,
+    researchLaneState,
+    cornersAllowedConfig,
+    cornersClvReport,
+    cornersTotalDiagnostic,
     pinnacleCornersMtime,
     shortlistMtime,
     predictionsMtime,
@@ -633,6 +705,10 @@ export default async function CornersMonitorPage() {
       readFile("data/shortlist/settled-pnl.csv"),
       readFile("data/shortlist/corners-live-pnl.txt"),
       readJson<TeamPropsStatus>("data/shortlist/team-props-status.json"),
+      readJson<ResearchLaneState>("data/football-form/research-lane-state.json"),
+      readJson<CornersAllowedConfig>("data/football-form/corners-v0-allowed-leagues.json"),
+      readFile("data/football-form/corners-v0-clv-monitor.md"),
+      readJson<CornersTotalDiagnostic>("data/football-form/corners-total-diagnostic.json"),
       readKnownFileMtime("data/corners-ou/pinnacle-corners-odds.csv"),
       readKnownFileMtime("data/shortlist/shortlist-latest.txt"),
       readKnownFileMtime("data/corners-ou/corners-ou-predictions.csv"),
@@ -967,6 +1043,13 @@ export default async function CornersMonitorPage() {
       : pipelineStatus?.warnings?.length
         ? "amber"
         : "green";
+  const cornersV0Lane = findResearchLane(researchLaneState, "corners_total", "canonical_form_v0");
+  const cornersV0AllowedLeagues = cornersAllowedConfig?.allowed_leagues ?? cornersV0Lane?.allowed_leagues ?? [];
+  const cornersV0BlockedLeagues = cornersAllowedConfig?.blocked_leagues ?? [];
+  const cornersV0Clv = parseClvMonitorSummary(cornersClvReport);
+  const cornersDiagnosticRows = Object.entries(cornersTotalDiagnostic?.by_league ?? {})
+    .filter(([league]) => cornersV0BlockedLeagues.includes(league))
+    .sort(([a], [b]) => a.localeCompare(b));
 
   return (
     <div className="min-h-screen bg-[#0a0f19] px-4 py-10 text-slate-200 sm:px-6">
@@ -1096,6 +1179,105 @@ export default async function CornersMonitorPage() {
             tone={statTone(avgClv !== null && avgClv > 0 ? "green" : avgClv !== null && avgClv < -3 ? "red" : "default")}
           />
         </section>
+
+        <SectionCard
+          collapsible
+          defaultOpen
+          title="Corners V0 Research Partial"
+          subtitle="Active research lane | canonical_form_v0 | total-corners CLV watch"
+        >
+          {cornersV0Lane || cornersAllowedConfig ? (
+            <>
+              <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-6">
+                <StatCard
+                  label="Research state"
+                  value={cornersV0Lane?.state ?? "research_partial"}
+                  tone={statTone("amber")}
+                  detail="V0 total corners"
+                />
+                <StatCard
+                  label="Allowed leagues"
+                  value={`${cornersV0AllowedLeagues.length}/5`}
+                  tone={statTone(cornersV0AllowedLeagues.length >= 3 ? "green" : "amber")}
+                  detail={formatLeagueList(cornersV0AllowedLeagues)}
+                />
+                <StatCard
+                  label="Blocked leagues"
+                  value={cornersV0BlockedLeagues.length.toString()}
+                  tone={statTone(cornersV0BlockedLeagues.length > 0 ? "amber" : "green")}
+                  detail={formatLeagueList(cornersV0BlockedLeagues)}
+                />
+                <StatCard
+                  label="Canonical-only"
+                  value={cornersAllowedConfig?.canonical_only_allowed === false ? "blocked" : "allowed"}
+                  tone={statTone(cornersAllowedConfig?.canonical_only_allowed === false ? "amber" : "green")}
+                  detail="hard guard"
+                />
+                <StatCard
+                  label="CLV picks"
+                  value={cornersV0Clv.picks}
+                  detail={`${cornersV0Clv.settled} settled`}
+                />
+                <StatCard
+                  label="Avg CLV"
+                  value={cornersV0Clv.avgClv}
+                  tone={cornersV0Clv.avgClv.startsWith("+") ? "text-emerald-300" : cornersV0Clv.avgClv.startsWith("-") ? "text-rose-300" : undefined}
+                />
+              </div>
+
+              <div className="mt-3 rounded-xl border border-amber-500/20 bg-amber-500/8 px-3 py-2 text-xs text-amber-100">
+                This is the corners research model being monitored. EPL, Ligue 1 and Serie A are allowed; Bundesliga and La Liga remain blocked until total-corners calibration improves.
+                {cornersV0Lane?.next_action ? ` Next action: ${cornersV0Lane.next_action}` : ""}
+              </div>
+
+              {cornersDiagnosticRows.length > 0 ? (
+                <div className="mt-3 overflow-x-auto rounded-xl border border-slate-800/60 bg-slate-950/30">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
+                        <th className="py-2.5 pl-4 pr-3">Blocked league</th>
+                        <th className="py-2.5 pr-3 font-mono">N</th>
+                        <th className="py-2.5 pr-3 font-mono">Current MAE</th>
+                        <th className="py-2.5 pr-3 font-mono">V0 MAE</th>
+                        <th className="py-2.5 pr-3 font-mono">Delta</th>
+                        <th className="py-2.5 pr-4">Read</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cornersDiagnosticRows.map(([league, row]) => {
+                        const delta = row.mae_delta ?? null;
+                        const blocked = delta !== null && delta > 0;
+                        return (
+                          <tr key={league} className="border-b border-slate-800/40">
+                            <td className="py-2 pl-4 pr-3 text-slate-200">{leagueTitle(league)}</td>
+                            <td className="py-2 pr-3 font-mono tabular-nums text-slate-400">{row.n ?? "-"}</td>
+                            <td className="py-2 pr-3 font-mono tabular-nums text-slate-300">{row.current_mae?.toFixed(4) ?? "-"}</td>
+                            <td className={`py-2 pr-3 font-mono tabular-nums ${blocked ? "text-rose-300" : "text-emerald-300"}`}>
+                              {row.canonical_mae?.toFixed(4) ?? "-"}
+                            </td>
+                            <td className={`py-2 pr-3 font-mono tabular-nums ${blocked ? "text-rose-300" : "text-emerald-300"}`}>
+                              {delta === null ? "-" : `${delta >= 0 ? "+" : ""}${delta.toFixed(4)}`}
+                            </td>
+                            <td className="py-2 pr-4">
+                              <StatusPill
+                                label={blocked ? "BLOCKED" : "PASS"}
+                                tone={blocked
+                                  ? "bg-amber-500/10 text-amber-300 border-amber-500/20"
+                                  : "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"}
+                              />
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <EmptyState message="Corners V0 research state is missing from the snapshot. Rebuild the corners snapshot." />
+          )}
+        </SectionCard>
 
         <p className="rounded-xl border border-slate-800/60 bg-slate-900/30 px-4 py-3 text-xs text-slate-400">
           <strong className="text-slate-200">How to read this page.</strong>{" "}

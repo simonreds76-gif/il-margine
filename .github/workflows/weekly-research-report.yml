@@ -1,0 +1,85 @@
+name: Weekly Research Report
+
+on:
+  schedule:
+    - cron: "30 22 * * 1" # Monday 22:30 UTC, after the main weekend football settlement window.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: weekly-research-report
+  cancel-in-progress: true
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install Python deps
+        run: pip install requests
+
+      - name: Create .env.local
+        run: |
+          : > .env.local
+          if [ -n "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
+            echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" >> .env.local
+          else
+            echo "NEXT_PUBLIC_SUPABASE_URL=https://nuqcgzbagxtbxlqrhtvc.supabase.co" >> .env.local
+          fi
+          if [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
+          fi
+          if [ -n "${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}" ]; then
+            echo "OPS_ALERT_TELEGRAM_BOT_TOKEN=${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN }}" >> .env.local
+          fi
+          if [ -n "${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}" ]; then
+            echo "OPS_ALERT_TELEGRAM_CHAT_ID=${{ secrets.OPS_ALERT_TELEGRAM_CHAT_ID }}" >> .env.local
+          fi
+
+      - name: Refresh research CLV monitor reports
+        run: |
+          python scripts/team-shots-v1-clv-monitor.py \
+            --picks data/football-form/team-shots-v3-ema20-published-picks.csv \
+            --output data/football-form/team-shots-v3-ema20-clv-monitor.csv \
+            --report data/football-form/team-shots-v3-ema20-clv-monitor.md \
+            --allowed-config data/football-form/team-shots-v3-ema20-allowed-leagues.json
+          python scripts/corners-v0-clv-monitor.py
+
+      - name: Build and send weekly report
+        run: python scripts/weekly-research-report.py
+
+      - name: Upload hosted monitor snapshots
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          python scripts/team-shots-live-snapshot.py
+          python scripts/corners-live-snapshot.py
+          if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://nuqcgzbagxtbxlqrhtvc.supabase.co}"
+            python scripts/team-shots-live-snapshot.py --supabase
+            python scripts/corners-live-snapshot.py --supabase
+          else
+            echo "::warning::SUPABASE_SERVICE_ROLE_KEY not configured; hosted monitor snapshot upload skipped."
+          fi
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-research-report
+          path: |
+            data/football-form/weekly-research-report.md
+            data/football-form/weekly-research-report.json
+            data/football-form/team-shots-v3-ema20-clv-monitor.md
+            data/football-form/corners-v0-clv-monitor.md

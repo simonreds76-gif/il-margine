@@ -109,6 +109,62 @@ type TeamShotsLast90Diagnostic = {
   }>;
 };
 
+type ResearchLane = {
+  market?: string;
+  model?: string;
+  state?: string;
+  allowed_leagues?: string[];
+  canonical_only_allowed?: boolean;
+  clv_monitor?: string;
+  last_segment_gate_run?: string;
+  next_action?: string;
+  notes?: string;
+};
+
+type ResearchLaneState = {
+  generated_at?: string;
+  lanes?: ResearchLane[];
+};
+
+type AllowedLeagueConfig = {
+  allowed_leagues?: string[];
+  blocked_leagues?: string[];
+  canonical_only_allowed?: boolean;
+  generated_at?: string;
+  model?: string;
+  rules?: string[];
+};
+
+type TeamShotsV3PromotionCheck = {
+  generated_at?: string;
+  ready_leagues?: string[];
+  blocked_leagues?: string[];
+  research_lane_ready_all_leagues?: boolean;
+  canonical_only?: {
+    hard_block?: boolean;
+    n?: number;
+    reason?: string;
+  };
+  league_results?: Array<{
+    league?: string;
+    common?: {
+      n?: number;
+      current_mae?: number;
+      canonical_mae?: number;
+      improvement_pct?: number;
+    };
+    last_90_common?: {
+      n?: number;
+      current_mae?: number;
+      canonical_mae?: number;
+      improvement_pct?: number;
+      count_ok?: boolean;
+      brier_ok?: boolean;
+      log_loss_ok?: boolean;
+    };
+  }>;
+};
+
 type PredictionsSummary = {
   prediction_count?: number;
   recent_predictions?: CsvRow[];
@@ -664,6 +720,40 @@ function formatDiagnosticMetric(value: unknown, digits = 4): string {
   return parsed === null ? "--" : parsed.toFixed(digits);
 }
 
+function formatModelName(model?: string | null): string {
+  if (!model) return "-";
+  if (model === "canonical_form_v3_ema20_nb") return "V3 EMA20";
+  if (model === "canonical_form_v2_pooled_opp_nb") return "V2 pooled";
+  if (model === "canonical_form_v1_market_nb") return "V1 market";
+  return model.replace(/^canonical_form_/, "").replace(/_/g, " ");
+}
+
+function formatLeagueList(leagues?: string[] | null): string {
+  const items = (leagues ?? []).filter(Boolean);
+  if (items.length === 0) return "-";
+  return items.map((league) => leagueTitle(league)).join(", ");
+}
+
+function parseClvMonitorSummary(report?: string | null): {
+  picks: string;
+  settled: string;
+  avgClv: string;
+} {
+  const text = report ?? "";
+  const pickMatch = text.match(/- Picks:\s*([0-9]+)/i);
+  const settledMatch = text.match(/- Settled:\s*([0-9]+)/i);
+  const avgMatch = text.match(/- Average published-to-close CLV:\s*([^\n]+)/i);
+  return {
+    picks: pickMatch?.[1] ?? "-",
+    settled: settledMatch?.[1] ?? "-",
+    avgClv: avgMatch?.[1]?.trim() ?? "-",
+  };
+}
+
+function findResearchLane(state: ResearchLaneState | null, market: string, model: string): ResearchLane | null {
+  return state?.lanes?.find((lane) => lane.market === market && lane.model === model) ?? null;
+}
+
 function maeDeltaTone(candidate: number | null, baseline: number | null): "green" | "red" | "amber" | "default" {
   if (candidate === null || baseline === null) return "default";
   if (candidate <= baseline) return "green";
@@ -927,6 +1017,14 @@ export default async function TeamShotsMonitorPage() {
 
     last90DiagnosticReport,
 
+    researchLaneState,
+
+    teamShotsV3AllowedConfig,
+
+    teamShotsV3PromotionCheck,
+
+    teamShotsV3ClvReport,
+
     comparisonCsv,
 
     comparisonTxt,
@@ -969,6 +1067,14 @@ export default async function TeamShotsMonitorPage() {
     readJson<TeamShotsLast90Diagnostic>("data/football-form/team-shots-last90-diagnostic.json"),
 
     readFile("data/football-form/team-shots-last90-diagnostic.md"),
+
+    readJson<ResearchLaneState>("data/football-form/research-lane-state.json"),
+
+    readJson<AllowedLeagueConfig>("data/football-form/team-shots-v3-ema20-allowed-leagues.json"),
+
+    readJson<TeamShotsV3PromotionCheck>("data/football-form/team-shots-v3-ema20-promotion-check.json"),
+
+    readFile("data/football-form/team-shots-v3-ema20-clv-monitor.md"),
 
     readFile("data/team-shots/team-shots-comparison.csv"),
 
@@ -1797,6 +1903,19 @@ function LiveLineTable({
     .map((row) => row.league)
     .filter(Boolean);
 
+  const teamShotsV3Lane = findResearchLane(researchLaneState, "team_shots", "canonical_form_v3_ema20_nb");
+  const teamShotsV3AllowedLeagues =
+    teamShotsV3AllowedConfig?.allowed_leagues ??
+    teamShotsV3Lane?.allowed_leagues ??
+    teamShotsV3PromotionCheck?.ready_leagues ??
+    [];
+  const teamShotsV3BlockedLeagues =
+    teamShotsV3AllowedConfig?.blocked_leagues ?? teamShotsV3PromotionCheck?.blocked_leagues ?? [];
+  const teamShotsV3Clv = parseClvMonitorSummary(teamShotsV3ClvReport);
+  const teamShotsV3LeagueRows = [...(teamShotsV3PromotionCheck?.league_results ?? [])].sort((a, b) =>
+    (a.league ?? "").localeCompare(b.league ?? ""),
+  );
+
   return (
     <div className="min-h-screen bg-[#0a0f19] px-4 py-10 text-slate-200 sm:px-6">
       <div className="mx-auto flex max-w-7xl flex-col gap-4">
@@ -1926,8 +2045,111 @@ function LiveLineTable({
         <SectionCard
           collapsible
           defaultOpen
-          title="Team-shots last-90 diagnostic"
-          subtitle="Canonical research layer | count-lambda sanity check"
+          title="Team Shots V3 EMA20 Research"
+          subtitle="Active research lane | canonical_form_v3_ema20_nb | live CLV watch"
+        >
+          {teamShotsV3PromotionCheck || teamShotsV3Lane ? (
+            <>
+              <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-6">
+                <StatCard
+                  label="Research state"
+                  value={teamShotsV3Lane?.state ?? (teamShotsV3PromotionCheck?.research_lane_ready_all_leagues ? "research_all_leagues" : "unknown")}
+                  tone={statTone(teamShotsV3PromotionCheck?.research_lane_ready_all_leagues ? "green" : "amber")}
+                  detail={formatModelName(teamShotsV3Lane?.model ?? teamShotsV3AllowedConfig?.model ?? "canonical_form_v3_ema20_nb")}
+                />
+                <StatCard
+                  label="Allowed leagues"
+                  value={`${teamShotsV3AllowedLeagues.length}/5`}
+                  tone={statTone(teamShotsV3AllowedLeagues.length === 5 ? "green" : "amber")}
+                  detail={formatLeagueList(teamShotsV3AllowedLeagues)}
+                />
+                <StatCard
+                  label="Canonical-only"
+                  value={teamShotsV3PromotionCheck?.canonical_only?.hard_block || teamShotsV3AllowedConfig?.canonical_only_allowed === false ? "blocked" : "allowed"}
+                  tone={statTone(teamShotsV3PromotionCheck?.canonical_only?.hard_block || teamShotsV3AllowedConfig?.canonical_only_allowed === false ? "amber" : "green")}
+                  detail={teamShotsV3PromotionCheck?.canonical_only?.n !== undefined ? `${teamShotsV3PromotionCheck.canonical_only.n.toLocaleString("en-GB")} rows not published` : "guard active"}
+                />
+                <StatCard
+                  label="CLV picks"
+                  value={teamShotsV3Clv.picks}
+                  detail={`${teamShotsV3Clv.settled} settled`}
+                />
+                <StatCard
+                  label="Avg CLV"
+                  value={teamShotsV3Clv.avgClv}
+                  tone={teamShotsV3Clv.avgClv.startsWith("+") ? "text-emerald-300" : teamShotsV3Clv.avgClv.startsWith("-") ? "text-rose-300" : undefined}
+                />
+                <StatCard
+                  label="Last gate"
+                  value={teamShotsV3Lane?.last_segment_gate_run ? formatRelativeAgeShort(teamShotsV3Lane.last_segment_gate_run, renderReferenceMillis) : "-"}
+                  detail={teamShotsV3Lane?.last_segment_gate_run ? formatDateTime(teamShotsV3Lane.last_segment_gate_run) : undefined}
+                />
+              </div>
+
+              <div className="mt-3 rounded-xl border border-emerald-500/20 bg-emerald-500/8 px-3 py-2 text-xs text-emerald-100">
+                This is the team-shots research model now being monitored: V3 EMA20, all five leagues allowed, canonical-only fixtures still blocked.
+                {teamShotsV3Lane?.next_action ? ` Next action: ${teamShotsV3Lane.next_action}` : ""}
+              </div>
+
+              {teamShotsV3LeagueRows.length > 0 ? (
+                <div className="mt-3 overflow-x-auto rounded-xl border border-slate-800/60 bg-slate-950/30">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
+                        <th className="py-2.5 pl-4 pr-3">League</th>
+                        <th className="py-2.5 pr-3 font-mono">N</th>
+                        <th className="py-2.5 pr-3 font-mono">Current MAE</th>
+                        <th className="py-2.5 pr-3 font-mono">V3 MAE</th>
+                        <th className="py-2.5 pr-3 font-mono">Improve</th>
+                        <th className="py-2.5 pr-4">Gate</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {teamShotsV3LeagueRows.map((row) => {
+                        const last90 = row.last_90_common;
+                        const passes = Boolean(last90?.count_ok && last90?.brier_ok && last90?.log_loss_ok);
+                        const improvement = finiteNumber(last90?.improvement_pct);
+                        return (
+                          <tr key={row.league ?? "unknown"} className="border-b border-slate-800/40">
+                            <td className="py-2 pl-4 pr-3 text-slate-200">{leagueTitle(row.league ?? "")}</td>
+                            <td className="py-2 pr-3 font-mono tabular-nums text-slate-400">{last90?.n ?? "-"}</td>
+                            <td className="py-2 pr-3 font-mono tabular-nums text-slate-300">{formatDiagnosticMetric(last90?.current_mae)}</td>
+                            <td className="py-2 pr-3 font-mono tabular-nums text-emerald-300">{formatDiagnosticMetric(last90?.canonical_mae)}</td>
+                            <td className="py-2 pr-3 font-mono tabular-nums text-emerald-300">
+                              {improvement === null ? "-" : `+${(improvement * 100).toFixed(1)}%`}
+                            </td>
+                            <td className="py-2 pr-4">
+                              <StatusPill
+                                label={passes ? "PASS" : "HOLD"}
+                                tone={passes
+                                  ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                                  : "bg-rose-500/10 text-rose-300 border-rose-500/20"}
+                              />
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              ) : null}
+
+              {teamShotsV3BlockedLeagues.length > 0 ? (
+                <p className="mt-3 text-xs text-amber-200">
+                  Blocked leagues: {formatLeagueList(teamShotsV3BlockedLeagues)}
+                </p>
+              ) : null}
+            </>
+          ) : (
+            <EmptyState message="Team-shots V3 EMA20 research state is missing from the snapshot. Rebuild the team-shots snapshot." />
+          )}
+        </SectionCard>
+
+        <SectionCard
+          collapsible
+          defaultOpen={false}
+          title="Legacy team-shots last-90 diagnostic"
+          subtitle="Older v1/v2 investigation reference | superseded by V3 EMA20 above"
         >
           {last90Diagnostic ? (
             <>

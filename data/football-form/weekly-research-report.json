@@ -1,0 +1,156 @@
+{
+  "generated_at": "2026-04-25T22:51:53Z",
+  "team_shots_v3_ema20": {
+    "label": "Team Shots V3 EMA20 Research",
+    "model": "canonical_form_v3_ema20_nb",
+    "lane": {
+      "allowed_leagues": [
+        "bundesliga",
+        "epl",
+        "la-liga",
+        "ligue-1",
+        "serie-a"
+      ],
+      "canonical_only_allowed": false,
+      "clv_monitor": "data/football-form/team-shots-v3-ema20-clv-monitor.md",
+      "model": "canonical_form_v3_ema20_nb",
+      "notes": "Active research candidate. Clean canonical EMA20 passes all five league segment gates.",
+      "state": "research_all_leagues",
+      "market": "team_shots",
+      "last_segment_gate_run": "2026-04-25T22:19:15Z",
+      "next_action": "Watch CLV passively; do not unblock canonical-only fixtures."
+    },
+    "allowed_leagues": [
+      "bundesliga",
+      "epl",
+      "la-liga",
+      "ligue-1",
+      "serie-a"
+    ],
+    "blocked_leagues": [],
+    "canonical_only_allowed": false,
+    "segment_gate": {
+      "n": 1140,
+      "current_mae": 3.7320449122807022,
+      "canonical_mae": 3.64133947368421,
+      "improvement_pct": 0.024304487413325627,
+      "leagues": [
+        {
+          "league": "bundesliga",
+          "passes": true,
+          "n": 222,
+          "current_mae": 3.8478,
+          "canonical_mae": 3.7622,
+          "improvement_pct": 0.022246478507198894
+        },
+        {
+          "league": "epl",
+          "passes": true,
+          "n": 224,
+          "current_mae": 3.4593,
+          "canonical_mae": 3.3498,
+          "improvement_pct": 0.03165380279247238
+        },
+        {
+          "league": "la-liga",
+          "passes": true,
+          "n": 242,
+          "current_mae": 3.8294,
+          "canonical_mae": 3.7293,
+          "improvement_pct": 0.02613986525304233
+        },
+        {
+          "league": "ligue-1",
+          "passes": true,
+          "n": 212,
+          "current_mae": 3.5528,
+          "canonical_mae": 3.4854,
+          "improvement_pct": 0.018970952488178375
+        },
+        {
+          "league": "serie-a",
+          "passes": true,
+          "n": 240,
+          "current_mae": 3.9397,
+          "canonical_mae": 3.8507,
+          "improvement_pct": 0.0225905525801458
+        }
+      ]
+    },
+    "clv": {
+      "published_picks": 0,
+      "settled": 0,
+      "pnl_units": 0,
+      "avg_published_to_close_clv": null,
+      "avg_model_to_close_clv": null,
+      "positive_clv_share": null,
+      "sample_state": "too_early",
+      "pause_rule_fired": false
+    }
+  },
+  "corners_v0": {
+    "label": "Corners V0 Research Partial",
+    "model": "canonical_form_v0",
+    "lane": {
+      "allowed_leagues": [
+        "epl",
+        "ligue-1",
+        "serie-a"
+      ],
+      "canonical_only_allowed": false,
+      "clv_monitor": "data/football-form/corners-v0-clv-monitor.md",
+      "model": "canonical_form_v0",
+      "notes": "Bundesliga and La Liga remain blocked after recent segment gate and venue diagnostic.",
+      "state": "research_partial",
+      "market": "corners_total",
+      "last_segment_gate_run": "2026-04-25T19:42:49Z",
+      "next_action": "Test a total-corners calibration/pressure correction for Bundesliga and La Liga; pure home/away redistribution cannot move total O/U."
+    },
+    "allowed_leagues": [
+      "epl",
+      "ligue-1",
+      "serie-a"
+    ],
+    "blocked_leagues": [
+      "bundesliga",
+      "la-liga"
+    ],
+    "canonical_only_allowed": false,
+    "blocked_diagnostic": {
+      "bundesliga": {
+        "canonical_bias": 0.0861,
+        "canonical_mae": 2.6594,
+        "canonical_worse_share": 0.5586,
+        "current_bias": -0.2372,
+        "current_mae": 2.587,
+        "mae_delta": 0.0724,
+        "mean_lambda_gap": 0.3233,
+        "n": 111
+      },
+      "la-liga": {
+        "canonical_bias": 0.235,
+        "canonical_mae": 2.7749,
+        "canonical_worse_share": 0.5868,
+        "current_bias": 0.1105,
+        "current_mae": 2.7026,
+        "mae_delta": 0.0723,
+        "mean_lambda_gap": 0.1245,
+        "n": 121
+      }
+    },
+    "clv": {
+      "published_picks": 0,
+      "settled": 0,
+      "pnl_units": 0,
+      "avg_published_to_close_clv": null,
+      "avg_model_to_close_clv": null,
+      "positive_clv_share": null,
+      "sample_state": "too_early",
+      "pause_rule_fired": false
+    }
+  },
+  "status": {
+    "pause_required": false,
+    "read": "observe_live_sample"
+  }
+}

@@ -44,8 +44,17 @@ const TEAM_SHOTS_SHADOW_FILES = [
   "data/team-shots/shadow/team-shots-shadow-performance.txt",
 ] as const;
 const TEAM_SHOTS_MARKET_FILES = [
+  "data/football-form/research-lane-state.json",
+  "data/football-form/research-lane-state.md",
+  "data/football-form/team-shots-active-allowed-leagues.json",
   "data/football-form/team-shots-last90-diagnostic.json",
   "data/football-form/team-shots-last90-diagnostic.md",
+  "data/football-form/team-shots-v3-ema20-allowed-leagues.json",
+  "data/football-form/team-shots-v3-ema20-promotion-check.json",
+  "data/football-form/team-shots-v3-ema20-promotion-check.md",
+  "data/football-form/team-shots-v3-ema20-clv-monitor.md",
+  "data/football-form/weekly-research-report.json",
+  "data/football-form/weekly-research-report.md",
   "data/team-shots/team-shots-comparison.csv",
   "data/team-shots/team-shots-comparison.txt",
   "data/team-shots/team-shots-odds-history.csv",
