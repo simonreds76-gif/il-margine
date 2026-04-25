@@ -118,7 +118,11 @@ def main() -> int:
         print(f"Stale goalscorer player logs: {' '.join(stale_leagues)}")
     else:
         print("Goalscorer player logs fresh.")
-    print(f"Wrote {args.output.relative_to(ROOT)}")
+    try:
+        output_label = str(args.output.relative_to(ROOT))
+    except ValueError:
+        output_label = str(args.output)
+    print(f"Wrote {output_label}")
 
     return 1 if args.fail_on_stale and stale_leagues else 0
 
