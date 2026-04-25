@@ -1,0 +1,1096 @@
+{
+  "best_by_source": {
+    "recent6": {
+      "candidate_mae": 3.727,
+      "current_mae": 3.7321,
+      "improvement_pct": 0.0014,
+      "league_metrics": {
+        "bundesliga": {
+          "candidate_mae": 3.7969,
+          "current_mae": 3.8478,
+          "improvement_pct": 0.0132,
+          "n": 222,
+          "passes_count_threshold": true
+        },
+        "epl": {
+          "candidate_mae": 3.5543,
+          "current_mae": 3.4593,
+          "improvement_pct": -0.0275,
+          "n": 224,
+          "passes_count_threshold": false
+        },
+        "la-liga": {
+          "candidate_mae": 3.8061,
+          "current_mae": 3.8294,
+          "improvement_pct": 0.0061,
+          "n": 242,
+          "passes_count_threshold": true
+        },
+        "ligue-1": {
+          "candidate_mae": 3.4977,
+          "current_mae": 3.5528,
+          "improvement_pct": 0.0155,
+          "n": 212,
+          "passes_count_threshold": true
+        },
+        "serie-a": {
+          "candidate_mae": 3.9463,
+          "current_mae": 3.9397,
+          "improvement_pct": -0.0017,
+          "n": 240,
+          "passes_count_threshold": false
+        }
+      },
+      "n": 1140,
+      "source": "recent6",
+      "weight": 0.0
+    },
+    "venue20": {
+      "candidate_mae": 3.6965,
+      "current_mae": 3.7321,
+      "improvement_pct": 0.0095,
+      "league_metrics": {
+        "bundesliga": {
+          "candidate_mae": 3.788,
+          "current_mae": 3.8478,
+          "improvement_pct": 0.0156,
+          "n": 222,
+          "passes_count_threshold": true
+        },
+        "epl": {
+          "candidate_mae": 3.4711,
+          "current_mae": 3.4593,
+          "improvement_pct": -0.0034,
+          "n": 224,
+          "passes_count_threshold": false
+        },
+        "la-liga": {
+          "candidate_mae": 3.765,
+          "current_mae": 3.8294,
+          "improvement_pct": 0.0168,
+          "n": 242,
+          "passes_count_threshold": true
+        },
+        "ligue-1": {
+          "candidate_mae": 3.5113,
+          "current_mae": 3.5528,
+          "improvement_pct": 0.0117,
+          "n": 212,
+          "passes_count_threshold": true
+        },
+        "serie-a": {
+          "candidate_mae": 3.9168,
+          "current_mae": 3.9397,
+          "improvement_pct": 0.0058,
+          "n": 240,
+          "passes_count_threshold": true
+        }
+      },
+      "n": 1140,
+      "source": "venue20",
+      "weight": 0.5
+    }
+  },
+  "diagnostic": "ema_blend_sweep",
+  "generated_at": "2026-04-25T20:12:19+00:00",
+  "latest_form_date": "2026-04-23",
+  "market": "team_shots",
+  "model": "canonical_form_v2_pooled_opp_nb",
+  "recent_cutoff": "2026-01-23",
+  "sweeps": {
+    "recent6": [
+      {
+        "candidate_mae": 3.727,
+        "current_mae": 3.7321,
+        "improvement_pct": 0.0014,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.7969,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.0132,
+            "n": 222,
+            "passes_count_threshold": true
+          },
+          "epl": {
+            "candidate_mae": 3.5543,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0275,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.8061,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.0061,
+            "n": 242,
+            "passes_count_threshold": true
+          },
+          "ligue-1": {
+            "candidate_mae": 3.4977,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0155,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.9463,
+            "current_mae": 3.9397,
+            "improvement_pct": -0.0017,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "recent6",
+        "weight": 0.0
+      },
+      {
+        "candidate_mae": 3.7291,
+        "current_mae": 3.7321,
+        "improvement_pct": 0.0008,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.8015,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.012,
+            "n": 222,
+            "passes_count_threshold": true
+          },
+          "epl": {
+            "candidate_mae": 3.5602,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0292,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.8109,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.0048,
+            "n": 242,
+            "passes_count_threshold": false
+          },
+          "ligue-1": {
+            "candidate_mae": 3.4967,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0158,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.9424,
+            "current_mae": 3.9397,
+            "improvement_pct": -0.0007,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "recent6",
+        "weight": 0.1
+      },
+      {
+        "candidate_mae": 3.7339,
+        "current_mae": 3.7321,
+        "improvement_pct": -0.0005,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.8116,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.0094,
+            "n": 222,
+            "passes_count_threshold": true
+          },
+          "epl": {
+            "candidate_mae": 3.5676,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0313,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.8163,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.0034,
+            "n": 242,
+            "passes_count_threshold": false
+          },
+          "ligue-1": {
+            "candidate_mae": 3.4983,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0154,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.9422,
+            "current_mae": 3.9397,
+            "improvement_pct": -0.0006,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "recent6",
+        "weight": 0.2
+      },
+      {
+        "candidate_mae": 3.742,
+        "current_mae": 3.7321,
+        "improvement_pct": -0.0027,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.8268,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.0055,
+            "n": 222,
+            "passes_count_threshold": true
+          },
+          "epl": {
+            "candidate_mae": 3.5779,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0343,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.8246,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.0013,
+            "n": 242,
+            "passes_count_threshold": false
+          },
+          "ligue-1": {
+            "candidate_mae": 3.5031,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.014,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.9443,
+            "current_mae": 3.9397,
+            "improvement_pct": -0.0012,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "recent6",
+        "weight": 0.3
+      },
+      {
+        "candidate_mae": 3.7551,
+        "current_mae": 3.7321,
+        "improvement_pct": -0.0062,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.8496,
+            "current_mae": 3.8478,
+            "improvement_pct": -0.0005,
+            "n": 222,
+            "passes_count_threshold": false
+          },
+          "epl": {
+            "candidate_mae": 3.5944,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0391,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.8345,
+            "current_mae": 3.8294,
+            "improvement_pct": -0.0013,
+            "n": 242,
+            "passes_count_threshold": false
+          },
+          "ligue-1": {
+            "candidate_mae": 3.5109,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0118,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.9532,
+            "current_mae": 3.9397,
+            "improvement_pct": -0.0034,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "recent6",
+        "weight": 0.4
+      },
+      {
+        "candidate_mae": 3.7698,
+        "current_mae": 3.7321,
+        "improvement_pct": -0.0101,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.8759,
+            "current_mae": 3.8478,
+            "improvement_pct": -0.0073,
+            "n": 222,
+            "passes_count_threshold": false
+          },
+          "epl": {
+            "candidate_mae": 3.6124,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0443,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.8466,
+            "current_mae": 3.8294,
+            "improvement_pct": -0.0045,
+            "n": 242,
+            "passes_count_threshold": false
+          },
+          "ligue-1": {
+            "candidate_mae": 3.5193,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0094,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.9625,
+            "current_mae": 3.9397,
+            "improvement_pct": -0.0058,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "recent6",
+        "weight": 0.5
+      },
+      {
+        "candidate_mae": 3.7888,
+        "current_mae": 3.7321,
+        "improvement_pct": -0.0152,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.9044,
+            "current_mae": 3.8478,
+            "improvement_pct": -0.0147,
+            "n": 222,
+            "passes_count_threshold": false
+          },
+          "epl": {
+            "candidate_mae": 3.6332,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0503,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.8672,
+            "current_mae": 3.8294,
+            "improvement_pct": -0.0099,
+            "n": 242,
+            "passes_count_threshold": false
+          },
+          "ligue-1": {
+            "candidate_mae": 3.5288,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0068,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.978,
+            "current_mae": 3.9397,
+            "improvement_pct": -0.0097,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "recent6",
+        "weight": 0.6
+      },
+      {
+        "candidate_mae": 3.8113,
+        "current_mae": 3.7321,
+        "improvement_pct": -0.0212,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.9345,
+            "current_mae": 3.8478,
+            "improvement_pct": -0.0225,
+            "n": 222,
+            "passes_count_threshold": false
+          },
+          "epl": {
+            "candidate_mae": 3.6556,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0568,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.891,
+            "current_mae": 3.8294,
+            "improvement_pct": -0.0161,
+            "n": 242,
+            "passes_count_threshold": false
+          },
+          "ligue-1": {
+            "candidate_mae": 3.545,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0022,
+            "n": 212,
+            "passes_count_threshold": false
+          },
+          "serie-a": {
+            "candidate_mae": 3.9975,
+            "current_mae": 3.9397,
+            "improvement_pct": -0.0147,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "recent6",
+        "weight": 0.7
+      },
+      {
+        "candidate_mae": 3.8352,
+        "current_mae": 3.7321,
+        "improvement_pct": -0.0276,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.9659,
+            "current_mae": 3.8478,
+            "improvement_pct": -0.0307,
+            "n": 222,
+            "passes_count_threshold": false
+          },
+          "epl": {
+            "candidate_mae": 3.6794,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0636,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.9169,
+            "current_mae": 3.8294,
+            "improvement_pct": -0.0228,
+            "n": 242,
+            "passes_count_threshold": false
+          },
+          "ligue-1": {
+            "candidate_mae": 3.5633,
+            "current_mae": 3.5528,
+            "improvement_pct": -0.0029,
+            "n": 212,
+            "passes_count_threshold": false
+          },
+          "serie-a": {
+            "candidate_mae": 4.0174,
+            "current_mae": 3.9397,
+            "improvement_pct": -0.0197,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "recent6",
+        "weight": 0.8
+      },
+      {
+        "candidate_mae": 3.8611,
+        "current_mae": 3.7321,
+        "improvement_pct": -0.0346,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 4.0015,
+            "current_mae": 3.8478,
+            "improvement_pct": -0.0399,
+            "n": 222,
+            "passes_count_threshold": false
+          },
+          "epl": {
+            "candidate_mae": 3.7046,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0709,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.9454,
+            "current_mae": 3.8294,
+            "improvement_pct": -0.0303,
+            "n": 242,
+            "passes_count_threshold": false
+          },
+          "ligue-1": {
+            "candidate_mae": 3.5835,
+            "current_mae": 3.5528,
+            "improvement_pct": -0.0086,
+            "n": 212,
+            "passes_count_threshold": false
+          },
+          "serie-a": {
+            "candidate_mae": 4.0374,
+            "current_mae": 3.9397,
+            "improvement_pct": -0.0248,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "recent6",
+        "weight": 0.9
+      },
+      {
+        "candidate_mae": 3.8881,
+        "current_mae": 3.7321,
+        "improvement_pct": -0.0418,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 4.0383,
+            "current_mae": 3.8478,
+            "improvement_pct": -0.0495,
+            "n": 222,
+            "passes_count_threshold": false
+          },
+          "epl": {
+            "candidate_mae": 3.7312,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0786,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.9752,
+            "current_mae": 3.8294,
+            "improvement_pct": -0.0381,
+            "n": 242,
+            "passes_count_threshold": false
+          },
+          "ligue-1": {
+            "candidate_mae": 3.6042,
+            "current_mae": 3.5528,
+            "improvement_pct": -0.0145,
+            "n": 212,
+            "passes_count_threshold": false
+          },
+          "serie-a": {
+            "candidate_mae": 4.0583,
+            "current_mae": 3.9397,
+            "improvement_pct": -0.0301,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "recent6",
+        "weight": 1.0
+      }
+    ],
+    "venue20": [
+      {
+        "candidate_mae": 3.727,
+        "current_mae": 3.7321,
+        "improvement_pct": 0.0014,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.7969,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.0132,
+            "n": 222,
+            "passes_count_threshold": true
+          },
+          "epl": {
+            "candidate_mae": 3.5543,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0275,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.8061,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.0061,
+            "n": 242,
+            "passes_count_threshold": true
+          },
+          "ligue-1": {
+            "candidate_mae": 3.4977,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0155,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.9463,
+            "current_mae": 3.9397,
+            "improvement_pct": -0.0017,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "venue20",
+        "weight": 0.0
+      },
+      {
+        "candidate_mae": 3.7155,
+        "current_mae": 3.7321,
+        "improvement_pct": 0.0044,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.7889,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.0153,
+            "n": 222,
+            "passes_count_threshold": true
+          },
+          "epl": {
+            "candidate_mae": 3.5326,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0212,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.7892,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.0105,
+            "n": 242,
+            "passes_count_threshold": true
+          },
+          "ligue-1": {
+            "candidate_mae": 3.4984,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0153,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.936,
+            "current_mae": 3.9397,
+            "improvement_pct": 0.0009,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "venue20",
+        "weight": 0.1
+      },
+      {
+        "candidate_mae": 3.7063,
+        "current_mae": 3.7321,
+        "improvement_pct": 0.0069,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.7832,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.0168,
+            "n": 222,
+            "passes_count_threshold": true
+          },
+          "epl": {
+            "candidate_mae": 3.5127,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0154,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.7761,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.0139,
+            "n": 242,
+            "passes_count_threshold": true
+          },
+          "ligue-1": {
+            "candidate_mae": 3.5006,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0147,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.927,
+            "current_mae": 3.9397,
+            "improvement_pct": 0.0032,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "venue20",
+        "weight": 0.2
+      },
+      {
+        "candidate_mae": 3.7002,
+        "current_mae": 3.7321,
+        "improvement_pct": 0.0085,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.7797,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.0177,
+            "n": 222,
+            "passes_count_threshold": true
+          },
+          "epl": {
+            "candidate_mae": 3.4974,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.011,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.7685,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.0159,
+            "n": 242,
+            "passes_count_threshold": true
+          },
+          "ligue-1": {
+            "candidate_mae": 3.5035,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0139,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.921,
+            "current_mae": 3.9397,
+            "improvement_pct": 0.0048,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "venue20",
+        "weight": 0.3
+      },
+      {
+        "candidate_mae": 3.697,
+        "current_mae": 3.7321,
+        "improvement_pct": 0.0094,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.7806,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.0175,
+            "n": 222,
+            "passes_count_threshold": true
+          },
+          "epl": {
+            "candidate_mae": 3.4832,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0069,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.7654,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.0167,
+            "n": 242,
+            "passes_count_threshold": true
+          },
+          "ligue-1": {
+            "candidate_mae": 3.5065,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.013,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.9184,
+            "current_mae": 3.9397,
+            "improvement_pct": 0.0054,
+            "n": 240,
+            "passes_count_threshold": true
+          }
+        },
+        "n": 1140,
+        "source": "venue20",
+        "weight": 0.4
+      },
+      {
+        "candidate_mae": 3.6965,
+        "current_mae": 3.7321,
+        "improvement_pct": 0.0095,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.788,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.0156,
+            "n": 222,
+            "passes_count_threshold": true
+          },
+          "epl": {
+            "candidate_mae": 3.4711,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0034,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.765,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.0168,
+            "n": 242,
+            "passes_count_threshold": true
+          },
+          "ligue-1": {
+            "candidate_mae": 3.5113,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0117,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.9168,
+            "current_mae": 3.9397,
+            "improvement_pct": 0.0058,
+            "n": 240,
+            "passes_count_threshold": true
+          }
+        },
+        "n": 1140,
+        "source": "venue20",
+        "weight": 0.5
+      },
+      {
+        "candidate_mae": 3.6974,
+        "current_mae": 3.7321,
+        "improvement_pct": 0.0093,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.7965,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.0133,
+            "n": 222,
+            "passes_count_threshold": true
+          },
+          "epl": {
+            "candidate_mae": 3.4598,
+            "current_mae": 3.4593,
+            "improvement_pct": -0.0002,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.7681,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.016,
+            "n": 242,
+            "passes_count_threshold": true
+          },
+          "ligue-1": {
+            "candidate_mae": 3.517,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0101,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.9156,
+            "current_mae": 3.9397,
+            "improvement_pct": 0.0061,
+            "n": 240,
+            "passes_count_threshold": true
+          }
+        },
+        "n": 1140,
+        "source": "venue20",
+        "weight": 0.6
+      },
+      {
+        "candidate_mae": 3.7011,
+        "current_mae": 3.7321,
+        "improvement_pct": 0.0083,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.8073,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.0105,
+            "n": 222,
+            "passes_count_threshold": true
+          },
+          "epl": {
+            "candidate_mae": 3.4496,
+            "current_mae": 3.4593,
+            "improvement_pct": 0.0028,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.7779,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.0134,
+            "n": 242,
+            "passes_count_threshold": true
+          },
+          "ligue-1": {
+            "candidate_mae": 3.5227,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0085,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.9178,
+            "current_mae": 3.9397,
+            "improvement_pct": 0.0056,
+            "n": 240,
+            "passes_count_threshold": true
+          }
+        },
+        "n": 1140,
+        "source": "venue20",
+        "weight": 0.7
+      },
+      {
+        "candidate_mae": 3.7084,
+        "current_mae": 3.7321,
+        "improvement_pct": 0.0063,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.8194,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.0074,
+            "n": 222,
+            "passes_count_threshold": true
+          },
+          "epl": {
+            "candidate_mae": 3.4463,
+            "current_mae": 3.4593,
+            "improvement_pct": 0.0038,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.7911,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.01,
+            "n": 242,
+            "passes_count_threshold": true
+          },
+          "ligue-1": {
+            "candidate_mae": 3.5304,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0063,
+            "n": 212,
+            "passes_count_threshold": true
+          },
+          "serie-a": {
+            "candidate_mae": 3.9245,
+            "current_mae": 3.9397,
+            "improvement_pct": 0.0039,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "venue20",
+        "weight": 0.8
+      },
+      {
+        "candidate_mae": 3.7187,
+        "current_mae": 3.7321,
+        "improvement_pct": 0.0036,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.8326,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.004,
+            "n": 222,
+            "passes_count_threshold": false
+          },
+          "epl": {
+            "candidate_mae": 3.4496,
+            "current_mae": 3.4593,
+            "improvement_pct": 0.0028,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.8078,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.0056,
+            "n": 242,
+            "passes_count_threshold": true
+          },
+          "ligue-1": {
+            "candidate_mae": 3.5409,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0034,
+            "n": 212,
+            "passes_count_threshold": false
+          },
+          "serie-a": {
+            "candidate_mae": 3.9315,
+            "current_mae": 3.9397,
+            "improvement_pct": 0.0021,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "venue20",
+        "weight": 0.9
+      },
+      {
+        "candidate_mae": 3.7321,
+        "current_mae": 3.7321,
+        "improvement_pct": 0.0,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 3.8478,
+            "current_mae": 3.8478,
+            "improvement_pct": 0.0,
+            "n": 222,
+            "passes_count_threshold": false
+          },
+          "epl": {
+            "candidate_mae": 3.4593,
+            "current_mae": 3.4593,
+            "improvement_pct": 0.0,
+            "n": 224,
+            "passes_count_threshold": false
+          },
+          "la-liga": {
+            "candidate_mae": 3.8294,
+            "current_mae": 3.8294,
+            "improvement_pct": 0.0,
+            "n": 242,
+            "passes_count_threshold": false
+          },
+          "ligue-1": {
+            "candidate_mae": 3.5528,
+            "current_mae": 3.5528,
+            "improvement_pct": 0.0,
+            "n": 212,
+            "passes_count_threshold": false
+          },
+          "serie-a": {
+            "candidate_mae": 3.9397,
+            "current_mae": 3.9397,
+            "improvement_pct": 0.0,
+            "n": 240,
+            "passes_count_threshold": false
+          }
+        },
+        "n": 1140,
+        "source": "venue20",
+        "weight": 1.0
+      }
+    ]
+  }
+}

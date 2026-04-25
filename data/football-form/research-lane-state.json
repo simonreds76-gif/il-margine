@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T19:45:00Z",
+  "generated_at": "2026-04-25T21:10:00Z",
   "lanes": [
     {
       "allowed_leagues": [
@@ -12,7 +12,9 @@
       "model": "canonical_form_v0",
       "notes": "Bundesliga and La Liga remain blocked after recent segment gate and venue diagnostic.",
       "state": "research_partial",
-      "market": "corners_total"
+      "market": "corners_total",
+      "last_segment_gate_run": "2026-04-25T19:42:49Z",
+      "next_action": "Test a total-corners calibration/pressure correction for Bundesliga and La Liga; pure home/away redistribution cannot move total O/U."
     },
     {
       "allowed_leagues": [
@@ -21,9 +23,11 @@
       "canonical_only_allowed": false,
       "clv_monitor": "data/football-form/team-shots-v1-clv-monitor.md",
       "model": "canonical_form_v1_market_nb",
-      "notes": "Conservative research config. V1 passes only La Liga.",
-      "state": "research_partial",
-      "market": "team_shots"
+      "notes": "Deprecated/reference config. V1 passed only La Liga, but v2 is the active research candidate.",
+      "state": "deprecated_reference",
+      "market": "team_shots",
+      "last_segment_gate_run": "2026-04-25T19:43:56Z",
+      "next_action": "Keep for backtest comparison only."
     },
     {
       "allowed_leagues": [
@@ -32,11 +36,13 @@
         "ligue-1"
       ],
       "canonical_only_allowed": false,
-      "clv_monitor": null,
+      "clv_monitor": "data/football-form/team-shots-v2-clv-monitor.md",
       "model": "canonical_form_v2_pooled_opp_nb",
-      "notes": "Diagnostic/promotable candidate only. EPL and Serie A remain blocked.",
-      "state": "candidate_partial",
-      "market": "team_shots"
+      "notes": "Active research candidate. EPL and Serie A remain blocked.",
+      "state": "research_partial",
+      "market": "team_shots",
+      "last_segment_gate_run": "2026-04-25T19:44:33Z",
+      "next_action": "Test 20-match EMA smoothing on top of v2; early sweep says Serie A can improve, EPL still does not clear the gate."
     }
   ],
   "last_segment_gate_run": "2026-04-25T19:44:33Z",

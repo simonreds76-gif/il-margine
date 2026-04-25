@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Join team-shots v1 research picks to captured bookmaker prices.
+"""Join team-shots research picks to captured bookmaker prices.
 
-This can run before any v1 picks exist. It writes the monitor schema and
+This can run before any picks exist. It writes the monitor schema and
 applies the same hard guards as corners: allowed leagues only, and no
 canonical-only publication until that segment is separately validated.
 """
@@ -295,6 +295,14 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         writer.writerows(rows)
 
 
+def display_path(path: Path) -> str:
+    resolved = path if path.is_absolute() else ROOT / path
+    try:
+        return str(resolved.relative_to(ROOT)).replace("\\", "/")
+    except ValueError:
+        return str(path).replace("\\", "/")
+
+
 def avg(values: list[float]) -> float | None:
     vals = [value for value in values if value == value]
     return sum(vals) / len(vals) if vals else None
@@ -305,8 +313,9 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, odds_path: Path,
     blocked = [row for row in rows if row.get("blocked_reason")]
     with_close = [row for row in rows if row.get("book_price_close")]
     avg_clv = avg([value for value in clv_values if value is not None])
+    model = str(allowed_config.get("model") or "team-shots-research")
     lines = [
-        "# Team-Shots V1 CLV Monitor",
+        f"# Team-Shots CLV Monitor: `{model}`",
         "",
         f"Generated: {fmt_dt(datetime.now(UTC))}",
         f"Picks input: `{picks_path.relative_to(ROOT) if picks_path.is_absolute() and ROOT in picks_path.parents else picks_path}`",
@@ -332,8 +341,8 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, odds_path: Path,
         "",
         "## De-Promotion Rules",
         "",
-        "- Pause team-shots v1 if 30-day rolling CLV is below 0 with at least 50 settled picks.",
-        "- Pause team-shots v1 if rolling 90-day production Brier exceeds 1.05x the pre-promotion backtest Brier.",
+        f"- Pause `{model}` if 30-day rolling CLV is below 0 with at least 50 settled picks.",
+        f"- Pause `{model}` if rolling 90-day production Brier exceeds 1.05x the pre-promotion backtest Brier.",
         "",
     ]
     return "\n".join(lines)
@@ -373,8 +382,8 @@ def main() -> None:
     write_csv(args.output, rows)
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(render_report(rows, args.picks, args.odds, allowed_config), encoding="utf-8")
-    print(f"Wrote {args.output.relative_to(ROOT)}")
-    print(f"Wrote {args.report.relative_to(ROOT)}")
+    print(f"Wrote {display_path(args.output)}")
+    print(f"Wrote {display_path(args.report)}")
 
 
 if __name__ == "__main__":

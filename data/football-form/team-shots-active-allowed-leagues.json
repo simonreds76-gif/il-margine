@@ -1,0 +1,14 @@
+{
+  "active_model": "canonical_form_v2_pooled_opp_nb",
+  "active_config": "data/football-form/team-shots-v2-allowed-leagues.json",
+  "deprecated_configs": [
+    "data/football-form/team-shots-v1-allowed-leagues.json"
+  ],
+  "generated_at": "2026-04-25T21:10:00Z",
+  "market": "team_shots",
+  "notes": [
+    "v2 is the active research candidate because it passes bundesliga, la-liga, and ligue-1.",
+    "v1 remains a backtest reference only.",
+    "canonical-only fixtures remain blocked."
+  ]
+}

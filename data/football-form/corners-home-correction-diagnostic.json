@@ -1,0 +1,351 @@
+{
+  "diagnostic": "home_correction",
+  "generated_at": "2026-04-25T20:12:20+00:00",
+  "latest_form_date": "2026-04-23",
+  "market": "corners_total",
+  "model": "canonical_form_v0",
+  "recent_cutoff": "2026-01-23",
+  "shifts": {
+    "bundesliga": 0.4801,
+    "epl": 0.544,
+    "la-liga": 0.6445,
+    "ligue-1": 0.511,
+    "serie-a": 0.5285
+  },
+  "summaries": {
+    "home_only": [
+      {
+        "candidate_mae": 2.6309,
+        "current_mae": 2.6663,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 2.6594,
+            "current_mae": 2.587,
+            "n": 111
+          },
+          "epl": {
+            "candidate_mae": 2.5618,
+            "current_mae": 2.6609,
+            "n": 112
+          },
+          "la-liga": {
+            "candidate_mae": 2.7749,
+            "current_mae": 2.7026,
+            "n": 121
+          },
+          "ligue-1": {
+            "candidate_mae": 2.4323,
+            "current_mae": 2.6322,
+            "n": 106
+          },
+          "serie-a": {
+            "candidate_mae": 2.6993,
+            "current_mae": 2.7384,
+            "n": 120
+          }
+        },
+        "mode": "home_only",
+        "scale": 0.0
+      },
+      {
+        "candidate_mae": 2.6395,
+        "current_mae": 2.6663,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 2.6694,
+            "current_mae": 2.587,
+            "n": 111
+          },
+          "epl": {
+            "candidate_mae": 2.5632,
+            "current_mae": 2.6609,
+            "n": 112
+          },
+          "la-liga": {
+            "candidate_mae": 2.8104,
+            "current_mae": 2.7026,
+            "n": 121
+          },
+          "ligue-1": {
+            "candidate_mae": 2.4204,
+            "current_mae": 2.6322,
+            "n": 106
+          },
+          "serie-a": {
+            "candidate_mae": 2.7043,
+            "current_mae": 2.7384,
+            "n": 120
+          }
+        },
+        "mode": "home_only",
+        "scale": 0.25
+      },
+      {
+        "candidate_mae": 2.6521,
+        "current_mae": 2.6663,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 2.6854,
+            "current_mae": 2.587,
+            "n": 111
+          },
+          "epl": {
+            "candidate_mae": 2.5707,
+            "current_mae": 2.6609,
+            "n": 112
+          },
+          "la-liga": {
+            "candidate_mae": 2.8464,
+            "current_mae": 2.7026,
+            "n": 121
+          },
+          "ligue-1": {
+            "candidate_mae": 2.4128,
+            "current_mae": 2.6322,
+            "n": 106
+          },
+          "serie-a": {
+            "candidate_mae": 2.7127,
+            "current_mae": 2.7384,
+            "n": 120
+          }
+        },
+        "mode": "home_only",
+        "scale": 0.5
+      },
+      {
+        "candidate_mae": 2.671,
+        "current_mae": 2.6663,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 2.7089,
+            "current_mae": 2.587,
+            "n": 111
+          },
+          "epl": {
+            "candidate_mae": 2.5804,
+            "current_mae": 2.6609,
+            "n": 112
+          },
+          "la-liga": {
+            "candidate_mae": 2.8865,
+            "current_mae": 2.7026,
+            "n": 121
+          },
+          "ligue-1": {
+            "candidate_mae": 2.4142,
+            "current_mae": 2.6322,
+            "n": 106
+          },
+          "serie-a": {
+            "candidate_mae": 2.7301,
+            "current_mae": 2.7384,
+            "n": 120
+          }
+        },
+        "mode": "home_only",
+        "scale": 0.75
+      },
+      {
+        "candidate_mae": 2.693,
+        "current_mae": 2.6663,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 2.7364,
+            "current_mae": 2.587,
+            "n": 111
+          },
+          "epl": {
+            "candidate_mae": 2.5918,
+            "current_mae": 2.6609,
+            "n": 112
+          },
+          "la-liga": {
+            "candidate_mae": 2.9278,
+            "current_mae": 2.7026,
+            "n": 121
+          },
+          "ligue-1": {
+            "candidate_mae": 2.4175,
+            "current_mae": 2.6322,
+            "n": 106
+          },
+          "serie-a": {
+            "candidate_mae": 2.7539,
+            "current_mae": 2.7384,
+            "n": 120
+          }
+        },
+        "mode": "home_only",
+        "scale": 1.0
+      }
+    ],
+    "symmetric": [
+      {
+        "candidate_mae": 2.6309,
+        "current_mae": 2.6663,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 2.6594,
+            "current_mae": 2.587,
+            "n": 111
+          },
+          "epl": {
+            "candidate_mae": 2.5618,
+            "current_mae": 2.6609,
+            "n": 112
+          },
+          "la-liga": {
+            "candidate_mae": 2.7749,
+            "current_mae": 2.7026,
+            "n": 121
+          },
+          "ligue-1": {
+            "candidate_mae": 2.4323,
+            "current_mae": 2.6322,
+            "n": 106
+          },
+          "serie-a": {
+            "candidate_mae": 2.6993,
+            "current_mae": 2.7384,
+            "n": 120
+          }
+        },
+        "mode": "symmetric",
+        "scale": 0.0
+      },
+      {
+        "candidate_mae": 2.6309,
+        "current_mae": 2.6663,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 2.6594,
+            "current_mae": 2.587,
+            "n": 111
+          },
+          "epl": {
+            "candidate_mae": 2.5618,
+            "current_mae": 2.6609,
+            "n": 112
+          },
+          "la-liga": {
+            "candidate_mae": 2.7749,
+            "current_mae": 2.7026,
+            "n": 121
+          },
+          "ligue-1": {
+            "candidate_mae": 2.4323,
+            "current_mae": 2.6322,
+            "n": 106
+          },
+          "serie-a": {
+            "candidate_mae": 2.6993,
+            "current_mae": 2.7384,
+            "n": 120
+          }
+        },
+        "mode": "symmetric",
+        "scale": 0.25
+      },
+      {
+        "candidate_mae": 2.6309,
+        "current_mae": 2.6663,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 2.6594,
+            "current_mae": 2.587,
+            "n": 111
+          },
+          "epl": {
+            "candidate_mae": 2.5618,
+            "current_mae": 2.6609,
+            "n": 112
+          },
+          "la-liga": {
+            "candidate_mae": 2.7749,
+            "current_mae": 2.7026,
+            "n": 121
+          },
+          "ligue-1": {
+            "candidate_mae": 2.4323,
+            "current_mae": 2.6322,
+            "n": 106
+          },
+          "serie-a": {
+            "candidate_mae": 2.6993,
+            "current_mae": 2.7384,
+            "n": 120
+          }
+        },
+        "mode": "symmetric",
+        "scale": 0.5
+      },
+      {
+        "candidate_mae": 2.6309,
+        "current_mae": 2.6663,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 2.6594,
+            "current_mae": 2.587,
+            "n": 111
+          },
+          "epl": {
+            "candidate_mae": 2.5618,
+            "current_mae": 2.6609,
+            "n": 112
+          },
+          "la-liga": {
+            "candidate_mae": 2.7749,
+            "current_mae": 2.7026,
+            "n": 121
+          },
+          "ligue-1": {
+            "candidate_mae": 2.4323,
+            "current_mae": 2.6322,
+            "n": 106
+          },
+          "serie-a": {
+            "candidate_mae": 2.6993,
+            "current_mae": 2.7384,
+            "n": 120
+          }
+        },
+        "mode": "symmetric",
+        "scale": 0.75
+      },
+      {
+        "candidate_mae": 2.6309,
+        "current_mae": 2.6663,
+        "league_metrics": {
+          "bundesliga": {
+            "candidate_mae": 2.6594,
+            "current_mae": 2.587,
+            "n": 111
+          },
+          "epl": {
+            "candidate_mae": 2.5618,
+            "current_mae": 2.6609,
+            "n": 112
+          },
+          "la-liga": {
+            "candidate_mae": 2.7749,
+            "current_mae": 2.7026,
+            "n": 121
+          },
+          "ligue-1": {
+            "candidate_mae": 2.4323,
+            "current_mae": 2.6322,
+            "n": 106
+          },
+          "serie-a": {
+            "candidate_mae": 2.6993,
+            "current_mae": 2.7384,
+            "n": 120
+          }
+        },
+        "mode": "symmetric",
+        "scale": 1.0
+      }
+    ]
+  }
+}
