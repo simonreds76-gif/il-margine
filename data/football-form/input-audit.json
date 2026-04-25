@@ -534,7 +534,7 @@
       "source_role": "Pinnacle corners O/U snapshots for CLV and live market comparison"
     },
     {
-      "bytes": 296644,
+      "bytes": 313078,
       "columns": [
         "captured_at",
         "match_date",
@@ -561,7 +561,7 @@
             "odds_decimal"
           ],
           "pct": 100.0,
-          "rows_present": 1492
+          "rows_present": 1576
         },
         "corners": {
           "columns_available": [],
@@ -599,44 +599,44 @@
           "rows_present": 0
         }
       },
-      "freshness_days": -1,
+      "freshness_days": -2,
       "key": "team_shots_odds_history",
       "league_breakdown": [
         {
           "latest_date": "2026-04-26",
           "league": "Bundesliga",
-          "rows": 404
+          "rows": 416
         },
         {
-          "latest_date": "2026-04-26",
+          "latest_date": "2026-04-27",
           "league": "La Liga",
-          "rows": 276
+          "rows": 308
         },
         {
-          "latest_date": "2026-04-25",
+          "latest_date": "2026-04-27",
           "league": "Premier League",
-          "rows": 400
+          "rows": 408
         },
         {
-          "latest_date": "2026-04-26",
+          "latest_date": "2026-04-27",
           "league": "Serie A",
-          "rows": 412
+          "rows": 444
         }
       ],
-      "max_date": "2026-04-26",
+      "max_date": "2026-04-27",
       "min_date": "2026-04-10",
       "missing_required_groups": [],
-      "mtime_utc": "2026-04-25T09:48:50+00:00",
+      "mtime_utc": "2026-04-25T14:09:31+00:00",
       "owner": "team-shots",
       "path": "data/team-shots/team-shots-odds-history.csv",
       "required_groups": [
         "book_odds"
       ],
-      "row_count": 1492,
+      "row_count": 1576,
       "source_role": "Bookmaker team-shots O/U snapshots"
     },
     {
-      "bytes": 49246233,
+      "bytes": 49805727,
       "columns": [
         "capture_date",
         "captured_at",
@@ -665,7 +665,7 @@
             "odds_decimal"
           ],
           "pct": 100.0,
-          "rows_present": 205503
+          "rows_present": 207857
         },
         "corners": {
           "columns_available": [],
@@ -687,7 +687,7 @@
             "player_name"
           ],
           "pct": 100.0,
-          "rows_present": 205503
+          "rows_present": 207857
         },
         "shots": {
           "columns_available": [],
@@ -711,43 +711,43 @@
         {
           "latest_date": "2026-04-27",
           "league": "England - Premier League",
-          "rows": 40781
+          "rows": 41016
         },
         {
           "latest_date": "2026-04-26",
           "league": "France - Ligue 1",
-          "rows": 40530
+          "rows": 40937
         },
         {
           "latest_date": "2026-04-26",
           "league": "Germany - Bundesliga",
-          "rows": 35230
+          "rows": 35448
         },
         {
           "latest_date": "2026-04-27",
           "league": "Italy - Serie A",
-          "rows": 41963
+          "rows": 42647
         },
         {
           "latest_date": "2026-04-27",
           "league": "Spain - LaLiga",
-          "rows": 46999
+          "rows": 47809
         }
       ],
       "max_date": "2026-04-27",
       "min_date": "2026-04-10",
       "missing_required_groups": [],
-      "mtime_utc": "2026-04-25T13:27:53+00:00",
+      "mtime_utc": "2026-04-25T14:09:31+00:00",
       "owner": "goalscorer",
       "path": "data/goalscorer/goalscorer-odds-history.csv",
       "required_groups": [
         "book_odds"
       ],
-      "row_count": 205503,
+      "row_count": 207857,
       "source_role": "Bookmaker anytime-goalscorer odds snapshots"
     }
   ],
-  "generated_at": "2026-04-25T14:06:47+00:00",
+  "generated_at": "2026-04-25T14:25:31+00:00",
   "issues": [],
   "model_files": [
     {

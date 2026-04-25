@@ -1,0 +1,309 @@
+#!/usr/bin/env python3
+"""Join corners v0 research picks to Pinnacle prices for CLV monitoring.
+
+The script is deliberately lane-agnostic: it can run before there are any
+published v0 picks and will still write the expected schema. Once picks exist,
+it records publication price, 3h/1h reference prices, close, CLV, and whether
+the hard canonical-only guard would have blocked the pick.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import re
+import unicodedata
+from collections import defaultdict
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from typing import Any
+
+
+ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_PICKS = ROOT / "data" / "football-form" / "corners-v0-published-picks.csv"
+DEFAULT_PINNACLE = ROOT / "data" / "corners-ou" / "pinnacle-corners-odds.csv"
+DEFAULT_OUTPUT = ROOT / "data" / "football-form" / "corners-v0-clv-monitor.csv"
+DEFAULT_REPORT = ROOT / "data" / "football-form" / "corners-v0-clv-monitor.md"
+
+OUTPUT_FIELDS = [
+    "pick_id",
+    "published_at_utc",
+    "kickoff_utc",
+    "match_id",
+    "match_date",
+    "league",
+    "match",
+    "home_team",
+    "away_team",
+    "selection",
+    "line",
+    "side",
+    "model_fair_odds",
+    "model_implied_prob",
+    "pinnacle_price_at_publication",
+    "pinnacle_price_3h_pre_kickoff",
+    "pinnacle_price_1h_pre_kickoff",
+    "pinnacle_price_close",
+    "published_to_close_clv",
+    "model_to_close_clv",
+    "pinnacle_movement_to_close",
+    "result",
+    "pnl_units",
+    "current_model_would_have_priced",
+    "confidence_guard_applied",
+    "blocked_reason",
+]
+
+
+def norm_team(text: str) -> str:
+    text = (text or "").strip().lower().replace("(corners)", "")
+    text = unicodedata.normalize("NFD", text)
+    text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
+    return re.sub(r"[^a-z0-9]+", " ", text).strip()
+
+
+def parse_dt(text: Any) -> datetime | None:
+    raw = str(text or "").strip()
+    if not raw:
+        return None
+    try:
+        parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)
+
+
+def fmt_dt(value: datetime | None) -> str:
+    if value is None:
+        return ""
+    return value.astimezone(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def pf(value: Any) -> float | None:
+    text = str(value or "").replace(",", "").strip()
+    if not text:
+        return None
+    try:
+        return float(text)
+    except ValueError:
+        return None
+
+
+def load_csv(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+    with path.open("r", encoding="utf-8-sig", errors="replace", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+def split_match(row: dict[str, str]) -> tuple[str, str]:
+    home = row.get("home_team", "").strip()
+    away = row.get("away_team", "").strip()
+    if home and away:
+        return home, away
+    match = row.get("match", "")
+    if " vs " in match:
+        left, right = match.split(" vs ", 1)
+        return left.strip(), right.strip()
+    if " v " in match:
+        left, right = match.split(" v ", 1)
+        return left.strip(), right.strip()
+    return home, away
+
+
+def line_label(value: Any) -> str:
+    parsed = pf(value)
+    if parsed is None:
+        return str(value or "").strip()
+    return f"{parsed:.1f}"
+
+
+def build_pinnacle_index(rows: list[dict[str, str]]) -> dict[str, list[dict[str, Any]]]:
+    index: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        home = norm_team(row.get("home_team", ""))
+        away = norm_team(row.get("away_team", ""))
+        match_date = (row.get("match_date") or row.get("kickoff_iso") or "").strip()[:10]
+        side = (row.get("side") or "").strip().lower()
+        line = line_label(row.get("line"))
+        odds = pf(row.get("odds_decimal"))
+        captured_at = parse_dt(row.get("captured_at"))
+        kickoff = parse_dt(row.get("kickoff_iso"))
+        if not (home and away and match_date and side and line and odds and captured_at):
+            continue
+        item = {"captured_at": captured_at, "kickoff": kickoff, "odds": odds}
+        index[f"{match_date}|{home}|{away}|{line}|{side}"].append(item)
+        index[f"__any__|{home}|{away}|{line}|{side}"].append(item)
+    for items in index.values():
+        items.sort(key=lambda item: item["captured_at"])
+    return index
+
+
+def price_at_or_before(items: list[dict[str, Any]], target: datetime | None) -> float | None:
+    if not items:
+        return None
+    if target is None:
+        return items[-1]["odds"]
+    candidates = [item for item in items if item["captured_at"] <= target]
+    if candidates:
+        return candidates[-1]["odds"]
+    return None
+
+
+def row_bool(value: Any) -> bool:
+    text = str(value or "").strip().lower()
+    return text in {"1", "true", "yes", "y"}
+
+
+def build_pick_row(
+    pick: dict[str, str],
+    index: dict[str, list[dict[str, Any]]],
+    *,
+    allow_canonical_only: bool,
+) -> dict[str, Any]:
+    home, away = split_match(pick)
+    league = (pick.get("league") or "").strip().lower()
+    match_date = (pick.get("match_date") or pick.get("kickoff_utc") or pick.get("kick_off") or "").strip()[:10]
+    line = line_label(pick.get("line"))
+    side = (pick.get("side") or "").strip().lower()
+    published = parse_dt(pick.get("published_at_utc") or pick.get("published_at") or pick.get("logged_at"))
+    kickoff = parse_dt(pick.get("kickoff_utc") or pick.get("kick_off") or pick.get("kickoff_iso"))
+    key = f"{match_date}|{norm_team(home)}|{norm_team(away)}|{line}|{side}"
+    items = index.get(key) or index.get(f"__any__|{norm_team(home)}|{norm_team(away)}|{line}|{side}") or []
+
+    price_publication = price_at_or_before(items, published)
+    price_3h = price_at_or_before(items, kickoff - timedelta(hours=3) if kickoff else None)
+    price_1h = price_at_or_before(items, kickoff - timedelta(hours=1) if kickoff else None)
+    close = price_at_or_before(items, kickoff)
+    model_fair = pf(pick.get("model_fair_odds") or pick.get("model_fair"))
+    model_prob = pf(pick.get("model_implied_prob") or pick.get("model_prob"))
+    if model_prob is None and model_fair and model_fair > 1:
+        model_prob = 1.0 / model_fair
+    current_model_would_have_priced = row_bool(pick.get("current_model_would_have_priced"))
+    blocked_reason = ""
+    confidence_guard_applied = False
+    if not current_model_would_have_priced and not allow_canonical_only:
+        confidence_guard_applied = True
+        blocked_reason = "canonical_only_guard"
+
+    published_to_close_clv = ""
+    movement_to_close = ""
+    if price_publication and close:
+        published_to_close_clv = round((price_publication / close) - 1.0, 6)
+        movement_to_close = round(close - price_publication, 6)
+
+    model_to_close_clv = ""
+    if model_prob and close:
+        model_to_close_clv = round((model_prob * close) - 1.0, 6)
+
+    match = pick.get("match") or f"{home} vs {away}"
+    return {
+        "pick_id": pick.get("pick_id") or "|".join([league, match_date, norm_team(home), norm_team(away), line, side]),
+        "published_at_utc": fmt_dt(published),
+        "kickoff_utc": fmt_dt(kickoff),
+        "match_id": pick.get("match_id") or "|".join([league, match_date, norm_team(home), norm_team(away)]),
+        "match_date": match_date,
+        "league": league,
+        "match": match,
+        "home_team": home,
+        "away_team": away,
+        "selection": pick.get("selection") or f"{side} {line}",
+        "line": line,
+        "side": side,
+        "model_fair_odds": round(model_fair, 6) if model_fair else "",
+        "model_implied_prob": round(model_prob, 6) if model_prob else "",
+        "pinnacle_price_at_publication": round(price_publication, 6) if price_publication else "",
+        "pinnacle_price_3h_pre_kickoff": round(price_3h, 6) if price_3h else "",
+        "pinnacle_price_1h_pre_kickoff": round(price_1h, 6) if price_1h else "",
+        "pinnacle_price_close": round(close, 6) if close else "",
+        "published_to_close_clv": published_to_close_clv,
+        "model_to_close_clv": model_to_close_clv,
+        "pinnacle_movement_to_close": movement_to_close,
+        "result": pick.get("result", ""),
+        "pnl_units": pick.get("pnl_units", ""),
+        "current_model_would_have_priced": "true" if current_model_would_have_priced else "false",
+        "confidence_guard_applied": "true" if confidence_guard_applied else "false",
+        "blocked_reason": blocked_reason,
+    }
+
+
+def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=OUTPUT_FIELDS)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def avg(values: list[float]) -> float | None:
+    vals = [value for value in values if value == value]
+    return sum(vals) / len(vals) if vals else None
+
+
+def render_report(rows: list[dict[str, Any]], picks_path: Path, pinnacle_path: Path) -> str:
+    clv_values = [pf(row.get("published_to_close_clv")) for row in rows if pf(row.get("published_to_close_clv")) is not None]
+    blocked = [row for row in rows if row.get("blocked_reason")]
+    with_close = [row for row in rows if row.get("pinnacle_price_close")]
+    avg_clv = avg([value for value in clv_values if value is not None])
+    lines = [
+        "# Corners V0 CLV Monitor",
+        "",
+        f"Generated: {fmt_dt(datetime.now(UTC))}",
+        f"Picks input: `{picks_path.relative_to(ROOT) if picks_path.is_absolute() and ROOT in picks_path.parents else picks_path}`",
+        f"Pinnacle input: `{pinnacle_path.relative_to(ROOT) if pinnacle_path.is_absolute() and ROOT in pinnacle_path.parents else pinnacle_path}`",
+        "",
+        "## Summary",
+        "",
+        f"- Picks: {len(rows)}",
+        f"- Picks with close: {len(with_close)}",
+        f"- Hard-guard blocked: {len(blocked)}",
+        f"- Average published-to-close CLV: {avg_clv:+.2%}" if avg_clv is not None else "- Average published-to-close CLV: -",
+        "",
+        "## Required Fields",
+        "",
+        "- `current_model_would_have_priced` must be true for publication while canonical-only evidence is below threshold.",
+        "- `published_to_close_clv` tracks the taken/published Pinnacle price versus close.",
+        "- `model_to_close_clv` tracks the model-implied probability versus close.",
+        "- `confidence_guard_applied=true` means the row must not be treated as a published pick.",
+        "",
+        "## De-Promotion Rules",
+        "",
+        "- Pause corners v0 if 30-day rolling CLV is below 0 with at least 50 settled picks.",
+        "- Pause corners v0 if rolling 90-day production Brier exceeds 1.05x the pre-promotion backtest Brier.",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Join corners v0 research picks to Pinnacle CLV prices")
+    parser.add_argument("--picks", type=Path, default=DEFAULT_PICKS)
+    parser.add_argument("--pinnacle", type=Path, default=DEFAULT_PINNACLE)
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
+    parser.add_argument(
+        "--allow-canonical-only",
+        action="store_true",
+        help="Disable the hard canonical-only publication guard. Do not use until segment evidence exists.",
+    )
+    args = parser.parse_args()
+
+    picks = load_csv(args.picks)
+    pinnacle_rows = load_csv(args.pinnacle)
+    index = build_pinnacle_index(pinnacle_rows)
+    rows = [
+        build_pick_row(pick, index, allow_canonical_only=args.allow_canonical_only)
+        for pick in picks
+    ]
+    write_csv(args.output, rows)
+    args.report.parent.mkdir(parents=True, exist_ok=True)
+    args.report.write_text(render_report(rows, args.picks, args.pinnacle), encoding="utf-8")
+    print(f"Wrote {args.output.relative_to(ROOT)}")
+    print(f"Wrote {args.report.relative_to(ROOT)}")
+
+
+if __name__ == "__main__":
+    main()

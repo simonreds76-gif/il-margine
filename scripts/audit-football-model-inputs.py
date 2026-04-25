@@ -590,6 +590,12 @@ def load_yoy_highlights(path: Path) -> dict[str, Any]:
     return highlights
 
 
+def load_json(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def fmt_float(value: Any, decimals: int = 4) -> str:
     if value is None:
         return "-"
@@ -625,6 +631,10 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
     backtest_report_rel = rel(DEFAULT_OUTPUT_DIR / "canonical-backtest-report.md")
     yoy_report_rel = rel(DEFAULT_OUTPUT_DIR / "league-yoy-variance.md")
     yoy_json_rel = rel(DEFAULT_OUTPUT_DIR / "league-yoy-variance.json")
+    corners_promotion_rel = rel(DEFAULT_OUTPUT_DIR / "corners-v0-promotion-check.md")
+    corners_promotion_json_rel = rel(DEFAULT_OUTPUT_DIR / "corners-v0-promotion-check.json")
+    corners_clv_rel = rel(DEFAULT_OUTPUT_DIR / "corners-v0-clv-monitor.csv")
+    corners_clv_report_rel = rel(DEFAULT_OUTPUT_DIR / "corners-v0-clv-monitor.md")
     team_layer_exists = (DEFAULT_OUTPUT_DIR / "team-match-base.csv").exists() and (
         DEFAULT_OUTPUT_DIR / "team-rolling-form.csv"
     ).exists()
@@ -638,6 +648,7 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
     ).exists()
     backtest = load_backtest_highlights(DEFAULT_OUTPUT_DIR / "canonical-backtest-summary.csv")
     yoy = load_yoy_highlights(DEFAULT_OUTPUT_DIR / "league-yoy-variance.json")
+    corners_promotion = load_json(DEFAULT_OUTPUT_DIR / "corners-v0-promotion-check.json")
     player_logs = next((dataset for dataset in payload["datasets"] if dataset["key"] == "goalscorer_player_logs"), {})
     lines = [
         "# Claude Review Packet: Football Canonical Input Layer",
@@ -695,9 +706,19 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
             [
                 f"- Research backtest summary: `{backtest_summary_rel}`",
                 f"- Research backtest report: `{backtest_report_rel}`",
-                "- Corners canonical v0 beats current on common-sample and last-90 common-sample count MAE and Brier/log-loss.",
+                "- Corners canonical v0 beats current on aggregate common-sample and last-90 common-sample count MAE and Brier/log-loss.",
                 "- Team-shots canonical v1_market_nb adds capped 1X2 win-probability/game-state adjustment plus causal prior-data league negative-binomial O/U conversion. It improves Brier/log-loss, but recent count MAE is not yet better than current.",
                 "- No live policy or published pick logic has been changed yet; this remains research-only pending odds/CLV and recent-window validation.",
+            ]
+        )
+    if corners_promotion:
+        ready = ", ".join(corners_promotion.get("ready_leagues", [])) or "-"
+        blocked = ", ".join(corners_promotion.get("blocked_leagues", [])) or "-"
+        lines.extend(
+            [
+                f"- Corners v0 segment promotion check: `{corners_promotion_rel}` / `{corners_promotion_json_rel}`",
+                f"- Segment gate read: partial research lane only. Passing leagues `{ready}`; blocked leagues `{blocked}`.",
+                f"- Corners v0 CLV monitor schema/report: `{corners_clv_rel}` / `{corners_clv_report_rel}`",
             ]
         )
     if yoy.get("exists"):
@@ -720,6 +741,8 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
             "- Added common/canonical-only/full and last-90 sample splits to the canonical backtest report.",
             "- Added a team-shots `canonical_form_v1_market_nb` research variant using the market-implied win probability gap as a capped game-state proxy and causal prior-data negative-binomial O/U calibration.",
             "- Added a league year-over-year variance check to decide whether all-prior normalization is safe or trailing-12-month baselines are required.",
+            "- Added a corners v0 per-league promotion gate. Aggregate corners passed, but Bundesliga and La Liga fail the recent segment gate, so all-league promotion is blocked.",
+            "- Added a corners v0 CLV monitor schema with publication, 3h, 1h, close, CLV, and hard canonical-only guard fields.",
             "",
         ]
     )
@@ -738,7 +761,7 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
                     f"{fmt_float(backtest.get('corners_common_mae'))} | "
                     f"Brier {'ok' if backtest.get('corners_common_prob', {}).get('brier_ok') else 'fail'}, "
                     f"log-loss {'ok' if backtest.get('corners_common_prob', {}).get('log_loss_ok') else 'fail'} | "
-                    "promotion candidate after odds/CLV join |"
+                    "aggregate pass only; segment gate decides publication |"
                 ),
                 (
                     "| corners v0 | last_90_common | "
@@ -797,6 +820,23 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
             ]
         )
 
+    if corners_promotion:
+        ready = ", ".join(corners_promotion.get("ready_leagues", [])) or "-"
+        blocked = ", ".join(corners_promotion.get("blocked_leagues", [])) or "-"
+        guard = corners_promotion.get("canonical_only", {})
+        lines.extend(
+            [
+                "## Corners V0 Segment Gate",
+                "",
+                f"- All-league research promotion: {'pass' if corners_promotion.get('research_lane_ready_all_leagues') else 'fail'}.",
+                f"- Passing leagues for partial research lane: {ready}.",
+                f"- Blocked leagues until recent segment calibration is fixed: {blocked}.",
+                f"- Canonical-only hard block: {'on' if guard.get('hard_block') else 'off'}; sample N={guard.get('n', '-')}.",
+                "- Do not publish canonical-only picks. Do not publish Bundesliga or La Liga corners v0 picks yet.",
+                "",
+            ]
+        )
+
     lines.extend([
         "## Findings From Current Repo",
         "",
@@ -810,19 +850,20 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
         "## Proposed Implementation Order",
         "",
         "1. Keep the stale-player-log fix in production workflows and monitor the next scheduled run.",
-        "2. Run corners v0 odds/CLV join first because count and probability gates pass on common and last-90 common samples.",
-        "3. Add a corners confidence guard for canonical-only coverage because the current canonical-only sample is only N=2 and looks unsafe to generalize from.",
+        "2. Run corners v0 odds/CLV join first, but only for passing leagues: EPL, Ligue 1, and Serie A.",
+        "3. Keep the corners confidence guard as a hard cutoff: canonical-only fixtures are blocked, not flagged.",
         "4. Implement trailing-12-month normalization for EPL/Serie A primary shots/corners before any team-shots promotion.",
-        "5. Add win-prob gap bucket calibration for team-shots; negative binomial improves O/U probability but recent count MAE still lags current.",
-        "6. Then do the team-shots odds/CLV join and keep it research-only until the recent-window count issue is explained or fixed.",
+        "5. Diagnose Bundesliga and La Liga corners v0 recent-segment failures before allowing all-league research publication.",
+        "6. Add win-prob gap bucket calibration for team-shots; negative binomial improves O/U probability but recent count MAE still lags current.",
+        "7. Then do the team-shots odds/CLV join and keep it research-only until the recent-window count issue is explained or fixed.",
         "",
         "## Questions For Follow-up Review",
         "",
-        "1. Corners v0 now passes full and last-90 common-sample count/probability gates. Is odds/CLV join plus confidence guard sufficient for research-lane promotion?",
-        "2. Team-shots v1_market_nb improves Brier/log-loss but last-90 count MAE is worse than current. Should we tune the capped game-state lambda, split by win-prob bucket, or hold the model entirely?",
-        "3. For EPL/Serie A, should trailing-12-month normalization replace all-prior normalization globally, or only for shots/corners primary metrics?",
-        "4. Is the canonical-only team-shots sample large enough to trust after segment gates, or should we withhold picks where current model was historically silent?",
-        "5. What exact CLV join schema should block/allow corners v0 research-lane publication?",
+        "1. Segment check changed the corners read: EPL/Ligue 1/Serie A pass, Bundesliga/La Liga fail recent segment gates. Should partial research publication be allowed only for passing leagues?",
+        "2. For Bundesliga and La Liga corners v0, should we tune per-league calibration, recent-pressure weight, or keep the current corners lane as-is for those leagues?",
+        "3. Team-shots v1_market_nb improves Brier/log-loss but last-90 count MAE is worse than current. Should we tune the capped game-state lambda, split by win-prob bucket, or hold the model entirely?",
+        "4. For EPL/Serie A, should trailing-12-month normalization replace all-prior normalization globally, or only for shots/corners primary metrics?",
+        "5. Is the CLV monitor schema now sufficient for corners v0 live research tracking and de-promotion rules?",
         "",
     ])
     return "\n".join(lines)
