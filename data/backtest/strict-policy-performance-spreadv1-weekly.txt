@@ -1,4 +1,51 @@
 Strict Policy Settled Performance
-Generated UTC: 2026-04-14T20:35:00+00:00
-As-of date: 2026-04-14
-No signal rows in strict-signals-spreadv1-archive.csv; stub summary (all zeros).
+Generated UTC: 2026-04-25T16:45:17+00:00
+As-of date: 2026-04-24
+Window: 2026-04-18 -> 2026-04-24 (7d)
+Clean evaluation start: 2026-03-14
+Source: strict-signals only
+
+Window performance (combined)
+  BASE    signals=  58 settled=  41 unsettled=  17 W-L= 18- 23 staked=82.00u pnl=-12.02u ROI=-14.66% WR=43.90% avg_value=10.78% avg_pin=1.939 invalid_odds=0
+
+All-time performance (combined)
+  BASE    signals=  71 settled=  54 unsettled=  17 W-L= 26- 28 staked=108.00u pnl=-6.94u ROI=-6.42% WR=48.15% avg_value=11.94% avg_pin=1.940 invalid_odds=0
+
+Legacy period (mixed-vintage, all-time)
+  BASE    signals=   0 settled=   0 unsettled=   0 W-L=  0-  0 staked=0.00u pnl=0.00u ROI=n/a WR=n/a avg_value=n/a avg_pin=n/a invalid_odds=0
+
+Clean period (all-time)
+  BASE    signals=  71 settled=  54 unsettled=  17 W-L= 26- 28 staked=108.00u pnl=-6.94u ROI=-6.42% WR=48.15% avg_value=11.94% avg_pin=1.940 invalid_odds=0
+
+Clean period window (combined)
+  BASE    signals=  58 settled=  41 unsettled=  17 W-L= 18- 23 staked=82.00u pnl=-12.02u ROI=-14.66% WR=43.90% avg_value=10.78% avg_pin=1.939 invalid_odds=0
+
+Window performance by bet type (ML vs Handicap)
+  [ML (match winner)]
+    BASE    signals=   0 settled=   0 backlog=   0 W-L=  0-  0 ROI=n/a pnl=0.00u
+  [Handicap (spread)]
+    BASE    signals=  58 settled=  41 backlog=  17 W-L= 18- 23 ROI=-14.66% pnl=-12.02u
+
+All-time performance by bet type (ML vs Handicap)
+  [ML (match winner)]
+    BASE    signals=   0 settled=   0 backlog=   0 W-L=  0-  0 ROI=n/a pnl=0.00u
+  [Handicap (spread)]
+    BASE    signals=  71 settled=  54 backlog=  17 W-L= 26- 28 ROI=-6.42% pnl=-6.94u
+
+Legacy period by bet type (ML vs Handicap)
+  [ML (match winner)]
+    BASE    signals=   0 settled=   0 backlog=   0 W-L=  0-  0 ROI=n/a pnl=0.00u
+  [Handicap (spread)]
+    BASE    signals=   0 settled=   0 backlog=   0 W-L=  0-  0 ROI=n/a pnl=0.00u
+
+Clean period by bet type (ML vs Handicap)
+  [ML (match winner)]
+    BASE    signals=   0 settled=   0 backlog=   0 W-L=  0-  0 ROI=n/a pnl=0.00u
+  [Handicap (spread)]
+    BASE    signals=  71 settled=  54 backlog=  17 W-L= 26- 28 ROI=-6.42% pnl=-6.94u
+
+Clean period window by bet type (ML vs Handicap)
+  [ML (match winner)]
+    BASE    signals=   0 settled=   0 backlog=   0 W-L=  0-  0 ROI=n/a pnl=0.00u
+  [Handicap (spread)]
+    BASE    signals=  58 settled=  41 backlog=  17 W-L= 18- 23 ROI=-14.66% pnl=-12.02u

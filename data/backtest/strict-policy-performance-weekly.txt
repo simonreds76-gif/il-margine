@@ -1,32 +1,51 @@
 Strict Policy Settled Performance
-Generated UTC: 2026-03-13T14:14:40+00:00
-As-of date: 2026-03-12
-Window: 2026-03-06 -> 2026-03-12 (7d)
-Source: overlay-compare
-Settlement backfill from strict-signals: patched_rows=0, patched_to_settled=0
+Generated UTC: 2026-04-25T16:45:17+00:00
+As-of date: 2026-03-29
+Window: 2026-03-23 -> 2026-03-29 (7d)
+Clean evaluation start: 2026-03-14
+Source: strict-signals only
 
 Window performance (combined)
-  BASE    signals=  53 settled=  53 unsettled=   0 W-L= 12- 41 staked=53.00u pnl=-20.40u ROI=-38.49% WR=22.64% avg_value=30.49% avg_pin=4.521 invalid_odds=0
-  OVERLAY signals=  15 settled=  15 unsettled=   0 W-L=  5- 10 staked=15.00u pnl=-6.07u ROI=-40.46% WR=33.33% avg_value=19.19% avg_pin=1.974 invalid_odds=0
-  DELTA overlay-base: signals=-38 settled=-38 pnl=+14.33u roi=-1.97pp
+  BASE    signals=  30 settled=  30 unsettled=   0 W-L=  9- 15 staked=33.00u pnl=-4.60u ROI=-13.93% WR=37.50% avg_value=33.49% avg_pin=2.834 invalid_odds=0
 
 All-time performance (combined)
-  BASE    signals=  79 settled=  79 unsettled=   0 W-L= 22- 57 staked=79.00u pnl=-18.55u ROI=-23.48% WR=27.85% avg_value=30.89% avg_pin=4.099 invalid_odds=0
-  OVERLAY signals=  25 settled=  25 unsettled=   0 W-L=  9- 16 staked=25.00u pnl=-7.85u ROI=-31.41% WR=36.00% avg_value=20.84% avg_pin=2.054 invalid_odds=0
-  DELTA overlay-base: signals=-54 settled=-54 pnl=+10.70u roi=-7.93pp
+  BASE    signals= 219 settled= 219 unsettled=   0 W-L= 99-112 staked=265.00u pnl=34.14u ROI=12.88% WR=46.92% avg_value=29.51% avg_pin=3.348 invalid_odds=0
+
+Legacy period (mixed-vintage, all-time)
+  BASE    signals=  80 settled=  80 unsettled=   0 W-L= 25- 55 staked=80.00u pnl=-11.81u ROI=-14.77% WR=31.25% avg_value=31.22% avg_pin=4.117 invalid_odds=0
+
+Clean period (all-time)
+  BASE    signals= 139 settled= 139 unsettled=   0 W-L= 74- 57 staked=185.00u pnl=45.96u ROI=24.84% WR=56.49% avg_value=27.74% avg_pin=2.558 invalid_odds=0
+
+Clean period window (combined)
+  BASE    signals=  30 settled=  30 unsettled=   0 W-L=  9- 15 staked=33.00u pnl=-4.60u ROI=-13.93% WR=37.50% avg_value=33.49% avg_pin=2.834 invalid_odds=0
 
 Window performance by bet type (ML vs Handicap)
   [ML (match winner)]
-    BASE    signals=  52 settled=  52 backlog=   0 W-L= 12- 40 ROI=-37.31% pnl=-19.40u
-    OVERLAY signals=  15 settled=  15 backlog=   0 W-L=  5- 10 ROI=-40.46% pnl=-6.07u
+    BASE    signals=  15 settled=  15 backlog=   0 W-L=  5- 10 ROI=-12.18% pnl=-1.83u
   [Handicap (spread)]
-    BASE    signals=   1 settled=   1 backlog=   0 W-L=  0-  1 ROI=-100.00% pnl=-1.00u
-    OVERLAY signals=   0 settled=   0 backlog=   0 W-L=  0-  0 ROI=n/a pnl=0.00u
+    BASE    signals=  15 settled=  15 backlog=   0 W-L=  4-  5 ROI=-15.39% pnl=-2.77u
 
 All-time performance by bet type (ML vs Handicap)
   [ML (match winner)]
-    BASE    signals=  78 settled=  78 backlog=   0 W-L= 22- 56 ROI=-22.50% pnl=-17.55u
-    OVERLAY signals=  25 settled=  25 backlog=   0 W-L=  9- 16 ROI=-31.41% pnl=-7.85u
+    BASE    signals= 154 settled= 154 backlog=   0 W-L= 58- 96 ROI=-5.15% pnl=-7.99u
   [Handicap (spread)]
-    BASE    signals=   1 settled=   1 backlog=   0 W-L=  0-  1 ROI=-100.00% pnl=-1.00u
-    OVERLAY signals=   0 settled=   0 backlog=   0 W-L=  0-  0 ROI=n/a pnl=0.00u
+    BASE    signals=  65 settled=  65 backlog=   0 W-L= 41- 16 ROI=38.30% pnl=42.13u
+
+Legacy period by bet type (ML vs Handicap)
+  [ML (match winner)]
+    BASE    signals=  78 settled=  78 backlog=   0 W-L= 24- 54 ROI=-15.18% pnl=-11.84u
+  [Handicap (spread)]
+    BASE    signals=   2 settled=   2 backlog=   0 W-L=  1-  1 ROI=1.50% pnl=0.03u
+
+Clean period by bet type (ML vs Handicap)
+  [ML (match winner)]
+    BASE    signals=  76 settled=  76 backlog=   0 W-L= 34- 42 ROI=5.01% pnl=3.86u
+  [Handicap (spread)]
+    BASE    signals=  63 settled=  63 backlog=   0 W-L= 40- 15 ROI=38.98% pnl=42.10u
+
+Clean period window by bet type (ML vs Handicap)
+  [ML (match winner)]
+    BASE    signals=  15 settled=  15 backlog=   0 W-L=  5- 10 ROI=-12.18% pnl=-1.83u
+  [Handicap (spread)]
+    BASE    signals=  15 settled=  15 backlog=   0 W-L=  4-  5 ROI=-15.39% pnl=-2.77u
