@@ -8,9 +8,9 @@
       "match_date": "2026-04-25",
       "home_team": "Angers",
       "away_team": "Paris Saint-Germain",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "5-3-2",
       "away_formation": "4-3-3",
       "home_players": [
@@ -29,14 +29,14 @@
       "away_players": [
         "Matvey Safonov",
         "Achraf Hakimi",
-        "Marquinhos",
+        "Ilya Zabarnyi",
         "Willian Pacho",
         "Lucas Hernández",
-        "Warren Zaïre-Emery",
+        "Senny Mayulu",
+        "Lucas Beraldo",
         "Fabián Ruiz",
-        "João Neves",
-        "Désiré Doué",
-        "Ousmane Dembélé",
+        "Kang-In Lee",
+        "Gonçalo Ramos",
         "Bradley Barcola"
       ],
       "home_starters": [
@@ -160,7 +160,7 @@
           "position_id": 32
         },
         {
-          "name": "Marquinhos",
+          "name": "Ilya Zabarnyi",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -187,7 +187,7 @@
           "position_id": 38
         },
         {
-          "name": "Warren Zaïre-Emery",
+          "name": "Senny Mayulu",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -196,7 +196,7 @@
           "position_id": 73
         },
         {
-          "name": "Fabián Ruiz",
+          "name": "Lucas Beraldo",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -205,7 +205,7 @@
           "position_id": 75
         },
         {
-          "name": "João Neves",
+          "name": "Fabián Ruiz",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -214,7 +214,7 @@
           "position_id": 77
         },
         {
-          "name": "Désiré Doué",
+          "name": "Kang-In Lee",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -223,7 +223,7 @@
           "position_id": 103
         },
         {
-          "name": "Ousmane Dembélé",
+          "name": "Gonçalo Ramos",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -252,7 +252,17 @@
         "Goduine Koyalipou",
         "Lanroy Machine"
       ],
-      "away_subs": [],
+      "away_subs": [
+        "Lucas Chevalier",
+        "Nuno Mendes",
+        "Dro Fernández",
+        "João Neves",
+        "Warren Zaïre-Emery",
+        "Désiré Doué",
+        "Ibrahim Mbaye",
+        "Khvicha Kvaratskhelia",
+        "Ousmane Dembélé"
+      ],
       "home_unavailable": [
         "Marius Louër",
         "Carlens Arcus",
