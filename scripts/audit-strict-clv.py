@@ -174,7 +174,18 @@ def pct(v: float) -> str:
 
 
 def row_key(row: dict[str, str], include_mode: bool = True) -> tuple[str, ...]:
-    out = [norm(row.get(f)) for f in KEY_FIELDS]
+    event_date = norm(row.get("match_date")) or norm(row.get("date"))
+    out = [
+        event_date,
+        norm(row.get("player1")),
+        norm(row.get("player2")),
+        norm(row.get("surface")),
+        norm(row.get("series")),
+        norm(row.get("confidence")),
+        norm(row.get("side")),
+        norm(row.get("bet_type") or "match"),
+        norm(row.get("signal_profile")),
+    ]
     if include_mode:
         out.append(norm(row.get("policy_mode") or "base"))
     return tuple(out)
@@ -186,14 +197,32 @@ def is_settled(row: dict[str, str]) -> bool:
 
 def dedupe_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
     by_key: dict[tuple[str, ...], dict[str, str]] = {}
+    settlement_fields = {
+        "settlement_status",
+        "result",
+        "bet_outcome",
+        "won_bet",
+        "match_date",
+        "player1_id",
+        "player2_id",
+        "winner_id",
+        "loser_id",
+        "settled_at",
+        "settlement_note",
+        "closing_odds1",
+        "closing_odds2",
+        "closing_source",
+    }
     for row in rows:
         k = row_key(row, include_mode=True)
         prev = by_key.get(k)
         if prev is None:
             by_key[k] = row
             continue
-        if is_settled(row) and not is_settled(prev):
-            by_key[k] = row
+        if is_settled(row):
+            for field, value in row.items():
+                if norm(value) and (field in settlement_fields or not norm(prev.get(field))):
+                    prev[field] = value
     return list(by_key.values())
 
 

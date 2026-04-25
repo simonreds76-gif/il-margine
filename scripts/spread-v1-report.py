@@ -87,6 +87,54 @@ def settled_spread_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
     return out
 
 
+def is_settled(row: dict[str, str]) -> bool:
+    return norm(row.get("settlement_status")) == "settled"
+
+
+def logical_pick_key(row: dict[str, str]) -> tuple[str, ...]:
+    event_date = norm(row.get("match_date")) or norm(row.get("date"))
+    return (
+        event_date,
+        norm(row.get("player1")),
+        norm(row.get("player2")),
+        norm(row.get("bet_type") or "match"),
+        norm(row.get("side")),
+        norm(row.get("policy_mode") or "base"),
+        norm(row.get("signal_profile")),
+    )
+
+
+def dedupe_logical_picks(rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    """Keep first published entry price; merge settlement from later refreshes."""
+    out: dict[tuple[str, ...], dict[str, str]] = {}
+    for row in rows:
+        key = logical_pick_key(row)
+        prev = out.get(key)
+        if prev is None:
+            out[key] = dict(row)
+            continue
+        if is_settled(row):
+            for field in (
+                "settlement_status",
+                "result",
+                "bet_outcome",
+                "won_bet",
+                "match_date",
+                "player1_id",
+                "player2_id",
+                "winner_id",
+                "loser_id",
+                "settled_at",
+                "settlement_note",
+                "closing_odds1",
+                "closing_odds2",
+                "closing_source",
+            ):
+                if norm(row.get(field)):
+                    prev[field] = row.get(field) or ""
+    return list(out.values())
+
+
 def line_bucket(value: float | None) -> str:
     if value is None:
         return "n/a"
@@ -240,7 +288,7 @@ def main() -> None:
     status_path = resolve_path(args.status_json)
     sweep_path = resolve_path(args.threshold_sweep_csv)
 
-    raw_rows = load_csv_rows(signals_path)
+    raw_rows = dedupe_logical_picks(load_csv_rows(signals_path))
     settled_rows_all = settled_spread_rows(raw_rows)
     clv_rows = load_csv_rows(clv_detail_path)
     clv_lookup = build_clv_lookup(clv_rows)

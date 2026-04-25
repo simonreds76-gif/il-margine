@@ -1109,9 +1109,16 @@ def main() -> int:
             f"path={args.spread_v1_calibration_file}"
         )
         if args.append:
-            live_dedup_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
-            lane_key_fields = ["date", "player1", "player2", "bet_type", "spread_line", "policy_mode", "signal_profile"]
-            archive_key_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
+            if args.signal_profile == "spread_v1_shadow":
+                # One spread-v1 pick per fixture/side. Line refreshes are price
+                # updates, not separate bets.
+                live_dedup_fields = ["player1", "player2", "bet_type", "side", "policy_mode", "signal_profile"]
+                lane_key_fields = live_dedup_fields
+                archive_key_fields = live_dedup_fields
+            else:
+                live_dedup_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
+                lane_key_fields = ["date", "player1", "player2", "bet_type", "spread_line", "policy_mode", "signal_profile"]
+                archive_key_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
             out_paths = derive_signal_csv_paths(Path(args.output))
             live_count = write_live_snapshot(
                 out_paths.live,
@@ -1953,9 +1960,16 @@ def main() -> int:
             r.pop("_clay_calibrated_match", None)
 
     if args.append:
-        live_dedup_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
-        lane_key_fields = ["date", "player1", "player2", "bet_type", "spread_line", "policy_mode", "signal_profile"]
-        archive_key_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
+        if args.signal_profile == "spread_v1_shadow":
+            # One spread-v1 pick per fixture/side. Line refreshes are price
+            # updates, not separate bets.
+            live_dedup_fields = ["player1", "player2", "bet_type", "side", "policy_mode", "signal_profile"]
+            lane_key_fields = live_dedup_fields
+            archive_key_fields = live_dedup_fields
+        else:
+            live_dedup_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
+            lane_key_fields = ["date", "player1", "player2", "bet_type", "spread_line", "policy_mode", "signal_profile"]
+            archive_key_fields = ["date", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"]
         out_paths = derive_signal_csv_paths(Path(args.output))
         live_count = write_live_snapshot(
             out_paths.live,

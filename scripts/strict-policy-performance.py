@@ -124,6 +124,22 @@ def lane_key(row: dict[str, str], include_mode: bool = True) -> tuple[str, ...]:
     return tuple(out)
 
 
+def logical_pick_key(row: dict[str, str], include_mode: bool = True) -> tuple[str, ...]:
+    """One fixture/side/lane is one bet; repeated refreshes are not new bets."""
+    event_date = row_key_val(row, "match_date") or row_key_val(row, "date")
+    out = [
+        event_date,
+        row_key_val(row, "player1"),
+        row_key_val(row, "player2"),
+        row_key_val(row, "bet_type"),
+        row_key_val(row, "side"),
+        row_key_val(row, "signal_profile"),
+    ]
+    if include_mode:
+        out.append(row_key_val(row, "policy_mode"))
+    return tuple(out)
+
+
 def lookup_key(row: dict[str, str]) -> tuple[str, ...]:
     return tuple(row_key_val(row, f) for f in KEY_FIELDS)
 
@@ -141,15 +157,17 @@ def load_csv_rows(path: Path) -> list[dict[str, str]]:
 def dedupe_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
     by_key: dict[tuple[str, ...], dict[str, str]] = {}
     for r in rows:
-        k = lane_key(r, include_mode=True)
+        k = logical_pick_key(r, include_mode=True)
         prev = by_key.get(k)
         if prev is None:
             by_key[k] = r
             continue
-        # Prefer settled rows; otherwise keep the latest row seen in file order.
-        if is_settled(prev) and not is_settled(r):
-            continue
-        by_key[k] = r
+        # Keep the first published price as the entry, but backfill settlement
+        # fields from later refresh rows once the match has settled.
+        if is_settled(r):
+            for field in SETTLEMENT_FIELDS:
+                if norm_key_val(r.get(field)):
+                    prev[field] = r.get(field) or ""
     return list(by_key.values())
 
 

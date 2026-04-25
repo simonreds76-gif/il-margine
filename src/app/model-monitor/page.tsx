@@ -107,12 +107,14 @@ type MonitorSignalRow = {
   pinOdds1?: number;
   pinOdds2?: number;
   stakeUnits?: number;
+  policyMode: string;
   signalProfile: string;
   settlementStatus: string;
   result: string;
   betOutcome: string;
   settledAt: string;
   settlementNote: string;
+  refreshCount?: number;
 };
 
 type SignalCohortSummary = {
@@ -477,6 +479,7 @@ function parseSignalRows(text: string | null): MonitorSignalRow[] {
     pinOdds1: parseFloatMaybe(row.pin_odds1),
     pinOdds2: parseFloatMaybe(row.pin_odds2),
     stakeUnits: parseFloatMaybe(row.stake_units),
+    policyMode: row.policy_mode ?? "",
     signalProfile: row.signal_profile ?? "",
     settlementStatus: row.settlement_status ?? "",
     result: row.result ?? "",
@@ -484,6 +487,51 @@ function parseSignalRows(text: string | null): MonitorSignalRow[] {
     settledAt: row.settled_at ?? "",
     settlementNote: row.settlement_note ?? "",
   }));
+}
+
+function isSettledSignal(row: MonitorSignalRow): boolean {
+  return (row.settlementStatus || "").trim().toLowerCase() === "settled";
+}
+
+function mergeSettlementFields(base: MonitorSignalRow, update: MonitorSignalRow): MonitorSignalRow {
+  return {
+    ...base,
+    settlementStatus: update.settlementStatus || base.settlementStatus,
+    result: update.result || base.result,
+    betOutcome: update.betOutcome || base.betOutcome,
+    settledAt: update.settledAt || base.settledAt,
+    settlementNote: update.settlementNote || base.settlementNote,
+    matchDate: update.matchDate || base.matchDate,
+  };
+}
+
+function logicalSignalKey(row: MonitorSignalRow): string {
+  const eventDate = row.matchDate || row.date;
+  return [
+    eventDate,
+    row.player1.trim().toLowerCase(),
+    row.player2.trim().toLowerCase(),
+    row.betType || "match",
+    row.side,
+    row.policyMode || "base",
+    row.signalProfile,
+  ].join("|");
+}
+
+function dedupeLogicalSignalRows(rows: MonitorSignalRow[]): MonitorSignalRow[] {
+  const byKey = new Map<string, MonitorSignalRow>();
+  const ordered = [...rows].sort((left, right) => signalTimestamp(left) - signalTimestamp(right));
+  for (const row of ordered) {
+    const key = logicalSignalKey(row);
+    const prev = byKey.get(key);
+    if (!prev) {
+      byKey.set(key, { ...row, refreshCount: 1 });
+      continue;
+    }
+    const merged = isSettledSignal(row) ? mergeSettlementFields(prev, row) : prev;
+    byKey.set(key, { ...merged, refreshCount: (prev.refreshCount ?? 1) + 1 });
+  }
+  return [...byKey.values()];
 }
 
 function normalizeLeague(league?: string): "ATP" | "Challenger" {
@@ -510,7 +558,7 @@ function summarizeSignalCohort(
 
   for (const row of filtered) {
     if (row.valuePct != null) values.push(row.valuePct);
-    if ((row.settlementStatus || "").trim().toLowerCase() !== "settled") continue;
+    if (!isSettledSignal(row)) continue;
     settled += 1;
 
     const outcome = (row.betOutcome || "").trim().toLowerCase();
@@ -587,7 +635,7 @@ function getNoMatchRows(rows: MonitorSignalRow[]): MonitorSignalRow[] {
 
 function getSettledSignalRows(rows: MonitorSignalRow[]): MonitorSignalRow[] {
   return rows
-    .filter((row) => (row.settlementStatus || "").trim().toLowerCase() === "settled")
+    .filter(isSettledSignal)
     .sort((left, right) => {
       const leftStamp = Date.parse(left.settledAt || "") || signalTimestamp(left);
       const rightStamp = Date.parse(right.settledAt || "") || signalTimestamp(right);
@@ -718,35 +766,36 @@ export default async function ModelMonitorPage() {
   const clvSpreadV1 = parseClvAudit(clvAuditSpreadV1Txt);
   const profiles = parsePolicyProfiles(profileTxt);
   const profileMap = new Map(profiles.map((profile) => [profile.name, profile]));
-  const strictSignalsArchive = parseSignalRows(strictSignalsArchiveCsv);
-  const strictSignalsLive = parseSignalRows(strictSignalsLiveCsv);
+  const strictSignalsArchiveRaw = parseSignalRows(strictSignalsArchiveCsv);
+  const strictSignalsArchive = dedupeLogicalSignalRows(strictSignalsArchiveRaw);
+  const strictSignalsLive = dedupeLogicalSignalRows(parseSignalRows(strictSignalsLiveCsv));
   const strictSignalsClean = filterCleanSignalRows(strictSignalsArchive);
   const strictSettledRows = getSettledSignalRows(strictSignalsArchive);
   const strictQueue = getActiveQueueRows(strictSignalsLive);
-  const volumeSignalsArchive = parseSignalRows(volumeSignalsArchiveCsv);
-  const volumeSignalsLive = parseSignalRows(volumeSignalsLiveCsv);
+  const volumeSignalsArchiveRaw = parseSignalRows(volumeSignalsArchiveCsv);
+  const volumeSignalsArchive = dedupeLogicalSignalRows(volumeSignalsArchiveRaw);
+  const volumeSignalsLive = dedupeLogicalSignalRows(parseSignalRows(volumeSignalsLiveCsv));
   const volumeSignalsClean = filterCleanSignalRows(volumeSignalsArchive);
   const volumeQueue = getActiveQueueRows(volumeSignalsLive);
   const volumeNoMatchRows = getNoMatchRows(volumeSignalsArchive);
   const volumeSettledRows = getSettledSignalRows(volumeSignalsArchive);
-  const spreadV1SignalsArchive = parseSignalRows(spreadV1SignalsArchiveCsv);
-  const spreadV1SignalsLive = parseSignalRows(spreadV1SignalsLiveCsv);
+  const spreadV1SignalsArchiveRaw = parseSignalRows(spreadV1SignalsArchiveCsv);
+  const spreadV1SignalsArchive = dedupeLogicalSignalRows(spreadV1SignalsArchiveRaw);
+  const spreadV1SignalsLive = dedupeLogicalSignalRows(parseSignalRows(spreadV1SignalsLiveCsv));
   const spreadV1SignalsClean = filterCleanSignalRows(spreadV1SignalsArchive);
   const spreadV1Queue = getActiveQueueRows(spreadV1SignalsLive);
   const spreadV1NoMatchRows = getNoMatchRows(spreadV1SignalsArchive);
   const spreadV1SettledRows = getSettledSignalRows(spreadV1SignalsArchive);
-  const spreadShadowSignalsArchive = parseSignalRows(spreadShadowSignalsArchiveCsv);
-  const spreadShadowSignalsLive = parseSignalRows(spreadShadowSignalsLiveCsv);
+  const spreadShadowSignalsArchiveRaw = parseSignalRows(spreadShadowSignalsArchiveCsv);
+  const spreadShadowSignalsArchive = dedupeLogicalSignalRows(spreadShadowSignalsArchiveRaw);
+  const spreadShadowSignalsLive = dedupeLogicalSignalRows(parseSignalRows(spreadShadowSignalsLiveCsv));
   const spreadShadowSignalsClean = filterCleanSignalRows(spreadShadowSignalsArchive);
   const spreadShadowQueue = getActiveQueueRows(spreadShadowSignalsLive);
-  const spreadShadowNoMatchRows = getNoMatchRows(spreadShadowSignalsArchive);
-  const spreadShadowSettledRows = getSettledSignalRows(spreadShadowSignalsArchive);
-  const clay2026SignalsArchive = parseSignalRows(clay2026SignalsArchiveCsv);
-  const clay2026SignalsLive = parseSignalRows(clay2026SignalsLiveCsv);
+  const clay2026SignalsArchiveRaw = parseSignalRows(clay2026SignalsArchiveCsv);
+  const clay2026SignalsArchive = dedupeLogicalSignalRows(clay2026SignalsArchiveRaw);
+  const clay2026SignalsLive = dedupeLogicalSignalRows(parseSignalRows(clay2026SignalsLiveCsv));
   const clay2026SignalsClean = filterCleanSignalRows(clay2026SignalsArchive);
   const clay2026Queue = getActiveQueueRows(clay2026SignalsLive);
-  const clay2026NoMatchRows = getNoMatchRows(clay2026SignalsArchive);
-  const clay2026SettledRows = getSettledSignalRows(clay2026SignalsArchive);
   const clay2026AllCohort = summarizeSignalCohort(clay2026SignalsArchive);
   const clay2026AtpCohort = summarizeSignalCohort(clay2026SignalsArchive, "ATP");
   const clay2026ChallengerCohort = summarizeSignalCohort(clay2026SignalsArchive, "Challenger");
@@ -768,7 +817,7 @@ export default async function ModelMonitorPage() {
 
   const strictAllRoi = perfValue(strictBase.combinedAll, "roi_pct", parseFloatMaybe);
   const volumeAllRoi = perfValue(volumeBase.combinedAll, "roi_pct", parseFloatMaybe);
-  const spreadV1AllRoi = perfValue(spreadV1Base.combinedAll, "roi_pct", parseFloatMaybe);
+  const spreadV1AllRoi = spreadV1SpreadRecordedCohort.roiPct;
   const spreadShadowAllRoi = perfValue(spreadShadowBase.combinedAll, "roi_pct", parseFloatMaybe);
   const clay2026AllRoi = perfValue(clay2026Base.combinedAll, "roi_pct", parseFloatMaybe);
   const strictWindowRoi = perfValue(strictBase.combinedWindow, "roi_pct", parseFloatMaybe);
@@ -812,15 +861,7 @@ export default async function ModelMonitorPage() {
       ? "ATP ML research has no settled sample yet."
       : `ATP ML research has settled enough to start comparing against strict on live results.`;
   const spreadShadowDiagnosis =
-    !spreadShadowSignalsLiveCsv
-      ? "Spread shadow has no live CSV on disk right now, which usually means no qualifying clay/non-policy handicap row has been written yet."
-      : spreadShadowQueue.length === 0 && spreadShadowNoMatchRows.length > 0
-      ? `Spread shadow has ${spreadShadowNoMatchRows.length} unresolved no_match rows, but no true live queue right now.`
-      : spreadShadowSignalsLive.length === 0
-      ? "Spread shadow is wired in, but it has not logged a qualifying 20%+ clay/non-policy handicap row yet."
-      : perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) === 0
-        ? `Spread shadow has ${spreadShadowSignalsArchive.length} tracked rows, but no settled sample yet.`
-        : `Spread shadow is tracking ${perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? 0} rows with ${perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) ?? 0} settled so far.`;
+    `Old Spread Shadow is archived reference only (${spreadShadowSignalsArchive.length} logical rows). It is excluded from active scoreboard and latest-settled cards.`;
   const spreadV1Diagnosis =
     !spreadV1SignalsLiveCsv
       ? "Spread v1 shadow has no live CSV on disk yet."
@@ -832,15 +873,7 @@ export default async function ModelMonitorPage() {
             ? `Spread v1 shadow has ${spreadV1SignalsArchive.length} tracked rows, but no settled spread sample yet.`
             : `Spread v1 shadow has ${spreadV1SettledRows.length} settled spreads with CLV coverage ${matchedSpreadV1}/${auditedSpreadV1 || 0}.`;
   const clay2026Diagnosis =
-    !clay2026SignalsLiveCsv
-      ? "Clay 2026 has no live CSV on disk right now, which usually means the calibrated lane has not written a qualifying row yet."
-      : clay2026Queue.length === 0 && clay2026NoMatchRows.length > 0
-      ? `Clay 2026 has ${clay2026NoMatchRows.length} unresolved no_match rows, but no true live queue right now.`
-      : clay2026SignalsLive.length === 0
-      ? "Clay 2026 is wired in, but it has not logged a qualifying calibrated-favorite row yet."
-      : clay2026AllCohort.settled === 0
-        ? `Clay 2026 has ${clay2026SignalsArchive.length} tracked rows (ATP ${clay2026AtpCohort.signals}, Challenger ${clay2026ChallengerCohort.signals}), but no settled sample yet. Challenger remains observational only.`
-        : `Clay 2026 is tracking ${clay2026AllCohort.signals} rows with ${clay2026AllCohort.settled} settled so far. ATP and Challenger are shown separately; Challenger remains observational only.`;
+    `Clay 2026 is archived reference only (${clay2026SignalsArchive.length} logical rows). It is excluded from active scoreboard and latest-settled cards.`;
   const volumeQueueMlCount = volumeQueue.filter((row) => row.betType !== "spread").length;
   const volumeQueueSpreadCount = volumeQueue.filter((row) => row.betType === "spread").length;
   const volumeSettledMlCount =
@@ -855,8 +888,8 @@ export default async function ModelMonitorPage() {
   const volumeSettledCount =
     perfValue(volumeBase.combinedAll, "settled", parseIntMaybe) ??
     volumeSignalsArchive.filter((row) => (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
-  const spreadV1TrackedCount = perfValue(spreadV1Base.combinedAll, "signals", parseIntMaybe) ?? spreadV1SignalsArchive.length;
-  const spreadV1SettledCount = perfValue(spreadV1Base.combinedAll, "settled", parseIntMaybe) ?? spreadV1SettledRows.length;
+  const spreadV1TrackedCount = spreadV1SignalsArchive.length;
+  const spreadV1SettledCount = spreadV1SettledRows.length;
   const spreadShadowTrackedCount = perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? spreadShadowSignalsArchive.length;
   const spreadShadowSettledCount = perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) ?? 0;
   const clay2026TrackedCount = perfValue(clay2026Base.combinedAll, "signals", parseIntMaybe) ?? clay2026SignalsArchive.length;
@@ -865,7 +898,7 @@ export default async function ModelMonitorPage() {
   const strictSpreadOpenCount = strictQueue.filter((row) => row.betType === "spread").length;
   const volumeMlOpenCount = volumeQueueMlCount;
   const volumeSpreadOpenCount = volumeQueueSpreadCount;
-  const spreadV1OpenCount = perfValue(spreadV1Base.combinedAll, "unsettled", parseIntMaybe) ?? spreadV1Queue.length;
+  const spreadV1OpenCount = spreadV1Queue.length;
   const spreadShadowOpenCount = spreadShadowQueue.length;
   const clay2026OpenCount = clay2026Queue.length;
   const resultsAsOfDate =
@@ -876,8 +909,6 @@ export default async function ModelMonitorPage() {
     ...strictSettledRows.map((row) => ({ source: "Strict", lane: row.betType === "spread" ? "Strict Spread" : "Strict ML", accent: "rose" as const, row })),
     ...volumeSettledRows.map((row) => ({ source: "Volume 200", lane: row.betType === "spread" ? "Volume 200 Spread" : "Volume 200 ML", accent: "amber" as const, row })),
     ...spreadV1SettledRows.map((row) => ({ source: "Spread v1", lane: "Spread v1 HC", accent: "sky" as const, row })),
-    ...spreadShadowSettledRows.map((row) => ({ source: "Spread Shadow", lane: "Spread Shadow HC", accent: "cyan" as const, row })),
-    ...clay2026SettledRows.map((row) => ({ source: "Clay 2026", lane: "Clay 2026 ML", accent: "orange" as const, row })),
   ].sort((left, right) => {
     const leftStamp = Date.parse(left.row.settledAt || "") || signalTimestamp(left.row);
     const rightStamp = Date.parse(right.row.settledAt || "") || signalTimestamp(right.row);
@@ -957,13 +988,16 @@ export default async function ModelMonitorPage() {
       settled: spreadV1SettledCount,
       signals: spreadV1TrackedCount,
       open: spreadV1OpenCount,
-      wlv: perfWlv(spreadV1Base.handicapAll ?? spreadV1Base.combinedAll),
-      roi: perfValue(spreadV1Base.handicapAll ?? spreadV1Base.combinedAll, "roi_pct", parseFloatMaybe),
+      wlv: cohortWlv(spreadV1SpreadRecordedCohort),
+      roi: spreadV1SpreadRecordedCohort.roiPct,
       flatStakePounds: spreadV1SpreadFlatCohort.pnlUnits * 100,
       flatTotalStakedPounds: spreadV1SpreadFlatCohort.stakedUnits * 100,
       unitTotalStakedPounds: spreadV1SpreadRecordedCohort.stakedUnits * 100,
       unitStakePounds: spreadV1SpreadRecordedCohort.pnlUnits * 100,
-      winRate: perfValue(spreadV1Base.handicapAll ?? spreadV1Base.combinedAll, "win_rate_pct", parseFloatMaybe),
+      winRate:
+        spreadV1SpreadRecordedCohort.settled > 0
+          ? (spreadV1SpreadRecordedCohort.wins / spreadV1SpreadRecordedCohort.settled) * 100
+          : undefined,
       clv: clvSpreadV1.avgClvPct,
     },
     {
@@ -999,6 +1033,7 @@ export default async function ModelMonitorPage() {
       clvLabel: "n/a",
     },
   ];
+  const activeLaneScoreRows = laneScoreRows.filter((row) => !["Spread Shadow", "Clay 2026"].includes(row.policy));
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.10),_transparent_22%),#0b0f14] text-slate-100">
@@ -1121,7 +1156,7 @@ export default async function ModelMonitorPage() {
         </div>
 
         <div className="mb-8">
-          <MonitorCard title="Lane Scoreboard" subtitle="Every lane on its own row so ML and spread can be judged separately. Total Bets = settled bets.">
+          <MonitorCard title="Active Lane Scoreboard" subtitle="Logical picks only: repeat refreshes of the same fixture/side/lane are collapsed. Legacy Clay 2026 and old Spread Shadow are archived below, not mixed into the active board.">
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
                 <thead>
@@ -1140,7 +1175,7 @@ export default async function ModelMonitorPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {laneScoreRows.map((row) => (
+                  {activeLaneScoreRows.map((row) => (
                     <tr key={`${row.policy}-${row.lane}`} className="border-b border-slate-900/80 text-slate-200">
                       <td className="px-3 py-3 font-semibold text-white">{row.policy}</td>
                       <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.lane}</td>
@@ -1161,13 +1196,13 @@ export default async function ModelMonitorPage() {
               </table>
             </div>
             <p className="mt-3 text-xs leading-6 text-slate-500">
-              Default board uses one money column only: <span className="font-semibold text-slate-300">Recorded P/L (GBP100/u)</span>. That is the actual settled P/L from stored unit sizes with 1u = GBP100. CLV is audited on strict ML, ATP ML research, and spread_v1 shadow. Legacy Spread Shadow and Clay 2026 remain reference lanes.
+              Default board uses one money column only: <span className="font-semibold text-slate-300">Recorded P/L (GBP100/u)</span>. That is the actual settled P/L from stored unit sizes with 1u = GBP100. CLV is audited on strict ML, ATP ML research, and spread_v1 shadow. Deprecated Clay 2026 and old Spread Shadow are no longer mixed into active counts.
             </p>
             <div className="mt-4 grid gap-3 lg:grid-cols-3">
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
-                <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Clay 2026 Split</div>
-                <div className="mt-2">ATP only: {cohortWlv(clay2026AtpCohort)} | {formatPct(clay2026AtpCohort.roiPct)}</div>
-                <div className="mt-1">Challenger: {cohortWlv(clay2026ChallengerCohort)} | {formatPct(clay2026ChallengerCohort.roiPct)}</div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Archived Lanes</div>
+                <div className="mt-2">Clay 2026 and old Spread Shadow are archived reference only.</div>
+                <div className="mt-1 text-slate-500">They do not appear in active settled-result cards.</div>
               </div>
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
                 <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Volume 200 Open</div>
@@ -1186,7 +1221,7 @@ export default async function ModelMonitorPage() {
                 Flat view assumes every settled bet risked £100. Recorded view converts the stored unit stakes into pounds at 1u = £100. When a lane uses mixed 1u and 2u staking, recorded P/L will diverge from flat P/L.
               </p>
               <div className="mt-3 grid gap-3 lg:grid-cols-2">
-                {laneScoreRows.map((row) => (
+                {activeLaneScoreRows.map((row) => (
                   <div key={`stake-basis-${row.policy}-${row.lane}`} className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3 text-sm text-slate-300">
                     <div className="font-semibold text-slate-100">{row.policy} {row.lane}</div>
                     <div className="mt-2 grid gap-2 sm:grid-cols-2">
@@ -1215,7 +1250,7 @@ export default async function ModelMonitorPage() {
         </div>
 
         <div className="mb-8">
-          <MonitorCard title="Latest Settled Results" subtitle={'Fastest way to answer questions like "did Clay 2026 win yesterday?" without digging through the raw CSVs.'}>
+          <MonitorCard title="Latest Settled Results" subtitle="Active lanes only. Repeat refreshes are collapsed into one logical pick so the same market is not shown as multiple bets.">
             <div className="grid gap-4 xl:grid-cols-2">
               {[
                 { label: `Settled Today (${resultsAsOfDate})`, rows: settledTodayRows },
@@ -1224,7 +1259,7 @@ export default async function ModelMonitorPage() {
                 <div key={group.label} className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
                   <div className="mb-3 flex items-center justify-between gap-3">
                     <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{group.label}</div>
-                    <div className="text-xs text-slate-500">{group.rows.length} rows</div>
+                    <div className="text-xs text-slate-500">{group.rows.length} logical picks</div>
                   </div>
                   {group.rows.length === 0 ? (
                     <p className="text-sm leading-6 text-slate-400">No settled rows logged for this date.</p>
@@ -1237,8 +1272,8 @@ export default async function ModelMonitorPage() {
                             ? "border-rose-500/20 bg-rose-500/5 text-rose-200"
                             : accent === "amber"
                               ? "border-amber-500/20 bg-amber-500/5 text-amber-200"
-                              : accent === "cyan"
-                                ? "border-cyan-500/20 bg-cyan-500/5 text-cyan-200"
+                              : accent === "sky"
+                                ? "border-sky-500/20 bg-sky-500/5 text-sky-200"
                                 : "border-orange-500/20 bg-orange-500/5 text-orange-200";
                         const outcomeClasses =
                           row.betOutcome === "WIN"
@@ -1268,6 +1303,7 @@ export default async function ModelMonitorPage() {
                                   {row.surface} | {row.league || "ATP"} | {row.series} | {source}
                                   {row.claySpeedTier ? ` | ${row.claySpeedTier}` : ""}
                                   {row.settledAt ? ` | settled ${row.settledAt.replace("T", " ").slice(0, 16)} UTC` : ""}
+                                  {(row.refreshCount ?? 1) > 1 ? ` | ${row.refreshCount} refreshes collapsed` : ""}
                                 </div>
                               </div>
                               <div className="text-right text-sm">
@@ -1290,7 +1326,7 @@ export default async function ModelMonitorPage() {
           </MonitorCard>
         </div>
 
-        <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-7">
+        <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
           <MonitorCard title="Strict Live Control" subtitle={`Clean sample first: Hard | Masters 1000 | high | public >=10%${strictAsOf ? ` | as of ${strictAsOf}` : ""}`}>
             <div className="grid gap-3">
               <Stat label="Clean ROI" value={formatPct(strictAllRoi)} tone={metricTone(strictAllRoi)} />
@@ -1317,17 +1353,6 @@ export default async function ModelMonitorPage() {
               <Stat label="Unsettled" value={`${spreadV1OpenCount}`} />
               <Stat label="Hard Status" value={spreadV1Status?.surfaces?.hard?.promotion_status ?? "off"} tone="text-sky-300" />
               <Stat label="Clay Status" value={spreadV1Status?.surfaces?.clay?.promotion_status ?? "off"} tone="text-sky-300" />
-            </div>
-          </MonitorCard>
-
-          <MonitorCard title="Clay 2026" subtitle={`ATP-only research lane, Challenger legacy sample${clay2026AsOf ? ` | as of ${clay2026AsOf}` : ""}`}>
-            <div className="grid gap-3">
-              <Stat label="Clean ROI" value={formatPct(clay2026AllRoi)} tone={metricTone(clay2026AllRoi)} />
-              <Stat label="Signals" value={`${clay2026TrackedCount}`} />
-              <Stat label="Settled" value={`${clay2026SettledCount}`} />
-              <Stat label="Unsettled" value={`${perfValue(clay2026Base.combinedAll, "unsettled", parseIntMaybe) ?? clay2026Queue.length}`} />
-              <Stat label="ATP Signals" value={`${clay2026AtpCohort.signals}`} tone="text-emerald-300" />
-              <Stat label="CH Signals" value={`${clay2026ChallengerCohort.signals}`} tone="text-amber-300" />
             </div>
           </MonitorCard>
 
@@ -1447,15 +1472,15 @@ export default async function ModelMonitorPage() {
                   <Stat label="Signals" value={`${spreadV1TrackedCount}`} compact />
                   <Stat label="Settled" value={`${spreadV1SettledCount}`} compact />
                   <Stat label="Unsettled" value={`${spreadV1OpenCount}`} compact />
-                  <Stat label="Avg Value" value={formatPct(perfValue(spreadV1Base.combinedAll, "avg_value_pct", parseFloatMaybe))} tone="text-sky-200" compact />
+                  <Stat label="Avg Value" value={formatPct(spreadV1SpreadRecordedCohort.avgValuePct)} tone="text-sky-200" compact />
                   <Stat label="Avg CLV" value={formatPct(clvSpreadV1.avgClvPct, 3)} tone={metricTone(clvSpreadV1.avgClvPct)} compact />
                 </div>
                 <div className="mt-3 space-y-3">
                   <SplitBucket
                     title="Spread"
-                    roi={formatPct(perfValue(spreadV1Base.handicapAll, "roi_pct", parseFloatMaybe))}
-                    roiTone={metricTone(perfValue(spreadV1Base.handicapAll, "roi_pct", parseFloatMaybe))}
-                    wlv={perfWlv(spreadV1Base.handicapAll)}
+                    roi={formatPct(spreadV1SpreadRecordedCohort.roiPct)}
+                    roiTone={metricTone(spreadV1SpreadRecordedCohort.roiPct)}
+                    wlv={cohortWlv(spreadV1SpreadRecordedCohort)}
                   />
                   <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-xs text-slate-400">
                     Calibration: {spreadV1Status?.calibration?.valid ? "ready" : "off"} | source {spreadV1Status?.calibration?.line_source_used || "n/a"} | hard {spreadV1Status?.surfaces?.hard?.promotion_status ?? "off"} | clay {spreadV1Status?.surfaces?.clay?.promotion_status ?? "off"} | capture {spreadV1Status?.last_spread_capture_at || "n/a"}
@@ -1466,10 +1491,10 @@ export default async function ModelMonitorPage() {
               <div className="rounded-2xl border border-orange-500/20 bg-orange-500/5 p-4">
                 <div className="mb-4 flex items-center justify-between">
                   <h3 className="text-base font-semibold text-white">Clay 2026</h3>
-                  <span className="rounded-full bg-orange-500/15 px-2 py-1 text-xs font-semibold text-orange-200">calibrated lane</span>
+                  <span className="rounded-full bg-orange-500/15 px-2 py-1 text-xs font-semibold text-orange-200">archived reference</span>
                 </div>
                 <p className="mb-3 text-sm leading-6 text-slate-400">
-                  ATP is the historically validated cohort. Challenger stays in the shadow stream, but it is observational only and should not drive promotion decisions.
+                  Deprecated lane kept below the active board only for audit history. It does not feed the active scoreboard or latest settled cards.
                 </p>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Stat label="Clean ROI" value={formatPct(clay2026AllRoi)} tone={metricTone(clay2026AllRoi)} compact />
@@ -1869,10 +1894,10 @@ export default async function ModelMonitorPage() {
                   Live ATP ML research tracking: {volumeTrackedCount} rows, {volumeSettledCount} settled, {volumeOpenCount} currently open, {volumeNoMatchCount} parked as no_match, {formatPct(volumeAllRoi)} clean ROI.
                 </li>
                 <li>
-                  Spread shadow tracking: {spreadShadowTrackedCount} signals, {spreadShadowSettledCount} settled, {formatPct(spreadShadowAllRoi)} ROI.
+                  Archived old Spread Shadow: {spreadShadowTrackedCount} signals, {spreadShadowSettledCount} settled, {formatPct(spreadShadowAllRoi)} ROI. Not active.
                 </li>
                 <li>
-                  Clay 2026 tracking: {clay2026TrackedCount} signals, {clay2026SettledCount} settled, {formatPct(clay2026AllRoi)} ROI. ATP {clay2026AtpCohort.signals} tracked / {clay2026AtpCohort.settled} settled; Challenger {clay2026ChallengerCohort.signals} tracked / {clay2026ChallengerCohort.settled} settled and remains observational.
+                  Archived Clay 2026: {clay2026TrackedCount} signals, {clay2026SettledCount} settled, {formatPct(clay2026AllRoi)} ROI. ATP {clay2026AtpCohort.signals} tracked / {clay2026AtpCohort.settled} settled; Challenger {clay2026ChallengerCohort.signals} tracked / {clay2026ChallengerCohort.settled} settled. Not active.
                 </li>
               </ul>
               <details className="rounded-xl border border-slate-800 bg-slate-950/35 p-3">
@@ -1893,10 +1918,10 @@ export default async function ModelMonitorPage() {
                 <span className="font-semibold text-slate-100">Next clean upgrade:</span> move the monitor metrics into Supabase so this page can be real-time without redeploys.
               </p>
               <p>
-                <span className="font-semibold text-slate-100">Current interpretation:</span> strict live control is negative, shadow is too young, and CLV diagnosis is blocked by missing overlap from historical close data. Your own Pinnacle history capture is now the right path to fix that.
+                <span className="font-semibold text-slate-100">Current interpretation:</span> Spread v1 is still shadow/research. Logical-pick dedupe is active, so repeated refreshes of the same fixture do not count as extra bets.
               </p>
               <p>
-                <span className="font-semibold text-slate-100">Spread shadow:</span> this is now a separate clay/non-policy handicap lane. If it has no open picks, that means the tracker found nothing above the 20% threshold, not that the lane is broken.
+                <span className="font-semibold text-slate-100">Archived lanes:</span> old Spread Shadow and Clay 2026 are audit history only. They are intentionally excluded from active scoreboard and latest-settled cards.
               </p>
             </div>
           </MonitorCard>
