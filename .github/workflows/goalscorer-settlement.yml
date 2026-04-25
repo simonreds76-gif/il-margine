@@ -69,6 +69,7 @@ jobs:
           python scripts/goalscorer-player-log-health.py \
             --season "${{ steps.season.outputs.label }}" \
             --max-age-days 3 \
+            --output "${RUNNER_TEMP}/goalscorer-player-log-health.json" \
             --github-output
 
       - name: Refresh stale Understat player logs
