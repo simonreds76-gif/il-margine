@@ -15,6 +15,8 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import subprocess
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -43,7 +45,11 @@ def pf(value: Any) -> float | None:
 
 def load_rows(path: Path) -> list[dict[str, str]]:
     if not path.exists():
-        raise SystemExit(f"Missing backtest summary: {path}")
+        if path != DEFAULT_SUMMARY:
+            raise SystemExit(f"Missing backtest summary: {path}")
+        subprocess.run([sys.executable, str(ROOT / "scripts" / "backtest-football-form-layer.py")], check=True)
+    if not path.exists():
+        raise SystemExit(f"Backtest did not create expected summary: {path}")
     with path.open("r", encoding="utf-8", newline="") as handle:
         return list(csv.DictReader(handle))
 

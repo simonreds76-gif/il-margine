@@ -1,6 +1,6 @@
 # Corners V0 Promotion Check
 
-Generated: 2026-04-25T14:43:22+00:00
+Generated: 2026-04-25T16:01:46+00:00
 
 This is a research-lane gate only. It does not change live picks.
 

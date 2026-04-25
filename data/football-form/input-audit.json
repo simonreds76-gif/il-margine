@@ -116,7 +116,7 @@
       "max_date": "2026-04-23",
       "min_date": "2025-08-15",
       "missing_required_groups": [],
-      "mtime_utc": "2026-04-25T09:48:50+00:00",
+      "mtime_utc": "2026-04-25T15:35:24+00:00",
       "owner": "team-shots",
       "path": "data/team-shots/fbref/all-fbref-matches.csv",
       "required_groups": [
@@ -266,7 +266,7 @@
       "max_date": "2026-04-23",
       "min_date": "2025-08-15",
       "missing_required_groups": [],
-      "mtime_utc": "2026-04-25T09:48:50+00:00",
+      "mtime_utc": "2026-04-25T15:35:24+00:00",
       "owner": "team-shots",
       "path": "data/team-shots/historical/all-historical-matches.csv",
       "required_groups": [
@@ -421,7 +421,7 @@
       "max_date": "2026-04-23",
       "min_date": "2014-08-08",
       "missing_required_groups": [],
-      "mtime_utc": "2026-04-25T09:48:20+00:00",
+      "mtime_utc": "2026-04-25T15:34:57+00:00",
       "owner": "corners",
       "path": "data/corners-ou/historical/all-historical-matches.csv",
       "required_groups": [
@@ -524,7 +524,7 @@
       "max_date": "2026-04-27",
       "min_date": "2026-04-10",
       "missing_required_groups": [],
-      "mtime_utc": "2026-04-25T12:54:33+00:00",
+      "mtime_utc": "2026-04-25T15:34:57+00:00",
       "owner": "corners",
       "path": "data/corners-ou/pinnacle-corners-odds.csv",
       "required_groups": [
@@ -626,7 +626,7 @@
       "max_date": "2026-04-27",
       "min_date": "2026-04-10",
       "missing_required_groups": [],
-      "mtime_utc": "2026-04-25T14:09:31+00:00",
+      "mtime_utc": "2026-04-25T15:35:25+00:00",
       "owner": "team-shots",
       "path": "data/team-shots/team-shots-odds-history.csv",
       "required_groups": [
@@ -636,7 +636,7 @@
       "source_role": "Bookmaker team-shots O/U snapshots"
     },
     {
-      "bytes": 49805727,
+      "bytes": 50033243,
       "columns": [
         "capture_date",
         "captured_at",
@@ -665,7 +665,7 @@
             "odds_decimal"
           ],
           "pct": 100.0,
-          "rows_present": 207857
+          "rows_present": 208815
         },
         "corners": {
           "columns_available": [],
@@ -687,7 +687,7 @@
             "player_name"
           ],
           "pct": 100.0,
-          "rows_present": 207857
+          "rows_present": 208815
         },
         "shots": {
           "columns_available": [],
@@ -711,22 +711,22 @@
         {
           "latest_date": "2026-04-27",
           "league": "England - Premier League",
-          "rows": 41016
+          "rows": 41094
         },
         {
           "latest_date": "2026-04-26",
           "league": "France - Ligue 1",
-          "rows": 40937
+          "rows": 41344
         },
         {
           "latest_date": "2026-04-26",
           "league": "Germany - Bundesliga",
-          "rows": 35448
+          "rows": 35579
         },
         {
           "latest_date": "2026-04-27",
           "league": "Italy - Serie A",
-          "rows": 42647
+          "rows": 42989
         },
         {
           "latest_date": "2026-04-27",
@@ -737,21 +737,21 @@
       "max_date": "2026-04-27",
       "min_date": "2026-04-10",
       "missing_required_groups": [],
-      "mtime_utc": "2026-04-25T14:09:31+00:00",
+      "mtime_utc": "2026-04-25T15:35:09+00:00",
       "owner": "goalscorer",
       "path": "data/goalscorer/goalscorer-odds-history.csv",
       "required_groups": [
         "book_odds"
       ],
-      "row_count": 207857,
+      "row_count": 208815,
       "source_role": "Bookmaker anytime-goalscorer odds snapshots"
     }
   ],
-  "generated_at": "2026-04-25T14:48:47+00:00",
+  "generated_at": "2026-04-25T16:06:24+00:00",
   "issues": [],
   "model_files": [
     {
-      "bytes": 30855,
+      "bytes": 30752,
       "data_paths": [
         "data/team-shots/fbref/all-fbref-matches.csv",
         "data/team-shots/historical/all-historical-matches.csv",
@@ -772,7 +772,7 @@
       }
     },
     {
-      "bytes": 16017,
+      "bytes": 15974,
       "data_paths": [],
       "exists": true,
       "path": "scripts/team-shots-compare.py",
@@ -788,7 +788,7 @@
       }
     },
     {
-      "bytes": 17063,
+      "bytes": 16926,
       "data_paths": [],
       "exists": true,
       "path": "scripts/team-shots-shadow-tracker.py",
@@ -961,7 +961,7 @@
       }
     },
     {
-      "bytes": 28178,
+      "bytes": 27353,
       "data_paths": [
         "data/goalscorer",
         "data/goalscorer/serie-a-player-match-logs-{season}.csv"
@@ -999,7 +999,7 @@
       }
     },
     {
-      "bytes": 15629,
+      "bytes": 15232,
       "data_paths": [
         "data/match",
         "data/matches"
@@ -1124,7 +1124,7 @@
         "max_date": "2024-05-18",
         "min_date": "2023-08-18",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T09:48:20+00:00",
+        "mtime_utc": "2026-03-15T22:24:17+00:00",
         "path": "data/goalscorer/bundesliga-player-match-logs-2023-2024.csv",
         "row_count": 9019
       },
@@ -1231,7 +1231,7 @@
         "max_date": "2025-05-17",
         "min_date": "2024-08-23",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T09:48:20+00:00",
+        "mtime_utc": "2026-03-15T21:35:34+00:00",
         "path": "data/goalscorer/bundesliga-player-match-logs-2024-2025.csv",
         "row_count": 9131
       },
@@ -1338,7 +1338,7 @@
         "max_date": "2026-04-24",
         "min_date": "2025-08-22",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T13:27:52+00:00",
+        "mtime_utc": "2026-04-25T15:34:57+00:00",
         "path": "data/goalscorer/bundesliga-player-match-logs-2025-2026.csv",
         "row_count": 8161
       },
@@ -1445,7 +1445,7 @@
         "max_date": "2024-05-19",
         "min_date": "2023-08-11",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T09:48:25+00:00",
+        "mtime_utc": "2026-03-15T22:07:08+00:00",
         "path": "data/goalscorer/epl-player-match-logs-2023-2024.csv",
         "row_count": 10895
       },
@@ -1552,7 +1552,7 @@
         "max_date": "2025-05-25",
         "min_date": "2024-08-16",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T09:48:25+00:00",
+        "mtime_utc": "2026-04-12T19:57:54+00:00",
         "path": "data/goalscorer/epl-player-match-logs-2024-2025.csv",
         "row_count": 11114
       },
@@ -1659,7 +1659,7 @@
         "max_date": "2026-04-24",
         "min_date": "2025-08-15",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T13:27:52+00:00",
+        "mtime_utc": "2026-04-25T15:35:02+00:00",
         "path": "data/goalscorer/epl-player-match-logs-2025-2026.csv",
         "row_count": 9618
       },
@@ -1766,7 +1766,7 @@
         "max_date": "2024-05-26",
         "min_date": "2023-08-11",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T09:48:33+00:00",
+        "mtime_utc": "2026-03-15T22:16:38+00:00",
         "path": "data/goalscorer/la-liga-player-match-logs-2023-2024.csv",
         "row_count": 11476
       },
@@ -1873,7 +1873,7 @@
         "max_date": "2025-05-25",
         "min_date": "2024-08-15",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T09:48:33+00:00",
+        "mtime_utc": "2026-04-12T19:57:55+00:00",
         "path": "data/goalscorer/la-liga-player-match-logs-2024-2025.csv",
         "row_count": 11487
       },
@@ -1980,7 +1980,7 @@
         "max_date": "2026-04-24",
         "min_date": "2025-08-15",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T13:27:53+00:00",
+        "mtime_utc": "2026-04-25T15:35:11+00:00",
         "path": "data/goalscorer/la-liga-player-match-logs-2025-2026.csv",
         "row_count": 9708
       },
@@ -2087,7 +2087,7 @@
         "max_date": "2024-05-19",
         "min_date": "2023-08-12",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T09:48:37+00:00",
+        "mtime_utc": "2026-04-12T19:57:56+00:00",
         "path": "data/goalscorer/ligue-1-player-match-logs-2023-2024.csv",
         "row_count": 8893
       },
@@ -2194,7 +2194,7 @@
         "max_date": "2025-05-17",
         "min_date": "2024-08-16",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T09:48:38+00:00",
+        "mtime_utc": "2026-03-16T11:22:25+00:00",
         "path": "data/goalscorer/ligue-1-player-match-logs-2024-2025.csv",
         "row_count": 8947
       },
@@ -2301,7 +2301,7 @@
         "max_date": "2026-04-24",
         "min_date": "2025-08-15",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T13:27:54+00:00",
+        "mtime_utc": "2026-04-25T15:35:15+00:00",
         "path": "data/goalscorer/ligue-1-player-match-logs-2025-2026.csv",
         "row_count": 7915
       },
@@ -2408,7 +2408,7 @@
         "max_date": "2024-06-02",
         "min_date": "2023-08-19",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T09:48:48+00:00",
+        "mtime_utc": "2026-03-15T19:59:56+00:00",
         "path": "data/goalscorer/serie-a-player-match-logs-2023-2024.csv",
         "row_count": 11162
       },
@@ -2515,7 +2515,7 @@
         "max_date": "2025-05-25",
         "min_date": "2024-08-17",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T09:48:48+00:00",
+        "mtime_utc": "2026-03-15T20:08:19+00:00",
         "path": "data/goalscorer/serie-a-player-match-logs-2024-2025.csv",
         "row_count": 10929
       },
@@ -2622,7 +2622,7 @@
         "max_date": "2026-04-24",
         "min_date": "2025-08-23",
         "missing_required_groups": [],
-        "mtime_utc": "2026-04-25T13:27:54+00:00",
+        "mtime_utc": "2026-04-25T15:35:24+00:00",
         "path": "data/goalscorer/serie-a-player-match-logs-2025-2026.csv",
         "row_count": 9803
       }

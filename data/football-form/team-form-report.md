@@ -1,6 +1,6 @@
 # Football Team Form Layer Report
 
-Generated: 2026-04-25T13:37:25+00:00
+Generated: 2026-04-25T15:59:50+00:00
 
 ## Outputs
 
@@ -41,6 +41,7 @@ Generated: 2026-04-25T13:37:25+00:00
 ## Notes
 
 - Rolling features are causal: each row uses only prior matches for that team.
+- League-relative fields include all-prior and trailing-12-month causal baselines; both exclude the current matchday.
 - Current-match raw stats are included for backtests; model training must avoid using current_* as predictors for pre-match bets.
 - Venue-split rolling shots, SOT, and corners are included so live models do not have to rebuild those histories separately.
 - Opponent strength is currently a bookmaker 1X2 proxy from previous matches, not an Elo system.

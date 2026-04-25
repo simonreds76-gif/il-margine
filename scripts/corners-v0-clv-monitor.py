@@ -162,8 +162,31 @@ def row_bool(value: Any) -> bool:
 
 def load_allowed_config(path: Path) -> dict[str, Any]:
     if not path.exists():
-        return {"allowed_leagues": [], "canonical_only_allowed": False}
-    return json.loads(path.read_text(encoding="utf-8"))
+        return {
+            "allowed_leagues": [],
+            "canonical_only_allowed": False,
+            "config_valid": False,
+            "config_error": f"missing allowed config: {path}",
+        }
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return {
+            "allowed_leagues": [],
+            "canonical_only_allowed": False,
+            "config_valid": False,
+            "config_error": f"malformed allowed config: {exc}",
+        }
+    if not isinstance(payload.get("allowed_leagues"), list):
+        return {
+            "allowed_leagues": [],
+            "canonical_only_allowed": False,
+            "config_valid": False,
+            "config_error": "allowed config missing list field: allowed_leagues",
+        }
+    payload["config_valid"] = True
+    payload["config_error"] = ""
+    return payload
 
 
 def build_pick_row(
@@ -172,6 +195,8 @@ def build_pick_row(
     *,
     allow_canonical_only: bool,
     allowed_leagues: set[str],
+    config_valid: bool,
+    config_error: str,
 ) -> dict[str, Any]:
     home, away = split_match(pick)
     league = (pick.get("league") or "").strip().lower()
@@ -194,12 +219,17 @@ def build_pick_row(
     current_model_would_have_priced = row_bool(pick.get("current_model_would_have_priced"))
     blocked_reasons: list[str] = []
     confidence_guard_applied = False
+    if not config_valid:
+        confidence_guard_applied = True
+        blocked_reasons.append("allowed_config_invalid")
     if not current_model_would_have_priced and not allow_canonical_only:
         confidence_guard_applied = True
         blocked_reasons.append("canonical_only_guard")
-    if allowed_leagues and league not in allowed_leagues:
+    if league not in allowed_leagues:
         confidence_guard_applied = True
         blocked_reasons.append("league_not_allowed")
+    if config_error:
+        blocked_reasons.append(config_error)
 
     published_to_close_clv = ""
     movement_to_close = ""
@@ -259,7 +289,7 @@ def avg(values: list[float]) -> float | None:
     return sum(vals) / len(vals) if vals else None
 
 
-def render_report(rows: list[dict[str, Any]], picks_path: Path, pinnacle_path: Path) -> str:
+def render_report(rows: list[dict[str, Any]], picks_path: Path, pinnacle_path: Path, allowed_config: dict[str, Any]) -> str:
     clv_values = [pf(row.get("published_to_close_clv")) for row in rows if pf(row.get("published_to_close_clv")) is not None]
     blocked = [row for row in rows if row.get("blocked_reason")]
     with_close = [row for row in rows if row.get("pinnacle_price_close")]
@@ -277,6 +307,9 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, pinnacle_path: P
         f"- Picks with close: {len(with_close)}",
         f"- Hard-guard blocked: {len(blocked)}",
         f"- Average published-to-close CLV: {avg_clv:+.2%}" if avg_clv is not None else "- Average published-to-close CLV: -",
+        f"- Allowed-league config valid: {'yes' if allowed_config.get('config_valid') else 'no'}",
+        f"- Allowed leagues: `{', '.join(allowed_config.get('allowed_leagues', [])) or '-'}`",
+        f"- Config error: `{allowed_config.get('config_error') or '-'}`",
         "",
         "## Required Fields",
         "",
@@ -290,6 +323,13 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, pinnacle_path: P
         "",
         "- Pause corners v0 if 30-day rolling CLV is below 0 with at least 50 settled picks.",
         "- Pause corners v0 if rolling 90-day production Brier exceeds 1.05x the pre-promotion backtest Brier.",
+        "",
+        "## Re-Promotion Rules After A Pause",
+        "",
+        "- Re-run the original full-window and last-90 Brier/log-loss gates.",
+        "- Document the specific cause of the pause: negative CLV drift or Brier calibration drift.",
+        "- Ship a documented data/model/scope change before re-enabling; do not simply re-enable because variance looks nicer.",
+        "- Wait at least 14 days after the pause before attempting re-promotion.",
         "",
     ]
     return "\n".join(lines)
@@ -316,12 +356,19 @@ def main() -> None:
     allowed_leagues = {str(league).strip().lower() for league in allowed_config.get("allowed_leagues", [])}
     allow_canonical_only = args.allow_canonical_only or bool(allowed_config.get("canonical_only_allowed"))
     rows = [
-        build_pick_row(pick, index, allow_canonical_only=allow_canonical_only, allowed_leagues=allowed_leagues)
+        build_pick_row(
+            pick,
+            index,
+            allow_canonical_only=allow_canonical_only,
+            allowed_leagues=allowed_leagues,
+            config_valid=bool(allowed_config.get("config_valid")),
+            config_error=str(allowed_config.get("config_error") or ""),
+        )
         for pick in picks
     ]
     write_csv(args.output, rows)
     args.report.parent.mkdir(parents=True, exist_ok=True)
-    args.report.write_text(render_report(rows, args.picks, args.pinnacle), encoding="utf-8")
+    args.report.write_text(render_report(rows, args.picks, args.pinnacle, allowed_config), encoding="utf-8")
     print(f"Wrote {args.output.relative_to(ROOT)}")
     print(f"Wrote {args.report.relative_to(ROOT)}")
 

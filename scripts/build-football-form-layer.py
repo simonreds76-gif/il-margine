@@ -21,7 +21,7 @@ import subprocess
 import sys
 from collections import defaultdict, deque
 from dataclasses import dataclass
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -101,6 +101,13 @@ ROLLING_BASE_FIELDS = [
     "league_prior_corners_against_avg",
     "league_prior_xg_for_avg",
     "league_prior_xg_against_avg",
+    "league_t12_rows",
+    "league_t12_shots_for_avg",
+    "league_t12_shots_against_avg",
+    "league_t12_corners_for_avg",
+    "league_t12_corners_against_avg",
+    "league_t12_xg_for_avg",
+    "league_t12_xg_against_avg",
 ]
 
 
@@ -145,6 +152,12 @@ RELATIVE_METRICS = [
     "corners_against_avg_rel",
     "xg_for_avg_rel",
     "xg_against_avg_rel",
+    "shots_for_avg_t12_rel",
+    "shots_against_avg_t12_rel",
+    "corners_for_avg_t12_rel",
+    "corners_against_avg_t12_rel",
+    "xg_for_avg_t12_rel",
+    "xg_against_avg_t12_rel",
 ]
 
 
@@ -449,14 +462,22 @@ LEAGUE_BASELINE_SOURCES = {
 }
 
 
-def update_league_stats(stats: dict[str, float], row: dict[str, Any]) -> None:
-    stats["rows"] = stats.get("rows", 0.0) + 1.0
+def adjust_league_stats(stats: dict[str, float], row: dict[str, Any], delta: float) -> None:
+    stats["rows"] = stats.get("rows", 0.0) + delta
     for source_field in LEAGUE_BASELINE_SOURCES:
         value = numeric(row, source_field)
         if value is None:
             continue
-        stats[f"{source_field}_sum"] = stats.get(f"{source_field}_sum", 0.0) + value
-        stats[f"{source_field}_count"] = stats.get(f"{source_field}_count", 0.0) + 1.0
+        stats[f"{source_field}_sum"] = stats.get(f"{source_field}_sum", 0.0) + (value * delta)
+        stats[f"{source_field}_count"] = stats.get(f"{source_field}_count", 0.0) + delta
+
+
+def update_league_stats(stats: dict[str, float], row: dict[str, Any]) -> None:
+    adjust_league_stats(stats, row, 1.0)
+
+
+def remove_league_stats(stats: dict[str, float], row: dict[str, Any]) -> None:
+    adjust_league_stats(stats, row, -1.0)
 
 
 def summarize_league_baseline(stats: dict[str, float]) -> dict[str, Any]:
@@ -477,6 +498,16 @@ def summarize_league_baseline(stats: dict[str, float]) -> dict[str, Any]:
     }
 
 
+def summarize_league_t12_baseline(stats: dict[str, float]) -> dict[str, Any]:
+    """Causal trailing-12-month league baseline using only prior matchdays."""
+    out: dict[str, Any] = {"league_t12_rows": int(stats.get("rows", 0.0))}
+    for source_field in LEAGUE_BASELINE_SOURCES:
+        count = stats.get(f"{source_field}_count", 0.0)
+        total = stats.get(f"{source_field}_sum", 0.0)
+        out[f"league_t12_{source_field}_avg"] = f"{total / count:.4f}".rstrip("0").rstrip(".") if count else ""
+    return out
+
+
 def relative_window_fields(row: dict[str, Any], window: int) -> dict[str, Any]:
     pairs = {
         "shots_for_avg_rel": (f"r{window}_shots_for_avg", "league_prior_shots_for_avg"),
@@ -485,6 +516,12 @@ def relative_window_fields(row: dict[str, Any], window: int) -> dict[str, Any]:
         "corners_against_avg_rel": (f"r{window}_corners_against_avg", "league_prior_corners_against_avg"),
         "xg_for_avg_rel": (f"r{window}_xg_for_avg", "league_prior_xg_for_avg"),
         "xg_against_avg_rel": (f"r{window}_xg_against_avg", "league_prior_xg_against_avg"),
+        "shots_for_avg_t12_rel": (f"r{window}_shots_for_avg", "league_t12_shots_for_avg"),
+        "shots_against_avg_t12_rel": (f"r{window}_shots_against_avg", "league_t12_shots_against_avg"),
+        "corners_for_avg_t12_rel": (f"r{window}_corners_for_avg", "league_t12_corners_for_avg"),
+        "corners_against_avg_t12_rel": (f"r{window}_corners_against_avg", "league_t12_corners_against_avg"),
+        "xg_for_avg_t12_rel": (f"r{window}_xg_for_avg", "league_t12_xg_for_avg"),
+        "xg_against_avg_t12_rel": (f"r{window}_xg_against_avg", "league_t12_xg_against_avg"),
     }
     return {
         f"r{window}_{name}": ratio(numeric(row, value_field), numeric(row, baseline_field))
@@ -495,6 +532,8 @@ def relative_window_fields(row: dict[str, Any], window: int) -> dict[str, Any]:
 def build_rolling_rows(team_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     histories: dict[str, deque[dict[str, Any]]] = defaultdict(lambda: deque(maxlen=max(WINDOWS)))
     league_stats: dict[str, dict[str, float]] = defaultdict(dict)
+    league_t12_rows: dict[str, deque[dict[str, Any]]] = defaultdict(deque)
+    league_t12_stats: dict[str, dict[str, float]] = defaultdict(dict)
     pending_league_rows: list[dict[str, Any]] = []
     current_date: str | None = None
     rolling_rows: list[dict[str, Any]] = []
@@ -514,8 +553,18 @@ def build_rolling_rows(team_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
         elif row["date"] != current_date:
             for pending_row in pending_league_rows:
                 update_league_stats(league_stats[pending_row["league"]], pending_row)
+                league_t12_rows[pending_row["league"]].append(pending_row)
+                update_league_stats(league_t12_stats[pending_row["league"]], pending_row)
             pending_league_rows = []
             current_date = row["date"]
+
+        row_date = parse_date(row["date"])
+        if row_date is not None:
+            cutoff = row_date - timedelta(days=365)
+            league_window = league_t12_rows[row["league"]]
+            while league_window and (parsed := parse_date(league_window[0]["date"])) is not None and parsed < cutoff:
+                expired = league_window.popleft()
+                remove_league_stats(league_t12_stats[row["league"]], expired)
 
         history = list(histories[row["team_key"]])
         out = {
@@ -543,6 +592,7 @@ def build_rolling_rows(team_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "market_opp_win_prob": row["market_opp_win_prob"],
         }
         out.update(summarize_league_baseline(league_stats[row["league"]]))
+        out.update(summarize_league_t12_baseline(league_t12_stats[row["league"]]))
         for window in WINDOWS:
             out.update(summarize_window(history, window))
             out.update(relative_window_fields(out, window))
@@ -680,6 +730,7 @@ def render_report(
         "## Notes",
         "",
         "- Rolling features are causal: each row uses only prior matches for that team.",
+        "- League-relative fields include all-prior and trailing-12-month causal baselines; both exclude the current matchday.",
         "- Current-match raw stats are included for backtests; model training must avoid using current_* as predictors for pre-match bets.",
         "- Venue-split rolling shots, SOT, and corners are included so live models do not have to rebuild those histories separately.",
         "- Opponent strength is currently a bookmaker 1X2 proxy from previous matches, not an Elo system.",

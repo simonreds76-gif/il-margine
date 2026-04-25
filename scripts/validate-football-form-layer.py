@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from pathlib import Path
@@ -129,6 +130,26 @@ def duplicate_count(rows: list[dict[str, Any]], fields: list[str]) -> int:
     return duplicates
 
 
+def safe_code(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", value.lower()).strip("_") or "unknown"
+
+
+def league_freshness(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    latest_by_league: dict[str, date] = {}
+    today = datetime.now(UTC).date()
+    for row in rows:
+        league = str(row.get("league") or "unknown").strip() or "unknown"
+        parsed = parse_date(row.get("date"))
+        if parsed is None:
+            continue
+        if league not in latest_by_league or parsed > latest_by_league[league]:
+            latest_by_league[league] = parsed
+    return {
+        league: {"latest_date": latest.isoformat(), "age_days": (today - latest).days}
+        for league, latest in sorted(latest_by_league.items())
+    }
+
+
 def validate_file(
     *,
     label: str,
@@ -162,6 +183,18 @@ def validate_file(
                 f"latest date {latest.isoformat()} is {age_days}d old; max {max_age_days}d",
             )
         )
+
+    league_dates = league_freshness(rows)
+    for league, summary in league_dates.items():
+        league_age = summary["age_days"]
+        if league_age is not None and league_age > max_age_days:
+            issues.append(
+                ValidationIssue(
+                    "error",
+                    f"{label}_{safe_code(league)}_stale",
+                    f"{league} latest date {summary['latest_date']} is {league_age}d old; max {max_age_days}d",
+                )
+            )
 
     coverage_summary = {field: round(coverage(rows, field), 4) for field in critical_coverage if field in field_set}
     for field, ratio in coverage_summary.items():
@@ -201,6 +234,7 @@ def validate_file(
             "latest_date": latest.isoformat() if latest else None,
             "age_days": age_days,
             "critical_coverage": coverage_summary,
+            "league_freshness": league_dates,
             "market_team_win_prob_coverage": round(market_coverage, 4),
             "xg_coverage": round(xg_coverage, 4),
             "duplicates": duplicates,
@@ -232,8 +266,20 @@ def render_markdown(payload: dict[str, Any]) -> str:
             lines.append(f"- **{issue['level']}** `{issue['code']}`: {issue['detail']}")
     else:
         lines.append("- No validation issues.")
-    lines.append("")
-    return "\n".join(lines)
+    lines.extend(["", "## Per-League Freshness", ""])
+    for label, summary in payload["files"].items():
+        lines.extend(
+            [
+                f"### {label}",
+                "",
+                "| League | Latest date | Age days |",
+                "| --- | --- | ---: |",
+            ]
+        )
+        for league, item in summary.get("league_freshness", {}).items():
+            lines.append(f"| {league} | {item['latest_date']} | {item['age_days']} |")
+        lines.append("")
+    return "\n".join(lines).rstrip() + "\n"
 
 
 def main() -> int:

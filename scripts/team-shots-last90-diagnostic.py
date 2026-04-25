@@ -16,6 +16,7 @@ import csv
 import importlib.util
 import json
 import math
+import subprocess
 import sys
 from collections import defaultdict
 from datetime import UTC, date, datetime, timedelta
@@ -46,6 +47,16 @@ def load_csv(path: Path) -> list[dict[str, str]]:
         return []
     with path.open("r", encoding="utf-8", errors="replace", newline="") as handle:
         return list(csv.DictReader(handle))
+
+
+def ensure_form_input(path: Path) -> None:
+    if path.exists():
+        return
+    if path != DEFAULT_FORM:
+        raise SystemExit(f"Missing canonical form input: {path}")
+    subprocess.run([sys.executable, str(ROOT / "scripts" / "build-football-form-layer.py")], check=True)
+    if not path.exists():
+        raise SystemExit(f"Canonical form build did not create expected input: {path}")
 
 
 def pf(value: Any, default: float | None = None) -> float | None:
@@ -179,8 +190,21 @@ def build_records(form_rows: list[dict[str, str]], current_rows: list[dict[str, 
             current_pred = pf(current.get("lambda_venue"), None) or pf(current.get("lambda_shots"), None)
             canonical_market = bt.canonical_team_shots_lambda(team, opp, use_market=True)
             canonical_no_market = bt.canonical_team_shots_lambda(team, opp, use_market=False)
+            canonical_market_t12 = bt.canonical_team_shots_lambda(team, opp, use_market=True, use_trailing12=True)
+            team_venue = str(team.get("venue", "")).strip()
+            opp_venue = str(opp.get("venue", "")).strip()
+            attack_input = bt.blended_prefer(team, bt.venue_field("shots_for", team_venue), "shots_for_avg")
+            defence_input = bt.blended_prefer(opp, bt.venue_field("shots_against", opp_venue), "shots_against_avg")
+            t12_ratio = bt.league_level_ratio(team, opp, metric_for="shots_for", metric_against="shots_against")
             fixture_date = parse_date(team.get("date"))
-            if actual is None or current_pred is None or canonical_market is None or canonical_no_market is None or fixture_date is None:
+            if (
+                actual is None
+                or current_pred is None
+                or canonical_market is None
+                or canonical_no_market is None
+                or canonical_market_t12 is None
+                or fixture_date is None
+            ):
                 continue
             market_team = pf(team.get("market_team_win_prob"))
             market_opp = pf(team.get("market_opp_win_prob"))
@@ -202,6 +226,16 @@ def build_records(form_rows: list[dict[str, str]], current_rows: list[dict[str, 
                     "current": current_pred,
                     "canonical_market": canonical_market,
                     "canonical_no_market": canonical_no_market,
+                    "canonical_market_t12": canonical_market_t12,
+                    "attack_input": attack_input,
+                    "defence_input": defence_input,
+                    "quality_adjustment": bt.quality_adjustment(team, opp),
+                    "market_adjustment": bt.market_game_state_adjustment(team),
+                    "t12_ratio": t12_ratio,
+                    "league_prior_shots_for_avg": pf(team.get("league_prior_shots_for_avg")),
+                    "league_prior_shots_against_avg": pf(opp.get("league_prior_shots_against_avg")),
+                    "league_t12_shots_for_avg": pf(team.get("league_t12_shots_for_avg")),
+                    "league_t12_shots_against_avg": pf(opp.get("league_t12_shots_against_avg")),
                     "market_gap": round(gap, 4) if gap is not None else None,
                     "gap_bucket": gap_bucket(gap),
                     "matchday": matchday,
@@ -225,7 +259,7 @@ def build_payload(form_rows: list[dict[str, str]], current_rows: list[dict[str, 
     recent_records = [
         record for record in records if recent_cutoff is not None and parse_date(record["date"]) is not None and parse_date(record["date"]) >= recent_cutoff
     ]
-    pred_fields = ["current", "canonical_market", "canonical_no_market"]
+    pred_fields = ["current", "canonical_market", "canonical_no_market", "canonical_market_t12"]
     current_full = summarize_records(records, "current")
     current_recent = summarize_records(recent_records, "current")
     cap_read = {
@@ -245,6 +279,7 @@ def build_payload(form_rows: list[dict[str, str]], current_rows: list[dict[str, 
         item["canonical_market_error"] = round(item["canonical_market"] - item["actual"], 4)
         item["current_error"] = round(item["current"] - item["actual"], 4)
         item["canonical_no_market_error"] = round(item["canonical_no_market"] - item["actual"], 4)
+        item["canonical_market_t12_error"] = round(item["canonical_market_t12"] - item["actual"], 4)
     return {
         "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat(),
         "latest_form_date": latest.isoformat() if latest else None,
@@ -266,24 +301,38 @@ def render_summary_table(title: str, rows: list[dict[str, Any]], group_field: st
     lines = [
         f"## {title}",
         "",
-        f"| {group_field} | N | Current MAE | Canonical market MAE | Cap disabled MAE | Read |",
-        "| --- | ---: | ---: | ---: | ---: | --- |",
+        f"| {group_field} | N | Current MAE | Canonical market MAE | Cap disabled MAE | T12 replay MAE | Read |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | --- |",
     ]
     for row in rows:
         current = row["current"]
         market = row["canonical_market"]
         no_market = row["canonical_no_market"]
+        t12 = row["canonical_market_t12"]
         read = "cap helps"
         if no_market.get("mae") is not None and market.get("mae") is not None and no_market["mae"] < market["mae"]:
             read = "cap hurts"
+        if t12.get("mae") is not None and market.get("mae") is not None and t12["mae"] < market["mae"]:
+            read += "; t12 helps"
+        elif t12.get("mae") is not None and market.get("mae") is not None:
+            read += "; t12 does not help"
         if market.get("mae") is not None and current.get("mae") is not None and market["mae"] > current["mae"]:
             read += "; canonical lags current"
         lines.append(
             f"| {row[group_field]} | {market.get('n', 0)} | {current.get('mae', '-')} | "
-            f"{market.get('mae', '-')} | {no_market.get('mae', '-')} | {read} |"
+            f"{market.get('mae', '-')} | {no_market.get('mae', '-')} | {t12.get('mae', '-')} | {read} |"
         )
     lines.append("")
     return lines
+
+
+def fmt_num(value: Any, digits: int = 2) -> str:
+    if value is None:
+        return "-"
+    try:
+        return f"{float(value):.{digits}f}"
+    except (TypeError, ValueError):
+        return "-"
 
 
 def render_markdown(payload: dict[str, Any]) -> str:
@@ -305,7 +354,7 @@ def render_markdown(payload: dict[str, Any]) -> str:
         "| --- | --- | ---: | ---: | ---: | ---: |",
     ]
     for sample_name, sample in (("full_common", full), ("last_90_common", recent)):
-        for model_key in ("current", "canonical_market", "canonical_no_market"):
+        for model_key in ("current", "canonical_market", "canonical_no_market", "canonical_market_t12"):
             item = sample[model_key]
             lines.append(
                 f"| {sample_name} | {model_key} | {item.get('n', 0)} | {item.get('mae', '-')} | "
@@ -319,6 +368,7 @@ def render_markdown(payload: dict[str, Any]) -> str:
             f"- Cap-disabled recent MAE beats capped recent MAE: `{'yes' if cap.get('market_cap_hurts_recent') else 'no'}`",
             f"- Current last-90 MAE minus current full-window MAE: `{cap.get('current_recent_vs_full_mae_delta')}`",
             "- If cap-disabled is better, the market-game-state cap is the first suspect. If not, inspect ingestion/history buckets before tuning.",
+            "- `canonical_market_t12` is a trailing-12-month league-level normalization replay; it is diagnostic only, not a live policy.",
             "",
         ]
     )
@@ -330,15 +380,34 @@ def render_markdown(payload: dict[str, Any]) -> str:
         [
             "## Largest Recent Canonical Market Errors",
             "",
-            "| Date | League | Match | Team | Actual | Current | Canonical | Cap disabled | Gap bucket | Matchday | Min history |",
-            "| --- | --- | --- | --- | ---: | ---: | ---: | ---: | --- | ---: | ---: |",
+            "| Date | League | Match | Team | Actual | Current | Canonical | Cap disabled | T12 replay | Gap bucket | Matchday | Min history |",
+            "| --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: |",
         ]
     )
     for row in payload["largest_recent_canonical_market_errors"]:
         lines.append(
             f"| {row['date']} | {row['league']} | {row['home_team']} vs {row['away_team']} | {row['team']} | "
             f"{row['actual']:.1f} | {row['current']:.2f} | {row['canonical_market']:.2f} | "
-            f"{row['canonical_no_market']:.2f} | {row['gap_bucket']} | {row.get('matchday') or '-'} | {row['min_history']} |"
+            f"{row['canonical_no_market']:.2f} | {row['canonical_market_t12']:.2f} | {row['gap_bucket']} | "
+            f"{row.get('matchday') or '-'} | {row['min_history']} |"
+        )
+    lines.append("")
+    lines.extend(
+        [
+            "## Largest Error Input Spot Check",
+            "",
+            "| Date | League | Team | Attack input | Opp def input | Quality adj | Market adj | T12 ratio | Prior shots | T12 shots |",
+            "| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        ]
+    )
+    for row in payload["largest_recent_canonical_market_errors"]:
+        prior = row.get("league_prior_shots_for_avg")
+        t12 = row.get("league_t12_shots_for_avg")
+        lines.append(
+            f"| {row['date']} | {row['league']} | {row['team']} | "
+            f"{fmt_num(row.get('attack_input'))} | {fmt_num(row.get('defence_input'))} | "
+            f"{fmt_num(row.get('quality_adjustment'), 3)} | {fmt_num(row.get('market_adjustment'), 3)} | "
+            f"{fmt_num(row.get('t12_ratio'), 3)} | {fmt_num(prior)} | {fmt_num(t12)} |"
         )
     lines.append("")
     return "\n".join(lines)
@@ -352,7 +421,14 @@ def main() -> None:
     parser.add_argument("--report-out", type=Path, default=DEFAULT_REPORT)
     args = parser.parse_args()
 
-    payload = build_payload(load_csv(args.form), load_csv(args.current))
+    ensure_form_input(args.form)
+    form_rows = load_csv(args.form)
+    current_rows = load_csv(args.current)
+    if not form_rows:
+        raise SystemExit(f"Canonical form input is empty: {args.form}")
+    if not current_rows:
+        raise SystemExit(f"Current team-shots input is empty: {args.current}")
+    payload = build_payload(form_rows, current_rows)
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     args.report_out.write_text(render_markdown(payload), encoding="utf-8")

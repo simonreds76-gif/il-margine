@@ -22,6 +22,8 @@ from __future__ import annotations
 import argparse
 import csv
 import math
+import subprocess
+import sys
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
@@ -140,6 +142,16 @@ def load_csv(path: Path) -> list[dict[str, Any]]:
         return list(csv.DictReader(fh))
 
 
+def ensure_form_input(path: Path) -> None:
+    if path.exists():
+        return
+    if path != DEFAULT_FORM:
+        raise SystemExit(f"Missing canonical form input: {path}")
+    subprocess.run([sys.executable, str(ROOT / "scripts" / "build-football-form-layer.py")], check=True)
+    if not path.exists():
+        raise SystemExit(f"Canonical form build did not create expected input: {path}")
+
+
 def enough_history(row: dict[str, Any], minimum: int = 6) -> bool:
     return int(pf(row.get("r10_matches"), 0) or 0) >= minimum
 
@@ -210,7 +222,43 @@ def pressure_adjustment(team: dict[str, Any], opp: dict[str, Any], league_shots_
     return clamp(1.0 + ((pressure - 1.0) * 0.18), 0.88, 1.12)
 
 
-def canonical_team_shots_lambda(team: dict[str, Any], opp: dict[str, Any], *, use_market: bool = False) -> float | None:
+def league_level_ratio(
+    team: dict[str, Any],
+    opp: dict[str, Any],
+    *,
+    metric_for: str,
+    metric_against: str,
+) -> float:
+    """Causal trailing-12m league-level replay ratio.
+
+    This is a diagnostic normalization replay, not a promoted formula. It asks
+    whether recent league shot/corner regimes explain the last-90 regression.
+    """
+    t12_rows = int(pf(team.get("league_t12_rows"), 0) or 0)
+    if t12_rows < 100:
+        return 1.0
+    prior_values = [
+        pf(team.get(f"league_prior_{metric_for}_avg"), None),
+        pf(opp.get(f"league_prior_{metric_against}_avg"), None),
+    ]
+    t12_values = [
+        pf(team.get(f"league_t12_{metric_for}_avg"), None),
+        pf(opp.get(f"league_t12_{metric_against}_avg"), None),
+    ]
+    prior = mean([value for value in prior_values if value is not None and value > 0])
+    trailing = mean([value for value in t12_values if value is not None and value > 0])
+    if prior <= 0 or trailing <= 0:
+        return 1.0
+    return clamp(trailing / prior, 0.90, 1.10)
+
+
+def canonical_team_shots_lambda(
+    team: dict[str, Any],
+    opp: dict[str, Any],
+    *,
+    use_market: bool = False,
+    use_trailing12: bool = False,
+) -> float | None:
     team_venue = str(team.get("venue", "")).strip()
     opp_venue = str(opp.get("venue", "")).strip()
     attack = blended_prefer(team, venue_field("shots_for", team_venue), "shots_for_avg")
@@ -221,6 +269,8 @@ def canonical_team_shots_lambda(team: dict[str, Any], opp: dict[str, Any], *, us
     lam *= quality_adjustment(team, opp)
     if use_market:
         lam *= market_game_state_adjustment(team)
+    if use_trailing12:
+        lam *= league_level_ratio(team, opp, metric_for="shots_for", metric_against="shots_against")
     return clamp(lam, 3.0, 30.0)
 
 
@@ -228,6 +278,8 @@ def canonical_corners_lambda(
     team: dict[str, Any],
     opp: dict[str, Any],
     league_shots_avg: float,
+    *,
+    use_trailing12: bool = False,
 ) -> float | None:
     attack = blended(team, "corners_for_avg")
     opp_defence = blended(opp, "corners_against_avg")
@@ -235,6 +287,8 @@ def canonical_corners_lambda(
         return None
     lam = (0.58 * attack) + (0.42 * opp_defence)
     lam *= pressure_adjustment(team, opp, league_shots_avg)
+    if use_trailing12:
+        lam *= league_level_ratio(team, opp, metric_for="corners_for", metric_against="corners_against")
     return clamp(lam, 1.0, 15.0)
 
 
@@ -464,8 +518,9 @@ def evaluate_canonical(
                 ("canonical_form_v0", False, False),
                 ("canonical_form_v1_market", True, False),
                 ("canonical_form_v1_market_nb", True, True),
+                ("canonical_form_v1_market_nb_t12", True, True),
             ):
-                lam = canonical_team_shots_lambda(team, opp, use_market=use_market)
+                lam = canonical_team_shots_lambda(team, opp, use_market=use_market, use_trailing12=model.endswith("_t12"))
                 if lam is None:
                     continue
                 probs = None
@@ -492,21 +547,34 @@ def evaluate_canonical(
 
         home_corners = canonical_corners_lambda(home, away, league_shots_avg.get(league, 0.0))
         away_corners = canonical_corners_lambda(away, home, league_shots_avg.get(league, 0.0))
+        home_corners_t12 = canonical_corners_lambda(home, away, league_shots_avg.get(league, 0.0), use_trailing12=True)
+        away_corners_t12 = canonical_corners_lambda(away, home, league_shots_avg.get(league, 0.0), use_trailing12=True)
         actual_home = pf(home.get("current_corners_for"), None)
         actual_away = pf(away.get("current_corners_for"), None)
         if home_corners is not None and away_corners is not None and actual_home is not None and actual_away is not None:
             common = row_key(home) in corners_common_keys
-            for sample in sample_names(common=common, prediction_date=fixture_date, recent_cutoff=recent_cutoff):
-                add_prediction(
-                    buckets,
-                    model="canonical_form_v0",
-                    market="corners_total",
-                    sample=sample,
-                    league=league,
-                    pred_count=home_corners + away_corners,
-                    actual_count=actual_home + actual_away,
-                    lines=CORNERS_LINES,
-                )
+            for model, pred_count in (
+                ("canonical_form_v0", home_corners + away_corners),
+                (
+                    "canonical_form_v0_t12",
+                    (home_corners_t12 + away_corners_t12)
+                    if home_corners_t12 is not None and away_corners_t12 is not None
+                    else None,
+                ),
+            ):
+                if pred_count is None:
+                    continue
+                for sample in sample_names(common=common, prediction_date=fixture_date, recent_cutoff=recent_cutoff):
+                    add_prediction(
+                        buckets,
+                        model=model,
+                        market="corners_total",
+                        sample=sample,
+                        league=league,
+                        pred_count=pred_count,
+                        actual_count=actual_home + actual_away,
+                        lines=CORNERS_LINES,
+                    )
 
 
 def write_summary(path: Path, rows: list[dict[str, Any]]) -> None:
@@ -601,6 +669,7 @@ def render_report(rows: list[dict[str, Any]]) -> str:
             "- `last_90_*` samples use the final 90 days of the canonical form table.",
             "- `canonical_form_v1_market` adds a capped pre-match 1X2 win-probability adjustment for expected game state.",
             "- `canonical_form_v1_market_nb` keeps the same lambda but converts O/U probabilities with a causal prior-data league negative-binomial dispersion estimate.",
+            "- `*_t12` rows are diagnostic trailing-12-month league-level normalization replays, not live policy candidates yet.",
             "- Promotion should require full-window and last-90-day Brier/log-loss to match or beat current on the common sample, then odds/CLV checks.",
         ]
     )
@@ -659,9 +728,16 @@ def main() -> None:
     parser.add_argument("--report-out", type=Path, default=DEFAULT_REPORT_OUT)
     args = parser.parse_args()
 
+    ensure_form_input(args.form)
     form_rows = load_csv(args.form)
     team_shots_rows = load_csv(args.team_shots_current)
     corners_rows = load_csv(args.corners_current)
+    if not form_rows:
+        raise SystemExit(f"Canonical form input is empty: {args.form}")
+    if not team_shots_rows:
+        raise SystemExit(f"Current team-shots input is empty: {args.team_shots_current}")
+    if not corners_rows:
+        raise SystemExit(f"Current corners input is empty: {args.corners_current}")
     latest_date = latest_form_date(form_rows)
     recent_cutoff = latest_date - timedelta(days=90) if latest_date else None
 

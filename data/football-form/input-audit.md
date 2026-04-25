@@ -1,6 +1,6 @@
 # Football Model Input Audit
 
-Generated: 2026-04-25T14:48:47+00:00
+Generated: 2026-04-25T16:06:24+00:00
 
 ## Summary
 
@@ -11,7 +11,7 @@ Generated: 2026-04-25T14:48:47+00:00
 | corners_historical_matches | 21357 | 2026-04-23 | 2 | ok |
 | corners_pinnacle_odds | 13738 | 2026-04-27 | -2 | ok |
 | team_shots_odds_history | 1576 | 2026-04-27 | -2 | ok |
-| goalscorer_odds_history | 207857 | 2026-04-27 | -2 | ok |
+| goalscorer_odds_history | 208815 | 2026-04-27 | -2 | ok |
 | goalscorer_player_logs | 148258 | 2026-04-24 | 1 | 15 files |
 
 ## Issues
@@ -124,8 +124,8 @@ Generated: 2026-04-25T14:48:47+00:00
 | shots | - | 0 | 0.00% |
 | shots_on_target | - | 0 | 0.00% |
 | corners | - | 0 | 0.00% |
-| book_odds | `odds_decimal` | 207857 | 100.00% |
-| player_identity | `player_name` | 207857 | 100.00% |
+| book_odds | `odds_decimal` | 208815 | 100.00% |
+| player_identity | `player_name` | 208815 | 100.00% |
 | minutes | - | 0 | 0.00% |
 
 ## Model Script Signal Map
