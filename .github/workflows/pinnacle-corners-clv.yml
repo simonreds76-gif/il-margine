@@ -57,6 +57,4 @@ jobs:
             exit 0
           fi
           git commit -m "chore: capture pinnacle corners odds"
-          git fetch origin golden-with-speed-insights
-          git rebase origin/golden-with-speed-insights
-          git push origin HEAD:golden-with-speed-insights
+          bash scripts/ci-safe-push.sh golden-with-speed-insights
