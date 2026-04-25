@@ -1,0 +1,815 @@
+{
+  "allowed_config_path": "data/football-form/team-shots-v3-ema20-allowed-leagues.json",
+  "blocked_leagues": [],
+  "canonical_only": {
+    "hard_block": true,
+    "n": 38850,
+    "reason": "Team-shots canonical-only coverage is large but not segment-validated yet; publish only where current_model_would_have_priced is true."
+  },
+  "generated_at": "2026-04-25T22:19:15+00:00",
+  "league_results": [
+    {
+      "common": {
+        "brier_ok": true,
+        "canonical_mae": 3.753,
+        "count_ok": true,
+        "current_mae": 3.8726,
+        "improvement_pct": 0.03088364406341985,
+        "lines": [
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.171404,
+            "canonical_log_loss": 0.514136,
+            "current_brier": 0.181751,
+            "current_log_loss": 0.54564,
+            "line": "9.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.20364,
+            "canonical_log_loss": 0.588561,
+            "current_brier": 0.2217,
+            "current_log_loss": 0.642742,
+            "line": "10.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.213301,
+            "canonical_log_loss": 0.611822,
+            "current_brier": 0.23027,
+            "current_log_loss": 0.663712,
+            "line": "11.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.215439,
+            "canonical_log_loss": 0.617876,
+            "current_brier": 0.235321,
+            "current_log_loss": 0.677558,
+            "line": "12.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.217779,
+            "canonical_log_loss": 0.62378,
+            "current_brier": 0.234188,
+            "current_log_loss": 0.679658,
+            "line": "13.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.20389,
+            "canonical_log_loss": 0.595386,
+            "current_brier": 0.218103,
+            "current_log_loss": 0.651313,
+            "line": "14.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.182739,
+            "canonical_log_loss": 0.548265,
+            "current_brier": 0.195184,
+            "current_log_loss": 0.607118,
+            "line": "15.5",
+            "log_loss_ok": true
+          }
+        ],
+        "log_loss_ok": true,
+        "mae_delta": -0.1195999999999997,
+        "n": 432
+      },
+      "last_90_common": {
+        "brier_ok": true,
+        "canonical_mae": 3.7622,
+        "count_ok": true,
+        "current_mae": 3.8478,
+        "improvement_ok": true,
+        "improvement_pct": 0.022246478507198894,
+        "lines": [
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.165103,
+            "canonical_log_loss": 0.497358,
+            "current_brier": 0.176083,
+            "current_log_loss": 0.517231,
+            "line": "9.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.202319,
+            "canonical_log_loss": 0.582366,
+            "current_brier": 0.220364,
+            "current_log_loss": 0.619732,
+            "line": "10.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.209914,
+            "canonical_log_loss": 0.604033,
+            "current_brier": 0.223827,
+            "current_log_loss": 0.64201,
+            "line": "11.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.218075,
+            "canonical_log_loss": 0.623139,
+            "current_brier": 0.233957,
+            "current_log_loss": 0.668047,
+            "line": "12.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.224545,
+            "canonical_log_loss": 0.638717,
+            "current_brier": 0.24325,
+            "current_log_loss": 0.702542,
+            "line": "13.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.205885,
+            "canonical_log_loss": 0.600777,
+            "current_brier": 0.219311,
+            "current_log_loss": 0.661499,
+            "line": "14.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.184459,
+            "canonical_log_loss": 0.553109,
+            "current_brier": 0.194429,
+            "current_log_loss": 0.61398,
+            "line": "15.5",
+            "log_loss_ok": true
+          }
+        ],
+        "log_loss_ok": true,
+        "mae_delta": -0.0855999999999999,
+        "min_improvement_pct": 0.005,
+        "n": 222,
+        "n_ok": true
+      },
+      "league": "bundesliga",
+      "passes": true
+    },
+    {
+      "common": {
+        "brier_ok": true,
+        "canonical_mae": 3.4297,
+        "count_ok": true,
+        "current_mae": 3.6259,
+        "improvement_pct": 0.054110703549463623,
+        "lines": [
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.172173,
+            "canonical_log_loss": 0.520624,
+            "current_brier": 0.179675,
+            "current_log_loss": 0.546867,
+            "line": "9.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.194084,
+            "canonical_log_loss": 0.572143,
+            "current_brier": 0.208913,
+            "current_log_loss": 0.625399,
+            "line": "10.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.202761,
+            "canonical_log_loss": 0.591914,
+            "current_brier": 0.216505,
+            "current_log_loss": 0.638002,
+            "line": "11.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.207715,
+            "canonical_log_loss": 0.602275,
+            "current_brier": 0.224186,
+            "current_log_loss": 0.660721,
+            "line": "12.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.205916,
+            "canonical_log_loss": 0.59736,
+            "current_brier": 0.22358,
+            "current_log_loss": 0.666334,
+            "line": "13.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.187689,
+            "canonical_log_loss": 0.555757,
+            "current_brier": 0.20159,
+            "current_log_loss": 0.619274,
+            "line": "14.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.164743,
+            "canonical_log_loss": 0.500268,
+            "current_brier": 0.175327,
+            "current_log_loss": 0.550128,
+            "line": "15.5",
+            "log_loss_ok": true
+          }
+        ],
+        "log_loss_ok": true,
+        "mae_delta": -0.19620000000000015,
+        "n": 544
+      },
+      "last_90_common": {
+        "brier_ok": true,
+        "canonical_mae": 3.3498,
+        "count_ok": true,
+        "current_mae": 3.4593,
+        "improvement_ok": true,
+        "improvement_pct": 0.03165380279247238,
+        "lines": [
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.161576,
+            "canonical_log_loss": 0.495929,
+            "current_brier": 0.164306,
+            "current_log_loss": 0.503222,
+            "line": "9.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.193395,
+            "canonical_log_loss": 0.57092,
+            "current_brier": 0.202004,
+            "current_log_loss": 0.60548,
+            "line": "10.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.20526,
+            "canonical_log_loss": 0.599369,
+            "current_brier": 0.21579,
+            "current_log_loss": 0.638898,
+            "line": "11.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.209655,
+            "canonical_log_loss": 0.607779,
+            "current_brier": 0.221418,
+            "current_log_loss": 0.647652,
+            "line": "12.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.204487,
+            "canonical_log_loss": 0.594927,
+            "current_brier": 0.217164,
+            "current_log_loss": 0.635204,
+            "line": "13.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.179522,
+            "canonical_log_loss": 0.537601,
+            "current_brier": 0.190434,
+            "current_log_loss": 0.568878,
+            "line": "14.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.162333,
+            "canonical_log_loss": 0.496491,
+            "current_brier": 0.165043,
+            "current_log_loss": 0.510224,
+            "line": "15.5",
+            "log_loss_ok": true
+          }
+        ],
+        "log_loss_ok": true,
+        "mae_delta": -0.10949999999999971,
+        "min_improvement_pct": 0.005,
+        "n": 224,
+        "n_ok": true
+      },
+      "league": "epl",
+      "passes": true
+    },
+    {
+      "common": {
+        "brier_ok": true,
+        "canonical_mae": 3.5714,
+        "count_ok": true,
+        "current_mae": 3.7184,
+        "improvement_pct": 0.039533132530120425,
+        "lines": [
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.194877,
+            "canonical_log_loss": 0.565647,
+            "current_brier": 0.213892,
+            "current_log_loss": 0.624238,
+            "line": "9.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.210191,
+            "canonical_log_loss": 0.60365,
+            "current_brier": 0.231037,
+            "current_log_loss": 0.670196,
+            "line": "10.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.214974,
+            "canonical_log_loss": 0.617678,
+            "current_brier": 0.233406,
+            "current_log_loss": 0.683871,
+            "line": "11.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.211213,
+            "canonical_log_loss": 0.611018,
+            "current_brier": 0.227316,
+            "current_log_loss": 0.675364,
+            "line": "12.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.194423,
+            "canonical_log_loss": 0.573356,
+            "current_brier": 0.206809,
+            "current_log_loss": 0.631412,
+            "line": "13.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.175496,
+            "canonical_log_loss": 0.529364,
+            "current_brier": 0.187278,
+            "current_log_loss": 0.592244,
+            "line": "14.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.157696,
+            "canonical_log_loss": 0.486903,
+            "current_brier": 0.167877,
+            "current_log_loss": 0.545837,
+            "line": "15.5",
+            "log_loss_ok": true
+          }
+        ],
+        "log_loss_ok": true,
+        "mae_delta": -0.1469999999999998,
+        "n": 520
+      },
+      "last_90_common": {
+        "brier_ok": true,
+        "canonical_mae": 3.7293,
+        "count_ok": true,
+        "current_mae": 3.8294,
+        "improvement_ok": true,
+        "improvement_pct": 0.02613986525304233,
+        "lines": [
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.201861,
+            "canonical_log_loss": 0.581619,
+            "current_brier": 0.213885,
+            "current_log_loss": 0.619899,
+            "line": "9.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.220147,
+            "canonical_log_loss": 0.625301,
+            "current_brier": 0.236726,
+            "current_log_loss": 0.677482,
+            "line": "10.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.219827,
+            "canonical_log_loss": 0.628888,
+            "current_brier": 0.234821,
+            "current_log_loss": 0.680899,
+            "line": "11.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.212926,
+            "canonical_log_loss": 0.614987,
+            "current_brier": 0.226068,
+            "current_log_loss": 0.655425,
+            "line": "12.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.194291,
+            "canonical_log_loss": 0.573497,
+            "current_brier": 0.20243,
+            "current_log_loss": 0.601736,
+            "line": "13.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.177101,
+            "canonical_log_loss": 0.534039,
+            "current_brier": 0.184153,
+            "current_log_loss": 0.56987,
+            "line": "14.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.157802,
+            "canonical_log_loss": 0.486503,
+            "current_brier": 0.165888,
+            "current_log_loss": 0.529071,
+            "line": "15.5",
+            "log_loss_ok": true
+          }
+        ],
+        "log_loss_ok": true,
+        "mae_delta": -0.1001000000000003,
+        "min_improvement_pct": 0.005,
+        "n": 242,
+        "n_ok": true
+      },
+      "league": "la-liga",
+      "passes": true
+    },
+    {
+      "common": {
+        "brier_ok": true,
+        "canonical_mae": 3.7326,
+        "count_ok": true,
+        "current_mae": 3.779,
+        "improvement_pct": 0.012278380523948074,
+        "lines": [
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.19792,
+            "canonical_log_loss": 0.578168,
+            "current_brier": 0.207408,
+            "current_log_loss": 0.6235,
+            "line": "9.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.214879,
+            "canonical_log_loss": 0.618616,
+            "current_brier": 0.22951,
+            "current_log_loss": 0.672287,
+            "line": "10.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.218595,
+            "canonical_log_loss": 0.628711,
+            "current_brier": 0.235789,
+            "current_log_loss": 0.691032,
+            "line": "11.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.207321,
+            "canonical_log_loss": 0.603358,
+            "current_brier": 0.222468,
+            "current_log_loss": 0.657656,
+            "line": "12.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.196403,
+            "canonical_log_loss": 0.580546,
+            "current_brier": 0.207088,
+            "current_log_loss": 0.635036,
+            "line": "13.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.177461,
+            "canonical_log_loss": 0.538636,
+            "current_brier": 0.18434,
+            "current_log_loss": 0.591731,
+            "line": "14.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.157282,
+            "canonical_log_loss": 0.487627,
+            "current_brier": 0.16424,
+            "current_log_loss": 0.534982,
+            "line": "15.5",
+            "log_loss_ok": true
+          }
+        ],
+        "log_loss_ok": true,
+        "mae_delta": -0.046399999999999775,
+        "n": 428
+      },
+      "last_90_common": {
+        "brier_ok": true,
+        "canonical_mae": 3.4854,
+        "count_ok": true,
+        "current_mae": 3.5528,
+        "improvement_ok": true,
+        "improvement_pct": 0.018970952488178375,
+        "lines": [
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.183797,
+            "canonical_log_loss": 0.54918,
+            "current_brier": 0.193437,
+            "current_log_loss": 0.592304,
+            "line": "9.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.215307,
+            "canonical_log_loss": 0.620249,
+            "current_brier": 0.231257,
+            "current_log_loss": 0.681524,
+            "line": "10.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.215599,
+            "canonical_log_loss": 0.618678,
+            "current_brier": 0.231775,
+            "current_log_loss": 0.666715,
+            "line": "11.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.209975,
+            "canonical_log_loss": 0.607258,
+            "current_brier": 0.225468,
+            "current_log_loss": 0.659665,
+            "line": "12.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.185813,
+            "canonical_log_loss": 0.554831,
+            "current_brier": 0.1901,
+            "current_log_loss": 0.584947,
+            "line": "13.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.165529,
+            "canonical_log_loss": 0.506769,
+            "current_brier": 0.168618,
+            "current_log_loss": 0.537474,
+            "line": "14.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.137032,
+            "canonical_log_loss": 0.437213,
+            "current_brier": 0.137714,
+            "current_log_loss": 0.45679,
+            "line": "15.5",
+            "log_loss_ok": true
+          }
+        ],
+        "log_loss_ok": true,
+        "mae_delta": -0.06740000000000013,
+        "min_improvement_pct": 0.005,
+        "n": 212,
+        "n_ok": true
+      },
+      "league": "ligue-1",
+      "passes": true
+    },
+    {
+      "common": {
+        "brier_ok": true,
+        "canonical_mae": 3.6322,
+        "count_ok": true,
+        "current_mae": 3.7501,
+        "improvement_pct": 0.031439161622356764,
+        "lines": [
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.187422,
+            "canonical_log_loss": 0.555019,
+            "current_brier": 0.192063,
+            "current_log_loss": 0.589921,
+            "line": "9.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.200785,
+            "canonical_log_loss": 0.585633,
+            "current_brier": 0.210094,
+            "current_log_loss": 0.626899,
+            "line": "10.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.211239,
+            "canonical_log_loss": 0.610142,
+            "current_brier": 0.220829,
+            "current_log_loss": 0.649648,
+            "line": "11.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.206736,
+            "canonical_log_loss": 0.600477,
+            "current_brier": 0.219031,
+            "current_log_loss": 0.648597,
+            "line": "12.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.193711,
+            "canonical_log_loss": 0.572069,
+            "current_brier": 0.206233,
+            "current_log_loss": 0.622725,
+            "line": "13.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.177992,
+            "canonical_log_loss": 0.534847,
+            "current_brier": 0.190242,
+            "current_log_loss": 0.592103,
+            "line": "14.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.14821,
+            "canonical_log_loss": 0.460777,
+            "current_brier": 0.161528,
+            "current_log_loss": 0.506949,
+            "line": "15.5",
+            "log_loss_ok": true
+          }
+        ],
+        "log_loss_ok": true,
+        "mae_delta": -0.11790000000000012,
+        "n": 540
+      },
+      "last_90_common": {
+        "brier_ok": true,
+        "canonical_mae": 3.8507,
+        "count_ok": true,
+        "current_mae": 3.9397,
+        "improvement_ok": true,
+        "improvement_pct": 0.0225905525801458,
+        "lines": [
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.196229,
+            "canonical_log_loss": 0.572212,
+            "current_brier": 0.205462,
+            "current_log_loss": 0.615771,
+            "line": "9.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.204317,
+            "canonical_log_loss": 0.590902,
+            "current_brier": 0.215376,
+            "current_log_loss": 0.62636,
+            "line": "10.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.20917,
+            "canonical_log_loss": 0.604564,
+            "current_brier": 0.215907,
+            "current_log_loss": 0.629862,
+            "line": "11.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.204545,
+            "canonical_log_loss": 0.595421,
+            "current_brier": 0.216664,
+            "current_log_loss": 0.642973,
+            "line": "12.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.190245,
+            "canonical_log_loss": 0.564815,
+            "current_brier": 0.199306,
+            "current_log_loss": 0.604778,
+            "line": "13.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.17481,
+            "canonical_log_loss": 0.527314,
+            "current_brier": 0.184381,
+            "current_log_loss": 0.566317,
+            "line": "14.5",
+            "log_loss_ok": true
+          },
+          {
+            "brier_ok": true,
+            "canonical_brier": 0.15346,
+            "canonical_log_loss": 0.470459,
+            "current_brier": 0.166674,
+            "current_log_loss": 0.512137,
+            "line": "15.5",
+            "log_loss_ok": true
+          }
+        ],
+        "log_loss_ok": true,
+        "mae_delta": -0.08900000000000041,
+        "min_improvement_pct": 0.005,
+        "n": 240,
+        "n_ok": true
+      },
+      "league": "serie-a",
+      "passes": true
+    }
+  ],
+  "policy": {
+    "market": "team_shots",
+    "min_canonical_only_n": 200,
+    "min_last90_league_n": 50,
+    "min_last90_mae_improvement_pct": 0.005,
+    "model": "canonical_form_v3_ema20_nb",
+    "promotion_lane": "research"
+  },
+  "ready_leagues": [
+    "bundesliga",
+    "epl",
+    "la-liga",
+    "ligue-1",
+    "serie-a"
+  ],
+  "research_lane_ready_all_leagues": true,
+  "research_lane_ready_partial": true,
+  "source": "data/football-form/canonical-backtest-summary.csv"
+}

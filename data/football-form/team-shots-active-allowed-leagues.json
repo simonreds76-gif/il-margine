@@ -1,14 +1,15 @@
 {
-  "active_model": "canonical_form_v2_pooled_opp_nb",
-  "active_config": "data/football-form/team-shots-v2-allowed-leagues.json",
+  "active_model": "canonical_form_v3_ema20_nb",
+  "active_config": "data/football-form/team-shots-v3-ema20-allowed-leagues.json",
   "deprecated_configs": [
-    "data/football-form/team-shots-v1-allowed-leagues.json"
+    "data/football-form/team-shots-v1-allowed-leagues.json",
+    "data/football-form/team-shots-v2-allowed-leagues.json"
   ],
-  "generated_at": "2026-04-25T21:10:00Z",
+  "generated_at": "2026-04-25T22:19:15Z",
   "market": "team_shots",
   "notes": [
-    "v2 is the active research candidate because it passes bundesliga, la-liga, and ligue-1.",
-    "v1 remains a backtest reference only.",
+    "v3 is the active research candidate because clean canonical EMA20 fields pass all five league segment gates.",
+    "v1 and v2 remain backtest references only.",
     "canonical-only fixtures remain blocked."
   ]
 }

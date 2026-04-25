@@ -45,12 +45,16 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
 - Team-shots current-vs-canonical feature gap diagnostic: `data/football-form/team-shots-feature-gap-diagnostic.md` / `data/football-form/team-shots-feature-gap-diagnostic.json`
 - Team-shots v2 pooled-opponent promotion gate: `data/football-form/team-shots-v2-promotion-check.md` / `data/football-form/team-shots-v2-promotion-check.json`
 - Team-shots v2 allowed-league config: `data/football-form/team-shots-v2-allowed-leagues.json`
+- Team-shots v3 EMA20 promotion gate: `data/football-form/team-shots-v3-ema20-promotion-check.md` / `data/football-form/team-shots-v3-ema20-promotion-check.json`
+- Team-shots v3 EMA20 allowed-league config: `data/football-form/team-shots-v3-ema20-allowed-leagues.json`
 - Team-shots v1 CLV monitor schema/report: `data/football-form/team-shots-v1-clv-monitor.csv` / `data/football-form/team-shots-v1-clv-monitor.md`
 - Team-shots v2 CLV monitor schema/report: `data/football-form/team-shots-v2-clv-monitor.csv` / `data/football-form/team-shots-v2-clv-monitor.md`
+- Team-shots v3 EMA20 CLV monitor schema/report: `data/football-form/team-shots-v3-ema20-clv-monitor.csv` / `data/football-form/team-shots-v3-ema20-clv-monitor.md`
 - Team-shots active research config pointer: `data/football-form/team-shots-active-allowed-leagues.json`
 - Team-shots v2 EMA diagnostic: `data/football-form/team-shots-v2-ema-diagnostic.md` / `data/football-form/team-shots-v2-ema-diagnostic.json`
 - Corners v0 venue/component diagnostic: `data/football-form/corners-v0-venue-diagnostic.md` / `data/football-form/corners-v0-venue-diagnostic.json`
 - Corners home-correction diagnostic: `data/football-form/corners-home-correction-diagnostic.md` / `data/football-form/corners-home-correction-diagnostic.json`
+- Corners total diagnostic: `data/football-form/corners-total-diagnostic.md` / `data/football-form/corners-total-diagnostic.json`
 - Research-lane state log: `data/football-form/research-lane-state.md` / `data/football-form/research-lane-state.json`
 
 ## Changes Since Previous Review
@@ -82,6 +86,12 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
 - Added a v2 CLV monitor report pointed at the v2 allowed-league config. It is empty-safe and currently has zero published picks.
 - Added a v2+EMA diagnostic sweep. The 20-match venue-EMA blend helps aggregate and Serie A, but EPL remains blocked under the +0.5% count-improvement gate.
 - Added a corners home-correction diagnostic. Symmetric home/away correction cannot move total-corners O/U; one-sided home premium worsens Bundesliga and La Liga.
+- Added clean causal EMA20 fields to the canonical team-form table using decay `0.93`.
+- Added `canonical_form_v3_ema20_nb`: v2 pooled-opponent defence plus canonical EMA20 history fields.
+- Ran the v3 promotion gate. Result: all five leagues pass common and last-90 count/Brier/log-loss gates; canonical-only remains blocked.
+- Promoted v3 to the active team-shots research config; v1 and v2 are now reference variants.
+- Added a v3 CLV monitor schema/report. It is empty-safe and currently has zero published picks.
+- Added a corners total-level diagnostic for Bundesliga and La Liga. It confirms the remaining corners issue is total-level calibration/pressure, not home/away redistribution.
 
 ## Backtest Highlights
 
@@ -96,6 +106,7 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
 | team-shots v1_market_nb_t12 | last_90_common | 1140 | 3.7320 | 3.8024 | diagnostic | T12 replay worsens aggregate count MAE; do not promote |
 | team-shots v2_current_shape_nb | last_90_common | 1140 | 3.7320 | 4.0120 | diagnostic | current-style multiplicative replay is worse; formula shape alone is not enough |
 | team-shots v2_pooled_opp_nb | last_90_common | 1140 | 3.7320 | 3.7270 | Brier ok, log-loss mixed by league | pooled opponent defence fixes aggregate recent MAE but still fails EPL and Serie A segment gates |
+| team-shots v3_ema20_nb | last_90_common | 1140 | 3.7320 | 3.6413 | Brier ok, log-loss ok | clean EMA20 canonical fields pass all five league segment gates |
 | team-shots v1_market_nb | canonical_only | 38850 | - | 3.5336 | no baseline | coverage looks usable, still needs segment gates |
 
 ## Normalization Read
@@ -157,6 +168,22 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
 - Best `recent6` weight: `0.0`, which means short recent-form smoothing is worse than v2 and should not be promoted.
 - Read: 20-match venue EMA is promising for Serie A, but it does not fix EPL. Do not blindly ship v3; either implement clean canonical EMA fields and rerun gates or run an EPL-specific diagnostic.
 
+## Team-Shots V3 EMA20 Result
+
+- V3 implementation: keep v2's pooled opponent defence, capped market/game-state adjustment, and NB O/U calibration; replace r5/r10 simple history with causal EMA20 fields generated inside `team-rolling-form.csv`.
+- EMA20 decay: `0.93`; newest prior match receives weight `1.0`.
+- All-league last-90 common: current MAE `3.7320`, v3 MAE `3.6413`, improvement `2.43%`.
+- Passing v3 research leagues: `bundesliga`, `epl`, `la-liga`, `ligue-1`, `serie-a`.
+- Blocked v3 leagues: `-`.
+- League last-90 count improvements:
+  - Bundesliga: current `3.8478`, v3 `3.7622`, improvement `2.22%`.
+  - EPL: current `3.4593`, v3 `3.3498`, improvement `3.17%`.
+  - La Liga: current `3.8294`, v3 `3.7293`, improvement `2.61%`.
+  - Ligue 1: current `3.5528`, v3 `3.4854`, improvement `1.90%`.
+  - Serie A: current `3.9397`, v3 `3.8507`, improvement `2.26%`.
+- Common and last-90 Brier/log-loss gates pass for every league and every standard team-shots line.
+- Operational state: v3 is now the active research candidate. v1 and v2 remain reference variants only. Canonical-only fixtures remain blocked.
+
 ## Corners V0 Segment Gate
 
 - All-league research promotion: fail.
@@ -184,6 +211,19 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
   - La Liga v0 last-90 MAE `2.7749`; with full home premium `2.9278`.
 - Read: do not build a corners home-advantage correction for total O/U. The next corners test needs to target total-corners calibration or pressure directly.
 
+## Corners Total Diagnostic
+
+- Diagnostic target: match total-corners expectation directly, not home/away components.
+- Last-90 blocked-league summary:
+  - Bundesliga: current MAE `2.5870`, v0 MAE `2.6594`, delta `+0.0724`; v0 bias `+0.0861`, lambda gap `+0.3233`.
+  - La Liga: current MAE `2.7026`, v0 MAE `2.7749`, delta `+0.0723`; v0 bias `+0.2350`, lambda gap `+0.1245`.
+- Bundesliga damage clusters in high-pace/both-high-attack fixtures:
+  - High pace: current `2.8750`, v0 `3.2312`, delta `+0.3562`.
+  - Both high attack: current `2.6876`, v0 `3.1329`, delta `+0.4453`.
+- La Liga damage is less clean:
+  - Neutral pace worsens (`+0.1859`), one-sided attack worsens (`+0.2093`), low pace improves (`-0.1467`).
+- Read: a blunt scalar may be too crude. Bundesliga points toward pressure/attack-shape over-amplification; La Liga likely needs a separate total-level bucket diagnostic before any publication expansion.
+
 ## Findings From Current Repo
 
 - No hard input-audit issues detected by the first pass.
@@ -197,15 +237,17 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
 5. Hold team-shots all-league promotion. La Liga can be allowed in research-only via `team-shots-v1-allowed-leagues.json`, with canonical-only fixtures still blocked.
 6. Keep Bundesliga/La Liga corners blocked until a variant passes their recent segment gates.
 7. Team-shots v2 pooled-opponent is the active research candidate for `bundesliga`, `la-liga`, and `ligue-1`, with canonical-only still blocked.
-8. Keep `epl` and `serie-a` blocked for team-shots v2 until a follow-up variant fixes their segment gates.
-9. For team-shots v3, implement clean canonical 20-match EMA fields only if we are comfortable that the diagnostic justifies the plumbing. Expect Serie A to improve; EPL still needs another explanation.
-10. For corners Bundesliga/La Liga, do not apply a home/away redistribution fix. It cannot move total O/U. Run a total-corners calibration or pressure formula diagnostic instead.
+8. Use `canonical_form_v3_ema20_nb` as the active team-shots research candidate for all five leagues.
+9. Keep team-shots canonical-only fixtures blocked until canonical-only segment validation exists.
+10. Watch v3 CLV passively; do not react before the pre-defined sample thresholds.
+11. For corners Bundesliga/La Liga, do not apply a home/away redistribution fix. It cannot move total O/U.
+12. Next corners work: test total-level pressure/attack-shape calibration, starting with Bundesliga high-pace and both-high-attack buckets; keep La Liga blocked until its failure mode is cleaner.
 
 ## Questions For Follow-up Review
 
-1. Team-shots v2 is now active research for `bundesliga`, `la-liga`, and `ligue-1`, with v1 deprecated/reference. Any objection to this operational simplification?
-2. The v2+venue20 EMA sweep improves ALL and Serie A but still blocks EPL. Is clean canonical EMA implementation worth doing now, or should we diagnose EPL first?
-3. Corners home correction is not viable for total O/U. What total-corners diagnostic should come next: pressure formula, league calibration, or away-volume cap?
-4. Should Serie A team-shots be allowed under an EMA-enhanced candidate only after clean canonical EMA fields exist, or is the proxy diagnostic enough to justify a scoped research lane?
+1. Team-shots v3 clean EMA20 now passes all five league segment gates. Any objection to making v3 the active research candidate while keeping canonical-only blocked?
+2. Should v3 go straight into passive CLV monitoring only, or should we add one more diagnostic split before letting it publish research picks?
+3. Corners total diagnostic points to Bundesliga high-pace/both-high-attack over-amplification. Should the next test be a pressure cap, attack-shape cap, or league-specific total scalar?
+4. La Liga corners failure is not as clean as Bundesliga. Should we keep La Liga fully blocked until a clearer bucket-level fix appears?
 5. Team-form freshness is acceptable by max-age (latest league dates 2-6 days old), but xG coverage is still only 6.5%. Should xG stay guarded/debug-only for all derivative football models until coverage improves?
-6. Is the fail-closed allowed-league config plus explicit re-promotion criteria enough operational discipline for corners v0 and team-shots v1 research publication?
+6. Is the fail-closed allowed-league config plus explicit re-promotion criteria enough operational discipline for corners v0 and team-shots v3 research publication?

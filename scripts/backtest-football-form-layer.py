@@ -165,6 +165,10 @@ def enough_history(row: dict[str, Any], minimum: int = 6) -> bool:
     return int(pf(row.get("r10_matches"), 0) or 0) >= minimum
 
 
+def enough_ema_history(row: dict[str, Any], minimum: int = 6) -> bool:
+    return int(pf(row.get("ema20_matches"), 0) or 0) >= minimum
+
+
 def blended(row: dict[str, Any], field: str) -> float | None:
     r10 = pf(row.get(f"r10_{field}"), None)
     r5 = pf(row.get(f"r5_{field}"), None)
@@ -183,6 +187,17 @@ def blended_prefer(row: dict[str, Any], preferred: str, fallback: str) -> float 
     if value is not None:
         return value
     return blended(row, fallback)
+
+
+def ema20(row: dict[str, Any], field: str) -> float | None:
+    return pf(row.get(f"ema20_{field}"), None)
+
+
+def ema20_prefer(row: dict[str, Any], preferred: str, fallback: str) -> float | None:
+    value = ema20(row, preferred)
+    if value is not None:
+        return value
+    return ema20(row, fallback)
 
 
 def venue_field(base: str, venue: str) -> str:
@@ -294,6 +309,25 @@ def canonical_team_shots_pooled_opp_lambda(
     attack = blended_prefer(team, venue_field("shots_for", team_venue), "shots_for_avg")
     opp_defence = blended(opp, "shots_against_avg")
     if attack is None or opp_defence is None or not enough_history(team) or not enough_history(opp):
+        return None
+    lam = (0.55 * attack) + (0.45 * opp_defence)
+    lam *= quality_adjustment(team, opp)
+    if use_market:
+        lam *= market_game_state_adjustment(team)
+    return clamp(lam, 3.0, 30.0)
+
+
+def canonical_team_shots_ema20_lambda(
+    team: dict[str, Any],
+    opp: dict[str, Any],
+    *,
+    use_market: bool = True,
+) -> float | None:
+    """Team-shots v3 replay: v2 pooled opponent defence with EMA20 histories."""
+    team_venue = str(team.get("venue", "")).strip()
+    attack = ema20_prefer(team, venue_field("shots_for", team_venue), "shots_for_avg")
+    opp_defence = ema20(opp, "shots_against_avg")
+    if attack is None or opp_defence is None or not enough_ema_history(team) or not enough_ema_history(opp):
         return None
     lam = (0.55 * attack) + (0.45 * opp_defence)
     lam *= quality_adjustment(team, opp)
@@ -591,11 +625,14 @@ def evaluate_canonical(
                 ("canonical_form_v1_market_nb_t12", True, True),
                 ("canonical_form_v2_current_shape_nb", False, True),
                 ("canonical_form_v2_pooled_opp_nb", True, True),
+                ("canonical_form_v3_ema20_nb", True, True),
             ):
                 if model == "canonical_form_v2_current_shape_nb":
                     lam = canonical_team_shots_current_shape_lambda(team, opp)
                 elif model == "canonical_form_v2_pooled_opp_nb":
                     lam = canonical_team_shots_pooled_opp_lambda(team, opp, use_market=use_market)
+                elif model == "canonical_form_v3_ema20_nb":
+                    lam = canonical_team_shots_ema20_lambda(team, opp, use_market=use_market)
                 else:
                     lam = canonical_team_shots_lambda(team, opp, use_market=use_market, use_trailing12=model.endswith("_t12"))
                 if lam is None:
@@ -749,6 +786,7 @@ def render_report(rows: list[dict[str, Any]]) -> str:
             "- `*_t12` rows are diagnostic trailing-12-month league-level normalization replays, not live policy candidates yet.",
             "- `canonical_form_v2_current_shape_nb` is a diagnostic replay of the current model's multiplicative league-relative formula shape using canonical inputs; it is not a promotion candidate unless it beats v1/current on segment gates.",
             "- `canonical_form_v2_pooled_opp_nb` keeps canonical's additive/market/NB shape but pools opponent concession instead of using the opponent venue split.",
+            "- `canonical_form_v3_ema20_nb` keeps v2's pooled opponent defence but uses causal EMA20 history fields generated inside the canonical table.",
             "- Promotion should require full-window and last-90-day Brier/log-loss to match or beat current on the common sample, then odds/CLV checks.",
         ]
     )

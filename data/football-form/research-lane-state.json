@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T21:10:00Z",
+  "generated_at": "2026-04-25T22:19:15Z",
   "lanes": [
     {
       "allowed_leagues": [
@@ -23,7 +23,7 @@
       "canonical_only_allowed": false,
       "clv_monitor": "data/football-form/team-shots-v1-clv-monitor.md",
       "model": "canonical_form_v1_market_nb",
-      "notes": "Deprecated/reference config. V1 passed only La Liga, but v2 is the active research candidate.",
+      "notes": "Deprecated/reference config. V1 passed only La Liga.",
       "state": "deprecated_reference",
       "market": "team_shots",
       "last_segment_gate_run": "2026-04-25T19:43:56Z",
@@ -38,14 +38,31 @@
       "canonical_only_allowed": false,
       "clv_monitor": "data/football-form/team-shots-v2-clv-monitor.md",
       "model": "canonical_form_v2_pooled_opp_nb",
-      "notes": "Active research candidate. EPL and Serie A remain blocked.",
-      "state": "research_partial",
+      "notes": "Deprecated/reference config. V2 was superseded by v3 EMA20.",
+      "state": "deprecated_reference",
       "market": "team_shots",
       "last_segment_gate_run": "2026-04-25T19:44:33Z",
-      "next_action": "Test 20-match EMA smoothing on top of v2; early sweep says Serie A can improve, EPL still does not clear the gate."
+      "next_action": "Keep for backtest comparison only."
+    },
+    {
+      "allowed_leagues": [
+        "bundesliga",
+        "epl",
+        "la-liga",
+        "ligue-1",
+        "serie-a"
+      ],
+      "canonical_only_allowed": false,
+      "clv_monitor": "data/football-form/team-shots-v3-ema20-clv-monitor.md",
+      "model": "canonical_form_v3_ema20_nb",
+      "notes": "Active research candidate. Clean canonical EMA20 passes all five league segment gates.",
+      "state": "research_all_leagues",
+      "market": "team_shots",
+      "last_segment_gate_run": "2026-04-25T22:19:15Z",
+      "next_action": "Watch CLV passively; do not unblock canonical-only fixtures."
     }
   ],
-  "last_segment_gate_run": "2026-04-25T19:44:33Z",
+  "last_segment_gate_run": "2026-04-25T22:19:15Z",
   "rules": [
     "fail closed if an allowed-league config is missing or malformed",
     "publish only leagues listed in the model's allowed-league config",

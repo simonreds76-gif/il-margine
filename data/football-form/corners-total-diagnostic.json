@@ -1,0 +1,319 @@
+{
+  "by_league": {
+    "bundesliga": {
+      "canonical_bias": 0.0861,
+      "canonical_mae": 2.6594,
+      "canonical_worse_share": 0.5586,
+      "current_bias": -0.2372,
+      "current_mae": 2.587,
+      "mae_delta": 0.0724,
+      "mean_lambda_gap": 0.3233,
+      "n": 111
+    },
+    "epl": {
+      "canonical_bias": -0.0005,
+      "canonical_mae": 2.5618,
+      "canonical_worse_share": 0.4643,
+      "current_bias": -0.6802,
+      "current_mae": 2.6609,
+      "mae_delta": -0.0991,
+      "mean_lambda_gap": 0.6797,
+      "n": 112
+    },
+    "la-liga": {
+      "canonical_bias": 0.235,
+      "canonical_mae": 2.7749,
+      "canonical_worse_share": 0.5868,
+      "current_bias": 0.1105,
+      "current_mae": 2.7026,
+      "mae_delta": 0.0723,
+      "mean_lambda_gap": 0.1245,
+      "n": 121
+    },
+    "ligue-1": {
+      "canonical_bias": -0.1644,
+      "canonical_mae": 2.4323,
+      "canonical_worse_share": 0.3774,
+      "current_bias": -0.4586,
+      "current_mae": 2.6322,
+      "mae_delta": -0.1999,
+      "mean_lambda_gap": 0.2942,
+      "n": 106
+    },
+    "serie-a": {
+      "canonical_bias": 0.1357,
+      "canonical_mae": 2.6993,
+      "canonical_worse_share": 0.4833,
+      "current_bias": -1.1419,
+      "current_mae": 2.7384,
+      "mae_delta": -0.039,
+      "mean_lambda_gap": 1.2776,
+      "n": 120
+    }
+  },
+  "diagnostic": "match_total",
+  "focus": {
+    "bundesliga": {
+      "attack_shape": {
+        "balanced": {
+          "canonical_bias": -0.3987,
+          "canonical_mae": 3.1409,
+          "canonical_worse_share": 0.5,
+          "current_bias": -0.5268,
+          "current_mae": 3.0693,
+          "mae_delta": 0.0716,
+          "mean_lambda_gap": 0.1282,
+          "n": 38
+        },
+        "both_high": {
+          "canonical_bias": 1.6248,
+          "canonical_mae": 3.1329,
+          "canonical_worse_share": 0.8667,
+          "current_bias": 0.9033,
+          "current_mae": 2.6876,
+          "mae_delta": 0.4453,
+          "mean_lambda_gap": 0.7215,
+          "n": 15
+        },
+        "both_low": {
+          "canonical_bias": -0.1969,
+          "canonical_mae": 1.6707,
+          "canonical_worse_share": 0.5263,
+          "current_bias": -0.4051,
+          "current_mae": 1.7629,
+          "mae_delta": -0.0923,
+          "mean_lambda_gap": 0.2082,
+          "n": 19
+        },
+        "one_sided": {
+          "canonical_bias": 0.1046,
+          "canonical_mae": 2.4899,
+          "canonical_worse_share": 0.5128,
+          "current_bias": -0.3119,
+          "current_mae": 2.4799,
+          "mae_delta": 0.01,
+          "mean_lambda_gap": 0.4164,
+          "n": 39
+        }
+      },
+      "pace_bucket": {
+        "high": {
+          "canonical_bias": 1.4023,
+          "canonical_mae": 3.2312,
+          "canonical_worse_share": 0.6897,
+          "current_bias": 1.2414,
+          "current_mae": 2.875,
+          "mae_delta": 0.3562,
+          "mean_lambda_gap": 0.1609,
+          "n": 29
+        },
+        "low": {
+          "canonical_bias": 0.5658,
+          "canonical_mae": 2.8706,
+          "canonical_worse_share": 0.5152,
+          "current_bias": 0.0556,
+          "current_mae": 2.9503,
+          "mae_delta": -0.0796,
+          "mean_lambda_gap": 0.5102,
+          "n": 33
+        },
+        "neutral": {
+          "canonical_bias": -1.0159,
+          "canonical_mae": 2.1788,
+          "canonical_worse_share": 0.5102,
+          "current_bias": -1.3094,
+          "current_mae": 2.172,
+          "mae_delta": 0.0068,
+          "mean_lambda_gap": 0.2936,
+          "n": 49
+        }
+      },
+      "win_gap_bucket": {
+        "0-10pp": {
+          "canonical_bias": -0.3027,
+          "canonical_mae": 2.5083,
+          "canonical_worse_share": 0.5714,
+          "current_bias": -0.6292,
+          "current_mae": 2.4317,
+          "mae_delta": 0.0766,
+          "mean_lambda_gap": 0.3265,
+          "n": 21
+        },
+        "10-25pp": {
+          "canonical_bias": 0.5631,
+          "canonical_mae": 2.4419,
+          "canonical_worse_share": 0.5385,
+          "current_bias": 0.1978,
+          "current_mae": 2.4765,
+          "mae_delta": -0.0346,
+          "mean_lambda_gap": 0.3653,
+          "n": 39
+        },
+        "25-40pp": {
+          "canonical_bias": 1.0073,
+          "canonical_mae": 2.589,
+          "canonical_worse_share": 0.6111,
+          "current_bias": 0.4626,
+          "current_mae": 2.2651,
+          "mae_delta": 0.3239,
+          "mean_lambda_gap": 0.5447,
+          "n": 18
+        },
+        "40-55pp": {
+          "canonical_bias": -0.776,
+          "canonical_mae": 3.2471,
+          "canonical_worse_share": 0.6667,
+          "current_bias": -0.7715,
+          "current_mae": 3.0425,
+          "mae_delta": 0.2046,
+          "mean_lambda_gap": -0.0044,
+          "n": 24
+        },
+        "55pp+": {
+          "canonical_bias": -0.6167,
+          "canonical_mae": 2.5286,
+          "canonical_worse_share": 0.2222,
+          "current_bias": -1.182,
+          "current_mae": 2.858,
+          "mae_delta": -0.3294,
+          "mean_lambda_gap": 0.5653,
+          "n": 9
+        }
+      }
+    },
+    "la-liga": {
+      "attack_shape": {
+        "balanced": {
+          "canonical_bias": 0.6955,
+          "canonical_mae": 2.9182,
+          "canonical_worse_share": 0.5455,
+          "current_bias": 0.5569,
+          "current_mae": 2.8461,
+          "mae_delta": 0.072,
+          "mean_lambda_gap": 0.1387,
+          "n": 44
+        },
+        "both_high": {
+          "canonical_bias": 0.1935,
+          "canonical_mae": 1.9683,
+          "canonical_worse_share": 0.7273,
+          "current_bias": 0.4844,
+          "current_mae": 1.9245,
+          "mae_delta": 0.0437,
+          "mean_lambda_gap": -0.2909,
+          "n": 11
+        },
+        "both_low": {
+          "canonical_bias": -0.3013,
+          "canonical_mae": 2.6178,
+          "canonical_worse_share": 0.4667,
+          "current_bias": -0.9806,
+          "current_mae": 2.6991,
+          "mae_delta": -0.0813,
+          "mean_lambda_gap": 0.6793,
+          "n": 30
+        },
+        "one_sided": {
+          "canonical_bias": 0.1319,
+          "canonical_mae": 2.9772,
+          "canonical_worse_share": 0.6944,
+          "current_bias": 0.36,
+          "current_mae": 2.7678,
+          "mae_delta": 0.2093,
+          "mean_lambda_gap": -0.2281,
+          "n": 36
+        }
+      },
+      "pace_bucket": {
+        "high": {
+          "canonical_bias": 0.5739,
+          "canonical_mae": 2.2671,
+          "canonical_worse_share": 0.5667,
+          "current_bias": 1.0016,
+          "current_mae": 2.1292,
+          "mae_delta": 0.1379,
+          "mean_lambda_gap": -0.4277,
+          "n": 30
+        },
+        "low": {
+          "canonical_bias": -0.9992,
+          "canonical_mae": 2.9846,
+          "canonical_worse_share": 0.5135,
+          "current_bias": -1.4424,
+          "current_mae": 3.1313,
+          "mae_delta": -0.1467,
+          "mean_lambda_gap": 0.4432,
+          "n": 37
+        },
+        "neutral": {
+          "canonical_bias": 0.8925,
+          "canonical_mae": 2.9133,
+          "canonical_worse_share": 0.6481,
+          "current_bias": 0.6794,
+          "current_mae": 2.7275,
+          "mae_delta": 0.1859,
+          "mean_lambda_gap": 0.213,
+          "n": 54
+        }
+      },
+      "win_gap_bucket": {
+        "0-10pp": {
+          "canonical_bias": -0.2985,
+          "canonical_mae": 2.6219,
+          "canonical_worse_share": 0.5,
+          "current_bias": -0.511,
+          "current_mae": 2.7095,
+          "mae_delta": -0.0875,
+          "mean_lambda_gap": 0.2125,
+          "n": 32
+        },
+        "10-25pp": {
+          "canonical_bias": 0.8163,
+          "canonical_mae": 3.2544,
+          "canonical_worse_share": 0.6765,
+          "current_bias": 0.4569,
+          "current_mae": 3.1808,
+          "mae_delta": 0.0737,
+          "mean_lambda_gap": 0.3593,
+          "n": 34
+        },
+        "25-40pp": {
+          "canonical_bias": 1.0725,
+          "canonical_mae": 2.6473,
+          "canonical_worse_share": 0.6923,
+          "current_bias": 0.7619,
+          "current_mae": 2.3372,
+          "mae_delta": 0.3101,
+          "mean_lambda_gap": 0.3106,
+          "n": 26
+        },
+        "40-55pp": {
+          "canonical_bias": -0.5291,
+          "canonical_mae": 2.0773,
+          "canonical_worse_share": 0.2308,
+          "current_bias": -0.2332,
+          "current_mae": 2.488,
+          "mae_delta": -0.4107,
+          "mean_lambda_gap": -0.2958,
+          "n": 13
+        },
+        "55pp+": {
+          "canonical_bias": -0.673,
+          "canonical_mae": 2.8359,
+          "canonical_worse_share": 0.6875,
+          "current_bias": -0.162,
+          "current_mae": 2.4409,
+          "mae_delta": 0.395,
+          "mean_lambda_gap": -0.511,
+          "n": 16
+        }
+      }
+    }
+  },
+  "generated_at": "2026-04-25T22:14:24+00:00",
+  "latest_form_date": "2026-04-23",
+  "market": "corners_total",
+  "model": "canonical_form_v0",
+  "recent_cutoff": "2026-01-23",
+  "worst_csv": "data/football-form/corners-total-worst.csv"
+}

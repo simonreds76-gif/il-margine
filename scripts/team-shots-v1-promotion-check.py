@@ -258,7 +258,7 @@ def render_markdown(payload: dict[str, Any]) -> str:
         "",
         "## Per-League Gates",
         "",
-        "| League | Common N | Current MAE | V1 MAE | Count | Brier | Log-loss | Last90 N | Last90 Current MAE | Last90 V1 MAE | Last90 Improvement | Last90 Count | Last90 Brier | Last90 Log-loss |",
+        "| League | Common N | Current MAE | Candidate MAE | Count | Brier | Log-loss | Last90 N | Last90 Current MAE | Last90 Candidate MAE | Last90 Improvement | Last90 Count | Last90 Brier | Last90 Log-loss |",
         "| --- | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- |",
     ]
     for item in payload["league_results"]:
