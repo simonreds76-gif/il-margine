@@ -51,7 +51,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/corners-ou/pinnacle-corners-odds.csv data/corners-ou/corners-live-snapshot.json
+          git add data/corners-ou/
           if git diff --cached --quiet; then
             echo "No Pinnacle corners CLV changes to commit."
             exit 0

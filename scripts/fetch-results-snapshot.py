@@ -322,7 +322,16 @@ def main() -> int:
     return total_fixtures
 
 
-if __name__ == "__main__":
+def run_cli() -> int:
     load_env()
+    if os.environ.get("FETCH_RESULTS_SNAPSHOT_RUN_STATUS_EXTERNAL") == "1":
+        main()
+        return 0
+
     with run_status("fetch-results-snapshot", trigger_kind="schedule") as rs:
         rs.rows_out = main()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(run_cli())
