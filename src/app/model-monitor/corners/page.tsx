@@ -683,6 +683,7 @@ export default async function CornersMonitorPage() {
     pipelineStatus,
     researchLaneState,
     cornersAllowedConfig,
+    cornersClvCsv,
     cornersClvReport,
     cornersTotalDiagnostic,
     pinnacleCornersMtime,
@@ -707,6 +708,7 @@ export default async function CornersMonitorPage() {
       readJson<TeamPropsStatus>("data/shortlist/team-props-status.json"),
       readJson<ResearchLaneState>("data/football-form/research-lane-state.json"),
       readJson<CornersAllowedConfig>("data/football-form/corners-v0-allowed-leagues.json"),
+      readFile("data/football-form/corners-v0-clv-monitor.csv"),
       readFile("data/football-form/corners-v0-clv-monitor.md"),
       readJson<CornersTotalDiagnostic>("data/football-form/corners-total-diagnostic.json"),
       readKnownFileMtime("data/corners-ou/pinnacle-corners-odds.csv"),
@@ -1047,6 +1049,15 @@ export default async function CornersMonitorPage() {
   const cornersV0AllowedLeagues = cornersAllowedConfig?.allowed_leagues ?? cornersV0Lane?.allowed_leagues ?? [];
   const cornersV0BlockedLeagues = cornersAllowedConfig?.blocked_leagues ?? [];
   const cornersV0Clv = parseClvMonitorSummary(cornersClvReport);
+  const cornersV0ClvRows = cornersClvCsv ? parseCsvCached(cornersClvCsv) : [];
+  const cornersV0PendingPicks = cornersV0ClvRows
+    .filter((row) => {
+      const result = (row.result ?? "").trim();
+      const blockedReason = (row.blocked_reason ?? "").trim();
+      const guarded = (row.confidence_guard_applied ?? "").trim().toLowerCase() === "true";
+      return !result && !blockedReason && !guarded;
+    })
+    .sort((a, b) => (a.kickoff_utc ?? a.match_date ?? "").localeCompare(b.kickoff_utc ?? b.match_date ?? ""));
   const cornersDiagnosticRows = Object.entries(cornersTotalDiagnostic?.by_league ?? {})
     .filter(([league]) => cornersV0BlockedLeagues.includes(league))
     .sort(([a], [b]) => a.localeCompare(b));
@@ -1276,6 +1287,85 @@ export default async function CornersMonitorPage() {
             </>
           ) : (
             <EmptyState message="Corners V0 research state is missing from the snapshot. Rebuild the corners snapshot." />
+          )}
+        </SectionCard>
+
+        <SectionCard
+          collapsible
+          defaultOpen
+          title={`Corners V0 Pending Picks - ${cornersV0PendingPicks.length}`}
+          subtitle="Research-only published V0 picks waiting for result/close. Blocked Bundesliga/La Liga and canonical-only rows are excluded."
+        >
+          {cornersV0PendingPicks.length > 0 ? (
+            <div className="grid gap-3 xl:grid-cols-2">
+              {cornersV0PendingPicks.map((row, index) => {
+                const modelFair = maybeFloat(row.model_fair_odds);
+                const modelProb = maybeFloat(row.model_implied_prob);
+                const publicationOdds = maybeFloat(row.pinnacle_price_at_publication);
+                const edgeRaw =
+                  modelProb !== null && publicationOdds !== null
+                    ? probabilityEdge(modelProb, publicationOdds)
+                    : null;
+                const edgePct = edgeRaw !== null ? edgeRaw * 100 : null;
+                return (
+                  <div key={`${row.pick_id || row.match_id || index}`} className="rounded-2xl border border-amber-500/20 bg-amber-500/8 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-amber-300">
+                          Corners V0 open
+                        </div>
+                        <div className="mt-1">
+                          <MatchLabel
+                            league={row.league}
+                            homeTeam={row.home_team}
+                            awayTeam={row.away_team}
+                            iconSize={18}
+                            textClassName="text-sm font-medium text-slate-100"
+                          />
+                        </div>
+                        <div className="mt-1 text-[11px] text-slate-500">
+                          {row.kickoff_utc ? formatKickoff(row.kickoff_utc) : row.match_date || "-"}
+                        </div>
+                      </div>
+                      <StatusPill
+                        label={`${row.line || "-"} ${(row.side ?? "").toUpperCase()}`}
+                        tone={row.side === "over"
+                          ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                          : "bg-sky-500/10 text-sky-300 border-sky-500/20"}
+                      />
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-5">
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">Pinnacle pub</div>
+                        <div className="mt-0.5 font-mono text-slate-200">{publicationOdds !== null ? publicationOdds.toFixed(2) : "-"}</div>
+                      </div>
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">Model fair</div>
+                        <div className="mt-0.5 font-mono text-slate-200">{modelFair !== null ? modelFair.toFixed(2) : "-"}</div>
+                      </div>
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">Entry edge</div>
+                        <div className={`mt-0.5 font-mono ${edgePct !== null && edgePct >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                          {formatSignedPercent(edgePct)}
+                        </div>
+                      </div>
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">3h / 1h</div>
+                        <div className="mt-0.5 font-mono text-slate-300">
+                          {(row.pinnacle_price_3h_pre_kickoff || "-")} / {(row.pinnacle_price_1h_pre_kickoff || "-")}
+                        </div>
+                      </div>
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">Published</div>
+                        <div className="mt-0.5 text-slate-300">{row.published_at_utc ? formatDateTime(row.published_at_utc) : "-"}</div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <EmptyState message="No Corners V0 pending research picks right now. The board will fill automatically once the V0 publisher writes open rows into the CLV monitor." />
           )}
         </SectionCard>
 

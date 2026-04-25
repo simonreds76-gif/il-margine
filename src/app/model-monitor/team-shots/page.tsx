@@ -1023,6 +1023,8 @@ export default async function TeamShotsMonitorPage() {
 
     teamShotsV3PromotionCheck,
 
+    teamShotsV3ClvCsv,
+
     teamShotsV3ClvReport,
 
     comparisonCsv,
@@ -1073,6 +1075,8 @@ export default async function TeamShotsMonitorPage() {
     readJson<AllowedLeagueConfig>("data/football-form/team-shots-v3-ema20-allowed-leagues.json"),
 
     readJson<TeamShotsV3PromotionCheck>("data/football-form/team-shots-v3-ema20-promotion-check.json"),
+
+    readFile("data/football-form/team-shots-v3-ema20-clv-monitor.csv"),
 
     readFile("data/football-form/team-shots-v3-ema20-clv-monitor.md"),
 
@@ -1912,6 +1916,15 @@ function LiveLineTable({
   const teamShotsV3BlockedLeagues =
     teamShotsV3AllowedConfig?.blocked_leagues ?? teamShotsV3PromotionCheck?.blocked_leagues ?? [];
   const teamShotsV3Clv = parseClvMonitorSummary(teamShotsV3ClvReport);
+  const teamShotsV3ClvRows = teamShotsV3ClvCsv ? parseCsvCached(teamShotsV3ClvCsv) : [];
+  const teamShotsV3PendingPicks = teamShotsV3ClvRows
+    .filter((row) => {
+      const result = (row.result ?? "").trim();
+      const blockedReason = (row.blocked_reason ?? "").trim();
+      const guarded = (row.confidence_guard_applied ?? "").trim().toLowerCase() === "true";
+      return !result && !blockedReason && !guarded;
+    })
+    .sort((a, b) => (a.kickoff_utc ?? a.match_date ?? "").localeCompare(b.kickoff_utc ?? b.match_date ?? ""));
   const teamShotsV3LeagueRows = [...(teamShotsV3PromotionCheck?.league_results ?? [])].sort((a, b) =>
     (a.league ?? "").localeCompare(b.league ?? ""),
   );
@@ -2142,6 +2155,88 @@ function LiveLineTable({
             </>
           ) : (
             <EmptyState message="Team-shots V3 EMA20 research state is missing from the snapshot. Rebuild the team-shots snapshot." />
+          )}
+        </SectionCard>
+
+        <SectionCard
+          collapsible
+          defaultOpen
+          title={`Team Shots V3 EMA20 Pending Picks - ${teamShotsV3PendingPicks.length}`}
+          subtitle="Research-only published picks waiting for result/close. Canonical-only blocked rows are excluded."
+        >
+          {teamShotsV3PendingPicks.length > 0 ? (
+            <div className="grid gap-3 xl:grid-cols-2">
+              {teamShotsV3PendingPicks.map((row, index) => {
+                const publicationOdds = maybeFloat(row.book_price_at_publication);
+                const modelFair = maybeFloat(row.model_fair_odds);
+                const modelProb = maybeFloat(row.model_implied_prob);
+                const edgePct =
+                  publicationOdds !== null && modelProb !== null
+                    ? evEdgePct(modelProb, publicationOdds)
+                    : null;
+                return (
+                  <div key={`${row.pick_id || row.match_id || index}`} className="rounded-2xl border border-emerald-500/20 bg-emerald-500/8 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-300">
+                          Team Shots V3 EMA20 open
+                        </div>
+                        <div className="mt-1">
+                          <MatchLabel
+                            league={row.league}
+                            homeTeam={row.home_team}
+                            awayTeam={row.away_team}
+                            iconSize={18}
+                            textClassName="text-sm font-medium text-slate-100"
+                          />
+                        </div>
+                        <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
+                          <TeamLabel
+                            league={row.league}
+                            team={row.team}
+                            iconSize={14}
+                            teamClassName="text-[11px] text-slate-400"
+                          />
+                          <span>{row.kickoff_utc ? formatDateTime(row.kickoff_utc) : row.match_date || "-"}</span>
+                        </div>
+                      </div>
+                      <StatusPill
+                        label={`${row.line || "-"} ${(row.side ?? "").toUpperCase()}`}
+                        tone={row.side === "over"
+                          ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                          : "bg-sky-500/10 text-sky-300 border-sky-500/20"}
+                      />
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-5">
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">Book</div>
+                        <div className="mt-0.5 text-slate-300">{row.bookmaker || "-"}</div>
+                      </div>
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">Entry odds</div>
+                        <div className="mt-0.5 font-mono text-slate-200">{publicationOdds !== null ? publicationOdds.toFixed(2) : "-"}</div>
+                      </div>
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">Model fair</div>
+                        <div className="mt-0.5 font-mono text-slate-200">{modelFair !== null ? modelFair.toFixed(2) : "-"}</div>
+                      </div>
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">Entry edge</div>
+                        <div className={`mt-0.5 font-mono ${edgePct !== null && edgePct >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                          {edgePct !== null ? formatSignedPercent(edgePct) : "-"}
+                        </div>
+                      </div>
+                      <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
+                        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">Published</div>
+                        <div className="mt-0.5 text-slate-300">{row.published_at_utc ? formatDateTime(row.published_at_utc) : "-"}</div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <EmptyState message="No Team Shots V3 EMA20 pending research picks right now. The board will fill automatically once the V3 publisher writes open rows into the CLV monitor." />
           )}
         </SectionCard>
 

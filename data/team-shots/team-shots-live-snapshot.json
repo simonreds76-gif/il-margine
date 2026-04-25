@@ -1,7 +1,7 @@
 {
   "snapshot_key": "team_shots_state",
-  "generated_at": "2026-04-25T22:51:54Z",
-  "file_count": 25,
+  "generated_at": "2026-04-25T23:11:23Z",
+  "file_count": 26,
   "missing_files": [
     "data/team-shots/team-shots-backtest-results.csv",
     "data/team-shots/team-shots-backtest-report.txt"
@@ -97,6 +97,11 @@
       "mtime": "2026-04-25T22:22:55Z",
       "size_bytes": 1886
     },
+    "data/football-form/team-shots-v3-ema20-clv-monitor.csv": {
+      "content": "pick_id,published_at_utc,kickoff_utc,time_to_kickoff_hours,match_id,match_date,league,match,home_team,away_team,team,bookmaker,selection,line,side,model_fair_odds,model_implied_prob,book_price_at_publication,book_price_3h_pre_kickoff,book_price_1h_pre_kickoff,book_price_close,published_to_close_clv,model_to_close_clv,book_movement_to_close,result,pnl_units,current_model_would_have_priced,confidence_guard_applied,blocked_reason\n",
+      "mtime": "2026-04-25T22:51:45Z",
+      "size_bytes": 432
+    },
     "data/football-form/team-shots-v3-ema20-clv-monitor.md": {
       "content": "# Team-Shots CLV Monitor: `canonical_form_v3_ema20_nb`\n\nGenerated: 2026-04-25T22:51:45Z\nPicks input: `data\\football-form\\team-shots-v3-ema20-published-picks.csv`\nOdds input: `data\\team-shots\\team-shots-odds-history.csv`\n\n## Summary\n\n- Picks: 0\n- Picks with close: 0\n- Hard-guard blocked: 0\n- Average published-to-close CLV: -\n- Allowed-league config valid: yes\n- Allowed leagues: `bundesliga, epl, la-liga, ligue-1, serie-a`\n- Config error: `-`\n\n## Required Fields\n\n- `current_model_would_have_priced` must be true while canonical-only evidence is blocked.\n- `time_to_kickoff_hours` records publication timing so CLV can be interpreted by lead time.\n- `published_to_close_clv` tracks the captured bookmaker price versus close.\n- `model_to_close_clv` tracks the model-implied probability versus close.\n- `confidence_guard_applied=true` means the row must not be treated as a published pick.\n\n## De-Promotion Rules\n\n- Pause `canonical_form_v3_ema20_nb` if 30-day rolling CLV is below 0 with at least 50 settled picks.\n- Pause `canonical_form_v3_ema20_nb` if rolling 90-day production Brier exceeds 1.05x the pre-promotion backtest Brier.\n",
       "mtime": "2026-04-25T22:51:45Z",
@@ -133,5 +138,5 @@
       "size_bytes": 2685
     }
   },
-  "payload_hash": "2b414da8ef91626f4809df8d6d03dc89e6f2766a44a153f989111081f5ce2d00"
+  "payload_hash": "010454e6bfa37d5776bb83593b6c664a55829c7a4ac40beba0f03e8158f670a6"
 }
