@@ -44,6 +44,11 @@ jobs:
           if [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
             echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
           fi
+          if [ -n "${{ secrets.DATABASE_URL }}" ]; then
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env.local
+          elif [ -n "${{ secrets.SUPABASE_DB_URL }}" ]; then
+            echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL }}" >> .env.local
+          fi
 
       - name: Resolve current season
         id: season
@@ -57,6 +62,29 @@ jobs:
           fi
           end_year="$((start_year + 1))"
           echo "label=${start_year}-${end_year}" >> "$GITHUB_OUTPUT"
+
+      - name: Check Understat player-log freshness
+        id: understat_health
+        run: |
+          python scripts/goalscorer-player-log-health.py \
+            --season "${{ steps.season.outputs.label }}" \
+            --max-age-days 3 \
+            --github-output
+
+      - name: Refresh stale Understat player logs
+        env:
+          STALE_LEAGUES: ${{ steps.understat_health.outputs.stale_leagues }}
+          SEASON_LABEL: ${{ steps.understat_health.outputs.season }}
+        run: |
+          if [ -n "${STALE_LEAGUES}" ]; then
+            echo "Refreshing stale current-season Understat logs before settlement: ${STALE_LEAGUES} (${SEASON_LABEL})"
+            python scripts/understat-scrape-serie-a.py \
+              --resume \
+              --league ${STALE_LEAGUES} \
+              --season "${SEASON_LABEL}"
+          else
+            echo "Goalscorer current-season player logs fresh; skipping Understat scrape."
+          fi
 
       - name: Fetch recent FotMob match detail
         run: |
