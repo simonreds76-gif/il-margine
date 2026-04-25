@@ -27,6 +27,9 @@ import requests
 
 OUTPUT_DIR = "data/goalscorer"
 REQUEST_DELAY = 0.8
+REQUEST_TIMEOUT = 30.0
+REQUEST_ATTEMPTS = 5
+PLAYER_REQUEST_ATTEMPTS = 6
 MIN_SEASON_MINUTES = 90
 BIG_CHANCE_XG_THRESHOLD = 0.20
 
@@ -335,12 +338,13 @@ def _fetch_json_with_retry(
     url: str,
     *,
     allow_missing: bool = False,
-    max_attempts: int = 5,
+    max_attempts: Optional[int] = None,
 ) -> Optional[dict]:
+    attempts = max_attempts or REQUEST_ATTEMPTS
     last_error: Optional[Exception] = None
-    for attempt in range(1, max_attempts + 1):
+    for attempt in range(1, attempts + 1):
         try:
-            response = session.get(url, headers=HEADERS, timeout=30)
+            response = session.get(url, headers=HEADERS, timeout=REQUEST_TIMEOUT)
             if allow_missing and response.status_code in (404, 410):
                 time.sleep(REQUEST_DELAY)
                 return None
@@ -351,15 +355,15 @@ def _fetch_json_with_retry(
             last_error = exc
             status_code = exc.response.status_code if exc.response is not None else None
             retryable = status_code in (408, 409, 425, 429, 500, 502, 503, 504)
-            if not retryable or attempt == max_attempts:
+            if not retryable or attempt == attempts:
                 raise
-            print(f" retry {attempt}/{max_attempts} (HTTP {status_code})", end="", flush=True)
+            print(f" retry {attempt}/{attempts} (HTTP {status_code})", end="", flush=True)
             _sleep_before_retry(attempt)
         except requests.RequestException as exc:
             last_error = exc
-            if attempt == max_attempts:
+            if attempt == attempts:
                 raise
-            print(f" retry {attempt}/{max_attempts} ({type(exc).__name__})", end="", flush=True)
+            print(f" retry {attempt}/{attempts} ({type(exc).__name__})", end="", flush=True)
             _sleep_before_retry(attempt)
 
     if last_error is not None:
@@ -372,7 +376,7 @@ def _fetch_player_json(session: requests.Session, player_url: str) -> Optional[d
     GET getPlayerData/{id}. Returns None if Understat has no page (404/410) for this id
     (league list can still reference removed/merged players). Other errors raise.
     """
-    return _fetch_json_with_retry(session, player_url, allow_missing=True, max_attempts=6)
+    return _fetch_json_with_retry(session, player_url, allow_missing=True, max_attempts=PLAYER_REQUEST_ATTEMPTS)
 
 
 def scrape_season(state: ScrapeState) -> str:
@@ -435,7 +439,15 @@ def scrape_season(state: ScrapeState) -> str:
 
         print(f"  {player.get('player_name')} ({season_minutes}min)...", end="", flush=True)
         player_url = f"https://understat.com/getPlayerData/{player_id}"
-        payload = _fetch_player_json(state.session, player_url)
+        try:
+            payload = _fetch_player_json(state.session, player_url)
+        except requests.RequestException as exc:
+            print(f" skip ({type(exc).__name__}: {exc})", flush=True)
+            player_fetch_failures += 1
+            done_players.add(player_id)
+            with open(progress_path, "w", encoding="utf-8") as handle:
+                json.dump({"done_players": sorted(done_players)}, handle)
+            continue
         if payload is None:
             print(
                 f" skip (404/410: no player page - often removed/renamed on Understat; id={player_id})",
@@ -613,7 +625,7 @@ def scrape_season(state: ScrapeState) -> str:
 
 
 def main() -> None:
-    global REQUEST_DELAY
+    global REQUEST_ATTEMPTS, REQUEST_DELAY, REQUEST_TIMEOUT, PLAYER_REQUEST_ATTEMPTS
     parser = argparse.ArgumentParser(description="Understat football player match-log scraper")
     parser.add_argument(
         "--league",
@@ -627,10 +639,21 @@ def main() -> None:
     parser.add_argument("--resume", action="store_true", help="Resume interrupted scrape")
     parser.add_argument("--max-players", type=int, help="Optional limit for testing")
     parser.add_argument("--delay", type=float, default=REQUEST_DELAY, help="Delay between requests in seconds")
+    parser.add_argument("--request-timeout", type=float, default=REQUEST_TIMEOUT, help="HTTP timeout per request in seconds")
+    parser.add_argument("--max-attempts", type=int, default=REQUEST_ATTEMPTS, help="Max attempts for league-data requests")
+    parser.add_argument(
+        "--player-max-attempts",
+        type=int,
+        default=PLAYER_REQUEST_ATTEMPTS,
+        help="Max attempts for per-player requests",
+    )
     args = parser.parse_args()
 
     seasons = args.season or DEFAULT_SEASONS
     REQUEST_DELAY = args.delay
+    REQUEST_TIMEOUT = args.request_timeout
+    REQUEST_ATTEMPTS = args.max_attempts
+    PLAYER_REQUEST_ATTEMPTS = args.player_max_attempts
 
     session = requests.Session()
     print("\n" + "=" * 64)
@@ -640,6 +663,8 @@ def main() -> None:
     print(f"  Seasons: {seasons}")
     print(f"  Output:  {args.out_dir}")
     print(f"  Delay:   {REQUEST_DELAY:.1f}s between requests")
+    print(f"  Timeout: {REQUEST_TIMEOUT:.1f}s per request")
+    print(f"  Attempts: league={REQUEST_ATTEMPTS}, player={PLAYER_REQUEST_ATTEMPTS}")
 
     for league_key in args.league:
         config = LEAGUE_CONFIGS[league_key]

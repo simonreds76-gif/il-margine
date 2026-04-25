@@ -74,20 +74,29 @@ jobs:
           STALE_LEAGUES: ${{ steps.understat_health.outputs.stale_leagues }}
           SEASON_LABEL: ${{ steps.understat_health.outputs.season }}
           UNDERSTAT_DELAY: "0.5"
+          UNDERSTAT_REQUEST_TIMEOUT: "12"
+          UNDERSTAT_MAX_ATTEMPTS: "3"
+          UNDERSTAT_PLAYER_MAX_ATTEMPTS: "3"
         run: |
           if [ "${FORCE_UNDERSTAT}" = "true" ]; then
             echo "FORCE_UNDERSTAT: running Understat scrape for all configured leagues/seasons."
             python scripts/understat-scrape-serie-a.py \
               --league serie-a epl la-liga bundesliga ligue-1 \
               --season 2023-2024 2024-2025 2025-2026 \
-              --delay "${UNDERSTAT_DELAY}"
+              --delay "${UNDERSTAT_DELAY}" \
+              --request-timeout "${UNDERSTAT_REQUEST_TIMEOUT}" \
+              --max-attempts "${UNDERSTAT_MAX_ATTEMPTS}" \
+              --player-max-attempts "${UNDERSTAT_PLAYER_MAX_ATTEMPTS}"
           elif [ -n "${STALE_LEAGUES}" ]; then
             echo "Refreshing stale current-season Understat logs: ${STALE_LEAGUES} (${SEASON_LABEL})"
             python scripts/understat-scrape-serie-a.py \
               --resume \
               --league ${STALE_LEAGUES} \
               --season "${SEASON_LABEL}" \
-              --delay "${UNDERSTAT_DELAY}"
+              --delay "${UNDERSTAT_DELAY}" \
+              --request-timeout "${UNDERSTAT_REQUEST_TIMEOUT}" \
+              --max-attempts "${UNDERSTAT_MAX_ATTEMPTS}" \
+              --player-max-attempts "${UNDERSTAT_PLAYER_MAX_ATTEMPTS}"
           else
             echo "Goalscorer current-season player logs fresh; skipping Understat scrape."
           fi

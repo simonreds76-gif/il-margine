@@ -78,6 +78,9 @@ jobs:
           STALE_LEAGUES: ${{ steps.understat_health.outputs.stale_leagues }}
           SEASON_LABEL: ${{ steps.understat_health.outputs.season }}
           UNDERSTAT_DELAY: "0.5"
+          UNDERSTAT_REQUEST_TIMEOUT: "12"
+          UNDERSTAT_MAX_ATTEMPTS: "3"
+          UNDERSTAT_PLAYER_MAX_ATTEMPTS: "3"
         run: |
           if [ -n "${STALE_LEAGUES}" ]; then
             echo "Refreshing stale current-season Understat logs before settlement: ${STALE_LEAGUES} (${SEASON_LABEL})"
@@ -85,7 +88,10 @@ jobs:
               --resume \
               --league ${STALE_LEAGUES} \
               --season "${SEASON_LABEL}" \
-              --delay "${UNDERSTAT_DELAY}"
+              --delay "${UNDERSTAT_DELAY}" \
+              --request-timeout "${UNDERSTAT_REQUEST_TIMEOUT}" \
+              --max-attempts "${UNDERSTAT_MAX_ATTEMPTS}" \
+              --player-max-attempts "${UNDERSTAT_PLAYER_MAX_ATTEMPTS}"
           else
             echo "Goalscorer current-season player logs fresh; skipping Understat scrape."
           fi
