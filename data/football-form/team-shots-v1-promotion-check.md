@@ -1,6 +1,6 @@
-# Team-Shots V1 Promotion Check
+# Team-Shots Promotion Check: `canonical_form_v1_market_nb`
 
-Generated: 2026-04-25T19:23:21+00:00
+Generated: 2026-04-25T19:43:56+00:00
 
 This is a research-lane gate only. It does not change live picks.
 
@@ -27,7 +27,7 @@ Blocked leagues: `bundesliga, epl, ligue-1, serie-a`
 
 ## Publication Rule
 
-- Allow team-shots v1 into research lane only for fixtures where the current model would also have priced the fixture.
+- Allow `canonical_form_v1_market_nb` into research lane only for fixtures where the current model would also have priced the fixture.
 - Restrict initial research-lane publication to passing leagues only.
 - Keep canonical-only fixtures blocked until segment calibration is stable.
-- Allowed-league config written to `data\football-form\team-shots-v1-allowed-leagues.json`.
+- Allowed-league config written to `data/football-form/team-shots-v1-allowed-leagues.json`.

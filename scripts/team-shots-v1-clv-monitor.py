@@ -1,0 +1,381 @@
+#!/usr/bin/env python3
+"""Join team-shots v1 research picks to captured bookmaker prices.
+
+This can run before any v1 picks exist. It writes the monitor schema and
+applies the same hard guards as corners: allowed leagues only, and no
+canonical-only publication until that segment is separately validated.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import re
+import unicodedata
+from collections import defaultdict
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from typing import Any
+
+
+ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_PICKS = ROOT / "data" / "football-form" / "team-shots-v1-published-picks.csv"
+DEFAULT_ODDS = ROOT / "data" / "team-shots" / "team-shots-odds-history.csv"
+DEFAULT_OUTPUT = ROOT / "data" / "football-form" / "team-shots-v1-clv-monitor.csv"
+DEFAULT_REPORT = ROOT / "data" / "football-form" / "team-shots-v1-clv-monitor.md"
+DEFAULT_ALLOWED_CONFIG = ROOT / "data" / "football-form" / "team-shots-v1-allowed-leagues.json"
+
+OUTPUT_FIELDS = [
+    "pick_id",
+    "published_at_utc",
+    "kickoff_utc",
+    "time_to_kickoff_hours",
+    "match_id",
+    "match_date",
+    "league",
+    "match",
+    "home_team",
+    "away_team",
+    "team",
+    "bookmaker",
+    "selection",
+    "line",
+    "side",
+    "model_fair_odds",
+    "model_implied_prob",
+    "book_price_at_publication",
+    "book_price_3h_pre_kickoff",
+    "book_price_1h_pre_kickoff",
+    "book_price_close",
+    "published_to_close_clv",
+    "model_to_close_clv",
+    "book_movement_to_close",
+    "result",
+    "pnl_units",
+    "current_model_would_have_priced",
+    "confidence_guard_applied",
+    "blocked_reason",
+]
+
+
+def norm(text: str) -> str:
+    text = (text or "").strip().lower()
+    text = unicodedata.normalize("NFD", text)
+    text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
+    return re.sub(r"[^a-z0-9]+", " ", text).strip()
+
+
+def parse_dt(text: Any) -> datetime | None:
+    raw = str(text or "").strip()
+    if not raw:
+        return None
+    try:
+        parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)
+
+
+def fmt_dt(value: datetime | None) -> str:
+    if value is None:
+        return ""
+    return value.astimezone(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def pf(value: Any) -> float | None:
+    text = str(value or "").replace(",", "").strip()
+    if not text:
+        return None
+    try:
+        return float(text)
+    except ValueError:
+        return None
+
+
+def load_csv(path: Path) -> list[dict[str, str]]:
+    if not path.exists():
+        return []
+    with path.open("r", encoding="utf-8-sig", errors="replace", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+def line_label(value: Any) -> str:
+    parsed = pf(value)
+    return f"{parsed:.1f}" if parsed is not None else str(value or "").strip()
+
+
+def split_match(row: dict[str, str]) -> tuple[str, str]:
+    home = row.get("home_team", "").strip()
+    away = row.get("away_team", "").strip()
+    if home and away:
+        return home, away
+    match = row.get("match", "")
+    for separator in (" vs ", " v "):
+        if separator in match:
+            left, right = match.split(separator, 1)
+            return left.strip(), right.strip()
+    return home, away
+
+
+def row_bool(value: Any) -> bool:
+    return str(value or "").strip().lower() in {"1", "true", "yes", "y"}
+
+
+def load_allowed_config(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {
+            "allowed_leagues": [],
+            "canonical_only_allowed": False,
+            "config_valid": False,
+            "config_error": f"missing allowed config: {path}",
+        }
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return {
+            "allowed_leagues": [],
+            "canonical_only_allowed": False,
+            "config_valid": False,
+            "config_error": f"malformed allowed config: {exc}",
+        }
+    if not isinstance(payload.get("allowed_leagues"), list):
+        return {
+            "allowed_leagues": [],
+            "canonical_only_allowed": False,
+            "config_valid": False,
+            "config_error": "allowed config missing list field: allowed_leagues",
+        }
+    payload["config_valid"] = True
+    payload["config_error"] = ""
+    return payload
+
+
+def build_odds_index(rows: list[dict[str, str]]) -> dict[str, list[dict[str, Any]]]:
+    index: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        home = norm(row.get("home_team", ""))
+        away = norm(row.get("away_team", ""))
+        team = norm(row.get("team", ""))
+        match_date = (row.get("match_date") or row.get("kickoff_at") or "").strip()[:10]
+        side = str(row.get("side") or "").strip().lower()
+        line = line_label(row.get("line"))
+        bookmaker = norm(row.get("bookmaker", ""))
+        odds = pf(row.get("odds_decimal"))
+        captured_at = parse_dt(row.get("captured_at"))
+        kickoff = parse_dt(row.get("kickoff_at"))
+        if not (home and away and team and match_date and side and line and bookmaker and odds and captured_at):
+            continue
+        item = {"captured_at": captured_at, "kickoff": kickoff, "odds": odds, "bookmaker": bookmaker}
+        keys = [
+            f"{match_date}|{home}|{away}|{team}|{line}|{side}|{bookmaker}",
+            f"{match_date}|{home}|{away}|{team}|{line}|{side}|__any__",
+            f"__any__|{home}|{away}|{team}|{line}|{side}|{bookmaker}",
+            f"__any__|{home}|{away}|{team}|{line}|{side}|__any__",
+        ]
+        for key in keys:
+            index[key].append(item)
+    for items in index.values():
+        items.sort(key=lambda item: item["captured_at"])
+    return index
+
+
+def price_at_or_before(items: list[dict[str, Any]], target: datetime | None) -> float | None:
+    if not items:
+        return None
+    if target is None:
+        return items[-1]["odds"]
+    candidates = [item for item in items if item["captured_at"] <= target]
+    if candidates:
+        return candidates[-1]["odds"]
+    return None
+
+
+def build_pick_row(
+    pick: dict[str, str],
+    index: dict[str, list[dict[str, Any]]],
+    *,
+    allow_canonical_only: bool,
+    allowed_leagues: set[str],
+    config_valid: bool,
+    config_error: str,
+) -> dict[str, Any]:
+    home, away = split_match(pick)
+    league = str(pick.get("league") or "").strip().lower()
+    team = pick.get("team", "").strip()
+    bookmaker = pick.get("bookmaker", "").strip() or "Bet365"
+    match_date = (pick.get("match_date") or pick.get("kickoff_utc") or pick.get("kickoff_iso") or "").strip()[:10]
+    line = line_label(pick.get("line"))
+    side = str(pick.get("side") or "").strip().lower()
+    published = parse_dt(pick.get("published_at_utc") or pick.get("published_at") or pick.get("logged_at"))
+    kickoff = parse_dt(pick.get("kickoff_utc") or pick.get("kickoff_iso") or pick.get("kick_off"))
+    key = f"{match_date}|{norm(home)}|{norm(away)}|{norm(team)}|{line}|{side}|{norm(bookmaker)}"
+    fallback = f"{match_date}|{norm(home)}|{norm(away)}|{norm(team)}|{line}|{side}|__any__"
+    any_key = f"__any__|{norm(home)}|{norm(away)}|{norm(team)}|{line}|{side}|__any__"
+    items = index.get(key) or index.get(fallback) or index.get(any_key) or []
+
+    price_publication = price_at_or_before(items, published)
+    price_3h = price_at_or_before(items, kickoff - timedelta(hours=3) if kickoff else None)
+    price_1h = price_at_or_before(items, kickoff - timedelta(hours=1) if kickoff else None)
+    close = price_at_or_before(items, kickoff)
+    model_fair = pf(pick.get("model_fair_odds") or pick.get("model_fair"))
+    model_prob = pf(pick.get("model_implied_prob") or pick.get("model_prob"))
+    if model_prob is None and model_fair and model_fair > 1:
+        model_prob = 1.0 / model_fair
+
+    current_model_would_have_priced = row_bool(pick.get("current_model_would_have_priced"))
+    blocked_reasons: list[str] = []
+    confidence_guard_applied = False
+    if not config_valid:
+        confidence_guard_applied = True
+        blocked_reasons.append("allowed_config_invalid")
+    if not current_model_would_have_priced and not allow_canonical_only:
+        confidence_guard_applied = True
+        blocked_reasons.append("canonical_only_guard")
+    if league not in allowed_leagues:
+        confidence_guard_applied = True
+        blocked_reasons.append("league_not_allowed")
+    if config_error:
+        blocked_reasons.append(config_error)
+
+    published_to_close_clv = ""
+    movement_to_close = ""
+    if price_publication and close:
+        published_to_close_clv = round((price_publication / close) - 1.0, 6)
+        movement_to_close = round(close - price_publication, 6)
+
+    model_to_close_clv = ""
+    if model_prob and close:
+        model_to_close_clv = round((model_prob * close) - 1.0, 6)
+    time_to_kickoff_hours = ""
+    if published and kickoff:
+        time_to_kickoff_hours = round((kickoff - published).total_seconds() / 3600.0, 3)
+
+    match = pick.get("match") or f"{home} vs {away}"
+    return {
+        "pick_id": pick.get("pick_id") or "|".join([league, match_date, norm(home), norm(away), norm(team), line, side]),
+        "published_at_utc": fmt_dt(published),
+        "kickoff_utc": fmt_dt(kickoff),
+        "time_to_kickoff_hours": time_to_kickoff_hours,
+        "match_id": pick.get("match_id") or "|".join([league, match_date, norm(home), norm(away)]),
+        "match_date": match_date,
+        "league": league,
+        "match": match,
+        "home_team": home,
+        "away_team": away,
+        "team": team,
+        "bookmaker": bookmaker,
+        "selection": pick.get("selection") or f"{team} {side} {line}",
+        "line": line,
+        "side": side,
+        "model_fair_odds": round(model_fair, 6) if model_fair else "",
+        "model_implied_prob": round(model_prob, 6) if model_prob else "",
+        "book_price_at_publication": round(price_publication, 6) if price_publication else "",
+        "book_price_3h_pre_kickoff": round(price_3h, 6) if price_3h else "",
+        "book_price_1h_pre_kickoff": round(price_1h, 6) if price_1h else "",
+        "book_price_close": round(close, 6) if close else "",
+        "published_to_close_clv": published_to_close_clv,
+        "model_to_close_clv": model_to_close_clv,
+        "book_movement_to_close": movement_to_close,
+        "result": pick.get("result", ""),
+        "pnl_units": pick.get("pnl_units", ""),
+        "current_model_would_have_priced": "true" if current_model_would_have_priced else "false",
+        "confidence_guard_applied": "true" if confidence_guard_applied else "false",
+        "blocked_reason": ";".join(blocked_reasons),
+    }
+
+
+def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=OUTPUT_FIELDS)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def avg(values: list[float]) -> float | None:
+    vals = [value for value in values if value == value]
+    return sum(vals) / len(vals) if vals else None
+
+
+def render_report(rows: list[dict[str, Any]], picks_path: Path, odds_path: Path, allowed_config: dict[str, Any]) -> str:
+    clv_values = [pf(row.get("published_to_close_clv")) for row in rows if pf(row.get("published_to_close_clv")) is not None]
+    blocked = [row for row in rows if row.get("blocked_reason")]
+    with_close = [row for row in rows if row.get("book_price_close")]
+    avg_clv = avg([value for value in clv_values if value is not None])
+    lines = [
+        "# Team-Shots V1 CLV Monitor",
+        "",
+        f"Generated: {fmt_dt(datetime.now(UTC))}",
+        f"Picks input: `{picks_path.relative_to(ROOT) if picks_path.is_absolute() and ROOT in picks_path.parents else picks_path}`",
+        f"Odds input: `{odds_path.relative_to(ROOT) if odds_path.is_absolute() and ROOT in odds_path.parents else odds_path}`",
+        "",
+        "## Summary",
+        "",
+        f"- Picks: {len(rows)}",
+        f"- Picks with close: {len(with_close)}",
+        f"- Hard-guard blocked: {len(blocked)}",
+        f"- Average published-to-close CLV: {avg_clv:+.2%}" if avg_clv is not None else "- Average published-to-close CLV: -",
+        f"- Allowed-league config valid: {'yes' if allowed_config.get('config_valid') else 'no'}",
+        f"- Allowed leagues: `{', '.join(allowed_config.get('allowed_leagues', [])) or '-'}`",
+        f"- Config error: `{allowed_config.get('config_error') or '-'}`",
+        "",
+        "## Required Fields",
+        "",
+        "- `current_model_would_have_priced` must be true while canonical-only evidence is blocked.",
+        "- `time_to_kickoff_hours` records publication timing so CLV can be interpreted by lead time.",
+        "- `published_to_close_clv` tracks the captured bookmaker price versus close.",
+        "- `model_to_close_clv` tracks the model-implied probability versus close.",
+        "- `confidence_guard_applied=true` means the row must not be treated as a published pick.",
+        "",
+        "## De-Promotion Rules",
+        "",
+        "- Pause team-shots v1 if 30-day rolling CLV is below 0 with at least 50 settled picks.",
+        "- Pause team-shots v1 if rolling 90-day production Brier exceeds 1.05x the pre-promotion backtest Brier.",
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Join team-shots v1 research picks to captured bookmaker CLV prices")
+    parser.add_argument("--picks", type=Path, default=DEFAULT_PICKS)
+    parser.add_argument("--odds", type=Path, default=DEFAULT_ODDS)
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
+    parser.add_argument("--allowed-config", type=Path, default=DEFAULT_ALLOWED_CONFIG)
+    parser.add_argument(
+        "--allow-canonical-only",
+        action="store_true",
+        help="Disable the hard canonical-only publication guard. Do not use until segment evidence exists.",
+    )
+    args = parser.parse_args()
+
+    picks = load_csv(args.picks)
+    odds_rows = load_csv(args.odds)
+    index = build_odds_index(odds_rows)
+    allowed_config = load_allowed_config(args.allowed_config)
+    allowed_leagues = {str(league).strip().lower() for league in allowed_config.get("allowed_leagues", [])}
+    allow_canonical_only = args.allow_canonical_only or bool(allowed_config.get("canonical_only_allowed"))
+    rows = [
+        build_pick_row(
+            pick,
+            index,
+            allow_canonical_only=allow_canonical_only,
+            allowed_leagues=allowed_leagues,
+            config_valid=bool(allowed_config.get("config_valid")),
+            config_error=str(allowed_config.get("config_error") or ""),
+        )
+        for pick in picks
+    ]
+    write_csv(args.output, rows)
+    args.report.parent.mkdir(parents=True, exist_ok=True)
+    args.report.write_text(render_report(rows, args.picks, args.odds, allowed_config), encoding="utf-8")
+    print(f"Wrote {args.output.relative_to(ROOT)}")
+    print(f"Wrote {args.report.relative_to(ROOT)}")
+
+
+if __name__ == "__main__":
+    main()

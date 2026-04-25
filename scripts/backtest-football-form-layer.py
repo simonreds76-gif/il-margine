@@ -283,6 +283,25 @@ def canonical_team_shots_lambda(
     return clamp(lam, 3.0, 30.0)
 
 
+def canonical_team_shots_pooled_opp_lambda(
+    team: dict[str, Any],
+    opp: dict[str, Any],
+    *,
+    use_market: bool = True,
+) -> float | None:
+    """Team-shots v2 replay: venue attack, pooled opponent concession."""
+    team_venue = str(team.get("venue", "")).strip()
+    attack = blended_prefer(team, venue_field("shots_for", team_venue), "shots_for_avg")
+    opp_defence = blended(opp, "shots_against_avg")
+    if attack is None or opp_defence is None or not enough_history(team) or not enough_history(opp):
+        return None
+    lam = (0.55 * attack) + (0.45 * opp_defence)
+    lam *= quality_adjustment(team, opp)
+    if use_market:
+        lam *= market_game_state_adjustment(team)
+    return clamp(lam, 3.0, 30.0)
+
+
 def league_prior_avg(team: dict[str, Any], opp: dict[str, Any], metric_for: str, metric_against: str, fallback: float) -> float:
     values = [
         pf(team.get(f"league_prior_{metric_for}_avg"), None),
@@ -571,9 +590,12 @@ def evaluate_canonical(
                 ("canonical_form_v1_market_nb", True, True),
                 ("canonical_form_v1_market_nb_t12", True, True),
                 ("canonical_form_v2_current_shape_nb", False, True),
+                ("canonical_form_v2_pooled_opp_nb", True, True),
             ):
                 if model == "canonical_form_v2_current_shape_nb":
                     lam = canonical_team_shots_current_shape_lambda(team, opp)
+                elif model == "canonical_form_v2_pooled_opp_nb":
+                    lam = canonical_team_shots_pooled_opp_lambda(team, opp, use_market=use_market)
                 else:
                     lam = canonical_team_shots_lambda(team, opp, use_market=use_market, use_trailing12=model.endswith("_t12"))
                 if lam is None:
@@ -726,6 +748,7 @@ def render_report(rows: list[dict[str, Any]]) -> str:
             "- `canonical_form_v1_market_nb` keeps the same lambda but converts O/U probabilities with a causal prior-data league negative-binomial dispersion estimate.",
             "- `*_t12` rows are diagnostic trailing-12-month league-level normalization replays, not live policy candidates yet.",
             "- `canonical_form_v2_current_shape_nb` is a diagnostic replay of the current model's multiplicative league-relative formula shape using canonical inputs; it is not a promotion candidate unless it beats v1/current on segment gates.",
+            "- `canonical_form_v2_pooled_opp_nb` keeps canonical's additive/market/NB shape but pools opponent concession instead of using the opponent venue split.",
             "- Promotion should require full-window and last-90-day Brier/log-loss to match or beat current on the common sample, then odds/CLV checks.",
         ]
     )

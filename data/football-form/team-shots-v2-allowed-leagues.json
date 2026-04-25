@@ -1,19 +1,19 @@
 {
   "allowed_leagues": [
-    "la-liga"
+    "bundesliga",
+    "la-liga",
+    "ligue-1"
   ],
   "blocked_leagues": [
-    "bundesliga",
     "epl",
-    "ligue-1",
     "serie-a"
   ],
   "canonical_only_allowed": false,
   "canonical_only_min_n": 200,
-  "generated_at": "2026-04-25T19:43:56+00:00",
+  "generated_at": "2026-04-25T19:44:33+00:00",
   "lane": "research",
   "market": "team_shots",
-  "model": "canonical_form_v1_market_nb",
+  "model": "canonical_form_v2_pooled_opp_nb",
   "rules": [
     "publish only if league is in allowed_leagues",
     "publish only if current_model_would_have_priced is true",

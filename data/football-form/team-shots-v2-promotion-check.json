@@ -1,9 +1,7 @@
 {
-  "allowed_config_path": "data/football-form/team-shots-v1-allowed-leagues.json",
+  "allowed_config_path": "data/football-form/team-shots-v2-allowed-leagues.json",
   "blocked_leagues": [
-    "bundesliga",
     "epl",
-    "ligue-1",
     "serie-a"
   ],
   "canonical_only": {
@@ -11,20 +9,20 @@
     "n": 38850,
     "reason": "Team-shots canonical-only coverage is large but not segment-validated yet; publish only where current_model_would_have_priced is true."
   },
-  "generated_at": "2026-04-25T19:43:56+00:00",
+  "generated_at": "2026-04-25T19:44:33+00:00",
   "league_results": [
     {
       "common": {
         "brier_ok": true,
-        "canonical_mae": 3.7781,
+        "canonical_mae": 3.787,
         "count_ok": true,
         "current_mae": 3.8726,
-        "improvement_pct": 0.0244022104012808,
+        "improvement_pct": 0.02210401280793263,
         "lines": [
           {
             "brier_ok": true,
-            "canonical_brier": 0.176559,
-            "canonical_log_loss": 0.527422,
+            "canonical_brier": 0.174413,
+            "canonical_log_loss": 0.523216,
             "current_brier": 0.181751,
             "current_log_loss": 0.54564,
             "line": "9.5",
@@ -32,8 +30,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.205915,
-            "canonical_log_loss": 0.59552,
+            "canonical_brier": 0.207054,
+            "canonical_log_loss": 0.597949,
             "current_brier": 0.2217,
             "current_log_loss": 0.642742,
             "line": "10.5",
@@ -41,8 +39,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.214122,
-            "canonical_log_loss": 0.614,
+            "canonical_brier": 0.215613,
+            "canonical_log_loss": 0.616625,
             "current_brier": 0.23027,
             "current_log_loss": 0.663712,
             "line": "11.5",
@@ -50,8 +48,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.218048,
-            "canonical_log_loss": 0.623731,
+            "canonical_brier": 0.217909,
+            "canonical_log_loss": 0.622317,
             "current_brier": 0.235321,
             "current_log_loss": 0.677558,
             "line": "12.5",
@@ -59,8 +57,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.220482,
-            "canonical_log_loss": 0.63179,
+            "canonical_brier": 0.219526,
+            "canonical_log_loss": 0.627314,
             "current_brier": 0.234188,
             "current_log_loss": 0.679658,
             "line": "13.5",
@@ -68,8 +66,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.20705,
-            "canonical_log_loss": 0.606254,
+            "canonical_brier": 0.205522,
+            "canonical_log_loss": 0.599163,
             "current_brier": 0.218103,
             "current_log_loss": 0.651313,
             "line": "14.5",
@@ -77,8 +75,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.186155,
-            "canonical_log_loss": 0.558782,
+            "canonical_brier": 0.185499,
+            "canonical_log_loss": 0.55454,
             "current_brier": 0.195184,
             "current_log_loss": 0.607118,
             "line": "15.5",
@@ -86,30 +84,30 @@
           }
         ],
         "log_loss_ok": true,
-        "mae_delta": -0.09450000000000003,
+        "mae_delta": -0.0855999999999999,
         "n": 432
       },
       "last_90_common": {
         "brier_ok": true,
-        "canonical_mae": 3.8572,
-        "count_ok": false,
+        "canonical_mae": 3.7969,
+        "count_ok": true,
         "current_mae": 3.8478,
-        "improvement_ok": false,
-        "improvement_pct": -0.002442954415510239,
+        "improvement_ok": true,
+        "improvement_pct": 0.013228338271219903,
         "lines": [
           {
             "brier_ok": true,
-            "canonical_brier": 0.173575,
-            "canonical_log_loss": 0.518094,
+            "canonical_brier": 0.169283,
+            "canonical_log_loss": 0.508981,
             "current_brier": 0.176083,
             "current_log_loss": 0.517231,
             "line": "9.5",
-            "log_loss_ok": false
+            "log_loss_ok": true
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.211235,
-            "canonical_log_loss": 0.603781,
+            "canonical_brier": 0.207429,
+            "canonical_log_loss": 0.595519,
             "current_brier": 0.220364,
             "current_log_loss": 0.619732,
             "line": "10.5",
@@ -117,8 +115,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.216554,
-            "canonical_log_loss": 0.619029,
+            "canonical_brier": 0.213315,
+            "canonical_log_loss": 0.610703,
             "current_brier": 0.223827,
             "current_log_loss": 0.64201,
             "line": "11.5",
@@ -126,8 +124,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.225087,
-            "canonical_log_loss": 0.6399,
+            "canonical_brier": 0.220085,
+            "canonical_log_loss": 0.626588,
             "current_brier": 0.233957,
             "current_log_loss": 0.668047,
             "line": "12.5",
@@ -135,8 +133,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.233955,
-            "canonical_log_loss": 0.664535,
+            "canonical_brier": 0.228521,
+            "canonical_log_loss": 0.64784,
             "current_brier": 0.24325,
             "current_log_loss": 0.702542,
             "line": "13.5",
@@ -144,8 +142,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.212223,
-            "canonical_log_loss": 0.6223,
+            "canonical_brier": 0.208128,
+            "canonical_log_loss": 0.60686,
             "current_brier": 0.219311,
             "current_log_loss": 0.661499,
             "line": "14.5",
@@ -153,35 +151,35 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.190746,
-            "canonical_log_loss": 0.572768,
+            "canonical_brier": 0.186571,
+            "canonical_log_loss": 0.55789,
             "current_brier": 0.194429,
             "current_log_loss": 0.61398,
             "line": "15.5",
             "log_loss_ok": true
           }
         ],
-        "log_loss_ok": false,
-        "mae_delta": 0.009400000000000297,
+        "log_loss_ok": true,
+        "mae_delta": -0.050899999999999945,
         "min_improvement_pct": 0.005,
         "n": 222,
         "n_ok": true
       },
       "league": "bundesliga",
-      "passes": false
+      "passes": true
     },
     {
       "common": {
         "brier_ok": true,
-        "canonical_mae": 3.6504,
-        "count_ok": false,
+        "canonical_mae": 3.57,
+        "count_ok": true,
         "current_mae": 3.6259,
-        "improvement_pct": -0.00675694310378106,
+        "improvement_pct": 0.015416862020463962,
         "lines": [
           {
             "brier_ok": true,
-            "canonical_brier": 0.177296,
-            "canonical_log_loss": 0.529608,
+            "canonical_brier": 0.175215,
+            "canonical_log_loss": 0.52741,
             "current_brier": 0.179675,
             "current_log_loss": 0.546867,
             "line": "9.5",
@@ -189,8 +187,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.20008,
-            "canonical_log_loss": 0.584529,
+            "canonical_brier": 0.198778,
+            "canonical_log_loss": 0.582215,
             "current_brier": 0.208913,
             "current_log_loss": 0.625399,
             "line": "10.5",
@@ -198,8 +196,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.207369,
-            "canonical_log_loss": 0.602278,
+            "canonical_brier": 0.207742,
+            "canonical_log_loss": 0.602165,
             "current_brier": 0.216505,
             "current_log_loss": 0.638002,
             "line": "11.5",
@@ -207,8 +205,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.213742,
-            "canonical_log_loss": 0.617152,
+            "canonical_brier": 0.21462,
+            "canonical_log_loss": 0.616256,
             "current_brier": 0.224186,
             "current_log_loss": 0.660721,
             "line": "12.5",
@@ -216,8 +214,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.212515,
-            "canonical_log_loss": 0.613679,
+            "canonical_brier": 0.213868,
+            "canonical_log_loss": 0.614422,
             "current_brier": 0.22358,
             "current_log_loss": 0.666334,
             "line": "13.5",
@@ -225,8 +223,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.19108,
-            "canonical_log_loss": 0.566766,
+            "canonical_brier": 0.194598,
+            "canonical_log_loss": 0.571226,
             "current_brier": 0.20159,
             "current_log_loss": 0.619274,
             "line": "14.5",
@@ -234,8 +232,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.170649,
-            "canonical_log_loss": 0.516758,
+            "canonical_brier": 0.171276,
+            "canonical_log_loss": 0.515344,
             "current_brier": 0.175327,
             "current_log_loss": 0.550128,
             "line": "15.5",
@@ -243,30 +241,30 @@
           }
         ],
         "log_loss_ok": true,
-        "mae_delta": 0.024499999999999744,
+        "mae_delta": -0.05590000000000028,
         "n": 544
       },
       "last_90_common": {
         "brier_ok": false,
-        "canonical_mae": 3.5884,
+        "canonical_mae": 3.5543,
         "count_ok": false,
         "current_mae": 3.4593,
         "improvement_ok": false,
-        "improvement_pct": -0.03731968895441281,
+        "improvement_pct": -0.027462203335935072,
         "lines": [
           {
             "brier_ok": false,
-            "canonical_brier": 0.165145,
-            "canonical_log_loss": 0.500593,
+            "canonical_brier": 0.167182,
+            "canonical_log_loss": 0.5086,
             "current_brier": 0.164306,
             "current_log_loss": 0.503222,
             "line": "9.5",
-            "log_loss_ok": true
+            "log_loss_ok": false
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.195326,
-            "canonical_log_loss": 0.573125,
+            "canonical_brier": 0.199772,
+            "canonical_log_loss": 0.584698,
             "current_brier": 0.202004,
             "current_log_loss": 0.60548,
             "line": "10.5",
@@ -274,8 +272,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.207355,
-            "canonical_log_loss": 0.603682,
+            "canonical_brier": 0.213538,
+            "canonical_log_loss": 0.617136,
             "current_brier": 0.21579,
             "current_log_loss": 0.638898,
             "line": "11.5",
@@ -283,8 +281,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.213787,
-            "canonical_log_loss": 0.617585,
+            "canonical_brier": 0.219753,
+            "canonical_log_loss": 0.62884,
             "current_brier": 0.221418,
             "current_log_loss": 0.647652,
             "line": "12.5",
@@ -292,8 +290,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.213266,
-            "canonical_log_loss": 0.615084,
+            "canonical_brier": 0.216055,
+            "canonical_log_loss": 0.620375,
             "current_brier": 0.217164,
             "current_log_loss": 0.635204,
             "line": "13.5",
@@ -301,8 +299,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.183068,
-            "canonical_log_loss": 0.545647,
+            "canonical_brier": 0.188663,
+            "canonical_log_loss": 0.55831,
             "current_brier": 0.190434,
             "current_log_loss": 0.568878,
             "line": "14.5",
@@ -310,16 +308,16 @@
           },
           {
             "brier_ok": false,
-            "canonical_brier": 0.167704,
-            "canonical_log_loss": 0.507611,
+            "canonical_brier": 0.169892,
+            "canonical_log_loss": 0.514236,
             "current_brier": 0.165043,
             "current_log_loss": 0.510224,
             "line": "15.5",
-            "log_loss_ok": true
+            "log_loss_ok": false
           }
         ],
-        "log_loss_ok": true,
-        "mae_delta": 0.12910000000000021,
+        "log_loss_ok": false,
+        "mae_delta": 0.0950000000000002,
         "min_improvement_pct": 0.005,
         "n": 224,
         "n_ok": true
@@ -330,15 +328,15 @@
     {
       "common": {
         "brier_ok": true,
-        "canonical_mae": 3.6305,
+        "canonical_mae": 3.6381,
         "count_ok": true,
         "current_mae": 3.7184,
-        "improvement_pct": 0.023639199655765886,
+        "improvement_pct": 0.021595309810671207,
         "lines": [
           {
             "brier_ok": true,
-            "canonical_brier": 0.196337,
-            "canonical_log_loss": 0.570932,
+            "canonical_brier": 0.199824,
+            "canonical_log_loss": 0.578676,
             "current_brier": 0.213892,
             "current_log_loss": 0.624238,
             "line": "9.5",
@@ -346,8 +344,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.213712,
-            "canonical_log_loss": 0.614101,
+            "canonical_brier": 0.216705,
+            "canonical_log_loss": 0.618805,
             "current_brier": 0.231037,
             "current_log_loss": 0.670196,
             "line": "10.5",
@@ -355,8 +353,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.217699,
-            "canonical_log_loss": 0.625173,
+            "canonical_brier": 0.220033,
+            "canonical_log_loss": 0.628916,
             "current_brier": 0.233406,
             "current_log_loss": 0.683871,
             "line": "11.5",
@@ -364,8 +362,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.21367,
-            "canonical_log_loss": 0.617499,
+            "canonical_brier": 0.216483,
+            "canonical_log_loss": 0.623111,
             "current_brier": 0.227316,
             "current_log_loss": 0.675364,
             "line": "12.5",
@@ -373,8 +371,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.197228,
-            "canonical_log_loss": 0.57957,
+            "canonical_brier": 0.199177,
+            "canonical_log_loss": 0.584384,
             "current_brier": 0.206809,
             "current_log_loss": 0.631412,
             "line": "13.5",
@@ -382,8 +380,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.179924,
-            "canonical_log_loss": 0.53918,
+            "canonical_brier": 0.178391,
+            "canonical_log_loss": 0.536133,
             "current_brier": 0.187278,
             "current_log_loss": 0.592244,
             "line": "14.5",
@@ -391,8 +389,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.161737,
-            "canonical_log_loss": 0.497645,
+            "canonical_brier": 0.159845,
+            "canonical_log_loss": 0.492803,
             "current_brier": 0.167877,
             "current_log_loss": 0.545837,
             "line": "15.5",
@@ -400,21 +398,21 @@
           }
         ],
         "log_loss_ok": true,
-        "mae_delta": -0.08789999999999987,
+        "mae_delta": -0.08029999999999982,
         "n": 520
       },
       "last_90_common": {
         "brier_ok": true,
-        "canonical_mae": 3.7148,
+        "canonical_mae": 3.8061,
         "count_ok": true,
         "current_mae": 3.8294,
         "improvement_ok": true,
-        "improvement_pct": 0.02992635922076572,
+        "improvement_pct": 0.006084504099859069,
         "lines": [
           {
             "brier_ok": true,
-            "canonical_brier": 0.198072,
-            "canonical_log_loss": 0.575369,
+            "canonical_brier": 0.205263,
+            "canonical_log_loss": 0.59164,
             "current_brier": 0.213885,
             "current_log_loss": 0.619899,
             "line": "9.5",
@@ -422,8 +420,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.21935,
-            "canonical_log_loss": 0.625537,
+            "canonical_brier": 0.225623,
+            "canonical_log_loss": 0.63892,
             "current_brier": 0.236726,
             "current_log_loss": 0.677482,
             "line": "10.5",
@@ -431,8 +429,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.220274,
-            "canonical_log_loss": 0.631374,
+            "canonical_brier": 0.224613,
+            "canonical_log_loss": 0.641015,
             "current_brier": 0.234821,
             "current_log_loss": 0.680899,
             "line": "11.5",
@@ -440,8 +438,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.213973,
-            "canonical_log_loss": 0.618232,
+            "canonical_brier": 0.219141,
+            "canonical_log_loss": 0.630462,
             "current_brier": 0.226068,
             "current_log_loss": 0.655425,
             "line": "12.5",
@@ -449,8 +447,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.198738,
-            "canonical_log_loss": 0.583681,
+            "canonical_brier": 0.201162,
+            "canonical_log_loss": 0.589718,
             "current_brier": 0.20243,
             "current_log_loss": 0.601736,
             "line": "13.5",
@@ -458,8 +456,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.181471,
-            "canonical_log_loss": 0.545625,
+            "canonical_brier": 0.182884,
+            "canonical_log_loss": 0.548819,
             "current_brier": 0.184153,
             "current_log_loss": 0.56987,
             "line": "14.5",
@@ -467,8 +465,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.159351,
-            "canonical_log_loss": 0.492384,
+            "canonical_brier": 0.162626,
+            "canonical_log_loss": 0.500345,
             "current_brier": 0.165888,
             "current_log_loss": 0.529071,
             "line": "15.5",
@@ -476,7 +474,7 @@
           }
         ],
         "log_loss_ok": true,
-        "mae_delta": -0.11460000000000026,
+        "mae_delta": -0.02330000000000032,
         "min_improvement_pct": 0.005,
         "n": 242,
         "n_ok": true
@@ -487,15 +485,15 @@
     {
       "common": {
         "brier_ok": true,
-        "canonical_mae": 3.799,
-        "count_ok": false,
+        "canonical_mae": 3.7218,
+        "count_ok": true,
         "current_mae": 3.779,
-        "improvement_pct": -0.005292405398253511,
+        "improvement_pct": 0.015136279439005007,
         "lines": [
           {
             "brier_ok": true,
-            "canonical_brier": 0.202932,
-            "canonical_log_loss": 0.588277,
+            "canonical_brier": 0.199964,
+            "canonical_log_loss": 0.582166,
             "current_brier": 0.207408,
             "current_log_loss": 0.6235,
             "line": "9.5",
@@ -503,8 +501,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.217567,
-            "canonical_log_loss": 0.623419,
+            "canonical_brier": 0.217958,
+            "canonical_log_loss": 0.624385,
             "current_brier": 0.22951,
             "current_log_loss": 0.672287,
             "line": "10.5",
@@ -512,8 +510,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.220269,
-            "canonical_log_loss": 0.632386,
+            "canonical_brier": 0.219895,
+            "canonical_log_loss": 0.631112,
             "current_brier": 0.235789,
             "current_log_loss": 0.691032,
             "line": "11.5",
@@ -521,8 +519,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.211506,
-            "canonical_log_loss": 0.613566,
+            "canonical_brier": 0.208877,
+            "canonical_log_loss": 0.60679,
             "current_brier": 0.222468,
             "current_log_loss": 0.657656,
             "line": "12.5",
@@ -530,8 +528,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.199835,
-            "canonical_log_loss": 0.589316,
+            "canonical_brier": 0.197781,
+            "canonical_log_loss": 0.584595,
             "current_brier": 0.207088,
             "current_log_loss": 0.635036,
             "line": "13.5",
@@ -539,8 +537,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.179701,
-            "canonical_log_loss": 0.543355,
+            "canonical_brier": 0.176907,
+            "canonical_log_loss": 0.538791,
             "current_brier": 0.18434,
             "current_log_loss": 0.591731,
             "line": "14.5",
@@ -548,8 +546,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.159603,
-            "canonical_log_loss": 0.490168,
+            "canonical_brier": 0.156206,
+            "canonical_log_loss": 0.483957,
             "current_brier": 0.16424,
             "current_log_loss": 0.534982,
             "line": "15.5",
@@ -557,21 +555,21 @@
           }
         ],
         "log_loss_ok": true,
-        "mae_delta": 0.020000000000000018,
+        "mae_delta": -0.05719999999999992,
         "n": 428
       },
       "last_90_common": {
-        "brier_ok": false,
-        "canonical_mae": 3.6434,
-        "count_ok": false,
+        "brier_ok": true,
+        "canonical_mae": 3.4977,
+        "count_ok": true,
         "current_mae": 3.5528,
-        "improvement_ok": false,
-        "improvement_pct": -0.02550101328529617,
+        "improvement_ok": true,
+        "improvement_pct": 0.015508894393154674,
         "lines": [
           {
-            "brier_ok": false,
-            "canonical_brier": 0.197996,
-            "canonical_log_loss": 0.581288,
+            "brier_ok": true,
+            "canonical_brier": 0.188781,
+            "canonical_log_loss": 0.558912,
             "current_brier": 0.193437,
             "current_log_loss": 0.592304,
             "line": "9.5",
@@ -579,8 +577,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.226224,
-            "canonical_log_loss": 0.645073,
+            "canonical_brier": 0.220666,
+            "canonical_log_loss": 0.630689,
             "current_brier": 0.231257,
             "current_log_loss": 0.681524,
             "line": "10.5",
@@ -588,8 +586,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.224509,
-            "canonical_log_loss": 0.638384,
+            "canonical_brier": 0.21746,
+            "canonical_log_loss": 0.621382,
             "current_brier": 0.231775,
             "current_log_loss": 0.666715,
             "line": "11.5",
@@ -597,17 +595,17 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.21942,
-            "canonical_log_loss": 0.628932,
+            "canonical_brier": 0.210318,
+            "canonical_log_loss": 0.606623,
             "current_brier": 0.225468,
             "current_log_loss": 0.659665,
             "line": "12.5",
             "log_loss_ok": true
           },
           {
-            "brier_ok": false,
-            "canonical_brier": 0.190687,
-            "canonical_log_loss": 0.566493,
+            "brier_ok": true,
+            "canonical_brier": 0.184997,
+            "canonical_log_loss": 0.551715,
             "current_brier": 0.1901,
             "current_log_loss": 0.584947,
             "line": "13.5",
@@ -615,17 +613,17 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.168204,
-            "canonical_log_loss": 0.511681,
+            "canonical_brier": 0.162736,
+            "canonical_log_loss": 0.49923,
             "current_brier": 0.168618,
             "current_log_loss": 0.537474,
             "line": "14.5",
             "log_loss_ok": true
           },
           {
-            "brier_ok": false,
-            "canonical_brier": 0.141931,
-            "canonical_log_loss": 0.448542,
+            "brier_ok": true,
+            "canonical_brier": 0.135078,
+            "canonical_log_loss": 0.431846,
             "current_brier": 0.137714,
             "current_log_loss": 0.45679,
             "line": "15.5",
@@ -633,26 +631,26 @@
           }
         ],
         "log_loss_ok": true,
-        "mae_delta": 0.09060000000000024,
+        "mae_delta": -0.05509999999999993,
         "min_improvement_pct": 0.005,
         "n": 212,
         "n_ok": true
       },
       "league": "ligue-1",
-      "passes": false
+      "passes": true
     },
     {
       "common": {
         "brier_ok": true,
-        "canonical_mae": 3.7954,
-        "count_ok": false,
+        "canonical_mae": 3.7342,
+        "count_ok": true,
         "current_mae": 3.7501,
-        "improvement_pct": -0.012079677875256573,
+        "improvement_pct": 0.004239886936348429,
         "lines": [
           {
             "brier_ok": true,
-            "canonical_brier": 0.190313,
-            "canonical_log_loss": 0.561635,
+            "canonical_brier": 0.190931,
+            "canonical_log_loss": 0.563546,
             "current_brier": 0.192063,
             "current_log_loss": 0.589921,
             "line": "9.5",
@@ -660,8 +658,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.204091,
-            "canonical_log_loss": 0.593177,
+            "canonical_brier": 0.205856,
+            "canonical_log_loss": 0.597543,
             "current_brier": 0.210094,
             "current_log_loss": 0.626899,
             "line": "10.5",
@@ -669,8 +667,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.218606,
-            "canonical_log_loss": 0.628047,
+            "canonical_brier": 0.216539,
+            "canonical_log_loss": 0.623164,
             "current_brier": 0.220829,
             "current_log_loss": 0.649648,
             "line": "11.5",
@@ -678,8 +676,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.211538,
-            "canonical_log_loss": 0.613533,
+            "canonical_brier": 0.210254,
+            "canonical_log_loss": 0.610229,
             "current_brier": 0.219031,
             "current_log_loss": 0.648597,
             "line": "12.5",
@@ -687,8 +685,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.198814,
-            "canonical_log_loss": 0.586471,
+            "canonical_brier": 0.198478,
+            "canonical_log_loss": 0.585863,
             "current_brier": 0.206233,
             "current_log_loss": 0.622725,
             "line": "13.5",
@@ -696,8 +694,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.184274,
-            "canonical_log_loss": 0.552618,
+            "canonical_brier": 0.183764,
+            "canonical_log_loss": 0.550879,
             "current_brier": 0.190242,
             "current_log_loss": 0.592103,
             "line": "14.5",
@@ -705,8 +703,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.154291,
-            "canonical_log_loss": 0.47535,
+            "canonical_brier": 0.153268,
+            "canonical_log_loss": 0.473891,
             "current_brier": 0.161528,
             "current_log_loss": 0.506949,
             "line": "15.5",
@@ -714,21 +712,21 @@
           }
         ],
         "log_loss_ok": true,
-        "mae_delta": 0.045299999999999674,
+        "mae_delta": -0.015900000000000247,
         "n": 540
       },
       "last_90_common": {
         "brier_ok": true,
-        "canonical_mae": 4.026,
+        "canonical_mae": 3.9463,
         "count_ok": false,
         "current_mae": 3.9397,
         "improvement_ok": false,
-        "improvement_pct": -0.02190522120973668,
+        "improvement_pct": -0.0016752544609994965,
         "lines": [
           {
             "brier_ok": true,
-            "canonical_brier": 0.195904,
-            "canonical_log_loss": 0.571338,
+            "canonical_brier": 0.199373,
+            "canonical_log_loss": 0.578945,
             "current_brier": 0.205462,
             "current_log_loss": 0.615771,
             "line": "9.5",
@@ -736,8 +734,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.20135,
-            "canonical_log_loss": 0.583651,
+            "canonical_brier": 0.207567,
+            "canonical_log_loss": 0.598581,
             "current_brier": 0.215376,
             "current_log_loss": 0.62636,
             "line": "10.5",
@@ -745,8 +743,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.214247,
-            "canonical_log_loss": 0.615077,
+            "canonical_brier": 0.213458,
+            "canonical_log_loss": 0.614998,
             "current_brier": 0.215907,
             "current_log_loss": 0.629862,
             "line": "11.5",
@@ -754,8 +752,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.205777,
-            "canonical_log_loss": 0.599588,
+            "canonical_brier": 0.206366,
+            "canonical_log_loss": 0.602296,
             "current_brier": 0.216664,
             "current_log_loss": 0.642973,
             "line": "12.5",
@@ -763,8 +761,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.190315,
-            "canonical_log_loss": 0.566583,
+            "canonical_brier": 0.192829,
+            "canonical_log_loss": 0.5753,
             "current_brier": 0.199306,
             "current_log_loss": 0.604778,
             "line": "13.5",
@@ -772,8 +770,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.178208,
-            "canonical_log_loss": 0.537188,
+            "canonical_brier": 0.179162,
+            "canonical_log_loss": 0.540022,
             "current_brier": 0.184381,
             "current_log_loss": 0.566317,
             "line": "14.5",
@@ -781,8 +779,8 @@
           },
           {
             "brier_ok": true,
-            "canonical_brier": 0.161788,
-            "canonical_log_loss": 0.490844,
+            "canonical_brier": 0.158461,
+            "canonical_log_loss": 0.484554,
             "current_brier": 0.166674,
             "current_log_loss": 0.512137,
             "line": "15.5",
@@ -790,7 +788,7 @@
           }
         ],
         "log_loss_ok": true,
-        "mae_delta": 0.0862999999999996,
+        "mae_delta": 0.006599999999999717,
         "min_improvement_pct": 0.005,
         "n": 240,
         "n_ok": true
@@ -804,11 +802,13 @@
     "min_canonical_only_n": 200,
     "min_last90_league_n": 50,
     "min_last90_mae_improvement_pct": 0.005,
-    "model": "canonical_form_v1_market_nb",
+    "model": "canonical_form_v2_pooled_opp_nb",
     "promotion_lane": "research"
   },
   "ready_leagues": [
-    "la-liga"
+    "bundesliga",
+    "la-liga",
+    "ligue-1"
   ],
   "research_lane_ready_all_leagues": false,
   "research_lane_ready_partial": true,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Promotion gate report for canonical team-shots v1.
+"""Promotion gate report for canonical team-shots research variants.
 
 This is research-only. It checks whether the canonical team-shots model is
 safe to publish by league, using the same discipline as the corners v0 gate:
@@ -242,8 +242,10 @@ def fmt(value: Any, digits: int = 4) -> str:
 
 
 def render_markdown(payload: dict[str, Any]) -> str:
+    model = payload["policy"]["model"]
+    allowed_config_path = payload.get("allowed_config_path") or str(DEFAULT_ALLOWED_CONFIG.relative_to(ROOT))
     lines = [
-        "# Team-Shots V1 Promotion Check",
+        f"# Team-Shots Promotion Check: `{model}`",
         "",
         f"Generated: {payload['generated_at']}",
         "",
@@ -295,34 +297,46 @@ def render_markdown(payload: dict[str, Any]) -> str:
             "",
             "## Publication Rule",
             "",
-            "- Allow team-shots v1 into research lane only for fixtures where the current model would also have priced the fixture.",
+            f"- Allow `{model}` into research lane only for fixtures where the current model would also have priced the fixture.",
             "- Restrict initial research-lane publication to passing leagues only.",
             "- Keep canonical-only fixtures blocked until segment calibration is stable.",
-            f"- Allowed-league config written to `{DEFAULT_ALLOWED_CONFIG.relative_to(ROOT)}`.",
+            f"- Allowed-league config written to `{allowed_config_path}`.",
             "",
         ]
     )
     return "\n".join(lines)
 
 
+def display_path(path: Path) -> str:
+    resolved = path if path.is_absolute() else ROOT / path
+    try:
+        return str(resolved.relative_to(ROOT)).replace("\\", "/")
+    except ValueError:
+        return str(path).replace("\\", "/")
+
+
 def main() -> None:
+    global MODEL
     parser = argparse.ArgumentParser(description="Check team-shots v1 promotion gates")
     parser.add_argument("--summary", type=Path, default=DEFAULT_SUMMARY)
     parser.add_argument("--json-out", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--report-out", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--allowed-config-out", type=Path, default=DEFAULT_ALLOWED_CONFIG)
+    parser.add_argument("--model", default=MODEL, help="Canonical team-shots model id from canonical-backtest-summary.csv")
     parser.add_argument("--strict", action="store_true", help="Exit 1 unless all-league research promotion gate passes")
     args = parser.parse_args()
 
+    MODEL = args.model
     rows = load_rows(args.summary)
     payload = build_payload(rows)
+    payload["allowed_config_path"] = display_path(args.allowed_config_out)
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     args.report_out.write_text(render_markdown(payload), encoding="utf-8")
     args.allowed_config_out.write_text(json.dumps(build_allowed_config(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(f"Wrote {args.json_out.relative_to(ROOT)}")
-    print(f"Wrote {args.report_out.relative_to(ROOT)}")
-    print(f"Wrote {args.allowed_config_out.relative_to(ROOT)}")
+    print(f"Wrote {display_path(args.json_out)}")
+    print(f"Wrote {display_path(args.report_out)}")
+    print(f"Wrote {display_path(args.allowed_config_out)}")
     if args.strict and not payload["research_lane_ready_all_leagues"]:
         raise SystemExit(1)
 

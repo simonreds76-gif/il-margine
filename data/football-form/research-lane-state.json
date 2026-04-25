@@ -1,0 +1,49 @@
+{
+  "generated_at": "2026-04-25T19:45:00Z",
+  "lanes": [
+    {
+      "allowed_leagues": [
+        "epl",
+        "ligue-1",
+        "serie-a"
+      ],
+      "canonical_only_allowed": false,
+      "clv_monitor": "data/football-form/corners-v0-clv-monitor.md",
+      "model": "canonical_form_v0",
+      "notes": "Bundesliga and La Liga remain blocked after recent segment gate and venue diagnostic.",
+      "state": "research_partial",
+      "market": "corners_total"
+    },
+    {
+      "allowed_leagues": [
+        "la-liga"
+      ],
+      "canonical_only_allowed": false,
+      "clv_monitor": "data/football-form/team-shots-v1-clv-monitor.md",
+      "model": "canonical_form_v1_market_nb",
+      "notes": "Conservative research config. V1 passes only La Liga.",
+      "state": "research_partial",
+      "market": "team_shots"
+    },
+    {
+      "allowed_leagues": [
+        "bundesliga",
+        "la-liga",
+        "ligue-1"
+      ],
+      "canonical_only_allowed": false,
+      "clv_monitor": null,
+      "model": "canonical_form_v2_pooled_opp_nb",
+      "notes": "Diagnostic/promotable candidate only. EPL and Serie A remain blocked.",
+      "state": "candidate_partial",
+      "market": "team_shots"
+    }
+  ],
+  "last_segment_gate_run": "2026-04-25T19:44:33Z",
+  "rules": [
+    "fail closed if an allowed-league config is missing or malformed",
+    "publish only leagues listed in the model's allowed-league config",
+    "canonical-only fixtures remain blocked until segment calibration explicitly passes",
+    "pause a lane if CLV or rolling Brier de-promotion rules fire"
+  ]
+}
