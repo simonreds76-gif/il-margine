@@ -82,6 +82,33 @@ type TeamShotsScrapeStatus = {
   error?: string;
 };
 
+type DiagnosticMetric = {
+  n?: number;
+  mae?: number;
+  bias?: number;
+  rmse?: number;
+};
+
+type TeamShotsLast90Diagnostic = {
+  generated_at?: string;
+  latest_form_date?: string;
+  recent_cutoff?: string;
+  summary?: {
+    full_common?: Record<string, DiagnosticMetric>;
+    last_90_common?: Record<string, DiagnosticMetric>;
+    cap_read?: {
+      market_cap_hurts_recent?: boolean;
+      current_recent_vs_full_mae_delta?: number | null;
+    };
+  };
+  last_90_by_league?: Array<{
+    league?: string;
+    current?: DiagnosticMetric;
+    canonical_market?: DiagnosticMetric;
+    canonical_no_market?: DiagnosticMetric;
+  }>;
+};
+
 type PredictionsSummary = {
   prediction_count?: number;
   recent_predictions?: CsvRow[];
@@ -628,6 +655,21 @@ function formatPctDelta(value: number | null): string {
   return `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
 }
 
+function finiteNumber(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function formatDiagnosticMetric(value: unknown, digits = 4): string {
+  const parsed = finiteNumber(value);
+  return parsed === null ? "--" : parsed.toFixed(digits);
+}
+
+function maeDeltaTone(candidate: number | null, baseline: number | null): "green" | "red" | "amber" | "default" {
+  if (candidate === null || baseline === null) return "default";
+  if (candidate <= baseline) return "green";
+  return "red";
+}
+
 function consensusTone(consensus: ConsensusState): string {
   if (consensus === "conflict") return "bg-rose-500/10 text-rose-300 border-rose-500/20";
   if (consensus === "divergent") return "bg-amber-500/10 text-amber-300 border-amber-500/20";
@@ -656,8 +698,8 @@ function signalBadge(
 }
 
 function effectiveStake(edgeDecimal: number, consensus: ConsensusState): number {
-  let stake = shadowStakeUnits(edgeDecimal);
-  let numericStake = pf(stake.replace("u", ""), 0);
+  const stake = shadowStakeUnits(edgeDecimal);
+  const numericStake = pf(stake.replace("u", ""), 0);
   if (consensus !== "conflict") return numericStake;
   if (edgeDecimal < 0.08) return 0;
   if (numericStake >= 2) return 1.5;
@@ -881,6 +923,10 @@ export default async function TeamShotsMonitorPage() {
 
     predictionsSummary,
 
+    last90Diagnostic,
+
+    last90DiagnosticReport,
+
     comparisonCsv,
 
     comparisonTxt,
@@ -896,6 +942,8 @@ export default async function TeamShotsMonitorPage() {
     comparisonMtime,
 
     upcomingMtime,
+
+    last90DiagnosticMtime,
 
     snapshotGeneratedAt,
 
@@ -918,6 +966,10 @@ export default async function TeamShotsMonitorPage() {
 
     readJson<PredictionsSummary>("data/team-shots/team-shots-monitor-summary.json"),
 
+    readJson<TeamShotsLast90Diagnostic>("data/football-form/team-shots-last90-diagnostic.json"),
+
+    readFile("data/football-form/team-shots-last90-diagnostic.md"),
+
     readFile("data/team-shots/team-shots-comparison.csv"),
 
     readFile("data/team-shots/team-shots-comparison.txt"),
@@ -933,6 +985,8 @@ export default async function TeamShotsMonitorPage() {
     readKnownFileMtime("data/team-shots/team-shots-comparison.csv"),
 
     readKnownFileMtime("data/team-shots/team-shots-upcoming.csv"),
+
+    readKnownFileMtime("data/football-form/team-shots-last90-diagnostic.json"),
 
     readTeamShotsLiveSnapshotGeneratedAt(),
 
@@ -1459,7 +1513,7 @@ function LiveLineTable({
     ? `Using hosted team-shots status from ${formatDateTime(hostedPipelineAt)} because team-props status is older.`
     : (pipelineStatus?.message ?? null);
 
-  const coverageReferenceMillis = renderReferenceMillis || Date.now();
+  const coverageReferenceMillis = renderReferenceMillis;
   const coverageWindowEndMillis = coverageReferenceMillis + 48 * 60 * 60 * 1000;
   const upcomingCoverageByLeague = new Map<string, Map<string, string>>();
   for (const row of upcomingRows) {
@@ -1719,6 +1773,30 @@ function LiveLineTable({
     )
     .slice(0, 15);
 
+  const last90Summary = last90Diagnostic?.summary?.last_90_common ?? {};
+  const fullSummary = last90Diagnostic?.summary?.full_common ?? {};
+  const last90CurrentMae = finiteNumber(last90Summary.current?.mae);
+  const last90CanonicalMae = finiteNumber(last90Summary.canonical_market?.mae);
+  const last90NoCapMae = finiteNumber(last90Summary.canonical_no_market?.mae);
+  const fullCurrentMae = finiteNumber(fullSummary.current?.mae);
+  const fullCanonicalMae = finiteNumber(fullSummary.canonical_market?.mae);
+  const last90MaeDelta =
+    last90CurrentMae !== null && last90CanonicalMae !== null
+      ? last90CanonicalMae - last90CurrentMae
+      : null;
+  const last90CapHurts = Boolean(last90Diagnostic?.summary?.cap_read?.market_cap_hurts_recent);
+  const last90LeagueRows = [...(last90Diagnostic?.last_90_by_league ?? [])].sort((a, b) =>
+    (a.league ?? "").localeCompare(b.league ?? ""),
+  );
+  const last90LaggingLeagues = last90LeagueRows
+    .filter((row) => {
+      const current = finiteNumber(row.current?.mae);
+      const canonical = finiteNumber(row.canonical_market?.mae);
+      return current !== null && canonical !== null && canonical > current;
+    })
+    .map((row) => row.league)
+    .filter(Boolean);
+
   return (
     <div className="min-h-screen bg-[#0a0f19] px-4 py-10 text-slate-200 sm:px-6">
       <div className="mx-auto flex max-w-7xl flex-col gap-4">
@@ -1844,6 +1922,111 @@ function LiveLineTable({
             tone={avgClv !== null ? (avgClv >= 0 ? "text-emerald-300" : "text-rose-300") : undefined}
           />
         </section>
+
+        <SectionCard
+          collapsible
+          defaultOpen
+          title="Team-shots last-90 diagnostic"
+          subtitle="Canonical research layer | count-lambda sanity check"
+        >
+          {last90Diagnostic ? (
+            <>
+              <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
+                <StatCard
+                  label="Last-90 current MAE"
+                  value={formatDiagnosticMetric(last90CurrentMae)}
+                  detail={`${last90Summary.current?.n ?? "-"} common rows`}
+                />
+                <StatCard
+                  label="Last-90 canonical MAE"
+                  value={formatDiagnosticMetric(last90CanonicalMae)}
+                  tone={statTone(maeDeltaTone(last90CanonicalMae, last90CurrentMae))}
+                  detail={last90MaeDelta !== null ? `${last90MaeDelta >= 0 ? "+" : ""}${last90MaeDelta.toFixed(4)} vs current` : undefined}
+                />
+                <StatCard
+                  label="Cap disabled MAE"
+                  value={formatDiagnosticMetric(last90NoCapMae)}
+                  tone={statTone(last90CapHurts ? "red" : "green")}
+                  detail={last90CapHurts ? "cap hurts recent MAE" : "cap is not the first suspect"}
+                />
+                <StatCard
+                  label="Full-window check"
+                  value={formatDiagnosticMetric(fullCanonicalMae)}
+                  tone={statTone(maeDeltaTone(fullCanonicalMae, fullCurrentMae))}
+                  detail={`current ${formatDiagnosticMetric(fullCurrentMae)}`}
+                />
+                <StatCard
+                  label="Research read"
+                  value={last90MaeDelta !== null && last90MaeDelta <= 0 ? "candidate" : "hold"}
+                  tone={statTone(last90MaeDelta !== null && last90MaeDelta <= 0 ? "green" : "red")}
+                  detail={last90MaeDelta !== null && last90MaeDelta <= 0 ? "recent count gate passes" : "recent count MAE still lags current"}
+                />
+              </div>
+
+              <div className="mt-3 rounded-xl border border-amber-500/20 bg-amber-500/8 px-3 py-2 text-xs text-amber-200">
+                Latest form date {last90Diagnostic.latest_form_date ?? "-"} | generated{" "}
+                {last90Diagnostic.generated_at ? formatDateTime(last90Diagnostic.generated_at) : "-"}.
+                {last90DiagnosticMtime ? ` File age ${formatRelativeAgeShort(last90DiagnosticMtime, renderReferenceMillis)}.` : ""}
+                {last90LaggingLeagues.length > 0 ? (
+                  <> Canonical capped lags current in {last90LaggingLeagues.join(", ")}.</>
+                ) : null}
+                {" "}This is research-only and does not change live picks.
+              </div>
+
+              {last90LeagueRows.length > 0 ? (
+                <div className="mt-3 overflow-x-auto rounded-xl border border-slate-800/60 bg-slate-950/30">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
+                        <th className="py-2.5 pl-4 pr-3">League</th>
+                        <th className="py-2.5 pr-3 font-mono">N</th>
+                        <th className="py-2.5 pr-3 font-mono">Current MAE</th>
+                        <th className="py-2.5 pr-3 font-mono">Canonical MAE</th>
+                        <th className="py-2.5 pr-3 font-mono">No-cap MAE</th>
+                        <th className="py-2.5 pr-4">Read</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {last90LeagueRows.map((row) => {
+                        const current = finiteNumber(row.current?.mae);
+                        const canonical = finiteNumber(row.canonical_market?.mae);
+                        const noCap = finiteNumber(row.canonical_no_market?.mae);
+                        const canonicalLags = current !== null && canonical !== null && canonical > current;
+                        const capHurts = noCap !== null && canonical !== null && noCap < canonical;
+                        return (
+                          <tr key={row.league ?? "unknown"} className="border-b border-slate-800/40">
+                            <td className="py-2 pl-4 pr-3 text-slate-200">{leagueTitle(row.league ?? "")}</td>
+                            <td className="py-2 pr-3 font-mono tabular-nums text-slate-400">{row.canonical_market?.n ?? "-"}</td>
+                            <td className="py-2 pr-3 font-mono tabular-nums text-slate-300">{formatDiagnosticMetric(current)}</td>
+                            <td className={`py-2 pr-3 font-mono tabular-nums ${canonicalLags ? "text-rose-300" : "text-emerald-300"}`}>
+                              {formatDiagnosticMetric(canonical)}
+                            </td>
+                            <td className={`py-2 pr-3 font-mono tabular-nums ${capHurts ? "text-rose-300" : "text-slate-400"}`}>
+                              {formatDiagnosticMetric(noCap)}
+                            </td>
+                            <td className="py-2 pr-4">
+                              <StatusPill
+                                label={canonicalLags ? "HOLD" : "PASS"}
+                                tone={canonicalLags
+                                  ? "bg-rose-500/10 text-rose-300 border-rose-500/20"
+                                  : "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"}
+                              />
+                              <span className="ml-2 text-[11px] text-slate-500">
+                                {capHurts ? "cap hurts here" : "cap not first suspect"}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <EmptyState message="Team-shots last-90 diagnostic is missing. Run scripts/team-shots-last90-diagnostic.py, then rebuild the team-shots snapshot." />
+          )}
+        </SectionCard>
 
         {(legacySettledShadow.length > 0 || legacyPendingRows.length > 0) ? (
           <SectionCard
@@ -2459,6 +2642,14 @@ function LiveLineTable({
         ) : !hasBacktestArtifacts ? (
           <SectionCard collapsible defaultOpen={false} title="Backtest Report" subtitle="Artifacts unavailable">
             <EmptyState message="Backtest report files are missing from the current snapshot source, so no historical report can be shown here." />
+          </SectionCard>
+        ) : null}
+
+        {last90DiagnosticReport ? (
+          <SectionCard collapsible defaultOpen={false} title="Team-shots last-90 diagnostic report" subtitle="data/football-form/team-shots-last90-diagnostic.md">
+            <pre className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/40 p-4 text-[11px] leading-relaxed text-slate-300 whitespace-pre">
+              {last90DiagnosticReport}
+            </pre>
           </SectionCard>
         ) : null}
 

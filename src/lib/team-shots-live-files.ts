@@ -44,6 +44,8 @@ const TEAM_SHOTS_SHADOW_FILES = [
   "data/team-shots/shadow/team-shots-shadow-performance.txt",
 ] as const;
 const TEAM_SHOTS_MARKET_FILES = [
+  "data/football-form/team-shots-last90-diagnostic.json",
+  "data/football-form/team-shots-last90-diagnostic.md",
   "data/team-shots/team-shots-comparison.csv",
   "data/team-shots/team-shots-comparison.txt",
   "data/team-shots/team-shots-odds-history.csv",

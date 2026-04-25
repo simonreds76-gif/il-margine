@@ -35,6 +35,8 @@ SNAPSHOT_FILES = [
     "data/team-shots/team-shots-upcoming.csv",
     "data/team-shots/team-shots-scanner.csv",
     "data/team-shots/team-shots-scrape-last-run.json",
+    "data/football-form/team-shots-last90-diagnostic.json",
+    "data/football-form/team-shots-last90-diagnostic.md",
     "data/team-shots/shadow/team-shots-shadow-signals.csv",
     "data/team-shots/shadow/team-shots-shadow-performance.txt",
     "data/team-shots/shadow/settlement-audit.json",
