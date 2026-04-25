@@ -453,6 +453,161 @@ def render_markdown(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def load_backtest_highlights(summary_path: Path) -> dict[str, Any]:
+    highlights: dict[str, Any] = {"exists": summary_path.exists()}
+    if not summary_path.exists():
+        return highlights
+
+    with summary_path.open("r", encoding="utf-8", errors="replace", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+
+    def number(value: Any) -> float | None:
+        if value is None or str(value).strip() == "":
+            return None
+        try:
+            return float(value)
+        except ValueError:
+            return None
+
+    def count_row(model: str, market: str, sample: str) -> dict[str, Any] | None:
+        for row in rows:
+            if (
+                row.get("model") == model
+                and row.get("market") == market
+                and row.get("sample") == sample
+                and row.get("league") == "ALL"
+                and row.get("line") == "count"
+            ):
+                return row
+        return None
+
+    def metric_value(model: str, market: str, sample: str, line: str, metric: str) -> float | None:
+        for row in rows:
+            if (
+                row.get("model") == model
+                and row.get("market") == market
+                and row.get("sample") == sample
+                and row.get("league") == "ALL"
+                and row.get("line") == line
+            ):
+                return number(row.get(metric))
+        return None
+
+    def n_value(row: dict[str, Any] | None) -> int | None:
+        n = number(row.get("n") if row else None)
+        return int(n) if n is not None else None
+
+    def mae_value(row: dict[str, Any] | None) -> float | None:
+        return number(row.get("mae") if row else None)
+
+    def probability_better(
+        candidate: str,
+        baseline: str,
+        market: str,
+        sample: str,
+        lines_to_check: list[str],
+    ) -> dict[str, bool]:
+        brier_ok = True
+        log_loss_ok = True
+        for line in lines_to_check:
+            candidate_brier = metric_value(candidate, market, sample, line, "brier")
+            baseline_brier = metric_value(baseline, market, sample, line, "brier")
+            candidate_loss = metric_value(candidate, market, sample, line, "log_loss")
+            baseline_loss = metric_value(baseline, market, sample, line, "log_loss")
+            if candidate_brier is None or baseline_brier is None or candidate_brier > baseline_brier:
+                brier_ok = False
+            if candidate_loss is None or baseline_loss is None or candidate_loss > baseline_loss:
+                log_loss_ok = False
+        return {"brier_ok": brier_ok, "log_loss_ok": log_loss_ok}
+
+    corners_common = count_row("canonical_form_v0", "corners_total", "common")
+    corners_common_current = count_row("current", "corners_total", "common")
+    corners_recent = count_row("canonical_form_v0", "corners_total", "last_90_common")
+    corners_recent_current = count_row("current", "corners_total", "last_90_common")
+    corners_only = count_row("canonical_form_v0", "corners_total", "canonical_only")
+
+    team_common_nb = count_row("canonical_form_v1_market_nb", "team_shots", "common")
+    team_common_market = count_row("canonical_form_v1_market", "team_shots", "common")
+    team_common_current = count_row("current", "team_shots", "common")
+    team_recent_nb = count_row("canonical_form_v1_market_nb", "team_shots", "last_90_common")
+    team_recent_current = count_row("current", "team_shots", "last_90_common")
+    team_only_nb = count_row("canonical_form_v1_market_nb", "team_shots", "canonical_only")
+
+    corners_lines = ["8.5", "9.5", "10.5", "11.5"]
+    team_lines = ["9.5", "10.5", "11.5", "12.5", "13.5", "14.5", "15.5"]
+
+    highlights.update(
+        {
+            "corners_common_n": n_value(corners_common),
+            "corners_common_mae": mae_value(corners_common),
+            "corners_common_current_mae": mae_value(corners_common_current),
+            "corners_recent_n": n_value(corners_recent),
+            "corners_recent_mae": mae_value(corners_recent),
+            "corners_recent_current_mae": mae_value(corners_recent_current),
+            "corners_only_n": n_value(corners_only),
+            "corners_only_mae": mae_value(corners_only),
+            "corners_common_prob": probability_better(
+                "canonical_form_v0", "current", "corners_total", "common", corners_lines
+            ),
+            "corners_recent_prob": probability_better(
+                "canonical_form_v0", "current", "corners_total", "last_90_common", corners_lines
+            ),
+            "team_common_n": n_value(team_common_nb),
+            "team_common_nb_mae": mae_value(team_common_nb),
+            "team_common_market_mae": mae_value(team_common_market),
+            "team_common_current_mae": mae_value(team_common_current),
+            "team_recent_n": n_value(team_recent_nb),
+            "team_recent_nb_mae": mae_value(team_recent_nb),
+            "team_recent_current_mae": mae_value(team_recent_current),
+            "team_only_n": n_value(team_only_nb),
+            "team_only_nb_mae": mae_value(team_only_nb),
+            "team_common_nb_prob": probability_better(
+                "canonical_form_v1_market_nb", "current", "team_shots", "common", team_lines
+            ),
+            "team_recent_nb_prob": probability_better(
+                "canonical_form_v1_market_nb", "current", "team_shots", "last_90_common", team_lines
+            ),
+        }
+    )
+    return highlights
+
+
+def load_yoy_highlights(path: Path) -> dict[str, Any]:
+    highlights: dict[str, Any] = {"exists": path.exists(), "primary_trailing": [], "guarded_trailing": []}
+    if not path.exists():
+        return highlights
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    primary_metrics = {"shots_for", "shots_against", "corners_for", "corners_against"}
+    for league, info in sorted(payload.get("leagues", {}).items()):
+        material = set(info.get("material_metrics", []))
+        recommendation = info.get("recommendation")
+        if recommendation != "use_trailing_12m_baseline":
+            continue
+        if material & primary_metrics:
+            highlights["primary_trailing"].append(league)
+        else:
+            highlights["guarded_trailing"].append(league)
+    return highlights
+
+
+def fmt_float(value: Any, decimals: int = 4) -> str:
+    if value is None:
+        return "-"
+    try:
+        return f"{float(value):.{decimals}f}"
+    except (TypeError, ValueError):
+        return "-"
+
+
+def fmt_int(value: Any) -> str:
+    if value is None:
+        return "-"
+    try:
+        return str(int(value))
+    except (TypeError, ValueError):
+        return "-"
+
+
 def render_claude_packet(payload: dict[str, Any]) -> str:
     audit_rel = rel(DEFAULT_OUTPUT_DIR / "input-audit.md")
     json_rel = rel(DEFAULT_OUTPUT_DIR / "input-audit.json")
@@ -468,6 +623,8 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
     player_smoke_rel = rel(DEFAULT_OUTPUT_DIR / "goalscorer-player-log-smoke.md")
     backtest_summary_rel = rel(DEFAULT_OUTPUT_DIR / "canonical-backtest-summary.csv")
     backtest_report_rel = rel(DEFAULT_OUTPUT_DIR / "canonical-backtest-report.md")
+    yoy_report_rel = rel(DEFAULT_OUTPUT_DIR / "league-yoy-variance.md")
+    yoy_json_rel = rel(DEFAULT_OUTPUT_DIR / "league-yoy-variance.json")
     team_layer_exists = (DEFAULT_OUTPUT_DIR / "team-match-base.csv").exists() and (
         DEFAULT_OUTPUT_DIR / "team-rolling-form.csv"
     ).exists()
@@ -479,6 +636,8 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
     backtest_exists = (DEFAULT_OUTPUT_DIR / "canonical-backtest-summary.csv").exists() and (
         DEFAULT_OUTPUT_DIR / "canonical-backtest-report.md"
     ).exists()
+    backtest = load_backtest_highlights(DEFAULT_OUTPUT_DIR / "canonical-backtest-summary.csv")
+    yoy = load_yoy_highlights(DEFAULT_OUTPUT_DIR / "league-yoy-variance.json")
     player_logs = next((dataset for dataset in payload["datasets"] if dataset["key"] == "goalscorer_player_logs"), {})
     lines = [
         "# Claude Review Packet: Football Canonical Input Layer",
@@ -529,16 +688,23 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
     if player_logs:
         lines.append(
             f"- Goalscorer player logs are now fresh: latest `{player_logs.get('latest_date')}`, "
-            f"freshness `{player_logs.get('freshness_days')}` day(s), rows `{player_logs.get('rows')}`."
+            f"freshness `{player_logs.get('freshness_days')}` day(s), rows `{player_logs.get('row_count')}`."
         )
     if backtest_exists:
         lines.extend(
             [
                 f"- Research backtest summary: `{backtest_summary_rel}`",
                 f"- Research backtest report: `{backtest_report_rel}`",
-                "- Corners canonical v0 beats current on common-sample count MAE and Brier/log-loss.",
-                "- Team-shots canonical v1_market adds capped 1X2 win-probability/game-state adjustment and beats current on common-sample count MAE and Brier/log-loss across tested O/U lines.",
+                "- Corners canonical v0 beats current on common-sample and last-90 common-sample count MAE and Brier/log-loss.",
+                "- Team-shots canonical v1_market_nb adds capped 1X2 win-probability/game-state adjustment plus causal prior-data league negative-binomial O/U conversion. It improves Brier/log-loss, but recent count MAE is not yet better than current.",
                 "- No live policy or published pick logic has been changed yet; this remains research-only pending odds/CLV and recent-window validation.",
+            ]
+        )
+    if yoy.get("exists"):
+        lines.extend(
+            [
+                f"- League YoY variance report: `{yoy_report_rel}` / `{yoy_json_rel}`",
+                "- EPL and Serie A show material shots/corners regime variance, so trailing-12-month normalization should be implemented before any football-form promotion.",
             ]
         )
     lines.append("")
@@ -551,10 +717,85 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
             "- Added schema/freshness validation for canonical team-form outputs: row counts, required fields, critical coverage, duplicate keys, freshness, market coverage, and xG coverage warnings.",
             "- Added date-versioned canonical CSV outputs and a manifest so model reports can record exactly which canonical data version they used.",
             "- Added causal league-relative normalized fields for shots, corners, and xG. They use only prior league rows, not current-season full-sample means.",
-            "- Added a team-shots `canonical_form_v1_market_*` research variant using the market-implied win probability gap as a capped game-state proxy.",
+            "- Added common/canonical-only/full and last-90 sample splits to the canonical backtest report.",
+            "- Added a team-shots `canonical_form_v1_market_nb` research variant using the market-implied win probability gap as a capped game-state proxy and causal prior-data negative-binomial O/U calibration.",
+            "- Added a league year-over-year variance check to decide whether all-prior normalization is safe or trailing-12-month baselines are required.",
             "",
         ]
     )
+
+    if backtest.get("exists"):
+        lines.extend(
+            [
+                "## Backtest Highlights",
+                "",
+                "| Area | Sample | N | Current MAE | Canonical MAE | Probability gate | Read |",
+                "| --- | --- | ---: | ---: | ---: | --- | --- |",
+                (
+                    "| corners v0 | common | "
+                    f"{fmt_int(backtest.get('corners_common_n'))} | "
+                    f"{fmt_float(backtest.get('corners_common_current_mae'))} | "
+                    f"{fmt_float(backtest.get('corners_common_mae'))} | "
+                    f"Brier {'ok' if backtest.get('corners_common_prob', {}).get('brier_ok') else 'fail'}, "
+                    f"log-loss {'ok' if backtest.get('corners_common_prob', {}).get('log_loss_ok') else 'fail'} | "
+                    "promotion candidate after odds/CLV join |"
+                ),
+                (
+                    "| corners v0 | last_90_common | "
+                    f"{fmt_int(backtest.get('corners_recent_n'))} | "
+                    f"{fmt_float(backtest.get('corners_recent_current_mae'))} | "
+                    f"{fmt_float(backtest.get('corners_recent_mae'))} | "
+                    f"Brier {'ok' if backtest.get('corners_recent_prob', {}).get('brier_ok') else 'fail'}, "
+                    f"log-loss {'ok' if backtest.get('corners_recent_prob', {}).get('log_loss_ok') else 'fail'} | "
+                    "recent window also passes |"
+                ),
+                (
+                    "| corners v0 | canonical_only | "
+                    f"{fmt_int(backtest.get('corners_only_n'))} | - | "
+                    f"{fmt_float(backtest.get('corners_only_mae'))} | no baseline | "
+                    "sample is tiny; add confidence guard, do not infer coverage safety |"
+                ),
+                (
+                    "| team-shots v1_market_nb | common | "
+                    f"{fmt_int(backtest.get('team_common_n'))} | "
+                    f"{fmt_float(backtest.get('team_common_current_mae'))} | "
+                    f"{fmt_float(backtest.get('team_common_nb_mae'))} | "
+                    f"Brier {'ok' if backtest.get('team_common_nb_prob', {}).get('brier_ok') else 'fail'}, "
+                    f"log-loss {'ok' if backtest.get('team_common_nb_prob', {}).get('log_loss_ok') else 'fail'} | "
+                    "NB helps O/U calibration |"
+                ),
+                (
+                    "| team-shots v1_market_nb | last_90_common | "
+                    f"{fmt_int(backtest.get('team_recent_n'))} | "
+                    f"{fmt_float(backtest.get('team_recent_current_mae'))} | "
+                    f"{fmt_float(backtest.get('team_recent_nb_mae'))} | "
+                    f"Brier {'ok' if backtest.get('team_recent_nb_prob', {}).get('brier_ok') else 'fail'}, "
+                    f"log-loss {'ok' if backtest.get('team_recent_nb_prob', {}).get('log_loss_ok') else 'fail'} | "
+                    "probability passes, count MAE does not; keep research-only |"
+                ),
+                (
+                    "| team-shots v1_market_nb | canonical_only | "
+                    f"{fmt_int(backtest.get('team_only_n'))} | - | "
+                    f"{fmt_float(backtest.get('team_only_nb_mae'))} | no baseline | "
+                    "coverage looks usable, still needs segment gates |"
+                ),
+                "",
+            ]
+        )
+
+    if yoy.get("exists"):
+        primary = ", ".join(yoy.get("primary_trailing", [])) or "-"
+        guarded = ", ".join(yoy.get("guarded_trailing", [])) or "-"
+        lines.extend(
+            [
+                "## Normalization Read",
+                "",
+                f"- Use trailing-12-month baselines before promotion for primary shots/corners metrics in: {primary}.",
+                f"- Treat trailing xG as guarded/sparse-only first in: {guarded}.",
+                "- La Liga and Ligue 1 are within the 10% material threshold on the checked primary metrics, so all-prior baselines are less risky there.",
+                "",
+            ]
+        )
 
     lines.extend([
         "## Findings From Current Repo",
@@ -569,18 +810,19 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
         "## Proposed Implementation Order",
         "",
         "1. Keep the stale-player-log fix in production workflows and monitor the next scheduled run.",
-        "2. Split canonical backtests into full-window and last-90-day windows for Brier/log-loss promotion gating.",
-        "3. Add odds/CLV joins for team-shots v1_market and corners v0 before any promotion.",
-        "4. Test negative-binomial probability calibration for team shots versus current Poisson O/U conversion.",
-        "5. Only then wire canonical inputs into research monitor lanes; do not move official policy yet.",
+        "2. Run corners v0 odds/CLV join first because count and probability gates pass on common and last-90 common samples.",
+        "3. Add a corners confidence guard for canonical-only coverage because the current canonical-only sample is only N=2 and looks unsafe to generalize from.",
+        "4. Implement trailing-12-month normalization for EPL/Serie A primary shots/corners before any team-shots promotion.",
+        "5. Add win-prob gap bucket calibration for team-shots; negative binomial improves O/U probability but recent count MAE still lags current.",
+        "6. Then do the team-shots odds/CLV join and keep it research-only until the recent-window count issue is explained or fixed.",
         "",
         "## Questions For Follow-up Review",
         "",
-        "1. Does the capped market-implied game-state adjustment look mathematically defensible for team shots, or should it be learned/fit instead of hand-capped?",
-        "2. Is the causal league-relative normalization enough for v1, or should normalization use trailing-12-month league baselines instead of all prior league rows?",
-        "3. Should team-shots O/U probabilities move to negative-binomial calibration now that count MAE improved but dispersion is still likely non-Poisson?",
-        "4. For promotion, should the block be both full-window and last-90-day Brier/log-loss, then CLV watch in research?",
-        "5. Which odds/CLV join should be done first: team-shots v1_market or corners v0?",
+        "1. Corners v0 now passes full and last-90 common-sample count/probability gates. Is odds/CLV join plus confidence guard sufficient for research-lane promotion?",
+        "2. Team-shots v1_market_nb improves Brier/log-loss but last-90 count MAE is worse than current. Should we tune the capped game-state lambda, split by win-prob bucket, or hold the model entirely?",
+        "3. For EPL/Serie A, should trailing-12-month normalization replace all-prior normalization globally, or only for shots/corners primary metrics?",
+        "4. Is the canonical-only team-shots sample large enough to trust after segment gates, or should we withhold picks where current model was historically silent?",
+        "5. What exact CLV join schema should block/allow corners v0 research-lane publication?",
         "",
     ])
     return "\n".join(lines)

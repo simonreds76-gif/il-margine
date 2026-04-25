@@ -24,7 +24,7 @@ import csv
 import math
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -66,6 +66,27 @@ def poisson_prob_over(line: float, lam: float) -> float:
     return clamp(1.0 - cdf, 1e-6, 1.0 - 1e-6)
 
 
+def negative_binomial_prob_over(line: float, mean_count: float, alpha: float) -> float:
+    """P(X > line) for NB2 variance = mean + alpha * mean^2."""
+    if mean_count <= 0:
+        return 0.0
+    if alpha <= 1e-6:
+        return poisson_prob_over(line, mean_count)
+
+    cutoff = int(math.floor(line))
+    size = 1.0 / alpha
+    success_prob = size / (size + mean_count)
+    success_prob = clamp(success_prob, 1e-9, 1.0 - 1e-9)
+
+    pmf = math.exp(size * math.log(success_prob))
+    cdf = pmf
+    fail_prob = 1.0 - success_prob
+    for k in range(cutoff):
+        pmf *= ((k + size) / (k + 1.0)) * fail_prob
+        cdf += pmf
+    return clamp(1.0 - cdf, 1e-6, 1.0 - 1e-6)
+
+
 def brier(prob: float, actual: bool) -> float:
     y = 1.0 if actual else 0.0
     return (prob - y) ** 2
@@ -88,6 +109,18 @@ def row_key(row: dict[str, Any]) -> tuple[str, str, str, str]:
         str(row.get("home_team", "")).strip(),
         str(row.get("away_team", "")).strip(),
     )
+
+
+def row_date(row: dict[str, Any]) -> date | None:
+    text = str(row.get("date") or row.get("match_date") or "").strip()
+    if not text:
+        return None
+    for candidate in (text, text[:10]):
+        try:
+            return datetime.fromisoformat(candidate).date()
+        except ValueError:
+            continue
+    return None
 
 
 def team_key(row: dict[str, Any]) -> tuple[str, str, str, str, str]:
@@ -209,6 +242,7 @@ def canonical_corners_lambda(
 class MetricBucket:
     model: str
     market: str
+    sample: str
     league: str
     line: str
     n: int = 0
@@ -236,6 +270,7 @@ class MetricBucket:
         return {
             "model": self.model,
             "market": self.market,
+            "sample": self.sample,
             "league": self.league,
             "line": self.line,
             "n": self.n,
@@ -251,23 +286,24 @@ class MetricBucket:
 
 
 def add_prediction(
-    buckets: dict[tuple[str, str, str, str], MetricBucket],
+    buckets: dict[tuple[str, str, str, str, str], MetricBucket],
     *,
     model: str,
     market: str,
+    sample: str,
     league: str,
     pred_count: float,
     actual_count: float,
     lines: list[float],
     probs: dict[float, float] | None = None,
 ) -> None:
-    count_key = (model, market, league, "count")
-    buckets.setdefault(count_key, MetricBucket(model, market, league, "count")).add_count(pred_count, actual_count)
+    count_key = (model, market, sample, league, "count")
+    buckets.setdefault(count_key, MetricBucket(model, market, sample, league, "count")).add_count(pred_count, actual_count)
 
     for line in lines:
         line_label = f"{line:.1f}"
-        key = (model, market, league, line_label)
-        bucket = buckets.setdefault(key, MetricBucket(model, market, league, line_label))
+        key = (model, market, sample, league, line_label)
+        bucket = buckets.setdefault(key, MetricBucket(model, market, sample, league, line_label))
         bucket.add_count(pred_count, actual_count)
         prob = probs.get(line) if probs else poisson_prob_over(line, pred_count)
         bucket.add_prob(prob, actual_count > line)
@@ -283,7 +319,60 @@ def league_shots_averages(form_rows: list[dict[str, Any]]) -> dict[str, float]:
     return {league: mean(vals) for league, vals in values.items()}
 
 
-def evaluate_current_team_shots(rows: list[dict[str, Any]], buckets: dict[tuple[str, str, str, str], MetricBucket]) -> None:
+def estimate_alpha(values: list[float]) -> float:
+    if len(values) < 100:
+        return 0.0
+    avg = mean(values)
+    if avg <= 0:
+        return 0.0
+    variance = sum((value - avg) ** 2 for value in values) / (len(values) - 1)
+    return clamp((variance - avg) / (avg * avg), 0.0, 2.0)
+
+
+def estimate_team_shots_alpha_by_date(form_rows: list[dict[str, Any]]) -> dict[tuple[str, date], float]:
+    values: dict[str, list[tuple[date, float]]] = defaultdict(list)
+    all_values: list[tuple[date, float]] = []
+    for row in form_rows:
+        league = str(row.get("league", "")).strip()
+        parsed = row_date(row)
+        actual = pf(row.get("current_shots_for"), None)
+        if league and parsed is not None and actual is not None:
+            values[league].append((parsed, actual))
+            all_values.append((parsed, actual))
+
+    alpha_by_date: dict[tuple[str, date], float] = {}
+    for league, dated_values in {**values, "ALL": all_values}.items():
+        dated_values = sorted(dated_values, key=lambda item: item[0])
+        unique_dates = sorted({value_date for value_date, _ in dated_values})
+        index = 0
+        prior_values: list[float] = []
+        for current_date in unique_dates:
+            while index < len(dated_values) and dated_values[index][0] < current_date:
+                prior_values.append(dated_values[index][1])
+                index += 1
+            alpha_by_date[(league, current_date)] = estimate_alpha(prior_values)
+    return alpha_by_date
+
+
+def latest_form_date(form_rows: list[dict[str, Any]]) -> date | None:
+    dates = [parsed for row in form_rows if (parsed := row_date(row))]
+    return max(dates) if dates else None
+
+
+def sample_names(*, common: bool, prediction_date: date | None, recent_cutoff: date | None) -> list[str]:
+    names = ["full", "common" if common else "canonical_only"]
+    if prediction_date is not None and recent_cutoff is not None and prediction_date >= recent_cutoff:
+        names.append("last_90_full")
+        names.append("last_90_common" if common else "last_90_canonical_only")
+    return names
+
+
+def evaluate_current_team_shots(
+    rows: list[dict[str, Any]],
+    buckets: dict[tuple[str, str, str, str, str], MetricBucket],
+    *,
+    recent_cutoff: date | None,
+) -> None:
     for row in rows:
         league = str(row.get("league", "")).strip()
         pred = pf(row.get("lambda_venue"), None) or pf(row.get("lambda_shots"), None)
@@ -292,19 +381,28 @@ def evaluate_current_team_shots(rows: list[dict[str, Any]], buckets: dict[tuple[
             continue
         probs = {line: pf(row.get(f"p_over_{line:.1f}"), None) for line in TEAM_SHOTS_LINES}
         probs = {line: prob for line, prob in probs.items() if prob is not None}
-        add_prediction(
-            buckets,
-            model="current",
-            market="team_shots",
-            league=league,
-            pred_count=pred,
-            actual_count=actual,
-            lines=TEAM_SHOTS_LINES,
-            probs=probs,
-        )
+        for sample in sample_names(common=True, prediction_date=row_date(row), recent_cutoff=recent_cutoff):
+            if sample not in {"common", "last_90_common"}:
+                continue
+            add_prediction(
+                buckets,
+                model="current",
+                market="team_shots",
+                sample=sample,
+                league=league,
+                pred_count=pred,
+                actual_count=actual,
+                lines=TEAM_SHOTS_LINES,
+                probs=probs,
+            )
 
 
-def evaluate_current_corners(rows: list[dict[str, Any]], buckets: dict[tuple[str, str, str, str], MetricBucket]) -> None:
+def evaluate_current_corners(
+    rows: list[dict[str, Any]],
+    buckets: dict[tuple[str, str, str, str, str], MetricBucket],
+    *,
+    recent_cutoff: date | None,
+) -> None:
     for row in rows:
         league = str(row.get("league", "")).strip()
         pred = pf(row.get("lambda_total"), None)
@@ -313,30 +411,36 @@ def evaluate_current_corners(rows: list[dict[str, Any]], buckets: dict[tuple[str
             continue
         probs = {line: pf(row.get(f"p_over_{line:.1f}"), None) for line in CORNERS_LINES}
         probs = {line: prob for line, prob in probs.items() if prob is not None}
-        add_prediction(
-            buckets,
-            model="current",
-            market="corners_total",
-            league=league,
-            pred_count=pred,
-            actual_count=actual,
-            lines=CORNERS_LINES,
-            probs=probs,
-        )
+        for sample in sample_names(common=True, prediction_date=row_date(row), recent_cutoff=recent_cutoff):
+            if sample not in {"common", "last_90_common"}:
+                continue
+            add_prediction(
+                buckets,
+                model="current",
+                market="corners_total",
+                sample=sample,
+                league=league,
+                pred_count=pred,
+                actual_count=actual,
+                lines=CORNERS_LINES,
+                probs=probs,
+            )
 
 
 def evaluate_canonical(
     form_rows: list[dict[str, Any]],
-    buckets: dict[tuple[str, str, str, str], MetricBucket],
+    buckets: dict[tuple[str, str, str, str, str], MetricBucket],
     *,
     team_shots_common_keys: set[tuple[str, str, str, str, str]],
     corners_common_keys: set[tuple[str, str, str, str]],
+    recent_cutoff: date | None,
 ) -> None:
     rows_by_fixture: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
     for row in form_rows:
         rows_by_fixture[row_key(row)].append(row)
 
     league_shots_avg = league_shots_averages(form_rows)
+    team_shots_alpha_by_date = estimate_team_shots_alpha_by_date(form_rows)
 
     for fixture_rows in rows_by_fixture.values():
         if len(fixture_rows) != 2:
@@ -348,37 +452,42 @@ def evaluate_canonical(
         home = home_rows[0]
         away = away_rows[0]
         league = str(home.get("league", "")).strip()
+        fixture_date = row_date(home)
 
         for team, opp in ((home, away), (away, home)):
             actual = pf(team.get("current_shots_for"), None)
             if actual is None:
                 continue
             common = team_key(team) in team_shots_common_keys
-            for model, use_market in (
-                ("canonical_form_v0_full", False),
-                ("canonical_form_v1_market_full", True),
+            samples = sample_names(common=common, prediction_date=fixture_date, recent_cutoff=recent_cutoff)
+            for model, use_market, use_nb in (
+                ("canonical_form_v0", False, False),
+                ("canonical_form_v1_market", True, False),
+                ("canonical_form_v1_market_nb", True, True),
             ):
                 lam = canonical_team_shots_lambda(team, opp, use_market=use_market)
                 if lam is None:
                     continue
-                add_prediction(
-                    buckets,
-                    model=model,
-                    market="team_shots",
-                    league=league,
-                    pred_count=lam,
-                    actual_count=actual,
-                    lines=TEAM_SHOTS_LINES,
-                )
-                if common:
+                probs = None
+                if use_nb:
+                    alpha = 0.0
+                    if fixture_date is not None:
+                        alpha = team_shots_alpha_by_date.get(
+                            (league, fixture_date),
+                            team_shots_alpha_by_date.get(("ALL", fixture_date), 0.0),
+                        )
+                    probs = {line: negative_binomial_prob_over(line, lam, alpha) for line in TEAM_SHOTS_LINES}
+                for sample in samples:
                     add_prediction(
                         buckets,
-                        model=model.replace("_full", "_common"),
+                        model=model,
                         market="team_shots",
+                        sample=sample,
                         league=league,
                         pred_count=lam,
                         actual_count=actual,
                         lines=TEAM_SHOTS_LINES,
+                        probs=probs,
                     )
 
         home_corners = canonical_corners_lambda(home, away, league_shots_avg.get(league, 0.0))
@@ -387,20 +496,12 @@ def evaluate_canonical(
         actual_away = pf(away.get("current_corners_for"), None)
         if home_corners is not None and away_corners is not None and actual_home is not None and actual_away is not None:
             common = row_key(home) in corners_common_keys
-            add_prediction(
-                buckets,
-                model="canonical_form_v0_full",
-                market="corners_total",
-                league=league,
-                pred_count=home_corners + away_corners,
-                actual_count=actual_home + actual_away,
-                lines=CORNERS_LINES,
-            )
-            if common:
+            for sample in sample_names(common=common, prediction_date=fixture_date, recent_cutoff=recent_cutoff):
                 add_prediction(
                     buckets,
-                    model="canonical_form_v0_common",
+                    model="canonical_form_v0",
                     market="corners_total",
+                    sample=sample,
                     league=league,
                     pred_count=home_corners + away_corners,
                     actual_count=actual_home + actual_away,
@@ -413,6 +514,7 @@ def write_summary(path: Path, rows: list[dict[str, Any]]) -> None:
     fields = [
         "model",
         "market",
+        "sample",
         "league",
         "line",
         "n",
@@ -446,13 +548,27 @@ def render_report(rows: list[dict[str, Any]]) -> str:
         "",
         "## Count Accuracy",
         "",
-        "| Model | Market | N | Mean pred | Mean actual | Bias | MAE | RMSE |",
-        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| Model | Market | Sample | N | Mean pred | Mean actual | Bias | MAE | RMSE |",
+        "| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
 
-    for row in sorted(count_rows, key=lambda item: (item["market"], item["model"])):
+    sample_order = {
+        "common": 0,
+        "canonical_only": 1,
+        "full": 2,
+        "last_90_common": 3,
+        "last_90_canonical_only": 4,
+        "last_90_full": 5,
+    }
+
+    for row in sorted(
+        count_rows,
+        key=lambda item: (item["market"], sample_order.get(item["sample"], 99), item["model"]),
+    ):
         lines.append(
-            "| {model} | {market} | {n} | {mean_pred} | {mean_actual} | {bias} | {mae} | {rmse} |".format(**row)
+            "| {model} | {market} | {sample} | {n} | {mean_pred} | {mean_actual} | {bias} | {mae} | {rmse} |".format(
+                **row
+            )
         )
 
     lines.extend(
@@ -460,13 +576,18 @@ def render_report(rows: list[dict[str, Any]]) -> str:
             "",
             "## Probability Calibration",
             "",
-            "| Model | Market | Line | N | Actual over | Brier | Log loss |",
-            "| --- | --- | ---: | ---: | ---: | ---: | ---: |",
+            "| Model | Market | Sample | Line | N | Actual over | Brier | Log loss |",
+            "| --- | --- | --- | ---: | ---: | ---: | ---: | ---: |",
         ]
     )
-    for row in sorted(prob_rows, key=lambda item: (item["market"], float(item["line"]), item["model"])):
+    for row in sorted(
+        prob_rows,
+        key=lambda item: (item["market"], sample_order.get(item["sample"], 99), float(item["line"]), item["model"]),
+    ):
         lines.append(
-            "| {model} | {market} | {line} | {n} | {actual_over_rate} | {brier} | {log_loss} |".format(**row)
+            "| {model} | {market} | {sample} | {line} | {n} | {actual_over_rate} | {brier} | {log_loss} |".format(
+                **row
+            )
         )
 
     lines.extend(
@@ -474,12 +595,13 @@ def render_report(rows: list[dict[str, Any]]) -> str:
             "",
             "## Read This Properly",
             "",
-            "- `current` is whatever the existing generated prediction CSV currently contains.",
-            "- `canonical_form_v0_common` is tested only on rows where the current generated output also exists.",
-            "- `canonical_form_v0_full` is the same formula over the full eligible historical canonical table.",
-            "- `canonical_form_v1_market_*` adds a capped pre-match 1X2 win-probability adjustment for expected game state.",
-            "- If v0 is worse but close, the canonical layer is still useful as plumbing, not yet as a model replacement.",
-            "- If v0 beats current on Brier/log-loss over common lines, then we test it against odds/CLV before promotion.",
+            "- `common` means both current and canonical produced a prediction for that row.",
+            "- `canonical_only` means canonical produced a prediction where current generated output was silent.",
+            "- `full` is common + canonical_only for canonical models. Current has no full row because it is the baseline CSV itself.",
+            "- `last_90_*` samples use the final 90 days of the canonical form table.",
+            "- `canonical_form_v1_market` adds a capped pre-match 1X2 win-probability adjustment for expected game state.",
+            "- `canonical_form_v1_market_nb` keeps the same lambda but converts O/U probabilities with a causal prior-data league negative-binomial dispersion estimate.",
+            "- Promotion should require full-window and last-90-day Brier/log-loss to match or beat current on the common sample, then odds/CLV checks.",
         ]
     )
     return "\n".join(lines) + "\n"
@@ -487,18 +609,19 @@ def render_report(rows: list[dict[str, Any]]) -> str:
 
 def aggregate_all(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     source_rows = list(rows)
-    grouped: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    grouped: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
     for row in source_rows:
-        grouped[(row["model"], row["market"], row["line"])].append(row)
+        grouped[(row["model"], row["market"], row["sample"], row["line"])].append(row)
 
     all_rows: list[dict[str, Any]] = []
-    for (model, market, line), group in grouped.items():
+    for (model, market, sample, line), group in grouped.items():
         n = sum(int(row["n"]) for row in group)
         if n <= 0:
             continue
         row = {
             "model": model,
             "market": market,
+            "sample": sample,
             "league": "ALL",
             "line": line,
             "n": n,
@@ -539,20 +662,23 @@ def main() -> None:
     form_rows = load_csv(args.form)
     team_shots_rows = load_csv(args.team_shots_current)
     corners_rows = load_csv(args.corners_current)
+    latest_date = latest_form_date(form_rows)
+    recent_cutoff = latest_date - timedelta(days=90) if latest_date else None
 
-    buckets: dict[tuple[str, str, str, str], MetricBucket] = {}
-    evaluate_current_team_shots(team_shots_rows, buckets)
-    evaluate_current_corners(corners_rows, buckets)
+    buckets: dict[tuple[str, str, str, str, str], MetricBucket] = {}
+    evaluate_current_team_shots(team_shots_rows, buckets, recent_cutoff=recent_cutoff)
+    evaluate_current_corners(corners_rows, buckets, recent_cutoff=recent_cutoff)
     evaluate_canonical(
         form_rows,
         buckets,
         team_shots_common_keys={team_key(row) for row in team_shots_rows},
         corners_common_keys={row_key(row) for row in corners_rows},
+        recent_cutoff=recent_cutoff,
     )
 
     rows = [bucket.as_row() for bucket in buckets.values()]
     rows = aggregate_all(rows)
-    rows.sort(key=lambda row: (row["market"], row["model"], row["league"], str(row["line"])))
+    rows.sort(key=lambda row: (row["market"], row["sample"], row["model"], row["league"], str(row["line"])))
 
     write_summary(args.summary_out, rows)
     args.report_out.parent.mkdir(parents=True, exist_ok=True)
