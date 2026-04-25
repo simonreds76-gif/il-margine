@@ -1,0 +1,2641 @@
+{
+  "datasets": [
+    {
+      "bytes": 146902,
+      "columns": [
+        "date",
+        "league",
+        "season",
+        "home_team",
+        "away_team",
+        "home_shots",
+        "away_shots",
+        "home_sot",
+        "away_sot",
+        "home_goals",
+        "away_goals",
+        "home_xg",
+        "away_xg",
+        "home_corners",
+        "away_corners",
+        "B365H",
+        "B365D",
+        "B365A",
+        "B365_over25",
+        "B365_under25"
+      ],
+      "date_field": "date",
+      "exists": true,
+      "field_coverage": {
+        "book_odds": {
+          "columns_available": [
+            "B365H",
+            "B365D",
+            "B365A"
+          ],
+          "pct": 100.0,
+          "rows_present": 1520
+        },
+        "corners": {
+          "columns_available": [
+            "home_corners",
+            "away_corners"
+          ],
+          "pct": 100.0,
+          "rows_present": 1520
+        },
+        "minutes": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "npxg": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "player_identity": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "shots": {
+          "columns_available": [
+            "home_shots",
+            "away_shots"
+          ],
+          "pct": 100.0,
+          "rows_present": 1520
+        },
+        "shots_on_target": {
+          "columns_available": [
+            "home_sot",
+            "away_sot"
+          ],
+          "pct": 100.0,
+          "rows_present": 1520
+        },
+        "xg": {
+          "columns_available": [
+            "home_xg",
+            "away_xg"
+          ],
+          "pct": 91.51,
+          "rows_present": 1391
+        }
+      },
+      "freshness_days": 2,
+      "key": "team_shots_fbref_matches",
+      "league_breakdown": [
+        {
+          "latest_date": "2026-04-19",
+          "league": "bundesliga",
+          "rows": 270
+        },
+        {
+          "latest_date": "2026-04-22",
+          "league": "epl",
+          "rows": 332
+        },
+        {
+          "latest_date": "2026-04-23",
+          "league": "la-liga",
+          "rows": 320
+        },
+        {
+          "latest_date": "2026-04-22",
+          "league": "ligue-1",
+          "rows": 268
+        },
+        {
+          "latest_date": "2026-04-20",
+          "league": "serie-a",
+          "rows": 330
+        }
+      ],
+      "max_date": "2026-04-23",
+      "min_date": "2025-08-15",
+      "missing_required_groups": [],
+      "mtime_utc": "2026-04-25T09:48:50+00:00",
+      "owner": "team-shots",
+      "path": "data/team-shots/fbref/all-fbref-matches.csv",
+      "required_groups": [
+        "xg",
+        "shots",
+        "shots_on_target",
+        "corners",
+        "book_odds"
+      ],
+      "row_count": 1520,
+      "source_role": "FBref match-level shots, SOT, corners, xG, and 1X2 odds"
+    },
+    {
+      "bytes": 265844,
+      "columns": [
+        "league",
+        "season",
+        "Date",
+        "HomeTeam",
+        "AwayTeam",
+        "FTHG",
+        "FTAG",
+        "HS",
+        "AS",
+        "HST",
+        "AST",
+        "HC",
+        "AC",
+        "HF",
+        "AF",
+        "HY",
+        "AY",
+        "HR",
+        "AR",
+        "FTR",
+        "HTHG",
+        "HTAG",
+        "HTR",
+        "B365H",
+        "B365D",
+        "B365A",
+        "BWH",
+        "BWD",
+        "BWA",
+        "B365>2.5",
+        "B365<2.5",
+        "B365AHH",
+        "B365AHA",
+        "B365CH",
+        "B365CD",
+        "B365CA",
+        "BWCH",
+        "BWCD",
+        "BWCA",
+        "B365C>2.5",
+        "B365C<2.5",
+        "B365CAHH",
+        "B365CAHA",
+        "Referee"
+      ],
+      "date_field": "Date",
+      "exists": true,
+      "field_coverage": {
+        "book_odds": {
+          "columns_available": [
+            "B365H",
+            "B365D",
+            "B365A"
+          ],
+          "pct": 100.0,
+          "rows_present": 1520
+        },
+        "corners": {
+          "columns_available": [
+            "HC",
+            "AC"
+          ],
+          "pct": 100.0,
+          "rows_present": 1520
+        },
+        "minutes": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "npxg": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "player_identity": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "shots": {
+          "columns_available": [
+            "HS",
+            "AS"
+          ],
+          "pct": 100.0,
+          "rows_present": 1520
+        },
+        "shots_on_target": {
+          "columns_available": [
+            "HST",
+            "AST"
+          ],
+          "pct": 100.0,
+          "rows_present": 1520
+        },
+        "xg": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        }
+      },
+      "freshness_days": 2,
+      "key": "team_shots_football_data_matches",
+      "league_breakdown": [
+        {
+          "latest_date": "2026-04-19",
+          "league": "bundesliga",
+          "rows": 270
+        },
+        {
+          "latest_date": "2026-04-22",
+          "league": "epl",
+          "rows": 332
+        },
+        {
+          "latest_date": "2026-04-23",
+          "league": "la-liga",
+          "rows": 320
+        },
+        {
+          "latest_date": "2026-04-22",
+          "league": "ligue-1",
+          "rows": 268
+        },
+        {
+          "latest_date": "2026-04-20",
+          "league": "serie-a",
+          "rows": 330
+        }
+      ],
+      "max_date": "2026-04-23",
+      "min_date": "2025-08-15",
+      "missing_required_groups": [],
+      "mtime_utc": "2026-04-25T09:48:50+00:00",
+      "owner": "team-shots",
+      "path": "data/team-shots/historical/all-historical-matches.csv",
+      "required_groups": [
+        "shots",
+        "shots_on_target",
+        "corners",
+        "book_odds"
+      ],
+      "row_count": 1520,
+      "source_role": "Football-Data match-level shots, SOT, corners, goals, and bookmaker odds"
+    },
+    {
+      "bytes": 3652151,
+      "columns": [
+        "league",
+        "season",
+        "Date",
+        "HomeTeam",
+        "AwayTeam",
+        "FTHG",
+        "FTAG",
+        "HS",
+        "AS",
+        "HST",
+        "AST",
+        "HC",
+        "AC",
+        "HF",
+        "AF",
+        "HY",
+        "AY",
+        "HR",
+        "AR",
+        "FTR",
+        "HTHG",
+        "HTAG",
+        "HTR",
+        "B365H",
+        "B365D",
+        "B365A",
+        "BWH",
+        "BWD",
+        "BWA",
+        "IWH",
+        "IWD",
+        "IWA",
+        "B365>2.5",
+        "B365<2.5",
+        "B365AHH",
+        "B365AHA",
+        "B365CH",
+        "B365CD",
+        "B365CA",
+        "BWCH",
+        "BWCD",
+        "BWCA",
+        "IWCH",
+        "IWCD",
+        "IWCA",
+        "B365C>2.5",
+        "B365C<2.5",
+        "B365CAHH",
+        "B365CAHA",
+        "Referee"
+      ],
+      "date_field": "Date",
+      "exists": true,
+      "field_coverage": {
+        "book_odds": {
+          "columns_available": [
+            "B365H",
+            "B365D",
+            "B365A"
+          ],
+          "pct": 99.97,
+          "rows_present": 21351
+        },
+        "corners": {
+          "columns_available": [
+            "HC",
+            "AC"
+          ],
+          "pct": 99.99,
+          "rows_present": 21355
+        },
+        "minutes": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "npxg": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "player_identity": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "shots": {
+          "columns_available": [
+            "HS",
+            "AS"
+          ],
+          "pct": 99.99,
+          "rows_present": 21355
+        },
+        "shots_on_target": {
+          "columns_available": [
+            "HST",
+            "AST"
+          ],
+          "pct": 99.97,
+          "rows_present": 21351
+        },
+        "xg": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        }
+      },
+      "freshness_days": 2,
+      "key": "corners_historical_matches",
+      "league_breakdown": [
+        {
+          "latest_date": "2026-04-19",
+          "league": "bundesliga",
+          "rows": 3636
+        },
+        {
+          "latest_date": "2026-04-22",
+          "league": "epl",
+          "rows": 4512
+        },
+        {
+          "latest_date": "2026-04-23",
+          "league": "la-liga",
+          "rows": 4500
+        },
+        {
+          "latest_date": "2026-04-22",
+          "league": "ligue-1",
+          "rows": 4199
+        },
+        {
+          "latest_date": "2026-04-20",
+          "league": "serie-a",
+          "rows": 4510
+        }
+      ],
+      "max_date": "2026-04-23",
+      "min_date": "2014-08-08",
+      "missing_required_groups": [],
+      "mtime_utc": "2026-04-25T09:48:20+00:00",
+      "owner": "corners",
+      "path": "data/corners-ou/historical/all-historical-matches.csv",
+      "required_groups": [
+        "corners",
+        "book_odds",
+        "shots"
+      ],
+      "row_count": 21357,
+      "source_role": "Football-Data historical corners and 1X2 odds"
+    },
+    {
+      "bytes": 1550522,
+      "columns": [
+        "captured_at",
+        "league",
+        "match_date",
+        "kickoff_iso",
+        "home_team",
+        "away_team",
+        "line",
+        "side",
+        "odds_decimal",
+        "odds_american"
+      ],
+      "date_field": "match_date",
+      "exists": true,
+      "field_coverage": {
+        "book_odds": {
+          "columns_available": [
+            "odds_decimal"
+          ],
+          "pct": 100.0,
+          "rows_present": 13726
+        },
+        "corners": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "minutes": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "npxg": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "player_identity": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "shots": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "shots_on_target": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "xg": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        }
+      },
+      "freshness_days": -2,
+      "key": "corners_pinnacle_odds",
+      "league_breakdown": [
+        {
+          "latest_date": "2026-04-26",
+          "league": "bundesliga",
+          "rows": 2514
+        },
+        {
+          "latest_date": "2026-04-27",
+          "league": "epl",
+          "rows": 2970
+        },
+        {
+          "latest_date": "2026-04-27",
+          "league": "la-liga",
+          "rows": 2710
+        },
+        {
+          "latest_date": "2026-04-26",
+          "league": "ligue-1",
+          "rows": 2510
+        },
+        {
+          "latest_date": "2026-04-27",
+          "league": "serie-a",
+          "rows": 3022
+        }
+      ],
+      "max_date": "2026-04-27",
+      "min_date": "2026-04-10",
+      "missing_required_groups": [],
+      "mtime_utc": "2026-04-25T09:48:20+00:00",
+      "owner": "corners",
+      "path": "data/corners-ou/pinnacle-corners-odds.csv",
+      "required_groups": [
+        "book_odds"
+      ],
+      "row_count": 13726,
+      "source_role": "Pinnacle corners O/U snapshots for CLV and live market comparison"
+    },
+    {
+      "bytes": 296644,
+      "columns": [
+        "captured_at",
+        "match_date",
+        "event_id",
+        "kickoff_at",
+        "snapshot_kind",
+        "bookmaker",
+        "competition",
+        "home_team",
+        "away_team",
+        "team",
+        "market",
+        "line",
+        "side",
+        "odds_decimal",
+        "source",
+        "notes"
+      ],
+      "date_field": "match_date",
+      "exists": true,
+      "field_coverage": {
+        "book_odds": {
+          "columns_available": [
+            "odds_decimal"
+          ],
+          "pct": 100.0,
+          "rows_present": 1492
+        },
+        "corners": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "minutes": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "npxg": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "player_identity": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "shots": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "shots_on_target": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "xg": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        }
+      },
+      "freshness_days": -1,
+      "key": "team_shots_odds_history",
+      "league_breakdown": [
+        {
+          "latest_date": "2026-04-26",
+          "league": "Bundesliga",
+          "rows": 404
+        },
+        {
+          "latest_date": "2026-04-26",
+          "league": "La Liga",
+          "rows": 276
+        },
+        {
+          "latest_date": "2026-04-25",
+          "league": "Premier League",
+          "rows": 400
+        },
+        {
+          "latest_date": "2026-04-26",
+          "league": "Serie A",
+          "rows": 412
+        }
+      ],
+      "max_date": "2026-04-26",
+      "min_date": "2026-04-10",
+      "missing_required_groups": [],
+      "mtime_utc": "2026-04-25T09:48:50+00:00",
+      "owner": "team-shots",
+      "path": "data/team-shots/team-shots-odds-history.csv",
+      "required_groups": [
+        "book_odds"
+      ],
+      "row_count": 1492,
+      "source_role": "Bookmaker team-shots O/U snapshots"
+    },
+    {
+      "bytes": 47470455,
+      "columns": [
+        "capture_date",
+        "captured_at",
+        "match_date",
+        "event_id",
+        "kickoff_at",
+        "minutes_to_kickoff",
+        "snapshot_kind",
+        "bookmaker",
+        "competition",
+        "market",
+        "home_team",
+        "away_team",
+        "player_name",
+        "player_team",
+        "odds_decimal",
+        "implied_prob",
+        "source",
+        "notes"
+      ],
+      "date_field": "match_date",
+      "exists": true,
+      "field_coverage": {
+        "book_odds": {
+          "columns_available": [
+            "odds_decimal"
+          ],
+          "pct": 100.0,
+          "rows_present": 198069
+        },
+        "corners": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "minutes": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "npxg": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "player_identity": {
+          "columns_available": [
+            "player_name"
+          ],
+          "pct": 100.0,
+          "rows_present": 198069
+        },
+        "shots": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "shots_on_target": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        },
+        "xg": {
+          "columns_available": [],
+          "pct": 0.0,
+          "rows_present": 0
+        }
+      },
+      "freshness_days": -2,
+      "key": "goalscorer_odds_history",
+      "league_breakdown": [
+        {
+          "latest_date": "2026-04-27",
+          "league": "England - Premier League",
+          "rows": 39951
+        },
+        {
+          "latest_date": "2026-04-26",
+          "league": "France - Ligue 1",
+          "rows": 38728
+        },
+        {
+          "latest_date": "2026-04-26",
+          "league": "Germany - Bundesliga",
+          "rows": 33685
+        },
+        {
+          "latest_date": "2026-04-27",
+          "league": "Italy - Serie A",
+          "rows": 40630
+        },
+        {
+          "latest_date": "2026-04-27",
+          "league": "Spain - LaLiga",
+          "rows": 45075
+        }
+      ],
+      "max_date": "2026-04-27",
+      "min_date": "2026-04-10",
+      "missing_required_groups": [],
+      "mtime_utc": "2026-04-25T09:48:31+00:00",
+      "owner": "goalscorer",
+      "path": "data/goalscorer/goalscorer-odds-history.csv",
+      "required_groups": [
+        "book_odds"
+      ],
+      "row_count": 198069,
+      "source_role": "Bookmaker anytime-goalscorer odds snapshots"
+    }
+  ],
+  "generated_at": "2026-04-25T10:18:15+00:00",
+  "issues": [
+    {
+      "area": "goalscorer_player_logs",
+      "message": "Latest player-log row is 15 days old (2026-04-10).",
+      "severity": "warn"
+    }
+  ],
+  "model_files": [
+    {
+      "bytes": 30855,
+      "data_paths": [
+        "data/team-shots/fbref/all-fbref-matches.csv",
+        "data/team-shots/historical/all-historical-matches.csv",
+        "data/team-shots/team-shots-calibration.txt",
+        "data/team-shots/team-shots-predictions.csv"
+      ],
+      "exists": true,
+      "path": "scripts/team-shots-model.py",
+      "terms": {
+        "corners": 32,
+        "fbref": 18,
+        "fotmob": 0,
+        "odds": 24,
+        "rolling": 81,
+        "shots": 183,
+        "understat": 0,
+        "xg": 122
+      }
+    },
+    {
+      "bytes": 16017,
+      "data_paths": [],
+      "exists": true,
+      "path": "scripts/team-shots-compare.py",
+      "terms": {
+        "corners": 0,
+        "fbref": 0,
+        "fotmob": 0,
+        "odds": 59,
+        "rolling": 10,
+        "shots": 32,
+        "understat": 0,
+        "xg": 1
+      }
+    },
+    {
+      "bytes": 17063,
+      "data_paths": [],
+      "exists": true,
+      "path": "scripts/team-shots-shadow-tracker.py",
+      "terms": {
+        "corners": 2,
+        "fbref": 1,
+        "fotmob": 0,
+        "odds": 37,
+        "rolling": 0,
+        "shots": 18,
+        "understat": 0,
+        "xg": 0
+      }
+    },
+    {
+      "bytes": 18918,
+      "data_paths": [
+        "data/corners-ou/corners-ou-calibration.txt",
+        "data/corners-ou/corners-ou-predictions.csv"
+      ],
+      "exists": true,
+      "path": "scripts/corners-ou-model.py",
+      "terms": {
+        "corners": 134,
+        "fbref": 0,
+        "fotmob": 0,
+        "odds": 56,
+        "rolling": 39,
+        "shots": 2,
+        "understat": 0,
+        "xg": 0
+      }
+    },
+    {
+      "bytes": 30847,
+      "data_paths": [
+        "data/corners-ou/corners-ou-backtest-report.txt",
+        "data/corners-ou/corners-ou-backtest-results.csv"
+      ],
+      "exists": true,
+      "path": "scripts/corners-ou-backtest.py",
+      "terms": {
+        "corners": 116,
+        "fbref": 0,
+        "fotmob": 0,
+        "odds": 27,
+        "rolling": 19,
+        "shots": 0,
+        "understat": 0,
+        "xg": 0
+      }
+    },
+    {
+      "bytes": 47881,
+      "data_paths": [
+        "data/shortlist/"
+      ],
+      "exists": true,
+      "path": "scripts/matchday-shortlist.py",
+      "terms": {
+        "corners": 105,
+        "fbref": 0,
+        "fotmob": 0,
+        "odds": 134,
+        "rolling": 86,
+        "shots": 2,
+        "understat": 0,
+        "xg": 0
+      }
+    },
+    {
+      "bytes": 48552,
+      "data_paths": [
+        "data/goalscorer",
+        "data/goalscorer/goalscorer-backtest-results.csv",
+        "data/goalscorer/goalscorer-calibration-bins.csv",
+        "data/goalscorer/goalscorer-calibration.txt",
+        "data/goalscorer/serie-a-player-match-logs-"
+      ],
+      "exists": true,
+      "path": "scripts/goalscorer-model.py",
+      "terms": {
+        "corners": 0,
+        "fbref": 0,
+        "fotmob": 0,
+        "odds": 1,
+        "rolling": 62,
+        "shots": 19,
+        "understat": 0,
+        "xg": 209
+      }
+    },
+    {
+      "bytes": 104029,
+      "data_paths": [
+        "data/goalscorer",
+        "data/goalscorer/goalscorer-odds-history.csv",
+        "data/goalscorer/penalty-baseline-evidence.json",
+        "data/goalscorer/penalty-baseline-overrides.json",
+        "data/goalscorer/serie-a-penalty-takers.json",
+        "data/goalscorer/serie-a-player-match-logs-"
+      ],
+      "exists": true,
+      "path": "scripts/goalscorer-live-compare.py",
+      "terms": {
+        "corners": 0,
+        "fbref": 0,
+        "fotmob": 2,
+        "odds": 129,
+        "rolling": 60,
+        "shots": 2,
+        "understat": 10,
+        "xg": 143
+      }
+    },
+    {
+      "bytes": 28141,
+      "data_paths": [
+        "data/goalscorer/serie-a-player-match-logs-2023-2024.csv",
+        "data/goalscorer/serie-a-player-match-logs-2024-2025.csv",
+        "data/goalscorer/serie-a-player-match-logs-2025-2026.csv"
+      ],
+      "exists": true,
+      "path": "scripts/goalscorer-shadow-tracker.py",
+      "terms": {
+        "corners": 0,
+        "fbref": 0,
+        "fotmob": 0,
+        "odds": 70,
+        "rolling": 3,
+        "shots": 0,
+        "understat": 1,
+        "xg": 0
+      }
+    },
+    {
+      "bytes": 25602,
+      "data_paths": [
+        "data/goalscorer"
+      ],
+      "exists": true,
+      "path": "scripts/understat-scrape-serie-a.py",
+      "terms": {
+        "corners": 0,
+        "fbref": 0,
+        "fotmob": 0,
+        "odds": 0,
+        "rolling": 0,
+        "shots": 10,
+        "understat": 13,
+        "xg": 68
+      }
+    },
+    {
+      "bytes": 11896,
+      "data_paths": [
+        "data/team-shots/fbref/all-fbref-matches.csv"
+      ],
+      "exists": true,
+      "path": "scripts/fbref-download-shooting.py",
+      "terms": {
+        "corners": 12,
+        "fbref": 6,
+        "fotmob": 0,
+        "odds": 20,
+        "rolling": 1,
+        "shots": 15,
+        "understat": 16,
+        "xg": 59
+      }
+    },
+    {
+      "bytes": 28178,
+      "data_paths": [
+        "data/goalscorer",
+        "data/goalscorer/serie-a-player-match-logs-{season}.csv"
+      ],
+      "exists": true,
+      "path": "scripts/fbref-scrape-serie-a.py",
+      "terms": {
+        "corners": 0,
+        "fbref": 15,
+        "fotmob": 0,
+        "odds": 0,
+        "rolling": 3,
+        "shots": 16,
+        "understat": 0,
+        "xg": 47
+      }
+    },
+    {
+      "bytes": 7007,
+      "data_paths": [
+        "data/match",
+        "data/matches"
+      ],
+      "exists": true,
+      "path": "scripts/fotmob_match_stats.py",
+      "terms": {
+        "corners": 30,
+        "fbref": 0,
+        "fotmob": 13,
+        "odds": 0,
+        "rolling": 3,
+        "shots": 27,
+        "understat": 0,
+        "xg": 0
+      }
+    },
+    {
+      "bytes": 15629,
+      "data_paths": [
+        "data/match",
+        "data/matches"
+      ],
+      "exists": true,
+      "path": "scripts/fotmob-fetch-lineups.py",
+      "terms": {
+        "corners": 0,
+        "fbref": 0,
+        "fotmob": 21,
+        "odds": 0,
+        "rolling": 9,
+        "shots": 0,
+        "understat": 3,
+        "xg": 0
+      }
+    }
+  ],
+  "player_logs": {
+    "file_count": 15,
+    "files": [
+      {
+        "bytes": 1314917,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 9019
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 48.5,
+            "rows_present": 4374
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 9019
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 48.74,
+            "rows_present": 4396
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 9019
+          }
+        },
+        "freshness_days": 707,
+        "league_breakdown": [
+          {
+            "latest_date": "2024-05-18",
+            "league": "Bundesliga",
+            "rows": 9019
+          }
+        ],
+        "max_date": "2024-05-18",
+        "min_date": "2023-08-18",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:20+00:00",
+        "path": "data/goalscorer/bundesliga-player-match-logs-2023-2024.csv",
+        "row_count": 9019
+      },
+      {
+        "bytes": 1333666,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 9131
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 46.06,
+            "rows_present": 4206
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 9131
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 46.19,
+            "rows_present": 4218
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 9131
+          }
+        },
+        "freshness_days": 343,
+        "league_breakdown": [
+          {
+            "latest_date": "2025-05-17",
+            "league": "Bundesliga",
+            "rows": 9131
+          }
+        ],
+        "max_date": "2025-05-17",
+        "min_date": "2024-08-23",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:20+00:00",
+        "path": "data/goalscorer/bundesliga-player-match-logs-2024-2025.csv",
+        "row_count": 9131
+      },
+      {
+        "bytes": 1118788,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 7613
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 47.14,
+            "rows_present": 3589
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 7613
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 47.47,
+            "rows_present": 3614
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 7613
+          }
+        },
+        "freshness_days": 15,
+        "league_breakdown": [
+          {
+            "latest_date": "2026-04-10",
+            "league": "Bundesliga",
+            "rows": 7613
+          }
+        ],
+        "max_date": "2026-04-10",
+        "min_date": "2025-08-22",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:20+00:00",
+        "path": "data/goalscorer/bundesliga-player-match-logs-2025-2026.csv",
+        "row_count": 7613
+      },
+      {
+        "bytes": 1596383,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 10895
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 47.96,
+            "rows_present": 5225
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 10895
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 48.1,
+            "rows_present": 5240
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 10895
+          }
+        },
+        "freshness_days": 706,
+        "league_breakdown": [
+          {
+            "latest_date": "2024-05-19",
+            "league": "Premier League",
+            "rows": 10895
+          }
+        ],
+        "max_date": "2024-05-19",
+        "min_date": "2023-08-11",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:25+00:00",
+        "path": "data/goalscorer/epl-player-match-logs-2023-2024.csv",
+        "row_count": 10895
+      },
+      {
+        "bytes": 1628548,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 11114
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 46.16,
+            "rows_present": 5130
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 11114
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 46.29,
+            "rows_present": 5145
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 11114
+          }
+        },
+        "freshness_days": 335,
+        "league_breakdown": [
+          {
+            "latest_date": "2025-05-25",
+            "league": "Premier League",
+            "rows": 11114
+          }
+        ],
+        "max_date": "2025-05-25",
+        "min_date": "2024-08-16",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:25+00:00",
+        "path": "data/goalscorer/epl-player-match-logs-2024-2025.csv",
+        "row_count": 11114
+      },
+      {
+        "bytes": 1308685,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 8964
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 46.34,
+            "rows_present": 4154
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 8964
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 46.55,
+            "rows_present": 4173
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 8964
+          }
+        },
+        "freshness_days": 15,
+        "league_breakdown": [
+          {
+            "latest_date": "2026-04-10",
+            "league": "Premier League",
+            "rows": 8964
+          }
+        ],
+        "max_date": "2026-04-10",
+        "min_date": "2025-08-15",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:25+00:00",
+        "path": "data/goalscorer/epl-player-match-logs-2025-2026.csv",
+        "row_count": 8964
+      },
+      {
+        "bytes": 1548191,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 11476
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 44.42,
+            "rows_present": 5098
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 11476
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 44.74,
+            "rows_present": 5134
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 11476
+          }
+        },
+        "freshness_days": 699,
+        "league_breakdown": [
+          {
+            "latest_date": "2024-05-26",
+            "league": "La Liga",
+            "rows": 11476
+          }
+        ],
+        "max_date": "2024-05-26",
+        "min_date": "2023-08-11",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:33+00:00",
+        "path": "data/goalscorer/la-liga-player-match-logs-2023-2024.csv",
+        "row_count": 11476
+      },
+      {
+        "bytes": 1563273,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 11487
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 43.59,
+            "rows_present": 5007
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 11487
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 43.82,
+            "rows_present": 5034
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 11487
+          }
+        },
+        "freshness_days": 335,
+        "league_breakdown": [
+          {
+            "latest_date": "2025-05-25",
+            "league": "La Liga",
+            "rows": 11487
+          }
+        ],
+        "max_date": "2025-05-25",
+        "min_date": "2024-08-15",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:33+00:00",
+        "path": "data/goalscorer/la-liga-player-match-logs-2024-2025.csv",
+        "row_count": 11487
+      },
+      {
+        "bytes": 1230186,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 9067
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 45.1,
+            "rows_present": 4089
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 9067
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 45.31,
+            "rows_present": 4108
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 9067
+          }
+        },
+        "freshness_days": 15,
+        "league_breakdown": [
+          {
+            "latest_date": "2026-04-10",
+            "league": "La Liga",
+            "rows": 9067
+          }
+        ],
+        "max_date": "2026-04-10",
+        "min_date": "2025-08-15",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:33+00:00",
+        "path": "data/goalscorer/la-liga-player-match-logs-2025-2026.csv",
+        "row_count": 9067
+      },
+      {
+        "bytes": 1185588,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 8893
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 47.03,
+            "rows_present": 4182
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 8893
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 47.27,
+            "rows_present": 4204
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 8893
+          }
+        },
+        "freshness_days": 706,
+        "league_breakdown": [
+          {
+            "latest_date": "2024-05-19",
+            "league": "Ligue 1",
+            "rows": 8893
+          }
+        ],
+        "max_date": "2024-05-19",
+        "min_date": "2023-08-12",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:37+00:00",
+        "path": "data/goalscorer/ligue-1-player-match-logs-2023-2024.csv",
+        "row_count": 8893
+      },
+      {
+        "bytes": 1193085,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 8947
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 45.72,
+            "rows_present": 4091
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 8947
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 46.06,
+            "rows_present": 4121
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 8947
+          }
+        },
+        "freshness_days": 343,
+        "league_breakdown": [
+          {
+            "latest_date": "2025-05-17",
+            "league": "Ligue 1",
+            "rows": 8947
+          }
+        ],
+        "max_date": "2025-05-17",
+        "min_date": "2024-08-16",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:38+00:00",
+        "path": "data/goalscorer/ligue-1-player-match-logs-2024-2025.csv",
+        "row_count": 8947
+      },
+      {
+        "bytes": 982726,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 7441
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 45.24,
+            "rows_present": 3366
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 7441
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 45.48,
+            "rows_present": 3384
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 7441
+          }
+        },
+        "freshness_days": 15,
+        "league_breakdown": [
+          {
+            "latest_date": "2026-04-10",
+            "league": "Ligue 1",
+            "rows": 7441
+          }
+        ],
+        "max_date": "2026-04-10",
+        "min_date": "2025-08-15",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:38+00:00",
+        "path": "data/goalscorer/ligue-1-player-match-logs-2025-2026.csv",
+        "row_count": 7441
+      },
+      {
+        "bytes": 1475663,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 11162
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 45.97,
+            "rows_present": 5131
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 11162
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 46.27,
+            "rows_present": 5165
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 11162
+          }
+        },
+        "freshness_days": 692,
+        "league_breakdown": [
+          {
+            "latest_date": "2024-06-02",
+            "league": "Serie A",
+            "rows": 11162
+          }
+        ],
+        "max_date": "2024-06-02",
+        "min_date": "2023-08-19",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:48+00:00",
+        "path": "data/goalscorer/serie-a-player-match-logs-2023-2024.csv",
+        "row_count": 11162
+      },
+      {
+        "bytes": 1443162,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 10929
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 45.08,
+            "rows_present": 4927
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 10929
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 45.28,
+            "rows_present": 4949
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 10929
+          }
+        },
+        "freshness_days": 335,
+        "league_breakdown": [
+          {
+            "latest_date": "2025-05-25",
+            "league": "Serie A",
+            "rows": 10929
+          }
+        ],
+        "max_date": "2025-05-25",
+        "min_date": "2024-08-17",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:48+00:00",
+        "path": "data/goalscorer/serie-a-player-match-logs-2024-2025.csv",
+        "row_count": 10929
+      },
+      {
+        "bytes": 1218048,
+        "columns": [
+          "season",
+          "competition",
+          "match_date",
+          "team",
+          "opponent",
+          "is_home",
+          "player_id",
+          "player_name",
+          "position",
+          "started",
+          "minutes",
+          "goals",
+          "assists",
+          "shots",
+          "shots_on_target",
+          "xg",
+          "npxg",
+          "xa",
+          "big_chances",
+          "big_chance_goals",
+          "big_chance_misses",
+          "big_chance_xg",
+          "penalties_scored",
+          "penalties_attempted",
+          "team_xg",
+          "team_xga"
+        ],
+        "date_field": "match_date",
+        "exists": true,
+        "field_coverage": {
+          "book_odds": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "corners": {
+            "columns_available": [],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "minutes": {
+            "columns_available": [
+              "minutes",
+              "started"
+            ],
+            "pct": 100.0,
+            "rows_present": 9197
+          },
+          "npxg": {
+            "columns_available": [
+              "npxg"
+            ],
+            "pct": 45.15,
+            "rows_present": 4152
+          },
+          "player_identity": {
+            "columns_available": [
+              "player_id",
+              "player_name",
+              "position"
+            ],
+            "pct": 100.0,
+            "rows_present": 9197
+          },
+          "shots": {
+            "columns_available": [
+              "shots"
+            ],
+            "pct": 45.33,
+            "rows_present": 4169
+          },
+          "shots_on_target": {
+            "columns_available": [
+              "shots_on_target"
+            ],
+            "pct": 0.0,
+            "rows_present": 0
+          },
+          "xg": {
+            "columns_available": [
+              "xg",
+              "team_xg",
+              "team_xga",
+              "big_chance_xg"
+            ],
+            "pct": 100.0,
+            "rows_present": 9197
+          }
+        },
+        "freshness_days": 15,
+        "league_breakdown": [
+          {
+            "latest_date": "2026-04-10",
+            "league": "Serie A",
+            "rows": 9197
+          }
+        ],
+        "max_date": "2026-04-10",
+        "min_date": "2025-08-23",
+        "missing_required_groups": [],
+        "mtime_utc": "2026-04-25T09:48:48+00:00",
+        "path": "data/goalscorer/serie-a-player-match-logs-2025-2026.csv",
+        "row_count": 9197
+      }
+    ],
+    "freshness_days": 15,
+    "glob": "data/goalscorer/*-player-match-logs-*.csv",
+    "latest_date": "2026-04-10",
+    "row_count": 145335
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "checked_at": "2026-04-25T10:16:02+00:00",
+  "checks": {
+    "bundesliga": {
+      "age_days": 15,
+      "exists": true,
+      "latest_match_date": "2026-04-10",
+      "max_age_days": 3,
+      "path": "data/goalscorer/bundesliga-player-match-logs-2025-2026.csv",
+      "reason": "old",
+      "rows": 7613,
+      "stale": true
+    },
+    "epl": {
+      "age_days": 15,
+      "exists": true,
+      "latest_match_date": "2026-04-10",
+      "max_age_days": 3,
+      "path": "data/goalscorer/epl-player-match-logs-2025-2026.csv",
+      "reason": "old",
+      "rows": 8964,
+      "stale": true
+    },
+    "la-liga": {
+      "age_days": 15,
+      "exists": true,
+      "latest_match_date": "2026-04-10",
+      "max_age_days": 3,
+      "path": "data/goalscorer/la-liga-player-match-logs-2025-2026.csv",
+      "reason": "old",
+      "rows": 9067,
+      "stale": true
+    },
+    "ligue-1": {
+      "age_days": 15,
+      "exists": true,
+      "latest_match_date": "2026-04-10",
+      "max_age_days": 3,
+      "path": "data/goalscorer/ligue-1-player-match-logs-2025-2026.csv",
+      "reason": "old",
+      "rows": 7441,
+      "stale": true
+    },
+    "serie-a": {
+      "age_days": 15,
+      "exists": true,
+      "latest_match_date": "2026-04-10",
+      "max_age_days": 3,
+      "path": "data/goalscorer/serie-a-player-match-logs-2025-2026.csv",
+      "reason": "old",
+      "rows": 9197,
+      "stale": true
+    }
+  },
+  "max_age_days": 3,
+  "season": "2025-2026",
+  "stale_leagues": [
+    "serie-a",
+    "epl",
+    "la-liga",
+    "bundesliga",
+    "ligue-1"
+  ],
+  "today": "2026-04-25"
+}
