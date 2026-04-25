@@ -1,0 +1,23 @@
+{
+  "allowed_leagues": [
+    "la-liga"
+  ],
+  "blocked_leagues": [
+    "bundesliga",
+    "epl",
+    "ligue-1",
+    "serie-a"
+  ],
+  "canonical_only_allowed": false,
+  "canonical_only_min_n": 200,
+  "generated_at": "2026-04-25T19:23:21+00:00",
+  "lane": "research",
+  "market": "team_shots",
+  "model": "canonical_form_v1_market_nb",
+  "rules": [
+    "publish only if league is in allowed_leagues",
+    "publish only if current_model_would_have_priced is true",
+    "do not publish canonical-only fixtures until canonical-only segment calibration passes",
+    "last_90 MAE must improve by at least 0.5%"
+  ]
+}

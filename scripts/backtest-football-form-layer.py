@@ -41,6 +41,15 @@ DEFAULT_REPORT_OUT = ROOT / "data" / "football-form" / "canonical-backtest-repor
 
 TEAM_SHOTS_LINES = [9.5, 10.5, 11.5, 12.5, 13.5, 14.5, 15.5]
 CORNERS_LINES = [8.5, 9.5, 10.5, 11.5]
+TEAM_SHOTS_BASELINES = {
+    "epl": 12.8,
+    "serie-a": 12.5,
+    "la-liga": 12.2,
+    "bundesliga": 12.9,
+    "ligue-1": 12.3,
+}
+DEFAULT_TEAM_SHOTS_BASELINE = 12.5
+XG_WEIGHT = 0.25
 
 
 def pf(value: Any, default: float | None = 0.0) -> float | None:
@@ -271,6 +280,48 @@ def canonical_team_shots_lambda(
         lam *= market_game_state_adjustment(team)
     if use_trailing12:
         lam *= league_level_ratio(team, opp, metric_for="shots_for", metric_against="shots_against")
+    return clamp(lam, 3.0, 30.0)
+
+
+def league_prior_avg(team: dict[str, Any], opp: dict[str, Any], metric_for: str, metric_against: str, fallback: float) -> float:
+    values = [
+        pf(team.get(f"league_prior_{metric_for}_avg"), None),
+        pf(opp.get(f"league_prior_{metric_against}_avg"), None),
+    ]
+    valid = [value for value in values if value is not None and value > 0]
+    return mean(valid) if valid else fallback
+
+
+def canonical_team_shots_current_shape_lambda(team: dict[str, Any], opp: dict[str, Any]) -> float | None:
+    """Current-model formula shape replay using canonical inputs.
+
+    This diagnostic tests the specific gap found in the feature comparison:
+    current uses a league-relative multiplicative lambda with venue-specific
+    team attack and pooled opponent defence. Canonical v1 used an additive
+    attack/concession blend and venue-specific opponent concession.
+    """
+    team_venue = str(team.get("venue", "")).strip()
+    league = str(team.get("league", "")).strip()
+    fallback = TEAM_SHOTS_BASELINES.get(league, DEFAULT_TEAM_SHOTS_BASELINE)
+    avg = league_prior_avg(team, opp, "shots_for", "shots_against", fallback)
+    if avg <= 0:
+        avg = fallback
+
+    attack = blended_prefer(team, venue_field("shots_for", team_venue), "shots_for_avg")
+    opp_defence = blended(opp, "shots_against_avg")
+    if attack is None or opp_defence is None or not enough_history(team) or not enough_history(opp):
+        return None
+
+    lam_shots = avg * (attack / avg) * (opp_defence / avg)
+    lam = lam_shots
+
+    team_xg = blended(team, "xg_for_avg")
+    opp_xg = blended(opp, "xg_against_avg")
+    avg_xg = league_prior_avg(team, opp, "xg_for", "xg_against", 1.35)
+    if team_xg is not None and opp_xg is not None and team_xg > 0 and opp_xg > 0 and avg_xg > 0:
+        xg_lam = avg * (team_xg / avg_xg) * (opp_xg / avg_xg)
+        lam = ((1.0 - XG_WEIGHT) * lam_shots) + (XG_WEIGHT * xg_lam)
+
     return clamp(lam, 3.0, 30.0)
 
 
@@ -519,8 +570,12 @@ def evaluate_canonical(
                 ("canonical_form_v1_market", True, False),
                 ("canonical_form_v1_market_nb", True, True),
                 ("canonical_form_v1_market_nb_t12", True, True),
+                ("canonical_form_v2_current_shape_nb", False, True),
             ):
-                lam = canonical_team_shots_lambda(team, opp, use_market=use_market, use_trailing12=model.endswith("_t12"))
+                if model == "canonical_form_v2_current_shape_nb":
+                    lam = canonical_team_shots_current_shape_lambda(team, opp)
+                else:
+                    lam = canonical_team_shots_lambda(team, opp, use_market=use_market, use_trailing12=model.endswith("_t12"))
                 if lam is None:
                     continue
                 probs = None
@@ -670,6 +725,7 @@ def render_report(rows: list[dict[str, Any]]) -> str:
             "- `canonical_form_v1_market` adds a capped pre-match 1X2 win-probability adjustment for expected game state.",
             "- `canonical_form_v1_market_nb` keeps the same lambda but converts O/U probabilities with a causal prior-data league negative-binomial dispersion estimate.",
             "- `*_t12` rows are diagnostic trailing-12-month league-level normalization replays, not live policy candidates yet.",
+            "- `canonical_form_v2_current_shape_nb` is a diagnostic replay of the current model's multiplicative league-relative formula shape using canonical inputs; it is not a promotion candidate unless it beats v1/current on segment gates.",
             "- Promotion should require full-window and last-90-day Brier/log-loss to match or beat current on the common sample, then odds/CLV checks.",
         ]
     )

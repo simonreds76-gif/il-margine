@@ -40,6 +40,9 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
 - At 7%, primary trailing-12-month candidates expand to `epl, la-liga, ligue-1, serie-a`; guarded/sparse candidates `bundesliga`.
 - Team-shots last-90 diagnostic: `data/football-form/team-shots-last90-diagnostic.md` / `data/football-form/team-shots-last90-diagnostic.json`
 - Cap-disabled team-shots lambda does not beat capped lambda in the recent window, so the cap is not the first suspect.
+- Team-shots v1 promotion gate: `data/football-form/team-shots-v1-promotion-check.md` / `data/football-form/team-shots-v1-promotion-check.json`
+- Team-shots v1 allowed-league config: `data/football-form/team-shots-v1-allowed-leagues.json`
+- Team-shots current-vs-canonical feature gap diagnostic: `data/football-form/team-shots-feature-gap-diagnostic.md` / `data/football-form/team-shots-feature-gap-diagnostic.json`
 
 ## Changes Since Previous Review
 
@@ -58,6 +61,9 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
 - Ran the team-shots last-90 diagnostic plus largest-error input spot checks. Cap-disabled and T12 replay are both worse than capped canonical on aggregate, so cap tuning and simple league-level normalization are not the first fix.
 - Hardened generated-CSV workflows: backtest/diagnostic/promotion scripts rebuild ignored canonical CSVs when missing instead of writing zero-row reports.
 - Hardened corners CLV allowed-league config to fail closed if the config is missing or malformed.
+- Added a team-shots v1 per-league promotion gate. Result: partial research gate only. `la-liga` passes; `bundesliga`, `epl`, `ligue-1`, and `serie-a` remain blocked.
+- Added a team-shots current-vs-canonical feature gap diagnostic. It compares current lambda columns with canonical lambda decomposition and dumps the 25 worst last-90 rows where canonical loses to current.
+- Added a diagnostic `canonical_form_v2_current_shape_nb` replay to test whether the current model's multiplicative league-relative formula shape fixes the issue when fed canonical inputs. It worsens count MAE, so formula shape alone is not the fix.
 
 ## Backtest Highlights
 
@@ -70,6 +76,7 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
 | team-shots v1_market_nb | common | 2464 | 3.7425 | 3.7262 | Brier ok, log-loss ok | NB helps O/U calibration |
 | team-shots v1_market_nb | last_90_common | 1140 | 3.7320 | 3.7699 | Brier ok, log-loss ok | probability passes, count MAE does not; keep research-only |
 | team-shots v1_market_nb_t12 | last_90_common | 1140 | 3.7320 | 3.8024 | diagnostic | T12 replay worsens aggregate count MAE; do not promote |
+| team-shots v2_current_shape_nb | last_90_common | 1140 | 3.7320 | 4.0120 | diagnostic | current-style multiplicative replay is worse; formula shape alone is not enough |
 | team-shots v1_market_nb | canonical_only | 38850 | - | 3.5336 | no baseline | coverage looks usable, still needs segment gates |
 
 ## Normalization Read
@@ -88,6 +95,28 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
 - Cap hurts by league only in: `serie-a`.
 - T12 replay helps by league only in: `epl, serie-a`.
 - Read: do not tune the cap first and do not promote simple T12 scaling. The recent count issue now points to current-model feature comparison / deeper lambda structure.
+
+## Team-Shots V1 Segment Gate
+
+- All-league research promotion: fail.
+- Passing leagues for partial research lane: `la-liga`.
+- Blocked leagues: `bundesliga, epl, ligue-1, serie-a`.
+- Canonical-only hard block: on; even though canonical-only N is large (`38850`), it has not passed segment calibration.
+- La Liga last-90 common: current MAE `3.8294`, v1 MAE `3.7148`, improvement `2.99%`; Brier/log-loss gates pass.
+- EPL/Ligue 1/Serie A fail count gates; Bundesliga is near parity on count but fails the last-90 improvement threshold and log-loss.
+
+## Team-Shots Feature Gap Diagnostic
+
+- Full common: current MAE `3.7425`, canonical v1 MAE `3.7262`.
+- Last-90 common: current MAE `3.7321`, canonical v1 MAE `3.7699`.
+- Last-90 mean canonical-current lambda gap: `+0.3262`; canonical is higher than current on about 60% of rows.
+- Venue split is important: away teams slightly improve under canonical (`3.5693` vs current `3.5861`), but home teams regress (`3.9706` vs current `3.8780`).
+- Current model differences now identified:
+  - current uses 20-match EMA with decay `0.93`; canonical currently has r5/r10 simple windows only;
+  - current uses venue-specific team attack but pooled opponent defence;
+  - current uses a multiplicative league-relative formula;
+  - current blends xG lambda at 25% where xG history is available.
+- Diagnostic replay `canonical_form_v2_current_shape_nb` copied the current-style multiplicative formula shape using canonical inputs. It worsened last-90 MAE to `4.0120`, so the next test should not be "just make canonical multiplicative". The missing value is more likely 20-match EMA/history smoothing and/or the exact current xG/venue treatment.
 
 ## Corners V0 Segment Gate
 
@@ -108,14 +137,16 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
 2. Keep corners v0 research publication restricted by `corners-v0-allowed-leagues.json`: EPL, Ligue 1, and Serie A only.
 3. Keep the corners confidence guard as a hard cutoff: canonical-only fixtures are blocked, not flagged.
 4. Keep T12 replay as diagnostic only. It did not fix aggregate team-shots or corners regression.
-5. Hold team-shots. Next diagnostic is current-model feature comparison against the largest-error spot checks, not odds/CLV join.
+5. Hold team-shots all-league promotion. La Liga can be allowed in research-only via `team-shots-v1-allowed-leagues.json`, with canonical-only fixtures still blocked.
 6. Keep Bundesliga/La Liga corners blocked until a variant passes their recent segment gates.
-7. Once team-shots recent count MAE is explained or fixed, then run segment gates and the odds/CLV join.
+7. For team-shots v2, next diagnostic should test adding current-style 20-match EMA/decay fields to the canonical layer and replaying v1/v2 with those smoother inputs.
+8. Once team-shots recent count MAE is explained or fixed, then run segment gates and the odds/CLV join.
 
 ## Questions For Follow-up Review
 
-1. T12 replay worsened aggregate last-90 team-shots and corners. Do you agree we should stop this branch and move to current-model feature comparison?
-2. Largest-error spot checks show extreme actual shot outliers where both current and canonical underpredict heavily. What current-model feature should be compared first: venue EMA, opponent concession weighting, or fixture/market-strength transform?
-3. For La Liga/Bundesliga corners, T12 replay did not recover the recent segment gate. Should the next test be per-league calibration or a separate corner-pressure formula by league?
-4. Team-form freshness is acceptable by max-age (latest league dates 2-6 days old), but xG coverage is still only 6.5%. Should xG stay guarded/debug-only for all derivative football models until coverage improves?
-5. Is the fail-closed allowed-league config plus explicit re-promotion criteria enough operational discipline for corners v0 research publication?
+1. Team-shots v1 passes only La Liga on the segment gate. Do you agree La Liga can be research-published with canonical-only hard-blocked, while other leagues stay on current/blocked?
+2. The current-style multiplicative replay using canonical r5/r10 inputs worsened last-90 MAE (`4.0120`). Does this confirm that the next test should be 20-match EMA/decay fields in the canonical layer rather than more formula tinkering?
+3. The home-team slice regresses while away teams slightly improve under canonical. Should v2 first test pooled opponent defence for home teams, or is the smoother r20/EMA history likely the cleaner first change?
+4. For La Liga/Bundesliga corners, T12 replay did not recover the recent segment gate. Should the next test be per-league calibration or a separate corner-pressure formula by league?
+5. Team-form freshness is acceptable by max-age (latest league dates 2-6 days old), but xG coverage is still only 6.5%. Should xG stay guarded/debug-only for all derivative football models until coverage improves?
+6. Is the fail-closed allowed-league config plus explicit re-promotion criteria enough operational discipline for corners v0 and team-shots v1 research publication?
