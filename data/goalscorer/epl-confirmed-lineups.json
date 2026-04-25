@@ -263,9 +263,9 @@
       "match_date": "2026-04-25",
       "home_team": "Fulham",
       "away_team": "Aston Villa",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -279,7 +279,7 @@
         "Harry Wilson",
         "Emile Smith Rowe",
         "Samuel Chukwueze",
-        "Rodrigo Muniz"
+        "Raul Jiménez"
       ],
       "away_players": [
         "Emiliano Martínez",
@@ -287,11 +287,11 @@
         "Ezri Konsa",
         "Pau Torres",
         "Lucas Digne",
-        "Amadou Onana",
+        "Lamare Bogarde",
         "Youri Tielemans",
         "John McGinn",
-        "Ross Barkley",
         "Morgan Rogers",
+        "Emiliano Buendía",
         "Ollie Watkins"
       ],
       "home_starters": [
@@ -386,7 +386,7 @@
           "position_id": 87
         },
         {
-          "name": "Rodrigo Muniz",
+          "name": "Raul Jiménez",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -442,7 +442,7 @@
           "position_id": 38
         },
         {
-          "name": "Amadou Onana",
+          "name": "Lamare Bogarde",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -469,7 +469,7 @@
           "position_id": 83
         },
         {
-          "name": "Ross Barkley",
+          "name": "Morgan Rogers",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -478,7 +478,7 @@
           "position_id": 85
         },
         {
-          "name": "Morgan Rogers",
+          "name": "Emiliano Buendía",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -496,8 +496,28 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Benjamin Lecomte",
+        "Antonee Robinson",
+        "Issa Diop",
+        "Harrison Reed",
+        "Joshua King",
+        "Tom Cairney",
+        "Jonah Kusi-Asare",
+        "Oscar Bobb",
+        "Rodrigo Muniz"
+      ],
+      "away_subs": [
+        "Marco Bizot",
+        "Ian Maatsen",
+        "Tyrone Mings",
+        "Victor Nilsson Lindelöf",
+        "Douglas Luiz",
+        "Ross Barkley",
+        "Jadon Sancho",
+        "Leon Bailey",
+        "Tammy Abraham"
+      ],
       "home_unavailable": [
         "Kenny Tete",
         "Alex Iwobi",

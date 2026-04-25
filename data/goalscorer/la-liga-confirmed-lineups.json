@@ -263,36 +263,36 @@
       "match_date": "2026-04-25",
       "home_team": "Deportivo Alaves",
       "away_team": "Mallorca",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "5-3-2",
-      "away_formation": "4-1-2-1-2",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "4-4-2",
+      "away_formation": "4-2-3-1",
       "home_players": [
         "Antonio Sivera",
+        "Ángel Pérez",
         "Jonny Otto",
         "Nahuel Tenaglia",
         "Victor Parada",
-        "Ángel Pérez",
-        "Abderrahman Rebbach",
-        "Jon Guridi",
-        "Antonio Blanco",
+        "Carles Aleñá",
         "Pablo Ibánez",
+        "Antonio Blanco",
+        "Abderrahman Rebbach",
         "Toni Martínez",
         "Lucas Boyé"
       ],
       "away_players": [
         "Leo Román",
         "Pablo Maffeo",
+        "David López",
         "Martin Valjent",
-        "Omar Mascarell",
         "Johan Mojica",
+        "Omar Mascarell",
         "Sergi Darder",
-        "Samú",
-        "Manu Morlanes",
+        "Jan Virgili",
         "Pablo Torre",
-        "Vedat Muriqi",
-        "Takuma Asano"
+        "Samú",
+        "Vedat Muriqi"
       ],
       "home_starters": [
         {
@@ -301,80 +301,80 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "5-3-2",
+          "formation": "4-4-2",
           "position_id": 11
-        },
-        {
-          "name": "Jonny Otto",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 33
-        },
-        {
-          "name": "Nahuel Tenaglia",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 35
-        },
-        {
-          "name": "Victor Parada",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 37
         },
         {
           "name": "Ángel Pérez",
           "line_index": 0,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 51
+          "formation": "4-4-2",
+          "position_id": 32
         },
         {
-          "name": "Abderrahman Rebbach",
+          "name": "Jonny Otto",
           "line_index": 0,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 59
+          "formation": "4-4-2",
+          "position_id": 34
         },
         {
-          "name": "Jon Guridi",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "5-3-2",
-          "position_id": 73
+          "name": "Nahuel Tenaglia",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 36
         },
         {
-          "name": "Antonio Blanco",
+          "name": "Victor Parada",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 38
+        },
+        {
+          "name": "Carles Aleñá",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "5-3-2",
-          "position_id": 75
+          "formation": "4-4-2",
+          "position_id": 72
         },
         {
           "name": "Pablo Ibánez",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "5-3-2",
-          "position_id": 77
+          "formation": "4-4-2",
+          "position_id": 74
+        },
+        {
+          "name": "Antonio Blanco",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 76
+        },
+        {
+          "name": "Abderrahman Rebbach",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 78
         },
         {
           "name": "Toni Martínez",
@@ -382,7 +382,7 @@
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "5-3-2",
+          "formation": "4-4-2",
           "position_id": 104
         },
         {
@@ -391,7 +391,7 @@
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "5-3-2",
+          "formation": "4-4-2",
           "position_id": 106
         }
       ],
@@ -402,7 +402,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-1-2-1-2",
+          "formation": "4-2-3-1",
           "position_id": 11
         },
         {
@@ -411,8 +411,17 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-2-1-2",
+          "formation": "4-2-3-1",
           "position_id": 32
+        },
+        {
+          "name": "David López",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34
         },
         {
           "name": "Martin Valjent",
@@ -420,16 +429,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-2-1-2",
-          "position_id": 34
-        },
-        {
-          "name": "Omar Mascarell",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-1-2-1-2",
+          "formation": "4-2-3-1",
           "position_id": 36
         },
         {
@@ -438,66 +438,92 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-2-1-2",
+          "formation": "4-2-3-1",
           "position_id": 38
+        },
+        {
+          "name": "Omar Mascarell",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
         },
         {
           "name": "Sergi Darder",
           "line_index": 1,
-          "line_size": 1,
+          "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
-          "formation": "4-1-2-1-2",
-          "position_id": 55
+          "formation": "4-2-3-1",
+          "position_id": 66
+        },
+        {
+          "name": "Jan Virgili",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83
+        },
+        {
+          "name": "Pablo Torre",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
         },
         {
           "name": "Samú",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-1-2-1-2",
-          "position_id": 74
-        },
-        {
-          "name": "Manu Morlanes",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-1-2-1-2",
-          "position_id": 76
-        },
-        {
-          "name": "Pablo Torre",
-          "line_index": 3,
-          "line_size": 1,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-1-2-1-2",
-          "position_id": 95
+          "formation": "4-2-3-1",
+          "position_id": 87
         },
         {
           "name": "Vedat Muriqi",
-          "line_index": 4,
-          "line_size": 2,
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-1-2-1-2",
-          "position_id": 114
-        },
-        {
-          "name": "Takuma Asano",
-          "line_index": 4,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-1-2-1-2",
-          "position_id": 116
+          "formation": "4-2-3-1",
+          "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Grégoire Swiderski",
+        "Raul Fernández",
+        "Egoitz Muñoz",
+        "Jon Pacheco",
+        "Ville Koski",
+        "Youssef Enríquez",
+        "Ander Guevara",
+        "Calebe",
+        "Denis Suárez",
+        "Jon Guridi",
+        "Ibrahim Diabate",
+        "Mariano Díaz"
+      ],
+      "away_subs": [
+        "Iván Cuéllar",
+        "Javier Olaizola",
+        "Mateu Morey",
+        "Toni Lato",
+        "Antonio Sánchez",
+        "Cesc Riba",
+        "Jandro Garcia",
+        "Manu Morlanes",
+        "Abdón Prats",
+        "Javi Llabrés",
+        "Justin Kalumba",
+        "Takuma Asano"
+      ],
       "home_unavailable": [
         "Facundo Garcés",
         "Carlos Protesoni"
@@ -2036,8 +2062,7 @@
         "Pau Cabanes"
       ],
       "away_unavailable": [
-        "Carlos Domínguez",
-        "Mihailo Ristic",
+        "Andrés Antañón",
         "Carl Starfelt",
         "Miguel Román"
       ]
