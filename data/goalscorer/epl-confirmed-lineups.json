@@ -8,11 +8,11 @@
       "match_date": "2026-04-25",
       "home_team": "Arsenal",
       "away_team": "Newcastle United",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "3-5-2",
+      "away_formation": "4-3-3",
       "home_players": [
         "David Raya",
         "Ben White",
@@ -28,16 +28,16 @@
       ],
       "away_players": [
         "Nick Pope",
+        "Lewis Miley",
         "Malick Thiaw",
         "Sven Botman",
         "Daniel Burn",
-        "Kieran Trippier",
         "Bruno Guimarães",
         "Sandro Tonali",
-        "Lewis Miley",
-        "Lewis Hall",
-        "Anthony Elanga",
-        "William Osula"
+        "Joseph Willock",
+        "Jacob Murphy",
+        "William Osula",
+        "Jacob Ramsey"
       ],
       "home_starters": [
         {
@@ -147,102 +147,122 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-5-2",
+          "formation": "4-3-3",
           "position_id": 11
+        },
+        {
+          "name": "Lewis Miley",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 32
         },
         {
           "name": "Malick Thiaw",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
-          "position_id": 33
+          "formation": "4-3-3",
+          "position_id": 34
         },
         {
           "name": "Sven Botman",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
-          "position_id": 35
+          "formation": "4-3-3",
+          "position_id": 36
         },
         {
           "name": "Daniel Burn",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
-          "position_id": 37
-        },
-        {
-          "name": "Kieran Trippier",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 71
+          "formation": "4-3-3",
+          "position_id": 38
         },
         {
           "name": "Bruno Guimarães",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "4-3-3",
           "position_id": 73
         },
         {
           "name": "Sandro Tonali",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "4-3-3",
           "position_id": 75
         },
         {
-          "name": "Lewis Miley",
+          "name": "Joseph Willock",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "4-3-3",
           "position_id": 77
         },
         {
-          "name": "Lewis Hall",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-2",
-          "position_id": 79
-        },
-        {
-          "name": "Anthony Elanga",
+          "name": "Jacob Murphy",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-5-2",
-          "position_id": 104
+          "formation": "4-3-3",
+          "position_id": 103
         },
         {
           "name": "William Osula",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-5-2",
-          "position_id": 106
+          "formation": "4-3-3",
+          "position_id": 105
+        },
+        {
+          "name": "Jacob Ramsey",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 107
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Kepa Arrizabalaga",
+        "Cristhian Mosquera",
+        "Myles Lewis-Skelly",
+        "Max Dowman",
+        "Bukayo Saka",
+        "Gabriel Jesus",
+        "Gabriel Martinelli",
+        "Leandro Trossard",
+        "Viktor Gyökeres"
+      ],
+      "away_subs": [
+        "Aaron Ramsdale",
+        "Alex Murphy",
+        "Kieran Trippier",
+        "Lewis Hall",
+        "Anthony Elanga",
+        "Harvey Barnes",
+        "Nick Woltemade",
+        "Sean Neave",
+        "Yoane Wissa"
+      ],
       "home_unavailable": [
         "Jurriën Timber",
         "Mikel Merino"
@@ -770,8 +790,8 @@
         }
       ],
       "home_subs": [
-        "Ármin Pécsi",
         "Jeremie Frimpong",
+        "Ármin Pécsi",
         "Joseph Gomez",
         "Milos Kerkez",
         "Ryan Gravenberch",
@@ -781,14 +801,14 @@
         "Will Wright"
       ],
       "away_subs": [
+        "Borna Sosa",
+        "Yéremi Pino",
         "Walter Benítez",
         "Chadi Riad",
-        "Borna Sosa",
         "Jefferson Lerma",
         "Justin Devenny",
         "Nathaniel Clyne",
         "Will Hughes",
-        "Yéremi Pino",
         "Jørgen Strand Larsen"
       ],
       "home_unavailable": [
@@ -1059,15 +1079,15 @@
         "Callum Wilson"
       ],
       "away_subs": [
+        "Tim Iroegbunam",
+        "Tyrique George",
         "Mark Travers",
         "Nathan Patterson",
         "Charly Alcaraz",
         "Harrison Armstrong",
         "Merlin Röhl",
         "Séamus Coleman",
-        "Tim Iroegbunam",
-        "Tyler Dibling",
-        "Tyrique George"
+        "Tyler Dibling"
       ],
       "home_unavailable": [
         "Lukasz Fabianski"
@@ -1331,15 +1351,15 @@
         "Tolu Arokodare"
       ],
       "away_subs": [
+        "Richarlison",
+        "Mathys Tel",
+        "João Palhinha",
+        "Lucas Bergvall",
         "Brandon Austin",
         "Radu Dragusin",
         "Souza",
         "Archie Gray",
-        "James Maddison",
-        "João Palhinha",
-        "Lucas Bergvall",
-        "Mathys Tel",
-        "Richarlison"
+        "James Maddison"
       ],
       "home_unavailable": [
         "Ladislav Krejcí",

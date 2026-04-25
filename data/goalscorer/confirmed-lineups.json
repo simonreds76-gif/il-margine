@@ -8,20 +8,20 @@
       "match_date": "2026-04-25",
       "home_team": "Bologna",
       "away_team": "Roma",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "4-3-3",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "3-4-3",
       "away_formation": "3-4-2-1",
       "home_players": [
-        "Massimo Pessina",
-        "João Mário",
-        "Torbjørn Heggem",
+        "Federico Ravaglia",
+        "Eivind Helland",
         "Jhon Lucumí",
-        "Juan Miranda",
-        "Tommaso Pobega",
+        "Torbjørn Heggem",
+        "João Mário",
         "Remo Freuler",
         "Lewis Ferguson",
+        "Juan Miranda",
         "Riccardo Orsolini",
         "Santiago Castro",
         "Jonathan Rowe"
@@ -33,84 +33,84 @@
         "Mario Hermoso",
         "Zeki Çelik",
         "Bryan Cristante",
-        "Niccolò Pisilli",
+        "Neil El Aynaoui",
         "Wesley",
         "Matias Soulé",
-        "Stephan El Shaarawy",
+        "Niccolò Pisilli",
         "Donyell Malen"
       ],
       "home_starters": [
         {
-          "name": "Massimo Pessina",
+          "name": "Federico Ravaglia",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-3-3",
+          "formation": "3-4-3",
           "position_id": 11
         },
         {
-          "name": "João Mário",
+          "name": "Eivind Helland",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 32
-        },
-        {
-          "name": "Torbjørn Heggem",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 34
+          "formation": "3-4-3",
+          "position_id": 33
         },
         {
           "name": "Jhon Lucumí",
           "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 36
-        },
-        {
-          "name": "Juan Miranda",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 38
-        },
-        {
-          "name": "Tommaso Pobega",
-          "line_index": 1,
           "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 35
+        },
+        {
+          "name": "Torbjørn Heggem",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 37
+        },
+        {
+          "name": "João Mário",
+          "line_index": 1,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 73
+          "formation": "3-4-3",
+          "position_id": 72
         },
         {
           "name": "Remo Freuler",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 75
+          "formation": "3-4-3",
+          "position_id": 74
         },
         {
           "name": "Lewis Ferguson",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 77
+          "formation": "3-4-3",
+          "position_id": 76
+        },
+        {
+          "name": "Juan Miranda",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 78
         },
         {
           "name": "Riccardo Orsolini",
@@ -118,7 +118,7 @@
           "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-3-3",
+          "formation": "3-4-3",
           "position_id": 103
         },
         {
@@ -127,7 +127,7 @@
           "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-3-3",
+          "formation": "3-4-3",
           "position_id": 105
         },
         {
@@ -136,7 +136,7 @@
           "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-3-3",
+          "formation": "3-4-3",
           "position_id": 107
         }
       ],
@@ -196,7 +196,7 @@
           "position_id": 64
         },
         {
-          "name": "Niccolò Pisilli",
+          "name": "Neil El Aynaoui",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -223,7 +223,7 @@
           "position_id": 84
         },
         {
-          "name": "Stephan El Shaarawy",
+          "name": "Niccolò Pisilli",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -241,8 +241,35 @@
           "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Massimo Pessina",
+        "Matteo Franceschelli",
+        "Charalambos Lykogiannis",
+        "Lorenzo De Silvestri",
+        "Martin Vitík",
+        "Nadir Zortea",
+        "Jens Odgaard",
+        "Nikola Moro",
+        "Simon Sohm",
+        "Tommaso Pobega",
+        "Benja Domínguez",
+        "Francesco Castaldo",
+        "Nicolò Cambiaghi"
+      ],
+      "away_subs": [
+        "Giorgio De Marzi",
+        "Pierluigi Gollini",
+        "Daniele Ghilardi",
+        "Jan Ziólkowski",
+        "Konstantinos Tsimikas",
+        "Angeliño",
+        "Devyne Rensch",
+        "Stephan El Shaarawy",
+        "Bryan Zaragoza",
+        "Lorenzo Venturino",
+        "Paulo Dybala",
+        "Robinio Vaz"
+      ],
       "home_unavailable": [
         "Lukasz Skorupski",
         "Nicolò Casale",
@@ -756,13 +783,13 @@
       "home_subs": [
         "Christian Ordóñez",
         "Nesta Elphege",
+        "Nahuel Estévez",
+        "Oliver Sørensen",
+        "Pontus Almqvist",
         "Edoardo Corvi",
         "Filippo Rinaldi",
         "Lautaro Valenti",
         "Franco Carboni",
-        "Nahuel Estévez",
-        "Oliver Sørensen",
-        "Pontus Almqvist",
         "Sascha Britschgi",
         "Gaetano Oristanio",
         "Jacob Ondrejka"
@@ -771,6 +798,8 @@
         "Gabriele Piccinini",
         "Idrissa Touré",
         "Henrik Meister",
+        "Juan Cuadrado",
+        "Lorran",
         "Nícolas",
         "Simone Scuffet",
         "Arturo Calabresi",
@@ -778,9 +807,7 @@
         "Raúl Albiol",
         "Calvin Stengs",
         "Felipe Loyola",
-        "Juan Cuadrado",
         "Malthe Højholt",
-        "Lorran",
         "Samuel Iling-Junior"
       ],
       "home_unavailable": [
@@ -1552,8 +1579,7 @@
       "home_unavailable": [],
       "away_unavailable": [
         "Juan Cabal",
-        "Arkadiusz Milik",
-        "Dusan Vlahovic"
+        "Arkadiusz Milik"
       ]
     },
     {
