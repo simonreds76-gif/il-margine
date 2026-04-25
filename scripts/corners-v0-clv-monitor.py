@@ -25,11 +25,13 @@ DEFAULT_PICKS = ROOT / "data" / "football-form" / "corners-v0-published-picks.cs
 DEFAULT_PINNACLE = ROOT / "data" / "corners-ou" / "pinnacle-corners-odds.csv"
 DEFAULT_OUTPUT = ROOT / "data" / "football-form" / "corners-v0-clv-monitor.csv"
 DEFAULT_REPORT = ROOT / "data" / "football-form" / "corners-v0-clv-monitor.md"
+DEFAULT_ALLOWED_CONFIG = ROOT / "data" / "football-form" / "corners-v0-allowed-leagues.json"
 
 OUTPUT_FIELDS = [
     "pick_id",
     "published_at_utc",
     "kickoff_utc",
+    "time_to_kickoff_hours",
     "match_id",
     "match_date",
     "league",
@@ -158,11 +160,18 @@ def row_bool(value: Any) -> bool:
     return text in {"1", "true", "yes", "y"}
 
 
+def load_allowed_config(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {"allowed_leagues": [], "canonical_only_allowed": False}
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def build_pick_row(
     pick: dict[str, str],
     index: dict[str, list[dict[str, Any]]],
     *,
     allow_canonical_only: bool,
+    allowed_leagues: set[str],
 ) -> dict[str, Any]:
     home, away = split_match(pick)
     league = (pick.get("league") or "").strip().lower()
@@ -183,11 +192,14 @@ def build_pick_row(
     if model_prob is None and model_fair and model_fair > 1:
         model_prob = 1.0 / model_fair
     current_model_would_have_priced = row_bool(pick.get("current_model_would_have_priced"))
-    blocked_reason = ""
+    blocked_reasons: list[str] = []
     confidence_guard_applied = False
     if not current_model_would_have_priced and not allow_canonical_only:
         confidence_guard_applied = True
-        blocked_reason = "canonical_only_guard"
+        blocked_reasons.append("canonical_only_guard")
+    if allowed_leagues and league not in allowed_leagues:
+        confidence_guard_applied = True
+        blocked_reasons.append("league_not_allowed")
 
     published_to_close_clv = ""
     movement_to_close = ""
@@ -198,12 +210,16 @@ def build_pick_row(
     model_to_close_clv = ""
     if model_prob and close:
         model_to_close_clv = round((model_prob * close) - 1.0, 6)
+    time_to_kickoff_hours = ""
+    if published and kickoff:
+        time_to_kickoff_hours = round((kickoff - published).total_seconds() / 3600.0, 3)
 
     match = pick.get("match") or f"{home} vs {away}"
     return {
         "pick_id": pick.get("pick_id") or "|".join([league, match_date, norm_team(home), norm_team(away), line, side]),
         "published_at_utc": fmt_dt(published),
         "kickoff_utc": fmt_dt(kickoff),
+        "time_to_kickoff_hours": time_to_kickoff_hours,
         "match_id": pick.get("match_id") or "|".join([league, match_date, norm_team(home), norm_team(away)]),
         "match_date": match_date,
         "league": league,
@@ -226,7 +242,7 @@ def build_pick_row(
         "pnl_units": pick.get("pnl_units", ""),
         "current_model_would_have_priced": "true" if current_model_would_have_priced else "false",
         "confidence_guard_applied": "true" if confidence_guard_applied else "false",
-        "blocked_reason": blocked_reason,
+        "blocked_reason": ";".join(blocked_reasons),
     }
 
 
@@ -265,6 +281,7 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, pinnacle_path: P
         "## Required Fields",
         "",
         "- `current_model_would_have_priced` must be true for publication while canonical-only evidence is below threshold.",
+        "- `time_to_kickoff_hours` records publication timing so CLV can be interpreted by lead time.",
         "- `published_to_close_clv` tracks the taken/published Pinnacle price versus close.",
         "- `model_to_close_clv` tracks the model-implied probability versus close.",
         "- `confidence_guard_applied=true` means the row must not be treated as a published pick.",
@@ -284,6 +301,7 @@ def main() -> None:
     parser.add_argument("--pinnacle", type=Path, default=DEFAULT_PINNACLE)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
+    parser.add_argument("--allowed-config", type=Path, default=DEFAULT_ALLOWED_CONFIG)
     parser.add_argument(
         "--allow-canonical-only",
         action="store_true",
@@ -294,8 +312,11 @@ def main() -> None:
     picks = load_csv(args.picks)
     pinnacle_rows = load_csv(args.pinnacle)
     index = build_pinnacle_index(pinnacle_rows)
+    allowed_config = load_allowed_config(args.allowed_config)
+    allowed_leagues = {str(league).strip().lower() for league in allowed_config.get("allowed_leagues", [])}
+    allow_canonical_only = args.allow_canonical_only or bool(allowed_config.get("canonical_only_allowed"))
     rows = [
-        build_pick_row(pick, index, allow_canonical_only=args.allow_canonical_only)
+        build_pick_row(pick, index, allow_canonical_only=allow_canonical_only, allowed_leagues=allowed_leagues)
         for pick in picks
     ]
     write_csv(args.output, rows)

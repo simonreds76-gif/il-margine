@@ -1,6 +1,6 @@
 # Corners V0 CLV Monitor
 
-Generated: 2026-04-25T14:24:07Z
+Generated: 2026-04-25T14:43:32Z
 Picks input: `data\football-form\corners-v0-published-picks.csv`
 Pinnacle input: `data\corners-ou\pinnacle-corners-odds.csv`
 
@@ -14,6 +14,7 @@ Pinnacle input: `data\corners-ou\pinnacle-corners-odds.csv`
 ## Required Fields
 
 - `current_model_would_have_priced` must be true for publication while canonical-only evidence is below threshold.
+- `time_to_kickoff_hours` records publication timing so CLV can be interpreted by lead time.
 - `published_to_close_clv` tracks the taken/published Pinnacle price versus close.
 - `model_to_close_clv` tracks the model-implied probability versus close.
 - `confidence_guard_applied=true` means the row must not be treated as a published pick.

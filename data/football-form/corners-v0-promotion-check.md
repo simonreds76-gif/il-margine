@@ -1,6 +1,6 @@
 # Corners V0 Promotion Check
 
-Generated: 2026-04-25T14:24:07+00:00
+Generated: 2026-04-25T14:43:22+00:00
 
 This is a research-lane gate only. It does not change live picks.
 
@@ -31,3 +31,4 @@ Blocked leagues: `bundesliga, la-liga`
 - Restrict initial research-lane publication to passing leagues only.
 - Keep canonical-only fixtures blocked until N >= 200 and segment calibration is stable.
 - CLV monitoring must log `current_model_would_have_priced` so live results can keep common vs extended-coverage bets separate.
+- Allowed-league config written to `data\football-form\corners-v0-allowed-leagues.json`.

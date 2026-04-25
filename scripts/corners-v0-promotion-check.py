@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SUMMARY = ROOT / "data" / "football-form" / "canonical-backtest-summary.csv"
 DEFAULT_JSON = ROOT / "data" / "football-form" / "corners-v0-promotion-check.json"
 DEFAULT_REPORT = ROOT / "data" / "football-form" / "corners-v0-promotion-check.md"
+DEFAULT_ALLOWED_CONFIG = ROOT / "data" / "football-form" / "corners-v0-allowed-leagues.json"
 
 CORNERS_LINES = ["8.5", "9.5", "10.5", "11.5"]
 MIN_CANONICAL_ONLY_N = 200
@@ -187,6 +188,24 @@ def build_payload(rows: list[dict[str, str]]) -> dict[str, Any]:
     }
 
 
+def build_allowed_config(payload: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "generated_at": payload["generated_at"],
+        "model": "canonical_form_v0",
+        "market": "corners_total",
+        "lane": "research",
+        "allowed_leagues": payload.get("ready_leagues", []),
+        "blocked_leagues": payload.get("blocked_leagues", []),
+        "canonical_only_allowed": False,
+        "canonical_only_min_n": MIN_CANONICAL_ONLY_N,
+        "rules": [
+            "publish only if league is in allowed_leagues",
+            "publish only if current_model_would_have_priced is true",
+            "do not publish canonical-only fixtures until canonical-only sample and segment calibration pass",
+        ],
+    }
+
+
 def fmt(value: Any, digits: int = 4) -> str:
     if value is None:
         return "-"
@@ -254,6 +273,7 @@ def render_markdown(payload: dict[str, Any]) -> str:
             "- Restrict initial research-lane publication to passing leagues only.",
             "- Keep canonical-only fixtures blocked until N >= 200 and segment calibration is stable.",
             "- CLV monitoring must log `current_model_would_have_priced` so live results can keep common vs extended-coverage bets separate.",
+            f"- Allowed-league config written to `{DEFAULT_ALLOWED_CONFIG.relative_to(ROOT)}`.",
             "",
         ]
     )
@@ -265,6 +285,7 @@ def main() -> None:
     parser.add_argument("--summary", type=Path, default=DEFAULT_SUMMARY)
     parser.add_argument("--json-out", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--report-out", type=Path, default=DEFAULT_REPORT)
+    parser.add_argument("--allowed-config-out", type=Path, default=DEFAULT_ALLOWED_CONFIG)
     parser.add_argument("--strict", action="store_true", help="Exit 1 unless all-league research promotion gate passes")
     args = parser.parse_args()
 
@@ -273,8 +294,10 @@ def main() -> None:
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     args.report_out.write_text(render_markdown(payload), encoding="utf-8")
+    args.allowed_config_out.write_text(json.dumps(build_allowed_config(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"Wrote {args.json_out.relative_to(ROOT)}")
     print(f"Wrote {args.report_out.relative_to(ROOT)}")
+    print(f"Wrote {args.allowed_config_out.relative_to(ROOT)}")
     if args.strict and not payload["research_lane_ready_all_leagues"]:
         raise SystemExit(1)
 

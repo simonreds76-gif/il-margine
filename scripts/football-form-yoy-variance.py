@@ -173,8 +173,10 @@ def main() -> int:
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     args.report_out.write_text(render_markdown(payload), encoding="utf-8")
-    print(f"Wrote {args.json_out.relative_to(ROOT)}")
-    print(f"Wrote {args.report_out.relative_to(ROOT)}")
+    json_out = args.json_out.resolve()
+    report_out = args.report_out.resolve()
+    print(f"Wrote {json_out.relative_to(ROOT)}")
+    print(f"Wrote {report_out.relative_to(ROOT)}")
     return 0
 
 

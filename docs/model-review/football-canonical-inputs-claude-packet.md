@@ -33,9 +33,14 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
 - No live policy or published pick logic has been changed yet; this remains research-only pending odds/CLV and recent-window validation.
 - Corners v0 segment promotion check: `data/football-form/corners-v0-promotion-check.md` / `data/football-form/corners-v0-promotion-check.json`
 - Segment gate read: partial research lane only. Passing leagues `epl, ligue-1, serie-a`; blocked leagues `bundesliga, la-liga`.
+- Corners v0 publication config: `data/football-form/corners-v0-allowed-leagues.json`. The publisher/monitor reads this config instead of relying on a stale one-off report.
 - Corners v0 CLV monitor schema/report: `data/football-form/corners-v0-clv-monitor.csv` / `data/football-form/corners-v0-clv-monitor.md`
 - League YoY variance report: `data/football-form/league-yoy-variance.md` / `data/football-form/league-yoy-variance.json`
 - EPL and Serie A show material shots/corners regime variance, so trailing-12-month normalization should be implemented before any football-form promotion.
+- Lower-threshold YoY variance sensitivity: `data/football-form/league-yoy-variance-7pct.md` / `data/football-form/league-yoy-variance-7pct.json`
+- At 7%, primary trailing-12-month candidates expand to `epl, la-liga, ligue-1, serie-a`; guarded/sparse candidates `bundesliga`.
+- Team-shots last-90 diagnostic: `data/football-form/team-shots-last90-diagnostic.md` / `data/football-form/team-shots-last90-diagnostic.json`
+- Cap-disabled team-shots lambda does not beat capped lambda in the recent window, so the cap is not the first suspect.
 
 ## Changes Since Previous Review
 
@@ -47,7 +52,10 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
 - Added a team-shots `canonical_form_v1_market_nb` research variant using the market-implied win probability gap as a capped game-state proxy and causal prior-data negative-binomial O/U calibration.
 - Added a league year-over-year variance check to decide whether all-prior normalization is safe or trailing-12-month baselines are required.
 - Added a corners v0 per-league promotion gate. Aggregate corners passed, but Bundesliga and La Liga fail the recent segment gate, so all-league promotion is blocked.
-- Added a corners v0 CLV monitor schema with publication, 3h, 1h, close, CLV, and hard canonical-only guard fields.
+- Operationalised the corners v0 gate as an allowed-league config. Initial research publication is allowed only for EPL, Ligue 1, and Serie A; Bundesliga and La Liga stay blocked.
+- Added a corners v0 CLV monitor schema with publication, 3h, 1h, close, CLV, time-to-kickoff, allowed-league blocking, and hard canonical-only guard fields.
+- Ran the lower-threshold YoY variance sensitivity Claude requested. At 7%, La Liga and Ligue 1 also become primary trailing-12-month candidates; Bundesliga remains guarded/sparse because its primary shots/corners are just below threshold while xG is sparse/volatile.
+- Ran the team-shots last-90 diagnostic. Cap-disabled lambda is worse than capped lambda, so cap tuning is not the first fix; recent canonical lambda still lags current in most leagues.
 
 ## Backtest Highlights
 
@@ -62,14 +70,25 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
 
 ## Normalization Read
 
-- Use trailing-12-month baselines before promotion for primary shots/corners metrics in: epl, serie-a.
-- Treat trailing xG as guarded/sparse-only first in: bundesliga.
-- La Liga and Ligue 1 are within the 10% material threshold on the checked primary metrics, so all-prior baselines are less risky there.
+- 10% material threshold: primary trailing-12-month candidates `epl, serie-a`; guarded/sparse candidates `bundesliga`.
+- 7% sensitivity threshold: primary trailing-12-month candidates `epl, la-liga, ligue-1, serie-a`; guarded/sparse candidates `bundesliga`.
+- This supports testing per-(league, metric) trailing normalization for La Liga before re-opening its corners v0 segment gate.
+- Keep Bundesliga guarded first: shots/corners are just below the 7% line, while xG variance is sparse and should not be blindly promoted into the model.
+
+## Team-Shots Last-90 Diagnostic
+
+- Full common MAE: current `3.7425`, canonical capped `3.7262`.
+- Last-90 common MAE: current `3.7321`, canonical capped `3.7699`, cap disabled `3.7948`.
+- Cap-disabled recent MAE beats capped recent MAE: `no`.
+- Recent canonical capped lags current in: `bundesliga, epl, ligue-1, serie-a`.
+- Cap hurts by league only in: `serie-a`.
+- Read: do not tune the cap first. The recent count issue is a canonical lambda / normalization problem until proven otherwise.
 
 ## Corners V0 Segment Gate
 
 - All-league research promotion: fail.
 - Passing leagues for partial research lane: epl, ligue-1, serie-a.
+- Active allowed-league config: `epl, ligue-1, serie-a`.
 - Blocked leagues until recent segment calibration is fixed: bundesliga, la-liga.
 - Canonical-only hard block: on; sample N=2.
 - Do not publish canonical-only picks. Do not publish Bundesliga or La Liga corners v0 picks yet.
@@ -81,17 +100,17 @@ Do not build steam tracking, public xG tables, or a Dixon-Coles product yet.
 ## Proposed Implementation Order
 
 1. Keep the stale-player-log fix in production workflows and monitor the next scheduled run.
-2. Run corners v0 odds/CLV join first, but only for passing leagues: EPL, Ligue 1, and Serie A.
+2. Keep corners v0 research publication restricted by `corners-v0-allowed-leagues.json`: EPL, Ligue 1, and Serie A only.
 3. Keep the corners confidence guard as a hard cutoff: canonical-only fixtures are blocked, not flagged.
-4. Implement trailing-12-month normalization for EPL/Serie A primary shots/corners before any team-shots promotion.
-5. Diagnose Bundesliga and La Liga corners v0 recent-segment failures before allowing all-league research publication.
-6. Add win-prob gap bucket calibration for team-shots; negative binomial improves O/U probability but recent count MAE still lags current.
-7. Then do the team-shots odds/CLV join and keep it research-only until the recent-window count issue is explained or fixed.
+4. Implement/test per-(league, metric) trailing-12-month normalization, starting with EPL/Serie A and re-testing La Liga because it crosses the 7% sensitivity threshold.
+5. Re-run corners segment gates after normalization. Only then consider adding La Liga or Bundesliga to the allowed-league config.
+6. Hold team-shots. The cap-disabled diagnostic did not fix last-90 count MAE, so investigate canonical lambda/normalization before any odds/CLV join.
+7. Once team-shots recent count MAE is explained or fixed, then run segment gates and the odds/CLV join.
 
 ## Questions For Follow-up Review
 
-1. Segment check changed the corners read: EPL/Ligue 1/Serie A pass, Bundesliga/La Liga fail recent segment gates. Should partial research publication be allowed only for passing leagues?
-2. For Bundesliga and La Liga corners v0, should we tune per-league calibration, recent-pressure weight, or keep the current corners lane as-is for those leagues?
-3. Team-shots v1_market_nb improves Brier/log-loss but last-90 count MAE is worse than current. Should we tune the capped game-state lambda, split by win-prob bucket, or hold the model entirely?
-4. For EPL/Serie A, should trailing-12-month normalization replace all-prior normalization globally, or only for shots/corners primary metrics?
-5. Is the CLV monitor schema now sufficient for corners v0 live research tracking and de-promotion rules?
+1. Does the allowed-league config plus hard canonical-only block cover the corners v0 research publication risk without adding more live-policy complexity?
+2. Given the 7% YoY sensitivity, should La Liga get per-metric trailing-12-month normalization before any per-league model calibration is considered?
+3. Team-shots cap-disabled recent MAE is worse than capped recent MAE. What lambda diagnostic should run next: normalization replay, largest-error input spot check, or current-model feature comparison?
+4. Should Bundesliga remain guarded/sparse until xG coverage improves, or should shots/corners trailing normalization be tested there despite falling just below the 7% primary threshold?
+5. Are the CLV de-promotion rules sufficient now that the monitor records time-to-kickoff and writes pre-close rows?

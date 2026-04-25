@@ -596,6 +596,49 @@ def load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def load_team_shots_diagnostic(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {"exists": False}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    full = payload.get("summary", {}).get("full_common", {})
+    recent = payload.get("summary", {}).get("last_90_common", {})
+    cap = payload.get("summary", {}).get("cap_read", {})
+
+    def mae(sample: dict[str, Any], model: str) -> float | None:
+        value = sample.get(model, {}).get("mae")
+        try:
+            return float(value) if value is not None else None
+        except (TypeError, ValueError):
+            return None
+
+    lagging_leagues = []
+    cap_hurts_leagues = []
+    for item in payload.get("last_90_by_league", []):
+        league = item.get("league")
+        current = mae(item, "current")
+        canonical = mae(item, "canonical_market")
+        no_market = mae(item, "canonical_no_market")
+        if league and current is not None and canonical is not None and canonical > current:
+            lagging_leagues.append(str(league))
+        if league and no_market is not None and canonical is not None and no_market < canonical:
+            cap_hurts_leagues.append(str(league))
+
+    return {
+        "exists": True,
+        "latest_form_date": payload.get("latest_form_date"),
+        "recent_cutoff": payload.get("recent_cutoff"),
+        "full_current_mae": mae(full, "current"),
+        "full_canonical_mae": mae(full, "canonical_market"),
+        "recent_current_mae": mae(recent, "current"),
+        "recent_canonical_mae": mae(recent, "canonical_market"),
+        "recent_no_market_mae": mae(recent, "canonical_no_market"),
+        "cap_hurts_recent": bool(cap.get("market_cap_hurts_recent")),
+        "current_recent_vs_full_mae_delta": cap.get("current_recent_vs_full_mae_delta"),
+        "lagging_leagues": lagging_leagues,
+        "cap_hurts_leagues": cap_hurts_leagues,
+    }
+
+
 def fmt_float(value: Any, decimals: int = 4) -> str:
     if value is None:
         return "-"
@@ -631,10 +674,15 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
     backtest_report_rel = rel(DEFAULT_OUTPUT_DIR / "canonical-backtest-report.md")
     yoy_report_rel = rel(DEFAULT_OUTPUT_DIR / "league-yoy-variance.md")
     yoy_json_rel = rel(DEFAULT_OUTPUT_DIR / "league-yoy-variance.json")
+    yoy7_report_rel = rel(DEFAULT_OUTPUT_DIR / "league-yoy-variance-7pct.md")
+    yoy7_json_rel = rel(DEFAULT_OUTPUT_DIR / "league-yoy-variance-7pct.json")
     corners_promotion_rel = rel(DEFAULT_OUTPUT_DIR / "corners-v0-promotion-check.md")
     corners_promotion_json_rel = rel(DEFAULT_OUTPUT_DIR / "corners-v0-promotion-check.json")
+    corners_allowed_rel = rel(DEFAULT_OUTPUT_DIR / "corners-v0-allowed-leagues.json")
     corners_clv_rel = rel(DEFAULT_OUTPUT_DIR / "corners-v0-clv-monitor.csv")
     corners_clv_report_rel = rel(DEFAULT_OUTPUT_DIR / "corners-v0-clv-monitor.md")
+    team_diag_rel = rel(DEFAULT_OUTPUT_DIR / "team-shots-last90-diagnostic.md")
+    team_diag_json_rel = rel(DEFAULT_OUTPUT_DIR / "team-shots-last90-diagnostic.json")
     team_layer_exists = (DEFAULT_OUTPUT_DIR / "team-match-base.csv").exists() and (
         DEFAULT_OUTPUT_DIR / "team-rolling-form.csv"
     ).exists()
@@ -648,7 +696,10 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
     ).exists()
     backtest = load_backtest_highlights(DEFAULT_OUTPUT_DIR / "canonical-backtest-summary.csv")
     yoy = load_yoy_highlights(DEFAULT_OUTPUT_DIR / "league-yoy-variance.json")
+    yoy7 = load_yoy_highlights(DEFAULT_OUTPUT_DIR / "league-yoy-variance-7pct.json")
     corners_promotion = load_json(DEFAULT_OUTPUT_DIR / "corners-v0-promotion-check.json")
+    corners_allowed = load_json(DEFAULT_OUTPUT_DIR / "corners-v0-allowed-leagues.json")
+    team_diag = load_team_shots_diagnostic(DEFAULT_OUTPUT_DIR / "team-shots-last90-diagnostic.json")
     player_logs = next((dataset for dataset in payload["datasets"] if dataset["key"] == "goalscorer_player_logs"), {})
     lines = [
         "# Claude Review Packet: Football Canonical Input Layer",
@@ -718,6 +769,7 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
             [
                 f"- Corners v0 segment promotion check: `{corners_promotion_rel}` / `{corners_promotion_json_rel}`",
                 f"- Segment gate read: partial research lane only. Passing leagues `{ready}`; blocked leagues `{blocked}`.",
+                f"- Corners v0 publication config: `{corners_allowed_rel}`. The publisher/monitor reads this config instead of relying on a stale one-off report.",
                 f"- Corners v0 CLV monitor schema/report: `{corners_clv_rel}` / `{corners_clv_report_rel}`",
             ]
         )
@@ -726,6 +778,22 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
             [
                 f"- League YoY variance report: `{yoy_report_rel}` / `{yoy_json_rel}`",
                 "- EPL and Serie A show material shots/corners regime variance, so trailing-12-month normalization should be implemented before any football-form promotion.",
+            ]
+        )
+    if yoy7.get("exists"):
+        primary7 = ", ".join(yoy7.get("primary_trailing", [])) or "-"
+        guarded7 = ", ".join(yoy7.get("guarded_trailing", [])) or "-"
+        lines.extend(
+            [
+                f"- Lower-threshold YoY variance sensitivity: `{yoy7_report_rel}` / `{yoy7_json_rel}`",
+                f"- At 7%, primary trailing-12-month candidates expand to `{primary7}`; guarded/sparse candidates `{guarded7}`.",
+            ]
+        )
+    if team_diag.get("exists"):
+        lines.extend(
+            [
+                f"- Team-shots last-90 diagnostic: `{team_diag_rel}` / `{team_diag_json_rel}`",
+                "- Cap-disabled team-shots lambda does not beat capped lambda in the recent window, so the cap is not the first suspect.",
             ]
         )
     lines.append("")
@@ -742,7 +810,10 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
             "- Added a team-shots `canonical_form_v1_market_nb` research variant using the market-implied win probability gap as a capped game-state proxy and causal prior-data negative-binomial O/U calibration.",
             "- Added a league year-over-year variance check to decide whether all-prior normalization is safe or trailing-12-month baselines are required.",
             "- Added a corners v0 per-league promotion gate. Aggregate corners passed, but Bundesliga and La Liga fail the recent segment gate, so all-league promotion is blocked.",
-            "- Added a corners v0 CLV monitor schema with publication, 3h, 1h, close, CLV, and hard canonical-only guard fields.",
+            "- Operationalised the corners v0 gate as an allowed-league config. Initial research publication is allowed only for EPL, Ligue 1, and Serie A; Bundesliga and La Liga stay blocked.",
+            "- Added a corners v0 CLV monitor schema with publication, 3h, 1h, close, CLV, time-to-kickoff, allowed-league blocking, and hard canonical-only guard fields.",
+            "- Ran the lower-threshold YoY variance sensitivity Claude requested. At 7%, La Liga and Ligue 1 also become primary trailing-12-month candidates; Bundesliga remains guarded/sparse because its primary shots/corners are just below threshold while xG is sparse/volatile.",
+            "- Ran the team-shots last-90 diagnostic. Cap-disabled lambda is worse than capped lambda, so cap tuning is not the first fix; recent canonical lambda still lags current in most leagues.",
             "",
         ]
     )
@@ -813,9 +884,34 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
             [
                 "## Normalization Read",
                 "",
-                f"- Use trailing-12-month baselines before promotion for primary shots/corners metrics in: {primary}.",
-                f"- Treat trailing xG as guarded/sparse-only first in: {guarded}.",
-                "- La Liga and Ligue 1 are within the 10% material threshold on the checked primary metrics, so all-prior baselines are less risky there.",
+                f"- 10% material threshold: primary trailing-12-month candidates `{primary}`; guarded/sparse candidates `{guarded}`.",
+            ]
+        )
+        if yoy7.get("exists"):
+            primary7 = ", ".join(yoy7.get("primary_trailing", [])) or "-"
+            guarded7 = ", ".join(yoy7.get("guarded_trailing", [])) or "-"
+            lines.extend(
+                [
+                    f"- 7% sensitivity threshold: primary trailing-12-month candidates `{primary7}`; guarded/sparse candidates `{guarded7}`.",
+                    "- This supports testing per-(league, metric) trailing normalization for La Liga before re-opening its corners v0 segment gate.",
+                    "- Keep Bundesliga guarded first: shots/corners are just below the 7% line, while xG variance is sparse and should not be blindly promoted into the model.",
+                ]
+            )
+        lines.append("")
+
+    if team_diag.get("exists"):
+        lagging = ", ".join(team_diag.get("lagging_leagues", [])) or "-"
+        cap_hurts = ", ".join(team_diag.get("cap_hurts_leagues", [])) or "-"
+        lines.extend(
+            [
+                "## Team-Shots Last-90 Diagnostic",
+                "",
+                f"- Full common MAE: current `{fmt_float(team_diag.get('full_current_mae'))}`, canonical capped `{fmt_float(team_diag.get('full_canonical_mae'))}`.",
+                f"- Last-90 common MAE: current `{fmt_float(team_diag.get('recent_current_mae'))}`, canonical capped `{fmt_float(team_diag.get('recent_canonical_mae'))}`, cap disabled `{fmt_float(team_diag.get('recent_no_market_mae'))}`.",
+                f"- Cap-disabled recent MAE beats capped recent MAE: `{'yes' if team_diag.get('cap_hurts_recent') else 'no'}`.",
+                f"- Recent canonical capped lags current in: `{lagging}`.",
+                f"- Cap hurts by league only in: `{cap_hurts}`.",
+                "- Read: do not tune the cap first. The recent count issue is a canonical lambda / normalization problem until proven otherwise.",
                 "",
             ]
         )
@@ -824,12 +920,14 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
         ready = ", ".join(corners_promotion.get("ready_leagues", [])) or "-"
         blocked = ", ".join(corners_promotion.get("blocked_leagues", [])) or "-"
         guard = corners_promotion.get("canonical_only", {})
+        allowed = ", ".join(corners_allowed.get("allowed_leagues", [])) or "-"
         lines.extend(
             [
                 "## Corners V0 Segment Gate",
                 "",
                 f"- All-league research promotion: {'pass' if corners_promotion.get('research_lane_ready_all_leagues') else 'fail'}.",
                 f"- Passing leagues for partial research lane: {ready}.",
+                f"- Active allowed-league config: `{allowed}`.",
                 f"- Blocked leagues until recent segment calibration is fixed: {blocked}.",
                 f"- Canonical-only hard block: {'on' if guard.get('hard_block') else 'off'}; sample N={guard.get('n', '-')}.",
                 "- Do not publish canonical-only picks. Do not publish Bundesliga or La Liga corners v0 picks yet.",
@@ -850,20 +948,20 @@ def render_claude_packet(payload: dict[str, Any]) -> str:
         "## Proposed Implementation Order",
         "",
         "1. Keep the stale-player-log fix in production workflows and monitor the next scheduled run.",
-        "2. Run corners v0 odds/CLV join first, but only for passing leagues: EPL, Ligue 1, and Serie A.",
+        "2. Keep corners v0 research publication restricted by `corners-v0-allowed-leagues.json`: EPL, Ligue 1, and Serie A only.",
         "3. Keep the corners confidence guard as a hard cutoff: canonical-only fixtures are blocked, not flagged.",
-        "4. Implement trailing-12-month normalization for EPL/Serie A primary shots/corners before any team-shots promotion.",
-        "5. Diagnose Bundesliga and La Liga corners v0 recent-segment failures before allowing all-league research publication.",
-        "6. Add win-prob gap bucket calibration for team-shots; negative binomial improves O/U probability but recent count MAE still lags current.",
-        "7. Then do the team-shots odds/CLV join and keep it research-only until the recent-window count issue is explained or fixed.",
+        "4. Implement/test per-(league, metric) trailing-12-month normalization, starting with EPL/Serie A and re-testing La Liga because it crosses the 7% sensitivity threshold.",
+        "5. Re-run corners segment gates after normalization. Only then consider adding La Liga or Bundesliga to the allowed-league config.",
+        "6. Hold team-shots. The cap-disabled diagnostic did not fix last-90 count MAE, so investigate canonical lambda/normalization before any odds/CLV join.",
+        "7. Once team-shots recent count MAE is explained or fixed, then run segment gates and the odds/CLV join.",
         "",
         "## Questions For Follow-up Review",
         "",
-        "1. Segment check changed the corners read: EPL/Ligue 1/Serie A pass, Bundesliga/La Liga fail recent segment gates. Should partial research publication be allowed only for passing leagues?",
-        "2. For Bundesliga and La Liga corners v0, should we tune per-league calibration, recent-pressure weight, or keep the current corners lane as-is for those leagues?",
-        "3. Team-shots v1_market_nb improves Brier/log-loss but last-90 count MAE is worse than current. Should we tune the capped game-state lambda, split by win-prob bucket, or hold the model entirely?",
-        "4. For EPL/Serie A, should trailing-12-month normalization replace all-prior normalization globally, or only for shots/corners primary metrics?",
-        "5. Is the CLV monitor schema now sufficient for corners v0 live research tracking and de-promotion rules?",
+        "1. Does the allowed-league config plus hard canonical-only block cover the corners v0 research publication risk without adding more live-policy complexity?",
+        "2. Given the 7% YoY sensitivity, should La Liga get per-metric trailing-12-month normalization before any per-league model calibration is considered?",
+        "3. Team-shots cap-disabled recent MAE is worse than capped recent MAE. What lambda diagnostic should run next: normalization replay, largest-error input spot check, or current-model feature comparison?",
+        "4. Should Bundesliga remain guarded/sparse until xG coverage improves, or should shots/corners trailing normalization be tested there despite falling just below the 7% primary threshold?",
+        "5. Are the CLV de-promotion rules sufficient now that the monitor records time-to-kickoff and writes pre-close rows?",
         "",
     ])
     return "\n".join(lines)
