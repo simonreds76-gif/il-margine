@@ -32,7 +32,7 @@ import shutil
 import sys
 import unicodedata
 from collections import Counter, defaultdict
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from bisect import bisect_left
@@ -1216,19 +1216,32 @@ def main() -> int:
                 if pid is not None:
                     players[int(pid)] = p.get("name") or ""
 
-    snap = requests.get(
-        f"{base}/bookmaker_odds_snapshot",
-        headers=headers,
-        params={
-            "select": "player1_name,player2_name,odds1,odds2,league",
-            "bookmaker": "eq.Pinnacle",
-            "capture_date": "eq." + today,
-            "league": "in.(ATP,Challenger)",
-        },
-        timeout=30,
-    )
-    snap.raise_for_status()
-    pin_rows = snap.json() or []
+    def fetch_pinnacle_snapshot(snapshot_date: str) -> list[dict[str, Any]]:
+        snap = requests.get(
+            f"{base}/bookmaker_odds_snapshot",
+            headers=headers,
+            params={
+                "select": "player1_name,player2_name,odds1,odds2,league",
+                "bookmaker": "eq.Pinnacle",
+                "capture_date": "eq." + snapshot_date,
+                "league": "in.(ATP,Challenger)",
+            },
+            timeout=30,
+        )
+        snap.raise_for_status()
+        return snap.json() or []
+
+    snapshot_date_used = today
+    pin_rows = fetch_pinnacle_snapshot(snapshot_date_used)
+    if not pin_rows:
+        # The evening pipeline often crosses midnight UTC after scraping odds.
+        # Reuse the previous snapshot instead of publishing a false empty lane.
+        yesterday = (report_day - timedelta(days=1)).isoformat()
+        fallback_rows = fetch_pinnacle_snapshot(yesterday)
+        if fallback_rows:
+            snapshot_date_used = yesterday
+            pin_rows = fallback_rows
+            print(f"No Pinnacle snapshot for {today}; using {snapshot_date_used} snapshot.")
 
     fair_rows_for_match = [
         {
@@ -1460,7 +1473,7 @@ def main() -> int:
 
             candidates.append(
                 {
-                    "date": today,
+                    "date": snapshot_date_used,
                     "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
                     "player1": p1_name,
                     "player2": p2_name,
@@ -1512,7 +1525,7 @@ def main() -> int:
             )
             candidates.append(
                 {
-                    "date": today,
+                    "date": snapshot_date_used,
                     "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
                     "player1": p1_name,
                     "player2": p2_name,
@@ -1652,7 +1665,7 @@ def main() -> int:
                 )
                 candidates.append(
                     {
-                        "date": today,
+                        "date": snapshot_date_used,
                         "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
                         "player1": p1_name,
                         "player2": p2_name,
@@ -1711,7 +1724,7 @@ def main() -> int:
                 )
                 candidates.append(
                     {
-                        "date": today,
+                        "date": snapshot_date_used,
                         "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
                         "player1": p1_name,
                         "player2": p2_name,
