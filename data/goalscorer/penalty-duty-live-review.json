@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-25T20:30:22Z",
+  "generated_at": "2026-04-25T23:00:11Z",
   "league": "serie-a",
-  "row_count": 2,
+  "row_count": 1,
   "rows": [
     {
       "date": "2026-04-24",
@@ -31,37 +31,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Scott McTominay took 1 penalty attempt and missed for Napoli vs Cremonese. Primary pre-match: Kevin De Bruyne (unknown). Secondary pre-match: Rasmus Højlund (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-04-25T20:29:55Z",
-      "context_source_path": "data/goalscorer/penalty-duty-context.json"
-    },
-    {
-      "date": "2026-04-19",
-      "league": "serie-a",
-      "review_source": "fotmob_live",
-      "match": "Pisa vs Genoa",
-      "team": "Genoa",
-      "opponent": "Pisa",
-      "actual_taker": "Lorenzo Colombo",
-      "actual_role_pre_match": "tertiary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "55",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Ruslan Malinovskiy",
-      "secondary_pre_match": "Junior Messias",
-      "tertiary_pre_match": "Lorenzo Colombo",
-      "primary_lineup_status": "unknown",
-      "secondary_lineup_status": "unknown",
-      "tertiary_lineup_status": "unknown",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "expected_backup_shift",
-      "review_priority": "medium",
-      "editorial_note": "Lorenzo Colombo took 1 penalty attempt and scored for Genoa vs Pisa. Primary pre-match: Ruslan Malinovskiy (unknown). Secondary pre-match: Junior Messias (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-04-25T20:29:55Z",
+      "context_generated_at": "2026-04-25T22:59:56Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     }
   ]
