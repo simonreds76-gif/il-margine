@@ -542,3 +542,40 @@
 [17:45:39]   Team shots:        http://localhost:3000/model-monitor/team-shots
 [17:45:39]   Files:             data/shortlist/ + data/team-shots/
 [17:45:39] ==========================================
+[08:53:48] ==========================================
+[08:53:48]   TEAM PROPS PIPELINE -- 2026-04-25 08:53:47
+[08:53:48]   (Corners + Team Total Shots)
+[08:53:48] ==========================================
+[08:53:48] 
+[08:53:48] --- CORNERS ---
+[08:53:48] Step 1a: Refreshing corners current-season history...
+[08:53:58]   Corners historical refresh complete
+[08:53:58] Step 1b: Running corners model...
+[08:54:03]     20655 predictions generated
+[08:54:03] Step 1c: Fitting Platt calibration...
+[08:54:17]   Params written   -> /home/runner/work/il-margine/il-margine/data/corners-ou/corners-calibration-params.json
+[08:54:17] Step 1d: Building corners V3 backtest artifacts...
+[08:54:19]   Backtest bets written    : 175
+[08:54:19] Step 1e: Refreshing Pinnacle corners snapshot...
+[08:54:53]     New rows: 810
+[08:54:53] Step 1f: Generating official V3 shortlist from Pinnacle corners snapshot...
+[08:54:54] Step 1g: Generating V3.1 shadow shortlist from Pinnacle corners snapshot...
+[08:54:55] Step 1h: Settling previous corner bets...
+[08:54:56]     Settled: 37  W19/L16/P2  (54% ex-push)
+[08:54:56] 
+[08:54:56] --- TEAM TOTAL SHOTS ---
+[08:54:56] Skipped (SkipTeamShots switch enabled)
+[08:54:56] 
+[08:54:56] Syncing latest corners artifacts...
+[08:54:56]   Synced V3 shortlist: shortlist-2026-04-25.txt -> shortlist-latest.txt
+[08:54:56]   Synced V3 value bets: value-bets-2026-04-25.csv -> value-bets-latest.csv
+[08:54:56]   Synced V3 signals: signals-2026-04-25.csv -> signals-latest.csv
+[08:54:56]   Synced V3.1 shortlist: shortlist-2026-04-25-v31.txt -> shortlist-latest-v31.txt
+[08:54:56]   Synced V3.1 value bets: value-bets-2026-04-25-v31.csv -> value-bets-latest-v31.csv
+[08:54:56]   Synced V3.1 signals: signals-2026-04-25-v31.csv -> signals-latest-v31.csv
+[08:54:56] 
+[08:54:56] Pipeline complete. Check:
+[08:54:56]   Corners shortlist: http://localhost:3000/model-monitor/corners
+[08:54:56]   Team shots:        http://localhost:3000/model-monitor/team-shots
+[08:54:56]   Files:             data/shortlist/ + data/team-shots/
+[08:54:56] ==========================================
