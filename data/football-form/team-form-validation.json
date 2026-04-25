@@ -1,0 +1,48 @@
+{
+  "checked_at": "2026-04-25T13:37:29+00:00",
+  "files": {
+    "team-match-base.csv": {
+      "age_days": 2,
+      "critical_coverage": {
+        "corners_against": 1.0,
+        "corners_for": 1.0,
+        "shots_against": 1.0,
+        "shots_for": 1.0
+      },
+      "duplicates": 0,
+      "field_count": 27,
+      "latest_date": "2026-04-23",
+      "market_team_win_prob_coverage": 0.9997,
+      "rows": 42714,
+      "xg_coverage": 0.0651
+    },
+    "team-rolling-form.csv": {
+      "age_days": 2,
+      "critical_coverage": {
+        "current_corners_against": 1.0,
+        "current_corners_for": 1.0,
+        "current_shots_against": 1.0,
+        "current_shots_for": 1.0
+      },
+      "duplicates": 0,
+      "field_count": 101,
+      "latest_date": "2026-04-23",
+      "market_team_win_prob_coverage": 0.9997,
+      "rows": 42714,
+      "xg_coverage": 0.0651
+    }
+  },
+  "issues": [
+    {
+      "code": "team_match_base_xg_coverage_low",
+      "detail": "xG coverage 6.5%",
+      "level": "warning"
+    },
+    {
+      "code": "team_rolling_form_xg_coverage_low",
+      "detail": "xG coverage 6.5%",
+      "level": "warning"
+    }
+  ],
+  "status": "warning"
+}

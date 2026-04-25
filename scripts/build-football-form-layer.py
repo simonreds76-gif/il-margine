@@ -6,6 +6,9 @@ This is an input layer only. It does not change bet selection or model formulas.
 Outputs:
 - data/football-form/team-match-base.csv
 - data/football-form/team-rolling-form.csv
+- data/football-form/team-match-base-YYYY-MM-DD.csv
+- data/football-form/team-rolling-form-YYYY-MM-DD.csv
+- data/football-form/team-form-manifest.json
 - data/football-form/team-form-report.md
 """
 
@@ -14,6 +17,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import subprocess
 import sys
 from collections import defaultdict, deque
 from dataclasses import dataclass
@@ -90,6 +94,13 @@ ROLLING_BASE_FIELDS = [
     "current_corners_against",
     "market_team_win_prob",
     "market_opp_win_prob",
+    "league_prior_rows",
+    "league_prior_shots_for_avg",
+    "league_prior_shots_against_avg",
+    "league_prior_corners_for_avg",
+    "league_prior_corners_against_avg",
+    "league_prior_xg_for_avg",
+    "league_prior_xg_against_avg",
 ]
 
 
@@ -127,10 +138,22 @@ ROLLING_METRICS = [
 ]
 
 
+RELATIVE_METRICS = [
+    "shots_for_avg_rel",
+    "shots_against_avg_rel",
+    "corners_for_avg_rel",
+    "corners_against_avg_rel",
+    "xg_for_avg_rel",
+    "xg_against_avg_rel",
+]
+
+
 def rolling_fields() -> list[str]:
     fields = list(ROLLING_BASE_FIELDS)
     for window in WINDOWS:
         for metric in ROLLING_METRICS:
+            fields.append(f"r{window}_{metric}")
+        for metric in RELATIVE_METRICS:
             fields.append(f"r{window}_{metric}")
     return fields
 
@@ -416,8 +439,64 @@ def summarize_window(history: list[dict[str, Any]], window: int) -> dict[str, An
     }
 
 
+LEAGUE_BASELINE_SOURCES = {
+    "shots_for": "league_prior_shots_for_avg",
+    "shots_against": "league_prior_shots_against_avg",
+    "corners_for": "league_prior_corners_for_avg",
+    "corners_against": "league_prior_corners_against_avg",
+    "xg_for": "league_prior_xg_for_avg",
+    "xg_against": "league_prior_xg_against_avg",
+}
+
+
+def update_league_stats(stats: dict[str, float], row: dict[str, Any]) -> None:
+    stats["rows"] = stats.get("rows", 0.0) + 1.0
+    for source_field in LEAGUE_BASELINE_SOURCES:
+        value = numeric(row, source_field)
+        if value is None:
+            continue
+        stats[f"{source_field}_sum"] = stats.get(f"{source_field}_sum", 0.0) + value
+        stats[f"{source_field}_count"] = stats.get(f"{source_field}_count", 0.0) + 1.0
+
+
+def summarize_league_baseline(stats: dict[str, float]) -> dict[str, Any]:
+    """Causal league baseline using only rows from dates before this matchday."""
+    out: dict[str, Any] = {"league_prior_rows": int(stats.get("rows", 0.0))}
+    for source_field, output_field in LEAGUE_BASELINE_SOURCES.items():
+        count = stats.get(f"{source_field}_count", 0.0)
+        total = stats.get(f"{source_field}_sum", 0.0)
+        out[output_field] = f"{total / count:.4f}".rstrip("0").rstrip(".") if count else ""
+    return {
+        "league_prior_rows": out["league_prior_rows"],
+        "league_prior_shots_for_avg": out["league_prior_shots_for_avg"],
+        "league_prior_shots_against_avg": out["league_prior_shots_against_avg"],
+        "league_prior_corners_for_avg": out["league_prior_corners_for_avg"],
+        "league_prior_corners_against_avg": out["league_prior_corners_against_avg"],
+        "league_prior_xg_for_avg": out["league_prior_xg_for_avg"],
+        "league_prior_xg_against_avg": out["league_prior_xg_against_avg"],
+    }
+
+
+def relative_window_fields(row: dict[str, Any], window: int) -> dict[str, Any]:
+    pairs = {
+        "shots_for_avg_rel": (f"r{window}_shots_for_avg", "league_prior_shots_for_avg"),
+        "shots_against_avg_rel": (f"r{window}_shots_against_avg", "league_prior_shots_against_avg"),
+        "corners_for_avg_rel": (f"r{window}_corners_for_avg", "league_prior_corners_for_avg"),
+        "corners_against_avg_rel": (f"r{window}_corners_against_avg", "league_prior_corners_against_avg"),
+        "xg_for_avg_rel": (f"r{window}_xg_for_avg", "league_prior_xg_for_avg"),
+        "xg_against_avg_rel": (f"r{window}_xg_against_avg", "league_prior_xg_against_avg"),
+    }
+    return {
+        f"r{window}_{name}": ratio(numeric(row, value_field), numeric(row, baseline_field))
+        for name, (value_field, baseline_field) in pairs.items()
+    }
+
+
 def build_rolling_rows(team_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     histories: dict[str, deque[dict[str, Any]]] = defaultdict(lambda: deque(maxlen=max(WINDOWS)))
+    league_stats: dict[str, dict[str, float]] = defaultdict(dict)
+    pending_league_rows: list[dict[str, Any]] = []
+    current_date: str | None = None
     rolling_rows: list[dict[str, Any]] = []
     sorted_rows = sorted(
         team_rows,
@@ -430,6 +509,14 @@ def build_rolling_rows(team_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
         ),
     )
     for row in sorted_rows:
+        if current_date is None:
+            current_date = row["date"]
+        elif row["date"] != current_date:
+            for pending_row in pending_league_rows:
+                update_league_stats(league_stats[pending_row["league"]], pending_row)
+            pending_league_rows = []
+            current_date = row["date"]
+
         history = list(histories[row["team_key"]])
         out = {
             "date": row["date"],
@@ -455,10 +542,13 @@ def build_rolling_rows(team_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "market_team_win_prob": row["market_team_win_prob"],
             "market_opp_win_prob": row["market_opp_win_prob"],
         }
+        out.update(summarize_league_baseline(league_stats[row["league"]]))
         for window in WINDOWS:
             out.update(summarize_window(history, window))
+            out.update(relative_window_fields(out, window))
         rolling_rows.append(out)
         histories[row["team_key"]].append(row)
+        pending_league_rows.append(row)
     return rolling_rows
 
 
@@ -468,6 +558,64 @@ def write_csv(path: Path, rows: list[dict[str, Any]], fields: list[str]) -> None
         writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
+
+
+def rel(path: Path) -> str:
+    try:
+        return path.relative_to(ROOT).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def default_version_label() -> str:
+    return datetime.now(UTC).date().isoformat()
+
+
+def write_manifest(
+    *,
+    output_dir: Path,
+    version_label: str,
+    match_rows: list[dict[str, Any]],
+    rolling_rows: list[dict[str, Any]],
+    xg_overlay_stats: dict[str, int],
+) -> None:
+    dates = [parse_date(row["date"]) for row in match_rows]
+    dates = [item for item in dates if item is not None]
+    manifest = {
+        "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat(),
+        "version": version_label,
+        "outputs": {
+            "team_match_base": rel(output_dir / "team-match-base.csv"),
+            "team_match_base_versioned": rel(output_dir / f"team-match-base-{version_label}.csv"),
+            "team_rolling_form": rel(output_dir / "team-rolling-form.csv"),
+            "team_rolling_form_versioned": rel(output_dir / f"team-rolling-form-{version_label}.csv"),
+            "report": rel(output_dir / "team-form-report.md"),
+            "validation_json": rel(output_dir / "team-form-validation.json"),
+            "validation_report": rel(output_dir / "team-form-validation.md"),
+        },
+        "row_counts": {
+            "team_match_base": len(match_rows),
+            "team_rolling_form": len(rolling_rows),
+        },
+        "date_range": {
+            "min": min(dates).isoformat() if dates else None,
+            "max": max(dates).isoformat() if dates else None,
+        },
+        "fields": {
+            "team_match_base": TEAM_MATCH_FIELDS,
+            "team_rolling_form": rolling_fields(),
+        },
+        "xg_overlay": xg_overlay_stats,
+        "notes": [
+            "Versioned CSVs are date-tagged generated artifacts.",
+            "Models should record the version value when training or producing research reports.",
+            "Validation must pass before a canonical table is trusted for model comparison.",
+        ],
+    }
+    (output_dir / "team-form-manifest.json").write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
 
 def render_report(
@@ -546,6 +694,9 @@ def main() -> int:
     parser.add_argument("--match-base", type=Path, default=DEFAULT_MATCH_BASE)
     parser.add_argument("--xg-source", type=Path, default=DEFAULT_XG_SOURCE)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument("--version-label", default=default_version_label())
+    parser.add_argument("--skip-validation", action="store_true")
+    parser.add_argument("--fail-on-validation-error", action="store_true")
     args = parser.parse_args()
 
     matches = load_match_base(args.match_base)
@@ -556,6 +707,8 @@ def main() -> int:
 
     write_csv(args.output_dir / "team-match-base.csv", team_rows, TEAM_MATCH_FIELDS)
     write_csv(args.output_dir / "team-rolling-form.csv", rolling_rows, rolling_fields())
+    write_csv(args.output_dir / f"team-match-base-{args.version_label}.csv", team_rows, TEAM_MATCH_FIELDS)
+    write_csv(args.output_dir / f"team-rolling-form-{args.version_label}.csv", rolling_rows, rolling_fields())
     report = render_report(
         match_count=len(match_rows),
         team_row_count=len(team_rows),
@@ -565,10 +718,31 @@ def main() -> int:
         output_dir=args.output_dir,
     )
     (args.output_dir / "team-form-report.md").write_text(report, encoding="utf-8")
+    write_manifest(
+        output_dir=args.output_dir,
+        version_label=args.version_label,
+        match_rows=team_rows,
+        rolling_rows=rolling_rows,
+        xg_overlay_stats=xg_overlay_stats,
+    )
 
-    print(f"Wrote {(args.output_dir / 'team-match-base.csv').relative_to(ROOT).as_posix()}")
-    print(f"Wrote {(args.output_dir / 'team-rolling-form.csv').relative_to(ROOT).as_posix()}")
-    print(f"Wrote {(args.output_dir / 'team-form-report.md').relative_to(ROOT).as_posix()}")
+    if not args.skip_validation:
+        validation_cmd = [
+            sys.executable,
+            str(ROOT / "scripts" / "validate-football-form-layer.py"),
+            "--output-dir",
+            str(args.output_dir),
+        ]
+        if args.fail_on_validation_error:
+            validation_cmd.append("--fail-on-error")
+        subprocess.run(validation_cmd, check=args.fail_on_validation_error)
+
+    print(f"Wrote {rel(args.output_dir / 'team-match-base.csv')}")
+    print(f"Wrote {rel(args.output_dir / 'team-rolling-form.csv')}")
+    print(f"Wrote {rel(args.output_dir / f'team-match-base-{args.version_label}.csv')}")
+    print(f"Wrote {rel(args.output_dir / f'team-rolling-form-{args.version_label}.csv')}")
+    print(f"Wrote {rel(args.output_dir / 'team-form-manifest.json')}")
+    print(f"Wrote {rel(args.output_dir / 'team-form-report.md')}")
     return 0
 
 

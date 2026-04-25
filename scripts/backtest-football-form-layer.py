@@ -152,6 +152,22 @@ def quality_adjustment(team: dict[str, Any], opp: dict[str, Any]) -> float:
     return clamp(1.0 + ((quality - neutral) * 1.5), 0.88, 1.12)
 
 
+def market_game_state_adjustment(team: dict[str, Any]) -> float:
+    """
+    Pre-match market strength proxy for expected game-state asymmetry.
+
+    Heavy favourites tend to take/produce more shots; heavy underdogs often spend
+    more time defending. The cap keeps this as a modest contextual nudge rather
+    than letting 1X2 odds dominate the shot model.
+    """
+    team_prob = pf(team.get("market_team_win_prob"), None)
+    opp_prob = pf(team.get("market_opp_win_prob"), None)
+    if team_prob is None or opp_prob is None:
+        return 1.0
+    gap = team_prob - opp_prob
+    return clamp(1.0 + (gap * 0.22), 0.88, 1.12)
+
+
 def pressure_adjustment(team: dict[str, Any], opp: dict[str, Any], league_shots_avg: float) -> float:
     team_shots = blended(team, "shots_for_avg")
     opp_conceded = blended(opp, "shots_against_avg")
@@ -161,7 +177,7 @@ def pressure_adjustment(team: dict[str, Any], opp: dict[str, Any], league_shots_
     return clamp(1.0 + ((pressure - 1.0) * 0.18), 0.88, 1.12)
 
 
-def canonical_team_shots_lambda(team: dict[str, Any], opp: dict[str, Any]) -> float | None:
+def canonical_team_shots_lambda(team: dict[str, Any], opp: dict[str, Any], *, use_market: bool = False) -> float | None:
     team_venue = str(team.get("venue", "")).strip()
     opp_venue = str(opp.get("venue", "")).strip()
     attack = blended_prefer(team, venue_field("shots_for", team_venue), "shots_for_avg")
@@ -170,6 +186,8 @@ def canonical_team_shots_lambda(team: dict[str, Any], opp: dict[str, Any]) -> fl
         return None
     lam = (0.55 * attack) + (0.45 * opp_defence)
     lam *= quality_adjustment(team, opp)
+    if use_market:
+        lam *= market_game_state_adjustment(team)
     return clamp(lam, 3.0, 30.0)
 
 
@@ -332,30 +350,36 @@ def evaluate_canonical(
         league = str(home.get("league", "")).strip()
 
         for team, opp in ((home, away), (away, home)):
-            lam = canonical_team_shots_lambda(team, opp)
             actual = pf(team.get("current_shots_for"), None)
-            if lam is None or actual is None:
+            if actual is None:
                 continue
             common = team_key(team) in team_shots_common_keys
-            add_prediction(
-                buckets,
-                model="canonical_form_v0_full",
-                market="team_shots",
-                league=league,
-                pred_count=lam,
-                actual_count=actual,
-                lines=TEAM_SHOTS_LINES,
-            )
-            if common:
+            for model, use_market in (
+                ("canonical_form_v0_full", False),
+                ("canonical_form_v1_market_full", True),
+            ):
+                lam = canonical_team_shots_lambda(team, opp, use_market=use_market)
+                if lam is None:
+                    continue
                 add_prediction(
                     buckets,
-                    model="canonical_form_v0_common",
+                    model=model,
                     market="team_shots",
                     league=league,
                     pred_count=lam,
                     actual_count=actual,
                     lines=TEAM_SHOTS_LINES,
                 )
+                if common:
+                    add_prediction(
+                        buckets,
+                        model=model.replace("_full", "_common"),
+                        market="team_shots",
+                        league=league,
+                        pred_count=lam,
+                        actual_count=actual,
+                        lines=TEAM_SHOTS_LINES,
+                    )
 
         home_corners = canonical_corners_lambda(home, away, league_shots_avg.get(league, 0.0))
         away_corners = canonical_corners_lambda(away, home, league_shots_avg.get(league, 0.0))
@@ -453,6 +477,7 @@ def render_report(rows: list[dict[str, Any]]) -> str:
             "- `current` is whatever the existing generated prediction CSV currently contains.",
             "- `canonical_form_v0_common` is tested only on rows where the current generated output also exists.",
             "- `canonical_form_v0_full` is the same formula over the full eligible historical canonical table.",
+            "- `canonical_form_v1_market_*` adds a capped pre-match 1X2 win-probability adjustment for expected game state.",
             "- If v0 is worse but close, the canonical layer is still useful as plumbing, not yet as a model replacement.",
             "- If v0 beats current on Brier/log-loss over common lines, then we test it against odds/CLV before promotion.",
         ]
