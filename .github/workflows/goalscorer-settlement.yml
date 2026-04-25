@@ -73,16 +73,25 @@ jobs:
             --github-output
 
       - name: Refresh stale Understat player logs
+        timeout-minutes: 45
         env:
           STALE_LEAGUES: ${{ steps.understat_health.outputs.stale_leagues }}
           SEASON_LABEL: ${{ steps.understat_health.outputs.season }}
+          UNDERSTAT_DELAY: "0.5"
+          UNDERSTAT_REQUEST_TIMEOUT: "12"
+          UNDERSTAT_MAX_ATTEMPTS: "3"
+          UNDERSTAT_PLAYER_MAX_ATTEMPTS: "3"
         run: |
           if [ -n "${STALE_LEAGUES}" ]; then
             echo "Refreshing stale current-season Understat logs before settlement: ${STALE_LEAGUES} (${SEASON_LABEL})"
             python scripts/understat-scrape-serie-a.py \
               --resume \
               --league ${STALE_LEAGUES} \
-              --season "${SEASON_LABEL}"
+              --season "${SEASON_LABEL}" \
+              --delay "${UNDERSTAT_DELAY}" \
+              --request-timeout "${UNDERSTAT_REQUEST_TIMEOUT}" \
+              --max-attempts "${UNDERSTAT_MAX_ATTEMPTS}" \
+              --player-max-attempts "${UNDERSTAT_PLAYER_MAX_ATTEMPTS}"
           else
             echo "Goalscorer current-season player logs fresh; skipping Understat scrape."
           fi
@@ -242,6 +251,11 @@ jobs:
             exit 0
           fi
           git commit -m "chore: hosted goalscorer settlement"
+          if ! git diff --quiet; then
+            echo "Discarding non-goalscorer generated tracked changes before rebase:"
+            git status --short
+            git restore --worktree .
+          fi
           git fetch origin golden-with-speed-insights
           git rebase origin/golden-with-speed-insights
           git push origin HEAD:golden-with-speed-insights
