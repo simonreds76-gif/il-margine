@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-25T15:26:46Z",
+  "updated_at": "2026-04-25T15:27:44Z",
   "reason": "cycle",
   "leagues": {
     "serie-a": {
@@ -8,8 +8,8 @@
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "hot",
-      "last_decision": "ran",
-      "last_message": "Ran serie-a in hot tier (cadence 10m, fixtures 8).",
+      "last_decision": "waiting",
+      "last_message": "Skip serie-a: cadence 10m not due yet.",
       "next_kickoff_utc": "2026-04-25T16:00:00Z"
     },
     "epl": {
@@ -18,8 +18,8 @@
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "hot",
-      "last_decision": "ran",
-      "last_message": "Ran epl in hot tier (cadence 10m, fixtures 2).",
+      "last_decision": "waiting",
+      "last_message": "Skip epl: cadence 10m not due yet.",
       "next_kickoff_utc": "2026-04-25T16:30:00Z"
     },
     "la-liga": {
@@ -28,8 +28,8 @@
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "hot",
-      "last_decision": "ran",
-      "last_message": "Ran la-liga in hot tier (cadence 10m, fixtures 7).",
+      "last_decision": "waiting",
+      "last_message": "Skip la-liga: cadence 10m not due yet.",
       "next_kickoff_utc": "2026-04-25T16:30:00Z"
     },
     "bundesliga": {
@@ -38,8 +38,8 @@
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "hot",
-      "last_decision": "ran",
-      "last_message": "Ran bundesliga in hot tier (cadence 10m, fixtures 3).",
+      "last_decision": "waiting",
+      "last_message": "Skip bundesliga: cadence 10m not due yet.",
       "next_kickoff_utc": "2026-04-25T16:30:00Z"
     },
     "ligue-1": {
@@ -48,8 +48,8 @@
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "warm",
-      "last_decision": "ran",
-      "last_message": "Ran ligue-1 in warm tier (cadence 30m, fixtures 7).",
+      "last_decision": "waiting",
+      "last_message": "Skip ligue-1: cadence 30m not due yet.",
       "next_kickoff_utc": "2026-04-25T17:00:00Z"
     }
   }
