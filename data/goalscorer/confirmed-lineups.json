@@ -261,9 +261,9 @@
         "Daniele Ghilardi",
         "Robinio Vaz",
         "Paulo Dybala",
+        "Jan Ziólkowski",
         "Giorgio De Marzi",
         "Pierluigi Gollini",
-        "Jan Ziólkowski",
         "Konstantinos Tsimikas",
         "Angeliño",
         "Stephan El Shaarawy",
@@ -291,23 +291,23 @@
       "match_date": "2026-04-25",
       "home_team": "Hellas Verona",
       "away_team": "Lecce",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "3-5-2",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "3-5-1-1",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Lorenzo Montipò",
         "Victor Nelsson",
+        "Armel Bella-Kotchap",
         "Andrias Edmundsson",
-        "Nicolás Valentini",
-        "Pol Lirola",
+        "Rafik Belghali",
         "Jean-Daniel Akpa Akpro",
         "Roberto Gagliardini",
         "Antoine Bernede",
-        "Domagoj Bradaric",
-        "Rafik Belghali",
-        "Amin Sarr"
+        "Martin Frese",
+        "Tomás Suslov",
+        "Kieron Bowie"
       ],
       "away_players": [
         "Wladimiro Falcone",
@@ -329,7 +329,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 11
         },
         {
@@ -338,8 +338,17 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 33
+        },
+        {
+          "name": "Armel Bella-Kotchap",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-1-1",
+          "position_id": 35
         },
         {
           "name": "Andrias Edmundsson",
@@ -347,25 +356,16 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
-          "position_id": 35
-        },
-        {
-          "name": "Nicolás Valentini",
-          "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 37
         },
         {
-          "name": "Pol Lirola",
+          "name": "Rafik Belghali",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 71
         },
         {
@@ -374,7 +374,7 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 73
         },
         {
@@ -383,7 +383,7 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 75
         },
         {
@@ -392,35 +392,35 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 77
         },
         {
-          "name": "Domagoj Bradaric",
+          "name": "Martin Frese",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 79
         },
         {
-          "name": "Rafik Belghali",
+          "name": "Tomás Suslov",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-5-2",
-          "position_id": 104
+          "line_size": 1,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-5-1-1",
+          "position_id": 95
         },
         {
-          "name": "Amin Sarr",
-          "line_index": 2,
-          "line_size": 2,
+          "name": "Kieron Bowie",
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-5-2",
-          "position_id": 106
+          "formation": "3-5-1-1",
+          "position_id": 115
         }
       ],
       "away_starters": [
@@ -525,7 +525,21 @@
         }
       ],
       "home_subs": [],
-      "away_subs": [],
+      "away_subs": [
+        "Christian Früchtl",
+        "Jasper Samooja",
+        "Corrie Ndaba",
+        "Matías Pérez",
+        "Álex Sala",
+        "Filip Marchwinski",
+        "Niko Kovac",
+        "Olaf Gorter",
+        "Oumar Ngom",
+        "Thórir Helgason",
+        "Francesco Camarda",
+        "Konan N’Dri",
+        "Walid Cheddira"
+      ],
       "home_unavailable": [
         "Daniel Oyegoke",
         "Suat Serdar",

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-25T16:05:43Z",
+  "generated_at": "2026-04-25T18:12:28Z",
   "league": "bundesliga",
-  "row_count": 3,
+  "row_count": 4,
   "rows": [
     {
       "team": "Augsburg",
@@ -25,6 +25,22 @@
       "team_key": "bayer leverkusen",
       "player_name": "Patrik Schick",
       "player_key": "patrik schick",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-25"
+    },
+    {
+      "team": "Hamburger SV",
+      "team_key": "hamburger sv",
+      "player_name": "Robert Glatzel",
+      "player_key": "robert glatzel",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
