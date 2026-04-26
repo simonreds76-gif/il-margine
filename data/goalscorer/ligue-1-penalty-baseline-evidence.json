@@ -1,9 +1,25 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-26T16:26:35Z",
+  "generated_at": "2026-04-26T17:05:30Z",
   "league": "ligue-1",
-  "row_count": 5,
+  "row_count": 7,
   "rows": [
+    {
+      "team": "Le Havre",
+      "team_key": "le havre",
+      "player_name": "Yanis Zouaoui",
+      "player_key": "yanis zouaoui",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-26"
+    },
     {
       "team": "Lille",
       "team_key": "lille",
@@ -41,6 +57,22 @@
       "team_key": "metz",
       "player_name": "Gauthier Hein",
       "player_key": "gauthier hein",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-26"
+    },
+    {
+      "team": "Paris FC",
+      "team_key": "paris fc",
+      "player_name": "Ilan Kebbal",
+      "player_key": "ilan kebbal",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
