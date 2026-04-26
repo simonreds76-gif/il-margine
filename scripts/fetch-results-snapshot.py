@@ -35,7 +35,9 @@ from settlement_utils import (
 BASE_URL = "https://www.football-data.co.uk"
 SHORTLIST_SETTLED = ROOT / "data" / "shortlist" / "settled-pnl.csv"
 TEAM_SHOTS_SIGNALS = ROOT / "data" / "team-shots" / "shadow" / "team-shots-shadow-signals.csv"
-DEFAULT_PENDING_PATHS = [SHORTLIST_SETTLED, TEAM_SHOTS_SIGNALS]
+TEAM_SHOTS_V3_RESEARCH = ROOT / "data" / "football-form" / "team-shots-v3-ema20-clv-monitor.csv"
+CORNERS_V0_RESEARCH = ROOT / "data" / "football-form" / "corners-v0-clv-monitor.csv"
+DEFAULT_PENDING_PATHS = [SHORTLIST_SETTLED, TEAM_SHOTS_SIGNALS, TEAM_SHOTS_V3_RESEARCH, CORNERS_V0_RESEARCH]
 DEFAULT_API_FOOTBALL_MAX_REQUESTS = 10
 
 
@@ -151,7 +153,7 @@ def collect_target_fixtures(rows: List[dict]) -> Dict[str, List[dict]]:
         if not league:
             continue
         raw_date = ""
-        for field in ("kick_off", "kickoff_iso", "match_date", "fixture_date", "date", "file_date"):
+        for field in ("kick_off", "kickoff_iso", "kickoff_utc", "match_date", "fixture_date", "date", "file_date"):
             raw_date = str(row.get(field, "") or "").strip()
             if raw_date:
                 break
@@ -215,7 +217,7 @@ def main() -> int:
     pending_rows = load_pending_rows(pending_paths)
     target_dates_by_league = collect_target_dates(
         pending_rows,
-        kickoff_fields=("kick_off", "kickoff_iso"),
+        kickoff_fields=("kick_off", "kickoff_iso", "kickoff_utc"),
         date_fields=("match_date", "fixture_date", "date", "file_date"),
     )
     target_fixtures_by_league = collect_target_fixtures(pending_rows)

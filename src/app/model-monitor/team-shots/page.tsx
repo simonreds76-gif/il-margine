@@ -1917,7 +1917,9 @@ function LiveLineTable({
     teamShotsV3AllowedConfig?.blocked_leagues ?? teamShotsV3PromotionCheck?.blocked_leagues ?? [];
   const teamShotsV3Clv = parseClvMonitorSummary(teamShotsV3ClvReport);
   const teamShotsV3ClvRows = teamShotsV3ClvCsv ? parseCsvCached(teamShotsV3ClvCsv) : [];
-  const teamShotsV3SettledPicks = teamShotsV3ClvRows.filter((row) => (row.result ?? "").trim());
+  const teamShotsV3SettledPicks = teamShotsV3ClvRows.filter((row) =>
+    ["won", "lost", "push"].includes((row.result ?? "").trim().toLowerCase()),
+  );
   const teamShotsV3GuardBlockedPicks = teamShotsV3ClvRows.filter((row) => {
     const blockedReason = (row.blocked_reason ?? "").trim();
     const guarded = (row.confidence_guard_applied ?? "").trim().toLowerCase() === "true";
@@ -1928,7 +1930,7 @@ function LiveLineTable({
       const result = (row.result ?? "").trim();
       const blockedReason = (row.blocked_reason ?? "").trim();
       const guarded = (row.confidence_guard_applied ?? "").trim().toLowerCase() === "true";
-      return !result && !blockedReason && !guarded;
+      return (!result || result.toLowerCase() === "pending") && !blockedReason && !guarded;
     })
     .sort((a, b) => (a.kickoff_utc ?? a.match_date ?? "").localeCompare(b.kickoff_utc ?? b.match_date ?? ""));
   const teamShotsV3LeagueRows = [...(teamShotsV3PromotionCheck?.league_results ?? [])].sort((a, b) =>

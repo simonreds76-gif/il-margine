@@ -1055,7 +1055,7 @@ export default async function CornersMonitorPage() {
       const result = (row.result ?? "").trim();
       const blockedReason = (row.blocked_reason ?? "").trim();
       const guarded = (row.confidence_guard_applied ?? "").trim().toLowerCase() === "true";
-      return !result && !blockedReason && !guarded;
+      return (!result || result.toLowerCase() === "pending") && !blockedReason && !guarded;
     })
     .sort((a, b) => (a.kickoff_utc ?? a.match_date ?? "").localeCompare(b.kickoff_utc ?? b.match_date ?? ""));
   const cornersDiagnosticRows = Object.entries(cornersTotalDiagnostic?.by_league ?? {})

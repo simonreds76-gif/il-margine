@@ -53,10 +53,15 @@ OUTPUT_FIELDS = [
     "book_movement_to_close",
     "result",
     "pnl_units",
+    "actual_team_shots",
+    "settled_at",
     "current_model_would_have_priced",
     "confidence_guard_applied",
     "blocked_reason",
 ]
+
+SETTLED_RESULTS = {"won", "lost", "push"}
+SETTLEMENT_FIELDS = ("result", "pnl_units", "actual_team_shots", "settled_at")
 
 
 def norm(text: str) -> str:
@@ -102,6 +107,27 @@ def load_csv(path: Path) -> list[dict[str, str]]:
         return []
     with path.open("r", encoding="utf-8-sig", errors="replace", newline="") as handle:
         return list(csv.DictReader(handle))
+
+
+def load_existing_settlements(path: Path) -> dict[str, dict[str, str]]:
+    rows = load_csv(path)
+    settlements: dict[str, dict[str, str]] = {}
+    for row in rows:
+        pick_id = str(row.get("pick_id") or "").strip()
+        result = str(row.get("result") or "").strip().lower()
+        if pick_id and result in SETTLED_RESULTS:
+            settlements[pick_id] = row
+    return settlements
+
+
+def preserve_settlement(row: dict[str, Any], existing: dict[str, dict[str, str]]) -> dict[str, Any]:
+    prior = existing.get(str(row.get("pick_id") or "").strip())
+    if not prior:
+        return row
+    for field in SETTLEMENT_FIELDS:
+        if field in prior:
+            row[field] = prior.get(field, "")
+    return row
 
 
 def line_label(value: Any) -> str:
@@ -281,8 +307,10 @@ def build_pick_row(
         "published_to_close_clv": published_to_close_clv,
         "model_to_close_clv": model_to_close_clv,
         "book_movement_to_close": movement_to_close,
-        "result": pick.get("result", ""),
+        "result": pick.get("result", "") or "pending",
         "pnl_units": pick.get("pnl_units", ""),
+        "actual_team_shots": pick.get("actual_team_shots", ""),
+        "settled_at": pick.get("settled_at", ""),
         "current_model_would_have_priced": "true" if current_model_would_have_priced else "false",
         "confidence_guard_applied": "true" if confidence_guard_applied else "false",
         "blocked_reason": ";".join(blocked_reasons),
@@ -314,6 +342,10 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, odds_path: Path,
     clv_values = [pf(row.get("published_to_close_clv")) for row in rows if pf(row.get("published_to_close_clv")) is not None]
     blocked = [row for row in rows if row.get("blocked_reason")]
     with_close = [row for row in rows if row.get("book_price_close")]
+    settled = [row for row in rows if str(row.get("result") or "").strip().lower() in SETTLED_RESULTS]
+    open_rows = [row for row in rows if str(row.get("result") or "").strip().lower() in {"", "pending"}]
+    pnl_values = [pf(row.get("pnl_units")) for row in settled if pf(row.get("pnl_units")) is not None]
+    total_pnl = sum(value for value in pnl_values if value is not None)
     avg_clv = avg([value for value in clv_values if value is not None])
     model = str(allowed_config.get("model") or "team-shots-research")
     lines = [
@@ -326,6 +358,9 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, odds_path: Path,
         "## Summary",
         "",
         f"- Picks: {len(rows)}",
+        f"- Settled: {len(settled)}",
+        f"- Open/pending: {len(open_rows)}",
+        f"- Settled PnL: {total_pnl:+.2f}u" if settled else "- Settled PnL: -",
         f"- Picks with close: {len(with_close)}",
         f"- Hard-guard blocked: {len(blocked)}",
         f"- Average published-to-close CLV: {avg_clv:+.2%}" if avg_clv is not None else "- Average published-to-close CLV: -",
@@ -367,17 +402,21 @@ def main() -> None:
     picks = load_csv(args.picks)
     odds_rows = load_csv(args.odds)
     index = build_odds_index(odds_rows)
+    existing_settlements = load_existing_settlements(args.output)
     allowed_config = load_allowed_config(args.allowed_config)
     allowed_leagues = {str(league).strip().lower() for league in allowed_config.get("allowed_leagues", [])}
     allow_canonical_only = args.allow_canonical_only or bool(allowed_config.get("canonical_only_allowed"))
     rows = [
-        build_pick_row(
+        preserve_settlement(
+            build_pick_row(
             pick,
             index,
             allow_canonical_only=allow_canonical_only,
             allowed_leagues=allowed_leagues,
             config_valid=bool(allowed_config.get("config_valid")),
             config_error=str(allowed_config.get("config_error") or ""),
+            ),
+            existing_settlements,
         )
         for pick in picks
     ]

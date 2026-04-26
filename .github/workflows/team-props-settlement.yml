@@ -89,7 +89,9 @@ jobs:
           set +e
           FETCH_RESULTS_SNAPSHOT_RUN_STATUS_EXTERNAL=1 python scripts/fetch-results-snapshot.py \
             --pending-path data/shortlist/settled-pnl.csv \
-            --pending-path data/team-shots/shadow/team-shots-shadow-signals.csv
+            --pending-path data/team-shots/shadow/team-shots-shadow-signals.csv \
+            --pending-path data/football-form/team-shots-v3-ema20-clv-monitor.csv \
+            --pending-path data/football-form/corners-v0-clv-monitor.csv
           fetch_status=$?
           set -e
 
@@ -135,6 +137,10 @@ jobs:
         if: always()
         run: python scripts/shortlist-settle.py
 
+      - name: Settle football research lanes
+        if: always()
+        run: python scripts/settle-football-research-lanes.py
+
       - name: Audit settlement
         id: audit
         if: always()
@@ -142,7 +148,9 @@ jobs:
         run: |
           python scripts/settlement_audit.py \
             data/team-shots/shadow/settlement-audit.json \
-            data/shortlist/settlement-audit.json
+            data/shortlist/settlement-audit.json \
+            data/football-form/team-shots-v3-ema20-settlement-audit.json \
+            data/football-form/corners-v0-settlement-audit.json
 
       - name: Upload settlement audit artifacts
         if: always()
@@ -152,6 +160,8 @@ jobs:
           path: |
             data/shortlist/settlement-audit.json
             data/team-shots/shadow/settlement-audit.json
+            data/football-form/team-shots-v3-ema20-settlement-audit.json
+            data/football-form/corners-v0-settlement-audit.json
           retention-days: 30
 
       - name: Generate team-props snapshot artifacts
@@ -187,6 +197,9 @@ jobs:
           fi
           if [ -d data/corners-ou ]; then
             git add data/corners-ou/
+          fi
+          if [ -d data/football-form ]; then
+            git add data/football-form/
           fi
           if [ -d data/results-snapshot ]; then
             git add data/results-snapshot/
