@@ -1917,6 +1917,12 @@ function LiveLineTable({
     teamShotsV3AllowedConfig?.blocked_leagues ?? teamShotsV3PromotionCheck?.blocked_leagues ?? [];
   const teamShotsV3Clv = parseClvMonitorSummary(teamShotsV3ClvReport);
   const teamShotsV3ClvRows = teamShotsV3ClvCsv ? parseCsvCached(teamShotsV3ClvCsv) : [];
+  const teamShotsV3SettledPicks = teamShotsV3ClvRows.filter((row) => (row.result ?? "").trim());
+  const teamShotsV3GuardBlockedPicks = teamShotsV3ClvRows.filter((row) => {
+    const blockedReason = (row.blocked_reason ?? "").trim();
+    const guarded = (row.confidence_guard_applied ?? "").trim().toLowerCase() === "true";
+    return Boolean(blockedReason || guarded);
+  });
   const teamShotsV3PendingPicks = teamShotsV3ClvRows
     .filter((row) => {
       const result = (row.result ?? "").trim();
@@ -2083,14 +2089,16 @@ function LiveLineTable({
                   detail={teamShotsV3PromotionCheck?.canonical_only?.n !== undefined ? `${teamShotsV3PromotionCheck.canonical_only.n.toLocaleString("en-GB")} rows not published` : "guard active"}
                 />
                 <StatCard
-                  label="CLV picks"
-                  value={teamShotsV3Clv.picks}
-                  detail={`${teamShotsV3Clv.settled} settled`}
+                  label="Open V3 picks"
+                  value={String(teamShotsV3PendingPicks.length)}
+                  tone={statTone(teamShotsV3PendingPicks.length > 0 ? "green" : "default")}
+                  detail={`${teamShotsV3SettledPicks.length} settled | ${teamShotsV3ClvRows.length} published`}
                 />
                 <StatCard
                   label="Avg CLV"
                   value={teamShotsV3Clv.avgClv}
                   tone={teamShotsV3Clv.avgClv.startsWith("+") ? "text-emerald-300" : teamShotsV3Clv.avgClv.startsWith("-") ? "text-rose-300" : undefined}
+                  detail={teamShotsV3GuardBlockedPicks.length > 0 ? `${teamShotsV3GuardBlockedPicks.length} guard-blocked` : undefined}
                 />
                 <StatCard
                   label="Last gate"

@@ -43,7 +43,7 @@ TEAM_MODEL = "canonical_form_v3_ema20_nb"
 TEAM_MIN_EDGE = 0.05
 CORNERS_MODEL = "canonical_form_v0"
 CORNERS_MIN_EDGE = 0.05
-MAX_PICKS_PER_FIXTURE = 2
+MAX_PICKS_PER_FIXTURE = 1
 
 PUBLISHED_FIELDS = [
     "pick_id",
@@ -662,15 +662,86 @@ def publish_corners(args: argparse.Namespace, by_team, by_league, now: datetime)
 
 
 def cap_fixture_volume(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Keep only the strongest research signal per fixture.
+
+    These lanes are monitored like possible future products, so a fixture must
+    not publish multiple lines/sides from the same model. If over 8.5 and over
+    9.5 both clear the edge threshold, only the higher EV row survives.
+    """
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
         grouped[str(row.get("match_id", ""))].append(row)
     kept: list[dict[str, Any]] = []
     for fixture_rows in grouped.values():
         kept.extend(
-            sorted(fixture_rows, key=lambda item: float(item.get("edge") or 0.0), reverse=True)[:MAX_PICKS_PER_FIXTURE]
+            sorted(
+                fixture_rows,
+                key=lambda item: (
+                    float(item.get("edge") or 0.0),
+                    float(item.get("model_implied_prob") or 0.0),
+                    float(item.get("book_odds") or 0.0),
+                ),
+                reverse=True,
+            )[:MAX_PICKS_PER_FIXTURE]
         )
     return sorted(kept, key=lambda item: (item.get("kickoff_utc", ""), item.get("match", ""), -float(item.get("edge") or 0.0)))
+
+
+def row_is_open_published(row: dict[str, Any]) -> bool:
+    result = str(row.get("result") or "").strip()
+    blocked = str(row.get("blocked_reason") or "").strip()
+    guarded = str(row.get("confidence_guard_applied") or "").strip().lower() == "true"
+    return not result and not blocked and not guarded
+
+
+def merge_published_ledger(existing_rows: list[dict[str, str]], fresh_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Append/merge new picks without dropping already-published open picks.
+
+    The feed is a publication ledger, not only today's upcoming scanner. If a
+    row was published before kickoff and has not settled yet, it must stay in
+    the monitor after kickoff. After merging, enforce the product rule that
+    only the strongest open EV signal per fixture remains visible.
+    """
+    merged_by_id: dict[str, dict[str, Any]] = {}
+    for row in existing_rows:
+        pick_id = str(row.get("pick_id") or "").strip()
+        if pick_id:
+            merged_by_id[pick_id] = dict(row)
+    for row in fresh_rows:
+        pick_id = str(row.get("pick_id") or "").strip()
+        if pick_id:
+            merged_by_id[pick_id] = dict(row)
+
+    grouped_open: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    passthrough: list[dict[str, Any]] = []
+    for row in merged_by_id.values():
+        if row_is_open_published(row):
+            grouped_open[str(row.get("match_id", ""))].append(row)
+        else:
+            passthrough.append(row)
+
+    kept_open: list[dict[str, Any]] = []
+    for fixture_rows in grouped_open.values():
+        kept_open.extend(
+            sorted(
+                fixture_rows,
+                key=lambda item: (
+                    float(item.get("edge") or 0.0),
+                    float(item.get("model_implied_prob") or 0.0),
+                    float(item.get("book_odds") or 0.0),
+                ),
+                reverse=True,
+            )[:MAX_PICKS_PER_FIXTURE]
+        )
+
+    return sorted(
+        passthrough + kept_open,
+        key=lambda item: (
+            item.get("kickoff_utc", ""),
+            item.get("match", ""),
+            -float(item.get("edge") or 0.0),
+        ),
+    )
 
 
 def main() -> None:
@@ -696,6 +767,8 @@ def main() -> None:
     by_team, by_league = build_base_indexes(base_rows)
     team_picks = publish_team_shots(args, by_team, by_league, base_rows, now)
     corners_picks = publish_corners(args, by_team, by_league, now)
+    team_picks = merge_published_ledger(load_csv(args.team_output), team_picks)
+    corners_picks = merge_published_ledger(load_csv(args.corners_output), corners_picks)
     write_csv(args.team_output, team_picks)
     write_csv(args.corners_output, corners_picks)
     print(f"Wrote {args.team_output.relative_to(ROOT)} ({len(team_picks)} rows)")
