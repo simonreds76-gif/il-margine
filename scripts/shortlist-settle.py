@@ -362,7 +362,7 @@ def _row_preference(row: dict) -> tuple[str, int, int]:
     file_date = ((row.get("file_date") or "").strip()[:10]) or "9999-99-99"
     settled_rank = 0 if (row.get("settled") or "").strip() == "yes" else 1
     kickoff_rank = 0 if (row.get("kick_off") or "").strip() else 1
-    return (file_date, settled_rank, kickoff_rank)
+    return (settled_rank, file_date, kickoff_rank)
 # ── Settle ────────────────────────────────────────────────────────────────────
 
 def settle_all(target_date: Optional[str] = None, snapshot_date: Optional[str] = None) -> tuple[List[dict], dict]:
@@ -437,8 +437,11 @@ def settle_all(target_date: Optional[str] = None, snapshot_date: Optional[str] =
     source_rows = current_source_rows + [
         row
         for row in existing_source_rows
-        if _row_identity(row) not in current_keys
-        and _rerun_fixture_identity(row) not in current_rerun_keys
+        if (row.get("settled") or "").strip() == "yes"
+        or (
+            _row_identity(row) not in current_keys
+            and _rerun_fixture_identity(row) not in current_rerun_keys
+        )
     ]
 
     rows: List[dict] = []
@@ -539,6 +542,18 @@ def settle_all(target_date: Optional[str] = None, snapshot_date: Optional[str] =
             settled["pnl_staked"] = pnl_staked
             if (bet.get("settled") or "").strip() != "yes":
                 settled_this_run += 1
+        elif (
+            (bet.get("settled") or "").strip() == "yes"
+            and str(bet.get("actual_total_corners") or "").strip()
+        ):
+            # Never regress a graded bet back to pending just because the
+            # latest provider snapshot is temporarily missing that fixture.
+            settled["settled"] = "yes"
+            settled["settled_at"] = bet.get("settled_at") or ""
+            settled["actual_total_corners"] = bet.get("actual_total_corners") or ""
+            settled["won"] = bet.get("won") or ""
+            settled["pnl_units"] = bet.get("pnl_units") or ""
+            settled["pnl_staked"] = bet.get("pnl_staked") or ""
         else:
             settled["settled_at"] = bet.get("settled_at") or ""
             settled["settled"] = "pending"
@@ -556,9 +571,12 @@ def settle_all(target_date: Optional[str] = None, snapshot_date: Optional[str] =
         key = _row_identity(r)
         if key not in seen:
             seen[key] = r
-        # If the same full identity appears twice (e.g. the shortlist file and the existing
-        # settled CSV), the one already in `seen` wins (current shortlist file was added first
-        # in source_rows, so it takes precedence over the cached settled row).
+            continue
+        # Preserve an already-settled row if the latest source snapshot cannot
+        # currently reproduce the result. Otherwise a temporary provider gap can
+        # regress a winning/losing pick back to pending and trip the audit again.
+        if (seen[key].get("settled") or "").strip() != "yes" and (r.get("settled") or "").strip() == "yes":
+            seen[key] = r
     rows = list(seen.values())
 
     # Then collapse ghost duplicates caused by team-name aliases / regime reruns

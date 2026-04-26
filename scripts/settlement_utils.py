@@ -56,6 +56,12 @@ TEAM_ALIASES: Dict[str, str] = {
     "fulham fc": "fulham",
     "burnley fc": "burnley",
     "manchester city": "man city",
+    "manchester united": "man united",
+    "manchester utd": "man united",
+    "man utd": "man united",
+    "leeds united": "leeds",
+    "west ham united": "west ham",
+    "nottingham forest": "nott m forest",
     "newcastle united": "newcastle",
     "newcastle utd": "newcastle",
     "valencia cf": "valencia",
@@ -125,6 +131,13 @@ def snapshot_path_for(day: date) -> Path:
     return RESULTS_SNAPSHOT_DIR / f"{day.isoformat()}.json"
 
 
+def display_path(path: Path) -> str:
+    try:
+        return path.resolve().relative_to(ROOT.resolve()).as_posix()
+    except ValueError:
+        return str(path)
+
+
 def resolve_snapshot_paths(preferred_date: Optional[str] = None) -> list[Path]:
     target = parse_isoish_date(preferred_date or "") or datetime.now(UTC).date()
     candidates: list[Path] = []
@@ -150,7 +163,7 @@ def load_results_snapshot(preferred_date: Optional[str] = None) -> Tuple[Dict[st
     source_freshness: Dict[str, dict] = {}
     merged_payload: dict[str, Any] = {
         "snapshot_date": None,
-        "snapshot_paths": [str(path) for path in paths],
+        "snapshot_paths": [display_path(path) for path in paths],
     }
 
     # Newest snapshot wins on duplicate keys; older snapshots only fill holes.
@@ -178,7 +191,7 @@ def load_results_snapshot(preferred_date: Optional[str] = None) -> Tuple[Dict[st
                     "api_football_error": league_data.get("api_football_error"),
                     "api_football_max_requests": league_data.get("api_football_max_requests", 0),
                     "snapshot_date": payload.get("snapshot_date"),
-                    "snapshot_path": str(path),
+                    "snapshot_path": display_path(path),
                 }
             for key, fixture in (league_data.get("fixtures") or {}).items():
                 if key not in results:
