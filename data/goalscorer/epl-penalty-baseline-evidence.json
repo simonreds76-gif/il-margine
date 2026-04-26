@@ -1,7 +1,56 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-25T23:00:50Z",
+  "generated_at": "2026-04-26T00:03:56Z",
   "league": "epl",
-  "row_count": 0,
-  "rows": []
+  "row_count": 3,
+  "rows": [
+    {
+      "team": "Brentford",
+      "team_key": "brentford",
+      "player_name": "Thiago",
+      "player_key": "thiago",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-11"
+    },
+    {
+      "team": "Crystal Palace",
+      "team_key": "crystal palace",
+      "player_name": "Jean-Philippe Mateta",
+      "player_key": "jean philippe mateta",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-12"
+    },
+    {
+      "team": "Leeds",
+      "team_key": "leeds",
+      "player_name": "Dominic Calvert-Lewin",
+      "player_key": "dominic calvert lewin",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-18"
+    }
+  ]
 }

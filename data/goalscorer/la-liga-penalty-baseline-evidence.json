@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-25T23:01:44Z",
+  "generated_at": "2026-04-26T00:03:57Z",
   "league": "la-liga",
   "row_count": 7,
   "rows": [
@@ -25,15 +25,16 @@
       "team_key": "elche",
       "player_name": "André Silva",
       "player_key": "andr silva",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live"
+        "fotmob_live",
+        "settled_logs"
       ],
-      "event_count": 1,
+      "event_count": 2,
       "last_event_date": "2026-04-22"
     },
     {
@@ -41,15 +42,16 @@
       "team_key": "espanyol",
       "player_name": "Kike García",
       "player_key": "kike garc a",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live"
+        "fotmob_live",
+        "settled_logs"
       ],
-      "event_count": 1,
+      "event_count": 2,
       "last_event_date": "2026-04-23"
     },
     {
@@ -73,15 +75,16 @@
       "team_key": "osasuna",
       "player_name": "Ante Budimir",
       "player_key": "ante budimir",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "observed_player_penalties": 3,
+      "observed_team_penalties": 3,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 3.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live"
+        "fotmob_live",
+        "settled_logs"
       ],
-      "event_count": 1,
+      "event_count": 3,
       "last_event_date": "2026-04-21"
     },
     {

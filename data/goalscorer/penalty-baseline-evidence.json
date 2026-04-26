@@ -1,23 +1,72 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-25T23:00:11Z",
+  "generated_at": "2026-04-26T00:03:54Z",
   "league": "serie-a",
-  "row_count": 1,
+  "row_count": 4,
   "rows": [
     {
-      "team": "Napoli",
-      "team_key": "napoli",
-      "player_name": "Scott McTominay",
-      "player_key": "scott mctominay",
+      "team": "Como",
+      "team_key": "como",
+      "player_name": "Lucas Da Cunha",
+      "player_key": "lucas da cunha",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
       "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live"
+        "settled_logs"
       ],
       "event_count": 1,
+      "last_event_date": "2026-04-12"
+    },
+    {
+      "team": "Genoa",
+      "team_key": "genoa",
+      "player_name": "Lorenzo Colombo",
+      "player_key": "lorenzo colombo",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-19"
+    },
+    {
+      "team": "Lazio",
+      "team_key": "lazio",
+      "player_name": "Mattia Zaccagni",
+      "player_key": "mattia zaccagni",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-18"
+    },
+    {
+      "team": "Napoli",
+      "team_key": "napoli",
+      "player_name": "Scott McTominay",
+      "player_key": "scott mctominay",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
+      "observed_share": 1.0,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live",
+        "settled_logs"
+      ],
+      "event_count": 2,
       "last_event_date": "2026-04-24"
     }
   ]
