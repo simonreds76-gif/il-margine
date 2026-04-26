@@ -20,7 +20,24 @@ git config user.email "github-actions[bot]@users.noreply.github.com"
 for attempt in $(seq 1 "${max_attempts}"); do
   echo "Safe push attempt ${attempt}/${max_attempts} to ${remote}/${branch}"
   git fetch "${remote}" "${branch}"
-  git rebase --autostash "${remote}/${branch}"
+
+  if ! git diff --cached --quiet; then
+    echo "::error::ci-safe-push was called with staged changes after the workflow commit."
+    git status --short
+    exit 1
+  fi
+
+  # Hosted data jobs often leave generated files outside the committed scope
+  # (for example status files, locks, or secondary snapshots). Rebase requires a
+  # clean tree, so park those leftovers instead of letting the push step fail
+  # after the useful commit has already been created.
+  if ! git diff --quiet || [ -n "$(git ls-files --others --exclude-standard)" ]; then
+    echo "Stashing leftover generated files before rebase:"
+    git status --short
+    git stash push --include-untracked -m "ci-safe-push leftovers before rebase"
+  fi
+
+  git rebase "${remote}/${branch}"
 
   if git push "${remote}" "HEAD:${branch}"; then
     echo "Safe push completed."
