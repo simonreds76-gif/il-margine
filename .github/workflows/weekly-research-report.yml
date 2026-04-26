@@ -49,6 +49,7 @@ jobs:
 
       - name: Refresh research CLV monitor reports
         run: |
+          python scripts/publish-football-research-picks.py
           python scripts/team-shots-v1-clv-monitor.py \
             --picks data/football-form/team-shots-v3-ema20-published-picks.csv \
             --output data/football-form/team-shots-v3-ema20-clv-monitor.csv \

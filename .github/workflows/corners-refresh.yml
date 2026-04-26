@@ -48,6 +48,16 @@ jobs:
         run: |
           ./scripts/run-corners-pipeline.ps1 -SkipTeamShots -DaysAhead 7 -MinEdge 0.10 -Regions eu
 
+      - name: Refresh football research pick feeds
+        run: |
+          python scripts/publish-football-research-picks.py
+          python scripts/team-shots-v1-clv-monitor.py \
+            --picks data/football-form/team-shots-v3-ema20-published-picks.csv \
+            --output data/football-form/team-shots-v3-ema20-clv-monitor.csv \
+            --report data/football-form/team-shots-v3-ema20-clv-monitor.md \
+            --allowed-config data/football-form/team-shots-v3-ema20-allowed-leagues.json
+          python scripts/corners-v0-clv-monitor.py
+
       - name: Generate corners snapshot artifact
         run: python scripts/corners-live-snapshot.py
 
@@ -72,6 +82,9 @@ jobs:
           fi
           if [ -d data/corners-ou ]; then
             git add data/corners-ou/
+          fi
+          if [ -d data/football-form ]; then
+            git add data/football-form/
           fi
           if git diff --cached --quiet; then
             echo "No corners refresh changes to commit."

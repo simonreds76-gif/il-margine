@@ -39,6 +39,7 @@ SNAPSHOT_FILES = [
     "data/football-form/corners-v0-allowed-leagues.json",
     "data/football-form/corners-v0-promotion-check.json",
     "data/football-form/corners-v0-promotion-check.md",
+    "data/football-form/corners-v0-published-picks.csv",
     "data/football-form/corners-v0-clv-monitor.csv",
     "data/football-form/corners-v0-clv-monitor.md",
     "data/football-form/corners-total-diagnostic.json",

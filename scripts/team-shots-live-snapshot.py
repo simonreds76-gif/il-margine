@@ -43,6 +43,7 @@ SNAPSHOT_FILES = [
     "data/football-form/team-shots-v3-ema20-allowed-leagues.json",
     "data/football-form/team-shots-v3-ema20-promotion-check.json",
     "data/football-form/team-shots-v3-ema20-promotion-check.md",
+    "data/football-form/team-shots-v3-ema20-published-picks.csv",
     "data/football-form/team-shots-v3-ema20-clv-monitor.csv",
     "data/football-form/team-shots-v3-ema20-clv-monitor.md",
     "data/football-form/weekly-research-report.json",

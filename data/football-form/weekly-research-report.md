@@ -1,6 +1,6 @@
 # Weekly Research Lane Report
 
-- Generated: 2026-04-25T22:51:53Z
+- Generated: 2026-04-26T00:28:27Z
 - Overall read: observe live sample
 
 ## Team Shots V3 EMA20 Research
@@ -10,7 +10,7 @@
 - Blocked leagues: -
 - Canonical-only fixtures: blocked
 - Last-90 segment gate: 1140 rows, current MAE 3.7320, V3 MAE 3.6413, improvement +2.4%
-- Live CLV sample: 0 published, 0 settled
+- Live CLV sample: 12 published, 0 settled
 - Avg published-to-close CLV: -
 - P/L sample: +0.00u
 - Action: watch passively; not enough live sample until 50 settled picks
@@ -21,7 +21,7 @@
 - Allowed leagues: EPL, Ligue 1, Serie A
 - Blocked leagues: Bundesliga, La Liga
 - Canonical-only fixtures: blocked
-- Live CLV sample: 0 published, 0 settled
+- Live CLV sample: 7 published, 0 settled
 - Avg published-to-close CLV: -
 - P/L sample: +0.00u
 - Action: keep partial; Bundesliga/La Liga remain blocked

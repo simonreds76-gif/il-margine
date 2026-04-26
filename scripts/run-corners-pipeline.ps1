@@ -576,6 +576,27 @@ try {
         Log "Skipped (SkipTeamShots switch enabled)"
     }
 
+    $currentStep = "research-feeds"
+    Write-Status -State "running" -Message "Publishing football research feeds" -Artifacts (Build-ArtifactsState)
+    Log ""
+    Log "--- RESEARCH FEEDS ---"
+    try {
+        & python scripts/publish-football-research-picks.py 2>&1 | ForEach-Object { Log "  $_" }
+        if ($LASTEXITCODE -ne 0) {
+            Add-WarningMessage "Research pick publisher returned exit code $LASTEXITCODE."
+        }
+        & python scripts/team-shots-v1-clv-monitor.py --picks data/football-form/team-shots-v3-ema20-published-picks.csv --output data/football-form/team-shots-v3-ema20-clv-monitor.csv --report data/football-form/team-shots-v3-ema20-clv-monitor.md --allowed-config data/football-form/team-shots-v3-ema20-allowed-leagues.json 2>&1 | ForEach-Object { Log "  $_" }
+        if ($LASTEXITCODE -ne 0) {
+            Add-WarningMessage "Team shots V3 CLV monitor returned exit code $LASTEXITCODE."
+        }
+        & python scripts/corners-v0-clv-monitor.py 2>&1 | ForEach-Object { Log "  $_" }
+        if ($LASTEXITCODE -ne 0) {
+            Add-WarningMessage "Corners V0 CLV monitor returned exit code $LASTEXITCODE."
+        }
+    } catch {
+        Add-WarningMessage "Research feed publication failed: $_"
+    }
+
     $currentStep = "artifact-sync"
     Write-Status -State "running" -Message "Refreshing latest team props artifacts" -Artifacts (Build-ArtifactsState)
     Log ""

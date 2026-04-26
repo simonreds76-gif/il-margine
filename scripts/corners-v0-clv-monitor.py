@@ -85,6 +85,8 @@ def fmt_dt(value: datetime | None) -> str:
 
 
 def pf(value: Any) -> float | None:
+    if isinstance(value, (int, float)):
+        return float(value)
     text = str(value or "").replace(",", "").strip()
     if not text:
         return None
