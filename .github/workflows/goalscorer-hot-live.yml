@@ -49,6 +49,11 @@ jobs:
           if [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
             echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" >> .env.local
           fi
+          if [ -n "${{ secrets.DATABASE_URL }}" ]; then
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env.local
+          elif [ -n "${{ secrets.SUPABASE_DB_URL }}" ]; then
+            echo "SUPABASE_DB_URL=${{ secrets.SUPABASE_DB_URL }}" >> .env.local
+          fi
 
       - name: Run hosted hot live poll
         run: python scripts/goalscorer-live-hosted.py
@@ -79,6 +84,4 @@ jobs:
             exit 0
           fi
           git commit -m "chore: hosted goalscorer hot live poll"
-          git fetch origin golden-with-speed-insights
-          git rebase origin/golden-with-speed-insights
-          git push origin HEAD:golden-with-speed-insights
+          bash scripts/ci-safe-push.sh golden-with-speed-insights

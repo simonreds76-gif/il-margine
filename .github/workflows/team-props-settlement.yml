@@ -120,9 +120,7 @@ jobs:
       - name: Push results snapshot immediately
         if: env.SNAPSHOT_COMMITTED == '1'
         run: |
-          git fetch origin golden-with-speed-insights
-          git rebase origin/golden-with-speed-insights
-          git push origin HEAD:golden-with-speed-insights
+          bash scripts/ci-safe-push.sh golden-with-speed-insights
 
       - name: Refresh local branch after snapshot push
         if: env.SNAPSHOT_COMMITTED == '1'
@@ -198,9 +196,7 @@ jobs:
             exit 0
           fi
           git commit -m "chore: hosted team props settlement"
-          git fetch origin golden-with-speed-insights
-          git rebase origin/golden-with-speed-insights
-          git push origin HEAD:golden-with-speed-insights
+          bash scripts/ci-safe-push.sh golden-with-speed-insights
 
       - name: Fail workflow if settlement audit reported errors
         if: always() && steps.audit.outcome == 'failure'

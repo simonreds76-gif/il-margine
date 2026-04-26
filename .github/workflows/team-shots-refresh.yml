@@ -1,12 +1,9 @@
-﻿name: Team Shots Refresh
+name: Team Shots Refresh
 
 on:
   schedule:
-    - cron: "12 17 * * 2" # Tuesday 17:12 UTC = 18:12 BST
-    - cron: "12 8 * * 3"  # Wednesday 08:12 UTC = 09:12 BST
-    - cron: "12 17 * * 5" # Friday 17:12 UTC = 18:12 BST
-    - cron: "12 8 * * 6"  # Saturday 08:12 UTC = 09:12 BST
-    - cron: "12 8 * * 0"  # Sunday 08:12 UTC = 09:12 BST
+    - cron: "12 8 * * *"  # Daily 08:12 UTC = 09:12 BST
+    - cron: "12 17 * * *" # Daily 17:12 UTC = 18:12 BST
   workflow_dispatch:
 
 permissions:
@@ -46,11 +43,20 @@ jobs:
       - name: Refresh FBRef / Understat shooting data
         run: python scripts/fbref-download-shooting.py --leagues epl serie-a la-liga bundesliga ligue-1 --seasons 2025
 
+      - name: Build canonical football form layer
+        run: python scripts/build-football-form-layer.py
+
       - name: Run team-shots model
         run: python scripts/team-shots-model.py
 
       - name: Fit team-shots calibration
         run: python scripts/team-shots-fit-calibration.py
+
+      - name: Run team-shots v2 NB dry-run model
+        run: python scripts/team-shots-model.py --prob-surface lambda_shots_nb --nb-alpha 0.25 --output data/team-shots/team-shots-predictions.v2-nb.csv --calibration data/team-shots/team-shots-calibration.v2-nb.txt
+
+      - name: Fit team-shots v2 calibration diagnostics
+        run: python scripts/team-shots-fit-calibration.py --predictions data/team-shots/team-shots-predictions.v2-nb.csv --params-out data/team-shots/team-shots-calibration-params.v2-nb.json --diag-out data/team-shots/team-shots-calibration-diagnostics.v2-nb.txt
 
       - name: Optional upcoming + compare + shadow
         env:
@@ -60,12 +66,29 @@ jobs:
             python scripts/team_shots_upcoming.py --days-ahead 7
             python scripts/team-shots-compare.py --min-edge 0.05
             python scripts/team-shots-shadow-tracker.py --min-edge 0.05
+            python scripts/team_shots_upcoming.py --days-ahead 7 --prob-surface lambda_shots_nb --nb-alpha 0.25 --no-calibration --output data/team-shots/team-shots-upcoming.v2-nb-raw.csv --scanner data/team-shots/team-shots-scanner.v2-nb-raw.csv
+            python scripts/team-shots-compare.py --predictions data/team-shots/team-shots-predictions.v2-nb.csv --upcoming data/team-shots/team-shots-upcoming.v2-nb-raw.csv --no-calibration --output data/team-shots/team-shots-comparison.v2-nb-raw.csv --summary data/team-shots/team-shots-comparison.v2-nb-raw.txt
+            python scripts/team-shots-shadow-tracker.py --comparison data/team-shots/team-shots-comparison.v2-nb-raw.csv --scanner data/team-shots/team-shots-scanner.v2-nb-raw.csv --signals data/team-shots/shadow/team-shots-shadow-signals.v2-nb-raw-live-dry-run.csv --summary data/team-shots/shadow/team-shots-shadow-performance.v2-nb-raw-live-dry-run.txt --policy-version lambda-shots-nb-v2-raw --min-edge 0.12
           else
             echo "THE_ODDS_API_KEY not configured; skipping upcoming/compare/shadow."
           fi
 
       - name: Settle team-shots shadow signals
-        run: python scripts/team-shots-settle.py
+        run: |
+          python scripts/team-shots-settle.py
+          if [ -f data/team-shots/shadow/team-shots-shadow-signals.v2-nb-raw-live-dry-run.csv ]; then
+            python scripts/team-shots-settle.py --signals data/team-shots/shadow/team-shots-shadow-signals.v2-nb-raw-live-dry-run.csv --summary data/team-shots/shadow/team-shots-shadow-performance.v2-nb-raw-live-dry-run.txt --audit-out data/team-shots/shadow/settlement-audit.v2-nb-raw.json
+          fi
+
+      - name: Refresh football research pick feeds
+        run: |
+          python scripts/publish-football-research-picks.py
+          python scripts/team-shots-v1-clv-monitor.py \
+            --picks data/football-form/team-shots-v3-ema20-published-picks.csv \
+            --output data/football-form/team-shots-v3-ema20-clv-monitor.csv \
+            --report data/football-form/team-shots-v3-ema20-clv-monitor.md \
+            --allowed-config data/football-form/team-shots-v3-ema20-allowed-leagues.json
+          python scripts/corners-v0-clv-monitor.py
 
       - name: Generate team-shots snapshot artifact
         run: python scripts/team-shots-live-snapshot.py
@@ -87,12 +110,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/team-shots/
+          git add data/football-form/
           if git diff --cached --quiet; then
             echo "No team-shots refresh changes to commit."
             exit 0
           fi
           git commit -m "chore: hosted team shots refresh"
-          git fetch origin golden-with-speed-insights
-          git rebase origin/golden-with-speed-insights
-          git push origin HEAD:golden-with-speed-insights
+          bash scripts/ci-safe-push.sh golden-with-speed-insights
 
