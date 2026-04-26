@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-04-26T17:57:44Z",
+  "run_at": "2026-04-26T17:57:45Z",
   "model": "team-shots",
-  "total_bets": 81,
-  "settled_this_run": 0,
-  "total_settled": 78,
-  "total_pending": 3,
+  "total_bets": 16,
+  "settled_this_run": 4,
+  "total_settled": 4,
+  "total_pending": 12,
   "pending_breakdown": {
-    "future": 2,
-    "live": 0,
-    "stale": 1,
+    "future": 3,
+    "live": 1,
+    "stale": 8,
     "old_stale": 0,
     "unknown": 0
   },
@@ -91,20 +91,78 @@
   },
   "stale_rows": [
     {
+      "match": "Getafe CF vs FC Barcelona",
+      "league": "la-liga",
+      "line": "10.5",
+      "side": "under",
+      "kickoff": "2026-04-25T14:15:00Z",
+      "hours_elapsed": 27.71
+    },
+    {
+      "match": "Genoa CFC vs Como 1907",
+      "league": "serie-a",
+      "line": "10.5",
+      "side": "under",
+      "kickoff": "2026-04-26T13:00:00Z",
+      "hours_elapsed": 4.96
+    },
+    {
+      "match": "FSV Mainz vs Bayern Munich",
+      "league": "bundesliga",
+      "line": "11.5",
+      "side": "under",
+      "kickoff": "2026-04-25T13:30:00Z",
+      "hours_elapsed": 28.46
+    },
+    {
+      "match": "SSC Napoli vs US Cremonese",
+      "league": "serie-a",
+      "line": "8.5",
+      "side": "under",
+      "kickoff": "2026-04-24T18:45:00Z",
+      "hours_elapsed": 47.21
+    },
+    {
+      "match": "Valencia CF vs Girona FC",
+      "league": "la-liga",
+      "line": "9.5",
+      "side": "under",
+      "kickoff": "2026-04-25T16:30:00Z",
+      "hours_elapsed": 25.46
+    },
+    {
+      "match": "Arsenal FC vs Newcastle United",
+      "league": "epl",
+      "line": "9.5",
+      "side": "under",
+      "kickoff": "2026-04-25T16:30:00Z",
+      "hours_elapsed": 25.46
+    },
+    {
       "match": "VfB Stuttgart vs Werder Bremen",
       "league": "bundesliga",
       "line": "16.5",
       "side": "under",
       "kickoff": "2026-04-26T13:30:00Z",
       "hours_elapsed": 4.46
+    },
+    {
+      "match": "Atletico Madrid vs Athletic Bilbao",
+      "league": "la-liga",
+      "line": "11.5",
+      "side": "under",
+      "kickoff": "2026-04-25T19:00:00Z",
+      "hours_elapsed": 22.96
     }
   ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
   "warnings": [
-    "1 stale pending row(s) across 1 fixture(s) (3-48h elapsed)"
+    "8 stale pending row(s) across 8 fixture(s) (3-48h elapsed)"
   ],
-  "errors": [],
-  "exit_code_recommendation": 0
+  "errors": [
+    "la-liga: 3 stale fixture(s) across 3 pending row(s)"
+  ],
+  "exit_code_recommendation": 1
 }
