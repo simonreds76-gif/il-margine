@@ -293,32 +293,32 @@
       "match_date": "2026-04-26",
       "home_team": "Genoa",
       "away_team": "Como",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "3-4-1-2",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "4-4-2",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Justin Bijlow",
         "Alessandro Marcandalli",
         "Leo Østigard",
+        "Sebastian Otoa",
         "Johan Vásquez",
-        "Mikael Egill Ellertsson",
-        "Ruslan Malinovsky",
-        "Morten Frendrup",
         "Stefano Sabelli",
-        "Tommaso Baldanzi",
-        "Vítinha",
-        "Lorenzo Colombo"
+        "Morten Frendrup",
+        "Amorim",
+        "Mikael Egill Ellertsson",
+        "Jeff Ekhator",
+        "Vítinha"
       ],
       "away_players": [
         "Jean Butez",
         "Ivan Smolcic",
         "Jacobo Ramón",
-        "Marc-Oliver Kempf",
+        "Diego Carlos",
         "Álex Valle",
-        "Lucas Da Cunha",
         "Máximo Perrone",
+        "Lucas Da Cunha",
         "Assane Diao",
         "Nico Paz",
         "Martin Baturina",
@@ -331,62 +331,44 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-1-2",
+          "formation": "4-4-2",
           "position_id": 11
         },
         {
           "name": "Alessandro Marcandalli",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-1-2",
-          "position_id": 33
+          "formation": "4-4-2",
+          "position_id": 32
         },
         {
           "name": "Leo Østigard",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-1-2",
-          "position_id": 35
+          "formation": "4-4-2",
+          "position_id": 34
+        },
+        {
+          "name": "Sebastian Otoa",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 36
         },
         {
           "name": "Johan Vásquez",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-1-2",
-          "position_id": 37
-        },
-        {
-          "name": "Mikael Egill Ellertsson",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-1-2",
-          "position_id": 62
-        },
-        {
-          "name": "Ruslan Malinovsky",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-1-2",
-          "position_id": 64
-        },
-        {
-          "name": "Morten Frendrup",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-1-2",
-          "position_id": 66
+          "formation": "4-4-2",
+          "position_id": 38
         },
         {
           "name": "Stefano Sabelli",
@@ -394,34 +376,52 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-1-2",
-          "position_id": 68
+          "formation": "4-4-2",
+          "position_id": 72
         },
         {
-          "name": "Tommaso Baldanzi",
+          "name": "Morten Frendrup",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 74
+        },
+        {
+          "name": "Amorim",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 76
+        },
+        {
+          "name": "Mikael Egill Ellertsson",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 78
+        },
+        {
+          "name": "Jeff Ekhator",
           "line_index": 2,
-          "line_size": 1,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-1-2",
-          "position_id": 85
-        },
-        {
-          "name": "Vítinha",
-          "line_index": 3,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-1-2",
+          "formation": "4-4-2",
           "position_id": 104
         },
         {
-          "name": "Lorenzo Colombo",
-          "line_index": 3,
+          "name": "Vítinha",
+          "line_index": 2,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-1-2",
+          "formation": "4-4-2",
           "position_id": 106
         }
       ],
@@ -454,7 +454,7 @@
           "position_id": 34
         },
         {
-          "name": "Marc-Oliver Kempf",
+          "name": "Diego Carlos",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -472,7 +472,7 @@
           "position_id": 38
         },
         {
-          "name": "Lucas Da Cunha",
+          "name": "Máximo Perrone",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -481,7 +481,7 @@
           "position_id": 64
         },
         {
-          "name": "Máximo Perrone",
+          "name": "Lucas Da Cunha",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -526,10 +526,39 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Daniele Sommariva",
+        "Nicola Leali",
+        "Latif Ouedraogo",
+        "Mamedi Doucouré",
+        "Nils Zätterström",
+        "Aarón Martín",
+        "Jacopo Grossi",
+        "Jean Onana",
+        "Junior Messias",
+        "Patrizio Masini",
+        "Ruslan Malinovsky",
+        "Daniel Ndulue",
+        "Lorenzo Colombo",
+        "Maxwel Cornet"
+      ],
+      "away_subs": [
+        "Mauro Vigorito",
+        "Nikola Cavlina",
+        "Noel Törnqvist",
+        "Alberto Moreno",
+        "Edoardo Goldaniga",
+        "Ignace Van Der Brempt",
+        "Marc-Oliver Kempf",
+        "Maxence Caqueret",
+        "Adrian Lahdo",
+        "Álvaro Morata",
+        "Jesús Rodríguez",
+        "Nicolas-Gerrit Kühn"
+      ],
       "home_unavailable": [
         "Caleb Ekuban",
+        "Tommaso Baldanzi",
         "Brooke Norton-Cuffy"
       ],
       "away_unavailable": [

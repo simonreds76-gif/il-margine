@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-26T12:41:29Z",
+  "generated_at": "2026-04-26T13:56:14Z",
   "league": "la-liga",
-  "row_count": 7,
+  "row_count": 8,
   "rows": [
     {
       "team": "Barcelona",
@@ -93,15 +93,31 @@
       "player_name": "Brais Méndez",
       "player_key": "brais m ndez",
       "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
         "fotmob_live"
       ],
       "event_count": 1,
       "last_event_date": "2026-04-22"
+    },
+    {
+      "team": "Real Sociedad",
+      "team_key": "real sociedad",
+      "player_name": "Mikel Oyarzabal",
+      "player_key": "mikel oyarzabal",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-26"
     },
     {
       "team": "Villarreal",

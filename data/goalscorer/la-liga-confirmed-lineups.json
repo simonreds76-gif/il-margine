@@ -490,31 +490,31 @@
         }
       ],
       "home_subs": [
+        "Pedro Díaz",
+        "Alemão",
+        "Jorge de Frutos",
+        "Gerard Gumbau",
+        "Fran Pérez",
         "Gil Juanpe",
         "Abdul Mumin",
         "Pacha Espino",
         "Iván Balliu",
         "Jozhua Vertrouwd",
-        "Gerard Gumbau",
         "Óscar Trejo",
-        "Óscar Valentín",
-        "Pedro Díaz",
-        "Alemão",
-        "Fran Pérez",
-        "Jorge de Frutos"
+        "Óscar Valentín"
       ],
       "away_subs": [
+        "Luka Sucic",
+        "Pablo Marín",
+        "Jon Gorrotxategi",
+        "Yangel Herrera",
+        "Aihen Muñoz",
         "Aitor Fraga",
         "Unai Marrero",
-        "Aihen Muñoz",
         "Aritz Elustondo",
         "Luken Beitia",
         "Brais Méndez",
-        "Jon Gorrotxategi",
-        "Luka Sucic",
-        "Pablo Marín",
         "Wesley",
-        "Yangel Herrera",
         "Arsen Zakharyan"
       ],
       "home_unavailable": [
@@ -536,21 +536,21 @@
       "match_date": "2026-04-26",
       "home_team": "Real Oviedo",
       "away_team": "Elche",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-4-2",
-      "away_formation": "4-4-2",
+      "away_formation": "5-3-2",
       "home_players": [
         "Aarón Escandell",
         "Nacho Vidal",
-        "Eric Bailly",
-        "Dani Calvo",
-        "Javi López",
-        "Ilyas Chaira",
+        "David Costas",
+        "David Carmo",
+        "Rahim Alhassane",
+        "Haissem Hassan",
         "Kwasi Sibo",
-        "Santiago Colombatto",
-        "Thiago Fernández",
+        "Nicolás Fonseca",
+        "Ilyas Chaira",
         "Alberto Reina",
         "Federico Viñas"
       ],
@@ -558,14 +558,14 @@
         "Matías Dituro",
         "Buba Sangaré",
         "David Affengruber",
-        "Léo Pétrot",
-        "Germán Valera",
-        "Tete Morente",
-        "Gonzalo Villar",
+        "Pedro Bigas",
+        "Héctor Fort",
+        "Adrià Pedrosa",
         "Aleix Febas",
-        "Martim Neto",
+        "Gonzalo Villar",
+        "Marc Aguado",
         "André Silva",
-        "Rafa Mir"
+        "Álvaro Rodriguez"
       ],
       "home_starters": [
         {
@@ -587,7 +587,7 @@
           "position_id": 32
         },
         {
-          "name": "Eric Bailly",
+          "name": "David Costas",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -596,7 +596,7 @@
           "position_id": 34
         },
         {
-          "name": "Dani Calvo",
+          "name": "David Carmo",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -605,7 +605,7 @@
           "position_id": 36
         },
         {
-          "name": "Javi López",
+          "name": "Rahim Alhassane",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -614,7 +614,7 @@
           "position_id": 38
         },
         {
-          "name": "Ilyas Chaira",
+          "name": "Haissem Hassan",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -632,7 +632,7 @@
           "position_id": 74
         },
         {
-          "name": "Santiago Colombatto",
+          "name": "Nicolás Fonseca",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -641,7 +641,7 @@
           "position_id": 76
         },
         {
-          "name": "Thiago Fernández",
+          "name": "Ilyas Chaira",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -675,80 +675,80 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-4-2",
+          "formation": "5-3-2",
           "position_id": 11
         },
         {
           "name": "Buba Sangaré",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 32
+          "formation": "5-3-2",
+          "position_id": 33
         },
         {
           "name": "David Affengruber",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 34
+          "formation": "5-3-2",
+          "position_id": 35
         },
         {
-          "name": "Léo Pétrot",
+          "name": "Pedro Bigas",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 36
+          "formation": "5-3-2",
+          "position_id": 37
         },
         {
-          "name": "Germán Valera",
+          "name": "Héctor Fort",
           "line_index": 0,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
-          "position_id": 38
+          "formation": "5-3-2",
+          "position_id": 51
         },
         {
-          "name": "Tete Morente",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 72
-        },
-        {
-          "name": "Gonzalo Villar",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 74
+          "name": "Adrià Pedrosa",
+          "line_index": 0,
+          "line_size": 5,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-3-2",
+          "position_id": 59
         },
         {
           "name": "Aleix Febas",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 76
+          "formation": "5-3-2",
+          "position_id": 73
         },
         {
-          "name": "Martim Neto",
+          "name": "Gonzalo Villar",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 78
+          "formation": "5-3-2",
+          "position_id": 75
+        },
+        {
+          "name": "Marc Aguado",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "5-3-2",
+          "position_id": 77
         },
         {
           "name": "André Silva",
@@ -756,21 +756,46 @@
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
+          "formation": "5-3-2",
           "position_id": 104
         },
         {
-          "name": "Rafa Mir",
+          "name": "Álvaro Rodriguez",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
+          "formation": "5-3-2",
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Horatiu Moldovan",
+        "Dani Calvo",
+        "Eric Bailly",
+        "Javi López",
+        "Lucas Ahijado",
+        "Ovie Ejaria",
+        "Pablo Agudín",
+        "Santi Cazorla",
+        "Santiago Colombatto",
+        "Thiago Borbas",
+        "Thiago Fernández"
+      ],
+      "away_subs": [
+        "Iñaki Peña",
+        "John Donald",
+        "Léo Pétrot",
+        "Victor Chust",
+        "Federico Redondo",
+        "Germán Valera",
+        "Grady Diangana",
+        "Martim Neto",
+        "Josan",
+        "Lucas Cepeda",
+        "Rafa Mir",
+        "Tete Morente"
+      ],
       "home_unavailable": [
         "Jaime Vázquez",
         "Leander Dendoncker",
