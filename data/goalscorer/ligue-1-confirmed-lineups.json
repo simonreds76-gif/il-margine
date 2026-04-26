@@ -557,26 +557,26 @@
       "match_date": "2026-04-26",
       "home_team": "Marseille",
       "away_team": "Nice",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "3-4-3",
-      "away_formation": "3-4-2-1",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "3-5-1-1",
+      "away_formation": "3-4-1-2",
       "home_players": [
         "Gerónimo Rulli",
         "Benjamin Pavard",
         "Leonardo Balerdi",
-        "Emerson",
+        "Facundo Medina",
         "Timothy Weah",
-        "Himad Abdelli",
         "Pierre-Emile Højbjerg",
-        "Hamed Traorè",
-        "Mason Greenwood",
-        "Pierre-Emerick Aubameyang",
-        "Ethan Nwaneri"
+        "Tochukwu Nnadi",
+        "Arthur Vermeeren",
+        "Emerson",
+        "Quinten Timber",
+        "Pierre-Emerick Aubameyang"
       ],
       "away_players": [
-        "Maxime Dupé",
+        "Yehvann Diouf",
         "Antoine Mendy",
         "Juma Bah",
         "Kojo Peprah Oppong",
@@ -584,8 +584,8 @@
         "Hicham Boudaoui",
         "Salis Abdul Samed",
         "Melvin Bard",
-        "Tom Louchet",
         "Morgan Sanson",
+        "Mohamed-Ali Cho",
         "Elye Wahi"
       ],
       "home_starters": [
@@ -595,7 +595,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-3",
+          "formation": "3-5-1-1",
           "position_id": 11
         },
         {
@@ -604,7 +604,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-3",
+          "formation": "3-5-1-1",
           "position_id": 33
         },
         {
@@ -613,90 +613,90 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-3",
+          "formation": "3-5-1-1",
           "position_id": 35
         },
         {
-          "name": "Emerson",
+          "name": "Facundo Medina",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-3",
+          "formation": "3-5-1-1",
           "position_id": 37
         },
         {
           "name": "Timothy Weah",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 72
-        },
-        {
-          "name": "Himad Abdelli",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 74
+          "formation": "3-5-1-1",
+          "position_id": 71
         },
         {
           "name": "Pierre-Emile Højbjerg",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 76
+          "formation": "3-5-1-1",
+          "position_id": 73
         },
         {
-          "name": "Hamed Traorè",
+          "name": "Tochukwu Nnadi",
           "line_index": 1,
-          "line_size": 4,
+          "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-3",
-          "position_id": 78
+          "formation": "3-5-1-1",
+          "position_id": 75
         },
         {
-          "name": "Mason Greenwood",
+          "name": "Arthur Vermeeren",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 77
+        },
+        {
+          "name": "Emerson",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 79
+        },
+        {
+          "name": "Quinten Timber",
           "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-4-3",
-          "position_id": 103
+          "line_size": 1,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-5-1-1",
+          "position_id": 95
         },
         {
           "name": "Pierre-Emerick Aubameyang",
-          "line_index": 2,
-          "line_size": 3,
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-3",
-          "position_id": 105
-        },
-        {
-          "name": "Ethan Nwaneri",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-4-3",
-          "position_id": 107
+          "formation": "3-5-1-1",
+          "position_id": 115
         }
       ],
       "away_starters": [
         {
-          "name": "Maxime Dupé",
+          "name": "Yehvann Diouf",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-2-1",
+          "formation": "3-4-1-2",
           "position_id": 11
         },
         {
@@ -705,7 +705,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-4-1-2",
           "position_id": 33
         },
         {
@@ -714,7 +714,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-4-1-2",
           "position_id": 35
         },
         {
@@ -723,7 +723,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-4-1-2",
           "position_id": 37
         },
         {
@@ -732,7 +732,7 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
+          "formation": "3-4-1-2",
           "position_id": 62
         },
         {
@@ -741,7 +741,7 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
+          "formation": "3-4-1-2",
           "position_id": 64
         },
         {
@@ -750,7 +750,7 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
+          "formation": "3-4-1-2",
           "position_id": 66
         },
         {
@@ -759,40 +759,61 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
+          "formation": "3-4-1-2",
           "position_id": 68
-        },
-        {
-          "name": "Tom Louchet",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84
         },
         {
           "name": "Morgan Sanson",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 1,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 86
+          "formation": "3-4-1-2",
+          "position_id": 85
+        },
+        {
+          "name": "Mohamed-Ali Cho",
+          "line_index": 3,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-1-2",
+          "position_id": 104
         },
         {
           "name": "Elye Wahi",
           "line_index": 3,
-          "line_size": 1,
+          "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-2-1",
-          "position_id": 105
+          "formation": "3-4-1-2",
+          "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Jeffrey De Lange",
+        "Hilan Hamzaoui Slimani",
+        "Ethan Nwaneri",
+        "Himad Abdelli",
+        "Nouhoum Kamissoko",
+        "Ange Lago",
+        "Mason Greenwood",
+        "Tadjidine Mmadi",
+        "Ugo Lamare El Kadmiri"
+      ],
+      "away_subs": [
+        "Maxime Dupé",
+        "Ali Abdi",
+        "Dante",
+        "Charles Vanhoutte",
+        "Djibril Coulibaly",
+        "Kail Boudache",
+        "Sofiane Diop",
+        "Tom Louchet",
+        "Kevin Carlos"
+      ],
       "home_unavailable": [
+        "Hamed Traorè",
         "Bilal Nadir",
         "CJ Egan-Riley",
         "Nayef Aguerd",

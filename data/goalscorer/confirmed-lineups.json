@@ -575,9 +575,9 @@
       "match_date": "2026-04-26",
       "home_team": "Milan",
       "away_team": "Juventus",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-5-2",
       "away_formation": "3-4-3",
       "home_players": [
@@ -604,7 +604,7 @@
         "Andrea Cambiaso",
         "Francisco Conceição",
         "Jonathan David",
-        "Kenan Yildiz"
+        "Jérémie Boga"
       ],
       "home_starters": [
         {
@@ -799,7 +799,7 @@
           "position_id": 105
         },
         {
-          "name": "Kenan Yildiz",
+          "name": "Jérémie Boga",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -808,8 +808,33 @@
           "position_id": 107
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Matteo Pittarella",
+        "Pietro Terracciano",
+        "David Odogu",
+        "Koni De Winter",
+        "Zachary Athekame",
+        "Ardon Jashari",
+        "Pervis Estupinán",
+        "Ruben Loftus-Cheek",
+        "Samuele Ricci",
+        "Christopher Nkunku",
+        "Niclas Füllkrug",
+        "Santiago Giménez"
+      ],
+      "away_subs": [
+        "Carlo Pinsoglio",
+        "Mattia Perin",
+        "Emil Holm",
+        "Federico Gatti",
+        "Edon Zhegrova",
+        "Fabio Miretti",
+        "Filip Kostic",
+        "Kenan Yildiz",
+        "Teun Koopmeiners",
+        "Dusan Vlahovic",
+        "Loïs Openda"
+      ],
       "home_unavailable": [],
       "away_unavailable": [
         "Juan Cabal",
@@ -1060,8 +1085,8 @@
       "home_subs": [
         "Alieu Njie",
         "Luca Marianucci",
-        "Cesare Casadei",
         "Duván Zapata",
+        "Cesare Casadei",
         "Adrien Tamèze",
         "Franco Israel",
         "Lapo Siviero",
