@@ -1,14 +1,46 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-26T15:00:21Z",
+  "generated_at": "2026-04-26T16:26:35Z",
   "league": "ligue-1",
-  "row_count": 2,
+  "row_count": 5,
   "rows": [
+    {
+      "team": "Lille",
+      "team_key": "lille",
+      "player_name": "Matias Fernandez-Pardo",
+      "player_key": "matias fernandez pardo",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-26"
+    },
     {
       "team": "Lorient",
       "team_key": "lorient",
       "player_name": "Pablo Pagis",
       "player_key": "pablo pagis",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-26"
+    },
+    {
+      "team": "Metz",
+      "team_key": "metz",
+      "player_name": "Gauthier Hein",
+      "player_key": "gauthier hein",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
@@ -35,6 +67,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-04-22"
+    },
+    {
+      "team": "Rennes",
+      "team_key": "rennes",
+      "player_name": "Estéban Lepaul",
+      "player_key": "est ban lepaul",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-26"
     }
   ]
 }
