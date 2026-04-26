@@ -29,6 +29,13 @@ $spreadFitFiles = @(
     "data/backtest/backtest-results-2026.csv"
 )
 $spreadRefreshTimeoutSeconds = 240
+$dailyOddsTimeoutSeconds = 1800
+if (-not [string]::IsNullOrWhiteSpace($env:TENNIS_DAILY_ODDS_TOTAL_TIMEOUT_SECONDS)) {
+    $parsedDailyOddsTimeout = 0
+    if ([int]::TryParse($env:TENNIS_DAILY_ODDS_TOTAL_TIMEOUT_SECONDS, [ref]$parsedDailyOddsTimeout) -and $parsedDailyOddsTimeout -gt 0) {
+        $dailyOddsTimeoutSeconds = $parsedDailyOddsTimeout
+    }
+}
 
 function Test-EnvFlag([string]$value) {
     if ([string]::IsNullOrWhiteSpace($value)) { return $false }
@@ -64,25 +71,37 @@ function Invoke-LoggedProcess {
 
     $stdoutPath = Join-Path $env:TEMP ("ilmargine-" + [guid]::NewGuid().ToString() + ".out.log")
     $stderrPath = Join-Path $env:TEMP ("ilmargine-" + [guid]::NewGuid().ToString() + ".err.log")
+    $script:LastProcessOutputLines = @()
     try {
         $proc = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -NoNewWindow -PassThru -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+        $timedOut = $false
         if ($TimeoutSeconds -gt 0) {
-            try {
-                Wait-Process -Id $proc.Id -Timeout $TimeoutSeconds -ErrorAction Stop
-            } catch {
+            if (-not $proc.WaitForExit($TimeoutSeconds * 1000)) {
+                $timedOut = $true
                 Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+                $proc.WaitForExit(10000) | Out-Null
                 Log "WARNING: $Label timed out after ${TimeoutSeconds}s and was stopped."
-                return 124
             }
         } else {
-            Wait-Process -Id $proc.Id
+            $proc.WaitForExit()
         }
+        $proc.Refresh()
 
         if (Test-Path $stdoutPath) {
-            Get-Content $stdoutPath | ForEach-Object { Log $_ }
+            $stdoutLines = @(Get-Content $stdoutPath)
+            $script:LastProcessOutputLines += $stdoutLines
+            $stdoutLines | ForEach-Object { Log $_ }
         }
         if (Test-Path $stderrPath) {
-            Get-Content $stderrPath | ForEach-Object { Log $_ }
+            $stderrLines = @(Get-Content $stderrPath)
+            $script:LastProcessOutputLines += $stderrLines
+            $stderrLines | ForEach-Object { Log $_ }
+        }
+        if ($timedOut) {
+            return 124
+        }
+        if ($null -eq $proc.ExitCode) {
+            return 0
         }
         return $proc.ExitCode
     } finally {
@@ -161,10 +180,8 @@ if ($LASTEXITCODE -ne 0) {
 
 # Step 6: Pinnacle odds + fair odds
 Log "=== Step 6/10: Pinnacle odds + fair odds ==="
-$step6Output = & python scripts\run-daily-odds.py --skip-strict-report 2>&1
-$step6Exit = $LASTEXITCODE
-$step6Lines = @($step6Output | ForEach-Object { "$_" })
-$step6Lines | ForEach-Object { Log $_ }
+$step6Exit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-daily-odds.py", "--skip-strict-report") -Label "Pinnacle/fair-odds" -TimeoutSeconds $dailyOddsTimeoutSeconds
+$step6Lines = @($script:LastProcessOutputLines | ForEach-Object { "$_" })
 if ($step6Exit -ne 0) {
     Log "ERROR: Pinnacle/fair-odds failed (exit $step6Exit)"
     Set-RunStatusFailure "DailyOddsFailed" "Pinnacle/fair-odds failed (exit $step6Exit)"

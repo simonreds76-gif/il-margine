@@ -31,9 +31,30 @@ def _env_bool(name: str, default: bool) -> bool:
     return str(raw).strip().lower() in {"1", "true", "yes", "on"}
 
 
-def run_cmd(cmd: list[str], label: str, fatal: bool = True) -> int:
+def _env_int(name: str, default: int) -> int:
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    try:
+        value = int(str(raw).strip())
+    except ValueError:
+        return default
+    return value if value > 0 else default
+
+
+def run_cmd(cmd: list[str], label: str, fatal: bool = True, timeout_seconds: int | None = None) -> int:
     print(f"\n=== {label} ===\n")
-    r = subprocess.run(cmd, cwd=str(ROOT), env=os.environ.copy())
+    try:
+        r = subprocess.run(cmd, cwd=str(ROOT), env=os.environ.copy(), timeout=timeout_seconds)
+    except subprocess.TimeoutExpired:
+        timeout_label = f" after {timeout_seconds}s" if timeout_seconds else ""
+        msg = f"{label} timed out{timeout_label}."
+        if fatal:
+            print(f"\n{msg} Stopping.")
+            sys.exit(124)
+        print(f"\nWARNING: {msg} Continuing.")
+        return 124
+
     if r.returncode != 0:
         msg = f"{label} failed (exit {r.returncode})."
         if fatal:
@@ -74,23 +95,27 @@ def main() -> int:
     )
     parser.set_defaults(strict_compare_overlay=_env_bool("STRICT_POLICY_COMPARE_OVERLAY", True))
     args = parser.parse_args()
+    step_timeout = _env_int("TENNIS_DAILY_ODDS_STEP_TIMEOUT_SECONDS", 900)
 
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "pinnacle-scrape-odds.py"), "--active-leagues-only"],
         label="1/4 Pinnacle scraper (writes to bookmaker_odds_snapshot)",
         fatal=True,
+        timeout_seconds=step_timeout,
     )
 
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "oncourt-compute-fair-odds.py"), "--skip-handicap-values"],
         label="2/4 Fair odds pipeline",
         fatal=True,
+        timeout_seconds=step_timeout,
     )
 
     run_cmd(
         [sys.executable, str(ROOT / "scripts" / "compute-handicap-values.py")],
         label="3/4 Handicap values (spread edge)",
         fatal=False,
+        timeout_seconds=step_timeout,
     )
 
     if not args.skip_strict_report:
@@ -124,6 +149,7 @@ def main() -> int:
             strict_cmd,
             label=f"4/6 Strict report (production mode: {args.strict_policy_mode}; compare: {args.strict_compare_overlay})",
             fatal=False,
+            timeout_seconds=step_timeout,
         )
 
         clay_cmd = [
@@ -139,6 +165,7 @@ def main() -> int:
             clay_cmd,
             label="5/6 Clay 2026 shadow append",
             fatal=False,
+            timeout_seconds=step_timeout,
         )
 
         spread_cmd = [
@@ -154,6 +181,7 @@ def main() -> int:
             spread_cmd,
             label="6/6 Spread v1 Shadow append",
             fatal=False,
+            timeout_seconds=step_timeout,
         )
     else:
         print("\n=== 4/6 Strict report skipped (--skip-strict-report) ===")

@@ -18,6 +18,13 @@ $volumeMode = "$env:STRICT_POLICY_VOLUME_MODE".ToLower()
 if ([string]::IsNullOrWhiteSpace($volumeMode)) { $volumeMode = "off" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_SHADOW_ENABLED)) { $env:STRICT_SPREAD_V1_SHADOW_ENABLED = "1" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_CALIBRATED_ENABLED)) { $env:STRICT_CLAY_CALIBRATED_ENABLED = "0" }
+$dailyOddsTimeoutSeconds = 1200
+if (-not [string]::IsNullOrWhiteSpace($env:TENNIS_DAILY_ODDS_TOTAL_TIMEOUT_SECONDS)) {
+    $parsedDailyOddsTimeout = 0
+    if ([int]::TryParse($env:TENNIS_DAILY_ODDS_TOTAL_TIMEOUT_SECONDS, [ref]$parsedDailyOddsTimeout) -and $parsedDailyOddsTimeout -gt 0) {
+        $dailyOddsTimeoutSeconds = $parsedDailyOddsTimeout
+    }
+}
 function Test-EnvFlag([string]$value) {
     if ([string]::IsNullOrWhiteSpace($value)) { return $false }
     return @("1", "true", "yes", "on") -contains $value.Trim().ToLower()
@@ -40,6 +47,54 @@ function Log($msg) {
     $line = "$(Get-Date -Format 'HH:mm:ss') $msg"
     Write-Host $line
     Add-Content -Path $logFile -Value $line
+}
+
+function Invoke-LoggedProcess {
+    param(
+        [Parameter(Mandatory = $true)][string]$FilePath,
+        [Parameter(Mandatory = $true)][string[]]$ArgumentList,
+        [Parameter(Mandatory = $true)][string]$Label,
+        [int]$TimeoutSeconds = 0
+    )
+
+    $stdoutPath = Join-Path $env:TEMP ("ilmargine-" + [guid]::NewGuid().ToString() + ".out.log")
+    $stderrPath = Join-Path $env:TEMP ("ilmargine-" + [guid]::NewGuid().ToString() + ".err.log")
+    $script:LastProcessOutputLines = @()
+    try {
+        $proc = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -NoNewWindow -PassThru -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath
+        $timedOut = $false
+        if ($TimeoutSeconds -gt 0) {
+            if (-not $proc.WaitForExit($TimeoutSeconds * 1000)) {
+                $timedOut = $true
+                Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+                $proc.WaitForExit(10000) | Out-Null
+                Log "WARNING: $Label timed out after ${TimeoutSeconds}s and was stopped."
+            }
+        } else {
+            $proc.WaitForExit()
+        }
+        $proc.Refresh()
+
+        if (Test-Path $stdoutPath) {
+            $stdoutLines = @(Get-Content $stdoutPath)
+            $script:LastProcessOutputLines += $stdoutLines
+            $stdoutLines | ForEach-Object { Log $_ }
+        }
+        if (Test-Path $stderrPath) {
+            $stderrLines = @(Get-Content $stderrPath)
+            $script:LastProcessOutputLines += $stderrLines
+            $stderrLines | ForEach-Object { Log $_ }
+        }
+        if ($timedOut) {
+            return 124
+        }
+        if ($null -eq $proc.ExitCode) {
+            return 0
+        }
+        return $proc.ExitCode
+    } finally {
+        Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
+    }
 }
 
 function Set-RunStatusFailure([string]$Type, [string]$Message) {
@@ -85,10 +140,8 @@ try {
     }
 
     Log "=== Step 3/8: Pinnacle odds + fair odds ==="
-    $step3Output = & python scripts\run-daily-odds.py --skip-strict-report 2>&1
-    $step3Exit = $LASTEXITCODE
-    $step3Lines = @($step3Output | ForEach-Object { "$_" })
-    $step3Lines | ForEach-Object { Log $_ }
+    $step3Exit = Invoke-LoggedProcess -FilePath "python" -ArgumentList @("scripts\run-daily-odds.py", "--skip-strict-report") -Label "Pinnacle/fair-odds" -TimeoutSeconds $dailyOddsTimeoutSeconds
+    $step3Lines = @($script:LastProcessOutputLines | ForEach-Object { "$_" })
     if ($step3Exit -ne 0) {
         Log "ERROR: Pinnacle/fair-odds failed (exit $step3Exit)"
         Set-RunStatusFailure "DailyOddsFailed" "Pinnacle/fair-odds failed (exit $step3Exit)"
