@@ -8,19 +8,19 @@
       "match_date": "2026-04-26",
       "home_team": "Osasuna",
       "away_team": "Sevilla",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "4-3-2-1",
+      "away_formation": "4-4-2",
       "home_players": [
         "Sergio Herrera",
         "Valentin Rosier",
         "Flavien Boyomo",
-        "Jorge Herrando",
+        "Alejandro Catena",
         "Javi Galán",
         "Jon Moncayola",
-        "Lucas Torró",
+        "Iker Muñoz",
         "Rubén Garcia",
         "Aimar Oroz",
         "Víctor Muñoz",
@@ -28,16 +28,16 @@
       ],
       "away_players": [
         "Odysseas Vlachodimos",
-        "Juanlu Sánchez",
+        "José Ángel Carmona",
         "Andrés Lopez",
         "Kike Salas",
-        "Oso",
-        "Lucien Agoumé",
-        "Nemanja Gudelj",
-        "Manu Bueno",
-        "Isaac Romero",
+        "Gabriel Suazo",
         "Rubén Vargas",
-        "Akor Adams"
+        "Lucien Agoumé",
+        "Djibril Sow",
+        "Oso",
+        "Neal Maupay",
+        "Isaac Romero"
       ],
       "home_starters": [
         {
@@ -68,7 +68,7 @@
           "position_id": 34
         },
         {
-          "name": "Jorge Herrando",
+          "name": "Alejandro Catena",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -95,7 +95,7 @@
           "position_id": 64
         },
         {
-          "name": "Lucas Torró",
+          "name": "Iker Muñoz",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -147,16 +147,16 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-3-2-1",
+          "formation": "4-4-2",
           "position_id": 11
         },
         {
-          "name": "Juanlu Sánchez",
+          "name": "José Ángel Carmona",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-2-1",
+          "formation": "4-4-2",
           "position_id": 32
         },
         {
@@ -165,7 +165,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-2-1",
+          "formation": "4-4-2",
           "position_id": 34
         },
         {
@@ -174,75 +174,98 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-2-1",
+          "formation": "4-4-2",
           "position_id": 36
         },
         {
-          "name": "Oso",
+          "name": "Gabriel Suazo",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-2-1",
+          "formation": "4-4-2",
           "position_id": 38
+        },
+        {
+          "name": "Rubén Vargas",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 72
         },
         {
           "name": "Lucien Agoumé",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-3-2-1",
-          "position_id": 63
+          "formation": "4-4-2",
+          "position_id": 74
         },
         {
-          "name": "Nemanja Gudelj",
+          "name": "Djibril Sow",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-3-2-1",
-          "position_id": 65
+          "formation": "4-4-2",
+          "position_id": 76
         },
         {
-          "name": "Manu Bueno",
+          "name": "Oso",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "4-3-2-1",
-          "position_id": 67
+          "formation": "4-4-2",
+          "position_id": 78
+        },
+        {
+          "name": "Neal Maupay",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-4-2",
+          "position_id": 104
         },
         {
           "name": "Isaac Romero",
           "line_index": 2,
           "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-3-2-1",
-          "position_id": 84
-        },
-        {
-          "name": "Rubén Vargas",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-3-2-1",
-          "position_id": 86
-        },
-        {
-          "name": "Akor Adams",
-          "line_index": 3,
-          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-3-2-1",
-          "position_id": 115
+          "formation": "4-4-2",
+          "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Aitor Fernández",
+        "Dimitrios Stamatakis",
+        "Asier Osambela",
+        "Iñigo Arguibide",
+        "Jorge Herrando",
+        "Abel Bretones",
+        "Lucas Torró",
+        "Moi Gómez",
+        "Enrique Barja",
+        "Raúl García",
+        "Raúl Moro"
+      ],
+      "away_subs": [
+        "Ørjan Håskjold Nyland",
+        "Juanlu Sánchez",
+        "Nemanja Gudelj",
+        "Tanguy Nianzou",
+        "Batista Mendy",
+        "Peque Fernández",
+        "Manu Bueno",
+        "Akor Adams",
+        "Alexis Sánchez",
+        "Chidera Ejuke"
+      ],
       "home_unavailable": [
         "Iker Benito"
       ],
@@ -770,6 +793,9 @@
         }
       ],
       "home_subs": [
+        "Thiago Fernández",
+        "Santi Cazorla",
+        "Thiago Borbas",
         "Horatiu Moldovan",
         "Dani Calvo",
         "Eric Bailly",
@@ -777,12 +803,10 @@
         "Lucas Ahijado",
         "Ovie Ejaria",
         "Pablo Agudín",
-        "Santi Cazorla",
-        "Santiago Colombatto",
-        "Thiago Borbas",
-        "Thiago Fernández"
+        "Santiago Colombatto"
       ],
       "away_subs": [
+        "Tete Morente",
         "Iñaki Peña",
         "John Donald",
         "Léo Pétrot",
@@ -793,8 +817,7 @@
         "Martim Neto",
         "Josan",
         "Lucas Cepeda",
-        "Rafa Mir",
-        "Tete Morente"
+        "Rafa Mir"
       ],
       "home_unavailable": [
         "Jaime Vázquez",

@@ -824,9 +824,9 @@
       "match_date": "2026-04-26",
       "home_team": "Torino",
       "away_team": "Inter",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-1-2",
       "away_formation": "3-5-2",
       "home_players": [
@@ -834,8 +834,8 @@
         "Saúl Coco",
         "Ardian Ismajli",
         "Enzo Ebosse",
-        "Marcus Holmgren Pedersen",
-        "Cesare Casadei",
+        "Valentino Lazaro",
+        "Emirhan Ilkhan",
         "Gvidas Gineitis",
         "Rafael Obrador",
         "Nikola Vlasic",
@@ -844,16 +844,16 @@
       ],
       "away_players": [
         "Yann Sommer",
+        "Yann Aurel Bisseck",
         "Manuel Akanji",
-        "Francesco Acerbi",
-        "Alessandro Bastoni",
-        "Denzel Dumfries",
+        "Carlos Augusto",
+        "Matteo Darmian",
         "Nicolò Barella",
-        "Hakan Çalhanoglu",
+        "Piotr Zielinski",
         "Petar Sucic",
         "Federico Dimarco",
-        "Marcus Thuram",
-        "Francesco Pio Esposito"
+        "Ange-Yoan Bonny",
+        "Marcus Thuram"
       ],
       "home_starters": [
         {
@@ -893,7 +893,7 @@
           "position_id": 37
         },
         {
-          "name": "Marcus Holmgren Pedersen",
+          "name": "Valentino Lazaro",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -902,7 +902,7 @@
           "position_id": 62
         },
         {
-          "name": "Cesare Casadei",
+          "name": "Emirhan Ilkhan",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -967,7 +967,7 @@
           "position_id": 11
         },
         {
-          "name": "Manuel Akanji",
+          "name": "Yann Aurel Bisseck",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -976,7 +976,7 @@
           "position_id": 33
         },
         {
-          "name": "Francesco Acerbi",
+          "name": "Manuel Akanji",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -985,7 +985,7 @@
           "position_id": 35
         },
         {
-          "name": "Alessandro Bastoni",
+          "name": "Carlos Augusto",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -994,7 +994,7 @@
           "position_id": 37
         },
         {
-          "name": "Denzel Dumfries",
+          "name": "Matteo Darmian",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -1012,7 +1012,7 @@
           "position_id": 73
         },
         {
-          "name": "Hakan Çalhanoglu",
+          "name": "Piotr Zielinski",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -1039,7 +1039,7 @@
           "position_id": 79
         },
         {
-          "name": "Marcus Thuram",
+          "name": "Ange-Yoan Bonny",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -1048,7 +1048,7 @@
           "position_id": 104
         },
         {
-          "name": "Francesco Pio Esposito",
+          "name": "Marcus Thuram",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -1057,16 +1057,43 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Franco Israel",
+        "Lapo Siviero",
+        "Adrien Tamèze",
+        "Cristiano Biraghi",
+        "Guillermo Maripán",
+        "Luca Marianucci",
+        "Alieu Njie",
+        "Cesare Casadei",
+        "Ivan Ilic",
+        "Matteo Prati",
+        "Duván Zapata",
+        "Sandro Kulenovic"
+      ],
+      "away_subs": [
+        "Josep Martínez",
+        "Raffaele Di Gennaro",
+        "Alessandro Bastoni",
+        "Francesco Acerbi",
+        "Matteo Cocchi",
+        "Stefan de Vrij",
+        "Andy Diouf",
+        "Davide Frattesi",
+        "Denzel Dumfries",
+        "Hakan Çalhanoglu",
+        "Henrikh Mkhitaryan",
+        "Francesco Pio Esposito",
+        "Lautaro Martínez",
+        "Mattia Mosconi"
+      ],
       "home_unavailable": [
         "Tino Anjorin",
         "Zakaria Aboukhlal",
         "Zanos Savva"
       ],
       "away_unavailable": [
-        "Luis Henrique",
-        "Lautaro Martínez"
+        "Luis Henrique"
       ]
     },
     {
