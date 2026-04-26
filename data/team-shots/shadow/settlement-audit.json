@@ -1,12 +1,12 @@
 {
-  "run_at": "2026-04-26T00:06:32Z",
+  "run_at": "2026-04-26T09:13:02Z",
   "model": "team-shots",
-  "total_bets": 79,
-  "settled_this_run": 5,
+  "total_bets": 81,
+  "settled_this_run": 0,
   "total_settled": 78,
-  "total_pending": 1,
+  "total_pending": 3,
   "pending_breakdown": {
-    "future": 1,
+    "future": 3,
     "live": 0,
     "stale": 0,
     "old_stale": 0,
@@ -26,7 +26,7 @@
       "api_football_error": null,
       "api_football_max_requests": 10,
       "snapshot_date": "2026-04-26",
-      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-26.json"
+      "snapshot_path": "data/results-snapshot/2026-04-26.json"
     },
     "epl": {
       "football_data_latest": "2026-04-22",
@@ -41,7 +41,7 @@
       "api_football_error": null,
       "api_football_max_requests": 10,
       "snapshot_date": "2026-04-26",
-      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-26.json"
+      "snapshot_path": "data/results-snapshot/2026-04-26.json"
     },
     "la-liga": {
       "football_data_latest": "2026-04-23",
@@ -56,7 +56,7 @@
       "api_football_error": null,
       "api_football_max_requests": 10,
       "snapshot_date": "2026-04-26",
-      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-26.json"
+      "snapshot_path": "data/results-snapshot/2026-04-26.json"
     },
     "ligue-1": {
       "football_data_latest": "2026-04-22",
@@ -71,7 +71,7 @@
       "api_football_error": null,
       "api_football_max_requests": 10,
       "snapshot_date": "2026-04-26",
-      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-26.json"
+      "snapshot_path": "data/results-snapshot/2026-04-26.json"
     },
     "serie-a": {
       "football_data_latest": "2026-04-20",
@@ -86,7 +86,7 @@
       "api_football_error": null,
       "api_football_max_requests": 9,
       "snapshot_date": "2026-04-26",
-      "snapshot_path": "/home/runner/work/il-margine/il-margine/data/results-snapshot/2026-04-26.json"
+      "snapshot_path": "data/results-snapshot/2026-04-26.json"
     }
   },
   "stale_rows": [],
