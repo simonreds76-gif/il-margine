@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { supabase, Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
+import BetMobileMeta from "@/components/BetMobileMeta";
 import MarketBadge from "@/components/MarketBadge";
 
 import Footer from "@/components/Footer";
@@ -390,13 +391,7 @@ export default function PlayerProps() {
                         PENDING
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center gap-4">
-                        <span className="font-mono text-slate-200">{formatOdds(pick.odds)}</span>
-                        <BookmakerLogo bookmaker={pick.bookmaker} size="sm" stopPropagationOnClick />
-                        <span className="font-mono text-slate-100 font-bold min-w-[2.5rem] text-right">{formatStake(pick.stake)}u</span>
-                      </div>
-                    </div>
+                    <BetMobileMeta odds={pick.odds} bookmaker={pick.bookmaker} stake={pick.stake} />
                   </div>
                 ))}
               </div>
@@ -566,16 +561,14 @@ export default function PlayerProps() {
                         {result.status.toUpperCase()}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center gap-4">
-                        <span className="font-mono text-slate-200">{formatOdds(result.odds)}</span>
-                        <BookmakerLogo bookmaker={result.bookmaker} size="sm" stopPropagationOnClick />
-                        <span className="font-mono text-slate-100 font-bold min-w-[2.5rem] text-right">{formatStake(result.stake)}u</span>
-                      </div>
-                      <span className={`font-mono font-medium shrink-0 ${result.status === "void" ? "text-slate-400" : result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
-                        {result.status === "void" ? "0.00" : `${result.profit_loss && result.profit_loss > 0 ? "+" : ""}${result.profit_loss?.toFixed(2)}`}u
-                      </span>
-                    </div>
+                    <BetMobileMeta
+                      odds={result.odds}
+                      bookmaker={result.bookmaker}
+                      stake={result.stake}
+                      status={result.status}
+                      profitLoss={result.profit_loss}
+                      showProfit
+                    />
                   </div>
                 ))}
               </div>

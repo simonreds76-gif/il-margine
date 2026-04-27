@@ -7,6 +7,7 @@ import { questionSlug } from "@/lib/parse-faq";
 import { supabase, type Bet, type Bookmaker, type MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
+import BetMobileMeta from "@/components/BetMobileMeta";
 import MarketBadge from "@/components/MarketBadge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
@@ -826,13 +827,7 @@ export default function Home() {
                       {bet.player ? <span>{bet.player} - </span> : null}
                       {bet.selection}
                     </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center gap-4">
-                        <span className="font-mono font-semibold text-slate-200">{formatOdds(bet.odds)}</span>
-                        <BookmakerLogo bookmaker={bet.bookmaker} size="sm" stopPropagationOnClick />
-                        <span className="min-w-[2.5rem] text-right font-mono font-bold text-slate-100">{formatStake(bet.stake)}u</span>
-                      </div>
-                    </div>
+                    <BetMobileMeta odds={bet.odds} bookmaker={bet.bookmaker} stake={bet.stake} />
                   </div>
                 ))}
               </div>
@@ -1002,26 +997,14 @@ export default function Home() {
                         {bet.status.toUpperCase()}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center gap-4">
-                        <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
-                        <BookmakerLogo bookmaker={bet.bookmaker} size="sm" stopPropagationOnClick />
-                        <span className="min-w-[2.5rem] text-right font-mono font-bold text-slate-100">{formatStake(bet.stake)}u</span>
-                      </div>
-                      <span
-                        className={`shrink-0 font-mono font-medium ${
-                          bet.status === "void"
-                            ? "text-slate-400"
-                            : bet.profit_loss && bet.profit_loss > 0
-                              ? "text-emerald-400"
-                              : "text-red-400"
-                        }`}
-                      >
-                        {bet.status === "void"
-                          ? "0.00"
-                          : `${bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}${bet.profit_loss?.toFixed(2)}`}u
-                      </span>
-                    </div>
+                    <BetMobileMeta
+                      odds={bet.odds}
+                      bookmaker={bet.bookmaker}
+                      stake={bet.stake}
+                      status={bet.status}
+                      profitLoss={bet.profit_loss}
+                      showProfit
+                    />
                   </div>
                 ))}
               </div>
