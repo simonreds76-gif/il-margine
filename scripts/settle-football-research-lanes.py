@@ -23,6 +23,7 @@ from settlement_utils import (
     load_results_snapshot,
     normalize_team_name,
     parse_isoish_date,
+    resolve_fixture_result,
 )
 
 FOOTBALL_FORM_DIR = ROOT / "data" / "football-form"
@@ -111,11 +112,7 @@ def result_for_fixture(results: Mapping[str, dict], row: Mapping[str, Any]) -> d
     away = str(row.get("away_team", "") or "").strip()
     if match_date is None or not home or not away:
         return None
-    for delta in (0, 1, -1):
-        key = build_fixture_key(match_date + timedelta(days=delta), home, away)
-        if key in results:
-            return results[key]
-    return None
+    return resolve_fixture_result(results, match_date, home, away)
 
 
 def settle_market(side: str, line: float, actual: float, odds: float) -> tuple[str, float]:

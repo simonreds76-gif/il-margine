@@ -37,6 +37,7 @@ from settlement_utils import (
     load_results_snapshot,
     normalize_team_name,
     parse_isoish_date,
+    resolve_fixture_result,
 )
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -481,14 +482,7 @@ def settle_all(target_date: Optional[str] = None, snapshot_date: Optional[str] =
         settled["match_date"] = match_date.isoformat()
         settled["policy_version"] = _policy_version(bet)
 
-        # Try exact date, then +/- 1 day (timezone/schedule fuzziness)
-        result = None
-        for delta in (0, 1, -1):
-            check_date = match_date + timedelta(days=delta)
-            key = f"{check_date.isoformat()}|{home_n}|{away_n}"
-            result = actual.get(key)
-            if result:
-                break
+        result = resolve_fixture_result(actual, match_date, parts[0], parts[1])
 
         line_val = float(bet.get("line", 0))
         side = bet.get("side", "")

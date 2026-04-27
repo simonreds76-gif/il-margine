@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Settle pending team-shots shadow signals using actual match shot data.
 
@@ -29,6 +29,7 @@ from settlement_utils import (
     load_results_snapshot,
     normalize_team_name,
     normalize_text_basic,
+    resolve_fixture_result,
 )
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -193,7 +194,7 @@ def settle_signals(
         if sig.get("result") not in ("pending", ""):
             if not sig.get("settled_at"):
                 sig["settled_at"] = sig.get("logged_at", "")
-            # Already settled — still try to fill missing closing_odds/clv if absent.
+            # Already settled â€” still try to fill missing closing_odds/clv if absent.
             if odds_index and not sig.get("closing_odds"):
                 closing = find_closing_odds(sig, odds_index)
                 if closing:
@@ -211,16 +212,12 @@ def settle_signals(
         except ValueError:
             still_pending += 1
             continue
-
-        # Try exact date, then ±1 day (timezone/schedule fuzziness)
-        match_data = None
-        for delta in (0, 1, -1):
-            check_date = sig_date_obj + timedelta(days=delta)
-            key = f"{check_date.isoformat()}|{home_norm}|{away_norm}"
-            match_data = results_lookup.get(key)
-            if match_data:
-                break
-
+        match_data = resolve_fixture_result(
+            results_lookup,
+            sig_date_obj,
+            sig.get("home_team", ""),
+            sig.get("away_team", ""),
+        )
         if match_data is None:
             still_pending += 1
             continue
@@ -305,7 +302,7 @@ def main() -> None:
     print(f"  {len(odds_index)} odds entries indexed (will backfill CLV for {len(missing_clv)} settled signals)")
 
     if not pending:
-        print("  No pending signals to settle — running CLV backfill only.")
+        print("  No pending signals to settle â€” running CLV backfill only.")
         settle_signals(signals, {}, odds_index)
         if missing_clv:
             fieldnames = signal_fields_for_rows(signals)

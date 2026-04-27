@@ -4,9 +4,10 @@ import csv
 import json
 import re
 import unicodedata
+from difflib import SequenceMatcher
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, Iterable, Optional, Tuple
+from typing import Any, Dict, Iterable, Mapping, Optional, Tuple
 
 ROOT = Path(__file__).resolve().parent.parent
 RESULTS_SNAPSHOT_DIR = ROOT / "data" / "results-snapshot"
@@ -21,7 +22,27 @@ LEAGUE_CODES = {
 }
 
 GENERIC_TEAM_TOKENS = {
-    "fc", "cf", "afc", "cfc", "sc", "ac", "acf", "us", "ud", "rc", "ssc", "calcio", "1907",
+    "fc",
+    "cf",
+    "afc",
+    "cfc",
+    "sc",
+    "ac",
+    "acf",
+    "as",
+    "us",
+    "ud",
+    "rc",
+    "ssc",
+    "sv",
+    "bc",
+    "club",
+    "football",
+    "calcio",
+    "de",
+    "the",
+    "1907",
+    "1913",
 }
 
 TEAM_ALIASES: Dict[str, str] = {
@@ -230,6 +251,89 @@ def build_fixture_key(match_date: date | str, home_team: str, away_team: str) ->
     else:
         date_str = str(match_date).strip()[:10]
     return f"{date_str}|{normalize_team_name(home_team)}|{normalize_team_name(away_team)}"
+
+
+def _team_tokens(value: str) -> set[str]:
+    return {token for token in normalize_team_name(value).split() if token}
+
+
+def team_name_match_score(left: str, right: str) -> float:
+    """Score two team names after normalisation.
+
+    This is deliberately conservative: exact normalised names score 1.0, common
+    bookmaker/API variants score high, but short ambiguous overlaps do not.
+    """
+    left_norm = normalize_team_name(left)
+    right_norm = normalize_team_name(right)
+    if not left_norm or not right_norm:
+        return 0.0
+    if left_norm == right_norm:
+        return 1.0
+
+    left_tokens = _team_tokens(left_norm)
+    right_tokens = _team_tokens(right_norm)
+    if not left_tokens or not right_tokens:
+        return 0.0
+
+    shorter = left_tokens if len(left_tokens) <= len(right_tokens) else right_tokens
+    longer = right_tokens if shorter is left_tokens else left_tokens
+    if shorter.issubset(longer) and any(len(token) >= 4 for token in shorter):
+        return 0.94
+
+    intersection = left_tokens & right_tokens
+    union = left_tokens | right_tokens
+    jaccard = len(intersection) / len(union) if union else 0.0
+    sequence = SequenceMatcher(None, left_norm, right_norm).ratio()
+    return max(jaccard, sequence * 0.96)
+
+
+def resolve_fixture_result(
+    results: Mapping[str, dict],
+    match_date: date,
+    home_team: str,
+    away_team: str,
+    *,
+    day_slop: Iterable[int] = (0, 1, -1),
+    min_team_score: float = 0.82,
+    min_pair_score: float = 1.78,
+    min_winning_margin: float = 0.12,
+) -> dict | None:
+    """Resolve a fixture result by exact key, then safe same-date fuzzy match.
+
+    The fallback is intentionally narrow: it only scans the requested date (+/-
+    the configured slop), keeps home/away orientation, requires both teams to
+    score well, and refuses ambiguous matches.
+    """
+    for delta in day_slop:
+        key = build_fixture_key(match_date + timedelta(days=delta), home_team, away_team)
+        if key in results:
+            return results[key]
+
+    candidates: list[tuple[float, float, float, dict]] = []
+    target_dates = {(match_date + timedelta(days=delta)).isoformat() for delta in day_slop}
+    for key, fixture in results.items():
+        try:
+            fixture_date, key_home, key_away = key.split("|", 2)
+        except ValueError:
+            continue
+        if fixture_date not in target_dates:
+            continue
+
+        fixture_home = str(fixture.get("home_team") or key_home)
+        fixture_away = str(fixture.get("away_team") or key_away)
+        home_score = team_name_match_score(home_team, fixture_home)
+        away_score = team_name_match_score(away_team, fixture_away)
+        pair_score = home_score + away_score
+        if home_score >= min_team_score and away_score >= min_team_score and pair_score >= min_pair_score:
+            candidates.append((pair_score, home_score, away_score, fixture))
+
+    if not candidates:
+        return None
+
+    candidates.sort(key=lambda item: item[0], reverse=True)
+    if len(candidates) > 1 and (candidates[0][0] - candidates[1][0]) < min_winning_margin:
+        return None
+    return candidates[0][3]
 
 
 def ensure_snapshot_dir() -> None:
