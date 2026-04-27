@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import os
 import sys
 import urllib.request
@@ -26,6 +27,9 @@ DEFAULT_REPORT = OUT_DIR / "weekly-research-report.md"
 
 TEAM_SHOTS_MODEL = "canonical_form_v3_ema20_nb"
 CORNERS_MODEL = "canonical_form_v0"
+ML_GAP_GUARD_MIN_EDGE_PCT = 10.0
+ML_GAP_GUARD_THRESHOLD = 0.10
+BACKTEST_YEARS = (2022, 2023, 2024, 2025, 2026)
 
 
 def display_path(path: Path) -> str:
@@ -72,6 +76,13 @@ def pf(value: Any) -> float | None:
         return float(text)
     except ValueError:
         return None
+
+
+def finite_float(value: Any) -> float | None:
+    parsed = pf(value)
+    if parsed is None or not math.isfinite(parsed):
+        return None
+    return parsed
 
 
 def avg(values: list[float]) -> float | None:
@@ -127,6 +138,154 @@ def clv_summary(rows: list[dict[str, str]]) -> dict[str, Any]:
     }
 
 
+def empty_bet_summary() -> dict[str, Any]:
+    return {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "pnl_units": 0.0,
+        "roi_pct": None,
+        "avg_edge_pct": None,
+        "avg_gap_pp": None,
+    }
+
+
+def bet_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    if not rows:
+        return empty_bet_summary()
+    wins = sum(1 for row in rows if row.get("win"))
+    pnl = sum(float(row.get("pnl_units") or 0.0) for row in rows)
+    return {
+        "n": len(rows),
+        "wins": wins,
+        "losses": len(rows) - wins,
+        "pnl_units": round(pnl, 4),
+        "roi_pct": round((pnl / len(rows)) * 100, 2),
+        "avg_edge_pct": round(avg([float(row["edge_pct"]) for row in rows]) or 0.0, 2),
+        "avg_gap_pp": round((avg([float(row["model_market_gap"]) for row in rows]) or 0.0) * 100, 2),
+    }
+
+
+def format_bet_summary(summary: dict[str, Any]) -> str:
+    if not summary.get("n"):
+        return "n=0"
+    return (
+        f"n={summary['n']} "
+        f"{summary['wins']}W/{summary['losses']}L "
+        f"pnl={summary['pnl_units']:+.2f}u "
+        f"ROI={pct(summary['roi_pct'])} "
+        f"avg edge={summary['avg_edge_pct']:.1f}% "
+        f"avg gap={summary['avg_gap_pp']:.1f}pp"
+    )
+
+
+def load_ml_gap_guard_picks(edge_min_pct: float = ML_GAP_GUARD_MIN_EDGE_PCT) -> list[dict[str, Any]]:
+    picks: list[dict[str, Any]] = []
+    for year in BACKTEST_YEARS:
+        path = ROOT / "data" / "backtest" / f"backtest-results-{year}.csv"
+        if not path.exists():
+            continue
+        for row in load_csv(path):
+            p1_prob = finite_float(row.get("our_prob"))
+            pin_odds1 = finite_float(row.get("pinnacle_odds"))
+            pin_odds2 = finite_float(row.get("pinnacle_odds_loser"))
+            if (
+                p1_prob is None
+                or pin_odds1 is None
+                or pin_odds2 is None
+                or not 0 < p1_prob < 1
+                or pin_odds1 <= 1
+                or pin_odds2 <= 1
+            ):
+                continue
+            p2_prob = 1.0 - p1_prob
+            pin_p1 = (1.0 / pin_odds1) / ((1.0 / pin_odds1) + (1.0 / pin_odds2))
+            model_fav_side = "P1" if p1_prob >= p2_prob else "P2"
+            market_fav_side = "P1" if pin_p1 >= 0.5 else "P2"
+            model_market_gap = abs(max(p1_prob, p2_prob) - max(pin_p1, 1.0 - pin_p1))
+            actual_winner = (row.get("actual_winner") or "").strip()
+            sides = [
+                ("P1", (row.get("player1") or "").strip(), p1_prob, pin_odds1),
+                ("P2", (row.get("player2") or "").strip(), p2_prob, pin_odds2),
+            ]
+            for side, player, probability, odds in sides:
+                if not player:
+                    continue
+                edge_pct = (odds * probability - 1.0) * 100
+                if edge_pct < edge_min_pct:
+                    continue
+                win = player == actual_winner
+                picks.append(
+                    {
+                        "year": year,
+                        "date": row.get("date", ""),
+                        "tournament": row.get("tournament", ""),
+                        "surface": row.get("surface", ""),
+                        "series": row.get("series", ""),
+                        "confidence": (row.get("confidence") or "").strip().lower(),
+                        "player1": row.get("player1", ""),
+                        "player2": row.get("player2", ""),
+                        "side": side,
+                        "player": player,
+                        "edge_pct": edge_pct,
+                        "model_market_gap": model_market_gap,
+                        "guarded": model_market_gap > ML_GAP_GUARD_THRESHOLD,
+                        "market_side_type": "fav" if side == market_fav_side else "dog",
+                        "model_side_type": "fav" if side == model_fav_side else "dog",
+                        "win": win,
+                        "pnl_units": odds - 1.0 if win else -1.0,
+                    }
+                )
+    return picks
+
+
+def ml_gap_guard_summary() -> dict[str, Any]:
+    picks = load_ml_gap_guard_picks()
+    guarded = [row for row in picks if row["guarded"]]
+    clay_high = [
+        row
+        for row in guarded
+        if row["surface"] == "Clay" and row["confidence"] == "high"
+    ]
+    clay_high_market_dog = [row for row in clay_high if row["market_side_type"] == "dog"]
+    etcheverry_fils_type = [
+        row
+        for row in clay_high_market_dog
+        if row["series"] == "Masters 1000"
+    ]
+    closest_band = [
+        row
+        for row in etcheverry_fils_type
+        if 0.12 < row["model_market_gap"] <= 0.15 and 30 <= row["edge_pct"] < 50
+    ]
+    year_breakdown = {
+        str(year): bet_summary([row for row in etcheverry_fils_type if row["year"] == year])
+        for year in BACKTEST_YEARS
+    }
+    recent = [
+        row
+        for row in etcheverry_fils_type
+        if row["year"] in {2024, 2025, 2026}
+    ]
+    return {
+        "label": "Tennis ML gap-guard quiet audit",
+        "edge_min_pct": ML_GAP_GUARD_MIN_EDGE_PCT,
+        "gap_threshold_pp": ML_GAP_GUARD_THRESHOLD * 100,
+        "all_guarded": bet_summary(guarded),
+        "clay_high_guarded": bet_summary(clay_high),
+        "clay_high_market_dog": bet_summary(clay_high_market_dog),
+        "etch_type": bet_summary(etcheverry_fils_type),
+        "closest_band": bet_summary(closest_band),
+        "etch_type_years": year_breakdown,
+        "etch_type_recent": bet_summary(recent),
+        "read": (
+            "keep_guard_active_recent_sample_weak"
+            if (bet_summary(recent).get("roi_pct") is None or float(bet_summary(recent).get("roi_pct") or 0) < 0)
+            else "interesting_but_keep_shadow_until_live_sample"
+        ),
+    }
+
+
 def weighted_last90_delta(promotion: dict[str, Any]) -> dict[str, Any]:
     total_n = 0
     current_sum = 0.0
@@ -173,6 +332,7 @@ def build_payload() -> dict[str, Any]:
 
     team_clv_rows = load_csv(OUT_DIR / "team-shots-v3-ema20-clv-monitor.csv")
     corners_clv_rows = load_csv(OUT_DIR / "corners-v0-clv-monitor.csv")
+    tennis_gap_guard = ml_gap_guard_summary()
 
     payload = {
         "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -199,6 +359,7 @@ def build_payload() -> dict[str, Any]:
             },
             "clv": clv_summary(corners_clv_rows),
         },
+        "tennis_ml_gap_guard": tennis_gap_guard,
     }
     payload["status"] = {
         "pause_required": bool(
@@ -213,6 +374,7 @@ def build_payload() -> dict[str, Any]:
 def render_report(payload: dict[str, Any]) -> str:
     team = payload["team_shots_v3_ema20"]
     corners = payload["corners_v0"]
+    tennis = payload["tennis_ml_gap_guard"]
     team_gate = team["segment_gate"]
     team_clv = team["clv"]
     corners_clv = corners["clv"]
@@ -262,10 +424,33 @@ def render_report(payload: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
+            "## Tennis ML Gap-Guard Quiet Audit",
+            "",
+            "- This is not a live picks lane. Official ML value remains blocked when the model/market favourite gap is too wide.",
+            f"- Guard trigger: model/market favourite gap > {tennis['gap_threshold_pp']:.1f}pp and model edge >= {tennis['edge_min_pct']:.1f}%.",
+            f"- All guarded ML candidates: {format_bet_summary(tennis['all_guarded'])}",
+            f"- Clay high-confidence guarded: {format_bet_summary(tennis['clay_high_guarded'])}",
+            f"- Clay high-confidence market dogs: {format_bet_summary(tennis['clay_high_market_dog'])}",
+            f"- Etcheverry/Fils-type candidates: {format_bet_summary(tennis['etch_type'])}",
+            f"- Closest band to Etcheverry/Fils: {format_bet_summary(tennis['closest_band'])}",
+            f"- Recent Etcheverry/Fils-type sample (2024-2026): {format_bet_summary(tennis['etch_type_recent'])}",
+            f"- Action: {'keep ML guard active; collect evidence quietly' if tennis['read'] == 'keep_guard_active_recent_sample_weak' else 'interesting, but keep shadow-only until live sample exists'}",
+            "",
+            "### Etcheverry/Fils-Type Year Split",
+            "",
+        ]
+    )
+    for year, summary in tennis.get("etch_type_years", {}).items():
+        lines.append(f"- {year}: {format_bet_summary(summary)}")
+
+    lines.extend(
+        [
+            "",
             "## Plain-English Read",
             "",
             "- Team-shots V3 is not proven profitable live yet; it is the first broad research candidate that passed the backtest segment gates.",
             "- Corners V0 is narrower and deliberately blocked in two leagues. That is a discipline feature, not a failure.",
+            "- Tennis ML gap-guard remains a safety brake. The backtest is not stable enough to unblock those big market-disagreement ML dogs.",
             "- The next real evidence is CLV and settled live sample. Until 50 settled picks, do not overreact to wins/losses.",
             "",
         ]
@@ -276,6 +461,7 @@ def render_report(payload: dict[str, Any]) -> str:
 def telegram_text(payload: dict[str, Any]) -> str:
     team = payload["team_shots_v3_ema20"]
     corners = payload["corners_v0"]
+    tennis = payload["tennis_ml_gap_guard"]
     team_clv = team["clv"]
     corners_clv = corners["clv"]
     return "\n".join(
@@ -285,8 +471,9 @@ def telegram_text(payload: dict[str, Any]) -> str:
             "",
             f"Team Shots V3 EMA20: {len(team['allowed_leagues'])}/5 leagues, {team_clv['published_picks']} picks, {team_clv['settled']} settled, avg CLV {pct((team_clv['avg_published_to_close_clv'] or 0) * 100) if team_clv['avg_published_to_close_clv'] is not None else '-'}",
             f"Corners V0: {len(corners['allowed_leagues'])}/5 leagues, blocked {join_leagues(corners['blocked_leagues'])}, {corners_clv['published_picks']} picks, {corners_clv['settled']} settled, avg CLV {pct((corners_clv['avg_published_to_close_clv'] or 0) * 100) if corners_clv['avg_published_to_close_clv'] is not None else '-'}",
+            f"Tennis ML gap guard: Etch/Fils-type {format_bet_summary(tennis['etch_type'])}; recent 2024-26 {format_bet_summary(tennis['etch_type_recent'])}",
             "",
-            "Read: observe live sample. No production claim until CLV/settled sample is real.",
+            "Read: observe football live sample. Keep tennis ML gap guard active; quiet audit only.",
         ]
     )
 
