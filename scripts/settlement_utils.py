@@ -21,7 +21,7 @@ LEAGUE_CODES = {
 }
 
 GENERIC_TEAM_TOKENS = {
-    "fc", "cf", "afc", "sc", "ac", "us", "ud", "rc", "ssc", "calcio", "1907",
+    "fc", "cf", "afc", "cfc", "sc", "ac", "acf", "us", "ud", "rc", "ssc", "calcio", "1907",
 }
 
 TEAM_ALIASES: Dict[str, str] = {
