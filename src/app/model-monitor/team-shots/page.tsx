@@ -750,6 +750,69 @@ function parseClvMonitorSummary(report?: string | null): {
   };
 }
 
+type ResearchBetSummary = {
+  total: number;
+  settled: number;
+  pending: number;
+  won: number;
+  lost: number;
+  pushed: number;
+  pnl: number;
+  roi: number | null;
+  winRate: number | null;
+};
+
+function researchRowIsGuarded(row: CsvRow): boolean {
+  const blockedReason = (row.blocked_reason ?? "").trim();
+  const guarded = (row.confidence_guard_applied ?? "").trim().toLowerCase() === "true";
+  return Boolean(blockedReason || guarded);
+}
+
+function researchRowIsActive(row: CsvRow): boolean {
+  return !researchRowIsGuarded(row);
+}
+
+function researchResult(row: CsvRow): string {
+  return (row.result ?? "").trim().toLowerCase();
+}
+
+function isSettledResearchRow(row: CsvRow): boolean {
+  return ["won", "lost", "push"].includes(researchResult(row));
+}
+
+function researchBetSummary(rows: CsvRow[]): ResearchBetSummary {
+  const activeRows = rows.filter(researchRowIsActive);
+  const settledRows = activeRows.filter(isSettledResearchRow);
+  const won = settledRows.filter((row) => researchResult(row) === "won").length;
+  const lost = settledRows.filter((row) => researchResult(row) === "lost").length;
+  const pushed = settledRows.filter((row) => researchResult(row) === "push").length;
+  const pnl = settledRows.reduce((sum, row) => sum + pf(row.pnl_units, 0), 0);
+  const graded = won + lost;
+
+  return {
+    total: activeRows.length,
+    settled: settledRows.length,
+    pending: activeRows.filter((row) => {
+      const result = researchResult(row);
+      return !result || result === "pending";
+    }).length,
+    won,
+    lost,
+    pushed,
+    pnl,
+    roi: settledRows.length > 0 ? (pnl / settledRows.length) * 100 : null,
+    winRate: graded > 0 ? (won / graded) * 100 : null,
+  };
+}
+
+function formatUnits(value: number): string {
+  return `${value >= 0 ? "+" : ""}${value.toFixed(2)}u`;
+}
+
+function researchRowSortKey(row: CsvRow): string {
+  return row.settled_at ?? row.kickoff_utc ?? row.published_at_utc ?? row.match_date ?? "";
+}
+
 function findResearchLane(state: ResearchLaneState | null, market: string, model: string): ResearchLane | null {
   return state?.lanes?.find((lane) => lane.market === market && lane.model === model) ?? null;
 }
@@ -1917,20 +1980,18 @@ function LiveLineTable({
     teamShotsV3AllowedConfig?.blocked_leagues ?? teamShotsV3PromotionCheck?.blocked_leagues ?? [];
   const teamShotsV3Clv = parseClvMonitorSummary(teamShotsV3ClvReport);
   const teamShotsV3ClvRows = teamShotsV3ClvCsv ? parseCsvCached(teamShotsV3ClvCsv) : [];
+  const teamShotsV3Summary = researchBetSummary(teamShotsV3ClvRows);
   const teamShotsV3SettledPicks = teamShotsV3ClvRows.filter((row) =>
-    ["won", "lost", "push"].includes((row.result ?? "").trim().toLowerCase()),
+    researchRowIsActive(row) && isSettledResearchRow(row),
   );
-  const teamShotsV3GuardBlockedPicks = teamShotsV3ClvRows.filter((row) => {
-    const blockedReason = (row.blocked_reason ?? "").trim();
-    const guarded = (row.confidence_guard_applied ?? "").trim().toLowerCase() === "true";
-    return Boolean(blockedReason || guarded);
-  });
+  const teamShotsV3RecentSettledPicks = [...teamShotsV3SettledPicks]
+    .sort((a, b) => researchRowSortKey(b).localeCompare(researchRowSortKey(a)))
+    .slice(0, 8);
+  const teamShotsV3GuardBlockedPicks = teamShotsV3ClvRows.filter(researchRowIsGuarded);
   const teamShotsV3PendingPicks = teamShotsV3ClvRows
     .filter((row) => {
-      const result = (row.result ?? "").trim();
-      const blockedReason = (row.blocked_reason ?? "").trim();
-      const guarded = (row.confidence_guard_applied ?? "").trim().toLowerCase() === "true";
-      return (!result || result.toLowerCase() === "pending") && !blockedReason && !guarded;
+      const result = researchResult(row);
+      return (!result || result === "pending") && researchRowIsActive(row);
     })
     .sort((a, b) => (a.kickoff_utc ?? a.match_date ?? "").localeCompare(b.kickoff_utc ?? b.match_date ?? ""));
   const teamShotsV3LeagueRows = [...(teamShotsV3PromotionCheck?.league_results ?? [])].sort((a, b) =>
@@ -2094,7 +2155,33 @@ function LiveLineTable({
                   label="Open V3 picks"
                   value={String(teamShotsV3PendingPicks.length)}
                   tone={statTone(teamShotsV3PendingPicks.length > 0 ? "green" : "default")}
-                  detail={`${teamShotsV3SettledPicks.length} settled | ${teamShotsV3ClvRows.length} published`}
+                  detail={`${teamShotsV3Summary.settled} settled | ${teamShotsV3Summary.total} active`}
+                />
+                <StatCard
+                  label="W / L"
+                  value={`${teamShotsV3Summary.won}W / ${teamShotsV3Summary.lost}L`}
+                  tone={statTone(teamShotsV3Summary.won >= teamShotsV3Summary.lost ? "green" : "red")}
+                  detail={`${teamShotsV3Summary.pushed} push | ${teamShotsV3Summary.pending} open`}
+                />
+                <StatCard
+                  label="P&L flat"
+                  value={formatUnits(teamShotsV3Summary.pnl)}
+                  tone={statTone(teamShotsV3Summary.pnl > 0 ? "green" : teamShotsV3Summary.pnl < 0 ? "red" : "default")}
+                  detail="1u per published pick"
+                />
+                <StatCard
+                  label="ROI flat"
+                  value={teamShotsV3Summary.roi !== null ? formatSignedPercent(teamShotsV3Summary.roi) : "-"}
+                  tone={statTone(
+                    teamShotsV3Summary.roi === null
+                      ? "default"
+                      : teamShotsV3Summary.roi > 0
+                        ? "green"
+                        : teamShotsV3Summary.roi < 0
+                          ? "red"
+                          : "default",
+                  )}
+                  detail={teamShotsV3Summary.winRate !== null ? `${teamShotsV3Summary.winRate.toFixed(0)}% win rate` : undefined}
                 />
                 <StatCard
                   label="Avg CLV"
@@ -2161,6 +2248,63 @@ function LiveLineTable({
                 <p className="mt-3 text-xs text-amber-200">
                   Blocked leagues: {formatLeagueList(teamShotsV3BlockedLeagues)}
                 </p>
+              ) : null}
+
+              {teamShotsV3RecentSettledPicks.length > 0 ? (
+                <div className="mt-3 overflow-x-auto rounded-xl border border-slate-800/60 bg-slate-950/30">
+                  <div className="border-b border-slate-800 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                    Recent Team Shots V3 EMA20 Settled
+                  </div>
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
+                        <th className="py-2.5 pl-4 pr-3">Result</th>
+                        <th className="py-2.5 pr-3">Match</th>
+                        <th className="py-2.5 pr-3">Team / pick</th>
+                        <th className="py-2.5 pr-3 font-mono">Actual</th>
+                        <th className="py-2.5 pr-3 font-mono">P&L</th>
+                        <th className="py-2.5 pr-4">Settled</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {teamShotsV3RecentSettledPicks.map((row, index) => {
+                        const result = researchResult(row);
+                        const pnl = pf(row.pnl_units, 0);
+                        return (
+                          <tr key={`${row.pick_id || row.match_id || index}-settled`} className="border-b border-slate-800/40">
+                            <td className="py-2 pl-4 pr-3">
+                              <StatusPill
+                                label={result.toUpperCase()}
+                                tone={result === "won"
+                                  ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                                  : result === "lost"
+                                    ? "bg-rose-500/10 text-rose-300 border-rose-500/20"
+                                    : "bg-slate-700/30 text-slate-300 border-slate-600/30"}
+                              />
+                            </td>
+                            <td className="py-2 pr-3">
+                              <MatchLabel
+                                league={row.league}
+                                homeTeam={row.home_team}
+                                awayTeam={row.away_team}
+                                iconSize={16}
+                                textClassName="text-xs text-slate-200"
+                              />
+                            </td>
+                            <td className="py-2 pr-3 text-slate-300">
+                              {row.team || "-"} {row.line || "-"} {(row.side ?? "").toUpperCase()}
+                            </td>
+                            <td className="py-2 pr-3 font-mono tabular-nums text-slate-300">{row.actual_team_shots || "-"}</td>
+                            <td className={`py-2 pr-3 font-mono tabular-nums ${pnl >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                              {formatUnits(pnl)}
+                            </td>
+                            <td className="py-2 pr-4 text-slate-500">{row.settled_at ? formatDateTime(row.settled_at) : "-"}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               ) : null}
             </>
           ) : (

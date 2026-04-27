@@ -408,6 +408,69 @@ function parseClvMonitorSummary(report?: string | null): {
   };
 }
 
+type ResearchBetSummary = {
+  total: number;
+  settled: number;
+  pending: number;
+  won: number;
+  lost: number;
+  pushed: number;
+  pnl: number;
+  roi: number | null;
+  winRate: number | null;
+};
+
+function researchRowIsGuarded(row: CsvRow): boolean {
+  const blockedReason = (row.blocked_reason ?? "").trim();
+  const guarded = (row.confidence_guard_applied ?? "").trim().toLowerCase() === "true";
+  return Boolean(blockedReason || guarded);
+}
+
+function researchRowIsActive(row: CsvRow): boolean {
+  return !researchRowIsGuarded(row);
+}
+
+function researchResult(row: CsvRow): string {
+  return (row.result ?? "").trim().toLowerCase();
+}
+
+function isSettledResearchRow(row: CsvRow): boolean {
+  return ["won", "lost", "push"].includes(researchResult(row));
+}
+
+function researchBetSummary(rows: CsvRow[]): ResearchBetSummary {
+  const activeRows = rows.filter(researchRowIsActive);
+  const settledRows = activeRows.filter(isSettledResearchRow);
+  const won = settledRows.filter((row) => researchResult(row) === "won").length;
+  const lost = settledRows.filter((row) => researchResult(row) === "lost").length;
+  const pushed = settledRows.filter((row) => researchResult(row) === "push").length;
+  const pnl = settledRows.reduce((sum, row) => sum + pf(row.pnl_units, 0), 0);
+  const graded = won + lost;
+
+  return {
+    total: activeRows.length,
+    settled: settledRows.length,
+    pending: activeRows.filter((row) => {
+      const result = researchResult(row);
+      return !result || result === "pending";
+    }).length,
+    won,
+    lost,
+    pushed,
+    pnl,
+    roi: settledRows.length > 0 ? (pnl / settledRows.length) * 100 : null,
+    winRate: graded > 0 ? (won / graded) * 100 : null,
+  };
+}
+
+function formatUnits(value: number): string {
+  return `${value >= 0 ? "+" : ""}${value.toFixed(2)}u`;
+}
+
+function researchRowSortKey(row: CsvRow): string {
+  return row.settled_at ?? row.kickoff_utc ?? row.published_at_utc ?? row.match_date ?? "";
+}
+
 function findResearchLane(state: ResearchLaneState | null, market: string, model: string): ResearchLane | null {
   return state?.lanes?.find((lane) => lane.market === market && lane.model === model) ?? null;
 }
@@ -1050,12 +1113,17 @@ export default async function CornersMonitorPage() {
   const cornersV0BlockedLeagues = cornersAllowedConfig?.blocked_leagues ?? [];
   const cornersV0Clv = parseClvMonitorSummary(cornersClvReport);
   const cornersV0ClvRows = cornersClvCsv ? parseCsvCached(cornersClvCsv) : [];
+  const cornersV0Summary = researchBetSummary(cornersV0ClvRows);
+  const cornersV0SettledPicks = cornersV0ClvRows.filter((row) =>
+    researchRowIsActive(row) && isSettledResearchRow(row),
+  );
+  const cornersV0RecentSettledPicks = [...cornersV0SettledPicks]
+    .sort((a, b) => researchRowSortKey(b).localeCompare(researchRowSortKey(a)))
+    .slice(0, 8);
   const cornersV0PendingPicks = cornersV0ClvRows
     .filter((row) => {
-      const result = (row.result ?? "").trim();
-      const blockedReason = (row.blocked_reason ?? "").trim();
-      const guarded = (row.confidence_guard_applied ?? "").trim().toLowerCase() === "true";
-      return (!result || result.toLowerCase() === "pending") && !blockedReason && !guarded;
+      const result = researchResult(row);
+      return (!result || result === "pending") && researchRowIsActive(row);
     })
     .sort((a, b) => (a.kickoff_utc ?? a.match_date ?? "").localeCompare(b.kickoff_utc ?? b.match_date ?? ""));
   const cornersDiagnosticRows = Object.entries(cornersTotalDiagnostic?.by_league ?? {})
@@ -1227,7 +1295,33 @@ export default async function CornersMonitorPage() {
                 <StatCard
                   label="CLV picks"
                   value={cornersV0Clv.picks}
-                  detail={`${cornersV0Clv.settled} settled`}
+                  detail={`${cornersV0Summary.settled} settled | ${cornersV0Summary.total} active`}
+                />
+                <StatCard
+                  label="W / L"
+                  value={`${cornersV0Summary.won}W / ${cornersV0Summary.lost}L`}
+                  tone={statTone(cornersV0Summary.won >= cornersV0Summary.lost ? "green" : "red")}
+                  detail={`${cornersV0Summary.pushed} push | ${cornersV0Summary.pending} open`}
+                />
+                <StatCard
+                  label="P&L flat"
+                  value={formatUnits(cornersV0Summary.pnl)}
+                  tone={statTone(cornersV0Summary.pnl > 0 ? "green" : cornersV0Summary.pnl < 0 ? "red" : "default")}
+                  detail="1u per published pick"
+                />
+                <StatCard
+                  label="ROI flat"
+                  value={cornersV0Summary.roi !== null ? formatSignedPercent(cornersV0Summary.roi) : "-"}
+                  tone={statTone(
+                    cornersV0Summary.roi === null
+                      ? "default"
+                      : cornersV0Summary.roi > 0
+                        ? "green"
+                        : cornersV0Summary.roi < 0
+                          ? "red"
+                          : "default",
+                  )}
+                  detail={cornersV0Summary.winRate !== null ? `${cornersV0Summary.winRate.toFixed(0)}% win rate` : undefined}
                 />
                 <StatCard
                   label="Avg CLV"
@@ -1277,6 +1371,63 @@ export default async function CornersMonitorPage() {
                                   : "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"}
                               />
                             </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              ) : null}
+
+              {cornersV0RecentSettledPicks.length > 0 ? (
+                <div className="mt-3 overflow-x-auto rounded-xl border border-slate-800/60 bg-slate-950/30">
+                  <div className="border-b border-slate-800 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                    Recent Corners V0 Settled
+                  </div>
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
+                        <th className="py-2.5 pl-4 pr-3">Result</th>
+                        <th className="py-2.5 pr-3">Match</th>
+                        <th className="py-2.5 pr-3">Pick</th>
+                        <th className="py-2.5 pr-3 font-mono">Actual</th>
+                        <th className="py-2.5 pr-3 font-mono">P&L</th>
+                        <th className="py-2.5 pr-4">Settled</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cornersV0RecentSettledPicks.map((row, index) => {
+                        const result = researchResult(row);
+                        const pnl = pf(row.pnl_units, 0);
+                        return (
+                          <tr key={`${row.pick_id || row.match_id || index}-settled`} className="border-b border-slate-800/40">
+                            <td className="py-2 pl-4 pr-3">
+                              <StatusPill
+                                label={result.toUpperCase()}
+                                tone={result === "won"
+                                  ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                                  : result === "lost"
+                                    ? "bg-rose-500/10 text-rose-300 border-rose-500/20"
+                                    : "bg-slate-700/30 text-slate-300 border-slate-600/30"}
+                              />
+                            </td>
+                            <td className="py-2 pr-3">
+                              <MatchLabel
+                                league={row.league}
+                                homeTeam={row.home_team}
+                                awayTeam={row.away_team}
+                                iconSize={16}
+                                textClassName="text-xs text-slate-200"
+                              />
+                            </td>
+                            <td className="py-2 pr-3 text-slate-300">
+                              {row.line || "-"} {(row.side ?? "").toUpperCase()}
+                            </td>
+                            <td className="py-2 pr-3 font-mono tabular-nums text-slate-300">{row.actual_total_corners || "-"}</td>
+                            <td className={`py-2 pr-3 font-mono tabular-nums ${pnl >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                              {formatUnits(pnl)}
+                            </td>
+                            <td className="py-2 pr-4 text-slate-500">{row.settled_at ? formatDateTime(row.settled_at) : "-"}</td>
                           </tr>
                         );
                       })}
