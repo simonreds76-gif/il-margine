@@ -8,9 +8,9 @@
       "match_date": "2026-04-27",
       "home_team": "Manchester United",
       "away_team": "Brentford",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -21,9 +21,9 @@
         "Luke Shaw",
         "Casemiro",
         "Kobbie Mainoo",
-        "Bryan Mbeumo",
+        "Amad",
         "Bruno Fernandes",
-        "Matheus Cunha",
+        "Bryan Mbeumo",
         "Benjamin Sesko"
       ],
       "away_players": [
@@ -104,7 +104,7 @@
           "position_id": 66
         },
         {
-          "name": "Bryan Mbeumo",
+          "name": "Amad",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -122,7 +122,7 @@
           "position_id": 85
         },
         {
-          "name": "Matheus Cunha",
+          "name": "Bryan Mbeumo",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -241,21 +241,38 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Altay Bayindir",
         "Leny Yoro",
+        "Noussair Mazraoui",
+        "Tyrell Malacia",
+        "Manuel Ugarte",
+        "Mason Mount",
+        "Patrick Dorgu",
+        "Joshua Zirkzee",
+        "Shea Lacey"
+      ],
+      "away_subs": [
+        "Hákon Rafn Valdimarsson",
+        "Aaron Hickey",
+        "Ethan Pinnock",
+        "Kristoffer Ajer",
+        "Ollie Shield",
+        "Joshua Dasilva",
+        "Kaye Furo",
+        "Reiss Nelson",
+        "Romelle Donovan"
+      ],
+      "home_unavailable": [
+        "Matheus Cunha",
         "Lisandro Martínez",
-        "Matthijs de Ligt",
-        "Patrick Dorgu"
+        "Matthijs de Ligt"
       ],
       "away_unavailable": [
         "Jordan Henderson",
         "Rico Henry",
         "Vitaly Janelt",
-        "Fábio Carvalho",
-        "Joshua Dasilva",
-        "Kaye Furo"
+        "Fábio Carvalho"
       ]
     }
   ]
