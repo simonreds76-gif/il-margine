@@ -80,9 +80,9 @@ const bookmakerLogos: Record<string, string> = {
   "boyle sports": "boylesports",
   "BOY": "boylesports",
   "BS": "boylesports",
-  "Spreadex": "spreadex.jpg",
-  "spreadex": "spreadex.jpg",
-  "SPX": "spreadex.jpg",
+  "Spreadex": "spreadex",
+  "spreadex": "spreadex",
+  "SPX": "spreadex",
   "Pinnacle": "pinnacle",
   "pinnacle": "pinnacle",
   "Pinnacle Bet": "pinnacle",
@@ -127,6 +127,7 @@ const preferSvg: Record<string, boolean> = {
   williamhill: true,
   skybet: true,
   betway: true,
+  spreadex: true,
 };
 
 // All logos one step larger so thumbnails are easier to recognise (was 24/32/40px)
