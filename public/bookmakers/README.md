@@ -15,7 +15,7 @@ For the recommended bookmakers section, use these filenames (PNG or SVG):
 
 Other bookmakers (if used elsewhere):
 
-- `bet365.png`, `betfair.png`, `paddypower.png`, `williamhill.png`, `skybet.png`, `betway.png`, `888sport.png`, `betfred.png`, `pinnacle.png` (or `pinnacle.svg`), etc.
+- `bet365.png`, `betfair.png`, `paddypower.png`, `williamhill.png`, `skybet.png`, `betway.png`, `888sport.png`, `betfred.png`, `pinnacle.png` (or `pinnacle.svg`), `boylesports.png`, `spreadex.jpg`, etc.
 
 ## Logo Specifications
 
@@ -37,3 +37,4 @@ You can find bookmaker logos from:
 - **Bookmakers page** uses **32px (md)**. Recommended source size: **64×64 px** (or 128×128 px). Logos are shown at 24px (sm), 32px (md), or 40px (lg) depending on context.
 - If a logo is missing, a fallback with the first letter will be shown
 - Logos are clickable if affiliate links are set in the database
+- Spreadex and BoyleSports are reporting-only additions unless affiliate links are added later.

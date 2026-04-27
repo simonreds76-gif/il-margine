@@ -12,6 +12,8 @@ const LOGO_MAP: Record<string, string> = {
   "william-hill": "williamhill",
   betfred: "betfred",
   betway: "betway",
+  boylesports: "boylesports",
+  spreadex: "spreadex",
 };
 
 const SIZE_CLASSES = {
@@ -23,6 +25,8 @@ const SIZE_CLASSES = {
 
 const LOGO_SCALE: Record<string, number> = {
   betway: 1.14,
+  boylesports: 0.92,
+  spreadex: 0.95,
 };
 
 interface BookmakerThumbProps {
@@ -40,6 +44,7 @@ export default function BookmakerThumb({ id, name, size = "md", className = "" }
   const logoPaths = logoBase ? [
     `/bookmakers/${logoBase}.svg`,
     `/bookmakers/${logoBase}.png`,
+    `/bookmakers/${logoBase}.jpeg`,
     `/bookmakers/${logoBase}.jpg`,
   ] : [];
 

@@ -331,6 +331,8 @@ export function bookmakerLogoPath(bookmaker: string): string | null {
     pinnacle: "/bookmakers/pinnacle.png",
     bwin: "/bookmakers/bwin.png",
     "888sport": "/bookmakers/888sport.png",
+    boylesports: "/bookmakers/boylesports.png",
+    spreadex: "/bookmakers/spreadex.jpg",
   };
   return mapping[normalized] ?? null;
 }

@@ -74,6 +74,15 @@ const bookmakerLogos: Record<string, string> = {
   "betway": "betway",
   "888sport": "888sport",
   "BoyleSports": "boylesports",
+  "Boylesports": "boylesports",
+  "boylesports": "boylesports",
+  "Boyle Sports": "boylesports",
+  "boyle sports": "boylesports",
+  "BOY": "boylesports",
+  "BS": "boylesports",
+  "Spreadex": "spreadex.jpg",
+  "spreadex": "spreadex.jpg",
+  "SPX": "spreadex.jpg",
   "Pinnacle": "pinnacle",
   "pinnacle": "pinnacle",
   "Pinnacle Bet": "pinnacle",
@@ -92,6 +101,9 @@ const bookmakerDisplayNames: Record<string, string> = {
   "BF": "Betfred",
   "BW": "Bwin",
   "SB": "Sky Bet",
+  "BOY": "BoyleSports",
+  "BS": "BoyleSports",
+  "SPX": "Spreadex",
 };
 
 // Logos that have lots of padding in the asset – scale up so they match others’ visual size
@@ -100,10 +112,13 @@ const logoScale: Record<string, number> = {
   ladbrokes: 0.85,
   bwin: 1.05,
   betway: 1.14,
+  boylesports: 0.92,
+  spreadex: 0.95,
 };
 
 const logoFrameClasses: Record<string, string> = {
   bwin: "rounded-md border border-slate-200/90 bg-white p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
+  spreadex: "rounded-md border border-slate-200/90 bg-white p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
 };
 
 // Prefer SVG for crisp scaling (avoids pixelation when PNG is low-res)
