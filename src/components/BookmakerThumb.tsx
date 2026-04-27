@@ -23,24 +23,18 @@ const SIZE_CLASSES = {
   lg: "w-12 h-12",
 } as const;
 
-const LOGO_SCALE: Record<string, number> = {
-  betway: 1.14,
-  boylesports: 0.92,
-  spreadex: 0.95,
-};
-
-const WIDE_LOGOS: Record<string, boolean> = {
-  betway: true,
-  boylesports: true,
-  spreadex: true,
-};
-
-const WIDE_SIZE_CLASSES = {
+const FRAME_SIZE_CLASSES = {
   xs: "w-12 h-7",
   sm: "w-16 h-8",
   md: "w-20 h-10",
   lg: "w-24 h-12",
 } as const;
+
+const LOGO_SCALE: Record<string, number> = {
+  betway: 1.14,
+  boylesports: 0.92,
+  spreadex: 0.95,
+};
 
 interface BookmakerThumbProps {
   id: string;
@@ -64,7 +58,6 @@ export default function BookmakerThumb({ id, name, size = "md", className = "" }
   const currentSrc = logoPaths[srcIndex] ?? null;
   const showImage = currentSrc && !failed;
   const scale = LOGO_SCALE[logoBase] ?? 1;
-  const sizeClass = WIDE_LOGOS[logoBase] ? WIDE_SIZE_CLASSES[size] : SIZE_CLASSES[size];
 
   const handleError = () => {
     if (srcIndex < logoPaths.length - 1) {
@@ -77,12 +70,12 @@ export default function BookmakerThumb({ id, name, size = "md", className = "" }
   return (
     <div className={`flex items-center justify-center flex-shrink-0 ${className}`}>
       {showImage ? (
-        <div className={`${sizeClass} relative overflow-hidden rounded-lg flex items-center justify-center bg-slate-800/50`}>
+        <div className={`${FRAME_SIZE_CLASSES[size]} relative overflow-hidden rounded-lg flex items-center justify-center bg-slate-800/50`}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={currentSrc}
             alt={name}
-            className="w-full h-full object-contain"
+            className={`${SIZE_CLASSES[size]} object-contain`}
             style={{ transform: `scale(${scale})` }}
             onError={handleError}
           />
