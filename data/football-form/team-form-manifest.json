@@ -1,6 +1,6 @@
 {
   "date_range": {
-    "max": "2026-04-23",
+    "max": "2026-04-26",
     "min": "2014-08-08"
   },
   "fields": {
@@ -186,7 +186,7 @@
       "ema20_opponent_market_strength_avg"
     ]
   },
-  "generated_at": "2026-04-27T10:28:08+00:00",
+  "generated_at": "2026-04-27T18:19:34+00:00",
   "notes": [
     "Versioned CSVs are date-tagged generated artifacts.",
     "Models should record the version value when training or producing research reports.",
@@ -202,14 +202,14 @@
     "validation_report": "data/football-form/team-form-validation.md"
   },
   "row_counts": {
-    "team_match_base": 42714,
-    "team_rolling_form": 42714
+    "team_match_base": 42796,
+    "team_rolling_form": 42796
   },
   "version": "2026-04-27",
   "xg_overlay": {
-    "matched": 1520,
-    "rows": 1520,
+    "matched": 1561,
+    "rows": 1561,
     "unmatched": 0,
-    "with_xg": 1391
+    "with_xg": 1429
   }
 }
