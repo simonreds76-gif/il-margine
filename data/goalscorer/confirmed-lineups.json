@@ -8,23 +8,23 @@
       "match_date": "2026-04-27",
       "home_team": "Cagliari",
       "away_team": "Atalanta",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "4-3-3",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "4-2-3-1",
       "away_formation": "3-4-2-1",
       "home_players": [
         "Elia Caprile",
         "Zé Pedro",
         "Yerry Mina",
-        "Alberto Dossena",
+        "Juan Rodríguez",
         "Adam Obert",
-        "Alessandro Deiola",
-        "Gianluca Gaetano",
         "Michel Ndary Adopo",
-        "Marco Palestra",
+        "Gianluca Gaetano",
         "Sebastiano Esposito",
-        "Michael Folorunsho"
+        "Alessandro Deiola",
+        "Michael Folorunsho",
+        "Paul Mendy"
       ],
       "away_players": [
         "Marco Carnesecchi",
@@ -33,7 +33,7 @@
         "Sead Kolasinac",
         "Raoul Bellanova",
         "Marten de Roon",
-        "Éderson",
+        "Mario Pasalic",
         "Davide Zappacosta",
         "Charles De Ketelaere",
         "Giacomo Raspadori",
@@ -46,7 +46,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-3-3",
+          "formation": "4-2-3-1",
           "position_id": 11
         },
         {
@@ -55,7 +55,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-2-3-1",
           "position_id": 32
         },
         {
@@ -64,16 +64,16 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-2-3-1",
           "position_id": 34
         },
         {
-          "name": "Alberto Dossena",
+          "name": "Juan Rodríguez",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-2-3-1",
           "position_id": 36
         },
         {
@@ -82,62 +82,62 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-2-3-1",
           "position_id": 38
-        },
-        {
-          "name": "Alessandro Deiola",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 73
-        },
-        {
-          "name": "Gianluca Gaetano",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 75
         },
         {
           "name": "Michel Ndary Adopo",
           "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 77
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
         },
         {
-          "name": "Marco Palestra",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 103
+          "name": "Gianluca Gaetano",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
         },
         {
           "name": "Sebastiano Esposito",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 105
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83
+        },
+        {
+          "name": "Alessandro Deiola",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
         },
         {
           "name": "Michael Folorunsho",
           "line_index": 2,
           "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87
+        },
+        {
+          "name": "Paul Mendy",
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 107
+          "formation": "4-2-3-1",
+          "position_id": 115
         }
       ],
       "away_starters": [
@@ -196,7 +196,7 @@
           "position_id": 64
         },
         {
-          "name": "Éderson",
+          "name": "Mario Pasalic",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -241,8 +241,36 @@
           "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Alen Sherri",
+        "Giuseppe Ciocci",
+        "Alberto Dossena",
+        "Gabriele Zappa",
+        "Othniël Raterink",
+        "Agustín Albarracín",
+        "Ibrahim Sulemana",
+        "Joseph Liteta",
+        "Marco Palestra",
+        "Andrea Belotti",
+        "Gennaro Borrelli",
+        "Semih Kiliçsoy",
+        "Yael Trepy"
+      ],
+      "away_subs": [
+        "Marco Sportiello",
+        "Piotr Pardel",
+        "Honest Ahanor",
+        "Isak Hien",
+        "Odilon Kossounou",
+        "Relja Obric",
+        "Éderson",
+        "Ibrahim Sulemana",
+        "Lazar Samardzic",
+        "Nicola Zalewski",
+        "Yunus Musah",
+        "Mitchel Bakker",
+        "Nikola Krstovic"
+      ],
       "home_unavailable": [
         "Luca Mazzitelli",
         "Mattia Felici",
