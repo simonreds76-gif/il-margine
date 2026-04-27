@@ -118,7 +118,13 @@ const logoScale: Record<string, number> = {
 
 const logoFrameClasses: Record<string, string> = {
   bwin: "rounded-md border border-slate-200/90 bg-white p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
-  spreadex: "rounded-md border border-slate-200/90 bg-white p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
+  spreadex: "rounded-md border border-slate-200/90 bg-white px-1 py-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
+};
+
+const wideLogoFrames: Record<string, boolean> = {
+  betway: true,
+  boylesports: true,
+  spreadex: true,
 };
 
 // Prefer SVG for crisp scaling (avoids pixelation when PNG is low-res)
@@ -135,6 +141,12 @@ const sizeClasses = {
   sm: "w-8 h-8",
   md: "w-10 h-10",
   lg: "w-12 h-12",
+};
+
+const wideSizeClasses = {
+  sm: "w-16 h-8",
+  md: "w-20 h-10",
+  lg: "w-24 h-12",
 };
 
 export default function BookmakerLogo({
@@ -187,6 +199,7 @@ export default function BookmakerLogo({
   const showImage = currentSrc && !imageFailed;
   const scale = logoScale[scaleKey] ?? 1;
   const frameClassName = logoFrameClasses[scaleKey] ?? "";
+  const frameSizeClass = wideLogoFrames[scaleKey] ? wideSizeClasses[size] : sizeClasses[size];
 
   // Prefer name for display; use override so "CR" shows as "Coral" etc.
   const displayName =
@@ -199,7 +212,7 @@ export default function BookmakerLogo({
     <div className={`flex items-center justify-center gap-2 ${className}`}>
       {showImage ? (
         <div
-          className={`${sizeClasses[size]} min-w-[2rem] min-h-[2rem] relative flex-shrink-0 mx-auto overflow-hidden ${frameClassName}`}
+          className={`${frameSizeClass} min-h-[2rem] relative flex-shrink-0 mx-auto overflow-hidden ${frameClassName}`}
         >
           <div className="relative h-full w-full">
             <div className="absolute inset-0" style={{ transform: `scale(${scale})` }}>
@@ -207,7 +220,7 @@ export default function BookmakerLogo({
                 src={currentSrc}
                 alt={displayName}
                 fill
-                sizes="48px"
+                sizes={wideLogoFrames[scaleKey] ? "96px" : "48px"}
                 className="object-contain"
                 unoptimized
                 onError={() => {
