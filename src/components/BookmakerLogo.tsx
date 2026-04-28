@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Bookmaker } from "@/lib/supabase";
+import { resolveBookmakerLogo } from "@/lib/bookmaker-logos";
 
 interface BookmakerLogoProps {
   /** Single bookmaker or array (Supabase sometimes returns relation as array) */
@@ -17,96 +18,7 @@ interface BookmakerLogoProps {
   stopPropagationOnClick?: boolean;
 }
 
-// Map bookmaker short_name / name (from DB or copy) to logo filename in public/bookmakers/.
-// When adding a new bookmaker: add row in Supabase bookmakers, add logo file, then add entry here (name + short_name variants).
-const bookmakerLogos: Record<string, string> = {
-  // Recommended 8 + common variants
-  "Midnite": "midnite",
-  "midnite": "midnite",
-  "Midnight": "midnite",
-  "midnight": "midnite",
-  "MN": "midnite",
-  "BetVictor": "betvictor",
-  "Betvictor": "betvictor",
-  "betvictor": "betvictor",
-  "Bet Victor": "betvictor",
-  "bet victor": "betvictor",
-  "BV": "betvictor",
-  "Unibet": "Unibet_idYHeiKVm__1.png",
-  "unibet": "Unibet_idYHeiKVm__1.png",
-  "Coral": "coral",
-  "coral": "coral",
-  "CR": "coral",
-  "Ladbrokes": "ladbrokes",
-  "ladbrokes": "ladbrokes",
-  "LAD": "ladbrokes",
-  "Bwin": "bwin",
-  "bwin": "bwin",
-  "BW": "bwin",
-  "BetMGM": "BetMGM UK_idPMHl2t9c_0.png",
-  "betmgm": "BetMGM UK_idPMHl2t9c_0.png",
-  "LeoVegas": "BetMGM UK_idPMHl2t9c_0.png",
-  "William Hill": "williamhill.png",
-  "WilliamHill": "williamhill.png",
-  "WH": "williamhill.png",
-  "wh": "williamhill.png",
-  "williamhill": "williamhill.png",
-  "Betfred": "betfred",
-  "betfred": "betfred",
-  "Bet Fred": "betfred",
-  "bet fred": "betfred",
-  "BF": "betfred",
-  // Others (admin / legacy)
-  "bet365": "bet365",
-  "Bet365": "bet365",
-  "Betfair": "betfair",
-  "betfair": "betfair",
-  "Paddy Power": "paddypower",
-  "Paddy": "paddypower",
-  "paddypower": "paddypower",
-  "Sky Bet": "skybet.png",
-  "SkyBet": "skybet.png",
-  "Skybet": "skybet.png",
-  "skybet": "skybet.png",
-  "SB": "skybet.png",
-  "sb": "skybet.png",
-  "Betway": "betway",
-  "betway": "betway",
-  "888sport": "888sport",
-  "BoyleSports": "boylesports",
-  "Boylesports": "boylesports",
-  "boylesports": "boylesports",
-  "Boyle Sports": "boylesports",
-  "boyle sports": "boylesports",
-  "BOY": "boylesports",
-  "BS": "boylesports",
-  "Spreadex": "spreadex",
-  "spreadex": "spreadex",
-  "SPX": "spreadex",
-  "Pinnacle": "pinnacle",
-  "pinnacle": "pinnacle",
-  "Pinnacle Bet": "pinnacle",
-  "pinnacle bet": "pinnacle",
-  "Marathon": "marathon",
-  "DraftKings": "draftkings",
-  "FanDuel": "fanduel",
-};
-
-// Override for display when short_name is abbreviated (e.g. CR -> Coral)
-const bookmakerDisplayNames: Record<string, string> = {
-  "CR": "Coral",
-  "WH": "William Hill",
-  "LAD": "Ladbrokes",
-  "BV": "BetVictor",
-  "BF": "Betfred",
-  "BW": "Bwin",
-  "SB": "Sky Bet",
-  "BOY": "BoyleSports",
-  "BS": "BoyleSports",
-  "SPX": "Spreadex",
-};
-
-// Logos that have lots of padding in the asset – scale up so they match others’ visual size
+// Logos that have lots of padding in the asset - scale up so they match others' visual size.
 const logoScale: Record<string, number> = {
   pinnacle: 2,
   ladbrokes: 0.85,
@@ -119,15 +31,6 @@ const logoScale: Record<string, number> = {
 const logoFrameClasses: Record<string, string> = {
   bwin: "rounded-md border border-slate-200/90 bg-white p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
   spreadex: "rounded-md border border-slate-200/90 bg-white px-1 py-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]",
-};
-
-// Prefer SVG for crisp scaling (avoids pixelation when PNG is low-res)
-const preferSvg: Record<string, boolean> = {
-  bet365: true,
-  williamhill: true,
-  skybet: true,
-  betway: true,
-  spreadex: true,
 };
 
 // All logos one step larger so thumbnails are easier to recognise (was 24/32/40px)
@@ -155,43 +58,20 @@ export default function BookmakerLogo({
     );
   }
 
-  const sn = String(bookmaker.short_name || "").trim();
-  const nm = String(bookmaker.name || "").trim();
-  const logoBase = bookmakerLogos[sn] || bookmakerLogos[nm] || bookmakerLogos[sn.toLowerCase()] || bookmakerLogos[nm.toLowerCase()];
-  const hasExtension = logoBase?.includes(".");
-  const scaleKey = logoBase?.split(".")[0] ?? "";
-  const useSvgFirst = preferSvg[scaleKey];
-  // Prefer SVG for some logos (crisp at any size); otherwise try png/jpeg/jpg then svg
-  const logoPaths: string[] = logoBase
-    ? hasExtension
-      ? [`/bookmakers/${encodeURIComponent(logoBase)}`]
-      : useSvgFirst
-        ? [
-            `/bookmakers/${logoBase}.svg`,
-            `/bookmakers/${logoBase}.png`,
-            `/bookmakers/${logoBase}.jpeg`,
-            `/bookmakers/${logoBase}.jpg`,
-          ]
-        : [
-            `/bookmakers/${logoBase}.png`,
-            `/bookmakers/${logoBase}.jpeg`,
-            `/bookmakers/${logoBase}.jpg`,
-            `/bookmakers/${logoBase}.svg`,
-          ]
-    : [];
+  const resolvedLogo = resolveBookmakerLogo(bookmaker);
+  const logoPaths = resolvedLogo?.paths ?? [];
   const currentSrc = logoPaths[srcIndex] || null;
 
   const link = bookmaker.affiliate_link || "#";
   const hasAffiliate = !!bookmaker.affiliate_link;
 
   const showImage = currentSrc && !imageFailed;
-  const scale = logoScale[scaleKey] ?? 1;
-  const frameClassName = logoFrameClasses[scaleKey] ?? "";
+  const scale = logoScale[resolvedLogo?.key ?? ""] ?? 1;
+  const frameClassName = logoFrameClasses[resolvedLogo?.key ?? ""] ?? "";
 
-  // Prefer name for display; use override so "CR" shows as "Coral" etc.
   const displayName =
+    resolvedLogo?.displayName ||
     bookmaker.name ||
-    bookmakerDisplayNames[bookmaker.short_name] ||
     bookmaker.short_name ||
     "";
 

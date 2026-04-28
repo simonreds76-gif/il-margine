@@ -1,20 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-/** Same logo logic as BookmakerLogo. Maps bookmaker id to filename in public/bookmakers/. Omit if no logo file. */
-const LOGO_MAP: Record<string, string> = {
-  midnite: "midnite",
-  betvictor: "betvictor",
-  coral: "coral",
-  ladbrokes: "ladbrokes",
-  betmgm: "betmgm",
-  "william-hill": "williamhill",
-  betfred: "betfred",
-  betway: "betway",
-  boylesports: "boylesports",
-  spreadex: "spreadex",
-};
+import { resolveBookmakerLogo } from "@/lib/bookmaker-logos";
 
 const SIZE_CLASSES = {
   xs: "w-7 h-7",
@@ -44,20 +31,15 @@ interface BookmakerThumbProps {
 }
 
 export default function BookmakerThumb({ id, name, size = "md", className = "" }: BookmakerThumbProps) {
-  const logoBase = LOGO_MAP[id];
+  const resolvedLogo = resolveBookmakerLogo({ short_name: id, name });
   const [srcIndex, setSrcIndex] = useState(0);
   const [failed, setFailed] = useState(false);
 
-  const logoPaths = logoBase ? [
-    `/bookmakers/${logoBase}.svg`,
-    `/bookmakers/${logoBase}.png`,
-    `/bookmakers/${logoBase}.jpeg`,
-    `/bookmakers/${logoBase}.jpg`,
-  ] : [];
-
+  const logoPaths = resolvedLogo?.paths ?? [];
   const currentSrc = logoPaths[srcIndex] ?? null;
   const showImage = currentSrc && !failed;
-  const scale = LOGO_SCALE[logoBase] ?? 1;
+  const scale = LOGO_SCALE[resolvedLogo?.key ?? ""] ?? 1;
+  const displayName = resolvedLogo?.displayName ?? name;
 
   const handleError = () => {
     if (srcIndex < logoPaths.length - 1) {
@@ -74,7 +56,7 @@ export default function BookmakerThumb({ id, name, size = "md", className = "" }
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={currentSrc}
-            alt={name}
+            alt={displayName}
             className={`${SIZE_CLASSES[size]} object-contain`}
             style={{ transform: `scale(${scale})` }}
             onError={handleError}
@@ -82,7 +64,7 @@ export default function BookmakerThumb({ id, name, size = "md", className = "" }
         </div>
       ) : (
         <div className={`${SIZE_CLASSES[size]} rounded-lg bg-slate-700 flex items-center justify-center`}>
-          <span className="text-sm font-semibold text-slate-400">{name.charAt(0)}</span>
+          <span className="text-sm font-semibold text-slate-400">{displayName.charAt(0)}</span>
         </div>
       )}
     </div>

@@ -1,3 +1,5 @@
+import { getBookmakerLogoPath } from "@/lib/bookmaker-logos";
+
 export type LeagueKey = "serie-a" | "epl" | "la-liga" | "bundesliga" | "ligue-1";
 
 export type PublicRow = {
@@ -313,28 +315,7 @@ export function marketProbability(odds: number): number | null {
 }
 
 export function bookmakerLogoPath(bookmaker: string): string | null {
-  const normalized = bookmaker.trim().toLowerCase().replace(/\s+/g, "");
-  const mapping: Record<string, string> = {
-    bet365: "/bookmakers/bet365.png",
-    betfair: "/bookmakers/betfair.png",
-    paddypower: "/bookmakers/paddypower.png",
-    williamhill: "/bookmakers/williamhill.png",
-    skybet: "/bookmakers/skybet.png",
-    betway: "/bookmakers/betway.svg",
-    coral: "/bookmakers/coral.jpeg",
-    ladbrokes: "/bookmakers/ladbrokes.png",
-    betmgm: "/bookmakers/betmgm.svg",
-    unibet: "/bookmakers/unibet.png",
-    midnite: "/bookmakers/midnite.png",
-    betvictor: "/bookmakers/betvictor.png",
-    betfred: "/bookmakers/betfred.png",
-    pinnacle: "/bookmakers/pinnacle.png",
-    bwin: "/bookmakers/bwin.png",
-    "888sport": "/bookmakers/888sport.png",
-    boylesports: "/bookmakers/boylesports.png",
-    spreadex: "/bookmakers/spreadex.svg",
-  };
-  return mapping[normalized] ?? null;
+  return getBookmakerLogoPath(bookmaker);
 }
 
 export function getContextSignals(
