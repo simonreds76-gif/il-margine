@@ -8,6 +8,8 @@ import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import BetMobileMeta from "@/components/BetMobileMeta";
 import MarketBadge from "@/components/MarketBadge";
+import PnL from "@/components/PnL";
+import ResultBadge from "@/components/ResultBadge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import PageHomeLink from "@/components/PageHomeLink";
@@ -520,12 +522,10 @@ export default function TennisTips() {
                           </td>
                         <td className="px-4 py-4 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(result.stake)}u</td>
                         <td className="px-4 py-4 text-center border-r border-slate-800/30">
-                          <span className={`inline-flex min-w-[4rem] justify-center rounded-md px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-[0.04em] ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : result.status === "void" ? "text-slate-400 bg-slate-500/10" : "text-red-400 bg-red-500/10"}`}>
-                            {result.status.toUpperCase()}
-                          </span>
+                          <ResultBadge status={result.status} />
                         </td>
-                        <td className={`px-4 py-4 text-right font-mono font-medium ${result.status === "void" ? "text-slate-400" : result.profit_loss && result.profit_loss > 0 ? "text-emerald-400" : "text-red-400"}`}>
-                          {result.status === "void" ? "0.00" : `${result.profit_loss && result.profit_loss > 0 ? "+" : ""}${result.profit_loss?.toFixed(2)}`}u
+                        <td className="px-4 py-4 text-right">
+                          <PnL value={result.profit_loss} status={result.status} />
                         </td>
                       </tr>
                     ))}
@@ -561,9 +561,7 @@ export default function TennisTips() {
                           {result.selection}
                         </div>
                       </div>
-                      <span className={`ml-3 inline-flex min-w-[4rem] justify-center rounded-md px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-[0.04em] ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : result.status === "void" ? "text-slate-400 bg-slate-500/10" : "text-red-400 bg-red-500/10"}`}>
-                        {result.status.toUpperCase()}
-                      </span>
+                      <ResultBadge status={result.status} size="sm" className="ml-3" />
                     </div>
                     <BetMobileMeta
                       odds={result.odds}

@@ -9,6 +9,8 @@ import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats
 import BookmakerLogo from "@/components/BookmakerLogo";
 import BetMobileMeta from "@/components/BetMobileMeta";
 import MarketBadge from "@/components/MarketBadge";
+import PnL from "@/components/PnL";
+import ResultBadge from "@/components/ResultBadge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
@@ -758,7 +760,7 @@ export default function Home() {
             <p className="mb-6 text-xs text-slate-500">Stake in units (1u = your standard stake). We typically recommend 0.5u to 2u per pick.</p>
             <div className="overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0c0f14]">
               <div className="hidden md:block">
-                <table className="w-full table-fixed border-collapse">
+                <table className="w-full table-fixed border-collapse text-sm">
                   <thead>
                     <tr className="border-b border-slate-800/40 bg-slate-950/40 text-[11px] uppercase text-slate-500">
                       <th className="w-11 border-r border-slate-800/40 px-2.5 py-3 text-left"></th>
@@ -929,30 +931,10 @@ export default function Home() {
                         </td>
                         <td className="border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle font-mono text-slate-200">{formatStake(bet.stake)}u</td>
                         <td className="border-r border-slate-800/40 px-2.5 py-3.5 align-middle text-center">
-                          <span
-                            className={`inline-flex min-w-[4rem] justify-center rounded-md px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-[0.04em] ${
-                              bet.status === "won"
-                                ? "bg-emerald-500/10 text-emerald-400"
-                                : bet.status === "void"
-                                  ? "bg-slate-500/10 text-slate-400"
-                                  : "bg-red-500/10 text-red-400"
-                            }`}
-                          >
-                            {bet.status.toUpperCase()}
-                          </span>
+                          <ResultBadge status={bet.status} />
                         </td>
-                        <td
-                          className={`px-2.5 py-3.5 text-right align-middle font-mono text-sm font-medium ${
-                            bet.status === "void"
-                              ? "text-slate-400"
-                              : bet.profit_loss && bet.profit_loss > 0
-                                ? "text-emerald-400"
-                                : "text-red-400"
-                          }`}
-                        >
-                          {bet.status === "void"
-                            ? "0.00"
-                            : `${bet.profit_loss && bet.profit_loss > 0 ? "+" : ""}${bet.profit_loss?.toFixed(2) || "0.00"}`}u
+                        <td className="px-2.5 py-3.5 text-right align-middle">
+                          <PnL value={bet.profit_loss} status={bet.status} />
                         </td>
                       </tr>
                     ))}
@@ -985,17 +967,7 @@ export default function Home() {
                           {bet.selection}
                         </div>
                       </div>
-                      <span
-                        className={`ml-3 inline-flex min-w-[4rem] justify-center rounded-md px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-[0.04em] ${
-                          bet.status === "won"
-                            ? "bg-emerald-500/10 text-emerald-400"
-                            : bet.status === "void"
-                              ? "bg-slate-500/10 text-slate-400"
-                              : "bg-red-500/10 text-red-400"
-                        }`}
-                      >
-                        {bet.status.toUpperCase()}
-                      </span>
+                      <ResultBadge status={bet.status} size="sm" className="ml-3" />
                     </div>
                     <BetMobileMeta
                       odds={bet.odds}

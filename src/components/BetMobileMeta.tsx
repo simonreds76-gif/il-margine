@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import type { Bookmaker } from "@/lib/supabase";
 import { formatOdds, formatStake } from "@/lib/format";
 import BookmakerLogo from "@/components/BookmakerLogo";
+import PnL from "@/components/PnL";
 
 interface BetMobileMetaProps {
   odds: number | string;
@@ -44,7 +45,6 @@ export default function BetMobileMeta({
   const isVoid = status === "void";
   const profit = Number(profitLoss ?? 0);
   const profitClassName = isVoid ? "text-slate-400" : profit > 0 ? "text-emerald-400" : "text-red-400";
-  const profitText = isVoid ? "0.00u" : `${profit > 0 ? "+" : ""}${profit.toFixed(2)}u`;
 
   return (
     <div className={`mt-4 grid gap-2 ${showProfit ? "grid-cols-2" : "grid-cols-3"}`}>
@@ -59,7 +59,7 @@ export default function BetMobileMeta({
       </MetaBox>
       {showProfit ? (
         <MetaBox label="P/L" valueClassName={profitClassName}>
-          <span className="font-mono">{profitText}</span>
+          <PnL value={profitLoss} status={status} />
         </MetaBox>
       ) : null}
     </div>
