@@ -492,8 +492,8 @@ export default function TennisTips() {
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
                       <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '50px' }}>Stake</th>
-                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Result</th>
-                      <th className="px-4 py-3 text-right" style={{ width: '80px' }}>P/L</th>
+                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '84px' }}>Result</th>
+                      <th className="px-4 py-3 text-right" style={{ width: '84px' }}>P/L</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -515,7 +515,7 @@ export default function TennisTips() {
                         </td>
                           <td className="px-4 py-4 text-center border-r border-slate-800/50">
                             <div className="flex justify-center">
-                              <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
+                              <BookmakerLogo bookmaker={result.bookmaker} size="xs" />
                             </div>
                           </td>
                         <td className="px-4 py-4 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(result.stake)}u</td>

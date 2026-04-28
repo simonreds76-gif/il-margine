@@ -897,8 +897,8 @@ export default function Home() {
                       <th className="w-16 border-r border-slate-800/40 px-2.5 py-3 text-center">Odds</th>
                       <th className="w-20 border-r border-slate-800/40 px-2.5 py-3 text-center">Bookmaker</th>
                       <th className="w-16 border-r border-slate-800/40 px-2.5 py-3 text-center">Stake</th>
-                      <th className="w-16 border-r border-slate-800/40 px-2.5 py-3 text-center">Result</th>
-                      <th className="w-16 px-2.5 py-3 text-right">P/L</th>
+                      <th className="w-20 border-r border-slate-800/40 px-2.5 py-3 text-center">Result</th>
+                      <th className="w-20 px-2.5 py-3 text-right">P/L</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -924,7 +924,7 @@ export default function Home() {
                         </td>
                         <td className="border-r border-slate-800/40 px-2.5 py-3.5 align-middle text-center">
                           <div className="flex justify-center">
-                            <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
+                            <BookmakerLogo bookmaker={bet.bookmaker} size="xs" />
                           </div>
                         </td>
                         <td className="border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle font-mono text-slate-200">{formatStake(bet.stake)}u</td>

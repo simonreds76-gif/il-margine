@@ -9,7 +9,7 @@ import { resolveBookmakerLogo } from "@/lib/bookmaker-logos";
 interface BookmakerLogoProps {
   /** Single bookmaker or array (Supabase sometimes returns relation as array) */
   bookmaker: Bookmaker | Bookmaker[] | null | undefined;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   showName?: boolean;
   className?: string;
   /** When true, render logo only (no Link). Use when already inside a Link to avoid invalid nested anchors. */
@@ -20,8 +20,18 @@ interface BookmakerLogoProps {
 
 // Logos that have lots of padding in the asset - scale up so they match others' visual size.
 const logoScale: Record<string, number> = {
+  bet365: 1.08,
+  betfair: 1.15,
+  betfred: 1,
+  betvictor: 1,
+  coral: 1,
   pinnacle: 2,
-  ladbrokes: 0.85,
+  ladbrokes: 1,
+  midnite: 1.1,
+  paddypower: 1.08,
+  skybet: 1,
+  unibet: 1.1,
+  williamhill: 1,
   bwin: 1.05,
   betway: 1.14,
   boylesports: 0.92,
@@ -35,7 +45,8 @@ const logoFrameClasses: Record<string, string> = {
 
 // All logos one step larger so thumbnails are easier to recognise (was 24/32/40px)
 const sizeClasses = {
-  sm: "w-16 h-8",
+  xs: "w-12 h-8",
+  sm: "w-16 h-10",
   md: "w-20 h-10",
   lg: "w-24 h-12",
 };
