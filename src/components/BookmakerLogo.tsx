@@ -20,22 +20,23 @@ interface BookmakerLogoProps {
 
 // Logos that have lots of padding in the asset - scale up so they match others' visual size.
 const logoScale: Record<string, number> = {
-  bet365: 1.08,
+  bet365: 0.95,
   betfair: 1.15,
-  betfred: 1,
-  betvictor: 1,
-  coral: 1,
+  betfred: 0.84,
+  betmgm: 0.8,
+  betvictor: 0.84,
+  coral: 0.84,
   pinnacle: 2,
-  ladbrokes: 1,
+  ladbrokes: 0.84,
   midnite: 1.1,
   paddypower: 1.08,
-  skybet: 1,
+  skybet: 0.84,
   unibet: 1.1,
-  williamhill: 1,
+  williamhill: 0.84,
   bwin: 1.05,
   betway: 1.14,
   boylesports: 0.92,
-  spreadex: 0.95,
+  spreadex: 0.82,
 };
 
 const logoFrameClasses: Record<string, string> = {
