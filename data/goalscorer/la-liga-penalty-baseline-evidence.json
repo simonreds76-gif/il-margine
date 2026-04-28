@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-28T00:45:16Z",
+  "generated_at": "2026-04-28T19:31:52Z",
   "league": "la-liga",
-  "row_count": 10,
+  "row_count": 9,
   "rows": [
     {
       "team": "Barcelona",
@@ -71,36 +71,19 @@
       "last_event_date": "2026-04-23"
     },
     {
-      "team": "Girona",
-      "team_key": "girona",
-      "player_name": "Azzedine Ounahi",
-      "player_key": "azzedine ounahi",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-21"
-    },
-    {
       "team": "Osasuna",
       "team_key": "osasuna",
       "player_name": "Ante Budimir",
       "player_key": "ante budimir",
-      "observed_player_penalties": 3,
-      "observed_team_penalties": 3,
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 3.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live",
         "settled_logs"
       ],
-      "event_count": 3,
+      "event_count": 2,
       "last_event_date": "2026-04-21"
     },
     {

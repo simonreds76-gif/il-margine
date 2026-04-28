@@ -1,3 +1,260 @@
 {
-  "fixtures": []
+  "fixtures": [
+    {
+      "fotmob_match_id": 4803384,
+      "fotmob_page_url": "/matches/pisa-vs-lecce/27r67c#4803384",
+      "home_fotmob_team_id": 6479,
+      "away_fotmob_team_id": 9888,
+      "match_date": "2026-05-01",
+      "home_team": "Pisa",
+      "away_team": "Lecce",
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-5-2",
+      "away_formation": "4-2-3-1",
+      "home_players": [
+        "Adrian Semper",
+        "Simone Canestrelli",
+        "Antonio Caracciolo",
+        "Rosen Bozhinov",
+        "Mehdi Léris",
+        "Ebenezer Akinsanmiro",
+        "Michel Aebischer",
+        "Isak Vural",
+        "Samuele Angori",
+        "Filip Stojilkovic",
+        "Stefano Moreo"
+      ],
+      "away_players": [
+        "Wladimiro Falcone",
+        "Danilo Veiga",
+        "Jamil Siebert",
+        "Gaby Jean",
+        "Antonino Gallo",
+        "Ylber Ramadani",
+        "Lassana Coulibaly",
+        "Santiago Pierotti",
+        "Omri Gandelman",
+        "Lameck Banda",
+        "Nikola Stulic"
+      ],
+      "home_starters": [
+        {
+          "name": "Adrian Semper",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-5-2",
+          "position_id": 11
+        },
+        {
+          "name": "Simone Canestrelli",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 33
+        },
+        {
+          "name": "Antonio Caracciolo",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 35
+        },
+        {
+          "name": "Rosen Bozhinov",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 37
+        },
+        {
+          "name": "Mehdi Léris",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 71
+        },
+        {
+          "name": "Ebenezer Akinsanmiro",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 73
+        },
+        {
+          "name": "Michel Aebischer",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 75
+        },
+        {
+          "name": "Isak Vural",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 77
+        },
+        {
+          "name": "Samuele Angori",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79
+        },
+        {
+          "name": "Filip Stojilkovic",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 104
+        },
+        {
+          "name": "Stefano Moreo",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 106
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Wladimiro Falcone",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-2-3-1",
+          "position_id": 11
+        },
+        {
+          "name": "Danilo Veiga",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 32
+        },
+        {
+          "name": "Jamil Siebert",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34
+        },
+        {
+          "name": "Gaby Jean",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36
+        },
+        {
+          "name": "Antonino Gallo",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38
+        },
+        {
+          "name": "Ylber Ramadani",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
+        },
+        {
+          "name": "Lassana Coulibaly",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
+        },
+        {
+          "name": "Santiago Pierotti",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83
+        },
+        {
+          "name": "Omri Gandelman",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
+        },
+        {
+          "name": "Lameck Banda",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87
+        },
+        {
+          "name": "Nikola Stulic",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-2-3-1",
+          "position_id": 115
+        }
+      ],
+      "home_subs": [],
+      "away_subs": [],
+      "home_unavailable": [
+        "Marius Marin",
+        "Daniel Denoon",
+        "Mattéo Tramoni",
+        "Rafiu Durosinmi"
+      ],
+      "away_unavailable": [
+        "Kialonda Gaspar",
+        "Medon Berisha",
+        "Sadik Fofana",
+        "Riccardo Sottil"
+      ]
+    }
+  ]
 }
