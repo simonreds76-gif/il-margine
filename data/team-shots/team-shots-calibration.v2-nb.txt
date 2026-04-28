@@ -1,40 +1,40 @@
 ======================================================================
   TEAM SHOTS MODEL -- CALIBRATION REPORT
 ======================================================================
-  Total predictions: 2546
+  Total predictions: 2554
 
-  Mean predicted lambda: 12.56
-  Mean actual shots:     12.57
+  Mean predicted lambda: 12.57
+  Mean actual shots:     12.56
 
   MAE:  3.75
   RMSE: 4.78
 
-  Line   8.5: predicted=0.641  actual=0.769  diff=-0.127  (n=2546)
-  Line   9.5: predicted=0.581  actual=0.695  diff=-0.114  (n=2546)
-  Line  10.5: predicted=0.523  actual=0.615  diff=-0.092  (n=2546)
-  Line  11.5: predicted=0.469  actual=0.537  diff=-0.068  (n=2546)
-  Line  12.5: predicted=0.418  actual=0.466  diff=-0.049  (n=2546)
-  Line  13.5: predicted=0.370  actual=0.395  diff=-0.025  (n=2546)
-  Line  14.5: predicted=0.327  actual=0.319  diff=+0.009  (n=2546)
-  Line  15.5: predicted=0.288  actual=0.253  diff=+0.035  (n=2546)
-  Line  16.5: predicted=0.253  actual=0.207  diff=+0.046  (n=2546)
-  Line  17.5: predicted=0.221  actual=0.164  diff=+0.057  (n=2546)
-  Line  19.5: predicted=0.169  actual=0.101  diff=+0.067  (n=2546)
-  Line  20.5: predicted=0.147  actual=0.076  diff=+0.071  (n=2546)
+  Line   8.5: predicted=0.642  actual=0.769  diff=-0.127  (n=2554)
+  Line   9.5: predicted=0.582  actual=0.695  diff=-0.113  (n=2554)
+  Line  10.5: predicted=0.524  actual=0.615  diff=-0.091  (n=2554)
+  Line  11.5: predicted=0.469  actual=0.536  diff=-0.068  (n=2554)
+  Line  12.5: predicted=0.418  actual=0.466  diff=-0.048  (n=2554)
+  Line  13.5: predicted=0.370  actual=0.394  diff=-0.024  (n=2554)
+  Line  14.5: predicted=0.327  actual=0.318  diff=+0.009  (n=2554)
+  Line  15.5: predicted=0.288  actual=0.253  diff=+0.036  (n=2554)
+  Line  16.5: predicted=0.253  actual=0.207  diff=+0.046  (n=2554)
+  Line  17.5: predicted=0.222  actual=0.164  diff=+0.058  (n=2554)
+  Line  19.5: predicted=0.169  actual=0.101  diff=+0.068  (n=2554)
+  Line  20.5: predicted=0.147  actual=0.076  diff=+0.071  (n=2554)
 
   Calibration by probability bins (over 10.5):
     [0.00, 0.20): n=   69  predicted=0.151  actual=0.290  diff=-0.139
     [0.20, 0.35): n=  318  predicted=0.292  actual=0.355  diff=-0.063
-    [0.35, 0.50): n=  715  predicted=0.430  actual=0.530  diff=-0.100
-    [0.50, 0.65): n=  839  predicted=0.574  actual=0.651  diff=-0.076
-    [0.65, 0.80): n=  512  predicted=0.708  actual=0.820  diff=-0.113
+    [0.35, 0.50): n=  718  predicted=0.430  actual=0.531  diff=-0.100
+    [0.50, 0.65): n=  841  predicted=0.574  actual=0.650  diff=-0.076
+    [0.65, 0.80): n=  515  predicted=0.707  actual=0.819  diff=-0.112
     [0.80, 1.00): n=   93  predicted=0.835  actual=0.946  diff=-0.111
 
   Per-league breakdown:
     bundesliga     : n=  450  pred=13.12  actual=13.19  MAE=3.90
-    epl            : n=  556  pred=12.49  actual=12.54  MAE=3.59
-    la-liga        : n=  538  pred=12.62  actual=12.55  MAE=3.75
+    epl            : n=  558  pred=12.49  actual=12.54  MAE=3.59
+    la-liga        : n=  540  pred=12.63  actual=12.54  MAE=3.76
     ligue-1        : n=  446  pred=12.15  actual=12.30  MAE=3.75
-    serie-a        : n=  556  pred=12.47  actual=12.31  MAE=3.77
+    serie-a        : n=  560  pred=12.47  actual=12.31  MAE=3.76
 
 ======================================================================
