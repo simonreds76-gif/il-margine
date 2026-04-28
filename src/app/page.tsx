@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
@@ -924,13 +924,13 @@ export default function Home() {
                         </td>
                         <td className="border-r border-slate-800/40 px-2.5 py-3.5 align-middle text-center">
                           <div className="flex justify-center">
-                            <BookmakerLogo bookmaker={bet.bookmaker} size="xs" />
+                            <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
                           </div>
                         </td>
                         <td className="border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle font-mono text-slate-200">{formatStake(bet.stake)}u</td>
                         <td className="border-r border-slate-800/40 px-2.5 py-3.5 align-middle text-center">
                           <span
-                            className={`inline-flex min-w-[3.5rem] justify-center rounded px-1.5 py-1 font-mono text-[10px] ${
+                            className={`inline-flex min-w-[4rem] justify-center rounded-md px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-[0.04em] ${
                               bet.status === "won"
                                 ? "bg-emerald-500/10 text-emerald-400"
                                 : bet.status === "void"
@@ -986,7 +986,7 @@ export default function Home() {
                         </div>
                       </div>
                       <span
-                        className={`ml-2 rounded px-2 py-1 font-mono text-xs ${
+                        className={`ml-3 inline-flex min-w-[4rem] justify-center rounded-md px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-[0.04em] ${
                           bet.status === "won"
                             ? "bg-emerald-500/10 text-emerald-400"
                             : bet.status === "void"

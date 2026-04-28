@@ -511,12 +511,12 @@ export default function PlayerProps() {
                         </td>
                           <td className="px-4 py-4 text-center border-r border-slate-800/50">
                             <div className="flex justify-center">
-                              <BookmakerLogo bookmaker={result.bookmaker} size="xs" />
+                              <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
                             </div>
                           </td>
                         <td className="px-4 py-4 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(result.stake)}u</td>
                         <td className="px-4 py-4 text-center border-r border-slate-800/30">
-                          <span className={`text-xs font-mono px-2 py-1 rounded ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : result.status === "void" ? "text-slate-400 bg-slate-500/10" : "text-red-400 bg-red-500/10"}`}>
+                          <span className={`inline-flex min-w-[4rem] justify-center rounded-md px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-[0.04em] ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : result.status === "void" ? "text-slate-400 bg-slate-500/10" : "text-red-400 bg-red-500/10"}`}>
                             {result.status.toUpperCase()}
                           </span>
                         </td>
@@ -557,7 +557,7 @@ export default function PlayerProps() {
                           {result.selection}
                         </div>
                       </div>
-                      <span className={`text-xs font-mono px-2 py-1 rounded ml-2 ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : result.status === "void" ? "text-slate-400 bg-slate-500/10" : "text-red-400 bg-red-500/10"}`}>
+                      <span className={`ml-3 inline-flex min-w-[4rem] justify-center rounded-md px-2.5 py-1.5 font-mono text-[11px] font-bold tracking-[0.04em] ${result.status === "won" ? "text-emerald-400 bg-emerald-500/10" : result.status === "void" ? "text-slate-400 bg-slate-500/10" : "text-red-400 bg-red-500/10"}`}>
                         {result.status.toUpperCase()}
                       </span>
                     </div>
