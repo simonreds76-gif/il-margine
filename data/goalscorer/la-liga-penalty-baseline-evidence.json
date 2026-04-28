@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-27T18:19:23Z",
+  "generated_at": "2026-04-28T00:45:16Z",
   "league": "la-liga",
   "row_count": 10,
   "rows": [
@@ -109,9 +109,9 @@
       "player_name": "Brais Méndez",
       "player_key": "brais m ndez",
       "observed_player_penalties": 1,
-      "observed_team_penalties": 2,
-      "observed_share": 0.5,
-      "observed_sample": 2.0,
+      "observed_team_penalties": 3,
+      "observed_share": 0.3333,
+      "observed_sample": 3.0,
       "evidence_source": "review_events",
       "review_sources": [
         "fotmob_live"
@@ -124,15 +124,16 @@
       "team_key": "real sociedad",
       "player_name": "Mikel Oyarzabal",
       "player_key": "mikel oyarzabal",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 2,
-      "observed_share": 0.5,
-      "observed_sample": 2.0,
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 3,
+      "observed_share": 0.6667,
+      "observed_sample": 3.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live"
+        "fotmob_live",
+        "settled_logs"
       ],
-      "event_count": 1,
+      "event_count": 2,
       "last_event_date": "2026-04-26"
     },
     {

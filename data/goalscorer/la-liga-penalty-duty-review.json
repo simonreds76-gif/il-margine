@@ -1,8 +1,35 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-27T00:06:37Z",
-  "row_count": 4,
+  "generated_at": "2026-04-28T00:45:15Z",
+  "row_count": 5,
   "rows": [
+    {
+      "date": "2026-04-26",
+      "league": "la-liga",
+      "review_source": "settled_logs",
+      "match": "Rayo Vallecano vs Real Sociedad San Sebastian",
+      "team": "Real Sociedad",
+      "opponent": "Rayo Vallecano",
+      "actual_taker": "Mikel Oyarzabal",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "primary_pre_match": "Mikel Oyarzabal",
+      "secondary_pre_match": "Brais Méndez",
+      "tertiary_pre_match": "Takefusa Kubo",
+      "primary_lineup_status": "unknown",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "needs_manual_review",
+      "review_priority": "medium",
+      "editorial_note": "Mikel Oyarzabal took 1 penalty attempt for Real Sociedad vs Rayo Vallecano. Primary pre-match: Mikel Oyarzabal (unknown). Secondary pre-match: Brais Méndez (unknown). Needs manual editorial review.",
+      "context_generated_at": "2026-04-27T19:23:38Z",
+      "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
+    },
     {
       "date": "2026-04-23",
       "league": "la-liga",
@@ -27,7 +54,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Kike García took 1 penalty attempt for Espanyol vs Rayo Vallecano. Primary pre-match: Javi Puado (unknown). Secondary pre-match: Kike Garcia (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-04-26T23:32:30Z",
+      "context_generated_at": "2026-04-27T19:23:38Z",
       "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
     },
     {
@@ -54,7 +81,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "André Silva took 1 penalty attempt for Elche vs Atletico Madrid. Primary pre-match: Rafa Mir (unknown). Secondary pre-match: André Silva (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-04-26T23:32:30Z",
+      "context_generated_at": "2026-04-27T19:23:38Z",
       "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
     },
     {
@@ -81,7 +108,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Ante Budimir took 1 penalty attempt for Osasuna vs Athletic Club. Primary pre-match: Ante Budimir (unknown). Secondary pre-match: Aimar Oroz (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-26T23:32:30Z",
+      "context_generated_at": "2026-04-27T19:23:38Z",
       "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
     },
     {
@@ -108,7 +135,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Ante Budimir took 1 penalty attempt for Osasuna vs Real Betis. Primary pre-match: Ante Budimir (unknown). Secondary pre-match: Aimar Oroz (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-26T23:32:30Z",
+      "context_generated_at": "2026-04-27T19:23:38Z",
       "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
     }
   ]
