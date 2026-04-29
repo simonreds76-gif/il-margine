@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-29T20:58:24Z",
+  "updated_at": "2026-04-29T20:59:29Z",
   "reason": "cycle",
   "leagues": {
     "serie-a": {
@@ -8,8 +8,8 @@
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "cold",
-      "last_decision": "ran",
-      "last_message": "Ran serie-a in cold tier (cadence 120m, fixtures 4).",
+      "last_decision": "waiting",
+      "last_message": "Skip serie-a: cadence 120m not due yet.",
       "next_kickoff_utc": "2026-05-01T18:45:00Z"
     },
     "epl": {
@@ -18,8 +18,8 @@
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "cold",
-      "last_decision": "ran",
-      "last_message": "Ran epl in cold tier (cadence 120m, fixtures 5).",
+      "last_decision": "waiting",
+      "last_message": "Skip epl: cadence 120m not due yet.",
       "next_kickoff_utc": "2026-05-01T19:00:00Z"
     },
     "la-liga": {
@@ -28,8 +28,8 @@
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "cold",
-      "last_decision": "ran",
-      "last_message": "Ran la-liga in cold tier (cadence 120m, fixtures 5).",
+      "last_decision": "waiting",
+      "last_message": "Skip la-liga: cadence 120m not due yet.",
       "next_kickoff_utc": "2026-05-01T19:00:00Z"
     },
     "bundesliga": {
@@ -38,8 +38,8 @@
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "cold",
-      "last_decision": "ran",
-      "last_message": "Ran bundesliga in cold tier (cadence 120m, fixtures 6).",
+      "last_decision": "waiting",
+      "last_message": "Skip bundesliga: cadence 120m not due yet.",
       "next_kickoff_utc": "2026-05-02T13:30:00Z"
     },
     "ligue-1": {
@@ -48,8 +48,8 @@
       "last_failure_at": "",
       "consecutive_failures": 0,
       "last_tier": "cold",
-      "last_decision": "ran",
-      "last_message": "Ran ligue-1 in cold tier (cadence 120m, fixtures 4).",
+      "last_decision": "waiting",
+      "last_message": "Skip ligue-1: cadence 120m not due yet.",
       "next_kickoff_utc": "2026-05-02T13:00:00Z"
     }
   }
