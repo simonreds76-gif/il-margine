@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-29T20:56:19Z",
+  "generated_at": "2026-04-29T23:42:15Z",
   "league": "la-liga",
-  "row_count": 7,
+  "row_count": 6,
   "rows": [
     {
       "team": "Celta Vigo",
@@ -41,16 +41,15 @@
       "team_key": "espanyol",
       "player_name": "Kike García",
       "player_key": "kike garc a",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 2,
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
       "observed_share": 1.0,
-      "observed_sample": 2.0,
+      "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live",
         "settled_logs"
       ],
-      "event_count": 2,
+      "event_count": 1,
       "last_event_date": "2026-04-23"
     },
     {
@@ -92,31 +91,15 @@
       "player_name": "Gerard Moreno",
       "player_key": "gerard moreno",
       "observed_player_penalties": 1,
-      "observed_team_penalties": 2,
-      "observed_share": 0.5,
-      "observed_sample": 2.0,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
         "fotmob_live"
       ],
       "event_count": 1,
       "last_event_date": "2026-04-26"
-    },
-    {
-      "team": "Villarreal",
-      "team_key": "villarreal",
-      "player_name": "Nicolas Pépé",
-      "player_key": "nicolas p p",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 2,
-      "observed_share": 0.5,
-      "observed_sample": 2.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-23"
     }
   ]
 }
