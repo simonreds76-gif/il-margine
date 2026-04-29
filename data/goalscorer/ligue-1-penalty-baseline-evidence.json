@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-29T01:17:43Z",
+  "generated_at": "2026-04-29T13:07:50Z",
   "league": "ligue-1",
   "row_count": 7,
   "rows": [
@@ -69,6 +69,22 @@
       "last_event_date": "2026-04-26"
     },
     {
+      "team": "Nice",
+      "team_key": "nice",
+      "player_name": "Elye Wahi",
+      "player_key": "elye wahi",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-04-26"
+    },
+    {
       "team": "Paris FC",
       "team_key": "paris fc",
       "player_name": "Ilan Kebbal",
@@ -83,22 +99,6 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-04-26"
-    },
-    {
-      "team": "Paris Saint-Germain",
-      "team_key": "paris saint germain",
-      "player_name": "Khvicha Kvaratskhelia",
-      "player_key": "khvicha kvaratskhelia",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-22"
     },
     {
       "team": "Rennes",
