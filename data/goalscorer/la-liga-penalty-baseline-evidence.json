@@ -1,25 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-29T01:17:41Z",
+  "generated_at": "2026-04-29T01:23:13Z",
   "league": "la-liga",
-  "row_count": 9,
+  "row_count": 7,
   "rows": [
-    {
-      "team": "Barcelona",
-      "team_key": "barcelona",
-      "player_name": "Lamine Yamal",
-      "player_key": "lamine yamal",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-22"
-    },
     {
       "team": "Celta Vigo",
       "team_key": "celta vigo",
@@ -41,16 +25,15 @@
       "team_key": "elche",
       "player_name": "André Silva",
       "player_key": "andr silva",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 2,
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
       "observed_share": 1.0,
-      "observed_sample": 2.0,
+      "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live",
         "settled_logs"
       ],
-      "event_count": 2,
+      "event_count": 1,
       "last_event_date": "2026-04-22"
     },
     {
@@ -89,28 +72,12 @@
     {
       "team": "Real Sociedad",
       "team_key": "real sociedad",
-      "player_name": "Brais Méndez",
-      "player_key": "brais m ndez",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 3,
-      "observed_share": 0.3333,
-      "observed_sample": 3.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-22"
-    },
-    {
-      "team": "Real Sociedad",
-      "team_key": "real sociedad",
       "player_name": "Mikel Oyarzabal",
       "player_key": "mikel oyarzabal",
       "observed_player_penalties": 2,
-      "observed_team_penalties": 3,
-      "observed_share": 0.6667,
-      "observed_sample": 3.0,
+      "observed_team_penalties": 2,
+      "observed_share": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
         "fotmob_live",
