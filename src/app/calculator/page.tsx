@@ -11,7 +11,7 @@ import {
   calculateWinRate,
   getBaselineDisplayStats,
 } from "@/lib/baseline";
-import { supabase, CategoryStats } from "@/lib/supabase";
+import { CategoryStats } from "@/lib/supabase";
 
 const FRACTION_PRESETS = [
   { value: 0.1, label: "0.1x", context: "Props" },
@@ -217,7 +217,7 @@ function GrowthChart({
 
   const gridLines = Array.from({ length: 5 }, (_, i) => {
     const value = minV + (range * i) / 4;
-    return { y: y(value), label: value >= 1000 ? `£${(value / 1000).toFixed(1)}k` : `£${value.toFixed(0)}` };
+    return { y: y(value), label: value >= 1000 ? `Â£${(value / 1000).toFixed(1)}k` : `Â£${value.toFixed(0)}` };
   });
 
   return (
@@ -256,7 +256,7 @@ function GrowthChart({
             <circle cx={x(n - 1, n)} cy={y(endValue)} r={path.active ? 4 : 2} fill={path.color} opacity={path.active ? 1 : 0.35} />
             {path.active ? (
               <text x={x(n - 1, n) - 6} y={y(endValue) - 9} textAnchor="end" fill={path.color} fontSize="10" fontWeight="700" fontFamily="ui-monospace,SFMono-Regular,monospace">
-                {endValue >= 1000 ? `£${(endValue / 1000).toFixed(1)}k` : `£${endValue.toFixed(0)}`}
+                {endValue >= 1000 ? `Â£${(endValue / 1000).toFixed(1)}k` : `Â£${endValue.toFixed(0)}`}
               </text>
             ) : null}
           </g>
@@ -264,7 +264,7 @@ function GrowthChart({
       })}
 
       <text x={padLeft + chartW / 2} y={height - 3} textAnchor="middle" fill="rgba(255,255,255,0.18)" fontSize="8" fontFamily="ui-monospace,SFMono-Regular,monospace">
-        bets →
+        bets â†’
       </text>
     </svg>
   );
@@ -318,7 +318,7 @@ function ReturnsChart({
         {formatCompactCurrency(endValue)} ({returnPct >= 0 ? "+" : ""}{returnPct.toFixed(0)}%)
       </text>
       <text x={padLeft + chartW / 2} y={height - 3} textAnchor="middle" fill="rgba(255,255,255,0.15)" fontSize="8" fontFamily="ui-monospace,SFMono-Regular,monospace">
-        settled bets →
+        settled bets â†’
       </text>
     </svg>
   );
@@ -362,8 +362,11 @@ export default function CalculatorPage() {
 
   const fetchData = useCallback(async () => {
     try {
-      const { data } = await supabase.from("category_stats").select("*");
-      const stats = data ?? [];
+      const res = await fetch("/api/public-record?scope=calculator");
+      const json = await res.json();
+      if (!res.ok) throw new Error(json?.error || "Failed to load calculator record");
+
+      const stats = (json.stats ?? []) as CategoryStats[];
       const propsRows = stats.filter((s: CategoryStats) => s.market === "props");
       const tennisRows = stats.filter((s: CategoryStats) => s.market === "tennis");
 
@@ -548,7 +551,7 @@ export default function CalculatorPage() {
                   href="/track-record"
                   className="text-[11px] font-mono font-bold uppercase tracking-[0.1em] text-emerald-400 transition-colors hover:text-emerald-300"
                 >
-                  View track record →
+                  View track record â†’
                 </Link>
               </div>
               <p className="mb-6 max-w-2xl text-base leading-relaxed text-slate-300">
@@ -571,7 +574,7 @@ export default function CalculatorPage() {
                             : "border-slate-600 bg-[#0c0f14] text-slate-500 hover:border-slate-500"
                         }`}
                       >
-                        £{preset}
+                        Â£{preset}
                       </button>
                     );
                   })}
@@ -590,14 +593,14 @@ export default function CalculatorPage() {
                 {[
                   {
                     label: "Total staked",
-                    value: `£${totalStaked.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
+                    value: `Â£${totalStaked.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
                     sub: `${recordSummary.totalBets.toLocaleString()} settled bets`,
                     accent: false,
                   },
                   {
                     label: "Profit / loss",
-                    value: `${flatProfit >= 0 ? "+" : ""}£${flatProfit.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
-                    sub: `at £${stakeValue || 0}/bet`,
+                    value: `${flatProfit >= 0 ? "+" : ""}Â£${flatProfit.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
+                    sub: `at Â£${stakeValue || 0}/bet`,
                     accent: true,
                   },
                   {
@@ -633,7 +636,7 @@ export default function CalculatorPage() {
               <div className="mb-5">
                 <div className="mb-3 flex flex-wrap items-end gap-4">
                   <label className="block min-w-[220px] flex-1">
-                    <span className={labelClassName}>Optional: starting bankroll (£)</span>
+                    <span className={labelClassName}>Optional: starting bankroll (Â£)</span>
                   <input
                     type="number"
                     value={returnsBankroll}
@@ -660,7 +663,7 @@ export default function CalculatorPage() {
               </div>
 
                 {returnsPoints.length > 0 ? (
-                  <ChartShell title="Illustrative bankroll curve" subtitle="flat stake · aggregate record">
+                  <ChartShell title="Illustrative bankroll curve" subtitle="flat stake Â· aggregate record">
                     <ReturnsChart points={returnsPoints} startBankroll={returnsBankrollValue} />
                   </ChartShell>
                 ) : null}
@@ -699,12 +702,12 @@ export default function CalculatorPage() {
                 >
                   Reset to example
                 </button>
-                {" · "}
+                {" Â· "}
                 <Link
                   href="/resources/kelly-criterion-sports-betting"
                   className="text-slate-500 transition-colors hover:text-emerald-400"
                 >
-                  Full guide →
+                  Full guide â†’
                 </Link>
               </p>
 
@@ -750,7 +753,7 @@ export default function CalculatorPage() {
               </div>
 
               <div className="mb-5">
-                <ChartShell title="Expected bankroll growth" subtitle="200 bets · fractional Kelly curves">
+                <ChartShell title="Expected bankroll growth" subtitle="200 bets Â· fractional Kelly curves">
                   <GrowthChart paths={kellyPaths} baseline={kellyChartBankroll} />
                 </ChartShell>
                 {!hasEdge ? (
@@ -838,7 +841,7 @@ export default function CalculatorPage() {
                     {formatCurrency(adjustedStake, 2)}
                   </div>
                   <div className="mt-1.5 font-mono text-[11px] text-slate-500">
-                    {adjustedKellyPct.toFixed(2)}% of bankroll · {fraction}x Kelly
+                    {adjustedKellyPct.toFixed(2)}% of bankroll Â· {fraction}x Kelly
                   </div>
                 </div>
 
@@ -848,7 +851,7 @@ export default function CalculatorPage() {
                     {(rawKelly * 100).toFixed(1)}%
                   </div>
                   <div className="mt-1.5 font-mono text-[11px] text-slate-600">
-                    {formatCurrency(bankrollValue * rawKelly)} at full size · too volatile for most bettors
+                    {formatCurrency(bankrollValue * rawKelly)} at full size Â· too volatile for most bettors
                   </div>
                 </div>
               </div>
@@ -910,7 +913,7 @@ export default function CalculatorPage() {
                 href="/resources/kelly-criterion-sports-betting"
                 className="text-emerald-400 transition-colors hover:text-emerald-300"
               >
-                Read the full guide →
+                Read the full guide â†’
               </Link>
             </p>
           </div>
@@ -945,7 +948,7 @@ export default function CalculatorPage() {
             <a href="https://www.begambleaware.org" className="text-slate-300 underline underline-offset-2">
               BeGambleAware
             </a>
-            {" · "}
+            {" Â· "}
             <a href="https://www.gamcare.org.uk" className="text-slate-300 underline underline-offset-2">
               GamCare
             </a>

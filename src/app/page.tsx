@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { questionSlug } from "@/lib/parse-faq";
-import { supabase, type Bet, type Bookmaker, type MarketStats } from "@/lib/supabase";
+import { type Bet, type Bookmaker, type MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import BetMobileMeta from "@/components/BetMobileMeta";
@@ -437,49 +437,26 @@ export default function Home() {
   };
 
   const fetchData = useCallback(async () => {
-    const [statsResponse, recentResponse, pendingResponse] = await Promise.all([
-      supabase.from("market_stats").select("*"),
-      supabase
-        .from("bets")
-        .select("*, bookmaker:bookmakers(*)")
-        .in("status", ["won", "lost", "void"])
-        .order("settled_at", { ascending: false })
-        .limit(5),
-      supabase
-        .from("bets")
-        .select("*, bookmaker:bookmakers(*)")
-        .eq("status", "pending")
-        .order("posted_at", { ascending: false })
-        .limit(20),
-    ]);
-
-    const { data: stats, error: statsError } = statsResponse;
-    const { data: recent, error: recentError } = recentResponse;
-    const { data: pending, error: pendingError } = pendingResponse;
-
-    if (statsError) console.error("Error fetching market stats:", statsError);
-    if (recentError) console.error("Error fetching recent bets:", recentError);
-    if (pendingError) console.error("Error fetching pending bets:", pendingError);
-
-    if (recent) setRecentBets(recent as HomepageBet[]);
-    if (pending) setPendingBets(pending as HomepageBet[]);
-
     try {
-      setLast7Error(false);
-      const res = await fetch("/api/last7-profit", { cache: "no-store" });
+      const res = await fetch("/api/public-record?scope=home");
       const json = await res.json();
-      if (res.ok && typeof json.total === "number") {
-        setLast7DaysProfit(json.total);
-        setLast7DaysCount(typeof json.count === "number" ? json.count : 0);
+      if (!res.ok) throw new Error(json?.error || "Failed to load public homepage record");
+
+      setRecentBets((json.recent ?? []) as HomepageBet[]);
+      setPendingBets((json.pending ?? []) as HomepageBet[]);
+      calculateCombinedStats((json.stats as MarketStats[] | null) ?? []);
+      setLast7Error(false);
+      if (json.last7 && typeof json.last7.total === "number") {
+        setLast7DaysProfit(json.last7.total);
+        setLast7DaysCount(typeof json.last7.count === "number" ? json.last7.count : 0);
       } else {
         setLast7Error(true);
       }
     } catch (error) {
-      console.error("Error fetching last 7 days:", error);
+      console.error("Error fetching public homepage record:", error);
       setLast7Error(true);
+      calculateCombinedStats([]);
     }
-
-    calculateCombinedStats((stats as MarketStats[] | null) ?? []);
   }, []);
 
   useEffect(() => {
@@ -1103,7 +1080,7 @@ export default function Home() {
         <div className="rounded-xl border border-amber-500/10 bg-amber-500/[0.03] px-5 py-4 text-[12px] leading-relaxed text-slate-500">
           <strong className="text-amber-400/80">Responsible gambling:</strong> Past performance does not guarantee future results. Only bet what you can afford to lose.{" "}
           <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-slate-400 underline underline-offset-2">BeGambleAware</a>
-          <span className="px-1.5 text-slate-500">·</span>
+          <span className="px-1.5 text-slate-500">Â·</span>
           <a href="https://www.gamcare.org.uk" target="_blank" rel="noopener noreferrer" className="text-slate-400 underline underline-offset-2">GamCare</a>
         </div>
       </div>

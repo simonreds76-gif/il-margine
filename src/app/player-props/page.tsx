@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { supabase, Bet, CategoryStats } from "@/lib/supabase";
+import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import BetMobileMeta from "@/components/BetMobileMeta";
@@ -45,34 +45,20 @@ export default function PlayerProps() {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    
-    const { data: pending } = await supabase
-      .from("bets")
-      .select("*, bookmaker:bookmakers(*)")
-      .eq("market", "props")
-      .eq("status", "pending")
-      .order("posted_at", { ascending: false })
-      .limit(50); // Fetch more from DB, but display only 5 initially
-    
-    if (pending) setPendingBets(pending);
 
-    const { data: recent } = await supabase
-      .from("bets")
-      .select("*, bookmaker:bookmakers(*)")
-      .eq("market", "props")
-      .in("status", ["won", "lost", "void"])
-      .order("settled_at", { ascending: false })
-      .limit(50); // Fetch more from DB, but display only 5 initially
-    
-    if (recent) setRecentBets(recent);
+    try {
+      const res = await fetch("/api/public-record?scope=props");
+      const json = await res.json();
+      if (!res.ok) throw new Error(json?.error || "Failed to load player props record");
 
-    const { data: categoryStats } = await supabase
-      .from("category_stats")
-      .select("*")
-      .eq("market", "props");
-    
-    if (categoryStats) setStats(categoryStats);
-    setLoading(false);
+      setPendingBets((json.pending ?? []) as Bet[]);
+      setRecentBets((json.recent ?? []) as Bet[]);
+      setStats((json.stats ?? []) as CategoryStats[]);
+    } catch (error) {
+      console.error("Error fetching player props record:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {

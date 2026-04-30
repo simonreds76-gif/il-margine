@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 
 export type MonthlyBreakdownScope = "combined" | "props" | "tennis";
 
-interface MonthRow {
+export interface MonthRow {
   month: string;
   total_bets: number;
   wins: number;
@@ -39,9 +39,11 @@ interface MonthlyBreakdownProps {
   scope: MonthlyBreakdownScope;
   /** If true, always show all rows (e.g. in admin) */
   showAll?: boolean;
+  /** Public pages can pass cached API rows to avoid direct Supabase reads. */
+  rowsOverride?: MonthRow[];
 }
 
-export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBreakdownProps) {
+export default function MonthlyBreakdown({ scope, showAll = false, rowsOverride }: MonthlyBreakdownProps) {
   const [rows, setRows] = useState<MonthRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState(false);
@@ -50,6 +52,12 @@ export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBrea
   const view = VIEW_BY_SCOPE[scope];
 
   useEffect(() => {
+    if (rowsOverride) {
+      setRows(rowsOverride);
+      setLoading(false);
+      return;
+    }
+
     async function fetch_() {
       const { data, error } = await supabase
         .from(view)
@@ -60,7 +68,7 @@ export default function MonthlyBreakdown({ scope, showAll = false }: MonthlyBrea
       setLoading(false);
     }
     fetch_();
-  }, [view]);
+  }, [rowsOverride, view]);
 
   if (loading) return null;
   if (rows.length === 0) return null;

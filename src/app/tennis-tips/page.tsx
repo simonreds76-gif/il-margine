@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { supabase, Bet, CategoryStats } from "@/lib/supabase";
+import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BookmakerLogo from "@/components/BookmakerLogo";
 import BetMobileMeta from "@/components/BetMobileMeta";
@@ -50,37 +50,20 @@ export default function TennisTips() {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    
-    // Fetch pending bets
-    const { data: pending } = await supabase
-      .from("bets")
-      .select("*, bookmaker:bookmakers(*)")
-      .eq("market", "tennis")
-      .eq("status", "pending")
-      .order("posted_at", { ascending: false })
-      .limit(50);
-    
-    if (pending) setPendingBets(pending);
 
-    // Fetch recent settled bets
-    const { data: recent } = await supabase
-      .from("bets")
-      .select("*, bookmaker:bookmakers(*)")
-      .eq("market", "tennis")
-      .in("status", ["won", "lost", "void"])
-      .order("settled_at", { ascending: false })
-      .limit(50);
-    
-    if (recent) setRecentBets(recent);
+    try {
+      const res = await fetch("/api/public-record?scope=tennis");
+      const json = await res.json();
+      if (!res.ok) throw new Error(json?.error || "Failed to load tennis record");
 
-    // Fetch stats from view
-    const { data: categoryStats } = await supabase
-      .from("category_stats")
-      .select("*")
-      .eq("market", "tennis");
-    
-    if (categoryStats) setStats(categoryStats);
-    setLoading(false);
+      setPendingBets((json.pending ?? []) as Bet[]);
+      setRecentBets((json.recent ?? []) as Bet[]);
+      setStats((json.stats ?? []) as CategoryStats[]);
+    } catch (error) {
+      console.error("Error fetching tennis record:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   // Fetch data on load
