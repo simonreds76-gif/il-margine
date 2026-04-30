@@ -1,0 +1,2228 @@
+{
+  "generated_at": "2026-04-30T21:52:14.745653Z",
+  "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
+    "data/goalscorer/goalscorer-live-comparison.csv",
+    "data/goalscorer/epl/goalscorer-live-comparison.csv",
+    "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
+    "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
+    "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
+  ],
+  "edge_threshold_pp": 0.0,
+  "fixtures_evaluated": 39,
+  "signals_qualifying": 36,
+  "leagues_covered": [
+    "bundesliga",
+    "epl",
+    "la-liga",
+    "ligue-1",
+    "serie-a"
+  ],
+  "featured_signal_id": "20260502-christoph-baumgartner-abe32dac5d",
+  "signals": [
+    {
+      "id": "20260502-christoph-baumgartner-abe32dac5d",
+      "match": {
+        "home_team": "Bayer Leverkusen",
+        "away_team": "RB Leipzig",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Christoph Baumgartner",
+        "team": "RasenBallsport Leipzig",
+        "position": "MID",
+        "jersey_label": "MI",
+        "team_primary_color": "#111827",
+        "team_secondary_color": "#f8fafc"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 45.3,
+        "fair_odds": 2.21
+      },
+      "market_data": {
+        "best_odds": 3.2,
+        "best_book": "Bet365",
+        "implied_chance_pct": 31.2
+      },
+      "edge": {
+        "price_gap_pp": 14.0,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 96
+        },
+        "share_of_team_chances_pct": 25,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 96
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 63
+        },
+        "fixture_boost_pct": 2,
+        "projected_minutes": 89,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Christoph Baumgartner at 45.3%, market implies 31.2%",
+        "Takes 25% of RasenBallsport Leipzig's scoring chances",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-said-el-mala-14076ac654",
+      "match": {
+        "home_team": "Union Berlin",
+        "away_team": "1. FC Cologne",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Said El Mala",
+        "team": "FC Cologne",
+        "position": "FW",
+        "jersey_label": "FW",
+        "team_primary_color": "#dc2626",
+        "team_secondary_color": "#1e3a8a"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 44.0,
+        "fair_odds": 2.28
+      },
+      "market_data": {
+        "best_odds": 2.88,
+        "best_book": "Bet365",
+        "implied_chance_pct": 34.8
+      },
+      "edge": {
+        "price_gap_pp": 9.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 93
+        },
+        "share_of_team_chances_pct": 29,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 74
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 89
+        },
+        "fixture_boost_pct": 18,
+        "projected_minutes": 78,
+        "penalty_role": "Secondary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Said El Mala at 44.0%, market implies 34.8%",
+        "Takes 29% of FC Cologne's scoring chances",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +18% goal-threat boost"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-jakub-kaminski-dc5f24ab2e",
+      "match": {
+        "home_team": "Union Berlin",
+        "away_team": "1. FC Cologne",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Jakub Kaminski",
+        "team": "FC Cologne",
+        "position": "AM",
+        "jersey_label": "AM",
+        "team_primary_color": "#dc2626",
+        "team_secondary_color": "#1e3a8a"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 33.3,
+        "fair_odds": 3.01
+      },
+      "market_data": {
+        "best_odds": 4.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 25.0
+      },
+      "edge": {
+        "price_gap_pp": 8.3,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 87
+        },
+        "share_of_team_chances_pct": 23,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 74
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 89
+        },
+        "fixture_boost_pct": 18,
+        "projected_minutes": 89,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Jakub Kaminski at 33.3%, market implies 25.0%",
+        "Takes 23% of FC Cologne's scoring chances",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +18% goal-threat boost"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260501-antonio-caracciolo-e9656f3bd3",
+      "match": {
+        "home_team": "Pisa SC",
+        "away_team": "US Lecce",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-01",
+        "venue": ""
+      },
+      "player": {
+        "name": "Antonio Caracciolo",
+        "team": "Pisa",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#38bdf8"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 15.7,
+        "fair_odds": 6.39
+      },
+      "market_data": {
+        "best_odds": 13.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 7.7
+      },
+      "edge": {
+        "price_gap_pp": 8.0,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 72
+        },
+        "share_of_team_chances_pct": 12,
+        "share_of_team_chances_percentile": 91,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 46
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 79
+        },
+        "fixture_boost_pct": 23,
+        "projected_minutes": 87,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Antonio Caracciolo at 15.7%, market implies 7.7%",
+        "Takes 12% of Pisa's scoring chances",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +23% goal-threat boost"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-ramy-bensebaini-f1c28bf499",
+      "match": {
+        "home_team": "Borussia Monchengladbach",
+        "away_team": "Borussia Dortmund",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Ramy Bensebaini",
+        "team": "Borussia Dortmund",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#0e7490",
+        "team_secondary_color": "#34d399"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 22.6,
+        "fair_odds": 4.43
+      },
+      "market_data": {
+        "best_odds": 6.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 15.4
+      },
+      "edge": {
+        "price_gap_pp": 7.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 66
+        },
+        "share_of_team_chances_pct": 6,
+        "share_of_team_chances_percentile": 79,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 83
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 74
+        },
+        "fixture_boost_pct": 5,
+        "projected_minutes": 78,
+        "penalty_role": "Primary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Ramy Bensebaini at 22.6%, market implies 15.4%",
+        "Takes 6% of Borussia Dortmund's scoring chances",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-lassine-sinayoko-8f4f8fb7e7",
+      "match": {
+        "home_team": "AJ Auxerre",
+        "away_team": "Angers SCO",
+        "league": "ligue-1",
+        "league_display": "Ligue 1",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Lassine Sinayoko",
+        "team": "Auxerre",
+        "position": "FW",
+        "jersey_label": "FW",
+        "team_primary_color": "#0f172a",
+        "team_secondary_color": "#f8fafc"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 45.4,
+        "fair_odds": 2.2
+      },
+      "market_data": {
+        "best_odds": 2.6,
+        "best_book": "Bet365",
+        "implied_chance_pct": 38.5
+      },
+      "edge": {
+        "price_gap_pp": 7.0,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 96
+        },
+        "share_of_team_chances_pct": 36,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 55
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 73
+        },
+        "fixture_boost_pct": 4,
+        "projected_minutes": 89,
+        "penalty_role": "Primary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Lassine Sinayoko at 45.4%, market implies 38.5%",
+        "Takes 36% of Auxerre's scoring chances",
+        "Recent chance quality grades as strong",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260501-oliveira-tiago-gabriel-c12013e8aa",
+      "match": {
+        "home_team": "Pisa SC",
+        "away_team": "US Lecce",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-01",
+        "venue": ""
+      },
+      "player": {
+        "name": "Oliveira Tiago Gabriel",
+        "team": "Lecce",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#38bdf8"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 14.2,
+        "fair_odds": 7.05
+      },
+      "market_data": {
+        "best_odds": 13.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 7.7
+      },
+      "edge": {
+        "price_gap_pp": 6.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 71
+        },
+        "share_of_team_chances_pct": 13,
+        "share_of_team_chances_percentile": 92,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 24
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 87
+        },
+        "fixture_boost_pct": 29,
+        "projected_minutes": 89,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Oliveira Tiago Gabriel at 14.2%, market implies 7.7%",
+        "Takes 13% of Lecce's scoring chances",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +29% goal-threat boost"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260501-zian-flemming-e9b2c2a51d",
+      "match": {
+        "home_team": "Leeds United",
+        "away_team": "Burnley FC",
+        "league": "epl",
+        "league_display": "Premier League",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-01",
+        "venue": ""
+      },
+      "player": {
+        "name": "Zian Flemming",
+        "team": "Burnley",
+        "position": "FW",
+        "jersey_label": "FW",
+        "team_primary_color": "#0f172a",
+        "team_secondary_color": "#f8fafc"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 29.5,
+        "fair_odds": 3.4
+      },
+      "market_data": {
+        "best_odds": 4.33,
+        "best_book": "Bet365",
+        "implied_chance_pct": 23.1
+      },
+      "edge": {
+        "price_gap_pp": 6.4,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 94
+        },
+        "share_of_team_chances_pct": 30,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 13
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 43
+        },
+        "fixture_boost_pct": 1,
+        "projected_minutes": 78,
+        "penalty_role": "Primary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Zian Flemming at 29.5%, market implies 23.1%",
+        "Takes 30% of Burnley's scoring chances",
+        "Recent chance quality grades as strong",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-marcus-tavernier-df076d8a22",
+      "match": {
+        "home_team": "AFC Bournemouth",
+        "away_team": "Crystal Palace",
+        "league": "epl",
+        "league_display": "Premier League",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Marcus Tavernier",
+        "team": "Bournemouth",
+        "position": "AM",
+        "jersey_label": "AM",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#38bdf8"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 32.5,
+        "fair_odds": 3.08
+      },
+      "market_data": {
+        "best_odds": 3.75,
+        "best_book": "Bet365",
+        "implied_chance_pct": 26.7
+      },
+      "edge": {
+        "price_gap_pp": 5.8,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 95
+        },
+        "share_of_team_chances_pct": 18,
+        "share_of_team_chances_percentile": 96,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 90
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 49
+        },
+        "fixture_boost_pct": 8,
+        "projected_minutes": 84,
+        "penalty_role": "Secondary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Marcus Tavernier at 32.5%, market implies 26.7%",
+        "Takes 18% of Bournemouth's scoring chances",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-virgil-van-dijk-cbab154b7a",
+      "match": {
+        "home_team": "Manchester United",
+        "away_team": "Liverpool FC",
+        "league": "epl",
+        "league_display": "Premier League",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Virgil van Dijk",
+        "team": "Liverpool",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#581c87",
+        "team_secondary_color": "#f97316"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 14.6,
+        "fair_odds": 6.83
+      },
+      "market_data": {
+        "best_odds": 11.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 9.1
+      },
+      "edge": {
+        "price_gap_pp": 5.6,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 80
+        },
+        "share_of_team_chances_pct": 11,
+        "share_of_team_chances_percentile": 88,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 59
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 33
+        },
+        "fixture_boost_pct": -15,
+        "projected_minutes": 90,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Virgil van Dijk at 14.6%, market implies 9.1%",
+        "Takes 11% of Liverpool's scoring chances",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-scott-mctominay-56b6c5088c",
+      "match": {
+        "home_team": "Como 1907",
+        "away_team": "SSC Napoli",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Scott McTominay",
+        "team": "Napoli",
+        "position": "MID",
+        "jersey_label": "MI",
+        "team_primary_color": "#581c87",
+        "team_secondary_color": "#f97316"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 28.3,
+        "fair_odds": 3.54
+      },
+      "market_data": {
+        "best_odds": 4.33,
+        "best_book": "Bet365",
+        "implied_chance_pct": 23.1
+      },
+      "edge": {
+        "price_gap_pp": 5.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 95
+        },
+        "share_of_team_chances_pct": 26,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 7
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 3
+        },
+        "fixture_boost_pct": -40,
+        "projected_minutes": 84,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Scott McTominay at 28.3%, market implies 23.1%",
+        "Takes 26% of Napoli's scoring chances",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-malick-thiaw-399dd6d137",
+      "match": {
+        "home_team": "Newcastle United",
+        "away_team": "Brighton & Hove Albion",
+        "league": "epl",
+        "league_display": "Premier League",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Malick Thiaw",
+        "team": "Newcastle United",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#166534",
+        "team_secondary_color": "#facc15"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 15.2,
+        "fair_odds": 6.59
+      },
+      "market_data": {
+        "best_odds": 10.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 10.0
+      },
+      "edge": {
+        "price_gap_pp": 5.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 66
+        },
+        "share_of_team_chances_pct": 12,
+        "share_of_team_chances_percentile": 91,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 41
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 11
+        },
+        "fixture_boost_pct": -19,
+        "projected_minutes": 84,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Malick Thiaw at 15.2%, market implies 10.0%",
+        "Takes 12% of Newcastle United's scoring chances"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-deniz-undav-75252ad00d",
+      "match": {
+        "home_team": "TSG Hoffenheim",
+        "away_team": "VfB Stuttgart",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Deniz Undav",
+        "team": "VfB Stuttgart",
+        "position": "FW",
+        "jersey_label": "FW",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#38bdf8"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 49.5,
+        "fair_odds": 2.02
+      },
+      "market_data": {
+        "best_odds": 2.25,
+        "best_book": "Bet365",
+        "implied_chance_pct": 44.4
+      },
+      "edge": {
+        "price_gap_pp": 5.1,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 99
+        },
+        "share_of_team_chances_pct": 31,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 89
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 64
+        },
+        "fixture_boost_pct": -6,
+        "projected_minutes": 82,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Deniz Undav at 49.5%, market implies 44.4%",
+        "Takes 31% of VfB Stuttgart's scoring chances",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-mohamed-amine-sbai-e6057f7d01",
+      "match": {
+        "home_team": "AJ Auxerre",
+        "away_team": "Angers SCO",
+        "league": "ligue-1",
+        "league_display": "Ligue 1",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Mohamed Amine Sbai",
+        "team": "Angers",
+        "position": "FW",
+        "jersey_label": "FW",
+        "team_primary_color": "#166534",
+        "team_secondary_color": "#facc15"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 19.2,
+        "fair_odds": 5.2
+      },
+      "market_data": {
+        "best_odds": 7.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 14.3
+      },
+      "edge": {
+        "price_gap_pp": 4.9,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 71
+        },
+        "share_of_team_chances_pct": 16,
+        "share_of_team_chances_percentile": 95,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 5
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 35
+        },
+        "fixture_boost_pct": -6,
+        "projected_minutes": 78,
+        "penalty_role": "Secondary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Mohamed Amine Sbai at 19.2%, market implies 14.3%",
+        "Takes 16% of Angers's scoring chances"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-fabio-chiarodia-7d63dacc4e",
+      "match": {
+        "home_team": "Borussia Monchengladbach",
+        "away_team": "Borussia Dortmund",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Fabio Chiarodia",
+        "team": "Borussia M.Gladbach",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#581c87",
+        "team_secondary_color": "#f97316"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 9.5,
+        "fair_odds": 10.58
+      },
+      "market_data": {
+        "best_odds": 21.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 4.8
+      },
+      "edge": {
+        "price_gap_pp": 4.7,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 87
+        },
+        "share_of_team_chances_pct": 8,
+        "share_of_team_chances_percentile": 84,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 27
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 36
+        },
+        "fixture_boost_pct": -25,
+        "projected_minutes": 78,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Fabio Chiarodia at 9.5%, market implies 4.8%",
+        "Takes 8% of Borussia M.Gladbach's scoring chances",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-edmond-tapsoba-4cba9023e3",
+      "match": {
+        "home_team": "Bayer Leverkusen",
+        "away_team": "RB Leipzig",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Edmond Tapsoba",
+        "team": "Bayer Leverkusen",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#111827",
+        "team_secondary_color": "#f8fafc"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 16.2,
+        "fair_odds": 6.16
+      },
+      "market_data": {
+        "best_odds": 8.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 11.8
+      },
+      "edge": {
+        "price_gap_pp": 4.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 68
+        },
+        "share_of_team_chances_pct": 9,
+        "share_of_team_chances_percentile": 85,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 92
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 40
+        },
+        "fixture_boost_pct": -17,
+        "projected_minutes": 90,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Edmond Tapsoba at 16.2%, market implies 11.8%",
+        "Takes 9% of Bayer Leverkusen's scoring chances"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-matthieu-udol-62afc2c7b1",
+      "match": {
+        "home_team": "OGC Nice",
+        "away_team": "Racing Club De Lens",
+        "league": "ligue-1",
+        "league_display": "Ligue 1",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Matthieu Udol",
+        "team": "Lens",
+        "position": "MID",
+        "jersey_label": "MI",
+        "team_primary_color": "#1d4ed8",
+        "team_secondary_color": "#b91c1c"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 18.8,
+        "fair_odds": 5.32
+      },
+      "market_data": {
+        "best_odds": 7.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 14.3
+      },
+      "edge": {
+        "price_gap_pp": 4.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 85
+        },
+        "share_of_team_chances_pct": 9,
+        "share_of_team_chances_percentile": 86,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 97
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 93
+        },
+        "fixture_boost_pct": 54,
+        "projected_minutes": 90,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Matthieu Udol at 18.8%, market implies 14.3%",
+        "Takes 9% of Lens's scoring chances",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +54% goal-threat boost"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-federico-vinas-5be3255d1f",
+      "match": {
+        "home_team": "Real Betis Seville",
+        "away_team": "Real Oviedo",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Federico Vinas",
+        "team": "Real Oviedo",
+        "position": "FW",
+        "jersey_label": "FW",
+        "team_primary_color": "#dc2626",
+        "team_secondary_color": "#1e3a8a"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 31.4,
+        "fair_odds": 3.19
+      },
+      "market_data": {
+        "best_odds": 3.6,
+        "best_book": "Bet365",
+        "implied_chance_pct": 27.8
+      },
+      "edge": {
+        "price_gap_pp": 3.6,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 85
+        },
+        "share_of_team_chances_pct": 28,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 21
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 18
+        },
+        "fixture_boost_pct": -21,
+        "projected_minutes": 86,
+        "penalty_role": "Primary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Federico Vinas at 31.4%, market implies 27.8%",
+        "Takes 28% of Real Oviedo's scoring chances",
+        "Recent chance quality grades as strong",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-marshall-munetsi-0c19e17fc6",
+      "match": {
+        "home_team": "Paris FC",
+        "away_team": "Stade Brest 29",
+        "league": "ligue-1",
+        "league_display": "Ligue 1",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Marshall Munetsi",
+        "team": "Paris FC",
+        "position": "AM",
+        "jersey_label": "AM",
+        "team_primary_color": "#0f172a",
+        "team_secondary_color": "#f8fafc"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 29.4,
+        "fair_odds": 3.4
+      },
+      "market_data": {
+        "best_odds": 3.75,
+        "best_book": "Bet365",
+        "implied_chance_pct": 26.7
+      },
+      "edge": {
+        "price_gap_pp": 2.8,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 93
+        },
+        "share_of_team_chances_pct": 21,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 71
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 77
+        },
+        "fixture_boost_pct": 34,
+        "projected_minutes": 78,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Marshall Munetsi at 29.4%, market implies 26.7%",
+        "Takes 21% of Paris FC's scoring chances",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +34% goal-threat boost"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-casemiro-d5b2909625",
+      "match": {
+        "home_team": "Manchester United",
+        "away_team": "Liverpool FC",
+        "league": "epl",
+        "league_display": "Premier League",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Casemiro",
+        "team": "Manchester United",
+        "position": "DMC",
+        "jersey_label": "DM",
+        "team_primary_color": "#111827",
+        "team_secondary_color": "#f8fafc"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 19.3,
+        "fair_odds": 5.17
+      },
+      "market_data": {
+        "best_odds": 6.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 16.7
+      },
+      "edge": {
+        "price_gap_pp": 2.7,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 77
+        },
+        "share_of_team_chances_pct": 13,
+        "share_of_team_chances_percentile": 91,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 72
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 42
+        },
+        "fixture_boost_pct": -7,
+        "projected_minutes": 86,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Casemiro at 19.3%, market implies 16.7%",
+        "Takes 13% of Manchester United's scoring chances",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-romulo-da-cruz-c023926a8f",
+      "match": {
+        "home_team": "Bayer Leverkusen",
+        "away_team": "RB Leipzig",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Romulo da Cruz",
+        "team": "RasenBallsport Leipzig",
+        "position": "FW",
+        "jersey_label": "FW",
+        "team_primary_color": "#111827",
+        "team_secondary_color": "#f8fafc"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 40.6,
+        "fair_odds": 2.46
+      },
+      "market_data": {
+        "best_odds": 2.62,
+        "best_book": "Bet365",
+        "implied_chance_pct": 38.1
+      },
+      "edge": {
+        "price_gap_pp": 2.6,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 97
+        },
+        "share_of_team_chances_pct": 20,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 96
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 63
+        },
+        "fixture_boost_pct": 2,
+        "projected_minutes": 78,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Romulo da Cruz at 40.6%, market implies 38.1%",
+        "Takes 20% of RasenBallsport Leipzig's scoring chances",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-ollie-watkins-c86427a869",
+      "match": {
+        "home_team": "Aston Villa",
+        "away_team": "Tottenham Hotspur",
+        "league": "epl",
+        "league_display": "Premier League",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Ollie Watkins",
+        "team": "Aston Villa",
+        "position": "FW",
+        "jersey_label": "FW",
+        "team_primary_color": "#111827",
+        "team_secondary_color": "#f8fafc"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 44.7,
+        "fair_odds": 2.24
+      },
+      "market_data": {
+        "best_odds": 2.38,
+        "best_book": "Bet365",
+        "implied_chance_pct": 42.1
+      },
+      "edge": {
+        "price_gap_pp": 2.6,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 95
+        },
+        "share_of_team_chances_pct": 30,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 88
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 66
+        },
+        "fixture_boost_pct": -3,
+        "projected_minutes": 82,
+        "penalty_role": "Primary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Ollie Watkins at 44.7%, market implies 42.1%",
+        "Takes 30% of Aston Villa's scoring chances",
+        "Recent chance quality grades as strong",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-konstantinos-mavropanos-3d49f4f34a",
+      "match": {
+        "home_team": "Brentford FC",
+        "away_team": "West Ham United",
+        "league": "epl",
+        "league_display": "Premier League",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Konstantinos Mavropanos",
+        "team": "West Ham",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#0e7490",
+        "team_secondary_color": "#34d399"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 12.5,
+        "fair_odds": 7.98
+      },
+      "market_data": {
+        "best_odds": 10.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 10.0
+      },
+      "edge": {
+        "price_gap_pp": 2.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 81
+        },
+        "share_of_team_chances_pct": 10,
+        "share_of_team_chances_percentile": 87,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 49
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 53
+        },
+        "fixture_boost_pct": -10,
+        "projected_minutes": 82,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Konstantinos Mavropanos at 12.5%, market implies 10.0%",
+        "Takes 10% of West Ham's scoring chances",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-rafik-belghali-3b1eb94e8e",
+      "match": {
+        "home_team": "Juventus Turin",
+        "away_team": "Hellas Verona",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Rafik Belghali",
+        "team": "Verona",
+        "position": "MID",
+        "jersey_label": "MI",
+        "team_primary_color": "#166534",
+        "team_secondary_color": "#facc15"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 8.9,
+        "fair_odds": 11.19
+      },
+      "market_data": {
+        "best_odds": 15.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 6.7
+      },
+      "edge": {
+        "price_gap_pp": 2.3,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 58
+        },
+        "share_of_team_chances_pct": 14,
+        "share_of_team_chances_percentile": 93,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 2
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 4
+        },
+        "fixture_boost_pct": -32,
+        "projected_minutes": 78,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Rafik Belghali at 8.9%, market implies 6.7%",
+        "Takes 14% of Verona's scoring chances"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-antoine-mendy-3aeadcdd3d",
+      "match": {
+        "home_team": "OGC Nice",
+        "away_team": "Racing Club De Lens",
+        "league": "ligue-1",
+        "league_display": "Ligue 1",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Antoine Mendy",
+        "team": "Nice",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#dc2626",
+        "team_secondary_color": "#1e3a8a"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 9.8,
+        "fair_odds": 10.15
+      },
+      "market_data": {
+        "best_odds": 13.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 7.7
+      },
+      "edge": {
+        "price_gap_pp": 2.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 77
+        },
+        "share_of_team_chances_pct": 8,
+        "share_of_team_chances_percentile": 85,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 30
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 13
+        },
+        "fixture_boost_pct": -19,
+        "projected_minutes": 82,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Antoine Mendy at 9.8%, market implies 7.7%",
+        "Takes 8% of Nice's scoring chances",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-nico-schlotterbeck-ba15b56ecc",
+      "match": {
+        "home_team": "Borussia Monchengladbach",
+        "away_team": "Borussia Dortmund",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Nico Schlotterbeck",
+        "team": "Borussia Dortmund",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#0e7490",
+        "team_secondary_color": "#34d399"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 16.5,
+        "fair_odds": 6.06
+      },
+      "market_data": {
+        "best_odds": 7.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 14.3
+      },
+      "edge": {
+        "price_gap_pp": 2.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 55
+        },
+        "share_of_team_chances_pct": 10,
+        "share_of_team_chances_percentile": 87,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 83
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 74
+        },
+        "fixture_boost_pct": 5,
+        "projected_minutes": 90,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Nico Schlotterbeck at 16.5%, market implies 14.3%",
+        "Takes 10% of Borussia Dortmund's scoring chances"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-michel-adopo-8f12e4c9f2",
+      "match": {
+        "home_team": "Bologna FC",
+        "away_team": "Cagliari Calcio",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Michel Adopo",
+        "team": "Cagliari",
+        "position": "DMC",
+        "jersey_label": "DM",
+        "team_primary_color": "#581c87",
+        "team_secondary_color": "#f97316"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 9.7,
+        "fair_odds": 10.33
+      },
+      "market_data": {
+        "best_odds": 13.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 7.7
+      },
+      "edge": {
+        "price_gap_pp": 2.0,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Average",
+          "percentile": 43
+        },
+        "share_of_team_chances_pct": 10,
+        "share_of_team_chances_percentile": 87,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 11
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 37
+        },
+        "fixture_boost_pct": -4,
+        "projected_minutes": 84,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Michel Adopo at 9.7%, market implies 7.7%",
+        "Takes 10% of Cagliari's scoring chances"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-leopold-querfeld-c400b56257",
+      "match": {
+        "home_team": "Union Berlin",
+        "away_team": "1. FC Cologne",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Leopold Querfeld",
+        "team": "Union Berlin",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#111827",
+        "team_secondary_color": "#f8fafc"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 16.2,
+        "fair_odds": 6.16
+      },
+      "market_data": {
+        "best_odds": 7.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 14.3
+      },
+      "edge": {
+        "price_gap_pp": 1.9,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Average",
+          "percentile": 44
+        },
+        "share_of_team_chances_pct": 5,
+        "share_of_team_chances_percentile": 74,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 65
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 83
+        },
+        "fixture_boost_pct": -7,
+        "projected_minutes": 90,
+        "penalty_role": "Secondary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Leopold Querfeld at 16.2%, market implies 14.3%",
+        "Takes 5% of Union Berlin's scoring chances",
+        "Opponent defensive profile is a positive matchup"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-nordi-mukiele-e81c28b0e1",
+      "match": {
+        "home_team": "Wolverhampton Wanderers",
+        "away_team": "Sunderland AFC",
+        "league": "epl",
+        "league_display": "Premier League",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Nordi Mukiele",
+        "team": "Sunderland",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#111827",
+        "team_secondary_color": "#f8fafc"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 10.1,
+        "fair_odds": 9.93
+      },
+      "market_data": {
+        "best_odds": 12.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 8.3
+      },
+      "edge": {
+        "price_gap_pp": 1.7,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 73
+        },
+        "share_of_team_chances_pct": 8,
+        "share_of_team_chances_percentile": 84,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 34
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 97
+        },
+        "fixture_boost_pct": 30,
+        "projected_minutes": 83,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Nordi Mukiele at 10.1%, market implies 8.3%",
+        "Takes 8% of Sunderland's scoring chances",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +30% goal-threat boost"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-victor-parada-1c711998a8",
+      "match": {
+        "home_team": "Deportivo Alaves",
+        "away_team": "Athletic Bilbao",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Victor Parada",
+        "team": "Alaves",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#111827",
+        "team_secondary_color": "#f8fafc"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 9.4,
+        "fair_odds": 10.67
+      },
+      "market_data": {
+        "best_odds": 13.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 7.7
+      },
+      "edge": {
+        "price_gap_pp": 1.7,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Average",
+          "percentile": 51
+        },
+        "share_of_team_chances_pct": 6,
+        "share_of_team_chances_percentile": 80,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 62
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 44
+        },
+        "fixture_boost_pct": -5,
+        "projected_minutes": 86,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Victor Parada at 9.4%, market implies 7.7%",
+        "Takes 6% of Alaves's scoring chances"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-giovanni-simeone-66a7e3634b",
+      "match": {
+        "home_team": "Udinese Calcio",
+        "away_team": "Torino FC",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Giovanni Simeone",
+        "team": "Torino",
+        "position": "FW",
+        "jersey_label": "FW",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#38bdf8"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 30.1,
+        "fair_odds": 3.33
+      },
+      "market_data": {
+        "best_odds": 3.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 28.6
+      },
+      "edge": {
+        "price_gap_pp": 1.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 94
+        },
+        "share_of_team_chances_pct": 27,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 36
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 56
+        },
+        "fixture_boost_pct": 14,
+        "projected_minutes": 78,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Giovanni Simeone at 30.1%, market implies 28.6%",
+        "Takes 27% of Torino's scoring chances",
+        "Recent chance quality grades as strong",
+        "Fixture profile adds a +14% goal-threat boost"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260502-axel-disasi-3a0451beed",
+      "match": {
+        "home_team": "Brentford FC",
+        "away_team": "West Ham United",
+        "league": "epl",
+        "league_display": "Premier League",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Axel Disasi",
+        "team": "West Ham",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#0e7490",
+        "team_secondary_color": "#34d399"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 9.1,
+        "fair_odds": 10.98
+      },
+      "market_data": {
+        "best_odds": 13.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 7.7
+      },
+      "edge": {
+        "price_gap_pp": 1.4,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 65
+        },
+        "share_of_team_chances_pct": 7,
+        "share_of_team_chances_percentile": 81,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 49
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 53
+        },
+        "fixture_boost_pct": -10,
+        "projected_minutes": 81,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Axel Disasi at 9.1%, market implies 7.7%",
+        "Takes 7% of West Ham's scoring chances"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-sinaly-diomande-66df5622e6",
+      "match": {
+        "home_team": "AJ Auxerre",
+        "away_team": "Angers SCO",
+        "league": "ligue-1",
+        "league_display": "Ligue 1",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Sinaly Diomande",
+        "team": "Auxerre",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#0f172a",
+        "team_secondary_color": "#f8fafc"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 11.9,
+        "fair_odds": 8.42
+      },
+      "market_data": {
+        "best_odds": 9.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 10.5
+      },
+      "edge": {
+        "price_gap_pp": 1.4,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 69
+        },
+        "share_of_team_chances_pct": 9,
+        "share_of_team_chances_percentile": 85,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 55
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 73
+        },
+        "fixture_boost_pct": 4,
+        "projected_minutes": 90,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Sinaly Diomande at 11.9%, market implies 10.5%",
+        "Takes 9% of Auxerre's scoring chances"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-antonio-rudiger-fd59ba8eb7",
+      "match": {
+        "home_team": "Espanyol Barcelona",
+        "away_team": "Real Madrid",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Antonio Rudiger",
+        "team": "Real Madrid",
+        "position": "DEF",
+        "jersey_label": "DE",
+        "team_primary_color": "#1d4ed8",
+        "team_secondary_color": "#b91c1c"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 13.0,
+        "fair_odds": 7.71
+      },
+      "market_data": {
+        "best_odds": 8.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 11.8
+      },
+      "edge": {
+        "price_gap_pp": 1.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 74
+        },
+        "share_of_team_chances_pct": 8,
+        "share_of_team_chances_percentile": 83,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 78
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 92
+        },
+        "fixture_boost_pct": 19,
+        "projected_minutes": 81,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Antonio Rudiger at 13.0%, market implies 11.8%",
+        "Takes 8% of Real Madrid's scoring chances",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +19% goal-threat boost"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-mateo-pellegrino-e20ae13beb",
+      "match": {
+        "home_team": "Inter Milano",
+        "away_team": "Parma Calcio",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Mateo Pellegrino",
+        "team": "Parma Calcio 1913",
+        "position": "FW",
+        "jersey_label": "FW",
+        "team_primary_color": "#111827",
+        "team_secondary_color": "#f8fafc"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 21.1,
+        "fair_odds": 4.74
+      },
+      "market_data": {
+        "best_odds": 5.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 20.0
+      },
+      "edge": {
+        "price_gap_pp": 1.1,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 72
+        },
+        "share_of_team_chances_pct": 28,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 3
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 7
+        },
+        "fixture_boost_pct": -32,
+        "projected_minutes": 79,
+        "penalty_role": "Primary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Mateo Pellegrino at 21.1%, market implies 20.0%",
+        "Takes 28% of Parma Calcio 1913's scoring chances",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260503-florian-wirtz-e2a6707a55",
+      "match": {
+        "home_team": "Manchester United",
+        "away_team": "Liverpool FC",
+        "league": "epl",
+        "league_display": "Premier League",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-03",
+        "venue": ""
+      },
+      "player": {
+        "name": "Florian Wirtz",
+        "team": "Liverpool",
+        "position": "AM",
+        "jersey_label": "AM",
+        "team_primary_color": "#581c87",
+        "team_secondary_color": "#f97316"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 24.2,
+        "fair_odds": 4.13
+      },
+      "market_data": {
+        "best_odds": 4.33,
+        "best_book": "Bet365",
+        "implied_chance_pct": 23.1
+      },
+      "edge": {
+        "price_gap_pp": 1.1,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 83
+        },
+        "share_of_team_chances_pct": 18,
+        "share_of_team_chances_percentile": 96,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 59
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 33
+        },
+        "fixture_boost_pct": -15,
+        "projected_minutes": 84,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Florian Wirtz at 24.2%, market implies 23.1%",
+        "Takes 18% of Liverpool's scoring chances",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    }
+  ]
+}

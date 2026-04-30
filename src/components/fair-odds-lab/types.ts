@@ -1,0 +1,57 @@
+export type SignalMetric = {
+  label: string;
+  value: string;
+  percentile?: number;
+  note?: string;
+  inverse?: boolean;
+};
+
+export type Signal = {
+  id: string;
+  match: string;
+  competition: string;
+  leagueSlug?: string;
+  kickoff: string;
+  kickoffUtc?: string;
+  venue: string;
+  player: string;
+  team: string;
+  position: string;
+  playerNumber: string;
+  teamPrimaryColor: string;
+  teamSecondaryColor?: string;
+  market: string;
+  fairOdds: number;
+  bestBookOdds: number;
+  bestBookmaker: string;
+  marketAverageOdds?: number;
+  modelProbability: number;
+  bookmakerProbability: number;
+  projectedMinutes?: number;
+  teamExpectedNpxg?: number;
+  playerRecentNpxg?: number;
+  attackingShare: number;
+  opponentXga?: number;
+  fixtureSwing: number;
+  penaltyRole: string;
+  lineupStatus: string;
+  confidence: "High" | "Medium" | "Low";
+  accent: string;
+  recentChanceQuality?: string;
+  teamAttackingOutlook?: string;
+  opponentDefensiveWeakness?: string;
+  playerMetrics: SignalMetric[];
+  opponentMetrics: SignalMetric[];
+  edgeReasons: string[];
+};
+
+export type LabArtifact = {
+  generatedAt: string | null;
+  edgeThresholdPp: number;
+  fixturesEvaluated: number;
+  signalsQualifying: number;
+  leaguesCovered: string[];
+  featuredSignalId?: string | null;
+  signals: Signal[];
+  isMock: boolean;
+};

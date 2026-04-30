@@ -1,0 +1,548 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
+import { OddsComparisonBar } from "@/components/fair-odds-lab/OddsComparisonBar";
+import {
+  MiniDonut,
+  MinutesMeter,
+  PenaltyBadge,
+  PriceGapMeter,
+  ProportionalBar,
+  SignedBoostMeter,
+  StatusSteps,
+  TierIndicator,
+} from "@/components/fair-odds-lab/primitives";
+import type { LabArtifact, Signal, SignalMetric } from "@/components/fair-odds-lab/types";
+
+type SortMode = "edge" | "kickoff" | "confidence";
+
+type LeagueOption = {
+  key: string;
+  label: string;
+  count: number;
+};
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function leagueKey(signal: Signal) {
+  return signal.leagueSlug || slugify(signal.competition || "other");
+}
+
+function probabilityGap(signal: Signal) {
+  return signal.modelProbability - signal.bookmakerProbability;
+}
+
+function formatPercent(value: number) {
+  return `${value.toFixed(1)}%`;
+}
+
+function parseKickoff(signal: Signal) {
+  const timestamp = signal.kickoffUtc ? Date.parse(signal.kickoffUtc) : Number.NaN;
+  return Number.isFinite(timestamp) ? timestamp : Number.MAX_SAFE_INTEGER;
+}
+
+function confidenceRank(confidence: Signal["confidence"]) {
+  if (confidence === "High") return 3;
+  if (confidence === "Medium") return 2;
+  return 1;
+}
+
+function sortSignals(signals: Signal[], sortMode: SortMode) {
+  return [...signals].sort((a, b) => {
+    if (sortMode === "kickoff") {
+      return parseKickoff(a) - parseKickoff(b) || probabilityGap(b) - probabilityGap(a);
+    }
+
+    if (sortMode === "confidence") {
+      return (
+        confidenceRank(b.confidence) - confidenceRank(a.confidence) ||
+        probabilityGap(b) - probabilityGap(a) ||
+        parseKickoff(a) - parseKickoff(b)
+      );
+    }
+
+    return probabilityGap(b) - probabilityGap(a) || parseKickoff(a) - parseKickoff(b);
+  });
+}
+
+function confidenceTone(confidence: Signal["confidence"]) {
+  if (confidence === "High") {
+    return "border-emerald-400/35 bg-emerald-400/10 text-emerald-200";
+  }
+
+  if (confidence === "Medium") {
+    return "border-slate-500/35 bg-slate-500/10 text-slate-200";
+  }
+
+  return "border-rose-400/35 bg-rose-400/10 text-rose-200";
+}
+
+function numberFromMetric(value: string) {
+  const parsed = Number.parseFloat(value.replace(/[^0-9.-]/g, ""));
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function renderMetricVisual(metric: SignalMetric) {
+  const label = metric.label.toLowerCase();
+
+  if (label.includes("recent chance quality")) {
+    return <TierIndicator tier={metric.value} size="sm" variant="quality" />;
+  }
+
+  if (label.includes("share of team chances")) {
+    return <ProportionalBar value={numberFromMetric(metric.value)} maxValue={50} />;
+  }
+
+  if (label.includes("lineup confidence")) {
+    return <StatusSteps status={metric.value} />;
+  }
+
+  if (label.includes("penalty role")) {
+    return <PenaltyBadge role={metric.value} />;
+  }
+
+  if (label.includes("team attacking outlook")) {
+    return <TierIndicator tier={metric.value} size="sm" variant="outlook" />;
+  }
+
+  if (label.includes("opponent defensive weakness")) {
+    return <TierIndicator tier={metric.value} size="sm" variant="weakness" />;
+  }
+
+  if (label.includes("fixture boost")) {
+    return <SignedBoostMeter value={numberFromMetric(metric.value)} />;
+  }
+
+  if (label.includes("projected minutes")) {
+    return <MinutesMeter minutes={numberFromMetric(metric.value)} />;
+  }
+
+  return null;
+}
+
+function SignalCard({
+  signal,
+  featured,
+  selected,
+  onOpen,
+}: {
+  signal: Signal;
+  featured: boolean;
+  selected: boolean;
+  onOpen: () => void;
+}) {
+  const gap = probabilityGap(signal);
+
+  return (
+    <article
+      className={`group relative overflow-hidden rounded-2xl border bg-[#0c0f14] p-5 transition hover:-translate-y-0.5 hover:border-emerald-300/35 hover:shadow-[0_16px_50px_rgba(16,185,129,0.1)] ${
+        selected ? "border-emerald-300/50" : "border-slate-700/45"
+      }`}
+    >
+      <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${signal.accent}`} />
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+            {signal.competition}
+          </div>
+          <div className="mt-1 text-sm text-slate-400">{signal.match}</div>
+          <div className="mt-1 text-xs text-slate-600">{signal.kickoff}</div>
+        </div>
+        <div className="flex flex-col items-end gap-2">
+          {featured ? (
+            <span className="rounded-md border border-emerald-400/25 bg-emerald-400/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-200">
+              Featured
+            </span>
+          ) : null}
+          <span className={`rounded-md border px-2 py-1 text-[11px] font-semibold ${confidenceTone(signal.confidence)}`}>
+            {signal.confidence}
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-5">
+        <OddsComparisonBar
+          modelOdds={signal.fairOdds}
+          bookOdds={signal.bestBookOdds}
+          bookName={signal.bestBookmaker}
+          gapPp={gap}
+          modelProb={signal.modelProbability}
+          marketProb={signal.bookmakerProbability}
+          size="compact"
+        />
+      </div>
+
+      <div className="mt-5">
+        <div className="text-2xl font-bold tracking-tight text-slate-50">{signal.player}</div>
+        <div className="mt-1 text-xs text-slate-500">
+          {signal.team} | {signal.position} | {signal.market}
+        </div>
+      </div>
+
+      <div className="mt-5 grid grid-cols-3 gap-2">
+        <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3">
+          <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+            Chance
+          </div>
+          <div className="mt-2">
+            <TierIndicator tier={signal.recentChanceQuality ?? "Average"} size="sm" />
+          </div>
+          <div className="mt-2 text-[10px] font-semibold text-slate-300">
+            {signal.recentChanceQuality ?? "Unknown"}
+          </div>
+        </div>
+        <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3 text-center">
+          <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+            Share
+          </div>
+          <div className="mt-1 flex justify-center">
+            <MiniDonut
+              value={(signal.attackingShare / 50) * 100}
+              size={32}
+              showValue
+              displayValue={String(signal.attackingShare)}
+              tone="cyan"
+            />
+          </div>
+          <div className="mt-1 text-[10px] font-semibold text-slate-300">
+            {signal.attackingShare}%
+          </div>
+        </div>
+        <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3">
+          <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+            Pens
+          </div>
+          <div className="mt-2">
+            <PenaltyBadge role={signal.penaltyRole} size="mini" />
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-5 border-t border-slate-800/80 pt-4 text-sm text-slate-400">
+        Model chance{" "}
+        <span className="font-mono font-semibold text-emerald-200">
+          {formatPercent(signal.modelProbability)}
+        </span>{" "}
+        vs market{" "}
+        <span className="font-mono font-semibold text-slate-200">
+          {formatPercent(signal.bookmakerProbability)}
+        </span>
+        .
+      </div>
+
+      <button
+        type="button"
+        onClick={onOpen}
+        className="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-slate-700/70 bg-slate-900/80 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:border-emerald-400/40 hover:text-emerald-200"
+      >
+        Open details
+      </button>
+    </article>
+  );
+}
+
+function MetricDetailList({ title, metrics }: { title: string; metrics: SignalMetric[] }) {
+  return (
+    <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4">
+      <h4 className="text-sm font-semibold text-slate-100">{title}</h4>
+      <div className="mt-4 space-y-3">
+        {metrics.map((metric) => (
+          <div key={metric.label} className="rounded-xl border border-slate-800/80 bg-slate-900/45 p-3">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="text-xs font-medium text-slate-300">{metric.label}</div>
+                {metric.note ? (
+                  <div className="mt-0.5 text-[11px] text-slate-500">{metric.note}</div>
+                ) : null}
+              </div>
+              <div className="text-right font-mono text-sm font-semibold text-slate-100">
+                {metric.value}
+              </div>
+            </div>
+            <div className="mt-3">{renderMetricVisual(metric)}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DetailPanel({
+  signal,
+  index,
+  total,
+  onClose,
+  onNext,
+  onPrevious,
+}: {
+  signal: Signal;
+  index: number;
+  total: number;
+  onClose: () => void;
+  onNext: () => void;
+  onPrevious: () => void;
+}) {
+  const gap = probabilityGap(signal);
+
+  return (
+    <aside className="rounded-[2rem] border border-emerald-300/20 bg-[#0a0f12] p-5 shadow-[0_24px_90px_rgba(16,185,129,0.12)] xl:sticky xl:top-24">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-300">
+            Signal details
+          </div>
+          <h3 className="mt-2 text-2xl font-black tracking-tight text-slate-50">
+            {signal.player}
+          </h3>
+          <p className="mt-1 text-sm text-slate-400">
+            {signal.match} | {signal.kickoff}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1 text-xs font-semibold text-slate-400 transition hover:text-slate-100"
+        >
+          Close
+        </button>
+      </div>
+
+      <div className="mt-5">
+        <OddsComparisonBar
+          modelOdds={signal.fairOdds}
+          bookOdds={signal.bestBookOdds}
+          bookName={signal.bestBookmaker}
+          gapPp={gap}
+          modelProb={signal.modelProbability}
+          marketProb={signal.bookmakerProbability}
+          size="compact"
+        />
+      </div>
+
+      <div className="mt-5 grid grid-cols-2 gap-3">
+        <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/[0.07] p-3">
+          <div className="text-[10px] uppercase tracking-[0.16em] text-emerald-300">
+            Model chance
+          </div>
+          <div className="mt-1 font-mono text-xl font-black text-emerald-100">
+            {formatPercent(signal.modelProbability)}
+          </div>
+        </div>
+        <div className="rounded-xl border border-amber-400/20 bg-amber-400/[0.07] p-3">
+          <div className="text-[10px] uppercase tracking-[0.16em] text-amber-300">
+            Price gap
+          </div>
+          <div className="mt-1 font-mono text-xl font-black text-amber-200">
+            +{gap.toFixed(1)}pp
+          </div>
+          <PriceGapMeter value={gap} />
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-4">
+        <MetricDetailList title="Player case" metrics={signal.playerMetrics} />
+        <MetricDetailList title="Matchup profile" metrics={signal.opponentMetrics} />
+      </div>
+
+      {signal.edgeReasons.length > 0 ? (
+        <div className="mt-5 rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4">
+          <h4 className="text-sm font-semibold text-slate-100">Plain-English reasons</h4>
+          <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-300">
+            {signal.edgeReasons.map((reason) => (
+              <li key={reason} className="rounded-xl border border-slate-800/80 bg-slate-900/45 px-3 py-2">
+                {reason}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-800/80 pt-4">
+        <button
+          type="button"
+          onClick={onPrevious}
+          className="rounded-xl border border-slate-700/80 px-3 py-2 text-sm font-semibold text-slate-300 transition hover:border-emerald-400/40 hover:text-emerald-200"
+        >
+          Previous
+        </button>
+        <span className="text-xs text-slate-500">
+          {index + 1} of {total}
+        </span>
+        <button
+          type="button"
+          onClick={onNext}
+          className="rounded-xl border border-slate-700/80 px-3 py-2 text-sm font-semibold text-slate-300 transition hover:border-emerald-400/40 hover:text-emerald-200"
+        >
+          Next
+        </button>
+      </div>
+    </aside>
+  );
+}
+
+export function FairOddsSignalBrowser({
+  artifact,
+  featuredSignalId,
+}: {
+  artifact: LabArtifact;
+  featuredSignalId?: string | null;
+}) {
+  const [activeLeague, setActiveLeague] = useState("all");
+  const [sortMode, setSortMode] = useState<SortMode>("edge");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const leagueOptions = useMemo<LeagueOption[]>(() => {
+    const counts = new Map<string, LeagueOption>();
+    for (const signal of artifact.signals) {
+      const key = leagueKey(signal);
+      const current = counts.get(key);
+      if (current) {
+        current.count += 1;
+      } else {
+        counts.set(key, { key, label: signal.competition || key, count: 1 });
+      }
+    }
+    return [...counts.values()].sort((a, b) => a.label.localeCompare(b.label));
+  }, [artifact.signals]);
+
+  const visibleSignals = useMemo(() => {
+    const filtered =
+      activeLeague === "all"
+        ? artifact.signals
+        : artifact.signals.filter((signal) => leagueKey(signal) === activeLeague);
+    return sortSignals(filtered, sortMode);
+  }, [activeLeague, artifact.signals, sortMode]);
+
+  const selectedSignal = selectedId
+    ? visibleSignals.find((signal) => signal.id === selectedId) ?? null
+    : null;
+  const selectedIndex = selectedSignal
+    ? visibleSignals.findIndex((signal) => signal.id === selectedSignal.id)
+    : -1;
+
+  function openSignal(signal: Signal) {
+    setSelectedId(signal.id);
+  }
+
+  function cycleSignal(direction: 1 | -1) {
+    if (!visibleSignals.length || selectedIndex < 0) return;
+    const nextIndex = (selectedIndex + direction + visibleSignals.length) % visibleSignals.length;
+    setSelectedId(visibleSignals[nextIndex].id);
+  }
+
+  if (artifact.signals.length === 0) return null;
+
+  return (
+    <section className="mt-10">
+      <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300">
+            Signal browser
+          </div>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-50">
+            Browse model-price gaps
+          </h2>
+        </div>
+        <div className="text-sm text-slate-500">
+          {artifact.isMock
+            ? "Static concept data for page design."
+            : "Static artifact data. No Supabase reads, writes, or polling."}
+        </div>
+      </div>
+
+      <div className="mb-5 rounded-2xl border border-slate-700/45 bg-[#0c0f14] p-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setActiveLeague("all")}
+              className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
+                activeLeague === "all"
+                  ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
+                  : "border-slate-700/80 bg-slate-900/70 text-slate-400 hover:text-slate-200"
+              }`}
+            >
+              All | {artifact.signals.length}
+            </button>
+            {leagueOptions.map((option) => (
+              <button
+                key={option.key}
+                type="button"
+                onClick={() => setActiveLeague(option.key)}
+                className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
+                  activeLeague === option.key
+                    ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
+                    : "border-slate-700/80 bg-slate-900/70 text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                {option.label} | {option.count}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+              Sort
+            </span>
+            {[
+              ["edge", "Edge"],
+              ["kickoff", "Kickoff"],
+              ["confidence", "Confidence"],
+            ].map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setSortMode(value as SortMode)}
+                className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
+                  sortMode === value
+                    ? "border-amber-400/35 bg-amber-400/10 text-amber-200"
+                    : "border-slate-700/80 bg-slate-900/70 text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {visibleSignals.length === 0 ? (
+        <div className="rounded-2xl border border-slate-700/45 bg-[#0c0f14] p-8 text-center text-sm text-slate-400">
+          No signals match this league filter. Switch back to All to see the current artifact.
+        </div>
+      ) : (
+        <div className={`grid gap-5 ${selectedSignal ? "xl:grid-cols-[minmax(0,1fr)_430px]" : ""}`}>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {visibleSignals.map((signal) => (
+              <SignalCard
+                key={signal.id}
+                signal={signal}
+                featured={signal.id === featuredSignalId}
+                selected={signal.id === selectedId}
+                onOpen={() => openSignal(signal)}
+              />
+            ))}
+          </div>
+
+          {selectedSignal ? (
+            <DetailPanel
+              signal={selectedSignal}
+              index={selectedIndex}
+              total={visibleSignals.length}
+              onClose={() => setSelectedId(null)}
+              onNext={() => cycleSignal(1)}
+              onPrevious={() => cycleSignal(-1)}
+            />
+          ) : null}
+        </div>
+      )}
+    </section>
+  );
+}
