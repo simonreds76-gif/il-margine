@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-30T20:45:38Z",
+  "generated_at": "2026-04-30T23:32:49Z",
   "league": "serie-a",
-  "row_count": 2,
+  "row_count": 1,
   "rows": [
     {
       "date": "2026-04-26",
@@ -31,37 +31,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Nikola Vlasic took 1 penalty attempt and scored for Torino vs Inter. Primary pre-match: Nikola Vlasic (unknown). Secondary pre-match: Duván Zapata (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-04-30T20:45:11Z",
-      "context_source_path": "data/goalscorer/penalty-duty-context.json"
-    },
-    {
-      "date": "2026-04-24",
-      "league": "serie-a",
-      "review_source": "fotmob_live",
-      "match": "Napoli vs Cremonese",
-      "team": "Napoli",
-      "opponent": "Cremonese",
-      "actual_taker": "Scott McTominay",
-      "actual_role_pre_match": "tertiary",
-      "penalties_attempted": 1,
-      "penalties_scored": 0,
-      "distinct_takers_in_match": 1,
-      "minute": "83",
-      "event_type": "AttemptSaved",
-      "event_result": "missed",
-      "primary_pre_match": "Kevin De Bruyne",
-      "secondary_pre_match": "Rasmus Højlund",
-      "tertiary_pre_match": "Scott McTominay",
-      "primary_lineup_status": "unknown",
-      "secondary_lineup_status": "unknown",
-      "tertiary_lineup_status": "unknown",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "expected_backup_shift",
-      "review_priority": "medium",
-      "editorial_note": "Scott McTominay took 1 penalty attempt and missed for Napoli vs Cremonese. Primary pre-match: Kevin De Bruyne (unknown). Secondary pre-match: Rasmus Højlund (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-04-30T20:45:11Z",
+      "context_generated_at": "2026-04-30T23:32:24Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     }
   ]
