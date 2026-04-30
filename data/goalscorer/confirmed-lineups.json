@@ -246,8 +246,7 @@
       "home_unavailable": [
         "Daniel Denoon",
         "Marius Marin",
-        "Mattéo Tramoni",
-        "Rafiu Durosinmi"
+        "Mattéo Tramoni"
       ],
       "away_unavailable": [
         "Kialonda Gaspar",
@@ -504,7 +503,6 @@
         "Lorenzo Bernasconi"
       ],
       "away_unavailable": [
-        "Justin Bijlow",
         "Tommaso Baldanzi",
         "Caleb Ekuban"
       ]
@@ -753,8 +751,6 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Mërgim Vojvoda",
-        "Sergi Roberto",
         "Jayden Addai"
       ],
       "away_unavailable": [
@@ -1014,6 +1010,7 @@
         "Keinan Davis"
       ],
       "away_unavailable": [
+        "Duván Zapata",
         "Tino Anjorin",
         "Zakaria Aboukhlal",
         "Zanos Savva"
@@ -1266,15 +1263,269 @@
         "Nicolò Cambiaghi",
         "Thijs Dallinga",
         "Lukasz Skorupski",
-        "João Mário",
-        "Federico Bernardeschi"
+        "João Mário"
       ],
       "away_unavailable": [
         "Luca Mazzitelli",
         "Mattia Felici",
         "Riyad Idrissi",
         "Gennaro Borrelli",
-        "Leonardo Pavoletti"
+        "Leonardo Pavoletti",
+        "Paul Mendy"
+      ]
+    },
+    {
+      "fotmob_match_id": 4803383,
+      "fotmob_page_url": "/matches/hellas-verona-vs-juventus/389a06#4803383",
+      "home_fotmob_team_id": 9885,
+      "away_fotmob_team_id": 9876,
+      "match_date": "2026-05-03",
+      "home_team": "Juventus",
+      "away_team": "Hellas Verona",
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-4-3",
+      "away_formation": "3-5-1-1",
+      "home_players": [
+        "Michele Di Gregorio",
+        "Pierre Kalulu",
+        "Gleison Bremer",
+        "Lloyd Kelly",
+        "Weston McKennie",
+        "Manuel Locatelli",
+        "Khéphren Thuram-Ulien",
+        "Andrea Cambiaso",
+        "Francisco Conceição",
+        "Jonathan David",
+        "Jérémie Boga"
+      ],
+      "away_players": [
+        "Lorenzo Montipò",
+        "Victor Nelsson",
+        "Nicolás Valentini",
+        "Andrias Edmundsson",
+        "Rafik Belghali",
+        "Jean-Daniel Akpa Akpro",
+        "Roberto Gagliardini",
+        "Antoine Bernede",
+        "Martin Frese",
+        "Tomás Suslov",
+        "Kieron Bowie"
+      ],
+      "home_starters": [
+        {
+          "name": "Michele Di Gregorio",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-4-3",
+          "position_id": 11
+        },
+        {
+          "name": "Pierre Kalulu",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 33
+        },
+        {
+          "name": "Gleison Bremer",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 35
+        },
+        {
+          "name": "Lloyd Kelly",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-4-3",
+          "position_id": 37
+        },
+        {
+          "name": "Weston McKennie",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 72
+        },
+        {
+          "name": "Manuel Locatelli",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 74
+        },
+        {
+          "name": "Khéphren Thuram-Ulien",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 76
+        },
+        {
+          "name": "Andrea Cambiaso",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-3",
+          "position_id": 78
+        },
+        {
+          "name": "Francisco Conceição",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 103
+        },
+        {
+          "name": "Jonathan David",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 105
+        },
+        {
+          "name": "Jérémie Boga",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 107
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Lorenzo Montipò",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-5-1-1",
+          "position_id": 11
+        },
+        {
+          "name": "Victor Nelsson",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-1-1",
+          "position_id": 33
+        },
+        {
+          "name": "Nicolás Valentini",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-1-1",
+          "position_id": 35
+        },
+        {
+          "name": "Andrias Edmundsson",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-1-1",
+          "position_id": 37
+        },
+        {
+          "name": "Rafik Belghali",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 71
+        },
+        {
+          "name": "Jean-Daniel Akpa Akpro",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 73
+        },
+        {
+          "name": "Roberto Gagliardini",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 75
+        },
+        {
+          "name": "Antoine Bernede",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 77
+        },
+        {
+          "name": "Martin Frese",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 79
+        },
+        {
+          "name": "Tomás Suslov",
+          "line_index": 2,
+          "line_size": 1,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-5-1-1",
+          "position_id": 95
+        },
+        {
+          "name": "Kieron Bowie",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-1-1",
+          "position_id": 115
+        }
+      ],
+      "home_subs": [],
+      "away_subs": [],
+      "home_unavailable": [
+        "Juan Cabal",
+        "Arkadiusz Milik"
+      ],
+      "away_unavailable": [
+        "Cheikh Niasse",
+        "Daniel Oyegoke",
+        "Suat Serdar",
+        "Daniel Mosquera"
       ]
     },
     {
