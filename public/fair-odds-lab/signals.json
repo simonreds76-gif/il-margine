@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-30T22:45:43.125314Z",
+  "generated_at": "2026-04-30T23:37:59.164304Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -244,12 +244,12 @@
         "fair_odds": 6.39
       },
       "market_data": {
-        "best_odds": 13.0,
+        "best_odds": 12.0,
         "best_book": "Bet365",
-        "implied_chance_pct": 7.7
+        "implied_chance_pct": 8.3
       },
       "edge": {
-        "price_gap_pp": 8.0,
+        "price_gap_pp": 7.3,
         "model_advantage": true
       },
       "metrics": {
@@ -274,7 +274,7 @@
       },
       "confidence_tier": "Medium",
       "reasons": [
-        "Model scores Antonio Caracciolo at 15.7%, market implies 7.7%",
+        "Model scores Antonio Caracciolo at 15.7%, market implies 8.3%",
         "Takes 12% of Pisa's scoring chances",
         "Opponent defensive profile is a positive matchup",
         "Fixture profile adds a +23% goal-threat boost"
@@ -411,71 +411,6 @@
       "risk_flags": []
     },
     {
-      "id": "20260501-oliveira-tiago-gabriel-c12013e8aa",
-      "match": {
-        "home_team": "Pisa SC",
-        "away_team": "US Lecce",
-        "league": "serie-a",
-        "league_display": "Serie A",
-        "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-01",
-        "venue": ""
-      },
-      "player": {
-        "name": "Oliveira Tiago Gabriel",
-        "team": "Lecce",
-        "position": "DEF",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/serie-a/lecce.png",
-        "team_primary_color": "#facc15",
-        "team_secondary_color": "#dc2626",
-        "team_shirt_pattern": "vertical-stripes"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 14.2,
-        "fair_odds": 7.05
-      },
-      "market_data": {
-        "best_odds": 13.0,
-        "best_book": "Bet365",
-        "implied_chance_pct": 7.7
-      },
-      "edge": {
-        "price_gap_pp": 6.5,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 71
-        },
-        "share_of_team_chances_pct": 13,
-        "share_of_team_chances_percentile": 92,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 24
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 87
-        },
-        "fixture_boost_pct": 29,
-        "projected_minutes": 89,
-        "penalty_role": "Not on penalties",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores Oliveira Tiago Gabriel at 14.2%, market implies 7.7%",
-        "Takes 13% of Lecce's scoring chances",
-        "Opponent defensive profile is a positive matchup",
-        "Fixture profile adds a +29% goal-threat boost"
-      ],
-      "risk_flags": []
-    },
-    {
       "id": "20260501-zian-flemming-e9b2c2a51d",
       "match": {
         "home_team": "Leeds United",
@@ -537,6 +472,71 @@
         "Takes 30% of Burnley's scoring chances",
         "Recent chance quality grades as strong",
         "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260501-oliveira-tiago-gabriel-c12013e8aa",
+      "match": {
+        "home_team": "Pisa SC",
+        "away_team": "US Lecce",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-01",
+        "venue": ""
+      },
+      "player": {
+        "name": "Oliveira Tiago Gabriel",
+        "team": "Lecce",
+        "position": "DEF",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/lecce.png",
+        "team_primary_color": "#facc15",
+        "team_secondary_color": "#dc2626",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 14.2,
+        "fair_odds": 7.05
+      },
+      "market_data": {
+        "best_odds": 12.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 8.3
+      },
+      "edge": {
+        "price_gap_pp": 5.9,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 71
+        },
+        "share_of_team_chances_pct": 13,
+        "share_of_team_chances_percentile": 92,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 24
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 87
+        },
+        "fixture_boost_pct": 29,
+        "projected_minutes": 89,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Oliveira Tiago Gabriel at 14.2%, market implies 8.3%",
+        "Takes 13% of Lecce's scoring chances",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +29% goal-threat boost"
       ],
       "risk_flags": []
     },
@@ -2140,6 +2140,69 @@
       "risk_flags": []
     },
     {
+      "id": "20260502-oumar-solet-7d74f501ef",
+      "match": {
+        "home_team": "Udinese Calcio",
+        "away_team": "Torino FC",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-02",
+        "venue": ""
+      },
+      "player": {
+        "name": "Oumar Solet",
+        "team": "Udinese",
+        "position": "DEF",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/udinese.png",
+        "team_primary_color": "#0f172a",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 14.5,
+        "fair_odds": 6.89
+      },
+      "market_data": {
+        "best_odds": 7.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 13.3
+      },
+      "edge": {
+        "price_gap_pp": 1.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Limited",
+          "percentile": 34
+        },
+        "share_of_team_chances_pct": 7,
+        "share_of_team_chances_percentile": 81,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 33
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 39
+        },
+        "fixture_boost_pct": 9,
+        "projected_minutes": 81,
+        "penalty_role": "Secondary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Oumar Solet at 14.5%, market implies 13.3%",
+        "Takes 7% of Udinese's scoring chances"
+      ],
+      "risk_flags": []
+    },
+    {
       "id": "20260503-antonio-rudiger-fd59ba8eb7",
       "match": {
         "home_team": "Espanyol Barcelona",
@@ -2265,70 +2328,6 @@
         "Model scores Florian Wirtz at 24.2%, market implies 23.1%",
         "Takes 18% of Liverpool's scoring chances",
         "Recent chance quality grades as strong"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260503-mateo-pellegrino-e20ae13beb",
-      "match": {
-        "home_team": "Inter Milano",
-        "away_team": "Parma Calcio",
-        "league": "serie-a",
-        "league_display": "Serie A",
-        "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-03",
-        "venue": ""
-      },
-      "player": {
-        "name": "Mateo Pellegrino",
-        "team": "Parma Calcio 1913",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/serie-a/parma.png",
-        "team_primary_color": "#111827",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 21.1,
-        "fair_odds": 4.74
-      },
-      "market_data": {
-        "best_odds": 5.0,
-        "best_book": "Bet365",
-        "implied_chance_pct": 20.0
-      },
-      "edge": {
-        "price_gap_pp": 1.1,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 72
-        },
-        "share_of_team_chances_pct": 28,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 3
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Low",
-          "percentile": 7
-        },
-        "fixture_boost_pct": -32,
-        "projected_minutes": 79,
-        "penalty_role": "Primary",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores Mateo Pellegrino at 21.1%, market implies 20.0%",
-        "Takes 28% of Parma Calcio 1913's scoring chances",
-        "Primary penalty role adds a clear scoring route"
       ],
       "risk_flags": []
     }
