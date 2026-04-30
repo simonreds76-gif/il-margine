@@ -1,8 +1,6 @@
 name: Goalscorer Hot Live Poll
 
 on:
-  schedule:
-    - cron: "*/10 8-23 * * *"
   workflow_dispatch:
     inputs:
       reason:
@@ -63,12 +61,13 @@ jobs:
 
       - name: Upload goalscorer monitor snapshot
         env:
+          ENABLE_SUPABASE_SNAPSHOT_UPLOADS: ${{ vars.ENABLE_SUPABASE_SNAPSHOT_UPLOADS }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+          if [ "${ENABLE_SUPABASE_SNAPSHOT_UPLOADS:-0}" = "1" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
             python scripts/build-goalscorer-monitor-snapshot.py --supabase
           else
-            echo "SUPABASE_SERVICE_ROLE_KEY not configured; skipping monitor snapshot upload."
+            echo "::warning::Supabase snapshot upload disabled or key missing; skipping monitor snapshot upload."
           fi
 
       - name: Commit and push if new data

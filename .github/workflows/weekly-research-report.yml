@@ -62,17 +62,18 @@ jobs:
 
       - name: Upload hosted monitor snapshots
         env:
+          ENABLE_SUPABASE_SNAPSHOT_UPLOADS: ${{ vars.ENABLE_SUPABASE_SNAPSHOT_UPLOADS }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           python scripts/team-shots-live-snapshot.py
           python scripts/corners-live-snapshot.py
-          if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+          if [ "${ENABLE_SUPABASE_SNAPSHOT_UPLOADS:-0}" = "1" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
             export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://nuqcgzbagxtbxlqrhtvc.supabase.co}"
             python scripts/team-shots-live-snapshot.py --supabase
             python scripts/corners-live-snapshot.py --supabase
           else
-            echo "::warning::SUPABASE_SERVICE_ROLE_KEY not configured; hosted monitor snapshot upload skipped."
+            echo "::warning::Supabase snapshot upload disabled or key missing; hosted monitor snapshot upload skipped."
           fi
 
       - name: Upload report artifact

@@ -62,14 +62,15 @@ jobs:
 
       - name: Upload team-shots hosted snapshot
         env:
+          ENABLE_SUPABASE_SNAPSHOT_UPLOADS: ${{ vars.ENABLE_SUPABASE_SNAPSHOT_UPLOADS }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+          if [ "${ENABLE_SUPABASE_SNAPSHOT_UPLOADS:-0}" = "1" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
             export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://nuqcgzbagxtbxlqrhtvc.supabase.co}"
             python scripts/team-shots-live-snapshot.py --supabase
           else
-            echo "::warning::SUPABASE_SERVICE_ROLE_KEY not configured; team-shots hosted snapshot upload skipped."
+            echo "::warning::Supabase snapshot upload disabled or key missing; team-shots hosted snapshot upload skipped."
           fi
 
       - name: Commit and push if new data
