@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-30T15:14:56Z",
+  "generated_at": "2026-04-30T15:20:50Z",
   "source_status": {
-    "compared_at": "2026-04-30T15:14:51Z",
-    "hot_live_updated_at": "2026-04-30T13:11:01Z",
-    "expected_refresh_updated_at": "2026-04-30T15:14:51Z",
-    "settlement_updated_at": "2026-04-30T13:09:55Z",
-    "scheduler_heartbeat_at": "2026-04-30T13:11:01Z",
-    "snapshot_generated_at": "2026-04-30T15:14:56Z",
-    "live_status_state": "skipped",
-    "live_status_message": "Goalscorer live poll skipped: no leagues due in current cadence window."
+    "compared_at": "2026-04-30T15:20:29Z",
+    "hot_live_updated_at": "2026-04-30T15:20:50Z",
+    "expected_refresh_updated_at": "2026-04-30T15:20:29Z",
+    "settlement_updated_at": "2026-04-30T15:20:49Z",
+    "scheduler_heartbeat_at": "2026-04-30T15:20:50Z",
+    "snapshot_generated_at": "2026-04-30T15:20:50Z",
+    "live_status_state": "idle",
+    "live_status_message": "Goalscorer live poll finished (5 league(s) ran)."
   },
   "league_cards": [
     {
@@ -18,7 +18,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-30T15:12:18Z",
+      "updated_at": "2026-04-30T15:16:53Z",
       "live_rows": 259,
       "public_now": 0,
       "shadow_now": 6,
@@ -49,7 +49,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-30T15:12:57Z",
+      "updated_at": "2026-04-30T15:17:48Z",
       "live_rows": 255,
       "public_now": 0,
       "shadow_now": 10,
@@ -80,7 +80,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-30T15:13:38Z",
+      "updated_at": "2026-04-30T15:18:44Z",
       "live_rows": 220,
       "public_now": 0,
       "shadow_now": 1,
@@ -111,7 +111,7 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-30T15:14:17Z",
+      "updated_at": "2026-04-30T15:19:39Z",
       "live_rows": 286,
       "public_now": 0,
       "shadow_now": 9,
@@ -142,12 +142,12 @@
       "status_key": "live_file",
       "status_label": "live file",
       "status_detail": null,
-      "updated_at": "2026-04-30T15:14:55Z",
-      "live_rows": 83,
+      "updated_at": "2026-04-30T15:20:35Z",
+      "live_rows": 189,
       "public_now": 0,
       "shadow_now": 2,
       "clean_fixtures": 0,
-      "degraded_fixtures": 5,
+      "degraded_fixtures": 8,
       "quarantined_fixtures": 0,
       "public_record": {
         "settled": 3,
@@ -1333,6 +1333,42 @@
         "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
       },
       {
+        "key": "ligue-1|2026-05-03|auxerre|angers",
+        "league_key": "ligue-1",
+        "league_label": "Ligue 1",
+        "match_date": "2026-05-03",
+        "home_team": "AJ Auxerre",
+        "away_team": "Angers SCO",
+        "competition": "France - Ligue 1",
+        "bookmaker": "Bet365",
+        "lineup_input": "none",
+        "trust_tier": "T2",
+        "corruption_score": 1.0,
+        "corruption_flags": [
+          "no_lineup_payload"
+        ],
+        "status_label": "Awaiting Lineup",
+        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+      },
+      {
+        "key": "ligue-1|2026-05-03|paris fc|brest",
+        "league_key": "ligue-1",
+        "league_label": "Ligue 1",
+        "match_date": "2026-05-03",
+        "home_team": "Paris FC",
+        "away_team": "Stade Brest 29",
+        "competition": "France - Ligue 1",
+        "bookmaker": "Bet365",
+        "lineup_input": "none",
+        "trust_tier": "T2",
+        "corruption_score": 1.0,
+        "corruption_flags": [
+          "no_lineup_payload"
+        ],
+        "status_label": "Awaiting Lineup",
+        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+      },
+      {
         "key": "ligue-1|2026-05-03|lille osc|le havre ac",
         "league_key": "ligue-1",
         "league_label": "Ligue 1",
@@ -1349,12 +1385,30 @@
         ],
         "status_label": "Awaiting Lineup",
         "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+      },
+      {
+        "key": "ligue-1|2026-05-03|strasbourg alsace|toulouse",
+        "league_key": "ligue-1",
+        "league_label": "Ligue 1",
+        "match_date": "2026-05-03",
+        "home_team": "Strasbourg Alsace",
+        "away_team": "Toulouse FC",
+        "competition": "France - Ligue 1",
+        "bookmaker": "Bet365",
+        "lineup_input": "none",
+        "trust_tier": "T2",
+        "corruption_score": 1.0,
+        "corruption_flags": [
+          "no_lineup_payload"
+        ],
+        "status_label": "Awaiting Lineup",
+        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
       }
     ],
     "clean_count": 0,
-    "degraded_count": 32,
+    "degraded_count": 35,
     "quarantined_count": 0,
-    "hidden_pending_count": 11,
+    "hidden_pending_count": 14,
     "hidden_expected_count": 21,
     "flagged_rows": []
   },
@@ -8701,10 +8755,175 @@
         "unplaced": []
       },
       "has_any_lineup": true
+    },
+    {
+      "key": "2026-05-03|Bet365|AJ Auxerre|Angers SCO",
+      "league_key": "ligue-1",
+      "league_label": "Ligue 1",
+      "competition": "France - Ligue 1",
+      "match_date": "2026-05-03",
+      "kickoff": "2026-05-03",
+      "bookmaker": "Bet365",
+      "home_team": "AJ Auxerre",
+      "away_team": "Angers SCO",
+      "matched_player_prices": 43,
+      "health": {
+        "key": "ligue-1|2026-05-03|auxerre|angers",
+        "league_key": "ligue-1",
+        "league_label": "Ligue 1",
+        "match_date": "2026-05-03",
+        "home_team": "AJ Auxerre",
+        "away_team": "Angers SCO",
+        "competition": "France - Ligue 1",
+        "bookmaker": "Bet365",
+        "lineup_input": "none",
+        "trust_tier": "T2",
+        "corruption_score": 1.0,
+        "corruption_flags": [
+          "no_lineup_payload"
+        ],
+        "status_label": "Awaiting Lineup",
+        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+      },
+      "home": {
+        "team": "AJ Auxerre",
+        "lineup_status": "",
+        "total_players": 0,
+        "matched_players": 0,
+        "keeper": null,
+        "attackers": [],
+        "midfielders": [],
+        "wide_players": [],
+        "centre_backs": [],
+        "unplaced": []
+      },
+      "away": {
+        "team": "Angers SCO",
+        "lineup_status": "",
+        "total_players": 0,
+        "matched_players": 0,
+        "keeper": null,
+        "attackers": [],
+        "midfielders": [],
+        "wide_players": [],
+        "centre_backs": [],
+        "unplaced": []
+      },
+      "has_any_lineup": false
+    },
+    {
+      "key": "2026-05-03|Bet365|Paris FC|Stade Brest 29",
+      "league_key": "ligue-1",
+      "league_label": "Ligue 1",
+      "competition": "France - Ligue 1",
+      "match_date": "2026-05-03",
+      "kickoff": "2026-05-03",
+      "bookmaker": "Bet365",
+      "home_team": "Paris FC",
+      "away_team": "Stade Brest 29",
+      "matched_player_prices": 43,
+      "health": {
+        "key": "ligue-1|2026-05-03|paris fc|brest",
+        "league_key": "ligue-1",
+        "league_label": "Ligue 1",
+        "match_date": "2026-05-03",
+        "home_team": "Paris FC",
+        "away_team": "Stade Brest 29",
+        "competition": "France - Ligue 1",
+        "bookmaker": "Bet365",
+        "lineup_input": "none",
+        "trust_tier": "T2",
+        "corruption_score": 1.0,
+        "corruption_flags": [
+          "no_lineup_payload"
+        ],
+        "status_label": "Awaiting Lineup",
+        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+      },
+      "home": {
+        "team": "Paris FC",
+        "lineup_status": "",
+        "total_players": 0,
+        "matched_players": 0,
+        "keeper": null,
+        "attackers": [],
+        "midfielders": [],
+        "wide_players": [],
+        "centre_backs": [],
+        "unplaced": []
+      },
+      "away": {
+        "team": "Stade Brest 29",
+        "lineup_status": "",
+        "total_players": 0,
+        "matched_players": 0,
+        "keeper": null,
+        "attackers": [],
+        "midfielders": [],
+        "wide_players": [],
+        "centre_backs": [],
+        "unplaced": []
+      },
+      "has_any_lineup": false
+    },
+    {
+      "key": "2026-05-03|Bet365|Strasbourg Alsace|Toulouse FC",
+      "league_key": "ligue-1",
+      "league_label": "Ligue 1",
+      "competition": "France - Ligue 1",
+      "match_date": "2026-05-03",
+      "kickoff": "2026-05-03",
+      "bookmaker": "Bet365",
+      "home_team": "Strasbourg Alsace",
+      "away_team": "Toulouse FC",
+      "matched_player_prices": 20,
+      "health": {
+        "key": "ligue-1|2026-05-03|strasbourg alsace|toulouse",
+        "league_key": "ligue-1",
+        "league_label": "Ligue 1",
+        "match_date": "2026-05-03",
+        "home_team": "Strasbourg Alsace",
+        "away_team": "Toulouse FC",
+        "competition": "France - Ligue 1",
+        "bookmaker": "Bet365",
+        "lineup_input": "none",
+        "trust_tier": "T2",
+        "corruption_score": 1.0,
+        "corruption_flags": [
+          "no_lineup_payload"
+        ],
+        "status_label": "Awaiting Lineup",
+        "summary": "No FotMob lineup payload yet. This fixture stays soft until a real expected or confirmed XI lands."
+      },
+      "home": {
+        "team": "Strasbourg Alsace",
+        "lineup_status": "",
+        "total_players": 0,
+        "matched_players": 0,
+        "keeper": null,
+        "attackers": [],
+        "midfielders": [],
+        "wide_players": [],
+        "centre_backs": [],
+        "unplaced": []
+      },
+      "away": {
+        "team": "Toulouse FC",
+        "lineup_status": "",
+        "total_players": 0,
+        "matched_players": 0,
+        "keeper": null,
+        "attackers": [],
+        "midfielders": [],
+        "wide_players": [],
+        "centre_backs": [],
+        "unplaced": []
+      },
+      "has_any_lineup": false
     }
   ],
   "penalty_watchlist": {
-    "generated_at": "2026-04-30T13:09:55Z",
+    "generated_at": "2026-04-30T15:20:49Z",
     "row_count": 32,
     "rows": [
       {
@@ -9367,7 +9586,7 @@
         "inherited_from_pre_match": "",
         "transfer_level_pre_match": "",
         "editorial_note": "Patrik Schick took 1 penalty attempt and scored for Bayer Leverkusen vs 1. FC Kln. Primary pre-match: Patrik Schick (unknown). Secondary pre-match: Álex Grimaldo (unknown). Needs manual editorial review.",
-        "context_generated_at": "2026-04-30T13:08:12Z",
+        "context_generated_at": "2026-04-30T15:19:29Z",
         "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json",
         "primary_on_pitch_at_penalty": "Yes, starter",
         "active_on_pitch_at_penalty": "Yes, starter",
@@ -11011,21 +11230,21 @@
     ]
   },
   "diagnostics": {
-    "matched_rows": 1103,
+    "matched_rows": 1209,
     "suppressed_rows": 0,
     "fixtures_with_confirmed_lineups": 0,
     "fixtures_with_expected_xis": 0,
-    "history_mapped_rows": 1008,
-    "roster_mapped_rows": 95,
-    "fallback_rows": 657,
-    "low_confidence_rows": 258,
-    "missing_player_history_rows": 1274,
+    "history_mapped_rows": 1104,
+    "roster_mapped_rows": 105,
+    "fallback_rows": 668,
+    "low_confidence_rows": 280,
+    "missing_player_history_rows": 1279,
     "starter_rows": 0,
     "expected_starter_rows": 418,
-    "avg_ev_pct": -66.95021958295558,
+    "avg_ev_pct": -67.2084071960298,
     "source_feed_gap_leagues": [],
-    "raw_monitor_summary": "=== Serie A | Updated 30/04/2026, 16:12 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-30T15:12:09Z\n\nHistorical Rows          30,016\nOdds Rows                1,777\nMatched Rows             1,602\nMissing Player History   172\nMissing Team Mapping     3\nFallback Rows            123\nQualified Rows           46\nRoster Resolved Rows     148\nHigh Confidence Rows     0\nMedium Confidence Rows   1,293\nLow Confidence Rows      309\nPublic High Signals      0\nPublic Caveat Signals    39\nShadow Track Rows        6\nPenalty Transfer Rows    2\nPosition Upgrade Rows    2\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 6\nFixtures Clean           0\nFixtures Degraded        36\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    119\nExpected Bench Rows      0\nExpected Out Rows        26\nNot In Squad Rows        0\n\nAverage EV               -0.6927\n\n\n=== Premier League | Updated 30/04/2026, 16:12 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-30T15:12:49Z\n\nHistorical Rows          29,611\nOdds Rows                1,680\nMatched Rows             1,411\nMissing Player History   193\nMissing Team Mapping     76\nFallback Rows            144\nQualified Rows           78\nRoster Resolved Rows     122\nHigh Confidence Rows     0\nMedium Confidence Rows   1,164\nLow Confidence Rows      247\nPublic High Signals      0\nPublic Caveat Signals    71\nShadow Track Rows        10\nPenalty Transfer Rows    2\nPosition Upgrade Rows    1\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 6\nFixtures Clean           0\nFixtures Degraded        37\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    119\nExpected Bench Rows      0\nExpected Out Rows        12\nNot In Squad Rows        0\n\nAverage EV               -0.6289\n\n\n=== La Liga | Updated 30/04/2026, 16:13 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-30T15:13:30Z\n\nHistorical Rows          30,783\nOdds Rows                2,032\nMatched Rows             1,276\nMissing Player History   359\nMissing Team Mapping     397\nFallback Rows            170\nQualified Rows           34\nRoster Resolved Rows     153\nHigh Confidence Rows     0\nMedium Confidence Rows   976\nLow Confidence Rows      300\nPublic High Signals      0\nPublic Caveat Signals    31\nShadow Track Rows        1\nPenalty Transfer Rows    2\nPosition Upgrade Rows    1\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 2\nFixtures Clean           0\nFixtures Degraded        37\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    41\nExpected Bench Rows      0\nExpected Out Rows        9\nNot In Squad Rows        0\n\nAverage EV               -0.7138\n\n\n=== Bundesliga | Updated 30/04/2026, 16:14 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-30T15:14:09Z\n\nHistorical Rows          24,784\nOdds Rows                1,689\nMatched Rows             1,459\nMissing Player History   147\nMissing Team Mapping     83\nFallback Rows            141\nQualified Rows           45\nRoster Resolved Rows     132\nHigh Confidence Rows     0\nMedium Confidence Rows   1,171\nLow Confidence Rows      288\nPublic High Signals      0\nPublic Caveat Signals    39\nShadow Track Rows        9\nPenalty Transfer Rows    5\nPosition Upgrade Rows    1\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 5\nFixtures Clean           0\nFixtures Degraded        34\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    99\nExpected Bench Rows      0\nExpected Out Rows        30\nNot In Squad Rows        0\n\nAverage EV               -0.6856\n\n\n=== Ligue 1 | Updated 30/04/2026, 16:14 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-30T15:14:48Z\n\nHistorical Rows          24,255\nOdds Rows                1,707\nMatched Rows             677\nMissing Player History   403\nMissing Team Mapping     627\nFallback Rows            79\nQualified Rows           16\nRoster Resolved Rows     63\nHigh Confidence Rows     0\nMedium Confidence Rows   530\nLow Confidence Rows      147\nPublic High Signals      0\nPublic Caveat Signals    13\nShadow Track Rows        2\nPenalty Transfer Rows    2\nPosition Upgrade Rows    0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 2\nFixtures Clean           0\nFixtures Degraded        31\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    40\nExpected Bench Rows      0\nExpected Out Rows        8\nNot In Squad Rows        0\n\nAverage EV               -0.7198\n"
+    "raw_monitor_summary": "=== Serie A | Updated 30/04/2026, 16:16 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-30T15:16:43Z\n\nHistorical Rows          30,016\nOdds Rows                1,777\nMatched Rows             1,602\nMissing Player History   172\nMissing Team Mapping     3\nFallback Rows            123\nQualified Rows           46\nRoster Resolved Rows     148\nHigh Confidence Rows     0\nMedium Confidence Rows   1,293\nLow Confidence Rows      309\nPublic High Signals      0\nPublic Caveat Signals    39\nShadow Track Rows        6\nPenalty Transfer Rows    2\nPosition Upgrade Rows    2\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 6\nFixtures Clean           0\nFixtures Degraded        36\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    119\nExpected Bench Rows      0\nExpected Out Rows        26\nNot In Squad Rows        0\n\nAverage EV               -0.6927\n\n\n=== Premier League | Updated 30/04/2026, 16:17 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-30T15:17:38Z\n\nHistorical Rows          29,611\nOdds Rows                1,680\nMatched Rows             1,411\nMissing Player History   193\nMissing Team Mapping     76\nFallback Rows            144\nQualified Rows           78\nRoster Resolved Rows     122\nHigh Confidence Rows     0\nMedium Confidence Rows   1,164\nLow Confidence Rows      247\nPublic High Signals      0\nPublic Caveat Signals    71\nShadow Track Rows        10\nPenalty Transfer Rows    2\nPosition Upgrade Rows    1\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 6\nFixtures Clean           0\nFixtures Degraded        37\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    119\nExpected Bench Rows      0\nExpected Out Rows        12\nNot In Squad Rows        0\n\nAverage EV               -0.6289\n\n\n=== La Liga | Updated 30/04/2026, 16:18 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-30T15:18:34Z\n\nHistorical Rows          30,783\nOdds Rows                2,032\nMatched Rows             1,276\nMissing Player History   359\nMissing Team Mapping     397\nFallback Rows            170\nQualified Rows           34\nRoster Resolved Rows     153\nHigh Confidence Rows     0\nMedium Confidence Rows   976\nLow Confidence Rows      300\nPublic High Signals      0\nPublic Caveat Signals    31\nShadow Track Rows        1\nPenalty Transfer Rows    2\nPosition Upgrade Rows    1\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 2\nFixtures Clean           0\nFixtures Degraded        37\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    41\nExpected Bench Rows      0\nExpected Out Rows        9\nNot In Squad Rows        0\n\nAverage EV               -0.7138\n\n\n=== Bundesliga | Updated 30/04/2026, 16:19 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-30T15:19:29Z\n\nHistorical Rows          24,784\nOdds Rows                1,689\nMatched Rows             1,459\nMissing Player History   147\nMissing Team Mapping     83\nFallback Rows            141\nQualified Rows           45\nRoster Resolved Rows     132\nHigh Confidence Rows     0\nMedium Confidence Rows   1,171\nLow Confidence Rows      288\nPublic High Signals      0\nPublic Caveat Signals    39\nShadow Track Rows        9\nPenalty Transfer Rows    5\nPosition Upgrade Rows    1\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 5\nFixtures Clean           0\nFixtures Degraded        34\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    99\nExpected Bench Rows      0\nExpected Out Rows        30\nNot In Squad Rows        0\n\nAverage EV               -0.6856\n\n\n=== Ligue 1 | Updated 30/04/2026, 16:20 ===\nGoalscorer Live Comparison\n==========================\n\nCompared At             2026-04-30T15:20:25Z\n\nHistorical Rows          24,255\nOdds Rows                1,834\nMatched Rows             783\nMissing Player History   408\nMissing Team Mapping     643\nFallback Rows            90\nQualified Rows           21\nRoster Resolved Rows     73\nHigh Confidence Rows     0\nMedium Confidence Rows   614\nLow Confidence Rows      169\nPublic High Signals      0\nPublic Caveat Signals    18\nShadow Track Rows        2\nPenalty Transfer Rows    2\nPosition Upgrade Rows    0\nFixtures With Confirmed Lineups 0\nFixtures With Expected Lineups 2\nFixtures Clean           0\nFixtures Degraded        34\nFixtures Quarantined     0\nConfirmed Starter Rows   0\nConfirmed Bench Rows     0\nExpected Starter Rows    40\nExpected Bench Rows      0\nExpected Out Rows        8\nNot In Squad Rows        0\n\nAverage EV               -0.7169\n"
   },
   "snapshot_key": "monitor_state",
-  "payload_hash": "2413ff32c43bb1fc15864d5b36d03e37c07b9be1c0772af23b099a751be34c02"
+  "payload_hash": "a39b6026cd2729a09a214d8f9856a8541777982bd5be84e0f519fad8918c964e"
 }
