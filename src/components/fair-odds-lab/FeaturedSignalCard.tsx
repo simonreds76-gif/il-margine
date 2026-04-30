@@ -356,6 +356,7 @@ export function FeaturedSignalCard({
                   teamLogoPath={signal.teamLogoPath}
                   teamPrimaryColor={signal.teamPrimaryColor}
                   teamSecondaryColor={signal.teamSecondaryColor}
+                  shirtPattern={signal.teamShirtPattern}
                 />
               </div>
               <div className="mt-3 flex flex-wrap justify-center gap-2">
@@ -364,7 +365,7 @@ export function FeaturedSignalCard({
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-300/30 bg-emerald-400/18 px-2.5 py-1 text-xs font-semibold text-emerald-100 shadow-[0_0_18px_rgba(52,211,153,0.08)]">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
-                  {signal.confidence} confidence
+                  Value signal
                 </span>
               </div>
               <h2 className="mt-4 break-words text-3xl font-black leading-tight tracking-tight text-slate-50 sm:text-4xl">

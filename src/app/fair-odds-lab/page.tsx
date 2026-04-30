@@ -2,6 +2,7 @@
 import path from "node:path";
 import type { Metadata } from "next";
 
+import teamLogoManifest from "../../../data/goalscorer/team-logo-map.json";
 import { FairOddsSignalBrowser } from "@/components/fair-odds-lab/FairOddsSignalBrowser";
 import { sampleSignals } from "@/components/fair-odds-lab/__fixtures__/sample-signals";
 import type { LabArtifact, Signal } from "@/components/fair-odds-lab/types";
@@ -44,6 +45,127 @@ function normalizeConfidence(value: unknown): Signal["confidence"] {
 function normalizeMetricTier(value: unknown, fallback = "Unknown") {
   if (typeof value === "string" && value.trim()) return value.trim();
   return fallback;
+}
+
+type TeamLogoRow = {
+  logo_path?: string;
+  team_key?: string;
+};
+
+type LogoManifest = {
+  leagues?: Record<
+    string,
+    {
+      teams?: Record<string, TeamLogoRow>;
+    }
+  >;
+};
+
+const LOGO_MANIFEST = teamLogoManifest as LogoManifest;
+
+const TEAM_NAME_ALIASES: Record<string, string> = {
+  "rb leipzig": "rasenballsport leipzig",
+  "fc cologne": "cologne",
+  "1 fc koln": "cologne",
+  "fc koln": "cologne",
+  "1 fc cologne": "cologne",
+  "tottenham hotspur": "tottenham",
+  "west ham united": "west ham",
+  wolves: "wolverhampton wanderers",
+  wolverhampton: "wolverhampton wanderers",
+  "brighton and hove albion": "brighton",
+  "brighton hove albion": "brighton",
+  "afc bournemouth": "bournemouth",
+  "borussia monchengladbach": "borussia m gladbach",
+  "as roma": "roma",
+  "acf fiorentina": "fiorentina",
+  "inter milan": "inter",
+  "inter milano": "inter",
+  internazionale: "inter",
+  "athletic bilbao": "athletic club",
+  "real sociedad": "sociedad",
+  "real sociedad san sebastian": "sociedad",
+  "as monaco": "monaco",
+  "rc lens": "lens",
+};
+
+const TEAM_STYLE_OVERRIDES: Record<string, { primary: string; secondary: string; pattern: Signal["teamShirtPattern"] }> = {
+  "arsenal": { primary: "#b91c1c", secondary: "#f8fafc", pattern: "sash" },
+  "aston villa": { primary: "#7f1d1d", secondary: "#38bdf8", pattern: "solid" },
+  "bournemouth": { primary: "#dc2626", secondary: "#111827", pattern: "vertical-stripes" },
+  "brentford": { primary: "#f8fafc", secondary: "#dc2626", pattern: "vertical-stripes" },
+  "brighton": { primary: "#2563eb", secondary: "#f8fafc", pattern: "vertical-stripes" },
+  "burnley": { primary: "#7f1d1d", secondary: "#38bdf8", pattern: "solid" },
+  "chelsea": { primary: "#1d4ed8", secondary: "#f8fafc", pattern: "solid" },
+  "crystal palace": { primary: "#1d4ed8", secondary: "#dc2626", pattern: "vertical-stripes" },
+  "everton": { primary: "#1d4ed8", secondary: "#f8fafc", pattern: "solid" },
+  "liverpool": { primary: "#dc2626", secondary: "#f8fafc", pattern: "solid" },
+  "manchester city": { primary: "#7dd3fc", secondary: "#f8fafc", pattern: "solid" },
+  "manchester united": { primary: "#dc2626", secondary: "#111827", pattern: "solid" },
+  "newcastle united": { primary: "#f8fafc", secondary: "#111827", pattern: "vertical-stripes" },
+  "tottenham": { primary: "#f8fafc", secondary: "#1e3a8a", pattern: "solid" },
+  "west ham": { primary: "#7f1d1d", secondary: "#38bdf8", pattern: "solid" },
+  "wolverhampton wanderers": { primary: "#f59e0b", secondary: "#111827", pattern: "solid" },
+  "bayer leverkusen": { primary: "#111827", secondary: "#dc2626", pattern: "vertical-stripes" },
+  "rasenballsport leipzig": { primary: "#f8fafc", secondary: "#dc2626", pattern: "sash" },
+  "cologne": { primary: "#f8fafc", secondary: "#dc2626", pattern: "solid" },
+  "borussia dortmund": { primary: "#facc15", secondary: "#111827", pattern: "solid" },
+  "union berlin": { primary: "#b91c1c", secondary: "#facc15", pattern: "solid" },
+  "bayern munich": { primary: "#dc2626", secondary: "#f8fafc", pattern: "solid" },
+  "pisa": { primary: "#0f172a", secondary: "#1d4ed8", pattern: "halves" },
+  "lecce": { primary: "#facc15", secondary: "#dc2626", pattern: "vertical-stripes" },
+  "napoli": { primary: "#0ea5e9", secondary: "#f8fafc", pattern: "solid" },
+  "como": { primary: "#1d4ed8", secondary: "#f8fafc", pattern: "solid" },
+  "juventus": { primary: "#f8fafc", secondary: "#111827", pattern: "vertical-stripes" },
+  "inter": { primary: "#1d4ed8", secondary: "#111827", pattern: "vertical-stripes" },
+  "milan": { primary: "#dc2626", secondary: "#111827", pattern: "vertical-stripes" },
+  "roma": { primary: "#7f1d1d", secondary: "#f59e0b", pattern: "solid" },
+  "lazio": { primary: "#7dd3fc", secondary: "#f8fafc", pattern: "solid" },
+  "fiorentina": { primary: "#7e22ce", secondary: "#f8fafc", pattern: "solid" },
+  "atalanta": { primary: "#1d4ed8", secondary: "#111827", pattern: "vertical-stripes" },
+  "barcelona": { primary: "#1e3a8a", secondary: "#b91c1c", pattern: "vertical-stripes" },
+  "real madrid": { primary: "#f8fafc", secondary: "#facc15", pattern: "solid" },
+  "atletico madrid": { primary: "#f8fafc", secondary: "#dc2626", pattern: "vertical-stripes" },
+  "sociedad": { primary: "#f8fafc", secondary: "#2563eb", pattern: "vertical-stripes" },
+  "athletic club": { primary: "#f8fafc", secondary: "#dc2626", pattern: "vertical-stripes" },
+  "monaco": { primary: "#f8fafc", secondary: "#dc2626", pattern: "sash" },
+  "psg": { primary: "#1e3a8a", secondary: "#dc2626", pattern: "solid" },
+  "marseille": { primary: "#f8fafc", secondary: "#0ea5e9", pattern: "solid" },
+  "lyon": { primary: "#f8fafc", secondary: "#dc2626", pattern: "sash" },
+  "lille": { primary: "#dc2626", secondary: "#1e3a8a", pattern: "solid" },
+  "lens": { primary: "#dc2626", secondary: "#facc15", pattern: "vertical-stripes" },
+};
+
+function normalizeTeamKey(value: unknown): string {
+  const normalized = asText(value)
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&/g, " and ")
+    .replace(/[^a-zA-Z0-9]+/g, " ")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+  const aliased = TEAM_NAME_ALIASES[normalized] ?? normalized;
+  const simplified = aliased
+    .replace(/\b(?:ac|afc|as|bc|ca|cf|cfc|fc|rc|rcd|sc|ssc|us)\b/g, " ")
+    .replace(/\bcalcio\b/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return TEAM_NAME_ALIASES[simplified] ?? simplified;
+}
+
+function resolveTeamLogoPath(leagueSlug: string, team: string): string {
+  const teams = LOGO_MANIFEST.leagues?.[leagueSlug]?.teams ?? {};
+  if (teams[team]?.logo_path) return asText(teams[team].logo_path);
+  const target = normalizeTeamKey(team);
+  const matched = Object.entries(teams).find(([name, row]) => {
+    return normalizeTeamKey(name) === target || normalizeTeamKey(row.team_key) === target;
+  });
+  return matched?.[1].logo_path ? asText(matched[1].logo_path) : "";
+}
+
+function resolveTeamStyle(team: string) {
+  return TEAM_STYLE_OVERRIDES[normalizeTeamKey(team)] ?? null;
 }
 
 function mapArtifactSignal(rawValue: unknown): Signal | null {
@@ -89,6 +211,12 @@ function mapArtifactSignal(rawValue: unknown): Signal | null {
   const match = homeTeam && awayTeam ? `${homeTeam} vs ${awayTeam}` : asText(matchData.label, "Unknown match");
   const rawPlayerNumber = asText(player.jersey_number, asText(player.shirt_number, asText(player.jersey_label)));
   const playerNumber = /^\d{1,2}$/.test(rawPlayerNumber) ? rawPlayerNumber : undefined;
+  const teamName = asText(player.team, "Unknown team");
+  const teamStyle = resolveTeamStyle(teamName);
+  const rawPattern = asText(player.team_shirt_pattern);
+  const artifactPattern = ["solid", "vertical-stripes", "halves", "sash"].includes(rawPattern)
+    ? (rawPattern as Signal["teamShirtPattern"])
+    : undefined;
 
   return {
     id: asText(raw.id, `${playerName}-${match}`),
@@ -99,13 +227,14 @@ function mapArtifactSignal(rawValue: unknown): Signal | null {
     kickoffUtc: asText(matchData.kickoff_utc),
     venue: asText(matchData.venue, "Venue TBC"),
     player: playerName,
-    team: asText(player.team, "Unknown team"),
+    team: teamName,
     position: asText(player.position, "FW"),
     playerNumber,
-    teamLogoPath: asText(player.team_logo_path),
+    teamLogoPath: asText(player.team_logo_path) || resolveTeamLogoPath(leagueSlug, teamName),
     leagueLogoPath: asText(matchData.league_logo_path, leagueSlug ? `/league-logos/${leagueSlug}.png` : ""),
-    teamPrimaryColor: asText(player.team_primary_color, "#1d4ed8"),
-    teamSecondaryColor: asText(player.team_secondary_color, "#0f172a"),
+    teamPrimaryColor: teamStyle?.primary ?? asText(player.team_primary_color, "#1d4ed8"),
+    teamSecondaryColor: teamStyle?.secondary ?? asText(player.team_secondary_color, "#0f172a"),
+    teamShirtPattern: teamStyle?.pattern ?? artifactPattern,
     market: asText(raw.market, "Anytime goalscorer"),
     fairOdds,
     bestBookOdds,

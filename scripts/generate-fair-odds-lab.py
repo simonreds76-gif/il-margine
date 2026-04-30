@@ -53,6 +53,61 @@ TEAM_COLOR_PALETTE = [
     ("#581c87", "#f97316"),
 ]
 
+TEAM_STYLE_OVERRIDES = {
+    "arsenal": ("#b91c1c", "#f8fafc", "sash"),
+    "aston villa": ("#7f1d1d", "#38bdf8", "solid"),
+    "bournemouth": ("#dc2626", "#111827", "vertical-stripes"),
+    "brentford": ("#f8fafc", "#dc2626", "vertical-stripes"),
+    "brighton": ("#2563eb", "#f8fafc", "vertical-stripes"),
+    "burnley": ("#7f1d1d", "#38bdf8", "solid"),
+    "chelsea": ("#1d4ed8", "#f8fafc", "solid"),
+    "crystal palace": ("#1d4ed8", "#dc2626", "vertical-stripes"),
+    "everton": ("#1d4ed8", "#f8fafc", "solid"),
+    "fulham": ("#f8fafc", "#111827", "solid"),
+    "leeds": ("#f8fafc", "#facc15", "solid"),
+    "liverpool": ("#dc2626", "#f8fafc", "solid"),
+    "manchester city": ("#7dd3fc", "#f8fafc", "solid"),
+    "manchester united": ("#dc2626", "#111827", "solid"),
+    "newcastle united": ("#f8fafc", "#111827", "vertical-stripes"),
+    "tottenham": ("#f8fafc", "#1e3a8a", "solid"),
+    "west ham": ("#7f1d1d", "#38bdf8", "solid"),
+    "wolverhampton wanderers": ("#f59e0b", "#111827", "solid"),
+    "bayer leverkusen": ("#111827", "#dc2626", "vertical-stripes"),
+    "rasenballsport leipzig": ("#f8fafc", "#dc2626", "sash"),
+    "cologne": ("#f8fafc", "#dc2626", "solid"),
+    "borussia dortmund": ("#facc15", "#111827", "solid"),
+    "union berlin": ("#b91c1c", "#facc15", "solid"),
+    "bayern munich": ("#dc2626", "#f8fafc", "solid"),
+    "eintracht frankfurt": ("#111827", "#f8fafc", "vertical-stripes"),
+    "hoffenheim": ("#1d4ed8", "#f8fafc", "solid"),
+    "mainz 05": ("#dc2626", "#f8fafc", "solid"),
+    "wolfsburg": ("#16a34a", "#f8fafc", "solid"),
+    "pisa": ("#0f172a", "#1d4ed8", "halves"),
+    "lecce": ("#facc15", "#dc2626", "vertical-stripes"),
+    "napoli": ("#0ea5e9", "#f8fafc", "solid"),
+    "como": ("#1d4ed8", "#f8fafc", "solid"),
+    "juventus": ("#f8fafc", "#111827", "vertical-stripes"),
+    "inter": ("#1d4ed8", "#111827", "vertical-stripes"),
+    "milan": ("#dc2626", "#111827", "vertical-stripes"),
+    "roma": ("#7f1d1d", "#f59e0b", "solid"),
+    "lazio": ("#7dd3fc", "#f8fafc", "solid"),
+    "fiorentina": ("#7e22ce", "#f8fafc", "solid"),
+    "atalanta": ("#1d4ed8", "#111827", "vertical-stripes"),
+    "barcelona": ("#1e3a8a", "#b91c1c", "vertical-stripes"),
+    "real madrid": ("#f8fafc", "#facc15", "solid"),
+    "atletico madrid": ("#f8fafc", "#dc2626", "vertical-stripes"),
+    "sociedad": ("#f8fafc", "#2563eb", "vertical-stripes"),
+    "athletic club": ("#f8fafc", "#dc2626", "vertical-stripes"),
+    "valencia": ("#f8fafc", "#f97316", "solid"),
+    "villarreal": ("#facc15", "#1d4ed8", "solid"),
+    "monaco": ("#f8fafc", "#dc2626", "sash"),
+    "psg": ("#1e3a8a", "#dc2626", "solid"),
+    "marseille": ("#f8fafc", "#0ea5e9", "solid"),
+    "lyon": ("#f8fafc", "#dc2626", "sash"),
+    "lille": ("#dc2626", "#1e3a8a", "solid"),
+    "lens": ("#dc2626", "#facc15", "vertical-stripes"),
+}
+
 LEAGUE_SLUGS = {
     "england - premier league": "epl",
     "premier league": "epl",
@@ -376,6 +431,15 @@ def stable_colors(team: str) -> tuple[str, str]:
     return TEAM_COLOR_PALETTE[index]
 
 
+def team_style(team: str) -> tuple[str, str, str]:
+    key = canonical_team_key(team)
+    override = TEAM_STYLE_OVERRIDES.get(key)
+    if override:
+        return override
+    primary, secondary = stable_colors(team)
+    return primary, secondary, "solid"
+
+
 def signal_key(row: dict[str, str]) -> tuple[str, str, str, str, str]:
     return (
         row_date_key(row),
@@ -606,7 +670,7 @@ def build_signal(
     competition = clean_text(row.get("competition"), "Football")
     league = league_slug(competition)
     team = clean_text(row.get("player_team"), "Unknown team")
-    primary, secondary = stable_colors(team)
+    primary, secondary, shirt_pattern = team_style(team)
 
     recent_tier = tier_from_percentile(
         percentiles["recent"],
@@ -659,6 +723,7 @@ def build_signal(
             "team_logo_path": logo_path,
             "team_primary_color": primary,
             "team_secondary_color": secondary,
+            "team_shirt_pattern": shirt_pattern,
         },
         "market": "Anytime goalscorer",
         "model": {

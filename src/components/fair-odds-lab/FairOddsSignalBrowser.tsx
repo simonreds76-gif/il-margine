@@ -69,18 +69,6 @@ function sortSignals(signals: Signal[], sortMode: SortMode) {
   });
 }
 
-function confidenceTone(confidence: Signal["confidence"]) {
-  if (confidence === "High") {
-    return "border-emerald-400/35 bg-emerald-400/10 text-emerald-200";
-  }
-
-  if (confidence === "Medium") {
-    return "border-slate-500/35 bg-slate-500/10 text-slate-200";
-  }
-
-  return "border-rose-400/35 bg-rose-400/10 text-rose-200";
-}
-
 function SignalCard({
   signal,
   featured,
@@ -123,9 +111,6 @@ function SignalCard({
               Top gap
             </span>
           ) : null}
-          <span className={`rounded-md border px-2 py-1 text-[11px] font-semibold ${confidenceTone(signal.confidence)}`}>
-            {signal.confidence}
-          </span>
         </div>
       </div>
 

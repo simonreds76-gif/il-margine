@@ -22,6 +22,7 @@ export type Signal = {
   leagueLogoPath?: string;
   teamPrimaryColor: string;
   teamSecondaryColor?: string;
+  teamShirtPattern?: "solid" | "vertical-stripes" | "halves" | "sash";
   market: string;
   fairOdds: number;
   bestBookOdds: number;

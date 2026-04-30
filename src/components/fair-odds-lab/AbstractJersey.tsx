@@ -3,6 +3,7 @@ type AbstractJerseyProps = {
   teamSecondaryColor?: string;
   playerNumber?: string;
   teamLogoPath?: string;
+  shirtPattern?: "solid" | "vertical-stripes" | "halves" | "sash";
   accentEmerald?: boolean;
 };
 
@@ -11,6 +12,7 @@ export function AbstractJersey({
   teamSecondaryColor = "#0f172a",
   playerNumber,
   teamLogoPath,
+  shirtPattern = "solid",
   accentEmerald = true,
 }: AbstractJerseyProps) {
   const accent = accentEmerald ? "#34d399" : teamSecondaryColor;
@@ -42,6 +44,9 @@ export function AbstractJersey({
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
+        <clipPath id={`jersey-clip-${safeId}`}>
+          <path d="M65 34 28 58 14 116l36 13 12-39v116h96V90l12 39 36-13-14-58-37-24-25 19H90L65 34Z" />
+        </clipPath>
       </defs>
 
       <path
@@ -51,6 +56,21 @@ export function AbstractJersey({
         stroke="rgba(226,232,240,0.28)"
         strokeWidth="2"
       />
+      <g clipPath={`url(#jersey-clip-${safeId})`}>
+        {shirtPattern === "vertical-stripes" ? (
+          <>
+            <rect x="54" y="30" width="20" height="178" fill={teamSecondaryColor} opacity="0.62" />
+            <rect x="94" y="30" width="20" height="178" fill={teamSecondaryColor} opacity="0.62" />
+            <rect x="134" y="30" width="20" height="178" fill={teamSecondaryColor} opacity="0.62" />
+          </>
+        ) : null}
+        {shirtPattern === "halves" ? (
+          <rect x="110" y="30" width="98" height="178" fill={teamSecondaryColor} opacity="0.72" />
+        ) : null}
+        {shirtPattern === "sash" ? (
+          <path d="M22 48 48 30 198 205 169 222Z" fill={teamSecondaryColor} opacity="0.68" />
+        ) : null}
+      </g>
       <path
         d="M88 53c6 11 14 16 22 16s16-5 22-16"
         fill="none"
