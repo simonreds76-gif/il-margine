@@ -57,6 +57,9 @@ jobs:
             --allowed-config data/football-form/team-shots-v3-ema20-allowed-leagues.json
           python scripts/corners-v0-clv-monitor.py
 
+      - name: Settle football research lanes before snapshot
+        run: python scripts/settle-football-research-lanes.py
+
       - name: Generate team-shots snapshot artifact
         run: python scripts/team-shots-live-snapshot.py
 
