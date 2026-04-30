@@ -58,19 +58,23 @@ jobs:
             --allowed-config data/football-form/team-shots-v3-ema20-allowed-leagues.json
           python scripts/corners-v0-clv-monitor.py
 
+      - name: Settle football research lanes before snapshot
+        run: python scripts/settle-football-research-lanes.py
+
       - name: Generate corners snapshot artifact
         run: python scripts/corners-live-snapshot.py
 
       - name: Upload corners hosted snapshot
         env:
+          ENABLE_SUPABASE_SNAPSHOT_UPLOADS: ${{ vars.ENABLE_SUPABASE_SNAPSHOT_UPLOADS }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+          if [ "${ENABLE_SUPABASE_SNAPSHOT_UPLOADS:-0}" = "1" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
             export NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://nuqcgzbagxtbxlqrhtvc.supabase.co}"
             python scripts/corners-live-snapshot.py --supabase
           else
-            echo "::warning::SUPABASE_SERVICE_ROLE_KEY not configured; hosted corners snapshot upload skipped. Branch snapshot JSON will still be committed."
+            echo "::warning::Supabase snapshot upload disabled or key missing; hosted corners snapshot upload skipped. Branch snapshot JSON will still be committed."
           fi
 
       - name: Commit and push if new data

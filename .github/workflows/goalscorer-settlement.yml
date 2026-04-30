@@ -217,12 +217,13 @@ jobs:
 
       - name: Upload goalscorer monitor snapshot
         env:
+          ENABLE_SUPABASE_SNAPSHOT_UPLOADS: ${{ vars.ENABLE_SUPABASE_SNAPSHOT_UPLOADS }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+          if [ "${ENABLE_SUPABASE_SNAPSHOT_UPLOADS:-0}" = "1" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
             python scripts/build-goalscorer-monitor-snapshot.py --supabase
           else
-            echo "::warning::SUPABASE_SERVICE_ROLE_KEY not configured; goalscorer monitor snapshot upload skipped."
+            echo "::warning::Supabase snapshot upload disabled or key missing; goalscorer monitor snapshot upload skipped."
           fi
 
       - name: Generate local hosted snapshot artifact
@@ -230,12 +231,13 @@ jobs:
 
       - name: Upload hosted snapshot
         env:
+          ENABLE_SUPABASE_SNAPSHOT_UPLOADS: ${{ vars.ENABLE_SUPABASE_SNAPSHOT_UPLOADS }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          if [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+          if [ "${ENABLE_SUPABASE_SNAPSHOT_UPLOADS:-0}" = "1" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
             python scripts/goalscorer-live-snapshot.py --supabase
           else
-            echo "::warning::SUPABASE_SERVICE_ROLE_KEY not configured; goalscorer hosted snapshot upload skipped."
+            echo "::warning::Supabase snapshot upload disabled or key missing; goalscorer hosted snapshot upload skipped."
           fi
 
       - name: Commit and push if new data
