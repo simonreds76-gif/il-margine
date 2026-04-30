@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { FeaturedSignalCard } from "@/components/fair-odds-lab/FeaturedSignalCard";
 import { LogoBadge } from "@/components/fair-odds-lab/LogoBadge";
@@ -217,6 +217,7 @@ export function FairOddsSignalBrowser({
   const [activeLeague, setActiveLeague] = useState("all");
   const [sortMode, setSortMode] = useState<SortMode>("edge");
   const [selectedId, setSelectedId] = useState<string | null>(featuredSignalId ?? null);
+  const featuredRef = useRef<HTMLDivElement | null>(null);
 
   const leagueOptions = useMemo<LeagueOption[]>(() => {
     const counts = new Map<string, LeagueOption>();
@@ -250,6 +251,9 @@ export function FairOddsSignalBrowser({
 
   function openSignal(signal: Signal) {
     setSelectedId(signal.id);
+    window.requestAnimationFrame(() => {
+      featuredRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
 
   function cycleSignal(direction: 1 | -1) {
@@ -341,31 +345,33 @@ export function FairOddsSignalBrowser({
       ) : (
         <div className="grid gap-6">
           {selectedSignal ? (
-            <FeaturedSignalCard
-              signal={selectedSignal}
-              eyebrow={selectedSignal.id === featuredSignalId ? "Top value gap" : "Selected research signal"}
-              controls={
-                <div className="hidden items-center gap-2 sm:flex">
-                  <button
-                    type="button"
-                    onClick={() => cycleSignal(-1)}
-                    className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1 text-xs font-semibold text-slate-400 transition hover:text-slate-100"
-                  >
-                    Previous
-                  </button>
-                  <span className="text-xs text-slate-500">
-                    {selectedIndex + 1} of {visibleSignals.length}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => cycleSignal(1)}
-                    className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1 text-xs font-semibold text-slate-400 transition hover:text-slate-100"
-                  >
-                    Next
-                  </button>
-                </div>
-              }
-            />
+            <div ref={featuredRef} className="scroll-mt-24">
+              <FeaturedSignalCard
+                signal={selectedSignal}
+                eyebrow={selectedSignal.id === featuredSignalId ? "Top value gap" : "Selected research signal"}
+                controls={
+                  <div className="hidden items-center gap-2 sm:flex">
+                    <button
+                      type="button"
+                      onClick={() => cycleSignal(-1)}
+                      className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1 text-xs font-semibold text-slate-400 transition hover:text-slate-100"
+                    >
+                      Previous
+                    </button>
+                    <span className="text-xs text-slate-500">
+                      {selectedIndex + 1} of {visibleSignals.length}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => cycleSignal(1)}
+                      className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1 text-xs font-semibold text-slate-400 transition hover:text-slate-100"
+                    >
+                      Next
+                    </button>
+                  </div>
+                }
+              />
+            </div>
           ) : null}
 
           <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
