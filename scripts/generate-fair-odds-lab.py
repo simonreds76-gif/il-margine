@@ -18,6 +18,8 @@ import argparse
 import csv
 import hashlib
 import json
+import re
+import unicodedata
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -34,9 +36,11 @@ DEFAULT_INPUTS = [
     Path("data/goalscorer/la-liga/goalscorer-live-comparison.csv"),
     Path("data/goalscorer/bundesliga/goalscorer-live-comparison.csv"),
     Path("data/goalscorer/ligue-1/goalscorer-live-comparison.csv"),
+    Path("data/goalscorer/serie-a/goalscorer-live-comparison.csv"),
 ]
 DEFAULT_MONITOR_SNAPSHOT = Path("data/goalscorer/goalscorer-monitor-snapshot.json")
 DEFAULT_OUTPUT = Path("public/fair-odds-lab/signals.json")
+DEFAULT_TEAM_LOGO_MAP = Path("data/goalscorer/team-logo-map.json")
 
 TEAM_COLOR_PALETTE = [
     ("#1d4ed8", "#b91c1c"),
@@ -72,6 +76,50 @@ LEAGUE_LABELS = {
     "ligue-1": "Ligue 1",
 }
 
+TEAM_NAME_ALIASES = {
+    "fc st pauli": "st pauli",
+    "ca osasuna": "osasuna",
+    "athletic bilbao": "athletic club",
+    "rb leipzig": "rasenballsport leipzig",
+    "tsg hoffenheim": "hoffenheim",
+    "borussia monchengladbach": "borussia m gladbach",
+    "brighton and hove albion": "brighton",
+    "brighton hove albion": "brighton",
+    "afc bournemouth": "bournemouth",
+    "1 fc koln": "fc cologne",
+    "1 fc cologne": "fc cologne",
+    "fc koln": "fc cologne",
+    "1 fc heidenheim": "fc heidenheim",
+    "heidenheim": "fc heidenheim",
+    "fsv mainz 05": "mainz 05",
+    "sc freiburg": "freiburg",
+    "vfl wolfsburg": "wolfsburg",
+    "leeds united": "leeds",
+    "tottenham hotspur": "tottenham",
+    "west ham united": "west ham",
+    "wolves": "wolverhampton wanderers",
+    "wolverhampton": "wolverhampton wanderers",
+    "getafe cf": "getafe",
+    "levante ud": "levante",
+    "as monaco": "monaco",
+    "rc lens": "lens",
+    "acf fiorentina": "fiorentina",
+    "as roma": "roma",
+    "atalanta bc": "atalanta",
+    "hellas verona": "verona",
+    "lazio rome": "lazio",
+    "parma calcio 1913": "parma",
+    "parma calcio": "parma",
+    "internazionale": "inter",
+    "inter milano": "inter",
+    "inter milan": "inter",
+    "deportivo alaves": "alaves",
+    "real sociedad": "sociedad",
+    "real sociedad san sebastian": "sociedad",
+    "juventus turin": "juventus",
+    "espanyol barcelona": "espanyol",
+}
+
 
 @dataclass(frozen=True)
 class Candidate:
@@ -98,6 +146,7 @@ def parse_args() -> argparse.Namespace:
         help="Input CSV or live-board JSON. May be supplied multiple times. Defaults to all goalscorer live-board/comparison files.",
     )
     parser.add_argument("--monitor-snapshot", type=Path, default=DEFAULT_MONITOR_SNAPSHOT)
+    parser.add_argument("--team-logo-map", type=Path, default=DEFAULT_TEAM_LOGO_MAP)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--edge-threshold-pp", type=float, default=0.0)
     parser.add_argument("--max-signals", type=int, default=36)
@@ -133,6 +182,79 @@ def clean_text(value: Any | None, fallback: str = "") -> str:
     if value is None:
         return fallback
     return str(value).strip() or fallback
+
+
+def normalize_logo_key(value: Any | None) -> str:
+    text = clean_text(value).lower()
+    text = unicodedata.normalize("NFKD", text)
+    text = "".join(ch for ch in text if not unicodedata.combining(ch))
+    text = text.replace("&", " and ")
+    text = re.sub(r"[^a-z0-9]+", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def simplify_club_key(value: str) -> str:
+    return re.sub(r"\b(?:ac|afc|as|bc|ca|cf|cfc|fc|rc|rcd|sc|ssc|us)\b", " ", value).replace(
+        "calcio",
+        " ",
+    )
+
+
+def canonical_team_key(value: Any | None) -> str:
+    normalized = normalize_logo_key(value)
+    if not normalized:
+        return ""
+    aliased = TEAM_NAME_ALIASES.get(normalized, normalized)
+    simplified = re.sub(r"\s+", " ", simplify_club_key(aliased)).strip()
+    return TEAM_NAME_ALIASES.get(simplified, simplified)
+
+
+def load_logo_manifest(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8-sig"))
+    except json.JSONDecodeError:
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def team_logo_path(logo_manifest: dict[str, Any], league: str, team: str) -> str:
+    leagues = logo_manifest.get("leagues")
+    if not isinstance(leagues, dict):
+        return ""
+    league_entry = leagues.get(league)
+    if not isinstance(league_entry, dict):
+        return ""
+    teams = league_entry.get("teams")
+    if not isinstance(teams, dict):
+        return ""
+
+    direct = teams.get(team)
+    if isinstance(direct, dict) and clean_text(direct.get("logo_path")):
+        return clean_text(direct.get("logo_path"))
+
+    target = canonical_team_key(team)
+    for name, row in teams.items():
+        if not isinstance(row, dict):
+            continue
+        if canonical_team_key(name) == target or canonical_team_key(row.get("team_key")) == target:
+            return clean_text(row.get("logo_path"))
+    return ""
+
+
+def league_logo_path(league: str) -> str:
+    if league in LEAGUE_LABELS:
+        return f"/league-logos/{league}.png"
+    return ""
+
+
+def real_jersey_number(row: dict[str, str]) -> str:
+    for key in ("jersey_number", "shirt_number", "squad_number"):
+        value = clean_text(row.get(key))
+        if re.fullmatch(r"\d{1,2}", value):
+            return value
+    return ""
 
 
 def london_today_iso(today_override: str | None) -> str:
@@ -478,6 +600,7 @@ def is_public_quality_signal(candidate: Candidate) -> bool:
 def build_signal(
     candidate: Candidate,
     percentiles: dict[str, int | None],
+    logo_manifest: dict[str, Any],
 ) -> dict[str, Any]:
     row = candidate.row
     competition = clean_text(row.get("competition"), "Football")
@@ -514,6 +637,7 @@ def build_signal(
 
     player_name = clean_text(row.get("canonical_player_name") or row.get("player_name"), "Unknown player")
     position = clean_text(row.get("today_position_group") or row.get("position_group") or row.get("position"), "FW")
+    logo_path = team_logo_path(logo_manifest, league, team)
 
     return {
         "id": signal_id(row),
@@ -522,6 +646,7 @@ def build_signal(
             "away_team": clean_text(row.get("away_team")),
             "league": league,
             "league_display": LEAGUE_LABELS.get(league, competition),
+            "league_logo_path": league_logo_path(league),
             "kickoff_utc": clean_text(row.get("kickoff")),
             "kickoff_display": display_kickoff(row),
             "venue": "",
@@ -530,7 +655,8 @@ def build_signal(
             "name": player_name,
             "team": team,
             "position": position,
-            "jersey_label": position[:2].upper() if position else "FW",
+            "jersey_label": real_jersey_number(row),
+            "team_logo_path": logo_path,
             "team_primary_color": primary,
             "team_secondary_color": secondary,
         },
@@ -578,6 +704,7 @@ def main() -> None:
     args = parse_args()
     today_iso = london_today_iso(args.today)
     input_paths = args.input or DEFAULT_INPUTS
+    logo_manifest = load_logo_manifest(args.team_logo_map)
     raw_rows, candidates, source_paths = read_grouped_candidates(
         input_paths,
         args.monitor_snapshot,
@@ -610,13 +737,14 @@ def main() -> None:
             "opponent_xga": percentile(candidate.opponent_xga, values["opponent_xga"]),
             "minutes": percentile(candidate.expected_minutes, values["minutes"]),
         }
-        signals.append(build_signal(candidate, percentiles))
+        signals.append(build_signal(candidate, percentiles, logo_manifest))
 
     confidence_rank = {"High": 3, "Medium": 2, "Low": 1}
     signals.sort(
         key=lambda item: (
-            -confidence_rank.get(item["confidence_tier"], 0),
             -item["edge"]["price_gap_pp"],
+            -confidence_rank.get(item["confidence_tier"], 0),
+            -item["model"]["scoring_chance_pct"],
             item["match"].get("kickoff_utc") or item["match"].get("kickoff_display") or "",
         )
     )

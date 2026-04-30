@@ -1,7 +1,8 @@
 type AbstractJerseyProps = {
   teamPrimaryColor: string;
   teamSecondaryColor?: string;
-  playerNumber: string;
+  playerNumber?: string;
+  teamLogoPath?: string;
   accentEmerald?: boolean;
 };
 
@@ -9,10 +10,11 @@ export function AbstractJersey({
   teamPrimaryColor,
   teamSecondaryColor = "#0f172a",
   playerNumber,
+  teamLogoPath,
   accentEmerald = true,
 }: AbstractJerseyProps) {
   const accent = accentEmerald ? "#34d399" : teamSecondaryColor;
-  const safeId = `${playerNumber}-${teamPrimaryColor}-${teamSecondaryColor}`.replace(
+  const safeId = `${playerNumber || "club"}-${teamPrimaryColor}-${teamSecondaryColor}`.replace(
     /[^a-zA-Z0-9_-]/g,
     "",
   );
@@ -69,18 +71,41 @@ export function AbstractJersey({
         strokeOpacity="0.42"
         strokeWidth="2"
       />
-      <text
-        x="110"
-        y="145"
-        fill="rgba(248,250,252,0.96)"
-        fontFamily="ui-sans-serif, system-ui, sans-serif"
-        fontSize="64"
-        fontWeight="900"
-        letterSpacing="-4"
-        textAnchor="middle"
-      >
-        {playerNumber}
-      </text>
+      {teamLogoPath ? (
+        <>
+          <circle
+            cx="110"
+            cy="123"
+            r="43"
+            fill="rgba(248,250,252,0.92)"
+            stroke={accent}
+            strokeOpacity="0.58"
+            strokeWidth="3"
+          />
+          <image
+            href={teamLogoPath}
+            x="72"
+            y="85"
+            width="76"
+            height="76"
+            preserveAspectRatio="xMidYMid meet"
+          />
+        </>
+      ) : null}
+      {playerNumber ? (
+        <text
+          x="110"
+          y={teamLogoPath ? "195" : "145"}
+          fill="rgba(248,250,252,0.96)"
+          fontFamily="ui-sans-serif, system-ui, sans-serif"
+          fontSize={teamLogoPath ? "32" : "64"}
+          fontWeight="900"
+          letterSpacing={teamLogoPath ? "-1" : "-4"}
+          textAnchor="middle"
+        >
+          {playerNumber}
+        </text>
+      ) : null}
       <path
         d="M52 213h116"
         stroke={accent}

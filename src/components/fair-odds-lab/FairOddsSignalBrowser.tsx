@@ -1,19 +1,16 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 
+import { FeaturedSignalCard } from "@/components/fair-odds-lab/FeaturedSignalCard";
+import { LogoBadge } from "@/components/fair-odds-lab/LogoBadge";
 import { OddsComparisonBar } from "@/components/fair-odds-lab/OddsComparisonBar";
 import {
   MiniDonut,
-  MinutesMeter,
   PenaltyBadge,
-  PriceGapMeter,
-  ProportionalBar,
-  SignedBoostMeter,
-  StatusSteps,
   TierIndicator,
 } from "@/components/fair-odds-lab/primitives";
-import type { LabArtifact, Signal, SignalMetric } from "@/components/fair-odds-lab/types";
+import type { LabArtifact, Signal } from "@/components/fair-odds-lab/types";
 
 type SortMode = "edge" | "kickoff" | "confidence";
 
@@ -84,49 +81,6 @@ function confidenceTone(confidence: Signal["confidence"]) {
   return "border-rose-400/35 bg-rose-400/10 text-rose-200";
 }
 
-function numberFromMetric(value: string) {
-  const parsed = Number.parseFloat(value.replace(/[^0-9.-]/g, ""));
-  return Number.isFinite(parsed) ? parsed : 0;
-}
-
-function renderMetricVisual(metric: SignalMetric) {
-  const label = metric.label.toLowerCase();
-
-  if (label.includes("recent chance quality")) {
-    return <TierIndicator tier={metric.value} size="sm" variant="quality" />;
-  }
-
-  if (label.includes("share of team chances")) {
-    return <ProportionalBar value={numberFromMetric(metric.value)} maxValue={50} />;
-  }
-
-  if (label.includes("lineup confidence")) {
-    return <StatusSteps status={metric.value} />;
-  }
-
-  if (label.includes("penalty role")) {
-    return <PenaltyBadge role={metric.value} />;
-  }
-
-  if (label.includes("team attacking outlook")) {
-    return <TierIndicator tier={metric.value} size="sm" variant="outlook" />;
-  }
-
-  if (label.includes("opponent defensive weakness")) {
-    return <TierIndicator tier={metric.value} size="sm" variant="weakness" />;
-  }
-
-  if (label.includes("fixture boost")) {
-    return <SignedBoostMeter value={numberFromMetric(metric.value)} />;
-  }
-
-  if (label.includes("projected minutes")) {
-    return <MinutesMeter minutes={numberFromMetric(metric.value)} />;
-  }
-
-  return null;
-}
-
 function SignalCard({
   signal,
   featured,
@@ -142,23 +96,31 @@ function SignalCard({
 
   return (
     <article
-      className={`group relative overflow-hidden rounded-2xl border bg-[#0c0f14] p-5 transition hover:-translate-y-0.5 hover:border-emerald-300/35 hover:shadow-[0_16px_50px_rgba(16,185,129,0.1)] ${
-        selected ? "border-emerald-300/50" : "border-slate-700/45"
+      className={`group relative min-w-0 overflow-hidden rounded-2xl border bg-[#0c0f14] p-5 transition hover:-translate-y-0.5 hover:border-emerald-300/35 hover:shadow-[0_16px_50px_rgba(16,185,129,0.1)] ${
+        selected ? "border-emerald-300/60 shadow-[0_0_0_1px_rgba(52,211,153,0.12)]" : "border-slate-700/45"
       }`}
     >
       <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${signal.accent}`} />
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-            {signal.competition}
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex min-w-0 items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <LogoBadge
+              src={signal.leagueLogoPath}
+              alt={`${signal.competition} logo`}
+              fallback={signal.competition}
+              size={22}
+              shape="rounded"
+              className="bg-white/95 p-1"
+            />
+            <span className="truncate">{signal.competition}</span>
           </div>
-          <div className="mt-1 text-sm text-slate-400">{signal.match}</div>
+          <div className="mt-2 text-sm leading-snug text-slate-400">{signal.match}</div>
           <div className="mt-1 text-xs text-slate-600">{signal.kickoff}</div>
         </div>
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex shrink-0 flex-col items-end gap-2">
           {featured ? (
             <span className="rounded-md border border-emerald-400/25 bg-emerald-400/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-200">
-              Featured
+              Top gap
             </span>
           ) : null}
           <span className={`rounded-md border px-2 py-1 text-[11px] font-semibold ${confidenceTone(signal.confidence)}`}>
@@ -179,10 +141,22 @@ function SignalCard({
         />
       </div>
 
-      <div className="mt-5">
-        <div className="text-2xl font-bold tracking-tight text-slate-50">{signal.player}</div>
-        <div className="mt-1 text-xs text-slate-500">
-          {signal.team} | {signal.position} | {signal.market}
+      <div className="mt-5 min-w-0">
+        <div className="flex items-start gap-3">
+          <LogoBadge
+            src={signal.teamLogoPath}
+            alt={`${signal.team} logo`}
+            fallback={signal.team}
+            size={40}
+          />
+          <div className="min-w-0">
+            <div className="break-words text-2xl font-bold leading-tight tracking-tight text-slate-50">
+              {signal.player}
+            </div>
+            <div className="mt-1 text-xs text-slate-500">
+              {signal.team} | {signal.position} | {signal.market}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -242,148 +216,9 @@ function SignalCard({
         onClick={onOpen}
         className="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-slate-700/70 bg-slate-900/80 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:border-emerald-400/40 hover:text-emerald-200"
       >
-        Open details
+        {selected ? "Showing above" : "View as featured"}
       </button>
     </article>
-  );
-}
-
-function MetricDetailList({ title, metrics }: { title: string; metrics: SignalMetric[] }) {
-  return (
-    <div className="rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4">
-      <h4 className="text-sm font-semibold text-slate-100">{title}</h4>
-      <div className="mt-4 space-y-3">
-        {metrics.map((metric) => (
-          <div key={metric.label} className="rounded-xl border border-slate-800/80 bg-slate-900/45 p-3">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <div className="text-xs font-medium text-slate-300">{metric.label}</div>
-                {metric.note ? (
-                  <div className="mt-0.5 text-[11px] text-slate-500">{metric.note}</div>
-                ) : null}
-              </div>
-              <div className="text-right font-mono text-sm font-semibold text-slate-100">
-                {metric.value}
-              </div>
-            </div>
-            <div className="mt-3">{renderMetricVisual(metric)}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function DetailPanel({
-  signal,
-  index,
-  total,
-  onClose,
-  onNext,
-  onPrevious,
-}: {
-  signal: Signal;
-  index: number;
-  total: number;
-  onClose: () => void;
-  onNext: () => void;
-  onPrevious: () => void;
-}) {
-  const gap = probabilityGap(signal);
-
-  return (
-    <aside className="rounded-[2rem] border border-emerald-300/20 bg-[#0a0f12] p-5 shadow-[0_24px_90px_rgba(16,185,129,0.12)] xl:sticky xl:top-24">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-300">
-            Signal details
-          </div>
-          <h3 className="mt-2 text-2xl font-black tracking-tight text-slate-50">
-            {signal.player}
-          </h3>
-          <p className="mt-1 text-sm text-slate-400">
-            {signal.match} | {signal.kickoff}
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={onClose}
-          className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1 text-xs font-semibold text-slate-400 transition hover:text-slate-100"
-        >
-          Close
-        </button>
-      </div>
-
-      <div className="mt-5">
-        <OddsComparisonBar
-          modelOdds={signal.fairOdds}
-          bookOdds={signal.bestBookOdds}
-          bookName={signal.bestBookmaker}
-          gapPp={gap}
-          modelProb={signal.modelProbability}
-          marketProb={signal.bookmakerProbability}
-          size="compact"
-        />
-      </div>
-
-      <div className="mt-5 grid grid-cols-2 gap-3">
-        <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/[0.07] p-3">
-          <div className="text-[10px] uppercase tracking-[0.16em] text-emerald-300">
-            Model chance
-          </div>
-          <div className="mt-1 font-mono text-xl font-black text-emerald-100">
-            {formatPercent(signal.modelProbability)}
-          </div>
-        </div>
-        <div className="rounded-xl border border-amber-400/20 bg-amber-400/[0.07] p-3">
-          <div className="text-[10px] uppercase tracking-[0.16em] text-amber-300">
-            Price gap
-          </div>
-          <div className="mt-1 font-mono text-xl font-black text-amber-200">
-            +{gap.toFixed(1)}pp
-          </div>
-          <PriceGapMeter value={gap} />
-        </div>
-      </div>
-
-      <div className="mt-5 grid gap-4">
-        <MetricDetailList title="Player case" metrics={signal.playerMetrics} />
-        <MetricDetailList title="Matchup profile" metrics={signal.opponentMetrics} />
-      </div>
-
-      {signal.edgeReasons.length > 0 ? (
-        <div className="mt-5 rounded-2xl border border-slate-800/80 bg-slate-950/55 p-4">
-          <h4 className="text-sm font-semibold text-slate-100">Plain-English reasons</h4>
-          <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-300">
-            {signal.edgeReasons.map((reason) => (
-              <li key={reason} className="rounded-xl border border-slate-800/80 bg-slate-900/45 px-3 py-2">
-                {reason}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-
-      <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-800/80 pt-4">
-        <button
-          type="button"
-          onClick={onPrevious}
-          className="rounded-xl border border-slate-700/80 px-3 py-2 text-sm font-semibold text-slate-300 transition hover:border-emerald-400/40 hover:text-emerald-200"
-        >
-          Previous
-        </button>
-        <span className="text-xs text-slate-500">
-          {index + 1} of {total}
-        </span>
-        <button
-          type="button"
-          onClick={onNext}
-          className="rounded-xl border border-slate-700/80 px-3 py-2 text-sm font-semibold text-slate-300 transition hover:border-emerald-400/40 hover:text-emerald-200"
-        >
-          Next
-        </button>
-      </div>
-    </aside>
   );
 }
 
@@ -396,7 +231,7 @@ export function FairOddsSignalBrowser({
 }) {
   const [activeLeague, setActiveLeague] = useState("all");
   const [sortMode, setSortMode] = useState<SortMode>("edge");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(featuredSignalId ?? null);
 
   const leagueOptions = useMemo<LeagueOption[]>(() => {
     const counts = new Map<string, LeagueOption>();
@@ -420,9 +255,10 @@ export function FairOddsSignalBrowser({
     return sortSignals(filtered, sortMode);
   }, [activeLeague, artifact.signals, sortMode]);
 
-  const selectedSignal = selectedId
-    ? visibleSignals.find((signal) => signal.id === selectedId) ?? null
-    : null;
+  const selectedSignal =
+    (selectedId ? visibleSignals.find((signal) => signal.id === selectedId) : null) ??
+    visibleSignals[0] ??
+    null;
   const selectedIndex = selectedSignal
     ? visibleSignals.findIndex((signal) => signal.id === selectedSignal.id)
     : -1;
@@ -518,31 +354,49 @@ export function FairOddsSignalBrowser({
           No signals match this league filter. Switch back to All to see the current artifact.
         </div>
       ) : (
-        <div className={`grid gap-5 ${selectedSignal ? "xl:grid-cols-[minmax(0,1fr)_430px]" : ""}`}>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-6">
+          {selectedSignal ? (
+            <FeaturedSignalCard
+              signal={selectedSignal}
+              eyebrow={selectedSignal.id === featuredSignalId ? "Top value gap" : "Selected research signal"}
+              controls={
+                <div className="hidden items-center gap-2 sm:flex">
+                  <button
+                    type="button"
+                    onClick={() => cycleSignal(-1)}
+                    className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1 text-xs font-semibold text-slate-400 transition hover:text-slate-100"
+                  >
+                    Previous
+                  </button>
+                  <span className="text-xs text-slate-500">
+                    {selectedIndex + 1} of {visibleSignals.length}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => cycleSignal(1)}
+                    className="rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1 text-xs font-semibold text-slate-400 transition hover:text-slate-100"
+                  >
+                    Next
+                  </button>
+                </div>
+              }
+            />
+          ) : null}
+
+          <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
             {visibleSignals.map((signal) => (
               <SignalCard
                 key={signal.id}
                 signal={signal}
                 featured={signal.id === featuredSignalId}
-                selected={signal.id === selectedId}
+                selected={signal.id === selectedSignal?.id}
                 onOpen={() => openSignal(signal)}
               />
             ))}
           </div>
-
-          {selectedSignal ? (
-            <DetailPanel
-              signal={selectedSignal}
-              index={selectedIndex}
-              total={visibleSignals.length}
-              onClose={() => setSelectedId(null)}
-              onNext={() => cycleSignal(1)}
-              onPrevious={() => cycleSignal(-1)}
-            />
-          ) : null}
         </div>
       )}
     </section>
   );
 }
+

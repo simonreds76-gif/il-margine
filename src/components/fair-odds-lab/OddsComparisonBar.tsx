@@ -37,7 +37,7 @@ export function OddsComparisonBar({
           : "overflow-hidden rounded-[1.75rem] border border-emerald-300/25 bg-slate-950/70 p-4 shadow-[0_0_40px_rgba(16,185,129,0.08)] sm:p-5"
       }
     >
-      <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end gap-3">
+      <div className={`grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end ${compact ? "gap-2" : "gap-3"}`}>
         <div className="min-w-0">
           <div className="text-[9px] font-semibold uppercase tracking-[0.18em] text-emerald-300">
             Il Margine
@@ -45,7 +45,7 @@ export function OddsComparisonBar({
           <div
             className={
               compact
-                ? "mt-1 font-mono text-2xl font-black text-emerald-200"
+                ? "mt-1 font-mono text-xl font-black text-emerald-200 sm:text-2xl"
                 : "mt-1 font-mono text-4xl font-black tracking-tight text-emerald-200 sm:text-5xl"
             }
           >
@@ -74,7 +74,7 @@ export function OddsComparisonBar({
           <div
             className={
               compact
-                ? "mt-1 font-mono text-2xl font-black text-slate-100"
+                ? "mt-1 font-mono text-xl font-black text-slate-100 sm:text-2xl"
                 : "mt-1 font-mono text-4xl font-black tracking-tight text-slate-100 sm:text-5xl"
             }
           >

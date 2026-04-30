@@ -17,7 +17,9 @@ export type Signal = {
   player: string;
   team: string;
   position: string;
-  playerNumber: string;
+  playerNumber?: string;
+  teamLogoPath?: string;
+  leagueLogoPath?: string;
   teamPrimaryColor: string;
   teamSecondaryColor?: string;
   market: string;
