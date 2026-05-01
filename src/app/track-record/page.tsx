@@ -38,6 +38,15 @@ const FAQ_ITEMS = [
     answer:
       "Use ROI, sample size, settlement transparency, and whether the prices were posted before the event. Short winning streaks are not proof of edge and short losing streaks do not automatically disprove it. The record matters because it keeps both sides visible over time.",
   },
+  {
+    question: "Can I see what the record would mean for my own stake size?",
+    answer:
+      "Yes. Use the returns calculator to test different unit sizes, bankrolls, and staking assumptions against the same unit-based logic used in the public record.",
+    cta: {
+      href: "/calculator",
+      label: "Open the returns calculator",
+    },
+  },
 ] as const;
 
 type DisplayStats = ReturnType<typeof getBaselineDisplayStats>;
@@ -643,7 +652,27 @@ export default function TrackRecordPage() {
           <h2 className="mb-6 text-xl font-semibold text-slate-100">FAQ</h2>
           <div className="max-w-3xl space-y-2">
             {FAQ_ITEMS.map((item) => (
-              <FAQ key={item.question} q={item.question} a={item.answer} />
+              <FAQ
+                key={item.question}
+                q={item.question}
+                a={
+                  <>
+                    {item.answer}
+                    {"cta" in item ? (
+                      <>
+                        {" "}
+                        <Link
+                          href={item.cta.href}
+                          className="font-medium text-emerald-400 underline underline-offset-4 transition-colors hover:text-emerald-300"
+                        >
+                          {item.cta.label}
+                        </Link>
+                        .
+                      </>
+                    ) : null}
+                  </>
+                }
+              />
             ))}
           </div>
         </section>
