@@ -3,7 +3,7 @@ import { BASE_URL } from "@/lib/config";
 
 const title = "Track Record | Verified Betting Results";
 const description =
-  "Verified betting track record: 1,227+ settled bets, +19% combined ROI across player props and ATP tennis. Pre-match timestamps, immutable records.";
+  "Verified betting track record across player props and ATP tennis. Pre-match timestamps, live public settlements, and immutable accounting.";
 const url = `${BASE_URL}/track-record`;
 
 export const metadata: Metadata = {
@@ -20,14 +20,14 @@ export const metadata: Metadata = {
     url,
     title: "Verified Betting Track Record - Player Props & ATP Tennis | Il Margine",
     description:
-      "1,227+ settled bets with +19% combined ROI. Every selection posted before kick-off, every result logged transparently. No edits, no deletions.",
+      "Live public betting record across player props and ATP tennis. Every selection posted before kick-off, every result logged transparently. No edits, no deletions.",
     images: [{ url: "/og.png", width: 1200, height: 630, alt: "Il Margine - Track Record" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Verified Betting Track Record - Player Props & ATP Tennis | Il Margine",
     description:
-      "1,227+ settled bets with +19% combined ROI. Every selection posted before kick-off, every result logged transparently. No edits, no deletions.",
+      "Live public betting record across player props and ATP tennis. Every selection posted before kick-off, every result logged transparently. No edits, no deletions.",
     images: ["/og.png"],
   },
 };

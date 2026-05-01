@@ -1,32 +1,153 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
+import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
+import { type MarketStats } from "@/lib/supabase";
 import Footer from "@/components/Footer";
 import PageHomeLink from "@/components/PageHomeLink";
 
 const FAQ_ITEMS = [
   {
-    question: "How is performance calculated?",
+    question: "What is included in the headline track record?",
     answer:
-      "ROI is total profit divided by total stakes. Standard metrics: win rate, bet count, return on investment. Transparent accounting.",
+      "The headline record combines the original validation baseline with live public selections settled through the site. Player props and ATP tennis are tracked separately, then rolled up into the combined record so the homepage and track record page use the same accounting base.",
   },
   {
-    question: "How often do you post picks?",
+    question: "How is ROI calculated?",
     answer:
-      "Irregularly. We only post when value exists. Some weeks have volume, some have none.",
+      "ROI is total profit divided by total stake. A +10% ROI means 100 units staked would have returned 10 units of profit. We use stake-weighted profit, not raw win rate, because a 2.60 winner and a 1.60 winner do not carry the same value.",
   },
   {
-    question: "How do you handle losing runs?",
+    question: "Why can the totals move after a result is settled?",
     answer:
-      "They stay visible. We don't hide drawdowns or pretend variance disappears when the sample turns against us.",
+      "The public feed updates when bets move from pending to won, lost, or void. Once a result is settled, the bet count, ROI, win rate, category records, and recent selections can all change automatically from the database feed.",
   },
   {
-    question: "Can past picks be edited?",
+    question: "Are losing runs and voids included?",
     answer:
-      "No. Once logged, records cannot be changed. That is the entire point of public tracking.",
+      "Yes. Losses stay in the record and drawdowns remain visible. Voids are kept in the public history but do not count as wins or losses for win-rate purposes and do not add profit or loss to ROI.",
+  },
+  {
+    question: "Can old picks be edited or removed?",
+    answer:
+      "No. The point of public tracking is that selections are logged before the event and settled afterwards. If a category needs correcting, such as moving a football prop from Other to La Liga, the bet itself stays in the record and only the classification changes.",
+  },
+  {
+    question: "Why do market and league records not always move equally?",
+    answer:
+      "The headline record is market-level. League and category pages are slices of that same record, so their samples are smaller and can move sharply after only a few results. The combined number is the broadest view; category records are useful context, not a replacement for the full sample.",
+  },
+  {
+    question: "How should I judge the record?",
+    answer:
+      "Use ROI, sample size, settlement transparency, and whether the prices were posted before the event. Short winning streaks are not proof of edge and short losing streaks do not automatically disprove it. The record matters because it keeps both sides visible over time.",
   },
 ] as const;
+
+type DisplayStats = ReturnType<typeof getBaselineDisplayStats>;
+
+interface CombinedMarketStats {
+  total_bets: number;
+  roi: number;
+  win_rate: number;
+  avg_odds: number;
+  total_profit: number;
+}
+
+function getTrackingMonths() {
+  const start = new Date("2024-10-01T00:00:00Z");
+  const now = new Date();
+  const months = Math.max(
+    1,
+    (now.getUTCFullYear() - start.getUTCFullYear()) * 12 + (now.getUTCMonth() - start.getUTCMonth())
+  );
+  return `${months}+ months`;
+}
+
+function buildCombinedStats(liveStats: MarketStats[]): DisplayStats {
+  const propsLive = liveStats.find((stat) => stat.market === "props");
+  const tennisLive = liveStats.find((stat) => stat.market === "tennis");
+
+  const propsLiveBets = propsLive?.total_bets || 0;
+  const propsLiveWins = propsLive?.wins || 0;
+  const propsLiveLosses = propsLive?.losses || 0;
+  const propsLiveProfit = Number(propsLive?.total_profit) || 0;
+  const propsLiveStake = Number(propsLive?.total_stake) || propsLiveBets;
+
+  const propsWins = BASELINE_STATS.props.wins + propsLiveWins;
+  const propsLosses = BASELINE_STATS.props.losses + propsLiveLosses;
+  const propsProfit = BASELINE_STATS.props.total_profit + propsLiveProfit;
+  const propsStake = BASELINE_STATS.props.total_stake + propsLiveStake;
+
+  const propsCombined: CombinedMarketStats = {
+    total_bets: BASELINE_STATS.props.total_bets + propsLiveBets,
+    roi: calculateROI(propsProfit, propsStake || 1),
+    win_rate: calculateWinRate(propsWins, propsLosses),
+    avg_odds: propsLive?.avg_odds && propsLiveBets > 0 ? Number(propsLive.avg_odds) : 0,
+    total_profit: propsProfit,
+  };
+
+  const tennisLiveBets = tennisLive?.total_bets || 0;
+  const tennisLiveWins = tennisLive?.wins || 0;
+  const tennisLiveLosses = tennisLive?.losses || 0;
+  const tennisLiveProfit = Number(tennisLive?.total_profit) || 0;
+  const tennisLiveStake = Number(tennisLive?.total_stake) || tennisLiveBets;
+
+  const tennisWins = BASELINE_STATS.tennis.wins + tennisLiveWins;
+  const tennisLosses = BASELINE_STATS.tennis.losses + tennisLiveLosses;
+  const tennisProfit = BASELINE_STATS.tennis.total_profit + tennisLiveProfit;
+  const tennisStake = BASELINE_STATS.tennis.total_stake + tennisLiveStake;
+
+  const tennisCombined: CombinedMarketStats = {
+    total_bets: BASELINE_STATS.tennis.total_bets + tennisLiveBets,
+    roi: calculateROI(tennisProfit, tennisStake || 1),
+    win_rate: calculateWinRate(tennisWins, tennisLosses),
+    avg_odds: tennisLive?.avg_odds && tennisLiveBets > 0 ? Number(tennisLive.avg_odds) : 0,
+    total_profit: tennisProfit,
+  };
+
+  const overallLiveBets = propsLiveBets + tennisLiveBets;
+  const overallLiveWins = propsLiveWins + tennisLiveWins;
+  const overallLiveLosses = propsLiveLosses + tennisLiveLosses;
+  const overallLiveProfit = propsLiveProfit + tennisLiveProfit;
+  const overallLiveStake = propsLiveStake + tennisLiveStake;
+
+  const overallWins = BASELINE_STATS.overall.wins + overallLiveWins;
+  const overallLosses = BASELINE_STATS.overall.losses + overallLiveLosses;
+  const overallProfit = BASELINE_STATS.overall.total_profit + overallLiveProfit;
+  const overallStake = BASELINE_STATS.overall.total_stake + overallLiveStake;
+
+  const overallCombined: CombinedMarketStats = {
+    total_bets: BASELINE_STATS.overall.total_bets + overallLiveBets,
+    roi: calculateROI(overallProfit, overallStake || 1),
+    win_rate: calculateWinRate(overallWins, overallLosses),
+    avg_odds: 0,
+    total_profit: overallProfit,
+  };
+
+  if (propsCombined.avg_odds > 0 || tennisCombined.avg_odds > 0) {
+    const totalOddsWeight =
+      propsCombined.avg_odds * propsCombined.total_bets +
+      tennisCombined.avg_odds * tennisCombined.total_bets;
+    overallCombined.avg_odds =
+      overallCombined.total_bets > 0 ? totalOddsWeight / overallCombined.total_bets : 0;
+  }
+
+  return {
+    props: propsCombined,
+    tennis: tennisCombined,
+    overall: overallCombined,
+  };
+}
+
+function formatBetCount(value: number) {
+  return `${Math.round(value).toLocaleString("en-GB")}+`;
+}
+
+function formatSignedPercent(value: number) {
+  return `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
+}
 
 function FaqSchema() {
   const schema = {
@@ -150,6 +271,55 @@ function FAQ({ q, a }: { q: string; a: ReactNode }) {
 }
 
 export default function TrackRecordPage() {
+  const [displayStats, setDisplayStats] = useState<DisplayStats>(() => getBaselineDisplayStats());
+  const [statsStatus, setStatsStatus] = useState<"loading" | "live" | "fallback">("loading");
+
+  const fetchStats = useCallback(async () => {
+    try {
+      const res = await fetch("/api/public-record?scope=home", { cache: "no-store" });
+      const json = await res.json();
+      if (!res.ok) {
+        throw new Error(json?.error || "Failed to load public record");
+      }
+      setDisplayStats(buildCombinedStats((json.stats as MarketStats[] | null) ?? []));
+      setStatsStatus("live");
+    } catch (error) {
+      console.error("Error fetching track record stats:", error);
+      setDisplayStats(getBaselineDisplayStats());
+      setStatsStatus("fallback");
+    }
+  }, []);
+
+  useEffect(() => {
+    const initialFetchId = window.setTimeout(() => {
+      void fetchStats();
+    }, 0);
+    const handleFocus = () => {
+      void fetchStats();
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        void fetchStats();
+      }
+    };
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      window.clearTimeout(initialFetchId);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, [fetchStats]);
+
+  const trackingPeriod = getTrackingMonths();
+  const statsNote =
+    statsStatus === "live"
+      ? "Baseline validation plus live public settlements. Updated from the public record feed."
+      : statsStatus === "fallback"
+        ? "Baseline validation shown while the live public record feed is unavailable."
+        : "Baseline validation shown while live public settlements load.";
+
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <FaqSchema />
@@ -203,21 +373,21 @@ export default function TrackRecordPage() {
           <div className="mt-12 grid gap-3 md:grid-cols-3">
             <StatCard
               label="Player Props"
-              value="780+"
-              sub="+25.0% ROI · 58% win rate"
+              value={formatBetCount(displayStats.props.total_bets)}
+              sub={`${formatSignedPercent(displayStats.props.roi)} ROI | ${displayStats.props.win_rate.toFixed(1)}% win rate`}
               accent
               delay={550}
             />
             <StatCard
               label="ATP Tennis"
-              value="447"
-              sub="+8.6% ROI · 54% win rate · Tipstrr verified"
+              value={formatBetCount(displayStats.tennis.total_bets)}
+              sub={`${formatSignedPercent(displayStats.tennis.roi)} ROI | ${displayStats.tennis.win_rate.toFixed(1)}% win rate | Tipstrr verified`}
               delay={650}
             />
             <StatCard
               label="Combined ROI"
-              value="+19%"
-              sub="1,227+ bets · 18 months"
+              value={formatSignedPercent(displayStats.overall.roi)}
+              sub={`${formatBetCount(displayStats.overall.total_bets)} bets | ${trackingPeriod}`}
               accent
               delay={750}
             />
@@ -225,7 +395,7 @@ export default function TrackRecordPage() {
 
           <Reveal delay={850}>
             <p className="mt-4 font-mono text-[10px] leading-relaxed text-slate-600">
-              Validation-phase data from private tracking. Live public tracking is now ongoing.
+              {statsNote}
             </p>
           </Reveal>
         </div>
@@ -297,7 +467,7 @@ export default function TrackRecordPage() {
                   </svg>
                 ),
                 title: "No editing",
-                body: "The public record cannot be changed after the fact. What is posted stays posted — wins and losses.",
+                body: "The public record cannot be changed after the fact. What is posted stays posted - wins and losses.",
               },
             ].map((item) => (
               <div
@@ -376,7 +546,7 @@ export default function TrackRecordPage() {
             <div className="relative grid gap-10 lg:grid-cols-[1fr,0.6fr] lg:gap-14">
               <div>
                 <span className="mb-3 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/90">
-                  Why we're different
+                  Why we are different
                 </span>
                 <h2 className="mb-5 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
                   The tipster problem
@@ -392,7 +562,7 @@ export default function TrackRecordPage() {
                     fact.
                   </p>
                   <p>
-                    That is not analysis. It is gambling repackaged as expertise — because confidence sells
+                    That is not analysis. It is gambling repackaged as expertise - because confidence sells
                     better than honesty.
                   </p>
                 </div>
@@ -439,22 +609,9 @@ export default function TrackRecordPage() {
           </span>
           <h2 className="mb-6 text-xl font-semibold text-slate-100">FAQ</h2>
           <div className="max-w-3xl space-y-2">
-            <FAQ
-              q="How is performance calculated?"
-              a="ROI is total profit divided by total stakes. Standard metrics: win rate, bet count, return on investment. Transparent accounting."
-            />
-            <FAQ
-              q="How often do you post picks?"
-              a="Irregularly. We only post when value exists. Some weeks have volume, some have none."
-            />
-            <FAQ
-              q="How do you handle losing runs?"
-              a="They stay visible. We don't hide drawdowns or pretend variance disappears when the sample turns against us."
-            />
-            <FAQ
-              q="Can past picks be edited?"
-              a="No. Once logged, records cannot be changed. That is the entire point of public tracking."
-            />
+            {FAQ_ITEMS.map((item) => (
+              <FAQ key={item.question} q={item.question} a={item.answer} />
+            ))}
           </div>
         </section>
 
@@ -487,7 +644,7 @@ export default function TrackRecordPage() {
                 href="/player-props"
                 className="mt-7 inline-flex items-center gap-2.5 rounded-lg bg-emerald-500 px-8 py-3.5 text-base font-semibold text-white transition-colors hover:bg-emerald-400"
               >
-                View Tips →
+                View Tips -&gt;
               </Link>
             </div>
           </div>
@@ -505,7 +662,7 @@ export default function TrackRecordPage() {
             >
               BeGambleAware
             </a>{" "}
-            ·{" "}
+            <span className="px-1.5 text-slate-500">|</span>
             <a
               href="https://www.gamcare.org.uk"
               target="_blank"
