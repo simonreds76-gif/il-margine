@@ -8,16 +8,16 @@
       "match_date": "2026-05-01",
       "home_team": "Pisa",
       "away_team": "Lecce",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-5-2",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Adrian Semper",
-        "Rosen Bozhinov",
         "Antonio Caracciolo",
         "Simone Canestrelli",
+        "Rosen Bozhinov",
         "Mehdi Léris",
         "Ebenezer Akinsanmiro",
         "Michel Aebischer",
@@ -33,11 +33,11 @@
         "Tiago Gabriel",
         "Antonino Gallo",
         "Ylber Ramadani",
-        "Lassana Coulibaly",
+        "Oumar Ngom",
         "Santiago Pierotti",
-        "Omri Gandelman",
+        "Lassana Coulibaly",
         "Lameck Banda",
-        "Nikola Stulic"
+        "Walid Cheddira"
       ],
       "home_starters": [
         {
@@ -50,7 +50,7 @@
           "position_id": 11
         },
         {
-          "name": "Rosen Bozhinov",
+          "name": "Antonio Caracciolo",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -59,7 +59,7 @@
           "position_id": 33
         },
         {
-          "name": "Antonio Caracciolo",
+          "name": "Simone Canestrelli",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -68,7 +68,7 @@
           "position_id": 35
         },
         {
-          "name": "Simone Canestrelli",
+          "name": "Rosen Bozhinov",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -196,7 +196,7 @@
           "position_id": 64
         },
         {
-          "name": "Lassana Coulibaly",
+          "name": "Oumar Ngom",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -214,7 +214,7 @@
           "position_id": 83
         },
         {
-          "name": "Omri Gandelman",
+          "name": "Lassana Coulibaly",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -232,7 +232,7 @@
           "position_id": 87
         },
         {
-          "name": "Nikola Stulic",
+          "name": "Walid Cheddira",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -241,8 +241,39 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Nícolas",
+        "Simone Scuffet",
+        "Arturo Calabresi",
+        "Francesco Coppola",
+        "Raúl Albiol",
+        "Calvin Stengs",
+        "Felipe Loyola",
+        "Gabriele Piccinini",
+        "Idrissa Touré",
+        "Juan Cuadrado",
+        "Malthe Højholt",
+        "Henrik Meister",
+        "Lorran",
+        "Rafiu Durosinmi",
+        "Samuel Iling-Junior"
+      ],
+      "away_subs": [
+        "Christian Früchtl",
+        "Jasper Samooja",
+        "Corrie Ndaba",
+        "Gaby Jean",
+        "Matías Pérez",
+        "Álex Sala",
+        "Filip Marchwinski",
+        "Niko Kovac",
+        "Olaf Gorter",
+        "Omri Gandelman",
+        "Thórir Helgason",
+        "Francesco Camarda",
+        "Konan N’Dri",
+        "Nikola Stulic"
+      ],
       "home_unavailable": [
         "Daniel Denoon",
         "Marius Marin",
