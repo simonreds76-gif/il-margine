@@ -6,14 +6,12 @@ import { useRouter } from "next/navigation";
 import { questionSlug } from "@/lib/parse-faq";
 import { type Bet, type Bookmaker, type MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
-import BookmakerLogo from "@/components/BookmakerLogo";
 import BetMobileMeta from "@/components/BetMobileMeta";
-import MarketBadge from "@/components/MarketBadge";
-import PnL from "@/components/PnL";
+import PublicBetsTable from "@/components/PublicBetsTable";
 import ResultBadge from "@/components/ResultBadge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
-import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
+import { formatMatchDate } from "@/lib/format";
 import { slugifyTip } from "@/lib/slugify";
 
 const HOMEPAGE_KEYFRAMES = `
@@ -737,50 +735,7 @@ export default function Home() {
             <p className="mb-6 text-xs text-slate-500">Stake in units (1u = your standard stake). We typically recommend 0.5u to 2u per pick.</p>
             <div className="overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0c0f14]">
               <div className="hidden overflow-x-auto md:block">
-                <table className="w-full min-w-[1060px] table-fixed border-collapse text-sm">
-                  <thead>
-                    <tr className="border-b border-slate-800/40 bg-slate-950/40 text-[11px] uppercase text-slate-500">
-                      <th className="w-[3.75rem] border-r border-slate-800/40 px-2.5 py-3 text-center"></th>
-                      <th className="w-[5.25rem] border-r border-slate-800/40 px-2.5 py-3 text-center">Date</th>
-                      <th className="w-[28%] border-r border-slate-800/40 px-4 py-3 text-left">Match</th>
-                      <th className="w-[15%] border-r border-slate-800/40 px-4 py-3 text-left">Player</th>
-                      <th className="w-[20%] border-r border-slate-800/40 px-4 py-3 text-left">Selection</th>
-                      <th className="w-[4.75rem] border-r border-slate-800/40 px-3 py-3 text-right">Odds</th>
-                      <th className="w-28 border-r border-slate-800/40 px-3 py-3 text-center">Bookmaker</th>
-                      <th className="w-[4.5rem] px-3 py-3 text-right">Stake</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {displayedPendingBets.map((bet) => (
-                      <tr key={bet.id} className="border-b border-slate-800/40 last:border-b-0 hover:bg-slate-800/20">
-                        <td className="border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle">
-                          <MarketBadge market={bet.market} category={bet.category} event={bet.event} hideOnMobile />
-                        </td>
-                        <td className="border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle text-sm whitespace-nowrap text-slate-400">{formatMatchDate(bet.match_date)}</td>
-                        <td className="border-r border-slate-800/40 px-4 py-3.5 align-middle font-medium text-slate-200">
-                          <Link href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="block truncate transition-colors hover:text-emerald-400" title={bet.event}>
-                            {bet.event}
-                          </Link>
-                        </td>
-                        <td className="border-r border-slate-800/40 px-4 py-3.5 align-middle text-slate-300">
-                          <span className="block truncate">{bet.player || "-"}</span>
-                        </td>
-                        <td className="border-r border-slate-800/40 px-4 py-3.5 align-middle text-slate-300">
-                          <span className="block whitespace-normal break-words leading-snug" title={bet.selection}>{bet.selection}</span>
-                        </td>
-                        <td className="border-r border-slate-800/40 px-3 py-3.5 text-right align-middle">
-                          <span className="font-mono tabular-nums text-slate-200">{formatOdds(bet.odds)}</span>
-                        </td>
-                        <td className="border-r border-slate-800/40 px-3 py-3.5 align-middle text-center">
-                          <div className="flex justify-center">
-                            <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
-                          </div>
-                        </td>
-                        <td className="px-3 py-3.5 text-right align-middle font-mono tabular-nums text-slate-200">{formatStake(bet.stake)}u</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <PublicBetsTable bets={displayedPendingBets} mode="pending" />
               </div>
               <div className="divide-y divide-slate-800/40 md:hidden">
                 {displayedPendingBets.map((bet) => (
@@ -865,58 +820,7 @@ export default function Home() {
             <p className="mb-6 text-xs text-slate-500">Stake in units (1u = your standard stake). We typically recommend 0.5u to 2u per pick.</p>
             <div className="overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0c0f14]">
               <div className="hidden overflow-x-auto md:block">
-                <table className="w-full min-w-[1180px] table-fixed border-collapse text-sm">
-                  <thead>
-                    <tr className="border-b border-slate-800/40 bg-slate-950/40 text-[11px] uppercase text-slate-500">
-                      <th className="w-[3.75rem] border-r border-slate-800/40 px-2.5 py-3 text-center"></th>
-                      <th className="w-[5.25rem] border-r border-slate-800/40 px-2.5 py-3 text-center">Date</th>
-                      <th className="w-[25%] border-r border-slate-800/40 px-4 py-3 text-left">Match</th>
-                      <th className="w-[15%] border-r border-slate-800/40 px-4 py-3 text-left">Player</th>
-                      <th className="w-[18%] border-r border-slate-800/40 px-4 py-3 text-left">Selection</th>
-                      <th className="w-[4.75rem] border-r border-slate-800/40 px-3 py-3 text-right">Odds</th>
-                      <th className="w-28 border-r border-slate-800/40 px-3 py-3 text-center">Bookmaker</th>
-                      <th className="w-[4.5rem] border-r border-slate-800/40 px-3 py-3 text-right">Stake</th>
-                      <th className="w-24 border-r border-slate-800/40 px-3 py-3 text-center">Result</th>
-                      <th className="w-24 px-4 py-3 text-right">P/L</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {recentBets.slice(0, 5).map((bet) => (
-                      <tr key={bet.id} className="border-b border-slate-800/40 last:border-b-0 hover:bg-slate-800/20">
-                        <td className="border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle">
-                          <MarketBadge market={bet.market} category={bet.category} event={bet.event} hideOnMobile />
-                        </td>
-                        <td className="border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle text-sm whitespace-nowrap text-slate-400">{formatMatchDate(bet.match_date)}</td>
-                        <td className="border-r border-slate-800/40 px-4 py-3.5 align-middle font-medium text-slate-200">
-                          <Link href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="block truncate transition-colors hover:text-emerald-400" title={bet.event}>
-                            {bet.event}
-                          </Link>
-                        </td>
-                        <td className="border-r border-slate-800/40 px-4 py-3.5 align-middle text-slate-300">
-                          <span className="block truncate">{bet.player || "-"}</span>
-                        </td>
-                        <td className="border-r border-slate-800/40 px-4 py-3.5 align-middle text-slate-300">
-                          <span className="block whitespace-normal break-words leading-snug" title={bet.selection}>{bet.selection}</span>
-                        </td>
-                        <td className="border-r border-slate-800/40 px-3 py-3.5 text-right align-middle">
-                          <span className="font-mono tabular-nums text-slate-200">{formatOdds(bet.odds)}</span>
-                        </td>
-                        <td className="border-r border-slate-800/40 px-3 py-3.5 align-middle text-center">
-                          <div className="flex justify-center">
-                            <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
-                          </div>
-                        </td>
-                        <td className="border-r border-slate-800/40 px-3 py-3.5 text-right align-middle font-mono tabular-nums text-slate-200">{formatStake(bet.stake)}u</td>
-                        <td className="border-r border-slate-800/40 px-2.5 py-3.5 align-middle text-center">
-                          <ResultBadge status={bet.status} />
-                        </td>
-                        <td className="px-4 py-3.5 text-right align-middle">
-                          <PnL value={bet.profit_loss} status={bet.status} />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <PublicBetsTable bets={recentBets.slice(0, 5)} mode="settled" />
               </div>
               <div className="divide-y divide-slate-800/40 md:hidden">
                 {recentBets.slice(0, 5).map((bet) => (

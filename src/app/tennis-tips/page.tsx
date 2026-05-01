@@ -1,19 +1,16 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
-import BookmakerLogo from "@/components/BookmakerLogo";
 import BetMobileMeta from "@/components/BetMobileMeta";
-import MarketBadge from "@/components/MarketBadge";
-import PnL from "@/components/PnL";
+import PublicBetsTable from "@/components/PublicBetsTable";
 import ResultBadge from "@/components/ResultBadge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import PageHomeLink from "@/components/PageHomeLink";
-import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
+import { formatMatchDate, formatOdds } from "@/lib/format";
 import { slugifyTip } from "@/lib/slugify";
 
 export default function TennisTips() {
@@ -303,52 +300,7 @@ export default function TennisTips() {
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
               {/* Desktop Table */}
               <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
-                <table className="w-full border-collapse min-w-full">
-                  <thead>
-                    <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
-                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '50px' }}></th>
-                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '70px' }}>Date</th>
-                      <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
-                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '100px' }}>Pick</th>
-                      <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
-                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
-                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
-                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '50px' }}>Stake</th>
-                      <th className="px-4 py-3 text-center" style={{ width: '70px' }}>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {displayedPending.map((pick) => (
-                      <tr key={pick.id} className="border-b border-slate-700 hover:bg-slate-800/30">
-                        <td className="px-4 py-4 text-center border-r border-slate-800/50">
-                          <MarketBadge market={pick.market} category={pick.category} event={pick.event} hideOnMobile />
-                        </td>
-                        <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(pick.match_date)}</td>
-                        <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50">
-                          <Link href={`/tips/${slugifyTip(pick.event, pick.id)}`} className="hover:text-emerald-400 transition-colors">
-                            {pick.event}
-                          </Link>
-                        </td>
-                        <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{pick.player || "-"}</td>
-                        <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{pick.selection}</td>
-                        <td className="px-4 py-4 text-center border-r border-slate-800/50">
-                          <span className="font-mono text-slate-200">{formatOdds(pick.odds)}</span>
-                        </td>
-                        <td className="px-4 py-4 text-center border-r border-slate-800/50">
-                          <div className="flex justify-center">
-                            <BookmakerLogo bookmaker={pick.bookmaker} size="sm" />
-                          </div>
-                        </td>
-                        <td className="px-4 py-4 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(pick.stake)}u</td>
-                        <td className="px-4 py-4 text-center">
-                          <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">
-                            PENDING
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <PublicBetsTable bets={displayedPending} mode="pending" playerHeader="Pick" />
               </div>
               {/* Mobile Cards */}
               <div className="md:hidden divide-y divide-slate-600">
@@ -466,54 +418,7 @@ export default function TennisTips() {
             <div className="bg-slate-900/50 rounded-lg border border-slate-800 overflow-hidden">
               {/* Desktop Table */}
               <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
-                <table className="w-full border-collapse min-w-full">
-                  <thead>
-                    <tr className="border-b border-slate-700 text-xs text-slate-500 uppercase bg-slate-900/50">
-                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '50px' }}></th>
-                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '70px' }}>Date</th>
-                      <th className="px-4 py-3 text-left border-r border-slate-800">Match</th>
-                      <th className="px-4 py-3 text-left border-r border-slate-800" style={{ width: '100px' }}>Pick</th>
-                      <th className="px-4 py-3 text-left border-r border-slate-800">Selection</th>
-                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '70px' }}>Odds</th>
-                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '90px' }}>Bookmaker</th>
-                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '50px' }}>Stake</th>
-                      <th className="px-4 py-3 text-center border-r border-slate-800" style={{ width: '84px' }}>Result</th>
-                      <th className="px-4 py-3 text-right" style={{ width: '84px' }}>P/L</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {displayedRecent.map((result) => (
-                      <tr key={result.id} className="border-b border-slate-700 hover:bg-slate-800/30">
-                        <td className="px-4 py-4 text-center border-r border-slate-800/50">
-                          <MarketBadge market={result.market} category={result.category} event={result.event} hideOnMobile />
-                        </td>
-                        <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(result.match_date)}</td>
-                        <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50">
-                          <Link href={`/tips/${slugifyTip(result.event, result.id)}`} className="hover:text-emerald-400 transition-colors">
-                            {result.event}
-                          </Link>
-                        </td>
-                        <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{result.player || "-"}</td>
-                        <td className="px-4 py-4 text-slate-300 border-r border-slate-800/50">{result.selection}</td>
-                        <td className="px-4 py-4 text-center border-r border-slate-800/50">
-                          <span className="font-mono text-slate-200">{formatOdds(result.odds)}</span>
-                        </td>
-                          <td className="px-4 py-4 text-center border-r border-slate-800/50">
-                            <div className="flex justify-center">
-                              <BookmakerLogo bookmaker={result.bookmaker} size="sm" />
-                            </div>
-                          </td>
-                        <td className="px-4 py-4 text-center font-mono text-slate-200 border-r border-slate-800/50">{formatStake(result.stake)}u</td>
-                        <td className="px-4 py-4 text-center border-r border-slate-800/30">
-                          <ResultBadge status={result.status} />
-                        </td>
-                        <td className="px-4 py-4 text-right">
-                          <PnL value={result.profit_loss} status={result.status} />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <PublicBetsTable bets={displayedRecent} mode="settled" playerHeader="Pick" />
               </div>
               {/* Mobile Cards */}
               <div className="md:hidden divide-y divide-slate-600">
