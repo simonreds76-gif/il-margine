@@ -20,10 +20,10 @@
         "Daley Blind",
         "Arnau Martínez",
         "Axel Witsel",
-        "Iván Martin",
+        "Fran Beltrán",
         "Viktor Tsigankov",
-        "Thomas Lemar",
         "Azzedine Ounahi",
+        "Joel Roca",
         "Claudio Echeverri"
       ],
       "away_players": [
@@ -95,7 +95,7 @@
           "position_id": 64
         },
         {
-          "name": "Iván Martin",
+          "name": "Fran Beltrán",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -113,7 +113,7 @@
           "position_id": 83
         },
         {
-          "name": "Thomas Lemar",
+          "name": "Azzedine Ounahi",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -122,7 +122,7 @@
           "position_id": 85
         },
         {
-          "name": "Azzedine Ounahi",
+          "name": "Joel Roca",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -253,9 +253,9 @@
         "Vladyslav Vanat"
       ],
       "away_unavailable": [
-        "Marash Kumbulla",
         "Lucas Bergström",
         "Antonio Raíllo",
+        "Marash Kumbulla",
         "Mateo Joseph"
       ]
     },
@@ -1039,13 +1039,13 @@
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
       "home_formation": "4-4-2",
-      "away_formation": "4-1-4-1",
+      "away_formation": "4-2-3-1",
       "home_players": [
         "Arnau Tenas",
         "Alex Freeman",
-        "Rafa Marín",
+        "Pau Navarro",
         "Renato Veiga",
-        "Alfonso Pedraza",
+        "Sergi Cardona",
         "Nicolas Pépé",
         "Santi Comesaña",
         "Pape Gueye",
@@ -1056,14 +1056,14 @@
       "away_players": [
         "Mathew Ryan",
         "Jeremy Toljan",
-        "Adrián De La Fuente",
+        "Alan Matturro",
         "Matías Moreno",
         "Manuel Sánchez",
+        "Jon Olasagasti",
         "Ugo Raghouber",
         "Víctor García",
-        "Jon Olasagasti",
         "Pablo Martínez",
-        "Paco Cortés",
+        "Iván Romero",
         "Carlos Espí"
       ],
       "home_starters": [
@@ -1086,7 +1086,7 @@
           "position_id": 32
         },
         {
-          "name": "Rafa Marín",
+          "name": "Pau Navarro",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1104,7 +1104,7 @@
           "position_id": 36
         },
         {
-          "name": "Alfonso Pedraza",
+          "name": "Sergi Cardona",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1174,7 +1174,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 11
         },
         {
@@ -1183,16 +1183,16 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 32
         },
         {
-          "name": "Adrián De La Fuente",
+          "name": "Alan Matturro",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 34
         },
         {
@@ -1201,7 +1201,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 36
         },
         {
@@ -1210,53 +1210,53 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 38
+        },
+        {
+          "name": "Jon Olasagasti",
+          "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
         },
         {
           "name": "Ugo Raghouber",
           "line_index": 1,
-          "line_size": 1,
+          "line_size": 2,
           "role_score": 2,
           "role_group": "DMC",
-          "formation": "4-1-4-1",
-          "position_id": 65
+          "formation": "4-2-3-1",
+          "position_id": 66
         },
         {
           "name": "Víctor García",
           "line_index": 2,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 82
-        },
-        {
-          "name": "Jon Olasagasti",
-          "line_index": 2,
-          "line_size": 4,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 84
+          "formation": "4-2-3-1",
+          "position_id": 83
         },
         {
           "name": "Pablo Martínez",
           "line_index": 2,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 86
+          "formation": "4-2-3-1",
+          "position_id": 85
         },
         {
-          "name": "Paco Cortés",
+          "name": "Iván Romero",
           "line_index": 2,
-          "line_size": 4,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-1-4-1",
-          "position_id": 88
+          "formation": "4-2-3-1",
+          "position_id": 87
         },
         {
           "name": "Carlos Espí",
@@ -1264,7 +1264,7 @@
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-1-4-1",
+          "formation": "4-2-3-1",
           "position_id": 115
         }
       ],
@@ -1277,9 +1277,10 @@
         "Pau Cabanes"
       ],
       "away_unavailable": [
-        "Álex Primo",
         "Unai Vencedor",
         "Kareem Tunde",
+        "Álex Primo",
+        "Adrián De La Fuente",
         "Unai Elgezabal"
       ]
     },
