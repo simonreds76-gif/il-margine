@@ -214,6 +214,7 @@ def main() -> int:
             "--league", league,
             "--live-only",
             "--fetch-lineups",
+            "--lineup-days-ahead", "0",
             "--fetch-odds-api",
             "--odds-api-bookmakers", "Bet365",
             "--bookmaker", "Bet365",
@@ -235,7 +236,9 @@ def main() -> int:
         ran_count += 1
         successful_run_at = now_utc_iso()
         detail_run_at = ""
-        run_detail_tasks = not (tier == "hot" and last_detail_age is not None and last_detail_age < DETAIL_CADENCE_HOT_MINUTES)
+        run_detail_tasks = False
+        if tier not in {"lineup", "grace"}:
+            run_detail_tasks = not (last_detail_age is not None and last_detail_age < DETAIL_CADENCE_HOT_MINUTES)
 
         if run_detail_tasks:
             review_proc = run_cmd([sys.executable, str(ROOT / "scripts" / "goalscorer-live-penalty-review.py"), "--league", league, "--days-back", "6"])

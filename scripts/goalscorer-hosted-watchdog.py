@@ -4,7 +4,9 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 import sys
+import time
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
@@ -99,6 +101,42 @@ def dispatch_hot_live(repo: str, workflow_file: str, branch: str, token: str, re
     )
 
 
+def dispatch_hot_live_with_retry(
+    repo: str,
+    workflow_file: str,
+    branch: str,
+    token: str,
+    reason: str,
+    *,
+    attempts: int,
+    retry_delay_seconds: float,
+) -> None:
+    attempts = max(1, attempts)
+    retry_delay_seconds = max(0.0, retry_delay_seconds)
+
+    for attempt in range(1, attempts + 1):
+        try:
+            dispatch_hot_live(repo, workflow_file, branch, token, reason)
+            if attempt > 1:
+                emit("notice", f"Goalscorer watchdog dispatch succeeded on attempt {attempt}/{attempts}.")
+            return
+        except urllib.error.HTTPError as exc:
+            retryable = 500 <= exc.code <= 599
+            if not retryable or attempt >= attempts:
+                raise
+            emit(
+                "warning",
+                f"Goalscorer watchdog dispatch got GitHub HTTP {exc.code}; retrying attempt {attempt + 1}/{attempts}.",
+            )
+        except urllib.error.URLError:
+            if attempt >= attempts:
+                raise
+            emit("warning", f"Goalscorer watchdog dispatch hit a network error; retrying attempt {attempt + 1}/{attempts}.")
+
+        if retry_delay_seconds:
+            time.sleep(retry_delay_seconds * attempt)
+
+
 def newest_status_age_minutes(status_payload: dict[str, Any] | None) -> float | None:
     if not status_payload:
         return None
@@ -114,6 +152,44 @@ def emit(level: str, message: str) -> None:
     print(f"::{level}::{message}")
 
 
+def load_lineup_plan() -> dict[str, Any] | None:
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "goalscorer-live-schedule.py"), "--json"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    if proc.returncode != 0:
+        emit(
+            "warning",
+            f"Goalscorer watchdog could not build lineup schedule; leaving hot-live idle. {proc.stderr.strip() or proc.stdout.strip()}",
+        )
+        return None
+    try:
+        return json.loads(proc.stdout or "{}")
+    except json.JSONDecodeError:
+        emit("warning", "Goalscorer watchdog got invalid lineup schedule JSON; leaving hot-live idle.")
+        return None
+
+
+def due_lineup_fixtures(plan: dict[str, Any] | None) -> tuple[int, list[str]]:
+    if not isinstance(plan, dict):
+        return 0, []
+    due_count = 0
+    labels: list[str] = []
+    for league in plan.get("leagues", []):
+        if not isinstance(league, dict):
+            continue
+        count = int(league.get("active_fixture_count") or 0)
+        if count <= 0:
+            continue
+        due_count += count
+        labels.append(f"{league.get('league')}:{count}")
+    return due_count, labels
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Hosted watchdog for the goalscorer hot-live workflow")
     parser.add_argument("--status-file", default=str(DEFAULT_STATUS_FILE))
@@ -122,12 +198,21 @@ def main() -> int:
     parser.add_argument("--stale-minutes", type=float, default=35.0)
     parser.add_argument("--running-grace-minutes", type=float, default=25.0)
     parser.add_argument("--cooldown-minutes", type=float, default=20.0)
+    parser.add_argument("--dispatch-attempts", type=int, default=3)
+    parser.add_argument("--dispatch-retry-delay-seconds", type=float, default=8.0)
     args = parser.parse_args()
 
     token = os.environ.get("GITHUB_TOKEN", "").strip()
     repo = os.environ.get("GITHUB_REPOSITORY", "").strip()
     if not token or not repo:
         raise SystemExit("Set GITHUB_TOKEN and GITHUB_REPOSITORY for the hosted watchdog.")
+
+    lineup_plan = load_lineup_plan()
+    due_count, due_labels = due_lineup_fixtures(lineup_plan)
+    if due_count <= 0:
+        emit("notice", "No official-lineup windows are due; goalscorer watchdog stayed idle.")
+        return 0
+    emit("notice", f"Official-lineup window due for {due_count} fixture(s): {', '.join(due_labels)}.")
 
     status_payload = read_json(Path(args.status_file))
     status_state = str((status_payload or {}).get("state") or "").strip().lower()
@@ -165,7 +250,15 @@ def main() -> int:
 
     reason = "watchdog_stale_status"
     try:
-        dispatch_hot_live(repo, args.workflow_file, args.branch, token, reason)
+        dispatch_hot_live_with_retry(
+            repo,
+            args.workflow_file,
+            args.branch,
+            token,
+            reason,
+            attempts=args.dispatch_attempts,
+            retry_delay_seconds=args.dispatch_retry_delay_seconds,
+        )
     except urllib.error.HTTPError as exc:
         emit("error", f"Goalscorer watchdog failed to dispatch hot-live workflow: HTTP {exc.code}")
         return 1
