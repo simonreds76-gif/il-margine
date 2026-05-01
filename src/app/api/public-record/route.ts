@@ -68,9 +68,10 @@ async function fetchHomePayload() {
         .from("bets")
         .select("*, bookmaker:bookmakers(*)")
         .in("status", ["won", "lost", "void"])
-        .order("settled_at", { ascending: false, nullsFirst: false })
         .order("match_date", { ascending: false, nullsFirst: false })
+        .order("settled_at", { ascending: false, nullsFirst: false })
         .order("posted_at", { ascending: false, nullsFirst: false })
+        .order("id", { ascending: false })
         .limit(5),
       supabase
         .from("bets")
@@ -123,9 +124,10 @@ async function fetchMarketPayload(scope: "tennis" | "props") {
         .select("*, bookmaker:bookmakers(*)")
         .eq("market", market)
         .in("status", ["won", "lost", "void"])
-        .order("settled_at", { ascending: false, nullsFirst: false })
         .order("match_date", { ascending: false, nullsFirst: false })
+        .order("settled_at", { ascending: false, nullsFirst: false })
         .order("posted_at", { ascending: false, nullsFirst: false })
+        .order("id", { ascending: false })
         .limit(50),
       supabase.from("category_stats").select("*").eq("market", market),
     ]),
