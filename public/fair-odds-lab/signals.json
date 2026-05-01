@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-01T16:18:07.958669Z",
+  "generated_at": "2026-05-01T17:22:29.222632Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -9,7 +9,7 @@
     "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
   "edge_threshold_pp": 0.0,
-  "fixtures_evaluated": 40,
+  "fixtures_evaluated": 41,
   "signals_qualifying": 36,
   "leagues_covered": [
     "bundesliga",
@@ -69,7 +69,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 64
+          "percentile": 63
         },
         "fixture_boost_pct": 2,
         "projected_minutes": 89,
@@ -123,13 +123,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 88
+          "percentile": 89
         },
         "share_of_team_chances_pct": 35,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 62
+          "percentile": 63
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
@@ -193,11 +193,11 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 73
+          "percentile": 74
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 89
+          "percentile": 90
         },
         "fixture_boost_pct": 18,
         "projected_minutes": 78,
@@ -263,7 +263,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 80
+          "percentile": 79
         },
         "fixture_boost_pct": 23,
         "projected_minutes": 87,
@@ -324,11 +324,11 @@
         "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 73
+          "percentile": 74
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 89
+          "percentile": 90
         },
         "fixture_boost_pct": 18,
         "projected_minutes": 89,
@@ -390,7 +390,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 55
+          "percentile": 56
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
@@ -407,6 +407,70 @@
         "Takes 36% of Auxerre's scoring chances",
         "Recent chance quality grades as strong",
         "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260504-morgan-gibbs-white-970df360c3",
+      "match": {
+        "home_team": "Chelsea FC",
+        "away_team": "Nottingham Forest",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-04",
+        "venue": ""
+      },
+      "player": {
+        "name": "Morgan Gibbs-White",
+        "team": "Nottingham Forest",
+        "position": "MID",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/nottingham-forest.png",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#38bdf8",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 29.8,
+        "fair_odds": 3.36
+      },
+      "market_data": {
+        "best_odds": 4.33,
+        "best_book": "Bet365",
+        "implied_chance_pct": 23.1
+      },
+      "edge": {
+        "price_gap_pp": 6.7,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 87
+        },
+        "share_of_team_chances_pct": 23,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 39
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 60
+        },
+        "fixture_boost_pct": -12,
+        "projected_minutes": 88,
+        "penalty_role": "Secondary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Morgan Gibbs-White at 29.8%, market implies 23.1%",
+        "Takes 23% of Nottingham Forest's scoring chances",
+        "Recent chance quality grades as strong"
       ],
       "risk_flags": []
     },
@@ -455,7 +519,7 @@
         "share_of_team_chances_percentile": 92,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 24
+          "percentile": 25
         },
         "opponent_defensive_weakness": {
           "tier": "High",
@@ -520,7 +584,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 12
+          "percentile": 13
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
@@ -537,70 +601,6 @@
         "Takes 30% of Burnley's scoring chances",
         "Recent chance quality grades as strong",
         "Primary penalty role adds a clear scoring route"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260504-morgan-gibbs-white-970df360c3",
-      "match": {
-        "home_team": "Chelsea FC",
-        "away_team": "Nottingham Forest",
-        "league": "epl",
-        "league_display": "Premier League",
-        "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-04",
-        "venue": ""
-      },
-      "player": {
-        "name": "Morgan Gibbs-White",
-        "team": "Nottingham Forest",
-        "position": "MID",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/nottingham-forest.png",
-        "team_primary_color": "#7f1d1d",
-        "team_secondary_color": "#38bdf8",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 29.3,
-        "fair_odds": 3.41
-      },
-      "market_data": {
-        "best_odds": 4.33,
-        "best_book": "Bet365",
-        "implied_chance_pct": 23.1
-      },
-      "edge": {
-        "price_gap_pp": 6.2,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 87
-        },
-        "share_of_team_chances_pct": 23,
-        "share_of_team_chances_percentile": 98,
-        "team_attacking_outlook": {
-          "tier": "Average",
-          "percentile": 38
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 61
-        },
-        "fixture_boost_pct": -12,
-        "projected_minutes": 88,
-        "penalty_role": "Secondary",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores Morgan Gibbs-White at 29.3%, market implies 23.1%",
-        "Takes 23% of Nottingham Forest's scoring chances",
-        "Recent chance quality grades as strong"
       ],
       "risk_flags": []
     },
@@ -778,11 +778,11 @@
         "share_of_team_chances_percentile": 88,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 59
+          "percentile": 60
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 32
+          "percentile": 33
         },
         "fixture_boost_pct": -15,
         "projected_minutes": 90,
@@ -907,11 +907,11 @@
         "share_of_team_chances_percentile": 91,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 41
+          "percentile": 42
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 11
+          "percentile": 10
         },
         "fixture_boost_pct": -19,
         "projected_minutes": 84,
@@ -964,13 +964,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 87
+          "percentile": 88
         },
         "share_of_team_chances_pct": 23,
         "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 15
+          "percentile": 16
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
@@ -1097,7 +1097,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 7
+          "percentile": 8
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
@@ -1231,7 +1231,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 35
+          "percentile": 36
         },
         "fixture_boost_pct": -25,
         "projected_minutes": 78,
@@ -1354,7 +1354,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 89
+          "percentile": 90
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
@@ -1418,11 +1418,11 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 21
+          "percentile": 22
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 18
+          "percentile": 19
         },
         "fixture_boost_pct": -21,
         "projected_minutes": 86,
@@ -1477,17 +1477,17 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Good",
-          "percentile": 55
+          "percentile": 56
         },
         "share_of_team_chances_pct": 10,
         "share_of_team_chances_percentile": 88,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 82
+          "percentile": 83
         },
         "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 75
+          "tier": "Positive",
+          "percentile": 74
         },
         "fixture_boost_pct": 5,
         "projected_minutes": 90,
@@ -1497,8 +1497,7 @@
       "confidence_tier": "Medium",
       "reasons": [
         "Model scores Nico Schlotterbeck at 17.5%, market implies 14.3%",
-        "Takes 10% of Borussia Dortmund's scoring chances",
-        "Opponent defensive profile is a positive matchup"
+        "Takes 10% of Borussia Dortmund's scoring chances"
       ],
       "risk_flags": []
     },
@@ -1568,70 +1567,6 @@
       "risk_flags": []
     },
     {
-      "id": "20260504-felipe-morato-c0c8f1e71f",
-      "match": {
-        "home_team": "Chelsea FC",
-        "away_team": "Nottingham Forest",
-        "league": "epl",
-        "league_display": "Premier League",
-        "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-04",
-        "venue": ""
-      },
-      "player": {
-        "name": "Felipe Morato",
-        "team": "Nottingham Forest",
-        "position": "DEF",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/nottingham-forest.png",
-        "team_primary_color": "#7f1d1d",
-        "team_secondary_color": "#38bdf8",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 8.8,
-        "fair_odds": 11.33
-      },
-      "market_data": {
-        "best_odds": 17.0,
-        "best_book": "Bet365",
-        "implied_chance_pct": 5.9
-      },
-      "edge": {
-        "price_gap_pp": 2.9,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 93
-        },
-        "share_of_team_chances_pct": 7,
-        "share_of_team_chances_percentile": 82,
-        "team_attacking_outlook": {
-          "tier": "Average",
-          "percentile": 38
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 61
-        },
-        "fixture_boost_pct": -7,
-        "projected_minutes": 78,
-        "penalty_role": "Not on penalties",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores Felipe Morato at 8.8%, market implies 5.9%",
-        "Takes 7% of Nottingham Forest's scoring chances",
-        "Recent chance quality grades as strong"
-      ],
-      "risk_flags": []
-    },
-    {
       "id": "20260503-marshall-munetsi-0c19e17fc6",
       "match": {
         "home_team": "Paris FC",
@@ -1676,11 +1611,11 @@
         "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 70
+          "percentile": 71
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 78
+          "percentile": 77
         },
         "fixture_boost_pct": 34,
         "projected_minutes": 78,
@@ -1736,7 +1671,7 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 77
+          "percentile": 78
         },
         "share_of_team_chances_pct": 13,
         "share_of_team_chances_percentile": 91,
@@ -1746,7 +1681,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 40
+          "percentile": 41
         },
         "fixture_boost_pct": -7,
         "projected_minutes": 86,
@@ -1806,7 +1741,7 @@
         "share_of_team_chances_percentile": 93,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 85
+          "percentile": 86
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
@@ -1864,7 +1799,7 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 81
+          "percentile": 82
         },
         "share_of_team_chances_pct": 10,
         "share_of_team_chances_percentile": 87,
@@ -1886,6 +1821,71 @@
         "Model scores Konstantinos Mavropanos at 12.5%, market implies 10.0%",
         "Takes 10% of West Ham's scoring chances",
         "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260504-alessio-romagnoli-211b5facec",
+      "match": {
+        "home_team": "US Cremonese",
+        "away_team": "Lazio Rome",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-04",
+        "venue": ""
+      },
+      "player": {
+        "name": "Alessio Romagnoli",
+        "team": "Lazio",
+        "position": "DEF",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/lazio.png",
+        "team_primary_color": "#7dd3fc",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 8.2,
+        "fair_odds": 12.14
+      },
+      "market_data": {
+        "best_odds": 17.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 5.9
+      },
+      "edge": {
+        "price_gap_pp": 2.4,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Average",
+          "percentile": 48
+        },
+        "share_of_team_chances_pct": 6,
+        "share_of_team_chances_percentile": 79,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 50
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 85
+        },
+        "fixture_boost_pct": 44,
+        "projected_minutes": 82,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Alessio Romagnoli at 8.2%, market implies 5.9%",
+        "Takes 6% of Lazio's scoring chances",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +44% goal-threat boost"
       ],
       "risk_flags": []
     },
@@ -1991,7 +1991,7 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 77
+          "percentile": 78
         },
         "share_of_team_chances_pct": 8,
         "share_of_team_chances_percentile": 84,
@@ -2001,7 +2001,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 12
+          "percentile": 13
         },
         "fixture_boost_pct": -19,
         "projected_minutes": 82,
@@ -2061,7 +2061,7 @@
         "share_of_team_chances_percentile": 84,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 33
+          "percentile": 34
         },
         "opponent_defensive_weakness": {
           "tier": "High",
@@ -2126,7 +2126,7 @@
         "share_of_team_chances_percentile": 80,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 62
+          "percentile": 63
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
@@ -2183,17 +2183,17 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Good",
-          "percentile": 58
+          "percentile": 59
         },
         "share_of_team_chances_pct": 5,
         "share_of_team_chances_percentile": 75,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 64
+          "percentile": 65
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 84
+          "percentile": 83
         },
         "fixture_boost_pct": -11,
         "projected_minutes": 78,
@@ -2319,7 +2319,7 @@
         "share_of_team_chances_percentile": 85,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 55
+          "percentile": 56
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
