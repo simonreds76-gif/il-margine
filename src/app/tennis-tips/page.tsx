@@ -321,7 +321,7 @@ export default function TennisTips() {
                     {displayedPending.map((pick) => (
                       <tr key={pick.id} className="border-b border-slate-700 hover:bg-slate-800/30">
                         <td className="px-4 py-4 text-center border-r border-slate-800/50">
-                          <MarketBadge market={pick.market} category={pick.category} hideOnMobile />
+                          <MarketBadge market={pick.market} category={pick.category} event={pick.event} hideOnMobile />
                         </td>
                         <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(pick.match_date)}</td>
                         <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50">
@@ -485,7 +485,7 @@ export default function TennisTips() {
                     {displayedRecent.map((result) => (
                       <tr key={result.id} className="border-b border-slate-700 hover:bg-slate-800/30">
                         <td className="px-4 py-4 text-center border-r border-slate-800/50">
-                          <MarketBadge market={result.market} category={result.category} hideOnMobile />
+                          <MarketBadge market={result.market} category={result.category} event={result.event} hideOnMobile />
                         </td>
                         <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(result.match_date)}</td>
                         <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50">

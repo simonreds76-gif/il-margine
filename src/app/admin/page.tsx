@@ -79,6 +79,9 @@ export default function AdminPanel() {
     props: [
       { id: "pl", name: "Premier League" },
       { id: "seriea", name: "Serie A" },
+      { id: "laliga", name: "La Liga" },
+      { id: "bundesliga", name: "Bundesliga" },
+      { id: "ligue1", name: "Ligue 1" },
       { id: "ucl", name: "Champions League" },
       { id: "other", name: "Other" },
     ],
@@ -94,11 +97,17 @@ export default function AdminPanel() {
     betbuilders: [
       { id: "pl", name: "Premier League" },
       { id: "seriea", name: "Serie A" },
+      { id: "laliga", name: "La Liga" },
+      { id: "bundesliga", name: "Bundesliga" },
+      { id: "ligue1", name: "Ligue 1" },
       { id: "other", name: "Other" },
     ],
     atg: [
       { id: "pl", name: "Premier League" },
       { id: "seriea", name: "Serie A" },
+      { id: "laliga", name: "La Liga" },
+      { id: "bundesliga", name: "Bundesliga" },
+      { id: "ligue1", name: "Ligue 1" },
       { id: "other", name: "Other" },
     ],
   };

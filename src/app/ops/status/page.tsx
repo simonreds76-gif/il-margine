@@ -40,7 +40,7 @@ type SilentPipelineRow = {
 };
 
 function formatDateTime(value: string | null): string {
-  if (!value) return "â€”";
+  if (!value) return "n/a";
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
   return parsed.toLocaleString("en-GB", {
@@ -56,7 +56,7 @@ function formatDateTime(value: string | null): string {
 }
 
 function formatSeconds(value: number | null): string {
-  if (value == null || !Number.isFinite(value)) return "â€”";
+  if (value == null || !Number.isFinite(value)) return "n/a";
   if (value < 60) return `${Math.round(value)}s`;
   if (value < 3600) return `${(value / 60).toFixed(1)}m`;
   if (value < 86400) return `${(value / 3600).toFixed(1)}h`;
@@ -169,7 +169,7 @@ export default async function OpsStatusPage() {
                       <div>
                         <p className="font-medium">{row.pipeline}</p>
                         <p className="text-xs text-slate-400">
-                          Expected {row.expected_interval || "â€”"} | Grace {row.grace_interval || "â€”"}
+                          Expected {row.expected_interval || "n/a"} | Grace {row.grace_interval || "n/a"}
                         </p>
                       </div>
                       <div className="text-right text-sm">
@@ -249,13 +249,13 @@ export default async function OpsStatusPage() {
                   <tr key={row.pipeline} className="align-top">
                     <td className="px-3 py-3">
                       <div className="font-medium text-slate-100">{row.pipeline}</div>
-                      <div className="mt-1 text-xs text-slate-500">{row.trigger_kind || "â€”"}</div>
+                      <div className="mt-1 text-xs text-slate-500">{row.trigger_kind || "n/a"}</div>
                     </td>
-                    <td className="px-3 py-3 text-slate-300">{row.host || "â€”"}</td>
-                    <td className={`px-3 py-3 font-medium ${statusTone(row.last_status)}`}>{row.last_status || "â€”"}</td>
+                    <td className="px-3 py-3 text-slate-300">{row.host || "n/a"}</td>
+                    <td className={`px-3 py-3 font-medium ${statusTone(row.last_status)}`}>{row.last_status || "n/a"}</td>
                     <td className="px-3 py-3 text-slate-300">{formatDateTime(row.last_started_at)}</td>
                     <td className="px-3 py-3 text-slate-300">{formatSeconds(row.last_duration_seconds)}</td>
-                    <td className="px-3 py-3 text-slate-300">{row.last_rows_out ?? "â€”"}</td>
+                    <td className="px-3 py-3 text-slate-300">{row.last_rows_out ?? "n/a"}</td>
                     <td className="px-3 py-3 text-xs text-slate-400">
                       <div>{row.runs_24h ?? 0} runs</div>
                       <div>{row.ok_24h ?? 0} ok / {row.failed_24h ?? 0} failed / {row.running_24h ?? 0} running</div>
@@ -265,11 +265,11 @@ export default async function OpsStatusPage() {
                         <div>
                           <div className="text-rose-300">{row.last_error_type}</div>
                           <div className="mt-1 max-w-md whitespace-pre-wrap break-words text-slate-500">
-                            {row.last_error_message || "â€”"}
+                            {row.last_error_message || "n/a"}
                           </div>
                         </div>
                       ) : (
-                        "â€”"
+                        "n/a"
                       )}
                     </td>
                   </tr>

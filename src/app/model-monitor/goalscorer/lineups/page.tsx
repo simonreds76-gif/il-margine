@@ -39,7 +39,7 @@ function groupFixturesByLeague(rows: GoalscorerFixtureLineup[]) {
   return [...grouped.entries()];
 }
 
-// â”€â”€â”€ Player row â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Player row -------------------------------------------------------------
 
 function PlayerRow({
   player,
@@ -53,7 +53,7 @@ function PlayerRow({
           <div className="truncate text-sm font-medium text-white">{player.name}</div>
           <div className="text-[11px] text-slate-500">
             {player.position}
-            {player.expected_minutes ? ` Â· ${Math.round(player.expected_minutes)} min` : ""}
+            {player.expected_minutes ? ` | ${Math.round(player.expected_minutes)} min` : ""}
           </div>
         </div>
         <StatusPill
@@ -76,7 +76,7 @@ function PlayerRow({
   );
 }
 
-// â”€â”€â”€ Player section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Player section ----------------------------------------------------------
 
 function PlayerSection({
   label,
@@ -98,7 +98,7 @@ function PlayerSection({
   );
 }
 
-// â”€â”€â”€ Team column â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Team column --------------------------------------------------------------
 
 function TeamColumn({
   leagueKey,
@@ -143,7 +143,7 @@ function TeamColumn({
   );
 }
 
-// â”€â”€â”€ Fixture card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Fixture card -------------------------------------------------------------
 
 function FixtureCard({ fixture }: { fixture: GoalscorerFixtureLineup }) {
   return (
@@ -194,7 +194,7 @@ function FixtureCard({ fixture }: { fixture: GoalscorerFixtureLineup }) {
   );
 }
 
-// â”€â”€â”€ Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Page --------------------------------------------------------------------
 
 export default async function GoalscorerLineupsPage() {
   if (!MODEL_MONITOR_ENABLED) notFound();
@@ -228,14 +228,14 @@ export default async function GoalscorerLineupsPage() {
 
         <MonitorNav current="lineups" />
 
-        {/* â”€â”€ Hero â”€â”€ */}
+        {/* -- Hero -- */}
         <HeroCard title="Goalscorer Lineups" eyebrow="Snapshot-backed fixture view">
           <span className="text-slate-300">Fixture cards rendered from the compact goalscorer monitor snapshot.</span>
-          <span className="mx-2 text-slate-700">Â·</span>
+          <span className="mx-2 text-slate-700">|</span>
           <span className="text-slate-500">Generated {formatDateTimeLabel(snapshot.generated_at)}</span>
         </HeroCard>
 
-        {/* â”€â”€ KPI strip â”€â”€ */}
+        {/* -- KPI strip -- */}
         <section className="grid gap-2.5 sm:grid-cols-3 xl:grid-cols-5">
           <StatCard label="Fixtures"        value={String(fixtures.length)} />
           <StatCard label="With lineups"    value={String(fixturesWithLineups)} />
@@ -244,7 +244,7 @@ export default async function GoalscorerLineupsPage() {
           <StatCard label="Penalty reviews" value={String(snapshot.penalty_watchlist.row_count)} />
         </section>
 
-        {/* â”€â”€ Fixture groups â”€â”€ */}
+        {/* -- Fixture groups -- */}
         {grouped.length === 0 ? (
           <SectionCard title="Fixtures" subtitle="No fixture lineup rows are present in the snapshot.">
             <EmptyState message="No fixture lineup data is available." />

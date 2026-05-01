@@ -14,6 +14,7 @@ import ResultBadge from "@/components/ResultBadge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import PageHomeLink from "@/components/PageHomeLink";
+import { getDisplayBetCategory } from "@/lib/bet-category";
 import { formatStake, formatMatchDate, formatOdds } from "@/lib/format";
 import { slugifyTip } from "@/lib/slugify";
 
@@ -31,8 +32,11 @@ export default function PlayerProps() {
     { id: "all", name: "All Leagues", color: "emerald" },
     { id: "pl", name: "Premier League", color: "purple" },
     { id: "seriea", name: "Serie A", color: "blue" },
+    { id: "laliga", name: "La Liga", color: "red" },
+    { id: "bundesliga", name: "Bundesliga", color: "rose" },
+    { id: "ligue1", name: "Ligue 1", color: "cyan" },
     { id: "ucl", name: "Champions League", color: "amber" },
-    { id: "other", name: "Other", color: "cyan" },
+    { id: "other", name: "Other", color: "slate" },
   ];
 
   const colorClasses: Record<string, { border: string; text: string; bg: string; bar: string }> = {
@@ -40,7 +44,10 @@ export default function PlayerProps() {
     purple: { border: "border-purple-500/50", text: "text-purple-400", bg: "bg-purple-500/10", bar: "from-purple-500 to-purple-400" },
     blue: { border: "border-blue-500/50", text: "text-blue-400", bg: "bg-blue-500/10", bar: "from-blue-500 to-blue-400" },
     amber: { border: "border-amber-500/50", text: "text-amber-400", bg: "bg-amber-500/10", bar: "from-amber-500 to-amber-400" },
+    red: { border: "border-red-500/50", text: "text-red-400", bg: "bg-red-500/10", bar: "from-red-500 to-red-400" },
+    rose: { border: "border-rose-500/50", text: "text-rose-400", bg: "bg-rose-500/10", bar: "from-rose-500 to-rose-400" },
     cyan: { border: "border-cyan-500/50", text: "text-cyan-400", bg: "bg-cyan-500/10", bar: "from-cyan-500 to-cyan-400" },
+    slate: { border: "border-slate-600/70", text: "text-slate-300", bg: "bg-slate-700/20", bar: "from-slate-600 to-slate-500" },
   };
 
   const fetchData = useCallback(async () => {
@@ -174,8 +181,9 @@ export default function PlayerProps() {
     };
   };
 
-  const filteredPending = activeLeague === "all" ? pendingBets : pendingBets.filter(b => b.category === activeLeague);
-  const filteredRecent = activeLeague === "all" ? recentBets : recentBets.filter(b => b.category === activeLeague);
+  const categoryForBet = (bet: Bet) => getDisplayBetCategory({ market: bet.market, category: bet.category, event: bet.event });
+  const filteredPending = activeLeague === "all" ? pendingBets : pendingBets.filter(b => categoryForBet(b) === activeLeague);
+  const filteredRecent = activeLeague === "all" ? recentBets : recentBets.filter(b => categoryForBet(b) === activeLeague);
   
   // Display limits: show 5 initially, or all if expanded
   const displayedPending = showAllPending ? filteredPending : filteredPending.slice(0, 5);
@@ -317,7 +325,7 @@ export default function PlayerProps() {
                     {displayedPending.map((pick) => (
                       <tr key={pick.id} className="border-b border-slate-700 hover:bg-slate-800/30">
                         <td className="px-4 py-4 text-center border-r border-slate-800/50">
-                          <MarketBadge market={pick.market} category={pick.category} hideOnMobile />
+                          <MarketBadge market={pick.market} category={pick.category} event={pick.event} hideOnMobile />
                         </td>
                         <td className="px-4 py-4 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(pick.match_date)}</td>
                         <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50">
@@ -484,7 +492,7 @@ export default function PlayerProps() {
                     {displayedRecent.map((result) => (
                       <tr key={result.id} className="border-b border-slate-700 hover:bg-slate-800/30">
                         <td className="px-4 py-4 text-center border-r border-slate-800/50">
-                          <MarketBadge market={result.market} category={result.category} hideOnMobile />
+                          <MarketBadge market={result.market} category={result.category} event={result.event} hideOnMobile />
                         </td>
                         <td className="px-4 py-3 text-slate-400 border-r border-slate-800/50 text-sm whitespace-nowrap">{formatMatchDate(result.match_date)}</td>
                         <td className="px-4 py-4 font-medium text-slate-200 border-r border-slate-800/50">

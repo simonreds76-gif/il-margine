@@ -729,54 +729,54 @@ export default function Home() {
 
       {pendingBets.length > 0 ? (
         <section className="border-b border-slate-800/30 py-16 md:py-20">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-8 sm:mb-10">
               <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">Live now</span>
               <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Active picks</h2>
             </div>
             <p className="mb-6 text-xs text-slate-500">Stake in units (1u = your standard stake). We typically recommend 0.5u to 2u per pick.</p>
             <div className="overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0c0f14]">
-              <div className="hidden md:block">
-                <table className="w-full table-fixed border-collapse text-sm">
+              <div className="hidden overflow-x-auto md:block">
+                <table className="w-full min-w-[1060px] table-fixed border-collapse text-sm">
                   <thead>
                     <tr className="border-b border-slate-800/40 bg-slate-950/40 text-[11px] uppercase text-slate-500">
-                      <th className="w-11 border-r border-slate-800/40 px-2.5 py-3 text-left"></th>
-                      <th className="w-16 border-r border-slate-800/40 px-2.5 py-3 text-left">Date</th>
-                      <th className="w-[24%] border-r border-slate-800/40 px-3 py-3 text-left">Match</th>
-                      <th className="w-[14%] border-r border-slate-800/40 px-3 py-3 text-left">Player</th>
-                      <th className="w-[17%] border-r border-slate-800/40 px-3 py-3 text-left">Selection</th>
-                      <th className="w-16 border-r border-slate-800/40 px-2.5 py-3 text-center">Odds</th>
-                      <th className="w-20 border-r border-slate-800/40 px-2.5 py-3 text-center">Bookmaker</th>
-                      <th className="w-16 px-2.5 py-3 text-center">Stake</th>
+                      <th className="w-[3.75rem] border-r border-slate-800/40 px-2.5 py-3 text-center"></th>
+                      <th className="w-[5.25rem] border-r border-slate-800/40 px-2.5 py-3 text-center">Date</th>
+                      <th className="w-[28%] border-r border-slate-800/40 px-4 py-3 text-left">Match</th>
+                      <th className="w-[15%] border-r border-slate-800/40 px-4 py-3 text-left">Player</th>
+                      <th className="w-[20%] border-r border-slate-800/40 px-4 py-3 text-left">Selection</th>
+                      <th className="w-[4.75rem] border-r border-slate-800/40 px-3 py-3 text-right">Odds</th>
+                      <th className="w-28 border-r border-slate-800/40 px-3 py-3 text-center">Bookmaker</th>
+                      <th className="w-[4.5rem] px-3 py-3 text-right">Stake</th>
                     </tr>
                   </thead>
                   <tbody>
                     {displayedPendingBets.map((bet) => (
                       <tr key={bet.id} className="border-b border-slate-800/40 last:border-b-0 hover:bg-slate-800/20">
                         <td className="border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle">
-                          <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
+                          <MarketBadge market={bet.market} category={bet.category} event={bet.event} hideOnMobile />
                         </td>
-                        <td className="border-r border-slate-800/40 px-2.5 py-3.5 align-middle text-sm whitespace-nowrap text-slate-400">{formatMatchDate(bet.match_date)}</td>
-                        <td className="border-r border-slate-800/40 px-3 py-3.5 align-middle font-medium text-slate-200">
+                        <td className="border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle text-sm whitespace-nowrap text-slate-400">{formatMatchDate(bet.match_date)}</td>
+                        <td className="border-r border-slate-800/40 px-4 py-3.5 align-middle font-medium text-slate-200">
                           <Link href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="block truncate transition-colors hover:text-emerald-400" title={bet.event}>
                             {bet.event}
                           </Link>
                         </td>
-                        <td className="border-r border-slate-800/40 px-3 py-3.5 align-middle text-slate-300">
+                        <td className="border-r border-slate-800/40 px-4 py-3.5 align-middle text-slate-300">
                           <span className="block truncate">{bet.player || "-"}</span>
                         </td>
-                        <td className="border-r border-slate-800/40 px-3 py-3.5 align-middle text-slate-300">
+                        <td className="border-r border-slate-800/40 px-4 py-3.5 align-middle text-slate-300">
                           <span className="block whitespace-normal break-words leading-snug" title={bet.selection}>{bet.selection}</span>
                         </td>
-                        <td className="border-r border-slate-800/40 px-2.5 py-3.5 align-middle text-center">
-                          <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
+                        <td className="border-r border-slate-800/40 px-3 py-3.5 text-right align-middle">
+                          <span className="font-mono tabular-nums text-slate-200">{formatOdds(bet.odds)}</span>
                         </td>
-                        <td className="border-r border-slate-800/40 px-2.5 py-3.5 align-middle text-center">
+                        <td className="border-r border-slate-800/40 px-3 py-3.5 align-middle text-center">
                           <div className="flex justify-center">
                             <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
                           </div>
                         </td>
-                        <td className="px-2.5 py-3.5 text-center align-middle font-mono text-slate-200">{formatStake(bet.stake)}u</td>
+                        <td className="px-3 py-3.5 text-right align-middle font-mono tabular-nums text-slate-200">{formatStake(bet.stake)}u</td>
                       </tr>
                     ))}
                   </tbody>
@@ -843,7 +843,7 @@ export default function Home() {
 
       {recentBets.length > 0 ? (
         <section className="border-b border-slate-800/30 py-16 md:py-20">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">Latest results</span>
@@ -864,53 +864,53 @@ export default function Home() {
             </div>
             <p className="mb-6 text-xs text-slate-500">Stake in units (1u = your standard stake). We typically recommend 0.5u to 2u per pick.</p>
             <div className="overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0c0f14]">
-              <div className="hidden md:block">
-                <table className="w-full table-fixed border-collapse text-sm">
+              <div className="hidden overflow-x-auto md:block">
+                <table className="w-full min-w-[1180px] table-fixed border-collapse text-sm">
                   <thead>
                     <tr className="border-b border-slate-800/40 bg-slate-950/40 text-[11px] uppercase text-slate-500">
-                      <th className="w-11 border-r border-slate-800/40 px-2.5 py-3 text-left"></th>
-                      <th className="w-16 border-r border-slate-800/40 px-2.5 py-3 text-left">Date</th>
-                      <th className="w-[24%] border-r border-slate-800/40 px-3 py-3 text-left">Match</th>
-                      <th className="w-[14%] border-r border-slate-800/40 px-3 py-3 text-left">Player</th>
-                      <th className="w-[17%] border-r border-slate-800/40 px-3 py-3 text-left">Selection</th>
-                      <th className="w-16 border-r border-slate-800/40 px-2.5 py-3 text-center">Odds</th>
-                      <th className="w-20 border-r border-slate-800/40 px-2.5 py-3 text-center">Bookmaker</th>
-                      <th className="w-16 border-r border-slate-800/40 px-2.5 py-3 text-center">Stake</th>
-                      <th className="w-20 border-r border-slate-800/40 px-2.5 py-3 text-center">Result</th>
-                      <th className="w-20 px-2.5 py-3 text-right">P/L</th>
+                      <th className="w-[3.75rem] border-r border-slate-800/40 px-2.5 py-3 text-center"></th>
+                      <th className="w-[5.25rem] border-r border-slate-800/40 px-2.5 py-3 text-center">Date</th>
+                      <th className="w-[25%] border-r border-slate-800/40 px-4 py-3 text-left">Match</th>
+                      <th className="w-[15%] border-r border-slate-800/40 px-4 py-3 text-left">Player</th>
+                      <th className="w-[18%] border-r border-slate-800/40 px-4 py-3 text-left">Selection</th>
+                      <th className="w-[4.75rem] border-r border-slate-800/40 px-3 py-3 text-right">Odds</th>
+                      <th className="w-28 border-r border-slate-800/40 px-3 py-3 text-center">Bookmaker</th>
+                      <th className="w-[4.5rem] border-r border-slate-800/40 px-3 py-3 text-right">Stake</th>
+                      <th className="w-24 border-r border-slate-800/40 px-3 py-3 text-center">Result</th>
+                      <th className="w-24 px-4 py-3 text-right">P/L</th>
                     </tr>
                   </thead>
                   <tbody>
                     {recentBets.slice(0, 5).map((bet) => (
                       <tr key={bet.id} className="border-b border-slate-800/40 last:border-b-0 hover:bg-slate-800/20">
                         <td className="border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle">
-                          <MarketBadge market={bet.market} category={bet.category} hideOnMobile />
+                          <MarketBadge market={bet.market} category={bet.category} event={bet.event} hideOnMobile />
                         </td>
-                        <td className="border-r border-slate-800/40 px-2.5 py-3.5 align-middle text-sm whitespace-nowrap text-slate-400">{formatMatchDate(bet.match_date)}</td>
-                        <td className="border-r border-slate-800/40 px-3 py-3.5 align-middle font-medium text-slate-200">
+                        <td className="border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle text-sm whitespace-nowrap text-slate-400">{formatMatchDate(bet.match_date)}</td>
+                        <td className="border-r border-slate-800/40 px-4 py-3.5 align-middle font-medium text-slate-200">
                           <Link href={`/tips/${slugifyTip(bet.event, bet.id)}`} className="block truncate transition-colors hover:text-emerald-400" title={bet.event}>
                             {bet.event}
                           </Link>
                         </td>
-                        <td className="border-r border-slate-800/40 px-3 py-3.5 align-middle text-slate-300">
+                        <td className="border-r border-slate-800/40 px-4 py-3.5 align-middle text-slate-300">
                           <span className="block truncate">{bet.player || "-"}</span>
                         </td>
-                        <td className="border-r border-slate-800/40 px-3 py-3.5 align-middle text-slate-300">
+                        <td className="border-r border-slate-800/40 px-4 py-3.5 align-middle text-slate-300">
                           <span className="block whitespace-normal break-words leading-snug" title={bet.selection}>{bet.selection}</span>
                         </td>
-                        <td className="border-r border-slate-800/40 px-2.5 py-3.5 align-middle text-center">
-                          <span className="font-mono text-slate-200">{formatOdds(bet.odds)}</span>
+                        <td className="border-r border-slate-800/40 px-3 py-3.5 text-right align-middle">
+                          <span className="font-mono tabular-nums text-slate-200">{formatOdds(bet.odds)}</span>
                         </td>
-                        <td className="border-r border-slate-800/40 px-2.5 py-3.5 align-middle text-center">
+                        <td className="border-r border-slate-800/40 px-3 py-3.5 align-middle text-center">
                           <div className="flex justify-center">
                             <BookmakerLogo bookmaker={bet.bookmaker} size="sm" />
                           </div>
                         </td>
-                        <td className="border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle font-mono text-slate-200">{formatStake(bet.stake)}u</td>
+                        <td className="border-r border-slate-800/40 px-3 py-3.5 text-right align-middle font-mono tabular-nums text-slate-200">{formatStake(bet.stake)}u</td>
                         <td className="border-r border-slate-800/40 px-2.5 py-3.5 align-middle text-center">
                           <ResultBadge status={bet.status} />
                         </td>
-                        <td className="px-2.5 py-3.5 text-right align-middle">
+                        <td className="px-4 py-3.5 text-right align-middle">
                           <PnL value={bet.profit_loss} status={bet.status} />
                         </td>
                       </tr>
@@ -1080,7 +1080,7 @@ export default function Home() {
         <div className="rounded-xl border border-amber-500/10 bg-amber-500/[0.03] px-5 py-4 text-[12px] leading-relaxed text-slate-500">
           <strong className="text-amber-400/80">Responsible gambling:</strong> Past performance does not guarantee future results. Only bet what you can afford to lose.{" "}
           <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" className="text-slate-400 underline underline-offset-2">BeGambleAware</a>
-          <span className="px-1.5 text-slate-500">Â·</span>
+          <span className="px-1.5 text-slate-500">|</span>
           <a href="https://www.gamcare.org.uk" target="_blank" rel="noopener noreferrer" className="text-slate-400 underline underline-offset-2">GamCare</a>
         </div>
       </div>

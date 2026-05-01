@@ -1,5 +1,7 @@
 "use client";
 
+import { getDisplayBetCategory } from "@/lib/bet-category";
+
 type MarketConfig = {
   src: string;
   label: string;
@@ -23,38 +25,21 @@ const MARKET_CONFIG: Record<string, MarketConfig> = {
   rolandgarros: { src: "/icons/markets/tennis.svg", label: "Roland Garros" },
   wimbledon: { src: "/icons/markets/tennis.svg", label: "Wimbledon" },
   usopen: { src: "/icons/markets/tennis.svg", label: "US Open" },
-  pl: { src: "/icons/markets/pl.svg", label: "Premier League", wide: true },
-  seriea: { src: "/icons/markets/seriea.svg", label: "Serie A" },
+  pl: { src: "/league-logos/epl.png", label: "Premier League", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
+  seriea: { src: "/league-logos/serie-a.png", label: "Serie A", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
+  laliga: { src: "/league-logos/la-liga.png", label: "La Liga", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
+  bundesliga: { src: "/league-logos/bundesliga.png", label: "Bundesliga", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
+  ligue1: { src: "/league-logos/ligue-1.png", label: "Ligue 1", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
   ucl: { src: "/icons/markets/ucl-official.svg", label: "Champions League", invertForDark: true },
-  other: { src: "/icons/markets/other.svg", label: "Other" },
-  worldcup: { src: "/icons/markets/other.svg", label: "World Cup" },
-  betbuilders: { src: "/icons/markets/other.svg", label: "Bet Builders" },
-  atg: { src: "/icons/markets/other.svg", label: "ATG" },
+  other: { src: "/icons/markets/other-football.svg", label: "Other football", containerClassName: "h-7 w-7", imageClassName: "h-7 w-7 object-contain" },
+  worldcup: { src: "/icons/markets/other-football.svg", label: "World Cup", containerClassName: "h-7 w-7", imageClassName: "h-7 w-7 object-contain" },
+  betbuilders: { src: "/icons/markets/other-football.svg", label: "Bet Builders", containerClassName: "h-7 w-7", imageClassName: "h-7 w-7 object-contain" },
+  atg: { src: "/icons/markets/other-football.svg", label: "ATG", containerClassName: "h-7 w-7", imageClassName: "h-7 w-7 object-contain" },
 };
 
-function normalizeCategory(value: string): string {
-  const raw = (value ?? "").trim().toLowerCase();
-  if (!raw) return "other";
-  const compact = raw.replace(/[\s_-]+/g, "");
-
-  if (compact === "pl" || compact === "epl" || compact === "premierleague" || compact === "englishpremierleague") {
-    return "pl";
-  }
-  if (compact === "seriea" || compact === "italianseriea" || compact === "seriaa") {
-    return "seriea";
-  }
-  if (compact === "ucl" || compact === "championsleague" || compact === "uefachampionsleague") {
-    return "ucl";
-  }
-  if (compact === "atp" || compact === "challenger" || compact === "ausopen" || compact === "rolandgarros" || compact === "wimbledon" || compact === "usopen") {
-    return compact;
-  }
-  return compact;
-}
-
-function getConfig(market: string, category: string): MarketConfig {
+function getConfig(market: string, category: string, event?: string | null): MarketConfig {
   const marketKey = (market ?? "").trim().toLowerCase();
-  const categoryKey = normalizeCategory(category ?? "");
+  const categoryKey = getDisplayBetCategory({ market, category, event });
 
   if (marketKey === "tennis") {
     return MARKET_CONFIG[categoryKey] ?? MARKET_CONFIG.tennis;
@@ -70,22 +55,23 @@ function getConfig(market: string, category: string): MarketConfig {
 interface MarketBadgeProps {
   market: string;
   category?: string | null;
+  event?: string | null;
   showLabel?: boolean;
   className?: string;
   /** Hide badge on mobile (md and up only) */
   hideOnMobile?: boolean;
 }
 
-export default function MarketBadge({ market, category, showLabel = false, className = "", hideOnMobile = false }: MarketBadgeProps) {
-  const { src, label, invertForDark, wide, containerClassName, imageClassName } = getConfig(market, category ?? "");
+export default function MarketBadge({ market, category, event, showLabel = false, className = "", hideOnMobile = false }: MarketBadgeProps) {
+  const { src, label, invertForDark, wide, containerClassName, imageClassName } = getConfig(market, category ?? "", event);
   return (
     <span
-      className={`inline-flex items-center gap-1.5 ${hideOnMobile ? "hidden lg:inline-flex" : ""} ${className}`}
+      className={`inline-flex items-center gap-1.5 ${hideOnMobile ? "hidden md:inline-flex" : ""} ${className}`}
       title={label}
     >
       <span className={`inline-flex items-center justify-center shrink-0 ${containerClassName ?? (wide ? "h-6 w-8" : "h-6 w-6")}`}>
         <img
-          src={`${src}?v=8`}
+          src={`${src}?v=9`}
           alt={label}
           width={wide ? 32 : 24}
           height={24}

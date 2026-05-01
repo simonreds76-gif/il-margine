@@ -116,7 +116,7 @@ export default async function TipPage({ params }: PageProps) {
           </div>
 
           <div className="flex items-center gap-2 mb-5 flex-wrap">
-            <MarketBadge market={bet.market} category={bet.category} />
+            <MarketBadge market={bet.market} category={bet.category} event={bet.event} />
             <span className="text-xs font-mono px-2.5 py-1 rounded-md border border-slate-600 text-slate-400 bg-slate-800/50">
               {formatMatchDate(bet.match_date)}
             </span>
