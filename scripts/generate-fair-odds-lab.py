@@ -41,6 +41,13 @@ DEFAULT_INPUTS = [
 DEFAULT_MONITOR_SNAPSHOT = Path("data/goalscorer/goalscorer-monitor-snapshot.json")
 DEFAULT_OUTPUT = Path("public/fair-odds-lab/signals.json")
 DEFAULT_TEAM_LOGO_MAP = Path("data/goalscorer/team-logo-map.json")
+DEFAULT_LINEUP_FIXTURES = [
+    Path("data/goalscorer/confirmed-lineups.json"),
+    Path("data/goalscorer/epl-confirmed-lineups.json"),
+    Path("data/goalscorer/la-liga-confirmed-lineups.json"),
+    Path("data/goalscorer/bundesliga-confirmed-lineups.json"),
+    Path("data/goalscorer/ligue-1-confirmed-lineups.json"),
+]
 
 TEAM_COLOR_PALETTE = [
     ("#1d4ed8", "#b91c1c"),
@@ -135,6 +142,8 @@ TEAM_NAME_ALIASES = {
     "fc st pauli": "st pauli",
     "ca osasuna": "osasuna",
     "athletic bilbao": "athletic club",
+    "aj auxerre": "auxerre",
+    "angers sco": "angers",
     "rb leipzig": "rasenballsport leipzig",
     "tsg hoffenheim": "hoffenheim",
     "borussia monchengladbach": "borussia m gladbach",
@@ -160,6 +169,7 @@ TEAM_NAME_ALIASES = {
     "rc lens": "lens",
     "acf fiorentina": "fiorentina",
     "as roma": "roma",
+    "como 1907": "como",
     "atalanta bc": "atalanta",
     "hellas verona": "verona",
     "lazio rome": "lazio",
@@ -173,6 +183,10 @@ TEAM_NAME_ALIASES = {
     "real sociedad san sebastian": "sociedad",
     "juventus turin": "juventus",
     "espanyol barcelona": "espanyol",
+    "ogc nice": "nice",
+    "racing club de lens": "lens",
+    "real betis seville": "real betis",
+    "stade brest 29": "brest",
 }
 
 
@@ -202,6 +216,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--monitor-snapshot", type=Path, default=DEFAULT_MONITOR_SNAPSHOT)
     parser.add_argument("--team-logo-map", type=Path, default=DEFAULT_TEAM_LOGO_MAP)
+    parser.add_argument(
+        "--lineups",
+        type=Path,
+        action="append",
+        help="Confirmed/expected lineup JSON files used to enrich signals with FotMob ids and kickoff UTC. Defaults to all goalscorer lineup files.",
+    )
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--edge-threshold-pp", type=float, default=0.0)
     parser.add_argument("--max-signals", type=int, default=36)
@@ -302,6 +322,81 @@ def league_logo_path(league: str) -> str:
     if league in LEAGUE_LABELS:
         return f"/league-logos/{league}.png"
     return ""
+
+
+def infer_lineup_league(path: Path) -> str:
+    name = path.name.lower()
+    if name.startswith("epl-"):
+        return "epl"
+    if name.startswith("la-liga-"):
+        return "la-liga"
+    if name.startswith("bundesliga-"):
+        return "bundesliga"
+    if name.startswith("ligue-1-"):
+        return "ligue-1"
+    if name.startswith("serie-a-") or name == "confirmed-lineups.json":
+        return "serie-a"
+    return ""
+
+
+def lineup_fixture_key(league: str, match_date: str, home_team: Any, away_team: Any) -> tuple[str, str, str, str]:
+    return (
+        league,
+        match_date[:10],
+        canonical_team_key(home_team),
+        canonical_team_key(away_team),
+    )
+
+
+def load_lineup_fixture_lookup(paths: list[Path]) -> dict[tuple[str, str, str, str], dict[str, Any]]:
+    lookup: dict[tuple[str, str, str, str], dict[str, Any]] = {}
+    for path in paths:
+        if not path.exists():
+            continue
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8-sig"))
+        except json.JSONDecodeError:
+            continue
+        fixtures = payload.get("fixtures") if isinstance(payload, dict) else None
+        if not isinstance(fixtures, list):
+            continue
+        league = infer_lineup_league(path)
+        for fixture in fixtures:
+            if not isinstance(fixture, dict):
+                continue
+            match_date = clean_text(fixture.get("match_date")) or clean_text(fixture.get("kickoff_utc"))[:10]
+            home = clean_text(fixture.get("home_team"))
+            away = clean_text(fixture.get("away_team"))
+            if not (league and match_date and home and away):
+                continue
+            lookup[lineup_fixture_key(league, match_date, home, away)] = fixture
+    return lookup
+
+
+def enrich_rows_with_lineups(
+    rows: list[dict[str, Any]],
+    lineup_lookup: dict[tuple[str, str, str, str], dict[str, Any]],
+) -> list[dict[str, Any]]:
+    if not lineup_lookup:
+        return rows
+
+    enriched: list[dict[str, Any]] = []
+    for row in rows:
+        copied = dict(row)
+        competition = clean_text(copied.get("competition"))
+        league = league_slug(competition)
+        match_date = row_date_key(copied)
+        home = clean_text(copied.get("home_team"))
+        away = clean_text(copied.get("away_team"))
+        fixture = lineup_lookup.get(lineup_fixture_key(league, match_date, home, away))
+        if fixture:
+            if not clean_text(copied.get("kickoff")):
+                copied["kickoff"] = clean_text(fixture.get("kickoff_utc"))
+            copied["_fotmob_match_id"] = clean_text(fixture.get("fotmob_match_id"))
+            copied["_fotmob_page_url"] = clean_text(fixture.get("fotmob_page_url"))
+            copied["_lineup_type"] = clean_text(fixture.get("lineup_type"))
+        enriched.append(copied)
+    return enriched
 
 
 def real_jersey_number(row: dict[str, str]) -> str:
@@ -593,6 +688,7 @@ def build_candidates_from_rows(
 def read_grouped_candidates(
     input_paths: list[Path],
     monitor_snapshot_path: Path,
+    lineup_fixture_paths: list[Path],
     today_iso: str,
     include_past: bool,
 ) -> tuple[list[dict[str, Any]], list[Candidate], list[str]]:
@@ -604,6 +700,7 @@ def read_grouped_candidates(
             source_paths.append(str(input_path).replace("\\", "/"))
             source_rows.extend(rows)
 
+    source_rows = enrich_rows_with_lineups(source_rows, load_lineup_fixture_lookup(lineup_fixture_paths))
     raw_rows, candidates = build_candidates_from_rows(source_rows, today_iso, include_past)
     if raw_rows:
         return raw_rows, candidates, source_paths
@@ -713,6 +810,9 @@ def build_signal(
             "league_logo_path": league_logo_path(league),
             "kickoff_utc": clean_text(row.get("kickoff")),
             "kickoff_display": display_kickoff(row),
+            "fotmob_match_id": clean_text(row.get("_fotmob_match_id")),
+            "fotmob_page_url": clean_text(row.get("_fotmob_page_url")),
+            "lineup_type": clean_text(row.get("_lineup_type")),
             "venue": "",
         },
         "player": {
@@ -769,10 +869,12 @@ def main() -> None:
     args = parse_args()
     today_iso = london_today_iso(args.today)
     input_paths = args.input or DEFAULT_INPUTS
+    lineup_paths = args.lineups or DEFAULT_LINEUP_FIXTURES
     logo_manifest = load_logo_manifest(args.team_logo_map)
     raw_rows, candidates, source_paths = read_grouped_candidates(
         input_paths,
         args.monitor_snapshot,
+        lineup_paths,
         today_iso,
         args.include_past,
     )

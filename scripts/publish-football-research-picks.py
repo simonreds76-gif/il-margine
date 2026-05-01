@@ -14,6 +14,7 @@ import importlib.util
 import json
 import math
 import re
+import subprocess
 import sys
 import unicodedata
 from collections import defaultdict
@@ -32,7 +33,7 @@ from settlement_utils import normalize_team_name  # noqa: E402
 
 DEFAULT_TEAM_BASE = ROOT / "data" / "football-form" / "team-match-base.csv"
 DEFAULT_TEAM_ODDS = ROOT / "data" / "team-shots" / "team-shots-odds-history.csv"
-DEFAULT_TEAM_CURRENT_FIXTURES = ROOT / "data" / "team-shots" / "team-shots-upcoming.v2-nb.csv"
+DEFAULT_TEAM_CURRENT_FIXTURES = ROOT / "data" / "team-shots" / "team-shots-upcoming.v2-nb-raw.csv"
 DEFAULT_TEAM_ALLOWED = ROOT / "data" / "football-form" / "team-shots-v3-ema20-allowed-leagues.json"
 DEFAULT_TEAM_OUT = ROOT / "data" / "football-form" / "team-shots-v3-ema20-published-picks.csv"
 DEFAULT_CORNERS_PINNACLE = ROOT / "data" / "corners-ou" / "pinnacle-corners-odds.csv"
@@ -247,6 +248,16 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         writer.writerows(rows)
 
 
+def ensure_team_base(path: Path) -> None:
+    """Build the canonical football form layer instead of silently publishing zero fresh picks."""
+    if path.exists():
+        return
+    print(f"{path.relative_to(ROOT)} missing; rebuilding canonical football form layer.")
+    subprocess.run([sys.executable, str(SCRIPTS / "build-football-form-layer.py")], check=True)
+    if not path.exists():
+        raise SystemExit(f"Required team base still missing after rebuild: {path}")
+
+
 def load_allowed(path: Path) -> set[str]:
     if not path.exists():
         return set()
@@ -432,10 +443,10 @@ def latest_team_shots_odds(rows: list[dict[str, str]], now: datetime) -> list[di
 def current_team_fixture_set(rows: list[dict[str, str]], now: datetime) -> set[str]:
     keys: set[str] = set()
     for row in rows:
-        kickoff = parse_dt(row.get("kickoff_iso"))
+        kickoff = parse_dt(row.get("kickoff_iso") or row.get("kickoff_at"))
         if not kickoff or kickoff <= now:
             continue
-        league = league_slug(row.get("league", ""))
+        league = league_slug(row.get("league") or row.get("competition") or "")
         match_date = kickoff.date().isoformat()
         home = row.get("home_team", "")
         away = row.get("away_team", "")
@@ -763,6 +774,7 @@ def main() -> None:
     if now is None:
         raise SystemExit(f"Invalid --now value: {args.now}")
 
+    ensure_team_base(args.team_base)
     base_rows = load_csv(args.team_base)
     by_team, by_league = build_base_indexes(base_rows)
     team_picks = publish_team_shots(args, by_team, by_league, base_rows, now)

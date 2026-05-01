@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-05-01T18:11:36Z",
+  "run_at": "2026-05-01T22:16:22Z",
   "model": "team-shots-v3-ema20-research",
-  "total_bets": 24,
+  "total_bets": 25,
   "settled_this_run": 0,
   "total_settled": 9,
-  "total_pending": 15,
+  "total_pending": 16,
   "pending_breakdown": {
     "future": 15,
     "live": 0,
-    "stale": 0,
+    "stale": 1,
     "old_stale": 0,
     "unknown": 0
   },
@@ -89,11 +89,22 @@
       "snapshot_path": "data/results-snapshot/2026-05-01.json"
     }
   },
-  "stale_rows": [],
+  "stale_rows": [
+    {
+      "match": "Pisa SC vs US Lecce",
+      "league": "serie-a",
+      "line": "12.5",
+      "side": "under",
+      "kickoff": "2026-05-01T18:45:00Z",
+      "hours_elapsed": 3.52
+    }
+  ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [],
+  "warnings": [
+    "1 stale pending row(s) across 1 fixture(s) (3-48h elapsed)"
+  ],
   "errors": [],
   "exit_code_recommendation": 0
 }

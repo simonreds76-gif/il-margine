@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-01T18:15:51.110088Z",
+  "generated_at": "2026-05-01T22:15:19.622381Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -9,7 +9,7 @@
     "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
   "edge_threshold_pp": 0.0,
-  "fixtures_evaluated": 41,
+  "fixtures_evaluated": 44,
   "signals_qualifying": 36,
   "leagues_covered": [
     "bundesliga",
@@ -28,8 +28,11 @@
         "league": "bundesliga",
         "league_display": "Bundesliga",
         "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
+        "kickoff_utc": "2026-05-02T16:30:00Z",
+        "kickoff_display": "Sat 02 May 17:30 UK",
+        "fotmob_match_id": "4829594",
+        "fotmob_page_url": "/matches/bayer-leverkusen-vs-rb-leipzig/803a6n9#4829594",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -69,7 +72,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 64
+          "percentile": 66
         },
         "fixture_boost_pct": 2,
         "projected_minutes": 89,
@@ -92,8 +95,11 @@
         "league": "serie-a",
         "league_display": "Serie A",
         "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-01",
+        "kickoff_utc": "2026-05-01T18:45:00Z",
+        "kickoff_display": "Fri 01 May 19:45 UK",
+        "fotmob_match_id": "4803384",
+        "fotmob_page_url": "/matches/pisa-vs-lecce/27r67c#4803384",
+        "lineup_type": "standard",
         "venue": ""
       },
       "player": {
@@ -129,11 +135,11 @@
         "share_of_team_chances_percentile": 94,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 46
+          "percentile": 47
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 79
+          "percentile": 80
         },
         "fixture_boost_pct": 23,
         "projected_minutes": 85,
@@ -157,8 +163,11 @@
         "league": "epl",
         "league_display": "Premier League",
         "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-01",
+        "kickoff_utc": "2026-05-01T19:00:00Z",
+        "kickoff_display": "Fri 01 May 20:00 UK",
+        "fotmob_match_id": "4813721",
+        "fotmob_page_url": "/matches/burnley-vs-leeds-united/2akph4#4813721",
+        "lineup_type": "standard",
         "venue": ""
       },
       "player": {
@@ -198,7 +207,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 42
+          "percentile": 45
         },
         "fixture_boost_pct": 1,
         "projected_minutes": 85,
@@ -222,8 +231,11 @@
         "league": "la-liga",
         "league_display": "La Liga",
         "league_logo_path": "/league-logos/la-liga.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
+        "kickoff_utc": "2026-05-02T16:30:00Z",
+        "kickoff_display": "Sat 02 May 17:30 UK",
+        "fotmob_match_id": "4837440",
+        "fotmob_page_url": "/matches/athletic-club-vs-deportivo-alaves/2qet5l#4837440",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -253,17 +265,17 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 89
+          "percentile": 88
         },
         "share_of_team_chances_pct": 35,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 63
+          "percentile": 64
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 44
+          "percentile": 46
         },
         "fixture_boost_pct": -5,
         "projected_minutes": 84,
@@ -286,8 +298,11 @@
         "league": "serie-a",
         "league_display": "Serie A",
         "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-01",
+        "kickoff_utc": "2026-05-01T18:45:00Z",
+        "kickoff_display": "Fri 01 May 19:45 UK",
+        "fotmob_match_id": "4803384",
+        "fotmob_page_url": "/matches/pisa-vs-lecce/27r67c#4803384",
+        "lineup_type": "standard",
         "venue": ""
       },
       "player": {
@@ -327,7 +342,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 88
+          "percentile": 89
         },
         "fixture_boost_pct": 29,
         "projected_minutes": 85,
@@ -351,8 +366,11 @@
         "league": "bundesliga",
         "league_display": "Bundesliga",
         "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
+        "kickoff_utc": "2026-05-02T13:30:00Z",
+        "kickoff_display": "Sat 02 May 14:30 UK",
+        "fotmob_match_id": "4829601",
+        "fotmob_page_url": "/matches/union-berlin-vs-1-fc-koln/2cqofy#4829601",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -417,8 +435,11 @@
         "league": "bundesliga",
         "league_display": "Bundesliga",
         "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
+        "kickoff_utc": "2026-05-02T13:30:00Z",
+        "kickoff_display": "Sat 02 May 14:30 UK",
+        "fotmob_match_id": "4829601",
+        "fotmob_page_url": "/matches/union-berlin-vs-1-fc-koln/2cqofy#4829601",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -483,8 +504,11 @@
         "league": "ligue-1",
         "league_display": "Ligue 1",
         "league_logo_path": "/league-logos/ligue-1.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-03",
+        "kickoff_utc": "2026-05-03T15:15:00Z",
+        "kickoff_display": "Sun 03 May 16:15 UK",
+        "fotmob_match_id": "4830737",
+        "fotmob_page_url": "/matches/angers-vs-auxerre/2b2l2f#4830737",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -520,11 +544,11 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 56
+          "percentile": 58
         },
         "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 73
+          "tier": "High",
+          "percentile": 75
         },
         "fixture_boost_pct": 4,
         "projected_minutes": 89,
@@ -536,6 +560,7 @@
         "Model scores Lassine Sinayoko at 45.4%, market implies 38.5%",
         "Takes 36% of Auxerre's scoring chances",
         "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
         "Primary penalty role adds a clear scoring route"
       ],
       "risk_flags": []
@@ -548,8 +573,11 @@
         "league": "epl",
         "league_display": "Premier League",
         "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-04",
+        "kickoff_utc": "2026-05-04T14:00:00Z",
+        "kickoff_display": "Mon 04 May 15:00 UK",
+        "fotmob_match_id": "4813719",
+        "fotmob_page_url": "/matches/chelsea-vs-nottingham-forest/2vn3ne#4813719",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -589,7 +617,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 61
+          "percentile": 63
         },
         "fixture_boost_pct": -12,
         "projected_minutes": 88,
@@ -612,8 +640,11 @@
         "league": "epl",
         "league_display": "Premier League",
         "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-03",
+        "kickoff_utc": "2026-05-03T18:00:00Z",
+        "kickoff_display": "Sun 03 May 19:00 UK",
+        "fotmob_match_id": "4813717",
+        "fotmob_page_url": "/matches/tottenham-hotspur-vs-aston-villa/2xnfpj#4813717",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -653,7 +684,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 66
+          "percentile": 69
         },
         "fixture_boost_pct": -3,
         "projected_minutes": 82,
@@ -677,8 +708,11 @@
         "league": "epl",
         "league_display": "Premier League",
         "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-03",
+        "kickoff_utc": "2026-05-03T13:00:00Z",
+        "kickoff_display": "Sun 03 May 14:00 UK",
+        "fotmob_match_id": "4813715",
+        "fotmob_page_url": "/matches/afc-bournemouth-vs-crystal-palace/2txspy#4813715",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -718,7 +752,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 48
+          "percentile": 50
         },
         "fixture_boost_pct": 8,
         "projected_minutes": 84,
@@ -741,8 +775,11 @@
         "league": "epl",
         "league_display": "Premier League",
         "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-03",
+        "kickoff_utc": "2026-05-03T14:30:00Z",
+        "kickoff_display": "Sun 03 May 15:30 UK",
+        "fotmob_match_id": "4813722",
+        "fotmob_page_url": "/matches/liverpool-vs-manchester-united/2ygkcb#4813722",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -775,14 +812,14 @@
           "percentile": 80
         },
         "share_of_team_chances_pct": 11,
-        "share_of_team_chances_percentile": 88,
+        "share_of_team_chances_percentile": 89,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 60
+          "percentile": 61
         },
         "opponent_defensive_weakness": {
-          "tier": "Low",
-          "percentile": 33
+          "tier": "Average",
+          "percentile": 36
         },
         "fixture_boost_pct": -15,
         "projected_minutes": 90,
@@ -805,8 +842,11 @@
         "league": "serie-a",
         "league_display": "Serie A",
         "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
+        "kickoff_utc": "2026-05-02T13:00:00Z",
+        "kickoff_display": "Sat 02 May 14:00 UK",
+        "fotmob_match_id": "4803387",
+        "fotmob_page_url": "/matches/udinese-vs-torino/2su8qu#4803387",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -841,12 +881,12 @@
         "share_of_team_chances_pct": 32,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
-          "tier": "Average",
-          "percentile": 35
+          "tier": "Quiet",
+          "percentile": 34
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 56
+          "percentile": 58
         },
         "fixture_boost_pct": 14,
         "projected_minutes": 78,
@@ -870,8 +910,11 @@
         "league": "epl",
         "league_display": "Premier League",
         "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
+        "kickoff_utc": "2026-05-02T14:00:00Z",
+        "kickoff_display": "Sat 02 May 15:00 UK",
+        "fotmob_match_id": "4813723",
+        "fotmob_page_url": "/matches/brighton-hove-albion-vs-newcastle-united/3gos5a#4813723",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -907,11 +950,11 @@
         "share_of_team_chances_percentile": 91,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 42
+          "percentile": 43
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 11
+          "percentile": 10
         },
         "fixture_boost_pct": -19,
         "projected_minutes": 84,
@@ -933,8 +976,11 @@
         "league": "serie-a",
         "league_display": "Serie A",
         "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
+        "kickoff_utc": "2026-05-02T18:45:00Z",
+        "kickoff_display": "Sat 02 May 19:45 UK",
+        "fotmob_match_id": "4803378",
+        "fotmob_page_url": "/matches/atalanta-vs-genoa/2wqssb#4803378",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -964,17 +1010,17 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 88
+          "percentile": 87
         },
         "share_of_team_chances_pct": 23,
         "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 16
+          "percentile": 15
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 50
+          "percentile": 52
         },
         "fixture_boost_pct": -1,
         "projected_minutes": 78,
@@ -997,8 +1043,11 @@
         "league": "ligue-1",
         "league_display": "Ligue 1",
         "league_logo_path": "/league-logos/ligue-1.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-03",
+        "kickoff_utc": "2026-05-03T15:15:00Z",
+        "kickoff_display": "Sun 03 May 16:15 UK",
+        "fotmob_match_id": "4830737",
+        "fotmob_page_url": "/matches/angers-vs-auxerre/2b2l2f#4830737",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -1037,8 +1086,8 @@
           "percentile": 4
         },
         "opponent_defensive_weakness": {
-          "tier": "Low",
-          "percentile": 34
+          "tier": "Average",
+          "percentile": 37
         },
         "fixture_boost_pct": -6,
         "projected_minutes": 78,
@@ -1053,6 +1102,72 @@
       "risk_flags": []
     },
     {
+      "id": "20260504-james-tarkowski-5a9baa8058",
+      "match": {
+        "home_team": "Everton FC",
+        "away_team": "Manchester City",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-04T19:00:00Z",
+        "kickoff_display": "Mon 04 May 20:00 UK",
+        "fotmob_match_id": "4813720",
+        "fotmob_page_url": "/matches/manchester-city-vs-everton/2fauom#4813720",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "James Tarkowski",
+        "team": "Everton",
+        "position": "DEF",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/everton.png",
+        "team_primary_color": "#1d4ed8",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 12.5,
+        "fair_odds": 8.03
+      },
+      "market_data": {
+        "best_odds": 13.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 7.7
+      },
+      "edge": {
+        "price_gap_pp": 4.8,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Average",
+          "percentile": 51
+        },
+        "share_of_team_chances_pct": 10,
+        "share_of_team_chances_percentile": 88,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 40
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 16
+        },
+        "fixture_boost_pct": -16,
+        "projected_minutes": 90,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores James Tarkowski at 12.5%, market implies 7.7%",
+        "Takes 10% of Everton's scoring chances"
+      ],
+      "risk_flags": []
+    },
+    {
       "id": "20260502-scott-mctominay-56b6c5088c",
       "match": {
         "home_team": "Como 1907",
@@ -1060,8 +1175,11 @@
         "league": "serie-a",
         "league_display": "Serie A",
         "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
+        "kickoff_utc": "2026-05-02T16:00:00Z",
+        "kickoff_display": "Sat 02 May 17:00 UK",
+        "fotmob_match_id": "4803380",
+        "fotmob_page_url": "/matches/napoli-vs-como/3bmv18#4803380",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -1124,8 +1242,11 @@
         "league": "ligue-1",
         "league_display": "Ligue 1",
         "league_logo_path": "/league-logos/ligue-1.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
+        "kickoff_utc": "2026-05-02T19:05:00Z",
+        "kickoff_display": "Sat 02 May 20:05 UK",
+        "fotmob_match_id": "4830742",
+        "fotmob_page_url": "/matches/lens-vs-nice/2t05v9#4830742",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -1161,7 +1282,7 @@
         "share_of_team_chances_percentile": 86,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 97
+          "percentile": 98
         },
         "opponent_defensive_weakness": {
           "tier": "High",
@@ -1190,8 +1311,11 @@
         "league": "bundesliga",
         "league_display": "Bundesliga",
         "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-03",
+        "kickoff_utc": "2026-05-03T15:30:00Z",
+        "kickoff_display": "Sun 03 May 16:30 UK",
+        "fotmob_match_id": "4829596",
+        "fotmob_page_url": "/matches/borussia-monchengladbach-vs-borussia-dortmund/363pci#4829596",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -1231,7 +1355,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 36
+          "percentile": 39
         },
         "fixture_boost_pct": -25,
         "projected_minutes": 78,
@@ -1254,8 +1378,11 @@
         "league": "serie-a",
         "league_display": "Serie A",
         "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-01",
+        "kickoff_utc": "2026-05-01T18:45:00Z",
+        "kickoff_display": "Fri 01 May 19:45 UK",
+        "fotmob_match_id": "4803384",
+        "fotmob_page_url": "/matches/pisa-vs-lecce/27r67c#4803384",
+        "lineup_type": "standard",
         "venue": ""
       },
       "player": {
@@ -1295,7 +1422,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 88
+          "percentile": 89
         },
         "fixture_boost_pct": 40,
         "projected_minutes": 85,
@@ -1319,8 +1446,11 @@
         "league": "bundesliga",
         "league_display": "Bundesliga",
         "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
+        "kickoff_utc": "2026-05-02T16:30:00Z",
+        "kickoff_display": "Sat 02 May 17:30 UK",
+        "fotmob_match_id": "4829594",
+        "fotmob_page_url": "/matches/bayer-leverkusen-vs-rb-leipzig/803a6n9#4829594",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -1356,11 +1486,11 @@
         "share_of_team_chances_percentile": 85,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 92
+          "percentile": 93
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 40
+          "percentile": 42
         },
         "fixture_boost_pct": -17,
         "projected_minutes": 90,
@@ -1382,8 +1512,11 @@
         "league": "bundesliga",
         "league_display": "Bundesliga",
         "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
+        "kickoff_utc": "2026-05-02T13:30:00Z",
+        "kickoff_display": "Sat 02 May 14:30 UK",
+        "fotmob_match_id": "4829599",
+        "fotmob_page_url": "/matches/hoffenheim-vs-vfb-stuttgart/2tu70i#4829599",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -1419,11 +1552,11 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 90
+          "percentile": 89
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 65
+          "percentile": 67
         },
         "fixture_boost_pct": -6,
         "projected_minutes": 82,
@@ -1439,6 +1572,72 @@
       "risk_flags": []
     },
     {
+      "id": "20260504-kiernan-dewsbury-hall-388e3b938d",
+      "match": {
+        "home_team": "Everton FC",
+        "away_team": "Manchester City",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-04T19:00:00Z",
+        "kickoff_display": "Mon 04 May 20:00 UK",
+        "fotmob_match_id": "4813720",
+        "fotmob_page_url": "/matches/manchester-city-vs-everton/2fauom#4813720",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Kiernan Dewsbury-Hall",
+        "team": "Everton",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/everton.png",
+        "team_primary_color": "#1d4ed8",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 18.1,
+        "fair_odds": 5.51
+      },
+      "market_data": {
+        "best_odds": 7.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 14.3
+      },
+      "edge": {
+        "price_gap_pp": 3.8,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 73
+        },
+        "share_of_team_chances_pct": 15,
+        "share_of_team_chances_percentile": 93,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 40
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 16
+        },
+        "fixture_boost_pct": -16,
+        "projected_minutes": 84,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Kiernan Dewsbury-Hall at 18.1%, market implies 14.3%",
+        "Takes 15% of Everton's scoring chances"
+      ],
+      "risk_flags": []
+    },
+    {
       "id": "20260503-federico-vinas-5be3255d1f",
       "match": {
         "home_team": "Real Betis Seville",
@@ -1446,8 +1645,11 @@
         "league": "la-liga",
         "league_display": "La Liga",
         "league_logo_path": "/league-logos/la-liga.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-03",
+        "kickoff_utc": "2026-05-03T16:30:00Z",
+        "kickoff_display": "Sun 03 May 17:30 UK",
+        "fotmob_match_id": "4837441",
+        "fotmob_page_url": "/matches/real-betis-vs-real-oviedo/2gts1f#4837441",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -1483,11 +1685,11 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 22
+          "percentile": 21
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 19
+          "percentile": 21
         },
         "fixture_boost_pct": -21,
         "projected_minutes": 86,
@@ -1511,8 +1713,11 @@
         "league": "bundesliga",
         "league_display": "Bundesliga",
         "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-03",
+        "kickoff_utc": "2026-05-03T15:30:00Z",
+        "kickoff_display": "Sun 03 May 16:30 UK",
+        "fotmob_match_id": "4829596",
+        "fotmob_page_url": "/matches/borussia-monchengladbach-vs-borussia-dortmund/363pci#4829596",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -1542,7 +1747,7 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Good",
-          "percentile": 56
+          "percentile": 55
         },
         "share_of_team_chances_pct": 10,
         "share_of_team_chances_percentile": 88,
@@ -1551,8 +1756,8 @@
           "percentile": 83
         },
         "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 74
+          "tier": "High",
+          "percentile": 76
         },
         "fixture_boost_pct": 5,
         "projected_minutes": 90,
@@ -1562,7 +1767,8 @@
       "confidence_tier": "Medium",
       "reasons": [
         "Model scores Nico Schlotterbeck at 17.5%, market implies 14.3%",
-        "Takes 10% of Borussia Dortmund's scoring chances"
+        "Takes 10% of Borussia Dortmund's scoring chances",
+        "Opponent defensive profile is a positive matchup"
       ],
       "risk_flags": []
     },
@@ -1574,8 +1780,11 @@
         "league": "ligue-1",
         "league_display": "Ligue 1",
         "league_logo_path": "/league-logos/ligue-1.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-03",
+        "kickoff_utc": "2026-05-03T15:15:00Z",
+        "kickoff_display": "Sun 03 May 16:15 UK",
+        "fotmob_match_id": "4830743",
+        "fotmob_page_url": "/matches/paris-fc-vs-brest/1u3kbv#4830743",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -1608,14 +1817,14 @@
           "percentile": 93
         },
         "share_of_team_chances_pct": 21,
-        "share_of_team_chances_percentile": 98,
+        "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 71
+          "percentile": 72
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 78
+          "percentile": 79
         },
         "fixture_boost_pct": 34,
         "projected_minutes": 78,
@@ -1640,8 +1849,11 @@
         "league": "epl",
         "league_display": "Premier League",
         "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-03",
+        "kickoff_utc": "2026-05-03T14:30:00Z",
+        "kickoff_display": "Sun 03 May 15:30 UK",
+        "fotmob_match_id": "4813722",
+        "fotmob_page_url": "/matches/liverpool-vs-manchester-united/2ygkcb#4813722",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -1671,17 +1883,17 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 78
+          "percentile": 77
         },
         "share_of_team_chances_pct": 13,
         "share_of_team_chances_percentile": 91,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 72
+          "percentile": 73
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 41
+          "percentile": 44
         },
         "fixture_boost_pct": -7,
         "projected_minutes": 86,
@@ -1704,8 +1916,11 @@
         "league": "epl",
         "league_display": "Premier League",
         "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-04",
+        "kickoff_utc": "2026-05-04T14:00:00Z",
+        "kickoff_display": "Mon 04 May 15:00 UK",
+        "fotmob_match_id": "4813719",
+        "fotmob_page_url": "/matches/chelsea-vs-nottingham-forest/2vn3ne#4813719",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -1744,8 +1959,8 @@
           "percentile": 85
         },
         "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 54
+          "tier": "Positive",
+          "percentile": 55
         },
         "fixture_boost_pct": 10,
         "projected_minutes": 89,
@@ -1768,8 +1983,11 @@
         "league": "epl",
         "league_display": "Premier League",
         "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
+        "kickoff_utc": "2026-05-02T14:00:00Z",
+        "kickoff_display": "Sat 02 May 15:00 UK",
+        "fotmob_match_id": "4813718",
+        "fotmob_page_url": "/matches/west-ham-united-vs-brentford/2uwdxd#4813718",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -1799,17 +2017,17 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 82
+          "percentile": 81
         },
         "share_of_team_chances_pct": 10,
         "share_of_team_chances_percentile": 87,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 49
+          "percentile": 50
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 52
+          "percentile": 54
         },
         "fixture_boost_pct": -10,
         "projected_minutes": 82,
@@ -1832,8 +2050,11 @@
         "league": "serie-a",
         "league_display": "Serie A",
         "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-04",
+        "kickoff_utc": "2026-05-04T16:30:00Z",
+        "kickoff_display": "Mon 04 May 17:30 UK",
+        "fotmob_match_id": "4803381",
+        "fotmob_page_url": "/matches/cremonese-vs-lazio/27j2wb#4803381",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -1863,17 +2084,17 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Average",
-          "percentile": 48
+          "percentile": 47
         },
         "share_of_team_chances_pct": 6,
         "share_of_team_chances_percentile": 79,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 50
+          "percentile": 51
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 85
+          "percentile": 86
         },
         "fixture_boost_pct": 44,
         "projected_minutes": 82,
@@ -1890,6 +2111,73 @@
       "risk_flags": []
     },
     {
+      "id": "20260504-thierno-barry-ee6f711cd4",
+      "match": {
+        "home_team": "Everton FC",
+        "away_team": "Manchester City",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-04T19:00:00Z",
+        "kickoff_display": "Mon 04 May 20:00 UK",
+        "fotmob_match_id": "4813720",
+        "fotmob_page_url": "/matches/manchester-city-vs-everton/2fauom#4813720",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Thierno Barry",
+        "team": "Everton",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/everton.png",
+        "team_primary_color": "#1d4ed8",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 25.4,
+        "fair_odds": 3.94
+      },
+      "market_data": {
+        "best_odds": 4.33,
+        "best_book": "Bet365",
+        "implied_chance_pct": 23.1
+      },
+      "edge": {
+        "price_gap_pp": 2.3,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 96
+        },
+        "share_of_team_chances_pct": 22,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 40
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 16
+        },
+        "fixture_boost_pct": -16,
+        "projected_minutes": 78,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Thierno Barry at 25.4%, market implies 23.1%",
+        "Takes 22% of Everton's scoring chances",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
       "id": "20260503-rafik-belghali-3b1eb94e8e",
       "match": {
         "home_team": "Juventus Turin",
@@ -1897,8 +2185,11 @@
         "league": "serie-a",
         "league_display": "Serie A",
         "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-03",
+        "kickoff_utc": "2026-05-03T16:00:00Z",
+        "kickoff_display": "Sun 03 May 17:00 UK",
+        "fotmob_match_id": "4803383",
+        "fotmob_page_url": "/matches/hellas-verona-vs-juventus/389a06#4803383",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -1960,8 +2251,11 @@
         "league": "serie-a",
         "league_display": "Serie A",
         "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-01",
+        "kickoff_utc": "2026-05-01T18:45:00Z",
+        "kickoff_display": "Fri 01 May 19:45 UK",
+        "fotmob_match_id": "4803384",
+        "fotmob_page_url": "/matches/pisa-vs-lecce/27r67c#4803384",
+        "lineup_type": "standard",
         "venue": ""
       },
       "player": {
@@ -1994,14 +2288,14 @@
           "percentile": 57
         },
         "share_of_team_chances_pct": 10,
-        "share_of_team_chances_percentile": 87,
+        "share_of_team_chances_percentile": 88,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 46
+          "percentile": 47
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 79
+          "percentile": 80
         },
         "fixture_boost_pct": 23,
         "projected_minutes": 85,
@@ -2025,8 +2319,11 @@
         "league": "ligue-1",
         "league_display": "Ligue 1",
         "league_logo_path": "/league-logos/ligue-1.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
+        "kickoff_utc": "2026-05-02T19:05:00Z",
+        "kickoff_display": "Sat 02 May 20:05 UK",
+        "fotmob_match_id": "4830742",
+        "fotmob_page_url": "/matches/lens-vs-nice/2t05v9#4830742",
+        "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
@@ -2062,11 +2359,11 @@
         "share_of_team_chances_percentile": 84,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 30
+          "percentile": 29
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 13
+          "percentile": 14
         },
         "fixture_boost_pct": -19,
         "projected_minutes": 82,
@@ -2089,8 +2386,11 @@
         "league": "epl",
         "league_display": "Premier League",
         "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-01",
+        "kickoff_utc": "2026-05-01T19:00:00Z",
+        "kickoff_display": "Fri 01 May 20:00 UK",
+        "fotmob_match_id": "4813721",
+        "fotmob_page_url": "/matches/burnley-vs-leeds-united/2akph4#4813721",
+        "lineup_type": "standard",
         "venue": ""
       },
       "player": {
@@ -2143,199 +2443,6 @@
         "Takes 10% of Leeds's scoring chances",
         "Opponent defensive profile is a positive matchup",
         "Fixture profile adds a +33% goal-threat boost"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260502-nordi-mukiele-e81c28b0e1",
-      "match": {
-        "home_team": "Wolverhampton Wanderers",
-        "away_team": "Sunderland AFC",
-        "league": "epl",
-        "league_display": "Premier League",
-        "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
-        "venue": ""
-      },
-      "player": {
-        "name": "Nordi Mukiele",
-        "team": "Sunderland",
-        "position": "DEF",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/sunderland.png",
-        "team_primary_color": "#111827",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 10.2,
-        "fair_odds": 9.78
-      },
-      "market_data": {
-        "best_odds": 12.0,
-        "best_book": "Bet365",
-        "implied_chance_pct": 8.3
-      },
-      "edge": {
-        "price_gap_pp": 1.9,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 73
-        },
-        "share_of_team_chances_pct": 8,
-        "share_of_team_chances_percentile": 84,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 34
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 97
-        },
-        "fixture_boost_pct": 30,
-        "projected_minutes": 83,
-        "penalty_role": "Not on penalties",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores Nordi Mukiele at 10.2%, market implies 8.3%",
-        "Takes 8% of Sunderland's scoring chances",
-        "Opponent defensive profile is a positive matchup",
-        "Fixture profile adds a +30% goal-threat boost"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260502-victor-parada-1c711998a8",
-      "match": {
-        "home_team": "Deportivo Alaves",
-        "away_team": "Athletic Bilbao",
-        "league": "la-liga",
-        "league_display": "La Liga",
-        "league_logo_path": "/league-logos/la-liga.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
-        "venue": ""
-      },
-      "player": {
-        "name": "Victor Parada",
-        "team": "Alaves",
-        "position": "DEF",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/la-liga/alaves.png",
-        "team_primary_color": "#111827",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 9.5,
-        "fair_odds": 10.58
-      },
-      "market_data": {
-        "best_odds": 13.0,
-        "best_book": "Bet365",
-        "implied_chance_pct": 7.7
-      },
-      "edge": {
-        "price_gap_pp": 1.8,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Average",
-          "percentile": 51
-        },
-        "share_of_team_chances_pct": 6,
-        "share_of_team_chances_percentile": 80,
-        "team_attacking_outlook": {
-          "tier": "Positive",
-          "percentile": 63
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 44
-        },
-        "fixture_boost_pct": -5,
-        "projected_minutes": 86,
-        "penalty_role": "Not on penalties",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores Victor Parada at 9.5%, market implies 7.7%",
-        "Takes 6% of Alaves's scoring chances"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260502-derrick-kohn-9c27f1ab46",
-      "match": {
-        "home_team": "Union Berlin",
-        "away_team": "1. FC Cologne",
-        "league": "bundesliga",
-        "league_display": "Bundesliga",
-        "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
-        "venue": ""
-      },
-      "player": {
-        "name": "Derrick Kohn",
-        "team": "Union Berlin",
-        "position": "MID",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/bundesliga/union-berlin.png",
-        "team_primary_color": "#b91c1c",
-        "team_secondary_color": "#facc15",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 14.2,
-        "fair_odds": 7.02
-      },
-      "market_data": {
-        "best_odds": 8.0,
-        "best_book": "Bet365",
-        "implied_chance_pct": 12.5
-      },
-      "edge": {
-        "price_gap_pp": 1.7,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 59
-        },
-        "share_of_team_chances_pct": 5,
-        "share_of_team_chances_percentile": 75,
-        "team_attacking_outlook": {
-          "tier": "Positive",
-          "percentile": 65
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 83
-        },
-        "fixture_boost_pct": -11,
-        "projected_minutes": 78,
-        "penalty_role": "Primary",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores Derrick Kohn at 14.2%, market implies 12.5%",
-        "Takes 5% of Union Berlin's scoring chances",
-        "Opponent defensive profile is a positive matchup",
-        "Primary penalty role adds a clear scoring route"
       ],
       "risk_flags": []
     }

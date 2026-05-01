@@ -22,7 +22,7 @@ import json
 import re
 import runpy
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, List
 from zoneinfo import ZoneInfo
@@ -106,6 +106,25 @@ def _fetch_text(url: str) -> str:
     response.raise_for_status()
     response.encoding = "utf-8"
     return response.text
+
+
+def _normalize_utc_iso(*values: object) -> str:
+    """Return a stable UTC ISO timestamp from FotMob's mixed time fields."""
+    for value in values:
+        raw = str(value or "").strip()
+        if not raw:
+            continue
+        try:
+            parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return parsed.astimezone(timezone.utc).replace(microsecond=0).isoformat().replace(
+            "+00:00",
+            "Z",
+        )
+    return ""
 
 
 def _extract_next_payload(html_text: str) -> dict:
@@ -272,7 +291,17 @@ def fetch_confirmed_lineups(date_str: str, league_id: int, roster_by_team: Dict[
 
         home_team = str(general.get("homeTeam", {}).get("name") or lineup.get("homeTeam", {}).get("name") or match.get("home", {}).get("name") or "").strip()
         away_team = str(general.get("awayTeam", {}).get("name") or lineup.get("awayTeam", {}).get("name") or match.get("away", {}).get("name") or "").strip()
-        match_date = str(general.get("matchTimeUTCDate") or match.get("status", {}).get("utcTime") or "").strip()[:10]
+        status = match.get("status", {}) if isinstance(match.get("status"), dict) else {}
+        kickoff_utc = _normalize_utc_iso(
+            general.get("matchTimeUTCDate"),
+            status.get("utcTime"),
+            status.get("timeUTCDate"),
+            match.get("timeUTCDate"),
+        )
+        match_date = (
+            kickoff_utc[:10]
+            or str(general.get("matchTimeUTCDate") or status.get("utcTime") or "").strip()[:10]
+        )
         home_formation = str(lineup.get("homeTeam", {}).get("formation") or lineup.get("formation") or "").strip()
         away_formation = str(lineup.get("awayTeam", {}).get("formation") or lineup.get("formation") or "").strip()
         home_starter_entries = _build_starter_entries(
@@ -306,6 +335,7 @@ def fetch_confirmed_lineups(date_str: str, league_id: int, roster_by_team: Dict[
                 "home_fotmob_team_id": int(general.get("homeTeam", {}).get("id") or match.get("home", {}).get("id") or 0),
                 "away_fotmob_team_id": int(general.get("awayTeam", {}).get("id") or match.get("away", {}).get("id") or 0),
                 "match_date": match_date,
+                "kickoff_utc": kickoff_utc,
                 "home_team": home_team,
                 "away_team": away_team,
                 "home_status": "Confirmed Lineup" if lineup_type == "standard" else "FotMob Expected XI",
