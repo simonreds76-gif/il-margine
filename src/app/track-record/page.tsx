@@ -9,11 +9,6 @@ import PageHomeLink from "@/components/PageHomeLink";
 
 const FAQ_ITEMS = [
   {
-    question: "How is the £100-per-unit profit calculated?",
-    answer:
-      "Each settled selection is converted from its posted unit stake into cash: 0.5u is £50, 1u is £100, and 2u is £200. We then settle the bet at the recorded odds and result, convert its unit profit or loss into pounds, and add player props plus tennis together.",
-  },
-  {
     question: "How is ROI calculated?",
     answer:
       "ROI is total profit divided by total stake. A +10% ROI means 100 units staked would have returned 10 units of profit. We use stake-weighted profit, not raw win rate, because a 2.60 winner and a 1.60 winner do not carry the same value.",
@@ -402,11 +397,11 @@ export default function TrackRecordPage() {
             <div className="mt-4 rounded-2xl border border-emerald-500/15 bg-emerald-500/[0.035] p-5 md:flex md:items-center md:justify-between md:gap-8">
               <div>
                 <div className="text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-emerald-400/90">
-                  Historical result at £100 per unit
+                  Calculated result at £100 per unit
                 </div>
                 <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
-                  Calculated from the posted stake on every settled pick: 0.5u = £50, 1u = £100,
-                  2u = £200. Props and tennis are converted from unit P/L and summed together.
+                  Every recorded stake is scaled directly: 0.5u = £50, 1u = £100, 2u = £200.
+                  This is the current tracked props + tennis P/L at that staking level.
                 </p>
               </div>
               <div className="mt-5 shrink-0 md:mt-0 md:text-right">
