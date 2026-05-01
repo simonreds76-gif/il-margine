@@ -24,29 +24,29 @@ interface PublicBetsTableProps {
 const th = {
   icon: "w-[3.75rem] border-r border-slate-800/40 px-2.5 py-3 text-center",
   date: "w-[5.25rem] border-r border-slate-800/40 px-2.5 py-3 text-center",
-  match: "w-[25%] border-r border-slate-800/40 px-4 py-3 text-left",
-  player: "w-[15%] border-r border-slate-800/40 px-4 py-3 text-left",
-  selection: "w-[18%] border-r border-slate-800/40 px-4 py-3 text-left",
-  odds: "w-[5.5rem] border-r border-slate-800/40 px-4 py-3 text-right",
+  match: "w-[25%] border-r border-slate-800/40 px-4 py-3 text-center",
+  player: "w-[15%] border-r border-slate-800/40 px-4 py-3 text-center",
+  selection: "w-[18%] border-r border-slate-800/40 px-4 py-3 text-center",
+  odds: "w-[5.5rem] border-r border-slate-800/40 px-4 py-3 text-center",
   bookmaker: "w-32 border-r border-slate-800/40 px-4 py-3 text-center",
-  stake: "w-[5.5rem] border-r border-slate-800/40 px-4 py-3 text-right",
-  stakeLast: "w-[5.5rem] px-4 py-3 text-right",
+  stake: "w-[5.5rem] border-r border-slate-800/40 px-4 py-3 text-center",
+  stakeLast: "w-[5.5rem] px-4 py-3 text-center",
   status: "w-24 border-r border-slate-800/40 px-3 py-3 text-center",
-  pnl: "w-24 px-4 py-3 text-right",
+  pnl: "w-24 px-4 py-3 text-center",
 } as const;
 
 const td = {
   icon: "border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle",
   date: "border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle text-sm whitespace-nowrap text-slate-400",
-  match: "border-r border-slate-800/40 px-4 py-3.5 align-middle font-medium text-slate-200",
-  player: "border-r border-slate-800/40 px-4 py-3.5 align-middle text-slate-300",
-  selection: "border-r border-slate-800/40 px-4 py-3.5 align-middle text-slate-300",
-  odds: "border-r border-slate-800/40 px-4 py-3.5 text-right align-middle",
+  match: "border-r border-slate-800/40 px-4 py-3.5 text-center align-middle font-medium text-slate-200",
+  player: "border-r border-slate-800/40 px-4 py-3.5 text-center align-middle text-slate-300",
+  selection: "border-r border-slate-800/40 px-4 py-3.5 text-center align-middle text-slate-300",
+  odds: "border-r border-slate-800/40 px-4 py-3.5 text-center align-middle",
   bookmaker: "border-r border-slate-800/40 px-4 py-3.5 align-middle text-center",
-  stake: "border-r border-slate-800/40 px-4 py-3.5 text-right align-middle font-mono tabular-nums text-slate-200",
-  stakeLast: "px-4 py-3.5 text-right align-middle font-mono tabular-nums text-slate-200",
+  stake: "border-r border-slate-800/40 px-4 py-3.5 text-center align-middle font-mono tabular-nums text-slate-200",
+  stakeLast: "px-4 py-3.5 text-center align-middle font-mono tabular-nums text-slate-200",
   status: "border-r border-slate-800/40 px-2.5 py-3.5 align-middle text-center",
-  pnl: "px-4 py-3.5 text-right align-middle",
+  pnl: "px-4 py-3.5 text-center align-middle",
 } as const;
 
 export default function PublicBetsTable({
@@ -100,7 +100,7 @@ export default function PublicBetsTable({
               <span className="block truncate">{bet.player || "-"}</span>
             </td>
             <td className={td.selection}>
-              <span className="block whitespace-normal break-words leading-snug" title={bet.selection}>
+              <span className="block whitespace-normal break-words text-center leading-snug" title={bet.selection}>
                 {bet.selection}
               </span>
             </td>
