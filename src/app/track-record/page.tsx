@@ -9,9 +9,9 @@ import PageHomeLink from "@/components/PageHomeLink";
 
 const FAQ_ITEMS = [
   {
-    question: "What is included in the headline track record?",
+    question: "What would this record mean at £100 per unit?",
     answer:
-      "The headline record combines the original validation baseline with live public selections settled through the site. Player props and ATP tennis are tracked separately, then rolled up into the combined record so the homepage and track record page use the same accounting base.",
+      "Unit profit is the clean way to measure betting performance. If 1u equals £100, then every +1u of recorded profit equals £100 profit before any personal account limits, stake changes, or withdrawals. The cash example on this page converts the same tracked unit P/L into a simple £100-per-unit illustration.",
   },
   {
     question: "How is ROI calculated?",
@@ -147,6 +147,11 @@ function formatBetCount(value: number) {
 
 function formatSignedPercent(value: number) {
   return `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
+}
+
+function formatCashExample(unitsProfit: number, poundsPerUnit = 100) {
+  const value = Math.round(unitsProfit * poundsPerUnit);
+  return `${value >= 0 ? "+" : "-"}£${Math.abs(value).toLocaleString("en-GB")}`;
 }
 
 function FaqSchema() {
@@ -315,10 +320,10 @@ export default function TrackRecordPage() {
   const trackingPeriod = getTrackingMonths();
   const statsNote =
     statsStatus === "live"
-      ? "Baseline validation plus live public settlements. Updated from the public record feed."
+      ? "Updated automatically from settled results in the public record feed."
       : statsStatus === "fallback"
-        ? "Baseline validation shown while the live public record feed is unavailable."
-        : "Baseline validation shown while live public settlements load.";
+        ? "Stored public record shown while the live feed is unavailable."
+        : "Loading the latest settled public record.";
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -392,6 +397,23 @@ export default function TrackRecordPage() {
               delay={750}
             />
           </div>
+
+          <Reveal delay={820}>
+            <div className="mt-4 rounded-2xl border border-emerald-500/15 bg-emerald-500/[0.035] p-5 md:flex md:items-center md:justify-between md:gap-8">
+              <div>
+                <div className="text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-emerald-400/90">
+                  £100 per unit example
+                </div>
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
+                  If every recorded 1u stake was followed as £100, the tracked unit profit would convert
+                  to this approximate cash profit.
+                </p>
+              </div>
+              <div className="mt-4 shrink-0 font-mono text-3xl font-black tracking-tight text-emerald-400 tabular-nums md:mt-0 md:text-4xl">
+                {formatCashExample(displayStats.overall.total_profit)}
+              </div>
+            </div>
+          </Reveal>
 
           <Reveal delay={850}>
             <p className="mt-4 font-mono text-[10px] leading-relaxed text-slate-600">
