@@ -1121,3 +1121,48 @@
 [09:44:39]   Team shots:        http://localhost:3000/model-monitor/team-shots
 [09:44:39]   Files:             data/shortlist/ + data/team-shots/
 [09:44:39] ==========================================
+[17:59:46] ==========================================
+[17:59:46]   TEAM PROPS PIPELINE -- 2026-05-01 17:59:45
+[17:59:46]   (Corners + Team Total Shots)
+[17:59:46] ==========================================
+[17:59:46] 
+[17:59:46] --- CORNERS ---
+[17:59:46] Step 1a: Refreshing corners current-season history...
+[17:59:54]   Corners historical refresh complete
+[17:59:54] Step 1b: Running corners model...
+[17:59:59]     20700 predictions generated
+[17:59:59] Step 1c: Fitting Platt calibration...
+[18:00:13]   Params written   -> /home/runner/work/il-margine/il-margine/data/corners-ou/corners-calibration-params.json
+[18:00:13] Step 1d: Building corners V3 backtest artifacts...
+[18:00:16]   Backtest bets written    : 175
+[18:00:16] Step 1e: Refreshing Pinnacle corners snapshot...
+[18:00:45]     New rows: 0
+[18:00:45] Step 1f: Generating official V3 shortlist from Pinnacle corners snapshot...
+[18:00:46] Step 1g: Generating V3.1 shadow shortlist from Pinnacle corners snapshot...
+[18:00:47] Step 1h: Settling previous corner bets...
+[18:00:48]     Settled: 40  W21/L17/P2  (55% ex-push)
+[18:00:48] 
+[18:00:48] --- TEAM TOTAL SHOTS ---
+[18:00:48] Skipped (SkipTeamShots switch enabled)
+[18:00:48] 
+[18:00:48] --- RESEARCH FEEDS ---
+[18:00:48]   Wrote data/football-form/team-shots-v3-ema20-published-picks.csv (22 rows)
+[18:00:48]   Wrote data/football-form/corners-v0-published-picks.csv (17 rows)
+[18:00:48]   Wrote data/football-form/team-shots-v3-ema20-clv-monitor.csv
+[18:00:48]   Wrote data/football-form/team-shots-v3-ema20-clv-monitor.md
+[18:00:49]   Wrote data/football-form/corners-v0-clv-monitor.csv
+[18:00:49]   Wrote data/football-form/corners-v0-clv-monitor.md
+[18:00:49] 
+[18:00:49] Syncing latest corners artifacts...
+[18:00:49]   Synced V3 shortlist: shortlist-2026-05-01.txt -> shortlist-latest.txt
+[18:00:49]   Synced V3 value bets: value-bets-2026-05-01.csv -> value-bets-latest.csv
+[18:00:49]   Synced V3 signals: signals-2026-05-01.csv -> signals-latest.csv
+[18:00:49]   Synced V3.1 shortlist: shortlist-2026-05-01-v31.txt -> shortlist-latest-v31.txt
+[18:00:49]   Synced V3.1 value bets: value-bets-2026-05-01-v31.csv -> value-bets-latest-v31.csv
+[18:00:49]   Synced V3.1 signals: signals-2026-05-01-v31.csv -> signals-latest-v31.csv
+[18:00:49] 
+[18:00:49] Pipeline complete. Check:
+[18:00:49]   Corners shortlist: http://localhost:3000/model-monitor/corners
+[18:00:49]   Team shots:        http://localhost:3000/model-monitor/team-shots
+[18:00:49]   Files:             data/shortlist/ + data/team-shots/
+[18:00:49] ==========================================
