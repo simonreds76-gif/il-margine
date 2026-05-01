@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-01T17:22:29.222632Z",
+  "generated_at": "2026-05-01T18:15:51.110088Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -69,7 +69,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 63
+          "percentile": 64
         },
         "fixture_boost_pct": 2,
         "projected_minutes": 89,
@@ -81,6 +81,136 @@
         "Model scores Christoph Baumgartner at 43.7%, market implies 31.2%",
         "Takes 24% of RasenBallsport Leipzig's scoring chances",
         "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260501-antonio-caracciolo-e9656f3bd3",
+      "match": {
+        "home_team": "Pisa SC",
+        "away_team": "US Lecce",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-01",
+        "venue": ""
+      },
+      "player": {
+        "name": "Antonio Caracciolo",
+        "team": "Pisa",
+        "position": "DEF",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/pisa.png",
+        "team_primary_color": "#0f172a",
+        "team_secondary_color": "#1d4ed8",
+        "team_shirt_pattern": "halves"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 19.5,
+        "fair_odds": 5.12
+      },
+      "market_data": {
+        "best_odds": 13.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 7.7
+      },
+      "edge": {
+        "price_gap_pp": 11.9,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 72
+        },
+        "share_of_team_chances_pct": 16,
+        "share_of_team_chances_percentile": 94,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 46
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 79
+        },
+        "fixture_boost_pct": 23,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "Model scores Antonio Caracciolo at 19.5%, market implies 7.7%",
+        "Takes 16% of Pisa's scoring chances",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +23% goal-threat boost"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260501-zian-flemming-e9b2c2a51d",
+      "match": {
+        "home_team": "Leeds United",
+        "away_team": "Burnley FC",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-01",
+        "venue": ""
+      },
+      "player": {
+        "name": "Zian Flemming",
+        "team": "Burnley",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/burnley.png",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#38bdf8",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 34.7,
+        "fair_odds": 2.88
+      },
+      "market_data": {
+        "best_odds": 4.33,
+        "best_book": "Bet365",
+        "implied_chance_pct": 23.1
+      },
+      "edge": {
+        "price_gap_pp": 11.7,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 94
+        },
+        "share_of_team_chances_pct": 37,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 13
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 42
+        },
+        "fixture_boost_pct": 1,
+        "projected_minutes": 85,
+        "penalty_role": "Primary",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "Model scores Zian Flemming at 34.7%, market implies 23.1%",
+        "Takes 37% of Burnley's scoring chances",
+        "Recent chance quality grades as strong",
+        "Primary penalty role adds a clear scoring route"
       ],
       "risk_flags": []
     },
@@ -133,7 +263,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 43
+          "percentile": 44
         },
         "fixture_boost_pct": -5,
         "projected_minutes": 84,
@@ -145,6 +275,71 @@
         "Model scores Antonio Martinez at 44.9%, market implies 34.8%",
         "Takes 35% of Alaves's scoring chances",
         "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260501-oliveira-tiago-gabriel-c12013e8aa",
+      "match": {
+        "home_team": "Pisa SC",
+        "away_team": "US Lecce",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-01",
+        "venue": ""
+      },
+      "player": {
+        "name": "Oliveira Tiago Gabriel",
+        "team": "Lecce",
+        "position": "DEF",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/lecce.png",
+        "team_primary_color": "#facc15",
+        "team_secondary_color": "#dc2626",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 17.6,
+        "fair_odds": 5.68
+      },
+      "market_data": {
+        "best_odds": 13.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 7.7
+      },
+      "edge": {
+        "price_gap_pp": 9.9,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 71
+        },
+        "share_of_team_chances_pct": 16,
+        "share_of_team_chances_percentile": 95,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 24
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 88
+        },
+        "fixture_boost_pct": 29,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "Model scores Oliveira Tiago Gabriel at 17.6%, market implies 7.7%",
+        "Takes 16% of Lecce's scoring chances",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +29% goal-threat boost"
       ],
       "risk_flags": []
     },
@@ -211,71 +406,6 @@
         "Recent chance quality grades as strong",
         "Opponent defensive profile is a positive matchup",
         "Fixture profile adds a +18% goal-threat boost"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260501-antonio-caracciolo-e9656f3bd3",
-      "match": {
-        "home_team": "Pisa SC",
-        "away_team": "US Lecce",
-        "league": "serie-a",
-        "league_display": "Serie A",
-        "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-01",
-        "venue": ""
-      },
-      "player": {
-        "name": "Antonio Caracciolo",
-        "team": "Pisa",
-        "position": "DEF",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/serie-a/pisa.png",
-        "team_primary_color": "#0f172a",
-        "team_secondary_color": "#1d4ed8",
-        "team_shirt_pattern": "halves"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 15.7,
-        "fair_odds": 6.39
-      },
-      "market_data": {
-        "best_odds": 13.0,
-        "best_book": "Bet365",
-        "implied_chance_pct": 7.7
-      },
-      "edge": {
-        "price_gap_pp": 8.0,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 72
-        },
-        "share_of_team_chances_pct": 12,
-        "share_of_team_chances_percentile": 91,
-        "team_attacking_outlook": {
-          "tier": "Average",
-          "percentile": 46
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 79
-        },
-        "fixture_boost_pct": 23,
-        "projected_minutes": 87,
-        "penalty_role": "Not on penalties",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores Antonio Caracciolo at 15.7%, market implies 7.7%",
-        "Takes 12% of Pisa's scoring chances",
-        "Opponent defensive profile is a positive matchup",
-        "Fixture profile adds a +23% goal-threat boost"
       ],
       "risk_flags": []
     },
@@ -459,7 +589,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 60
+          "percentile": 61
         },
         "fixture_boost_pct": -12,
         "projected_minutes": 88,
@@ -471,136 +601,6 @@
         "Model scores Morgan Gibbs-White at 29.8%, market implies 23.1%",
         "Takes 23% of Nottingham Forest's scoring chances",
         "Recent chance quality grades as strong"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260501-oliveira-tiago-gabriel-c12013e8aa",
-      "match": {
-        "home_team": "Pisa SC",
-        "away_team": "US Lecce",
-        "league": "serie-a",
-        "league_display": "Serie A",
-        "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-01",
-        "venue": ""
-      },
-      "player": {
-        "name": "Oliveira Tiago Gabriel",
-        "team": "Lecce",
-        "position": "DEF",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/serie-a/lecce.png",
-        "team_primary_color": "#facc15",
-        "team_secondary_color": "#dc2626",
-        "team_shirt_pattern": "vertical-stripes"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 14.2,
-        "fair_odds": 7.05
-      },
-      "market_data": {
-        "best_odds": 13.0,
-        "best_book": "Bet365",
-        "implied_chance_pct": 7.7
-      },
-      "edge": {
-        "price_gap_pp": 6.5,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 71
-        },
-        "share_of_team_chances_pct": 13,
-        "share_of_team_chances_percentile": 92,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 25
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 88
-        },
-        "fixture_boost_pct": 29,
-        "projected_minutes": 89,
-        "penalty_role": "Not on penalties",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores Oliveira Tiago Gabriel at 14.2%, market implies 7.7%",
-        "Takes 13% of Lecce's scoring chances",
-        "Opponent defensive profile is a positive matchup",
-        "Fixture profile adds a +29% goal-threat boost"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260501-zian-flemming-e9b2c2a51d",
-      "match": {
-        "home_team": "Leeds United",
-        "away_team": "Burnley FC",
-        "league": "epl",
-        "league_display": "Premier League",
-        "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-01",
-        "venue": ""
-      },
-      "player": {
-        "name": "Zian Flemming",
-        "team": "Burnley",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/burnley.png",
-        "team_primary_color": "#7f1d1d",
-        "team_secondary_color": "#38bdf8",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 29.5,
-        "fair_odds": 3.4
-      },
-      "market_data": {
-        "best_odds": 4.33,
-        "best_book": "Bet365",
-        "implied_chance_pct": 23.1
-      },
-      "edge": {
-        "price_gap_pp": 6.4,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 94
-        },
-        "share_of_team_chances_pct": 30,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 13
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 42
-        },
-        "fixture_boost_pct": 1,
-        "projected_minutes": 78,
-        "penalty_role": "Primary",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores Zian Flemming at 29.5%, market implies 23.1%",
-        "Takes 30% of Burnley's scoring chances",
-        "Recent chance quality grades as strong",
-        "Primary penalty role adds a clear scoring route"
       ],
       "risk_flags": []
     },
@@ -911,7 +911,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 10
+          "percentile": 11
         },
         "fixture_boost_pct": -19,
         "projected_minutes": 84,
@@ -974,7 +974,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 49
+          "percentile": 50
         },
         "fixture_boost_pct": -1,
         "projected_minutes": 78,
@@ -1165,7 +1165,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 93
+          "percentile": 94
         },
         "fixture_boost_pct": 54,
         "projected_minutes": 90,
@@ -1247,6 +1247,71 @@
       "risk_flags": []
     },
     {
+      "id": "20260501-lassana-coulibaly-cdbd83fbfe",
+      "match": {
+        "home_team": "Pisa SC",
+        "away_team": "US Lecce",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-01",
+        "venue": ""
+      },
+      "player": {
+        "name": "Lassana Coulibaly",
+        "team": "Lecce",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/lecce.png",
+        "team_primary_color": "#facc15",
+        "team_secondary_color": "#dc2626",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 15.0,
+        "fair_odds": 6.65
+      },
+      "market_data": {
+        "best_odds": 9.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 10.5
+      },
+      "edge": {
+        "price_gap_pp": 4.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 60
+        },
+        "share_of_team_chances_pct": 14,
+        "share_of_team_chances_percentile": 93,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 24
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 88
+        },
+        "fixture_boost_pct": 40,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "Model scores Lassana Coulibaly at 15.0%, market implies 10.5%",
+        "Takes 14% of Lecce's scoring chances",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +40% goal-threat boost"
+      ],
+      "risk_flags": []
+    },
+    {
       "id": "20260502-edmond-tapsoba-4cba9023e3",
       "match": {
         "home_team": "Bayer Leverkusen",
@@ -1295,7 +1360,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 39
+          "percentile": 40
         },
         "fixture_boost_pct": -17,
         "projected_minutes": 90,
@@ -1502,71 +1567,6 @@
       "risk_flags": []
     },
     {
-      "id": "20260501-james-justin-a64b96fbf6",
-      "match": {
-        "home_team": "Leeds United",
-        "away_team": "Burnley FC",
-        "league": "epl",
-        "league_display": "Premier League",
-        "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-01",
-        "venue": ""
-      },
-      "player": {
-        "name": "James Justin",
-        "team": "Leeds",
-        "position": "MID",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/leeds.png",
-        "team_primary_color": "#f8fafc",
-        "team_secondary_color": "#facc15",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 16.3,
-        "fair_odds": 6.12
-      },
-      "market_data": {
-        "best_odds": 7.5,
-        "best_book": "Bet365",
-        "implied_chance_pct": 13.3
-      },
-      "edge": {
-        "price_gap_pp": 3.0,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 71
-        },
-        "share_of_team_chances_pct": 9,
-        "share_of_team_chances_percentile": 87,
-        "team_attacking_outlook": {
-          "tier": "Strong",
-          "percentile": 84
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 99
-        },
-        "fixture_boost_pct": 33,
-        "projected_minutes": 87,
-        "penalty_role": "Not on penalties",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores James Justin at 16.3%, market implies 13.3%",
-        "Takes 9% of Leeds's scoring chances",
-        "Opponent defensive profile is a positive matchup",
-        "Fixture profile adds a +33% goal-threat boost"
-      ],
-      "risk_flags": []
-    },
-    {
       "id": "20260503-marshall-munetsi-0c19e17fc6",
       "match": {
         "home_team": "Paris FC",
@@ -1615,7 +1615,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 77
+          "percentile": 78
         },
         "fixture_boost_pct": 34,
         "projected_minutes": 78,
@@ -1741,11 +1741,11 @@
         "share_of_team_chances_percentile": 93,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 86
+          "percentile": 85
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 53
+          "percentile": 54
         },
         "fixture_boost_pct": 10,
         "projected_minutes": 89,
@@ -1953,6 +1953,71 @@
       "risk_flags": []
     },
     {
+      "id": "20260501-samuele-angori-7bd67e11e2",
+      "match": {
+        "home_team": "Pisa SC",
+        "away_team": "US Lecce",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-01",
+        "venue": ""
+      },
+      "player": {
+        "name": "Samuele Angori",
+        "team": "Pisa",
+        "position": "MID",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/pisa.png",
+        "team_primary_color": "#0f172a",
+        "team_secondary_color": "#1d4ed8",
+        "team_shirt_pattern": "halves"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 12.8,
+        "fair_odds": 7.84
+      },
+      "market_data": {
+        "best_odds": 9.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 10.5
+      },
+      "edge": {
+        "price_gap_pp": 2.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 57
+        },
+        "share_of_team_chances_pct": 10,
+        "share_of_team_chances_percentile": 87,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 46
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 79
+        },
+        "fixture_boost_pct": 23,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "Model scores Samuele Angori at 12.8%, market implies 10.5%",
+        "Takes 10% of Pisa's scoring chances",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +23% goal-threat boost"
+      ],
+      "risk_flags": []
+    },
+    {
       "id": "20260502-antoine-mendy-3aeadcdd3d",
       "match": {
         "home_team": "OGC Nice",
@@ -1991,7 +2056,7 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 78
+          "percentile": 77
         },
         "share_of_team_chances_pct": 8,
         "share_of_team_chances_percentile": 84,
@@ -2013,6 +2078,71 @@
         "Model scores Antoine Mendy at 9.8%, market implies 7.7%",
         "Takes 8% of Nice's scoring chances",
         "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260501-james-justin-a64b96fbf6",
+      "match": {
+        "home_team": "Leeds United",
+        "away_team": "Burnley FC",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-01",
+        "venue": ""
+      },
+      "player": {
+        "name": "James Justin",
+        "team": "Leeds",
+        "position": "MID",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/leeds.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#facc15",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 17.4,
+        "fair_odds": 5.74
+      },
+      "market_data": {
+        "best_odds": 6.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 15.4
+      },
+      "edge": {
+        "price_gap_pp": 2.0,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 71
+        },
+        "share_of_team_chances_pct": 10,
+        "share_of_team_chances_percentile": 88,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 84
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 99
+        },
+        "fixture_boost_pct": 33,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "Model scores James Justin at 17.4%, market implies 15.4%",
+        "Takes 10% of Leeds's scoring chances",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +33% goal-threat boost"
       ],
       "risk_flags": []
     },
@@ -2130,7 +2260,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 43
+          "percentile": 44
         },
         "fixture_boost_pct": -5,
         "projected_minutes": 86,
@@ -2206,134 +2336,6 @@
         "Takes 5% of Union Berlin's scoring chances",
         "Opponent defensive profile is a positive matchup",
         "Primary penalty role adds a clear scoring route"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260502-nikola-vlasic-fb2d5c5955",
-      "match": {
-        "home_team": "Udinese Calcio",
-        "away_team": "Torino FC",
-        "league": "serie-a",
-        "league_display": "Serie A",
-        "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-02",
-        "venue": ""
-      },
-      "player": {
-        "name": "Nikola Vlasic",
-        "team": "Torino",
-        "position": "AM",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/serie-a/torino.png",
-        "team_primary_color": "#7f1d1d",
-        "team_secondary_color": "#38bdf8",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 23.6,
-        "fair_odds": 4.24
-      },
-      "market_data": {
-        "best_odds": 4.5,
-        "best_book": "Bet365",
-        "implied_chance_pct": 22.2
-      },
-      "edge": {
-        "price_gap_pp": 1.4,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 73
-        },
-        "share_of_team_chances_pct": 12,
-        "share_of_team_chances_percentile": 91,
-        "team_attacking_outlook": {
-          "tier": "Average",
-          "percentile": 35
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 56
-        },
-        "fixture_boost_pct": 14,
-        "projected_minutes": 89,
-        "penalty_role": "Primary",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores Nikola Vlasic at 23.6%, market implies 22.2%",
-        "Takes 12% of Torino's scoring chances",
-        "Fixture profile adds a +14% goal-threat boost",
-        "Primary penalty role adds a clear scoring route"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260503-sinaly-diomande-66df5622e6",
-      "match": {
-        "home_team": "AJ Auxerre",
-        "away_team": "Angers SCO",
-        "league": "ligue-1",
-        "league_display": "Ligue 1",
-        "league_logo_path": "/league-logos/ligue-1.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-03",
-        "venue": ""
-      },
-      "player": {
-        "name": "Sinaly Diomande",
-        "team": "Auxerre",
-        "position": "DEF",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/ligue-1/auxerre.png",
-        "team_primary_color": "#0f172a",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 11.9,
-        "fair_odds": 8.42
-      },
-      "market_data": {
-        "best_odds": 9.5,
-        "best_book": "Bet365",
-        "implied_chance_pct": 10.5
-      },
-      "edge": {
-        "price_gap_pp": 1.4,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 69
-        },
-        "share_of_team_chances_pct": 9,
-        "share_of_team_chances_percentile": 85,
-        "team_attacking_outlook": {
-          "tier": "Positive",
-          "percentile": 56
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 73
-        },
-        "fixture_boost_pct": 4,
-        "projected_minutes": 90,
-        "penalty_role": "Not on penalties",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores Sinaly Diomande at 11.9%, market implies 10.5%",
-        "Takes 9% of Auxerre's scoring chances"
       ],
       "risk_flags": []
     }
