@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-01T10:53:43.138172Z",
+  "generated_at": "2026-05-01T11:57:28.329010Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -472,71 +472,6 @@
         "Takes 13% of Lecce's scoring chances",
         "Opponent defensive profile is a positive matchup",
         "Fixture profile adds a +29% goal-threat boost"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260501-zian-flemming-e9b2c2a51d",
-      "match": {
-        "home_team": "Leeds United",
-        "away_team": "Burnley FC",
-        "league": "epl",
-        "league_display": "Premier League",
-        "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-01",
-        "venue": ""
-      },
-      "player": {
-        "name": "Zian Flemming",
-        "team": "Burnley",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/burnley.png",
-        "team_primary_color": "#7f1d1d",
-        "team_secondary_color": "#38bdf8",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 29.5,
-        "fair_odds": 3.4
-      },
-      "market_data": {
-        "best_odds": 4.33,
-        "best_book": "Bet365",
-        "implied_chance_pct": 23.1
-      },
-      "edge": {
-        "price_gap_pp": 6.4,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 94
-        },
-        "share_of_team_chances_pct": 30,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 13
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 43
-        },
-        "fixture_boost_pct": 1,
-        "projected_minutes": 78,
-        "penalty_role": "Primary",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores Zian Flemming at 29.5%, market implies 23.1%",
-        "Takes 30% of Burnley's scoring chances",
-        "Recent chance quality grades as strong",
-        "Primary penalty role adds a clear scoring route"
       ],
       "risk_flags": []
     },
@@ -1052,6 +987,71 @@
       "risk_flags": []
     },
     {
+      "id": "20260501-zian-flemming-e9b2c2a51d",
+      "match": {
+        "home_team": "Leeds United",
+        "away_team": "Burnley FC",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-01",
+        "venue": ""
+      },
+      "player": {
+        "name": "Zian Flemming",
+        "team": "Burnley",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/burnley.png",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#38bdf8",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 29.5,
+        "fair_odds": 3.4
+      },
+      "market_data": {
+        "best_odds": 4.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 25.0
+      },
+      "edge": {
+        "price_gap_pp": 4.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 94
+        },
+        "share_of_team_chances_pct": 30,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 13
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 43
+        },
+        "fixture_boost_pct": 1,
+        "projected_minutes": 78,
+        "penalty_role": "Primary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores Zian Flemming at 29.5%, market implies 25.0%",
+        "Takes 30% of Burnley's scoring chances",
+        "Recent chance quality grades as strong",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
       "id": "20260502-matthieu-udol-62afc2c7b1",
       "match": {
         "home_team": "OGC Nice",
@@ -1242,6 +1242,71 @@
         "Takes 28% of Real Oviedo's scoring chances",
         "Recent chance quality grades as strong",
         "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260501-james-justin-a64b96fbf6",
+      "match": {
+        "home_team": "Leeds United",
+        "away_team": "Burnley FC",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "",
+        "kickoff_display": "2026-05-01",
+        "venue": ""
+      },
+      "player": {
+        "name": "James Justin",
+        "team": "Leeds",
+        "position": "MID",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/leeds.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#facc15",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 16.3,
+        "fair_odds": 6.12
+      },
+      "market_data": {
+        "best_odds": 7.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 13.3
+      },
+      "edge": {
+        "price_gap_pp": 3.0,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Good",
+          "percentile": 71
+        },
+        "share_of_team_chances_pct": 9,
+        "share_of_team_chances_percentile": 87,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 85
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 99
+        },
+        "fixture_boost_pct": 33,
+        "projected_minutes": 87,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "Model scores James Justin at 16.3%, market implies 13.3%",
+        "Takes 9% of Leeds's scoring chances",
+        "Opponent defensive profile is a positive matchup",
+        "Fixture profile adds a +33% goal-threat boost"
       ],
       "risk_flags": []
     },
@@ -2263,70 +2328,6 @@
         "Model scores Florian Wirtz at 24.2%, market implies 23.1%",
         "Takes 18% of Liverpool's scoring chances",
         "Recent chance quality grades as strong"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260503-mateo-pellegrino-e20ae13beb",
-      "match": {
-        "home_team": "Inter Milano",
-        "away_team": "Parma Calcio",
-        "league": "serie-a",
-        "league_display": "Serie A",
-        "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "",
-        "kickoff_display": "2026-05-03",
-        "venue": ""
-      },
-      "player": {
-        "name": "Mateo Pellegrino",
-        "team": "Parma Calcio 1913",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/serie-a/parma.png",
-        "team_primary_color": "#111827",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 21.1,
-        "fair_odds": 4.74
-      },
-      "market_data": {
-        "best_odds": 5.0,
-        "best_book": "Bet365",
-        "implied_chance_pct": 20.0
-      },
-      "edge": {
-        "price_gap_pp": 1.1,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Good",
-          "percentile": 72
-        },
-        "share_of_team_chances_pct": 28,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 3
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Low",
-          "percentile": 7
-        },
-        "fixture_boost_pct": -32,
-        "projected_minutes": 79,
-        "penalty_role": "Primary",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "Model scores Mateo Pellegrino at 21.1%, market implies 20.0%",
-        "Takes 28% of Parma Calcio 1913's scoring chances",
-        "Primary penalty role adds a clear scoring route"
       ],
       "risk_flags": []
     }
