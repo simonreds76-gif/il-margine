@@ -9,9 +9,9 @@ import PageHomeLink from "@/components/PageHomeLink";
 
 const FAQ_ITEMS = [
   {
-    question: "What would this record mean at £100 per unit?",
+    question: "How is the £100-per-unit profit calculated?",
     answer:
-      "Unit profit is the clean way to measure betting performance. If 1u equals £100, then every +1u of recorded profit equals £100 profit before any personal account limits, stake changes, or withdrawals. The cash example on this page converts the same tracked unit P/L into a simple £100-per-unit illustration.",
+      "Each settled selection is converted from its posted unit stake into cash: 0.5u is £50, 1u is £100, and 2u is £200. We then settle the bet at the recorded odds and result, convert its unit profit or loss into pounds, and add player props plus tennis together.",
   },
   {
     question: "How is ROI calculated?",
@@ -402,15 +402,31 @@ export default function TrackRecordPage() {
             <div className="mt-4 rounded-2xl border border-emerald-500/15 bg-emerald-500/[0.035] p-5 md:flex md:items-center md:justify-between md:gap-8">
               <div>
                 <div className="text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-emerald-400/90">
-                  £100 per unit example
+                  Historical result at £100 per unit
                 </div>
                 <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
-                  If every recorded 1u stake was followed as £100, the tracked unit profit would convert
-                  to this approximate cash profit.
+                  Calculated from the posted stake on every settled pick: 0.5u = £50, 1u = £100,
+                  2u = £200. Props and tennis are converted from unit P/L and summed together.
                 </p>
               </div>
-              <div className="mt-4 shrink-0 font-mono text-3xl font-black tracking-tight text-emerald-400 tabular-nums md:mt-0 md:text-4xl">
-                {formatCashExample(displayStats.overall.total_profit)}
+              <div className="mt-5 shrink-0 md:mt-0 md:text-right">
+                <div className="font-mono text-3xl font-black tracking-tight text-emerald-400 tabular-nums md:text-4xl">
+                  {formatCashExample(displayStats.overall.total_profit)}
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2 md:justify-end">
+                  <span className="rounded-full border border-emerald-500/15 bg-[#0c0f14]/80 px-3 py-1.5 font-mono text-[11px] text-slate-400">
+                    Props{" "}
+                    <span className="font-semibold text-emerald-400">
+                      {formatCashExample(displayStats.props.total_profit)}
+                    </span>
+                  </span>
+                  <span className="rounded-full border border-emerald-500/15 bg-[#0c0f14]/80 px-3 py-1.5 font-mono text-[11px] text-slate-400">
+                    Tennis{" "}
+                    <span className="font-semibold text-emerald-400">
+                      {formatCashExample(displayStats.tennis.total_profit)}
+                    </span>
+                  </span>
+                </div>
               </div>
             </div>
           </Reveal>
