@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const CACHE_HEADER = "public, s-maxage=90, stale-while-revalidate=900";
+const LIVE_RECORD_CACHE_HEADER = "no-store";
 const TIMEOUT_MS = 8000;
 
 type PublicScope = "home" | "tennis" | "props" | "calculator" | "monthly";
@@ -27,12 +28,12 @@ const MONTHLY_SETTING_BY_SCOPE: Record<MonthlyScope, string> = {
   tennis: "monthly_breakdown_tennis_public",
 };
 
-function cachedJson(payload: unknown) {
+function cachedJson(payload: unknown, cacheHeader = CACHE_HEADER) {
   const res = NextResponse.json({
     ...((payload && typeof payload === "object") ? payload : { data: payload }),
     cachedAt: new Date().toISOString(),
   });
-  res.headers.set("Cache-Control", CACHE_HEADER);
+  res.headers.set("Cache-Control", cacheHeader);
   return res;
 }
 
@@ -194,8 +195,10 @@ export async function GET(request: Request) {
   const scope = parseScope(url.searchParams.get("scope"));
 
   try {
-    if (scope === "home") return cachedJson(await fetchHomePayload());
-    if (scope === "tennis" || scope === "props") return cachedJson(await fetchMarketPayload(scope));
+    if (scope === "home") return cachedJson(await fetchHomePayload(), LIVE_RECORD_CACHE_HEADER);
+    if (scope === "tennis" || scope === "props") {
+      return cachedJson(await fetchMarketPayload(scope), LIVE_RECORD_CACHE_HEADER);
+    }
     if (scope === "calculator") return cachedJson(await fetchCalculatorPayload());
     return cachedJson(await fetchMonthlyPayload(parseMonthlyScope(url.searchParams.get("monthlyScope"))));
   } catch (error) {
