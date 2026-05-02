@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-05-02T16:30:00Z",
       "home_team": "Bayer Leverkusen",
       "away_team": "RB Leipzig",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "4-3-3",
       "home_players": [
@@ -31,11 +31,11 @@
         "Maarten Vandevoordt",
         "Ridle Baku",
         "Willi Orbán",
-        "Castello Lukeba",
-        "David Raum",
-        "Assan Ouédraogo",
-        "Nicolas Seiwald",
+        "El Chadaille Bitshiabu",
+        "Max Finkgräfe",
         "Christoph Baumgartner",
+        "Nicolas Seiwald",
+        "Xaver Schlager",
         "Yan Diomande",
         "Rômulo",
         "Antonio Nusa"
@@ -170,7 +170,7 @@
           "position_id": 34
         },
         {
-          "name": "Castello Lukeba",
+          "name": "El Chadaille Bitshiabu",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -179,7 +179,7 @@
           "position_id": 36
         },
         {
-          "name": "David Raum",
+          "name": "Max Finkgräfe",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -188,7 +188,7 @@
           "position_id": 38
         },
         {
-          "name": "Assan Ouédraogo",
+          "name": "Christoph Baumgartner",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -206,7 +206,7 @@
           "position_id": 75
         },
         {
-          "name": "Christoph Baumgartner",
+          "name": "Xaver Schlager",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -253,7 +253,17 @@
         "Malik Tillman",
         "Christian Kofane"
       ],
-      "away_subs": [],
+      "away_subs": [
+        "Péter Gulácsi",
+        "Benjamin Henrichs",
+        "Castello Lukeba",
+        "David Raum",
+        "Lukas Klostermann",
+        "Brajan Gruda",
+        "Assan Ouédraogo",
+        "Conrad Harder",
+        "Johan Bakayoko"
+      ],
       "home_unavailable": [
         "Lucas Vázquez",
         "Martin Terrier"

@@ -9,34 +9,34 @@
       "kickoff_utc": "2026-05-02T16:30:00Z",
       "home_team": "Deportivo Alaves",
       "away_team": "Athletic Club",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "5-3-2",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "4-4-2",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Antonio Sivera",
+        "Ángel Pérez",
         "Jonny Otto",
         "Nahuel Tenaglia",
         "Victor Parada",
-        "Ángel Pérez",
-        "Abderrahman Rebbach",
-        "Pablo Ibánez",
-        "Antonio Blanco",
         "Denis Suárez",
+        "Antonio Blanco",
+        "Pablo Ibánez",
+        "Abderrahman Rebbach",
         "Toni Martínez",
         "Ibrahim Diabate"
       ],
       "away_players": [
         "Unai Simón",
         "Andoni Gorosabel",
-        "Daniel Vivian",
+        "Yeray Álvarez",
         "Aymeric Laporte",
         "Yuri Berchiche",
-        "Íñigo Ruíz de Galarreta",
         "Mikel Jauregizar",
+        "Alejandro Rego",
         "Iñaki Williams",
-        "Oihan Sancet",
+        "Unai Gómez",
         "Nico Williams",
         "Gorka Guruzeta"
       ],
@@ -47,80 +47,80 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "5-3-2",
+          "formation": "4-4-2",
           "position_id": 11
-        },
-        {
-          "name": "Jonny Otto",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 33
-        },
-        {
-          "name": "Nahuel Tenaglia",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 35
-        },
-        {
-          "name": "Victor Parada",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 37
         },
         {
           "name": "Ángel Pérez",
           "line_index": 0,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 51
+          "formation": "4-4-2",
+          "position_id": 32
         },
         {
-          "name": "Abderrahman Rebbach",
+          "name": "Jonny Otto",
           "line_index": 0,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 59
+          "formation": "4-4-2",
+          "position_id": 34
         },
         {
-          "name": "Pablo Ibánez",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "5-3-2",
-          "position_id": 73
+          "name": "Nahuel Tenaglia",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 36
         },
         {
-          "name": "Antonio Blanco",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "5-3-2",
-          "position_id": 75
+          "name": "Victor Parada",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 38
         },
         {
           "name": "Denis Suárez",
           "line_index": 1,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "5-3-2",
-          "position_id": 77
+          "formation": "4-4-2",
+          "position_id": 72
+        },
+        {
+          "name": "Antonio Blanco",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 74
+        },
+        {
+          "name": "Pablo Ibánez",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 76
+        },
+        {
+          "name": "Abderrahman Rebbach",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 78
         },
         {
           "name": "Toni Martínez",
@@ -128,7 +128,7 @@
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "5-3-2",
+          "formation": "4-4-2",
           "position_id": 104
         },
         {
@@ -137,7 +137,7 @@
           "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "5-3-2",
+          "formation": "4-4-2",
           "position_id": 106
         }
       ],
@@ -161,7 +161,7 @@
           "position_id": 32
         },
         {
-          "name": "Daniel Vivian",
+          "name": "Yeray Álvarez",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -188,7 +188,7 @@
           "position_id": 38
         },
         {
-          "name": "Íñigo Ruíz de Galarreta",
+          "name": "Mikel Jauregizar",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -197,7 +197,7 @@
           "position_id": 64
         },
         {
-          "name": "Mikel Jauregizar",
+          "name": "Alejandro Rego",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -215,7 +215,7 @@
           "position_id": 83
         },
         {
-          "name": "Oihan Sancet",
+          "name": "Unai Gómez",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -242,8 +242,34 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Grégoire Swiderski",
+        "Raul Fernández",
+        "Egoitz Muñoz",
+        "Jon Pacheco",
+        "Ville Koski",
+        "Youssef Enríquez",
+        "Ander Guevara",
+        "Calebe",
+        "Carles Aleñá",
+        "Jon Guridi",
+        "Aitor Mañas",
+        "Mariano Díaz"
+      ],
+      "away_subs": [
+        "Álex Padilla",
+        "Adama Boiro",
+        "Aitor Paredes",
+        "Daniel Vivian",
+        "Jesús Areso",
+        "Íñigo Ruíz de Galarreta",
+        "Mikel Vesga",
+        "Oihan Sancet",
+        "Alex Berenguer",
+        "Nico Serrano",
+        "Robert Navarro",
+        "Urko Izeta"
+      ],
       "home_unavailable": [
         "Facundo Garcés",
         "Carlos Protesoni",
@@ -752,32 +778,32 @@
         }
       ],
       "home_subs": [
+        "Diego López",
+        "Hugo Duro",
+        "Jesus Vázquez",
+        "Arnaut Danjuma",
+        "Dani Raba",
         "Cristian Rivero",
         "Eray Cömert",
-        "Jesus Vázquez",
         "Rubén Iranzo",
         "Unai Núñez",
         "André Almeida",
         "Baptiste Santamaría",
-        "Diego López",
-        "Lucas Núñez",
-        "Arnaut Danjuma",
-        "Dani Raba",
-        "Hugo Duro"
+        "Lucas Núñez"
       ],
       "away_subs": [
-        "Jan Oblak",
+        "Iker Luque",
+        "Miguel Llorente",
+        "Koke",
+        "Antoine Griezmann",
         "Aleksa Puric",
+        "Jan Oblak",
         "Dani Martinez",
         "Marc Pubill",
         "Matteo Ruggeri",
         "Ademola Lookman",
         "Álex Baena",
-        "Johnny Cardoso",
-        "Koke",
-        "Antoine Griezmann",
-        "Iker Luque",
-        "Miguel Llorente"
+        "Johnny Cardoso"
       ],
       "home_unavailable": [
         "Lucas Beltrán",
