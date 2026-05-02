@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-05-02T09:22:52Z",
+  "run_at": "2026-05-02T18:02:32Z",
   "model": "team-shots",
-  "total_bets": 67,
-  "settled_this_run": 1,
+  "total_bets": 70,
+  "settled_this_run": 0,
   "total_settled": 57,
-  "total_pending": 10,
+  "total_pending": 13,
   "pending_breakdown": {
-    "future": 10,
-    "live": 0,
-    "stale": 0,
+    "future": 7,
+    "live": 2,
+    "stale": 4,
     "old_stale": 0,
     "unknown": 0
   },
@@ -89,11 +89,46 @@
       "snapshot_path": "data/results-snapshot/2026-05-02.json"
     }
   },
-  "stale_rows": [],
+  "stale_rows": [
+    {
+      "match": "Union Berlin vs 1. FC Cologne",
+      "league": "bundesliga",
+      "line": "13.5",
+      "side": "under",
+      "kickoff": "2026-05-02T13:30:00Z",
+      "hours_elapsed": 4.54
+    },
+    {
+      "match": "Newcastle United vs Brighton & Hove Albion",
+      "league": "epl",
+      "line": "14.5",
+      "side": "under",
+      "kickoff": "2026-05-02T14:00:00Z",
+      "hours_elapsed": 4.04
+    },
+    {
+      "match": "Brentford FC vs West Ham United",
+      "league": "epl",
+      "line": "11.5",
+      "side": "under",
+      "kickoff": "2026-05-02T14:00:00Z",
+      "hours_elapsed": 4.04
+    },
+    {
+      "match": "Villarreal CF vs Levante UD",
+      "league": "la-liga",
+      "line": "15.5",
+      "side": "under",
+      "kickoff": "2026-05-02T12:00:00Z",
+      "hours_elapsed": 6.04
+    }
+  ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [],
+  "warnings": [
+    "4 stale pending row(s) across 4 fixture(s) (3-48h elapsed)"
+  ],
   "errors": [],
   "exit_code_recommendation": 0
 }
