@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-05-03T14:06:28Z",
+  "run_at": "2026-05-03T17:50:41Z",
   "model": "team-shots-v3-ema20-research",
   "total_bets": 27,
   "settled_this_run": 0,
   "total_settled": 19,
   "total_pending": 8,
   "pending_breakdown": {
-    "future": 3,
-    "live": 3,
-    "stale": 2,
+    "future": 2,
+    "live": 1,
+    "stale": 5,
     "old_stale": 0,
     "unknown": 0
   },
@@ -96,7 +96,7 @@
       "line": "8.5",
       "side": "over",
       "kickoff": "2026-05-03T10:30:00Z",
-      "hours_elapsed": 3.61
+      "hours_elapsed": 7.34
     },
     {
       "match": "Bologna FC vs Cagliari Calcio",
@@ -104,14 +104,38 @@
       "line": "14.5",
       "side": "under",
       "kickoff": "2026-05-03T10:30:00Z",
-      "hours_elapsed": 3.61
+      "hours_elapsed": 7.34
+    },
+    {
+      "match": "RC Celta de Vigo vs Elche CF",
+      "league": "la-liga",
+      "line": "14.5",
+      "side": "under",
+      "kickoff": "2026-05-03T12:00:00Z",
+      "hours_elapsed": 5.84
+    },
+    {
+      "match": "AFC Bournemouth vs Crystal Palace",
+      "league": "epl",
+      "line": "9.5",
+      "side": "over",
+      "kickoff": "2026-05-03T13:00:00Z",
+      "hours_elapsed": 4.84
+    },
+    {
+      "match": "Sassuolo Calcio vs AC Milan",
+      "league": "serie-a",
+      "line": "14.5",
+      "side": "under",
+      "kickoff": "2026-05-03T13:00:00Z",
+      "hours_elapsed": 4.84
     }
   ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
   "warnings": [
-    "2 stale pending row(s) across 1 fixture(s) (3-48h elapsed)"
+    "5 stale pending row(s) across 4 fixture(s) (3-48h elapsed)"
   ],
   "errors": [],
   "exit_code_recommendation": 0
