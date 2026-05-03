@@ -527,9 +527,9 @@
       "kickoff_utc": "2026-05-03T13:30:00Z",
       "home_team": "St. Pauli",
       "away_team": "Mainz 05",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-2-1",
       "away_formation": "3-5-2",
       "home_players": [
@@ -537,10 +537,10 @@
         "Tomoya Ando",
         "Hauke Wahl",
         "Karol Mets",
-        "Manolis Saliakas",
-        "Mathias Rasmussen",
-        "Jackson Irvine",
         "Arkadiusz Pyrka",
+        "Jackson Irvine",
+        "Eric Smith",
+        "Lars Ritzka",
         "Danel Sinani",
         "Joel Chima Fujita",
         "Andréas Hountondji"
@@ -549,7 +549,7 @@
         "Daniel Batz",
         "Danny da Costa",
         "Stefan Posch",
-        "Dominik Kohr",
+        "Kacper Potulski",
         "Silvan Widmer",
         "Paul Nebel",
         "Kaishu Sano",
@@ -596,7 +596,7 @@
           "position_id": 37
         },
         {
-          "name": "Manolis Saliakas",
+          "name": "Arkadiusz Pyrka",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -605,7 +605,7 @@
           "position_id": 62
         },
         {
-          "name": "Mathias Rasmussen",
+          "name": "Jackson Irvine",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -614,7 +614,7 @@
           "position_id": 64
         },
         {
-          "name": "Jackson Irvine",
+          "name": "Eric Smith",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -623,7 +623,7 @@
           "position_id": 66
         },
         {
-          "name": "Arkadiusz Pyrka",
+          "name": "Lars Ritzka",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -688,7 +688,7 @@
           "position_id": 35
         },
         {
-          "name": "Dominik Kohr",
+          "name": "Kacper Potulski",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -760,8 +760,28 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Ben Alexander Voll",
+        "Adam Dzwigala",
+        "David Nemeth",
+        "Connor Metcalfe",
+        "Louis Oppie",
+        "Mathias Rasmussen",
+        "Abdoulie Ceesay",
+        "Martijn Kaars",
+        "Taichi Hara"
+      ],
+      "away_subs": [
+        "Robin Zentner",
+        "Dominik Kohr",
+        "Stefan Bell",
+        "Anthony Caci",
+        "Lennard Maloney",
+        "Nikolas Veratschnig",
+        "Sota Kawasaki",
+        "Armindo Sieb",
+        "Nelson Weiper"
+      ],
       "home_unavailable": [
         "James Sands",
         "Simon Spari",
