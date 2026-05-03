@@ -1,15 +1,15 @@
 # Team-Shots CLV Monitor: `canonical_form_v3_ema20_nb`
 
-Generated: 2026-05-02T19:49:59Z
+Generated: 2026-05-03T09:16:47Z
 Picks input: `data/football-form/team-shots-v3-ema20-published-picks.csv`
 Odds input: `data/team-shots/team-shots-odds-history.csv`
 
 ## Summary
 
 - Picks: 27
-- Settled: 10
-- Open/pending: 17
-- Settled PnL: +4.86u
+- Settled: 19
+- Open/pending: 8
+- Settled PnL: +4.91u
 - Picks with close: 27
 - Hard-guard blocked: 3
 - Average published-to-close CLV: +0.34%
