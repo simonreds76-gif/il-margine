@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-05-03T15:30:00Z",
       "home_team": "Borussia Mönchengladbach",
       "away_team": "Borussia Dortmund",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-1-4-2",
       "away_formation": "3-4-2-1",
       "home_players": [
@@ -23,14 +23,14 @@
         "Joseph Scally",
         "Rocco Reitz",
         "Kevin Stöger",
-        "Robin Hack",
+        "Wael Mohya",
         "Franck Honorat",
         "Haris Tabakovic"
       ],
       "away_players": [
         "Gregor Kobel",
+        "Luca Reggiani",
         "Waldemar Anton",
-        "Filippo Mané",
         "Nico Schlotterbeck",
         "Julian Ryerson",
         "Marcel Sabitzer",
@@ -114,7 +114,7 @@
           "position_id": 86
         },
         {
-          "name": "Robin Hack",
+          "name": "Wael Mohya",
           "line_index": 2,
           "line_size": 4,
           "role_score": 4,
@@ -152,7 +152,7 @@
           "position_id": 11
         },
         {
-          "name": "Waldemar Anton",
+          "name": "Luca Reggiani",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -161,7 +161,7 @@
           "position_id": 33
         },
         {
-          "name": "Filippo Mané",
+          "name": "Waldemar Anton",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -242,8 +242,27 @@
           "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Jan Olschowsky",
+        "Kevin Diks",
+        "Kota Takai",
+        "Lukas Ullrich",
+        "Florian Neuhaus",
+        "Giovanni Reyna",
+        "Hugo Bolin",
+        "Robin Hack",
+        "Shuto Machino"
+      ],
+      "away_subs": [
+        "Alexander Meyer",
+        "Filippo Mané",
+        "Carney Chukwuemeka",
+        "Daniel Svensson",
+        "Salih Özcan",
+        "Yan Couto",
+        "Fábio Silva",
+        "Mathis Albert"
+      ],
       "home_unavailable": [
         "Jan Urbich",
         "Nathan N'Goumou",
@@ -761,14 +780,14 @@
         }
       ],
       "home_subs": [
-        "Ben Alexander Voll",
         "Adam Dzwigala",
-        "David Nemeth",
         "Connor Metcalfe",
-        "Louis Oppie",
-        "Mathias Rasmussen",
         "Abdoulie Ceesay",
         "Martijn Kaars",
+        "Ben Alexander Voll",
+        "David Nemeth",
+        "Louis Oppie",
+        "Mathias Rasmussen",
         "Taichi Hara"
       ],
       "away_subs": [

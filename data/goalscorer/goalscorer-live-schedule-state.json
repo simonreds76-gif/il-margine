@@ -1,16 +1,16 @@
 {
-  "updated_at": "2026-05-03T14:17:49Z",
+  "updated_at": "2026-05-03T15:04:53Z",
   "reason": "cycle",
   "leagues": {
     "serie-a": {
-      "last_successful_run_at": "2026-05-03T12:52:06Z",
+      "last_successful_run_at": "2026-05-03T15:03:34Z",
       "last_detail_run_at": "2026-05-01T17:16:09Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip serie-a: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "lineup",
+      "last_decision": "ran",
+      "last_message": "Ran serie-a in lineup tier (cadence 10m, fixtures 1).",
+      "next_kickoff_utc": "2026-05-03T16:00:00Z"
     },
     "epl": {
       "last_successful_run_at": "2026-05-03T11:57:40Z",
@@ -33,17 +33,17 @@
       "next_kickoff_utc": ""
     },
     "bundesliga": {
-      "last_successful_run_at": "2026-05-03T12:52:38Z",
+      "last_successful_run_at": "2026-05-03T15:04:13Z",
       "last_detail_run_at": "2026-05-01T17:19:46Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip bundesliga: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "lineup",
+      "last_decision": "ran",
+      "last_message": "Ran bundesliga in lineup tier (cadence 10m, fixtures 1).",
+      "next_kickoff_utc": "2026-05-03T15:30:00Z"
     },
     "ligue-1": {
-      "last_successful_run_at": "2026-05-03T14:17:49Z",
+      "last_successful_run_at": "2026-05-03T15:04:53Z",
       "last_detail_run_at": "2026-05-01T17:20:58Z",
       "last_failure_at": "",
       "consecutive_failures": 0,

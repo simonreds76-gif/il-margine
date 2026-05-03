@@ -9,28 +9,28 @@
       "kickoff_utc": "2026-05-03T15:15:00Z",
       "home_team": "Auxerre",
       "away_team": "Angers",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "5-3-2",
       "home_players": [
         "Théo De Percin",
-        "Marvin Senaya",
+        "Lamine Sy",
         "Sinaly Diomandé",
         "Bryan Okoh",
         "Gideon Mensah",
         "Elisha Owusu",
         "Kévin Danois",
-        "Romain Faivre",
+        "Naouirou Ahamada",
         "Danny Namaso",
-        "Josué Casimir",
-        "Lassine Sinayoko"
+        "Lassine Sinayoko",
+        "Sékou Mara"
       ],
       "away_players": [
         "Hervé Koffi",
-        "Abdoulaye Bamba",
-        "Emmanuel Biumla",
+        "Ousmane Camara",
+        "Marius Louër",
         "Jordan Lefort",
         "Lilian Rao-Lisoa",
         "Jacques Ekomié",
@@ -51,7 +51,7 @@
           "position_id": 11
         },
         {
-          "name": "Marvin Senaya",
+          "name": "Lamine Sy",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -105,7 +105,7 @@
           "position_id": 66
         },
         {
-          "name": "Romain Faivre",
+          "name": "Naouirou Ahamada",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -123,7 +123,7 @@
           "position_id": 85
         },
         {
-          "name": "Josué Casimir",
+          "name": "Lassine Sinayoko",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -132,7 +132,7 @@
           "position_id": 87
         },
         {
-          "name": "Lassine Sinayoko",
+          "name": "Sékou Mara",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -152,7 +152,7 @@
           "position_id": 11
         },
         {
-          "name": "Abdoulaye Bamba",
+          "name": "Ousmane Camara",
           "line_index": 0,
           "line_size": 5,
           "role_score": 1,
@@ -161,7 +161,7 @@
           "position_id": 33
         },
         {
-          "name": "Emmanuel Biumla",
+          "name": "Marius Louër",
           "line_index": 0,
           "line_size": 5,
           "role_score": 1,
@@ -242,9 +242,30 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Tom Negrel",
+        "Clément Akpa",
+        "Francisco Sierralta",
+        "Marvin Senaya",
+        "Telli Siwe",
+        "Assane Dioussé",
+        "Josué Casimir",
+        "Lasso Coulibaly",
+        "Mamoudou Cissokho"
+      ],
+      "away_subs": [
+        "Melvin Zinga",
+        "Abdoulaye Bamba",
+        "Carlens Arcus",
+        "Dan Sinaté",
+        "Florent Hanin",
+        "Mael Gernigon",
+        "Louis Mouton",
+        "Goduine Koyalipou",
+        "Lanroy Machine"
+      ],
       "home_unavailable": [
+        "Romain Faivre",
         "Donovan Léon",
         "Fredrik Oppegård",
         "Oussama El Azzouzi"
@@ -498,23 +519,23 @@
         }
       ],
       "home_subs": [
+        "Ethan Mbappé",
+        "Calvin Verdonk",
+        "Olivier Giroud",
+        "Gaëtan Perrin",
+        "Tiago Santos",
         "Arnaud Bodart",
         "Alexsandro Ribeiro",
-        "Calvin Verdonk",
         "Chancel Mbemba",
-        "Tiago Santos",
-        "Ethan Mbappé",
-        "Gaëtan Perrin",
-        "Olivier Giroud",
         "Osame Sahraoui"
       ],
       "away_subs": [
-        "Lionel Mpasi-Nzau",
+        "Timothée Pembélé",
+        "Yassine Kechta",
         "Enzo Koffi",
         "Étienne Youté Kinkoué",
-        "Timothée Pembélé",
+        "Lionel Mpasi-Nzau",
         "Daren Mosengo",
-        "Yassine Kechta",
         "Felix Mambimbi",
         "Godson Kyeremeh",
         "Yanis Djellel"
@@ -793,36 +814,36 @@
       "kickoff_utc": "2026-05-03T15:15:00Z",
       "home_team": "Paris FC",
       "away_team": "Brest",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
       "away_formation": "4-3-3",
       "home_players": [
         "Kevin Trapp",
-        "Adama Camara",
+        "Hamari Traoré",
         "Diego Coppola",
         "Mamadou Mbow",
         "Nhoa Sangui",
         "Rudy Matondo",
-        "Maxime Lopez",
-        "Jonathan Ikoné",
         "Marshall Munetsi",
-        "Alimami Gory",
-        "Ciro Immobile"
+        "Jonathan Ikoné",
+        "Ilan Kebbal",
+        "Moses Simon",
+        "Willem Geubbels"
       ],
       "away_players": [
         "Grégoire Coudert",
-        "Kenny Lala",
-        "Brendan Chardonnet",
-        "Soumaïla Coulibaly",
         "Luck Zogbé",
+        "Raphaël Le Guen",
+        "Brendan Chardonnet",
+        "Kenny Lala",
         "Lucas Tousart",
         "Joris Chotard",
         "Hugo Magnetti",
-        "Romain Del Castillo",
+        "Rémy Lascary",
         "Ludovic Ajorque",
-        "Junior Dina Ebimbe"
+        "Romain Del Castillo"
       ],
       "home_starters": [
         {
@@ -835,7 +856,7 @@
           "position_id": 11
         },
         {
-          "name": "Adama Camara",
+          "name": "Hamari Traoré",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -880,7 +901,7 @@
           "position_id": 64
         },
         {
-          "name": "Maxime Lopez",
+          "name": "Marshall Munetsi",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -898,7 +919,7 @@
           "position_id": 83
         },
         {
-          "name": "Marshall Munetsi",
+          "name": "Ilan Kebbal",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -907,7 +928,7 @@
           "position_id": 85
         },
         {
-          "name": "Alimami Gory",
+          "name": "Moses Simon",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -916,7 +937,7 @@
           "position_id": 87
         },
         {
-          "name": "Ciro Immobile",
+          "name": "Willem Geubbels",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -936,7 +957,7 @@
           "position_id": 11
         },
         {
-          "name": "Kenny Lala",
+          "name": "Luck Zogbé",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -945,7 +966,7 @@
           "position_id": 32
         },
         {
-          "name": "Brendan Chardonnet",
+          "name": "Raphaël Le Guen",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -954,7 +975,7 @@
           "position_id": 34
         },
         {
-          "name": "Soumaïla Coulibaly",
+          "name": "Brendan Chardonnet",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -963,7 +984,7 @@
           "position_id": 36
         },
         {
-          "name": "Luck Zogbé",
+          "name": "Kenny Lala",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -999,7 +1020,7 @@
           "position_id": 77
         },
         {
-          "name": "Romain Del Castillo",
+          "name": "Rémy Lascary",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -1017,7 +1038,7 @@
           "position_id": 105
         },
         {
-          "name": "Junior Dina Ebimbe",
+          "name": "Romain Del Castillo",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -1026,19 +1047,37 @@
           "position_id": 107
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Obed Nkambadio",
+        "Otávio",
+        "Tuomas Ollila",
+        "Adama Camara",
+        "Alimami Gory",
+        "Maxime Lopez",
+        "Vincent Marchetti",
+        "Ciro Immobile",
+        "Luca Koleosho"
+      ],
+      "away_subs": [
+        "Noah Jauny",
+        "Radoslaw Majecki",
+        "Michel Diaz",
+        "Hamidou Makalou",
+        "Kamory Doumbia",
+        "Junior Dina Ebimbe",
+        "Mama Baldé",
+        "Pathé Mboup",
+        "Saliou Diop"
+      ],
       "home_unavailable": [
         "Julien Lopez",
-        "Tuomas Ollila",
         "Pierre Lees-Melou",
         "Pierre-Yves Hamel",
         "Jean-Philippe Krasso"
       ],
       "away_unavailable": [
         "Bradley Locko",
-        "Daouda Guindo",
-        "Kamory Doumbia"
+        "Daouda Guindo"
       ]
     },
     {
@@ -1050,23 +1089,23 @@
       "kickoff_utc": "2026-05-03T15:15:00Z",
       "home_team": "Strasbourg",
       "away_team": "Toulouse",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "4-2-3-1",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "4-4-1-1",
       "away_formation": "3-4-2-1",
       "home_players": [
         "Mike Penders",
-        "Junior Mwanga",
+        "Mathis Amougou",
         "Ismaël Doukouré",
         "Lucas Høgsberg",
         "Maxi Oyedele",
-        "Samir El Mourabet",
-        "Rafael Luís",
-        "Sebastian Nanasi",
         "Samuel Amo-Ameyaw",
+        "Rafael Luís",
+        "Abdoul Ouattara",
         "Gessime Yassine",
-        "Julio Enciso"
+        "Sebastian Nanasi",
+        "Yaya Dieme"
       ],
       "away_players": [
         "Guillaume Restes",
@@ -1078,7 +1117,7 @@
         "Cristian Cásseres",
         "Dayann Methalie",
         "Santiago Hidalgo",
-        "Pape Demba Diop",
+        "Yann Gboho",
         "Jacen Russell-Rowe"
       ],
       "home_starters": [
@@ -1088,16 +1127,16 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-2-3-1",
+          "formation": "4-4-1-1",
           "position_id": 11
         },
         {
-          "name": "Junior Mwanga",
+          "name": "Mathis Amougou",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-4-1-1",
           "position_id": 32
         },
         {
@@ -1106,7 +1145,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-4-1-1",
           "position_id": 34
         },
         {
@@ -1115,7 +1154,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-4-1-1",
           "position_id": 36
         },
         {
@@ -1124,61 +1163,61 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-4-1-1",
           "position_id": 38
         },
         {
-          "name": "Samir El Mourabet",
+          "name": "Samuel Amo-Ameyaw",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-1-1",
+          "position_id": 72
         },
         {
           "name": "Rafael Luís",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-1-1",
+          "position_id": 74
+        },
+        {
+          "name": "Abdoul Ouattara",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-1-1",
+          "position_id": 76
+        },
+        {
+          "name": "Gessime Yassine",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-1-1",
+          "position_id": 78
         },
         {
           "name": "Sebastian Nanasi",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 1,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83
+          "formation": "4-4-1-1",
+          "position_id": 95
         },
         {
-          "name": "Samuel Amo-Ameyaw",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85
-        },
-        {
-          "name": "Gessime Yassine",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87
-        },
-        {
-          "name": "Julio Enciso",
+          "name": "Yaya Dieme",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-2-3-1",
+          "formation": "4-4-1-1",
           "position_id": 115
         }
       ],
@@ -1265,7 +1304,7 @@
           "position_id": 84
         },
         {
-          "name": "Pape Demba Diop",
+          "name": "Yann Gboho",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -1283,8 +1322,28 @@
           "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Karl-Johan Johnsson",
+        "Amadou Cissé",
+        "Andrew Omobamidele",
+        "Diego Moreira",
+        "Julio Enciso",
+        "Junior Mwanga",
+        "Samir El Mourabet",
+        "Tyrese Noubissie",
+        "Emanuel Emegha"
+      ],
+      "away_subs": [
+        "Kjetil Haug",
+        "Gaëtan Bakhouche",
+        "Seny Koumbassa",
+        "Djibril Sidibé",
+        "Mário Sauer",
+        "Warren Kamanzi",
+        "Emersonn",
+        "Ilyas Azizi",
+        "Julián Vignolo"
+      ],
       "home_unavailable": [
         "Guéla Doué",
         "Aaron Anselmino",
@@ -1292,6 +1351,7 @@
         "Joaquín Panichelli"
       ],
       "away_unavailable": [
+        "Pape Demba Diop",
         "Rafik Messali",
         "Abu Francis",
         "Frank Magri"
