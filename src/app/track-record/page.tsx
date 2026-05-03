@@ -531,7 +531,7 @@ export default function TrackRecordPage() {
                   </svg>
                 ),
                 title: "Pre-match posting",
-                body: "Posted before the event. Telegram timestamps for props and site publish times for tennis make timing visible before the result is known.",
+                body: "Posted before the event. Public posting timestamps for props and site publish times for tennis make timing visible before the result is known.",
               },
               {
                 icon: (
@@ -820,14 +820,12 @@ export default function TrackRecordPage() {
                   Open returns calculator &rarr;
                 </Link>
               </div>
-              <a
-                href="https://t.me/IlMargineProps"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/player-props"
                 className="mt-5 inline-flex text-sm text-slate-500 underline underline-offset-4 transition-colors hover:text-emerald-300"
               >
-                Prefer Telegram alerts? Join the props feed &rarr;
-              </a>
+                Open the latest props feed &rarr;
+              </Link>
             </div>
           </div>
         </section>
