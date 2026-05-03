@@ -103,6 +103,16 @@ jobs:
             --days-back 3
         continue-on-error: true
 
+      - name: Build same-night FotMob penalty review
+        run: |
+          for league in serie-a epl la-liga bundesliga ligue-1; do
+            echo "---- Build live penalty review: ${league}"
+            python scripts/goalscorer-live-penalty-review.py \
+              --league "${league}" \
+              --days-back 6
+          done
+        continue-on-error: true
+
       - name: Settle public and shadow goalscorer signals
         run: |
           declare -A SHADOW_OUTPUTS=(

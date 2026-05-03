@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import glob
 import json
 import re
 import runpy
@@ -40,30 +41,35 @@ LEAGUE_CONFIGS = {
     "serie-a": {
         "league_id": 55,
         "context": ROOT / "data" / "goalscorer" / "penalty-duty-context.json",
+        "context_history": ROOT / "data" / "goalscorer" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "penalty-duty-live-review.csv",
         "output_json": ROOT / "data" / "goalscorer" / "penalty-duty-live-review.json",
     },
     "epl": {
         "league_id": 47,
         "context": ROOT / "data" / "goalscorer" / "epl" / "penalty-duty-context.json",
+        "context_history": ROOT / "data" / "goalscorer" / "epl" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "epl-penalty-duty-live-review.csv",
         "output_json": ROOT / "data" / "goalscorer" / "epl-penalty-duty-live-review.json",
     },
     "la-liga": {
         "league_id": 87,
         "context": ROOT / "data" / "goalscorer" / "la-liga" / "penalty-duty-context.json",
+        "context_history": ROOT / "data" / "goalscorer" / "la-liga" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "la-liga-penalty-duty-live-review.csv",
         "output_json": ROOT / "data" / "goalscorer" / "la-liga-penalty-duty-live-review.json",
     },
     "bundesliga": {
         "league_id": 54,
         "context": ROOT / "data" / "goalscorer" / "bundesliga" / "penalty-duty-context.json",
+        "context_history": ROOT / "data" / "goalscorer" / "bundesliga" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "bundesliga-penalty-duty-live-review.csv",
         "output_json": ROOT / "data" / "goalscorer" / "bundesliga-penalty-duty-live-review.json",
     },
     "ligue-1": {
         "league_id": 53,
         "context": ROOT / "data" / "goalscorer" / "ligue-1" / "penalty-duty-context.json",
+        "context_history": ROOT / "data" / "goalscorer" / "ligue-1" / "live-history" / "penalty-duty-context-*.json",
         "output_csv": ROOT / "data" / "goalscorer" / "ligue-1-penalty-duty-live-review.csv",
         "output_json": ROOT / "data" / "goalscorer" / "ligue-1-penalty-duty-live-review.json",
     },
@@ -177,25 +183,62 @@ def _fetch_match_payload(match_id: int) -> dict:
     return _extract_next_payload(_fetch_text(f"https://www.fotmob.com{page_url}"))
 
 
-def _load_context_map(path: Path) -> Dict[tuple[str, str, str], dict]:
-    payload = _load_json(path)
-    generated_at = str(payload.get("generated_at") or "")
-    rows = payload.get("rows", [])
-    if not isinstance(rows, list):
-        return {}
+def _expand_context_paths(paths: Iterable[Path]) -> List[Path]:
+    expanded: List[Path] = []
+    for path in paths:
+        text = str(path)
+        if "*" in text or "?" in text:
+            expanded.extend(Path(item) for item in glob.glob(text))
+        elif path.exists():
+            expanded.append(path)
+    return sorted(expanded)
 
+
+def _context_quality(row: dict) -> int:
+    score = 0
+    if str(row.get("active_taker_pre_match") or "").strip():
+        score += 4
+    for field in ("primary_lineup_status", "secondary_lineup_status", "tertiary_lineup_status"):
+        status = str(row.get(field) or "").strip().lower()
+        if status and status != "unknown":
+            score += 1
+    team_status = str(row.get("team_lineup_status") or "").strip().lower()
+    if team_status and team_status != "unknown":
+        score += 1
+    return score
+
+
+def _load_context_map(paths: Iterable[Path]) -> Dict[tuple[str, str, str], dict]:
     loaded: Dict[tuple[str, str, str], dict] = {}
-    for row in rows:
-        item = dict(row)
-        item["_generated_at"] = generated_at
-        item["_source_path"] = _display_path(path)
-        key = (
-            str(item.get("match_date") or "").strip(),
-            str(item.get("team_key") or "").strip(),
-            str(item.get("opponent_key") or "").strip(),
-        )
-        if all(key):
-            loaded[key] = item
+    for path in _expand_context_paths(paths):
+        payload = _load_json(path)
+        generated_at = str(payload.get("generated_at") or "")
+        rows = payload.get("rows", [])
+        if not isinstance(rows, list):
+            continue
+
+        for row in rows:
+            item = dict(row)
+            item["_generated_at"] = generated_at
+            item["_source_path"] = _display_path(path)
+            key = (
+                str(item.get("match_date") or "").strip(),
+                str(item.get("team_key") or "").strip(),
+                str(item.get("opponent_key") or "").strip(),
+            )
+            if not all(key):
+                continue
+            current = loaded.get(key)
+            if current is None:
+                loaded[key] = item
+                continue
+            current_quality = _context_quality(current)
+            item_quality = _context_quality(item)
+            if item_quality > current_quality or (
+                item_quality == current_quality
+                and generated_at >= str(current.get("_generated_at") or "")
+            ):
+                loaded[key] = item
     return loaded
 
 
@@ -273,7 +316,7 @@ def build_live_review_rows(league_key: str, fotmob_dates: Iterable[str]) -> List
     )
     penalty_role_for_player = penalty_utils["penalty_role_for_player"]
 
-    context_map = _load_context_map(config["context"])
+    context_map = _load_context_map([config["context"], config["context_history"]])
 
     grouped_events: Dict[tuple[str, str, str, str], List[dict]] = defaultdict(list)
     distinct_takers_by_team_match: Dict[tuple[str, str, str], set[str]] = defaultdict(set)
