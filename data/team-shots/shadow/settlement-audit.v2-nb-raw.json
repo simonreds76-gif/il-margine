@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-05-03T09:41:38Z",
+  "run_at": "2026-05-03T18:01:54Z",
   "model": "team-shots",
   "total_bets": 70,
-  "settled_this_run": 7,
+  "settled_this_run": 0,
   "total_settled": 64,
   "total_pending": 6,
   "pending_breakdown": {
-    "future": 6,
-    "live": 0,
-    "stale": 0,
+    "future": 3,
+    "live": 1,
+    "stale": 2,
     "old_stale": 0,
     "unknown": 0
   },
@@ -32,7 +32,7 @@
       "football_data_latest": "2026-04-27",
       "lag_days": 6,
       "football_data_count": 339,
-      "fotmob_count": 5,
+      "fotmob_count": 4,
       "fotmob_latest": "2026-05-02",
       "api_football_count": 0,
       "api_football_latest": null,
@@ -47,7 +47,7 @@
       "football_data_latest": "2026-04-27",
       "lag_days": 6,
       "football_data_count": 330,
-      "fotmob_count": 5,
+      "fotmob_count": 4,
       "fotmob_latest": "2026-05-02",
       "api_football_count": 0,
       "api_football_latest": null,
@@ -77,7 +77,7 @@
       "football_data_latest": "2026-04-27",
       "lag_days": 6,
       "football_data_count": 340,
-      "fotmob_count": 4,
+      "fotmob_count": 3,
       "fotmob_latest": "2026-05-02",
       "api_football_count": 0,
       "api_football_latest": null,
@@ -89,11 +89,30 @@
       "snapshot_path": "data/results-snapshot/2026-05-03.json"
     }
   },
-  "stale_rows": [],
+  "stale_rows": [
+    {
+      "match": "Bologna FC vs Cagliari Calcio",
+      "league": "serie-a",
+      "line": "14.5",
+      "side": "under",
+      "kickoff": "2026-05-03T10:30:00Z",
+      "hours_elapsed": 7.53
+    },
+    {
+      "match": "Getafe CF vs Rayo Vallecano",
+      "league": "la-liga",
+      "line": "10.5",
+      "side": "over",
+      "kickoff": "2026-05-03T14:15:00Z",
+      "hours_elapsed": 3.78
+    }
+  ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [],
+  "warnings": [
+    "2 stale pending row(s) across 2 fixture(s) (3-48h elapsed)"
+  ],
   "errors": [],
   "exit_code_recommendation": 0
 }
