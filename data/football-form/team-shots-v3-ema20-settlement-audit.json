@@ -1,142 +1,99 @@
 {
-  "run_at": "2026-05-02T18:02:57Z",
+  "run_at": "2026-05-03T00:11:33Z",
   "model": "team-shots-v3-ema20-research",
   "total_bets": 27,
-  "settled_this_run": 0,
-  "total_settled": 10,
-  "total_pending": 17,
+  "settled_this_run": 9,
+  "total_settled": 19,
+  "total_pending": 8,
   "pending_breakdown": {
-    "future": 10,
-    "live": 2,
-    "stale": 5,
+    "future": 8,
+    "live": 0,
+    "stale": 0,
     "old_stale": 0,
     "unknown": 0
   },
   "source_freshness": {
     "bundesliga": {
       "football_data_latest": "2026-04-26",
-      "lag_days": 6,
+      "lag_days": 7,
       "football_data_count": 279,
-      "fotmob_count": 0,
-      "fotmob_latest": null,
+      "fotmob_count": 6,
+      "fotmob_latest": "2026-05-02",
       "api_football_count": 0,
       "api_football_latest": null,
-      "api_football_requests_used": 2,
-      "api_football_requests_remaining_after_league": 8,
+      "api_football_requests_used": 1,
+      "api_football_requests_remaining_after_league": 9,
       "api_football_error": null,
       "api_football_max_requests": 10,
-      "snapshot_date": "2026-05-02",
-      "snapshot_path": "data/results-snapshot/2026-05-02.json"
+      "snapshot_date": "2026-05-03",
+      "snapshot_path": "data/results-snapshot/2026-05-03.json"
     },
     "epl": {
       "football_data_latest": "2026-04-27",
-      "lag_days": 5,
+      "lag_days": 6,
       "football_data_count": 339,
-      "fotmob_count": 1,
-      "fotmob_latest": "2026-05-01",
+      "fotmob_count": 5,
+      "fotmob_latest": "2026-05-02",
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 2,
-      "api_football_requests_remaining_after_league": 6,
+      "api_football_requests_remaining_after_league": 7,
       "api_football_error": null,
-      "api_football_max_requests": 8,
-      "snapshot_date": "2026-05-02",
-      "snapshot_path": "data/results-snapshot/2026-05-02.json"
+      "api_football_max_requests": 9,
+      "snapshot_date": "2026-05-03",
+      "snapshot_path": "data/results-snapshot/2026-05-03.json"
     },
     "la-liga": {
       "football_data_latest": "2026-04-27",
-      "lag_days": 5,
+      "lag_days": 6,
       "football_data_count": 330,
-      "fotmob_count": 1,
-      "fotmob_latest": "2026-05-01",
+      "fotmob_count": 5,
+      "fotmob_latest": "2026-05-02",
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 2,
-      "api_football_requests_remaining_after_league": 4,
+      "api_football_requests_remaining_after_league": 5,
       "api_football_error": null,
-      "api_football_max_requests": 6,
-      "snapshot_date": "2026-05-02",
-      "snapshot_path": "data/results-snapshot/2026-05-02.json"
+      "api_football_max_requests": 7,
+      "snapshot_date": "2026-05-03",
+      "snapshot_path": "data/results-snapshot/2026-05-03.json"
     },
     "ligue-1": {
       "football_data_latest": "2026-04-26",
-      "lag_days": 6,
+      "lag_days": 7,
       "football_data_count": 277,
-      "fotmob_count": 0,
-      "fotmob_latest": null,
+      "fotmob_count": 4,
+      "fotmob_latest": "2026-05-02",
+      "api_football_count": 0,
+      "api_football_latest": null,
+      "api_football_requests_used": 1,
+      "api_football_requests_remaining_after_league": 4,
+      "api_football_error": null,
+      "api_football_max_requests": 5,
+      "snapshot_date": "2026-05-03",
+      "snapshot_path": "data/results-snapshot/2026-05-03.json"
+    },
+    "serie-a": {
+      "football_data_latest": "2026-04-27",
+      "lag_days": 6,
+      "football_data_count": 340,
+      "fotmob_count": 4,
+      "fotmob_latest": "2026-05-02",
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 2,
       "api_football_requests_remaining_after_league": 2,
       "api_football_error": null,
       "api_football_max_requests": 4,
-      "snapshot_date": "2026-05-02",
-      "snapshot_path": "data/results-snapshot/2026-05-02.json"
-    },
-    "serie-a": {
-      "football_data_latest": "2026-04-27",
-      "lag_days": 5,
-      "football_data_count": 340,
-      "fotmob_count": 1,
-      "fotmob_latest": "2026-05-01",
-      "api_football_count": 0,
-      "api_football_latest": null,
-      "api_football_requests_used": 2,
-      "api_football_requests_remaining_after_league": 0,
-      "api_football_error": null,
-      "api_football_max_requests": 2,
-      "snapshot_date": "2026-05-02",
-      "snapshot_path": "data/results-snapshot/2026-05-02.json"
+      "snapshot_date": "2026-05-03",
+      "snapshot_path": "data/results-snapshot/2026-05-03.json"
     }
   },
-  "stale_rows": [
-    {
-      "match": "Villarreal CF vs Levante UD",
-      "league": "la-liga",
-      "line": "15.5",
-      "side": "under",
-      "kickoff": "2026-05-02T12:00:00Z",
-      "hours_elapsed": 6.05
-    },
-    {
-      "match": "Udinese Calcio vs Torino FC",
-      "league": "serie-a",
-      "line": "10.5",
-      "side": "over",
-      "kickoff": "2026-05-02T13:00:00Z",
-      "hours_elapsed": 5.05
-    },
-    {
-      "match": "Bayern Munich vs 1. FC Heidenheim",
-      "league": "bundesliga",
-      "line": "9.5",
-      "side": "over",
-      "kickoff": "2026-05-02T13:30:00Z",
-      "hours_elapsed": 4.55
-    },
-    {
-      "match": "Werder Bremen vs FC Augsburg",
-      "league": "bundesliga",
-      "line": "10.5",
-      "side": "over",
-      "kickoff": "2026-05-02T13:30:00Z",
-      "hours_elapsed": 4.55
-    },
-    {
-      "match": "Werder Bremen vs FC Augsburg",
-      "league": "bundesliga",
-      "line": "11.5",
-      "side": "over",
-      "kickoff": "2026-05-02T13:30:00Z",
-      "hours_elapsed": 4.55
-    }
-  ],
+  "stale_rows": [],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [
-    "5 stale pending row(s) across 4 fixture(s) (3-48h elapsed)"
-  ],
+  "warnings": [],
   "errors": [],
   "exit_code_recommendation": 0
 }
