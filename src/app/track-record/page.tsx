@@ -225,7 +225,8 @@ function StatCard({
   accent?: boolean;
   delay?: number;
 }) {
-  const watermark = value.includes(String.fromCharCode(163)) || value.startsWith("+") ? "" : value.replace(/[^0-9.%]/g, "");
+  const stripped = value.replace(/[^0-9.%]/g, "");
+  const watermark = stripped.length >= 2 ? stripped : "";
 
   return (
     <div
@@ -390,22 +391,21 @@ export default function TrackRecordPage() {
           </Reveal>
 
           <Reveal delay={250}>
-            <div className="mt-5 flex flex-wrap gap-2 text-[11px] font-mono font-semibold uppercase tracking-[0.12em] text-slate-400">
-              <span className="rounded-full border border-emerald-500/20 bg-emerald-500/[0.055] px-3 py-2 text-emerald-300">
-                Tipstrr verified tennis
-              </span>
-              <a
-                href="https://t.me/IlMargineProps"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-slate-700/50 bg-[#0c0f14] px-3 py-2 transition-colors hover:border-emerald-500/30 hover:text-emerald-300"
-              >
-                Pre-match Telegram timestamps
-              </a>
-              <span className="rounded-full border border-slate-700/50 bg-[#0c0f14] px-3 py-2">
-                {trackingRange}
-              </span>
-            </div>
+            <ul className="mt-5 flex flex-wrap gap-2 text-[11px] font-mono font-semibold uppercase tracking-[0.12em] text-slate-400">
+              {[
+                "Public site ledger",
+                "Pre-result timestamps",
+                "Settlement audit trail",
+                "No edited history",
+              ].map((label) => (
+                <li
+                  key={label}
+                  className="rounded-full border border-slate-700/50 bg-[#0c0f14] px-3 py-2"
+                >
+                  {label}
+                </li>
+              ))}
+            </ul>
           </Reveal>
 
           <Reveal delay={310}>
@@ -449,7 +449,7 @@ export default function TrackRecordPage() {
             <StatCard
               label="ATP Tennis"
               value={formatBetCount(displayStats.tennis.total_bets)}
-              sub={`${formatSignedPercent(displayStats.tennis.roi)} ROI | ${displayStats.tennis.win_rate.toFixed(1)}% win rate | Tipstrr verified`}
+              sub={`${formatSignedPercent(displayStats.tennis.roi)} ROI | ${displayStats.tennis.win_rate.toFixed(1)}% win rate`}
               delay={500}
             />
           </div>
@@ -583,12 +583,12 @@ export default function TrackRecordPage() {
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      d="M9 12.75L11.25 15 15 9.75M12 3l7.5 3v5.25c0 4.5-3 8.25-7.5 9.75-4.5-1.5-7.5-5.25-7.5-9.75V6L12 3z"
+                      d="M9 12h6m-6 4h6M9 8h6M5.25 19.5h13.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H5.25A1.5 1.5 0 003.75 6v12a1.5 1.5 0 001.5 1.5z"
                     />
                   </svg>
                 ),
-                title: "Independent mirror",
-                body: "ATP tennis is mirrored to Tipstrr for third-party settlement context. Props remain timestamped through the public posting feed.",
+                title: "Settlement audit trail",
+                body: "Every settlement is appended, never overwritten. Reclassifications are written as new rows so the original odds, stake, and result stay intact.",
               },
             ].map((item) => (
               <div
@@ -729,9 +729,9 @@ export default function TrackRecordPage() {
                   <div className="grid gap-3">
                     {[
                       ["Settled sample", formatBetCount(displayStats.overall.total_bets)],
-                      ["GBP100/unit example", formatCashExample(displayStats.overall.total_profit)],
+                      ["\u00A3100 / unit example", formatCashExample(displayStats.overall.total_profit)],
                       ["Tracking window", trackingRange],
-                      ["Verification", "Tipstrr + timestamps"],
+                      ["Verification", "Pre-result timestamps"],
                     ].map(([label, value]) => (
                       <div key={label} className="rounded-lg border border-slate-800/70 bg-[#0c0f14] px-4 py-3">
                         <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
