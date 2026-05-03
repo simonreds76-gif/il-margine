@@ -13,15 +13,15 @@
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "3-5-2",
+      "away_formation": "4-5-1",
       "home_players": [
         "Massimo Pessina",
         "Lorenzo De Silvestri",
         "Eivind Helland",
         "Jhon Lucumí",
         "Juan Miranda",
-        "Nikola Moro",
         "Remo Freuler",
+        "Nikola Moro",
         "Federico Bernardeschi",
         "Simon Sohm",
         "Benja Domínguez",
@@ -32,13 +32,13 @@
         "Zé Pedro",
         "Yerry Mina",
         "Alberto Dossena",
+        "Adam Obert",
         "Marco Palestra",
         "Michel Ndary Adopo",
         "Gianluca Gaetano",
         "Alessandro Deiola",
-        "Adam Obert",
-        "Sebastiano Esposito",
-        "Michael Folorunsho"
+        "Michael Folorunsho",
+        "Sebastiano Esposito"
       ],
       "home_starters": [
         {
@@ -87,7 +87,7 @@
           "position_id": 38
         },
         {
-          "name": "Nikola Moro",
+          "name": "Remo Freuler",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -96,7 +96,7 @@
           "position_id": 64
         },
         {
-          "name": "Remo Freuler",
+          "name": "Nikola Moro",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -148,35 +148,44 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-5-2",
+          "formation": "4-5-1",
           "position_id": 11
         },
         {
           "name": "Zé Pedro",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
-          "position_id": 33
+          "formation": "4-5-1",
+          "position_id": 32
         },
         {
           "name": "Yerry Mina",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
-          "position_id": 35
+          "formation": "4-5-1",
+          "position_id": 34
         },
         {
           "name": "Alberto Dossena",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
-          "position_id": 37
+          "formation": "4-5-1",
+          "position_id": 36
+        },
+        {
+          "name": "Adam Obert",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-5-1",
+          "position_id": 38
         },
         {
           "name": "Marco Palestra",
@@ -184,7 +193,7 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "4-5-1",
           "position_id": 71
         },
         {
@@ -193,7 +202,7 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "4-5-1",
           "position_id": 73
         },
         {
@@ -202,7 +211,7 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "4-5-1",
           "position_id": 75
         },
         {
@@ -211,39 +220,32 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "4-5-1",
           "position_id": 77
         },
         {
-          "name": "Adam Obert",
+          "name": "Michael Folorunsho",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "4-5-1",
           "position_id": 79
         },
         {
           "name": "Sebastiano Esposito",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-5-2",
-          "position_id": 104
-        },
-        {
-          "name": "Michael Folorunsho",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-5-2",
-          "position_id": 106
+          "formation": "4-5-1",
+          "position_id": 115
         }
       ],
       "home_subs": [
+        "Jonathan Rowe",
         "Federico Ravaglia",
+        "Riccardo Gnudi",
         "Ukko Happonen",
         "Charalambos Lykogiannis",
         "Martin Vitík",
@@ -251,17 +253,16 @@
         "Torbjørn Heggem",
         "Lewis Ferguson",
         "Tommaso Pobega",
-        "Jonathan Rowe",
         "Riccardo Orsolini",
         "Santiago Castro"
       ],
       "away_subs": [
+        "Ibrahim Sulemana",
         "Alen Sherri",
         "Giuseppe Ciocci",
         "Gabriele Zappa",
         "Juan Rodríguez",
         "Agustín Albarracín",
-        "Ibrahim Sulemana",
         "Andrea Belotti",
         "Paul Mendy",
         "Semih Kiliçsoy",
@@ -831,8 +832,8 @@
         "Ardon Jashari",
         "Adrien Rabiot",
         "Pervis Estupinán",
-        "Christopher Nkunku",
-        "Rafael Leão"
+        "Rafael Leão",
+        "Christopher Nkunku"
       ],
       "home_starters": [
         {
@@ -1018,7 +1019,7 @@
           "position_id": 79
         },
         {
-          "name": "Christopher Nkunku",
+          "name": "Rafael Leão",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -1027,7 +1028,7 @@
           "position_id": 104
         },
         {
-          "name": "Rafael Leão",
+          "name": "Christopher Nkunku",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
