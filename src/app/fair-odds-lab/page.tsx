@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const dynamic = "force-dynamic";
+
 function asNumber(value: unknown): number | null {
   const numberValue = typeof value === "number" ? value : Number(value);
   return Number.isFinite(numberValue) ? numberValue : null;
@@ -297,6 +299,12 @@ function mapArtifactSignal(rawValue: unknown): Signal | null {
   };
 }
 
+function isPreKickoffSignal(signal: Signal, nowMs = Date.now()): boolean {
+  if (!signal.kickoffUtc) return false;
+  const kickoffMs = Date.parse(signal.kickoffUtc);
+  return Number.isFinite(kickoffMs) && kickoffMs > nowMs;
+}
+
 function makeMockArtifact(): LabArtifact {
   return {
     generatedAt: null,
@@ -336,6 +344,7 @@ function readLabArtifact(): LabArtifact {
       ? parsed.signals
           .map(mapArtifactSignal)
           .filter((signal: Signal | null): signal is Signal => signal !== null)
+          .filter((signal: Signal) => isPreKickoffSignal(signal))
       : [];
 
     return {
@@ -484,8 +493,9 @@ export default function FairOddsLabPage() {
               odds are {formatOdds(exampleSignal.fairOdds)} and the bookmaker offers{" "}
               {formatOdds(exampleSignal.bestBookOdds)}, the market is paying more
               than the implied risk. That is a value signal, not a promise the
-              player will score. Worked example: model {formatOdds(exampleSignal.fairOdds)} vs market{" "}
-              {formatOdds(exampleSignal.bestBookOdds)} = +{exampleProbabilityGap.toFixed(1)}pp gap.
+              player will score. In plain words, a +{exampleProbabilityGap.toFixed(1)}pp gap means
+              the model gives the player about {exampleProbabilityGap.toFixed(1)} more chances in
+              every 100 than the bookmaker price implies.
             </p>
           </div>
         </section>

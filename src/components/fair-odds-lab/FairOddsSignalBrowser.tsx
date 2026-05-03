@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { FeaturedSignalCard } from "@/components/fair-odds-lab/FeaturedSignalCard";
 import { LogoBadge } from "@/components/fair-odds-lab/LogoBadge";
@@ -43,6 +43,11 @@ function formatPercent(value: number) {
 function parseKickoff(signal: Signal) {
   const timestamp = signal.kickoffUtc ? Date.parse(signal.kickoffUtc) : Number.NaN;
   return Number.isFinite(timestamp) ? timestamp : Number.MAX_SAFE_INTEGER;
+}
+
+function isPreKickoffSignal(signal: Signal, nowMs: number) {
+  const timestamp = signal.kickoffUtc ? Date.parse(signal.kickoffUtc) : Number.NaN;
+  return Number.isFinite(timestamp) && timestamp > nowMs;
 }
 
 function confidenceRank(confidence: Signal["confidence"]) {
@@ -218,10 +223,16 @@ export function FairOddsSignalBrowser({
   const [sortMode, setSortMode] = useState<SortMode>("edge");
   const [selectedId, setSelectedId] = useState<string | null>(featuredSignalId ?? null);
   const featuredRef = useRef<HTMLDivElement | null>(null);
+  const nowMs = useMemo(() => Date.now(), []);
+
+  const liveSignals = useMemo(
+    () => artifact.signals.filter((signal) => isPreKickoffSignal(signal, nowMs)),
+    [artifact.signals, nowMs],
+  );
 
   const leagueOptions = useMemo<LeagueOption[]>(() => {
     const counts = new Map<string, LeagueOption>();
-    for (const signal of artifact.signals) {
+    for (const signal of liveSignals) {
       const key = leagueKey(signal);
       const current = counts.get(key);
       if (current) {
@@ -231,15 +242,22 @@ export function FairOddsSignalBrowser({
       }
     }
     return [...counts.values()].sort((a, b) => a.label.localeCompare(b.label));
-  }, [artifact.signals]);
+  }, [liveSignals]);
 
-  const visibleSignals = useMemo(() => {
+  const visibleSignalsFor = (league: string, sort: SortMode) => {
     const filtered =
-      activeLeague === "all"
-        ? artifact.signals
-        : artifact.signals.filter((signal) => leagueKey(signal) === activeLeague);
-    return sortSignals(filtered, sortMode);
-  }, [activeLeague, artifact.signals, sortMode]);
+      league === "all"
+        ? liveSignals
+        : liveSignals.filter((signal) => leagueKey(signal) === league);
+    return sortSignals(filtered, sort);
+  };
+
+  const visibleSignals = useMemo(
+    () => visibleSignalsFor(activeLeague, sortMode),
+    [activeLeague, liveSignals, sortMode],
+  );
+  const confidenceSortDisabled =
+    new Set(visibleSignals.map((signal) => signal.confidence)).size < 2;
 
   const selectedSignal =
     (selectedId ? visibleSignals.find((signal) => signal.id === selectedId) : null) ??
@@ -248,6 +266,28 @@ export function FairOddsSignalBrowser({
   const selectedIndex = selectedSignal
     ? visibleSignals.findIndex((signal) => signal.id === selectedSignal.id)
     : -1;
+
+  useEffect(() => {
+    if (!visibleSignals.length) {
+      if (selectedId !== null) setSelectedId(null);
+      return;
+    }
+    if (!selectedId || !visibleSignals.some((signal) => signal.id === selectedId)) {
+      setSelectedId(visibleSignals[0].id);
+    }
+  }, [selectedId, visibleSignals]);
+
+  function applyLeague(nextLeague: string) {
+    setActiveLeague(nextLeague);
+    const nextSignals = visibleSignalsFor(nextLeague, sortMode);
+    setSelectedId(nextSignals[0]?.id ?? null);
+  }
+
+  function applySort(nextSort: SortMode) {
+    setSortMode(nextSort);
+    const nextSignals = visibleSignalsFor(activeLeague, nextSort);
+    setSelectedId(nextSignals[0]?.id ?? null);
+  }
 
   function openSignal(signal: Signal) {
     setSelectedId(signal.id);
@@ -262,7 +302,7 @@ export function FairOddsSignalBrowser({
     setSelectedId(visibleSignals[nextIndex].id);
   }
 
-  if (artifact.signals.length === 0) return null;
+  if (liveSignals.length === 0) return null;
 
   return (
     <section className="mt-10">
@@ -287,20 +327,20 @@ export function FairOddsSignalBrowser({
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              onClick={() => setActiveLeague("all")}
+              onClick={() => applyLeague("all")}
               className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
                 activeLeague === "all"
                   ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
                   : "border-slate-700/80 bg-slate-900/70 text-slate-400 hover:text-slate-200"
               }`}
             >
-              All | {artifact.signals.length}
+              All | {liveSignals.length}
             </button>
             {leagueOptions.map((option) => (
               <button
                 key={option.key}
                 type="button"
-                onClick={() => setActiveLeague(option.key)}
+                onClick={() => applyLeague(option.key)}
                 className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
                   activeLeague === option.key
                     ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
@@ -324,11 +364,19 @@ export function FairOddsSignalBrowser({
               <button
                 key={value}
                 type="button"
-                onClick={() => setSortMode(value as SortMode)}
+                onClick={() => applySort(value as SortMode)}
+                disabled={value === "confidence" && confidenceSortDisabled}
+                title={
+                  value === "confidence" && confidenceSortDisabled
+                    ? "All visible signals have the same confidence tier."
+                    : undefined
+                }
                 className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
                   sortMode === value
                     ? "border-amber-400/35 bg-amber-400/10 text-amber-200"
-                    : "border-slate-700/80 bg-slate-900/70 text-slate-400 hover:text-slate-200"
+                    : value === "confidence" && confidenceSortDisabled
+                      ? "cursor-not-allowed border-slate-800/80 bg-slate-950/70 text-slate-600"
+                      : "border-slate-700/80 bg-slate-900/70 text-slate-400 hover:text-slate-200"
                 }`}
               >
                 {label}

@@ -179,7 +179,7 @@ function MarketTable({ signal }: { signal: Signal }) {
         </h3>
       </div>
       <div className="overflow-hidden rounded-xl border border-slate-800/80">
-        <div className="grid grid-cols-3 bg-slate-900/90 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+        <div className="grid grid-cols-[minmax(0,1fr)_minmax(72px,0.7fr)_minmax(154px,0.9fr)] bg-slate-900/90 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
           <div className="px-3 py-2">Metric</div>
           <div className="px-3 py-2 text-right">Model</div>
           <div className="px-3 py-2 text-right">
@@ -192,7 +192,7 @@ function MarketTable({ signal }: { signal: Signal }) {
         {rows.map((row) => (
           <div
             key={row.label}
-            className="grid grid-cols-3 border-t border-slate-800/75 text-sm"
+            className="grid grid-cols-[minmax(0,1fr)_minmax(72px,0.7fr)_minmax(154px,0.9fr)] border-t border-slate-800/75 text-sm"
           >
             <div className="px-3 py-3 text-slate-400">{row.label}</div>
             <div className="px-3 py-3 text-right font-mono text-emerald-200 tabular-nums">

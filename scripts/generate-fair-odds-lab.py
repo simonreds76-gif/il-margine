@@ -432,6 +432,20 @@ def display_kickoff(row: dict[str, str]) -> str:
     return dt.strftime("%a %d %b %H:%M UK")
 
 
+def kickoff_datetime_utc(row: dict[str, Any]) -> datetime | None:
+    kickoff = clean_text(row.get("kickoff"))
+    if not kickoff:
+        return None
+    value = kickoff.replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(value)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
 def match_label(row: dict[str, str]) -> str:
     home = clean_text(row.get("home_team"))
     away = clean_text(row.get("away_team"))
@@ -635,11 +649,17 @@ def build_candidates_from_rows(
 ) -> tuple[list[dict[str, Any]], list[Candidate]]:
     raw_future_rows: list[dict[str, Any]] = []
     grouped: dict[tuple[str, str, str, str, str], dict[str, str]] = {}
+    now_utc = datetime.now(timezone.utc)
 
     for row in all_rows:
         date_key = row_date_key(row)
-        if not include_past and date_key and date_key < today_iso:
-            continue
+        if not include_past:
+            kickoff_dt = kickoff_datetime_utc(row)
+            if kickoff_dt is not None:
+                if kickoff_dt <= now_utc:
+                    continue
+            elif date_key and date_key < today_iso:
+                continue
 
         odds = parse_float(row.get("odds_decimal"))
         model_prob = parse_float(row.get("model_p_atgs"))
