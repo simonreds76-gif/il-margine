@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-05-03T15:04:53Z",
+  "updated_at": "2026-05-03T15:59:15Z",
   "reason": "cycle",
   "leagues": {
     "serie-a": {
-      "last_successful_run_at": "2026-05-03T15:03:34Z",
+      "last_successful_run_at": "2026-05-03T15:58:39Z",
       "last_detail_run_at": "2026-05-01T17:16:09Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
@@ -23,34 +23,34 @@
       "next_kickoff_utc": ""
     },
     "la-liga": {
-      "last_successful_run_at": "2026-05-03T11:09:59Z",
+      "last_successful_run_at": "2026-05-03T15:59:15Z",
       "last_detail_run_at": "2026-05-01T17:18:34Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip la-liga: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "lineup",
+      "last_decision": "ran",
+      "last_message": "Ran la-liga in lineup tier (cadence 10m, fixtures 1).",
+      "next_kickoff_utc": "2026-05-03T16:30:00Z"
     },
     "bundesliga": {
       "last_successful_run_at": "2026-05-03T15:04:13Z",
       "last_detail_run_at": "2026-05-01T17:19:46Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "lineup",
-      "last_decision": "ran",
-      "last_message": "Ran bundesliga in lineup tier (cadence 10m, fixtures 1).",
-      "next_kickoff_utc": "2026-05-03T15:30:00Z"
+      "last_tier": "off",
+      "last_decision": "off",
+      "last_message": "Skip bundesliga: no upcoming fixtures inside schedule window.",
+      "next_kickoff_utc": ""
     },
     "ligue-1": {
       "last_successful_run_at": "2026-05-03T15:04:53Z",
       "last_detail_run_at": "2026-05-01T17:20:58Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "lineup",
-      "last_decision": "ran",
-      "last_message": "Ran ligue-1 in lineup tier (cadence 10m, fixtures 3).",
-      "next_kickoff_utc": "2026-05-03T15:15:00Z"
+      "last_tier": "off",
+      "last_decision": "off",
+      "last_message": "Skip ligue-1: no upcoming fixtures inside schedule window.",
+      "next_kickoff_utc": ""
     }
   }
 }
