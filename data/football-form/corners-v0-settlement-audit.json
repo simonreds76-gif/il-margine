@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-05-03T09:57:15Z",
+  "run_at": "2026-05-03T14:06:28Z",
   "model": "corners-v0-research",
   "total_bets": 20,
   "settled_this_run": 0,
   "total_settled": 10,
   "total_pending": 10,
   "pending_breakdown": {
-    "future": 10,
-    "live": 0,
-    "stale": 0,
+    "future": 7,
+    "live": 2,
+    "stale": 1,
     "old_stale": 0,
     "unknown": 0
   },
@@ -89,11 +89,22 @@
       "snapshot_path": "data/results-snapshot/2026-05-03.json"
     }
   },
-  "stale_rows": [],
+  "stale_rows": [
+    {
+      "match": "Bologna vs Cagliari",
+      "league": "serie-a",
+      "line": "8.5",
+      "side": "under",
+      "kickoff": "2026-05-03T10:30:00Z",
+      "hours_elapsed": 3.61
+    }
+  ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [],
+  "warnings": [
+    "1 stale pending row(s) across 1 fixture(s) (3-48h elapsed)"
+  ],
   "errors": [],
   "exit_code_recommendation": 0
 }
