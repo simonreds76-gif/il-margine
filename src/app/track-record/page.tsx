@@ -14,11 +14,6 @@ const FAQ_ITEMS = [
       "ROI is total profit divided by total stake. A +10% ROI means 100 units staked would have returned 10 units of profit. We use stake-weighted profit, not raw win rate, because a 2.60 winner and a 1.60 winner do not carry the same value.",
   },
   {
-    question: "Why can the totals move after a result is settled?",
-    answer:
-      "The public feed updates when bets move from pending to won, lost, or void. Once a result is settled, the bet count, ROI, win rate, category records, and recent selections can all change automatically from the database feed.",
-  },
-  {
     question: "Are losing runs and voids included?",
     answer:
       "Yes. Losses stay in the record and drawdowns remain visible. Voids are kept in the public history but do not count as wins or losses for win-rate purposes and do not add profit or loss to ROI.",
@@ -26,22 +21,27 @@ const FAQ_ITEMS = [
   {
     question: "Can old picks be edited or removed?",
     answer:
-      "No. The point of public tracking is that selections are logged before the event and settled afterwards. If a category needs correcting, such as moving a football prop from Other to La Liga, the bet itself stays in the record and only the classification changes.",
+      "No. Once a selection is posted or published, it cannot be retracted, reworded, or repriced. The only post-hoc change we allow is taxonomy: if a Premier League prop was filed under Other by mistake, we can re-tag the category. The bet itself, odds, stake, timestamp, and result stay frozen.",
   },
   {
-    question: "Why do market and league records not always move equally?",
+    question: "Can I follow in real time?",
     answer:
-      "The headline record is market-level. League and category pages are slices of that same record, so their samples are smaller and can move sharply after only a few results. The combined number is the broadest view; category records are useful context, not a replacement for the full sample.",
+      "Yes. Player props are posted publicly when value is identified, usually close to team-news or market-moving windows. Tennis selections are posted on the site with the same unit-stake logic used in this record.",
+  },
+  {
+    question: "Are results net of bookmaker limits?",
+    answer:
+      "No public record can know every follower's limit, price delay, or account restriction. We record the posted odds, posted stake, and final settlement. If limits become an issue, that is usually a sign the edge has become visible to the bookmaker too.",
   },
   {
     question: "How should I judge the record?",
     answer:
-      "Use ROI, sample size, settlement transparency, and whether the prices were posted before the event. Short winning streaks are not proof of edge and short losing streaks do not automatically disprove it. The record matters because it keeps both sides visible over time.",
+      "Use ROI, sample size, settlement transparency, and whether prices were posted before the result was known. A hot week is not proof of edge, and a cold week does not kill the thesis. The record matters because both sides stay visible over time.",
   },
   {
-    question: "Can I see what the record would mean for my own stake size?",
+    question: "What would this mean for my own stake size?",
     answer:
-      "Yes. Use the returns calculator to test different unit sizes, bankrolls, and staking assumptions against the same unit-based logic used in the public record.",
+      "Use the returns calculator to test different unit sizes, bankrolls, and staking assumptions against the same unit-based logic used in the public record.",
     cta: {
       href: "/calculator",
       label: "Open the returns calculator",
@@ -67,6 +67,16 @@ function getTrackingMonths() {
     (now.getUTCFullYear() - start.getUTCFullYear()) * 12 + (now.getUTCMonth() - start.getUTCMonth())
   );
   return `${months}+ months`;
+}
+
+function getTrackingRangeLabel() {
+  const now = new Date();
+  const currentMonth = now.toLocaleDateString("en-GB", {
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+  return `Oct 2024 - ${currentMonth}`;
 }
 
 function buildCombinedStats(liveStats: MarketStats[]): DisplayStats {
@@ -155,7 +165,7 @@ function formatSignedPercent(value: number) {
 
 function formatCashExample(unitsProfit: number, poundsPerUnit = 100) {
   const value = Math.round(unitsProfit * poundsPerUnit);
-  return `${value >= 0 ? "+" : "-"}£${Math.abs(value).toLocaleString("en-GB")}`;
+  return `${value >= 0 ? "+" : "-"}${String.fromCharCode(163)}${Math.abs(value).toLocaleString("en-GB")}`;
 }
 
 function FaqSchema() {
@@ -215,6 +225,8 @@ function StatCard({
   accent?: boolean;
   delay?: number;
 }) {
+  const watermark = value.includes(String.fromCharCode(163)) || value.startsWith("+") ? "" : value.replace(/[^0-9.%]/g, "");
+
   return (
     <div
       className={`relative overflow-hidden rounded-2xl border p-5 md:p-6 ${
@@ -233,14 +245,16 @@ function StatCard({
           }}
         />
       ) : null}
-      <span
-        className="pointer-events-none absolute -right-3 -bottom-4 select-none font-mono text-[80px] font-black leading-none"
-        style={{
-          color: accent ? "rgba(16,185,129,0.03)" : "rgba(255,255,255,0.015)",
-        }}
-      >
-        {value.replace(/[^0-9.%+]/g, "")}
-      </span>
+      {watermark ? (
+        <span
+          className="pointer-events-none absolute -right-3 -bottom-4 select-none font-mono text-[80px] font-black leading-none"
+          style={{
+            color: accent ? "rgba(16,185,129,0.03)" : "rgba(255,255,255,0.015)",
+          }}
+        >
+          {watermark}
+        </span>
+      ) : null}
       <div className="relative">
         <div className="text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-slate-500">
           {label}
@@ -264,6 +278,7 @@ function FAQ({ q, a }: { q: string; a: ReactNode }) {
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 text-[14px] font-medium text-slate-300 transition-colors hover:text-white">
         {q}
         <svg
+          aria-hidden="true"
           className="h-4 w-4 shrink-0 text-emerald-500/40 transition-transform group-open:rotate-180"
           fill="none"
           stroke="currentColor"
@@ -282,6 +297,7 @@ function FAQ({ q, a }: { q: string; a: ReactNode }) {
 export default function TrackRecordPage() {
   const [displayStats, setDisplayStats] = useState<DisplayStats>(() => getBaselineDisplayStats());
   const [statsStatus, setStatsStatus] = useState<"loading" | "live" | "fallback">("loading");
+  const [showStatsNote, setShowStatsNote] = useState(false);
 
   const fetchStats = useCallback(async () => {
     try {
@@ -300,6 +316,7 @@ export default function TrackRecordPage() {
   }, []);
 
   useEffect(() => {
+    const statsNoteTimer = window.setTimeout(() => setShowStatsNote(true), 300);
     const initialFetchId = window.setTimeout(() => {
       void fetchStats();
     }, 0);
@@ -315,6 +332,7 @@ export default function TrackRecordPage() {
     document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
+      window.clearTimeout(statsNoteTimer);
       window.clearTimeout(initialFetchId);
       window.removeEventListener("focus", handleFocus);
       document.removeEventListener("visibilitychange", handleVisibility);
@@ -322,12 +340,15 @@ export default function TrackRecordPage() {
   }, [fetchStats]);
 
   const trackingPeriod = getTrackingMonths();
+  const trackingRange = getTrackingRangeLabel();
   const statsNote =
     statsStatus === "live"
       ? "Updated automatically from settled results in the public record feed."
       : statsStatus === "fallback"
         ? "Stored public record shown while the live feed is unavailable."
-        : "Loading the latest settled public record.";
+        : showStatsNote
+          ? "Loading the latest settled public record."
+          : "";
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
@@ -348,70 +369,107 @@ export default function TrackRecordPage() {
             <PageHomeLink className="mb-12" />
           </Reveal>
 
-          <Reveal delay={100}>
+          <Reveal delay={60}>
             <span className="text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
-              Track Record
+              Verified public record | updated live
             </span>
           </Reveal>
 
-          <Reveal delay={200}>
-            <h1 className="mt-4 text-3xl font-semibold leading-tight tracking-tight text-slate-100 sm:text-4xl md:text-5xl">
-              Track Record
+          <Reveal delay={120}>
+            <h1 className="mt-4 max-w-4xl text-4xl font-semibold leading-[0.95] tracking-tight text-slate-100 sm:text-5xl md:text-6xl">
+              {formatCashExample(displayStats.overall.total_profit)} of evidence.
             </h1>
           </Reveal>
 
-          <Reveal delay={320}>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-              Every bet posted before kick-off. Every result logged after settlement. No edits, no
-              deletions.
+          <Reveal delay={190}>
+            <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+              {formatBetCount(displayStats.overall.total_bets)} settled bets across player props and ATP tennis. {" "}
+              {formatSignedPercent(displayStats.overall.roi)} ROI over {trackingPeriod}. Posted before the result was known,
+              logged after settlement, never edited.
             </p>
           </Reveal>
 
-          <Reveal delay={420}>
-            <Link
-              href="/the-edge"
-              className="mt-4 inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors hover:text-emerald-400"
-            >
-              See our methodology
-              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
+          <Reveal delay={250}>
+            <div className="mt-5 flex flex-wrap gap-2 text-[11px] font-mono font-semibold uppercase tracking-[0.12em] text-slate-400">
+              <span className="rounded-full border border-emerald-500/20 bg-emerald-500/[0.055] px-3 py-2 text-emerald-300">
+                Tipstrr verified tennis
+              </span>
+              <a
+                href="https://t.me/IlMargineProps"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-slate-700/50 bg-[#0c0f14] px-3 py-2 transition-colors hover:border-emerald-500/30 hover:text-emerald-300"
+              >
+                Pre-match Telegram timestamps
+              </a>
+              <span className="rounded-full border border-slate-700/50 bg-[#0c0f14] px-3 py-2">
+                {trackingRange}
+              </span>
+            </div>
           </Reveal>
 
-          <div className="mt-12 grid gap-3 md:grid-cols-3">
+          <Reveal delay={310}>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/player-props"
+                className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-400"
+              >
+                View today&apos;s selections &rarr;
+              </Link>
+              <Link
+                href="/calculator"
+                className="inline-flex items-center gap-2 rounded-lg border border-slate-700/60 bg-[#0c0f14] px-5 py-3 text-sm font-semibold text-slate-200 transition-colors hover:border-emerald-500/30 hover:text-emerald-300"
+              >
+                Open returns calculator &rarr;
+              </Link>
+              <Link
+                href="/the-edge"
+                className="inline-flex items-center gap-1.5 px-1 py-3 text-sm text-slate-500 transition-colors hover:text-emerald-400"
+              >
+                See methodology &rarr;
+              </Link>
+            </div>
+          </Reveal>
+
+          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <StatCard
               label="Player Props"
               value={formatBetCount(displayStats.props.total_bets)}
               sub={`${formatSignedPercent(displayStats.props.roi)} ROI | ${displayStats.props.win_rate.toFixed(1)}% win rate`}
               accent
-              delay={550}
+              delay={380}
+            />
+            <StatCard
+              label="Combined ROI"
+              value={formatSignedPercent(displayStats.overall.roi)}
+              sub={`${formatBetCount(displayStats.overall.total_bets)} bets | ${trackingRange}`}
+              accent
+              delay={440}
             />
             <StatCard
               label="ATP Tennis"
               value={formatBetCount(displayStats.tennis.total_bets)}
               sub={`${formatSignedPercent(displayStats.tennis.roi)} ROI | ${displayStats.tennis.win_rate.toFixed(1)}% win rate | Tipstrr verified`}
-              delay={650}
-            />
-            <StatCard
-              label="Combined ROI"
-              value={formatSignedPercent(displayStats.overall.roi)}
-              sub={`${formatBetCount(displayStats.overall.total_bets)} bets | ${trackingPeriod}`}
-              accent
-              delay={750}
+              delay={500}
             />
           </div>
 
-          <Reveal delay={820}>
+          <Reveal delay={560}>
             <div className="mt-4 rounded-2xl border border-emerald-500/15 bg-emerald-500/[0.035] p-5 md:flex md:items-center md:justify-between md:gap-8">
               <div>
                 <div className="text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-emerald-400/90">
-                  Calculated result at £100 per unit
+                  Calculated result at &pound;100 per unit
                 </div>
                 <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
-                  Every recorded stake is scaled directly: 0.5u = £50, 1u = £100, 2u = £200.
-                  This is the current tracked props + tennis P/L at that staking level.
+                  Every posted stake is scaled directly: 0.5u = &pound;50, 1u = &pound;100, 2u = &pound;200.
+                  The figure uses the current props + tennis P/L at that staking level.
                 </p>
+                <Link
+                  href="/calculator"
+                  className="mt-3 inline-flex text-sm font-medium text-emerald-400 underline underline-offset-4 transition-colors hover:text-emerald-300"
+                >
+                  Test the same record against your stake size &rarr;
+                </Link>
               </div>
               <div className="mt-5 shrink-0 md:mt-0 md:text-right">
                 <div className="font-mono text-3xl font-black tracking-tight text-emerald-400 tabular-nums md:text-4xl">
@@ -435,11 +493,13 @@ export default function TrackRecordPage() {
             </div>
           </Reveal>
 
-          <Reveal delay={850}>
-            <p className="mt-4 font-mono text-[10px] leading-relaxed text-slate-600">
-              {statsNote}
-            </p>
-          </Reveal>
+          {statsNote ? (
+            <Reveal delay={600}>
+              <p className="mt-4 font-mono text-[10px] leading-relaxed text-slate-600">
+                {statsNote}
+              </p>
+            </Reveal>
+          ) : null}
         </div>
       </section>
 
@@ -452,7 +512,7 @@ export default function TrackRecordPage() {
             Verification system
           </h2>
 
-          <div className="grid gap-3 md:grid-cols-3">
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
             {[
               {
                 icon: (
@@ -471,7 +531,7 @@ export default function TrackRecordPage() {
                   </svg>
                 ),
                 title: "Pre-match posting",
-                body: "Every selection published on site before kick-off. Timestamps are immutable and verifiable.",
+                body: "Posted before the event. Telegram timestamps for props and site publish times for tennis make timing visible before the result is known.",
               },
               {
                 icon: (
@@ -490,7 +550,7 @@ export default function TrackRecordPage() {
                   </svg>
                 ),
                 title: "Post-match settlement",
-                body: "Once settled, the result is logged with outcome and P&L impact. No lag, no filtering.",
+                body: "Result, profit/loss, odds and stake are logged after settlement. We do not wait to see how the week looks first.",
               },
               {
                 icon: (
@@ -509,7 +569,26 @@ export default function TrackRecordPage() {
                   </svg>
                 ),
                 title: "No editing",
-                body: "The public record cannot be changed after the fact. What is posted stays posted - wins and losses.",
+                body: "Selections cannot be retracted, repriced, or quietly removed. Category fixes can happen, but the bet itself stays frozen.",
+              },
+              {
+                icon: (
+                  <svg
+                    className="h-5 w-5 text-emerald-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 12.75L11.25 15 15 9.75M12 3l7.5 3v5.25c0 4.5-3 8.25-7.5 9.75-4.5-1.5-7.5-5.25-7.5-9.75V6L12 3z"
+                    />
+                  </svg>
+                ),
+                title: "Independent mirror",
+                body: "ATP tennis is mirrored to Tipstrr for third-party settlement context. Props remain timestamped through the public posting feed.",
               },
             ].map((item) => (
               <div
@@ -530,6 +609,40 @@ export default function TrackRecordPage() {
 
         <section className="border-b border-slate-800/30 py-16 md:py-20">
           <span className="mb-3 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/90">
+            Benchmark
+          </span>
+          <div className="grid gap-8 lg:grid-cols-[0.85fr,1.15fr] lg:items-start">
+            <div>
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
+                Where {formatSignedPercent(displayStats.overall.roi)} ROI sits
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-slate-500">
+                Sustained positive ROI over {formatBetCount(displayStats.overall.total_bets)} settled bets is the point.
+                The comparison below is a plain-English yardstick, not a promise about future returns.
+              </p>
+            </div>
+            <div className="overflow-hidden rounded-2xl border border-slate-700/40 bg-[#0c0f14]">
+              {[
+                ["Average punter", "-5% to -10%", formatSignedPercent(displayStats.overall.roi)],
+                ["Tipster services", "+2% to +5%", formatSignedPercent(displayStats.overall.roi)],
+                ["Sharp bettors", "+5% to +10%", formatSignedPercent(displayStats.overall.roi)],
+                ["Pro syndicates", "+10% to +15%", formatSignedPercent(displayStats.overall.roi)],
+              ].map(([group, typical, ilmargine]) => (
+                <div
+                  key={group}
+                  className="grid grid-cols-[1.2fr,0.85fr,0.85fr] border-b border-slate-800/50 px-4 py-3 last:border-b-0 sm:px-5"
+                >
+                  <span className="text-sm font-medium text-slate-300">{group}</span>
+                  <span className="font-mono text-sm text-slate-500">{typical}</span>
+                  <span className="text-right font-mono text-sm font-bold text-emerald-400">{ilmargine}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-slate-800/30 py-16 md:py-20">
+          <span className="mb-3 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/90">
             Before you follow
           </span>
           <h2 className="mb-8 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
@@ -539,12 +652,12 @@ export default function TrackRecordPage() {
           <div className="grid gap-x-12 gap-y-5 md:grid-cols-2">
             {[
               {
-                t: "Variance is real",
-                d: "Good process still comes with losing runs and ugly short-term swings.",
-              },
-              {
                 t: "Sample size matters",
                 d: "Twenty bets tells you almost nothing. Hundreds tell you much more.",
+              },
+              {
+                t: "Variance is real",
+                d: "Good process still comes with losing runs and ugly short-term swings.",
               },
               {
                 t: "ROI varies by market",
@@ -559,8 +672,8 @@ export default function TrackRecordPage() {
                 d: "Win consistently and bookmakers may cut your size. That's a signal it works.",
               },
               {
-                t: "Losses get logged",
-                d: "Transparency matters more than a curated feed. Every loss stays visible.",
+                t: "No staking gimmicks",
+                d: "Flat units only. No martingales, recovery plans, or compounding tricks dressed up as edge.",
               },
             ].map((item) => (
               <div key={item.t} className="flex items-start gap-3.5">
@@ -595,17 +708,15 @@ export default function TrackRecordPage() {
                 </h2>
                 <div className="space-y-4 text-base leading-relaxed text-slate-400">
                   <p>
-                    Most tipster services are not businesses built on edge. They are marketing funnels built
-                    on confidence.
+                    Most tipsters are not businesses built on edge. They are funnels built on confidence.
                   </p>
                   <p>
-                    The usual playbook: plays of the year with no timestamps, giant unit claims that vanish
-                    when they lose, cherry-picked winner screenshots, records that get cleaner after the
-                    fact.
+                    Plays of the year with no timestamps. Unit claims that quietly shrink after a loss.
+                    Cherry-picked screenshots. Records that get cleaner the longer you stare.
                   </p>
                   <p>
-                    That is not analysis. It is gambling repackaged as expertise - because confidence sells
-                    better than honesty.
+                    Edge is boring by comparison: a posted price, a logged stake, a settled result, and a
+                    number that keeps climbing while the losses stay visible too.
                   </p>
                 </div>
               </div>
@@ -613,29 +724,22 @@ export default function TrackRecordPage() {
               <div className="flex items-center">
                 <div className="w-full rounded-xl border border-slate-700/40 bg-[#0f1117] p-5">
                   <div className="mb-4 text-[10px] font-mono font-bold uppercase tracking-[0.16em] text-emerald-400/80">
-                    What real edge looks like
+                    Receipts, not slogans
                   </div>
-                  <div className="space-y-3">
+                  <div className="grid gap-3">
                     {[
-                      "Immutable timestamps",
-                      "Visible losses",
-                      "Transparent settlement",
-                      "Bad runs kept alongside good",
-                      "No edited history",
-                    ].map((item) => (
-                      <div key={item} className="flex items-center gap-3">
-                        <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-emerald-500/20 bg-emerald-500/[0.06]">
-                          <svg
-                            className="h-3 w-3 text-emerald-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            strokeWidth="2.5"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
+                      ["Settled sample", formatBetCount(displayStats.overall.total_bets)],
+                      ["GBP100/unit example", formatCashExample(displayStats.overall.total_profit)],
+                      ["Tracking window", trackingRange],
+                      ["Verification", "Tipstrr + timestamps"],
+                    ].map(([label, value]) => (
+                      <div key={label} className="rounded-lg border border-slate-800/70 bg-[#0c0f14] px-4 py-3">
+                        <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
+                          {label}
                         </div>
-                        <span className="text-sm text-slate-400">{item}</span>
+                        <div className="mt-1 font-mono text-lg font-black text-slate-100 tabular-nums">
+                          {value}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -697,30 +801,46 @@ export default function TrackRecordPage() {
 
             <div className="relative">
               <h2 className="text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
-                Follow the picks
+                See what is posted now
               </h2>
               <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-slate-400">
-                All selections posted on the website with full analysis.
+                Today&apos;s selections and the calculator use the same unit logic as the public record.
               </p>
-              <Link
-                href="/player-props"
-                className="mt-7 inline-flex items-center gap-2.5 rounded-lg bg-emerald-500 px-8 py-3.5 text-base font-semibold text-white transition-colors hover:bg-emerald-400"
+              <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+                <Link
+                  href="/player-props"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-lg bg-emerald-500 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-emerald-400"
+                >
+                  Today&apos;s selections &rarr;
+                </Link>
+                <Link
+                  href="/calculator"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-lg border border-slate-700/60 bg-[#111522] px-7 py-3.5 text-base font-semibold text-slate-200 transition-colors hover:border-emerald-500/30 hover:text-emerald-300"
+                >
+                  Open returns calculator &rarr;
+                </Link>
+              </div>
+              <a
+                href="https://t.me/IlMargineProps"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 inline-flex text-sm text-slate-500 underline underline-offset-4 transition-colors hover:text-emerald-300"
               >
-                View Tips -&gt;
-              </Link>
+                Prefer Telegram alerts? Join the props feed &rarr;
+              </a>
             </div>
           </div>
         </section>
 
         <div className="pb-14">
           <div className="rounded-xl border border-amber-500/10 bg-amber-500/[0.03] px-5 py-4 text-[12px] leading-relaxed text-slate-500">
-            <strong className="text-amber-400/80">Responsible gambling:</strong> Past performance does not
-            guarantee future results. Only bet what you can afford to lose.{" "}
+            <strong className="text-amber-300">Responsible gambling:</strong>{" "}
+            <span className="text-slate-300">Past performance does not guarantee future results. Only bet what you can afford to lose.</span>{" "}
             <a
               href="https://www.begambleaware.org"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-slate-400 underline underline-offset-2"
+              className="text-slate-500 underline underline-offset-2 transition-colors hover:text-slate-300"
             >
               BeGambleAware
             </a>{" "}
@@ -729,7 +849,7 @@ export default function TrackRecordPage() {
               href="https://www.gamcare.org.uk"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-slate-400 underline underline-offset-2"
+              className="text-slate-500 underline underline-offset-2 transition-colors hover:text-slate-300"
             >
               GamCare
             </a>
