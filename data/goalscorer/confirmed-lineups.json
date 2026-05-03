@@ -293,11 +293,11 @@
       "kickoff_utc": "2026-05-03T18:45:00Z",
       "home_team": "Inter",
       "away_team": "Parma",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-5-2",
-      "away_formation": "3-5-2",
+      "away_formation": "3-5-1-1",
       "home_players": [
         "Yann Sommer",
         "Yann Aurel Bisseck",
@@ -306,7 +306,7 @@
         "Denzel Dumfries",
         "Nicolò Barella",
         "Piotr Zielinski",
-        "Henrikh Mkhitaryan",
+        "Petar Sucic",
         "Federico Dimarco",
         "Marcus Thuram",
         "Francesco Pio Esposito"
@@ -321,8 +321,8 @@
         "Hans Nicolussi Caviglia",
         "Mandela Keita",
         "Emanuele Valeri",
-        "Mateo Pellegrino",
-        "Gabriel Strefezza"
+        "Gabriel Strefezza",
+        "Mateo Pellegrino"
       ],
       "home_starters": [
         {
@@ -389,7 +389,7 @@
           "position_id": 75
         },
         {
-          "name": "Henrikh Mkhitaryan",
+          "name": "Petar Sucic",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -432,7 +432,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 11
         },
         {
@@ -441,7 +441,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 33
         },
         {
@@ -450,7 +450,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 35
         },
         {
@@ -459,7 +459,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 37
         },
         {
@@ -468,7 +468,7 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 71
         },
         {
@@ -477,7 +477,7 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 73
         },
         {
@@ -486,7 +486,7 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 75
         },
         {
@@ -495,7 +495,7 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 77
         },
         {
@@ -504,34 +504,60 @@
           "line_size": 5,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-2",
+          "formation": "3-5-1-1",
           "position_id": 79
-        },
-        {
-          "name": "Mateo Pellegrino",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-5-2",
-          "position_id": 104
         },
         {
           "name": "Gabriel Strefezza",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 1,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-5-1-1",
+          "position_id": 95
+        },
+        {
+          "name": "Mateo Pellegrino",
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-5-2",
-          "position_id": 106
+          "formation": "3-5-1-1",
+          "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Josep Martínez",
+        "Raffaele Di Gennaro",
+        "Carlos Augusto",
+        "Francesco Acerbi",
+        "Matteo Cocchi",
+        "Stefan de Vrij",
+        "Andy Diouf",
+        "Davide Frattesi",
         "Hakan Çalhanoglu",
-        "Luis Henrique"
+        "Henrikh Mkhitaryan",
+        "Luis Henrique",
+        "Matteo Darmian",
+        "Ange-Yoan Bonny",
+        "Lautaro Martínez",
+        "Mattia Mosconi"
       ],
+      "away_subs": [
+        "Edoardo Corvi",
+        "Filippo Rinaldi",
+        "Lautaro Valenti",
+        "Christian Ordóñez",
+        "Franco Carboni",
+        "Nahuel Estévez",
+        "Oliver Sørensen",
+        "Pontus Almqvist",
+        "Sascha Britschgi",
+        "Gaetano Oristanio",
+        "Jacob Ondrejka",
+        "Nesta Elphege"
+      ],
+      "home_unavailable": [],
       "away_unavailable": [
         "Benjamín Cremaschi",
         "Matija Frigan"
@@ -783,22 +809,22 @@
         "Dusan Vlahovic",
         "Fabio Miretti",
         "Jérémie Boga",
+        "Edon Zhegrova",
+        "Teun Koopmeiners",
         "Carlo Pinsoglio",
         "Mattia Perin",
         "Emil Holm",
         "Federico Gatti",
-        "Edon Zhegrova",
         "Filip Kostic",
-        "Teun Koopmeiners",
         "Vasilije Adzic",
         "Loïs Openda"
       ],
       "away_subs": [
         "Tobias Slotsager",
         "Sandi Lovric",
+        "Abdou Harroui",
         "Giacomo Toniolo",
         "Simone Perilli",
-        "Abdou Harroui",
         "Fallou Cham",
         "Pol Lirola",
         "Amin Sarr",
