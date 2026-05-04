@@ -20,6 +20,7 @@ export default function Footer({ className = "" }: FooterProps) {
           <div className="flex flex-col items-center md:items-end gap-3">
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-slate-500">
               <Link href="/faq" className="hover:text-slate-300">Frequently Asked Questions</Link>
+              <Link href="/premium" className="hover:text-slate-300">Premium</Link>
               <Link href="/contact" className="hover:text-slate-300">Contact</Link>
               <Link href="/disclaimer" className="hover:text-slate-300">Disclaimer</Link>
               <Link href="/privacy-policy" className="hover:text-slate-300">Privacy Policy</Link>

@@ -78,6 +78,16 @@ export default function GlobalNav() {
               <Link href="/anytime-goalscorer" className={linkClass(pathname === "/anytime-goalscorer")}>Goalscorer Model</Link>
             ) : null}
             <Link href="/track-record" className={linkClass(pathname === "/track-record")}>Track Record</Link>
+            <Link
+              href="/premium"
+              className={`rounded-full border px-4 py-2 text-sm font-semibold transition-all ${
+                pathname === "/premium"
+                  ? "border-emerald-400/45 bg-emerald-500/[0.12] text-emerald-300"
+                  : "border-emerald-500/20 bg-emerald-500/[0.055] text-emerald-300 hover:border-emerald-400/45 hover:bg-emerald-500/10"
+              }`}
+            >
+              Premium
+            </Link>
             {showMonitorLink ? <Link href="/model-monitor" className={linkClass(pathname === "/model-monitor")}>Monitor</Link> : null}
             <Link href="/bookmakers" className={linkClass(pathname === '/bookmakers')}>Bookmakers</Link>
             <Link href="/calculator" className={linkClass(pathname === '/calculator')}>Calculator</Link>
@@ -125,6 +135,9 @@ export default function GlobalNav() {
             ) : null}
             <Link href="/track-record" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/track-record" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
               Track Record
+            </Link>
+            <Link href="/premium" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-semibold rounded transition-colors ${pathname === "/premium" ? "text-emerald-300 bg-emerald-500/10" : "text-emerald-300 hover:text-emerald-200 hover:bg-emerald-500/10"}`}>
+              Premium
             </Link>
             {showMonitorLink ? (
               <Link href="/model-monitor" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/model-monitor" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>

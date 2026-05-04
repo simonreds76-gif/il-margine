@@ -411,22 +411,22 @@ export default function TrackRecordPage() {
           <Reveal delay={310}>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
-                href="/player-props"
+                href="/premium"
                 className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-400"
+              >
+                Join Premium &rarr;
+              </Link>
+              <Link
+                href="/player-props"
+                className="inline-flex items-center gap-2 rounded-lg border border-slate-700/60 bg-[#0c0f14] px-5 py-3 text-sm font-semibold text-slate-200 transition-colors hover:border-emerald-500/30 hover:text-emerald-300"
               >
                 View today&apos;s selections &rarr;
               </Link>
               <Link
                 href="/calculator"
-                className="inline-flex items-center gap-2 rounded-lg border border-slate-700/60 bg-[#0c0f14] px-5 py-3 text-sm font-semibold text-slate-200 transition-colors hover:border-emerald-500/30 hover:text-emerald-300"
-              >
-                Open returns calculator &rarr;
-              </Link>
-              <Link
-                href="/the-edge"
                 className="inline-flex items-center gap-1.5 px-1 py-3 text-sm text-slate-500 transition-colors hover:text-emerald-400"
               >
-                See methodology &rarr;
+                Returns calculator &rarr;
               </Link>
             </div>
           </Reveal>
@@ -804,14 +804,14 @@ export default function TrackRecordPage() {
                 See what is posted now
               </h2>
               <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-slate-400">
-                Today&apos;s selections and the calculator use the same unit logic as the public record.
+                Premium founding access uses the same unit logic as the public record: posted stake, posted odds, settled result.
               </p>
               <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
                 <Link
-                  href="/player-props"
+                  href="/premium"
                   className="inline-flex items-center justify-center gap-2.5 rounded-lg bg-emerald-500 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-emerald-400"
                 >
-                  Today&apos;s selections &rarr;
+                  Join Premium &rarr;
                 </Link>
                 <Link
                   href="/calculator"

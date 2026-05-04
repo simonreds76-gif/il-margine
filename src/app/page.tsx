@@ -85,6 +85,11 @@ const EXPLORE_LINKS = [
     body: "Verified performance, immutable timestamps, and transparent settlement.",
   },
   {
+    href: "/premium",
+    title: "Premium",
+    body: "Founding access for the full paid props and ATP tennis value feed.",
+  },
+  {
     href: "/calculator",
     title: "Calculator",
     body: "Returns tracking and Kelly sizing built around the same approach.",
@@ -565,22 +570,22 @@ export default function Home() {
               <HomepageReveal delay={420}>
                 <div className="mt-8 flex flex-wrap items-center gap-4">
                   <Link
-                    href="/player-props"
+                    href="/premium"
                     className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-6 py-3 text-base font-semibold text-white transition-all hover:bg-emerald-400 hover:shadow-[0_0_40px_rgba(16,185,129,0.2)]"
                   >
-                    Player Props Tips {"\u2192"}
+                    Join Premium {"\u2192"}
                   </Link>
                   <Link
-                    href="/tennis-tips"
+                    href="/player-props"
                     className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-6 py-3 text-base font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
                   >
-                    ATP Tennis Tips {"\u2192"}
+                    Free Picks {"\u2192"}
                   </Link>
                   <Link
-                    href="/the-edge"
+                    href="/track-record"
                     className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 transition-colors hover:text-emerald-400"
                   >
-                    How It Works {"\u2192"}
+                    Track Record {"\u2192"}
                   </Link>
                 </div>
               </HomepageReveal>
@@ -588,8 +593,8 @@ export default function Home() {
               <HomepageReveal delay={560}>
                 <div className="mt-7 flex flex-wrap items-center gap-3 font-mono text-xs text-slate-600">
                   {[
-                    "Free picks",
-                    "No sign-up",
+                    "Free picks stay public",
+                    "Premium founding access",
                     "Transparent results",
                   ].map((item) => (
                     <span key={item} className="inline-flex items-center gap-2">
@@ -865,10 +870,10 @@ export default function Home() {
 
             <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
               <Link href="/tennis-tips#picks" className="text-slate-400 transition-colors hover:text-emerald-400">
-                Review tennis results -&gt;
+                Review tennis results &rarr;
               </Link>
               <Link href="/player-props#picks" className="text-slate-400 transition-colors hover:text-emerald-400">
-                Review player props results -&gt;
+                Review player props results &rarr;
               </Link>
             </div>
           </div>
@@ -881,7 +886,7 @@ export default function Home() {
             Go deeper
           </span>
           <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Explore</h2>
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {EXPLORE_LINKS.map((item) => (
               <ExploreCard key={item.href} href={item.href} title={item.title} body={item.body} />
             ))}
@@ -957,22 +962,22 @@ export default function Home() {
               style={{ background: "linear-gradient(90deg, transparent, rgba(16,185,129,0.35), transparent)" }}
             />
             <div className="relative">
-              <h2 className="text-3xl font-semibold text-slate-100">See the edge in practice</h2>
-              <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-slate-300">
-                Free selections posted on site. Match, market, selection, odds, bookmaker, and stake. Everything needed to place the bet with clarity.
+              <h2 className="text-3xl font-semibold text-slate-100">Turn the public record into a premium feed</h2>
+              <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-slate-300">
+                Free selections stay visible on site. Premium founding access adds the full paid feed for football props, ATP tennis, stake guidance, and model-led value signals.
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link
-                  href="/player-props"
+                  href="/premium"
                   className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-8 py-3.5 text-[15px] font-semibold text-white transition-all hover:bg-emerald-400 hover:shadow-[0_0_50px_rgba(16,185,129,0.22)]"
                 >
-                  Player Props Tips {"\u2192"}
+                  Join Premium {"\u2192"}
                 </Link>
                 <Link
-                  href="/tennis-tips"
+                  href="/track-record"
                   className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-8 py-3.5 text-[15px] font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
                 >
-                  ATP Tennis Tips {"\u2192"}
+                  Inspect Track Record {"\u2192"}
                 </Link>
               </div>
             </div>
