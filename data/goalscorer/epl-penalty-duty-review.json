@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-03T00:16:20Z",
-  "row_count": 2,
+  "generated_at": "2026-05-04T00:13:05Z",
+  "row_count": 1,
   "rows": [
     {
       "date": "2026-04-18",
@@ -27,34 +27,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Dominic Calvert-Lewin took 1 penalty attempt for Leeds vs Wolverhampton Wanderers. Primary pre-match: Dominic Calvert-Lewin (unknown). Secondary pre-match: Lukas Nmecha (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-02T19:13:18Z",
-      "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
-    },
-    {
-      "date": "2026-04-12",
-      "league": "epl",
-      "review_source": "settled_logs",
-      "match": "Crystal Palace vs Newcastle United",
-      "team": "Crystal Palace",
-      "opponent": "Newcastle United",
-      "actual_taker": "Jean-Philippe Mateta",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "primary_pre_match": "Jean-Philippe Mateta",
-      "secondary_pre_match": "Ismaila Sarr",
-      "tertiary_pre_match": "Justin Devenny",
-      "primary_lineup_status": "unknown",
-      "secondary_lineup_status": "unknown",
-      "tertiary_lineup_status": "unknown",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "needs_manual_review",
-      "review_priority": "medium",
-      "editorial_note": "Jean-Philippe Mateta took 1 penalty attempt for Crystal Palace vs Newcastle United. Primary pre-match: Jean-Philippe Mateta (unknown). Secondary pre-match: Ismaila Sarr (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-02T19:13:18Z",
+      "context_generated_at": "2026-05-03T19:07:36Z",
       "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
     }
   ]

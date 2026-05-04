@@ -315,21 +315,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Alpha Touré",
-      "fotmob_id": 1536998,
-      "team": "Metz",
-      "team_id": 8550,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Koffi Kouao",
       "fotmob_id": 820712,
       "team": "Metz",
@@ -540,21 +525,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Mamadou Coulibaly",
-      "fotmob_id": 1524548,
-      "team": "Monaco",
-      "team_id": 9829,
-      "started": false,
-      "squad_status": "sub",
-      "minutes_played": 32,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": true,
-      "subbed_off": false,
-      "sub_in_minute": 58,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Ansu Fati",
       "fotmob_id": 1086012,
       "team": "Monaco",
@@ -563,6 +533,21 @@
       "squad_status": "sub",
       "minutes_played": 32,
       "goals": 1,
+      "own_goals": 0,
+      "subbed_on": true,
+      "subbed_off": false,
+      "sub_in_minute": 58,
+      "sub_out_minute": 0
+    },
+    {
+      "name": "Mamadou Coulibaly",
+      "fotmob_id": 1524548,
+      "team": "Monaco",
+      "team_id": 9829,
+      "started": false,
+      "squad_status": "sub",
+      "minutes_played": 32,
+      "goals": 0,
       "own_goals": 0,
       "subbed_on": true,
       "subbed_off": false,
@@ -658,96 +643,6 @@
       "subbed_off": false,
       "sub_in_minute": 0,
       "sub_out_minute": 0
-    },
-    {
-      "name": "Mohammed Salisu",
-      "fotmob_id": 938247,
-      "team": "Monaco",
-      "team_id": 9829,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Vanderson",
-      "fotmob_id": 1207992,
-      "team": "Monaco",
-      "team_id": 9829,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Kassoum Ouattara",
-      "fotmob_id": 1387194,
-      "team": "Monaco",
-      "team_id": 9829,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Stanis Idumbo",
-      "fotmob_id": 1366936,
-      "team": "Monaco",
-      "team_id": 9829,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Takumi Minamino",
-      "fotmob_id": 408943,
-      "team": "Monaco",
-      "team_id": 9829,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Paris Brunner",
-      "fotmob_id": 1412956,
-      "team": "Monaco",
-      "team_id": 9829,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
     }
   ],
   "goal_events": [
@@ -773,5 +668,5 @@
       "is_own_goal": false
     }
   ],
-  "fetched_at": "2026-05-03T00:16:04Z"
+  "fetched_at": "2026-05-04T00:12:25Z"
 }

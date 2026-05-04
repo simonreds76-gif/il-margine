@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-03T00:16:19Z",
-  "row_count": 5,
+  "generated_at": "2026-05-04T00:13:04Z",
+  "row_count": 4,
   "rows": [
     {
       "date": "2026-04-26",
@@ -27,7 +27,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Nikola Vlasic took 1 penalty attempt for Torino vs Inter. Primary pre-match: Nikola Vlasic (unknown). Secondary pre-match: Duván Zapata (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-02T19:12:32Z",
+      "context_generated_at": "2026-05-03T19:06:58Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     },
     {
@@ -54,7 +54,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Scott McTominay took 1 penalty attempt for Napoli vs Cremonese. Primary pre-match: Kevin De Bruyne (unknown). Secondary pre-match: Rasmus Højlund (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-05-02T19:12:32Z",
+      "context_generated_at": "2026-05-03T19:06:58Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     },
     {
@@ -81,7 +81,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Lorenzo Colombo took 1 penalty attempt for Genoa vs Pisa. Primary pre-match: Ruslan Malinovskiy (unknown). Secondary pre-match: Junior Messias (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-05-02T19:12:32Z",
+      "context_generated_at": "2026-05-03T19:06:58Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     },
     {
@@ -108,34 +108,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Mattia Zaccagni took 1 penalty attempt for Lazio vs Napoli. Primary pre-match: Mattia Zaccagni (unknown). Secondary pre-match: Danilo Cataldi (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-02T19:12:32Z",
-      "context_source_path": "data/goalscorer/penalty-duty-context.json"
-    },
-    {
-      "date": "2026-04-12",
-      "league": "serie-a",
-      "review_source": "settled_logs",
-      "match": "Como 1907 vs Inter Milano",
-      "team": "Como",
-      "opponent": "Inter",
-      "actual_taker": "Lucas Da Cunha",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "primary_pre_match": "Lucas Da Cunha",
-      "secondary_pre_match": "Martin Baturina",
-      "tertiary_pre_match": "Tasos Douvikas",
-      "primary_lineup_status": "unknown",
-      "secondary_lineup_status": "unknown",
-      "tertiary_lineup_status": "unknown",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "needs_manual_review",
-      "review_priority": "medium",
-      "editorial_note": "Lucas Da Cunha took 1 penalty attempt for Como vs Inter. Primary pre-match: Lucas Da Cunha (unknown). Secondary pre-match: Martin Baturina (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-02T19:12:32Z",
+      "context_generated_at": "2026-05-03T19:06:58Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     }
   ]

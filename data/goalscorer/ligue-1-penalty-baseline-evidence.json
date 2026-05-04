@@ -1,9 +1,41 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-03T00:16:24Z",
+  "generated_at": "2026-05-04T00:13:09Z",
   "league": "ligue-1",
-  "row_count": 7,
+  "row_count": 9,
   "rows": [
+    {
+      "team": "Angers",
+      "team_key": "angers",
+      "player_name": "Branco van den Boomen",
+      "player_key": "branco van den boomen",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-03"
+    },
+    {
+      "team": "Angers",
+      "team_key": "angers",
+      "player_name": "Goduine Koyalipou",
+      "player_key": "goduine koyalipou",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 2,
+      "observed_share": 0.5,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-03"
+    },
     {
       "team": "Le Havre",
       "team_key": "le havre",

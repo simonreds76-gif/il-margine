@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-03T00:16:23Z",
+  "generated_at": "2026-05-04T00:13:08Z",
   "league": "bundesliga",
-  "row_count": 8,
+  "row_count": 5,
   "rows": [
     {
       "team": "Augsburg",
@@ -43,31 +43,15 @@
       "player_name": "Gian-Luca Waldschmidt",
       "player_key": "gian luca waldschmidt",
       "observed_player_penalties": 1,
-      "observed_team_penalties": 2,
-      "observed_share": 0.5,
-      "observed_sample": 2.0,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
         "settled_logs"
       ],
       "event_count": 1,
       "last_event_date": "2026-04-17"
-    },
-    {
-      "team": "FC Cologne",
-      "team_key": "fc cologne",
-      "player_name": "Said El Mala",
-      "player_key": "said el mala",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 2,
-      "observed_share": 0.5,
-      "observed_sample": 2.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "settled_logs"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-12"
     },
     {
       "team": "Hamburger SV",
@@ -101,38 +85,6 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-04-18"
-    },
-    {
-      "team": "VfB Stuttgart",
-      "team_key": "vfb stuttgart",
-      "player_name": "Deniz Undav",
-      "player_key": "deniz undav",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "settled_logs"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-12"
-    },
-    {
-      "team": "Werder Bremen",
-      "team_key": "werder bremen",
-      "player_name": "Romano Schmid",
-      "player_key": "romano schmid",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "settled_logs"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-12"
     }
   ]
 }
