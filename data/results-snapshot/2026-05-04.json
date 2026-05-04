@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-04T01:17:48Z",
+  "fetched_at": "2026-05-04T10:50:54Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
@@ -3358,19 +3358,6 @@
           "source": "football-data",
           "total_corners": 16
         },
-        "2026-05-02|bayer leverkusen|rb leipzig": {
-          "away_corners": 3,
-          "away_shots": 14,
-          "away_sot": 5,
-          "away_team": "rb leipzig",
-          "home_corners": 7,
-          "home_shots": 23,
-          "home_sot": 8,
-          "home_team": "bayer leverkusen",
-          "match_id": 4829594,
-          "source": "fotmob",
-          "total_corners": 10
-        },
         "2026-05-02|bayern munich|heidenheim": {
           "away_corners": 5,
           "away_shots": 12,
@@ -3393,19 +3380,6 @@
           "home_sot": 5,
           "home_team": "ein frankfurt",
           "source": "football-data",
-          "total_corners": 13
-        },
-        "2026-05-02|eintracht frankfurt|hamburg": {
-          "away_corners": 4,
-          "away_shots": 9,
-          "away_sot": 4,
-          "away_team": "hamburg",
-          "home_corners": 9,
-          "home_shots": 8,
-          "home_sot": 5,
-          "home_team": "eintracht frankfurt",
-          "match_id": 4829597,
-          "source": "fotmob",
           "total_corners": 13
         },
         "2026-05-02|hoffenheim|stuttgart": {
@@ -3456,19 +3430,6 @@
           "source": "football-data",
           "total_corners": 10
         },
-        "2026-05-03|borussia monchengladbach|borussia dortmund": {
-          "away_corners": 1,
-          "away_shots": 6,
-          "away_sot": 1,
-          "away_team": "borussia dortmund",
-          "home_corners": 1,
-          "home_shots": 12,
-          "home_sot": 4,
-          "home_team": "borussia monchengladbach",
-          "match_id": 4829596,
-          "source": "fotmob",
-          "total_corners": 2
-        },
         "2026-05-03|borussia monchengladbach|dortmund": {
           "away_corners": 1,
           "away_shots": 6,
@@ -3508,17 +3469,13 @@
       },
       "football_data_count": 288,
       "football_data_latest": "2026-05-03",
-      "fotmob_count": 9,
-      "fotmob_latest": "2026-05-03",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "lag_days": 1,
       "source": "football-data",
       "source_latest": "2026-05-03",
-      "target_dates": [
-        "2026-05-02",
-        "2026-05-03",
-        "2026-05-04"
-      ],
-      "target_fixture_count": 1,
+      "target_dates": [],
+      "target_fixture_count": 0,
       "unresolved_fixture_count": 0
     },
     "epl": {
@@ -7646,19 +7603,6 @@
           "source": "football-data",
           "total_corners": 12
         },
-        "2026-05-02|wolverhampton|sunderland": {
-          "away_corners": 3,
-          "away_shots": 10,
-          "away_sot": 2,
-          "away_team": "sunderland",
-          "home_corners": 6,
-          "home_shots": 20,
-          "home_sot": 7,
-          "home_team": "wolverhampton",
-          "match_id": 4813724,
-          "source": "fotmob",
-          "total_corners": 9
-        },
         "2026-05-02|wolves|sunderland": {
           "away_corners": 3,
           "away_shots": 10,
@@ -7710,19 +7654,18 @@
       },
       "football_data_count": 347,
       "football_data_latest": "2026-05-03",
-      "fotmob_count": 7,
+      "fotmob_count": 3,
       "fotmob_latest": "2026-05-03",
       "lag_days": 1,
       "source": "football-data",
       "source_latest": "2026-05-03",
       "target_dates": [
-        "2026-05-02",
         "2026-05-03",
         "2026-05-04",
         "2026-05-05"
       ],
-      "target_fixture_count": 3,
-      "unresolved_fixture_count": 1
+      "target_fixture_count": 2,
+      "unresolved_fixture_count": 2
     },
     "la-liga": {
       "api_football_count": 0,
@@ -11817,18 +11760,17 @@
       },
       "football_data_count": 339,
       "football_data_latest": "2026-05-03",
-      "fotmob_count": 8,
+      "fotmob_count": 4,
       "fotmob_latest": "2026-05-03",
       "lag_days": 1,
       "source": "football-data",
       "source_latest": "2026-05-03",
       "target_dates": [
-        "2026-05-02",
         "2026-05-03",
         "2026-05-04",
         "2026-05-05"
       ],
-      "target_fixture_count": 3,
+      "target_fixture_count": 1,
       "unresolved_fixture_count": 1
     },
     "ligue-1": {
@@ -15200,19 +15142,6 @@
           "source": "football-data",
           "total_corners": 15
         },
-        "2026-05-02|paris saint germain|lorient": {
-          "away_corners": 2,
-          "away_shots": 5,
-          "away_sot": 3,
-          "away_team": "lorient",
-          "home_corners": 12,
-          "home_shots": 24,
-          "home_sot": 6,
-          "home_team": "paris saint germain",
-          "match_id": 4830744,
-          "source": "fotmob",
-          "total_corners": 14
-        },
         "2026-05-02|paris sg|lorient": {
           "away_corners": 2,
           "away_shots": 5,
@@ -15288,17 +15217,13 @@
       },
       "football_data_count": 286,
       "football_data_latest": "2026-05-03",
-      "fotmob_count": 9,
-      "fotmob_latest": "2026-05-03",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "lag_days": 1,
       "source": "football-data",
       "source_latest": "2026-05-03",
-      "target_dates": [
-        "2026-05-02",
-        "2026-05-03",
-        "2026-05-04"
-      ],
-      "target_fixture_count": 5,
+      "target_dates": [],
+      "target_fixture_count": 0,
       "unresolved_fixture_count": 0
     },
     "serie-a": {
@@ -19502,18 +19427,17 @@
       },
       "football_data_count": 348,
       "football_data_latest": "2026-05-03",
-      "fotmob_count": 7,
+      "fotmob_count": 4,
       "fotmob_latest": "2026-05-03",
       "lag_days": 1,
       "source": "football-data",
       "source_latest": "2026-05-03",
       "target_dates": [
-        "2026-05-02",
         "2026-05-03",
         "2026-05-04",
         "2026-05-05"
       ],
-      "target_fixture_count": 4,
+      "target_fixture_count": 1,
       "unresolved_fixture_count": 1
     }
   },
