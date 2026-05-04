@@ -26,6 +26,13 @@ PROMOTION_MIN_SETTLED = 50
 PROMOTION_POSITIVE_SHARE_MIN = 52.0
 
 
+def _env_bool(name: str, default: bool = False) -> bool:
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build spread_v1_shadow research report and status artifacts.")
     parser.add_argument("--signals", default=str(DEFAULT_SIGNALS))
@@ -258,8 +265,14 @@ def calibration_status(payload: dict[str, Any] | None) -> dict[str, Any]:
     if valid and not correction_valid:
         valid = False
         reason = f"correction:{correction_reason}"
+    elif valid and not base_calibration_valid and not _env_bool("SPREAD_V1_ENABLE_CORRECTION_ONLY", False):
+        valid = False
+        reason = f"base-calibration:{str(payload.get('calibration_reason') or 'invalid-calibration')}"
     else:
-        reason = "ok" if (valid and base_calibration_valid) else ("ok-correction-only" if valid else "invalid-scope-or-source")
+        reason = (
+            "ok" if (valid and base_calibration_valid)
+            else ("ok-correction-only" if valid else "invalid-scope-or-source")
+        )
     return {
         "valid": valid,
         "reason": reason,

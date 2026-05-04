@@ -54,6 +54,13 @@ MIN_VENUE_SPW_MATCHES = 50
 POINT_PROB_MATCH_PROB_GAP_MAX = 0.08
 
 
+def _env_bool(name: str, default: bool = False) -> bool:
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
 def _root_dir() -> str:
     base = os.path.dirname(os.path.abspath(__file__))
     return os.path.dirname(base)
@@ -367,30 +374,34 @@ def load_handicap_calibration(args: argparse.Namespace) -> HandicapCalibration:
 
     with open(cal_path, "r", encoding="utf-8") as f:
         payload = json.load(f)
+
+    if mode == "auto" and isinstance(payload, dict) and payload.get("calibration_valid") is False:
+        reason = str(payload.get("calibration_reason") or "invalid-calibration")
+        if _env_bool("SPREAD_V1_ENABLE_CORRECTION_ONLY", False):
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, reason, payload)
+        # Correction-only mode created ML/handicap contradictions; keep it opt-in only.
+        return HandicapCalibration(False, 0.0, 0.0, 1.0, reason, None)
+
     parsed = _parse_calibration_payload(payload)
     if parsed is None:
         if mode in {"force", "on", "required"}:
             raise ValueError(f"Calibration file missing required params: {cal_path}")
-        return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid:{cal_path}", payload if isinstance(payload, dict) else None)
+        return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid:{cal_path}", None)
 
     if mode == "auto":
-        calibration_valid = payload.get("calibration_valid")
-        if calibration_valid is False:
-            reason = str(payload.get("calibration_reason") or "invalid-calibration")
-            return HandicapCalibration(False, 0.0, 0.0, 1.0, reason, payload if isinstance(payload, dict) else None)
         line_source = str(payload.get("line_source_used") or "").strip().lower()
         usable_scope = payload.get("usable_scope") if isinstance(payload.get("usable_scope"), dict) else {}
         surfaces = {str(item).strip() for item in usable_scope.get("surfaces") or [] if str(item).strip()}
         leagues = {str(item).strip() for item in usable_scope.get("leagues") or [] if str(item).strip()}
         best_of = str(usable_scope.get("best_of") or "").strip().lower()
         if line_source != "snapshot":
-            return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid-line-source:{line_source or 'missing'}", payload if isinstance(payload, dict) else None)
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid-line-source:{line_source or 'missing'}", payload if _env_bool("SPREAD_V1_ENABLE_CORRECTION_ONLY", False) and isinstance(payload, dict) else None)
         if best_of != "bo3":
-            return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid-best-of:{best_of or 'missing'}", payload if isinstance(payload, dict) else None)
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, f"invalid-best-of:{best_of or 'missing'}", payload if _env_bool("SPREAD_V1_ENABLE_CORRECTION_ONLY", False) and isinstance(payload, dict) else None)
         if "ATP" not in leagues:
-            return HandicapCalibration(False, 0.0, 0.0, 1.0, "invalid-leagues", payload if isinstance(payload, dict) else None)
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, "invalid-leagues", payload if _env_bool("SPREAD_V1_ENABLE_CORRECTION_ONLY", False) and isinstance(payload, dict) else None)
         if not {"Hard", "Clay"}.issubset(surfaces):
-            return HandicapCalibration(False, 0.0, 0.0, 1.0, "invalid-surfaces", payload if isinstance(payload, dict) else None)
+            return HandicapCalibration(False, 0.0, 0.0, 1.0, "invalid-surfaces", payload if _env_bool("SPREAD_V1_ENABLE_CORRECTION_ONLY", False) and isinstance(payload, dict) else None)
 
     line_shift, platt_a, platt_b = parsed
     return HandicapCalibration(True, line_shift, platt_a, platt_b, cal_path, payload if isinstance(payload, dict) else None)
@@ -655,6 +666,7 @@ def main():
     fallback_divergent_point_probs = 0
     correction_reason_counts: Counter[str] = Counter()
     correction_applied = 0
+    correction_sign_flip_guarded = 0
     for m in matched:
         fo, pin, pin_reversed_for_fair = m["fair"], m["pinnacle"], m["pin_reversed_for_fair"]
         p1_win_prob = float(fo.get("p1_win_prob") or 0.0)
@@ -713,6 +725,13 @@ def main():
         #   -x => P1 -x
         model_p1_raw = prob_p1_covers_plus(p_a, p_b, line)
         model_p1_shifted = prob_p1_covers_plus(p_a, p_b, line + calibration.line_shift)
+
+        implied1 = 1.0 / spread_odds1
+        implied2 = 1.0 / spread_odds2
+        raw_model_p2 = _clamp(1.0 - model_p1_raw, 1e-6, 1.0 - 1e-6)
+        raw_edge1 = (model_p1_raw - implied1) / implied1 * 100 if implied1 > 0 else None
+        raw_edge2 = (raw_model_p2 - implied2) / implied2 * 100 if implied2 > 0 else None
+
         model_p1_base = _calibrate_prob(model_p1_shifted, calibration)
         tour_name_upper = str(meta.get("name") or "").upper() if isinstance(meta, dict) else ""
         is_grand_slam = bool(
@@ -731,19 +750,31 @@ def main():
             league=str(pin.get("league") or "").strip() or None,
             best_of=best_of,
         )
+        model_p2 = _clamp(1.0 - model_p1, 1e-6, 1.0 - 1e-6)
+        edge1 = (model_p1 - implied1) / implied1 * 100 if implied1 > 0 else None
+        edge2 = (model_p2 - implied2) / implied2 * 100 if implied2 > 0 else None
+
+        sign_flip_guarded = (
+            not _env_bool("SPREAD_V1_ALLOW_CORRECTION_SIGN_FLIP", False)
+            and (
+                (raw_edge1 is not None and edge1 is not None and raw_edge1 <= 0.0 < edge1)
+                or (raw_edge2 is not None and edge2 is not None and raw_edge2 <= 0.0 < edge2)
+            )
+        )
+        if sign_flip_guarded:
+            # A calibration/correction layer may dampen or resize an existing edge,
+            # but it must not invent an opposite-side handicap pick against the raw model.
+            model_p1 = model_p1_raw
+            model_p2 = raw_model_p2
+            edge1 = raw_edge1
+            edge2 = raw_edge2
+            correction_reason = "sign-flip-guard"
+            correction_sign_flip_guarded += 1
+
         if correction_reason == "ok":
             correction_applied += 1
         else:
             correction_reason_counts[correction_reason] += 1
-        model_p2 = _clamp(1.0 - model_p1, 1e-6, 1.0 - 1e-6)
-
-        implied1 = 1.0 / spread_odds1
-        raw_edge1 = (model_p1_raw - implied1) / implied1 * 100 if implied1 > 0 else None
-        edge1 = (model_p1 - implied1) / implied1 * 100 if implied1 > 0 else None
-
-        # Opposite side (OUR P2 at -line), complementary on .5 spreads.
-        implied2 = 1.0 / spread_odds2
-        edge2 = (model_p2 - implied2) / implied2 * 100 if implied2 > 0 else None
 
         if raw_edge1 is not None:
             edge_raw_p1.append(raw_edge1)
@@ -795,6 +826,8 @@ def main():
     print("Edge diagnostics (P2 -line, calibrated):")
     summarize_edges("cal", edge_cal_p2)
     if calibration.payload is not None:
+        if correction_sign_flip_guarded:
+            print(f"Correction sign-flip guard: guarded={correction_sign_flip_guarded}")
         print(
             "Spread v1 correction layer: "
             f"applied={correction_applied} "

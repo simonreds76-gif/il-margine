@@ -366,6 +366,10 @@ def _load_spread_v1_calibration_status(path: Path) -> dict[str, Any]:
         status["reason"] = f"correction:{status['correction_reason']}"
         return status
 
+    if not status["base_calibration_valid"] and not env_bool(os.environ.get("SPREAD_V1_ENABLE_CORRECTION_ONLY"), False):
+        status["reason"] = f"base-calibration:{status['base_calibration_reason']}"
+        return status
+
     status["valid"] = True
     status["reason"] = "ok" if status["base_calibration_valid"] else "ok-correction-only"
     return status
