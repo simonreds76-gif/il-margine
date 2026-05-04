@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-05-04T16:30:00Z",
       "home_team": "Cremonese",
       "away_team": "Lazio",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-4-2",
       "away_formation": "4-3-3",
       "home_players": [
@@ -20,25 +20,25 @@
         "Federico Baschirotto",
         "Sebastiano Luperto",
         "Giuseppe Pezzella",
-        "Tommaso Barbieri",
-        "Morten Thorsby",
+        "Romano Floriani Mussolini",
         "Youssef Maleh",
-        "Jari Vandeputte",
-        "Antonio Sanabria",
-        "Federico Bonazzoli"
+        "Alberto Grassi",
+        "Alessio Zerbin",
+        "Federico Bonazzoli",
+        "Antonio Sanabria"
       ],
       "away_players": [
         "Edoardo Motta",
         "Adam Marusic",
-        "Alessio Romagnoli",
         "Oliver Provstgaard",
+        "Alessio Romagnoli",
         "Nuno Tavares",
         "Toma Basic",
         "Patric",
-        "Fisayo Dele-Bashiru",
+        "Kenneth Taylor",
         "Gustav Isaksen",
         "Daniel Maldini",
-        "Tijjani Noslin"
+        "Mattia Zaccagni"
       ],
       "home_starters": [
         {
@@ -87,7 +87,7 @@
           "position_id": 38
         },
         {
-          "name": "Tommaso Barbieri",
+          "name": "Romano Floriani Mussolini",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -96,7 +96,7 @@
           "position_id": 72
         },
         {
-          "name": "Morten Thorsby",
+          "name": "Youssef Maleh",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -105,7 +105,7 @@
           "position_id": 74
         },
         {
-          "name": "Youssef Maleh",
+          "name": "Alberto Grassi",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -114,7 +114,7 @@
           "position_id": 76
         },
         {
-          "name": "Jari Vandeputte",
+          "name": "Alessio Zerbin",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -123,7 +123,7 @@
           "position_id": 78
         },
         {
-          "name": "Antonio Sanabria",
+          "name": "Federico Bonazzoli",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -132,7 +132,7 @@
           "position_id": 104
         },
         {
-          "name": "Federico Bonazzoli",
+          "name": "Antonio Sanabria",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -161,7 +161,7 @@
           "position_id": 32
         },
         {
-          "name": "Alessio Romagnoli",
+          "name": "Oliver Provstgaard",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -170,7 +170,7 @@
           "position_id": 34
         },
         {
-          "name": "Oliver Provstgaard",
+          "name": "Alessio Romagnoli",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -206,7 +206,7 @@
           "position_id": 75
         },
         {
-          "name": "Fisayo Dele-Bashiru",
+          "name": "Kenneth Taylor",
           "line_index": 1,
           "line_size": 3,
           "role_score": 3,
@@ -233,7 +233,7 @@
           "position_id": 105
         },
         {
-          "name": "Tijjani Noslin",
+          "name": "Mattia Zaccagni",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -242,8 +242,36 @@
           "position_id": 107
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Lapo Nava",
+        "Marco Silvestri",
+        "Federico Ceccherini",
+        "Francesco Folino",
+        "Matteo Bianchetti",
+        "Mikayil Faye",
+        "Martín Payero",
+        "Michele Collocolo",
+        "Morten Thorsby",
+        "Tommaso Barbieri",
+        "Warren Bondo",
+        "David Okereke",
+        "Jamie Vardy",
+        "Milan Djuric"
+      ],
+      "away_subs": [
+        "Giacomo Giacomone",
+        "Nicolo Pannozzo",
+        "Luca Pellegrini",
+        "Manuel Lazzari",
+        "Adrian Przyborek",
+        "Fisayo Dele-Bashiru",
+        "Nicolò Rovella",
+        "Reda Belahyane",
+        "Boulaye Dia",
+        "Pedro",
+        "Petar Ratkov",
+        "Tijjani Noslin"
+      ],
       "home_unavailable": [
         "Faris Moumbagna"
       ],
