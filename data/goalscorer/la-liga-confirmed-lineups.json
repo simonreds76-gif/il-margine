@@ -9,9 +9,9 @@
       "kickoff_utc": "2026-05-04T19:00:00Z",
       "home_team": "Sevilla",
       "away_team": "Real Sociedad",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-4-2",
       "away_formation": "4-4-2",
       "home_players": [
@@ -19,13 +19,13 @@
         "José Ángel Carmona",
         "Andrés Lopez",
         "Kike Salas",
-        "César Azpilicueta",
+        "Gabriel Suazo",
         "Rubén Vargas",
         "Lucien Agoumé",
-        "Joan Jordán",
-        "Oso",
-        "Neal Maupay",
-        "Isaac Romero"
+        "Nemanja Gudelj",
+        "Chidera Ejuke",
+        "Isaac Romero",
+        "Neal Maupay"
       ],
       "away_players": [
         "Alex Remiro",
@@ -33,12 +33,12 @@
         "Jon Martín",
         "Duje Caleta-Car",
         "Sergio Gómez",
-        "Takefusa Kubo",
-        "Carlos Soler",
-        "Beñat Turrientes",
         "Ander Barrenetxea",
-        "Orri Óskarsson",
-        "Mikel Oyarzabal"
+        "Jon Gorrotxategi",
+        "Beñat Turrientes",
+        "Pablo Marín",
+        "Mikel Oyarzabal",
+        "Carlos Soler"
       ],
       "home_starters": [
         {
@@ -78,7 +78,7 @@
           "position_id": 36
         },
         {
-          "name": "César Azpilicueta",
+          "name": "Gabriel Suazo",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -105,7 +105,7 @@
           "position_id": 74
         },
         {
-          "name": "Joan Jordán",
+          "name": "Nemanja Gudelj",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -114,7 +114,7 @@
           "position_id": 76
         },
         {
-          "name": "Oso",
+          "name": "Chidera Ejuke",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -123,7 +123,7 @@
           "position_id": 78
         },
         {
-          "name": "Neal Maupay",
+          "name": "Isaac Romero",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -132,7 +132,7 @@
           "position_id": 104
         },
         {
-          "name": "Isaac Romero",
+          "name": "Neal Maupay",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -188,7 +188,7 @@
           "position_id": 38
         },
         {
-          "name": "Takefusa Kubo",
+          "name": "Ander Barrenetxea",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -197,7 +197,7 @@
           "position_id": 72
         },
         {
-          "name": "Carlos Soler",
+          "name": "Jon Gorrotxategi",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -215,7 +215,7 @@
           "position_id": 76
         },
         {
-          "name": "Ander Barrenetxea",
+          "name": "Pablo Marín",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -224,7 +224,7 @@
           "position_id": 78
         },
         {
-          "name": "Orri Óskarsson",
+          "name": "Mikel Oyarzabal",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -233,7 +233,7 @@
           "position_id": 104
         },
         {
-          "name": "Mikel Oyarzabal",
+          "name": "Carlos Soler",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -242,8 +242,33 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Ørjan Håskjold Nyland",
+        "César Azpilicueta",
+        "Juanlu Sánchez",
+        "Oso",
+        "Tanguy Nianzou",
+        "Batista Mendy",
+        "Peque Fernández",
+        "Joan Jordán",
+        "Nico Guillen",
+        "Adnan Januzaj",
+        "Akor Adams",
+        "Alexis Sánchez"
+      ],
+      "away_subs": [
+        "Aitor Fraga",
+        "Unai Marrero",
+        "Aihen Muñoz",
+        "Aritz Elustondo",
+        "Brais Méndez",
+        "Luka Sucic",
+        "Wesley",
+        "Yangel Herrera",
+        "Arsen Zakharyan",
+        "Orri Óskarsson",
+        "Takefusa Kubo"
+      ],
       "home_unavailable": [
         "Marcão",
         "Djibril Sow"
