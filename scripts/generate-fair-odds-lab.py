@@ -49,6 +49,26 @@ DEFAULT_LINEUP_FIXTURES = [
     Path("data/goalscorer/ligue-1-confirmed-lineups.json"),
 ]
 
+PUBLIC_EDGE_THRESHOLD_PP = 5.0
+PUBLIC_MAX_SIGNALS = 10
+PUBLIC_MIN_MODEL_PROB_PCT = 18.0
+PUBLIC_MAX_MARKET_ODDS = 8.0
+PUBLIC_OFFICIAL_LINEUP_WINDOW_MINUTES = 70
+DEFENSIVE_POSITION_TOKENS = {
+    "GK",
+    "D",
+    "DC",
+    "DEF",
+    "CB",
+    "LB",
+    "RB",
+    "LWB",
+    "RWB",
+    "DL",
+    "DR",
+    "FB",
+}
+
 TEAM_COLOR_PALETTE = [
     ("#1d4ed8", "#b91c1c"),
     ("#7f1d1d", "#38bdf8"),
@@ -223,8 +243,16 @@ def parse_args() -> argparse.Namespace:
         help="Confirmed/expected lineup JSON files used to enrich signals with FotMob ids and kickoff UTC. Defaults to all goalscorer lineup files.",
     )
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
-    parser.add_argument("--edge-threshold-pp", type=float, default=0.0)
-    parser.add_argument("--max-signals", type=int, default=36)
+    parser.add_argument("--edge-threshold-pp", type=float, default=PUBLIC_EDGE_THRESHOLD_PP)
+    parser.add_argument("--max-signals", type=int, default=PUBLIC_MAX_SIGNALS)
+    parser.add_argument("--min-model-prob-pct", type=float, default=PUBLIC_MIN_MODEL_PROB_PCT)
+    parser.add_argument("--max-market-odds", type=float, default=PUBLIC_MAX_MARKET_ODDS)
+    parser.add_argument(
+        "--official-lineup-window-minutes",
+        type=int,
+        default=PUBLIC_OFFICIAL_LINEUP_WINDOW_MINUTES,
+        help="Require confirmed starters inside this many minutes before kickoff. Use 0 to disable.",
+    )
     parser.add_argument(
         "--today",
         help="London date override, YYYY-MM-DD. Defaults to today's London date.",
@@ -282,6 +310,12 @@ def canonical_team_key(value: Any | None) -> str:
     aliased = TEAM_NAME_ALIASES.get(normalized, normalized)
     simplified = re.sub(r"\s+", " ", simplify_club_key(aliased)).strip()
     return TEAM_NAME_ALIASES.get(simplified, simplified)
+
+
+def canonical_person_key(value: Any | None) -> str:
+    normalized = normalize_logo_key(value)
+    normalized = re.sub(r"\b(?:jr|junior|sr|ii|iii|iv)\b", " ", normalized)
+    return re.sub(r"\s+", " ", normalized).strip()
 
 
 def load_logo_manifest(path: Path) -> dict[str, Any]:
@@ -373,6 +407,38 @@ def load_lineup_fixture_lookup(paths: list[Path]) -> dict[tuple[str, str, str, s
     return lookup
 
 
+def is_confirmed_lineup_type(value: Any | None) -> bool:
+    return clean_text(value).lower() in {"confirmed", "standard", "confirmed xi", "confirmed_lineup"}
+
+
+def lineup_player_keys(fixture: dict[str, Any], side: str) -> set[str]:
+    keys: set[str] = set()
+    for field in (f"{side}_starters", f"{side}_players"):
+        players = fixture.get(field)
+        if not isinstance(players, list):
+            continue
+        for player in players:
+            if isinstance(player, dict):
+                key = canonical_person_key(player.get("name"))
+            else:
+                key = canonical_person_key(player)
+            if key:
+                keys.add(key)
+    return keys
+
+
+def fixture_side_for_row(row: dict[str, Any], fixture: dict[str, Any]) -> str:
+    player_team = canonical_team_key(row.get("player_team") or row.get("team"))
+    if player_team and player_team == canonical_team_key(fixture.get("home_team")):
+        return "home"
+    if player_team and player_team == canonical_team_key(fixture.get("away_team")):
+        return "away"
+    row_home = canonical_team_key(row.get("home_team"))
+    if row_home and row_home == canonical_team_key(fixture.get("home_team")):
+        return "home"
+    return "away"
+
+
 def enrich_rows_with_lineups(
     rows: list[dict[str, Any]],
     lineup_lookup: dict[tuple[str, str, str, str], dict[str, Any]],
@@ -394,7 +460,22 @@ def enrich_rows_with_lineups(
                 copied["kickoff"] = clean_text(fixture.get("kickoff_utc"))
             copied["_fotmob_match_id"] = clean_text(fixture.get("fotmob_match_id"))
             copied["_fotmob_page_url"] = clean_text(fixture.get("fotmob_page_url"))
-            copied["_lineup_type"] = clean_text(fixture.get("lineup_type"))
+            lineup_type = clean_text(fixture.get("lineup_type")).lower()
+            copied["_lineup_type"] = lineup_type
+            lineup_is_confirmed = is_confirmed_lineup_type(lineup_type)
+
+            side = fixture_side_for_row(copied, fixture)
+            player_key = canonical_person_key(copied.get("canonical_player_name") or copied.get("player_name"))
+            starter_keys = lineup_player_keys(fixture, side)
+            matched_starter = bool(player_key and player_key in starter_keys)
+            if matched_starter:
+                copied["lineup_state"] = "starter"
+                copied["lineup_status"] = "confirmed" if lineup_is_confirmed else "projected xi"
+                copied["lineup_source"] = "confirmed_lineups" if lineup_is_confirmed else "expected_lineups"
+            elif lineup_is_confirmed and starter_keys:
+                copied["lineup_state"] = "bench"
+                copied["lineup_status"] = "confirmed"
+                copied["lineup_source"] = "confirmed_lineups"
         enriched.append(copied)
     return enriched
 
@@ -519,6 +600,32 @@ def lineup_label(row: dict[str, str]) -> str:
     if "bench" in state or "sub" in state:
         return "Bench risk"
     return "Lineup unknown"
+
+
+def position_label(row: dict[str, Any]) -> str:
+    return clean_text(row.get("today_position_group") or row.get("position_group") or row.get("position")).upper()
+
+
+def is_defensive_position(row: dict[str, Any]) -> bool:
+    text = position_label(row)
+    if not text:
+        return False
+    tokens = {token for token in re.split(r"[^A-Z0-9]+", text) if token}
+    return bool(tokens & DEFENSIVE_POSITION_TOKENS)
+
+
+def minutes_until_kickoff(row: dict[str, Any]) -> float | None:
+    kickoff_dt = kickoff_datetime_utc(row)
+    if kickoff_dt is None:
+        return None
+    return (kickoff_dt - datetime.now(timezone.utc)).total_seconds() / 60
+
+
+def official_lineup_required(row: dict[str, Any], window_minutes: int) -> bool:
+    if window_minutes <= 0:
+        return False
+    minutes = minutes_until_kickoff(row)
+    return minutes is not None and 0 <= minutes <= window_minutes
 
 
 def penalty_label(row: dict[str, str]) -> str:
@@ -761,7 +868,13 @@ def build_reasons(
     return reasons[:5]
 
 
-def is_public_quality_signal(candidate: Candidate) -> bool:
+def is_public_quality_signal(
+    candidate: Candidate,
+    *,
+    min_model_prob_pct: float,
+    max_market_odds: float,
+    official_lineup_window_minutes: int,
+) -> bool:
     lineup = lineup_label(candidate.row).lower()
     confidence = normalize_confidence(
         candidate.row.get("signal_confidence"),
@@ -775,7 +888,31 @@ def is_public_quality_signal(candidate: Candidate) -> bool:
         return False
     if candidate.expected_minutes is not None and candidate.expected_minutes < 70:
         return False
+    if candidate.model_prob_pct < min_model_prob_pct:
+        return False
+    if candidate.best_odds > max_market_odds:
+        return False
+    if is_defensive_position(candidate.row):
+        return False
+    if official_lineup_required(candidate.row, official_lineup_window_minutes) and "confirmed starter" not in lineup:
+        return False
     return True
+
+
+def public_signal_score(signal: dict[str, Any]) -> float:
+    confidence_rank = {"High": 3, "Medium": 2, "Low": 1}
+    metrics = signal.get("metrics", {})
+    lineup = clean_text(metrics.get("lineup_confidence"))
+    share = float(metrics.get("share_of_team_chances_pct") or 0)
+    best_odds = float(signal.get("market_data", {}).get("best_odds") or 0)
+    model_prob = float(signal.get("model", {}).get("scoring_chance_pct") or 0)
+    gap = float(signal.get("edge", {}).get("price_gap_pp") or 0)
+    score = model_prob + (gap * 1.6) + (share * 0.18)
+    score += confidence_rank.get(clean_text(signal.get("confidence_tier")), 0) * 4
+    if lineup == "Confirmed starter":
+        score += 5
+    score -= max(0.0, best_odds - 5.0) * 1.5
+    return score
 
 
 def build_signal(
@@ -832,7 +969,7 @@ def build_signal(
             "kickoff_display": display_kickoff(row),
             "fotmob_match_id": clean_text(row.get("_fotmob_match_id")),
             "fotmob_page_url": clean_text(row.get("_fotmob_page_url")),
-            "lineup_type": clean_text(row.get("_lineup_type")),
+            "lineup_type": "confirmed" if is_confirmed_lineup_type(row.get("_lineup_type")) else clean_text(row.get("_lineup_type")),
             "venue": "",
         },
         "player": {
@@ -912,7 +1049,12 @@ def main() -> None:
         for candidate in candidates
         if candidate.price_gap_pp >= args.edge_threshold_pp
         and candidate.best_odds > candidate.fair_odds
-        and is_public_quality_signal(candidate)
+        and is_public_quality_signal(
+            candidate,
+            min_model_prob_pct=args.min_model_prob_pct,
+            max_market_odds=args.max_market_odds,
+            official_lineup_window_minutes=args.official_lineup_window_minutes,
+        )
     ]
 
     signals = []
@@ -926,12 +1068,9 @@ def main() -> None:
         }
         signals.append(build_signal(candidate, percentiles, logo_manifest))
 
-    confidence_rank = {"High": 3, "Medium": 2, "Low": 1}
     signals.sort(
         key=lambda item: (
-            -item["edge"]["price_gap_pp"],
-            -confidence_rank.get(item["confidence_tier"], 0),
-            -item["model"]["scoring_chance_pct"],
+            -public_signal_score(item),
             item["match"].get("kickoff_utc") or item["match"].get("kickoff_display") or "",
         )
     )
@@ -945,6 +1084,13 @@ def main() -> None:
         "generated_at": datetime.now(tz=timezone.utc).isoformat().replace("+00:00", "Z"),
         "source_file": source_paths,
         "edge_threshold_pp": args.edge_threshold_pp,
+        "public_filters": {
+            "min_model_prob_pct": args.min_model_prob_pct,
+            "max_market_odds": args.max_market_odds,
+            "max_signals": args.max_signals,
+            "official_lineup_window_minutes": args.official_lineup_window_minutes,
+            "defensive_positions_hidden": sorted(DEFENSIVE_POSITION_TOKENS),
+        },
         "fixtures_evaluated": fixtures_evaluated,
         "signals_qualifying": len(signals),
         "leagues_covered": leagues_covered,
@@ -965,6 +1111,9 @@ def main() -> None:
     print(f"Fixtures evaluated: {fixtures_evaluated}")
     print(f"Signals qualifying: {len(signals)}")
     print(f"Edge threshold: +{args.edge_threshold_pp:.1f}pp")
+    print(f"Min model chance: {args.min_model_prob_pct:.1f}%")
+    print(f"Max market odds: {args.max_market_odds:.2f}")
+    print(f"Official lineup window: {args.official_lineup_window_minutes} minutes")
 
 
 if __name__ == "__main__":

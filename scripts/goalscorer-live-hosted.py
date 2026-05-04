@@ -270,7 +270,12 @@ def main() -> int:
 
     if ran_count > 0:
         snapshot_args = [sys.executable, str(ROOT / "scripts" / "goalscorer-live-snapshot.py")]
-        if os.environ.get("SUPABASE_SERVICE_ROLE_KEY") and os.environ.get("NEXT_PUBLIC_SUPABASE_URL"):
+        supabase_upload_enabled = os.environ.get("ENABLE_SUPABASE_SNAPSHOT_UPLOADS", "0").strip() == "1"
+        if (
+            supabase_upload_enabled
+            and os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
+            and os.environ.get("NEXT_PUBLIC_SUPABASE_URL")
+        ):
             snapshot_args.append("--supabase")
         snapshot_proc = run_cmd(snapshot_args)
         if snapshot_proc.returncode != 0:
