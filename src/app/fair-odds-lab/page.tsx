@@ -437,10 +437,7 @@ export default function FairOddsLabPage() {
           <div className="pointer-events-none absolute right-10 top-10 h-40 w-40 rounded-full border-[18px] border-emerald-300/[0.045]" />
           <div className="flex flex-wrap items-center gap-3">
             <span className="rounded-full border border-emerald-400/35 bg-emerald-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200">
-              Research preview
-            </span>
-            <span className="rounded-full border border-slate-700/55 bg-slate-900/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-              Not on official record
+              Il Margine Intelligence
             </span>
           </div>
 
