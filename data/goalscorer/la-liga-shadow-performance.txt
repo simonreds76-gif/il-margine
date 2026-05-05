@@ -1,32 +1,32 @@
 Goalscorer Shadow Performance
 =============================
 
-As of:                 2026-05-05T14:17:40Z
+As of:                 2026-05-05T19:25:52Z
 Signals file:          /home/runner/work/il-margine/il-margine/data/goalscorer/la-liga-shadow-signals.csv
 Clean evaluation start:2026-03-15
 
 All time
-  signals:    45
+  signals:    46
   settled:    45
-  unsettled:  0
+  unsettled:  1
   ROI:        -46.38%
   win rate:   11.11%
   P/L units:  -21.22
   Staked:     45.75
 
 Clean sample
-  signals:    45
+  signals:    46
   settled:    45
-  unsettled:  0
+  unsettled:  1
   ROI:        -46.38%
   win rate:   11.11%
   P/L units:  -21.22
   Staked:     45.75
 
 Last 7 days
-  signals:    13
+  signals:    14
   settled:    13
-  unsettled:  0
+  unsettled:  1
   ROI:        -92.45%
   win rate:   0.00%
   P/L units:  -12.25
@@ -34,4 +34,4 @@ Last 7 days
 
 By signal type (clean sample)
   penalty_transfer signals=  9 settled=  9 roi=+22.52% win_rate=22.22% pnl=+2.08u
-  shadow_track     signals= 36 settled= 36 roi=-63.84% win_rate=8.33% pnl=-23.30u
+  shadow_track     signals= 37 settled= 36 roi=-63.84% win_rate=8.33% pnl=-23.30u

@@ -1,3 +1,263 @@
 {
-  "fixtures": []
+  "fixtures": [
+    {
+      "fotmob_match_id": 4803397,
+      "fotmob_page_url": "/matches/sassuolo-vs-torino/2lrp7u#4803397",
+      "home_fotmob_team_id": 9804,
+      "away_fotmob_team_id": 7943,
+      "match_date": "2026-05-08",
+      "kickoff_utc": "2026-05-08T18:45:00Z",
+      "home_team": "Torino",
+      "away_team": "Sassuolo",
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-5-1-1",
+      "away_formation": "4-3-3",
+      "home_players": [
+        "Alberto Paleari",
+        "Luca Marianucci",
+        "Saúl Coco",
+        "Enzo Ebosse",
+        "Valentino Lazaro",
+        "Cesare Casadei",
+        "Emirhan Ilkhan",
+        "Gvidas Gineitis",
+        "Rafael Obrador",
+        "Nikola Vlasic",
+        "Giovanni Simeone"
+      ],
+      "away_players": [
+        "Stefano Turati",
+        "Sebastian Walukiewicz",
+        "Filippo Romagna",
+        "Tarik Muharemovic",
+        "Ulisses Garcia",
+        "Ismaël Koné",
+        "Nemanja Matic",
+        "Kristian Thorstvedt",
+        "Cristian Volpato",
+        "M'Bala Nzola",
+        "Armand Laurienté"
+      ],
+      "home_starters": [
+        {
+          "name": "Alberto Paleari",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-5-1-1",
+          "position_id": 11
+        },
+        {
+          "name": "Luca Marianucci",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-1-1",
+          "position_id": 33
+        },
+        {
+          "name": "Saúl Coco",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-1-1",
+          "position_id": 35
+        },
+        {
+          "name": "Enzo Ebosse",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-1-1",
+          "position_id": 37
+        },
+        {
+          "name": "Valentino Lazaro",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 71
+        },
+        {
+          "name": "Cesare Casadei",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 73
+        },
+        {
+          "name": "Emirhan Ilkhan",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 75
+        },
+        {
+          "name": "Gvidas Gineitis",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 77
+        },
+        {
+          "name": "Rafael Obrador",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-1-1",
+          "position_id": 79
+        },
+        {
+          "name": "Nikola Vlasic",
+          "line_index": 2,
+          "line_size": 1,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-5-1-1",
+          "position_id": 95
+        },
+        {
+          "name": "Giovanni Simeone",
+          "line_index": 3,
+          "line_size": 1,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-1-1",
+          "position_id": 115
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Stefano Turati",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-3-3",
+          "position_id": 11
+        },
+        {
+          "name": "Sebastian Walukiewicz",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 32
+        },
+        {
+          "name": "Filippo Romagna",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 34
+        },
+        {
+          "name": "Tarik Muharemovic",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 36
+        },
+        {
+          "name": "Ulisses Garcia",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 38
+        },
+        {
+          "name": "Ismaël Koné",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 73
+        },
+        {
+          "name": "Nemanja Matic",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 75
+        },
+        {
+          "name": "Kristian Thorstvedt",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 77
+        },
+        {
+          "name": "Cristian Volpato",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 103
+        },
+        {
+          "name": "M'Bala Nzola",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 105
+        },
+        {
+          "name": "Armand Laurienté",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 107
+        }
+      ],
+      "home_subs": [],
+      "away_subs": [],
+      "home_unavailable": [
+        "Ardian Ismajli",
+        "Tino Anjorin",
+        "Zakaria Aboukhlal",
+        "Ché Adams",
+        "Duván Zapata"
+      ],
+      "away_unavailable": [
+        "Edoardo Pieragnolo",
+        "Fali Candé",
+        "Daniel Boloca",
+        "Darryl Bakola",
+        "Alieu Fadera"
+      ]
+    }
+  ]
 }
