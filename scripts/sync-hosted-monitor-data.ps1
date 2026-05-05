@@ -116,6 +116,30 @@ $synced = 0
 $skipped = 0
 $backedUp = 0
 
+function Write-TextFileWithRetry {
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][string]$Content,
+        [Parameter(Mandatory = $true)][System.Text.Encoding]$Encoding,
+        [int]$Attempts = 8,
+        [int]$DelayMs = 250
+    )
+
+    for ($attempt = 1; $attempt -le $Attempts; $attempt++) {
+        try {
+            [System.IO.File]::WriteAllText($Path, $Content, $Encoding)
+            return
+        } catch [System.IO.IOException] {
+            if ($attempt -ge $Attempts) {
+                throw
+            }
+            $sleepMs = $DelayMs * $attempt
+            Write-Host "Retry locked file write ($attempt/$Attempts): $Path"
+            Start-Sleep -Milliseconds $sleepMs
+        }
+    }
+}
+
 foreach ($relativePath in $files) {
     $blobSpec = "${RemoteRef}:$relativePath"
     $content = git show $blobSpec 2>$null
@@ -138,7 +162,7 @@ foreach ($relativePath in $files) {
         New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
     }
 
-    [System.IO.File]::WriteAllText($targetPath, (($content -join "`n") + "`n"), $utf8NoBom)
+    Write-TextFileWithRetry -Path $targetPath -Content (($content -join "`n") + "`n") -Encoding $utf8NoBom
     Write-Host "Synced: $relativePath"
     $synced += 1
 }
