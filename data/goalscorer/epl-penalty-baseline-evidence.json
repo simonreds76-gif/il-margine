@@ -1,9 +1,57 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-04T00:13:05Z",
+  "generated_at": "2026-05-05T01:31:53Z",
   "league": "epl",
-  "row_count": 1,
+  "row_count": 5,
   "rows": [
+    {
+      "team": "Bournemouth",
+      "team_key": "bournemouth",
+      "player_name": "Eli Junior Kroupi",
+      "player_key": "eli junior kroupi",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-03"
+    },
+    {
+      "team": "Brentford",
+      "team_key": "brentford",
+      "player_name": "Thiago",
+      "player_key": "thiago",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-02"
+    },
+    {
+      "team": "Chelsea",
+      "team_key": "chelsea",
+      "player_name": "Cole Palmer",
+      "player_key": "cole palmer",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-04"
+    },
     {
       "team": "Leeds",
       "team_key": "leeds",
@@ -19,6 +67,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-04-18"
+    },
+    {
+      "team": "Nottingham Forest",
+      "team_key": "nottingham forest",
+      "player_name": "Igor Jesus",
+      "player_key": "igor jesus",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-04"
     }
   ]
 }
