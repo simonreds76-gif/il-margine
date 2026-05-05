@@ -6,7 +6,23 @@ param(
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
+$repoRootItem = Get-Item -LiteralPath $repoRoot -Force
+if ($repoRootItem.LinkType -eq "Junction" -and $repoRootItem.Target) {
+    $repoRoot = [string]@($repoRootItem.Target)[0]
+}
 Set-Location $repoRoot
+
+function Invoke-Native {
+    param(
+        [string]$FilePath,
+        [string[]]$Arguments
+    )
+
+    & $FilePath @Arguments
+    if ($LASTEXITCODE -ne 0) {
+        throw "Command failed with exit code ${LASTEXITCODE}: $FilePath $($Arguments -join ' ')"
+    }
+}
 
 function Resolve-Python {
     $candidates = @(
@@ -54,7 +70,7 @@ if ((Test-Path -LiteralPath $venvFullPath) -and $Force) {
 
 if (-not (Test-Path -LiteralPath $venvFullPath)) {
     Write-Host "Creating venv: $venvFullPath"
-    & $python.Command @($python.Args + @("-m", "venv", $venvFullPath))
+    Invoke-Native $python.Command @($python.Args + @("-m", "venv", $venvFullPath))
 }
 
 $venvPython = Join-Path $venvFullPath "Scripts\python.exe"
@@ -62,9 +78,9 @@ if (-not (Test-Path -LiteralPath $venvPython)) {
     throw "Venv Python not found: $venvPython"
 }
 
-& $venvPython -m pip install --upgrade pip
-& $venvPython -m pip install -r (Join-Path $repoRoot "scripts\requirements.txt")
-& $venvPython -m pip check
+Invoke-Native $venvPython @("-m", "pip", "install", "--upgrade", "pip")
+Invoke-Native $venvPython @("-m", "pip", "install", "-r", (Join-Path $repoRoot "scripts\requirements.txt"))
+Invoke-Native $venvPython @("-m", "pip", "check")
 
 Write-Host ""
 Write-Host "Python environment ready."
