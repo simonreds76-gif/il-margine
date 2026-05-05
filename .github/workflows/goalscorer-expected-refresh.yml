@@ -117,7 +117,9 @@ jobs:
           done
 
       - name: Build goalscorer monitor snapshot
-        run: python scripts/build-goalscorer-monitor-snapshot.py
+        run: |
+          python scripts/build-goalscorer-monitor-snapshot.py
+          python scripts/generate-fair-odds-lab.py
 
       - name: Upload goalscorer monitor snapshot
         env:
@@ -127,7 +129,7 @@ jobs:
           if [ "${ENABLE_SUPABASE_SNAPSHOT_UPLOADS:-0}" = "1" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
             python scripts/build-goalscorer-monitor-snapshot.py --supabase
           else
-            echo "Supabase snapshot upload disabled or key missing; skipping monitor snapshot upload."
+            echo "::warning::Supabase snapshot upload disabled or key missing; skipping monitor snapshot upload."
           fi
 
       - name: Upload hosted snapshot
@@ -138,7 +140,7 @@ jobs:
           if [ "${ENABLE_SUPABASE_SNAPSHOT_UPLOADS:-0}" = "1" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
             python scripts/goalscorer-live-snapshot.py --supabase
           else
-            echo "Supabase snapshot upload disabled or key missing; skipping hosted snapshot upload."
+            echo "::warning::Supabase snapshot upload disabled or key missing; skipping hosted snapshot upload."
           fi
 
       - name: Commit and push if new data
@@ -148,6 +150,9 @@ jobs:
           if [ -d data/goalscorer ]; then
             git add -f data/goalscorer/
             git add -u data/goalscorer || true
+          fi
+          if [ -d public/fair-odds-lab ]; then
+            git add -f public/fair-odds-lab/
           fi
           if git diff --cached --quiet; then
             echo "No goalscorer refresh changes to commit."

@@ -1,8 +1,6 @@
 name: Goalscorer Hot Live Poll
 
 on:
-  schedule:
-    - cron: "*/10 8-23 * * *"
   workflow_dispatch:
     inputs:
       reason:
@@ -59,7 +57,9 @@ jobs:
         run: python scripts/goalscorer-live-hosted.py
 
       - name: Build goalscorer monitor snapshot
-        run: python scripts/build-goalscorer-monitor-snapshot.py
+        run: |
+          python scripts/build-goalscorer-monitor-snapshot.py
+          python scripts/generate-fair-odds-lab.py
 
       - name: Upload goalscorer monitor snapshot
         env:
@@ -69,7 +69,7 @@ jobs:
           if [ "${ENABLE_SUPABASE_SNAPSHOT_UPLOADS:-0}" = "1" ] && [ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
             python scripts/build-goalscorer-monitor-snapshot.py --supabase
           else
-            echo "Supabase snapshot upload disabled or key missing; skipping monitor snapshot upload."
+            echo "::warning::Supabase snapshot upload disabled or key missing; skipping monitor snapshot upload."
           fi
 
       - name: Commit and push if new data
@@ -79,6 +79,9 @@ jobs:
           if [ -d data/goalscorer ]; then
             git add -f data/goalscorer/
             git add -u data/goalscorer || true
+          fi
+          if [ -d public/fair-odds-lab ]; then
+            git add -f public/fair-odds-lab/
           fi
           if git diff --cached --quiet; then
             echo "No goalscorer live changes to commit."
