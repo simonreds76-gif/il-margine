@@ -170,7 +170,7 @@ type PredictionsSummary = {
   recent_predictions?: CsvRow[];
 };
 
-const CURRENT_POLICY = "venue-consensus-v1";
+const CURRENT_POLICY = "venue-consensus-v2";
 const LEGACY_POLICY = "legacy";
 
 function policyVersion(row: CsvRow): string {

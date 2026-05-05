@@ -290,9 +290,9 @@ try {
     $currentStep = "corners-shortlist"
     Write-Status -State "running" -Message "Generating corners shortlist" -Artifacts (Build-ArtifactsState)
     Log "Step 1f: Generating official V3 shortlist from Pinnacle corners snapshot..."
-    $shortlistArgs = @("scripts/matchday-shortlist.py", "--policy", "V3", "--odds-source", "pinnacle", "--all-leagues", "--min-edge", $MinEdge, "--days-ahead", $DaysAhead, "--regions", $Regions, "--pinnacle-csv", $pinnacleSnapshotPath)
+    $shortlistArgs = @("scripts/matchday-shortlist.py", "--policy", "V3", "--odds-source", "pinnacle", "--all-leagues", "--side", "over", "--min-edge", $MinEdge, "--days-ahead", $DaysAhead, "--regions", $Regions, "--pinnacle-csv", $pinnacleSnapshotPath)
     if ($LeaguesOnly) {
-        $shortlistArgs = @("scripts/matchday-shortlist.py", "--policy", "V3", "--odds-source", "pinnacle", "--league", $LeaguesOnly.Split(",")[0], "--min-edge", $MinEdge, "--days-ahead", $DaysAhead, "--regions", $Regions, "--pinnacle-csv", $pinnacleSnapshotPath)
+        $shortlistArgs = @("scripts/matchday-shortlist.py", "--policy", "V3", "--odds-source", "pinnacle", "--league", $LeaguesOnly.Split(",")[0], "--side", "over", "--min-edge", $MinEdge, "--days-ahead", $DaysAhead, "--regions", $Regions, "--pinnacle-csv", $pinnacleSnapshotPath)
     }
     $shortlistResult = & python @shortlistArgs 2>&1
     $betsLine = ($shortlistResult | Select-String "Total bets:" | Select-Object -Last 1)
@@ -304,9 +304,9 @@ try {
 
     Write-Status -State "running" -Message "Generating corners V3.1 shadow shortlist" -Artifacts (Build-ArtifactsState)
     Log "Step 1g: Generating V3.1 shadow shortlist from Pinnacle corners snapshot..."
-    $shadowShortlistArgs = @("scripts/matchday-shortlist.py", "--policy", "V3.1", "--artifact-suffix", "v31", "--odds-source", "pinnacle", "--all-leagues", "--days-ahead", $DaysAhead, "--regions", $Regions, "--pinnacle-csv", $pinnacleSnapshotPath)
+    $shadowShortlistArgs = @("scripts/matchday-shortlist.py", "--policy", "V3.1", "--artifact-suffix", "v31", "--odds-source", "pinnacle", "--all-leagues", "--side", "over", "--days-ahead", $DaysAhead, "--regions", $Regions, "--pinnacle-csv", $pinnacleSnapshotPath)
     if ($LeaguesOnly) {
-        $shadowShortlistArgs = @("scripts/matchday-shortlist.py", "--policy", "V3.1", "--artifact-suffix", "v31", "--odds-source", "pinnacle", "--league", $LeaguesOnly.Split(",")[0], "--days-ahead", $DaysAhead, "--regions", $Regions, "--pinnacle-csv", $pinnacleSnapshotPath)
+        $shadowShortlistArgs = @("scripts/matchday-shortlist.py", "--policy", "V3.1", "--artifact-suffix", "v31", "--odds-source", "pinnacle", "--league", $LeaguesOnly.Split(",")[0], "--side", "over", "--days-ahead", $DaysAhead, "--regions", $Regions, "--pinnacle-csv", $pinnacleSnapshotPath)
     }
     $shadowShortlistResult = & python @shadowShortlistArgs 2>&1
     $shadowBetsLine = ($shadowShortlistResult | Select-String "Total bets:" | Select-Object -Last 1)

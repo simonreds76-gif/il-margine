@@ -44,6 +44,7 @@ TEAM_MODEL = "canonical_form_v3_ema20_nb"
 TEAM_MIN_EDGE = 0.05
 CORNERS_MODEL = "canonical_form_v0"
 CORNERS_MIN_EDGE = 0.05
+CORNERS_ALLOWED_SIDES = {"over"}
 MAX_PICKS_PER_FIXTURE = 1
 
 PUBLISHED_FIELDS = [
@@ -634,6 +635,8 @@ def publish_corners(args: argparse.Namespace, by_team, by_league, now: datetime)
             continue
         prob_over = BACKTEST.poisson_prob_over(line, total_lam)
         side = row.get("side", "").strip().lower()
+        if side not in CORNERS_ALLOWED_SIDES:
+            continue
         model_prob = prob_over if side == "over" else 1.0 - prob_over
         edge = (model_prob * row["odds"]) - 1.0
         if edge < args.corners_min_edge:
