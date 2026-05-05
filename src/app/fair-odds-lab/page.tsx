@@ -371,16 +371,17 @@ function probabilityGap(signal: Signal) {
 }
 
 function formatRefreshed(value: string | null) {
-  if (!value) return "Awaiting refresh";
+  if (!value) return "Waiting";
   const timestamp = Date.parse(value);
   if (!Number.isFinite(timestamp)) return "Latest artifact";
-  return new Intl.DateTimeFormat("en-GB", {
+  const label = new Intl.DateTimeFormat("en-GB", {
     day: "2-digit",
     month: "short",
     hour: "2-digit",
     minute: "2-digit",
     timeZone: "Europe/London",
   }).format(timestamp);
+  return `${label} UK`;
 }
 
 function EmptySignalsState({ artifact }: { artifact: LabArtifact }) {
@@ -398,16 +399,13 @@ function EmptySignalsState({ artifact }: { artifact: LabArtifact }) {
         </svg>
       </div>
       <h2 className="mt-5 text-2xl font-black tracking-tight text-slate-50">
-        No qualifying value signals right now
+        No live value spots right now
       </h2>
       <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-slate-400">
-        The model evaluated {artifact.fixturesEvaluated} fixture
-        {artifact.fixturesEvaluated === 1 ? "" : "s"}.{" "}
-        {artifact.edgeThresholdPp > 0
-          ? `None currently meet the +${artifact.edgeThresholdPp.toFixed(1)}pp price-gap threshold.`
-          : "None currently show a positive model-vs-market price gap."}{" "}
-        That means the lab is deliberately quiet rather than showing stale or
-        forced picks. Check back closer to kickoff, when confirmed teams land.
+        The latest board does not have a confirmed-starter goalscorer price
+        strong enough to show. That is intentional: if the edge is not clear,
+        the lab stays quiet instead of filling the page with weak picks. Check
+        again closer to kickoff, when teams and prices are sharper.
       </p>
     </section>
   );
@@ -425,7 +423,8 @@ export default function FairOddsLabPage() {
   const exampleProbabilityGap = probabilityGap(exampleSignal);
   const leagueCount =
     artifact.leaguesCovered.length || new Set(signals.map((signal) => signal.competition)).size;
-  const topSignalLabel = featured ? featured.player : "None live";
+  const boardStatus = featured ? featured.player : "Quiet board";
+  const coverageLabel = leagueCount > 0 ? leagueCount.toString() : "Waiting";
   const refreshedLabel = formatRefreshed(artifact.generatedAt);
 
   return (
@@ -460,10 +459,10 @@ export default function FairOddsLabPage() {
 
           <div className="relative mt-8 grid gap-0 overflow-hidden rounded-2xl border border-slate-700/55 bg-slate-950/70 sm:grid-cols-4">
             {[
-              ["Top value signal", topSignalLabel],
-              ["Signals live", signals.length.toString()],
-              ["Leagues watched", leagueCount.toString()],
-              ["Last refreshed", refreshedLabel],
+              ["Board status", boardStatus],
+              ["Live value spots", signals.length.toString()],
+              ["Leagues active", coverageLabel],
+              ["Updated", refreshedLabel],
             ].map(([label, value], index) => (
               <div
                 key={label}
@@ -483,9 +482,9 @@ export default function FairOddsLabPage() {
         </section>
 
         <section className="mt-5 rounded-2xl border border-amber-400/25 bg-amber-400/[0.08] px-4 py-3 text-sm leading-6 text-amber-100 sm:px-5">
-          Research signals only. These are not official Il Margine tracked bets
-          and are not part of the paid record. They show confirmed-starter value
-          spots where the model thinks the market price may be too big.
+          Research board only. These are model-led value spots, not official
+          tracked picks. We show confirmed starters before kickoff only when the
+          market price is clearly bigger than our fair price.
         </section>
 
         <section className="mt-5">
@@ -517,28 +516,6 @@ export default function FairOddsLabPage() {
           />
         ) : null}
 
-        <footer className="mt-10 rounded-2xl border border-slate-700/45 bg-slate-950/55 p-5 text-sm leading-6 text-slate-400">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <span>
-              Last refreshed: {artifact.generatedAt ? artifact.generatedAt : "static mock preview"}
-            </span>
-            <span>{signals.length} signals shown</span>
-          </div>
-          <p className="mt-3 border-t border-slate-800/80 pt-3">
-            This page shows research signals, not tracked picks. We do not
-            claim a goalscorer record here; if this model joins the official
-            lane, settled results will appear on the Track Record page. 18+.
-            Please gamble responsibly. Support is available through{" "}
-            <a className="text-emerald-200 underline-offset-4 hover:underline" href="https://www.begambleaware.org/" target="_blank" rel="noopener noreferrer">
-              BeGambleAware
-            </a>{" "}
-            and{" "}
-            <a className="text-emerald-200 underline-offset-4 hover:underline" href="https://www.gamcare.org.uk/" target="_blank" rel="noopener noreferrer">
-              GamCare
-            </a>
-            .
-          </p>
-        </footer>
       </div>
     </main>
   );
