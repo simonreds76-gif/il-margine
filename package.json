@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
+    "dev": "node scripts/dev-with-hosted-sync.mjs",
+    "dev:next": "next dev --webpack",
     "dev:turbo": "next dev",
     "daily-odds": "python scripts/run-daily-odds.py",
     "build": "next build && node scripts/check-vercel-trace.mjs",

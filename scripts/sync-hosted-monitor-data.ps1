@@ -63,7 +63,11 @@ $cornersFiles = @(
 
 $settlementFiles = @(
     "data/results-snapshot/latest.json",
+    "data/football-form/team-shots-v3-ema20-clv-monitor.csv",
+    "data/football-form/team-shots-v3-ema20-clv-monitor.md",
     "data/football-form/team-shots-v3-ema20-settlement-audit.json",
+    "data/football-form/corners-v0-clv-monitor.csv",
+    "data/football-form/corners-v0-clv-monitor.md",
     "data/football-form/corners-v0-settlement-audit.json",
     "data/team-shots/team-shots-live-snapshot.json",
     "data/corners-ou/corners-live-snapshot.json",
