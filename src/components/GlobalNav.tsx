@@ -12,7 +12,7 @@ export default function GlobalNav() {
   const showMonitorLink =
     process.env.NODE_ENV !== "production" ||
     process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
-  const showGoalscorerLink =
+  const showFairOddsLabLink =
     process.env.NODE_ENV !== "production" ||
     process.env.NEXT_PUBLIC_ENABLE_GOALSCORER_PAGE === "1";
   const mobileMenuOpen = mobileMenuPath === pathname;
@@ -74,8 +74,8 @@ export default function GlobalNav() {
             </div>
             <Link href="/the-edge" className={linkClass(pathname === "/the-edge")}>The Edge</Link>
             <Link href="/penalty-takers" className={linkClass(pathname === "/penalty-takers")}>Penalty Takers</Link>
-            {showGoalscorerLink ? (
-              <Link href="/anytime-goalscorer" className={linkClass(pathname === "/anytime-goalscorer")}>Goalscorer Model</Link>
+            {showFairOddsLabLink ? (
+              <Link href="/fair-odds-lab" className={linkClass(pathname === "/fair-odds-lab")}>Fair Odds Lab</Link>
             ) : null}
             <Link href="/track-record" className={linkClass(pathname === "/track-record")}>Track Record</Link>
             {showMonitorLink ? <Link href="/model-monitor" className={linkClass(pathname === "/model-monitor")}>Monitor</Link> : null}
@@ -118,9 +118,9 @@ export default function GlobalNav() {
             <Link href="/penalty-takers" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/penalty-takers" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
               Penalty Takers
             </Link>
-            {showGoalscorerLink ? (
-              <Link href="/anytime-goalscorer" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/anytime-goalscorer" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
-                Goalscorer Model
+            {showFairOddsLabLink ? (
+              <Link href="/fair-odds-lab" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/fair-odds-lab" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
+                Fair Odds Lab
               </Link>
             ) : null}
             <Link href="/track-record" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/track-record" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
