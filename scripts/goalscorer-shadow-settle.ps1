@@ -58,6 +58,22 @@ $publicSummaries = @{
     "ligue-1" = "data\goalscorer\ligue-1-public-performance.txt"
 }
 
+$fairOddsLabOutputs = @{
+    "serie-a" = "data\goalscorer\fair-odds-lab-serie-a-signals.csv"
+    "epl" = "data\goalscorer\fair-odds-lab-epl-signals.csv"
+    "la-liga" = "data\goalscorer\fair-odds-lab-la-liga-signals.csv"
+    "bundesliga" = "data\goalscorer\fair-odds-lab-bundesliga-signals.csv"
+    "ligue-1" = "data\goalscorer\fair-odds-lab-ligue-1-signals.csv"
+}
+
+$fairOddsLabSummaries = @{
+    "serie-a" = "data\goalscorer\fair-odds-lab-serie-a-performance.txt"
+    "epl" = "data\goalscorer\fair-odds-lab-epl-performance.txt"
+    "la-liga" = "data\goalscorer\fair-odds-lab-la-liga-performance.txt"
+    "bundesliga" = "data\goalscorer\fair-odds-lab-bundesliga-performance.txt"
+    "ligue-1" = "data\goalscorer\fair-odds-lab-ligue-1-performance.txt"
+}
+
 $penaltyContextCurrent = @{
     "serie-a" = "data\goalscorer\penalty-duty-context.json"
     "epl" = "data\goalscorer\epl\penalty-duty-context.json"
@@ -228,6 +244,16 @@ try {
             --summary $publicSummaries[$league] 2>&1 | ForEach-Object { Log $_ }
         if ($LASTEXITCODE -ne 0) {
             Log "ERROR: FotMob public settlement failed for $league (exit $LASTEXITCODE)"
+            exit 1
+        }
+
+        Log "---- Settle league: $league (Fair Odds Lab exposure) ----"
+        & $pythonExe scripts\goalscorer-settle.py `
+            --league $league `
+            --signals $fairOddsLabOutputs[$league] `
+            --summary $fairOddsLabSummaries[$league] 2>&1 | ForEach-Object { Log $_ }
+        if ($LASTEXITCODE -ne 0) {
+            Log "ERROR: Fair Odds Lab exposure settlement failed for $league (exit $LASTEXITCODE)"
             exit 1
         }
 

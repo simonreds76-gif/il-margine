@@ -143,6 +143,20 @@ jobs:
             [bundesliga]="data/goalscorer/bundesliga-public-performance.txt"
             [ligue-1]="data/goalscorer/ligue-1-public-performance.txt"
           )
+          declare -A FAIR_ODDS_LAB_OUTPUTS=(
+            [serie-a]="data/goalscorer/fair-odds-lab-serie-a-signals.csv"
+            [epl]="data/goalscorer/fair-odds-lab-epl-signals.csv"
+            [la-liga]="data/goalscorer/fair-odds-lab-la-liga-signals.csv"
+            [bundesliga]="data/goalscorer/fair-odds-lab-bundesliga-signals.csv"
+            [ligue-1]="data/goalscorer/fair-odds-lab-ligue-1-signals.csv"
+          )
+          declare -A FAIR_ODDS_LAB_SUMMARIES=(
+            [serie-a]="data/goalscorer/fair-odds-lab-serie-a-performance.txt"
+            [epl]="data/goalscorer/fair-odds-lab-epl-performance.txt"
+            [la-liga]="data/goalscorer/fair-odds-lab-la-liga-performance.txt"
+            [bundesliga]="data/goalscorer/fair-odds-lab-bundesliga-performance.txt"
+            [ligue-1]="data/goalscorer/fair-odds-lab-ligue-1-performance.txt"
+          )
 
           for league in serie-a epl la-liga bundesliga ligue-1; do
             echo "---- Settle league: ${league} (shadow)"
@@ -156,6 +170,12 @@ jobs:
               --league "${league}" \
               --signals "${PUBLIC_OUTPUTS[$league]}" \
               --summary "${PUBLIC_SUMMARIES[$league]}"
+
+            echo "---- Settle league: ${league} (fair odds lab exposure)"
+            python scripts/goalscorer-settle.py \
+              --league "${league}" \
+              --signals "${FAIR_ODDS_LAB_OUTPUTS[$league]}" \
+              --summary "${FAIR_ODDS_LAB_SUMMARIES[$league]}"
           done
 
       - name: Rebuild penalty review and evidence

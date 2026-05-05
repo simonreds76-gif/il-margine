@@ -41,6 +41,7 @@ DEFAULT_INPUTS = [
 DEFAULT_MONITOR_SNAPSHOT = Path("data/goalscorer/goalscorer-monitor-snapshot.json")
 DEFAULT_OUTPUT = Path("public/fair-odds-lab/signals.json")
 DEFAULT_TEAM_LOGO_MAP = Path("data/goalscorer/team-logo-map.json")
+DEFAULT_EXPOSURE_LOG_DIR = Path("data/goalscorer")
 DEFAULT_LINEUP_FIXTURES = [
     Path("data/goalscorer/confirmed-lineups.json"),
     Path("data/goalscorer/epl-confirmed-lineups.json"),
@@ -54,6 +55,7 @@ PUBLIC_MAX_SIGNALS = 5
 PUBLIC_MIN_MODEL_PROB_PCT = 20.0
 PUBLIC_MAX_MARKET_ODDS = 6.0
 PUBLIC_OFFICIAL_LINEUP_WINDOW_MINUTES = 70
+FAIR_ODDS_LAB_POLICY_REASON = "fair_odds_lab_confirmed_top5_edge6_prob20_odds6"
 DEFENSIVE_POSITION_TOKENS = {
     "GK",
     "D",
@@ -158,6 +160,51 @@ LEAGUE_LABELS = {
     "ligue-1": "Ligue 1",
 }
 
+FAIR_ODDS_LAB_LOG_FIELDS = [
+    "date",
+    "kickoff",
+    "match",
+    "competition",
+    "player",
+    "team",
+    "opponent",
+    "signal_type",
+    "finishing_luck",
+    "fixture_swing",
+    "penalty_transfer",
+    "penalty_transfer_from",
+    "position_upgrade",
+    "lineup_state",
+    "model_p_atgs",
+    "model_fair_odds",
+    "best_bookmaker",
+    "best_bookmaker_odds",
+    "ev",
+    "confidence",
+    "compared_at",
+    "player_id",
+    "market_player_name",
+    "home_team",
+    "away_team",
+    "position_group",
+    "position",
+    "historical_minutes",
+    "trust_tier",
+    "public_action",
+    "public_policy_reason",
+    "penalty_dependent",
+    "penalty_dependency_share",
+    "recommended_stake_units",
+    "recommended_stake_band",
+    "recommended_stake_label",
+    "settled",
+    "goals_scored",
+    "bet_outcome",
+    "settled_at",
+    "pnl_units",
+    "settlement_note",
+]
+
 TEAM_NAME_ALIASES = {
     "fc st pauli": "st pauli",
     "ca osasuna": "osasuna",
@@ -243,6 +290,17 @@ def parse_args() -> argparse.Namespace:
         help="Confirmed/expected lineup JSON files used to enrich signals with FotMob ids and kickoff UTC. Defaults to all goalscorer lineup files.",
     )
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--exposure-log-dir",
+        type=Path,
+        default=DEFAULT_EXPOSURE_LOG_DIR,
+        help="Directory for append-only Fair Odds Lab public exposure logs.",
+    )
+    parser.add_argument(
+        "--skip-exposure-log",
+        action="store_true",
+        help="Local QA only. Do not append the public exposure log.",
+    )
     parser.add_argument("--edge-threshold-pp", type=float, default=PUBLIC_EDGE_THRESHOLD_PP)
     parser.add_argument("--max-signals", type=int, default=PUBLIC_MAX_SIGNALS)
     parser.add_argument("--min-model-prob-pct", type=float, default=PUBLIC_MIN_MODEL_PROB_PCT)
@@ -845,6 +903,122 @@ def read_grouped_candidates(
     return raw_rows, candidates, source_paths
 
 
+def fair_odds_lab_log_path(log_dir: Path, league: str, suffix: str = "signals.csv") -> Path:
+    return log_dir / f"fair-odds-lab-{league}-{suffix}"
+
+
+def exposure_log_key(row: dict[str, str]) -> tuple[str, str, str]:
+    return (
+        clean_text(row.get("date")),
+        normalize_logo_key(row.get("match")),
+        normalize_logo_key(row.get("player") or row.get("market_player_name")),
+    )
+
+
+def read_exposure_log(path: Path) -> tuple[list[dict[str, str]], list[str]]:
+    if not path.exists():
+        return [], FAIR_ODDS_LAB_LOG_FIELDS.copy()
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle)
+        fieldnames = list(reader.fieldnames or FAIR_ODDS_LAB_LOG_FIELDS)
+        for field in FAIR_ODDS_LAB_LOG_FIELDS:
+            if field not in fieldnames:
+                fieldnames.append(field)
+        return list(reader), fieldnames
+
+
+def write_exposure_log(path: Path, rows: list[dict[str, str]], fieldnames: list[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    normalized_rows = [{field: clean_text(row.get(field)) for field in fieldnames} for row in rows]
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(normalized_rows)
+
+
+def fmt_decimal(value: float | None, digits: int) -> str:
+    if value is None:
+        value = 0.0
+    return f"{value:.{digits}f}"
+
+
+def exposure_row_from_candidate(candidate: Candidate) -> dict[str, str]:
+    row = candidate.row
+    date_key = row_date_key(row)
+    home_team = clean_text(row.get("home_team"))
+    away_team = clean_text(row.get("away_team"))
+    player_name = clean_text(row.get("canonical_player_name") or row.get("player_name"))
+    fixture_swing = candidate.fixture_swing if candidate.fixture_swing is not None else parse_float(row.get("fixture_swing_3"))
+    best_ev = (candidate.model_prob_pct / 100 * candidate.best_odds) - 1.0
+
+    return {
+        "date": date_key,
+        "kickoff": clean_text(row.get("kickoff")) or date_key,
+        "match": f"{home_team} vs {away_team}".strip(),
+        "competition": clean_text(row.get("competition")),
+        "player": player_name,
+        "team": clean_text(row.get("player_team")),
+        "opponent": clean_text(row.get("opponent")),
+        "signal_type": "fair_odds_lab",
+        "finishing_luck": fmt_decimal(parse_float(row.get("finishing_luck_8")), 4),
+        "fixture_swing": fmt_decimal(fixture_swing, 4),
+        "penalty_transfer": "1" if clean_text(row.get("penalty_transfer")).lower() in {"1", "true", "yes"} else "0",
+        "penalty_transfer_from": clean_text(row.get("penalty_transfer_from")),
+        "position_upgrade": "1" if clean_text(row.get("position_upgrade")).lower() in {"1", "true", "yes"} else "0",
+        "lineup_state": clean_text(row.get("lineup_state")) or lineup_label(row),
+        "model_p_atgs": fmt_decimal(candidate.model_prob_pct / 100, 6),
+        "model_fair_odds": fmt_decimal(candidate.fair_odds, 4),
+        "best_bookmaker": clean_text(row.get("bookmaker"), "Best market"),
+        "best_bookmaker_odds": fmt_decimal(candidate.best_odds, 4),
+        "ev": fmt_decimal(best_ev, 6),
+        "confidence": normalize_confidence(row.get("signal_confidence"), lineup_label(row), candidate.expected_minutes),
+        "compared_at": clean_text(row.get("compared_at")) or datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "player_id": clean_text(row.get("player_id")),
+        "market_player_name": clean_text(row.get("player_name")) or player_name,
+        "home_team": home_team,
+        "away_team": away_team,
+        "position_group": clean_text(row.get("today_position_group") or row.get("position_group")),
+        "position": clean_text(row.get("position")),
+        "historical_minutes": fmt_decimal(parse_float(row.get("historical_minutes")) or candidate.expected_minutes, 1),
+        "trust_tier": clean_text(row.get("trust_tier")),
+        "public_action": "surface",
+        "public_policy_reason": FAIR_ODDS_LAB_POLICY_REASON,
+        "penalty_dependent": "1" if clean_text(row.get("penalty_dependent")).lower() in {"1", "true", "yes"} else "0",
+        "penalty_dependency_share": fmt_decimal(parse_float(row.get("penalty_dependency_share")), 4),
+        "recommended_stake_units": "1.00",
+        "recommended_stake_band": "research",
+        "recommended_stake_label": "Research only",
+        "settled": "",
+        "goals_scored": "",
+        "bet_outcome": "",
+        "settled_at": "",
+        "pnl_units": "",
+        "settlement_note": "",
+    }
+
+
+def append_exposure_logs(candidates: list[Candidate], log_dir: Path) -> dict[str, int]:
+    rows_by_league: dict[str, list[dict[str, str]]] = {}
+    for candidate in candidates:
+        league = league_slug(clean_text(candidate.row.get("competition"), "football"))
+        rows_by_league.setdefault(league, []).append(exposure_row_from_candidate(candidate))
+
+    added_by_league: dict[str, int] = {}
+    for league, rows in sorted(rows_by_league.items()):
+        path = fair_odds_lab_log_path(log_dir, league)
+        existing_rows, fieldnames = read_exposure_log(path)
+        existing_keys = {exposure_log_key(row) for row in existing_rows}
+        added_rows = [row for row in rows if exposure_log_key(row) not in existing_keys]
+        if not added_rows:
+            added_by_league[league] = 0
+            continue
+        merged = existing_rows + added_rows
+        merged.sort(key=lambda row: (clean_text(row.get("date")), clean_text(row.get("kickoff")), clean_text(row.get("match")), clean_text(row.get("player"))))
+        write_exposure_log(path, merged, fieldnames)
+        added_by_league[league] = len(added_rows)
+    return added_by_league
+
+
 def build_reasons(
     candidate: Candidate,
     recent_tier: str,
@@ -1063,7 +1237,7 @@ def main() -> None:
         )
     ]
 
-    signals = []
+    signal_entries: list[tuple[Candidate, dict[str, Any]]] = []
     for candidate in qualifying:
         percentiles = {
             "recent": percentile(candidate.recent_npxg, values["recent"]),
@@ -1072,16 +1246,22 @@ def main() -> None:
             "opponent_xga": percentile(candidate.opponent_xga, values["opponent_xga"]),
             "minutes": percentile(candidate.expected_minutes, values["minutes"]),
         }
-        signals.append(build_signal(candidate, percentiles, logo_manifest))
+        signal_entries.append((candidate, build_signal(candidate, percentiles, logo_manifest)))
 
-    signals.sort(
+    signal_entries.sort(
         key=lambda item: (
-            -public_signal_score(item),
-            item["match"].get("kickoff_utc") or item["match"].get("kickoff_display") or "",
+            -public_signal_score(item[1]),
+            item[1]["match"].get("kickoff_utc") or item[1]["match"].get("kickoff_display") or "",
         )
     )
     if args.max_signals > 0:
-        signals = signals[: args.max_signals]
+        signal_entries = signal_entries[: args.max_signals]
+    selected_candidates = [candidate for candidate, _signal in signal_entries]
+    signals = [signal for _candidate, signal in signal_entries]
+
+    exposure_added_by_league: dict[str, int] = {}
+    if not args.skip_exposure_log:
+        exposure_added_by_league = append_exposure_logs(selected_candidates, args.exposure_log_dir)
 
     fixtures_evaluated = len({(row_date_key(row), clean_text(row.get("home_team")), clean_text(row.get("away_team"))) for row in raw_rows})
     leagues_covered = sorted({signal["match"]["league"] for signal in signals})
@@ -1121,6 +1301,13 @@ def main() -> None:
     print(f"Min model chance: {args.min_model_prob_pct:.1f}%")
     print(f"Max market odds: {args.max_market_odds:.2f}")
     print(f"Official lineup window: {args.official_lineup_window_minutes} minutes")
+    if args.skip_exposure_log:
+        print("Exposure log: skipped")
+    elif exposure_added_by_league:
+        added_summary = ", ".join(f"{league} +{count}" for league, count in sorted(exposure_added_by_league.items()))
+        print(f"Exposure log additions: {added_summary}")
+    else:
+        print("Exposure log additions: none")
 
 
 if __name__ == "__main__":
