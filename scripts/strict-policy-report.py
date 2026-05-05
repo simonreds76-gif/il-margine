@@ -67,11 +67,26 @@ STRICT_MIN_VALUE_PCT = 10.0  # Public-facing high-conviction signals
 INTERNAL_TRACK_MIN_VALUE_PCT = 5.0  # Internal tracking for 200-bet confirmation
 HANDICAP_MIN_EDGE_PCT = 20.0  # Handicap signal: model edge vs Pinnacle spread
 SPREAD_SHADOW_MIN_EDGE_PCT = 20.0  # Separate shadow lane for handicaps outside current strict match policy
-SPREAD_V1_MIN_EDGE_PCT = float(os.environ.get("SPREAD_V1_MIN_EDGE_PCT", "5.0"))
+
+
+def env_float(name: str, default: float) -> float:
+    try:
+        return float(os.environ.get(name, str(default)))
+    except (TypeError, ValueError):
+        return default
+
+
+# Spread-v1 is a public-monitor research lane, not a 5% internal tracker. Never
+# allow a low env override to publish weak handicap edges like a +6% spread pick.
+SPREAD_V1_MIN_EDGE_PCT = max(
+    HANDICAP_MIN_EDGE_PCT,
+    env_float("SPREAD_V1_MIN_EDGE_PCT", HANDICAP_MIN_EDGE_PCT),
+)
 ALLOWED_SEGMENT = "Hard|Masters 1000"
 ALLOWED_CONFIDENCE = {"high"}
 SPREAD_SHADOW_CONFIDENCE = {"high", "medium"}
-SPREAD_V1_ALLOWED_SURFACES = {"Hard", "Clay"}
+SPREAD_V1_ENABLE_CLAY = env_bool(os.environ.get("SPREAD_V1_ENABLE_CLAY"), False)
+SPREAD_V1_ALLOWED_SURFACES = {"Hard"} | ({"Clay"} if SPREAD_V1_ENABLE_CLAY else set())
 SPREAD_V1_EXCLUDED_SERIES = {"Grand Slam"}
 EXCLUDE_ATP500_HARD_SHORT_FAVORITES = True
 EXCLUDE_SHORT_FAV_MAX_ODDS = 1.8
@@ -130,7 +145,7 @@ SHADOW_PROFILE_LABELS: dict[str, str] = {
     "volume_275": "Volume 275 (legacy shadow; includes Clay Masters)",
     "volume_200": "ATP-only ML research lane (main-tour only, no ATP250 shadow expansion, no spreads)",
     "spread_shadow": "Spread shadow (20%+ handicap edges; Clay + non-policy tournaments)",
-    "spread_v1_shadow": "Spread v1 shadow (strict-first ATP bo3 hard/clay research lane; real-market calibration required)",
+    "spread_v1_shadow": "Spread v1 shadow (strict-first ATP bo3 hard-only research lane; real-market calibration required)",
     "clay_calibrated": "Clay calibrated shadow (new-after-calibration favorite 55-65%)",
 }
 SHADOW_PROFILE_ALLOWED_LEAGUES: dict[str, set[str]] = {
