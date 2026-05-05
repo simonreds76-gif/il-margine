@@ -8,9 +8,9 @@ import { sampleSignals } from "@/components/fair-odds-lab/__fixtures__/sample-si
 import type { LabArtifact, Signal } from "@/components/fair-odds-lab/types";
 
 export const metadata: Metadata = {
-  title: "Fair Odds Lab | Anytime Goalscorer Value Signals",
+  title: "Goalscorer Fair Odds Lab | Anytime Goalscorer Value Spots",
   description:
-    "Research-only anytime goalscorer value signals comparing Il Margine fair odds with bookmaker market prices.",
+    "Research-only confirmed-starter anytime goalscorer value spots comparing Il Margine fair odds with bookmaker market prices.",
   alternates: {
     canonical: "/fair-odds-lab",
   },
@@ -47,6 +47,14 @@ function normalizeConfidence(value: unknown): Signal["confidence"] {
 function normalizeMetricTier(value: unknown, fallback = "Unknown") {
   if (typeof value === "string" && value.trim()) return value.trim();
   return fallback;
+}
+
+function roleLabel(minutes: number | undefined, lineupStatus: string) {
+  if (lineupStatus.toLowerCase().includes("confirmed")) return "Confirmed starter";
+  if (minutes === undefined) return lineupStatus;
+  if (minutes >= 80) return "Likely full match";
+  if (minutes >= 70) return "Expected 60+";
+  return "Minutes watch";
 }
 
 type TeamLogoRow = {
@@ -261,12 +269,6 @@ function mapArtifactSignal(rawValue: unknown): Signal | null {
         note: "Recent non-penalty chance volume",
       },
       {
-        label: "Share of team chances",
-        value: `${shareOfTeamChances}%`,
-        percentile: asNumber(metrics.share_of_team_chances_percentile) ?? undefined,
-        note: "How much of the team threat runs through him",
-      },
-      {
         label: "Lineup confidence",
         value: lineupStatus,
       },
@@ -287,12 +289,8 @@ function mapArtifactSignal(rawValue: unknown): Signal | null {
         percentile: asNumber(opponentWeaknessMetric.percentile) ?? undefined,
       },
       {
-        label: "Fixture boost",
-        value: `${fixtureBoost >= 0 ? "+" : ""}${fixtureBoost}%`,
-      },
-      {
-        label: "Projected minutes",
-        value: projectedMinutes ? `${projectedMinutes} min` : lineupStatus,
+        label: "Expected role",
+        value: roleLabel(projectedMinutes, lineupStatus),
       },
     ],
     edgeReasons: Array.isArray(raw.reasons) ? raw.reasons.map((reason: unknown) => asText(reason)).filter(Boolean) : [],
@@ -308,7 +306,7 @@ function isPreKickoffSignal(signal: Signal, nowMs = Date.now()): boolean {
 function makeMockArtifact(): LabArtifact {
   return {
     generatedAt: null,
-    edgeThresholdPp: 5,
+    edgeThresholdPp: 6,
     fixturesEvaluated: sampleSignals.length,
     signalsQualifying: sampleSignals.length,
     leaguesCovered: [...new Set(sampleSignals.map((signal) => signal.competition))],
@@ -321,7 +319,7 @@ function makeMockArtifact(): LabArtifact {
 function makeEmptyArtifact(): LabArtifact {
   return {
     generatedAt: null,
-    edgeThresholdPp: 5,
+    edgeThresholdPp: 6,
     fixturesEvaluated: 0,
     signalsQualifying: 0,
     leaguesCovered: [],
@@ -349,7 +347,7 @@ function readLabArtifact(): LabArtifact {
 
     return {
       generatedAt: asText(parsed?.generated_at) || null,
-      edgeThresholdPp: asNumber(parsed?.edge_threshold_pp) ?? 5,
+      edgeThresholdPp: asNumber(parsed?.edge_threshold_pp) ?? 6,
       fixturesEvaluated: asNumber(parsed?.fixtures_evaluated) ?? 0,
       signalsQualifying: asNumber(parsed?.signals_qualifying) ?? artifactSignals.length,
       leaguesCovered: Array.isArray(parsed?.leagues_covered)
@@ -370,6 +368,19 @@ function formatOdds(value: number) {
 
 function probabilityGap(signal: Signal) {
   return signal.modelProbability - signal.bookmakerProbability;
+}
+
+function formatRefreshed(value: string | null) {
+  if (!value) return "Awaiting refresh";
+  const timestamp = Date.parse(value);
+  if (!Number.isFinite(timestamp)) return "Latest artifact";
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/London",
+  }).format(timestamp);
 }
 
 function EmptySignalsState({ artifact }: { artifact: LabArtifact }) {
@@ -396,7 +407,7 @@ function EmptySignalsState({ artifact }: { artifact: LabArtifact }) {
           ? `None currently meet the +${artifact.edgeThresholdPp.toFixed(1)}pp price-gap threshold.`
           : "None currently show a positive model-vs-market price gap."}{" "}
         That means the lab is deliberately quiet rather than showing stale or
-        forced picks.
+        forced picks. Check back closer to kickoff, when confirmed teams land.
       </p>
     </section>
   );
@@ -411,14 +422,11 @@ export default function FairOddsLabPage() {
     ? [featured, ...artifact.signals.filter((signal) => signal.id !== featured.id)]
     : artifact.signals;
   const exampleSignal = featured ?? sampleSignals[0];
-  const bestProbabilityGap = featured ? probabilityGap(featured) : 0;
   const exampleProbabilityGap = probabilityGap(exampleSignal);
-  const averageProbabilityGap =
-    signals.length > 0
-      ? signals.reduce((total, signal) => total + probabilityGap(signal), 0) / signals.length
-      : 0;
   const leagueCount =
     artifact.leaguesCovered.length || new Set(signals.map((signal) => signal.competition)).size;
+  const topSignalLabel = featured ? featured.player : "None live";
+  const refreshedLabel = formatRefreshed(artifact.generatedAt);
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#07090d] text-slate-100">
@@ -433,28 +441,29 @@ export default function FairOddsLabPage() {
               Research preview
             </span>
             <span className="rounded-full border border-slate-700/55 bg-slate-900/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-              Not tracked picks
+              Not on official record
             </span>
           </div>
 
           <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-end">
             <div>
               <h1 className="max-w-4xl text-5xl font-black tracking-tight text-slate-50 sm:text-6xl lg:text-7xl">
-                Fair Odds Lab
+                Goalscorer Fair Odds Lab
               </h1>
               <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300 sm:text-xl">
-                Anytime goalscorer value signals where the model thinks the
-                market price is too long.
+                Where our model&apos;s price is shorter than the bookies&apos;.
+                We surface confirmed-starter anytime-goalscorer value spots
+                when the market is paying more than the model says it should.
               </p>
             </div>
           </div>
 
           <div className="relative mt-8 grid gap-0 overflow-hidden rounded-2xl border border-slate-700/55 bg-slate-950/70 sm:grid-cols-4">
             {[
-              ["Sample signals", signals.length.toString()],
-              ["Avg gap", `+${averageProbabilityGap.toFixed(1)}pp`],
-              ["Biggest gap", `+${bestProbabilityGap.toFixed(1)}pp`],
-              ["Leagues", leagueCount.toString()],
+              ["Top value signal", topSignalLabel],
+              ["Signals live", signals.length.toString()],
+              ["Leagues watched", leagueCount.toString()],
+              ["Last refreshed", refreshedLabel],
             ].map(([label, value], index) => (
               <div
                 key={label}
@@ -464,11 +473,7 @@ export default function FairOddsLabPage() {
                   {label}
                 </div>
                 <div
-                  className={`mt-1 font-mono text-2xl font-black ${
-                    label.includes("gap") || label.includes("Gap")
-                      ? "text-amber-300"
-                      : "text-slate-100"
-                  }`}
+                  className="mt-1 break-words font-mono text-2xl font-black text-slate-100"
                 >
                   {value}
                 </div>
@@ -479,8 +484,8 @@ export default function FairOddsLabPage() {
 
         <section className="mt-5 rounded-2xl border border-amber-400/25 bg-amber-400/[0.08] px-4 py-3 text-sm leading-6 text-amber-100 sm:px-5">
           Research signals only. These are not official Il Margine tracked bets
-          and are not part of the paid record. They show where the model thinks
-          the market price may be too big.
+          and are not part of the paid record. They show confirmed-starter value
+          spots where the model thinks the market price may be too big.
         </section>
 
         <section className="mt-5">
@@ -491,11 +496,10 @@ export default function FairOddsLabPage() {
             <p className="mt-3 text-sm leading-7 text-slate-300">
               The model estimates a player&apos;s true chance of scoring. If our fair
               odds are {formatOdds(exampleSignal.fairOdds)} and the bookmaker offers{" "}
-              {formatOdds(exampleSignal.bestBookOdds)}, the market is paying more
-              than the implied risk. That is a value signal, not a promise the
-              player will score. In plain words, a +{exampleProbabilityGap.toFixed(1)}pp gap means
-              the model gives the player about {exampleProbabilityGap.toFixed(1)} more chances in
-              every 100 than the bookmaker price implies.
+              {formatOdds(exampleSignal.bestBookOdds)}, the bookmaker is paying
+              more than our price says it should. That is a value signal, not a
+              promise the player will score. In plain words, a {`+${exampleProbabilityGap.toFixed(1)}pp`} gap means our model sees a
+              bigger scoring chance than the market price implies.
             </p>
           </div>
         </section>
@@ -521,9 +525,18 @@ export default function FairOddsLabPage() {
             <span>{signals.length} signals shown</span>
           </div>
           <p className="mt-3 border-t border-slate-800/80 pt-3">
-            This lab separates model research from official picks. No ROI, win
-            loss record, or staking claim should appear here until the
-            goalscorer model earns tracked status.
+            This page shows research signals, not tracked picks. We do not
+            claim a goalscorer record here; if this model joins the official
+            lane, settled results will appear on the Track Record page. 18+.
+            Please gamble responsibly. Support is available through{" "}
+            <a className="text-emerald-200 underline-offset-4 hover:underline" href="https://www.begambleaware.org/" target="_blank" rel="noopener noreferrer">
+              BeGambleAware
+            </a>{" "}
+            and{" "}
+            <a className="text-emerald-200 underline-offset-4 hover:underline" href="https://www.gamcare.org.uk/" target="_blank" rel="noopener noreferrer">
+              GamCare
+            </a>
+            .
           </p>
         </footer>
       </div>

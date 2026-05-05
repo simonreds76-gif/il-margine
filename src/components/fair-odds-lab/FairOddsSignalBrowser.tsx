@@ -1,12 +1,11 @@
 ﻿"use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import { FeaturedSignalCard } from "@/components/fair-odds-lab/FeaturedSignalCard";
 import { LogoBadge } from "@/components/fair-odds-lab/LogoBadge";
 import { OddsComparisonBar } from "@/components/fair-odds-lab/OddsComparisonBar";
 import {
-  MiniDonut,
   PenaltyBadge,
   TierIndicator,
 } from "@/components/fair-odds-lab/primitives";
@@ -45,15 +44,18 @@ function parseKickoff(signal: Signal) {
   return Number.isFinite(timestamp) ? timestamp : Number.MAX_SAFE_INTEGER;
 }
 
-function isPreKickoffSignal(signal: Signal, nowMs: number) {
-  const timestamp = signal.kickoffUtc ? Date.parse(signal.kickoffUtc) : Number.NaN;
-  return Number.isFinite(timestamp) && timestamp > nowMs;
-}
-
 function confidenceRank(confidence: Signal["confidence"]) {
   if (confidence === "High") return 3;
   if (confidence === "Medium") return 2;
   return 1;
+}
+
+function compactLineupLabel(status: string) {
+  const normalized = status.toLowerCase();
+  if (normalized.includes("confirmed")) return "Confirmed";
+  if (normalized.includes("projected")) return "Projected";
+  if (normalized.includes("bench")) return "Bench risk";
+  return "Unknown";
 }
 
 function sortSignals(signals: Signal[], sortMode: SortMode) {
@@ -162,26 +164,17 @@ function SignalCard({
             {signal.recentChanceQuality ?? "Unknown"}
           </div>
         </div>
-        <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3 text-center">
+        <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3">
           <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-            Share
+            Lineup
           </div>
-          <div className="mt-1 flex justify-center">
-            <MiniDonut
-              value={(signal.attackingShare / 50) * 100}
-              size={32}
-              showValue
-              displayValue={String(signal.attackingShare)}
-              tone="cyan"
-            />
-          </div>
-          <div className="mt-1 text-[10px] font-semibold text-slate-300">
-            {signal.attackingShare}%
+          <div className="mt-3 inline-flex rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-1 text-[10px] font-semibold text-emerald-100">
+            {compactLineupLabel(signal.lineupStatus)}
           </div>
         </div>
         <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3">
           <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-            Pens
+            Penalties
           </div>
           <div className="mt-2">
             <PenaltyBadge role={signal.penaltyRole} size="mini" />
@@ -206,7 +199,7 @@ function SignalCard({
         onClick={onOpen}
         className="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-slate-700/70 bg-slate-900/80 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:border-emerald-400/40 hover:text-emerald-200"
       >
-        {selected ? "Showing above" : "View as featured"}
+        {selected ? "Selected" : "View details"}
       </button>
     </article>
   );
@@ -223,12 +216,7 @@ export function FairOddsSignalBrowser({
   const [sortMode, setSortMode] = useState<SortMode>("edge");
   const [selectedId, setSelectedId] = useState<string | null>(featuredSignalId ?? null);
   const featuredRef = useRef<HTMLDivElement | null>(null);
-  const nowMs = useMemo(() => Date.now(), []);
-
-  const liveSignals = useMemo(
-    () => artifact.signals.filter((signal) => isPreKickoffSignal(signal, nowMs)),
-    [artifact.signals, nowMs],
-  );
+  const liveSignals = artifact.signals;
 
   const leagueOptions = useMemo<LeagueOption[]>(() => {
     const counts = new Map<string, LeagueOption>();
@@ -244,17 +232,17 @@ export function FairOddsSignalBrowser({
     return [...counts.values()].sort((a, b) => a.label.localeCompare(b.label));
   }, [liveSignals]);
 
-  const visibleSignalsFor = (league: string, sort: SortMode) => {
+  const visibleSignalsFor = useCallback((league: string, sort: SortMode) => {
     const filtered =
       league === "all"
         ? liveSignals
         : liveSignals.filter((signal) => leagueKey(signal) === league);
     return sortSignals(filtered, sort);
-  };
+  }, [liveSignals]);
 
   const visibleSignals = useMemo(
     () => visibleSignalsFor(activeLeague, sortMode),
-    [activeLeague, liveSignals, sortMode],
+    [activeLeague, sortMode, visibleSignalsFor],
   );
   const confidenceSortDisabled =
     new Set(visibleSignals.map((signal) => signal.confidence)).size < 2;
@@ -266,16 +254,6 @@ export function FairOddsSignalBrowser({
   const selectedIndex = selectedSignal
     ? visibleSignals.findIndex((signal) => signal.id === selectedSignal.id)
     : -1;
-
-  useEffect(() => {
-    if (!visibleSignals.length) {
-      if (selectedId !== null) setSelectedId(null);
-      return;
-    }
-    if (!selectedId || !visibleSignals.some((signal) => signal.id === selectedId)) {
-      setSelectedId(visibleSignals[0].id);
-    }
-  }, [selectedId, visibleSignals]);
 
   function applyLeague(nextLeague: string) {
     setActiveLeague(nextLeague);
@@ -312,13 +290,13 @@ export function FairOddsSignalBrowser({
             Signal browser
           </div>
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-50">
-            Browse model-price gaps
+            Browse confirmed value spots
           </h2>
         </div>
         <div className="text-sm text-slate-500">
           {artifact.isMock
             ? "Static concept data for page design."
-            : "Static artifact data. No Supabase reads, writes, or polling."}
+            : "Refreshed from the latest model artifact. No live database calls."}
         </div>
       </div>
 
@@ -396,7 +374,7 @@ export function FairOddsSignalBrowser({
             <div ref={featuredRef} className="scroll-mt-24">
               <FeaturedSignalCard
                 signal={selectedSignal}
-                eyebrow={selectedSignal.id === featuredSignalId ? "Top value gap" : "Selected research signal"}
+                eyebrow={selectedSignal.id === featuredSignalId ? "Top value spot" : "Selected value spot"}
                 controls={
                   <div className="hidden items-center gap-2 sm:flex">
                     <button

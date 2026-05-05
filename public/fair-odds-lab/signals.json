@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-05T13:27:36.296760Z",
+  "generated_at": "2026-05-05T14:06:36.879809Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -8,12 +8,13 @@
     "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
     "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
-  "edge_threshold_pp": 5.0,
+  "edge_threshold_pp": 6.0,
   "public_filters": {
-    "min_model_prob_pct": 18.0,
-    "max_market_odds": 8.0,
-    "max_signals": 10,
+    "min_model_prob_pct": 20.0,
+    "max_market_odds": 6.0,
+    "max_signals": 5,
     "official_lineup_window_minutes": 70,
+    "require_confirmed_starter": true,
     "defensive_positions_hidden": [
       "CB",
       "D",

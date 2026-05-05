@@ -49,10 +49,10 @@ DEFAULT_LINEUP_FIXTURES = [
     Path("data/goalscorer/ligue-1-confirmed-lineups.json"),
 ]
 
-PUBLIC_EDGE_THRESHOLD_PP = 5.0
-PUBLIC_MAX_SIGNALS = 10
-PUBLIC_MIN_MODEL_PROB_PCT = 18.0
-PUBLIC_MAX_MARKET_ODDS = 8.0
+PUBLIC_EDGE_THRESHOLD_PP = 6.0
+PUBLIC_MAX_SIGNALS = 5
+PUBLIC_MIN_MODEL_PROB_PCT = 20.0
+PUBLIC_MAX_MARKET_ODDS = 6.0
 PUBLIC_OFFICIAL_LINEUP_WINDOW_MINUTES = 70
 DEFENSIVE_POSITION_TOKENS = {
     "GK",
@@ -252,6 +252,11 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=PUBLIC_OFFICIAL_LINEUP_WINDOW_MINUTES,
         help="Require confirmed starters inside this many minutes before kickoff. Use 0 to disable.",
+    )
+    parser.add_argument(
+        "--allow-projected-lineups",
+        action="store_true",
+        help="Local QA only. Public artifact defaults to confirmed starters only.",
     )
     parser.add_argument(
         "--today",
@@ -847,21 +852,18 @@ def build_reasons(
     penalty: str,
     fixture_boost_pct: int,
 ) -> list[str]:
-    row = candidate.row
-    player = clean_text(row.get("canonical_player_name") or row.get("player_name"), "Player")
-    team = clean_text(row.get("player_team"), "his team")
     reasons = [
-        f"Model scores {player} at {candidate.model_prob_pct:.1f}%, market implies {candidate.implied_pct:.1f}%",
+        "The model price is shorter than the bookmaker's best available price",
     ]
 
-    if candidate.team_share is not None and candidate.team_share > 0:
-        reasons.append(f"Takes {candidate.team_share * 100:.0f}% of {team}'s scoring chances")
+    if candidate.team_share is not None and candidate.team_share >= 0.25:
+        reasons.append("A large share of the team's chances runs through him")
     if recent_tier in {"Strong", "Very strong"}:
         reasons.append(f"Recent chance quality grades as {recent_tier.lower()}")
     if opponent_tier in {"High", "Very high"}:
         reasons.append("Opponent defensive profile is a positive matchup")
     if fixture_boost_pct >= 10:
-        reasons.append(f"Fixture profile adds a {fixture_boost_pct:+d}% goal-threat boost")
+        reasons.append("The fixture profile adds to his scoring case")
     if penalty == "Primary":
         reasons.append("Primary penalty role adds a clear scoring route")
 
@@ -874,6 +876,7 @@ def is_public_quality_signal(
     min_model_prob_pct: float,
     max_market_odds: float,
     official_lineup_window_minutes: int,
+    allow_projected_lineups: bool,
 ) -> bool:
     lineup = lineup_label(candidate.row).lower()
     confidence = normalize_confidence(
@@ -885,6 +888,8 @@ def is_public_quality_signal(
     if "unknown" in lineup or "bench" in lineup:
         return False
     if confidence == "Low":
+        return False
+    if not allow_projected_lineups and "confirmed starter" not in lineup:
         return False
     if candidate.expected_minutes is not None and candidate.expected_minutes < 70:
         return False
@@ -1054,6 +1059,7 @@ def main() -> None:
             min_model_prob_pct=args.min_model_prob_pct,
             max_market_odds=args.max_market_odds,
             official_lineup_window_minutes=args.official_lineup_window_minutes,
+            allow_projected_lineups=args.allow_projected_lineups,
         )
     ]
 
@@ -1089,6 +1095,7 @@ def main() -> None:
             "max_market_odds": args.max_market_odds,
             "max_signals": args.max_signals,
             "official_lineup_window_minutes": args.official_lineup_window_minutes,
+            "require_confirmed_starter": not args.allow_projected_lineups,
             "defensive_positions_hidden": sorted(DEFENSIVE_POSITION_TOKENS),
         },
         "fixtures_evaluated": fixtures_evaluated,

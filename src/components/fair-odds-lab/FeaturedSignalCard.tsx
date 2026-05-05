@@ -238,20 +238,19 @@ function FeatureStrip({ signal }: { signal: Signal }) {
         </div>
       </div>
       <div className={cardClass}>
-        <div className={labelClass}>Share of team chances</div>
+        <div className={labelClass}>Lineup status</div>
         <div>
-          <div className={valueClass}>{signal.attackingShare}%</div>
-          <ProportionalBar value={signal.attackingShare} maxValue={50} />
+          <div className={valueClass}>{signal.lineupStatus}</div>
+          <div className="mt-3">
+            <StatusSteps status={signal.lineupStatus} />
+          </div>
         </div>
       </div>
       <div className={cardClass}>
-        <div className={labelClass}>Fixture boost</div>
-        <div>
-          <div className={valueClass}>
-            {signal.fixtureSwing >= 0 ? "+" : ""}
-            {signal.fixtureSwing}%
-          </div>
-          <SignedBoostMeter value={signal.fixtureSwing} />
+        <div className={labelClass}>Penalty role</div>
+        <div className="flex items-center justify-between gap-3">
+          <div className={valueClass}>{signal.penaltyRole}</div>
+          <PenaltyBadge role={signal.penaltyRole} />
         </div>
       </div>
     </div>
