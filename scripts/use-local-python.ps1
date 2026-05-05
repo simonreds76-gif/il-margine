@@ -18,4 +18,7 @@ if (Test-Path -LiteralPath $venvPython) {
     }
     $env:Path = "$venvScripts;$($pathParts -join ';')"
     $env:ILMARGINE_PYTHON = $venvPython
+    Write-Host "[python] using local venv: $venvPython"
+} else {
+    Write-Warning "[python] local venv missing at $venvPython; falling back to system Python. Run scripts/setup-python-env.ps1 to repair it."
 }

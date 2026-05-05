@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, "..");
 const passthroughArgs = process.argv.slice(2);
+const configuredSyncTimeoutMs = Number.parseInt(process.env.ILMARGINE_HOSTED_SYNC_TIMEOUT_MS ?? "45000", 10);
+const syncTimeoutMs = Number.isFinite(configuredSyncTimeoutMs) && configuredSyncTimeoutMs > 0 ? configuredSyncTimeoutMs : 45000;
 
 function runHostedSync() {
   if (process.env.ILMARGINE_SKIP_HOSTED_SYNC === "1") {
@@ -32,8 +34,14 @@ function runHostedSync() {
       cwd: repoRoot,
       stdio: "inherit",
       env: process.env,
+      timeout: syncTimeoutMs,
     },
   );
+
+  if (result.error) {
+    console.warn(`[dev] Hosted monitor sync did not complete (${result.error.message}). Starting Next dev anyway.`);
+    return;
+  }
 
   if (result.status !== 0) {
     console.warn(

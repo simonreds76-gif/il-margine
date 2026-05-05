@@ -5,6 +5,7 @@
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $root
+. (Join-Path $root "scripts\use-local-python.ps1") -RepoRoot $root
 
 $dataDir = Join-Path $root "data\goalscorer"
 New-Item -ItemType Directory -Force -Path $dataDir | Out-Null

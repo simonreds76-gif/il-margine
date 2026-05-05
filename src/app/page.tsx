@@ -663,7 +663,7 @@ export default function Home() {
                   : market.id === "atp"
                     ? "/tennis-tips"
                     : market.id === "atg"
-                      ? "/anytime-goalscorer"
+                      ? "/fair-odds-lab"
                       : undefined;
               return <MarketCard key={market.id} market={market} href={href} />;
             })}
