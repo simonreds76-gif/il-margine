@@ -50,18 +50,33 @@ function runHostedSync() {
   }
 }
 
+function quoteCmdArg(value) {
+  const text = String(value);
+  if (!text) {
+    return '""';
+  }
+  return /[\s"&|<>^()%!]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+}
+
 function startNextDev() {
   if (process.env.ILMARGINE_DEV_SYNC_ONLY === "1") {
     console.log("[dev] Sync-only mode complete. Next dev not started.");
     return;
   }
 
-  const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
-  const child = spawn(npmCommand, ["run", "dev:next", "--", ...passthroughArgs], {
-    cwd: repoRoot,
-    stdio: "inherit",
-    env: process.env,
-  });
+  const npmArgs = ["run", "dev:next", "--", ...passthroughArgs];
+  const child =
+    process.platform === "win32"
+      ? spawn("cmd.exe", ["/d", "/s", "/c", ["npm.cmd", ...npmArgs].map(quoteCmdArg).join(" ")], {
+          cwd: repoRoot,
+          stdio: "inherit",
+          env: process.env,
+        })
+      : spawn("npm", npmArgs, {
+          cwd: repoRoot,
+          stdio: "inherit",
+          env: process.env,
+        });
 
   child.on("exit", (code, signal) => {
     if (signal) {
