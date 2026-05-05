@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-05T01:13:28Z",
+  "fetched_at": "2026-05-05T10:26:30Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
@@ -3483,8 +3483,8 @@
       "api_football_error": null,
       "api_football_latest": null,
       "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 10,
-      "api_football_requests_used": 0,
+      "api_football_requests_remaining_after_league": 8,
+      "api_football_requests_used": 2,
       "fetch_error": null,
       "fixtures": {
         "2025-08-15|liverpool|bournemouth": {
@@ -7678,25 +7678,26 @@
       },
       "football_data_count": 349,
       "football_data_latest": "2026-05-04",
-      "fotmob_count": 5,
-      "fotmob_latest": "2026-05-04",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "lag_days": 1,
       "source": "football-data",
       "source_latest": "2026-05-04",
       "target_dates": [
-        "2026-05-03",
-        "2026-05-04",
-        "2026-05-05"
+        "2026-05-08",
+        "2026-05-09",
+        "2026-05-10",
+        "2026-05-11"
       ],
       "target_fixture_count": 2,
-      "unresolved_fixture_count": 0
+      "unresolved_fixture_count": 2
     },
     "la-liga": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
       "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 10,
+      "api_football_requests_remaining_after_league": 8,
       "api_football_requests_used": 0,
       "fetch_error": null,
       "fixtures": {
@@ -11732,19 +11733,6 @@
           "source": "football-data",
           "total_corners": 9
         },
-        "2026-05-03|betis|real oviedo": {
-          "away_corners": 4,
-          "away_shots": 17,
-          "away_sot": 5,
-          "away_team": "real oviedo",
-          "home_corners": 5,
-          "home_shots": 10,
-          "home_sot": 5,
-          "home_team": "betis",
-          "match_id": 4837441,
-          "source": "fotmob",
-          "total_corners": 9
-        },
         "2026-05-03|celta|elche": {
           "away_corners": 2,
           "away_shots": 15,
@@ -11796,26 +11784,22 @@
       },
       "football_data_count": 340,
       "football_data_latest": "2026-05-04",
-      "fotmob_count": 5,
-      "fotmob_latest": "2026-05-04",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "lag_days": 1,
       "source": "football-data",
       "source_latest": "2026-05-04",
-      "target_dates": [
-        "2026-05-03",
-        "2026-05-04",
-        "2026-05-05"
-      ],
-      "target_fixture_count": 1,
+      "target_dates": [],
+      "target_fixture_count": 0,
       "unresolved_fixture_count": 0
     },
     "ligue-1": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 9,
-      "api_football_requests_used": 1,
+      "api_football_max_requests": 8,
+      "api_football_requests_remaining_after_league": 6,
+      "api_football_requests_used": 2,
       "fetch_error": null,
       "fixtures": {
         "2025-08-15|rennes|marseille": {
@@ -15261,18 +15245,20 @@
       "target_dates": [
         "2026-05-07",
         "2026-05-08",
-        "2026-05-09"
+        "2026-05-09",
+        "2026-05-10",
+        "2026-05-11"
       ],
-      "target_fixture_count": 1,
-      "unresolved_fixture_count": 1
+      "target_fixture_count": 4,
+      "unresolved_fixture_count": 4
     },
     "serie-a": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 9,
-      "api_football_requests_remaining_after_league": 8,
-      "api_football_requests_used": 1,
+      "api_football_max_requests": 6,
+      "api_football_requests_remaining_after_league": 3,
+      "api_football_requests_used": 3,
       "fetch_error": null,
       "fixtures": {
         "2025-08-23|genoa|lecce": {
@@ -19427,19 +19413,6 @@
           "source": "football-data",
           "total_corners": 11
         },
-        "2026-05-03|juventus|hellas verona": {
-          "away_corners": 1,
-          "away_shots": 7,
-          "away_sot": 3,
-          "away_team": "hellas verona",
-          "home_corners": 14,
-          "home_shots": 29,
-          "home_sot": 7,
-          "home_team": "juventus",
-          "match_id": 4803383,
-          "source": "fotmob",
-          "total_corners": 15
-        },
         "2026-05-03|juventus|verona": {
           "away_corners": 1,
           "away_shots": 7,
@@ -19491,21 +19464,21 @@
       },
       "football_data_count": 350,
       "football_data_latest": "2026-05-04",
-      "fotmob_count": 6,
-      "fotmob_latest": "2026-05-04",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "lag_days": 1,
       "source": "football-data",
       "source_latest": "2026-05-04",
       "target_dates": [
-        "2026-05-03",
-        "2026-05-04",
-        "2026-05-05",
         "2026-05-07",
         "2026-05-08",
-        "2026-05-09"
+        "2026-05-09",
+        "2026-05-10",
+        "2026-05-11",
+        "2026-05-12"
       ],
-      "target_fixture_count": 2,
-      "unresolved_fixture_count": 1
+      "target_fixture_count": 5,
+      "unresolved_fixture_count": 5
     }
   },
   "snapshot_date": "2026-05-05"
