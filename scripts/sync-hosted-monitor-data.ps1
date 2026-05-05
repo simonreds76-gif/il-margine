@@ -1,7 +1,11 @@
 param(
     [switch]$TeamShots,
     [switch]$Corners,
-    [switch]$Goalscorer
+    [switch]$Goalscorer,
+    [switch]$Settlement,
+    [string]$RemoteRef = "origin/golden-with-speed-insights",
+    [switch]$NoFetch,
+    [switch]$NoBackup
 )
 
 $ErrorActionPreference = "Stop"
@@ -9,10 +13,11 @@ $ErrorActionPreference = "Stop"
 $repoRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $repoRoot
 
-$syncAll = -not ($TeamShots -or $Corners -or $Goalscorer)
+$syncAll = -not ($TeamShots -or $Corners -or $Goalscorer -or $Settlement)
 $includeTeamShots = $syncAll -or $TeamShots
 $includeCorners = $syncAll -or $Corners
 $includeGoalscorer = $syncAll -or $Goalscorer
+$includeSettlement = $syncAll -or $Settlement -or $TeamShots -or $Corners
 
 $teamShotsFiles = @(
     "data/team-shots/team-shots-live-snapshot.json",
@@ -30,6 +35,7 @@ $teamShotsFiles = @(
     "data/football-form/team-shots-v3-ema20-published-picks.csv",
     "data/football-form/team-shots-v3-ema20-clv-monitor.csv",
     "data/football-form/team-shots-v3-ema20-clv-monitor.md",
+    "data/football-form/team-shots-v3-ema20-settlement-audit.json",
     "data/team-shots/shadow/team-shots-shadow-signals.csv",
     "data/team-shots/shadow/team-shots-shadow-performance.txt",
     "data/shortlist/team-props-status.json"
@@ -37,6 +43,7 @@ $teamShotsFiles = @(
 
 $cornersFiles = @(
     "data/corners-ou/corners-live-snapshot.json",
+    "data/corners-ou/corners-monitor-summary.json",
     "data/corners-ou/corners-ou-calibration.txt",
     "data/corners-ou/corners-ou-backtest-report.txt",
     "data/corners-ou/corners-ou-backtest-results.csv",
@@ -45,12 +52,22 @@ $cornersFiles = @(
     "data/football-form/corners-v0-published-picks.csv",
     "data/football-form/corners-v0-clv-monitor.csv",
     "data/football-form/corners-v0-clv-monitor.md",
+    "data/football-form/corners-v0-settlement-audit.json",
     "data/shortlist/shortlist-latest.txt",
     "data/shortlist/value-bets-latest.csv",
     "data/shortlist/signals-latest.csv",
     "data/shortlist/settled-pnl.csv",
     "data/shortlist/corners-live-pnl.txt",
     "data/shortlist/team-props-status.json"
+)
+
+$settlementFiles = @(
+    "data/results-snapshot/latest.json",
+    "data/football-form/team-shots-v3-ema20-settlement-audit.json",
+    "data/football-form/corners-v0-settlement-audit.json",
+    "data/team-shots/team-shots-live-snapshot.json",
+    "data/corners-ou/corners-live-snapshot.json",
+    "data/corners-ou/corners-monitor-summary.json"
 )
 
 $goalscorerFiles = @(
@@ -65,25 +82,38 @@ $goalscorerFiles = @(
     "data/goalscorer/goalscorer-live-schedule-state.json",
     "data/goalscorer/goalscorer-health-status.json",
     "data/goalscorer/goalscorer-live.log",
-    "data/goalscorer/confirmed-lineups.json"
+    "data/goalscorer/confirmed-lineups.json",
+    "public/fair-odds-lab/signals.json"
 )
 
 $files = New-Object System.Collections.Generic.List[string]
 if ($includeTeamShots) { $teamShotsFiles | ForEach-Object { [void]$files.Add($_) } }
 if ($includeCorners) { $cornersFiles | ForEach-Object { [void]$files.Add($_) } }
+if ($includeSettlement) { $settlementFiles | ForEach-Object { [void]$files.Add($_) } }
 if ($includeGoalscorer) { $goalscorerFiles | ForEach-Object { [void]$files.Add($_) } }
 
 $files = $files | Select-Object -Unique
 
-Write-Host "Fetching latest hosted data from origin/golden-with-speed-insights..."
-git fetch origin golden-with-speed-insights | Out-Null
+if (-not $NoFetch) {
+    Write-Host "Fetching latest hosted data from origin/golden-with-speed-insights..."
+    git fetch origin golden-with-speed-insights | Out-Null
+}
+
+$backupRoot = $null
+if (-not $NoBackup) {
+    $stamp = Get-Date -Format "yyyyMMdd-HHmmss"
+    $backupRoot = Join-Path $repoRoot ".cleanup-backups/hosted-monitor-sync-$stamp"
+    New-Item -ItemType Directory -Force -Path $backupRoot | Out-Null
+    Write-Host "Backing up existing local monitor artifacts to $backupRoot"
+}
 
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 $synced = 0
 $skipped = 0
+$backedUp = 0
 
 foreach ($relativePath in $files) {
-    $blobSpec = "origin/golden-with-speed-insights:$relativePath"
+    $blobSpec = "${RemoteRef}:$relativePath"
     $content = git show $blobSpec 2>$null
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Skip missing: $relativePath"
@@ -92,15 +122,41 @@ foreach ($relativePath in $files) {
     }
 
     $targetPath = Join-Path $repoRoot ($relativePath -replace "/", "\")
+    if ((Test-Path -LiteralPath $targetPath) -and $backupRoot) {
+        $backupPath = Join-Path $backupRoot ($relativePath -replace "/", "\")
+        New-Item -ItemType Directory -Force -Path (Split-Path -Parent $backupPath) | Out-Null
+        Copy-Item -LiteralPath $targetPath -Destination $backupPath -Force
+        $backedUp += 1
+    }
+
     $targetDir = Split-Path -Parent $targetPath
     if ($targetDir) {
         New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
     }
 
-    [System.IO.File]::WriteAllText($targetPath, ($content -join "`n"), $utf8NoBom)
+    [System.IO.File]::WriteAllText($targetPath, (($content -join "`n") + "`n"), $utf8NoBom)
     Write-Host "Synced: $relativePath"
     $synced += 1
 }
 
 Write-Host ""
-Write-Host "Done. Synced $synced file(s); skipped $skipped missing file(s)."
+Write-Host "Done. Synced $synced file(s); skipped $skipped missing file(s); backed up $backedUp file(s)."
+
+function Show-MonitorCsvStatus($Label, $Path) {
+    if (-not (Test-Path -LiteralPath $Path)) { return }
+    try {
+        $rows = Import-Csv -LiteralPath $Path
+        $groups = $rows | Group-Object result | Sort-Object Name
+        $summary = ($groups | ForEach-Object { "$($_.Name)=$($_.Count)" }) -join ", "
+        $pending = @($rows | Where-Object { $_.result -eq "pending" })
+        Write-Host "$Label status: $summary; pending=$($pending.Count)"
+        foreach ($row in ($pending | Select-Object -First 5)) {
+            Write-Host "  pending $($row.match_date): $($row.match) / $($row.selection)"
+        }
+    } catch {
+        Write-Warning "Could not summarize ${Label}: $($_.Exception.Message)"
+    }
+}
+
+Show-MonitorCsvStatus "Team shots v3 EMA20" (Join-Path $repoRoot "data/football-form/team-shots-v3-ema20-clv-monitor.csv")
+Show-MonitorCsvStatus "Corners v0" (Join-Path $repoRoot "data/football-form/corners-v0-clv-monitor.csv")
