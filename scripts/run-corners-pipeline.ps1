@@ -29,6 +29,7 @@ param(
 $ErrorActionPreference = "Continue"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $root
+. (Join-Path $root "scripts\use-local-python.ps1") -RepoRoot $root
 . (Join-Path $root "scripts\_lib\run_status.ps1")
 
 $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"

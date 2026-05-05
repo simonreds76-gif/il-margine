@@ -6,6 +6,7 @@ $ErrorActionPreference = "Stop"
 $scriptPath = $MyInvocation.MyCommand.Path
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 Set-Location $root
+. (Join-Path $root "scripts\use-local-python.ps1") -RepoRoot $root
 . (Join-Path $root "scripts\task-lock.ps1")
 
 $dataDir = Join-Path $root "data"
