@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-05T01:31:53Z",
+  "generated_at": "2026-05-06T00:20:09Z",
   "league": "epl",
   "row_count": 5,
   "rows": [
@@ -23,17 +23,18 @@
     {
       "team": "Brentford",
       "team_key": "brentford",
-      "player_name": "Thiago",
-      "player_key": "thiago",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "player_name": "Igor Thiago",
+      "player_key": "igor thiago",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
+        "fotmob_live",
         "settled_logs"
       ],
-      "event_count": 1,
+      "event_count": 2,
       "last_event_date": "2026-05-02"
     },
     {
@@ -41,15 +42,16 @@
       "team_key": "chelsea",
       "player_name": "Cole Palmer",
       "player_key": "cole palmer",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
+        "fotmob_live",
         "settled_logs"
       ],
-      "event_count": 1,
+      "event_count": 2,
       "last_event_date": "2026-05-04"
     },
     {
@@ -73,15 +75,16 @@
       "team_key": "nottingham forest",
       "player_name": "Igor Jesus",
       "player_key": "igor jesus",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
+        "fotmob_live",
         "settled_logs"
       ],
-      "event_count": 1,
+      "event_count": 2,
       "last_event_date": "2026-05-04"
     }
   ]

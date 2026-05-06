@@ -1,38 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-01T17:16:31Z",
+  "generated_at": "2026-05-06T00:19:19Z",
   "league": "serie-a",
-  "row_count": 1,
-  "rows": [
-    {
-      "date": "2026-04-26",
-      "league": "serie-a",
-      "review_source": "fotmob_live",
-      "match": "Torino vs Inter",
-      "team": "Torino",
-      "opponent": "Inter",
-      "actual_taker": "Nikola Vlasic",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "minute": "79",
-      "event_type": "Goal",
-      "event_result": "scored",
-      "primary_pre_match": "Nikola Vlasic",
-      "secondary_pre_match": "Duván Zapata",
-      "tertiary_pre_match": "Giovanni Simeone",
-      "primary_lineup_status": "unknown",
-      "secondary_lineup_status": "unknown",
-      "tertiary_lineup_status": "unknown",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "needs_manual_review",
-      "review_priority": "medium",
-      "editorial_note": "Nikola Vlasic took 1 penalty attempt and scored for Torino vs Inter. Primary pre-match: Nikola Vlasic (unknown). Secondary pre-match: Duván Zapata (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-01T17:15:58Z",
-      "context_source_path": "data/goalscorer/penalty-duty-context.json"
-    }
-  ]
+  "row_count": 0,
+  "rows": []
 }

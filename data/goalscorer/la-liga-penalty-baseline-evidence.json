@@ -1,40 +1,25 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-05T01:31:55Z",
+  "generated_at": "2026-05-06T00:20:11Z",
   "league": "la-liga",
-  "row_count": 6,
+  "row_count": 5,
   "rows": [
-    {
-      "team": "Celta Vigo",
-      "team_key": "celta vigo",
-      "player_name": "Borja Iglesias",
-      "player_key": "borja iglesias",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-26"
-    },
     {
       "team": "Elche",
       "team_key": "elche",
       "player_name": "André Silva",
       "player_key": "andr silva",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
+        "fotmob_live",
         "settled_logs"
       ],
-      "event_count": 1,
-      "last_event_date": "2026-04-22"
+      "event_count": 2,
+      "last_event_date": "2026-05-03"
     },
     {
       "team": "Espanyol",
@@ -51,6 +36,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-04-23"
+    },
+    {
+      "team": "Getafe",
+      "team_key": "getafe",
+      "player_name": "Mauro Arambarri",
+      "player_key": "mauro arambarri",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-03"
     },
     {
       "team": "Osasuna",
@@ -73,30 +74,13 @@
       "team_key": "real sociedad",
       "player_name": "Mikel Oyarzabal",
       "player_key": "mikel oyarzabal",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 2,
-      "observed_share": 1.0,
-      "observed_sample": 2.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live",
-        "settled_logs"
-      ],
-      "event_count": 2,
-      "last_event_date": "2026-04-26"
-    },
-    {
-      "team": "Villarreal",
-      "team_key": "villarreal",
-      "player_name": "Gerard Moreno",
-      "player_key": "gerard moreno",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
       "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live"
+        "settled_logs"
       ],
       "event_count": 1,
       "last_event_date": "2026-04-26"
