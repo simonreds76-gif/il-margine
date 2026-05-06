@@ -1,10 +1,10 @@
 {
   "pipeline": "team-props",
   "state": "idle",
-  "updated_at": "2026-05-06T10:16:22.4150928Z",
-  "last_started_at": "2026-05-06T10:14:25.7668705Z",
-  "last_finished_at": "2026-05-06T10:16:22.4150928Z",
-  "last_successful_finished_at": "2026-05-06T10:16:22.4149819Z",
+  "updated_at": "2026-05-06T18:19:50.3929172Z",
+  "last_started_at": "2026-05-06T18:18:06.1557532Z",
+  "last_finished_at": "2026-05-06T18:19:50.3929172Z",
+  "last_successful_finished_at": "2026-05-06T18:19:50.3928201Z",
   "current_step": "",
   "message": "Team props pipeline finished successfully.",
   "warnings": [],
@@ -18,55 +18,55 @@
     "regions": "eu"
   },
   "artifacts": {
-    "signals_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest.csv",
+    "team_shots_comparison": {
+      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-comparison.csv",
       "exists": true,
-      "updated_at": "2026-05-06T10:15:35.3142906Z"
+      "updated_at": "2026-05-06T18:17:51.6732128Z"
     },
     "value_bets_latest": {
       "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest.csv",
       "exists": true,
-      "updated_at": "2026-05-06T10:15:35.3137655Z"
-    },
-    "shadow_signals_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest-v31.csv",
-      "exists": true,
-      "updated_at": "2026-05-06T10:15:35.9182052Z"
-    },
-    "shadow_value_bets_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest-v31.csv",
-      "exists": true,
-      "updated_at": "2026-05-06T10:15:35.9175624Z"
-    },
-    "pipeline_log": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/pipeline-log.txt",
-      "exists": true,
-      "updated_at": "2026-05-06T10:16:22.4102097Z"
+      "updated_at": "2026-05-06T18:19:17.1284781Z"
     },
     "team_shots_predictions": {
       "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-predictions.csv",
       "exists": true,
-      "updated_at": "2026-05-06T10:14:15.7311794Z"
+      "updated_at": "2026-05-06T18:17:51.6881345Z"
     },
-    "shadow_shortlist_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest-v31.txt",
+    "pipeline_log": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/pipeline-log.txt",
       "exists": true,
-      "updated_at": "2026-05-06T10:15:35.9175511Z"
+      "updated_at": "2026-05-06T18:19:50.3890502Z"
     },
-    "team_shots_comparison": {
-      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-comparison.csv",
+    "signals_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest.csv",
       "exists": true,
-      "updated_at": "2026-05-06T10:14:15.7221794Z"
+      "updated_at": "2026-05-06T18:19:17.1285198Z"
+    },
+    "shadow_value_bets_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest-v31.csv",
+      "exists": true,
+      "updated_at": "2026-05-06T18:19:17.6058460Z"
     },
     "team_shots_upcoming": {
       "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-upcoming.csv",
       "exists": true,
-      "updated_at": "2026-05-06T10:14:15.7351793Z"
+      "updated_at": "2026-05-06T18:17:51.7011347Z"
+    },
+    "shadow_signals_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest-v31.csv",
+      "exists": true,
+      "updated_at": "2026-05-06T18:19:17.6062960Z"
     },
     "shortlist_latest": {
       "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest.txt",
       "exists": true,
-      "updated_at": "2026-05-06T10:15:35.3135670Z"
+      "updated_at": "2026-05-06T18:19:17.1283736Z"
+    },
+    "shadow_shortlist_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest-v31.txt",
+      "exists": true,
+      "updated_at": "2026-05-06T18:19:17.6057365Z"
     }
   }
 }
