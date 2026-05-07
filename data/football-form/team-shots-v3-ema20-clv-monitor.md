@@ -1,18 +1,18 @@
 # Team-Shots CLV Monitor: `canonical_form_v3_ema20_nb`
 
-Generated: 2026-05-07T10:36:55Z
+Generated: 2026-05-07T11:44:21Z
 Picks input: `data/football-form/team-shots-v3-ema20-published-picks.csv`
 Odds input: `data/team-shots/team-shots-odds-history.csv`
 
 ## Summary
 
-- Picks: 27
+- Picks: 30
 - Settled: 27
-- Open/pending: 0
+- Open/pending: 3
 - Settled PnL: +4.35u
-- Picks with close: 27
-- Hard-guard blocked: 3
-- Average published-to-close CLV: +0.34%
+- Picks with close: 30
+- Hard-guard blocked: 6
+- Average published-to-close CLV: +0.30%
 - Allowed-league config valid: yes
 - Allowed leagues: `bundesliga, epl, la-liga, ligue-1, serie-a`
 - Config error: `-`
