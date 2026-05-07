@@ -1,6 +1,6 @@
 # Corners V0 CLV Monitor
 
-Generated: 2026-05-06T20:18:43Z
+Generated: 2026-05-07T10:16:40Z
 Picks input: `data/football-form/corners-v0-published-picks.csv`
 Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
@@ -12,7 +12,7 @@ Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 - Settled PnL: -0.06u
 - Picks with close: 31
 - Hard-guard blocked: 0
-- Average published-to-close CLV: +0.27%
+- Average published-to-close CLV: +0.29%
 - Allowed-league config valid: yes
 - Allowed leagues: `epl, ligue-1, serie-a`
 - Config error: `-`
