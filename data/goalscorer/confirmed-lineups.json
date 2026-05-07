@@ -12,7 +12,7 @@
       "home_status": "FotMob Expected XI",
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
-      "home_formation": "3-5-1-1",
+      "home_formation": "3-4-1-2",
       "away_formation": "4-3-3",
       "home_players": [
         "Alberto Paleari",
@@ -20,23 +20,23 @@
         "Saúl Coco",
         "Enzo Ebosse",
         "Valentino Lazaro",
-        "Cesare Casadei",
         "Emirhan Ilkhan",
         "Gvidas Gineitis",
         "Rafael Obrador",
         "Nikola Vlasic",
-        "Giovanni Simeone"
+        "Giovanni Simeone",
+        "Alieu Njie"
       ],
       "away_players": [
         "Stefano Turati",
-        "Sebastian Walukiewicz",
-        "Filippo Romagna",
+        "Woyo Coulibaly",
         "Tarik Muharemovic",
+        "Sebastian Walukiewicz",
         "Ulisses Garcia",
         "Ismaël Koné",
         "Nemanja Matic",
         "Kristian Thorstvedt",
-        "Cristian Volpato",
+        "Domenico Berardi",
         "M'Bala Nzola",
         "Armand Laurienté"
       ],
@@ -47,7 +47,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-5-1-1",
+          "formation": "3-4-1-2",
           "position_id": 11
         },
         {
@@ -56,7 +56,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "3-4-1-2",
           "position_id": 33
         },
         {
@@ -65,7 +65,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "3-4-1-2",
           "position_id": 35
         },
         {
@@ -74,53 +74,44 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "3-4-1-2",
           "position_id": 37
         },
         {
           "name": "Valentino Lazaro",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 71
-        },
-        {
-          "name": "Cesare Casadei",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 73
+          "formation": "3-4-1-2",
+          "position_id": 62
         },
         {
           "name": "Emirhan Ilkhan",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 75
+          "formation": "3-4-1-2",
+          "position_id": 64
         },
         {
           "name": "Gvidas Gineitis",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 77
+          "formation": "3-4-1-2",
+          "position_id": 66
         },
         {
           "name": "Rafael Obrador",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 79
+          "formation": "3-4-1-2",
+          "position_id": 68
         },
         {
           "name": "Nikola Vlasic",
@@ -128,17 +119,26 @@
           "line_size": 1,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-5-1-1",
-          "position_id": 95
+          "formation": "3-4-1-2",
+          "position_id": 85
         },
         {
           "name": "Giovanni Simeone",
           "line_index": 3,
-          "line_size": 1,
+          "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-5-1-1",
-          "position_id": 115
+          "formation": "3-4-1-2",
+          "position_id": 104
+        },
+        {
+          "name": "Alieu Njie",
+          "line_index": 3,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-1-2",
+          "position_id": 106
         }
       ],
       "away_starters": [
@@ -152,7 +152,7 @@
           "position_id": 11
         },
         {
-          "name": "Sebastian Walukiewicz",
+          "name": "Woyo Coulibaly",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -161,7 +161,7 @@
           "position_id": 32
         },
         {
-          "name": "Filippo Romagna",
+          "name": "Tarik Muharemovic",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -170,7 +170,7 @@
           "position_id": 34
         },
         {
-          "name": "Tarik Muharemovic",
+          "name": "Sebastian Walukiewicz",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -215,7 +215,7 @@
           "position_id": 77
         },
         {
-          "name": "Cristian Volpato",
+          "name": "Domenico Berardi",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -245,12 +245,12 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Ardian Ismajli",
-        "Marcus Holmgren Pedersen",
-        "Tino Anjorin",
-        "Zakaria Aboukhlal",
+        "Marcus Pedersen",
         "Ché Adams",
-        "Duván Zapata"
+        "Duván Zapata",
+        "Ardian Ismajli",
+        "Tino Anjorin",
+        "Zakaria Aboukhlal"
       ],
       "away_unavailable": [
         "Edoardo Pieragnolo",
