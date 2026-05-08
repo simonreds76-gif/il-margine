@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T16:47:27.742644Z",
+  "generated_at": "2026-05-08T18:08:18.884532Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -31,288 +31,77 @@
     ]
   },
   "fixtures_evaluated": 43,
-  "signals_qualifying": 5,
+  "signals_qualifying": 4,
   "leagues_covered": [
-    "bundesliga",
     "epl",
-    "la-liga",
-    "ligue-1"
+    "serie-a"
   ],
-  "featured_signal_id": "20260509-patrik-schick-cf47dbcbb4",
+  "featured_signal_id": "20260508-giovanni-simeone-fc5890684a",
   "signals": [
     {
-      "id": "20260509-patrik-schick-cf47dbcbb4",
+      "id": "20260508-giovanni-simeone-fc5890684a",
       "match": {
-        "home_team": "VfB Stuttgart",
-        "away_team": "Bayer Leverkusen",
-        "league": "bundesliga",
-        "league_display": "Bundesliga",
-        "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "2026-05-09T13:30:00Z",
-        "kickoff_display": "Sat 09 May 14:30 UK",
-        "fotmob_match_id": "4829610",
-        "fotmob_page_url": "/matches/bayer-leverkusen-vs-vfb-stuttgart/2tb6ui#4829610",
-        "lineup_type": "predicted",
+        "home_team": "Torino FC",
+        "away_team": "Sassuolo Calcio",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-05-08T18:45:00Z",
+        "kickoff_display": "Fri 08 May 19:45 UK",
+        "fotmob_match_id": "4803397",
+        "fotmob_page_url": "/matches/sassuolo-vs-torino/2lrp7u#4803397",
+        "lineup_type": "confirmed",
         "venue": ""
       },
       "player": {
-        "name": "Patrik Schick",
-        "team": "Bayer Leverkusen",
+        "name": "Giovanni Simeone",
+        "team": "Torino",
         "position": "FW",
         "jersey_label": "",
-        "team_logo_path": "/team-logos/bundesliga/bayer-leverkusen.png",
-        "team_primary_color": "#111827",
-        "team_secondary_color": "#dc2626",
-        "team_shirt_pattern": "vertical-stripes"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 56.1,
-        "fair_odds": 1.78
-      },
-      "market_data": {
-        "best_odds": 2.2,
-        "best_book": "Bet365",
-        "implied_chance_pct": 45.5
-      },
-      "edge": {
-        "price_gap_pp": 10.6,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 99
-        },
-        "share_of_team_chances_pct": 31,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Strong",
-          "percentile": 96
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 78
-        },
-        "fixture_boost_pct": 2,
-        "projected_minutes": 78,
-        "penalty_role": "Primary",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup",
-        "Primary penalty role adds a clear scoring route"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260509-christoph-baumgartner-e4d995c5fe",
-      "match": {
-        "home_team": "RB Leipzig",
-        "away_team": "FC St. Pauli",
-        "league": "bundesliga",
-        "league_display": "Bundesliga",
-        "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "2026-05-09T13:30:00Z",
-        "kickoff_display": "Sat 09 May 14:30 UK",
-        "fotmob_match_id": "4829609",
-        "fotmob_page_url": "/matches/st-pauli-vs-rb-leipzig/800e6am#4829609",
-        "lineup_type": "predicted",
-        "venue": ""
-      },
-      "player": {
-        "name": "Christoph Baumgartner",
-        "team": "RasenBallsport Leipzig",
-        "position": "MID",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/bundesliga/rasenballsport-leipzig.png",
-        "team_primary_color": "#f8fafc",
-        "team_secondary_color": "#dc2626",
-        "team_shirt_pattern": "sash"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 52.3,
-        "fair_odds": 1.91
-      },
-      "market_data": {
-        "best_odds": 2.38,
-        "best_book": "Bet365",
-        "implied_chance_pct": 42.1
-      },
-      "edge": {
-        "price_gap_pp": 10.2,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 97
-        },
-        "share_of_team_chances_pct": 25,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Strong",
-          "percentile": 97
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 97
-        },
-        "fixture_boost_pct": 23,
-        "projected_minutes": 89,
-        "penalty_role": "Not on penalties",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup",
-        "The fixture profile adds to his scoring case"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260510-lassine-sinayoko-bf7f8b3dfe",
-      "match": {
-        "home_team": "AJ Auxerre",
-        "away_team": "OGC Nice",
-        "league": "ligue-1",
-        "league_display": "Ligue 1",
-        "league_logo_path": "/league-logos/ligue-1.png",
-        "kickoff_utc": "2026-05-10T19:00:00Z",
-        "kickoff_display": "Sun 10 May 20:00 UK",
-        "fotmob_match_id": "4830747",
-        "fotmob_page_url": "/matches/auxerre-vs-nice/2sy6tc#4830747",
-        "lineup_type": "predicted",
-        "venue": ""
-      },
-      "player": {
-        "name": "Lassine Sinayoko",
-        "team": "Auxerre",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/ligue-1/auxerre.png",
-        "team_primary_color": "#0f172a",
-        "team_secondary_color": "#f8fafc",
+        "team_logo_path": "/team-logos/serie-a/torino.png",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#38bdf8",
         "team_shirt_pattern": "solid"
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 47.9,
-        "fair_odds": 2.09
+        "scoring_chance_pct": 45.1,
+        "fair_odds": 2.22
       },
       "market_data": {
-        "best_odds": 2.75,
+        "best_odds": 3.1,
         "best_book": "Bet365",
-        "implied_chance_pct": 36.4
+        "implied_chance_pct": 32.3
       },
       "edge": {
-        "price_gap_pp": 11.5,
+        "price_gap_pp": 12.8,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 97
+          "percentile": 94
         },
-        "share_of_team_chances_pct": 35,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Positive",
-          "percentile": 74
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 93
-        },
-        "fixture_boost_pct": 19,
-        "projected_minutes": 89,
-        "penalty_role": "Primary",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup",
-        "The fixture profile adds to his scoring case"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260509-antonio-martinez-2ed4feec3f",
-      "match": {
-        "home_team": "Elche CF",
-        "away_team": "Deportivo Alaves",
-        "league": "la-liga",
-        "league_display": "La Liga",
-        "league_logo_path": "/league-logos/la-liga.png",
-        "kickoff_utc": "2026-05-09T12:00:00Z",
-        "kickoff_display": "Sat 09 May 13:00 UK",
-        "fotmob_match_id": "4837455",
-        "fotmob_page_url": "/matches/deportivo-alaves-vs-elche/3cor73#4837455",
-        "lineup_type": "predicted",
-        "venue": ""
-      },
-      "player": {
-        "name": "Antonio Martinez",
-        "team": "Alaves",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/la-liga/alaves.png",
-        "team_primary_color": "#111827",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 43.3,
-        "fair_odds": 2.31
-      },
-      "market_data": {
-        "best_odds": 2.88,
-        "best_book": "Bet365",
-        "implied_chance_pct": 34.8
-      },
-      "edge": {
-        "price_gap_pp": 8.6,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 85
-        },
-        "share_of_team_chances_pct": 35,
+        "share_of_team_chances_pct": 41,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 53
+          "percentile": 52
         },
         "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 96
+          "tier": "Average",
+          "percentile": 54
         },
-        "fixture_boost_pct": 34,
-        "projected_minutes": 84,
+        "fixture_boost_pct": 6,
+        "projected_minutes": 85,
         "penalty_role": "Not on penalties",
-        "lineup_confidence": "Projected starter"
+        "lineup_confidence": "Confirmed starter"
       },
-      "confidence_tier": "Medium",
+      "confidence_tier": "High",
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup",
-        "The fixture profile adds to his scoring case"
+        "Recent chance quality grades as strong"
       ],
       "risk_flags": []
     },
@@ -381,6 +170,141 @@
         "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
         "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260509-florian-wirtz-b58dc7682b",
+      "match": {
+        "home_team": "Liverpool FC",
+        "away_team": "Chelsea FC",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-09T11:30:00Z",
+        "kickoff_display": "Sat 09 May 12:30 UK",
+        "fotmob_match_id": "4813729",
+        "fotmob_page_url": "/matches/chelsea-vs-liverpool/2f3vr7#4813729",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Florian Wirtz",
+        "team": "Liverpool",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/liverpool.png",
+        "team_primary_color": "#dc2626",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 34.7,
+        "fair_odds": 2.88
+      },
+      "market_data": {
+        "best_odds": 3.6,
+        "best_book": "Bet365",
+        "implied_chance_pct": 27.8
+      },
+      "edge": {
+        "price_gap_pp": 6.9,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 80
+        },
+        "share_of_team_chances_pct": 21,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 84
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 67
+        },
+        "fixture_boost_pct": 15,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260509-marcus-tavernier-6e37202885",
+      "match": {
+        "home_team": "Fulham FC",
+        "away_team": "AFC Bournemouth",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-09T14:00:00Z",
+        "kickoff_display": "Sat 09 May 15:00 UK",
+        "fotmob_match_id": "4813728",
+        "fotmob_page_url": "/matches/afc-bournemouth-vs-fulham/2uiul6#4813728",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Marcus Tavernier",
+        "team": "Bournemouth",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/bournemouth.png",
+        "team_primary_color": "#dc2626",
+        "team_secondary_color": "#111827",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 32.5,
+        "fair_odds": 3.08
+      },
+      "market_data": {
+        "best_odds": 4.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 25.0
+      },
+      "edge": {
+        "price_gap_pp": 7.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 94
+        },
+        "share_of_team_chances_pct": 19,
+        "share_of_team_chances_percentile": 97,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 83
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 86
+        },
+        "fixture_boost_pct": 19,
+        "projected_minutes": 84,
+        "penalty_role": "Secondary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
       ],
       "risk_flags": []
     }
