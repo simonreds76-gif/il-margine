@@ -19,7 +19,7 @@ function runHostedSync() {
     return;
   }
 
-  console.log("[dev] Syncing hosted monitor settlement artifacts before starting Next...");
+  console.log("[dev] Syncing hosted monitor, settlement, and goalscorer artifacts before starting Next...");
   const result = spawnSync(
     "powershell.exe",
     [
@@ -29,6 +29,7 @@ function runHostedSync() {
       "-File",
       resolve(scriptDir, "sync-hosted-monitor-data.ps1"),
       "-Settlement",
+      "-Goalscorer",
     ],
     {
       cwd: repoRoot,
