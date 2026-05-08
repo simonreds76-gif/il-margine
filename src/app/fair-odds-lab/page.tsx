@@ -10,7 +10,7 @@ import type { LabArtifact, Signal } from "@/components/fair-odds-lab/types";
 export const metadata: Metadata = {
   title: "Goalscorer Fair Odds Lab | Anytime Goalscorer Value Spots",
   description:
-    "Research-only confirmed-starter anytime goalscorer value spots comparing Il Margine fair odds with bookmaker market prices.",
+    "Research-only anytime goalscorer value spots for likely and confirmed starters, comparing Il Margine fair odds with bookmaker market prices.",
   alternates: {
     canonical: "/fair-odds-lab",
   },
@@ -384,7 +384,7 @@ function formatRefreshed(value: string | null) {
   return `${label} UK`;
 }
 
-function EmptySignalsState({ artifact }: { artifact: LabArtifact }) {
+function EmptySignalsState() {
   return (
     <section className="rounded-[2rem] border border-slate-700/45 bg-[#0c0f14] p-8 text-center shadow-[0_24px_80px_rgba(0,0,0,0.25)]">
       <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] text-emerald-300">
@@ -402,10 +402,10 @@ function EmptySignalsState({ artifact }: { artifact: LabArtifact }) {
         No live value spots right now
       </h2>
       <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-slate-400">
-        The latest board does not have a confirmed-starter goalscorer price
-        strong enough to show. That is intentional: if the edge is not clear,
-        the lab stays quiet instead of filling the page with weak picks. Check
-        again closer to kickoff, when teams and prices are sharper.
+        The latest board does not have a goalscorer price strong enough to
+        show. That is intentional: if the edge is not clear, the lab stays
+        quiet instead of filling the page with weak picks. Check again closer
+        to kickoff, when teams and prices are sharper.
       </p>
     </section>
   );
@@ -448,8 +448,8 @@ export default function FairOddsLabPage() {
               </h1>
               <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300 sm:text-xl">
                 Where our model&apos;s price is shorter than the bookies&apos;.
-                We surface confirmed-starter anytime-goalscorer value spots
-                when the market is paying more than the model says it should.
+                We surface likely-starter anytime-goalscorer value spots, then
+                upgrade the status to confirmed once official teams are out.
               </p>
             </div>
           </div>
@@ -480,8 +480,8 @@ export default function FairOddsLabPage() {
 
         <section className="mt-5 rounded-2xl border border-amber-400/25 bg-amber-400/[0.08] px-4 py-3 text-sm leading-6 text-amber-100 sm:px-5">
           Research board only. These are model-led value spots, not official
-          tracked picks. We show confirmed starters before kickoff only when the
-          market price is clearly bigger than our fair price.
+          tracked picks. Projected starters can appear before team news; once
+          official lineups land, the status updates to confirmed or drops out.
         </section>
 
         <section className="mt-5">
@@ -502,7 +502,7 @@ export default function FairOddsLabPage() {
 
         {!featured ? (
           <section className="mt-8">
-            <EmptySignalsState artifact={artifact} />
+            <EmptySignalsState />
           </section>
         ) : null}
 

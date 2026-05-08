@@ -290,7 +290,7 @@ export function FairOddsSignalBrowser({
             Signal browser
           </div>
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-50">
-            Browse confirmed value spots
+            Browse live value spots
           </h2>
         </div>
         <div className="text-sm text-slate-500">

@@ -54,8 +54,8 @@ PUBLIC_EDGE_THRESHOLD_PP = 6.0
 PUBLIC_MAX_SIGNALS = 5
 PUBLIC_MIN_MODEL_PROB_PCT = 20.0
 PUBLIC_MAX_MARKET_ODDS = 6.0
-PUBLIC_OFFICIAL_LINEUP_WINDOW_MINUTES = 70
-FAIR_ODDS_LAB_POLICY_REASON = "fair_odds_lab_confirmed_top5_edge6_prob20_odds6"
+PUBLIC_OFFICIAL_LINEUP_WINDOW_MINUTES = 0
+FAIR_ODDS_LAB_POLICY_REASON = "fair_odds_lab_likely_starters_top5_edge6_prob20_odds6"
 DEFENSIVE_POSITION_TOKENS = {
     "GK",
     "D",
@@ -309,12 +309,20 @@ def parse_args() -> argparse.Namespace:
         "--official-lineup-window-minutes",
         type=int,
         default=PUBLIC_OFFICIAL_LINEUP_WINDOW_MINUTES,
-        help="Require confirmed starters inside this many minutes before kickoff. Use 0 to disable.",
+        help="Require confirmed starters inside this many minutes before kickoff. Default 0 keeps likely starters visible until official teams update them.",
     )
+    parser.set_defaults(allow_projected_lineups=True)
     parser.add_argument(
         "--allow-projected-lineups",
+        dest="allow_projected_lineups",
         action="store_true",
-        help="Local QA only. Public artifact defaults to confirmed starters only.",
+        help="Allow FotMob expected starters on the public board. This is the default.",
+    )
+    parser.add_argument(
+        "--confirmed-lineups-only",
+        dest="allow_projected_lineups",
+        action="store_false",
+        help="Hide projected starters and publish confirmed starters only.",
     )
     parser.add_argument(
         "--today",
