@@ -298,9 +298,21 @@ function mapArtifactSignal(rawValue: unknown): Signal | null {
 }
 
 function isPreKickoffSignal(signal: Signal, nowMs = Date.now()): boolean {
-  if (!signal.kickoffUtc) return false;
-  const kickoffMs = Date.parse(signal.kickoffUtc);
-  return Number.isFinite(kickoffMs) && kickoffMs > nowMs;
+  if (signal.kickoffUtc) {
+    const kickoffMs = Date.parse(signal.kickoffUtc);
+    return Number.isFinite(kickoffMs) && kickoffMs > nowMs;
+  }
+
+  const dateOnly = signal.kickoff.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!dateOnly) return false;
+
+  const [, year, month, day] = dateOnly;
+  const fallbackDateMs = Date.UTC(Number(year), Number(month) - 1, Number(day));
+  const now = new Date(nowMs);
+  const todayStartMs = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+
+  // Date-only rows are safe to show only for future dates; same-day rows need an exact kickoff.
+  return Number.isFinite(fallbackDateMs) && fallbackDateMs > todayStartMs;
 }
 
 function makeMockArtifact(): LabArtifact {
