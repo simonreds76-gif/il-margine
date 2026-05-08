@@ -142,8 +142,12 @@ function Write-TextFileWithRetry {
 
 foreach ($relativePath in $files) {
     $blobSpec = "${RemoteRef}:$relativePath"
-    $content = git show $blobSpec 2>$null
-    if ($LASTEXITCODE -ne 0) {
+    $previousErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    $content = & git show $blobSpec 2>$null
+    $gitShowExitCode = $LASTEXITCODE
+    $ErrorActionPreference = $previousErrorActionPreference
+    if ($gitShowExitCode -ne 0) {
         Write-Host "Skip missing: $relativePath"
         $skipped += 1
         continue
