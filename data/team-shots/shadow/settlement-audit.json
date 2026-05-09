@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-05-09T09:58:12Z",
+  "run_at": "2026-05-09T18:03:42Z",
   "model": "team-shots",
-  "total_bets": 132,
+  "total_bets": 134,
   "settled_this_run": 0,
   "total_settled": 123,
-  "total_pending": 9,
+  "total_pending": 11,
   "pending_breakdown": {
-    "future": 9,
-    "live": 0,
-    "stale": 0,
+    "future": 4,
+    "live": 2,
+    "stale": 5,
     "old_stale": 0,
     "unknown": 0
   },
@@ -89,11 +89,54 @@
       "snapshot_path": "data/results-snapshot/2026-05-09.json"
     }
   },
-  "stale_rows": [],
+  "stale_rows": [
+    {
+      "match": "Elche CF vs Deportivo Alaves",
+      "league": "la-liga",
+      "line": "12.5",
+      "side": "over",
+      "kickoff": "2026-05-09T12:00:00Z",
+      "hours_elapsed": 6.06
+    },
+    {
+      "match": "RB Leipzig vs FC St. Pauli",
+      "league": "bundesliga",
+      "line": "8.5",
+      "side": "over",
+      "kickoff": "2026-05-09T13:30:00Z",
+      "hours_elapsed": 4.56
+    },
+    {
+      "match": "Sevilla FC vs Espanyol Barcelona",
+      "league": "la-liga",
+      "line": "15.5",
+      "side": "under",
+      "kickoff": "2026-05-09T14:15:00Z",
+      "hours_elapsed": 3.81
+    },
+    {
+      "match": "FC Augsburg vs Borussia Monchengladbach",
+      "league": "bundesliga",
+      "line": "15.5",
+      "side": "under",
+      "kickoff": "2026-05-09T13:30:00Z",
+      "hours_elapsed": 4.56
+    },
+    {
+      "match": "Fulham FC vs AFC Bournemouth",
+      "league": "epl",
+      "line": "12.5",
+      "side": "over",
+      "kickoff": "2026-05-09T14:00:00Z",
+      "hours_elapsed": 4.06
+    }
+  ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [],
+  "warnings": [
+    "5 stale pending row(s) across 5 fixture(s) (3-48h elapsed)"
+  ],
   "errors": [],
   "exit_code_recommendation": 0
 }
