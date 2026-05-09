@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T15:45:40.416211Z",
+  "generated_at": "2026-05-09T16:43:38.201996Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -30,82 +30,13 @@
       "RWB"
     ]
   },
-  "fixtures_evaluated": 31,
-  "signals_qualifying": 2,
+  "fixtures_evaluated": 29,
+  "signals_qualifying": 1,
   "leagues_covered": [
-    "epl",
     "ligue-1"
   ],
-  "featured_signal_id": "20260509-igor-thiago-428b8c75f2",
+  "featured_signal_id": "20260510-lassine-sinayoko-bf7f8b3dfe",
   "signals": [
-    {
-      "id": "20260509-igor-thiago-428b8c75f2",
-      "match": {
-        "home_team": "Manchester City",
-        "away_team": "Brentford FC",
-        "league": "epl",
-        "league_display": "Premier League",
-        "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "2026-05-09T16:30:00Z",
-        "kickoff_display": "Sat 09 May 17:30 UK",
-        "fotmob_match_id": "4813730",
-        "fotmob_page_url": "/matches/manchester-city-vs-brentford/2spwom#4813730",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Igor Thiago",
-        "team": "Brentford",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/brentford.png",
-        "team_primary_color": "#f8fafc",
-        "team_secondary_color": "#dc2626",
-        "team_shirt_pattern": "vertical-stripes"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 42.4,
-        "fair_odds": 2.36
-      },
-      "market_data": {
-        "best_odds": 3.1,
-        "best_book": "Bet365",
-        "implied_chance_pct": 32.3
-      },
-      "edge": {
-        "price_gap_pp": 10.2,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 92
-        },
-        "share_of_team_chances_pct": 32,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Average",
-          "percentile": 45
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Low",
-          "percentile": 21
-        },
-        "fixture_boost_pct": -14,
-        "projected_minutes": 85,
-        "penalty_role": "Primary",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Primary penalty role adds a clear scoring route"
-      ],
-      "risk_flags": []
-    },
     {
       "id": "20260510-lassine-sinayoko-bf7f8b3dfe",
       "match": {
@@ -148,7 +79,7 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 98
+          "percentile": 97
         },
         "share_of_team_chances_pct": 35,
         "share_of_team_chances_percentile": 99,
