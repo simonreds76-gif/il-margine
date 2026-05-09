@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T18:48:00.867444Z",
+  "generated_at": "2026-05-09T19:13:57.638470Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -30,9 +30,10 @@
       "RWB"
     ]
   },
-  "fixtures_evaluated": 30,
-  "signals_qualifying": 1,
+  "fixtures_evaluated": 29,
+  "signals_qualifying": 2,
   "leagues_covered": [
+    "bundesliga",
     "ligue-1"
   ],
   "featured_signal_id": "20260510-lassine-sinayoko-bf7f8b3dfe",
@@ -85,7 +86,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 83
+          "percentile": 82
         },
         "opponent_defensive_weakness": {
           "tier": "High",
@@ -103,6 +104,74 @@
         "Recent chance quality grades as strong",
         "Opponent defensive profile is a positive matchup",
         "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260510-jakub-kaminski-a1b5acc667",
+      "match": {
+        "home_team": "1. FC Cologne",
+        "away_team": "1. FC Heidenheim",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "league_logo_path": "/league-logos/bundesliga.png",
+        "kickoff_utc": "2026-05-10T15:30:00Z",
+        "kickoff_display": "Sun 10 May 16:30 UK",
+        "fotmob_match_id": "4829605",
+        "fotmob_page_url": "/matches/1-fc-koln-vs-fc-heidenheim/2gushez#4829605",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Jakub Kaminski",
+        "team": "FC Cologne",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/bundesliga/fc-cologne.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#dc2626",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 41.3,
+        "fair_odds": 2.42
+      },
+      "market_data": {
+        "best_odds": 2.88,
+        "best_book": "Bet365",
+        "implied_chance_pct": 34.8
+      },
+      "edge": {
+        "price_gap_pp": 6.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 93
+        },
+        "share_of_team_chances_pct": 26,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 94
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 87
+        },
+        "fixture_boost_pct": 8,
+        "projected_minutes": 88,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup"
       ],
       "risk_flags": []
     }
