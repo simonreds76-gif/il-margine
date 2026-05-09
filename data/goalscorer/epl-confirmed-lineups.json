@@ -243,25 +243,25 @@
         }
       ],
       "home_subs": [
-        "Jason Steele",
         "Joël Veltman",
+        "Yasin Ayari",
+        "Georginio Rutter",
+        "Jason Steele",
         "Olivier Boscagli",
         "James Milner",
         "Matthew O'Riley",
-        "Yasin Ayari",
         "Charalampos Kostoulas",
-        "Georginio Rutter",
         "Solly March"
       ],
       "away_subs": [
-        "Josh Gracey",
         "David Møller Wolfe",
+        "Jean-Ricner Bellegarde",
+        "Rodrigo Gomes",
+        "Josh Gracey",
         "Ladislav Krejcí",
         "Matt Doherty",
         "Angel Gomes",
         "Jackson Tchatchoua",
-        "Jean-Ricner Bellegarde",
-        "Rodrigo Gomes",
         "Tolu Arokodare"
       ],
       "home_unavailable": [
@@ -296,8 +296,8 @@
         "Joachim Andersen",
         "Calvin Bassey",
         "Antonee Robinson",
-        "Tom Cairney",
         "Sasa Lukic",
+        "Tom Cairney",
         "Harry Wilson",
         "Emile Smith Rowe",
         "Samuel Chukwueze",
@@ -363,7 +363,7 @@
           "position_id": 38
         },
         {
-          "name": "Tom Cairney",
+          "name": "Sasa Lukic",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -372,7 +372,7 @@
           "position_id": 64
         },
         {
-          "name": "Sasa Lukic",
+          "name": "Tom Cairney",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -519,25 +519,25 @@
         }
       ],
       "home_subs": [
-        "Benjamin Lecomte",
         "Issa Diop",
-        "Kenny Tete",
-        "Harrison Reed",
-        "Joshua King",
-        "Sander Berge",
         "Kevin",
         "Oscar Bobb",
-        "Raul Jiménez"
+        "Joshua King",
+        "Benjamin Lecomte",
+        "Kenny Tete",
+        "Harrison Reed",
+        "Sander Berge",
+        "Jonah Kusi-Asare"
       ],
       "away_subs": [
+        "Tyler Adams",
+        "Amine Adli",
+        "David Brooks",
         "Christos Mandas",
         "Bafodé Diakité",
         "Alex Tóth",
         "Justin Kluivert",
-        "Tyler Adams",
-        "Amine Adli",
         "Ben Gannon-Doak",
-        "David Brooks",
         "Enes Ünal"
       ],
       "home_unavailable": [
@@ -841,19 +841,19 @@
       "kickoff_utc": "2026-05-09T16:30:00Z",
       "home_team": "Manchester City",
       "away_team": "Brentford",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "5-3-2",
+      "away_formation": "4-2-3-1",
       "home_players": [
         "Gianluigi Donnarumma",
         "Matheus Nunes",
-        "Abdukodir Khusanov",
         "Marc Guéhi",
+        "Nathan Aké",
         "Nico O'Reilly",
         "Bernardo Silva",
-        "Nico González",
+        "Tijjani Reijnders",
         "Antoine Semenyo",
         "Rayan Cherki",
         "Jérémy Doku",
@@ -861,16 +861,16 @@
       ],
       "away_players": [
         "Caoimhín Kelleher",
-        "Kristoffer Ajer",
-        "Sepp van den Berg",
-        "Nathan Collins",
         "Michael Kayode",
-        "Keane Lewis-Potter",
+        "Kristoffer Ajer",
+        "Nathan Collins",
+        "Aaron Hickey",
         "Mathias Jensen",
         "Yehor Yarmoliuk",
+        "Keane Lewis-Potter",
         "Mikkel Damsgaard",
-        "Igor Thiago",
-        "Kevin Schade"
+        "Kevin Schade",
+        "Igor Thiago"
       ],
       "home_starters": [
         {
@@ -892,7 +892,7 @@
           "position_id": 32
         },
         {
-          "name": "Abdukodir Khusanov",
+          "name": "Marc Guéhi",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -901,7 +901,7 @@
           "position_id": 34
         },
         {
-          "name": "Marc Guéhi",
+          "name": "Nathan Aké",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -928,7 +928,7 @@
           "position_id": 64
         },
         {
-          "name": "Nico González",
+          "name": "Tijjani Reijnders",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -980,110 +980,128 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "5-3-2",
+          "formation": "4-2-3-1",
           "position_id": 11
-        },
-        {
-          "name": "Kristoffer Ajer",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 33
-        },
-        {
-          "name": "Sepp van den Berg",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 35
-        },
-        {
-          "name": "Nathan Collins",
-          "line_index": 0,
-          "line_size": 5,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 37
         },
         {
           "name": "Michael Kayode",
           "line_index": 0,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 51
+          "formation": "4-2-3-1",
+          "position_id": 32
         },
         {
-          "name": "Keane Lewis-Potter",
+          "name": "Kristoffer Ajer",
           "line_index": 0,
-          "line_size": 5,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "5-3-2",
-          "position_id": 59
+          "formation": "4-2-3-1",
+          "position_id": 34
+        },
+        {
+          "name": "Nathan Collins",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36
+        },
+        {
+          "name": "Aaron Hickey",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38
         },
         {
           "name": "Mathias Jensen",
           "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "5-3-2",
-          "position_id": 73
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
         },
         {
           "name": "Yehor Yarmoliuk",
           "line_index": 1,
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
+        },
+        {
+          "name": "Keane Lewis-Potter",
+          "line_index": 2,
           "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "5-3-2",
-          "position_id": 75
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83
         },
         {
           "name": "Mikkel Damsgaard",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "5-3-2",
-          "position_id": 77
-        },
-        {
-          "name": "Igor Thiago",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "5-3-2",
-          "position_id": 104
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
         },
         {
           "name": "Kevin Schade",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87
+        },
+        {
+          "name": "Igor Thiago",
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "5-3-2",
-          "position_id": 106
+          "formation": "4-2-3-1",
+          "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "James Trafford",
+        "John Stones",
+        "Rayan Aït-Nouri",
+        "Rúben Dias",
+        "Mateo Kovacic",
+        "Nico González",
+        "Phil Foden",
+        "Omar Marmoush",
+        "Savinho"
+      ],
+      "away_subs": [
+        "Hákon Rafn Valdimarsson",
+        "Ethan Pinnock",
+        "Sepp van den Berg",
+        "Jordan Henderson",
+        "Vitaly Janelt",
+        "Dango Ouattara",
+        "Joshua Dasilva",
+        "Kaye Furo",
+        "Reiss Nelson"
+      ],
       "home_unavailable": [
         "Rodri",
-        "Rúben Dias",
         "Josko Gvardiol"
       ],
       "away_unavailable": [
         "Rico Henry",
-        "Jordan Henderson",
         "Fábio Carvalho"
       ]
     },
@@ -1103,12 +1121,12 @@
       "away_formation": "4-2-3-1",
       "home_players": [
         "Robin Roefs",
-        "Nordi Mukiele",
         "Lutsharel Geertruida",
+        "Nordi Mukiele",
         "Omar Alderete",
         "Reinildo",
-        "Noah Sadiki",
         "Granit Xhaka",
+        "Noah Sadiki",
         "Trai Hume",
         "Enzo Le Fée",
         "Chemsdine Talbi",
@@ -1120,10 +1138,10 @@
         "Harry Maguire",
         "Lisandro Martínez",
         "Luke Shaw",
-        "Bruno Fernandes",
+        "Mason Mount",
         "Kobbie Mainoo",
         "Amad",
-        "Mason Mount",
+        "Bruno Fernandes",
         "Matheus Cunha",
         "Joshua Zirkzee"
       ],
@@ -1138,7 +1156,7 @@
           "position_id": 11
         },
         {
-          "name": "Nordi Mukiele",
+          "name": "Lutsharel Geertruida",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1147,7 +1165,7 @@
           "position_id": 32
         },
         {
-          "name": "Lutsharel Geertruida",
+          "name": "Nordi Mukiele",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1174,7 +1192,7 @@
           "position_id": 38
         },
         {
-          "name": "Noah Sadiki",
+          "name": "Granit Xhaka",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1183,7 +1201,7 @@
           "position_id": 64
         },
         {
-          "name": "Granit Xhaka",
+          "name": "Noah Sadiki",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1275,7 +1293,7 @@
           "position_id": 38
         },
         {
-          "name": "Bruno Fernandes",
+          "name": "Mason Mount",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1302,7 +1320,7 @@
           "position_id": 83
         },
         {
-          "name": "Mason Mount",
+          "name": "Bruno Fernandes",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1330,6 +1348,7 @@
         }
       ],
       "home_subs": [
+        "Nilson Angulo",
         "Melker Ellborg",
         "Dennis Cirkin",
         "Luke O'Nien",
@@ -1337,19 +1356,18 @@
         "Chris Rigg",
         "Eliezer Mayenda",
         "Jocelin Ta Bi",
-        "Nilson Angulo",
         "Wilson Isidor"
       ],
       "away_subs": [
+        "Patrick Dorgu",
+        "Bryan Mbeumo",
         "Altay Bayindir",
         "Ayden Heaven",
         "Diogo Dalot",
         "Leny Yoro",
         "Tyrell Malacia",
         "Jack Fletcher",
-        "Patrick Dorgu",
-        "Tyler Fletcher",
-        "Bryan Mbeumo"
+        "Tyler Fletcher"
       ],
       "home_unavailable": [
         "Bertrand Traoré",
