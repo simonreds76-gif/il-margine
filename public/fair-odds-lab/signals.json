@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T11:15:37.768386Z",
+  "generated_at": "2026-05-09T12:03:59.086553Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -30,82 +30,15 @@
       "RWB"
     ]
   },
-  "fixtures_evaluated": 42,
+  "fixtures_evaluated": 40,
   "signals_qualifying": 5,
   "leagues_covered": [
     "bundesliga",
     "epl",
     "ligue-1"
   ],
-  "featured_signal_id": "20260509-joao-pedro-df049ed51b",
+  "featured_signal_id": "20260509-patrik-schick-cf47dbcbb4",
   "signals": [
-    {
-      "id": "20260509-joao-pedro-df049ed51b",
-      "match": {
-        "home_team": "Liverpool FC",
-        "away_team": "Chelsea FC",
-        "league": "epl",
-        "league_display": "Premier League",
-        "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "2026-05-09T11:30:00Z",
-        "kickoff_display": "Sat 09 May 12:30 UK",
-        "fotmob_match_id": "4813729",
-        "fotmob_page_url": "/matches/chelsea-vs-liverpool/2f3vr7#4813729",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Joao Pedro",
-        "team": "Chelsea",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/chelsea.png",
-        "team_primary_color": "#1d4ed8",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 45.3,
-        "fair_odds": 2.21
-      },
-      "market_data": {
-        "best_odds": 3.1,
-        "best_book": "Bet365",
-        "implied_chance_pct": 32.3
-      },
-      "edge": {
-        "price_gap_pp": 13.0,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 99
-        },
-        "share_of_team_chances_pct": 36,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Positive",
-          "percentile": 74
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 54
-        },
-        "fixture_boost_pct": 8,
-        "projected_minutes": 85,
-        "penalty_role": "Not on penalties",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong"
-      ],
-      "risk_flags": []
-    },
     {
       "id": "20260509-patrik-schick-cf47dbcbb4",
       "match": {
@@ -296,7 +229,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 93
+          "percentile": 94
         },
         "fixture_boost_pct": 19,
         "projected_minutes": 89,
@@ -361,11 +294,11 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 41
+          "percentile": 44
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 15
+          "percentile": 16
         },
         "fixture_boost_pct": -14,
         "projected_minutes": 90,
@@ -378,6 +311,74 @@
         "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
         "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260510-jakub-kaminski-a1b5acc667",
+      "match": {
+        "home_team": "1. FC Cologne",
+        "away_team": "1. FC Heidenheim",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "league_logo_path": "/league-logos/bundesliga.png",
+        "kickoff_utc": "2026-05-10T15:30:00Z",
+        "kickoff_display": "Sun 10 May 16:30 UK",
+        "fotmob_match_id": "4829605",
+        "fotmob_page_url": "/matches/1-fc-koln-vs-fc-heidenheim/2gushez#4829605",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Jakub Kaminski",
+        "team": "FC Cologne",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/bundesliga/fc-cologne.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#dc2626",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 41.3,
+        "fair_odds": 2.42
+      },
+      "market_data": {
+        "best_odds": 2.88,
+        "best_book": "Bet365",
+        "implied_chance_pct": 34.8
+      },
+      "edge": {
+        "price_gap_pp": 6.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 92
+        },
+        "share_of_team_chances_pct": 26,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 87
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 88
+        },
+        "fixture_boost_pct": 8,
+        "projected_minutes": 88,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup"
       ],
       "risk_flags": []
     }
