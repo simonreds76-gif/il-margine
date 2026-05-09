@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-09T01:17:45Z",
+  "fetched_at": "2026-05-09T09:57:59Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
@@ -11820,13 +11820,12 @@
       "source": "football-data",
       "source_latest": "2026-05-04",
       "target_dates": [
-        "2026-05-07",
         "2026-05-08",
         "2026-05-09",
         "2026-05-10",
         "2026-05-11"
       ],
-      "target_fixture_count": 6,
+      "target_fixture_count": 5,
       "unresolved_fixture_count": 5
     },
     "ligue-1": {
@@ -15269,36 +15268,21 @@
           "home_team": "strasbourg",
           "source": "football-data",
           "total_corners": 11
-        },
-        "2026-05-08|lens|nantes": {
-          "away_corners": 3,
-          "away_shots": 15,
-          "away_sot": 3,
-          "away_team": "nantes",
-          "home_corners": 8,
-          "home_shots": 14,
-          "home_sot": 5,
-          "home_team": "lens",
-          "match_id": 4830749,
-          "source": "fotmob",
-          "total_corners": 11
         }
       },
       "football_data_count": 286,
       "football_data_latest": "2026-05-03",
-      "fotmob_count": 1,
-      "fotmob_latest": "2026-05-08",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "lag_days": 6,
       "source": "football-data",
       "source_latest": "2026-05-03",
       "target_dates": [
-        "2026-05-07",
-        "2026-05-08",
         "2026-05-09",
         "2026-05-10",
         "2026-05-11"
       ],
-      "target_fixture_count": 4,
+      "target_fixture_count": 3,
       "unresolved_fixture_count": 3
     },
     "serie-a": {
@@ -19509,37 +19493,22 @@
           "home_team": "roma",
           "source": "football-data",
           "total_corners": 9
-        },
-        "2026-05-08|torino|sassuolo": {
-          "away_corners": 5,
-          "away_shots": 13,
-          "away_sot": 7,
-          "away_team": "sassuolo",
-          "home_corners": 7,
-          "home_shots": 18,
-          "home_sot": 4,
-          "home_team": "torino",
-          "match_id": 4803397,
-          "source": "fotmob",
-          "total_corners": 12
         }
       },
       "football_data_count": 350,
       "football_data_latest": "2026-05-04",
-      "fotmob_count": 1,
-      "fotmob_latest": "2026-05-08",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "lag_days": 5,
       "source": "football-data",
       "source_latest": "2026-05-04",
       "target_dates": [
-        "2026-05-07",
-        "2026-05-08",
         "2026-05-09",
         "2026-05-10",
         "2026-05-11",
         "2026-05-12"
       ],
-      "target_fixture_count": 6,
+      "target_fixture_count": 5,
       "unresolved_fixture_count": 5
     }
   },
