@@ -261,6 +261,7 @@ def fetch_confirmed_lineups(date_str: str, league_id: int, roster_by_team: Dict[
     stats = {
         "league_matches": len(serie_matches),
         "page_fetches": 0,
+        "page_fetch_errors": 0,
         "confirmed_fixtures": 0,
         "predicted_fixtures": 0,
         "missing_lineup_payload": 0,
@@ -271,12 +272,28 @@ def fetch_confirmed_lineups(date_str: str, league_id: int, roster_by_team: Dict[
         if not match_id:
             continue
 
-        match_payload = _fetch_json(MATCH_URL, {"id": match_id})
+        try:
+            match_payload = _fetch_json(MATCH_URL, {"id": match_id})
+        except Exception as exc:
+            stats["page_fetch_errors"] += 1
+            home = str(match.get("home", {}).get("name") or "").strip()
+            away = str(match.get("away", {}).get("name") or "").strip()
+            print(f"  WARNING: skipped FotMob match payload for {home} vs {away} ({match_id}): {exc}")
+            continue
+
         page_url = str(match_payload.get("pageUrl") or "").strip()
         if not page_url:
             continue
 
-        page_payload = _extract_next_payload(_fetch_text(f"{WEB_BASE}{page_url}"))
+        try:
+            page_payload = _extract_next_payload(_fetch_text(f"{WEB_BASE}{page_url}"))
+        except Exception as exc:
+            stats["page_fetch_errors"] += 1
+            home = str(match.get("home", {}).get("name") or "").strip()
+            away = str(match.get("away", {}).get("name") or "").strip()
+            print(f"  WARNING: skipped FotMob lineup page for {home} vs {away} ({match_id}): {exc}")
+            continue
+
         stats["page_fetches"] += 1
         page_props = page_payload.get("props", {}).get("pageProps", {})
         lineup = page_props.get("content", {}).get("lineup")
@@ -396,6 +413,7 @@ def main() -> None:
     stats = {
         "league_matches": 0,
         "page_fetches": 0,
+        "page_fetch_errors": 0,
         "confirmed_fixtures": 0,
         "predicted_fixtures": 0,
         "missing_lineup_payload": 0,
@@ -416,6 +434,7 @@ def main() -> None:
 
     print(f"  League fixtures:      {stats['league_matches']:,}")
     print(f"  Page fetches:         {stats['page_fetches']:,}")
+    print(f"  Page fetch errors:    {stats['page_fetch_errors']:,}")
     print(f"  Confirmed lineups:    {stats['confirmed_fixtures']:,}")
     print(f"  Expected XIs:         {stats['predicted_fixtures']:,}")
     print(f"  Missing payload:      {stats['missing_lineup_payload']:,}")
