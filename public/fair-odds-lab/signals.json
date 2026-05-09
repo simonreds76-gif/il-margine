@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T10:18:10.055518Z",
+  "generated_at": "2026-05-09T11:15:37.768386Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -35,11 +35,77 @@
   "leagues_covered": [
     "bundesliga",
     "epl",
-    "la-liga",
     "ligue-1"
   ],
-  "featured_signal_id": "20260509-patrik-schick-cf47dbcbb4",
+  "featured_signal_id": "20260509-joao-pedro-df049ed51b",
   "signals": [
+    {
+      "id": "20260509-joao-pedro-df049ed51b",
+      "match": {
+        "home_team": "Liverpool FC",
+        "away_team": "Chelsea FC",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-09T11:30:00Z",
+        "kickoff_display": "Sat 09 May 12:30 UK",
+        "fotmob_match_id": "4813729",
+        "fotmob_page_url": "/matches/chelsea-vs-liverpool/2f3vr7#4813729",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Joao Pedro",
+        "team": "Chelsea",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/chelsea.png",
+        "team_primary_color": "#1d4ed8",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 45.3,
+        "fair_odds": 2.21
+      },
+      "market_data": {
+        "best_odds": 3.1,
+        "best_book": "Bet365",
+        "implied_chance_pct": 32.3
+      },
+      "edge": {
+        "price_gap_pp": 13.0,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 99
+        },
+        "share_of_team_chances_pct": 36,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 74
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 54
+        },
+        "fixture_boost_pct": 8,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
     {
       "id": "20260509-patrik-schick-cf47dbcbb4",
       "match": {
@@ -235,75 +301,6 @@
         "fixture_boost_pct": 19,
         "projected_minutes": 89,
         "penalty_role": "Primary",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup",
-        "The fixture profile adds to his scoring case"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260509-antonio-martinez-2ed4feec3f",
-      "match": {
-        "home_team": "Elche CF",
-        "away_team": "Deportivo Alaves",
-        "league": "la-liga",
-        "league_display": "La Liga",
-        "league_logo_path": "/league-logos/la-liga.png",
-        "kickoff_utc": "2026-05-09T12:00:00Z",
-        "kickoff_display": "Sat 09 May 13:00 UK",
-        "fotmob_match_id": "4837455",
-        "fotmob_page_url": "/matches/deportivo-alaves-vs-elche/3cor73#4837455",
-        "lineup_type": "predicted",
-        "venue": ""
-      },
-      "player": {
-        "name": "Antonio Martinez",
-        "team": "Alaves",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/la-liga/alaves.png",
-        "team_primary_color": "#111827",
-        "team_secondary_color": "#f8fafc",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 43.3,
-        "fair_odds": 2.31
-      },
-      "market_data": {
-        "best_odds": 2.88,
-        "best_book": "Bet365",
-        "implied_chance_pct": 34.8
-      },
-      "edge": {
-        "price_gap_pp": 8.6,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 85
-        },
-        "share_of_team_chances_pct": 35,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Average",
-          "percentile": 50
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 96
-        },
-        "fixture_boost_pct": 34,
-        "projected_minutes": 84,
-        "penalty_role": "Not on penalties",
         "lineup_confidence": "Projected starter"
       },
       "confidence_tier": "Medium",
