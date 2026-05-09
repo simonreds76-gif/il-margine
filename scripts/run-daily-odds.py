@@ -42,10 +42,19 @@ def _env_int(name: str, default: int) -> int:
     return value if value > 0 else default
 
 
-def run_cmd(cmd: list[str], label: str, fatal: bool = True, timeout_seconds: int | None = None) -> int:
+def run_cmd(
+    cmd: list[str],
+    label: str,
+    fatal: bool = True,
+    timeout_seconds: int | None = None,
+    env_overrides: dict[str, str] | None = None,
+) -> int:
     print(f"\n=== {label} ===\n")
+    env = os.environ.copy()
+    if env_overrides:
+        env.update(env_overrides)
     try:
-        r = subprocess.run(cmd, cwd=str(ROOT), env=os.environ.copy(), timeout=timeout_seconds)
+        r = subprocess.run(cmd, cwd=str(ROOT), env=env, timeout=timeout_seconds)
     except subprocess.TimeoutExpired:
         timeout_label = f" after {timeout_seconds}s" if timeout_seconds else ""
         msg = f"{label} timed out{timeout_label}."
@@ -182,6 +191,7 @@ def main() -> int:
             label="6/6 Spread v1 Shadow append",
             fatal=False,
             timeout_seconds=step_timeout,
+            env_overrides={"SPREAD_V1_ENABLE_CORRECTION_ONLY": "1"},
         )
     else:
         print("\n=== 4/6 Strict report skipped (--skip-strict-report) ===")

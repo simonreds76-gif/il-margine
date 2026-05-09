@@ -181,9 +181,20 @@ try {
 
     Log "=== Step 7/8: Research shadow lanes ==="
     if ($spreadV1ShadowEnabled) {
-        & python scripts\strict-policy-report.py --append --signal-profile spread_v1_shadow --output "data\backtest\strict-signals-spreadv1-live.csv" 2>&1 | ForEach-Object { Log $_ }
-        if ($LASTEXITCODE -ne 0) {
-            Log "WARNING: spread_v1_shadow append failed (exit $LASTEXITCODE), continuing..."
+        $prevSpreadV1CorrectionOnly = $env:SPREAD_V1_ENABLE_CORRECTION_ONLY
+        $env:SPREAD_V1_ENABLE_CORRECTION_ONLY = "1"
+        try {
+            & python scripts\strict-policy-report.py --append --signal-profile spread_v1_shadow --output "data\backtest\strict-signals-spreadv1-live.csv" 2>&1 | ForEach-Object { Log $_ }
+            if ($LASTEXITCODE -ne 0) {
+                Log "WARNING: spread_v1_shadow append failed (exit $LASTEXITCODE), continuing..."
+            }
+        }
+        finally {
+            if ($null -eq $prevSpreadV1CorrectionOnly) {
+                Remove-Item Env:\SPREAD_V1_ENABLE_CORRECTION_ONLY -ErrorAction SilentlyContinue
+            } else {
+                $env:SPREAD_V1_ENABLE_CORRECTION_ONLY = $prevSpreadV1CorrectionOnly
+            }
         }
     } else {
         Log "Spread v1 shadow skipped (STRICT_SPREAD_V1_SHADOW_ENABLED=0)."
