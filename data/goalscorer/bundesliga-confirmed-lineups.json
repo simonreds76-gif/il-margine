@@ -1,281 +1,6 @@
 {
   "fixtures": [
     {
-      "fotmob_match_id": 4829604,
-      "fotmob_page_url": "/matches/borussia-dortmund-vs-eintracht-frankfurt/36cxvu#4829604",
-      "home_fotmob_team_id": 9789,
-      "away_fotmob_team_id": 9810,
-      "match_date": "2026-05-08",
-      "kickoff_utc": "2026-05-08T18:30:00Z",
-      "home_team": "Borussia Dortmund",
-      "away_team": "Eintracht Frankfurt",
-      "home_status": "Confirmed Lineup",
-      "away_status": "Confirmed Lineup",
-      "lineup_type": "standard",
-      "home_formation": "3-4-2-1",
-      "away_formation": "4-2-3-1",
-      "home_players": [
-        "Gregor Kobel",
-        "Luca Reggiani",
-        "Waldemar Anton",
-        "Nico Schlotterbeck",
-        "Julian Ryerson",
-        "Marcel Sabitzer",
-        "Jobe Bellingham",
-        "Maximilian Beier",
-        "Julian Brandt",
-        "Samuele Inácio",
-        "Serhou Guirassy"
-      ],
-      "away_players": [
-        "Michael Zetterer",
-        "Aurèle Amenda",
-        "Robin Koch",
-        "Arthur Theate",
-        "Nathaniel Brown",
-        "Ellyes Skhiri",
-        "Mahmoud Dahoud",
-        "Ritsu Doan",
-        "Can Uzun",
-        "Farès Chaïbi",
-        "Arnaud Kalimuendo-Muinga"
-      ],
-      "home_starters": [
-        {
-          "name": "Gregor Kobel",
-          "line_index": -1,
-          "line_size": 1,
-          "role_score": 0,
-          "role_group": "GK",
-          "formation": "3-4-2-1",
-          "position_id": 11
-        },
-        {
-          "name": "Luca Reggiani",
-          "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 33
-        },
-        {
-          "name": "Waldemar Anton",
-          "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 35
-        },
-        {
-          "name": "Nico Schlotterbeck",
-          "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 37
-        },
-        {
-          "name": "Julian Ryerson",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 62
-        },
-        {
-          "name": "Marcel Sabitzer",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 64
-        },
-        {
-          "name": "Jobe Bellingham",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 66
-        },
-        {
-          "name": "Maximilian Beier",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 68
-        },
-        {
-          "name": "Julian Brandt",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84
-        },
-        {
-          "name": "Samuele Inácio",
-          "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 86
-        },
-        {
-          "name": "Serhou Guirassy",
-          "line_index": 3,
-          "line_size": 1,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-4-2-1",
-          "position_id": 105
-        }
-      ],
-      "away_starters": [
-        {
-          "name": "Michael Zetterer",
-          "line_index": -1,
-          "line_size": 1,
-          "role_score": 0,
-          "role_group": "GK",
-          "formation": "4-2-3-1",
-          "position_id": 11
-        },
-        {
-          "name": "Aurèle Amenda",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 32
-        },
-        {
-          "name": "Robin Koch",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 34
-        },
-        {
-          "name": "Arthur Theate",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 36
-        },
-        {
-          "name": "Nathaniel Brown",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 38
-        },
-        {
-          "name": "Ellyes Skhiri",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64
-        },
-        {
-          "name": "Mahmoud Dahoud",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66
-        },
-        {
-          "name": "Ritsu Doan",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83
-        },
-        {
-          "name": "Can Uzun",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85
-        },
-        {
-          "name": "Farès Chaïbi",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87
-        },
-        {
-          "name": "Arnaud Kalimuendo-Muinga",
-          "line_index": 3,
-          "line_size": 1,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-2-3-1",
-          "position_id": 115
-        }
-      ],
-      "home_subs": [
-        "Alexander Meyer",
-        "Niklas Süle",
-        "Carney Chukwuemeka",
-        "Daniel Svensson",
-        "Felix Nmecha",
-        "Karim Adeyemi",
-        "Salih Özcan",
-        "Yan Couto",
-        "Fábio Silva"
-      ],
-      "away_subs": [
-        "Mario Götze",
-        "Jean-Mattéo Bahoya",
-        "Kauã",
-        "Hugo Larsson",
-        "Oscar Højlund",
-        "Timothy Chandler",
-        "Ansgar Knauff",
-        "Ayoube Amaimouni-Echghouyab",
-        "Jonathan Burkardt"
-      ],
-      "home_unavailable": [
-        "Emre Can",
-        "Ramy Bensebaini"
-      ],
-      "away_unavailable": [
-        "Jens Grahl",
-        "Michy Batshuayi",
-        "Nnamdi Collins",
-        "Rasmus Kristensen"
-      ]
-    },
-    {
       "fotmob_match_id": 4829603,
       "fotmob_page_url": "/matches/augsburg-vs-borussia-monchengladbach/2qjvjb#4829603",
       "home_fotmob_team_id": 8406,
@@ -1858,9 +1583,9 @@
         "Maximilian Eggestein",
         "Johan Manzambi",
         "Jan-Niklas Beste",
-        "Lucas Höler",
+        "Maximilian Philipp",
         "Vincenzo Grifo",
-        "Igor Matanovic"
+        "Lucas Höler"
       ],
       "home_starters": [
         {
@@ -2037,7 +1762,7 @@
           "position_id": 83
         },
         {
-          "name": "Lucas Höler",
+          "name": "Maximilian Philipp",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -2055,7 +1780,7 @@
           "position_id": 87
         },
         {
-          "name": "Igor Matanovic",
+          "name": "Lucas Höler",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
