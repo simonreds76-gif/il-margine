@@ -467,6 +467,7 @@ function formatHighlightDate(value: string) {
 
 function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
   if (!highlights.length) return null;
+  const gridColumns = highlights.length >= 3 ? "md:grid-cols-2 xl:grid-cols-3" : "md:grid-cols-2";
 
   return (
     <section className="mt-8 overflow-hidden rounded-[2rem] border border-emerald-400/20 bg-[#0c0f14] shadow-[0_24px_90px_rgba(0,0,0,0.28)]">
@@ -484,7 +485,7 @@ function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
         </p>
       </div>
 
-      <div className="grid gap-px bg-slate-800/70 md:grid-cols-2 xl:grid-cols-3">
+      <div className={`grid gap-px bg-slate-800/70 ${gridColumns}`}>
         {highlights.map((highlight) => (
           <article key={highlight.id} className="bg-[#0c0f14] p-5">
             <div className="flex items-start justify-between gap-3">
@@ -555,7 +556,7 @@ function EmptySignalsState() {
         </svg>
       </div>
       <h2 className="mt-5 text-2xl font-black tracking-tight text-slate-50">
-        No live value spots right now
+        No current value spots right now
       </h2>
       <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-slate-400">
         The latest board does not have a goalscorer price strong enough to
@@ -576,12 +577,9 @@ export default function FairOddsLabPage() {
   const signals = featured
     ? [featured, ...artifact.signals.filter((signal) => signal.id !== featured.id)]
     : artifact.signals;
-  const exampleSignal = featured ?? sampleSignals[0];
-  const exampleProbabilityGap = probabilityGap(exampleSignal);
-  const leagueCount =
-    artifact.leaguesCovered.length || new Set(signals.map((signal) => signal.competition)).size;
+  const leagueCount = new Set(signals.map((signal) => signal.competition)).size;
   const boardStatus = featured ? featured.player : "Quiet board";
-  const coverageLabel = leagueCount > 0 ? leagueCount.toString() : "Waiting";
+  const coverageLabel = leagueCount.toString();
   const refreshedLabel = formatRefreshed(artifact.generatedAt);
 
   return (
@@ -613,9 +611,9 @@ export default function FairOddsLabPage() {
 
           <div className="relative mt-8 grid gap-0 overflow-hidden rounded-2xl border border-slate-700/55 bg-slate-950/70 sm:grid-cols-4">
             {[
-              ["Board status", boardStatus],
-              ["Live value spots", signals.length.toString()],
-              ["Leagues active", coverageLabel],
+              ["Top value spot", boardStatus],
+              ["Current spots", signals.length.toString()],
+              ["Competitions", coverageLabel],
               ["Updated", refreshedLabel],
             ].map(([label, value], index) => (
               <div
@@ -635,10 +633,10 @@ export default function FairOddsLabPage() {
           </div>
         </section>
 
-        <section className="mt-5 rounded-2xl border border-amber-400/25 bg-amber-400/[0.08] px-4 py-3 text-sm leading-6 text-amber-100 sm:px-5">
-          Research board only. These are model-led value spots, not official
-          tracked picks. Projected starters can appear before team news; once
-          official lineups land, the status updates to confirmed or drops out.
+        <section className="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.055] px-4 py-3 text-sm leading-6 text-emerald-100 sm:px-5">
+          Intelligence board. Prices and team news can move. Likely starters
+          update to Confirmed XI when official teams land, or drop out if the
+          lineup no longer supports the signal.
         </section>
 
         <section className="mt-5">
@@ -646,14 +644,25 @@ export default function FairOddsLabPage() {
             <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-300">
               How to read this
             </div>
-            <p className="mt-3 text-sm leading-7 text-slate-300">
-              The model estimates a player&apos;s true chance of scoring. If our fair
-              odds are {formatOdds(exampleSignal.fairOdds)} and the bookmaker offers{" "}
-              {formatOdds(exampleSignal.bestBookOdds)}, the bookmaker is paying
-              more than our price says it should. That is a value signal, not a
-              promise the player will score. In plain words, a {`+${exampleProbabilityGap.toFixed(1)}pp`} gap means our model sees a
-              bigger scoring chance than the market price implies.
-            </p>
+            {featured ? (
+              <p className="mt-3 text-sm leading-7 text-slate-300">
+                The model estimates a player&apos;s true chance of scoring. If our
+                fair odds are {formatOdds(featured.fairOdds)} and the bookmaker
+                offers {formatOdds(featured.bestBookOdds)}, the bookmaker is
+                paying more than our price says it should. In plain words, a{" "}
+                {`+${probabilityGap(featured).toFixed(1)}pp`} gap means our
+                model sees a bigger scoring chance than the market price
+                implies.
+              </p>
+            ) : (
+              <p className="mt-3 text-sm leading-7 text-slate-300">
+                The model estimates a player&apos;s true chance of scoring and
+                compares that fair price with the bookmaker&apos;s market price.
+                When our price is shorter than the market, the difference is a
+                probability gap: the model sees a bigger scoring chance than
+                the odds imply.
+              </p>
+            )}
           </div>
         </section>
 

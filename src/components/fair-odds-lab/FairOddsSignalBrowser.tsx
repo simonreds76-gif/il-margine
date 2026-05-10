@@ -290,13 +290,13 @@ export function FairOddsSignalBrowser({
             Signal browser
           </div>
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-50">
-            Browse live value spots
+            Browse current value spots
           </h2>
         </div>
         <div className="text-sm text-slate-500">
           {artifact.isMock
             ? "Static concept data for page design."
-            : "Refreshed from the latest model artifact. No live database calls."}
+            : "Updated from the latest model run."}
         </div>
       </div>
 
@@ -376,6 +376,7 @@ export function FairOddsSignalBrowser({
                 signal={selectedSignal}
                 eyebrow={selectedSignal.id === featuredSignalId ? "Top value spot" : "Selected value spot"}
                 controls={
+                  visibleSignals.length > 1 ? (
                   <div className="hidden items-center gap-2 sm:flex">
                     <button
                       type="button"
@@ -395,22 +396,25 @@ export function FairOddsSignalBrowser({
                       Next
                     </button>
                   </div>
+                  ) : null
                 }
               />
             </div>
           ) : null}
 
-          <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
-            {visibleSignals.map((signal) => (
-              <SignalCard
-                key={signal.id}
-                signal={signal}
-                featured={signal.id === featuredSignalId}
-                selected={signal.id === selectedSignal?.id}
-                onOpen={() => openSignal(signal)}
-              />
-            ))}
-          </div>
+          {visibleSignals.length > 1 ? (
+            <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
+              {visibleSignals.map((signal) => (
+                <SignalCard
+                  key={signal.id}
+                  signal={signal}
+                  featured={signal.id === featuredSignalId}
+                  selected={signal.id === selectedSignal?.id}
+                  onOpen={() => openSignal(signal)}
+                />
+              ))}
+            </div>
+          ) : null}
         </div>
       )}
     </section>

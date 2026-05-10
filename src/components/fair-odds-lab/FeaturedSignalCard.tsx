@@ -309,6 +309,7 @@ export function FeaturedSignalCard({
   controls?: ReactNode;
 }) {
   const gap = probabilityGap(signal);
+  const venueLabel = signal.venue && signal.venue !== "Venue TBC" ? ` | ${signal.venue}` : "";
 
   return (
     <article className="overflow-hidden rounded-[2rem] border border-emerald-300/20 bg-[#0a0f12] shadow-[0_24px_90px_rgba(16,185,129,0.12)]">
@@ -332,13 +333,19 @@ export function FeaturedSignalCard({
               </span>
             </div>
             <div className="mt-1 text-xs text-slate-500">
-              {signal.kickoff} <span className="text-slate-700">|</span> {signal.venue}
+              {signal.kickoff}
+              {venueLabel ? (
+                <>
+                  <span className="text-slate-700"> | </span>
+                  {signal.venue}
+                </>
+              ) : null}
             </div>
           </div>
           <div className="flex items-center gap-2">
             {controls}
             <span className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">
-              Research only
+              Model signal
             </span>
           </div>
         </div>
