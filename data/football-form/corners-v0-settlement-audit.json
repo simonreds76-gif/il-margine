@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-05-10T14:16:59Z",
+  "run_at": "2026-05-10T17:55:50Z",
   "model": "corners-v0-research",
   "total_bets": 34,
   "settled_this_run": 0,
   "total_settled": 24,
   "total_pending": 10,
   "pending_breakdown": {
-    "future": 7,
-    "live": 3,
-    "stale": 0,
+    "future": 6,
+    "live": 1,
+    "stale": 3,
     "old_stale": 0,
     "unknown": 0
   },
@@ -89,11 +89,38 @@
       "snapshot_path": "data/results-snapshot/2026-05-10.json"
     }
   },
-  "stale_rows": [],
+  "stale_rows": [
+    {
+      "match": "Cremonese vs Pisa",
+      "league": "serie-a",
+      "line": "8.5",
+      "side": "under",
+      "kickoff": "2026-05-10T13:00:00Z",
+      "hours_elapsed": 4.93
+    },
+    {
+      "match": "Crystal Palace vs Everton",
+      "league": "epl",
+      "line": "9.5",
+      "side": "under",
+      "kickoff": "2026-05-10T13:00:00Z",
+      "hours_elapsed": 4.93
+    },
+    {
+      "match": "Fiorentina vs Genoa",
+      "league": "serie-a",
+      "line": "8.5",
+      "side": "under",
+      "kickoff": "2026-05-10T13:00:00Z",
+      "hours_elapsed": 4.93
+    }
+  ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [],
+  "warnings": [
+    "3 stale pending row(s) across 3 fixture(s) (3-48h elapsed)"
+  ],
   "errors": [],
   "exit_code_recommendation": 0
 }
