@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-10T01:22:55Z",
+  "fetched_at": "2026-05-10T10:03:35Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
@@ -3465,99 +3465,17 @@
           "home_team": "st pauli",
           "source": "football-data",
           "total_corners": 14
-        },
-        "2026-05-08|borussia dortmund|eintracht frankfurt": {
-          "away_corners": 2,
-          "away_shots": 9,
-          "away_sot": 4,
-          "away_team": "eintracht frankfurt",
-          "home_corners": 6,
-          "home_shots": 12,
-          "home_sot": 8,
-          "home_team": "borussia dortmund",
-          "match_id": 4829604,
-          "source": "fotmob",
-          "total_corners": 8
-        },
-        "2026-05-09|augsburg|borussia monchengladbach": {
-          "away_corners": 2,
-          "away_shots": 16,
-          "away_sot": 4,
-          "away_team": "borussia monchengladbach",
-          "home_corners": 3,
-          "home_shots": 15,
-          "home_sot": 10,
-          "home_team": "augsburg",
-          "match_id": 4829603,
-          "source": "fotmob",
-          "total_corners": 5
-        },
-        "2026-05-09|hoffenheim|werder bremen": {
-          "away_corners": 3,
-          "away_shots": 11,
-          "away_sot": 2,
-          "away_team": "werder bremen",
-          "home_corners": 8,
-          "home_shots": 15,
-          "home_sot": 4,
-          "home_team": "hoffenheim",
-          "match_id": 4829607,
-          "source": "fotmob",
-          "total_corners": 11
-        },
-        "2026-05-09|rb leipzig|st pauli": {
-          "away_corners": 5,
-          "away_shots": 8,
-          "away_sot": 3,
-          "away_team": "st pauli",
-          "home_corners": 3,
-          "home_shots": 13,
-          "home_sot": 5,
-          "home_team": "rb leipzig",
-          "match_id": 4829609,
-          "source": "fotmob",
-          "total_corners": 8
-        },
-        "2026-05-09|stuttgart|bayer leverkusen": {
-          "away_corners": 6,
-          "away_shots": 6,
-          "away_sot": 5,
-          "away_team": "bayer leverkusen",
-          "home_corners": 7,
-          "home_shots": 20,
-          "home_sot": 9,
-          "home_team": "stuttgart",
-          "match_id": 4829610,
-          "source": "fotmob",
-          "total_corners": 13
-        },
-        "2026-05-09|wolfsburg|bayern munich": {
-          "away_corners": 3,
-          "away_shots": 16,
-          "away_sot": 9,
-          "away_team": "bayern munich",
-          "home_corners": 6,
-          "home_shots": 17,
-          "home_sot": 5,
-          "home_team": "wolfsburg",
-          "match_id": 4829611,
-          "source": "fotmob",
-          "total_corners": 9
         }
       },
       "football_data_count": 288,
       "football_data_latest": "2026-05-03",
-      "fotmob_count": 6,
-      "fotmob_latest": "2026-05-09",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "lag_days": 7,
       "source": "football-data",
       "source_latest": "2026-05-03",
-      "target_dates": [
-        "2026-05-08",
-        "2026-05-09",
-        "2026-05-10"
-      ],
-      "target_fixture_count": 3,
+      "target_dates": [],
+      "target_fixture_count": 0,
       "unresolved_fixture_count": 0
     },
     "epl": {
@@ -7831,13 +7749,12 @@
       "source": "football-data",
       "source_latest": "2026-05-04",
       "target_dates": [
-        "2026-05-08",
         "2026-05-09",
         "2026-05-10",
         "2026-05-11",
         "2026-05-12"
       ],
-      "target_fixture_count": 7,
+      "target_fixture_count": 3,
       "unresolved_fixture_count": 3
     },
     "la-liga": {
@@ -11929,19 +11846,6 @@
           "source": "football-data",
           "total_corners": 6
         },
-        "2026-05-08|levante|osasuna": {
-          "away_corners": 1,
-          "away_shots": 5,
-          "away_sot": 3,
-          "away_team": "osasuna",
-          "home_corners": 15,
-          "home_shots": 35,
-          "home_sot": 12,
-          "home_team": "levante",
-          "match_id": 4837453,
-          "source": "fotmob",
-          "total_corners": 16
-        },
         "2026-05-09|ath madrid|celta": {
           "away_corners": 0,
           "away_shots": 3,
@@ -11997,18 +11901,17 @@
       },
       "football_data_count": 340,
       "football_data_latest": "2026-05-04",
-      "fotmob_count": 5,
+      "fotmob_count": 4,
       "fotmob_latest": "2026-05-09",
       "lag_days": 6,
       "source": "football-data",
       "source_latest": "2026-05-04",
       "target_dates": [
-        "2026-05-08",
         "2026-05-09",
         "2026-05-10",
         "2026-05-11"
       ],
-      "target_fixture_count": 5,
+      "target_fixture_count": 2,
       "unresolved_fixture_count": 2
     },
     "ligue-1": {
@@ -15465,8 +15368,8 @@
         "2026-05-10",
         "2026-05-11"
       ],
-      "target_fixture_count": 3,
-      "unresolved_fixture_count": 3
+      "target_fixture_count": 4,
+      "unresolved_fixture_count": 4
     },
     "serie-a": {
       "api_football_count": 0,
