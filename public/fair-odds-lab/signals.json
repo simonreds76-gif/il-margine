@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T18:10:49.850305Z",
+  "generated_at": "2026-05-10T19:08:08.063118Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -30,69 +30,69 @@
       "RWB"
     ]
   },
-  "fixtures_evaluated": 16,
+  "fixtures_evaluated": 12,
   "signals_qualifying": 1,
   "leagues_covered": [
-    "ligue-1"
+    "epl"
   ],
-  "featured_signal_id": "20260510-lassine-sinayoko-bf7f8b3dfe",
+  "featured_signal_id": "20260511-dominic-calvert-lewin-9cd27c06f4",
   "signals": [
     {
-      "id": "20260510-lassine-sinayoko-bf7f8b3dfe",
+      "id": "20260511-dominic-calvert-lewin-9cd27c06f4",
       "match": {
-        "home_team": "AJ Auxerre",
-        "away_team": "OGC Nice",
-        "league": "ligue-1",
-        "league_display": "Ligue 1",
-        "league_logo_path": "/league-logos/ligue-1.png",
-        "kickoff_utc": "2026-05-10T19:00:00Z",
-        "kickoff_display": "Sun 10 May 20:00 UK",
-        "fotmob_match_id": "4830747",
-        "fotmob_page_url": "/matches/auxerre-vs-nice/2sy6tc#4830747",
+        "home_team": "Tottenham Hotspur",
+        "away_team": "Leeds United",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-11T19:00:00Z",
+        "kickoff_display": "Mon 11 May 20:00 UK",
+        "fotmob_match_id": "4813733",
+        "fotmob_page_url": "/matches/leeds-united-vs-tottenham-hotspur/2ejdsf#4813733",
         "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
-        "name": "Lassine Sinayoko",
-        "team": "Auxerre",
+        "name": "Dominic Calvert-Lewin",
+        "team": "Leeds",
         "position": "FW",
         "jersey_label": "",
-        "team_logo_path": "/team-logos/ligue-1/auxerre.png",
-        "team_primary_color": "#0f172a",
-        "team_secondary_color": "#f8fafc",
+        "team_logo_path": "/team-logos/epl/leeds.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#facc15",
         "team_shirt_pattern": "solid"
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 47.9,
-        "fair_odds": 2.09
+        "scoring_chance_pct": 42.4,
+        "fair_odds": 2.36
       },
       "market_data": {
-        "best_odds": 2.75,
+        "best_odds": 2.88,
         "best_book": "Bet365",
-        "implied_chance_pct": 36.4
+        "implied_chance_pct": 34.8
       },
       "edge": {
-        "price_gap_pp": 11.5,
+        "price_gap_pp": 7.6,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 97
+          "percentile": 93
         },
-        "share_of_team_chances_pct": 35,
+        "share_of_team_chances_pct": 28,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 88
+          "percentile": 78
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 95
+          "percentile": 82
         },
-        "fixture_boost_pct": 19,
-        "projected_minutes": 89,
+        "fixture_boost_pct": -19,
+        "projected_minutes": 87,
         "penalty_role": "Primary",
         "lineup_confidence": "Projected starter"
       },
@@ -102,7 +102,7 @@
         "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
         "Opponent defensive profile is a positive matchup",
-        "The fixture profile adds to his scoring case"
+        "Primary penalty role adds a clear scoring route"
       ],
       "risk_flags": []
     }
