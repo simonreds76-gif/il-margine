@@ -1,16 +1,16 @@
 {
-  "updated_at": "2026-05-10T14:23:18Z",
+  "updated_at": "2026-05-10T15:19:02Z",
   "reason": "cycle",
   "leagues": {
     "serie-a": {
-      "last_successful_run_at": "2026-05-10T12:58:36Z",
+      "last_successful_run_at": "2026-05-10T15:18:28Z",
       "last_detail_run_at": "2026-05-01T17:16:09Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
-      "last_tier": "off",
-      "last_decision": "off",
-      "last_message": "Skip serie-a: no upcoming fixtures inside schedule window.",
-      "next_kickoff_utc": ""
+      "last_tier": "lineup",
+      "last_decision": "ran",
+      "last_message": "Ran serie-a in lineup tier (cadence 10m, fixtures 1).",
+      "next_kickoff_utc": "2026-05-10T16:00:00Z"
     },
     "epl": {
       "last_successful_run_at": "2026-05-10T12:59:14Z",
@@ -33,7 +33,7 @@
       "next_kickoff_utc": ""
     },
     "bundesliga": {
-      "last_successful_run_at": "2026-05-10T14:23:18Z",
+      "last_successful_run_at": "2026-05-10T15:19:02Z",
       "last_detail_run_at": "2026-05-01T17:19:46Z",
       "last_failure_at": "",
       "consecutive_failures": 0,
