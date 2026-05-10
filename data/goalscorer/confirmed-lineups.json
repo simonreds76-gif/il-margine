@@ -856,35 +856,35 @@
       "kickoff_utc": "2026-05-10T18:45:00Z",
       "home_team": "Milan",
       "away_team": "Atalanta",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-5-2",
-      "away_formation": "3-4-1-2",
+      "away_formation": "3-4-2-1",
       "home_players": [
         "Mike Maignan",
-        "Davide Bartesaghi",
+        "Koni De Winter",
         "Matteo Gabbia",
         "Strahinja Pavlovic",
         "Alexis Saelemaekers",
-        "Youssouf Fofana",
-        "Ardon Jashari",
+        "Ruben Loftus-Cheek",
+        "Samuele Ricci",
         "Adrien Rabiot",
-        "Pervis Estupinán",
-        "Christopher Nkunku",
-        "Rafael Leão"
+        "Davide Bartesaghi",
+        "Rafael Leão",
+        "Santiago Giménez"
       ],
       "away_players": [
         "Marco Carnesecchi",
         "Giorgio Scalvini",
-        "Berat Djimsiti",
-        "Honest Ahanor",
+        "Isak Hien",
+        "Sead Kolasinac",
         "Davide Zappacosta",
         "Marten de Roon",
         "Éderson",
         "Nicola Zalewski",
         "Charles De Ketelaere",
-        "Gianluca Scamacca",
+        "Giacomo Raspadori",
         "Nikola Krstovic"
       ],
       "home_starters": [
@@ -898,7 +898,7 @@
           "position_id": 11
         },
         {
-          "name": "Davide Bartesaghi",
+          "name": "Koni De Winter",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -934,7 +934,7 @@
           "position_id": 71
         },
         {
-          "name": "Youssouf Fofana",
+          "name": "Ruben Loftus-Cheek",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -943,7 +943,7 @@
           "position_id": 73
         },
         {
-          "name": "Ardon Jashari",
+          "name": "Samuele Ricci",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -961,7 +961,7 @@
           "position_id": 77
         },
         {
-          "name": "Pervis Estupinán",
+          "name": "Davide Bartesaghi",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -970,7 +970,7 @@
           "position_id": 79
         },
         {
-          "name": "Christopher Nkunku",
+          "name": "Rafael Leão",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -979,7 +979,7 @@
           "position_id": 104
         },
         {
-          "name": "Rafael Leão",
+          "name": "Santiago Giménez",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -995,7 +995,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 11
         },
         {
@@ -1004,25 +1004,25 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 33
         },
         {
-          "name": "Berat Djimsiti",
+          "name": "Isak Hien",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 35
         },
         {
-          "name": "Honest Ahanor",
+          "name": "Sead Kolasinac",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 37
         },
         {
@@ -1031,7 +1031,7 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 62
         },
         {
@@ -1040,7 +1040,7 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 64
         },
         {
@@ -1049,7 +1049,7 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 66
         },
         {
@@ -1058,39 +1058,63 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 68
         },
         {
           "name": "Charles De Ketelaere",
           "line_index": 2,
-          "line_size": 1,
+          "line_size": 2,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-4-1-2",
-          "position_id": 85
+          "formation": "3-4-2-1",
+          "position_id": 84
         },
         {
-          "name": "Gianluca Scamacca",
-          "line_index": 3,
+          "name": "Giacomo Raspadori",
+          "line_index": 2,
           "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-4-1-2",
-          "position_id": 104
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86
         },
         {
           "name": "Nikola Krstovic",
           "line_index": 3,
-          "line_size": 2,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-1-2",
-          "position_id": 106
+          "formation": "3-4-2-1",
+          "position_id": 105
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Matteo Pittarella",
+        "Pietro Terracciano",
+        "David Odogu",
+        "Zachary Athekame",
+        "Ardon Jashari",
+        "Pervis Estupinán",
+        "Youssouf Fofana",
+        "Christopher Nkunku",
+        "Niclas Füllkrug"
+      ],
+      "away_subs": [
+        "Francesco Rossi",
+        "Marco Sportiello",
+        "Honest Ahanor",
+        "Odilon Kossounou",
+        "Relja Obric",
+        "Kamaldeen Sulemana",
+        "Lazar Samardzic",
+        "Mario Pasalic",
+        "Raoul Bellanova",
+        "Yunus Musah",
+        "Dominic Vavassori",
+        "Gianluca Scamacca",
+        "Mitchel Bakker"
+      ],
       "home_unavailable": [
         "Christian Pulisic",
         "Fikayo Tomori",
@@ -1121,11 +1145,11 @@
         "Lautaro Valenti",
         "Enrico Del Prato",
         "Christian Ordóñez",
-        "Mandela Keita",
         "Hans Nicolussi Caviglia",
+        "Mandela Keita",
         "Emanuele Valeri",
-        "Gabriel Strefezza",
-        "Nesta Elphege"
+        "Nesta Elphege",
+        "Gabriel Strefezza"
       ],
       "away_players": [
         "Mile Svilar",
@@ -1196,7 +1220,7 @@
           "position_id": 73
         },
         {
-          "name": "Mandela Keita",
+          "name": "Hans Nicolussi Caviglia",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -1205,7 +1229,7 @@
           "position_id": 75
         },
         {
-          "name": "Hans Nicolussi Caviglia",
+          "name": "Mandela Keita",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -1223,7 +1247,7 @@
           "position_id": 79
         },
         {
-          "name": "Gabriel Strefezza",
+          "name": "Nesta Elphege",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -1232,7 +1256,7 @@
           "position_id": 104
         },
         {
-          "name": "Nesta Elphege",
+          "name": "Gabriel Strefezza",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -1343,31 +1367,30 @@
         }
       ],
       "home_subs": [
+        "Mateo Pellegrino",
+        "Franco Carboni",
+        "Sascha Britschgi",
+        "Nahuel Estévez",
+        "Pontus Almqvist",
         "Edoardo Corvi",
         "Filippo Rinaldi",
         "Abdoulaye Ndiaye",
         "Dominik Drobnic",
-        "Franco Carboni",
-        "Nahuel Estévez",
         "Oliver Sørensen",
-        "Pontus Almqvist",
-        "Sascha Britschgi",
         "Daniel Mikolajewski",
-        "Jacob Ondrejka",
-        "Mateo Pellegrino"
+        "Jacob Ondrejka"
       ],
       "away_subs": [
+        "Daniele Ghilardi",
+        "Neil El Aynaoui",
+        "Niccolò Pisilli",
+        "Devyne Rensch",
+        "Lorenzo Venturino",
         "Giorgio De Marzi",
         "Pierluigi Gollini",
-        "Daniele Ghilardi",
         "Jan Ziólkowski",
         "Konstantinos Tsimikas",
         "Angeliño",
-        "Devyne Rensch",
-        "Neil El Aynaoui",
-        "Niccolò Pisilli",
-        "Stephan El Shaarawy",
-        "Lorenzo Venturino",
         "Robinio Vaz"
       ],
       "home_unavailable": [
