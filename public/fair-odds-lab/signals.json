@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T11:44:51.566757Z",
+  "generated_at": "2026-05-10T12:59:52.245049Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -30,14 +30,84 @@
       "RWB"
     ]
   },
-  "fixtures_evaluated": 27,
-  "signals_qualifying": 2,
+  "fixtures_evaluated": 26,
+  "signals_qualifying": 4,
   "leagues_covered": [
     "bundesliga",
-    "ligue-1"
+    "epl",
+    "ligue-1",
+    "serie-a"
   ],
-  "featured_signal_id": "20260510-lassine-sinayoko-bf7f8b3dfe",
+  "featured_signal_id": "20260510-zian-flemming-a822505914",
   "signals": [
+    {
+      "id": "20260510-zian-flemming-a822505914",
+      "match": {
+        "home_team": "Burnley FC",
+        "away_team": "Aston Villa",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-10T13:00:00Z",
+        "kickoff_display": "Sun 10 May 14:00 UK",
+        "fotmob_match_id": "4813726",
+        "fotmob_page_url": "/matches/burnley-vs-aston-villa/2t9lxd#4813726",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Zian Flemming",
+        "team": "Burnley",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/burnley.png",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#38bdf8",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 38.4,
+        "fair_odds": 2.6
+      },
+      "market_data": {
+        "best_odds": 3.75,
+        "best_book": "Bet365",
+        "implied_chance_pct": 26.7
+      },
+      "edge": {
+        "price_gap_pp": 11.7,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 93
+        },
+        "share_of_team_chances_pct": 39,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 20
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 58
+        },
+        "fixture_boost_pct": -2,
+        "projected_minutes": 85,
+        "penalty_role": "Primary",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
     {
       "id": "20260510-lassine-sinayoko-bf7f8b3dfe",
       "match": {
@@ -108,6 +178,73 @@
       "risk_flags": []
     },
     {
+      "id": "20260510-lorenzo-colombo-7aad214105",
+      "match": {
+        "home_team": "ACF Fiorentina",
+        "away_team": "Genoa CFC",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-05-10T13:00:00Z",
+        "kickoff_display": "Sun 10 May 14:00 UK",
+        "fotmob_match_id": "4803391",
+        "fotmob_page_url": "/matches/fiorentina-vs-genoa/2wv81r#4803391",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Lorenzo Colombo",
+        "team": "Genoa",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/genoa.png",
+        "team_primary_color": "#581c87",
+        "team_secondary_color": "#f97316",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 33.0,
+        "fair_odds": 3.03
+      },
+      "market_data": {
+        "best_odds": 4.33,
+        "best_book": "Bet365",
+        "implied_chance_pct": 23.1
+      },
+      "edge": {
+        "price_gap_pp": 9.9,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 88
+        },
+        "share_of_team_chances_pct": 28,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 9
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 53
+        },
+        "fixture_boost_pct": -4,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
       "id": "20260510-jakub-kaminski-a1b5acc667",
       "match": {
         "home_team": "1. FC Cologne",
@@ -155,7 +292,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 96
+          "percentile": 95
         },
         "opponent_defensive_weakness": {
           "tier": "High",

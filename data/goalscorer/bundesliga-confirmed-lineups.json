@@ -268,9 +268,9 @@
       "kickoff_utc": "2026-05-10T13:30:00Z",
       "home_team": "Hamburger SV",
       "away_team": "Freiburg",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "3-4-3",
       "away_formation": "4-2-3-1",
       "home_players": [
@@ -278,26 +278,26 @@
         "Nicolás Capaldo",
         "Luka Vuskovic",
         "Warmed Omari",
-        "Giorgi Gocholeishvili",
+        "Bakery Jatta",
         "Nicolai Remberg",
         "Albert Sambi Lokonga",
-        "Bakery Jatta",
+        "Albert Grønbæk",
         "Fábio Vieira",
-        "Robert Glatzel",
+        "Otto Stange",
         "Ransford Königsdörffer"
       ],
       "away_players": [
         "Noah Atubolu",
-        "Philipp Treu",
+        "Lukas Kübler",
         "Matthias Ginter",
         "Bruno Ogbus",
-        "Christian Günter",
+        "Philipp Treu",
         "Maximilian Eggestein",
         "Johan Manzambi",
         "Jan-Niklas Beste",
-        "Maximilian Philipp",
+        "Lucas Höler",
         "Vincenzo Grifo",
-        "Lucas Höler"
+        "Igor Matanovic"
       ],
       "home_starters": [
         {
@@ -337,7 +337,7 @@
           "position_id": 37
         },
         {
-          "name": "Giorgi Gocholeishvili",
+          "name": "Bakery Jatta",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -364,7 +364,7 @@
           "position_id": 76
         },
         {
-          "name": "Bakery Jatta",
+          "name": "Albert Grønbæk",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -382,7 +382,7 @@
           "position_id": 103
         },
         {
-          "name": "Robert Glatzel",
+          "name": "Otto Stange",
           "line_index": 2,
           "line_size": 3,
           "role_score": 5,
@@ -411,7 +411,7 @@
           "position_id": 11
         },
         {
-          "name": "Philipp Treu",
+          "name": "Lukas Kübler",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -438,7 +438,7 @@
           "position_id": 36
         },
         {
-          "name": "Christian Günter",
+          "name": "Philipp Treu",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -474,7 +474,7 @@
           "position_id": 83
         },
         {
-          "name": "Maximilian Philipp",
+          "name": "Lucas Höler",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -492,7 +492,7 @@
           "position_id": 87
         },
         {
-          "name": "Lucas Höler",
+          "name": "Igor Matanovic",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -501,9 +501,30 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Sander Tangvik",
+        "Daniel Elfadli",
+        "Jordan Torunarigha",
+        "Louis Lemke",
+        "Shafiq Nandja",
+        "Fabio Baldé",
+        "Philip Otele",
+        "Rayan Philippe",
+        "Yussuf Poulsen"
+      ],
+      "away_subs": [
+        "Florian Müller",
+        "Anthony Jung",
+        "Christian Günter",
+        "Jordy Makengo",
+        "Philipp Lienhart",
+        "Nicolas Höfler",
+        "Cyriaque Irié",
+        "Derry Scherhant",
+        "Maximilian Philipp"
+      ],
       "home_unavailable": [
+        "Robert Glatzel",
         "Miro Muheim",
         "Alexander Røssing",
         "William Mikelbrencis"
