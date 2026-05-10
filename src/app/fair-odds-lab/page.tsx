@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 };
 
 export const dynamic = "force-dynamic";
+const REMOTE_ARTIFACT_REVALIDATE_SECONDS = 300;
 
 function asNumber(value: unknown): number | null {
   const numberValue = typeof value === "number" ? value : Number(value);
@@ -341,37 +342,70 @@ function makeEmptyArtifact(): LabArtifact {
   };
 }
 
-function readLabArtifact(): LabArtifact {
-  const artifactPath = path.join(process.cwd(), "public", "fair-odds-lab", "signals.json");
+function parseLabArtifact(parsed: unknown, isMock = false): LabArtifact | null {
+  const raw = asRecord(parsed);
+  if (!Array.isArray(raw.signals)) return null;
 
-  if (!fs.existsSync(artifactPath)) {
-    return process.env.NODE_ENV === "production" ? makeEmptyArtifact() : makeMockArtifact();
-  }
+  const artifactSignals = raw.signals
+    .map(mapArtifactSignal)
+    .filter((signal: Signal | null): signal is Signal => signal !== null)
+    .filter((signal: Signal) => isPreKickoffSignal(signal));
+
+  return {
+    generatedAt: asText(raw.generated_at) || null,
+    edgeThresholdPp: asNumber(raw.edge_threshold_pp) ?? 6,
+    fixturesEvaluated: asNumber(raw.fixtures_evaluated) ?? 0,
+    signalsQualifying: asNumber(raw.signals_qualifying) ?? artifactSignals.length,
+    leaguesCovered: Array.isArray(raw.leagues_covered)
+      ? raw.leagues_covered.map((league: unknown) => asText(league)).filter(Boolean)
+      : [],
+    featuredSignalId: asText(raw.featured_signal_id) || artifactSignals[0]?.id,
+    signals: artifactSignals,
+    isMock,
+  };
+}
+
+async function fetchRemoteJson(url: string | undefined, label: string): Promise<unknown | null> {
+  const artifactUrl = url?.trim();
+  if (!artifactUrl) return null;
 
   try {
-    const parsed = JSON.parse(fs.readFileSync(artifactPath, "utf8"));
-    const artifactSignals = Array.isArray(parsed?.signals)
-      ? parsed.signals
-          .map(mapArtifactSignal)
-          .filter((signal: Signal | null): signal is Signal => signal !== null)
-          .filter((signal: Signal) => isPreKickoffSignal(signal))
-      : [];
-
-    return {
-      generatedAt: asText(parsed?.generated_at) || null,
-      edgeThresholdPp: asNumber(parsed?.edge_threshold_pp) ?? 6,
-      fixturesEvaluated: asNumber(parsed?.fixtures_evaluated) ?? 0,
-      signalsQualifying: asNumber(parsed?.signals_qualifying) ?? artifactSignals.length,
-      leaguesCovered: Array.isArray(parsed?.leagues_covered)
-        ? parsed.leagues_covered.map((league: unknown) => asText(league)).filter(Boolean)
-        : [],
-      featuredSignalId: asText(parsed?.featured_signal_id) || artifactSignals[0]?.id,
-      signals: artifactSignals,
-      isMock: false,
-    };
-  } catch {
-    return process.env.NODE_ENV === "production" ? makeEmptyArtifact() : makeMockArtifact();
+    const response = await fetch(artifactUrl, {
+      headers: { accept: "application/json" },
+      next: { revalidate: REMOTE_ARTIFACT_REVALIDATE_SECONDS },
+    });
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.warn(`[fair-odds-lab] ${label} remote fetch failed; falling back to bundled artifact.`, error);
+    return null;
   }
+}
+
+function readLocalJson(fileName: string): unknown | null {
+  const artifactPath = path.join(process.cwd(), "public", "fair-odds-lab", fileName);
+  if (!fs.existsSync(artifactPath)) return null;
+
+  try {
+    return JSON.parse(fs.readFileSync(artifactPath, "utf8"));
+  } catch (error) {
+    console.warn(`[fair-odds-lab] bundled ${fileName} failed to parse.`, error);
+    return null;
+  }
+}
+
+async function readLabArtifact(): Promise<LabArtifact> {
+  const remoteArtifact = parseLabArtifact(
+    await fetchRemoteJson(process.env.FAIR_ODDS_LAB_ARTIFACT_URL, "signals"),
+  );
+  if (remoteArtifact) return remoteArtifact;
+
+  const localArtifact = parseLabArtifact(readLocalJson("signals.json"));
+  if (localArtifact) return localArtifact;
+
+  return process.env.NODE_ENV === "production" ? makeEmptyArtifact() : makeMockArtifact();
 }
 
 function mapHighlight(rawValue: unknown): LabHighlight | null {
@@ -417,20 +451,22 @@ function mapHighlight(rawValue: unknown): LabHighlight | null {
   };
 }
 
-function readLabHighlights(): LabHighlight[] {
-  const highlightsPath = path.join(process.cwd(), "public", "fair-odds-lab", "highlights.json");
-  if (!fs.existsSync(highlightsPath)) return [];
+function parseLabHighlights(parsed: unknown): LabHighlight[] | null {
+  const raw = asRecord(parsed);
+  if (!Array.isArray(raw.highlights)) return null;
 
-  try {
-    const parsed = JSON.parse(fs.readFileSync(highlightsPath, "utf8"));
-    return Array.isArray(parsed?.highlights)
-      ? parsed.highlights
-          .map(mapHighlight)
-          .filter((highlight: LabHighlight | null): highlight is LabHighlight => highlight !== null)
-      : [];
-  } catch {
-    return [];
-  }
+  return raw.highlights
+    .map(mapHighlight)
+    .filter((highlight: LabHighlight | null): highlight is LabHighlight => highlight !== null);
+}
+
+async function readLabHighlights(): Promise<LabHighlight[]> {
+  const remoteHighlights = parseLabHighlights(
+    await fetchRemoteJson(process.env.FAIR_ODDS_LAB_HIGHLIGHTS_URL, "highlights"),
+  );
+  if (remoteHighlights) return remoteHighlights;
+
+  return parseLabHighlights(readLocalJson("highlights.json")) ?? [];
 }
 
 function formatOdds(value: number) {
@@ -568,9 +604,9 @@ function EmptySignalsState() {
   );
 }
 
-export default function FairOddsLabPage() {
-  const artifact = readLabArtifact();
-  const highlights = readLabHighlights();
+export default async function FairOddsLabPage() {
+  const artifact = await readLabArtifact();
+  const highlights = await readLabHighlights();
   const featured =
     artifact.signals.find((signal) => signal.id === artifact.featuredSignalId) ??
     artifact.signals[0];

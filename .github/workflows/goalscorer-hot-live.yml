@@ -64,6 +64,15 @@ jobs:
           python scripts/generate-fair-odds-lab.py
           python scripts/generate-fair-odds-lab-highlights.py
 
+      - name: Upload Fair Odds Lab artifacts to Vercel Blob
+        env:
+          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+        run: |
+          if [ -n "${BLOB_READ_WRITE_TOKEN:-}" ]; then
+            python -m pip install vercel
+          fi
+          python scripts/upload-fair-odds-lab-blob.py
+
       - name: Upload goalscorer monitor snapshot
         env:
           ENABLE_SUPABASE_SNAPSHOT_UPLOADS: ${{ vars.ENABLE_SUPABASE_SNAPSHOT_UPLOADS }}
