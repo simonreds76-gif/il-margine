@@ -39,7 +39,7 @@ def validate_json_file(path: Path) -> bytes:
     return data
 
 
-def upload_file(client: Any, label: str, path: Path, pathname: str, token: str, cache_seconds: int) -> str:
+def upload_file(client: Any, label: str, path: Path, pathname: str, cache_seconds: int) -> str:
     body = validate_json_file(path)
     blob = client.put(
         pathname,
@@ -48,7 +48,6 @@ def upload_file(client: Any, label: str, path: Path, pathname: str, token: str, 
         content_type="application/json",
         overwrite=True,
         cache_control_max_age=cache_seconds,
-        token=token,
     )
     url = getattr(blob, "url", None)
     if not url and isinstance(blob, dict):
@@ -80,7 +79,7 @@ def main() -> None:
         if not path.exists():
             print(f"::warning::{path.relative_to(ROOT)} missing; skipping {label} upload.")
             continue
-        uploaded[label] = upload_file(client, label, path, pathname, token, args.cache_seconds)
+        uploaded[label] = upload_file(client, label, path, pathname, args.cache_seconds)
 
     if uploaded:
         print("Fair Odds Lab Blob upload complete.")
