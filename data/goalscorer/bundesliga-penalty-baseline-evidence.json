@@ -1,25 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-09T01:47:44Z",
+  "generated_at": "2026-05-10T00:13:10Z",
   "league": "bundesliga",
   "row_count": 4,
   "rows": [
-    {
-      "team": "Augsburg",
-      "team_key": "augsburg",
-      "player_name": "Fabian Rieder",
-      "player_key": "fabian rieder",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "settled_logs"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-18"
-    },
     {
       "team": "Bayer Leverkusen",
       "team_key": "bayer leverkusen",
@@ -35,6 +19,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-04-25"
+    },
+    {
+      "team": "Bayern München",
+      "team_key": "bayern munchen",
+      "player_name": "Harry Kane",
+      "player_key": "harry kane",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-09"
     },
     {
       "team": "Hamburger SV",
@@ -53,20 +53,20 @@
       "last_event_date": "2026-04-25"
     },
     {
-      "team": "Hoffenheim",
-      "team_key": "hoffenheim",
-      "player_name": "Andrej Kramaric",
-      "player_key": "andrej kramaric",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 2,
+      "team": "VfB Stuttgart",
+      "team_key": "vfb stuttgart",
+      "player_name": "Maximilian Mittelstädt",
+      "player_key": "maximilian mittelst dt",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
       "observed_share": 1.0,
-      "observed_sample": 2.0,
+      "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "settled_logs"
+        "fotmob_live"
       ],
       "event_count": 1,
-      "last_event_date": "2026-04-18"
+      "last_event_date": "2026-05-09"
     }
   ]
 }

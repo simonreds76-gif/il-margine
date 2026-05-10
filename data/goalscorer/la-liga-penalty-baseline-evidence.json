@@ -1,25 +1,40 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-09T01:47:42Z",
+  "generated_at": "2026-05-10T00:13:09Z",
   "league": "la-liga",
   "row_count": 5,
   "rows": [
+    {
+      "team": "Deportivo Alaves",
+      "team_key": "alaves",
+      "player_name": "Toni Martínez",
+      "player_key": "toni mart nez",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-09"
+    },
     {
       "team": "Elche",
       "team_key": "elche",
       "player_name": "André Silva",
       "player_key": "andr silva",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 2,
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
       "observed_share": 1.0,
-      "observed_sample": 2.0,
+      "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live",
         "settled_logs"
       ],
-      "event_count": 2,
-      "last_event_date": "2026-05-03"
+      "event_count": 1,
+      "last_event_date": "2026-04-22"
     },
     {
       "team": "Espanyol",
@@ -36,22 +51,6 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-04-23"
-    },
-    {
-      "team": "Getafe",
-      "team_key": "getafe",
-      "player_name": "Mauro Arambarri",
-      "player_key": "mauro arambarri",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-05-03"
     },
     {
       "team": "Osasuna",
@@ -74,16 +73,17 @@
       "team_key": "real sociedad",
       "player_name": "Mikel Oyarzabal",
       "player_key": "mikel oyarzabal",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
+        "fotmob_live",
         "settled_logs"
       ],
-      "event_count": 1,
-      "last_event_date": "2026-04-26"
+      "event_count": 2,
+      "last_event_date": "2026-05-09"
     }
   ]
 }
