@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T22:27:59.785842Z",
+  "generated_at": "2026-05-10T23:33:48.936076Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -30,7 +30,7 @@
       "RWB"
     ]
   },
-  "fixtures_evaluated": 12,
+  "fixtures_evaluated": 8,
   "signals_qualifying": 1,
   "leagues_covered": [
     "epl"
@@ -84,12 +84,12 @@
         "share_of_team_chances_pct": 28,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
-          "tier": "Strong",
-          "percentile": 78
+          "tier": "Positive",
+          "percentile": 72
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 82
+          "percentile": 78
         },
         "fixture_boost_pct": -19,
         "projected_minutes": 87,
