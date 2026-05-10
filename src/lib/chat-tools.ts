@@ -1,10 +1,35 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { readFile } from "fs/promises";
 import path from "path";
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const sb = createClient(url, key);
+let cachedSupabase: SupabaseClient | null = null;
+let cachedEnvKey = "";
+
+function getSupabaseClient(): SupabaseClient {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const envKey = `${url ?? ""}:${key ?? ""}`;
+
+  if (!url || !key) {
+    throw new Error(
+      "Chat tools require NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_ANON_KEY."
+    );
+  }
+
+  if (!cachedSupabase || cachedEnvKey !== envKey) {
+    cachedSupabase = createClient(url, key);
+    cachedEnvKey = envKey;
+  }
+  return cachedSupabase;
+}
+
+const sb = new Proxy({} as SupabaseClient, {
+  get(_target, prop) {
+    const client = getSupabaseClient();
+    const value = Reflect.get(client, prop);
+    return typeof value === "function" ? value.bind(client) : value;
+  },
+});
 
 type Row = Record<string, unknown>;
 
