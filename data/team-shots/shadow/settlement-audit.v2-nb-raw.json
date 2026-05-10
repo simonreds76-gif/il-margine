@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-05-10T09:50:27Z",
+  "run_at": "2026-05-10T18:04:46Z",
   "model": "team-shots",
-  "total_bets": 95,
-  "settled_this_run": 7,
+  "total_bets": 97,
+  "settled_this_run": 0,
   "total_settled": 86,
-  "total_pending": 9,
+  "total_pending": 11,
   "pending_breakdown": {
-    "future": 9,
-    "live": 0,
-    "stale": 0,
+    "future": 3,
+    "live": 3,
+    "stale": 5,
     "old_stale": 0,
     "unknown": 0
   },
@@ -17,8 +17,8 @@
       "football_data_latest": "2026-05-03",
       "lag_days": 7,
       "football_data_count": 288,
-      "fotmob_count": 6,
-      "fotmob_latest": "2026-05-09",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 0,
@@ -47,7 +47,7 @@
       "football_data_latest": "2026-05-04",
       "lag_days": 6,
       "football_data_count": 340,
-      "fotmob_count": 5,
+      "fotmob_count": 4,
       "fotmob_latest": "2026-05-09",
       "api_football_count": 0,
       "api_football_latest": null,
@@ -89,11 +89,54 @@
       "snapshot_path": "data/results-snapshot/2026-05-10.json"
     }
   },
-  "stale_rows": [],
+  "stale_rows": [
+    {
+      "match": "Crystal Palace vs Everton FC",
+      "league": "epl",
+      "line": "11.5",
+      "side": "under",
+      "kickoff": "2026-05-10T13:00:00Z",
+      "hours_elapsed": 5.08
+    },
+    {
+      "match": "Athletic Bilbao vs Valencia CF",
+      "league": "la-liga",
+      "line": "13.5",
+      "side": "under",
+      "kickoff": "2026-05-10T14:15:00Z",
+      "hours_elapsed": 3.83
+    },
+    {
+      "match": "US Cremonese vs Pisa SC",
+      "league": "serie-a",
+      "line": "14.5",
+      "side": "under",
+      "kickoff": "2026-05-10T13:00:00Z",
+      "hours_elapsed": 5.08
+    },
+    {
+      "match": "RCD Mallorca vs Villarreal CF",
+      "league": "la-liga",
+      "line": "13.5",
+      "side": "under",
+      "kickoff": "2026-05-10T12:00:00Z",
+      "hours_elapsed": 6.08
+    },
+    {
+      "match": "Burnley FC vs Aston Villa",
+      "league": "epl",
+      "line": "10.5",
+      "side": "under",
+      "kickoff": "2026-05-10T13:00:00Z",
+      "hours_elapsed": 5.08
+    }
+  ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [],
+  "warnings": [
+    "5 stale pending row(s) across 5 fixture(s) (3-48h elapsed)"
+  ],
   "errors": [],
   "exit_code_recommendation": 0
 }

@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-05-10T10:04:01Z",
+  "run_at": "2026-05-10T18:04:46Z",
   "model": "team-shots",
-  "total_bets": 134,
+  "total_bets": 136,
   "settled_this_run": 0,
   "total_settled": 130,
-  "total_pending": 4,
+  "total_pending": 6,
   "pending_breakdown": {
     "future": 4,
     "live": 0,
-    "stale": 0,
+    "stale": 2,
     "old_stale": 0,
     "unknown": 0
   },
@@ -89,11 +89,30 @@
       "snapshot_path": "data/results-snapshot/2026-05-10.json"
     }
   },
-  "stale_rows": [],
+  "stale_rows": [
+    {
+      "match": "US Cremonese vs Pisa SC",
+      "league": "serie-a",
+      "line": "8.5",
+      "side": "over",
+      "kickoff": "2026-05-10T13:00:00Z",
+      "hours_elapsed": 5.08
+    },
+    {
+      "match": "Crystal Palace vs Everton FC",
+      "league": "epl",
+      "line": "12.5",
+      "side": "over",
+      "kickoff": "2026-05-10T13:00:00Z",
+      "hours_elapsed": 5.08
+    }
+  ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [],
+  "warnings": [
+    "2 stale pending row(s) across 2 fixture(s) (3-48h elapsed)"
+  ],
   "errors": [],
   "exit_code_recommendation": 0
 }
