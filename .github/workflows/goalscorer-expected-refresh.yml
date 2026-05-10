@@ -120,6 +120,7 @@ jobs:
         run: |
           python scripts/build-goalscorer-monitor-snapshot.py
           python scripts/generate-fair-odds-lab.py
+          python scripts/generate-fair-odds-lab-highlights.py
 
       - name: Upload goalscorer monitor snapshot
         env:

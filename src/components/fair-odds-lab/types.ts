@@ -58,3 +58,22 @@ export type LabArtifact = {
   signals: Signal[];
   isMock: boolean;
 };
+
+export type LabHighlight = {
+  id: string;
+  date: string;
+  kickoff?: string;
+  competition: string;
+  league?: string;
+  match: string;
+  player: string;
+  team?: string;
+  bestBookmaker: string;
+  bestOdds: number;
+  fairOdds: number;
+  modelChancePct: number;
+  marketChancePct: number;
+  priceGapPp: number;
+  goalsScored: number;
+  settledAt?: string;
+};

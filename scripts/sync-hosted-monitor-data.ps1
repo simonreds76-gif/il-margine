@@ -87,7 +87,13 @@ $goalscorerFiles = @(
     "data/goalscorer/goalscorer-health-status.json",
     "data/goalscorer/goalscorer-live.log",
     "data/goalscorer/confirmed-lineups.json",
-    "public/fair-odds-lab/signals.json"
+    "data/goalscorer/fair-odds-lab-serie-a-signals.csv",
+    "data/goalscorer/fair-odds-lab-epl-signals.csv",
+    "data/goalscorer/fair-odds-lab-la-liga-signals.csv",
+    "data/goalscorer/fair-odds-lab-bundesliga-signals.csv",
+    "data/goalscorer/fair-odds-lab-ligue-1-signals.csv",
+    "public/fair-odds-lab/signals.json",
+    "public/fair-odds-lab/highlights.json"
 )
 
 $files = New-Object System.Collections.Generic.List[string]

@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import teamLogoManifest from "../../../data/goalscorer/team-logo-map.json";
 import { FairOddsSignalBrowser } from "@/components/fair-odds-lab/FairOddsSignalBrowser";
 import { sampleSignals } from "@/components/fair-odds-lab/__fixtures__/sample-signals";
-import type { LabArtifact, Signal } from "@/components/fair-odds-lab/types";
+import type { LabArtifact, LabHighlight, Signal } from "@/components/fair-odds-lab/types";
 
 export const metadata: Metadata = {
   title: "Goalscorer Fair Odds Lab | Anytime Goalscorer Value Spots",
@@ -374,6 +374,65 @@ function readLabArtifact(): LabArtifact {
   }
 }
 
+function mapHighlight(rawValue: unknown): LabHighlight | null {
+  const raw = asRecord(rawValue);
+  const bestOdds = asNumber(raw.best_odds);
+  const fairOdds = asNumber(raw.fair_odds);
+  const modelChancePct = asNumber(raw.model_chance_pct);
+  const marketChancePct = asNumber(raw.market_chance_pct);
+  const priceGapPp = asNumber(raw.price_gap_pp);
+  const goalsScored = asNumber(raw.goals_scored) ?? 1;
+  const player = asText(raw.player);
+  const match = asText(raw.match);
+
+  if (
+    !player ||
+    !match ||
+    bestOdds === null ||
+    fairOdds === null ||
+    modelChancePct === null ||
+    marketChancePct === null ||
+    priceGapPp === null
+  ) {
+    return null;
+  }
+
+  return {
+    id: asText(raw.id, `${asText(raw.date)}-${player}-${match}`),
+    date: asText(raw.date),
+    kickoff: asText(raw.kickoff) || undefined,
+    competition: asText(raw.competition, "Football"),
+    league: asText(raw.league) || undefined,
+    match,
+    player,
+    team: asText(raw.team) || undefined,
+    bestBookmaker: asText(raw.best_bookmaker, "Best market"),
+    bestOdds,
+    fairOdds,
+    modelChancePct,
+    marketChancePct,
+    priceGapPp,
+    goalsScored,
+    settledAt: asText(raw.settled_at) || undefined,
+  };
+}
+
+function readLabHighlights(): LabHighlight[] {
+  const highlightsPath = path.join(process.cwd(), "public", "fair-odds-lab", "highlights.json");
+  if (!fs.existsSync(highlightsPath)) return [];
+
+  try {
+    const parsed = JSON.parse(fs.readFileSync(highlightsPath, "utf8"));
+    return Array.isArray(parsed?.highlights)
+      ? parsed.highlights
+          .map(mapHighlight)
+          .filter((highlight: LabHighlight | null): highlight is LabHighlight => highlight !== null)
+      : [];
+  } catch {
+    return [];
+  }
+}
+
 function formatOdds(value: number) {
   return value.toFixed(2);
 }
@@ -394,6 +453,91 @@ function formatRefreshed(value: string | null) {
     timeZone: "Europe/London",
   }).format(timestamp);
   return `${label} UK`;
+}
+
+function formatHighlightDate(value: string) {
+  const timestamp = Date.parse(value);
+  if (!Number.isFinite(timestamp)) return value || "Recent";
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    timeZone: "Europe/London",
+  }).format(timestamp);
+}
+
+function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
+  if (!highlights.length) return null;
+
+  return (
+    <section className="mt-8 overflow-hidden rounded-[2rem] border border-emerald-400/20 bg-[#0c0f14] shadow-[0_24px_90px_rgba(0,0,0,0.28)]">
+      <div className="flex flex-col gap-3 border-b border-slate-800/80 px-5 py-5 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300">
+            Lab hits
+          </div>
+          <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-50">
+            Flagged by the model. Finished by the player.
+          </h2>
+        </div>
+        <p className="max-w-md text-sm leading-6 text-slate-400">
+          Winning goalscorer value spots recently surfaced by the Fair Odds Lab.
+        </p>
+      </div>
+
+      <div className="grid gap-px bg-slate-800/70 md:grid-cols-2 xl:grid-cols-3">
+        {highlights.map((highlight) => (
+          <article key={highlight.id} className="bg-[#0c0f14] p-5">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  {formatHighlightDate(highlight.date)} | {highlight.competition}
+                </div>
+                <h3 className="mt-3 text-2xl font-black leading-tight tracking-tight text-slate-50">
+                  {highlight.player}
+                </h3>
+                <div className="mt-1 truncate text-sm text-slate-500">{highlight.match}</div>
+              </div>
+              <span className="shrink-0 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-emerald-200">
+                Scored
+              </span>
+            </div>
+
+            <div className="mt-5 grid grid-cols-3 gap-2">
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/70 p-3">
+                <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                  Fair
+                </div>
+                <div className="mt-1 font-mono text-xl font-black text-emerald-200">
+                  {formatOdds(highlight.fairOdds)}
+                </div>
+              </div>
+              <div className="rounded-xl border border-slate-800/80 bg-slate-950/70 p-3">
+                <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                  Market
+                </div>
+                <div className="mt-1 font-mono text-xl font-black text-slate-100">
+                  {formatOdds(highlight.bestOdds)}
+                </div>
+              </div>
+              <div className="rounded-xl border border-amber-400/20 bg-amber-400/[0.07] p-3">
+                <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-amber-200/80">
+                  Gap
+                </div>
+                <div className="mt-1 font-mono text-xl font-black text-amber-200">
+                  +{highlight.priceGapPp.toFixed(1)}pp
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 text-sm leading-6 text-slate-400">
+              The Lab priced him shorter than {highlight.bestBookmaker}&apos;s market price.
+              {highlight.goalsScored > 1 ? ` He scored ${highlight.goalsScored}.` : ""}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 function EmptySignalsState() {
@@ -425,6 +569,7 @@ function EmptySignalsState() {
 
 export default function FairOddsLabPage() {
   const artifact = readLabArtifact();
+  const highlights = readLabHighlights();
   const featured =
     artifact.signals.find((signal) => signal.id === artifact.featuredSignalId) ??
     artifact.signals[0];
@@ -524,6 +669,8 @@ export default function FairOddsLabPage() {
             featuredSignalId={featured?.id ?? null}
           />
         ) : null}
+
+        <LabHitsSection highlights={highlights} />
 
       </div>
     </main>
