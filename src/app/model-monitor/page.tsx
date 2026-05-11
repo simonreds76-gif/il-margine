@@ -38,7 +38,9 @@ type SpreadThresholdStatus = {
   staked_units?: number;
   pnl_units?: number;
   roi_pct?: number;
+  rolling_20_roi_pct?: number;
   clv_matched?: number;
+  clv_match_rate_pct?: number;
   avg_clv_pct?: number;
   median_clv_pct?: number;
   positive_clv_share_pct?: number;
@@ -46,11 +48,25 @@ type SpreadThresholdStatus = {
   live_ready?: boolean;
 };
 
+type SpreadOrientationSummary = {
+  settled?: number;
+  wins?: number;
+  losses?: number;
+  staked_units?: number;
+  pnl_units?: number;
+  roi_pct?: number;
+  clv_matched?: number;
+  clv_match_rate_pct?: number;
+  avg_clv_pct?: number;
+  rolling_20_roi_pct?: number;
+};
+
 type SpreadSurfaceStatus = {
   settled_total?: number;
   recommended_threshold_pct?: number | null;
   promotion_status?: string;
   threshold_results?: SpreadThresholdStatus[];
+  orientation_breakout?: Record<string, SpreadOrientationSummary>;
   current_threshold_pct?: number | null;
   current?: SpreadThresholdStatus;
 };
@@ -67,11 +83,32 @@ type SpreadV1Status = {
     reason?: string;
     line_source_used?: string;
     fit_timestamp?: string;
+    base_calibration_valid?: boolean;
+    base_calibration_reason?: string;
+    correction_valid?: boolean;
+    correction_reason?: string;
+    warning?: string;
   };
   surfaces?: {
     hard?: SpreadSurfaceStatus;
     clay?: SpreadSurfaceStatus;
   };
+};
+
+type ClayMlAnalysis = {
+  generatedAt?: string;
+  holdoutEce?: number;
+  logLossDelta?: number;
+  verdict?: string;
+};
+
+type SpreadCalibrationParams = {
+  generated_at_utc?: string;
+  fit_timestamp?: string;
+  line_source_used?: string;
+  surface_filter?: string;
+  calibration_valid?: boolean;
+  calibration_reason?: string;
 };
 
 type ProfileSummary = {
@@ -338,6 +375,16 @@ function parseClvAudit(text: string | null): ClvSummary {
   };
 }
 
+function parseClayMlAnalysis(text: string | null): ClayMlAnalysis {
+  if (!text) return {};
+  return {
+    generatedAt: text.match(/Generated UTC:\s+(.+)/)?.[1]?.trim(),
+    holdoutEce: parseFloatMaybe(text.match(/Holdout 2025 ECE:\s+([+-]?[\d.]+)/)?.[1]),
+    logLossDelta: parseFloatMaybe(text.match(/Holdout 2025 log-loss delta vs Pinnacle:\s+([+-]?[\d.]+)/)?.[1]),
+    verdict: text.match(/Verdict:\s+(.+)/)?.[1]?.trim(),
+  };
+}
+
 function parsePolicyProfiles(text: string | null): ProfileSummary[] {
   if (!text) return [];
   const blocks = [...text.matchAll(/\[([^\]]+)\]\n([\s\S]*?)(?=\n\[[^\]]+\]|\s*$)/g)];
@@ -444,6 +491,40 @@ function SplitBucket({
       <div className="grid gap-2">
         <Stat label="ROI" value={roi} tone={roiTone} compact />
         <Stat label="W/L/V" value={wlv} tone="text-slate-100" compact />
+      </div>
+    </div>
+  );
+}
+
+function SpreadOrientationCard({
+  title,
+  summary,
+  tone,
+  note,
+}: {
+  title: string;
+  summary?: SpreadOrientationSummary;
+  tone: string;
+  note: string;
+}) {
+  return (
+    <div className={`rounded-2xl border bg-slate-950/35 p-4 ${tone}`}>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-sm font-semibold text-slate-100">{title}</div>
+          <div className="mt-1 text-xs leading-5 text-slate-500">{note}</div>
+        </div>
+        <div className="rounded-full border border-slate-700/80 bg-slate-900/80 px-2 py-1 text-xs font-semibold text-slate-300">
+          n={summary?.settled ?? 0}
+        </div>
+      </div>
+      <div className="mt-4 grid gap-2 sm:grid-cols-2">
+        <Stat label="W-L" value={orientationWl(summary)} compact />
+        <Stat label="ROI" value={formatPct(summary?.roi_pct)} tone={metricTone(summary?.roi_pct)} compact />
+        <Stat label="Avg CLV" value={formatPct(summary?.avg_clv_pct, 3)} tone={metricTone(summary?.avg_clv_pct)} compact />
+        <Stat label="CLV Match" value={formatPct(summary?.clv_match_rate_pct, 1, false)} compact />
+        <Stat label="Rolling 20" value={formatPct(summary?.rolling_20_roi_pct)} tone={metricTone(summary?.rolling_20_roi_pct)} compact />
+        <Stat label="P/L" value={formatUnits(summary?.pnl_units)} tone={metricTone(summary?.pnl_units)} compact />
       </div>
     </div>
   );
@@ -607,6 +688,11 @@ function cohortWlv(summary: SignalCohortSummary): string {
   return `${summary.wins}/${summary.losses}/${summary.voids}`;
 }
 
+function orientationWl(summary?: SpreadOrientationSummary): string {
+  if (!summary) return "n/a";
+  return `${summary.wins ?? 0}-${summary.losses ?? 0}`;
+}
+
 function formatClvCell(value?: number, label = "n/a"): string {
   if (value == null || Number.isNaN(value)) return label;
   return formatPct(value, 3, false);
@@ -696,6 +782,8 @@ export default async function ModelMonitorPage() {
     clay2026SignalsArchiveCsv,
     clay2026SignalsLiveCsv,
     spreadV1StatusJson,
+    clayMlAnalysisTxt,
+    claySpreadCalibrationJson,
     strictPerfMtime,
     volumePerfMtime,
     spreadV1PerfMtime,
@@ -711,6 +799,8 @@ export default async function ModelMonitorPage() {
     spreadShadowSignalsMtime,
     clay2026SignalsMtime,
     spreadV1StatusMtime,
+    clayMlAnalysisMtime,
+    claySpreadCalibrationMtime,
   ] = await Promise.all([
     readLocalFile("data/backtest/strict-policy-performance-weekly.csv"),
     readLocalFile("data/backtest/strict-policy-performance-volume200-weekly.csv"),
@@ -733,6 +823,8 @@ export default async function ModelMonitorPage() {
     readLocalFile("data/backtest/strict-signals-claycal-archive.csv"),
     readLocalFile("data/backtest/strict-signals-claycal-live.csv"),
     readLocalFile("data/backtest/spread-v1-shadow-status.json"),
+    readLocalFile("data/backtest/clay-ml-calibration-analysis.txt"),
+    readLocalFile("data/backtest/spread-v1-clay-calibration-params.json"),
     readLocalMtime("data/backtest/strict-policy-performance-weekly.csv"),
     readLocalMtime("data/backtest/strict-policy-performance-volume200-weekly.csv"),
     readLocalMtime("data/backtest/strict-policy-performance-spreadv1-weekly.csv"),
@@ -748,6 +840,8 @@ export default async function ModelMonitorPage() {
     readLocalMtime("data/backtest/strict-signals-spreadshadow-live.csv"),
     readLocalMtime("data/backtest/strict-signals-claycal-live.csv"),
     readLocalMtime("data/backtest/spread-v1-shadow-status.json"),
+    readLocalMtime("data/backtest/clay-ml-calibration-analysis.txt"),
+    readLocalMtime("data/backtest/spread-v1-clay-calibration-params.json"),
   ]);
 
   const strictRows = strictPerfCsv ? parseCsv(strictPerfCsv) : [];
@@ -814,6 +908,15 @@ export default async function ModelMonitorPage() {
   const clay2026MlRecordedCohort = summarizeSignalCohort(clay2026SignalsClean, undefined, "recorded", "match");
   const clay2026MlFlatCohort = summarizeSignalCohort(clay2026SignalsClean, undefined, "flat", "match");
   const spreadV1Status = parseJsonMaybe<SpreadV1Status>(spreadV1StatusJson);
+  const clayMlAnalysis = parseClayMlAnalysis(clayMlAnalysisTxt);
+  const claySpreadCalibration = parseJsonMaybe<SpreadCalibrationParams>(claySpreadCalibrationJson);
+  const claySpreadCalibrationReady = claySpreadCalibration?.calibration_valid === true;
+  const claySpreadOrientation = spreadV1Status?.surfaces?.clay?.orientation_breakout ?? {};
+  const clayFavHandicap = claySpreadOrientation.favorite_handicap;
+  const clayDogHandicap = claySpreadOrientation.dog_handicap;
+  const clayScratchHandicap = claySpreadOrientation.scratch;
+  const clayThresholds = spreadV1Status?.surfaces?.clay?.threshold_results ?? [];
+  const clayFavCandidateStatus = claySpreadCalibrationReady ? "tracking shadow candidate" : "blocked until clay-only calibration is valid";
 
   const strictAllRoi = perfValue(strictBase.combinedAll, "roi_pct", parseFloatMaybe);
   const volumeAllRoi = perfValue(volumeBase.combinedAll, "roi_pct", parseFloatMaybe);
@@ -845,6 +948,7 @@ export default async function ModelMonitorPage() {
     !clvAuditVolumeTxt ? "volume_200 CLV audit" : null,
     !clvAuditSpreadV1Txt ? "spread_v1 CLV audit" : null,
     !profileTxt ? "policy profile backtest" : null,
+    !clayMlAnalysisTxt ? "clay ML calibration analysis" : null,
   ].filter(Boolean) as string[];
   const strictDiagnosis =
     strictAllRoi == null
@@ -1089,6 +1193,8 @@ export default async function ModelMonitorPage() {
               <FileStamp label="Spread shadow signals" value={spreadShadowSignalsMtime} />
               <FileStamp label="Clay 2026 signals" value={clay2026SignalsMtime} />
               <FileStamp label="Spread v1 status" value={spreadV1StatusMtime} />
+              <FileStamp label="Clay ML analysis" value={clayMlAnalysisMtime} />
+              <FileStamp label="Clay spread calib" value={claySpreadCalibrationMtime} />
             </div>
           </div>
         </section>
@@ -1709,6 +1815,109 @@ export default async function ModelMonitorPage() {
                     ))}
                   </div>
                 )}
+              </div>
+            </div>
+          </MonitorCard>
+        </div>
+
+        <div className="mb-8">
+          <MonitorCard title="Clay Tennis Research Watch" subtitle="Clay ML is paused; clay favourite handicap is tracked as a gated research candidate only.">
+            <div className="grid gap-4 xl:grid-cols-[0.85fr_1.15fr]">
+              <div className="rounded-2xl border border-orange-500/25 bg-orange-500/5 p-4">
+                <div className="mb-4 flex items-start justify-between gap-3">
+                  <div>
+                    <h3 className="text-base font-semibold text-white">Clay ML calibrated lane</h3>
+                    <p className="mt-1 text-sm leading-6 text-slate-400">
+                      Held off by default. The latest calibration diagnostic says the 2025 holdout is not good enough to restart this lane.
+                    </p>
+                  </div>
+                  <span className="rounded-full border border-orange-400/30 bg-orange-400/10 px-2 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-orange-200">
+                    paused
+                  </span>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Stat label="Holdout ECE" value={clayMlAnalysis.holdoutEce != null ? clayMlAnalysis.holdoutEce.toFixed(4) : "n/a"} tone={clayMlAnalysis.holdoutEce != null && clayMlAnalysis.holdoutEce > 0.05 ? "text-rose-300" : "text-emerald-300"} compact />
+                  <Stat label="Log-loss vs Pin" value={clayMlAnalysis.logLossDelta != null ? `${clayMlAnalysis.logLossDelta >= 0 ? "+" : ""}${clayMlAnalysis.logLossDelta.toFixed(4)}` : "n/a"} tone={metricTone((clayMlAnalysis.logLossDelta ?? 0) * -1)} compact />
+                  <Stat label="Generated" value={clayMlAnalysis.generatedAt ? clayMlAnalysis.generatedAt.slice(0, 10) : "n/a"} compact />
+                  <Stat label="Default" value="off" tone="text-orange-200" compact />
+                </div>
+                <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/45 p-3 text-sm leading-6 text-slate-300">
+                  {clayMlAnalysis.verdict ?? "No clay ML diagnostic verdict found. Keep this lane off until the analysis file is generated."}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4">
+                <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                  <div>
+                    <h3 className="text-base font-semibold text-white">Clay favourite-handicap candidate</h3>
+                    <p className="mt-1 text-sm leading-6 text-slate-400">
+                      The monitor tracks the exact split Claude asked for: favourite handicap versus dog and scratch. Fav HC is the only positive clay spread cluster so far.
+                    </p>
+                  </div>
+                  <span className={`rounded-full border px-2 py-1 text-xs font-semibold uppercase tracking-[0.14em] ${claySpreadCalibrationReady ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-200" : "border-amber-400/30 bg-amber-400/10 text-amber-200"}`}>
+                    {clayFavCandidateStatus}
+                  </span>
+                </div>
+                <div className="grid gap-3 lg:grid-cols-3">
+                  <SpreadOrientationCard
+                    title="Favourite handicap"
+                    summary={clayFavHandicap}
+                    tone="border-emerald-500/25"
+                    note="Candidate lane: fav HC, high confidence, 2.0-3.5 games, 8-18% edge."
+                  />
+                  <SpreadOrientationCard
+                    title="Dog handicap"
+                    summary={clayDogHandicap}
+                    tone="border-rose-500/25"
+                    note="Blocked from clay candidate scope unless future calibration proves otherwise."
+                  />
+                  <SpreadOrientationCard
+                    title="Scratch / near-zero"
+                    summary={clayScratchHandicap}
+                    tone="border-slate-700/80"
+                    note="Blocked; this bucket is too noisy for clay handicap promotion."
+                  />
+                </div>
+                <div className="mt-4 grid gap-3 lg:grid-cols-[0.8fr_1.2fr]">
+                  <div className="rounded-xl border border-slate-800/80 bg-slate-950/45 p-3 text-sm leading-6 text-slate-300">
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Calibration gate</div>
+                    <div className="mt-2">
+                      Clay-only spread calibration: <span className={claySpreadCalibrationReady ? "font-semibold text-emerald-300" : "font-semibold text-amber-300"}>{claySpreadCalibrationReady ? "valid" : "missing / invalid"}</span>
+                    </div>
+                    <div className="mt-1 text-slate-500">
+                      File: spread-v1-clay-calibration-params.json. Source {claySpreadCalibration?.line_source_used ?? "n/a"}, reason {claySpreadCalibration?.calibration_reason ?? "n/a"}.
+                    </div>
+                    <div className="mt-3 text-xs text-slate-500">
+                      No public output. This is monitor-only research until sample, CLV, and calibration gates pass.
+                    </div>
+                  </div>
+                  <div className="overflow-hidden rounded-xl border border-slate-800/80 bg-slate-950/45">
+                    <table className="w-full text-left text-xs">
+                      <thead className="border-b border-slate-800 bg-slate-900/80 text-slate-500">
+                        <tr>
+                          <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">Clay edge gate</th>
+                          <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">n</th>
+                          <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">ROI</th>
+                          <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">Roll20</th>
+                          <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">CLV</th>
+                          <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">Ready</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-800/80">
+                        {clayThresholds.slice(0, 6).map((row) => (
+                          <tr key={`clay-threshold-${row.threshold_pct}`} className="text-slate-300">
+                            <td className="px-3 py-2 font-mono">{row.threshold_pct != null ? `${row.threshold_pct.toFixed(0)}%+` : "n/a"}</td>
+                            <td className="px-3 py-2 font-mono">{row.settled ?? 0}</td>
+                            <td className={`px-3 py-2 font-mono ${metricTone(row.roi_pct)}`}>{formatPct(row.roi_pct)}</td>
+                            <td className={`px-3 py-2 font-mono ${metricTone(row.rolling_20_roi_pct)}`}>{formatPct(row.rolling_20_roi_pct)}</td>
+                            <td className={`px-3 py-2 font-mono ${metricTone(row.avg_clv_pct)}`}>{formatPct(row.avg_clv_pct, 3)}</td>
+                            <td className="px-3 py-2">{row.live_ready ? <span className="text-emerald-300">yes</span> : <span className="text-slate-500">no</span>}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </MonitorCard>
