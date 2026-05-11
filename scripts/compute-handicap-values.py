@@ -52,6 +52,8 @@ MIN_VENUE_SPW_MATCHES = 50
 # 12 percentage points was letting obviously contradictory ML/handicap rows
 # survive; tighten this so we fall back to the reverse-solved shape sooner.
 POINT_PROB_MATCH_PROB_GAP_MAX = 0.08
+MODEL_MARKET_FAV_PROB_GAP_MAX = 0.10
+MODEL_MARKET_FAV_SIDE_FLIP_BUFFER = 0.03
 
 
 def _env_bool(name: str, default: bool = False) -> bool:
@@ -494,6 +496,52 @@ def main():
         print("No rows in daily_fair_odds. Run oncourt-compute-fair-odds.py first.")
         sys.exit(1)
 
+    try:
+        r_today = requests.get(
+            f"{url}/rest/v1/oncourt_today",
+            headers=headers,
+            params={
+                "select": "tour_id,player1_id,player2_id,result",
+                "limit": 5000,
+            },
+            timeout=30,
+        )
+        if r_today.ok:
+            open_pair_keys: set[tuple[int, int, int]] = set()
+            for today_row in r_today.json() or []:
+                if str(today_row.get("result") or "").strip():
+                    continue
+                try:
+                    tid = int(today_row["tour_id"])
+                    p1 = int(today_row["player1_id"])
+                    p2 = int(today_row["player2_id"])
+                except (KeyError, TypeError, ValueError):
+                    continue
+                open_pair_keys.add((tid, p1, p2))
+                open_pair_keys.add((tid, p2, p1))
+            if open_pair_keys:
+                before = len(fair_rows)
+                fair_rows = [
+                    row
+                    for row in fair_rows
+                    if (
+                        row.get("tour_id") is not None
+                        and row.get("player1_id") is not None
+                        and row.get("player2_id") is not None
+                        and (
+                            int(row["tour_id"]),
+                            int(row["player1_id"]),
+                            int(row["player2_id"]),
+                        )
+                        in open_pair_keys
+                    )
+                ]
+                print(f"Filtered daily_fair_odds to open OnCourt rows: {len(fair_rows)}/{before}")
+        else:
+            print(f"WARNING: oncourt_today open-row filter skipped: HTTP {r_today.status_code}")
+    except Exception as exc:
+        print(f"WARNING: oncourt_today open-row filter skipped: {exc}")
+
     player_ids = set()
     tour_ids = set()
     for row in fair_rows:
@@ -712,13 +760,31 @@ def main():
             line = -pin_line
             spread_odds1 = pin_o2
             spread_odds2 = pin_o1
+            pin_ml_odds1 = float(pin.get("odds2") or 0)
+            pin_ml_odds2 = float(pin.get("odds1") or 0)
         else:
             line = pin_line
             spread_odds1 = pin_o1
             spread_odds2 = pin_o2
+            pin_ml_odds1 = float(pin.get("odds1") or 0)
+            pin_ml_odds2 = float(pin.get("odds2") or 0)
 
         if spread_odds1 <= 1 or spread_odds2 <= 1:
             continue
+        if pin_ml_odds1 > 1 and pin_ml_odds2 > 1:
+            pin_inv1 = 1.0 / pin_ml_odds1
+            pin_inv2 = 1.0 / pin_ml_odds2
+            pin_p1_no_vig = pin_inv1 / (pin_inv1 + pin_inv2)
+            model_fav_side = "P1" if p1_win_prob >= 0.5 else "P2"
+            pin_fav_side = "P1" if pin_p1_no_vig >= 0.5 else "P2"
+            model_market_fav_gap = abs(max(p1_win_prob, 1.0 - p1_win_prob) - max(pin_p1_no_vig, 1.0 - pin_p1_no_vig))
+            model_market_side_flip = (
+                model_fav_side != pin_fav_side
+                and abs(pin_p1_no_vig - 0.5) >= MODEL_MARKET_FAV_SIDE_FLIP_BUFFER
+                and abs(p1_win_prob - 0.5) >= MODEL_MARKET_FAV_SIDE_FLIP_BUFFER
+            )
+            if model_market_fav_gap > MODEL_MARKET_FAV_PROB_GAP_MAX or model_market_side_flip:
+                continue
 
         # Signed line from OUR P1 perspective:
         #   +x => P1 +x

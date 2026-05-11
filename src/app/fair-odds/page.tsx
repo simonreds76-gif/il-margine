@@ -62,6 +62,7 @@ interface FairOddsMatch {
   ml_short_fav_model_guard?: boolean;
   ml_short_fav_market_guard?: boolean;
   ml_model_market_gap_guard?: boolean;
+  ml_model_market_side_flip_guard?: boolean;
   ml_model_market_fav_gap?: number;
   blocked_reason?: string;
   tournament_speed_signal?: number;
@@ -470,7 +471,6 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
     <div className="grid gap-3 lg:grid-cols-2">
       {signals.map((signal) => {
         const clayMeta = signal.kind === "clay_2026" ? clay2026SignalMeta(signal) : null;
-        const clayGuardGap = signal.kind === "clay_guarded" ? signal.clay_guarded_selected_elo_gap_vs_market : undefined;
         const handicapShape =
           signal.kind === "spread_v1" ? handicapShapeMeta(signal.handicap_point_prob_source) : null;
         const challengerLabel = signal.league === "Challenger" ? "CH" : null;
@@ -1455,7 +1455,9 @@ function MatchRow({
       )
     );
   const handicapHiddenReason =
-    m.ml_model_market_gap_guard
+    m.ml_model_market_side_flip_guard
+      ? "edge hidden: favourite side mismatch"
+      : m.ml_model_market_gap_guard
       ? "edge hidden: ML/market mismatch"
       : "edge hidden: model shape drift";
   const rowSignals = rowSignalSort(m.row_signals ?? []);

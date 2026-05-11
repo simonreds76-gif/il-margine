@@ -92,6 +92,7 @@ export interface FairOddsRow {
   ml_short_fav_model_guard?: boolean;
   ml_short_fav_market_guard?: boolean;
   ml_model_market_gap_guard?: boolean;
+  ml_model_market_side_flip_guard?: boolean;
   ml_model_market_fav_gap?: number;
   short_fav_dog_spread_guard_p1?: boolean;
   short_fav_dog_spread_guard_p2?: boolean;
@@ -210,6 +211,7 @@ const MIN_VENUE_SPW_MATCHES = 50;
 // as a divergent fallback case rather than a trusted stored shape.
 const POINT_PROB_MATCH_PROB_GAP_MAX = 0.08;
 const MODEL_MARKET_FAV_PROB_GAP_MAX = 0.10;
+const MODEL_MARKET_FAV_SIDE_FLIP_BUFFER = 0.03;
 const SPEED_RATIO_CLAMP: [number, number] = [0.92, 1.08];
 const TOURNAMENT_SPEED_VENUE_COMPONENT_WEIGHT = 0.75;
 const TOURNAMENT_SPEED_SHIFT_COMPONENT_WEIGHT = 0.25;
@@ -752,32 +754,14 @@ function shadowProfileLeagueAllowed(profile: ShadowProfile, league?: "ATP" | "Ch
   return allowed.has(league);
 }
 
-function spreadShadowReasonFor(
-  surface: string,
-  seriesBucket: string,
-  confidence?: string,
-  tournamentName?: string
-): string | null {
-  const conf = (confidence ?? "").trim().toLowerCase();
-  if (!(conf === "high" || conf === "medium")) return null;
-  if (isHoustonClayShadowException(surface, tournamentName)) return null;
-
-  const inStrictMatchSegment =
-    STRICT_POLICY_ALLOWED_SEGMENTS.has(`${surface}|${seriesBucket}`) &&
-    STRICT_POLICY_ALLOWED_CONFIDENCE.has(conf);
-  const isClay = surface === "Clay";
-  if (isClay && !inStrictMatchSegment) return "clay_non_policy";
-  if (isClay) return "clay";
-  if (!inStrictMatchSegment) return "non_policy";
-  return null;
-}
-
 function firstBlockedReason(params: {
   hasPositiveRawValue: boolean;
   recentInjuredAny: boolean;
   pinnacleShortFavoriteExcluded: boolean;
   modelShortFavoriteExcluded: boolean;
   modelMarketGapExcluded: boolean;
+  modelMarketSideFlipExcluded: boolean;
+  challengerValueExcluded: boolean;
   atp500HardShortFavoriteExcluded: boolean;
   heavyFavoriteDogExcluded: boolean;
   favoriteSpreadConflictExcluded: boolean;
@@ -790,7 +774,9 @@ function firstBlockedReason(params: {
   if (params.recentInjuredAny) return "Blocked: recent injury flag";
   if (params.pinnacleShortFavoriteExcluded) return "Blocked: Pinnacle fav <1.25";
   if (params.modelShortFavoriteExcluded) return "Blocked: model fav <1.25";
+  if (params.modelMarketSideFlipExcluded) return "Blocked: model/market favourite side flip";
   if (params.modelMarketGapExcluded) return "Blocked: model/market favourite gap >10pp";
+  if (params.challengerValueExcluded) return "Blocked: Challenger research lane disabled";
   if (params.atp500HardShortFavoriteExcluded) return "Blocked: ATP500 Hard short-favourite ML filter";
   if (params.heavyFavoriteDogExcluded) return "Blocked: Masters hard heavy-favorite dog ML guard";
   if (params.favoriteSpreadConflictExcluded) return "Blocked: same-match favourite handicap conflict";
@@ -812,6 +798,8 @@ function mlDisplayGuardReason(params: {
   pinnacleShortFavoriteExcluded: boolean;
   modelShortFavoriteExcluded: boolean;
   modelMarketGapExcluded: boolean;
+  modelMarketSideFlipExcluded: boolean;
+  challengerValueExcluded: boolean;
   heavyFavoriteDogExcluded: boolean;
   favoriteSpreadConflictExcluded: boolean;
   oppositeSideHandicapConflictExcluded: boolean;
@@ -822,8 +810,14 @@ function mlDisplayGuardReason(params: {
   if (params.pinnacleShortFavoriteExcluded || params.modelShortFavoriteExcluded) {
     return "ML value hidden: favourite <1.25";
   }
+  if (params.modelMarketSideFlipExcluded) {
+    return "ML value hidden: model/market favourite side flip";
+  }
   if (params.modelMarketGapExcluded) {
     return "ML value hidden: model/market favourite gap >10pp";
+  }
+  if (params.challengerValueExcluded) {
+    return "ML value hidden: Challenger lane disabled";
   }
   if (params.heavyFavoriteDogExcluded) {
     return "ML value hidden: heavy-favourite dog guard";
@@ -1058,6 +1052,7 @@ function loadLocalOncourtTodayRows(): Array<{
   player2_id: number;
   round_id?: number;
   draw?: number;
+  result?: string;
 }> {
   if (!fs.existsSync(LOCAL_ONCOURT_TODAY_CSV)) return [];
 
@@ -1084,6 +1079,7 @@ function loadLocalOncourtTodayRows(): Array<{
     player2_id: number;
     round_id?: number;
     draw?: number;
+    result?: string;
   }> = [];
   for (let i = 1; i < lines.length; i += 1) {
     const cols = parseCsvLine(lines[i]);
@@ -1097,6 +1093,7 @@ function loadLocalOncourtTodayRows(): Array<{
       player2_id: player2Id,
       round_id: parseCsvNumber(get(cols, "round_id")),
       draw: parseCsvNumber(get(cols, "draw")),
+      result: get(cols, "result").trim(),
     });
   }
   return rows;
@@ -1536,20 +1533,42 @@ async function run(): Promise<Response> {
 
   const { data: oncourtTodayRows, error: oncourtTodayErr } = await supabase
     .from("oncourt_today")
-    .select("tour_id, player1_id, player2_id")
+    .select("tour_id, player1_id, player2_id, result")
     .limit(FAIR_ODDS_LIMIT);
   if (oncourtTodayErr) {
     console.warn("[fair-odds] Could not load oncourt_today for Pinnacle-only current-gap filtering", oncourtTodayErr.message);
   }
-  const localOncourtTodayRows = loadLocalOncourtTodayRows();
-  const currentOncourtRows = localOncourtTodayRows.length > 0 ? localOncourtTodayRows : oncourtTodayRows ?? [];
-  if (localOncourtTodayRows.length > 0) {
-    console.log(`[fair-odds] Local today_atp.csv supplement: ${localOncourtTodayRows.length} rows.`);
+  const localOncourtTodayRows = process.env.NODE_ENV === "production" ? [] : loadLocalOncourtTodayRows();
+  const currentOncourtRows = oncourtTodayRows?.length ? oncourtTodayRows : localOncourtTodayRows;
+  if (!oncourtTodayRows?.length && localOncourtTodayRows.length > 0) {
+    console.log(`[fair-odds] Local today_atp.csv fallback: ${localOncourtTodayRows.length} rows.`);
+  }
+  const currentOpenOncourtRows = currentOncourtRows.filter((row) => !String(row.result ?? "").trim());
+  const openOncourtPairIdKeys = new Set<string>();
+  const addOpenPairIdKey = (tourIdRaw: unknown, p1Raw: unknown, p2Raw: unknown) => {
+    const tourId = Number(tourIdRaw);
+    const p1Id = Number(p1Raw);
+    const p2Id = Number(p2Raw);
+    if (!Number.isFinite(tourId) || !Number.isFinite(p1Id) || !Number.isFinite(p2Id)) return;
+    openOncourtPairIdKeys.add(`${tourId}|${p1Id}|${p2Id}`);
+    openOncourtPairIdKeys.add(`${tourId}|${p2Id}|${p1Id}`);
+  };
+  for (const row of currentOpenOncourtRows) {
+    addOpenPairIdKey(row.tour_id, row.player1_id, row.player2_id);
+  }
+  const fairOddsSourceRows =
+    currentOncourtRows.length > 0
+      ? oddsRows.filter((row) => openOncourtPairIdKeys.has(`${row.tour_id}|${row.player1_id}|${row.player2_id}`))
+      : oddsRows;
+  if (currentOncourtRows.length > 0 && fairOddsSourceRows.length !== oddsRows.length) {
+    console.log(
+      `[fair-odds] Filtered daily_fair_odds to open OnCourt rows: ${fairOddsSourceRows.length}/${oddsRows.length}.`
+    );
   }
 
   const playerIds = new Set<number>();
   const tourIds = new Set<number>();
-  for (const r of oddsRows) {
+  for (const r of fairOddsSourceRows) {
     if (r.player1_id != null) playerIds.add(r.player1_id);
     if (r.player2_id != null) playerIds.add(r.player2_id);
     if (r.tour_id != null) tourIds.add(r.tour_id);
@@ -1636,7 +1655,7 @@ async function run(): Promise<Response> {
       });
     }
   }
-  const mainTourOddsRows = oddsRows;
+  const mainTourOddsRows = fairOddsSourceRows;
 
   const normalizeSurfaceKey = (surface?: string | null): string => {
     const s = (surface ?? "").trim().toLowerCase();
@@ -1831,7 +1850,7 @@ async function run(): Promise<Response> {
   }
 
   const currentOncourtPairKeys = new Set<string>();
-  for (const row of currentOncourtRows) {
+  for (const row of currentOpenOncourtRows) {
     const p1Id = row.player1_id != null ? Number(row.player1_id) : NaN;
     const p2Id = row.player2_id != null ? Number(row.player2_id) : NaN;
     const tourId = row.tour_id != null ? Number(row.tour_id) : NaN;
@@ -1844,6 +1863,12 @@ async function run(): Promise<Response> {
     currentOncourtPairKeys.add(normalizePinnaclePairKey(p1Name, p2Name, league));
     currentOncourtPairKeys.add(normalizePinnaclePairKey(p2Name, p1Name, league));
   }
+  const isInCurrentOpenOncourtSchedule = (row: PinnacleRow) => {
+    if (currentOncourtRows.length === 0) return true;
+    const directKey = normalizePinnaclePairKey(row.player1_name ?? "", row.player2_name ?? "", row.league);
+    const reverseKey = normalizePinnaclePairKey(row.player2_name ?? "", row.player1_name ?? "", row.league);
+    return currentOncourtPairKeys.has(directKey) || currentOncourtPairKeys.has(reverseKey);
+  };
 
   /** Multi-key surname set to match hyphen/compound variants safely. */
   function normaliseSurnameKeys(name: string): string[] {
@@ -1927,6 +1952,7 @@ async function run(): Promise<Response> {
     };
 
     for (const pin of pinRows) {
+      if (!isInCurrentOpenOncourtSchedule(pin)) continue;
       if (isDoublesPin(pin)) continue;
       for (const key of makePairKeys(pin.player1_name ?? "", pin.player2_name ?? "")) {
         addLookup(key, { row: pin, reversed: false });
@@ -1969,7 +1995,9 @@ async function run(): Promise<Response> {
         .filter((c) => !matchedPinRows.has(c.row))
         .sort((a, b) => b.score - a.score);
       if (!ranked.length) continue;
-      // When tied, prefer first (avoids skipping matches that would otherwise match)
+      // Ambiguous surname matches are worse than no match: they create phantom
+      // ML/handicap value when the draw has moved on to a new opponent.
+      if (ranked.length > 1 && ranked[0].score === ranked[1].score) continue;
       const best = ranked[0];
       const pin = best.row;
       matchedPinRows.add(pin);
@@ -2016,14 +2044,8 @@ async function run(): Promise<Response> {
       addCurrentOpponent(fo.player1_name ?? "", fo.player2_name ?? "");
       addCurrentOpponent(fo.player2_name ?? "", fo.player1_name ?? "");
     }
-    const isInCurrentOncourtSchedule = (row: PinnacleRow) => {
-      if (currentOncourtPairKeys.size === 0) return true;
-      const directKey = normalizePinnaclePairKey(row.player1_name ?? "", row.player2_name ?? "", row.league);
-      const reverseKey = normalizePinnaclePairKey(row.player2_name ?? "", row.player1_name ?? "", row.league);
-      return currentOncourtPairKeys.has(directKey) || currentOncourtPairKeys.has(reverseKey);
-    };
     const isStaleAlternativePairing = (row: PinnacleRow) => {
-      if (isInCurrentOncourtSchedule(row)) return false;
+      if (isInCurrentOpenOncourtSchedule(row)) return false;
       const p1Key = normaliseFullName(row.player1_name ?? "");
       const p2Key = normaliseFullName(row.player2_name ?? "");
       if (!p1Key || !p2Key) return false;
@@ -2035,8 +2057,8 @@ async function run(): Promise<Response> {
     };
     const rawPinnacleOnly = singlesPin.filter((p) => !matchedPinRows.has(p));
     const staleAlternativePairings = rawPinnacleOnly.filter(isStaleAlternativePairing);
-    const notInCurrentSchedule = rawPinnacleOnly.filter((p) => !isStaleAlternativePairing(p) && !isInCurrentOncourtSchedule(p));
-    const pinnacleOnly = rawPinnacleOnly.filter((p) => !isStaleAlternativePairing(p) && isInCurrentOncourtSchedule(p));
+    const notInCurrentSchedule = rawPinnacleOnly.filter((p) => !isStaleAlternativePairing(p) && !isInCurrentOpenOncourtSchedule(p));
+    const pinnacleOnly = rawPinnacleOnly.filter((p) => !isStaleAlternativePairing(p) && isInCurrentOpenOncourtSchedule(p));
     if (staleAlternativePairings.length > 0) {
       console.log(
         `[fair-odds] Suppressed stale Pinnacle-only rows that conflict with current fair-odds pairings:`,
@@ -2121,8 +2143,16 @@ async function run(): Promise<Response> {
       pinnacle != null && pinnacle.pinnacle_odds1 > 1 && pinnacle.pinnacle_odds2 > 1
         ? (1 / pinnacle.pinnacle_odds1) / ((1 / pinnacle.pinnacle_odds1) + (1 / pinnacle.pinnacle_odds2))
         : undefined;
+    const pinFavoriteSide: "P1" | "P2" | undefined =
+      pinP1NoVig == null ? undefined : pinP1NoVig >= 0.5 ? "P1" : "P2";
     const modelMarketFavoriteGap =
       pinP1NoVig != null ? Math.abs(modelFavoriteProb - Math.max(pinP1NoVig, 1 - pinP1NoVig)) : undefined;
+    const modelMarketFavoriteSideMismatch =
+      pinP1NoVig != null &&
+      pinFavoriteSide != null &&
+      modelFavoriteSide !== pinFavoriteSide &&
+      Math.abs(pinP1NoVig - 0.5) >= MODEL_MARKET_FAV_SIDE_FLIP_BUFFER &&
+      Math.abs(p1WinProb - 0.5) >= MODEL_MARKET_FAV_SIDE_FLIP_BUFFER;
     const hasCurrentSpreadData =
       pinnacle != null &&
       r.spread_line != null &&
@@ -2166,12 +2196,14 @@ async function run(): Promise<Response> {
       Math.min(pinnacle.pinnacle_odds1 ?? 0, pinnacle.pinnacle_odds2 ?? 0) < STRICT_POLICY_MISPRICE_FAV_ODDS_MIN;
     const modelMarketGapExcluded =
       STRICT_POLICY_MODE &&
-      modelMarketFavoriteGap != null &&
-      modelMarketFavoriteGap > MODEL_MARKET_FAV_PROB_GAP_MAX;
+      ((modelMarketFavoriteGap != null &&
+        modelMarketFavoriteGap > MODEL_MARKET_FAV_PROB_GAP_MAX) ||
+        modelMarketFavoriteSideMismatch);
+    const challengerValueExcluded = league === "Challenger";
     const injuryExcluded = STRICT_POLICY_MODE && STRICT_INJURY_OVERLAY_ENABLED && recentInjuredAny;
     const mispriceExcluded = modelFavOddsMispriceExcluded || pinFavOddsMispriceExcluded || modelMarketGapExcluded;
-    const handicapEdgeP1 = !modelMarketGapExcluded ? rawHandicapEdgeP1 : undefined;
-    const handicapEdgeP2 = !modelMarketGapExcluded ? rawHandicapEdgeP2 : undefined;
+    const handicapEdgeP1 = !modelMarketGapExcluded && !challengerValueExcluded ? rawHandicapEdgeP1 : undefined;
+    const handicapEdgeP2 = !modelMarketGapExcluded && !challengerValueExcluded ? rawHandicapEdgeP2 : undefined;
     if (
       policyBaseAllows &&
       (shortFavoriteExcluded || mispriceExcluded || injuryExcluded)
@@ -2298,12 +2330,14 @@ async function run(): Promise<Response> {
     // signal routing and should not look actionable in the fair-odds table.
     const suppressDisplayValueP1 =
       confidence === "none" ||
+      challengerValueExcluded ||
       mispriceExcluded ||
       strictHeavyFavoriteDogExcludedP1 ||
       strictFavoriteSpreadConflictP1 ||
       strictOppositeHandicapConflictP1;
     const suppressDisplayValueP2 =
       confidence === "none" ||
+      challengerValueExcluded ||
       mispriceExcluded ||
       strictHeavyFavoriteDogExcludedP2 ||
       strictFavoriteSpreadConflictP2 ||
@@ -2393,6 +2427,8 @@ async function run(): Promise<Response> {
       pinnacleShortFavoriteExcluded: pinFavOddsMispriceExcluded,
       modelShortFavoriteExcluded: modelFavOddsMispriceExcluded,
       modelMarketGapExcluded,
+      modelMarketSideFlipExcluded: modelMarketFavoriteSideMismatch,
+      challengerValueExcluded,
       heavyFavoriteDogExcluded: strictHeavyFavoriteDogExcludedP1 || strictHeavyFavoriteDogExcludedP2,
       favoriteSpreadConflictExcluded: strictFavoriteSpreadConflictP1 || strictFavoriteSpreadConflictP2,
       oppositeSideHandicapConflictExcluded:
@@ -2404,6 +2440,8 @@ async function run(): Promise<Response> {
       pinnacleShortFavoriteExcluded: pinFavOddsMispriceExcluded,
       modelShortFavoriteExcluded: modelFavOddsMispriceExcluded,
       modelMarketGapExcluded,
+      modelMarketSideFlipExcluded: modelMarketFavoriteSideMismatch,
+      challengerValueExcluded,
       atp500HardShortFavoriteExcluded: shortFavoriteExcluded,
       heavyFavoriteDogExcluded: strictHeavyFavoriteDogExcludedP1 || strictHeavyFavoriteDogExcludedP2,
       favoriteSpreadConflictExcluded: strictFavoriteSpreadConflictP1 || strictFavoriteSpreadConflictP2,
@@ -2483,6 +2521,7 @@ async function run(): Promise<Response> {
       ml_short_fav_model_guard: modelFavOddsMispriceExcluded,
       ml_short_fav_market_guard: pinFavOddsMispriceExcluded,
       ml_model_market_gap_guard: modelMarketGapExcluded,
+      ml_model_market_side_flip_guard: modelMarketFavoriteSideMismatch,
       ml_model_market_fav_gap:
         modelMarketFavoriteGap != null ? Math.round(modelMarketFavoriteGap * 10000) / 10000 : undefined,
       short_fav_dog_spread_guard_p1: shortFavDogSpreadGuardP1,

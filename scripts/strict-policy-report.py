@@ -101,6 +101,7 @@ EXCLUDE_SHORT_FAV_CONFIDENCE = {"high"}
 # Skip matches where model favourite odds < 1.25.
 # The model cannot price extreme mismatches — both sides are unreliable.
 MISPRICE_MODEL_MARKET_FAV_GAP_MAX = 0.10
+MISPRICE_MODEL_MARKET_FAV_SIDE_FLIP_BUFFER = 0.03
 MISPRICE_MODEL_FAV_ODDS_MIN = 1.25
 POINT_PROB_MATCH_PROB_GAP_MAX = 0.08
 HEAVY_FAV_DOG_GUARD_MIN_FAV_PROB = 0.74
@@ -1240,6 +1241,52 @@ def main() -> int:
         print("No rows in daily_fair_odds. Run oncourt-compute-fair-odds.py first.")
         return 0
 
+    try:
+        today_rows_resp = requests.get(
+            f"{base}/oncourt_today",
+            headers=headers,
+            params={
+                "select": "tour_id,player1_id,player2_id,result",
+                "limit": 5000,
+            },
+            timeout=30,
+        )
+        if today_rows_resp.ok:
+            open_pair_keys: set[tuple[int, int, int]] = set()
+            for today_row in today_rows_resp.json() or []:
+                if str(today_row.get("result") or "").strip():
+                    continue
+                try:
+                    tid = int(today_row["tour_id"])
+                    p1 = int(today_row["player1_id"])
+                    p2 = int(today_row["player2_id"])
+                except (KeyError, TypeError, ValueError):
+                    continue
+                open_pair_keys.add((tid, p1, p2))
+                open_pair_keys.add((tid, p2, p1))
+            if open_pair_keys:
+                before = len(rows)
+                rows = [
+                    row
+                    for row in rows
+                    if (
+                        row.get("tour_id") is not None
+                        and row.get("player1_id") is not None
+                        and row.get("player2_id") is not None
+                        and (
+                            int(row["tour_id"]),
+                            int(row["player1_id"]),
+                            int(row["player2_id"]),
+                        )
+                        in open_pair_keys
+                    )
+                ]
+                print(f"Filtered daily_fair_odds to open OnCourt rows: {len(rows)}/{before}")
+        else:
+            print(f"WARNING: oncourt_today open-row filter skipped: HTTP {today_rows_resp.status_code}")
+    except Exception as exc:
+        print(f"WARNING: oncourt_today open-row filter skipped: {exc}")
+
     tour_ids = list({r["tour_id"] for r in rows if r.get("tour_id") is not None})
     tours: dict[int, dict[str, Any]] = {}
     if tour_ids:
@@ -1408,8 +1455,17 @@ def main() -> int:
         pin_inv2 = 1.0 / float(pin["odds2"] or 1.0)
         pin_total_inv = pin_inv1 + pin_inv2
         pin_p1_no_vig = pin_inv1 / pin_total_inv if pin_total_inv > 0 else 0.5
+        pin_favorite_side = "P1" if pin_p1_no_vig >= 0.5 else "P2"
         model_market_fav_gap = abs(model_favorite_prob - max(pin_p1_no_vig, 1.0 - pin_p1_no_vig))
-        model_market_gap_excluded = model_market_fav_gap > MISPRICE_MODEL_MARKET_FAV_GAP_MAX
+        model_market_side_flip_excluded = (
+            model_favorite_side != pin_favorite_side
+            and abs(pin_p1_no_vig - 0.5) >= MISPRICE_MODEL_MARKET_FAV_SIDE_FLIP_BUFFER
+            and abs(p1_win_prob - 0.5) >= MISPRICE_MODEL_MARKET_FAV_SIDE_FLIP_BUFFER
+        )
+        model_market_gap_excluded = (
+            model_market_fav_gap > MISPRICE_MODEL_MARKET_FAV_GAP_MAX
+            or model_market_side_flip_excluded
+        )
 
         stored_pa = _parse_point_prob(r.get("p_a"))
         stored_pb = _parse_point_prob(r.get("p_b"))
