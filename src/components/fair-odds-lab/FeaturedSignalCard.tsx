@@ -30,6 +30,24 @@ function probabilityGap(signal: Signal) {
   return signal.modelProbability - signal.bookmakerProbability;
 }
 
+function splitMatchTeams(match: string) {
+  const parts = match.split(/\s+(?:vs|v)\s+/i).map((part) => part.trim()).filter(Boolean);
+  return {
+    home: parts[0] ?? "",
+    away: parts[1] ?? "",
+  };
+}
+
+function opponentFromSignal(signal: Signal) {
+  const { home, away } = splitMatchTeams(signal.match);
+  const normalizedTeam = signal.team.toLowerCase();
+  const homeKey = home.toLowerCase();
+  const awayKey = away.toLowerCase();
+  if (homeKey && (homeKey.includes(normalizedTeam) || normalizedTeam.includes(homeKey))) return away;
+  if (awayKey && (awayKey.includes(normalizedTeam) || normalizedTeam.includes(awayKey))) return home;
+  return away || home || "Opponent";
+}
+
 function numberFromMetric(value: string) {
   const parsed = Number.parseFloat(value.replace(/[^0-9.-]/g, ""));
   return Number.isFinite(parsed) ? parsed : 0;
@@ -184,7 +202,7 @@ function MarketTable({ signal }: { signal: Signal }) {
     {
       label: "Probability gap",
       model: "-",
-      best: `+${gap.toFixed(1)}pp`,
+      best: `+${gap.toFixed(1)} pp`,
     },
   ];
 
@@ -195,7 +213,7 @@ function MarketTable({ signal }: { signal: Signal }) {
           Price panel
         </div>
         <h3 className="mt-1 text-base font-semibold text-slate-100">
-          Il Margine vs market
+          Il Margine vs Bet365 reference
         </h3>
       </div>
       <div className="overflow-hidden rounded-xl border border-slate-800/80">
@@ -204,7 +222,7 @@ function MarketTable({ signal }: { signal: Signal }) {
           <div className="px-3 py-2 text-right">Model</div>
           <div className="flex items-center justify-end gap-2 px-3 py-2 text-right">
             <span>
-              Best
+              Reference
               <span className="hidden truncate normal-case tracking-normal text-slate-600 sm:block">
                 {signal.bestBookmaker}
               </span>
@@ -227,7 +245,14 @@ function MarketTable({ signal }: { signal: Signal }) {
               }`}
             >
               {row.best}
-              {row.label === "Probability gap" ? <PriceGapMeter value={gap} /> : null}
+              {row.label === "Probability gap" ? (
+                <>
+                  <div className="mt-1 text-[10px] font-sans text-slate-500">
+                    percentage points vs market
+                  </div>
+                  <PriceGapMeter value={gap} />
+                </>
+              ) : null}
             </div>
           </div>
         ))}
@@ -333,6 +358,7 @@ export function FeaturedSignalCard({
 }) {
   const gap = probabilityGap(signal);
   const venueLabel = signal.venue && signal.venue !== "Venue TBC" ? ` | ${signal.venue}` : "";
+  const opponent = opponentFromSignal(signal);
 
   return (
     <article className="overflow-hidden rounded-[2rem] border border-emerald-300/20 bg-[#0a0f12] shadow-[0_24px_90px_rgba(16,185,129,0.12)]">
@@ -353,6 +379,28 @@ export function FeaturedSignalCard({
               />
               <span className="min-w-0 break-words">
                 {signal.match} <span className="text-slate-600">|</span> {signal.competition}
+              </span>
+            </div>
+            <div className="mt-3 inline-flex max-w-full items-center gap-2 rounded-full border border-slate-800/80 bg-slate-950/60 px-3 py-1.5">
+              <LogoBadge
+                src={signal.teamLogoPath}
+                alt={`${signal.team} logo`}
+                fallback={signal.team}
+                size={24}
+              />
+              <span className="truncate text-xs font-semibold text-slate-300">
+                {signal.team}
+              </span>
+              <span className="shrink-0 text-[10px] font-black uppercase tracking-[0.14em] text-slate-600">
+                vs
+              </span>
+              <LogoBadge
+                alt={`${opponent} logo`}
+                fallback={opponent}
+                size={24}
+              />
+              <span className="truncate text-xs font-semibold text-slate-300">
+                {opponent}
               </span>
             </div>
             <div className="mt-1 text-xs text-slate-500">
@@ -440,6 +488,8 @@ export function FeaturedSignalCard({
             <div className="text-xs leading-5 text-slate-500">
               Reference price:{" "}
               <span className="font-semibold text-slate-300">{signal.bestBookmaker}</span>.
+              This is the single market reference for the Lab, not a claim that
+              it beats every book.{" "}
               Compare your own available bookies before betting.
             </div>
             <Link

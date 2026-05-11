@@ -1,9 +1,13 @@
 ﻿import fs from "node:fs";
 import path from "node:path";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import teamLogoManifest from "../../../data/goalscorer/team-logo-map.json";
+import { AbstractJersey } from "@/components/fair-odds-lab/AbstractJersey";
+import { BookmakerLogo } from "@/components/fair-odds-lab/BookmakerLogo";
 import { FairOddsSignalBrowser } from "@/components/fair-odds-lab/FairOddsSignalBrowser";
+import { LogoBadge } from "@/components/fair-odds-lab/LogoBadge";
 import { sampleSignals } from "@/components/fair-odds-lab/__fixtures__/sample-signals";
 import type { LabArtifact, LabHighlight, Signal, SignalMetric } from "@/components/fair-odds-lab/types";
 import { BASE_URL } from "@/lib/config";
@@ -351,7 +355,7 @@ function mapArtifactSignal(rawValue: unknown): Signal | null {
     market: asText(raw.market, "Anytime goalscorer"),
     fairOdds,
     bestBookOdds,
-    bestBookmaker: asText(marketData.best_book, "Best market"),
+    bestBookmaker: asText(marketData.best_book, "Bet365 reference"),
     modelProbability,
     bookmakerProbability,
     projectedMinutes,
@@ -528,7 +532,7 @@ function mapHighlight(rawValue: unknown): LabHighlight | null {
     match,
     player,
     team: asText(raw.team) || undefined,
-    bestBookmaker: asText(raw.best_bookmaker, "Best market"),
+    bestBookmaker: asText(raw.best_bookmaker, "Bet365 reference"),
     bestOdds,
     fairOdds,
     modelChancePct,
@@ -588,80 +592,202 @@ function formatHighlightDate(value: string) {
   }).format(timestamp);
 }
 
-function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
-  if (!highlights.length) return null;
-  const gridColumns = highlights.length >= 3 ? "md:grid-cols-2 xl:grid-cols-3" : "md:grid-cols-2";
+function formatTicketDate(value: string) {
+  const timestamp = Date.parse(value);
+  if (!Number.isFinite(timestamp)) return value || "Recent";
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    timeZone: "Europe/London",
+  }).format(timestamp);
+}
+
+function splitMatchTeams(match: string) {
+  const parts = match.split(/\s+(?:vs|v)\s+/i).map((part) => part.trim()).filter(Boolean);
+  return {
+    home: parts[0] ?? "",
+    away: parts[1] ?? "",
+  };
+}
+
+function teamsMatch(a: string | undefined, b: string | undefined) {
+  const left = normalizeTeamKey(a);
+  const right = normalizeTeamKey(b);
+  return Boolean(left && right && (left === right || left.includes(right) || right.includes(left)));
+}
+
+function resolveHighlightTeams(highlight: LabHighlight) {
+  const { home, away } = splitMatchTeams(highlight.match);
+  const team = highlight.team || home;
+  const opponent = teamsMatch(team, home) ? away : teamsMatch(team, away) ? home : away || home;
+  return {
+    team,
+    opponent,
+    home,
+    away,
+  };
+}
+
+function HitTicket({ highlight }: { highlight: LabHighlight }) {
+  const teams = resolveHighlightTeams(highlight);
+  const style = resolveTeamStyle(teams.team);
+  const teamLogoPath = resolveTeamLogoPath(highlight.league ?? "", teams.team);
+  const opponentLogoPath = resolveTeamLogoPath(highlight.league ?? "", teams.opponent);
+  const leagueLogoPath = highlight.league ? `/league-logos/${highlight.league}.png` : "";
+  const stateLabel = highlight.superSubWin ? "Super Sub hit" : highlight.goalsScored > 1 ? `Scored x${highlight.goalsScored}` : "Scored";
+  const stateClass = highlight.superSubWin
+    ? "border-cyan-300/30 bg-cyan-300/10 text-cyan-100"
+    : "border-emerald-300/30 bg-emerald-300/10 text-emerald-100";
 
   return (
-    <section className="mt-8 overflow-hidden rounded-[2rem] border border-emerald-400/20 bg-[#0c0f14] shadow-[0_24px_90px_rgba(0,0,0,0.28)]">
-      <div className="flex flex-col gap-3 border-b border-slate-800/80 px-5 py-5 sm:flex-row sm:items-end sm:justify-between">
+    <article className="group relative overflow-hidden rounded-[1.5rem] border border-slate-800/80 bg-[#090e15] p-4 transition duration-300 hover:-translate-y-1 hover:border-emerald-400/35 hover:shadow-[0_24px_60px_rgba(16,185,129,0.12)]">
+      <div className="pointer-events-none absolute -right-14 -top-14 h-32 w-32 rounded-full bg-emerald-300/[0.08] blur-2xl transition group-hover:bg-emerald-300/[0.14]" />
+      <div className="relative flex items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
+          <LogoBadge
+            src={leagueLogoPath}
+            alt={`${highlight.competition} logo`}
+            fallback={highlight.competition}
+            size={24}
+            shape="rounded"
+            className="bg-white/95 p-1"
+          />
+          <span className="truncate">{highlight.competition}</span>
+        </div>
+        <span className="shrink-0 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">
+          {formatTicketDate(highlight.date)}
+        </span>
+      </div>
+
+      <div className="relative mt-4 border-t border-dashed border-slate-700/50 pt-4">
+        <div className="flex gap-4">
+          <div className="w-[72px] shrink-0">
+            <AbstractJersey
+              teamLogoPath={teamLogoPath}
+              teamPrimaryColor={style?.primary ?? "#10b981"}
+              teamSecondaryColor={style?.secondary ?? "#0f172a"}
+              shirtPattern={style?.pattern ?? "solid"}
+              accentEmerald={false}
+            />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h3 className="break-words text-2xl font-black leading-tight tracking-tight text-slate-50">
+              {highlight.player}
+            </h3>
+            <div className="mt-1 text-sm font-semibold text-slate-500">
+              {teams.team}
+            </div>
+            <div className="mt-3 flex min-w-0 items-center gap-2 rounded-xl border border-slate-800/80 bg-slate-950/55 px-3 py-2">
+              <LogoBadge
+                src={teamLogoPath}
+                alt={`${teams.team} logo`}
+                fallback={teams.team}
+                size={24}
+              />
+              <span className="min-w-0 truncate text-xs font-semibold text-slate-300">
+                {teams.team}
+              </span>
+              <span className="shrink-0 text-[10px] font-black uppercase tracking-[0.16em] text-slate-600">
+                vs
+              </span>
+              <LogoBadge
+                src={opponentLogoPath}
+                alt={`${teams.opponent} logo`}
+                fallback={teams.opponent}
+                size={24}
+              />
+              <span className="min-w-0 truncate text-xs font-semibold text-slate-300">
+                {teams.opponent}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 grid grid-cols-3 overflow-hidden rounded-2xl border border-slate-800/80 bg-slate-950/70">
+          <div className="p-3">
+            <div className="text-[9px] font-black uppercase tracking-[0.14em] text-emerald-200/80">
+              Fair
+            </div>
+            <div className="mt-1 font-mono text-2xl font-black text-emerald-100">
+              {formatOdds(highlight.fairOdds)}
+            </div>
+          </div>
+          <div className="border-l border-slate-800/80 p-3">
+            <div className="text-[9px] font-black uppercase tracking-[0.14em] text-slate-500">
+              Reference
+            </div>
+            <div className="mt-1 flex flex-wrap items-center gap-2">
+              <span className="font-mono text-2xl font-black text-slate-100">
+                {formatOdds(highlight.bestOdds)}
+              </span>
+              <BookmakerLogo name={highlight.bestBookmaker} />
+            </div>
+          </div>
+          <div className="border-l border-amber-300/20 bg-amber-300/[0.065] p-3">
+            <div className="text-[9px] font-black uppercase tracking-[0.14em] text-amber-100/80">
+              Gap
+            </div>
+            <div className="mt-1 font-mono text-2xl font-black text-amber-100">
+              +{highlight.priceGapPp.toFixed(1)}
+            </div>
+            <div className="text-[9px] font-black uppercase tracking-[0.14em] text-amber-100/60">
+              pp
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-dashed border-slate-700/45 pt-4">
+          <span className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-black uppercase tracking-[0.14em] ${stateClass}`}>
+            <span className="inline-flex h-4 w-4 animate-pulse items-center justify-center rounded-full bg-white/10">
+              &#10003;
+            </span>
+            {stateLabel}
+          </span>
+          <span className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-slate-500">
+            Lab pick · {formatHighlightDate(highlight.date)}
+          </span>
+        </div>
+
+        <div className="mt-3 text-xs leading-5 text-slate-500">
+          Reference: {highlight.bestBookmaker} · Lab vs market gap.
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
+  if (!highlights.length) return null;
+  const visibleHighlights = highlights.slice(0, 6);
+
+  return (
+    <section id="lab-hits" className="mt-16">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300">
+          <div className="text-[11px] font-black uppercase tracking-[0.22em] text-emerald-300">
             Lab hits
           </div>
           <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-50">
-            Flagged by the model. Finished by the player.
+            The model said value. The player scored.
           </h2>
         </div>
-        <p className="max-w-md text-sm leading-6 text-slate-400">
-          Winning goalscorer value spots recently surfaced by the Fair Odds Lab.
-        </p>
+        <Link
+          href="/fair-odds-lab#lab-hits"
+          className="text-xs font-black uppercase tracking-[0.16em] text-emerald-200 transition hover:text-emerald-100"
+        >
+          Recent flagged hits &rarr;
+        </Link>
       </div>
+      <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-500">
+        Recent value spots the Lab flagged where the named player went on to
+        score. This is not an official goalscorer track record; official settled
+        picks live on the Track Record page.
+      </p>
 
-      <div className={`grid gap-px bg-slate-800/70 ${gridColumns}`}>
-        {highlights.map((highlight) => (
-          <article key={highlight.id} className="bg-[#0c0f14] p-5">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                  {formatHighlightDate(highlight.date)} | {highlight.competition}
-                </div>
-                <h3 className="mt-3 text-2xl font-black leading-tight tracking-tight text-slate-50">
-                  {highlight.player}
-                </h3>
-                <div className="mt-1 truncate text-sm text-slate-500">{highlight.match}</div>
-              </div>
-              <span className="shrink-0 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-emerald-200">
-                {highlight.superSubWin ? "Super Sub" : "Scored"}
-              </span>
-            </div>
-
-            <div className="mt-5 grid grid-cols-3 gap-2">
-              <div className="rounded-xl border border-slate-800/80 bg-slate-950/70 p-3">
-                <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                  Fair
-                </div>
-                <div className="mt-1 font-mono text-xl font-black text-emerald-200">
-                  {formatOdds(highlight.fairOdds)}
-                </div>
-              </div>
-              <div className="rounded-xl border border-slate-800/80 bg-slate-950/70 p-3">
-                <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                  Market
-                </div>
-                <div className="mt-1 font-mono text-xl font-black text-slate-100">
-                  {formatOdds(highlight.bestOdds)}
-                </div>
-              </div>
-              <div className="rounded-xl border border-amber-400/20 bg-amber-400/[0.07] p-3">
-                <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-amber-200/80">
-                  Gap
-                </div>
-                <div className="mt-1 font-mono text-xl font-black text-amber-200">
-                  +{highlight.priceGapPp.toFixed(1)}pp
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-4 text-sm leading-6 text-slate-400">
-              The Lab priced him shorter than {highlight.bestBookmaker}&apos;s market price.
-              {highlight.superSubWin && highlight.superSubReplacement
-                ? ` Direct replacement ${highlight.superSubReplacement} scored under Super Sub terms.`
-                : highlight.goalsScored > 1
-                  ? ` He scored ${highlight.goalsScored}.`
-                  : ""}
-            </div>
-          </article>
+      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {visibleHighlights.map((highlight) => (
+          <HitTicket key={highlight.id} highlight={highlight} />
         ))}
       </div>
     </section>
@@ -698,9 +824,9 @@ function SuperSubExplainer() {
           <p className="mt-3 text-xs leading-6 text-slate-500">
             This page uses Bet365 as the reference price where available because
             its anytime-goalscorer markets commonly carry Sub On Play On terms.
-            It is not a claim that Bet365 is always the best price. Compare your
-            own available bookies before betting; if we publish an official
-            goalscorer tip, we will specify the bookie and odds used.
+            It is not a claim that Bet365 is the top price everywhere. Compare
+            your own available bookies before betting; if we publish an
+            official goalscorer tip, we will specify the bookie and odds used.
           </p>
           <p className="mt-2 text-xs leading-6 text-slate-500">
             Availability depends on the bookmaker, match, market, jurisdiction
@@ -815,7 +941,7 @@ function buildFairOddsLabStructuredData({
             acceptedAnswer: {
               "@type": "Answer",
               text:
-                "Bet365 is used as a simple reference because its anytime-goalscorer markets are widely available and commonly carry Sub On Play On terms. It is not always the best price. Compare your own available bookies, and if Il Margine publishes an official goalscorer tip we will specify the bookie and odds used.",
+                "Bet365 is used as a simple reference because its anytime-goalscorer markets are widely available and commonly carry Sub On Play On terms. It is not a claim that Bet365 is the top price everywhere. Compare your own available bookies, and if Il Margine publishes an official goalscorer tip we will specify the bookie and odds used.",
             },
           },
         ],
@@ -834,7 +960,7 @@ function buildFairOddsLabStructuredData({
                   name: `${signal.player} anytime goalscorer value spot`,
                   description: `${signal.player} in ${signal.match}: Il Margine fair odds ${formatOdds(
                     signal.fairOdds,
-                  )}, market price ${formatOdds(signal.bestBookOdds)}.`,
+                  )}, Bet365 reference price ${formatOdds(signal.bestBookOdds)}.`,
                   url: pageUrl,
                 },
               })),
@@ -890,66 +1016,6 @@ function EmptySignalsState() {
         to kickoff, when teams and prices are sharper.
       </p>
     </section>
-  );
-}
-
-function WidgetIdentityCard({
-  topSpot,
-  signalCount,
-  refreshedLabel,
-}: {
-  topSpot: string;
-  signalCount: number;
-  refreshedLabel: string;
-}) {
-  return (
-    <aside className="relative overflow-hidden rounded-[1.75rem] border border-cyan-300/25 bg-[#07111d]/90 p-5 shadow-[0_24px_80px_rgba(14,165,233,0.14)]">
-      <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-cyan-300/15 blur-2xl" />
-      <div className="absolute -bottom-14 left-8 h-36 w-36 rounded-full bg-emerald-300/12 blur-2xl" />
-      <div className="relative">
-        <div className="flex items-center justify-between gap-3">
-          <span className="rounded-full border border-cyan-300/30 bg-cyan-300/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-cyan-100">
-            Embed-ready
-          </span>
-          <span className="rounded-full border border-emerald-300/25 bg-emerald-300/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-100">
-            Powered by Il Margine
-          </span>
-        </div>
-
-        <div className="mt-8 rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-            Today&apos;s board
-          </div>
-          <div className="mt-2 text-2xl font-black leading-tight tracking-tight text-slate-50">
-            {topSpot}
-          </div>
-          <div className="mt-4 grid grid-cols-2 gap-2">
-            <div className="rounded-xl border border-emerald-300/20 bg-emerald-300/[0.06] p-3">
-              <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-200/80">
-                Spots
-              </div>
-              <div className="mt-1 font-mono text-2xl font-black text-emerald-100">
-                {signalCount}
-              </div>
-            </div>
-            <div className="rounded-xl border border-amber-300/20 bg-amber-300/[0.07] p-3">
-              <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-amber-100/80">
-                Refresh
-              </div>
-              <div className="mt-1 font-mono text-sm font-black leading-tight text-amber-100">
-                {refreshedLabel}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-4 text-xs leading-6 text-slate-400">
-          A compact fair-odds intelligence module designed to sit inside match
-          previews, betting hubs, and affiliate content while carrying Il
-          Margine attribution.
-        </div>
-      </div>
-    </aside>
   );
 }
 
@@ -1054,9 +1120,10 @@ export default async function FairOddsLabPage({ searchParams }: FairOddsLabPageP
             />
             {!isEmbed ? (
               <p className="mt-3 px-2 text-xs leading-5 text-slate-500">
-                Prices and team news can move. Likely starters update to
-                Confirmed XI when official teams land, or drop out if the
-                lineup no longer supports the signal.
+                Reference prices are taken from Bet365 to keep value spots
+                comparable. This does not claim Bet365 beats every book.
+                Prices and team news can move; likely starters update to
+                Confirmed XI when official teams land.
               </p>
             ) : null}
           </>
@@ -1064,14 +1131,15 @@ export default async function FairOddsLabPage({ searchParams }: FairOddsLabPageP
 
         {!isEmbed ? (
           <>
-            <SuperSubExplainer />
             <LabHitsSection highlights={highlights} />
-            <div className="mt-16">
-              <WidgetIdentityCard
-                topSpot={boardStatus}
-                signalCount={signals.length}
-                refreshedLabel={refreshedLabel}
-              />
+            <SuperSubExplainer />
+            <div className="mt-12 flex flex-col gap-3 border-t border-slate-800/60 pt-4 sm:flex-row sm:items-center sm:justify-between">
+              <span className="text-xs leading-5 text-slate-500">
+                Goalscorer Fair Odds Lab · Model research, not official picks
+              </span>
+              <span className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300/80">
+                Powered by Il Margine
+              </span>
             </div>
           </>
         ) : null}

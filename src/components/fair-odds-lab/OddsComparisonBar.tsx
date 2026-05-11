@@ -57,7 +57,7 @@ export function OddsComparisonBar({
         <div className="relative mb-1 shrink-0 px-1 text-center">
           <div className="absolute left-1/2 top-1/2 h-10 w-px -translate-x-1/2 -translate-y-1/2 rotate-[22deg] bg-emerald-300/70 shadow-[0_0_12px_rgba(52,211,153,0.85)]" />
           <div className="relative text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-            vs
+            {compact ? "gap" : "price gap"}
           </div>
           <div
             className={
@@ -66,12 +66,17 @@ export function OddsComparisonBar({
                 : "mt-1 font-mono text-2xl font-black text-amber-300 sm:text-3xl"
             }
           >
-            +{gapPp.toFixed(1)}pp
+            +{gapPp.toFixed(1)} pp
           </div>
+          {!compact ? (
+            <div className="mt-0.5 text-[10px] leading-4 text-slate-500">
+              percentage points vs market
+            </div>
+          ) : null}
         </div>
         <div className="min-w-0 text-right">
           <div className="flex min-w-0 items-center justify-end gap-2 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-            <span className="truncate">{compact ? "Best" : bookName}</span>
+            <span className="truncate">{compact ? "Reference" : "Reference price"}</span>
             <BookmakerLogo name={bookName} />
           </div>
           <div

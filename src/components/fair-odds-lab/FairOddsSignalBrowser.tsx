@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 
+import { AbstractJersey } from "@/components/fair-odds-lab/AbstractJersey";
 import { FeaturedSignalCard } from "@/components/fair-odds-lab/FeaturedSignalCard";
 import { LogoBadge } from "@/components/fair-odds-lab/LogoBadge";
 import type { LabArtifact, Signal } from "@/components/fair-odds-lab/types";
@@ -104,13 +105,16 @@ function SignalCard({
           onClick={onOpen}
           className="flex min-w-0 items-center gap-3 text-left"
         >
-          <LogoBadge
-            src={signal.teamLogoPath}
-            alt={`${signal.team} logo`}
-            fallback={signal.team}
-            size={44}
-            className="shadow-[0_0_24px_rgba(15,23,42,0.7)]"
-          />
+          <span className="w-12 shrink-0">
+            <AbstractJersey
+              playerNumber={signal.playerNumber}
+              teamLogoPath={signal.teamLogoPath}
+              teamPrimaryColor={signal.teamPrimaryColor}
+              teamSecondaryColor={signal.teamSecondaryColor}
+              shirtPattern={signal.teamShirtPattern}
+              accentEmerald={false}
+            />
+          </span>
           <div className="min-w-0">
             <div className="break-words text-xl font-black leading-tight tracking-tight text-slate-50 sm:text-2xl">
               {signal.player}
@@ -153,7 +157,7 @@ function SignalCard({
               Gap
             </div>
             <div className="mt-1 font-mono text-xl font-black text-amber-100">
-              +{gap.toFixed(1)}pp
+              +{gap.toFixed(1)} pp
             </div>
           </div>
         </div>
@@ -410,10 +414,12 @@ export function FairOddsSignalBrowser({
         </div>
       )}
 
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-slate-800/70 pt-4 text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
-        <span>Fair odds research module</span>
-        <span className="text-emerald-200">Powered by Il Margine &middot; ilmargine.bet</span>
-      </div>
+      {embed ? (
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-slate-800/70 pt-4 text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
+          <span>Fair odds research module</span>
+          <span className="text-emerald-200">Powered by Il Margine &middot; ilmargine.bet</span>
+        </div>
+      ) : null}
     </section>
   );
 }
