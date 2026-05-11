@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T18:05:36.060964Z",
+  "generated_at": "2026-05-11T19:18:53.783701Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -8,7 +8,7 @@
     "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
     "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
-  "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
+  "team_form_source": "data/goalscorer/*player-match-logs-*.csv",
   "edge_threshold_pp": 6.0,
   "public_filters": {
     "min_model_prob_pct": 20.0,
@@ -31,111 +31,9 @@
       "RWB"
     ]
   },
-  "fixtures_evaluated": 14,
-  "signals_qualifying": 1,
-  "leagues_covered": [
-    "epl"
-  ],
-  "featured_signal_id": "20260511-dominic-calvert-lewin-9cd27c06f4",
-  "signals": [
-    {
-      "id": "20260511-dominic-calvert-lewin-9cd27c06f4",
-      "match": {
-        "home_team": "Tottenham Hotspur",
-        "away_team": "Leeds United",
-        "league": "epl",
-        "league_display": "Premier League",
-        "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "2026-05-11T19:00:00Z",
-        "kickoff_display": "Mon 11 May 20:00 UK",
-        "fotmob_match_id": "4813733",
-        "fotmob_page_url": "/matches/leeds-united-vs-tottenham-hotspur/2ejdsf#4813733",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Dominic Calvert-Lewin",
-        "team": "Leeds",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/leeds.png",
-        "team_primary_color": "#f8fafc",
-        "team_secondary_color": "#facc15",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 45.7,
-        "fair_odds": 2.19
-      },
-      "market_data": {
-        "best_odds": 3.2,
-        "best_book": "Bet365",
-        "implied_chance_pct": 31.2
-      },
-      "edge": {
-        "price_gap_pp": 14.4,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 92
-        },
-        "share_of_team_chances_pct": 32,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Positive",
-          "percentile": 69
-        },
-        "recent_team_form": {
-          "tier": "Strong",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-01",
-          "xg_for_avg": 2.05,
-          "xg_against_avg": 0.92,
-          "xgd_per90": 1.13,
-          "shots_for_avg": 14.8,
-          "shots_against_avg": 11.8,
-          "sot_for_avg": 5.4,
-          "sot_against_avg": 4.6,
-          "corners_for_avg": 4.2,
-          "corners_against_avg": 6.2
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 86
-        },
-        "opponent_recent_defence": {
-          "tier": "Average",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-03",
-          "xg_for_avg": 1.28,
-          "xg_against_avg": 1.17,
-          "xgd_per90": 0.11,
-          "shots_for_avg": 11.8,
-          "shots_against_avg": 9.4,
-          "sot_for_avg": 4.6,
-          "sot_against_avg": 3.0,
-          "corners_for_avg": 7.2,
-          "corners_against_avg": 4.0
-        },
-        "fixture_boost_pct": -19,
-        "projected_minutes": 85,
-        "penalty_role": "Primary",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Recent team form supports the attacking case",
-        "Opponent defensive profile is a positive matchup"
-      ],
-      "risk_flags": []
-    }
-  ]
+  "fixtures_evaluated": 11,
+  "signals_qualifying": 0,
+  "leagues_covered": [],
+  "featured_signal_id": null,
+  "signals": []
 }
