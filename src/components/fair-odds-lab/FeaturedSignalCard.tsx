@@ -163,6 +163,11 @@ function MetricTable({
           </div>
         ))}
       </div>
+      <div className="mt-3 rounded-xl border border-sky-300/15 bg-sky-300/[0.045] px-3 py-2 text-[11px] leading-5 text-slate-400">
+        Where a bookmaker shows a Sub On Play On / Super Sub icon, the bet may
+        roll to the direct replacement if the player is substituted. The model
+        price above does not assume that extra protection.
+      </div>
     </div>
   );
 }

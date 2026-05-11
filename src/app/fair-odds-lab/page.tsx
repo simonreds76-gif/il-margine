@@ -11,10 +11,13 @@ import { BASE_URL } from "@/lib/config";
 export const metadata: Metadata = {
   title: "Anytime Goalscorer Value Spots | Goalscorer Fair Odds Lab",
   description:
-    "Live anytime goalscorer value spots from Il Margine, comparing our model's fair odds with bookmaker prices for likely and confirmed starters.",
+    "Live anytime goalscorer value spots from Il Margine, comparing our model's fair odds with bookmaker prices for likely and confirmed starters, including bookmaker-dependent Super Sub upside.",
   keywords: [
     "anytime goalscorer tips",
     "goalscorer value bets",
+    "Super Sub goalscorer",
+    "Sub On Play On",
+    "bet365 goalscorer",
     "football goalscorer odds",
     "fair odds",
     "football betting model",
@@ -33,7 +36,7 @@ export const metadata: Metadata = {
     url: `${BASE_URL}/fair-odds-lab`,
     title: "Goalscorer Fair Odds Lab | Il Margine",
     description:
-      "Anytime goalscorer value spots where Il Margine's model price is shorter than the bookmaker market price.",
+      "Anytime goalscorer value spots where Il Margine's model price is shorter than the bookmaker market price. Some bookmaker markets can add Sub On Play On upside.",
     images: [
       {
         url: `${BASE_URL}/og.png`,
@@ -47,7 +50,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Goalscorer Fair Odds Lab | Il Margine",
     description:
-      "Anytime goalscorer value spots where Il Margine's model price is shorter than the bookmaker market price.",
+      "Anytime goalscorer value spots where Il Margine's model price is shorter than the bookmaker market price, with Super Sub upside explained where relevant.",
     images: [`${BASE_URL}/og.png`],
   },
 };
@@ -652,6 +655,55 @@ function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
   );
 }
 
+function SuperSubExplainer() {
+  return (
+    <section className="mt-5 overflow-hidden rounded-2xl border border-sky-300/20 bg-sky-300/[0.055]">
+      <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="p-5 sm:p-6">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-sky-200">
+            Bookmaker edge layer
+          </div>
+          <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-50">
+            Super Sub can make the same goalscorer price stronger.
+          </h2>
+          <p className="mt-3 text-sm leading-7 text-slate-300">
+            The model prices the named player only. It does not add extra value
+            for bookmaker promotions such as bet365&apos;s Sub On Play On, where
+            eligible player-market bets can roll to the direct replacement if
+            your player is substituted. When that icon is available, the real
+            bet can have more protection than the fair odds shown here.
+          </p>
+          <p className="mt-3 text-xs leading-6 text-slate-500">
+            Availability depends on the bookmaker, match, market, jurisdiction
+            and account eligibility. Always check the betslip icon and the
+            bookmaker rules before placing a bet. We do not bake Super Sub into
+            the model price, so treat it as potential upside on top of the
+            displayed value gap.
+          </p>
+        </div>
+        <div className="border-t border-slate-800/80 bg-slate-950/50 p-5 lg:border-l lg:border-t-0">
+          <div className="grid gap-3">
+            {[
+              ["Model price", "Named player only"],
+              ["Bookmaker feature", "Sub On Play On / Super Sub"],
+              ["Why it matters", "Replacement can keep the bet alive"],
+            ].map(([label, value]) => (
+              <div key={label} className="rounded-xl border border-slate-800/80 bg-slate-950/70 p-3">
+                <div className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                  {label}
+                </div>
+                <div className="mt-1 font-mono text-sm font-black text-slate-100">
+                  {value}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function buildFairOddsLabStructuredData({
   signals,
   highlights,
@@ -673,7 +725,7 @@ function buildFairOddsLabStructuredData({
         url: pageUrl,
         name: "Goalscorer Fair Odds Lab",
         description:
-          "Anytime goalscorer value spots where Il Margine compares model fair odds with bookmaker market prices.",
+          "Anytime goalscorer value spots where Il Margine compares model fair odds with bookmaker market prices and explains bookmaker-dependent Super Sub upside.",
         isPartOf: {
           "@type": "WebSite",
           "@id": `${BASE_URL}/#website`,
@@ -685,6 +737,8 @@ function buildFairOddsLabStructuredData({
           "football betting model",
           "fair odds",
           "goalscorer value spots",
+          "Super Sub goalscorer betting",
+          "Sub On Play On",
         ],
         dateModified: generatedAt ?? new Date().toISOString(),
       },
@@ -703,6 +757,30 @@ function buildFairOddsLabStructuredData({
             position: 2,
             name: "Goalscorer Fair Odds Lab",
             item: pageUrl,
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${pageUrl}#super-sub-faq`,
+        mainEntity: [
+          {
+            "@type": "Question",
+            name: "Does the Fair Odds Lab include Super Sub in the model price?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text:
+                "No. The model prices the named player only. If a bookmaker offers a Sub On Play On or Super Sub feature on the same market, that is treated as extra bookmaker-dependent protection on top of the displayed fair odds.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Can a replacement player make a goalscorer bet win?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text:
+                "On selected player markets where the bookmaker displays the relevant Sub On Play On or Super Sub icon, the bet may roll to the direct replacement if the named player is substituted. Availability and settlement depend on bookmaker rules.",
+            },
           },
         ],
       },
@@ -858,6 +936,8 @@ export default async function FairOddsLabPage() {
           update to Confirmed XI when official teams land, or drop out if the
           lineup no longer supports the signal.
         </section>
+
+        <SuperSubExplainer />
 
         <section className="mt-5">
           <div className="rounded-2xl border border-slate-700/45 bg-[#0c0f14] p-5">

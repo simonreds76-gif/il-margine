@@ -74,3 +74,18 @@ Example artifact shape:
 5. What is the safest next data upgrade?
    - Codex recommendation: keep using current xG/shots/corners layer first; add a provider for injuries/set-pieces only after launch, because those require external data quality/licensing checks.
 
+## Super Sub / Sub On Play On note
+
+The public page now explains bookmaker-dependent Super Sub upside. The model still prices the named player only.
+
+Important implementation constraint:
+
+- Current automatic goalscorer settlement can verify whether the named player scored.
+- It cannot reliably verify whether the direct replacement scored, because our stored player logs do not contain substitution-event mapping.
+- Do not count Super Sub wins automatically until we add a verified match-event source that links substituted player -> direct replacement -> scorer.
+
+Recommended copy stance:
+
+- Treat Sub On Play On as extra bookmaker-dependent protection, not part of the model.
+- Mention bet365/Sub On Play On for SEO, but always say availability depends on the market icon and bookmaker rules.
+- Historical highlights should remain named-player wins unless a future settlement note explicitly marks a verified replacement win.
