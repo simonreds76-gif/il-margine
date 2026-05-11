@@ -494,6 +494,7 @@ function mapHighlight(rawValue: unknown): LabHighlight | null {
   const marketChancePct = asNumber(raw.market_chance_pct);
   const priceGapPp = asNumber(raw.price_gap_pp);
   const goalsScored = asNumber(raw.goals_scored) ?? 1;
+  const superSubReplacementGoals = asNumber(raw.super_sub_replacement_goals);
   const player = asText(raw.player);
   const match = asText(raw.match);
 
@@ -525,6 +526,9 @@ function mapHighlight(rawValue: unknown): LabHighlight | null {
     marketChancePct,
     priceGapPp,
     goalsScored,
+    superSubWin: Boolean(raw.super_sub_win),
+    superSubReplacement: asText(raw.super_sub_replacement) || undefined,
+    superSubReplacementGoals: superSubReplacementGoals ?? undefined,
     settledAt: asText(raw.settled_at) || undefined,
   };
 }
@@ -613,7 +617,7 @@ function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
                 <div className="mt-1 truncate text-sm text-slate-500">{highlight.match}</div>
               </div>
               <span className="shrink-0 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-emerald-200">
-                Scored
+                {highlight.superSubWin ? "Super Sub" : "Scored"}
               </span>
             </div>
 
@@ -646,7 +650,11 @@ function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
 
             <div className="mt-4 text-sm leading-6 text-slate-400">
               The Lab priced him shorter than {highlight.bestBookmaker}&apos;s market price.
-              {highlight.goalsScored > 1 ? ` He scored ${highlight.goalsScored}.` : ""}
+              {highlight.superSubWin && highlight.superSubReplacement
+                ? ` Direct replacement ${highlight.superSubReplacement} scored under Super Sub terms.`
+                : highlight.goalsScored > 1
+                  ? ` He scored ${highlight.goalsScored}.`
+                  : ""}
             </div>
           </article>
         ))}
@@ -674,18 +682,23 @@ function SuperSubExplainer() {
             bet can have more protection than the fair odds shown here.
           </p>
           <p className="mt-3 text-xs leading-6 text-slate-500">
+            This page uses Bet365 as the reference price where available,
+            because its anytime-goalscorer markets commonly carry Sub On Play On
+            terms. It is not a claim that Bet365 is always the best price.
+            Compare your own available bookies before betting; if we publish an
+            official goalscorer tip, we will specify the bookie and odds used.
+          </p>
+          <p className="mt-2 text-xs leading-6 text-slate-500">
             Availability depends on the bookmaker, match, market, jurisdiction
             and account eligibility. Always check the betslip icon and the
-            bookmaker rules before placing a bet. We do not bake Super Sub into
-            the model price, so treat it as potential upside on top of the
-            displayed value gap.
+            bookmaker rules before placing a bet.
           </p>
         </div>
         <div className="border-t border-slate-800/80 bg-slate-950/50 p-5 lg:border-l lg:border-t-0">
           <div className="grid gap-3">
             {[
               ["Model price", "Named player only"],
-              ["Bookmaker feature", "Sub On Play On / Super Sub"],
+              ["Reference book", "Bet365 for simple comparison"],
               ["Why it matters", "Replacement can keep the bet alive"],
             ].map(([label, value]) => (
               <div key={label} className="rounded-xl border border-slate-800/80 bg-slate-950/70 p-3">
@@ -780,6 +793,15 @@ function buildFairOddsLabStructuredData({
               "@type": "Answer",
               text:
                 "On selected player markets where the bookmaker displays the relevant Sub On Play On or Super Sub icon, the bet may roll to the direct replacement if the named player is substituted. Availability and settlement depend on bookmaker rules.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Why does the page use Bet365 as the reference price?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text:
+                "Bet365 is used as a simple reference because its anytime-goalscorer markets are widely available and commonly carry Sub On Play On terms. It is not always the best price. Compare your own available bookies, and if Il Margine publishes an official goalscorer tip we will specify the bookie and odds used.",
             },
           },
         ],

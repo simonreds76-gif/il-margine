@@ -75,5 +75,8 @@ export type LabHighlight = {
   marketChancePct: number;
   priceGapPp: number;
   goalsScored: number;
+  superSubWin?: boolean;
+  superSubReplacement?: string;
+  superSubReplacementGoals?: number;
   settledAt?: string;
 };

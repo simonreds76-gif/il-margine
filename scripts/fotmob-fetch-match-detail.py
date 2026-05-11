@@ -191,6 +191,39 @@ def _extract_goal_events(shots: Iterable[dict], home_team: str, away_team: str, 
     return goal_events
 
 
+def _build_substitution_groups(players: Iterable[dict]) -> List[dict]:
+    groups: Dict[tuple[int, int], dict] = {}
+    for player in players:
+        if not isinstance(player, dict):
+            continue
+        team_id = _safe_int(player.get("team_id"))
+        team_name = str(player.get("team") or "").strip()
+        player_payload = {
+            "name": str(player.get("name") or "").strip(),
+            "fotmob_id": _safe_int(player.get("fotmob_id")),
+        }
+        sub_in = _safe_int(player.get("sub_in_minute"))
+        sub_out = _safe_int(player.get("sub_out_minute"))
+        if bool(player.get("subbed_on")) and sub_in > 0:
+            group = groups.setdefault(
+                (team_id, sub_in),
+                {"team": team_name, "team_id": team_id, "minute": sub_in, "on": [], "off": []},
+            )
+            group["on"].append(player_payload)
+        if bool(player.get("subbed_off")) and sub_out > 0:
+            group = groups.setdefault(
+                (team_id, sub_out),
+                {"team": team_name, "team_id": team_id, "minute": sub_out, "on": [], "off": []},
+            )
+            group["off"].append(player_payload)
+
+    output: List[dict] = []
+    for group in groups.values():
+        group["direct_replacement_verified"] = len(group["on"]) == 1 and len(group["off"]) == 1
+        output.append(group)
+    return sorted(output, key=lambda group: (str(group.get("team") or ""), _safe_int(group.get("minute"))))
+
+
 def _build_match_result(league_key: str, match: dict, payload: dict) -> dict | None:
     page_props = payload.get("props", {}).get("pageProps", {})
     general = page_props.get("general", {}) or {}
@@ -257,6 +290,7 @@ def _build_match_result(league_key: str, match: dict, payload: dict) -> dict | N
         "away_score": _safe_int(status.get("scoreStr", "0-0").split("-")[1] if "-" in str(status.get("scoreStr") or "") else 0),
         "players": merged_players,
         "goal_events": goal_events,
+        "substitution_groups": _build_substitution_groups(merged_players),
         "fetched_at": datetime.now(ZoneInfo("UTC")).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
     }
 

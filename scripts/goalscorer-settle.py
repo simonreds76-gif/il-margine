@@ -28,6 +28,7 @@ from scripts._lib.run_status import run_status
 
 DEFAULT_RESULTS_DIR = ROOT / "data" / "goalscorer" / "match-results"
 DEFAULT_ALIAS_PATH = ROOT / "data" / "goalscorer" / "fotmob-player-aliases.json"
+SUPER_SUB_BOOKMAKER_TOKENS = {"bet365"}
 
 LEAGUE_CONFIGS = {
     "serie-a": {
@@ -97,6 +98,13 @@ def _parse_float(value: Any, default: float = 0.0) -> float:
     try:
         return float(text)
     except ValueError:
+        return default
+
+
+def _parse_int(value: Any, default: int = 0) -> int:
+    try:
+        return int(float(str(value or "").strip()))
+    except (TypeError, ValueError):
         return default
 
 
@@ -170,6 +178,78 @@ def _find_team_players(match_result: dict, team_key: str, team_key_func) -> List
 
 def _complete_team_sheet(team_players: List[dict]) -> bool:
     return len(team_players) >= 14
+
+
+def _player_name(player: dict) -> str:
+    return str(player.get("name") or "").strip()
+
+
+def _non_own_goal_count(player: dict) -> int:
+    return max(_parse_int(player.get("goals")) - _parse_int(player.get("own_goals")), 0)
+
+
+def _normalise_bookmaker(value: Any) -> str:
+    return "".join(ch for ch in str(value or "").strip().lower() if ch.isalnum())
+
+
+def _is_super_sub_eligible_bookmaker(row: dict) -> bool:
+    bookmaker = _normalise_bookmaker(row.get("best_bookmaker"))
+    return bookmaker in SUPER_SUB_BOOKMAKER_TOKENS
+
+
+def _settle_super_sub_replacement(
+    row: dict,
+    *,
+    team_players: List[dict],
+    player_entry: dict,
+) -> tuple[str, str, int] | None:
+    """Settle Bet365 Sub On Play On only when the replacement is unambiguous.
+
+    FotMob exposes each player's sub-in/sub-out minute in the match detail we
+    archive. We only treat that as a verified direct replacement when exactly
+    one player left and exactly one player entered for the same team/minute.
+    Multiple substitutions at the same minute stay as normal named-player
+    losses because we cannot prove the direct replacement from this source.
+    """
+
+    row["super_sub_eligible_bookmaker"] = "1" if _is_super_sub_eligible_bookmaker(row) else "0"
+    row["super_sub_checked"] = "0"
+    row["super_sub_replacement"] = ""
+    row["super_sub_replacement_goals"] = "0"
+
+    if row["super_sub_eligible_bookmaker"] != "1":
+        return None
+    if not bool(player_entry.get("subbed_off")):
+        return None
+
+    sub_out_minute = _parse_int(player_entry.get("sub_out_minute"))
+    if sub_out_minute <= 0:
+        return None
+
+    outgoing = [
+        player
+        for player in team_players
+        if bool(player.get("subbed_off")) and _parse_int(player.get("sub_out_minute")) == sub_out_minute
+    ]
+    incoming = [
+        player
+        for player in team_players
+        if bool(player.get("subbed_on")) and _parse_int(player.get("sub_in_minute")) == sub_out_minute
+    ]
+    row["super_sub_checked"] = "1"
+
+    if len(outgoing) != 1 or len(incoming) != 1:
+        return None
+
+    replacement = incoming[0]
+    replacement_name = _player_name(replacement)
+    replacement_goals = _non_own_goal_count(replacement)
+    row["super_sub_replacement"] = replacement_name
+    row["super_sub_replacement_goals"] = str(replacement_goals)
+
+    if replacement_goals > 0:
+        return "won", f"super_sub_replacement_scored:{replacement_name}", replacement_goals
+    return None
 
 
 def _has_complete_finished_fallback(match_result: dict, home_team_key: str, away_team_key: str, team_key_func) -> bool:
@@ -257,12 +337,23 @@ def settle_row(
             return "void", "not_in_matchday_squad", 0
         return "void", "confirmed_non_runner", 0
 
-    goals = int(player_entry.get("goals") or 0)
-    own_goals = int(player_entry.get("own_goals") or 0)
-    non_og_goals = max(goals - own_goals, 0)
+    non_og_goals = _non_own_goal_count(player_entry)
 
     if non_og_goals > 0:
         return "won", f"scored_{non_og_goals}_goals", non_og_goals
+
+    super_sub_result = _settle_super_sub_replacement(
+        row,
+        team_players=team_players,
+        player_entry=player_entry,
+    )
+    if super_sub_result is not None:
+        return super_sub_result
+    if row.get("super_sub_checked") == "1":
+        replacement = str(row.get("super_sub_replacement") or "").strip()
+        if replacement:
+            return "lost", f"played_did_not_score_super_sub_checked:{replacement}", 0
+        return "lost", "played_did_not_score_super_sub_ambiguous", 0
     return "lost", "played_did_not_score", 0
 
 

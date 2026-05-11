@@ -63,6 +63,10 @@ def highlight_from_row(row: dict[str, str], league: str) -> dict[str, Any] | Non
     date = clean_text(row.get("date"))
     match = clean_text(row.get("match"))
     player = clean_text(row.get("player") or row.get("market_player_name"))
+    settlement_note = clean_text(row.get("settlement_note"))
+    super_sub_replacement = clean_text(row.get("super_sub_replacement"))
+    super_sub_replacement_goals = int(parse_float(row.get("super_sub_replacement_goals")) or 0)
+    super_sub_win = settlement_note.startswith("super_sub_replacement_scored:")
 
     return {
         "id": f"{date}-{league}-{match}-{player}".lower().replace(" ", "-"),
@@ -80,8 +84,11 @@ def highlight_from_row(row: dict[str, str], league: str) -> dict[str, Any] | Non
         "market_chance_pct": round(market_prob * 100.0, 1),
         "price_gap_pp": round(price_gap_pp, 1),
         "goals_scored": int(parse_float(row.get("goals_scored")) or 1),
+        "super_sub_win": super_sub_win,
+        "super_sub_replacement": super_sub_replacement,
+        "super_sub_replacement_goals": super_sub_replacement_goals,
         "settled_at": clean_text(row.get("settled_at")),
-        "settlement_note": clean_text(row.get("settlement_note")),
+        "settlement_note": settlement_note,
     }
 
 
