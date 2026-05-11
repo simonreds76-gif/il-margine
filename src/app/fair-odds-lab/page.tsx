@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     canonical: "/fair-odds-lab",
   },
   robots: {
-    index: process.env.NEXT_PUBLIC_ENABLE_GOALSCORER_PAGE === "1",
-    follow: process.env.NEXT_PUBLIC_ENABLE_GOALSCORER_PAGE === "1",
+    index: true,
+    follow: true,
   },
 };
 

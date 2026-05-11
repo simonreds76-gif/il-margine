@@ -324,9 +324,6 @@ function ExploreCard({ href, title, body }: { href: string; title: string; body:
 
 export default function Home() {
   const router = useRouter();
-  const showGoalscorerMarket =
-    process.env.NODE_ENV !== "production" ||
-    process.env.NEXT_PUBLIC_ENABLE_GOALSCORER_PAGE === "1";
   const [recentBets, setRecentBets] = useState<HomepageBet[]>([]);
   const [pendingBets, setPendingBets] = useState<HomepageBet[]>([]);
   const [showAllPending, setShowAllPending] = useState(false);
@@ -512,7 +509,7 @@ export default function Home() {
       status: "active" as const,
       profit: "In development",
     },
-  ].filter((market) => showGoalscorerMarket || market.id !== "atg");
+  ];
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">

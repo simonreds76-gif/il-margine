@@ -7,10 +7,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const worldCupLastModified = worldCupData?.last_verified
     ? new Date(`${worldCupData.last_verified}T12:00:00Z`)
     : new Date();
-  const showFairOddsLabPage =
-    process.env.NODE_ENV !== 'production' ||
-    process.env.GOALSCORER_PAGE_PUBLIC === '1' ||
-    process.env.NEXT_PUBLIC_ENABLE_GOALSCORER_PAGE === '1';
   const entries: MetadataRoute.Sitemap = [
     {
       url: BASE_URL,
@@ -52,14 +48,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           })),
         ]
       : []),
-    ...(showFairOddsLabPage
-      ? [{
-          url: `${BASE_URL}/fair-odds-lab`,
-          lastModified: new Date(),
-          changeFrequency: 'weekly' as const,
-          priority: 0.8,
-        }]
-      : []),
+    {
+      url: `${BASE_URL}/fair-odds-lab`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    },
     {
       url: `${BASE_URL}/bet-builders`,
       lastModified: new Date(),
