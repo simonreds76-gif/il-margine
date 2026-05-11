@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T09:00:47.527113Z",
+  "generated_at": "2026-05-11T11:22:59.774134Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -8,6 +8,7 @@
     "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
     "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
+  "team_form_source": "",
   "edge_threshold_pp": 6.0,
   "public_filters": {
     "min_model_prob_pct": 20.0,
@@ -30,7 +31,7 @@
       "RWB"
     ]
   },
-  "fixtures_evaluated": 8,
+  "fixtures_evaluated": 10,
   "signals_qualifying": 1,
   "leagues_covered": [
     "epl"
@@ -64,16 +65,16 @@
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 42.4,
-        "fair_odds": 2.36
+        "scoring_chance_pct": 45.7,
+        "fair_odds": 2.19
       },
       "market_data": {
-        "best_odds": 2.88,
+        "best_odds": 3.0,
         "best_book": "Bet365",
-        "implied_chance_pct": 34.8
+        "implied_chance_pct": 33.3
       },
       "edge": {
-        "price_gap_pp": 7.6,
+        "price_gap_pp": 12.4,
         "model_advantage": true
       },
       "metrics": {
@@ -81,15 +82,21 @@
           "tier": "Strong",
           "percentile": 93
         },
-        "share_of_team_chances_pct": 28,
+        "share_of_team_chances_pct": 32,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 72
+          "percentile": 71
+        },
+        "recent_team_form": {
+          "tier": "Unknown"
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 78
+          "percentile": 82
+        },
+        "opponent_recent_defence": {
+          "tier": "Unknown"
         },
         "fixture_boost_pct": -19,
         "projected_minutes": 87,
