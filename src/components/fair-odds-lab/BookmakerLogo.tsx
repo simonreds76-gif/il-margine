@@ -5,7 +5,7 @@ type BookmakerLogoProps = {
 };
 
 const BOOKMAKER_LOGOS: Array<[RegExp, string]> = [
-  [/bet\s*365/i, "/bookmakers/bet365.png"],
+  [/bet\s*365/i, "/bookmakers/bet365.svg"],
   [/pinnacle/i, "/bookmakers/pinnacle.png"],
   [/betfair/i, "/bookmakers/betfair.png"],
   [/bet\s*mgm/i, "/bookmakers/BetMGM UK_idPMHl2t9c_0.png"],
@@ -30,11 +30,15 @@ export function BookmakerLogo({ name, size = "sm", className = "" }: BookmakerLo
   const src = bookmakerLogoPath(name);
   if (!src) return null;
 
-  const sizeClass = size === "md" ? "h-8 min-w-14 px-2.5" : "h-6 min-w-11 px-2";
+  const isBet365 = /bet\s*365/i.test(name);
+  const sizeClass = size === "md" ? "h-8 min-w-16 px-3" : "h-6 min-w-12 px-2.5";
+  const brandClass = isBet365
+    ? "border-emerald-400/25 bg-[#071b12] shadow-[0_0_18px_rgba(16,185,129,0.12)]"
+    : "border-slate-700/60 bg-slate-950/70";
 
   return (
     <span
-      className={`inline-flex shrink-0 items-center justify-center rounded-md border border-slate-700/60 bg-slate-950/70 ${sizeClass} ${className}`}
+      className={`inline-flex shrink-0 items-center justify-center rounded-md border ${brandClass} ${sizeClass} ${className}`}
       title={name}
     >
       <img

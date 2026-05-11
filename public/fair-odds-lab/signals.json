@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T12:15:16.671861Z",
+  "generated_at": "2026-05-11T12:30:45.375512Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -8,7 +8,7 @@
     "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
     "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
-  "team_form_source": "",
+  "team_form_source": "data/goalscorer/*player-match-logs-*.csv",
   "edge_threshold_pp": 6.0,
   "public_filters": {
     "min_model_prob_pct": 20.0,
@@ -89,14 +89,38 @@
           "percentile": 71
         },
         "recent_team_form": {
-          "tier": "Unknown"
+          "tier": "Strong",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-01",
+          "xg_for_avg": 2.05,
+          "xg_against_avg": 0.92,
+          "xgd_per90": 1.13,
+          "shots_for_avg": 14.8,
+          "shots_against_avg": 11.4,
+          "sot_for_avg": 0.0,
+          "sot_against_avg": 0.0,
+          "corners_for_avg": null,
+          "corners_against_avg": null
         },
         "opponent_defensive_weakness": {
           "tier": "High",
           "percentile": 82
         },
         "opponent_recent_defence": {
-          "tier": "Unknown"
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-03",
+          "xg_for_avg": 1.28,
+          "xg_against_avg": 1.17,
+          "xgd_per90": 0.11,
+          "shots_for_avg": 11.8,
+          "shots_against_avg": 9.4,
+          "sot_for_avg": 0.0,
+          "sot_against_avg": 0.0,
+          "corners_for_avg": null,
+          "corners_against_avg": null
         },
         "fixture_boost_pct": -19,
         "projected_minutes": 87,
@@ -108,8 +132,8 @@
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup",
-        "Primary penalty role adds a clear scoring route"
+        "Recent team form supports the attacking case",
+        "Opponent defensive profile is a positive matchup"
       ],
       "risk_flags": []
     }

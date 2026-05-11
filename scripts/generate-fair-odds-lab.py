@@ -50,6 +50,7 @@ DEFAULT_LINEUP_FIXTURES = [
     Path("data/goalscorer/bundesliga-confirmed-lineups.json"),
     Path("data/goalscorer/ligue-1-confirmed-lineups.json"),
 ]
+DEFAULT_FORM_PLAYER_LOG_DIR = Path("data/goalscorer")
 
 PUBLIC_EDGE_THRESHOLD_PP = 6.0
 PUBLIC_MAX_SIGNALS = 5
@@ -399,6 +400,78 @@ def load_team_match_base_index(path: Path) -> dict[tuple[str, str], list[dict[st
             if not date_key or not team:
                 continue
             index.setdefault((league, team), []).append(dict(row))
+
+    for rows in index.values():
+        rows.sort(key=lambda item: clean_text(item.get("date")))
+    return index
+
+
+def load_goalscorer_player_log_form_index() -> dict[tuple[str, str], list[dict[str, Any]]]:
+    """Fallback recent-form source from goalscorer player logs.
+
+    The preferred form layer is team-match-base.csv, but CI can build it into a
+    temp directory and still fail to pass that path forward. The player logs are
+    already required for the goalscorer model, so this keeps the public page
+    from leaking "Unknown" form tiles when the temp form artifact is missing.
+    """
+
+    fixture_rows: dict[tuple[str, str, str, str], dict[str, Any]] = {}
+    for path in sorted(DEFAULT_FORM_PLAYER_LOG_DIR.glob("*player-match-logs-*.csv")):
+        if not path.exists():
+            continue
+        with path.open(newline="", encoding="utf-8-sig") as handle:
+            for row in csv.DictReader(handle):
+                date_key = clean_text(row.get("match_date"))
+                league = league_slug(clean_text(row.get("competition")))
+                team = clean_text(row.get("team"))
+                opponent = clean_text(row.get("opponent"))
+                team_key = canonical_team_key(team)
+                opponent_key = canonical_team_key(opponent)
+                if not date_key or not league or not team_key or not opponent_key:
+                    continue
+                key = (date_key, league, team_key, opponent_key)
+                fixture = fixture_rows.setdefault(
+                    key,
+                    {
+                        "date": date_key,
+                        "league": league,
+                        "team": team,
+                        "team_key": team_key,
+                        "opponent": opponent,
+                        "opponent_key": opponent_key,
+                        "xg_for": None,
+                        "xg_against": None,
+                        "shots_for": 0.0,
+                        "sot_for": 0.0,
+                    },
+                )
+                team_xg = parse_float(row.get("team_xg"))
+                team_xga = parse_float(row.get("team_xga"))
+                if fixture.get("xg_for") is None and team_xg is not None:
+                    fixture["xg_for"] = team_xg
+                if fixture.get("xg_against") is None and team_xga is not None:
+                    fixture["xg_against"] = team_xga
+                fixture["shots_for"] = float(fixture.get("shots_for") or 0.0) + (parse_float(row.get("shots")) or 0.0)
+                fixture["sot_for"] = float(fixture.get("sot_for") or 0.0) + (parse_float(row.get("shots_on_target")) or 0.0)
+
+    index: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for (date_key, league, team_key, opponent_key), fixture in fixture_rows.items():
+        opponent_fixture = fixture_rows.get((date_key, league, opponent_key, team_key))
+        row = {
+            "date": date_key,
+            "league": league,
+            "team": fixture.get("team"),
+            "team_key": team_key,
+            "opponent": fixture.get("opponent"),
+            "opponent_key": opponent_key,
+            "xg_for": fixture.get("xg_for"),
+            "xg_against": fixture.get("xg_against"),
+            "shots_for": fixture.get("shots_for"),
+            "shots_against": opponent_fixture.get("shots_for") if opponent_fixture else None,
+            "sot_for": fixture.get("sot_for"),
+            "sot_against": opponent_fixture.get("sot_for") if opponent_fixture else None,
+        }
+        index.setdefault((league, team_key), []).append(row)
 
     for rows in index.values():
         rows.sort(key=lambda item: clean_text(item.get("date")))
@@ -1410,6 +1483,10 @@ def main() -> None:
     lineup_paths = args.lineups or DEFAULT_LINEUP_FIXTURES
     logo_manifest = load_logo_manifest(args.team_logo_map)
     team_form_index = load_team_match_base_index(args.team_match_base)
+    team_form_source = str(args.team_match_base).replace("\\", "/") if team_form_index else ""
+    if not team_form_index:
+        team_form_index = load_goalscorer_player_log_form_index()
+        team_form_source = "data/goalscorer/*player-match-logs-*.csv" if team_form_index else ""
     raw_rows, candidates, source_paths = read_grouped_candidates(
         input_paths,
         args.monitor_snapshot,
@@ -1473,7 +1550,7 @@ def main() -> None:
     payload = {
         "generated_at": datetime.now(tz=timezone.utc).isoformat().replace("+00:00", "Z"),
         "source_file": source_paths,
-        "team_form_source": str(args.team_match_base).replace("\\", "/") if team_form_index else "",
+        "team_form_source": team_form_source,
         "edge_threshold_pp": args.edge_threshold_pp,
         "public_filters": {
             "min_model_prob_pct": args.min_model_prob_pct,
@@ -1498,7 +1575,7 @@ def main() -> None:
     print("================================================================")
     print(f"Inputs: {', '.join(source_paths) if source_paths else 'none'}")
     print(f"Monitor snapshot: {args.monitor_snapshot}")
-    print(f"Team form context: {args.team_match_base if team_form_index else 'not available'}")
+    print(f"Team form context: {team_form_source or 'not available'}")
     print(f"Output: {args.output}")
     print(f"Today filter: {today_iso} (include_past={args.include_past})")
     print(f"Fixtures evaluated: {fixtures_evaluated}")

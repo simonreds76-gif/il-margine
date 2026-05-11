@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import teamLogoManifest from "../../../data/goalscorer/team-logo-map.json";
 import { FairOddsSignalBrowser } from "@/components/fair-odds-lab/FairOddsSignalBrowser";
 import { sampleSignals } from "@/components/fair-odds-lab/__fixtures__/sample-signals";
-import type { LabArtifact, LabHighlight, Signal } from "@/components/fair-odds-lab/types";
+import type { LabArtifact, LabHighlight, Signal, SignalMetric } from "@/components/fair-odds-lab/types";
 import { BASE_URL } from "@/lib/config";
 
 export const metadata: Metadata = {
@@ -83,6 +83,10 @@ function normalizeConfidence(value: unknown): Signal["confidence"] {
 function normalizeMetricTier(value: unknown, fallback = "Unknown") {
   if (typeof value === "string" && value.trim()) return value.trim();
   return fallback;
+}
+
+function isKnownTier(value: string) {
+  return value.trim().toLowerCase() !== "unknown";
 }
 
 function roleLabel(minutes: number | undefined, lineupStatus: string) {
@@ -296,6 +300,36 @@ function mapArtifactSignal(rawValue: unknown): Signal | null {
   const artifactPattern = ["solid", "vertical-stripes", "halves", "sash"].includes(rawPattern)
     ? (rawPattern as Signal["teamShirtPattern"])
     : undefined;
+  const opponentMetrics: SignalMetric[] = [
+    {
+      label: "Team attacking outlook",
+      value: teamAttackingOutlook,
+      percentile: asNumber(teamOutlookMetric.percentile) ?? undefined,
+    },
+  ];
+  if (isKnownTier(recentTeamForm)) {
+    opponentMetrics.push({
+      label: "Recent team form",
+      value: recentTeamForm,
+      note: teamFormNote(recentTeamFormMetric),
+    });
+  }
+  opponentMetrics.push({
+    label: "Opponent defensive weakness",
+    value: opponentDefensiveWeakness,
+    percentile: asNumber(opponentWeaknessMetric.percentile) ?? undefined,
+  });
+  if (isKnownTier(opponentRecentDefence)) {
+    opponentMetrics.push({
+      label: "Opponent recent defence",
+      value: opponentRecentDefence,
+      note: opponentFormNote(opponentRecentDefenceMetric),
+    });
+  }
+  opponentMetrics.push({
+    label: "Expected role",
+    value: roleLabel(projectedMinutes, lineupStatus),
+  });
 
   return {
     id: asText(raw.id, `${playerName}-${match}`),
@@ -346,32 +380,7 @@ function mapArtifactSignal(rawValue: unknown): Signal | null {
         value: penaltyRole,
       },
     ],
-    opponentMetrics: [
-      {
-        label: "Team attacking outlook",
-        value: teamAttackingOutlook,
-        percentile: asNumber(teamOutlookMetric.percentile) ?? undefined,
-      },
-      {
-        label: "Recent team form",
-        value: recentTeamForm,
-        note: teamFormNote(recentTeamFormMetric),
-      },
-      {
-        label: "Opponent defensive weakness",
-        value: opponentDefensiveWeakness,
-        percentile: asNumber(opponentWeaknessMetric.percentile) ?? undefined,
-      },
-      {
-        label: "Opponent recent defence",
-        value: opponentRecentDefence,
-        note: opponentFormNote(opponentRecentDefenceMetric),
-      },
-      {
-        label: "Expected role",
-        value: roleLabel(projectedMinutes, lineupStatus),
-      },
-    ],
+    opponentMetrics,
     edgeReasons: Array.isArray(raw.reasons) ? raw.reasons.map((reason: unknown) => asText(reason)).filter(Boolean) : [],
   };
 }
