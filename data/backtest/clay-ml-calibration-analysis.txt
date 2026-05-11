@@ -1,0 +1,50 @@
+Tennis Clay ML Calibration Analysis
+========================================
+Generated UTC: 2026-05-11T22:00:02+00:00
+
+Inputs
+- data\backtest\backtest-results-2022.csv
+- data\backtest\backtest-results-2023.csv
+- data\backtest\backtest-results-2024.csv
+- data\backtest\backtest-results-2025.csv
+- Curve CSV: data\backtest\clay-ml-calibration-analysis.csv
+
+Sealed-data rule
+- Default run uses 2022-2025 only.
+- 2026+ rows skipped: 0
+- Do not use 2026 for parameter selection.
+
+Backtest rows
+- Files loaded: 4
+- Rows seen: 9,889
+- Clay favourite observations used: 3,046
+
+Calibration metrics (ECE includes bins with n >= 30)
+dataset      group        n     ece    ll_model  ll_pin   brier_model  brier_pin
+train        all       1535  0.0441    0.6143  0.5886       0.2138     0.2028
+validation   all        804  0.0574    0.6428  0.5871       0.2244     0.2019
+holdout      all        707  0.0580    0.6199  0.5936       0.2161     0.2045
+
+Per-series calibration metrics
+dataset      series          n     ece    ll_model  ll_pin
+train        ATP250           759  0.0617    0.6554  0.6283
+train        ATP500           141       -    0.5355  0.5056
+train        Grand Slam       244  0.0320    0.5323  0.5000
+train        Masters 1000     391  0.0439    0.6140  0.5967
+validation   ATP250           382  0.0759    0.6979  0.6267
+validation   ATP500            69       -    0.7303  0.6149
+validation   Grand Slam       121       -    0.4637  0.4371
+validation   Masters 1000     232  0.0574    0.6194  0.5918
+holdout      ATP250           258  0.0990    0.6526  0.6100
+holdout      ATP500           111       -    0.5689  0.6066
+holdout      Grand Slam       115       -    0.5633  0.5285
+holdout      Masters 1000     223  0.0605    0.6365  0.6018
+
+Clay-calibrated signal archive
+- scanned: data\backtest\strict-signals.csv
+- no settled pre-2026 clay_calibrated archive rows found; ROI by bin/series/cohort cannot be evaluated yet
+
+Gate interpretation
+- Holdout 2025 ECE: 0.0580 (fail)
+- Holdout 2025 log-loss delta vs Pinnacle: +0.0263
+- Verdict: do not re-enable clay ML shadow before refitting/reviewing the calibration map.

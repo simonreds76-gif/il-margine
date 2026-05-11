@@ -70,6 +70,8 @@ except ImportError:
 SURFACE_AVG_SPW = {"hard": 0.64, "clay": 0.62, "grass": 0.66, "i.hard": 0.65}
 POINT_CLAMP_LO = 0.42
 POINT_CLAMP_HI = 0.80
+DEFAULT_OUT = "data/backtest/spread-v1-calibration-params.json"
+SURFACE_FILTERS = {"all": None, "clay": "clay", "hard": "hard", "grass": "grass"}
 
 
 @dataclass
@@ -183,6 +185,15 @@ def _normalize_surface(v: object) -> str:
     if s.startswith("grass"):
         return "grass"
     return "hard"
+
+
+def _surface_filter_label(value: str) -> Optional[str]:
+    return SURFACE_FILTERS.get(value)
+
+
+def _surface_scope(value: str) -> List[str]:
+    surface = _surface_filter_label(value)
+    return [surface.title()] if surface else ["Hard", "Clay"]
 
 
 def _normalize_name(v: object) -> str:
@@ -834,8 +845,13 @@ def main() -> None:
     ap.add_argument("--snapshot-bookmaker", default="Pinnacle")
     ap.add_argument("--snapshot-leagues", default="ATP")
     ap.add_argument("--snapshot-page-size", type=int, default=1000)
-    ap.add_argument("--out", default="data/backtest/spread-v1-calibration-params.json")
+    ap.add_argument("--surface-filter", choices=sorted(SURFACE_FILTERS), default="all")
+    ap.add_argument("--out", default=DEFAULT_OUT)
     args = ap.parse_args()
+    if args.surface_filter != "all" and args.out == DEFAULT_OUT:
+        args.out = f"data/backtest/spread-v1-{args.surface_filter}-calibration-params.json"
+    surface_filter = _surface_filter_label(args.surface_filter)
+    usable_surfaces = _surface_scope(args.surface_filter)
 
     def write_invalid_payload(reason: str) -> None:
         fit_timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -845,6 +861,7 @@ def main() -> None:
             "fit_timestamp": fit_timestamp,
             "line_source_requested": args.line_source,
             "line_source_used": line_source_used,
+            "surface_filter": args.surface_filter,
             "files": list(args.files),
             "lines": lines if line_source_used == "synthetic" else None,
             "sample_count": 0,
@@ -861,7 +878,7 @@ def main() -> None:
             "usable_scope": {
                 "leagues": ["ATP"],
                 "best_of": "bo3",
-                "surfaces": ["Hard", "Clay"],
+                "surfaces": usable_surfaces,
             },
             "usage": {},
             "correction_valid": False,
@@ -882,6 +899,10 @@ def main() -> None:
 
     load_env()
     match_rows, skipped_rows = load_match_rows(args.files)
+    if surface_filter:
+        before_filter = len(match_rows)
+        match_rows = [row for row in match_rows if row.surface == surface_filter]
+        skipped_rows["surface_filter"] = before_filter - len(match_rows)
     if not match_rows:
         print("No usable match rows. Check --files and required columns (date/player1/player2/score/actual_winner).")
         return
@@ -916,6 +937,11 @@ def main() -> None:
         if snap_samples:
             samples = snap_samples
             line_source_used = "snapshot"
+        elif args.line_source == "auto" and surface_filter:
+            write_invalid_payload("no-real-market-snapshot-samples")
+            print("No real market snapshot samples for surface-specific calibration.")
+            print("Synthetic fallback is disabled when --surface-filter is set.")
+            return
         elif args.line_source == "auto":
             samples, syn_stats = build_samples_synthetic(match_rows, lines)
             source_details["synthetic"] = syn_stats
@@ -946,6 +972,7 @@ def main() -> None:
         "fit_timestamp": fit_timestamp,
         "line_source_requested": args.line_source,
         "line_source_used": line_source_used,
+        "surface_filter": args.surface_filter,
         "files": list(args.files),
         "lines": lines if line_source_used == "synthetic" else None,
         "sample_count": len(samples),
@@ -962,7 +989,7 @@ def main() -> None:
         "usable_scope": {
             "leagues": ["ATP"],
             "best_of": "bo3",
-            "surfaces": ["Hard", "Clay"],
+            "surfaces": usable_surfaces,
         },
         "usage": {
             "HANDICAP_LINE_SHIFT": best["line_shift"],

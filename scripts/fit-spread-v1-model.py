@@ -45,6 +45,7 @@ POINT_CLAMP_HI = 0.80
 SURFACE_AVG_SPW = {"hard": 0.64, "clay": 0.62, "grass": 0.66, "i.hard": 0.65}
 EXCLUDED_SERIES = {"Grand Slam", "Challenger"}
 ALLOWED_SURFACES = {"Hard", "Clay"}
+SURFACE_FILTERS = {"all": None, "clay": "Clay", "hard": "Hard", "grass": "Grass"}
 RIDGE_GRID = [0.0, 0.1, 0.3, 1.0, 3.0]
 COEFFICIENT_NORM_PENALTY = 0.05
 
@@ -87,6 +88,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dataset-out", default=str(DEFAULT_DATASET_OUT))
     parser.add_argument("--report-out", default=str(DEFAULT_REPORT_OUT))
     parser.add_argument("--calibration-file", default=str(DEFAULT_CALIBRATION_FILE))
+    parser.add_argument("--surface-filter", choices=sorted(SURFACE_FILTERS), default="all")
     parser.add_argument("--snapshot-date-window", type=int, default=1)
     parser.add_argument("--min-total-rows", type=int, default=80)
     parser.add_argument("--min-train-rows", type=int, default=40)
@@ -136,6 +138,10 @@ def _normalize_surface(v: object) -> str:
     if s.startswith("grass"):
         return "Grass"
     return "Hard"
+
+
+def _surface_filter_label(value: str) -> str | None:
+    return SURFACE_FILTERS.get(value)
 
 
 def _normalize_name(v: object) -> str:
@@ -245,7 +251,8 @@ def _pick_col(fieldnames: Sequence[str], candidates: Sequence[str]) -> str | Non
     return None
 
 
-def load_match_rows(files: Sequence[str]) -> tuple[list[MatchRow], dict[str, int]]:
+def load_match_rows(files: Sequence[str], allowed_surfaces: set[str] | None = None) -> tuple[list[MatchRow], dict[str, int]]:
+    allowed_surfaces = allowed_surfaces or ALLOWED_SURFACES
     rows: list[MatchRow] = []
     skipped = {
         "file_missing": 0,
@@ -295,7 +302,7 @@ def load_match_rows(files: Sequence[str]) -> tuple[list[MatchRow], dict[str, int
 
                 series = str(row.get(c_series) or "").strip() if c_series else ""
                 surface = _normalize_surface(row.get(c_surface))
-                if surface not in ALLOWED_SURFACES or series in EXCLUDED_SERIES:
+                if surface not in allowed_surfaces or series in EXCLUDED_SERIES:
                     skipped["filtered_scope"] += 1
                     continue
 
@@ -624,16 +631,17 @@ def build_games_lookup(start_date: str, end_date: str, tour_ids: set[int]) -> di
     return lookup
 
 
-def build_dataset_from_audit(audit_path: Path, calibration: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, int]]:
+def build_dataset_from_audit(audit_path: Path, calibration: dict[str, Any], allowed_surfaces: set[str] | None = None) -> tuple[list[dict[str, Any]], dict[str, int]]:
     if not audit_path.exists():
         return [], {"audit_missing": 1}
+    allowed_surfaces = allowed_surfaces or ALLOWED_SURFACES
 
     raw_rows: list[dict[str, str]] = []
     with audit_path.open("r", encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
         for row in reader:
             surface = _normalize_surface(row.get("surface"))
-            if surface not in ALLOWED_SURFACES:
+            if surface not in allowed_surfaces:
                 continue
             if _is_grand_slam_name(str(row.get("tournament") or "")):
                 continue
@@ -811,7 +819,16 @@ def write_dataset_csv(path: Path, rows: list[dict[str, Any]]) -> None:
             writer.writerow(row)
 
 
-def build_invalid_correction(reason: str, generated_at: str, dataset_path: Path, dataset_rows: int, dataset_stats: dict[str, Any]) -> dict[str, Any]:
+def build_invalid_correction(
+    reason: str,
+    generated_at: str,
+    dataset_path: Path,
+    dataset_rows: int,
+    dataset_stats: dict[str, Any],
+    *,
+    surface_filter: str = "all",
+    usable_surfaces: Sequence[str] | None = None,
+) -> dict[str, Any]:
     return {
         "valid": False,
         "reason": reason,
@@ -820,13 +837,26 @@ def build_invalid_correction(reason: str, generated_at: str, dataset_path: Path,
         "dataset_file": str(dataset_path.relative_to(ROOT)),
         "dataset_rows": dataset_rows,
         "dataset_stats": dataset_stats,
-        "usable_scope": {"leagues": ["ATP"], "best_of": "bo3", "surfaces": sorted(ALLOWED_SURFACES)},
+        "surface_filter": surface_filter,
+        "usable_scope": {"leagues": ["ATP"], "best_of": "bo3", "surfaces": sorted(usable_surfaces or ALLOWED_SURFACES)},
     }
 
 
 def main() -> None:
     args = parse_args()
     load_env()
+
+    surface_filter = _surface_filter_label(args.surface_filter)
+    allowed_surfaces = {surface_filter} if surface_filter else set(ALLOWED_SURFACES)
+    usable_surfaces = sorted(allowed_surfaces)
+    if args.surface_filter != "all":
+        suffix = args.surface_filter
+        if args.calibration_file == str(DEFAULT_CALIBRATION_FILE):
+            args.calibration_file = str(DATA_DIR / f"spread-v1-{suffix}-calibration-params.json")
+        if args.dataset_out == str(DEFAULT_DATASET_OUT):
+            args.dataset_out = str(DATA_DIR / f"spread-v1-{suffix}-training-dataset.csv")
+        if args.report_out == str(DEFAULT_REPORT_OUT):
+            args.report_out = str(DATA_DIR / f"spread-v1-{suffix}-model-report.txt")
 
     calibration_path = Path(args.calibration_file)
     if not calibration_path.is_absolute():
@@ -843,7 +873,7 @@ def main() -> None:
     skipped_rows: dict[str, Any] = {}
 
     if DEFAULT_AUDIT_FILE.exists():
-        dataset_rows, dataset_stats = build_dataset_from_audit(DEFAULT_AUDIT_FILE, calibration)
+        dataset_rows, dataset_stats = build_dataset_from_audit(DEFAULT_AUDIT_FILE, calibration, allowed_surfaces)
         write_dataset_csv(dataset_path, dataset_rows)
         report_dataset_context = [
             f"Dataset source: audit_local ({DEFAULT_AUDIT_FILE.relative_to(ROOT)})",
@@ -852,9 +882,9 @@ def main() -> None:
             "",
         ]
     else:
-        matches, skipped_rows = load_match_rows(args.files)
+        matches, skipped_rows = load_match_rows(args.files, allowed_surfaces)
         if not matches:
-            correction = build_invalid_correction("no-match-rows", generated_at, dataset_path, 0, {"skipped_rows": skipped_rows})
+            correction = build_invalid_correction("no-match-rows", generated_at, dataset_path, 0, {"skipped_rows": skipped_rows}, surface_filter=args.surface_filter, usable_surfaces=usable_surfaces)
             base_payload = {}
             if calibration_path.exists():
                 try:
@@ -886,7 +916,7 @@ def main() -> None:
         ]
 
     if not dataset_rows:
-        correction = build_invalid_correction("no-dataset-rows", generated_at, dataset_path, 0, {**dataset_stats, "skipped_rows": skipped_rows})
+        correction = build_invalid_correction("no-dataset-rows", generated_at, dataset_path, 0, {**dataset_stats, "skipped_rows": skipped_rows}, surface_filter=args.surface_filter, usable_surfaces=usable_surfaces)
         base_payload = {}
         if calibration_path.exists():
             try:
@@ -908,11 +938,12 @@ def main() -> None:
         f"Calibration file: {calibration_path.relative_to(ROOT)}",
         f"Dataset file: {dataset_path.relative_to(ROOT)}",
         f"Base calibration enabled: {calibration.get('enabled', False)} ({calibration.get('reason', 'n/a')})",
+        f"Surface filter: {args.surface_filter}",
         "",
     ] + report_dataset_context
 
     if len(dataset_rows) < args.min_total_rows:
-        correction_payload = build_invalid_correction(f"insufficient-dataset-rows:{len(dataset_rows)}", generated_at, dataset_path, len(dataset_rows), dataset_stats)
+        correction_payload = build_invalid_correction(f"insufficient-dataset-rows:{len(dataset_rows)}", generated_at, dataset_path, len(dataset_rows), dataset_stats, surface_filter=args.surface_filter, usable_surfaces=usable_surfaces)
         report_lines.append(f"Correction model invalid: {correction_payload['reason']}")
     else:
         sorted_rows = sorted(dataset_rows, key=lambda row: (row["date_iso"], row.get("captured_at", ""), row["player1"], row["player2"]))
@@ -929,6 +960,8 @@ def main() -> None:
                 dataset_path,
                 len(dataset_rows),
                 {**dataset_stats, "split_strategy": split_strategy, "train_rows": int(train_mask.sum()), "valid_rows": int(valid_mask.sum()), "test_rows": int(test_mask.sum())},
+                surface_filter=args.surface_filter,
+                usable_surfaces=usable_surfaces,
             )
             report_lines.append(f"Correction model invalid: {correction_payload['reason']}")
         else:
@@ -968,6 +1001,7 @@ def main() -> None:
                 "dataset_file": str(dataset_path.relative_to(ROOT)),
                 "dataset_rows": len(dataset_rows),
                 "dataset_stats": dataset_stats,
+                "surface_filter": args.surface_filter,
                 "baseline_source": "calibrated" if calibration.get("enabled") else "raw",
                 "devig_method": "normalized_inverse_odds",
                 "split_strategy": split_strategy,
@@ -980,7 +1014,7 @@ def main() -> None:
                 "coefficient_norm": round(float(best_fit["coefficient_norm"]), 8),
                 "ridge": best_fit["ridge"],
                 "max_abs_logit_adjustment": 1.25,
-                "usable_scope": {"leagues": ["ATP"], "best_of": "bo3", "surfaces": sorted(ALLOWED_SURFACES)},
+                "usable_scope": {"leagues": ["ATP"], "best_of": "bo3", "surfaces": usable_surfaces},
                 "metrics": {
                     "train_base": best_fit["train_base"],
                     "validation_base": best_fit["valid_base"],
