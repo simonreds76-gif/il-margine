@@ -90,6 +90,35 @@ function roleLabel(minutes: number | undefined, lineupStatus: string) {
   return "Minutes watch";
 }
 
+function formatSignedValue(value: number | null, digits = 2) {
+  if (value === null) return null;
+  return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}`;
+}
+
+function formatOneDecimal(value: number | null) {
+  if (value === null) return null;
+  return value.toFixed(1);
+}
+
+function teamFormNote(metric: Record<string, unknown>) {
+  const window = asNumber(metric.window) ?? 5;
+  const xgd = formatSignedValue(asNumber(metric.xgd_per90));
+  const xgFor = formatOneDecimal(asNumber(metric.xg_for_avg));
+  const xgAgainst = formatOneDecimal(asNumber(metric.xg_against_avg));
+  if (!xgd) return "Recent team attacking form";
+  const xgDetail = xgFor && xgAgainst ? ` (${xgFor} xG for, ${xgAgainst} against)` : "";
+  return `Last ${window}: ${xgd} xGD/90${xgDetail}`;
+}
+
+function opponentFormNote(metric: Record<string, unknown>) {
+  const window = asNumber(metric.window) ?? 5;
+  const xgAgainst = formatOneDecimal(asNumber(metric.xg_against_avg));
+  const shotsAgainst = formatOneDecimal(asNumber(metric.shots_against_avg));
+  if (!xgAgainst) return "Recent opponent chance concession";
+  const shotDetail = shotsAgainst ? `, ${shotsAgainst} shots conceded` : "";
+  return `Last ${window}: ${xgAgainst} xGA${shotDetail}`;
+}
+
 type TeamLogoRow = {
   logo_path?: string;
   team_key?: string;
@@ -219,7 +248,9 @@ function mapArtifactSignal(rawValue: unknown): Signal | null {
   const metrics = asRecord(raw.metrics);
   const recentChanceMetric = asRecord(metrics.recent_chance_quality);
   const teamOutlookMetric = asRecord(metrics.team_attacking_outlook);
+  const recentTeamFormMetric = asRecord(metrics.recent_team_form);
   const opponentWeaknessMetric = asRecord(metrics.opponent_defensive_weakness);
+  const opponentRecentDefenceMetric = asRecord(metrics.opponent_recent_defence);
   const player = asRecord(raw.player);
   const matchData = asRecord(raw.match);
 
@@ -241,7 +272,9 @@ function mapArtifactSignal(rawValue: unknown): Signal | null {
 
   const recentChanceQuality = normalizeMetricTier(recentChanceMetric.tier);
   const teamAttackingOutlook = normalizeMetricTier(teamOutlookMetric.tier);
+  const recentTeamForm = normalizeMetricTier(recentTeamFormMetric.tier);
   const opponentDefensiveWeakness = normalizeMetricTier(opponentWeaknessMetric.tier);
+  const opponentRecentDefence = normalizeMetricTier(opponentRecentDefenceMetric.tier);
   const shareOfTeamChances = asNumber(metrics.share_of_team_chances_pct) ?? 0;
   const fixtureBoost = asNumber(metrics.fixture_boost_pct) ?? 0;
   const projectedMinutes = asNumber(metrics.projected_minutes) ?? undefined;
@@ -317,9 +350,19 @@ function mapArtifactSignal(rawValue: unknown): Signal | null {
         percentile: asNumber(teamOutlookMetric.percentile) ?? undefined,
       },
       {
+        label: "Recent team form",
+        value: recentTeamForm,
+        note: teamFormNote(recentTeamFormMetric),
+      },
+      {
         label: "Opponent defensive weakness",
         value: opponentDefensiveWeakness,
         percentile: asNumber(opponentWeaknessMetric.percentile) ?? undefined,
+      },
+      {
+        label: "Opponent recent defence",
+        value: opponentRecentDefence,
+        note: opponentFormNote(opponentRecentDefenceMetric),
       },
       {
         label: "Expected role",

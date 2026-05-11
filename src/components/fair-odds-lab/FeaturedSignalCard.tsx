@@ -74,7 +74,25 @@ function renderMetricVisual(metric: SignalMetric) {
     );
   }
 
+  if (label.includes("recent team form")) {
+    return (
+      <div className="flex items-center gap-3">
+        <span className="font-mono text-sm font-semibold text-slate-100">{metric.value}</span>
+        <TierIndicator tier={metric.value} size="sm" variant="outlook" />
+      </div>
+    );
+  }
+
   if (label.includes("opponent defensive weakness")) {
+    return (
+      <div className="flex items-center gap-3">
+        <span className="font-mono text-sm font-semibold text-slate-100">{metric.value}</span>
+        <TierIndicator tier={metric.value} size="sm" variant="weakness" />
+      </div>
+    );
+  }
+
+  if (label.includes("opponent recent defence")) {
     return (
       <div className="flex items-center gap-3">
         <span className="font-mono text-sm font-semibold text-slate-100">{metric.value}</span>

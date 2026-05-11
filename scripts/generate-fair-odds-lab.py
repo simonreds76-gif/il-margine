@@ -41,6 +41,7 @@ DEFAULT_INPUTS = [
 DEFAULT_MONITOR_SNAPSHOT = Path("data/goalscorer/goalscorer-monitor-snapshot.json")
 DEFAULT_OUTPUT = Path("public/fair-odds-lab/signals.json")
 DEFAULT_TEAM_LOGO_MAP = Path("data/goalscorer/team-logo-map.json")
+DEFAULT_TEAM_MATCH_BASE = Path("data/football-form/team-match-base.csv")
 DEFAULT_EXPOSURE_LOG_DIR = Path("data/goalscorer")
 DEFAULT_LINEUP_FIXTURES = [
     Path("data/goalscorer/confirmed-lineups.json"),
@@ -271,6 +272,8 @@ class Candidate:
     opponent_xga: float | None
     fixture_swing: float | None
     expected_minutes: float | None
+    team_form: dict[str, Any] | None
+    opponent_form: dict[str, Any] | None
 
 
 def parse_args() -> argparse.Namespace:
@@ -283,6 +286,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--monitor-snapshot", type=Path, default=DEFAULT_MONITOR_SNAPSHOT)
     parser.add_argument("--team-logo-map", type=Path, default=DEFAULT_TEAM_LOGO_MAP)
+    parser.add_argument(
+        "--team-match-base",
+        type=Path,
+        default=DEFAULT_TEAM_MATCH_BASE,
+        help="Optional canonical team-match base CSV used for public rolling-form explanations.",
+    )
     parser.add_argument(
         "--lineups",
         type=Path,
@@ -350,6 +359,144 @@ def parse_float(value: Any | None) -> float | None:
     except ValueError:
         return None
     return result if result == result else None
+
+
+def avg_float(values: list[float | None]) -> float | None:
+    clean = [value for value in values if value is not None]
+    if not clean:
+        return None
+    return sum(clean) / len(clean)
+
+
+def round_float(value: float | None, digits: int = 2) -> float | None:
+    if value is None:
+        return None
+    return round(value, digits)
+
+
+def load_team_match_base_index(path: Path) -> dict[tuple[str, str], list[dict[str, Any]]]:
+    """Load causal team-match rows for public explanation context.
+
+    The model signal itself is still driven by the goalscorer output. This layer
+    only adds plain-English form context such as last-5 xGD and opponent xGA.
+    """
+
+    if not path.exists():
+        return {}
+
+    index: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    with path.open(newline="", encoding="utf-8-sig") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            date_key = clean_text(row.get("date"))
+            league = league_slug(clean_text(row.get("league")))
+            team = canonical_team_key(row.get("team"))
+            if not date_key or not team:
+                continue
+            index.setdefault((league, team), []).append(dict(row))
+
+    for rows in index.values():
+        rows.sort(key=lambda item: clean_text(item.get("date")))
+    return index
+
+
+def team_rows_for_form(
+    index: dict[tuple[str, str], list[dict[str, Any]]],
+    league: str,
+    team: str,
+) -> list[dict[str, Any]]:
+    team = canonical_team_key(team)
+    if not team:
+        return []
+    exact = index.get((league, team))
+    if exact:
+        return exact
+    # Promotion/relegation names can drift between league slugs; same-team fallback
+    # is safer than dropping context entirely.
+    merged: list[dict[str, Any]] = []
+    for (_row_league, row_team), rows in index.items():
+        if row_team == team:
+            merged.extend(rows)
+    return sorted(merged, key=lambda item: clean_text(item.get("date")))
+
+
+def recent_form_context(
+    index: dict[tuple[str, str], list[dict[str, Any]]],
+    *,
+    league: str,
+    team: str,
+    before_date: str,
+    window: int = 5,
+) -> dict[str, Any] | None:
+    rows = team_rows_for_form(index, league, team)
+    if not rows:
+        return None
+
+    cutoff = before_date[:10]
+    eligible = [row for row in rows if not cutoff or clean_text(row.get("date")) < cutoff]
+    recent = eligible[-window:]
+    if not recent:
+        return None
+
+    xg_for = avg_float([parse_float(row.get("xg_for")) for row in recent])
+    xg_against = avg_float([parse_float(row.get("xg_against")) for row in recent])
+    xgd = xg_for - xg_against if xg_for is not None and xg_against is not None else None
+
+    return {
+        "window": window,
+        "matches": len(recent),
+        "through_date": clean_text(recent[-1].get("date")),
+        "xg_for_avg": round_float(xg_for),
+        "xg_against_avg": round_float(xg_against),
+        "xgd_per90": round_float(xgd),
+        "shots_for_avg": round_float(avg_float([parse_float(row.get("shots_for")) for row in recent]), 1),
+        "shots_against_avg": round_float(avg_float([parse_float(row.get("shots_against")) for row in recent]), 1),
+        "sot_for_avg": round_float(avg_float([parse_float(row.get("sot_for")) for row in recent]), 1),
+        "sot_against_avg": round_float(avg_float([parse_float(row.get("sot_against")) for row in recent]), 1),
+        "corners_for_avg": round_float(avg_float([parse_float(row.get("corners_for")) for row in recent]), 1),
+        "corners_against_avg": round_float(avg_float([parse_float(row.get("corners_against")) for row in recent]), 1),
+    }
+
+
+def opponent_team_for_row(row: dict[str, Any]) -> str:
+    explicit = clean_text(row.get("opponent"))
+    if explicit:
+        return explicit
+
+    player_team = canonical_team_key(row.get("player_team"))
+    home = clean_text(row.get("home_team"))
+    away = clean_text(row.get("away_team"))
+    if player_team and canonical_team_key(home) == player_team:
+        return away
+    if player_team and canonical_team_key(away) == player_team:
+        return home
+    return ""
+
+
+def recent_team_form_tier(context: dict[str, Any] | None) -> str:
+    xgd = parse_float((context or {}).get("xgd_per90"))
+    if xgd is None:
+        return "Unknown"
+    if xgd >= 0.65:
+        return "Strong"
+    if xgd >= 0.25:
+        return "Positive"
+    if xgd >= -0.25:
+        return "Average"
+    return "Quiet"
+
+
+def recent_defence_weakness_tier(context: dict[str, Any] | None) -> str:
+    xga = parse_float((context or {}).get("xg_against_avg"))
+    if xga is None:
+        return "Unknown"
+    if xga >= 1.7:
+        return "High"
+    if xga >= 1.35:
+        return "Positive"
+    if xga >= 1.0:
+        return "Average"
+    return "Low"
 
 
 def clean_text(value: Any | None, fallback: str = "") -> str:
@@ -824,6 +971,7 @@ def build_candidates_from_rows(
     all_rows: list[dict[str, Any]],
     today_iso: str,
     include_past: bool,
+    team_form_index: dict[tuple[str, str], list[dict[str, Any]]],
 ) -> tuple[list[dict[str, Any]], list[Candidate]]:
     raw_future_rows: list[dict[str, Any]] = []
     grouped: dict[tuple[str, str, str, str, str], dict[str, str]] = {}
@@ -862,6 +1010,23 @@ def build_candidates_from_rows(
         model_prob_pct = model_prob * 100
         implied_pct = 100 / best_odds
         price_gap_pp = model_prob_pct - implied_pct
+        competition = clean_text(row.get("competition"), "Football")
+        league = league_slug(competition)
+        match_date = row_date_key(row)
+        player_team = clean_text(row.get("player_team"))
+        opponent_team = opponent_team_for_row(row)
+        team_form = recent_form_context(
+            team_form_index,
+            league=league,
+            team=player_team,
+            before_date=match_date,
+        )
+        opponent_form = recent_form_context(
+            team_form_index,
+            league=league,
+            team=opponent_team,
+            before_date=match_date,
+        )
 
         candidates.append(
             Candidate(
@@ -877,6 +1042,8 @@ def build_candidates_from_rows(
                 opponent_xga=parse_float(row.get("next_opponent_xga")),
                 fixture_swing=parse_float(row.get("fixture_swing_3")),
                 expected_minutes=parse_float(row.get("expected_minutes") or row.get("minutes_estimate")),
+                team_form=team_form,
+                opponent_form=opponent_form,
             )
         )
 
@@ -889,6 +1056,7 @@ def read_grouped_candidates(
     lineup_fixture_paths: list[Path],
     today_iso: str,
     include_past: bool,
+    team_form_index: dict[tuple[str, str], list[dict[str, Any]]],
 ) -> tuple[list[dict[str, Any]], list[Candidate], list[str]]:
     source_paths: list[str] = []
     source_rows: list[dict[str, Any]] = []
@@ -899,14 +1067,14 @@ def read_grouped_candidates(
             source_rows.extend(rows)
 
     source_rows = enrich_rows_with_lineups(source_rows, load_lineup_fixture_lookup(lineup_fixture_paths))
-    raw_rows, candidates = build_candidates_from_rows(source_rows, today_iso, include_past)
+    raw_rows, candidates = build_candidates_from_rows(source_rows, today_iso, include_past, team_form_index)
     if raw_rows:
         return raw_rows, candidates, source_paths
 
     monitor_rows = monitor_live_bets_to_rows(monitor_snapshot_path)
     if monitor_rows:
         source_paths = [str(monitor_snapshot_path).replace("\\", "/")]
-        return (*build_candidates_from_rows(monitor_rows, today_iso, include_past), source_paths)
+        return (*build_candidates_from_rows(monitor_rows, today_iso, include_past, team_form_index), source_paths)
 
     return raw_rows, candidates, source_paths
 
@@ -1034,6 +1202,8 @@ def build_reasons(
     penalty: str,
     fixture_boost_pct: int,
 ) -> list[str]:
+    team_form_tier = recent_team_form_tier(candidate.team_form)
+    opponent_recent_tier = recent_defence_weakness_tier(candidate.opponent_form)
     reasons = [
         "The model price is shorter than the bookmaker's best available price",
     ]
@@ -1042,8 +1212,12 @@ def build_reasons(
         reasons.append("A large share of the team's chances runs through him")
     if recent_tier in {"Strong", "Very strong"}:
         reasons.append(f"Recent chance quality grades as {recent_tier.lower()}")
+    if team_form_tier in {"Strong", "Positive"}:
+        reasons.append("Recent team form supports the attacking case")
     if opponent_tier in {"High", "Very high"}:
         reasons.append("Opponent defensive profile is a positive matchup")
+    elif opponent_recent_tier in {"High", "Positive"}:
+        reasons.append("Opponent has been allowing chances recently")
     if fixture_boost_pct >= 10:
         reasons.append("The fixture profile adds to his scoring case")
     if penalty == "Primary":
@@ -1134,6 +1308,8 @@ def build_signal(
         "Average",
         "Low",
     )
+    recent_team_form = recent_team_form_tier(candidate.team_form)
+    opponent_recent_defence = recent_defence_weakness_tier(candidate.opponent_form)
     lineup = lineup_label(row)
     penalty = penalty_label(row)
     confidence = normalize_confidence(row.get("signal_confidence"), lineup, candidate.expected_minutes)
@@ -1194,9 +1370,17 @@ def build_signal(
                 "tier": team_tier,
                 "percentile": percentiles["team_xg"],
             },
+            "recent_team_form": {
+                "tier": recent_team_form,
+                **(candidate.team_form or {}),
+            },
             "opponent_defensive_weakness": {
                 "tier": opponent_tier,
                 "percentile": percentiles["opponent_xga"],
+            },
+            "opponent_recent_defence": {
+                "tier": opponent_recent_defence,
+                **(candidate.opponent_form or {}),
             },
             "fixture_boost_pct": fixture_boost_pct,
             "projected_minutes": round(candidate.expected_minutes) if candidate.expected_minutes is not None else None,
@@ -1215,12 +1399,14 @@ def main() -> None:
     input_paths = args.input or DEFAULT_INPUTS
     lineup_paths = args.lineups or DEFAULT_LINEUP_FIXTURES
     logo_manifest = load_logo_manifest(args.team_logo_map)
+    team_form_index = load_team_match_base_index(args.team_match_base)
     raw_rows, candidates, source_paths = read_grouped_candidates(
         input_paths,
         args.monitor_snapshot,
         lineup_paths,
         today_iso,
         args.include_past,
+        team_form_index,
     )
 
     values = {
@@ -1277,6 +1463,7 @@ def main() -> None:
     payload = {
         "generated_at": datetime.now(tz=timezone.utc).isoformat().replace("+00:00", "Z"),
         "source_file": source_paths,
+        "team_form_source": str(args.team_match_base).replace("\\", "/") if team_form_index else "",
         "edge_threshold_pp": args.edge_threshold_pp,
         "public_filters": {
             "min_model_prob_pct": args.min_model_prob_pct,
@@ -1301,6 +1488,7 @@ def main() -> None:
     print("================================================================")
     print(f"Inputs: {', '.join(source_paths) if source_paths else 'none'}")
     print(f"Monitor snapshot: {args.monitor_snapshot}")
+    print(f"Team form context: {args.team_match_base if team_form_index else 'not available'}")
     print(f"Output: {args.output}")
     print(f"Today filter: {today_iso} (include_past={args.include_past})")
     print(f"Fixtures evaluated: {fixtures_evaluated}")
