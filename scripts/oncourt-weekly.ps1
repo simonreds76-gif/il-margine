@@ -189,6 +189,12 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-signals analysis failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Step 11b/12: Analyse clay calibrated shadow signals ==="
+& python scripts\analyse-strict-signals.py --days 7 --input data\backtest\strict-signals-claycal-archive.csv --report-txt data\backtest\strict-signals-claycal-weekly.txt --summary-csv data\backtest\strict-signals-claycal-weekly.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: clay calibrated signal analysis failed (exit $LASTEXITCODE), continuing..."
+}
+
 # Step 12: Append Pinnacle history capture (weekly checkpoint)
 Log "=== Step 12/12: Append Pinnacle history capture (weekly) ==="
 & python scripts\pinnacle-capture-history.py --capture-mode weekly 2>&1 | ForEach-Object { Log $_ }

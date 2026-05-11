@@ -147,7 +147,7 @@ SHADOW_PROFILE_LABELS: dict[str, str] = {
     "volume_200": "ATP-only ML research lane (main-tour only, no ATP250 shadow expansion, no spreads)",
     "spread_shadow": "Spread shadow (20%+ handicap edges; Clay + non-policy tournaments)",
     "spread_v1_shadow": "Spread v1 shadow (strict-first ATP bo3 hard-only research lane; real-market calibration required)",
-    "clay_calibrated": "Clay calibrated shadow (new-after-calibration favorite 55-65%)",
+    "clay_calibrated": "Clay calibrated shadow (high-confidence new-after-calibration favorite 55-65%)",
 }
 SHADOW_PROFILE_ALLOWED_LEAGUES: dict[str, set[str]] = {
     # Shadow lanes have not held up in Challenger samples; keep production-facing
@@ -163,6 +163,7 @@ HOUSTON_SHADOW_CONFIDENCE = {"high", "medium"}
 CLAY_CALIBRATED_MIN_VALUE_PCT = 5.0
 CLAY_CALIBRATED_PROB_MIN = 0.55
 CLAY_CALIBRATED_PROB_MAX = 0.65
+CLAY_CALIBRATED_CONFIDENCE = {"high"}
 
 
 def _append_key_value(field: str, value: Any) -> str:
@@ -1459,6 +1460,7 @@ def main() -> int:
         )
         clay_calibrated_match = (
             clay_calibrated_enabled
+            and confidence in CLAY_CALIBRATED_CONFIDENCE
             and not model_ml_excluded
             and not pin_ml_excluded
             and not model_market_gap_excluded
