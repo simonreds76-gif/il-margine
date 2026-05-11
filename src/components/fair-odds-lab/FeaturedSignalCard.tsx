@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 
 import { AbstractJersey } from "@/components/fair-odds-lab/AbstractJersey";
 import { BookmakerLogo } from "@/components/fair-odds-lab/BookmakerLogo";
@@ -162,11 +163,6 @@ function MetricTable({
             <div className="flex min-w-[138px] justify-end">{renderMetricVisual(metric)}</div>
           </div>
         ))}
-      </div>
-      <div className="mt-3 rounded-xl border border-sky-300/15 bg-sky-300/[0.045] px-3 py-2 text-[11px] leading-5 text-slate-400">
-        Bet365 is used as the reference price where available because its
-        goalscorer markets commonly include Sub On Play On. It may not be the
-        best price in your account, so compare your own bookies before betting.
       </div>
     </div>
   );
@@ -427,15 +423,31 @@ export function FeaturedSignalCard({
               size="large"
             />
 
-            <ProbabilityGauge
-              modelProb={signal.modelProbability}
-              marketProb={signal.bookmakerProbability}
-              gapPp={gap}
-            />
+            <div className="hidden lg:block">
+              <ProbabilityGauge
+                modelProb={signal.modelProbability}
+                marketProb={signal.bookmakerProbability}
+                gapPp={gap}
+              />
+            </div>
           </div>
 
           <div className="mt-5">
             <FeatureStrip signal={signal} />
+          </div>
+
+          <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-slate-800/80 bg-slate-950/55 p-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-xs leading-5 text-slate-500">
+              Reference price:{" "}
+              <span className="font-semibold text-slate-300">{signal.bestBookmaker}</span>.
+              Compare your own available bookies before betting.
+            </div>
+            <Link
+              href="/bookmakers"
+              className="inline-flex items-center justify-center rounded-xl border border-emerald-300/25 bg-emerald-300/[0.09] px-4 py-2 text-sm font-black text-emerald-100 transition hover:border-emerald-300/45 hover:bg-emerald-300/[0.13]"
+            >
+              Compare bookmakers &rarr;
+            </Link>
           </div>
         </div>
 
