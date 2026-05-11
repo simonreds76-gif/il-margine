@@ -118,8 +118,8 @@ function opponentFormNote(metric: Record<string, unknown>) {
   const xgAgainst = formatOneDecimal(asNumber(metric.xg_against_avg));
   const shotsAgainst = formatOneDecimal(asNumber(metric.shots_against_avg));
   if (!xgAgainst) return "Recent opponent chance concession";
-  const shotDetail = shotsAgainst ? `, ${shotsAgainst} shots conceded` : "";
-  return `Last ${window}: ${xgAgainst} xGA${shotDetail}`;
+  const shotDetail = shotsAgainst ? `, ${shotsAgainst} shots conceded/game` : "";
+  return `Last ${window}: ${xgAgainst} xGA/game${shotDetail}`;
 }
 
 type TeamLogoRow = {
