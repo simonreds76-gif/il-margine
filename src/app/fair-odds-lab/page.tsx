@@ -564,10 +564,6 @@ function formatOdds(value: number) {
   return value.toFixed(2);
 }
 
-function probabilityGap(signal: Signal) {
-  return signal.modelProbability - signal.bookmakerProbability;
-}
-
 function formatRefreshed(value: string | null) {
   if (!value) return "Waiting";
   const timestamp = Date.parse(value);
@@ -674,16 +670,25 @@ function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
 
 function SuperSubExplainer() {
   return (
-    <section className="mt-5 overflow-hidden rounded-2xl border border-sky-300/20 bg-sky-300/[0.055]">
-      <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <div className="p-5 sm:p-6">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-sky-200">
+    <details className="group mt-16 overflow-hidden rounded-2xl border border-slate-700/55 bg-[#080d14]/85 shadow-[0_22px_90px_rgba(0,0,0,0.28)]">
+      <summary className="flex cursor-pointer list-none flex-col gap-3 px-5 py-5 transition hover:bg-emerald-300/[0.035] sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-300">
             Bookmaker edge layer
           </div>
-          <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-50">
-            Super Sub can make the same goalscorer price stronger.
+          <h2 className="mt-2 text-xl font-black tracking-tight text-slate-50 sm:text-2xl">
+            Why Bet365 Super Sub can add protection
           </h2>
-          <p className="mt-3 text-sm leading-7 text-slate-300">
+        </div>
+        <span className="inline-flex items-center justify-center rounded-full border border-emerald-300/25 bg-emerald-300/[0.08] px-3 py-1.5 text-xs font-black uppercase tracking-[0.14em] text-emerald-100">
+          Read explainer
+          <span className="ml-2 transition group-open:rotate-180">v</span>
+        </span>
+      </summary>
+
+      <div className="grid gap-0 border-t border-slate-800/80 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="p-5 sm:p-6">
+          <p className="text-sm leading-7 text-slate-300">
             The model prices the named player only. It does not add extra value
             for bookmaker promotions such as bet365&apos;s Sub On Play On, where
             eligible player-market bets can roll to the direct replacement if
@@ -691,11 +696,11 @@ function SuperSubExplainer() {
             bet can have more protection than the fair odds shown here.
           </p>
           <p className="mt-3 text-xs leading-6 text-slate-500">
-            This page uses Bet365 as the reference price where available,
-            because its anytime-goalscorer markets commonly carry Sub On Play On
-            terms. It is not a claim that Bet365 is always the best price.
-            Compare your own available bookies before betting; if we publish an
-            official goalscorer tip, we will specify the bookie and odds used.
+            This page uses Bet365 as the reference price where available because
+            its anytime-goalscorer markets commonly carry Sub On Play On terms.
+            It is not a claim that Bet365 is always the best price. Compare your
+            own available bookies before betting; if we publish an official
+            goalscorer tip, we will specify the bookie and odds used.
           </p>
           <p className="mt-2 text-xs leading-6 text-slate-500">
             Availability depends on the bookmaker, match, market, jurisdiction
@@ -722,7 +727,7 @@ function SuperSubExplainer() {
           </div>
         </div>
       </div>
-    </section>
+    </details>
   );
 }
 
@@ -888,9 +893,76 @@ function EmptySignalsState() {
   );
 }
 
-export default async function FairOddsLabPage() {
+function WidgetIdentityCard({
+  topSpot,
+  signalCount,
+  refreshedLabel,
+}: {
+  topSpot: string;
+  signalCount: number;
+  refreshedLabel: string;
+}) {
+  return (
+    <aside className="relative overflow-hidden rounded-[1.75rem] border border-cyan-300/25 bg-[#07111d]/90 p-5 shadow-[0_24px_80px_rgba(14,165,233,0.14)]">
+      <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full bg-cyan-300/15 blur-2xl" />
+      <div className="absolute -bottom-14 left-8 h-36 w-36 rounded-full bg-emerald-300/12 blur-2xl" />
+      <div className="relative">
+        <div className="flex items-center justify-between gap-3">
+          <span className="rounded-full border border-cyan-300/30 bg-cyan-300/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-cyan-100">
+            Embed-ready
+          </span>
+          <span className="rounded-full border border-emerald-300/25 bg-emerald-300/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-emerald-100">
+            Powered by Il Margine
+          </span>
+        </div>
+
+        <div className="mt-8 rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+            Today&apos;s board
+          </div>
+          <div className="mt-2 text-2xl font-black leading-tight tracking-tight text-slate-50">
+            {topSpot}
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <div className="rounded-xl border border-emerald-300/20 bg-emerald-300/[0.06] p-3">
+              <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-200/80">
+                Spots
+              </div>
+              <div className="mt-1 font-mono text-2xl font-black text-emerald-100">
+                {signalCount}
+              </div>
+            </div>
+            <div className="rounded-xl border border-amber-300/20 bg-amber-300/[0.07] p-3">
+              <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-amber-100/80">
+                Refresh
+              </div>
+              <div className="mt-1 font-mono text-sm font-black leading-tight text-amber-100">
+                {refreshedLabel}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 text-xs leading-6 text-slate-400">
+          A compact fair-odds intelligence module designed to sit inside match
+          previews, betting hubs, and affiliate content while carrying Il
+          Margine attribution.
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+type FairOddsLabPageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function FairOddsLabPage({ searchParams }: FairOddsLabPageProps) {
   const artifact = await readLabArtifact();
   const highlights = await readLabHighlights();
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const embedParam = resolvedSearchParams.embed;
+  const isEmbed = Array.isArray(embedParam) ? embedParam.includes("1") : embedParam === "1";
   const featured =
     artifact.signals.find((signal) => signal.id === artifact.featuredSignalId) ??
     artifact.signals[0];
@@ -908,110 +980,101 @@ export default async function FairOddsLabPage() {
   });
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#07090d] text-slate-100">
+    <main className="min-h-screen overflow-hidden bg-[#05070b] text-slate-100">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_12%_5%,rgba(34,197,94,0.16),transparent_28%),radial-gradient(circle_at_88%_12%,rgba(14,165,233,0.12),transparent_30%),linear-gradient(rgba(148,163,184,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.025)_1px,transparent_1px)] bg-[size:auto,auto,40px_40px,40px_40px]" />
+      {!isEmbed ? (
+        <>
+          <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_10%_8%,rgba(16,185,129,0.2),transparent_28%),radial-gradient(circle_at_84%_10%,rgba(14,165,233,0.18),transparent_30%),radial-gradient(circle_at_50%_88%,rgba(245,158,11,0.1),transparent_30%),linear-gradient(rgba(148,163,184,0.028)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.028)_1px,transparent_1px)] bg-[size:auto,auto,auto,42px_42px,42px_42px]" />
+          <div className="pointer-events-none fixed inset-x-0 top-0 h-40 bg-gradient-to-b from-emerald-300/[0.08] to-transparent" />
+        </>
+      ) : null}
 
-      <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <section className="relative overflow-hidden rounded-[2rem] border border-slate-700/45 bg-slate-950/55 p-6 shadow-[0_30px_120px_rgba(0,0,0,0.45)] sm:p-8">
-          <div className="pointer-events-none absolute -right-16 -top-20 h-80 w-80 rounded-full border-[34px] border-emerald-400/[0.055]" />
-          <div className="pointer-events-none absolute right-10 top-10 h-40 w-40 rounded-full border-[18px] border-emerald-300/[0.045]" />
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full border border-emerald-400/35 bg-emerald-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200">
-              Il Margine Intelligence
-            </span>
-          </div>
-
-          <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-end">
-            <div>
-              <h1 className="max-w-4xl text-5xl font-black tracking-tight text-slate-50 sm:text-6xl lg:text-7xl">
-                Goalscorer Fair Odds Lab
-              </h1>
-              <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300 sm:text-xl">
-                Where our model&apos;s price is shorter than the bookies&apos;.
-                We surface likely-starter anytime-goalscorer value spots, then
-                upgrade the status to confirmed once official teams are out.
-              </p>
-            </div>
-          </div>
-
-          <div className="relative mt-8 grid gap-0 overflow-hidden rounded-2xl border border-slate-700/55 bg-slate-950/70 sm:grid-cols-4">
-            {[
-              ["Top value spot", boardStatus],
-              ["Current spots", signals.length.toString()],
-              ["Competitions", coverageLabel],
-              ["Updated", refreshedLabel],
-            ].map(([label, value], index) => (
-              <div
-                key={label}
-                className={`px-4 py-4 ${index > 0 ? "border-t border-slate-800/80 sm:border-l sm:border-t-0" : ""}`}
-              >
-                <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                  {label}
+      <div className={`relative mx-auto ${isEmbed ? "max-w-6xl px-3 py-3 sm:px-4 sm:py-4" : "max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10"}`}>
+        {!isEmbed ? (
+          <section className="relative overflow-hidden rounded-[1.75rem] border border-emerald-300/20 bg-slate-950/70 p-5 shadow-[0_28px_120px_rgba(0,0,0,0.5)] sm:p-6">
+            <div className="pointer-events-none absolute -left-24 top-0 h-64 w-64 rounded-full bg-emerald-400/[0.08] blur-3xl" />
+            <div className="pointer-events-none absolute -right-20 -top-28 h-80 w-80 rounded-full border-[30px] border-cyan-300/[0.06]" />
+            <div className="relative grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(520px,0.95fr)] lg:items-end">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-full border border-emerald-400/35 bg-emerald-400/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-emerald-200">
+                    Il Margine Intelligence
+                  </span>
+                  <span className="rounded-full border border-slate-700/70 bg-slate-900/70 px-3 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-slate-300">
+                    Goalscorer value spots
+                  </span>
                 </div>
-                <div
-                  className="mt-1 break-words font-mono text-2xl font-black text-slate-100"
-                >
-                  {value}
-                </div>
+                <h1 className="mt-4 max-w-3xl text-4xl font-black tracking-tight text-slate-50 sm:text-5xl">
+                  Goalscorer Fair Odds Lab
+                </h1>
+                <p className="mt-3 max-w-2xl text-base leading-7 text-slate-300">
+                  Where our model price is shorter than the bookies&apos;.
+                </p>
               </div>
-            ))}
-          </div>
-        </section>
 
-        <section className="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.055] px-4 py-3 text-sm leading-6 text-emerald-100 sm:px-5">
-          Intelligence board. Prices and team news can move. Likely starters
-          update to Confirmed XI when official teams land, or drop out if the
-          lineup no longer supports the signal.
-        </section>
-
-        <SuperSubExplainer />
-
-        <section className="mt-5">
-          <div className="rounded-2xl border border-slate-700/45 bg-[#0c0f14] p-5">
-            <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-300">
-              How to read this
+              <div className="grid gap-0 overflow-hidden rounded-2xl border border-slate-700/55 bg-slate-950/75 sm:grid-cols-4">
+                {[
+                  ["Top value spot", boardStatus],
+                  ["Current spots", signals.length.toString()],
+                  ["Competitions", coverageLabel],
+                  ["Updated", refreshedLabel],
+                ].map(([label, value], index) => (
+                  <div
+                    key={label}
+                    className={`px-4 py-4 ${index > 0 ? "border-t border-slate-800/80 sm:border-l sm:border-t-0" : ""}`}
+                  >
+                    <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                      {label}
+                    </div>
+                    <div className="mt-1 break-words font-mono text-xl font-black text-slate-100">
+                      {value}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            {featured ? (
-              <p className="mt-3 text-sm leading-7 text-slate-300">
-                The model estimates a player&apos;s true chance of scoring. If our
-                fair odds are {formatOdds(featured.fairOdds)} and the bookmaker
-                offers {formatOdds(featured.bestBookOdds)}, the bookmaker is
-                paying more than our price says it should. In plain words, a{" "}
-                {`+${probabilityGap(featured).toFixed(1)}pp`} gap means our
-                model sees a bigger scoring chance than the market price
-                implies.
-              </p>
-            ) : (
-              <p className="mt-3 text-sm leading-7 text-slate-300">
-                The model estimates a player&apos;s true chance of scoring and
-                compares that fair price with the bookmaker&apos;s market price.
-                When our price is shorter than the market, the difference is a
-                probability gap: the model sees a bigger scoring chance than
-                the odds imply.
-              </p>
-            )}
-          </div>
-        </section>
+          </section>
+        ) : null}
 
         {!featured ? (
-          <section className="mt-8">
+          <section className={isEmbed ? "mt-0" : "mt-8"}>
             <EmptySignalsState />
           </section>
         ) : null}
 
         {signals.length > 0 ? (
-          <FairOddsSignalBrowser
-            artifact={{ ...artifact, signals }}
-            featuredSignalId={featured?.id ?? null}
-          />
+          <>
+            <FairOddsSignalBrowser
+              artifact={{ ...artifact, signals }}
+              featuredSignalId={featured?.id ?? null}
+              embed={isEmbed}
+            />
+            {!isEmbed ? (
+              <p className="mt-3 px-2 text-xs leading-5 text-slate-500">
+                Prices and team news can move. Likely starters update to
+                Confirmed XI when official teams land, or drop out if the
+                lineup no longer supports the signal.
+              </p>
+            ) : null}
+          </>
         ) : null}
 
-        <LabHitsSection highlights={highlights} />
-
+        {!isEmbed ? (
+          <>
+            <SuperSubExplainer />
+            <LabHitsSection highlights={highlights} />
+            <div className="mt-16">
+              <WidgetIdentityCard
+                topSpot={boardStatus}
+                signalCount={signals.length}
+                refreshedLabel={refreshedLabel}
+              />
+            </div>
+          </>
+        ) : null}
       </div>
     </main>
   );

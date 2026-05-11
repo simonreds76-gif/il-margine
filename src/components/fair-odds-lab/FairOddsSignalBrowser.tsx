@@ -4,11 +4,6 @@ import { useCallback, useMemo, useRef, useState } from "react";
 
 import { FeaturedSignalCard } from "@/components/fair-odds-lab/FeaturedSignalCard";
 import { LogoBadge } from "@/components/fair-odds-lab/LogoBadge";
-import { OddsComparisonBar } from "@/components/fair-odds-lab/OddsComparisonBar";
-import {
-  PenaltyBadge,
-  TierIndicator,
-} from "@/components/fair-odds-lab/primitives";
 import type { LabArtifact, Signal } from "@/components/fair-odds-lab/types";
 
 type SortMode = "edge" | "kickoff" | "confidence";
@@ -37,6 +32,10 @@ function probabilityGap(signal: Signal) {
 
 function formatPercent(value: number) {
   return `${value.toFixed(1)}%`;
+}
+
+function formatOdds(value: number) {
+  return value.toFixed(2);
 }
 
 function parseKickoff(signal: Signal) {
@@ -88,101 +87,100 @@ function SignalCard({
   onOpen: () => void;
 }) {
   const gap = probabilityGap(signal);
+  const lineupLabel = compactLineupLabel(signal.lineupStatus);
 
   return (
     <article
-      className={`group relative min-w-0 overflow-hidden rounded-2xl border bg-[#0c0f14] p-5 transition hover:-translate-y-0.5 hover:border-emerald-300/35 hover:shadow-[0_16px_50px_rgba(16,185,129,0.1)] ${
-        selected ? "border-emerald-300/60 shadow-[0_0_0_1px_rgba(52,211,153,0.12)]" : "border-slate-700/45"
+      className={`group relative min-w-0 overflow-hidden rounded-2xl border bg-[#0b1018] p-3 transition duration-300 hover:-translate-y-0.5 hover:border-emerald-300/40 hover:shadow-[0_18px_54px_rgba(16,185,129,0.14)] sm:p-4 ${
+        selected ? "border-emerald-300/70 shadow-[0_0_0_1px_rgba(52,211,153,0.18),0_24px_80px_rgba(16,185,129,0.14)]" : "border-slate-700/45"
       }`}
     >
-      <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${signal.accent}`} />
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <div className="flex min-w-0 items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-            <LogoBadge
-              src={signal.leagueLogoPath}
-              alt={`${signal.competition} logo`}
-              fallback={signal.competition}
-              size={22}
-              shape="rounded"
-              className="bg-white/95 p-1"
-            />
-            <span className="truncate">{signal.competition}</span>
-          </div>
-          <div className="mt-2 text-sm leading-snug text-slate-400">{signal.match}</div>
-          <div className="mt-1 text-xs text-slate-600">{signal.kickoff}</div>
-        </div>
-        <div className="flex shrink-0 flex-col items-end gap-2">
-          {featured ? (
-            <span className="rounded-md border border-emerald-400/25 bg-emerald-400/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-200">
-              Top gap
-            </span>
-          ) : null}
-        </div>
-      </div>
+      <div className={`absolute inset-y-0 left-0 w-1 bg-gradient-to-b ${signal.accent}`} />
+      <div className="pointer-events-none absolute -right-16 top-1/2 h-28 w-28 -translate-y-1/2 rounded-full bg-emerald-300/[0.07] blur-2xl transition group-hover:bg-emerald-300/[0.12]" />
 
-      <div className="mt-5">
-        <OddsComparisonBar
-          modelOdds={signal.fairOdds}
-          bookOdds={signal.bestBookOdds}
-          bookName={signal.bestBookmaker}
-          gapPp={gap}
-          modelProb={signal.modelProbability}
-          marketProb={signal.bookmakerProbability}
-          size="compact"
-        />
-      </div>
-
-      <div className="mt-5 min-w-0">
-        <div className="flex items-start gap-3">
+      <div className="relative grid gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)_auto] lg:items-center">
+        <button
+          type="button"
+          onClick={onOpen}
+          className="flex min-w-0 items-center gap-3 text-left"
+        >
           <LogoBadge
             src={signal.teamLogoPath}
             alt={`${signal.team} logo`}
             fallback={signal.team}
-            size={40}
+            size={44}
+            className="shadow-[0_0_24px_rgba(15,23,42,0.7)]"
           />
           <div className="min-w-0">
-            <div className="break-words text-2xl font-bold leading-tight tracking-tight text-slate-50">
+            <div className="break-words text-xl font-black leading-tight tracking-tight text-slate-50 sm:text-2xl">
               {signal.player}
             </div>
-            <div className="mt-1 text-xs text-slate-500">
-              {signal.team} | {signal.position} | {signal.market}
+            <div className="mt-1 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500">
+              <span className="min-w-0 truncate">{signal.match}</span>
+              <span className="text-slate-700">|</span>
+              <LogoBadge
+                src={signal.leagueLogoPath}
+                alt={`${signal.competition} logo`}
+                fallback={signal.competition}
+                size={18}
+                shape="rounded"
+                className="bg-white/95 p-0.5"
+              />
+              <span>{signal.kickoff}</span>
+            </div>
+          </div>
+        </button>
+
+        <div className="grid grid-cols-3 gap-2">
+          <div className="rounded-xl border border-emerald-300/18 bg-emerald-300/[0.055] px-3 py-2">
+            <div className="text-[9px] font-black uppercase tracking-[0.16em] text-emerald-200/80">
+              Il Margine
+            </div>
+            <div className="mt-1 font-mono text-xl font-black text-emerald-100">
+              {formatOdds(signal.fairOdds)}
+            </div>
+          </div>
+          <div className="rounded-xl border border-slate-700/65 bg-slate-950/55 px-3 py-2">
+            <div className="text-[9px] font-black uppercase tracking-[0.16em] text-slate-500">
+              Market
+            </div>
+            <div className="mt-1 font-mono text-xl font-black text-slate-100">
+              {formatOdds(signal.bestBookOdds)}
+            </div>
+          </div>
+          <div className="rounded-xl border border-amber-300/22 bg-amber-300/[0.075] px-3 py-2">
+            <div className="text-[9px] font-black uppercase tracking-[0.16em] text-amber-100/80">
+              Gap
+            </div>
+            <div className="mt-1 font-mono text-xl font-black text-amber-100">
+              +{gap.toFixed(1)}pp
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="mt-5 grid grid-cols-3 gap-2">
-        <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3">
-          <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-            Chance
-          </div>
-          <div className="mt-2">
-            <TierIndicator tier={signal.recentChanceQuality ?? "Average"} size="sm" />
-          </div>
-          <div className="mt-2 text-[10px] font-semibold text-slate-300">
-            {signal.recentChanceQuality ?? "Unknown"}
-          </div>
-        </div>
-        <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3">
-          <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-            Lineup
-          </div>
-          <div className="mt-3 inline-flex rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-1 text-[10px] font-semibold text-emerald-100">
-            {compactLineupLabel(signal.lineupStatus)}
-          </div>
-        </div>
-        <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 p-3">
-          <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-            Penalties
-          </div>
-          <div className="mt-2">
-            <PenaltyBadge role={signal.penaltyRole} size="mini" />
-          </div>
+        <div className="flex flex-wrap items-center gap-2 lg:justify-end">
+          {featured ? (
+            <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-200">
+              Top gap
+            </span>
+          ) : null}
+          <span className="rounded-full border border-cyan-300/20 bg-cyan-300/[0.07] px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-cyan-100">
+            {lineupLabel}
+          </span>
+          <span className="rounded-full border border-slate-700/70 bg-slate-950/70 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-slate-300">
+            {signal.penaltyRole}
+          </span>
+          <button
+            type="button"
+            onClick={onOpen}
+            className="rounded-full border border-emerald-300/20 bg-emerald-300/[0.06] px-3 py-1.5 text-xs font-black text-emerald-100 transition hover:border-emerald-300/45 hover:bg-emerald-300/[0.1]"
+          >
+            {selected ? "Showing" : "Details"}
+          </button>
         </div>
       </div>
 
-      <div className="mt-5 border-t border-slate-800/80 pt-4 text-sm text-slate-400">
+      <div className="relative mt-3 text-xs leading-5 text-slate-500 lg:hidden">
         Model chance{" "}
         <span className="font-mono font-semibold text-emerald-200">
           {formatPercent(signal.modelProbability)}
@@ -193,14 +191,6 @@ function SignalCard({
         </span>
         .
       </div>
-
-      <button
-        type="button"
-        onClick={onOpen}
-        className="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-slate-700/70 bg-slate-900/80 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:border-emerald-400/40 hover:text-emerald-200"
-      >
-        {selected ? "Selected" : "View details"}
-      </button>
     </article>
   );
 }
@@ -208,9 +198,11 @@ function SignalCard({
 export function FairOddsSignalBrowser({
   artifact,
   featuredSignalId,
+  embed = false,
 }: {
   artifact: LabArtifact;
   featuredSignalId?: string | null;
+  embed?: boolean;
 }) {
   const [activeLeague, setActiveLeague] = useState("all");
   const [sortMode, setSortMode] = useState<SortMode>("edge");
@@ -283,24 +275,24 @@ export function FairOddsSignalBrowser({
   if (liveSignals.length === 0) return null;
 
   return (
-    <section className="mt-10">
+    <section className={`${embed ? "mt-0" : "mt-6"} rounded-[2.25rem] border border-slate-700/45 bg-[#080d14]/75 p-4 shadow-[0_28px_110px_rgba(0,0,0,0.35)] sm:p-5`}>
       <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-300">
-            Signal browser
+          <div className="text-[11px] font-black uppercase tracking-[0.22em] text-emerald-300">
+            Current value spots
           </div>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-50">
-            Browse current value spots
+          <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-50 sm:text-4xl">
+            Model price vs market price.
           </h2>
         </div>
-        <div className="text-sm text-slate-500">
+        <div className="rounded-full border border-cyan-300/20 bg-cyan-300/[0.07] px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-100">
           {artifact.isMock
-            ? "Static concept data for page design."
-            : "Updated from the latest model run."}
+            ? "Static design data"
+            : "Latest model artifact"}
         </div>
       </div>
 
-      <div className="mb-5 rounded-2xl border border-slate-700/45 bg-[#0c0f14] p-4">
+      <div className="mb-5 rounded-2xl border border-slate-700/45 bg-[linear-gradient(135deg,rgba(15,23,42,0.9),rgba(6,18,26,0.9))] p-4">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap gap-2">
             <button
@@ -403,7 +395,7 @@ export function FairOddsSignalBrowser({
           ) : null}
 
           {visibleSignals.length > 1 ? (
-            <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
+            <div className="grid gap-3">
               {visibleSignals.map((signal) => (
                 <SignalCard
                   key={signal.id}
@@ -417,6 +409,11 @@ export function FairOddsSignalBrowser({
           ) : null}
         </div>
       )}
+
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-slate-800/70 pt-4 text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
+        <span>Fair odds research module</span>
+        <span className="text-emerald-200">Powered by Il Margine &middot; ilmargine.bet</span>
+      </div>
     </section>
   );
 }
