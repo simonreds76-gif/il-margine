@@ -1,13 +1,13 @@
 Spread v1 Shadow Report
-Generated UTC: 2026-05-11T18:22:40Z
+Generated UTC: 2026-05-11T22:40:42Z
 Signals file: data\backtest\strict-signals-spreadv1-archive.csv
 CLV detail file: data\backtest\strict-clv-audit-spreadv1-2026.csv
 Calibration file: data\backtest\spread-v1-calibration-params.json
 
 Overall
-  Tracked rows: 46
-  Settled rows: 46
-  Open rows: 0
+  Tracked rows: 49
+  Settled rows: 34
+  Open rows: 15
   CLV rows: 34
   Last spread capture at: 2026-04-25T15:09:25.581533+00:00
 
@@ -27,20 +27,27 @@ Hard
   Promotion status: shadow
   Settled total: 0
   Recommended threshold: n/a
-  thr=5.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
-  thr=8.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
-  thr=10.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
-  thr=12.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
-  thr=15.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
-  thr=20.0% settled=0 roi=n/a avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  Orientation breakout:
+  Threshold sweep:
+  thr=5.0% settled=0 roi=n/a rolling20=n/a clv_match=n/a% avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=8.0% settled=0 roi=n/a rolling20=n/a clv_match=n/a% avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=10.0% settled=0 roi=n/a rolling20=n/a clv_match=n/a% avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=12.0% settled=0 roi=n/a rolling20=n/a clv_match=n/a% avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=15.0% settled=0 roi=n/a rolling20=n/a clv_match=n/a% avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
+  thr=20.0% settled=0 roi=n/a rolling20=n/a clv_match=n/a% avg_clv=n/a pos_clv=n/a line_dom=n/a ready=False
 
 Clay
   Promotion status: shadow
-  Settled total: 46
+  Settled total: 34
   Recommended threshold: n/a
-  thr=5.0% settled=46 roi=-3.6109 avg_clv=-0.0097 pos_clv=35.2941 line_dom=0.2107 ready=False
-  thr=8.0% settled=23 roi=0.4696 avg_clv=0.0129 pos_clv=38.8889 line_dom=0.3809 ready=False
-  thr=10.0% settled=18 roi=-4.3333 avg_clv=-0.0298 pos_clv=38.4615 line_dom=0.472 ready=False
-  thr=12.0% settled=16 roi=-4.1062 avg_clv=-0.1312 pos_clv=33.3333 line_dom=0.3209 ready=False
-  thr=15.0% settled=10 roi=-43.25 avg_clv=-0.2157 pos_clv=33.3333 line_dom=0.3655 ready=False
-  thr=20.0% settled=6 roi=-34.6167 avg_clv=-0.3938 pos_clv=33.3333 line_dom=0.5097 ready=False
+  Orientation breakout:
+    favorite_handicap: settled=8 W-L=6-2 roi=46.1875 rolling20=46.1875 clv_match=87.5% avg_clv=0.466
+    dog_handicap: settled=20 W-L=9-11 roi=-12.715 rolling20=-12.715 clv_match=80.0% avg_clv=-0.3582
+    scratch: settled=6 W-L=3-3 roi=-5.2167 rolling20=-5.2167 clv_match=50.0% avg_clv=-0.2466
+  Threshold sweep:
+  thr=5.0% settled=34 roi=2.4676 rolling20=-3.08 clv_match=76.4706% avg_clv=-0.1234 pos_clv=30.7692 line_dom=0.2848 ready=False
+  thr=8.0% settled=16 roi=9.2375 rolling20=9.2375 clv_match=81.25% avg_clv=-0.0268 pos_clv=38.4615 line_dom=0.3611 ready=False
+  thr=10.0% settled=12 roi=-3.4167 rolling20=-3.4167 clv_match=75.0% avg_clv=-0.3211 pos_clv=33.3333 line_dom=0.49 ready=False
+  thr=12.0% settled=11 roi=-11.7 rolling20=-11.7 clv_match=81.8182% avg_clv=-0.3211 pos_clv=33.3333 line_dom=0.4033 ready=False
+  thr=15.0% settled=6 roi=-67.15 rolling20=-67.15 clv_match=66.6667% avg_clv=-0.6524 pos_clv=25.0 line_dom=0.5036 ready=False
+  thr=20.0% settled=5 roi=-60.58 rolling20=-60.58 clv_match=60.0% avg_clv=-0.3938 pos_clv=33.3333 line_dom=0.6699 ready=False

@@ -141,6 +141,33 @@ def line_bucket(value: float | None) -> str:
     return f"{abs(value):.1f}"
 
 
+def display_line(row: dict[str, str]) -> float | None:
+    line = parse_float(row.get("spread_line"))
+    if line is None:
+        return None
+    return -line if norm(row.get("side")) == "p2-" else line
+
+
+def orientation(row: dict[str, str]) -> str:
+    line = display_line(row)
+    if line is None:
+        return "unknown"
+    if line > 0:
+        return "dog_handicap"
+    if line < 0:
+        return "favorite_handicap"
+    return "scratch"
+
+
+def row_sort_key(row: dict[str, str]) -> tuple[str, str, str, str]:
+    return (
+        row.get("match_date") or row.get("date") or "",
+        row.get("time_utc") or "",
+        norm(row.get("player1")),
+        norm(row.get("player2")),
+    )
+
+
 def row_key(row: dict[str, str]) -> tuple[str, str, str, str, str]:
     spread_line = parse_float(row.get("spread_line"))
     spread_key = "" if spread_line is None else f"{spread_line:.1f}"
@@ -173,33 +200,81 @@ def row_pnl_units(row: dict[str, str]) -> tuple[float, float]:
     return 0.0, 0.0
 
 
-def evaluate_threshold(
+def summarize_pick_rows(
     rows: list[dict[str, str]],
     clv_lookup: dict[tuple[str, str, str, str, str], dict[str, str]],
-    threshold: float,
 ) -> dict[str, Any]:
-    eligible = [row for row in rows if (parse_float(row.get("value_pct")) or 0.0) >= threshold]
     pnl_units = 0.0
     staked_units = 0.0
-    line_bucket_pnl: dict[str, float] = defaultdict(float)
     clv_values: list[float] = []
-    for row in eligible:
+    wins = 0
+    losses = 0
+    for row in rows:
         pnl, staked = row_pnl_units(row)
         pnl_units += pnl
         staked_units += staked
-        bucket = line_bucket(parse_float(row.get("spread_line")))
-        line_bucket_pnl[bucket] += pnl
+        outcome = norm(row.get("bet_outcome"))
+        if outcome == "win":
+            wins += 1
+        elif outcome == "loss":
+            losses += 1
         clv_row = clv_lookup.get(row_key(row))
         if clv_row:
             clv_val = parse_float(clv_row.get("clv_implied_delta_pct"))
             if clv_val is not None:
                 clv_values.append(clv_val)
 
+    rolling_rows = sorted(rows, key=row_sort_key)[-20:]
+    rolling_pnl = 0.0
+    rolling_staked = 0.0
+    for row in rolling_rows:
+        pnl, staked = row_pnl_units(row)
+        rolling_pnl += pnl
+        rolling_staked += staked
+
     roi_pct = (100.0 * pnl_units / staked_units) if staked_units > 0 else None
     avg_clv = mean(clv_values) if clv_values else None
-    median_clv = median(clv_values) if clv_values else None
-    positive_clv = sum(1 for value in clv_values if value > 0)
-    positive_share = (100.0 * positive_clv / len(clv_values)) if clv_values else None
+    clv_match_rate = (100.0 * len(clv_values) / len(rows)) if rows else None
+    rolling_20_roi = (100.0 * rolling_pnl / rolling_staked) if rolling_staked > 0 else None
+    return {
+        "settled": len(rows),
+        "wins": wins,
+        "losses": losses,
+        "staked_units": round(staked_units, 4),
+        "pnl_units": round(pnl_units, 4),
+        "roi_pct": round(roi_pct, 4) if roi_pct is not None else None,
+        "clv_matched": len(clv_values),
+        "clv_match_rate_pct": round(clv_match_rate, 4) if clv_match_rate is not None else None,
+        "avg_clv_pct": round(avg_clv, 4) if avg_clv is not None else None,
+        "rolling_20_roi_pct": round(rolling_20_roi, 4) if rolling_20_roi is not None else None,
+    }
+
+
+def evaluate_threshold(
+    rows: list[dict[str, str]],
+    clv_lookup: dict[tuple[str, str, str, str, str], dict[str, str]],
+    threshold: float,
+) -> dict[str, Any]:
+    eligible = [row for row in rows if (parse_float(row.get("value_pct")) or 0.0) >= threshold]
+    line_bucket_pnl: dict[str, float] = defaultdict(float)
+    for row in eligible:
+        pnl, staked = row_pnl_units(row)
+        bucket = line_bucket(parse_float(row.get("spread_line")))
+        line_bucket_pnl[bucket] += pnl
+    summary = summarize_pick_rows(eligible, clv_lookup)
+    roi_pct = summary["roi_pct"]
+    avg_clv = summary["avg_clv_pct"]
+    clv_values_count = int(summary["clv_matched"])
+    positive_clv_values: list[float] = []
+    for row in eligible:
+        clv_row = clv_lookup.get(row_key(row))
+        if clv_row:
+            clv_val = parse_float(clv_row.get("clv_implied_delta_pct"))
+            if clv_val is not None:
+                positive_clv_values.append(clv_val)
+    median_clv = median(positive_clv_values) if positive_clv_values else None
+    positive_clv = sum(1 for value in positive_clv_values if value > 0)
+    positive_share = (100.0 * positive_clv / len(positive_clv_values)) if positive_clv_values else None
     abs_total = sum(abs(value) for value in line_bucket_pnl.values())
     dominant_share = (
         max((abs(value) for value in line_bucket_pnl.values()), default=0.0) / abs_total
@@ -220,11 +295,13 @@ def evaluate_threshold(
     return {
         "threshold_pct": threshold,
         "settled": len(eligible),
-        "staked_units": round(staked_units, 4),
-        "pnl_units": round(pnl_units, 4),
-        "roi_pct": round(roi_pct, 4) if roi_pct is not None else None,
-        "clv_matched": len(clv_values),
-        "avg_clv_pct": round(avg_clv, 4) if avg_clv is not None else None,
+        "staked_units": summary["staked_units"],
+        "pnl_units": summary["pnl_units"],
+        "roi_pct": roi_pct,
+        "rolling_20_roi_pct": summary["rolling_20_roi_pct"],
+        "clv_matched": clv_values_count,
+        "clv_match_rate_pct": summary["clv_match_rate_pct"],
+        "avg_clv_pct": avg_clv,
         "median_clv_pct": round(median_clv, 4) if median_clv is not None else None,
         "positive_clv_share_pct": round(positive_share, 4) if positive_share is not None else None,
         "line_bucket_dominance_share": round(dominant_share, 4) if dominant_share is not None else None,
@@ -311,6 +388,10 @@ def main() -> None:
     for surface in SURFACES:
         surface_rows = [row for row in settled_rows_all if (row.get("surface") or "").strip() == surface]
         threshold_results = [evaluate_threshold(surface_rows, clv_lookup, threshold) for threshold in THRESHOLDS]
+        orientation_breakout = {
+            segment: summarize_pick_rows([row for row in surface_rows if orientation(row) == segment], clv_lookup)
+            for segment in ("favorite_handicap", "dog_handicap", "scratch", "unknown")
+        }
         for result in threshold_results:
             sweep_rows.append({"surface": surface, **result})
         recommended = next((result for result in threshold_results if result["live_ready"]), None)
@@ -329,6 +410,7 @@ def main() -> None:
             "recommended_threshold_pct": recommended_thresholds[surface],
             "promotion_status": promotion_status,
             "threshold_results": threshold_results,
+            "orientation_breakout": orientation_breakout,
             "current_threshold_pct": THRESHOLDS[0] if current_surface else None,
             "current": current_surface,
         }
@@ -403,13 +485,28 @@ def main() -> None:
                 f"  Promotion status: {payload['promotion_status']}",
                 f"  Settled total: {payload['settled_total']}",
                 f"  Recommended threshold: {payload['recommended_threshold_pct'] if payload['recommended_threshold_pct'] is not None else 'n/a'}",
+                "  Orientation breakout:",
             ]
         )
+        for segment, summary in payload["orientation_breakout"].items():
+            if not summary["settled"]:
+                continue
+            report_lines.append(
+                "    "
+                + f"{segment}: settled={summary['settled']} W-L={summary['wins']}-{summary['losses']} "
+                + f"roi={summary['roi_pct'] if summary['roi_pct'] is not None else 'n/a'} "
+                + f"rolling20={summary['rolling_20_roi_pct'] if summary['rolling_20_roi_pct'] is not None else 'n/a'} "
+                + f"clv_match={summary['clv_match_rate_pct'] if summary['clv_match_rate_pct'] is not None else 'n/a'}% "
+                + f"avg_clv={summary['avg_clv_pct'] if summary['avg_clv_pct'] is not None else 'n/a'}"
+            )
+        report_lines.append("  Threshold sweep:")
         for result in payload["threshold_results"]:
             report_lines.append(
                 "  "
                 + f"thr={result['threshold_pct']:.1f}% settled={result['settled']} "
                 + f"roi={result['roi_pct'] if result['roi_pct'] is not None else 'n/a'} "
+                + f"rolling20={result['rolling_20_roi_pct'] if result['rolling_20_roi_pct'] is not None else 'n/a'} "
+                + f"clv_match={result['clv_match_rate_pct'] if result['clv_match_rate_pct'] is not None else 'n/a'}% "
                 + f"avg_clv={result['avg_clv_pct'] if result['avg_clv_pct'] is not None else 'n/a'} "
                 + f"pos_clv={result['positive_clv_share_pct'] if result['positive_clv_share_pct'] is not None else 'n/a'} "
                 + f"line_dom={result['line_bucket_dominance_share'] if result['line_bucket_dominance_share'] is not None else 'n/a'} "
@@ -431,7 +528,9 @@ def main() -> None:
             "staked_units",
             "pnl_units",
             "roi_pct",
+            "rolling_20_roi_pct",
             "clv_matched",
+            "clv_match_rate_pct",
             "avg_clv_pct",
             "median_clv_pct",
             "positive_clv_share_pct",

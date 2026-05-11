@@ -48,6 +48,7 @@ VOLUME_200_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-vol
 VOLUME_200_INTERNAL_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-volume200-internal.csv")
 SPREAD_SHADOW_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-spreadshadow.csv")
 SPREAD_V1_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-spreadv1.csv")
+SPREAD_V1_CLAY_FAV_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-clay-fav.csv")
 CLAY_CALIBRATED_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-claycal.csv")
 CLAY_CALIBRATED_INTERNAL_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-claycal-internal.csv")
 
@@ -57,6 +58,7 @@ SIGNAL_PROFILE_PATHS: dict[str, tuple[SignalCsvPaths, SignalCsvPaths | None]] = 
     "volume_200": (VOLUME_200_SIGNAL_PATHS, VOLUME_200_INTERNAL_SIGNAL_PATHS),
     "spread_shadow": (SPREAD_SHADOW_SIGNAL_PATHS, None),
     "spread_v1_shadow": (SPREAD_V1_SIGNAL_PATHS, None),
+    "spread_v1_clay_fav": (SPREAD_V1_CLAY_FAV_SIGNAL_PATHS, None),
     "clay_calibrated": (CLAY_CALIBRATED_SIGNAL_PATHS, CLAY_CALIBRATED_INTERNAL_SIGNAL_PATHS),
 }
 

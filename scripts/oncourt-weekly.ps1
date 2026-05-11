@@ -23,6 +23,12 @@ $spreadFitFiles = @(
     "data/backtest/backtest-results-2025.csv",
     "data/backtest/backtest-results-2026.csv"
 )
+$claySpreadFitFiles = @(
+    "data/backtest/backtest-results-2022.csv",
+    "data/backtest/backtest-results-2023.csv",
+    "data/backtest/backtest-results-2024.csv",
+    "data/backtest/backtest-results-2025.csv"
+)
 $externalFetchTimeoutSeconds = 300
 $spreadRefreshTimeoutSeconds = 240
 
@@ -212,6 +218,35 @@ $spreadFitArgs = @("scripts\fit-spread-v1-model.py", "--files") + $spreadFitFile
 $spreadFitExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList $spreadFitArgs -Label "spread_v1 correction fit" -TimeoutSeconds $spreadRefreshTimeoutSeconds
 if ($spreadFitExit -ne 0) {
     Log "WARNING: spread_v1 correction fit failed (exit $spreadFitExit), continuing..."
+}
+
+Log "=== Post-step: Clay-only spread_v1 calibration + gated correction fit ==="
+$clayCalPath = "data\backtest\spread-v1-clay-calibration-params.json"
+$clayCaliArgs = @("scripts\handicap-calibration.py", "--surface-filter", "clay", "--line-source", "snapshot", "--files") + $claySpreadFitFiles
+$clayCaliExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList $clayCaliArgs -Label "clay-only base calibration" -TimeoutSeconds $spreadRefreshTimeoutSeconds
+if ($clayCaliExit -ne 0) {
+    Log "WARNING: clay-only calibration failed (exit $clayCaliExit), continuing..."
+}
+
+$clayBaseValid = $false
+if (Test-Path $clayCalPath) {
+    try {
+        $clayPayload = Get-Content -Raw -Path $clayCalPath | ConvertFrom-Json
+        $clayBaseValid = ($clayPayload.calibration_valid -eq $true)
+    }
+    catch {
+        Log "WARNING: could not parse $clayCalPath, skipping clay-only correction fit."
+    }
+}
+if ($clayBaseValid) {
+    $clayFitArgs = @("scripts\fit-spread-v1-model.py", "--surface-filter", "clay", "--files") + $claySpreadFitFiles
+    $clayFitExit = Invoke-LoggedProcess -FilePath "python" -ArgumentList $clayFitArgs -Label "clay-only correction fit" -TimeoutSeconds $spreadRefreshTimeoutSeconds
+    if ($clayFitExit -ne 0) {
+        Log "WARNING: clay-only correction fit failed (exit $clayFitExit), continuing..."
+    }
+}
+else {
+    Log "Clay-only correction fit skipped: base calibration is not valid yet."
 }
 
 # Weekly CLV audits (captured history first, tennis-data fallback)
