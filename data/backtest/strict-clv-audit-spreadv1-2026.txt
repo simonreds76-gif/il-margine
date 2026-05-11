@@ -1,17 +1,90 @@
 Strict CLV Audit vs Captured/Closing Pinnacle Odds
-Generated UTC: 2026-04-14
-Signals file: C:\Users\44746\Downloads\il-margine\data\backtest\strict-signals-spreadv1-archive.csv
+Generated UTC: 2026-05-11
+Signals file: D:\IlMargine\il-margine\data\backtest\strict-signals-spreadv1-archive.csv
 Audit bet type: spread
 Closing odds file: history-only
 
 Input coverage
-  Raw strict rows: 0
-  Deduped strict rows: 0
-  Settled strict rows: 0
-  Settled spread rows audited: 0
+  Raw strict rows: 46
+  Deduped strict rows: 46
+  Settled strict rows: 46
+  Settled spread rows audited: 46
   Settled ML rows skipped: 0
-  Unique settled spread match+side keys: 0
-  Signal date range: n/a -> n/a
-  Settled match-date range: n/a -> n/a
+  Unique settled spread match+side keys: 46
+  Signal date range: 2026-04-14 -> 2026-05-03
+  Settled match-date range: 2026-04-15 -> 2026-05-04
 
-No settled spread rows to audit yet; wrote zero-state audit artifacts.
+Captured-history coverage
+  Enabled: True
+  History rows loaded: 20442
+  Supabase rows loaded: 18909
+  Local rows loaded: 13477
+  Local files scanned: 689
+  History note: window 2026-04-14 -> 2026-05-04
+
+Closing-file mapping
+  XLSX matches loaded: 0
+  Closing matches mapped to OnCourt IDs: 0
+  Closing date range: n/a -> n/a
+  XLSX skips: {}
+  Name-map report: {}
+  Closing match skips: {}
+
+Audit matching
+  Matched spread rows: 34 / 46
+  Closing sources: {'supabase': 39}
+  Match methods: {'history': 39}
+  Unmatched reasons: {'spread_line_mismatch': 5, 'history_ambiguous': 3, 'history_not_found': 4}
+
+CLV summary
+  Avg CLV implied delta: -0.010%
+  Median CLV implied delta: +0.000%
+  Positive CLV share: 12/34 (35.29%)
+  Avg odds move pct: +0.066%
+
+By lag bucket
+      plus_1_day n= 22 avg_clv=+0.156% median=+0.000% pos=7/22
+   plus_2_3_days n=  6 avg_clv=-0.693% median=-0.871% pos=2/6
+        same_day n=  6 avg_clv=+0.067% median=+0.216% pos=3/6
+
+By value bucket
+          10-15% n=  7 avg_clv=+0.129% median=+0.000% pos=3/7
+          15-20% n=  3 avg_clv=-0.038% median=+0.000% pos=1/3
+            20%+ n=  3 avg_clv=-0.394% median=-0.199% pos=1/3
+           5-10% n= 21 avg_clv=+0.003% median=-0.233% pos=7/21
+
+By surface
+            Clay n= 34 avg_clv=-0.010% median=+0.000% pos=12/34
+
+By side
+             P1+ n= 20 avg_clv=+0.270% median=+0.341% pos=11/20
+             P2- n= 14 avg_clv=-0.409% median=-0.237% pos=1/14
+
+By line bucket
+             0.0 n=  3 avg_clv=-0.247% median=-0.241% pos=0/3
+             0.5 n=  3 avg_clv=-0.545% median=+0.000% pos=0/3
+             1.0 n=  1 avg_clv=+0.000% median=+0.000% pos=0/1
+             1.5 n=  2 avg_clv=-0.468% median=-0.468% pos=1/2
+             2.0 n=  3 avg_clv=+0.939% median=+0.000% pos=1/3
+             2.5 n=  5 avg_clv=+0.234% median=-0.450% pos=2/5
+             3.0 n=  4 avg_clv=-0.312% median=-0.227% pos=1/4
+             3.5 n=  8 avg_clv=+0.518% median=+0.698% pos=5/8
+             4.0 n=  5 avg_clv=-0.781% median=-1.428% pos=2/5
+
+By outcome
+            LOSS n= 18 avg_clv=-0.128% median=-0.100% pos=7/18
+             WIN n= 16 avg_clv=+0.123% median=+0.000% pos=5/16
+
+Best CLV rows
+  2026-04-23 Sebastian Ofner vs Tomas Martin Etcheverry P2- line=2.0 scrape=2.000 close=1.885 clv=+3.050%
+  2026-04-14 Cameron Norrie vs Ethan Quinn P1+ line=-2.5 scrape=1.971 close=1.885 clv=+2.315%
+  2026-04-16 Flavio Cobolli vs Vit Kopriva P1+ line=-3.5 scrape=2.000 close=1.926 clv=+1.921%
+  2026-04-22 Cristian Garin vs Alexander Blockx P1+ line=2.5 scrape=1.980 close=1.909 clv=+1.878%
+  2026-04-21 Yannick Hanfmann vs Marcos Giron P1+ line=-3.5 scrape=1.990 close=1.935 clv=+1.428%
+
+Worst CLV rows
+  2026-04-21 Martin Landaluce vs Adam Walton P2- line=-4.0 scrape=1.990 close=2.080 clv=-2.174%
+  2026-04-23 Mariano Navone vs Alexander Zverev P1+ line=4.0 scrape=1.926 close=2.000 clv=-1.921%
+  2026-04-22 Nicolai Budkov Kjaer vs Reilly Opelka P2- line=0.5 scrape=1.901 close=1.962 clv=-1.635%
+  2026-04-17 Tomas Machac vs Andrey Rublev P2- line=1.5 scrape=1.917 close=1.971 clv=-1.429%
+  2026-04-19 Billy Harris vs Daniel Merida Aguilar P1+ line=4.0 scrape=1.935 close=1.990 clv=-1.428%

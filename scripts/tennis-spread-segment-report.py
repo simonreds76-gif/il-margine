@@ -177,6 +177,26 @@ def summarize(rows: Iterable[dict[str, object]]) -> dict[str, object]:
     }
 
 
+def current_bounded_gate(row: dict[str, object], *, include_clay: bool) -> bool:
+    """Replay the current spread-v1 safety gate against historical archived rows."""
+    surface = normal_value(str(row.get("surface", "")))
+    series = normal_value(str(row.get("series", "")))
+    confidence = normal_value(str(row.get("confidence", ""))).lower()
+    line = row.get("_display_line")
+    edge = row.get("_edge")
+    if not isinstance(line, (int, float)) or not isinstance(edge, (int, float)):
+        return False
+    if edge < 10.0 or edge > 18.0:
+        return False
+    if line >= 0 or abs(float(line)) < 2.0 or abs(float(line)) > 3.5:
+        return False
+    if surface == "Hard":
+        return series != "Grand Slam"
+    if surface == "Clay" and include_clay:
+        return series in {"ATP250", "ATP500"} and confidence == "high"
+    return False
+
+
 def segment_rows(rows: list[dict[str, object]]) -> list[dict[str, object]]:
     dimensions = [
         ("orientation", "_orientation"),
@@ -250,6 +270,8 @@ def write_csv(rows: list[dict[str, object]]) -> None:
 
 def write_report(rows: list[dict[str, object]], segments: list[dict[str, object]]) -> None:
     overall = summarize(rows)
+    live_gate = summarize([r for r in rows if current_bounded_gate(r, include_clay=False)])
+    clay_research_gate = summarize([r for r in rows if current_bounded_gate(r, include_clay=True)])
     min_block_n = 8
     block_flags = [
         s
@@ -274,6 +296,8 @@ def write_report(rows: list[dict[str, object]], segments: list[dict[str, object]
         f"Input: {INPUT.relative_to(ROOT)}",
         "",
         f"Overall settled spread V1: {fmt_stats(overall)}",
+        f"Current bounded gate replay (default hard-only): {fmt_stats(live_gate)}",
+        f"Current bounded gate replay (clay research enabled): {fmt_stats(clay_research_gate)}",
         "",
         "Largest segments",
     ]

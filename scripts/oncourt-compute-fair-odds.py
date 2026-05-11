@@ -243,6 +243,8 @@ SERIES_FAVORITE_PROB_CAP = {
     "Masters 1000": {"high": 0.93, "medium": 0.90, "low": 0.87},
     "Grand Slam": {"high": 0.95, "medium": 0.92, "low": 0.89},
     "Masters Cup": {"high": 0.94, "medium": 0.91, "low": 0.88},
+    # Grass samples are sparse and recent holdout bins showed favourite overconfidence.
+    "Grass": {"high": 0.87, "medium": 0.83, "low": 0.80},
     "Challenger": {"high": 0.84, "medium": 0.80, "low": 0.76},
 }
 CHALLENGER_ELO_WEIGHT_MULTIPLIER = {"high": 0.74, "medium": 0.66, "low": 0.58, "none": 0.58}
@@ -934,7 +936,12 @@ def _series_crisis_rank_multiplier(series_bucket):
 
 
 def _apply_series_probability_guard(p1_win, series_bucket, surface, confidence, is_challenger=False):
-    cap_bucket = "Challenger" if is_challenger else series_bucket
+    if is_challenger:
+        cap_bucket = "Challenger"
+    elif surface == "Grass":
+        cap_bucket = "Grass"
+    else:
+        cap_bucket = series_bucket
     caps = SERIES_FAVORITE_PROB_CAP.get(cap_bucket)
     if not caps:
         return _clamp(float(p1_win), 1e-6, 1.0 - 1e-6)

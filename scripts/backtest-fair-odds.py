@@ -185,6 +185,13 @@ PROB_CAL_SERIES_BLEND = {
 }
 SERIES_FAVORITE_PROB_CAP = {
     "ATP250": {"high": 0.89, "medium": 0.85, "low": 0.82},
+    "ATP500": {"high": 0.91, "medium": 0.87, "low": 0.84},
+    "Masters 1000": {"high": 0.93, "medium": 0.90, "low": 0.87},
+    "Grand Slam": {"high": 0.95, "medium": 0.92, "low": 0.89},
+    "Masters Cup": {"high": 0.94, "medium": 0.91, "low": 0.88},
+    # Keep the backtest aligned with the live model's grass overconfidence guard.
+    "Grass": {"high": 0.87, "medium": 0.83, "low": 0.80},
+    "Challenger": {"high": 0.84, "medium": 0.80, "low": 0.76},
 }
 
 
@@ -1321,7 +1328,8 @@ def _series_crisis_rank_multiplier(series: str) -> float:
 
 
 def _apply_series_probability_guard(p1_win: float, series: str, surface: str, confidence: str) -> float:
-    caps = SERIES_FAVORITE_PROB_CAP.get(series)
+    cap_bucket = "Grass" if surface == "Grass" else series
+    caps = SERIES_FAVORITE_PROB_CAP.get(cap_bucket)
     if not caps:
         return _safe_prob(p1_win)
     cap = float(caps.get(confidence, 0.90))
@@ -1923,7 +1931,11 @@ def _load_challenger_matches(
     return matches, skip, short_names
 
 
-def _load_backtest_matches(paths: list[Path]) -> tuple[list[BacktestMatch], Counter, set[str]]:
+def _load_backtest_matches(
+    paths: list[Path],
+    *,
+    include_missing_pinnacle: bool = False,
+) -> tuple[list[BacktestMatch], Counter, set[str]]:
     matches: list[BacktestMatch] = []
     short_names = set()
     skip = Counter()
@@ -1965,11 +1977,19 @@ def _load_backtest_matches(paths: list[Path]) -> tuple[list[BacktestMatch], Coun
                 psw = _float(row[idx["PSW"]])
                 psl = _float(row[idx["PSL"]])
                 if psw is None or psl is None:
-                    skip["missing_pinnacle_odds"] += 1
-                    continue
+                    if not include_missing_pinnacle:
+                        skip["missing_pinnacle_odds"] += 1
+                        continue
+                    skip["missing_pinnacle_odds_included"] += 1
+                    psw = 0.0
+                    psl = 0.0
                 if psw <= 1.0 or psl <= 1.0:
-                    skip["bad_pinnacle_odds"] += 1
-                    continue
+                    if not include_missing_pinnacle:
+                        skip["bad_pinnacle_odds"] += 1
+                        continue
+                    skip["bad_pinnacle_odds_included"] += 1
+                    psw = 0.0
+                    psl = 0.0
 
                 surface = _court_to_surface(str(row[idx["Court"]] or ""), str(row[idx["Surface"]] or ""))
                 tournament = str(row[idx["Tournament"]] or "").strip()
@@ -2510,6 +2530,7 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         "tournament_speed_archetype_delta",
         "tournament_speed_style_edge",
         "score",
+        "has_pinnacle_odds",
     ]
     with open(path, "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fields)
@@ -2530,6 +2551,15 @@ def main() -> None:
     parser.add_argument("--thresholds", default="2,5,10", help="Value%% thresholds (percent, comma-separated)")
     parser.add_argument("--limit-matches", type=int, default=None, help="Process first N matches after sorting (debug)")
     parser.add_argument("--dry-run", action="store_true", help="Do not write CSV/log outputs.")
+    parser.add_argument(
+        "--include-missing-pinnacle",
+        action="store_true",
+        help=(
+            "Include completed matches even when Tennis-Data lacks PSW/PSL. "
+            "Use for calibration datasets where spread lines come from captured Pinnacle history; "
+            "ROI/log-loss still evaluate only rows with PSW/PSL."
+        ),
+    )
     parser.add_argument("--v2", action="store_true", help="Use hybrid_v2 SPW-inversion p_a/p_b formula (fixes double-counting).")
     parser.add_argument("--no-matchup", action="store_true", help="Disable matchup model; use legacy/hybrid_v2 p_a/p_b (for A/B comparison).")
     parser.add_argument("--no-decomposed-return", action="store_true", help="Disable return decomposition in matchup model; use aggregate return_pct (for A/B comparison).")
@@ -2694,7 +2724,10 @@ def main() -> None:
         )
     else:
         print("Loading tennis-data files...")
-        matches, skip_from_xlsx, short_names = _load_backtest_matches(xlsx_paths)
+        matches, skip_from_xlsx, short_names = _load_backtest_matches(
+            xlsx_paths,
+            include_missing_pinnacle=bool(args.include_missing_pinnacle),
+        )
     if args.limit_matches:
         matches = matches[: args.limit_matches]
     if not matches:
@@ -2874,16 +2907,25 @@ def main() -> None:
 
         our_odds_w = 1.0 / _safe_prob(p_winner)
         our_odds_l = 1.0 / _safe_prob(1.0 - p_winner)
-        p_pin_w_raw = 1.0 / m.psw
-        p_pin_l_raw = 1.0 / m.psl
-        pin_sum = p_pin_w_raw + p_pin_l_raw
-        p_pin_w = p_pin_w_raw / pin_sum if pin_sum > 0 else 0.5
+        has_pinnacle_odds = m.psw > 1.0 and m.psl > 1.0
+        if has_pinnacle_odds:
+            p_pin_w_raw = 1.0 / m.psw
+            p_pin_l_raw = 1.0 / m.psl
+            pin_sum = p_pin_w_raw + p_pin_l_raw
+            p_pin_w = p_pin_w_raw / pin_sum if pin_sum > 0 else 0.5
 
-        value_w = (m.psw / our_odds_w) - 1.0
-        value_l = (m.psl / our_odds_l) - 1.0
-        best_side = "winner" if value_w >= value_l else "loser"
-        best_value = value_w if value_w >= value_l else value_l
-        best_result = "win" if best_side == "winner" else "loss"
+            value_w = (m.psw / our_odds_w) - 1.0
+            value_l = (m.psl / our_odds_l) - 1.0
+            best_side = "winner" if value_w >= value_l else "loser"
+            best_value = value_w if value_w >= value_l else value_l
+            best_result = "win" if best_side == "winner" else "loss"
+        else:
+            p_pin_w = 0.5
+            value_w = -1.0
+            value_l = -1.0
+            best_side = ""
+            best_value = 0.0
+            best_result = ""
 
         record = {
             "year": m.year,
@@ -2910,6 +2952,7 @@ def main() -> None:
             "model_favorite_prob": round(max(p_winner, 1.0 - p_winner), 6),
             "p_model_winner": p_winner,
             "p_pin_winner": p_pin_w,
+            "has_pinnacle_odds": has_pinnacle_odds,
             "fav_prob": max(p_winner, 1.0 - p_winner),
             "fav_won": 1 if p_winner >= 0.5 else 0,
             "psw": m.psw,
@@ -2945,9 +2988,9 @@ def main() -> None:
         return
 
     filter_hard_m1000 = getattr(args, "filter_hard_m1000", False)
-    eval_results = results
+    eval_results = [r for r in results if r.get("has_pinnacle_odds")]
     if filter_hard_m1000:
-        eval_results = [r for r in results if r["surface"] == "Hard" and r["series"] == "Masters 1000"]
+        eval_results = [r for r in eval_results if r["surface"] == "Hard" and r["series"] == "Masters 1000"]
         print(f"Filter: Hard | Masters 1000 only ({len(eval_results):,} of {len(results):,} matches)")
 
     print(f"Completed predictions: {len(results):,}")

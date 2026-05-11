@@ -64,7 +64,10 @@ def _load_env():
                 line = line.strip()
                 if line and not line.startswith("#") and "=" in line:
                     k, v = line.split("=", 1)
-                    os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+                    key = k.strip()
+                    value = v.strip().strip('"').strip("'")
+                    if not os.environ.get(key):
+                        os.environ[key] = value
 
 _load_env()
 
@@ -73,11 +76,9 @@ SUPABASE_URL = (
     or os.environ.get("SUPABASE_URL")
     or ""
 ).rstrip("/")
-SUPABASE_KEY = (
-    os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
-    or os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY")
-    or ""
-)
+SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or ""
+SUPABASE_ANON_KEY = os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY") or ""
+SUPABASE_KEY = SUPABASE_SERVICE_ROLE_KEY or SUPABASE_ANON_KEY
 
 # ─── Helpers ────────────────────────────────────────────────────────
 
@@ -456,10 +457,14 @@ def main():
     if not SUPABASE_URL or not SUPABASE_KEY:
         print("ERROR: Missing Supabase credentials.")
         print("  Ensure .env.local has NEXT_PUBLIC_SUPABASE_URL and")
-        print("  SUPABASE_SERVICE_ROLE_KEY (or NEXT_PUBLIC_SUPABASE_ANON_KEY)")
+        print("  SUPABASE_SERVICE_ROLE_KEY")
+        sys.exit(1)
+    if not SUPABASE_SERVICE_ROLE_KEY:
+        print("ERROR: SUPABASE_SERVICE_ROLE_KEY is required for OnCourt writes.")
+        print("  Refusing to fall back to the anon key because RLS blocks inserts/upserts.")
         sys.exit(1)
 
-    key_type = "service_role" if os.environ.get("SUPABASE_SERVICE_ROLE_KEY") else "anon"
+    key_type = "service_role"
     mode = "QUICK (players/tours/today only)" if QUICK else "RECENT (last 365d games/stat)" if RECENT else "FULL"
     if SKIP_PLAYERS:
         mode += " + SKIP_PLAYERS"

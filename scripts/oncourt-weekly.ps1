@@ -17,6 +17,8 @@ $logFile = Join-Path $dataDir "oncourt-weekly.log"
 if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_VOLUME_MODE)) { $env:STRICT_POLICY_VOLUME_MODE = "volume_200" }
 $volumeMode = "$env:STRICT_POLICY_VOLUME_MODE".ToLower()
 if ([string]::IsNullOrWhiteSpace($volumeMode)) { $volumeMode = "off" }
+# Scheduled runs are hard-safe: clay spread-v1 can only be enabled by a manual research run.
+$env:SPREAD_V1_ENABLE_CLAY = "0"
 $spreadFitFiles = @(
     "data/backtest/backtest-results-2025.csv",
     "data/backtest/backtest-results-2026.csv"

@@ -26,13 +26,6 @@ PROMOTION_MIN_SETTLED = 50
 PROMOTION_POSITIVE_SHARE_MIN = 52.0
 
 
-def _env_bool(name: str, default: bool = False) -> bool:
-    raw = os.environ.get(name)
-    if raw is None:
-        return default
-    return raw.strip().lower() in {"1", "true", "yes", "on"}
-
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build spread_v1_shadow research report and status artifacts.")
     parser.add_argument("--signals", default=str(DEFAULT_SIGNALS))
@@ -262,17 +255,15 @@ def calibration_status(payload: dict[str, Any] | None) -> dict[str, Any]:
     correction_valid = bool(payload.get("correction_valid"))
     correction_reason = str(payload.get("correction_reason") or "missing")
     base_calibration_valid = payload.get("calibration_valid") is not False
-    if valid and not correction_valid:
+    warning = ""
+    if valid and not base_calibration_valid and not correction_valid:
         valid = False
-        reason = f"correction:{correction_reason}"
-    elif valid and not base_calibration_valid and not _env_bool("SPREAD_V1_ENABLE_CORRECTION_ONLY", False):
-        valid = False
-        reason = f"base-calibration:{str(payload.get('calibration_reason') or 'invalid-calibration')}"
+        reason = f"base:{payload.get('calibration_reason') or 'invalid'};correction:{correction_reason}"
+    elif valid and base_calibration_valid and not correction_valid:
+        reason = "ok-base-only"
+        warning = f"correction:{correction_reason}"
     else:
-        reason = (
-            "ok" if (valid and base_calibration_valid)
-            else ("ok-correction-only" if valid else "invalid-scope-or-source")
-        )
+        reason = "ok" if (valid and base_calibration_valid) else ("ok-correction-only" if valid else "invalid-scope-or-source")
     return {
         "valid": valid,
         "reason": reason,
@@ -289,6 +280,7 @@ def calibration_status(payload: dict[str, Any] | None) -> dict[str, Any]:
         "correction_valid": correction_valid,
         "correction_reason": correction_reason,
         "correction_model": payload.get("correction_model") if isinstance(payload.get("correction_model"), dict) else {},
+        "warning": warning,
     }
 
 
@@ -392,6 +384,15 @@ def main() -> None:
         f"  Correction valid: {calibration.get('correction_valid', False)}",
         f"  Correction reason: {calibration.get('correction_reason', 'n/a')}",
     ]
+    if calibration["valid"] and not calibration.get("base_calibration_valid", False):
+        report_lines.extend(
+            [
+                "  WARNING: correction-only mode is active because base calibration is invalid.",
+                "  Treat promotion status as shadow-only until snapshot/base calibration is refit.",
+            ]
+        )
+    if calibration.get("warning"):
+        report_lines.append(f"  WARNING: {calibration['warning']}")
 
     for surface in SURFACES:
         payload = surfaces_payload[surface.lower()]

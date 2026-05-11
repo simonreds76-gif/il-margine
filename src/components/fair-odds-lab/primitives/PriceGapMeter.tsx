@@ -13,7 +13,7 @@ export function PriceGapMeter({ value }: PriceGapMeterProps) {
   const positive = clamped >= 0;
 
   return (
-    <div className="mt-2 h-7 min-w-[148px] max-w-full overflow-visible px-1">
+    <div className="mt-1 h-7 w-full min-w-[108px] max-w-[148px] overflow-visible px-1">
       <div className="relative mx-2 h-1.5 rounded-full bg-slate-800">
         <div
           className={`absolute top-0 h-1.5 rounded-full ${

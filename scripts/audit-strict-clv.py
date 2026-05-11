@@ -579,6 +579,7 @@ def build_history_lookup(rows: list[HistoryRow]) -> dict[str, list[tuple[History
 def match_signal_to_history(
     row: dict[str, str],
     lookup: dict[str, list[tuple[HistoryRow, bool]]],
+    signal_line: float | None = None,
 ) -> tuple[HistoryRow | None, bool, str]:
     signal_ts = parse_signal_ts(row.get("date"), row.get("time_utc"))
     match_dt = parse_iso_date(row.get("match_date"))
@@ -597,7 +598,11 @@ def match_signal_to_history(
         for hist, reversed_for_signal in lookup.get(key, []):
             if hist.captured_ts < signal_ts or hist.captured_ts >= cutoff_ts:
                 continue
-            ident = f"{hist.captured_at}|{hist.player1_name}|{hist.player2_name}|{'R' if reversed_for_signal else 'N'}"
+            ident = (
+                f"{hist.captured_at}|{hist.player1_name}|{hist.player2_name}|"
+                f"{'R' if reversed_for_signal else 'N'}|{hist.spread_line}|"
+                f"{hist.spread_odds1}|{hist.spread_odds2}"
+            )
             if ident in candidate_map:
                 prev = candidate_map[ident]
                 candidate_map[ident] = (prev[0], prev[1], prev[2] + 1)
@@ -623,6 +628,12 @@ def match_signal_to_history(
             score += 4
         if fo_p2_full and fo_p2_full == _full_name(hist_p2):
             score += 4
+        if signal_line is not None:
+            hist_line = -hist.spread_line if reversed_for_signal else hist.spread_line
+            if hist_line is not None and abs(hist_line - signal_line) <= 0.051:
+                score += 12
+            elif hist_line is not None:
+                score -= 1
         candidate_map[ident] = (hist, reversed_for_signal, score)
 
     ranked = sorted(candidate_map.values(), key=lambda x: (-x[2], -x[0].captured_ts.timestamp()))
@@ -861,7 +872,9 @@ def main() -> None:
         signal_line = parse_float(row.get("spread_line"))
 
         hist_row, hist_reversed, hist_method = (
-            match_signal_to_history(row, history_lookup) if history_lookup else (None, False, "history_unavailable")
+            match_signal_to_history(row, history_lookup, signal_line if args.bet_type == "spread" else None)
+            if history_lookup
+            else (None, False, "history_unavailable")
         )
         if args.bet_type == "spread":
             if signal_line is None:

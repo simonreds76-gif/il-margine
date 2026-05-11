@@ -76,18 +76,19 @@ def env_float(name: str, default: float) -> float:
         return default
 
 
-# Spread-v1 is a public-monitor research lane, not a 5% internal tracker. Never
-# allow a low env override to publish weak handicap edges like a +6% spread pick.
-SPREAD_V1_MIN_EDGE_PCT = max(
-    HANDICAP_MIN_EDGE_PCT,
-    env_float("SPREAD_V1_MIN_EDGE_PCT", HANDICAP_MIN_EDGE_PCT),
-)
+# Spread-v1 is a bounded research lane. The live audit showed weak 5-6% edges
+# and huge 20%+ overclaims are both unstable, so keep it inside a controlled
+# window unless an explicit research run overrides these envs.
+SPREAD_V1_MIN_EDGE_PCT = max(10.0, env_float("SPREAD_V1_MIN_EDGE_PCT", 10.0))
+SPREAD_V1_MAX_EDGE_PCT = env_float("SPREAD_V1_MAX_EDGE_PCT", 18.0)
 ALLOWED_SEGMENT = "Hard|Masters 1000"
 ALLOWED_CONFIDENCE = {"high"}
 SPREAD_SHADOW_CONFIDENCE = {"high", "medium"}
 SPREAD_V1_ENABLE_CLAY = env_bool(os.environ.get("SPREAD_V1_ENABLE_CLAY"), False)
 SPREAD_V1_ALLOWED_SURFACES = {"Hard"} | ({"Clay"} if SPREAD_V1_ENABLE_CLAY else set())
 SPREAD_V1_EXCLUDED_SERIES = {"Grand Slam"}
+SPREAD_V1_CLAY_ALLOWED_SERIES = {"ATP250", "ATP500"}
+SPREAD_V1_CLAY_ALLOWED_CONFIDENCE = {"high"}
 EXCLUDE_ATP500_HARD_SHORT_FAVORITES = True
 EXCLUDE_SHORT_FAV_MAX_ODDS = 1.8
 EXCLUDE_SHORT_FAV_CONFIDENCE = {"high"}
@@ -377,16 +378,20 @@ def _load_spread_v1_calibration_status(path: Path) -> dict[str, Any]:
     if not SPREAD_V1_ALLOWED_SURFACES.issubset(surfaces):
         status["reason"] = "invalid-surfaces"
         return status
-    if not status["correction_valid"]:
-        status["reason"] = f"correction:{status['correction_reason']}"
-        return status
-
-    if not status["base_calibration_valid"] and not env_bool(os.environ.get("SPREAD_V1_ENABLE_CORRECTION_ONLY"), False):
-        status["reason"] = f"base-calibration:{status['base_calibration_reason']}"
+    if not status["base_calibration_valid"] and not status["correction_valid"]:
+        status["reason"] = f"base:{status['base_calibration_reason']};correction:{status['correction_reason']}"
         return status
 
     status["valid"] = True
-    status["reason"] = "ok" if status["base_calibration_valid"] else "ok-correction-only"
+    if status["base_calibration_valid"] and not status["correction_valid"]:
+        status["reason"] = "ok-base-only"
+        status["warning"] = f"correction:{status['correction_reason']}"
+    elif status["base_calibration_valid"]:
+        status["reason"] = "ok"
+    else:
+        status["reason"] = "ok-correction-only"
+    if not status["base_calibration_valid"]:
+        status["warning"] = f"base-calibration:{status['base_calibration_reason']}"
     return status
 
 
@@ -623,10 +628,10 @@ def is_spread_v1_segment_guarded(side: str, spread_line: float | None) -> bool:
         return False
     display_line = spread_line if side == "P1+" else -spread_line if side == "P2-" else spread_line
     # Live segment audit 2026-04-24: favorite-side handicaps are carrying the
-    # spread-v1 record, while dog/scratch and sub-2-game lines are leaking.
+    # spread-v1 record, while dog/scratch, sub-2-game, and very wide lines leak.
     if display_line >= 0:
         return True
-    return abs(display_line) < 2.0
+    return abs(display_line) < 2.0 or abs(display_line) > 3.5
 
 
 def has_favorite_spread_conflict(
@@ -694,13 +699,18 @@ def spread_shadow_reason_for(surface: str, series_bucket: str, confidence: str, 
     return None
 
 
-def spread_v1_scope_reason(surface: str, series_bucket: str, league: str) -> str | None:
+def spread_v1_scope_reason(surface: str, series_bucket: str, league: str, confidence: str) -> str | None:
     if league != "ATP":
         return "league"
     if surface not in SPREAD_V1_ALLOWED_SURFACES:
         return "surface"
     if series_bucket in SPREAD_V1_EXCLUDED_SERIES:
         return "best_of_five"
+    if surface == "Clay":
+        if series_bucket not in SPREAD_V1_CLAY_ALLOWED_SERIES:
+            return "clay_series"
+        if (confidence or "").strip().lower() not in SPREAD_V1_CLAY_ALLOWED_CONFIDENCE:
+            return "clay_confidence"
     return None
 
 
@@ -1353,7 +1363,7 @@ def main() -> int:
             clay_calibrated_enabled = False
             if strict_min_value is None:
                 continue
-        spread_v1_scope = spread_v1_scope_reason(surface, series_bucket, league) if spread_v1_requested else None
+        spread_v1_scope = spread_v1_scope_reason(surface, series_bucket, league, confidence) if spread_v1_requested else None
         spread_v1_eligible = (
             spread_v1_requested
             and spread_v1_scope is None
@@ -1641,12 +1651,15 @@ def main() -> int:
             )
             spread_v1_segment_p1_guarded = is_spread_v1_segment_guarded("P1+", sl)
             spread_v1_segment_p2_guarded = is_spread_v1_segment_guarded("P2-", sl)
+            spread_v1_p1_edge_guarded = args.signal_profile == "spread_v1_shadow" and he1 > SPREAD_V1_MAX_EDGE_PCT
+            spread_v1_p2_edge_guarded = args.signal_profile == "spread_v1_shadow" and he2 > SPREAD_V1_MAX_EDGE_PCT
             spread_v1_p1_allowed = (
                 args.signal_profile != "spread_v1_shadow"
                 or (
                     not spread_v1_segment_p1_guarded
                     and
                     not short_fav_dog_spread_p1_guarded
+                    and not spread_v1_p1_edge_guarded
                     and not is_excluded_heavy_favorite_dog(
                         surface,
                         series_bucket,
@@ -1662,6 +1675,7 @@ def main() -> int:
                     not spread_v1_segment_p2_guarded
                     and
                     not short_fav_dog_spread_p2_guarded
+                    and not spread_v1_p2_edge_guarded
                     and not is_excluded_heavy_favorite_dog(
                         surface,
                         series_bucket,
@@ -1737,6 +1751,7 @@ def main() -> int:
                         "ml_short_fav_market_guard": pin_ml_excluded,
                         "atp500_short_fav_ml_guard": atp500_short_favorite_ml_excluded,
                         "short_fav_dog_spread_guard": short_fav_dog_spread_p1_guarded,
+                        "spread_v1_max_edge_guard": spread_v1_p1_edge_guarded,
                     }
                 )
             if he2 >= edge_threshold and spread_v1_p2_allowed:
@@ -1796,6 +1811,7 @@ def main() -> int:
                         "ml_short_fav_market_guard": pin_ml_excluded,
                         "atp500_short_fav_ml_guard": atp500_short_favorite_ml_excluded,
                         "short_fav_dog_spread_guard": short_fav_dog_spread_p2_guarded,
+                        "spread_v1_max_edge_guard": spread_v1_p2_edge_guarded,
                     }
                 )
 
@@ -1909,6 +1925,12 @@ def main() -> int:
                 f"reason={spread_v1_calibration_status.get('reason', '')}  |  "
                 f"line_source={spread_v1_calibration_status.get('line_source_used', '') or 'n/a'}  |  "
                 f"path={args.spread_v1_calibration_file}"
+            )
+            if spread_v1_calibration_status.get("warning"):
+                print(f"Spread v1 calibration warning: {spread_v1_calibration_status['warning']}")
+            print(
+                f"Spread v1 edge window: {SPREAD_V1_MIN_EDGE_PCT:.1f}%"
+                f" to {SPREAD_V1_MAX_EDGE_PCT:.1f}%"
             )
     print(
         "Stake sizing: "

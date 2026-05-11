@@ -45,32 +45,40 @@ def parse_args() -> argparse.Namespace:
 
 
 def find_candidate_urls(year: int) -> list[str]:
-    resp = requests.get(ALDATA_URL, timeout=REQUEST_TIMEOUT, headers={"User-Agent": "Mozilla/5.0"})
-    resp.raise_for_status()
-    html = resp.text
-    hrefs = re.findall(r'href=["\']([^"\']+)["\']', html, flags=re.I)
     candidates: list[str] = []
-    for href in hrefs:
-        full = urljoin(ALDATA_URL, href)
-        if str(year) not in full:
-            continue
-        if not re.search(rf"/{year}/.*\.(zip|xlsx|xls)$", full, flags=re.I):
-            continue
-        candidates.append(full)
-
+    index_error: Exception | None = None
     fallbacks = [
-        f"https://www.tennis-data.co.uk/{year}/{year}.xlsx",
-        f"https://www.tennis-data.co.uk/{year}/{year}.zip",
+        # tennis-data HTTPS is flaky on some Windows TLS stacks; direct HTTP is
+        # intentionally first because the workbook endpoint still serves 200.
         f"http://www.tennis-data.co.uk/{year}/{year}.xlsx",
         f"http://www.tennis-data.co.uk/{year}/{year}.zip",
+        f"https://www.tennis-data.co.uk/{year}/{year}.xlsx",
+        f"https://www.tennis-data.co.uk/{year}/{year}.zip",
     ]
+    try:
+        resp = requests.get(ALDATA_URL, timeout=REQUEST_TIMEOUT, headers={"User-Agent": "Mozilla/5.0"})
+        resp.raise_for_status()
+        html = resp.text
+        hrefs = re.findall(r'href=["\']([^"\']+)["\']', html, flags=re.I)
+        for href in hrefs:
+            full = urljoin(ALDATA_URL, href)
+            if str(year) not in full:
+                continue
+            if not re.search(rf"/{year}/.*\.(zip|xlsx|xls)$", full, flags=re.I):
+                continue
+            candidates.append(full)
+    except Exception as exc:
+        index_error = exc
+
     out: list[str] = []
     seen = set()
-    for url in [*candidates, *fallbacks]:
+    for url in [*fallbacks, *candidates]:
         if url in seen:
             continue
         seen.add(url)
         out.append(url)
+    if not out and index_error:
+        raise RuntimeError(f"Could not read tennis-data index or build fallbacks: {index_error}") from index_error
     return out
 
 

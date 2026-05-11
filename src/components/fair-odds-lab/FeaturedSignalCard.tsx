@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 
 import { AbstractJersey } from "@/components/fair-odds-lab/AbstractJersey";
-import { BookmakerLogo } from "@/components/fair-odds-lab/BookmakerLogo";
 import { LogoBadge } from "@/components/fair-odds-lab/LogoBadge";
 import { OddsComparisonBar } from "@/components/fair-odds-lab/OddsComparisonBar";
 import { ProbabilityGauge } from "@/components/fair-odds-lab/ProbabilityGauge";
@@ -202,7 +201,7 @@ function MarketTable({ signal }: { signal: Signal }) {
     {
       label: "Probability gap",
       model: "-",
-      best: `+${gap.toFixed(1)} pp`,
+      best: `${gap >= 0 ? "+" : ""}${gap.toFixed(1)} pp`,
     },
   ];
 
@@ -217,23 +216,20 @@ function MarketTable({ signal }: { signal: Signal }) {
         </h3>
       </div>
       <div className="overflow-hidden rounded-xl border border-slate-800/80">
-        <div className="grid grid-cols-[minmax(0,1fr)_minmax(72px,0.7fr)_minmax(154px,0.9fr)] bg-slate-900/90 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+        <div className="grid grid-cols-[minmax(92px,1fr)_minmax(64px,0.6fr)_minmax(118px,0.85fr)] bg-slate-900/90 text-[9px] font-semibold uppercase tracking-[0.1em] text-slate-500 sm:text-[10px]">
           <div className="px-3 py-2">Metric</div>
           <div className="px-3 py-2 text-right">Model</div>
-          <div className="flex items-center justify-end gap-2 px-3 py-2 text-right">
-            <span>
-              Reference
-              <span className="hidden truncate normal-case tracking-normal text-slate-600 sm:block">
-                {signal.bestBookmaker}
-              </span>
+          <div className="min-w-0 px-3 py-2 text-right">
+            <span className="block truncate">Reference</span>
+            <span className="block truncate normal-case tracking-normal text-slate-600">
+              {signal.bestBookmaker}
             </span>
-            <BookmakerLogo name={signal.bestBookmaker} />
           </div>
         </div>
         {rows.map((row) => (
           <div
             key={row.label}
-            className="grid grid-cols-[minmax(0,1fr)_minmax(72px,0.7fr)_minmax(154px,0.9fr)] border-t border-slate-800/75 text-sm"
+            className="grid grid-cols-[minmax(92px,1fr)_minmax(64px,0.6fr)_minmax(118px,0.85fr)] border-t border-slate-800/75 text-sm"
           >
             <div className="px-3 py-3 text-slate-400">{row.label}</div>
             <div className="px-3 py-3 text-right font-mono text-emerald-200 tabular-nums">
@@ -244,15 +240,17 @@ function MarketTable({ signal }: { signal: Signal }) {
                 row.label === "Probability gap" ? "text-amber-300" : "text-slate-100"
               }`}
             >
-              {row.best}
               {row.label === "Probability gap" ? (
-                <>
-                  <div className="mt-1 text-[10px] font-sans text-slate-500">
+                <div className="flex flex-col items-end gap-1">
+                  <span>{row.best}</span>
+                  <span className="whitespace-nowrap text-[9px] font-medium normal-case tracking-normal text-slate-500">
                     percentage points vs market
-                  </div>
+                  </span>
                   <PriceGapMeter value={gap} />
-                </>
-              ) : null}
+                </div>
+              ) : (
+                row.best
+              )}
             </div>
           </div>
         ))}
