@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T12:30:45.375512Z",
+  "generated_at": "2026-05-11T12:37:15.039379Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -8,7 +8,7 @@
     "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
     "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
-  "team_form_source": "data/goalscorer/*player-match-logs-*.csv",
+  "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
   "edge_threshold_pp": 6.0,
   "public_filters": {
     "min_model_prob_pct": 20.0,
@@ -97,11 +97,11 @@
           "xg_against_avg": 0.92,
           "xgd_per90": 1.13,
           "shots_for_avg": 14.8,
-          "shots_against_avg": 11.4,
-          "sot_for_avg": 0.0,
-          "sot_against_avg": 0.0,
-          "corners_for_avg": null,
-          "corners_against_avg": null
+          "shots_against_avg": 11.8,
+          "sot_for_avg": 5.4,
+          "sot_against_avg": 4.6,
+          "corners_for_avg": 4.2,
+          "corners_against_avg": 6.2
         },
         "opponent_defensive_weakness": {
           "tier": "High",
@@ -117,10 +117,10 @@
           "xgd_per90": 0.11,
           "shots_for_avg": 11.8,
           "shots_against_avg": 9.4,
-          "sot_for_avg": 0.0,
-          "sot_against_avg": 0.0,
-          "corners_for_avg": null,
-          "corners_against_avg": null
+          "sot_for_avg": 4.6,
+          "sot_against_avg": 3.0,
+          "corners_for_avg": 7.2,
+          "corners_against_avg": 4.0
         },
         "fixture_boost_pct": -19,
         "projected_minutes": 87,
