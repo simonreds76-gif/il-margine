@@ -9,10 +9,10 @@
       "kickoff_utc": "2026-05-11T18:45:00Z",
       "home_team": "Napoli",
       "away_team": "Bologna",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "3-4-2-1",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "3-4-3",
       "away_formation": "4-2-3-1",
       "home_players": [
         "Vanja Milinkovic-Savic",
@@ -23,21 +23,21 @@
         "Scott McTominay",
         "Stanislav Lobotka",
         "Miguel Gutiérrez",
-        "Kevin De Bruyne",
-        "Alisson Santos",
-        "Rasmus Højlund"
+        "Giovane Nascimento",
+        "Rasmus Højlund",
+        "Alisson Santos"
       ],
       "away_players": [
-        "Lukasz Skorupski",
+        "Massimo Pessina",
         "João Mário",
-        "Torbjørn Heggem",
+        "Eivind Helland",
         "Jhon Lucumí",
         "Juan Miranda",
+        "Tommaso Pobega",
         "Remo Freuler",
-        "Lewis Ferguson",
         "Riccardo Orsolini",
+        "Lewis Ferguson",
         "Federico Bernardeschi",
-        "Jonathan Rowe",
         "Santiago Castro"
       ],
       "home_starters": [
@@ -47,7 +47,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-2-1",
+          "formation": "3-4-3",
           "position_id": 11
         },
         {
@@ -56,7 +56,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-4-3",
           "position_id": 33
         },
         {
@@ -65,7 +65,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-4-3",
           "position_id": 35
         },
         {
@@ -74,7 +74,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
+          "formation": "3-4-3",
           "position_id": 37
         },
         {
@@ -83,8 +83,8 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 62
+          "formation": "3-4-3",
+          "position_id": 72
         },
         {
           "name": "Scott McTominay",
@@ -92,8 +92,8 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 64
+          "formation": "3-4-3",
+          "position_id": 74
         },
         {
           "name": "Stanislav Lobotka",
@@ -101,8 +101,8 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 66
+          "formation": "3-4-3",
+          "position_id": 76
         },
         {
           "name": "Miguel Gutiérrez",
@@ -110,40 +110,40 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 68
+          "formation": "3-4-3",
+          "position_id": 78
         },
         {
-          "name": "Kevin De Bruyne",
+          "name": "Giovane Nascimento",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 103
+        },
+        {
+          "name": "Rasmus Højlund",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-4-3",
+          "position_id": 105
         },
         {
           "name": "Alisson Santos",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 86
-        },
-        {
-          "name": "Rasmus Højlund",
-          "line_index": 3,
-          "line_size": 1,
+          "line_size": 3,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-2-1",
-          "position_id": 105
+          "formation": "3-4-3",
+          "position_id": 107
         }
       ],
       "away_starters": [
         {
-          "name": "Lukasz Skorupski",
+          "name": "Massimo Pessina",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
@@ -161,7 +161,7 @@
           "position_id": 32
         },
         {
-          "name": "Torbjørn Heggem",
+          "name": "Eivind Helland",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -188,7 +188,7 @@
           "position_id": 38
         },
         {
-          "name": "Remo Freuler",
+          "name": "Tommaso Pobega",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -197,7 +197,7 @@
           "position_id": 64
         },
         {
-          "name": "Lewis Ferguson",
+          "name": "Remo Freuler",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -215,7 +215,7 @@
           "position_id": 83
         },
         {
-          "name": "Federico Bernardeschi",
+          "name": "Lewis Ferguson",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -224,7 +224,7 @@
           "position_id": 85
         },
         {
-          "name": "Jonathan Rowe",
+          "name": "Federico Bernardeschi",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -242,10 +242,34 @@
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
-      "home_unavailable": [
+      "home_subs": [
+        "Alex Meret",
+        "Nikita Contini",
+        "Juan Jesus",
         "Mathías Olivera",
+        "Sam Beukema",
+        "Frank Anguissa",
+        "Antonio Vergara",
+        "Billy Gilmour",
+        "Eljif Elmas",
+        "Leonardo Spinazzola",
+        "Pasquale Mazzocchi"
+      ],
+      "away_subs": [
+        "Federico Ravaglia",
+        "Lukasz Skorupski",
+        "Charalambos Lykogiannis",
+        "Lorenzo De Silvestri",
+        "Nadir Zortea",
+        "Torbjørn Heggem",
+        "Jens Odgaard",
+        "Nikola Moro",
+        "Simon Sohm",
+        "Benja Domínguez",
+        "Jonathan Rowe",
+        "Thijs Dallinga"
+      ],
+      "home_unavailable": [
         "Romelu Lukaku",
         "David Neres"
       ],
