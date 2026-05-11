@@ -14,6 +14,8 @@ export async function GET() {
     "## Key Pages",
     `- Home: ${BASE_URL}/`,
     `- Tennis Tips: ${BASE_URL}/tennis-tips`,
+    `- Player Props: ${BASE_URL}/player-props`,
+    `- Goalscorer Fair Odds Lab: ${BASE_URL}/fair-odds-lab`,
     `- ATP Tennis: ${BASE_URL}/atp-tennis`,
     `- Track Record: ${BASE_URL}/track-record`,
     `- The Edge: ${BASE_URL}/the-edge`,

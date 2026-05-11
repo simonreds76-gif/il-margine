@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { AbstractJersey } from "@/components/fair-odds-lab/AbstractJersey";
+import { BookmakerLogo } from "@/components/fair-odds-lab/BookmakerLogo";
 import { LogoBadge } from "@/components/fair-odds-lab/LogoBadge";
 import { OddsComparisonBar } from "@/components/fair-odds-lab/OddsComparisonBar";
 import { ProbabilityGauge } from "@/components/fair-odds-lab/ProbabilityGauge";
@@ -182,11 +183,14 @@ function MarketTable({ signal }: { signal: Signal }) {
         <div className="grid grid-cols-[minmax(0,1fr)_minmax(72px,0.7fr)_minmax(154px,0.9fr)] bg-slate-900/90 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
           <div className="px-3 py-2">Metric</div>
           <div className="px-3 py-2 text-right">Model</div>
-          <div className="px-3 py-2 text-right">
-            Best
-            <span className="hidden truncate normal-case tracking-normal text-slate-600 sm:block">
-              {signal.bestBookmaker}
+          <div className="flex items-center justify-end gap-2 px-3 py-2 text-right">
+            <span>
+              Best
+              <span className="hidden truncate normal-case tracking-normal text-slate-600 sm:block">
+                {signal.bestBookmaker}
+              </span>
             </span>
+            <BookmakerLogo name={signal.bestBookmaker} />
           </div>
         </div>
         {rows.map((row) => (

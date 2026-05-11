@@ -504,10 +504,10 @@ export default function Home() {
     },
     {
       id: "atg",
-      name: "Goalscorer Model",
-      description: "Anytime goalscorer fair odds and automated value surfacing.",
+      name: "Fair Odds Lab",
+      description: "Anytime goalscorer value spots where our model's fair price is shorter than the bookies'.",
       status: "active" as const,
-      profit: "In development",
+      profit: "Live intelligence board",
     },
   ];
 

@@ -6,17 +6,49 @@ import teamLogoManifest from "../../../data/goalscorer/team-logo-map.json";
 import { FairOddsSignalBrowser } from "@/components/fair-odds-lab/FairOddsSignalBrowser";
 import { sampleSignals } from "@/components/fair-odds-lab/__fixtures__/sample-signals";
 import type { LabArtifact, LabHighlight, Signal } from "@/components/fair-odds-lab/types";
+import { BASE_URL } from "@/lib/config";
 
 export const metadata: Metadata = {
-  title: "Goalscorer Fair Odds Lab | Anytime Goalscorer Value Spots",
+  title: "Anytime Goalscorer Value Spots | Goalscorer Fair Odds Lab",
   description:
-    "Research-only anytime goalscorer value spots for likely and confirmed starters, comparing Il Margine fair odds with bookmaker market prices.",
+    "Live anytime goalscorer value spots from Il Margine, comparing our model's fair odds with bookmaker prices for likely and confirmed starters.",
+  keywords: [
+    "anytime goalscorer tips",
+    "goalscorer value bets",
+    "football goalscorer odds",
+    "fair odds",
+    "football betting model",
+    "Bet365 goalscorer odds",
+    "Il Margine",
+  ],
   alternates: {
     canonical: "/fair-odds-lab",
   },
   robots: {
     index: true,
     follow: true,
+  },
+  openGraph: {
+    type: "website",
+    url: `${BASE_URL}/fair-odds-lab`,
+    title: "Goalscorer Fair Odds Lab | Il Margine",
+    description:
+      "Anytime goalscorer value spots where Il Margine's model price is shorter than the bookmaker market price.",
+    images: [
+      {
+        url: `${BASE_URL}/og.png`,
+        width: 1200,
+        height: 630,
+        alt: "Il Margine Goalscorer Fair Odds Lab",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Goalscorer Fair Odds Lab | Il Margine",
+    description:
+      "Anytime goalscorer value spots where Il Margine's model price is shorter than the bookmaker market price.",
+    images: [`${BASE_URL}/og.png`],
   },
 };
 
@@ -577,6 +609,106 @@ function LabHitsSection({ highlights }: { highlights: LabHighlight[] }) {
   );
 }
 
+function buildFairOddsLabStructuredData({
+  signals,
+  highlights,
+  generatedAt,
+}: {
+  signals: Signal[];
+  highlights: LabHighlight[];
+  generatedAt: string | null;
+}) {
+  const pageUrl = `${BASE_URL}/fair-odds-lab`;
+  const topSignals = signals.slice(0, 8);
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": `${pageUrl}#webpage`,
+        url: pageUrl,
+        name: "Goalscorer Fair Odds Lab",
+        description:
+          "Anytime goalscorer value spots where Il Margine compares model fair odds with bookmaker market prices.",
+        isPartOf: {
+          "@type": "WebSite",
+          "@id": `${BASE_URL}/#website`,
+          name: "Il Margine",
+          url: BASE_URL,
+        },
+        about: [
+          "anytime goalscorer odds",
+          "football betting model",
+          "fair odds",
+          "goalscorer value spots",
+        ],
+        dateModified: generatedAt ?? new Date().toISOString(),
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${pageUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: BASE_URL,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Goalscorer Fair Odds Lab",
+            item: pageUrl,
+          },
+        ],
+      },
+      ...(topSignals.length
+        ? [
+            {
+              "@type": "ItemList",
+              "@id": `${pageUrl}#current-signals`,
+              name: "Current goalscorer value spots",
+              itemListElement: topSignals.map((signal, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                item: {
+                  "@type": "Thing",
+                  name: `${signal.player} anytime goalscorer value spot`,
+                  description: `${signal.player} in ${signal.match}: Il Margine fair odds ${formatOdds(
+                    signal.fairOdds,
+                  )}, market price ${formatOdds(signal.bestBookOdds)}.`,
+                  url: pageUrl,
+                },
+              })),
+            },
+          ]
+        : []),
+      ...(highlights.length
+        ? [
+            {
+              "@type": "ItemList",
+              "@id": `${pageUrl}#recently-flagged`,
+              name: "Recently flagged goalscorer hits",
+              itemListElement: highlights.slice(0, 6).map((highlight, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                item: {
+                  "@type": "Thing",
+                  name: `${highlight.player} scored after being flagged by the Fair Odds Lab`,
+                  description: `${highlight.player} was flagged in ${highlight.match} at market odds ${formatOdds(
+                    highlight.bestOdds,
+                  )}.`,
+                  url: pageUrl,
+                },
+              })),
+            },
+          ]
+        : []),
+    ],
+  };
+}
+
 function EmptySignalsState() {
   return (
     <section className="rounded-[2rem] border border-slate-700/45 bg-[#0c0f14] p-8 text-center shadow-[0_24px_80px_rgba(0,0,0,0.25)]">
@@ -617,9 +749,18 @@ export default async function FairOddsLabPage() {
   const boardStatus = featured ? featured.player : "Quiet board";
   const coverageLabel = leagueCount.toString();
   const refreshedLabel = formatRefreshed(artifact.generatedAt);
+  const structuredData = buildFairOddsLabStructuredData({
+    signals,
+    highlights,
+    generatedAt: artifact.generatedAt,
+  });
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#07090d] text-slate-100">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_12%_5%,rgba(34,197,94,0.16),transparent_28%),radial-gradient(circle_at_88%_12%,rgba(14,165,233,0.12),transparent_30%),linear-gradient(rgba(148,163,184,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.025)_1px,transparent_1px)] bg-[size:auto,auto,40px_40px,40px_40px]" />
 
       <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">

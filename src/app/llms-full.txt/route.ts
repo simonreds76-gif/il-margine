@@ -11,6 +11,8 @@ export async function GET() {
     "## Main",
     `- ${BASE_URL}/`,
     `- ${BASE_URL}/tennis-tips`,
+    `- ${BASE_URL}/player-props`,
+    `- ${BASE_URL}/fair-odds-lab`,
     `- ${BASE_URL}/atp-tennis`,
     `- ${BASE_URL}/track-record`,
     `- ${BASE_URL}/the-edge`,

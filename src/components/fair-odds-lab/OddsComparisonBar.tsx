@@ -1,3 +1,5 @@
+import { BookmakerLogo } from "@/components/fair-odds-lab/BookmakerLogo";
+
 type OddsComparisonBarProps = {
   modelOdds: number;
   bookOdds: number;
@@ -68,8 +70,9 @@ export function OddsComparisonBar({
           </div>
         </div>
         <div className="min-w-0 text-right">
-          <div className="truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-            {compact ? "Best" : bookName}
+          <div className="flex min-w-0 items-center justify-end gap-2 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <span className="truncate">{compact ? "Best" : bookName}</span>
+            <BookmakerLogo name={bookName} />
           </div>
           <div
             className={
