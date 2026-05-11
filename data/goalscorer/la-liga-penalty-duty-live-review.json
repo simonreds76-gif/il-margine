@@ -1,9 +1,69 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-10T00:12:53Z",
+  "generated_at": "2026-05-11T01:24:05Z",
   "league": "la-liga",
-  "row_count": 2,
+  "row_count": 4,
   "rows": [
+    {
+      "date": "2026-05-10",
+      "league": "la-liga",
+      "review_source": "fotmob_live",
+      "match": "Mallorca vs Villarreal",
+      "team": "Villarreal",
+      "opponent": "Mallorca",
+      "actual_taker": "Ayoze Pérez",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "31",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "",
+      "secondary_pre_match": "",
+      "tertiary_pre_match": "",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "needs_manual_review",
+      "review_priority": "medium",
+      "editorial_note": "Ayoze Pérez took 1 penalty attempt and scored for Villarreal vs Mallorca. Needs manual editorial review.",
+      "context_generated_at": "",
+      "context_source_path": ""
+    },
+    {
+      "date": "2026-05-10",
+      "league": "la-liga",
+      "review_source": "fotmob_live",
+      "match": "Athletic Club vs Valencia",
+      "team": "Valencia",
+      "opponent": "Athletic Club",
+      "actual_taker": "Hugo Duro",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 0,
+      "distinct_takers_in_match": 1,
+      "minute": "27",
+      "event_type": "Post",
+      "event_result": "missed",
+      "primary_pre_match": "",
+      "secondary_pre_match": "",
+      "tertiary_pre_match": "",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "needs_manual_review",
+      "review_priority": "medium",
+      "editorial_note": "Hugo Duro took 1 penalty attempt and missed for Valencia vs Athletic Club. Needs manual editorial review.",
+      "context_generated_at": "",
+      "context_source_path": ""
+    },
     {
       "date": "2026-05-09",
       "league": "la-liga",
@@ -32,7 +92,7 @@
       "review_priority": "low",
       "editorial_note": "Mikel Oyarzabal took 1 penalty attempt and scored for Real Sociedad vs Real Betis. Primary pre-match: Mikel Oyarzabal (confirmed_starter). Secondary pre-match: Brais Méndez (confirmed_bench). Pre-match active slot was primary -> Mikel Oyarzabal. No hierarchy change implied from this event.",
       "context_generated_at": "2026-05-09T21:41:06Z",
-      "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
+      "context_source_path": "data/goalscorer/la-liga/live-history/penalty-duty-context-20260509-214106.json"
     },
     {
       "date": "2026-05-09",
@@ -62,7 +122,7 @@
       "review_priority": "medium",
       "editorial_note": "Toni Martínez took 1 penalty attempt and scored for Deportivo Alaves vs Elche. Primary pre-match: Carlos Vicente (unknown). Secondary pre-match: Lucas Boyé (not_in_squad). Pre-match active slot was tertiary -> Toni Martínez. Looks like the expected backup took over because the primary was unavailable or inactive.",
       "context_generated_at": "2026-05-09T21:41:06Z",
-      "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
+      "context_source_path": "data/goalscorer/la-liga/live-history/penalty-duty-context-20260509-214106.json"
     }
   ]
 }

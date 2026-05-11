@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-10T00:13:12Z",
+  "generated_at": "2026-05-11T01:24:30Z",
   "league": "ligue-1",
-  "row_count": 2,
+  "row_count": 5,
   "rows": [
     {
       "team": "Angers",
@@ -35,6 +35,54 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-05-03"
+    },
+    {
+      "team": "Le Havre",
+      "team_key": "le havre",
+      "player_name": "Sofiane Boufal",
+      "player_key": "sofiane boufal",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-10"
+    },
+    {
+      "team": "Marseille",
+      "team_key": "marseille",
+      "player_name": "Mason Greenwood",
+      "player_key": "mason greenwood",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-10"
+    },
+    {
+      "team": "Strasbourg",
+      "team_key": "strasbourg",
+      "player_name": "Julio Enciso",
+      "player_key": "julio enciso",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-10"
     }
   ]
 }
