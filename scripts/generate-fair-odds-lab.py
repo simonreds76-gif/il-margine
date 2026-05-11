@@ -21,13 +21,14 @@ import json
 import re
 import unicodedata
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
 
 LONDON = ZoneInfo("Europe/London")
+MATCH_VISIBILITY_AFTER_KICKOFF = timedelta(minutes=150)
 
 DEFAULT_INPUTS = [
     Path("data/goalscorer/all-leagues-live-board.json"),
@@ -1060,7 +1061,7 @@ def build_candidates_from_rows(
         if not include_past:
             kickoff_dt = kickoff_datetime_utc(row)
             if kickoff_dt is not None:
-                if kickoff_dt <= now_utc:
+                if kickoff_dt <= now_utc and now_utc - kickoff_dt > MATCH_VISIBILITY_AFTER_KICKOFF:
                     continue
             elif date_key and date_key < today_iso:
                 continue
@@ -1559,6 +1560,7 @@ def main() -> None:
             "official_lineup_window_minutes": args.official_lineup_window_minutes,
             "require_confirmed_starter": not args.allow_projected_lineups,
             "defensive_positions_hidden": sorted(DEFENSIVE_POSITION_TOKENS),
+            "post_kickoff_visibility_minutes": int(MATCH_VISIBILITY_AFTER_KICKOFF.total_seconds() / 60),
         },
         "fixtures_evaluated": fixtures_evaluated,
         "signals_qualifying": len(signals),

@@ -61,6 +61,7 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 const REMOTE_ARTIFACT_REVALIDATE_SECONDS = 300;
+const MATCH_VISIBILITY_AFTER_KICKOFF_MS = 150 * 60 * 1000;
 
 function asNumber(value: unknown): number | null {
   const numberValue = typeof value === "number" ? value : Number(value);
@@ -389,14 +390,19 @@ function mapArtifactSignal(rawValue: unknown): Signal | null {
   };
 }
 
-function isPreKickoffSignal(signal: Signal, nowMs = Date.now()): boolean {
+function getSignalDisplayStatus(
+  signal: Signal,
+  nowMs = Date.now(),
+): Signal["displayStatus"] | null {
   if (signal.kickoffUtc) {
     const kickoffMs = Date.parse(signal.kickoffUtc);
-    return Number.isFinite(kickoffMs) && kickoffMs > nowMs;
+    if (!Number.isFinite(kickoffMs)) return null;
+    if (kickoffMs > nowMs) return "pre_match";
+    return nowMs - kickoffMs <= MATCH_VISIBILITY_AFTER_KICKOFF_MS ? "in_play" : null;
   }
 
   const dateOnly = signal.kickoff.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (!dateOnly) return false;
+  if (!dateOnly) return null;
 
   const [, year, month, day] = dateOnly;
   const fallbackDateMs = Date.UTC(Number(year), Number(month) - 1, Number(day));
@@ -404,7 +410,7 @@ function isPreKickoffSignal(signal: Signal, nowMs = Date.now()): boolean {
   const todayStartMs = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
 
   // Date-only rows are safe to show only for future dates; same-day rows need an exact kickoff.
-  return Number.isFinite(fallbackDateMs) && fallbackDateMs > todayStartMs;
+  return Number.isFinite(fallbackDateMs) && fallbackDateMs > todayStartMs ? "pre_match" : null;
 }
 
 function makeMockArtifact(): LabArtifact {
@@ -437,20 +443,31 @@ function parseLabArtifact(parsed: unknown, isMock = false): LabArtifact | null {
   const raw = asRecord(parsed);
   if (!Array.isArray(raw.signals)) return null;
 
+  const nowMs = Date.now();
   const artifactSignals = raw.signals
     .map(mapArtifactSignal)
     .filter((signal: Signal | null): signal is Signal => signal !== null)
-    .filter((signal: Signal) => isPreKickoffSignal(signal));
+    .map((signal: Signal): Signal | null => {
+      const displayStatus = getSignalDisplayStatus(signal, nowMs);
+      return displayStatus ? { ...signal, displayStatus } : null;
+    })
+    .filter((signal: Signal | null): signal is Signal => signal !== null);
+  const requestedFeaturedId = asText(raw.featured_signal_id);
+  const featuredSignal =
+    artifactSignals.find((signal) => signal.id === requestedFeaturedId && signal.displayStatus === "pre_match") ??
+    artifactSignals.find((signal) => signal.displayStatus === "pre_match") ??
+    artifactSignals.find((signal) => signal.id === requestedFeaturedId) ??
+    artifactSignals[0];
 
   return {
     generatedAt: asText(raw.generated_at) || null,
     edgeThresholdPp: asNumber(raw.edge_threshold_pp) ?? 6,
     fixturesEvaluated: asNumber(raw.fixtures_evaluated) ?? 0,
-    signalsQualifying: asNumber(raw.signals_qualifying) ?? artifactSignals.length,
+    signalsQualifying: artifactSignals.length,
     leaguesCovered: Array.isArray(raw.leagues_covered)
       ? raw.leagues_covered.map((league: unknown) => asText(league)).filter(Boolean)
       : [],
-    featuredSignalId: asText(raw.featured_signal_id) || artifactSignals[0]?.id,
+    featuredSignalId: featuredSignal?.id ?? null,
     signals: artifactSignals,
     isMock,
   };
@@ -1007,13 +1024,13 @@ function EmptySignalsState() {
         </svg>
       </div>
       <h2 className="mt-5 text-2xl font-black tracking-tight text-slate-50">
-        No current value spots right now
+        No flagged value spots right now
       </h2>
       <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-slate-400">
         The latest board does not have a goalscorer price strong enough to
         show. That is intentional: if the edge is not clear, the lab stays
-        quiet instead of filling the page with weak picks. Check again closer
-        to kickoff, when teams and prices are sharper.
+        quiet. Pre-match signals stay visible as locked watch cards after
+        kickoff, then clear once the match window closes.
       </p>
     </section>
   );
@@ -1036,6 +1053,7 @@ export default async function FairOddsLabPage({ searchParams }: FairOddsLabPageP
     ? [featured, ...artifact.signals.filter((signal) => signal.id !== featured.id)]
     : artifact.signals;
   const leagueCount = new Set(signals.map((signal) => signal.competition)).size;
+  const inPlayCount = signals.filter((signal) => signal.displayStatus === "in_play").length;
   const boardStatus = featured ? featured.player : "Quiet board";
   const coverageLabel = leagueCount.toString();
   const refreshedLabel = formatRefreshed(artifact.generatedAt);
@@ -1084,7 +1102,7 @@ export default async function FairOddsLabPage({ searchParams }: FairOddsLabPageP
               <div className="grid gap-0 overflow-hidden rounded-2xl border border-slate-700/55 bg-slate-950/75 sm:grid-cols-4">
                 {[
                   ["Top value spot", boardStatus],
-                  ["Current spots", signals.length.toString()],
+                  ["Flagged spots", signals.length.toString()],
                   ["Competitions", coverageLabel],
                   ["Updated", refreshedLabel],
                 ].map(([label, value], index) => (
@@ -1123,7 +1141,9 @@ export default async function FairOddsLabPage({ searchParams }: FairOddsLabPageP
                 Reference prices are taken from Bet365 to keep value spots
                 comparable. This does not claim Bet365 beats every book.
                 Prices and team news can move; likely starters update to
-                Confirmed XI when official teams land.
+                Confirmed XI when official teams land. After kickoff, flagged
+                spots stay visible as locked watch cards until the match window
+                closes{inPlayCount > 0 ? ` (${inPlayCount} live now)` : ""}.
               </p>
             ) : null}
           </>

@@ -58,6 +58,10 @@ function compactLineupLabel(status: string) {
   return "Unknown";
 }
 
+function isInPlayWatch(signal: Signal) {
+  return signal.displayStatus === "in_play";
+}
+
 function sortSignals(signals: Signal[], sortMode: SortMode) {
   return [...signals].sort((a, b) => {
     if (sortMode === "kickoff") {
@@ -89,6 +93,7 @@ function SignalCard({
 }) {
   const gap = probabilityGap(signal);
   const lineupLabel = compactLineupLabel(signal.lineupStatus);
+  const inPlayWatch = isInPlayWatch(signal);
 
   return (
     <article
@@ -131,6 +136,14 @@ function SignalCard({
                 className="bg-white/95 p-0.5"
               />
               <span>{signal.kickoff}</span>
+              {inPlayWatch ? (
+                <>
+                  <span className="text-slate-700">|</span>
+                  <span className="font-semibold text-amber-200">
+                    Flagged before kickoff - market closed
+                  </span>
+                </>
+              ) : null}
             </div>
           </div>
         </button>
@@ -171,6 +184,11 @@ function SignalCard({
           <span className="rounded-full border border-cyan-300/20 bg-cyan-300/[0.07] px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-cyan-100">
             {lineupLabel}
           </span>
+          {inPlayWatch ? (
+            <span className="rounded-full border border-amber-300/25 bg-amber-300/[0.08] px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-100">
+              In play watch
+            </span>
+          ) : null}
           <span className="rounded-full border border-slate-700/70 bg-slate-950/70 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-slate-300">
             {signal.penaltyRole}
           </span>
@@ -283,16 +301,16 @@ export function FairOddsSignalBrowser({
       <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="text-[11px] font-black uppercase tracking-[0.22em] text-emerald-300">
-            Current value spots
+            Flagged value spots
           </div>
           <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-50 sm:text-4xl">
-            Model price vs market price.
+            Model price vs market price, tracked through the match window.
           </h2>
         </div>
         <div className="rounded-full border border-cyan-300/20 bg-cyan-300/[0.07] px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-100">
           {artifact.isMock
             ? "Static design data"
-            : "Latest model artifact"}
+            : "Pre-match board + locked watch"}
         </div>
       </div>
 
@@ -362,7 +380,7 @@ export function FairOddsSignalBrowser({
 
       {visibleSignals.length === 0 ? (
         <div className="rounded-2xl border border-slate-700/45 bg-[#0c0f14] p-8 text-center text-sm text-slate-400">
-          No signals match this league filter. Switch back to All to see the current artifact.
+          No signals match this league filter. Switch back to All to see the flagged board.
         </div>
       ) : (
         <div className="grid gap-6">

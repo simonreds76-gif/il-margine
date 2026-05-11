@@ -13,6 +13,7 @@ export type Signal = {
   leagueSlug?: string;
   kickoff: string;
   kickoffUtc?: string;
+  displayStatus?: "pre_match" | "in_play";
   venue: string;
   player: string;
   team: string;

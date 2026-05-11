@@ -355,6 +355,7 @@ export function FeaturedSignalCard({
   controls?: ReactNode;
 }) {
   const gap = probabilityGap(signal);
+  const inPlayWatch = signal.displayStatus === "in_play";
   const venueLabel = signal.venue && signal.venue !== "Venue TBC" ? ` | ${signal.venue}` : "";
   const opponent = opponentFromSignal(signal);
 
@@ -409,10 +410,23 @@ export function FeaturedSignalCard({
                   {signal.venue}
                 </>
               ) : null}
+              {inPlayWatch ? (
+                <>
+                  <span className="text-slate-700"> | </span>
+                  <span className="font-semibold text-amber-200">
+                    Flagged pre-match - market closed
+                  </span>
+                </>
+              ) : null}
             </div>
           </div>
           <div className="flex items-center gap-2">
             {controls}
+            {inPlayWatch ? (
+              <span className="rounded-full border border-amber-300/25 bg-amber-300/[0.08] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-amber-100">
+                In play watch
+              </span>
+            ) : null}
             <span className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-amber-200">
               Model signal
             </span>
