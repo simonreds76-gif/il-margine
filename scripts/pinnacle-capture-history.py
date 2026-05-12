@@ -97,9 +97,30 @@ def append_history_rows(rows: list[dict[str, Any]], dry_run: bool) -> None:
         "Prefer": "return=minimal",
     }
     resp = requests.post(url, headers=req_headers, json=rows, timeout=HTTP_TIMEOUT)
+    if not resp.ok and _unknown_schedule_column(resp.text):
+        print("History table schedule columns unavailable; retrying without match_date/kickoff_iso.")
+        rows = _strip_schedule_fields(rows)
+        resp = requests.post(url, headers=req_headers, json=rows, timeout=HTTP_TIMEOUT)
     if not resp.ok:
         raise RuntimeError(f"bookmaker_odds_history insert failed: {resp.status_code} {resp.text[:300]}")
     print(f"Appended {len(rows)} rows to bookmaker_odds_history.")
+
+
+def _strip_schedule_fields(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [
+        {key: value for key, value in row.items() if key not in {"match_date", "kickoff_iso"}}
+        for row in rows
+    ]
+
+
+def _unknown_schedule_column(text: str) -> bool:
+    lower = (text or "").lower()
+    return ("match_date" in lower or "kickoff_iso" in lower) and (
+        "schema cache" in lower
+        or "could not find" in lower
+        or "column" in lower
+        or "pgrst204" in lower
+    )
 
 
 def save_local_csv(rows: list[dict[str, Any]], captured_at: datetime) -> Path:
@@ -123,6 +144,8 @@ def save_local_csv(rows: list[dict[str, Any]], captured_at: datetime) -> Path:
         "spread_line",
         "spread_odds1",
         "spread_odds2",
+        "match_date",
+        "kickoff_iso",
     ]
     with path.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
@@ -145,6 +168,10 @@ def main() -> int:
     if not results:
         print("No Pinnacle matches scraped.")
         return 0
+    dated_count = sum(1 for row in results if row.get("match_date") and row.get("kickoff_iso"))
+    print(f"Schedule metadata: {dated_count}/{len(results)} rows dated.")
+    if dated_count == 0:
+        raise RuntimeError("Pinnacle scrape returned no match_date/kickoff_iso metadata; refusing undated history capture.")
 
     captured_at = datetime.now(timezone.utc)
     capture_date = captured_at.date().isoformat()
@@ -167,6 +194,8 @@ def main() -> int:
             "spread_line": row.get("spread_line"),
             "spread_odds1": row.get("spread_odds1"),
             "spread_odds2": row.get("spread_odds2"),
+            "match_date": row.get("match_date"),
+            "kickoff_iso": row.get("kickoff_iso"),
         }
         for row in results
     ]

@@ -133,6 +133,27 @@ def _norm_name(name: str) -> str:
     return " ".join(n.split())
 
 
+def _normalise_kickoff_iso(value: str | None) -> str | None:
+    """Return a stable UTC ISO string from Pinnacle schedule fields."""
+    text = str(value or "").strip()
+    if not text:
+        return None
+    if text.endswith("+00:00"):
+        return f"{text[:-6]}Z"
+    return text
+
+
+def _matchup_kickoff_iso(matchup: dict) -> str | None:
+    periods = matchup.get("periods") or []
+    first_cutoff = periods[0].get("cutoffAt") if periods and isinstance(periods[0], dict) else None
+    parent = matchup.get("parent") if isinstance(matchup.get("parent"), dict) else {}
+    return _normalise_kickoff_iso(
+        matchup.get("startTime")
+        or first_cutoff
+        or parent.get("startTime")
+    )
+
+
 def _api_get(path: str, retries: int = 3) -> list | dict | None:
     """GET from Pinnacle API with retries."""
     url = f"{PINNACLE_API_BASE}/{path.lstrip('/')}"
@@ -430,6 +451,8 @@ def scrape_pinnacle() -> list[dict]:
                 continue
             if m.get("isLive"):
                 continue
+            kickoff_iso = _matchup_kickoff_iso(m)
+            match_date = kickoff_iso[:10] if kickoff_iso else None
 
             ml = moneylines.get(mid)
             if not ml:
@@ -503,6 +526,8 @@ def scrape_pinnacle() -> list[dict]:
                 "spread_odds2": spread["odds2"] if spread else None,
                 "league": league_tag,
                 "league_name": league_name,
+                "match_date": match_date,
+                "kickoff_iso": kickoff_iso,
             }
             # Sanity check spread sign vs ML favourite side.
             # If P1 is ML favourite (odds1 < odds2), spread_line should usually be <= 0.
@@ -541,7 +566,9 @@ def scrape_pinnacle() -> list[dict]:
     for r in results:
         key = (_norm_name(r["player1_name"]), _norm_name(r["player2_name"]))
         if key in seen:
-            if r["pinnacle_margin"] < seen[key]["pinnacle_margin"]:
+            has_schedule = 0 if r.get("kickoff_iso") else 1
+            seen_has_schedule = 0 if seen[key].get("kickoff_iso") else 1
+            if (has_schedule, r["pinnacle_margin"]) < (seen_has_schedule, seen[key]["pinnacle_margin"]):
                 seen[key] = r
         else:
             seen[key] = r
@@ -736,6 +763,8 @@ def upsert_to_supabase(results: list[dict]):
             "spread_line": r.get("spread_line"),
             "spread_odds1": r.get("spread_odds1"),
             "spread_odds2": r.get("spread_odds2"),
+            "match_date": r.get("match_date"),
+            "kickoff_iso": r.get("kickoff_iso"),
         })
 
     if not rows:
@@ -765,9 +794,30 @@ def upsert_to_supabase(results: list[dict]):
     }
 
     max_retries = 3
+    def post_rows(payload: list[dict]):
+        return requests.post(url, json=payload, headers=headers, timeout=30)
+
+    def strip_schedule_fields(payload: list[dict]) -> list[dict]:
+        return [
+            {k: v for k, v in row.items() if k not in {"match_date", "kickoff_iso"}}
+            for row in payload
+        ]
+
+    def unknown_schedule_column(text: str) -> bool:
+        lower = (text or "").lower()
+        return ("match_date" in lower or "kickoff_iso" in lower) and (
+            "schema cache" in lower
+            or "could not find" in lower
+            or "column" in lower
+            or "pgrst204" in lower
+        )
+
     for attempt in range(1, max_retries + 1):
         try:
-            resp = requests.post(url, json=rows, headers=headers, timeout=30)
+            resp = post_rows(rows)
+            if not resp.ok and unknown_schedule_column(resp.text):
+                print("  WARNING: snapshot schedule columns unavailable; retrying without match_date/kickoff_iso.")
+                resp = post_rows(strip_schedule_fields(rows))
             if resp.ok:
                 atp_c = sum(1 for r in rows if r["league"] == "ATP")
                 chall_c = sum(1 for r in rows if r["league"] == "Challenger")
@@ -805,7 +855,7 @@ def save_csv(results: list[dict]):
         "player1_name", "player2_name", "odds1", "odds2",
         "pinnacle_margin", "ou_line", "ou_over", "ou_under",
         "spread_line", "spread_odds1", "spread_odds2",
-        "league", "league_name",
+        "league", "league_name", "match_date", "kickoff_iso",
     ]
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -936,10 +986,14 @@ def main():
     atp = sum(1 for r in results if r["league"] in ("ATP", "Challenger"))
     wta = sum(1 for r in results if r["league"] == "WTA")
     chall = sum(1 for r in results if r["league"] == "Challenger")
+    dated = sum(1 for r in results if r.get("match_date") and r.get("kickoff_iso"))
 
-    print(f"\n  Summary: {len(results)} matches ({atp} ATP/Challenger, {wta} WTA), {ou_count} with O/U, {spread_count} with spread")
+    print(f"\n  Summary: {len(results)} matches ({atp} ATP/Challenger, {wta} WTA), {ou_count} with O/U, {spread_count} with spread, {dated} dated")
     if chall:
         print(f"    ({chall} of which are Challenger)")
+    if dated == 0:
+        print("  ERROR: Pinnacle scrape returned no match_date/kickoff_iso metadata; refusing to write an undated live snapshot.")
+        sys.exit(1)
     # Per-league spread breakdown
     by_league: dict[str, tuple[int, int]] = {}
     for r in results:
