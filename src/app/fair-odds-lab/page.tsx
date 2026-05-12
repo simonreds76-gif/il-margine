@@ -3,6 +3,7 @@ import path from "node:path";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import teamKitColors from "../../../data/goalscorer/team-kit-colors.json";
 import teamLogoManifest from "../../../data/goalscorer/team-logo-map.json";
 import { AbstractJersey } from "@/components/fair-odds-lab/AbstractJersey";
 import { BookmakerLogo } from "@/components/fair-odds-lab/BookmakerLogo";
@@ -146,6 +147,12 @@ type LogoManifest = {
 };
 
 const LOGO_MANIFEST = teamLogoManifest as LogoManifest;
+type TeamStyle = {
+  primary: string;
+  secondary: string;
+  pattern: NonNullable<Signal["teamShirtPattern"]>;
+};
+const TEAM_KIT_COLORS = teamKitColors as Record<string, TeamStyle>;
 
 const TEAM_NAME_ALIASES: Record<string, string> = {
   "rb leipzig": "rasenballsport leipzig",
@@ -249,7 +256,8 @@ function resolveTeamLogoPath(leagueSlug: string, team: string): string {
 }
 
 function resolveTeamStyle(team: string) {
-  return TEAM_STYLE_OVERRIDES[normalizeTeamKey(team)] ?? null;
+  const key = normalizeTeamKey(team);
+  return TEAM_KIT_COLORS[key] ?? TEAM_STYLE_OVERRIDES[key] ?? null;
 }
 
 function mapArtifactSignal(rawValue: unknown): Signal | null {

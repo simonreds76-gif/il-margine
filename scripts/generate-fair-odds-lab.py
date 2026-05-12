@@ -42,6 +42,7 @@ DEFAULT_INPUTS = [
 DEFAULT_MONITOR_SNAPSHOT = Path("data/goalscorer/goalscorer-monitor-snapshot.json")
 DEFAULT_OUTPUT = Path("public/fair-odds-lab/signals.json")
 DEFAULT_TEAM_LOGO_MAP = Path("data/goalscorer/team-logo-map.json")
+DEFAULT_TEAM_KIT_COLORS = Path("data/goalscorer/team-kit-colors.json")
 DEFAULT_TEAM_MATCH_BASE = Path("data/football-form/team-match-base.csv")
 DEFAULT_EXPOSURE_LOG_DIR = Path("data/goalscorer")
 DEFAULT_LINEUP_FIXTURES = [
@@ -139,6 +140,39 @@ TEAM_STYLE_OVERRIDES = {
     "lille": ("#dc2626", "#1e3a8a", "solid"),
     "lens": ("#dc2626", "#facc15", "vertical-stripes"),
 }
+
+
+def load_team_kit_color_overrides(path: Path = DEFAULT_TEAM_KIT_COLORS) -> dict[str, tuple[str, str, str]]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8-sig"))
+    except json.JSONDecodeError:
+        return {}
+    if not isinstance(payload, dict):
+        return {}
+
+    overrides: dict[str, tuple[str, str, str]] = {}
+    for raw_key, raw_value in payload.items():
+        if not isinstance(raw_value, dict):
+            continue
+        primary = str(raw_value.get("primary") or "").strip()
+        secondary = str(raw_value.get("secondary") or "").strip()
+        pattern = str(raw_value.get("pattern") or "solid").strip()
+        if not primary or not secondary:
+            continue
+        if pattern not in {"solid", "vertical-stripes", "halves", "sash"}:
+            pattern = "solid"
+        key = unicodedata.normalize("NFKD", str(raw_key or ""))
+        key = "".join(ch for ch in key if not unicodedata.combining(ch)).lower()
+        key = re.sub(r"[^a-z0-9]+", " ", key).strip()
+        key = re.sub(r"\s+", " ", key)
+        if key:
+            overrides[key] = (primary, secondary, pattern)
+    return overrides
+
+
+TEAM_STYLE_OVERRIDES.update(load_team_kit_color_overrides())
 
 LEAGUE_SLUGS = {
     "england - premier league": "epl",
