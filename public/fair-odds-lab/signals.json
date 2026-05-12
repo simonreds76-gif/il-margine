@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T22:38:15.819917Z",
+  "generated_at": "2026-05-12T23:41:17.783431Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -32,7 +32,7 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 11,
+  "fixtures_evaluated": 10,
   "signals_qualifying": 1,
   "leagues_covered": [
     "la-liga"
@@ -87,7 +87,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 12
+          "percentile": 13
         },
         "recent_team_form": {
           "tier": "Average",
@@ -106,7 +106,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 61
+          "percentile": 59
         },
         "opponent_recent_defence": {
           "tier": "High",
