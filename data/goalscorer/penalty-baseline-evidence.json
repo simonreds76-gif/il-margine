@@ -1,23 +1,41 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-11T01:24:22Z",
+  "generated_at": "2026-05-12T01:46:29Z",
   "league": "serie-a",
-  "row_count": 4,
+  "row_count": 5,
   "rows": [
+    {
+      "team": "Bologna",
+      "team_key": "bologna",
+      "player_name": "Riccardo Orsolini",
+      "player_key": "riccardo orsolini",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
+      "observed_share": 1.0,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live",
+        "settled_logs"
+      ],
+      "event_count": 2,
+      "last_event_date": "2026-05-11"
+    },
     {
       "team": "Milan",
       "team_key": "milan",
       "player_name": "Christopher Nkunku",
       "player_key": "christopher nkunku",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live"
+        "fotmob_live",
+        "settled_logs"
       ],
-      "event_count": 1,
+      "event_count": 2,
       "last_event_date": "2026-05-10"
     },
     {
@@ -41,15 +59,16 @@
       "team_key": "roma",
       "player_name": "Donyell Malen",
       "player_key": "donyell malen",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live"
+        "fotmob_live",
+        "settled_logs"
       ],
-      "event_count": 1,
+      "event_count": 2,
       "last_event_date": "2026-05-10"
     },
     {

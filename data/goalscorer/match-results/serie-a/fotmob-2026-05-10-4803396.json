@@ -360,21 +360,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Adrián Bernabé",
-      "fotmob_id": 951714,
-      "team": "Parma",
-      "team_id": 10167,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Gaetano Oristanio",
       "fotmob_id": 1110045,
       "team": "Parma",
@@ -392,21 +377,6 @@
     {
       "name": "Benjamín Cremaschi",
       "fotmob_id": 1354177,
-      "team": "Parma",
-      "team_id": 10167,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Matija Frigan",
-      "fotmob_id": 1190371,
       "team": "Parma",
       "team_id": 10167,
       "started": false,
@@ -750,36 +720,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Lorenzo Pellegrini",
-      "fotmob_id": 540307,
-      "team": "Roma",
-      "team_id": 8686,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Artem Dovbyk",
-      "fotmob_id": 655696,
-      "team": "Roma",
-      "team_id": 8686,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Bryan Zaragoza",
       "fotmob_id": 1202525,
       "team": "Roma",
@@ -847,5 +787,157 @@
       "is_own_goal": false
     }
   ],
-  "fetched_at": "2026-05-11T01:23:34Z"
+  "substitution_groups": [
+    {
+      "team": "Parma",
+      "team_id": 10167,
+      "minute": 53,
+      "on": [
+        {
+          "name": "Mateo Pellegrino",
+          "fotmob_id": 1224237
+        }
+      ],
+      "off": [
+        {
+          "name": "Gabriel Strefezza",
+          "fotmob_id": 836436
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Parma",
+      "team_id": 10167,
+      "minute": 74,
+      "on": [
+        {
+          "name": "Franco Carboni",
+          "fotmob_id": 1199360
+        },
+        {
+          "name": "Sascha Britschgi",
+          "fotmob_id": 1693531
+        }
+      ],
+      "off": [
+        {
+          "name": "Enrico Del Prato",
+          "fotmob_id": 935380
+        },
+        {
+          "name": "Emanuele Valeri",
+          "fotmob_id": 867789
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Parma",
+      "team_id": 10167,
+      "minute": 79,
+      "on": [
+        {
+          "name": "Nahuel Estévez",
+          "fotmob_id": 815366
+        },
+        {
+          "name": "Pontus Almqvist",
+          "fotmob_id": 822589
+        }
+      ],
+      "off": [
+        {
+          "name": "Hans Nicolussi Caviglia",
+          "fotmob_id": 845994
+        },
+        {
+          "name": "Nesta Elphege",
+          "fotmob_id": 1460253
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Roma",
+      "team_id": 8686,
+      "minute": 53,
+      "on": [
+        {
+          "name": "Daniele Ghilardi",
+          "fotmob_id": 1386006
+        }
+      ],
+      "off": [
+        {
+          "name": "Mario Hermoso",
+          "fotmob_id": 671203
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Roma",
+      "team_id": 8686,
+      "minute": 58,
+      "on": [
+        {
+          "name": "Neil El Aynaoui",
+          "fotmob_id": 1274060
+        },
+        {
+          "name": "Niccolò Pisilli",
+          "fotmob_id": 1451196
+        }
+      ],
+      "off": [
+        {
+          "name": "Bryan Cristante",
+          "fotmob_id": 299799
+        },
+        {
+          "name": "Matias Soulé",
+          "fotmob_id": 1280082
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Roma",
+      "team_id": 8686,
+      "minute": 74,
+      "on": [
+        {
+          "name": "Devyne Rensch",
+          "fotmob_id": 1180321
+        }
+      ],
+      "off": [
+        {
+          "name": "Zeki Çelik",
+          "fotmob_id": 867225
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Roma",
+      "team_id": 8686,
+      "minute": 75,
+      "on": [
+        {
+          "name": "Lorenzo Venturino",
+          "fotmob_id": 1707510
+        }
+      ],
+      "off": [
+        {
+          "name": "Kouadio Koné",
+          "fotmob_id": 1016132
+        }
+      ],
+      "direct_replacement_verified": true
+    }
+  ],
+  "fetched_at": "2026-05-12T01:45:11Z"
 }

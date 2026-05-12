@@ -360,36 +360,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Andreas Christensen",
-      "fotmob_id": 449232,
-      "team": "Barcelona",
-      "team_id": 8634,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Lamine Yamal",
-      "fotmob_id": 1467236,
-      "team": "Barcelona",
-      "team_id": 8634,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Thibaut Courtois",
       "fotmob_id": 170323,
       "team": "Real Madrid",
@@ -703,126 +673,6 @@
       "subbed_off": false,
       "sub_in_minute": 0,
       "sub_out_minute": 0
-    },
-    {
-      "name": "Dani Ceballos",
-      "fotmob_id": 531629,
-      "team": "Real Madrid",
-      "team_id": 8633,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Kylian Mbappé",
-      "fotmob_id": 701154,
-      "team": "Real Madrid",
-      "team_id": 8633,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Daniel Carvajal",
-      "fotmob_id": 282674,
-      "team": "Real Madrid",
-      "team_id": 8633,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Éder Militao",
-      "fotmob_id": 844415,
-      "team": "Real Madrid",
-      "team_id": 8633,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Ferland Mendy",
-      "fotmob_id": 623537,
-      "team": "Real Madrid",
-      "team_id": 8633,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Arda Güler",
-      "fotmob_id": 1253890,
-      "team": "Real Madrid",
-      "team_id": 8633,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Federico Valverde",
-      "fotmob_id": 743533,
-      "team": "Real Madrid",
-      "team_id": 8633,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Rodrygo",
-      "fotmob_id": 895362,
-      "team": "Real Madrid",
-      "team_id": 8633,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
     }
   ],
   "goal_events": [
@@ -841,5 +691,121 @@
       "is_own_goal": false
     }
   ],
-  "fetched_at": "2026-05-11T01:23:43Z"
+  "substitution_groups": [
+    {
+      "team": "Barcelona",
+      "team_id": 8634,
+      "minute": 64,
+      "on": [
+        {
+          "name": "Frenkie de Jong",
+          "fotmob_id": 638622
+        },
+        {
+          "name": "Raphinha",
+          "fotmob_id": 696679
+        }
+      ],
+      "off": [
+        {
+          "name": "Marcus Rashford",
+          "fotmob_id": 696365
+        },
+        {
+          "name": "Dani Olmo",
+          "fotmob_id": 614834
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Barcelona",
+      "team_id": 8634,
+      "minute": 77,
+      "on": [
+        {
+          "name": "Marc Bernal",
+          "fotmob_id": 1573126
+        },
+        {
+          "name": "Robert Lewandowski",
+          "fotmob_id": 93447
+        }
+      ],
+      "off": [
+        {
+          "name": "Gavi",
+          "fotmob_id": 1279040
+        },
+        {
+          "name": "Ferran Torres",
+          "fotmob_id": 881771
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Barcelona",
+      "team_id": 8634,
+      "minute": 88,
+      "on": [
+        {
+          "name": "Alejandro Balde",
+          "fotmob_id": 1254166
+        }
+      ],
+      "off": [
+        {
+          "name": "Fermín López",
+          "fotmob_id": 1404415
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Real Madrid",
+      "team_id": 8633,
+      "minute": 70,
+      "on": [
+        {
+          "name": "Thiago Pitarch",
+          "fotmob_id": 1796908
+        }
+      ],
+      "off": [
+        {
+          "name": "Eduardo Camavinga",
+          "fotmob_id": 1015185
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Real Madrid",
+      "team_id": 8633,
+      "minute": 79,
+      "on": [
+        {
+          "name": "César Palacios",
+          "fotmob_id": 1403691
+        },
+        {
+          "name": "Franco Mastantuono",
+          "fotmob_id": 1607566
+        }
+      ],
+      "off": [
+        {
+          "name": "Brahim Díaz",
+          "fotmob_id": 750027
+        },
+        {
+          "name": "Gonzalo García",
+          "fotmob_id": 1413847
+        }
+      ],
+      "direct_replacement_verified": false
+    }
+  ],
+  "fetched_at": "2026-05-12T01:45:24Z"
 }

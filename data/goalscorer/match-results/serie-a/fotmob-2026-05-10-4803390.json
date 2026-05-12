@@ -360,21 +360,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Federico Baschirotto",
-      "fotmob_id": 799230,
-      "team": "Cremonese",
-      "team_id": 7801,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Faris Moumbagna",
       "fotmob_id": 952325,
       "team": "Cremonese",
@@ -778,21 +763,6 @@
       "subbed_off": false,
       "sub_in_minute": 0,
       "sub_out_minute": 0
-    },
-    {
-      "name": "Mattéo Tramoni",
-      "fotmob_id": 864006,
-      "team": "Pisa",
-      "team_id": 6479,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
     }
   ],
   "goal_events": [
@@ -818,5 +788,147 @@
       "is_own_goal": false
     }
   ],
-  "fetched_at": "2026-05-11T01:23:32Z"
+  "substitution_groups": [
+    {
+      "team": "Cremonese",
+      "team_id": 7801,
+      "minute": 59,
+      "on": [
+        {
+          "name": "Alessio Zerbin",
+          "fotmob_id": 850295
+        },
+        {
+          "name": "Morten Thorsby",
+          "fotmob_id": 439148
+        }
+      ],
+      "off": [
+        {
+          "name": "Giuseppe Pezzella",
+          "fotmob_id": 670928
+        },
+        {
+          "name": "Youssef Maleh",
+          "fotmob_id": 789243
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Cremonese",
+      "team_id": 7801,
+      "minute": 72,
+      "on": [
+        {
+          "name": "Antonio Sanabria",
+          "fotmob_id": 474448
+        },
+        {
+          "name": "David Okereke",
+          "fotmob_id": 740161
+        }
+      ],
+      "off": [
+        {
+          "name": "Jari Vandeputte",
+          "fotmob_id": 466113
+        },
+        {
+          "name": "Jamie Vardy",
+          "fotmob_id": 286119
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Cremonese",
+      "team_id": 7801,
+      "minute": 85,
+      "on": [
+        {
+          "name": "Francesco Folino",
+          "fotmob_id": 1596106
+        }
+      ],
+      "off": [
+        {
+          "name": "Sebastiano Luperto",
+          "fotmob_id": 604330
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Pisa",
+      "team_id": 6479,
+      "minute": 37,
+      "on": [
+        {
+          "name": "Arturo Calabresi",
+          "fotmob_id": 583659
+        },
+        {
+          "name": "Samuele Angori",
+          "fotmob_id": 1289942
+        }
+      ],
+      "off": [
+        {
+          "name": "Mehdi Léris",
+          "fotmob_id": 847357
+        },
+        {
+          "name": "Stefano Moreo",
+          "fotmob_id": 506776
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Pisa",
+      "team_id": 6479,
+      "minute": 65,
+      "on": [
+        {
+          "name": "Malthe Højholt",
+          "fotmob_id": 1014136
+        },
+        {
+          "name": "Henrik Meister",
+          "fotmob_id": 1296413
+        }
+      ],
+      "off": [
+        {
+          "name": "Isak Vural",
+          "fotmob_id": 1400859
+        },
+        {
+          "name": "Filip Stojilkovic",
+          "fotmob_id": 1079080
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Pisa",
+      "team_id": 6479,
+      "minute": 72,
+      "on": [
+        {
+          "name": "Gabriele Piccinini",
+          "fotmob_id": 1289520
+        }
+      ],
+      "off": [
+        {
+          "name": "Ebenezer Akinsanmiro",
+          "fotmob_id": 1481909
+        }
+      ],
+      "direct_replacement_verified": true
+    }
+  ],
+  "fetched_at": "2026-05-12T01:45:09Z"
 }

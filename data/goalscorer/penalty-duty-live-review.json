@@ -1,9 +1,39 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-11T01:24:00Z",
+  "generated_at": "2026-05-12T01:45:51Z",
   "league": "serie-a",
-  "row_count": 2,
+  "row_count": 3,
   "rows": [
+    {
+      "date": "2026-05-11",
+      "league": "serie-a",
+      "review_source": "fotmob_live",
+      "match": "Napoli vs Bologna",
+      "team": "Bologna",
+      "opponent": "Napoli",
+      "actual_taker": "Riccardo Orsolini",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "minute": "34",
+      "event_type": "Goal",
+      "event_result": "scored",
+      "primary_pre_match": "Riccardo Orsolini",
+      "secondary_pre_match": "Federico Bernardeschi",
+      "tertiary_pre_match": "Santiago Castro",
+      "primary_lineup_status": "confirmed_starter",
+      "secondary_lineup_status": "confirmed_starter",
+      "tertiary_lineup_status": "confirmed_starter",
+      "active_taker_pre_match": "Riccardo Orsolini",
+      "active_slot_pre_match": "primary",
+      "team_lineup_status": "unknown",
+      "review_type": "primary_held",
+      "review_priority": "low",
+      "editorial_note": "Riccardo Orsolini took 1 penalty attempt and scored for Bologna vs Napoli. Primary pre-match: Riccardo Orsolini (confirmed_starter). Secondary pre-match: Federico Bernardeschi (confirmed_starter). Pre-match active slot was primary -> Riccardo Orsolini. No hierarchy change implied from this event.",
+      "context_generated_at": "2026-05-11T19:48:26Z",
+      "context_source_path": "data/goalscorer/penalty-duty-context.json"
+    },
     {
       "date": "2026-05-10",
       "league": "serie-a",
@@ -32,7 +62,7 @@
       "review_priority": "medium",
       "editorial_note": "Christopher Nkunku took 1 penalty attempt and scored for Milan vs Atalanta. Primary pre-match: Christian Pulisic (not_in_squad). Secondary pre-match: Rafael Leão (confirmed_starter). Pre-match active slot was secondary -> Rafael Leão. Looks like the expected backup took over because the primary was unavailable or inactive.",
       "context_generated_at": "2026-05-10T19:05:22Z",
-      "context_source_path": "data/goalscorer/penalty-duty-context.json"
+      "context_source_path": "data/goalscorer/live-history/penalty-duty-context-20260510-190522.json"
     },
     {
       "date": "2026-05-10",
@@ -62,7 +92,7 @@
       "review_priority": "high",
       "editorial_note": "Donyell Malen took 1 penalty attempt and scored for Roma vs Parma. Primary pre-match: Paulo Dybala (confirmed_starter). Secondary pre-match: Donyell Malen (confirmed_starter). Pre-match active slot was primary -> Paulo Dybala. Strong review flag: a ranked backup took it while the primary still looked available.",
       "context_generated_at": "2026-05-10T19:05:22Z",
-      "context_source_path": "data/goalscorer/penalty-duty-context.json"
+      "context_source_path": "data/goalscorer/live-history/penalty-duty-context-20260510-190522.json"
     }
   ]
 }

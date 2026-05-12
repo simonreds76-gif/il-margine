@@ -315,38 +315,8 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Christian Pulisic",
-      "fotmob_id": 688295,
-      "team": "Milan",
-      "team_id": 8564,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Fikayo Tomori",
       "fotmob_id": 749662,
-      "team": "Milan",
-      "team_id": 8564,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Luka Modric",
-      "fotmob_id": 31097,
       "team": "Milan",
       "team_id": 8564,
       "started": false,
@@ -718,21 +688,6 @@
       "subbed_off": false,
       "sub_in_minute": 0,
       "sub_out_minute": 0
-    },
-    {
-      "name": "Lorenzo Bernasconi",
-      "fotmob_id": 1191093,
-      "team": "Atalanta",
-      "team_id": 8524,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
     }
   ],
   "goal_events": [
@@ -772,5 +727,139 @@
       "is_own_goal": false
     }
   ],
-  "fetched_at": "2026-05-11T01:23:35Z"
+  "substitution_groups": [
+    {
+      "team": "Atalanta",
+      "team_id": 8524,
+      "minute": 48,
+      "on": [
+        {
+          "name": "Odilon Kossounou",
+          "fotmob_id": 1014496
+        }
+      ],
+      "off": [
+        {
+          "name": "Giorgio Scalvini",
+          "fotmob_id": 1202358
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Atalanta",
+      "team_id": 8524,
+      "minute": 55,
+      "on": [
+        {
+          "name": "Raoul Bellanova",
+          "fotmob_id": 902651
+        }
+      ],
+      "off": [
+        {
+          "name": "Davide Zappacosta",
+          "fotmob_id": 244811
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Atalanta",
+      "team_id": 8524,
+      "minute": 63,
+      "on": [
+        {
+          "name": "Honest Ahanor",
+          "fotmob_id": 1669629
+        },
+        {
+          "name": "Mario Pasalic",
+          "fotmob_id": 446266
+        }
+      ],
+      "off": [
+        {
+          "name": "Charles De Ketelaere",
+          "fotmob_id": 1095432
+        },
+        {
+          "name": "Odilon Kossounou",
+          "fotmob_id": 1014496
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Milan",
+      "team_id": 8564,
+      "minute": 46,
+      "on": [
+        {
+          "name": "Christopher Nkunku",
+          "fotmob_id": 704523
+        }
+      ],
+      "off": [
+        {
+          "name": "Ruben Loftus-Cheek",
+          "fotmob_id": 604982
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Milan",
+      "team_id": 8564,
+      "minute": 58,
+      "on": [
+        {
+          "name": "Zachary Athekame",
+          "fotmob_id": 1595629
+        },
+        {
+          "name": "Youssouf Fofana",
+          "fotmob_id": 954621
+        },
+        {
+          "name": "Niclas Füllkrug",
+          "fotmob_id": 276791
+        }
+      ],
+      "off": [
+        {
+          "name": "Koni De Winter",
+          "fotmob_id": 1200630
+        },
+        {
+          "name": "Santiago Giménez",
+          "fotmob_id": 954092
+        },
+        {
+          "name": "Rafael Leão",
+          "fotmob_id": 848844
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Milan",
+      "team_id": 8564,
+      "minute": 80,
+      "on": [
+        {
+          "name": "Pervis Estupinán",
+          "fotmob_id": 688278
+        }
+      ],
+      "off": [
+        {
+          "name": "Davide Bartesaghi",
+          "fotmob_id": 1385856
+        }
+      ],
+      "direct_replacement_verified": true
+    }
+  ],
+  "fetched_at": "2026-05-12T01:45:12Z"
 }

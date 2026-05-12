@@ -675,6 +675,21 @@
       "sub_out_minute": 0
     },
     {
+      "name": "Marnon Busch",
+      "fotmob_id": 571379,
+      "team": "FC Heidenheim",
+      "team_id": 94937,
+      "started": false,
+      "squad_status": "unavailable",
+      "minutes_played": 0,
+      "goals": 0,
+      "own_goals": 0,
+      "subbed_on": false,
+      "subbed_off": false,
+      "sub_in_minute": 0,
+      "sub_out_minute": 0
+    },
+    {
       "name": "Nick Rothweiler",
       "fotmob_id": 1799710,
       "team": "FC Heidenheim",
@@ -765,5 +780,147 @@
       "is_own_goal": false
     }
   ],
-  "fetched_at": "2026-05-11T01:23:46Z"
+  "substitution_groups": [
+    {
+      "team": "1. FC Köln",
+      "team_id": 8722,
+      "minute": 58,
+      "on": [
+        {
+          "name": "Gian-Luca Waldschmidt",
+          "fotmob_id": 540073
+        }
+      ],
+      "off": [
+        {
+          "name": "Tom Krauß",
+          "fotmob_id": 992060
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "1. FC Köln",
+      "team_id": 8722,
+      "minute": 71,
+      "on": [
+        {
+          "name": "Alessio Castro-Montes",
+          "fotmob_id": 748620
+        },
+        {
+          "name": "Florian Kainz",
+          "fotmob_id": 187358
+        }
+      ],
+      "off": [
+        {
+          "name": "Joël Schmied",
+          "fotmob_id": 1003254
+        },
+        {
+          "name": "Linton Maina",
+          "fotmob_id": 930035
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "1. FC Köln",
+      "team_id": 8722,
+      "minute": 89,
+      "on": [
+        {
+          "name": "Dominique Heintz",
+          "fotmob_id": 303800
+        },
+        {
+          "name": "Youssoupha Niang",
+          "fotmob_id": 1888413
+        }
+      ],
+      "off": [
+        {
+          "name": "Cenk Özkacar",
+          "fotmob_id": 1107951
+        },
+        {
+          "name": "Kristoffer Lund Hansen",
+          "fotmob_id": 1235086
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "FC Heidenheim",
+      "team_id": 94937,
+      "minute": 76,
+      "on": [
+        {
+          "name": "Leonidas Stergiou",
+          "fotmob_id": 1019947
+        },
+        {
+          "name": "Christian Conteh",
+          "fotmob_id": 1000011
+        }
+      ],
+      "off": [
+        {
+          "name": "Omar Traoré",
+          "fotmob_id": 1080917
+        },
+        {
+          "name": "Arijon Ibrahimovic",
+          "fotmob_id": 1327150
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "FC Heidenheim",
+      "team_id": 94937,
+      "minute": 83,
+      "on": [
+        {
+          "name": "Luca Kerber",
+          "fotmob_id": 1222166
+        },
+        {
+          "name": "Mathias Honsak",
+          "fotmob_id": 557805
+        }
+      ],
+      "off": [
+        {
+          "name": "Eren Dinkçi",
+          "fotmob_id": 1146376
+        },
+        {
+          "name": "Budu Zivzivadze",
+          "fotmob_id": 674242
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "FC Heidenheim",
+      "team_id": 94937,
+      "minute": 89,
+      "on": [
+        {
+          "name": "Stefan Schimmer",
+          "fotmob_id": 767730
+        }
+      ],
+      "off": [
+        {
+          "name": "Marvin Pieringer",
+          "fotmob_id": 956913
+        }
+      ],
+      "direct_replacement_verified": true
+    }
+  ],
+  "fetched_at": "2026-05-12T01:45:27Z"
 }

@@ -315,53 +315,8 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Borna Sosa",
-      "fotmob_id": 622091,
-      "team": "Crystal Palace",
-      "team_id": 9826,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Evann Guessand",
       "fotmob_id": 1087966,
-      "team": "Crystal Palace",
-      "team_id": 9826,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Cheick Oumar Doucouré",
-      "fotmob_id": 951954,
-      "team": "Crystal Palace",
-      "team_id": 9826,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Edward Nketiah",
-      "fotmob_id": 860920,
       "team": "Crystal Palace",
       "team_id": 9826,
       "started": false,
@@ -675,36 +630,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Idrissa Gueye",
-      "fotmob_id": 179410,
-      "team": "Everton",
-      "team_id": 8668,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Jarrad Branthwaite",
-      "fotmob_id": 1030829,
-      "team": "Everton",
-      "team_id": 8668,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Jack Grealish",
       "fotmob_id": 312765,
       "team": "Everton",
@@ -750,5 +675,97 @@
       "is_own_goal": false
     }
   ],
-  "fetched_at": "2026-05-11T01:23:37Z"
+  "substitution_groups": [
+    {
+      "team": "Crystal Palace",
+      "team_id": 9826,
+      "minute": 65,
+      "on": [
+        {
+          "name": "Jean-Philippe Mateta",
+          "fotmob_id": 706297
+        }
+      ],
+      "off": [
+        {
+          "name": "Jørgen Strand Larsen",
+          "fotmob_id": 821100
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Crystal Palace",
+      "team_id": 9826,
+      "minute": 80,
+      "on": [
+        {
+          "name": "Jefferson Lerma",
+          "fotmob_id": 466672
+        }
+      ],
+      "off": [
+        {
+          "name": "Brennan Johnson",
+          "fotmob_id": 1076756
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Everton",
+      "team_id": 8668,
+      "minute": 70,
+      "on": [
+        {
+          "name": "Thierno Barry",
+          "fotmob_id": 1398392
+        }
+      ],
+      "off": [
+        {
+          "name": "Beto",
+          "fotmob_id": 1079485
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Everton",
+      "team_id": 8668,
+      "minute": 80,
+      "on": [
+        {
+          "name": "Tyrique George",
+          "fotmob_id": 1424875
+        }
+      ],
+      "off": [
+        {
+          "name": "Merlin Röhl",
+          "fotmob_id": 1210384
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Everton",
+      "team_id": 8668,
+      "minute": 90,
+      "on": [
+        {
+          "name": "Charly Alcaraz",
+          "fotmob_id": 1128965
+        }
+      ],
+      "off": [
+        {
+          "name": "Kiernan Dewsbury-Hall",
+          "fotmob_id": 886016
+        }
+      ],
+      "direct_replacement_verified": true
+    }
+  ],
+  "fetched_at": "2026-05-12T01:45:15Z"
 }

@@ -613,36 +613,6 @@
       "subbed_off": false,
       "sub_in_minute": 0,
       "sub_out_minute": 0
-    },
-    {
-      "name": "Jurriën Timber",
-      "fotmob_id": 942381,
-      "team": "Arsenal",
-      "team_id": 9825,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Mikel Merino",
-      "fotmob_id": 574645,
-      "team": "Arsenal",
-      "team_id": 9825,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
     }
   ],
   "goal_events": [
@@ -654,5 +624,123 @@
       "is_own_goal": false
     }
   ],
-  "fetched_at": "2026-05-11T01:23:39Z"
+  "substitution_groups": [
+    {
+      "team": "Arsenal",
+      "team_id": 9825,
+      "minute": 28,
+      "on": [
+        {
+          "name": "Martín Zubimendi",
+          "fotmob_id": 1031325
+        }
+      ],
+      "off": [
+        {
+          "name": "Ben White",
+          "fotmob_id": 776151
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Arsenal",
+      "team_id": 9825,
+      "minute": 46,
+      "on": [
+        {
+          "name": "Cristhian Mosquera",
+          "fotmob_id": 1298907
+        }
+      ],
+      "off": [
+        {
+          "name": "Riccardo Calafiori",
+          "fotmob_id": 1105912
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Arsenal",
+      "team_id": 9825,
+      "minute": 67,
+      "on": [
+        {
+          "name": "Martin Ødegaard",
+          "fotmob_id": 534670
+        },
+        {
+          "name": "Kai Havertz",
+          "fotmob_id": 749736
+        }
+      ],
+      "off": [
+        {
+          "name": "Eberechi Eze",
+          "fotmob_id": 818975
+        },
+        {
+          "name": "Martín Zubimendi",
+          "fotmob_id": 1031325
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Arsenal",
+      "team_id": 9825,
+      "minute": 80,
+      "on": [
+        {
+          "name": "Noni Madueke",
+          "fotmob_id": 1084981
+        }
+      ],
+      "off": [
+        {
+          "name": "Bukayo Saka",
+          "fotmob_id": 961995
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "West Ham United",
+      "team_id": 8654,
+      "minute": 67,
+      "on": [
+        {
+          "name": "Pablo",
+          "fotmob_id": 1227326
+        }
+      ],
+      "off": [
+        {
+          "name": "Valentín Castellanos",
+          "fotmob_id": 823658
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "West Ham United",
+      "team_id": 8654,
+      "minute": 85,
+      "on": [
+        {
+          "name": "Callum Wilson",
+          "fotmob_id": 184321
+        }
+      ],
+      "off": [
+        {
+          "name": "Axel Disasi",
+          "fotmob_id": 696646
+        }
+      ],
+      "direct_replacement_verified": true
+    }
+  ],
+  "fetched_at": "2026-05-12T01:45:19Z"
 }

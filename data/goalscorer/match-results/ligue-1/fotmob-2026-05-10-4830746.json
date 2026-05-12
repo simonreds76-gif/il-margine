@@ -330,51 +330,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Harouna Djibirin",
-      "fotmob_id": 1832893,
-      "team": "Angers",
-      "team_id": 8121,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Marius Courcoul",
-      "fotmob_id": 1514645,
-      "team": "Angers",
-      "team_id": 8121,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Yassin Belkhdim",
-      "fotmob_id": 1347791,
-      "team": "Angers",
-      "team_id": 8121,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Mike Penders",
       "fotmob_id": 1319972,
       "team": "Strasbourg",
@@ -705,53 +660,8 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Sebastian Nanasi",
-      "fotmob_id": 1156569,
-      "team": "Strasbourg",
-      "team_id": 9848,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Aaron Anselmino",
       "fotmob_id": 1494947,
-      "team": "Strasbourg",
-      "team_id": 9848,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Emanuel Emegha",
-      "fotmob_id": 1183148,
-      "team": "Strasbourg",
-      "team_id": 9848,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Joaquín Panichelli",
-      "fotmob_id": 1408580,
       "team": "Strasbourg",
       "team_id": 9848,
       "started": false,
@@ -781,5 +691,149 @@
       "is_own_goal": false
     }
   ],
-  "fetched_at": "2026-05-11T01:23:48Z"
+  "substitution_groups": [
+    {
+      "team": "Angers",
+      "team_id": 8121,
+      "minute": 46,
+      "on": [
+        {
+          "name": "Goduine Koyalipou",
+          "fotmob_id": 864154
+        }
+      ],
+      "off": [
+        {
+          "name": "Prosper Peter",
+          "fotmob_id": 1748405
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Angers",
+      "team_id": 8121,
+      "minute": 61,
+      "on": [
+        {
+          "name": "Lanroy Machine",
+          "fotmob_id": 1752228
+        }
+      ],
+      "off": [
+        {
+          "name": "Louis Mouton",
+          "fotmob_id": 1329255
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Angers",
+      "team_id": 8121,
+      "minute": 86,
+      "on": [
+        {
+          "name": "Abdoulaye Bamba",
+          "fotmob_id": 210400
+        },
+        {
+          "name": "Emmanuel Biumla",
+          "fotmob_id": 1428420
+        }
+      ],
+      "off": [
+        {
+          "name": "Lilian Rao-Lisoa",
+          "fotmob_id": 1431818
+        },
+        {
+          "name": "Goduine Koyalipou",
+          "fotmob_id": 864154
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Angers",
+      "team_id": 8121,
+      "minute": 90,
+      "on": [
+        {
+          "name": "Florent Hanin",
+          "fotmob_id": 210423
+        }
+      ],
+      "off": [
+        {
+          "name": "Pierrick Capelle",
+          "fotmob_id": 310836
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Strasbourg",
+      "team_id": 9848,
+      "minute": 46,
+      "on": [
+        {
+          "name": "Rafael Luís",
+          "fotmob_id": 1526822
+        }
+      ],
+      "off": [
+        {
+          "name": "Maxi Oyedele",
+          "fotmob_id": 1355526
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Strasbourg",
+      "team_id": 9848,
+      "minute": 75,
+      "on": [
+        {
+          "name": "Tyrese Noubissie",
+          "fotmob_id": 1900030
+        },
+        {
+          "name": "Gessime Yassine",
+          "fotmob_id": 1603755
+        }
+      ],
+      "off": [
+        {
+          "name": "Mathis Amougou",
+          "fotmob_id": 1581053
+        },
+        {
+          "name": "Yaya Dieme",
+          "fotmob_id": 1975804
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Strasbourg",
+      "team_id": 9848,
+      "minute": 90,
+      "on": [
+        {
+          "name": "Jean-Baptiste Bosey",
+          "fotmob_id": 1873054
+        }
+      ],
+      "off": [
+        {
+          "name": "Lucas Høgsberg",
+          "fotmob_id": 1436942
+        }
+      ],
+      "direct_replacement_verified": true
+    }
+  ],
+  "fetched_at": "2026-05-12T01:45:29Z"
 }

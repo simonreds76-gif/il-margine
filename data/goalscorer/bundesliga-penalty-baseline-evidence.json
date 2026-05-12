@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-11T01:24:28Z",
+  "generated_at": "2026-05-12T01:46:34Z",
   "league": "bundesliga",
-  "row_count": 4,
+  "row_count": 5,
   "rows": [
     {
       "team": "Bayer Leverkusen",
@@ -37,6 +37,22 @@
       "last_event_date": "2026-05-09"
     },
     {
+      "team": "Bayern Munich",
+      "team_key": "bayern munich",
+      "player_name": "Harry Kane",
+      "player_key": "harry kane",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-09"
+    },
+    {
       "team": "Hamburger SV",
       "team_key": "hamburger sv",
       "player_name": "Robert Glatzel",
@@ -63,7 +79,7 @@
       "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live"
+        "settled_logs"
       ],
       "event_count": 1,
       "last_event_date": "2026-05-09"

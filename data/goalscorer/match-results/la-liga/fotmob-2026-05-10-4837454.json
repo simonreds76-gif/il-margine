@@ -375,36 +375,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Antonio Raíllo",
-      "fotmob_id": 640231,
-      "team": "Mallorca",
-      "team_id": 8661,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Lucas Bergström",
-      "fotmob_id": 1096396,
-      "team": "Mallorca",
-      "team_id": 8661,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Marash Kumbulla",
       "fotmob_id": 872362,
       "team": "Mallorca",
@@ -778,36 +748,6 @@
       "subbed_off": false,
       "sub_in_minute": 0,
       "sub_out_minute": 0
-    },
-    {
-      "name": "Pau Cabanes",
-      "fotmob_id": 1646375,
-      "team": "Villarreal",
-      "team_id": 10205,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Juan Foyth",
-      "fotmob_id": 833219,
-      "team": "Villarreal",
-      "team_id": 10205,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
     }
   ],
   "goal_events": [
@@ -826,5 +766,149 @@
       "is_own_goal": false
     }
   ],
-  "fetched_at": "2026-05-11T01:23:40Z"
+  "substitution_groups": [
+    {
+      "team": "Mallorca",
+      "team_id": 8661,
+      "minute": 62,
+      "on": [
+        {
+          "name": "Toni Lato",
+          "fotmob_id": 674518
+        }
+      ],
+      "off": [
+        {
+          "name": "Johan Mojica",
+          "fotmob_id": 474673
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Mallorca",
+      "team_id": 8661,
+      "minute": 70,
+      "on": [
+        {
+          "name": "Miguel Calatayud",
+          "fotmob_id": 1981023
+        },
+        {
+          "name": "Jan Virgili",
+          "fotmob_id": 1690093
+        }
+      ],
+      "off": [
+        {
+          "name": "Mateu Morey",
+          "fotmob_id": 844478
+        },
+        {
+          "name": "Manu Morlanes",
+          "fotmob_id": 784241
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Mallorca",
+      "team_id": 8661,
+      "minute": 76,
+      "on": [
+        {
+          "name": "David López",
+          "fotmob_id": 1552991
+        }
+      ],
+      "off": [
+        {
+          "name": "Pablo Torre",
+          "fotmob_id": 1233404
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Villarreal",
+      "team_id": 10205,
+      "minute": 63,
+      "on": [
+        {
+          "name": "Alberto Moleiro",
+          "fotmob_id": 1184694
+        },
+        {
+          "name": "Nicolas Pépé",
+          "fotmob_id": 575735
+        }
+      ],
+      "off": [
+        {
+          "name": "Alfon González",
+          "fotmob_id": 926643
+        },
+        {
+          "name": "Tani Oluwaseyi",
+          "fotmob_id": 1338740
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Villarreal",
+      "team_id": 10205,
+      "minute": 70,
+      "on": [
+        {
+          "name": "Georges Mikautadze",
+          "fotmob_id": 1117069
+        }
+      ],
+      "off": [
+        {
+          "name": "Ayoze Pérez",
+          "fotmob_id": 479020
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Villarreal",
+      "team_id": 10205,
+      "minute": 71,
+      "on": [
+        {
+          "name": "Gerard Moreno",
+          "fotmob_id": 246438
+        }
+      ],
+      "off": [
+        {
+          "name": "Tajon Buchanan",
+          "fotmob_id": 1026135
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Villarreal",
+      "team_id": 10205,
+      "minute": 75,
+      "on": [
+        {
+          "name": "Dani Parejo",
+          "fotmob_id": 75307
+        }
+      ],
+      "off": [
+        {
+          "name": "Santi Comesaña",
+          "fotmob_id": 671865
+        }
+      ],
+      "direct_replacement_verified": true
+    }
+  ],
+  "fetched_at": "2026-05-12T01:45:20Z"
 }

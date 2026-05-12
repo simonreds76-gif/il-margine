@@ -315,36 +315,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Abdoulaye Touré",
-      "fotmob_id": 439366,
-      "team": "Le Havre",
-      "team_id": 9746,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Stephan Zagadou",
-      "fotmob_id": 1729826,
-      "team": "Le Havre",
-      "team_id": 9746,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Gerónimo Rulli",
       "fotmob_id": 245555,
       "team": "Marseille",
@@ -660,66 +630,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "CJ Egan-Riley",
-      "fotmob_id": 1187227,
-      "team": "Marseille",
-      "team_id": 8592,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Nayef Aguerd",
-      "fotmob_id": 617310,
-      "team": "Marseille",
-      "team_id": 8592,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Bilal Nadir",
-      "fotmob_id": 1283407,
-      "team": "Marseille",
-      "team_id": 8592,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Geoffrey Kondogbia",
-      "fotmob_id": 214972,
-      "team": "Marseille",
-      "team_id": 8592,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Hamed Traorè",
       "fotmob_id": 875672,
       "team": "Marseille",
@@ -744,5 +654,131 @@
       "is_own_goal": false
     }
   ],
-  "fetched_at": "2026-05-11T01:23:50Z"
+  "substitution_groups": [
+    {
+      "team": "Le Havre",
+      "team_id": 9746,
+      "minute": 72,
+      "on": [
+        {
+          "name": "Timothée Pembélé",
+          "fotmob_id": 1108603
+        },
+        {
+          "name": "Simon Ebonog",
+          "fotmob_id": 1469758
+        }
+      ],
+      "off": [
+        {
+          "name": "Fodé Doucouré",
+          "fotmob_id": 1180696
+        },
+        {
+          "name": "Sofiane Boufal",
+          "fotmob_id": 365672
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Le Havre",
+      "team_id": 9746,
+      "minute": 80,
+      "on": [
+        {
+          "name": "Enzo Koffi",
+          "fotmob_id": 1816726
+        }
+      ],
+      "off": [
+        {
+          "name": "Yanis Zouaoui",
+          "fotmob_id": 1098243
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Le Havre",
+      "team_id": 9746,
+      "minute": 89,
+      "on": [
+        {
+          "name": "Yassine Kechta",
+          "fotmob_id": 1255855
+        }
+      ],
+      "off": [
+        {
+          "name": "Lucas Gourna-Douath",
+          "fotmob_id": 1137106
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Marseille",
+      "team_id": 8592,
+      "minute": 66,
+      "on": [
+        {
+          "name": "Arthur Vermeeren",
+          "fotmob_id": 1387389
+        }
+      ],
+      "off": [
+        {
+          "name": "Tochukwu Nnadi",
+          "fotmob_id": 1353104
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Marseille",
+      "team_id": 8592,
+      "minute": 87,
+      "on": [
+        {
+          "name": "Nouhoum Kamissoko",
+          "fotmob_id": 1698484
+        },
+        {
+          "name": "Ange Lago",
+          "fotmob_id": 1843478
+        }
+      ],
+      "off": [
+        {
+          "name": "Mason Greenwood",
+          "fotmob_id": 950473
+        },
+        {
+          "name": "Quinten Timber",
+          "fotmob_id": 970563
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Marseille",
+      "team_id": 8592,
+      "minute": 89,
+      "on": [
+        {
+          "name": "Ugo Lamare El Kadmiri",
+          "fotmob_id": 1820043
+        }
+      ],
+      "off": [
+        {
+          "name": "Amine Gouiri",
+          "fotmob_id": 844437
+        }
+      ],
+      "direct_replacement_verified": true
+    }
+  ],
+  "fetched_at": "2026-05-12T01:45:32Z"
 }

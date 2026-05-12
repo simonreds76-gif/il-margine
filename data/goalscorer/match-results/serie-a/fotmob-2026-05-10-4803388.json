@@ -405,66 +405,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Cheikh Niasse",
-      "fotmob_id": 1011022,
-      "team": "Hellas Verona",
-      "team_id": 9876,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Daniel Oyegoke",
-      "fotmob_id": 1098817,
-      "team": "Hellas Verona",
-      "team_id": 9876,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Suat Serdar",
-      "fotmob_id": 667790,
-      "team": "Hellas Verona",
-      "team_id": 9876,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Daniel Mosquera",
-      "fotmob_id": 1130732,
-      "team": "Hellas Verona",
-      "team_id": 9876,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Jean Butez",
       "fotmob_id": 560939,
       "team": "Como",
@@ -838,21 +778,6 @@
       "subbed_off": false,
       "sub_in_minute": 0,
       "sub_out_minute": 0
-    },
-    {
-      "name": "Jayden Addai",
-      "fotmob_id": 1347241,
-      "team": "Como",
-      "team_id": 10171,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
     }
   ],
   "goal_events": [
@@ -864,5 +789,121 @@
       "is_own_goal": false
     }
   ],
-  "fetched_at": "2026-05-11T01:23:31Z"
+  "substitution_groups": [
+    {
+      "team": "Como",
+      "team_id": 10171,
+      "minute": 36,
+      "on": [
+        {
+          "name": "Alberto Moreno",
+          "fotmob_id": 314605
+        }
+      ],
+      "off": [
+        {
+          "name": "Álex Valle",
+          "fotmob_id": 1384881
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Como",
+      "team_id": 10171,
+      "minute": 46,
+      "on": [
+        {
+          "name": "Ivan Smolcic",
+          "fotmob_id": 1353289
+        },
+        {
+          "name": "Maxence Caqueret",
+          "fotmob_id": 846000
+        },
+        {
+          "name": "Martin Baturina",
+          "fotmob_id": 1215064
+        }
+      ],
+      "off": [
+        {
+          "name": "Mërgim Vojvoda",
+          "fotmob_id": 560945
+        },
+        {
+          "name": "Máximo Perrone",
+          "fotmob_id": 1336582
+        },
+        {
+          "name": "Jesús Rodríguez",
+          "fotmob_id": 1624039
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Como",
+      "team_id": 10171,
+      "minute": 81,
+      "on": [
+        {
+          "name": "Ignace Van Der Brempt",
+          "fotmob_id": 1082597
+        }
+      ],
+      "off": [
+        {
+          "name": "Assane Diao",
+          "fotmob_id": 1434889
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Hellas Verona",
+      "team_id": 9876,
+      "minute": 63,
+      "on": [
+        {
+          "name": "Sandi Lovric",
+          "fotmob_id": 557346
+        }
+      ],
+      "off": [
+        {
+          "name": "Antoine Bernede",
+          "fotmob_id": 767013
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Hellas Verona",
+      "team_id": 9876,
+      "minute": 81,
+      "on": [
+        {
+          "name": "Ioan Vermesan",
+          "fotmob_id": 1775258
+        },
+        {
+          "name": "Isaac Aguiar",
+          "fotmob_id": 1459741
+        }
+      ],
+      "off": [
+        {
+          "name": "Rafik Belghali",
+          "fotmob_id": 1231029
+        },
+        {
+          "name": "Jean-Daniel Akpa Akpro",
+          "fotmob_id": 279879
+        }
+      ],
+      "direct_replacement_verified": false
+    }
+  ],
+  "fetched_at": "2026-05-12T01:45:07Z"
 }

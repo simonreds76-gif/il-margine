@@ -390,36 +390,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Tariq Lamptey",
-      "fotmob_id": 955139,
-      "team": "Fiorentina",
-      "team_id": 8535,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Moise Kean",
-      "fotmob_id": 747926,
-      "team": "Fiorentina",
-      "team_id": 8535,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Justin Bijlow",
       "fotmob_id": 721533,
       "team": "Genoa",
@@ -705,6 +675,21 @@
       "sub_out_minute": 0
     },
     {
+      "name": "Stefano Sabelli",
+      "fotmob_id": 364104,
+      "team": "Genoa",
+      "team_id": 10233,
+      "started": false,
+      "squad_status": "sub",
+      "minutes_played": 0,
+      "goals": 0,
+      "own_goals": 0,
+      "subbed_on": false,
+      "subbed_off": false,
+      "sub_in_minute": 0,
+      "sub_out_minute": 0
+    },
+    {
       "name": "Jacopo Grossi",
       "fotmob_id": 1948558,
       "team": "Genoa",
@@ -735,51 +720,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Stefano Sabelli",
-      "fotmob_id": 364104,
-      "team": "Genoa",
-      "team_id": 10233,
-      "started": false,
-      "squad_status": "sub",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Brooke Norton-Cuffy",
-      "fotmob_id": 1214915,
-      "team": "Genoa",
-      "team_id": 10233,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Junior Messias",
-      "fotmob_id": 1003368,
-      "team": "Genoa",
-      "team_id": 10233,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Tommaso Baldanzi",
       "fotmob_id": 1200591,
       "team": "Genoa",
@@ -796,5 +736,149 @@
     }
   ],
   "goal_events": [],
-  "fetched_at": "2026-05-11T01:23:33Z"
+  "substitution_groups": [
+    {
+      "team": "Fiorentina",
+      "team_id": 8535,
+      "minute": 61,
+      "on": [
+        {
+          "name": "Roberto Piccoli",
+          "fotmob_id": 1017401
+        }
+      ],
+      "off": [
+        {
+          "name": "Riccardo Braschi",
+          "fotmob_id": 1794209
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Fiorentina",
+      "team_id": 8535,
+      "minute": 72,
+      "on": [
+        {
+          "name": "Marco Brescianini",
+          "fotmob_id": 950596
+        }
+      ],
+      "off": [
+        {
+          "name": "Rolando Mandragora",
+          "fotmob_id": 577911
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Fiorentina",
+      "team_id": 8535,
+      "minute": 73,
+      "on": [
+        {
+          "name": "Giovanni Fabbian",
+          "fotmob_id": 1276505
+        }
+      ],
+      "off": [
+        {
+          "name": "Cher Ndour",
+          "fotmob_id": 1246009
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Fiorentina",
+      "team_id": 8535,
+      "minute": 86,
+      "on": [
+        {
+          "name": "Albert Gudmundsson",
+          "fotmob_id": 665188
+        }
+      ],
+      "off": [
+        {
+          "name": "Fabiano Parisi",
+          "fotmob_id": 1093285
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Genoa",
+      "team_id": 10233,
+      "minute": 58,
+      "on": [
+        {
+          "name": "Caleb Ekuban",
+          "fotmob_id": 424614
+        }
+      ],
+      "off": [
+        {
+          "name": "Lorenzo Colombo",
+          "fotmob_id": 1050163
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Genoa",
+      "team_id": 10233,
+      "minute": 71,
+      "on": [
+        {
+          "name": "Latif Ouedraogo",
+          "fotmob_id": 1948559
+        },
+        {
+          "name": "Ruslan Malinovsky",
+          "fotmob_id": 459658
+        }
+      ],
+      "off": [
+        {
+          "name": "Aarón Martín",
+          "fotmob_id": 684981
+        },
+        {
+          "name": "Jeff Ekhator",
+          "fotmob_id": 1669628
+        }
+      ],
+      "direct_replacement_verified": false
+    },
+    {
+      "team": "Genoa",
+      "team_id": 10233,
+      "minute": 82,
+      "on": [
+        {
+          "name": "Mamedi Doucouré",
+          "fotmob_id": 1910652
+        },
+        {
+          "name": "Patrizio Masini",
+          "fotmob_id": 1189223
+        }
+      ],
+      "off": [
+        {
+          "name": "Alessandro Marcandalli",
+          "fotmob_id": 1436436
+        },
+        {
+          "name": "Amorim",
+          "fotmob_id": 1469120
+        }
+      ],
+      "direct_replacement_verified": false
+    }
+  ],
+  "fetched_at": "2026-05-12T01:45:10Z"
 }
