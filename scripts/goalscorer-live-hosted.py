@@ -214,7 +214,7 @@ def main() -> int:
             "--league", league,
             "--live-only",
             "--fetch-lineups",
-            "--lineup-days-ahead", "0",
+            "--lineup-days-ahead", "3",
             "--fetch-odds-api",
             "--odds-api-bookmakers", "Bet365",
             "--bookmaker", "Bet365",
