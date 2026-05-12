@@ -1,4 +1,5 @@
-﻿import Footer from "@/components/Footer";
+﻿import Link from "next/link";
+import Footer from "@/components/Footer";
 import PageHomeLink from "@/components/PageHomeLink";
 
 type TeamEntry = {
@@ -93,6 +94,7 @@ function Crest({
 
 function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
   const anchorId = `${league.key}-${team.slug}`;
+  const teamPath = `/penalty-takers/${league.key}/${team.slug}`;
   const takers = [
     { label: "First choice", value: team.primary, tier: "1" as const },
     { label: "Second choice", value: team.secondary, tier: "2" as const },
@@ -107,9 +109,9 @@ function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
         <Crest logoPath={team.logoPath} team={team.team} initials={team.initials} />
         <div className="min-w-0 flex-1 pt-0.5">
           <h3 id={anchorId} className="scroll-mt-28 truncate text-[15px] font-semibold tracking-[0.01em] text-slate-100">
-            <a href={`#${anchorId}`} className="transition hover:text-emerald-400">
+            <Link href={teamPath} className="transition hover:text-emerald-400">
               {team.team}
-            </a>
+            </Link>
           </h3>
           {team.lastUpdated ? (
             <p className="mt-1 text-[11px] font-mono uppercase tracking-[0.14em] text-slate-500">
@@ -158,6 +160,13 @@ function TeamCard({ team, league }: { team: TeamEntry; league: LeagueEntry }) {
           </div>
         ))}
       </div>
+
+      <Link
+        href={teamPath}
+        className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-xs font-semibold text-emerald-100 transition hover:border-emerald-300/35 hover:bg-emerald-400/15"
+      >
+        Open {team.team} page <span aria-hidden="true">-&gt;</span>
+      </Link>
     </article>
   );
 }
@@ -174,7 +183,7 @@ export default function PenaltyTakersClient({
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <main className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
         <section className="pt-6">
-          <a
+          <Link
             href="/penalty-takers/world-cup-2026"
             className="group block overflow-hidden rounded-[26px] border border-amber-400/20 bg-[linear-gradient(135deg,rgba(20,18,12,0.98),rgba(16,18,24,0.98))] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.18)] transition hover:-translate-y-0.5 hover:border-amber-300/35"
           >
@@ -208,7 +217,7 @@ export default function PenaltyTakersClient({
                 <span aria-hidden="true">→</span>
               </div>
             </div>
-          </a>
+          </Link>
         </section>
 
         <section className="border-b border-slate-800/50 pt-6 pb-12 md:pt-6 md:pb-16">
@@ -267,9 +276,9 @@ export default function PenaltyTakersClient({
 
           <div className="mt-6 overflow-hidden rounded-2xl border border-slate-800/80 bg-slate-950/70">
             {recentChanges.map((change, index) => (
-              <a
+              <Link
                 key={`${change.leagueKey}-${change.slug}-${change.lastUpdated}`}
-                href={`#${change.leagueKey}-${change.slug}`}
+                href={`/penalty-takers/${change.leagueKey}/${change.slug}`}
                 className={`grid grid-cols-[84px_20px_minmax(0,1fr)] items-center gap-3 px-4 py-3 transition hover:bg-slate-900/80 sm:grid-cols-[108px_20px_minmax(0,1fr)] ${index > 0 ? "border-t border-slate-800/80" : ""}`}
               >
                 <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-slate-500">
@@ -284,7 +293,7 @@ export default function PenaltyTakersClient({
                     <span className="text-slate-500"> next: {change.secondary}</span>
                   ) : null}
                 </span>
-              </a>
+              </Link>
             ))}
           </div>
         </section>
@@ -376,12 +385,12 @@ export default function PenaltyTakersClient({
 
           <div className="mt-5 px-1 text-sm leading-6 text-slate-400">
             Need the international board too?{" "}
-            <a
+            <Link
               href="/penalty-takers/world-cup-2026"
               className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300"
             >
               World Cup 2026 penalty takers
-            </a>
+            </Link>
             .{" "}
           </div>
 

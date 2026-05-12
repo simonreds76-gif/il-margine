@@ -101,7 +101,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!team) {
     return {
-      title: "World Cup penalty taker | Il Margine",
+      title: "World Cup penalty taker",
     };
   }
 
@@ -110,7 +110,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const url = worldCupTeamUrl(team.team);
 
   return {
-    title: `${title} | Il Margine`,
+    title,
     description,
     alternates: {
       canonical: url,

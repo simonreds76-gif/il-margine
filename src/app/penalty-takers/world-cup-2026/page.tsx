@@ -93,7 +93,7 @@ const CONFEDERATION_STYLES: Record<
 };
 
 export const metadata: Metadata = {
-  title: `${PAGE_TITLE} | Il Margine`,
+  title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
   alternates: {
     canonical: WORLD_CUP_PENALTIES_URL,

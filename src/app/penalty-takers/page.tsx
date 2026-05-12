@@ -152,7 +152,7 @@ const LEAGUES: LeagueConfig[] = [
 ];
 
 export const metadata: Metadata = {
-  title: `${PAGE_TITLE} | Il Margine`,
+  title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
   alternates: {
     canonical: PAGE_URL,

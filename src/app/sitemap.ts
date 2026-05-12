@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { BASE_URL, FAIR_ODDS_INDEXABLE } from "@/lib/config";
 import { RESOURCES } from "@/lib/resources";
+import { readAllClubPenaltyTeams } from "@/lib/club-penalty-takers";
 import { readWorldCupData, worldCupTeamUrl, WORLD_CUP_PENALTIES_URL } from "@/lib/world-cup-penalties";
 
 const STATIC_LAST_MODIFIED = new Date("2026-05-12T00:00:00Z");
@@ -10,6 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const worldCupLastModified = worldCupData?.last_verified
     ? new Date(`${worldCupData.last_verified}T12:00:00Z`)
     : STATIC_LAST_MODIFIED;
+  const clubPenaltyTeams = await readAllClubPenaltyTeams().catch(() => []);
 
   const entries: MetadataRoute.Sitemap = [
     { url: BASE_URL, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 1 },
@@ -19,6 +21,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/fair-odds-lab`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 0.8 },
     { url: `${BASE_URL}/anytime-goalscorer`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "daily", priority: 0.8 },
     { url: `${BASE_URL}/penalty-takers`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: "weekly", priority: 0.8 },
+    ...clubPenaltyTeams.map((team) => ({
+      url: team.absoluteUrl,
+      lastModified: team.lastUpdated ? new Date(`${team.lastUpdated}T12:00:00Z`) : STATIC_LAST_MODIFIED,
+      changeFrequency: "weekly" as const,
+      priority: 0.62,
+    })),
     ...(worldCupData
       ? [
           { url: WORLD_CUP_PENALTIES_URL, lastModified: worldCupLastModified, changeFrequency: "weekly" as const, priority: 0.9 },
