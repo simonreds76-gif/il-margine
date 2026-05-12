@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T10:22:50.368952Z",
+  "generated_at": "2026-05-12T10:35:01.016131Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -8,7 +8,7 @@
     "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
     "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
-  "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
+  "team_form_source": "data/goalscorer/*player-match-logs-*.csv",
   "edge_threshold_pp": 6.0,
   "public_filters": {
     "min_model_prob_pct": 20.0,
@@ -33,7 +33,7 @@
     "post_kickoff_visibility_minutes": 150
   },
   "fixtures_evaluated": 12,
-  "signals_qualifying": 1,
+  "signals_qualifying": 2,
   "leagues_covered": [
     "la-liga"
   ],
@@ -66,8 +66,8 @@
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 38.3,
-        "fair_odds": 2.61
+        "scoring_chance_pct": 39.3,
+        "fair_odds": 2.55
       },
       "market_data": {
         "best_odds": 3.2,
@@ -75,15 +75,15 @@
         "implied_chance_pct": 31.2
       },
       "edge": {
-        "price_gap_pp": 7.1,
+        "price_gap_pp": 8.0,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 90
+          "percentile": 92
         },
-        "share_of_team_chances_pct": 34,
+        "share_of_team_chances_pct": 35,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
@@ -93,37 +93,37 @@
           "tier": "Average",
           "window": 5,
           "matches": 5,
-          "through_date": "2026-05-01",
-          "xg_for_avg": 1.47,
-          "xg_against_avg": 1.61,
-          "xgd_per90": -0.14,
-          "shots_for_avg": 10.0,
-          "shots_against_avg": 14.2,
-          "sot_for_avg": 4.0,
-          "sot_against_avg": 4.0,
-          "corners_for_avg": 5.0,
-          "corners_against_avg": 5.8
+          "through_date": "2026-05-10",
+          "xg_for_avg": 1.57,
+          "xg_against_avg": 1.51,
+          "xgd_per90": 0.06,
+          "shots_for_avg": 12.0,
+          "shots_against_avg": 12.2,
+          "sot_for_avg": 0.0,
+          "sot_against_avg": 0.0,
+          "corners_for_avg": null,
+          "corners_against_avg": null
         },
         "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 58
+          "tier": "Average",
+          "percentile": 53
         },
         "opponent_recent_defence": {
           "tier": "High",
           "window": 5,
           "matches": 5,
-          "through_date": "2026-05-03",
-          "xg_for_avg": 0.89,
-          "xg_against_avg": 1.75,
-          "xgd_per90": -0.87,
-          "shots_for_avg": 7.4,
-          "shots_against_avg": 12.6,
-          "sot_for_avg": 2.0,
-          "sot_against_avg": 3.6,
-          "corners_for_avg": 3.8,
-          "corners_against_avg": 4.2
+          "through_date": "2026-05-10",
+          "xg_for_avg": 0.77,
+          "xg_against_avg": 1.76,
+          "xgd_per90": -0.99,
+          "shots_for_avg": 9.8,
+          "shots_against_avg": 13.0,
+          "sot_for_avg": 0.0,
+          "sot_against_avg": 0.0,
+          "corners_for_avg": null,
+          "corners_against_avg": null
         },
-        "fixture_boost_pct": -14,
+        "fixture_boost_pct": -17,
         "projected_minutes": 89,
         "penalty_role": "Primary",
         "lineup_confidence": "Projected starter"
@@ -135,6 +135,104 @@
         "Recent chance quality grades as strong",
         "Opponent has been allowing chances recently",
         "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260512-alvaro-rodriguez-567d31d132",
+      "match": {
+        "home_team": "Real Betis Seville",
+        "away_team": "Elche CF",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-05-12T18:00:00Z",
+        "kickoff_display": "Tue 12 May 19:00 UK",
+        "fotmob_match_id": "4837461",
+        "fotmob_page_url": "/matches/real-betis-vs-elche/2y0rtr#4837461",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Alvaro Rodriguez",
+        "team": "Elche",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/la-liga/elche.png",
+        "team_primary_color": "#0f172a",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 31.5,
+        "fair_odds": 3.17
+      },
+      "market_data": {
+        "best_odds": 4.33,
+        "best_book": "Bet365",
+        "implied_chance_pct": 23.1
+      },
+      "edge": {
+        "price_gap_pp": 8.4,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 94
+        },
+        "share_of_team_chances_pct": 31,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 25
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-09",
+          "xg_for_avg": 1.8,
+          "xg_against_avg": 1.66,
+          "xgd_per90": 0.15,
+          "shots_for_avg": 11.2,
+          "shots_against_avg": 11.2,
+          "sot_for_avg": 0.0,
+          "sot_against_avg": 0.0,
+          "corners_for_avg": null,
+          "corners_against_avg": null
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 58
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-09",
+          "xg_for_avg": 1.27,
+          "xg_against_avg": 1.63,
+          "xgd_per90": -0.37,
+          "shots_for_avg": 11.4,
+          "shots_against_avg": 12.4,
+          "sot_for_avg": 0.0,
+          "sot_against_avg": 0.0,
+          "corners_for_avg": null,
+          "corners_against_avg": null
+        },
+        "fixture_boost_pct": -12,
+        "projected_minutes": 78,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent has been allowing chances recently"
       ],
       "risk_flags": []
     }
