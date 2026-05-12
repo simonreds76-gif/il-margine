@@ -17,15 +17,19 @@ This reads `public/favicon-256.png` (or `public/logo.png`) and writes:
 
 The app uses these dark-background icons so the tab has no white corners. Each image is your logo centered on background `#0f1117`. Hard-refresh or reopen the tab to see the icon.
 
-## Vercel: do not build from `main`
+## Vercel: skip live-data-only builds
 
-So only `golden-with-speed-insights` (or other branches) trigger builds:
+Use Vercel's ignored build step to avoid rebuilding the app for hosted monitor
+artifact commits. The script builds by default and skips only when every changed
+path is a known live-data artifact.
 
-1. In **Vercel** → Project **Settings** → **Git** → **Ignored Build Step**, set:
+1. In **Vercel** -> Project **Settings** -> **Git** -> **Ignored Build Step**, set:
    ```bash
-   node scripts/vercel-ignore-main.cjs
+   node scripts/vercel-should-build.cjs
    ```
-2. If the command exits `0`, Vercel builds; if `1`, it skips. The script skips when the branch is `main`.
+2. Vercel convention: exit `0` skips the build, exit `1` proceeds with the build.
+3. Add `[force build]` to a commit message to build even when only data artifacts changed.
+
 
 ## Tennis stats test (Sackmann data)
 
