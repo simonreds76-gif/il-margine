@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-12T01:19:05Z",
+  "fetched_at": "2026-05-12T11:06:40Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
@@ -7906,17 +7906,13 @@
       },
       "football_data_count": 359,
       "football_data_latest": "2026-05-11",
-      "fotmob_count": 5,
-      "fotmob_latest": "2026-05-11",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "lag_days": 1,
       "source": "football-data",
       "source_latest": "2026-05-11",
-      "target_dates": [
-        "2026-05-10",
-        "2026-05-11",
-        "2026-05-12"
-      ],
-      "target_fixture_count": 1,
+      "target_dates": [],
+      "target_fixture_count": 0,
       "unresolved_fixture_count": 0
     },
     "la-liga": {
@@ -12116,19 +12112,6 @@
           "source": "football-data",
           "total_corners": 10
         },
-        "2026-05-10|real oviedo|getafe": {
-          "away_corners": 9,
-          "away_shots": 22,
-          "away_sot": 4,
-          "away_team": "getafe",
-          "home_corners": 1,
-          "home_shots": 8,
-          "home_sot": 4,
-          "home_team": "real oviedo",
-          "match_id": 4837458,
-          "source": "fotmob",
-          "total_corners": 10
-        },
         "2026-05-11|vallecano|girona": {
           "away_corners": 5,
           "away_shots": 9,
@@ -12144,18 +12127,17 @@
       },
       "football_data_count": 350,
       "football_data_latest": "2026-05-11",
-      "fotmob_count": 5,
+      "fotmob_count": 1,
       "fotmob_latest": "2026-05-11",
       "lag_days": 1,
       "source": "football-data",
       "source_latest": "2026-05-11",
       "target_dates": [
-        "2026-05-10",
         "2026-05-11",
         "2026-05-12",
         "2026-05-13"
       ],
-      "target_fixture_count": 2,
+      "target_fixture_count": 1,
       "unresolved_fixture_count": 1
     },
     "ligue-1": {
@@ -12163,8 +12145,8 @@
       "api_football_error": null,
       "api_football_latest": null,
       "api_football_max_requests": 9,
-      "api_football_requests_remaining_after_league": 8,
-      "api_football_requests_used": 1,
+      "api_football_requests_remaining_after_league": 7,
+      "api_football_requests_used": 2,
       "fetch_error": null,
       "fixtures": {
         "2025-08-15|rennes|marseille": {
@@ -15718,18 +15700,21 @@
       "target_dates": [
         "2026-05-12",
         "2026-05-13",
-        "2026-05-14"
+        "2026-05-14",
+        "2026-05-16",
+        "2026-05-17",
+        "2026-05-18"
       ],
-      "target_fixture_count": 1,
-      "unresolved_fixture_count": 1
+      "target_fixture_count": 3,
+      "unresolved_fixture_count": 3
     },
     "serie-a": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 8,
-      "api_football_requests_used": 0,
+      "api_football_max_requests": 7,
+      "api_football_requests_remaining_after_league": 6,
+      "api_football_requests_used": 1,
       "fetch_error": null,
       "fixtures": {
         "2025-08-23|genoa|lecce": {
@@ -20004,19 +19989,6 @@
           "source": "football-data",
           "total_corners": 7
         },
-        "2026-05-10|hellas verona|como": {
-          "away_corners": 7,
-          "away_shots": 11,
-          "away_sot": 4,
-          "away_team": "como",
-          "home_corners": 7,
-          "home_shots": 11,
-          "home_sot": 3,
-          "home_team": "hellas verona",
-          "match_id": 4803388,
-          "source": "fotmob",
-          "total_corners": 14
-        },
         "2026-05-10|milan|atalanta": {
           "away_corners": 2,
           "away_shots": 9,
@@ -20068,18 +20040,18 @@
       },
       "football_data_count": 360,
       "football_data_latest": "2026-05-11",
-      "fotmob_count": 6,
-      "fotmob_latest": "2026-05-11",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "lag_days": 1,
       "source": "football-data",
       "source_latest": "2026-05-11",
       "target_dates": [
-        "2026-05-10",
-        "2026-05-11",
-        "2026-05-12"
+        "2026-05-16",
+        "2026-05-17",
+        "2026-05-18"
       ],
       "target_fixture_count": 1,
-      "unresolved_fixture_count": 0
+      "unresolved_fixture_count": 1
     }
   },
   "snapshot_date": "2026-05-12"
