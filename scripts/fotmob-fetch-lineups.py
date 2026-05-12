@@ -406,8 +406,14 @@ def _read_existing_fixtures(path: Path) -> List[dict]:
     return fixtures if isinstance(fixtures, list) else []
 
 
-def _preserve_future_fixtures(path: Path, fixtures: List[dict], start_date: str, fetched_end_date: str) -> tuple[List[dict], int]:
-    """Keep future expected XIs if a narrow refresh did not fetch their dates."""
+def _preserve_future_fixtures(
+    path: Path,
+    fixtures: List[dict],
+    start_date: str,
+    fetched_end_date: str,
+    preserve_missing_with_errors: bool = False,
+) -> tuple[List[dict], int]:
+    """Keep future expected XIs if a narrow or degraded refresh misses them."""
     existing = _read_existing_fixtures(path)
     if not existing:
         return fixtures, 0
@@ -431,7 +437,9 @@ def _preserve_future_fixtures(path: Path, fixtures: List[dict], start_date: str,
             fixture_date = datetime.strptime(fixture_date_raw, "%Y-%m-%d").date()
         except ValueError:
             continue
-        if fixture_date <= fetched_end or fixture_date > preserve_until:
+        if fixture_date < start or fixture_date > preserve_until:
+            continue
+        if fixture_date <= fetched_end and not preserve_missing_with_errors:
             continue
         key = _fixture_key(fixture)
         if key in seen_keys:
@@ -493,6 +501,7 @@ def main() -> None:
         fixtures,
         date_window[0],
         date_window[-1],
+        stats["page_fetch_errors"] > 0,
     )
     write_output(Path(args.out), fixtures)
 
