@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T10:35:01.016131Z",
+  "generated_at": "2026-05-12T10:51:28.564004Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -8,7 +8,7 @@
     "data/goalscorer/bundesliga/goalscorer-live-comparison.csv",
     "data/goalscorer/ligue-1/goalscorer-live-comparison.csv"
   ],
-  "team_form_source": "data/goalscorer/*player-match-logs-*.csv",
+  "team_form_source": "/home/runner/work/_temp/football-form/team-match-base.csv",
   "edge_threshold_pp": 6.0,
   "public_filters": {
     "min_model_prob_pct": 20.0,
@@ -97,12 +97,12 @@
           "xg_for_avg": 1.57,
           "xg_against_avg": 1.51,
           "xgd_per90": 0.06,
-          "shots_for_avg": 12.0,
-          "shots_against_avg": 12.2,
-          "sot_for_avg": 0.0,
-          "sot_against_avg": 0.0,
-          "corners_for_avg": null,
-          "corners_against_avg": null
+          "shots_for_avg": 12.4,
+          "shots_against_avg": 12.6,
+          "sot_for_avg": 5.2,
+          "sot_against_avg": 3.2,
+          "corners_for_avg": 4.8,
+          "corners_against_avg": 5.8
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
@@ -113,15 +113,15 @@
           "window": 5,
           "matches": 5,
           "through_date": "2026-05-10",
-          "xg_for_avg": 0.77,
-          "xg_against_avg": 1.76,
-          "xgd_per90": -0.99,
+          "xg_for_avg": 0.62,
+          "xg_against_avg": 2.06,
+          "xgd_per90": -1.44,
           "shots_for_avg": 9.8,
-          "shots_against_avg": 13.0,
-          "sot_for_avg": 0.0,
-          "sot_against_avg": 0.0,
-          "corners_for_avg": null,
-          "corners_against_avg": null
+          "shots_against_avg": 13.2,
+          "sot_for_avg": 1.6,
+          "sot_against_avg": 4.4,
+          "corners_for_avg": 4.8,
+          "corners_against_avg": 3.8
         },
         "fixture_boost_pct": -17,
         "projected_minutes": 89,
@@ -193,34 +193,22 @@
           "window": 5,
           "matches": 5,
           "through_date": "2026-05-09",
-          "xg_for_avg": 1.8,
-          "xg_against_avg": 1.66,
-          "xgd_per90": 0.15,
-          "shots_for_avg": 11.2,
-          "shots_against_avg": 11.2,
-          "sot_for_avg": 0.0,
-          "sot_against_avg": 0.0,
-          "corners_for_avg": null,
-          "corners_against_avg": null
+          "xg_for_avg": 2.1,
+          "xg_against_avg": 1.88,
+          "xgd_per90": 0.22,
+          "shots_for_avg": 11.4,
+          "shots_against_avg": 11.6,
+          "sot_for_avg": 4.2,
+          "sot_against_avg": 4.4,
+          "corners_for_avg": 5.6,
+          "corners_against_avg": 5.0
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
           "percentile": 58
         },
         "opponent_recent_defence": {
-          "tier": "Positive",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-09",
-          "xg_for_avg": 1.27,
-          "xg_against_avg": 1.63,
-          "xgd_per90": -0.37,
-          "shots_for_avg": 11.4,
-          "shots_against_avg": 12.4,
-          "sot_for_avg": 0.0,
-          "sot_against_avg": 0.0,
-          "corners_for_avg": null,
-          "corners_against_avg": null
+          "tier": "Unknown"
         },
         "fixture_boost_pct": -12,
         "projected_minutes": 78,
@@ -231,8 +219,7 @@
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Opponent has been allowing chances recently"
+        "Recent chance quality grades as strong"
       ],
       "risk_flags": []
     }
