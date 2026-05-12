@@ -1,10 +1,10 @@
 {
   "pipeline": "team-props",
   "state": "idle",
-  "updated_at": "2026-05-11T19:00:53.7663593Z",
-  "last_started_at": "2026-05-11T18:59:31.5484065Z",
-  "last_finished_at": "2026-05-11T19:00:53.7663593Z",
-  "last_successful_finished_at": "2026-05-11T19:00:53.7662348Z",
+  "updated_at": "2026-05-12T10:31:05.3194467Z",
+  "last_started_at": "2026-05-12T10:29:24.0002047Z",
+  "last_finished_at": "2026-05-12T10:31:05.3194467Z",
+  "last_successful_finished_at": "2026-05-12T10:31:05.3193217Z",
   "current_step": "",
   "message": "Team props pipeline finished successfully.",
   "warnings": [],
@@ -18,55 +18,55 @@
     "regions": "eu"
   },
   "artifacts": {
-    "pipeline_log": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/pipeline-log.txt",
+    "shortlist_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest.txt",
       "exists": true,
-      "updated_at": "2026-05-11T19:00:53.7614551Z"
-    },
-    "shadow_signals_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest-v31.csv",
-      "exists": true,
-      "updated_at": "2026-05-11T19:00:21.0692373Z"
+      "updated_at": "2026-05-12T10:30:21.4739350Z"
     },
     "shadow_shortlist_latest": {
       "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest-v31.txt",
       "exists": true,
-      "updated_at": "2026-05-11T19:00:21.0688413Z"
-    },
-    "team_shots_predictions": {
-      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-predictions.csv",
-      "exists": true,
-      "updated_at": "2026-05-11T18:59:26.2926051Z"
+      "updated_at": "2026-05-12T10:30:22.1034615Z"
     },
     "signals_latest": {
       "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest.csv",
       "exists": true,
-      "updated_at": "2026-05-11T19:00:20.4625875Z"
+      "updated_at": "2026-05-12T10:30:21.4742439Z"
     },
-    "shadow_value_bets_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest-v31.csv",
+    "pipeline_log": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/pipeline-log.txt",
       "exists": true,
-      "updated_at": "2026-05-11T19:00:21.0689856Z"
+      "updated_at": "2026-05-12T10:31:05.3138415Z"
     },
-    "value_bets_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest.csv",
+    "team_shots_predictions": {
+      "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-predictions.csv",
       "exists": true,
-      "updated_at": "2026-05-11T19:00:20.4623494Z"
+      "updated_at": "2026-05-12T10:29:17.4368372Z"
     },
     "team_shots_upcoming": {
       "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-upcoming.csv",
       "exists": true,
-      "updated_at": "2026-05-11T18:59:26.2966051Z"
+      "updated_at": "2026-05-12T10:29:17.4408372Z"
     },
-    "shortlist_latest": {
-      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/shortlist-latest.txt",
+    "value_bets_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest.csv",
       "exists": true,
-      "updated_at": "2026-05-11T19:00:20.4621999Z"
+      "updated_at": "2026-05-12T10:30:21.4740355Z"
     },
     "team_shots_comparison": {
       "path": "/home/runner/work/il-margine/il-margine/data/team-shots/team-shots-comparison.csv",
       "exists": true,
-      "updated_at": "2026-05-11T18:59:26.2818917Z"
+      "updated_at": "2026-05-12T10:29:17.4278373Z"
+    },
+    "shadow_value_bets_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/value-bets-latest-v31.csv",
+      "exists": true,
+      "updated_at": "2026-05-12T10:30:22.1035842Z"
+    },
+    "shadow_signals_latest": {
+      "path": "/home/runner/work/il-margine/il-margine/data/shortlist/signals-latest-v31.csv",
+      "exists": true,
+      "updated_at": "2026-05-12T10:30:22.1041273Z"
     }
   }
 }
