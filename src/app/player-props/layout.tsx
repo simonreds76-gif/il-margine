@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
+import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 
 const title = "Player Props Betting Tips | Fouls, Shots, Cards & Value Markets";
 const description =
@@ -32,5 +33,13 @@ export default function PlayerPropsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      <BreadcrumbSchema crumbs={[
+        { name: "Home", url: "/" },
+        { name: "Player Props", url: "/player-props" },
+      ]} />
+      {children}
+    </>
+  );
 }

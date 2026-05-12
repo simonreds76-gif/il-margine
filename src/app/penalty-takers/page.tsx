@@ -10,6 +10,8 @@ const PAGE_DESCRIPTION =
   "Penalty takers 2025/26 for every club in Serie A, the Premier League, La Liga, Bundesliga and Ligue 1. See the current first, second and third-choice penalty taker for all 96 teams in one place.";
 const PAGE_URL = `${BASE_URL}/penalty-takers`;
 
+export const revalidate = 43200;
+
 type PenaltyTeamRow = {
   primary?: string;
   secondary?: string;

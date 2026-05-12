@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
+import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 
 const title = "Track Record | Verified Betting Results";
 const description =
@@ -37,5 +38,13 @@ export default function TrackRecordLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <>
+      <BreadcrumbSchema crumbs={[
+        { name: "Home", url: "/" },
+        { name: "Track Record", url: "/track-record" },
+      ]} />
+      {children}
+    </>
+  );
 }

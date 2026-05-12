@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BASE_URL } from "@/lib/config";
+import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 
 const title = "Tennis Betting Tips Today | ATP, Challenger & Grand Slams";
 const description =
@@ -32,5 +33,13 @@ export default function TennisTipsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      <BreadcrumbSchema crumbs={[
+        { name: "Home", url: "/" },
+        { name: "Tennis Tips", url: "/tennis-tips" },
+      ]} />
+      {children}
+    </>
+  );
 }

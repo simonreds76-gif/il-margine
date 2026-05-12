@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 const REMOTE_ARTIFACT_REVALIDATE_SECONDS = 300;
 const MATCH_VISIBILITY_AFTER_KICKOFF_MS = 150 * 60 * 1000;
 
