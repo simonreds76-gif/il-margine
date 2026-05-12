@@ -297,13 +297,13 @@ export function FairOddsSignalBrowser({
   if (liveSignals.length === 0) return null;
 
   return (
-    <section className={`${embed ? "mt-0" : "mt-6"} rounded-[2.25rem] border border-slate-700/45 bg-[#080d14]/75 p-4 shadow-[0_28px_110px_rgba(0,0,0,0.35)] sm:p-5`}>
-      <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+    <section className={`${embed ? "mt-0" : "mt-6"} rounded-[1.5rem] border border-slate-700/45 bg-[#080d14]/75 p-3 shadow-[0_28px_110px_rgba(0,0,0,0.35)] sm:rounded-[2.25rem] sm:p-5`}>
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3 sm:mb-5 sm:gap-4">
         <div>
           <div className="text-[11px] font-black uppercase tracking-[0.22em] text-emerald-300">
             Flagged value spots
           </div>
-          <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-50 sm:text-4xl">
+          <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-50 sm:text-4xl">
             Model price vs market price, tracked through the match window.
           </h2>
         </div>
@@ -314,13 +314,13 @@ export function FairOddsSignalBrowser({
         </div>
       </div>
 
-      <div className="mb-5 rounded-2xl border border-slate-700/45 bg-[linear-gradient(135deg,rgba(15,23,42,0.9),rgba(6,18,26,0.9))] p-4">
+      <div className="mb-4 rounded-2xl border border-slate-700/45 bg-[linear-gradient(135deg,rgba(15,23,42,0.9),rgba(6,18,26,0.9))] p-3 sm:mb-5 sm:p-4">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-wrap gap-2">
+          <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
             <button
               type="button"
               onClick={() => applyLeague("all")}
-              className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
+              className={`shrink-0 rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
                 activeLeague === "all"
                   ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
                   : "border-slate-700/80 bg-slate-900/70 text-slate-400 hover:text-slate-200"
@@ -333,7 +333,7 @@ export function FairOddsSignalBrowser({
                 key={option.key}
                 type="button"
                 onClick={() => applyLeague(option.key)}
-                className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
+                className={`shrink-0 rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
                   activeLeague === option.key
                     ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
                     : "border-slate-700/80 bg-slate-900/70 text-slate-400 hover:text-slate-200"
@@ -344,7 +344,7 @@ export function FairOddsSignalBrowser({
             ))}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="-mx-1 flex items-center gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
             <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
               Sort
             </span>
@@ -363,7 +363,7 @@ export function FairOddsSignalBrowser({
                     ? "All visible signals have the same confidence tier."
                     : undefined
                 }
-                className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
+                className={`shrink-0 rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
                   sortMode === value
                     ? "border-amber-400/35 bg-amber-400/10 text-amber-200"
                     : value === "confidence" && confidenceSortDisabled
@@ -383,7 +383,7 @@ export function FairOddsSignalBrowser({
           No signals match this league filter. Switch back to All to see the flagged board.
         </div>
       ) : (
-        <div className="grid gap-6">
+        <div className="grid gap-4 sm:gap-6">
           {selectedSignal ? (
             <div ref={featuredRef} className="scroll-mt-24">
               <FeaturedSignalCard

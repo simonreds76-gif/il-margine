@@ -1084,12 +1084,12 @@ export default async function FairOddsLabPage({ searchParams }: FairOddsLabPageP
         </>
       ) : null}
 
-      <div className={`relative mx-auto ${isEmbed ? "max-w-6xl px-3 py-3 sm:px-4 sm:py-4" : "max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10"}`}>
+      <div className={`relative mx-auto ${isEmbed ? "max-w-6xl px-3 py-3 sm:px-4 sm:py-4" : "max-w-7xl px-3 py-4 sm:px-6 sm:py-8 lg:px-8 lg:py-10"}`}>
         {!isEmbed ? (
-          <section className="relative overflow-hidden rounded-[1.75rem] border border-emerald-300/20 bg-slate-950/70 p-5 shadow-[0_28px_120px_rgba(0,0,0,0.5)] sm:p-6">
+          <section className="relative overflow-hidden rounded-[1.5rem] border border-emerald-300/20 bg-slate-950/70 p-4 shadow-[0_28px_120px_rgba(0,0,0,0.5)] sm:rounded-[1.75rem] sm:p-6">
             <div className="pointer-events-none absolute -left-24 top-0 h-64 w-64 rounded-full bg-emerald-400/[0.08] blur-3xl" />
             <div className="pointer-events-none absolute -right-20 -top-28 h-80 w-80 rounded-full border-[30px] border-cyan-300/[0.06]" />
-            <div className="relative grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(520px,0.95fr)] lg:items-end">
+            <div className="relative grid gap-4 sm:gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(520px,0.95fr)] lg:items-end">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="rounded-full border border-emerald-400/35 bg-emerald-400/10 px-3 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-emerald-200">
@@ -1099,15 +1099,15 @@ export default async function FairOddsLabPage({ searchParams }: FairOddsLabPageP
                     Goalscorer value spots
                   </span>
                 </div>
-                <h1 className="mt-4 max-w-3xl text-4xl font-black tracking-tight text-slate-50 sm:text-5xl">
+                <h1 className="mt-4 max-w-3xl text-4xl font-black leading-[0.95] tracking-tight text-slate-50 sm:text-5xl">
                   Goalscorer Fair Odds Lab
                 </h1>
-                <p className="mt-3 max-w-2xl text-base leading-7 text-slate-300">
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base sm:leading-7">
                   Where our model price is shorter than the bookies&apos;.
                 </p>
               </div>
 
-              <div className="grid gap-0 overflow-hidden rounded-2xl border border-slate-700/55 bg-slate-950/75 sm:grid-cols-4">
+              <div className="grid grid-cols-2 gap-0 overflow-hidden rounded-2xl border border-slate-700/55 bg-slate-950/75 sm:grid-cols-4">
                 {[
                   ["Top value spot", boardStatus],
                   ["Flagged spots", signals.length.toString()],
@@ -1116,12 +1116,16 @@ export default async function FairOddsLabPage({ searchParams }: FairOddsLabPageP
                 ].map(([label, value], index) => (
                   <div
                     key={label}
-                    className={`px-4 py-4 ${index > 0 ? "border-t border-slate-800/80 sm:border-l sm:border-t-0" : ""}`}
+                    className={`px-3 py-3 sm:px-4 sm:py-4 ${
+                      index >= 2 ? "border-t border-slate-800/80 sm:border-t-0" : ""
+                    } ${index > 0 ? "sm:border-l sm:border-slate-800/80" : ""} ${
+                      index === 1 || index === 3 ? "border-l border-slate-800/80" : ""
+                    }`}
                   >
-                    <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                    <div className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-500 sm:text-[10px] sm:tracking-[0.2em]">
                       {label}
                     </div>
-                    <div className="mt-1 break-words font-mono text-xl font-black text-slate-100">
+                    <div className="mt-1 break-words font-mono text-lg font-black text-slate-100 sm:text-xl">
                       {value}
                     </div>
                   </div>

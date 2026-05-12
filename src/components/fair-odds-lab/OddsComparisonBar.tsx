@@ -37,6 +37,15 @@ export function OddsComparisonBar({
   const positiveGap = clampedGap >= 0;
   const modelChance = modelProb ?? 100 / modelOdds;
   const marketChance = marketProb ?? 100 / bookOdds;
+  const panelClass = compact
+    ? "min-w-0"
+    : "min-w-0 rounded-2xl border border-slate-800/80 bg-slate-900/55 p-3 sm:border-0 sm:bg-transparent sm:p-0";
+  const priceClass = compact
+    ? "mt-1 font-mono text-xl font-black text-emerald-200 sm:text-2xl"
+    : "mt-1 font-mono text-3xl font-black tracking-tight text-emerald-200 sm:text-5xl";
+  const referencePriceClass = compact
+    ? "mt-1 font-mono text-xl font-black text-slate-100 sm:text-2xl"
+    : "mt-1 font-mono text-3xl font-black tracking-tight text-slate-100 sm:text-5xl";
 
   return (
     <div
@@ -47,25 +56,27 @@ export function OddsComparisonBar({
       }
     >
       <div
-        className={`grid grid-cols-[minmax(74px,1fr)_minmax(88px,auto)_minmax(74px,1fr)] items-end ${
-          compact ? "gap-2" : "gap-3 sm:grid-cols-[minmax(92px,1fr)_minmax(116px,auto)_minmax(92px,1fr)]"
+        className={`grid items-stretch ${
+          compact
+            ? "grid-cols-[minmax(74px,1fr)_minmax(88px,auto)_minmax(74px,1fr)] gap-2"
+            : "grid-cols-2 gap-3 sm:grid-cols-[minmax(92px,1fr)_minmax(116px,auto)_minmax(92px,1fr)] sm:items-end"
         }`}
       >
-        <div className="min-w-0">
+        <div className={panelClass}>
           <div className="text-[9px] font-semibold uppercase tracking-[0.18em] text-emerald-300">
             Il Margine
           </div>
-          <div
-            className={
-              compact
-                ? "mt-1 font-mono text-xl font-black text-emerald-200 sm:text-2xl"
-                : "mt-1 font-mono text-3xl font-black tracking-tight text-emerald-200 sm:text-5xl"
-            }
-          >
+          <div className={priceClass}>
             {formatOdds(modelOdds)}
           </div>
         </div>
-        <div className="relative mb-0 shrink-0 text-center">
+        <div
+          className={
+            compact
+              ? "relative mb-0 shrink-0 text-center"
+              : "relative order-last col-span-2 rounded-2xl border border-amber-300/20 bg-amber-300/[0.06] p-3 text-center sm:order-none sm:col-span-1 sm:border-0 sm:bg-transparent sm:p-0"
+          }
+        >
           <div className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">
             {compact ? "gap" : "price gap"}
           </div>
@@ -79,25 +90,19 @@ export function OddsComparisonBar({
             {formatGap(gapPp)}
           </div>
           {!compact ? (
-            <div className="mt-0.5 whitespace-nowrap text-[9px] font-medium normal-case tracking-normal text-slate-500">
+            <div className="mt-0.5 text-[10px] font-medium normal-case tracking-normal text-slate-500 sm:whitespace-nowrap sm:text-[9px]">
               percentage points vs market
             </div>
           ) : null}
         </div>
-        <div className="min-w-0 text-right">
+        <div className={compact ? "min-w-0 text-right" : `${panelClass} text-left sm:text-right`}>
           <div className="truncate text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-500">
             Reference
             {!compact ? (
               <span className="ml-1 normal-case tracking-normal text-slate-600">{bookName}</span>
             ) : null}
           </div>
-          <div
-            className={
-              compact
-                ? "mt-1 font-mono text-xl font-black text-slate-100 sm:text-2xl"
-                : "mt-1 font-mono text-3xl font-black tracking-tight text-slate-100 sm:text-5xl"
-            }
-          >
+          <div className={referencePriceClass}>
             {formatOdds(bookOdds)}
           </div>
         </div>
