@@ -1,19 +1,19 @@
 # Football Form Layer Validation
 
-Generated: 2026-05-12T10:30:55+00:00
+Generated: 2026-05-12T10:43:30+00:00
 Status: **WARNING**
 
 ## Files
 
 | File | Rows | Latest date | Market coverage | xG coverage | Duplicates |
 | --- | ---: | --- | ---: | ---: | ---: |
-| team-match-base.csv | 42996 | 2026-05-11 | 100.0% | 6.9% | 0 |
-| team-rolling-form.csv | 42996 | 2026-05-11 | 100.0% | 6.9% | 0 |
+| team-match-base.csv | 42996 | 2026-05-11 | 100.0% | 7.0% | 0 |
+| team-rolling-form.csv | 42996 | 2026-05-11 | 100.0% | 7.0% | 0 |
 
 ## Issues
 
-- **warning** `team_match_base_xg_coverage_low`: xG coverage 6.8%
-- **warning** `team_rolling_form_xg_coverage_low`: xG coverage 6.8%
+- **warning** `team_match_base_xg_coverage_low`: xG coverage 7.0%
+- **warning** `team_rolling_form_xg_coverage_low`: xG coverage 7.0%
 
 ## Per-League Freshness
 
