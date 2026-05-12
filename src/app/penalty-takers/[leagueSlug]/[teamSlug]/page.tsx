@@ -9,7 +9,6 @@ import {
   buildClubPenaltyDescription,
   buildClubPenaltyLead,
   buildClubPenaltyTitle,
-  buildSourceLabel,
   getClubPenaltyTeam,
   readClubPenaltyData,
   readAllClubPenaltyTeams,
@@ -146,7 +145,6 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
   const title = buildClubPenaltyTitle(team);
   const description = buildClubPenaltyDescription(team);
   const lead = buildClubPenaltyLead(team);
-  const sourceLabel = buildSourceLabel(team);
 
   const quickAnswer = lead;
   const secondAnswer = team.secondary && team.secondary !== "TBC"
@@ -284,21 +282,20 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
               <p>{quickAnswer}</p>
               <p>{team.leagueCopy}</p>
               <p>
-                This page is built as a live club reference, not a one-name list. If the first-choice taker is injured, suspended, substituted or not starting, the second and third names become the useful part of the hierarchy.
+                This page is built as a live Il Margine club file, not a one-name list. If the first-choice taker is injured, suspended, substituted or not starting, the second and third names become the useful part of the hierarchy.
               </p>
             </div>
           </div>
 
           <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_14px_40px_rgba(0,0,0,0.18)] sm:p-6">
-            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Source file</div>
+            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Il Margine file</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Last checked: {team.lastUpdatedLabel || "current file"}</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
-              <p>{sourceLabel}</p>
               <p>
-                We update the order only when the evidence changes: penalties taken or missed, lineup context, injuries, suspensions, transfers, coaching comments, or strong league-specific reporting.
+                We update the order only when the evidence changes: penalties taken or missed, lineup context, injuries, suspensions, transfers, coaching comments, or strong league-specific signals.
               </p>
               <p>
-                Spot a hierarchy shift? <a href="mailto:contact@ilmargine.bet" className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300">Send it to us</a> and we will tighten the reference.
+                Spot a hierarchy shift? <a href="mailto:contact@ilmargine.bet" className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300">Send it to us</a> and we will tighten the file.
               </p>
             </div>
           </div>

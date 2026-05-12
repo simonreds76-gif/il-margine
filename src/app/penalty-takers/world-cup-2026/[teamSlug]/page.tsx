@@ -13,6 +13,7 @@ import {
   flagImageUrl,
   getWorldCupTeamBySlug,
   initials,
+  publicPenaltyEvidenceText,
   readWorldCupData,
   worldCupTeamSlug,
   worldCupTeamUrl,
@@ -78,14 +79,6 @@ const CONFEDERATION_STYLES: Record<
     accent: "bg-violet-300",
   },
 };
-
-function hostname(url: string): string {
-  try {
-    return new URL(url).hostname.replace(/^www\./, "");
-  } catch {
-    return "source";
-  }
-}
 
 export async function generateStaticParams() {
   const data = await readWorldCupData();
@@ -170,6 +163,11 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
   const style = CONFEDERATION_STYLES[team.confederation] ?? CONFEDERATION_STYLES.CONMEBOL;
   const primary = team.likely_primary?.trim();
   const secondary = team.likely_secondary?.trim();
+  const visibleLastEvidence = publicPenaltyEvidenceText(team.last_evidence);
+  const visibleNote = publicPenaltyEvidenceText(team.note);
+  const visibleEvidenceLog = (team.evidence_log?.length ? team.evidence_log : ["Evidence trail still being built."]).map(
+    (entry) => publicPenaltyEvidenceText(entry, "Evidence trail still being built."),
+  );
   const groupMates = team.group
     ? data.teams
         .filter((candidate) => candidate.group === team.group && candidate.team !== team.team)
@@ -331,7 +329,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                       Current file: {data.last_verified}
                     </span>
                     <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-[10px] text-slate-400 sm:text-xs">
-                      {team.source_urls?.length ?? 0} sources reviewed
+                      Il Margine file
                     </span>
                   </div>
                 </div>
@@ -371,7 +369,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                     <div className="rounded-2xl border border-white/10 bg-slate-950/35 p-4">
                       <div className="text-[10px] uppercase tracking-[0.18em] text-slate-400">Latest key evidence</div>
                       <div className="mt-1.5 text-sm leading-6 text-slate-200">
-                        {team.last_evidence || "Evidence file still being built from the current cycle."}
+                        {visibleLastEvidence}
                       </div>
                     </div>
                   </div>
@@ -387,7 +385,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Who is {team.team}&apos;s penalty taker?</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
               <p>{quickAnswer}</p>
-              <p>{team.note}</p>
+              <p>{visibleNote}</p>
               <p>
                 If you searched for <span className="text-slate-100">{team.team} penalty taker</span>, the hierarchy
                 at the top is the quickest answer we are willing to publish right now. The evidence trail underneath
@@ -404,7 +402,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
               <p>A fresh in-match penalty can move this page quickly, especially if it contradicts the current lead or happens with the full-strength tournament pool on the pitch.</p>
               <p>For the more conditional boards, one more clean senior penalty is often enough to sharpen the backup line or flip the order outright.</p>
               <p>
-                Spot a hierarchy shift, a squad-specific wrinkle or a better local source?{" "}
+                Spot a hierarchy shift, a squad-specific wrinkle or a stronger team signal?{" "}
                 <a href="mailto:contact@ilmargine.bet" className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300">
                   Contact us here
                 </a>
@@ -419,7 +417,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Evidence Trail</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Why the board looks like this</h2>
             <div className="mt-5 space-y-4">
-              {(team.evidence_log?.length ? team.evidence_log : ["Evidence trail still being built."]).map((entry, index) => (
+              {visibleEvidenceLog.map((entry, index) => (
                 <div key={`${team.team}-${entry}`} className="flex gap-3">
                   <div
                     className={`mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-[11px] font-semibold ${
@@ -438,20 +436,11 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
 
           <div className="space-y-6">
             <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
-              <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Sources Reviewed</div>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Primary trail and supporting checks</h2>
-              <div className="mt-5 flex flex-wrap gap-2.5">
-                {(team.source_urls?.length ? team.source_urls : []).map((url) => (
-                  <a
-                    key={url}
-                    href={url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-500 hover:text-slate-100"
-                  >
-                    {hostname(url)}
-                  </a>
-                ))}
+              <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Il Margine File</div>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Internal hierarchy checks</h2>
+              <div className="mt-5 space-y-3 text-sm leading-7 text-slate-300">
+                <p>We keep the public page focused on the answer: current primary, closest backup and the match evidence that moves the hierarchy.</p>
+                <p>The internal file stays broader so we can re-check squad context, event timing and backup pressure without turning the page into a raw research appendix.</p>
               </div>
             </div>
 

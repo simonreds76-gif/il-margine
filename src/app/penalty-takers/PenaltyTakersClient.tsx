@@ -229,7 +229,7 @@ export default function PenaltyTakersClient({
             </h1>
             <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
               First, second and third-choice penalty takers for every club in Europe&apos;s top five leagues.
-              Built as a live reference for bettors, fantasy players and anyone who needs the full hierarchy,
+              Built as a live intelligence file for bettors, fantasy players and anyone who needs the full hierarchy,
               not a stale one-name list from August.
             </p>
 
@@ -378,7 +378,7 @@ export default function PenaltyTakersClient({
               <p className="mt-4 text-[15px] leading-7 text-slate-300">
                 We only move a team when the hierarchy actually changes on the pitch or in the squad context:
                 penalties taken, penalties missed, injuries, suspensions, transfers, coach decisions or strong
-                league-specific reporting.
+                league-specific signals.
               </p>
             </div>
           </div>
@@ -399,7 +399,7 @@ export default function PenaltyTakersClient({
             <a href="mailto:contact@ilmargine.bet" className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300">
               Let us know
             </a>{" "}
-            and we&apos;ll tighten the reference.
+            and we&apos;ll tighten the file.
           </div>
         </section>
       </main>

@@ -12,8 +12,6 @@ type PenaltyTeamRow = {
   secondary?: string;
   tertiary?: string;
   last_updated?: string;
-  source?: string;
-  cross_check?: string;
 };
 
 type PenaltyFile = Record<string, PenaltyTeamRow>;
@@ -59,8 +57,6 @@ export type ClubPenaltyTeam = {
   tertiary: string;
   lastUpdated: string;
   lastUpdatedLabel: string;
-  source: string;
-  crossCheck: string;
   logoPath: string;
   initials: string;
   relativeUrl: string;
@@ -90,7 +86,7 @@ export const CLUB_LEAGUES: ClubLeagueConfig[] = [
     logoPath: "/league-logos/epl.png",
     accent: "indigo",
     surface: "from-indigo-500/24 via-indigo-400/8 to-slate-950",
-    copy: "Premier League markets react quickly to the obvious taker, so the useful reference is the full order: who steps up first, who follows, and who becomes live if team news removes the headline name.",
+    copy: "Premier League markets react quickly to the obvious taker, so the useful intelligence is the full order: who steps up first, who follows, and who becomes live if team news removes the headline name.",
   },
   {
     key: "la-liga",
@@ -249,8 +245,6 @@ export async function readClubPenaltyData(): Promise<ClubPenaltyLeague[]> {
             tertiary: cleanClubPenaltyText(entry.tertiary),
             lastUpdated: cleanClubPenaltyText(entry.last_updated),
             lastUpdatedLabel: formatClubPenaltyDate(cleanClubPenaltyText(entry.last_updated)),
-            source: cleanClubPenaltyText(entry.source),
-            crossCheck: cleanClubPenaltyText(entry.cross_check),
             logoPath: findLogoPath(league.key, teamName, logoManifest),
             initials: buildInitials(team),
             relativeUrl,
@@ -297,7 +291,3 @@ export function buildClubPenaltyLead(team: ClubPenaltyTeam): string {
   return `${team.primary} is our current ${team.team} penalty taker call. We do not name a firm backup yet because the second-choice trail is still thin.`;
 }
 
-export function buildSourceLabel(team: ClubPenaltyTeam): string {
-  if (team.source && team.crossCheck) return `${team.source}; ${team.crossCheck}`;
-  return team.source || team.crossCheck || "Manual hierarchy file";
-}

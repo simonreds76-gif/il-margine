@@ -13,27 +13,28 @@ import {
   worldCupTeamUrl,
   flagImageUrl,
   initials,
+  publicPenaltyEvidenceText,
 } from "@/lib/world-cup-penalties";
 import { BASE_URL } from "@/lib/config";
 
 const PAGE_TITLE = "World Cup 2026 Penalty Takers by Nation";
 const PAGE_DESCRIPTION =
-  "Who takes penalties for every qualified nation at the 2026 FIFA World Cup? First-choice and backup penalty takers, updated from official match reports, federation sources and native-language reporting across six confederations.";
+  "Who takes penalties for every qualified nation at the 2026 FIFA World Cup? First-choice and backup penalty takers from the Il Margine World Cup intelligence file.";
 
 const FEATURED_TEAMS = ["Germany", "France", "Brazil", "Argentina", "England", "Spain", "Japan", "Netherlands", "USA", "Mexico"];
 const LATE_QUALIFIER_TEAMS = ["Bosnia and Herzegovina", "Sweden", "Turkiye", "Czechia", "Congo DR", "Iraq"];
 
 const CONFEDERATION_INTROS: Record<string, string> = {
   UEFA:
-    "UEFA gives us the deepest evidence pool: qualifiers, Nations League and federation match reports usually make the first-choice order easier to verify.",
+    "UEFA gives us the deepest evidence pool: qualifiers, Nations League minutes and repeated senior penalty events usually make the first-choice order easier to verify.",
   CONMEBOL:
     "CONMEBOL often looks obvious on the headline sides, but the right answer still comes from actual in-match penalties, not reputation alone.",
   Concacaf:
     "Concacaf is the section where squad context matters most. Some countries are stable, others switch takers depending on availability and tournament squad strength.",
   AFC:
-    "AFC needs a multilingual lens more than any other section here. Official reports exist, but the hierarchy often needs federation and local-language cross-checking.",
+    "AFC needs a multilingual lens more than any other section here. The hierarchy often needs a deeper event audit before the backup line becomes trustworthy.",
   CAF:
-    "CAF is exactly where this kind of page can be useful. Official tournament and qualifier reports exist, but few places keep the hierarchy cleanly updated.",
+    "CAF is exactly where this kind of page can be useful. Tournament and qualifier evidence exists, but few places keep the hierarchy cleanly updated.",
   OFC:
     "OFC is small in team count, but the same rules apply: only real senior in-match penalty evidence moves a team out of research.",
 };
@@ -424,7 +425,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
                                         {team.confederation}
                                       </span>
                                       <span className="rounded-full border border-slate-700 bg-slate-950/80 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-slate-400">
-                                        {team.source_urls?.length ?? 0} sources
+                                        Il Margine file
                                       </span>
                                     </div>
                                   </div>
@@ -453,17 +454,17 @@ export default async function WorldCup2026PenaltyTakersPage() {
                             <div className="rounded-2xl border border-slate-800/80 bg-slate-950/75 p-4">
                               <div className="text-[10px] uppercase tracking-[0.18em] text-slate-500">Latest key evidence</div>
                               <div className="mt-1.5 text-sm leading-6 text-slate-300">
-                                {team.last_evidence || "File still being built from the latest cycle."}
+                                {publicPenaltyEvidenceText(team.last_evidence, "File still being built from the latest cycle.")}
                               </div>
                             </div>
 
                             <div className="mt-4 rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4">
                               <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-emerald-400">Editorial note</div>
-                              <p className="mt-3 text-sm leading-7 text-slate-300">{trimEvidence(team.note, 220)}</p>
+                              <p className="mt-3 text-sm leading-7 text-slate-300">{trimEvidence(publicPenaltyEvidenceText(team.note), 220)}</p>
                             </div>
 
                             <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                              <div className="text-xs text-slate-500">{team.source_urls?.length ?? 0} sources in file</div>
+                              <div className="text-xs text-slate-500">Il Margine confidence: {team.confidence}</div>
                               <Link
                                 href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(team.team)}`}
                                 className="rounded-full border border-slate-700 bg-slate-950 px-4 py-2 text-xs text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
@@ -518,7 +519,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
                       <div className="mt-2 text-sm text-slate-300">
                         <span className="text-slate-500">Current call:</span> {team.likely_primary || "Still building"}{team.likely_secondary ? `, with ${team.likely_secondary} next.` : "."}
                       </div>
-                      <div className="mt-2 text-xs leading-6 text-slate-400">{team.last_evidence || "Fresh file added after qualification."}</div>
+                      <div className="mt-2 text-xs leading-6 text-slate-400">{publicPenaltyEvidenceText(team.last_evidence, "Fresh file added after qualification.")}</div>
                     </div>
                   </div>
                 </Link>
@@ -530,7 +531,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">How The Board Moves</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">How the finished board gets tightened</h2>
             <div className="mt-4 space-y-3 text-sm leading-7 text-slate-300">
-              <p>Official senior in-match penalties come first. Federation confirmation comes next. Local-language reporting and event timelines tighten the call when the file is still mixed.</p>
+              <p>Senior in-match penalties come first. Squad confirmation, event timelines and repeat pressure evidence tighten the call when the file is still mixed.</p>
               <p>Shoot-outs can support the order, but they do not automatically overrule a stronger recent in-match trail. When the file is mixed, the page says so plainly in the note instead of hiding behind a vague label.</p>
               <p>Now that the field is complete, the live work is less about qualification slots and more about hierarchy drift. The goal is simple: give the country-level answer quickly, then show the evidence that justifies it.</p>
             </div>
@@ -542,7 +543,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
             <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">Help Tighten The Board</div>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Closer to one of the squads?</h2>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
-              If you cover one of the qualified teams locally, work around the squad, or simply have stronger reporting than we do on a live hierarchy shift, send it through. Useful corrections beat stale consensus every time.
+              If you cover one of the qualified teams locally, work around the squad, or simply have stronger information on a live hierarchy shift, send it through. Useful corrections beat stale consensus every time.
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <a
@@ -551,7 +552,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
               >
                 contact@ilmargine.bet
               </a>
-              <span className="text-sm text-slate-400">Spot an error, a new taker, or a better local source? Let us know.</span>
+              <span className="text-sm text-slate-400">Spot an error, a new taker, or a stronger hierarchy signal? Let us know.</span>
             </div>
           </div>
         </section>

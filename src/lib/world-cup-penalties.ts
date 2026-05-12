@@ -152,6 +152,25 @@ export function worldCupTeamUrl(team: string): string {
   return `${WORLD_CUP_PENALTIES_URL}/${worldCupTeamSlug(team)}`;
 }
 
+export function publicPenaltyEvidenceText(value: string | undefined, fallback = "Il Margine file still being built from the current cycle."): string {
+  const text = (value || fallback).trim();
+  if (!text) return fallback;
+
+  return text
+    .replace(/https?:\/\/\S+/gi, "")
+    .replace(/\bAPF\s*\/\s*Sofascore:/gi, "Il Margine audit:")
+    .replace(/\bUEFA reported\b/gi, "The match record shows")
+    .replace(/\bFIFA reported\b/gi, "The match record shows")
+    .replace(/\bTransfermarkt's\s+/gi, "The ")
+    .replace(/\b(?:Transfermarkt|SofaScore|Sofascore|FotMob|WhoScored|FBref|Opta|LigaInsider|fantasyfootballscout|understat|goal\.com|fantacalcio\.it|sosfanta|as\.com|futbolfantasy\.com|ligue1\.com|bundesliga\.com|kicker\.de)\b/gi, "Il Margine audit")
+    .replace(/\b(?:transfermarkt_penalty_log|understat_2025_26_attempts|manual_update_[\w-]+|manual_review)\b/gi, "Il Margine audit")
+    .replace(/\bsource urls?\b/gi, "evidence checks")
+    .replace(/\bsources?\b/gi, "checks")
+    .replace(/\s+([.,;:])/g, "$1")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
 export function getGroupForTeam(team: string): string | undefined {
   return WORLD_CUP_GROUP_ORDER.find((group) => WORLD_CUP_GROUPS[group]?.includes(team));
 }
