@@ -19,16 +19,12 @@ The app uses these dark-background icons so the tab has no white corners. Each i
 
 ## Vercel: skip live-data-only builds
 
-Use Vercel's ignored build step to avoid rebuilding the app for hosted monitor
-artifact commits. The script builds by default and skips only when every changed
-path is a known live-data artifact.
+Vercel runs `node scripts/vercel-should-build.cjs` from `vercel.json` to avoid
+rebuilding the app for hosted monitor artifact commits. The script builds by
+default and skips only when every changed path is a known live-data artifact.
 
-1. In **Vercel** -> Project **Settings** -> **Git** -> **Ignored Build Step**, set:
-   ```bash
-   node scripts/vercel-should-build.cjs
-   ```
-2. Vercel convention: exit `0` skips the build, exit `1` proceeds with the build.
-3. Add `[force build]` to a commit message to build even when only data artifacts changed.
+Vercel convention: exit `0` skips the build, exit `1` proceeds with the build.
+Add `[force build]` to a commit message to build even when only data artifacts changed.
 
 
 ## Tennis stats test (Sackmann data)
