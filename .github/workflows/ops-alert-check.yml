@@ -66,5 +66,8 @@ jobs:
       - name: Check Fair Odds Lab highlights freshness
         run: python scripts/validate-fair-odds-lab-highlights.py
 
+      - name: Clean superseded run_status orphans
+        run: python scripts/cleanup-run-status-orphans.py
+
       - name: Check run_status alert views
         run: python scripts/ops-alert-check.py
