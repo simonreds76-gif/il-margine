@@ -119,7 +119,19 @@ jobs:
       - name: Build goalscorer monitor snapshot
         run: |
           python scripts/build-goalscorer-monitor-snapshot.py
-          python scripts/generate-fair-odds-lab.py
+          python scripts/build-football-form-layer.py --output-dir "${RUNNER_TEMP}/football-form" --skip-validation
+          python scripts/generate-fair-odds-lab.py --team-match-base "${RUNNER_TEMP}/football-form/team-match-base.csv"
+          python scripts/generate-fair-odds-lab-highlights.py
+          python scripts/validate-fair-odds-lab-highlights.py
+
+      - name: Upload Fair Odds Lab artifacts to Vercel Blob
+        env:
+          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+        run: |
+          if [ -n "${BLOB_READ_WRITE_TOKEN:-}" ]; then
+            python -m pip install vercel
+          fi
+          python scripts/upload-fair-odds-lab-blob.py
 
       - name: Upload goalscorer monitor snapshot
         env:
