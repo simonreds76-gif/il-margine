@@ -386,6 +386,64 @@ def write_output(path: Path, fixtures: List[dict]) -> None:
         handle.write("\n")
 
 
+def _fixture_key(fixture: dict) -> tuple[str, str, str]:
+    return (
+        str(fixture.get("match_date") or ""),
+        str(fixture.get("home_team") or ""),
+        str(fixture.get("away_team") or ""),
+    )
+
+
+def _read_existing_fixtures(path: Path) -> List[dict]:
+    if not path.exists():
+        return []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        print(f"  WARNING: could not read existing lineup file for merge guard: {exc}")
+        return []
+    fixtures = payload.get("fixtures", [])
+    return fixtures if isinstance(fixtures, list) else []
+
+
+def _preserve_future_fixtures(path: Path, fixtures: List[dict], start_date: str, fetched_end_date: str) -> tuple[List[dict], int]:
+    """Keep future expected XIs if a narrow refresh did not fetch their dates."""
+    existing = _read_existing_fixtures(path)
+    if not existing:
+        return fixtures, 0
+
+    try:
+        start = datetime.strptime(start_date, "%Y%m%d").date()
+        fetched_end = datetime.strptime(fetched_end_date, "%Y%m%d").date()
+    except ValueError:
+        return fixtures, 0
+
+    preserve_until = start + timedelta(days=3)
+    seen_keys = {_fixture_key(fixture) for fixture in fixtures}
+    merged = list(fixtures)
+    preserved = 0
+
+    for fixture in existing:
+        fixture_date_raw = str(fixture.get("match_date") or "").strip()[:10]
+        if not fixture_date_raw:
+            continue
+        try:
+            fixture_date = datetime.strptime(fixture_date_raw, "%Y-%m-%d").date()
+        except ValueError:
+            continue
+        if fixture_date <= fetched_end or fixture_date > preserve_until:
+            continue
+        key = _fixture_key(fixture)
+        if key in seen_keys:
+            continue
+        merged.append(fixture)
+        seen_keys.add(key)
+        preserved += 1
+
+    merged.sort(key=lambda item: (item.get("match_date", ""), item.get("home_team", ""), item.get("away_team", "")))
+    return merged, preserved
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Fetch FotMob league lineups")
     parser.add_argument("--date", default=_today_fotmob_date(), help="FotMob date in YYYYMMDD format")
@@ -430,6 +488,12 @@ def main() -> None:
             fixtures.append(fixture)
 
     fixtures.sort(key=lambda item: (item["match_date"], item["home_team"], item["away_team"]))
+    fixtures, preserved_fixtures = _preserve_future_fixtures(
+        Path(args.out),
+        fixtures,
+        date_window[0],
+        date_window[-1],
+    )
     write_output(Path(args.out), fixtures)
 
     print(f"  League fixtures:      {stats['league_matches']:,}")
@@ -437,6 +501,8 @@ def main() -> None:
     print(f"  Page fetch errors:    {stats['page_fetch_errors']:,}")
     print(f"  Confirmed lineups:    {stats['confirmed_fixtures']:,}")
     print(f"  Expected XIs:         {stats['predicted_fixtures']:,}")
+    if preserved_fixtures:
+        print(f"  Preserved future XIs: {preserved_fixtures:,}")
     print(f"  Missing payload:      {stats['missing_lineup_payload']:,}")
     print(f"  Saved:                {args.out}")
     print("\n  Done.\n")
