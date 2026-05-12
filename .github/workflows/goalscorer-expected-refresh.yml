@@ -122,6 +122,7 @@ jobs:
           python scripts/build-football-form-layer.py --output-dir "${RUNNER_TEMP}/football-form" --skip-validation
           python scripts/generate-fair-odds-lab.py --team-match-base "${RUNNER_TEMP}/football-form/team-match-base.csv"
           python scripts/generate-fair-odds-lab-highlights.py
+          python scripts/validate-fair-odds-lab-highlights.py
 
       - name: Upload Fair Odds Lab artifacts to Vercel Blob
         env:

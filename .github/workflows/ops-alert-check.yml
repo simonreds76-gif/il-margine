@@ -63,5 +63,8 @@ jobs:
           echo "Telegram creds present: ${{ secrets.OPS_ALERT_TELEGRAM_BOT_TOKEN != '' && secrets.OPS_ALERT_TELEGRAM_CHAT_ID != '' }}"
           echo "Webhook present: ${{ secrets.OPS_ALERT_WEBHOOK_URL != '' }}"
 
+      - name: Check Fair Odds Lab highlights freshness
+        run: python scripts/validate-fair-odds-lab-highlights.py
+
       - name: Check run_status alert views
         run: python scripts/ops-alert-check.py

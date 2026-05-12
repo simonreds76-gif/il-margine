@@ -260,6 +260,7 @@ jobs:
         run: |
           python scripts/goalscorer-live-snapshot.py
           python scripts/generate-fair-odds-lab-highlights.py
+          python scripts/validate-fair-odds-lab-highlights.py
 
       - name: Upload Fair Odds Lab artifacts to Vercel Blob
         env:
