@@ -12,19 +12,19 @@
       "home_status": "Confirmed Lineup",
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
-      "home_formation": "4-2-3-1",
+      "home_formation": "4-1-3-2",
       "away_formation": "3-4-2-1",
       "home_players": [
         "Gianluigi Donnarumma",
+        "Matheus Nunes",
         "Abdukodir Khusanov",
         "Marc Guéhi",
         "Josko Gvardiol",
-        "Rayan Aït-Nouri",
-        "Matheus Nunes",
         "Bernardo Silva",
-        "Antoine Semenyo",
-        "Phil Foden",
         "Savinho",
+        "Phil Foden",
+        "Rayan Aït-Nouri",
+        "Antoine Semenyo",
         "Omar Marmoush"
       ],
       "away_players": [
@@ -33,8 +33,8 @@
         "Maxence Lacroix",
         "Jaydee Canvot",
         "Daniel Muñoz",
-        "Jefferson Lerma",
         "Will Hughes",
+        "Jefferson Lerma",
         "Tyrick Mitchell",
         "Brennan Johnson",
         "Yéremi Pino",
@@ -47,8 +47,17 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-2-3-1",
+          "formation": "4-1-3-2",
           "position_id": 11
+        },
+        {
+          "name": "Matheus Nunes",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-1-3-2",
+          "position_id": 32
         },
         {
           "name": "Abdukodir Khusanov",
@@ -56,8 +65,8 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 32
+          "formation": "4-1-3-2",
+          "position_id": 34
         },
         {
           "name": "Marc Guéhi",
@@ -65,8 +74,8 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 34
+          "formation": "4-1-3-2",
+          "position_id": 36
         },
         {
           "name": "Josko Gvardiol",
@@ -74,43 +83,25 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 36
-        },
-        {
-          "name": "Rayan Aït-Nouri",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-1-3-2",
           "position_id": 38
-        },
-        {
-          "name": "Matheus Nunes",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64
         },
         {
           "name": "Bernardo Silva",
           "line_index": 1,
-          "line_size": 2,
+          "line_size": 1,
           "role_score": 2,
           "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66
+          "formation": "4-1-3-2",
+          "position_id": 65
         },
         {
-          "name": "Antoine Semenyo",
+          "name": "Savinho",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-2-3-1",
+          "formation": "4-1-3-2",
           "position_id": 83
         },
         {
@@ -119,26 +110,35 @@
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-2-3-1",
+          "formation": "4-1-3-2",
           "position_id": 85
         },
         {
-          "name": "Savinho",
+          "name": "Rayan Aït-Nouri",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-2-3-1",
+          "formation": "4-1-3-2",
           "position_id": 87
+        },
+        {
+          "name": "Antoine Semenyo",
+          "line_index": 3,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-1-3-2",
+          "position_id": 104
         },
         {
           "name": "Omar Marmoush",
           "line_index": 3,
-          "line_size": 1,
+          "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-2-3-1",
-          "position_id": 115
+          "formation": "4-1-3-2",
+          "position_id": 106
         }
       ],
       "away_starters": [
@@ -188,7 +188,7 @@
           "position_id": 62
         },
         {
-          "name": "Jefferson Lerma",
+          "name": "Will Hughes",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -197,7 +197,7 @@
           "position_id": 64
         },
         {
-          "name": "Will Hughes",
+          "name": "Jefferson Lerma",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,

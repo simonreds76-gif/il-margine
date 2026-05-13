@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T18:20:27.868168Z",
+  "generated_at": "2026-05-13T19:59:03.863546Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -32,7 +32,7 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 19,
+  "fixtures_evaluated": 18,
   "signals_qualifying": 2,
   "leagues_covered": [
     "bundesliga",
@@ -88,7 +88,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 92
+          "percentile": 91
         },
         "recent_team_form": {
           "tier": "Positive",
@@ -107,7 +107,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 60
+          "percentile": 61
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -151,7 +151,7 @@
         "kickoff_display": "Wed 13 May 20:30 UK",
         "fotmob_match_id": "4837463",
         "fotmob_page_url": "/matches/getafe-vs-mallorca/2dp4lm#4837463",
-        "lineup_type": "predicted",
+        "lineup_type": "confirmed",
         "venue": ""
       },
       "player": {
@@ -206,7 +206,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 31
+          "percentile": 33
         },
         "opponent_recent_defence": {
           "tier": "High",
@@ -226,7 +226,7 @@
         "fixture_boost_pct": -17,
         "projected_minutes": 89,
         "penalty_role": "Primary",
-        "lineup_confidence": "Projected starter"
+        "lineup_confidence": "Confirmed starter"
       },
       "confidence_tier": "Medium",
       "reasons": [
