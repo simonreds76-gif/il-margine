@@ -16,6 +16,7 @@ const { execFileSync } = require("node:child_process");
 const previousSha = process.env.VERCEL_GIT_PREVIOUS_SHA || "";
 const currentSha = process.env.VERCEL_GIT_COMMIT_SHA || "HEAD";
 const commitMessage = process.env.VERCEL_GIT_COMMIT_MESSAGE || "";
+const commitRef = process.env.VERCEL_GIT_COMMIT_REF || process.env.VERCEL_GIT_COMMIT_REF_NAME || "";
 
 function log(...args) {
   console.log("[vercel-should-build]", ...args);
@@ -39,17 +40,53 @@ if (!previousSha) {
   build("VERCEL_GIT_PREVIOUS_SHA missing; building defensively");
 }
 
-let changedFiles = [];
-try {
-  changedFiles = execFileSync("git", ["diff", "--name-only", previousSha, currentSha], {
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-  })
+function parseFileList(output) {
+  return output
     .split(/\r?\n/)
     .map((file) => file.trim().replaceAll("\\", "/"))
     .filter(Boolean);
+}
+
+function readChangedFiles(args) {
+  return parseFileList(
+    execFileSync("git", args, {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    }),
+  );
+}
+
+let changedFiles = [];
+let usedSingleCommitFallback = false;
+try {
+  changedFiles = readChangedFiles(["diff", "--name-only", previousSha, currentSha]);
 } catch (error) {
-  build(`git diff failed; building defensively: ${error.message}`);
+  log(`initial git diff failed: ${error.message.split(/\r?\n/)[0]}`);
+
+  if (commitRef) {
+    try {
+      execFileSync("git", ["fetch", "--no-tags", "--deepen=1000", "origin", commitRef], {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
+      });
+      changedFiles = readChangedFiles(["diff", "--name-only", previousSha, currentSha]);
+      log("diff succeeded after deepening Vercel's shallow checkout");
+    } catch (fetchError) {
+      log(`history deepen fallback failed: ${fetchError.message.split(/\r?\n/)[0]}`);
+    }
+  }
+
+  if (changedFiles.length === 0) {
+    try {
+      // Last resort for single-commit artifact pushes. This avoids rebuilding
+      // known live-data commits just because Vercel did not clone enough history.
+      changedFiles = readChangedFiles(["diff-tree", "--no-commit-id", "--name-only", "-r", currentSha]);
+      usedSingleCommitFallback = true;
+      log("using current-commit diff fallback because previous SHA is unavailable");
+    } catch (treeError) {
+      build(`git diff failed after fallbacks; building defensively: ${treeError.message}`);
+    }
+  }
 }
 
 if (changedFiles.length === 0) {
@@ -101,6 +138,9 @@ function isSkippable(file) {
 const buildRelevantFiles = changedFiles.filter((file) => !isSkippable(file));
 
 if (buildRelevantFiles.length === 0) {
+  if (usedSingleCommitFallback && !commitMessage.toLowerCase().startsWith("chore:")) {
+    build("single-commit fallback only skips chore artifact commits; building defensively");
+  }
   skip(`all ${changedFiles.length} changed path(s) are live-data artifacts; skipping build`);
 }
 
