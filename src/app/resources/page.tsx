@@ -62,14 +62,25 @@ export default function ResourcesPage() {
               href={resource.href}
               className="block p-6 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-500/30 transition-colors group flex flex-col h-full"
             >
-              <span className="inline-block text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded mb-3">
-                {resource.category}
-              </span>
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                <span className="inline-block rounded bg-emerald-500/10 px-2 py-1 font-mono text-xs text-emerald-400">
+                  {resource.category}
+                </span>
+                {resource.datePublished ? (
+                  <time dateTime={resource.datePublished} className="font-mono text-xs text-slate-500">
+                    {new Intl.DateTimeFormat("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    }).format(new Date(`${resource.datePublished}T12:00:00Z`))}
+                  </time>
+                ) : null}
+              </div>
               <h2 className="text-xl font-semibold text-slate-100 mb-2">
                 {resource.title}
               </h2>
               <p className="text-slate-400 text-sm leading-relaxed mb-4 flex-1">
-                {resource.description}
+                {resource.excerpt ?? resource.description}
               </p>
               <div className="flex items-center justify-between mt-auto pt-2">
                 <span className="text-xs text-slate-500 font-mono">

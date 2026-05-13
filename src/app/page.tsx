@@ -1,5 +1,6 @@
 import HomepageClient from "./HomepageClient";
 import { fetchHomePayload } from "@/lib/public-record";
+import { CURRENTLY_WATCHING, HOMEPAGE_LAB_NOTES } from "@/lib/resources";
 
 export const revalidate = 60;
 
@@ -15,6 +16,8 @@ export default async function Home() {
       initialRecentBets={payload.recent}
       initialPendingBets={payload.pending}
       initialLast7={payload.last7}
+      initialLabNotes={HOMEPAGE_LAB_NOTES}
+      currentlyWatching={CURRENTLY_WATCHING}
     />
   );
 }

@@ -11,8 +11,10 @@ import PublicBetsTable from "@/components/PublicBetsTable";
 import ResultBadge from "@/components/ResultBadge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
+import LabNotesSection from "@/components/LabNotesSection";
 import { formatMatchDate } from "@/lib/format";
 import { slugifyTip } from "@/lib/slugify";
+import type { Resource } from "@/lib/resources";
 
 const HOMEPAGE_KEYFRAMES = `
 @keyframes homepage-reveal {
@@ -327,6 +329,8 @@ type HomepageClientProps = {
   initialRecentBets?: HomepageBet[];
   initialPendingBets?: HomepageBet[];
   initialLast7?: { total: number; count: number } | null;
+  initialLabNotes?: Resource[];
+  currentlyWatching?: string | null;
 };
 
 function buildCombinedStats(liveStats: MarketStats[]) {
@@ -391,6 +395,8 @@ export default function HomepageClient({
   initialRecentBets = [],
   initialPendingBets = [],
   initialLast7 = null,
+  initialLabNotes = [],
+  currentlyWatching = null,
 }: HomepageClientProps) {
   const router = useRouter();
   const [recentBets, setRecentBets] = useState<HomepageBet[]>(initialRecentBets);
@@ -864,6 +870,8 @@ export default function HomepageClient({
           </div>
         </div>
       </section>
+
+      <LabNotesSection notes={initialLabNotes} currentlyWatching={currentlyWatching} />
 
       <section className="border-b border-slate-800/30 py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
