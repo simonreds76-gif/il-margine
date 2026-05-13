@@ -13,7 +13,7 @@
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
       "home_formation": "4-2-3-1",
-      "away_formation": "4-2-3-1",
+      "away_formation": "4-1-4-1",
       "home_players": [
         "Grégoire Coudert",
         "Kenny Lala",
@@ -32,10 +32,10 @@
         "Guéla Doué",
         "Andrew Omobamidele",
         "Ismaël Doukouré",
-        "Ben Chilwell",
-        "Mathis Amougou",
+        "Abdoul Ouattara",
         "Samir El Mourabet",
         "Diego Moreira",
+        "Valentín Barco",
         "Sebastian Nanasi",
         "Martial Godo",
         "Julio Enciso"
@@ -148,7 +148,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-2-3-1",
+          "formation": "4-1-4-1",
           "position_id": 11
         },
         {
@@ -157,7 +157,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-1-4-1",
           "position_id": 32
         },
         {
@@ -166,7 +166,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-1-4-1",
           "position_id": 34
         },
         {
@@ -175,62 +175,62 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-1-4-1",
           "position_id": 36
         },
         {
-          "name": "Ben Chilwell",
+          "name": "Abdoul Ouattara",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-1-4-1",
           "position_id": 38
-        },
-        {
-          "name": "Mathis Amougou",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64
         },
         {
           "name": "Samir El Mourabet",
           "line_index": 1,
-          "line_size": 2,
+          "line_size": 1,
           "role_score": 2,
           "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66
+          "formation": "4-1-4-1",
+          "position_id": 65
         },
         {
           "name": "Diego Moreira",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83
+          "formation": "4-1-4-1",
+          "position_id": 82
+        },
+        {
+          "name": "Valentín Barco",
+          "line_index": 2,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-1-4-1",
+          "position_id": 84
         },
         {
           "name": "Sebastian Nanasi",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85
+          "formation": "4-1-4-1",
+          "position_id": 86
         },
         {
           "name": "Martial Godo",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87
+          "formation": "4-1-4-1",
+          "position_id": 88
         },
         {
           "name": "Julio Enciso",
@@ -238,11 +238,21 @@
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-2-3-1",
+          "formation": "4-1-4-1",
           "position_id": 115
         }
       ],
-      "home_subs": [],
+      "home_subs": [
+        "Noah Jauny",
+        "Luck Zogbé",
+        "Axel Lassus",
+        "Hamidou Makalou",
+        "Lucas Tousart",
+        "Mama Baldé",
+        "Pathé Mboup",
+        "Rémy Lascary",
+        "Saliou Diop"
+      ],
       "away_subs": [],
       "home_unavailable": [
         "Brendan Chardonnet",
