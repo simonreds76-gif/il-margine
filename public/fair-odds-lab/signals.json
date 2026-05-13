@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T13:32:04.141112Z",
+  "generated_at": "2026-05-13T15:44:32.882884Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -32,9 +32,211 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 10,
-  "signals_qualifying": 0,
-  "leagues_covered": [],
-  "featured_signal_id": null,
-  "signals": []
+  "fixtures_evaluated": 19,
+  "signals_qualifying": 2,
+  "leagues_covered": [
+    "bundesliga",
+    "la-liga"
+  ],
+  "featured_signal_id": "20260516-christoph-baumgartner-53459f72b2",
+  "signals": [
+    {
+      "id": "20260516-christoph-baumgartner-53459f72b2",
+      "match": {
+        "home_team": "SC Freiburg",
+        "away_team": "RB Leipzig",
+        "league": "bundesliga",
+        "league_display": "Bundesliga",
+        "league_logo_path": "/league-logos/bundesliga.png",
+        "kickoff_utc": "2026-05-16T13:30:00Z",
+        "kickoff_display": "Sat 16 May 14:30 UK",
+        "fotmob_match_id": "4829616",
+        "fotmob_page_url": "/matches/freiburg-vs-rb-leipzig/80nandr#4829616",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Christoph Baumgartner",
+        "team": "RasenBallsport Leipzig",
+        "position": "MID",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/bundesliga/rasenballsport-leipzig.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#dc2626",
+        "team_shirt_pattern": "sash"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 47.3,
+        "fair_odds": 2.11
+      },
+      "market_data": {
+        "best_odds": 3.2,
+        "best_book": "Bet365",
+        "implied_chance_pct": 31.2
+      },
+      "edge": {
+        "price_gap_pp": 16.1,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 96
+        },
+        "share_of_team_chances_pct": 27,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Strong",
+          "percentile": 92
+        },
+        "recent_team_form": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-09",
+          "xg_for_avg": 2.59,
+          "xg_against_avg": 1.96,
+          "xgd_per90": 0.63,
+          "shots_for_avg": 18.0,
+          "shots_against_avg": 13.2,
+          "sot_for_avg": 7.8,
+          "sot_against_avg": 4.0,
+          "corners_for_avg": 6.6,
+          "corners_against_avg": 4.8
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 60
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-10",
+          "xg_for_avg": 1.03,
+          "xg_against_avg": 1.6,
+          "xgd_per90": -0.57,
+          "shots_for_avg": 9.6,
+          "shots_against_avg": 13.4,
+          "sot_for_avg": 3.4,
+          "sot_against_avg": 3.8,
+          "corners_for_avg": 2.8,
+          "corners_against_avg": 4.8
+        },
+        "fixture_boost_pct": -3,
+        "projected_minutes": 89,
+        "penalty_role": "Not on penalties",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Recent team form supports the attacking case",
+        "Opponent has been allowing chances recently"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260513-vedat-muriqi-0f598c2619",
+      "match": {
+        "home_team": "Getafe CF",
+        "away_team": "RCD Mallorca",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-05-13T19:30:00Z",
+        "kickoff_display": "Wed 13 May 20:30 UK",
+        "fotmob_match_id": "4837463",
+        "fotmob_page_url": "/matches/getafe-vs-mallorca/2dp4lm#4837463",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Vedat Muriqi",
+        "team": "Mallorca",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/la-liga/mallorca.png",
+        "team_primary_color": "#dc2626",
+        "team_secondary_color": "#111827",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 39.3,
+        "fair_odds": 2.55
+      },
+      "market_data": {
+        "best_odds": 3.25,
+        "best_book": "Bet365",
+        "implied_chance_pct": 30.8
+      },
+      "edge": {
+        "price_gap_pp": 8.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 91
+        },
+        "share_of_team_chances_pct": 35,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 7
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-10",
+          "xg_for_avg": 1.57,
+          "xg_against_avg": 1.51,
+          "xgd_per90": 0.06,
+          "shots_for_avg": 12.4,
+          "shots_against_avg": 12.6,
+          "sot_for_avg": 5.2,
+          "sot_against_avg": 3.2,
+          "corners_for_avg": 4.8,
+          "corners_against_avg": 5.8
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Low",
+          "percentile": 32
+        },
+        "opponent_recent_defence": {
+          "tier": "High",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-10",
+          "xg_for_avg": 0.62,
+          "xg_against_avg": 2.06,
+          "xgd_per90": -1.44,
+          "shots_for_avg": 9.8,
+          "shots_against_avg": 13.2,
+          "sot_for_avg": 1.6,
+          "sot_against_avg": 4.4,
+          "corners_for_avg": 4.8,
+          "corners_against_avg": 3.8
+        },
+        "fixture_boost_pct": -17,
+        "projected_minutes": 89,
+        "penalty_role": "Primary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent has been allowing chances recently",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    }
+  ]
 }
