@@ -79,6 +79,40 @@ function LeagueLogo({ team }: { team: ClubPenaltyTeam }) {
   );
 }
 
+function MiniClubLogo({
+  team,
+  size = "card",
+}: {
+  team: ClubPenaltyTeam;
+  size?: "card" | "nav";
+}) {
+  const wrapperClass =
+    size === "nav"
+      ? "inline-flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full border border-slate-700/70 bg-slate-950/80 shadow-[0_8px_18px_rgba(0,0,0,0.18)]"
+      : "inline-flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-700/75 bg-slate-950/80 shadow-[0_8px_18px_rgba(0,0,0,0.18)]";
+  const imageClass = size === "nav" ? "h-5 w-5 object-contain" : "h-6 w-6 object-contain";
+
+  return (
+    <span className={wrapperClass}>
+      {team.logoPath ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={team.logoPath} alt={`${team.team} crest`} className={imageClass} />
+      ) : (
+        <span className="font-mono text-[10px] font-semibold text-slate-300">{team.initials}</span>
+      )}
+    </span>
+  );
+}
+
+function MiniLeagueLogo({ team }: { team: ClubPenaltyTeam }) {
+  return (
+    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/70 bg-gradient-to-b from-white to-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={team.leagueLogoPath} alt={team.leagueLabel} className="h-5 w-5 object-contain" />
+    </span>
+  );
+}
+
 export async function generateStaticParams() {
   const teams = await readAllClubPenaltyTeams();
   return teams.map((team) => ({
@@ -325,17 +359,28 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
           </div>
 
           <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_14px_40px_rgba(0,0,0,0.18)] sm:p-6">
-            <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">More {team.leagueLabel}</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Related club penalty takers</h2>
+            <div className="flex items-start gap-3">
+              <MiniLeagueLogo team={team} />
+              <div>
+                <div className="font-mono text-xs uppercase tracking-[0.28em] text-emerald-400">More {team.leagueLabel}</div>
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-100">Related club penalty takers</h2>
+              </div>
+            </div>
             <div className="mt-5 grid gap-2 sm:grid-cols-2">
               {related.map((relatedTeam) => (
                 <Link
                   key={relatedTeam.relativeUrl}
                   href={relatedTeam.relativeUrl}
-                  className="flex items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-950/70 px-3 py-2 text-sm text-slate-300 transition hover:border-slate-600 hover:text-slate-100"
+                  className="group flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-950/70 px-3 py-2.5 text-sm text-slate-300 transition hover:border-slate-600 hover:bg-slate-950 hover:text-slate-100"
                 >
-                  <span className="truncate font-medium text-slate-100">{relatedTeam.team}</span>
-                  <span className="truncate text-xs text-slate-500">{relatedTeam.primary}</span>
+                  <MiniClubLogo team={relatedTeam} />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-medium text-slate-100 transition group-hover:text-emerald-300">
+                      {relatedTeam.team}
+                    </span>
+                    <span className="mt-0.5 block truncate text-xs text-slate-500">{relatedTeam.primary}</span>
+                  </span>
+                  <span className="text-slate-600 transition group-hover:text-emerald-300" aria-hidden="true">→</span>
                 </Link>
               ))}
             </div>
@@ -347,9 +392,31 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
             <span className="text-slate-100">Keep moving through {team.leagueLabel}:</span> use the previous and next links or return to the full table.
           </div>
           <div className="flex flex-wrap gap-2">
-            {previous ? <Link href={previous.relativeUrl} className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-500 hover:text-slate-100">Prev: {previous.team}</Link> : null}
-            {next ? <Link href={next.relativeUrl} className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-300 hover:border-slate-500 hover:text-slate-100">Next: {next.team}</Link> : null}
-            <Link href={`/penalty-takers#${team.leagueKey}`} className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1.5 text-xs text-emerald-100 hover:border-emerald-300/40 hover:bg-emerald-400/14">All {team.leagueLabel}</Link>
+            {previous ? (
+              <Link
+                href={previous.relativeUrl}
+                className="group inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-950 py-1.5 pr-3 pl-1.5 text-xs text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
+              >
+                <MiniClubLogo team={previous} size="nav" />
+                <span>Prev: <span className="font-medium text-slate-100 transition group-hover:text-emerald-300">{previous.team}</span></span>
+              </Link>
+            ) : null}
+            {next ? (
+              <Link
+                href={next.relativeUrl}
+                className="group inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-950 py-1.5 pr-3 pl-1.5 text-xs text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
+              >
+                <MiniClubLogo team={next} size="nav" />
+                <span>Next: <span className="font-medium text-slate-100 transition group-hover:text-emerald-300">{next.team}</span></span>
+              </Link>
+            ) : null}
+            <Link
+              href={`/penalty-takers#${team.leagueKey}`}
+              className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 py-1.5 pr-3 pl-1.5 text-xs text-emerald-100 transition hover:border-emerald-300/40 hover:bg-emerald-400/14"
+            >
+              <MiniLeagueLogo team={team} />
+              <span>All {team.leagueLabel}</span>
+            </Link>
           </div>
         </section>
       </main>
