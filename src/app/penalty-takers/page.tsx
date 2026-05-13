@@ -51,10 +51,14 @@ type RecentChange = {
   slug: string;
   leagueKey: string;
   leagueLabel: string;
+  leagueShort: string;
+  leagueLogoPath: string;
   primary: string;
   secondary: string;
   lastUpdated: string;
   lastUpdatedLabel: string;
+  logoPath: string;
+  initials: string;
 };
 
 type LeagueEntry = {
@@ -324,6 +328,8 @@ export default async function PenaltyTakersPage() {
       ...team,
       leagueKey: league.key,
       leagueLabel: league.label,
+      leagueShort: league.short,
+      leagueLogoPath: league.logoPath,
     })),
   );
   const sortedByUpdate = [...flattenedTeams]
@@ -348,10 +354,14 @@ export default async function PenaltyTakersPage() {
     slug: team.slug,
     leagueKey: team.leagueKey,
     leagueLabel: team.leagueLabel,
+    leagueShort: team.leagueShort,
+    leagueLogoPath: team.leagueLogoPath,
     primary: team.primary,
     secondary: team.secondary,
     lastUpdated: team.lastUpdated,
     lastUpdatedLabel: formatDateLabel(team.lastUpdated),
+    logoPath: team.logoPath,
+    initials: team.initials,
   }));
   const breadcrumbData = {
     "@context": "https://schema.org",

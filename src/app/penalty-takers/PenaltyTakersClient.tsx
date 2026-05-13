@@ -39,10 +39,14 @@ type Props = {
     slug: string;
     leagueKey: string;
     leagueLabel: string;
+    leagueShort: string;
+    leagueLogoPath: string;
     primary: string;
     secondary: string;
     lastUpdated: string;
     lastUpdatedLabel: string;
+    logoPath: string;
+    initials: string;
   }[];
 };
 
@@ -61,6 +65,60 @@ function getLeagueDotClass(leagueKey: string): string {
     default:
       return "bg-slate-500";
   }
+}
+
+function getLeagueRecentClasses(leagueKey: string): string {
+  switch (leagueKey) {
+    case "serie-a":
+      return "border-emerald-400/20 bg-emerald-400/8 text-emerald-200";
+    case "epl":
+      return "border-indigo-400/20 bg-indigo-400/8 text-indigo-200";
+    case "la-liga":
+      return "border-amber-400/20 bg-amber-400/8 text-amber-100";
+    case "bundesliga":
+      return "border-rose-400/20 bg-rose-400/8 text-rose-100";
+    case "ligue-1":
+      return "border-cyan-400/20 bg-cyan-400/8 text-cyan-100";
+    default:
+      return "border-slate-700/60 bg-slate-800/60 text-slate-300";
+  }
+}
+
+function RecentChangeCrest({
+  logoPath,
+  team,
+  initials,
+  leagueLogoPath,
+  leagueLabel,
+  leagueShort,
+}: {
+  logoPath: string;
+  team: string;
+  initials: string;
+  leagueLogoPath: string;
+  leagueLabel: string;
+  leagueShort: string;
+}) {
+  return (
+    <div className="relative flex h-14 w-16 shrink-0 items-center">
+      <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-slate-700/75 bg-slate-950/80 shadow-[0_10px_24px_rgba(0,0,0,0.22)]">
+        {logoPath ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={logoPath} alt={`${team} crest`} className="h-8 w-8 object-contain" />
+        ) : (
+          <span className="font-mono text-[11px] font-semibold tracking-tight text-slate-300">{initials}</span>
+        )}
+      </div>
+      <div className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center overflow-hidden rounded-xl border border-white/70 bg-gradient-to-b from-white to-slate-100 shadow-[0_8px_18px_rgba(0,0,0,0.28)]">
+        {leagueLogoPath ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={leagueLogoPath} alt={leagueLabel} className="h-[18px] w-[18px] object-contain" />
+        ) : (
+          <span className="font-mono text-[9px] font-bold text-slate-700">{leagueShort}</span>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function Crest({
@@ -279,20 +337,50 @@ export default function PenaltyTakersClient({
               <Link
                 key={`${change.leagueKey}-${change.slug}-${change.lastUpdated}`}
                 href={`/penalty-takers/${change.leagueKey}/${change.slug}`}
-                className={`grid grid-cols-[84px_20px_minmax(0,1fr)] items-center gap-3 px-4 py-3 transition hover:bg-slate-900/80 sm:grid-cols-[108px_20px_minmax(0,1fr)] ${index > 0 ? "border-t border-slate-800/80" : ""}`}
+                className={`group block px-4 py-4 transition hover:bg-slate-900/85 sm:px-5 ${index > 0 ? "border-t border-slate-800/80" : ""}`}
               >
-                <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-slate-500">
-                  {change.lastUpdatedLabel}
-                </span>
-                <span className={`h-2.5 w-2.5 rounded-full ${getLeagueDotClass(change.leagueKey)}`} />
-                <span className="min-w-0 text-sm leading-6 text-slate-300">
-                  <strong className="font-semibold text-slate-100">{change.team}</strong>
-                  <span className="text-slate-500"> — </span>
-                  <span>{change.primary}</span>
-                  {change.secondary && change.secondary !== "TBC" ? (
-                    <span className="text-slate-500"> next: {change.secondary}</span>
-                  ) : null}
-                </span>
+                <div className="flex items-center gap-4">
+                  <RecentChangeCrest
+                    logoPath={change.logoPath}
+                    team={change.team}
+                    initials={change.initials}
+                    leagueLogoPath={change.leagueLogoPath}
+                    leagueLabel={change.leagueLabel}
+                    leagueShort={change.leagueShort}
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <time
+                        dateTime={change.lastUpdated || undefined}
+                        className="font-mono text-[11px] uppercase tracking-[0.16em] text-slate-500"
+                      >
+                        {change.lastUpdatedLabel}
+                      </time>
+                      <span className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] ${getLeagueRecentClasses(change.leagueKey)}`}>
+                        <span className={`h-1.5 w-1.5 rounded-full ${getLeagueDotClass(change.leagueKey)}`} />
+                        {change.leagueLabel}
+                      </span>
+                    </div>
+                    <div className="mt-1.5 flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+                      <strong className="truncate text-[15px] font-semibold text-slate-100 transition group-hover:text-emerald-300">
+                        {change.team}
+                      </strong>
+                      <span className="hidden text-slate-600 sm:inline">/</span>
+                      <span className="min-w-0 text-sm text-slate-300">
+                        <span>{change.primary}</span>
+                        {change.secondary && change.secondary !== "TBC" ? (
+                          <>
+                            <span className="mx-2 text-slate-600">→</span>
+                            <span className="text-slate-400">{change.secondary}</span>
+                          </>
+                        ) : null}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-700/70 bg-slate-950/70 text-slate-500 transition group-hover:border-emerald-400/30 group-hover:text-emerald-300 sm:flex">
+                    <span aria-hidden="true">→</span>
+                  </div>
+                </div>
               </Link>
             ))}
           </div>
