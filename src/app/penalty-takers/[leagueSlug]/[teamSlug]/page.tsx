@@ -284,6 +284,13 @@ export default async function ClubPenaltyTakerPage({ params }: PageProps) {
               <p>
                 This page is built as a live Il Margine club file, not a one-name list. If the first-choice taker is injured, suspended, substituted or not starting, the second and third names become the useful part of the hierarchy.
               </p>
+              <p>
+                Penalty order is one input in goalscorer pricing. When {team.leagueLabel} fixtures are live, compare the hierarchy with the{" "}
+                <Link href="/fair-odds-lab" className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300">
+                  Goalscorer Fair Odds Lab
+                </Link>
+                .
+              </p>
             </div>
           </div>
 

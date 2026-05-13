@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
@@ -412,6 +413,23 @@ export default function TennisTips({
                   by the close.
                 </p>
               </div>
+            </div>
+            <div className="mt-5 rounded-xl border border-slate-800/80 bg-slate-950/40 p-4 text-sm leading-6 text-slate-400">
+              Want the caveats behind the current surface model? Read the{" "}
+              <Link
+                href="/resources/clay-season-tennis-model-caveats"
+                className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300"
+              >
+                ATP clay model note
+              </Link>
+              {" "}and the{" "}
+              <Link
+                href="/resources/how-to-read-a-tipster-track-record"
+                className="border-b border-emerald-500/30 text-emerald-400 hover:text-emerald-300"
+              >
+                track-record guide
+              </Link>
+              {" "}before treating any short sample as proof.
             </div>
           </div>
         </div>

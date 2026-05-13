@@ -1,115 +1,131 @@
-﻿"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import Footer from "@/components/Footer";
-import { RESOURCES, RESOURCE_CATEGORIES, type ResourceCategory } from "@/lib/resources";
 import PageHomeLink from "@/components/PageHomeLink";
+import { RESOURCES, RESOURCE_CATEGORIES, type ResourceCategory } from "@/lib/resources";
 
-export default function ResourcesPage() {
-  const [categoryFilter, setCategoryFilter] = useState<ResourceCategory | "">("");
+type PageProps = {
+  searchParams?: Promise<{
+    category?: string | string[];
+  }>;
+};
 
-  const filteredResources =
-    categoryFilter === ""
-      ? RESOURCES
-      : RESOURCES.filter((r) => r.category === categoryFilter);
+function getSelectedCategory(category?: string | string[]): ResourceCategory | "" {
+  const value = Array.isArray(category) ? category[0] : category;
+  return RESOURCE_CATEGORIES.includes(value as ResourceCategory) ? (value as ResourceCategory) : "";
+}
+
+function categoryHref(category: ResourceCategory | ""): string {
+  return category ? `/resources?category=${encodeURIComponent(category)}` : "/resources";
+}
+
+function categoryClasses(category: ResourceCategory | "", selected: ResourceCategory | ""): string {
+  const isActive = category === selected;
+  return [
+    "rounded-full border px-3 py-1.5 text-xs font-mono uppercase tracking-[0.16em] transition",
+    isActive
+      ? "border-emerald-400/45 bg-emerald-400/12 text-emerald-200"
+      : "border-slate-800 bg-slate-900/55 text-slate-400 hover:border-slate-600 hover:text-slate-200",
+  ].join(" ");
+}
+
+function formatResourceDate(datePublished?: string): string | null {
+  if (!datePublished) return null;
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(`${datePublished}T12:00:00Z`));
+}
+
+export default async function ResourcesPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const categoryFilter = getSelectedCategory(params?.category);
+  const filteredResources = categoryFilter === "" ? RESOURCES : RESOURCES.filter((resource) => resource.category === categoryFilter);
 
   return (
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
-      <section className="pt-6 pb-12 md:pt-6 md:pb-16 border-b border-slate-800/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="border-b border-slate-800/50 pt-6 pb-12 md:pt-6 md:pb-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <PageHomeLink className="mb-8" />
-          <span className="text-xs font-mono text-emerald-400 mb-3 block tracking-wider">
+          <span className="mb-3 block font-mono text-xs tracking-wider text-emerald-400">
             RESOURCES
           </span>
-          <h1 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-4">
+          <h1 className="mb-4 text-3xl font-semibold text-slate-100 sm:text-4xl">
             Betting Resources, Tools & Guides
           </h1>
-          <p className="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
+          <p className="max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
             Strategy pieces, calculators and reference pages for value, staking,
             bankroll management and the mechanics behind profitable betting.
           </p>
         </div>
       </section>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="mb-8 md:mb-10">
-          <label htmlFor="category-filter" className="sr-only">
-            Filter by category
-          </label>
-          <select
-            id="category-filter"
-            value={categoryFilter}
-            onChange={(e) =>
-              setCategoryFilter((e.target.value || "") as ResourceCategory | "")
-            }
-            className="w-full md:w-auto min-w-[200px] bg-slate-900/50 border border-slate-700 px-4 py-2.5 rounded-lg text-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50"
-          >
-            <option value="">All categories</option>
-            {RESOURCE_CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Article grid - 2-3 columns on desktop, single on mobile */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredResources.map((resource) => (
-            <Link
-              key={resource.href}
-              href={resource.href}
-              className="block p-6 bg-slate-900/50 border border-slate-800 rounded-lg hover:border-emerald-500/30 transition-colors group flex flex-col h-full"
-            >
-              <div className="mb-3 flex flex-wrap items-center gap-2">
-                <span className="inline-block rounded bg-emerald-500/10 px-2 py-1 font-mono text-xs text-emerald-400">
-                  {resource.category}
-                </span>
-                {resource.datePublished ? (
-                  <time dateTime={resource.datePublished} className="font-mono text-xs text-slate-500">
-                    {new Intl.DateTimeFormat("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    }).format(new Date(`${resource.datePublished}T12:00:00Z`))}
-                  </time>
-                ) : null}
-              </div>
-              <h2 className="text-xl font-semibold text-slate-100 mb-2">
-                {resource.title}
-              </h2>
-              <p className="text-slate-400 text-sm leading-relaxed mb-4 flex-1">
-                {resource.excerpt ?? resource.description}
-              </p>
-              <div className="flex items-center justify-between mt-auto pt-2">
-                <span className="text-xs text-slate-500 font-mono">
-                  {resource.minRead} min read
-                </span>
-                <span className="text-sm font-medium text-emerald-400 group-hover:text-emerald-300">
-                  Read article →
-                </span>
-              </div>
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+        <nav aria-label="Resource categories" className="mb-8 flex flex-wrap gap-2 md:mb-10">
+          <Link href={categoryHref("")} className={categoryClasses("", categoryFilter)}>
+            All categories
+          </Link>
+          {RESOURCE_CATEGORIES.map((category) => (
+            <Link key={category} href={categoryHref(category)} className={categoryClasses(category, categoryFilter)}>
+              {category}
             </Link>
           ))}
+        </nav>
+
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredResources.map((resource) => {
+            const dateLabel = formatResourceDate(resource.datePublished);
+            return (
+              <Link
+                key={resource.href}
+                href={resource.href}
+                className="group flex h-full flex-col rounded-lg border border-slate-800 bg-slate-900/50 p-6 transition-colors hover:border-emerald-500/30"
+              >
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <span className="inline-block rounded bg-emerald-500/10 px-2 py-1 font-mono text-xs text-emerald-400">
+                    {resource.category}
+                  </span>
+                  {dateLabel ? (
+                    <time dateTime={resource.datePublished} className="font-mono text-xs text-slate-500">
+                      {dateLabel}
+                    </time>
+                  ) : null}
+                </div>
+                <h2 className="mb-2 text-xl font-semibold text-slate-100 transition-colors group-hover:text-emerald-300">
+                  {resource.title}
+                </h2>
+                <p className="mb-4 flex-1 text-sm leading-relaxed text-slate-400">
+                  {resource.excerpt ?? resource.description}
+                </p>
+                <div className="mt-auto flex items-center justify-between pt-2">
+                  <span className="font-mono text-xs text-slate-500">
+                    {resource.minRead} min read
+                  </span>
+                  <span className="text-sm font-medium text-emerald-400 group-hover:text-emerald-300">
+                    Read article -&gt;
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
         </div>
 
-        {filteredResources.length === 0 && (
-          <p className="text-slate-500 text-center py-12">
+        {filteredResources.length === 0 ? (
+          <p className="py-12 text-center text-slate-500">
             No articles in this category yet. Check back soon.
           </p>
-        )}
+        ) : null}
 
         <section className="mt-12 rounded-2xl border border-slate-800/80 bg-slate-900/45 p-6 md:p-8">
           <div className="max-w-3xl">
-            <div className="text-xs font-mono uppercase tracking-[0.18em] text-slate-400">
+            <div className="font-mono text-xs uppercase tracking-[0.18em] text-slate-400">
               Reference Boards
             </div>
             <h2 className="mt-3 text-2xl font-semibold text-slate-100">
               Live reference pages
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-slate-400">
-              The site also has a couple of live boards that work more like reference tools
+              The site also has live boards that work more like reference tools
               than educational reads.
             </p>
           </div>
@@ -119,17 +135,18 @@ export default function ResourcesPage() {
               href="/penalty-takers"
               className="rounded-xl border border-slate-800 bg-slate-950/60 p-5 transition-colors hover:border-emerald-500/25"
             >
-              <div className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">
+              <div className="font-mono text-xs uppercase tracking-[0.18em] text-emerald-400">
                 Club board
               </div>
               <h3 className="mt-3 text-xl font-semibold text-slate-100">
                 Penalty Takers 2025/26
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                First, second and third-choice takers for every club across the top five leagues.
+                First, second and third-choice takers for every club across the top five leagues,
+                with individual club pages for team-specific searches.
               </p>
               <div className="mt-4 text-sm font-medium text-emerald-400">
-                Open club board →
+                Open club board -&gt;
               </div>
             </Link>
 
@@ -137,7 +154,7 @@ export default function ResourcesPage() {
               href="/penalty-takers/world-cup-2026"
               className="rounded-xl border border-slate-800 bg-slate-950/60 p-5 transition-colors hover:border-emerald-500/25"
             >
-              <div className="text-xs font-mono uppercase tracking-[0.18em] text-emerald-400">
+              <div className="font-mono text-xs uppercase tracking-[0.18em] text-emerald-400">
                 Tournament board
               </div>
               <h3 className="mt-3 text-xl font-semibold text-slate-100">
@@ -147,7 +164,7 @@ export default function ResourcesPage() {
                 Country-by-country hierarchy pages for the tournament with one page per nation.
               </p>
               <div className="mt-4 text-sm font-medium text-emerald-400">
-                Open World Cup board →
+                Open World Cup board -&gt;
               </div>
             </Link>
           </div>
@@ -158,4 +175,3 @@ export default function ResourcesPage() {
     </div>
   );
 }
-
