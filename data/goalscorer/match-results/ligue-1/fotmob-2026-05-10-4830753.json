@@ -202,7 +202,7 @@
       "started": false,
       "squad_status": "sub",
       "minutes_played": 23,
-      "goals": 1,
+      "goals": 0,
       "own_goals": 0,
       "subbed_on": true,
       "subbed_off": false,
@@ -315,21 +315,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Jérémy Jacquet",
-      "fotmob_id": 1473534,
-      "team": "Rennes",
-      "team_id": 9851,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Przemyslaw Frankowski",
       "fotmob_id": 402419,
       "team": "Rennes",
@@ -382,8 +367,8 @@
       "started": true,
       "squad_status": "starter",
       "minutes_played": 90,
-      "goals": 0,
-      "own_goals": 0,
+      "goals": 1,
+      "own_goals": 1,
       "subbed_on": false,
       "subbed_off": false,
       "sub_in_minute": 0,
@@ -643,66 +628,6 @@
       "subbed_off": false,
       "sub_in_minute": 0,
       "sub_out_minute": 0
-    },
-    {
-      "name": "Julien Lopez",
-      "fotmob_id": 354477,
-      "team": "Paris FC",
-      "team_id": 6379,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Tuomas Ollila",
-      "fotmob_id": 965666,
-      "team": "Paris FC",
-      "team_id": 6379,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Pierre-Yves Hamel",
-      "fotmob_id": 690119,
-      "team": "Paris FC",
-      "team_id": 6379,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
-      "name": "Jean-Philippe Krasso",
-      "fotmob_id": 853108,
-      "team": "Paris FC",
-      "team_id": 6379,
-      "started": false,
-      "squad_status": "unavailable",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
     }
   ],
   "goal_events": [
@@ -722,9 +647,9 @@
     },
     {
       "minute": 75,
-      "scorer": "Breel Embolo",
-      "fotmob_id": 527103,
-      "team": "Rennes",
+      "scorer": "Diego Coppola",
+      "fotmob_id": 1321562,
+      "team": "Paris FC",
       "is_own_goal": false
     }
   ],
@@ -892,5 +817,5 @@
       "direct_replacement_verified": true
     }
   ],
-  "fetched_at": "2026-05-12T01:45:37Z"
+  "fetched_at": "2026-05-13T01:30:58Z"
 }

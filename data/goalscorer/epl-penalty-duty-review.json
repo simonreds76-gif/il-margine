@@ -1,8 +1,35 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-12T01:46:31Z",
-  "row_count": 4,
+  "generated_at": "2026-05-13T01:32:04Z",
+  "row_count": 5,
   "rows": [
+    {
+      "date": "2026-05-11",
+      "league": "epl",
+      "review_source": "settled_logs",
+      "match": "Tottenham Hotspur vs Leeds United",
+      "team": "Leeds",
+      "opponent": "Tottenham",
+      "actual_taker": "Dominic Calvert-Lewin",
+      "actual_role_pre_match": "primary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "primary_pre_match": "Dominic Calvert-Lewin",
+      "secondary_pre_match": "Lukas Nmecha",
+      "tertiary_pre_match": "Joel Piroe",
+      "primary_lineup_status": "unknown",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "needs_manual_review",
+      "review_priority": "medium",
+      "editorial_note": "Dominic Calvert-Lewin took 1 penalty attempt for Leeds vs Tottenham. Primary pre-match: Dominic Calvert-Lewin (unknown). Secondary pre-match: Lukas Nmecha (unknown). Needs manual editorial review.",
+      "context_generated_at": "2026-05-12T19:54:01Z",
+      "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
+    },
     {
       "date": "2026-05-04",
       "league": "epl",
@@ -27,7 +54,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Igor Jesus took 1 penalty attempt for Nottingham Forest vs Chelsea. Primary pre-match: Chris Wood (unknown). Secondary pre-match: Morgan Gibbs-White (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-05-11T19:49:01Z",
+      "context_generated_at": "2026-05-12T19:54:01Z",
       "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
     },
     {
@@ -54,7 +81,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Cole Palmer took 1 penalty attempt for Chelsea vs Nottingham Forest. Primary pre-match: Cole Palmer (unknown). Secondary pre-match: Enzo Fernández (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-11T19:49:01Z",
+      "context_generated_at": "2026-05-12T19:54:01Z",
       "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
     },
     {
@@ -81,7 +108,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Eli Junior Kroupi took 1 penalty attempt for Bournemouth vs Crystal Palace. Primary pre-match: Eli Junior Kroupi (unknown). Secondary pre-match: Marcus Tavernier (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-11T19:49:01Z",
+      "context_generated_at": "2026-05-12T19:54:01Z",
       "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
     },
     {
@@ -108,7 +135,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Thiago took 1 penalty attempt for Brentford vs West Ham. Primary pre-match: Thiago (unknown). Secondary pre-match: Kevin Schade (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-11T19:49:01Z",
+      "context_generated_at": "2026-05-12T19:54:01Z",
       "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
     }
   ]
