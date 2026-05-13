@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T20:14:50.635888Z",
+  "generated_at": "2026-05-13T21:47:29.086986Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -32,7 +32,7 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 18,
+  "fixtures_evaluated": 16,
   "signals_qualifying": 2,
   "leagues_covered": [
     "bundesliga",
@@ -82,13 +82,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 96
+          "percentile": 97
         },
         "share_of_team_chances_pct": 27,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 91
+          "percentile": 93
         },
         "recent_team_form": {
           "tier": "Positive",
@@ -107,7 +107,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 61
+          "percentile": 56
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -181,13 +181,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 91
+          "percentile": 92
         },
         "share_of_team_chances_pct": 35,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 7
+          "percentile": 8
         },
         "recent_team_form": {
           "tier": "Average",
@@ -206,7 +206,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 33
+          "percentile": 28
         },
         "opponent_recent_defence": {
           "tier": "High",
