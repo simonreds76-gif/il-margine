@@ -75,7 +75,7 @@ interface FairOddsMatch {
 
 interface SignalSummary {
   id: number;
-  kind?: "clay_guarded" | "clay_2026" | "spread_v1" | "volume_200" | "volume_200_upgrade" | "volume_275";
+  kind?: "challenger_ml_shadow" | "clay_guarded" | "clay_2026" | "spread_v1" | "volume_200" | "volume_200_upgrade" | "volume_275";
   player1_id?: number;
   player2_id?: number;
   player1_name: string;
@@ -107,6 +107,30 @@ interface SignalSummary {
   clay_guarded_selected_market_prob?: number;
   clay_guarded_selected_elo_gap_vs_market?: number;
   handicap_point_prob_source?: "stored_p_a_p_b" | "fallback_divergent_gap" | "fallback_missing";
+}
+
+interface ChallengerNearmiss {
+  id: number;
+  date?: string;
+  time_utc?: string;
+  player1_name: string;
+  player2_name: string;
+  side?: string;
+  value_pct?: number;
+  surface?: string;
+  league?: "ATP" | "Challenger";
+  series?: string;
+  confidence?: string;
+  data_coverage_tag?: string;
+  match_count_12m_p1?: number;
+  match_count_12m_p2?: number;
+  matches_total_p1?: number;
+  matches_total_p2?: number;
+  recent_challenger_plus_p1?: number;
+  recent_challenger_plus_p2?: number;
+  last_match_days_p1?: number;
+  last_match_days_p2?: number;
+  skip_reason: string;
 }
 
 interface StrictPolicyMeta {
@@ -156,14 +180,18 @@ interface ApiResponse {
   signals_volume?: SignalSummary[];
   signals_volume_200_live?: SignalSummary[];
   signals_volume_200_upgrade_live?: SignalSummary[];
+  signals_challenger_ml?: SignalSummary[];
+  challenger_nearmisses?: ChallengerNearmiss[];
   signals_clay_guarded?: SignalSummary[];
   signals_clay_2026?: SignalSummary[];
   signals_spread_v1?: SignalSummary[];
   signal_attachment?: {
+    challenger_ml_shadow?: { loaded: number; attached: number; unmatched: number };
     clay_guarded?: { loaded: number; attached: number; unmatched: number };
     clay_2026?: { loaded: number; attached: number; unmatched: number };
     spread_v1?: { loaded: number; attached: number; unmatched: number };
   };
+  internal_research_lanes?: boolean;
   error?: string;
 }
 
@@ -261,6 +289,7 @@ function bestValueBadge(m: FairOddsMatch): { side: string; value: number } | nul
 type SignalFeedCategory =
   | "strict"
   | "shadow"
+  | "challenger_ml_shadow"
   | "volume_200"
   | "volume_200_upgrade"
   | "volume_275"
@@ -298,6 +327,13 @@ function signalFeedMeta(category: SignalFeedCategory, shadowProfile?: string): {
       label: "VOL200",
       badgeClass: "border-amber-500/30 bg-amber-500/10 text-amber-300",
       accentClass: "text-amber-300",
+    };
+  }
+  if (category === "challenger_ml_shadow") {
+    return {
+      label: "CH ML",
+      badgeClass: "border-fuchsia-400/35 bg-fuchsia-400/10 text-fuchsia-200",
+      accentClass: "text-fuchsia-200",
     };
   }
   if (category === "volume_200_upgrade") {
@@ -341,6 +377,7 @@ function primarySignalBadgeMeta(
   shadowProfile?: string,
 ): { label: string; className: string; title?: string } | null {
   const clayGuardedSignal = rowSignals.find((signal) => signal.kind === "clay_guarded");
+  const challengerSignal = rowSignals.find((signal) => signal.kind === "challenger_ml_shadow");
   const claySignal = rowSignals.find((signal) => signal.kind === "clay_2026");
   const spreadSignal = rowSignals.find((signal) => signal.kind === "spread_v1");
 
@@ -349,6 +386,14 @@ function primarySignalBadgeMeta(
       label: "STRICT",
       className: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
       title: "Strict policy match",
+    };
+  }
+
+  if (challengerSignal) {
+    return {
+      label: "CH ML",
+      className: "border-fuchsia-400/35 bg-fuchsia-400/10 text-fuchsia-200",
+      title: "Internal Challenger ML shadow signal",
     };
   }
 
@@ -437,10 +482,11 @@ function categoryForShadowProfile(profile?: string): SignalFeedCategory {
 }
 
 function rowSignalKindOrder(kind?: SignalSummary["kind"]): number {
-  if (kind === "clay_guarded") return 0;
-  if (kind === "clay_2026") return 1;
-  if (kind === "spread_v1") return 2;
-  return 3;
+  if (kind === "challenger_ml_shadow") return 0;
+  if (kind === "spread_v1") return 1;
+  if (kind === "clay_guarded") return 2;
+  if (kind === "clay_2026") return 3;
+  return 4;
 }
 
 function rowSignalSort(signals: SignalSummary[]): SignalSummary[] {
@@ -481,7 +527,9 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
           <div
             key={`${signal.kind ?? signal.bet_type}-${signal.id}`}
             className={`w-full min-w-0 rounded-xl border px-3 py-3 ${
-              signal.kind === "clay_guarded"
+              signal.kind === "challenger_ml_shadow"
+                ? "border-fuchsia-400/25 bg-fuchsia-400/8"
+                : signal.kind === "clay_guarded"
                 ? "border-lime-500/25 bg-lime-500/8"
                 : signal.kind === "clay_2026"
                   ? "border-orange-500/25 bg-orange-500/8"
@@ -493,12 +541,18 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
                 <div className="flex flex-wrap items-center gap-1.5">
                   <span
                     className={`rounded border px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${
-                      signal.kind === "clay_2026"
+                      signal.kind === "challenger_ml_shadow"
+                        ? "border-fuchsia-400/35 bg-fuchsia-400/10 text-fuchsia-200"
+                        : signal.kind === "clay_2026"
                         ? "border-orange-500/30 bg-orange-500/10 text-orange-200"
                         : "border-cyan-500/25 bg-cyan-500/10 text-cyan-300"
                     }`}
                   >
-                    {signal.kind === "clay_2026" ? "Clay 2026 ML" : "Spread v1"}
+                    {signal.kind === "challenger_ml_shadow"
+                      ? "Challenger ML"
+                      : signal.kind === "clay_2026"
+                        ? "Clay 2026 ML"
+                        : "Spread v1"}
                   </span>
                   <span className="rounded border border-slate-700/70 bg-slate-950/70 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-200">
                     {signalSideBadgeText(signal)}
@@ -751,6 +805,11 @@ function SignalFeedList({
                       CH
                     </span>
                   ) : null}
+                  {signal.kind === "challenger_ml_shadow" ? (
+                    <span className="rounded border border-fuchsia-400/30 bg-fuchsia-400/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-fuchsia-200">
+                      INTERNAL
+                    </span>
+                  ) : null}
                   {signal.kind === "clay_2026" && signal.league === "Challenger" ? (
                     <span className="rounded border border-amber-500/25 bg-amber-500/10 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-amber-200">
                       UNVALIDATED CH
@@ -793,6 +852,78 @@ function SignalFeedList({
         );
       })}
     </ul>
+  );
+}
+
+function challengerSkipReasonLabel(reason?: string): string {
+  if (reason === "coverage_thin") return "Coverage thin";
+  if (reason === "confidence_low") return "Confidence low";
+  if (reason === "edge_below_floor") return "Edge below 10%";
+  if (reason === "edge_above_cap") return "Edge above 15%";
+  if (reason === "model_market_gap") return "Model/market gap";
+  if (reason === "model_ml_excluded") return "Model ML excluded";
+  if (reason === "pin_ml_excluded") return "Pinnacle excluded";
+  if (reason === "surface_blocked") return "Surface blocked";
+  return reason ? reason.replace(/_/g, " ") : "Unknown";
+}
+
+function challengerCoverageLine(row: ChallengerNearmiss): string {
+  const surface = `surface ${row.match_count_12m_p1 ?? "?"}/${row.match_count_12m_p2 ?? "?"}`;
+  const total = `total ${row.matches_total_p1 ?? "?"}/${row.matches_total_p2 ?? "?"}`;
+  const chall = `CH+ ${row.recent_challenger_plus_p1 ?? "?"}/${row.recent_challenger_plus_p2 ?? "?"}`;
+  const days = `days ${row.last_match_days_p1 ?? "?"}/${row.last_match_days_p2 ?? "?"}`;
+  return `${surface} | ${total} | ${chall} | ${days}`;
+}
+
+function ChallengerNearmissList({ rows }: { rows: ChallengerNearmiss[] }) {
+  if (!rows.length) {
+    return <p className="text-[13px] italic text-slate-500">No Challenger near-misses recorded for the active slate.</p>;
+  }
+
+  const reasonCounts = Array.from(
+    rows.reduce((acc, row) => {
+      const key = row.skip_reason || "unknown";
+      acc.set(key, (acc.get(key) ?? 0) + 1);
+      return acc;
+    }, new Map<string, number>()),
+  ).sort((a, b) => b[1] - a[1]);
+
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2">
+        {reasonCounts.map(([reason, count]) => (
+          <span
+            key={reason}
+            className="rounded-full border border-slate-700/70 bg-slate-950/60 px-2 py-1 text-[11px] font-medium text-slate-300"
+          >
+            {challengerSkipReasonLabel(reason)} <span className="text-slate-500">{count}</span>
+          </span>
+        ))}
+      </div>
+      <div className="grid gap-2 lg:grid-cols-2">
+        {rows.slice(0, 8).map((row) => (
+          <div key={`${row.date}-${row.player1_name}-${row.player2_name}-${row.skip_reason}`} className="rounded-xl border border-slate-800/80 bg-slate-900/55 px-3 py-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="truncate text-[13px] font-semibold text-slate-100">
+                  {row.player1_name} vs {row.player2_name}
+                </div>
+                <div className="mt-1 text-[11px] text-slate-500">
+                  {row.surface ?? "surface?"} | {row.series ?? "tournament?"} | {row.confidence ?? "conf?"} | {row.data_coverage_tag ?? "tag?"}
+                </div>
+                <div className="mt-1 text-[11px] text-slate-500">{challengerCoverageLine(row)}</div>
+              </div>
+              <div className="shrink-0 text-right">
+                <div className={`font-mono text-[13px] font-semibold ${valueColor(row.value_pct)}`}>{fmtPct(row.value_pct)}</div>
+                <div className="mt-1 rounded border border-amber-500/25 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-200">
+                  {challengerSkipReasonLabel(row.skip_reason)}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -959,6 +1090,13 @@ export default function FairOddsPage() {
       signal,
     })),
   );
+  const challengerFeedItems = sortSignalFeedItems(
+    (data?.signals_challenger_ml ?? []).map((signal) => ({
+      key: `challenger-${signal.id}`,
+      category: "challenger_ml_shadow" as const,
+      signal,
+    })),
+  );
   const clayGuardedFeedItems = sortSignalFeedItems(
     (data?.signals_clay_guarded ?? []).map((signal) => ({
       key: `clay-guarded-${signal.id}`,
@@ -997,16 +1135,38 @@ export default function FairOddsPage() {
       items: shadowFeedItems,
       emptyLabel: `No ${shadowProfileLabel(data?.shadow_profile).toLowerCase()} shadow-only signals today`,
     },
+    ...(data?.internal_research_lanes
+      ? [
+          {
+            key: "challenger",
+            category: "challenger_ml_shadow" as const,
+            title: "Challenger ML",
+            subtitle: "Internal HIGH-coverage 10-15% edge lane",
+            items: challengerFeedItems,
+            emptyLabel:
+              (data?.challenger_nearmisses?.length ?? 0) > 0
+                ? "No live Challenger ML signals; see near-misses below."
+                : "No Challenger ML signals today",
+          },
+        ]
+      : []),
+    {
+      key: "spread",
+      category: "spread_v1" as const,
+      title: "Spread v1",
+      subtitle: "Strict-first ATP bo3 hard/clay research spreads",
+      items: spreadFeedItems,
+      emptyLabel: "No spread v1 signals today",
+    },
+  ];
+  const archivedSignalSections = [
     ...(data?.shadow_profile !== "volume_200" && volume200CompareFeedItems.length
       ? [
           {
             key: "volume200-compare",
             category: "volume_200" as const,
-            title: "Volume 200",
-            subtitle:
-              data?.shadow_profile === "volume_200"
-                ? "Active volume lane"
-                : "Parallel baseline lane",
+            title: "Volume 200 baseline",
+            subtitle: "Reference lane",
             items: volume200CompareFeedItems,
             emptyLabel: "No Volume 200 signals today",
           },
@@ -1018,10 +1178,7 @@ export default function FairOddsPage() {
             key: "volume200u-compare",
             category: "volume_200_upgrade" as const,
             title: "Volume 200 Upgrade",
-            subtitle:
-              data?.shadow_profile === "volume_200_upgrade"
-                ? "Active upgraded volume lane"
-                : "Parallel candidate lane",
+            subtitle: "Archived candidate lane",
             items: volume200UpgradeFeedItems,
             emptyLabel: "No Volume 200 Upgrade signals today",
           },
@@ -1031,7 +1188,7 @@ export default function FairOddsPage() {
       key: "clay-guarded",
       category: "clay_guarded" as const,
       title: "Clay Guard",
-      subtitle: "Allow-tier ATP250 dogs with Elo >= market",
+      subtitle: "Archived legacy clay dog gate",
       items: clayGuardedFeedItems,
       emptyLabel: "No Clay Guard signals today",
     },
@@ -1039,19 +1196,11 @@ export default function FairOddsPage() {
       key: "clay",
       category: "clay_2026" as const,
       title: "Clay 2026",
-      subtitle: "Calibrated clay ML lane",
+      subtitle: "Archived calibrated clay ML lane",
       items: clayFeedItems,
       emptyLabel: "No Clay 2026 signals today",
     },
-    {
-      key: "spread",
-      category: "spread_v1" as const,
-      title: "Spread v1",
-      subtitle: "Strict-first ATP bo3 hard/clay research spreads",
-      items: spreadFeedItems,
-      emptyLabel: "No spread v1 signals today",
-    },
-  ];
+  ].filter((section) => section.items.length > 0);
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_20%_0%,#1a2235_0%,#0f1117_45%,#0c0e14_100%)] text-slate-100">
@@ -1101,6 +1250,13 @@ export default function FairOddsPage() {
               <span><span className="text-slate-200">{data.pinnacle_matched_count}</span> matched</span>
               {data.signal_attachment && (
                 <>
+                  {data.internal_research_lanes ? (
+                    <span className={data.signal_attachment.challenger_ml_shadow?.unmatched ? "text-amber-300" : "text-fuchsia-200"}>
+                      Challenger ML <span className="text-slate-200">{data.signal_attachment.challenger_ml_shadow?.attached ?? 0}/{data.signal_attachment.challenger_ml_shadow?.loaded ?? 0}</span>
+                      {" "}
+                      <span className="text-slate-500">near {data.challenger_nearmisses?.length ?? 0}</span>
+                    </span>
+                  ) : null}
                   <span className={data.signal_attachment.clay_guarded?.unmatched ? "text-amber-300" : ""}>
                     Clay Guard <span className="text-slate-200">{data.signal_attachment.clay_guarded?.attached ?? 0}/{data.signal_attachment.clay_guarded?.loaded ?? 0}</span>
                   </span>
@@ -1142,9 +1298,14 @@ export default function FairOddsPage() {
               <div>
                 <h2 className="text-base font-semibold tracking-tight text-slate-100">Signals</h2>
                 <p className="mt-1 text-[13px] text-slate-500">
-                  Click a policy to expand its signals. Each section stays sorted by highest value first.
+                  Active lanes only. Archived clay/legacy lanes are tucked below so the board stays readable.
                 </p>
               </div>
+              {data.internal_research_lanes ? (
+                <span className="inline-flex w-fit rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-fuchsia-200">
+                  internal research on
+                </span>
+              ) : null}
             </div>
 
             <div className="mt-4 space-y-3">
@@ -1190,8 +1351,84 @@ export default function FairOddsPage() {
               })}
             </div>
 
+            {data.internal_research_lanes ? (
+              <details className="mt-4 rounded-xl border border-fuchsia-400/20 bg-fuchsia-400/5">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-3">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded border border-fuchsia-400/35 bg-fuchsia-400/10 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-fuchsia-200">
+                        CH AUDIT
+                      </span>
+                      <span className="text-[14px] font-medium text-slate-100">Challenger near-misses</span>
+                      <span className="text-[12px] text-slate-500">why candidates failed the HIGH-coverage gate</span>
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-3 text-[11px]">
+                    <span className="text-slate-400">
+                      <span className="text-slate-200">{data.challenger_nearmisses?.length ?? 0}</span> rows
+                    </span>
+                    <span className="text-slate-500 transition-transform group-open:rotate-180">v</span>
+                  </div>
+                </summary>
+                <div className="border-t border-fuchsia-400/15 px-3 pb-3 pt-3">
+                  <ChallengerNearmissList rows={data.challenger_nearmisses ?? []} />
+                </div>
+              </details>
+            ) : null}
+
+            {archivedSignalSections.length > 0 ? (
+              <details className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/35">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-3">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded border border-slate-700/70 bg-slate-900/80 px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+                        ARCHIVE
+                      </span>
+                      <span className="text-[14px] font-medium text-slate-100">Legacy / paused lanes</span>
+                      <span className="text-[12px] text-slate-500">hidden from the active board</span>
+                    </div>
+                  </div>
+                  <span className="text-[11px] text-slate-500">{archivedSignalSections.length} lanes</span>
+                </summary>
+                <div className="space-y-3 border-t border-slate-800/70 px-3 pb-3 pt-3">
+                  {archivedSignalSections.map((section) => {
+                    const meta = signalFeedMeta(section.category, data.shadow_profile);
+                    return (
+                      <details key={section.key} className="rounded-xl border border-slate-800/80 bg-slate-950/45">
+                        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3 py-3">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className={`rounded border px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${meta.badgeClass}`}>
+                              {meta.label}
+                            </span>
+                            <span className="text-[13px] font-medium text-slate-100">{section.title}</span>
+                            <span className="text-[12px] text-slate-500">{section.subtitle}</span>
+                          </div>
+                          <span className="text-[11px] text-slate-400">{section.items.length} signals</span>
+                        </summary>
+                        <div className="border-t border-slate-800/70 px-3 pb-3 pt-3">
+                          <SignalFeedList
+                            items={section.items}
+                            emptyLabel={section.emptyLabel}
+                            shadowProfile={data.shadow_profile}
+                          />
+                        </div>
+                      </details>
+                    );
+                  })}
+                </div>
+              </details>
+            ) : null}
+
             {data.signal_attachment && (
               <div className="mt-4 border-t border-slate-800/70 pt-3 text-[11px] text-slate-500">
+                {data.internal_research_lanes ? (
+                  <>
+                    Challenger ML {data.signal_attachment.challenger_ml_shadow?.attached ?? 0}/{data.signal_attachment.challenger_ml_shadow?.loaded ?? 0}
+                    {" | "}
+                    Near-miss {data.challenger_nearmisses?.length ?? 0}
+                    {" | "}
+                  </>
+                ) : null}
                 Clay Guard {data.signal_attachment.clay_guarded?.attached ?? 0}/{data.signal_attachment.clay_guarded?.loaded ?? 0}
                 {" | "}
                 Clay 2026 {data.signal_attachment.clay_2026?.attached ?? 0}/{data.signal_attachment.clay_2026?.loaded ?? 0}

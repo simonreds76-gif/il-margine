@@ -221,12 +221,15 @@ const TOURNAMENT_SPEED_SHIFT_SIGNAL_SCALE = 2.0;
 const FAST_CLAY_SPEED_THRESHOLD = 0.1;
 const CLAY_2026_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-claycal-live.csv");
 const SPREAD_V1_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-spreadv1-live.csv");
+const CHALLENGER_ML_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-challenger-ml-live.csv");
+const CHALLENGER_ML_NEARMISS_CSV = getKnownProjectFilePath("data/backtest/challenger-ml-shadow-nearmiss.csv");
 const FAIR_ODDS_CLAY_2026_ENABLED = parseBoolEnv("FAIR_ODDS_CLAY_2026_ENABLED", false);
 const FAIR_ODDS_TENNIS_SPREADS_ENABLED = parseBoolEnv("FAIR_ODDS_TENNIS_SPREADS_ENABLED", false);
 const FAIR_ODDS_SPREAD_V1_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_V1_ENABLED", true);
+const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
 type MatchSide = "P1" | "P2";
 type FastClayArchetype = "both" | "serve_led" | "return_led" | "contrarian";
-type ShadowSignalKind = "clay_2026" | "spread_v1";
+type ShadowSignalKind = "clay_2026" | "spread_v1" | "challenger_ml_shadow";
 
 interface ShadowSignalSummary {
   id: number;
@@ -259,6 +262,30 @@ interface ShadowSignalSummary {
   clay_2026_calibrated_odds2?: number;
   clay_2026_selected_prob?: number;
   handicap_point_prob_source?: "stored_p_a_p_b" | "fallback_divergent_gap" | "fallback_missing";
+}
+
+interface ChallengerNearmissSummary {
+  id: number;
+  date?: string;
+  time_utc?: string;
+  player1_name: string;
+  player2_name: string;
+  side?: string;
+  value_pct?: number;
+  surface?: string;
+  league?: "ATP" | "Challenger";
+  series?: string;
+  confidence?: string;
+  data_coverage_tag?: string;
+  match_count_12m_p1?: number;
+  match_count_12m_p2?: number;
+  matches_total_p1?: number;
+  matches_total_p2?: number;
+  recent_challenger_plus_p1?: number;
+  recent_challenger_plus_p2?: number;
+  last_match_days_p1?: number;
+  last_match_days_p2?: number;
+  skip_reason: string;
 }
 
 interface SignalAttachmentDiagnostics {
@@ -295,6 +322,13 @@ function spreadConflictDirection(signal: ShadowSignalSummary): MatchSide | null 
   if (signal.side === "P1+") return "P1";
   if (signal.side === "P2-") return "P2";
   return null;
+}
+
+function shadowKindRank(kind: ShadowSignalKind): number {
+  if (kind === "challenger_ml_shadow") return 0;
+  if (kind === "spread_v1") return 1;
+  if (kind === "clay_2026") return 2;
+  return 3;
 }
 
 function suppressConflictingClaySignals(
@@ -1209,6 +1243,68 @@ function loadActiveShadowSignals(csvPath: string, kind: ShadowSignalKind, active
       void settlement_status;
       return rest;
     });
+}
+
+function loadChallengerNearmisses(csvPath: string, activeDate?: string): ChallengerNearmissSummary[] {
+  if (!fs.existsSync(csvPath)) return [];
+
+  let text = "";
+  try {
+    text = fs.readFileSync(csvPath, "utf8");
+  } catch (e) {
+    console.warn(`[fair-odds] Could not read Challenger near-miss CSV: ${csvPath}`, e);
+    return [];
+  }
+
+  const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+  if (lines.length < 2) return [];
+
+  const header = parseCsvLine(lines[0]);
+  const index = new Map<string, number>();
+  header.forEach((h, i) => index.set(h, i));
+  const get = (cols: string[], name: string) => cols[index.get(name) ?? -1] ?? "";
+
+  const parsedRows: Array<{ cols: string[]; rowDate: string }> = [];
+  const availableDates = new Set<string>();
+  for (let i = 1; i < lines.length; i += 1) {
+    const cols = parseCsvLine(lines[i]);
+    const rowDate = get(cols, "date").trim();
+    if (rowDate) availableDates.add(rowDate);
+    parsedRows.push({ cols, rowDate });
+  }
+
+  const effectiveDate =
+    activeDate && availableDates.has(activeDate)
+      ? activeDate
+      : Array.from(availableDates).sort().at(-1);
+
+  return parsedRows
+    .filter(({ rowDate }) => !effectiveDate || !rowDate || rowDate === effectiveDate)
+    .map(({ cols }, idx) => ({
+      id: idx + 1,
+      date: get(cols, "date") || undefined,
+      time_utc: get(cols, "time_utc") || undefined,
+      player1_name: get(cols, "player1"),
+      player2_name: get(cols, "player2"),
+      side: get(cols, "side") || undefined,
+      value_pct: parseCsvNumber(get(cols, "value_pct")),
+      surface: get(cols, "surface") || undefined,
+      league: parseCsvLeague(get(cols, "league")),
+      series: get(cols, "series") || get(cols, "tour_name") || undefined,
+      confidence: get(cols, "confidence") || undefined,
+      data_coverage_tag: get(cols, "data_coverage_tag") || undefined,
+      match_count_12m_p1: parseCsvNumber(get(cols, "match_count_12m_p1")),
+      match_count_12m_p2: parseCsvNumber(get(cols, "match_count_12m_p2")),
+      matches_total_p1: parseCsvNumber(get(cols, "matches_total_p1")),
+      matches_total_p2: parseCsvNumber(get(cols, "matches_total_p2")),
+      recent_challenger_plus_p1: parseCsvNumber(get(cols, "recent_challenger_plus_p1")),
+      recent_challenger_plus_p2: parseCsvNumber(get(cols, "recent_challenger_plus_p2")),
+      last_match_days_p1: parseCsvNumber(get(cols, "last_match_days_p1")),
+      last_match_days_p2: parseCsvNumber(get(cols, "last_match_days_p2")),
+      skip_reason: get(cols, "skip_reason") || "unknown",
+    }))
+    .filter((row) => row.player1_name && row.player2_name)
+    .slice(-50);
 }
 
 interface InjuryIndex {
@@ -2549,6 +2645,12 @@ async function run(): Promise<Response> {
   const spreadV1SignalsCsv = FAIR_ODDS_SPREAD_V1_ENABLED
     ? loadActiveShadowSignals(SPREAD_V1_SIGNAL_CSV, "spread_v1", today)
     : [];
+  const challengerMlSignalsCsv = INTERNAL_RESEARCH_LANES
+    ? loadActiveShadowSignals(CHALLENGER_ML_SIGNAL_CSV, "challenger_ml_shadow", today)
+    : [];
+  const challengerNearmisses = INTERNAL_RESEARCH_LANES
+    ? loadChallengerNearmisses(CHALLENGER_ML_NEARMISS_CSV, today)
+    : [];
   const effectiveSpreadV1SignalsCsv = spreadV1SignalsCsv;
   const effectiveClay2026SignalsCsv = suppressConflictingClaySignals(clay2026SignalsCsv, effectiveSpreadV1SignalsCsv);
   const rowSignalsByMatch = new Map<string, ShadowSignalSummary[]>();
@@ -2567,12 +2669,12 @@ async function run(): Promise<Response> {
     }
     return Array.from(new Set(keys));
   };
-  for (const signal of [...effectiveClay2026SignalsCsv, ...effectiveSpreadV1SignalsCsv]) {
+  for (const signal of [...challengerMlSignalsCsv, ...effectiveSpreadV1SignalsCsv, ...effectiveClay2026SignalsCsv]) {
     for (const key of signalLookupKeys(signal)) addSignalToRowKey(key, signal);
   }
   for (const signals of rowSignalsByMatch.values()) {
     signals.sort((a, b) => {
-      if (a.kind !== b.kind) return a.kind === "clay_2026" ? -1 : 1;
+      if (a.kind !== b.kind) return shadowKindRank(a.kind) - shadowKindRank(b.kind);
       if (a.bet_type !== b.bet_type) return a.bet_type === "match" ? -1 : 1;
       return a.side.localeCompare(b.side);
     });
@@ -2585,7 +2687,7 @@ async function run(): Promise<Response> {
           .flatMap((key) => (rowSignalsByMatch.get(key) ?? []).map((signal) => [`${signal.kind}|${signal.id}`, signal] as const))
       ).values()
     ).sort((a, b) => {
-      if (a.kind !== b.kind) return a.kind === "clay_2026" ? -1 : 1;
+      if (a.kind !== b.kind) return shadowKindRank(a.kind) - shadowKindRank(b.kind);
       if (a.bet_type !== b.bet_type) return a.bet_type === "match" ? -1 : 1;
       return a.side.localeCompare(b.side);
     });
@@ -2613,6 +2715,7 @@ async function run(): Promise<Response> {
   });
 
   const attachedByKind: Record<ShadowSignalKind, Set<number>> = {
+    challenger_ml_shadow: new Set<number>(),
     clay_2026: new Set<number>(),
     spread_v1: new Set<number>(),
   };
@@ -2623,6 +2726,11 @@ async function run(): Promise<Response> {
     for (const signal of rowSignals) attachedByKind[signal.kind].add(signal.id);
   }
   const signal_attachment: Record<ShadowSignalKind, SignalAttachmentDiagnostics> = {
+    challenger_ml_shadow: {
+      loaded: challengerMlSignalsCsv.length,
+      attached: attachedByKind.challenger_ml_shadow.size,
+      unmatched: Math.max(0, challengerMlSignalsCsv.length - attachedByKind.challenger_ml_shadow.size),
+    },
     clay_2026: {
       loaded: effectiveClay2026SignalsCsv.length,
       attached: attachedByKind.clay_2026.size,
@@ -2635,9 +2743,16 @@ async function run(): Promise<Response> {
     },
   };
   const unmatchedSignals = {
+    challenger_ml_shadow: challengerMlSignalsCsv.filter((signal) => !attachedByKind.challenger_ml_shadow.has(signal.id)),
     clay_2026: effectiveClay2026SignalsCsv.filter((signal) => !attachedByKind.clay_2026.has(signal.id)),
     spread_v1: effectiveSpreadV1SignalsCsv.filter((signal) => !attachedByKind.spread_v1.has(signal.id)),
   };
+  if (unmatchedSignals.challenger_ml_shadow.length) {
+    console.warn(
+      "[fair-odds] Unmatched Challenger ML signals:",
+      unmatchedSignals.challenger_ml_shadow.map((signal) => `${signal.id}: ${signal.player1_name} vs ${signal.player2_name} | ${signal.side}`)
+    );
+  }
   if (unmatchedSignals.clay_2026.length) {
     console.warn(
       "[fair-odds] Unmatched Clay 2026 signals:",
@@ -3046,9 +3161,12 @@ async function run(): Promise<Response> {
     signals_volume_overlap,
     signals_volume_additional,
     signals_volume,
+    signals_challenger_ml: challengerMlSignalsCsv,
+    challenger_nearmisses: challengerNearmisses,
     signals_clay_2026,
     signals_spread_v1: spreadSignalsSpreadV1,
     signal_attachment,
+    internal_research_lanes: INTERNAL_RESEARCH_LANES,
     ...(pinnacleHint ? { pinnacle_hint: pinnacleHint } : {}),
     ...(spreadHint ? { spread_hint: spreadHint } : {}),
   });

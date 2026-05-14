@@ -329,6 +329,18 @@ function formatUnits(value?: number, digits = 2): string {
   return `${value >= 0 ? "+" : ""}${value.toFixed(digits)}u`;
 }
 
+function challengerSkipReasonLabel(reason?: string): string {
+  if (reason === "coverage_thin") return "Coverage thin";
+  if (reason === "confidence_low") return "Confidence low";
+  if (reason === "edge_below_floor") return "Edge below floor";
+  if (reason === "edge_above_cap") return "Edge above cap";
+  if (reason === "model_market_gap") return "Model/market gap";
+  if (reason === "model_ml_excluded") return "Model ML excluded";
+  if (reason === "pin_ml_excluded") return "Pinnacle excluded";
+  if (reason === "surface_blocked") return "Surface blocked";
+  return reason ? reason.replace(/_/g, " ") : "Unknown";
+}
+
 function formatPounds(value?: number, digits = 0, showSign = true): string {
   if (value == null || Number.isNaN(value)) return "n/a";
   const abs = Math.abs(value);
@@ -921,6 +933,16 @@ export default async function ModelMonitorPage() {
   const challengerSignalsClean = filterCleanSignalRows(challengerSignalsArchive);
   const challengerQueue = getActiveQueueRows(challengerSignalsLive);
   const challengerNearmissRows = challengerNearmissCsv ? parseCsv(challengerNearmissCsv) : [];
+  const challengerNearmissReasonCounts = Array.from(
+    challengerNearmissRows.reduce((acc, row) => {
+      const reason = row.skip_reason || "unknown";
+      acc.set(reason, (acc.get(reason) ?? 0) + 1);
+      return acc;
+    }, new Map<string, number>()),
+  ).sort((a, b) => b[1] - a[1]);
+  const latestChallengerNearmissRows = [...challengerNearmissRows]
+    .sort((a, b) => `${b.date ?? ""} ${b.time_utc ?? ""}`.localeCompare(`${a.date ?? ""} ${a.time_utc ?? ""}`))
+    .slice(0, 8);
   const challengerRows = challengerPerfCsv ? parseCsv(challengerPerfCsv) : [];
   const challengerBase = parsePerf(challengerRows, "base");
   const clvChallenger = parseClvAudit(clvAuditChallengerTxt);
@@ -1930,6 +1952,102 @@ export default async function ModelMonitorPage() {
             </div>
           </MonitorCard>
         </div>
+
+        {INTERNAL_RESEARCH_LANES ? (
+          <div className="mb-8">
+            <MonitorCard title="Challenger ML Internal Watch" subtitle="HIGH-coverage Challenger singles lane, 10-15% value band. Near-misses explain why the lane is dark.">
+              <div className="grid gap-4 xl:grid-cols-[0.85fr_1.15fr]">
+                <div className="rounded-2xl border border-fuchsia-400/25 bg-fuchsia-400/5 p-4">
+                  <div className="mb-4 flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="text-base font-semibold text-white">Current Challenger lane</h3>
+                      <p className="mt-1 text-sm leading-6 text-slate-400">
+                        Shows only internal signals. If there are no rows, the near-miss audit should still say whether coverage, confidence, or edge gates blocked the slate.
+                      </p>
+                    </div>
+                    <span className="rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-2 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-fuchsia-200">
+                      internal
+                    </span>
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <Stat label="Tracked" value={`${challengerTrackedCount}`} compact />
+                    <Stat label="Open" value={`${challengerOpenCount}`} tone={challengerOpenCount > 0 ? "text-fuchsia-200" : "text-slate-300"} compact />
+                    <Stat label="Settled" value={`${challengerSettledCount}`} compact />
+                    <Stat label="Near-miss" value={`${challengerNearmissRows.length}`} tone={challengerNearmissRows.length > 0 ? "text-amber-300" : "text-slate-300"} compact />
+                    <Stat label="ROI" value={formatPct(challengerMlRecordedCohort.roiPct)} tone={metricTone(challengerMlRecordedCohort.roiPct)} compact />
+                    <Stat label="CLV" value={formatPct(clvChallenger.avgClvPct, 3)} tone={metricTone(clvChallenger.avgClvPct)} compact />
+                  </div>
+                  <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/45 p-3 text-xs leading-5 text-slate-400">
+                    Gate: Challenger singles, HIGH coverage, high confidence, value 10-15%. Production/public output is blocked.
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4">
+                  <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                    <div>
+                      <h3 className="text-base font-semibold text-white">Near-miss reasons</h3>
+                      <p className="mt-1 text-sm leading-6 text-slate-400">
+                        These are candidates that hit the Challenger universe but failed one gate. Coverage thin means the model refused to trust the sample.
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {challengerNearmissReasonCounts.length ? (
+                        challengerNearmissReasonCounts.map(([reason, count]) => (
+                          <span key={reason} className="rounded-full border border-slate-700/80 bg-slate-900/80 px-2 py-1 text-xs text-slate-300">
+                            {challengerSkipReasonLabel(reason)} <span className="text-slate-500">{count}</span>
+                          </span>
+                        ))
+                      ) : (
+                        <span className="rounded-full border border-slate-700/80 bg-slate-900/80 px-2 py-1 text-xs text-slate-400">
+                          no near-misses
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  {latestChallengerNearmissRows.length ? (
+                    <div className="overflow-hidden rounded-xl border border-slate-800/80">
+                      <table className="w-full text-left text-xs">
+                        <thead className="border-b border-slate-800 bg-slate-900/80 text-slate-500">
+                          <tr>
+                            <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">Match</th>
+                            <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">Tag</th>
+                            <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">Edge</th>
+                            <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">Coverage</th>
+                            <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">Reason</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-800/80">
+                          {latestChallengerNearmissRows.map((row) => (
+                            <tr key={`${row.date}-${row.player1}-${row.player2}-${row.skip_reason}`} className="text-slate-300">
+                              <td className="px-3 py-2">
+                                <div className="font-medium text-slate-100">{row.player1} vs {row.player2}</div>
+                                <div className="mt-0.5 text-[11px] text-slate-500">{row.surface || "surface?"} | {row.series || row.tour_name || "tournament?"}</div>
+                              </td>
+                              <td className="px-3 py-2 font-mono">{row.data_coverage_tag || "n/a"}</td>
+                              <td className={`px-3 py-2 font-mono ${metricTone(parseFloatMaybe(row.value_pct))}`}>{formatPct(parseFloatMaybe(row.value_pct))}</td>
+                              <td className="px-3 py-2 font-mono text-[11px] text-slate-400">
+                                s {row.match_count_12m_p1 || "?"}/{row.match_count_12m_p2 || "?"} | total {row.matches_total_p1 || "?"}/{row.matches_total_p2 || "?"} | days {row.last_match_days_p1 || "?"}/{row.last_match_days_p2 || "?"}
+                              </td>
+                              <td className="px-3 py-2">
+                                <span className="rounded border border-amber-500/25 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-200">
+                                  {challengerSkipReasonLabel(row.skip_reason)}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="rounded-xl border border-slate-800/80 bg-slate-950/45 p-4 text-sm text-slate-400">
+                      No Challenger near-miss file yet. Once the daily runner executes with CHALLENGER_ML_ENABLE=1, this panel should populate even if no live signal passes.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </MonitorCard>
+          </div>
+        ) : null}
 
         <div className="mb-8">
           <MonitorCard title="Clay Tennis Research Watch" subtitle="Clay ML is paused; clay favourite handicap is tracked as a gated research candidate only.">
