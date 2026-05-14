@@ -21,6 +21,7 @@ if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_SHADOW_ENABLED)) { $env:S
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_CALIBRATED_ENABLED)) { $env:STRICT_CLAY_CALIBRATED_ENABLED = "0" }
 if ([string]::IsNullOrWhiteSpace($env:CHALLENGER_ML_ENABLE)) { $env:CHALLENGER_ML_ENABLE = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED)) { $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED = "0" }
+if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_BO3_ENABLED)) { $env:STRICT_CLAY_BO3_ENABLED = "0" }
 # Scheduled runs are hard-safe: clay spread-v1 can only be enabled by a manual research run.
 $env:SPREAD_V1_ENABLE_CLAY = "0"
 $dailyOddsTimeoutSeconds = 1200
@@ -39,6 +40,7 @@ $spreadV1ShadowEnabled = Test-EnvFlag $env:STRICT_SPREAD_V1_SHADOW_ENABLED
 $clayCalibratedEnabled = Test-EnvFlag $env:STRICT_CLAY_CALIBRATED_ENABLED
 $challengerMlEnabled = Test-EnvFlag $env:CHALLENGER_ML_ENABLE
 $clayFavEnabled = Test-EnvFlag $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED
+$clayBo3Enabled = Test-EnvFlag $env:STRICT_CLAY_BO3_ENABLED
 
 function Get-VolumeShadowConfig([string]$mode) {
     switch ($mode) {
@@ -230,6 +232,26 @@ try {
         }
     } else {
         Log "Spread v1 clay-favourite shadow skipped (STRICT_SPREAD_V1_CLAY_FAV_ENABLED=0)."
+    }
+    if ($clayBo3Enabled) {
+        Log "Clay bo3 internal shadow (ML 5-13%, dog HC 6-25%)."
+        $prevInternalResearchLanes = $env:INTERNAL_RESEARCH_LANES
+        $env:INTERNAL_RESEARCH_LANES = "1"
+        try {
+            & python scripts\strict-policy-report.py --append --signal-profile clay_bo3 --output "data\backtest\strict-signals-clay_bo3-live.csv" 2>&1 | ForEach-Object { Log $_ }
+            if ($LASTEXITCODE -ne 0) {
+                Log "WARNING: clay_bo3 append failed (exit $LASTEXITCODE), continuing..."
+            }
+        }
+        finally {
+            if ($null -eq $prevInternalResearchLanes) {
+                Remove-Item Env:\INTERNAL_RESEARCH_LANES -ErrorAction SilentlyContinue
+            } else {
+                $env:INTERNAL_RESEARCH_LANES = $prevInternalResearchLanes
+            }
+        }
+    } else {
+        Log "Clay bo3 shadow skipped (STRICT_CLAY_BO3_ENABLED=0)."
     }
 
     Log "=== Step 8/8: Nightly-style tennis settlement/performance ==="

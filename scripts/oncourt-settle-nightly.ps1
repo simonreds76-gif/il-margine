@@ -94,6 +94,12 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: clay-fav settlement failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Step 7d/12: Settle clay bo3 CSV ==="
+& python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-clay_bo3-archive.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: clay_bo3 settlement failed (exit $LASTEXITCODE), continuing..."
+}
+
 Log "=== Step 8/12: Strict policy settled performance ==="
 & python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-archive.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
@@ -138,6 +144,12 @@ Log "=== Step 12c/12: Clay-fav settled performance ==="
 & python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-clay-fav-archive.csv --report-txt data\backtest\strict-policy-performance-clay-fav-weekly.txt --summary-csv data\backtest\strict-policy-performance-clay-fav-weekly.csv 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-policy-performance spread_v1_clay_fav failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Step 12d/12: Clay bo3 settled performance ==="
+& python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-clay_bo3-archive.csv --report-txt data\backtest\strict-policy-performance-clay_bo3-weekly.txt --summary-csv data\backtest\strict-policy-performance-clay_bo3-weekly.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: strict-policy-performance clay_bo3 failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "============================================"

@@ -1,7 +1,7 @@
 {
-  "version": "2026-05-14-phase0",
-  "phase": "phase0-scaffold",
-  "description": "Internal tennis research lane registry. Phase 0 is declarative only; live probability and signal paths do not consume this file.",
+  "version": "2026-05-14-phase1-clay-bo3-shadow",
+  "phase": "phase1-clay-bo3-shadow",
+  "description": "Internal tennis research lane registry. Clay bo3 is the first active shadow signal gate; later overlays/calibrations stay internal and phase-gated.",
   "defaults": {
     "currency": "units",
     "stake_units": 1.0,
@@ -35,26 +35,28 @@
     },
     "clay_bo3": {
       "label": "Clay bo3",
-      "state": "shadow_planned",
+      "state": "internal_shadow",
       "phase": 1,
+      "description": "Active internal shadow gate on existing fair-odds output: ATP clay ML edges plus dog-handicap candidates. Per-cohort clay overlay/calibration remains a later research step.",
       "filters": {
         "league": ["ATP"],
         "surface": ["Clay"],
-        "series": ["ATP250", "ATP500", "Masters1000", "ATPFinals"],
+        "series": ["ATP250", "ATP500", "Masters 1000", "Masters Cup"],
         "best_of": [3],
         "exclude_grand_slams": true
       },
       "markets": {
-        "ml": { "state": "planned_shadow", "edge_pct": [5, 13], "confidence": ["high"] },
-        "dog_hc": { "state": "planned_shadow", "min_edge_pct": 6 },
-        "over_games": { "state": "planned_shadow" }
+        "ml": { "state": "internal_shadow", "edge_pct": [5, 13], "confidence": ["high"] },
+        "dog_hc": { "state": "internal_shadow", "edge_pct": [6, 25] },
+        "over_games": { "state": "future_shadow" }
       },
       "calibration": {
         "path": "data/backtest/calibration/clay-bo3-calibration.json",
-        "method": "isotonic_cohort",
+        "method": "existing_global_until_lane_refit",
         "fallback_lane": "hard_bo3"
       },
       "overlay": {
+        "status": "planned_not_consumed_by_phase1",
         "hybrid_elo_weight": 0.5,
         "form_weight": 0.1,
         "form_cap": 0.04,

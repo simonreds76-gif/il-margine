@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { notFound } from "next/navigation";
 import {
   TENNIS_LEGACY_DISABLED_LANES,
@@ -5,6 +6,7 @@ import {
   TENNIS_RESEARCH_LANES,
   type TennisResearchLaneId,
 } from "@/lib/tennis-monitor-files";
+import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
 import { StatusPill, cn } from "../shared";
 
 export const dynamic = "force-dynamic";
@@ -15,11 +17,24 @@ const TENNIS_MONITOR_ENABLED =
 type LaneView = {
   id: TennisResearchLaneId;
   title: string;
-  state: "LIVE ALIAS" | "SHADOW PLANNED" | "DEFERRED" | "DISABLED";
+  state: "LIVE ALIAS" | "SHADOW LIVE" | "SHADOW PLANNED" | "DEFERRED" | "DISABLED";
   badgeTone: string;
   market: string;
   summary: string;
   disabledReason?: string;
+};
+
+type CsvRow = Record<string, string>;
+
+type LaneStats = {
+  liveCount: number;
+  archiveCount: number;
+  nearMissCount: number;
+  settledCount: number;
+  roiPct: number | null;
+  avgClvPct: number | null;
+  topNearMissReasons: string[];
+  latestSignals: CsvRow[];
 };
 
 const badgeTones = {
@@ -41,10 +56,10 @@ const laneViews: Record<TennisResearchLaneId, LaneView> = {
   clay_bo3: {
     id: "clay_bo3",
     title: "Clay bo3",
-    state: "SHADOW PLANNED",
+    state: "SHADOW LIVE",
     badgeTone: badgeTones.shadow,
-    market: "ML, dog HC, overs",
-    summary: "Placeholder for the return-weighted clay lane. Phase 1 will wire calibration and signals.",
+    market: "ML, dog HC",
+    summary: "Internal clay shadow lane using existing fair-odds output: ATP clay ML edges plus dog-handicap candidates.",
   },
   slam_bo5: {
     id: "slam_bo5",
@@ -102,6 +117,142 @@ function laneAnchor(id: string) {
   return id.replaceAll("_", "-");
 }
 
+function parseCsvLine(line: string): string[] {
+  const out: string[] = [];
+  let current = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i += 1) {
+    const char = line[i];
+    if (char === '"') {
+      if (inQuotes && line[i + 1] === '"') {
+        current += '"';
+        i += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (char === "," && !inQuotes) {
+      out.push(current);
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+  out.push(current);
+  return out;
+}
+
+function parseCsv(text: string): CsvRow[] {
+  const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+  if (lines.length === 0) return [];
+  const headers = parseCsvLine(lines[0]).map((header) => header.trim());
+  return lines.slice(1).map((line) => {
+    const values = parseCsvLine(line);
+    return Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ""]));
+  });
+}
+
+async function readKnownFile(relativePath?: string): Promise<string | null> {
+  if (!relativePath) return null;
+  const fullPath = tryGetKnownProjectFilePath(relativePath);
+  if (!fullPath) return null;
+  try {
+    return await readFile(fullPath, "utf8");
+  } catch {
+    return null;
+  }
+}
+
+function toNumber(value: string | undefined): number | null {
+  if (value === undefined || value === "") return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function isWon(row: CsvRow): boolean {
+  const raw = `${row.won_bet || row.bet_outcome || row.result || ""}`.toLowerCase();
+  return raw === "true" || raw === "1" || raw.includes("won") || raw === "w";
+}
+
+function isLost(row: CsvRow): boolean {
+  const raw = `${row.won_bet || row.bet_outcome || row.result || ""}`.toLowerCase();
+  return raw === "false" || raw === "0" || raw.includes("lost") || raw === "l";
+}
+
+function settledRows(rows: CsvRow[]): CsvRow[] {
+  return rows.filter((row) => isWon(row) || isLost(row));
+}
+
+function rowPnlUnits(row: CsvRow): number | null {
+  const stake = toNumber(row.stake_units) ?? 1;
+  if (isLost(row)) return -stake;
+  if (!isWon(row)) return null;
+  const odds =
+    row.bet_type === "spread"
+      ? toNumber(row.spread_odds)
+      : row.side === "P2"
+        ? toNumber(row.pin_odds2)
+        : toNumber(row.pin_odds1);
+  if (!odds) return null;
+  return (odds - 1) * stake;
+}
+
+function avg(values: number[]): number | null {
+  if (values.length === 0) return null;
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+function formatNumber(value: number | null, suffix = "", digits = 1): string {
+  if (value === null || !Number.isFinite(value)) return "-";
+  const sign = value > 0 ? "+" : "";
+  return `${sign}${value.toFixed(digits)}${suffix}`;
+}
+
+function topReasons(rows: CsvRow[]): string[] {
+  const counts = new Map<string, number>();
+  rows.forEach((row) => {
+    const reason = row.skip_reason || "unknown";
+    counts.set(reason, (counts.get(reason) ?? 0) + 1);
+  });
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([reason, count]) => `${reason} (${count})`);
+}
+
+async function loadLaneStats(id: TennisResearchLaneId): Promise<LaneStats> {
+  const files = TENNIS_MONITOR_FILES[id];
+  const [liveCsv, archiveCsv, nearMissCsv, clvCsv, clvSpreadCsv] = await Promise.all([
+    readKnownFile(files.live),
+    readKnownFile(files.archive),
+    readKnownFile(files.nearMiss),
+    readKnownFile(files.clvAuditCsv),
+    readKnownFile(files.clvAuditSpreadCsv),
+  ]);
+  const liveRows = liveCsv ? parseCsv(liveCsv) : [];
+  const archiveRows = archiveCsv ? parseCsv(archiveCsv) : [];
+  const nearMissRows = nearMissCsv ? parseCsv(nearMissCsv) : [];
+  const settled = settledRows(archiveRows);
+  const pnlValues = settled.map(rowPnlUnits).filter((value): value is number => value !== null);
+  const stakeValues = settled.map((row) => toNumber(row.stake_units) ?? 1);
+  const totalStake = stakeValues.reduce((sum, value) => sum + value, 0);
+  const totalPnl = pnlValues.reduce((sum, value) => sum + value, 0);
+  const clvRows = [...(clvCsv ? parseCsv(clvCsv) : []), ...(clvSpreadCsv ? parseCsv(clvSpreadCsv) : [])];
+  const clvValues = clvRows
+    .map((row) => toNumber(row.clv_pct) ?? toNumber(row.avg_clv_pct))
+    .filter((value): value is number => value !== null);
+
+  return {
+    liveCount: liveRows.length,
+    archiveCount: archiveRows.length,
+    nearMissCount: nearMissRows.length,
+    settledCount: settled.length,
+    roiPct: totalStake > 0 ? (totalPnl / totalStake) * 100 : null,
+    avgClvPct: avg(clvValues),
+    topNearMissReasons: topReasons(nearMissRows),
+    latestSignals: liveRows.slice(-5).reverse(),
+  };
+}
+
 function EmptyMetric({ label, value = "-" }: { label: string; value?: string }) {
   return (
     <div className="rounded-xl border border-slate-800/70 bg-slate-950/50 p-4">
@@ -111,7 +262,7 @@ function EmptyMetric({ label, value = "-" }: { label: string; value?: string }) 
   );
 }
 
-function LaneCard({ lane }: { lane: LaneView }) {
+function LaneCard({ lane, stats }: { lane: LaneView; stats: LaneStats }) {
   const files = TENNIS_MONITOR_FILES[lane.id];
 
   return (
@@ -139,19 +290,51 @@ function LaneCard({ lane }: { lane: LaneView }) {
       ) : null}
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <EmptyMetric label="Live signals" />
-        <EmptyMetric label="Near misses" />
-        <EmptyMetric label="Last 30d ROI" />
-        <EmptyMetric label="CLV avg" />
+        <EmptyMetric label="Live signals" value={String(stats.liveCount)} />
+        <EmptyMetric label="Near misses" value={String(stats.nearMissCount)} />
+        <EmptyMetric label="Settled" value={String(stats.settledCount || stats.archiveCount)} />
+        <EmptyMetric label="ROI" value={formatNumber(stats.roiPct, "%")} />
       </div>
 
       <div className="mt-5 grid gap-3 lg:grid-cols-3">
         <div className="rounded-xl border border-slate-800/70 bg-slate-950/40 p-4 lg:col-span-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Phase 0 empty state</p>
-          <p className="mt-2 text-sm leading-6 text-slate-400">
-            No ledger, near-miss, calibration-health, or reliability data is read for this lane yet. Later phases will
-            attach the files listed below after each lane starts emitting real shadow rows.
-          </p>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Latest live rows</p>
+            <p className="text-xs text-slate-500">Avg CLV: {formatNumber(stats.avgClvPct, "%")}</p>
+          </div>
+          {stats.latestSignals.length > 0 ? (
+            <div className="mt-3 overflow-x-auto">
+              <table className="min-w-full text-left text-xs">
+                <thead className="text-slate-500">
+                  <tr>
+                    <th className="py-2 pr-4 font-medium">Match</th>
+                    <th className="py-2 pr-4 font-medium">Type</th>
+                    <th className="py-2 pr-4 font-medium">Side</th>
+                    <th className="py-2 pr-4 font-medium">Edge</th>
+                    <th className="py-2 pr-4 font-medium">Reason</th>
+                  </tr>
+                </thead>
+                <tbody className="text-slate-300">
+                  {stats.latestSignals.map((row, index) => (
+                    <tr key={`${row.player1}-${row.player2}-${row.side}-${index}`} className="border-t border-slate-800/70">
+                      <td className="py-2 pr-4">{row.player1 || "-"} vs {row.player2 || "-"}</td>
+                      <td className="py-2 pr-4">{row.bet_type || "match"}</td>
+                      <td className="py-2 pr-4">{row.side || "-"}</td>
+                      <td className="py-2 pr-4">{row.value_pct || "-"}</td>
+                      <td className="py-2 pr-4">{row.shadow_reason || "-"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="mt-2 text-sm leading-6 text-slate-400">
+              No live rows yet. Run the lane with `INTERNAL_RESEARCH_LANES=1` and `--signal-profile clay_bo3`.
+            </p>
+          )}
+          {stats.topNearMissReasons.length > 0 ? (
+            <p className="mt-4 text-xs text-slate-500">Near-miss reasons: {stats.topNearMissReasons.join(", ")}</p>
+          ) : null}
         </div>
         <div className="rounded-xl border border-slate-800/70 bg-slate-950/40 p-4">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Primary file targets</p>
@@ -175,13 +358,17 @@ function LaneCard({ lane }: { lane: LaneView }) {
   );
 }
 
-export default function TennisMonitorPage() {
+export default async function TennisMonitorPage() {
   if (!TENNIS_MONITOR_ENABLED) {
     notFound();
   }
 
   const activeLanes = TENNIS_RESEARCH_LANES.map((id) => laneViews[id]);
   const legacyLanes = TENNIS_LEGACY_DISABLED_LANES.map((id) => laneViews[id]);
+  const statsEntries = await Promise.all(
+    [...TENNIS_RESEARCH_LANES, ...TENNIS_LEGACY_DISABLED_LANES].map(async (id) => [id, await loadLaneStats(id)] as const),
+  );
+  const statsByLane = Object.fromEntries(statsEntries) as Record<TennisResearchLaneId, LaneStats>;
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
@@ -194,8 +381,8 @@ export default function TennisMonitorPage() {
                 Tennis Research Lanes
               </h1>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">
-                Phase 0 scaffold only. This page proves the internal lane surface exists without touching public tennis
-                pages, Fair Odds Lab, or the live fair-odds probability path.
+                Internal-only tennis lane board. Clay bo3 is the first active shadow lane; later tabs stay scaffolded
+                until their own research phases are built.
               </p>
             </div>
             <StatusPill label="LOCALHOST ONLY" tone="border-slate-600 bg-slate-900 text-slate-300" />
@@ -219,10 +406,10 @@ export default function TennisMonitorPage() {
 
         <div className="mt-6 space-y-5">
           {activeLanes.map((lane) => (
-            <LaneCard key={lane.id} lane={lane} />
+            <LaneCard key={lane.id} lane={lane} stats={statsByLane[lane.id]} />
           ))}
           {legacyLanes.map((lane) => (
-            <LaneCard key={lane.id} lane={lane} />
+            <LaneCard key={lane.id} lane={lane} stats={statsByLane[lane.id]} />
           ))}
         </div>
       </div>

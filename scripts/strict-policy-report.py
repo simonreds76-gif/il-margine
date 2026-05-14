@@ -45,6 +45,7 @@ if str(_PROJECT_ROOT) not in sys.path:
 
 from injury_overlay import env_bool, load_recent_injury_index
 from signal_storage import (
+    CLAY_BO3_NEARMISS_PATH,
     CHALLENGER_ML_NEARMISS_PATH,
     SIGNAL_PROFILE_PATHS,
     SIGNALS_CURRENT_JSON,
@@ -98,6 +99,12 @@ CHALLENGER_ML_MAX_EDGE_PCT = env_float("CHALLENGER_ML_MAX_EDGE_PCT", 15.0)
 CHALLENGER_ML_ALLOWED_SURFACES = {"Hard", "Clay", "Grass", "Indoor"}
 CHALLENGER_ML_ALLOWED_CONFIDENCE = {"high"}
 CHALLENGER_ML_REQUIRE_COVERAGE_TAG = "HIGH"
+CLAY_BO3_MIN_EDGE_PCT = env_float("CLAY_BO3_MIN_EDGE_PCT", 5.0)
+CLAY_BO3_MAX_EDGE_PCT = env_float("CLAY_BO3_MAX_EDGE_PCT", 13.0)
+CLAY_BO3_DOG_HC_MIN_EDGE_PCT = env_float("CLAY_BO3_DOG_HC_MIN_EDGE_PCT", 6.0)
+CLAY_BO3_DOG_HC_MAX_EDGE_PCT = env_float("CLAY_BO3_DOG_HC_MAX_EDGE_PCT", 25.0)
+CLAY_BO3_ALLOWED_SERIES = {"ATP250", "ATP500", "Masters 1000", "Masters Cup"}
+CLAY_BO3_ALLOWED_CONFIDENCE = {"high"}
 SPREAD_V1_CLAY_FAV_STALE_DAYS = env_int("SPREAD_V1_CLAY_FAV_STALE_DAYS", 14)
 ALLOWED_SEGMENT = "Hard|Masters 1000"
 ALLOWED_CONFIDENCE = {"high"}
@@ -169,6 +176,7 @@ SHADOW_PROFILE_LABELS: dict[str, str] = {
     "spread_v1_shadow": "Spread v1 shadow (strict-first ATP bo3 hard-only research lane; real-market calibration required)",
     "spread_v1_clay_fav": "Clay favourite handicap shadow (fav HC 2.0-3.5 games, 8-18% edge, clay-only calibration required)",
     "challenger_ml_shadow": "Challenger singles ML internal shadow (HIGH coverage, 10-15% edge)",
+    "clay_bo3": "Clay bo3 internal shadow (ATP clay ML 5-13% edge + dog HC 6-25%)",
     "clay_calibrated": "Clay calibrated shadow (high-confidence new-after-calibration favorite 55-65%)",
 }
 SHADOW_PROFILE_ALLOWED_LEAGUES: dict[str, set[str]] = {
@@ -180,6 +188,7 @@ SHADOW_PROFILE_ALLOWED_LEAGUES: dict[str, set[str]] = {
     "spread_v1_shadow": {"ATP"},
     "spread_v1_clay_fav": {"ATP"},
     "challenger_ml_shadow": {"Challenger"},
+    "clay_bo3": {"ATP"},
     "clay_calibrated": {"ATP"},
 }
 HOUSTON_SHADOW_MIN_VALUE_PCT = 20.0
@@ -794,6 +803,20 @@ def spread_v1_clay_fav_scope_reason(surface: str, series_bucket: str, league: st
     return None
 
 
+def clay_bo3_scope_reason(surface: str, series_bucket: str, league: str, confidence: str) -> str | None:
+    if league != "ATP":
+        return "league"
+    if surface != "Clay":
+        return "surface"
+    if series_bucket == "Grand Slam":
+        return "best_of_five"
+    if series_bucket not in CLAY_BO3_ALLOWED_SERIES:
+        return "series_blocked"
+    if (confidence or "").strip().lower() not in CLAY_BO3_ALLOWED_CONFIDENCE:
+        return "confidence_low"
+    return None
+
+
 def shadow_profile_league_allowed(profile_name: str, league: str) -> bool:
     allowed = SHADOW_PROFILE_ALLOWED_LEAGUES.get(profile_name)
     if not allowed:
@@ -972,6 +995,37 @@ def challenger_skip_reason(
     if value_pct < CHALLENGER_ML_MIN_EDGE_PCT:
         return "edge_below_floor"
     if value_pct > CHALLENGER_ML_MAX_EDGE_PCT:
+        return "edge_above_cap"
+    return None
+
+
+def clay_bo3_skip_reason(
+    *,
+    scope_reason: str | None,
+    value_pct: float | None,
+    model_ml_excluded: bool,
+    pin_ml_excluded: bool,
+    model_market_gap_excluded: bool,
+    atp500_short_favorite_ml_excluded: bool,
+    heavy_favorite_dog_excluded: bool,
+) -> str | None:
+    if scope_reason:
+        return scope_reason
+    if model_market_gap_excluded:
+        return "model_market_gap"
+    if model_ml_excluded:
+        return "model_ml_excluded"
+    if pin_ml_excluded:
+        return "pin_ml_excluded"
+    if atp500_short_favorite_ml_excluded:
+        return "short_favorite_ml_excluded"
+    if heavy_favorite_dog_excluded:
+        return "heavy_favorite_dog_excluded"
+    if value_pct is None:
+        return "edge_missing"
+    if value_pct < CLAY_BO3_MIN_EDGE_PCT:
+        return "edge_below_floor"
+    if value_pct > CLAY_BO3_MAX_EDGE_PCT:
         return "edge_above_cap"
     return None
 
@@ -1194,7 +1248,7 @@ def write_signals_current_artifact() -> None:
     SIGNALS_CURRENT_JSON.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
-PHASE0_RESEARCH_LANE_STUBS = {"clay_bo3", "slam_bo5", "challenger_ml", "indoor_bo3", "grass_bo3"}
+PHASE0_RESEARCH_LANE_STUBS = {"slam_bo5", "challenger_ml", "indoor_bo3", "grass_bo3"}
 
 
 def phase0_signal_profile_dispatch(
@@ -1211,6 +1265,8 @@ def phase0_signal_profile_dispatch(
         return "strict", None, "", False
     if signal_profile == "challenger_hc":
         return signal_profile, 2, "lane disabled: awaiting Pinnacle HC coverage + challenger_ml proof", True
+    if signal_profile == "clay_bo3" and not internal_research_lanes:
+        return signal_profile, 2, "lane clay_bo3 requires INTERNAL_RESEARCH_LANES=1", True
     if signal_profile in PHASE0_RESEARCH_LANE_STUBS:
         if not internal_research_lanes:
             return signal_profile, 2, f"lane {signal_profile} requires INTERNAL_RESEARCH_LANES=1", True
@@ -1309,7 +1365,7 @@ def main() -> int:
     if not args.output:
         args.output = str(profile_public_paths.live)
     if not args.internal_output:
-        if args.signal_profile in {"spread_shadow", "challenger_ml_shadow", *SPREAD_V1_SIGNAL_PROFILES}:
+        if args.signal_profile in {"spread_shadow", "challenger_ml_shadow", "clay_bo3", *SPREAD_V1_SIGNAL_PROFILES}:
             args.internal_output = ""
         else:
             args.internal_output = str((profile_internal_paths or STRICT_INTERNAL_SIGNAL_PATHS).live)
@@ -1603,6 +1659,7 @@ def main() -> int:
 
     candidates: list[dict[str, Any]] = []
     challenger_nearmiss_rows: list[dict[str, Any]] = []
+    clay_bo3_nearmiss_rows: list[dict[str, Any]] = []
     for r in rows:
         surface = (r.get("surface") or "").strip()
         confidence = (r.get("confidence") or "").strip().lower()
@@ -1627,6 +1684,7 @@ def main() -> int:
         spread_shadow_eligible = args.signal_profile == "spread_shadow" and spread_shadow_reason is not None
         clay_calibrated_enabled = args.signal_profile == "clay_calibrated" and surface == "Clay"
         challenger_ml_requested = args.signal_profile == "challenger_ml_shadow"
+        clay_bo3_requested = args.signal_profile == "clay_bo3"
         spread_v1_requested = args.signal_profile in SPREAD_V1_SIGNAL_PROFILES
         spread_v1_clay_fav_requested = args.signal_profile == "spread_v1_clay_fav"
         if (
@@ -1635,6 +1693,7 @@ def main() -> int:
             and not spread_shadow_eligible
             and not clay_calibrated_enabled
             and not challenger_ml_requested
+            and not clay_bo3_requested
             and not spread_v1_requested
         ):
             continue
@@ -1691,6 +1750,9 @@ def main() -> int:
             and spread_v1_scope is None
             and spread_v1_calibration_status.get("valid") is True
         )
+        clay_bo3_scope = clay_bo3_scope_reason(surface, series_bucket, league, confidence) if clay_bo3_requested else None
+        clay_bo3_scope_ok = clay_bo3_requested and clay_bo3_scope is None
+        clay_bo3_spread_eligible = clay_bo3_scope_ok
 
         # ML only: skip when Pinnacle favourite odds < 1.25. Keep spreads eligible.
         pin_fav_odds = min(float(pin["odds1"] or 0), float(pin["odds2"] or 0))
@@ -1765,6 +1827,13 @@ def main() -> int:
             and has_favorite_spread_conflict(model_favorite_side, sl, he1, he2)
             and side != model_favorite_side
         )
+        heavy_favorite_dog_excluded = is_excluded_heavy_favorite_dog(
+            surface,
+            series_bucket,
+            model_favorite_prob,
+            side,
+            model_favorite_side,
+        )
         strict_match = (
             strict_min_value is not None
             and not model_ml_excluded
@@ -1774,7 +1843,7 @@ def main() -> int:
             and has_internal_ml_value
             and value_pct is not None
             and value_pct >= strict_min_value
-            and not is_excluded_heavy_favorite_dog(surface, series_bucket, model_favorite_prob, side, model_favorite_side)
+            and not heavy_favorite_dog_excluded
             and not strict_favorite_spread_conflict
         )
         volume_match = (
@@ -1822,6 +1891,44 @@ def main() -> int:
             and value_pct is not None
             and CHALLENGER_ML_MIN_EDGE_PCT <= value_pct <= CHALLENGER_ML_MAX_EDGE_PCT
         )
+        clay_bo3_ml_match = (
+            clay_bo3_scope_ok
+            and not model_ml_excluded
+            and not pin_ml_excluded
+            and not model_market_gap_excluded
+            and not atp500_short_favorite_ml_excluded
+            and not heavy_favorite_dog_excluded
+            and value_pct is not None
+            and CLAY_BO3_MIN_EDGE_PCT <= value_pct <= CLAY_BO3_MAX_EDGE_PCT
+        )
+        if clay_bo3_requested and league == "ATP" and surface == "Clay" and not clay_bo3_ml_match:
+            skip_reason = clay_bo3_skip_reason(
+                scope_reason=clay_bo3_scope,
+                value_pct=value_pct,
+                model_ml_excluded=model_ml_excluded,
+                pin_ml_excluded=pin_ml_excluded,
+                model_market_gap_excluded=model_market_gap_excluded,
+                atp500_short_favorite_ml_excluded=atp500_short_favorite_ml_excluded,
+                heavy_favorite_dog_excluded=heavy_favorite_dog_excluded,
+            )
+            if skip_reason:
+                clay_bo3_nearmiss_rows.append(
+                    {
+                        "date": snapshot_date_used,
+                        "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
+                        "player1": p1_name,
+                        "player2": p2_name,
+                        "surface": surface,
+                        "league": league,
+                        "series": series_bucket,
+                        "confidence": confidence,
+                        "side": side,
+                        "value_pct": round(value_pct, 2) if value_pct is not None else "",
+                        "model_favorite_prob": round(model_favorite_prob, 4),
+                        "pin_favorite_prob": round(max(pin_p1_no_vig, 1.0 - pin_p1_no_vig), 4),
+                        "skip_reason": skip_reason,
+                    }
+                )
         if challenger_ml_requested and league == "Challenger" and not challenger_ml_match:
             skip_reason = challenger_skip_reason(
                 coverage_tag=challenger_coverage_tag,
@@ -1866,14 +1973,18 @@ def main() -> int:
                 and not volume_spread_eligible
                 and not spread_shadow_eligible
                 and not spread_v1_eligible
+                and not clay_bo3_spread_eligible
                 and not clay_calibrated_match
                 and not challenger_ml_match
+                and not clay_bo3_ml_match
             ):
                 continue
         bet_side = "fav" if side == fav_side else "dog"
         tname = tournament_name
         tkey = tour_key(tname)
-        if args.signal_profile not in {"spread_shadow", *SPREAD_V1_SIGNAL_PROFILES} and (strict_match or volume_match or challenger_ml_match):
+        if args.signal_profile not in {"spread_shadow", *SPREAD_V1_SIGNAL_PROFILES} and (
+            strict_match or volume_match or challenger_ml_match or clay_bo3_ml_match
+        ):
             stake_units, stake_gbp, stake_model = compute_stake_units(
                 our_odds1=our_odds1,
                 our_odds2=our_odds2,
@@ -1922,9 +2033,10 @@ def main() -> int:
                     "_strict_match": strict_match,
                     "_volume_match": volume_match,
                     "_challenger_ml_match": challenger_ml_match,
+                    "_clay_bo3_match": clay_bo3_ml_match,
                     "_spread_shadow_match": False,
                     "_spread_v1_match": False,
-                    "shadow_reason": "challenger_ml_high_coverage_10_15" if challenger_ml_match else "",
+                    "shadow_reason": "clay_bo3_ml_edge_5_13" if clay_bo3_ml_match else "challenger_ml_high_coverage_10_15" if challenger_ml_match else "",
                 }
             )
 
@@ -1989,6 +2101,7 @@ def main() -> int:
                     "_tournament_name": tname,
                     "_strict_match": False,
                     "_volume_match": False,
+                    "_clay_bo3_match": False,
                     "_spread_shadow_match": False,
                     "_spread_v1_match": False,
                     "_clay_calibrated_match": True,
@@ -1998,7 +2111,13 @@ def main() -> int:
 
         # Handicap signals: when handicap_edge >= 20% on P1+ or P2-
         # Keep them flat 1u and profile-gated the same way as match signals.
-        profile_spread_eligible = strict_spread_eligible or volume_spread_eligible or spread_shadow_eligible or spread_v1_eligible
+        profile_spread_eligible = (
+            strict_spread_eligible
+            or volume_spread_eligible
+            or spread_shadow_eligible
+            or spread_v1_eligible
+            or clay_bo3_spread_eligible
+        )
         if profile_spread_eligible and (
             spread_line is not None
             and spread_o1 is not None
@@ -2012,6 +2131,8 @@ def main() -> int:
             edge_threshold = (
                 SPREAD_SHADOW_MIN_EDGE_PCT
                 if args.signal_profile == "spread_shadow"
+                else CLAY_BO3_DOG_HC_MIN_EDGE_PCT
+                if clay_bo3_requested
                 else SPREAD_V1_CLAY_FAV_MIN_EDGE_PCT
                 if spread_v1_clay_fav_requested
                 else SPREAD_V1_MIN_EDGE_PCT
@@ -2035,6 +2156,26 @@ def main() -> int:
             spread_v1_max_edge = SPREAD_V1_CLAY_FAV_MAX_EDGE_PCT if spread_v1_clay_fav_requested else SPREAD_V1_MAX_EDGE_PCT
             spread_v1_p1_edge_guarded = spread_v1_requested and he1 > spread_v1_max_edge
             spread_v1_p2_edge_guarded = spread_v1_requested and he2 > spread_v1_max_edge
+            clay_bo3_p1_edge_guarded = clay_bo3_requested and he1 > CLAY_BO3_DOG_HC_MAX_EDGE_PCT
+            clay_bo3_p2_edge_guarded = clay_bo3_requested and he2 > CLAY_BO3_DOG_HC_MAX_EDGE_PCT
+            clay_bo3_p1_dog_side = our_odds1 > our_odds2
+            clay_bo3_p2_dog_side = our_odds2 > our_odds1
+            clay_bo3_p1_allowed = (
+                not clay_bo3_requested
+                or (
+                    clay_bo3_p1_dog_side
+                    and not clay_bo3_p1_edge_guarded
+                    and not short_fav_dog_spread_p1_guarded
+                )
+            )
+            clay_bo3_p2_allowed = (
+                not clay_bo3_requested
+                or (
+                    clay_bo3_p2_dog_side
+                    and not clay_bo3_p2_edge_guarded
+                    and not short_fav_dog_spread_p2_guarded
+                )
+            )
             spread_v1_p1_allowed = (
                 not spread_v1_requested
                 or (
@@ -2070,6 +2211,8 @@ def main() -> int:
             shadow_reason_value = (
                 spread_shadow_reason
                 if args.signal_profile == "spread_shadow"
+                else "clay_bo3_dog_handicap_edge_6_25"
+                if clay_bo3_requested
                 else "clay_favorite_handicap_2_3_5_edge_8_18"
                 if spread_v1_clay_fav_requested
                 else "strict_first_atp_bo3_hard_clay"
@@ -2078,7 +2221,7 @@ def main() -> int:
             )
             calibration_reason = spread_v1_calibration_status.get("reason", "")
             calibration_source = spread_v1_calibration_status.get("line_source_used", "")
-            if he1 >= edge_threshold and spread_v1_p1_allowed:
+            if he1 >= edge_threshold and spread_v1_p1_allowed and clay_bo3_p1_allowed:
                 stake_units_h1, stake_gbp_h1, stake_model_h1 = compute_stake_units(
                     our_odds1=our_odds1,
                     our_odds2=our_odds2,
@@ -2125,6 +2268,7 @@ def main() -> int:
                         "_tournament_name": tname,
                         "_strict_match": strict_spread_eligible,
                         "_volume_match": volume_spread_eligible,
+                        "_clay_bo3_match": clay_bo3_spread_eligible,
                         "_spread_shadow_match": spread_shadow_eligible,
                         "_spread_v1_match": spread_v1_eligible,
                         "shadow_reason": shadow_reason_value or "",
@@ -2136,9 +2280,11 @@ def main() -> int:
                         "atp500_short_fav_ml_guard": atp500_short_favorite_ml_excluded,
                         "short_fav_dog_spread_guard": short_fav_dog_spread_p1_guarded,
                         "spread_v1_max_edge_guard": spread_v1_p1_edge_guarded,
+                        "clay_bo3_dog_side": clay_bo3_p1_dog_side if clay_bo3_requested else "",
+                        "clay_bo3_max_edge_guard": clay_bo3_p1_edge_guarded if clay_bo3_requested else "",
                     }
                 )
-            if he2 >= edge_threshold and spread_v1_p2_allowed:
+            if he2 >= edge_threshold and spread_v1_p2_allowed and clay_bo3_p2_allowed:
                 stake_units_h2, stake_gbp_h2, stake_model_h2 = compute_stake_units(
                     our_odds1=our_odds1,
                     our_odds2=our_odds2,
@@ -2185,6 +2331,7 @@ def main() -> int:
                         "_tournament_name": tname,
                         "_strict_match": strict_spread_eligible,
                         "_volume_match": volume_spread_eligible,
+                        "_clay_bo3_match": clay_bo3_spread_eligible,
                         "_spread_shadow_match": spread_shadow_eligible,
                         "_spread_v1_match": spread_v1_eligible,
                         "shadow_reason": shadow_reason_value or "",
@@ -2196,6 +2343,8 @@ def main() -> int:
                         "atp500_short_fav_ml_guard": atp500_short_favorite_ml_excluded,
                         "short_fav_dog_spread_guard": short_fav_dog_spread_p2_guarded,
                         "spread_v1_max_edge_guard": spread_v1_p2_edge_guarded,
+                        "clay_bo3_dog_side": clay_bo3_p2_dog_side if clay_bo3_requested else "",
+                        "clay_bo3_max_edge_guard": clay_bo3_p2_edge_guarded if clay_bo3_requested else "",
                     }
                 )
 
@@ -2216,6 +2365,8 @@ def main() -> int:
         profile_key = "_spread_v1_match"
     elif args.signal_profile == "challenger_ml_shadow":
         profile_key = "_challenger_ml_match"
+    elif args.signal_profile == "clay_bo3":
+        profile_key = "_clay_bo3_match"
     elif args.signal_profile == "clay_calibrated":
         profile_key = "_clay_calibrated_match"
     else:
@@ -2333,6 +2484,13 @@ def main() -> int:
                 f"confidence={','.join(sorted(CHALLENGER_ML_ALLOWED_CONFIDENCE))} | "
                 f"edge {CHALLENGER_ML_MIN_EDGE_PCT:.1f}-{CHALLENGER_ML_MAX_EDGE_PCT:.1f}%"
             )
+        if args.signal_profile == "clay_bo3":
+            print(
+                "Clay bo3 gate: "
+                f"ML edge {CLAY_BO3_MIN_EDGE_PCT:.1f}-{CLAY_BO3_MAX_EDGE_PCT:.1f}% | "
+                f"dog HC edge {CLAY_BO3_DOG_HC_MIN_EDGE_PCT:.1f}-{CLAY_BO3_DOG_HC_MAX_EDGE_PCT:.1f}% | "
+                f"confidence={','.join(sorted(CLAY_BO3_ALLOWED_CONFIDENCE))}"
+            )
     print(
         "Stake sizing: "
         f"match 1u flat; spread 2u flat; unit_gbp={STRICT_UNIT_GBP:.2f}"
@@ -2398,6 +2556,7 @@ def main() -> int:
             r.pop("_strict_match", None)
             r.pop("_volume_match", None)
             r.pop("_challenger_ml_match", None)
+            r.pop("_clay_bo3_match", None)
             r.pop("_spread_shadow_match", None)
             r.pop("_spread_v1_match", None)
             r.pop("_clay_calibrated_match", None)
@@ -2474,6 +2633,16 @@ def main() -> int:
             print(
                 f"Appended {nearmiss_added}/{len(challenger_nearmiss_rows)} Challenger near-miss rows "
                 f"to {CHALLENGER_ML_NEARMISS_PATH}."
+            )
+        if args.signal_profile == "clay_bo3":
+            nearmiss_added = append_rows_dedup(
+                CLAY_BO3_NEARMISS_PATH,
+                clay_bo3_nearmiss_rows,
+                key_fields=["date", "player1", "player2", "skip_reason"],
+            )
+            print(
+                f"Appended {nearmiss_added}/{len(clay_bo3_nearmiss_rows)} Clay bo3 near-miss rows "
+                f"to {CLAY_BO3_NEARMISS_PATH}."
             )
         write_signals_current_artifact()
         print(f"Updated signals artifact at {SIGNALS_CURRENT_JSON}.")

@@ -35,14 +35,21 @@ class Phase0LaneDispatchTest(unittest.TestCase):
         self.assertEqual(message, "")
         self.assertFalse(stderr)
 
-    def test_research_lane_rejects_without_internal_flag(self):
+    def test_clay_lane_rejects_without_internal_flag(self):
         profile, exit_code, message, stderr = self.module.phase0_signal_profile_dispatch("clay_bo3", False)
         self.assertEqual(profile, "clay_bo3")
         self.assertEqual(exit_code, 2)
         self.assertIn("requires INTERNAL_RESEARCH_LANES=1", message)
         self.assertTrue(stderr)
 
-    def test_research_lane_noops_with_internal_flag(self):
+    def test_clay_lane_continues_with_internal_flag(self):
+        profile, exit_code, message, stderr = self.module.phase0_signal_profile_dispatch("clay_bo3", True)
+        self.assertEqual(profile, "clay_bo3")
+        self.assertIsNone(exit_code)
+        self.assertEqual(message, "")
+        self.assertFalse(stderr)
+
+    def test_phase0_stub_lane_noops_with_internal_flag(self):
         profile, exit_code, message, stderr = self.module.phase0_signal_profile_dispatch("slam_bo5", True)
         self.assertEqual(profile, "slam_bo5")
         self.assertEqual(exit_code, 0)

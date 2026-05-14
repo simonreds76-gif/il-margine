@@ -201,6 +201,12 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: clay calibrated signal analysis failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Step 11c/12: Analyse clay bo3 shadow signals ==="
+& python scripts\analyse-strict-signals.py --days 7 --input data\backtest\strict-signals-clay_bo3-archive.csv --report-txt data\backtest\strict-signals-clay_bo3-weekly.txt --summary-csv data\backtest\strict-signals-clay_bo3-weekly.csv 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: clay bo3 signal analysis failed (exit $LASTEXITCODE), continuing..."
+}
+
 # Step 12: Append Pinnacle history capture (weekly checkpoint)
 Log "=== Step 12/12: Append Pinnacle history capture (weekly) ==="
 & python scripts\pinnacle-capture-history.py --capture-mode weekly 2>&1 | ForEach-Object { Log $_ }
@@ -278,6 +284,18 @@ Log "=== Post-step: Clay-fav spread CLV audit ==="
 & python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-clay-fav-archive.csv --bet-type spread --detail-csv data\backtest\strict-clv-audit-clay-fav-2026.csv --summary-txt data\backtest\strict-clv-audit-clay-fav-2026.txt 2>&1 | ForEach-Object { Log $_ }
 if ($LASTEXITCODE -ne 0) {
     Log "WARNING: clay-fav spread CLV audit failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Post-step: Clay bo3 ML CLV audit ==="
+& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-clay_bo3-archive.csv --detail-csv data\backtest\strict-clv-audit-clay_bo3-2026.csv --summary-txt data\backtest\strict-clv-audit-clay_bo3-2026.txt 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: clay bo3 ML CLV audit failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Post-step: Clay bo3 dog-HC CLV audit ==="
+& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-clay_bo3-archive.csv --bet-type spread --detail-csv data\backtest\strict-clv-audit-clay_bo3-spread-2026.csv --summary-txt data\backtest\strict-clv-audit-clay_bo3-spread-2026.txt 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: clay bo3 dog-HC CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
 Log "=== Post-step: Spread v1 shadow report ==="

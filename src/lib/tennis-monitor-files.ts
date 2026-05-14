@@ -17,6 +17,8 @@ export type TennisMonitorFileGroup = {
   performance?: string;
   clvAuditCsv?: string;
   clvAuditTxt?: string;
+  clvAuditSpreadCsv?: string;
+  clvAuditSpreadTxt?: string;
 };
 
 export const TENNIS_RESEARCH_LANES: TennisResearchLaneId[] = [
@@ -49,6 +51,8 @@ export const TENNIS_MONITOR_FILES: Record<TennisResearchLaneId, TennisMonitorFil
     performance: "data/backtest/strict-policy-performance-clay_bo3-weekly.csv",
     clvAuditCsv: "data/backtest/strict-clv-audit-clay_bo3-2026.csv",
     clvAuditTxt: "data/backtest/strict-clv-audit-clay_bo3-2026.txt",
+    clvAuditSpreadCsv: "data/backtest/strict-clv-audit-clay_bo3-spread-2026.csv",
+    clvAuditSpreadTxt: "data/backtest/strict-clv-audit-clay_bo3-spread-2026.txt",
   },
   slam_bo5: {
     label: "Slam bo5",
