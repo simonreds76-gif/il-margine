@@ -17,6 +17,7 @@ import argparse
 import hashlib
 import json
 import os
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict
@@ -161,9 +162,36 @@ def upload_snapshot(snapshot_key: str, payload: Dict[str, object]) -> None:
         "Prefer": "resolution=merge-duplicates,return=representation",
     }
     url = f"{base}/rest/v1/goalscorer_live_snapshot?on_conflict=snapshot_key"
-    response = requests.post(url, headers=headers, json=[row], timeout=30)
-    if not response.ok:
-        raise SystemExit(f"Supabase upload failed: {response.status_code} {response.text[:400]}")
+    attempts = max(1, int(os.environ.get("SUPABASE_SNAPSHOT_UPLOAD_ATTEMPTS", "3") or "3"))
+    read_timeout = max(10, int(os.environ.get("SUPABASE_SNAPSHOT_UPLOAD_TIMEOUT", "45") or "45"))
+    required = (os.environ.get("SUPABASE_SNAPSHOT_UPLOAD_REQUIRED", "0") or "0").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+    }
+
+    last_error = ""
+    for attempt in range(1, attempts + 1):
+        try:
+            response = requests.post(url, headers=headers, json=[row], timeout=(10, read_timeout))
+        except requests.exceptions.RequestException as exc:
+            last_error = f"{type(exc).__name__}: {exc}"
+        else:
+            if response.ok:
+                return
+            if 400 <= response.status_code < 500 and response.status_code != 429:
+                raise SystemExit(f"Supabase upload failed: {response.status_code} {response.text[:400]}")
+            last_error = f"{response.status_code} {response.text[:400]}"
+
+        if attempt < attempts:
+            sleep_seconds = min(2 ** attempt, 10)
+            print(f"  Supabase upload attempt {attempt}/{attempts} failed: {last_error}; retrying in {sleep_seconds}s")
+            time.sleep(sleep_seconds)
+
+    message = f"Supabase upload failed after {attempts} attempt(s): {last_error}"
+    if required:
+        raise SystemExit(message)
+    print(f"  WARNING: {message}; continuing because SUPABASE_SNAPSHOT_UPLOAD_REQUIRED is not enabled")
 
 
 def main() -> None:
