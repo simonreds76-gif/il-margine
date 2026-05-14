@@ -8,6 +8,11 @@ const passthroughArgs = process.argv.slice(2);
 const configuredSyncTimeoutMs = Number.parseInt(process.env.ILMARGINE_HOSTED_SYNC_TIMEOUT_MS ?? "45000", 10);
 const syncTimeoutMs = Number.isFinite(configuredSyncTimeoutMs) && configuredSyncTimeoutMs > 0 ? configuredSyncTimeoutMs : 45000;
 
+if (!process.env.INTERNAL_RESEARCH_LANES) {
+  process.env.INTERNAL_RESEARCH_LANES = "1";
+  console.log("[dev] Internal research lanes enabled for local fair-odds/model-monitor views.");
+}
+
 function runHostedSync() {
   if (process.env.ILMARGINE_SKIP_HOSTED_SYNC === "1") {
     console.log("[dev] Hosted monitor sync skipped by ILMARGINE_SKIP_HOSTED_SYNC=1.");
