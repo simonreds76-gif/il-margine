@@ -338,9 +338,73 @@ def avg(values: list[float]) -> float | None:
     return sum(vals) / len(vals) if vals else None
 
 
+def is_active_pick(row: dict[str, Any]) -> bool:
+    return not str(row.get("blocked_reason") or "").strip() and not row_bool(row.get("confidence_guard_applied"))
+
+
+def pct(value: float | None) -> str:
+    return "-" if value is None else f"{value:+.2f}%"
+
+
+def segment_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    active = [row for row in rows if is_active_pick(row)]
+    settled = [row for row in active if str(row.get("result") or "").strip().lower() in SETTLED_RESULTS]
+    pending = [row for row in active if str(row.get("result") or "").strip().lower() in {"", "pending"}]
+    won = sum(1 for row in settled if str(row.get("result") or "").strip().lower() == "won")
+    lost = sum(1 for row in settled if str(row.get("result") or "").strip().lower() == "lost")
+    pushed = sum(1 for row in settled if str(row.get("result") or "").strip().lower() == "push")
+    pnl = sum(value for value in (pf(row.get("pnl_units")) for row in settled) if value is not None)
+    clv_values = [value for value in (pf(row.get("published_to_close_clv")) for row in settled) if value is not None]
+    roi = (pnl / len(settled) * 100.0) if settled else None
+    avg_clv = avg(clv_values)
+    return {
+        "active": len(active),
+        "settled": len(settled),
+        "pending": len(pending),
+        "won": won,
+        "lost": lost,
+        "pushed": pushed,
+        "pnl": pnl,
+        "roi": roi,
+        "avg_clv_pct": avg_clv * 100.0 if avg_clv is not None else None,
+        "clv_n": len(clv_values),
+    }
+
+
+def append_segment_table(lines: list[str], title: str, groups: list[tuple[str, list[dict[str, Any]]]]) -> None:
+    lines.extend([
+        f"## {title}",
+        "",
+        "| Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|",
+    ])
+    for label, group_rows in groups:
+        summary = segment_summary(group_rows)
+        if not summary["active"]:
+            continue
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    label,
+                    str(summary["active"]),
+                    str(summary["settled"]),
+                    str(summary["pending"]),
+                    f"{summary['won']}-{summary['lost']}-{summary['pushed']}",
+                    f"{summary['pnl']:+.2f}u",
+                    pct(summary["roi"]),
+                    f"{pct(summary['avg_clv_pct'])} (n={summary['clv_n']})",
+                ]
+            )
+            + " |"
+        )
+    lines.append("")
+
+
 def render_report(rows: list[dict[str, Any]], picks_path: Path, odds_path: Path, allowed_config: dict[str, Any]) -> str:
     clv_values = [pf(row.get("published_to_close_clv")) for row in rows if pf(row.get("published_to_close_clv")) is not None]
     blocked = [row for row in rows if row.get("blocked_reason")]
+    active_rows = [row for row in rows if is_active_pick(row)]
     with_close = [row for row in rows if row.get("book_price_close")]
     settled = [row for row in rows if str(row.get("result") or "").strip().lower() in SETTLED_RESULTS]
     open_rows = [row for row in rows if str(row.get("result") or "").strip().lower() in {"", "pending"}]
@@ -358,6 +422,7 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, odds_path: Path,
         "## Summary",
         "",
         f"- Picks: {len(rows)}",
+        f"- Active published picks: {len(active_rows)}",
         f"- Settled: {len(settled)}",
         f"- Open/pending: {len(open_rows)}",
         f"- Settled PnL: {total_pnl:+.2f}u" if settled else "- Settled PnL: -",
@@ -368,6 +433,24 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, odds_path: Path,
         f"- Allowed leagues: `{', '.join(allowed_config.get('allowed_leagues', [])) or '-'}`",
         f"- Config error: `{allowed_config.get('config_error') or '-'}`",
         "",
+    ]
+    append_segment_table(lines, "Active Side Breakdown", [(side.title(), [row for row in rows if str(row.get("side") or "").strip().lower() == side]) for side in ("over", "under")])
+    leagues = sorted({str(row.get("league") or "").strip().lower() for row in active_rows if str(row.get("league") or "").strip()})
+    append_segment_table(lines, "Active League Breakdown", [(league or "unknown", [row for row in rows if str(row.get("league") or "").strip().lower() == league]) for league in leagues])
+    append_segment_table(
+        lines,
+        "Active Side x League Breakdown",
+        [
+            (f"{side.title()} / {league}", [
+                row for row in rows
+                if str(row.get("side") or "").strip().lower() == side
+                and str(row.get("league") or "").strip().lower() == league
+            ])
+            for side in ("over", "under")
+            for league in leagues
+        ],
+    )
+    lines.extend([
         "## Required Fields",
         "",
         "- `current_model_would_have_priced` must be true while canonical-only evidence is blocked.",
@@ -381,7 +464,7 @@ def render_report(rows: list[dict[str, Any]], picks_path: Path, odds_path: Path,
         f"- Pause `{model}` if 30-day rolling CLV is below 0 with at least 50 settled picks.",
         f"- Pause `{model}` if rolling 90-day production Brier exceeds 1.05x the pre-promotion backtest Brier.",
         "",
-    ]
+    ])
     return "\n".join(lines)
 
 

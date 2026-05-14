@@ -161,22 +161,10 @@ export async function readCornersLiveFile(relativePath: string): Promise<string 
     }
   };
 
-  const readLocalMtime = async (): Promise<string | null> => {
-    try {
-      const fullPath = tryGetKnownProjectFilePath(relativePath);
-      if (!fullPath) return null;
-      const stat = await fs.stat(fullPath);
-      return stat.mtime.toISOString();
-    } catch {
-      return null;
-    }
-  };
-
   if (!PREFER_LOCAL) {
     const payload = await loadHostedSnapshot();
     const hostedEntry = getSnapshotFileEntry(payload, relativePath);
-    const localMtime = await readLocalMtime();
-    if (typeof hostedEntry?.content === "string" && shouldPreferHosted(hostedEntry.mtime ?? payload?.generated_at ?? null, localMtime)) {
+    if (typeof hostedEntry?.content === "string") {
       return hostedEntry.content;
     }
   }
@@ -220,10 +208,9 @@ export async function readCornersLiveMtime(relativePath: string): Promise<string
   if (!PREFER_LOCAL) {
     const payload = await loadHostedSnapshot();
     const hosted = getSnapshotFileEntry(payload, relativePath)?.mtime ?? payload?.generated_at ?? null;
-    const localMtime = await readLocalMtime();
-    if (shouldPreferHosted(hosted, localMtime)) return hosted;
-    if (typeof localMtime === "string") return localMtime;
     if (typeof hosted === "string") return hosted;
+    const localMtime = await readLocalMtime();
+    if (typeof localMtime === "string") return localMtime;
     return null;
   }
 
@@ -242,7 +229,7 @@ export async function readCornersLiveSnapshotGeneratedAt(): Promise<string | nul
   const payload = await loadHostedSnapshot();
   const hostedGeneratedAt = typeof payload?.generated_at === "string" ? payload.generated_at : null;
   const localGeneratedAt = await readLocalSnapshotGeneratedAt();
-  return newerTimestamp(hostedGeneratedAt, localGeneratedAt);
+  return PREFER_LOCAL ? newerTimestamp(localGeneratedAt, hostedGeneratedAt) : hostedGeneratedAt ?? localGeneratedAt;
 }
 
 export async function inspectCornersLiveSource(relativePath: string): Promise<CornersLiveSourceStatus> {
@@ -261,6 +248,19 @@ export async function inspectCornersLiveSource(relativePath: string): Promise<Co
     }
   } catch {
     localFileMtime = null;
+  }
+
+  if (!PREFER_LOCAL && hostedFileMtime) {
+    return {
+      source: "hosted",
+      reason: localFileMtime ? "hosted_newer" : "hosted_only",
+      hostedSnapshotAvailable: Boolean(payload),
+      localSnapshotAvailable: Boolean(localSnapshotGeneratedAt),
+      hostedGeneratedAt,
+      localSnapshotGeneratedAt,
+      hostedFileMtime,
+      localFileMtime,
+    };
   }
 
   if (shouldPreferHosted(hostedFileMtime, localFileMtime)) {

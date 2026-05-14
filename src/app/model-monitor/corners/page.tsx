@@ -374,6 +374,16 @@ function sourceTone(source: "hosted" | "local" | "missing"): "default" | "green"
   return "default";
 }
 
+function monitorStaleHours(): number {
+  const raw = process.env.MONITOR_STALE_HOURS ?? process.env.TEAM_PROPS_MONITOR_STALE_HOURS;
+  const parsed = Number.parseFloat(raw ?? "");
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 18;
+}
+
+function currentServerRenderMillis(): number {
+  return Date.now();
+}
+
 // Tone helper: converts the old "green"/"red"/"amber" strings to CSS class names
 // used by the shared StatCard `tone` prop.
 function statTone(t?: "default" | "green" | "red" | "amber"): string | undefined {
@@ -461,6 +471,15 @@ function researchBetSummary(rows: CsvRow[]): ResearchBetSummary {
     roi: settledRows.length > 0 ? (pnl / settledRows.length) * 100 : null,
     winRate: graded > 0 ? (won / graded) * 100 : null,
   };
+}
+
+function researchAvgPublishedClvPct(rows: CsvRow[]): { avg: number | null; n: number } {
+  const settledRows = rows.filter(researchRowIsActive).filter(isSettledResearchRow);
+  const values = settledRows
+    .map((row) => maybeFloat(row.published_to_close_clv))
+    .filter((value): value is number => value !== null);
+  if (values.length === 0) return { avg: null, n: 0 };
+  return { avg: (values.reduce((sum, value) => sum + value, 0) / values.length) * 100, n: values.length };
 }
 
 function formatUnits(value: number): string {
@@ -1102,6 +1121,18 @@ export default async function CornersMonitorPage() {
     pipelineStatus?.updated_at,
   ]);
   const renderReferenceMs = renderReferenceAt ? Date.parse(renderReferenceAt) : 0;
+  const staleHours = monitorStaleHours();
+  const realNowMillis = currentServerRenderMillis();
+  const hostedSnapshotAt = shortlistSource.hostedGeneratedAt ?? null;
+  const hostedSnapshotMillis = hostedSnapshotAt ? Date.parse(hostedSnapshotAt) : Number.NaN;
+  const hostedSnapshotAgeHours = Number.isFinite(hostedSnapshotMillis)
+    ? Math.max(0, (realNowMillis - hostedSnapshotMillis) / (60 * 60 * 1000))
+    : null;
+  const hostedSnapshotIsStale =
+    !shortlistSource.hostedSnapshotAvailable ||
+    hostedSnapshotAgeHours === null ||
+    hostedSnapshotAgeHours > staleHours ||
+    shortlistSource.source !== "hosted";
   const pipelineTone =
     pipelineStatus?.state === "failed"
       ? "red"
@@ -1114,6 +1145,15 @@ export default async function CornersMonitorPage() {
   const cornersV0Clv = parseClvMonitorSummary(cornersClvReport);
   const cornersV0ClvRows = cornersClvCsv ? parseCsvCached(cornersClvCsv) : [];
   const cornersV0Summary = researchBetSummary(cornersV0ClvRows);
+  const cornersV0SideRows = (["over", "under"] as const).map((side) => {
+    const rows = cornersV0ClvRows.filter((row) => (row.side ?? "").trim().toLowerCase() === side);
+    return {
+      side,
+      label: side === "over" ? "Overs" : "Unders",
+      summary: researchBetSummary(rows),
+      clv: researchAvgPublishedClvPct(rows),
+    };
+  });
   const cornersV0SettledPicks = cornersV0ClvRows.filter((row) =>
     researchRowIsActive(row) && isSettledResearchRow(row),
   );
@@ -1145,6 +1185,22 @@ export default async function CornersMonitorPage() {
             Reference odds from Pinnacle. Place on bet365 / Paddy Power if they offer the same or better price.
           </span>
         </HeroCard>
+
+        {hostedSnapshotIsStale ? (
+          <section className="rounded-2xl border border-rose-500/35 bg-rose-950/35 p-4 text-sm text-rose-100">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-rose-300">
+              Stale hosted corners data
+            </div>
+            <p className="mt-2">
+              Do not trust an empty or quiet corners board until this clears. The canonical hosted `corners_state` snapshot is{" "}
+              {hostedSnapshotAt ? `${formatRelativeAgeShort(hostedSnapshotAt, realNowMillis)} old` : "missing"}; threshold is {staleHours.toFixed(0)}h.
+            </p>
+            <p className="mt-1 text-xs text-rose-200/80">
+              Source: {shortlistSource.source} | hosted generated {hostedSnapshotAt ? formatDateTime(hostedSnapshotAt) : "missing"} | local fallback{" "}
+              {shortlistSource.localSnapshotGeneratedAt ? formatDateTime(shortlistSource.localSnapshotGeneratedAt) : "missing"}.
+            </p>
+          </section>
+        ) : null}
 
         <SectionCard
           collapsible
@@ -1328,6 +1384,59 @@ export default async function CornersMonitorPage() {
                   value={cornersV0Clv.avgClv}
                   tone={cornersV0Clv.avgClv.startsWith("+") ? "text-emerald-300" : cornersV0Clv.avgClv.startsWith("-") ? "text-rose-300" : undefined}
                 />
+              </div>
+
+              <div className="mt-3 grid gap-2.5 md:grid-cols-2">
+                {cornersV0SideRows.map(({ side, label, summary, clv }) => (
+                  <div
+                    key={side}
+                    className={`rounded-xl border px-3 py-3 ${
+                      side === "over"
+                        ? "border-emerald-500/20 bg-emerald-500/8"
+                        : "border-sky-500/20 bg-sky-500/8"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div>
+                        <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                          Side split
+                        </div>
+                        <div className="mt-1 text-sm font-semibold text-slate-100">{label}</div>
+                      </div>
+                      <StatusPill
+                        label={side.toUpperCase()}
+                        tone={side === "over"
+                          ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                          : "bg-sky-500/10 text-sky-300 border-sky-500/20"}
+                      />
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
+                      <div>
+                        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">Settled</div>
+                        <div className="mt-0.5 font-mono text-slate-200">{summary.settled}/{summary.total}</div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">W-L-P</div>
+                        <div className="mt-0.5 font-mono text-slate-200">{summary.won}-{summary.lost}-{summary.pushed}</div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">ROI</div>
+                        <div className={`mt-0.5 font-mono ${summary.roi !== null && summary.roi >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                          {summary.roi !== null ? formatSignedPercent(summary.roi) : "-"}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-[10px] uppercase tracking-[0.14em] text-slate-600">CLV</div>
+                        <div className={`mt-0.5 font-mono ${clv.avg !== null && clv.avg >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                          {clv.avg !== null ? `${formatSignedPercent(clv.avg)} (${clv.n})` : "-"}
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`mt-2 text-xs ${summary.pnl >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                      {formatUnits(summary.pnl)} flat P&L | {summary.pending} open
+                    </div>
+                  </div>
+                ))}
               </div>
 
               <div className="mt-3 rounded-xl border border-amber-500/20 bg-amber-500/8 px-3 py-2 text-xs text-amber-100">

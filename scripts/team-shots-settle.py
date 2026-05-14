@@ -366,6 +366,26 @@ def main() -> None:
 
 
 def _write_summary(signals: List[dict], path: Path) -> None:
+    def append_side_summary(side: str, side_signals: List[dict]) -> None:
+        side_settled = [s for s in side_signals if s.get("result") in ("won", "lost", "push")]
+        side_pending = [s for s in side_signals if s.get("result") == "pending"]
+        if not side_signals:
+            return
+        side_pnl = sum(_pf(s.get("pnl")) for s in side_settled)
+        side_wins = sum(1 for s in side_settled if s.get("result") == "won")
+        side_losses = sum(1 for s in side_settled if s.get("result") == "lost")
+        side_pushes = sum(1 for s in side_settled if s.get("result") == "push")
+        side_roi = side_pnl / len(side_settled) * 100 if side_settled else 0.0
+        clv_vals = [_pf(s.get("clv"), float("nan")) for s in side_settled if s.get("clv")]
+        clv_vals = [v for v in clv_vals if v == v]
+        avg_clv = sum(clv_vals) / len(clv_vals) * 100 if clv_vals else None
+        clv_text = f", Avg CLV {avg_clv:+.1f}% (n={len(clv_vals)})" if avg_clv is not None else ""
+        lines.append(
+            f"    {side.upper():<5} {len(side_signals):>3} signals, {len(side_settled):>3} settled, "
+            f"{len(side_pending):>3} pending, {side_wins}W/{side_losses}L/{side_pushes}P, "
+            f"PnL {side_pnl:+.1f}u, ROI {side_roi:+.1f}%{clv_text}"
+        )
+
     lines: List[str] = []
     lines.append("=" * 60)
     lines.append("  TEAM SHOTS SHADOW -- PERFORMANCE SUMMARY")
@@ -393,6 +413,10 @@ def _write_summary(signals: List[dict], path: Path) -> None:
         if clv_vals:
             avg_clv = sum(clv_vals) / len(clv_vals) * 100
             lines.append(f"  Avg CLV:        {avg_clv:+.1f}%  (n={len(clv_vals)}, vs Bet365 close)")
+        lines.append("")
+        lines.append("  By side:")
+        for side in ("over", "under"):
+            append_side_summary(side, [s for s in signals if (s.get("side") or "").strip().lower() == side])
 
     lines.append(f"\n  Updated: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}")
     lines.append("=" * 60)
