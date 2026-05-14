@@ -1,0 +1,74 @@
+Clay bo3 lane backtest
+Generated UTC: 2026-05-14T22:00:29Z
+ML rows loaded from historical files: 9,889
+
+Scope
+- ML: ATP clay bo3, series in ATP250, ATP500, Masters 1000, Masters Cup, confidence=high, edge 5-13%, 1u flat stake.
+- Dog HC diagnostic: clay dog-handicap edge 6-25%, 1u flat stake.
+- Historical caveat: backtest-results-YYYY.csv files do not contain spread lines/odds, so dog HC cannot be scored over 2022-2025 from those files.
+- CLV caveat: historical ML CSVs contain one Pinnacle price snapshot, not open/close pairs. CLV remains a live archive audit metric.
+
+ML historical verdict
+- Overall: 336 bets, 144W/192L/0P, PnL -45.00u on 336.0u, ROI -13.4%, WR 42.9%, avg edge 8.7%, avg odds 2.223
+- Bootstrap ROI 95% CI: -24.5% to -1.5%
+- Max drawdown: 49.16u
+
+ML by year
+- 2024: 98 bets, 41W/57L/0P, PnL -14.55u on 98.0u, ROI -14.8%, WR 41.8%, avg edge 8.6%, avg odds 2.206
+- 2023: 84 bets, 39W/45L/0P, PnL -4.86u on 84.0u, ROI -5.8%, WR 46.4%, avg edge 8.7%, avg odds 2.208
+- 2022: 82 bets, 32W/50L/0P, PnL -15.18u on 82.0u, ROI -18.5%, WR 39.0%, avg edge 8.9%, avg odds 2.256
+- 2025: 72 bets, 32W/40L/0P, PnL -10.41u on 72.0u, ROI -14.5%, WR 44.4%, avg edge 8.6%, avg odds 2.224
+
+ML by series
+- ATP250: 212 bets, 89W/123L/0P, PnL -33.13u on 212.0u, ROI -15.6%, WR 42.0%, avg edge 8.7%, avg odds 2.160
+- Masters 1000: 89 bets, 39W/50L/0P, PnL -8.15u on 89.0u, ROI -9.2%, WR 43.8%, avg edge 8.6%, avg odds 2.353
+- ATP500: 35 bets, 16W/19L/0P, PnL -3.72u on 35.0u, ROI -10.6%, WR 45.7%, avg edge 8.9%, avg odds 2.273
+
+ML by favorite/dog
+- favorite_ml: 185 bets, 95W/90L/0P, PnL -24.18u on 185.0u, ROI -13.1%, WR 51.4%, avg edge 8.5%, avg odds 1.729
+- dog_ml: 151 bets, 49W/102L/0P, PnL -20.82u on 151.0u, ROI -13.8%, WR 32.5%, avg edge 8.9%, avg odds 2.827
+
+ML by edge bucket
+- 07-09: 98 bets, 40W/58L/0P, PnL -26.69u on 98.0u, ROI -27.2%, WR 40.8%, avg edge 8.1%, avg odds 2.149
+- 05-07: 97 bets, 42W/55L/0P, PnL -11.25u on 97.0u, ROI -11.6%, WR 43.3%, avg edge 6.0%, avg odds 2.168
+- 11-13: 79 bets, 31W/48L/0P, PnL -8.41u on 79.0u, ROI -10.6%, WR 39.2%, avg edge 11.9%, avg odds 2.411
+- 09-11: 62 bets, 31W/31L/0P, PnL +1.35u on 62.0u, ROI +2.2%, WR 50.0%, avg edge 9.8%, avg odds 2.186
+
+ML threshold sweep
+- Tested simple edge bands inside 5-13% with at least 40 bets.
+- edge 9-13%: 141 bets, ROI -5.0%, min-year -15.2%, 2025 -4.9% (2022:-15.2%, 2023:+4.2%, 2024:-4.0%, 2025:-4.9%)
+- edge 9-12%: 107 bets, ROI -0.9%, min-year -16.0%, 2025 -16.0% (2022:+8.2%, 2023:+8.1%, 2024:-5.5%, 2025:-16.0%)
+- edge 5-13%: 336 bets, ROI -13.4%, min-year -18.5%, 2025 -14.5% (2022:-18.5%, 2023:-5.8%, 2024:-14.8%, 2025:-14.5%)
+- edge 8-13%: 196 bets, ROI -11.9%, min-year -20.6%, 2025 -18.7% (2022:-20.6%, 2023:+0.6%, 2024:-9.9%, 2025:-18.7%)
+- edge 5-8%: 140 bets, ROI -15.4%, min-year -21.5%, 2025 -8.8% (2022:-15.1%, 2023:-14.3%, 2024:-21.5%, 2025:-8.8%)
+- edge 6-13%: 278 bets, ROI -13.7%, min-year -21.7%, 2025 -18.7% (2022:-21.7%, 2023:-6.4%, 2024:-9.7%, 2025:-18.7%)
+- edge 5-7%: 97 bets, ROI -11.6%, min-year -22.1%, 2025 -14.9% (2022:-3.1%, 2023:-2.5%, 2024:-22.1%, 2025:-14.9%)
+- edge 7-13%: 239 bets, ROI -14.1%, min-year -22.8%, 2025 -14.3% (2022:-22.8%, 2023:-7.3%, 2024:-11.7%, 2025:-14.3%)
+
+Dog HC diagnostics
+- Settled spread archive proxy: 10 bets, 8W/2L/0P, PnL +5.68u on 10.0u, ROI +56.8%, WR 80.0%, avg edge 10.9%, avg odds 1.964
+- Spread training dataset proxy: 56 bets, 25W/31L/0P, PnL -7.50u on 56.0u, ROI -13.4%, WR 44.6%, avg edge 13.5%, avg odds 1.932
+
+Dog HC interpretation
+- Treat these as diagnostics, not a 2022-2025 backtest, because historical spread market data was not persisted in the main backtest files.
+- If dog HC remains negative in live archive samples, the clay_bo3 implementation should keep ML only or tighten dog-HC gates before any promotion.
+
+Dog HC archive by series
+- ATP500: 6 bets, 5W/1L/0P, PnL +3.84u on 6.0u, ROI +64.0%, WR 83.3%, avg edge 12.2%, avg odds 1.975
+- Masters 1000: 4 bets, 3W/1L/0P, PnL +1.84u on 4.0u, ROI +46.0%, WR 75.0%, avg edge 8.8%, avg odds 1.948
+
+Dog HC archive by edge bucket
+- 05-07: 2 bets, 1W/1L/0P, PnL -0.07u on 2.0u, ROI -3.7%, WR 50.0%, avg edge 6.5%, avg odds 1.939
+- 07-09: 2 bets, 2W/0L/0P, PnL +1.91u on 2.0u, ROI +95.3%, WR 100.0%, avg edge 8.3%, avg odds 1.953
+- 09-11: 2 bets, 2W/0L/0P, PnL +1.97u on 2.0u, ROI +98.6%, WR 100.0%, avg edge 9.7%, avg odds 1.986
+- 11-13: 2 bets, 2W/0L/0P, PnL +1.94u on 2.0u, ROI +97.1%, WR 100.0%, avg edge 12.6%, avg odds 1.971
+- 13-15: 1 bets, 1W/0L/0P, PnL +0.94u on 1.0u, ROI +93.5%, WR 100.0%, avg edge 14.0%, avg odds 1.935
+- 20-25: 1 bets, 0W/1L/0P, PnL -1.00u on 1.0u, ROI -100.0%, WR 0.0%, avg edge 20.5%, avg odds 2.010
+
+Dog HC training dataset by year
+- 2026: 56 bets, 25W/31L/0P, PnL -7.50u on 56.0u, ROI -13.4%, WR 44.6%, avg edge 13.5%, avg odds 1.932
+
+Decision notes
+- Keep clay_bo3 ML disabled by default. No simple edge band in the historical sweep clears a basic by-year robustness test.
+- Dog HC needs either recovered historical spread snapshots or continued live shadow settlement before it can be treated as more than a diagnostic lane.
+- Next useful improvement: add per-tournament clay cohorts and compare ML ROI by Monte Carlo/Madrid/Rome/other clay before changing model math.

@@ -37,7 +37,7 @@
       "label": "Clay bo3",
       "state": "internal_shadow",
       "phase": 1,
-      "description": "Active internal shadow gate on existing fair-odds output: ATP clay ML edges plus dog-handicap candidates. Per-cohort clay overlay/calibration remains a later research step.",
+      "description": "Active internal shadow gate on existing fair-odds output. ML is disabled by default after the 2022-2025 backtest failed; dog-handicap candidates remain internal diagnostics. Per-cohort clay overlay/calibration remains a later research step.",
       "filters": {
         "league": ["ATP"],
         "surface": ["Clay"],
@@ -46,7 +46,13 @@
         "exclude_grand_slams": true
       },
       "markets": {
-        "ml": { "state": "internal_shadow", "edge_pct": [5, 13], "confidence": ["high"] },
+        "ml": {
+          "state": "disabled_by_default",
+          "edge_pct": [5, 13],
+          "confidence": ["high"],
+          "enable_env": "CLAY_BO3_ML_ENABLE",
+          "disabled_reason": "2022-2025 historical ML gate ROI negative"
+        },
         "dog_hc": { "state": "internal_shadow", "edge_pct": [6, 25] },
         "over_games": { "state": "future_shadow" }
       },

@@ -103,6 +103,7 @@ CLAY_BO3_MIN_EDGE_PCT = env_float("CLAY_BO3_MIN_EDGE_PCT", 5.0)
 CLAY_BO3_MAX_EDGE_PCT = env_float("CLAY_BO3_MAX_EDGE_PCT", 13.0)
 CLAY_BO3_DOG_HC_MIN_EDGE_PCT = env_float("CLAY_BO3_DOG_HC_MIN_EDGE_PCT", 6.0)
 CLAY_BO3_DOG_HC_MAX_EDGE_PCT = env_float("CLAY_BO3_DOG_HC_MAX_EDGE_PCT", 25.0)
+CLAY_BO3_ML_ENABLE = env_bool(os.environ.get("CLAY_BO3_ML_ENABLE"), False)
 CLAY_BO3_ALLOWED_SERIES = {"ATP250", "ATP500", "Masters 1000", "Masters Cup"}
 CLAY_BO3_ALLOWED_CONFIDENCE = {"high"}
 SPREAD_V1_CLAY_FAV_STALE_DAYS = env_int("SPREAD_V1_CLAY_FAV_STALE_DAYS", 14)
@@ -1001,6 +1002,7 @@ def challenger_skip_reason(
 
 def clay_bo3_skip_reason(
     *,
+    ml_enabled: bool,
     scope_reason: str | None,
     value_pct: float | None,
     model_ml_excluded: bool,
@@ -1011,6 +1013,8 @@ def clay_bo3_skip_reason(
 ) -> str | None:
     if scope_reason:
         return scope_reason
+    if not ml_enabled:
+        return "ml_disabled_backtest_failed"
     if model_market_gap_excluded:
         return "model_market_gap"
     if model_ml_excluded:
@@ -1892,7 +1896,8 @@ def main() -> int:
             and CHALLENGER_ML_MIN_EDGE_PCT <= value_pct <= CHALLENGER_ML_MAX_EDGE_PCT
         )
         clay_bo3_ml_match = (
-            clay_bo3_scope_ok
+            CLAY_BO3_ML_ENABLE
+            and clay_bo3_scope_ok
             and not model_ml_excluded
             and not pin_ml_excluded
             and not model_market_gap_excluded
@@ -1903,6 +1908,7 @@ def main() -> int:
         )
         if clay_bo3_requested and league == "ATP" and surface == "Clay" and not clay_bo3_ml_match:
             skip_reason = clay_bo3_skip_reason(
+                ml_enabled=CLAY_BO3_ML_ENABLE,
                 scope_reason=clay_bo3_scope,
                 value_pct=value_pct,
                 model_ml_excluded=model_ml_excluded,
@@ -2487,7 +2493,7 @@ def main() -> int:
         if args.signal_profile == "clay_bo3":
             print(
                 "Clay bo3 gate: "
-                f"ML edge {CLAY_BO3_MIN_EDGE_PCT:.1f}-{CLAY_BO3_MAX_EDGE_PCT:.1f}% | "
+                f"ML enabled={CLAY_BO3_ML_ENABLE} edge {CLAY_BO3_MIN_EDGE_PCT:.1f}-{CLAY_BO3_MAX_EDGE_PCT:.1f}% | "
                 f"dog HC edge {CLAY_BO3_DOG_HC_MIN_EDGE_PCT:.1f}-{CLAY_BO3_DOG_HC_MAX_EDGE_PCT:.1f}% | "
                 f"confidence={','.join(sorted(CLAY_BO3_ALLOWED_CONFIDENCE))}"
             )
