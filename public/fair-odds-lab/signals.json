@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T19:24:45.552948Z",
+  "generated_at": "2026-05-14T19:56:43.670585Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -32,7 +32,7 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 23,
+  "fixtures_evaluated": 45,
   "signals_qualifying": 3,
   "leagues_covered": [
     "bundesliga",
@@ -71,12 +71,12 @@
         "fair_odds": 2.11
       },
       "market_data": {
-        "best_odds": 3.2,
+        "best_odds": 3.0,
         "best_book": "Bet365",
-        "implied_chance_pct": 31.2
+        "implied_chance_pct": 33.3
       },
       "edge": {
-        "price_gap_pp": 16.1,
+        "price_gap_pp": 14.0,
         "model_advantage": true
       },
       "metrics": {
@@ -88,7 +88,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 92
+          "percentile": 96
         },
         "recent_team_form": {
           "tier": "Positive",
@@ -107,7 +107,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 67
+          "percentile": 73
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -181,13 +181,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 92
+          "percentile": 93
         },
         "share_of_team_chances_pct": 36,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 17
+          "percentile": 29
         },
         "recent_team_form": {
           "tier": "Average",
@@ -205,8 +205,8 @@
           "corners_against_avg": 5.8
         },
         "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 49
+          "tier": "Positive",
+          "percentile": 55
         },
         "opponent_recent_defence": {
           "tier": "Low",
@@ -285,14 +285,14 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 3
+          "percentile": 9
         },
         "recent_team_form": {
           "tier": "Unknown"
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 3
+          "percentile": 10
         },
         "opponent_recent_defence": {
           "tier": "Average",
