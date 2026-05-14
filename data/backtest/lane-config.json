@@ -1,0 +1,196 @@
+{
+  "version": "2026-05-14-phase0",
+  "phase": "phase0-scaffold",
+  "description": "Internal tennis research lane registry. Phase 0 is declarative only; live probability and signal paths do not consume this file.",
+  "defaults": {
+    "currency": "units",
+    "stake_units": 1.0,
+    "public_exposure": false,
+    "requires_internal_research_lanes": true
+  },
+  "lanes": {
+    "hard_bo3": {
+      "label": "Hard bo3",
+      "state": "anchor",
+      "phase": 0,
+      "description": "Byte-identical alias to the existing strict ATP main-tour ML path during Phase 0.",
+      "filters": {
+        "league": ["ATP"],
+        "surface": ["Hard"],
+        "series": ["ATP250", "ATP500", "Masters1000", "ATPFinals"],
+        "best_of": [3],
+        "exclude_grand_slams": true
+      },
+      "markets": {
+        "ml": { "state": "existing", "edge_pct": [4, 12], "confidence": ["high"] },
+        "fav_hc": { "state": "future_controlled" },
+        "over_games": { "state": "future_shadow" }
+      },
+      "calibration": {
+        "path": "data/backtest/calibration/_fallback.json",
+        "method": "existing_global",
+        "fallback_lane": null
+      },
+      "overlay": {}
+    },
+    "clay_bo3": {
+      "label": "Clay bo3",
+      "state": "shadow_planned",
+      "phase": 1,
+      "filters": {
+        "league": ["ATP"],
+        "surface": ["Clay"],
+        "series": ["ATP250", "ATP500", "Masters1000", "ATPFinals"],
+        "best_of": [3],
+        "exclude_grand_slams": true
+      },
+      "markets": {
+        "ml": { "state": "planned_shadow", "edge_pct": [5, 13], "confidence": ["high"] },
+        "dog_hc": { "state": "planned_shadow", "min_edge_pct": 6 },
+        "over_games": { "state": "planned_shadow" }
+      },
+      "calibration": {
+        "path": "data/backtest/calibration/clay-bo3-calibration.json",
+        "method": "isotonic_cohort",
+        "fallback_lane": "hard_bo3"
+      },
+      "overlay": {
+        "hybrid_elo_weight": 0.5,
+        "form_weight": 0.1,
+        "form_cap": 0.04,
+        "vs_big_server_weight": 0.015,
+        "vs_leftie_weight": 0.05,
+        "vs_leftie_cap": 0.025,
+        "tournament_speed_point_weight": 0.24
+      }
+    },
+    "slam_bo5": {
+      "label": "Slam bo5",
+      "state": "shadow_planned",
+      "phase": 2,
+      "filters": {
+        "league": ["ATP"],
+        "series": ["Grand Slam"],
+        "best_of": [5]
+      },
+      "markets": {
+        "fav_ml": { "state": "planned_shadow" },
+        "dog_hc": { "state": "planned_shadow" },
+        "over_games": { "state": "planned_shadow" }
+      },
+      "calibration": {
+        "path": "data/backtest/calibration/slam-bo5-calibration.json",
+        "method": "platt_event_cohort",
+        "fallback_lane": "_pooled"
+      },
+      "overlay": {
+        "bo5_stamina": true,
+        "comeback_profile": true,
+        "age_decay": true
+      }
+    },
+    "challenger_ml": {
+      "label": "Challenger ML",
+      "state": "shadow_planned",
+      "phase": 3,
+      "filters": {
+        "league": ["Challenger"],
+        "surface": ["Hard", "Clay", "Grass", "I.hard", "Indoor"],
+        "singles_only": true
+      },
+      "markets": {
+        "ml": {
+          "state": "internal_shadow",
+          "edge_pct": [10, 15],
+          "confidence": ["high"],
+          "data_coverage_tag": "HIGH"
+        }
+      },
+      "calibration": {
+        "path": "data/backtest/calibration/challenger-ml-calibration.json",
+        "method": "fallback_only_until_600_settled",
+        "fallback_lane": "_fallback"
+      },
+      "overlay": {
+        "shrinkage_n": 55,
+        "rank_logit_scale": 1.05,
+        "elo_gap_full": 400
+      }
+    },
+    "indoor_bo3": {
+      "label": "Indoor bo3",
+      "state": "deferred",
+      "phase": 4,
+      "filters": {
+        "league": ["ATP"],
+        "surface": ["I.hard", "Indoor"],
+        "best_of": [3],
+        "exclude_grand_slams": true
+      },
+      "markets": {
+        "ml": { "state": "planned_shadow", "edge_pct": [4, 12] },
+        "fav_hc": { "state": "planned_shadow" },
+        "under_games": { "state": "planned_shadow" }
+      },
+      "calibration": {
+        "path": "data/backtest/calibration/indoor-bo3-calibration.json",
+        "method": "platt",
+        "fallback_lane": "hard_bo3"
+      },
+      "overlay": {
+        "hybrid_elo_weight": 0.6,
+        "vs_big_server_weight": 0.035,
+        "season_workload_days": true
+      }
+    },
+    "grass_bo3": {
+      "label": "Grass bo3",
+      "state": "deferred",
+      "phase": 5,
+      "filters": {
+        "league": ["ATP"],
+        "surface": ["Grass"],
+        "best_of": [3],
+        "exclude_grand_slams": true
+      },
+      "markets": {
+        "fav_hc": { "state": "planned_shadow" },
+        "over_games": { "state": "planned_shadow" },
+        "ml": { "state": "planned_shadow", "min_edge_pct": 8 }
+      },
+      "calibration": {
+        "path": "data/backtest/calibration/grass-bo3-calibration.json",
+        "method": "platt_shrunk_to_hard",
+        "fallback_lane": "hard_bo3"
+      },
+      "overlay": {
+        "hybrid_elo_weight": 0.65,
+        "vs_big_server_weight": 0.045,
+        "form_weight": 0.05,
+        "shrinkage_n": 60
+      }
+    },
+    "challenger_hc": {
+      "label": "Challenger HC",
+      "state": "disabled",
+      "phase": 7,
+      "disabled_reason": "awaiting Pinnacle HC coverage + challenger_ml proof",
+      "filters": {
+        "league": ["Challenger"]
+      },
+      "markets": {},
+      "calibration": null,
+      "overlay": {}
+    },
+    "clay_calibrated": {
+      "label": "Clay Calibrated (legacy)",
+      "state": "disabled",
+      "phase": 7,
+      "disabled_reason": "diagnostics inconclusive 2025-04",
+      "legacy": true,
+      "markets": {},
+      "calibration": null,
+      "overlay": {}
+    }
+  }
+}

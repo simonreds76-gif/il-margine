@@ -1194,6 +1194,30 @@ def write_signals_current_artifact() -> None:
     SIGNALS_CURRENT_JSON.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
+PHASE0_RESEARCH_LANE_STUBS = {"clay_bo3", "slam_bo5", "challenger_ml", "indoor_bo3", "grass_bo3"}
+
+
+def phase0_signal_profile_dispatch(
+    signal_profile: str,
+    internal_research_lanes: bool,
+) -> tuple[str, int | None, str, bool]:
+    """Normalize or short-circuit Phase 0 research-lane signal profiles.
+
+    Returns (normalized_profile, exit_code, message, message_to_stderr).
+    exit_code=None means the caller should continue with normalized_profile.
+    """
+
+    if signal_profile == "hard_bo3":
+        return "strict", None, "", False
+    if signal_profile == "challenger_hc":
+        return signal_profile, 2, "lane disabled: awaiting Pinnacle HC coverage + challenger_ml proof", True
+    if signal_profile in PHASE0_RESEARCH_LANE_STUBS:
+        if not internal_research_lanes:
+            return signal_profile, 2, f"lane {signal_profile} requires INTERNAL_RESEARCH_LANES=1", True
+        return signal_profile, 0, f"lane {signal_profile}: Phase 0 scaffold (no-op)", False
+    return signal_profile, None, "", False
+
+
 def main() -> int:
     load_env()
 
@@ -1202,7 +1226,23 @@ def main() -> int:
     parser.add_argument("--append", action="store_true", help="Write live snapshot CSVs and append archive CSVs")
     parser.add_argument(
         "--signal-profile",
-        choices=("strict", "volume_275", "volume_200", "spread_shadow", "spread_v1_shadow", "spread_v1_clay_fav", "challenger_ml_shadow", "clay_calibrated"),
+        choices=(
+            "strict",
+            "volume_275",
+            "volume_200",
+            "spread_shadow",
+            "spread_v1_shadow",
+            "spread_v1_clay_fav",
+            "challenger_ml_shadow",
+            "clay_calibrated",
+            "hard_bo3",
+            "clay_bo3",
+            "slam_bo5",
+            "challenger_ml",
+            "indoor_bo3",
+            "grass_bo3",
+            "challenger_hc",
+        ),
         default=(os.environ.get("STRICT_SIGNAL_PROFILE", "strict") or "strict").strip().lower(),
         help="Signal profile to evaluate/write (strict live policy or one of the shadow volume profiles).",
     )
@@ -1251,6 +1291,14 @@ def main() -> int:
         help="Versioned real-market spread calibration JSON for spread_v1_shadow.",
     )
     args = parser.parse_args()
+    args.signal_profile, phase0_exit_code, phase0_message, phase0_stderr = phase0_signal_profile_dispatch(
+        args.signal_profile,
+        os.environ.get("INTERNAL_RESEARCH_LANES") == "1",
+    )
+    if phase0_exit_code is not None:
+        print(phase0_message, file=sys.stderr if phase0_stderr else sys.stdout)
+        return phase0_exit_code
+
     if (
         args.signal_profile == "spread_v1_clay_fav"
         and args.spread_v1_calibration_file == str(DEFAULT_SPREAD_V1_CALIBRATION_FILE)
