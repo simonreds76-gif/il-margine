@@ -45,6 +45,7 @@ if str(_PROJECT_ROOT) not in sys.path:
 
 from injury_overlay import env_bool, load_recent_injury_index
 from signal_storage import (
+    CHALLENGER_ML_NEARMISS_PATH,
     SIGNAL_PROFILE_PATHS,
     SIGNALS_CURRENT_JSON,
     STRICT_INTERNAL_SIGNAL_PATHS,
@@ -77,6 +78,13 @@ def env_float(name: str, default: float) -> float:
         return default
 
 
+def env_int(name: str, default: int) -> int:
+    try:
+        return int(os.environ.get(name, str(default)))
+    except (TypeError, ValueError):
+        return default
+
+
 # Spread-v1 is a bounded research lane. The live audit showed weak 5-6% edges
 # and huge 20%+ overclaims are both unstable, so keep it inside a controlled
 # window unless an explicit research run overrides these envs.
@@ -84,6 +92,13 @@ SPREAD_V1_MIN_EDGE_PCT = max(10.0, env_float("SPREAD_V1_MIN_EDGE_PCT", 10.0))
 SPREAD_V1_MAX_EDGE_PCT = env_float("SPREAD_V1_MAX_EDGE_PCT", 18.0)
 SPREAD_V1_CLAY_FAV_MIN_EDGE_PCT = max(5.0, env_float("SPREAD_V1_CLAY_FAV_MIN_EDGE_PCT", 8.0))
 SPREAD_V1_CLAY_FAV_MAX_EDGE_PCT = env_float("SPREAD_V1_CLAY_FAV_MAX_EDGE_PCT", 18.0)
+CHALLENGER_ML_ENABLE = env_bool(os.environ.get("CHALLENGER_ML_ENABLE"), False)
+CHALLENGER_ML_MIN_EDGE_PCT = env_float("CHALLENGER_ML_MIN_EDGE_PCT", 10.0)
+CHALLENGER_ML_MAX_EDGE_PCT = env_float("CHALLENGER_ML_MAX_EDGE_PCT", 15.0)
+CHALLENGER_ML_ALLOWED_SURFACES = {"Hard", "Clay", "Grass", "Indoor"}
+CHALLENGER_ML_ALLOWED_CONFIDENCE = {"high"}
+CHALLENGER_ML_REQUIRE_COVERAGE_TAG = "HIGH"
+SPREAD_V1_CLAY_FAV_STALE_DAYS = env_int("SPREAD_V1_CLAY_FAV_STALE_DAYS", 14)
 ALLOWED_SEGMENT = "Hard|Masters 1000"
 ALLOWED_CONFIDENCE = {"high"}
 SPREAD_SHADOW_CONFIDENCE = {"high", "medium"}
@@ -138,7 +153,7 @@ VOLUME_200_RULES: list[dict[str, Any]] = [
     {"surface": "Grass", "series": "ATP500", "confidence": {"high", "medium"}, "min_value_pct": 10.0},
 ]
 
-MATCH_ONLY_SIGNAL_PROFILES = {"volume_200"}
+MATCH_ONLY_SIGNAL_PROFILES = {"volume_200", "challenger_ml_shadow"}
 SPREAD_V1_SIGNAL_PROFILES = {"spread_v1_shadow", "spread_v1_clay_fav"}
 SPREAD_ONLY_SIGNAL_PROFILES = SPREAD_V1_SIGNAL_PROFILES
 
@@ -153,6 +168,7 @@ SHADOW_PROFILE_LABELS: dict[str, str] = {
     "spread_shadow": "Spread shadow (20%+ handicap edges; Clay + non-policy tournaments)",
     "spread_v1_shadow": "Spread v1 shadow (strict-first ATP bo3 hard-only research lane; real-market calibration required)",
     "spread_v1_clay_fav": "Clay favourite handicap shadow (fav HC 2.0-3.5 games, 8-18% edge, clay-only calibration required)",
+    "challenger_ml_shadow": "Challenger singles ML internal shadow (HIGH coverage, 10-15% edge)",
     "clay_calibrated": "Clay calibrated shadow (high-confidence new-after-calibration favorite 55-65%)",
 }
 SHADOW_PROFILE_ALLOWED_LEAGUES: dict[str, set[str]] = {
@@ -163,6 +179,7 @@ SHADOW_PROFILE_ALLOWED_LEAGUES: dict[str, set[str]] = {
     "spread_shadow": {"ATP"},
     "spread_v1_shadow": {"ATP"},
     "spread_v1_clay_fav": {"ATP"},
+    "challenger_ml_shadow": {"Challenger"},
     "clay_calibrated": {"ATP"},
 }
 HOUSTON_SHADOW_MIN_VALUE_PCT = 20.0
@@ -401,6 +418,49 @@ def _load_spread_v1_calibration_status(path: Path) -> dict[str, Any]:
     if not status["base_calibration_valid"]:
         status["warning"] = f"base-calibration:{status['base_calibration_reason']}"
     return status
+
+
+def _parse_datetime_utc(value: Any) -> datetime | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def _spread_v1_fit_age_days(status: dict[str, Any]) -> int | None:
+    parsed = _parse_datetime_utc(status.get("fit_timestamp"))
+    if parsed is None:
+        return None
+    return max(0, int((datetime.now(timezone.utc) - parsed).total_seconds() // 86400))
+
+
+def _profile_audit_row(reason: str, signal_profile: str) -> dict[str, Any]:
+    now = datetime.now(timezone.utc)
+    return {
+        "date": now.date().isoformat(),
+        "time_utc": now.strftime("%H:%M:%S"),
+        "player1": "",
+        "player2": "",
+        "surface": "",
+        "league": "",
+        "series": "",
+        "confidence": "",
+        "side": "",
+        "value_pct": "",
+        "bet_type": "audit",
+        "policy_mode": "base",
+        "signal_profile": signal_profile,
+        "threshold_tier": "audit",
+        "shadow_reason": "lane_skipped",
+        "skip_reason": reason,
+        "settlement_status": "void",
+    }
 
 
 def _interp_piecewise(points: list[tuple[float, float]], x: float) -> float:
@@ -856,6 +916,66 @@ def is_houston_clay_shadow_exception(surface: str, tournament_name: str) -> bool
     return "houston" in tour_key_candidates(tournament_name)
 
 
+def _int_or_blank(value: Any) -> int | str:
+    try:
+        if value in ("", None):
+            return ""
+        return int(float(value))
+    except (TypeError, ValueError):
+        return ""
+
+
+def challenger_coverage_fields(row: dict[str, Any], tour_name: str, tour_id: Any) -> dict[str, Any]:
+    return {
+        "tour_id": tour_id if tour_id is not None else "",
+        "tour_name": tour_name,
+        "challenger_event": True,
+        "data_coverage_tag": str(row.get("data_coverage_tag") or "").strip().upper(),
+        "match_count_12m_p1": _int_or_blank(row.get("match_count_12m_p1")),
+        "match_count_12m_p2": _int_or_blank(row.get("match_count_12m_p2")),
+        "matches_total_p1": _int_or_blank(row.get("matches_total_p1")),
+        "matches_total_p2": _int_or_blank(row.get("matches_total_p2")),
+        "recent_challenger_plus_p1": _int_or_blank(row.get("recent_challenger_plus_p1")),
+        "recent_challenger_plus_p2": _int_or_blank(row.get("recent_challenger_plus_p2")),
+        "last_match_days_p1": _int_or_blank(row.get("last_match_days_p1")),
+        "last_match_days_p2": _int_or_blank(row.get("last_match_days_p2")),
+    }
+
+
+def challenger_skip_reason(
+    *,
+    coverage_tag: str,
+    confidence: str,
+    surface: str,
+    value_pct: float | None,
+    model_ml_excluded: bool,
+    pin_ml_excluded: bool,
+    model_market_gap_excluded: bool,
+    atp500_short_favorite_ml_excluded: bool,
+) -> str | None:
+    if surface not in CHALLENGER_ML_ALLOWED_SURFACES:
+        return "surface_blocked"
+    if coverage_tag != CHALLENGER_ML_REQUIRE_COVERAGE_TAG:
+        return "coverage_thin"
+    if confidence not in CHALLENGER_ML_ALLOWED_CONFIDENCE:
+        return "confidence_low"
+    if model_market_gap_excluded:
+        return "model_market_gap"
+    if model_ml_excluded:
+        return "model_ml_excluded"
+    if pin_ml_excluded:
+        return "pin_ml_excluded"
+    if atp500_short_favorite_ml_excluded:
+        return "short_favorite_ml_excluded"
+    if value_pct is None:
+        return "edge_missing"
+    if value_pct < CHALLENGER_ML_MIN_EDGE_PCT:
+        return "edge_below_floor"
+    if value_pct > CHALLENGER_ML_MAX_EDGE_PCT:
+        return "edge_above_cap"
+    return None
+
+
 def append_rows_dedup(path: Path, rows: list[dict[str, Any]], key_fields: list[str]) -> int:
     # spread_shadow (and similar) often appends 0/0 until a qualifying 20%+ handicap exists.
     # Old behavior: skip writing → file never created → settle-strict-signals.py and
@@ -1082,7 +1202,7 @@ def main() -> int:
     parser.add_argument("--append", action="store_true", help="Write live snapshot CSVs and append archive CSVs")
     parser.add_argument(
         "--signal-profile",
-        choices=("strict", "volume_275", "volume_200", "spread_shadow", "spread_v1_shadow", "spread_v1_clay_fav", "clay_calibrated"),
+        choices=("strict", "volume_275", "volume_200", "spread_shadow", "spread_v1_shadow", "spread_v1_clay_fav", "challenger_ml_shadow", "clay_calibrated"),
         default=(os.environ.get("STRICT_SIGNAL_PROFILE", "strict") or "strict").strip().lower(),
         help="Signal profile to evaluate/write (strict live policy or one of the shadow volume profiles).",
     )
@@ -1141,7 +1261,7 @@ def main() -> int:
     if not args.output:
         args.output = str(profile_public_paths.live)
     if not args.internal_output:
-        if args.signal_profile in {"spread_shadow", *SPREAD_V1_SIGNAL_PROFILES}:
+        if args.signal_profile in {"spread_shadow", "challenger_ml_shadow", *SPREAD_V1_SIGNAL_PROFILES}:
             args.internal_output = ""
         else:
             args.internal_output = str((profile_internal_paths or STRICT_INTERNAL_SIGNAL_PATHS).live)
@@ -1155,7 +1275,66 @@ def main() -> int:
     if args.signal_profile == "clay_calibrated" and not clay_prob_map:
         print(f"Clay calibrated profile requested but no valid remap points loaded from {args.clay_calibration_file}", file=sys.stderr)
         return 1
+    if args.signal_profile == "challenger_ml_shadow" and not CHALLENGER_ML_ENABLE:
+        print("challenger_ml_shadow disabled: CHALLENGER_ML_ENABLE=0")
+        if args.append:
+            out_paths = derive_signal_csv_paths(Path(args.output))
+            live_count = write_live_snapshot(
+                out_paths.live,
+                [],
+                dedup_key_fields=["date", "player1", "player2", "bet_type", "side", "policy_mode", "signal_profile"],
+                lane_key_fields=["date", "player1", "player2", "bet_type", "policy_mode", "signal_profile"],
+            )
+            archive_added = append_rows_dedup(
+                out_paths.archive,
+                [],
+                key_fields=["date", "player1", "player2", "bet_type", "side", "policy_mode", "signal_profile"],
+            )
+            mirror_live_snapshot(out_paths)
+            print(
+                f"Wrote {live_count}/0 public live rows to {out_paths.live} "
+                f"and appended {archive_added} archive rows to {out_paths.archive}."
+            )
+            write_signals_current_artifact()
+            print(f"Updated signals artifact at {SIGNALS_CURRENT_JSON}.")
+        return 0
     spread_v1_calibration_status = _load_spread_v1_calibration_status(Path(args.spread_v1_calibration_file))
+    if args.signal_profile == "spread_v1_clay_fav":
+        stale_days = _spread_v1_fit_age_days(spread_v1_calibration_status)
+        stale_reason = None
+        if not spread_v1_calibration_status.get("valid", False):
+            stale_reason = f"calibration_{spread_v1_calibration_status.get('reason', 'invalid')}"
+        elif stale_days is None:
+            stale_reason = "calibration_timestamp_missing"
+        elif stale_days > SPREAD_V1_CLAY_FAV_STALE_DAYS:
+            stale_reason = f"calibration_stale_{stale_days}d"
+        if stale_reason:
+            print(
+                f"spread_v1_clay_fav disabled: {stale_reason} "
+                f"path={args.spread_v1_calibration_file}"
+            )
+            if args.append:
+                out_paths = derive_signal_csv_paths(Path(args.output))
+                live_count = write_live_snapshot(
+                    out_paths.live,
+                    [],
+                    dedup_key_fields=["player1", "player2", "bet_type", "side", "policy_mode", "signal_profile"],
+                    lane_key_fields=["player1", "player2", "bet_type", "side", "policy_mode", "signal_profile"],
+                )
+                audit_row = _profile_audit_row(stale_reason, "spread_v1_clay_fav")
+                archive_added = append_rows_dedup(
+                    out_paths.archive,
+                    [audit_row],
+                    key_fields=["date", "signal_profile", "skip_reason"],
+                )
+                mirror_live_snapshot(out_paths)
+                print(
+                    f"Wrote {live_count}/0 public live rows to {out_paths.live} "
+                    f"and appended {archive_added} audit rows to {out_paths.archive}."
+                )
+                write_signals_current_artifact()
+                print(f"Updated signals artifact at {SIGNALS_CURRENT_JSON}.")
+            return 0
     if args.signal_profile in SPREAD_V1_SIGNAL_PROFILES and not spread_v1_calibration_status.get("valid", False):
         print(
             f"{args.signal_profile} disabled: "
@@ -1226,15 +1405,29 @@ def main() -> int:
     injury_flagged_matches = 0
     injury_skipped_matches = 0
 
+    base_daily_select = "id,tour_id,player1_id,player2_id,surface,p1_win_prob,p2_win_prob,odds1,odds2,p_a,p_b,confidence,spread_line,spread_odds1,spread_odds2,handicap_edge_p1,handicap_edge_p2"
+    coverage_daily_select = (
+        base_daily_select
+        + ",match_count_12m_p1,match_count_12m_p2,matches_total_p1,matches_total_p2,"
+        + "recent_challenger_plus_p1,recent_challenger_plus_p2,last_match_days_p1,last_match_days_p2,data_coverage_tag"
+    )
     r = requests.get(
         f"{base}/daily_fair_odds",
         headers=headers,
         params={
-            "select": "id,tour_id,player1_id,player2_id,surface,p1_win_prob,p2_win_prob,odds1,odds2,p_a,p_b,confidence,spread_line,spread_odds1,spread_odds2,handicap_edge_p1,handicap_edge_p2",
+            "select": coverage_daily_select,
             "limit": 2000,
         },
         timeout=30,
     )
+    if r.status_code >= 400 and any(tok in r.text.lower() for tok in ("schema cache", "unknown column", "could not find")):
+        print("WARNING: daily_fair_odds coverage columns missing; Challenger coverage gates will stay dark until SQL migration is applied.")
+        r = requests.get(
+            f"{base}/daily_fair_odds",
+            headers=headers,
+            params={"select": base_daily_select, "limit": 2000},
+            timeout=30,
+        )
     r.raise_for_status()
     rows = r.json() or []
     if not rows:
@@ -1361,6 +1554,7 @@ def main() -> int:
     matched_pinnacle = match_pinnacle_rows(fair_rows_for_match, pin_rows)
 
     candidates: list[dict[str, Any]] = []
+    challenger_nearmiss_rows: list[dict[str, Any]] = []
     for r in rows:
         surface = (r.get("surface") or "").strip()
         confidence = (r.get("confidence") or "").strip().lower()
@@ -1384,6 +1578,7 @@ def main() -> int:
         spread_shadow_reason = spread_shadow_reason_for(surface, series_bucket, confidence, tournament_name)
         spread_shadow_eligible = args.signal_profile == "spread_shadow" and spread_shadow_reason is not None
         clay_calibrated_enabled = args.signal_profile == "clay_calibrated" and surface == "Clay"
+        challenger_ml_requested = args.signal_profile == "challenger_ml_shadow"
         spread_v1_requested = args.signal_profile in SPREAD_V1_SIGNAL_PROFILES
         spread_v1_clay_fav_requested = args.signal_profile == "spread_v1_clay_fav"
         if (
@@ -1391,6 +1586,7 @@ def main() -> int:
             and volume_min_value is None
             and not spread_shadow_eligible
             and not clay_calibrated_enabled
+            and not challenger_ml_requested
             and not spread_v1_requested
         ):
             continue
@@ -1562,6 +1758,50 @@ def main() -> int:
             and not clay_calibration_side_flip
             and not clay_calibration_favorite_flip
         )
+        challenger_fields = challenger_coverage_fields(r, tournament_name, tour_id) if challenger_ml_requested else {}
+        challenger_coverage_tag = str(challenger_fields.get("data_coverage_tag") or "").upper()
+        challenger_ml_match = (
+            challenger_ml_requested
+            and CHALLENGER_ML_ENABLE
+            and league == "Challenger"
+            and surface in CHALLENGER_ML_ALLOWED_SURFACES
+            and confidence in CHALLENGER_ML_ALLOWED_CONFIDENCE
+            and challenger_coverage_tag == CHALLENGER_ML_REQUIRE_COVERAGE_TAG
+            and not model_ml_excluded
+            and not pin_ml_excluded
+            and not model_market_gap_excluded
+            and not atp500_short_favorite_ml_excluded
+            and value_pct is not None
+            and CHALLENGER_ML_MIN_EDGE_PCT <= value_pct <= CHALLENGER_ML_MAX_EDGE_PCT
+        )
+        if challenger_ml_requested and league == "Challenger" and not challenger_ml_match:
+            skip_reason = challenger_skip_reason(
+                coverage_tag=challenger_coverage_tag,
+                confidence=confidence,
+                surface=surface,
+                value_pct=value_pct,
+                model_ml_excluded=model_ml_excluded,
+                pin_ml_excluded=pin_ml_excluded,
+                model_market_gap_excluded=model_market_gap_excluded,
+                atp500_short_favorite_ml_excluded=atp500_short_favorite_ml_excluded,
+            )
+            if skip_reason:
+                challenger_nearmiss_rows.append(
+                    {
+                        "date": snapshot_date_used,
+                        "time_utc": datetime.now(timezone.utc).strftime("%H:%M:%S"),
+                        "player1": p1_name,
+                        "player2": p2_name,
+                        "surface": surface,
+                        "league": league,
+                        "series": series_bucket,
+                        **challenger_fields,
+                        "confidence": confidence,
+                        "side": side,
+                        "value_pct": round(value_pct, 2) if value_pct is not None else "",
+                        "skip_reason": skip_reason,
+                    }
+                )
         strict_spread_eligible = strict_min_value is not None
         volume_spread_eligible = (
             volume_min_value is not None
@@ -1579,12 +1819,13 @@ def main() -> int:
                 and not spread_shadow_eligible
                 and not spread_v1_eligible
                 and not clay_calibrated_match
+                and not challenger_ml_match
             ):
                 continue
         bet_side = "fav" if side == fav_side else "dog"
         tname = tournament_name
         tkey = tour_key(tname)
-        if args.signal_profile not in {"spread_shadow", *SPREAD_V1_SIGNAL_PROFILES} and (strict_match or volume_match):
+        if args.signal_profile not in {"spread_shadow", *SPREAD_V1_SIGNAL_PROFILES} and (strict_match or volume_match or challenger_ml_match):
             stake_units, stake_gbp, stake_model = compute_stake_units(
                 our_odds1=our_odds1,
                 our_odds2=our_odds2,
@@ -1605,6 +1846,7 @@ def main() -> int:
                     "league": league,
                     "series": series_bucket,
                     "confidence": confidence,
+                    **(challenger_fields if challenger_ml_match else {}),
                     "our_odds1": round(our_odds1, 4),
                     "our_odds2": round(our_odds2, 4),
                     "pin_odds1": round(pin["odds1"], 4),
@@ -1631,9 +1873,10 @@ def main() -> int:
                     "_tournament_name": tname,
                     "_strict_match": strict_match,
                     "_volume_match": volume_match,
+                    "_challenger_ml_match": challenger_ml_match,
                     "_spread_shadow_match": False,
                     "_spread_v1_match": False,
-                    "shadow_reason": "",
+                    "shadow_reason": "challenger_ml_high_coverage_10_15" if challenger_ml_match else "",
                 }
             )
 
@@ -1923,6 +2166,8 @@ def main() -> int:
         profile_key = "_spread_shadow_match"
     elif args.signal_profile in SPREAD_V1_SIGNAL_PROFILES:
         profile_key = "_spread_v1_match"
+    elif args.signal_profile == "challenger_ml_shadow":
+        profile_key = "_challenger_ml_match"
     elif args.signal_profile == "clay_calibrated":
         profile_key = "_clay_calibrated_match"
     else:
@@ -2032,6 +2277,14 @@ def main() -> int:
                     f"Spread v1 edge window: {SPREAD_V1_MIN_EDGE_PCT:.1f}%"
                     f" to {SPREAD_V1_MAX_EDGE_PCT:.1f}%"
                 )
+        if args.signal_profile == "challenger_ml_shadow":
+            print(
+                "Challenger ML gate: "
+                f"enabled={CHALLENGER_ML_ENABLE} | "
+                f"coverage={CHALLENGER_ML_REQUIRE_COVERAGE_TAG} | "
+                f"confidence={','.join(sorted(CHALLENGER_ML_ALLOWED_CONFIDENCE))} | "
+                f"edge {CHALLENGER_ML_MIN_EDGE_PCT:.1f}-{CHALLENGER_ML_MAX_EDGE_PCT:.1f}%"
+            )
     print(
         "Stake sizing: "
         f"match 1u flat; spread 2u flat; unit_gbp={STRICT_UNIT_GBP:.2f}"
@@ -2096,6 +2349,7 @@ def main() -> int:
             r.pop("_tournament_name", None)
             r.pop("_strict_match", None)
             r.pop("_volume_match", None)
+            r.pop("_challenger_ml_match", None)
             r.pop("_spread_shadow_match", None)
             r.pop("_spread_v1_match", None)
             r.pop("_clay_calibrated_match", None)
@@ -2163,6 +2417,16 @@ def main() -> int:
                 key_fields=["date", "time_utc", "player1", "player2", "bet_type", "side", "spread_line", "policy_mode", "signal_profile"],
             )
             print(f"Appended {added_cmp}/{len(compare_rows)} comparison rows to {compare_path} (deduped).")
+        if args.signal_profile == "challenger_ml_shadow":
+            nearmiss_added = append_rows_dedup(
+                CHALLENGER_ML_NEARMISS_PATH,
+                challenger_nearmiss_rows,
+                key_fields=["date", "player1", "player2", "skip_reason"],
+            )
+            print(
+                f"Appended {nearmiss_added}/{len(challenger_nearmiss_rows)} Challenger near-miss rows "
+                f"to {CHALLENGER_ML_NEARMISS_PATH}."
+            )
         write_signals_current_artifact()
         print(f"Updated signals artifact at {SIGNALS_CURRENT_JSON}.")
 

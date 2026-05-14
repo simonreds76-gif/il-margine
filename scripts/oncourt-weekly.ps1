@@ -268,6 +268,18 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: spread v1 shadow CLV audit failed (exit $LASTEXITCODE), continuing..."
 }
 
+Log "=== Post-step: Challenger ML CLV audit ==="
+& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-challenger-ml-archive.csv --detail-csv data\backtest\strict-clv-audit-challenger-ml-2026.csv --summary-txt data\backtest\strict-clv-audit-challenger-ml-2026.txt 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: Challenger ML CLV audit failed (exit $LASTEXITCODE), continuing..."
+}
+
+Log "=== Post-step: Clay-fav spread CLV audit ==="
+& python scripts\audit-strict-clv.py --signals data\backtest\strict-signals-clay-fav-archive.csv --bet-type spread --detail-csv data\backtest\strict-clv-audit-clay-fav-2026.csv --summary-txt data\backtest\strict-clv-audit-clay-fav-2026.txt 2>&1 | ForEach-Object { Log $_ }
+if ($LASTEXITCODE -ne 0) {
+    Log "WARNING: clay-fav spread CLV audit failed (exit $LASTEXITCODE), continuing..."
+}
+
 Log "=== Post-step: Spread v1 shadow report ==="
 $prevSpreadV1CorrectionOnly = $env:SPREAD_V1_ENABLE_CORRECTION_ONLY
 $env:SPREAD_V1_ENABLE_CORRECTION_ONLY = "1"

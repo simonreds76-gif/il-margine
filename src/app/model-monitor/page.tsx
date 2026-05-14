@@ -183,6 +183,7 @@ type LaneScoreRow = {
   winRate?: number;
   clv?: number;
   clvLabel?: string;
+  statusBadge?: { tone: "muted" | "warn" | "ok"; label: string };
 };
 
 export const dynamic = "force-dynamic";
@@ -193,6 +194,7 @@ const MODEL_MONITOR_PUBLIC =
   process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
 const MODEL_MONITOR_ENABLED =
   MODEL_MONITOR_PUBLIC || process.env.VERCEL_ENV === "preview";
+const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
 
 function parseCsvLine(line: string): string[] {
   const out: string[] = [];
@@ -342,6 +344,12 @@ function metricTone(value?: number): string {
   if (value > 0) return "text-emerald-300";
   if (value < 0) return "text-rose-300";
   return "text-slate-300";
+}
+
+function statusBadgeClass(tone: NonNullable<LaneScoreRow["statusBadge"]>["tone"]): string {
+  if (tone === "ok") return "border-emerald-500/40 bg-emerald-500/10 text-emerald-200";
+  if (tone === "warn") return "border-amber-500/40 bg-amber-500/10 text-amber-200";
+  return "border-slate-700/70 bg-slate-900/80 text-slate-300";
 }
 
 function parseClvAudit(text: string | null): ClvSummary {
@@ -781,6 +789,15 @@ export default async function ModelMonitorPage() {
     spreadShadowSignalsLiveCsv,
     clay2026SignalsArchiveCsv,
     clay2026SignalsLiveCsv,
+    challengerSignalsArchiveCsv,
+    challengerSignalsLiveCsv,
+    challengerNearmissCsv,
+    challengerPerfCsv,
+    clvAuditChallengerTxt,
+    clayFavSignalsArchiveCsv,
+    clayFavSignalsLiveCsv,
+    clayFavPerfCsv,
+    clvAuditClayFavTxt,
     spreadV1StatusJson,
     clayMlAnalysisTxt,
     claySpreadCalibrationJson,
@@ -822,6 +839,15 @@ export default async function ModelMonitorPage() {
     readLocalFile("data/backtest/strict-signals-spreadshadow-live.csv"),
     readLocalFile("data/backtest/strict-signals-claycal-archive.csv"),
     readLocalFile("data/backtest/strict-signals-claycal-live.csv"),
+    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-signals-challenger-ml-archive.csv") : null,
+    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-signals-challenger-ml-live.csv") : null,
+    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/challenger-ml-shadow-nearmiss.csv") : null,
+    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-policy-performance-challenger-ml-weekly.csv") : null,
+    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-clv-audit-challenger-ml-2026.txt") : null,
+    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-signals-clay-fav-archive.csv") : null,
+    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-signals-clay-fav-live.csv") : null,
+    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-policy-performance-clay-fav-weekly.csv") : null,
+    INTERNAL_RESEARCH_LANES ? readLocalFile("data/backtest/strict-clv-audit-clay-fav-2026.txt") : null,
     readLocalFile("data/backtest/spread-v1-shadow-status.json"),
     readLocalFile("data/backtest/clay-ml-calibration-analysis.txt"),
     readLocalFile("data/backtest/spread-v1-clay-calibration-params.json"),
@@ -890,6 +916,21 @@ export default async function ModelMonitorPage() {
   const clay2026SignalsLive = dedupeLogicalSignalRows(parseSignalRows(clay2026SignalsLiveCsv));
   const clay2026SignalsClean = filterCleanSignalRows(clay2026SignalsArchive);
   const clay2026Queue = getActiveQueueRows(clay2026SignalsLive);
+  const challengerSignalsArchive = dedupeLogicalSignalRows(parseSignalRows(challengerSignalsArchiveCsv));
+  const challengerSignalsLive = dedupeLogicalSignalRows(parseSignalRows(challengerSignalsLiveCsv));
+  const challengerSignalsClean = filterCleanSignalRows(challengerSignalsArchive);
+  const challengerQueue = getActiveQueueRows(challengerSignalsLive);
+  const challengerNearmissRows = challengerNearmissCsv ? parseCsv(challengerNearmissCsv) : [];
+  const challengerRows = challengerPerfCsv ? parseCsv(challengerPerfCsv) : [];
+  const challengerBase = parsePerf(challengerRows, "base");
+  const clvChallenger = parseClvAudit(clvAuditChallengerTxt);
+  const clayFavSignalsArchive = dedupeLogicalSignalRows(parseSignalRows(clayFavSignalsArchiveCsv));
+  const clayFavSignalsLive = dedupeLogicalSignalRows(parseSignalRows(clayFavSignalsLiveCsv));
+  const clayFavSignalsClean = filterCleanSignalRows(clayFavSignalsArchive);
+  const clayFavQueue = getActiveQueueRows(clayFavSignalsLive);
+  const clayFavRows = clayFavPerfCsv ? parseCsv(clayFavPerfCsv) : [];
+  const clayFavBase = parsePerf(clayFavRows, "base");
+  const clvClayFav = parseClvAudit(clvAuditClayFavTxt);
   const clay2026AllCohort = summarizeSignalCohort(clay2026SignalsArchive);
   const clay2026AtpCohort = summarizeSignalCohort(clay2026SignalsArchive, "ATP");
   const clay2026ChallengerCohort = summarizeSignalCohort(clay2026SignalsArchive, "Challenger");
@@ -907,6 +948,10 @@ export default async function ModelMonitorPage() {
   const spreadShadowSpreadFlatCohort = summarizeSignalCohort(spreadShadowSignalsClean, undefined, "flat", "spread");
   const clay2026MlRecordedCohort = summarizeSignalCohort(clay2026SignalsClean, undefined, "recorded", "match");
   const clay2026MlFlatCohort = summarizeSignalCohort(clay2026SignalsClean, undefined, "flat", "match");
+  const challengerMlRecordedCohort = summarizeSignalCohort(challengerSignalsClean, undefined, "recorded", "match");
+  const challengerMlFlatCohort = summarizeSignalCohort(challengerSignalsClean, undefined, "flat", "match");
+  const clayFavSpreadRecordedCohort = summarizeSignalCohort(clayFavSignalsClean, undefined, "recorded", "spread");
+  const clayFavSpreadFlatCohort = summarizeSignalCohort(clayFavSignalsClean, undefined, "flat", "spread");
   const spreadV1Status = parseJsonMaybe<SpreadV1Status>(spreadV1StatusJson);
   const clayMlAnalysis = parseClayMlAnalysis(clayMlAnalysisTxt);
   const claySpreadCalibration = parseJsonMaybe<SpreadCalibrationParams>(claySpreadCalibrationJson);
@@ -994,6 +1039,10 @@ export default async function ModelMonitorPage() {
     volumeSignalsArchive.filter((row) => (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
   const spreadV1TrackedCount = spreadV1SignalsArchive.length;
   const spreadV1SettledCount = spreadV1SettledRows.length;
+  const challengerTrackedCount = challengerSignalsArchive.length;
+  const challengerSettledCount = getSettledSignalRows(challengerSignalsArchive).length;
+  const clayFavTrackedCount = clayFavSignalsArchive.length;
+  const clayFavSettledCount = getSettledSignalRows(clayFavSignalsArchive).length;
   const spreadShadowTrackedCount = perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? spreadShadowSignalsArchive.length;
   const spreadShadowSettledCount = perfValue(spreadShadowBase.combinedAll, "settled", parseIntMaybe) ?? 0;
   const clay2026TrackedCount = perfValue(clay2026Base.combinedAll, "signals", parseIntMaybe) ?? clay2026SignalsArchive.length;
@@ -1003,6 +1052,8 @@ export default async function ModelMonitorPage() {
   const volumeMlOpenCount = volumeQueueMlCount;
   const volumeSpreadOpenCount = volumeQueueSpreadCount;
   const spreadV1OpenCount = spreadV1Queue.length;
+  const challengerOpenCount = challengerQueue.length;
+  const clayFavOpenCount = clayFavQueue.length;
   const spreadShadowOpenCount = spreadShadowQueue.length;
   const clay2026OpenCount = clay2026Queue.length;
   const resultsAsOfDate =
@@ -1104,6 +1155,59 @@ export default async function ModelMonitorPage() {
           : undefined,
       clv: clvSpreadV1.avgClvPct,
     },
+    ...(INTERNAL_RESEARCH_LANES
+      ? [
+          {
+            policy: "Challenger ML (internal)",
+            lane: "ML",
+            marketType: `Match winner - ${challengerNearmissRows.length} near-miss`,
+            settled: perfValue(challengerBase.mlAll ?? challengerBase.combinedAll, "settled", parseIntMaybe) ?? challengerSettledCount,
+            signals: perfValue(challengerBase.mlAll ?? challengerBase.combinedAll, "signals", parseIntMaybe) ?? challengerTrackedCount,
+            open: perfValue(challengerBase.mlAll ?? challengerBase.combinedAll, "unsettled", parseIntMaybe) ?? challengerOpenCount,
+            wlv: perfWlv(challengerBase.mlAll ?? challengerBase.combinedAll) || cohortWlv(challengerMlRecordedCohort),
+            roi: perfValue(challengerBase.mlAll ?? challengerBase.combinedAll, "roi_pct", parseFloatMaybe) ?? challengerMlRecordedCohort.roiPct,
+            flatStakePounds: challengerMlFlatCohort.pnlUnits * 100,
+            flatTotalStakedPounds: challengerMlFlatCohort.stakedUnits * 100,
+            unitTotalStakedPounds: challengerMlRecordedCohort.stakedUnits * 100,
+            unitStakePounds: challengerMlRecordedCohort.pnlUnits * 100,
+            winRate: perfValue(challengerBase.mlAll ?? challengerBase.combinedAll, "win_rate_pct", parseFloatMaybe),
+            clv: clvChallenger.avgClvPct,
+          },
+          {
+            policy: "Clay-Fav HC (internal)",
+            lane: "HC",
+            marketType: "Handicap",
+            settled: perfValue(clayFavBase.handicapAll ?? clayFavBase.combinedAll, "settled", parseIntMaybe) ?? clayFavSettledCount,
+            signals: perfValue(clayFavBase.handicapAll ?? clayFavBase.combinedAll, "signals", parseIntMaybe) ?? clayFavTrackedCount,
+            open: perfValue(clayFavBase.handicapAll ?? clayFavBase.combinedAll, "unsettled", parseIntMaybe) ?? clayFavOpenCount,
+            wlv: perfWlv(clayFavBase.handicapAll ?? clayFavBase.combinedAll) || cohortWlv(clayFavSpreadRecordedCohort),
+            roi: perfValue(clayFavBase.handicapAll ?? clayFavBase.combinedAll, "roi_pct", parseFloatMaybe) ?? clayFavSpreadRecordedCohort.roiPct,
+            flatStakePounds: clayFavSpreadFlatCohort.pnlUnits * 100,
+            flatTotalStakedPounds: clayFavSpreadFlatCohort.stakedUnits * 100,
+            unitTotalStakedPounds: clayFavSpreadRecordedCohort.stakedUnits * 100,
+            unitStakePounds: clayFavSpreadRecordedCohort.pnlUnits * 100,
+            winRate: perfValue(clayFavBase.handicapAll ?? clayFavBase.combinedAll, "win_rate_pct", parseFloatMaybe),
+            clv: clvClayFav.avgClvPct,
+          },
+          {
+            policy: "Clay Calibrated (internal)",
+            lane: "ML",
+            marketType: "Match winner",
+            settled: 0,
+            signals: 0,
+            open: 0,
+            wlv: "-",
+            roi: undefined,
+            flatStakePounds: 0,
+            flatTotalStakedPounds: 0,
+            unitTotalStakedPounds: 0,
+            unitStakePounds: 0,
+            winRate: undefined,
+            clvLabel: "disabled",
+            statusBadge: { tone: "muted" as const, label: "DISABLED - awaiting diagnostic" },
+          },
+        ]
+      : []),
     {
       policy: "Spread Shadow",
       lane: "HC",
@@ -1283,7 +1387,14 @@ export default async function ModelMonitorPage() {
                 <tbody>
                   {activeLaneScoreRows.map((row) => (
                     <tr key={`${row.policy}-${row.lane}`} className="border-b border-slate-900/80 text-slate-200">
-                      <td className="px-3 py-3 font-semibold text-white">{row.policy}</td>
+                      <td className="px-3 py-3 font-semibold text-white">
+                        <div>{row.policy}</div>
+                        {row.statusBadge ? (
+                          <div className={`mt-1 inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] ${statusBadgeClass(row.statusBadge.tone)}`}>
+                            {row.statusBadge.label}
+                          </div>
+                        ) : null}
+                      </td>
                       <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.lane}</td>
                       <td className="px-3 py-3 text-slate-300">{row.marketType}</td>
                       <td className="px-3 py-3 font-mono tabular-nums">{row.settled}</td>

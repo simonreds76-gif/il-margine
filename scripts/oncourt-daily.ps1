@@ -25,6 +25,8 @@ $volumeMode = "$env:STRICT_POLICY_VOLUME_MODE".ToLower()
 if ([string]::IsNullOrWhiteSpace($volumeMode)) { $volumeMode = "off" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_SHADOW_ENABLED)) { $env:STRICT_SPREAD_V1_SHADOW_ENABLED = "1" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_CALIBRATED_ENABLED)) { $env:STRICT_CLAY_CALIBRATED_ENABLED = "0" }
+if ([string]::IsNullOrWhiteSpace($env:CHALLENGER_ML_ENABLE)) { $env:CHALLENGER_ML_ENABLE = "0" }
+if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED)) { $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED = "0" }
 # Scheduled runs are hard-safe: clay spread-v1 can only be enabled by a manual research run.
 $env:SPREAD_V1_ENABLE_CLAY = "0"
 $spreadFitFiles = @(
@@ -47,6 +49,8 @@ function Test-EnvFlag([string]$value) {
 
 $spreadV1ShadowEnabled = Test-EnvFlag $env:STRICT_SPREAD_V1_SHADOW_ENABLED
 $clayCalibratedEnabled = Test-EnvFlag $env:STRICT_CLAY_CALIBRATED_ENABLED
+$challengerMlEnabled = Test-EnvFlag $env:CHALLENGER_ML_ENABLE
+$clayFavEnabled = Test-EnvFlag $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED
 
 function Get-VolumeShadowConfig([string]$mode) {
     switch ($mode) {
@@ -253,6 +257,26 @@ if ($clayCalibratedEnabled) {
     }
 } else {
     Log "=== Step 8c/10: Clay 2026 shadow skipped (STRICT_CLAY_CALIBRATED_ENABLED override is off) ==="
+}
+
+if ($challengerMlEnabled) {
+    Log "=== Step 8d/10: Challenger ML internal shadow (10-15% edge, HIGH coverage) ==="
+    & python scripts\strict-policy-report.py --append --signal-profile challenger_ml_shadow --output "data\backtest\strict-signals-challenger-ml-live.csv" 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "WARNING: challenger_ml_shadow append failed (exit $LASTEXITCODE), continuing..."
+    }
+} else {
+    Log "=== Step 8d/10: Challenger ML shadow skipped (CHALLENGER_ML_ENABLE=0) ==="
+}
+
+if ($clayFavEnabled) {
+    Log "=== Step 8e/10: Spread v1 clay-favourite shadow (calibration-gated) ==="
+    & python scripts\strict-policy-report.py --append --signal-profile spread_v1_clay_fav --output "data\backtest\strict-signals-clay-fav-live.csv" 2>&1 | ForEach-Object { Log $_ }
+    if ($LASTEXITCODE -ne 0) {
+        Log "WARNING: spread_v1_clay_fav append failed (exit $LASTEXITCODE), continuing..."
+    }
+} else {
+    Log "=== Step 8e/10: Spread v1 clay-favourite shadow skipped (STRICT_SPREAD_V1_CLAY_FAV_ENABLED=0) ==="
 }
 
 # Step 9: Settle/report immediately after nightly append so results are ready by the next morning.

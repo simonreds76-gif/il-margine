@@ -661,6 +661,33 @@ def _is_established_player(rank, elo_surface, elo_overall, match_count):
     return False
 
 
+def _days_since(value, today_value=None):
+    parsed = _parse_iso_date(value)
+    if parsed is None:
+        return None
+    today_value = today_value or date.today()
+    return max(0, (today_value - parsed).days)
+
+
+def _coverage_tag(surface_matches_12m, history, activity, today_value=None) -> bool:
+    last_match_days = _days_since((activity or {}).get("last_match_date"), today_value)
+    return (
+        int(surface_matches_12m or 0) >= 3
+        and int((history or {}).get("matches_total") or 0) >= 20
+        and int((history or {}).get("recent_challenger_plus_matches") or 0) >= 2
+        and last_match_days is not None
+        and last_match_days <= 75
+    )
+
+
+def _data_coverage_tag(mc1, mc2, h1, h2, a1, a2, today_value=None) -> str:
+    if _coverage_tag(mc1, h1, a1, today_value) and _coverage_tag(mc2, h2, a2, today_value):
+        return "HIGH"
+    if int(mc1 or 0) >= 2 and int(mc2 or 0) >= 2:
+        return "PARTIAL"
+    return "THIN"
+
+
 def _apply_low_confidence_dog_guard(
     p1_win,
     p_elo,
@@ -1129,36 +1156,71 @@ def main():
         keep_existing_ids = set()
 
         headers_write = {**headers, "Content-Type": "application/json", "Prefer": "return=minimal"}
+        coverage_fields = {
+            "match_count_12m_p1",
+            "match_count_12m_p2",
+            "matches_total_p1",
+            "matches_total_p2",
+            "recent_challenger_plus_p1",
+            "recent_challenger_plus_p2",
+            "last_match_days_p1",
+            "last_match_days_p2",
+            "data_coverage_tag",
+        }
+        coverage_schema_missing = False
         inserted = 0
         updated = 0
         recovered = 0
+
+        def _strip_coverage_fields(row):
+            return {k: v for k, v in row.items() if k not in coverage_fields}
+
+        def _is_schema_cache_error(resp):
+            if resp.status_code < 400:
+                return False
+            body = (resp.text or "").lower()
+            return any(tok in body for tok in ("schema cache", "unknown column", "could not find"))
+
+        def _write_daily_row(method, url, row):
+            nonlocal coverage_schema_missing
+            payload = _strip_coverage_fields(row) if coverage_schema_missing else row
+            resp = requests.request(method, url, headers=headers_write, json=payload, timeout=REQ_TIMEOUT)
+            if not coverage_schema_missing and _is_schema_cache_error(resp):
+                coverage_schema_missing = True
+                print(f"  coverage_fields_not_synced_schema_missing rows={len(current_rows)}")
+                resp = requests.request(
+                    method,
+                    url,
+                    headers=headers_write,
+                    json=_strip_coverage_fields(row),
+                    timeout=REQ_TIMEOUT,
+                )
+            return resp
 
         for row in current_rows:
             key = _daily_row_key(row)
             existing = existing_by_key.get(key)
             if existing is not None:
-                r = requests.patch(
+                r = _write_daily_row(
+                    "PATCH",
                     f"{base}/daily_fair_odds?id=eq.{existing['id']}",
-                    headers=headers_write,
-                    json=row,
-                    timeout=REQ_TIMEOUT,
+                    row,
                 )
                 r.raise_for_status()
                 keep_existing_ids.add(str(existing["id"]))
                 updated += 1
                 continue
 
-            r = requests.post(f"{base}/daily_fair_odds", headers=headers_write, json=row, timeout=REQ_TIMEOUT)
+            r = _write_daily_row("POST", f"{base}/daily_fair_odds", row)
             if r.status_code == 409:
                 existing_id = _find_existing_daily_row_id(row)
                 if existing_id is None:
                     print(f"  daily_fair_odds conflict body: {r.text}")
                     r.raise_for_status()
-                patch_r = requests.patch(
+                patch_r = _write_daily_row(
+                    "PATCH",
                     f"{base}/daily_fair_odds?id=eq.{existing_id}",
-                    headers=headers_write,
-                    json=row,
-                    timeout=REQ_TIMEOUT,
+                    row,
                 )
                 patch_r.raise_for_status()
                 keep_existing_ids.add(str(existing_id))
@@ -3256,6 +3318,9 @@ def main():
                 if (mc1 is not None and int(mc1 or 0) < 10) or (mc2 is not None and int(mc2 or 0) < 10):
                     print(f"    ^ Low match_count -> hold/return may be noisy. Re-run oncourt-compute-player-stats after fresh extract, or add prior when sample small.")
 
+        p1_activity = recent_activity_by_player.get(p1) or {}
+        p2_activity = recent_activity_by_player.get(p2) or {}
+
         # Store the same point-probability shape used to price totals/spreads.
         # The raw matchup p_a/p_b still feeds p_serve_return as one ML blend
         # component, but the published ML fair can move after Elo/rank/form/
@@ -3278,6 +3343,15 @@ def main():
             "odds2": round(odds2, 2),
             "expected_total_games": round(exp_games_cal, 1),
             "confidence": confidence,
+            "match_count_12m_p1": mc1_12,
+            "match_count_12m_p2": mc2_12,
+            "matches_total_p1": int((p1_hist or {}).get("matches_total") or 0),
+            "matches_total_p2": int((p2_hist or {}).get("matches_total") or 0),
+            "recent_challenger_plus_p1": int((p1_hist or {}).get("recent_challenger_plus_matches") or 0),
+            "recent_challenger_plus_p2": int((p2_hist or {}).get("recent_challenger_plus_matches") or 0),
+            "last_match_days_p1": _days_since(p1_activity.get("last_match_date"), today_d),
+            "last_match_days_p2": _days_since(p2_activity.get("last_match_date"), today_d),
+            "data_coverage_tag": _data_coverage_tag(mc1_12, mc2_12, p1_hist, p2_hist, p1_activity, p2_activity, today_d),
             **ou_data,
         })
 
