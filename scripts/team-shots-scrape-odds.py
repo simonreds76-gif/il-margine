@@ -81,7 +81,7 @@ LEAGUE_CONFIGS = {
     },
 }
 
-LIVE_LEAGUES = ["epl", "serie-a", "la-liga", "bundesliga"]
+LIVE_LEAGUES = ["epl", "serie-a", "la-liga", "bundesliga", "ligue-1"]
 
 # Account selection can be changed from the odds-api.io dashboard/API.
 # Live account check on 2026-04-18 showed only Bet365 returning 200 for the

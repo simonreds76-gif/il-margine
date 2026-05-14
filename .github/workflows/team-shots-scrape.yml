@@ -42,7 +42,7 @@ jobs:
           fi
 
       - name: Scrape odds
-        run: python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365"
+        run: python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365" --days-ahead 7
 
       - name: Archive odds
         run: python scripts/team-shots-odds-archive.py

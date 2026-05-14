@@ -33,6 +33,10 @@ jobs:
       - name: Create .env.local
         run: |
           : > .env.local
+          if [ -n "${{ secrets.ODDS_API_KEY }}" ]; then
+            echo "ODDS_API_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
+            echo "ODDS_API_IO_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
+          fi
           if [ -n "${{ secrets.THE_ODDS_API_KEY }}" ]; then
             echo "THE_ODDS_API_KEY=${{ secrets.THE_ODDS_API_KEY }}" >> .env.local
           fi
@@ -60,9 +64,13 @@ jobs:
 
       - name: Optional upcoming + compare + shadow
         env:
-          THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          ODDS_API_IO_KEY: ${{ secrets.ODDS_API_KEY }}
+          BETS_API_KEY: ${{ secrets.BETS_API_KEY }}
         run: |
-          if [ -n "${THE_ODDS_API_KEY:-}" ]; then
+          if [ -n "${ODDS_API_KEY:-}${ODDS_API_IO_KEY:-}${BETS_API_KEY:-}" ]; then
+            python scripts/team-shots-scrape-odds.py --all-leagues --bookmakers "Bet365" --days-ahead 7
+            python scripts/team-shots-odds-archive.py
             python scripts/team_shots_upcoming.py --days-ahead 7
             python scripts/team-shots-compare.py --min-edge 0.05
             python scripts/team-shots-shadow-tracker.py --min-edge 0.05
@@ -70,7 +78,7 @@ jobs:
             python scripts/team-shots-compare.py --predictions data/team-shots/team-shots-predictions.v2-nb.csv --upcoming data/team-shots/team-shots-upcoming.v2-nb-raw.csv --no-calibration --output data/team-shots/team-shots-comparison.v2-nb-raw.csv --summary data/team-shots/team-shots-comparison.v2-nb-raw.txt
             python scripts/team-shots-shadow-tracker.py --comparison data/team-shots/team-shots-comparison.v2-nb-raw.csv --scanner data/team-shots/team-shots-scanner.v2-nb-raw.csv --signals data/team-shots/shadow/team-shots-shadow-signals.v2-nb-raw-live-dry-run.csv --summary data/team-shots/shadow/team-shots-shadow-performance.v2-nb-raw-live-dry-run.txt --policy-version lambda-shots-nb-v2-raw --min-edge 0.12
           else
-            echo "THE_ODDS_API_KEY not configured; skipping upcoming/compare/shadow."
+            echo "::warning::No team-shots odds API key configured; skipping scrape/upcoming/compare/shadow."
           fi
 
       - name: Settle team-shots shadow signals
