@@ -1,0 +1,82 @@
+Clay ML v2 validation report
+=============================
+generated_at_utc: 2026-05-14T23:42:03.505762+00:00
+features: data\backtest\clay-v2-features-2022-2024.csv
+train_years: [2022, 2023]
+validation_year: 2024
+
+Important data correction
+- backtest-results rows are winner-first: player1 == actual_winner for every clay row audited.
+- The feature builder therefore uses deterministic player-A orientation and trains P(player_a wins).
+- pinnacle_prob_novig and our_prob_raw are transformed into player-A space before fitting.
+
+Rows
+- train_n: 1535
+- validation_n: 804
+- validation_label_rate_player_a_win: 0.5112
+
+Primary M_full metrics
+- blessed_output: raw
+- raw_log_loss: 0.6077
+- platt_log_loss: 0.6194
+- log_loss(M_full): 0.6077
+- log_loss(Pinnacle): 0.5871
+- delta_log_loss_vs_pinnacle: +0.0206
+- brier(M_full): 0.2106
+- brier(Pinnacle): 0.2019
+- delta_brier_vs_pinnacle: +0.0087
+- ece(M_full): 0.0404 (n=798)
+- ece(Pinnacle): 0.0356 (n=779)
+- platt_a: -0.226544
+- platt_b: 1.067624
+
+Diagnostic M_no_pin metrics
+- blessed_output: raw
+- raw_log_loss: 0.6328
+- platt_log_loss: 0.6481
+- log_loss(M_no_pin): 0.6328
+- delta_log_loss_vs_pinnacle: +0.0457
+- brier(M_no_pin): 0.2214
+- delta_brier_vs_pinnacle: +0.0195
+- ece(M_no_pin): 0.0451 (n=804)
+
+Validation gates
+- n >= 600: PASS
+- log_loss(M_full) < log_loss(Pinnacle): FAIL
+- brier(M_full) < brier(Pinnacle): FAIL
+- ece(M_full) <= 0.04: FAIL
+decision: FAIL
+fail_reasons: log_loss_not_better_than_pinnacle, brier_not_better_than_pinnacle, ece_gate_failed
+
+ROI inspection only, not a validation gate
+| edge_band | n | wins | pnl | roi |
+|---|---:|---:|---:|---:|
+| 3-6 | 209 | 87 | -31.53 | -15.09% |
+| 6-8 | 106 | 50 | +5.40 | +5.09% |
+| 8-10 | 75 | 28 | -17.82 | -23.76% |
+| 10-12 | 60 | 31 | +7.31 | +12.18% |
+| 12+ | 96 | 31 | -25.81 | -26.89% |
+
+Top feature importances by LightGBM gain
+| rank | feature | gain | split |
+|---:|---|---:|---:|
+| 1 | pinnacle_prob_novig | 2519.9229 | 97 |
+| 2 | our_prob_raw | 589.2524 | 42 |
+| 3 | clay_l52w_first_serve_pct_a | 197.1753 | 36 |
+| 4 | clay_l52w_return_pts_won_pct_b | 176.6144 | 32 |
+| 5 | clay_l52w_first_serve_won_pct_b | 141.6600 | 23 |
+| 6 | clay_l52w_return_pts_won_pct_a | 121.0341 | 24 |
+| 7 | clay_l52w_first_serve_pct_b | 117.9110 | 22 |
+| 8 | days_since_last_match_b | 113.1336 | 19 |
+| 9 | clay_career_winrate_a | 111.2750 | 20 |
+| 10 | age_diff | 102.6734 | 18 |
+| 11 | log_clay_points_diff | 101.7496 | 19 |
+| 12 | clay_l52w_second_serve_won_pct_a | 88.3120 | 18 |
+| 13 | clay_points_a | 87.3794 | 15 |
+| 14 | clay_l52w_first_serve_won_pct_a | 85.2259 | 18 |
+| 15 | clay_l52w_matches_b | 82.3192 | 14 |
+
+Known limitations
+- players_atp atp_rank and clay_points are current-snapshot fields, not point-in-time ranks.
+- players_atp has no hand column in this repo; lefty flags come only from left_handed_players.csv.
+- No CLV gate is reported because historical open and close prices are degenerate in this repo.
