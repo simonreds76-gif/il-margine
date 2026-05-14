@@ -37,9 +37,10 @@ export type TeamShotsLiveSourceStatus = {
 const SNAPSHOT_TABLE = "goalscorer_live_snapshot";
 const SNAPSHOT_KEY = process.env.TEAM_SHOTS_LIVE_SNAPSHOT_KEY || "team_shots_state";
 const LOCAL_SNAPSHOT_FILE = "data/team-shots/team-shots-live-snapshot.json";
-const PREFER_LOCAL =
-  process.env.MONITOR_PREFER_LOCAL === "1" ||
-  (process.env.NODE_ENV !== "production" && process.env.MONITOR_PREFER_HOSTED !== "1");
+// The scheduled jobs publish the canonical monitor bundle to hosted snapshots.
+// Local files are allowed only as an explicit debugging override; otherwise
+// localhost can silently lag behind the latest automated refresh.
+const PREFER_LOCAL = process.env.MONITOR_PREFER_LOCAL === "1";
 const INCLUDE_HOSTED_METADATA_IN_LOCAL_DEV = process.env.MONITOR_COMPARE_HOSTED === "1";
 const TEAM_SHOTS_SHADOW_FILES = [
   "data/team-shots/shadow/team-shots-shadow-signals.csv",
