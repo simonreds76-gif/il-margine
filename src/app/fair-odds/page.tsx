@@ -75,7 +75,15 @@ interface FairOddsMatch {
 
 interface SignalSummary {
   id: number;
-  kind?: "challenger_ml_shadow" | "clay_guarded" | "clay_2026" | "spread_v1" | "volume_200" | "volume_200_upgrade" | "volume_275";
+  kind?:
+    | "challenger_ml_shadow"
+    | "clay_bo3"
+    | "clay_guarded"
+    | "clay_2026"
+    | "spread_v1"
+    | "volume_200"
+    | "volume_200_upgrade"
+    | "volume_275";
   player1_id?: number;
   player2_id?: number;
   player1_name: string;
@@ -181,12 +189,14 @@ interface ApiResponse {
   signals_volume_200_live?: SignalSummary[];
   signals_volume_200_upgrade_live?: SignalSummary[];
   signals_challenger_ml?: SignalSummary[];
+  signals_clay_bo3?: SignalSummary[];
   challenger_nearmisses?: ChallengerNearmiss[];
   signals_clay_guarded?: SignalSummary[];
   signals_clay_2026?: SignalSummary[];
   signals_spread_v1?: SignalSummary[];
   signal_attachment?: {
     challenger_ml_shadow?: { loaded: number; attached: number; unmatched: number };
+    clay_bo3?: { loaded: number; attached: number; unmatched: number };
     clay_guarded?: { loaded: number; attached: number; unmatched: number };
     clay_2026?: { loaded: number; attached: number; unmatched: number };
     spread_v1?: { loaded: number; attached: number; unmatched: number };
@@ -290,6 +300,7 @@ type SignalFeedCategory =
   | "strict"
   | "shadow"
   | "challenger_ml_shadow"
+  | "clay_bo3"
   | "volume_200"
   | "volume_200_upgrade"
   | "volume_275"
@@ -336,6 +347,13 @@ function signalFeedMeta(category: SignalFeedCategory, shadowProfile?: string): {
       accentClass: "text-fuchsia-200",
     };
   }
+  if (category === "clay_bo3") {
+    return {
+      label: "CLAY BO3",
+      badgeClass: "border-sky-400/35 bg-sky-400/10 text-sky-200",
+      accentClass: "text-sky-200",
+    };
+  }
   if (category === "volume_200_upgrade") {
     return {
       label: "VOL200+",
@@ -378,6 +396,7 @@ function primarySignalBadgeMeta(
 ): { label: string; className: string; title?: string } | null {
   const clayGuardedSignal = rowSignals.find((signal) => signal.kind === "clay_guarded");
   const challengerSignal = rowSignals.find((signal) => signal.kind === "challenger_ml_shadow");
+  const clayBo3Signal = rowSignals.find((signal) => signal.kind === "clay_bo3");
   const claySignal = rowSignals.find((signal) => signal.kind === "clay_2026");
   const spreadSignal = rowSignals.find((signal) => signal.kind === "spread_v1");
 
@@ -394,6 +413,14 @@ function primarySignalBadgeMeta(
       label: "CH ML",
       className: "border-fuchsia-400/35 bg-fuchsia-400/10 text-fuchsia-200",
       title: "Internal Challenger ML shadow signal",
+    };
+  }
+
+  if (clayBo3Signal) {
+    return {
+      label: "CLAY BO3",
+      className: "border-sky-400/35 bg-sky-400/10 text-sky-200",
+      title: `Internal clay bo3 ${clayBo3Signal.bet_type === "spread" ? "dog-HC" : "ML"} shadow signal`,
     };
   }
 
@@ -483,10 +510,11 @@ function categoryForShadowProfile(profile?: string): SignalFeedCategory {
 
 function rowSignalKindOrder(kind?: SignalSummary["kind"]): number {
   if (kind === "challenger_ml_shadow") return 0;
-  if (kind === "spread_v1") return 1;
-  if (kind === "clay_guarded") return 2;
-  if (kind === "clay_2026") return 3;
-  return 4;
+  if (kind === "clay_bo3") return 1;
+  if (kind === "spread_v1") return 2;
+  if (kind === "clay_guarded") return 3;
+  if (kind === "clay_2026") return 4;
+  return 5;
 }
 
 function rowSignalSort(signals: SignalSummary[]): SignalSummary[] {
@@ -529,6 +557,8 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
             className={`w-full min-w-0 rounded-xl border px-3 py-3 ${
               signal.kind === "challenger_ml_shadow"
                 ? "border-fuchsia-400/25 bg-fuchsia-400/8"
+                : signal.kind === "clay_bo3"
+                ? "border-sky-400/25 bg-sky-400/8"
                 : signal.kind === "clay_guarded"
                 ? "border-lime-500/25 bg-lime-500/8"
                 : signal.kind === "clay_2026"
@@ -543,6 +573,8 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
                     className={`rounded border px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] ${
                       signal.kind === "challenger_ml_shadow"
                         ? "border-fuchsia-400/35 bg-fuchsia-400/10 text-fuchsia-200"
+                        : signal.kind === "clay_bo3"
+                        ? "border-sky-400/35 bg-sky-400/10 text-sky-200"
                         : signal.kind === "clay_2026"
                         ? "border-orange-500/30 bg-orange-500/10 text-orange-200"
                         : "border-cyan-500/25 bg-cyan-500/10 text-cyan-300"
@@ -550,6 +582,10 @@ function MatchSignalsStrip({ signals }: { signals: SignalSummary[] }) {
                   >
                     {signal.kind === "challenger_ml_shadow"
                       ? "Challenger ML"
+                      : signal.kind === "clay_bo3"
+                        ? signal.bet_type === "spread"
+                          ? "Clay bo3 dog-HC"
+                          : "Clay bo3 ML"
                       : signal.kind === "clay_2026"
                         ? "Clay 2026 ML"
                         : "Spread v1"}
@@ -1097,6 +1133,13 @@ export default function FairOddsPage() {
       signal,
     })),
   );
+  const clayBo3FeedItems = sortSignalFeedItems(
+    (data?.signals_clay_bo3 ?? []).map((signal) => ({
+      key: `clay-bo3-${signal.id}`,
+      category: "clay_bo3" as const,
+      signal,
+    })),
+  );
   const clayGuardedFeedItems = sortSignalFeedItems(
     (data?.signals_clay_guarded ?? []).map((signal) => ({
       key: `clay-guarded-${signal.id}`,
@@ -1147,6 +1190,14 @@ export default function FairOddsPage() {
               (data?.challenger_nearmisses?.length ?? 0) > 0
                 ? "No live Challenger ML signals; see near-misses below."
                 : "No Challenger ML signals today",
+          },
+          {
+            key: "clay-bo3",
+            category: "clay_bo3" as const,
+            title: "Clay bo3",
+            subtitle: "Internal ATP clay ML 5-13% + dog-HC 6-25%",
+            items: clayBo3FeedItems,
+            emptyLabel: "No Clay bo3 signals today",
           },
         ]
       : []),
@@ -1251,11 +1302,16 @@ export default function FairOddsPage() {
               {data.signal_attachment && (
                 <>
                   {data.internal_research_lanes ? (
-                    <span className={data.signal_attachment.challenger_ml_shadow?.unmatched ? "text-amber-300" : "text-fuchsia-200"}>
-                      Challenger ML <span className="text-slate-200">{data.signal_attachment.challenger_ml_shadow?.attached ?? 0}/{data.signal_attachment.challenger_ml_shadow?.loaded ?? 0}</span>
-                      {" "}
-                      <span className="text-slate-500">near {data.challenger_nearmisses?.length ?? 0}</span>
-                    </span>
+                    <>
+                      <span className={data.signal_attachment.challenger_ml_shadow?.unmatched ? "text-amber-300" : "text-fuchsia-200"}>
+                        Challenger ML <span className="text-slate-200">{data.signal_attachment.challenger_ml_shadow?.attached ?? 0}/{data.signal_attachment.challenger_ml_shadow?.loaded ?? 0}</span>
+                        {" "}
+                        <span className="text-slate-500">near {data.challenger_nearmisses?.length ?? 0}</span>
+                      </span>
+                      <span className={data.signal_attachment.clay_bo3?.unmatched ? "text-amber-300" : "text-sky-200"}>
+                        Clay bo3 <span className="text-slate-200">{data.signal_attachment.clay_bo3?.attached ?? 0}/{data.signal_attachment.clay_bo3?.loaded ?? 0}</span>
+                      </span>
+                    </>
                   ) : null}
                   <span className={data.signal_attachment.clay_guarded?.unmatched ? "text-amber-300" : ""}>
                     Clay Guard <span className="text-slate-200">{data.signal_attachment.clay_guarded?.attached ?? 0}/{data.signal_attachment.clay_guarded?.loaded ?? 0}</span>
@@ -1424,6 +1480,8 @@ export default function FairOddsPage() {
                 {data.internal_research_lanes ? (
                   <>
                     Challenger ML {data.signal_attachment.challenger_ml_shadow?.attached ?? 0}/{data.signal_attachment.challenger_ml_shadow?.loaded ?? 0}
+                    {" | "}
+                    Clay bo3 {data.signal_attachment.clay_bo3?.attached ?? 0}/{data.signal_attachment.clay_bo3?.loaded ?? 0}
                     {" | "}
                     Near-miss {data.challenger_nearmisses?.length ?? 0}
                     {" | "}

@@ -223,13 +223,14 @@ const CLAY_2026_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signa
 const SPREAD_V1_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-spreadv1-live.csv");
 const CHALLENGER_ML_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-challenger-ml-live.csv");
 const CHALLENGER_ML_NEARMISS_CSV = getKnownProjectFilePath("data/backtest/challenger-ml-shadow-nearmiss.csv");
+const CLAY_BO3_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-clay_bo3-live.csv");
 const FAIR_ODDS_CLAY_2026_ENABLED = parseBoolEnv("FAIR_ODDS_CLAY_2026_ENABLED", false);
 const FAIR_ODDS_TENNIS_SPREADS_ENABLED = parseBoolEnv("FAIR_ODDS_TENNIS_SPREADS_ENABLED", false);
 const FAIR_ODDS_SPREAD_V1_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_V1_ENABLED", true);
 const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
 type MatchSide = "P1" | "P2";
 type FastClayArchetype = "both" | "serve_led" | "return_led" | "contrarian";
-type ShadowSignalKind = "clay_2026" | "spread_v1" | "challenger_ml_shadow";
+type ShadowSignalKind = "clay_2026" | "spread_v1" | "challenger_ml_shadow" | "clay_bo3";
 
 interface ShadowSignalSummary {
   id: number;
@@ -326,9 +327,10 @@ function spreadConflictDirection(signal: ShadowSignalSummary): MatchSide | null 
 
 function shadowKindRank(kind: ShadowSignalKind): number {
   if (kind === "challenger_ml_shadow") return 0;
-  if (kind === "spread_v1") return 1;
-  if (kind === "clay_2026") return 2;
-  return 3;
+  if (kind === "clay_bo3") return 1;
+  if (kind === "spread_v1") return 2;
+  if (kind === "clay_2026") return 3;
+  return 4;
 }
 
 function suppressConflictingClaySignals(
@@ -1191,7 +1193,9 @@ function loadActiveShadowSignals(csvPath: string, kind: ShadowSignalKind, active
     // for the same match on the same day; the fair-odds page should show the latest
     // current lane, not both stale and current sides together.
     const signalKey =
-      kind === "spread_v1"
+      kind === "clay_bo3" && betType === "spread"
+        ? `${kind}|${signalIdentity}|${betType}|${side}|${spreadLine ?? ""}`
+        : kind === "spread_v1"
         ? `${kind}|${signalIdentity}|${betType}|${spreadLine ?? ""}`
         : `${kind}|${signalIdentity}|${betType}`;
 
@@ -2648,6 +2652,9 @@ async function run(): Promise<Response> {
   const challengerMlSignalsCsv = INTERNAL_RESEARCH_LANES
     ? loadActiveShadowSignals(CHALLENGER_ML_SIGNAL_CSV, "challenger_ml_shadow", today)
     : [];
+  const clayBo3SignalsCsv = INTERNAL_RESEARCH_LANES
+    ? loadActiveShadowSignals(CLAY_BO3_SIGNAL_CSV, "clay_bo3", today)
+    : [];
   const challengerNearmisses = INTERNAL_RESEARCH_LANES
     ? loadChallengerNearmisses(CHALLENGER_ML_NEARMISS_CSV, today)
     : [];
@@ -2669,7 +2676,12 @@ async function run(): Promise<Response> {
     }
     return Array.from(new Set(keys));
   };
-  for (const signal of [...challengerMlSignalsCsv, ...effectiveSpreadV1SignalsCsv, ...effectiveClay2026SignalsCsv]) {
+  for (const signal of [
+    ...challengerMlSignalsCsv,
+    ...clayBo3SignalsCsv,
+    ...effectiveSpreadV1SignalsCsv,
+    ...effectiveClay2026SignalsCsv,
+  ]) {
     for (const key of signalLookupKeys(signal)) addSignalToRowKey(key, signal);
   }
   for (const signals of rowSignalsByMatch.values()) {
@@ -2716,6 +2728,7 @@ async function run(): Promise<Response> {
 
   const attachedByKind: Record<ShadowSignalKind, Set<number>> = {
     challenger_ml_shadow: new Set<number>(),
+    clay_bo3: new Set<number>(),
     clay_2026: new Set<number>(),
     spread_v1: new Set<number>(),
   };
@@ -2731,6 +2744,11 @@ async function run(): Promise<Response> {
       attached: attachedByKind.challenger_ml_shadow.size,
       unmatched: Math.max(0, challengerMlSignalsCsv.length - attachedByKind.challenger_ml_shadow.size),
     },
+    clay_bo3: {
+      loaded: clayBo3SignalsCsv.length,
+      attached: attachedByKind.clay_bo3.size,
+      unmatched: Math.max(0, clayBo3SignalsCsv.length - attachedByKind.clay_bo3.size),
+    },
     clay_2026: {
       loaded: effectiveClay2026SignalsCsv.length,
       attached: attachedByKind.clay_2026.size,
@@ -2744,6 +2762,7 @@ async function run(): Promise<Response> {
   };
   const unmatchedSignals = {
     challenger_ml_shadow: challengerMlSignalsCsv.filter((signal) => !attachedByKind.challenger_ml_shadow.has(signal.id)),
+    clay_bo3: clayBo3SignalsCsv.filter((signal) => !attachedByKind.clay_bo3.has(signal.id)),
     clay_2026: effectiveClay2026SignalsCsv.filter((signal) => !attachedByKind.clay_2026.has(signal.id)),
     spread_v1: effectiveSpreadV1SignalsCsv.filter((signal) => !attachedByKind.spread_v1.has(signal.id)),
   };
@@ -2757,6 +2776,15 @@ async function run(): Promise<Response> {
     console.warn(
       "[fair-odds] Unmatched Clay 2026 signals:",
       unmatchedSignals.clay_2026.map((signal) => `${signal.id}: ${signal.player1_name} vs ${signal.player2_name} | ${signal.side}`)
+    );
+  }
+  if (unmatchedSignals.clay_bo3.length) {
+    console.warn(
+      "[fair-odds] Unmatched Clay bo3 signals:",
+      unmatchedSignals.clay_bo3.map(
+        (signal) =>
+          `${signal.id}: ${signal.player1_name} vs ${signal.player2_name} | ${signal.side}${signal.spread_line != null ? ` ${signal.spread_line}` : ""}`
+      )
     );
   }
   if (!FAIR_ODDS_CLAY_2026_ENABLED) {
@@ -3162,6 +3190,7 @@ async function run(): Promise<Response> {
     signals_volume_additional,
     signals_volume,
     signals_challenger_ml: challengerMlSignalsCsv,
+    signals_clay_bo3: clayBo3SignalsCsv,
     challenger_nearmisses: challengerNearmisses,
     signals_clay_2026,
     signals_spread_v1: spreadSignalsSpreadV1,
