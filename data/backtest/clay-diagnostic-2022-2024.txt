@@ -1,0 +1,105 @@
+Clay ML Diagnostic Sweep 2022-2024
+Generated UTC: 2026-05-14T22:55:35Z
+
+Scope
+- Reads only `backtest-results-2022.csv`, `backtest-results-2023.csv`, `backtest-results-2024.csv`.
+- Joins close prices from `atp-2022.xlsx`, `atp-2023.xlsx`, `atp-2024.xlsx`.
+- 2025 is not read in this phase.
+- Policy-excluded rows are excluded from the sweep.
+- CLV is marked unavailable when the joined close odds are identical to the backtest odds.
+- Grid size: 864 cells x 4 splits.
+- Bootstrap runs per aggregate: 1000.
+
+Load Stats
+- Rows seen: 7,573
+- Clay rows seen: 2,339
+- Rows used after base safety filters: 781
+- Rows with close-price join: 781/781
+- Rows with non-zero CLV after close join: 0/781
+- Closing rows loaded: 7,573
+- Close duplicate keys: 0
+
+Pass Criteria
+- N >= 100 on pooled 2022-2024.
+- ROI bootstrap 95% lower bound > 0 on pooled 2022-2024.
+- Model log-loss delta vs Pinnacle <= 0 on pooled 2022-2024.
+- Average CLV >= 0 on pooled 2022-2024, and the CLV join must be non-degenerate.
+- ROI > 0 in each of 2022, 2023, and 2024.
+
+Passing Cells
+- none
+
+Top 20 by pooled ROI
+- edge6-12|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=121 | ROI=+0.23% | bootLB=-14.28% | dLL=0.0061 | ECE=0.0910 | CLV=n/a | CLV+=n/a
+- edge7-13|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=116 | ROI=-0.03% | bootLB=-14.88% | dLL=0.0088 | ECE=0.0996 | CLV=n/a | CLV+=n/a
+- edge6-12|agree-with-pinnacle|high+medium|ATP-non-Slam|model-fav | n=117 | ROI=-0.28% | bootLB=-15.29% | dLL=0.0082 | ECE=0.0878 | CLV=n/a | CLV+=n/a
+- edge7-13|agree-with-pinnacle|high+medium|ATP-non-Slam|model-fav | n=112 | ROI=-0.58% | bootLB=-16.17% | dLL=0.0110 | ECE=0.1047 | CLV=n/a | CLV+=n/a
+- edge7-15|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=126 | ROI=-0.78% | bootLB=-15.00% | dLL=0.0109 | ECE=0.0900 | CLV=n/a | CLV+=n/a
+- edge10-15|agree-with-pinnacle|all|ATP-non-Slam|both | n=148 | ROI=-1.29% | bootLB=-21.20% | dLL=0.0092 | ECE=0.0557 | CLV=n/a | CLV+=n/a
+- edge7-15|agree-with-pinnacle|high+medium|ATP-non-Slam|model-fav | n=122 | ROI=-1.30% | bootLB=-16.50% | dLL=0.0130 | ECE=0.0943 | CLV=n/a | CLV+=n/a
+- edge6-12|no-filter|all|ATP-non-Slam|model-fav | n=142 | ROI=-1.59% | bootLB=-15.80% | dLL=0.0071 | ECE=0.0744 | CLV=n/a | CLV+=n/a
+- edge6-12|no-filter|high+medium|ATP-non-Slam|model-fav | n=138 | ROI=-2.08% | bootLB=-15.33% | dLL=0.0089 | ECE=0.0712 | CLV=n/a | CLV+=n/a
+- edge10-15|agree-with-pinnacle|high+medium|ATP-non-Slam|both | n=146 | ROI=-2.11% | bootLB=-20.86% | dLL=0.0111 | ECE=0.0555 | CLV=n/a | CLV+=n/a
+- edge7-13|no-filter|all|ATP-non-Slam|model-fav | n=139 | ROI=-3.29% | bootLB=-17.51% | dLL=0.0125 | ECE=0.0754 | CLV=n/a | CLV+=n/a
+- edge5-13|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=166 | ROI=-3.39% | bootLB=-16.32% | dLL=0.0088 | ECE=0.0714 | CLV=n/a | CLV+=n/a
+- edge5-13|agree-with-pinnacle|high+medium|ATP-non-Slam|model-fav | n=160 | ROI=-3.52% | bootLB=-16.71% | dLL=0.0099 | ECE=0.0724 | CLV=n/a | CLV+=n/a
+- edge7-13|no-filter|high+medium|ATP-non-Slam|model-fav | n=135 | ROI=-3.84% | bootLB=-18.27% | dLL=0.0144 | ECE=0.0789 | CLV=n/a | CLV+=n/a
+- edge4-10|agree-with-pinnacle|high+medium|ATP-non-Slam|model-fav | n=122 | ROI=-5.10% | bootLB=-20.39% | dLL=0.0093 | ECE=0.0830 | CLV=n/a | CLV+=n/a
+- edge5-12|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=153 | ROI=-5.25% | bootLB=-17.80% | dLL=0.0112 | ECE=0.0918 | CLV=n/a | CLV+=n/a
+- edge5-12|agree-with-pinnacle|high+medium|ATP-non-Slam|model-fav | n=147 | ROI=-5.47% | bootLB=-17.91% | dLL=0.0125 | ECE=0.0842 | CLV=n/a | CLV+=n/a
+- edge6-12|agree-with-pinnacle|high+medium|ATP250|both | n=141 | ROI=-5.72% | bootLB=-23.18% | dLL=0.0120 | ECE=0.0338 | CLV=n/a | CLV+=n/a
+- edge6-12|agree-with-pinnacle|all|ATP250|both | n=143 | ROI=-5.82% | bootLB=-22.85% | dLL=0.0121 | ECE=0.0353 | CLV=n/a | CLV+=n/a
+- edge4-10|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=126 | ROI=-5.86% | bootLB=-19.67% | dLL=0.0101 | ECE=0.0948 | CLV=n/a | CLV+=n/a
+
+Top 20 by delta log-loss vs Pinnacle
+- edge5-13|no-filter|all|Masters1000|both | n=110 | ROI=-7.97% | bootLB=-27.56% | dLL=-0.0028 | ECE=0.0724 | CLV=n/a | CLV+=n/a
+- edge5-13|agree-with-pinnacle|all|Masters1000|both | n=106 | ROI=-10.10% | bootLB=-29.57% | dLL=-0.0002 | ECE=0.0678 | CLV=n/a | CLV+=n/a
+- edge5-13|no-filter|high+medium|Masters1000|both | n=107 | ROI=-9.37% | bootLB=-29.48% | dLL=0.0003 | ECE=0.0679 | CLV=n/a | CLV+=n/a
+- edge5-12|no-filter|all|Masters1000|both | n=100 | ROI=-11.85% | bootLB=-31.41% | dLL=0.0027 | ECE=0.0719 | CLV=n/a | CLV+=n/a
+- edge5-13|agree-with-pinnacle|high+medium|Masters1000|both | n=103 | ROI=-11.62% | bootLB=-32.37% | dLL=0.0030 | ECE=0.0630 | CLV=n/a | CLV+=n/a
+- edge6-12|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=121 | ROI=+0.23% | bootLB=-14.28% | dLL=0.0061 | ECE=0.0910 | CLV=n/a | CLV+=n/a
+- edge5-12|agree-with-pinnacle|high-only|ATP-non-Slam|model-dog | n=114 | ROI=-13.08% | bootLB=-35.68% | dLL=0.0065 | ECE=0.0661 | CLV=n/a | CLV+=n/a
+- edge5-12|no-filter|high-only|ATP-non-Slam|model-dog | n=114 | ROI=-13.08% | bootLB=-35.48% | dLL=0.0065 | ECE=0.0661 | CLV=n/a | CLV+=n/a
+- edge6-12|no-filter|all|ATP-non-Slam|model-fav | n=142 | ROI=-1.59% | bootLB=-15.80% | dLL=0.0071 | ECE=0.0744 | CLV=n/a | CLV+=n/a
+- edge6-12|agree-with-pinnacle|all|ATP-non-Slam|both | n=246 | ROI=-8.28% | bootLB=-22.01% | dLL=0.0076 | ECE=0.0339 | CLV=n/a | CLV+=n/a
+- edge6-12|no-filter|all|ATP-non-Slam|both | n=267 | ROI=-8.58% | bootLB=-21.59% | dLL=0.0080 | ECE=0.0228 | CLV=n/a | CLV+=n/a
+- edge6-12|agree-with-pinnacle|high+medium|ATP-non-Slam|model-fav | n=117 | ROI=-0.28% | bootLB=-15.29% | dLL=0.0082 | ECE=0.0878 | CLV=n/a | CLV+=n/a
+- edge5-13|agree-with-pinnacle|high-only|ATP-non-Slam|model-dog | n=128 | ROI=-14.68% | bootLB=-36.83% | dLL=0.0084 | ECE=0.0736 | CLV=n/a | CLV+=n/a
+- edge5-13|no-filter|high-only|ATP-non-Slam|model-dog | n=128 | ROI=-14.68% | bootLB=-34.76% | dLL=0.0084 | ECE=0.0736 | CLV=n/a | CLV+=n/a
+- edge6-12|agree-with-pinnacle|high+medium|ATP-non-Slam|both | n=242 | ROI=-8.67% | bootLB=-22.96% | dLL=0.0086 | ECE=0.0314 | CLV=n/a | CLV+=n/a
+- edge5-12|agree-with-pinnacle|high+medium|ATP-non-Slam|model-dog | n=146 | ROI=-15.64% | bootLB=-35.84% | dLL=0.0088 | ECE=0.0794 | CLV=n/a | CLV+=n/a
+- edge5-12|no-filter|high+medium|ATP-non-Slam|model-dog | n=146 | ROI=-15.64% | bootLB=-37.53% | dLL=0.0088 | ECE=0.0794 | CLV=n/a | CLV+=n/a
+- edge5-13|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=166 | ROI=-3.39% | bootLB=-16.32% | dLL=0.0088 | ECE=0.0714 | CLV=n/a | CLV+=n/a
+- edge7-13|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=116 | ROI=-0.03% | bootLB=-14.88% | dLL=0.0088 | ECE=0.0996 | CLV=n/a | CLV+=n/a
+- edge6-12|no-filter|high+medium|ATP-non-Slam|model-fav | n=138 | ROI=-2.08% | bootLB=-15.33% | dLL=0.0089 | ECE=0.0712 | CLV=n/a | CLV+=n/a
+
+Top 20 by CLV-positive rate
+- none
+
+Top 20 by bootstrap lower bound
+- edge6-12|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=121 | ROI=+0.23% | bootLB=-14.28% | dLL=0.0061 | ECE=0.0910 | CLV=n/a | CLV+=n/a
+- edge7-13|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=116 | ROI=-0.03% | bootLB=-14.88% | dLL=0.0088 | ECE=0.0996 | CLV=n/a | CLV+=n/a
+- edge7-15|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=126 | ROI=-0.78% | bootLB=-15.00% | dLL=0.0109 | ECE=0.0900 | CLV=n/a | CLV+=n/a
+- edge6-12|agree-with-pinnacle|high+medium|ATP-non-Slam|model-fav | n=117 | ROI=-0.28% | bootLB=-15.29% | dLL=0.0082 | ECE=0.0878 | CLV=n/a | CLV+=n/a
+- edge6-12|no-filter|high+medium|ATP-non-Slam|model-fav | n=138 | ROI=-2.08% | bootLB=-15.33% | dLL=0.0089 | ECE=0.0712 | CLV=n/a | CLV+=n/a
+- edge6-12|no-filter|all|ATP-non-Slam|model-fav | n=142 | ROI=-1.59% | bootLB=-15.80% | dLL=0.0071 | ECE=0.0744 | CLV=n/a | CLV+=n/a
+- edge7-13|agree-with-pinnacle|high+medium|ATP-non-Slam|model-fav | n=112 | ROI=-0.58% | bootLB=-16.17% | dLL=0.0110 | ECE=0.1047 | CLV=n/a | CLV+=n/a
+- edge5-13|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=166 | ROI=-3.39% | bootLB=-16.32% | dLL=0.0088 | ECE=0.0714 | CLV=n/a | CLV+=n/a
+- edge7-15|agree-with-pinnacle|high+medium|ATP-non-Slam|model-fav | n=122 | ROI=-1.30% | bootLB=-16.50% | dLL=0.0130 | ECE=0.0943 | CLV=n/a | CLV+=n/a
+- edge5-13|agree-with-pinnacle|high+medium|ATP-non-Slam|model-fav | n=160 | ROI=-3.52% | bootLB=-16.71% | dLL=0.0099 | ECE=0.0724 | CLV=n/a | CLV+=n/a
+- edge7-13|no-filter|all|ATP-non-Slam|model-fav | n=139 | ROI=-3.29% | bootLB=-17.51% | dLL=0.0125 | ECE=0.0754 | CLV=n/a | CLV+=n/a
+- edge5-12|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=153 | ROI=-5.25% | bootLB=-17.80% | dLL=0.0112 | ECE=0.0918 | CLV=n/a | CLV+=n/a
+- edge5-12|agree-with-pinnacle|high+medium|ATP-non-Slam|model-fav | n=147 | ROI=-5.47% | bootLB=-17.91% | dLL=0.0125 | ECE=0.0842 | CLV=n/a | CLV+=n/a
+- edge7-13|no-filter|high+medium|ATP-non-Slam|model-fav | n=135 | ROI=-3.84% | bootLB=-18.27% | dLL=0.0144 | ECE=0.0789 | CLV=n/a | CLV+=n/a
+- edge5-12|no-filter|all|ATP-non-Slam|model-fav | n=177 | ROI=-6.54% | bootLB=-19.60% | dLL=0.0116 | ECE=0.0954 | CLV=n/a | CLV+=n/a
+- edge4-10|agree-with-pinnacle|all|ATP-non-Slam|model-fav | n=126 | ROI=-5.86% | bootLB=-19.67% | dLL=0.0101 | ECE=0.0948 | CLV=n/a | CLV+=n/a
+- edge5-13|no-filter|all|ATP-non-Slam|model-fav | n=195 | ROI=-7.27% | bootLB=-19.70% | dLL=0.0130 | ECE=0.0891 | CLV=n/a | CLV+=n/a
+- edge7-15|no-filter|high+medium|ATP-non-Slam|model-fav | n=160 | ROI=-6.72% | bootLB=-19.75% | dLL=0.0195 | ECE=0.0947 | CLV=n/a | CLV+=n/a
+- edge5-12|no-filter|high+medium|ATP-non-Slam|model-fav | n=171 | ROI=-6.78% | bootLB=-19.77% | dLL=0.0128 | ECE=0.0890 | CLV=n/a | CLV+=n/a
+- edge7-15|no-filter|all|ATP-non-Slam|model-fav | n=165 | ROI=-6.75% | bootLB=-19.77% | dLL=0.0187 | ECE=0.0942 | CLV=n/a | CLV+=n/a
+
+Interpretation
+- No 2022-2024 cell passed the locked Phase 1 gates. Do not touch 2025; current clay ML output is not salvageable by this fixed grid.
+- Historical CLV is not informative here: the backtest odds equal the tennis-data close odds, so there is no true open-close movement in these files.
+- Spread/handicap and totals remain out of scope because 2022-2024 line history is not available in repo data.
+- Challenger remains out of scope because the historical ATP backtest files contain no Challenger odds rows.
