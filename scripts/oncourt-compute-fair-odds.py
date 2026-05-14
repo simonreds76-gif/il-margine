@@ -1179,7 +1179,7 @@ def main():
             if resp.status_code < 400:
                 return False
             body = (resp.text or "").lower()
-            return any(tok in body for tok in ("schema cache", "unknown column", "could not find"))
+            return any(tok in body for tok in ("schema cache", "unknown column", "could not find", "does not exist", "42703"))
 
         def _write_daily_row(method, url, row):
             nonlocal coverage_schema_missing

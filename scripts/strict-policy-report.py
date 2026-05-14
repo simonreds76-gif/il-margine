@@ -1420,7 +1420,7 @@ def main() -> int:
         },
         timeout=30,
     )
-    if r.status_code >= 400 and any(tok in r.text.lower() for tok in ("schema cache", "unknown column", "could not find")):
+    if r.status_code >= 400 and any(tok in r.text.lower() for tok in ("schema cache", "unknown column", "could not find", "does not exist", "42703")):
         print("WARNING: daily_fair_odds coverage columns missing; Challenger coverage gates will stay dark until SQL migration is applied.")
         r = requests.get(
             f"{base}/daily_fair_odds",
