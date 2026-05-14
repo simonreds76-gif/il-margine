@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T15:36:14.900872Z",
+  "generated_at": "2026-05-14T17:26:27.205961Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -32,10 +32,11 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 13,
-  "signals_qualifying": 1,
+  "fixtures_evaluated": 22,
+  "signals_qualifying": 2,
   "leagues_covered": [
-    "bundesliga"
+    "bundesliga",
+    "la-liga"
   ],
   "featured_signal_id": "20260516-christoph-baumgartner-53459f72b2",
   "signals": [
@@ -87,7 +88,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 92
+          "percentile": 95
         },
         "recent_team_form": {
           "tier": "Positive",
@@ -105,8 +106,8 @@
           "corners_against_avg": 4.8
         },
         "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 49
+          "tier": "Positive",
+          "percentile": 65
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -135,6 +136,104 @@
         "Recent chance quality grades as strong",
         "Recent team form supports the attacking case",
         "Opponent has been allowing chances recently"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260517-vedat-muriqi-4197998a2a",
+      "match": {
+        "home_team": "Levante UD",
+        "away_team": "RCD Mallorca",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-05-17T17:00:00Z",
+        "kickoff_display": "Sun 17 May 18:00 UK",
+        "fotmob_match_id": "4837474",
+        "fotmob_page_url": "/matches/levante-vs-mallorca/2gib84#4837474",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Vedat Muriqi",
+        "team": "Mallorca",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/la-liga/mallorca.png",
+        "team_primary_color": "#dc2626",
+        "team_secondary_color": "#111827",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 44.6,
+        "fair_odds": 2.24
+      },
+      "market_data": {
+        "best_odds": 2.6,
+        "best_book": "Bet365",
+        "implied_chance_pct": 38.5
+      },
+      "edge": {
+        "price_gap_pp": 6.1,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 92
+        },
+        "share_of_team_chances_pct": 36,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 15
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-10",
+          "xg_for_avg": 1.57,
+          "xg_against_avg": 1.51,
+          "xgd_per90": 0.06,
+          "shots_for_avg": 12.4,
+          "shots_against_avg": 12.6,
+          "sot_for_avg": 5.2,
+          "sot_against_avg": 3.2,
+          "corners_for_avg": 4.8,
+          "corners_against_avg": 5.8
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 46
+        },
+        "opponent_recent_defence": {
+          "tier": "Low",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-08",
+          "xg_for_avg": 2.22,
+          "xg_against_avg": 0.93,
+          "xgd_per90": 1.29,
+          "shots_for_avg": 17.0,
+          "shots_against_avg": 9.2,
+          "sot_for_avg": 5.2,
+          "sot_against_avg": 3.0,
+          "corners_for_avg": 6.6,
+          "corners_against_avg": 4.0
+        },
+        "fixture_boost_pct": -1,
+        "projected_minutes": 89,
+        "penalty_role": "Primary",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Primary penalty role adds a clear scoring route"
       ],
       "risk_flags": []
     }
