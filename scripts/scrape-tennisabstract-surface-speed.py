@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fetch ATP tournament CPI / surface-speed ratings from Tennis Abstract and
+Fetch ATP tournament surface-speed proxy ratings from Tennis Abstract and
 store them locally (CSV) plus optional Supabase upsert.
 
 Source:
@@ -41,6 +41,16 @@ SOURCE_URL_FMT = "https://www.tennisabstract.com/cgi-bin/surface-speed.cgi?year=
 USER_AGENT = "Mozilla/5.0 (compatible; il-margine-cpi-scraper/1.0)"
 REQUEST_TIMEOUT = 35
 REQUEST_PAUSE_SEC = 0.8
+
+KNOWN_NAME_FIXES = {
+    "nd garros": "Roland Garros",
+    "garros": "Roland Garros",
+}
+
+
+def _apply_known_name_fixes(name: str) -> str:
+    compact = re.sub(r"[^a-z0-9]+", " ", (name or "").strip().lower()).strip()
+    return KNOWN_NAME_FIXES.get(compact, name)
 
 
 def load_env() -> None:
@@ -114,6 +124,7 @@ def _parse_int(value: str) -> int | None:
 
 
 def _tour_key(name: str) -> str:
+    name = _apply_known_name_fixes(name)
     raw = (name or "").strip().lower()
     if not raw:
         return ""
@@ -138,6 +149,7 @@ def _extract_sample_size(name: str) -> int | None:
 def _clean_tournament_name(name: str) -> str:
     n = (name or "").strip()
     n = re.sub(r"\s*\((\d{1,5})\)\s*$", "", n).strip()
+    n = _apply_known_name_fixes(n)
     return n
 
 
@@ -151,7 +163,7 @@ def _parse_year_rows_from_html(html: str, season_year: int, source_url: str, scr
         if not tds:
             continue
 
-        cells = [td.get_text(" ", strip=True) for td in tds]
+        cells = [td.get_text("", strip=True) for td in tds]
         surface = ""
         cpi = None
         tournament_raw = ""
@@ -199,6 +211,7 @@ def _parse_year_rows_from_html(html: str, season_year: int, source_url: str, scr
                 "tournament_name": tournament_name,
                 "tournament_key": key,
                 "cpi": float(cpi),
+                "ta_surface_speed": float(cpi),
                 "sample_size": sample_size,
                 "source_url": source_url,
                 "updated_at": scraped_at,
@@ -235,6 +248,7 @@ def _parse_year_rows_from_html(html: str, season_year: int, source_url: str, scr
                 "tournament_name": tournament_name,
                 "tournament_key": key,
                 "cpi": float(cpi),
+                "ta_surface_speed": float(cpi),
                 "sample_size": _extract_sample_size(tournament_raw),
                 "source_url": source_url,
                 "updated_at": scraped_at,
@@ -268,6 +282,7 @@ def _write_csv(path: Path, rows: list[dict]) -> None:
         "tournament_name",
         "tournament_key",
         "cpi",
+        "ta_surface_speed",
         "sample_size",
         "source_url",
         "updated_at",

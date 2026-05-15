@@ -1,0 +1,84 @@
+Clay ML v3 Phase A backfill report
+====================================
+generated_at_utc: 2026-05-15T10:15:18.166322+00:00
+years: [2022, 2023, 2024]
+fixture_denominator: 2339
+scope: backfill only; no model, no signal lane, no monitor
+note_2025: TennisAbstract 2025 may be re-scraped only as scraper hygiene for malformed names; it is not used in v3 backfill/model training.
+
+Task 1 - TennisAbstract surface-speed proxy
+status: PASS
+fixture_coverage: 2339/2339 (100.0%)
+fixture_gate: >= 1872/2339
+tournament_coverage: 24/24
+
+Task 2 - Altitude / venue geo
+status: PASS
+venue_coverage: 23/23 (100.0%)
+venue_gate: >= 95%
+
+tournament_venue_bridge
+- argentina_open -> buenos_aires_lawn_tennis_club -> altitude_m=25.0
+- barcelona_open -> real_club_tenis_barcelona -> altitude_m=90.0
+- bmw_open -> mtc_iphitos_munich -> altitude_m=520.0
+- chile_open -> club_deportivo_uc_san_carlos -> altitude_m=670.0
+- cordoba_open -> polo_deportivo_kempes_cordoba -> altitude_m=430.0
+- croatia_open -> stella_maris_umag -> altitude_m=5.0
+- estoril_open -> clube_tenis_estoril -> altitude_m=60.0
+- european_open -> am_rothenbaum_hamburg -> altitude_m=8.0
+- french_open -> roland_garros_paris -> altitude_m=35.0
+- generali_open -> tennisstadion_kitzbuhel -> altitude_m=762.0
+- geneva_open -> tennis_club_geneve -> altitude_m=375.0
+- grand_prix_hassan_ii -> royal_tennis_club_marrakech -> altitude_m=460.0
+- internazionali_bnl_ditalia -> foro_italico_rome -> altitude_m=20.0
+- lyon_open -> parc_tete_or_lyon -> altitude_m=175.0
+- monte_carlo_masters -> monte_carlo_country_club -> altitude_m=50.0
+- mutua_madrid_open -> madrid_caja_magica -> altitude_m=660.0
+- nordea_open -> bastad_tennis_stadium -> altitude_m=5.0
+- rio_open -> jockey_club_brasileiro_rio -> altitude_m=5.0
+- serbia_open -> novak_tennis_center_belgrade -> altitude_m=90.0
+- srpska_open -> national_tennis_center_banja_luka -> altitude_m=165.0
+- suisse_open_gstaad -> roy_emerson_arena_gstaad -> altitude_m=1050.0
+- tiriac_open -> nastase_marica_sports_club_bucharest -> altitude_m=85.0
+- us_mens_clay_court_championships -> river_oaks_houston -> altitude_m=20.0
+
+Task 3 - Weather
+status: PASS
+fixture_coverage: 2339/2339 (100.0%)
+fixture_gate: >= 2106/2339
+granularity_limit: daily venue aggregate; match start times are unavailable, so intra-day weather swings are lost.
+humidity_sources: {'hourly_aggregated': 468}
+
+Task 4 - Point-in-time ranks from tennis-data xlsx
+status: PASS
+fixture_coverage: 2278/2339 (97.4%)
+fixture_gate: >= 2223/2339
+join_methods: {'surname': 2278, 'miss': 61}
+xlsx_retirement_rows_loaded: 65
+rank_join_gaps_sample:
+- 2022-02-15 Rio Open Miomir Kecmanovic d. Alejandro Pascacio F.
+- 2022-04-06 U.S. Men's Clay Court Championships Nick Kyrgios d. Vinay Kumar T
+- 2022-04-26 Millennium Estoril Open Richard Gasquet d. Vinay Kumar T
+- 2022-05-02 Mutua Madrid Open Jannik Sinner d. Vinay Kumar T
+- 2022-05-09 Internazionali BNL d'Italia Vinay Kumar T d. Albert Ramos-Vinolas
+- 2022-05-11 Internazionali BNL d'Italia Alex De Minaur d. Vinay Kumar T
+- 2022-05-15 Geneva Open Tallon Griekspoor d. Vinay Kumar T
+- 2022-05-17 Geneva Open Christopher O'Connell d. Albert Ramos-Vinolas
+- 2022-05-18 Geneva Open Reilly Opelka d. Christopher O'Connell
+- 2022-05-22 French Open Aljaz Bedene d. Christopher O'Connell
+- 2022-05-22 French Open Felix Auger Aliassime d. Juan Pablo Varillas
+- 2022-05-24 French Open Joao Sousa d. Chun Hsin Tseng
+- 2022-05-24 French Open Cristian Garin d. Vinay Kumar T
+- 2022-07-25 Generali Open Juan Pablo Varillas d. Carlos Taberner
+- 2022-07-27 Generali Open Albert Ramos-Vinolas d. Juan Pablo Varillas
+- 2023-02-06 Cordoba Open Dusan Lajovic d. Juan Pablo Varillas
+- 2023-02-14 Argentina Open Juan Pablo Varillas d. Joao Sousa
+- 2023-02-16 Argentina Open Juan Pablo Varillas d. Dominic Thiem
+- 2023-02-17 Argentina Open Juan Pablo Varillas d. Lorenzo Musetti
+- 2023-02-18 Argentina Open Cameron Norrie d. Juan Pablo Varillas
+
+No model artefact check
+status: PASS
+
+overall_status: PASS
+decision: Phase A passed; a separate future PR may propose the v3 residual model.
