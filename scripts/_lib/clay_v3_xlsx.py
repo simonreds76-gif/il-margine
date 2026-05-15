@@ -29,6 +29,19 @@ FIELDNAMES = [
     "join_method",
 ]
 
+NAME_TOKEN_ALIASES = {
+    # Backtest source corruption: player_id 49583 is Tommy Paul, but some rows
+    # were written as "Vinay Kumar T". Keep this alias explicit and audited.
+    "vinay kumar": ["paul"],
+}
+
+KNOWN_CORRUPTED_BACKTEST_KEYS = {
+    "alejandro pascacio",
+    "juan pablo boada",
+    "vinay kumar",
+    "zhuo zhang",
+}
+
 
 @dataclass(frozen=True)
 class RankJoinResult:
@@ -48,34 +61,62 @@ def _norm_name(s: str | None) -> str:
     t = (s or "").strip().lower()
     t = unicodedata.normalize("NFD", t)
     t = "".join(c for c in t if unicodedata.category(c) != "Mn")
-    return t.replace("-", "").replace("'", "")
+    t = t.replace("’", "").replace("‘", "").replace("'", "")
+    return re.sub(r"[^a-z0-9]+", "", t)
 
 
 def _tokenise_name(name: str | None) -> list[str]:
     cleaned = (name or "").replace(",", " ").replace("-", " ")
+    cleaned = cleaned.replace("’", "").replace("‘", "").replace("'", "")
     cleaned = re.sub(r"\s*\([^)]*\)", " ", cleaned)
     cleaned = re.sub(r"\s*\[[^\]]*\]", " ", cleaned)
-    return [
-        _norm_name(tok)
-        for tok in cleaned.split()
-        if tok and not re.match(r"^[a-z]$", _norm_name(tok))
-    ]
+    raw_tokens = []
+    for tok in cleaned.split():
+        norm = _norm_name(tok)
+        if not norm:
+            continue
+        if "." in tok and len(norm) <= 2:
+            continue
+        if re.match(r"^[a-z]$", norm) and norm != "o":
+            continue
+        raw_tokens.append(norm)
+    tokens: list[str] = []
+    i = 0
+    while i < len(raw_tokens):
+        token = raw_tokens[i]
+        if token == "o" and i + 1 < len(raw_tokens):
+            tokens.append("o" + raw_tokens[i + 1])
+            i += 2
+            continue
+        if token:
+            tokens.append(token)
+        i += 1
+    alias_key = " ".join(tokens)
+    return NAME_TOKEN_ALIASES.get(alias_key, tokens)
 
 
 def _surname_keys(name: str | None) -> list[str]:
     tokens = _tokenise_name(name)
     if not tokens:
         return []
-    out = {tokens[-1]}
+    out = {tokens[-1], " ".join(tokens), "".join(tokens)}
     if len(tokens) >= 2:
-        out.add(tokens[-2])
-        out.add(f"{tokens[-2]} {tokens[-1]}")
-        out.add(f"{tokens[-2]}{tokens[-1]}")
+        surname_tokens = tokens[1:]
+        out.add(" ".join(surname_tokens))
+        out.add("".join(surname_tokens))
     return sorted(out)
 
 
 def _full_key(name: str | None) -> str:
     return " ".join(_tokenise_name(name))
+
+
+def _is_known_corrupted_name(name: str | None) -> bool:
+    return " ".join(_tokenise_name(name)) in KNOWN_CORRUPTED_BACKTEST_KEYS
+
+
+def _keys_overlap(a: set[str], b: set[str]) -> bool:
+    return bool(a and b and a.intersection(b))
 
 
 def _float_or_blank(value: Any) -> str:
@@ -102,9 +143,17 @@ def _date_iso(value: Any) -> str:
     return ts.strftime("%Y-%m-%d")
 
 
-def load_xlsx_rank_index(paths: list[Path]) -> tuple[dict[tuple[str, str, str, str], dict[str, Any]], dict[tuple[str, str, str, str], dict[str, Any]], int]:
+def load_xlsx_rank_index(
+    paths: list[Path],
+) -> tuple[
+    dict[tuple[str, str, str, str], dict[str, Any]],
+    dict[tuple[str, str, str, str], dict[str, Any]],
+    dict[tuple[str, str], list[dict[str, Any]]],
+    int,
+]:
     full_index: dict[tuple[str, str, str, str], dict[str, Any]] = {}
     surname_buckets: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    fixture_rows: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     retirement_count = 0
     for path in paths:
         df = pd.read_excel(path)
@@ -131,6 +180,7 @@ def load_xlsx_rank_index(paths: list[Path]) -> tuple[dict[tuple[str, str, str, s
                 "comment": str(record.get("Comment") or ""),
             }
             full_index[(date_iso, canonical, _full_key(winner), _full_key(loser))] = row
+            fixture_rows[(date_iso, canonical)].append(row)
             for wk in _surname_keys(winner):
                 for lk in _surname_keys(loser):
                     surname_buckets[(date_iso, canonical, wk, lk)].append(row)
@@ -138,11 +188,11 @@ def load_xlsx_rank_index(paths: list[Path]) -> tuple[dict[tuple[str, str, str, s
     for key, rows in surname_buckets.items():
         if len(rows) == 1:
             surname_index[key] = rows[0]
-    return full_index, surname_index, retirement_count
+    return full_index, surname_index, fixture_rows, retirement_count
 
 
 def join_fixture_ranks(fixtures: list[dict[str, Any]], xlsx_paths: list[Path]) -> RankJoinResult:
-    full_index, surname_index, retirement_count = load_xlsx_rank_index(xlsx_paths)
+    full_index, surname_index, fixture_rows, retirement_count = load_xlsx_rank_index(xlsx_paths)
     out: list[dict[str, Any]] = []
     methods = Counter()
     misses: list[dict[str, Any]] = []
@@ -168,6 +218,24 @@ def join_fixture_ranks(fixtures: list[dict[str, Any]], xlsx_paths: list[Path]) -
                             break
                     if match is not None:
                         break
+            if match is None:
+                winner_keys = set(_surname_keys(winner_name))
+                loser_keys = set(_surname_keys(loser_name))
+                candidates: list[dict[str, Any]] = []
+                for row_candidate in fixture_rows.get((date_iso, canonical), []):
+                    candidate_winner_keys = set(_surname_keys(row_candidate.get("winner_short")))
+                    candidate_loser_keys = set(_surname_keys(row_candidate.get("loser_short")))
+                    winner_matches = _keys_overlap(winner_keys, candidate_winner_keys)
+                    loser_matches = _keys_overlap(loser_keys, candidate_loser_keys)
+                    if winner_matches and loser_matches:
+                        candidates.append(row_candidate)
+                    elif winner_matches and _is_known_corrupted_name(loser_name):
+                        candidates.append(row_candidate)
+                    elif loser_matches and _is_known_corrupted_name(winner_name):
+                        candidates.append(row_candidate)
+                if len(candidates) == 1:
+                    match = candidates[0]
+                    method = "opponent_side"
         row = {
             "date": date_iso,
             "tournament": fixture.get("tournament", ""),

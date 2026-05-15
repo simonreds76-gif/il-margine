@@ -1,4 +1,4 @@
-Clay ML v3 Phase A backfill report
+﻿Clay ML v3 Phase A backfill report
 ====================================
 generated_at_utc: 2026-05-15T10:15:18.166322+00:00
 years: [2022, 2023, 2024]
@@ -82,3 +82,18 @@ status: PASS
 
 overall_status: PASS
 decision: Phase A passed; a separate future PR may propose the v3 residual model.
+
+Clay ML v3 Phase A - post-audit rank patch
+===========================================
+generated_at_utc: 2026-05-15T11:38:56.277026+00:00
+years: [2022, 2023, 2024]
+fixture_denominator: 2339
+status: PASS
+rank_fixture_coverage: 2337/2339 (99.9%)
+post_audit_gate: >= 2328/2339
+join_methods: {'surname': 2261, 'opponent_side': 76, 'miss': 2}
+xlsx_retirement_rows_loaded: 65
+fixes_applied: apostrophe/O-prefix normalization; initial stripping; surname key uses tokens after first; explicit Vinay Kumar T -> Tommy Paul alias.
+rank_join_gaps_sample:
+- 2022-04-09 U.S. Men's Clay Court Championships John Isner d. Alejandro Pascacio F.
+- 2024-02-09 Cordoba Open Sebastian Baez d. Alejandro Pascacio F.

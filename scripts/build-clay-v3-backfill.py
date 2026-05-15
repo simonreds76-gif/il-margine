@@ -38,6 +38,7 @@ SURFACE_SPEED_MIN_FIXTURE_COVERAGE = 0.80
 ALTITUDE_MIN_VENUE_COVERAGE = 0.95
 WEATHER_MIN_FIXTURE_COVERAGE = 0.90
 RANKS_MIN_FIXTURE_COVERAGE = 0.95
+RANKS_POST_AUDIT_MIN_FIXTURE_COVERAGE = 0.995
 
 
 class TaskError(RuntimeError):
@@ -49,6 +50,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--years", nargs="+", type=int, required=True, help="Backtest years to audit, expected 2022 2023 2024.")
     parser.add_argument("--report-out", type=Path, default=BACKTEST_DIR / "clay-v3-backfill-report.txt")
     parser.add_argument("--skip-scrape", action="store_true", help="Use existing TennisAbstract CSV without calling the scraper.")
+    parser.add_argument(
+        "--tasks",
+        choices=["all", "ranks"],
+        default="all",
+        help="Run all Phase A tasks or only the post-audit rank cache rebuild.",
+    )
     return parser.parse_args()
 
 
@@ -235,6 +242,41 @@ def main() -> int:
     fixtures = load_clay_fixtures(years)
     if not fixtures:
         raise SystemExit("No clay fixtures found for requested years")
+
+    if args.tasks == "ranks":
+        xlsx_paths = [BACKTEST_DIR / f"atp-{year}.xlsx" for year in years]
+        ranks = join_fixture_ranks(fixtures, xlsx_paths)
+        write_rank_cache(RANKS_CSV, ranks.rows)
+        task_pass = ranks.coverage >= RANKS_POST_AUDIT_MIN_FIXTURE_COVERAGE
+        lines = [
+            "Clay ML v3 Phase A - post-audit rank patch",
+            "===========================================",
+            f"generated_at_utc: {datetime.now(timezone.utc).isoformat()}",
+            f"years: {years}",
+            f"fixture_denominator: {len(fixtures)}",
+            f"status: {'PASS' if task_pass else 'FAIL'}",
+            f"rank_fixture_coverage: {ranks.coverage_count}/{ranks.total_count} ({pct(ranks.coverage_count, ranks.total_count)})",
+            f"post_audit_gate: >= {math.ceil(RANKS_POST_AUDIT_MIN_FIXTURE_COVERAGE * len(fixtures))}/{len(fixtures)}",
+            f"join_methods: {ranks.join_methods}",
+            f"xlsx_retirement_rows_loaded: {ranks.retirement_count}",
+            "fixes_applied: apostrophe/O-prefix normalization; initial stripping; surname key uses tokens after first; explicit Vinay Kumar T -> Tommy Paul alias.",
+        ]
+        if ranks.misses:
+            lines.append("rank_join_gaps_sample:")
+            for row in ranks.misses[:20]:
+                lines.append(f"- {row['date']} {row['tournament']} {row['winner_name']} d. {row['loser_name']}")
+        report_text = "\n".join(lines) + "\n"
+        args.report_out.parent.mkdir(parents=True, exist_ok=True)
+        existing = args.report_out.read_text(encoding="utf-8") if args.report_out.exists() else ""
+        if existing and not existing.startswith("Clay ML v3 Phase A - post-audit rank patch"):
+            marker = "Clay ML v3 Phase A - post-audit rank patch"
+            if marker in existing:
+                existing = existing[: existing.index(marker)].rstrip() + "\n"
+            args.report_out.write_text(existing.rstrip() + "\n\n" + report_text, encoding="utf-8")
+        else:
+            args.report_out.write_text(report_text, encoding="utf-8")
+        print(report_text)
+        return 0 if task_pass else 1
 
     scrape_error = None
     if not args.skip_scrape:
