@@ -12,6 +12,7 @@ type SortMode = "edge" | "kickoff" | "confidence";
 type LeagueOption = {
   key: string;
   label: string;
+  logoPath: string;
   count: number;
 };
 
@@ -240,7 +241,12 @@ export function FairOddsSignalBrowser({
       if (current) {
         current.count += 1;
       } else {
-        counts.set(key, { key, label: signal.competition || key, count: 1 });
+        counts.set(key, {
+          key,
+          label: signal.competition || key,
+          logoPath: signal.leagueLogoPath || `/league-logos/${key}.png`,
+          count: 1,
+        });
       }
     }
     return [...counts.values()].sort((a, b) => a.label.localeCompare(b.label));
@@ -326,7 +332,25 @@ export function FairOddsSignalBrowser({
                   : "border-slate-700/80 bg-slate-900/70 text-slate-400 hover:text-slate-200"
               }`}
             >
-              All | {liveSignals.length}
+              <span className="inline-flex items-center gap-2">
+                <span className="flex -space-x-1">
+                  {leagueOptions.slice(0, 4).map((option) => (
+                    <LogoBadge
+                      key={option.key}
+                      src={option.logoPath}
+                      alt={`${option.label} logo`}
+                      fallback={option.label}
+                      size={22}
+                      shape="rounded"
+                      className="bg-white/95 p-0.5 ring-2 ring-[#0c0f14]"
+                    />
+                  ))}
+                </span>
+                <span>All</span>
+                <span className="rounded-full bg-slate-950/70 px-1.5 py-0.5 text-[11px] text-slate-300">
+                  {liveSignals.length}
+                </span>
+              </span>
             </button>
             {leagueOptions.map((option) => (
               <button
@@ -339,7 +363,20 @@ export function FairOddsSignalBrowser({
                     : "border-slate-700/80 bg-slate-900/70 text-slate-400 hover:text-slate-200"
                 }`}
               >
-                {option.label} | {option.count}
+                <span className="inline-flex items-center gap-2">
+                  <LogoBadge
+                    src={option.logoPath}
+                    alt={`${option.label} logo`}
+                    fallback={option.label}
+                    size={22}
+                    shape="rounded"
+                    className="bg-white/95 p-0.5"
+                  />
+                  <span className="hidden sm:inline">{option.label}</span>
+                  <span className="rounded-full bg-slate-950/70 px-1.5 py-0.5 text-[11px] text-slate-300">
+                    {option.count}
+                  </span>
+                </span>
               </button>
             ))}
           </div>

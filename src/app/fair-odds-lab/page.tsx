@@ -177,6 +177,8 @@ const TEAM_NAME_ALIASES: Record<string, string> = {
   "real sociedad": "sociedad",
   "real sociedad san sebastian": "sociedad",
   "as monaco": "monaco",
+  "ogc nice": "nice",
+  "olympique gymnaste club nice": "nice",
   "rc lens": "lens",
 };
 
