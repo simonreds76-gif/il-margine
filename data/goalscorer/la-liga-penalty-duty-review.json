@@ -1,8 +1,35 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-14T01:41:35Z",
+  "generated_at": "2026-05-15T01:49:30Z",
   "row_count": 4,
   "rows": [
+    {
+      "date": "2026-05-12",
+      "league": "la-liga",
+      "review_source": "settled_logs",
+      "match": "CA Osasuna vs Atletico Madrid",
+      "team": "Atletico Madrid",
+      "opponent": "Osasuna",
+      "actual_taker": "Ademola Lookman",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "primary_pre_match": "Julián Álvarez",
+      "secondary_pre_match": "Antoine Griezmann",
+      "tertiary_pre_match": "Alexander Sørloth",
+      "primary_lineup_status": "unknown",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Ademola Lookman took 1 penalty attempt for Atletico Madrid vs Osasuna. Primary pre-match: Julián Álvarez (unknown). Secondary pre-match: Antoine Griezmann (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-05-14T19:54:24Z",
+      "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
+    },
     {
       "date": "2026-05-09",
       "league": "la-liga",
@@ -27,7 +54,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Mikel Oyarzabal took 1 penalty attempt for Real Sociedad vs Real Betis. Primary pre-match: Mikel Oyarzabal (unknown). Secondary pre-match: Brais Méndez (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-13T19:57:11Z",
+      "context_generated_at": "2026-05-14T19:54:24Z",
       "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
     },
     {
@@ -54,7 +81,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Antonio Martínez took 1 penalty attempt for Alaves vs Elche. Primary pre-match: Carlos Vicente (unknown). Secondary pre-match: Lucas Boyé (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-05-13T19:57:11Z",
+      "context_generated_at": "2026-05-14T19:54:24Z",
       "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
     },
     {
@@ -81,34 +108,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Mikel Oyarzabal took 1 penalty attempt for Real Sociedad vs Rayo Vallecano. Primary pre-match: Mikel Oyarzabal (unknown). Secondary pre-match: Brais Méndez (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-13T19:57:11Z",
-      "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
-    },
-    {
-      "date": "2026-04-23",
-      "league": "la-liga",
-      "review_source": "settled_logs",
-      "match": "Rayo Vallecano vs Espanyol Barcelona",
-      "team": "Espanyol",
-      "opponent": "Rayo Vallecano",
-      "actual_taker": "Kike García",
-      "actual_role_pre_match": "secondary",
-      "penalties_attempted": 1,
-      "penalties_scored": 0,
-      "distinct_takers_in_match": 1,
-      "primary_pre_match": "Javi Puado",
-      "secondary_pre_match": "Kike Garcia",
-      "tertiary_pre_match": "Roberto Fernandez",
-      "primary_lineup_status": "unknown",
-      "secondary_lineup_status": "unknown",
-      "tertiary_lineup_status": "unknown",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "expected_backup_shift",
-      "review_priority": "medium",
-      "editorial_note": "Kike García took 1 penalty attempt for Espanyol vs Rayo Vallecano. Primary pre-match: Javi Puado (unknown). Secondary pre-match: Kike Garcia (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-05-13T19:57:11Z",
+      "context_generated_at": "2026-05-14T19:54:24Z",
       "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
     }
   ]
