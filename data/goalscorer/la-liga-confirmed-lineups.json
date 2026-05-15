@@ -17,7 +17,7 @@
       "home_players": [
         "Unai Simón",
         "Jesús Areso",
-        "Daniel Vivian",
+        "Yeray Álvarez",
         "Aymeric Laporte",
         "Adama Boiro",
         "Íñigo Ruíz de Galarreta",
@@ -60,7 +60,7 @@
           "position_id": 32
         },
         {
-          "name": "Daniel Vivian",
+          "name": "Yeray Álvarez",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -245,10 +245,11 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
+        "Daniel Vivian",
         "Yuri Berchiche",
-        "Nico Williams",
         "Beñat Prados",
-        "Oihan Sancet"
+        "Oihan Sancet",
+        "Nico Williams"
       ],
       "away_unavailable": [
         "Ilaix Moriba",
@@ -503,18 +504,18 @@
       "away_subs": [],
       "home_unavailable": [
         "José Giménez",
-        "Julián Álvarez",
         "Pablo Barrios",
         "Marcos Llorente",
         "Nahuel Molina",
         "Johnny Cardoso",
         "Nicolás González",
-        "Rodrigo Mendoza"
+        "Rodrigo Mendoza",
+        "Julián Álvarez"
       ],
       "away_unavailable": [
-        "Marc-André ter Stegen",
         "Donny van de Beek",
         "Juan Carlos",
+        "Marc-André ter Stegen",
         "Portu",
         "Vladyslav Vanat"
       ]
@@ -767,11 +768,11 @@
         "Lamine Yamal"
       ],
       "away_unavailable": [
-        "Diego Llorente",
-        "Juan Hernández",
         "Aitor Ruibal",
         "Ángel Ortiz",
-        "Marc Bartra"
+        "Diego Llorente",
+        "Marc Bartra",
+        "Juan Hernández"
       ]
     },
     {
@@ -796,7 +797,7 @@
         "Héctor Fort",
         "Gonzalo Villar",
         "Marc Aguado",
-        "Aleix Febas",
+        "Martim Neto",
         "Germán Valera",
         "Grady Diangana",
         "André Silva"
@@ -879,7 +880,7 @@
           "position_id": 75
         },
         {
-          "name": "Aleix Febas",
+          "name": "Martim Neto",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -1022,6 +1023,7 @@
         "Eder Sarabia",
         "Adam Boayar",
         "Léo Pétrot",
+        "Aleix Febas",
         "Yago Santiago"
       ],
       "away_unavailable": [
@@ -1064,7 +1066,7 @@
         "Martin Valjent",
         "Luis Orejuela",
         "Manu Morlanes",
-        "Omar Mascarell",
+        "Antonio Sánchez",
         "Zito Luvumbo",
         "Sergi Darder",
         "Jan Virgili",
@@ -1227,7 +1229,7 @@
           "position_id": 64
         },
         {
-          "name": "Omar Mascarell",
+          "name": "Antonio Sánchez",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1279,10 +1281,11 @@
         "Carlos Álvarez"
       ],
       "away_unavailable": [
-        "Marash Kumbulla",
         "Mateo Joseph",
+        "Lucas Bergström",
         "Antonio Raíllo",
-        "Lucas Bergström"
+        "Marash Kumbulla",
+        "Omar Mascarell"
       ]
     },
     {
@@ -1549,26 +1552,26 @@
       "home_status": "FotMob Expected XI",
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
-      "home_formation": "4-3-3",
+      "home_formation": "4-2-3-1",
       "away_formation": "4-4-2",
       "home_players": [
         "Augusto Batalla",
-        "Andrei Ratiu",
-        "Pathé Ciss",
+        "Iván Balliu",
         "Florian Lejeune",
+        "Nobel Mendy",
         "Pep Chavarría",
-        "Pedro Díaz",
         "Óscar Valentín",
-        "Unai López",
-        "Jorge de Frutos",
-        "Sergio Camello",
-        "Fran Pérez"
+        "Gerard Gumbau",
+        "Fran Pérez",
+        "Pedro Díaz",
+        "Pacha Espino",
+        "Randy Nteka"
       ],
       "away_players": [
         "Arnau Tenas",
         "Alex Freeman",
         "Pau Navarro",
-        "Renato Veiga",
+        "Logan Costa",
         "Alfonso Pedraza",
         "Nicolas Pépé",
         "Dani Parejo",
@@ -1584,26 +1587,17 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-3-3",
+          "formation": "4-2-3-1",
           "position_id": 11
         },
         {
-          "name": "Andrei Ratiu",
+          "name": "Iván Balliu",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-2-3-1",
           "position_id": 32
-        },
-        {
-          "name": "Pathé Ciss",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-3-3",
-          "position_id": 34
         },
         {
           "name": "Florian Lejeune",
@@ -1611,7 +1605,16 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-2-3-1",
+          "position_id": 34
+        },
+        {
+          "name": "Nobel Mendy",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
           "position_id": 36
         },
         {
@@ -1620,62 +1623,62 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-2-3-1",
           "position_id": 38
-        },
-        {
-          "name": "Pedro Díaz",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 73
         },
         {
           "name": "Óscar Valentín",
           "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 75
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
         },
         {
-          "name": "Unai López",
+          "name": "Gerard Gumbau",
           "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 77
-        },
-        {
-          "name": "Jorge de Frutos",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 103
-        },
-        {
-          "name": "Sergio Camello",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 105
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
         },
         {
           "name": "Fran Pérez",
           "line_index": 2,
           "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83
+        },
+        {
+          "name": "Pedro Díaz",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
+        },
+        {
+          "name": "Pacha Espino",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87
+        },
+        {
+          "name": "Randy Nteka",
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 107
+          "formation": "4-2-3-1",
+          "position_id": 115
         }
       ],
       "away_starters": [
@@ -1707,7 +1710,7 @@
           "position_id": 34
         },
         {
-          "name": "Renato Veiga",
+          "name": "Logan Costa",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1782,15 +1785,14 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Iván Balliu",
-        "Gerard Gumbau",
-        "Ilias Akhomach",
         "Luiz Felipe",
-        "Isi Palazón"
+        "Isi Palazón",
+        "Ilias Akhomach"
       ],
       "away_unavailable": [
         "Pau Cabanes",
-        "Juan Foyth"
+        "Juan Foyth",
+        "Renato Veiga"
       ]
     },
     {
@@ -2039,8 +2041,8 @@
       "away_subs": [],
       "home_unavailable": [
         "Ovie Ejaria",
-        "Leander Dendoncker",
-        "Jaime Vázquez"
+        "Jaime Vázquez",
+        "Leander Dendoncker"
       ],
       "away_unavailable": [
         "Facundo Garcés",
@@ -2065,7 +2067,7 @@
         "Alex Remiro",
         "Jon Aramburu",
         "Jon Martín",
-        "Duje Caleta-Car",
+        "Igor Zubeldia",
         "Sergio Gómez",
         "Takefusa Kubo",
         "Jon Gorrotxategi",
@@ -2076,7 +2078,7 @@
       ],
       "away_players": [
         "Stole Dimitrievski",
-        "Renzo Saravia",
+        "Thierry Correia",
         "César Tárrega",
         "Eray Cömert",
         "Jesus Vázquez",
@@ -2116,7 +2118,7 @@
           "position_id": 34
         },
         {
-          "name": "Duje Caleta-Car",
+          "name": "Igor Zubeldia",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -2199,7 +2201,7 @@
           "position_id": 11
         },
         {
-          "name": "Renzo Saravia",
+          "name": "Thierry Correia",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -2298,7 +2300,8 @@
       "away_unavailable": [
         "José Copete",
         "Dimitri Foulquier",
-        "José Gayà"
+        "José Gayà",
+        "Renzo Saravia"
       ]
     },
     {
@@ -2546,16 +2549,16 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Isaac Romero",
         "Manu Bueno",
-        "Marcão"
+        "Marcão",
+        "Isaac Romero"
       ],
       "away_unavailable": [
         "Andriy Lunin",
         "Dean Donny Huijsen",
         "Ferland Mendy",
-        "Arda Güler",
         "Éder Militao",
+        "Arda Güler",
         "Rodrygo"
       ]
     }
