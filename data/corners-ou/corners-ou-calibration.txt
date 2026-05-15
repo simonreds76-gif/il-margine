@@ -1,39 +1,39 @@
 ======================================================================
   CORNERS O/U MODEL -- CALIBRATION REPORT
 ======================================================================
-  Total predictions: 20796
+  Total predictions: 20809
 
   Mean predicted total: 9.734
   Mean actual total:    9.840
 
-  MAE:  2.789
-  RMSE: 3.506
+  MAE:  2.788
+  RMSE: 3.505
 
   Line-by-line calibration:
-    Line   7.5: predicted=0.727  actual=0.743  diff=-0.0161  (n=20796)
-    Line   8.5: predicted=0.616  actual=0.633  diff=-0.0176  (n=20796)
-    Line   9.5: predicted=0.499  actual=0.515  diff=-0.0159  (n=20796)
-    Line  10.5: predicted=0.387  actual=0.399  diff=-0.0120  (n=20796)
-    Line  11.5: predicted=0.287  actual=0.293  diff=-0.0060  (n=20796)
-    Line  12.5: predicted=0.204  actual=0.209  diff=-0.0048  (n=20796)
+    Line   7.5: predicted=0.727  actual=0.743  diff=-0.0161  (n=20809)
+    Line   8.5: predicted=0.616  actual=0.633  diff=-0.0177  (n=20809)
+    Line   9.5: predicted=0.499  actual=0.515  diff=-0.0158  (n=20809)
+    Line  10.5: predicted=0.387  actual=0.399  diff=-0.0118  (n=20809)
+    Line  11.5: predicted=0.287  actual=0.293  diff=-0.0060  (n=20809)
+    Line  12.5: predicted=0.204  actual=0.209  diff=-0.0047  (n=20809)
 
   Calibration by probability bins (over 9.5):
     [0.00, 0.25): n= 1792  predicted=0.189  actual=0.424  diff=-0.2355
-    [0.25, 0.40): n= 4358  predicted=0.333  actual=0.454  diff=-0.1211
-    [0.40, 0.50): n= 4257  predicted=0.451  actual=0.497  diff=-0.0464
-    [0.50, 0.60): n= 4227  predicted=0.549  actual=0.537  diff=+0.0125
-    [0.60, 0.75): n= 4549  predicted=0.667  actual=0.566  diff=+0.1014
-    [0.75, 1.00): n= 1613  predicted=0.810  actual=0.623  diff=+0.1873
+    [0.25, 0.40): n= 4362  predicted=0.333  actual=0.454  diff=-0.1209
+    [0.40, 0.50): n= 4258  predicted=0.451  actual=0.497  diff=-0.0463
+    [0.50, 0.60): n= 4231  predicted=0.549  actual=0.537  diff=+0.0126
+    [0.60, 0.75): n= 4552  predicted=0.667  actual=0.566  diff=+0.1016
+    [0.75, 1.00): n= 1614  predicted=0.810  actual=0.623  diff=+0.1870
 
   Per-league breakdown:
     bundesliga     : n= 3537  pred=9.703  actual=9.645  MAE=2.800
-    epl            : n= 4390  pred=10.343  actual=10.418  MAE=2.866
-    la-liga        : n= 4399  pred=9.344  actual=9.548  MAE=2.679
-    ligue-1        : n= 4085  pred=9.566  actual=9.543  MAE=2.742
+    epl            : n= 4391  pred=10.343  actual=10.419  MAE=2.866
+    la-liga        : n= 4409  pred=9.345  actual=9.548  MAE=2.679
+    ligue-1        : n= 4087  pred=9.566  actual=9.543  MAE=2.741
     serie-a        : n= 4385  pred=9.698  actual=9.986  MAE=2.856
 
   Smart baseline regression (OLS on B365 1X2 -> corners):
-    Matches with B365 odds: 20790
+    Matches with B365 odds: 20803
     Home corners: avg=5.43, avg P(home_win)=0.442, avg P(away_win)=0.309
     Away corners: avg=4.41
 

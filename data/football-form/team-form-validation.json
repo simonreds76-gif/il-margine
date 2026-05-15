@@ -1,8 +1,8 @@
 {
-  "checked_at": "2026-05-15T10:15:29+00:00",
+  "checked_at": "2026-05-15T10:21:22+00:00",
   "files": {
     "team-match-base.csv": {
-      "age_days": 4,
+      "age_days": 1,
       "critical_coverage": {
         "corners_against": 1.0,
         "corners_for": 1.0,
@@ -11,23 +11,23 @@
       },
       "duplicates": 0,
       "field_count": 27,
-      "latest_date": "2026-05-11",
+      "latest_date": "2026-05-14",
       "league_freshness": {
         "bundesliga": {
           "age_days": 5,
           "latest_date": "2026-05-10"
         },
         "epl": {
-          "age_days": 4,
-          "latest_date": "2026-05-11"
+          "age_days": 2,
+          "latest_date": "2026-05-13"
         },
         "la-liga": {
-          "age_days": 4,
-          "latest_date": "2026-05-11"
+          "age_days": 1,
+          "latest_date": "2026-05-14"
         },
         "ligue-1": {
-          "age_days": 5,
-          "latest_date": "2026-05-10"
+          "age_days": 2,
+          "latest_date": "2026-05-13"
         },
         "serie-a": {
           "age_days": 4,
@@ -35,11 +35,11 @@
         }
       },
       "market_team_win_prob_coverage": 0.9997,
-      "rows": 42996,
+      "rows": 43022,
       "xg_coverage": 0.0705
     },
     "team-rolling-form.csv": {
-      "age_days": 4,
+      "age_days": 1,
       "critical_coverage": {
         "current_corners_against": 1.0,
         "current_corners_for": 1.0,
@@ -48,23 +48,23 @@
       },
       "duplicates": 0,
       "field_count": 150,
-      "latest_date": "2026-05-11",
+      "latest_date": "2026-05-14",
       "league_freshness": {
         "bundesliga": {
           "age_days": 5,
           "latest_date": "2026-05-10"
         },
         "epl": {
-          "age_days": 4,
-          "latest_date": "2026-05-11"
+          "age_days": 2,
+          "latest_date": "2026-05-13"
         },
         "la-liga": {
-          "age_days": 4,
-          "latest_date": "2026-05-11"
+          "age_days": 1,
+          "latest_date": "2026-05-14"
         },
         "ligue-1": {
-          "age_days": 5,
-          "latest_date": "2026-05-10"
+          "age_days": 2,
+          "latest_date": "2026-05-13"
         },
         "serie-a": {
           "age_days": 4,
@@ -72,7 +72,7 @@
         }
       },
       "market_team_win_prob_coverage": 0.9997,
-      "rows": 42996,
+      "rows": 43022,
       "xg_coverage": 0.0705
     }
   },

@@ -1,19 +1,19 @@
 # Corners V0 CLV Monitor
 
-Generated: 2026-05-15T10:15:58Z
+Generated: 2026-05-15T10:22:21Z
 Picks input: `data/football-form/corners-v0-published-picks.csv`
 Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
 ## Summary
 
-- Picks: 41
-- Active published picks: 41
+- Picks: 42
+- Active published picks: 42
 - Settled: 35
-- Open/pending: 6
+- Open/pending: 7
 - Settled PnL: -0.22u
-- Picks with close: 41
+- Picks with close: 42
 - Hard-guard blocked: 0
-- Average published-to-close CLV: +0.50%
+- Average published-to-close CLV: +0.48%
 - Allowed-league config valid: yes
 - Allowed leagues: `epl, ligue-1, serie-a`
 - Config error: `-`
@@ -22,14 +22,14 @@ Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Over | 25 | 19 | 6 | 10-9-0 | +2.03u | +10.68% | -0.18% (n=19) |
+| Over | 26 | 19 | 7 | 10-9-0 | +2.03u | +10.68% | -0.18% (n=19) |
 | Under | 16 | 16 | 0 | 7-9-0 | -2.25u | -14.07% | +1.46% (n=16) |
 
 ## Active League Breakdown
 
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| epl | 6 | 6 | 0 | 1-5-0 | -3.95u | -65.83% | +0.99% (n=6) |
+| epl | 7 | 6 | 1 | 1-5-0 | -3.95u | -65.83% | +0.99% (n=6) |
 | ligue-1 | 19 | 14 | 5 | 8-6-0 | +3.24u | +23.13% | -0.25% (n=14) |
 | serie-a | 16 | 15 | 1 | 8-7-0 | +0.49u | +3.27% | +1.16% (n=15) |
 
@@ -37,7 +37,7 @@ Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Over / epl | 4 | 4 | 0 | 1-3-0 | -1.95u | -48.75% | +0.00% (n=4) |
+| Over / epl | 5 | 4 | 1 | 1-3-0 | -1.95u | -48.75% | +0.00% (n=4) |
 | Over / ligue-1 | 17 | 12 | 5 | 8-4-0 | +5.24u | +43.65% | -0.29% (n=12) |
 | Over / serie-a | 4 | 3 | 1 | 1-2-0 | -1.26u | -41.97% | +0.00% (n=3) |
 | Under / epl | 2 | 2 | 0 | 0-2-0 | -2.00u | -100.00% | +2.97% (n=2) |
