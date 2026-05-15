@@ -211,6 +211,8 @@ FAIR_ODDS_LAB_LOG_FIELDS = [
     "penalty_transfer",
     "penalty_transfer_from",
     "position_upgrade",
+    "role_adjustment_factor",
+    "role_adjustment_reason",
     "lineup_state",
     "model_p_atgs",
     "model_fair_odds",
@@ -1254,6 +1256,8 @@ def exposure_row_from_candidate(candidate: Candidate) -> dict[str, str]:
         "penalty_transfer": "1" if clean_text(row.get("penalty_transfer")).lower() in {"1", "true", "yes"} else "0",
         "penalty_transfer_from": clean_text(row.get("penalty_transfer_from")),
         "position_upgrade": "1" if clean_text(row.get("position_upgrade")).lower() in {"1", "true", "yes"} else "0",
+        "role_adjustment_factor": fmt_decimal(parse_float(row.get("role_adjustment_factor")) or 1.0, 4),
+        "role_adjustment_reason": clean_text(row.get("role_adjustment_reason")),
         "lineup_state": clean_text(row.get("lineup_state")) or lineup_label(row),
         "model_p_atgs": fmt_decimal(candidate.model_prob_pct / 100, 6),
         "model_fair_odds": fmt_decimal(candidate.fair_odds, 4),
@@ -1338,6 +1342,9 @@ def build_reasons(
         reasons.append("Opponent has been allowing chances recently")
     if fixture_boost_pct >= 10:
         reasons.append("The fixture profile adds to his scoring case")
+    role_factor = parse_float(candidate.row.get("role_adjustment_factor"))
+    if role_factor is not None and role_factor >= 1.03:
+        reasons.append("Confirmed XI shows a more advanced scoring role")
     if penalty == "Primary":
         reasons.append("Primary penalty role adds a clear scoring route")
 
@@ -1503,6 +1510,8 @@ def build_signal(
             "fixture_boost_pct": fixture_boost_pct,
             "projected_minutes": round(candidate.expected_minutes) if candidate.expected_minutes is not None else None,
             "penalty_role": penalty,
+            "role_adjustment_factor": parse_float(row.get("role_adjustment_factor")) or 1.0,
+            "role_adjustment_reason": clean_text(row.get("role_adjustment_reason")),
             "lineup_confidence": lineup,
         },
         "confidence_tier": confidence,

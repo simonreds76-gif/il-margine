@@ -75,6 +75,11 @@ STACKED_RECENT_WINDOW = 8
 STACKED_FIXTURE_WINDOW = 3
 USUAL_POSITION_WINDOW = 10
 USUAL_POSITION_SHARE_MIN = 0.80
+ROLE_ADJUSTMENT_MIN_USUAL_MATCHES = 5
+ROLE_ADJUSTMENT_CONFIDENCE_FLOOR = 0.50
+ROLE_ADJUSTMENT_MAX_FACTOR = 1.15
+ROLE_ADJUSTMENT_MIN_FACTOR = 0.85
+ROLE_ADJUSTMENT_STEP = 0.05
 PUBLIC_ATTACKING_POSITIONS = {"FW", "FWR", "FWL", "AMC", "AMR", "AML"}
 PUBLIC_MIN_HISTORY_MINUTES = 600.0
 PUBLIC_MIN_BEST_ODDS = 1.60
@@ -1246,6 +1251,49 @@ def _position_upgrade_summary(player_name: str, player_history, fixture_lineup: 
     }
 
 
+def _confirmed_role_adjustment(position_signal: dict, lineup_status: str) -> tuple[float, str]:
+    """Return a capped non-penalty lambda multiplier from official XI role changes."""
+    if lineup_status != "confirmed_starter":
+        return 1.0, ""
+
+    try:
+        delta = int(position_signal.get("position_change_score"))
+    except (TypeError, ValueError):
+        return 1.0, ""
+
+    if delta == 0:
+        return 1.0, ""
+
+    try:
+        usual_matches = int(position_signal.get("usual_position_matches") or 0)
+        usual_share = float(position_signal.get("usual_position_share") or 0.0)
+    except (TypeError, ValueError):
+        return 1.0, ""
+
+    if usual_matches < ROLE_ADJUSTMENT_MIN_USUAL_MATCHES:
+        return 1.0, ""
+
+    capped_delta = max(-3, min(3, delta))
+    raw_adjustment = capped_delta * ROLE_ADJUSTMENT_STEP
+    confidence_weight = min(
+        1.0,
+        max(ROLE_ADJUSTMENT_CONFIDENCE_FLOOR, usual_share / USUAL_POSITION_SHARE_MIN),
+    )
+    factor = 1.0 + (raw_adjustment * confidence_weight)
+    factor = max(ROLE_ADJUSTMENT_MIN_FACTOR, min(ROLE_ADJUSTMENT_MAX_FACTOR, factor))
+
+    if abs(factor - 1.0) < 0.001:
+        return 1.0, ""
+
+    reason = (
+        f"confirmed_role_delta={delta:+d};"
+        f"usual={position_signal.get('usual_position', '')};"
+        f"today={position_signal.get('today_position_group', '')};"
+        f"weight={confidence_weight:.2f}"
+    )
+    return factor, reason
+
+
 def _build_team_penalty_context(
     *,
     league_key: str,
@@ -1382,6 +1430,7 @@ def write_outputs(
             "shadow_track_rows",
             "penalty_transfer_rows",
             "position_upgrade_rows",
+            "role_adjusted_rows",
             "fixtures_with_confirmed_lineups",
             "fixtures_with_expected_lineups",
             "fixtures_clean",
@@ -1573,6 +1622,7 @@ def main() -> None:
         "shadow_track_rows": 0,
         "penalty_transfer_rows": 0,
         "position_upgrade_rows": 0,
+        "role_adjusted_rows": 0,
         "fixtures_with_confirmed_lineups": 0,
         "fixtures_with_expected_lineups": 0,
         "fixtures_clean": 0,
@@ -2054,7 +2104,34 @@ def main() -> None:
             if method == "fallback":
                 stats["fallback_rows"] += 1
 
-            model_prob = prob_at_least_one(prediction["total_lambda"]) if prediction["total_lambda"] > 0 else 0.0
+            position_signal = _position_upgrade_summary(
+                candidate["player_meta"].get("player_name", odds_row["player_name"]),
+                player_histories[candidate["player_id"]],
+                fixture_lineup,
+                candidate["is_home"],
+            )
+            role_adjustment_factor, role_adjustment_reason = _confirmed_role_adjustment(
+                position_signal,
+                lineup_status,
+            )
+            base_non_pen_lambda = prediction["non_pen_lambda"]
+            base_total_lambda = prediction["total_lambda"]
+            if role_adjustment_factor != 1.0 and base_non_pen_lambda <= 0:
+                role_adjustment_factor = 1.0
+                role_adjustment_reason = ""
+            adjusted_non_pen_lambda = base_non_pen_lambda
+            adjusted_total_lambda = base_total_lambda
+            adjusted_team_share = prediction["team_share"]
+            if role_adjustment_factor != 1.0 and base_non_pen_lambda > 0:
+                adjusted_non_pen_lambda = base_non_pen_lambda * role_adjustment_factor
+                adjusted_total_lambda = max(0.001, adjusted_non_pen_lambda + prediction["penalty_lambda"])
+                adjusted_team_share = (
+                    adjusted_non_pen_lambda / prediction["team_expected_npxg"]
+                    if prediction["team_expected_npxg"] > 0
+                    else adjusted_team_share
+                )
+
+            model_prob = prob_at_least_one(adjusted_total_lambda) if adjusted_total_lambda > 0 else 0.0
             fair_odds = (1.0 / model_prob) if model_prob > 0.01 else 99.0
             odds_decimal = odds_row["odds_decimal"]
             implied_prob = odds_row["implied_prob"] or (1.0 / odds_decimal if odds_decimal > 1.0 else 0.0)
@@ -2074,14 +2151,8 @@ def main() -> None:
                     [team_penalty_event.get("active_taker", "")],
                 ) is not None
             )
-            position_signal = _position_upgrade_summary(
-                candidate["player_meta"].get("player_name", odds_row["player_name"]),
-                player_histories[candidate["player_id"]],
-                fixture_lineup,
-                candidate["is_home"],
-            )
             public_gate_reason = ""
-            penalty_dependency_share = _penalty_dependency_share(prediction["total_lambda"], prediction["penalty_lambda"])
+            penalty_dependency_share = _penalty_dependency_share(adjusted_total_lambda, prediction["penalty_lambda"])
             recommended_stake_units = 0.0
             recommended_stake_band = ""
             recommended_stake_label = ""
@@ -2129,6 +2200,8 @@ def main() -> None:
                 confidence_reason = f"{confidence_reason},fixture_{fixture_health['trust_tier'].lower()}" if confidence_reason else f"fixture_{fixture_health['trust_tier'].lower()}"
             if candidate.get("history_stale"):
                 confidence_reason = f"{confidence_reason},stale_history" if confidence_reason else "stale_history"
+            if role_adjustment_factor != 1.0:
+                confidence_reason = f"{confidence_reason},role_adjusted" if confidence_reason else "role_adjusted"
             signal_eligible = candidate.get("lineup_state", "unknown") not in {"bench", "not_in_squad", "expected_bench", "expected_out"}
             if ev >= shadow_min_ev and signal_eligible:
                 stats["qualified_rows"] += 1
@@ -2148,6 +2221,8 @@ def main() -> None:
                 stats["penalty_transfer_rows"] += 1
             if position_signal["position_upgrade"]:
                 stats["position_upgrade_rows"] += 1
+            if role_adjustment_factor != 1.0:
+                stats["role_adjusted_rows"] += 1
 
             results.append(
                 {
@@ -2171,11 +2246,15 @@ def main() -> None:
                     "implied_prob": round(implied_prob, 6),
                     "model_p_atgs": round(model_prob, 6),
                     "model_fair_odds_atgs": round(fair_odds, 4),
-                    "model_lambda": round(prediction["total_lambda"], 4),
+                    "model_lambda": round(adjusted_total_lambda, 4),
                     "team_expected_npxg": round(prediction["team_expected_npxg"], 4),
-                    "team_share": round(prediction["team_share"], 4),
-                    "non_pen_lambda": round(prediction["non_pen_lambda"], 4),
+                    "team_share": round(adjusted_team_share, 4),
+                    "non_pen_lambda": round(adjusted_non_pen_lambda, 4),
+                    "base_non_pen_lambda": round(base_non_pen_lambda, 4),
                     "penalty_lambda": round(prediction["penalty_lambda"], 4),
+                    "base_model_lambda": round(base_total_lambda, 4),
+                    "role_adjustment_factor": round(role_adjustment_factor, 4),
+                    "role_adjustment_reason": role_adjustment_reason,
                     "penalty_dependency_share": round(penalty_dependency_share, 4),
                     "penalty_dependent": int(penalty_dependency_share > PUBLIC_MAX_PENALTY_DEPENDENCE_SHARE),
                     "penalty_share": round(prediction["penalty_share"], 4),
