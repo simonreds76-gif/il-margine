@@ -105,11 +105,11 @@ function SignalCard({
       <div className={`absolute inset-y-0 left-0 w-1 bg-gradient-to-b ${signal.accent}`} />
       <div className="pointer-events-none absolute -right-16 top-1/2 h-28 w-28 -translate-y-1/2 rounded-full bg-emerald-300/[0.07] blur-2xl transition group-hover:bg-emerald-300/[0.12]" />
 
-      <div className="relative grid gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)_auto] lg:items-center">
+      <div className="relative grid gap-3 lg:grid-cols-[minmax(300px,1fr)_342px_328px] lg:items-stretch xl:grid-cols-[minmax(360px,1fr)_360px_392px]">
         <button
           type="button"
           onClick={onOpen}
-          className="flex min-w-0 items-center gap-3 text-left"
+          className="flex min-w-0 items-center gap-3 text-left lg:min-h-[86px]"
         >
           <span className="w-12 shrink-0">
             <AbstractJersey
@@ -125,7 +125,7 @@ function SignalCard({
             <div className="break-words text-xl font-black leading-tight tracking-tight text-slate-50 sm:text-2xl">
               {signal.player}
             </div>
-            <div className="mt-1 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500">
+            <div className="mt-1 flex min-w-0 items-center gap-2 text-xs text-slate-500">
               <span className="min-w-0 truncate">{signal.match}</span>
               <span className="text-slate-700">|</span>
               <LogoBadge
@@ -136,21 +136,16 @@ function SignalCard({
                 shape="rounded"
                 className="bg-white/95 p-0.5"
               />
-              <span>{signal.kickoff}</span>
-              {inPlayWatch ? (
-                <>
-                  <span className="text-slate-700">|</span>
-                  <span className="font-semibold text-amber-200">
-                    Flagged before kickoff - market closed
-                  </span>
-                </>
-              ) : null}
+              <span className="shrink-0">{signal.kickoff}</span>
+            </div>
+            <div className="mt-1 min-h-[18px] text-xs font-semibold leading-[18px] text-amber-200">
+              {inPlayWatch ? "Flagged before kickoff - market closed" : ""}
             </div>
           </div>
         </button>
 
-        <div className="grid grid-cols-3 gap-2">
-          <div className="rounded-xl border border-emerald-300/18 bg-emerald-300/[0.055] px-3 py-2">
+        <div className="grid grid-cols-3 gap-2 lg:items-stretch">
+          <div className="flex min-h-[64px] flex-col justify-center rounded-xl border border-emerald-300/18 bg-emerald-300/[0.055] px-3 py-2">
             <div className="text-[9px] font-black uppercase tracking-[0.16em] text-emerald-200/80">
               Il Margine
             </div>
@@ -158,7 +153,7 @@ function SignalCard({
               {formatOdds(signal.fairOdds)}
             </div>
           </div>
-          <div className="rounded-xl border border-slate-700/65 bg-slate-950/55 px-3 py-2">
+          <div className="flex min-h-[64px] flex-col justify-center rounded-xl border border-slate-700/65 bg-slate-950/55 px-3 py-2">
             <div className="text-[9px] font-black uppercase tracking-[0.16em] text-slate-500">
               Market
             </div>
@@ -166,7 +161,7 @@ function SignalCard({
               {formatOdds(signal.bestBookOdds)}
             </div>
           </div>
-          <div className="rounded-xl border border-amber-300/22 bg-amber-300/[0.075] px-3 py-2">
+          <div className="flex min-h-[64px] flex-col justify-center rounded-xl border border-amber-300/22 bg-amber-300/[0.075] px-3 py-2">
             <div className="text-[9px] font-black uppercase tracking-[0.16em] text-amber-100/80">
               Gap
             </div>
@@ -176,27 +171,29 @@ function SignalCard({
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 lg:justify-end">
-          {featured ? (
-            <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-200">
-              Top gap
+        <div className="grid min-h-[64px] grid-cols-[minmax(0,1fr)_76px] items-center gap-2 xl:grid-cols-[minmax(0,1fr)_84px]">
+          <div className="flex min-w-0 flex-wrap items-center justify-start gap-2 lg:justify-end">
+            {featured ? (
+              <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-emerald-200">
+                Top gap
+              </span>
+            ) : null}
+            <span className="rounded-full border border-cyan-300/20 bg-cyan-300/[0.07] px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-cyan-100">
+              {lineupLabel}
             </span>
-          ) : null}
-          <span className="rounded-full border border-cyan-300/20 bg-cyan-300/[0.07] px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-cyan-100">
-            {lineupLabel}
-          </span>
-          {inPlayWatch ? (
-            <span className="rounded-full border border-amber-300/25 bg-amber-300/[0.08] px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-100">
-              In play watch
+            {inPlayWatch ? (
+              <span className="rounded-full border border-amber-300/25 bg-amber-300/[0.08] px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-amber-100">
+                In play watch
+              </span>
+            ) : null}
+            <span className="rounded-full border border-slate-700/70 bg-slate-950/70 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-slate-300">
+              {signal.penaltyRole}
             </span>
-          ) : null}
-          <span className="rounded-full border border-slate-700/70 bg-slate-950/70 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-slate-300">
-            {signal.penaltyRole}
-          </span>
+          </div>
           <button
             type="button"
             onClick={onOpen}
-            className="rounded-full border border-emerald-300/20 bg-emerald-300/[0.06] px-3 py-1.5 text-xs font-black text-emerald-100 transition hover:border-emerald-300/45 hover:bg-emerald-300/[0.1]"
+            className="w-full rounded-full border border-emerald-300/20 bg-emerald-300/[0.06] px-3 py-1.5 text-center text-xs font-black text-emerald-100 transition hover:border-emerald-300/45 hover:bg-emerald-300/[0.1]"
           >
             {selected ? "Showing" : "Details"}
           </button>
