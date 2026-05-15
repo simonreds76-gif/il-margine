@@ -1026,7 +1026,6 @@
         "Alexis Saelemaekers",
         "Luka Modric",
         "Pervis Estupinán",
-        "Christian Pulisic",
         "Rafael Leão"
       ]
     },
@@ -1528,7 +1527,6 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Khéphren Thuram-Ulien",
         "Juan Cabal",
         "Arkadiusz Milik"
       ],
@@ -1783,6 +1781,7 @@
       "away_subs": [],
       "home_unavailable": [
         "Daniel Denoon",
+        "Francesco Coppola",
         "Rosen Bozhinov",
         "Felipe Loyola",
         "Mattéo Tramoni"
@@ -2301,6 +2300,263 @@
         "Medon Berisha",
         "Sadik Fofana",
         "Riccardo Sottil"
+      ]
+    },
+    {
+      "fotmob_match_id": 4803407,
+      "fotmob_page_url": "/matches/cremonese-vs-udinese/28331t#4803407",
+      "home_fotmob_team_id": 8600,
+      "away_fotmob_team_id": 7801,
+      "match_date": "2026-05-17",
+      "kickoff_utc": "2026-05-17T18:45:00Z",
+      "home_team": "Udinese",
+      "away_team": "Cremonese",
+      "home_status": "FotMob Expected XI",
+      "away_status": "FotMob Expected XI",
+      "lineup_type": "predicted",
+      "home_formation": "3-5-2",
+      "away_formation": "4-4-2",
+      "home_players": [
+        "Maduka Okoye",
+        "Christian Kabasele",
+        "Thomas Kristensen",
+        "Oumar Solet",
+        "Oier Zarraga",
+        "Jakub Piotrowski",
+        "Jesper Karlström",
+        "Arthur Atta",
+        "Hassane Kamara",
+        "Nicolò Zaniolo",
+        "Keinan Davis"
+      ],
+      "away_players": [
+        "Emil Audero",
+        "Filippo Terracciano",
+        "Matteo Bianchetti",
+        "Sebastiano Luperto",
+        "Francesco Folino",
+        "Tommaso Barbieri",
+        "Alberto Grassi",
+        "Youssef Maleh",
+        "Jari Vandeputte",
+        "Federico Bonazzoli",
+        "Jamie Vardy"
+      ],
+      "home_starters": [
+        {
+          "name": "Maduka Okoye",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "3-5-2",
+          "position_id": 11
+        },
+        {
+          "name": "Christian Kabasele",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 33
+        },
+        {
+          "name": "Thomas Kristensen",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 35
+        },
+        {
+          "name": "Oumar Solet",
+          "line_index": 0,
+          "line_size": 3,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "3-5-2",
+          "position_id": 37
+        },
+        {
+          "name": "Oier Zarraga",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 71
+        },
+        {
+          "name": "Jakub Piotrowski",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 73
+        },
+        {
+          "name": "Jesper Karlström",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 75
+        },
+        {
+          "name": "Arthur Atta",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 77
+        },
+        {
+          "name": "Hassane Kamara",
+          "line_index": 1,
+          "line_size": 5,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-5-2",
+          "position_id": 79
+        },
+        {
+          "name": "Nicolò Zaniolo",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 104
+        },
+        {
+          "name": "Keinan Davis",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "3-5-2",
+          "position_id": 106
+        }
+      ],
+      "away_starters": [
+        {
+          "name": "Emil Audero",
+          "line_index": -1,
+          "line_size": 1,
+          "role_score": 0,
+          "role_group": "GK",
+          "formation": "4-4-2",
+          "position_id": 11
+        },
+        {
+          "name": "Filippo Terracciano",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 32
+        },
+        {
+          "name": "Matteo Bianchetti",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 34
+        },
+        {
+          "name": "Sebastiano Luperto",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 36
+        },
+        {
+          "name": "Francesco Folino",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-4-2",
+          "position_id": 38
+        },
+        {
+          "name": "Tommaso Barbieri",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 72
+        },
+        {
+          "name": "Alberto Grassi",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 74
+        },
+        {
+          "name": "Youssef Maleh",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 76
+        },
+        {
+          "name": "Jari Vandeputte",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-4-2",
+          "position_id": 78
+        },
+        {
+          "name": "Federico Bonazzoli",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-4-2",
+          "position_id": 104
+        },
+        {
+          "name": "Jamie Vardy",
+          "line_index": 2,
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-4-2",
+          "position_id": 106
+        }
+      ],
+      "home_subs": [],
+      "away_subs": [],
+      "home_unavailable": [
+        "Jurgen Ekkelenkamp",
+        "Alessandro Zanoli",
+        "Kingsley Ehizibue"
+      ],
+      "away_unavailable": [
+        "Faris Moumbagna",
+        "Federico Baschirotto",
+        "Giuseppe Pezzella",
+        "Martín Payero",
+        "Romano Floriani Mussolini"
       ]
     }
   ]
