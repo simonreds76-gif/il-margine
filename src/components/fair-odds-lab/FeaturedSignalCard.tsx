@@ -38,6 +38,12 @@ function splitMatchTeams(match: string) {
 }
 
 function opponentFromSignal(signal: Signal) {
+  if (signal.teamLogoPath && signal.teamLogoPath === signal.homeTeamLogoPath && signal.awayTeam) {
+    return signal.awayTeam;
+  }
+  if (signal.teamLogoPath && signal.teamLogoPath === signal.awayTeamLogoPath && signal.homeTeam) {
+    return signal.homeTeam;
+  }
   const { home, away } = splitMatchTeams(signal.match);
   const normalizedTeam = signal.team.toLowerCase();
   const homeKey = home.toLowerCase();
@@ -45,6 +51,19 @@ function opponentFromSignal(signal: Signal) {
   if (homeKey && (homeKey.includes(normalizedTeam) || normalizedTeam.includes(homeKey))) return away;
   if (awayKey && (awayKey.includes(normalizedTeam) || normalizedTeam.includes(awayKey))) return home;
   return away || home || "Opponent";
+}
+
+function opponentLogoFromSignal(signal: Signal) {
+  if (signal.teamLogoPath && signal.teamLogoPath === signal.homeTeamLogoPath) {
+    return signal.awayTeamLogoPath;
+  }
+  if (signal.teamLogoPath && signal.teamLogoPath === signal.awayTeamLogoPath) {
+    return signal.homeTeamLogoPath;
+  }
+  const opponent = opponentFromSignal(signal).toLowerCase();
+  if (signal.homeTeam?.toLowerCase() === opponent) return signal.homeTeamLogoPath;
+  if (signal.awayTeam?.toLowerCase() === opponent) return signal.awayTeamLogoPath;
+  return undefined;
 }
 
 function numberFromMetric(value: string) {
@@ -362,6 +381,7 @@ export function FeaturedSignalCard({
   const inPlayWatch = signal.displayStatus === "in_play";
   const venueLabel = signal.venue && signal.venue !== "Venue TBC" ? ` | ${signal.venue}` : "";
   const opponent = opponentFromSignal(signal);
+  const opponentLogoPath = opponentLogoFromSignal(signal);
 
   return (
     <article className="overflow-hidden rounded-[1.5rem] border border-emerald-300/20 bg-[#0a0f12] shadow-[0_24px_90px_rgba(16,185,129,0.12)] sm:rounded-[2rem]">
@@ -398,6 +418,7 @@ export function FeaturedSignalCard({
                 vs
               </span>
               <LogoBadge
+                src={opponentLogoPath}
                 alt={`${opponent} logo`}
                 fallback={opponent}
                 size={24}

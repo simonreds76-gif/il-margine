@@ -349,6 +349,10 @@ function mapArtifactSignal(rawValue: unknown): Signal | null {
   return {
     id: asText(raw.id, `${playerName}-${match}`),
     match,
+    homeTeam,
+    awayTeam,
+    homeTeamLogoPath: homeTeam ? resolveTeamLogoPath(leagueSlug, homeTeam) : "",
+    awayTeamLogoPath: awayTeam ? resolveTeamLogoPath(leagueSlug, awayTeam) : "",
     competition: asText(matchData.league_display, "Football"),
     leagueSlug,
     kickoff: asText(matchData.kickoff_display, "TBC"),

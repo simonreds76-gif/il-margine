@@ -9,6 +9,10 @@ export type SignalMetric = {
 export type Signal = {
   id: string;
   match: string;
+  homeTeam?: string;
+  awayTeam?: string;
+  homeTeamLogoPath?: string;
+  awayTeamLogoPath?: string;
   competition: string;
   leagueSlug?: string;
   kickoff: string;
