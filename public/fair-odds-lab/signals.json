@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T18:36:34.976104Z",
+  "generated_at": "2026-05-16T19:24:47.094893Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -32,103 +32,13 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 36,
-  "signals_qualifying": 3,
+  "fixtures_evaluated": 38,
+  "signals_qualifying": 2,
   "leagues_covered": [
-    "epl",
-    "la-liga"
+    "epl"
   ],
-  "featured_signal_id": "20260517-ante-budimir-cf6e9c4d16",
+  "featured_signal_id": "20260517-dominic-calvert-lewin-57b2c23d7b",
   "signals": [
-    {
-      "id": "20260517-ante-budimir-cf6e9c4d16",
-      "match": {
-        "home_team": "CA Osasuna",
-        "away_team": "Espanyol Barcelona",
-        "league": "la-liga",
-        "league_display": "La Liga",
-        "league_logo_path": "/league-logos/la-liga.png",
-        "kickoff_utc": "2026-05-17T17:00:00Z",
-        "kickoff_display": "Sun 17 May 18:00 UK",
-        "fotmob_match_id": "4837478",
-        "fotmob_page_url": "/matches/osasuna-vs-espanyol/2dbonz#4837478",
-        "lineup_type": "predicted",
-        "venue": ""
-      },
-      "player": {
-        "name": "Ante Budimir",
-        "team": "Osasuna",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/la-liga/osasuna.png",
-        "team_primary_color": "#dc2626",
-        "team_secondary_color": "#1e3a8a",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 57.5,
-        "fair_odds": 1.74
-      },
-      "market_data": {
-        "best_odds": 2.1,
-        "best_book": "Bet365",
-        "implied_chance_pct": 47.6
-      },
-      "edge": {
-        "price_gap_pp": 9.9,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 95
-        },
-        "share_of_team_chances_pct": 40,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Strong",
-          "percentile": 81
-        },
-        "recent_team_form": {
-          "tier": "Average",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-12",
-          "xg_for_avg": 1.55,
-          "xg_against_avg": 1.59,
-          "xgd_per90": -0.05,
-          "shots_for_avg": 12.0,
-          "shots_against_avg": 13.6,
-          "sot_for_avg": 4.4,
-          "sot_against_avg": 4.8,
-          "corners_for_avg": 4.0,
-          "corners_against_avg": 7.0
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 97
-        },
-        "opponent_recent_defence": {
-          "tier": "Unknown"
-        },
-        "fixture_boost_pct": 28,
-        "projected_minutes": 82,
-        "penalty_role": "Primary",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup",
-        "The fixture profile adds to his scoring case"
-      ],
-      "risk_flags": []
-    },
     {
       "id": "20260517-dominic-calvert-lewin-57b2c23d7b",
       "match": {
@@ -177,7 +87,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 59
+          "percentile": 57
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -196,7 +106,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 14
+          "percentile": 15
         },
         "opponent_recent_defence": {
           "tier": "Average",
@@ -297,7 +207,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 49
+          "percentile": 47
         },
         "opponent_recent_defence": {
           "tier": "Positive",
