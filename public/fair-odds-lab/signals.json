@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T09:23:59.547831Z",
+  "generated_at": "2026-05-16T10:00:36.615615Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -258,8 +258,8 @@
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 47.5,
-        "fair_odds": 2.1
+        "scoring_chance_pct": 46.0,
+        "fair_odds": 2.17
       },
       "market_data": {
         "best_odds": 2.5,
@@ -267,7 +267,7 @@
         "implied_chance_pct": 40.0
       },
       "edge": {
-        "price_gap_pp": 7.5,
+        "price_gap_pp": 6.0,
         "model_advantage": true
       },
       "metrics": {
@@ -275,7 +275,7 @@
           "tier": "Strong",
           "percentile": 90
         },
-        "share_of_team_chances_pct": 33,
+        "share_of_team_chances_pct": 31,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Average",

@@ -1,284 +1,6 @@
 {
   "fixtures": [
     {
-      "fotmob_match_id": 4813737,
-      "fotmob_page_url": "/matches/liverpool-vs-aston-villa/2ydbmv#4813737",
-      "home_fotmob_team_id": 10252,
-      "away_fotmob_team_id": 8650,
-      "match_date": "2026-05-15",
-      "kickoff_utc": "2026-05-15T19:00:00Z",
-      "home_team": "Aston Villa",
-      "away_team": "Liverpool",
-      "home_status": "Confirmed Lineup",
-      "away_status": "Confirmed Lineup",
-      "lineup_type": "standard",
-      "home_formation": "4-2-3-1",
-      "away_formation": "4-2-3-1",
-      "home_players": [
-        "Emiliano Martínez",
-        "Matty Cash",
-        "Ezri Konsa",
-        "Pau Torres",
-        "Lucas Digne",
-        "Victor Nilsson Lindelöf",
-        "Youri Tielemans",
-        "John McGinn",
-        "Morgan Rogers",
-        "Emiliano Buendía",
-        "Ollie Watkins"
-      ],
-      "away_players": [
-        "Giorgi Mamardashvili",
-        "Joseph Gomez",
-        "Ibrahima Konaté",
-        "Virgil van Dijk",
-        "Milos Kerkez",
-        "Ryan Gravenberch",
-        "Alexis Mac Allister",
-        "Curtis Jones",
-        "Dominik Szoboszlai",
-        "Rio Ngumoha",
-        "Cody Gakpo"
-      ],
-      "home_starters": [
-        {
-          "name": "Emiliano Martínez",
-          "line_index": -1,
-          "line_size": 1,
-          "role_score": 0,
-          "role_group": "GK",
-          "formation": "4-2-3-1",
-          "position_id": 11
-        },
-        {
-          "name": "Matty Cash",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 32
-        },
-        {
-          "name": "Ezri Konsa",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 34
-        },
-        {
-          "name": "Pau Torres",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 36
-        },
-        {
-          "name": "Lucas Digne",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 38
-        },
-        {
-          "name": "Victor Nilsson Lindelöf",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64
-        },
-        {
-          "name": "Youri Tielemans",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66
-        },
-        {
-          "name": "John McGinn",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83
-        },
-        {
-          "name": "Morgan Rogers",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85
-        },
-        {
-          "name": "Emiliano Buendía",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87
-        },
-        {
-          "name": "Ollie Watkins",
-          "line_index": 3,
-          "line_size": 1,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-2-3-1",
-          "position_id": 115
-        }
-      ],
-      "away_starters": [
-        {
-          "name": "Giorgi Mamardashvili",
-          "line_index": -1,
-          "line_size": 1,
-          "role_score": 0,
-          "role_group": "GK",
-          "formation": "4-2-3-1",
-          "position_id": 11
-        },
-        {
-          "name": "Joseph Gomez",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 32
-        },
-        {
-          "name": "Ibrahima Konaté",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 34
-        },
-        {
-          "name": "Virgil van Dijk",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 36
-        },
-        {
-          "name": "Milos Kerkez",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 38
-        },
-        {
-          "name": "Ryan Gravenberch",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64
-        },
-        {
-          "name": "Alexis Mac Allister",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66
-        },
-        {
-          "name": "Curtis Jones",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83
-        },
-        {
-          "name": "Dominik Szoboszlai",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85
-        },
-        {
-          "name": "Rio Ngumoha",
-          "line_index": 2,
-          "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87
-        },
-        {
-          "name": "Cody Gakpo",
-          "line_index": 3,
-          "line_size": 1,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-2-3-1",
-          "position_id": 115
-        }
-      ],
-      "home_subs": [
-        "Marco Bizot",
-        "Andrés García",
-        "Ian Maatsen",
-        "Douglas Luiz",
-        "Lamare Bogarde",
-        "Ross Barkley",
-        "Jadon Sancho",
-        "Leon Bailey",
-        "Tammy Abraham"
-      ],
-      "away_subs": [
-        "Freddie Woodman",
-        "Andrew Robertson",
-        "Mor Talla Ndiaye",
-        "James McConnell",
-        "Trey Nyoni",
-        "Federico Chiesa",
-        "Florian Wirtz",
-        "Mohamed Salah",
-        "Will Wright"
-      ],
-      "home_unavailable": [
-        "Amadou Onana",
-        "Boubacar Kamara",
-        "Alysson Edward"
-      ],
-      "away_unavailable": [
-        "Alisson Becker",
-        "Conor Bradley",
-        "Giovanni Leoni",
-        "Stefan Bajcetic",
-        "Wataru Endo",
-        "Hugo Ekitiké"
-      ]
-    },
-    {
       "fotmob_match_id": 4813738,
       "fotmob_page_url": "/matches/crystal-palace-vs-brentford/38a4jj#4813738",
       "home_fotmob_team_id": 9937,
@@ -290,20 +12,20 @@
       "home_status": "FotMob Expected XI",
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
-      "home_formation": "4-4-2",
+      "home_formation": "4-2-3-1",
       "away_formation": "3-4-2-1",
       "home_players": [
         "Caoimhín Kelleher",
         "Michael Kayode",
-        "Kristoffer Ajer",
+        "Sepp van den Berg",
         "Nathan Collins",
         "Keane Lewis-Potter",
         "Yehor Yarmoliuk",
         "Mathias Jensen",
-        "Aaron Hickey",
+        "Dango Ouattara",
         "Mikkel Damsgaard",
-        "Igor Thiago",
-        "Kevin Schade"
+        "Kevin Schade",
+        "Igor Thiago"
       ],
       "away_players": [
         "Dean Henderson",
@@ -311,12 +33,12 @@
         "Maxence Lacroix",
         "Jaydee Canvot",
         "Daniel Muñoz",
-        "Will Hughes",
-        "Jefferson Lerma",
+        "Adam Wharton",
+        "Daichi Kamada",
         "Tyrick Mitchell",
-        "Brennan Johnson",
+        "Ismaïla Sarr",
         "Yéremi Pino",
-        "Jean-Philippe Mateta"
+        "Jørgen Strand Larsen"
       ],
       "home_starters": [
         {
@@ -325,7 +47,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 11
         },
         {
@@ -334,16 +56,16 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 32
         },
         {
-          "name": "Kristoffer Ajer",
+          "name": "Sepp van den Berg",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 34
         },
         {
@@ -352,7 +74,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 36
         },
         {
@@ -361,62 +83,62 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-4-2",
+          "formation": "4-2-3-1",
           "position_id": 38
         },
         {
           "name": "Yehor Yarmoliuk",
           "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 72
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 64
         },
         {
           "name": "Mathias Jensen",
           "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 74
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
+          "position_id": 66
         },
         {
-          "name": "Aaron Hickey",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 76
+          "name": "Dango Ouattara",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 83
         },
         {
           "name": "Mikkel Damsgaard",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-4-2",
-          "position_id": 78
-        },
-        {
-          "name": "Igor Thiago",
           "line_index": 2,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 104
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
         },
         {
           "name": "Kevin Schade",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87
+        },
+        {
+          "name": "Igor Thiago",
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-4-2",
-          "position_id": 106
+          "formation": "4-2-3-1",
+          "position_id": 115
         }
       ],
       "away_starters": [
@@ -466,7 +188,7 @@
           "position_id": 62
         },
         {
-          "name": "Will Hughes",
+          "name": "Adam Wharton",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -475,7 +197,7 @@
           "position_id": 64
         },
         {
-          "name": "Jefferson Lerma",
+          "name": "Daichi Kamada",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -493,7 +215,7 @@
           "position_id": 68
         },
         {
-          "name": "Brennan Johnson",
+          "name": "Ismaïla Sarr",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -511,7 +233,7 @@
           "position_id": 86
         },
         {
-          "name": "Jean-Philippe Mateta",
+          "name": "Jørgen Strand Larsen",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -528,9 +250,9 @@
       ],
       "away_unavailable": [
         "Borna Sosa",
+        "Evann Guessand",
         "Cheick Oumar Doucouré",
-        "Edward Nketiah",
-        "Evann Guessand"
+        "Edward Nketiah"
       ]
     },
     {
@@ -778,13 +500,13 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
+        "Idrissa Gueye",
         "Jarrad Branthwaite",
-        "Idrissa Gana Gueye",
         "Jack Grealish"
       ],
       "away_unavailable": [
-        "Daniel Ballard",
         "Bertrand Traoré",
+        "Daniel Ballard",
         "Romaine Mundle"
       ]
     },
@@ -807,12 +529,12 @@
         "Joe Rodon",
         "Jaka Bijol",
         "Sebastiaan Bornauw",
-        "Daniel James",
+        "Wilfried Gnonto",
         "Sean Longstaff",
         "Ao Tanaka",
         "James Justin",
         "Anton Stach",
-        "Brenden Aaronson",
+        "Lukas Nmecha",
         "Dominic Calvert-Lewin"
       ],
       "away_players": [
@@ -866,7 +588,7 @@
           "position_id": 37
         },
         {
-          "name": "Daniel James",
+          "name": "Wilfried Gnonto",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -911,7 +633,7 @@
           "position_id": 84
         },
         {
-          "name": "Brenden Aaronson",
+          "name": "Lukas Nmecha",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -1033,16 +755,16 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
+        "Noah Okafor",
+        "Pascal Struijk",
         "Gabriel Gudmundsson",
         "Jayden Bogle",
-        "Pascal Struijk",
-        "Ilia Gruev",
-        "Noah Okafor"
+        "Ilia Gruev"
       ],
       "away_unavailable": [
-        "Adam Webster",
         "Mats Wieffer",
         "Diego Gómez",
+        "Adam Webster",
         "Kaoru Mitoma",
         "Stefanos Tzimas"
       ]
@@ -1060,31 +782,31 @@
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
       "home_formation": "4-2-3-1",
-      "away_formation": "3-4-2-1",
+      "away_formation": "4-2-3-1",
       "home_players": [
         "Senne Lammens",
-        "Noussair Mazraoui",
+        "Diogo Dalot",
         "Harry Maguire",
         "Lisandro Martínez",
         "Luke Shaw",
-        "Mason Mount",
+        "Casemiro",
         "Kobbie Mainoo",
-        "Amad",
+        "Amad Diallo",
         "Bruno Fernandes",
         "Matheus Cunha",
-        "Joshua Zirkzee"
+        "Bryan Mbeumo"
       ],
       "away_players": [
         "Matz Sels",
-        "Jair Cunha",
-        "Nikola Milenkovic",
-        "Morato",
         "Neco Williams",
+        "Nikola Milenkovic",
+        "Jair Cunha",
+        "Luca Netz",
         "Nicolás Dominguez",
         "Elliot Anderson",
-        "Luca Netz",
         "Dilane Bakwa",
         "Igor Jesus",
+        "Morgan Gibbs-White",
         "Taiwo Awoniyi"
       ],
       "home_starters": [
@@ -1098,7 +820,7 @@
           "position_id": 11
         },
         {
-          "name": "Noussair Mazraoui",
+          "name": "Diogo Dalot",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1134,7 +856,7 @@
           "position_id": 38
         },
         {
-          "name": "Mason Mount",
+          "name": "Casemiro",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -1152,7 +874,7 @@
           "position_id": 66
         },
         {
-          "name": "Amad",
+          "name": "Amad Diallo",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1179,7 +901,7 @@
           "position_id": 87
         },
         {
-          "name": "Joshua Zirkzee",
+          "name": "Bryan Mbeumo",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -1195,89 +917,89 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-2-1",
+          "formation": "4-2-3-1",
           "position_id": 11
         },
         {
-          "name": "Jair Cunha",
+          "name": "Neco Williams",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 33
+          "formation": "4-2-3-1",
+          "position_id": 32
         },
         {
           "name": "Nikola Milenkovic",
           "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 35
-        },
-        {
-          "name": "Morato",
-          "line_index": 0,
-          "line_size": 3,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 37
-        },
-        {
-          "name": "Neco Williams",
-          "line_index": 1,
           "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 62
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 34
+        },
+        {
+          "name": "Jair Cunha",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 36
+        },
+        {
+          "name": "Luca Netz",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38
         },
         {
           "name": "Nicolás Dominguez",
           "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
           "position_id": 64
         },
         {
           "name": "Elliot Anderson",
           "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
           "position_id": 66
-        },
-        {
-          "name": "Luca Netz",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 68
         },
         {
           "name": "Dilane Bakwa",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84
+          "formation": "4-2-3-1",
+          "position_id": 83
         },
         {
           "name": "Igor Jesus",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 86
+          "formation": "4-2-3-1",
+          "position_id": 85
+        },
+        {
+          "name": "Morgan Gibbs-White",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 87
         },
         {
           "name": "Taiwo Awoniyi",
@@ -1285,27 +1007,26 @@
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-2-1",
-          "position_id": 105
+          "formation": "4-2-3-1",
+          "position_id": 115
         }
       ],
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "Matthijs de Ligt",
-        "Benjamin Sesko"
+        "Benjamin Sesko",
+        "Matthijs de Ligt"
       ],
       "away_unavailable": [
+        "Dan Ndoye",
+        "Ibrahim Sangaré",
+        "Zach Abbott",
         "John Victor",
         "Murillo",
         "Nicolò Savona",
         "Ola Aina",
         "Willy Boly",
-        "Zach Abbott",
-        "Ibrahim Sangaré",
-        "Morgan Gibbs-White",
-        "Callum Hudson-Odoi",
-        "Dan Ndoye"
+        "Callum Hudson-Odoi"
       ]
     },
     {
@@ -1321,7 +1042,7 @@
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
       "home_formation": "4-2-3-1",
-      "away_formation": "3-4-2-1",
+      "away_formation": "4-2-3-1",
       "home_players": [
         "Nick Pope",
         "Lewis Hall",
@@ -1330,21 +1051,21 @@
         "Daniel Burn",
         "Sandro Tonali",
         "Bruno Guimarães",
-        "Jacob Murphy",
+        "Harvey Barnes",
         "Nick Woltemade",
-        "Joelinton",
+        "Jacob Ramsey",
         "William Osula"
       ],
       "away_players": [
         "Mads Hermansen",
-        "Jean-Clair Todibo",
+        "Aaron Wan-Bissaka",
         "Konstantinos Mavropanos",
         "Axel Disasi",
-        "Aaron Wan-Bissaka",
+        "Malick Diouf",
         "Tomás Soucek",
         "Mateus Fernandes",
-        "Malick Diouf",
         "Jarrod Bowen",
+        "Pablo",
         "Crysencio Summerville",
         "Valentín Castellanos"
       ],
@@ -1413,7 +1134,7 @@
           "position_id": 66
         },
         {
-          "name": "Jacob Murphy",
+          "name": "Harvey Barnes",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1431,7 +1152,7 @@
           "position_id": 85
         },
         {
-          "name": "Joelinton",
+          "name": "Jacob Ramsey",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1456,89 +1177,89 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-2-1",
+          "formation": "4-2-3-1",
           "position_id": 11
         },
         {
-          "name": "Jean-Clair Todibo",
+          "name": "Aaron Wan-Bissaka",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 33
+          "formation": "4-2-3-1",
+          "position_id": 32
         },
         {
           "name": "Konstantinos Mavropanos",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 35
+          "formation": "4-2-3-1",
+          "position_id": 34
         },
         {
           "name": "Axel Disasi",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-2-1",
-          "position_id": 37
+          "formation": "4-2-3-1",
+          "position_id": 36
         },
         {
-          "name": "Aaron Wan-Bissaka",
-          "line_index": 1,
+          "name": "Malick Diouf",
+          "line_index": 0,
           "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 62
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-2-3-1",
+          "position_id": 38
         },
         {
           "name": "Tomás Soucek",
           "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
           "position_id": 64
         },
         {
           "name": "Mateus Fernandes",
           "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
+          "line_size": 2,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-2-3-1",
           "position_id": 66
-        },
-        {
-          "name": "Malick Diouf",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-2-1",
-          "position_id": 68
         },
         {
           "name": "Jarrod Bowen",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 84
+          "formation": "4-2-3-1",
+          "position_id": 83
+        },
+        {
+          "name": "Pablo",
+          "line_index": 2,
+          "line_size": 3,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-2-3-1",
+          "position_id": 85
         },
         {
           "name": "Crysencio Summerville",
           "line_index": 2,
-          "line_size": 2,
+          "line_size": 3,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-4-2-1",
-          "position_id": 86
+          "formation": "4-2-3-1",
+          "position_id": 87
         },
         {
           "name": "Valentín Castellanos",
@@ -1546,13 +1267,14 @@
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-2-1",
-          "position_id": 105
+          "formation": "4-2-3-1",
+          "position_id": 115
         }
       ],
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
+        "Joelinton",
         "Emil Krafth",
         "Fabian Schär",
         "Valentino Livramento",
@@ -1577,34 +1299,34 @@
       "home_formation": "3-4-2-1",
       "away_formation": "4-2-3-1",
       "home_players": [
-        "Daniel Bentley",
+        "José Sá",
         "Yerson Mosquera",
         "Santiago Bueno",
-        "Toti Gomes",
-        "Pedro Lima",
+        "Ladislav Krejcí",
+        "Rodrigo Gomes",
         "André",
         "João Gomes",
         "Hugo Bueno",
-        "Adam Armstrong",
+        "Jean-Ricner Bellegarde",
         "Mateus Mané",
-        "Hee-Chan Hwang"
+        "Adam Armstrong"
       ],
       "away_players": [
         "Bernd Leno",
         "Timothy Castagne",
-        "Kenny Tete",
+        "Issa Diop",
         "Calvin Bassey",
         "Antonee Robinson",
         "Sasa Lukic",
         "Tom Cairney",
-        "Harry Wilson",
+        "Oscar Bobb",
         "Emile Smith Rowe",
-        "Samuel Chukwueze",
+        "Alex Iwobi",
         "Rodrigo Muniz"
       ],
       "home_starters": [
         {
-          "name": "Daniel Bentley",
+          "name": "José Sá",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
@@ -1631,7 +1353,7 @@
           "position_id": 35
         },
         {
-          "name": "Toti Gomes",
+          "name": "Ladislav Krejcí",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -1640,7 +1362,7 @@
           "position_id": 37
         },
         {
-          "name": "Pedro Lima",
+          "name": "Rodrigo Gomes",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
@@ -1676,7 +1398,7 @@
           "position_id": 68
         },
         {
-          "name": "Adam Armstrong",
+          "name": "Jean-Ricner Bellegarde",
           "line_index": 2,
           "line_size": 2,
           "role_score": 4,
@@ -1694,7 +1416,7 @@
           "position_id": 86
         },
         {
-          "name": "Hee-Chan Hwang",
+          "name": "Adam Armstrong",
           "line_index": 3,
           "line_size": 1,
           "role_score": 5,
@@ -1723,7 +1445,7 @@
           "position_id": 32
         },
         {
-          "name": "Kenny Tete",
+          "name": "Issa Diop",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -1768,7 +1490,7 @@
           "position_id": 66
         },
         {
-          "name": "Harry Wilson",
+          "name": "Oscar Bobb",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1786,7 +1508,7 @@
           "position_id": 85
         },
         {
-          "name": "Samuel Chukwueze",
+          "name": "Alex Iwobi",
           "line_index": 2,
           "line_size": 3,
           "role_score": 4,
@@ -1807,14 +1529,12 @@
       "home_subs": [],
       "away_subs": [],
       "home_unavailable": [
-        "José Sá",
-        "Sam Johnstone",
-        "Enso González"
+        "Enso González",
+        "Sam Johnstone"
       ],
       "away_unavailable": [
         "Joachim Andersen",
-        "Ryan Sessegnon",
-        "Alex Iwobi"
+        "Ryan Sessegnon"
       ]
     },
     {
