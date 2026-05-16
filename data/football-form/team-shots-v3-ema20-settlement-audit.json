@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-05-16T14:26:26Z",
+  "run_at": "2026-05-16T17:58:47Z",
   "model": "team-shots-v3-ema20-research",
   "total_bets": 60,
   "settled_this_run": 0,
@@ -7,8 +7,8 @@
   "total_pending": 16,
   "pending_breakdown": {
     "future": 12,
-    "live": 4,
-    "stale": 0,
+    "live": 0,
+    "stale": 4,
     "old_stale": 0,
     "unknown": 0
   },
@@ -89,11 +89,48 @@
       "snapshot_path": "data/results-snapshot/2026-05-16.json"
     }
   },
-  "stale_rows": [],
+  "stale_rows": [
+    {
+      "match": "FC St. Pauli vs VFL Wolfsburg",
+      "league": "bundesliga",
+      "line": "13.5",
+      "side": "under",
+      "kickoff": "2026-05-16T13:30:00Z",
+      "hours_elapsed": 4.48
+    },
+    {
+      "match": "SC Freiburg vs RB Leipzig",
+      "league": "bundesliga",
+      "line": "12.5",
+      "side": "over",
+      "kickoff": "2026-05-16T13:30:00Z",
+      "hours_elapsed": 4.48
+    },
+    {
+      "match": "Union Berlin vs FC Augsburg",
+      "league": "bundesliga",
+      "line": "11.5",
+      "side": "over",
+      "kickoff": "2026-05-16T13:30:00Z",
+      "hours_elapsed": 4.48
+    },
+    {
+      "match": "Werder Bremen vs Borussia Dortmund",
+      "league": "bundesliga",
+      "line": "13.5",
+      "side": "under",
+      "kickoff": "2026-05-16T13:30:00Z",
+      "hours_elapsed": 4.48
+    }
+  ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [],
-  "errors": [],
-  "exit_code_recommendation": 0
+  "warnings": [
+    "4 stale pending row(s) across 4 fixture(s) (3-48h elapsed)"
+  ],
+  "errors": [
+    "bundesliga: 4 stale fixture(s) across 4 pending row(s)"
+  ],
+  "exit_code_recommendation": 1
 }
