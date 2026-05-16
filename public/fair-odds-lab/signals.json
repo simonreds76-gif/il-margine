@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T15:39:49.652017Z",
+  "generated_at": "2026-05-16T16:34:22.338163Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -32,116 +32,14 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 43,
-  "signals_qualifying": 5,
+  "fixtures_evaluated": 36,
+  "signals_qualifying": 3,
   "leagues_covered": [
-    "bundesliga",
     "epl",
     "la-liga"
   ],
-  "featured_signal_id": "20260516-christoph-baumgartner-53459f72b2",
+  "featured_signal_id": "20260517-ante-budimir-cf6e9c4d16",
   "signals": [
-    {
-      "id": "20260516-christoph-baumgartner-53459f72b2",
-      "match": {
-        "home_team": "SC Freiburg",
-        "away_team": "RB Leipzig",
-        "league": "bundesliga",
-        "league_display": "Bundesliga",
-        "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "2026-05-16T13:30:00Z",
-        "kickoff_display": "Sat 16 May 14:30 UK",
-        "fotmob_match_id": "4829616",
-        "fotmob_page_url": "/matches/freiburg-vs-rb-leipzig/80nandr#4829616",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Christoph Baumgartner",
-        "team": "RasenBallsport Leipzig",
-        "position": "MID",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/bundesliga/rasenballsport-leipzig.png",
-        "team_primary_color": "#f8fafc",
-        "team_secondary_color": "#dc2626",
-        "team_shirt_pattern": "sash"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 53.7,
-        "fair_odds": 1.86
-      },
-      "market_data": {
-        "best_odds": 3.25,
-        "best_book": "Bet365",
-        "implied_chance_pct": 30.8
-      },
-      "edge": {
-        "price_gap_pp": 22.9,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 97
-        },
-        "share_of_team_chances_pct": 32,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Strong",
-          "percentile": 97
-        },
-        "recent_team_form": {
-          "tier": "Positive",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-09",
-          "xg_for_avg": 2.59,
-          "xg_against_avg": 1.96,
-          "xgd_per90": 0.63,
-          "shots_for_avg": 18.0,
-          "shots_against_avg": 13.2,
-          "sot_for_avg": 7.8,
-          "sot_against_avg": 4.0,
-          "corners_for_avg": 6.6,
-          "corners_against_avg": 4.8
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Positive",
-          "percentile": 71
-        },
-        "opponent_recent_defence": {
-          "tier": "Positive",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-10",
-          "xg_for_avg": 1.03,
-          "xg_against_avg": 1.6,
-          "xgd_per90": -0.57,
-          "shots_for_avg": 9.6,
-          "shots_against_avg": 13.4,
-          "sot_for_avg": 3.4,
-          "sot_against_avg": 3.8,
-          "corners_for_avg": 2.8,
-          "corners_against_avg": 4.8
-        },
-        "fixture_boost_pct": -3,
-        "projected_minutes": 85,
-        "penalty_role": "Not on penalties",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Recent team form supports the attacking case",
-        "Opponent has been allowing chances recently"
-      ],
-      "risk_flags": []
-    },
     {
       "id": "20260517-ante-budimir-cf6e9c4d16",
       "match": {
@@ -190,7 +88,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Strong",
-          "percentile": 77
+          "percentile": 81
         },
         "recent_team_form": {
           "tier": "Average",
@@ -209,7 +107,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "High",
-          "percentile": 91
+          "percentile": 97
         },
         "opponent_recent_defence": {
           "tier": "Unknown"
@@ -278,8 +176,8 @@
         "share_of_team_chances_pct": 31,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
-          "tier": "Average",
-          "percentile": 52
+          "tier": "Positive",
+          "percentile": 59
         },
         "recent_team_form": {
           "tier": "Strong",
@@ -298,7 +196,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 12
+          "percentile": 14
         },
         "opponent_recent_defence": {
           "tier": "Average",
@@ -329,106 +227,6 @@
         "Recent chance quality grades as strong",
         "Recent team form supports the attacking case",
         "Primary penalty role adds a clear scoring route"
-      ],
-      "risk_flags": []
-    },
-    {
-      "id": "20260516-johan-manzambi-b0b32839e3",
-      "match": {
-        "home_team": "SC Freiburg",
-        "away_team": "RB Leipzig",
-        "league": "bundesliga",
-        "league_display": "Bundesliga",
-        "league_logo_path": "/league-logos/bundesliga.png",
-        "kickoff_utc": "2026-05-16T13:30:00Z",
-        "kickoff_display": "Sat 16 May 14:30 UK",
-        "fotmob_match_id": "4829616",
-        "fotmob_page_url": "/matches/freiburg-vs-rb-leipzig/80nandr#4829616",
-        "lineup_type": "confirmed",
-        "venue": ""
-      },
-      "player": {
-        "name": "Johan Manzambi",
-        "team": "Freiburg",
-        "position": "AM",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/bundesliga/freiburg.png",
-        "team_primary_color": "#dc2626",
-        "team_secondary_color": "#111827",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 29.1,
-        "fair_odds": 3.43
-      },
-      "market_data": {
-        "best_odds": 4.33,
-        "best_book": "Bet365",
-        "implied_chance_pct": 23.1
-      },
-      "edge": {
-        "price_gap_pp": 6.0,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 86
-        },
-        "share_of_team_chances_pct": 20,
-        "share_of_team_chances_percentile": 97,
-        "team_attacking_outlook": {
-          "tier": "Positive",
-          "percentile": 71
-        },
-        "recent_team_form": {
-          "tier": "Quiet",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-10",
-          "xg_for_avg": 1.03,
-          "xg_against_avg": 1.6,
-          "xgd_per90": -0.57,
-          "shots_for_avg": 9.6,
-          "shots_against_avg": 13.4,
-          "sot_for_avg": 3.4,
-          "sot_against_avg": 3.8,
-          "corners_for_avg": 2.8,
-          "corners_against_avg": 4.8
-        },
-        "opponent_defensive_weakness": {
-          "tier": "High",
-          "percentile": 80
-        },
-        "opponent_recent_defence": {
-          "tier": "High",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-09",
-          "xg_for_avg": 2.59,
-          "xg_against_avg": 1.96,
-          "xgd_per90": 0.63,
-          "shots_for_avg": 18.0,
-          "shots_against_avg": 13.2,
-          "sot_for_avg": 7.8,
-          "sot_against_avg": 4.0,
-          "corners_for_avg": 6.6,
-          "corners_against_avg": 4.8
-        },
-        "fixture_boost_pct": -16,
-        "projected_minutes": 85,
-        "penalty_role": "Not on penalties",
-        "role_adjustment_factor": 1.1,
-        "role_adjustment_reason": "confirmed_role_delta=+2;usual=DMC;today=AM;weight=1.00",
-        "lineup_confidence": "Confirmed starter"
-      },
-      "confidence_tier": "High",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "Recent chance quality grades as strong",
-        "Opponent defensive profile is a positive matchup",
-        "Confirmed XI shows a more advanced scoring role"
       ],
       "risk_flags": []
     },
@@ -480,7 +278,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 9
+          "percentile": 10
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -499,7 +297,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 40
+          "percentile": 49
         },
         "opponent_recent_defence": {
           "tier": "Positive",
