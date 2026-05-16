@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-05-16T09:53:53Z",
+  "run_at": "2026-05-16T18:06:13Z",
   "model": "team-shots",
-  "total_bets": 119,
-  "settled_this_run": 1,
+  "total_bets": 122,
+  "settled_this_run": 0,
   "total_settled": 104,
-  "total_pending": 15,
+  "total_pending": 18,
   "pending_breakdown": {
-    "future": 15,
+    "future": 14,
     "live": 0,
-    "stale": 0,
+    "stale": 4,
     "old_stale": 0,
     "unknown": 0
   },
@@ -32,8 +32,8 @@
       "football_data_latest": "2026-05-13",
       "lag_days": 3,
       "football_data_count": 360,
-      "fotmob_count": 1,
-      "fotmob_latest": "2026-05-15",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
       "api_football_count": 0,
       "api_football_latest": null,
       "api_football_requests_used": 2,
@@ -89,11 +89,48 @@
       "snapshot_path": "data/results-snapshot/2026-05-16.json"
     }
   },
-  "stale_rows": [],
+  "stale_rows": [
+    {
+      "match": "Borussia Monchengladbach vs TSG Hoffenheim",
+      "league": "bundesliga",
+      "line": "17.5",
+      "side": "under",
+      "kickoff": "2026-05-16T13:30:00Z",
+      "hours_elapsed": 4.6
+    },
+    {
+      "match": "SC Freiburg vs RB Leipzig",
+      "league": "bundesliga",
+      "line": "13.5",
+      "side": "under",
+      "kickoff": "2026-05-16T13:30:00Z",
+      "hours_elapsed": 4.6
+    },
+    {
+      "match": "Bayern Munich vs 1. FC Cologne",
+      "league": "bundesliga",
+      "line": "9.5",
+      "side": "over",
+      "kickoff": "2026-05-16T13:30:00Z",
+      "hours_elapsed": 4.6
+    },
+    {
+      "match": "FC St. Pauli vs VFL Wolfsburg",
+      "league": "bundesliga",
+      "line": "13.5",
+      "side": "under",
+      "kickoff": "2026-05-16T13:30:00Z",
+      "hours_elapsed": 4.6
+    }
+  ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
-  "warnings": [],
-  "errors": [],
-  "exit_code_recommendation": 0
+  "warnings": [
+    "4 stale pending row(s) across 4 fixture(s) (3-48h elapsed)"
+  ],
+  "errors": [
+    "bundesliga: 4 stale fixture(s) across 4 pending row(s)"
+  ],
+  "exit_code_recommendation": 1
 }
