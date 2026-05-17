@@ -1,0 +1,805 @@
+{
+  "generated_at": "2026-03-16T15:55:08.425861+00:00",
+  "source": "fotmob",
+  "logo_base": "https://images.fotmob.com/image_resources/logo/teamlogo/{team_id}.png",
+  "leagues": {
+    "bundesliga": {
+      "label": "Bundesliga",
+      "league_id": 54,
+      "teams": {
+        "Augsburg": {
+          "team_key": "augsburg",
+          "fotmob_team_id": 8406,
+          "fotmob_name": "Augsburg",
+          "fotmob_short_name": "Augsburg",
+          "page_url": "/teams/8406/overview/augsburg",
+          "logo_path": "/team-logos/bundesliga/augsburg.png"
+        },
+        "Bayer Leverkusen": {
+          "team_key": "bayer leverkusen",
+          "fotmob_team_id": 8178,
+          "fotmob_name": "Bayer Leverkusen",
+          "fotmob_short_name": "Leverkusen",
+          "page_url": "/teams/8178/overview/bayer-leverkusen",
+          "logo_path": "/team-logos/bundesliga/bayer-leverkusen.png"
+        },
+        "Bayern Munich": {
+          "team_key": "bayern munich",
+          "fotmob_team_id": 9823,
+          "fotmob_name": "Bayern München",
+          "fotmob_short_name": "Bayern München",
+          "page_url": "/teams/9823/overview/bayern-munchen",
+          "logo_path": "/team-logos/bundesliga/bayern-munich.png"
+        },
+        "Borussia Dortmund": {
+          "team_key": "borussia dortmund",
+          "fotmob_team_id": 9789,
+          "fotmob_name": "Borussia Dortmund",
+          "fotmob_short_name": "Dortmund",
+          "page_url": "/teams/9789/overview/borussia-dortmund",
+          "logo_path": "/team-logos/bundesliga/borussia-dortmund.png"
+        },
+        "Borussia M.Gladbach": {
+          "team_key": "borussia m gladbach",
+          "fotmob_team_id": 9788,
+          "fotmob_name": "Borussia Mönchengladbach",
+          "fotmob_short_name": "M'gladbach",
+          "page_url": "/teams/9788/overview/borussia-monchengladbach",
+          "logo_path": "/team-logos/bundesliga/borussia-m-gladbach.png"
+        },
+        "Eintracht Frankfurt": {
+          "team_key": "eintracht frankfurt",
+          "fotmob_team_id": 9810,
+          "fotmob_name": "Eintracht Frankfurt",
+          "fotmob_short_name": "Frankfurt",
+          "page_url": "/teams/9810/overview/eintracht-frankfurt",
+          "logo_path": "/team-logos/bundesliga/eintracht-frankfurt.png"
+        },
+        "FC Cologne": {
+          "team_key": "fc cologne",
+          "fotmob_team_id": 8722,
+          "fotmob_name": "1. FC Köln",
+          "fotmob_short_name": "Köln",
+          "page_url": "/teams/8722/overview/1-fc-koln",
+          "logo_path": "/team-logos/bundesliga/fc-cologne.png"
+        },
+        "FC Heidenheim": {
+          "team_key": "fc heidenheim",
+          "fotmob_team_id": 94937,
+          "fotmob_name": "FC Heidenheim",
+          "fotmob_short_name": "FC Heidenheim",
+          "page_url": "/teams/94937/overview/fc-heidenheim",
+          "logo_path": "/team-logos/bundesliga/fc-heidenheim.png"
+        },
+        "Freiburg": {
+          "team_key": "freiburg",
+          "fotmob_team_id": 8358,
+          "fotmob_name": "Freiburg",
+          "fotmob_short_name": "Freiburg",
+          "page_url": "/teams/8358/overview/freiburg",
+          "logo_path": "/team-logos/bundesliga/freiburg.png"
+        },
+        "Hamburger SV": {
+          "team_key": "hamburger sv",
+          "fotmob_team_id": 9790,
+          "fotmob_name": "Hamburger SV",
+          "fotmob_short_name": "Hamburger SV",
+          "page_url": "/teams/9790/overview/hamburger-sv",
+          "logo_path": "/team-logos/bundesliga/hamburger-sv.png"
+        },
+        "Hoffenheim": {
+          "team_key": "hoffenheim",
+          "fotmob_team_id": 8226,
+          "fotmob_name": "Hoffenheim",
+          "fotmob_short_name": "Hoffenheim",
+          "page_url": "/teams/8226/overview/hoffenheim",
+          "logo_path": "/team-logos/bundesliga/hoffenheim.png"
+        },
+        "Mainz 05": {
+          "team_key": "mainz 05",
+          "fotmob_team_id": 9905,
+          "fotmob_name": "Mainz 05",
+          "fotmob_short_name": "Mainz",
+          "page_url": "/teams/9905/overview/mainz-05",
+          "logo_path": "/team-logos/bundesliga/mainz-05.png"
+        },
+        "RasenBallsport Leipzig": {
+          "team_key": "rasenballsport leipzig",
+          "fotmob_team_id": 178475,
+          "fotmob_name": "RB Leipzig",
+          "fotmob_short_name": "RB Leipzig",
+          "page_url": "/teams/178475/overview/rb-leipzig",
+          "logo_path": "/team-logos/bundesliga/rasenballsport-leipzig.png"
+        },
+        "St. Pauli": {
+          "team_key": "st pauli",
+          "fotmob_team_id": 8152,
+          "fotmob_name": "St. Pauli",
+          "fotmob_short_name": "St. Pauli",
+          "page_url": "/teams/8152/overview/st-pauli",
+          "logo_path": "/team-logos/bundesliga/st-pauli.png"
+        },
+        "Union Berlin": {
+          "team_key": "union berlin",
+          "fotmob_team_id": 8149,
+          "fotmob_name": "Union Berlin",
+          "fotmob_short_name": "Union Berlin",
+          "page_url": "/teams/8149/overview/union-berlin",
+          "logo_path": "/team-logos/bundesliga/union-berlin.png"
+        },
+        "VfB Stuttgart": {
+          "team_key": "vfb stuttgart",
+          "fotmob_team_id": 10269,
+          "fotmob_name": "VfB Stuttgart",
+          "fotmob_short_name": "VfB Stuttgart",
+          "page_url": "/teams/10269/overview/vfb-stuttgart",
+          "logo_path": "/team-logos/bundesliga/vfb-stuttgart.png"
+        },
+        "Werder Bremen": {
+          "team_key": "werder bremen",
+          "fotmob_team_id": 8697,
+          "fotmob_name": "Werder Bremen",
+          "fotmob_short_name": "Werder Bremen",
+          "page_url": "/teams/8697/overview/werder-bremen",
+          "logo_path": "/team-logos/bundesliga/werder-bremen.png"
+        },
+        "Wolfsburg": {
+          "team_key": "wolfsburg",
+          "fotmob_team_id": 8721,
+          "fotmob_name": "Wolfsburg",
+          "fotmob_short_name": "Wolfsburg",
+          "page_url": "/teams/8721/overview/wolfsburg",
+          "logo_path": "/team-logos/bundesliga/wolfsburg.png"
+        }
+      }
+    },
+    "epl": {
+      "label": "Premier League",
+      "league_id": 47,
+      "teams": {
+        "Arsenal": {
+          "team_key": "arsenal",
+          "fotmob_team_id": 9825,
+          "fotmob_name": "Arsenal",
+          "fotmob_short_name": "Arsenal",
+          "page_url": "/teams/9825/overview/arsenal",
+          "logo_path": "/team-logos/epl/arsenal.png"
+        },
+        "Aston Villa": {
+          "team_key": "aston villa",
+          "fotmob_team_id": 10252,
+          "fotmob_name": "Aston Villa",
+          "fotmob_short_name": "Aston Villa",
+          "page_url": "/teams/10252/overview/aston-villa",
+          "logo_path": "/team-logos/epl/aston-villa.png"
+        },
+        "Bournemouth": {
+          "team_key": "bournemouth",
+          "fotmob_team_id": 8678,
+          "fotmob_name": "AFC Bournemouth",
+          "fotmob_short_name": "Bournemouth",
+          "page_url": "/teams/8678/overview/afc-bournemouth",
+          "logo_path": "/team-logos/epl/bournemouth.png"
+        },
+        "Brentford": {
+          "team_key": "brentford",
+          "fotmob_team_id": 9937,
+          "fotmob_name": "Brentford",
+          "fotmob_short_name": "Brentford",
+          "page_url": "/teams/9937/overview/brentford",
+          "logo_path": "/team-logos/epl/brentford.png"
+        },
+        "Brighton": {
+          "team_key": "brighton",
+          "fotmob_team_id": 10204,
+          "fotmob_name": "Brighton & Hove Albion",
+          "fotmob_short_name": "Brighton",
+          "page_url": "/teams/10204/overview/brighton-hove-albion",
+          "logo_path": "/team-logos/epl/brighton.png"
+        },
+        "Burnley": {
+          "team_key": "burnley",
+          "fotmob_team_id": 8191,
+          "fotmob_name": "Burnley",
+          "fotmob_short_name": "Burnley",
+          "page_url": "/teams/8191/overview/burnley",
+          "logo_path": "/team-logos/epl/burnley.png"
+        },
+        "Chelsea": {
+          "team_key": "chelsea",
+          "fotmob_team_id": 8455,
+          "fotmob_name": "Chelsea",
+          "fotmob_short_name": "Chelsea",
+          "page_url": "/teams/8455/overview/chelsea",
+          "logo_path": "/team-logos/epl/chelsea.png"
+        },
+        "Crystal Palace": {
+          "team_key": "crystal palace",
+          "fotmob_team_id": 9826,
+          "fotmob_name": "Crystal Palace",
+          "fotmob_short_name": "Crystal Palace",
+          "page_url": "/teams/9826/overview/crystal-palace",
+          "logo_path": "/team-logos/epl/crystal-palace.png"
+        },
+        "Everton": {
+          "team_key": "everton",
+          "fotmob_team_id": 8668,
+          "fotmob_name": "Everton",
+          "fotmob_short_name": "Everton",
+          "page_url": "/teams/8668/overview/everton",
+          "logo_path": "/team-logos/epl/everton.png"
+        },
+        "Fulham": {
+          "team_key": "fulham",
+          "fotmob_team_id": 9879,
+          "fotmob_name": "Fulham",
+          "fotmob_short_name": "Fulham",
+          "page_url": "/teams/9879/overview/fulham",
+          "logo_path": "/team-logos/epl/fulham.png"
+        },
+        "Leeds": {
+          "team_key": "leeds",
+          "fotmob_team_id": 8463,
+          "fotmob_name": "Leeds United",
+          "fotmob_short_name": "Leeds",
+          "page_url": "/teams/8463/overview/leeds-united",
+          "logo_path": "/team-logos/epl/leeds.png"
+        },
+        "Liverpool": {
+          "team_key": "liverpool",
+          "fotmob_team_id": 8650,
+          "fotmob_name": "Liverpool",
+          "fotmob_short_name": "Liverpool",
+          "page_url": "/teams/8650/overview/liverpool",
+          "logo_path": "/team-logos/epl/liverpool.png"
+        },
+        "Manchester City": {
+          "team_key": "manchester city",
+          "fotmob_team_id": 8456,
+          "fotmob_name": "Manchester City",
+          "fotmob_short_name": "Man City",
+          "page_url": "/teams/8456/overview/manchester-city",
+          "logo_path": "/team-logos/epl/manchester-city.png"
+        },
+        "Manchester United": {
+          "team_key": "manchester united",
+          "fotmob_team_id": 10260,
+          "fotmob_name": "Manchester United",
+          "fotmob_short_name": "Man United",
+          "page_url": "/teams/10260/overview/manchester-united",
+          "logo_path": "/team-logos/epl/manchester-united.png"
+        },
+        "Newcastle United": {
+          "team_key": "newcastle united",
+          "fotmob_team_id": 10261,
+          "fotmob_name": "Newcastle United",
+          "fotmob_short_name": "Newcastle",
+          "page_url": "/teams/10261/overview/newcastle-united",
+          "logo_path": "/team-logos/epl/newcastle-united.png"
+        },
+        "Nottingham Forest": {
+          "team_key": "nottingham forest",
+          "fotmob_team_id": 10203,
+          "fotmob_name": "Nottingham Forest",
+          "fotmob_short_name": "Nottm Forest",
+          "page_url": "/teams/10203/overview/nottingham-forest",
+          "logo_path": "/team-logos/epl/nottingham-forest.png"
+        },
+        "Sunderland": {
+          "team_key": "sunderland",
+          "fotmob_team_id": 8472,
+          "fotmob_name": "Sunderland",
+          "fotmob_short_name": "Sunderland",
+          "page_url": "/teams/8472/overview/sunderland",
+          "logo_path": "/team-logos/epl/sunderland.png"
+        },
+        "Tottenham": {
+          "team_key": "tottenham",
+          "fotmob_team_id": 8586,
+          "fotmob_name": "Tottenham Hotspur",
+          "fotmob_short_name": "Tottenham",
+          "page_url": "/teams/8586/overview/tottenham-hotspur",
+          "logo_path": "/team-logos/epl/tottenham.png"
+        },
+        "West Ham": {
+          "team_key": "west ham",
+          "fotmob_team_id": 8654,
+          "fotmob_name": "West Ham United",
+          "fotmob_short_name": "West Ham",
+          "page_url": "/teams/8654/overview/west-ham-united",
+          "logo_path": "/team-logos/epl/west-ham.png"
+        },
+        "Wolverhampton Wanderers": {
+          "team_key": "wolves",
+          "fotmob_team_id": 8602,
+          "fotmob_name": "Wolverhampton Wanderers",
+          "fotmob_short_name": "Wolves",
+          "page_url": "/teams/8602/overview/wolverhampton-wanderers",
+          "logo_path": "/team-logos/epl/wolves.png"
+        }
+      }
+    },
+    "la-liga": {
+      "label": "La Liga",
+      "league_id": 87,
+      "teams": {
+        "Alaves": {
+          "team_key": "alaves",
+          "fotmob_team_id": 9866,
+          "fotmob_name": "Deportivo Alaves",
+          "fotmob_short_name": "Deportivo Alaves",
+          "page_url": "/teams/9866/overview/deportivo-alaves",
+          "logo_path": "/team-logos/la-liga/alaves.png"
+        },
+        "Athletic Club": {
+          "team_key": "athletic club",
+          "fotmob_team_id": 8315,
+          "fotmob_name": "Athletic Club",
+          "fotmob_short_name": "Athletic Club",
+          "page_url": "/teams/8315/overview/athletic-club",
+          "logo_path": "/team-logos/la-liga/athletic-club.png"
+        },
+        "Atletico Madrid": {
+          "team_key": "atletico madrid",
+          "fotmob_team_id": 9906,
+          "fotmob_name": "Atletico Madrid",
+          "fotmob_short_name": "Atletico Madrid",
+          "page_url": "/teams/9906/overview/atletico-madrid",
+          "logo_path": "/team-logos/la-liga/atletico-madrid.png"
+        },
+        "Barcelona": {
+          "team_key": "barcelona",
+          "fotmob_team_id": 8634,
+          "fotmob_name": "Barcelona",
+          "fotmob_short_name": "Barcelona",
+          "page_url": "/teams/8634/overview/barcelona",
+          "logo_path": "/team-logos/la-liga/barcelona.png"
+        },
+        "Celta Vigo": {
+          "team_key": "celta vigo",
+          "fotmob_team_id": 9910,
+          "fotmob_name": "Celta Vigo",
+          "fotmob_short_name": "Celta Vigo",
+          "page_url": "/teams/9910/overview/celta-vigo",
+          "logo_path": "/team-logos/la-liga/celta-vigo.png"
+        },
+        "Elche": {
+          "team_key": "elche",
+          "fotmob_team_id": 10268,
+          "fotmob_name": "Elche",
+          "fotmob_short_name": "Elche",
+          "page_url": "/teams/10268/overview/elche",
+          "logo_path": "/team-logos/la-liga/elche.png"
+        },
+        "Espanyol": {
+          "team_key": "espanyol",
+          "fotmob_team_id": 8558,
+          "fotmob_name": "Espanyol",
+          "fotmob_short_name": "Espanyol",
+          "page_url": "/teams/8558/overview/espanyol",
+          "logo_path": "/team-logos/la-liga/espanyol.png"
+        },
+        "Getafe": {
+          "team_key": "getafe",
+          "fotmob_team_id": 8305,
+          "fotmob_name": "Getafe",
+          "fotmob_short_name": "Getafe",
+          "page_url": "/teams/8305/overview/getafe",
+          "logo_path": "/team-logos/la-liga/getafe.png"
+        },
+        "Girona": {
+          "team_key": "girona",
+          "fotmob_team_id": 7732,
+          "fotmob_name": "Girona",
+          "fotmob_short_name": "Girona",
+          "page_url": "/teams/7732/overview/girona",
+          "logo_path": "/team-logos/la-liga/girona.png"
+        },
+        "Levante": {
+          "team_key": "levante",
+          "fotmob_team_id": 8581,
+          "fotmob_name": "Levante",
+          "fotmob_short_name": "Levante",
+          "page_url": "/teams/8581/overview/levante",
+          "logo_path": "/team-logos/la-liga/levante.png"
+        },
+        "Mallorca": {
+          "team_key": "mallorca",
+          "fotmob_team_id": 8661,
+          "fotmob_name": "Mallorca",
+          "fotmob_short_name": "Mallorca",
+          "page_url": "/teams/8661/overview/mallorca",
+          "logo_path": "/team-logos/la-liga/mallorca.png"
+        },
+        "Osasuna": {
+          "team_key": "osasuna",
+          "fotmob_team_id": 8371,
+          "fotmob_name": "Osasuna",
+          "fotmob_short_name": "Osasuna",
+          "page_url": "/teams/8371/overview/osasuna",
+          "logo_path": "/team-logos/la-liga/osasuna.png"
+        },
+        "Rayo Vallecano": {
+          "team_key": "rayo vallecano",
+          "fotmob_team_id": 8370,
+          "fotmob_name": "Rayo Vallecano",
+          "fotmob_short_name": "Rayo Vallecano",
+          "page_url": "/teams/8370/overview/rayo-vallecano",
+          "logo_path": "/team-logos/la-liga/rayo-vallecano.png"
+        },
+        "Real Betis": {
+          "team_key": "real betis",
+          "fotmob_team_id": 8603,
+          "fotmob_name": "Real Betis",
+          "fotmob_short_name": "Real Betis",
+          "page_url": "/teams/8603/overview/real-betis",
+          "logo_path": "/team-logos/la-liga/real-betis.png"
+        },
+        "Real Madrid": {
+          "team_key": "real madrid",
+          "fotmob_team_id": 8633,
+          "fotmob_name": "Real Madrid",
+          "fotmob_short_name": "Real Madrid",
+          "page_url": "/teams/8633/overview/real-madrid",
+          "logo_path": "/team-logos/la-liga/real-madrid.png"
+        },
+        "Real Oviedo": {
+          "team_key": "real oviedo",
+          "fotmob_team_id": 8670,
+          "fotmob_name": "Real Oviedo",
+          "fotmob_short_name": "Real Oviedo",
+          "page_url": "/teams/8670/overview/real-oviedo",
+          "logo_path": "/team-logos/la-liga/real-oviedo.png"
+        },
+        "Real Sociedad": {
+          "team_key": "real sociedad",
+          "fotmob_team_id": 8560,
+          "fotmob_name": "Real Sociedad",
+          "fotmob_short_name": "Real Sociedad",
+          "page_url": "/teams/8560/overview/real-sociedad",
+          "logo_path": "/team-logos/la-liga/real-sociedad.png"
+        },
+        "Sevilla": {
+          "team_key": "sevilla",
+          "fotmob_team_id": 8302,
+          "fotmob_name": "Sevilla",
+          "fotmob_short_name": "Sevilla",
+          "page_url": "/teams/8302/overview/sevilla",
+          "logo_path": "/team-logos/la-liga/sevilla.png"
+        },
+        "Valencia": {
+          "team_key": "valencia",
+          "fotmob_team_id": 10267,
+          "fotmob_name": "Valencia",
+          "fotmob_short_name": "Valencia",
+          "page_url": "/teams/10267/overview/valencia",
+          "logo_path": "/team-logos/la-liga/valencia.png"
+        },
+        "Villarreal": {
+          "team_key": "villarreal",
+          "fotmob_team_id": 10205,
+          "fotmob_name": "Villarreal",
+          "fotmob_short_name": "Villarreal",
+          "page_url": "/teams/10205/overview/villarreal",
+          "logo_path": "/team-logos/la-liga/villarreal.png"
+        }
+      }
+    },
+    "ligue-1": {
+      "label": "Ligue 1",
+      "league_id": 53,
+      "teams": {
+        "Angers": {
+          "team_key": "angers",
+          "fotmob_team_id": 8121,
+          "fotmob_name": "Angers",
+          "fotmob_short_name": "Angers",
+          "page_url": "/teams/8121/overview/angers",
+          "logo_path": "/team-logos/ligue-1/angers.png"
+        },
+        "Auxerre": {
+          "team_key": "auxerre",
+          "fotmob_team_id": 8583,
+          "fotmob_name": "Auxerre",
+          "fotmob_short_name": "Auxerre",
+          "page_url": "/teams/8583/overview/auxerre",
+          "logo_path": "/team-logos/ligue-1/auxerre.png"
+        },
+        "Brest": {
+          "team_key": "brest",
+          "fotmob_team_id": 8521,
+          "fotmob_name": "Brest",
+          "fotmob_short_name": "Brest",
+          "page_url": "/teams/8521/overview/brest",
+          "logo_path": "/team-logos/ligue-1/brest.png"
+        },
+        "Le Havre": {
+          "team_key": "le havre",
+          "fotmob_team_id": 9746,
+          "fotmob_name": "Le Havre",
+          "fotmob_short_name": "Le Havre",
+          "page_url": "/teams/9746/overview/le-havre",
+          "logo_path": "/team-logos/ligue-1/le-havre.png"
+        },
+        "Lens": {
+          "team_key": "lens",
+          "fotmob_team_id": 8588,
+          "fotmob_name": "Lens",
+          "fotmob_short_name": "Lens",
+          "page_url": "/teams/8588/overview/lens",
+          "logo_path": "/team-logos/ligue-1/lens.png"
+        },
+        "Lille": {
+          "team_key": "lille",
+          "fotmob_team_id": 8639,
+          "fotmob_name": "Lille",
+          "fotmob_short_name": "Lille",
+          "page_url": "/teams/8639/overview/lille",
+          "logo_path": "/team-logos/ligue-1/lille.png"
+        },
+        "Lorient": {
+          "team_key": "lorient",
+          "fotmob_team_id": 8689,
+          "fotmob_name": "Lorient",
+          "fotmob_short_name": "Lorient",
+          "page_url": "/teams/8689/overview/lorient",
+          "logo_path": "/team-logos/ligue-1/lorient.png"
+        },
+        "Lyon": {
+          "team_key": "lyon",
+          "fotmob_team_id": 9748,
+          "fotmob_name": "Lyon",
+          "fotmob_short_name": "Lyon",
+          "page_url": "/teams/9748/overview/lyon",
+          "logo_path": "/team-logos/ligue-1/lyon.png"
+        },
+        "Marseille": {
+          "team_key": "marseille",
+          "fotmob_team_id": 8592,
+          "fotmob_name": "Marseille",
+          "fotmob_short_name": "Marseille",
+          "page_url": "/teams/8592/overview/marseille",
+          "logo_path": "/team-logos/ligue-1/marseille.png"
+        },
+        "Metz": {
+          "team_key": "metz",
+          "fotmob_team_id": 8550,
+          "fotmob_name": "Metz",
+          "fotmob_short_name": "Metz",
+          "page_url": "/teams/8550/overview/metz",
+          "logo_path": "/team-logos/ligue-1/metz.png"
+        },
+        "Monaco": {
+          "team_key": "monaco",
+          "fotmob_team_id": 9829,
+          "fotmob_name": "Monaco",
+          "fotmob_short_name": "Monaco",
+          "page_url": "/teams/9829/overview/monaco",
+          "logo_path": "/team-logos/ligue-1/monaco.png"
+        },
+        "Nantes": {
+          "team_key": "nantes",
+          "fotmob_team_id": 9830,
+          "fotmob_name": "Nantes",
+          "fotmob_short_name": "Nantes",
+          "page_url": "/teams/9830/overview/nantes",
+          "logo_path": "/team-logos/ligue-1/nantes.png"
+        },
+        "Nice": {
+          "team_key": "nice",
+          "fotmob_team_id": 9831,
+          "fotmob_name": "Nice",
+          "fotmob_short_name": "Nice",
+          "page_url": "/teams/9831/overview/nice",
+          "logo_path": "/team-logos/ligue-1/nice.png"
+        },
+        "Paris FC": {
+          "team_key": "paris fc",
+          "fotmob_team_id": 6379,
+          "fotmob_name": "Paris FC",
+          "fotmob_short_name": "Paris FC",
+          "page_url": "/teams/6379/overview/paris-fc",
+          "logo_path": "/team-logos/ligue-1/paris-fc.png"
+        },
+        "Paris Saint Germain": {
+          "team_key": "paris saint germain",
+          "fotmob_team_id": 9847,
+          "fotmob_name": "Paris Saint-Germain",
+          "fotmob_short_name": "PSG",
+          "page_url": "/teams/9847/overview/paris-saint-germain",
+          "logo_path": "/team-logos/ligue-1/paris-saint-germain.png"
+        },
+        "Rennes": {
+          "team_key": "rennes",
+          "fotmob_team_id": 9851,
+          "fotmob_name": "Rennes",
+          "fotmob_short_name": "Rennes",
+          "page_url": "/teams/9851/overview/rennes",
+          "logo_path": "/team-logos/ligue-1/rennes.png"
+        },
+        "Strasbourg": {
+          "team_key": "strasbourg",
+          "fotmob_team_id": 9848,
+          "fotmob_name": "Strasbourg",
+          "fotmob_short_name": "Strasbourg",
+          "page_url": "/teams/9848/overview/strasbourg",
+          "logo_path": "/team-logos/ligue-1/strasbourg.png"
+        },
+        "Toulouse": {
+          "team_key": "toulouse",
+          "fotmob_team_id": 9941,
+          "fotmob_name": "Toulouse",
+          "fotmob_short_name": "Toulouse",
+          "page_url": "/teams/9941/overview/toulouse",
+          "logo_path": "/team-logos/ligue-1/toulouse.png"
+        }
+      }
+    },
+    "serie-a": {
+      "label": "Serie A",
+      "league_id": 55,
+      "teams": {
+        "AC Milan": {
+          "team_key": "milan",
+          "fotmob_team_id": 8564,
+          "fotmob_name": "Milan",
+          "fotmob_short_name": "Milan",
+          "page_url": "/teams/8564/overview/milan",
+          "logo_path": "/team-logos/serie-a/milan.png"
+        },
+        "Atalanta": {
+          "team_key": "atalanta",
+          "fotmob_team_id": 8524,
+          "fotmob_name": "Atalanta",
+          "fotmob_short_name": "Atalanta",
+          "page_url": "/teams/8524/overview/atalanta",
+          "logo_path": "/team-logos/serie-a/atalanta.png"
+        },
+        "Bologna": {
+          "team_key": "bologna",
+          "fotmob_team_id": 9857,
+          "fotmob_name": "Bologna",
+          "fotmob_short_name": "Bologna",
+          "page_url": "/teams/9857/overview/bologna",
+          "logo_path": "/team-logos/serie-a/bologna.png"
+        },
+        "Cagliari": {
+          "team_key": "cagliari",
+          "fotmob_team_id": 8529,
+          "fotmob_name": "Cagliari",
+          "fotmob_short_name": "Cagliari",
+          "page_url": "/teams/8529/overview/cagliari",
+          "logo_path": "/team-logos/serie-a/cagliari.png"
+        },
+        "Como": {
+          "team_key": "como",
+          "fotmob_team_id": 10171,
+          "fotmob_name": "Como",
+          "fotmob_short_name": "Como",
+          "page_url": "/teams/10171/overview/como",
+          "logo_path": "/team-logos/serie-a/como.png"
+        },
+        "Cremonese": {
+          "team_key": "cremonese",
+          "fotmob_team_id": 7801,
+          "fotmob_name": "Cremonese",
+          "fotmob_short_name": "Cremonese",
+          "page_url": "/teams/7801/overview/cremonese",
+          "logo_path": "/team-logos/serie-a/cremonese.png"
+        },
+        "Fiorentina": {
+          "team_key": "fiorentina",
+          "fotmob_team_id": 8535,
+          "fotmob_name": "Fiorentina",
+          "fotmob_short_name": "Fiorentina",
+          "page_url": "/teams/8535/overview/fiorentina",
+          "logo_path": "/team-logos/serie-a/fiorentina.png"
+        },
+        "Genoa": {
+          "team_key": "genoa",
+          "fotmob_team_id": 10233,
+          "fotmob_name": "Genoa",
+          "fotmob_short_name": "Genoa",
+          "page_url": "/teams/10233/overview/genoa",
+          "logo_path": "/team-logos/serie-a/genoa.png"
+        },
+        "Inter": {
+          "team_key": "inter",
+          "fotmob_team_id": 8636,
+          "fotmob_name": "Inter",
+          "fotmob_short_name": "Inter",
+          "page_url": "/teams/8636/overview/inter",
+          "logo_path": "/team-logos/serie-a/inter.png"
+        },
+        "Juventus": {
+          "team_key": "juventus",
+          "fotmob_team_id": 9885,
+          "fotmob_name": "Juventus",
+          "fotmob_short_name": "Juventus",
+          "page_url": "/teams/9885/overview/juventus",
+          "logo_path": "/team-logos/serie-a/juventus.png"
+        },
+        "Lazio": {
+          "team_key": "lazio",
+          "fotmob_team_id": 8543,
+          "fotmob_name": "Lazio",
+          "fotmob_short_name": "Lazio",
+          "page_url": "/teams/8543/overview/lazio",
+          "logo_path": "/team-logos/serie-a/lazio.png"
+        },
+        "Lecce": {
+          "team_key": "lecce",
+          "fotmob_team_id": 9888,
+          "fotmob_name": "Lecce",
+          "fotmob_short_name": "Lecce",
+          "page_url": "/teams/9888/overview/lecce",
+          "logo_path": "/team-logos/serie-a/lecce.png"
+        },
+        "Napoli": {
+          "team_key": "napoli",
+          "fotmob_team_id": 9875,
+          "fotmob_name": "Napoli",
+          "fotmob_short_name": "Napoli",
+          "page_url": "/teams/9875/overview/napoli",
+          "logo_path": "/team-logos/serie-a/napoli.png"
+        },
+        "Parma Calcio 1913": {
+          "team_key": "parma",
+          "fotmob_team_id": 10167,
+          "fotmob_name": "Parma",
+          "fotmob_short_name": "Parma",
+          "page_url": "/teams/10167/overview/parma",
+          "logo_path": "/team-logos/serie-a/parma.png"
+        },
+        "Pisa": {
+          "team_key": "pisa",
+          "fotmob_team_id": 6479,
+          "fotmob_name": "Pisa",
+          "fotmob_short_name": "Pisa",
+          "page_url": "/teams/6479/overview/pisa",
+          "logo_path": "/team-logos/serie-a/pisa.png"
+        },
+        "Roma": {
+          "team_key": "roma",
+          "fotmob_team_id": 8686,
+          "fotmob_name": "Roma",
+          "fotmob_short_name": "Roma",
+          "page_url": "/teams/8686/overview/roma",
+          "logo_path": "/team-logos/serie-a/roma.png"
+        },
+        "Sassuolo": {
+          "team_key": "sassuolo",
+          "fotmob_team_id": 7943,
+          "fotmob_name": "Sassuolo",
+          "fotmob_short_name": "Sassuolo",
+          "page_url": "/teams/7943/overview/sassuolo",
+          "logo_path": "/team-logos/serie-a/sassuolo.png"
+        },
+        "Torino": {
+          "team_key": "torino",
+          "fotmob_team_id": 9804,
+          "fotmob_name": "Torino",
+          "fotmob_short_name": "Torino",
+          "page_url": "/teams/9804/overview/torino",
+          "logo_path": "/team-logos/serie-a/torino.png"
+        },
+        "Udinese": {
+          "team_key": "udinese",
+          "fotmob_team_id": 8600,
+          "fotmob_name": "Udinese",
+          "fotmob_short_name": "Udinese",
+          "page_url": "/teams/8600/overview/udinese",
+          "logo_path": "/team-logos/serie-a/udinese.png"
+        },
+        "Verona": {
+          "team_key": "verona",
+          "fotmob_team_id": 9876,
+          "fotmob_name": "Hellas Verona",
+          "fotmob_short_name": "Hellas Verona",
+          "page_url": "/teams/9876/overview/hellas-verona",
+          "logo_path": "/team-logos/serie-a/verona.png"
+        }
+      }
+    }
+  }
+}
