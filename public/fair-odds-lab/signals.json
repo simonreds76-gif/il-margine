@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T12:08:54.419338Z",
+  "generated_at": "2026-05-17T13:42:54.024912Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -32,8 +32,8 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 36,
-  "signals_qualifying": 2,
+  "fixtures_evaluated": 31,
+  "signals_qualifying": 4,
   "leagues_covered": [
     "epl"
   ],
@@ -51,7 +51,7 @@
         "kickoff_display": "Sun 17 May 15:00 UK",
         "fotmob_match_id": "4813741",
         "fotmob_page_url": "/matches/leeds-united-vs-brighton-hove-albion/2vqp9d#4813741",
-        "lineup_type": "predicted",
+        "lineup_type": "confirmed",
         "venue": ""
       },
       "player": {
@@ -66,8 +66,8 @@
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 46.0,
-        "fair_odds": 2.17
+        "scoring_chance_pct": 48.3,
+        "fair_odds": 2.07
       },
       "market_data": {
         "best_odds": 2.62,
@@ -75,15 +75,15 @@
         "implied_chance_pct": 38.1
       },
       "edge": {
-        "price_gap_pp": 7.9,
+        "price_gap_pp": 10.2,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 90
+          "percentile": 89
         },
-        "share_of_team_chances_pct": 31,
+        "share_of_team_chances_pct": 34,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Positive",
@@ -106,7 +106,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Low",
-          "percentile": 15
+          "percentile": 10
         },
         "opponent_recent_defence": {
           "tier": "Average",
@@ -124,19 +124,218 @@
           "corners_against_avg": 4.6
         },
         "fixture_boost_pct": -32,
-        "projected_minutes": 90,
+        "projected_minutes": 85,
         "penalty_role": "Primary",
         "role_adjustment_factor": 1.0,
         "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
+        "lineup_confidence": "Confirmed starter"
       },
-      "confidence_tier": "Medium",
+      "confidence_tier": "High",
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
         "Recent team form supports the attacking case",
         "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260517-ismaila-sarr-6e8bb69013",
+      "match": {
+        "home_team": "Brentford FC",
+        "away_team": "Crystal Palace",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-17T14:00:00Z",
+        "kickoff_display": "Sun 17 May 15:00 UK",
+        "fotmob_match_id": "4813738",
+        "fotmob_page_url": "/matches/crystal-palace-vs-brentford/38a4jj#4813738",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Ismaila Sarr",
+        "team": "Crystal Palace",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/crystal-palace.png",
+        "team_primary_color": "#1d4ed8",
+        "team_secondary_color": "#dc2626",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 32.2,
+        "fair_odds": 3.11
+      },
+      "market_data": {
+        "best_odds": 4.0,
+        "best_book": "Bet365",
+        "implied_chance_pct": 25.0
+      },
+      "edge": {
+        "price_gap_pp": 7.2,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 92
+        },
+        "share_of_team_chances_pct": 20,
+        "share_of_team_chances_percentile": 97,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 61
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-13",
+          "xg_for_avg": 1.47,
+          "xg_against_avg": 1.69,
+          "xgd_per90": -0.22,
+          "shots_for_avg": 11.4,
+          "shots_against_avg": 12.4,
+          "sot_for_avg": 3.8,
+          "sot_against_avg": 4.4,
+          "corners_for_avg": 4.4,
+          "corners_against_avg": 7.4
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 82
+        },
+        "opponent_recent_defence": {
+          "tier": "High",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-09",
+          "xg_for_avg": 1.77,
+          "xg_against_avg": 1.87,
+          "xgd_per90": -0.1,
+          "shots_for_avg": 12.0,
+          "shots_against_avg": 14.8,
+          "sot_for_avg": 4.0,
+          "sot_against_avg": 5.4,
+          "corners_for_avg": 4.6,
+          "corners_against_avg": 5.8
+        },
+        "fixture_boost_pct": 12,
+        "projected_minutes": 85,
+        "penalty_role": "Secondary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260517-jack-hinshelwood-043c1473f2",
+      "match": {
+        "home_team": "Leeds United",
+        "away_team": "Brighton & Hove Albion",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-17T14:00:00Z",
+        "kickoff_display": "Sun 17 May 15:00 UK",
+        "fotmob_match_id": "4813741",
+        "fotmob_page_url": "/matches/leeds-united-vs-brighton-hove-albion/2vqp9d#4813741",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Jack Hinshelwood",
+        "team": "Brighton",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/brighton.png",
+        "team_primary_color": "#2563eb",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 27.3,
+        "fair_odds": 3.66
+      },
+      "market_data": {
+        "best_odds": 4.75,
+        "best_book": "Bet365",
+        "implied_chance_pct": 21.1
+      },
+      "edge": {
+        "price_gap_pp": 6.3,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 92
+        },
+        "share_of_team_chances_pct": 23,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 43
+        },
+        "recent_team_form": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-09",
+          "xg_for_avg": 1.76,
+          "xg_against_avg": 1.26,
+          "xgd_per90": 0.5,
+          "shots_for_avg": 13.0,
+          "shots_against_avg": 9.4,
+          "sot_for_avg": 5.6,
+          "sot_against_avg": 3.6,
+          "corners_for_avg": 6.0,
+          "corners_against_avg": 4.6
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 46
+        },
+        "opponent_recent_defence": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-11",
+          "xg_for_avg": 2.34,
+          "xg_against_avg": 1.15,
+          "xgd_per90": 1.18,
+          "shots_for_avg": 14.2,
+          "shots_against_avg": 13.8,
+          "sot_for_avg": 5.4,
+          "sot_against_avg": 4.8,
+          "corners_for_avg": 3.4,
+          "corners_against_avg": 8.6
+        },
+        "fixture_boost_pct": -23,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong",
+        "Recent team form supports the attacking case"
       ],
       "risk_flags": []
     },
@@ -188,7 +387,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 10
+          "percentile": 6
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -207,7 +406,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 47
+          "percentile": 43
         },
         "opponent_recent_defence": {
           "tier": "Positive",
