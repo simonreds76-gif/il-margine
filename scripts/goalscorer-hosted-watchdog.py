@@ -213,7 +213,7 @@ def main() -> int:
         emit("notice", "No official-lineup windows are due; goalscorer watchdog stayed idle.")
         return 0
     if schedule_error:
-        emit("warning", "Lineup schedule unavailable; using heartbeat freshness as the safety fallback.")
+        emit("warning", "Lineup schedule unavailable; forcing a hot-live safety dispatch unless another run is active or cooling down.")
     else:
         emit("notice", f"Official-lineup window due for {due_count} fixture(s): {', '.join(due_labels)}.")
 
@@ -240,18 +240,19 @@ def main() -> int:
         emit("notice", "Goalscorer status already reports a fresh running poll; watchdog stayed idle.")
         return 0
 
-    if status_age is not None and status_age <= args.stale_minutes:
+    if status_age is not None and status_age <= args.stale_minutes and not schedule_error:
         emit("notice", f"Goalscorer heartbeat is fresh ({status_age:.1f}m old); watchdog stayed idle.")
         return 0
 
     if latest_run_age is not None and latest_run_age <= args.cooldown_minutes:
+        reason_detail = "schedule is unavailable" if schedule_error else "heartbeat looks stale"
         emit(
             "warning",
-            f"Goalscorer heartbeat looks stale, but the latest hot-live run was updated {latest_run_age:.1f}m ago; waiting out cooldown.",
+            f"Goalscorer {reason_detail}, but the latest hot-live run was updated {latest_run_age:.1f}m ago; waiting out cooldown.",
         )
         return 0
 
-    reason = "watchdog_stale_status"
+    reason = "watchdog_schedule_error" if schedule_error else "watchdog_stale_status"
     try:
         dispatch_hot_live_with_retry(
             repo,
@@ -269,7 +270,7 @@ def main() -> int:
         emit("error", f"Goalscorer watchdog failed to dispatch hot-live workflow: {exc}")
         return 1
 
-    stale_text = "missing heartbeat" if status_age is None else f"stale heartbeat ({status_age:.1f}m old)"
+    stale_text = "schedule error" if schedule_error else ("missing heartbeat" if status_age is None else f"stale heartbeat ({status_age:.1f}m old)")
     emit("warning", f"Goalscorer watchdog dispatched a fresh hot-live run because of {stale_text}.")
     return 0
 
