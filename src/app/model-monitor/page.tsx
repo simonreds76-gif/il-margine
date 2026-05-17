@@ -195,6 +195,7 @@ const MODEL_MONITOR_PUBLIC =
 const MODEL_MONITOR_ENABLED =
   MODEL_MONITOR_PUBLIC || process.env.VERCEL_ENV === "preview";
 const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
+const ASSIST_VALUE_SIGNALS_PATH = "data/assist-value/assist-value-shadow-signals.csv";
 
 function parseCsvLine(line: string): string[] {
   const out: string[] = [];
@@ -775,6 +776,18 @@ function formatSignedLine(value?: number): string {
   return `${value > 0 ? "+" : ""}${value.toFixed(value % 1 === 0 ? 0 : 1)}`;
 }
 
+function formatOddsCell(value?: string): string {
+  const n = parseFloatMaybe(value);
+  if (n == null || Number.isNaN(n)) return "n/a";
+  return n.toFixed(n >= 10 ? 1 : 2);
+}
+
+function formatPointCell(value?: string): string {
+  const n = parseFloatMaybe(value);
+  if (n == null || Number.isNaN(n)) return "n/a";
+  return `${n > 0 ? "+" : ""}${n.toFixed(2)} pp`;
+}
+
 export default async function ModelMonitorPage() {
   if (process.env.NODE_ENV === "production" && !MODEL_MONITOR_ENABLED) {
     notFound();
@@ -882,11 +895,27 @@ export default async function ModelMonitorPage() {
     readLocalMtime("data/backtest/spread-v1-clay-calibration-params.json"),
   ]);
 
+  const [assistSignalsCsv, assistSignalsMtime] = await Promise.all([
+    readLocalFile(ASSIST_VALUE_SIGNALS_PATH),
+    readLocalMtime(ASSIST_VALUE_SIGNALS_PATH),
+  ]);
+
   const strictRows = strictPerfCsv ? parseCsv(strictPerfCsv) : [];
   const volumeRows = volumePerfCsv ? parseCsv(volumePerfCsv) : [];
   const spreadV1Rows = spreadV1PerfCsv ? parseCsv(spreadV1PerfCsv) : [];
   const spreadShadowRows = spreadShadowPerfCsv ? parseCsv(spreadShadowPerfCsv) : [];
   const clay2026Rows = clay2026PerfCsv ? parseCsv(clay2026PerfCsv) : [];
+  const assistRows = assistSignalsCsv ? parseCsv(assistSignalsCsv) : [];
+  const assistShadowRows = assistRows
+    .filter((row) => row.signal_status === "shadow_signal")
+    .sort((a, b) => (parseFloatMaybe(b.edge_pp) ?? -999) - (parseFloatMaybe(a.edge_pp) ?? -999));
+  const assistWatchRows = assistRows.filter((row) => row.signal_status === "watch");
+  const assistTopRows = assistShadowRows.slice(0, 3);
+  const assistGeneratedAt = assistRows
+    .map((row) => row.generated_at)
+    .filter(Boolean)
+    .sort()
+    .at(-1) ?? assistSignalsMtime;
   const strictBase = parsePerf(strictRows, "base");
   const strictOverlay = parsePerf(strictRows, "overlay");
   const volumeBase = parsePerf(volumeRows, "base");
@@ -1398,6 +1427,88 @@ export default async function ModelMonitorPage() {
             <h2 className="text-xl font-semibold text-slate-100">Operations Board</h2>
             <p className="mt-1 text-sm text-slate-400">Lane-by-lane scoreboard first, latest settled results second, deeper diagnostics below.</p>
           </div>
+        </div>
+
+        <div className="mb-8">
+          <MonitorCard
+            title="Assist Value Shadow Picks"
+            subtitle={`Top 3 monitor-visible assist candidates. This is private monitor shadow output only, not Fair Odds Lab/public wiring.${assistGeneratedAt ? ` Generated ${assistGeneratedAt}.` : ""}`}
+          >
+            <div className="mb-4 grid gap-3 sm:grid-cols-3">
+              <Stat label="Shadow Signals" value={`${assistShadowRows.length}`} tone={assistShadowRows.length > 0 ? "text-emerald-300" : "text-slate-400"} />
+              <Stat label="Watch Rows" value={`${assistWatchRows.length}`} tone={assistWatchRows.length > 0 ? "text-amber-300" : "text-slate-400"} />
+              <Stat label="Artifact Rows" value={`${assistRows.length}`} tone={assistRows.length > 0 ? "text-sky-300" : "text-slate-400"} />
+            </div>
+            {assistTopRows.length === 0 ? (
+              <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4 text-sm text-slate-400">
+                No assist shadow signals found in the current artifact yet. When the assist run writes rows, the top 3 appear here.
+              </div>
+            ) : (
+              <div className="grid gap-3 xl:grid-cols-3">
+                {assistTopRows.map((row, index) => {
+                  const modelProb = parseFloatMaybe(row.model_prob);
+                  return (
+                    <div
+                      key={`${row.player_name}-${row.home_team}-${row.away_team}-${row.kickoff_at}-${index}`}
+                      className="rounded-2xl border border-sky-400/20 bg-sky-400/5 p-4"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="text-lg font-semibold text-white">{row.player_name || "Unknown player"}</div>
+                          <div className="mt-1 text-sm text-slate-400">
+                            {row.home_team || "home"} vs {row.away_team || "away"}
+                          </div>
+                          <div className="mt-1 text-xs text-slate-500">
+                            {row.competition || row.league_key || "competition"} - {row.kickoff_at || row.match_date || "kickoff n/a"}
+                          </div>
+                        </div>
+                        <span className="rounded-full border border-sky-400/30 bg-sky-400/10 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-sky-200">
+                          {row.confidence || "shadow"}
+                        </span>
+                      </div>
+                      <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
+                        <div className="rounded-xl border border-slate-800 bg-slate-950/45 p-3">
+                          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Fair</div>
+                          <div className="mt-1 font-mono text-lg text-white">{formatOddsCell(row.fair_odds)}</div>
+                        </div>
+                        <div className="rounded-xl border border-slate-800 bg-slate-950/45 p-3">
+                          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Market</div>
+                          <div className="mt-1 font-mono text-lg text-white">{formatOddsCell(row.market_odds)}</div>
+                        </div>
+                        <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-3">
+                          <div className="text-[10px] uppercase tracking-[0.16em] text-emerald-300/80">Edge</div>
+                          <div className="mt-1 font-mono text-lg text-emerald-200">{formatPointCell(row.edge_pp)}</div>
+                        </div>
+                        <div className="rounded-xl border border-slate-800 bg-slate-950/45 p-3">
+                          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Model</div>
+                          <div className="mt-1 font-mono text-lg text-white">
+                            {modelProb == null ? "n/a" : formatPct(modelProb * 100, 1, false)}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-300">
+                        <span className="rounded-full border border-slate-700 bg-slate-950/45 px-2 py-1">
+                          set pieces {formatPct(parseFloatMaybe(row.setpiece_share_last5_pct), 1, false)}
+                        </span>
+                        <span className="rounded-full border border-slate-700 bg-slate-950/45 px-2 py-1">
+                          team {row.player_team || "n/a"}
+                        </span>
+                        <span className="rounded-full border border-slate-700 bg-slate-950/45 px-2 py-1">
+                          {row.notes || "private_shadow"}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-3 text-sm text-amber-100">
+              <span>Monitor-visible shadow picks only. They are not in Fair Odds Lab and not authorised as a public lane.</span>
+              <Link href="/model-monitor/assist-value" className="font-semibold text-sky-200 underline decoration-sky-400/40 underline-offset-4 hover:text-sky-100">
+                Open full assist monitor
+              </Link>
+            </div>
+          </MonitorCard>
         </div>
 
         <div className="mb-8">
