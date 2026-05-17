@@ -1,5 +1,5 @@
 Assist Value Model Report
-generated_at_utc: 2026-05-17T14:45:11Z
+generated_at_utc: 2026-05-17T16:01:17Z
 
 Status
 model_status: ENABLED_SHADOW_V0
@@ -8,9 +8,9 @@ settlement_status: NOT_BACKTESTED
 
 Counts
 priced_rows: 1520
-shadow_signals: 6
-watch_rows: 3
-shadow_signals_by_league: la-liga=2, ligue-1=3, serie-a=1
+shadow_signals: 5
+watch_rows: 6
+shadow_signals_by_league: la-liga=2, ligue-1=2, serie-a=1
 
 Model
 p_assist = 1 - exp(-lambda)
@@ -23,7 +23,6 @@ Top shadow signals
  - Jon Ander Olasagasti | Levante UD vs RCD Mallorca | fair 4.528 vs market 7.000 | edge 7.80pp | conf medium | setpiece 51.28
  - Federico Dimarco | Inter Milano vs Hellas Verona | fair 2.848 vs market 3.500 | edge 6.53pp | conf high | setpiece 50.0
  - Luis Milla | Elche CF vs Getafe CF | fair 4.332 vs market 6.000 | edge 6.42pp | conf high | setpiece 97.06
- - Afonso Moreira | Olympique Lyon vs Racing Club De Lens | fair 3.568 vs market 4.333 | edge 4.94pp | conf medium | setpiece 38.1
 
 Guardrail
 These are private model candidates only. Do not publish until settlement/backtest gates exist.
