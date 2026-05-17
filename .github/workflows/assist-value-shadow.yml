@@ -1,0 +1,70 @@
+name: Assist Value Shadow
+
+on:
+  schedule:
+    - cron: "10 7 * * *"
+    - cron: "*/30 8-22 * * *"
+  workflow_dispatch:
+    inputs:
+      refresh_role_sources:
+        description: "Refresh RotoWire/FPL/SetPieceTakers source audit before scraping odds"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: assist-value-shadow-writes
+  cancel-in-progress: false
+
+jobs:
+  assist-shadow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: golden-with-speed-insights
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install Python deps
+        run: pip install requests
+
+      - name: Create .env.local
+        run: |
+          : > .env.local
+          if [ -n "${{ secrets.ODDS_API_KEY }}" ]; then
+            echo "ODDS_API_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
+            echo "ODDS_API_IO_KEY=${{ secrets.ODDS_API_KEY }}" >> .env.local
+          fi
+
+      - name: Run assist value shadow lane
+        run: |
+          REFRESH_FLAGS=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.refresh_role_sources }}" = "true" ]; then
+            REFRESH_FLAGS="--refresh-role-sources"
+          fi
+          if [ "${{ github.event.schedule }}" = "10 7 * * *" ]; then
+            REFRESH_FLAGS="--refresh-role-sources"
+          fi
+          python scripts/run-assist-value-shadow.py ${REFRESH_FLAGS} --allow-odds-failure --days-ahead 3
+
+      - name: Commit and push if new shadow data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -d data/assist-value ]; then
+            git add -f data/assist-value/
+            git add -u data/assist-value || true
+          fi
+          if git diff --cached --quiet; then
+            echo "No assist value shadow changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: assist value shadow refresh"
+          bash scripts/ci-safe-push.sh golden-with-speed-insights
