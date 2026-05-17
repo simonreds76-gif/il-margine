@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T17:53:28.356930Z",
+  "generated_at": "2026-05-17T18:49:40.406599Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -32,11 +32,12 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 25,
-  "signals_qualifying": 2,
+  "fixtures_evaluated": 24,
+  "signals_qualifying": 4,
   "leagues_covered": [
     "epl",
-    "la-liga"
+    "la-liga",
+    "serie-a"
   ],
   "featured_signal_id": "20260517-federico-vinas-573a4e596a",
   "signals": [
@@ -88,14 +89,14 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Positive",
-          "percentile": 60
+          "percentile": 59
         },
         "recent_team_form": {
           "tier": "Unknown"
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 51
+          "percentile": 52
         },
         "opponent_recent_defence": {
           "tier": "Average",
@@ -126,6 +127,208 @@
         "Recent chance quality grades as strong",
         "The fixture profile adds to his scoring case",
         "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260517-kristian-thorstvedt-71ba40c9c0",
+      "match": {
+        "home_team": "Sassuolo Calcio",
+        "away_team": "US Lecce",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-05-17T18:45:00Z",
+        "kickoff_display": "Sun 17 May 19:45 UK",
+        "fotmob_match_id": "4803406",
+        "fotmob_page_url": "/matches/sassuolo-vs-lecce/2mnqb0#4803406",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Kristian Thorstvedt",
+        "team": "Sassuolo",
+        "position": "MID",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/sassuolo.png",
+        "team_primary_color": "#16a34a",
+        "team_secondary_color": "#111827",
+        "team_shirt_pattern": "vertical-stripes"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 36.5,
+        "fair_odds": 2.74
+      },
+      "market_data": {
+        "best_odds": 3.75,
+        "best_book": "Bet365",
+        "implied_chance_pct": 26.7
+      },
+      "edge": {
+        "price_gap_pp": 9.9,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 85
+        },
+        "share_of_team_chances_pct": 28,
+        "share_of_team_chances_percentile": 98,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 72
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-08",
+          "xg_for_avg": 1.55,
+          "xg_against_avg": 1.51,
+          "xgd_per90": 0.04,
+          "shots_for_avg": 12.6,
+          "shots_against_avg": 14.6,
+          "sot_for_avg": 4.4,
+          "sot_against_avg": 4.0,
+          "corners_for_avg": 3.8,
+          "corners_against_avg": 6.0
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 93
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-09",
+          "xg_for_avg": 1.1,
+          "xg_against_avg": 1.62,
+          "xgd_per90": -0.52,
+          "shots_for_avg": 9.4,
+          "shots_against_avg": 11.0,
+          "sot_for_avg": 2.8,
+          "sot_against_avg": 4.6,
+          "corners_for_avg": 3.4,
+          "corners_against_avg": 5.0
+        },
+        "fixture_boost_pct": 36,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260517-giovanni-simeone-9e04c1d0a9",
+      "match": {
+        "home_team": "Cagliari Calcio",
+        "away_team": "Torino FC",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-05-17T18:45:00Z",
+        "kickoff_display": "Sun 17 May 19:45 UK",
+        "fotmob_match_id": "4803399",
+        "fotmob_page_url": "/matches/cagliari-vs-torino/2s2af3#4803399",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Giovanni Simeone",
+        "team": "Torino",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/torino.png",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 35.1,
+        "fair_odds": 2.85
+      },
+      "market_data": {
+        "best_odds": 3.75,
+        "best_book": "Bet365",
+        "implied_chance_pct": 26.7
+      },
+      "edge": {
+        "price_gap_pp": 8.4,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 96
+        },
+        "share_of_team_chances_pct": 32,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 36
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-08",
+          "xg_for_avg": 1.52,
+          "xg_against_avg": 1.71,
+          "xgd_per90": -0.19,
+          "shots_for_avg": 11.2,
+          "shots_against_avg": 15.6,
+          "sot_for_avg": 2.0,
+          "sot_against_avg": 5.6,
+          "corners_for_avg": 3.6,
+          "corners_against_avg": 5.4
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 59
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-09",
+          "xg_for_avg": 1.27,
+          "xg_against_avg": 1.48,
+          "xgd_per90": -0.21,
+          "shots_for_avg": 13.2,
+          "shots_against_avg": 11.4,
+          "sot_for_avg": 3.4,
+          "sot_against_avg": 4.6,
+          "corners_for_avg": 5.8,
+          "corners_against_avg": 5.2
+        },
+        "fixture_boost_pct": 10,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent has been allowing chances recently",
+        "The fixture profile adds to his scoring case"
       ],
       "risk_flags": []
     },
@@ -196,7 +399,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 46
+          "percentile": 49
         },
         "opponent_recent_defence": {
           "tier": "Positive",
