@@ -148,37 +148,48 @@ def clean_assist_player_name(value: str) -> str:
 
 def build_rows(odds_rows: list[dict[str, str]], roles_by_player: dict[str, list[dict[str, str]]]) -> list[dict[str, str]]:
     output: list[dict[str, str]] = []
+    latest_by_key: dict[tuple[str, ...], dict[str, str]] = {}
     for odds in odds_rows:
         player = clean_assist_player_name(str(odds.get("player_name") or ""))
         if not player:
             continue
         role, join_status = choose_role(odds, roles_by_player.get(norm_text(player), []))
         shadow_status = "role_matched" if role and join_status != "ambiguous_player_name" else join_status
-        output.append(
-            {
-                "captured_at": odds.get("captured_at", ""),
-                "match_date": odds.get("match_date", ""),
-                "kickoff_at": odds.get("kickoff_at", ""),
-                "competition": odds.get("competition", ""),
-                "home_team": odds.get("home_team", ""),
-                "away_team": odds.get("away_team", ""),
-                "bookmaker": odds.get("bookmaker", ""),
-                "player_name": player,
-                "odds_decimal": odds.get("odds_decimal", ""),
-                "role_team": (role or {}).get("team", "") or (role or {}).get("rotowire_team", ""),
-                "corner_share_last5_pct": (role or {}).get("corner_share_last5_pct", ""),
-                "corner_share_total_pct": (role or {}).get("corner_share_total_pct", ""),
-                "fk_share_last5_pct": (role or {}).get("fk_share_last5_pct", ""),
-                "fk_share_total_pct": (role or {}).get("fk_share_total_pct", ""),
-                "setpiece_share_last5_pct": (role or {}).get("setpiece_share_last5_pct", ""),
-                "total_share_pct": (role or {}).get("total_share_pct", ""),
-                "latest_role_week": (role or {}).get("latest_week", ""),
-                "role_source": (role or {}).get("source", ""),
-                "join_status": join_status,
-                "shadow_status": shadow_status,
-                "notes": "research_only_no_public_signal",
-            }
+        row = {
+            "captured_at": odds.get("captured_at", ""),
+            "match_date": odds.get("match_date", ""),
+            "kickoff_at": odds.get("kickoff_at", ""),
+            "competition": odds.get("competition", ""),
+            "home_team": odds.get("home_team", ""),
+            "away_team": odds.get("away_team", ""),
+            "bookmaker": odds.get("bookmaker", ""),
+            "player_name": player,
+            "odds_decimal": odds.get("odds_decimal", ""),
+            "role_team": (role or {}).get("team", "") or (role or {}).get("rotowire_team", ""),
+            "corner_share_last5_pct": (role or {}).get("corner_share_last5_pct", ""),
+            "corner_share_total_pct": (role or {}).get("corner_share_total_pct", ""),
+            "fk_share_last5_pct": (role or {}).get("fk_share_last5_pct", ""),
+            "fk_share_total_pct": (role or {}).get("fk_share_total_pct", ""),
+            "setpiece_share_last5_pct": (role or {}).get("setpiece_share_last5_pct", ""),
+            "total_share_pct": (role or {}).get("total_share_pct", ""),
+            "latest_role_week": (role or {}).get("latest_week", ""),
+            "role_source": (role or {}).get("source", ""),
+            "join_status": join_status,
+            "shadow_status": shadow_status,
+            "notes": "research_only_no_public_signal",
+        }
+        key = (
+            row["match_date"],
+            row["kickoff_at"],
+            norm_team(row["home_team"]),
+            norm_team(row["away_team"]),
+            norm_text(row["bookmaker"]),
+            norm_text(row["player_name"]),
         )
+        existing = latest_by_key.get(key)
+        if existing is None or row["captured_at"] >= existing.get("captured_at", ""):
+            latest_by_key[key] = row
+    output = list(latest_by_key.values())
     output.sort(
         key=lambda row: (
             as_float(row.get("setpiece_share_last5_pct", "")),
