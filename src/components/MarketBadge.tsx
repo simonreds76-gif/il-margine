@@ -24,26 +24,26 @@ const MARKET_CONFIG: Record<string, MarketConfig> = {
   ausopen: {
     src: "/icons/markets/slams/australian-open.svg",
     label: "Australian Open",
-    containerClassName: "h-8 w-10",
-    imageClassName: "max-h-8 max-w-10 object-contain",
+    containerClassName: "h-8 w-12",
+    imageClassName: "h-8 w-8 object-contain",
   },
   rolandgarros: {
-    src: "/icons/markets/slams/roland-garros.svg",
+    src: "/icons/markets/slams/roland-garros.png",
     label: "Roland Garros",
-    containerClassName: "h-8 w-10",
-    imageClassName: "max-h-8 max-w-10 object-contain",
+    containerClassName: "h-8 w-12",
+    imageClassName: "h-8 w-8 object-contain",
   },
   wimbledon: {
     src: "/icons/markets/slams/wimbledon.png",
     label: "Wimbledon",
-    containerClassName: "h-8 w-10",
-    imageClassName: "max-h-8 max-w-10 object-contain",
+    containerClassName: "h-8 w-12",
+    imageClassName: "h-8 w-8 object-contain",
   },
   usopen: {
     src: "/icons/markets/slams/us-open.svg",
     label: "US Open",
-    containerClassName: "h-8 w-10",
-    imageClassName: "max-h-8 max-w-10 object-contain",
+    containerClassName: "h-8 w-12 rounded bg-white/95 px-1",
+    imageClassName: "max-h-8 w-10 object-contain",
   },
   pl: { src: "/league-logos/epl.png", label: "Premier League", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
   seriea: { src: "/league-logos/serie-a.png", label: "Serie A", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
@@ -91,7 +91,7 @@ export default function MarketBadge({ market, category, event, showLabel = false
     >
       <span className={`inline-flex items-center justify-center shrink-0 ${containerClassName ?? (wide ? "h-6 w-8" : "h-6 w-6")}`}>
         <img
-          src={`${src}?v=10`}
+          src={`${src}?v=11`}
           alt={label}
           width={wide ? 32 : 24}
           height={24}
