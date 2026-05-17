@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-16T01:30:43Z",
+  "generated_at": "2026-05-17T01:47:08Z",
   "league": "serie-a",
   "row_count": 4,
   "rows": [
@@ -22,20 +22,19 @@
       "last_event_date": "2026-05-11"
     },
     {
-      "team": "Milan",
+      "team": "AC Milan",
       "team_key": "milan",
       "player_name": "Christopher Nkunku",
       "player_key": "christopher nkunku",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 2,
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
       "observed_share": 1.0,
-      "observed_sample": 2.0,
+      "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live",
         "settled_logs"
       ],
-      "event_count": 2,
+      "event_count": 1,
       "last_event_date": "2026-05-10"
     },
     {
@@ -43,16 +42,15 @@
       "team_key": "roma",
       "player_name": "Donyell Malen",
       "player_key": "donyell malen",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 2,
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
       "observed_share": 1.0,
-      "observed_sample": 2.0,
+      "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live",
         "settled_logs"
       ],
-      "event_count": 2,
+      "event_count": 1,
       "last_event_date": "2026-05-10"
     },
     {

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-16T01:30:49Z",
+  "generated_at": "2026-05-17T01:47:15Z",
   "league": "bundesliga",
-  "row_count": 4,
+  "row_count": 5,
   "rows": [
     {
       "team": "Bayer Leverkusen",
@@ -18,7 +18,7 @@
         "settled_logs"
       ],
       "event_count": 1,
-      "last_event_date": "2026-04-25"
+      "last_event_date": "2026-05-16"
     },
     {
       "team": "Bayern Munich",
@@ -37,20 +37,20 @@
       "last_event_date": "2026-05-09"
     },
     {
-      "team": "Hamburger SV",
-      "team_key": "hamburger sv",
-      "player_name": "Robert Glatzel",
-      "player_key": "robert glatzel",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "team": "Eintracht Frankfurt",
+      "team_key": "eintracht frankfurt",
+      "player_name": "Jonathan Burkardt",
+      "player_key": "jonathan burkardt",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
         "settled_logs"
       ],
       "event_count": 1,
-      "last_event_date": "2026-04-25"
+      "last_event_date": "2026-05-16"
     },
     {
       "team": "VfB Stuttgart",
@@ -67,6 +67,23 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-05-09"
+    },
+    {
+      "team": "Wolfsburg",
+      "team_key": "wolfsburg",
+      "player_name": "Christian Eriksen",
+      "player_key": "christian eriksen",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
+      "observed_share": 1.0,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live",
+        "settled_logs"
+      ],
+      "event_count": 2,
+      "last_event_date": "2026-05-16"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-16T01:30:48Z",
+  "generated_at": "2026-05-17T01:47:13Z",
   "league": "la-liga",
-  "row_count": 6,
+  "row_count": 4,
   "rows": [
     {
       "team": "Alaves",
@@ -68,38 +68,6 @@
       ],
       "event_count": 2,
       "last_event_date": "2026-05-09"
-    },
-    {
-      "team": "Valencia",
-      "team_key": "valencia",
-      "player_name": "Hugo Duro",
-      "player_key": "hugo duro",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-05-10"
-    },
-    {
-      "team": "Villarreal",
-      "team_key": "villarreal",
-      "player_name": "Ayoze Pérez",
-      "player_key": "ayoze p rez",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-05-10"
     }
   ]
 }
