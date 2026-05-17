@@ -126,6 +126,7 @@ const KNOWN_PROJECT_FILE_PATHS = {
   "data/goalscorer/serie-a-penalty-takers.json": path.join(process.cwd(), "data/goalscorer/serie-a-penalty-takers.json"),
   "data/goalscorer/team-logo-map.json": path.join(process.cwd(), "data/goalscorer/team-logo-map.json"),
   "data/assist-value/assist-value-model-report.txt": path.join(process.cwd(), "data/assist-value/assist-value-model-report.txt"),
+  "data/assist-value/assist-value-shadow-performance.txt": path.join(process.cwd(), "data/assist-value/assist-value-shadow-performance.txt"),
   "data/assist-value/assist-value-shadow-board.csv": path.join(process.cwd(), "data/assist-value/assist-value-shadow-board.csv"),
   "data/assist-value/assist-value-shadow-report.txt": path.join(process.cwd(), "data/assist-value/assist-value-shadow-report.txt"),
   "data/assist-value/assist-value-shadow-signals.csv": path.join(process.cwd(), "data/assist-value/assist-value-shadow-signals.csv"),

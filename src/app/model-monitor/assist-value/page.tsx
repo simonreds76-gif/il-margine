@@ -26,6 +26,7 @@ type CsvRow = Record<string, string>;
 const SIGNALS_PATH = "data/assist-value/assist-value-shadow-signals.csv";
 const MODEL_REPORT_PATH = "data/assist-value/assist-value-model-report.txt";
 const SHADOW_REPORT_PATH = "data/assist-value/assist-value-shadow-report.txt";
+const PERFORMANCE_REPORT_PATH = "data/assist-value/assist-value-shadow-performance.txt";
 const SOURCE_AUDIT_PATH = "data/assist-value/setpiece-source-audit.md";
 
 function parseCsvLine(line: string): string[] {
@@ -120,6 +121,11 @@ function signedPp(value: number | null): string {
   return `${value > 0 ? "+" : ""}${value.toFixed(2)} pp`;
 }
 
+function signedUnits(value: number | null): string {
+  if (value === null || !Number.isFinite(value)) return "-";
+  return `${value > 0 ? "+" : ""}${value.toFixed(2)}u`;
+}
+
 function statusTone(status?: string | null): string {
   const normalized = (status ?? "").toLowerCase();
   if (normalized === "shadow_signal") return "bg-cyan-500/10 text-cyan-300 border-cyan-500/20";
@@ -135,6 +141,14 @@ function confidenceTone(confidence?: string | null): string {
   if (normalized === "medium") return "bg-amber-500/10 text-amber-300 border-amber-500/20";
   if (normalized === "low") return "bg-slate-700/40 text-slate-400 border-slate-600/40";
   return "bg-slate-700/40 text-slate-300 border-slate-600/40";
+}
+
+function outcomeTone(outcome?: string | null): string {
+  const normalized = (outcome ?? "").toLowerCase();
+  if (normalized === "won") return "bg-emerald-500/10 text-emerald-300 border-emerald-500/20";
+  if (normalized === "lost") return "bg-rose-500/10 text-rose-300 border-rose-500/20";
+  if (normalized === "void") return "bg-slate-700/40 text-slate-300 border-slate-600/40";
+  return "bg-amber-500/10 text-amber-300 border-amber-500/20";
 }
 
 function statusLabel(status?: string | null): string {
@@ -165,6 +179,8 @@ function renderSignalRow(row: CsvRow) {
   const cornerShare = numberValue(row, "corner_share_last5_pct");
   const fkShare = numberValue(row, "fk_share_last5_pct");
   const expectedMinutes = numberValue(row, "expected_minutes");
+  const pnl = numberValue(row, "pnl_units");
+  const settled = row.settled === "1";
 
   return (
     <tr key={`${row.kickoff_at}-${row.player_name}-${row.market_odds}`} className="border-t border-slate-800/70">
@@ -202,6 +218,12 @@ function renderSignalRow(row: CsvRow) {
           {cornerShare !== null || fkShare !== null ? ` | CK ${pct(cornerShare)} | FK ${pct(fkShare)}` : ""}
         </div>
       </td>
+      <td className="py-3 pr-4 align-top">
+        <StatusPill label={settled ? row.bet_outcome || "settled" : "pending"} tone={outcomeTone(settled ? row.bet_outcome : "pending")} />
+        <div className={`mt-1 text-xs tabular-nums ${pnl !== null && pnl >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+          {settled ? signedUnits(pnl) : row.settlement_note || "awaiting result"}
+        </div>
+      </td>
     </tr>
   );
 }
@@ -209,10 +231,11 @@ function renderSignalRow(row: CsvRow) {
 export default async function AssistValueMonitorPage() {
   if (!MODEL_MONITOR_ENABLED) notFound();
 
-  const [signalsText, modelReport, shadowReport, sourceAudit, signalsMtime] = await Promise.all([
+  const [signalsText, modelReport, shadowReport, performanceReport, sourceAudit, signalsMtime] = await Promise.all([
     readKnownText(SIGNALS_PATH),
     readKnownText(MODEL_REPORT_PATH),
     readKnownText(SHADOW_REPORT_PATH),
+    readKnownText(PERFORMANCE_REPORT_PATH),
     readKnownText(SOURCE_AUDIT_PATH),
     readKnownMtime(SIGNALS_PATH),
   ]);
@@ -224,6 +247,13 @@ export default async function AssistValueMonitorPage() {
   const noEdgeRows = rows.filter((row) => row.signal_status === "no_edge").length;
   const highSignals = allSignalRows.filter((row) => row.confidence === "high").length;
   const mediumSignals = allSignalRows.filter((row) => row.confidence === "medium").length;
+  const settledRows = allSignalRows.filter((row) => row.settled === "1");
+  const wonRows = settledRows.filter((row) => row.bet_outcome === "won");
+  const lostRows = settledRows.filter((row) => row.bet_outcome === "lost");
+  const voidRows = settledRows.filter((row) => row.bet_outcome === "void");
+  const pnlUnits = settledRows.reduce((total, row) => total + (numberValue(row, "pnl_units") ?? 0), 0);
+  const settledStake = wonRows.length + lostRows.length;
+  const roiPct = settledStake > 0 ? (pnlUnits / settledStake) * 100 : 0;
   const latestGeneratedAt = maxString(rows.map((row) => row.generated_at));
   const latestCapturedAt = maxString(rows.map((row) => row.captured_at));
 
@@ -240,7 +270,7 @@ export default async function AssistValueMonitorPage() {
             <p>
               Private assist fair-odds candidates built from Bet365 assist prices, player assist/xA rates, team attack
               scale, and set-piece role share. This page is monitor-only: no Fair Odds Lab publication, no settlement
-              claim, and no production signal lane.
+              claim beyond the shadow ledger, and no production signal lane.
             </p>
             <div className="flex flex-wrap gap-2">
               <StatusPill label="model enabled shadow v0" tone="bg-amber-500/10 text-amber-300 border-amber-500/20" />
@@ -254,6 +284,8 @@ export default async function AssistValueMonitorPage() {
           <StatCard label="Priced rows" value={rows.length.toLocaleString("en-GB")} detail="Bet365 assist rows scored" />
           <StatCard label="Shadow signals" value={allSignalRows.length.toString()} tone="text-cyan-300" detail={`${highSignals} high, ${mediumSignals} medium`} />
           <StatCard label="Watch rows" value={watchRows.length.toString()} tone="text-amber-300" detail={`${noEdgeRows.toLocaleString("en-GB")} no-edge rows`} />
+          <StatCard label="Settled" value={settledRows.length.toString()} tone="text-emerald-300" detail={`${wonRows.length}W / ${lostRows.length}L / ${voidRows.length}V`} />
+          <StatCard label="Shadow P/L" value={signedUnits(pnlUnits)} tone={pnlUnits >= 0 ? "text-emerald-300" : "text-rose-300"} detail={`${roiPct > 0 ? "+" : ""}${roiPct.toFixed(1)}% ROI`} />
           <StatCard label="Latest capture" value={latestCapturedAt ? formatDateTimeLabel(latestCapturedAt) : "-"} detail={`CSV mtime ${signalsMtime ? formatDateTimeLabel(signalsMtime) : "-"}`} />
           <StatCard label="Generated" value={latestGeneratedAt ? formatDateTimeLabel(latestGeneratedAt) : "-"} detail="Pipeline timestamp" />
         </section>
@@ -272,6 +304,7 @@ export default async function AssistValueMonitorPage() {
                       <th className="pb-2 pr-4 font-semibold">Edge</th>
                       <th className="pb-2 pr-4 font-semibold">Model</th>
                       <th className="pb-2 pr-4 font-semibold">Role</th>
+                      <th className="pb-2 pr-4 font-semibold">Result</th>
                     </tr>
                   </thead>
                   <tbody>{signalRows.map(renderSignalRow)}</tbody>
@@ -302,13 +335,13 @@ export default async function AssistValueMonitorPage() {
               <div className="space-y-3 text-sm leading-6 text-slate-400">
                 <p>
                   The page is deliberately parked under model monitor. It helps us inspect the live assist model, but it
-                  does not authorize publication until settlement/backtest gates exist.
+                  does not authorize publication until backtest gates exist.
                 </p>
                 <ul className="list-disc space-y-1 pl-5 text-slate-500">
                   <li>No Fair Odds Lab exposure.</li>
                   <li>No public signal lane.</li>
                   <li>No staking or action label.</li>
-                  <li>No backtest claim yet.</li>
+                  <li>Shadow P/L only, settled from FotMob assist events where available.</li>
                 </ul>
               </div>
             </SectionCard>
@@ -329,6 +362,7 @@ export default async function AssistValueMonitorPage() {
                       <th className="pb-2 pr-4 font-semibold">Edge</th>
                       <th className="pb-2 pr-4 font-semibold">Model</th>
                       <th className="pb-2 pr-4 font-semibold">Role</th>
+                      <th className="pb-2 pr-4 font-semibold">Result</th>
                     </tr>
                   </thead>
                   <tbody>{watchRows.map(renderSignalRow)}</tbody>
@@ -351,6 +385,16 @@ export default async function AssistValueMonitorPage() {
         </section>
 
         <section className="mt-6 grid gap-6 lg:grid-cols-2">
+          <SectionCard title="Settlement Report" subtitle="Shadow P/L ledger written by scripts/assist-value-settle.py" collapsible defaultOpen={false}>
+            {performanceReport ? (
+              <pre className="max-h-[520px] overflow-auto whitespace-pre-wrap rounded-xl border border-slate-800/70 bg-slate-950/60 p-4 text-xs leading-5 text-slate-300">
+                {performanceReport}
+              </pre>
+            ) : (
+              <EmptyState message="Settlement report is missing. It will appear after the assist settler runs." />
+            )}
+          </SectionCard>
+
           <SectionCard title="Shadow Pipeline Report" subtitle="Live scrape and board-build summary" collapsible defaultOpen={false}>
             {shadowReport ? (
               <pre className="max-h-[520px] overflow-auto whitespace-pre-wrap rounded-xl border border-slate-800/70 bg-slate-950/60 p-4 text-xs leading-5 text-slate-300">
