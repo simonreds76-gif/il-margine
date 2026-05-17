@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T15:49:10.918684Z",
+  "generated_at": "2026-05-17T15:58:31.403738Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -33,9 +33,10 @@
     "post_kickoff_visibility_minutes": 150
   },
   "fixtures_evaluated": 29,
-  "signals_qualifying": 4,
+  "signals_qualifying": 5,
   "leagues_covered": [
-    "epl"
+    "epl",
+    "la-liga"
   ],
   "featured_signal_id": "20260517-dominic-calvert-lewin-57b2c23d7b",
   "signals": [
@@ -136,6 +137,95 @@
         "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
         "Recent team form supports the attacking case",
+        "Primary penalty role adds a clear scoring route"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260517-federico-vinas-573a4e596a",
+      "match": {
+        "home_team": "Real Oviedo",
+        "away_team": "Deportivo Alaves",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-05-17T17:00:00Z",
+        "kickoff_display": "Sun 17 May 18:00 UK",
+        "fotmob_match_id": "4837477",
+        "fotmob_page_url": "/matches/real-oviedo-vs-deportivo-alaves/2uai1q#4837477",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Federico Vinas",
+        "team": "Real Oviedo",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/la-liga/real-oviedo.png",
+        "team_primary_color": "#1d4ed8",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 39.1,
+        "fair_odds": 2.56
+      },
+      "market_data": {
+        "best_odds": 3.4,
+        "best_book": "Bet365",
+        "implied_chance_pct": 29.4
+      },
+      "edge": {
+        "price_gap_pp": 9.7,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 85
+        },
+        "share_of_team_chances_pct": 31,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Positive",
+          "percentile": 58
+        },
+        "recent_team_form": {
+          "tier": "Unknown"
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Average",
+          "percentile": 47
+        },
+        "opponent_recent_defence": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-13",
+          "xg_for_avg": 1.41,
+          "xg_against_avg": 1.01,
+          "xgd_per90": 0.4,
+          "shots_for_avg": 12.4,
+          "shots_against_avg": 12.2,
+          "sot_for_avg": 4.0,
+          "sot_against_avg": 3.8,
+          "corners_for_avg": 5.6,
+          "corners_against_avg": 6.2
+        },
+        "fixture_boost_pct": 10,
+        "projected_minutes": 85,
+        "penalty_role": "Primary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "The fixture profile adds to his scoring case",
         "Primary penalty role adds a clear scoring route"
       ],
       "risk_flags": []
@@ -288,7 +378,7 @@
         "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 42
+          "percentile": 43
         },
         "recent_team_form": {
           "tier": "Positive",
