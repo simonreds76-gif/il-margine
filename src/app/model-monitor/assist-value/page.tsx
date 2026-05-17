@@ -1,5 +1,5 @@
+import Link from "next/link";
 import { promises as fs } from "node:fs";
-
 import { notFound } from "next/navigation";
 
 import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
@@ -14,8 +14,11 @@ import {
   SectionCard,
   StatCard,
   StatusPill,
+  cn,
   formatDateTimeLabel,
   formatOdds,
+  formatUnits,
+  statusTone,
   toneClass,
 } from "../shared";
 
@@ -23,397 +26,465 @@ export const dynamic = "force-dynamic";
 
 type CsvRow = Record<string, string>;
 
+type LedgerSummary = {
+  signals: number;
+  settled: number;
+  pending: number;
+  won: number;
+  lost: number;
+  voided: number;
+  pnl: number;
+  staked: number;
+  roiPct: number | null;
+  avgEdge: number | null;
+};
+
+type LeagueLedgerSummary = LedgerSummary & {
+  leagueKey: string;
+  leagueLabel: string;
+};
+
 const SIGNALS_PATH = "data/assist-value/assist-value-shadow-signals.csv";
-const MODEL_REPORT_PATH = "data/assist-value/assist-value-model-report.txt";
 const SHADOW_REPORT_PATH = "data/assist-value/assist-value-shadow-report.txt";
+const MODEL_REPORT_PATH = "data/assist-value/assist-value-model-report.txt";
 const PERFORMANCE_REPORT_PATH = "data/assist-value/assist-value-shadow-performance.txt";
-const SOURCE_AUDIT_PATH = "data/assist-value/setpiece-source-audit.md";
 
 function parseCsvLine(line: string): string[] {
   const cells: string[] = [];
   let current = "";
   let quoted = false;
 
-  for (let i = 0; i < line.length; i += 1) {
-    const ch = line[i];
-    const next = line[i + 1];
-    if (ch === '"' && quoted && next === '"') {
+  for (let index = 0; index < line.length; index += 1) {
+    const char = line[index];
+    if (char === '"' && quoted && line[index + 1] === '"') {
       current += '"';
-      i += 1;
+      index += 1;
       continue;
     }
-    if (ch === '"') {
+    if (char === '"') {
       quoted = !quoted;
       continue;
     }
-    if (ch === "," && !quoted) {
+    if (char === "," && !quoted) {
       cells.push(current);
       current = "";
       continue;
     }
-    current += ch;
+    current += char;
   }
 
   cells.push(current);
   return cells.map((cell) => cell.trim());
 }
 
-function parseCsv(text?: string | null): CsvRow[] {
-  const lines = (text ?? "")
-    .split(/\r?\n/)
-    .map((line) => line.trimEnd())
-    .filter(Boolean);
-  if (lines.length <= 1) return [];
+function parseCsv(text: string | null): CsvRow[] {
+  const lines = (text ?? "").split(/\r?\n/).filter(Boolean);
+  if (lines.length < 2) return [];
+
   const headers = parseCsvLine(lines[0]);
   return lines.slice(1).map((line) => {
-    const cells = parseCsvLine(line);
+    const values = parseCsvLine(line);
     const row: CsvRow = {};
     headers.forEach((header, index) => {
-      row[header] = cells[index] ?? "";
+      row[header] = values[index] ?? "";
     });
     return row;
   });
 }
 
-async function readKnownText(relativePath: string): Promise<string> {
-  const absolutePath = tryGetKnownProjectFilePath(relativePath);
-  if (!absolutePath) return "";
-  try {
-    return await fs.readFile(absolutePath, "utf8");
-  } catch {
-    return "";
-  }
+function numeric(row: CsvRow, key: string): number | null {
+  const raw = row[key];
+  if (raw === undefined || raw === "") return null;
+  const value = Number(raw);
+  return Number.isFinite(value) ? value : null;
 }
 
-async function readKnownMtime(relativePath: string): Promise<string> {
-  const absolutePath = tryGetKnownProjectFilePath(relativePath);
-  if (!absolutePath) return "";
-  try {
-    const stat = await fs.stat(absolutePath);
-    return stat.mtime.toISOString();
-  } catch {
-    return "";
-  }
+function sum(values: Array<number | null>): number {
+  return values.reduce<number>((total, value) => total + (value ?? 0), 0);
 }
 
-function numberValue(row: CsvRow, key: string): number | null {
-  const raw = row[key]?.trim();
-  if (!raw) return null;
-  const parsed = Number(raw);
-  return Number.isFinite(parsed) ? parsed : null;
+function avg(values: Array<number | null>): number | null {
+  const clean = values.filter((value): value is number => value !== null && Number.isFinite(value));
+  if (clean.length === 0) return null;
+  return sum(clean) / clean.length;
 }
 
-function maxString(values: string[]): string {
-  return values.filter(Boolean).sort().at(-1) ?? "";
+function signedPp(value: number | null, digits = 1): string {
+  if (value === null) return "-";
+  const sign = value > 0 ? "+" : "";
+  return `${sign}${value.toFixed(digits)} pp`;
+}
+
+function signedPct(value: number | null, digits = 1): string {
+  if (value === null) return "-";
+  const sign = value > 0 ? "+" : "";
+  return `${sign}${value.toFixed(digits)}%`;
 }
 
 function pct(value: number | null, digits = 1): string {
-  if (value === null || !Number.isFinite(value)) return "-";
+  if (value === null) return "-";
   return `${value.toFixed(digits)}%`;
 }
 
-function probPct(value: number | null): string {
-  return value === null ? "-" : pct(value * 100, 1);
+function probPct(value: number | null, digits = 1): string {
+  if (value === null) return "-";
+  return `${(value * 100).toFixed(digits)}%`;
 }
 
-function signedPp(value: number | null): string {
-  if (value === null || !Number.isFinite(value)) return "-";
-  return `${value > 0 ? "+" : ""}${value.toFixed(2)} pp`;
+function cleanStatus(value?: string | null): string {
+  return (value ?? "").trim().toLowerCase();
 }
 
-function signedUnits(value: number | null): string {
-  if (value === null || !Number.isFinite(value)) return "-";
-  return `${value > 0 ? "+" : ""}${value.toFixed(2)}u`;
+function isSignal(row: CsvRow): boolean {
+  return cleanStatus(row.signal_status) === "shadow_signal";
 }
 
-function statusTone(status?: string | null): string {
-  const normalized = (status ?? "").toLowerCase();
-  if (normalized === "shadow_signal") return "bg-cyan-500/10 text-cyan-300 border-cyan-500/20";
-  if (normalized === "watch") return "bg-amber-500/10 text-amber-300 border-amber-500/20";
-  if (normalized === "no_edge") return "bg-slate-700/40 text-slate-400 border-slate-600/40";
-  if (normalized.includes("disabled")) return "bg-rose-500/10 text-rose-300 border-rose-500/20";
-  return "bg-slate-700/40 text-slate-300 border-slate-600/40";
+function isSettled(row: CsvRow): boolean {
+  const settled = cleanStatus(row.settled);
+  const outcome = cleanStatus(row.bet_outcome);
+  return settled === "1" || settled === "true" || settled === "yes" || outcome === "won" || outcome === "lost" || outcome === "void";
 }
 
-function confidenceTone(confidence?: string | null): string {
-  const normalized = (confidence ?? "").toLowerCase();
-  if (normalized === "high") return "bg-emerald-500/10 text-emerald-300 border-emerald-500/20";
-  if (normalized === "medium") return "bg-amber-500/10 text-amber-300 border-amber-500/20";
-  if (normalized === "low") return "bg-slate-700/40 text-slate-400 border-slate-600/40";
-  return "bg-slate-700/40 text-slate-300 border-slate-600/40";
+function outcome(row: CsvRow): "won" | "lost" | "void" | "pending" {
+  const value = cleanStatus(row.bet_outcome);
+  if (value === "won" || value === "lost" || value === "void") return value;
+  return isSettled(row) ? "void" : "pending";
 }
 
-function outcomeTone(outcome?: string | null): string {
-  const normalized = (outcome ?? "").toLowerCase();
-  if (normalized === "won") return "bg-emerald-500/10 text-emerald-300 border-emerald-500/20";
-  if (normalized === "lost") return "bg-rose-500/10 text-rose-300 border-rose-500/20";
-  if (normalized === "void") return "bg-slate-700/40 text-slate-300 border-slate-600/40";
+function pnlUnits(row: CsvRow): number {
+  const explicit = numeric(row, "pnl_units");
+  if (explicit !== null) return explicit;
+
+  const result = outcome(row);
+  if (result === "won") return Math.max(0, numeric(row, "market_odds") ?? 1) - 1;
+  if (result === "lost") return -1;
+  return 0;
+}
+
+function settlementColumnsPresent(rows: CsvRow[]): boolean {
+  if (rows.length === 0) return true;
+  return "settled" in rows[0] && "bet_outcome" in rows[0] && "pnl_units" in rows[0];
+}
+
+function summarize(rows: CsvRow[]): LedgerSummary {
+  const signals = rows.filter(isSignal);
+  const settledRows = signals.filter(isSettled);
+  const won = settledRows.filter((row) => outcome(row) === "won").length;
+  const lost = settledRows.filter((row) => outcome(row) === "lost").length;
+  const voided = settledRows.filter((row) => outcome(row) === "void").length;
+  const staked = won + lost;
+  const pnl = sum(settledRows.map(pnlUnits));
+
+  return {
+    signals: signals.length,
+    settled: settledRows.length,
+    pending: Math.max(0, signals.length - settledRows.length),
+    won,
+    lost,
+    voided,
+    pnl,
+    staked,
+    roiPct: staked > 0 ? (pnl / staked) * 100 : null,
+    avgEdge: avg(signals.map((row) => numeric(row, "edge_pp"))),
+  };
+}
+
+function leagueSummaries(rows: CsvRow[]): LeagueLedgerSummary[] {
+  const byLeague = new Map<string, CsvRow[]>();
+
+  rows.filter(isSignal).forEach((row) => {
+    const key = row.league_key || row.competition || "unknown";
+    byLeague.set(key, [...(byLeague.get(key) ?? []), row]);
+  });
+
+  return [...byLeague.entries()]
+    .map(([leagueKey, leagueRows]) => ({
+      ...summarize(leagueRows),
+      leagueKey,
+      leagueLabel: leagueRows[0]?.competition || leagueKey,
+    }))
+    .sort((a, b) => b.signals - a.signals || b.pnl - a.pnl);
+}
+
+function maxValue(rows: CsvRow[], key: string): string {
+  return rows
+    .map((row) => row[key])
+    .filter(Boolean)
+    .sort()
+    .at(-1) ?? "-";
+}
+
+function reportValue(report: string | null, label: string): string {
+  const match = (report ?? "").match(new RegExp(`${label}:\\s*([^\\n\\r]+)`, "i"));
+  return match?.[1]?.trim() ?? "-";
+}
+
+async function readLocalFile(relativePath: string): Promise<string | null> {
+  try {
+    const fullPath = tryGetKnownProjectFilePath(relativePath);
+    if (!fullPath) return null;
+    return await fs.readFile(fullPath, "utf8");
+  } catch {
+    return null;
+  }
+}
+
+async function readLocalMtime(relativePath: string): Promise<string | null> {
+  try {
+    const fullPath = tryGetKnownProjectFilePath(relativePath);
+    if (!fullPath) return null;
+    const stat = await fs.stat(fullPath);
+    return stat.mtime.toISOString();
+  } catch {
+    return null;
+  }
+}
+
+function confidenceTone(confidence: string): string {
+  const value = confidence.toLowerCase();
+  if (value === "high") return "bg-emerald-500/10 text-emerald-300 border-emerald-500/20";
+  if (value === "medium") return "bg-amber-500/10 text-amber-300 border-amber-500/20";
+  return "bg-slate-700/40 text-slate-400 border-slate-600/40";
+}
+
+function signalTone(status: string): string {
+  const value = status.toLowerCase();
+  if (value === "shadow_signal") return "bg-cyan-500/10 text-cyan-300 border-cyan-500/20";
+  if (value === "watch") return "bg-amber-500/10 text-amber-300 border-amber-500/20";
+  return "bg-slate-700/40 text-slate-400 border-slate-600/40";
+}
+
+function outcomeTone(value: string): string {
+  if (value === "won") return "bg-emerald-500/10 text-emerald-300 border-emerald-500/20";
+  if (value === "lost") return "bg-rose-500/10 text-rose-300 border-rose-500/20";
+  if (value === "void") return "bg-slate-700/40 text-slate-400 border-slate-600/40";
   return "bg-amber-500/10 text-amber-300 border-amber-500/20";
 }
 
-function statusLabel(status?: string | null): string {
-  return (status || "unknown").replace(/_/g, " ");
+function displayLeague(row: CsvRow): string {
+  return row.league_key || row.competition || "league";
 }
 
-function topByEdge(rows: CsvRow[], status: string, limit: number): CsvRow[] {
-  return rows
-    .filter((row) => row.signal_status === status)
-    .sort((a, b) => (numberValue(b, "edge_pp") ?? -Infinity) - (numberValue(a, "edge_pp") ?? -Infinity))
-    .slice(0, limit);
+function settlementLabel(row: CsvRow): string {
+  const result = outcome(row);
+  if (result === "pending") return "pending";
+  return `${result} ${formatUnits(pnlUnits(row), 2)}`;
 }
 
-function byLeague(rows: CsvRow[]): Array<[string, number]> {
-  const counts = new Map<string, number>();
-  rows.forEach((row) => {
-    const key = row.league_key || row.competition || "unknown";
-    counts.set(key, (counts.get(key) ?? 0) + 1);
-  });
-  return Array.from(counts.entries()).sort((a, b) => b[1] - a[1]);
+function PriceTile({ label, value, detail, tone }: { label: string; value: string; detail?: string; tone?: string }) {
+  return (
+    <div className="rounded-xl border border-slate-800/70 bg-slate-950/55 px-3 py-3">
+      <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">{label}</div>
+      <div className={cn("mt-1.5 text-lg font-semibold tabular-nums", tone ?? "text-slate-100")}>{value}</div>
+      {detail ? <div className="mt-1 text-[11px] text-slate-500">{detail}</div> : null}
+    </div>
+  );
 }
 
-function renderSignalRow(row: CsvRow) {
-  const edge = numberValue(row, "edge_pp");
-  const ev = numberValue(row, "ev_pct");
-  const modelProb = numberValue(row, "model_prob");
-  const setpieceShare = numberValue(row, "setpiece_share_last5_pct");
-  const cornerShare = numberValue(row, "corner_share_last5_pct");
-  const fkShare = numberValue(row, "fk_share_last5_pct");
-  const expectedMinutes = numberValue(row, "expected_minutes");
-  const pnl = numberValue(row, "pnl_units");
-  const settled = row.settled === "1";
+function AssistSignalCard({ row, rank }: { row: CsvRow; rank: number }) {
+  const result = outcome(row);
+  const edge = numeric(row, "edge_pp");
+  const ev = numeric(row, "ev_pct");
+  const fairOdds = numeric(row, "fair_odds");
+  const marketOdds = numeric(row, "market_odds");
+  const setPieceShare = numeric(row, "setpiece_share_last5_pct");
+  const cornerShare = numeric(row, "corner_share_last5_pct");
+  const fkShare = numeric(row, "fk_share_last5_pct");
+  const modelProb = numeric(row, "model_prob");
+  const expectedMinutes = numeric(row, "expected_minutes");
 
   return (
-    <tr key={`${row.kickoff_at}-${row.player_name}-${row.market_odds}`} className="border-t border-slate-800/70">
-      <td className="py-3 pr-4 align-top">
-        <div className="font-semibold text-slate-100">{row.player_name || "-"}</div>
-        <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
-          <span>{row.position || "pos -"}</span>
-          <span>|</span>
-          <span>{row.player_team || "team -"}</span>
-          <span>|</span>
-          <span>{expectedMinutes === null ? "mins -" : `${expectedMinutes.toFixed(0)} mins`}</span>
+    <article className="group relative overflow-hidden rounded-2xl border border-slate-800/90 bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.12),transparent_34%),linear-gradient(135deg,rgba(15,23,42,0.95),rgba(2,6,23,0.98))] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
+      <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-emerald-400 via-cyan-400 to-sky-500" />
+      <div className="flex flex-wrap items-start justify-between gap-4 pl-2">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <span className="rounded-full border border-slate-700/70 bg-slate-950/60 px-2 py-0.5 text-slate-300">#{rank}</span>
+            <LeagueLabel league={displayLeague(row)} label={row.competition || row.league_key} iconSize={14} />
+          </div>
+          <h3 className="mt-2 text-xl font-semibold tracking-tight text-white">{row.player_name || "Unknown player"}</h3>
+          <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-400">
+            <MatchLabel
+              league={displayLeague(row)}
+              homeTeam={row.home_team}
+              awayTeam={row.away_team}
+              iconSize={20}
+              textClassName="text-sm text-slate-400"
+            />
+            <span className="text-slate-700">|</span>
+            <span>{formatDateTimeLabel(row.kickoff_at || row.match_date)}</span>
+          </div>
+          <div className="mt-2 text-xs text-slate-500">
+            {row.player_team || "player team"} attack side vs {row.opponent_team || "opponent"} | {row.position || "pos n/a"} | {expectedMinutes !== null ? `${expectedMinutes.toFixed(0)} projected mins` : "minutes n/a"}
+          </div>
         </div>
-      </td>
-      <td className="py-3 pr-4 align-top">
-        <div className="flex flex-col gap-1">
-          <LeagueLabel league={row.league_key} label={row.competition} />
-          <MatchLabel league={row.league_key} homeTeam={row.home_team} awayTeam={row.away_team} />
-          <span className="text-xs text-slate-500">{formatDateTimeLabel(row.kickoff_at)}</span>
+
+        <div className="flex shrink-0 flex-wrap justify-end gap-1.5">
+          <StatusPill label={row.signal_status?.replaceAll("_", " ") || "shadow"} tone={signalTone(row.signal_status || "shadow_signal")} />
+          <StatusPill label={row.confidence || "unrated"} tone={confidenceTone(row.confidence || "")} />
+          <StatusPill label={settlementLabel(row)} tone={outcomeTone(result)} />
         </div>
-      </td>
-      <td className="py-3 pr-4 align-top tabular-nums text-slate-200">{formatOdds(numberValue(row, "fair_odds"), 3)}</td>
-      <td className="py-3 pr-4 align-top tabular-nums text-slate-200">{formatOdds(numberValue(row, "market_odds"), 3)}</td>
-      <td className="py-3 pr-4 align-top tabular-nums">
-        <span className={toneClass(edge)}>{signedPp(edge)}</span>
-        <div className="mt-1 text-xs text-slate-500">EV {ev === null ? "-" : `${ev.toFixed(2)}%`}</div>
-      </td>
-      <td className="py-3 pr-4 align-top tabular-nums text-slate-300">{probPct(modelProb)}</td>
-      <td className="py-3 pr-4 align-top">
-        <div className="flex flex-wrap gap-1.5">
-          <StatusPill label={statusLabel(row.signal_status)} tone={statusTone(row.signal_status)} />
-          <StatusPill label={row.confidence || "unknown"} tone={confidenceTone(row.confidence)} />
+      </div>
+
+      <div className="mt-4 grid gap-2 pl-2 sm:grid-cols-2 lg:grid-cols-6">
+        <PriceTile label="Fair" value={formatOdds(fairOdds, 2)} detail={probPct(modelProb)} />
+        <PriceTile label="Market" value={formatOdds(marketOdds, 2)} detail={row.bookmaker || "book"} />
+        <PriceTile label="Edge" value={signedPp(edge, 2)} tone={toneClass(edge)} />
+        <PriceTile label="EV" value={signedPct(ev, 1)} tone={toneClass(ev)} />
+        <PriceTile label="Set pieces" value={pct(setPieceShare, 1)} detail={`CK ${pct(cornerShare, 0)} | FK ${pct(fkShare, 0)}`} />
+        <PriceTile label="P/L" value={isSettled(row) ? formatUnits(pnlUnits(row), 2) : "pending"} tone={isSettled(row) ? toneClass(pnlUnits(row)) : "text-amber-300"} />
+      </div>
+
+      {row.notes ? <div className="mt-3 pl-2 text-[11px] text-slate-600">{row.notes}</div> : null}
+    </article>
+  );
+}
+
+function LeagueLedger({ leagues }: { leagues: LeagueLedgerSummary[] }) {
+  if (leagues.length === 0) return <EmptyState message="No shadow signals yet, so no league ledger is available." />;
+
+  return (
+    <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
+      {leagues.map((league) => (
+        <div key={league.leagueKey} className="rounded-xl border border-slate-800/80 bg-slate-950/45 p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">League ledger</div>
+              <div className="mt-1 text-sm font-semibold text-slate-100">
+                <LeagueLabel league={league.leagueKey} label={league.leagueLabel} iconSize={16} />
+              </div>
+            </div>
+            <StatusPill label={`${league.pending} pending`} tone="bg-amber-500/10 text-amber-300 border-amber-500/20" />
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <StatCard compact label="Signals" value={`${league.signals}`} detail={`${league.settled} settled`} />
+            <StatCard compact label="W-L-V" value={`${league.won}-${league.lost}-${league.voided}`} />
+            <StatCard compact label="P/L" value={formatUnits(league.pnl, 2)} tone={toneClass(league.pnl)} />
+            <StatCard compact label="ROI" value={signedPct(league.roiPct ?? 0, 1)} detail={league.staked > 0 ? `${league.staked}u staked` : "no settled stake"} tone={toneClass(league.roiPct ?? 0)} />
+          </div>
+          <div className="mt-3 text-xs text-slate-500">Avg edge: {signedPp(league.avgEdge, 2)}</div>
         </div>
-        <div className="mt-1 text-xs leading-5 text-slate-500">
-          Set pieces {pct(setpieceShare)}
-          {cornerShare !== null || fkShare !== null ? ` | CK ${pct(cornerShare)} | FK ${pct(fkShare)}` : ""}
-        </div>
-      </td>
-      <td className="py-3 pr-4 align-top">
-        <StatusPill label={settled ? row.bet_outcome || "settled" : "pending"} tone={outcomeTone(settled ? row.bet_outcome : "pending")} />
-        <div className={`mt-1 text-xs tabular-nums ${pnl !== null && pnl >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
-          {settled ? signedUnits(pnl) : row.settlement_note || "awaiting result"}
-        </div>
-      </td>
-    </tr>
+      ))}
+    </div>
   );
 }
 
 export default async function AssistValueMonitorPage() {
-  if (!MODEL_MONITOR_ENABLED) notFound();
+  if (!MODEL_MONITOR_ENABLED) {
+    notFound();
+  }
 
-  const [signalsText, modelReport, shadowReport, performanceReport, sourceAudit, signalsMtime] = await Promise.all([
-    readKnownText(SIGNALS_PATH),
-    readKnownText(MODEL_REPORT_PATH),
-    readKnownText(SHADOW_REPORT_PATH),
-    readKnownText(PERFORMANCE_REPORT_PATH),
-    readKnownText(SOURCE_AUDIT_PATH),
-    readKnownMtime(SIGNALS_PATH),
+  const [signalsText, shadowReport, modelReport, performanceReport, signalsMtime] = await Promise.all([
+    readLocalFile(SIGNALS_PATH),
+    readLocalFile(SHADOW_REPORT_PATH),
+    readLocalFile(MODEL_REPORT_PATH),
+    readLocalFile(PERFORMANCE_REPORT_PATH),
+    readLocalMtime(SIGNALS_PATH),
   ]);
 
   const rows = parseCsv(signalsText);
-  const allSignalRows = rows.filter((row) => row.signal_status === "shadow_signal");
-  const signalRows = topByEdge(rows, "shadow_signal", 25);
-  const watchRows = topByEdge(rows, "watch", 15);
-  const noEdgeRows = rows.filter((row) => row.signal_status === "no_edge").length;
-  const highSignals = allSignalRows.filter((row) => row.confidence === "high").length;
-  const mediumSignals = allSignalRows.filter((row) => row.confidence === "medium").length;
-  const settledRows = allSignalRows.filter((row) => row.settled === "1");
-  const wonRows = settledRows.filter((row) => row.bet_outcome === "won");
-  const lostRows = settledRows.filter((row) => row.bet_outcome === "lost");
-  const voidRows = settledRows.filter((row) => row.bet_outcome === "void");
-  const pnlUnits = settledRows.reduce((total, row) => total + (numberValue(row, "pnl_units") ?? 0), 0);
-  const settledStake = wonRows.length + lostRows.length;
-  const roiPct = settledStake > 0 ? (pnlUnits / settledStake) * 100 : 0;
-  const latestGeneratedAt = maxString(rows.map((row) => row.generated_at));
-  const latestCapturedAt = maxString(rows.map((row) => row.captured_at));
+  const signals = rows.filter(isSignal);
+  const watchRows = rows.filter((row) => cleanStatus(row.signal_status) === "watch");
+  const noEdgeRows = rows.filter((row) => cleanStatus(row.signal_status) === "no_edge");
+  const sortedSignals = [...signals].sort((a, b) => (numeric(b, "edge_pp") ?? -999) - (numeric(a, "edge_pp") ?? -999));
+  const generatedAt = maxValue(rows, "generated_at");
+  const capturedAt = maxValue(rows, "captured_at");
+  const ledger = summarize(rows);
+  const leagues = leagueSummaries(rows);
+  const hasSettlementColumns = settlementColumnsPresent(rows);
+  const roleMatchRate = reportValue(shadowReport, "role_match_rate_pct");
+  const publicStatus = reportValue(shadowReport, "public_signal_status");
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-300">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+    <main className="min-h-screen bg-[#050b12] px-4 py-6 text-slate-100 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl space-y-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <Link href="/model-monitor" className="text-sm font-semibold text-emerald-300 hover:text-emerald-200">
+            Back to model monitor
+          </Link>
           <MonitorNav current="assist-value" />
-          <StatusPill label="private shadow only" tone="bg-cyan-500/10 text-cyan-300 border-cyan-500/20" />
         </div>
 
-        <HeroCard eyebrow="Assist Value Lab" title="Assist Value Monitor">
-          <div className="flex flex-col gap-3 text-slate-400">
-            <p>
-              Private assist fair-odds candidates built from Bet365 assist prices, player assist/xA rates, team attack
-              scale, and set-piece role share. This page is monitor-only: no Fair Odds Lab publication, no settlement
-              claim beyond the shadow ledger, and no production signal lane.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <StatusPill label="model enabled shadow v0" tone="bg-amber-500/10 text-amber-300 border-amber-500/20" />
-              <StatusPill label="public disabled" tone="bg-rose-500/10 text-rose-300 border-rose-500/20" />
-              <StatusPill label="not backtested" tone="bg-slate-700/40 text-slate-300 border-slate-600/40" />
-            </div>
+        <HeroCard title="Assist Value Shadow Monitor" eyebrow="Research lane, no public betting output">
+          <div className="max-w-4xl text-slate-400">
+            Bet365 assist odds are compared with the internal assist fair line. This page now shows the actual evaluation layer: shadow signals, settlement state, P/L, ROI, and per-league splits. The public Fair Odds Lab stays untouched until this lane has a real backtest and live proof.
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <StatusPill label={publicStatus === "-" ? "private shadow" : publicStatus.replaceAll("_", " ")} tone="bg-amber-500/10 text-amber-300 border-amber-500/20" />
+            <StatusPill label={`${ledger.pending} pending`} tone="bg-cyan-500/10 text-cyan-300 border-cyan-500/20" />
+            <StatusPill label={hasSettlementColumns ? "settlement columns ready" : "settlement columns missing locally"} tone={hasSettlementColumns ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20" : "bg-rose-500/10 text-rose-300 border-rose-500/20"} />
           </div>
         </HeroCard>
 
-        <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          <StatCard label="Priced rows" value={rows.length.toLocaleString("en-GB")} detail="Bet365 assist rows scored" />
-          <StatCard label="Shadow signals" value={allSignalRows.length.toString()} tone="text-cyan-300" detail={`${highSignals} high, ${mediumSignals} medium`} />
-          <StatCard label="Watch rows" value={watchRows.length.toString()} tone="text-amber-300" detail={`${noEdgeRows.toLocaleString("en-GB")} no-edge rows`} />
-          <StatCard label="Settled" value={settledRows.length.toString()} tone="text-emerald-300" detail={`${wonRows.length}W / ${lostRows.length}L / ${voidRows.length}V`} />
-          <StatCard label="Shadow P/L" value={signedUnits(pnlUnits)} tone={pnlUnits >= 0 ? "text-emerald-300" : "text-rose-300"} detail={`${roiPct > 0 ? "+" : ""}${roiPct.toFixed(1)}% ROI`} />
-          <StatCard label="Latest capture" value={latestCapturedAt ? formatDateTimeLabel(latestCapturedAt) : "-"} detail={`CSV mtime ${signalsMtime ? formatDateTimeLabel(signalsMtime) : "-"}`} />
-          <StatCard label="Generated" value={latestGeneratedAt ? formatDateTimeLabel(latestGeneratedAt) : "-"} detail="Pipeline timestamp" />
-        </section>
-
-        <section className="mt-6 grid gap-6 lg:grid-cols-[1fr_360px]">
-          <SectionCard title="Current Shadow Signals" subtitle="Sorted by model edge against Bet365 assist odds">
-            {signalRows.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-left text-sm">
-                  <thead className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
-                    <tr>
-                      <th className="pb-2 pr-4 font-semibold">Player</th>
-                      <th className="pb-2 pr-4 font-semibold">Fixture</th>
-                      <th className="pb-2 pr-4 font-semibold">Fair</th>
-                      <th className="pb-2 pr-4 font-semibold">Market</th>
-                      <th className="pb-2 pr-4 font-semibold">Edge</th>
-                      <th className="pb-2 pr-4 font-semibold">Model</th>
-                      <th className="pb-2 pr-4 font-semibold">Role</th>
-                      <th className="pb-2 pr-4 font-semibold">Result</th>
-                    </tr>
-                  </thead>
-                  <tbody>{signalRows.map(renderSignalRow)}</tbody>
-                </table>
-              </div>
-            ) : (
-              <EmptyState message="No assist shadow signals in the latest artifact." />
-            )}
-          </SectionCard>
-
-          <div className="space-y-6">
-            <SectionCard title="Signal Mix" subtitle="Current shadow candidates by league">
-              {byLeague(allSignalRows).length > 0 ? (
-                <div className="space-y-2">
-                  {byLeague(allSignalRows).map(([league, count]) => (
-                    <div key={league} className="flex items-center justify-between rounded-xl border border-slate-800/70 bg-slate-950/40 px-3 py-2">
-                      <LeagueLabel league={league} />
-                      <span className="text-sm font-semibold tabular-nums text-slate-100">{count}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <EmptyState message="No league-level signal mix yet." />
-              )}
-            </SectionCard>
-
-            <SectionCard title="Guardrail" subtitle="Why this is not public">
-              <div className="space-y-3 text-sm leading-6 text-slate-400">
-                <p>
-                  The page is deliberately parked under model monitor. It helps us inspect the live assist model, but it
-                  does not authorize publication until backtest gates exist.
-                </p>
-                <ul className="list-disc space-y-1 pl-5 text-slate-500">
-                  <li>No Fair Odds Lab exposure.</li>
-                  <li>No public signal lane.</li>
-                  <li>No staking or action label.</li>
-                  <li>Shadow P/L only, settled from FotMob assist events where available.</li>
-                </ul>
-              </div>
-            </SectionCard>
+        {!hasSettlementColumns ? (
+          <div className="rounded-2xl border border-amber-500/25 bg-amber-500/10 px-5 py-4 text-sm text-amber-100">
+            The local signal CSV does not yet include settlement columns. The monitor still exposes P/L and ROI as zero-settled/pending, and the hosted settler will populate result columns after the next assist workflow run.
           </div>
+        ) : null}
+
+        <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <StatCard label="Shadow signals" value={`${ledger.signals}`} detail={`${watchRows.length} watch rows | ${noEdgeRows.length} no-edge rows`} />
+          <StatCard label="Settled / pending" value={`${ledger.settled} / ${ledger.pending}`} detail={`${ledger.won}-${ledger.lost}-${ledger.voided} W-L-V`} />
+          <StatCard label="Shadow P/L" value={formatUnits(ledger.pnl, 2)} detail={`${ledger.staked}u settled stake`} tone={toneClass(ledger.pnl)} />
+          <StatCard label="Shadow ROI" value={signedPct(ledger.roiPct ?? 0, 1)} detail={ledger.roiPct === null ? "no settled stake yet" : "settled signals only"} tone={toneClass(ledger.roiPct ?? 0)} />
+          <StatCard label="Average edge" value={signedPp(ledger.avgEdge, 2)} detail="shadow signals only" tone={toneClass(ledger.avgEdge)} />
+          <StatCard label="Role match" value={roleMatchRate === "-" ? "-" : `${roleMatchRate}%`} detail="source audit row match" />
+          <StatCard label="Generated" value={generatedAt === "-" ? "-" : formatDateTimeLabel(generatedAt)} detail={signalsMtime ? `file ${formatDateTimeLabel(signalsMtime)}` : "file timestamp unavailable"} />
+          <StatCard label="Captured" value={capturedAt === "-" ? "-" : formatDateTimeLabel(capturedAt)} detail="latest odds capture in CSV" />
         </section>
 
-        <section className="mt-6 grid gap-6 lg:grid-cols-2">
-          <SectionCard title="Watch Rows" subtitle="Near-miss assist candidates" collapsible defaultOpen={false}>
-            {watchRows.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-left text-sm">
-                  <thead className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
-                    <tr>
-                      <th className="pb-2 pr-4 font-semibold">Player</th>
-                      <th className="pb-2 pr-4 font-semibold">Fixture</th>
-                      <th className="pb-2 pr-4 font-semibold">Fair</th>
-                      <th className="pb-2 pr-4 font-semibold">Market</th>
-                      <th className="pb-2 pr-4 font-semibold">Edge</th>
-                      <th className="pb-2 pr-4 font-semibold">Model</th>
-                      <th className="pb-2 pr-4 font-semibold">Role</th>
-                      <th className="pb-2 pr-4 font-semibold">Result</th>
-                    </tr>
-                  </thead>
-                  <tbody>{watchRows.map(renderSignalRow)}</tbody>
-                </table>
+        <SectionCard title="League P/L" subtitle="Shadow-signal ledger by league. This is what you monitor before public promotion.">
+          <LeagueLedger leagues={leagues} />
+        </SectionCard>
+
+        <section className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
+          <SectionCard title="Assist Value Signals" subtitle="Goalscorer-style cards with fair odds, market odds, edge, set-piece role and settlement state.">
+            {sortedSignals.length === 0 ? (
+              <EmptyState message="No assist shadow signals in the current artifact." />
+            ) : (
+              <div className="space-y-3">
+                {sortedSignals.slice(0, 24).map((row, index) => (
+                  <AssistSignalCard
+                    key={`${row.player_name}-${row.home_team}-${row.away_team}-${row.kickoff_at}-${index}`}
+                    row={row}
+                    rank={index + 1}
+                  />
+                ))}
               </div>
-            ) : (
-              <EmptyState message="No watch rows in the latest artifact." />
             )}
           </SectionCard>
 
-          <SectionCard title="Model Report" subtitle="Raw report written by scripts/build-assist-value-model.py" collapsible defaultOpen={false}>
-            {modelReport ? (
-              <pre className="max-h-[520px] overflow-auto whitespace-pre-wrap rounded-xl border border-slate-800/70 bg-slate-950/60 p-4 text-xs leading-5 text-slate-300">
-                {modelReport}
-              </pre>
-            ) : (
-              <EmptyState message="Model report is missing." />
-            )}
-          </SectionCard>
-        </section>
+          <aside className="space-y-5">
+            <SectionCard title="Settlement Source" subtitle="FotMob assists when available, Understat as a slower fallback.">
+              <div className="space-y-3 text-sm text-slate-400">
+                <div className="rounded-xl border border-slate-800/70 bg-slate-950/45 p-3">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">Current state</div>
+                  <div className="mt-1 text-slate-200">{hasSettlementColumns ? "CSV can hold settlement results" : "Awaiting local settled artifact"}</div>
+                </div>
+                <div className="rounded-xl border border-slate-800/70 bg-slate-950/45 p-3">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">Performance report</div>
+                  <pre className="mt-2 max-h-56 overflow-auto whitespace-pre-wrap text-xs leading-5 text-slate-400">
+                    {performanceReport || "No performance report found locally yet. Ledger above is computed directly from the signal CSV."}
+                  </pre>
+                </div>
+              </div>
+            </SectionCard>
 
-        <section className="mt-6 grid gap-6 lg:grid-cols-2">
-          <SectionCard title="Settlement Report" subtitle="Shadow P/L ledger written by scripts/assist-value-settle.py" collapsible defaultOpen={false}>
-            {performanceReport ? (
-              <pre className="max-h-[520px] overflow-auto whitespace-pre-wrap rounded-xl border border-slate-800/70 bg-slate-950/60 p-4 text-xs leading-5 text-slate-300">
-                {performanceReport}
-              </pre>
-            ) : (
-              <EmptyState message="Settlement report is missing. It will appear after the assist settler runs." />
-            )}
-          </SectionCard>
+            <SectionCard title="Shadow Report" subtitle="Pipeline guardrails and source-match quality.">
+              <div className="grid gap-2">
+                <StatCard compact label="Shadow status" value={reportValue(shadowReport, "shadow_status")} />
+                <StatCard compact label="Public status" value={publicStatus} />
+                <StatCard compact label="Model status" value={reportValue(shadowReport, "model_status")} />
+                <StatCard compact label="Fair odds" value={reportValue(shadowReport, "fair_odds_status")} />
+              </div>
+            </SectionCard>
 
-          <SectionCard title="Shadow Pipeline Report" subtitle="Live scrape and board-build summary" collapsible defaultOpen={false}>
-            {shadowReport ? (
-              <pre className="max-h-[520px] overflow-auto whitespace-pre-wrap rounded-xl border border-slate-800/70 bg-slate-950/60 p-4 text-xs leading-5 text-slate-300">
-                {shadowReport}
+            <SectionCard title="Model Report" subtitle="Raw research report, kept collapsed for sanity." collapsible defaultOpen={false}>
+              <pre className="max-h-[520px] overflow-auto whitespace-pre-wrap rounded-xl bg-black/25 p-3 text-xs leading-5 text-slate-400">
+                {modelReport || "No assist model report found in hosted artifacts."}
               </pre>
-            ) : (
-              <EmptyState message="Shadow report is missing." />
-            )}
-          </SectionCard>
-
-          <SectionCard title="Set-Piece Source Audit" subtitle="Role-source status used by the assist model" collapsible defaultOpen={false}>
-            {sourceAudit ? (
-              <pre className="max-h-[520px] overflow-auto whitespace-pre-wrap rounded-xl border border-slate-800/70 bg-slate-950/60 p-4 text-xs leading-5 text-slate-300">
-                {sourceAudit}
-              </pre>
-            ) : (
-              <EmptyState message="Set-piece source audit is missing." />
-            )}
-          </SectionCard>
+            </SectionCard>
+          </aside>
         </section>
       </div>
     </main>
