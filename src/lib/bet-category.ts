@@ -61,7 +61,9 @@ export function normalizeBetCategory(value?: string | null): string {
   if (["uel", "europaleague", "uefaeuropaleague", "uecl", "conferenceleague", "uefaconferenceleague"].includes(compact)) {
     return "other";
   }
-  if (["atp", "challenger", "ausopen", "rolandgarros", "wimbledon", "usopen"].includes(compact)) return compact;
+  if (["ausopen", "australianopen"].includes(compact)) return "ausopen";
+  if (["rolandgarros", "frenchopen"].includes(compact)) return "rolandgarros";
+  if (["atp", "challenger", "wimbledon", "usopen"].includes(compact)) return compact;
 
   return compact;
 }
