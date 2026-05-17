@@ -152,7 +152,7 @@ def emit(level: str, message: str) -> None:
     print(f"::{level}::{message}")
 
 
-def load_lineup_plan() -> dict[str, Any] | None:
+def load_lineup_plan() -> tuple[dict[str, Any] | None, bool]:
     proc = subprocess.run(
         [sys.executable, str(ROOT / "scripts" / "goalscorer-live-schedule.py"), "--json"],
         cwd=ROOT,
@@ -164,14 +164,14 @@ def load_lineup_plan() -> dict[str, Any] | None:
     if proc.returncode != 0:
         emit(
             "warning",
-            f"Goalscorer watchdog could not build lineup schedule; leaving hot-live idle. {proc.stderr.strip() or proc.stdout.strip()}",
+            f"Goalscorer watchdog could not build lineup schedule; falling back to heartbeat dispatch. {proc.stderr.strip() or proc.stdout.strip()}",
         )
-        return None
+        return None, True
     try:
-        return json.loads(proc.stdout or "{}")
+        return json.loads(proc.stdout or "{}"), False
     except json.JSONDecodeError:
-        emit("warning", "Goalscorer watchdog got invalid lineup schedule JSON; leaving hot-live idle.")
-        return None
+        emit("warning", "Goalscorer watchdog got invalid lineup schedule JSON; falling back to heartbeat dispatch.")
+        return None, True
 
 
 def due_lineup_fixtures(plan: dict[str, Any] | None) -> tuple[int, list[str]]:
@@ -207,12 +207,15 @@ def main() -> int:
     if not token or not repo:
         raise SystemExit("Set GITHUB_TOKEN and GITHUB_REPOSITORY for the hosted watchdog.")
 
-    lineup_plan = load_lineup_plan()
+    lineup_plan, schedule_error = load_lineup_plan()
     due_count, due_labels = due_lineup_fixtures(lineup_plan)
-    if due_count <= 0:
+    if due_count <= 0 and not schedule_error:
         emit("notice", "No official-lineup windows are due; goalscorer watchdog stayed idle.")
         return 0
-    emit("notice", f"Official-lineup window due for {due_count} fixture(s): {', '.join(due_labels)}.")
+    if schedule_error:
+        emit("warning", "Lineup schedule unavailable; using heartbeat freshness as the safety fallback.")
+    else:
+        emit("notice", f"Official-lineup window due for {due_count} fixture(s): {', '.join(due_labels)}.")
 
     status_payload = read_json(Path(args.status_file))
     status_state = str((status_payload or {}).get("state") or "").strip().lower()
