@@ -225,8 +225,8 @@ def main() -> int:
     try:
         runs = load_hot_live_runs(repo, args.workflow_file, args.branch, token)
     except urllib.error.URLError as exc:
-        emit("warning", f"Goalscorer watchdog could not inspect workflow runs: {exc}")
-        return 0
+        emit("warning", f"Goalscorer watchdog could not inspect workflow runs; proceeding without duplicate-run inspection. {exc}")
+        runs = []
 
     active_run = next((run for run in runs if str(run.get("status") or "").strip().lower() in ACTIVE_STATUSES), None)
     latest_run = runs[0] if runs else None
