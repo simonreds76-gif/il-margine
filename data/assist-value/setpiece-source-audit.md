@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-05-17T11:27:05+00:00`
+Fetched at UTC: `2026-05-17T11:50:26+00:00`
 
 ## Decision
 
@@ -60,11 +60,11 @@ Overall: **PASS_SOURCE_LAYER**
 
 ## Outputs
 
-- `data\assist-value\rotowire-setpiece-roles.csv`
-- `data\assist-value\rotowire-source-status.csv`
-- `data\assist-value\fpl-setpiece-roles.csv`
-- `data\assist-value\setpiecetakers-source-status.csv`
-- `data\assist-value\setpiece-source-audit.json`
+- `/home/runner/work/il-margine/il-margine/data/assist-value/rotowire-setpiece-roles.csv`
+- `/home/runner/work/il-margine/il-margine/data/assist-value/rotowire-source-status.csv`
+- `/home/runner/work/il-margine/il-margine/data/assist-value/fpl-setpiece-roles.csv`
+- `/home/runner/work/il-margine/il-margine/data/assist-value/setpiecetakers-source-status.csv`
+- `/home/runner/work/il-margine/il-margine/data/assist-value/setpiece-source-audit.json`
 
 ## Production Guard
 
