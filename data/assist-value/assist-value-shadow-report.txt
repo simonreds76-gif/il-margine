@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-05-17T17:11:02Z
+generated_at_utc: 2026-05-17T18:24:59Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,41 +8,41 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 11947
-role_players_loaded: 1032
+raw_odds_rows_loaded: 12693
+role_players_loaded: 1034
 
 Join
 shadow_rows_assist_only: 1520
-role_matched_rows: 535
-role_match_rate_pct: 35.20
+role_matched_rows: 537
+role_match_rate_pct: 35.33
 ambiguous_player_rows: 0
-unmatched_player_rows: 985
+unmatched_player_rows: 983
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
 It is not a betting model, not a public Fair Odds Lab lane, and not a value signal.
 
 Top role-matched rows
- - Luis Milla | Elche CF vs Getafe CF | odds 6.0000 | setpiece_last5 97.06 | corners_last5 100.0 | fk_last5 100.0
+ - Luis Milla | Elche CF vs Getafe CF | odds 6.0000 | setpiece_last5 96.77 | corners_last5 100.0 | fk_last5 100.0
  - Gauthier Hein | OGC Nice vs FC Metz | odds 7.0000 | setpiece_last5 93.75 | corners_last5 90.91 | fk_last5 100.0
- - Trent Alexander-Arnold | Sevilla FC vs Real Madrid | odds 4.5000 | setpiece_last5 91.18 | corners_last5 91.67 | fk_last5 90.0
- - Pablo Pagis | FC Lorient vs Le Havre AC | odds 5.5000 | setpiece_last5 88.46 | corners_last5 93.33 | fk_last5 80.0
+ - Trent Alexander-Arnold | Sevilla FC vs Real Madrid | odds 4.5000 | setpiece_last5 90.62 | corners_last5 91.3 | fk_last5 88.89
  - James Ward-Prowse | Arsenal FC vs Burnley FC | odds 11.0000 | setpiece_last5 85.71 | corners_last5 88.24 | fk_last5 75.0
- - Kevin Danois | Lille OSC vs AJ Auxerre | odds 8.5000 | setpiece_last5 78.26 | corners_last5 80.95 | fk_last5 50.0
- - James Garner | Everton FC vs Sunderland AFC | odds 4.5000 | setpiece_last5 70.83 | corners_last5 68.18 | fk_last5 100.0
- - Branco van den Boomen | Stade Brest 29 vs Angers SCO | odds 6.5000 | setpiece_last5 68.18 | corners_last5 80.0 | fk_last5 50.0
- - Mathias Jensen | Brentford FC vs Crystal Palace | odds 4.3330 | setpiece_last5 66.67 | corners_last5 65.0 | fk_last5 87.5
- - Yanis Zouaoui | FC Lorient vs Le Havre AC | odds 4.5000 | setpiece_last5 64.52 | corners_last5 68.42 | fk_last5 60.0
+ - Pablo Pagis | FC Lorient vs Le Havre AC | odds 5.5000 | setpiece_last5 83.33 | corners_last5 90.0 | fk_last5 71.43
+ - Kevin Danois | Lille OSC vs AJ Auxerre | odds 8.5000 | setpiece_last5 77.78 | corners_last5 77.78 | fk_last5 0.0
+ - Sebastian Szymanski | Olympique Marseille vs Stade Rennais FC | odds 4.5000 | setpiece_last5 76.47 | corners_last5 81.48 | fk_last5 66.67
+ - James Garner | Everton FC vs Sunderland AFC | odds 4.5000 | setpiece_last5 76.0 | corners_last5 71.43 | fk_last5 100.0
+ - Branco van den Boomen | Stade Brest 29 vs Angers SCO | odds 7.0000 | setpiece_last5 68.18 | corners_last5 80.0 | fk_last5 50.0
+ - Ruben Vargas | Sevilla FC vs Real Madrid | odds 4.5000 | setpiece_last5 68.18 | corners_last5 76.92 | fk_last5 55.56
  - Jonathan Clauss | OGC Nice vs FC Metz | odds 2.7500 | setpiece_last5 63.64 | corners_last5 66.67 | fk_last5 66.67
- - Sebastian Szymanski | Olympique Marseille vs Stade Rennais FC | odds 4.5000 | setpiece_last5 63.64 | corners_last5 66.67 | fk_last5 57.14
- - Jarrod Bowen | Newcastle United vs West Ham United | odds 4.0000 | setpiece_last5 62.07 | corners_last5 75.0 | fk_last5 0.0
- - Nicolo Zaniolo | Udinese Calcio vs US Cremonese | odds 5.0000 | setpiece_last5 61.29 | corners_last5 57.14 | fk_last5 70.0
- - Ruben Vargas | Sevilla FC vs Real Madrid | odds 4.5000 | setpiece_last5 60.71 | corners_last5 62.5 | fk_last5 58.33
- - Armand Lauriente | Sassuolo Calcio vs US Lecce | odds 4.5000 | setpiece_last5 58.33 | corners_last5 60.0 | fk_last5 55.56
- - Sebastian Nanasi | Strasbourg Alsace vs AS Monaco | odds 5.0000 | setpiece_last5 57.89 | corners_last5 58.82 | fk_last5 100.0
+ - Anton Stach | Leeds United vs Brighton & Hove Albion | odds 7.0000 | setpiece_last5 62.96 | corners_last5 72.22 | fk_last5 50.0
+ - Bruno Guimaraes | Newcastle United vs West Ham United | odds 5.5000 | setpiece_last5 61.9 | corners_last5 66.67 | fk_last5 55.56
+ - Yanis Zouaoui | FC Lorient vs Le Havre AC | odds 4.5000 | setpiece_last5 60.71 | corners_last5 64.71 | fk_last5 55.56
+ - Nicolo Zaniolo | Udinese Calcio vs US Cremonese | odds 5.0000 | setpiece_last5 60.71 | corners_last5 57.89 | fk_last5 66.67
+ - Jarrod Bowen | Newcastle United vs West Ham United | odds 4.0000 | setpiece_last5 60.0 | corners_last5 75.0 | fk_last5 0.0
  - Pedro Porro | Chelsea FC vs Tottenham Hotspur | odds 6.5000 | setpiece_last5 57.14 | corners_last5 51.61 | fk_last5 100.0
- - Jari Vandeputte | Udinese Calcio vs US Cremonese | odds 4.5000 | setpiece_last5 55.56 | corners_last5 52.63 | fk_last5 62.5
- - Declan Rice | Arsenal FC vs Burnley FC | odds 3.0000 | setpiece_last5 55.0 | corners_last5 46.15 | fk_last5 83.33
+ - Jari Vandeputte | Udinese Calcio vs US Cremonese | odds 4.5000 | setpiece_last5 56.52 | corners_last5 53.33 | fk_last5 62.5
+ - Enzo Le Fee | Everton FC vs Sunderland AFC | odds 6.5000 | setpiece_last5 56.0 | corners_last5 64.29 | fk_last5 45.45
+ - Sebastian Nanasi | Strasbourg Alsace vs AS Monaco | odds 5.0000 | setpiece_last5 55.56 | corners_last5 56.25 | fk_last5 100.0
 
 Unmatched sample
  - Jorgen Larsen | Brentford FC vs Crystal Palace

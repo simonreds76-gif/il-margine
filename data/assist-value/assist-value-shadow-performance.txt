@@ -1,5 +1,5 @@
 Assist Value Shadow Performance
-generated_at_utc: 2026-05-17T18:07:27Z
+generated_at_utc: 2026-05-17T18:25:59Z
 
 Status
 lane_status: SHADOW_ONLY
@@ -8,14 +8,14 @@ settlement_source: fotmob_match_detail_assist_events
 
 Summary
 shadow_signals: 5
-settled: 0
-pending: 5
+settled: 2
+pending: 3
 won: 0
-lost: 0
+lost: 2
 void: 0
-stake_units: 0.00
-pnl_units: 0.0000
-roi_pct: 0.00
+stake_units: 2.00
+pnl_units: -2.0000
+roi_pct: -100.00
 
 Notes
 Only rows with signal_status=shadow_signal count in this ledger.

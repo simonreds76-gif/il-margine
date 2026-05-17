@@ -1,5 +1,5 @@
 {
-  "fetched_at_utc": "2026-05-17T11:50:26+00:00",
+  "fetched_at_utc": "2026-05-17T18:23:47+00:00",
   "overall_decision": "PASS_SOURCE_LAYER",
   "production_guard": "research_only_no_public_assist_picks_authorised",
   "rotowire_scope_caveat": "RotoWire set-piece weeks can exceed domestic league matchweeks; use the feed for current role inference, not as a league-only historical volume source.",
@@ -7,12 +7,12 @@
     "pass": true,
     "teams_ok": 96,
     "teams_total": 96,
-    "role_rows": 1032,
+    "role_rows": 1034,
     "by_league": {
       "epl": {
         "teams": 20,
         "ok": 20,
-        "role_rows": 208,
+        "role_rows": 209,
         "max_latest_week": 54
       },
       "bundesliga": {
@@ -25,19 +25,19 @@
         "teams": 18,
         "ok": 18,
         "role_rows": 200,
-        "max_latest_week": 49
+        "max_latest_week": 50
       },
       "la-liga": {
         "teams": 20,
         "ok": 20,
         "role_rows": 223,
-        "max_latest_week": 52
+        "max_latest_week": 53
       },
       "serie-a": {
         "teams": 20,
         "ok": 20,
-        "role_rows": 217,
-        "max_latest_week": 50
+        "role_rows": 218,
+        "max_latest_week": 51
       }
     }
   },

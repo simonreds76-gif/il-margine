@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-05-17T11:50:26+00:00`
+Fetched at UTC: `2026-05-17T18:23:47+00:00`
 
 ## Decision
 
@@ -14,15 +14,15 @@ Overall: **PASS_SOURCE_LAYER**
 ## RotoWire
 
 - Teams with set-piece blocks: `96/96`
-- Player role rows extracted: `1032`
+- Player role rows extracted: `1034`
 
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
 | bundesliga | 18 | 18 | 184 | 48 |
-| epl | 20 | 20 | 208 | 54 |
-| la-liga | 20 | 20 | 223 | 52 |
-| ligue-1 | 18 | 18 | 200 | 49 |
-| serie-a | 20 | 20 | 217 | 50 |
+| epl | 20 | 20 | 209 | 54 |
+| la-liga | 20 | 20 | 223 | 53 |
+| ligue-1 | 18 | 18 | 200 | 50 |
+| serie-a | 20 | 20 | 218 | 51 |
 
 ## FPL API
 
@@ -43,20 +43,20 @@ Overall: **PASS_SOURCE_LAYER**
 | League | Team | Player | Last-5 corner share | Season corner share | Corner total |
 |---|---|---|---:|---:|---:|
 | la-liga | Getafe | Luis Milla | 100.0% | 83.45% | 116 |
-| ligue-1 | Lorient | Pablo Pagis | 93.33% | 58.75% | 47 |
-| la-liga | Real Madrid | Trent Alexander-Arnold | 91.67% | 28.89% | 65 |
+| la-liga | Real Madrid | Trent Alexander-Arnold | 91.3% | 28.63% | 65 |
 | bundesliga | FSV Mainz 05 | Nadiem Amiri | 90.91% | 57.25% | 79 |
 | ligue-1 | Metz | Gauthier Hein | 90.91% | 63.25% | 74 |
+| ligue-1 | Lorient | Pablo Pagis | 90.0% | 58.75% | 47 |
 | epl | Burnley | James Ward-Prowse | 88.24% | 34.15% | 42 |
+| ligue-1 | Rennes | Sebastian Szymanski | 81.48% | 23.53% | 36 |
 | bundesliga | VfL Wolfsburg | Christian Eriksen | 81.25% | 55.0% | 77 |
-| ligue-1 | AJ Auxerre | Kevin Danois | 80.95% | 61.76% | 84 |
 | ligue-1 | Angers | Branco van den Boomen | 80.0% | 37.36% | 34 |
 | bundesliga | SC Freiburg | Jan-Niklas Beste | 77.78% | 38.5% | 72 |
-| epl | West Ham United | Jarrod Bowen | 75.0% | 36.78% | 64 |
+| ligue-1 | AJ Auxerre | Kevin Danois | 77.78% | 61.76% | 84 |
+| la-liga | Sevilla | Ruben Vargas | 76.92% | 22.45% | 33 |
+| epl | West Ham United | Jarrod Bowen | 75.0% | 37.14% | 65 |
 | bundesliga | RB Leipzig | Max Finkgrafe | 75.0% | 12.24% | 18 |
-| bundesliga | Bayer Leverkusen | Alejandro Grimaldo | 72.0% | 55.62% | 94 |
-| bundesliga | Union Berlin | Christopher Trimmel | 72.0% | 51.95% | 80 |
-| epl | Sunderland | Enzo Le Fee | 71.43% | 37.69% | 49 |
+| epl | Leeds United | Anton Stach | 72.22% | 58.01% | 105 |
 
 ## Outputs
 
