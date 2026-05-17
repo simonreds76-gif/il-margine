@@ -1,6 +1,4 @@
 kickoff_iso,league,home_team,away_team,team,venue,line,side,model_prob,model_fair,book_odds,bookmaker,edge,captured_at,lambda_venue,lambda_recent,divergence,consensus,effective_stake,preferred
-2026-05-16T13:30:00Z,bundesliga,Borussia Monchengladbach,TSG Hoffenheim,TSG Hoffenheim,away,17.5,under,0.8277,1.208,1.833,Bet365,0.5172,2026-05-14T11:46:13Z,13.06,13.78,0.0555,aligned,2.0,True
-2026-05-16T13:30:00Z,bundesliga,Borussia Monchengladbach,TSG Hoffenheim,TSG Hoffenheim,away,15.5,under,0.7101,1.408,2.0,Bet365,0.4202,2026-05-15T16:50:20Z,13.06,13.78,0.0555,aligned,2.0,True
 2026-05-17T18:45:00Z,serie-a,Sassuolo Calcio,US Lecce,US Lecce,away,14.5,under,0.7493,1.335,1.833,Bet365,0.3735,2026-05-14T11:01:00Z,10.61,10.37,0.0222,aligned,2.0,True
 2026-05-17T14:00:00Z,epl,Brentford FC,Crystal Palace,Brentford FC,home,15.5,under,0.7122,1.404,1.8,Bet365,0.282,2026-05-16T14:25:06Z,13.01,12.81,0.0158,aligned,2.0,True
 2026-05-17T11:30:00Z,epl,Manchester United,Nottingham Forest,Manchester United,home,17.5,under,0.682,1.466,1.833,Bet365,0.2501,2026-05-14T11:46:11Z,16.89,18.48,0.0945,aligned,2.0,True
@@ -13,32 +11,25 @@ kickoff_iso,league,home_team,away_team,team,venue,line,side,model_prob,model_fai
 2026-05-17T14:00:00Z,epl,Everton FC,Sunderland AFC,Everton FC,home,15.5,under,0.6639,1.506,1.8,Bet365,0.195,2026-05-16T14:25:06Z,14.09,14.47,0.0274,aligned,1.0,True
 2026-05-17T14:00:00Z,epl,Brentford FC,Crystal Palace,Brentford FC,home,14.5,under,0.6331,1.58,1.833,Bet365,0.1605,2026-05-15T16:50:14Z,13.01,12.81,0.0158,aligned,1.0,True
 2026-05-17T16:30:00Z,epl,Newcastle United,West Ham United,Newcastle United,home,16.5,under,0.6287,1.591,1.833,Bet365,0.1524,2026-05-14T11:00:54Z,16.27,16.61,0.0208,aligned,0.5,True
-2026-05-16T13:30:00Z,bundesliga,Bayern Munich,1. FC Cologne,1. FC Cologne,away,9.5,over,0.6695,1.494,1.909,Bet365,0.2781,2026-05-15T16:50:20Z,11.71,9.61,0.1793,divergent,1.5,False
-2026-05-16T13:30:00Z,bundesliga,Union Berlin,FC Augsburg,Union Berlin,home,11.5,over,0.6843,1.461,1.8,Bet365,0.2317,2026-05-14T11:46:13Z,15.32,17.09,0.1154,aligned,1.5,False
 2026-05-17T17:00:00Z,la-liga,Elche CF,Getafe CF,Getafe CF,away,9.5,over,0.6605,1.514,1.833,Bet365,0.2107,2026-05-16T14:25:14Z,11.52,11.53,0.0011,aligned,1.5,False
 2026-05-17T17:00:00Z,la-liga,CA Osasuna,Espanyol Barcelona,CA Osasuna,home,13.5,over,0.6516,1.535,1.833,Bet365,0.1944,2026-05-16T14:25:14Z,17.32,19.25,0.1115,aligned,1.0,False
 2026-05-17T17:00:00Z,la-liga,CA Osasuna,Espanyol Barcelona,Espanyol Barcelona,away,10.5,over,0.5913,1.691,2.0,Bet365,0.1826,2026-05-16T14:25:14Z,11.73,10.59,0.097,aligned,1.0,False
 2026-05-17T17:00:00Z,la-liga,Elche CF,Getafe CF,Getafe CF,away,10.5,over,0.5814,1.72,2.0,Bet365,0.1628,2026-05-15T16:50:18Z,11.52,11.53,0.0011,aligned,1.0,False
-2026-05-16T13:30:00Z,bundesliga,Union Berlin,FC Augsburg,Union Berlin,home,12.5,over,0.6332,1.579,1.833,Bet365,0.1607,2026-05-15T11:47:14Z,15.32,17.09,0.1154,aligned,1.0,False
 2026-05-17T17:00:00Z,la-liga,Real Sociedad San Sebastian,Valencia CF,Valencia CF,away,10.5,over,0.6538,1.53,1.727,Bet365,0.1291,2026-05-15T16:50:18Z,13.16,14.58,0.1079,aligned,0.5,False
 2026-05-17T17:00:00Z,la-liga,Atletico Madrid,Girona FC,Girona FC,away,9.5,over,0.6159,1.624,1.833,Bet365,0.1289,2026-05-15T16:50:18Z,10.6,10.1,0.0465,aligned,0.5,False
 2026-05-17T17:00:00Z,la-liga,Sevilla FC,Real Madrid,Sevilla FC,home,12.5,under,0.6142,1.628,1.833,Bet365,0.1258,2026-05-16T14:25:14Z,10.46,13.01,0.2439,divergent,0.5,False
 2026-05-17T17:00:00Z,la-liga,Sevilla FC,Real Madrid,Real Madrid,away,14.5,under,0.6565,1.523,1.909,Bet365,0.2533,2026-05-15T16:50:18Z,12.51,10.27,0.1794,divergent,0.0,False
 2026-05-17T19:15:00Z,la-liga,FC Barcelona,Real Betis Seville,FC Barcelona,home,17.5,under,0.6661,1.501,1.833,Bet365,0.221,2026-05-16T14:25:14Z,17.29,13.45,0.222,divergent,0.0,False
-2026-05-16T13:30:00Z,bundesliga,FC St. Pauli,VFL Wolfsburg,VFL Wolfsburg,away,13.5,under,0.6779,1.475,1.727,Bet365,0.1707,2026-05-14T11:46:13Z,10.56,8.9,0.1576,divergent,0.0,False
 2026-05-17T17:00:00Z,la-liga,Sevilla FC,Real Madrid,Real Madrid,away,13.5,under,0.5724,1.747,2.0,Bet365,0.1448,2026-05-16T14:25:14Z,12.51,10.27,0.1794,divergent,0.0,False
 2026-05-17T14:00:00Z,epl,Leeds United,Brighton & Hove Albion,Brighton & Hove Albion,away,13.5,under,0.6099,1.64,1.833,Bet365,0.1179,2026-05-16T14:25:06Z,11.8,11.72,0.0065,aligned,0.0,False
 2026-05-17T10:00:00Z,serie-a,Genoa CFC,AC Milan,AC Milan,away,13.5,under,0.6439,1.553,1.727,Bet365,0.112,2026-05-15T16:50:16Z,11.17,11.14,0.003,aligned,0.0,False
 2026-05-17T10:30:00Z,serie-a,Genoa CFC,AC Milan,AC Milan,away,13.5,under,0.6439,1.553,1.727,Bet365,0.112,2026-05-15T16:50:16Z,11.17,11.14,0.003,aligned,0.0,False
 2026-05-17T11:30:00Z,epl,Manchester United,Nottingham Forest,Manchester United,home,16.5,under,0.6021,1.661,1.833,Bet365,0.1036,2026-05-16T14:25:06Z,16.89,18.48,0.0945,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,FC St. Pauli,VFL Wolfsburg,FC St. Pauli,home,13.5,under,0.6116,1.635,1.8,Bet365,0.1009,2026-05-15T16:50:20Z,11.77,11.78,0.0016,aligned,0.0,False
 2026-05-17T10:00:00Z,serie-a,Pisa SC,SSC Napoli,Pisa SC,home,8.5,over,0.6296,1.588,1.727,Bet365,0.0873,2026-05-16T14:25:10Z,8.79,8.31,0.0548,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,SC Freiburg,RB Leipzig,RB Leipzig,away,13.5,over,0.5968,1.676,1.8,Bet365,0.0742,2026-05-15T16:50:20Z,16.06,15.05,0.0629,aligned,0.0,False
 2026-05-17T14:00:00Z,epl,Brentford FC,Crystal Palace,Crystal Palace,away,12.5,under,0.5845,1.711,1.833,Bet365,0.0714,2026-05-14T11:00:54Z,10.98,9.31,0.1516,divergent,0.0,False
 2026-05-17T17:00:00Z,la-liga,Levante UD,RCD Mallorca,RCD Mallorca,away,11.5,under,0.6202,1.612,1.727,Bet365,0.0711,2026-05-16T14:25:14Z,9.25,7.41,0.1992,divergent,0.0,False
 2026-05-17T17:00:00Z,la-liga,Atletico Madrid,Girona FC,Atletico Madrid,home,14.5,under,0.5345,1.871,2.0,Bet365,0.069,2026-05-15T11:47:12Z,15.21,15.26,0.0039,aligned,0.0,False
 2026-05-17T18:45:00Z,serie-a,Udinese Calcio,US Cremonese,Udinese Calcio,home,13.5,over,0.5578,1.793,1.909,Bet365,0.0648,2026-05-16T14:25:10Z,15.19,15.03,0.0105,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Union Berlin,FC Augsburg,FC Augsburg,away,14.5,under,0.5808,1.722,1.833,Bet365,0.0646,2026-05-15T16:50:20Z,14.16,13.44,0.0507,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Atletico Madrid,Girona FC,Atletico Madrid,home,15.5,under,0.6145,1.627,1.727,Bet365,0.0612,2026-05-16T14:25:14Z,15.21,15.26,0.0039,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Rayo Vallecano,Villarreal CF,Rayo Vallecano,home,14.5,over,0.5299,1.887,2.0,Bet365,0.0598,2026-05-16T14:25:14Z,16.7,20.43,0.2233,divergent,0.0,False
 2026-05-18T19:00:00Z,epl,Arsenal FC,Burnley FC,Arsenal FC,home,20.5,under,0.5781,1.73,1.833,Bet365,0.0597,2026-05-16T14:25:06Z,23.82,23.26,0.0233,aligned,0.0,False
@@ -48,12 +39,9 @@ kickoff_iso,league,home_team,away_team,team,venue,line,side,model_prob,model_fai
 2026-05-17T10:30:00Z,serie-a,Genoa CFC,AC Milan,Genoa CFC,home,11.5,under,0.5272,1.897,2.0,Bet365,0.0544,2026-05-16T14:25:10Z,10.87,12.27,0.1288,aligned,0.0,False
 2026-05-17T10:00:00Z,serie-a,Genoa CFC,AC Milan,AC Milan,away,12.5,under,0.5736,1.743,1.833,Bet365,0.0514,2026-05-16T14:25:10Z,11.17,11.14,0.003,aligned,0.0,False
 2026-05-17T10:30:00Z,serie-a,Genoa CFC,AC Milan,AC Milan,away,12.5,under,0.5736,1.743,1.833,Bet365,0.0514,2026-05-16T14:25:10Z,11.17,11.14,0.003,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,FC St. Pauli,VFL Wolfsburg,VFL Wolfsburg,away,12.5,under,0.6083,1.644,1.727,Bet365,0.0505,2026-05-15T16:50:20Z,10.56,8.9,0.1576,divergent,0.0,False
 2026-05-17T16:30:00Z,epl,Newcastle United,West Ham United,West Ham United,away,12.5,under,0.5472,1.827,1.909,Bet365,0.0446,2026-05-14T11:00:54Z,11.65,10.66,0.0853,aligned,0.0,False
 2026-05-17T14:00:00Z,epl,Leeds United,Brighton & Hove Albion,Leeds United,home,11.5,over,0.5698,1.755,1.833,Bet365,0.0444,2026-05-15T16:50:14Z,12.77,14.08,0.1022,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Bayern Munich,1. FC Cologne,Bayern Munich,home,19.5,under,0.5696,1.756,1.833,Bet365,0.0441,2026-05-15T16:50:20Z,22.68,23.83,0.0505,aligned,0.0,False
 2026-05-17T16:30:00Z,epl,Newcastle United,West Ham United,Newcastle United,home,15.5,under,0.5677,1.761,1.833,Bet365,0.0406,2026-05-16T14:25:06Z,16.27,16.61,0.0208,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Union Berlin,FC Augsburg,Union Berlin,home,13.5,over,0.5637,1.774,1.833,Bet365,0.0333,2026-05-15T16:50:20Z,15.32,17.09,0.1154,aligned,0.0,False
 2026-05-17T10:30:00Z,serie-a,Juventus Turin,ACF Fiorentina,ACF Fiorentina,away,9.5,under,0.571,1.751,1.8,Bet365,0.0278,2026-05-15T16:50:16Z,7.45,5.64,0.2431,divergent,0.0,False
 2026-05-17T16:00:00Z,serie-a,Atalanta BC,Bologna FC,Bologna FC,away,10.5,over,0.5605,1.784,1.833,Bet365,0.0274,2026-05-16T14:25:10Z,11.07,11.76,0.0616,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Atletico Madrid,Girona FC,Girona FC,away,10.5,over,0.5373,1.861,1.909,Bet365,0.0257,2026-05-16T14:25:14Z,10.6,10.1,0.0465,aligned,0.0,False
@@ -61,42 +49,32 @@ kickoff_iso,league,home_team,away_team,team,venue,line,side,model_prob,model_fai
 2026-05-17T10:30:00Z,serie-a,Como 1907,Parma Calcio,Como 1907,home,16.5,under,0.5107,1.958,2.0,Bet365,0.0214,2026-05-15T16:50:16Z,18.97,19.54,0.03,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Athletic Bilbao,RC Celta de Vigo,RC Celta de Vigo,away,8.5,over,0.554,1.805,1.833,Bet365,0.0155,2026-05-16T14:25:14Z,7.4,4.98,0.3275,conflict,0.0,False
 2026-05-17T17:00:00Z,la-liga,Rayo Vallecano,Villarreal CF,Villarreal CF,away,11.5,under,0.5863,1.706,1.727,Bet365,0.0125,2026-05-16T14:25:14Z,9.82,8.32,0.1527,divergent,0.0,False
-2026-05-16T13:30:00Z,bundesliga,SC Freiburg,RB Leipzig,SC Freiburg,home,13.5,under,0.5599,1.786,1.8,Bet365,0.0078,2026-05-14T11:46:13Z,12.76,13.4,0.0503,aligned,0.0,False
 2026-05-17T19:15:00Z,la-liga,FC Barcelona,Real Betis Seville,Real Betis Seville,away,10.5,under,0.5808,1.722,1.727,Bet365,0.003,2026-05-16T14:25:14Z,8.44,7.63,0.0962,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Real Sociedad San Sebastian,Valencia CF,Real Sociedad San Sebastian,home,12.5,under,0.5206,1.921,1.909,Bet365,-0.0062,2026-05-16T14:25:14Z,12.15,13.07,0.076,aligned,0.0,False
 2026-05-17T11:30:00Z,epl,Manchester United,Nottingham Forest,Nottingham Forest,away,10.5,over,0.4968,2.013,2.0,Bet365,-0.0064,2026-05-16T14:25:06Z,9.81,10.1,0.0291,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,FC St. Pauli,VFL Wolfsburg,FC St. Pauli,home,12.5,under,0.5409,1.849,1.833,Bet365,-0.0085,2026-05-14T11:46:13Z,11.77,11.78,0.0016,aligned,0.0,False
 2026-05-17T10:00:00Z,serie-a,Genoa CFC,AC Milan,Genoa CFC,home,10.5,over,0.5507,1.816,1.8,Bet365,-0.0087,2026-05-15T16:50:16Z,10.87,12.27,0.1288,aligned,0.0,False
 2026-05-17T10:30:00Z,serie-a,Genoa CFC,AC Milan,Genoa CFC,home,10.5,over,0.5507,1.816,1.8,Bet365,-0.0087,2026-05-15T16:50:16Z,10.87,12.27,0.1288,aligned,0.0,False
 2026-05-17T18:45:00Z,serie-a,Sassuolo Calcio,US Lecce,Sassuolo Calcio,home,12.5,under,0.5385,1.857,1.833,Bet365,-0.0129,2026-05-14T11:01:00Z,11.81,10.23,0.1336,aligned,0.0,False
 2026-05-17T18:45:00Z,serie-a,Cagliari Calcio,Torino FC,Torino FC,away,11.5,over,0.492,2.033,2.0,Bet365,-0.016,2026-05-16T14:25:10Z,11.23,9.76,0.1313,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,SC Freiburg,RB Leipzig,SC Freiburg,home,12.5,over,0.511,1.957,1.909,Bet365,-0.0245,2026-05-15T16:50:20Z,12.76,13.4,0.0503,aligned,0.0,False
 2026-05-17T16:30:00Z,epl,Newcastle United,West Ham United,West Ham United,away,11.5,under,0.4861,2.057,2.0,Bet365,-0.0278,2026-05-16T14:25:06Z,11.65,10.66,0.0853,aligned,0.0,False
 2026-05-17T18:45:00Z,serie-a,Cagliari Calcio,Torino FC,Cagliari Calcio,home,12.5,under,0.5046,1.982,1.909,Bet365,-0.0367,2026-05-16T14:25:10Z,12.45,14.31,0.1492,aligned,0.0,False
 2026-05-17T10:30:00Z,serie-a,Juventus Turin,ACF Fiorentina,ACF Fiorentina,away,8.5,over,0.5571,1.795,1.727,Bet365,-0.0379,2026-05-16T14:25:10Z,7.45,5.64,0.2431,divergent,0.0,False
-2026-05-16T13:30:00Z,bundesliga,SC Freiburg,RB Leipzig,RB Leipzig,away,14.5,over,0.5024,1.99,1.909,Bet365,-0.0409,2026-05-14T11:46:13Z,16.06,15.05,0.0629,aligned,0.0,False
 2026-05-17T18:45:00Z,serie-a,Sassuolo Calcio,US Lecce,Sassuolo Calcio,home,11.5,over,0.5221,1.915,1.833,Bet365,-0.043,2026-05-16T14:25:10Z,11.81,10.23,0.1336,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Elche CF,Getafe CF,Elche CF,home,12.5,under,0.5004,1.998,1.909,Bet365,-0.0447,2026-05-16T14:25:14Z,12.53,13.25,0.0573,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Levante UD,RCD Mallorca,Levante UD,home,14.5,over,0.5526,1.81,1.727,Bet365,-0.0457,2026-05-16T14:25:14Z,17.24,22.55,0.308,conflict,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Borussia Monchengladbach,TSG Hoffenheim,Borussia Monchengladbach,home,10.5,over,0.5459,1.832,1.727,Bet365,-0.0572,2026-05-15T16:50:20Z,10.77,11.51,0.0683,aligned,0.0,False
 2026-05-17T14:00:00Z,epl,Brentford FC,Crystal Palace,Crystal Palace,away,11.5,under,0.5215,1.918,1.8,Bet365,-0.0613,2026-05-16T14:25:06Z,10.98,9.31,0.1516,divergent,0.0,False
 2026-05-17T14:00:00Z,epl,Leeds United,Brighton & Hove Albion,Leeds United,home,12.5,over,0.5118,1.954,1.833,Bet365,-0.0619,2026-05-16T14:25:06Z,12.77,14.08,0.1022,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Athletic Bilbao,RC Celta de Vigo,Athletic Bilbao,home,13.5,over,0.4901,2.04,1.909,Bet365,-0.0644,2026-05-16T14:25:14Z,13.76,13.03,0.053,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Union Berlin,FC Augsburg,FC Augsburg,away,13.5,over,0.5092,1.964,1.833,Bet365,-0.0666,2026-05-15T11:47:14Z,14.16,13.44,0.0507,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Real Sociedad San Sebastian,Valencia CF,Real Sociedad San Sebastian,home,11.5,over,0.5391,1.855,1.727,Bet365,-0.069,2026-05-15T16:50:18Z,12.15,13.07,0.076,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Real Sociedad San Sebastian,Valencia CF,Real Sociedad San Sebastian,home,11.5,under,0.4609,2.17,2.0,Bet365,-0.0782,2026-05-15T16:50:18Z,12.15,13.07,0.076,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Athletic Bilbao,RC Celta de Vigo,Athletic Bilbao,home,13.5,under,0.5099,1.961,1.8,Bet365,-0.0822,2026-05-16T14:25:14Z,13.76,13.03,0.053,aligned,0.0,False
 2026-05-17T14:00:00Z,epl,Brentford FC,Crystal Palace,Crystal Palace,away,11.5,over,0.4785,2.09,1.909,Bet365,-0.0865,2026-05-16T14:25:06Z,10.98,9.31,0.1516,divergent,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Borussia Monchengladbach,TSG Hoffenheim,Borussia Monchengladbach,home,10.5,under,0.4541,2.202,2.0,Bet365,-0.0918,2026-05-15T16:50:20Z,10.77,11.51,0.0683,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Union Berlin,FC Augsburg,FC Augsburg,away,13.5,under,0.4908,2.037,1.833,Bet365,-0.1004,2026-05-15T11:47:14Z,14.16,13.44,0.0507,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Elche CF,Getafe CF,Elche CF,home,12.5,over,0.4996,2.002,1.8,Bet365,-0.1007,2026-05-16T14:25:14Z,12.53,13.25,0.0573,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,SC Freiburg,RB Leipzig,RB Leipzig,away,14.5,under,0.4976,2.01,1.8,Bet365,-0.1043,2026-05-14T11:46:13Z,16.06,15.05,0.0629,aligned,0.0,False
 2026-05-17T14:00:00Z,epl,Leeds United,Brighton & Hove Albion,Leeds United,home,12.5,under,0.4882,2.048,1.833,Bet365,-0.1051,2026-05-16T14:25:06Z,12.77,14.08,0.1022,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Levante UD,RCD Mallorca,Levante UD,home,14.5,under,0.4474,2.235,2.0,Bet365,-0.1052,2026-05-16T14:25:14Z,17.24,22.55,0.308,conflict,0.0,False
 2026-05-17T18:45:00Z,serie-a,Cagliari Calcio,Torino FC,Cagliari Calcio,home,12.5,over,0.4954,2.019,1.8,Bet365,-0.1083,2026-05-16T14:25:10Z,12.45,14.31,0.1492,aligned,0.0,False
 2026-05-17T16:30:00Z,epl,Newcastle United,West Ham United,West Ham United,away,11.5,over,0.5139,1.946,1.727,Bet365,-0.1125,2026-05-16T14:25:06Z,11.65,10.66,0.0853,aligned,0.0,False
 2026-05-17T10:30:00Z,serie-a,Juventus Turin,ACF Fiorentina,ACF Fiorentina,away,8.5,under,0.4429,2.258,2.0,Bet365,-0.1142,2026-05-16T14:25:10Z,7.45,5.64,0.2431,divergent,0.0,False
-2026-05-16T13:30:00Z,bundesliga,SC Freiburg,RB Leipzig,SC Freiburg,home,12.5,under,0.489,2.045,1.8,Bet365,-0.1198,2026-05-15T16:50:20Z,12.76,13.4,0.0503,aligned,0.0,False
 2026-05-17T18:45:00Z,serie-a,Cagliari Calcio,Torino FC,Torino FC,away,11.5,under,0.508,1.969,1.727,Bet365,-0.1227,2026-05-16T14:25:10Z,11.23,9.76,0.1313,aligned,0.0,False
 2026-05-17T18:45:00Z,serie-a,Sassuolo Calcio,US Lecce,Sassuolo Calcio,home,11.5,under,0.4779,2.092,1.833,Bet365,-0.124,2026-05-16T14:25:10Z,11.81,10.23,0.1336,aligned,0.0,False
 2026-05-17T11:30:00Z,epl,Manchester United,Nottingham Forest,Nottingham Forest,away,10.5,under,0.5032,1.987,1.727,Bet365,-0.131,2026-05-16T14:25:06Z,9.81,10.1,0.0291,aligned,0.0,False
@@ -106,8 +84,6 @@ kickoff_iso,league,home_team,away_team,team,venue,line,side,model_prob,model_fai
 2026-05-17T18:45:00Z,serie-a,Sassuolo Calcio,US Lecce,Sassuolo Calcio,home,12.5,over,0.4615,2.167,1.833,Bet365,-0.1541,2026-05-14T11:01:00Z,11.81,10.23,0.1336,aligned,0.0,False
 2026-05-17T10:00:00Z,serie-a,Como 1907,Parma Calcio,Como 1907,home,16.5,over,0.4893,2.044,1.727,Bet365,-0.155,2026-05-15T16:50:16Z,18.97,19.54,0.03,aligned,0.0,False
 2026-05-17T10:30:00Z,serie-a,Como 1907,Parma Calcio,Como 1907,home,16.5,over,0.4893,2.044,1.727,Bet365,-0.155,2026-05-15T16:50:16Z,18.97,19.54,0.03,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,FC St. Pauli,VFL Wolfsburg,FC St. Pauli,home,12.5,over,0.4591,2.178,1.833,Bet365,-0.1585,2026-05-14T11:46:13Z,11.77,11.78,0.0016,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,SC Freiburg,RB Leipzig,SC Freiburg,home,13.5,over,0.4401,2.272,1.909,Bet365,-0.1598,2026-05-14T11:46:13Z,12.76,13.4,0.0503,aligned,0.0,False
 2026-05-17T19:15:00Z,la-liga,FC Barcelona,Real Betis Seville,Real Betis Seville,away,10.5,over,0.4192,2.385,2.0,Bet365,-0.1616,2026-05-16T14:25:14Z,8.44,7.63,0.0962,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Atletico Madrid,Girona FC,Girona FC,away,10.5,under,0.4627,2.161,1.8,Bet365,-0.1671,2026-05-16T14:25:14Z,10.6,10.1,0.0465,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Rayo Vallecano,Villarreal CF,Villarreal CF,away,11.5,over,0.4137,2.417,2.0,Bet365,-0.1726,2026-05-16T14:25:14Z,9.82,8.32,0.1527,divergent,0.0,False
@@ -120,22 +96,16 @@ kickoff_iso,league,home_team,away_team,team,venue,line,side,model_prob,model_fai
 2026-05-17T16:00:00Z,serie-a,Atalanta BC,Bologna FC,Bologna FC,away,10.5,under,0.4395,2.275,1.833,Bet365,-0.1944,2026-05-16T14:25:10Z,11.07,11.76,0.0616,aligned,0.0,False
 2026-05-17T14:00:00Z,epl,Everton FC,Sunderland AFC,Sunderland AFC,away,10.5,under,0.4475,2.235,1.8,Bet365,-0.1945,2026-05-16T14:25:06Z,10.91,11.05,0.0132,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Atletico Madrid,Girona FC,Atletico Madrid,home,14.5,over,0.4655,2.148,1.727,Bet365,-0.1961,2026-05-15T11:47:12Z,15.21,15.26,0.0039,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Union Berlin,FC Augsburg,Union Berlin,home,13.5,under,0.4363,2.292,1.833,Bet365,-0.2003,2026-05-15T16:50:20Z,15.32,17.09,0.1154,aligned,0.0,False
 2026-05-17T18:45:00Z,serie-a,Udinese Calcio,US Cremonese,Udinese Calcio,home,13.5,under,0.4422,2.261,1.8,Bet365,-0.204,2026-05-16T14:25:10Z,15.19,15.03,0.0105,aligned,0.0,False
 2026-05-17T16:30:00Z,epl,Newcastle United,West Ham United,Newcastle United,home,15.5,over,0.4323,2.313,1.833,Bet365,-0.2076,2026-05-16T14:25:06Z,16.27,16.61,0.0208,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Bayern Munich,1. FC Cologne,Bayern Munich,home,19.5,over,0.4304,2.323,1.833,Bet365,-0.2111,2026-05-15T16:50:20Z,22.68,23.83,0.0505,aligned,0.0,False
 2026-05-17T14:00:00Z,epl,Leeds United,Brighton & Hove Albion,Leeds United,home,11.5,under,0.4302,2.325,1.833,Bet365,-0.2114,2026-05-15T16:50:14Z,12.77,14.08,0.1022,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Real Sociedad San Sebastian,Valencia CF,Valencia CF,away,11.5,under,0.4118,2.428,1.909,Bet365,-0.2139,2026-05-16T14:25:14Z,13.16,14.58,0.1079,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,FC St. Pauli,VFL Wolfsburg,VFL Wolfsburg,away,12.5,over,0.3917,2.553,2.0,Bet365,-0.2166,2026-05-15T16:50:20Z,10.56,8.9,0.1576,divergent,0.0,False
 2026-05-17T10:00:00Z,serie-a,Genoa CFC,AC Milan,AC Milan,away,12.5,over,0.4264,2.345,1.833,Bet365,-0.2184,2026-05-16T14:25:10Z,11.17,11.14,0.003,aligned,0.0,False
 2026-05-17T10:30:00Z,serie-a,Genoa CFC,AC Milan,AC Milan,away,12.5,over,0.4264,2.345,1.833,Bet365,-0.2184,2026-05-16T14:25:10Z,11.17,11.14,0.003,aligned,0.0,False
 2026-05-18T19:00:00Z,epl,Arsenal FC,Burnley FC,Arsenal FC,home,20.5,over,0.4219,2.37,1.833,Bet365,-0.2267,2026-05-16T14:25:06Z,23.82,23.26,0.0233,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Atletico Madrid,Girona FC,Atletico Madrid,home,15.5,over,0.3855,2.594,2.0,Bet365,-0.229,2026-05-16T14:25:14Z,15.21,15.26,0.0039,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,SC Freiburg,RB Leipzig,RB Leipzig,away,13.5,under,0.4032,2.48,1.909,Bet365,-0.2303,2026-05-15T16:50:20Z,16.06,15.05,0.0629,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Union Berlin,FC Augsburg,FC Augsburg,away,14.5,over,0.4192,2.385,1.833,Bet365,-0.2316,2026-05-15T16:50:20Z,14.16,13.44,0.0507,aligned,0.0,False
 2026-05-17T14:00:00Z,epl,Brentford FC,Crystal Palace,Crystal Palace,away,12.5,over,0.4155,2.407,1.833,Bet365,-0.2384,2026-05-14T11:00:54Z,10.98,9.31,0.1516,divergent,0.0,False
 2026-05-17T17:00:00Z,la-liga,Levante UD,RCD Mallorca,RCD Mallorca,away,11.5,over,0.3798,2.633,2.0,Bet365,-0.2404,2026-05-16T14:25:14Z,9.25,7.41,0.1992,divergent,0.0,False
-2026-05-16T13:30:00Z,bundesliga,FC St. Pauli,VFL Wolfsburg,FC St. Pauli,home,13.5,over,0.3884,2.575,1.909,Bet365,-0.2585,2026-05-15T16:50:20Z,11.77,11.78,0.0016,aligned,0.0,False
 2026-05-17T10:00:00Z,serie-a,Pisa SC,SSC Napoli,Pisa SC,home,8.5,under,0.3704,2.7,2.0,Bet365,-0.2592,2026-05-16T14:25:10Z,8.79,8.31,0.0548,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,Sevilla FC,Real Madrid,Real Madrid,away,13.5,over,0.4276,2.339,1.727,Bet365,-0.2615,2026-05-16T14:25:14Z,12.51,10.27,0.1794,divergent,0.0,False
 2026-05-17T11:30:00Z,epl,Manchester United,Nottingham Forest,Manchester United,home,16.5,over,0.3979,2.513,1.833,Bet365,-0.2706,2026-05-16T14:25:06Z,16.89,18.48,0.0945,aligned,0.0,False
@@ -151,8 +121,6 @@ kickoff_iso,league,home_team,away_team,team,venue,line,side,model_prob,model_fai
 2026-05-17T17:00:00Z,la-liga,Real Sociedad San Sebastian,Valencia CF,Valencia CF,away,10.5,under,0.3462,2.889,2.0,Bet365,-0.3076,2026-05-15T16:50:18Z,13.16,14.58,0.1079,aligned,0.0,False
 2026-05-17T16:30:00Z,epl,Newcastle United,West Ham United,Newcastle United,home,16.5,over,0.3713,2.693,1.833,Bet365,-0.3194,2026-05-14T11:00:54Z,16.27,16.61,0.0208,aligned,0.0,False
 2026-05-17T14:00:00Z,epl,Brentford FC,Crystal Palace,Brentford FC,home,14.5,over,0.3669,2.726,1.833,Bet365,-0.3275,2026-05-15T16:50:14Z,13.01,12.81,0.0158,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Union Berlin,FC Augsburg,Union Berlin,home,12.5,under,0.3668,2.726,1.833,Bet365,-0.3277,2026-05-15T11:47:14Z,15.32,17.09,0.1154,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,FC St. Pauli,VFL Wolfsburg,VFL Wolfsburg,away,13.5,over,0.3221,3.105,2.0,Bet365,-0.3558,2026-05-14T11:46:13Z,10.56,8.9,0.1576,divergent,0.0,False
 2026-05-17T18:45:00Z,serie-a,Udinese Calcio,US Cremonese,US Cremonese,away,11.5,over,0.3567,2.803,1.8,Bet365,-0.3579,2026-05-16T14:25:10Z,8.88,8.26,0.0699,aligned,0.0,False
 2026-05-17T14:00:00Z,epl,Everton FC,Sunderland AFC,Everton FC,home,15.5,over,0.3361,2.975,1.909,Bet365,-0.3584,2026-05-16T14:25:06Z,14.09,14.47,0.0274,aligned,0.0,False
 2026-05-17T17:00:00Z,la-liga,CA Osasuna,Espanyol Barcelona,CA Osasuna,home,13.5,under,0.3484,2.87,1.833,Bet365,-0.3614,2026-05-16T14:25:14Z,17.32,19.25,0.1115,aligned,0.0,False
@@ -160,12 +128,8 @@ kickoff_iso,league,home_team,away_team,team,venue,line,side,model_prob,model_fai
 2026-05-17T17:00:00Z,la-liga,Sevilla FC,Real Madrid,Real Madrid,away,14.5,over,0.3435,2.911,1.8,Bet365,-0.3817,2026-05-15T16:50:18Z,12.51,10.27,0.1794,divergent,0.0,False
 2026-05-17T16:00:00Z,serie-a,Atalanta BC,Bologna FC,Atalanta BC,home,16.5,over,0.306,3.268,2.0,Bet365,-0.388,2026-05-16T14:25:10Z,14.78,15.4,0.0421,aligned,0.0,False
 2026-05-17T19:15:00Z,la-liga,FC Barcelona,Real Betis Seville,FC Barcelona,home,17.5,over,0.3339,2.995,1.833,Bet365,-0.388,2026-05-16T14:25:14Z,17.29,13.45,0.222,divergent,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Union Berlin,FC Augsburg,Union Berlin,home,11.5,under,0.3157,3.168,1.909,Bet365,-0.3973,2026-05-14T11:46:13Z,15.32,17.09,0.1154,aligned,0.0,False
 2026-05-17T18:45:00Z,serie-a,Sassuolo Calcio,US Lecce,US Lecce,away,13.5,over,0.3246,3.081,1.833,Bet365,-0.405,2026-05-16T14:25:10Z,10.61,10.37,0.0222,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Bayern Munich,1. FC Cologne,1. FC Cologne,away,9.5,under,0.3305,3.026,1.8,Bet365,-0.4051,2026-05-15T16:50:20Z,11.71,9.61,0.1793,divergent,0.0,False
 2026-05-17T10:00:00Z,serie-a,Pisa SC,SSC Napoli,SSC Napoli,away,15.5,over,0.3231,3.095,1.833,Bet365,-0.4078,2026-05-16T14:25:10Z,13.8,13.63,0.012,aligned,0.0,False
 2026-05-17T11:30:00Z,epl,Manchester United,Nottingham Forest,Manchester United,home,17.5,over,0.318,3.145,1.833,Bet365,-0.4171,2026-05-14T11:46:11Z,16.89,18.48,0.0945,aligned,0.0,False
 2026-05-17T14:00:00Z,epl,Brentford FC,Crystal Palace,Brentford FC,home,15.5,over,0.2878,3.475,1.909,Bet365,-0.4506,2026-05-16T14:25:06Z,13.01,12.81,0.0158,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Borussia Monchengladbach,TSG Hoffenheim,TSG Hoffenheim,away,15.5,over,0.2899,3.449,1.727,Bet365,-0.4993,2026-05-15T16:50:20Z,13.06,13.78,0.0555,aligned,0.0,False
 2026-05-17T18:45:00Z,serie-a,Sassuolo Calcio,US Lecce,US Lecce,away,14.5,over,0.2507,3.989,1.833,Bet365,-0.5405,2026-05-14T11:01:00Z,10.61,10.37,0.0222,aligned,0.0,False
-2026-05-16T13:30:00Z,bundesliga,Borussia Monchengladbach,TSG Hoffenheim,TSG Hoffenheim,away,17.5,over,0.1723,5.804,1.833,Bet365,-0.6842,2026-05-14T11:46:13Z,13.06,13.78,0.0555,aligned,0.0,False
