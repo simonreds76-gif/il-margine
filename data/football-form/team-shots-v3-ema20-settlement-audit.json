@@ -1,14 +1,14 @@
 {
-  "run_at": "2026-05-17T14:22:40Z",
+  "run_at": "2026-05-17T18:00:38Z",
   "model": "team-shots-v3-ema20-research",
   "total_bets": 60,
   "settled_this_run": 0,
   "total_settled": 48,
   "total_pending": 12,
   "pending_breakdown": {
-    "future": 7,
-    "live": 2,
-    "stale": 3,
+    "future": 3,
+    "live": 4,
+    "stale": 5,
     "old_stale": 0,
     "unknown": 0
   },
@@ -96,7 +96,7 @@
       "line": "17.5",
       "side": "under",
       "kickoff": "2026-05-17T10:00:00Z",
-      "hours_elapsed": 4.38
+      "hours_elapsed": 8.01
     },
     {
       "match": "Pisa SC vs SSC Napoli",
@@ -104,7 +104,7 @@
       "line": "15.5",
       "side": "under",
       "kickoff": "2026-05-17T10:00:00Z",
-      "hours_elapsed": 4.38
+      "hours_elapsed": 8.01
     },
     {
       "match": "Genoa CFC vs AC Milan",
@@ -112,14 +112,30 @@
       "line": "13.5",
       "side": "under",
       "kickoff": "2026-05-17T10:30:00Z",
-      "hours_elapsed": 3.88
+      "hours_elapsed": 7.51
+    },
+    {
+      "match": "Brentford FC vs Crystal Palace",
+      "league": "epl",
+      "line": "15.5",
+      "side": "under",
+      "kickoff": "2026-05-17T14:00:00Z",
+      "hours_elapsed": 4.01
+    },
+    {
+      "match": "Everton FC vs Sunderland AFC",
+      "league": "epl",
+      "line": "15.5",
+      "side": "under",
+      "kickoff": "2026-05-17T14:00:00Z",
+      "hours_elapsed": 4.01
     }
   ],
   "old_stale_rows": [],
   "unknown_rows": [],
   "overridden_rows": [],
   "warnings": [
-    "3 stale pending row(s) across 3 fixture(s) (3-48h elapsed)"
+    "5 stale pending row(s) across 5 fixture(s) (3-48h elapsed)"
   ],
   "errors": [
     "serie-a: 3 stale fixture(s) across 3 pending row(s)"
