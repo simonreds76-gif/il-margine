@@ -22,6 +22,15 @@ jobs:
           ref: golden-with-speed-insights
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            scripts/goalscorer-hosted-watchdog.py
+            scripts/goalscorer-live-schedule.py
+            data/goalscorer/confirmed-lineups.json
+            data/goalscorer/epl-confirmed-lineups.json
+            data/goalscorer/la-liga-confirmed-lineups.json
+            data/goalscorer/bundesliga-confirmed-lineups.json
+            data/goalscorer/ligue-1-confirmed-lineups.json
 
       - uses: actions/setup-python@v6
         with:
