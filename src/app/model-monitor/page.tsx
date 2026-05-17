@@ -195,7 +195,6 @@ const MODEL_MONITOR_PUBLIC =
 const MODEL_MONITOR_ENABLED =
   MODEL_MONITOR_PUBLIC || process.env.VERCEL_ENV === "preview";
 const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
-const ASSIST_VALUE_SIGNALS_PATH = "data/assist-value/assist-value-shadow-signals.csv";
 
 function parseCsvLine(line: string): string[] {
   const out: string[] = [];
@@ -776,18 +775,6 @@ function formatSignedLine(value?: number): string {
   return `${value > 0 ? "+" : ""}${value.toFixed(value % 1 === 0 ? 0 : 1)}`;
 }
 
-function formatOddsCell(value?: string): string {
-  const n = parseFloatMaybe(value);
-  if (n == null || Number.isNaN(n)) return "n/a";
-  return n.toFixed(n >= 10 ? 1 : 2);
-}
-
-function formatPointCell(value?: string): string {
-  const n = parseFloatMaybe(value);
-  if (n == null || Number.isNaN(n)) return "n/a";
-  return `${n > 0 ? "+" : ""}${n.toFixed(2)} pp`;
-}
-
 export default async function ModelMonitorPage() {
   if (process.env.NODE_ENV === "production" && !MODEL_MONITOR_ENABLED) {
     notFound();
@@ -895,27 +882,11 @@ export default async function ModelMonitorPage() {
     readLocalMtime("data/backtest/spread-v1-clay-calibration-params.json"),
   ]);
 
-  const [assistSignalsCsv, assistSignalsMtime] = await Promise.all([
-    readLocalFile(ASSIST_VALUE_SIGNALS_PATH),
-    readLocalMtime(ASSIST_VALUE_SIGNALS_PATH),
-  ]);
-
   const strictRows = strictPerfCsv ? parseCsv(strictPerfCsv) : [];
   const volumeRows = volumePerfCsv ? parseCsv(volumePerfCsv) : [];
   const spreadV1Rows = spreadV1PerfCsv ? parseCsv(spreadV1PerfCsv) : [];
   const spreadShadowRows = spreadShadowPerfCsv ? parseCsv(spreadShadowPerfCsv) : [];
   const clay2026Rows = clay2026PerfCsv ? parseCsv(clay2026PerfCsv) : [];
-  const assistRows = assistSignalsCsv ? parseCsv(assistSignalsCsv) : [];
-  const assistShadowRows = assistRows
-    .filter((row) => row.signal_status === "shadow_signal")
-    .sort((a, b) => (parseFloatMaybe(b.edge_pp) ?? -999) - (parseFloatMaybe(a.edge_pp) ?? -999));
-  const assistWatchRows = assistRows.filter((row) => row.signal_status === "watch");
-  const assistTopRows = assistShadowRows.slice(0, 3);
-  const assistGeneratedAt = assistRows
-    .map((row) => row.generated_at)
-    .filter(Boolean)
-    .sort()
-    .at(-1) ?? assistSignalsMtime;
   const strictBase = parsePerf(strictRows, "base");
   const strictOverlay = parsePerf(strictRows, "overlay");
   const volumeBase = parsePerf(volumeRows, "base");
@@ -972,6 +943,12 @@ export default async function ModelMonitorPage() {
   const latestChallengerNearmissRows = [...challengerNearmissRows]
     .sort((a, b) => `${b.date ?? ""} ${b.time_utc ?? ""}`.localeCompare(`${a.date ?? ""} ${a.time_utc ?? ""}`))
     .slice(0, 8);
+  const challengerSignalByNearmissKey = new Map(
+    challengerSignalsArchive.map((row) => [
+      `${row.date}|${row.player1.trim().toLowerCase()}|${row.player2.trim().toLowerCase()}|${row.side}`,
+      row,
+    ]),
+  );
   const challengerRows = challengerPerfCsv ? parseCsv(challengerPerfCsv) : [];
   const challengerBase = parsePerf(challengerRows, "base");
   const clvChallenger = parseClvAudit(clvAuditChallengerTxt);
@@ -1092,6 +1069,15 @@ export default async function ModelMonitorPage() {
   const spreadV1SettledCount = spreadV1SettledRows.length;
   const challengerTrackedCount = challengerSignalsArchive.length;
   const challengerSettledCount = getSettledSignalRows(challengerSignalsArchive).length;
+  const challengerRoiEligibleCount = challengerSignalsArchive.filter((row) => {
+    if (!isSettledSignal(row) || (row.betType || "match") === "spread") return false;
+    const side = (row.side || "").trim().toLowerCase();
+    const odds = side === "p1" ? row.pinOdds1 : side === "p2" ? row.pinOdds2 : undefined;
+    return odds != null && odds > 1;
+  }).length;
+  const challengerInvalidOddsCount = Math.max(0, challengerSettledCount - challengerRoiEligibleCount);
+  const challengerPerfRow = challengerBase.mlAll ?? challengerBase.combinedAll;
+  const challengerRoiPct = perfValue(challengerPerfRow, "roi_pct", parseFloatMaybe) ?? challengerMlRecordedCohort.roiPct;
   const clayFavTrackedCount = clayFavSignalsArchive.length;
   const clayFavSettledCount = getSettledSignalRows(clayFavSignalsArchive).length;
   const spreadShadowTrackedCount = perfValue(spreadShadowBase.combinedAll, "signals", parseIntMaybe) ?? spreadShadowSignalsArchive.length;
@@ -1211,12 +1197,14 @@ export default async function ModelMonitorPage() {
           {
             policy: "Challenger ML (internal)",
             lane: "ML",
-            marketType: `Match winner - ${challengerNearmissRows.length} near-miss`,
-            settled: perfValue(challengerBase.mlAll ?? challengerBase.combinedAll, "settled", parseIntMaybe) ?? challengerSettledCount,
-            signals: perfValue(challengerBase.mlAll ?? challengerBase.combinedAll, "signals", parseIntMaybe) ?? challengerTrackedCount,
-            open: perfValue(challengerBase.mlAll ?? challengerBase.combinedAll, "unsettled", parseIntMaybe) ?? challengerOpenCount,
-            wlv: perfWlv(challengerBase.mlAll ?? challengerBase.combinedAll) || cohortWlv(challengerMlRecordedCohort),
-            roi: perfValue(challengerBase.mlAll ?? challengerBase.combinedAll, "roi_pct", parseFloatMaybe) ?? challengerMlRecordedCohort.roiPct,
+            marketType: challengerNearmissRows.length
+              ? `Match winner - ${challengerNearmissRows.length} shadow-settlement candidates`
+              : "Match winner",
+            settled: perfValue(challengerPerfRow, "settled", parseIntMaybe) ?? challengerSettledCount,
+            signals: perfValue(challengerPerfRow, "signals", parseIntMaybe) ?? challengerTrackedCount,
+            open: perfValue(challengerPerfRow, "unsettled", parseIntMaybe) ?? challengerOpenCount,
+            wlv: perfWlv(challengerPerfRow) || cohortWlv(challengerMlRecordedCohort),
+            roi: challengerRoiPct,
             flatStakePounds: challengerMlFlatCohort.pnlUnits * 100,
             flatTotalStakedPounds: challengerMlFlatCohort.stakedUnits * 100,
             unitTotalStakedPounds: challengerMlRecordedCohort.stakedUnits * 100,
@@ -1307,9 +1295,6 @@ export default async function ModelMonitorPage() {
           <Link href="/model-monitor/goalscorer" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300">
             Goalscorer Preview
           </Link>
-          <Link href="/model-monitor/assist-value" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-cyan-500/40 hover:text-cyan-300">
-            Assist Value
-          </Link>
           <Link href="/model-monitor/team-shots" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300">
             Team Shots
           </Link>
@@ -1380,6 +1365,16 @@ export default async function ModelMonitorPage() {
               </p>
             </Link>
             <Link
+              href="/model-monitor/assist-value"
+              className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-sky-500/30"
+            >
+              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-sky-300">Assist Value</div>
+              <div className="text-lg font-semibold text-white">Assist Shadow Monitor</div>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                Bet365 assist odds, model edge, and set-piece-role context. Monitor-visible, not public-lab wired.
+              </p>
+            </Link>
+            <Link
               href="/model-monitor/goalscorer/lineups"
               className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-cyan-500/30"
             >
@@ -1387,16 +1382,6 @@ export default async function ModelMonitorPage() {
               <div className="text-lg font-semibold text-white">Goalscorer Lineups</div>
               <p className="mt-2 text-sm leading-6 text-slate-400">
                 Fixture-by-fixture lineup states, taker context, and squad availability for goalscorer markets.
-              </p>
-            </Link>
-            <Link
-              href="/model-monitor/assist-value"
-              className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-cyan-500/30"
-            >
-              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">Assist Value</div>
-              <div className="text-lg font-semibold text-white">Assist Value Monitor</div>
-              <p className="mt-2 text-sm leading-6 text-slate-400">
-                Private assist fair-odds candidates, set-piece role context, and shadow-only model guardrails.
               </p>
             </Link>
             <Link
@@ -1427,88 +1412,6 @@ export default async function ModelMonitorPage() {
             <h2 className="text-xl font-semibold text-slate-100">Operations Board</h2>
             <p className="mt-1 text-sm text-slate-400">Lane-by-lane scoreboard first, latest settled results second, deeper diagnostics below.</p>
           </div>
-        </div>
-
-        <div className="mb-8">
-          <MonitorCard
-            title="Assist Value Shadow Picks"
-            subtitle={`Top 3 monitor-visible assist candidates. This is private monitor shadow output only, not Fair Odds Lab/public wiring.${assistGeneratedAt ? ` Generated ${assistGeneratedAt}.` : ""}`}
-          >
-            <div className="mb-4 grid gap-3 sm:grid-cols-3">
-              <Stat label="Shadow Signals" value={`${assistShadowRows.length}`} tone={assistShadowRows.length > 0 ? "text-emerald-300" : "text-slate-400"} />
-              <Stat label="Watch Rows" value={`${assistWatchRows.length}`} tone={assistWatchRows.length > 0 ? "text-amber-300" : "text-slate-400"} />
-              <Stat label="Artifact Rows" value={`${assistRows.length}`} tone={assistRows.length > 0 ? "text-sky-300" : "text-slate-400"} />
-            </div>
-            {assistTopRows.length === 0 ? (
-              <div className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4 text-sm text-slate-400">
-                No assist shadow signals found in the current artifact yet. When the assist run writes rows, the top 3 appear here.
-              </div>
-            ) : (
-              <div className="grid gap-3 xl:grid-cols-3">
-                {assistTopRows.map((row, index) => {
-                  const modelProb = parseFloatMaybe(row.model_prob);
-                  return (
-                    <div
-                      key={`${row.player_name}-${row.home_team}-${row.away_team}-${row.kickoff_at}-${index}`}
-                      className="rounded-2xl border border-sky-400/20 bg-sky-400/5 p-4"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <div className="text-lg font-semibold text-white">{row.player_name || "Unknown player"}</div>
-                          <div className="mt-1 text-sm text-slate-400">
-                            {row.home_team || "home"} vs {row.away_team || "away"}
-                          </div>
-                          <div className="mt-1 text-xs text-slate-500">
-                            {row.competition || row.league_key || "competition"} - {row.kickoff_at || row.match_date || "kickoff n/a"}
-                          </div>
-                        </div>
-                        <span className="rounded-full border border-sky-400/30 bg-sky-400/10 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-sky-200">
-                          {row.confidence || "shadow"}
-                        </span>
-                      </div>
-                      <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
-                        <div className="rounded-xl border border-slate-800 bg-slate-950/45 p-3">
-                          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Fair</div>
-                          <div className="mt-1 font-mono text-lg text-white">{formatOddsCell(row.fair_odds)}</div>
-                        </div>
-                        <div className="rounded-xl border border-slate-800 bg-slate-950/45 p-3">
-                          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Market</div>
-                          <div className="mt-1 font-mono text-lg text-white">{formatOddsCell(row.market_odds)}</div>
-                        </div>
-                        <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-3">
-                          <div className="text-[10px] uppercase tracking-[0.16em] text-emerald-300/80">Edge</div>
-                          <div className="mt-1 font-mono text-lg text-emerald-200">{formatPointCell(row.edge_pp)}</div>
-                        </div>
-                        <div className="rounded-xl border border-slate-800 bg-slate-950/45 p-3">
-                          <div className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Model</div>
-                          <div className="mt-1 font-mono text-lg text-white">
-                            {modelProb == null ? "n/a" : formatPct(modelProb * 100, 1, false)}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-300">
-                        <span className="rounded-full border border-slate-700 bg-slate-950/45 px-2 py-1">
-                          set pieces {formatPct(parseFloatMaybe(row.setpiece_share_last5_pct), 1, false)}
-                        </span>
-                        <span className="rounded-full border border-slate-700 bg-slate-950/45 px-2 py-1">
-                          team {row.player_team || "n/a"}
-                        </span>
-                        <span className="rounded-full border border-slate-700 bg-slate-950/45 px-2 py-1">
-                          {row.notes || "private_shadow"}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-3 text-sm text-amber-100">
-              <span>Monitor-visible shadow picks only. They are not in Fair Odds Lab and not authorised as a public lane.</span>
-              <Link href="/model-monitor/assist-value" className="font-semibold text-sky-200 underline decoration-sky-400/40 underline-offset-4 hover:text-sky-100">
-                Open full assist monitor
-              </Link>
-            </div>
-          </MonitorCard>
         </div>
 
         <div className="mb-8">
@@ -2079,14 +1982,14 @@ export default async function ModelMonitorPage() {
 
         {INTERNAL_RESEARCH_LANES ? (
           <div className="mb-8">
-            <MonitorCard title="Challenger ML Internal Watch" subtitle="HIGH-coverage Challenger singles lane, 10-15% value band. Near-misses explain why the lane is dark.">
+            <MonitorCard title="Challenger ML Internal Watch" subtitle="HIGH-coverage Challenger singles lane, 10-15% value band. Near-misses are promoted into an internal shadow-settlement ledger so the lane can be evaluated.">
               <div className="grid gap-4 xl:grid-cols-[0.85fr_1.15fr]">
                 <div className="rounded-2xl border border-fuchsia-400/25 bg-fuchsia-400/5 p-4">
                   <div className="mb-4 flex items-start justify-between gap-3">
                     <div>
                       <h3 className="text-base font-semibold text-white">Current Challenger lane</h3>
                       <p className="mt-1 text-sm leading-6 text-slate-400">
-                        Shows only internal signals. If there are no rows, the near-miss audit should still say whether coverage, confidence, or edge gates blocked the slate.
+                        Shows the internal Challenger ML settlement ledger, including near-miss candidates promoted for shadow evaluation.
                       </p>
                     </div>
                     <span className="rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-2 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-fuchsia-200">
@@ -2094,15 +1997,16 @@ export default async function ModelMonitorPage() {
                     </span>
                   </div>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    <Stat label="Tracked" value={`${challengerTrackedCount}`} compact />
-                    <Stat label="Open" value={`${challengerOpenCount}`} tone={challengerOpenCount > 0 ? "text-fuchsia-200" : "text-slate-300"} compact />
-                    <Stat label="Settled" value={`${challengerSettledCount}`} compact />
-                    <Stat label="Near-miss" value={`${challengerNearmissRows.length}`} tone={challengerNearmissRows.length > 0 ? "text-amber-300" : "text-slate-300"} compact />
-                    <Stat label="ROI" value={formatPct(challengerMlRecordedCohort.roiPct)} tone={metricTone(challengerMlRecordedCohort.roiPct)} compact />
+                    <Stat label="Tracked signals" value={`${challengerTrackedCount}`} compact />
+                    <Stat label="Open signals" value={`${challengerOpenCount}`} tone={challengerOpenCount > 0 ? "text-fuchsia-200" : "text-slate-300"} compact />
+                    <Stat label="Settled signals" value={`${challengerSettledCount}`} compact />
+                    <Stat label="Near-miss shadow rows" value={`${challengerNearmissRows.length}`} tone={challengerNearmissRows.length > 0 ? "text-amber-300" : "text-slate-300"} compact />
+                    <Stat label="ROI eligible" value={`${challengerRoiEligibleCount}/${challengerSettledCount}`} tone={challengerInvalidOddsCount > 0 ? "text-amber-300" : "text-emerald-300"} compact />
+                    <Stat label="ROI" value={formatPct(challengerRoiPct)} tone={metricTone(challengerRoiPct)} compact />
                     <Stat label="CLV" value={formatPct(clvChallenger.avgClvPct, 3)} tone={metricTone(clvChallenger.avgClvPct)} compact />
                   </div>
                   <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/45 p-3 text-xs leading-5 text-slate-400">
-                    Gate: Challenger singles, HIGH coverage, high confidence, value 10-15%. Production/public output is blocked.
+                    Gate: Challenger singles, HIGH coverage, high confidence, value 10-15%. Near-miss rows are now copied into strict-signals-challenger-ml archive as internal shadow bets and settled like signals. P/L/ROI uses only rows with captured Pinnacle odds; W/L settlement covers every matched result.
                   </div>
                 </div>
 
@@ -2111,7 +2015,7 @@ export default async function ModelMonitorPage() {
                     <div>
                       <h3 className="text-base font-semibold text-white">Near-miss reasons</h3>
                       <p className="mt-1 text-sm leading-6 text-slate-400">
-                        These are candidates that hit the Challenger universe but failed one gate. Coverage thin means the model refused to trust the sample.
+                        These are candidates that hit the Challenger universe but failed one gate. They are retained as shadow-settlement picks so the gate can be judged with actual outcomes.
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -2138,27 +2042,48 @@ export default async function ModelMonitorPage() {
                             <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">Edge</th>
                             <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">Coverage</th>
                             <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">Reason</th>
+                            <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">Result</th>
+                            <th className="px-3 py-2 font-semibold uppercase tracking-[0.16em]">Odds</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-800/80">
-                          {latestChallengerNearmissRows.map((row) => (
-                            <tr key={`${row.date}-${row.player1}-${row.player2}-${row.skip_reason}`} className="text-slate-300">
-                              <td className="px-3 py-2">
-                                <div className="font-medium text-slate-100">{row.player1} vs {row.player2}</div>
-                                <div className="mt-0.5 text-[11px] text-slate-500">{row.surface || "surface?"} | {row.series || row.tour_name || "tournament?"}</div>
-                              </td>
-                              <td className="px-3 py-2 font-mono">{row.data_coverage_tag || "n/a"}</td>
-                              <td className={`px-3 py-2 font-mono ${metricTone(parseFloatMaybe(row.value_pct))}`}>{formatPct(parseFloatMaybe(row.value_pct))}</td>
-                              <td className="px-3 py-2 font-mono text-[11px] text-slate-400">
-                                s {row.match_count_12m_p1 || "?"}/{row.match_count_12m_p2 || "?"} | total {row.matches_total_p1 || "?"}/{row.matches_total_p2 || "?"} | days {row.last_match_days_p1 || "?"}/{row.last_match_days_p2 || "?"}
-                              </td>
-                              <td className="px-3 py-2">
-                                <span className="rounded border border-amber-500/25 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-200">
-                                  {challengerSkipReasonLabel(row.skip_reason)}
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
+                          {latestChallengerNearmissRows.map((row) => {
+                            const settledRow = challengerSignalByNearmissKey.get(
+                              `${row.date}|${(row.player1 || "").trim().toLowerCase()}|${(row.player2 || "").trim().toLowerCase()}|${row.side}`,
+                            );
+                            const side = (row.side || "").toLowerCase();
+                            const odds = side === "p1" ? settledRow?.pinOdds1 : side === "p2" ? settledRow?.pinOdds2 : undefined;
+                            return (
+                              <tr key={`${row.date}-${row.player1}-${row.player2}-${row.skip_reason}`} className="text-slate-300">
+                                <td className="px-3 py-2">
+                                  <div className="font-medium text-slate-100">{row.player1} vs {row.player2}</div>
+                                  <div className="mt-0.5 text-[11px] text-slate-500">{row.surface || "surface?"} | {row.series || row.tour_name || "tournament?"}</div>
+                                </td>
+                                <td className="px-3 py-2 font-mono">{row.data_coverage_tag || "n/a"}</td>
+                                <td className={`px-3 py-2 font-mono ${metricTone(parseFloatMaybe(row.value_pct))}`}>{formatPct(parseFloatMaybe(row.value_pct))}</td>
+                                <td className="px-3 py-2 font-mono text-[11px] text-slate-400">
+                                  s {row.match_count_12m_p1 || "?"}/{row.match_count_12m_p2 || "?"} | total {row.matches_total_p1 || "?"}/{row.matches_total_p2 || "?"} | days {row.last_match_days_p1 || "?"}/{row.last_match_days_p2 || "?"}
+                                </td>
+                                <td className="px-3 py-2">
+                                  <span className="rounded border border-amber-500/25 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-200">
+                                    {challengerSkipReasonLabel(row.skip_reason)}
+                                  </span>
+                                </td>
+                                <td className="px-3 py-2 font-mono text-[11px]">
+                                  {settledRow?.settlementStatus === "settled" ? (
+                                    <span className={settledRow.betOutcome === "WIN" ? "text-emerald-300" : "text-rose-300"}>
+                                      {settledRow.betOutcome || "settled"}
+                                    </span>
+                                  ) : (
+                                    <span className="text-slate-500">{settledRow?.settlementStatus || "pending"}</span>
+                                  )}
+                                </td>
+                                <td className="px-3 py-2 font-mono text-[11px] text-slate-300">
+                                  {odds != null && odds > 1 ? odds.toFixed(3) : <span className="text-amber-300">missing</span>}
+                                </td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
