@@ -18,7 +18,6 @@ if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_VOLUME_MODE)) { $env:STRICT_
 $volumeMode = "$env:STRICT_POLICY_VOLUME_MODE".ToLower()
 if ([string]::IsNullOrWhiteSpace($volumeMode)) { $volumeMode = "off" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_SHADOW_ENABLED)) { $env:STRICT_SPREAD_V1_SHADOW_ENABLED = "1" }
-if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_CALIBRATED_ENABLED)) { $env:STRICT_CLAY_CALIBRATED_ENABLED = "0" }
 if ([string]::IsNullOrWhiteSpace($env:CHALLENGER_ML_ENABLE)) { $env:CHALLENGER_ML_ENABLE = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED)) { $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_BO3_ENABLED)) { $env:STRICT_CLAY_BO3_ENABLED = "1" }
@@ -38,7 +37,6 @@ function Test-EnvFlag([string]$value) {
 }
 
 $spreadV1ShadowEnabled = Test-EnvFlag $env:STRICT_SPREAD_V1_SHADOW_ENABLED
-$clayCalibratedEnabled = Test-EnvFlag $env:STRICT_CLAY_CALIBRATED_ENABLED
 $challengerMlEnabled = Test-EnvFlag $env:CHALLENGER_ML_ENABLE
 $clayFavEnabled = Test-EnvFlag $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED
 $clayBo3Enabled = Test-EnvFlag $env:STRICT_CLAY_BO3_ENABLED
@@ -208,14 +206,7 @@ try {
     } else {
         Log "Spread v1 shadow skipped (STRICT_SPREAD_V1_SHADOW_ENABLED=0)."
     }
-    if ($clayCalibratedEnabled) {
-        & python scripts\strict-policy-report.py --append --signal-profile clay_calibrated --output "data\backtest\strict-signals-claycal-live.csv" --internal-output "data\backtest\strict-signals-claycal-internal-live.csv" 2>&1 | ForEach-Object { Log $_ }
-        if ($LASTEXITCODE -ne 0) {
-            Log "WARNING: clay_calibrated append failed (exit $LASTEXITCODE), continuing..."
-        }
-    } else {
-        Log "Clay calibrated lane skipped (STRICT_CLAY_CALIBRATED_ENABLED override is off)."
-    }
+    Log "Clay calibrated legacy lane removed after failed ROI audit."
     if ($challengerMlEnabled) {
         Log "Challenger ML internal shadow (10-15% edge, HIGH coverage)."
         & python scripts\strict-policy-report.py --append --signal-profile challenger_ml_shadow --output "data\backtest\strict-signals-challenger-ml-live.csv" 2>&1 | ForEach-Object { Log $_ }

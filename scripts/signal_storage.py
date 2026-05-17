@@ -53,8 +53,6 @@ CHALLENGER_ML_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-
 CHALLENGER_ML_NEARMISS_PATH = DATA_DIR / "challenger-ml-shadow-nearmiss.csv"
 CLAY_BO3_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-clay_bo3.csv")
 CLAY_BO3_NEARMISS_PATH = DATA_DIR / "clay_bo3-shadow-nearmiss.csv"
-CLAY_CALIBRATED_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-claycal.csv")
-CLAY_CALIBRATED_INTERNAL_SIGNAL_PATHS = derive_signal_csv_paths(DATA_DIR / "strict-signals-claycal-internal.csv")
 
 SIGNAL_PROFILE_PATHS: dict[str, tuple[SignalCsvPaths, SignalCsvPaths | None]] = {
     "strict": (STRICT_SIGNAL_PATHS, STRICT_INTERNAL_SIGNAL_PATHS),
@@ -65,7 +63,6 @@ SIGNAL_PROFILE_PATHS: dict[str, tuple[SignalCsvPaths, SignalCsvPaths | None]] = 
     "spread_v1_clay_fav": (SPREAD_V1_CLAY_FAV_SIGNAL_PATHS, None),
     "challenger_ml_shadow": (CHALLENGER_ML_SIGNAL_PATHS, None),
     "clay_bo3": (CLAY_BO3_SIGNAL_PATHS, None),
-    "clay_calibrated": (CLAY_CALIBRATED_SIGNAL_PATHS, CLAY_CALIBRATED_INTERNAL_SIGNAL_PATHS),
 }
 
 SIGNALS_CURRENT_JSON = DATA_DIR / "signals-current.json"

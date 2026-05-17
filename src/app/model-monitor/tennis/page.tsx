@@ -102,15 +102,6 @@ const laneViews: Record<TennisResearchLaneId, LaneView> = {
     summary: "Disabled until Challenger ML has enough proof and Pinnacle HC coverage is audited.",
     disabledReason: "awaiting Pinnacle HC coverage + challenger_ml proof",
   },
-  clay_calibrated: {
-    id: "clay_calibrated",
-    title: "Clay Calibrated (legacy)",
-    state: "DISABLED",
-    badgeTone: badgeTones.disabled,
-    market: "Legacy ML",
-    summary: "Legacy lane remains disabled. It is shown here so the status is explicit.",
-    disabledReason: "diagnostics inconclusive 2025-04",
-  },
 };
 
 function laneAnchor(id: string) {

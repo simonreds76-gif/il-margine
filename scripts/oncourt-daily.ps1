@@ -24,7 +24,6 @@ if ([string]::IsNullOrWhiteSpace($env:STRICT_POLICY_VOLUME_MODE)) { $env:STRICT_
 $volumeMode = "$env:STRICT_POLICY_VOLUME_MODE".ToLower()
 if ([string]::IsNullOrWhiteSpace($volumeMode)) { $volumeMode = "off" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_SHADOW_ENABLED)) { $env:STRICT_SPREAD_V1_SHADOW_ENABLED = "1" }
-if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_CALIBRATED_ENABLED)) { $env:STRICT_CLAY_CALIBRATED_ENABLED = "0" }
 if ([string]::IsNullOrWhiteSpace($env:CHALLENGER_ML_ENABLE)) { $env:CHALLENGER_ML_ENABLE = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED)) { $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED = "0" }
 if ([string]::IsNullOrWhiteSpace($env:STRICT_CLAY_BO3_ENABLED)) { $env:STRICT_CLAY_BO3_ENABLED = "1" }
@@ -50,7 +49,6 @@ function Test-EnvFlag([string]$value) {
 }
 
 $spreadV1ShadowEnabled = Test-EnvFlag $env:STRICT_SPREAD_V1_SHADOW_ENABLED
-$clayCalibratedEnabled = Test-EnvFlag $env:STRICT_CLAY_CALIBRATED_ENABLED
 $challengerMlEnabled = Test-EnvFlag $env:CHALLENGER_ML_ENABLE
 $clayFavEnabled = Test-EnvFlag $env:STRICT_SPREAD_V1_CLAY_FAV_ENABLED
 $clayBo3Enabled = Test-EnvFlag $env:STRICT_CLAY_BO3_ENABLED
@@ -252,15 +250,7 @@ if ($spreadV1ShadowEnabled) {
     Log "=== Step 8b/10: Spread v1 shadow skipped (STRICT_SPREAD_V1_SHADOW_ENABLED=0) ==="
 }
 
-if ($clayCalibratedEnabled) {
-    Log "=== Step 8c/10: Clay 2026 shadow (new-after-calibration favorites 55-65%) ==="
-    & python scripts\strict-policy-report.py --append --signal-profile clay_calibrated --output "data\backtest\strict-signals-claycal-live.csv" --internal-output "data\backtest\strict-signals-claycal-internal-live.csv" 2>&1 | ForEach-Object { Log $_ }
-    if ($LASTEXITCODE -ne 0) {
-        Log "WARNING: clay_calibrated append failed (exit $LASTEXITCODE), continuing..."
-    }
-} else {
-    Log "=== Step 8c/10: Clay 2026 shadow skipped (STRICT_CLAY_CALIBRATED_ENABLED override is off) ==="
-}
+Log "=== Step 8c/10: Clay calibrated legacy lane removed after failed ROI audit ==="
 
 if ($challengerMlEnabled) {
     Log "=== Step 8d/10: Challenger ML internal shadow (10-15% edge, HIGH coverage) ==="

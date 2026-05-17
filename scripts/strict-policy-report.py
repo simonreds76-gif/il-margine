@@ -178,7 +178,6 @@ SHADOW_PROFILE_LABELS: dict[str, str] = {
     "spread_v1_clay_fav": "Clay favourite handicap shadow (fav HC 2.0-3.5 games, 8-18% edge, clay-only calibration required)",
     "challenger_ml_shadow": "Challenger singles ML internal shadow (HIGH coverage, 10-15% edge)",
     "clay_bo3": "Clay bo3 internal shadow (ATP clay ML 5-13% edge + dog HC 6-25%)",
-    "clay_calibrated": "Clay calibrated shadow (high-confidence new-after-calibration favorite 55-65%)",
 }
 SHADOW_PROFILE_ALLOWED_LEAGUES: dict[str, set[str]] = {
     # Shadow lanes have not held up in Challenger samples; keep production-facing
@@ -190,7 +189,6 @@ SHADOW_PROFILE_ALLOWED_LEAGUES: dict[str, set[str]] = {
     "spread_v1_clay_fav": {"ATP"},
     "challenger_ml_shadow": {"Challenger"},
     "clay_bo3": {"ATP"},
-    "clay_calibrated": {"ATP"},
 }
 HOUSTON_SHADOW_MIN_VALUE_PCT = 20.0
 HOUSTON_SHADOW_CONFIDENCE = {"high", "medium"}
@@ -1294,7 +1292,6 @@ def main() -> int:
             "spread_v1_shadow",
             "spread_v1_clay_fav",
             "challenger_ml_shadow",
-            "clay_calibrated",
             "hard_bo3",
             "clay_bo3",
             "slam_bo5",

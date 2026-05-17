@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
-"""Materialise internal clay research lanes for monitor settlement.
-
-Two clay lanes are intentionally research-only:
-- Clay-Fav HC: extracted from spread_v1_shadow favorite-handicap rows.
-- Clay Calibrated: already produced by strict-signals-claycal; this helper keeps
-  the monitor-facing performance artifacts fresh without changing production.
-"""
+"""Materialise the internal Clay-Fav HC research lane for monitor settlement."""
 
 from __future__ import annotations
 
@@ -22,9 +16,6 @@ CLAY_FAV_ARCHIVE = ROOT / "data" / "backtest" / "strict-signals-clay-fav-archive
 CLAY_FAV_LIVE = ROOT / "data" / "backtest" / "strict-signals-clay-fav-live.csv"
 CLAY_FAV_REPORT = ROOT / "data" / "backtest" / "strict-policy-performance-clay-fav-weekly.txt"
 CLAY_FAV_SUMMARY = ROOT / "data" / "backtest" / "strict-policy-performance-clay-fav-weekly.csv"
-CLAYCAL_ARCHIVE = ROOT / "data" / "backtest" / "strict-signals-claycal-archive.csv"
-CLAYCAL_REPORT = ROOT / "data" / "backtest" / "strict-policy-performance-clay2026-weekly.txt"
-CLAYCAL_SUMMARY = ROOT / "data" / "backtest" / "strict-policy-performance-clay2026-weekly.csv"
 
 
 def read_csv(path: Path) -> tuple[list[str], list[dict[str, str]]]:
@@ -116,13 +107,10 @@ def refresh_performance(signals: Path, report: Path, summary: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--skip-claycal", action="store_true", help="Only build Clay-Fav HC artifacts")
-    args = parser.parse_args()
+    parser.parse_args()
 
     clay_fav_count = build_clay_fav_archive()
     refresh_performance(CLAY_FAV_ARCHIVE, CLAY_FAV_REPORT, CLAY_FAV_SUMMARY)
-    if not args.skip_claycal:
-        refresh_performance(CLAYCAL_ARCHIVE, CLAYCAL_REPORT, CLAYCAL_SUMMARY)
     print(f"clay_fav_rows={clay_fav_count} clay_fav_archive={CLAY_FAV_ARCHIVE}")
     return 0
 

@@ -6,7 +6,6 @@ import csv
 from pathlib import Path
 
 from signal_storage import (
-    CLAY_CALIBRATED_SIGNAL_PATHS,
     SPREAD_SHADOW_SIGNAL_PATHS,
     SPREAD_V1_SIGNAL_PATHS,
     STRICT_SIGNAL_PATHS,
@@ -33,7 +32,6 @@ PROFILE_PATHS = {
     "volume_200": VOLUME_200_SIGNAL_PATHS,
     "spread_shadow": SPREAD_SHADOW_SIGNAL_PATHS,
     "spread_v1_shadow": SPREAD_V1_SIGNAL_PATHS,
-    "clay_calibrated": CLAY_CALIBRATED_SIGNAL_PATHS,
 }
 
 

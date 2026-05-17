@@ -195,11 +195,7 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-signals analysis failed (exit $LASTEXITCODE), continuing..."
 }
 
-Log "=== Step 11b/12: Analyse clay calibrated shadow signals ==="
-& python scripts\analyse-strict-signals.py --days 7 --input data\backtest\strict-signals-claycal-archive.csv --report-txt data\backtest\strict-signals-claycal-weekly.txt --summary-csv data\backtest\strict-signals-claycal-weekly.csv 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: clay calibrated signal analysis failed (exit $LASTEXITCODE), continuing..."
-}
+Log "=== Step 11b/12: Clay calibrated legacy analysis removed after failed ROI audit ==="
 
 Log "=== Step 11c/12: Analyse clay bo3 shadow signals ==="
 & python scripts\analyse-strict-signals.py --days 7 --input data\backtest\strict-signals-clay_bo3-archive.csv --report-txt data\backtest\strict-signals-clay_bo3-weekly.txt --summary-csv data\backtest\strict-signals-clay_bo3-weekly.csv 2>&1 | ForEach-Object { Log $_ }

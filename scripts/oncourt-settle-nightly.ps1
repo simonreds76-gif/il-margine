@@ -76,11 +76,7 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-signals-spreadshadow settlement failed (exit $LASTEXITCODE), continuing..."
 }
 
-Log "=== Step 7/12: Settle Clay 2026 shadow CSV ==="
-& python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-claycal-archive.csv 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: strict-signals-claycal settlement failed (exit $LASTEXITCODE), continuing..."
-}
+Log "=== Step 7/12: Clay calibrated legacy settlement removed after failed ROI audit ==="
 
 Log "=== Step 7b/12: Settle Challenger ML CSV ==="
 & python scripts\settle-strict-signals.py --csv data\backtest\strict-signals-challenger-ml-archive.csv 2>&1 | ForEach-Object { Log $_ }
@@ -128,11 +124,7 @@ if ($LASTEXITCODE -ne 0) {
     Log "WARNING: strict-policy-performance spread_shadow failed (exit $LASTEXITCODE), continuing..."
 }
 
-Log "=== Step 12/12: Clay 2026 settled performance ==="
-& python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-claycal-archive.csv --compare data\backtest\strict-signals-claycal-compare.csv --report-txt data\backtest\strict-policy-performance-clay2026-weekly.txt --summary-csv data\backtest\strict-policy-performance-clay2026-weekly.csv 2>&1 | ForEach-Object { Log $_ }
-if ($LASTEXITCODE -ne 0) {
-    Log "WARNING: strict-policy-performance clay_calibrated failed (exit $LASTEXITCODE), continuing..."
-}
+Log "=== Step 12/12: Clay calibrated legacy performance removed after failed ROI audit ==="
 
 Log "=== Step 12b/12: Challenger ML settled performance ==="
 & python scripts\strict-policy-performance.py --days 7 --signals data\backtest\strict-signals-challenger-ml-archive.csv --report-txt data\backtest\strict-policy-performance-challenger-ml-weekly.txt --summary-csv data\backtest\strict-policy-performance-challenger-ml-weekly.csv 2>&1 | ForEach-Object { Log $_ }

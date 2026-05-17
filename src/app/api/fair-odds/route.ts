@@ -219,18 +219,16 @@ const TOURNAMENT_SPEED_VENUE_FULL_MATCHES = 150;
 const TOURNAMENT_SPEED_SHIFT_FULL_MATCHES = 90;
 const TOURNAMENT_SPEED_SHIFT_SIGNAL_SCALE = 2.0;
 const FAST_CLAY_SPEED_THRESHOLD = 0.1;
-const CLAY_2026_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-claycal-live.csv");
 const SPREAD_V1_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-spreadv1-live.csv");
 const CHALLENGER_ML_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-challenger-ml-live.csv");
 const CHALLENGER_ML_NEARMISS_CSV = getKnownProjectFilePath("data/backtest/challenger-ml-shadow-nearmiss.csv");
 const CLAY_BO3_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-clay_bo3-live.csv");
-const FAIR_ODDS_CLAY_2026_ENABLED = parseBoolEnv("FAIR_ODDS_CLAY_2026_ENABLED", false);
 const FAIR_ODDS_TENNIS_SPREADS_ENABLED = parseBoolEnv("FAIR_ODDS_TENNIS_SPREADS_ENABLED", false);
 const FAIR_ODDS_SPREAD_V1_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_V1_ENABLED", true);
 const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
 type MatchSide = "P1" | "P2";
 type FastClayArchetype = "both" | "serve_led" | "return_led" | "contrarian";
-type ShadowSignalKind = "clay_2026" | "spread_v1" | "challenger_ml_shadow" | "clay_bo3";
+type ShadowSignalKind = "spread_v1" | "challenger_ml_shadow" | "clay_bo3";
 
 interface ShadowSignalSummary {
   id: number;
@@ -329,8 +327,7 @@ function shadowKindRank(kind: ShadowSignalKind): number {
   if (kind === "challenger_ml_shadow") return 0;
   if (kind === "clay_bo3") return 1;
   if (kind === "spread_v1") return 2;
-  if (kind === "clay_2026") return 3;
-  return 4;
+  return 3;
 }
 
 function suppressConflictingClaySignals(
@@ -2643,9 +2640,6 @@ async function run(): Promise<Response> {
     };
   });
 
-  const clay2026SignalsCsv = FAIR_ODDS_CLAY_2026_ENABLED
-    ? loadActiveShadowSignals(CLAY_2026_SIGNAL_CSV, "clay_2026", today)
-    : [];
   const spreadV1SignalsCsv = FAIR_ODDS_SPREAD_V1_ENABLED
     ? loadActiveShadowSignals(SPREAD_V1_SIGNAL_CSV, "spread_v1", today)
     : [];
@@ -2659,7 +2653,6 @@ async function run(): Promise<Response> {
     ? loadChallengerNearmisses(CHALLENGER_ML_NEARMISS_CSV, today)
     : [];
   const effectiveSpreadV1SignalsCsv = spreadV1SignalsCsv;
-  const effectiveClay2026SignalsCsv = suppressConflictingClaySignals(clay2026SignalsCsv, effectiveSpreadV1SignalsCsv);
   const rowSignalsByMatch = new Map<string, ShadowSignalSummary[]>();
   const addSignalToRowKey = (key: string, signal: ShadowSignalSummary) => {
     const existing = rowSignalsByMatch.get(key);
@@ -2680,7 +2673,6 @@ async function run(): Promise<Response> {
     ...challengerMlSignalsCsv,
     ...clayBo3SignalsCsv,
     ...effectiveSpreadV1SignalsCsv,
-    ...effectiveClay2026SignalsCsv,
   ]) {
     for (const key of signalLookupKeys(signal)) addSignalToRowKey(key, signal);
   }
@@ -2704,21 +2696,11 @@ async function run(): Promise<Response> {
       return a.side.localeCompare(b.side);
     });
 
-    let claySignal = rowSignals.find((signal) => signal.kind === "clay_2026" && signal.bet_type === "match");
     let spreadSignal = rowSignals.find((signal) => signal.kind === "spread_v1" && signal.bet_type === "spread");
-    const spreadDirection = spreadSignal ? spreadConflictDirection(spreadSignal) : null;
-    const clayDirection = claySignal?.side === "P2" ? "P2" : claySignal?.side === "P1" ? "P1" : null;
-
-    if (claySignal && spreadSignal && clayDirection && spreadDirection && clayDirection !== spreadDirection) {
-      const claySignalId = claySignal.id;
-      rowSignals = rowSignals.filter((signal) => !(signal.kind === "clay_2026" && signal.id === claySignalId));
-      claySignal = undefined;
-      spreadSignal = rowSignals.find((signal) => signal.kind === "spread_v1" && signal.bet_type === "spread");
-    }
 
     return {
       ...m,
-      league: claySignal?.league ?? spreadSignal?.league ?? m.league,
+      league: spreadSignal?.league ?? m.league,
       tournament_speed_signal: m.tournament_speed_signal,
       spread_v1_eligible: rowSignals.some((signal) => signal.kind === "spread_v1" && signal.bet_type === "spread"),
       spread_v1_reason: spreadSignal?.shadow_reason ?? m.spread_v1_reason,
@@ -2729,7 +2711,6 @@ async function run(): Promise<Response> {
   const attachedByKind: Record<ShadowSignalKind, Set<number>> = {
     challenger_ml_shadow: new Set<number>(),
     clay_bo3: new Set<number>(),
-    clay_2026: new Set<number>(),
     spread_v1: new Set<number>(),
   };
   let matchesWithRowSignals = 0;
@@ -2749,11 +2730,6 @@ async function run(): Promise<Response> {
       attached: attachedByKind.clay_bo3.size,
       unmatched: Math.max(0, clayBo3SignalsCsv.length - attachedByKind.clay_bo3.size),
     },
-    clay_2026: {
-      loaded: effectiveClay2026SignalsCsv.length,
-      attached: attachedByKind.clay_2026.size,
-      unmatched: Math.max(0, effectiveClay2026SignalsCsv.length - attachedByKind.clay_2026.size),
-    },
     spread_v1: {
       loaded: effectiveSpreadV1SignalsCsv.length,
       attached: attachedByKind.spread_v1.size,
@@ -2763,19 +2739,12 @@ async function run(): Promise<Response> {
   const unmatchedSignals = {
     challenger_ml_shadow: challengerMlSignalsCsv.filter((signal) => !attachedByKind.challenger_ml_shadow.has(signal.id)),
     clay_bo3: clayBo3SignalsCsv.filter((signal) => !attachedByKind.clay_bo3.has(signal.id)),
-    clay_2026: effectiveClay2026SignalsCsv.filter((signal) => !attachedByKind.clay_2026.has(signal.id)),
     spread_v1: effectiveSpreadV1SignalsCsv.filter((signal) => !attachedByKind.spread_v1.has(signal.id)),
   };
   if (unmatchedSignals.challenger_ml_shadow.length) {
     console.warn(
       "[fair-odds] Unmatched Challenger ML signals:",
       unmatchedSignals.challenger_ml_shadow.map((signal) => `${signal.id}: ${signal.player1_name} vs ${signal.player2_name} | ${signal.side}`)
-    );
-  }
-  if (unmatchedSignals.clay_2026.length) {
-    console.warn(
-      "[fair-odds] Unmatched Clay 2026 signals:",
-      unmatchedSignals.clay_2026.map((signal) => `${signal.id}: ${signal.player1_name} vs ${signal.player2_name} | ${signal.side}`)
     );
   }
   if (unmatchedSignals.clay_bo3.length) {
@@ -2786,9 +2755,6 @@ async function run(): Promise<Response> {
           `${signal.id}: ${signal.player1_name} vs ${signal.player2_name} | ${signal.side}${signal.spread_line != null ? ` ${signal.spread_line}` : ""}`
       )
     );
-  }
-  if (!FAIR_ODDS_CLAY_2026_ENABLED) {
-    console.warn("[fair-odds] Clay 2026 lane disabled on live fair-odds route.");
   }
   if (unmatchedSignals.spread_v1.length) {
     console.warn(
@@ -3064,7 +3030,6 @@ async function run(): Promise<Response> {
   const signals_volume_profile = [...matchSignalsVolumeProfile, ...spreadSignalsVolumeProfile];
   const signals_volume_overlap = [...matchSignalsVolumeOverlap, ...spreadSignalsVolumeOverlap];
   const signals_volume_additional = [...matchSignalsVolumeAdditional, ...spreadSignalsVolume];
-  const signals_clay_2026 = effectiveClay2026SignalsCsv;
   const spreadSignalsSpreadV1 = effectiveSpreadV1SignalsCsv;
 
   const matchesWithSpread = matches.filter(
@@ -3192,7 +3157,6 @@ async function run(): Promise<Response> {
     signals_challenger_ml: challengerMlSignalsCsv,
     signals_clay_bo3: clayBo3SignalsCsv,
     challenger_nearmisses: challengerNearmisses,
-    signals_clay_2026,
     signals_spread_v1: spreadSignalsSpreadV1,
     signal_attachment,
     internal_research_lanes: INTERNAL_RESEARCH_LANES,

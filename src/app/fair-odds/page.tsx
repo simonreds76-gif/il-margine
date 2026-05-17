@@ -1147,13 +1147,6 @@ export default function FairOddsPage() {
       signal,
     })),
   );
-  const clayFeedItems = sortSignalFeedItems(
-    (data?.signals_clay_2026 ?? []).map((signal) => ({
-      key: `clay-${signal.id}`,
-      category: "clay_2026" as const,
-      signal,
-    })),
-  );
   const spreadFeedItems = sortSignalFeedItems(
     (data?.signals_spread_v1 ?? []).map((signal) => ({
       key: `spread-${signal.id}`,
@@ -1243,14 +1236,6 @@ export default function FairOddsPage() {
       items: clayGuardedFeedItems,
       emptyLabel: "No Clay Guard signals today",
     },
-    {
-      key: "clay",
-      category: "clay_2026" as const,
-      title: "Clay 2026",
-      subtitle: "Archived calibrated clay ML lane",
-      items: clayFeedItems,
-      emptyLabel: "No Clay 2026 signals today",
-    },
   ].filter((section) => section.items.length > 0);
 
   return (
@@ -1315,9 +1300,6 @@ export default function FairOddsPage() {
                   ) : null}
                   <span className={data.signal_attachment.clay_guarded?.unmatched ? "text-amber-300" : ""}>
                     Clay Guard <span className="text-slate-200">{data.signal_attachment.clay_guarded?.attached ?? 0}/{data.signal_attachment.clay_guarded?.loaded ?? 0}</span>
-                  </span>
-                  <span className={data.signal_attachment.clay_2026?.unmatched ? "text-amber-300" : ""}>
-                    Clay 2026 <span className="text-slate-200">{data.signal_attachment.clay_2026?.attached ?? 0}/{data.signal_attachment.clay_2026?.loaded ?? 0}</span>
                   </span>
                   <span className={data.signal_attachment.spread_v1?.unmatched ? "text-amber-300" : ""}>
                     Spread v1 <span className="text-slate-200">{data.signal_attachment.spread_v1?.attached ?? 0}/{data.signal_attachment.spread_v1?.loaded ?? 0}</span>
@@ -1488,8 +1470,6 @@ export default function FairOddsPage() {
                   </>
                 ) : null}
                 Clay Guard {data.signal_attachment.clay_guarded?.attached ?? 0}/{data.signal_attachment.clay_guarded?.loaded ?? 0}
-                {" | "}
-                Clay 2026 {data.signal_attachment.clay_2026?.attached ?? 0}/{data.signal_attachment.clay_2026?.loaded ?? 0}
                 {" | "}
                 Spread v1 {data.signal_attachment.spread_v1?.attached ?? 0}/{data.signal_attachment.spread_v1?.loaded ?? 0}
                 {data.matches_with_row_signals != null ? ` | ${data.matches_with_row_signals} matches with signals` : ""}

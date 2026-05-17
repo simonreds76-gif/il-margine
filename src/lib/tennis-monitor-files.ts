@@ -5,8 +5,7 @@ export type TennisResearchLaneId =
   | "challenger_ml"
   | "indoor_bo3"
   | "grass_bo3"
-  | "challenger_hc"
-  | "clay_calibrated";
+  | "challenger_hc";
 
 export type TennisMonitorFileGroup = {
   label: string;
@@ -31,7 +30,7 @@ export const TENNIS_RESEARCH_LANES: TennisResearchLaneId[] = [
   "challenger_hc",
 ];
 
-export const TENNIS_LEGACY_DISABLED_LANES: TennisResearchLaneId[] = ["clay_calibrated"];
+export const TENNIS_LEGACY_DISABLED_LANES: TennisResearchLaneId[] = [];
 
 export const TENNIS_MONITOR_FILES: Record<TennisResearchLaneId, TennisMonitorFileGroup> = {
   hard_bo3: {
@@ -92,8 +91,5 @@ export const TENNIS_MONITOR_FILES: Record<TennisResearchLaneId, TennisMonitorFil
   },
   challenger_hc: {
     label: "Challenger HC",
-  },
-  clay_calibrated: {
-    label: "Clay Calibrated (legacy)",
   },
 };
