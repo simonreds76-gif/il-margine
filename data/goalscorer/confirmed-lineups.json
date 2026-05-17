@@ -1095,7 +1095,7 @@
       "away_status": "Confirmed Lineup",
       "lineup_type": "standard",
       "home_formation": "3-5-2",
-      "away_formation": "3-5-1-1",
+      "away_formation": "5-3-2",
       "home_players": [
         "Yann Sommer",
         "Stefan de Vrij",
@@ -1106,8 +1106,8 @@
         "Petar Sucic",
         "Henrikh Mkhitaryan",
         "Matteo Darmian",
-        "Lautaro Martínez",
-        "Ange-Yoan Bonny"
+        "Ange-Yoan Bonny",
+        "Lautaro Martínez"
       ],
       "away_players": [
         "Lorenzo Montipò",
@@ -1115,10 +1115,10 @@
         "Andrias Edmundsson",
         "Nicolás Valentini",
         "Rafik Belghali",
+        "Martin Frese",
         "Sandi Lovric",
         "Roberto Gagliardini",
         "Antoine Bernede",
-        "Martin Frese",
         "Tomás Suslov",
         "Kieron Bowie"
       ],
@@ -1205,7 +1205,7 @@
           "position_id": 79
         },
         {
-          "name": "Lautaro Martínez",
+          "name": "Ange-Yoan Bonny",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -1214,7 +1214,7 @@
           "position_id": 104
         },
         {
-          "name": "Ange-Yoan Bonny",
+          "name": "Lautaro Martínez",
           "line_index": 2,
           "line_size": 2,
           "role_score": 5,
@@ -1230,101 +1230,104 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-5-1-1",
+          "formation": "5-3-2",
           "position_id": 11
         },
         {
           "name": "Victor Nelsson",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 5,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "5-3-2",
           "position_id": 33
         },
         {
           "name": "Andrias Edmundsson",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 5,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "5-3-2",
           "position_id": 35
         },
         {
           "name": "Nicolás Valentini",
           "line_index": 0,
-          "line_size": 3,
+          "line_size": 5,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-5-1-1",
+          "formation": "5-3-2",
           "position_id": 37
         },
         {
           "name": "Rafik Belghali",
-          "line_index": 1,
+          "line_index": 0,
           "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 71
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-3-2",
+          "position_id": 51
+        },
+        {
+          "name": "Martin Frese",
+          "line_index": 0,
+          "line_size": 5,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "5-3-2",
+          "position_id": 59
         },
         {
           "name": "Sandi Lovric",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
+          "formation": "5-3-2",
           "position_id": 73
         },
         {
           "name": "Roberto Gagliardini",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
+          "formation": "5-3-2",
           "position_id": 75
         },
         {
           "name": "Antoine Bernede",
           "line_index": 1,
-          "line_size": 5,
+          "line_size": 3,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-5-1-1",
+          "formation": "5-3-2",
           "position_id": 77
-        },
-        {
-          "name": "Martin Frese",
-          "line_index": 1,
-          "line_size": 5,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-5-1-1",
-          "position_id": 79
         },
         {
           "name": "Tomás Suslov",
           "line_index": 2,
-          "line_size": 1,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "3-5-1-1",
-          "position_id": 95
+          "line_size": 2,
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "5-3-2",
+          "position_id": 104
         },
         {
           "name": "Kieron Bowie",
-          "line_index": 3,
-          "line_size": 1,
+          "line_index": 2,
+          "line_size": 2,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-5-1-1",
-          "position_id": 115
+          "formation": "5-3-2",
+          "position_id": 106
         }
       ],
       "home_subs": [
+        "Federico Dimarco",
+        "Francesco Pio Esposito",
+        "Piotr Zielinski",
         "Josep Martínez",
         "Raffaele Di Gennaro",
         "Alessandro Bastoni",
@@ -1333,15 +1336,28 @@
         "Yann Aurel Bisseck",
         "Davide Frattesi",
         "Denzel Dumfries",
-        "Federico Dimarco",
         "Hakan Çalhanoglu",
         "Nicolò Barella",
-        "Piotr Zielinski",
-        "Francesco Pio Esposito",
         "Marcus Thuram",
         "Mattia Mosconi"
       ],
-      "away_subs": [],
+      "away_subs": [
+        "Abdou Harroui",
+        "Jean-Daniel Akpa Akpro",
+        "Amin Sarr",
+        "Giacomo Toniolo",
+        "Simone Perilli",
+        "Armel Bella-Kotchap",
+        "Tobias Slotsager",
+        "Cheikh Niasse",
+        "Domagoj Bradaric",
+        "Fallou Cham",
+        "Moatasem Al Musrati",
+        "Pol Lirola",
+        "Ioan Vermesan",
+        "Isaac Aguiar",
+        "Junior Ajayi"
+      ],
       "home_unavailable": [],
       "away_unavailable": [
         "Daniel Oyegoke",
