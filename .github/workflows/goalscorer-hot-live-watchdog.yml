@@ -2,7 +2,7 @@ name: Goalscorer Hot Live Watchdog
 
 on:
   schedule:
-    - cron: "*/15 8-23 * * *"
+    - cron: "*/10 8-23 * * *"
   workflow_dispatch:
 
 permissions:
@@ -27,6 +27,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install Python deps
+        run: pip install requests
+
       - name: Inspect hosted goalscorer heartbeat
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -35,6 +38,6 @@ jobs:
           python scripts/goalscorer-hosted-watchdog.py \
             --branch golden-with-speed-insights \
             --workflow-file goalscorer-hot-live.yml \
-            --stale-minutes 35 \
-            --running-grace-minutes 25 \
-            --cooldown-minutes 20
+            --stale-minutes 8 \
+            --running-grace-minutes 12 \
+            --cooldown-minutes 8
