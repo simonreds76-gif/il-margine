@@ -1278,6 +1278,9 @@ export default async function ModelMonitorPage() {
           <Link href="/model-monitor/goalscorer" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300">
             Goalscorer Preview
           </Link>
+          <Link href="/model-monitor/assist-value" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-cyan-500/40 hover:text-cyan-300">
+            Assist Value
+          </Link>
           <Link href="/model-monitor/team-shots" className="inline-flex items-center rounded-full border border-slate-700/80 bg-slate-900/80 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-emerald-500/40 hover:text-emerald-300">
             Team Shots
           </Link>
@@ -1336,7 +1339,7 @@ export default async function ModelMonitorPage() {
             <h2 className="text-xl font-semibold text-slate-100">Monitor Pages</h2>
             <p className="mt-1 text-sm text-slate-400">Direct entry points for the live model monitors and diagnostics pages.</p>
           </div>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
             <Link
               href="/model-monitor/goalscorer"
               className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-emerald-500/30"
@@ -1355,6 +1358,16 @@ export default async function ModelMonitorPage() {
               <div className="text-lg font-semibold text-white">Goalscorer Lineups</div>
               <p className="mt-2 text-sm leading-6 text-slate-400">
                 Fixture-by-fixture lineup states, taker context, and squad availability for goalscorer markets.
+              </p>
+            </Link>
+            <Link
+              href="/model-monitor/assist-value"
+              className="rounded-2xl border border-slate-800 bg-[linear-gradient(180deg,rgba(15,20,33,0.97),rgba(10,13,22,0.97))] p-5 transition-colors hover:border-cyan-500/30"
+            >
+              <div className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">Assist Value</div>
+              <div className="text-lg font-semibold text-white">Assist Value Monitor</div>
+              <p className="mt-2 text-sm leading-6 text-slate-400">
+                Private assist fair-odds candidates, set-piece role context, and shadow-only model guardrails.
               </p>
             </Link>
             <Link

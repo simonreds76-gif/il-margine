@@ -426,7 +426,7 @@ export function PhaseLabel({ label, aside }: { label: string; aside?: string }) 
 export function MonitorNav({
   current,
 }: {
-  current: "tennis" | "goalscorer" | "lineups" | "team-shots" | "corners";
+  current: "tennis" | "goalscorer" | "lineups" | "assist-value" | "team-shots" | "corners";
 }) {
   const base =
     "inline-flex items-center rounded-full border border-slate-700/70 bg-slate-900/70 px-3 py-1.5 text-sm text-slate-400 transition-colors hover:border-slate-600 hover:text-slate-200";
@@ -442,6 +442,9 @@ export function MonitorNav({
       </Link>
       <Link href="/model-monitor/goalscorer/lineups" className={cn(base, current === "lineups" && active)}>
         Lineups
+      </Link>
+      <Link href="/model-monitor/assist-value" className={cn(base, current === "assist-value" && active)}>
+        Assist Value
       </Link>
       <Link href="/model-monitor/team-shots" className={cn(base, current === "team-shots" && active)}>
         Team Shots
