@@ -94,6 +94,20 @@ def main() -> None:
             "data/assist-value/assist-value-shadow-report.txt",
         ]
     )
+    run_cmd(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "build-assist-value-model.py"),
+            "--board",
+            "data/assist-value/assist-value-shadow-board.csv",
+            "--player-logs",
+            "data/goalscorer/*-player-match-logs-*.csv",
+            "--out",
+            "data/assist-value/assist-value-shadow-signals.csv",
+            "--report-out",
+            "data/assist-value/assist-value-model-report.txt",
+        ]
+    )
 
     print("\n  Done.\n")
 
