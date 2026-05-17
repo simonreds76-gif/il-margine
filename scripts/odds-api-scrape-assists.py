@@ -151,6 +151,8 @@ def _market_is_generic_assist(name: str, odds_list: list) -> bool:
     text = (name or "").strip().lower()
     if not _market_is_assist(text):
         return False
+    if "score or assist" in text:
+        return True
     if "anytime" in text or "player assists" in text or "to record an assist" in text:
         return True
     if len(odds_list) >= 3:
@@ -178,6 +180,31 @@ def _extract_player_from_market_name(name: str) -> str:
     return text.strip(" -:|")
 
 
+def _clean_assist_selection_label(label: str, market_name: str) -> str:
+    """Return the player name only when the selection is explicitly assist-side.
+
+    Bet365 exposes a mixed "Player To Score or Assist" market where the odds
+    array contains both "(Score)" and "(Assist)" selections. Treating the whole
+    market as assist would poison the shadow lane, so mixed markets must carry
+    an explicit "(Assist)" tag per selection.
+    """
+    text = (label or "").strip()
+    if not text:
+        return ""
+
+    market_text = (market_name or "").lower()
+    mixed_score_assist = "score or assist" in market_text
+    if mixed_score_assist and not re.search(r"\(\s*assist\s*\)", text, flags=re.I):
+        return ""
+    if re.search(r"\(\s*score\s*\)", text, flags=re.I):
+        return ""
+
+    text = re.sub(r"\s*\(\s*assist\s*\)\s*", " ", text, flags=re.I)
+    text = re.sub(r"\s*\(\s*[12]\s*\)\s*$", "", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip(" -:|")
+
+
 def _extract_assist_rows_for_market(bookmaker: str, event: dict, market: dict, competition_label: str) -> List[dict]:
     rows: List[dict] = []
     market_name = str(market.get("name") or "")
@@ -190,7 +217,8 @@ def _extract_assist_rows_for_market(bookmaker: str, event: dict, market: dict, c
     # Shape A: market name is generic, props are selections by player.
     if _market_is_generic_assist(market_name, odds_list):
         for prop in odds_list:
-            player_name = str(prop.get("label") or prop.get("name") or "").strip()
+            raw_label = str(prop.get("label") or prop.get("name") or "").strip()
+            player_name = _clean_assist_selection_label(raw_label, market_name)
             if player_name.lower() in {"yes", "no", "over", "under"}:
                 continue
             odds_decimal = _first_decimal(
@@ -221,7 +249,7 @@ def _extract_assist_rows_for_market(bookmaker: str, event: dict, market: dict, c
                     "player_team": "",
                     "odds_decimal": f"{odds_decimal:.4f}",
                     "source": "odds_api_io",
-                    "notes": f"event_id={event.get('id')};market={market_name}",
+                    "notes": f"event_id={event.get('id')};market={market_name};selection={raw_label}",
                 }
             )
         return rows

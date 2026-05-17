@@ -132,10 +132,24 @@ def as_float(value: str) -> float:
         return 0.0
 
 
+def clean_assist_player_name(value: str) -> str:
+    text = (value or "").strip()
+    if not text:
+        return ""
+    if re.search(r"\(\s*score\s+or\s+assist\s*\)", text, flags=re.I):
+        return ""
+    if re.search(r"\(\s*score\s*\)", text, flags=re.I):
+        return ""
+    text = re.sub(r"\s*\(\s*assist\s*\)\s*", " ", text, flags=re.I)
+    text = re.sub(r"\s*\(\s*[12]\s*\)\s*$", "", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip(" -:|")
+
+
 def build_rows(odds_rows: list[dict[str, str]], roles_by_player: dict[str, list[dict[str, str]]]) -> list[dict[str, str]]:
     output: list[dict[str, str]] = []
     for odds in odds_rows:
-        player = str(odds.get("player_name") or "").strip()
+        player = clean_assist_player_name(str(odds.get("player_name") or ""))
         if not player:
             continue
         role, join_status = choose_role(odds, roles_by_player.get(norm_text(player), []))
@@ -206,11 +220,11 @@ def write_report(path: str, rows: list[dict[str, str]], odds_rows: list[dict[str
         "fair_odds_status: NOT_AUTHORISED",
         "",
         "Inputs",
-        f"assist_odds_rows: {len(odds_rows)}",
+        f"raw_odds_rows_loaded: {len(odds_rows)}",
         f"role_players_loaded: {role_count}",
         "",
         "Join",
-        f"shadow_rows: {len(rows)}",
+        f"shadow_rows_assist_only: {len(rows)}",
         f"role_matched_rows: {len(matched)}",
         f"role_match_rate_pct: {match_rate:.2f}",
         f"ambiguous_player_rows: {len(ambiguous)}",
