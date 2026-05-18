@@ -8,11 +8,6 @@ export default function StructuredData() {
     "name": "Il Margine",
     "url": BASE_URL,
     "description": "Independent betting tips and analysis across tennis, player props and football markets, with a disciplined and data-driven approach.",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": `${BASE_URL}/?q={search_term_string}`,
-      "query-input": "required name=search_term_string",
-    },
   };
   
   const organizationSchema = {
