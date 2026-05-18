@@ -22,7 +22,7 @@ interface PublicBetsTableProps {
 }
 
 const th = {
-  icon: "w-[3.75rem] border-r border-slate-800/40 px-2.5 py-3 text-center",
+  icon: "hidden w-[3.75rem] border-r border-slate-800/40 px-2.5 py-3 text-center md:table-cell",
   date: "w-[5.25rem] border-r border-slate-800/40 px-2.5 py-3 text-center",
   match: "w-[25%] border-r border-slate-800/40 px-4 py-3 text-center",
   player: "w-[15%] border-r border-slate-800/40 px-4 py-3 text-center",
@@ -36,7 +36,7 @@ const th = {
 } as const;
 
 const td = {
-  icon: "border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle",
+  icon: "hidden border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle md:table-cell",
   date: "border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle text-sm whitespace-nowrap text-slate-400",
   match: "border-r border-slate-800/40 px-4 py-3.5 text-center align-middle font-medium text-slate-200",
   player: "border-r border-slate-800/40 px-4 py-3.5 text-center align-middle text-slate-300",
@@ -90,10 +90,11 @@ export default function PublicBetsTable({
             <td className={td.match}>
               <Link
                 href={`/tips/${slugifyTip(bet.event, bet.id)}`}
-                className="block truncate transition-colors hover:text-emerald-400"
+                className="flex min-w-0 items-center justify-center gap-2 transition-colors hover:text-emerald-400 md:block"
                 title={bet.event}
               >
-                {bet.event}
+                <MarketBadge market={bet.market} category={bet.category} event={bet.event} compact className="md:hidden" />
+                <span className="min-w-0 truncate">{bet.event}</span>
               </Link>
             </td>
             <td className={td.player}>

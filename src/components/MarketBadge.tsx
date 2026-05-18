@@ -80,22 +80,27 @@ interface MarketBadgeProps {
   className?: string;
   /** Hide badge on mobile (md and up only) */
   hideOnMobile?: boolean;
+  /** Compact badge for inline mobile placement inside dense tables. */
+  compact?: boolean;
 }
 
-export default function MarketBadge({ market, category, event, showLabel = false, className = "", hideOnMobile = false }: MarketBadgeProps) {
+export default function MarketBadge({ market, category, event, showLabel = false, className = "", hideOnMobile = false, compact = false }: MarketBadgeProps) {
   const { src, label, invertForDark, wide, containerClassName, imageClassName } = getConfig(market, category ?? "", event);
+  const resolvedContainerClassName = compact ? "h-5 w-8" : containerClassName ?? (wide ? "h-6 w-8" : "h-6 w-6");
+  const resolvedImageClassName = compact ? "max-h-5 max-w-8 object-contain" : imageClassName ?? (wide ? "h-[18px] w-auto" : "h-6 w-auto");
+
   return (
     <span
       className={`inline-flex items-center gap-1.5 ${hideOnMobile ? "hidden md:inline-flex" : ""} ${className}`}
       title={label}
     >
-      <span className={`inline-flex items-center justify-center shrink-0 ${containerClassName ?? (wide ? "h-6 w-8" : "h-6 w-6")}`}>
+      <span className={`inline-flex items-center justify-center shrink-0 ${resolvedContainerClassName}`}>
         <img
           src={`${src}?v=12`}
           alt={label}
           width={wide ? 32 : 24}
           height={24}
-          className={`${imageClassName ?? (wide ? "h-[18px] w-auto" : "h-6 w-auto")} object-contain shrink-0 ${invertForDark ? "brightness-0 invert" : ""}`}
+          className={`${resolvedImageClassName} object-contain shrink-0 ${invertForDark ? "brightness-0 invert" : ""}`}
         />
       </span>
       {showLabel && <span className="text-xs font-medium text-slate-400">{label}</span>}
