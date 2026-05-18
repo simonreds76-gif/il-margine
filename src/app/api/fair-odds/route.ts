@@ -230,6 +230,7 @@ const TOURNAMENT_SPEED_SHIFT_FULL_MATCHES = 90;
 const TOURNAMENT_SPEED_SHIFT_SIGNAL_SCALE = 2.0;
 const FAST_CLAY_SPEED_THRESHOLD = 0.1;
 const SPREAD_V1_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-spreadv1-live.csv");
+const VOLUME_200_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-volume200-live.csv");
 const CHALLENGER_ML_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-challenger-ml-live.csv");
 const CHALLENGER_ML_NEARMISS_CSV = projectFilePath("data/backtest/challenger-ml-shadow-nearmiss.csv");
 const CLAY_BO3_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-clay_bo3-live.csv");
@@ -238,7 +239,7 @@ const FAIR_ODDS_SPREAD_V1_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_V1_ENABLED", 
 const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
 type MatchSide = "P1" | "P2";
 type FastClayArchetype = "both" | "serve_led" | "return_led" | "contrarian";
-type ShadowSignalKind = "spread_v1" | "challenger_ml_shadow" | "clay_bo3";
+type ShadowSignalKind = "spread_v1" | "volume_200" | "challenger_ml_shadow" | "clay_bo3";
 
 interface ShadowSignalSummary {
   id: number;
@@ -336,7 +337,8 @@ function spreadConflictDirection(signal: ShadowSignalSummary): MatchSide | null 
 function shadowKindRank(kind: ShadowSignalKind): number {
   if (kind === "challenger_ml_shadow") return 0;
   if (kind === "clay_bo3") return 1;
-  if (kind === "spread_v1") return 2;
+  if (kind === "volume_200") return 2;
+  if (kind === "spread_v1") return 3;
   return 3;
 }
 
@@ -2653,6 +2655,7 @@ async function run(): Promise<Response> {
   const spreadV1SignalsCsv = FAIR_ODDS_SPREAD_V1_ENABLED
     ? loadActiveShadowSignals(SPREAD_V1_SIGNAL_CSV, "spread_v1", today)
     : [];
+  const volume200SignalsCsv = loadActiveShadowSignals(VOLUME_200_SIGNAL_CSV, "volume_200", today);
   const challengerMlSignalsCsv = INTERNAL_RESEARCH_LANES
     ? loadActiveShadowSignals(CHALLENGER_ML_SIGNAL_CSV, "challenger_ml_shadow", today)
     : [];
@@ -2680,6 +2683,7 @@ async function run(): Promise<Response> {
     return Array.from(new Set(keys));
   };
   for (const signal of [
+    ...volume200SignalsCsv,
     ...challengerMlSignalsCsv,
     ...clayBo3SignalsCsv,
     ...effectiveSpreadV1SignalsCsv,
@@ -2719,6 +2723,7 @@ async function run(): Promise<Response> {
   });
 
   const attachedByKind: Record<ShadowSignalKind, Set<number>> = {
+    volume_200: new Set<number>(),
     challenger_ml_shadow: new Set<number>(),
     clay_bo3: new Set<number>(),
     spread_v1: new Set<number>(),
@@ -2730,6 +2735,11 @@ async function run(): Promise<Response> {
     for (const signal of rowSignals) attachedByKind[signal.kind].add(signal.id);
   }
   const signal_attachment: Record<ShadowSignalKind, SignalAttachmentDiagnostics> = {
+    volume_200: {
+      loaded: volume200SignalsCsv.length,
+      attached: attachedByKind.volume_200.size,
+      unmatched: Math.max(0, volume200SignalsCsv.length - attachedByKind.volume_200.size),
+    },
     challenger_ml_shadow: {
       loaded: challengerMlSignalsCsv.length,
       attached: attachedByKind.challenger_ml_shadow.size,
@@ -2747,10 +2757,17 @@ async function run(): Promise<Response> {
     },
   };
   const unmatchedSignals = {
+    volume_200: volume200SignalsCsv.filter((signal) => !attachedByKind.volume_200.has(signal.id)),
     challenger_ml_shadow: challengerMlSignalsCsv.filter((signal) => !attachedByKind.challenger_ml_shadow.has(signal.id)),
     clay_bo3: clayBo3SignalsCsv.filter((signal) => !attachedByKind.clay_bo3.has(signal.id)),
     spread_v1: effectiveSpreadV1SignalsCsv.filter((signal) => !attachedByKind.spread_v1.has(signal.id)),
   };
+  if (unmatchedSignals.volume_200.length) {
+    console.warn(
+      "[fair-odds] Unmatched Volume 200 signals:",
+      unmatchedSignals.volume_200.map((signal) => `${signal.id}: ${signal.player1_name} vs ${signal.player2_name} | ${signal.side}`)
+    );
+  }
   if (unmatchedSignals.challenger_ml_shadow.length) {
     console.warn(
       "[fair-odds] Unmatched Challenger ML signals:",
@@ -3164,6 +3181,7 @@ async function run(): Promise<Response> {
     signals_volume_overlap,
     signals_volume_additional,
     signals_volume,
+    signals_volume_200_live: volume200SignalsCsv,
     signals_challenger_ml: challengerMlSignalsCsv,
     signals_clay_bo3: clayBo3SignalsCsv,
     challenger_nearmisses: challengerNearmisses,

@@ -397,6 +397,7 @@ function primarySignalBadgeMeta(
   const clayGuardedSignal = rowSignals.find((signal) => signal.kind === "clay_guarded");
   const challengerSignal = rowSignals.find((signal) => signal.kind === "challenger_ml_shadow");
   const clayBo3Signal = rowSignals.find((signal) => signal.kind === "clay_bo3");
+  const volume200Signal = rowSignals.find((signal) => signal.kind === "volume_200");
   const claySignal = rowSignals.find((signal) => signal.kind === "clay_2026");
   const spreadSignal = rowSignals.find((signal) => signal.kind === "spread_v1");
 
@@ -424,6 +425,14 @@ function primarySignalBadgeMeta(
     };
   }
 
+  if (volume200Signal) {
+    return {
+      label: "VOL200",
+      className: "border-amber-500/30 bg-amber-500/10 text-amber-300",
+      title: "Captured Volume 200 research signal",
+    };
+  }
+
   if (clayGuardedSignal) {
     return {
       label: "CLAY GUARD",
@@ -448,7 +457,7 @@ function primarySignalBadgeMeta(
     };
   }
 
-  if (match.shadow_match) {
+  if (match.shadow_match && shadowProfile !== "volume_200") {
     return {
       label: shadowProfileBadge(shadowProfile),
       className: "border-amber-500/30 bg-amber-500/10 text-amber-300",
@@ -1096,7 +1105,10 @@ export default function FairOddsPage() {
           return a.tournament.localeCompare(b.tournament);
         }),
     }));
-  const shadowOnlySignals = data?.signals_volume_additional ?? data?.signals_volume ?? [];
+  const shadowOnlySignals =
+    data?.shadow_profile === "volume_200"
+      ? data?.signals_volume_200_live ?? []
+      : data?.signals_volume_additional ?? data?.signals_volume ?? [];
   const strictFeedItems = sortSignalFeedItems(
     (data?.signals_strict ?? []).map((signal) => ({
       key: `strict-${signal.id}`,
