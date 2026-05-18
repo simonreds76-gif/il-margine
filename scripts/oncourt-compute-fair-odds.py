@@ -538,9 +538,25 @@ def _mean_std(values):
     return (mean, std)
 
 
+def _is_grand_slam_tour_name(tour_name):
+    u = (tour_name or "").upper()
+    return any(
+        x in u
+        for x in (
+            "AUSTRALIAN OPEN",
+            "FRENCH OPEN",
+            "ROLAND GARROS",
+            "WIMBLEDON",
+            "US OPEN",
+            "U.S. OPEN",
+            "GRAND SLAM",
+        )
+    )
+
+
 def _series_bucket_from_tour(tour_name, tour_rank):
     u = (tour_name or "").upper()
-    if any(x in u for x in ("AUSTRALIAN OPEN", "ROLAND GARROS", "WIMBLEDON", "US OPEN", "GRAND SLAM")):
+    if _is_grand_slam_tour_name(tour_name):
         return "Grand Slam"
     if "MASTERS CUP" in u or "ATP FINALS" in u or "TOUR FINALS" in u:
         return "Masters Cup"
@@ -558,7 +574,7 @@ def _series_bucket_from_tour(tour_name, tour_rank):
         rk = int(tour_rank) if tour_rank is not None else None
     except (TypeError, ValueError):
         rk = None
-    if rk == 1:
+    if rk == 4:
         return "Grand Slam"
     if rk == 3:
         return "Masters 1000"
@@ -1345,8 +1361,11 @@ def main():
             continue
         if "ITF" in name or "FUTURES" in name:
             continue
-        # Include ATP + Challenger: rank<=3 keeps ATP main tour (Masters 1000 often rank 3).
-        if rank is not None and rank <= INCLUDE_TOUR_RANK_MAX:
+        # Include ATP + Challenger. OnCourt marks Grand Slams (including RG qualies)
+        # as rank=4 and often names them "French Open - Paris", without "ATP".
+        if _is_grand_slam_tour_name(raw_name):
+            atp_challenger_tour_ids.add(tid)
+        elif rank is not None and rank <= INCLUDE_TOUR_RANK_MAX:
             atp_challenger_tour_ids.add(tid)
         elif "CHALLENGER" in name:
             atp_challenger_tour_ids.add(tid)
