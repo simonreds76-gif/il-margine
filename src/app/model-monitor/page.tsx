@@ -754,6 +754,44 @@ function getSelectedOdds(row: MonitorSignalRow): number | undefined {
   return row.side === "P2" ? row.pinOdds2 : row.pinOdds1;
 }
 
+function signalSelectionLabel(row: MonitorSignalRow): string {
+  if (row.betType === "spread") return `${row.side} ${formatSignedLine(row.spreadLine)} HC`;
+  return `${row.side} ML`;
+}
+
+function signalPnlUnits(row: MonitorSignalRow): number | undefined {
+  if (!isSettledSignal(row)) return undefined;
+  const outcome = (row.betOutcome || "").trim().toLowerCase();
+  const stake = row.stakeUnits && row.stakeUnits > 0 ? row.stakeUnits : 1;
+  const odds = getSelectedOdds(row);
+  if (outcome === "win" && odds != null && odds > 1) return stake * (odds - 1);
+  if (outcome === "loss") return -stake;
+  return 0;
+}
+
+function signalStatusClass(row: MonitorSignalRow): string {
+  const status = (row.settlementStatus || "").trim().toLowerCase();
+  const outcome = (row.betOutcome || "").trim().toLowerCase();
+  if (outcome === "win") return "border-emerald-500/25 bg-emerald-500/10 text-emerald-300";
+  if (outcome === "loss") return "border-rose-500/25 bg-rose-500/10 text-rose-300";
+  if (status === "no_match") return "border-amber-500/25 bg-amber-500/10 text-amber-300";
+  return "border-slate-700/80 bg-slate-900/80 text-slate-300";
+}
+
+function signalStatusLabel(row: MonitorSignalRow): string {
+  if (row.betOutcome) return row.betOutcome;
+  if (row.settlementStatus) return row.settlementStatus;
+  return "pending";
+}
+
+function sortSignalRowsForBrowser(rows: MonitorSignalRow[]): MonitorSignalRow[] {
+  return [...rows].sort((left, right) => {
+    const leftStamp = Date.parse(left.settledAt || "") || signalTimestamp(left);
+    const rightStamp = Date.parse(right.settledAt || "") || signalTimestamp(right);
+    return rightStamp - leftStamp;
+  });
+}
+
 function getSettlementDate(row: MonitorSignalRow): string {
   return row.settledAt ? row.settledAt.slice(0, 10) : row.matchDate || row.date;
 }
@@ -1218,6 +1256,47 @@ export default async function ModelMonitorPage() {
     },
   ];
   const activeLaneScoreRows = laneScoreRows.filter((row) => row.policy !== "Spread Shadow");
+  const signalBrowserGroups = [
+    {
+      key: "volume-200-ml",
+      title: "Volume 200 ML",
+      subtitle: "Captured ATP ML research rows. Pending rows should stay here until settlement.",
+      accent: "amber",
+      rows: sortSignalRowsForBrowser(volumeSignalsArchive.filter((row) => row.betType !== "spread")),
+    },
+    {
+      key: "volume-200-spread",
+      title: "Volume 200 Spread",
+      subtitle: "Legacy Volume 200 handicap rows kept for audit, not a public lane.",
+      accent: "amber",
+      rows: sortSignalRowsForBrowser(volumeSignalsArchive.filter((row) => row.betType === "spread")),
+    },
+    {
+      key: "spread-v1",
+      title: "Spread v1 HC",
+      subtitle: "Strict-first ATP bo3 hard/clay spread shadow.",
+      accent: "sky",
+      rows: sortSignalRowsForBrowser(spreadV1SignalsArchive),
+    },
+    ...(INTERNAL_RESEARCH_LANES
+      ? [
+          {
+            key: "challenger-ml",
+            title: "Challenger ML Internal",
+            subtitle: "Internal Challenger ML shadow rows and their settlement state.",
+            accent: "cyan",
+            rows: sortSignalRowsForBrowser(challengerSignalsArchive),
+          },
+          {
+            key: "clay-fav-hc",
+            title: "Clay-Fav HC Internal",
+            subtitle: "The exact Clay-Fav HC rows behind the scoreboard aggregate.",
+            accent: "emerald",
+            rows: sortSignalRowsForBrowser(clayFavSignalsArchive),
+          },
+        ]
+      : []),
+  ];
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.10),_transparent_22%),#0b0f14] text-slate-100">
@@ -1447,6 +1526,105 @@ export default async function ModelMonitorPage() {
                 ))}
               </div>
             </details>
+          </MonitorCard>
+        </div>
+
+        <div className="mb-8">
+          <MonitorCard title="Signal Browser" subtitle="Actual captured rows by lane. This is where you inspect the matches behind each aggregate, including internal research lanes.">
+            <div className="grid gap-4">
+              {signalBrowserGroups.map((group) => {
+                const displayedRows = group.rows.slice(0, 80);
+                const accentClass =
+                  group.accent === "emerald"
+                    ? "border-emerald-500/25 bg-emerald-500/8 text-emerald-200"
+                    : group.accent === "cyan"
+                      ? "border-cyan-500/25 bg-cyan-500/8 text-cyan-200"
+                      : group.accent === "sky"
+                        ? "border-sky-500/25 bg-sky-500/8 text-sky-200"
+                        : "border-amber-500/25 bg-amber-500/8 text-amber-200";
+                return (
+                  <details
+                    key={group.key}
+                    open={group.key === "clay-fav-hc" || group.key === "volume-200-ml"}
+                    className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4"
+                  >
+                    <summary className="cursor-pointer list-none">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${accentClass}`}>
+                              {group.rows.length} rows
+                            </span>
+                            <h3 className="text-base font-semibold text-slate-100">{group.title}</h3>
+                          </div>
+                          <p className="mt-1 text-sm leading-6 text-slate-400">{group.subtitle}</p>
+                        </div>
+                        <div className="text-xs text-slate-500">latest {displayedRows.length} shown</div>
+                      </div>
+                    </summary>
+                    {displayedRows.length === 0 ? (
+                      <p className="mt-4 rounded-xl border border-slate-800/80 bg-slate-900/70 p-3 text-sm text-slate-400">
+                        No captured rows for this lane in the current archive file.
+                      </p>
+                    ) : (
+                      <div className="mt-4 overflow-x-auto">
+                        <table className="min-w-[1100px] w-full text-sm">
+                          <thead>
+                            <tr className="border-b border-slate-800 text-left text-[11px] uppercase tracking-[0.18em] text-slate-500">
+                              <th className="px-3 py-3 font-semibold">Signal</th>
+                              <th className="px-3 py-3 font-semibold">Match</th>
+                              <th className="px-3 py-3 font-semibold">Pick</th>
+                              <th className="px-3 py-3 font-semibold">Odds</th>
+                              <th className="px-3 py-3 font-semibold">Edge</th>
+                              <th className="px-3 py-3 font-semibold">Stake</th>
+                              <th className="px-3 py-3 font-semibold">Status</th>
+                              <th className="px-3 py-3 font-semibold">P/L</th>
+                              <th className="px-3 py-3 font-semibold">Context</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {displayedRows.map((row, idx) => {
+                              const pnl = signalPnlUnits(row);
+                              return (
+                                <tr
+                                  key={`${group.key}-${row.date}-${row.timeUtc}-${row.player1}-${row.player2}-${row.side}-${row.spreadLine ?? "ml"}-${idx}`}
+                                  className="border-b border-slate-900/80 text-slate-200"
+                                >
+                                  <td className="px-3 py-3 font-mono text-xs tabular-nums text-slate-400">
+                                    <div>{row.date}</div>
+                                    <div>{row.timeUtc || "00:00:00"} UTC</div>
+                                    {(row.refreshCount ?? 1) > 1 ? <div className="mt-1 text-amber-300">{row.refreshCount} refreshes</div> : null}
+                                  </td>
+                                  <td className="px-3 py-3">
+                                    <div className="font-semibold text-slate-100">{row.player1} vs {row.player2}</div>
+                                    <div className="mt-1 text-xs text-slate-500">Match date {row.matchDate || row.date}</div>
+                                  </td>
+                                  <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{signalSelectionLabel(row)}</td>
+                                  <td className="px-3 py-3 font-mono tabular-nums text-slate-200">{getSelectedOdds(row)?.toFixed(3) ?? "n/a"}</td>
+                                  <td className="px-3 py-3 font-mono tabular-nums text-amber-200">{formatPct(row.valuePct)}</td>
+                                  <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{(row.stakeUnits ?? 1).toFixed(2)}u</td>
+                                  <td className="px-3 py-3">
+                                    <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${signalStatusClass(row)}`}>
+                                      {signalStatusLabel(row)}
+                                    </span>
+                                  </td>
+                                  <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(pnl)}`}>{pnl == null ? "pending" : formatUnits(pnl, 2)}</td>
+                                  <td className="px-3 py-3 text-xs leading-5 text-slate-500">
+                                    <div>{row.surface || "surface n/a"} | {row.league || "ATP"} | {row.series || "series n/a"}</div>
+                                    <div>{row.confidence || "confidence n/a"} | {row.signalProfile || "profile n/a"}</div>
+                                    {row.settlementNote ? <div className="mt-1 text-amber-200">{row.settlementNote}</div> : null}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </details>
+                );
+              })}
+            </div>
           </MonitorCard>
         </div>
 

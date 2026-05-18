@@ -7,6 +7,7 @@ import { questionSlug } from "@/lib/parse-faq";
 import { type Bet, type Bookmaker, type MarketStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate, getBaselineDisplayStats } from "@/lib/baseline";
 import BetMobileMeta from "@/components/BetMobileMeta";
+import MarketBadge from "@/components/MarketBadge";
 import PublicBetsTable from "@/components/PublicBetsTable";
 import ResultBadge from "@/components/ResultBadge";
 import Footer from "@/components/Footer";
@@ -734,14 +735,21 @@ export default function HomepageClient({
                       }
                     }}
                   >
-                    <div className="mb-1 flex items-center justify-between">
-                      <span className="text-xs whitespace-nowrap text-slate-500">{formatMatchDate(bet.match_date)}</span>
-                      <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-xs text-amber-400">PENDING</span>
-                    </div>
-                    <div className="mb-1 font-medium text-slate-200">{bet.event}</div>
-                    <div className="mb-2 text-sm text-slate-300">
-                      {bet.player ? <span>{bet.player} - </span> : null}
-                      {bet.selection}
+                    <div className="mb-3 flex items-start gap-3">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-950/70">
+                        <MarketBadge market={bet.market} category={bet.category} event={bet.event} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-1 flex items-center justify-between gap-3">
+                          <span className="text-xs whitespace-nowrap text-slate-500">{formatMatchDate(bet.match_date)}</span>
+                          <span className="rounded bg-amber-500/20 px-2 py-0.5 font-mono text-xs text-amber-400">PENDING</span>
+                        </div>
+                        <div className="mb-1 font-medium leading-snug text-slate-200">{bet.event}</div>
+                        <div className="text-sm leading-snug text-slate-300">
+                          {bet.player ? <span>{bet.player} - </span> : null}
+                          {bet.selection}
+                        </div>
+                      </div>
                     </div>
                     <BetMobileMeta odds={bet.odds} bookmaker={bet.bookmaker} stake={bet.stake} />
                   </div>

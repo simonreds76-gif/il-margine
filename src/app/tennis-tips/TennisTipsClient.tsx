@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
 import BetMobileMeta from "@/components/BetMobileMeta";
+import MarketBadge from "@/components/MarketBadge";
 import PublicBetsTable from "@/components/PublicBetsTable";
 import ResultBadge from "@/components/ResultBadge";
 import Footer from "@/components/Footer";
@@ -330,22 +331,25 @@ export default function TennisTips({
                       }
                     }}
                   >
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
+                    <div className="mb-3 flex items-start gap-3">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-950/70">
+                        <MarketBadge market={pick.market} category={pick.category} event={pick.event} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-1 flex items-center justify-between gap-3">
                           <span className="text-xs text-slate-500 whitespace-nowrap">{formatMatchDate(pick.match_date)}</span>
+                          <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">
+                            PENDING
+                          </span>
                         </div>
-                        <div className="font-medium text-slate-200 mb-1">
+                        <div className="font-medium text-slate-200 mb-1 leading-snug">
                           {pick.event}
                         </div>
-                        <div className="text-sm text-slate-400">
+                        <div className="text-sm text-slate-400 leading-snug">
                           {pick.player && <span>{pick.player} | </span>}
                           {pick.selection}
                         </div>
                       </div>
-                      <span className="text-xs font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400 ml-2">
-                        PENDING
-                      </span>
                     </div>
                     <BetMobileMeta odds={pick.odds} bookmaker={pick.bookmaker} stake={pick.stake} />
                   </div>
