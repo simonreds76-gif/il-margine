@@ -111,6 +111,40 @@ type SpreadCalibrationParams = {
   calibration_reason?: string;
 };
 
+type GrandSlamEvalSummary = {
+  bets?: number;
+  wins?: number;
+  losses?: number;
+  avg_value_pct?: number;
+  flat_roi_pct?: number;
+  tier_staked_units?: number;
+  tier_pnl_units?: number;
+  tier_roi_pct?: number;
+};
+
+type GrandSlamEvalRow = GrandSlamEvalSummary & {
+  key?: string;
+  label?: string;
+  surface?: string;
+  tournament?: string;
+  status?: string;
+  status_reasons?: string[];
+  yearly?: Array<GrandSlamEvalSummary & { year?: string }>;
+  confidence_breakdown?: Record<string, GrandSlamEvalSummary>;
+};
+
+type GrandSlamEvalReport = {
+  generated_at_utc?: string;
+  years?: number[];
+  criteria?: {
+    min_bets?: number;
+    min_tier_roi_pct?: number;
+    min_positive_years?: number;
+    latest_year_tier_roi_min_pct?: number;
+  };
+  rows?: GrandSlamEvalRow[];
+};
+
 type ProfileSummary = {
   name: string;
   bets?: number;
@@ -830,6 +864,7 @@ export default async function ModelMonitorPage() {
     clvAuditVolumeTxt,
     clvAuditSpreadV1Txt,
     profileTxt,
+    grandSlamEvalJson,
     shadowComparisonTxt,
     volumeSignalsArchiveCsv,
     volumeSignalsLiveCsv,
@@ -857,6 +892,7 @@ export default async function ModelMonitorPage() {
     clvAuditVolumeMtime,
     clvAuditSpreadV1Mtime,
     profileMtime,
+    grandSlamEvalMtime,
     strictSignalsLiveMtime,
     volumeSignalsMtime,
     spreadV1SignalsMtime,
@@ -875,6 +911,7 @@ export default async function ModelMonitorPage() {
     readLocalFile("data/backtest/strict-clv-audit-volume200-2026.txt"),
     readLocalFile("data/backtest/strict-clv-audit-spreadv1-2026.txt"),
     readLocalFile("data/backtest/policy-profile-backtest-2022-2025.txt"),
+    readLocalFile("data/backtest/grand-slam-eval-2022-2025.json"),
     readLocalFile("data/backtest/shadow-profile-comparison.txt"),
     readLocalFile("data/backtest/strict-signals-volume200-archive.csv"),
     readLocalFile("data/backtest/strict-signals-volume200-live.csv"),
@@ -902,6 +939,7 @@ export default async function ModelMonitorPage() {
     readLocalMtime("data/backtest/strict-clv-audit-volume200-2026.txt"),
     readLocalMtime("data/backtest/strict-clv-audit-spreadv1-2026.txt"),
     readLocalMtime("data/backtest/policy-profile-backtest-2022-2025.txt"),
+    readLocalMtime("data/backtest/grand-slam-eval-2022-2025.json"),
     readLocalMtime("data/backtest/strict-signals-live.csv"),
     readLocalMtime("data/backtest/strict-signals-volume200-live.csv"),
     readLocalMtime("data/backtest/strict-signals-spreadv1-live.csv"),
@@ -924,6 +962,8 @@ export default async function ModelMonitorPage() {
   const clvVolume = parseClvAudit(clvAuditVolumeTxt);
   const clvSpreadV1 = parseClvAudit(clvAuditSpreadV1Txt);
   const profiles = parsePolicyProfiles(profileTxt);
+  const grandSlamEval = parseJsonMaybe<GrandSlamEvalReport>(grandSlamEvalJson);
+  const grandSlamRows = grandSlamEval?.rows ?? [];
   const profileMap = new Map(profiles.map((profile) => [profile.name, profile]));
   const strictSignalsArchiveRaw = parseSignalRows(strictSignalsArchiveCsv);
   const strictSignalsArchive = dedupeLogicalSignalRows(strictSignalsArchiveRaw);
@@ -1346,6 +1386,7 @@ export default async function ModelMonitorPage() {
               <FileStamp label="Vol200 CLV" value={clvAuditVolumeMtime} />
               <FileStamp label="Spread v1 CLV" value={clvAuditSpreadV1Mtime} />
               <FileStamp label="Profile backtest" value={profileMtime} />
+              <FileStamp label="GS eval" value={grandSlamEvalMtime} />
               <FileStamp label="Strict signals" value={strictSignalsLiveMtime} />
               <FileStamp label="Vol200 signals" value={volumeSignalsMtime} />
               <FileStamp label="Spread v1 signals" value={spreadV1SignalsMtime} />
@@ -1591,6 +1632,63 @@ export default async function ModelMonitorPage() {
                 ))}
               </div>
             </details>
+          </MonitorCard>
+        </div>
+
+        <div className="mb-8">
+          <MonitorCard
+            title="Grand Slam Evidence"
+            subtitle={`Research-only ML split by event. ${grandSlamEval?.generated_at_utc ? `Generated ${grandSlamEval.generated_at_utc}` : "Run scripts/run-grand-slam-eval.py to refresh."}`}
+          >
+            {grandSlamRows.length === 0 ? (
+              <p className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-4 text-sm text-slate-400">
+                No Grand Slam evidence file found. Run <span className="font-mono text-slate-200">python scripts/run-grand-slam-eval.py --years 2022 2023 2024 2025</span>.
+              </p>
+            ) : (
+              <div className="grid gap-3 xl:grid-cols-5">
+                {grandSlamRows.map((row) => {
+                  const status = (row.status ?? "MISSING").toUpperCase();
+                  const statusClass =
+                    status === "PASS"
+                      ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-200"
+                      : status === "WATCH"
+                        ? "border-amber-500/40 bg-amber-500/10 text-amber-200"
+                        : "border-rose-500/40 bg-rose-500/10 text-rose-200";
+                  const latestYear = row.yearly?.[row.yearly.length - 1];
+                  const high = row.confidence_breakdown?.high;
+                  const medium = row.confidence_breakdown?.medium;
+                  return (
+                    <div key={row.key ?? row.label} className="rounded-2xl border border-slate-800 bg-slate-950/45 p-4">
+                      <div className="mb-3 flex items-start justify-between gap-3">
+                        <div>
+                          <h3 className="text-base font-semibold text-white">{row.label}</h3>
+                          <p className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-500">{row.surface} ML</p>
+                        </div>
+                        <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${statusClass}`}>
+                          {status}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <Stat label="Bets" value={`${row.bets ?? 0}`} compact />
+                        <Stat label="W-L" value={`${row.wins ?? 0}-${row.losses ?? 0}`} compact />
+                        <Stat label="Tier ROI" value={formatPct(row.tier_roi_pct)} tone={metricTone(row.tier_roi_pct)} compact />
+                        <Stat label="Tier P/L" value={`${formatUnits(row.tier_pnl_units)} / ${(row.tier_staked_units ?? 0).toFixed(1)}u`} tone={metricTone(row.tier_pnl_units)} compact />
+                      </div>
+                      <div className="mt-3 rounded-xl border border-slate-800/80 bg-slate-900/50 p-3 text-xs leading-5 text-slate-400">
+                        <div>Latest year: {latestYear?.year ?? "n/a"} {formatPct(latestYear?.tier_roi_pct)}</div>
+                        <div>High: {high?.bets ?? 0} bets, {formatPct(high?.tier_roi_pct)} | Medium: {medium?.bets ?? 0} bets, {formatPct(medium?.tier_roi_pct)}</div>
+                      </div>
+                      <p className="mt-3 text-xs leading-5 text-slate-500">
+                        {(row.status_reasons ?? []).join("; ") || "Meets current research evidence gate."}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            <div className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-xs leading-5 text-slate-400">
+              Gate: bets &gt;= {grandSlamEval?.criteria?.min_bets ?? 150}, tier ROI &gt;= +{grandSlamEval?.criteria?.min_tier_roi_pct ?? 5}%, positive years &gt;= {grandSlamEval?.criteria?.min_positive_years ?? 3}, latest year non-negative. This card is evidence only; it does not authorise new public signals.
+            </div>
           </MonitorCard>
         </div>
 

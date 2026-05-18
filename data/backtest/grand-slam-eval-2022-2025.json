@@ -1,0 +1,752 @@
+{
+  "criteria": {
+    "latest_year_tier_roi_min_pct": 0.0,
+    "min_bets": 150,
+    "min_positive_years": 3,
+    "min_tier_roi_pct": 5.0
+  },
+  "generated_at_utc": "2026-05-18T20:28:11Z",
+  "rows": [
+    {
+      "avg_value_pct": 17.23572925764193,
+      "bets": 229,
+      "candidate_definition": "Grand Slam, confidence high+medium, value_pct >= 5, policy_excluded=false, settled win/loss, valid selected Pinnacle odds",
+      "confidence_breakdown": {
+        "high": {
+          "avg_value_pct": 16.56203508771931,
+          "bets": 171,
+          "flat_pnl_units": 36.72,
+          "flat_roi_pct": 21.473684210526315,
+          "losses": 85,
+          "tier_pnl_units": 36.76500000000001,
+          "tier_roi_pct": 18.521410579345094,
+          "tier_staked_units": 198.5,
+          "wins": 86
+        },
+        "medium": {
+          "avg_value_pct": 19.22196551724138,
+          "bets": 58,
+          "flat_pnl_units": -8.07,
+          "flat_roi_pct": -13.913793103448278,
+          "losses": 36,
+          "tier_pnl_units": -9.9,
+          "tier_roi_pct": -13.943661971830986,
+          "tier_staked_units": 71.0,
+          "wins": 22
+        }
+      },
+      "flat_pnl_units": 28.650000000000013,
+      "flat_roi_pct": 12.510917030567692,
+      "key": "hard_grand_slam_aggregate",
+      "label": "Hard Grand Slam aggregate",
+      "losses": 121,
+      "status": "WATCH",
+      "status_reasons": [
+        "latest year ROI -20.69%"
+      ],
+      "surface": "Hard",
+      "threshold_breakdown": [
+        {
+          "avg_value_pct": 17.23572925764193,
+          "bets": 229,
+          "flat_pnl_units": 28.650000000000013,
+          "flat_roi_pct": 12.510917030567692,
+          "losses": 121,
+          "min_value_pct": 5.0,
+          "tier_pnl_units": 26.865000000000013,
+          "tier_roi_pct": 9.96846011131726,
+          "tier_staked_units": 269.5,
+          "wins": 108
+        },
+        {
+          "avg_value_pct": 22.522280000000006,
+          "bets": 150,
+          "flat_pnl_units": 20.080000000000005,
+          "flat_roi_pct": 13.386666666666668,
+          "losses": 86,
+          "min_value_pct": 10.0,
+          "tier_pnl_units": 22.580000000000005,
+          "tier_roi_pct": 9.817391304347828,
+          "tier_staked_units": 230.0,
+          "wins": 64
+        },
+        {
+          "avg_value_pct": 28.863978494623673,
+          "bets": 93,
+          "flat_pnl_units": 1.9199999999999982,
+          "flat_roi_pct": 2.064516129032256,
+          "losses": 60,
+          "min_value_pct": 15.0,
+          "tier_pnl_units": 4.419999999999998,
+          "tier_roi_pct": 2.554913294797687,
+          "tier_staked_units": 173.0,
+          "wins": 33
+        },
+        {
+          "avg_value_pct": 33.354477611940325,
+          "bets": 67,
+          "flat_pnl_units": 3.0799999999999983,
+          "flat_roi_pct": 4.597014925373132,
+          "losses": 42,
+          "min_value_pct": 20.0,
+          "tier_pnl_units": 6.159999999999997,
+          "tier_roi_pct": 4.597014925373132,
+          "tier_staked_units": 134.0,
+          "wins": 25
+        }
+      ],
+      "tier_pnl_units": 26.865000000000013,
+      "tier_roi_pct": 9.96846011131726,
+      "tier_staked_units": 269.5,
+      "tournament": "Hard Grand Slam aggregate",
+      "wins": 108,
+      "yearly": [
+        {
+          "avg_value_pct": 18.17533333333333,
+          "bets": 54,
+          "flat_pnl_units": -1.0799999999999992,
+          "flat_roi_pct": -1.9999999999999987,
+          "losses": 32,
+          "tier_pnl_units": 1.990000000000002,
+          "tier_roi_pct": 2.992481203007522,
+          "tier_staked_units": 66.5,
+          "wins": 22,
+          "year": "2022"
+        },
+        {
+          "avg_value_pct": 16.303456140350878,
+          "bets": 57,
+          "flat_pnl_units": 11.88,
+          "flat_roi_pct": 20.842105263157894,
+          "losses": 28,
+          "tier_pnl_units": 20.965000000000003,
+          "tier_roi_pct": 33.01574803149607,
+          "tier_staked_units": 63.5,
+          "wins": 29,
+          "year": "2023"
+        },
+        {
+          "avg_value_pct": 17.177700000000005,
+          "bets": 60,
+          "flat_pnl_units": 19.590000000000007,
+          "flat_roi_pct": 32.65000000000001,
+          "losses": 28,
+          "tier_pnl_units": 18.7,
+          "tier_roi_pct": 27.499999999999996,
+          "tier_staked_units": 68.0,
+          "wins": 32,
+          "year": "2024"
+        },
+        {
+          "avg_value_pct": 17.33715517241379,
+          "bets": 58,
+          "flat_pnl_units": -1.7400000000000002,
+          "flat_roi_pct": -3.0000000000000004,
+          "losses": 33,
+          "tier_pnl_units": -14.79,
+          "tier_roi_pct": -20.685314685314683,
+          "tier_staked_units": 71.5,
+          "wins": 25,
+          "year": "2025"
+        }
+      ]
+    },
+    {
+      "avg_value_pct": 19.242558333333353,
+      "bets": 120,
+      "candidate_definition": "Grand Slam, confidence high+medium, value_pct >= 5, policy_excluded=false, settled win/loss, valid selected Pinnacle odds",
+      "confidence_breakdown": {
+        "high": {
+          "avg_value_pct": 18.810144444444454,
+          "bets": 90,
+          "flat_pnl_units": 20.97,
+          "flat_roi_pct": 23.299999999999997,
+          "losses": 45,
+          "tier_pnl_units": 12.439999999999998,
+          "tier_roi_pct": 10.864628820960696,
+          "tier_staked_units": 114.5,
+          "wins": 45
+        },
+        "medium": {
+          "avg_value_pct": 20.5398,
+          "bets": 30,
+          "flat_pnl_units": -13.54,
+          "flat_roi_pct": -45.13333333333333,
+          "losses": 21,
+          "tier_pnl_units": -19.960000000000004,
+          "tier_roi_pct": -54.68493150684933,
+          "tier_staked_units": 36.5,
+          "wins": 9
+        }
+      },
+      "flat_pnl_units": 7.4300000000000015,
+      "flat_roi_pct": 6.191666666666668,
+      "key": "australian_open",
+      "label": "Australian Open",
+      "losses": 66,
+      "status": "FAIL",
+      "status_reasons": [
+        "sample 120 < 150",
+        "tier ROI -4.98% < +5%",
+        "positive years 2 < 3",
+        "latest year ROI -38.14%"
+      ],
+      "surface": "Hard",
+      "threshold_breakdown": [
+        {
+          "avg_value_pct": 19.242558333333353,
+          "bets": 120,
+          "flat_pnl_units": 7.4300000000000015,
+          "flat_roi_pct": 6.191666666666668,
+          "losses": 66,
+          "min_value_pct": 5.0,
+          "tier_pnl_units": -7.52,
+          "tier_roi_pct": -4.9801324503311255,
+          "tier_staked_units": 151.0,
+          "wins": 54
+        },
+        {
+          "avg_value_pct": 24.33402380952382,
+          "bets": 84,
+          "flat_pnl_units": -4.5,
+          "flat_roi_pct": -5.357142857142857,
+          "losses": 53,
+          "min_value_pct": 10.0,
+          "tier_pnl_units": -13.485,
+          "tier_roi_pct": -10.139097744360901,
+          "tier_staked_units": 133.0,
+          "wins": 31
+        },
+        {
+          "avg_value_pct": 30.195649122807023,
+          "bets": 57,
+          "flat_pnl_units": -7.359999999999999,
+          "flat_roi_pct": -12.912280701754387,
+          "losses": 39,
+          "min_value_pct": 15.0,
+          "tier_pnl_units": -16.345,
+          "tier_roi_pct": -15.419811320754718,
+          "tier_staked_units": 106.0,
+          "wins": 18
+        },
+        {
+          "avg_value_pct": 35.14765853658537,
+          "bets": 41,
+          "flat_pnl_units": -10.61,
+          "flat_roi_pct": -25.878048780487806,
+          "losses": 29,
+          "min_value_pct": 20.0,
+          "tier_pnl_units": -21.22,
+          "tier_roi_pct": -25.878048780487806,
+          "tier_staked_units": 82.0,
+          "wins": 12
+        }
+      ],
+      "tier_pnl_units": -7.52,
+      "tier_roi_pct": -4.9801324503311255,
+      "tier_staked_units": 151.0,
+      "tournament": "Australian Open",
+      "wins": 54,
+      "yearly": [
+        {
+          "avg_value_pct": 20.460062500000003,
+          "bets": 32,
+          "flat_pnl_units": -1.5299999999999998,
+          "flat_roi_pct": -4.781249999999999,
+          "losses": 19,
+          "tier_pnl_units": -4.0699999999999985,
+          "tier_roi_pct": -9.465116279069765,
+          "tier_staked_units": 43.0,
+          "wins": 13,
+          "year": "2022"
+        },
+        {
+          "avg_value_pct": 17.2665,
+          "bets": 26,
+          "flat_pnl_units": 6.15,
+          "flat_roi_pct": 23.653846153846157,
+          "losses": 12,
+          "tier_pnl_units": 7.795,
+          "tier_roi_pct": 25.98333333333333,
+          "tier_staked_units": 30.0,
+          "wins": 14,
+          "year": "2023"
+        },
+        {
+          "avg_value_pct": 20.048034482758617,
+          "bets": 29,
+          "flat_pnl_units": 9.98,
+          "flat_roi_pct": 34.41379310344828,
+          "losses": 13,
+          "tier_pnl_units": 5.535000000000002,
+          "tier_roi_pct": 16.279411764705888,
+          "tier_staked_units": 34.0,
+          "wins": 16,
+          "year": "2024"
+        },
+        {
+          "avg_value_pct": 18.910999999999998,
+          "bets": 33,
+          "flat_pnl_units": -7.17,
+          "flat_roi_pct": -21.727272727272727,
+          "losses": 22,
+          "tier_pnl_units": -16.78,
+          "tier_roi_pct": -38.13636363636364,
+          "tier_staked_units": 44.0,
+          "wins": 11,
+          "year": "2025"
+        }
+      ]
+    },
+    {
+      "avg_value_pct": 15.026376146788989,
+      "bets": 109,
+      "candidate_definition": "Grand Slam, confidence high+medium, value_pct >= 5, policy_excluded=false, settled win/loss, valid selected Pinnacle odds",
+      "confidence_breakdown": {
+        "high": {
+          "avg_value_pct": 14.064135802469135,
+          "bets": 81,
+          "flat_pnl_units": 15.75,
+          "flat_roi_pct": 19.444444444444446,
+          "losses": 40,
+          "tier_pnl_units": 24.325000000000003,
+          "tier_roi_pct": 28.958333333333336,
+          "tier_staked_units": 84.0,
+          "wins": 41
+        },
+        "medium": {
+          "avg_value_pct": 17.81,
+          "bets": 28,
+          "flat_pnl_units": 5.470000000000001,
+          "flat_roi_pct": 19.53571428571429,
+          "losses": 15,
+          "tier_pnl_units": 10.06,
+          "tier_roi_pct": 29.159420289855078,
+          "tier_staked_units": 34.5,
+          "wins": 13
+        }
+      },
+      "flat_pnl_units": 21.220000000000006,
+      "flat_roi_pct": 19.467889908256886,
+      "key": "us_open",
+      "label": "US Open",
+      "losses": 55,
+      "status": "WATCH",
+      "status_reasons": [
+        "sample 109 < 150"
+      ],
+      "surface": "Hard",
+      "threshold_breakdown": [
+        {
+          "avg_value_pct": 15.026376146788989,
+          "bets": 109,
+          "flat_pnl_units": 21.220000000000006,
+          "flat_roi_pct": 19.467889908256886,
+          "losses": 55,
+          "min_value_pct": 5.0,
+          "tier_pnl_units": 34.38500000000001,
+          "tier_roi_pct": 29.01687763713081,
+          "tier_staked_units": 118.5,
+          "wins": 54
+        },
+        {
+          "avg_value_pct": 20.21642424242424,
+          "bets": 66,
+          "flat_pnl_units": 24.580000000000005,
+          "flat_roi_pct": 37.24242424242425,
+          "losses": 33,
+          "min_value_pct": 10.0,
+          "tier_pnl_units": 36.065000000000005,
+          "tier_roi_pct": 37.180412371134025,
+          "tier_staked_units": 97.0,
+          "wins": 33
+        },
+        {
+          "avg_value_pct": 26.75550000000001,
+          "bets": 36,
+          "flat_pnl_units": 9.28,
+          "flat_roi_pct": 25.77777777777778,
+          "losses": 21,
+          "min_value_pct": 15.0,
+          "tier_pnl_units": 20.764999999999997,
+          "tier_roi_pct": 30.992537313432834,
+          "tier_staked_units": 67.0,
+          "wins": 15
+        },
+        {
+          "avg_value_pct": 30.526769230769236,
+          "bets": 26,
+          "flat_pnl_units": 13.689999999999998,
+          "flat_roi_pct": 52.65384615384614,
+          "losses": 13,
+          "min_value_pct": 20.0,
+          "tier_pnl_units": 27.379999999999995,
+          "tier_roi_pct": 52.65384615384614,
+          "tier_staked_units": 52.0,
+          "wins": 13
+        }
+      ],
+      "tier_pnl_units": 34.38500000000001,
+      "tier_roi_pct": 29.01687763713081,
+      "tier_staked_units": 118.5,
+      "tournament": "US Open",
+      "wins": 54,
+      "yearly": [
+        {
+          "avg_value_pct": 14.852090909090911,
+          "bets": 22,
+          "flat_pnl_units": 0.4500000000000002,
+          "flat_roi_pct": 2.0454545454545463,
+          "losses": 13,
+          "tier_pnl_units": 6.0600000000000005,
+          "tier_roi_pct": 25.78723404255319,
+          "tier_staked_units": 23.5,
+          "wins": 9,
+          "year": "2022"
+        },
+        {
+          "avg_value_pct": 15.495741935483867,
+          "bets": 31,
+          "flat_pnl_units": 5.7299999999999995,
+          "flat_roi_pct": 18.483870967741932,
+          "losses": 16,
+          "tier_pnl_units": 13.169999999999998,
+          "tier_roi_pct": 39.31343283582089,
+          "tier_staked_units": 33.5,
+          "wins": 15,
+          "year": "2023"
+        },
+        {
+          "avg_value_pct": 14.492548387096772,
+          "bets": 31,
+          "flat_pnl_units": 9.609999999999998,
+          "flat_roi_pct": 30.999999999999993,
+          "losses": 15,
+          "tier_pnl_units": 13.165000000000003,
+          "tier_roi_pct": 38.72058823529412,
+          "tier_staked_units": 34.0,
+          "wins": 16,
+          "year": "2024"
+        },
+        {
+          "avg_value_pct": 15.259680000000001,
+          "bets": 25,
+          "flat_pnl_units": 5.429999999999999,
+          "flat_roi_pct": 21.719999999999995,
+          "losses": 11,
+          "tier_pnl_units": 1.9899999999999998,
+          "tier_roi_pct": 7.236363636363635,
+          "tier_staked_units": 27.5,
+          "wins": 14,
+          "year": "2025"
+        }
+      ]
+    },
+    {
+      "avg_value_pct": 17.774708333333326,
+      "bets": 120,
+      "candidate_definition": "Grand Slam, confidence high+medium, value_pct >= 5, policy_excluded=false, settled win/loss, valid selected Pinnacle odds",
+      "confidence_breakdown": {
+        "high": {
+          "avg_value_pct": 17.256289473684216,
+          "bets": 76,
+          "flat_pnl_units": -17.48,
+          "flat_roi_pct": -23.0,
+          "losses": 49,
+          "tier_pnl_units": -19.514999999999997,
+          "tier_roi_pct": -21.44505494505494,
+          "tier_staked_units": 91.0,
+          "wins": 27
+        },
+        "medium": {
+          "avg_value_pct": 18.670159090909088,
+          "bets": 44,
+          "flat_pnl_units": 7.040000000000003,
+          "flat_roi_pct": 16.000000000000007,
+          "losses": 21,
+          "tier_pnl_units": 8.81,
+          "tier_roi_pct": 17.27450980392157,
+          "tier_staked_units": 51.0,
+          "wins": 23
+        }
+      },
+      "flat_pnl_units": -10.439999999999998,
+      "flat_roi_pct": -8.699999999999998,
+      "key": "roland_garros",
+      "label": "Roland Garros",
+      "losses": 70,
+      "status": "FAIL",
+      "status_reasons": [
+        "sample 120 < 150",
+        "tier ROI -7.54% < +5%",
+        "positive years 0 < 3",
+        "latest year ROI -13.30%"
+      ],
+      "surface": "Clay",
+      "threshold_breakdown": [
+        {
+          "avg_value_pct": 17.774708333333326,
+          "bets": 120,
+          "flat_pnl_units": -10.439999999999998,
+          "flat_roi_pct": -8.699999999999998,
+          "losses": 70,
+          "min_value_pct": 5.0,
+          "tier_pnl_units": -10.704999999999998,
+          "tier_roi_pct": -7.538732394366196,
+          "tier_staked_units": 142.0,
+          "wins": 50
+        },
+        {
+          "avg_value_pct": 24.173256756756757,
+          "bets": 74,
+          "flat_pnl_units": -1.65,
+          "flat_roi_pct": -2.2297297297297294,
+          "losses": 44,
+          "min_value_pct": 10.0,
+          "tier_pnl_units": -6.309999999999999,
+          "tier_roi_pct": -5.30252100840336,
+          "tier_staked_units": 119.0,
+          "wins": 30
+        },
+        {
+          "avg_value_pct": 29.29271153846154,
+          "bets": 52,
+          "flat_pnl_units": -1.94,
+          "flat_roi_pct": -3.7307692307692304,
+          "losses": 33,
+          "min_value_pct": 15.0,
+          "tier_pnl_units": -6.600000000000001,
+          "tier_roi_pct": -6.804123711340207,
+          "tier_staked_units": 97.0,
+          "wins": 19
+        },
+        {
+          "avg_value_pct": 33.72118421052632,
+          "bets": 38,
+          "flat_pnl_units": -7.380000000000001,
+          "flat_roi_pct": -19.42105263157895,
+          "losses": 26,
+          "min_value_pct": 20.0,
+          "tier_pnl_units": -14.760000000000002,
+          "tier_roi_pct": -19.42105263157895,
+          "tier_staked_units": 76.0,
+          "wins": 12
+        }
+      ],
+      "tier_pnl_units": -10.704999999999998,
+      "tier_roi_pct": -7.538732394366196,
+      "tier_staked_units": 142.0,
+      "tournament": "French Open",
+      "wins": 50,
+      "yearly": [
+        {
+          "avg_value_pct": 14.973454545454546,
+          "bets": 22,
+          "flat_pnl_units": -3.94,
+          "flat_roi_pct": -17.909090909090907,
+          "losses": 15,
+          "tier_pnl_units": -2.3499999999999996,
+          "tier_roi_pct": -9.591836734693876,
+          "tier_staked_units": 24.5,
+          "wins": 7,
+          "year": "2022"
+        },
+        {
+          "avg_value_pct": 18.16454761904762,
+          "bets": 42,
+          "flat_pnl_units": 1.0900000000000007,
+          "flat_roi_pct": 2.595238095238097,
+          "losses": 22,
+          "tier_pnl_units": -0.8949999999999978,
+          "tier_roi_pct": -1.672897196261678,
+          "tier_staked_units": 53.5,
+          "wins": 20,
+          "year": "2023"
+        },
+        {
+          "avg_value_pct": 20.694851851851855,
+          "bets": 27,
+          "flat_pnl_units": -6.630000000000001,
+          "flat_roi_pct": -24.555555555555557,
+          "losses": 18,
+          "tier_pnl_units": -3.0050000000000003,
+          "tier_roi_pct": -9.852459016393443,
+          "tier_staked_units": 30.5,
+          "wins": 9,
+          "year": "2024"
+        },
+        {
+          "avg_value_pct": 16.616448275862066,
+          "bets": 29,
+          "flat_pnl_units": -0.9599999999999995,
+          "flat_roi_pct": -3.310344827586205,
+          "losses": 15,
+          "tier_pnl_units": -4.455,
+          "tier_roi_pct": -13.298507462686567,
+          "tier_staked_units": 33.5,
+          "wins": 14,
+          "year": "2025"
+        }
+      ]
+    },
+    {
+      "avg_value_pct": 21.801465346534645,
+      "bets": 101,
+      "candidate_definition": "Grand Slam, confidence high+medium, value_pct >= 5, policy_excluded=false, settled win/loss, valid selected Pinnacle odds",
+      "confidence_breakdown": {
+        "high": {
+          "avg_value_pct": 6.116,
+          "bets": 2,
+          "flat_pnl_units": -0.49,
+          "flat_roi_pct": -24.5,
+          "losses": 1,
+          "tier_pnl_units": -0.245,
+          "tier_roi_pct": -24.5,
+          "tier_staked_units": 1.0,
+          "wins": 1
+        },
+        "medium": {
+          "avg_value_pct": 22.118343434343423,
+          "bets": 99,
+          "flat_pnl_units": -13.060000000000002,
+          "flat_roi_pct": -13.191919191919194,
+          "losses": 62,
+          "tier_pnl_units": -18.595,
+          "tier_roi_pct": -13.672794117647058,
+          "tier_staked_units": 136.0,
+          "wins": 37
+        }
+      },
+      "flat_pnl_units": -13.55,
+      "flat_roi_pct": -13.415841584158416,
+      "key": "wimbledon",
+      "label": "Wimbledon",
+      "losses": 63,
+      "status": "FAIL",
+      "status_reasons": [
+        "sample 101 < 150",
+        "tier ROI -13.75% < +5%",
+        "positive years 2 < 3",
+        "latest year ROI -53.30%"
+      ],
+      "surface": "Grass",
+      "threshold_breakdown": [
+        {
+          "avg_value_pct": 21.801465346534645,
+          "bets": 101,
+          "flat_pnl_units": -13.55,
+          "flat_roi_pct": -13.415841584158416,
+          "losses": 63,
+          "min_value_pct": 5.0,
+          "tier_pnl_units": -18.839999999999996,
+          "tier_roi_pct": -13.751824817518246,
+          "tier_staked_units": 137.0,
+          "wins": 38
+        },
+        {
+          "avg_value_pct": 26.41528571428571,
+          "bets": 77,
+          "flat_pnl_units": -9.600000000000001,
+          "flat_roi_pct": -12.467532467532468,
+          "losses": 51,
+          "min_value_pct": 10.0,
+          "tier_pnl_units": -16.865,
+          "tier_roi_pct": -13.491999999999999,
+          "tier_staked_units": 125.0,
+          "wins": 26
+        },
+        {
+          "avg_value_pct": 32.079618181818184,
+          "bets": 55,
+          "flat_pnl_units": -9.34,
+          "flat_roi_pct": -16.98181818181818,
+          "losses": 38,
+          "min_value_pct": 15.0,
+          "tier_pnl_units": -16.604999999999997,
+          "tier_roi_pct": -16.121359223300967,
+          "tier_staked_units": 103.0,
+          "wins": 17
+        },
+        {
+          "avg_value_pct": 37.145048780487805,
+          "bets": 41,
+          "flat_pnl_units": -5.189999999999999,
+          "flat_roi_pct": -12.658536585365852,
+          "losses": 28,
+          "min_value_pct": 20.0,
+          "tier_pnl_units": -10.379999999999997,
+          "tier_roi_pct": -12.658536585365852,
+          "tier_staked_units": 82.0,
+          "wins": 13
+        }
+      ],
+      "tier_pnl_units": -18.839999999999996,
+      "tier_roi_pct": -13.751824817518246,
+      "tier_staked_units": 137.0,
+      "tournament": "Wimbledon",
+      "wins": 38,
+      "yearly": [
+        {
+          "avg_value_pct": 25.36278947368421,
+          "bets": 19,
+          "flat_pnl_units": -0.8899999999999999,
+          "flat_roi_pct": -4.6842105263157885,
+          "losses": 12,
+          "tier_pnl_units": 0.1599999999999998,
+          "tier_roi_pct": 0.5714285714285707,
+          "tier_staked_units": 28.0,
+          "wins": 7,
+          "year": "2022"
+        },
+        {
+          "avg_value_pct": 25.22896774193548,
+          "bets": 31,
+          "flat_pnl_units": 4.66,
+          "flat_roi_pct": 15.03225806451613,
+          "losses": 17,
+          "tier_pnl_units": 4.470000000000001,
+          "tier_roi_pct": 9.933333333333334,
+          "tier_staked_units": 45.0,
+          "wins": 14,
+          "year": "2023"
+        },
+        {
+          "avg_value_pct": 17.413375000000002,
+          "bets": 24,
+          "flat_pnl_units": -4.26,
+          "flat_roi_pct": -17.75,
+          "losses": 14,
+          "tier_pnl_units": -5.614999999999999,
+          "tier_roi_pct": -18.409836065573767,
+          "tier_staked_units": 30.5,
+          "wins": 10,
+          "year": "2024"
+        },
+        {
+          "avg_value_pct": 19.26059259259259,
+          "bets": 27,
+          "flat_pnl_units": -13.060000000000002,
+          "flat_roi_pct": -48.37037037037038,
+          "losses": 20,
+          "tier_pnl_units": -17.855,
+          "tier_roi_pct": -53.29850746268657,
+          "tier_staked_units": 33.5,
+          "wins": 7,
+          "year": "2025"
+        }
+      ]
+    }
+  ],
+  "source_files": [
+    "D:\\IlMargine\\il-margine\\.codex-worktrees\\assist-settlement2\\data\\backtest\\backtest-results-2022.csv",
+    "D:\\IlMargine\\il-margine\\.codex-worktrees\\assist-settlement2\\data\\backtest\\backtest-results-2023.csv",
+    "D:\\IlMargine\\il-margine\\.codex-worktrees\\assist-settlement2\\data\\backtest\\backtest-results-2024.csv",
+    "D:\\IlMargine\\il-margine\\.codex-worktrees\\assist-settlement2\\data\\backtest\\backtest-results-2025.csv"
+  ],
+  "years": [
+    2022,
+    2023,
+    2024,
+    2025
+  ]
+}

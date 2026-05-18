@@ -1,0 +1,65 @@
+Grand Slam ML Evidence Report
+Generated UTC: 2026-05-18T20:28:11Z
+Years: 2022, 2023, 2024, 2025
+
+Scope: research-only evidence. No live signal, public output, production flag, or policy rule is changed by this report.
+Candidate definition: Grand Slam rows with confidence high+medium, value_pct >= 5, policy_excluded=false, settled win/loss, and valid selected Pinnacle odds.
+Staking: value_tiered (5-10=0.5u, 10-15=1u, 15-20=1.5u, 20+=2u), matching policy-profile-backtest.
+
+Promotion evidence gate:
+- bets >= 150
+- tier ROI >= +5%
+- positive years >= 3
+- latest year tier ROI >= 0%
+
+Primary event table:
+event | status | bets | W-L | avg value | flat ROI | tier ROI | tier P/L | yearly tier ROI | reasons
+Hard Grand Slam aggregate | WATCH | 229 | 108-121 | 17.24% | +12.51% | +9.97% | +26.87u on 269.50u | 2022:+2.99%, 2023:+33.02%, 2024:+27.50%, 2025:-20.69% | latest year ROI -20.69%
+Australian Open | FAIL | 120 | 54-66 | 19.24% | +6.19% | -4.98% | -7.52u on 151.00u | 2022:-9.47%, 2023:+25.98%, 2024:+16.28%, 2025:-38.14% | sample 120 < 150; tier ROI -4.98% < +5%; positive years 2 < 3; latest year ROI -38.14%
+US Open | WATCH | 109 | 54-55 | 15.03% | +19.47% | +29.02% | +34.39u on 118.50u | 2022:+25.79%, 2023:+39.31%, 2024:+38.72%, 2025:+7.24% | sample 109 < 150
+Roland Garros | FAIL | 120 | 50-70 | 17.77% | -8.70% | -7.54% | -10.70u on 142.00u | 2022:-9.59%, 2023:-1.67%, 2024:-9.85%, 2025:-13.30% | sample 120 < 150; tier ROI -7.54% < +5%; positive years 0 < 3; latest year ROI -13.30%
+Wimbledon | FAIL | 101 | 38-63 | 21.80% | -13.42% | -13.75% | -18.84u on 137.00u | 2022:+0.57%, 2023:+9.93%, 2024:-18.41%, 2025:-53.30% | sample 101 < 150; tier ROI -13.75% < +5%; positive years 2 < 3; latest year ROI -53.30%
+
+Confidence diagnostics (min value 5):
+[Hard Grand Slam aggregate]
+  high: bets=171 W-L=86-85 tierROI=+18.52% P/L=+36.77u on 198.50u
+  medium: bets=58 W-L=22-36 tierROI=-13.94% P/L=-9.90u on 71.00u
+[Australian Open]
+  high: bets=90 W-L=45-45 tierROI=+10.86% P/L=+12.44u on 114.50u
+  medium: bets=30 W-L=9-21 tierROI=-54.68% P/L=-19.96u on 36.50u
+[US Open]
+  high: bets=81 W-L=41-40 tierROI=+28.96% P/L=+24.33u on 84.00u
+  medium: bets=28 W-L=13-15 tierROI=+29.16% P/L=+10.06u on 34.50u
+[Roland Garros]
+  high: bets=76 W-L=27-49 tierROI=-21.45% P/L=-19.51u on 91.00u
+  medium: bets=44 W-L=23-21 tierROI=+17.27% P/L=+8.81u on 51.00u
+[Wimbledon]
+  high: bets=2 W-L=1-1 tierROI=-24.50% P/L=-0.24u on 1.00u
+  medium: bets=99 W-L=37-62 tierROI=-13.67% P/L=-18.59u on 136.00u
+
+Threshold diagnostics (high+medium):
+[Hard Grand Slam aggregate]
+  value>=5: bets=229 W-L=108-121 tierROI=+9.97% P/L=+26.87u on 269.50u
+  value>=10: bets=150 W-L=64-86 tierROI=+9.82% P/L=+22.58u on 230.00u
+  value>=15: bets=93 W-L=33-60 tierROI=+2.55% P/L=+4.42u on 173.00u
+  value>=20: bets=67 W-L=25-42 tierROI=+4.60% P/L=+6.16u on 134.00u
+[Australian Open]
+  value>=5: bets=120 W-L=54-66 tierROI=-4.98% P/L=-7.52u on 151.00u
+  value>=10: bets=84 W-L=31-53 tierROI=-10.14% P/L=-13.48u on 133.00u
+  value>=15: bets=57 W-L=18-39 tierROI=-15.42% P/L=-16.34u on 106.00u
+  value>=20: bets=41 W-L=12-29 tierROI=-25.88% P/L=-21.22u on 82.00u
+[US Open]
+  value>=5: bets=109 W-L=54-55 tierROI=+29.02% P/L=+34.39u on 118.50u
+  value>=10: bets=66 W-L=33-33 tierROI=+37.18% P/L=+36.07u on 97.00u
+  value>=15: bets=36 W-L=15-21 tierROI=+30.99% P/L=+20.76u on 67.00u
+  value>=20: bets=26 W-L=13-13 tierROI=+52.65% P/L=+27.38u on 52.00u
+[Roland Garros]
+  value>=5: bets=120 W-L=50-70 tierROI=-7.54% P/L=-10.70u on 142.00u
+  value>=10: bets=74 W-L=30-44 tierROI=-5.30% P/L=-6.31u on 119.00u
+  value>=15: bets=52 W-L=19-33 tierROI=-6.80% P/L=-6.60u on 97.00u
+  value>=20: bets=38 W-L=12-26 tierROI=-19.42% P/L=-14.76u on 76.00u
+[Wimbledon]
+  value>=5: bets=101 W-L=38-63 tierROI=-13.75% P/L=-18.84u on 137.00u
+  value>=10: bets=77 W-L=26-51 tierROI=-13.49% P/L=-16.86u on 125.00u
+  value>=15: bets=55 W-L=17-38 tierROI=-16.12% P/L=-16.60u on 103.00u
+  value>=20: bets=41 W-L=13-28 tierROI=-12.66% P/L=-10.38u on 82.00u
