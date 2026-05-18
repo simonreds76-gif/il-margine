@@ -15,17 +15,17 @@ type MarketConfig = {
 const MARKET_CONFIG: Record<string, MarketConfig> = {
   tennis: { src: "/icons/markets/tennis.svg", label: "Tennis" },
   atp: {
-    src: "/icons/markets/atp-brandmark-cropped.png",
+    src: "/icons/markets/atp-logo.png",
     label: "ATP Tour",
-    containerClassName: "h-7 w-7",
-    imageClassName: "h-full w-full object-contain",
+    containerClassName: "h-8 w-12",
+    imageClassName: "max-h-8 w-12 object-contain",
   },
   challenger: { src: "/icons/markets/tennis.svg", label: "Challenger" },
   ausopen: {
-    src: "/icons/markets/slams/australian-open.svg",
+    src: "/icons/markets/slams/australian-open.png",
     label: "Australian Open",
     containerClassName: "h-8 w-12",
-    imageClassName: "h-8 w-8 object-contain",
+    imageClassName: "max-h-8 w-12 object-contain",
   },
   rolandgarros: {
     src: "/icons/markets/slams/roland-garros.png",
@@ -40,10 +40,10 @@ const MARKET_CONFIG: Record<string, MarketConfig> = {
     imageClassName: "h-8 w-8 object-contain",
   },
   usopen: {
-    src: "/icons/markets/slams/us-open.svg",
+    src: "/icons/markets/slams/us-open.png",
     label: "US Open",
-    containerClassName: "h-8 w-12 rounded bg-white/95 px-1",
-    imageClassName: "max-h-8 w-10 object-contain",
+    containerClassName: "h-8 w-12",
+    imageClassName: "max-h-8 w-12 object-contain",
   },
   pl: { src: "/league-logos/epl.png", label: "Premier League", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
   seriea: { src: "/league-logos/serie-a.png", label: "Serie A", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
@@ -91,7 +91,7 @@ export default function MarketBadge({ market, category, event, showLabel = false
     >
       <span className={`inline-flex items-center justify-center shrink-0 ${containerClassName ?? (wide ? "h-6 w-8" : "h-6 w-6")}`}>
         <img
-          src={`${src}?v=11`}
+          src={`${src}?v=12`}
           alt={label}
           width={wide ? 32 : 24}
           height={24}
