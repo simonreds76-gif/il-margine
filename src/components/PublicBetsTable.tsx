@@ -22,7 +22,7 @@ interface PublicBetsTableProps {
 }
 
 const th = {
-  icon: "hidden w-[3.75rem] border-r border-slate-800/40 px-2.5 py-3 text-center md:table-cell",
+  icon: "w-[2.75rem] border-r border-slate-800/40 px-1.5 py-3 text-center md:w-[3.75rem] md:px-2.5",
   date: "w-[5.25rem] border-r border-slate-800/40 px-2.5 py-3 text-center",
   match: "w-[25%] border-r border-slate-800/40 px-4 py-3 text-center",
   player: "w-[15%] border-r border-slate-800/40 px-4 py-3 text-center",
@@ -36,7 +36,7 @@ const th = {
 } as const;
 
 const td = {
-  icon: "hidden border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle md:table-cell",
+  icon: "border-r border-slate-800/40 px-1.5 py-3.5 text-center align-middle md:px-2.5",
   date: "border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle text-sm whitespace-nowrap text-slate-400",
   match: "border-r border-slate-800/40 px-4 py-3.5 text-center align-middle font-medium text-slate-200",
   player: "border-r border-slate-800/40 px-4 py-3.5 text-center align-middle text-slate-300",
@@ -84,16 +84,18 @@ export default function PublicBetsTable({
         {bets.map((bet) => (
           <tr key={bet.id} className="border-b border-slate-800/40 last:border-b-0 hover:bg-slate-800/20">
             <td className={td.icon}>
-              <MarketBadge market={bet.market} category={bet.category} event={bet.event} hideOnMobile />
+              <div className="flex justify-center">
+                <MarketBadge market={bet.market} category={bet.category} event={bet.event} compact className="md:hidden" />
+                <MarketBadge market={bet.market} category={bet.category} event={bet.event} className="hidden md:inline-flex" />
+              </div>
             </td>
             <td className={td.date}>{formatMatchDate(bet.match_date)}</td>
             <td className={td.match}>
               <Link
                 href={`/tips/${slugifyTip(bet.event, bet.id)}`}
-                className="flex min-w-0 items-center justify-center gap-2 transition-colors hover:text-emerald-400 md:block"
+                className="block min-w-0 transition-colors hover:text-emerald-400"
                 title={bet.event}
               >
-                <MarketBadge market={bet.market} category={bet.category} event={bet.event} compact className="md:hidden" />
                 <span className="min-w-0 truncate">{bet.event}</span>
               </Link>
             </td>

@@ -59,6 +59,16 @@ function compactLineupLabel(status: string) {
   return "Unknown";
 }
 
+function compactLeagueLabel(label: string) {
+  const normalized = label.toLowerCase();
+  if (normalized.includes("premier")) return "EPL";
+  if (normalized.includes("serie")) return "Serie A";
+  if (normalized.includes("bundesliga")) return "Bundes";
+  if (normalized.includes("liga")) return "La Liga";
+  if (normalized.includes("ligue")) return "Ligue 1";
+  return label.length > 9 ? label.slice(0, 9) : label;
+}
+
 function isInPlayWatch(signal: Signal) {
   return signal.displayStatus === "in_play";
 }
@@ -323,7 +333,7 @@ export function FairOddsSignalBrowser({
             <button
               type="button"
               onClick={() => applyLeague("all")}
-              className={`shrink-0 rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
+              className={`shrink-0 rounded-full border px-2.5 py-1.5 text-sm font-semibold transition sm:px-3 ${
                 activeLeague === "all"
                   ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
                   : "border-slate-700/80 bg-slate-900/70 text-slate-400 hover:text-slate-200"
@@ -337,7 +347,7 @@ export function FairOddsSignalBrowser({
                       src={option.logoPath}
                       alt={`${option.label} logo`}
                       fallback={option.label}
-                      size={22}
+                      size={24}
                       shape="rounded"
                       className="bg-white/95 p-0.5 ring-2 ring-[#0c0f14]"
                     />
@@ -354,7 +364,8 @@ export function FairOddsSignalBrowser({
                 key={option.key}
                 type="button"
                 onClick={() => applyLeague(option.key)}
-                className={`shrink-0 rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
+                aria-label={`Show ${option.label} signals`}
+                className={`shrink-0 rounded-full border px-2.5 py-1.5 text-sm font-semibold transition sm:px-3 ${
                   activeLeague === option.key
                     ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
                     : "border-slate-700/80 bg-slate-900/70 text-slate-400 hover:text-slate-200"
@@ -365,10 +376,11 @@ export function FairOddsSignalBrowser({
                     src={option.logoPath}
                     alt={`${option.label} logo`}
                     fallback={option.label}
-                    size={22}
+                    size={24}
                     shape="rounded"
                     className="bg-white/95 p-0.5"
                   />
+                  <span className="sm:hidden">{compactLeagueLabel(option.label)}</span>
                   <span className="hidden sm:inline">{option.label}</span>
                   <span className="rounded-full bg-slate-950/70 px-1.5 py-0.5 text-[11px] text-slate-300">
                     {option.count}
