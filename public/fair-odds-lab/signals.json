@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T09:43:44.942292Z",
+  "generated_at": "2026-05-18T11:47:38.424959Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -33,112 +33,8 @@
     "post_kickoff_visibility_minutes": 150
   },
   "fixtures_evaluated": 3,
-  "signals_qualifying": 1,
-  "leagues_covered": [
-    "epl"
-  ],
-  "featured_signal_id": "20260518-zian-flemming-1a277d5581",
-  "signals": [
-    {
-      "id": "20260518-zian-flemming-1a277d5581",
-      "match": {
-        "home_team": "Arsenal FC",
-        "away_team": "Burnley FC",
-        "league": "epl",
-        "league_display": "Premier League",
-        "league_logo_path": "/league-logos/epl.png",
-        "kickoff_utc": "2026-05-18T19:00:00Z",
-        "kickoff_display": "Mon 18 May 20:00 UK",
-        "fotmob_match_id": "4813736",
-        "fotmob_page_url": "/matches/burnley-vs-arsenal/2omsup#4813736",
-        "lineup_type": "predicted",
-        "venue": ""
-      },
-      "player": {
-        "name": "Zian Flemming",
-        "team": "Burnley",
-        "position": "FW",
-        "jersey_label": "",
-        "team_logo_path": "/team-logos/epl/burnley.png",
-        "team_primary_color": "#7f1d1d",
-        "team_secondary_color": "#38bdf8",
-        "team_shirt_pattern": "solid"
-      },
-      "market": "Anytime goalscorer",
-      "model": {
-        "scoring_chance_pct": 27.5,
-        "fair_odds": 3.64
-      },
-      "market_data": {
-        "best_odds": 6.0,
-        "best_book": "Bet365",
-        "implied_chance_pct": 16.7
-      },
-      "edge": {
-        "price_gap_pp": 10.8,
-        "model_advantage": true
-      },
-      "metrics": {
-        "recent_chance_quality": {
-          "tier": "Strong",
-          "percentile": 95
-        },
-        "share_of_team_chances_pct": 32,
-        "share_of_team_chances_percentile": 99,
-        "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 21
-        },
-        "recent_team_form": {
-          "tier": "Quiet",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-10",
-          "xg_for_avg": 0.91,
-          "xg_against_avg": 1.95,
-          "xgd_per90": -1.05,
-          "shots_for_avg": 9.4,
-          "shots_against_avg": 17.4,
-          "sot_for_avg": 3.6,
-          "sot_against_avg": 6.8,
-          "corners_for_avg": 3.4,
-          "corners_against_avg": 6.0
-        },
-        "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 39
-        },
-        "opponent_recent_defence": {
-          "tier": "Positive",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-10",
-          "xg_for_avg": 2.32,
-          "xg_against_avg": 1.38,
-          "xgd_per90": 0.94,
-          "shots_for_avg": 13.6,
-          "shots_against_avg": 11.0,
-          "sot_for_avg": 4.6,
-          "sot_against_avg": 3.0,
-          "corners_for_avg": 5.6,
-          "corners_against_avg": 3.8
-        },
-        "fixture_boost_pct": -6,
-        "projected_minutes": 71,
-        "penalty_role": "Primary",
-        "role_adjustment_factor": 1.0,
-        "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
-      },
-      "confidence_tier": "Medium",
-      "reasons": [
-        "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong",
-        "Opponent has been allowing chances recently",
-        "Primary penalty role adds a clear scoring route"
-      ],
-      "risk_flags": []
-    }
-  ]
+  "signals_qualifying": 0,
+  "leagues_covered": [],
+  "featured_signal_id": null,
+  "signals": []
 }
