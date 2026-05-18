@@ -171,6 +171,7 @@ type LaneScoreRow = {
   policy: string;
   lane: string;
   marketType: string;
+  usageNote?: string;
   settled: number;
   signals: number;
   open: number;
@@ -985,9 +986,7 @@ export default async function ModelMonitorPage() {
   const strictMlFlatCohort = summarizeSignalCohort(strictSignalsClean, undefined, "flat", "match");
   const strictSpreadFlatCohort = summarizeSignalCohort(strictSignalsClean, undefined, "flat", "spread");
   const volumeMlRecordedCohort = summarizeSignalCohort(volumeSignalsClean, undefined, "recorded", "match");
-  const volumeSpreadRecordedCohort = summarizeSignalCohort(volumeSignalsClean, undefined, "recorded", "spread");
   const volumeMlFlatCohort = summarizeSignalCohort(volumeSignalsClean, undefined, "flat", "match");
-  const volumeSpreadFlatCohort = summarizeSignalCohort(volumeSignalsClean, undefined, "flat", "spread");
   const spreadV1SpreadRecordedCohort = summarizeSignalCohort(spreadV1SignalsClean, undefined, "recorded", "spread");
   const spreadV1SpreadFlatCohort = summarizeSignalCohort(spreadV1SignalsClean, undefined, "flat", "spread");
   const spreadShadowSpreadRecordedCohort = summarizeSignalCohort(spreadShadowSignalsClean, undefined, "recorded", "spread");
@@ -1058,18 +1057,14 @@ export default async function ModelMonitorPage() {
       : spreadV1Queue.length === 0 && spreadV1NoMatchRows.length > 0
         ? `Spread v1 shadow has ${spreadV1NoMatchRows.length} unresolved no_match rows, but no true live queue right now.`
         : spreadV1SignalsLive.length === 0
-          ? "Spread v1 shadow is wired in, but it has not logged a qualifying strict-first ATP bo3 hard/clay spread row yet."
+          ? "Spread v1 shadow is wired in, but scheduled runs are hard-only right now and have not logged a qualifying row."
           : spreadV1SettledRows.length === 0
             ? `Spread v1 shadow has ${spreadV1SignalsArchive.length} tracked rows, but no settled spread sample yet.`
             : `Spread v1 shadow has ${spreadV1SettledRows.length} settled spreads with CLV coverage ${matchedSpreadV1}/${auditedSpreadV1 || 0}.`;
   const volumeQueueMlCount = volumeQueue.filter((row) => row.betType !== "spread").length;
-  const volumeQueueSpreadCount = volumeQueue.filter((row) => row.betType === "spread").length;
   const volumeSettledMlCount =
     perfValue(volumeBase.mlAll, "settled", parseIntMaybe) ??
     volumeSignalsArchive.filter((row) => row.betType !== "spread" && (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
-  const volumeSettledSpreadCount =
-    perfValue(volumeBase.handicapAll, "settled", parseIntMaybe) ??
-    volumeSignalsArchive.filter((row) => row.betType === "spread" && (row.settlementStatus || "").trim().toLowerCase() === "settled").length;
   const volumeTrackedCount = perfValue(volumeBase.combinedAll, "signals", parseIntMaybe) ?? volumeSignalsArchive.length;
   const volumeOpenCount = perfValue(volumeBase.combinedAll, "unsettled", parseIntMaybe) ?? volumeQueue.length;
   const volumeNoMatchCount = volumeNoMatchRows.length;
@@ -1096,7 +1091,6 @@ export default async function ModelMonitorPage() {
   const strictMlOpenCount = strictQueue.filter((row) => row.betType !== "spread").length;
   const strictSpreadOpenCount = strictQueue.filter((row) => row.betType === "spread").length;
   const volumeMlOpenCount = volumeQueueMlCount;
-  const volumeSpreadOpenCount = volumeQueueSpreadCount;
   const spreadV1OpenCount = spreadV1Queue.length;
   const challengerOpenCount = challengerQueue.length;
   const clayFavOpenCount = clayFavQueue.length;
@@ -1107,7 +1101,7 @@ export default async function ModelMonitorPage() {
   const priorResultsDate = shiftIsoDate(resultsAsOfDate, -1);
   const latestSettledRows = [
     ...strictSettledRows.map((row) => ({ source: "Strict", lane: row.betType === "spread" ? "Strict Spread" : "Strict ML", accent: "rose" as const, row })),
-    ...volumeSettledRows.map((row) => ({ source: "Volume 200", lane: row.betType === "spread" ? "Volume 200 Spread" : "Volume 200 ML", accent: "amber" as const, row })),
+    ...volumeSettledRows.filter((row) => row.betType !== "spread").map((row) => ({ source: "Volume 200", lane: "Volume 200 ML", accent: "amber" as const, row })),
     ...spreadV1SettledRows.map((row) => ({ source: "Spread v1", lane: "Spread v1 HC", accent: "sky" as const, row })),
   ].sort((left, right) => {
     const leftStamp = Date.parse(left.row.settledAt || "") || signalTimestamp(left.row);
@@ -1121,6 +1115,7 @@ export default async function ModelMonitorPage() {
       policy: "Strict",
       lane: "ML",
       marketType: "Match winner",
+      usageNote: "Hard Masters 1000 high-confidence strict lane.",
       settled: perfValue(strictBase.mlAll, "settled", parseIntMaybe) ?? strictMlRecordedCohort.settled,
       signals: perfValue(strictBase.mlAll, "signals", parseIntMaybe) ?? strictMlRecordedCohort.signals,
       open: perfValue(strictBase.mlAll, "unsettled", parseIntMaybe) ?? strictMlOpenCount,
@@ -1132,11 +1127,13 @@ export default async function ModelMonitorPage() {
       unitStakePounds: strictMlRecordedCohort.pnlUnits * 100,
       winRate: perfValue(strictBase.mlAll, "win_rate_pct", parseFloatMaybe),
       clv: clv.avgClvPct,
+      statusBadge: { tone: "ok", label: "active - hard m1000" },
     },
     {
       policy: "Strict",
       lane: "Spread",
       marketType: "Handicap",
+      usageNote: "Hard Masters 1000 high-confidence handicap lane.",
       settled: perfValue(strictBase.handicapAll, "settled", parseIntMaybe) ?? strictSpreadRecordedCohort.settled,
       signals: perfValue(strictBase.handicapAll, "signals", parseIntMaybe) ?? strictSpreadRecordedCohort.signals,
       open: perfValue(strictBase.handicapAll, "unsettled", parseIntMaybe) ?? strictSpreadOpenCount,
@@ -1148,11 +1145,13 @@ export default async function ModelMonitorPage() {
       unitStakePounds: strictSpreadRecordedCohort.pnlUnits * 100,
       winRate: perfValue(strictBase.handicapAll, "win_rate_pct", parseFloatMaybe),
       clvLabel: "n/a",
+      statusBadge: { tone: "ok", label: "active - hard m1000" },
     },
     {
       policy: "Volume 200",
       lane: "ML",
       marketType: "Match winner",
+      usageNote: "ATP ML expansion, including Hard Grand Slam ML. No handicap output.",
       settled: perfValue(volumeBase.mlAll, "settled", parseIntMaybe) ?? volumeMlRecordedCohort.settled,
       signals: perfValue(volumeBase.mlAll, "signals", parseIntMaybe) ?? volumeMlRecordedCohort.signals,
       open: perfValue(volumeBase.mlAll, "unsettled", parseIntMaybe) ?? volumeMlOpenCount,
@@ -1164,27 +1163,13 @@ export default async function ModelMonitorPage() {
       unitStakePounds: volumeMlRecordedCohort.pnlUnits * 100,
       winRate: perfValue(volumeBase.mlAll, "win_rate_pct", parseFloatMaybe),
       clv: clvVolume.avgClvPct,
-    },
-    {
-      policy: "Volume 200",
-      lane: "Spread",
-      marketType: "Handicap",
-      settled: perfValue(volumeBase.handicapAll, "settled", parseIntMaybe) ?? volumeSpreadRecordedCohort.settled,
-      signals: perfValue(volumeBase.handicapAll, "signals", parseIntMaybe) ?? volumeSpreadRecordedCohort.signals,
-      open: perfValue(volumeBase.handicapAll, "unsettled", parseIntMaybe) ?? volumeSpreadOpenCount,
-      wlv: perfWlv(volumeBase.handicapAll),
-      roi: perfValue(volumeBase.handicapAll, "roi_pct", parseFloatMaybe),
-      flatStakePounds: volumeSpreadFlatCohort.pnlUnits * 100,
-      flatTotalStakedPounds: volumeSpreadFlatCohort.stakedUnits * 100,
-      unitTotalStakedPounds: volumeSpreadRecordedCohort.stakedUnits * 100,
-      unitStakePounds: volumeSpreadRecordedCohort.pnlUnits * 100,
-      winRate: perfValue(volumeBase.handicapAll, "win_rate_pct", parseFloatMaybe),
-      clvLabel: "n/a",
+      statusBadge: { tone: "ok", label: "active - atp ml" },
     },
     {
       policy: "Spread v1",
       lane: "HC",
       marketType: "Handicap",
+      usageNote: "Handicap research. Scheduled hard-only right now; clay-fav slice is manual/dormant.",
       settled: spreadV1SettledCount,
       signals: spreadV1TrackedCount,
       open: spreadV1OpenCount,
@@ -1199,6 +1184,7 @@ export default async function ModelMonitorPage() {
           ? (spreadV1SpreadRecordedCohort.wins / spreadV1SpreadRecordedCohort.settled) * 100
           : undefined,
       clv: clvSpreadV1.avgClvPct,
+      statusBadge: { tone: "warn", label: "research - hard hc" },
     },
     ...(INTERNAL_RESEARCH_LANES
       ? [
@@ -1255,12 +1241,13 @@ export default async function ModelMonitorPage() {
       clvLabel: "n/a",
     },
   ];
-  const activeLaneScoreRows = laneScoreRows.filter((row) => row.policy !== "Spread Shadow");
+  const activeLaneScoreRows = laneScoreRows.filter(
+    (row) => row.policy !== "Spread Shadow" && !row.policy.includes("(internal)"),
+  );
   const laneDetailRows = new Map<string, MonitorSignalRow[]>([
     ["Strict|ML", sortSignalRowsForBrowser(strictSignalsArchive.filter((row) => row.betType !== "spread"))],
     ["Strict|Spread", sortSignalRowsForBrowser(strictSignalsArchive.filter((row) => row.betType === "spread"))],
     ["Volume 200|ML", sortSignalRowsForBrowser(volumeSignalsArchive.filter((row) => row.betType !== "spread"))],
-    ["Volume 200|Spread", sortSignalRowsForBrowser(volumeSignalsArchive.filter((row) => row.betType === "spread"))],
     ["Spread v1|HC", sortSignalRowsForBrowser(spreadV1SignalsArchive)],
     ["Challenger ML (internal)|ML", sortSignalRowsForBrowser(challengerSignalsArchive)],
     ["Clay-Fav HC (internal)|HC", sortSignalRowsForBrowser(clayFavSignalsArchive)],
@@ -1274,16 +1261,9 @@ export default async function ModelMonitorPage() {
       rows: sortSignalRowsForBrowser(volumeSignalsArchive.filter((row) => row.betType !== "spread")),
     },
     {
-      key: "volume-200-spread",
-      title: "Volume 200 Spread",
-      subtitle: "Legacy Volume 200 handicap rows kept for audit, not a public lane.",
-      accent: "amber",
-      rows: sortSignalRowsForBrowser(volumeSignalsArchive.filter((row) => row.betType === "spread")),
-    },
-    {
       key: "spread-v1",
       title: "Spread v1 HC",
-      subtitle: "Strict-first ATP bo3 hard/clay spread shadow.",
+      subtitle: "Strict-first ATP bo3 handicap research. Scheduled hard-only right now.",
       accent: "sky",
       rows: sortSignalRowsForBrowser(spreadV1SignalsArchive),
     },
@@ -1468,7 +1448,10 @@ export default async function ModelMonitorPage() {
                         ) : null}
                       </td>
                       <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.lane}</td>
-                      <td className="px-3 py-3 text-slate-300">{row.marketType}</td>
+                      <td className="px-3 py-3 text-slate-300">
+                        <div>{row.marketType}</div>
+                        {row.usageNote ? <div className="mt-1 max-w-[18rem] text-xs leading-5 text-slate-500">{row.usageNote}</div> : null}
+                      </td>
                       <td className="px-3 py-3 font-mono tabular-nums">{row.settled}</td>
                       <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.signals}</td>
                       <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.open}</td>
@@ -1546,23 +1529,23 @@ export default async function ModelMonitorPage() {
               </div>
             </details>
             <p className="mt-3 text-xs leading-6 text-slate-500">
-              Default board uses one money column only: <span className="font-semibold text-slate-300">Recorded P/L (GBP100/u)</span>. That is the actual settled P/L from stored unit sizes with 1u = GBP100. CLV is audited on strict ML, ATP ML research, and spread_v1 shadow. Old Spread Shadow is no longer mixed into active counts.
+              Default board uses one money column only: <span className="font-semibold text-slate-300">Recorded P/L (GBP100/u)</span>. That is the actual settled P/L from stored unit sizes with 1u = GBP100. CLV is audited on strict ML, ATP ML research, and spread_v1 shadow. Old Spread Shadow, manual Challenger ML, manual Clay-Fav HC, and the disabled Volume 200 spread lane are not mixed into active counts.
             </p>
             <div className="mt-4 grid gap-3 lg:grid-cols-3">
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
-                <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Archived Lanes</div>
-                <div className="mt-2">Old Spread Shadow is archived reference only.</div>
-                <div className="mt-1 text-slate-500">They do not appear in active settled-result cards.</div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Dormant / Manual Lanes</div>
+                <div className="mt-2">Spread Shadow, Challenger ML internal, Clay-Fav HC internal, and Clay Calibrated are audit/manual only.</div>
+                <div className="mt-1 text-slate-500">They stay browsable below, but do not pretend to be active scheduled models.</div>
               </div>
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
                 <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Volume 200 Open</div>
-                <div className="mt-2">ML {volumeMlOpenCount} | Spread {volumeSpreadOpenCount}</div>
-                <div className="mt-1 text-slate-500">No-match rows parked: {volumeNoMatchCount}</div>
+                <div className="mt-2">ML {volumeMlOpenCount}</div>
+                <div className="mt-1 text-slate-500">No-match rows parked: {volumeNoMatchCount}. Handicap work belongs to Spread v1 / HC research, not Volume 200.</div>
               </div>
               <div className="rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-sm text-slate-300">
-                <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Board Dates</div>
-                <div className="mt-2">Settled today: {resultsAsOfDate}</div>
-                <div className="mt-1">Settled yesterday: {priorResultsDate}</div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Grand Slam Coverage</div>
+                <div className="mt-2">Hard Slam ML is already inside Volume 200: 229 bets, +9.97% tier ROI in the 2022-2025 profile audit.</div>
+                <div className="mt-1 text-slate-500">RG / Wimbledon are not approved by current data: Clay GS -7.54%, Grass GS -13.75% in the same quick segment read.</div>
               </div>
             </div>
             <details className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/35 p-3">
@@ -1785,7 +1768,7 @@ export default async function ModelMonitorPage() {
             </div>
           </MonitorCard>
 
-          <MonitorCard title="Volume 200 Shadow" subtitle={`Clean sample first, ML + spread tracked together${volumeAsOf ? ` | as of ${volumeAsOf}` : ""}`}>
+          <MonitorCard title="Volume 200 Shadow" subtitle={`Clean sample first, ATP ML expansion including Hard Grand Slam ML; no handicap lane${volumeAsOf ? ` | as of ${volumeAsOf}` : ""}`}>
             <div className="grid gap-3">
               <Stat label="Clean ROI" value={formatPct(volumeAllRoi)} tone={metricTone(volumeAllRoi)} />
               <Stat label="Tracked Rows" value={`${volumeTrackedCount}`} />
@@ -1794,7 +1777,7 @@ export default async function ModelMonitorPage() {
             </div>
           </MonitorCard>
 
-          <MonitorCard title="Spread v1 Shadow" subtitle={`Strict-first ATP bo3 hard/clay spread research${spreadV1AsOf ? ` | as of ${spreadV1AsOf}` : ""}`}>
+          <MonitorCard title="Spread v1 Shadow" subtitle={`Strict-first ATP bo3 handicap research; scheduled hard-only right now${spreadV1AsOf ? ` | as of ${spreadV1AsOf}` : ""}`}>
             <div className="grid gap-3">
               <Stat label="Clean ROI" value={formatPct(spreadV1AllRoi)} tone={metricTone(spreadV1AllRoi)} />
               <Stat label="Signals" value={`${spreadV1TrackedCount}`} />
@@ -1899,15 +1882,9 @@ export default async function ModelMonitorPage() {
                     roiTone={metricTone(perfValue(volumeBase.mlAll, "roi_pct", parseFloatMaybe))}
                     wlv={perfWlv(volumeBase.mlAll)}
                   />
-                  <SplitBucket
-                    title="Spread"
-                    roi={formatPct(perfValue(volumeBase.handicapAll, "roi_pct", parseFloatMaybe))}
-                    roiTone={metricTone(perfValue(volumeBase.handicapAll, "roi_pct", parseFloatMaybe))}
-                    wlv={perfWlv(volumeBase.handicapAll)}
-                  />
                 </div>
                 <div className="mt-3 rounded-xl border border-slate-800/80 bg-slate-950/35 p-3 text-xs text-slate-400">
-                  Open queue: ML {volumeQueueMlCount} | Spread {volumeQueueSpreadCount}. Settled so far: ML {volumeSettledMlCount} | Spread {volumeSettledSpreadCount}. No-match settlement rows: {volumeNoMatchCount}. This slot now tracks ATP-only ML expansion and should trend toward zero spread rows after the profile change.
+                  Open queue: ML {volumeQueueMlCount}. Settled so far: ML {volumeSettledMlCount}. No-match settlement rows: {volumeNoMatchCount}. This profile is ATP-only ML expansion; handicap needs its own HC model rather than a disabled Volume 200 spread row.
                 </div>
               </div>
 
@@ -2033,7 +2010,7 @@ export default async function ModelMonitorPage() {
                 {spreadV1Queue.length === 0 ? (
                   <p className="text-sm leading-6 text-slate-400">
                     {spreadV1SignalsLiveCsv
-                      ? "No open spread_v1_shadow bets right now. When a strict-first ATP bo3 hard/clay handicap qualifies, it will appear here."
+                      ? "No open spread_v1_shadow bets right now. When a strict-first ATP bo3 hard handicap qualifies, it will appear here."
                       : "No spread_v1 shadow CSV on disk right now. That usually means the lane has not written a qualifying row yet."}
                   </p>
                 ) : (
