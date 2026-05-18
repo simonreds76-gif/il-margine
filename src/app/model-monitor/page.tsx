@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Fragment } from "react";
 import { promises as fs } from "fs";
 import { notFound } from "next/navigation";
 import { tryGetKnownProjectFilePath } from "@/lib/project-file-paths";
@@ -1458,91 +1457,94 @@ export default async function ModelMonitorPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {activeLaneScoreRows.map((row) => {
-                    const detailRows = laneDetailRows.get(`${row.policy}|${row.lane}`) ?? [];
-                    const latestRows = detailRows.slice(0, 5);
-                    return (
-                      <Fragment key={`${row.policy}-${row.lane}`}>
-                        <tr className="border-b border-slate-900/80 text-slate-200">
-                          <td className="px-3 py-3 font-semibold text-white">
-                            <div>{row.policy}</div>
-                            {row.statusBadge ? (
-                              <div className={`mt-1 inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] ${statusBadgeClass(row.statusBadge.tone)}`}>
-                                {row.statusBadge.label}
-                              </div>
-                            ) : null}
-                          </td>
-                          <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.lane}</td>
-                          <td className="px-3 py-3 text-slate-300">{row.marketType}</td>
-                          <td className="px-3 py-3 font-mono tabular-nums">{row.settled}</td>
-                          <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.signals}</td>
-                          <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.open}</td>
-                          <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.wlv}</td>
-                          <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.roi)}`}>{formatPct(row.roi, 2, false)}</td>
-                          <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.unitStakePounds)}`}>{formatPounds(row.unitStakePounds, 0, true)}</td>
-                          <td className={`px-3 py-3 font-mono tabular-nums ${metricTone((row.winRate ?? 0) - 50)}`}>{formatPct(row.winRate, 2, false)}</td>
-                          <td className={`px-3 py-3 font-mono tabular-nums ${row.clv != null ? metricTone(row.clv) : "text-slate-500"}`}>
-                            {formatClvCell(row.clv, row.clvLabel ?? "n/a")}
-                          </td>
-                        </tr>
-                        <tr className="border-b border-slate-900/80">
-                          <td colSpan={11} className="bg-slate-950/25 px-3 py-3">
-                            <details open={latestRows.length > 0} className="rounded-xl border border-slate-800/80 bg-slate-950/40 p-3">
-                              <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                                Latest {latestRows.length || 0} captured picks for {row.policy} {row.lane}
-                              </summary>
-                              {latestRows.length === 0 ? (
-                                <p className="mt-3 text-sm text-slate-500">No captured rows are present in this lane archive.</p>
-                              ) : (
-                                <div className="mt-3 grid gap-2 xl:grid-cols-5">
-                                  {latestRows.map((pick, idx) => {
-                                    const pnl = signalPnlUnits(pick);
-                                    return (
-                                      <div
-                                        key={`${row.policy}-${row.lane}-latest-${pick.date}-${pick.timeUtc}-${pick.player1}-${pick.player2}-${pick.side}-${idx}`}
-                                        className="rounded-xl border border-slate-800 bg-slate-900/70 p-3"
-                                      >
-                                        <div className="mb-2 flex items-start justify-between gap-2">
-                                          <div className="min-w-0">
-                                            <div className="font-semibold leading-snug text-slate-100">{pick.player1} vs {pick.player2}</div>
-                                            <div className="mt-1 font-mono text-[11px] text-slate-500">{pick.date} {pick.timeUtc || "00:00:00"} UTC</div>
-                                          </div>
-                                          <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${signalStatusClass(pick)}`}>
-                                            {signalStatusLabel(pick)}
-                                          </span>
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-2 text-xs">
-                                          <div>
-                                            <div className="uppercase tracking-[0.16em] text-slate-600">Pick</div>
-                                            <div className="mt-0.5 font-mono text-slate-200">{signalSelectionLabel(pick)}</div>
-                                          </div>
-                                          <div>
-                                            <div className="uppercase tracking-[0.16em] text-slate-600">Odds</div>
-                                            <div className="mt-0.5 font-mono text-slate-200">{getSelectedOdds(pick)?.toFixed(3) ?? "n/a"}</div>
-                                          </div>
-                                          <div>
-                                            <div className="uppercase tracking-[0.16em] text-slate-600">Edge</div>
-                                            <div className="mt-0.5 font-mono text-amber-200">{formatPct(pick.valuePct)}</div>
-                                          </div>
-                                          <div>
-                                            <div className="uppercase tracking-[0.16em] text-slate-600">P/L</div>
-                                            <div className={`mt-0.5 font-mono ${metricTone(pnl)}`}>{pnl == null ? "pending" : formatUnits(pnl, 2)}</div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              )}
-                            </details>
-                          </td>
-                        </tr>
-                      </Fragment>
-                    );
-                  })}
+                  {activeLaneScoreRows.map((row) => (
+                    <tr key={`${row.policy}-${row.lane}`} className="border-b border-slate-900/80 text-slate-200">
+                      <td className="px-3 py-3 font-semibold text-white">
+                        <div>{row.policy}</div>
+                        {row.statusBadge ? (
+                          <div className={`mt-1 inline-flex rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] ${statusBadgeClass(row.statusBadge.tone)}`}>
+                            {row.statusBadge.label}
+                          </div>
+                        ) : null}
+                      </td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.lane}</td>
+                      <td className="px-3 py-3 text-slate-300">{row.marketType}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums">{row.settled}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.signals}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-slate-300">{row.open}</td>
+                      <td className="px-3 py-3 font-mono tabular-nums text-slate-100">{row.wlv}</td>
+                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.roi)}`}>{formatPct(row.roi, 2, false)}</td>
+                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone(row.unitStakePounds)}`}>{formatPounds(row.unitStakePounds, 0, true)}</td>
+                      <td className={`px-3 py-3 font-mono tabular-nums ${metricTone((row.winRate ?? 0) - 50)}`}>{formatPct(row.winRate, 2, false)}</td>
+                      <td className={`px-3 py-3 font-mono tabular-nums ${row.clv != null ? metricTone(row.clv) : "text-slate-500"}`}>
+                        {formatClvCell(row.clv, row.clvLabel ?? "n/a")}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
+            <details className="mt-4 rounded-xl border border-slate-800/80 bg-slate-950/35 p-3">
+              <summary className="cursor-pointer text-sm font-medium text-slate-200">
+                Latest captured picks by lane
+              </summary>
+              <div className="mt-3 grid gap-3">
+                {activeLaneScoreRows.map((row) => {
+                  const detailRows = laneDetailRows.get(`${row.policy}|${row.lane}`) ?? [];
+                  const latestRows = detailRows.slice(0, 5);
+                  return (
+                    <details key={`latest-lane-${row.policy}-${row.lane}`} className="rounded-xl border border-slate-800/80 bg-slate-900/55 p-3">
+                      <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+                        {row.policy} {row.lane} - latest {latestRows.length || 0}
+                      </summary>
+                      {latestRows.length === 0 ? (
+                        <p className="mt-3 text-sm text-slate-500">No captured rows are present in this lane archive.</p>
+                      ) : (
+                        <div className="mt-3 grid gap-2 xl:grid-cols-5">
+                          {latestRows.map((pick, idx) => {
+                            const pnl = signalPnlUnits(pick);
+                            return (
+                              <div
+                                key={`${row.policy}-${row.lane}-latest-${pick.date}-${pick.timeUtc}-${pick.player1}-${pick.player2}-${pick.side}-${idx}`}
+                                className="rounded-xl border border-slate-800 bg-slate-950/60 p-3"
+                              >
+                                <div className="mb-2 flex items-start justify-between gap-2">
+                                  <div className="min-w-0">
+                                    <div className="font-semibold leading-snug text-slate-100">{pick.player1} vs {pick.player2}</div>
+                                    <div className="mt-1 font-mono text-[11px] text-slate-500">{pick.date} {pick.timeUtc || "00:00:00"} UTC</div>
+                                  </div>
+                                  <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${signalStatusClass(pick)}`}>
+                                    {signalStatusLabel(pick)}
+                                  </span>
+                                </div>
+                                <div className="grid grid-cols-2 gap-2 text-xs">
+                                  <div>
+                                    <div className="uppercase tracking-[0.16em] text-slate-600">Pick</div>
+                                    <div className="mt-0.5 font-mono text-slate-200">{signalSelectionLabel(pick)}</div>
+                                  </div>
+                                  <div>
+                                    <div className="uppercase tracking-[0.16em] text-slate-600">Odds</div>
+                                    <div className="mt-0.5 font-mono text-slate-200">{getSelectedOdds(pick)?.toFixed(3) ?? "n/a"}</div>
+                                  </div>
+                                  <div>
+                                    <div className="uppercase tracking-[0.16em] text-slate-600">Edge</div>
+                                    <div className="mt-0.5 font-mono text-amber-200">{formatPct(pick.valuePct)}</div>
+                                  </div>
+                                  <div>
+                                    <div className="uppercase tracking-[0.16em] text-slate-600">P/L</div>
+                                    <div className={`mt-0.5 font-mono ${metricTone(pnl)}`}>{pnl == null ? "pending" : formatUnits(pnl, 2)}</div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </details>
+                  );
+                })}
+              </div>
+            </details>
             <p className="mt-3 text-xs leading-6 text-slate-500">
               Default board uses one money column only: <span className="font-semibold text-slate-300">Recorded P/L (GBP100/u)</span>. That is the actual settled P/L from stored unit sizes with 1u = GBP100. CLV is audited on strict ML, ATP ML research, and spread_v1 shadow. Old Spread Shadow is no longer mixed into active counts.
             </p>
