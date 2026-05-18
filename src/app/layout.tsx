@@ -22,8 +22,12 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   icons: {
-    icon: [{ url: "/favicon.png", sizes: "32x32", type: "image/png" }],
-    apple: "/favicon.png",
+    icon: [
+      { url: "/favicon.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-128.png", sizes: "128x128", type: "image/png" },
+      { url: "/favicon-256.png", sizes: "256x256", type: "image/png" },
+    ],
+    apple: "/favicon-256.png",
   },
   title: {
     default: "Il Margine | Betting with Mathematical Edge",
@@ -42,9 +46,9 @@ export const metadata: Metadata = {
     description: "Professional betting methodology from a former odds compiler. Data driven betting tips on tennis markets and football player props. We identify value where bookmakers misprice markets and publish transparent results.",
     images: [
       {
-        url: `${BASE_URL}/banner.png`,
+        url: `${BASE_URL}/og.png`,
         width: 1200,
-        height: 400,
+        height: 630,
         alt: "Il Margine Smart Betting Tips and Analysis",
         type: "image/png",
       },
@@ -54,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Betting with Mathematical Edge | Tennis and Football Player Props",
     description: "Professional betting methodology from a former odds compiler. Data driven betting tips on tennis markets and football player props. We identify value where bookmakers misprice markets and publish transparent results.",
-    images: [`${BASE_URL}/banner.png`],
+    images: [`${BASE_URL}/og.png`],
   },
 };
 
@@ -67,6 +71,9 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/favicon.png" sizes="32x32" type="image/png" />
+        <link rel="icon" href="/favicon-128.png" sizes="128x128" type="image/png" />
+        <link rel="icon" href="/favicon-256.png" sizes="256x256" type="image/png" />
+        <link rel="apple-touch-icon" href="/favicon-256.png" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <meta name="msvalidate.01" content="FD4A9F8A7202C71E5465E6A51F6B8F62" />

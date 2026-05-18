@@ -8,7 +8,10 @@
 :root {
   --background: #0f1117;
   --foreground: #f1f5f9;
-  --accent: #22c55e;
+  --accent: #57d196;
+  --brand-green: #57d196;
+  --brand-glow: #34d399;
+  --brand-bg: #05080b;
 }
 
 @theme inline {
@@ -48,6 +51,6 @@ body {
 }
 
 ::selection {
-  background: #22c55e;
+  background: #57d196;
   color: #000;
 }
