@@ -1545,7 +1545,7 @@ export default async function ModelMonitorPage() {
                 return (
                   <details
                     key={group.key}
-                    open={group.key === "clay-fav-hc" || group.key === "volume-200-ml"}
+                    open={group.rows.length > 0}
                     className="rounded-2xl border border-slate-800 bg-slate-950/35 p-4"
                   >
                     <summary className="cursor-pointer list-none">
