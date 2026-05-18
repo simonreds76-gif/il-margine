@@ -2,10 +2,6 @@ import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import fs from "node:fs";
 import path from "node:path";
-import {
-  getKnownProjectFilePath,
-  resolveConfiguredProjectFilePath,
-} from "@/lib/project-file-paths";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -23,6 +19,20 @@ const PINNACLE_SNAPSHOT_SELECT_LEGACY =
 const PINNACLE_SNAPSHOT_ROW_CAP = 12000;
 const LOCAL_PINNACLE_HISTORY_DIR = path.join(process.cwd(), "data", "pinnacle-history");
 const LOCAL_ONCOURT_TODAY_CSV = path.join(process.cwd(), "data", "oncourt", "today_atp.csv");
+
+function projectFilePath(relativePath: string): string {
+  return path.join(process.cwd(), ...relativePath.split("/"));
+}
+
+function resolveConfiguredRouteFilePath(
+  configuredPath: string | undefined,
+  fallbackPath: string,
+): string {
+  const trimmed = configuredPath?.trim();
+  if (!trimmed) return projectFilePath(fallbackPath);
+  if (path.isAbsolute(trimmed)) return trimmed;
+  return projectFilePath(trimmed);
+}
 
 export interface FairOddsRow {
   id: number;
@@ -174,7 +184,7 @@ const STRICT_POLICY_PRODUCTION_MODE: StrictPolicyMode =
   (process.env.STRICT_POLICY_PRODUCTION_MODE ?? "base").trim().toLowerCase() === "overlay"
     ? "overlay"
     : "base";
-const STRICT_OVERLAY_POLICY_FILE = resolveConfiguredProjectFilePath(
+const STRICT_OVERLAY_POLICY_FILE = resolveConfiguredRouteFilePath(
   process.env.STRICT_OVERLAY_POLICY_FILE,
   "data/backtest/tournament-segment-roi.csv",
 );
@@ -189,7 +199,7 @@ const STRICT_OVERLAY_MISSING_MODE: OverlayMissingMode =
     : "skip";
 const STRICT_INJURY_OVERLAY_ENABLED = parseBoolEnv("STRICT_INJURY_OVERLAY_ENABLED", false);
 const STRICT_INJURY_LOOKBACK_DAYS = parseNumberEnv("STRICT_INJURY_LOOKBACK_DAYS", 14);
-const INJURED_PLAYERS_CSV = resolveConfiguredProjectFilePath(
+const INJURED_PLAYERS_CSV = resolveConfiguredRouteFilePath(
   process.env.INJURED_PLAYERS_CSV,
   "data/injured-players-tennisexplorer.csv",
 );
@@ -219,10 +229,10 @@ const TOURNAMENT_SPEED_VENUE_FULL_MATCHES = 150;
 const TOURNAMENT_SPEED_SHIFT_FULL_MATCHES = 90;
 const TOURNAMENT_SPEED_SHIFT_SIGNAL_SCALE = 2.0;
 const FAST_CLAY_SPEED_THRESHOLD = 0.1;
-const SPREAD_V1_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-spreadv1-live.csv");
-const CHALLENGER_ML_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-challenger-ml-live.csv");
-const CHALLENGER_ML_NEARMISS_CSV = getKnownProjectFilePath("data/backtest/challenger-ml-shadow-nearmiss.csv");
-const CLAY_BO3_SIGNAL_CSV = getKnownProjectFilePath("data/backtest/strict-signals-clay_bo3-live.csv");
+const SPREAD_V1_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-spreadv1-live.csv");
+const CHALLENGER_ML_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-challenger-ml-live.csv");
+const CHALLENGER_ML_NEARMISS_CSV = projectFilePath("data/backtest/challenger-ml-shadow-nearmiss.csv");
+const CLAY_BO3_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-clay_bo3-live.csv");
 const FAIR_ODDS_TENNIS_SPREADS_ENABLED = parseBoolEnv("FAIR_ODDS_TENNIS_SPREADS_ENABLED", false);
 const FAIR_ODDS_SPREAD_V1_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_V1_ENABLED", true);
 const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
