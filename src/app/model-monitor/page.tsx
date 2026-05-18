@@ -1151,7 +1151,7 @@ export default async function ModelMonitorPage() {
       policy: "Volume 200",
       lane: "ML",
       marketType: "Match winner",
-      usageNote: "ATP ML expansion, including Hard Grand Slam ML. No handicap output.",
+      usageNote: "ATP main-tour ML expansion: Hard M1000, Hard ATP500, Hard Grand Slam, Clay ATP500, Grass ATP500. No Clay/Grass Slam. No handicap output.",
       settled: perfValue(volumeBase.mlAll, "settled", parseIntMaybe) ?? volumeMlRecordedCohort.settled,
       signals: perfValue(volumeBase.mlAll, "signals", parseIntMaybe) ?? volumeMlRecordedCohort.signals,
       open: perfValue(volumeBase.mlAll, "unsettled", parseIntMaybe) ?? volumeMlOpenCount,
@@ -1256,31 +1256,43 @@ export default async function ModelMonitorPage() {
     {
       key: "volume-200-ml",
       title: "Volume 200 ML",
-      subtitle: "Captured ATP ML research rows. Pending rows should stay here until settlement.",
+      subtitle: "ATP main-tour ML expansion: Hard M1000, Hard ATP500, Hard Grand Slam, Clay ATP500, Grass ATP500. No Clay/Grass Slam and no handicap output.",
       accent: "amber",
+      statusBadge: { tone: "ok" as const, label: "active - atp ml" },
       rows: sortSignalRowsForBrowser(volumeSignalsArchive.filter((row) => row.betType !== "spread")),
     },
     {
       key: "spread-v1",
       title: "Spread v1 HC",
-      subtitle: "Strict-first ATP bo3 handicap research. Scheduled hard-only right now.",
+      subtitle: "Strict-first ATP bo3 handicap research. Scheduled hard-only right now; clay-fav slice is manual/dormant.",
       accent: "sky",
+      statusBadge: { tone: "warn" as const, label: "research - hard hc" },
       rows: sortSignalRowsForBrowser(spreadV1SignalsArchive),
+    },
+    {
+      key: "spread-shadow",
+      title: "Spread Shadow Legacy",
+      subtitle: "Legacy 20%+ spread shadow, including clay and non-policy rows. Audit history only.",
+      accent: "slate",
+      statusBadge: { tone: "muted" as const, label: "dormant - audit" },
+      rows: sortSignalRowsForBrowser(spreadShadowSignalsArchive),
     },
     ...(INTERNAL_RESEARCH_LANES
       ? [
           {
             key: "challenger-ml",
             title: "Challenger ML Internal",
-            subtitle: "Internal Challenger ML shadow rows and their settlement state.",
+            subtitle: "Manual Challenger ML internal ledger; refreshed only by promote-challenger-nearmiss-shadow.py.",
             accent: "cyan",
+            statusBadge: { tone: "muted" as const, label: "manual - internal" },
             rows: sortSignalRowsForBrowser(challengerSignalsArchive),
           },
           {
             key: "clay-fav-hc",
             title: "Clay-Fav HC Internal",
-            subtitle: "The exact Clay-Fav HC rows behind the scoreboard aggregate.",
+            subtitle: "Manual Clay-Fav HC ledger derived from spread_v1 archive; refreshed only by promote-clay-internal-shadow.py.",
             accent: "emerald",
+            statusBadge: { tone: "muted" as const, label: "manual - internal" },
             rows: sortSignalRowsForBrowser(clayFavSignalsArchive),
           },
         ]
@@ -1594,7 +1606,9 @@ export default async function ModelMonitorPage() {
                       ? "border-cyan-500/25 bg-cyan-500/8 text-cyan-200"
                       : group.accent === "sky"
                         ? "border-sky-500/25 bg-sky-500/8 text-sky-200"
-                        : "border-amber-500/25 bg-amber-500/8 text-amber-200";
+                        : group.accent === "slate"
+                          ? "border-slate-700/70 bg-slate-900/80 text-slate-300"
+                          : "border-amber-500/25 bg-amber-500/8 text-amber-200";
                 return (
                   <details
                     key={group.key}
@@ -1608,6 +1622,11 @@ export default async function ModelMonitorPage() {
                             <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${accentClass}`}>
                               {group.rows.length} rows
                             </span>
+                            {group.statusBadge ? (
+                              <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${statusBadgeClass(group.statusBadge.tone)}`}>
+                                {group.statusBadge.label}
+                              </span>
+                            ) : null}
                             <h3 className="text-base font-semibold text-slate-100">{group.title}</h3>
                           </div>
                           <p className="mt-1 text-sm leading-6 text-slate-400">{group.subtitle}</p>
