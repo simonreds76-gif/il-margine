@@ -1,6 +1,6 @@
 # Corners V0 CLV Monitor
 
-Generated: 2026-05-17T20:03:31Z
+Generated: 2026-05-18T11:40:16Z
 Picks input: `data/football-form/corners-v0-published-picks.csv`
 Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
@@ -8,9 +8,9 @@ Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
 - Picks: 43
 - Active published picks: 43
-- Settled: 35
-- Open/pending: 8
-- Settled PnL: -0.22u
+- Settled: 43
+- Open/pending: 0
+- Settled PnL: +2.05u
 - Picks with close: 43
 - Hard-guard blocked: 0
 - Average published-to-close CLV: +0.48%
@@ -22,24 +22,24 @@ Pinnacle input: `data/corners-ou/pinnacle-corners-odds.csv`
 
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Over | 27 | 19 | 8 | 10-9-0 | +2.03u | +10.68% | -0.18% (n=19) |
+| Over | 27 | 27 | 0 | 15-12-0 | +4.30u | +15.92% | -0.09% (n=27) |
 | Under | 16 | 16 | 0 | 7-9-0 | -2.25u | -14.07% | +1.46% (n=16) |
 
 ## Active League Breakdown
 
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| epl | 8 | 6 | 2 | 1-5-0 | -3.95u | -65.83% | +0.99% (n=6) |
-| ligue-1 | 19 | 14 | 5 | 8-6-0 | +3.24u | +23.13% | -0.25% (n=14) |
-| serie-a | 16 | 15 | 1 | 8-7-0 | +0.49u | +3.27% | +1.16% (n=15) |
+| epl | 8 | 8 | 0 | 2-6-0 | -3.96u | -49.50% | +0.74% (n=8) |
+| ligue-1 | 19 | 19 | 0 | 12-7-0 | +6.52u | +34.30% | -0.16% (n=19) |
+| serie-a | 16 | 16 | 0 | 8-8-0 | -0.51u | -3.19% | +1.12% (n=16) |
 
 ## Active Side x League Breakdown
 
 | Segment | Active | Settled | Pending | W-L-P | PnL | ROI | Avg CLV |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Over / epl | 6 | 4 | 2 | 1-3-0 | -1.95u | -48.75% | +0.00% (n=4) |
-| Over / ligue-1 | 17 | 12 | 5 | 8-4-0 | +5.24u | +43.65% | -0.29% (n=12) |
-| Over / serie-a | 4 | 3 | 1 | 1-2-0 | -1.26u | -41.97% | +0.00% (n=3) |
+| Over / epl | 6 | 6 | 0 | 2-4-0 | -1.96u | -32.67% | +0.00% (n=6) |
+| Over / ligue-1 | 17 | 17 | 0 | 12-5-0 | +8.52u | +50.10% | -0.18% (n=17) |
+| Over / serie-a | 4 | 4 | 0 | 1-3-0 | -2.26u | -56.47% | +0.12% (n=4) |
 | Under / epl | 2 | 2 | 0 | 0-2-0 | -2.00u | -100.00% | +2.97% (n=2) |
 | Under / ligue-1 | 2 | 2 | 0 | 0-2-0 | -2.00u | -100.00% | +0.00% (n=2) |
 | Under / serie-a | 12 | 12 | 0 | 7-5-0 | +1.75u | +14.57% | +1.45% (n=12) |
