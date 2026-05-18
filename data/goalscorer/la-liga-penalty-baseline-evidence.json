@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-17T01:47:13Z",
+  "generated_at": "2026-05-18T01:43:03Z",
   "league": "la-liga",
-  "row_count": 4,
+  "row_count": 6,
   "rows": [
     {
       "team": "Alaves",
@@ -38,6 +38,23 @@
       "last_event_date": "2026-05-12"
     },
     {
+      "team": "Levante",
+      "team_key": "levante",
+      "player_name": "Adrián De la Fuente",
+      "player_key": "adri n de la fuente",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
+      "observed_share": 1.0,
+      "observed_sample": 2.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live",
+        "settled_logs"
+      ],
+      "event_count": 2,
+      "last_event_date": "2026-05-17"
+    },
+    {
       "team": "Rayo Vallecano",
       "team_key": "rayo vallecano",
       "player_name": "Randy Nteka",
@@ -54,19 +71,36 @@
       "last_event_date": "2026-05-14"
     },
     {
-      "team": "Real Sociedad",
-      "team_key": "real sociedad",
-      "player_name": "Mikel Oyarzabal",
-      "player_key": "mikel oyarzabal",
+      "team": "Real Betis",
+      "team_key": "real betis",
+      "player_name": "Isco",
+      "player_key": "isco",
       "observed_player_penalties": 2,
       "observed_team_penalties": 2,
       "observed_share": 1.0,
       "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
+        "fotmob_live",
         "settled_logs"
       ],
       "event_count": 2,
+      "last_event_date": "2026-05-17"
+    },
+    {
+      "team": "Real Sociedad",
+      "team_key": "real sociedad",
+      "player_name": "Mikel Oyarzabal",
+      "player_key": "mikel oyarzabal",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "settled_logs"
+      ],
+      "event_count": 1,
       "last_event_date": "2026-05-09"
     }
   ]

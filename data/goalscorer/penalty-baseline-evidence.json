@@ -1,31 +1,14 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-17T01:47:08Z",
+  "generated_at": "2026-05-18T01:42:58Z",
   "league": "serie-a",
-  "row_count": 4,
+  "row_count": 3,
   "rows": [
     {
       "team": "Bologna",
       "team_key": "bologna",
       "player_name": "Riccardo Orsolini",
       "player_key": "riccardo orsolini",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 2,
-      "observed_share": 1.0,
-      "observed_sample": 2.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "fotmob_live",
-        "settled_logs"
-      ],
-      "event_count": 2,
-      "last_event_date": "2026-05-11"
-    },
-    {
-      "team": "AC Milan",
-      "team_key": "milan",
-      "player_name": "Christopher Nkunku",
-      "player_key": "christopher nkunku",
       "observed_player_penalties": 1,
       "observed_team_penalties": 1,
       "observed_share": 1.0,
@@ -35,7 +18,24 @@
         "settled_logs"
       ],
       "event_count": 1,
-      "last_event_date": "2026-05-10"
+      "last_event_date": "2026-05-11"
+    },
+    {
+      "team": "Milan",
+      "team_key": "milan",
+      "player_name": "Christopher Nkunku",
+      "player_key": "christopher nkunku",
+      "observed_player_penalties": 3,
+      "observed_team_penalties": 3,
+      "observed_share": 1.0,
+      "observed_sample": 3.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live",
+        "settled_logs"
+      ],
+      "event_count": 3,
+      "last_event_date": "2026-05-17"
     },
     {
       "team": "Roma",
@@ -52,22 +52,6 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-05-10"
-    },
-    {
-      "team": "Torino",
-      "team_key": "torino",
-      "player_name": "Nikola Vlasic",
-      "player_key": "nikola vlasic",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "settled_logs"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-04-26"
     }
   ]
 }

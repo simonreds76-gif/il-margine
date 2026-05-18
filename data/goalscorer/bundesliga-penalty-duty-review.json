@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-17T01:47:15Z",
+  "generated_at": "2026-05-18T01:43:05Z",
   "row_count": 5,
   "rows": [
     {
@@ -18,16 +18,16 @@
       "primary_pre_match": "Christian Eriksen",
       "secondary_pre_match": "Mohammed Amoura",
       "tertiary_pre_match": "Lovro Majer",
-      "primary_lineup_status": "confirmed_starter",
-      "secondary_lineup_status": "confirmed_bench",
-      "tertiary_lineup_status": "confirmed_bench",
-      "active_taker_pre_match": "Christian Eriksen",
-      "active_slot_pre_match": "primary",
+      "primary_lineup_status": "unknown",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Christian Eriksen took 1 penalty attempt for Wolfsburg vs St. Pauli. Primary pre-match: Christian Eriksen (confirmed_starter). Secondary pre-match: Mohammed Amoura (confirmed_bench). Pre-match active slot was primary -> Christian Eriksen. No hierarchy change implied from this event.",
-      "context_generated_at": "2026-05-16T19:22:59Z",
+      "review_type": "needs_manual_review",
+      "review_priority": "medium",
+      "editorial_note": "Christian Eriksen took 1 penalty attempt for Wolfsburg vs St. Pauli. Primary pre-match: Christian Eriksen (unknown). Secondary pre-match: Mohammed Amoura (unknown). Needs manual editorial review.",
+      "context_generated_at": "2026-05-17T19:19:10Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -45,16 +45,16 @@
       "primary_pre_match": "Jonathan Burkardt",
       "secondary_pre_match": "Can Uzun",
       "tertiary_pre_match": "Michy Batshuayi",
-      "primary_lineup_status": "confirmed_bench",
-      "secondary_lineup_status": "confirmed_starter",
-      "tertiary_lineup_status": "not_in_squad",
-      "active_taker_pre_match": "Can Uzun",
-      "active_slot_pre_match": "secondary",
+      "primary_lineup_status": "unknown",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
-      "review_type": "primary_reclaimed_from_bench",
-      "review_priority": "low",
-      "editorial_note": "Jonathan Burkardt took 2 penalty attempts for Eintracht Frankfurt vs VfB Stuttgart. Primary pre-match: Jonathan Burkardt (confirmed_bench). Secondary pre-match: Can Uzun (confirmed_starter). Pre-match active slot was secondary -> Can Uzun. Low-priority note: the benched primary later reclaimed the duty after coming on, so the hierarchy likely still stands.",
-      "context_generated_at": "2026-05-16T19:22:59Z",
+      "review_type": "needs_manual_review",
+      "review_priority": "medium",
+      "editorial_note": "Jonathan Burkardt took 2 penalty attempts for Eintracht Frankfurt vs VfB Stuttgart. Primary pre-match: Jonathan Burkardt (unknown). Secondary pre-match: Can Uzun (unknown). Needs manual editorial review.",
+      "context_generated_at": "2026-05-17T19:19:10Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -72,16 +72,16 @@
       "primary_pre_match": "Patrik Schick",
       "secondary_pre_match": "Álex Grimaldo",
       "tertiary_pre_match": "Victor Boniface",
-      "primary_lineup_status": "confirmed_starter",
-      "secondary_lineup_status": "confirmed_starter",
+      "primary_lineup_status": "unknown",
+      "secondary_lineup_status": "unknown",
       "tertiary_lineup_status": "unknown",
-      "active_taker_pre_match": "Patrik Schick",
-      "active_slot_pre_match": "primary",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
-      "review_type": "primary_held",
-      "review_priority": "low",
-      "editorial_note": "Patrik Schick took 1 penalty attempt for Bayer Leverkusen vs Hamburger SV. Primary pre-match: Patrik Schick (confirmed_starter). Secondary pre-match: Álex Grimaldo (confirmed_starter). Pre-match active slot was primary -> Patrik Schick. No hierarchy change implied from this event.",
-      "context_generated_at": "2026-05-16T19:22:59Z",
+      "review_type": "needs_manual_review",
+      "review_priority": "medium",
+      "editorial_note": "Patrik Schick took 1 penalty attempt for Bayer Leverkusen vs Hamburger SV. Primary pre-match: Patrik Schick (unknown). Secondary pre-match: Álex Grimaldo (unknown). Needs manual editorial review.",
+      "context_generated_at": "2026-05-17T19:19:10Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -108,7 +108,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Maximilian Mittelstädt took 1 penalty attempt for VfB Stuttgart vs Bayer Leverkusen. Primary pre-match: Maximilian Mittelstädt (unknown). Secondary pre-match: Ermedin Demirovic (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-16T19:22:59Z",
+      "context_generated_at": "2026-05-17T19:19:10Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     },
     {
@@ -135,7 +135,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Harry Kane took 1 penalty attempt for Bayern Munich vs Wolfsburg. Primary pre-match: Harry Kane (unknown). Secondary pre-match: Michael Olise (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-16T19:22:59Z",
+      "context_generated_at": "2026-05-17T19:19:10Z",
       "context_source_path": "data/goalscorer/bundesliga/penalty-duty-context.json"
     }
   ]

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-17T01:47:17Z",
+  "generated_at": "2026-05-18T01:43:06Z",
   "league": "ligue-1",
-  "row_count": 2,
+  "row_count": 3,
   "rows": [
     {
       "team": "Angers",
@@ -35,6 +35,22 @@
       ],
       "event_count": 1,
       "last_event_date": "2026-05-03"
+    },
+    {
+      "team": "Lorient",
+      "team_key": "lorient",
+      "player_name": "Bamba Dieng",
+      "player_key": "bamba dieng",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
+      "observed_share": 1.0,
+      "observed_sample": 1.0,
+      "evidence_source": "review_events",
+      "review_sources": [
+        "fotmob_live"
+      ],
+      "event_count": 1,
+      "last_event_date": "2026-05-17"
     }
   ]
 }

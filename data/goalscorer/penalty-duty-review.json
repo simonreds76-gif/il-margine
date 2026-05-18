@@ -1,8 +1,35 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-17T01:47:08Z",
+  "generated_at": "2026-05-18T01:42:58Z",
   "row_count": 4,
   "rows": [
+    {
+      "date": "2026-05-17",
+      "league": "serie-a",
+      "review_source": "settled_logs",
+      "match": "Genoa CFC vs AC Milan",
+      "team": "AC Milan",
+      "opponent": "Genoa",
+      "actual_taker": "Christopher Nkunku",
+      "actual_role_pre_match": "tertiary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "primary_pre_match": "Christian Pulisic",
+      "secondary_pre_match": "Rafael Leão",
+      "tertiary_pre_match": "Christopher Nkunku",
+      "primary_lineup_status": "confirmed_bench",
+      "secondary_lineup_status": "not_in_squad",
+      "tertiary_lineup_status": "confirmed_starter",
+      "active_taker_pre_match": "Christopher Nkunku",
+      "active_slot_pre_match": "tertiary",
+      "team_lineup_status": "unknown",
+      "review_type": "expected_backup_shift",
+      "review_priority": "medium",
+      "editorial_note": "Christopher Nkunku took 1 penalty attempt for AC Milan vs Genoa. Primary pre-match: Christian Pulisic (confirmed_bench). Secondary pre-match: Rafael Leão (not_in_squad). Pre-match active slot was tertiary -> Christopher Nkunku. Looks like the expected backup took over because the primary was unavailable or inactive.",
+      "context_generated_at": "2026-05-17T19:17:13Z",
+      "context_source_path": "data/goalscorer/penalty-duty-context.json"
+    },
     {
       "date": "2026-05-11",
       "league": "serie-a",
@@ -27,7 +54,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Riccardo Orsolini took 1 penalty attempt for Bologna vs Napoli. Primary pre-match: Riccardo Orsolini (unknown). Secondary pre-match: Federico Bernardeschi (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-16T19:20:22Z",
+      "context_generated_at": "2026-05-17T19:17:13Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     },
     {
@@ -54,7 +81,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Donyell Malen took 1 penalty attempt for Roma vs Parma Calcio 1913. Primary pre-match: Paulo Dybala (unknown). Secondary pre-match: Donyell Malen (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-05-16T19:20:22Z",
+      "context_generated_at": "2026-05-17T19:17:13Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     },
     {
@@ -81,34 +108,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Christopher Nkunku took 1 penalty attempt for AC Milan vs Atalanta. Primary pre-match: Christian Pulisic (unknown). Secondary pre-match: Rafael Leão (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-05-16T19:20:22Z",
-      "context_source_path": "data/goalscorer/penalty-duty-context.json"
-    },
-    {
-      "date": "2026-04-26",
-      "league": "serie-a",
-      "review_source": "settled_logs",
-      "match": "Torino FC vs Inter Milano",
-      "team": "Torino",
-      "opponent": "Inter",
-      "actual_taker": "Nikola Vlasic",
-      "actual_role_pre_match": "primary",
-      "penalties_attempted": 1,
-      "penalties_scored": 1,
-      "distinct_takers_in_match": 1,
-      "primary_pre_match": "Nikola Vlasic",
-      "secondary_pre_match": "Duván Zapata",
-      "tertiary_pre_match": "Giovanni Simeone",
-      "primary_lineup_status": "unknown",
-      "secondary_lineup_status": "unknown",
-      "tertiary_lineup_status": "unknown",
-      "active_taker_pre_match": "",
-      "active_slot_pre_match": "",
-      "team_lineup_status": "unknown",
-      "review_type": "needs_manual_review",
-      "review_priority": "medium",
-      "editorial_note": "Nikola Vlasic took 1 penalty attempt for Torino vs Inter. Primary pre-match: Nikola Vlasic (unknown). Secondary pre-match: Duván Zapata (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-16T19:20:22Z",
+      "context_generated_at": "2026-05-17T19:17:13Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     }
   ]
