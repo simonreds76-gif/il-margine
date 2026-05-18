@@ -8,6 +8,7 @@ import html
 import json
 import os
 import re
+import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -1472,9 +1473,37 @@ def upload_snapshot(snapshot_key: str, payload: dict[str, Any]) -> None:
         raise SystemExit("Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to upload the monitor snapshot.")
     row = {"snapshot_key": snapshot_key, "updated_at": payload["generated_at"], "payload": payload}
     headers = {"apikey": key, "Authorization": f"Bearer {key}", "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates,return=representation"}
-    response = requests.post(f"{base}/rest/v1/{SNAPSHOT_TABLE}?on_conflict=snapshot_key", headers=headers, json=[row], timeout=30)
-    if not response.ok:
-        raise SystemExit(f"Supabase upload failed: {response.status_code} {response.text[:400]}")
+    url = f"{base}/rest/v1/{SNAPSHOT_TABLE}?on_conflict=snapshot_key"
+    attempts = max(1, int(os.environ.get("SUPABASE_SNAPSHOT_UPLOAD_ATTEMPTS", "3") or "3"))
+    read_timeout = max(10, int(os.environ.get("SUPABASE_SNAPSHOT_UPLOAD_TIMEOUT", "45") or "45"))
+    required = (os.environ.get("SUPABASE_SNAPSHOT_UPLOAD_REQUIRED", "0") or "0").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+    }
+
+    last_error = ""
+    for attempt in range(1, attempts + 1):
+        try:
+            response = requests.post(url, headers=headers, json=[row], timeout=(10, read_timeout))
+        except requests.exceptions.RequestException as exc:
+            last_error = f"{type(exc).__name__}: {exc}"
+        else:
+            if response.ok:
+                return
+            if 400 <= response.status_code < 500 and response.status_code != 429:
+                raise SystemExit(f"Supabase upload failed: {response.status_code} {response.text[:400]}")
+            last_error = f"{response.status_code} {response.text[:400]}"
+
+        if attempt < attempts:
+            sleep_seconds = min(2 ** attempt, 10)
+            print(f"Supabase upload attempt {attempt}/{attempts} failed: {last_error}; retrying in {sleep_seconds}s")
+            time.sleep(sleep_seconds)
+
+    message = f"Supabase upload failed after {attempts} attempt(s): {last_error}"
+    if required:
+        raise SystemExit(message)
+    print(f"WARNING: {message}; continuing because SUPABASE_SNAPSHOT_UPLOAD_REQUIRED is not enabled")
 
 
 def main() -> None:
