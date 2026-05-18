@@ -1,5 +1,5 @@
 Assist Value Model Report
-generated_at_utc: 2026-05-17T23:34:27Z
+generated_at_utc: 2026-05-18T11:14:13Z
 
 Status
 model_status: ENABLED_SHADOW_V0
@@ -9,7 +9,7 @@ settlement_status: NOT_BACKTESTED
 Counts
 priced_rows: 1520
 shadow_signals: 5
-watch_rows: 6
+watch_rows: 7
 shadow_signals_by_league: la-liga=2, ligue-1=2, serie-a=1
 
 Model
@@ -18,10 +18,10 @@ lambda = blended player xA/assist rate per90 * expected_minutes * team_attack_sc
 Market probability is 1 / Bet365 decimal odds; no vig adjustment because only one side is available.
 
 Top shadow signals
- - Gauthier Hein | OGC Nice vs FC Metz | fair 4.455 vs market 7.000 | edge 8.16pp | conf high | setpiece 93.75
- - Jon Ander Olasagasti | Levante UD vs RCD Mallorca | fair 4.496 vs market 7.000 | edge 7.95pp | conf medium | setpiece 55.26
- - Adrien Thomasson | Olympique Lyon vs Racing Club De Lens | fair 3.380 vs market 4.500 | edge 7.36pp | conf high | setpiece 32.14
- - Luis Milla | Elche CF vs Getafe CF | fair 4.333 vs market 6.000 | edge 6.41pp | conf high | setpiece 96.77
+ - Jon Ander Olasagasti | Levante UD vs RCD Mallorca | fair 4.338 vs market 7.000 | edge 8.77pp | conf medium | setpiece 56.1
+ - Gauthier Hein | OGC Nice vs FC Metz | fair 4.646 vs market 7.000 | edge 7.24pp | conf high | setpiece 94.12
+ - Adrien Thomasson | Olympique Lyon vs Racing Club De Lens | fair 3.453 vs market 4.500 | edge 6.74pp | conf high | setpiece 24.32
+ - Luis Milla | Elche CF vs Getafe CF | fair 4.333 vs market 6.000 | edge 6.41pp | conf high | setpiece 96.88
  - Federico Dimarco | Inter Milano vs Hellas Verona | fair 2.890 vs market 3.500 | edge 6.04pp | conf high | setpiece 30.0
 
 Guardrail
