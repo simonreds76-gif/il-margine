@@ -1,6 +1,6 @@
 type BookmakerLogoProps = {
   name: string;
-  size?: "sm" | "md";
+  size?: "xs" | "sm" | "md";
   className?: string;
 };
 
@@ -31,20 +31,27 @@ export function BookmakerLogo({ name, size = "sm", className = "" }: BookmakerLo
   if (!src) return null;
 
   const isBet365 = /bet\s*365/i.test(name);
-  const sizeClass = size === "md" ? "h-8 min-w-16 px-3" : "h-6 min-w-12 px-2.5";
+  const sizeClass =
+    size === "md"
+      ? "h-8 min-w-16 px-3"
+      : size === "xs"
+        ? "h-5 min-w-0 max-w-[74px] px-1.5"
+        : "h-6 min-w-12 px-2.5";
+  const shrinkClass = size === "xs" ? "shrink min-w-0" : "shrink-0";
+  const imageClass = size === "xs" ? "max-h-[68%] max-w-[58px]" : "max-h-[70%] max-w-[72px]";
   const brandClass = isBet365
     ? "border-emerald-400/25 bg-[#071b12] shadow-[0_0_18px_rgba(16,185,129,0.12)]"
     : "border-slate-700/60 bg-slate-950/70";
 
   return (
     <span
-      className={`inline-flex shrink-0 items-center justify-center rounded-md border ${brandClass} ${sizeClass} ${className}`}
+      className={`inline-flex ${shrinkClass} items-center justify-center overflow-hidden rounded-md border ${brandClass} ${sizeClass} ${className}`}
       title={name}
     >
       <img
         src={src}
         alt={`${name} logo`}
-        className="max-h-[70%] max-w-[72px] object-contain"
+        className={`${imageClass} object-contain`}
         loading="lazy"
       />
     </span>

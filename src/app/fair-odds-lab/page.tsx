@@ -748,11 +748,11 @@ function HitTicket({ highlight }: { highlight: LabHighlight }) {
             <div className="text-[9px] font-black uppercase tracking-[0.14em] text-slate-500">
               Reference
             </div>
-            <div className="mt-1 flex flex-wrap items-center gap-2">
+            <div className="mt-1 flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-2">
               <span className="font-mono text-2xl font-black text-slate-100">
                 {formatOdds(highlight.bestOdds)}
               </span>
-              <BookmakerLogo name={highlight.bestBookmaker} />
+              <BookmakerLogo name={highlight.bestBookmaker} size="xs" className="sm:h-6 sm:min-w-12 sm:max-w-none sm:px-2.5" />
             </div>
           </div>
           <div className="border-l border-amber-300/20 bg-amber-300/[0.065] p-3">
