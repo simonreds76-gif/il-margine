@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T17:59:51.899334Z",
+  "generated_at": "2026-05-19T18:59:52.065432Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -31,8 +31,111 @@
     "post_kickoff_visibility_minutes": 150
   },
   "fixtures_evaluated": 3,
-  "signals_qualifying": 0,
-  "leagues_covered": [],
-  "featured_signal_id": null,
-  "signals": []
+  "signals_qualifying": 1,
+  "leagues_covered": [
+    "epl"
+  ],
+  "featured_signal_id": "20260519-richarlison-fd4bfe3522",
+  "signals": [
+    {
+      "id": "20260519-richarlison-fd4bfe3522",
+      "match": {
+        "home_team": "Chelsea FC",
+        "away_team": "Tottenham Hotspur",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-19T19:15:00Z",
+        "kickoff_display": "Tue 19 May 20:15 UK",
+        "fotmob_match_id": "4813739",
+        "fotmob_page_url": "/matches/chelsea-vs-tottenham-hotspur/2eggkj#4813739",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Richarlison",
+        "team": "Tottenham",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/tottenham.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#1e3a8a",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 37.6,
+        "fair_odds": 2.66
+      },
+      "market_data": {
+        "best_odds": 3.2,
+        "best_book": "Bet365",
+        "implied_chance_pct": 31.2
+      },
+      "edge": {
+        "price_gap_pp": 6.4,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 97
+        },
+        "share_of_team_chances_pct": 35,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 19
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-11",
+          "xg_for_avg": 1.25,
+          "xg_against_avg": 1.23,
+          "xgd_per90": 0.02,
+          "shots_for_avg": 12.2,
+          "shots_against_avg": 10.0,
+          "sot_for_avg": 4.6,
+          "sot_against_avg": 2.4,
+          "corners_for_avg": 7.4,
+          "corners_against_avg": 3.8
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 80
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-09",
+          "xg_for_avg": 1.11,
+          "xg_against_avg": 1.66,
+          "xgd_per90": -0.55,
+          "shots_for_avg": 13.2,
+          "shots_against_avg": 10.2,
+          "sot_for_avg": 2.8,
+          "sot_against_avg": 5.0,
+          "corners_for_avg": 5.6,
+          "corners_against_avg": 5.0
+        },
+        "fixture_boost_pct": -5,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup"
+      ],
+      "risk_flags": []
+    }
+  ]
 }
