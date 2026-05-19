@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
@@ -38,14 +39,14 @@ export default function PlayerProps({
   const [showAllRecent, setShowAllRecent] = useState(false);
 
   const leagueConfig = [
-    { id: "all", name: "All Leagues", color: "emerald" },
-    { id: "pl", name: "Premier League", color: "purple" },
-    { id: "seriea", name: "Serie A", color: "blue" },
-    { id: "laliga", name: "La Liga", color: "red" },
-    { id: "bundesliga", name: "Bundesliga", color: "rose" },
-    { id: "ligue1", name: "Ligue 1", color: "cyan" },
-    { id: "ucl", name: "Champions League", color: "amber" },
-    { id: "other", name: "Other", color: "slate" },
+    { id: "all", name: "All Leagues", color: "emerald", logoPath: "/icons/markets/other-football.svg" },
+    { id: "pl", name: "Premier League", color: "purple", logoPath: "/league-logos/epl.png" },
+    { id: "seriea", name: "Serie A", color: "blue", logoPath: "/league-logos/serie-a.png" },
+    { id: "laliga", name: "La Liga", color: "red", logoPath: "/league-logos/la-liga.png" },
+    { id: "bundesliga", name: "Bundesliga", color: "rose", logoPath: "/league-logos/bundesliga.png" },
+    { id: "ligue1", name: "Ligue 1", color: "cyan", logoPath: "/league-logos/ligue-1.png" },
+    { id: "ucl", name: "Champions League", color: "amber", logoPath: "/icons/markets/ucl-official.svg" },
+    { id: "other", name: "Other", color: "slate", logoPath: "/icons/markets/other-football.svg" },
   ];
 
   const colorClasses: Record<string, { border: string; text: string; bg: string; bar: string }> = {
@@ -240,22 +241,34 @@ export default function PlayerProps({
           <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
             {leagueConfig.map((league) => {
               const leagueStats = getStatsForLeague(league.id);
+              const isActive = activeLeague === league.id;
               return (
                 <button
                   key={league.id}
                   onClick={() => setActiveLeague(league.id)}
-                  className={`px-4 py-3 rounded-lg border transition-all ${
-                    activeLeague === league.id
+                  className={`flex min-w-[152px] items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all sm:min-w-[174px] ${
+                    isActive
                       ? `bg-slate-900/80 ${colorClasses[league.color].border} ${colorClasses[league.color].text}`
                       : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
                   }`}
                 >
-                  <span className="font-medium">{league.name}</span>
-                  <div className="flex gap-3 mt-1 text-xs">
-                    <span>{leagueStats.total_bets} bets</span>
-                    <span className={`${colorClasses[league.color].text} font-mono`}>
-                      {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}%
-                    </span>
+                  <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-slate-950/70 p-1.5 ${isActive ? "shadow-[0_0_18px_rgba(87,209,150,0.16)]" : ""}`}>
+                    <Image
+                      src={league.logoPath}
+                      alt=""
+                      width={36}
+                      height={36}
+                      className="h-full w-full object-contain"
+                    />
+                  </span>
+                  <div className="min-w-0">
+                    <span className="block truncate font-medium">{league.name}</span>
+                    <div className="mt-1 flex gap-3 text-xs">
+                      <span>{leagueStats.total_bets} bets</span>
+                      <span className={`${colorClasses[league.color].text} font-mono`}>
+                        {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}%
+                      </span>
+                    </div>
                   </div>
                 </button>
               );
@@ -293,6 +306,10 @@ export default function PlayerProps({
               </div>
             </div>
           </div>
+          <p className="mt-4 max-w-3xl text-xs leading-relaxed text-slate-500">
+            Record cards use the full tracked category record. The recent selections table below is only a browsing
+            sample from the latest 50 settled player-prop picks, then filtered by the league tab you choose.
+          </p>
         </div>
       </section>
 
@@ -434,6 +451,10 @@ export default function PlayerProps({
           <div className="mb-6">
             <span className="text-xs font-mono text-emerald-400 mb-2 block">RESULTS</span>
             <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100">Recent Selections</h2>
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-500">
+              This is a recent-results window, not the source of truth for the ROI card above. Older bets still count
+              in the category record even when they have rolled out of the latest-50 settled feed.
+            </p>
           </div>
 
           {filteredRecent.length > 0 ? (
@@ -488,7 +509,7 @@ export default function PlayerProps({
               {/* Note when showing max 50 results */}
               {showAllRecent && filteredRecent.length === 50 && (
                 <div className="border-t border-slate-800 px-4 py-2 text-center">
-                  <p className="text-xs text-slate-500">Showing the 50 most recent settled bets.</p>
+                  <p className="text-xs text-slate-500">Showing the 50 most recent settled player-prop bets; older settled bets remain in the record cards.</p>
                 </div>
               )}
 
