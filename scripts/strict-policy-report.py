@@ -140,6 +140,7 @@ DEFAULT_STRICT_INJURY_LOOKBACK_DAYS = 14
 
 STRICT_UNIT_GBP = float(os.environ.get("STRICT_UNIT_GBP", "100"))
 MANDATORY_APPEND_FIELDS = ["stake_units", "stake_gbp", "stake_model", "signal_profile"]
+ACTIVE_LIVE_SIGNAL_STATUSES = {"", "pending", "open", "unsettled"}
 
 # Legacy volume profile kept for comparison.
 VOLUME_275_RULES: list[dict[str, Any]] = [
@@ -1138,19 +1139,30 @@ def write_live_snapshot(
     # a settled row. Otherwise odds movement can make a real signal disappear.
     existing_fields: list[str] = []
     existing_rows_by_lane: dict[tuple[str, ...], dict[str, str]] = {}
-    if path.exists():
-        with path.open("r", encoding="utf-8-sig", newline="") as f:
+
+    def absorb_existing_rows(source_path: Path) -> None:
+        nonlocal existing_fields
+        if not source_path.exists():
+            return
+        with source_path.open("r", encoding="utf-8-sig", newline="") as f:
             rd = csv.DictReader(f)
-            existing_fields = _clean_fieldnames(list(rd.fieldnames or []))
+            for field in _clean_fieldnames(list(rd.fieldnames or [])):
+                if field not in existing_fields:
+                    existing_fields.append(field)
             for row in rd:
                 normalized_existing = {k: ("" if v is None else str(v)) for k, v in dict(row).items()}
                 status = (normalized_existing.get("settlement_status") or "pending").strip().lower()
-                if status == "settled":
+                if status not in ACTIVE_LIVE_SIGNAL_STATUSES:
                     continue
                 if not normalized_existing.get("settlement_status"):
                     normalized_existing["settlement_status"] = "pending"
                 lane_key = tuple(_append_key_value(k, normalized_existing.get(k)) for k in lane_key_fields)
                 existing_rows_by_lane.setdefault(lane_key, normalized_existing)
+
+    archive_path = derive_signal_csv_paths(path).archive
+    if archive_path != path:
+        absorb_existing_rows(archive_path)
+    absorb_existing_rows(path)
 
     incoming_rows_by_lane: dict[tuple[str, ...], dict[str, str]] = {}
     for row in rows:

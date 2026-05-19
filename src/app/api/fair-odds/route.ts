@@ -13,7 +13,7 @@ const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 /** Pinnacle snapshot: only ATP + Challenger singles; cap must exceed busy days (many events) or rows past the limit never load (e.g. Naples Challenger). */
 const PINNACLE_SNAPSHOT_SELECT =
-  "player1_name, player2_name, odds1, odds2, ou_line, ou_over, ou_under, league, captured_at, match_date, kickoff_iso";
+  "player1_name, player2_name, odds1, odds2, ou_line, ou_over, ou_under, league, league_name, captured_at, match_date, kickoff_iso";
 const PINNACLE_SNAPSHOT_SELECT_LEGACY =
   "player1_name, player2_name, odds1, odds2, ou_line, ou_over, ou_under, league, captured_at";
 const PINNACLE_SNAPSHOT_ROW_CAP = 12000;
@@ -230,10 +230,14 @@ const TOURNAMENT_SPEED_SHIFT_FULL_MATCHES = 90;
 const TOURNAMENT_SPEED_SHIFT_SIGNAL_SCALE = 2.0;
 const FAST_CLAY_SPEED_THRESHOLD = 0.1;
 const SPREAD_V1_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-spreadv1-live.csv");
+const SPREAD_V1_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-spreadv1-archive.csv");
 const VOLUME_200_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-volume200-live.csv");
+const VOLUME_200_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-volume200-archive.csv");
 const CHALLENGER_ML_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-challenger-ml-live.csv");
+const CHALLENGER_ML_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-challenger-ml-archive.csv");
 const CHALLENGER_ML_NEARMISS_CSV = projectFilePath("data/backtest/challenger-ml-shadow-nearmiss.csv");
 const CLAY_BO3_SIGNAL_CSV = projectFilePath("data/backtest/strict-signals-clay_bo3-live.csv");
+const CLAY_BO3_SIGNAL_ARCHIVE_CSV = projectFilePath("data/backtest/strict-signals-clay_bo3-archive.csv");
 const FAIR_ODDS_TENNIS_SPREADS_ENABLED = parseBoolEnv("FAIR_ODDS_TENNIS_SPREADS_ENABLED", false);
 const FAIR_ODDS_SPREAD_V1_ENABLED = parseBoolEnv("FAIR_ODDS_SPREAD_V1_ENABLED", true);
 const INTERNAL_RESEARCH_LANES = process.env.INTERNAL_RESEARCH_LANES === "1";
@@ -1144,113 +1148,116 @@ function loadLocalOncourtTodayRows(): Array<{
   return rows;
 }
 
-function loadActiveShadowSignals(csvPath: string, kind: ShadowSignalKind, activeDate?: string): ShadowSignalSummary[] {
-  if (!fs.existsSync(csvPath)) return [];
+const ACTIVE_SIGNAL_STATUSES = new Set(["", "pending", "open", "unsettled"]);
 
-  let text = "";
-  try {
-    text = fs.readFileSync(csvPath, "utf8");
-  } catch (e) {
-    console.warn(`[fair-odds] Could not read shadow signal CSV: ${csvPath}`, e);
-    return [];
-  }
-
-  const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
-  if (lines.length < 2) return [];
-
-  const header = parseCsvLine(lines[0]);
-  const index = new Map<string, number>();
-  header.forEach((h, i) => index.set(h, i));
-  const required = ["player1", "player2", "side", "value_pct", "bet_type"];
-  if (required.some((k) => !index.has(k))) return [];
-  const hasSettlementStatus = index.has("settlement_status");
-
-  const get = (cols: string[], name: string) => cols[index.get(name) ?? -1] ?? "";
+function loadActiveShadowSignals(csvPaths: string | string[], kind: ShadowSignalKind, _activeDate?: string): ShadowSignalSummary[] {
+  const paths = Array.isArray(csvPaths) ? csvPaths : [csvPaths];
   const latestBySignalKey = new Map<string, ShadowSignalSummary & { settlement_status: string }>();
-  const parsedRows: Array<{ cols: string[]; rowDate: string }> = [];
-  const availableDates = new Set<string>();
+  let rowOrdinal = 0;
 
-  for (let i = 1; i < lines.length; i += 1) {
-    const cols = parseCsvLine(lines[i]);
-    const rowDate = get(cols, "date").trim();
-    if (rowDate) availableDates.add(rowDate);
-    parsedRows.push({ cols, rowDate });
-  }
+  for (const csvPath of paths) {
+    if (!fs.existsSync(csvPath)) continue;
 
-  const effectiveDate =
-    activeDate && availableDates.has(activeDate)
-      ? activeDate
-      : Array.from(availableDates).sort().at(-1);
+    let text = "";
+    try {
+      text = fs.readFileSync(csvPath, "utf8");
+    } catch (e) {
+      console.warn(`[fair-odds] Could not read shadow signal CSV: ${csvPath}`, e);
+      continue;
+    }
 
-  for (let i = 0; i < parsedRows.length; i += 1) {
-    const { cols, rowDate } = parsedRows[i];
-    if (effectiveDate && rowDate && rowDate !== effectiveDate) continue;
-    const player1Id = parseCsvNumber(get(cols, "player1_id"));
-    const player2Id = parseCsvNumber(get(cols, "player2_id"));
-    const player1Name = get(cols, "player1");
-    const player2Name = get(cols, "player2");
-    if (!player1Name || !player2Name) continue;
-    const side = get(cols, "side");
-    const betType = (get(cols, "bet_type") || "match").trim().toLowerCase() === "spread" ? "spread" : "match";
-    const spreadLine = parseCsvNumber(get(cols, "spread_line"));
-    const signalIdentity =
-      player1Id != null && player2Id != null
-        ? `${player1Id}|${player2Id}`
-        : signalNameKey(player1Name, player2Name);
-    // Keep only the latest active signal per live market lane.
-    // The CSV append flow can legitimately record an earlier side and a later side
-    // for the same match on the same day; the fair-odds page should show the latest
-    // current lane, not both stale and current sides together.
-    const signalKey =
-      kind === "clay_bo3" && betType === "spread"
-        ? `${kind}|${signalIdentity}|${betType}|${side}|${spreadLine ?? ""}`
-        : kind === "spread_v1"
-        ? `${kind}|${signalIdentity}|${betType}|${spreadLine ?? ""}`
-        : `${kind}|${signalIdentity}|${betType}`;
+    const lines = text.split(/\r?\n/).filter((line) => line.trim().length > 0);
+    if (lines.length < 2) continue;
 
-    latestBySignalKey.set(signalKey, {
-      id: i + 1,
-      kind,
-      player1_id: player1Id,
-      player2_id: player2Id,
-      player1_name: player1Name,
-      player2_name: player2Name,
-      side,
-      value_pct: parseCsvNumber(get(cols, "value_pct")) ?? 0,
-      pinnacle_odds: parseCsvNumber(get(cols, "spread_odds")) ?? parseCsvNumber(get(cols, side === "P1" || side === "P1+" ? "pin_odds1" : "pin_odds2")),
-      stake_units: parseCsvNumber(get(cols, "stake_units")),
-      stake_gbp: parseCsvNumber(get(cols, "stake_gbp")),
-      bet_type: betType,
-      spread_line: spreadLine,
-      tournament: get(cols, "series"),
-      surface: get(cols, "surface"),
-      league: parseCsvLeague(get(cols, "league")),
-      shadow_reason: get(cols, "shadow_reason") || undefined,
-      tournament_speed_signal: parseCsvNumber(get(cols, "tournament_speed_signal")),
-      clay_speed_tier:
-        (get(cols, "clay_speed_tier") || "") === "fast"
-          ? "fast"
-          : (get(cols, "clay_speed_tier") || "") === "normal"
-            ? "normal"
-            : undefined,
-      raw_value_p1: parseCsvNumber(get(cols, "raw_value_p1")) ?? parseCsvNumber(get(cols, "value_p1")),
-      raw_value_p2: parseCsvNumber(get(cols, "raw_value_p2")) ?? parseCsvNumber(get(cols, "value_p2")),
-      clay_2026_raw_value_same_side: parseCsvNumber(get(cols, "raw_value_same_side")),
-      clay_2026_value_p1: parseCsvNumber(get(cols, "value_p1")),
-      clay_2026_value_p2: parseCsvNumber(get(cols, "value_p2")),
-      clay_2026_raw_odds1: parseCsvNumber(get(cols, "raw_odds1_shadow")),
-      clay_2026_raw_odds2: parseCsvNumber(get(cols, "raw_odds2_shadow")),
-      clay_2026_calibrated_odds1: parseCsvNumber(get(cols, "calibrated_odds1")),
-      clay_2026_calibrated_odds2: parseCsvNumber(get(cols, "calibrated_odds2")),
-      clay_2026_selected_prob: parseCsvNumber(get(cols, "calibrated_selected_prob")),
-      handicap_point_prob_source:
-        (get(cols, "handicap_point_prob_source") as FairOddsRow["handicap_point_prob_source"]) || undefined,
-      settlement_status: hasSettlementStatus ? get(cols, "settlement_status").trim().toLowerCase() : "open",
-    });
+    const header = parseCsvLine(lines[0]);
+    const index = new Map<string, number>();
+    header.forEach((h, i) => index.set(h, i));
+    const required = ["player1", "player2", "side", "value_pct", "bet_type"];
+    if (required.some((k) => !index.has(k))) continue;
+    const hasSettlementStatus = index.has("settlement_status");
+
+    const get = (cols: string[], name: string) => cols[index.get(name) ?? -1] ?? "";
+
+    // These files are captured-signal queues, not today's recalculation view.
+    // Settlement updates the archive CSV, while the live CSV can be narrowed by
+    // the next model pass; read both and keep every still-pending signal visible.
+    for (let i = 1; i < lines.length; i += 1) {
+      const cols = parseCsvLine(lines[i]);
+      const settlementStatus = (hasSettlementStatus ? get(cols, "settlement_status") : "open").trim().toLowerCase();
+      if (!ACTIVE_SIGNAL_STATUSES.has(settlementStatus)) continue;
+      const player1Id = parseCsvNumber(get(cols, "player1_id"));
+      const player2Id = parseCsvNumber(get(cols, "player2_id"));
+      const player1Name = get(cols, "player1");
+      const player2Name = get(cols, "player2");
+      if (!player1Name || !player2Name) continue;
+      const side = get(cols, "side");
+      const betType: "match" | "spread" =
+        (get(cols, "bet_type") || "match").trim().toLowerCase() === "spread" ? "spread" : "match";
+      const spreadLine = parseCsvNumber(get(cols, "spread_line"));
+      const signalIdentity =
+        player1Id != null && player2Id != null
+          ? `${player1Id}|${player2Id}`
+          : signalNameKey(player1Name, player2Name);
+      // Keep one still-active signal per lane key, preserving the first archived
+      // capture rather than replacing it with a later volatile live recalculation.
+      const signalKey =
+        kind === "clay_bo3" && betType === "spread"
+          ? `${kind}|${signalIdentity}|${betType}|${side}|${spreadLine ?? ""}`
+          : kind === "spread_v1"
+            ? `${kind}|${signalIdentity}|${betType}|${spreadLine ?? ""}`
+            : `${kind}|${signalIdentity}|${betType}`;
+
+      const row: ShadowSignalSummary & { settlement_status: string } = {
+        id: rowOrdinal + 1,
+        kind,
+        player1_id: player1Id,
+        player2_id: player2Id,
+        player1_name: player1Name,
+        player2_name: player2Name,
+        side,
+        value_pct: parseCsvNumber(get(cols, "value_pct")) ?? 0,
+        pinnacle_odds:
+          parseCsvNumber(get(cols, "spread_odds")) ??
+          parseCsvNumber(get(cols, side === "P1" || side === "P1+" ? "pin_odds1" : "pin_odds2")),
+        stake_units: parseCsvNumber(get(cols, "stake_units")),
+        stake_gbp: parseCsvNumber(get(cols, "stake_gbp")),
+        bet_type: betType,
+        spread_line: spreadLine,
+        tournament: get(cols, "series"),
+        surface: get(cols, "surface"),
+        league: parseCsvLeague(get(cols, "league")),
+        shadow_reason: get(cols, "shadow_reason") || undefined,
+        tournament_speed_signal: parseCsvNumber(get(cols, "tournament_speed_signal")),
+        clay_speed_tier:
+          (get(cols, "clay_speed_tier") || "") === "fast"
+            ? "fast"
+            : (get(cols, "clay_speed_tier") || "") === "normal"
+              ? "normal"
+              : undefined,
+        raw_value_p1: parseCsvNumber(get(cols, "raw_value_p1")) ?? parseCsvNumber(get(cols, "value_p1")),
+        raw_value_p2: parseCsvNumber(get(cols, "raw_value_p2")) ?? parseCsvNumber(get(cols, "value_p2")),
+        clay_2026_raw_value_same_side: parseCsvNumber(get(cols, "raw_value_same_side")),
+        clay_2026_value_p1: parseCsvNumber(get(cols, "value_p1")),
+        clay_2026_value_p2: parseCsvNumber(get(cols, "value_p2")),
+        clay_2026_raw_odds1: parseCsvNumber(get(cols, "raw_odds1_shadow")),
+        clay_2026_raw_odds2: parseCsvNumber(get(cols, "raw_odds2_shadow")),
+        clay_2026_calibrated_odds1: parseCsvNumber(get(cols, "calibrated_odds1")),
+        clay_2026_calibrated_odds2: parseCsvNumber(get(cols, "calibrated_odds2")),
+        clay_2026_selected_prob: parseCsvNumber(get(cols, "calibrated_selected_prob")),
+        handicap_point_prob_source:
+          (get(cols, "handicap_point_prob_source") as FairOddsRow["handicap_point_prob_source"]) || undefined,
+        settlement_status: settlementStatus || "open",
+      };
+      rowOrdinal += 1;
+
+      if (!latestBySignalKey.has(signalKey)) {
+        latestBySignalKey.set(signalKey, row);
+      }
+    }
   }
 
   return Array.from(latestBySignalKey.values())
-    .filter((row) => row.settlement_status !== "settled")
+    .filter((row) => ACTIVE_SIGNAL_STATUSES.has(row.settlement_status))
     .map((row) => {
       const { settlement_status, ...rest } = row;
       void settlement_status;
@@ -1881,11 +1888,11 @@ async function run(): Promise<Response> {
     ]);
     const snapshotSchemaMissing =
       [todaySnapshotRes.error?.message ?? "", yesterdaySnapshotRes.error?.message ?? ""].some(
-        (message) => message.includes("match_date") || message.includes("kickoff_iso")
+        (message) => message.includes("match_date") || message.includes("kickoff_iso") || message.includes("league_name")
       );
     if (snapshotSchemaMissing) {
       console.warn(
-        "[fair-odds] bookmaker_odds_snapshot is missing match_date/kickoff_iso; falling back to legacy Pinnacle snapshot schema."
+        "[fair-odds] bookmaker_odds_snapshot is missing match_date/kickoff_iso/league_name; falling back to legacy Pinnacle snapshot schema."
       );
       [todaySnapshotRes, yesterdaySnapshotRes] = await Promise.all([
         fetchSnapshotForDate(today, PINNACLE_SNAPSHOT_SELECT_LEGACY),
@@ -1978,6 +1985,20 @@ async function run(): Promise<Response> {
     const reverseKey = normalizePinnaclePairKey(row.player2_name ?? "", row.player1_name ?? "", row.league);
     return currentOncourtPairKeys.has(directKey) || currentOncourtPairKeys.has(reverseKey);
   };
+  const isGrandSlamQualifyingPinnacleRow = (row: PinnacleRow) => {
+    const tournamentText = (row.tournament ?? "").toLowerCase();
+    const isQualifier = /\bqualif/.test(tournamentText);
+    const isSlam =
+      tournamentText.includes("french open") ||
+      tournamentText.includes("roland garros") ||
+      tournamentText.includes("australian open") ||
+      tournamentText.includes("wimbledon") ||
+      tournamentText.includes("us open") ||
+      tournamentText.includes("u.s. open");
+    return isQualifier && isSlam;
+  };
+  const canExposePinnacleOnly = (row: PinnacleRow) =>
+    isInCurrentOpenOncourtSchedule(row) || isGrandSlamQualifyingPinnacleRow(row);
 
   /** Multi-key surname set to match hyphen/compound variants safely. */
   function normaliseSurnameKeys(name: string): string[] {
@@ -2166,8 +2187,8 @@ async function run(): Promise<Response> {
     };
     const rawPinnacleOnly = singlesPin.filter((p) => !matchedPinRows.has(p));
     const staleAlternativePairings = rawPinnacleOnly.filter(isStaleAlternativePairing);
-    const notInCurrentSchedule = rawPinnacleOnly.filter((p) => !isStaleAlternativePairing(p) && !isInCurrentOpenOncourtSchedule(p));
-    const pinnacleOnly = rawPinnacleOnly.filter((p) => !isStaleAlternativePairing(p) && isInCurrentOpenOncourtSchedule(p));
+    const notInCurrentSchedule = rawPinnacleOnly.filter((p) => !isStaleAlternativePairing(p) && !canExposePinnacleOnly(p));
+    const pinnacleOnly = rawPinnacleOnly.filter((p) => !isStaleAlternativePairing(p) && canExposePinnacleOnly(p));
     if (staleAlternativePairings.length > 0) {
       console.log(
         `[fair-odds] Suppressed stale Pinnacle-only rows that conflict with current fair-odds pairings:`,
@@ -2653,14 +2674,18 @@ async function run(): Promise<Response> {
   });
 
   const spreadV1SignalsCsv = FAIR_ODDS_SPREAD_V1_ENABLED
-    ? loadActiveShadowSignals(SPREAD_V1_SIGNAL_CSV, "spread_v1", today)
+    ? loadActiveShadowSignals([SPREAD_V1_SIGNAL_ARCHIVE_CSV, SPREAD_V1_SIGNAL_CSV], "spread_v1", today)
     : [];
-  const volume200SignalsCsv = loadActiveShadowSignals(VOLUME_200_SIGNAL_CSV, "volume_200", today);
+  const volume200SignalsCsv = loadActiveShadowSignals(
+    [VOLUME_200_SIGNAL_ARCHIVE_CSV, VOLUME_200_SIGNAL_CSV],
+    "volume_200",
+    today
+  );
   const challengerMlSignalsCsv = INTERNAL_RESEARCH_LANES
-    ? loadActiveShadowSignals(CHALLENGER_ML_SIGNAL_CSV, "challenger_ml_shadow", today)
+    ? loadActiveShadowSignals([CHALLENGER_ML_SIGNAL_ARCHIVE_CSV, CHALLENGER_ML_SIGNAL_CSV], "challenger_ml_shadow", today)
     : [];
   const clayBo3SignalsCsv = INTERNAL_RESEARCH_LANES
-    ? loadActiveShadowSignals(CLAY_BO3_SIGNAL_CSV, "clay_bo3", today)
+    ? loadActiveShadowSignals([CLAY_BO3_SIGNAL_ARCHIVE_CSV, CLAY_BO3_SIGNAL_CSV], "clay_bo3", today)
     : [];
   const challengerNearmisses = INTERNAL_RESEARCH_LANES
     ? loadChallengerNearmisses(CHALLENGER_ML_NEARMISS_CSV, today)
