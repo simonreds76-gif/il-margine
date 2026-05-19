@@ -30,6 +30,12 @@ const lowContrastLogoFilter =
 const naturalLogoFilter =
   "[filter:drop-shadow(0_0_4px_rgba(255,255,255,0.32))_drop-shadow(0_0_10px_rgba(87,209,150,0.12))]";
 
+function roiToneClass(roi: number): string {
+  if (roi > 0) return "text-emerald-400";
+  if (roi < 0) return "text-rose-400";
+  return "text-slate-400";
+}
+
 export default function PlayerProps({
   initialPendingBets = [],
   initialRecentBets = [],
@@ -274,8 +280,8 @@ export default function PlayerProps({
                     <span className="block truncate font-medium">{league.name}</span>
                     <div className="mt-1 flex gap-3 text-xs">
                       <span>{leagueStats.total_bets} bets</span>
-                      <span className={`${colorClasses[league.color].text} font-mono`}>
-                        {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}%
+                      <span className={`${roiToneClass(leagueStats.roi)} font-mono`}>
+                        {leagueStats.roi > 0 ? "+" : ""}{leagueStats.roi.toFixed(1)}% ROI
                       </span>
                     </div>
                   </div>
@@ -294,7 +300,7 @@ export default function PlayerProps({
               </div>
             </div>
             <div className="p-5 bg-slate-900/50 rounded-lg border border-slate-800">
-              <div className={`text-2xl font-bold ${colorClasses[activeColor].text} font-mono mb-2`}>{currentStats.roi > 0 ? "+" : ""}{currentStats.roi.toFixed(1)}%</div>
+              <div className={`text-2xl font-bold ${roiToneClass(currentStats.roi)} font-mono mb-2`}>{currentStats.roi > 0 ? "+" : ""}{currentStats.roi.toFixed(1)}%</div>
               <div className="text-xs text-slate-500 mb-3">ROI</div>
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                 <div className={`h-full bg-gradient-to-r ${colorClasses[activeColor].bar} rounded-full`} style={{ width: `${Math.min(Math.abs(currentStats.roi) * 3, 100)}%` }} />
