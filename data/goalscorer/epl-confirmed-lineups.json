@@ -9,19 +9,19 @@
       "kickoff_utc": "2026-05-19T18:30:00Z",
       "home_team": "AFC Bournemouth",
       "away_team": "Manchester City",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-2-3-1",
-      "away_formation": "4-2-3-1",
+      "away_formation": "4-1-4-1",
       "home_players": [
         "Djordje Petrovic",
         "Adam Smith",
         "James Hill",
         "Marcos Senesi",
         "Adrien Truffert",
-        "Alex Scott",
         "Tyler Adams",
+        "Alex Scott",
         "Rayan",
         "Junior Kroupi",
         "Marcus Tavernier",
@@ -33,10 +33,10 @@
         "Abdukodir Khusanov",
         "Marc Guéhi",
         "Nico O'Reilly",
-        "Bernardo Silva",
-        "Nico González",
+        "Rodri",
         "Antoine Semenyo",
-        "Rayan Cherki",
+        "Mateo Kovacic",
+        "Bernardo Silva",
         "Jérémy Doku",
         "Erling Haaland"
       ],
@@ -87,7 +87,7 @@
           "position_id": 38
         },
         {
-          "name": "Alex Scott",
+          "name": "Tyler Adams",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -96,7 +96,7 @@
           "position_id": 64
         },
         {
-          "name": "Tyler Adams",
+          "name": "Alex Scott",
           "line_index": 1,
           "line_size": 2,
           "role_score": 2,
@@ -148,7 +148,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-2-3-1",
+          "formation": "4-1-4-1",
           "position_id": 11
         },
         {
@@ -157,7 +157,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-1-4-1",
           "position_id": 32
         },
         {
@@ -166,7 +166,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-1-4-1",
           "position_id": 34
         },
         {
@@ -175,7 +175,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-1-4-1",
           "position_id": 36
         },
         {
@@ -184,53 +184,53 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-1-4-1",
           "position_id": 38
         },
         {
-          "name": "Bernardo Silva",
+          "name": "Rodri",
           "line_index": 1,
-          "line_size": 2,
+          "line_size": 1,
           "role_score": 2,
           "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64
-        },
-        {
-          "name": "Nico González",
-          "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66
+          "formation": "4-1-4-1",
+          "position_id": 65
         },
         {
           "name": "Antoine Semenyo",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83
+          "formation": "4-1-4-1",
+          "position_id": 82
         },
         {
-          "name": "Rayan Cherki",
+          "name": "Mateo Kovacic",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85
+          "formation": "4-1-4-1",
+          "position_id": 84
+        },
+        {
+          "name": "Bernardo Silva",
+          "line_index": 2,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-1-4-1",
+          "position_id": 86
         },
         {
           "name": "Jérémy Doku",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 4,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87
+          "formation": "4-1-4-1",
+          "position_id": 88
         },
         {
           "name": "Erling Haaland",
@@ -238,12 +238,32 @@
           "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-2-3-1",
+          "formation": "4-1-4-1",
           "position_id": 115
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Christos Mandas",
+        "Bafodé Diakité",
+        "Alex Tóth",
+        "Justin Kluivert",
+        "Lewis Cook",
+        "Amine Adli",
+        "Ben Gannon-Doak",
+        "David Brooks",
+        "Enes Ünal"
+      ],
+      "away_subs": [
+        "James Trafford",
+        "John Stones",
+        "Josko Gvardiol",
+        "Rúben Dias",
+        "Phil Foden",
+        "Rayan Cherki",
+        "Tijjani Reijnders",
+        "Omar Marmoush",
+        "Savinho"
+      ],
       "home_unavailable": [
         "Julio Soler",
         "Ryan Christie"
