@@ -159,13 +159,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if [ -d data/goalscorer ]; then
-            git add -f data/goalscorer/
-            git add -u data/goalscorer || true
-          fi
-          if [ -d public/fair-odds-lab ]; then
-            git add -f public/fair-odds-lab/
-          fi
+          bash scripts/git-add-goalscorer-deploy-artifacts.sh
           if git diff --cached --quiet; then
             echo "No goalscorer refresh changes to commit."
             exit 0
