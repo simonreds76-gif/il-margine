@@ -50,7 +50,12 @@ const MARKET_CONFIG: Record<string, MarketConfig> = {
   laliga: { src: "/league-logos/la-liga.png", label: "La Liga", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
   bundesliga: { src: "/league-logos/bundesliga.png", label: "Bundesliga", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
   ligue1: { src: "/league-logos/ligue-1.png", label: "Ligue 1", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
-  ucl: { src: "/icons/markets/ucl-official.svg", label: "Champions League", invertForDark: true },
+  ucl: {
+    src: "/icons/markets/ucl-official.svg",
+    label: "Champions League",
+    containerClassName: "h-8 w-8",
+    imageClassName: "h-7 w-7 object-contain",
+  },
   other: { src: "/icons/markets/other-football.svg", label: "Other football", containerClassName: "h-7 w-7", imageClassName: "h-7 w-7 object-contain" },
   worldcup: { src: "/icons/markets/other-football.svg", label: "World Cup", containerClassName: "h-7 w-7", imageClassName: "h-7 w-7 object-contain" },
   betbuilders: { src: "/icons/markets/other-football.svg", label: "Bet Builders", containerClassName: "h-7 w-7", imageClassName: "h-7 w-7 object-contain" },
@@ -62,6 +67,7 @@ function getConfig(market: string, category: string, event?: string | null): Mar
   const categoryKey = getDisplayBetCategory({ market, category, event });
 
   if (marketKey === "tennis") {
+    if (categoryKey === "other") return MARKET_CONFIG.tennis;
     return MARKET_CONFIG[categoryKey] ?? MARKET_CONFIG.tennis;
   }
 
@@ -86,21 +92,23 @@ interface MarketBadgeProps {
 
 export default function MarketBadge({ market, category, event, showLabel = false, className = "", hideOnMobile = false, compact = false }: MarketBadgeProps) {
   const { src, label, invertForDark, wide, containerClassName, imageClassName } = getConfig(market, category ?? "", event);
-  const resolvedContainerClassName = compact ? "h-5 w-8" : containerClassName ?? (wide ? "h-6 w-8" : "h-6 w-6");
-  const resolvedImageClassName = compact ? "max-h-5 max-w-8 object-contain" : imageClassName ?? (wide ? "h-[18px] w-auto" : "h-6 w-auto");
+  const resolvedContainerClassName = compact ? "h-7 w-7" : containerClassName ?? (wide ? "h-7 w-9" : "h-7 w-7");
+  const resolvedImageClassName = compact ? "max-h-[1.15rem] max-w-[1.35rem] object-contain" : imageClassName ?? (wide ? "max-h-5 w-auto" : "max-h-5 max-w-5 object-contain");
 
   return (
     <span
       className={`inline-flex items-center gap-1.5 ${hideOnMobile ? "hidden md:inline-flex" : ""} ${className}`}
       title={label}
     >
-      <span className={`inline-flex items-center justify-center shrink-0 ${resolvedContainerClassName}`}>
+      <span
+        className={`inline-flex shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[radial-gradient(circle_at_30%_20%,#ffffff_0%,#effff7_48%,#d7f8e7_100%)] p-1 ring-1 ring-[#57d196]/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)] ${resolvedContainerClassName}`}
+      >
         <img
           src={`${src}?v=12`}
           alt={label}
           width={wide ? 32 : 24}
           height={24}
-          className={`${resolvedImageClassName} object-contain shrink-0 ${invertForDark ? "brightness-0 invert" : ""}`}
+          className={`${resolvedImageClassName} shrink-0 drop-shadow-[0_1px_2px_rgba(15,23,42,0.28)] ${invertForDark ? "brightness-0" : ""}`}
         />
       </span>
       {showLabel && <span className="text-xs font-medium text-slate-400">{label}</span>}

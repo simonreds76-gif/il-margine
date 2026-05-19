@@ -45,7 +45,7 @@ export default function TennisTips({
     { id: "rolandgarros", name: "Roland Garros", color: "rose", logoPath: "/icons/markets/slams/roland-garros.png" },
     { id: "wimbledon", name: "Wimbledon", color: "green", logoPath: "/icons/markets/slams/wimbledon.png" },
     { id: "usopen", name: "US Open", color: "indigo", logoPath: "/icons/markets/slams/us-open.png" },
-    { id: "other", name: "Other", color: "purple", logoPath: "/icons/markets/other.svg" },
+    { id: "other", name: "Other", color: "purple", logoPath: "/icons/markets/tennis.svg" },
   ];
 
   const colorClasses: Record<string, { border: string; text: string; bg: string; bar: string }> = {
@@ -58,6 +58,9 @@ export default function TennisTips({
     green: { border: "border-green-500/50", text: "text-green-400", bg: "bg-green-500/10", bar: "from-green-500 to-green-400" },
     indigo: { border: "border-indigo-500/50", text: "text-indigo-400", bg: "bg-indigo-500/10", bar: "from-indigo-500 to-indigo-400" },
   };
+  const logoPlateClassName =
+    "flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[radial-gradient(circle_at_30%_20%,#ffffff_0%,#effff7_48%,#d7f8e7_100%)] p-1.5 ring-1 ring-[#57d196]/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]";
+  const logoImageClassName = "h-full w-full object-contain drop-shadow-[0_1px_2px_rgba(15,23,42,0.28)]";
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -247,13 +250,13 @@ export default function TennisTips({
                       : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
                   }`}
                 >
-                  <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-slate-950/70 p-1.5 ${isActive ? "shadow-[0_0_18px_rgba(87,209,150,0.16)]" : ""}`}>
+                  <span className={`${logoPlateClassName} ${isActive ? "shadow-[inset_0_1px_0_rgba(255,255,255,0.75),0_0_18px_rgba(87,209,150,0.2)]" : ""}`}>
                     <Image
                       src={cat.logoPath}
                       alt=""
                       width={36}
                       height={36}
-                      className="h-full w-full object-contain"
+                      className={logoImageClassName}
                     />
                   </span>
                   <div className="min-w-0">
