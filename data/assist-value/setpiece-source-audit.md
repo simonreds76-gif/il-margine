@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-05-18T11:12:51+00:00`
+Fetched at UTC: `2026-05-19T10:42:20+00:00`
 
 ## Decision
 
@@ -19,7 +19,7 @@ Overall: **PASS_SOURCE_LAYER**
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
 | bundesliga | 18 | 18 | 184 | 48 |
-| epl | 20 | 20 | 210 | 54 |
+| epl | 20 | 20 | 210 | 55 |
 | la-liga | 20 | 20 | 224 | 53 |
 | ligue-1 | 18 | 18 | 204 | 50 |
 | serie-a | 20 | 20 | 220 | 51 |
@@ -29,7 +29,7 @@ Overall: **PASS_SOURCE_LAYER**
 - Status: `PASS`
 - Teams: `20`
 - Players: `839`
-- Players with set-piece role fields: `131`
+- Players with set-piece role fields: `132`
 
 ## SetPieceTakers
 
@@ -46,7 +46,6 @@ Overall: **PASS_SOURCE_LAYER**
 | la-liga | Real Madrid | Trent Alexander-Arnold | 91.3% | 28.63% | 65 |
 | bundesliga | FSV Mainz 05 | Nadiem Amiri | 90.91% | 57.25% | 79 |
 | ligue-1 | Metz | Gauthier Hein | 90.91% | 64.17% | 77 |
-| epl | Burnley | James Ward-Prowse | 88.24% | 34.15% | 42 |
 | ligue-1 | Lorient | Pablo Pagis | 83.33% | 58.54% | 48 |
 | bundesliga | VfL Wolfsburg | Christian Eriksen | 81.25% | 55.0% | 77 |
 | ligue-1 | AJ Auxerre | Kevin Danois | 78.95% | 62.04% | 85 |
@@ -57,6 +56,7 @@ Overall: **PASS_SOURCE_LAYER**
 | epl | Leeds United | Anton Stach | 72.22% | 58.01% | 105 |
 | bundesliga | Bayer Leverkusen | Alejandro Grimaldo | 72.0% | 55.62% | 94 |
 | bundesliga | Union Berlin | Christopher Trimmel | 72.0% | 51.95% | 80 |
+| epl | Everton | James Garner | 71.43% | 66.2% | 94 |
 
 ## Outputs
 

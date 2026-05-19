@@ -1,5 +1,5 @@
 {
-  "fetched_at_utc": "2026-05-18T11:12:51+00:00",
+  "fetched_at_utc": "2026-05-19T10:42:20+00:00",
   "overall_decision": "PASS_SOURCE_LAYER",
   "production_guard": "research_only_no_public_assist_picks_authorised",
   "rotowire_scope_caveat": "RotoWire set-piece weeks can exceed domestic league matchweeks; use the feed for current role inference, not as a league-only historical volume source.",
@@ -13,7 +13,7 @@
         "teams": 20,
         "ok": 20,
         "role_rows": 210,
-        "max_latest_week": 54
+        "max_latest_week": 55
       },
       "bundesliga": {
         "teams": 18,
@@ -47,7 +47,7 @@
     "reason": "ok",
     "teams": 20,
     "players": 839,
-    "players_with_roles": 131,
+    "players_with_roles": 132,
     "pass": true
   },
   "setpiecetakers": {
