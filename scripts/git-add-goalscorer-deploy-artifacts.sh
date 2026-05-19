@@ -6,6 +6,16 @@ set -euo pipefail
 # monitor snapshots, or the next hosted goalscorer run.
 shopt -s nullglob
 
+blocked_artifacts=(
+  data/goalscorer/live-history
+  data/goalscorer/*/live-history
+  data/goalscorer/inbox
+  data/goalscorer/match-results
+  data/goalscorer/test-run
+  data/goalscorer/all-leagues-live-board.json
+  data/goalscorer/goalscorer-odds-history.csv
+)
+
 artifacts=(
   data/goalscorer/team-logo-map.json
   data/goalscorer/team-kit-colors.json
@@ -59,6 +69,12 @@ artifacts=(
 
   public/fair-odds-lab/*
 )
+
+# If an older workflow run reintroduced generated bulk files, remove them from
+# the index again before staging the deployment allowlist.
+if ((${#blocked_artifacts[@]} > 0)); then
+  git rm -r --cached --ignore-unmatch -- "${blocked_artifacts[@]}" 2>/dev/null || true
+fi
 
 git add -u data/goalscorer public/fair-odds-lab || true
 
