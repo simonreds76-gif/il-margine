@@ -319,22 +319,6 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Takefusa Kubo",
-      "fotmob_id": 848289,
-      "team": "Real Sociedad",
-      "team_id": 8560,
-      "started": false,
-      "squad_status": "sub",
-      "minutes_played": 0,
-      "goals": 0,
-      "own_goals": 0,
-      "assists": 0,
-      "subbed_on": false,
-      "subbed_off": false,
-      "sub_in_minute": 0,
-      "sub_out_minute": 0
-    },
-    {
       "name": "Wesley",
       "fotmob_id": 1372179,
       "team": "Real Sociedad",
@@ -369,6 +353,22 @@
     {
       "name": "Gorka Carrera",
       "fotmob_id": 1431291,
+      "team": "Real Sociedad",
+      "team_id": 8560,
+      "started": false,
+      "squad_status": "sub",
+      "minutes_played": 0,
+      "goals": 0,
+      "own_goals": 0,
+      "assists": 0,
+      "subbed_on": false,
+      "subbed_off": false,
+      "sub_in_minute": 0,
+      "sub_out_minute": 0
+    },
+    {
+      "name": "Takefusa Kubo",
+      "fotmob_id": 848289,
       "team": "Real Sociedad",
       "team_id": 8560,
       "started": false,
@@ -655,8 +655,8 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Largie Ramazani",
-      "fotmob_id": 1077915,
+      "name": "Pepelu",
+      "fotmob_id": 673689,
       "team": "Valencia",
       "team_id": 10267,
       "started": false,
@@ -671,8 +671,8 @@
       "sub_out_minute": 0
     },
     {
-      "name": "Pepelu",
-      "fotmob_id": 673689,
+      "name": "Largie Ramazani",
+      "fotmob_id": 1077915,
       "team": "Valencia",
       "team_id": 10267,
       "started": false,
@@ -1098,12 +1098,12 @@
       "minute": 74,
       "on": [
         {
-          "name": "Largie Ramazani",
-          "fotmob_id": 1077915
-        },
-        {
           "name": "Pepelu",
           "fotmob_id": 673689
+        },
+        {
+          "name": "Largie Ramazani",
+          "fotmob_id": 1077915
         }
       ],
       "off": [
@@ -1137,5 +1137,5 @@
       "direct_replacement_verified": true
     }
   ],
-  "fetched_at": "2026-05-18T01:42:01Z"
+  "fetched_at": "2026-05-19T01:36:54Z"
 }

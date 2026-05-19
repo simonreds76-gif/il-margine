@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-18T01:42:58Z",
+  "generated_at": "2026-05-19T01:37:52Z",
   "row_count": 4,
   "rows": [
     {
@@ -18,16 +18,16 @@
       "primary_pre_match": "Christian Pulisic",
       "secondary_pre_match": "Rafael Leão",
       "tertiary_pre_match": "Christopher Nkunku",
-      "primary_lineup_status": "confirmed_bench",
-      "secondary_lineup_status": "not_in_squad",
-      "tertiary_lineup_status": "confirmed_starter",
-      "active_taker_pre_match": "Christopher Nkunku",
-      "active_slot_pre_match": "tertiary",
+      "primary_lineup_status": "unknown",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
-      "editorial_note": "Christopher Nkunku took 1 penalty attempt for AC Milan vs Genoa. Primary pre-match: Christian Pulisic (confirmed_bench). Secondary pre-match: Rafael Leão (not_in_squad). Pre-match active slot was tertiary -> Christopher Nkunku. Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-05-17T19:17:13Z",
+      "editorial_note": "Christopher Nkunku took 1 penalty attempt for AC Milan vs Genoa. Primary pre-match: Christian Pulisic (unknown). Secondary pre-match: Rafael Leão (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
+      "context_generated_at": "2026-05-18T19:45:56Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     },
     {
@@ -54,7 +54,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Riccardo Orsolini took 1 penalty attempt for Bologna vs Napoli. Primary pre-match: Riccardo Orsolini (unknown). Secondary pre-match: Federico Bernardeschi (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-17T19:17:13Z",
+      "context_generated_at": "2026-05-18T19:45:56Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     },
     {
@@ -81,7 +81,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Donyell Malen took 1 penalty attempt for Roma vs Parma Calcio 1913. Primary pre-match: Paulo Dybala (unknown). Secondary pre-match: Donyell Malen (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-05-17T19:17:13Z",
+      "context_generated_at": "2026-05-18T19:45:56Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     },
     {
@@ -108,7 +108,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Christopher Nkunku took 1 penalty attempt for AC Milan vs Atalanta. Primary pre-match: Christian Pulisic (unknown). Secondary pre-match: Rafael Leão (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-05-17T19:17:13Z",
+      "context_generated_at": "2026-05-18T19:45:56Z",
       "context_source_path": "data/goalscorer/penalty-duty-context.json"
     }
   ]

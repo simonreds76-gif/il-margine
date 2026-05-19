@@ -1,8 +1,62 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-18T01:43:00Z",
-  "row_count": 5,
+  "generated_at": "2026-05-19T01:37:55Z",
+  "row_count": 7,
   "rows": [
+    {
+      "date": "2026-05-17",
+      "league": "epl",
+      "review_source": "settled_logs",
+      "match": "Brentford FC vs Crystal Palace",
+      "team": "Crystal Palace",
+      "opponent": "Brentford",
+      "actual_taker": "Ismaila Sarr",
+      "actual_role_pre_match": "secondary",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "primary_pre_match": "Jean-Philippe Mateta",
+      "secondary_pre_match": "Ismaila Sarr",
+      "tertiary_pre_match": "Justin Devenny",
+      "primary_lineup_status": "unknown",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "expected_backup_shift",
+      "review_priority": "medium",
+      "editorial_note": "Ismaila Sarr took 1 penalty attempt for Crystal Palace vs Brentford. Primary pre-match: Jean-Philippe Mateta (unknown). Secondary pre-match: Ismaila Sarr (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
+      "context_generated_at": "2026-05-18T19:46:34Z",
+      "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
+    },
+    {
+      "date": "2026-05-17",
+      "league": "epl",
+      "review_source": "settled_logs",
+      "match": "Wolverhampton Wanderers vs Fulham FC",
+      "team": "Fulham",
+      "opponent": "Wolverhampton Wanderers",
+      "actual_taker": "Antonee Robinson",
+      "actual_role_pre_match": "none",
+      "penalties_attempted": 1,
+      "penalties_scored": 1,
+      "distinct_takers_in_match": 1,
+      "primary_pre_match": "Raúl Jiménez",
+      "secondary_pre_match": "Harry Wilson",
+      "tertiary_pre_match": "Alex Iwobi",
+      "primary_lineup_status": "unknown",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
+      "team_lineup_status": "unknown",
+      "review_type": "unranked_taker",
+      "review_priority": "high",
+      "editorial_note": "Antonee Robinson took 1 penalty attempt for Fulham vs Wolverhampton Wanderers. Primary pre-match: Raúl Jiménez (unknown). Secondary pre-match: Harry Wilson (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-05-18T19:46:34Z",
+      "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
+    },
     {
       "date": "2026-05-11",
       "league": "epl",
@@ -27,7 +81,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Dominic Calvert-Lewin took 1 penalty attempt for Leeds vs Tottenham. Primary pre-match: Dominic Calvert-Lewin (unknown). Secondary pre-match: Lukas Nmecha (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-17T19:18:09Z",
+      "context_generated_at": "2026-05-18T19:46:34Z",
       "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
     },
     {
@@ -54,7 +108,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Igor Jesus took 1 penalty attempt for Nottingham Forest vs Chelsea. Primary pre-match: Chris Wood (unknown). Secondary pre-match: Morgan Gibbs-White (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-05-17T19:18:09Z",
+      "context_generated_at": "2026-05-18T19:46:34Z",
       "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
     },
     {
@@ -81,7 +135,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Cole Palmer took 1 penalty attempt for Chelsea vs Nottingham Forest. Primary pre-match: Cole Palmer (unknown). Secondary pre-match: Enzo Fernández (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-17T19:18:09Z",
+      "context_generated_at": "2026-05-18T19:46:34Z",
       "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
     },
     {
@@ -108,7 +162,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Eli Junior Kroupi took 1 penalty attempt for Bournemouth vs Crystal Palace. Primary pre-match: Eli Junior Kroupi (unknown). Secondary pre-match: Marcus Tavernier (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-17T19:18:09Z",
+      "context_generated_at": "2026-05-18T19:46:34Z",
       "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
     },
     {
@@ -135,7 +189,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Thiago took 1 penalty attempt for Brentford vs West Ham. Primary pre-match: Thiago (unknown). Secondary pre-match: Kevin Schade (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-17T19:18:09Z",
+      "context_generated_at": "2026-05-18T19:46:34Z",
       "context_source_path": "data/goalscorer/epl/penalty-duty-context.json"
     }
   ]

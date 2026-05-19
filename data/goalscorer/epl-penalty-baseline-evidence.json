@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-18T01:43:01Z",
+  "generated_at": "2026-05-19T01:37:55Z",
   "league": "epl",
   "row_count": 7,
   "rows": [
@@ -56,16 +56,17 @@
       "team": "Crystal Palace",
       "team_key": "crystal palace",
       "player_name": "Ismaïla Sarr",
-      "player_key": "isma la sarr",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "player_key": "ismaila sarr",
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live"
+        "fotmob_live",
+        "settled_logs"
       ],
-      "event_count": 1,
+      "event_count": 2,
       "last_event_date": "2026-05-17"
     },
     {
@@ -73,15 +74,16 @@
       "team_key": "fulham",
       "player_name": "Antonee Robinson",
       "player_key": "antonee robinson",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
+      "observed_player_penalties": 2,
+      "observed_team_penalties": 2,
       "observed_share": 1.0,
-      "observed_sample": 1.0,
+      "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live"
+        "fotmob_live",
+        "settled_logs"
       ],
-      "event_count": 1,
+      "event_count": 2,
       "last_event_date": "2026-05-17"
     },
     {

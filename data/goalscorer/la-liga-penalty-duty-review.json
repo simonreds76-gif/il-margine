@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-18T01:43:03Z",
+  "generated_at": "2026-05-19T01:37:57Z",
   "row_count": 5,
   "rows": [
     {
@@ -18,16 +18,16 @@
       "primary_pre_match": "Morales",
       "secondary_pre_match": "Adrián De la Fuente",
       "tertiary_pre_match": "Karl Etta Eyong",
-      "primary_lineup_status": "confirmed_bench",
-      "secondary_lineup_status": "confirmed_starter",
-      "tertiary_lineup_status": "confirmed_bench",
-      "active_taker_pre_match": "Adrián De La Fuente",
-      "active_slot_pre_match": "secondary",
+      "primary_lineup_status": "unknown",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
-      "editorial_note": "Adrián De la Fuente took 1 penalty attempt for Levante vs Mallorca. Primary pre-match: Morales (confirmed_bench). Secondary pre-match: Adrián De la Fuente (confirmed_starter). Pre-match active slot was secondary -> Adrián De La Fuente. Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-05-17T19:18:45Z",
+      "editorial_note": "Adrián De la Fuente took 1 penalty attempt for Levante vs Mallorca. Primary pre-match: Morales (unknown). Secondary pre-match: Adrián De la Fuente (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
+      "context_generated_at": "2026-05-18T19:46:56Z",
       "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
     },
     {
@@ -45,16 +45,16 @@
       "primary_pre_match": "Juan Camilo Hernández",
       "secondary_pre_match": "Ezequiel Ávila",
       "tertiary_pre_match": "Antony",
-      "primary_lineup_status": "not_in_squad",
-      "secondary_lineup_status": "confirmed_bench",
-      "tertiary_lineup_status": "confirmed_starter",
-      "active_taker_pre_match": "Antony",
-      "active_slot_pre_match": "tertiary",
+      "primary_lineup_status": "unknown",
+      "secondary_lineup_status": "unknown",
+      "tertiary_lineup_status": "unknown",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
       "review_type": "unranked_taker",
       "review_priority": "high",
-      "editorial_note": "Isco took 1 penalty attempt for Real Betis vs Barcelona. Primary pre-match: Juan Camilo Hernández (not_in_squad). Secondary pre-match: Ezequiel Ávila (confirmed_bench). Pre-match active slot was tertiary -> Antony. Strong review flag: the taker was not in the tracked top three.",
-      "context_generated_at": "2026-05-17T19:18:45Z",
+      "editorial_note": "Isco took 1 penalty attempt for Real Betis vs Barcelona. Primary pre-match: Juan Camilo Hernández (unknown). Secondary pre-match: Ezequiel Ávila (unknown). Strong review flag: the taker was not in the tracked top three.",
+      "context_generated_at": "2026-05-18T19:46:56Z",
       "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
     },
     {
@@ -81,7 +81,7 @@
       "review_type": "unranked_taker",
       "review_priority": "high",
       "editorial_note": "Ademola Lookman took 1 penalty attempt for Atletico Madrid vs Osasuna. Primary pre-match: Julián Álvarez (unknown). Secondary pre-match: Antoine Griezmann (unknown). Strong review flag: the taker was not in the tracked top three.",
-      "context_generated_at": "2026-05-17T19:18:45Z",
+      "context_generated_at": "2026-05-18T19:46:56Z",
       "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
     },
     {
@@ -108,7 +108,7 @@
       "review_type": "needs_manual_review",
       "review_priority": "medium",
       "editorial_note": "Mikel Oyarzabal took 1 penalty attempt for Real Sociedad vs Real Betis. Primary pre-match: Mikel Oyarzabal (unknown). Secondary pre-match: Brais Méndez (unknown). Needs manual editorial review.",
-      "context_generated_at": "2026-05-17T19:18:45Z",
+      "context_generated_at": "2026-05-18T19:46:56Z",
       "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
     },
     {
@@ -135,7 +135,7 @@
       "review_type": "expected_backup_shift",
       "review_priority": "medium",
       "editorial_note": "Antonio Martínez took 1 penalty attempt for Alaves vs Elche. Primary pre-match: Carlos Vicente (unknown). Secondary pre-match: Lucas Boyé (unknown). Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-05-17T19:18:45Z",
+      "context_generated_at": "2026-05-18T19:46:56Z",
       "context_source_path": "data/goalscorer/la-liga/penalty-duty-context.json"
     }
   ]

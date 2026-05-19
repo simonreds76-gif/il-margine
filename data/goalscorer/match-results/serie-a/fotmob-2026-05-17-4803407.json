@@ -517,14 +517,14 @@
       "team_id": 7801,
       "started": true,
       "squad_status": "starter",
-      "minutes_played": 82,
+      "minutes_played": 81,
       "goals": 0,
       "own_goals": 0,
       "assists": 0,
       "subbed_on": false,
       "subbed_off": true,
       "sub_in_minute": 0,
-      "sub_out_minute": 82
+      "sub_out_minute": 81
     },
     {
       "name": "Alberto Grassi",
@@ -645,13 +645,13 @@
       "team_id": 7801,
       "started": false,
       "squad_status": "sub",
-      "minutes_played": 8,
+      "minutes_played": 9,
       "goals": 0,
       "own_goals": 0,
       "assists": 0,
       "subbed_on": true,
       "subbed_off": false,
-      "sub_in_minute": 82,
+      "sub_in_minute": 81,
       "sub_out_minute": 0
     },
     {
@@ -889,12 +889,26 @@
     {
       "team": "Cremonese",
       "team_id": 7801,
-      "minute": 82,
+      "minute": 81,
       "on": [
         {
           "name": "Jari Vandeputte",
           "fotmob_id": 466113
-        },
+        }
+      ],
+      "off": [
+        {
+          "name": "Morten Thorsby",
+          "fotmob_id": 439148
+        }
+      ],
+      "direct_replacement_verified": true
+    },
+    {
+      "team": "Cremonese",
+      "team_id": 7801,
+      "minute": 82,
+      "on": [
         {
           "name": "Michele Collocolo",
           "fotmob_id": 774716
@@ -902,15 +916,11 @@
       ],
       "off": [
         {
-          "name": "Morten Thorsby",
-          "fotmob_id": 439148
-        },
-        {
           "name": "Youssef Maleh",
           "fotmob_id": 789243
         }
       ],
-      "direct_replacement_verified": false
+      "direct_replacement_verified": true
     },
     {
       "team": "Cremonese",
@@ -1011,5 +1021,5 @@
       "direct_replacement_verified": true
     }
   ],
-  "fetched_at": "2026-05-18T01:41:45Z"
+  "fetched_at": "2026-05-19T01:36:38Z"
 }
