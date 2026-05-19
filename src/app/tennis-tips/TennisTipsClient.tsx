@@ -22,6 +22,9 @@ type TennisTipsClientProps = {
   initialStats?: CategoryStats[];
 };
 
+const naturalLogoFilter =
+  "[filter:drop-shadow(0_0_4px_rgba(255,255,255,0.32))_drop-shadow(0_0_10px_rgba(87,209,150,0.12))]";
+
 export default function TennisTips({
   initialPendingBets = [],
   initialRecentBets = [],
@@ -38,14 +41,14 @@ export default function TennisTips({
   const [showAllRecent, setShowAllRecent] = useState(false);
 
   const categoryConfig = [
-    { id: "all", name: "All Tennis", color: "emerald", logoPath: "/icons/markets/tennis.svg" },
-    { id: "atp", name: "ATP Tour", color: "blue", logoPath: "/icons/markets/atp-logo.png" },
-    { id: "challenger", name: "Challenger", color: "amber", logoPath: "/icons/markets/tennis.svg" },
-    { id: "ausopen", name: "Australian Open", color: "cyan", logoPath: "/icons/markets/slams/australian-open.png" },
-    { id: "rolandgarros", name: "Roland Garros", color: "rose", logoPath: "/icons/markets/slams/roland-garros.png" },
-    { id: "wimbledon", name: "Wimbledon", color: "green", logoPath: "/icons/markets/slams/wimbledon.png" },
-    { id: "usopen", name: "US Open", color: "indigo", logoPath: "/icons/markets/slams/us-open.png" },
-    { id: "other", name: "Other", color: "purple", logoPath: "/icons/markets/tennis.svg" },
+    { id: "all", name: "All Tennis", color: "emerald", logoPath: "/icons/markets/tennis.svg", logoClassName: naturalLogoFilter },
+    { id: "atp", name: "ATP Tour", color: "blue", logoPath: "/icons/markets/atp-logo.png", logoClassName: naturalLogoFilter },
+    { id: "challenger", name: "Challenger", color: "amber", logoPath: "/icons/markets/tennis.svg", logoClassName: naturalLogoFilter },
+    { id: "ausopen", name: "Australian Open", color: "cyan", logoPath: "/icons/markets/slams/australian-open.png", logoClassName: naturalLogoFilter },
+    { id: "rolandgarros", name: "Roland Garros", color: "rose", logoPath: "/icons/markets/slams/roland-garros.png", logoClassName: naturalLogoFilter },
+    { id: "wimbledon", name: "Wimbledon", color: "green", logoPath: "/icons/markets/slams/wimbledon.png", logoClassName: naturalLogoFilter },
+    { id: "usopen", name: "US Open", color: "indigo", logoPath: "/icons/markets/slams/us-open.png", logoClassName: naturalLogoFilter },
+    { id: "other", name: "Other", color: "purple", logoPath: "/icons/markets/tennis.svg", logoClassName: naturalLogoFilter },
   ];
 
   const colorClasses: Record<string, { border: string; text: string; bg: string; bar: string }> = {
@@ -58,9 +61,8 @@ export default function TennisTips({
     green: { border: "border-green-500/50", text: "text-green-400", bg: "bg-green-500/10", bar: "from-green-500 to-green-400" },
     indigo: { border: "border-indigo-500/50", text: "text-indigo-400", bg: "bg-indigo-500/10", bar: "from-indigo-500 to-indigo-400" },
   };
-  const logoPlateClassName =
-    "flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[radial-gradient(circle_at_30%_20%,rgba(87,209,150,0.2)_0%,rgba(15,23,42,0.94)_46%,rgba(2,6,23,0.98)_100%)] p-1.5 ring-1 ring-[#57d196]/28 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_18px_rgba(87,209,150,0.07)]";
-  const logoImageClassName = "h-full w-full object-contain drop-shadow-[0_0_4px_rgba(255,255,255,0.35)]";
+  const logoMarkClassName = "flex h-10 w-10 shrink-0 items-center justify-center overflow-visible";
+  const logoImageClassName = "h-full w-full object-contain";
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -250,13 +252,13 @@ export default function TennisTips({
                       : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
                   }`}
                 >
-                  <span className={`${logoPlateClassName} ${isActive ? "shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_0_18px_rgba(87,209,150,0.22)]" : ""}`}>
+                  <span className={`${logoMarkClassName} ${isActive ? "scale-105" : ""}`}>
                     <Image
                       src={cat.logoPath}
                       alt=""
                       width={36}
                       height={36}
-                      className={logoImageClassName}
+                      className={`${logoImageClassName} ${cat.logoClassName}`}
                     />
                   </span>
                   <div className="min-w-0">
@@ -352,7 +354,7 @@ export default function TennisTips({
                     }}
                   >
                     <div className="mb-3 flex items-start gap-3">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-950/70">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center">
                         <MarketBadge market={pick.market} category={pick.category} event={pick.event} />
                       </div>
                       <div className="min-w-0 flex-1">

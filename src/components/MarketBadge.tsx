@@ -11,6 +11,15 @@ type MarketConfig = {
   imageClassName?: string;
 };
 
+const DARK_MARK_FILTER =
+  "[filter:brightness(0)_invert(1)_drop-shadow(0_0_4px_rgba(255,255,255,0.58))_drop-shadow(0_0_11px_rgba(87,209,150,0.2))]";
+
+const LOW_CONTRAST_MARK_FILTER =
+  "[filter:brightness(1.9)_saturate(1.45)_contrast(1.15)_drop-shadow(0_0_4px_rgba(255,255,255,0.5))_drop-shadow(0_0_10px_rgba(87,209,150,0.18))]";
+
+const NATURAL_MARK_FILTER =
+  "[filter:drop-shadow(0_0_4px_rgba(255,255,255,0.32))_drop-shadow(0_0_10px_rgba(87,209,150,0.12))]";
+
 /** Maps market + category to SVG icon path and label. Used in picks tables. */
 const MARKET_CONFIG: Record<string, MarketConfig> = {
   tennis: { src: "/icons/markets/tennis.svg", label: "Tennis" },
@@ -45,21 +54,21 @@ const MARKET_CONFIG: Record<string, MarketConfig> = {
     containerClassName: "h-8 w-12",
     imageClassName: "max-h-8 w-12 object-contain",
   },
-  pl: { src: "/league-logos/epl.png", label: "Premier League", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
-  seriea: { src: "/league-logos/serie-a.png", label: "Serie A", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
-  laliga: { src: "/league-logos/la-liga.png", label: "La Liga", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
-  bundesliga: { src: "/league-logos/bundesliga.png", label: "Bundesliga", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
-  ligue1: { src: "/league-logos/ligue-1.png", label: "Ligue 1", containerClassName: "h-8 w-8", imageClassName: "h-8 w-8 object-contain" },
+  pl: { src: "/league-logos/epl.png", label: "Premier League", containerClassName: "h-8 w-8", imageClassName: `h-8 w-8 object-contain ${LOW_CONTRAST_MARK_FILTER}` },
+  seriea: { src: "/league-logos/serie-a.png", label: "Serie A", containerClassName: "h-8 w-8", imageClassName: `h-8 w-8 object-contain ${NATURAL_MARK_FILTER}` },
+  laliga: { src: "/league-logos/la-liga.png", label: "La Liga", containerClassName: "h-8 w-8", imageClassName: `h-8 w-8 object-contain ${NATURAL_MARK_FILTER}` },
+  bundesliga: { src: "/league-logos/bundesliga.png", label: "Bundesliga", containerClassName: "h-8 w-8", imageClassName: `h-8 w-8 object-contain ${NATURAL_MARK_FILTER}` },
+  ligue1: { src: "/league-logos/ligue-1.png", label: "Ligue 1", containerClassName: "h-8 w-8", imageClassName: `h-8 w-8 object-contain ${DARK_MARK_FILTER}` },
   ucl: {
     src: "/icons/markets/ucl-official.svg",
     label: "Champions League",
     containerClassName: "h-8 w-8",
-    imageClassName: "h-7 w-7 object-contain",
+    imageClassName: `h-7 w-7 object-contain opacity-95 ${DARK_MARK_FILTER}`,
   },
-  other: { src: "/icons/markets/other-football.svg", label: "Other football", containerClassName: "h-7 w-7", imageClassName: "h-6 w-6 object-contain" },
-  worldcup: { src: "/icons/markets/other-football.svg", label: "World Cup", containerClassName: "h-7 w-7", imageClassName: "h-6 w-6 object-contain" },
-  betbuilders: { src: "/icons/markets/other-football.svg", label: "Bet Builders", containerClassName: "h-7 w-7", imageClassName: "h-6 w-6 object-contain" },
-  atg: { src: "/icons/markets/other-football.svg", label: "ATG", containerClassName: "h-7 w-7", imageClassName: "h-6 w-6 object-contain" },
+  other: { src: "/icons/markets/other-football.svg", label: "Other football", containerClassName: "h-8 w-8", imageClassName: `h-8 w-8 object-contain ${NATURAL_MARK_FILTER}` },
+  worldcup: { src: "/icons/markets/other-football.svg", label: "World Cup", containerClassName: "h-8 w-8", imageClassName: `h-8 w-8 object-contain ${NATURAL_MARK_FILTER}` },
+  betbuilders: { src: "/icons/markets/other-football.svg", label: "Bet Builders", containerClassName: "h-8 w-8", imageClassName: `h-8 w-8 object-contain ${NATURAL_MARK_FILTER}` },
+  atg: { src: "/icons/markets/other-football.svg", label: "ATG", containerClassName: "h-8 w-8", imageClassName: `h-8 w-8 object-contain ${NATURAL_MARK_FILTER}` },
 };
 
 function getConfig(market: string, category: string, event?: string | null): MarketConfig {
@@ -101,14 +110,14 @@ export default function MarketBadge({ market, category, event, showLabel = false
       title={label}
     >
       <span
-        className={`inline-flex shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[radial-gradient(circle_at_30%_20%,rgba(87,209,150,0.18)_0%,rgba(15,23,42,0.92)_46%,rgba(2,6,23,0.96)_100%)] p-1 ring-1 ring-[#57d196]/28 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_14px_rgba(87,209,150,0.08)] ${resolvedContainerClassName}`}
+        className={`inline-flex shrink-0 items-center justify-center overflow-visible ${resolvedContainerClassName}`}
       >
         <img
-          src={`${src}?v=12`}
+          src={`${src}?v=13`}
           alt={label}
           width={wide ? 32 : 24}
           height={24}
-          className={`${resolvedImageClassName} shrink-0 drop-shadow-[0_0_3px_rgba(255,255,255,0.34)] ${invertForDark ? "brightness-0" : ""}`}
+          className={`${resolvedImageClassName} shrink-0 ${invertForDark ? "brightness-0" : ""}`}
         />
       </span>
       {showLabel && <span className="text-xs font-medium text-slate-400">{label}</span>}

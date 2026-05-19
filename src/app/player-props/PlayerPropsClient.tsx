@@ -23,6 +23,13 @@ type PlayerPropsClientProps = {
   initialStats?: CategoryStats[];
 };
 
+const darkLogoFilter =
+  "[filter:brightness(0)_invert(1)_drop-shadow(0_0_5px_rgba(255,255,255,0.58))_drop-shadow(0_0_12px_rgba(87,209,150,0.2))]";
+const lowContrastLogoFilter =
+  "[filter:brightness(1.9)_saturate(1.45)_contrast(1.15)_drop-shadow(0_0_5px_rgba(255,255,255,0.5))_drop-shadow(0_0_12px_rgba(87,209,150,0.18))]";
+const naturalLogoFilter =
+  "[filter:drop-shadow(0_0_4px_rgba(255,255,255,0.32))_drop-shadow(0_0_10px_rgba(87,209,150,0.12))]";
+
 export default function PlayerProps({
   initialPendingBets = [],
   initialRecentBets = [],
@@ -39,14 +46,14 @@ export default function PlayerProps({
   const [showAllRecent, setShowAllRecent] = useState(false);
 
   const leagueConfig = [
-    { id: "all", name: "All Leagues", color: "emerald", logoPath: "/icons/markets/other-football.svg" },
-    { id: "pl", name: "Premier League", color: "purple", logoPath: "/league-logos/epl.png" },
-    { id: "seriea", name: "Serie A", color: "blue", logoPath: "/league-logos/serie-a.png" },
-    { id: "laliga", name: "La Liga", color: "red", logoPath: "/league-logos/la-liga.png" },
-    { id: "bundesliga", name: "Bundesliga", color: "rose", logoPath: "/league-logos/bundesliga.png" },
-    { id: "ligue1", name: "Ligue 1", color: "cyan", logoPath: "/league-logos/ligue-1.png" },
-    { id: "ucl", name: "Champions League", color: "amber", logoPath: "/icons/markets/ucl-official.svg" },
-    { id: "other", name: "Other", color: "slate", logoPath: "/icons/markets/other-football.svg" },
+    { id: "all", name: "All Leagues", color: "emerald", logoPath: "/icons/markets/other-football.svg", logoClassName: naturalLogoFilter },
+    { id: "pl", name: "Premier League", color: "purple", logoPath: "/league-logos/epl.png", logoClassName: lowContrastLogoFilter },
+    { id: "seriea", name: "Serie A", color: "blue", logoPath: "/league-logos/serie-a.png", logoClassName: naturalLogoFilter },
+    { id: "laliga", name: "La Liga", color: "red", logoPath: "/league-logos/la-liga.png", logoClassName: naturalLogoFilter },
+    { id: "bundesliga", name: "Bundesliga", color: "rose", logoPath: "/league-logos/bundesliga.png", logoClassName: naturalLogoFilter },
+    { id: "ligue1", name: "Ligue 1", color: "cyan", logoPath: "/league-logos/ligue-1.png", logoClassName: darkLogoFilter },
+    { id: "ucl", name: "Champions League", color: "amber", logoPath: "/icons/markets/ucl-official.svg", logoClassName: darkLogoFilter },
+    { id: "other", name: "Other", color: "slate", logoPath: "/icons/markets/other-football.svg", logoClassName: naturalLogoFilter },
   ];
 
   const colorClasses: Record<string, { border: string; text: string; bg: string; bar: string }> = {
@@ -59,9 +66,8 @@ export default function PlayerProps({
     cyan: { border: "border-cyan-500/50", text: "text-cyan-400", bg: "bg-cyan-500/10", bar: "from-cyan-500 to-cyan-400" },
     slate: { border: "border-slate-600/70", text: "text-slate-300", bg: "bg-slate-700/20", bar: "from-slate-600 to-slate-500" },
   };
-  const logoPlateClassName =
-    "flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[radial-gradient(circle_at_30%_20%,rgba(87,209,150,0.2)_0%,rgba(15,23,42,0.94)_46%,rgba(2,6,23,0.98)_100%)] p-1.5 ring-1 ring-[#57d196]/28 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_18px_rgba(87,209,150,0.07)]";
-  const logoImageClassName = "h-full w-full object-contain drop-shadow-[0_0_4px_rgba(255,255,255,0.35)]";
+  const logoMarkClassName = "flex h-10 w-10 shrink-0 items-center justify-center overflow-visible";
+  const logoImageClassName = "h-full w-full object-contain";
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -255,13 +261,13 @@ export default function PlayerProps({
                       : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
                   }`}
                 >
-                  <span className={`${logoPlateClassName} ${isActive ? "shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_0_18px_rgba(87,209,150,0.22)]" : ""}`}>
+                  <span className={`${logoMarkClassName} ${isActive ? "scale-105" : ""}`}>
                     <Image
                       src={league.logoPath}
                       alt=""
                       width={36}
                       height={36}
-                      className={logoImageClassName}
+                      className={`${logoImageClassName} ${league.logoClassName}`}
                     />
                   </span>
                   <div className="min-w-0">
@@ -355,7 +361,7 @@ export default function PlayerProps({
                     }}
                   >
                     <div className="mb-3 flex items-start gap-3">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-950/70">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center">
                         <MarketBadge market={pick.market} category={pick.category} event={pick.event} />
                       </div>
                       <div className="min-w-0 flex-1">
