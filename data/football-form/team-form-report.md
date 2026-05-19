@@ -1,6 +1,6 @@
 # Football Team Form Layer Report
 
-Generated: 2026-05-19T11:01:57+00:00
+Generated: 2026-05-19T11:34:58+00:00
 
 ## Outputs
 
@@ -14,17 +14,17 @@ Generated: 2026-05-19T11:01:57+00:00
 - Rolling-form rows: 43112
 - Date range: 2014-08-08 to 2026-05-18
 - Leagues: bundesliga, epl, la-liga, ligue-1, serie-a
-- Team rows with xG: 3053 (7.1%)
+- Team rows with xG: 3135 (7.3%)
 - Team rows with market 1X2 strength: 43100 (100.0%)
 
 ## xG Overlay
 
 ```json
 {
-  "matched": 1674,
-  "rows": 1674,
+  "matched": 1719,
+  "rows": 1719,
   "unmatched": 0,
-  "with_xg": 1527
+  "with_xg": 1568
 }
 ```
 
@@ -32,11 +32,11 @@ Generated: 2026-05-19T11:01:57+00:00
 
 | League | Team rows | Rows with xG | xG coverage |
 | --- | ---: | ---: | ---: |
-| bundesliga | 7344 | 528 | 7.2% |
-| epl | 9096 | 720 | 7.9% |
-| la-liga | 9100 | 580 | 6.4% |
-| ligue-1 | 8472 | 578 | 6.8% |
-| serie-a | 9100 | 647 | 7.1% |
+| bundesliga | 7344 | 544 | 7.4% |
+| epl | 9096 | 736 | 8.1% |
+| la-liga | 9100 | 596 | 6.5% |
+| ligue-1 | 8472 | 594 | 7.0% |
+| serie-a | 9100 | 665 | 7.3% |
 
 ## Notes
 
