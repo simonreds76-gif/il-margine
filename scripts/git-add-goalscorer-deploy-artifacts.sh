@@ -12,6 +12,7 @@ blocked_artifacts=(
   data/goalscorer/inbox
   data/goalscorer/match-results
   data/goalscorer/test-run
+  data/goalscorer/*/fotmob-*.json
   data/goalscorer/all-leagues-live-board.json
   data/goalscorer/goalscorer-odds-history.csv
 )

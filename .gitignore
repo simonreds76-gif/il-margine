@@ -110,10 +110,19 @@ data/goalscorer/bundesliga/
 data/goalscorer/epl/
 data/goalscorer/la-liga/
 data/goalscorer/ligue-1/
+data/goalscorer/serie-a/
 data/goalscorer/live-history/
 data/goalscorer/match-results/
 data/goalscorer/inbox/
 data/goalscorer/test-run/
+
+# research/source caches kept off the deploy branch
+data/oncourt/
+tml-data/
+data/pinnacle-html/
+data/diagnostics/
+docs/backups/
+data/backtest/*.xlsx
 
 # local diagnostics
 data/diagnostics/reddit-intel/
