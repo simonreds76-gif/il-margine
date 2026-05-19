@@ -82,33 +82,6 @@ type TeamShotsScrapeStatus = {
   error?: string;
 };
 
-type DiagnosticMetric = {
-  n?: number;
-  mae?: number;
-  bias?: number;
-  rmse?: number;
-};
-
-type TeamShotsLast90Diagnostic = {
-  generated_at?: string;
-  latest_form_date?: string;
-  recent_cutoff?: string;
-  summary?: {
-    full_common?: Record<string, DiagnosticMetric>;
-    last_90_common?: Record<string, DiagnosticMetric>;
-    cap_read?: {
-      market_cap_hurts_recent?: boolean;
-      current_recent_vs_full_mae_delta?: number | null;
-    };
-  };
-  last_90_by_league?: Array<{
-    league?: string;
-    current?: DiagnosticMetric;
-    canonical_market?: DiagnosticMetric;
-    canonical_no_market?: DiagnosticMetric;
-  }>;
-};
-
 type ResearchLane = {
   market?: string;
   model?: string;
@@ -826,12 +799,6 @@ function findResearchLane(state: ResearchLaneState | null, market: string, model
   return state?.lanes?.find((lane) => lane.market === market && lane.model === model) ?? null;
 }
 
-function maeDeltaTone(candidate: number | null, baseline: number | null): "green" | "red" | "amber" | "default" {
-  if (candidate === null || baseline === null) return "default";
-  if (candidate <= baseline) return "green";
-  return "red";
-}
-
 function consensusTone(consensus: ConsensusState): string {
   if (consensus === "conflict") return "bg-rose-500/10 text-rose-300 border-rose-500/20";
   if (consensus === "divergent") return "bg-amber-500/10 text-amber-300 border-amber-500/20";
@@ -1095,10 +1062,6 @@ export default async function TeamShotsMonitorPage() {
 
     predictionsSummary,
 
-    last90Diagnostic,
-
-    last90DiagnosticReport,
-
     researchLaneState,
 
     teamShotsV3AllowedConfig,
@@ -1125,8 +1088,6 @@ export default async function TeamShotsMonitorPage() {
 
     upcomingMtime,
 
-    last90DiagnosticMtime,
-
     snapshotGeneratedAt,
 
     comparisonSource,
@@ -1147,10 +1108,6 @@ export default async function TeamShotsMonitorPage() {
     readFile("data/team-shots/shadow/team-shots-shadow-performance.txt"),
 
     readJson<PredictionsSummary>("data/team-shots/team-shots-monitor-summary.json"),
-
-    readJson<TeamShotsLast90Diagnostic>("data/football-form/team-shots-last90-diagnostic.json"),
-
-    readFile("data/football-form/team-shots-last90-diagnostic.md"),
 
     readJson<ResearchLaneState>("data/football-form/research-lane-state.json"),
 
@@ -1177,8 +1134,6 @@ export default async function TeamShotsMonitorPage() {
     readKnownFileMtime("data/team-shots/team-shots-comparison.csv"),
 
     readKnownFileMtime("data/team-shots/team-shots-upcoming.csv"),
-
-    readKnownFileMtime("data/football-form/team-shots-last90-diagnostic.json"),
 
     readTeamShotsLiveSnapshotGeneratedAt(),
 
@@ -1230,8 +1185,6 @@ export default async function TeamShotsMonitorPage() {
 
   const currentSettledShadow = settledShadow.filter((r) => policyVersion(r) === CURRENT_POLICY);
   const currentPendingShadow = pendingShadow.filter((r) => policyVersion(r) === CURRENT_POLICY);
-  const legacySettledShadow = settledShadow.filter((r) => policyVersion(r) !== CURRENT_POLICY);
-  const legacyPendingShadow = pendingShadow.filter((r) => policyVersion(r) !== CURRENT_POLICY);
 
   const activeSettledShadow = currentSettledShadow;
   const activePendingShadow = currentPendingShadow;
@@ -1256,15 +1209,6 @@ export default async function TeamShotsMonitorPage() {
   const avgClv = clvSettled.length > 0
     ? clvSettled.reduce((s, r) => s + pf(r.clv), 0) / clvSettled.length * 100
     : null;
-
-  const legacyPnl = legacySettledShadow.reduce((s, r) => s + pf(r.pnl), 0);
-  const legacyStakedTotal = legacySettledShadow.reduce((s, r) => s + pf(r.stake_units || "1"), 0);
-  const legacyPnlStaked = legacySettledShadow.reduce((s, r) => s + pf(r.pnl_staked), 0);
-  const legacyWins = legacySettledShadow.filter((r) => r.result === "won").length;
-  const legacyRoi =
-    legacySettledShadow.length > 0 ? (legacyPnl / legacySettledShadow.length) * 100 : 0;
-  const legacyRoiStaked =
-    legacyStakedTotal > 0 ? (legacyPnlStaked / legacyStakedTotal) * 100 : 0;
 
 
 
@@ -1957,7 +1901,6 @@ function LiveLineTable({
     });
 
   const pendingShadowRows = buildPendingShadowRows(activePendingShadow);
-  const legacyPendingRows = buildPendingShadowRows(legacyPendingShadow);
 
   const pendingUpcomingCount = pendingShadowRows.filter((row) => row.pendingState === "upcoming").length;
   const pendingAwaitingCount = pendingShadowRows.length - pendingUpcomingCount;
@@ -1976,30 +1919,6 @@ function LiveLineTable({
       (b.settled_at ?? b.date ?? "").localeCompare(a.settled_at ?? a.date ?? ""),
     )
     .slice(0, 15);
-
-  const last90Summary = last90Diagnostic?.summary?.last_90_common ?? {};
-  const fullSummary = last90Diagnostic?.summary?.full_common ?? {};
-  const last90CurrentMae = finiteNumber(last90Summary.current?.mae);
-  const last90CanonicalMae = finiteNumber(last90Summary.canonical_market?.mae);
-  const last90NoCapMae = finiteNumber(last90Summary.canonical_no_market?.mae);
-  const fullCurrentMae = finiteNumber(fullSummary.current?.mae);
-  const fullCanonicalMae = finiteNumber(fullSummary.canonical_market?.mae);
-  const last90MaeDelta =
-    last90CurrentMae !== null && last90CanonicalMae !== null
-      ? last90CanonicalMae - last90CurrentMae
-      : null;
-  const last90CapHurts = Boolean(last90Diagnostic?.summary?.cap_read?.market_cap_hurts_recent);
-  const last90LeagueRows = [...(last90Diagnostic?.last_90_by_league ?? [])].sort((a, b) =>
-    (a.league ?? "").localeCompare(b.league ?? ""),
-  );
-  const last90LaggingLeagues = last90LeagueRows
-    .filter((row) => {
-      const current = finiteNumber(row.current?.mae);
-      const canonical = finiteNumber(row.canonical_market?.mae);
-      return current !== null && canonical !== null && canonical > current;
-    })
-    .map((row) => row.league)
-    .filter(Boolean);
 
   const teamShotsV3Lane = findResearchLane(researchLaneState, "team_shots", "canonical_form_v3_ema20_nb");
   const teamShotsV3AllowedLeagues =
@@ -2183,8 +2102,8 @@ function LiveLineTable({
         <SectionCard
           collapsible
           defaultOpen
-          title="Team Shots V3 EMA20 Research"
-          subtitle="Active research lane | canonical_form_v3_ema20_nb | live CLV watch"
+          title="Team Shots V3 EMA20"
+          subtitle="Active team-shots model | canonical_form_v3_ema20_nb | live P/L and CLV watch"
         >
           {teamShotsV3PromotionCheck || teamShotsV3Lane ? (
             <>
@@ -2306,7 +2225,7 @@ function LiveLineTable({
               </div>
 
               <div className="mt-3 rounded-xl border border-emerald-500/20 bg-emerald-500/8 px-3 py-2 text-xs text-emerald-100">
-                This is the team-shots research model now being monitored: V3 EMA20, all five leagues allowed, canonical-only fixtures still blocked.
+                V3 EMA20 is the only active team-shots model shown here. Superseded v1/v2 diagnostics are retired from the monitor; canonical-only fixtures remain blocked.
                 {teamShotsV3Lane?.next_action ? ` Next action: ${teamShotsV3Lane.next_action}` : ""}
               </div>
 
@@ -2502,144 +2421,6 @@ function LiveLineTable({
             <EmptyState message="No Team Shots V3 EMA20 pending research picks right now. The board will fill automatically once the V3 publisher writes open rows into the CLV monitor." />
           )}
         </SectionCard>
-
-        <SectionCard
-          collapsible
-          defaultOpen={false}
-          title="Legacy team-shots last-90 diagnostic"
-          subtitle="Older v1/v2 investigation reference | superseded by V3 EMA20 above"
-        >
-          {last90Diagnostic ? (
-            <>
-              <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
-                <StatCard
-                  label="Last-90 current MAE"
-                  value={formatDiagnosticMetric(last90CurrentMae)}
-                  detail={`${last90Summary.current?.n ?? "-"} common rows`}
-                />
-                <StatCard
-                  label="Last-90 canonical MAE"
-                  value={formatDiagnosticMetric(last90CanonicalMae)}
-                  tone={statTone(maeDeltaTone(last90CanonicalMae, last90CurrentMae))}
-                  detail={last90MaeDelta !== null ? `${last90MaeDelta >= 0 ? "+" : ""}${last90MaeDelta.toFixed(4)} vs current` : undefined}
-                />
-                <StatCard
-                  label="Cap disabled MAE"
-                  value={formatDiagnosticMetric(last90NoCapMae)}
-                  tone={statTone(last90CapHurts ? "red" : "green")}
-                  detail={last90CapHurts ? "cap hurts recent MAE" : "cap is not the first suspect"}
-                />
-                <StatCard
-                  label="Full-window check"
-                  value={formatDiagnosticMetric(fullCanonicalMae)}
-                  tone={statTone(maeDeltaTone(fullCanonicalMae, fullCurrentMae))}
-                  detail={`current ${formatDiagnosticMetric(fullCurrentMae)}`}
-                />
-                <StatCard
-                  label="Research read"
-                  value={last90MaeDelta !== null && last90MaeDelta <= 0 ? "candidate" : "hold"}
-                  tone={statTone(last90MaeDelta !== null && last90MaeDelta <= 0 ? "green" : "red")}
-                  detail={last90MaeDelta !== null && last90MaeDelta <= 0 ? "recent count gate passes" : "recent count MAE still lags current"}
-                />
-              </div>
-
-              <div className="mt-3 rounded-xl border border-amber-500/20 bg-amber-500/8 px-3 py-2 text-xs text-amber-200">
-                Latest form date {last90Diagnostic.latest_form_date ?? "-"} | generated{" "}
-                {last90Diagnostic.generated_at ? formatDateTime(last90Diagnostic.generated_at) : "-"}.
-                {last90DiagnosticMtime ? ` File age ${formatRelativeAgeShort(last90DiagnosticMtime, renderReferenceMillis)}.` : ""}
-                {last90LaggingLeagues.length > 0 ? (
-                  <> Canonical capped lags current in {last90LaggingLeagues.join(", ")}.</>
-                ) : null}
-                {" "}This is research-only and does not change live picks.
-              </div>
-
-              {last90LeagueRows.length > 0 ? (
-                <div className="mt-3 overflow-x-auto rounded-xl border border-slate-800/60 bg-slate-950/30">
-                  <table className="w-full text-left text-xs">
-                    <thead>
-                      <tr className="border-b border-slate-800 text-[10px] uppercase tracking-wider text-slate-500">
-                        <th className="py-2.5 pl-4 pr-3">League</th>
-                        <th className="py-2.5 pr-3 font-mono">N</th>
-                        <th className="py-2.5 pr-3 font-mono">Current MAE</th>
-                        <th className="py-2.5 pr-3 font-mono">Canonical MAE</th>
-                        <th className="py-2.5 pr-3 font-mono">No-cap MAE</th>
-                        <th className="py-2.5 pr-4">Read</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {last90LeagueRows.map((row) => {
-                        const current = finiteNumber(row.current?.mae);
-                        const canonical = finiteNumber(row.canonical_market?.mae);
-                        const noCap = finiteNumber(row.canonical_no_market?.mae);
-                        const canonicalLags = current !== null && canonical !== null && canonical > current;
-                        const capHurts = noCap !== null && canonical !== null && noCap < canonical;
-                        return (
-                          <tr key={row.league ?? "unknown"} className="border-b border-slate-800/40">
-                            <td className="py-2 pl-4 pr-3 text-slate-200">{leagueTitle(row.league ?? "")}</td>
-                            <td className="py-2 pr-3 font-mono tabular-nums text-slate-400">{row.canonical_market?.n ?? "-"}</td>
-                            <td className="py-2 pr-3 font-mono tabular-nums text-slate-300">{formatDiagnosticMetric(current)}</td>
-                            <td className={`py-2 pr-3 font-mono tabular-nums ${canonicalLags ? "text-rose-300" : "text-emerald-300"}`}>
-                              {formatDiagnosticMetric(canonical)}
-                            </td>
-                            <td className={`py-2 pr-3 font-mono tabular-nums ${capHurts ? "text-rose-300" : "text-slate-400"}`}>
-                              {formatDiagnosticMetric(noCap)}
-                            </td>
-                            <td className="py-2 pr-4">
-                              <StatusPill
-                                label={canonicalLags ? "HOLD" : "PASS"}
-                                tone={canonicalLags
-                                  ? "bg-rose-500/10 text-rose-300 border-rose-500/20"
-                                  : "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"}
-                              />
-                              <span className="ml-2 text-[11px] text-slate-500">
-                                {capHurts ? "cap hurts here" : "cap not first suspect"}
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              ) : null}
-            </>
-          ) : (
-            <EmptyState message="Team-shots last-90 diagnostic is missing. Run scripts/team-shots-last90-diagnostic.py, then rebuild the team-shots snapshot." />
-          )}
-        </SectionCard>
-
-        {(legacySettledShadow.length > 0 || legacyPendingRows.length > 0) ? (
-          <SectionCard
-            collapsible
-            defaultOpen
-            title="Legacy policy"
-            subtitle={`${legacySettledShadow.length} settled | ${legacyPendingRows.length} pending`}
-          >
-            <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
-              <StatCard
-                label="Legacy Flat P/L (1u)"
-                value={`${legacyPnl >= 0 ? "+" : ""}${legacyPnl.toFixed(2)}u`}
-                tone={legacyPnl >= 0 ? "text-emerald-300" : "text-rose-300"}
-              />
-              <StatCard
-                label="Legacy Flat ROI (1u)"
-                value={`${legacyRoi >= 0 ? "+" : ""}${legacyRoi.toFixed(1)}%`}
-                tone={legacyRoi >= 0 ? "text-emerald-300" : "text-rose-300"}
-                detail={`${legacyWins}/${legacySettledShadow.length} wins`}
-              />
-              <StatCard
-                label="Legacy Staked P/L"
-                value={`${legacyPnlStaked >= 0 ? "+" : ""}${legacyPnlStaked.toFixed(2)}u`}
-                tone={legacyPnlStaked >= 0 ? "text-emerald-300" : "text-rose-300"}
-              />
-              <StatCard
-                label="Legacy ROI staked"
-                value={`${legacyRoiStaked >= 0 ? "+" : ""}${legacyRoiStaked.toFixed(1)}%`}
-                tone={legacyRoiStaked >= 0 ? "text-emerald-300" : "text-rose-300"}
-              />
-            </div>
-          </SectionCard>
-        ) : null}
 
         {/* Recent settled shadow bets */}
         {recentSettledShadow.length > 0 ? (
@@ -2981,75 +2762,6 @@ function LiveLineTable({
           </SectionCard>
         ) : null}
 
-        {legacyPendingRows.length > 0 ? (
-          <SectionCard
-            collapsible
-            defaultOpen={false}
-            title={`Legacy pending bets - ${legacyPendingRows.length} total`}
-            subtitle="Tracked separately from the current venue-consensus policy"
-          >
-            <div className="space-y-2">
-              {legacyPendingRows.map((row, idx) => (
-                <div key={idx} className="rounded-xl border border-slate-800/60 bg-slate-950/40 px-3 py-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <TeamLabel
-                        league={row.league}
-                        team={row.team}
-                        iconSize={18}
-                        teamClassName="truncate text-sm font-medium text-white"
-                      />
-                      <div className="mt-1">
-                        <MatchLabel
-                          league={row.league}
-                          homeTeam={row.home_team}
-                          awayTeam={row.away_team}
-                          iconSize={16}
-                          separator="v"
-                          textClassName="text-[11px] text-slate-500"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end gap-1">
-                      <StatusPill label="LEGACY" tone="bg-slate-700/30 text-slate-300 border-slate-600/30" />
-                      <StatusPill
-                        label={row.side === "over" ? "Over" : "Under"}
-                        tone={row.side === "over"
-                          ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
-                          : "bg-sky-500/10 text-sky-300 border-sky-500/20"}
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-2 grid grid-cols-2 gap-1 sm:grid-cols-5">
-                    <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Line</div>
-                      <div className="mt-0.5 font-mono text-xs text-slate-200">{row.line || "-"}</div>
-                    </div>
-                    <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Entry</div>
-                      <div className="mt-0.5 font-mono text-xs text-slate-200">{row.book_odds || "-"}</div>
-                    </div>
-                    <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Fair</div>
-                      <div className="mt-0.5 font-mono text-xs text-slate-200">{row.model_fair_odds || "-"}</div>
-                    </div>
-                    <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Edge</div>
-                      <div className={`mt-0.5 font-mono text-xs ${row.entryEdgePct !== null && row.entryEdgePct >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
-                        {row.entryEdgePct !== null ? formatSignedPercent(row.entryEdgePct) : "-"}
-                      </div>
-                    </div>
-                    <div className="rounded-lg border border-slate-800/70 bg-slate-950/40 px-2 py-1.5">
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">Stake</div>
-                      <div className="mt-0.5 font-mono text-xs text-amber-200">{`${pf(row.stake_units || "1", 1).toFixed(1)}u`}</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </SectionCard>
-        ) : null}
-
         {/* -- No upcoming warning -- */}
         {upcomingLeagueKeys.length === 0 && predictionCount === 0 ? (
           <SectionCard title="Upcoming Fixtures">
@@ -3222,14 +2934,6 @@ function LiveLineTable({
         ) : !hasBacktestArtifacts ? (
           <SectionCard collapsible defaultOpen={false} title="Backtest Report" subtitle="Artifacts unavailable">
             <EmptyState message="Backtest report files are missing from the current snapshot source, so no historical report can be shown here." />
-          </SectionCard>
-        ) : null}
-
-        {last90DiagnosticReport ? (
-          <SectionCard collapsible defaultOpen={false} title="Team-shots last-90 diagnostic report" subtitle="data/football-form/team-shots-last90-diagnostic.md">
-            <pre className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/40 p-4 text-[11px] leading-relaxed text-slate-300 whitespace-pre">
-              {last90DiagnosticReport}
-            </pre>
           </SectionCard>
         ) : null}
 
