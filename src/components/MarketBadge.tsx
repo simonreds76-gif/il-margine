@@ -56,10 +56,10 @@ const MARKET_CONFIG: Record<string, MarketConfig> = {
     containerClassName: "h-8 w-8",
     imageClassName: "h-7 w-7 object-contain",
   },
-  other: { src: "/icons/markets/other-football.svg", label: "Other football", containerClassName: "h-7 w-7", imageClassName: "h-7 w-7 object-contain" },
-  worldcup: { src: "/icons/markets/other-football.svg", label: "World Cup", containerClassName: "h-7 w-7", imageClassName: "h-7 w-7 object-contain" },
-  betbuilders: { src: "/icons/markets/other-football.svg", label: "Bet Builders", containerClassName: "h-7 w-7", imageClassName: "h-7 w-7 object-contain" },
-  atg: { src: "/icons/markets/other-football.svg", label: "ATG", containerClassName: "h-7 w-7", imageClassName: "h-7 w-7 object-contain" },
+  other: { src: "/icons/markets/other-football.svg", label: "Other football", containerClassName: "h-7 w-7", imageClassName: "h-6 w-6 object-contain" },
+  worldcup: { src: "/icons/markets/other-football.svg", label: "World Cup", containerClassName: "h-7 w-7", imageClassName: "h-6 w-6 object-contain" },
+  betbuilders: { src: "/icons/markets/other-football.svg", label: "Bet Builders", containerClassName: "h-7 w-7", imageClassName: "h-6 w-6 object-contain" },
+  atg: { src: "/icons/markets/other-football.svg", label: "ATG", containerClassName: "h-7 w-7", imageClassName: "h-6 w-6 object-contain" },
 };
 
 function getConfig(market: string, category: string, event?: string | null): MarketConfig {
@@ -93,7 +93,7 @@ interface MarketBadgeProps {
 export default function MarketBadge({ market, category, event, showLabel = false, className = "", hideOnMobile = false, compact = false }: MarketBadgeProps) {
   const { src, label, invertForDark, wide, containerClassName, imageClassName } = getConfig(market, category ?? "", event);
   const resolvedContainerClassName = compact ? "h-7 w-7" : containerClassName ?? (wide ? "h-7 w-9" : "h-7 w-7");
-  const resolvedImageClassName = compact ? "max-h-[1.15rem] max-w-[1.35rem] object-contain" : imageClassName ?? (wide ? "max-h-5 w-auto" : "max-h-5 max-w-5 object-contain");
+  const resolvedImageClassName = compact ? "max-h-[1.25rem] max-w-[1.45rem] object-contain" : imageClassName ?? (wide ? "max-h-5 w-auto" : "max-h-5 max-w-5 object-contain");
 
   return (
     <span
@@ -101,14 +101,14 @@ export default function MarketBadge({ market, category, event, showLabel = false
       title={label}
     >
       <span
-        className={`inline-flex shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[radial-gradient(circle_at_30%_20%,#ffffff_0%,#effff7_48%,#d7f8e7_100%)] p-1 ring-1 ring-[#57d196]/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)] ${resolvedContainerClassName}`}
+        className={`inline-flex shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[radial-gradient(circle_at_30%_20%,rgba(87,209,150,0.18)_0%,rgba(15,23,42,0.92)_46%,rgba(2,6,23,0.96)_100%)] p-1 ring-1 ring-[#57d196]/28 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_14px_rgba(87,209,150,0.08)] ${resolvedContainerClassName}`}
       >
         <img
           src={`${src}?v=12`}
           alt={label}
           width={wide ? 32 : 24}
           height={24}
-          className={`${resolvedImageClassName} shrink-0 drop-shadow-[0_1px_2px_rgba(15,23,42,0.28)] ${invertForDark ? "brightness-0" : ""}`}
+          className={`${resolvedImageClassName} shrink-0 drop-shadow-[0_0_3px_rgba(255,255,255,0.34)] ${invertForDark ? "brightness-0" : ""}`}
         />
       </span>
       {showLabel && <span className="text-xs font-medium text-slate-400">{label}</span>}

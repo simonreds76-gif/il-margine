@@ -60,8 +60,8 @@ export default function PlayerProps({
     slate: { border: "border-slate-600/70", text: "text-slate-300", bg: "bg-slate-700/20", bar: "from-slate-600 to-slate-500" },
   };
   const logoPlateClassName =
-    "flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[radial-gradient(circle_at_30%_20%,#ffffff_0%,#effff7_48%,#d7f8e7_100%)] p-1.5 ring-1 ring-[#57d196]/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]";
-  const logoImageClassName = "h-full w-full object-contain drop-shadow-[0_1px_2px_rgba(15,23,42,0.28)]";
+    "flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[radial-gradient(circle_at_30%_20%,rgba(87,209,150,0.2)_0%,rgba(15,23,42,0.94)_46%,rgba(2,6,23,0.98)_100%)] p-1.5 ring-1 ring-[#57d196]/28 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_18px_rgba(87,209,150,0.07)]";
+  const logoImageClassName = "h-full w-full object-contain drop-shadow-[0_0_4px_rgba(255,255,255,0.35)]";
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -255,7 +255,7 @@ export default function PlayerProps({
                       : "bg-slate-900/30 border-slate-800 text-slate-400 hover:border-slate-700"
                   }`}
                 >
-                  <span className={`${logoPlateClassName} ${isActive ? "shadow-[inset_0_1px_0_rgba(255,255,255,0.75),0_0_18px_rgba(87,209,150,0.2)]" : ""}`}>
+                  <span className={`${logoPlateClassName} ${isActive ? "shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_0_18px_rgba(87,209,150,0.22)]" : ""}`}>
                     <Image
                       src={league.logoPath}
                       alt=""

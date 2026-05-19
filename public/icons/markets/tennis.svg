@@ -1,5 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-  <circle cx="12" cy="12" r="9" fill="#4a5f23" stroke="#22c55e" stroke-width="1.5"/>
-  <path d="M5 7c2 2.5 2 7.5 0 10" fill="none" stroke="#6b8e23" stroke-width="2" stroke-linecap="round"/>
-  <path d="M19 7c-2 2.5-2 7.5 0 10" fill="none" stroke="#6b8e23" stroke-width="2" stroke-linecap="round"/>
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="ball" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(17 13) rotate(50) scale(34)">
+      <stop stop-color="#F1FFD2"/>
+      <stop offset=".45" stop-color="#A8F05D"/>
+      <stop offset="1" stop-color="#57D196"/>
+    </radialGradient>
+    <filter id="glow" x="2" y="2" width="44" height="44" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="0" stdDeviation="1.8" flood-color="#57D196" flood-opacity=".42"/>
+      <feDropShadow dx="0" dy="1.4" stdDeviation="1.8" flood-color="#020617" flood-opacity=".45"/>
+    </filter>
+  </defs>
+  <circle cx="24" cy="24" r="20.5" fill="url(#ball)" stroke="#DFFFC9" stroke-width="2.2" filter="url(#glow)"/>
+  <path d="M9.4 11.9c8.9 5.1 12.5 17.8 8 28" stroke="#F7FFE5" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M38.6 11.9c-8.9 5.1-12.5 17.8-8 28" stroke="#F7FFE5" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M9.4 11.9c8.9 5.1 12.5 17.8 8 28" stroke="#0B3B27" stroke-opacity=".22" stroke-width="1.1" stroke-linecap="round"/>
+  <path d="M38.6 11.9c-8.9 5.1-12.5 17.8-8 28" stroke="#0B3B27" stroke-opacity=".22" stroke-width="1.1" stroke-linecap="round"/>
 </svg>
