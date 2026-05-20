@@ -1,38 +1,38 @@
 ======================================================================
   TEAM SHOTS MODEL -- CALIBRATION REPORT
 ======================================================================
-  Total predictions: 2862
+  Total predictions: 2866
 
   Mean predicted lambda: 12.59
-  Mean actual shots:     12.61
+  Mean actual shots:     12.60
 
   MAE:  3.77
   RMSE: 4.82
 
-  Line   8.5: predicted=0.643  actual=0.770  diff=-0.127  (n=2862)
-  Line   9.5: predicted=0.583  actual=0.696  diff=-0.113  (n=2862)
-  Line  10.5: predicted=0.525  actual=0.616  diff=-0.091  (n=2862)
-  Line  11.5: predicted=0.470  actual=0.539  diff=-0.069  (n=2862)
-  Line  12.5: predicted=0.419  actual=0.471  diff=-0.052  (n=2862)
-  Line  13.5: predicted=0.372  actual=0.400  diff=-0.028  (n=2862)
-  Line  14.5: predicted=0.328  actual=0.322  diff=+0.006  (n=2862)
-  Line  15.5: predicted=0.289  actual=0.256  diff=+0.033  (n=2862)
-  Line  16.5: predicted=0.254  actual=0.208  diff=+0.046  (n=2862)
-  Line  17.5: predicted=0.222  actual=0.165  diff=+0.057  (n=2862)
-  Line  19.5: predicted=0.169  actual=0.103  diff=+0.066  (n=2862)
-  Line  20.5: predicted=0.147  actual=0.078  diff=+0.069  (n=2862)
+  Line   8.5: predicted=0.643  actual=0.770  diff=-0.127  (n=2866)
+  Line   9.5: predicted=0.583  actual=0.696  diff=-0.113  (n=2866)
+  Line  10.5: predicted=0.525  actual=0.616  diff=-0.091  (n=2866)
+  Line  11.5: predicted=0.470  actual=0.538  diff=-0.068  (n=2866)
+  Line  12.5: predicted=0.419  actual=0.471  diff=-0.052  (n=2866)
+  Line  13.5: predicted=0.372  actual=0.400  diff=-0.028  (n=2866)
+  Line  14.5: predicted=0.329  actual=0.322  diff=+0.007  (n=2866)
+  Line  15.5: predicted=0.289  actual=0.255  diff=+0.034  (n=2866)
+  Line  16.5: predicted=0.254  actual=0.208  diff=+0.046  (n=2866)
+  Line  17.5: predicted=0.222  actual=0.165  diff=+0.057  (n=2866)
+  Line  19.5: predicted=0.169  actual=0.103  diff=+0.067  (n=2866)
+  Line  20.5: predicted=0.148  actual=0.078  diff=+0.069  (n=2866)
 
   Calibration by probability bins (over 10.5):
     [0.00, 0.20): n=   75  predicted=0.151  actual=0.280  diff=-0.129
     [0.20, 0.35): n=  345  predicted=0.292  actual=0.345  diff=-0.053
-    [0.35, 0.50): n=  804  predicted=0.431  actual=0.527  diff=-0.096
-    [0.50, 0.65): n=  962  predicted=0.575  actual=0.657  diff=-0.082
-    [0.65, 0.80): n=  575  predicted=0.708  actual=0.821  diff=-0.113
+    [0.35, 0.50): n=  805  predicted=0.431  actual=0.527  diff=-0.096
+    [0.50, 0.65): n=  963  predicted=0.575  actual=0.656  diff=-0.082
+    [0.65, 0.80): n=  577  predicted=0.708  actual=0.820  diff=-0.112
     [0.80, 1.00): n=  101  predicted=0.836  actual=0.950  diff=-0.114
 
   Per-league breakdown:
     bundesliga     : n=  504  pred=13.19  actual=13.24  MAE=3.84
-    epl            : n=  616  pred=12.55  actual=12.61  MAE=3.59
+    epl            : n=  620  pred=12.56  actual=12.59  MAE=3.58
     la-liga        : n=  620  pred=12.60  actual=12.54  MAE=3.87
     ligue-1        : n=  502  pred=12.21  actual=12.47  MAE=3.82
     serie-a        : n=  620  pred=12.43  actual=12.26  MAE=3.75
