@@ -1,5 +1,5 @@
 Assist Value Model Report
-generated_at_utc: 2026-05-20T16:54:59Z
+generated_at_utc: 2026-05-20T19:27:37Z
 
 Status
 model_status: ENABLED_SHADOW_V0
@@ -7,10 +7,10 @@ public_signal_status: DISABLED
 settlement_status: NOT_BACKTESTED
 
 Counts
-priced_rows: 1617
-shadow_signals: 6
-watch_rows: 9
-shadow_signals_by_league: la-liga=2, ligue-1=2, serie-a=2
+priced_rows: 2141
+shadow_signals: 7
+watch_rows: 10
+shadow_signals_by_league: la-liga=3, ligue-1=2, serie-a=2
 
 Model
 p_assist = 1 - exp(-lambda)
@@ -18,7 +18,8 @@ lambda = blended player xA/assist rate per90 * expected_minutes * team_attack_sc
 Market probability is 1 / Bet365 decimal odds; no vig adjustment because only one side is available.
 
 Top shadow signals
- - Federico Dimarco | Bologna FC vs Inter Milano | fair 2.853 vs market 4.333 | edge 11.98pp | conf high | setpiece 30.0
+ - Federico Dimarco | Bologna FC vs Inter Milano | fair 2.853 vs market 4.500 | edge 12.83pp | conf high | setpiece 30.0
+ - Jon Ander Olasagasti | Real Betis Seville vs Levante UD | fair 4.299 vs market 7.500 | edge 9.93pp | conf medium | setpiece 56.1
  - Jon Ander Olasagasti | Levante UD vs RCD Mallorca | fair 4.338 vs market 7.000 | edge 8.77pp | conf medium | setpiece 56.1
  - Gauthier Hein | OGC Nice vs FC Metz | fair 4.646 vs market 7.000 | edge 7.24pp | conf high | setpiece 94.12
  - Adrien Thomasson | Olympique Lyon vs Racing Club De Lens | fair 3.453 vs market 4.500 | edge 6.74pp | conf high | setpiece 24.32
