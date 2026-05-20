@@ -1985,8 +1985,44 @@ async function run(): Promise<Response> {
     const reverseKey = normalizePinnaclePairKey(row.player2_name ?? "", row.player1_name ?? "", row.league);
     return currentOncourtPairKeys.has(directKey) || currentOncourtPairKeys.has(reverseKey);
   };
+  const openTournamentNames = Array.from(
+    new Set(
+      currentOpenOncourtRows
+        .map((row) => {
+          const tourId = row.tour_id != null ? Number(row.tour_id) : NaN;
+          return Number.isFinite(tourId) ? tours.get(tourId)?.name ?? "" : "";
+        })
+        .filter(Boolean)
+    )
+  );
+  const hasFrenchOpenOpenSchedule = openTournamentNames.some((name) =>
+    /french open|roland garros/i.test(name)
+  );
+  const isFrenchOpenQualifyingWindow = (() => {
+    const month = now.getUTCMonth() + 1;
+    const day = now.getUTCDate();
+    return month === 5 && day >= 15 && day <= 27;
+  })();
+  const inferPinnacleOnlyTournament = (row: PinnacleRow): string | undefined => {
+    const tournament = (row.tournament ?? "").trim();
+    if (tournament) return tournament;
+
+    // Supabase may still be on the legacy snapshot schema without league_name.
+    // During RG qualifying week, Pinnacle publishes qualifier markets before
+    // OnCourt carries the qualifying draw, so keep them visible with a label.
+    if (
+      row.league === "ATP" &&
+      hasFrenchOpenOpenSchedule &&
+      isFrenchOpenQualifyingWindow &&
+      !isInCurrentOpenOncourtSchedule(row)
+    ) {
+      return "ATP French Open - Qualifiers";
+    }
+
+    return undefined;
+  };
   const isGrandSlamQualifyingPinnacleRow = (row: PinnacleRow) => {
-    const tournamentText = (row.tournament ?? "").toLowerCase();
+    const tournamentText = (inferPinnacleOnlyTournament(row) ?? "").toLowerCase();
     const isQualifier = /\bqualif/.test(tournamentText);
     const isSlam =
       tournamentText.includes("french open") ||
@@ -3110,7 +3146,7 @@ async function run(): Promise<Response> {
         : undefined;
 
   const preliminaryPinnacleOnly = pinnacleOnly.map((p) => ({
-    tournament: p.tournament,
+    tournament: inferPinnacleOnlyTournament(p),
     player1_name: p.player1_name,
     player2_name: p.player2_name,
     odds1: p.odds1,
