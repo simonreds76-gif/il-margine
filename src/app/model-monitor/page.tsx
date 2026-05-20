@@ -1533,7 +1533,7 @@ export default async function ModelMonitorPage() {
               <div className="mt-3 grid gap-3">
                 {activeLaneScoreRows.map((row) => {
                   const detailRows = laneDetailRows.get(`${row.policy}|${row.lane}`) ?? [];
-                  const latestRows = detailRows.slice(0, 5);
+                  const latestRows = detailRows.slice(0, 8);
                   return (
                     <details key={`latest-lane-${row.policy}-${row.lane}`} className="rounded-xl border border-slate-800/80 bg-slate-900/55 p-3">
                       <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
