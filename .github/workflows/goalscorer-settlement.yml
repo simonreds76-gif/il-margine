@@ -235,6 +235,7 @@ jobs:
               --context "${CONTEXT_CURRENT[$league]}" "${CONTEXT_HISTORY[$league]}" \
               --data "${DATA_GLOBS[$league]}" \
               --days-back 21 \
+              --allow-empty-context \
               --output "${REVIEW_OUTPUTS[$league]}" \
               --json-output "${REVIEW_JSON_OUTPUTS[$league]}"
 

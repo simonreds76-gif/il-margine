@@ -31,6 +31,33 @@ DEFAULT_OUTPUT = ROOT / "data" / "goalscorer" / "penalty-duty-review.csv"
 DEFAULT_JSON_OUTPUT = ROOT / "data" / "goalscorer" / "penalty-duty-review.json"
 HIERARCHY_SLOTS = ("primary", "secondary", "tertiary")
 STARTER_STATUSES = {"confirmed_starter", "expected_starter"}
+REVIEW_FIELDNAMES = [
+    "date",
+    "league",
+    "review_source",
+    "match",
+    "team",
+    "opponent",
+    "actual_taker",
+    "actual_role_pre_match",
+    "penalties_attempted",
+    "penalties_scored",
+    "distinct_takers_in_match",
+    "primary_pre_match",
+    "secondary_pre_match",
+    "tertiary_pre_match",
+    "primary_lineup_status",
+    "secondary_lineup_status",
+    "tertiary_lineup_status",
+    "active_taker_pre_match",
+    "active_slot_pre_match",
+    "team_lineup_status",
+    "review_type",
+    "review_priority",
+    "editorial_note",
+    "context_generated_at",
+    "context_source_path",
+]
 
 
 def _expand_paths(paths: Iterable[str]) -> List[Path]:
@@ -318,41 +345,37 @@ def main() -> None:
     parser.add_argument("--days-back", type=int, default=14, help="Only review penalty events within this many days")
     parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Penalty-duty review CSV path")
     parser.add_argument("--json-output", default=str(DEFAULT_JSON_OUTPUT), help="Penalty-duty review JSON path")
+    parser.add_argument(
+        "--allow-empty-context",
+        action="store_true",
+        help="Write empty review artifacts instead of failing when no context rows exist.",
+    )
     args = parser.parse_args()
 
     context_rows = load_context_rows(args.context)
     if not context_rows:
-        raise SystemExit("No penalty-duty context rows found. Run goalscorer-live-compare.py first.")
+        if not args.allow_empty_context:
+            raise SystemExit("No penalty-duty context rows found. Run goalscorer-live-compare.py first.")
+        _write_csv(Path(args.output), [], REVIEW_FIELDNAMES)
+        _write_json(
+            Path(args.json_output),
+            {
+                "schema_version": 1,
+                "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+                "row_count": 0,
+                "context_row_count": 0,
+                "status": "empty_context",
+                "rows": [],
+            },
+        )
+        print("Loaded context rows: 0")
+        print("Review rows:         0")
+        print(f"Saved CSV:           {args.output}")
+        print(f"Saved JSON:          {args.json_output}")
+        return
 
     review_rows = build_review_rows(context_rows, args.data, args.days_back)
-    fieldnames = [
-        "date",
-        "league",
-        "review_source",
-        "match",
-        "team",
-        "opponent",
-        "actual_taker",
-        "actual_role_pre_match",
-        "penalties_attempted",
-        "penalties_scored",
-        "distinct_takers_in_match",
-        "primary_pre_match",
-        "secondary_pre_match",
-        "tertiary_pre_match",
-        "primary_lineup_status",
-        "secondary_lineup_status",
-        "tertiary_lineup_status",
-        "active_taker_pre_match",
-        "active_slot_pre_match",
-        "team_lineup_status",
-        "review_type",
-        "review_priority",
-        "editorial_note",
-        "context_generated_at",
-        "context_source_path",
-    ]
-    _write_csv(Path(args.output), review_rows, fieldnames)
+    _write_csv(Path(args.output), review_rows, REVIEW_FIELDNAMES)
     _write_json(
         Path(args.json_output),
         {
