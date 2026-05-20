@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-20T01:33:25Z",
+  "fetched_at": "2026-05-20T11:36:54Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
@@ -8128,8 +8128,7 @@
           "home_shots": 10,
           "home_sot": 2,
           "home_team": "bournemouth",
-          "match_id": 4813735,
-          "source": "fotmob",
+          "source": "football-data",
           "total_corners": 13
         },
         "2026-05-19|chelsea|tottenham": {
@@ -8141,28 +8140,24 @@
           "home_shots": 9,
           "home_sot": 4,
           "home_team": "chelsea",
-          "match_id": 4813739,
-          "source": "fotmob",
+          "source": "football-data",
           "total_corners": 7
         }
       },
-      "football_data_count": 368,
-      "football_data_latest": "2026-05-18",
-      "fotmob_count": 3,
-      "fotmob_latest": "2026-05-19",
-      "lag_days": 2,
+      "football_data_count": 370,
+      "football_data_latest": "2026-05-19",
+      "fotmob_count": 0,
+      "fotmob_latest": null,
+      "lag_days": 1,
       "source": "football-data",
-      "source_latest": "2026-05-18",
+      "source_latest": "2026-05-19",
       "target_dates": [
-        "2026-05-18",
-        "2026-05-19",
-        "2026-05-20",
         "2026-05-23",
         "2026-05-24",
         "2026-05-25"
       ],
       "target_fixture_count": 2,
-      "unresolved_fixture_count": 1
+      "unresolved_fixture_count": 2
     },
     "la-liga": {
       "api_football_count": 0,
