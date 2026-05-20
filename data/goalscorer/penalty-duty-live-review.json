@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-19T01:37:12Z",
+  "generated_at": "2026-05-20T09:33:05Z",
   "league": "serie-a",
   "row_count": 1,
   "rows": [
@@ -12,27 +12,27 @@
       "team": "Milan",
       "opponent": "Genoa",
       "actual_taker": "Christopher Nkunku",
-      "actual_role_pre_match": "tertiary",
+      "actual_role_pre_match": "none",
       "penalties_attempted": 1,
       "penalties_scored": 1,
       "distinct_takers_in_match": 1,
       "minute": "50",
       "event_type": "Goal",
       "event_result": "scored",
-      "primary_pre_match": "Christian Pulisic",
-      "secondary_pre_match": "Rafael Leão",
-      "tertiary_pre_match": "Christopher Nkunku",
-      "primary_lineup_status": "confirmed_bench",
-      "secondary_lineup_status": "not_in_squad",
-      "tertiary_lineup_status": "confirmed_starter",
-      "active_taker_pre_match": "Christopher Nkunku",
-      "active_slot_pre_match": "tertiary",
+      "primary_pre_match": "",
+      "secondary_pre_match": "",
+      "tertiary_pre_match": "",
+      "primary_lineup_status": "",
+      "secondary_lineup_status": "",
+      "tertiary_lineup_status": "",
+      "active_taker_pre_match": "",
+      "active_slot_pre_match": "",
       "team_lineup_status": "unknown",
-      "review_type": "expected_backup_shift",
+      "review_type": "needs_manual_review",
       "review_priority": "medium",
-      "editorial_note": "Christopher Nkunku took 1 penalty attempt and scored for Milan vs Genoa. Primary pre-match: Christian Pulisic (confirmed_bench). Secondary pre-match: Rafael Leão (not_in_squad). Pre-match active slot was tertiary -> Christopher Nkunku. Looks like the expected backup took over because the primary was unavailable or inactive.",
-      "context_generated_at": "2026-05-17T19:17:13Z",
-      "context_source_path": "data/goalscorer/live-history/penalty-duty-context-20260517-191713.json"
+      "editorial_note": "Christopher Nkunku took 1 penalty attempt and scored for Milan vs Genoa. Needs manual editorial review.",
+      "context_generated_at": "",
+      "context_source_path": ""
     }
   ]
 }

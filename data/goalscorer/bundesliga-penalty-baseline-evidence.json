@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-19T01:37:59Z",
+  "generated_at": "2026-05-20T09:33:36Z",
   "league": "bundesliga",
-  "row_count": 5,
+  "row_count": 3,
   "rows": [
     {
       "team": "Bayer Leverkusen",
@@ -15,26 +15,10 @@
       "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "settled_logs"
+        "fotmob_live"
       ],
       "event_count": 1,
       "last_event_date": "2026-05-16"
-    },
-    {
-      "team": "Bayern Munich",
-      "team_key": "bayern munich",
-      "player_name": "Harry Kane",
-      "player_key": "harry kane",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "settled_logs"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-05-09"
     },
     {
       "team": "Eintracht Frankfurt",
@@ -47,42 +31,25 @@
       "observed_sample": 2.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "settled_logs"
+        "fotmob_live"
       ],
       "event_count": 1,
       "last_event_date": "2026-05-16"
-    },
-    {
-      "team": "VfB Stuttgart",
-      "team_key": "vfb stuttgart",
-      "player_name": "Maximilian Mittelstädt",
-      "player_key": "maximilian mittelst dt",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "settled_logs"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-05-09"
     },
     {
       "team": "Wolfsburg",
       "team_key": "wolfsburg",
       "player_name": "Christian Eriksen",
       "player_key": "christian eriksen",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 2,
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
       "observed_share": 1.0,
-      "observed_sample": 2.0,
+      "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live",
-        "settled_logs"
+        "fotmob_live"
       ],
-      "event_count": 2,
+      "event_count": 1,
       "last_event_date": "2026-05-16"
     }
   ]

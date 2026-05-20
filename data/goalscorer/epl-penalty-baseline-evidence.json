@@ -1,72 +1,23 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-05-19T01:37:55Z",
+  "generated_at": "2026-05-20T09:33:35Z",
   "league": "epl",
-  "row_count": 7,
+  "row_count": 2,
   "rows": [
-    {
-      "team": "Bournemouth",
-      "team_key": "bournemouth",
-      "player_name": "Eli Junior Kroupi",
-      "player_key": "eli junior kroupi",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "settled_logs"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-05-03"
-    },
-    {
-      "team": "Brentford",
-      "team_key": "brentford",
-      "player_name": "Thiago",
-      "player_key": "thiago",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "settled_logs"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-05-02"
-    },
-    {
-      "team": "Chelsea",
-      "team_key": "chelsea",
-      "player_name": "Cole Palmer",
-      "player_key": "cole palmer",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "settled_logs"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-05-04"
-    },
     {
       "team": "Crystal Palace",
       "team_key": "crystal palace",
       "player_name": "Ismaïla Sarr",
-      "player_key": "ismaila sarr",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 2,
+      "player_key": "isma la sarr",
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
       "observed_share": 1.0,
-      "observed_sample": 2.0,
+      "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live",
-        "settled_logs"
+        "fotmob_live"
       ],
-      "event_count": 2,
+      "event_count": 1,
       "last_event_date": "2026-05-17"
     },
     {
@@ -74,49 +25,16 @@
       "team_key": "fulham",
       "player_name": "Antonee Robinson",
       "player_key": "antonee robinson",
-      "observed_player_penalties": 2,
-      "observed_team_penalties": 2,
+      "observed_player_penalties": 1,
+      "observed_team_penalties": 1,
       "observed_share": 1.0,
-      "observed_sample": 2.0,
+      "observed_sample": 1.0,
       "evidence_source": "review_events",
       "review_sources": [
-        "fotmob_live",
-        "settled_logs"
+        "fotmob_live"
       ],
-      "event_count": 2,
+      "event_count": 1,
       "last_event_date": "2026-05-17"
-    },
-    {
-      "team": "Leeds",
-      "team_key": "leeds",
-      "player_name": "Dominic Calvert-Lewin",
-      "player_key": "dominic calvert lewin",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "settled_logs"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-05-11"
-    },
-    {
-      "team": "Nottingham Forest",
-      "team_key": "nottingham forest",
-      "player_name": "Igor Jesus",
-      "player_key": "igor jesus",
-      "observed_player_penalties": 1,
-      "observed_team_penalties": 1,
-      "observed_share": 1.0,
-      "observed_sample": 1.0,
-      "evidence_source": "review_events",
-      "review_sources": [
-        "settled_logs"
-      ],
-      "event_count": 1,
-      "last_event_date": "2026-05-04"
     }
   ]
 }
