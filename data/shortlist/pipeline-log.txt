@@ -3209,3 +3209,58 @@
 [19:03:58]   Team shots:        http://localhost:3000/model-monitor/team-shots
 [19:03:58]   Files:             data/shortlist/ + data/team-shots/
 [19:03:58] ==========================================
+[10:48:16] ==========================================
+[10:48:16]   TEAM PROPS PIPELINE -- 2026-05-20 10:48:15
+[10:48:16]   (Corners + Team Total Shots)
+[10:48:16] ==========================================
+[10:48:16] 
+[10:48:16] --- CORNERS ---
+[10:48:16] Step 1a: Refreshing corners current-season history...
+[10:48:24]   Corners historical refresh complete
+[10:48:24] Step 1b: Running corners model...
+[10:48:29]     20856 predictions generated
+[10:48:29] Step 1c: Fitting Platt calibration...
+[10:48:43]   Params written   -> /home/runner/work/il-margine/il-margine/data/corners-ou/corners-calibration-params.json
+[10:48:43] Step 1d: Building corners V3 backtest artifacts...
+[10:48:46]   Backtest bets written    : 180
+[10:48:46] Step 1e: Refreshing Pinnacle corners snapshot...
+[10:48:59]     New rows: 4
+[10:48:59] Step 1f: Generating official V3 shortlist from Pinnacle corners snapshot...
+[10:49:00] Step 1g: Generating V3.1 shadow shortlist from Pinnacle corners snapshot...
+[10:49:00] Step 1h: Settling previous corner bets...
+[10:49:02]     Settled: 46  W25/L19/P2  (57% ex-push)
+[10:49:02] 
+[10:49:02] --- TEAM TOTAL SHOTS ---
+[10:49:02] Skipped (SkipTeamShots switch enabled)
+[10:49:02] 
+[10:49:02] --- RESEARCH FEEDS ---
+[10:49:35]   Validation status: warning
+[10:49:35]   Wrote data/football-form/team-form-validation.json
+[10:49:35]   Wrote data/football-form/team-form-validation.md
+[10:49:35]   Wrote data/football-form/team-match-base.csv
+[10:49:35]   Wrote data/football-form/team-rolling-form.csv
+[10:49:35]   Wrote data/football-form/team-match-base-2026-05-20.csv
+[10:49:35]   Wrote data/football-form/team-rolling-form-2026-05-20.csv
+[10:49:35]   Wrote data/football-form/team-form-manifest.json
+[10:49:35]   Wrote data/football-form/team-form-report.md
+[10:49:45]   data/football-form/team-match-base.csv missing; rebuilding canonical football form layer.
+[10:49:45]   Wrote data/football-form/team-shots-v3-ema20-published-picks.csv (60 rows)
+[10:49:45]   Wrote data/football-form/corners-v0-published-picks.csv (46 rows)
+[10:49:45]   Wrote data/football-form/team-shots-v3-ema20-clv-monitor.csv
+[10:49:45]   Wrote data/football-form/team-shots-v3-ema20-clv-monitor.md
+[10:49:45]   Wrote data/football-form/corners-v0-clv-monitor.csv
+[10:49:45]   Wrote data/football-form/corners-v0-clv-monitor.md
+[10:49:45] 
+[10:49:45] Syncing latest corners artifacts...
+[10:49:45]   Synced V3 shortlist: shortlist-2026-05-20.txt -> shortlist-latest.txt
+[10:49:45]   Synced V3 value bets: value-bets-2026-05-20.csv -> value-bets-latest.csv
+[10:49:45]   Synced V3 signals: signals-2026-05-20.csv -> signals-latest.csv
+[10:49:45]   Synced V3.1 shortlist: shortlist-2026-05-20-v31.txt -> shortlist-latest-v31.txt
+[10:49:45]   Synced V3.1 value bets: value-bets-2026-05-20-v31.csv -> value-bets-latest-v31.csv
+[10:49:45]   Synced V3.1 signals: signals-2026-05-20-v31.csv -> signals-latest-v31.csv
+[10:49:45] 
+[10:49:45] Pipeline complete. Check:
+[10:49:45]   Corners shortlist: http://localhost:3000/model-monitor/corners
+[10:49:45]   Team shots:        http://localhost:3000/model-monitor/team-shots
+[10:49:45]   Files:             data/shortlist/ + data/team-shots/
+[10:49:45] ==========================================
