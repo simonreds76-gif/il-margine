@@ -827,6 +827,10 @@ function sortSignalRowsForBrowser(rows: MonitorSignalRow[]): MonitorSignalRow[] 
   });
 }
 
+function sortSignalRowsByCapture(rows: MonitorSignalRow[]): MonitorSignalRow[] {
+  return [...rows].sort((left, right) => signalTimestamp(right) - signalTimestamp(left));
+}
+
 function getSettlementDate(row: MonitorSignalRow): string {
   return row.settledAt ? row.settledAt.slice(0, 10) : row.matchDate || row.date;
 }
@@ -974,15 +978,17 @@ export default async function ModelMonitorPage() {
   const volumeSignalsArchiveRaw = parseSignalRows(volumeSignalsArchiveCsv);
   const volumeSignalsArchive = dedupeLogicalSignalRows(volumeSignalsArchiveRaw);
   const volumeSignalsLive = dedupeLogicalSignalRows(parseSignalRows(volumeSignalsLiveCsv));
+  const volumeSignalsTracked = dedupeLogicalSignalRows([...volumeSignalsArchiveRaw, ...parseSignalRows(volumeSignalsLiveCsv)]);
   const volumeSignalsClean = filterCleanSignalRows(volumeSignalsArchive);
-  const volumeQueue = getActiveQueueRows(volumeSignalsLive);
+  const volumeQueue = getActiveQueueRows(volumeSignalsTracked);
   const volumeNoMatchRows = getNoMatchRows(volumeSignalsArchive);
   const volumeSettledRows = getSettledSignalRows(volumeSignalsArchive);
   const spreadV1SignalsArchiveRaw = parseSignalRows(spreadV1SignalsArchiveCsv);
   const spreadV1SignalsArchive = dedupeLogicalSignalRows(spreadV1SignalsArchiveRaw);
   const spreadV1SignalsLive = dedupeLogicalSignalRows(parseSignalRows(spreadV1SignalsLiveCsv));
+  const spreadV1SignalsTracked = dedupeLogicalSignalRows([...spreadV1SignalsArchiveRaw, ...parseSignalRows(spreadV1SignalsLiveCsv)]);
   const spreadV1SignalsClean = filterCleanSignalRows(spreadV1SignalsArchive);
-  const spreadV1Queue = getActiveQueueRows(spreadV1SignalsLive);
+  const spreadV1Queue = getActiveQueueRows(spreadV1SignalsTracked);
   const spreadV1NoMatchRows = getNoMatchRows(spreadV1SignalsArchive);
   const spreadV1SettledRows = getSettledSignalRows(spreadV1SignalsArchive);
   const spreadShadowSignalsArchiveRaw = parseSignalRows(spreadShadowSignalsArchiveCsv);
@@ -1285,12 +1291,12 @@ export default async function ModelMonitorPage() {
     (row) => row.policy !== "Spread Shadow" && !row.policy.includes("(internal)"),
   );
   const laneDetailRows = new Map<string, MonitorSignalRow[]>([
-    ["Strict|ML", sortSignalRowsForBrowser(strictSignalsArchive.filter((row) => row.betType !== "spread"))],
-    ["Strict|Spread", sortSignalRowsForBrowser(strictSignalsArchive.filter((row) => row.betType === "spread"))],
-    ["Volume 200|ML", sortSignalRowsForBrowser(volumeSignalsArchive.filter((row) => row.betType !== "spread"))],
-    ["Spread v1|HC", sortSignalRowsForBrowser(spreadV1SignalsArchive)],
-    ["Challenger ML (internal)|ML", sortSignalRowsForBrowser(challengerSignalsArchive)],
-    ["Clay-Fav HC (internal)|HC", sortSignalRowsForBrowser(clayFavSignalsArchive)],
+    ["Strict|ML", sortSignalRowsByCapture(strictSignalsArchive.filter((row) => row.betType !== "spread"))],
+    ["Strict|Spread", sortSignalRowsByCapture(strictSignalsArchive.filter((row) => row.betType === "spread"))],
+    ["Volume 200|ML", sortSignalRowsByCapture(volumeSignalsTracked.filter((row) => row.betType !== "spread"))],
+    ["Spread v1|HC", sortSignalRowsByCapture(spreadV1SignalsTracked)],
+    ["Challenger ML (internal)|ML", sortSignalRowsByCapture(challengerSignalsArchive)],
+    ["Clay-Fav HC (internal)|HC", sortSignalRowsByCapture(clayFavSignalsArchive)],
   ]);
   const signalBrowserGroups = [
     {

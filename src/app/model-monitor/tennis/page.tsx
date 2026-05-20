@@ -210,6 +210,41 @@ function topReasons(rows: CsvRow[]): string[] {
     .map(([reason, count]) => `${reason} (${count})`);
 }
 
+function rowSignalTimestamp(row: CsvRow): number {
+  const stamp = Date.parse(`${row.date || ""}T${row.time_utc || "00:00:00"}Z`);
+  return Number.isFinite(stamp) ? stamp : 0;
+}
+
+function logicalCsvSignalKey(row: CsvRow): string {
+  return [
+    row.match_date || row.date || "",
+    (row.player1 || "").trim().toLowerCase(),
+    (row.player2 || "").trim().toLowerCase(),
+    row.bet_type || "match",
+    row.side || "",
+    row.policy_mode || "base",
+    row.signal_profile || "",
+  ].join("|");
+}
+
+function latestCapturedRows(rows: CsvRow[]): CsvRow[] {
+  const byKey = new Map<string, CsvRow>();
+  [...rows]
+    .sort((left, right) => rowSignalTimestamp(left) - rowSignalTimestamp(right))
+    .forEach((row) => {
+      const key = logicalCsvSignalKey(row);
+      const previous = byKey.get(key);
+      if (!previous) {
+        byKey.set(key, row);
+        return;
+      }
+      const rowSettled = (row.settlement_status || "").trim().toLowerCase() === "settled";
+      const previousSettled = (previous.settlement_status || "").trim().toLowerCase() === "settled";
+      byKey.set(key, rowSettled && !previousSettled ? { ...previous, ...row } : previous);
+    });
+  return [...byKey.values()].sort((left, right) => rowSignalTimestamp(right) - rowSignalTimestamp(left)).slice(0, 5);
+}
+
 async function loadLaneStats(id: TennisResearchLaneId): Promise<LaneStats> {
   const files = TENNIS_MONITOR_FILES[id];
   const [liveCsv, archiveCsv, nearMissCsv, clvCsv, clvSpreadCsv] = await Promise.all([
@@ -240,7 +275,7 @@ async function loadLaneStats(id: TennisResearchLaneId): Promise<LaneStats> {
     roiPct: totalStake > 0 ? (totalPnl / totalStake) * 100 : null,
     avgClvPct: avg(clvValues),
     topNearMissReasons: topReasons(nearMissRows),
-    latestSignals: liveRows.slice(-5).reverse(),
+    latestSignals: latestCapturedRows([...archiveRows, ...liveRows]),
   };
 }
 
