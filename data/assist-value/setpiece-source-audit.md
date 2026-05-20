@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-05-19T10:42:20+00:00`
+Fetched at UTC: `2026-05-20T10:29:30+00:00`
 
 ## Decision
 
@@ -28,7 +28,7 @@ Overall: **PASS_SOURCE_LAYER**
 
 - Status: `PASS`
 - Teams: `20`
-- Players: `839`
+- Players: `840`
 - Players with set-piece role fields: `132`
 
 ## SetPieceTakers
