@@ -361,6 +361,51 @@ export default async function WorldCup2026PenaltyTakersPage() {
           </div>
         </section>
 
+        <section className="mt-6 rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+          <div className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-400">Group browser</div>
+          <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-100">Browse by World Cup 2026 group</h2>
+              <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-400">
+                Group A through Group L of the 2026 FIFA World Cup, with each team&apos;s current first-choice penalty taker.
+              </p>
+            </div>
+            <div className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-slate-400">
+              Updated {data.last_verified}
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            {indexGroups.map((group) => (
+              <article key={`group-browser-${group.key}`} className="rounded-2xl border border-slate-800/80 bg-slate-950/60 p-4">
+                <h3 className="text-lg font-semibold tracking-tight text-slate-100">Group {group.key}</h3>
+                <ul className="mt-3 space-y-2">
+                  {group.entries.map((entry) => (
+                    <li key={`group-browser-${group.key}-${entry.team}`}>
+                      {entry.kind === "team" ? (
+                        <Link
+                          href={`/penalty-takers/world-cup-2026/${entry.slug}`}
+                          className="block rounded-xl border border-slate-800/80 bg-slate-900/70 px-3 py-2 transition hover:border-slate-600 hover:bg-slate-900"
+                        >
+                          <span className="block truncate text-sm font-semibold text-slate-100">{entry.team}</span>
+                          <span className="mt-0.5 block truncate text-xs text-slate-400">
+                            {entry.likely_primary || "Penalty file still building"}
+                          </span>
+                        </Link>
+                      ) : (
+                        <div className="rounded-xl border border-dashed border-slate-700/80 bg-slate-900/40 px-3 py-2">
+                          <span className="block truncate text-sm font-semibold text-slate-300">{entry.team}</span>
+                          <span className="mt-0.5 block text-xs text-slate-500">{entry.note}</span>
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+
         <WorldCupTeamIndex teams={alphabeticalIndexTeams} confederations={indexFilters} groups={indexGroups} />
 
         <section className="mt-10 space-y-10 sm:mt-12 sm:space-y-14">
