@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Footer from "@/components/Footer";
+import FlagMark from "@/components/FlagMark";
 import PageHomeLink from "@/components/PageHomeLink";
 import WorldCupTeamIndex from "./WorldCupTeamIndex";
 import {
@@ -361,7 +362,10 @@ export default async function WorldCup2026PenaltyTakersPage() {
           </div>
         </section>
 
-        <section className="mt-6 rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+        <section
+          id="group-browser"
+          className="mt-6 scroll-mt-28 rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 shadow-[0_12px_32px_rgba(0,0,0,0.16)] sm:p-6 sm:shadow-[0_18px_50px_rgba(0,0,0,0.18)]"
+        >
           <div className="font-mono text-xs uppercase tracking-[0.24em] text-emerald-400">Group browser</div>
           <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
             <div>
@@ -385,11 +389,24 @@ export default async function WorldCup2026PenaltyTakersPage() {
                       {entry.kind === "team" ? (
                         <Link
                           href={`/penalty-takers/world-cup-2026/${entry.slug}`}
-                          className="block rounded-xl border border-slate-800/80 bg-slate-900/70 px-3 py-2 transition hover:border-slate-600 hover:bg-slate-900"
+                          className="flex items-center gap-3 rounded-xl border border-slate-800/80 bg-slate-900/70 px-3 py-2 transition hover:border-slate-600 hover:bg-slate-900"
                         >
-                          <span className="block truncate text-sm font-semibold text-slate-100">{entry.team}</span>
-                          <span className="mt-0.5 block truncate text-xs text-slate-400">
-                            {entry.likely_primary || "Penalty file still building"}
+                          <FlagMark
+                            src={entry.flagUrl}
+                            alt={`${entry.team} flag`}
+                            fallbackText={entry.initials}
+                            wrapperClassName="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-950/85"
+                            imageClassName="h-5 w-7 rounded-[3px] object-cover"
+                            fallbackClassName="font-mono text-[10px] text-slate-200"
+                            width={28}
+                            height={20}
+                            sizes="28px"
+                          />
+                          <span className="min-w-0">
+                            <span className="block truncate text-sm font-semibold text-slate-100">{entry.team}</span>
+                            <span className="mt-0.5 block truncate text-xs text-slate-400">
+                              {entry.likely_primary || "Penalty file still building"}
+                            </span>
                           </span>
                         </Link>
                       ) : (
