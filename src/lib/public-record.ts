@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getSupabaseAdmin } from "@/lib/supabase-server";
+import { getSupabaseAdmin, hasSupabaseAdminConfig } from "@/lib/supabase-server";
 
 const TIMEOUT_MS = 8000;
 
@@ -23,6 +23,14 @@ const MONTHLY_SETTING_BY_SCOPE: Record<MonthlyScope, string> = {
   tennis: "monthly_breakdown_tennis_public",
 };
 
+function emptyHomePayload() {
+  return { stats: [], recent: [], pending: [], last7: null };
+}
+
+function emptyMarketPayload() {
+  return { pending: [], recent: [], stats: [] };
+}
+
 async function withTimeout<T>(promise: PromiseLike<T>, label: string): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | null = null;
   const timeout = new Promise<never>((_, reject) => {
@@ -37,6 +45,8 @@ async function withTimeout<T>(promise: PromiseLike<T>, label: string): Promise<T
 }
 
 export async function fetchHomePayload() {
+  if (!hasSupabaseAdminConfig()) return emptyHomePayload();
+
   const supabase = getSupabaseAdmin();
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -88,6 +98,8 @@ export async function fetchHomePayload() {
 }
 
 export async function fetchMarketPayload(scope: "tennis" | "props") {
+  if (!hasSupabaseAdminConfig()) return emptyMarketPayload();
+
   const supabase = getSupabaseAdmin();
   const market = MARKET_BY_SCOPE[scope];
 
@@ -126,6 +138,8 @@ export async function fetchMarketPayload(scope: "tennis" | "props") {
 }
 
 export async function fetchCalculatorPayload() {
+  if (!hasSupabaseAdminConfig()) return { stats: [] };
+
   const supabase = getSupabaseAdmin();
   const response = await withTimeout(supabase.from("category_stats").select("*"), "public calculator stats query");
   if (response.error) throw new Error(response.error.message);
@@ -133,6 +147,8 @@ export async function fetchCalculatorPayload() {
 }
 
 export async function fetchMonthlyPayload(monthlyScope: MonthlyScope) {
+  if (!hasSupabaseAdminConfig()) return { show: false, rows: [] };
+
   const supabase = getSupabaseAdmin();
   const settingKey = MONTHLY_SETTING_BY_SCOPE[monthlyScope];
   const view = MONTHLY_VIEW_BY_SCOPE[monthlyScope];
