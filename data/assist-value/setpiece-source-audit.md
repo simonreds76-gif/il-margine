@@ -1,6 +1,6 @@
 # Assist Value Set-Piece Source Audit
 
-Fetched at UTC: `2026-05-20T10:29:30+00:00`
+Fetched at UTC: `2026-05-21T10:48:38+00:00`
 
 ## Decision
 
@@ -14,11 +14,11 @@ Overall: **PASS_SOURCE_LAYER**
 ## RotoWire
 
 - Teams with set-piece blocks: `96/96`
-- Player role rows extracted: `1042`
+- Player role rows extracted: `1041`
 
 | League | Teams OK | Teams | Role rows | Max latest week |
 |---|---:|---:|---:|---:|
-| bundesliga | 18 | 18 | 184 | 48 |
+| bundesliga | 18 | 18 | 183 | 49 |
 | epl | 20 | 20 | 210 | 55 |
 | la-liga | 20 | 20 | 224 | 53 |
 | ligue-1 | 18 | 18 | 204 | 50 |
@@ -50,9 +50,9 @@ Overall: **PASS_SOURCE_LAYER**
 | bundesliga | VfL Wolfsburg | Christian Eriksen | 81.25% | 55.0% | 77 |
 | ligue-1 | AJ Auxerre | Kevin Danois | 78.95% | 62.04% | 85 |
 | ligue-1 | Angers | Branco van den Boomen | 78.57% | 38.71% | 36 |
-| bundesliga | SC Freiburg | Jan-Niklas Beste | 77.78% | 38.5% | 72 |
 | epl | West Ham United | Jarrod Bowen | 75.0% | 37.14% | 65 |
 | bundesliga | RB Leipzig | Max Finkgrafe | 75.0% | 12.24% | 18 |
+| bundesliga | SC Freiburg | Jan-Niklas Beste | 75.0% | 38.5% | 72 |
 | epl | Leeds United | Anton Stach | 72.22% | 58.01% | 105 |
 | bundesliga | Bayer Leverkusen | Alejandro Grimaldo | 72.0% | 55.62% | 94 |
 | bundesliga | Union Berlin | Christopher Trimmel | 72.0% | 51.95% | 80 |
