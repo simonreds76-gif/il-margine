@@ -1,8 +1,9 @@
 {
-  "generated_at": "2026-05-21T15:54:14.130147Z",
+  "generated_at": "2026-05-21T16:44:39.808947Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
+    "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
     "data/goalscorer/bundesliga/goalscorer-live-comparison.csv"
   ],
@@ -30,13 +31,115 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 12,
-  "signals_qualifying": 1,
+  "fixtures_evaluated": 24,
+  "signals_qualifying": 2,
   "leagues_covered": [
+    "epl",
     "la-liga"
   ],
-  "featured_signal_id": "20260523-ante-budimir-f06ffe221f",
+  "featured_signal_id": "20260524-dominic-calvert-lewin-93e5afe1f6",
   "signals": [
+    {
+      "id": "20260524-dominic-calvert-lewin-93e5afe1f6",
+      "match": {
+        "home_team": "West Ham United",
+        "away_team": "Leeds United",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-24T15:00:00Z",
+        "kickoff_display": "Sun 24 May 16:00 UK",
+        "fotmob_match_id": "4813754",
+        "fotmob_page_url": "/matches/leeds-united-vs-west-ham-united/2f8a75#4813754",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Dominic Calvert-Lewin",
+        "team": "Leeds",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/epl/leeds.png",
+        "team_primary_color": "#f8fafc",
+        "team_secondary_color": "#facc15",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 50.2,
+        "fair_odds": 1.99
+      },
+      "market_data": {
+        "best_odds": 2.75,
+        "best_book": "Bet365",
+        "implied_chance_pct": 36.4
+      },
+      "edge": {
+        "price_gap_pp": 13.8,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 92
+        },
+        "share_of_team_chances_pct": 39,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 42
+        },
+        "recent_team_form": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-17",
+          "xg_for_avg": 1.9,
+          "xg_against_avg": 1.33,
+          "xgd_per90": 0.57,
+          "shots_for_avg": 12.6,
+          "shots_against_avg": 13.6,
+          "sot_for_avg": 4.4,
+          "sot_against_avg": 4.6,
+          "corners_for_avg": 4.0,
+          "corners_against_avg": 8.0
+        },
+        "opponent_defensive_weakness": {
+          "tier": "Positive",
+          "percentile": 62
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-17",
+          "xg_for_avg": 1.1,
+          "xg_against_avg": 1.54,
+          "xgd_per90": -0.44,
+          "shots_for_avg": 11.2,
+          "shots_against_avg": 12.8,
+          "sot_for_avg": 4.4,
+          "sot_against_avg": 4.2,
+          "corners_for_avg": 4.0,
+          "corners_against_avg": 4.4
+        },
+        "fixture_boost_pct": -7,
+        "projected_minutes": 90,
+        "penalty_role": "Primary",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Recent team form supports the attacking case",
+        "Opponent has been allowing chances recently"
+      ],
+      "risk_flags": []
+    },
     {
       "id": "20260523-ante-budimir-f06ffe221f",
       "match": {
@@ -79,13 +182,13 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 96
+          "percentile": 95
         },
         "share_of_team_chances_pct": 36,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 24
+          "percentile": 19
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -103,8 +206,8 @@
           "corners_against_avg": 6.4
         },
         "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 50
+          "tier": "Low",
+          "percentile": 34
         },
         "opponent_recent_defence": {
           "tier": "Average",
