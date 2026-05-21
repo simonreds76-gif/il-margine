@@ -13,7 +13,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "World Cup 2026 Player Props | Il Margine",
   description:
-    "World Cup 2026 player props hub for Il Margine, covering posted props, penalty-taker intelligence and the separate untracked goalscorer research lab.",
+    "World Cup 2026 player props hub for Il Margine, covering posted props, penalty-taker intelligence and tournament-specific goalscorer research.",
   alternates: {
     canonical: PAGE_URL,
   },
@@ -26,13 +26,13 @@ export const metadata: Metadata = {
     url: PAGE_URL,
     title: "World Cup 2026 Player Props | Il Margine",
     description:
-      "World Cup player props hub: posted picks, penalty hierarchy and research-only goalscorer lab.",
+      "World Cup player props hub: posted picks, penalty hierarchy and tournament goalscorer research.",
     images: [{ url: `${BASE_URL}/og.png`, width: 1200, height: 630, alt: "Il Margine World Cup player props" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "World Cup 2026 Player Props | Il Margine",
-    description: "World Cup player props hub: posted picks, penalty hierarchy and research-only goalscorer lab.",
+    description: "World Cup player props hub: posted picks, penalty hierarchy and tournament goalscorer research.",
     images: [`${BASE_URL}/og.png`],
   },
 };
@@ -61,12 +61,13 @@ export default async function WorldCupPlayerPropsPage() {
             <div className="grid gap-8 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
               <div>
                 <h1 className="max-w-4xl text-4xl font-semibold tracking-tight text-white sm:text-6xl">
-                  World Cup player props, without pretending the club model is already proven.
+                  World Cup player props, built for tournament football.
                 </h1>
                 <p className="mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg">
-                  This is the tournament hub for World Cup 2026 props. Posted props can still enter the normal
-                  Il Margine public record. Goalscorer model rows stay separate and untracked until the national-team
-                  lane earns evidence.
+                  This is the tournament hub for World Cup 2026 props. Posted shots, shots on target, cards, tackles
+                  and fouls picks stay in the official Il Margine record. Goalscorer pricing has its own World Cup lane
+                  because national-team markets need separate context: penalties, confirmed lineups, opponent tier and
+                  expected minutes.
                 </p>
               </div>
 
@@ -98,8 +99,8 @@ export default async function WorldCupPlayerPropsPage() {
               copy: "Useful when role and team attacking volume are clear, especially against weaker defensive tiers.",
             },
             {
-              title: "Priority 3: ATGS research",
-              copy: "Anytime goalscorer stays sparse: high-confidence penalty takers or clear number nines only.",
+              title: "Priority 3: selective ATGS",
+              copy: "Anytime goalscorer stays selective: high-confidence penalty takers or clear number nines in strong matchups.",
             },
           ].map((item) => (
             <article key={item.title} className="rounded-[1.5rem] border border-slate-800 bg-slate-950/70 p-6">
@@ -113,12 +114,12 @@ export default async function WorldCupPlayerPropsPage() {
           <div className="rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-6 sm:p-8">
             <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
               <div>
-                <p className="text-xs font-mono uppercase tracking-[0.2em] text-emerald-300">What is tracked?</p>
-                <h2 className="mt-3 text-2xl font-semibold text-white">Posted props stay in the official props record.</h2>
+                <p className="text-xs font-mono uppercase tracking-[0.2em] text-emerald-300">What is official?</p>
+                <h2 className="mt-3 text-2xl font-semibold text-white">Posted props go through the public record.</h2>
                 <p className="mt-3 text-sm leading-6 text-slate-400">
                   If a World Cup shots, SOT, cards, tackles or fouls pick is posted as an Il Margine player prop, it
-                  should use the existing public record path. The separate goalscorer research lab is not part of that
-                  record.
+                  uses the existing public record path. Goalscorer prices are monitored separately so their tournament
+                  performance can be judged cleanly on its own sample.
                 </p>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -138,7 +139,7 @@ export default async function WorldCupPlayerPropsPage() {
                   href="/fair-odds-lab/world-cup"
                   className="rounded-2xl border border-amber-300/30 bg-amber-300/10 p-4 text-sm font-semibold text-amber-100 transition hover:border-amber-200"
                 >
-                  Untracked goalscorer research lab
+                  World Cup goalscorer research
                 </Link>
                 <Link
                   href="/fair-odds-lab"

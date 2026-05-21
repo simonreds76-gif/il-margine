@@ -248,7 +248,7 @@ export default function PlayerProps({
             <span>
               <span className="block font-semibold">World Cup 2026 props hub</span>
               <span className="mt-1 block text-xs leading-5 text-emerald-100/70">
-                Posted props stay in the official record. Goalscorer research stays separated and untracked.
+                Tournament props, penalty hierarchy and goalscorer research kept in a separate WC lane.
               </span>
             </span>
             <span className="shrink-0 text-xs font-mono uppercase tracking-[0.16em]">Open</span>

@@ -24,7 +24,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "World Cup 2026 Goalscorer Research Lab",
   description:
-    "Untracked World Cup 2026 goalscorer research lab. This national-team lane is separate from the validated club Fair Odds Lab.",
+    "World Cup 2026 goalscorer research lab for tournament-specific pricing, kept separate from the club Fair Odds Lab.",
   alternates: {
     canonical: PAGE_URL,
   },
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     url: PAGE_URL,
     title: "World Cup 2026 Goalscorer Research Lab | Il Margine",
     description:
-      "Research-only World Cup 2026 goalscorer leans. Not part of the Il Margine tracked record.",
+      "Tournament-specific World Cup goalscorer research using penalty hierarchy, expected minutes and confirmed lineups.",
     images: [{ url: `${BASE_URL}/og.png`, width: 1200, height: 630, alt: "Il Margine World Cup research lab" }],
   },
 };
@@ -47,10 +47,10 @@ function readWorldCupLabArtifact(): WorldCupLabArtifact {
   if (!fs.existsSync(artifactPath)) {
     return {
       generated_at: null,
-      model_status: "NOT_VALIDATED",
-      fair_odds_status: "NOT_AUTHORISED",
+      model_status: "RESEARCH_LANE",
+      fair_odds_status: "TESTING_ONLY",
       public_signal_status: "DISABLED",
-      public_record: "EXCLUDED",
+      public_record: "SEPARATE_SAMPLE",
       settlement: "internal",
       signals: [],
     };
@@ -62,9 +62,9 @@ function readWorldCupLabArtifact(): WorldCupLabArtifact {
     return {
       generated_at: null,
       model_status: "ARTIFACT_PARSE_FAILED",
-      fair_odds_status: "NOT_AUTHORISED",
+      fair_odds_status: "TESTING_ONLY",
       public_signal_status: "DISABLED",
-      public_record: "EXCLUDED",
+      public_record: "SEPARATE_SAMPLE",
       settlement: "internal",
       signals: [],
     };
@@ -99,19 +99,19 @@ export default function WorldCupFairOddsLabPage() {
               World Cup 2026
             </p>
             <h1 className="max-w-4xl text-4xl font-semibold tracking-tight text-white sm:text-6xl">
-              Goalscorer research lab, separated from the club model.
+              World Cup goalscorer research, built for tournament conditions.
             </h1>
             <p className="mt-5 max-w-4xl text-base leading-7 text-slate-300 sm:text-lg">
-              World Cup 2026 research lab. Untracked. Il Margine has no validated national-team goalscorer
-              model yet. The picks below are research leans drawn from our club model, the World Cup penalty
-              hierarchy, and confirmed lineups. They are not part of the Il Margine tracked record.
+              This lab tests tournament-specific goalscorer prices using club production, the World Cup penalty
+              hierarchy, expected minutes and confirmed lineups. It stays separate from the club Fair Odds Lab so the
+              World Cup sample can be evaluated cleanly on its own evidence.
             </p>
 
             <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {[
-                ["model_status", statusLabel(artifact.model_status, "NOT_VALIDATED")],
-                ["fair_odds_status", statusLabel(artifact.fair_odds_status, "NOT_AUTHORISED")],
-                ["public_record", statusLabel(artifact.public_record, "EXCLUDED")],
+                ["model_status", statusLabel(artifact.model_status, "RESEARCH_LANE")],
+                ["fair_odds_status", statusLabel(artifact.fair_odds_status, "TESTING_ONLY")],
+                ["public_record", statusLabel(artifact.public_record, "SEPARATE_SAMPLE")],
                 ["settlement", statusLabel(artifact.settlement, "internal")],
               ].map(([label, value]) => (
                 <div key={label} className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
@@ -137,11 +137,11 @@ export default function WorldCupFairOddsLabPage() {
               </div>
 
               <div className="mt-6 rounded-2xl border border-dashed border-slate-700 bg-slate-900/40 p-6">
-                <p className="text-lg font-semibold text-slate-100">No World Cup goalscorer rows are authorised yet.</p>
+                <p className="text-lg font-semibold text-slate-100">No World Cup goalscorer rows are published yet.</p>
                 <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">
-                  This page is intentionally empty until the Phase 0 data foundation is complete: team-strength tiers,
-                  penalty hierarchy freshness, confirmed lineups, and append-only shadow settlement. That keeps the
-                  validated club Fair Odds Lab clean.
+                  Rows appear here only once the data foundation is ready: team-strength tiers, penalty hierarchy
+                  freshness, confirmed lineups and append-only settlement. The goal is a clean World Cup read, not a
+                  mixed club-plus-tournament sample.
                 </p>
               </div>
             </div>
@@ -152,7 +152,7 @@ export default function WorldCupFairOddsLabPage() {
                 <li>No presumed-XI row can be public.</li>
                 <li>Penalty-dependent rows need fresh hierarchy evidence.</li>
                 <li>WC samples never merge with the club Fair Odds Lab record.</li>
-                <li>X posts must say research lean and untracked.</li>
+                <li>X posts must be labelled as World Cup research leans.</li>
               </ul>
               <div className="mt-6 flex flex-col gap-3">
                 <Link
