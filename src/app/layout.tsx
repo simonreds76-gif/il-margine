@@ -27,7 +27,7 @@ export const metadata: Metadata = {
       { url: "/favicon-128.png", sizes: "128x128", type: "image/png" },
       { url: "/favicon-256.png", sizes: "256x256", type: "image/png" },
     ],
-    apple: "/favicon-256.png",
+    apple: [{ url: "/brand/il-margine-tube-icon.png", sizes: "512x512", type: "image/png" }],
   },
   title: {
     default: "Il Margine | Betting with Mathematical Edge",
@@ -73,7 +73,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.png" sizes="32x32" type="image/png" />
         <link rel="icon" href="/favicon-128.png" sizes="128x128" type="image/png" />
         <link rel="icon" href="/favicon-256.png" sizes="256x256" type="image/png" />
-        <link rel="apple-touch-icon" href="/favicon-256.png" />
+        <link rel="apple-touch-icon" href="/brand/il-margine-tube-icon.png" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <meta name="msvalidate.01" content="FD4A9F8A7202C71E5465E6A51F6B8F62" />
