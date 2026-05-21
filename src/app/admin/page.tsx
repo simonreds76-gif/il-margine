@@ -83,6 +83,7 @@ export default function AdminPanel() {
       { id: "bundesliga", name: "Bundesliga" },
       { id: "ligue1", name: "Ligue 1" },
       { id: "ucl", name: "Champions League" },
+      { id: "worldcup", name: "World Cup" },
       { id: "other", name: "Other" },
     ],
     tennis: [
@@ -100,6 +101,7 @@ export default function AdminPanel() {
       { id: "laliga", name: "La Liga" },
       { id: "bundesliga", name: "Bundesliga" },
       { id: "ligue1", name: "Ligue 1" },
+      { id: "worldcup", name: "World Cup" },
       { id: "other", name: "Other" },
     ],
     atg: [
@@ -108,6 +110,7 @@ export default function AdminPanel() {
       { id: "laliga", name: "La Liga" },
       { id: "bundesliga", name: "Bundesliga" },
       { id: "ligue1", name: "Ligue 1" },
+      { id: "worldcup", name: "World Cup" },
       { id: "other", name: "Other" },
     ],
   };
