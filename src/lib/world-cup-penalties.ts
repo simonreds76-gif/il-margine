@@ -131,6 +131,10 @@ export function flagImageUrl(team: string): string {
   return `https://flagcdn.com/w80/${code.toLowerCase()}.png`;
 }
 
+export function teamCrestImageUrl(team: string): string {
+  return `/team-logos/world-cup/${normalizeKey(team)}.png`;
+}
+
 export function initials(team: string): string {
   const parts = team
     .replace(/[.'-]/g, " ")

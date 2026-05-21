@@ -10,11 +10,11 @@ import {
   buildWorldCupTeamLead,
   buildWorldCupTeamTitle,
   CONFEDERATION_ORDER,
-  flagImageUrl,
   getWorldCupTeamBySlug,
   initials,
   publicPenaltyEvidenceText,
   readWorldCupData,
+  teamCrestImageUrl,
   worldCupTeamSlug,
   worldCupTeamUrl,
 } from "@/lib/world-cup-penalties";
@@ -159,7 +159,7 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
   const title = buildWorldCupTeamTitle(team);
   const description = buildWorldCupTeamDescription(team);
   const pageUrl = worldCupTeamUrl(team.team);
-  const heroFlagUrl = flagImageUrl(team.team);
+  const heroCrestUrl = teamCrestImageUrl(team.team);
   const style = CONFEDERATION_STYLES[team.confederation] ?? CONFEDERATION_STYLES.CONMEBOL;
   const primary = team.likely_primary?.trim();
   const secondary = team.likely_secondary?.trim();
@@ -292,15 +292,15 @@ export default async function WorldCupTeamPenaltyPage({ params }: PageProps) {
                 <div className="max-w-4xl">
                   <div className="flex flex-col items-start gap-4 sm:flex-row">
                     <FlagMark
-                      src={heroFlagUrl}
-                      alt={`${team.team} flag`}
+                      src={heroCrestUrl}
+                      alt={`${team.team} crest`}
                       fallbackText={initials(team.team)}
-                      wrapperClassName="flex h-16 w-16 shrink-0 items-center justify-center rounded-[20px] border border-slate-700/80 bg-slate-950/90 shadow-[0_12px_30px_rgba(0,0,0,0.18)] sm:h-20 sm:w-20 sm:rounded-[24px]"
-                      imageClassName="h-9 w-11 rounded-[6px] object-cover shadow-sm sm:h-11 sm:w-14"
+                      wrapperClassName="flex h-16 w-16 shrink-0 items-center justify-center sm:h-20 sm:w-20"
+                      imageClassName="h-14 w-14 object-contain drop-shadow-[0_10px_24px_rgba(0,0,0,0.5)] sm:h-16 sm:w-16"
                       fallbackClassName="font-mono text-base font-semibold text-slate-200"
-                      width={56}
-                      height={44}
-                      sizes="(min-width: 640px) 56px, 44px"
+                      width={64}
+                      height={64}
+                      sizes="(min-width: 640px) 64px, 56px"
                       priority
                     />
                     <div className="min-w-0">

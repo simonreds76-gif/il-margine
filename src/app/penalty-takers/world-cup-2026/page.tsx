@@ -10,9 +10,9 @@ import {
   WORLD_CUP_GROUP_ORDER,
   WORLD_CUP_GROUPS,
   readWorldCupData,
+  teamCrestImageUrl,
   worldCupTeamSlug,
   worldCupTeamUrl,
-  flagImageUrl,
   initials,
   publicPenaltyEvidenceText,
 } from "@/lib/world-cup-penalties";
@@ -172,7 +172,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
     group: team.group,
     likely_primary: team.likely_primary,
     slug: worldCupTeamSlug(team.team),
-    flagUrl: flagImageUrl(team.team),
+    crestUrl: teamCrestImageUrl(team.team),
     initials: initials(team.team),
   }));
   const indexFilters = grouped.map((group) => ({
@@ -193,7 +193,7 @@ export default async function WorldCup2026PenaltyTakersPage() {
           group,
           likely_primary: team.likely_primary,
           slug: worldCupTeamSlug(team.team),
-          flagUrl: flagImageUrl(team.team),
+          crestUrl: teamCrestImageUrl(team.team),
           initials: initials(team.team),
         };
       }
@@ -392,15 +392,15 @@ export default async function WorldCup2026PenaltyTakersPage() {
                           className="flex items-center gap-3 rounded-xl border border-slate-800/80 bg-slate-900/70 px-3 py-2 transition hover:border-slate-600 hover:bg-slate-900"
                         >
                           <FlagMark
-                            src={entry.flagUrl}
-                            alt={`${entry.team} flag`}
+                            src={entry.crestUrl}
+                            alt={`${entry.team} crest`}
                             fallbackText={entry.initials}
-                            wrapperClassName="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-950/85"
-                            imageClassName="h-5 w-7 rounded-[3px] object-cover"
+                            wrapperClassName="flex h-9 w-9 shrink-0 items-center justify-center"
+                            imageClassName="h-8 w-8 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.45)]"
                             fallbackClassName="font-mono text-[10px] text-slate-200"
-                            width={28}
-                            height={20}
-                            sizes="28px"
+                            width={32}
+                            height={32}
+                            sizes="32px"
                           />
                           <span className="min-w-0">
                             <span className="block truncate text-sm font-semibold text-slate-100">{entry.team}</span>
@@ -462,26 +462,27 @@ export default async function WorldCup2026PenaltyTakersPage() {
                                 <div className="flex items-start gap-4">
                                   <Link
                                     href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(team.team)}`}
-                                    className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-slate-700/80 bg-slate-950/90"
+                                    className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl"
                                   >
-                                    {flagImageUrl(team.team) ? (
-                                      // eslint-disable-next-line @next/next/no-img-element
-                                      <img
-                                        src={flagImageUrl(team.team)}
-                                        alt={`${team.team} flag`}
-                                        className="h-8 w-10 rounded-[4px] object-cover shadow-sm"
-                                      />
-                                    ) : (
-                                      <span className="font-mono text-[13px] font-semibold text-slate-200">{initials(team.team)}</span>
-                                    )}
+                                    <FlagMark
+                                      src={teamCrestImageUrl(team.team)}
+                                      alt={`${team.team} crest`}
+                                      fallbackText={initials(team.team)}
+                                      wrapperClassName="flex h-14 w-14 shrink-0 items-center justify-center"
+                                      imageClassName="h-12 w-12 object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
+                                      fallbackClassName="font-mono text-[13px] font-semibold text-slate-200"
+                                      width={48}
+                                      height={48}
+                                      sizes="48px"
+                                    />
                                   </Link>
                                   <div>
-                              <Link
-                                href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(team.team)}`}
-                                className="text-2xl font-semibold tracking-tight text-slate-100 hover:text-emerald-300"
-                              >
-                                {team.team} penalty taker
-                              </Link>
+                                    <Link
+                                      href={`/penalty-takers/world-cup-2026/${worldCupTeamSlug(team.team)}`}
+                                      className="text-2xl font-semibold tracking-tight text-slate-100 hover:text-emerald-300"
+                                    >
+                                      {team.team} penalty taker
+                                    </Link>
                                     <div className="mt-2 flex flex-wrap gap-2">
                                       <span className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${style.badge}`}>
                                         {team.confederation}
@@ -560,13 +561,18 @@ export default async function WorldCup2026PenaltyTakersPage() {
                   className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4 transition hover:border-slate-600 hover:bg-slate-900/90"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-slate-700/80 bg-slate-950/90">
-                      {flagImageUrl(team.team) ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={flagImageUrl(team.team)} alt={`${team.team} flag`} className="h-7 w-9 rounded-[4px] object-cover shadow-sm" />
-                      ) : (
-                        <span className="font-mono text-[12px] font-semibold text-slate-200">{initials(team.team)}</span>
-                      )}
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center">
+                      <FlagMark
+                        src={teamCrestImageUrl(team.team)}
+                        alt={`${team.team} crest`}
+                        fallbackText={initials(team.team)}
+                        wrapperClassName="flex h-12 w-12 shrink-0 items-center justify-center"
+                        imageClassName="h-10 w-10 object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
+                        fallbackClassName="font-mono text-[12px] font-semibold text-slate-200"
+                        width={40}
+                        height={40}
+                        sizes="40px"
+                      />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">

@@ -16,7 +16,7 @@ type IndexTeam = {
   group?: string;
   likely_primary?: string;
   slug: string;
-  flagUrl: string;
+  crestUrl: string;
   initials: string;
 };
 
@@ -228,14 +228,14 @@ export default function WorldCupTeamIndex({ teams, confederations, groups }: Pro
                 className="flex items-center gap-3 rounded-2xl border border-slate-800/80 bg-slate-950/70 px-3 py-3 transition hover:border-slate-600 hover:bg-slate-950"
               >
                 <FlagMark
-                  src={team.flagUrl}
-                  alt={`${team.team} flag`}
+                  src={team.crestUrl}
+                  alt={`${team.team} crest`}
                   fallbackText={team.initials}
-                  wrapperClassName="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-900/80"
-                  imageClassName="h-6 w-8 rounded-[3px] object-cover"
+                  wrapperClassName="flex h-10 w-10 shrink-0 items-center justify-center"
+                  imageClassName="h-8 w-8 object-contain drop-shadow-[0_5px_12px_rgba(0,0,0,0.45)]"
                   fallbackClassName="font-mono text-[11px] text-slate-200"
                   width={32}
-                  height={24}
+                  height={32}
                   sizes="32px"
                 />
                 <div className="min-w-0 flex-1">
@@ -279,14 +279,14 @@ export default function WorldCupTeamIndex({ teams, confederations, groups }: Pro
                       className="flex items-center gap-3 rounded-2xl border border-slate-800/80 bg-slate-950/80 px-3 py-3 transition hover:border-slate-600 hover:bg-slate-950"
                     >
                       <FlagMark
-                        src={entry.flagUrl}
-                        alt={`${entry.team} flag`}
+                        src={entry.crestUrl}
+                        alt={`${entry.team} crest`}
                         fallbackText={entry.initials}
-                        wrapperClassName="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-900/80"
-                        imageClassName="h-6 w-8 rounded-[3px] object-cover"
+                        wrapperClassName="flex h-10 w-10 shrink-0 items-center justify-center"
+                        imageClassName="h-8 w-8 object-contain drop-shadow-[0_5px_12px_rgba(0,0,0,0.45)]"
                         fallbackClassName="font-mono text-[11px] text-slate-200"
                         width={32}
-                        height={24}
+                        height={32}
                         sizes="32px"
                       />
                       <div className="min-w-0 flex-1">
