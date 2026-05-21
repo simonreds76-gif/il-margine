@@ -1,5 +1,5 @@
 Assist Value Shadow Report
-generated_at_utc: 2026-05-21T17:15:35Z
+generated_at_utc: 2026-05-21T19:27:53Z
 
 Status
 shadow_status: ENABLED_RESEARCH_ONLY
@@ -8,15 +8,15 @@ model_status: NOT_FITTED
 fair_odds_status: NOT_AUTHORISED
 
 Inputs
-raw_odds_rows_loaded: 20516
+raw_odds_rows_loaded: 21955
 role_players_loaded: 1041
 
 Join
-shadow_rows_assist_only: 2656
-role_matched_rows: 942
-role_match_rate_pct: 35.47
-ambiguous_player_rows: 0
-unmatched_player_rows: 1714
+shadow_rows_assist_only: 2961
+role_matched_rows: 1051
+role_match_rate_pct: 35.49
+ambiguous_player_rows: 1
+unmatched_player_rows: 1909
 
 Interpretation
 This board is an evidence layer only: Bet365 assist market rows enriched with RotoWire set-piece role shares.
@@ -39,7 +39,7 @@ Top role-matched rows
  - Sebastian Szymanski | Olympique Marseille vs Stade Rennais FC | odds 4.5000 | setpiece_last5 64.44 | corners_last5 65.79 | fk_last5 66.67
  - Anton Stach | Leeds United vs Brighton & Hove Albion | odds 7.0000 | setpiece_last5 62.96 | corners_last5 72.22 | fk_last5 50.0
  - Anton Stach | West Ham United vs Leeds United | odds 7.0000 | setpiece_last5 62.96 | corners_last5 72.22 | fk_last5 50.0
- - Bruno Fernandes | Brighton & Hove Albion vs Manchester United | odds 2.7500 | setpiece_last5 62.96 | corners_last5 50.0 | fk_last5 100.0
+ - Bruno Fernandes | Brighton & Hove Albion vs Manchester United | odds 2.6250 | setpiece_last5 62.96 | corners_last5 50.0 | fk_last5 100.0
  - Ruben Vargas | Sevilla FC vs Real Madrid | odds 4.5000 | setpiece_last5 62.5 | corners_last5 66.67 | fk_last5 55.56
  - Ruben Vargas | RC Celta de Vigo vs Sevilla FC | odds 6.5000 | setpiece_last5 62.5 | corners_last5 66.67 | fk_last5 55.56
  - Bruno Guimaraes | Newcastle United vs West Ham United | odds 5.5000 | setpiece_last5 61.9 | corners_last5 66.67 | fk_last5 55.56
