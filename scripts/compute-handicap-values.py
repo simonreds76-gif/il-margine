@@ -35,6 +35,8 @@ from dataclasses import dataclass
 from datetime import datetime, timezone, timedelta
 from statistics import mean, median
 
+import requests
+
 # Add scripts dir + project root for local imports
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _SCRIPT_DIR)
@@ -81,6 +83,26 @@ class HandicapCalibration:
 def _chunked(values: list[int], size: int):
     for start in range(0, len(values), size):
         yield values[start : start + size]
+
+
+def _fetch_rest_paged(base_url: str, table: str, headers: dict, params: dict, *, page_size: int = 1000, timeout: int = 30):
+    rows = []
+    offset = 0
+    while True:
+        page_params = {**params, "limit": page_size, "offset": offset}
+        response = requests.get(
+            f"{base_url}/rest/v1/{table}",
+            headers=headers,
+            params=page_params,
+            timeout=timeout,
+        )
+        response.raise_for_status()
+        page = response.json() or []
+        rows.extend(page)
+        if len(page) < page_size:
+            break
+        offset += len(page)
+    return rows
 
 
 def _solve_spw_for_match_prob(
@@ -484,61 +506,58 @@ def main():
             print(f"Handicap calibration: OFF ({calibration.source})")
 
     # 1) Load daily_fair_odds with final blended win probability + surface context
-    r = requests.get(
-        f"{url}/rest/v1/daily_fair_odds",
-        headers=headers,
-        params={"select": "id,tour_id,player1_id,player2_id,p1_win_prob,p_a,p_b,surface"},
+    fair_rows = _fetch_rest_paged(
+        url,
+        "daily_fair_odds",
+        headers,
+        {"select": "id,tour_id,player1_id,player2_id,p1_win_prob,p_a,p_b,surface"},
         timeout=30,
     )
-    r.raise_for_status()
-    fair_rows = r.json()
     if not fair_rows:
         print("No rows in daily_fair_odds. Run oncourt-compute-fair-odds.py first.")
         sys.exit(1)
 
     try:
-        r_today = requests.get(
-            f"{url}/rest/v1/oncourt_today",
-            headers=headers,
-            params={
+        today_rows = _fetch_rest_paged(
+            url,
+            "oncourt_today",
+            headers,
+            {
                 "select": "tour_id,player1_id,player2_id,result",
-                "limit": 5000,
+                "order": "tour_id.asc,round_id.asc,draw.asc,player1_id.asc,player2_id.asc",
             },
             timeout=30,
         )
-        if r_today.ok:
-            open_pair_keys: set[tuple[int, int, int]] = set()
-            for today_row in r_today.json() or []:
-                if str(today_row.get("result") or "").strip():
-                    continue
-                try:
-                    tid = int(today_row["tour_id"])
-                    p1 = int(today_row["player1_id"])
-                    p2 = int(today_row["player2_id"])
-                except (KeyError, TypeError, ValueError):
-                    continue
-                open_pair_keys.add((tid, p1, p2))
-                open_pair_keys.add((tid, p2, p1))
-            if open_pair_keys:
-                before = len(fair_rows)
-                fair_rows = [
-                    row
-                    for row in fair_rows
-                    if (
-                        row.get("tour_id") is not None
-                        and row.get("player1_id") is not None
-                        and row.get("player2_id") is not None
-                        and (
-                            int(row["tour_id"]),
-                            int(row["player1_id"]),
-                            int(row["player2_id"]),
-                        )
-                        in open_pair_keys
+        open_pair_keys: set[tuple[int, int, int]] = set()
+        for today_row in today_rows:
+            if str(today_row.get("result") or "").strip():
+                continue
+            try:
+                tid = int(today_row["tour_id"])
+                p1 = int(today_row["player1_id"])
+                p2 = int(today_row["player2_id"])
+            except (KeyError, TypeError, ValueError):
+                continue
+            open_pair_keys.add((tid, p1, p2))
+            open_pair_keys.add((tid, p2, p1))
+        if open_pair_keys:
+            before = len(fair_rows)
+            fair_rows = [
+                row
+                for row in fair_rows
+                if (
+                    row.get("tour_id") is not None
+                    and row.get("player1_id") is not None
+                    and row.get("player2_id") is not None
+                    and (
+                        int(row["tour_id"]),
+                        int(row["player1_id"]),
+                        int(row["player2_id"]),
                     )
-                ]
-                print(f"Filtered daily_fair_odds to open OnCourt rows: {len(fair_rows)}/{before}")
-        else:
-            print(f"WARNING: oncourt_today open-row filter skipped: HTTP {r_today.status_code}")
+                    in open_pair_keys
+                )
+            ]
+            print(f"Filtered daily_fair_odds to open OnCourt rows: {len(fair_rows)}/{before}")
     except Exception as exc:
         print(f"WARNING: oncourt_today open-row filter skipped: {exc}")
 

@@ -1627,13 +1627,29 @@ async function run(): Promise<Response> {
   /** Must cover all singles rows from daily_fair_odds after full oncourt_today pagination (was 2000; dropped high tour_id). */
   const FAIR_ODDS_LIMIT = 5000;
 
-  const { data: oddsRows, error: oddsErr } = await supabase
-    .from("daily_fair_odds")
-    .select("id, tour_id, player1_id, player2_id, surface, p1_win_prob, p2_win_prob, odds1, odds2, p_a, p_b, expected_total_games, ou_line_1, ou_over_1, ou_under_1, ou_line_2, ou_over_2, ou_under_2, ou_line_3, ou_over_3, ou_under_3, confidence, spread_line, spread_odds1, spread_odds2, handicap_edge_p1, handicap_edge_p2")
-    .order("tour_id")
-    .order("draw")
-    .order("round_id")
-    .limit(FAIR_ODDS_LIMIT);
+  const FAIR_ODDS_PAGE_SIZE = 1000;
+  const DAILY_FAIR_ODDS_SELECT =
+    "id, tour_id, player1_id, player2_id, surface, p1_win_prob, p2_win_prob, odds1, odds2, p_a, p_b, expected_total_games, ou_line_1, ou_over_1, ou_under_1, ou_line_2, ou_over_2, ou_under_2, ou_line_3, ou_over_3, ou_under_3, confidence, spread_line, spread_odds1, spread_odds2, handicap_edge_p1, handicap_edge_p2";
+
+  const fetchDailyFairOddsRows = async () => {
+    const rows: any[] = [];
+    for (let from = 0; from < FAIR_ODDS_LIMIT; from += FAIR_ODDS_PAGE_SIZE) {
+      const { data, error } = await supabase
+        .from("daily_fair_odds")
+        .select(DAILY_FAIR_ODDS_SELECT)
+        .order("tour_id")
+        .order("draw")
+        .order("round_id")
+        .range(from, Math.min(from + FAIR_ODDS_PAGE_SIZE - 1, FAIR_ODDS_LIMIT - 1));
+      if (error) return { rows, error };
+      const page = data ?? [];
+      rows.push(...page);
+      if (page.length < FAIR_ODDS_PAGE_SIZE) break;
+    }
+    return { rows, error: null };
+  };
+
+  const { rows: oddsRows, error: oddsErr } = await fetchDailyFairOddsRows();
 
   if (oddsErr) {
     return NextResponse.json({ error: oddsErr.message }, { status: 500 });
@@ -1647,10 +1663,27 @@ async function run(): Promise<Response> {
     });
   }
 
-  const { data: oncourtTodayRows, error: oncourtTodayErr } = await supabase
-    .from("oncourt_today")
-    .select("tour_id, player1_id, player2_id, result")
-    .limit(FAIR_ODDS_LIMIT);
+  const fetchOncourtTodayRows = async () => {
+    const rows: any[] = [];
+    for (let from = 0; from < FAIR_ODDS_LIMIT; from += FAIR_ODDS_PAGE_SIZE) {
+      const { data, error } = await supabase
+        .from("oncourt_today")
+        .select("tour_id, player1_id, player2_id, result")
+        .order("tour_id")
+        .order("round_id")
+        .order("draw")
+        .order("player1_id")
+        .order("player2_id")
+        .range(from, Math.min(from + FAIR_ODDS_PAGE_SIZE - 1, FAIR_ODDS_LIMIT - 1));
+      if (error) return { rows, error };
+      const page = data ?? [];
+      rows.push(...page);
+      if (page.length < FAIR_ODDS_PAGE_SIZE) break;
+    }
+    return { rows, error: null };
+  };
+
+  const { rows: oncourtTodayRows, error: oncourtTodayErr } = await fetchOncourtTodayRows();
   if (oncourtTodayErr) {
     console.warn("[fair-odds] Could not load oncourt_today for Pinnacle-only current-gap filtering", oncourtTodayErr.message);
   }

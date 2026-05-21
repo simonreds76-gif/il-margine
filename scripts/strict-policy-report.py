@@ -86,6 +86,26 @@ def env_int(name: str, default: int) -> int:
         return default
 
 
+def fetch_rest_paged(base_url: str, table: str, headers: dict[str, str], params: dict[str, Any], *, page_size: int = 1000, timeout: int = 30) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    offset = 0
+    while True:
+        page_params = {**params, "limit": page_size, "offset": offset}
+        response = requests.get(
+            f"{base_url}/rest/v1/{table}",
+            headers=headers,
+            params=page_params,
+            timeout=timeout,
+        )
+        response.raise_for_status()
+        page = response.json() or []
+        rows.extend(page)
+        if len(page) < page_size:
+            break
+        offset += len(page)
+    return rows
+
+
 # Spread-v1 is a bounded research lane. The live audit showed weak 5-6% edges
 # and huge 20%+ overclaims are both unstable, so keep it inside a controlled
 # window unless an explicit research run overrides these envs.
@@ -1576,48 +1596,46 @@ def main() -> int:
         return 0
 
     try:
-        today_rows_resp = requests.get(
-            f"{base}/oncourt_today",
-            headers=headers,
-            params={
+        today_rows = fetch_rest_paged(
+            base,
+            "oncourt_today",
+            headers,
+            {
                 "select": "tour_id,player1_id,player2_id,result",
-                "limit": 5000,
+                "order": "tour_id.asc,round_id.asc,draw.asc,player1_id.asc,player2_id.asc",
             },
             timeout=30,
         )
-        if today_rows_resp.ok:
-            open_pair_keys: set[tuple[int, int, int]] = set()
-            for today_row in today_rows_resp.json() or []:
-                if str(today_row.get("result") or "").strip():
-                    continue
-                try:
-                    tid = int(today_row["tour_id"])
-                    p1 = int(today_row["player1_id"])
-                    p2 = int(today_row["player2_id"])
-                except (KeyError, TypeError, ValueError):
-                    continue
-                open_pair_keys.add((tid, p1, p2))
-                open_pair_keys.add((tid, p2, p1))
-            if open_pair_keys:
-                before = len(rows)
-                rows = [
-                    row
-                    for row in rows
-                    if (
-                        row.get("tour_id") is not None
-                        and row.get("player1_id") is not None
-                        and row.get("player2_id") is not None
-                        and (
-                            int(row["tour_id"]),
-                            int(row["player1_id"]),
-                            int(row["player2_id"]),
-                        )
-                        in open_pair_keys
+        open_pair_keys: set[tuple[int, int, int]] = set()
+        for today_row in today_rows:
+            if str(today_row.get("result") or "").strip():
+                continue
+            try:
+                tid = int(today_row["tour_id"])
+                p1 = int(today_row["player1_id"])
+                p2 = int(today_row["player2_id"])
+            except (KeyError, TypeError, ValueError):
+                continue
+            open_pair_keys.add((tid, p1, p2))
+            open_pair_keys.add((tid, p2, p1))
+        if open_pair_keys:
+            before = len(rows)
+            rows = [
+                row
+                for row in rows
+                if (
+                    row.get("tour_id") is not None
+                    and row.get("player1_id") is not None
+                    and row.get("player2_id") is not None
+                    and (
+                        int(row["tour_id"]),
+                        int(row["player1_id"]),
+                        int(row["player2_id"]),
                     )
-                ]
-                print(f"Filtered daily_fair_odds to open OnCourt rows: {len(rows)}/{before}")
-        else:
-            print(f"WARNING: oncourt_today open-row filter skipped: HTTP {today_rows_resp.status_code}")
+                    in open_pair_keys
+                )
+            ]
+            print(f"Filtered daily_fair_odds to open OnCourt rows: {len(rows)}/{before}")
     except Exception as exc:
         print(f"WARNING: oncourt_today open-row filter skipped: {exc}")
 
