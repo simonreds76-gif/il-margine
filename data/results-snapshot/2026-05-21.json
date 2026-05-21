@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-21T01:32:51Z",
+  "fetched_at": "2026-05-21T11:55:50Z",
   "leagues": {
     "bundesliga": {
       "api_football_count": 0,
@@ -8156,16 +8156,16 @@
         "2026-05-24",
         "2026-05-25"
       ],
-      "target_fixture_count": 2,
-      "unresolved_fixture_count": 2
+      "target_fixture_count": 7,
+      "unresolved_fixture_count": 7
     },
     "la-liga": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 9,
-      "api_football_requests_used": 0,
+      "api_football_max_requests": 9,
+      "api_football_requests_remaining_after_league": 8,
+      "api_football_requests_used": 1,
       "fetch_error": null,
       "fixtures": {
         "2025-08-15|girona|vallecano": {
@@ -12616,16 +12616,20 @@
       "lag_days": 4,
       "source": "football-data",
       "source_latest": "2026-05-17",
-      "target_dates": [],
-      "target_fixture_count": 0,
-      "unresolved_fixture_count": 0
+      "target_dates": [
+        "2026-05-22",
+        "2026-05-23",
+        "2026-05-24"
+      ],
+      "target_fixture_count": 7,
+      "unresolved_fixture_count": 7
     },
     "ligue-1": {
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
       "api_football_max_requests": 10,
-      "api_football_requests_remaining_after_league": 9,
+      "api_football_requests_remaining_after_league": 8,
       "api_football_requests_used": 0,
       "fetch_error": null,
       "fixtures": {
@@ -16305,9 +16309,9 @@
       "api_football_count": 0,
       "api_football_error": null,
       "api_football_latest": null,
-      "api_football_max_requests": 9,
-      "api_football_requests_remaining_after_league": 8,
-      "api_football_requests_used": 1,
+      "api_football_max_requests": 8,
+      "api_football_requests_remaining_after_league": 5,
+      "api_football_requests_used": 3,
       "fetch_error": null,
       "fixtures": {
         "2025-08-23|genoa|lecce": {
@@ -20759,12 +20763,14 @@
       "source": "football-data",
       "source_latest": "2026-05-17",
       "target_dates": [
+        "2026-05-21",
+        "2026-05-22",
         "2026-05-23",
         "2026-05-24",
         "2026-05-25"
       ],
-      "target_fixture_count": 1,
-      "unresolved_fixture_count": 1
+      "target_fixture_count": 3,
+      "unresolved_fixture_count": 3
     }
   },
   "snapshot_date": "2026-05-21"
