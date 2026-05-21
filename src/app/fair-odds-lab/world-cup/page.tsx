@@ -22,7 +22,7 @@ type WorldCupLabArtifact = {
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "World Cup 2026 Goalscorer Research Lab | Il Margine",
+  title: "World Cup 2026 Goalscorer Research Lab",
   description:
     "Untracked World Cup 2026 goalscorer research lab. This national-team lane is separate from the validated club Fair Odds Lab.",
   alternates: {
