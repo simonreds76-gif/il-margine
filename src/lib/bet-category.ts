@@ -33,6 +33,7 @@ const LEAGUE_LABELS: Record<string, string> = {
   bundesliga: "Bundesliga",
   ligue1: "Ligue 1",
   ucl: "Champions League",
+  worldcup: "World Cup",
   other: "Other football",
 };
 
@@ -58,6 +59,7 @@ export function normalizeBetCategory(value?: string | null): string {
   if (["bundesliga", "germanbundesliga"].includes(compact)) return "bundesliga";
   if (["ligue1", "ligueone", "frenchligue1"].includes(compact)) return "ligue1";
   if (["ucl", "championsleague", "uefachampionsleague"].includes(compact)) return "ucl";
+  if (["worldcup", "worldcup2026", "fifaworldcup", "fifaworldcup2026", "wc", "wc2026"].includes(compact)) return "worldcup";
   if (["uel", "europaleague", "uefaeuropaleague", "uecl", "conferenceleague", "uefaconferenceleague"].includes(compact)) {
     return "other";
   }
@@ -129,10 +131,12 @@ function inferDomesticCategoryFromEvent(event?: string | null): string | null {
 export function getDisplayBetCategory({ market, category, event }: BetCategoryInput): string {
   const marketKey = normalizeText(market ?? "");
   const normalizedCategory = normalizeBetCategory(category);
+  const eventText = normalizeText(event ?? "");
 
   if (marketKey === "tennis") return normalizedCategory;
   if (!FOOTBALL_MARKETS.has(marketKey)) return normalizedCategory;
   if (normalizedCategory !== "other") return normalizedCategory;
+  if (/\b(world cup|fifa world cup|wc 2026)\b/i.test(event ?? "") || eventText.includes("world cup")) return "worldcup";
 
   return inferDomesticCategoryFromEvent(event) ?? normalizedCategory;
 }

@@ -66,7 +66,7 @@ const MARKET_CONFIG: Record<string, MarketConfig> = {
     imageClassName: `h-7 w-7 object-contain opacity-95 ${DARK_MARK_FILTER}`,
   },
   other: { src: "/icons/markets/other-football.svg", label: "Other football", containerClassName: "h-8 w-8", imageClassName: `h-8 w-8 object-contain ${NATURAL_MARK_FILTER}` },
-  worldcup: { src: "/icons/markets/other-football.svg", label: "World Cup", containerClassName: "h-8 w-8", imageClassName: `h-8 w-8 object-contain ${NATURAL_MARK_FILTER}` },
+  worldcup: { src: "/world-cup-trophy.svg", label: "World Cup", containerClassName: "h-8 w-8", imageClassName: `h-8 w-8 object-contain ${NATURAL_MARK_FILTER}` },
   betbuilders: { src: "/icons/markets/other-football.svg", label: "Bet Builders", containerClassName: "h-8 w-8", imageClassName: `h-8 w-8 object-contain ${NATURAL_MARK_FILTER}` },
   atg: { src: "/icons/markets/other-football.svg", label: "ATG", containerClassName: "h-8 w-8", imageClassName: `h-8 w-8 object-contain ${NATURAL_MARK_FILTER}` },
 };

@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bet, CategoryStats } from "@/lib/supabase";
 import { BASELINE_STATS, calculateROI, calculateWinRate } from "@/lib/baseline";
@@ -14,7 +13,7 @@ import ResultBadge from "@/components/ResultBadge";
 import Footer from "@/components/Footer";
 import MonthlyBreakdownSection from "@/components/MonthlyBreakdownSection";
 import PageHomeLink from "@/components/PageHomeLink";
-import { getDisplayBetCategory } from "@/lib/bet-category";
+import { getDisplayBetCategory, normalizeBetCategory } from "@/lib/bet-category";
 import { formatMatchDate, formatOdds } from "@/lib/format";
 import { slugifyTip } from "@/lib/slugify";
 
@@ -60,6 +59,7 @@ export default function PlayerProps({
     { id: "bundesliga", name: "Bundesliga", color: "rose", logoPath: "/league-logos/bundesliga.png", logoClassName: naturalLogoFilter },
     { id: "ligue1", name: "Ligue 1", color: "cyan", logoPath: "/league-logos/ligue-1.png", logoClassName: darkLogoFilter },
     { id: "ucl", name: "Champions League", color: "amber", logoPath: "/icons/markets/ucl-official.svg", logoClassName: darkLogoFilter },
+    { id: "worldcup", name: "World Cup", color: "emerald", logoPath: "/world-cup-trophy.svg", logoClassName: naturalLogoFilter },
     { id: "other", name: "Other", color: "slate", logoPath: "/icons/markets/other-football.svg", logoClassName: naturalLogoFilter },
   ];
 
@@ -160,7 +160,21 @@ export default function PlayerProps({
 
     // For specific league - combine category baseline + live data for that category
     const categoryBaseline = BASELINE_STATS.categoryBaselines.props[leagueId as keyof typeof BASELINE_STATS.categoryBaselines.props];
-    const leagueStats = stats.find(s => s.category === leagueId);
+    const categoryRows = stats.filter((s) => normalizeBetCategory(s.category) === leagueId);
+    const leagueStats = categoryRows.length > 0
+      ? {
+          total_bets: categoryRows.reduce((sum, s) => sum + (s.total_bets || 0), 0),
+          wins: categoryRows.reduce((sum, s) => sum + (s.wins || 0), 0),
+          losses: categoryRows.reduce((sum, s) => sum + (s.losses || 0), 0),
+          total_profit: categoryRows.reduce((sum, s) => sum + (Number(s.total_profit) || 0), 0),
+          total_stake: categoryRows.reduce((sum, s) => sum + (Number(s.total_stake) || 0), 0),
+          avg_odds: (() => {
+            const bets = categoryRows.reduce((sum, s) => sum + (s.total_bets || 0), 0);
+            const weighted = categoryRows.reduce((sum, s) => sum + (Number(s.avg_odds) || 0) * (s.total_bets || 0), 0);
+            return bets > 0 ? weighted / bets : 0;
+          })(),
+        }
+      : undefined;
 
     if (!categoryBaseline) {
       // No baseline for this category, show only live data
@@ -240,19 +254,6 @@ export default function PlayerProps({
             shots, tackles, fouls and cards where role, volume and game state move faster than the bookmaker template,
             and where the wrong line appears more often than it does in the main match odds.
           </p>
-
-          <Link
-            href="/player-props/world-cup-2026"
-            className="mt-6 flex max-w-3xl items-center justify-between gap-4 rounded-2xl border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-100 transition hover:border-emerald-300/60 hover:bg-emerald-400/15"
-          >
-            <span>
-              <span className="block font-semibold">World Cup 2026 props hub</span>
-              <span className="mt-1 block text-xs leading-5 text-emerald-100/70">
-                Tournament props, penalty hierarchy and goalscorer research kept in a separate WC lane.
-              </span>
-            </span>
-            <span className="shrink-0 text-xs font-mono uppercase tracking-[0.16em]">Open</span>
-          </Link>
 
           <div className="mt-6 flex flex-wrap gap-2">
             <span className="rounded-full border border-slate-700/60 bg-slate-900/50 px-3 py-1.5 text-xs font-mono text-slate-400">Shots</span>

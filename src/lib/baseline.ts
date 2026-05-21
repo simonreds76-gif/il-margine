@@ -91,6 +91,14 @@ export const BASELINE_STATS: BaselineStats = {
         total_stake: 80,
         avg_odds: 2.75, // Champions League: higher variance, less predictable
       },
+      worldcup: {
+        total_bets: 0,
+        wins: 0,
+        losses: 0,
+        total_profit: 0,
+        total_stake: 0,
+        avg_odds: 0,
+      },
       other: {
         total_bets: 25, // As specified
         wins: Math.round(25 * 0.58), // 58% win rate = 15 wins

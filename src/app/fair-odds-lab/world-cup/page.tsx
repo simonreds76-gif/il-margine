@@ -156,10 +156,10 @@ export default function WorldCupFairOddsLabPage() {
               </ul>
               <div className="mt-6 flex flex-col gap-3">
                 <Link
-                  href="/player-props/world-cup-2026"
+                  href="/player-props#picks"
                   className="rounded-full bg-emerald-400 px-4 py-2 text-center text-sm font-semibold text-slate-950 transition hover:bg-emerald-300"
                 >
-                  World Cup props hub
+                  Player Props record
                 </Link>
                 <Link
                   href="/penalty-takers/world-cup-2026"
