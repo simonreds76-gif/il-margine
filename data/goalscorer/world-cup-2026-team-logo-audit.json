@@ -1,0 +1,406 @@
+{
+  "audit_date": "2026-05-21",
+  "scope": "World Cup 2026 national-team visual marks currently shipped under public/team-logos/world-cup/",
+  "standard": "Audit checks whether each asset is plausible as a national-team crest/badge/football mark. It does not certify federation brand-rights or official media-kit provenance.",
+  "summary": {
+    "ok_strong": 31,
+    "ok_weak_reference": 13,
+    "review_exact_variant": 1,
+    "ok_team_badge_not_federation": 3
+  },
+  "records": [
+    {
+      "team": "Algeria",
+      "asset_path": "/team-logos/world-cup/algeria.png",
+      "asset_source_page": "https://www.footylogos.com/logos/algeria-national-team",
+      "wikipedia_badge_field": "Algerian NT (logo).png",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Argentina",
+      "asset_path": "/team-logos/world-cup/argentina.png",
+      "asset_source_page": "https://www.footylogos.com/logos/argentina-national-team",
+      "wikipedia_badge_field": "Argentina national football team logo.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Australia",
+      "asset_path": "/team-logos/world-cup/australia.png",
+      "asset_source_page": "https://www.footylogos.com/logos/australia-national-team",
+      "wikipedia_badge_field": "",
+      "status": "ok_weak_reference",
+      "note": "Wikipedia did not expose a badge field. Shipped Australia crest is plausible but needs direct Football Australia/team media check."
+    },
+    {
+      "team": "Austria",
+      "asset_path": "/team-logos/world-cup/austria.png",
+      "asset_source_page": "https://www.footylogos.com/logos/austria-national-team",
+      "wikipedia_badge_field": "Austria national football team crest.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Belgium",
+      "asset_path": "/team-logos/world-cup/belgium.png",
+      "asset_source_page": "https://www.footylogos.com/logos/belgium-national-team",
+      "wikipedia_badge_field": "Royal Belgian FA logo 2019.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Bosnia and Herzegovina",
+      "asset_path": "/team-logos/world-cup/bosnia-and-herzegovina.png",
+      "asset_source_page": "https://www.footylogos.com/logos/bosnia-and-herzegovina-national-team",
+      "wikipedia_badge_field": "Flag of Bosnia and Herzegovina.svg",
+      "status": "ok_weak_reference",
+      "note": "Wikipedia uses flag because the federation crest is non-free/limited; shipped badge looks like the national/federation football crest but needs official media-asset confirmation before calling it official."
+    },
+    {
+      "team": "Brazil",
+      "asset_path": "/team-logos/world-cup/brazil.png",
+      "asset_source_page": "https://www.footylogos.com/logos/brazil-national-team",
+      "wikipedia_badge_field": "Confedera\u00e7\u00e3o Brasileira de Futebol logo (2020).svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Cabo Verde",
+      "asset_path": "/team-logos/world-cup/cabo-verde.png",
+      "asset_source_page": "https://www.footylogos.com/logos/cabo-verde-national-team",
+      "wikipedia_badge_field": "Flag of Cape Verde.svg",
+      "status": "ok_weak_reference",
+      "note": "Wikipedia uses flag. Shipped FCF crest is plausible but third-party sourced."
+    },
+    {
+      "team": "Canada",
+      "asset_path": "/team-logos/world-cup/canada.png",
+      "asset_source_page": "https://www.footylogos.com/logos/canada-national-team",
+      "wikipedia_badge_field": "",
+      "status": "ok_weak_reference",
+      "note": "Wikipedia did not expose a badge field. Shipped Canada Soccer maple-leaf/ball mark is plausible but needs direct Canada Soccer media check."
+    },
+    {
+      "team": "Colombia",
+      "asset_path": "/team-logos/world-cup/colombia.png",
+      "asset_source_page": "https://www.footylogos.com/logos/colombia-national-team",
+      "wikipedia_badge_field": "FCF-Logo-2023.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Congo DR",
+      "asset_path": "/team-logos/world-cup/congo-dr.png",
+      "asset_source_page": "https://www.footylogos.com/logos/dr-congo-national-team",
+      "wikipedia_badge_field": "Congolese Association Football Federation logo.png",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Cote d'Ivoire",
+      "asset_path": "/team-logos/world-cup/cote-d-ivoire.png",
+      "asset_source_page": "https://www.footylogos.com/logos/cote-d-ivoire-national-team",
+      "wikipedia_badge_field": "Cote Divoire Enblem.png",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Croatia",
+      "asset_path": "/team-logos/world-cup/croatia.png",
+      "asset_source_page": "https://www.footylogos.com/logos/croatia-national-team",
+      "wikipedia_badge_field": "Flag of Croatia.svg<!--Don't place the current logo of the Croatian Football Federation here, as it's non-free under Wikipedia policy. Under the current policy, it can only be used on the page of the federation itself.-->",
+      "status": "ok_weak_reference",
+      "note": "Wikipedia explicitly avoids the HNS crest for non-free-policy reasons and uses a flag. Shipped HNS-style crest is plausible but third-party sourced."
+    },
+    {
+      "team": "Curacao",
+      "asset_path": "/team-logos/world-cup/curacao.png",
+      "asset_source_page": "https://www.footylogos.com/logos/curacao-national-team",
+      "wikipedia_badge_field": "",
+      "status": "ok_weak_reference",
+      "note": "Wikipedia lookup did not resolve cleanly due accent/page naming. Shipped FFK-style crest is plausible but needs direct federation check."
+    },
+    {
+      "team": "Czechia",
+      "asset_path": "/team-logos/world-cup/czechia.png",
+      "asset_source_page": "https://www.footylogos.com/logos/czechia-national-team",
+      "wikipedia_badge_field": "Czech Republic national football team logo.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Ecuador",
+      "asset_path": "/team-logos/world-cup/ecuador.png",
+      "asset_source_page": "https://www.footylogos.com/logos/ecuador-national-team",
+      "wikipedia_badge_field": "Ecuador national football team.png",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Egypt",
+      "asset_path": "/team-logos/world-cup/egypt.png",
+      "asset_source_page": "https://www.footylogos.com/logos/egypt-national-team",
+      "wikipedia_badge_field": "Egyptian Football Association logo.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "England",
+      "asset_path": "/team-logos/world-cup/england.png",
+      "asset_source_page": "https://www.footylogos.com/logos/england-national-team",
+      "wikipedia_badge_field": "England national football team crest.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "France",
+      "asset_path": "/team-logos/world-cup/france.png",
+      "asset_source_page": "https://www.footylogos.com/logos/france-national-team",
+      "wikipedia_badge_field": "France national football team seal.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Germany",
+      "asset_path": "/team-logos/world-cup/germany.png",
+      "asset_source_page": "https://www.footylogos.com/logos/germany-national-team",
+      "wikipedia_badge_field": "DFBEagle.svg",
+      "status": "review_exact_variant",
+      "note": "DFB national team keeps the eagle crest despite the 2025/26 corporate DFB rebrand; shipped gold/eagle badge is plausible but should be treated as a display/team-badge variant, not the new DFB corporate logo."
+    },
+    {
+      "team": "Ghana",
+      "asset_path": "/team-logos/world-cup/ghana.png",
+      "asset_source_page": "https://www.footylogos.com/logos/ghana-national-team",
+      "wikipedia_badge_field": "Ghana Football Association logo.png",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Haiti",
+      "asset_path": "/team-logos/world-cup/haiti.png",
+      "asset_source_page": "https://www.footylogos.com/logos/haiti-national-team",
+      "wikipedia_badge_field": "Flag of Haiti.svg",
+      "status": "ok_weak_reference",
+      "note": "Wikipedia uses flag. Shipped federation-style crest is plausible but third-party sourced."
+    },
+    {
+      "team": "IR Iran",
+      "asset_path": "/team-logos/world-cup/ir-iran.png",
+      "asset_source_page": "https://www.footylogos.com/logos/iran-national-team",
+      "wikipedia_badge_field": "Football Federation Islamic Republic of Iran logo.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Iraq",
+      "asset_path": "/team-logos/world-cup/iraq.png",
+      "asset_source_page": "https://www.footylogos.com/logos/iraq-national-team",
+      "wikipedia_badge_field": "Iraq National Team Badge 2021 v1.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Japan",
+      "asset_path": "/team-logos/world-cup/japan.png",
+      "asset_source_page": "https://www.footylogos.com/logos/japan-national-team",
+      "wikipedia_badge_field": "Japan_national_football_team_crest.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Jordan",
+      "asset_path": "/team-logos/world-cup/jordan.png",
+      "asset_source_page": "https://www.footylogos.com/logos/jordan-national-team",
+      "wikipedia_badge_field": "Jordan national football team logo 2024.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Korea Republic",
+      "asset_path": "/team-logos/world-cup/korea-republic.png",
+      "asset_source_page": "https://www.footylogos.com/logos/south-korea-national-team",
+      "wikipedia_badge_field": "Flag of South Korea.svg",
+      "status": "ok_weak_reference",
+      "note": "Wikipedia uses the national flag rather than the KFA tiger crest. Shipped KFA-style crest is plausible but third-party sourced."
+    },
+    {
+      "team": "Mexico",
+      "asset_path": "/team-logos/world-cup/mexico.png",
+      "asset_source_page": "https://www.footylogos.com/logos/mexico-national-team",
+      "wikipedia_badge_field": "Mexico national football team crest.svg <!-- Please do NOT remove this image. It was conceived to represent the national team, NOT the federation. -->",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Morocco",
+      "asset_path": "/team-logos/world-cup/morocco.png",
+      "asset_source_page": "https://www.footylogos.com/logos/morocco-national-team",
+      "wikipedia_badge_field": "Royal Moroccan Football Federation logo.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Netherlands",
+      "asset_path": "/team-logos/world-cup/netherlands.png",
+      "asset_source_page": "https://www.footylogos.com/logos/netherlands-national-team-dutch",
+      "wikipedia_badge_field": "Netherlands national football team logo.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "New Zealand",
+      "asset_path": "/team-logos/world-cup/new-zealand.png",
+      "asset_source_page": "https://www.footylogos.com/logos/new-zealand-national-team",
+      "wikipedia_badge_field": "",
+      "status": "ok_team_badge_not_federation",
+      "note": "National teams keep the iconic fern leaf; this is a team identity mark rather than the 2022 New Zealand Football corporate logo."
+    },
+    {
+      "team": "Norway",
+      "asset_path": "/team-logos/world-cup/norway.png",
+      "asset_source_page": "https://www.footylogos.com/logos/norway-national-team",
+      "wikipedia_badge_field": "Norway national football team logo.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Panama",
+      "asset_path": "/team-logos/world-cup/panama.png",
+      "asset_source_page": "https://www.footylogos.com/logos/panama-national-team",
+      "wikipedia_badge_field": "Flag of Panama.svg",
+      "status": "ok_weak_reference",
+      "note": "Wikipedia uses flag. Shipped federation-style crest is plausible but third-party sourced."
+    },
+    {
+      "team": "Paraguay",
+      "asset_path": "/team-logos/world-cup/paraguay.png",
+      "asset_source_page": "https://www.footylogos.com/logos/paraguay-national-team",
+      "wikipedia_badge_field": "Asociaci\u00f3n Paraguaya de F\u00fatbol logo.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Portugal",
+      "asset_path": "/team-logos/world-cup/portugal.png",
+      "asset_source_page": "https://www.footylogos.com/logos/portugal-national-team",
+      "wikipedia_badge_field": "| Badge_size               = 150px",
+      "status": "ok_strong",
+      "note": "Wikipedia parsing hit formatting noise, but shipped FPF cross/shield mark is the standard Portugal national-team crest family."
+    },
+    {
+      "team": "Qatar",
+      "asset_path": "/team-logos/world-cup/qatar.png",
+      "asset_source_page": "https://www.footylogos.com/logos/qatar-national-team",
+      "wikipedia_badge_field": "Flag of Qatar.svg",
+      "status": "ok_weak_reference",
+      "note": "Wikipedia uses flag. Shipped QFA crest is plausible but third-party sourced."
+    },
+    {
+      "team": "Saudi Arabia",
+      "asset_path": "/team-logos/world-cup/saudi-arabia.png",
+      "asset_source_page": "https://www.footylogos.com/logos/saudi-arabia-national-team",
+      "wikipedia_badge_field": "Saudi Arabia national football team logo.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Scotland",
+      "asset_path": "/team-logos/world-cup/scotland.png",
+      "asset_source_page": "https://www.footylogos.com/logos/scotland-national-team",
+      "wikipedia_badge_field": "Scotland national football team logo 2014.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Senegal",
+      "asset_path": "/team-logos/world-cup/senegal.png",
+      "asset_source_page": "https://www.footylogos.com/logos/senegal-national-team",
+      "wikipedia_badge_field": "Flag of Senegal.svg",
+      "status": "ok_weak_reference",
+      "note": "Wikipedia uses flag. Shipped FSF crest is plausible but third-party sourced."
+    },
+    {
+      "team": "South Africa",
+      "asset_path": "/team-logos/world-cup/south-africa.png",
+      "asset_source_page": "https://www.footylogos.com/logos/south-africa-national-team",
+      "wikipedia_badge_field": "",
+      "status": "ok_weak_reference",
+      "note": "Wikipedia did not expose a badge field. Shipped SAFA badge is plausible but third-party sourced."
+    },
+    {
+      "team": "Spain",
+      "asset_path": "/team-logos/world-cup/spain.png",
+      "asset_source_page": "https://www.footylogos.com/logos/spain-national-team",
+      "wikipedia_badge_field": "Spain national football team crest.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Sweden",
+      "asset_path": "/team-logos/world-cup/sweden.png",
+      "asset_source_page": "https://www.footylogos.com/logos/sweden-national-team",
+      "wikipedia_badge_field": "",
+      "status": "ok_weak_reference",
+      "note": "Wikipedia did not expose a badge field. Shipped SvFF shield is plausible but needs direct federation media check."
+    },
+    {
+      "team": "Switzerland",
+      "asset_path": "/team-logos/world-cup/switzerland.png",
+      "asset_source_page": "https://www.footylogos.com/logos/switzerland-national-team",
+      "wikipedia_badge_field": "Civil Ensign of Switzerland (Pantone).svg",
+      "status": "ok_team_badge_not_federation",
+      "note": "Shipped asset is the Swiss cross/flag style mark. That is a national-team badge treatment, not the SFV/ASF corporate federation logo."
+    },
+    {
+      "team": "Tunisia",
+      "asset_path": "/team-logos/world-cup/tunisia.png",
+      "asset_source_page": "https://www.footylogos.com/logos/tunisia-national-team",
+      "wikipedia_badge_field": "Tunisia national football team logo.png",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Turkiye",
+      "asset_path": "/team-logos/world-cup/turkiye.png",
+      "asset_source_page": "https://www.footylogos.com/logos/turkey-national-team",
+      "wikipedia_badge_field": "Roundel flag of Turkey.svg",
+      "status": "ok_team_badge_not_federation",
+      "note": "Shipped asset is the Turkish roundel/flag style mark. TFF statutes define a separate federation logo; this is acceptable only as national-team badge shorthand."
+    },
+    {
+      "team": "USA",
+      "asset_path": "/team-logos/world-cup/usa.png",
+      "asset_source_page": "https://www.footylogos.com/logos/usa-national-team",
+      "wikipedia_badge_field": "United States Soccer Federation logo.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Uruguay",
+      "asset_path": "/team-logos/world-cup/uruguay.png",
+      "asset_source_page": "https://www.footylogos.com/logos/uruguay-national-team",
+      "wikipedia_badge_field": "Uruguay national football team seal.svg",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    },
+    {
+      "team": "Uzbekistan",
+      "asset_path": "/team-logos/world-cup/uzbekistan.png",
+      "asset_source_page": "https://www.footylogos.com/logos/uzbekistan-national-team",
+      "wikipedia_badge_field": "Uzbekistan Football Association logo.png",
+      "status": "ok_strong",
+      "note": "Second reference did not raise an obvious mismatch; shipped asset matches the expected national-team/federation crest family at visual-audit level."
+    }
+  ],
+  "sources_used": [
+    "https://www.footylogos.com/logos/{team}-national-team source pages recorded per row",
+    "Wikipedia national football team infobox badge fields collected as a weak second-reference layer",
+    "https://www.footyheadlines.com/2026/01/new-all-new-german-football-association-logo.html",
+    "https://www.dfb.de/en/men/mens-national-team",
+    "https://www.footyheadlines.com/2022/12/new-zealand-football-association.html",
+    "https://teara.govt.nz/en/photograph/10913/team-logo",
+    "https://www.tff.org/Resources/TFF/Documents/tff-statues-as-of-06-22-2023.pdf"
+  ]
+}
