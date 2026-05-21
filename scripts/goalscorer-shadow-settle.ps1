@@ -271,6 +271,7 @@ try {
             --context $contextArgs `
             --data $dataGlobs[$league] `
             --days-back 21 `
+            --allow-empty-context `
             --output $penaltyReviewOutputs[$league] `
             --json-output $penaltyReviewJsonOutputs[$league] 2>&1 | ForEach-Object { Log $_ }
         if ($LASTEXITCODE -ne 0) {

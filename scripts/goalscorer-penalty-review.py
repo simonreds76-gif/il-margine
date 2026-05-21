@@ -350,11 +350,16 @@ def main() -> None:
         action="store_true",
         help="Write empty review artifacts instead of failing when no context rows exist.",
     )
+    parser.add_argument(
+        "--fail-empty-context",
+        action="store_true",
+        help="Fail when no context rows exist. Default is to write empty review artifacts so scheduled league loops continue.",
+    )
     args = parser.parse_args()
 
     context_rows = load_context_rows(args.context)
     if not context_rows:
-        if not args.allow_empty_context:
+        if args.fail_empty_context and not args.allow_empty_context:
             raise SystemExit("No penalty-duty context rows found. Run goalscorer-live-compare.py first.")
         _write_csv(Path(args.output), [], REVIEW_FIELDNAMES)
         _write_json(
@@ -368,6 +373,8 @@ def main() -> None:
                 "rows": [],
             },
         )
+        if not args.allow_empty_context:
+            print("No penalty-duty context rows found; wrote empty review artifacts.")
         print("Loaded context rows: 0")
         print("Review rows:         0")
         print(f"Saved CSV:           {args.output}")
