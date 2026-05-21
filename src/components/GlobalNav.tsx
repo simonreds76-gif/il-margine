@@ -20,7 +20,11 @@ export default function GlobalNav() {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  const isTipsActive = ["/tennis-tips", "/player-props", "/bet-builders"].includes(pathname);
+  const isTipsActive =
+    pathname === "/tennis-tips" ||
+    pathname === "/bet-builders" ||
+    pathname === "/player-props" ||
+    pathname.startsWith("/player-props/");
   const linkClass = (active: boolean) =>
     `text-base font-medium transition-colors ${active ? "text-emerald-400" : "text-slate-400 hover:text-slate-100"}`;
 
@@ -65,6 +69,7 @@ export default function GlobalNav() {
                 <div className="absolute top-full left-0 mt-2 w-48 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-50">
                   <Link href="/tennis-tips" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Tennis Tips</Link>
                   <Link href="/player-props" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Player Props</Link>
+                  <Link href="/player-props/world-cup-2026" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">World Cup Props</Link>
                   <Link href="/bet-builders" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Bet Builders</Link>
                 </div>
               )}
@@ -100,6 +105,9 @@ export default function GlobalNav() {
                   </Link>
                   <Link href="/player-props" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/player-props' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
                     Player Props
+                  </Link>
+                  <Link href="/player-props/world-cup-2026" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/player-props/world-cup-2026' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+                    World Cup Props
                   </Link>
                   <Link href="/bet-builders" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/bet-builders' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
                     Bet Builders

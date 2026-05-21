@@ -51,6 +51,10 @@ LEAGUE_CONFIGS = {
         "signals": ROOT / "data" / "goalscorer" / "ligue-1-shadow-signals.csv",
         "summary": ROOT / "data" / "goalscorer" / "ligue-1-shadow-performance.txt",
     },
+    "wc-2026": {
+        "signals": ROOT / "data" / "goalscorer" / "world-cup-2026-shadow-signals.csv",
+        "summary": ROOT / "data" / "goalscorer" / "world-cup-2026-shadow-performance.txt",
+    },
 }
 
 

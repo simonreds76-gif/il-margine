@@ -1,0 +1,16 @@
+{
+  "generated_at": null,
+  "tournament": "FIFA World Cup 2026",
+  "model_status": "NOT_VALIDATED",
+  "fair_odds_status": "NOT_AUTHORISED",
+  "public_signal_status": "DISABLED",
+  "public_record": "EXCLUDED",
+  "settlement": "internal",
+  "source_files": [
+    "data/goalscorer/world-cup-2026-penalty-takers.json",
+    "data/goalscorer/world-cup-2026-team-strength.json",
+    "data/goalscorer/world-cup-2026-shadow-signals.csv"
+  ],
+  "gate_note": "Research-only artifact. Do not merge with public/fair-odds-lab/signals.json.",
+  "signals": []
+}
