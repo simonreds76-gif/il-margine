@@ -12,7 +12,7 @@
       "home_status": "FotMob Expected XI",
       "away_status": "FotMob Expected XI",
       "lineup_type": "predicted",
-      "home_formation": "4-3-3",
+      "home_formation": "4-1-4-1",
       "away_formation": "3-4-1-2",
       "home_players": [
         "David de Gea",
@@ -20,18 +20,18 @@
         "Marin Pongracic",
         "Pietro Comuzzo",
         "Robin Gosens",
-        "Cher Ndour",
         "Nicolò Fagioli",
-        "Marco Brescianini",
-        "Niccolò Fortini",
-        "Roberto Piccoli",
-        "Manor Solomon"
+        "Jack Harrison",
+        "Rolando Mandragora",
+        "Cher Ndour",
+        "Manor Solomon",
+        "Roberto Piccoli"
       ],
       "away_players": [
         "Marco Carnesecchi",
         "Giorgio Scalvini",
-        "Berat Djimsiti",
-        "Honest Ahanor",
+        "Isak Hien",
+        "Sead Kolasinac",
         "Davide Zappacosta",
         "Marten de Roon",
         "Éderson",
@@ -47,7 +47,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-3-3",
+          "formation": "4-1-4-1",
           "position_id": 11
         },
         {
@@ -56,7 +56,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-1-4-1",
           "position_id": 32
         },
         {
@@ -65,7 +65,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-1-4-1",
           "position_id": 34
         },
         {
@@ -74,7 +74,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-1-4-1",
           "position_id": 36
         },
         {
@@ -83,62 +83,62 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-3-3",
+          "formation": "4-1-4-1",
           "position_id": 38
-        },
-        {
-          "name": "Cher Ndour",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 73
         },
         {
           "name": "Nicolò Fagioli",
           "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 75
+          "line_size": 1,
+          "role_score": 2,
+          "role_group": "DMC",
+          "formation": "4-1-4-1",
+          "position_id": 65
         },
         {
-          "name": "Marco Brescianini",
-          "line_index": 1,
-          "line_size": 3,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "4-3-3",
-          "position_id": 77
-        },
-        {
-          "name": "Niccolò Fortini",
+          "name": "Jack Harrison",
           "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 103
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-1-4-1",
+          "position_id": 82
         },
         {
-          "name": "Roberto Piccoli",
+          "name": "Rolando Mandragora",
           "line_index": 2,
-          "line_size": 3,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 105
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-1-4-1",
+          "position_id": 84
+        },
+        {
+          "name": "Cher Ndour",
+          "line_index": 2,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-1-4-1",
+          "position_id": 86
         },
         {
           "name": "Manor Solomon",
           "line_index": 2,
-          "line_size": 3,
+          "line_size": 4,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "4-1-4-1",
+          "position_id": 88
+        },
+        {
+          "name": "Roberto Piccoli",
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-3-3",
-          "position_id": 107
+          "formation": "4-1-4-1",
+          "position_id": 115
         }
       ],
       "away_starters": [
@@ -161,7 +161,7 @@
           "position_id": 33
         },
         {
-          "name": "Berat Djimsiti",
+          "name": "Isak Hien",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -170,7 +170,7 @@
           "position_id": 35
         },
         {
-          "name": "Honest Ahanor",
+          "name": "Sead Kolasinac",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
