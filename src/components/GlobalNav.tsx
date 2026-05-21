@@ -25,7 +25,7 @@ export default function GlobalNav() {
     pathname === "/bet-builders" ||
     pathname === "/player-props";
   const linkClass = (active: boolean) =>
-    `text-base font-medium transition-colors ${active ? "text-emerald-400" : "text-slate-400 hover:text-slate-100"}`;
+    `text-base font-medium transition-colors ${active ? "text-[var(--brand-green)]" : "text-slate-400 hover:text-slate-100"}`;
 
   return (
     <nav className="border-b border-slate-800/80 sticky top-0 z-50 bg-[#0f1117]/95 backdrop-blur-sm">
@@ -89,7 +89,7 @@ export default function GlobalNav() {
             <div className="px-4">
               <button 
                 onClick={() => setTipsMenuPath(tipsMenuOpen ? null : pathname)}
-                className={`w-full min-h-[44px] flex items-center justify-between text-base font-medium rounded px-3 py-3 transition-colors ${isTipsActive ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}
+                className={`w-full min-h-[44px] flex items-center justify-between text-base font-medium rounded px-3 py-3 transition-colors ${isTipsActive ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}
               >
                 <span>Tips</span>
                 <svg className={`w-4 h-4 transition-transform ${tipsMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,42 +98,42 @@ export default function GlobalNav() {
               </button>
               {tipsMenuOpen && (
                 <div className="mt-1 ml-4 space-y-1">
-                  <Link href="/tennis-tips" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/tennis-tips' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+                  <Link href="/tennis-tips" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/tennis-tips' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
                     Tennis Tips
                   </Link>
-                  <Link href="/player-props" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/player-props' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+                  <Link href="/player-props" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/player-props' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
                     Player Props
                   </Link>
-                  <Link href="/bet-builders" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/bet-builders' ? 'text-emerald-400 font-medium bg-emerald-500/10' : 'text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+                  <Link href="/bet-builders" className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded transition-colors ${pathname === '/bet-builders' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
                     Bet Builders
                   </Link>
                 </div>
               )}
             </div>
-            <Link href="/the-edge" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/the-edge" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
+            <Link href="/the-edge" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/the-edge" ? "text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]" : "text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]"}`}>
               The Edge
             </Link>
-            <Link href="/penalty-takers" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/penalty-takers" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
+            <Link href="/penalty-takers" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/penalty-takers" ? "text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]" : "text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]"}`}>
               Penalty Takers
             </Link>
-            <Link href="/fair-odds-lab" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/fair-odds-lab" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
+            <Link href="/fair-odds-lab" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/fair-odds-lab" ? "text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]" : "text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]"}`}>
               Fair Odds Lab
             </Link>
-            <Link href="/track-record" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/track-record" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
+            <Link href="/track-record" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/track-record" ? "text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]" : "text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]"}`}>
               Track Record
             </Link>
             {showMonitorLink ? (
-              <Link href="/model-monitor" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/model-monitor" ? "text-emerald-400 bg-emerald-500/10" : "text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10"}`}>
+              <Link href="/model-monitor" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === "/model-monitor" ? "text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]" : "text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]"}`}>
                 Monitor
               </Link>
             ) : null}
-            <Link href="/bookmakers" className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/bookmakers' ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+            <Link href="/bookmakers" className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/bookmakers' ? 'text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]' : 'text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
               Bookmakers
             </Link>
-            <Link href="/calculator" className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/calculator' ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+            <Link href="/calculator" className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/calculator' ? 'text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]' : 'text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
               Calculator
             </Link>
-            <Link href="/resources" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/resources' || pathname?.startsWith('/resources/') ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10'}`}>
+            <Link href="/resources" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/resources' || pathname?.startsWith('/resources/') ? 'text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]' : 'text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
               Resources
             </Link>
           </div>
