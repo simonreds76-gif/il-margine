@@ -3,6 +3,7 @@ name: Team Shots Weekly Scrape
 on:
   schedule:
     - cron: "0 10 * * 4" # Thursday 10am UTC = 11am BST
+    - cron: "20 11 * * 4" # Thursday backstop if GitHub drops/delays the first scheduled run
     - cron: "0 10 * * 5" # Friday 10am UTC = 11am BST
     - cron: "0 15 * * 5" # Friday 3pm UTC = 4pm BST
     - cron: "0 13 * * 6" # Saturday 1pm UTC = 2pm BST
