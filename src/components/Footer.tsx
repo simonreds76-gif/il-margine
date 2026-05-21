@@ -14,14 +14,14 @@ export default function Footer({ className = "" }: FooterProps) {
           <Link
             href="/"
             aria-label={`Il Margine: ${SITE_MOTTO}`}
-            className="group flex items-center rounded-2xl border border-[color:rgba(87,209,150,0.14)] bg-slate-950/45 px-3 py-2 shadow-[0_0_24px_rgba(87,209,150,0.06)] transition hover:border-[color:rgba(87,209,150,0.32)] hover:shadow-[0_0_34px_rgba(87,209,150,0.12)]"
+            className="group flex items-center transition hover:brightness-110"
           >
             <Image
               src="/brand/il-margine-tube-footer-compact.png"
               alt="Il Margine - Mind the Margin"
               width={360}
               height={90}
-              className="h-12 w-auto max-w-[min(78vw,22rem)] object-contain sm:h-14"
+              className="h-12 w-auto max-w-[min(82vw,23rem)] object-contain sm:h-14"
             />
           </Link>
           <div className="flex flex-col items-center md:items-end gap-3">
