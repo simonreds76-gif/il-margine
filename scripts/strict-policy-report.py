@@ -262,7 +262,7 @@ def load_env() -> None:
 
 def series_bucket_from_tour(tour_name: str | None, tour_rank: int | None) -> str:
     u = (tour_name or "").upper()
-    if any(x in u for x in ["AUSTRALIAN OPEN", "ROLAND GARROS", "WIMBLEDON", "US OPEN", "GRAND SLAM"]):
+    if any(x in u for x in ["AUSTRALIAN OPEN", "FRENCH OPEN", "ROLAND GARROS", "WIMBLEDON", "US OPEN", "U.S. OPEN", "GRAND SLAM"]):
         return "Grand Slam"
     if "MASTERS CUP" in u or "ATP FINALS" in u or "TOUR FINALS" in u:
         return "Masters Cup"
@@ -274,7 +274,7 @@ def series_bucket_from_tour(tour_name: str | None, tour_rank: int | None) -> str
         return "Challenger"
     if "ATP 250" in u or "250" in u:
         return "ATP250"
-    if tour_rank == 1:
+    if tour_rank in {1, 4}:
         return "Grand Slam"
     if tour_rank == 3:
         return "Masters 1000"

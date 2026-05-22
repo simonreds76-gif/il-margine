@@ -616,7 +616,7 @@ function buildStrictPolicyPayload(
 function seriesBucketFromTour(tourName?: string, tourRank?: number | null): string {
   const u = (tourName ?? "").toUpperCase();
   if (
-    ["AUSTRALIAN OPEN", "ROLAND GARROS", "WIMBLEDON", "US OPEN", "GRAND SLAM"].some((x) =>
+    ["AUSTRALIAN OPEN", "FRENCH OPEN", "ROLAND GARROS", "WIMBLEDON", "US OPEN", "U.S. OPEN", "GRAND SLAM"].some((x) =>
       u.includes(x)
     )
   ) {
@@ -632,7 +632,7 @@ function seriesBucketFromTour(tourName?: string, tourRank?: number | null): stri
 
   const rankNum = tourRank != null ? Number(tourRank) : NaN;
   if (Number.isFinite(rankNum)) {
-    if (rankNum === 1) return "Grand Slam";
+    if (rankNum === 4 || rankNum === 1) return "Grand Slam";
     if (rankNum === 3) return "Masters 1000";
     if (rankNum === 2) return "ATP500";
   }
@@ -857,30 +857,30 @@ function mlDisplayGuardReason(params: {
   const positiveSuppressedP2 = params.suppressDisplayValueP2 && (params.rawValueP2 ?? Number.NEGATIVE_INFINITY) > 0;
   if (!positiveSuppressedP1 && !positiveSuppressedP2) return undefined;
   if (params.pinnacleShortFavoriteExcluded || params.modelShortFavoriteExcluded) {
-    return "ML value hidden: favourite <1.25";
+    return "ML guard: favourite <1.25";
   }
   if (params.modelMarketSideFlipExcluded) {
-    return "ML value hidden: model/market favourite side flip";
+    return "ML guard: model/market favourite side flip";
   }
   if (params.modelMarketGapExcluded) {
-    return "ML value hidden: model/market favourite gap >10pp";
+    return "ML guard: model/market favourite gap >10pp";
   }
   if (params.challengerValueExcluded) {
-    return "ML value hidden: Challenger lane disabled";
+    return "ML guard: Challenger lane disabled";
   }
   if (params.heavyFavoriteDogExcluded) {
-    return "ML value hidden: heavy-favourite dog guard";
+    return "ML guard: heavy-favourite dog";
   }
   if (params.favoriteSpreadConflictExcluded) {
-    return "ML value hidden: same-match handicap conflict";
+    return "ML guard: same-match handicap conflict";
   }
   if (params.oppositeSideHandicapConflictExcluded) {
-    return "ML value hidden: opposite-side handicap signal";
+    return "ML guard: opposite-side handicap signal";
   }
   if (params.confidence === "none") {
-    return "ML value hidden: low-confidence row";
+    return "ML guard: low-confidence row";
   }
-  return "ML value hidden by guard";
+  return "ML guard active";
 }
 
 type OverlayLookupValue = { n: number; roi_pct_shrunk: number };
@@ -2542,11 +2542,11 @@ async function run(): Promise<Response> {
       strictFavoriteSpreadConflictP2 ||
       strictOppositeHandicapConflictP2;
     const displayValueP1 =
-      !suppressDisplayValueP1 && pinnacle && ourOdds1 > 1 && pinnacle.pinnacle_odds1 > 1
+      pinnacle && ourOdds1 > 1 && pinnacle.pinnacle_odds1 > 1
         ? rawValueP1
         : undefined;
     const displayValueP2 =
-      !suppressDisplayValueP2 && pinnacle && ourOdds2 > 1 && pinnacle.pinnacle_odds2 > 1
+      pinnacle && ourOdds2 > 1 && pinnacle.pinnacle_odds2 > 1
         ? rawValueP2
         : undefined;
     if (policyMatch) strictPolicySignaledCount += 1;

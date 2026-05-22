@@ -1813,9 +1813,9 @@ function MatchRow({
         <td className="text-center px-2.5 py-3 font-mono tabular-nums text-[13px]">
           <span
             className={`inline-flex rounded-md px-1.5 py-0.5 ${bestValue ? `${valueColor(bestValue.value)} ${valueBg(bestValue.value)}` : "text-slate-500"}`}
-            title={bestValue ? "Best-side value % = (Pinnacle / Our odds) - 1" : blockedDetail ?? "No display-safe value"}
+            title={bestValue ? "Best-side raw value % = (Pinnacle / Our odds) - 1" : blockedDetail ?? "No matched market value"}
           >
-            {bestValue ? `${bestValue.side} ${fmtPct(bestValue.value)}` : blockedDetail ? <span className="text-amber-300/80">guarded</span> : "--"}
+            {bestValue ? `${bestValue.side} ${fmtPct(bestValue.value)}` : "--"}
           </span>
         </td>
 
