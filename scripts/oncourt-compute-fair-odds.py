@@ -93,6 +93,13 @@ RANK_CLASS_GAP_CAP = 0.07
 RANK_POINTS_BLEND = 0.35
 POINTS_LOGIT_SCALE = 1.25
 POINTS_MIN_BASE = 5.0
+SURFACE_POINTS_MISMATCH_SURFACES = {"Clay", "Grass"}
+SURFACE_POINTS_MISMATCH_SERIES = {"Grand Slam", "Masters 1000", "ATP500"}
+SURFACE_POINTS_MISMATCH_MIN_FAV_POINTS = 150.0
+SURFACE_POINTS_MISMATCH_MAX_DOG_POINTS = 50.0
+SURFACE_POINTS_MISMATCH_MIN_RATIO = 8.0
+SURFACE_POINTS_MISMATCH_BLEND_BASE = 0.28
+SURFACE_POINTS_MISMATCH_BLEND_CAP = 0.68
 
 SHRINKAGE_N = 40
 SURFACE_LEAGUE_AVG = {"Hard": 0.64, "Clay": 0.62, "Grass": 0.67, "I.hard": 0.64, "N/A": 0.64}
@@ -997,6 +1004,63 @@ def _apply_series_probability_guard(p1_win, series_bucket, surface, confidence, 
     q = p if fav_is_p1 else (1.0 - p)
     q = min(q, cap)
     return q if fav_is_p1 else (1.0 - q)
+
+
+def _apply_surface_points_mismatch_guard(
+    p1_win,
+    surface,
+    series_bucket,
+    confidence,
+    pts1,
+    pts2,
+    p_rank_points,
+):
+    """Stop thin clay/grass samples from inventing value against clear surface specialists."""
+    if surface not in SURFACE_POINTS_MISMATCH_SURFACES:
+        return p1_win, 0.0, 0.0
+    if series_bucket not in SURFACE_POINTS_MISMATCH_SERIES:
+        return p1_win, 0.0, 0.0
+    if p_rank_points is None:
+        return p1_win, 0.0, 0.0
+    try:
+        p1_pts = max(0.0, float(pts1 or 0.0))
+        p2_pts = max(0.0, float(pts2 or 0.0))
+    except (TypeError, ValueError):
+        return p1_win, 0.0, 0.0
+
+    fav_pts = max(p1_pts, p2_pts)
+    dog_pts = min(p1_pts, p2_pts)
+    ratio = (fav_pts + POINTS_MIN_BASE) / (dog_pts + POINTS_MIN_BASE)
+    if (
+        fav_pts < SURFACE_POINTS_MISMATCH_MIN_FAV_POINTS
+        or dog_pts > SURFACE_POINTS_MISMATCH_MAX_DOG_POINTS
+        or ratio < SURFACE_POINTS_MISMATCH_MIN_RATIO
+    ):
+        return p1_win, 0.0, ratio
+
+    points_favour_p1 = p1_pts > p2_pts
+    anchor = _clamp(float(p_rank_points), 0.02, 0.98)
+    if points_favour_p1 and p1_win >= anchor - 0.02:
+        return p1_win, 0.0, ratio
+    if (not points_favour_p1) and p1_win <= anchor + 0.02:
+        return p1_win, 0.0, ratio
+
+    blend = SURFACE_POINTS_MISMATCH_BLEND_BASE
+    blend += min(0.22, math.log(ratio / SURFACE_POINTS_MISMATCH_MIN_RATIO) * 0.14)
+    if series_bucket == "Grand Slam":
+        blend += 0.10
+    if dog_pts <= 20:
+        blend += 0.10
+    if confidence in ("medium", "low"):
+        blend += 0.08
+    blend = _clamp(blend, SURFACE_POINTS_MISMATCH_BLEND_BASE, SURFACE_POINTS_MISMATCH_BLEND_CAP)
+
+    adjusted = (1.0 - blend) * p1_win + blend * anchor
+    if points_favour_p1:
+        adjusted = max(p1_win, adjusted)
+    else:
+        adjusted = min(p1_win, adjusted)
+    return adjusted, adjusted - p1_win, ratio
 
 
 def _calibrate_match_probability(p1_win, series_bucket, surface, confidence):
@@ -2488,6 +2552,7 @@ def main():
     skip_missing_both = 0
     skip_missing_p1 = 0
     skip_missing_p2 = 0
+    surface_points_guarded_matches = 0
     surface_counts = {}
     for f in fixtures:
         tour_id = f.get("tour_id")
@@ -3136,6 +3201,21 @@ def main():
         )
         p2_win = 1.0 - p1_win
 
+        surface_points_guard_delta = 0.0
+        surface_points_guard_ratio = 0.0
+        p1_win, surface_points_guard_delta, surface_points_guard_ratio = _apply_surface_points_mismatch_guard(
+            p1_win,
+            surface,
+            series_bucket,
+            confidence,
+            pts1,
+            pts2,
+            p_rank_points,
+        )
+        if abs(surface_points_guard_delta) > 1e-9:
+            surface_points_guarded_matches += 1
+        p2_win = 1.0 - p1_win
+
         # Normalize
         tot = p1_win + p2_win
         if tot > 0:
@@ -3331,7 +3411,9 @@ def main():
                     f"    H2H={h2h_delta:+.4f} ADV={adv_delta:+.4f} "
                     f"form_base={delta_p1_form:+.4f} results_form={results_form_delta:+.4f} "
                     f"tour_hist={tour_history_delta:+.4f} crisis_shock={crisis_shock_delta:+.4f} "
-                    f"total_delta={delta_p1:+.4f} elo_mag_release={elo_magnitude_release:+.4f} low_conf_guard={low_conf_dog_delta:+.4f} "
+                    f"total_delta={delta_p1:+.4f} elo_mag_release={elo_magnitude_release:+.4f} "
+                    f"surface_points_guard={surface_points_guard_delta:+.4f} (ratio={surface_points_guard_ratio:.1f}) "
+                    f"low_conf_guard={low_conf_dog_delta:+.4f} "
                     f"stepup_guard={stepup_dog_delta:+.4f} "
                     f"crisis(P1/P2)={p1_crisis}/{p2_crisis}"
                 )
@@ -3386,6 +3468,7 @@ def main():
     print(f"  Fixture surfaces (from tour_id): {dict(surface_counts)}")
     print(f"  Skipped: no player1/player2 = {skip_no_players}, same-player = {skip_same_player}, unknown = {skip_unknown}, doubles/team (name contains / or &) = {skip_doubles}")
     print(f"  Elo/rank fallback (missing stats): both = {skip_missing_both}, P1 only = {skip_missing_p1}, P2 only = {skip_missing_p2}")
+    print(f"  Surface-points mismatch guard: adjusted_matches={surface_points_guarded_matches}")
     conf_counts = {"high": 0, "medium": 0, "low": 0, "none": 0}
     for row in out:
         c = row.get("confidence", "high")
