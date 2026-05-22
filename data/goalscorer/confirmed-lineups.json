@@ -9,22 +9,22 @@
       "kickoff_utc": "2026-05-22T18:45:00Z",
       "home_team": "Fiorentina",
       "away_team": "Atalanta",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
       "home_formation": "4-1-4-1",
-      "away_formation": "3-4-1-2",
+      "away_formation": "3-4-2-1",
       "home_players": [
-        "David de Gea",
+        "Oliver Christensen",
         "Dodô",
-        "Marin Pongracic",
+        "Daniele Rugani",
         "Pietro Comuzzo",
         "Robin Gosens",
         "Marco Brescianini",
         "Jack Harrison",
         "Rolando Mandragora",
         "Giovanni Fabbian",
-        "Manor Solomon",
+        "Albert Gudmundsson",
         "Roberto Piccoli"
       ],
       "away_players": [
@@ -32,17 +32,17 @@
         "Giorgio Scalvini",
         "Isak Hien",
         "Honest Ahanor",
-        "Davide Zappacosta",
-        "Éderson",
+        "Raoul Bellanova",
+        "Marten de Roon",
+        "Mario Pasalic",
         "Yunus Musah",
-        "Mitchel Bakker",
         "Lazar Samardzic",
-        "Gianluca Scamacca",
-        "Kamaldeen Sulemana"
+        "Kamaldeen Sulemana",
+        "Giacomo Raspadori"
       ],
       "home_starters": [
         {
-          "name": "David de Gea",
+          "name": "Oliver Christensen",
           "line_index": -1,
           "line_size": 1,
           "role_score": 0,
@@ -60,7 +60,7 @@
           "position_id": 32
         },
         {
-          "name": "Marin Pongracic",
+          "name": "Daniele Rugani",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
@@ -123,7 +123,7 @@
           "position_id": 86
         },
         {
-          "name": "Manor Solomon",
+          "name": "Albert Gudmundsson",
           "line_index": 2,
           "line_size": 4,
           "role_score": 4,
@@ -148,7 +148,7 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 11
         },
         {
@@ -157,7 +157,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 33
         },
         {
@@ -166,7 +166,7 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 35
         },
         {
@@ -175,26 +175,35 @@
           "line_size": 3,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 37
         },
         {
-          "name": "Davide Zappacosta",
+          "name": "Raoul Bellanova",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 62
         },
         {
-          "name": "Éderson",
+          "name": "Marten de Roon",
           "line_index": 1,
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 64
+        },
+        {
+          "name": "Mario Pasalic",
+          "line_index": 1,
+          "line_size": 4,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "3-4-2-1",
+          "position_id": 66
         },
         {
           "name": "Yunus Musah",
@@ -202,44 +211,35 @@
           "line_size": 4,
           "role_score": 3,
           "role_group": "MID",
-          "formation": "3-4-1-2",
-          "position_id": 66
-        },
-        {
-          "name": "Mitchel Bakker",
-          "line_index": 1,
-          "line_size": 4,
-          "role_score": 3,
-          "role_group": "MID",
-          "formation": "3-4-1-2",
+          "formation": "3-4-2-1",
           "position_id": 68
         },
         {
           "name": "Lazar Samardzic",
           "line_index": 2,
-          "line_size": 1,
+          "line_size": 2,
           "role_score": 4,
           "role_group": "AM",
-          "formation": "3-4-1-2",
-          "position_id": 85
-        },
-        {
-          "name": "Gianluca Scamacca",
-          "line_index": 3,
-          "line_size": 2,
-          "role_score": 5,
-          "role_group": "FW",
-          "formation": "3-4-1-2",
-          "position_id": 104
+          "formation": "3-4-2-1",
+          "position_id": 84
         },
         {
           "name": "Kamaldeen Sulemana",
-          "line_index": 3,
+          "line_index": 2,
           "line_size": 2,
+          "role_score": 4,
+          "role_group": "AM",
+          "formation": "3-4-2-1",
+          "position_id": 86
+        },
+        {
+          "name": "Giacomo Raspadori",
+          "line_index": 3,
+          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "3-4-1-2",
-          "position_id": 106
+          "formation": "3-4-2-1",
+          "position_id": 105
         }
       ],
       "home_subs": [],
