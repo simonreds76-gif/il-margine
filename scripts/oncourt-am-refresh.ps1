@@ -139,8 +139,8 @@ try {
         Log "WARNING: 32-bit Python not found at $py32, skipping extract"
     }
 
-    Log "=== Step 2/8: Supabase sync (--quick --skip-players) ==="
-    & python scripts\oncourt-load-supabase.py --quick --skip-players 2>&1 | ForEach-Object { Log $_ }
+    Log "=== Step 2/8: Supabase sync (--quick, includes players) ==="
+    & python scripts\oncourt-load-supabase.py --quick 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "ERROR: Supabase sync failed (exit $LASTEXITCODE)"
         Set-RunStatusFailure "SupabaseSyncFailed" "Supabase sync failed (exit $LASTEXITCODE)"

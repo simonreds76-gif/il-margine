@@ -1103,6 +1103,12 @@ def main():
                 + (" ..." if len(missing_ids) > 20 else "")
             )
             print("  Run `python scripts/oncourt-load-supabase.py --quick` to backfill those players.")
+            if os.environ.get("ALLOW_MISSING_ONCOURT_PLAYERS", "").strip().lower() not in {"1", "true", "yes", "on"}:
+                print(
+                    "ERROR: Refusing to sync partial daily_fair_odds because oncourt_players is stale. "
+                    "Run Supabase sync without --skip-players, then rerun fair odds."
+                )
+                sys.exit(1)
 
         filtered = [
             row
