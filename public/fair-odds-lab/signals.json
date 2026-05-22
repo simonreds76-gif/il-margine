@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T14:00:34.748555Z",
+  "generated_at": "2026-05-22T16:16:24.600619Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -35,6 +35,7 @@
   "signals_qualifying": 4,
   "leagues_covered": [
     "epl",
+    "la-liga",
     "serie-a"
   ],
   "featured_signal_id": "20260524-dominic-calvert-lewin-93e5afe1f6",
@@ -230,90 +231,78 @@
       "risk_flags": []
     },
     {
-      "id": "20260524-giovanni-simeone-704587d8ef",
+      "id": "20260523-ilyas-chaira-1695c0d57b",
       "match": {
-        "home_team": "Torino FC",
-        "away_team": "Juventus Turin",
-        "league": "serie-a",
-        "league_display": "Serie A",
-        "league_logo_path": "/league-logos/serie-a.png",
-        "kickoff_utc": "2026-05-24T18:45:00Z",
-        "kickoff_display": "Sun 24 May 19:45 UK",
-        "fotmob_match_id": "4803416",
-        "fotmob_page_url": "/matches/torino-vs-juventus/37eu56#4803416",
+        "home_team": "RCD Mallorca",
+        "away_team": "Real Oviedo",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-05-23T19:00:00Z",
+        "kickoff_display": "Sat 23 May 20:00 UK",
+        "fotmob_match_id": "4837485",
+        "fotmob_page_url": "/matches/mallorca-vs-real-oviedo/2hfado#4837485",
         "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
-        "name": "Giovanni Simeone",
-        "team": "Torino",
-        "position": "FW",
+        "name": "Ilyas Chaira",
+        "team": "Real Oviedo",
+        "position": "AM",
         "jersey_label": "",
-        "team_logo_path": "/team-logos/serie-a/torino.png",
-        "team_primary_color": "#7f1d1d",
+        "team_logo_path": "/team-logos/la-liga/real-oviedo.png",
+        "team_primary_color": "#1d4ed8",
         "team_secondary_color": "#f8fafc",
         "team_shirt_pattern": "solid"
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 27.6,
-        "fair_odds": 3.62
+        "scoring_chance_pct": 25.6,
+        "fair_odds": 3.91
       },
       "market_data": {
-        "best_odds": 4.75,
+        "best_odds": 6.0,
         "best_book": "Bet365",
-        "implied_chance_pct": 21.1
+        "implied_chance_pct": 16.7
       },
       "edge": {
-        "price_gap_pp": 6.6,
+        "price_gap_pp": 8.9,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 96
+          "percentile": 81
         },
-        "share_of_team_chances_pct": 29,
-        "share_of_team_chances_percentile": 99,
+        "share_of_team_chances_pct": 21,
+        "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
-          "tier": "Quiet",
-          "percentile": 18
+          "tier": "Average",
+          "percentile": 39
         },
         "recent_team_form": {
-          "tier": "Average",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-17",
-          "xg_for_avg": 1.56,
-          "xg_against_avg": 1.73,
-          "xgd_per90": -0.17,
-          "shots_for_avg": 11.0,
-          "shots_against_avg": 14.6,
-          "sot_for_avg": 2.2,
-          "sot_against_avg": 5.6,
-          "corners_for_avg": 3.2,
-          "corners_against_avg": 5.2
+          "tier": "Unknown"
         },
         "opponent_defensive_weakness": {
-          "tier": "Low",
-          "percentile": 4
+          "tier": "High",
+          "percentile": 85
         },
         "opponent_recent_defence": {
-          "tier": "Low",
+          "tier": "Positive",
           "window": 5,
           "matches": 5,
           "through_date": "2026-05-17",
-          "xg_for_avg": 1.73,
-          "xg_against_avg": 0.56,
-          "xgd_per90": 1.17,
-          "shots_for_avg": 18.8,
-          "shots_against_avg": 8.0,
-          "sot_for_avg": 6.2,
-          "sot_against_avg": 2.2,
-          "corners_for_avg": 7.2,
-          "corners_against_avg": 1.2
+          "xg_for_avg": 0.78,
+          "xg_against_avg": 1.69,
+          "xgd_per90": -0.9,
+          "shots_for_avg": 9.4,
+          "shots_against_avg": 11.4,
+          "sot_for_avg": 3.8,
+          "sot_against_avg": 3.4,
+          "corners_for_avg": 4.0,
+          "corners_against_avg": 5.0
         },
-        "fixture_boost_pct": -42,
+        "fixture_boost_pct": 28,
         "projected_minutes": 78,
         "penalty_role": "Not on penalties",
         "role_adjustment_factor": 1.0,
@@ -323,8 +312,9 @@
       "confidence_tier": "Medium",
       "reasons": [
         "The model price is shorter than the bookmaker's best available price",
-        "A large share of the team's chances runs through him",
-        "Recent chance quality grades as strong"
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
       ],
       "risk_flags": []
     },
