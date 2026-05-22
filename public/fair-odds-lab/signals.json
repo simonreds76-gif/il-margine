@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T08:51:39.555348Z",
+  "generated_at": "2026-05-22T11:19:32.329803Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -32,10 +32,9 @@
     "post_kickoff_visibility_minutes": 150
   },
   "fixtures_evaluated": 29,
-  "signals_qualifying": 3,
+  "signals_qualifying": 4,
   "leagues_covered": [
     "epl",
-    "la-liga",
     "serie-a"
   ],
   "featured_signal_id": "20260524-dominic-calvert-lewin-93e5afe1f6",
@@ -88,7 +87,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 46
+          "percentile": 44
         },
         "recent_team_form": {
           "tier": "Positive",
@@ -142,91 +141,79 @@
       "risk_flags": []
     },
     {
-      "id": "20260523-ante-budimir-f06ffe221f",
+      "id": "20260524-ollie-watkins-3f94b0c704",
       "match": {
-        "home_team": "Getafe CF",
-        "away_team": "CA Osasuna",
-        "league": "la-liga",
-        "league_display": "La Liga",
-        "league_logo_path": "/league-logos/la-liga.png",
-        "kickoff_utc": "2026-05-23T19:00:00Z",
-        "kickoff_display": "Sat 23 May 20:00 UK",
-        "fotmob_match_id": "4837484",
-        "fotmob_page_url": "/matches/getafe-vs-osasuna/2askb1#4837484",
+        "home_team": "Manchester City",
+        "away_team": "Aston Villa",
+        "league": "epl",
+        "league_display": "Premier League",
+        "league_logo_path": "/league-logos/epl.png",
+        "kickoff_utc": "2026-05-24T15:00:00Z",
+        "kickoff_display": "Sun 24 May 16:00 UK",
+        "fotmob_match_id": "4813750",
+        "fotmob_page_url": "/matches/manchester-city-vs-aston-villa/2w74gq#4813750",
         "lineup_type": "predicted",
         "venue": ""
       },
       "player": {
-        "name": "Ante Budimir",
-        "team": "Osasuna",
+        "name": "Ollie Watkins",
+        "team": "Aston Villa",
         "position": "FW",
         "jersey_label": "",
-        "team_logo_path": "/team-logos/la-liga/osasuna.png",
-        "team_primary_color": "#dc2626",
-        "team_secondary_color": "#1e3a8a",
+        "team_logo_path": "/team-logos/epl/aston-villa.png",
+        "team_primary_color": "#7f1d1d",
+        "team_secondary_color": "#38bdf8",
         "team_shirt_pattern": "solid"
       },
       "market": "Anytime goalscorer",
       "model": {
-        "scoring_chance_pct": 42.3,
-        "fair_odds": 2.36
+        "scoring_chance_pct": 33.9,
+        "fair_odds": 2.95
       },
       "market_data": {
-        "best_odds": 2.88,
+        "best_odds": 3.6,
         "best_book": "Bet365",
-        "implied_chance_pct": 34.8
+        "implied_chance_pct": 27.8
       },
       "edge": {
-        "price_gap_pp": 7.6,
+        "price_gap_pp": 6.2,
         "model_advantage": true
       },
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 96
+          "percentile": 99
         },
-        "share_of_team_chances_pct": 36,
+        "share_of_team_chances_pct": 30,
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 27
+          "percentile": 33
         },
         "recent_team_form": {
-          "tier": "Quiet",
+          "tier": "Positive",
           "window": 5,
           "matches": 5,
-          "through_date": "2026-05-17",
-          "xg_for_avg": 1.59,
-          "xg_against_avg": 1.87,
-          "xgd_per90": -0.28,
-          "shots_for_avg": 15.2,
-          "shots_against_avg": 13.6,
-          "sot_for_avg": 5.4,
-          "sot_against_avg": 5.0,
-          "corners_for_avg": 5.0,
-          "corners_against_avg": 6.4
+          "through_date": "2026-05-15",
+          "xg_for_avg": 1.94,
+          "xg_against_avg": 1.44,
+          "xgd_per90": 0.5,
+          "shots_for_avg": 12.4,
+          "shots_against_avg": 12.8,
+          "sot_for_avg": 5.0,
+          "sot_against_avg": 5.8,
+          "corners_for_avg": 5.2,
+          "corners_against_avg": 4.6
         },
         "opponent_defensive_weakness": {
-          "tier": "Average",
-          "percentile": 36
+          "tier": "Low",
+          "percentile": 18
         },
         "opponent_recent_defence": {
-          "tier": "Average",
-          "window": 5,
-          "matches": 5,
-          "through_date": "2026-05-17",
-          "xg_for_avg": 0.97,
-          "xg_against_avg": 1.03,
-          "xgd_per90": -0.06,
-          "shots_for_avg": 9.8,
-          "shots_against_avg": 10.0,
-          "sot_for_avg": 2.2,
-          "sot_against_avg": 3.8,
-          "corners_for_avg": 4.4,
-          "corners_against_avg": 2.4
+          "tier": "Unknown"
         },
-        "fixture_boost_pct": -22,
-        "projected_minutes": 83,
+        "fixture_boost_pct": -30,
+        "projected_minutes": 80,
         "penalty_role": "Primary",
         "role_adjustment_factor": 1.0,
         "role_adjustment_reason": "",
@@ -237,6 +224,7 @@
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong",
+        "Recent team form supports the attacking case",
         "Primary penalty role adds a clear scoring route"
       ],
       "risk_flags": []
@@ -337,6 +325,106 @@
         "The model price is shorter than the bookmaker's best available price",
         "A large share of the team's chances runs through him",
         "Recent chance quality grades as strong"
+      ],
+      "risk_flags": []
+    },
+    {
+      "id": "20260524-lorenzo-colombo-2ea47de538",
+      "match": {
+        "home_team": "US Lecce",
+        "away_team": "Genoa CFC",
+        "league": "serie-a",
+        "league_display": "Serie A",
+        "league_logo_path": "/league-logos/serie-a.png",
+        "kickoff_utc": "2026-05-24T18:45:00Z",
+        "kickoff_display": "Sun 24 May 19:45 UK",
+        "fotmob_match_id": "4803412",
+        "fotmob_page_url": "/matches/lecce-vs-genoa/3cj5b9#4803412",
+        "lineup_type": "predicted",
+        "venue": ""
+      },
+      "player": {
+        "name": "Lorenzo Colombo",
+        "team": "Genoa",
+        "position": "FW",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/serie-a/genoa.png",
+        "team_primary_color": "#b91c1c",
+        "team_secondary_color": "#1e3a8a",
+        "team_shirt_pattern": "halves"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 25.7,
+        "fair_odds": 3.89
+      },
+      "market_data": {
+        "best_odds": 5.5,
+        "best_book": "Bet365",
+        "implied_chance_pct": 18.2
+      },
+      "edge": {
+        "price_gap_pp": 7.5,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 86
+        },
+        "share_of_team_chances_pct": 21,
+        "share_of_team_chances_percentile": 97,
+        "team_attacking_outlook": {
+          "tier": "Quiet",
+          "percentile": 26
+        },
+        "recent_team_form": {
+          "tier": "Average",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-17",
+          "xg_for_avg": 1.1,
+          "xg_against_avg": 1.22,
+          "xgd_per90": -0.12,
+          "shots_for_avg": 9.8,
+          "shots_against_avg": 12.4,
+          "sot_for_avg": 2.6,
+          "sot_against_avg": 4.0,
+          "corners_for_avg": 3.2,
+          "corners_against_avg": 4.4
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 94
+        },
+        "opponent_recent_defence": {
+          "tier": "High",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-17",
+          "xg_for_avg": 1.26,
+          "xg_against_avg": 1.72,
+          "xgd_per90": -0.46,
+          "shots_for_avg": 10.4,
+          "shots_against_avg": 11.6,
+          "sot_for_avg": 3.8,
+          "sot_against_avg": 5.0,
+          "corners_for_avg": 3.8,
+          "corners_against_avg": 3.8
+        },
+        "fixture_boost_pct": 33,
+        "projected_minutes": 78,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Projected starter"
+      },
+      "confidence_tier": "Medium",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
       ],
       "risk_flags": []
     }
