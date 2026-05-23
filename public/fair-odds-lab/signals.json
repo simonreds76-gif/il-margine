@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T17:39:59.125346Z",
+  "generated_at": "2026-05-23T18:35:51.573189Z",
   "source_file": [
     "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
@@ -32,7 +32,7 @@
     "post_kickoff_visibility_minutes": 150
   },
   "fixtures_evaluated": 28,
-  "signals_qualifying": 3,
+  "signals_qualifying": 4,
   "leagues_covered": [
     "epl",
     "la-liga",
@@ -142,6 +142,95 @@
       "risk_flags": []
     },
     {
+      "id": "20260523-ilyas-chaira-1695c0d57b",
+      "match": {
+        "home_team": "RCD Mallorca",
+        "away_team": "Real Oviedo",
+        "league": "la-liga",
+        "league_display": "La Liga",
+        "league_logo_path": "/league-logos/la-liga.png",
+        "kickoff_utc": "2026-05-23T19:00:00Z",
+        "kickoff_display": "Sat 23 May 20:00 UK",
+        "fotmob_match_id": "4837485",
+        "fotmob_page_url": "/matches/mallorca-vs-real-oviedo/2hfado#4837485",
+        "lineup_type": "confirmed",
+        "venue": ""
+      },
+      "player": {
+        "name": "Ilyas Chaira",
+        "team": "Real Oviedo",
+        "position": "AM",
+        "jersey_label": "",
+        "team_logo_path": "/team-logos/la-liga/real-oviedo.png",
+        "team_primary_color": "#1d4ed8",
+        "team_secondary_color": "#f8fafc",
+        "team_shirt_pattern": "solid"
+      },
+      "market": "Anytime goalscorer",
+      "model": {
+        "scoring_chance_pct": 33.9,
+        "fair_odds": 2.95
+      },
+      "market_data": {
+        "best_odds": 4.75,
+        "best_book": "Bet365",
+        "implied_chance_pct": 21.1
+      },
+      "edge": {
+        "price_gap_pp": 12.9,
+        "model_advantage": true
+      },
+      "metrics": {
+        "recent_chance_quality": {
+          "tier": "Strong",
+          "percentile": 82
+        },
+        "share_of_team_chances_pct": 30,
+        "share_of_team_chances_percentile": 99,
+        "team_attacking_outlook": {
+          "tier": "Average",
+          "percentile": 40
+        },
+        "recent_team_form": {
+          "tier": "Unknown"
+        },
+        "opponent_defensive_weakness": {
+          "tier": "High",
+          "percentile": 85
+        },
+        "opponent_recent_defence": {
+          "tier": "Positive",
+          "window": 5,
+          "matches": 5,
+          "through_date": "2026-05-17",
+          "xg_for_avg": 0.78,
+          "xg_against_avg": 1.69,
+          "xgd_per90": -0.9,
+          "shots_for_avg": 9.4,
+          "shots_against_avg": 11.4,
+          "sot_for_avg": 3.8,
+          "sot_against_avg": 3.4,
+          "corners_for_avg": 4.0,
+          "corners_against_avg": 5.0
+        },
+        "fixture_boost_pct": 28,
+        "projected_minutes": 85,
+        "penalty_role": "Not on penalties",
+        "role_adjustment_factor": 1.0,
+        "role_adjustment_reason": "",
+        "lineup_confidence": "Confirmed starter"
+      },
+      "confidence_tier": "High",
+      "reasons": [
+        "The model price is shorter than the bookmaker's best available price",
+        "A large share of the team's chances runs through him",
+        "Recent chance quality grades as strong",
+        "Opponent defensive profile is a positive matchup",
+        "The fixture profile adds to his scoring case"
+      ],
+      "risk_flags": []
+    },
+    {
       "id": "20260523-ante-budimir-f06ffe221f",
       "match": {
         "home_team": "Getafe CF",
@@ -153,7 +242,7 @@
         "kickoff_display": "Sat 23 May 20:00 UK",
         "fotmob_match_id": "4837484",
         "fotmob_page_url": "/matches/getafe-vs-osasuna/2askb1#4837484",
-        "lineup_type": "predicted",
+        "lineup_type": "confirmed",
         "venue": ""
       },
       "player": {
@@ -183,7 +272,7 @@
       "metrics": {
         "recent_chance_quality": {
           "tier": "Strong",
-          "percentile": 96
+          "percentile": 95
         },
         "share_of_team_chances_pct": 36,
         "share_of_team_chances_percentile": 99,
@@ -230,7 +319,7 @@
         "penalty_role": "Primary",
         "role_adjustment_factor": 1.0,
         "role_adjustment_reason": "",
-        "lineup_confidence": "Projected starter"
+        "lineup_confidence": "Confirmed starter"
       },
       "confidence_tier": "Medium",
       "reasons": [
@@ -286,10 +375,10 @@
           "percentile": 86
         },
         "share_of_team_chances_pct": 22,
-        "share_of_team_chances_percentile": 98,
+        "share_of_team_chances_percentile": 97,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 25
+          "percentile": 26
         },
         "recent_team_form": {
           "tier": "Average",
