@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-05-23T16:34:46.927811Z",
+  "generated_at": "2026-05-23T17:39:59.125346Z",
   "source_file": [
+    "data/goalscorer/all-leagues-live-board.json",
     "data/goalscorer/goalscorer-live-comparison.csv",
     "data/goalscorer/epl/goalscorer-live-comparison.csv",
     "data/goalscorer/la-liga/goalscorer-live-comparison.csv",
@@ -30,7 +31,7 @@
     ],
     "post_kickoff_visibility_minutes": 150
   },
-  "fixtures_evaluated": 29,
+  "fixtures_evaluated": 28,
   "signals_qualifying": 3,
   "leagues_covered": [
     "epl",
@@ -87,7 +88,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Average",
-          "percentile": 46
+          "percentile": 45
         },
         "recent_team_form": {
           "tier": "Positive",
@@ -106,7 +107,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Positive",
-          "percentile": 65
+          "percentile": 64
         },
         "opponent_recent_defence": {
           "tier": "Positive",
@@ -188,7 +189,7 @@
         "share_of_team_chances_percentile": 99,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 28
+          "percentile": 27
         },
         "recent_team_form": {
           "tier": "Quiet",
@@ -207,7 +208,7 @@
         },
         "opponent_defensive_weakness": {
           "tier": "Average",
-          "percentile": 39
+          "percentile": 37
         },
         "opponent_recent_defence": {
           "tier": "Average",
@@ -288,7 +289,7 @@
         "share_of_team_chances_percentile": 98,
         "team_attacking_outlook": {
           "tier": "Quiet",
-          "percentile": 26
+          "percentile": 25
         },
         "recent_team_form": {
           "tier": "Average",

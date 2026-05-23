@@ -9,34 +9,34 @@
       "kickoff_utc": "2026-05-23T16:00:00Z",
       "home_team": "Bologna",
       "away_team": "Inter",
-      "home_status": "FotMob Expected XI",
-      "away_status": "FotMob Expected XI",
-      "lineup_type": "predicted",
-      "home_formation": "4-2-3-1",
+      "home_status": "Confirmed Lineup",
+      "away_status": "Confirmed Lineup",
+      "lineup_type": "standard",
+      "home_formation": "4-3-3",
       "away_formation": "3-5-2",
       "home_players": [
         "Lukasz Skorupski",
-        "João Mário",
+        "Lorenzo De Silvestri",
+        "Eivind Helland",
         "Jhon Lucumí",
-        "Torbjørn Heggem",
         "Juan Miranda",
-        "Remo Freuler",
-        "Nikola Moro",
-        "Federico Bernardeschi",
         "Lewis Ferguson",
-        "Jonathan Rowe",
-        "Santiago Castro"
+        "Remo Freuler",
+        "Tommaso Pobega",
+        "Federico Bernardeschi",
+        "Santiago Castro",
+        "Jonathan Rowe"
       ],
       "away_players": [
         "Josep Martínez",
         "Yann Aurel Bisseck",
-        "Francesco Acerbi",
-        "Alessandro Bastoni",
-        "Luis Henrique",
+        "Stefan de Vrij",
+        "Carlos Augusto",
         "Andy Diouf",
         "Petar Sucic",
-        "Henrikh Mkhitaryan",
-        "Matteo Cocchi",
+        "Piotr Zielinski",
+        "Nicolò Barella",
+        "Federico Dimarco",
         "Francesco Pio Esposito",
         "Lautaro Martínez"
       ],
@@ -47,17 +47,26 @@
           "line_size": 1,
           "role_score": 0,
           "role_group": "GK",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 11
         },
         {
-          "name": "João Mário",
+          "name": "Lorenzo De Silvestri",
           "line_index": 0,
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 32
+        },
+        {
+          "name": "Eivind Helland",
+          "line_index": 0,
+          "line_size": 4,
+          "role_score": 1,
+          "role_group": "DEF",
+          "formation": "4-3-3",
+          "position_id": 34
         },
         {
           "name": "Jhon Lucumí",
@@ -65,16 +74,7 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
-          "position_id": 34
-        },
-        {
-          "name": "Torbjørn Heggem",
-          "line_index": 0,
-          "line_size": 4,
-          "role_score": 1,
-          "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 36
         },
         {
@@ -83,62 +83,62 @@
           "line_size": 4,
           "role_score": 1,
           "role_group": "DEF",
-          "formation": "4-2-3-1",
+          "formation": "4-3-3",
           "position_id": 38
+        },
+        {
+          "name": "Lewis Ferguson",
+          "line_index": 1,
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 73
         },
         {
           "name": "Remo Freuler",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 64
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 75
         },
         {
-          "name": "Nikola Moro",
+          "name": "Tommaso Pobega",
           "line_index": 1,
-          "line_size": 2,
-          "role_score": 2,
-          "role_group": "DMC",
-          "formation": "4-2-3-1",
-          "position_id": 66
+          "line_size": 3,
+          "role_score": 3,
+          "role_group": "MID",
+          "formation": "4-3-3",
+          "position_id": 77
         },
         {
           "name": "Federico Bernardeschi",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 83
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 103
         },
         {
-          "name": "Lewis Ferguson",
+          "name": "Santiago Castro",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 85
+          "role_score": 5,
+          "role_group": "FW",
+          "formation": "4-3-3",
+          "position_id": 105
         },
         {
           "name": "Jonathan Rowe",
           "line_index": 2,
           "line_size": 3,
-          "role_score": 4,
-          "role_group": "AM",
-          "formation": "4-2-3-1",
-          "position_id": 87
-        },
-        {
-          "name": "Santiago Castro",
-          "line_index": 3,
-          "line_size": 1,
           "role_score": 5,
           "role_group": "FW",
-          "formation": "4-2-3-1",
-          "position_id": 115
+          "formation": "4-3-3",
+          "position_id": 107
         }
       ],
       "away_starters": [
@@ -161,7 +161,7 @@
           "position_id": 33
         },
         {
-          "name": "Francesco Acerbi",
+          "name": "Stefan de Vrij",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -170,7 +170,7 @@
           "position_id": 35
         },
         {
-          "name": "Alessandro Bastoni",
+          "name": "Carlos Augusto",
           "line_index": 0,
           "line_size": 3,
           "role_score": 1,
@@ -179,7 +179,7 @@
           "position_id": 37
         },
         {
-          "name": "Luis Henrique",
+          "name": "Andy Diouf",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -188,7 +188,7 @@
           "position_id": 71
         },
         {
-          "name": "Andy Diouf",
+          "name": "Petar Sucic",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -197,7 +197,7 @@
           "position_id": 73
         },
         {
-          "name": "Petar Sucic",
+          "name": "Piotr Zielinski",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -206,7 +206,7 @@
           "position_id": 75
         },
         {
-          "name": "Henrikh Mkhitaryan",
+          "name": "Nicolò Barella",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -215,7 +215,7 @@
           "position_id": 77
         },
         {
-          "name": "Matteo Cocchi",
+          "name": "Federico Dimarco",
           "line_index": 1,
           "line_size": 5,
           "role_score": 3,
@@ -242,8 +242,33 @@
           "position_id": 106
         }
       ],
-      "home_subs": [],
-      "away_subs": [],
+      "home_subs": [
+        "Nadir Zortea",
+        "Jens Odgaard",
+        "Nikola Moro",
+        "Federico Ravaglia",
+        "Massimo Pessina",
+        "Charalambos Lykogiannis",
+        "João Mário",
+        "Torbjørn Heggem",
+        "Simon Sohm",
+        "Benja Domínguez",
+        "Thijs Dallinga"
+      ],
+      "away_subs": [
+        "Henrikh Mkhitaryan",
+        "Luis Henrique",
+        "Ange-Yoan Bonny",
+        "Matteo Cocchi",
+        "Raffaele Di Gennaro",
+        "Yann Sommer",
+        "Alessandro Bastoni",
+        "Francesco Acerbi",
+        "Iwo Kaczmarski",
+        "Luka Topalovic",
+        "Matteo Darmian",
+        "Mattia Mosconi"
+      ],
       "home_unavailable": [
         "Riccardo Orsolini",
         "Martin Vitík",
