@@ -61,6 +61,15 @@ POSITION_ASSIST_PRIOR_PER90 = {
     "Unknown": 0.09,
 }
 
+SETTLEMENT_FIELDS = [
+    "settled",
+    "assists_recorded",
+    "bet_outcome",
+    "settled_at",
+    "pnl_units",
+    "settlement_note",
+]
+
 OUTPUT_FIELDS = [
     "generated_at",
     "captured_at",
@@ -94,6 +103,7 @@ OUTPUT_FIELDS = [
     "setpiece_share_last5_pct",
     "join_status",
     "notes",
+    *SETTLEMENT_FIELDS,
 ]
 
 
@@ -300,6 +310,39 @@ def read_csvs(patterns: Iterable[str]) -> list[dict[str, str]]:
                         cleaned["league_key"] = league
                     rows.append(cleaned)
     return rows
+
+
+def signal_key(row: dict[str, str]) -> tuple[str, ...]:
+    return (
+        row.get("captured_at", ""),
+        row.get("match_date", ""),
+        team_key(row.get("home_team", "")),
+        team_key(row.get("away_team", "")),
+        norm_text(row.get("player_name", "")),
+        norm_text(row.get("bookmaker", "")),
+        row.get("market_odds", "") or row.get("odds_decimal", ""),
+    )
+
+
+def load_existing_settlement(path: str) -> dict[tuple[str, ...], dict[str, str]]:
+    target = ROOT / path if not Path(path).is_absolute() else Path(path)
+    if not target.exists():
+        return {}
+    rows = read_csvs([str(target)])
+    carried: dict[tuple[str, ...], dict[str, str]] = {}
+    for row in rows:
+        key = signal_key(row)
+        settlement = {field: row.get(field, "") for field in SETTLEMENT_FIELDS}
+        if any(value for value in settlement.values()):
+            carried[key] = settlement
+    return carried
+
+
+def carry_existing_settlement(rows: list[dict[str, str]], existing: dict[tuple[str, ...], dict[str, str]]) -> None:
+    for row in rows:
+        settlement = existing.get(signal_key(row), {})
+        for field in SETTLEMENT_FIELDS:
+            row[field] = settlement.get(field, row.get(field, ""))
 
 
 def player_prior(position: str) -> float:
@@ -532,7 +575,8 @@ def write_report(path: str, rows: list[dict[str, str]]) -> Path:
         "Status",
         "model_status: ENABLED_SHADOW_V0",
         "public_signal_status: DISABLED",
-        "settlement_status: NOT_BACKTESTED",
+        "settlement_status: ENABLED_SHADOW_FOTMOB",
+        "backtest_status: NOT_BACKTESTED",
         "",
         "Counts",
         f"priced_rows: {len(rows)}",
@@ -577,6 +621,7 @@ def main() -> None:
     parser.add_argument("--report-out", default=DEFAULT_REPORT)
     args = parser.parse_args()
 
+    existing_settlement = load_existing_settlement(args.out)
     board_rows = read_csvs([args.board])
     player_logs = read_csvs(args.player_logs)
     indexes, team_index = build_indexes(player_logs)
@@ -586,6 +631,7 @@ def main() -> None:
         for row in board_rows
         if (modelled := model_row(row, indexes, team_index, generated_at)) is not None
     ]
+    carry_existing_settlement(rows, existing_settlement)
     rows.sort(key=lambda row: (row["signal_status"] == "shadow_signal", parse_float(row["edge_pp"])), reverse=True)
     out_path = write_csv(args.out, rows)
     report_path = write_report(args.report_out, rows)

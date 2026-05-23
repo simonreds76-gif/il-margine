@@ -2,6 +2,7 @@ param(
     [switch]$TeamShots,
     [switch]$Corners,
     [switch]$Goalscorer,
+    [switch]$AssistValue,
     [switch]$Settlement,
     [string]$RemoteRef = "origin/golden-with-speed-insights",
     [switch]$NoFetch,
@@ -13,10 +14,11 @@ $ErrorActionPreference = "Stop"
 $repoRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $repoRoot
 
-$syncAll = -not ($TeamShots -or $Corners -or $Goalscorer -or $Settlement)
+$syncAll = -not ($TeamShots -or $Corners -or $Goalscorer -or $AssistValue -or $Settlement)
 $includeTeamShots = $syncAll -or $TeamShots
 $includeCorners = $syncAll -or $Corners
 $includeGoalscorer = $syncAll -or $Goalscorer
+$includeAssistValue = $syncAll -or $AssistValue
 $includeSettlement = $syncAll -or $Settlement -or $TeamShots -or $Corners
 
 $teamShotsFiles = @(
@@ -96,11 +98,25 @@ $goalscorerFiles = @(
     "public/fair-odds-lab/highlights.json"
 )
 
+$assistValueFiles = @(
+    "data/assist-value/assist-value-shadow-signals.csv",
+    "data/assist-value/assist-value-shadow-board.csv",
+    "data/assist-value/assist-value-shadow-report.txt",
+    "data/assist-value/assist-value-model-report.txt",
+    "data/assist-value/assist-value-shadow-performance.txt",
+    "data/assist-value/assist-market-audit-serie-a.csv",
+    "data/assist-value/assist-market-audit-epl.csv",
+    "data/assist-value/assist-market-audit-la-liga.csv",
+    "data/assist-value/assist-market-audit-bundesliga.csv",
+    "data/assist-value/assist-market-audit-ligue-1.csv"
+)
+
 $files = New-Object System.Collections.Generic.List[string]
 if ($includeTeamShots) { $teamShotsFiles | ForEach-Object { [void]$files.Add($_) } }
 if ($includeCorners) { $cornersFiles | ForEach-Object { [void]$files.Add($_) } }
 if ($includeSettlement) { $settlementFiles | ForEach-Object { [void]$files.Add($_) } }
 if ($includeGoalscorer) { $goalscorerFiles | ForEach-Object { [void]$files.Add($_) } }
+if ($includeAssistValue) { $assistValueFiles | ForEach-Object { [void]$files.Add($_) } }
 
 $files = $files | Select-Object -Unique
 
@@ -198,3 +214,21 @@ function Show-MonitorCsvStatus($Label, $Path) {
 
 Show-MonitorCsvStatus "Team shots v3 EMA20" (Join-Path $repoRoot "data/football-form/team-shots-v3-ema20-clv-monitor.csv")
 Show-MonitorCsvStatus "Corners v0" (Join-Path $repoRoot "data/football-form/corners-v0-clv-monitor.csv")
+
+function Show-AssistValueStatus($Path) {
+    if (-not (Test-Path -LiteralPath $Path)) { return }
+    try {
+        $rows = Import-Csv -LiteralPath $Path
+        $signals = @($rows | Where-Object { $_.signal_status -eq "shadow_signal" })
+        $settled = @($signals | Where-Object { $_.settled -in @("1", "true", "yes") })
+        $pending = [Math]::Max(0, $signals.Count - $settled.Count)
+        Write-Host "Assist Value shadow status: signals=$($signals.Count), settled=$($settled.Count), pending=$pending"
+        foreach ($row in ($signals | Select-Object -First 5)) {
+            Write-Host "  signal $($row.match_date): $($row.home_team) vs $($row.away_team) / $($row.player_name) @ $($row.market_odds)"
+        }
+    } catch {
+        Write-Warning "Could not summarize Assist Value: $($_.Exception.Message)"
+    }
+}
+
+Show-AssistValueStatus (Join-Path $repoRoot "data/assist-value/assist-value-shadow-signals.csv")

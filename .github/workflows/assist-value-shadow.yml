@@ -58,7 +58,7 @@ jobs:
         run: |
           python scripts/fotmob-fetch-match-detail.py \
             --league epl la-liga ligue-1 serie-a bundesliga \
-            --days-back 5
+            --days-back 14
 
       - name: Settle assist value shadow signals
         run: python scripts/assist-value-settle.py

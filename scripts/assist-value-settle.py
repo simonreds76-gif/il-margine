@@ -95,7 +95,7 @@ def _write_csv(path: Path, rows: List[dict], fieldnames: List[str]) -> None:
 def _load_aliases(path: Path) -> Dict[str, str]:
     if not path.exists():
         return {}
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload = json.loads(path.read_text(encoding="utf-8-sig"))
     aliases = payload.get("fotmob_aliases", payload) if isinstance(payload, dict) else {}
     return {
         str(key or "").strip(): str(value or "").strip()
@@ -115,7 +115,7 @@ def _load_match_results(results_dir: Path, team_key_func) -> Dict[tuple[str, str
         return loaded
     for path in sorted(results_dir.glob("*/fotmob-*.json")):
         try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
+            payload = json.loads(path.read_text(encoding="utf-8-sig"))
         except Exception:
             continue
         league_key = str(payload.get("league") or path.parent.name).strip()

@@ -18,7 +18,6 @@ import {
   formatDateTimeLabel,
   formatOdds,
   formatUnits,
-  statusTone,
   toneClass,
 } from "../shared";
 
@@ -219,6 +218,13 @@ function reportValue(report: string | null, label: string): string {
   return match?.[1]?.trim() ?? "-";
 }
 
+function timestampMs(value: string | null | undefined): number | null {
+  const text = (value ?? "").trim();
+  if (!text || text === "-") return null;
+  const parsed = Date.parse(text);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 async function readLocalFile(relativePath: string): Promise<string | null> {
   try {
     const fullPath = tryGetKnownProjectFilePath(relativePath);
@@ -394,6 +400,15 @@ export default async function AssistValueMonitorPage() {
   const hasSettlementColumns = settlementColumnsPresent(rows);
   const roleMatchRate = reportValue(shadowReport, "role_match_rate_pct");
   const publicStatus = reportValue(shadowReport, "public_signal_status");
+  const performanceGeneratedAt = reportValue(performanceReport, "generated_at_utc");
+  const latestSignalTimestamp = timestampMs(generatedAt) ?? timestampMs(signalsMtime);
+  const performanceTimestamp = timestampMs(performanceGeneratedAt);
+  const hasPerformanceReport = Boolean(performanceReport);
+  const performanceIsStale =
+    hasPerformanceReport &&
+    latestSignalTimestamp !== null &&
+    performanceTimestamp !== null &&
+    performanceTimestamp + 5 * 60 * 1000 < latestSignalTimestamp;
 
   return (
     <main className="min-h-screen bg-[#050b12] px-4 py-6 text-slate-100 sm:px-6 lg:px-8">
@@ -413,12 +428,23 @@ export default async function AssistValueMonitorPage() {
             <StatusPill label={publicStatus === "-" ? "private shadow" : publicStatus.replaceAll("_", " ")} tone="bg-amber-500/10 text-amber-300 border-amber-500/20" />
             <StatusPill label={`${ledger.pending} pending`} tone="bg-cyan-500/10 text-cyan-300 border-cyan-500/20" />
             <StatusPill label={hasSettlementColumns ? "settlement columns ready" : "settlement columns missing locally"} tone={hasSettlementColumns ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20" : "bg-rose-500/10 text-rose-300 border-rose-500/20"} />
+            <StatusPill
+              label={!hasPerformanceReport ? "performance missing" : performanceIsStale ? "performance stale" : "performance fresh"}
+              tone={!hasPerformanceReport || performanceIsStale ? "bg-rose-500/10 text-rose-300 border-rose-500/20" : "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"}
+            />
           </div>
         </HeroCard>
 
         {!hasSettlementColumns ? (
           <div className="rounded-2xl border border-amber-500/25 bg-amber-500/10 px-5 py-4 text-sm text-amber-100">
             The local signal CSV does not yet include settlement columns. The monitor still exposes P/L and ROI as zero-settled/pending, and the hosted settler will populate result columns after the next assist workflow run.
+          </div>
+        ) : null}
+
+        {performanceIsStale ? (
+          <div className="rounded-2xl border border-rose-500/25 bg-rose-500/10 px-5 py-4 text-sm text-rose-100">
+            Assist settlement is stale: the signal artifact is newer than the performance report. Do not trust the
+            P/L/ROI panel until the next assist workflow run refreshes <span className="font-semibold">assist-value-shadow-performance.txt</span>.
           </div>
         ) : null}
 
@@ -431,6 +457,12 @@ export default async function AssistValueMonitorPage() {
           <StatCard label="Role match" value={roleMatchRate === "-" ? "-" : `${roleMatchRate}%`} detail="source audit row match" />
           <StatCard label="Generated" value={generatedAt === "-" ? "-" : formatDateTimeLabel(generatedAt)} detail={signalsMtime ? `file ${formatDateTimeLabel(signalsMtime)}` : "file timestamp unavailable"} />
           <StatCard label="Captured" value={capturedAt === "-" ? "-" : formatDateTimeLabel(capturedAt)} detail="latest odds capture in CSV" />
+          <StatCard
+            label="Performance"
+            value={performanceGeneratedAt === "-" ? "missing" : formatDateTimeLabel(performanceGeneratedAt)}
+            detail={performanceIsStale ? "stale vs signal file" : "settlement summary"}
+            tone={!hasPerformanceReport || performanceIsStale ? "text-rose-300" : "text-emerald-300"}
+          />
         </section>
 
         <SectionCard title="League P/L" subtitle="Shadow-signal ledger by league. This is what you monitor before public promotion.">
@@ -459,7 +491,13 @@ export default async function AssistValueMonitorPage() {
               <div className="space-y-3 text-sm text-slate-400">
                 <div className="rounded-xl border border-slate-800/70 bg-slate-950/45 p-3">
                   <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">Current state</div>
-                  <div className="mt-1 text-slate-200">{hasSettlementColumns ? "CSV can hold settlement results" : "Awaiting local settled artifact"}</div>
+                  <div className="mt-1 text-slate-200">
+                    {performanceIsStale
+                      ? "Performance report is stale; settlement workflow needs to refresh it"
+                      : hasSettlementColumns
+                        ? "CSV can hold settlement results"
+                        : "Awaiting local settled artifact"}
+                  </div>
                 </div>
                 <div className="rounded-xl border border-slate-800/70 bg-slate-950/45 p-3">
                   <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">Performance report</div>
