@@ -27,8 +27,8 @@ const HOMEPAGE_KEYFRAMES = `
   to { opacity: 1; transform: translateX(0); }
 }
 @keyframes homepage-edge-result {
-  0% { opacity: 0; transform: scale(0.96); border-color: rgba(16,185,129,0.08); background: transparent; }
-  100% { opacity: 1; transform: scale(1); border-color: rgba(16,185,129,0.35); background: rgba(16,185,129,0.08); }
+  0% { opacity: 0; transform: scale(0.96); border-color: rgba(87,209,150,0.08); background: transparent; }
+  100% { opacity: 1; transform: scale(1); border-color: rgba(87,209,150,0.35); background: rgba(87,209,150,0.08); }
 }
 @keyframes homepage-edge-scan {
   0% { top: -2px; opacity: 0; }
@@ -157,23 +157,23 @@ function HomepageEdgeCard() {
       />
       <div
         className="absolute top-0 left-[8%] right-[8%] h-px"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(16,185,129,0.4), transparent)" }}
+        style={{ background: "linear-gradient(90deg, transparent, rgba(87,209,150,0.4), transparent)" }}
       />
       <div
         className="pointer-events-none absolute left-0 right-0 h-px"
         style={{
-          background: "linear-gradient(90deg, transparent 5%, rgba(16,185,129,0.3) 50%, transparent 95%)",
+          background: "linear-gradient(90deg, transparent 5%, rgba(87,209,150,0.3) 50%, transparent 95%)",
           animation: "homepage-edge-scan 3s ease-in-out 1.7s both",
         }}
       />
 
       <div className="relative">
         <div className="mb-4 flex items-center justify-between">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-emerald-400/90">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[rgba(87,209,150,0.90)]">
             How we find edge
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-[5px] w-[5px] rounded-full bg-emerald-400" style={{ animation: "homepage-pulse 2s ease-in-out infinite" }} />
+            <span className="h-[5px] w-[5px] rounded-full bg-[var(--brand-green)]" style={{ animation: "homepage-pulse 2s ease-in-out infinite" }} />
             <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-slate-600">Live example</span>
           </span>
         </div>
@@ -200,8 +200,8 @@ function HomepageEdgeCard() {
               animationDelay: "1450ms",
             }}
           >
-            <span className="text-[14px] font-semibold text-emerald-400 md:text-[15px]">Mathematical Edge</span>
-            <span className="font-mono text-[30px] font-black tracking-[-0.04em] text-emerald-400 md:text-[32px]">+11.1%</span>
+            <span className="text-[14px] font-semibold text-[var(--brand-green)] md:text-[15px]">Mathematical Edge</span>
+            <span className="font-mono text-[30px] font-black tracking-[-0.04em] text-[var(--brand-green)] md:text-[32px]">+11.1%</span>
           </div>
         </div>
 
@@ -227,24 +227,24 @@ function ProofStatCard({
   return (
     <div
       className={`relative overflow-hidden rounded-2xl border p-5 md:p-6 ${
-        accent ? "border-emerald-500/20 bg-[#0c0f14]" : "border-slate-700/40 bg-[#0c0f14]"
+        accent ? "border-[rgba(87,209,150,0.20)] bg-[#0c0f14]" : "border-slate-700/40 bg-[#0c0f14]"
       }`}
     >
       {accent ? (
         <div
           className="absolute top-0 left-[10%] right-[10%] h-px"
-          style={{ background: "linear-gradient(90deg, transparent, rgba(16,185,129,0.35), transparent)" }}
+          style={{ background: "linear-gradient(90deg, transparent, rgba(87,209,150,0.35), transparent)" }}
         />
       ) : null}
       <span
         className="pointer-events-none absolute -right-3 -bottom-4 select-none font-mono text-[80px] font-black leading-none"
-        style={{ color: accent ? "rgba(16,185,129,0.025)" : "rgba(255,255,255,0.015)" }}
+        style={{ color: accent ? "rgba(87,209,150,0.025)" : "rgba(255,255,255,0.015)" }}
       >
         {value.replace(/[^0-9.%+]/g, "")}
       </span>
       <div className="relative">
         <div className="text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-slate-500">{label}</div>
-        <div className={`mt-3 font-mono text-[2.2rem] font-extrabold leading-none tracking-tight tabular-nums md:text-[2.5rem] ${accent ? "text-emerald-400" : "text-slate-100"}`}>
+        <div className={`mt-3 font-mono text-[2.2rem] font-extrabold leading-none tracking-tight tabular-nums md:text-[2.5rem] ${accent ? "text-[var(--brand-green)]" : "text-slate-100"}`}>
           {value}
         </div>
         <div className="mt-3 font-mono text-[11px] leading-relaxed text-slate-500">{sub}</div>
@@ -265,14 +265,14 @@ function MarketCard({
     <div
       className={`group relative flex h-full min-h-[160px] flex-col overflow-hidden rounded-2xl border p-5 transition-all duration-300 md:p-6 ${
         active
-          ? "border-emerald-500/20 bg-[#0c0f14] hover:-translate-y-[2px] hover:border-emerald-500/30 hover:shadow-[0_12px_48px_rgba(16,185,129,0.04)]"
+          ? "border-[rgba(87,209,150,0.20)] bg-[#0c0f14] hover:-translate-y-[2px] hover:border-[rgba(87,209,150,0.30)] hover:shadow-[0_12px_48px_rgba(87,209,150,0.04)]"
           : "border-slate-700/40 bg-[#0c0f14] opacity-70"
       }`}
     >
       {active ? (
         <div
           className="absolute top-0 left-[8%] right-[8%] h-px"
-          style={{ background: "linear-gradient(90deg, transparent, rgba(16,185,129,0.22), transparent)" }}
+          style={{ background: "linear-gradient(90deg, transparent, rgba(87,209,150,0.22), transparent)" }}
         />
       ) : null}
       <div className="relative flex h-full flex-col">
@@ -281,7 +281,7 @@ function MarketCard({
           <span
             className={`rounded-full border px-2.5 py-[2px] text-[8px] font-mono font-bold uppercase tracking-[0.16em] ${
               active
-                ? "border-emerald-500/20 bg-emerald-500/8 text-emerald-400/85"
+                ? "border-[rgba(87,209,150,0.20)] bg-[rgba(87,209,150,0.08)] text-[rgba(87,209,150,0.85)]"
                 : "border-slate-700/40 bg-slate-800/50 text-slate-600"
             }`}
           >
@@ -292,7 +292,7 @@ function MarketCard({
         {active && market.profit ? (
           <div className="mt-4 flex items-baseline gap-4 font-mono text-[12px]">
             {market.bets ? <span className="tabular-nums text-slate-400/80">{market.bets} bets</span> : null}
-            <span className="font-semibold tabular-nums text-emerald-400/90">{market.profit}</span>
+            <span className="font-semibold tabular-nums text-[rgba(87,209,150,0.90)]">{market.profit}</span>
           </div>
         ) : null}
       </div>
@@ -314,11 +314,11 @@ function ExploreCard({ href, title, body }: { href: string; title: string; body:
   return (
     <Link
       href={href}
-      className="group flex h-full flex-col rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 transition-all duration-300 hover:-translate-y-[1px] hover:border-emerald-500/20 sm:p-5"
+      className="group flex h-full flex-col rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 transition-all duration-300 hover:-translate-y-[1px] hover:border-[rgba(87,209,150,0.20)] sm:p-5"
     >
       <h3 className="mb-1 text-[14px] font-semibold text-slate-200 transition-colors group-hover:text-white">{title}</h3>
       <p className="text-[12px] leading-[1.6] text-slate-600 transition-colors group-hover:text-slate-500">{body}</p>
-      <span className="mt-auto inline-flex w-full items-center justify-between pt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-400/45 transition-colors group-hover:text-emerald-400/85">
+      <span className="mt-auto inline-flex w-full items-center justify-between pt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-[rgba(87,209,150,0.45)] transition-colors group-hover:text-[rgba(87,209,150,0.85)]">
         View page {"\u2192"}
       </span>
     </Link>
@@ -475,7 +475,7 @@ export default function HomepageClient({
       value: `${displayStats.overall.total_bets.toLocaleString()}+`,
     },
     {
-      label: "Tracked",
+      label: "Tracking period",
       value: trackingPeriod,
     },
   ];
@@ -569,7 +569,7 @@ export default function HomepageClient({
                   </Link>
                   <Link
                     href="/the-edge"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 transition-colors hover:text-emerald-400"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-slate-400 transition-colors hover:text-[var(--brand-green)]"
                   >
                     How It Works {"\u2192"}
                   </Link>
@@ -597,17 +597,17 @@ export default function HomepageClient({
                     <span>Public record</span>
                     <span className="text-slate-500">Updated live</span>
                   </div>
-                  <div className="grid gap-2 sm:grid-cols-3">
-                  {heroProofStats.map((stat) => (
-                    <div key={stat.label} className="rounded-2xl border border-white/[0.06] bg-slate-950/55 px-4 py-4">
-                      <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
-                        {stat.label}
+                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                    {heroProofStats.map((stat) => (
+                      <div key={stat.label} className="rounded-xl border border-white/[0.06] bg-slate-950/55 px-2 py-3 text-center sm:rounded-2xl sm:px-4 sm:py-4 sm:text-left">
+                        <div className="font-mono text-[8px] font-bold uppercase leading-tight tracking-[0.11em] text-slate-500 sm:text-[10px] sm:tracking-[0.14em]">
+                          {stat.label}
+                        </div>
+                        <div className="mt-2 font-mono text-lg font-black leading-none tracking-tight text-[var(--brand-green)] sm:text-2xl">
+                          {stat.value}
+                        </div>
                       </div>
-                      <div className="mt-2 font-mono text-2xl font-black leading-none tracking-tight text-[var(--brand-green)]">
-                        {stat.value}
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                   </div>
                 </div>
               </HomepageReveal>
@@ -624,12 +624,12 @@ export default function HomepageClient({
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
+              <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">
                 Verified performance
               </span>
               <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Track record</h2>
             </div>
-            <Link href="/track-record" className="shrink-0 text-sm font-medium text-slate-500 transition-colors hover:text-emerald-400">
+            <Link href="/track-record" className="shrink-0 text-sm font-medium text-slate-500 transition-colors hover:text-[var(--brand-green)]">
               Full details {"\u2192"}
             </Link>
           </div>
@@ -656,7 +656,7 @@ export default function HomepageClient({
 
       <section id="markets" className="border-b border-slate-800/30 py-16 md:py-20 scroll-mt-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
+          <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">
             Where we operate
           </span>
           <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Markets</h2>
@@ -684,7 +684,7 @@ export default function HomepageClient({
         <section id="active-picks" className="scroll-mt-20 border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-8 sm:mb-10">
-              <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">Live now</span>
+              <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">Live now</span>
               <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Active picks</h2>
             </div>
             <p className="mb-6 text-xs text-slate-500">Stake in units (1u = your standard stake). We typically recommend 0.5u to 2u per pick.</p>
@@ -731,7 +731,7 @@ export default function HomepageClient({
                 <div className="border-t border-slate-800/40 p-4 text-center">
                   <button
                     onClick={() => setShowAllPending(!showAllPending)}
-                    className="text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-300"
+                    className="text-sm font-medium text-[var(--brand-green)] transition-colors hover:text-[var(--brand-green)]"
                   >
                     {showAllPending ? `Show Less (${pendingBets.length - 5} hidden)` : `Show All Active Picks (${pendingBets.length - 5} more)`}
                   </button>
@@ -741,16 +741,16 @@ export default function HomepageClient({
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Link
                 href="/tennis-tips#picks"
-                className="inline-flex items-center gap-3 rounded-full border border-slate-700/70 bg-slate-900/45 px-4 py-2.5 text-sm text-slate-200 transition-all hover:border-emerald-500/35 hover:bg-slate-900/70 hover:text-white"
+                className="inline-flex items-center gap-3 rounded-full border border-slate-700/70 bg-slate-900/45 px-4 py-2.5 text-sm text-slate-200 transition-all hover:border-[rgba(87,209,150,0.35)] hover:bg-slate-900/70 hover:text-white"
               >
-                <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">Tennis</span>
+                <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--brand-green)]">Tennis</span>
                 <span className="font-medium">Open latest tips</span>
               </Link>
               <Link
                 href="/player-props#picks"
-                className="inline-flex items-center gap-3 rounded-full border border-slate-700/70 bg-slate-900/45 px-4 py-2.5 text-sm text-slate-200 transition-all hover:border-emerald-500/35 hover:bg-slate-900/70 hover:text-white"
+                className="inline-flex items-center gap-3 rounded-full border border-slate-700/70 bg-slate-900/45 px-4 py-2.5 text-sm text-slate-200 transition-all hover:border-[rgba(87,209,150,0.35)] hover:bg-slate-900/70 hover:text-white"
               >
-                <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-emerald-400">Props</span>
+                <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--brand-green)]">Props</span>
                 <span className="font-medium">Open latest props</span>
               </Link>
             </div>
@@ -763,8 +763,8 @@ export default function HomepageClient({
           <div className="grid gap-10 lg:grid-cols-[1fr,0.9fr] lg:gap-16">
             <div className="lg:sticky lg:top-28 lg:self-start">
               <div className="mb-5 flex items-center gap-3">
-                <div className="h-10 w-[3px] rounded-full bg-emerald-500" />
-                <span className="text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
+                <div className="h-10 w-[3px] rounded-full bg-[var(--brand-green)]" />
+                <span className="text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">
                   Why Il Margine
                 </span>
               </div>
@@ -783,7 +783,7 @@ export default function HomepageClient({
               </div>
               <Link
                 href="/the-edge"
-                className="group mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-400/80 transition-colors hover:text-emerald-400"
+                className="group mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[rgba(87,209,150,0.80)] transition-colors hover:text-[var(--brand-green)]"
               >
                 Read full methodology
                 <svg className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -799,7 +799,7 @@ export default function HomepageClient({
                     {item.number}
                   </span>
                   <div className="relative">
-                    <span className="font-mono text-[10px] font-bold text-emerald-500/35">{item.number}</span>
+                    <span className="font-mono text-[10px] font-bold text-[rgba(87,209,150,0.35)]">{item.number}</span>
                     <h3 className="mt-1 text-[14px] font-semibold text-slate-200">{item.title}</h3>
                     <p className="mt-1.5 text-[12px] leading-[1.6] text-slate-600 transition-colors duration-300 group-hover:text-slate-500">
                       {item.body}
@@ -817,13 +817,13 @@ export default function HomepageClient({
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">Latest results</span>
+                <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">Latest results</span>
                 <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Latest settled picks</h2>
               </div>
               {last7DaysProfit != null && !last7Error && last7DaysCount > 0 ? (
                 <span
                   className={`font-mono text-xs sm:text-sm ${
-                    last7DaysProfit > 0 ? "text-emerald-400" : last7DaysProfit < 0 ? "text-red-400" : "text-slate-300"
+                    last7DaysProfit > 0 ? "text-[var(--brand-green)]" : last7DaysProfit < 0 ? "text-red-400" : "text-slate-300"
                   }`}
                 >
                   Last 7 days: {last7DaysProfit > 0 ? "+" : ""}{last7DaysProfit.toFixed(2)}u
@@ -880,10 +880,10 @@ export default function HomepageClient({
             </div>
 
             <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
-              <Link href="/tennis-tips#picks" className="text-slate-400 transition-colors hover:text-emerald-400">
+              <Link href="/tennis-tips#picks" className="text-slate-400 transition-colors hover:text-[var(--brand-green)]">
                 Review tennis results -&gt;
               </Link>
-              <Link href="/player-props#picks" className="text-slate-400 transition-colors hover:text-emerald-400">
+              <Link href="/player-props#picks" className="text-slate-400 transition-colors hover:text-[var(--brand-green)]">
                 Review player props results -&gt;
               </Link>
             </div>
@@ -893,7 +893,7 @@ export default function HomepageClient({
 
       <section className="border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
+          <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">
             Go deeper
           </span>
           <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Explore</h2>
@@ -911,12 +911,12 @@ export default function HomepageClient({
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
+              <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.95)]">
                 Common questions
               </span>
               <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Frequently asked questions</h2>
             </div>
-            <Link href="/faq" className="shrink-0 text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-300">
+            <Link href="/faq" className="shrink-0 text-sm font-medium text-[var(--brand-green)] transition-colors hover:text-[var(--brand-green)]">
               View all FAQ -&gt;
             </Link>
           </div>
@@ -949,11 +949,11 @@ export default function HomepageClient({
               <Link
                 key={item.q}
                 href={`/faq#${questionSlug(item.q)}`}
-                className="group flex h-full flex-col rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 text-left transition-all duration-300 hover:-translate-y-[1px] hover:border-emerald-500/25 sm:p-5"
+                className="group flex h-full flex-col rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 text-left transition-all duration-300 hover:-translate-y-[1px] hover:border-[rgba(87,209,150,0.25)] sm:p-5"
               >
                 <h3 className="mb-2 text-[15px] font-medium text-slate-200 transition-colors group-hover:text-white">{item.title}</h3>
                 <p className="text-sm leading-relaxed text-slate-500 transition-colors group-hover:text-slate-400">{item.summary}</p>
-                <span className="mt-auto pt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-400/45 transition-colors group-hover:text-emerald-400/85">
+                <span className="mt-auto pt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-[rgba(87,209,150,0.45)] transition-colors group-hover:text-[rgba(87,209,150,0.85)]">
                   Read answer {"\u2192"}
                 </span>
               </Link>
@@ -964,15 +964,15 @@ export default function HomepageClient({
 
       <section className="py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-2xl border border-emerald-500/15 px-6 py-10 text-center md:px-10 md:py-14">
+          <div className="relative overflow-hidden rounded-2xl border border-[rgba(87,209,150,0.15)] px-6 py-10 text-center md:px-10 md:py-14">
             <div className="absolute inset-0 bg-[#0c0f14]" />
             <div
               className="pointer-events-none absolute inset-0"
-              style={{ background: "radial-gradient(circle at 50% 140%, rgba(16,185,129,0.12), transparent 55%)" }}
+              style={{ background: "radial-gradient(circle at 50% 140%, rgba(87,209,150,0.12), transparent 55%)" }}
             />
             <div
               className="absolute top-0 left-[12%] right-[12%] h-px"
-              style={{ background: "linear-gradient(90deg, transparent, rgba(16,185,129,0.35), transparent)" }}
+              style={{ background: "linear-gradient(90deg, transparent, rgba(87,209,150,0.35), transparent)" }}
             />
             <div className="relative">
               <h2 className="text-3xl font-semibold text-slate-100">See the edge in practice</h2>
@@ -982,7 +982,7 @@ export default function HomepageClient({
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/player-props#picks"
-                  className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-8 py-3.5 text-[15px] font-semibold text-white transition-all hover:bg-emerald-400 hover:shadow-[0_0_50px_rgba(16,185,129,0.22)]"
+                  className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand-green)] px-8 py-3.5 text-[15px] font-semibold text-slate-950 transition-all hover:brightness-110 hover:shadow-[0_0_50px_rgba(87,209,150,0.22)]"
                 >
                   Open latest picks {"\u2192"}
                 </Link>

@@ -37,9 +37,9 @@ export default function GlobalNav() {
   return (
     <nav className="border-b border-slate-800/80 sticky top-0 z-50 bg-[#0f1117]/95 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 md:h-24">
-          <Link href="/" className="flex items-center h-14 md:h-20 shrink-0" onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
-            <Image src="/logo.png" alt="Il Margine" width={240} height={64} className="h-14 md:h-20 w-auto object-contain" priority />
+        <div className="flex items-center justify-between h-20 md:h-[88px]">
+          <Link href="/" className="flex items-center h-14 md:h-[68px] shrink-0" onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
+            <Image src="/logo.png" alt="Il Margine" width={240} height={64} className="h-14 md:h-[68px] w-auto object-contain" priority />
           </Link>
           
           {/* Mobile Menu Button */}
@@ -97,7 +97,7 @@ export default function GlobalNav() {
               </button>
               {resourcesMenuOpen && (
                 <div className="absolute top-full right-0 mt-2 w-52 overflow-hidden rounded-lg border border-slate-800 bg-slate-950 shadow-2xl shadow-black/40 z-50">
-                  <Link href="/resources" className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-900">Betting Resources</Link>
+                  <Link href="/resources" className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-900">All resources</Link>
                   <Link href="/bookmakers" className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-900">Bookmakers</Link>
                   <Link href="/calculator" className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-900">Calculator</Link>
                 </div>
@@ -150,15 +150,30 @@ export default function GlobalNav() {
                 Monitor
               </Link>
             ) : null}
-            <Link href="/bookmakers" className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/bookmakers' ? 'text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]' : 'text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
-              Bookmakers
-            </Link>
-            <Link href="/calculator" className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/calculator' ? 'text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]' : 'text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
-              Calculator
-            </Link>
-            <Link href="/resources" onClick={() => setMobileMenuPath(null)} className={`flex items-center min-h-[44px] px-4 py-3 text-base font-medium rounded transition-colors ${pathname === '/resources' || pathname?.startsWith('/resources/') ? 'text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]' : 'text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
-              Resources
-            </Link>
+            <div className="px-4">
+              <button
+                onClick={() => setResourcesMenuPath(resourcesMenuOpen ? null : pathname)}
+                className={`w-full min-h-[44px] flex items-center justify-between rounded px-3 py-3 text-base font-medium transition-colors ${isResourcesActive ? 'text-[var(--brand-green)] bg-[rgba(87,209,150,0.10)]' : 'text-slate-300 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}
+              >
+                <span>Resources</span>
+                <svg className={`w-4 h-4 transition-transform ${resourcesMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {resourcesMenuOpen && (
+                <div className="mt-1 ml-4 space-y-1">
+                  <Link href="/resources" onClick={() => setMobileMenuPath(null)} className={`flex min-h-[44px] items-center rounded px-3 py-2 text-sm transition-colors ${pathname === '/resources' || pathname?.startsWith('/resources/') ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
+                    All resources
+                  </Link>
+                  <Link href="/bookmakers" onClick={() => setMobileMenuPath(null)} className={`flex min-h-[44px] items-center rounded px-3 py-2 text-sm transition-colors ${pathname === '/bookmakers' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
+                    Bookmakers
+                  </Link>
+                  <Link href="/calculator" onClick={() => setMobileMenuPath(null)} className={`flex min-h-[44px] items-center rounded px-3 py-2 text-sm transition-colors ${pathname === '/calculator' ? 'text-[var(--brand-green)] font-medium bg-[rgba(87,209,150,0.10)]' : 'text-slate-400 hover:text-[var(--brand-green)] hover:bg-[rgba(87,209,150,0.10)]'}`}>
+                    Calculator
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
