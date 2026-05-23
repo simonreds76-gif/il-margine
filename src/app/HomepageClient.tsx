@@ -465,6 +465,20 @@ export default function HomepageClient({
   const displayStats = combinedStats ?? getBaselineDisplayStats();
   const displayedPendingBets = showAllPending ? pendingBets : pendingBets.slice(0, 5);
   const trackingPeriod = getTrackingMonths();
+  const heroProofStats = [
+    {
+      label: "Overall ROI",
+      value: `${displayStats.overall.roi > 0 ? "+" : ""}${displayStats.overall.roi.toFixed(1)}%`,
+    },
+    {
+      label: "Settled bets",
+      value: `${displayStats.overall.total_bets.toLocaleString()}+`,
+    },
+    {
+      label: "Tracked",
+      value: trackingPeriod,
+    },
+  ];
   const markets: HomepageMarket[] = [
     {
       id: "props",
@@ -501,7 +515,7 @@ export default function HomepageClient({
     <div className="min-h-screen bg-[#0f1117] text-slate-100">
       <style jsx global>{HOMEPAGE_KEYFRAMES}</style>
 
-      <section className="relative overflow-hidden border-b border-slate-800/40 pt-6 pb-16 md:pb-20 lg:pb-24">
+      <section className="relative overflow-hidden border-b border-slate-800/40 pt-6 pb-12 md:pb-14 lg:pb-16">
         <div
           className="pointer-events-none absolute inset-x-0 -top-24 h-[640px]"
           style={{ background: "radial-gradient(ellipse 1200px 550px at 50% -120px, rgba(16,185,129,0.08), transparent)" }}
@@ -509,16 +523,10 @@ export default function HomepageClient({
         <div className="pointer-events-none absolute -right-36 top-0 h-[420px] w-[420px] rounded-full bg-emerald-500/[0.02] blur-[120px]" />
 
         <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-start gap-12 lg:grid-cols-[1.2fr,0.8fr] lg:gap-16">
+          <div className="grid items-start gap-8 lg:grid-cols-[1.2fr,0.8fr] lg:gap-16">
             <div className="lg:py-4">
-              <HomepageReveal delay={0}>
-                <span className="text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
-                  Il Margine
-                </span>
-              </HomepageReveal>
-
-              <HomepageReveal delay={120}>
-                <h1 className="mt-5 text-4xl font-semibold leading-[1.02] tracking-tight text-white sm:text-5xl md:text-6xl">
+              <HomepageReveal delay={80}>
+                <h1 className="text-4xl font-semibold leading-[1.02] tracking-tight text-white sm:text-5xl md:text-6xl">
                   Betting with
                   <br className="hidden md:block" />{" "}
                   <span className="relative inline-block text-emerald-400">
@@ -539,13 +547,13 @@ export default function HomepageClient({
                 </h1>
               </HomepageReveal>
 
-              <HomepageReveal delay={280}>
+              <HomepageReveal delay={240}>
                 <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-300">
                   Professional betting methodology from a former odds compiler. We identify value where bookmakers misprice markets.
                 </p>
               </HomepageReveal>
 
-              <HomepageReveal delay={420}>
+              <HomepageReveal delay={380}>
                 <div className="mt-8 flex flex-wrap items-center gap-4">
                   <Link
                     href="/player-props"
@@ -568,17 +576,32 @@ export default function HomepageClient({
                 </div>
               </HomepageReveal>
 
-              <HomepageReveal delay={560}>
-                <div className="mt-7 flex flex-wrap items-center gap-3 font-mono text-xs text-slate-600">
+              <HomepageReveal delay={520}>
+                <div className="mt-7 flex flex-wrap items-center gap-3 font-mono text-xs text-slate-500">
                   {[
                     "Free picks",
                     "No sign-up",
                     "Transparent results",
                   ].map((item) => (
                     <span key={item} className="inline-flex items-center gap-2">
-                      <span className="h-[3px] w-[3px] rounded-full bg-slate-600" />
+                      <span className="h-[3px] w-[3px] rounded-full bg-slate-500" />
                       {item}
                     </span>
+                  ))}
+                </div>
+              </HomepageReveal>
+
+              <HomepageReveal delay={650}>
+                <div className="mt-7 grid max-w-2xl gap-2 rounded-2xl border border-slate-800/70 bg-[#0b0e13]/70 p-2 shadow-2xl shadow-black/10 sm:grid-cols-3">
+                  {heroProofStats.map((stat) => (
+                    <div key={stat.label} className="rounded-xl border border-slate-800/50 bg-slate-950/30 px-4 py-3">
+                      <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
+                        {stat.label}
+                      </div>
+                      <div className="mt-1 font-mono text-lg font-black leading-none tracking-tight text-emerald-400">
+                        {stat.value}
+                      </div>
+                    </div>
                   ))}
                 </div>
               </HomepageReveal>

@@ -8,20 +8,20 @@ interface FooterProps {
 
 export default function Footer({ className = "" }: FooterProps) {
   return (
-    <footer className={`border-t border-slate-800 py-8 bg-[#0f1117] ${className}`.trim()}>
+    <footer className={`border-t border-slate-800/70 bg-[#0b0e13] py-10 ${className}`.trim()}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-5">
           <Link
             href="/"
             aria-label={`Il Margine: ${SITE_MOTTO}`}
-            className="group flex items-center transition hover:brightness-110"
+            className="group -ml-2 flex items-center transition hover:brightness-110"
           >
             <Image
               src="/brand/il-margine-tube-footer-compact.png"
               alt="Il Margine - Mind the Margin"
               width={360}
               height={90}
-              className="h-12 w-auto max-w-[min(82vw,23rem)] object-contain sm:h-14"
+              className="h-14 w-auto max-w-[min(86vw,25rem)] object-contain opacity-95 drop-shadow-[0_0_22px_rgba(87,209,150,0.12)] sm:h-16"
             />
           </Link>
           <div className="flex flex-col items-center md:items-end gap-3">
