@@ -1,5 +1,5 @@
 Assist Value Model Report
-generated_at_utc: 2026-05-23T14:10:33Z
+generated_at_utc: 2026-05-23T15:43:17Z
 
 Status
 model_status: ENABLED_SHADOW_V0
@@ -7,10 +7,10 @@ public_signal_status: DISABLED
 settlement_status: NOT_BACKTESTED
 
 Counts
-priced_rows: 2963
-shadow_signals: 10
-watch_rows: 18
-shadow_signals_by_league: epl=1, la-liga=3, ligue-1=2, serie-a=4
+priced_rows: 2964
+shadow_signals: 11
+watch_rows: 17
+shadow_signals_by_league: epl=1, la-liga=3, ligue-1=2, serie-a=5
 
 Model
 p_assist = 1 - exp(-lambda)
@@ -18,8 +18,8 @@ lambda = blended player xA/assist rate per90 * expected_minutes * team_attack_sc
 Market probability is 1 / Bet365 decimal odds; no vig adjustment because only one side is available.
 
 Top shadow signals
+ - Federico Dimarco | Bologna FC vs Inter Milano | fair 3.055 vs market 4.500 | edge 10.51pp | conf high | setpiece 30.0
  - Jon Ander Olasagasti | Real Betis Seville vs Levante UD | fair 4.299 vs market 7.500 | edge 9.93pp | conf medium | setpiece 56.1
- - Federico Dimarco | Bologna FC vs Inter Milano | fair 3.055 vs market 4.333 | edge 9.65pp | conf high | setpiece 30.0
  - Jon Ander Olasagasti | Levante UD vs RCD Mallorca | fair 4.338 vs market 7.000 | edge 8.77pp | conf medium | setpiece 56.1
  - Gauthier Hein | OGC Nice vs FC Metz | fair 4.646 vs market 7.000 | edge 7.24pp | conf high | setpiece 94.12
  - Adrien Thomasson | Olympique Lyon vs Racing Club De Lens | fair 3.453 vs market 4.500 | edge 6.74pp | conf high | setpiece 24.32
@@ -27,6 +27,7 @@ Top shadow signals
  - Nicolo Zaniolo | SSC Napoli vs Udinese Calcio | fair 4.839 vs market 7.000 | edge 6.38pp | conf high | setpiece 53.12
  - Federico Dimarco | Inter Milano vs Hellas Verona | fair 2.890 vs market 3.500 | edge 6.04pp | conf high | setpiece 30.0
  - Anton Stach | West Ham United vs Leeds United | fair 5.186 vs market 7.000 | edge 5.00pp | conf high | setpiece 62.96
+ - Nicolo Barella | Bologna FC vs Inter Milano | fair 4.616 vs market 6.000 | edge 5.00pp | conf high | setpiece 20.0
  - Gianluca Gaetano | AC Milan vs Cagliari Calcio | fair 6.338 vs market 9.000 | edge 4.67pp | conf high | setpiece 6.9
 
 Guardrail
