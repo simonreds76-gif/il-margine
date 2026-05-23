@@ -8,12 +8,14 @@ import { usePathname } from "next/navigation";
 export default function GlobalNav() {
   const [mobileMenuPath, setMobileMenuPath] = useState<string | null>(null);
   const [tipsMenuPath, setTipsMenuPath] = useState<string | null>(null);
+  const [resourcesMenuPath, setResourcesMenuPath] = useState<string | null>(null);
   const pathname = usePathname();
   const showMonitorLink =
     process.env.NODE_ENV !== "production" ||
     process.env.NEXT_PUBLIC_ENABLE_MODEL_MONITOR === "1";
   const mobileMenuOpen = mobileMenuPath === pathname;
   const tipsMenuOpen = tipsMenuPath === pathname;
+  const resourcesMenuOpen = resourcesMenuPath === pathname;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -24,15 +26,20 @@ export default function GlobalNav() {
     pathname === "/tennis-tips" ||
     pathname === "/bet-builders" ||
     pathname === "/player-props";
+  const isResourcesActive =
+    pathname === "/bookmakers" ||
+    pathname === "/calculator" ||
+    pathname === "/resources" ||
+    pathname.startsWith("/resources/");
   const linkClass = (active: boolean) =>
     `text-base font-medium transition-colors ${active ? "text-[var(--brand-green)]" : "text-slate-400 hover:text-slate-100"}`;
 
   return (
     <nav className="border-b border-slate-800/80 sticky top-0 z-50 bg-[#0f1117]/95 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <Link href="/" className="flex items-center h-14 md:h-16 shrink-0" onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
-            <Image src="/logo.png" alt="Il Margine" width={240} height={64} className="h-14 md:h-16 w-auto object-contain" priority />
+        <div className="flex items-center justify-between h-20 md:h-24">
+          <Link href="/" className="flex items-center h-14 md:h-20 shrink-0" onClick={() => { if (pathname === "/") window.scrollTo(0, 0); }}>
+            <Image src="/logo.png" alt="Il Margine" width={240} height={64} className="h-14 md:h-20 w-auto object-contain" priority />
           </Link>
           
           {/* Mobile Menu Button */}
@@ -51,7 +58,7 @@ export default function GlobalNav() {
           </button>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-5 lg:gap-6">
             {/* Tips Dropdown */}
             <div className="relative">
               <button 
@@ -77,9 +84,25 @@ export default function GlobalNav() {
             <Link href="/fair-odds-lab" className={linkClass(pathname === "/fair-odds-lab")}>Fair Odds Lab</Link>
             <Link href="/track-record" className={linkClass(pathname === "/track-record")}>Track Record</Link>
             {showMonitorLink ? <Link href="/model-monitor" className={linkClass(pathname === "/model-monitor")}>Monitor</Link> : null}
-            <Link href="/bookmakers" className={linkClass(pathname === '/bookmakers')}>Bookmakers</Link>
-            <Link href="/calculator" className={linkClass(pathname === '/calculator')}>Calculator</Link>
-            <Link href="/resources" className={linkClass(pathname === '/resources' || pathname.startsWith('/resources/'))}>Resources</Link>
+            <div className="relative">
+              <button
+                onClick={() => setResourcesMenuPath(resourcesMenuOpen ? null : pathname)}
+                onBlur={() => setTimeout(() => setResourcesMenuPath(null), 150)}
+                className={`flex items-center gap-1 ${linkClass(isResourcesActive)}`}
+              >
+                Resources
+                <svg className={`w-4 h-4 transition-transform ${resourcesMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {resourcesMenuOpen && (
+                <div className="absolute top-full right-0 mt-2 w-52 overflow-hidden rounded-lg border border-slate-800 bg-slate-950 shadow-2xl shadow-black/40 z-50">
+                  <Link href="/resources" className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-900">Betting Resources</Link>
+                  <Link href="/bookmakers" className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-900">Bookmakers</Link>
+                  <Link href="/calculator" className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-900">Calculator</Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         

@@ -518,29 +518,29 @@ export default function HomepageClient({
       <section className="relative overflow-hidden border-b border-slate-800/40 pt-6 pb-12 md:pb-14 lg:pb-16">
         <div
           className="pointer-events-none absolute inset-x-0 -top-24 h-[640px]"
-          style={{ background: "radial-gradient(ellipse 1200px 550px at 50% -120px, rgba(16,185,129,0.08), transparent)" }}
+          style={{ background: "radial-gradient(ellipse 1200px 550px at 50% -120px, rgba(87,209,150,0.10), transparent)" }}
         />
-        <div className="pointer-events-none absolute -right-36 top-0 h-[420px] w-[420px] rounded-full bg-emerald-500/[0.02] blur-[120px]" />
+        <div className="pointer-events-none absolute -right-36 top-0 h-[420px] w-[420px] rounded-full bg-[rgba(87,209,150,0.035)] blur-[120px]" />
 
         <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-start gap-8 lg:grid-cols-[1.2fr,0.8fr] lg:gap-16">
             <div className="lg:py-4">
               <HomepageReveal delay={80}>
-                <h1 className="text-4xl font-semibold leading-[1.02] tracking-tight text-white sm:text-5xl md:text-6xl">
+                <h1 className="text-[3rem] font-semibold leading-[0.98] tracking-[-0.045em] text-white sm:text-6xl md:text-7xl">
                   Betting with
                   <br className="hidden md:block" />{" "}
-                  <span className="relative inline-block text-emerald-400">
+                  <span className="relative inline-block text-[var(--brand-green)]">
                     mathematical
                     <span
-                      className="absolute bottom-0 left-0 right-0 h-[2px] origin-left rounded-full bg-emerald-500/25"
+                      className="absolute bottom-0 left-0 right-0 h-[2px] origin-left rounded-full bg-[rgba(87,209,150,0.32)]"
                       style={{ animation: "homepage-underline 0.8s cubic-bezier(0.16,1,0.3,1) both", animationDelay: "850ms" }}
                     />
                   </span>
                   <br className="hidden md:block" />{" "}
-                  <span className="relative inline-block text-emerald-400">
+                  <span className="relative inline-block text-[var(--brand-green)]">
                     edge
                     <span
-                      className="absolute bottom-0 left-0 right-0 h-[2px] origin-left rounded-full bg-emerald-500/25"
+                      className="absolute bottom-0 left-0 right-0 h-[2px] origin-left rounded-full bg-[rgba(87,209,150,0.32)]"
                       style={{ animation: "homepage-underline 0.8s cubic-bezier(0.16,1,0.3,1) both", animationDelay: "1025ms" }}
                     />
                   </span>
@@ -557,7 +557,7 @@ export default function HomepageClient({
                 <div className="mt-8 flex flex-wrap items-center gap-4">
                   <Link
                     href="/player-props"
-                    className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-6 py-3 text-base font-semibold text-white transition-all hover:bg-emerald-400 hover:shadow-[0_0_40px_rgba(16,185,129,0.2)]"
+                    className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand-green)] px-6 py-3 text-base font-semibold text-slate-950 transition-all hover:brightness-110 hover:shadow-[0_0_40px_rgba(87,209,150,0.22)]"
                   >
                     Player Props Tips {"\u2192"}
                   </Link>
@@ -592,17 +592,23 @@ export default function HomepageClient({
               </HomepageReveal>
 
               <HomepageReveal delay={650}>
-                <div className="mt-7 grid max-w-2xl gap-2 rounded-2xl border border-slate-800/70 bg-[#0b0e13]/70 p-2 shadow-2xl shadow-black/10 sm:grid-cols-3">
+                <div className="mt-8 max-w-3xl rounded-[1.4rem] border border-[rgba(87,209,150,0.22)] bg-[linear-gradient(135deg,rgba(87,209,150,0.13),rgba(9,13,19,0.78)_34%,rgba(9,13,19,0.96))] p-2 shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
+                  <div className="mb-2 flex items-center justify-between px-2 pt-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[rgba(87,209,150,0.82)]">
+                    <span>Public record</span>
+                    <span className="text-slate-500">Updated live</span>
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-3">
                   {heroProofStats.map((stat) => (
-                    <div key={stat.label} className="rounded-xl border border-slate-800/50 bg-slate-950/30 px-4 py-3">
+                    <div key={stat.label} className="rounded-2xl border border-white/[0.06] bg-slate-950/55 px-4 py-4">
                       <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
                         {stat.label}
                       </div>
-                      <div className="mt-1 font-mono text-lg font-black leading-none tracking-tight text-emerald-400">
+                      <div className="mt-2 font-mono text-2xl font-black leading-none tracking-tight text-[var(--brand-green)]">
                         {stat.value}
                       </div>
                     </div>
                   ))}
+                  </div>
                 </div>
               </HomepageReveal>
             </div>
@@ -632,15 +638,15 @@ export default function HomepageClient({
             <ProofStatCard
               label="Overall ROI"
               value={`${displayStats.overall.roi > 0 ? "+" : ""}${displayStats.overall.roi.toFixed(1)}%`}
-              sub="Combined baseline plus live public tracking"
+              sub="Combined public record across player props and ATP tennis"
               accent
             />
             <ProofStatCard
               label="Settled bets"
               value={`${displayStats.overall.total_bets.toLocaleString()}+`}
-              sub="Player props and ATP tennis combined"
+              sub="Every settled public pick stays in the record"
             />
-            <ProofStatCard label="Tracking period" value={trackingPeriod} sub="Validation-phase history plus public tracking" accent />
+            <ProofStatCard label="Tracking period" value={trackingPeriod} sub="Month-by-month record stays visible" accent />
           </div>
 
         </div>

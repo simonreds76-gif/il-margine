@@ -16,6 +16,48 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 ENV_FILES = [ROOT / ".env.local", ROOT / "env.local"]
 TERMINAL_STATUSES = ("ok", "failed", "timeout", "aborted")
+CROSS_HOST_RECOVERY_PIPELINES = {"pinnacle-capture-history"}
+
+
+def should_allow_cross_host_recovery(row: dict[str, Any]) -> bool:
+    return (
+        str(row.get("pipeline") or "") in CROSS_HOST_RECOVERY_PIPELINES
+        and str(row.get("host") or "") != "github-actions"
+    )
+
+
+def build_cleanup_payload(
+    *,
+    row: dict[str, Any],
+    successor: dict[str, Any],
+    error_type: str,
+    reason: str,
+) -> dict[str, Any]:
+    cleaned_at = datetime.now(timezone.utc).isoformat()
+    message = (
+        f"Marked aborted by cleanup-run-status-orphans because {reason} "
+        f"{successor['run_id']} ({successor['status']}) started at "
+        f"{successor['started_at']} for pipeline {row['pipeline']}."
+    )
+    return {
+        "message": message,
+        "patch": {
+            "finished_at": cleaned_at,
+            "status": "aborted",
+            "error_type": error_type,
+            "error_message": message,
+            "details": {
+                "orphan_cleanup": {
+                    "cleaned_at": cleaned_at,
+                    "successor_run_id": successor["run_id"],
+                    "successor_status": successor["status"],
+                    "successor_started_at": str(successor["started_at"]),
+                    "successor_host": successor.get("host"),
+                    "stale_host": row.get("host"),
+                }
+            },
+        },
+    }
 
 
 def load_env_files() -> None:
@@ -116,7 +158,7 @@ def cleanup_via_db(database_url: str, dry_run: bool) -> int:
                 for row in stuck_rows:
                     cur.execute(
                         """
-                        select run_id::text, status, started_at, finished_at
+                        select run_id::text, status, host, started_at, finished_at
                         from run_status
                         where pipeline = %s
                           and host = %s
@@ -128,15 +170,34 @@ def cleanup_via_db(database_url: str, dry_run: bool) -> int:
                         (row["pipeline"], row["host"], row["started_at"]),
                     )
                     successor = cur.fetchone()
+                    error_type = "SupersededStaleRun"
+                    reason = "a later terminal run"
+                    if successor is None and should_allow_cross_host_recovery(row):
+                        cur.execute(
+                            """
+                            select run_id::text, status, host, started_at, finished_at
+                            from run_status
+                            where pipeline = %s
+                              and started_at > %s
+                              and status in ('ok', 'failed', 'timeout', 'aborted')
+                            order by started_at desc
+                            limit 1
+                            """,
+                            (row["pipeline"], row["started_at"]),
+                        )
+                        successor = cur.fetchone()
+                        error_type = "RecoveredByPeerHost"
+                        reason = "a later terminal run on another host"
                     if successor is None:
                         continue
                     successor_row = dict(zip([desc[0] for desc in cur.description or []], successor))
-                    message = (
-                        "Marked aborted by cleanup-run-status-orphans because a later terminal run "
-                        f"{successor_row['run_id']} ({successor_row['status']}) started at "
-                        f"{successor_row['started_at']} for the same pipeline/host."
+                    payload = build_cleanup_payload(
+                        row=row,
+                        successor=successor_row,
+                        error_type=error_type,
+                        reason=reason,
                     )
-                    print(f"ORPHAN {row['run_id']} -> aborted; {message}")
+                    print(f"ORPHAN {row['run_id']} -> aborted; {payload['message']}")
                     if dry_run:
                         cleaned += 1
                         continue
@@ -145,24 +206,16 @@ def cleanup_via_db(database_url: str, dry_run: bool) -> int:
                         update run_status
                         set finished_at = now(),
                             status = 'aborted',
-                            error_type = 'SupersededStaleRun',
+                            error_type = %s,
                             error_message = %s,
                             details = details || %s::jsonb
                         where run_id = %s
                           and status = 'running'
                         """,
                         (
-                            message,
-                            json.dumps(
-                                {
-                                    "orphan_cleanup": {
-                                        "cleaned_at": datetime.now(timezone.utc).isoformat(),
-                                        "successor_run_id": successor_row["run_id"],
-                                        "successor_status": successor_row["status"],
-                                        "successor_started_at": str(successor_row["started_at"]),
-                                    }
-                                }
-                            ),
+                            payload["patch"]["error_type"],
+                            payload["patch"]["error_message"],
+                            json.dumps(payload["patch"]["details"]),
                             row["run_id"],
                         ),
                     )
@@ -185,7 +238,7 @@ def cleanup_via_rest(dry_run: bool) -> int:
         successors = fetch_json_rest(
             "run_status",
             {
-                "select": "run_id,status,started_at,finished_at",
+                "select": "run_id,status,host,started_at,finished_at",
                 "pipeline": f"eq.{row['pipeline']}",
                 "host": f"eq.{row['host']}",
                 "started_at": f"gt.{row['started_at']}",
@@ -194,35 +247,39 @@ def cleanup_via_rest(dry_run: bool) -> int:
                 "limit": "1",
             },
         )
+        error_type = "SupersededStaleRun"
+        reason = "a later terminal run"
+        if not successors and should_allow_cross_host_recovery(row):
+            successors = fetch_json_rest(
+                "run_status",
+                {
+                    "select": "run_id,status,host,started_at,finished_at",
+                    "pipeline": f"eq.{row['pipeline']}",
+                    "started_at": f"gt.{row['started_at']}",
+                    "status": f"in.({','.join(TERMINAL_STATUSES)})",
+                    "order": "started_at.desc",
+                    "limit": "1",
+                },
+            )
+            error_type = "RecoveredByPeerHost"
+            reason = "a later terminal run on another host"
         if not successors:
             continue
         successor = successors[0]
-        message = (
-            "Marked aborted by cleanup-run-status-orphans because a later terminal run "
-            f"{successor['run_id']} ({successor['status']}) started at "
-            f"{successor['started_at']} for the same pipeline/host."
+        payload = build_cleanup_payload(
+            row=row,
+            successor=successor,
+            error_type=error_type,
+            reason=reason,
         )
-        print(f"ORPHAN {row['run_id']} -> aborted; {message}")
+        print(f"ORPHAN {row['run_id']} -> aborted; {payload['message']}")
         if dry_run:
             cleaned += 1
             continue
         patch_rest(
             "run_status",
             {"run_id": f"eq.{row['run_id']}", "status": "eq.running"},
-            {
-                "finished_at": datetime.now(timezone.utc).isoformat(),
-                "status": "aborted",
-                "error_type": "SupersededStaleRun",
-                "error_message": message,
-                "details": {
-                    "orphan_cleanup": {
-                        "cleaned_at": datetime.now(timezone.utc).isoformat(),
-                        "successor_run_id": successor["run_id"],
-                        "successor_status": successor["status"],
-                        "successor_started_at": successor["started_at"],
-                    }
-                },
-            },
+            payload["patch"],
         )
         cleaned += 1
     return cleaned
