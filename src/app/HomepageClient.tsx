@@ -614,7 +614,7 @@ export default function HomepageClient({
         </div>
       </section>
 
-      <section className="border-b border-slate-800/30 py-16 md:py-20">
+      <section className="border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -677,62 +677,8 @@ export default function HomepageClient({
         </div>
       </section>
 
-      <section className="border-b border-slate-800/30 py-16 md:py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[1fr,0.9fr] lg:gap-16">
-            <div className="lg:sticky lg:top-28 lg:self-start">
-              <div className="mb-5 flex items-center gap-3">
-                <div className="h-10 w-[3px] rounded-full bg-emerald-500" />
-                <span className="text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
-                  Why Il Margine
-                </span>
-              </div>
-              <h2 className="text-2xl font-semibold leading-tight text-slate-100 sm:text-3xl">
-                Built from the
-                <br />
-                other side
-              </h2>
-              <div className="mt-5 space-y-4 text-base leading-relaxed text-slate-400">
-                <p>
-                  Most betting services learn by betting. We learned by <span className="font-medium text-slate-200">building the prices</span> bookmakers use.
-                </p>
-                <p>
-                  Template pricing, margin allocation, copied lines, and risk-management blind spots are where the machinery leaves room for edge.
-                </p>
-              </div>
-              <Link
-                href="/the-edge"
-                className="group mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-400/80 transition-colors hover:text-emerald-400"
-              >
-                Read full methodology
-                <svg className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </div>
-
-            <div className="grid gap-2.5 sm:grid-cols-2">
-              {COMPILER_CARDS.map((item) => (
-                <div key={item.number} className="group relative overflow-hidden rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 transition-all duration-300 hover:border-slate-600/50">
-                  <span className="pointer-events-none absolute -right-1 -top-3 select-none font-mono text-[52px] font-black leading-none text-white/[0.015]">
-                    {item.number}
-                  </span>
-                  <div className="relative">
-                    <span className="font-mono text-[10px] font-bold text-emerald-500/35">{item.number}</span>
-                    <h3 className="mt-1 text-[14px] font-semibold text-slate-200">{item.title}</h3>
-                    <p className="mt-1.5 text-[12px] leading-[1.6] text-slate-600 transition-colors duration-300 group-hover:text-slate-500">
-                      {item.body}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {pendingBets.length > 0 ? (
-        <section className="border-b border-slate-800/30 py-16 md:py-20">
+        <section id="active-picks" className="scroll-mt-20 border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-8 sm:mb-10">
               <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">Live now</span>
@@ -809,13 +755,67 @@ export default function HomepageClient({
         </section>
       ) : null}
 
+      <section className="border-b border-slate-800/30 py-16 md:py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-10 lg:grid-cols-[1fr,0.9fr] lg:gap-16">
+            <div className="lg:sticky lg:top-28 lg:self-start">
+              <div className="mb-5 flex items-center gap-3">
+                <div className="h-10 w-[3px] rounded-full bg-emerald-500" />
+                <span className="text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
+                  Why Il Margine
+                </span>
+              </div>
+              <h2 className="text-2xl font-semibold leading-tight text-slate-100 sm:text-3xl">
+                Built from the
+                <br />
+                other side
+              </h2>
+              <div className="mt-5 space-y-4 text-base leading-relaxed text-slate-400">
+                <p>
+                  Most betting services learn by betting. We learned by <span className="font-medium text-slate-200">building the prices</span> bookmakers use.
+                </p>
+                <p>
+                  Template pricing, margin allocation, copied lines, and risk-management blind spots are where the machinery leaves room for edge.
+                </p>
+              </div>
+              <Link
+                href="/the-edge"
+                className="group mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-400/80 transition-colors hover:text-emerald-400"
+              >
+                Read full methodology
+                <svg className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+
+            <div className="grid gap-2.5 sm:grid-cols-2">
+              {COMPILER_CARDS.map((item) => (
+                <div key={item.number} className="group relative overflow-hidden rounded-xl border border-slate-700/40 bg-[#0c0f14] p-4 transition-all duration-300 hover:border-slate-600/50">
+                  <span className="pointer-events-none absolute -right-1 -top-3 select-none font-mono text-[52px] font-black leading-none text-white/[0.015]">
+                    {item.number}
+                  </span>
+                  <div className="relative">
+                    <span className="font-mono text-[10px] font-bold text-emerald-500/35">{item.number}</span>
+                    <h3 className="mt-1 text-[14px] font-semibold text-slate-200">{item.title}</h3>
+                    <p className="mt-1.5 text-[12px] leading-[1.6] text-slate-600 transition-colors duration-300 group-hover:text-slate-500">
+                      {item.body}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {recentBets.length > 0 ? (
-        <section className="border-b border-slate-800/30 py-16 md:py-20">
+        <section className="border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">Latest results</span>
-                <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Recent selections</h2>
+                <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">Latest settled picks</h2>
               </div>
               {last7DaysProfit != null && !last7Error && last7DaysCount > 0 ? (
                 <span
@@ -888,7 +888,7 @@ export default function HomepageClient({
         </section>
       ) : null}
 
-      <section className="border-b border-slate-800/30 py-16 md:py-20">
+      <section className="border-b border-slate-800/30 bg-[#0b0e13] py-16 md:py-20">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <span className="mb-2 block text-xs font-mono font-bold uppercase tracking-[0.18em] text-emerald-400/95">
             Go deeper
@@ -978,16 +978,16 @@ export default function HomepageClient({
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Link
-                  href="/player-props"
+                  href="/player-props#picks"
                   className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-8 py-3.5 text-[15px] font-semibold text-white transition-all hover:bg-emerald-400 hover:shadow-[0_0_50px_rgba(16,185,129,0.22)]"
                 >
-                  Player Props Tips {"\u2192"}
+                  Open latest picks {"\u2192"}
                 </Link>
                 <Link
-                  href="/tennis-tips"
+                  href="/track-record"
                   className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-8 py-3.5 text-[15px] font-medium text-slate-200 transition-all hover:border-slate-400 hover:bg-slate-800/40"
                 >
-                  ATP Tennis Tips {"\u2192"}
+                  See track record {"\u2192"}
                 </Link>
               </div>
             </div>

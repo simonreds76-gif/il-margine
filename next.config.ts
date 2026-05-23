@@ -1,12 +1,19 @@
 import type { NextConfig } from "next";
+import fs from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const projectRoot = path.dirname(fileURLToPath(import.meta.url));
+const projectRoot = fs.realpathSync(path.dirname(fileURLToPath(import.meta.url)));
+const require = createRequire(import.meta.url);
+const nextInstallRoot = fs.realpathSync(path.dirname(path.dirname(path.dirname(require.resolve("next/package.json")))));
+const relativeProjectRoot = path.relative(nextInstallRoot, projectRoot);
+const projectInsideNextInstallRoot =
+  relativeProjectRoot === "" || (!relativeProjectRoot.startsWith("..") && !path.isAbsolute(relativeProjectRoot));
 
 const nextConfig: NextConfig = {
   turbopack: {
-    root: projectRoot,
+    root: projectInsideNextInstallRoot ? nextInstallRoot : projectRoot,
   },
   // Keep unrelated tennis-model datasets out of the football monitor functions.
   // The goalscorer monitor now reads a compact snapshot payload instead of raw league trees.

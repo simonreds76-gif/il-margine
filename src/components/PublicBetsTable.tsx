@@ -22,30 +22,30 @@ interface PublicBetsTableProps {
 }
 
 const th = {
-  icon: "w-[2.75rem] border-r border-slate-800/40 px-1.5 py-3 text-center md:w-[3.75rem] md:px-2.5",
-  date: "w-[5.25rem] border-r border-slate-800/40 px-2.5 py-3 text-center",
-  match: "w-[25%] border-r border-slate-800/40 px-4 py-3 text-center",
-  player: "w-[15%] border-r border-slate-800/40 px-4 py-3 text-center",
-  selection: "w-[18%] border-r border-slate-800/40 px-4 py-3 text-center",
-  odds: "w-[5.5rem] border-r border-slate-800/40 px-4 py-3 text-center",
-  bookmaker: "w-32 border-r border-slate-800/40 px-4 py-3 text-center",
-  stake: "w-[5.5rem] border-r border-slate-800/40 px-4 py-3 text-center",
+  icon: "w-[2.75rem] px-1.5 py-3 text-center md:w-[3.75rem] md:px-2.5",
+  date: "w-[5.25rem] px-2.5 py-3 text-center",
+  match: "w-[25%] px-4 py-3 text-center",
+  player: "w-[15%] px-4 py-3 text-center",
+  selection: "w-[18%] px-4 py-3 text-center",
+  odds: "w-[5.5rem] border-l border-slate-800/50 px-4 py-3 text-center",
+  bookmaker: "w-32 px-4 py-3 text-center",
+  stake: "w-[5.5rem] border-l border-slate-800/50 px-4 py-3 text-center",
   stakeLast: "w-[5.5rem] px-4 py-3 text-center",
-  status: "w-24 border-r border-slate-800/40 px-3 py-3 text-center",
+  status: "w-24 border-l border-slate-800/50 px-3 py-3 text-center",
   pnl: "w-24 px-4 py-3 text-center",
 } as const;
 
 const td = {
-  icon: "border-r border-slate-800/40 px-1.5 py-3.5 text-center align-middle md:px-2.5",
-  date: "border-r border-slate-800/40 px-2.5 py-3.5 text-center align-middle text-sm whitespace-nowrap text-slate-400",
-  match: "border-r border-slate-800/40 px-4 py-3.5 text-center align-middle font-medium text-slate-200",
-  player: "border-r border-slate-800/40 px-4 py-3.5 text-center align-middle text-slate-300",
-  selection: "border-r border-slate-800/40 px-4 py-3.5 text-center align-middle text-slate-300",
-  odds: "border-r border-slate-800/40 px-4 py-3.5 text-center align-middle",
-  bookmaker: "border-r border-slate-800/40 px-4 py-3.5 align-middle text-center",
-  stake: "border-r border-slate-800/40 px-4 py-3.5 text-center align-middle font-mono tabular-nums text-slate-200",
+  icon: "px-1.5 py-3.5 text-center align-middle md:px-2.5",
+  date: "px-2.5 py-3.5 text-center align-middle text-sm whitespace-nowrap text-slate-400",
+  match: "px-4 py-3.5 text-center align-middle font-medium text-slate-200",
+  player: "px-4 py-3.5 text-center align-middle text-slate-300",
+  selection: "px-4 py-3.5 text-center align-middle text-slate-300",
+  odds: "border-l border-slate-800/50 px-4 py-3.5 text-center align-middle",
+  bookmaker: "px-4 py-3.5 align-middle text-center",
+  stake: "border-l border-slate-800/50 px-4 py-3.5 text-center align-middle font-mono tabular-nums text-slate-200",
   stakeLast: "px-4 py-3.5 text-center align-middle font-mono tabular-nums text-slate-200",
-  status: "border-r border-slate-800/40 px-2.5 py-3.5 align-middle text-center",
+  status: "border-l border-slate-800/50 px-2.5 py-3.5 align-middle text-center",
   pnl: "px-4 py-3.5 text-center align-middle",
 } as const;
 
@@ -82,7 +82,7 @@ export default function PublicBetsTable({
       </thead>
       <tbody>
         {bets.map((bet) => (
-          <tr key={bet.id} className="border-b border-slate-800/40 last:border-b-0 hover:bg-slate-800/20">
+          <tr key={bet.id} className="border-b border-slate-800/40 even:bg-slate-950/[0.18] last:border-b-0 hover:bg-slate-800/20">
             <td className={td.icon}>
               <div className="flex justify-center">
                 <MarketBadge market={bet.market} category={bet.category} event={bet.event} compact className="md:hidden" />
